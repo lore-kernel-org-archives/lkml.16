@@ -1,104 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F022586CD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A3781727
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:30:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740472128; cv=none; b=uIK71MYieesamx/A28NV+8X68vrstQ5CrNhwe5BAczJjd1vxFuRMIjCVoz+D9jQXdTYP0taZ7q5hxGVur6lFSSy0W0SwT6s1uhGAcCSYrv49zDdUd8wfnd1A3z84xKsbRJQuaRqXA7Hf2EvKPuQN/sXke358kudKwiAao2UGdl4=
+	t=1740472227; cv=none; b=Sggn4wjthJIht73x6feH0pMHtcOIyQ3/0eZ1zPlbABlICpVDoMtvAVnJH2TNqlAeUWkjNvcg9jtxR9WwXFvnYGI6ppDftxrTbhcXSu7naI7CySnQmF2RDRDdn2j9lu1Hm8oh128KYIF4Fanws5Tysk3j/AGSE43OTHHJJSqLbmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740472128; c=relaxed/simple;
-	bh=8vPpJ8olOuwN9lQFG5YAxtDVHtl13Hwmn7GTiIrcqhc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G2DpaEbPLCkLp20SfP7I+PHfT9bZJ/PJBSkDXOdCJ6WcW94LHOuxmHeiN1FJ/k0eE476FcpEQJ2ulaTfiW0LEwxkZq0htXGSFvkv2IoyHmTZlt1pOutMZlkLkvH5m2HfNbHJZ30nyUmIh9KN9UtUufFz07p2iXSH8LlBzNLlpRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+3vlCZa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740472227; c=relaxed/simple;
+	bh=oZsoK1cw3ClR6Nvp43TWcRmZZIKhQh28C4n1vCWF5FQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W/pWlrUh7NP54AgdRNqjBVCSUa6wGADeb8Gg+F1R3Xm4ZFApLLAwNbi7HYWdyyxRrxOMVxtLAjLM15ppUrnu7RtveNgNuQSny1PbWQaDJTuimm5tZfnCoHxEkg/cNuolzVc+hu7T//ag6Nk2yHAANqgn8RFP1kQDpuwEkU3fnJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7Xih5up; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+3vlCZa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E4EC4CEDD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:28:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7Xih5up"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FA6FC4CEE2;
+	Tue, 25 Feb 2025 08:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740472128;
-	bh=8vPpJ8olOuwN9lQFG5YAxtDVHtl13Hwmn7GTiIrcqhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W+3vlCZa9bUAZTxTn/9J71uNJbnotvyK9PmaPGkw4X4oDmLXIMxWqkfsCcSwSLluV
-	 Db0FfEvW+SAZXPOywDNfozz7H/frK0a4sToUc9cyCm5/VAuZ+/uGiuR3lr9A7lfGCY
-	 qyXUeAX0oNyqtPXG6eDHAyyo0jGeM7qolZiMPt04E3KDkWD7fkZnQWcINq2VcNejEh
-	 vxeCel3h2xVc0TK+G5o0zlcuBWI8sDdcnkf5aU0ERlRZAbkwMHPX1cUtjszlMPdL38
-	 S1b6ZxUhfwR3IuBuqzMcFMsOubgserxyc4QJoNuO0ut0gfcaSWRY7T92LX05cN3tEJ
-	 DLJRIviLFdGoQ==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5461dab4bfdso6377350e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:28:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVPzioYZB78cEtF4TqOBAkI7cMC0QNS4ReS/6uNNBgX+MJ5vm13qBHTpWJYGr+i7/wc2vd/UBCU4M/6d3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW7+iJYoGZr4Koc2hs0qsh4TS579l1kPYFZCQGxTz6zTgk+p9N
-	riT3BgzixWzAO6ArBi582BjSJ6OXhd50wXv5mJ1UkQfzJ9aScr0LCVuYoDF/teDCP92zYFm8NUN
-	250RMJYnVqxH8+Xns6ev2Y5yi0BE=
-X-Google-Smtp-Source: AGHT+IEo2P1y8oZ4sGjozx2IPF/FoxHw0AwPGW5G+13Hqko9jHR6xC99gVXu+gG39GPDa7xUUBqQyzk+N/BNjhsnf4Q=
-X-Received: by 2002:a05:6512:ba6:b0:545:8f0:e1a4 with SMTP id
- 2adb3069b0e04-54838f5b0c7mr7334086e87.45.1740472126391; Tue, 25 Feb 2025
- 00:28:46 -0800 (PST)
+	s=k20201202; t=1740472227;
+	bh=oZsoK1cw3ClR6Nvp43TWcRmZZIKhQh28C4n1vCWF5FQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=A7Xih5upTi0RucZKSZsjhlhz9rIPqa/Ksxxu4SG2hoCyDAmzzfT8bkidF6R7K3VL9
+	 MIMb+0nYi/yL84ZRGq+miuincj+Sg/slYoEqTxsrjFye/hLYlqHM9wOKGkWhnsnqpr
+	 q1qtVk0HDFbaBxmnqgLwRPJOYQLl1TXkdFJSnTCqL/fnU0VA5hLSq9YCueSV+7LFJq
+	 AH+sPfRdsEN6jc+05/mZVhf95l3jc+nBTaxFQOpG1j98wwwPvR66tJXX40hmZ0edSZ
+	 ara+y/OnhrdZmSjl7+W+/aFg2phpjUpJbfqSARDtLoRoZgUKTnnfoS5iokDy+n0Ilq
+	 9yMJ4xcU9cKFA==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Frank van der Linden <fvdl@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH mm-unstable 0/2] mm_init: rename *init_reserved_page* functions 
+Date: Tue, 25 Feb 2025 10:30:15 +0200
+Message-ID: <20250225083017.567649-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224062111.66528-1-kpark3469@gmail.com> <CA+KhAHYujgeC2kAd-vs0N0zwprpeqtD8G-8DpJ0w2RSxzZ5SQw@mail.gmail.com>
-In-Reply-To: <CA+KhAHYujgeC2kAd-vs0N0zwprpeqtD8G-8DpJ0w2RSxzZ5SQw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 25 Feb 2025 09:28:35 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXH-QmuXGi-5MSEzz7zSpPYWvM2eBPN-NbWF+R=49P2_2g@mail.gmail.com>
-X-Gm-Features: AWEUYZmXdqSofSbFbm1Jzg5QlVhvXfgc9GSCI-mItVYgS6fAb-clLZXGzXceAac
-Message-ID: <CAMj1kXH-QmuXGi-5MSEzz7zSpPYWvM2eBPN-NbWF+R=49P2_2g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kaslr: consider parange is bigger than linear_region_size
-To: Keun-O Park <kpark3469@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, Keuno Park <keun-o.park@katim.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Feb 2025 at 05:48, Keun-O Park <kpark3469@gmail.com> wrote:
->
-> On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Keun-O Park <kpark3469@gmail.com=
-> wrote:
-> >
-> > From: Keuno Park <keun-o.park@katim.com>
-> >
-> > On systems using 4KB pages and having 39 VA_BITS, linear_region_size
-> > gets 256GiB space. It was observed that some SoCs such as Qualcomm
-> > QCM8550 returns 40bits of PA range from MMFR0_EL1. This leads range
-> > value to have minus as the variable range is s64, so that all the
-> > calculations for randomizing linear address space are skpped.
-> > As a result of this, the kernel's linear region is not randomized.
-> > For this case, this patch sets the range by calculating memblock
-> > DRAM range to randomize the linear region of kernel.
-> >
-> > Change-Id: Ib29e45f44928937881d514fb87b4cac828b5a3f5
-> > Fixes: 97d6786e0669 ("arm64: mm: account for hotplug memory when random=
-izing the linear region")
-> > Signed-off-by: Keuno Park <keun-o.park@katim.com>
-> > ---
-> >  arch/arm64/mm/init.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index 9c0b8d9558fc..2ee657e2d60f 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -290,6 +290,11 @@ void __init arm64_memblock_init(void)
-> >                 s64 range =3D linear_region_size -
-> >                             BIT(id_aa64mmfr0_parange_to_phys_shift(para=
-nge));
-> >
-> > +               if (range < 0) {
-> > +                       range =3D linear_region_size -
-> > +                               (memblock_end_of_DRAM() - memblock_star=
-t_of_DRAM());
-> > +               }
-> > +
-..
->
-> In most cases, the hotplug memory code will be working the same as before=
-.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-How so? Such memory will usually appear above memblock_end_of_DRAM(),
-and due to the randomization, there may not be any space left there.
+Hi,
+
+Following Wei's comments on my patch that renamed init_reserved_page() to
+init_deferred_page(), I think it makes sense to pull that patch out of KHO
+series and merge it now.
+
+To take into account the refactoring of that function in mm-unstable there
+is also a patch that renames __init_reserved_page_zone() to
+__init_page_from_nid().
+
+[1] https://lore.kernel.org/linux-mm/Z71z9fO6tE5Px8rT@kernel.org/
+
+Mike Rapoport (Microsoft) (2):
+  mm/mm_init: rename __init_reserved_page_zone to __init_page_from_nid
+  mm/mm_init: rename init_reserved_page to init_deferred_page
+
+ mm/hugetlb.c  |  2 +-
+ mm/internal.h |  2 +-
+ mm/mm_init.c  | 10 +++++-----
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+-- 
+2.47.2
+
