@@ -1,119 +1,115 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186A6261591
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:47:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D393266573
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476840; cv=none; b=LUQ1A3RjSocRKAljyHWb1uIm59+PoAhzTzZHrYw1BzyTSzt7QZO5L/rjNU2zBEhoVxdEtoXP7MNAsPALZs0XDvZb4fvpOIn2XSU+wInwwu6qW17XZugCvKfGsfw4YTBNcQonD0Ku8fFth/G0tiK0435RnVIqxTITy/TRC25EKTo=
+	t=1740476844; cv=none; b=A2L6MFqbH1AgPVVXWkSoSwK5FewNSghOSzIo8TLABo3VJ3dPdHjzEf5v3MkqE8vkmDw4WLWvvjxjr5HjGOKCivCd4e5kA5XMgpBsWh1h/I8M8MwK4iEsmKDLgr4nWUyxqcFZbsNyBumYI3LvMTqGd89UXp4c6cT8ce+fRKmmR7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476840; c=relaxed/simple;
-	bh=1IHwqesQk08lufeZTBYIk2f7P1gwtjDf0lQkrtr/4QE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fg2oleUKTtpFvOIaJ+X2OA1EmKnKS3Pe2yYnCmUP4Rd/zM5mp87WilZ6ATjhtO5/uNRm/h0dqYSW8clRb0Z5cd++mRoFGQ9Q1bD/mTUDtbVKZ20KPdRAD7zWlPLBM6kLGVLLYvAZTpWm5pW1/5B+Lwj2G1manXMTKT76oOIMQ7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=WkOHmzOu; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1740476844; c=relaxed/simple;
+	bh=wP27JPweH/6fjM+NMVybUHMlDRdaIL6FUjjR0i8msYc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lP/MO/s4rsKOGE02ts7HjNBjIfaLVgmXcoOZgQB1WW5M3cxR8V1i/emsrqdqNty3WsiXSuaqhm9c/XKCEKOi9MZaLRUS2kFzgagC5Nx7vOPCzzgYrOLMhapxZPMnzWna3hw30ONY/P/+YmEviz+KtsCfZlmCK/2nXObBmDl71cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YxUfeHQY; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="WkOHmzOu"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-439846bc7eeso33425145e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:47:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxUfeHQY"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fbffe0254fso10874026a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:47:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1740476837; x=1741081637; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bU6pYEvOEizzQLjYkTI7JJD3Z+QYLCwitlQcIgyNBJQ=;
-        b=WkOHmzOumY1waLkpjZw3tzL3PpXCVevPmR4kQrkd5p5vU/JgrqVMCrTBZYJMX0Nt8H
-         8thHkM3Bq/e6U9llu74NZwYlZuBJQhb9y44XqMsXlGXWJt9FH0DFjX6PiD+UYThczyAB
-         uJhizL991Q15oSU5f1BXEroqPXTdjg3OoOvZhH6zTy5ULmYXBFJK0iutp6KlBzba2iX/
-         n/SOxo6jpikliu/BZaO4khcBuCEBV0rjOTIY8eKDUqKNkWL7JvFficEcwMXARJ18iNV+
-         jQDxKq0GROiELff3l6ovzhG0WWdlfowseAbmxr+CuDLcroMnoEBCRRwZoSMVLT4eSdRh
-         gjBA==
+        d=linaro.org; s=google; t=1740476842; x=1741081642; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T+f+044xs9oe+QU9W9buNo+/acydIG20YX/T/a/LsZc=;
+        b=YxUfeHQYZS9+9UqfDZE2+WbJIw5q8IME+o6qeHuufATz0PgJfa1wJpUDROVhaQ/dYX
+         eh5vDiDhTjRrFI1SgHspgXJqgwnHV/bKVOhwswxqr934rvGACUGB01TXtSJMQjhw/Cxi
+         PCCNrG69yfACsZXF6EQ8lrk0E5cuB7K1Tx/zm2DQjTlXA09I/xiOT1gkKMG8eoukSbCD
+         BW9LTJpVO7ZqSF5QSvwyPxwHkJCpJVEVVBkuDa7rSfvPgKwoHAdowy9EBOpPtJh8RHA/
+         ffiM3D/zfqBWYnwIoztbktQC+mAyjCt1XgpNSwZExK7vu7z1j044WKZA6CNNP+rIrn0o
+         agZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476837; x=1741081637;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bU6pYEvOEizzQLjYkTI7JJD3Z+QYLCwitlQcIgyNBJQ=;
-        b=cCy5aE/XbULzEAHul6d9Zc8lzsmoW/3lyqJgczVb5nbZJR43SCzoyEuIpmO+GxlZXT
-         /JMXVpb5kUT/i7kaHzUveqoAV+tH1Y5NdZgjGdorDf1Zc1DXycvALbClfFZPFXFAfIyN
-         9CZNL1/k7+cHA1M5f01rZhhhNLvonDhmyk3C6801MO369zuGGhACad0+NakfQECxM52N
-         B8PIL0zY7/DC16WwJtD4nd7hzSKpulL0rzAjbP+mpJKIYeFT78IECRDtRD22x+zcUP5z
-         4wbRXnjrJjgUYy4VRHLOQ97xzngBjqZWdrSXzXkAhUcHi7gKGMJsQ245e5XJ+zOqa+fo
-         1aqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVIvraOTJAoI6+KQM6jnHu+CiWE4cZRT6BPb8XSCyD4UENSPV06/vGgXjZRbuFITcNe6KsQFIj2q//vwA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+Q8RdSs57XRDMaypba5/fa5uNT0uCR7oir+7y31Y0fphP6MDS
-	Buo1lEJzpHvKvtPhGd4nRJVU6Vo+B+UlWFZ4jTH8EyGNpNv5qlPPF3/iA1tMHsU=
-X-Gm-Gg: ASbGnctt5a5ZI68s85TyDjo+XFshe4SNiczROrvqlgeAybOExE+m7YtdU2yTParrnWC
-	sv8yvj/LmXOJyTuC/J9CidRSPkbSD0fTBHLwgpbnc9cQpsD7GI55XphqgmRTF27mCKFRcoQifck
-	Zgkzg15Xfaim22cH5YLRGqzDkZi2sB5u31mKrcPAdNwF7UnSTZEUL9cOxHOKEUD6UVnkjdU22Lz
-	eLj+2nwBWmnsPrwzxoDNkdp2UcKrtM+PTuQQZcd377N6zoSpB4QeqziUuf4zBzKmEaatS3Ush+5
-	hh0eN7S9N+10r2DyFx6oPRfHcXVKTuKCZe06UQJNhIzF6j5yv45kg6gJbA==
-X-Google-Smtp-Source: AGHT+IEH9BuTR7e3cX9hlXLEtnZAxiSr3msyKmpW1dMtJNLMv3DVluSpKIXlP3IFKnIPJE4Vi+6X+w==
-X-Received: by 2002:a05:600c:1c18:b0:439:96b2:e8f with SMTP id 5b1f17b1804b1-439ae21d19fmr131970375e9.28.1740476837202;
-        Tue, 25 Feb 2025 01:47:17 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce740sm134182475e9.4.2025.02.25.01.47.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 01:47:16 -0800 (PST)
-Message-ID: <2907ae61-5e67-4db7-89df-821da999fbf1@blackwall.org>
-Date: Tue, 25 Feb 2025 11:47:15 +0200
+        d=1e100.net; s=20230601; t=1740476842; x=1741081642;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T+f+044xs9oe+QU9W9buNo+/acydIG20YX/T/a/LsZc=;
+        b=Ttkuvq20eOmiZNRw1xdSwlBJntRgG/8q09cdO/mdk8EfFPK6nAtTW6IKJMlOD+eq38
+         l0Y80ScgnrUcL66pDHsgJ94wG51ADR4NoSfpLfy/5j1Q8pBuP58DpaydY12rtuoNhQaL
+         bNSDpiapDyMs+bkhkx+FSlRbGwA/BmkBjzZilokOhBg0v725EeVEnzT7jgAOFeAomwzb
+         LYKVUTzabhEthb5feVPMdSXE7DStNe7vH1P3L0U1xhvOG//E95z73Hp06Zt6Fjqg5rvP
+         HhfYEgUn83Uuixjx1Kq8SYCypa7vuuFiP9a5Rr9E7J9Px7SELmK2aRbKrHUMJdwAKUQh
+         AAig==
+X-Gm-Message-State: AOJu0YyMEOScX9PxJTUG0H18HrMfs7AREGssx1kaEVIv1cNsgMSZTERn
+	Au2ekiQz6TFNJI/Mp60cYLFxKqV4mcLm4j2angP2HuI1yCsJOyBCAXCfUB21S2Y=
+X-Gm-Gg: ASbGncvGlm8EUe7POfZ6REEVrlnuNo+VKSAYA9QxqbVt27dDsd1Zp1sv5H/gN5ivUeH
+	9rdMxA1yrQXMUDqGPcMx/Ph4KQyAItlavi1RY6pLTRD+JEtGz6O/99fK/QdwyT/1e+7YIs99WRk
+	EhWOTTS7KkqEu91m1G3ojuMBu5imAiQWTgfkyN/HTO6RHO/mkKb8TkJsr0p0RJlypXv8qVwXdc1
+	shyJct3uwV51J5J2X8LwrlT6485xAKWaR5gdgf7PbZnclA4kyXX64qd+dUnYKV8HT/kKAdbBvEG
+	SoOVjdbQOKof1ek5k5Req/TfzPc=
+X-Google-Smtp-Source: AGHT+IEpV3O0DpZJB5fu1atlN0Tq9K+PHFsKxd1ALff89Dfbc3fdDd/hO40dZKnKimmZmJUjhEkl7Q==
+X-Received: by 2002:a17:90b:2644:b0:2ee:dcf6:1c8f with SMTP id 98e67ed59e1d1-2fce78c78a0mr31431819a91.16.1740476841935;
+        Tue, 25 Feb 2025 01:47:21 -0800 (PST)
+Received: from localhost ([122.172.84.15])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb05f913sm8077113a91.25.2025.02.25.01.47.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:47:21 -0800 (PST)
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Benno Lossin <benno.lossin@proton.me>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linux-kernel@vger.kernel.org,
+	Danilo Krummrich <dakr@redhat.com>,
+	rust-for-linux@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH 0/2] Rust: Add cpumask abstractions
+Date: Tue, 25 Feb 2025 15:17:13 +0530
+Message-Id: <cover.1740475625.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 net-next] bonding: report duplicate MAC address in all
- situations
-To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org
-References: <20250225033914.18617-1-liuhangbin@gmail.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250225033914.18617-1-liuhangbin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 2/25/25 05:39, Hangbin Liu wrote:
-> Normally, a bond uses the MAC address of the first added slave as the bond’s
-> MAC address. And the bond will set active slave’s MAC address to bond’s
-> address if fail_over_mac is set to none (0) or follow (2).
-> 
-> When the first slave is removed, the bond will still use the removed slave’s
-> MAC address, which can lead to a duplicate MAC address and potentially cause
-> issues with the switch. To avoid confusion, let's warn the user in all
-> situations, including when fail_over_mac is set to 2 or not in active-backup
-> mode.
-> 
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> ---
-> 
-> v2: add fail_over_mac != BOND_FOM_ACTIVE to condition (Jakub Kicinski)
-> 
-> ---
->  drivers/net/bonding/bond_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-> index 7d716e90a84c..7d98fee5a27f 100644
-> --- a/drivers/net/bonding/bond_main.c
-> +++ b/drivers/net/bonding/bond_main.c
-> @@ -2548,7 +2548,7 @@ static int __bond_release_one(struct net_device *bond_dev,
->  
->  	RCU_INIT_POINTER(bond->current_arp_slave, NULL);
->  
-> -	if (!all && (!bond->params.fail_over_mac ||
-> +	if (!all && (bond->params.fail_over_mac != BOND_FOM_ACTIVE ||
->  		     BOND_MODE(bond) != BOND_MODE_ACTIVEBACKUP)) {
->  		if (ether_addr_equal_64bits(bond_dev->dev_addr, slave->perm_hwaddr) &&
->  		    bond_has_slaves(bond))
+Hello,
 
-LGTM,
-Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+This series adds initial cpumask Rust abstractions and adds a new maintenance
+entry for the same.
+
+This was earlier sent as part of a larger series [1] and it was suggested to
+send these separately.
+
+Depends on: [2].
+
+--
+Viresh
+
+
+[1] https://lore.kernel.org/all/cover.1738832118.git.viresh.kumar@linaro.org/
+[2] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gmail.com/
+
+Viresh Kumar (2):
+  rust: Add initial cpumask abstractions
+  MAINTAINERS: Add entry for Rust bitmap API
+
+ MAINTAINERS            |   6 ++
+ rust/kernel/cpumask.rs | 168 +++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs     |   1 +
+ 3 files changed, 175 insertions(+)
+ create mode 100644 rust/kernel/cpumask.rs
+
+-- 
+2.31.1.272.g89b43f80a514
 
