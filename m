@@ -1,122 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FBF19C54F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D911A207640;
+	Tue, 25 Feb 2025 10:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740480425; cv=none; b=bJTOlNVr+0Eewvkhf2IR/AU6v7SweUKBh2YK1se1gTG5u7zU2u2ema3sIxGycOv9epcS5ulx8HCzkxis0DkZxquHmX/0M0b3WZiL+xf6SQYdNpqI0rrOJQ4KtoMoA33H4fTZD0bej8Tf7FHE46BH3k7mFbwfPSPFTQjONQs9mDg=
+	t=1740480469; cv=none; b=WBOE8YDZzu/HCIYTh4zlGZWr7jc++AMyVsP5tFWQD3GtbN7DB+mGwIwADJzBzh/Gnq+WAg84IbcSquP7t22CStmT4Ivbbj8CxSVW1hprVbdvSSK4GQTHR7NHhnwpUDcDZCpTpAvGOc3MAGXsYur6hDIeK6uxBOzkbYRAFSxMXsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740480425; c=relaxed/simple;
-	bh=HeA23Fblfe8AuqDknPqy/QZb+v6/Cv+7JHe3jUfuCVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GDWJKMOs58MmIq0RARPomezFYuVVh9ucK85UIQZB/ednJgm+JXo+BITAYp56iAfqHXODYGTYEXQsGws7TQewoOMAdt9ZGOGRlcvTXQ4C3Ode2ySKHzH7McJ2rRnpELgQcDzCo6iO7N8CU69GSK1B+5ss4CA6tMNp1IbPEX6NVn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhDLYPfT; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740480469; c=relaxed/simple;
+	bh=/KNAMi38Asr2k99fcPjp85/r0zVkoFead7fJ8kaLyls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pl8K9Qrab2fPgwMeewt3PSh+VryjfD7Cq4LWav2UfkNe/bfR7ojMbFSHcGrvx8Tr3yt1mkXsEyfec3D4Gi6rf0GKeErFX9bwq9kR3VZSgQ+tJEEUXyiEQShuGy9rgN810C3V9NVXzyoAxCRGdDoiJ6Ndt1bbTxPmrtbP78cyRS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=XppyBFO1; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhDLYPfT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740480424; x=1772016424;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=HeA23Fblfe8AuqDknPqy/QZb+v6/Cv+7JHe3jUfuCVc=;
-  b=WhDLYPfTam3vL5fz3S8KvaAdZv/zMkJrRKwPpOz2Z2IjEbUBqhBdwi1e
-   AElGu7AP1+R7rOZa6xozURTZC5INNDL5FfoUaEdwlrNt8ayPosvmr4OWD
-   h68AWNGFOgVMrV2EKdpvfTvTDhV70F5GboqaeXc5W4/Gdqj3Q4GuqDXuU
-   QjjTsM8p7TDvzA3/i8uSZQVyelSLJjRgHPiirS25lbtHjLeCG/UlchR5A
-   haI2ijLlKMAngcl9Yw+Bq2kGkKC0GVMnVPkvnjK92VT8X+lWVeTHd8U//
-   FCiJmdentkWXYJYOTdvFu1v+6yB7tINTbQojh4t2gpUZFizDf73W2u4rA
-   Q==;
-X-CSE-ConnectionGUID: KxZGHAEWQR2G9DeZoNN/8Q==
-X-CSE-MsgGUID: w1nHj54XRTm16jif0RVPaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="58702593"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="58702593"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 02:47:04 -0800
-X-CSE-ConnectionGUID: LXLpCp75TQ+IoemliAV8+g==
-X-CSE-MsgGUID: TKTEqMkwRP2TNs6UWQCmnA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="139596556"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 02:47:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmsSn-0000000Exi7-3rEA;
-	Tue, 25 Feb 2025 12:46:57 +0200
-Date: Tue, 25 Feb 2025 12:46:57 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	Kerem Karabay <kekrby@gmail.com>,
-	Atharva Tiwari <evepolonium@gmail.com>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v5 2/2] drm/tiny: add driver for Apple Touch Bars in x86
- Macs
-Message-ID: <Z72foRL3diil9icd@smile.fi.intel.com>
-References: <3457BF95-0E50-4B70-86DE-EE5EE95D3ACE@live.com>
- <4D7C00B4-7B75-4715-8D37-0059B22C030D@live.com>
- <Z72chunE_vvxtjLQ@smile.fi.intel.com>
- <PN3PR01MB9597BF95EC490951D75748F1B8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="XppyBFO1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740480465;
+	bh=/KNAMi38Asr2k99fcPjp85/r0zVkoFead7fJ8kaLyls=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XppyBFO1zrWOk38LONjnkPJFbnC3SR/T47AtqinrOTthalqcfKkLojzzNkWn1mCTB
+	 WYaN+Ld3k6nhCSodMoQvHhBYYJ8UKNDSkepKJkQp0fsoh1nihxAcsCXv9XIyO+uAB9
+	 mwzdXn5zqNdNnwph2mE6RhpMFRywLpoArNhOp0u1O9D8lGhmaNfsMPkJjDfntGgeM/
+	 WpzAK8WpCs4wT9BsqfFRTGdvmc4TAZ9OfEq0YYDJwB2IBh0mg11VMs+rbUsPt1Yaks
+	 6uQE2XB/pwWdMdZruzbzMhCMTDPA6d5Gs/0/lXfTzDxGGP8UZ0T3TjBMfrdA66nOns
+	 PLGH0y/tgtnag==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id BDF2117E09E7;
+	Tue, 25 Feb 2025 11:47:43 +0100 (CET)
+Message-ID: <1bfe965c-c166-40d6-9cd4-e50fb46fab8f@collabora.com>
+Date: Tue, 25 Feb 2025 11:47:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN3PR01MB9597BF95EC490951D75748F1B8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] power: supply: all: switch psy_cfg from of_node to
+ fwnode
+To: Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Hans de Goede <hdegoede@redhat.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?=
+ <pali@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+ Samuel Holland <samuel@sholland.org>, David Lechner <david@lechnology.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>,
+ Purism Kernel Team <kernel@puri.sm>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
+ <20250225-psy-core-convert-to-fwnode-v1-4-d5e4369936bb@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250225-psy-core-convert-to-fwnode-v1-4-d5e4369936bb@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 10:36:03AM +0000, Aditya Garg wrote:
-> > On 25 Feb 2025, at 4:03 PM, andriy.shevchenko@linux.intel.com wrote:
-> > On Tue, Feb 25, 2025 at 10:09:42AM +0000, Aditya Garg wrote:
-
-...
-
-> >> +static int appletbdrm_probe(struct usb_interface *intf,
-> >> +                const struct usb_device_id *id)
-> >> +{
-> >> +    struct usb_endpoint_descriptor *bulk_in, *bulk_out;
-> >> +    struct device *dev = &intf->dev;
-> >> +    struct appletbdrm_device *adev;
-> >> +    struct drm_device *drm;
-> >> +    int ret;
-> >> +
-> >> +    ret = usb_find_common_endpoints(intf->cur_altsetting, &bulk_in, &bulk_out, NULL, NULL);
-> >> +    if (ret) {
-> >> +        drm_err(drm, "Failed to find bulk endpoints\n");
-> > 
-> > This is simply wrong (and in this case even lead to crash in some circumstances).
-> > drm_err() may not be used here. That's my point in previous discussions.
-> > Independently on the subsystem the ->probe() for the sake of consistency and
-> > being informative should only rely on struct device *dev,
+Il 25/02/25 00:21, Sebastian Reichel ha scritto:
+> When registering a power-supply device, either a of_node or the more
+> recent fwnode can be supplied. Since fwnode can also contain an of_node,
+> let's try to get rid of it.
 > 
-> I'm not sure how drm_err works,
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-It's a macro.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> 
+#MediaTek
 
-> but struct drm_device does have a struct device *dev as well.
-
-Yes, but only when it's initialized.
-
-> Anyways, this is something I'll leave for Thomas to reply.
-
-The code above is wrong independently on his reply :-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> ---
+>   drivers/power/supply/ab8500_charger.c       | 4 ++--
+>   drivers/power/supply/acer_a500_battery.c    | 3 ++-
+>   drivers/power/supply/act8945a_charger.c     | 2 +-
+>   drivers/power/supply/axp20x_ac_power.c      | 2 +-
+>   drivers/power/supply/axp20x_battery.c       | 2 +-
+>   drivers/power/supply/axp20x_usb_power.c     | 2 +-
+>   drivers/power/supply/bd99954-charger.c      | 2 +-
+>   drivers/power/supply/bq2415x_charger.c      | 2 +-
+>   drivers/power/supply/bq24190_charger.c      | 2 +-
+>   drivers/power/supply/bq24735-charger.c      | 2 +-
+>   drivers/power/supply/bq2515x_charger.c      | 2 +-
+>   drivers/power/supply/bq256xx_charger.c      | 2 +-
+>   drivers/power/supply/bq25980_charger.c      | 2 +-
+>   drivers/power/supply/bq27xxx_battery.c      | 2 +-
+>   drivers/power/supply/cpcap-battery.c        | 2 +-
+>   drivers/power/supply/cpcap-charger.c        | 2 +-
+>   drivers/power/supply/ds2760_battery.c       | 3 +--
+>   drivers/power/supply/generic-adc-battery.c  | 2 +-
+>   drivers/power/supply/gpio-charger.c         | 2 +-
+>   drivers/power/supply/ingenic-battery.c      | 2 +-
+>   drivers/power/supply/ip5xxx_power.c         | 2 +-
+>   drivers/power/supply/lego_ev3_battery.c     | 3 ++-
+>   drivers/power/supply/lt3651-charger.c       | 2 +-
+>   drivers/power/supply/ltc4162-l-charger.c    | 2 +-
+>   drivers/power/supply/max17042_battery.c     | 2 +-
+>   drivers/power/supply/max77650-charger.c     | 2 +-
+>   drivers/power/supply/max8903_charger.c      | 2 +-
+>   drivers/power/supply/mm8013.c               | 2 +-
+>   drivers/power/supply/mt6360_charger.c       | 2 +-
+>   drivers/power/supply/mt6370-charger.c       | 2 +-
+>   drivers/power/supply/olpc_battery.c         | 4 ++--
+>   drivers/power/supply/pm8916_bms_vm.c        | 2 +-
+>   drivers/power/supply/pm8916_lbc.c           | 2 +-
+>   drivers/power/supply/qcom_battmgr.c         | 5 +++--
+>   drivers/power/supply/qcom_pmi8998_charger.c | 2 +-
+>   drivers/power/supply/qcom_smbb.c            | 2 +-
+>   drivers/power/supply/rk817_charger.c        | 2 +-
+>   drivers/power/supply/rt5033_battery.c       | 2 +-
+>   drivers/power/supply/rt5033_charger.c       | 3 ++-
+>   drivers/power/supply/rt9455_charger.c       | 2 +-
+>   drivers/power/supply/rt9467-charger.c       | 2 +-
+>   drivers/power/supply/rt9471.c               | 2 +-
+>   drivers/power/supply/sbs-battery.c          | 2 +-
+>   drivers/power/supply/sbs-charger.c          | 2 +-
+>   drivers/power/supply/sbs-manager.c          | 2 +-
+>   drivers/power/supply/sc2731_charger.c       | 2 +-
+>   drivers/power/supply/sc27xx_fuel_gauge.c    | 3 +--
+>   drivers/power/supply/smb347-charger.c       | 2 +-
+>   drivers/power/supply/tps65090-charger.c     | 2 +-
+>   drivers/power/supply/tps65217_charger.c     | 2 +-
+>   drivers/power/supply/ucs1002_power.c        | 2 +-
+>   51 files changed, 58 insertions(+), 56 deletions(-)
+> 
