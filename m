@@ -1,114 +1,136 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77255207653;
-	Tue, 25 Feb 2025 09:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476397; cv=pass; b=ngiSj0d9kFTLaDXGuEWUlJb+z1WopAjg73DJUNginOLZ1S6u68BK/iG3IspWaVSgEnM4wGqeLdgFQ4Y3Hutjxj240jg1g9BBxOVuHPmRaqDO20IMp6zGiACTdcbKAM0yBve4oPSltjNqI7wMt92dZXSbBn1m9kcZ9/wNOOaECKw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476397; c=relaxed/simple;
-	bh=UzMDKQkt/APhAY845N7QOMHur70PW2mkFrgoMVI+9Hk=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=K/fPZ535K6GdgWJstqsqdeQThbgXifcbSMh7SLgyca2nA4qVPcC3W89R9b5zXrpdzMQaGBfNf64Bzbi3M4tGsBRDsJqyjn8fQQZQiH+J7Ax/ZwAsiJqNUsfAaZA6KBiIhnGNIYfKYxbSdkJcg8unR4nYJLXN3LKtEx5tYGUBmBE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=hvrX7kV1; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6054B13A88A;
+	Tue, 25 Feb 2025 09:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476430; cv=none; b=F1FOaOfxZlrKrfkVp5NJa3lkLK1p0IV52aU2UwdMCDsuLSOswM8qjq/kdHE/KFwIZRWMCxpe6k+E9eagApGhIgV/VkEvuL4VbC9WxVjagHywb48d3los+OBlwhENhpa5WElWWzTBSop9in1uwhUscwuValQ4YALVdz7mzv2D5G8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476430; c=relaxed/simple;
+	bh=9MeSK15KTX1GpVUkanLg3jxBL8S+QzQcHgh3wTNK8Oc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OiJ2RSz8lImVDxsEvPgyEAes+P69mvTL0GZjBa54YPbHfp9vVRsgXW7eGm1oLfrct+DC9C4vaQpROjdnBhHzzrO3SMirV1XSeQbqcCHCO/RKppsZqKKleC2/mJYKjR/gGCIwJzAi43j6nLDsYruuCfq09R5gx51adgxy37j4jBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kmcl2aJp; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="hvrX7kV1"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476343; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lKfwm+GPGJHlomdOtbhL4nq673l9r+hfg/rzvXJLptro37IyLVJkuwTn1bISBbdYQNzNv6iqLdiv2RJZ1LV/waygQ+hbKlWlCvOc1QvjSf1PQ6MjlyjvIIe9iOlURL9rdVsbs7TBUpGznokogv9nvxAYzTwiSYdH+93d/+JQREM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476343; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=aFI/b2Tgjv0Ejq2UEKDmEnSYenBMkOjErWg/HfODXaM=; 
-	b=MeuxPlFZhCK/HUxOfsw3E5IfUTYhlHyX1xaYNNkRqt+4aqso1ZuFGo1ac5qjswMaukwdpgBedPpzodtdGTae4I3fw7Wmyg7mfSgoZ29RkDih9oxyD65kwzP92Rw1GW/bC7ZDJxkFMVU3VtyQJem3y7gMUi28ZmmtuMsVFyWZpYA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476343;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=aFI/b2Tgjv0Ejq2UEKDmEnSYenBMkOjErWg/HfODXaM=;
-	b=hvrX7kV1Khy07WyM9Yc3x1OUPJLy6kTcKN3Vbpr9KTLdMwsEtnni2IsI14jk1Wda
-	KbzQCO3d8TrVmvgEK9Wp++bjQNC/kF7wF9lIzGWqa8MOTp1/E7RS3MnCywn16nOc478
-	9ZP6m8TMz4yMjzzRzroG2dewbuQFAMxZGc3Ovo9M=
-Received: by mx.zohomail.com with SMTPS id 1740476340814587.5627182901516;
-	Tue, 25 Feb 2025 01:39:00 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kmcl2aJp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740476428; x=1772012428;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9MeSK15KTX1GpVUkanLg3jxBL8S+QzQcHgh3wTNK8Oc=;
+  b=Kmcl2aJpA8oTw4fmvSTARNwxKw4RfMtg8KiIzu5L8TjtN3NHhaVvOAeW
+   1aiWkdHYvukahe/cJQu59P6YYyE93Y4EjXZ95CQ2VPMaH1uIocrksq35T
+   yzlKkFg4aluazGEyai0pQ3miAtYH2gixnT6RiT2GryCaYYopBhQSWYiLV
+   uKGZECihTCtVbQwsj5VpNSFJO4M/yEfxh4f0GKDPpCMAAtK08kom+k6iE
+   HXNbN5RZoKfxumaif+gTSlrcHAHD0EL2ph1fxCb1/RQzpewlgvI3l9cuN
+   5c9bNQ06bRaXLIm6HJ/F2JIkq5wHtORhdODrh9QolAi0xWNfj044YghFB
+   A==;
+X-CSE-ConnectionGUID: foDcJOSLQem7Gatk7z0YIw==
+X-CSE-MsgGUID: 1Zeabzl8Qr++C9VHi4GlYA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40510239"
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="40510239"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 01:40:27 -0800
+X-CSE-ConnectionGUID: wuPiuA/zQd22MTq7/2Oa3Q==
+X-CSE-MsgGUID: 1/aed8HrRI+DCsOedLJWuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117267075"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa008.jf.intel.com with SMTP; 25 Feb 2025 01:40:18 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 25 Feb 2025 11:40:16 +0200
+Date: Tue, 25 Feb 2025 11:40:16 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Guillaume Stols <gstols@baylibre.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v4 02/10] property: Add
+ device_get_child_node_count_named()
+Message-ID: <Z72QAOA9xXbP16K-@kuha.fi.intel.com>
+References: <cover.1740421248.git.mazziesaccount@gmail.com>
+ <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v4 4/4] MAINTAINERS: add entry for configfs Rust
- abstractions
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250224-configfs-v4-4-9af9b5e611f6@kernel.org>
-Date: Tue, 25 Feb 2025 06:38:44 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Joel Becker <jlbec@evilplan.org>,
- Christoph Hellwig <hch@lst.de>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>,
- Fiona Behrens <me@kloenk.dev>,
- Charalampos Mitrodimas <charmitro@posteo.net>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <FF9232AA-9511-4E55-BC7C-EE42EBB8FBC1@collabora.com>
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
- <20250224-configfs-v4-4-9af9b5e611f6@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
 
-Hi Andreas,
+Hi,
 
-> On 24 Feb 2025, at 10:21, Andreas Hindborg <a.hindborg@kernel.org> wrote:
-> 
-> Update MAINTAINERS with entry for Rust configfs abstractions.
-> 
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
-> MAINTAINERS | 7 +++++++
-> 1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 896a307fa065..9b4d5c12eb43 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5870,6 +5870,13 @@ F: fs/configfs/
-> F: include/linux/configfs.h
-> F: samples/configfs/
-> 
-> +CONFIGFS [RUST]
-> +M: Andreas Hindborg <a.hindborg@kernel.org>
-> +L: rust-for-linux@vger.kernel.org
-> +S: Supported
-> +F: rust/kernel/configfs.rs
-> +F: samples/rust/rust_configfs.rs
+> +/**
+> + * device_get_child_node_count_named - number of child nodes with given name
+> + *
+> + * Scan device's child nodes and find all the nodes with a specific name and
+> + * return the number of found nodes. Potential '@number' -ending for scanned
+> + * names is ignored. Eg,
+> + * device_get_child_node_count(dev, "channel");
+> + * would match all the nodes:
+> + * channel { }, channel@0 {}, channel@0xabba {}...
+> + *
+> + * @dev: Device to count the child nodes for
+> + *
+> + * Return: the number of child nodes with a matching name for a given device.
+> + */
+> +unsigned int device_get_child_node_count_named(const struct device *dev,
+> +					       const char *name)
+> +{
+> +	struct fwnode_handle *child;
+> +	unsigned int count = 0;
 > +
-> CONGATEC BOARD CONTROLLER MFD DRIVER
-> M: Thomas Richard <thomas.richard@bootlin.com>
-> S: Maintained
-> 
-> -- 
-> 2.47.0
-> 
-> 
+> +	device_for_each_child_node(dev, child)
+> +		if (fwnode_name_eq(child, "channel"))
 
-Acked-by: Daniel Almeida <daniel.almeida@collabora.com>
+s/"channel"/name/ ?
+
+> +			count++;
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL_GPL(device_get_child_node_count_named);
+
+I did not check how many users are you proposing for this, but if
+there's only one, then IMO this should not be a global function yet.
+It just feels to special case to me. But let's see what the others
+think.
+
+thanks,
+
+-- 
+heikki
