@@ -1,94 +1,142 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D24268FE0;
-	Tue, 25 Feb 2025 13:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F04A2690CF;
+	Tue, 25 Feb 2025 13:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489140; cv=none; b=mqpAjUqzY+yYvOiyYyKhR43iF+UN4lLNkbzJxZlyN1R6goFi5614HLHIoTl2ar8EV6i4G8SSZadhnyTuZQFyHqfluLc+RVfbFTSSS/UKW25T0q/mqT1pnorSDQJg9cRQ6VbMEusKrJhN3/TplFAAR0KsQ658m2Z5/zMSjpqqXTs=
+	t=1740489167; cv=none; b=HwzfMwe1XQfxvhzSsPLwXrzhJA7cFb2+XY8dbWkCLsVTYHOjWgiELypYjffrMz3NQafct3KYu5SSEf34pe6wmJnf5wF4+wEadvCGf0GJj6+Uqzk552ags41clIJZzWN+sdQ+nT//CGr5YTzHqw3S5PTRkJ71bF71IGgHFCFA3iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489140; c=relaxed/simple;
-	bh=IvLxYoqof+h1zVJG/BNtTm2YaSAll3uDPKebnBkZeA8=;
+	s=arc-20240116; t=1740489167; c=relaxed/simple;
+	bh=3WjxgzbN4yGK9NfJVETwPvCEg4jcFsjHzAIqxYBtDuE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OjsWvDrm3cDUxD3OL3Whg5u2OJFN/Dnr5IKWDKnCDHPoFnBPBFOnjlSjibFWgL1Iysn5UZdQViZC0wpe3KQV1snrIAI8bqtuqCQePxvHopit8wSgt7dg+GX7G36eBuF5d0TDuMlVoE2ruED7CFwPuO9D43f8PrBv9o8KNW/mai8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=R+P5YuYy; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="R+P5YuYy"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BE0BB40E01AE;
-	Tue, 25 Feb 2025 13:12:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id c4bYqnj3_9Ty; Tue, 25 Feb 2025 13:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740489130; bh=aiTNWBEfHf+ez36sasAzHhMIQIMyctxZwHgo6gKB6Mw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R+P5YuYy+OZ/H0lPGjVJHQxWsJs04IfzWC+ISVcf3ZN9KSB6OvDodmMfex4Yy1x2u
-	 r6faDzQZKIU3Iu2tTqVpaQKKGaCuhok+p1Hq5YRGt+YdutTwG6HmBcIxb4x9F7dlgB
-	 2gfbgmisBe1wtaiLS/qvowXP3wNnvPzbtKJZZnN0HQo8vvowQM5/3SpS9Q87y9orve
-	 ikFk8PaPmjBKIY2iMAPyW/YxM8zC74sDdsp1xuRx+SkN3SSHXJuuzq8RRWs43ktXGp
-	 AxC8j6B1EwTkKEYIvViQ2NXIwNmZbGfyLRAoQjluKomqXv6HYdEQ1WUmyZ8pHkghUo
-	 gI2YB7UQvqgt4xMUl4us6aAF1YdzoiFWYglTeswsdEhJWjJq46AXgdDTjQPd53da/k
-	 5zNH9Ram6tMTb93FdSAzpUGYI3q1dnrqwuQG9iXweUhJxXrs9Ngq9LIc4VzqeCDoYx
-	 +Ul8FNkMblB3xcPK90Mw+t5RsurnHqla6Lhyj+GT+qPZzbzrrBfhjpTE6fm7RKTPFX
-	 Tqz2Qs/caOiTNY06+7z1lgSiJgJ7K0OoxZRHuYwBWtmHydBVMRcLKGX+no07gVrMra
-	 1CWrloNwXOKyBh0dNoPy1v/AG98jabIY0XDVrDpVLx68C3Bly9mqRmHn/i79z8DXOU
-	 qfOiIi/2qI0blmaahfLhHqrU=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E989240E0177;
-	Tue, 25 Feb 2025 13:12:04 +0000 (UTC)
-Date: Tue, 25 Feb 2025 14:12:03 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	x86@kernel.org, tony.luck@intel.com
-Subject: Re: [PATCH v2 3/3] x86/mce: Make mce_notify_irq() depend on
- CONFIG_X86_MCELOG_LEGACY
-Message-ID: <20250225131203.GLZ73Bo6OgcD302H5e@fat_crate.local>
-References: <20250210154707.114219-1-nik.borisov@suse.com>
- <20250210154707.114219-4-nik.borisov@suse.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=nFMv6WAHpFhEJ33ir+wgF5WZ8QAA2i7bobvtpjrMtZI7pBZzt7zmD3T9eCB+u2bIt5w9WmyNDipFgcwZy44sFfCDqbD+c7gzGpYjuKPyszusdhyiAVOfvrzakmlwp5K651l0ZKfBsWmt10aQMS6clS/6di23reWorpEgcBHZm4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e05780509dso7873066a12.2;
+        Tue, 25 Feb 2025 05:12:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740489164; x=1741093964;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=huyKeKicvAsO+vZpf8pNQmuBsQVHWr+7B6dkrLsJZHE=;
+        b=i5SPtjS29YKjSK3A6OFokznpbkHo88irxGwV2KMKqRNHW6Xsi6TCha2P2KcrSNVn+6
+         qZt6KhxKoeJy8ZqM7RKdyCTi9VDESOagQOiI43RnKZOTJOVlVTGM6Mm/oz3epBoMBhRo
+         Dz1Lc4qRLu0LjewD4Ki0j9vHePqueWfb9Co/IgOMfdyhqwL6b0Mv/L3wneaDDKYoxm6J
+         8PAa9ixGJwj5FFqrpSPfXdwztazida1SVhbTlZY12bN8ZppTdrfo83tTMbYPHSPb4Gq8
+         /bc62AIEzwLF8oaM7VkP6LhYagskPxPNDWvsk4PWoZ9ZZBmGoqNSdKdt6s2xUCkilsmD
+         vXAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVk/Cx1TZM/8mJLHKvNo8nHT/U8lY4KC3lmOWCfO9KLggpv8duUrcfjgSHtuoAWBkI8jzbsdd/ujvuyfJ7wwdte@vger.kernel.org, AJvYcCWE3MEufr8X7nqLAfXqucsWHl6PjVf1KaITgmGjqvT04prE1H0ld/7OfqaHaXWyBs/G+IAwhVHKcug=@vger.kernel.org, AJvYcCWU8aOL0Q25dqUxnSSSu2lcI1c4dfTaQ2RNSC/fNfhWvwLgfec1kQLgATjJSbV/8gnUmQ5eCCyrEh/o/3V2@vger.kernel.org, AJvYcCWbTB0ja6xLPkJSeuEpnnGuBJlt6vRKhUG/W4GPlwyQqGRYMfNoC40pHNq/QsPHwErY9NfCBFhj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJNji9mVw7T2REL8gzj0MBKtr0hT+dm/nDBo05Xb5vcy++LMLd
+	K61vXykTyxxBJlJm3BgCs41BHL4+TiUaJs8kOlwydwhx50hMQQzd
+X-Gm-Gg: ASbGncuOWxnNdd2UfSyt3ch3ETgV3TjvGVs0T34imt6HO7c9X7y5NOmNyDOu9y1t6EP
+	bWHtHSd570Tvu1fkkETMokjnYxvs74v8qIV5cDafmQAPY3TKJl+dAlmyAi8A/+1p9tHLAeDBtnx
+	gfySrcY2cbf83/cpgGqk1UHfmWvLaceEyYC4xpKaII7/TZn5z0jHRV91ZBrj/7hGt99nCyxkQMm
+	nfj4VSGqdsbOZqLbRkLTR7z1YPZQvEbv+ccnv+ptcEwpjU1v+BBV2ZBBNChOkRv3J/3Xif12ibF
+	NJLLHbWvQwn5k7Oe
+X-Google-Smtp-Source: AGHT+IFlxa/+8iEwcPmxNR8k8h8OkLnc2bi5Cian4c/8JlV7dVrkWbU9Bfqx1Ids2urTRQbj+bOtvg==
+X-Received: by 2002:a17:907:7d8e:b0:ab7:ef48:1668 with SMTP id a640c23a62f3a-abed10feb98mr355246166b.57.1740489163680;
+        Tue, 25 Feb 2025 05:12:43 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdbe0asm139551366b.36.2025.02.25.05.12.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 05:12:43 -0800 (PST)
+Date: Tue, 25 Feb 2025 05:12:40 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH net-next 4/7] netconsole: add configfs controls for
+ taskname sysdata feature
+Message-ID: <20250225-persimmon-narwhal-of-management-41bafb@leitao>
+References: <20250221-netcons_current-v1-0-21c86ae8fc0d@debian.org>
+ <20250221-netcons_current-v1-4-21c86ae8fc0d@debian.org>
+ <7309e760-63b0-4b58-ad33-2fb8db361141@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210154707.114219-4-nik.borisov@suse.com>
+In-Reply-To: <7309e760-63b0-4b58-ad33-2fb8db361141@redhat.com>
 
-On Mon, Feb 10, 2025 at 05:47:06PM +0200, Nikolay Borisov wrote:
-> mce_notify_irq() really depends on the legacy mcelog being enabled as
-> otherwise mce_work_trigger() will never schedule the trigger work as
-> mce_helper can't be set unless CONFIG_X86_MCELOG_LEGACY is defined.
+On Tue, Feb 25, 2025 at 12:41:50PM +0100, Paolo Abeni wrote:
+> On 2/21/25 2:52 PM, Breno Leitao wrote:
+> > Add configfs interface to enable/disable the taskname sysdata feature.
+> > This adds the following functionality:
+> > 
+> > The implementation follows the same pattern as the existing CPU number
+> > feature, ensuring consistent behavior and error handling across sysdata
+> > features.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/net/netconsole.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 50 insertions(+)
+> > 
+> > diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+> > index 1b109f46512ffb7628c6b34c6efdfc301376dd53..5a29144ae37ee7b487b1a252b0f2ce8574f9cefa 100644
+> > --- a/drivers/net/netconsole.c
+> > +++ b/drivers/net/netconsole.c
+> > @@ -426,6 +426,20 @@ static ssize_t sysdata_cpu_nr_enabled_show(struct config_item *item, char *buf)
+> >  	return sysfs_emit(buf, "%d\n", cpu_nr_enabled);
+> >  }
+> >  
+> > +/* configfs helper to display if taskname sysdata feature is enabled */
+> > +static ssize_t sysdata_taskname_enabled_show(struct config_item *item,
+> > +					     char *buf)
+> > +{
+> > +	struct netconsole_target *nt = to_target(item->ci_parent);
+> > +	bool taskname_enabled;
+> > +
+> > +	mutex_lock(&dynamic_netconsole_mutex);
+> > +	taskname_enabled = !!(nt->sysdata_fields & SYSDATA_TASKNAME);
+> > +	mutex_unlock(&dynamic_netconsole_mutex);
+> > +
+> > +	return sysfs_emit(buf, "%d\n", taskname_enabled);
+> > +}
+> > +
+> >  /*
+> >   * This one is special -- targets created through the configfs interface
+> >   * are not enabled (and the corresponding netpoll activated) by default.
+> > @@ -841,6 +855,40 @@ static void disable_sysdata_feature(struct netconsole_target *nt,
+> >  	nt->extradata_complete[nt->userdata_length] = 0;
+> >  }
+> >  
+> > +static ssize_t sysdata_taskname_enabled_store(struct config_item *item,
+> > +					      const char *buf, size_t count)
+> > +{
+> > +	struct netconsole_target *nt = to_target(item->ci_parent);
+> > +	bool taskname_enabled, curr;
+> > +	ssize_t ret;
+> > +
+> > +	ret = kstrtobool(buf, &taskname_enabled);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mutex_lock(&dynamic_netconsole_mutex);
+> > +	curr = nt->sysdata_fields & SYSDATA_TASKNAME;
 > 
-> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
-> ---
->  arch/x86/kernel/cpu/mce/core.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> Minor nit:
+> 	curr = !!(nt->sysdata_fields & SYSDATA_TASKNAME);
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index d55b1903fde6..8b8553e144ce 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -591,11 +591,13 @@ EXPORT_SYMBOL_GPL(mce_is_correctable);
->   */
->  static int mce_notify_irq(void)
->  {
-> +#ifdef CONFIG_X86_MCELOG_LEGACY
+> would be preferable, and more robust if later on other SYSDATA_ bits are
+> added, 'moving down' SYSDATA_TASKNAME definition.
+> 
+> Also it would be more consistent with previous usage in
+> `sysdata_taskname_enabled_show()`
 
-You can't do that - I see mce_notify_irq() in mce_timer_fn().
+Good point, in fact. I will update!
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks for the review,
+--breno
