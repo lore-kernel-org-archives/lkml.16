@@ -1,71 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0C819258C;
-	Tue, 25 Feb 2025 17:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D28D1993A3
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:15:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503740; cv=none; b=fkp6mMR62vcCF0Rbmk7q3V9Al9fZ48A8ZHRvaIjp63e+fjlbmuMFHJQM7Q76gIzc5d/I75q5AMBab1unxTJlXmJvxhptJYjDthqspKxVJQGRDTfQZ8PLiZw3qaNKUTbuRdNkT4jC/vOfmesm5mK8EmXsT9carOVCTSS2SiCqxD8=
+	t=1740503750; cv=none; b=JZZq80BKcl+3AMzBmuj9H5KquzMtEkIaGej/A1JWnlX5NbGCl1+Rc/mWJ1E2FrA+E3MNGT4Fr/c0+1b9DdqRRZMC/paHC/meuFkKYl61yatRICZw9gLHOAETziPyw1mID9pJ5bpyUhcZFarAtAsLVFDqDjO0ihkc8FES/C0D58E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503740; c=relaxed/simple;
-	bh=ZF1rAhCMbOrvp76SA+oTUJgptcVWQVsV/ij4xenjie0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jDHKUCG3dv0PmOBnLFcd3rJND3HLL7hQfPVC9qLnaqIv/SrhRnO4sbdYVxjHnk50HzDtC5zCzb7KJgj1yUOVf+WdQPkQHQVhR2AFBHeho5VOo+xBmhL3bSIro+iKdAFf3jhbH9XUMIRCB6dtMxKffod3klAcYlMX7mQ0jeE+VZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i28EhJ52; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740503750; c=relaxed/simple;
+	bh=lkQvFVIvZQta0+aNOIT6AAw2R3T9dNrKkosqjbctdkA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s+oDs3yHTiU5MSs+NnylyngmUPVeF2I9jlroUizov11prufEDzvyp82IrXmOclmrWCkMJY6+zPewtqRY8PoG7TjxXbAnqGM3HBiJj7MLSe75rGNCY6QaPw85g8/dQmV6Q+nA3KRKpv6vJ3pg8ylBIV6ejy9lOIf7Sk7S3J6tZrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fh9qCHhd; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i28EhJ52"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B4F6C4CEDD;
-	Tue, 25 Feb 2025 17:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740503740;
-	bh=ZF1rAhCMbOrvp76SA+oTUJgptcVWQVsV/ij4xenjie0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i28EhJ52IXq3mC5Lc3lOt22PkbrYUq4RV8yoxln8w81ZgPuc5yn9Zgwp1FTKe90XS
-	 z3crKCBTuHWP1++96ZxuvzXgk9a3+/U3/mqAlhPyenGj2Rzt6wJjqTHWsgRGyJTVN9
-	 G169Klzw/0lOhbX1lGAiyaFePgWfur1/vrJKhkRlBm6i+E+Lwh4oTtWDvG8t4jomR7
-	 /J2BMB8mZH7jVmxyN5HHYWFKUOpSJay7b/MwGzDNJYJ4quuMjNfRsGCcyJEiKuEQUU
-	 2wBv/glI9bXLWBmmtBII410ZzTgf3V2E0fF1AWbirgL7qjiVhpqyt8QBfVhDrx9MXd
-	 wNqNChMAHvvYw==
-Date: Tue, 25 Feb 2025 11:15:38 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	ath10k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-wireless@vger.kernel.org, Jeff Johnson <jjohnson@kernel.org>,
-	ath11k@lists.infradead.org,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Conor Dooley <conor+dt@kernel.org>, ath12k@lists.infradead.org
-Subject: Re: [PATCH 3/5] dt-bindings: wireless: ath12k: Strip ath12k prefix
- from calibration property
-Message-ID: <174050373800.2716505.16558517329137280278.robh@kernel.org>
-References: <20250225-b-wifi-qcom-calibration-variant-v1-0-3b2aa3f89c53@linaro.org>
- <20250225-b-wifi-qcom-calibration-variant-v1-3-3b2aa3f89c53@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fh9qCHhd"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5ded1395213so9796687a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:15:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740503747; x=1741108547; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FEK4xb/B08Bwt7c6wjhqP2Q9Ow5NOLQIal4ilKYegN4=;
+        b=fh9qCHhdn3mUoV3ALcU5pJQop2TtIucoN/c6s1eceNfyRaoOoQ7cluSuTjVL553WmX
+         jMDLZVSZ+2vVlohPqfmaPR8iDgzOQY44Zova8GuCkeu680ZbaDyaMnOyi7dOzWClHzo4
+         qUJ+kXTR0dfqc94igV3F7LUJbB87WlYkXPIqb6Vkfh46clgIBGnNaOSq7Vxl8g2/7HQW
+         r1eENgLusXxXAZMndLQzCKQJD8/ehLyXZ1mJtddPwUzNulyweHRPaKaGKWS3sisjccdd
+         aB5uuyWvv+5W4W6ObElr3ya/1495CDvE2gq3Fj116FrrlOADZDYDDQmBCaESsk5QYOKO
+         Dqlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740503747; x=1741108547;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FEK4xb/B08Bwt7c6wjhqP2Q9Ow5NOLQIal4ilKYegN4=;
+        b=k10HtIcX1/bB8Nu3IRO63XWyKd0bAHPGojF5j7Y8ci7zLi8CDzGhhE+utDVZwHbWWm
+         lbhypdh1aWoZLVU/pi8tltM8BGhS6ZnnZXPaOHO/2imYJVSKFJlxbEemoEdy20ynMzhG
+         HzBqjqL2swNyL//06RG9hX/OGtUTTpEYCRTc/tLkSWonc3W+aqpJUAheFwV1HhOjBS8V
+         j2hlmi3IzPv1SM9WJONO31VQ5d3U56NeblueNe78gzycNd16opKTFbFR0dKfAJpqmCbj
+         7Db3ikr6HN516XkpoqbvTvr3ndBbtPUVscPm9wJTihjKHVVUBGKo5JulUq37GEd3DscZ
+         OXWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWplkmNHwPRVwr8LXRTu0sE1PLdvSthZZjravQnwdp44o7pJv6gmbNe6rSFkoBZdDHd/JzRnANkKMRL9gY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK3ErJHcg7toweTtww4dgzQsiAE4k3rwllJD8zlUoFQuo8/lsz
+	gW56sJ9mV/EbJBS+G5cnvo8kWuEmVB42RIgMHTVZG4wYC2/t8wGmy0Bi4WOcY/dQY6MkctTgjs2
+	xWEig7oo9zfS9RrfdpUklFwy3mSQUFIOtwO7i6A==
+X-Gm-Gg: ASbGncto7WjeUt9rSFBFJdgWtRg5LV5R9jpWH1aPR9CxfImeocbz5E+v/qb7BL4aXAN
+	tg6et3pBtEyBl+K7yGU5MOkP5hvzxeGyWudDPzer86kwTjTj1hEAotmpOUNcsSnmTOOzLLIK0kF
+	EvZ1D3g7Q0oFl+2XIMnuI9KT8YyEhEOdHenyrm
+X-Google-Smtp-Source: AGHT+IGO+PuQkfrw24e9rTYkf6+kbTPyi2vcfG/Xugmqpr50mjP30AWfm7OjvZQPzYbxXrFYhU0lagUnZo69TH37vok=
+X-Received: by 2002:a05:6402:2546:b0:5d0:aa2d:6eee with SMTP id
+ 4fb4d7f45d1cf-5e44a254bd1mr3814794a12.26.1740503747273; Tue, 25 Feb 2025
+ 09:15:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225-b-wifi-qcom-calibration-variant-v1-3-3b2aa3f89c53@linaro.org>
+References: <20250221111226.64455-1-wuyun.abel@bytedance.com>
+ <20250221111226.64455-3-wuyun.abel@bytedance.com> <CAKfTPtBzsX6GKZP_NGTONrkp96qx9uOHr0+XG7tC6ELy4tbHBg@mail.gmail.com>
+ <6097164a-aa99-4869-b666-9dc7018c1f96@bytedance.com> <e1cfabab-1326-4cd8-a8a4-4b3fc4c1f7ec@linux.ibm.com>
+ <9d9d7432-9a5d-4216-ac53-a0f333a35d8f@bytedance.com> <d1237acd-9e3c-4ab9-8628-31d98fcf7638@linux.ibm.com>
+ <83f8b833-af79-4d77-a179-5065aec994dc@bytedance.com> <CAKfTPtBL4aPbEDOa8jJ+h2wQ9CLU80=0mQdrc07vfqBVswzAsg@mail.gmail.com>
+ <ffda0c9a-0794-4080-921f-99f0c31e2d6c@bytedance.com>
+In-Reply-To: <ffda0c9a-0794-4080-921f-99f0c31e2d6c@bytedance.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 25 Feb 2025 18:15:36 +0100
+X-Gm-Features: AQ5f1JqxPM0CgSVKDWr65uY1rO8CJdxHzTxs7zyX1TrZ7HPr41tDRLzWuTzraaw
+Message-ID: <CAKfTPtC-pSxpk9i1T4rgc8U7M-nYJ_fdJKaBJa-1dwi9+scTbg@mail.gmail.com>
+Subject: Re: Re: [PATCH 2/2] sched/fair: Fix premature check of WAKEUP_PREEMPTION
+To: Abel Wu <wuyun.abel@bytedance.com>
+Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Josh Don <joshdon@google.com>, 
+	Tianchen Ding <dtcccc@linux.alibaba.com>, 
+	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 25 Feb 2025 at 07:29, Abel Wu <wuyun.abel@bytedance.com> wrote:
+>
+> On 2/24/25 9:47 PM, Vincent Guittot wrote:
+> >
+> > Or we should just remove it. I'm curious to know who used it during
+> > the last couple of years ? Having in mind that lazy preemption adds
+>
+> TBH I have never used this feature. But since Phil mentioned a case
+> in debugging DELAY_DEQUEUE, I think we'd better keep it, what do you
+> think?
 
-On Tue, 25 Feb 2025 10:05:34 +0100, Krzysztof Kozlowski wrote:
-> Devicetree properties describing exactly the same thing should be
-> reusable between device bindings.  All Qualcomm Atheros WiFi chips needs
-> certain calibration data, so properties should not be prefixed with
-> device family (ath12k).
-> 
-> Deprecate qcom,ath12k-calibration-variant and alike, so we gradually
-> switch to a common property.  This will also allow moving these
-> properties to common schema, if desired.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/net/wireless/qcom,ath12k-wsi.yaml   | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
-> 
+Yes. And we need to figure out how to deal with the below as well
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-
+>
+> > another level as check_preempt_wakeup_fair()  uses it so sched-idle
+> > tasks might not always be immediately preempted anyway.
+>
+> Right, thanks for mention that.
+>
+> >
+> >
+> >>
+> >> Thanks,
+> >>          Abel
+> >>
+>
