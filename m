@@ -1,91 +1,98 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C057E3A1DB;
-	Tue, 25 Feb 2025 12:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740487271; cv=pass; b=CSU0ZC1+hjJjflVHhHEuSYhpLVbchaPVmRmvIapgfAszbgI4fLgic6m+WbtXD1YgGQMumaXJ6T24REBQDmfu3tUtG3Hv+mA93Gl+vEprvgknBKH3fKIXO5PfNwYgYMYoh2f5rZLDRXkgXJnKJhrFCoDZ1psgfkJlzAvU0iTxzcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740487271; c=relaxed/simple;
-	bh=AUEz4a3RiSL5/cLF/pQMmxgREDX4arxTDXKFwwi9EuA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PHnNxdXtTwAm3nnGvqN832Ij3H7ATQAQ6bi6kALLTsVB+uogAXGxlg+FD8r+eoAlhIiF8wy5QmuGvnTHAM1bHU042lm0TYZQgXfChlfdEsjlpCekuzHLLzGO8X1AQpI/Cosmv+xAHsYDVv2mD57DlSn9jQZjA0mircfK6Sx9ahY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=ZGwN9TGX; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA4B3A1DB
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:42:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740487344; cv=none; b=fYWulfN3Kx78TmoVzZQx8waSlyzDMLEdm2+MOPiLKHJNP+YWUFeVzBIOazIZG65KeN7W31nSd9Osv9FvQaN9XaF9tdQK/Q4IPFKxfYV/iQgTdBJFBzQIz2+2ndQiMkq7pB4HqL4P5F5gq/oYCMadpgJWE0Bw/RgY06W3A3U/6gU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740487344; c=relaxed/simple;
+	bh=RG5zQ3Orfi9kNoYpBR8awwCkHpjOu+LogwFQlJMRD1o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=knhDr7YHf9mwXvdR+UAsoBQx3R12RyROKNKC8efolWz9g6uvOfmnGCSeq3XFSWcm7TaWvS6eh9erafohAy5QKM0gT6fQjXClmalmTNmaijWEkfc9PwBWEBlEZiGHFxdusciFyhob2fXz95WxfCB9BqB4MzaLx8i8uTVxbsea8WM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i3x5m+ce; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="ZGwN9TGX"
-ARC-Seal: i=1; a=rsa-sha256; t=1740487242; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=aL/yndbaWtbjDj26LcXfza+N/18ktplU4cYjzN8NJ6uso/gKOkg7hpxUkXtm6+TW9MNu5kPYtZS3bbCXt3JL4CNeyoFLWQ3JpwROIijZPuKQTJhjmoFqtgAiNv2codaijnCBQmPq50D771VEUONIigk/j9mq+D6pn+U2+eprEek=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740487242; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kDN54TSKQCXwGr0WnQvfL3hvKdHgbSFGpuQMUeaewhA=; 
-	b=TpklSVtemRmlUXiIKkZorzpWgRCMGq+RAMxdZZAA0QYZZEhi5vRtiGs8qQaeyxjddrjUY2xxrv93BX/P2LhHpBypv+kwYaentedbx2oCq5D05O3pk8eXwian+77VYaGAILNuKfOl8VAF4e2ozi+gIa02jTJM/X8vDbiKp9yGBkM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740487242;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=kDN54TSKQCXwGr0WnQvfL3hvKdHgbSFGpuQMUeaewhA=;
-	b=ZGwN9TGX/W+xjOAr4VQfD1lO+OtDQobGeGI+OUKCkythx6wVHbHLodDOuWutdUX0
-	FCVJ6LFC/mFCXpvN5rQKvXcuzUSCPLuoq1nQr5/YcTCcVzPgArTYEHZZdRvdjPkV5k1
-	iwjD1stQtv9UvpWqyTLObc3oA6pAT9iDUYj43eFU=
-Received: by mx.zohomail.com with SMTPS id 1740487240110120.34947032551383;
-	Tue, 25 Feb 2025 04:40:40 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-staging@lists.linux.dev,
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Alex Bee <knaerzche@gmail.com>,
-	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Sebastian Fricke <sebastian.fricke@collabora.com>
-Subject: [PATCH] fixup! media: v4l2-common: Add helpers to calculate bytesperline and sizeimage
-Date: Tue, 25 Feb 2025 13:40:08 +0100
-Message-Id: <20250225124008.195405-1-sebastian.fricke@collabora.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i3x5m+ce"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C05C4CEEA
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740487343;
+	bh=RG5zQ3Orfi9kNoYpBR8awwCkHpjOu+LogwFQlJMRD1o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=i3x5m+ceCgM+JGyhuH3ga5mgo61BVP+RTkfvh1n8Pc+qWzg6fF9xfRoxWvmjW9mtY
+	 IvATULkfctLZ+1Rc9s9TN7Rl/Q0obZ9LIRnEeyfvVEsSGDTB0CYIHQyRblMY+Wm092
+	 vP7WRwwf0Jiw0F1wHL238EO/ud/WTF7IS9DjEq4dFrqIWqwdxkKFwk2ep5aXXaA3bp
+	 hB6rs5G/JD7RBltVGQW7EDxXLp2gaUDqayhlLtXWTK5dOZ34edWYg5iJMg+vSNJCOL
+	 AWtQDxuHCIV/Nz3dbuDx+i5QSCcdozRXTTs2rt9SUgKmbxel6XP4IxlzlgiBlpjpJ5
+	 DGvMvHj0iiJhA==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abb7a6ee2deso854027766b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 04:42:23 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVcqZpLFdxCnhtTf76HEXnqaMSF0xdD4k+aGutmIZCuqkGW0sx1VpoLiQWpZF/S5IAnSLv95QB60opDhf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5l95oCzMUFm83yp07fGzV8hKSrMxuCTg7C9s5mKOSYLq8S3oj
+	gI3e8Wzte1cIsj/z3hEBnsvft9arVI/NOoR5BIrbBv1+301OEU1PY11OCgeOdiE7ApfdNrYNPaj
+	yIlTZrB8gzKvXfw5haiwT0TWqIDg=
+X-Google-Smtp-Source: AGHT+IFlDNKrDvjPWTrqIgkrsabfuo0vqvfqq0fvScYNvBKd2vxsXrMgleZ6SWqt96ebVWYj5ZISikFHPuCie8h8lgM=
+X-Received: by 2002:a17:907:97ce:b0:abb:b209:aba7 with SMTP id
+ a640c23a62f3a-abc09abecf4mr1509608866b.26.1740487342408; Tue, 25 Feb 2025
+ 04:42:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20250225092420.1599954-1-maobibo@loongson.cn>
+In-Reply-To: <20250225092420.1599954-1-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 25 Feb 2025 20:42:11 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4Q8RTkmN1dbgwz01b7GgKd176cx-6uO7pitr7t7LgQww@mail.gmail.com>
+X-Gm-Features: AWEUYZn-hy6r80xRyM7xpc1OiwaQMsj-1BDglEge4Gd3f7ENAH3B_Fipy7g2y_Y
+Message-ID: <CAAhV-H4Q8RTkmN1dbgwz01b7GgKd176cx-6uO7pitr7t7LgQww@mail.gmail.com>
+Subject: Re: [PATCH v2] LoongArch: Select HAVE_VIRT_CPU_ACCOUNTING_GEN always
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: WANG Xuerui <kernel@xen0n.name>, loongarch@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
----
- drivers/media/v4l2-core/v4l2-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applied, thanks.
 
-diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-index 07a999f75755..aa86b8c6aa75 100644
---- a/drivers/media/v4l2-core/v4l2-common.c
-+++ b/drivers/media/v4l2-core/v4l2-common.c
-@@ -360,7 +360,7 @@ static inline unsigned int v4l2_format_block_height(const struct v4l2_format_inf
- }
- 
- static inline unsigned int v4l2_format_plane_stride(const struct v4l2_format_info *info, int plane,
--						   unsigned int width)
-+						    unsigned int width)
- {
- 	unsigned int hdiv = plane ? info->hdiv : 1;
- 	unsigned int aligned_width =
--- 
-2.25.1
+Huacai
 
+On Tue, Feb 25, 2025 at 5:24=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
+>
+> Option HAVE_VIRT_CPU_ACCOUNTING_GEN is selected by default for 64bit
+> system in kconfig file arch/Kconfig. There is another selection in file
+> arch/loongarch/Kconfig if SMP is not selected, it brings out some
+> misunderstanding for non-SMP case. Here always select option
+> HAVE_VIRT_CPU_ACCOUNTING_GEN for future possible 32bit system.
+>
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+> v1 ... v2:
+>   1. Select HAVE_VIRT_CPU_ACCOUNTING_GEN always for possible 32bit system=
+.
+> ---
+>  arch/loongarch/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 2b8bd27a852f..8d0885b165a2 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -175,7 +175,7 @@ config LOONGARCH
+>         select HAVE_STACKPROTECTOR
+>         select HAVE_SYSCALL_TRACEPOINTS
+>         select HAVE_TIF_NOHZ
+> -       select HAVE_VIRT_CPU_ACCOUNTING_GEN if !SMP
+> +       select HAVE_VIRT_CPU_ACCOUNTING_GEN
+>         select IRQ_FORCED_THREADING
+>         select IRQ_LOONGARCH_CPU
+>         select LOCK_MM_AND_FIND_VMA
+>
+> base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+> --
+> 2.39.3
+>
