@@ -1,140 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FF313B5B6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 557B81632D9;
 	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515901; cv=none; b=ZZB7hSU6yfl29DQsAwC06IMJOrVkOo+yBPVUC5LIT7eZDhaXaYu1hbAReln0Zx3Nz1557z8FV72qiS1vR3Y9BsrAYexcpo0R3e0mMU7MwCUVOnJ5m/ySUBSEp40pB170VaK84epsfrvaDgnN4oTYb/6QfJpsPJH1BAbozoJ4Vz8=
+	t=1740515902; cv=none; b=q1e9C7SAZaryADvPgJDcal65yk/Ov8F4o6iYX9PAk2Yl+e/BN6Pxi7gz0MkoxWDiF+HagN8TwBdHqJ24PkoH38Kliy8SJNXNoLYSj1qOK2Y/m0Bxas4flUe4JVb4fH6kqKvWBb8eVhPX2zGEexQ1jlLV205/Q0fpOR4tFW7VG/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515901; c=relaxed/simple;
-	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MNF9zy/xMWOTDn+ivTdSw3hW4Bek0JvoZgu9TR6nFl8qI/npKLMT7VvwnD3jDZnb+eMHpCIXGFrw8JQqDAx3mnXUrz9ey3GIUvjJqpSRvMsacpvgTEJ7NSGh7jTKuWi7VHOa/tYC6Wr4beu7FLIbqIhtvY4HJ9qkroDgr/gsBQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGrtdVth; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740515902; c=relaxed/simple;
+	bh=Ix+Pwhn+RghNZ8TaQ8WxJiqhMR2Rf4rkdqUxWh1jhfc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pRLLxqre9x/7lqwZAl/1g115my3nxuJjlF7pMdUxsF2bzxlqNJKH/gIqrbfC9uyQspJrr4Dm/jEUjWrI3LaFpzw0XgKp52FupOqA86JUWapIbtU/Kjk8DzeVxiJKu8lZcZ6zzwsakI2Wx62kTOHMs3xWr1Bp0n5/VWQFXWx/L5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=niBUKQLb; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGrtdVth"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8051FC4CEDD;
-	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740515900;
-	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GGrtdVthoxLVMlEI/fF8VwHYL/Yw7TMYgSCbDxAM7dUxLvnktgJFAcBNpBxvOZZ/M
-	 bIN9kq4blyIwTx+m3XVuXnGOh3iMLQ5IkK+eRCNVL4J8OzpzHnDzywLlyWYKZAj+R8
-	 zvcP75LCQUidbJaQ0wvtMu1m1KIMalzVJhmHhLP86DyoMpQBwlidgtTPjBbWXT0tFG
-	 ivY846gbSAMcjYa9OuBLh3DDZ0/yX/XM6Xx8s5IvVWidW1yL3t/7CSB1hhWPep73+x
-	 JO/N/J6XjENKEgwNDFm18UNX2mzY6Ylo2cPOcJAb3Luo+O/QIXqqki64UDBINWUGoN
-	 hU6tkRHgi5qMQ==
-Date: Tue, 25 Feb 2025 14:38:18 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelnewbies <kernelnewbies@kernelnewbies.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-Message-ID: <20250225203818.GA516645@bhelgaas>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="niBUKQLb"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51PKbwEk1423536
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 25 Feb 2025 12:37:59 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51PKbwEk1423536
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740515880;
+	bh=Ix+Pwhn+RghNZ8TaQ8WxJiqhMR2Rf4rkdqUxWh1jhfc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=niBUKQLbNw4BzHZWrL+JvGm/sxQqSiekYMxHJSnrHoiw7f2vIAT8C19tLKi0ibe+h
+	 RP05OF53QYQQBWhdLRdIqNg3+u3C32//+8N5U6PUOW9p4ELTX4JKPV/yVnZUuCQ/k1
+	 975YR/2qgjikBUJ5FhEMKIrOqsXLmiCgXOijdRbBTQc4izrjJcMcaD4bezW9bTGhLs
+	 /W0vqciXfNyoCq9fjSuX5LwJNQYOJQDUPOD+dPcd1lVlDQupingerQpJ1+mbtD4CAL
+	 R3RoAiazG7iECnk/taiT80feB4fj2uP2YNjJaqbePC1y2couD68KTT6JNUNPlswxhe
+	 zsE0OUVVrBgog==
+Date: Tue, 25 Feb 2025 12:37:55 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+CC: Alice Ryhl <aliceryhl@google.com>, Ventura Jack <venturajack85@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com,
+        david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org,
+        hch@infradead.org, ksummit@lists.linux.dev,
+        linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
+        rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+User-Agent: K-9 Mail for Android
+In-Reply-To: <2rrp3fmznibxyg3ocvsfasfnpwfp2skhf4x7ihrnvm72lemykf@lwp2jkdbwqgm>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com> <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com> <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c> <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com> <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com> <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com> <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com> <CAH5fLghEMtT663SNogAGad-qk7umefGeBKbm+QjKKzoskjOubw@mail.gmail.com> <5E3FEDC4-DBE3-45C7-A331-DAADD3E7EB42@zytor.com> <2rrp3fmznibxyg3ocvsfasfnpwfp2skhf4x7ihrnvm72lemykf@lwp2jkdbwqgm>
+Message-ID: <D11A34F5-EA92-4B80-8498-F9764E47EA97@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMciSVX3X=DxLU0tfj4rG5WPaS5BCUDcMp2MYWBitT0ecEH+ig@mail.gmail.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 06:46:02PM +0530, Naveen Kumar P wrote:
-> On Tue, Feb 25, 2025 at 1:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
-> > > On Mon, Feb 24, 2025 at 11:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
-> > > > > On Wed, Feb 19, 2025 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
-> > > > > > > Hi all,
-> > > > > > >
-> > > > > > > I am writing to seek assistance with an issue we are experiencing with
-> > > > > > > a PCIe device (PLDA Device 5555) connected through PCI Express Root
-> > > > > > > Port 1 to the host bridge.
-> > > > > > >
-> > > > > > > We have observed that after booting the system, the Base Address
-> > > > > > > Register (BAR0) memory of this device gets reset to 0x0 after
-> > > > > > > approximately one hour or more (the timing is inconsistent). This was
-> > > > > > > verified using the lspci output and the setpci -s 01:00.0
-> > > > > > > BASE_ADDRESS_0 command.
-> >
-> > > ...
-> > > I booted with the pcie_aspm=off kernel parameter, which means that
-> > > PCIe Active State Power Management (ASPM) is disabled. Given this
-> > > context, should I consider removing this setting to see if it affects
-> > > the occurrence of the Bus Check notifications and the BAR0 reset
-> > > issue?
-> >
-> > Doesn't seem likely to be related.  Once configured, ASPM operates
-> > without any software intervention.  But note that "pcie_aspm=off"
-> > means the kernel doesn't touch ASPM configuration at all, and any
-> > configuration done by firmware remains in effect.
-> >
-> > You can tell whether ASPM has been enabled by firmware with "sudo
-> > lspci -vv" before the problem occurs.
-> >
-> > > > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
-> > > > > showed all FF's, and then the next run of the same command showed
-> > > > > BASE_ADDRESS_0 reset to zero:
-> > > > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
-> > > > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > > >
-> > > > Looks like the device isn't responding at all here.  Could happen if
-> > > > the device is reset or powered down.
-> > >
-> > > From the kernel driver or user space tools, is it possible to
-> > > determine whether the device has been reset or powered down?  Are
-> > > there any power management settings or configurations that could be
-> > > causing the device to reset or power down unexpectedly?
-> >
-> > Not really.  By "powered down", I meant D3cold, where the main power
-> > is removed.  Config space is readable in all other power states.
-> >
-> > > > What is this device?  What driver is bound to it?  I don't see
-> > > > anything in dmesg that identifies a driver.
-> > >
-> > > The PCIe device in question is a Xilinx FPGA endpoint, which is
-> > > flashed with RTL code to expose several host interfaces to the system
-> > > via the PCIe link.
-> > >
-> > > We have an out-of-tree driver for this device, but to eliminate the
-> > > driver's role in this issue, I renamed the driver to prevent it from
-> > > loading automatically after rebooting the machine. Despite not using
-> > > the driver, the issue still occurred.
-> >
-> > Oh, right, I forgot that you mentioned this before.
-> >
-> > > > You're seeing the problem on v5.4 (Nov 2019), which is much newer than
-> > > > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
-> > > > time on unless the problem still happens on a current kernel.
-> >
-> > This part is important.  We don't want to spend a lot of time
-> > debugging an issue that may have already been fixed upstream.
+On February 25, 2025 12:21:06 PM PST, Kent Overstreet <kent=2Eoverstreet@li=
+nux=2Edev> wrote:
+>On Tue, Feb 25, 2025 at 10:16:17AM -0800, H=2E Peter Anvin wrote:
+>> On February 25, 2025 9:36:07 AM PST, Alice Ryhl <aliceryhl@google=2Ecom=
+> wrote:
+>> >On Tue, Feb 25, 2025 at 6:21=E2=80=AFPM Ventura Jack <venturajack85@gm=
+ail=2Ecom> wrote:
+>> >> On the topic of difficulty, even if there was a full specification,
+>> >> it might still be difficult to work with aliasing in unsafe Rust=2E
+>> >> For C "restrict", I assume that "restrict" is fully specified, and
+>> >> C developers still typically avoid "restrict"=2E And for unsafe
+>> >> Rust, the Rust community helpfully encourages people to
+>> >> avoid unsafe Rust when possible due to its difficulty=2E
+>> >
+>> >This I will not object to :)
+>> >
+>> >Alice
+>> >
+>> >
+>>=20
+>> I do have to say one thing about the standards process: it forces a
+>> real specification to be written, as in a proper interface contract,
+>> including the corner cases (which of course may be "undefined", but
+>> the idea is that even what is out of scope is clear=2E)
 >
-> Sure, I started building the 6.13 kernel and will post more
-> information if I notice the issue on the 6.13 kernel.
-> 
-> Regarding the CommClk- (Common Clock Configuration) bit, it indicates
-> whether the common clock configuration is enabled or disabled. When it
-> is set to CommClk-, it means that the common clock configuration is
-> disabled.
-> 
-> LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
->         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> 
-> For my device, I noticed that the common clock configuration is
-> disabled. Could this be causing the BAR reset issue?
+>Did it, though?
+>
+>The C standard didn't really define undefined behaviour in a
+>particularly useful way, and the compiler folks have always used it as a
+>shield to hide behind - "look! the standard says we can!", even though
+>that standard hasn't meaninfully changed it decades=2E It ossified things=
+=2E
+>
+>Whereas the Rust process seems to me to be more defined by actual
+>conversations with users and a focus on practicality and steady
+>improvement towards meaningful goals - i=2Ee=2E concrete specifications=
+=2E
+>There's been a lot of work towards those=2E
+>
+>You don't need a standards body to have specifications=2E
 
-Not to my knowledge.
+Whether a spec is "useful" is different from "ill defined=2E"
 
-> How is the CommClk bit determined(to set or clear)? and is it okay to
-> enable this bit after booting the kernel?
+I know where they came from =E2=80=93 wanting to compete with Fortran 77 f=
+or HPC, being a very vocal community in the compiler area=2E F77 had very f=
+ew ways to have aliasing at all, so it happened to make a lot of things lik=
+e autovectorization relatively easy=2E Since vectorization inherently relie=
+s on hoisting loads above stores this really matters in that context=2E=20
 
-It is somewhere in drivers/pci/pcie/aspm.c, i.e.,
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aspm.c?id=v6.13#n383
+Was C the right place to do it? That's a whole different question=2E
