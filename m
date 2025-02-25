@@ -1,102 +1,141 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4A2686A8;
-	Tue, 25 Feb 2025 12:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1308C267F58;
+	Tue, 25 Feb 2025 12:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486731; cv=none; b=Y+i7xeJsCiX/++CoPHJWCFRfMxabfrP1+j8aVLHC2ZOJtZVfgAhygp7HuZVx73UtPEZL2/HSDuVBpg68OQJGhLC3v70OXgEOMuUifemX2Q7WmRIQUn6llsN1fZTZYZFwSLxKUaNvoQPUydpqfC/5WDDDiizPhYjDKcRQG4jet64=
+	t=1740486742; cv=none; b=a/R9mLYY0OWTv+pdlJGZFq4UE4I4hyS0yhE8Q95dsySCtLcqPM/XqVK9XosN/zZPu913oClngQNLdCjxSwpM0AWiovf/o0qjAFDAOVBOyUuty6mKERCacXifbgWElw/GugH71c7gJLTv54XHWpbxIj/I57sOk6px2RkhEQew6Js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486731; c=relaxed/simple;
-	bh=1pyD4SZ5Q/Lc9AqUwjBxII6k9+7yhxDr5m+K9ELoDbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VE4ce1+xTag8NngqpnGBlwb1oBXwuMVT5NcgExm3r+092qJHTAOA07DCcQxc/CAX5wX/YWEDwQzmMUrOC6EcycwmtTngow3DoNpNpb7qyvPD2IlWPegPNb0DYQn6YWiciwUnMGR0oZeOvu2pvwkv4lJOP8mdM4MhXhgvHZAfiiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U//oaj6w; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740486742; c=relaxed/simple;
+	bh=h8PDT9P5RGKVlHl1hL6S1sHDxqWxMEzZ0RmWvnH5804=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UUGemEcjI0hJY2/eYUDsj1e64rT0MD/BVI4OmbeTK5yrwjORX+jiLtF6VGrTAHtobKh4X9GFF+QNhej96b4GS0NTJeZWb6ijhqVZFX4otf7tb4/IgDQuq/vvEo1Jl5JsjQjRtELbzA9lAMEaRnRiP9PkaK9BYNa3WSlFmoVei0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=HU9eGRBy; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U//oaj6w"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fcff77ff9bso6249760a91.0;
-        Tue, 25 Feb 2025 04:32:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740486729; x=1741091529; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hQ9PSnky3hzUHJ3r5I6w65ox232hzZUXn+oYcw3lsM=;
-        b=U//oaj6whFaW1Y9WF2s+r9c12W1TMarw1dgqGToyjyAEadXNzQVrJIq1FP1gVUB4Y1
-         s0NjCbLWy+XZoVi2sd+ZYuLO8AbG5Z1egr50nAKIbd4CEePEwd104cLF5Tw9z7SaAG7n
-         mR9IxSIy63IevXJOPTTL/3id625o2TDfXQGJGUkzufBU9W94orx+Pv+Gb/DgmfaAdTLg
-         1MdmkeLYw3XGe/c/5n3bevrduoeIcgPk7HUXroK44rKisSA5eluGISYT8AGI0fFgtZH6
-         PWAkPFezVmg2+0fLIEMXyt+oX2GhRnIPHSYUVExzNHUcTaLkQ3XcV1VjVY1Bt33Sqdsf
-         gQlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740486729; x=1741091529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7hQ9PSnky3hzUHJ3r5I6w65ox232hzZUXn+oYcw3lsM=;
-        b=xKltorvYcBqAh1Yvc+hazOp3hqiCmYPWM5CF2yt1xva0dxbLh2g/0L1d2ClZL7Gw0B
-         ZLrZULD30j7UmAvBb9LNepAGrpAsiVFXDgl17gWHhH0oAxlyxDMRxAR1cCY2k+gfMLGL
-         1UT4c6yC2yoIMNBjovLI4Nb8+WMCU9sndFaJDh6O6TZ06LcKCLZ2FXShUHPX6TGvE9k1
-         6zd8XfAy10pmy2g/iTEwy4VZfbh1iQuevFEs28hYRnX+/OfSLMhUulxKqa24czxRrcx/
-         24YkwbOrsL6og3RrH5MuSGvqsWnBLbU6TNbIxMApbCnFBWokRnb7T2RGWP6yz2NpMMZH
-         WYmg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLUrh8F3OLec9OaQNlXDx6weaQMXzxv6OSfLRBaURVW4m/QVceKGCDTSbHZp3gUtQnYqNp4qXdAejoqMgG@vger.kernel.org, AJvYcCXmURMu4Fj/GbJAomrFrVGHl39JpgMPAF/YCwucn0A1qfE9fAcphJK4Gp6S4QB1/Ge36X9I9kSrXMbB@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2eywYVnrFKwIQ+stC2vwIL9x8nZrBqrz2Rj+VkQeaqBRmKHaJ
-	xIwBzTuj0ew6urgwwVnG54+MDeJ7T2LXMrRefjcyo2oyRWUWaNRWEBz6SiUS3Cb2GgyYFizzMys
-	bmPxu2lbWL0NKnitdgsjdq3QdIVQ=
-X-Gm-Gg: ASbGncs78N1IKkSRyIt8OOSJhXi2BrdkNKy7jLw7owj1xtz91GzqVv2fPk4CQiXypdP
-	1fpp8zNAPNNa7aX0qOyuZFppJYJXiAyaPF7znDQyTEFX9ODtV0C+pEBcSBg7scBzmV2yhoDCoG8
-	kCvxtX
-X-Google-Smtp-Source: AGHT+IEhj54F35PZEsJYYrzaWJyBanI+coj2uAU8OTJp3NVm093Jk0fuCJf+AJB+0L8a6Juozj6iHZgPqCZQO9GBPqA=
-X-Received: by 2002:a17:90b:2751:b0:2ee:df70:1ff3 with SMTP id
- 98e67ed59e1d1-2fe68a312b8mr6037629a91.0.1740486729075; Tue, 25 Feb 2025
- 04:32:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="HU9eGRBy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=b/anH
+	9Si7AGNeGlSpdEHPfH0OT7WBuTxniqMA05MAeY=; b=HU9eGRByLz8KnTz7ckPK+
+	ynj9cETk4kn9VerHd6acIO2UYIv1lWAN+iMDyFKynQ77KRwk+nPXZVpS9I7n0Os4
+	ejnIYpqLbaJbQqBBvrtivUEBWxAi8liWDvQUA0OYKYSOsO6urU9+FLYZll2ZdrCN
+	7dyqtH1ekojdG4CMWsguZk=
+Received: from localhost.localdomain (unknown [193.203.214.57])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgCnFlwpuL1nryiDPA--.50629S4;
+	Tue, 25 Feb 2025 20:31:39 +0800 (CST)
+From: Ran Xiaokai <ranxiaokai627@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	ran.xiaokai@zte.com.cn,
+	yang.guang5@zte.com.cn,
+	Wang Yong <wang.yong12@zte.com.cn>
+Subject: [PATCH] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
+Date: Tue, 25 Feb 2025 12:31:32 +0000
+Message-Id: <20250225123132.2583820-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225120707.2658709-1-m.felsch@pengutronix.de>
-In-Reply-To: <20250225120707.2658709-1-m.felsch@pengutronix.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 25 Feb 2025 14:33:45 +0200
-X-Gm-Features: AWEUYZlyvb2cM0-5vtqGVculafUAJm4OWsTkAKrC0Tw7wQoPYmnk7k-oBG7QuOM
-Message-ID: <CAEnQRZAoPxFN1ce0MEY34KpJO=SS4n33ehABH4auxWTDq8_R8g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] arm64: dts: imx8mn: fix micfil dmas settings
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: "robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, Sascha Hauer" <s.hauer@pengutronix.de>, kernel@pengutronix.de, aford173@gmail.com, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Joy Zou <joy.zou@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgCnFlwpuL1nryiDPA--.50629S4
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrWxWFWrCryrZr47ur15Jwb_yoW5XFy8pr
+	ZxKFyxJw4UCFyvv3yUZF1rJw10q3yqqF4xt34ktw1rA3Z8uw43Xr1UtFyFq345ury8ZrWa
+	v3WDArW7Cw4DXw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j5R6wUUUUU=
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbBkBn+TGe9sWSGWgAAso
 
-On Tue, Feb 25, 2025 at 2:12=E2=80=AFPM Marco Felsch <m.felsch@pengutronix.=
-de> wrote:
->
-> The third dma cell is used for priority information not to encode
-> something else. The NXP downstream kernel use the third cell to encode
-> more information:
->
->  - Bit31: sw_done feature enable/disable
->  - Bit15~Bit8: selector
->  - Bit7~Bit0: priority level
->
-> but this was never mainlined. Therefore drop the further information and
-> just specify the priority which is 0.
->
-> FTR: The sw_done feature was mainlined without making use of the
-> devicetree.
->
-> Fixes: cca69ef6eba5 ("arm64: dts: imx8mn: Add support for micfil")
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-For all series:
+Lockdep reports this deadlock log:
+============================================
+WARNING: possible recursive locking detected
+--------------------------------------------
+sh/31444 is trying to acquire lock:
+ffffffff82c51af0 (cpu_hotplug_lock){++++}-{0:0}, at:
+stop_per_cpu_kthreads+0x7/0x60
 
-Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
+but task is already holding lock:
+ffffffff82c51af0 (cpu_hotplug_lock){++++}-{0:0}, at:
+start_per_cpu_kthreads+0x28/0x140
 
-Marco I couldn't find the cover letter for this series so I add my R-b tag =
-here.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(cpu_hotplug_lock);
+  lock(cpu_hotplug_lock);
+
+Call Trace:
+ <TASK>
+ __lock_acquire+0x1612/0x29b0
+ lock_acquire+0xd0/0x2e0
+ cpus_read_lock+0x49/0x120
+ stop_per_cpu_kthreads+0x7/0x60
+ start_kthread+0x105/0x120
+ start_per_cpu_kthreads+0xdd/0x140
+ osnoise_workload_start+0x261/0x2f0
+ osnoise_tracer_start+0x18/0x4
+
+In start_kthread(), when kthread_run_on_cpu() fails,
+cpus_read_unlock() should be called before stop_per_cpu_kthreads(),
+but both start_per_cpu_kthreads() and start_kthread() call the error
+handling routine stop_per_cpu_kthreads(),
+which is redundant. Only one call is necessary.
+To fix this, move stop_per_cpu_kthreads() outside of start_kthread(),
+use the return value of start_kthread() to determine kthread creation
+error.
+The same issue exists in osnoise_hotplug_workfn() too.
+
+Reviewed-by: Yang Guang <yang.guang5@zte.com.cn>
+Reviewed-by: Wang Yong <wang.yong12@zte.com.cn>
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+---
+ kernel/trace/trace_osnoise.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 92e16f03fa4e..38fb0c655f5b 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2029,7 +2029,6 @@ static int start_kthread(unsigned int cpu)
+ 
+ 	if (IS_ERR(kthread)) {
+ 		pr_err(BANNER "could not start sampling thread\n");
+-		stop_per_cpu_kthreads();
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -2097,7 +2096,7 @@ static void osnoise_hotplug_workfn(struct
+work_struct *dummy)
+ 		return;
+ 
+ 	guard(mutex)(&interface_lock);
+-	guard(cpus_read_lock)();
++	cpus_read_lock();
+ 
+ 	if (!cpu_online(cpu))
+ 		return;
+@@ -2105,7 +2104,12 @@ static void osnoise_hotplug_workfn(struct
+work_struct *dummy)
+ 	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
+ 		return;
+ 
+-	start_kthread(cpu);
++	if (start_kthread(cpu)) {
++		cpus_read_unlock();
++		stop_per_cpu_kthreads();
++		return;
++	}
++	cpus_read_unlock();
+ }
+ 
+ static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
+-- 
+2.15.2
+
