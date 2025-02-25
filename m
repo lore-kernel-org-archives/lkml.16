@@ -1,226 +1,147 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DAE19E7ED;
-	Tue, 25 Feb 2025 20:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5D84A1E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740516294; cv=none; b=KVE1Pvet7bAyDL23w+r5l1TOrAtNHUXASDlf4pp17upj9lMZrJPGt0ze8jjOz+jp9UnwtWI5uqS77yTCs1SbkJAevUNStT1zfUp02MyHz9LtM4Rvs701nSbhzzZf3JNN2c1SWruJvTpW/G8jGfcsDHzj6vDgasrdON7NgdM2vWs=
+	t=1740516379; cv=none; b=AXi21B/8WKkMXwy/U741fvCT72PEzUvR1fVzX6FXwKKZNvITivMIsq+0qQ96Zfk1NE8gelfEviepDV6XDZBKGIlkd5aZlqbEzw9zFa1MK6aq7aQdsTOibXvjaBQw6poNm53OmY5F8+wgVFq/TJnkj2YA9FgsjCDlOIDeF1fKmJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740516294; c=relaxed/simple;
-	bh=JdaFfeojRgDLnSKCRnP3LQY4obwOcVD+i7u06UObPC4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DhSpd70zUDe2ASx7Ny/19Gk7487tox13CorPgDlnVA3YHWYdN+vnJaGFF0yQnL5SmnxzXc07M57w4IxLvX9T5dORZmWpnOZKRu8B7EpXmLBoW2cl+YdCH4T740dMUpwDGMwIV1o/szucln3nLbAYnVJtBCfT7CYr5Qk65nEf/yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hTuB6Zg7; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740516379; c=relaxed/simple;
+	bh=Lb1zaIqiZM+uYmK0y6FfmW9Ae8kp+1CY4PP6GUnValA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=V1+V9lMsLBvu+9xlJCkAVQr+dc3wzXOHBLmfuCVIvQ7bsObXiDGwnXCBm25cfBGEadE7TZaOuZA7nLej2B/SxgMC5Bg18UUgi5qOCnp9Rq1YmIl3Un8PG4r20cQFPanBADp4QRR0khRhpYSlFpKzfZ9rdkIcTVfvT8FD5rUKzLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TgUdjRhs; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hTuB6Zg7"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-520a473d2adso3889319e0c.2;
-        Tue, 25 Feb 2025 12:44:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TgUdjRhs"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2f83e54432dso20002261a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:46:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740516291; x=1741121091; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyoYCdijdAcDh+ZcnJz2vFf5VFCyyRpDkibyR777Msc=;
-        b=hTuB6Zg7RBi7qu9DmDzrKal977l1mdp+wZRsKrZNXH/U9Kz3/AfXj/clFRYp5iUQ8t
-         Caj1tGEUMPyH9t2gWJcMxRqEF+tKqifQcbsIP8JGiMV/N4NV8uODUTE2aJWhRW5HaP8x
-         8zpaVNusWbdTV4niJ00nAE5dZTVy7V/DAa2A+L2UN2x0RfbJVs2j2+tLT5qoX6p6BfG9
-         qpzi8LKbTkxGidFDbsXqKlyvzYuSCYihBNYTLEcb6ezdOa6HO8K4zkWC42/Nt0lc4zZ+
-         BxC047B8KT9GRLQmQtkZbIhtEHDlGEHiF7kc2Zz/fsR2ivo8iMnZwcoVDDvCMMRYSA6I
-         TXDQ==
+        d=google.com; s=20230601; t=1740516377; x=1741121177; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AwsNt/V6C0SEvs4Dnf61cWDTvftwNiiIlb4RnaXcmjM=;
+        b=TgUdjRhsqg+Wzi9VKw1yTdJOgd3ZBdu2X8Dz4YXT7ifkbQRt1iYsbLy2VJNj5C4hli
+         0zz2MTMSRgTfKBbnM0LW3rAt4fezPofjP8B9UeYqHOod+jX2rKe2ahC+r0aL/3PPK3a7
+         773KxrfpyV66pr/mkQqyJ7Rw/L/MKHnCXYNx8fL6RA1ninYYWtzMzgvjJpj+QEtN7KcE
+         i2BO8m0bynN6i59Aanu0X9wpkMynY+xPhC9f+JJQ0ltnWjE7nFwJ+t+k+kJtnaVwDWB/
+         8kg73xB1nWD69KSKH44wAWKW63VuHDfFMIRcy8zhCP01hezOqL+qv53KieKh7wreqfCl
+         sWBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740516291; x=1741121091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyoYCdijdAcDh+ZcnJz2vFf5VFCyyRpDkibyR777Msc=;
-        b=MdAW8q+qN5R5hI56YlHVXAW6SGdMHOy3lVdBNbzAMnBGjkNBwE2PSEWwsTv2lcsQZy
-         Njj8XlRNqmctk3PyLTDrQG64bScvpJtK9gpJ25fHx9R4SWu7OvV7DUTvZ8P4Jbaeh76v
-         PBDEn7gEcBulKTGh7tiYtqNzWdxU13E659lPem9hR4MaiEb4gT4fgcyr4xNrB8Wr2mgi
-         kzi19JkuzArJjXBmKJBn4uxZqx7TmFAE324G4rIV6fbBISFC2vdEZg/HzI9lP+/ervZS
-         JATf7ZvbfkhnVxKZxOP6FUfxlUaROIBgdsJtNKtEiVsRXmbMK97giqqLy4sLLj5ubEln
-         ypxA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+BbTFOkXm8yUUaC8uf3vsH27SY2jq0YisEsmy8u4LFHXYLEp6Y63tOA+1yF1PRevCMIRhTWRF@vger.kernel.org, AJvYcCWeH4iC0Tl34swvRnsdKOHB36E9rhYsKq6eyigWfUa5bLk1KogS8DSTlPLcpQtb0gWM747tqBMVO6vCX9fUNrF5QGI=@vger.kernel.org, AJvYcCWug61RIVryn/p3r0RtQCmMLfJgNRUk/FHFVVcIRGiKPrPRY97Aav11KSIQCZndTmgZiFMJxFxi1wECid4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbUZ1nUuSxm03lB/phUAMroTlpamnEQxFcK6maIb3nSvVX/Vx7
-	OGTuE1/UB6zn9pyt8IkO+hE/ip2kRIrouXFzv58D6WsBvNUanJJ9zEvkhVL9n7zdPdJN+WD3LIq
-	IH1c/0YpyVlb/AKV3xOqk7GYloUYkpRVBj0E=
-X-Gm-Gg: ASbGnctQ4Q4xHImU+6p6tPbfzfQJZsvMzFs6dFqdah/OtICAppbxlP7E5Rx9dgI+NG8
-	4hcwMYBFzpsexCIh/JDlSBIjVd4o4NdWHyfFVhyED1KVAwuzOx2RuNw5tYP/JvmYAzGhRBSUZEi
-	ofw0ap3BY=
-X-Google-Smtp-Source: AGHT+IHocGgr8LXv5iH+ArhqKv5jV5H0FxchaIRcKB4J5GmBjFqIgnfpzy2JT4VgnnH0wZ35gCW1W5xZpGxQIzs0H+g=
-X-Received: by 2002:a05:6122:4009:b0:520:5a87:66f0 with SMTP id
- 71dfb90a1353d-5224ca5f48amr622885e0c.0.1740516291172; Tue, 25 Feb 2025
- 12:44:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740516377; x=1741121177;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AwsNt/V6C0SEvs4Dnf61cWDTvftwNiiIlb4RnaXcmjM=;
+        b=jPDNwutBcYYpyUeJod/ZBdWtgTSjybb6Nabl2rr5J9+LwGqUk3AXgu52aMIRf6wKic
+         lVRnAYFxXn8JRvRbMnEvl83CxPqE/AhO44ZoqZ95ZQHuhSheIdOEOYlCgsPfWdTZYkLf
+         F1WTsly2uU3UdBFtq2dXL4FOWvkbEXsHFHFkeOmLuukIpq85mF/4xv8ujlyhozgAdqQM
+         FPqKOfz6zoTtzoVh+i0pd+JGuJAF3xMrGAORyTBbhvANFPtzU8k7i5iDUrd3Y6eEqyyE
+         OebDXyCafZ7mdB5DAW/KduyygBVguqMx6TvV7ot1uPtRJ3fwQUaCzyqp+th2OocaYLSC
+         GEtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUL32BRbNNXnXeyY9rWd8h2EMm619Vbg+HEKc7eZ742SqlLaYH5aj85Pr0ehp6c8I3in3XOkKulNMa/naQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDn6PP68b00mzKOwrojOBCPXS26CGZ+tZoXQ7e5K3dmtw3WcEg
+	H2fbnARMRn19ju6X7096EB/b8i2nbESGBU5Qlc4qOIhYLNyAvgHO6I8jDm17FuBPe+UpMaHWxfq
+	QjQ==
+X-Google-Smtp-Source: AGHT+IG3nnnvmkG+wxrHTInj2Ig69F87Y7hW6VG7poXUtHgZo3oQOVU0yNovmqwt3N1ta/wB/S58PbVD86Y=
+X-Received: from pfwp47.prod.google.com ([2002:a05:6a00:26ef:b0:730:7a22:c567])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:aa7:8895:0:b0:732:6480:2bed
+ with SMTP id d2e1a72fcca58-7348bdd348dmr1042646b3a.13.1740516377355; Tue, 25
+ Feb 2025 12:46:17 -0800 (PST)
+Date: Tue, 25 Feb 2025 12:46:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250225105907.845347-1-claudiu.beznea.uj@bp.renesas.com> <20250225105907.845347-2-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250225105907.845347-2-claudiu.beznea.uj@bp.renesas.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 25 Feb 2025 20:44:25 +0000
-X-Gm-Features: AQ5f1JrIlEI9csHkFJEJ6oSQm2qEweelampPKPuX9QpIXSLN_Q21l7vsjhxOkyE
-Message-ID: <CA+V-a8tBPHA00n9MyP_PJa8KzTMDNJBoE7n+DzuzT_ObR7SuJw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] phy: renesas: rcar-gen3-usb2: Fix role detection
- on unbind/bind
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: yoshihiro.shimoda.uh@renesas.com, vkoul@kernel.org, kishon@kernel.org, 
-	horms+renesas@verge.net.au, fabrizio.castro.jz@renesas.com, 
-	linux-renesas-soc@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, stable@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250225204613.2316092-1-surenb@google.com>
+Subject: [PATCH 1/1] userfaultfd: do not block on locking a large folio with
+ raised refcount
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: lokeshgidra@google.com, aarcange@redhat.com, 21cnbao@gmail.com, 
+	v-songbaohua@oppo.com, david@redhat.com, peterx@redhat.com, 
+	willy@infradead.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	hughd@google.com, jannh@google.com, kaleshsingh@google.com, surenb@google.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 10:59=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev>=
- wrote:
->
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> It has been observed on the Renesas RZ/G3S SoC that unbinding and binding
-> the PHY driver leads to role autodetection failures. This issue occurs wh=
-en
-> PHY 3 is the first initialized PHY. PHY 3 does not have an interrupt
-> associated with the USB2_INT_ENABLE register (as
-> rcar_gen3_int_enable[3] =3D 0). As a result, rcar_gen3_init_otg() is call=
-ed
-> to initialize OTG without enabling PHY interrupts.
->
-> To resolve this, add rcar_gen3_is_any_otg_rphy_initialized() and call it =
-in
-> role_store(), role_show(), and rcar_gen3_init_otg(). At the same time,
-> rcar_gen3_init_otg() is only called when initialization for a PHY with
-> interrupt bits is in progress. As a result, the
-> struct rcar_gen3_phy::otg_initialized is no longer needed.
->
-> Fixes: 549b6b55b005 ("phy: renesas: rcar-gen3-usb2: enable/disable indepe=
-ndent irqs")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - collected tags
->
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 33 ++++++++++--------------
->  1 file changed, 14 insertions(+), 19 deletions(-)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Lokesh recently raised an issue about UFFDIO_MOVE getting into a deadlock
+state when it goes into split_folio() with raised folio refcount.
+split_folio() expects the reference count to be exactly
+mapcount + num_pages_in_folio + 1 (see can_split_folio()) and fails with
+EAGAIN otherwise. If multiple processes are trying to move the same
+large folio, they raise the refcount (all tasks succeed in that) then
+one of them succeeds in locking the folio, while others will block in
+folio_lock() while keeping the refcount raised. The winner of this
+race will proceed with calling split_folio() and will fail returning
+EAGAIN to the caller and unlocking the folio. The next competing process
+will get the folio locked and will go through the same flow. In the
+meantime the original winner will be retried and will block in
+folio_lock(), getting into the queue of waiting processes only to repeat
+the same path. All this results in a livelock.
+An easy fix would be to avoid waiting for the folio lock while holding
+folio refcount, similar to madvise_free_huge_pmd() where folio lock is
+acquired before raising the folio refcount.
+Modify move_pages_pte() to try locking the folio first and if that fails
+and the folio is large then return EAGAIN without touching the folio
+refcount. If the folio is single-page then split_folio() is not called,
+so we don't have this issue.
+Lokesh has a reproducer [1] and I verified that this change fixes the
+issue.
 
-Cheers,
-Prabhakar
+[1] https://github.com/lokeshgidra/uffd_move_ioctl_deadlock
 
-> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renes=
-as/phy-rcar-gen3-usb2.c
-> index 775f4f973a6c..46afba2fe0dc 100644
-> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-> @@ -107,7 +107,6 @@ struct rcar_gen3_phy {
->         struct rcar_gen3_chan *ch;
->         u32 int_enable_bits;
->         bool initialized;
-> -       bool otg_initialized;
->         bool powered;
->  };
->
-> @@ -320,16 +319,15 @@ static bool rcar_gen3_is_any_rphy_initialized(struc=
-t rcar_gen3_chan *ch)
->         return false;
->  }
->
-> -static bool rcar_gen3_needs_init_otg(struct rcar_gen3_chan *ch)
-> +static bool rcar_gen3_is_any_otg_rphy_initialized(struct rcar_gen3_chan =
-*ch)
->  {
-> -       int i;
-> -
-> -       for (i =3D 0; i < NUM_OF_PHYS; i++) {
-> -               if (ch->rphys[i].otg_initialized)
-> -                       return false;
-> +       for (enum rcar_gen3_phy_index i =3D PHY_INDEX_BOTH_HC; i <=3D PHY=
-_INDEX_EHCI;
-> +            i++) {
-> +               if (ch->rphys[i].initialized)
-> +                       return true;
->         }
->
-> -       return true;
-> +       return false;
->  }
->
->  static bool rcar_gen3_are_all_rphys_power_off(struct rcar_gen3_chan *ch)
-> @@ -351,7 +349,7 @@ static ssize_t role_store(struct device *dev, struct =
-device_attribute *attr,
->         bool is_b_device;
->         enum phy_mode cur_mode, new_mode;
->
-> -       if (!ch->is_otg_channel || !rcar_gen3_is_any_rphy_initialized(ch)=
-)
-> +       if (!ch->is_otg_channel || !rcar_gen3_is_any_otg_rphy_initialized=
-(ch))
->                 return -EIO;
->
->         if (sysfs_streq(buf, "host"))
-> @@ -389,7 +387,7 @@ static ssize_t role_show(struct device *dev, struct d=
-evice_attribute *attr,
->  {
->         struct rcar_gen3_chan *ch =3D dev_get_drvdata(dev);
->
-> -       if (!ch->is_otg_channel || !rcar_gen3_is_any_rphy_initialized(ch)=
-)
-> +       if (!ch->is_otg_channel || !rcar_gen3_is_any_otg_rphy_initialized=
-(ch))
->                 return -EIO;
->
->         return sprintf(buf, "%s\n", rcar_gen3_is_host(ch) ? "host" :
-> @@ -402,6 +400,9 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan =
-*ch)
->         void __iomem *usb2_base =3D ch->base;
->         u32 val;
->
-> +       if (!ch->is_otg_channel || rcar_gen3_is_any_otg_rphy_initialized(=
-ch))
-> +               return;
-> +
->         /* Should not use functions of read-modify-write a register */
->         val =3D readl(usb2_base + USB2_LINECTRL1);
->         val =3D (val & ~USB2_LINECTRL1_DP_RPD) | USB2_LINECTRL1_DPRPD_EN =
-|
-> @@ -465,12 +466,9 @@ static int rcar_gen3_phy_usb2_init(struct phy *p)
->         writel(USB2_SPD_RSM_TIMSET_INIT, usb2_base + USB2_SPD_RSM_TIMSET)=
-;
->         writel(USB2_OC_TIMSET_INIT, usb2_base + USB2_OC_TIMSET);
->
-> -       /* Initialize otg part */
-> -       if (channel->is_otg_channel) {
-> -               if (rcar_gen3_needs_init_otg(channel))
-> -                       rcar_gen3_init_otg(channel);
-> -               rphy->otg_initialized =3D true;
-> -       }
-> +       /* Initialize otg part (only if we initialize a PHY with IRQs). *=
-/
-> +       if (rphy->int_enable_bits)
-> +               rcar_gen3_init_otg(channel);
->
->         rphy->initialized =3D true;
->
-> @@ -486,9 +484,6 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
->
->         rphy->initialized =3D false;
->
-> -       if (channel->is_otg_channel)
-> -               rphy->otg_initialized =3D false;
-> -
->         val =3D readl(usb2_base + USB2_INT_ENABLE);
->         val &=3D ~rphy->int_enable_bits;
->         if (!rcar_gen3_is_any_rphy_initialized(channel))
-> --
-> 2.43.0
->
->
+Reported-by: Lokesh Gidra <lokeshgidra@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ mm/userfaultfd.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 867898c4e30b..f17f8290c523 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1236,6 +1236,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 		 */
+ 		if (!src_folio) {
+ 			struct folio *folio;
++			bool locked;
+ 
+ 			/*
+ 			 * Pin the page while holding the lock to be sure the
+@@ -1255,12 +1256,26 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 				goto out;
+ 			}
+ 
++			locked = folio_trylock(folio);
++			/*
++			 * We avoid waiting for folio lock with a raised refcount
++			 * for large folios because extra refcounts will result in
++			 * split_folio() failing later and retrying. If multiple
++			 * tasks are trying to move a large folio we can end
++			 * livelocking.
++			 */
++			if (!locked && folio_test_large(folio)) {
++				spin_unlock(src_ptl);
++				err = -EAGAIN;
++				goto out;
++			}
++
+ 			folio_get(folio);
+ 			src_folio = folio;
+ 			src_folio_pte = orig_src_pte;
+ 			spin_unlock(src_ptl);
+ 
+-			if (!folio_trylock(src_folio)) {
++			if (!locked) {
+ 				pte_unmap(&orig_src_pte);
+ 				pte_unmap(&orig_dst_pte);
+ 				src_pte = dst_pte = NULL;
+
+base-commit: 801d47bd96ce22acd43809bc09e004679f707c39
+-- 
+2.48.1.658.g4767266eb4-goog
+
