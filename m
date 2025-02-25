@@ -1,165 +1,68 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84EF267710;
-	Tue, 25 Feb 2025 09:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476524; cv=pass; b=E30aduytBgvZZrMoL8cBwth5tNtHIuPQT2xjMmNPqGoJM8dqKNEXPLcfY0rdET/IF1QDmUNMsaDv4ax0fiMnQzg9jG7a3ofwbQd2aFzs5IDk/vBA3bm6AnwrC8nMUAlTFk9gV5RjyJHgJ+HUM1PPUotEyZeC+kux8oo3oPjaMp8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476524; c=relaxed/simple;
-	bh=qV5/mFgVOaJlsgL7j+PIweNWTAqfECWHE8IDvYZkZSE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LeVL6X3e/JBiFyVY65XPYw6QWOsWKN8InDK3IseIPu06PqGyCkwn0l04dyHYJILhYyyqCHYB3/YNP9B6sAWysXd2eiyTZB7UKNH7U9si7SiiA3FUKEZdnWlp7VJBrfriT0KdulcAylXYioLedcJZcnV2o5907O3XmhY4+S41xGI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=F3o+DmJz; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="F3o+DmJz"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476500; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=b1G1tij8w9MUsFuZwjNJ2J996DTQsiE+sqDZkt6emWKQQcTxdDElrRqQD93BXmpaejD3XFoIkvUqJWx0gPkTpWOHVzGXDUB0DLoueJduBhG2b6/S6gbNxF+cTW1GBULUliUoO/GO19LFENaXFUu4zmXK1clpRKdLUYzD6QHrpHQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476500; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ydaNwD+QExLtqdUUDLYZNGa0VEDDTPQCaGJLdokEAl8=; 
-	b=lYIHbqz5b0p065bgzQCedV9SAqeadHViTVIb66AavBKPjrPHu5v90Mhurv14ZjSW5X/SHGFTvdmk9EfXsKE/hY/2Grwf2fQGnIRjmeC1YBVbYLqU8/YdI0Z/s5UVLHT2SqNUb+uoP+O6nt/6X3M2cLqMLXQ5G2LxYRG90TuI9XE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476500;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=ydaNwD+QExLtqdUUDLYZNGa0VEDDTPQCaGJLdokEAl8=;
-	b=F3o+DmJzzUuoHQJvR+212nn/N36QFIbvz0s2vkUamjcegnRsrNYJlbIcJ310YW7b
-	pzGVCV78y09/X2IGae2SoqXF8e5suUoeHbOgK67sjknwjqYn3p6+/eWozOc1CbnFL6i
-	VcbbAvG9YgcjrJY1vr245UnpsPddenW9CpiCTV/A=
-Received: by mx.zohomail.com with SMTPS id 1740476498610405.11605187345197;
-	Tue, 25 Feb 2025 01:41:38 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-Date: Tue, 25 Feb 2025 10:40:27 +0100
-Subject: [PATCH v7 06/12] media: rkvdec: Move rkvdec_reset_decoded_fmt
- helper
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66C326159F;
+	Tue, 25 Feb 2025 09:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.16.41.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476536; cv=none; b=XRgkx3goNHTKzB58hI/eacy5L8kI8yytxW9dt0ELJ0gH0sFDZqSEEs/vBr+URYr9hZn4fIAeI6qzonAlLdzL5fhiA2ytHdUpzS0xIs25Jwwr09B9FWNXqkQamYCRxEbiYuSeO/XMByKHl8Ucj2fxQHGtfhM7SPYwCH19ZoF4VmU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476536; c=relaxed/simple;
+	bh=eks3Lc85HLhbzd/HK40pZLMZF+S04fiYW8t+tU+g1cU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=myoXAJgZACH0uLHfNrorBUln2fm2dvOaAjTyCFnhCj4b7tquLwz75E3bHi+GhiJBiT4d4cPyQcYiHIJ5OBE4WqK8vxu+BHgwI5EGX703IcMKlSz8vQpMrk3kGB7dAchh5dOlH+sxyXEGCiwuNIb0NJyerLafJckCW/mP3Ow7hkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=195.16.41.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-msk-a-srv-ksmg02.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id 030021F4D2;
+	Tue, 25 Feb 2025 12:34:44 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Tue, 25 Feb 2025 12:34:42 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.177.20.114])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Z2C9s0QtQz1h0NN;
+	Tue, 25 Feb 2025 12:34:40 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Steve French <sfrench@samba.org>,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	lvc-patches@linuxtesting.org
+Subject: [PATCH 5.10/5.15 0/2] smb: client: fix UAF in async decryption
+Date: Tue, 25 Feb 2025 12:34:22 +0300
+Message-ID: <20250225093428.611253-1-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-6-7992a68a4910@collabora.com>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Alex Bee <knaerzche@gmail.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476426; l=3227;
- i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
- bh=3QFkEuQGNgb1BZvE0V8lmT5neA542UdT7PYjbWxjjM0=;
- b=aC/0vaGnjPQBM1T6M3cY3P/gToBjWStjuLJeKQunm2wkhfMBoiQg9BM9aJnfQp32y+eAp4LoDQ7h
- 6+sRSJLTALU1rBfMC9AqMOR+CqJr9kvf/UMR5cwomBwr/NCHTlTf
-X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
- pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191262 [Feb 25 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/25 08:32:00 #27449984
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-From: Jonas Karlman <jonas@kwiboo.se>
-
-Move rkvdec_reset_decoded_fmt() and the called rkvdec_reset_fmt() helper
-functions in preparation for adding a new caller in an upcoming patch.
-
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
----
- drivers/staging/media/rkvdec/rkvdec.c | 46 +++++++++++++++++------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index e354360f4acc1fe9b7c4b90745f0a818fa2b7cab..1f8f98cf91dc205f4a9da2712c81e90b726a6e57 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -37,6 +37,29 @@ static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
- 		DIV_ROUND_UP(pix_mp->height, 16);
- }
- 
-+static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
-+			     u32 fourcc)
-+{
-+	memset(f, 0, sizeof(*f));
-+	f->fmt.pix_mp.pixelformat = fourcc;
-+	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
-+	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
-+	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
-+	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
-+}
-+
-+static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
-+{
-+	struct v4l2_format *f = &ctx->decoded_fmt;
-+
-+	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
-+	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
-+	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
-+	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
-+	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
-+}
-+
- static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-@@ -169,18 +192,6 @@ rkvdec_find_coded_fmt_desc(u32 fourcc)
- 	return NULL;
- }
- 
--static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
--			     u32 fourcc)
--{
--	memset(f, 0, sizeof(*f));
--	f->fmt.pix_mp.pixelformat = fourcc;
--	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
--	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
--	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
--	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
--	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
--}
--
- static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
- {
- 	struct v4l2_format *f = &ctx->coded_fmt;
-@@ -196,17 +207,6 @@ static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
- 		ctx->coded_fmt_desc->ops->adjust_fmt(ctx, f);
- }
- 
--static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
--{
--	struct v4l2_format *f = &ctx->decoded_fmt;
--
--	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
--	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
--	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
--	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
--	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
--}
--
- static int rkvdec_enum_framesizes(struct file *file, void *priv,
- 				  struct v4l2_frmsizeenum *fsize)
- {
-
--- 
-2.25.1
-
+Commit b0abcd65ec54 ("smb: client: fix UAF in async decryption")
+fixes CVE-2024-50047 but brings NULL-pointer dereferebce. So
+commit 4bdec0d1f658 ("smb: client: fix NULL ptr deref in crypto_aead_setkey()")
+should be backported too.
