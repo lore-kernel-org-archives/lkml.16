@@ -1,92 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD7E211494;
-	Tue, 25 Feb 2025 21:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0450F212B3B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740517407; cv=none; b=GHt+25GXxa5YsIan0UZfsKdKEk9/lyvTdK2ADYKKPXIwYhU4TqGMHP3Xu5v7U7qbLQOevcIoGE8uGnk7DKXdpC3R94oSpv6BhvYueuCAT5Xf1QdWzBjPtjShMygaG3To6YpQOGfZY38ZWCy+bD6ymEUyWPWo/ZMq2PlCLIpgQb0=
+	t=1740517411; cv=none; b=Ps8/V54ICRjkjQg3P6ZSjVYjs5oOJywBpk3GaEApE5nWzs5TWt0uiQmYct5Ry2PLtya0GqheNXchvZ80wGCx+HvTEIq32g9xZIrKxskwqVlbdTKUs8M+pH1I/dIjC/Ptmkq5x6yRkH+T938fkUurv5phdeXie4Mu7KQFBaQAkAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740517407; c=relaxed/simple;
-	bh=3rjzucY2mzCS228H6NdD5SCcBe2EbMfvymk2w4oTTTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KUjAvPzf3jSBbjcUOB1gzwA4q6eVIS+hbY2uPF4hH6i6VBXwsCTRQTZO5ACPMjZ8xxiJSFvsuwK3iKJjp9qqfsw+46mrMzgnVyLU5ttVbcOXzTy8h/nF/ZHtLP4o3plh7PyydqrfYwZTTzi0EpKGuWHsfZ41WRBE+XpuWtMtSWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rua6QqsG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740517411; c=relaxed/simple;
+	bh=u7u8qa3o0CRq8+28X/DVzlbTKCg681qHjy2TBF7RW20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plqeOTO8rQi1jefP0v3Uh0eMlT7/o0HtUSifho5uoxS88BjlSzMsrq6JIFO0jQBRl2OQ5Z01sRzrPwS7LMkYX1Oa3vL6w43ZEkAzsw9jtT5xcsCrOhIpYjctPHo74YkT4kf7wJU6BnuUC8MJ4jUa5czb9QjCiQs2nxRJqLH71oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JMgL7+5o; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rua6QqsG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A451C4CEDD;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JMgL7+5o"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 61A9740E01AD;
 	Tue, 25 Feb 2025 21:03:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740517407;
-	bh=3rjzucY2mzCS228H6NdD5SCcBe2EbMfvymk2w4oTTTk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rua6QqsGWULVo6JIaHkhYkZsmQsYHrG84S0o7f2MfZmZbE6CnRFdafTtciX0MpS7s
-	 yk3Mg5XSHm/gFzcqdRrIvpIhv1v3sFFr5J0muP2KM9nHAiOUy9QOjIc+eUyw2DT8ZX
-	 MAVvS9OHMVCfH/piWSd8OanTFXH/F/GpbB8Xfrzu0RNrZLcCu0D0Kycv33jQfhPoAy
-	 /6VRmfokCqwOcSTM993ohRtwcGx+4ZEYgYqxjXxFxzk6JgLD977KczYz8EWJ3IIE7/
-	 PytJBDjvcJusPc8EEn5zGVAnhizQbxou+DYBt3IU7UHJp5bibBwjSSlIQ73xz25n+w
-	 IGN9HeadCuqsQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: display: mitsubishi,aa104xd12: Adjust allowed and required properties
-Date: Tue, 25 Feb 2025 15:03:15 -0600
-Message-ID: <20250225210316.3043357-2-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250225210316.3043357-1-robh@kernel.org>
-References: <20250225210316.3043357-1-robh@kernel.org>
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id BufiWpZA3Kh9; Tue, 25 Feb 2025 21:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740517403; bh=RW7EXBWZRnw4HvjQHbP/KC89pF9FScloDAfWFmC/zP0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JMgL7+5owRQsYhrS0LpvJMpyfC1ZGd7umIldHeF3ju5fAXdx+NiAuVKw26Y1nqU5k
+	 sX6fjSfyVLfb2e4eFNn+ZylYorMx8obUuLowfA7Gv1iBhkEITwR/99+Dex3mg7P56N
+	 h+dKN5FPzI8zEnRzwd3c+r+XaGnDCx8RWxBunj5MQ4Fv/xahUYhgwg+lTEzV30Za9+
+	 j6pqPlVyNDR9Vi2EFrXKPMBeh6iHGdJmVxxBItvN/wDUfKUwanxn8sWchflr3fsS+4
+	 rZUs9RIVWpwXeBkHqTjpnEiReaZCOU1KwWp65xAxxAadE8ruvxcOz/XHyUWm/r6Iix
+	 QbXt/SyxIO7ljexJWKj5JNN9flHnr8Wz7sJ/OcM6rs6YG5g2h9IPRK1FXDSRQFYLQ1
+	 sQAjHoPA31vnFiDcLERAyuTI3ptlcqkn6pljqIus6sdHVB5Dt3whzlhY7dTJJvQUra
+	 ytSKxQ/UeifIyn+jP0F5lNDu/MYDr/H6if/g59mhjTvADLt79ik+eQtK6pzy4xijBV
+	 pKBPaliQXxmMaaLCGkL6QXwJ0X7r79/J7zsaHiV0Uxx3lq/brm7jxQQWCYY2ntKmRN
+	 +ffK6Plz+fAc7kCZvkYDq4FGLH/rhREEokk8jZyVasNqpLx4i+KTqn0ToBl9OxvaGp
+	 hE7KLWzQcFdSPHlppk3ykVfo=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5E38840E01A0;
+	Tue, 25 Feb 2025 21:03:06 +0000 (UTC)
+Date: Tue, 25 Feb 2025 22:03:00 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali.Shukla@amd.com, mingo@kernel.org
+Subject: Re: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page
+ reclaim TLB flushing
+Message-ID: <20250225210300.GHZ74wBP2ogmM5P5lP@fat_crate.local>
+References: <20250223194943.3518952-1-riel@surriel.com>
+ <20250223194943.3518952-7-riel@surriel.com>
+ <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
+ <7c2baf33265444089ab780848de29a1336a9a4cc.camel@surriel.com>
+ <20250225203803.GGZ74qK1oZWk8u69O4@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250225203803.GGZ74qK1oZWk8u69O4@fat_crate.local>
 
-The Mitsubishi aa104xd12 panel requires an external backlight driver
-circuit, so allow the "backlight" property.
+On Tue, Feb 25, 2025 at 09:38:03PM +0100, Borislav Petkov wrote:
+> On Tue, Feb 25, 2025 at 02:17:20PM -0500, Rik van Riel wrote:
+> > Who do we need to ask to confirm that reading?
+> 
+> Lemme figure it out.
 
-There are users of this panel without a vcc-supply, so it shouldn't be
-required.
+Confirmed - that really is the case.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thx.
 
-diff --git a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-index 2c92d81caaaf..96621b89ae9e 100644
---- a/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/mitsubishi,aa104xd12.yaml
-@@ -43,6 +43,7 @@ properties:
-   height-mm:
-     const: 158
- 
-+  backlight: true
-   panel-timing: true
-   port: true
- 
-@@ -50,7 +51,6 @@ additionalProperties: false
- 
- required:
-   - compatible
--  - vcc-supply
-   - data-mapping
-   - width-mm
-   - height-mm
 -- 
-2.47.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
