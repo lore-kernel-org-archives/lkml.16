@@ -1,133 +1,150 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D681EBFE6;
-	Tue, 25 Feb 2025 13:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B06268C40
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489113; cv=none; b=W+fkG1Bf+Eu8h2eGlfMbIPP9DEcHybxn++0zD1Gmssz9PCgzlbt5J9hFkiGJp1kjaULSTyuo9n4PmpM8eXtWV+P9DWjvl3othYWZk/qSjEa8ajWTkQqnrXnJvJV+jvN7aql5TTgQbHD4iRvGTgfD5PzerWmmXqgz/Aryx6wEwVQ=
+	t=1740489133; cv=none; b=n07+Y0FdZ98fy/dS3dFsamRBP9kKH8S5dscGw+QC6TqEhq7YBZxRo6vPxmM2AO6bb7ZcpPuImsfWXRxt5g6FNREOW8NAvuhG8lePe31y5dBJeGjjlOYNtG3qTOj6V7JdWIQpEW9g1BCfj7uCjTyiFiLAh5g7MKobWvkBO8hwQMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489113; c=relaxed/simple;
-	bh=Tc06KpHhdncY5vHPplX6+roo60GBAPDBnABoT57FjX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ndxiqQHTqEEgFSLqSShj/ERrVAbkc1z13ALCzDdiAtWFZrIOd5CLlfPcxI28gtfV9I6XhfCx+8MBZzAXLjuFTt1EDXuaLdTzjNnYh5ucXcVo5bUisCBuxSLhMynT02L9hGRY2zpyVbzMGWbd2QtfhxBsCqrXpbBIaAnlDRmNuo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abec8b750ebso214848666b.0;
-        Tue, 25 Feb 2025 05:11:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740489110; x=1741093910;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWZOk7RRTPc+ZkJlzirhO5rrxb3g158YcdwUTbEdDw4=;
-        b=wrbTf7ye80IbNV6wsoXQuylnFBcomRrzkUdugE8PXgSOmOWxbACLt33khj1WxaOHZi
-         c5bNt7c9MlUcwDgH2/VF7dNs8pDZFwrmSysgZHHkhnGwdGFj/bPp1u2yEir2o0Rx+xi9
-         RRSTMy5ojbyHpbvclS7Yk4CtsBJDncTvZvVgPmoT5NwN7cALuGlQunLy09vOE4iSG7I0
-         NMpp4FSBfsWpWHsisuKOUHaPhOV+Qg1yfdaotPCjWNrGtcCXn9FWYjd7mMVA0DIz9Lrc
-         Y56IWOTicshOOAIBbfharFaC7MahfElwSXHYgOGwpBBomKAyDyfPiLwnByWoT8HoEYKL
-         9Lgw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4ykirT6upriIeMshKlZjdsFfoXh7zOT7qLj89Fxz1glTpsDqQjAEj53GgpCAttZ05ChKMHrSymQM1ZauQIwLX@vger.kernel.org, AJvYcCU8faJf3v2IGYqkMn/dZId8hI9U9vR2mZspGh88izXFgkHkYQUuHjc/z0t9mS++Twu2i6RoAww+WgM=@vger.kernel.org, AJvYcCVnPZM//mx8FozPXR3ZJBqG34tuZdun8Gd9VIN+BzVVKYsVQrTatsF2dg+ob8YlwrPLPk2NCHVk@vger.kernel.org, AJvYcCWeIBz+8DklpxHTH6jbpNhtL9csjfm9rST06lJKiUMYW8C4GqLKgiQWnQH1nyUz3W7FDkG8IeHvOqQQAxkS@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLmhaqZBB+2Z0KPczejHjjDqTacTLwHtg1B+NFaFuGnkfQe7E/
-	U4USfjXBQCuYNVMpQugdgFeue9YMOmz+ITKypABu5pWj6nt789k5
-X-Gm-Gg: ASbGnctGGbNN539bejVkkf7cZSdsrPx9YupE5neCQtZSkxRmOCWCYQZ/Gckycbnb51K
-	XAu4JgtX2AhBswMKsn+V9yNYJDz+Vqn9P7W2uOQ7K4rSRdpfsYra3PdqcCZuPbp/8eTW4JyvpDA
-	2OxHs5LwWUXA9rUjkBB2pD+iTk6cS7j3b9KeOMgmeVhdyknHTgs6Iz1cWs8EWsshvictlNfg8jO
-	43HZtAbXQIZgD9ClnNUfW61fpgjXw7SbLJ2zym1I2X6Y/ruT8TnJh6hCQqeIJcEB/Iv9+qL85FH
-	v0S/8epvRg6Xuw7I8A==
-X-Google-Smtp-Source: AGHT+IGFvHYwvYql3mUsikF1Ks4rOTcJOh62lrefJB9Zvc8mdhl4bBBxZZYSPaW8NxhpSJFjRt6GQg==
-X-Received: by 2002:a17:907:724f:b0:ab7:bf87:d9de with SMTP id a640c23a62f3a-abc0de146b4mr1561996666b.37.1740489110209;
-        Tue, 25 Feb 2025 05:11:50 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:72::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2054d58sm139993866b.148.2025.02.25.05.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 05:11:49 -0800 (PST)
-Date: Tue, 25 Feb 2025 05:11:47 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next 5/7] netconsole: add task name to extra data
- fields
-Message-ID: <20250225-bright-jasmine-butterfly-aa1bb0@leitao>
-References: <20250221-netcons_current-v1-0-21c86ae8fc0d@debian.org>
- <20250221-netcons_current-v1-5-21c86ae8fc0d@debian.org>
- <20250225101910.GM1615191@kernel.org>
- <20250225-doberman-of-scientific-champagne-640c69@leitao>
- <d0e43d0a-621d-46ee-8cb7-1e5c41e76b8c@redhat.com>
+	s=arc-20240116; t=1740489133; c=relaxed/simple;
+	bh=+OuOvkEeuzB7LAlg9x4s/xUKhlq/4QtpAbBFb8doADA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oHzc/zal+PRwskImQFRa/XvoUiYh41HFVkmi8WotGHFVqz8LUSZQCy5XT+syLb+MpGM59ZfBa9hYkXCWhHhmIEshmGS5YWPpm5AUcp8h68jgU8HxOePUBbdY7MA2auUXmtCFJLeieX4S3jPCCEx+z8jZNZbeas6pJBslxQuW93o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tmujE-0005WL-BO; Tue, 25 Feb 2025 14:12:04 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tmujD-002mM0-2S;
+	Tue, 25 Feb 2025 14:12:03 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tmujD-0008y2-29;
+	Tue, 25 Feb 2025 14:12:03 +0100
+Message-ID: <78e60d723c27b7fa0f03bc6a74f6ad37d6508734.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/8] dt-bindings: dsp: fsl,dsp: Add resets property
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Daniel Baluta <daniel.baluta@nxp.com>, robh@kernel.org,
+ krzk+dt@kernel.org,  shawnguo@kernel.org, mathieu.poirier@linaro.org
+Cc: conor+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+ festevam@gmail.com, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org,  imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org,  linux-remoteproc@vger.kernel.org,
+ andersson@kernel.org, Frank.Li@nxp.com,  peng.fan@nxp.com,
+ laurentiu.mihalcea@nxp.com, iuliana.prodan@nxp.com
+Date: Tue, 25 Feb 2025 14:12:03 +0100
+In-Reply-To: <20250225102005.408773-3-daniel.baluta@nxp.com>
+References: <20250225102005.408773-1-daniel.baluta@nxp.com>
+	 <20250225102005.408773-3-daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0e43d0a-621d-46ee-8cb7-1e5c41e76b8c@redhat.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello Paolo,
+On Di, 2025-02-25 at 12:19 +0200, Daniel Baluta wrote:
+> Assert and deassert functionality of the DSP found on i.MX8MP is
+> realized by combining control bits from two modules: Audio Block
+> Control and Debug Access Port.
+>=20
+> Audio block control bits are used to for Run/Stall the DSP core
+> while the DAP bits are used for software reset the core.
+>=20
+> The original plan was to use fsl,dsp-ctrl property and to refer the
+> audiomix bits via syscon interface. This proposal received NACK from
+> community we shouldn't abuse the syscon interface [1].
+>=20
+> So remove fsl,dsp-ctrl property for i.MX8MP and use reset control
+> interface instead.
+>=20
+> [1] https://patchwork.kernel.org/project/imx/patch/20250212085222.107102-=
+6-daniel.baluta@nxp.com/
+>=20
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>  .../devicetree/bindings/dsp/fsl,dsp.yaml         | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml b/Documen=
+tation/devicetree/bindings/dsp/fsl,dsp.yaml
+> index ab93ffd3d2e5..b3550c9d12e7 100644
+> --- a/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> +++ b/Documentation/devicetree/bindings/dsp/fsl,dsp.yaml
+> @@ -82,6 +82,9 @@ properties:
+>      description:
+>        Phandle to syscon block which provide access for processor enablem=
+ent
+> =20
+> +  resets:
+> +    maxItems: 1
 
-On Tue, Feb 25, 2025 at 12:53:49PM +0100, Paolo Abeni wrote:
-> On 2/25/25 12:17 PM, Breno Leitao wrote:
-> > On Tue, Feb 25, 2025 at 10:19:10AM +0000, Simon Horman wrote:
-> >> On Fri, Feb 21, 2025 at 05:52:10AM -0800, Breno Leitao wrote:
-> >>> This is the core patch for this whole patchset. Add support for
-> >>> including the current task's name in netconsole's extra data output.
-> >>> This adds a new append_taskname() function that writes the task name
-> >>> (from current->comm) into the target's extradata buffer, similar to how
-> >>> CPU numbers are handled.
-> >>>
-> >>> The task name is included when the SYSDATA_TASKNAME field is set,
-> >>> appearing in the format "taskname=<name>" in the output. This additional
-> >>> context can help with debugging by showing which task generated each
-> >>> console message.
-> >>>
-> >>> Signed-off-by: Breno Leitao <leitao@debian.org>
-> >>> ---
-> >>>  drivers/net/netconsole.c | 14 +++++++++++++-
-> >>>  1 file changed, 13 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-> >>> index 5a29144ae37ee7b487b1a252b0f2ce8574f9cefa..625f4c0be11d8deb454139b1c526abc842697219 100644
-> >>> --- a/drivers/net/netconsole.c
-> >>> +++ b/drivers/net/netconsole.c
-> >>> @@ -1179,12 +1179,22 @@ static int append_cpu_nr(struct netconsole_target *nt, int offset)
-> >>>  			 raw_smp_processor_id());
-> >>>  }
-> >>>  
-> >>> +static int append_taskname(struct netconsole_target *nt, int offset)
-> >>> +{
-> >>> +	if (WARN_ON_ONCE(!current))
-> >>> +		return 0;
-> >>
-> >> Hi Breno,
-> >>
-> >> I gather that theoretically this could occur, but it isn't expected
-> >> to happen in practice. Is that right?
-> > 
-> > That's correct. `current` isn't expected to be NULL in practice.
-> > I've been running this code on several servers for days and have never
-> > encountered this warning. 
-> > 
-> > While the taskname feature isn't enabled during early boot, netconsole
-> > might be active at that time, which is why I exercised extra caution
-> > here.
-> 
-> So `current` can't be NULL here. I think it's better to drop such check,
-> it's presence would be misleading. i.e. like adding checks for UDP stack
-> being initialized before calling send_msg_fragmented()
+The DAP core reset is mentioned in the commit message. Why is it
+missing here? After reading the discussion in [1], I'd expect both the
+stall and the (core) reset signal to be documented, something like:
 
-Ack. I will remove the check then, and check if the UDP stack has been
-initialized before calling netpoll helpers.
+  resets:
+    maxItems: 2
 
-What is the best way to make sure taht the UDP stack has been
-initialized?
+  reset-names:
+    items:
+      - const: core
+      - const: stall
 
-Thanks for the review,
---breno
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -164,6 +167,16 @@ allOf:
+>              - const: txdb1
+>              - const: rxdb0
+>              - const: rxdb1
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - fsl,imx8mp-dsp
+> +              - fsl,imx8mp-hifi4
+> +    then:
+> +      required:
+> +        - resets
+> =20
+>  additionalProperties: false
+> =20
+> @@ -186,6 +199,7 @@ examples:
+>      };
+>    - |
+>      #include <dt-bindings/clock/imx8mp-clock.h>
+> +    #include <dt-bindings/reset/imx8mp-reset-audiomix.h>
+>      dsp_reserved: dsp@92400000 {
+>        reg =3D <0x92400000 0x1000000>;
+>        no-map;
+> @@ -220,5 +234,5 @@ examples:
+>                 <&mu2 3 0>;
+>        memory-region =3D <&dsp_vdev0buffer>, <&dsp_vdev0vring0>,
+>                        <&dsp_vdev0vring1>, <&dsp_reserved>;
+> -      fsl,dsp-ctrl =3D <&audio_blk_ctrl>;
+
+Is there nothing else in this range that will have to be controlled by
+the DSP driver in the future, such as the IMPWIRE register or the
+XOCDMODE[OCDHALTONRESET] bit?
+
+regards
+Philipp
