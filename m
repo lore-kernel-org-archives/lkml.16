@@ -1,124 +1,107 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779DD24EF9B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3281E7C0A;
+	Tue, 25 Feb 2025 11:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740484661; cv=none; b=NU1kE9y1ltLovV8G9ySJUP29DjObo5G11oqovuzEwlw9N8SM2n5mzjYPvL3gQ5t1f/nKbzwIlWbRyUtKyF/UUzXxTz0LXY3PNahHSksqYkgXJNngejaJ6tzKMETV1nfKWqKkV/wDF93QEoVbkdEZCOcrxwCE8AF5hNHjKneDeSA=
+	t=1740484678; cv=none; b=MtzmPFTwowUZp7a0sBTWy9zZljcWMD5U1pk+ghMJ5y60VJdGi6vhNJV4Wr3pZjihqVQ+nVz+OEPl+ahmhlq0PpswJUGDGlR0ZPqVVCt59EPGulx/bVjO21lP0wpatuiooPGzaIp42UzBhRHlPCFwQ1u3JCcO/ygMfwhhEJSsD1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740484661; c=relaxed/simple;
-	bh=0ejaQvRgvD/39Cpjo9LWMBffWmj8mem5cTlbNfG0LaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6LybF/ME8waLGYQ5XMYogt46fDyuOASGq4ODzQ2LiXYXMqniHXTWArJzzOL/ywJDJh48rFttmLYTidFjjTEpSogeNjIzAvagsYaKQKfjrCsjoYACvusnPOn1ROsbTOeqG1o78szwKeyNfNmz6S4lyl5i0J/uH2gm5ujGws7hKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QdASPCFm; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740484678; c=relaxed/simple;
+	bh=L9zvKXRv4c3bXhNyjLzX65AtYdpn8Ffw1O68j1Jvs50=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=TMuKkNtA/4oMfg5KbmBoj6aPDXKicnt+TQDVx+13RInSwRe6utLcbi8NRRocyJTKBBwLKpoQ0guij+38mlfw5Ah81q+LgwKROGKxkCCR+Z5abm0luq/MrnXoiDK7lX5qGzfrO7DPnwrl/zcvxVyEPMIQICVdtdK8x4dz76pYkpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hBryZq+X; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QdASPCFm"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5439a6179a7so6124474e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:57:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBryZq+X"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e0573a84fcso7513297a12.2;
+        Tue, 25 Feb 2025 03:57:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740484657; x=1741089457; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BJdxb9d2Qc7/mEkgivvxiQHCCJjZY2RUEpoG9MQvZUI=;
-        b=QdASPCFmvY0kmiBGFkfLYbccilBrK/x1p/YrUfUijy9lOZsV8J2PugjpT/T+E9UA3G
-         O2p2rQ+XGfu1eEIwuKTVLbGqsxgUErD6aTqUqKt+nw4P93gOKFrsRZWD/8LEgOkg0wL6
-         7cmpVuEMMHg4/7LBmMaBHXHuDuY+CBe5Y3zyY4KPv6/cXMVcXSmsa2EkjJZW8DgAcpcw
-         /0dfwpRz4yPAoVNw+3DmUf/DMiIzE9bOyHE7S1R3tAyk+N3L867M2hVEd4mARY5yNYjS
-         H28nFe10GNUrxCdGVI3rkPCFdLP+/z3G5POkfBBg+q+X0WP1ouj+IyNVxHuDUWvLtIM4
-         PhgQ==
+        d=gmail.com; s=20230601; t=1740484675; x=1741089475; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=T+oQbQtf7tgruZ3SskNuc1XmiV1tLLW5ur3bDpFOqjg=;
+        b=hBryZq+XaEyMuRH4WJ6hcC4Do/hy45WcYhFXnRsYFbNvqjcdR6KQdze7MxUxk9NRBJ
+         MitpcX6PvtCYtNtLgFxz8D4kX+zk9lhx7SWn6YMapW3Iu7MF1qGCjWrvhBdxLMIrI+Mn
+         8G/bljVEfbc2zR3gItIKrQFmkxYSAaVKUKl1ZEe2BJHoqoqudmzyhMdwCFzhsYQLtzUW
+         /3LnsP413Ybwin0qgP5un70hTbEw9R94B1zjlRpKpuCCSX7jooxb5hnEH8IEQgh0W+G2
+         4kJgOtNMB3TZLK6uUrWsJ3W9EZnTRV7sL/gm06YrbmBBwrAJGpyZKoI7v+FCMejbG3Pi
+         HOpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740484657; x=1741089457;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BJdxb9d2Qc7/mEkgivvxiQHCCJjZY2RUEpoG9MQvZUI=;
-        b=kas1hE6EWwiApLiM6xSQiSf+5MO73SdAIouXbsN3ismApUVzYIbRvxwPsNi8za3lU5
-         SUgPiHq95BptehVOKbSgsyLy+mEAMcyrFulDygaIUl7izvwNpepxSHTN+5k2cVmo8WXC
-         3vjayRWL0tZn/kPW9sLNI1/aKYI8HYAtI2OcVqxxrVjJVPi7UnPr63D0AQQL+n13HZQf
-         Zc1f3FDfemiScRc745OrJpgyLdYa8RBp1IQwemEVvXccwaHyEG0pmfltI5TPvP7szAjZ
-         PklhyaN4WLqsTh9dpWcRAqcsmjuEOguTCvhdtRxkzjQfoFGoE62hXNRArARnZ264W/xv
-         9NBw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtBgEIKQmQV2fmJ3U2mmHmztJ6NVO2SSBkdzwHLkU2/hkeDkOOXXKPWz7lNuAjQrDAkwle7HekMmUyh2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz80A01NY/OqKYCb2e7oz4IRae3kHEpBL35T4UzwWTvZ+wwxrwe
-	elcdsf2resJ3Rc8onrUvlBYaGTcUwpIYe/mIDcdsCfisIQamvDap4iqUPIlNNek=
-X-Gm-Gg: ASbGnct2KDggIXn8waplrf7NHHXyRdlwmBYFpH1XXOwHdOuvr8sjygdmh0oT0tMhX10
-	7xzRs+v4R5GXJenRCOqziW6u8Km+PU8c2OfXMGzx0TmVdAmarIH2N7SpiBVYf8y494NlAwOv0lT
-	FHjBhfcFIwPiP2/RWDG/lDroCX4oJ4jibcYLtYsaOu/97NSZcW6HSYMMTd1uSCq5z3Aq4jsxW3P
-	gGJN5gOAPnnEgts0HegsdQMwIDq1LciTgl3yx2LqxBnWgY5fK/SXTmpeXwr8jhk0UuVjEluO893
-	M6cUrDFRqb2J2o+4snnFjQoHS1C/g0Y/nsoJ7YwpJ6AvQbgZGZvJQ31QqEwf//KfTqz9+8lISKk
-	/M7Rkiw==
-X-Google-Smtp-Source: AGHT+IFbqdYh8fwBrlR0bY7/Z36QCpnKteDFdIRRsnwu1FwaNfeJZqynpnHdLJr5tV947+xq6nGVtQ==
-X-Received: by 2002:a05:6512:280a:b0:545:8f7:8596 with SMTP id 2adb3069b0e04-54838cb6287mr5705354e87.17.1740484657548;
-        Tue, 25 Feb 2025 03:57:37 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548794c6a73sm95082e87.250.2025.02.25.03.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:57:36 -0800 (PST)
-Date: Tue, 25 Feb 2025 13:57:34 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxim Schwalm <maxim.schwalm@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] drm/bridge: simple-bridge: Add support for MStar
- TSUMU88ADT3-LF-1
-Message-ID: <lkfxsq3daspjxdw43dofch3nulprpmg4soxsgflsypu3kem4ok@utt6rfdtbg7j>
-References: <20250225083344.13195-1-clamor95@gmail.com>
- <20250225083344.13195-4-clamor95@gmail.com>
+        d=1e100.net; s=20230601; t=1740484675; x=1741089475;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=T+oQbQtf7tgruZ3SskNuc1XmiV1tLLW5ur3bDpFOqjg=;
+        b=dKMWdObRxfqr6z8pdjRH5BKBJfLDG1JgheYK8a57WHJUzaRMMfngmPPV5/ytBGTTRl
+         GR1Gw3QJ1SeNsPPGbcF9ieCODcRQv7QZNyX9jluZpez5uNmDk0Z2lRzs0ga2WU4Gnxjd
+         RnXZ2kucZCYzQIgCkiCtPZbm0emURVBB2KuisMJaKPsWx1eXFs5Ge0JyzZ3nVvXSWP+w
+         SgCU8zz2PwSRR3vG2/eGO9f7Gynw0KK3MAoX/9UJ/pEBN/uV7n26d59t5jPlq0+fS1V/
+         SCxlxK+XhaFvfo/H/o2afrq7e7BVJGSe/eph/ASgGWJfhJNjNxoNJz/tv5VkqOiMJso5
+         LddA==
+X-Forwarded-Encrypted: i=1; AJvYcCUxCnlTpW+bRvfE6LR8CiRNFopFbUw/sXjddLHnXMUULLiYRUxnbYWlkA58l1aCMNCfrAHSWBdoifGJkic=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA3NC58yinox73kHN13xbRCl6VwsFWWhr/+CzKSUSux/tXC6jE
+	muc7pf2yC2sXh4Pn0Di+jc2hqAaRO55pdK7D4CBE6vxnP/oxjTMx
+X-Gm-Gg: ASbGnctG5qigSNW9dmrOK5D9hvIhDicb0g8/fhiBFlxDBGkZCd81hfKMZrpU20zszIF
+	Bk+KtJ940yVTosW0YJIn5fMELrYjtPvamlSn4It2bTmU+cE7eAEHgrh34W0zycyt9L68gNT3D/z
+	vBVFPeJ5nhnyzMwh8RUqdb1XJBGMQIrQ8sfSv7w7+HfUHuALyjaCYJNwY0qJGe0NJljcEx2KPiq
+	osJX3B0mTLI9WHzsohFTZ5guvwSz484QrvODw76oTD0dk+T9/BniCeTlIBoAHtNfHrT4sMJuVNb
+	KZxNDLCdYqQm/sIGoL32WM8rkxCJu1uPwKldzdUk8Ik=
+X-Google-Smtp-Source: AGHT+IEvljivfokfnn/Rvjaln73+Fm6SDBkZKg+ngRkTP3BBxizYPRmt9ZxL7LkeNstdm5rUknLCNw==
+X-Received: by 2002:a05:6402:530b:b0:5de:ce71:bacb with SMTP id 4fb4d7f45d1cf-5e0b70f334emr14403735a12.16.1740484674877;
+        Tue, 25 Feb 2025 03:57:54 -0800 (PST)
+Received: from foxbook (adqm166.neoplus.adsl.tpnet.pl. [79.185.146.166])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e461f3e675sm1083423a12.72.2025.02.25.03.57.53
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 25 Feb 2025 03:57:54 -0800 (PST)
+Date: Tue, 25 Feb 2025 12:57:50 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] xhci: ring queuing cleanups plus a quirk
+Message-ID: <20250225125750.1b345e2c@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225083344.13195-4-clamor95@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 10:33:44AM +0200, Svyatoslav Ryhel wrote:
-> From: Maxim Schwalm <maxim.schwalm@gmail.com>
-> 
-> A simple HDMI bridge used in ASUS Transformer AiO P1801-T.
-> 
-> Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
-> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> Reviewed-by: Robert Foss <rfoss@kernel.org>
-> ---
->  drivers/gpu/drm/bridge/simple-bridge.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/simple-bridge.c b/drivers/gpu/drm/bridge/simple-bridge.c
-> index ab0b0e36e97a..c0f1f7baaa37 100644
-> --- a/drivers/gpu/drm/bridge/simple-bridge.c
-> +++ b/drivers/gpu/drm/bridge/simple-bridge.c
-> @@ -277,6 +277,11 @@ static const struct of_device_id simple_bridge_match[] = {
->  			.timings = &ti_ths8134_bridge_timings,
->  			.connector_type = DRM_MODE_CONNECTOR_VGA,
->  		},
-> +	}, {
-> +		.compatible = "mstar,tsumu88adt3-lf-1",
-> +		.data = &(const struct simple_bridge_info) {
-> +			.connector_type = DRM_MODE_CONNECTOR_HDMIA,
-> +		},
+I was looking at all uses of enqueue/dequeue pointers and I found two
+rather complex loops which appear to be doing really simple things.
 
-This entry should also come between adi,adv7123 and ti,opa362.
+I don't understand why they were written this way, it seems wasteful
+and I see nothing that should go wrong if they are replaced with much
+simpler code.
 
->  	},
->  	{},
->  };
-> -- 
-> 2.43.0
-> 
+I rewrote them and the driver still works. I exercised Set TR Dequeue
+code by starting/stopping isoc streams, using usb-storage with crappy
+cable (transaction errors, halts) and also the smartctl -x trick that
+results in URB unlinks (both on usb-storage and uas) with some disks.
+
+The third patch is a dedupe. BTW, that comment there about section
+6.4.4.1 of the 0.95 spec seems to be wrong, I suspect it should say
+that the chain bit cannot be *cleared* because that's how the code
+works and what some commit messages say. But I don't have 0.95 spec.
+
+New in v2:
+- dropped the patch for obsolete update_ring_for_set_deq_completion()
+- added a patch to enable the link chain quirk on one more HC
+- don't touch the chain bit in inc_enq_past_link() on quirky HCs
+- don't call inc_enq_past_link() unnecessarily
+
+Michal Pecio (3):
+  usb: xhci: Apply the link chain quirk on NEC isoc endpoints
+  usb: xhci: Simplify moving HW Dequeue Pointer past cancelled TDs
+  usb: xhci: Unify duplicate inc_enq() code
+
+ drivers/usb/host/xhci-ring.c | 198 +++++++++++++----------------------
+ drivers/usb/host/xhci.h      |  13 ++-
+ 2 files changed, 86 insertions(+), 125 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.48.1
