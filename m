@@ -1,195 +1,131 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2087.outbound.protection.outlook.com [40.107.94.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7575B1494DD;
-	Tue, 25 Feb 2025 02:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740450928; cv=fail; b=Et+ydsX61X58NM/pGVMcUTUxj8DdmSZWhn4k36pK97zJOpBKMipO0HHMcx2RHkfhYE0CUwiNu67mSBRJbC2ZO2Bfl0C3GCmf7aTAwc2IaHd6dAPLSN7gBJjJs/PDauqWnSBDX2XjoO5HGuoavPQ9IslSbVBaqanAgAXZAoQwzCs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740450928; c=relaxed/simple;
-	bh=3KWKEcBZDcGFLv8mnpHaQjbRce5vtIZj5f4P5Oy+oI8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cJIcoSUEn08W3OoRkPRPDOoPTvEbTgalDGieFuYCNsnNN6oBYCoGRRmNukcHcAkf4aQBy7vR6RMsIe5RFFWEu07ETH+xvKBST9U1DD11618OvBzpszAsm2arcoaq52/lw8qu6p07cpVdDmW43m9Gvew19Mbyotn3V03OiH1+BzQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dPnGt6vE; arc=fail smtp.client-ip=40.107.94.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89BD113C9B8;
+	Tue, 25 Feb 2025 02:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740450986; cv=none; b=diCgcyJ7vXIwlG0i2p50gEctlUdyZ7HC5JKh+y9ZEh7FQH1kTnq6X51gObzS9RKRsWz9HXt1g5/mXAApWpbOzCHDc3TiLGhBPWlzrQ8Y6/qJ6jYLAb4XA6z7cA+UFrADyfmhhWQOT/5M+EFqmGaY7LcPURVtvCJHUHCZEmQAsyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740450986; c=relaxed/simple;
+	bh=BCGQGMljga26411sT5xP4jNnIMcUcH9wHX8obGdlcoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AV8DnSZb0uOHLM//Q6DrJcVYg637UvBpQ5Du8/xJFSh7M+XusGLNxYVYdwf8edn7W1L8Z7BbwFPjjJzqYkYV11H/B/ChEpOp9mE5iCDNrnuDcLdMuoNIhVHk5m5BggA1+ll5dm2keqMvrVQ2RJ4tv21zLACoxgi/aLwA5g4myCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VMp/m9Ag; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dPnGt6vE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hi1XSwjN6f1Y+z6OPoxsL/jlq5XbXe18emyorlX1ct9vXoeVnCRuvc6+H3vyouL7bbvwzkfDiXuJ2CwmeIAUWF6hD/yw2e+aAZQhWj1iVATxLIHQGKzXjXanBTB2gFdSMnjdn31EL+nMwSD/87do41Db25atCmSR0C8AklGin+utn5X6GDAoS6te+i/PO3/+meIYycsKWldFNbEkSNeb/l82+ZUeIkEtp44wUe7HY/MdHp17uJY7feaNS3VBEH7GYYHiDFwmjnC1+gjkWwsf38mL3vSf+dtoT58rj+/Cex/6fmJslKfOZOQfALcyDCBYhn+wl+Vskf5rAu+LpuMA2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=86+8xrDY88TFzmSni65Fetb67TrOG5njyI7W2+8ZRME=;
- b=ETH+NPzxHAjVJOrIAVwXW7v40nSjs7QfB+p9S2odOvTUO2DagimbpsmNVE3RaF8v96PflTKHrT7CMGrI9OFMNPpT8xSI+JeVeg4xrsBdnQdO8qtInOmL1cnqBO6qnUFZRvxvem/jlTAwLWJi8WhJzR8HsNHM3X61q/SuqFNOJeUQ0dhFG6Kv0d46bw3g/95XFtzKVUM02GNGhEOgifHZosaqglPrx6GRC09U9z0ON3qTBkwijyNcntLxx1CyfDoLa+l0X/UQnNYDck0AUJeYWEh818F8XC1rYCfT2tmICqYsM+j2JXWanl9jNoZn46Mozxib35/6MF2oQvaLTwoV+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=86+8xrDY88TFzmSni65Fetb67TrOG5njyI7W2+8ZRME=;
- b=dPnGt6vEsqxvjSPqce09mTwUCd5xuQnXAZMRMguTpddA7CfhKPAiyyEjPq1DweXSzK3Ua0oyXzHcSksItprnsDorqH0vD5hIB80QWjksK+lbSYkdiG4XLZ+hpfHDKt1QN9vh2Ho/HEgwdMZWUjHVFfV2YM73q6dWxq5K/NAgdwk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL1PR12MB5804.namprd12.prod.outlook.com (2603:10b6:208:394::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Tue, 25 Feb
- 2025 02:35:20 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
- 02:35:20 +0000
-Message-ID: <6feda9d4-aa51-4903-8d6e-9444ad423fd2@amd.com>
-Date: Mon, 24 Feb 2025 18:09:38 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq/amd-pstate: Fix the clamping of perf values
-To: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>, gautham.shenoy@amd.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Viresh Kumar <viresh.kumar@linaro.org>, rafael@kernel.org, perry.yuan@amd.com
-References: <20250222033221.554976-1-dhananjay.ugwekar@amd.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20250222033221.554976-1-dhananjay.ugwekar@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR13CA0062.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::7) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VMp/m9Ag"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740450984; x=1771986984;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BCGQGMljga26411sT5xP4jNnIMcUcH9wHX8obGdlcoA=;
+  b=VMp/m9AgYiBP3wuDioRwBiQ4YcSSrlDDpRipNvIS75O9TwBDOGwfToyk
+   0HgOCPhhmy4DoLuG6Xp0aJ+whAq4hWZHspQLK1yGH7G7DzXxyUMQgjPtH
+   dTTFs9az8ASPzOFt9xOorQkBgjNsJ4Qnbb48+UDsrKE2yvdN/cm5HxDk2
+   F4KFZHmoYI7s6GP0Y4pD7y/pPzT19OOiz+TG+SPqyQ20gZlWPTLRHxqwK
+   1to9p1lh221nHl/fevpaKOQmt+7js8XxRsM3/BqVkEXHe0ueMplBEhptI
+   vnJfuWHZi798RTUdcCbqP/rwtJnsb+VsEp/EyigYd6Ja6709anodlHAcN
+   A==;
+X-CSE-ConnectionGUID: tjLyQ6vNSomKiJ/g/Xfzgg==
+X-CSE-MsgGUID: oJawWvqiT0GcW4iaYGApQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40427843"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="40427843"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 18:36:23 -0800
+X-CSE-ConnectionGUID: iahtX+s+TBylmQ62GnhRlQ==
+X-CSE-MsgGUID: zXweUOBFQV6DheV6xB0S7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120351003"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 24 Feb 2025 18:36:21 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tmknz-0009fD-1D;
+	Tue, 25 Feb 2025 02:36:19 +0000
+Date: Tue, 25 Feb 2025 10:35:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Cindy Lu <lulu@redhat.com>, jasowang@redhat.com, mst@redhat.com,
+	michael.christie@oracle.com, sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev
+Subject: Re: [PATCH v6 3/6] vhost: Add the cgroup related function
+Message-ID: <202502251038.6UlCIMJy-lkp@intel.com>
+References: <20250223154042.556001-4-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL1PR12MB5804:EE_
-X-MS-Office365-Filtering-Correlation-Id: c28999dd-e021-4f18-1be0-08dd55450c26
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dy9YM1VEd0pqSjNocWJtUnk2c0t1dkpNY20xeDIxYmI5aGYyY2hRWkdVc1FY?=
- =?utf-8?B?MEcwazN5Ti8rNWFWR013bGNNNEhXa3pDRVhyejFnVjQxUlpMT2p0N1pSaWFl?=
- =?utf-8?B?YmNaOWxpelcvTFQvclU1QmVubzg5ckdsU3FZR0gzYzVVZnlMQml6WW5WdVV1?=
- =?utf-8?B?TjlEUGFsWU02dm55RklJZWU2czlrajVVVDRKVDZOMWNJblNKWVVnMzBkdUtm?=
- =?utf-8?B?Q2hGcDNONlVpTk5ta293VnJzVkJvbnIzTnVoTkJIT04yVVczUDBEb0IwVVVF?=
- =?utf-8?B?RFVDTjg3NjVIQWkvVW1wTnhqMFI3dlAvL3U3RXBaZTYvczFONVM2K3RPajVu?=
- =?utf-8?B?MEZSNG1KQUE1ek5VaUtueXdqMFJZRkE5OEpUK1pFN0RyRnprWUhvWEhJU2py?=
- =?utf-8?B?WGgxanJZbEphTWRCU1BRV0xXRGhWUUFIOGRqWVNNcnlHWjFQYXFFRVZJY3Er?=
- =?utf-8?B?MEZWZmRJV2NKSjMxSURTVkZXaWZlNEtQc3R3K2t5WFZwYjJoOXRpbVJpbGdt?=
- =?utf-8?B?VmF4aTNXRkFQeGpDV3BUalV5TEVwSWVUL0tDc2hPaHJZaU5rZW5hZVptUzdZ?=
- =?utf-8?B?bTVkN3Q4ZGQ4ZHRuZC8zZUdITmJaanQ5a0ovSVdrclV6ZmVwZFZoc0JTM2hQ?=
- =?utf-8?B?RE9jbm5WZCtlVDR6cm5CUDlMcjBRYWc3dGpJMk9yN0NYaFpKTGR2aGJDdlFo?=
- =?utf-8?B?MW1WZHNVVGNoK09Fc3ZIMG9oY0FxUW4yb3JPWmRqUFJWZWZYQ3ZtbG1mOWhM?=
- =?utf-8?B?ZG5iNFJ4TjFDM2RaRTBmZnhWRVdZQWU0cThpVUQ5UzIzZStaRFBTM1E2QlJL?=
- =?utf-8?B?ajlTb3NqRGY5SmRRUXJoNFF1d1lRbWlPL1lkNEFUZDZydk1VVkVLcXRUK0M0?=
- =?utf-8?B?SnI3c295S0tYOUhoVXhCaFdqQmNDVS9qM0RibkY5MDZHcUF2cDZBNE1VSFFz?=
- =?utf-8?B?OFgvdzNpL3ZsN09JTW9rbDJraXhEV2pZVXFHcFZmNkdwQmVtY29Ud1YyeEp5?=
- =?utf-8?B?Nkh1UzdMeWt6U2wvWDB4RXp4L0x5TXVJcXJlbUpOdXhQdytOaHRTWk9zanpn?=
- =?utf-8?B?S1YrRE13MjlwaHlUbi9GZmFVZm1VQXpqL3dSRlY2YU80b3FiNVRHam1KU1ph?=
- =?utf-8?B?KzR2dWpLQU5RSkJBMkl0NUhVTkVxY2d6QVpxQ052dEFCQ0FyeXBUYXpXbkMw?=
- =?utf-8?B?OVZVLzB4dERUWkRiWXVOMEtxdVMyVFdJRXZ1TXRXQWFQNk9UNll4aDl0dTB6?=
- =?utf-8?B?RHZPV0F1NTdHcmg0UXVUNE9VWS9kYTIzQVUzZ1Qyb2psU2pPcU5Bb1htQmdW?=
- =?utf-8?B?VkRNWlhRQkZKV2RyY25Jb2xIU2p2OWZFWmo1NjZXejJhVnlWV0FNSkhZQ29w?=
- =?utf-8?B?RjF1SUlYdkNYaTFBZ01PbWdxYWxHS1loZi9PclRxbEFzbzVQcllXZVJZdEEw?=
- =?utf-8?B?eHVpbldoOGFQSloyK0FaK3R1VGlGN2pxZE5sVHZrYWlMYy90NHJKakFnaXV0?=
- =?utf-8?B?SjRkWlE4UTgxc3pLVlFIM3FWc2FvOUQva1ZRZmVpSEZkV29GUzhLelhabXlq?=
- =?utf-8?B?SzRqYjNDeUtyT0hjTFB0YmdGT0ZSVmROb2hXb3JtZHVXVmp0bkZYZDRkWnFa?=
- =?utf-8?B?cVErYVE1aXRLakJFNEdPZXdpSDJjdXlJQm1JSTFnWlZ4a2sxVkFLcHpWWnQ3?=
- =?utf-8?B?bkZLc2hCUnRWdzVnL0NpR2Z1dWRaaFQ0bDFIWFZIbGtRWU1iamFIUjZUdU9O?=
- =?utf-8?B?OHlIa2dqSERyUTQwZ0JUNUoyRlU0TSt3K2NSQmg1L2xTREZ2TlJpWkpJMGNW?=
- =?utf-8?B?cnJYYnF1dWhyVkU5SXIvOUQ0eSs0SVFXTXpYNlBUdnFQcDFZUXEzNnF1MHJE?=
- =?utf-8?Q?pHkqpKp44JX+f?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WUcxWlVkeTVlRXhvSFNUOWxCd0FjZkk2SlRhbUJTSjY2dnVvdTZzblU0dWwy?=
- =?utf-8?B?L0tOdGw3K2orWXNuTzBRZE1td3ViRm1DSTlnbTFPN2E2MTM2TDJzY2hjbWw0?=
- =?utf-8?B?UFVjSElpRVNGSnpJN25HVVdwT28xOEhVM2RNK3NyOS94clJTeUF1WWZremJh?=
- =?utf-8?B?OVdvL1ZDbDFuRjVINkRpTVFSRWpzeTdxVkZVeG8xMWNDTEhrUzFiT1JIT1Yz?=
- =?utf-8?B?ODBvbWF4WG1ZK2ZBNDVXTnhta0NJY1FFeXZQWCtwRnhtT0poaWFKL2lXWGxO?=
- =?utf-8?B?QTBLdGZoK1VVN3g0LzNrbFljWlNkRG8yR2pFdUl5c1FMYXUxTWlJTVRaN2hs?=
- =?utf-8?B?ZEhzTVROYUpoc1lDcDZaTnkvQ0ljeHQ4TG1Xc1d6Y09nOGpLNU1na2tVRmk0?=
- =?utf-8?B?eDFuV3BERTZ6Q1M5NnFWYmZLcm5xMXUrcCtqZFEyMC8wbDRPYytxbnRMOHZD?=
- =?utf-8?B?U2lKRGZBNXMxbjErU1VVbFFIUHNzWDg1R3hucXJMVktlQmJKQWhVc1ZSTHRE?=
- =?utf-8?B?anJtMW4wMHlYdzlGT2xYMGlUSkJWRE9Vay9iSHFyWmkyY0h5M3N5Z2RsL01z?=
- =?utf-8?B?bUhmUUFacGR5ZTk0QkkyTEplRnVjaVJYUWFPNk52YUNjWTI1UlFTRmtqb1hx?=
- =?utf-8?B?SitrQ2g5R0V4a0F1V2xsb0d5RERlYno4cEV5SkRuMmtibStqRlRvTU1NK2pQ?=
- =?utf-8?B?bEc2OHdwUVh6T3ZSQit6L0ZobU5XVWNtdEJyU09PUy9zSFl6Z0hJNFVFNVlD?=
- =?utf-8?B?K0F4TUl1aGd4NUpER3NXZlhoaVRvOSttdTZ0OEV2VXNERE9MS28zSTgxNkFo?=
- =?utf-8?B?Q2o5RDJiWnhrVm13QU10Z2FZMUhudDIyME1UNGwwMmVMSGovcXZwZUtYQTNs?=
- =?utf-8?B?VFJvUmg4YmVNS0xIN21ON2hrWDR3SGw4VVYwa2JZTnpzYlNxL1d2bUY4TE5D?=
- =?utf-8?B?SzBKY05OdW8vTVVmMHl3dHZwS3FjMkVBSWcwQ05FMHRMTnlYNXpzcHRhRXVI?=
- =?utf-8?B?ZnQ4Umg2a21TMWk4eDkwb3ZwN1U4Sk5GMUxOaVJraFBKdHhoTkJ1ZXA2RGNk?=
- =?utf-8?B?d25ETUs0WWxLcXA5eFl5SGdMcnA4U0dIU2tQa0F5SjdJanUvOEQ0cVppRll2?=
- =?utf-8?B?Nzl3NmNXY0lzRlRKcnZ0MXA0Qk5DLzRKZ2N4bklqQW9ud293MVUxMlN6eHkw?=
- =?utf-8?B?anA4VlNsbldkelNPcXVXeEJ0QktIdmw5NWRscGlTSnhDeGlNVjBhSVZRYTFL?=
- =?utf-8?B?Y0JxVUg0N3h4c2dnS2FMeUtmUkwyM2hNVXNtTTNSVGNjRFRHWjllalhRVXhN?=
- =?utf-8?B?NGxFTVJEUjViSHJpTExoKzVUc2hxa1paQ0RYSkszZm5qS0RSTkpDYmlpcEt1?=
- =?utf-8?B?NTlDRUl2dFA2VkJnU3RyRWx5b1BReDVkSis0MkZRcW5PU3YzdGQ1V1lqYml5?=
- =?utf-8?B?cG5SU3U2bFR3c0V6WjViTGdlMXNCcFRlV3QrR0NKTDUxdFF2SVJ6ZkdwVUEw?=
- =?utf-8?B?cnVjanRmQXo3ZlJTTjV1ZjJpd25Pc2psUHovOE5rVWgzdXY0d1ZrSDdvL0dZ?=
- =?utf-8?B?U0FmekNrRFFpUUxPZWhKUWZIRmQ5U1RaTlNaTGx2blhnVGMxVmFkbG9XbWxi?=
- =?utf-8?B?Y2FMZ2dxNGJ3QUFlWUU2UnpVYTNvdG40Ny9JaUVFd0FuTnh2Q0RYS0M0eU8z?=
- =?utf-8?B?dy9CMTIxRHR2NjVNUmZYaC9RM3hVeTN4NWErZFViQUduRlUxZXRBOXVyaStD?=
- =?utf-8?B?TmsvdC9oUVBJdjJJaHhhTCsvakJOcEJ4aUFZcHhobjFTYmFqc0hZRE1PR01S?=
- =?utf-8?B?bnhDTW9KUHJVOFZ3dXgrclRwVEdTVk9SS0Y5SUo3RjZjbzl0ZDQ2UkYrR2dL?=
- =?utf-8?B?bjczdjFZYVYyYkJRN3lXWktGL1NQK1kxTGNWRGMzUU9PczNzc25ta3RQT3Q5?=
- =?utf-8?B?bkdBOW8zRkNNZ0R3RFp2ZUZEaVFwS1V4bFVCU1FtQyttZVJmcXo1SGp0a0xu?=
- =?utf-8?B?OEh6L2JmaVJ5YWNDU1oyalE0NGxVMTJ1K2ZTZlk2WmZJWWpRbDJlUmxtVkYx?=
- =?utf-8?B?R05VZWxMeE5FWEphWUovWU1qTGE4ZlVhUFppMXBnNm56RlpiakN3ajNRTjBs?=
- =?utf-8?Q?+T9pK0bwk0NQRSwduajpvBjQ4?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c28999dd-e021-4f18-1be0-08dd55450c26
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 02:35:20.3707
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NI2TWNAQGWDi68KI3rnypo6LGncr9+V+158Vw7sIpcnsOmvAphRmkfCxXuFgR/HOJhIqqBX3liSAdNv6Q8icZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5804
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250223154042.556001-4-lulu@redhat.com>
 
-On 2/21/2025 21:32, Dhananjay Ugwekar wrote:
-> The clamping in freq_to_perf() is broken right now, as we first typecast
-> (read wraparound) the overflowing value into a u8 and then clamp it down.
-> So, use a u32 to store the >255 value in certain edge cases and then clamp
-> it down into a u8.
-> 
-> Also, use a "explicit typecast + clamp" instead of just a "clamp_t" as the
-> latter typecasts first and then clamps between the limits, which defeats
-> our purpose.
-> 
-> Fixes: 305621eb6a8b ("cpufreq/amd-pstate: Modularize perf<->freq conversion")
-> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
+Hi Cindy,
 
-Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+kernel test robot noticed the following build warnings:
 
-I'll rebase my series on this for v5.
+[auto build test WARNING on v6.14-rc3]
+[also build test WARNING on linus/master next-20250224]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> ---
->   drivers/cpufreq/amd-pstate.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 9ab95ec1f828..4705a644db6d 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -144,10 +144,10 @@ static struct quirk_entry quirk_amd_7k62 = {
->   
->   static inline u8 freq_to_perf(struct amd_cpudata *cpudata, unsigned int freq_val)
->   {
-> -	u8 perf_val = DIV_ROUND_UP_ULL((u64)freq_val * cpudata->nominal_perf,
-> +	u32 perf_val = DIV_ROUND_UP_ULL((u64)freq_val * cpudata->nominal_perf,
->   					cpudata->nominal_freq);
->   
-> -	return clamp_t(u8, perf_val, cpudata->lowest_perf, cpudata->highest_perf);
-> +	return (u8)clamp(perf_val, cpudata->lowest_perf, cpudata->highest_perf);
->   }
->   
->   static inline u32 perf_to_freq(struct amd_cpudata *cpudata, u8 perf_val)
+url:    https://github.com/intel-lab-lkp/linux/commits/Cindy-Lu/vhost-Add-a-new-parameter-in-vhost_dev-to-allow-user-select-kthread/20250223-234405
+base:   v6.14-rc3
+patch link:    https://lore.kernel.org/r/20250223154042.556001-4-lulu%40redhat.com
+patch subject: [PATCH v6 3/6] vhost: Add the cgroup related function
+config: x86_64-buildonly-randconfig-002-20250224 (https://download.01.org/0day-ci/archive/20250225/202502251038.6UlCIMJy-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250225/202502251038.6UlCIMJy-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502251038.6UlCIMJy-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/vhost/vhost.c:275: warning: Function parameter or struct member 'ignore_attachment' not described in '__vhost_worker_flush'
+
+
+vim +275 drivers/vhost/vhost.c
+
+0921dddcb589803 Mike Christie 2023-06-26  266  
+228a27cf78afc63 Mike Christie 2023-06-26  267  /**
+ba704ff4e142fd3 Mike Christie 2024-03-15  268   * __vhost_worker_flush - flush a worker
+228a27cf78afc63 Mike Christie 2023-06-26  269   * @worker: worker to flush
+228a27cf78afc63 Mike Christie 2023-06-26  270   *
+ba704ff4e142fd3 Mike Christie 2024-03-15  271   * The worker's flush_mutex must be held.
+228a27cf78afc63 Mike Christie 2023-06-26  272   */
+84e88426e3bc18f Cindy Lu      2025-02-23  273  static void __vhost_worker_flush(struct vhost_worker *worker,
+84e88426e3bc18f Cindy Lu      2025-02-23  274  				 bool ignore_attachment)
+a6fc04739be7cd8 Mike Christie 2023-06-26 @275  {
+228a27cf78afc63 Mike Christie 2023-06-26  276  	struct vhost_flush_struct flush;
+228a27cf78afc63 Mike Christie 2023-06-26  277  
+84e88426e3bc18f Cindy Lu      2025-02-23  278  	if ((!ignore_attachment && !worker->attachment_cnt) || worker->killed)
+ba704ff4e142fd3 Mike Christie 2024-03-15  279  		return;
+ba704ff4e142fd3 Mike Christie 2024-03-15  280  
+228a27cf78afc63 Mike Christie 2023-06-26  281  	init_completion(&flush.wait_event);
+228a27cf78afc63 Mike Christie 2023-06-26  282  	vhost_work_init(&flush.work, vhost_flush_work);
+228a27cf78afc63 Mike Christie 2023-06-26  283  
+228a27cf78afc63 Mike Christie 2023-06-26  284  	vhost_worker_queue(worker, &flush.work);
+ba704ff4e142fd3 Mike Christie 2024-03-15  285  	/*
+ba704ff4e142fd3 Mike Christie 2024-03-15  286  	 * Drop mutex in case our worker is killed and it needs to take the
+ba704ff4e142fd3 Mike Christie 2024-03-15  287  	 * mutex to force cleanup.
+ba704ff4e142fd3 Mike Christie 2024-03-15  288  	 */
+ba704ff4e142fd3 Mike Christie 2024-03-15  289  	mutex_unlock(&worker->mutex);
+228a27cf78afc63 Mike Christie 2023-06-26  290  	wait_for_completion(&flush.wait_event);
+ba704ff4e142fd3 Mike Christie 2024-03-15  291  	mutex_lock(&worker->mutex);
+ba704ff4e142fd3 Mike Christie 2024-03-15  292  }
+ba704ff4e142fd3 Mike Christie 2024-03-15  293  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
