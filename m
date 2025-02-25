@@ -1,390 +1,118 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77D626980F;
-	Tue, 25 Feb 2025 13:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70D11DB365;
+	Tue, 25 Feb 2025 13:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488535; cv=none; b=q6vJqq9h9RA1wcI8JktU3CHRpNdveaV+MrGf5DTuEwywQhSGb38PRhZr7sPv7MPRJK8d/vjSCOJvcStMpe1QzxLv9fKElP15PSfnHzMxs8Z0NyRUgNRs9y3XQJz/Q2wRJglKwX8ryu9nYTdLqyFJAttsc4/tz/OOdISEBlLYZbA=
+	t=1740488560; cv=none; b=JsWjg076yFSG+/yNp90DNOa1cT5xBdWzuMSv7fIcLkWUYhoReOmJvguBhONaVuxLsyt8LR1hccsi4IXIS7QwocWGdUAxgOTztNXz/m03arvu8LSEdTLH7y36GkMoelVNzbvmO6Htc+LOhltWLvk8RN/ODmIVcsfKlpgPG4OILdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488535; c=relaxed/simple;
-	bh=cw4Sf8/z3PQjcTvY8TiUhKwNXxp/XRVM8wT6iEU8bsM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=Uw/iVWNtud0iZxbH5SDA2VIqUBViVVx9tvQRiDt5Mt6lQJB92s5vkPDCgKKyIWuuqOpNv42AD4zzJSsmi9UAo5By/S3XpVu3aUPEYDk2lvXtuHp8k44oz9i0j2Z4d/FSgzHHNXdVy/A46aw8irMDbSJ0jp/cpenDsjzMjfDZLD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=EiwBCsS3; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1740488560; c=relaxed/simple;
+	bh=GfBv0+2Ig6Q/5M8ohpa5wt34MrwK4ksWEyDMsdwY+ag=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BYL1NTLskWTira3v6n6bxIxEKWhtNvzj9vbvEHU4igKoNagKDlPs/djF8BAETiIiWAgmzWYqj6f3fXz5xv3OUyYJUpYP5PPshsA5HIBhW464cpbA2nkUTKvM6AjApIvnNtfFc2cjvtJJL3LpD27z+z4/z/Qc2dlS9s3uY9GnigM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9VUX23F; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="EiwBCsS3"
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PAHLPd032310;
-	Tue, 25 Feb 2025 08:01:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=ep+wu
-	zrL130MidAt9/Q5e/9uJw+gYh41pQb4FipikFg=; b=EiwBCsS3XjUvLiGlKIO13
-	Mn4y63SF/ivvJO0CgOVvxY0c03eOI6+oD5Ge7sZWrNKFzxATaFAXpLuPyriQvl2C
-	MA7gLKz+WMi9TyT6CO1fHrslEx8A1LGGenOHd1ThL/5Vt7jRBFfKtym8IKCcFwu7
-	s/d0FqwoG2r67JcYBvSivBDrAysTYpoJJ9OFG99uTspekxlRQXYqDz01WG65v7GS
-	AwXr90DFEGcLmPcJlhhKXjNj1XQdq9cGuMrRLxwDEL7QsK7xyOx/OD5jLE1p0sHj
-	RTFKhTJX4oGPTLQufkvKw+Y+1seSp2ZWmIcHPG0iRZGEHi/ie/b8m4AggGw20PM6
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44yccapswm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 08:01:57 -0500 (EST)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 51PD1u2j015513
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 25 Feb 2025 08:01:56 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 25 Feb 2025 08:01:56 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Tue, 25 Feb 2025 08:01:56 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Tue, 25 Feb 2025 08:01:56 -0500
-Received: from CENCARNA-L02.ad.analog.com (CENCARNA-L02.ad.analog.com [10.117.116.88])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51PD1VXV020999;
-	Tue, 25 Feb 2025 08:01:48 -0500
-From: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
-Date: Tue, 25 Feb 2025 21:01:14 +0800
-Subject: [PATCH v2 2/2] hwmon: (pmbus/lt3074): add support for lt3074
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9VUX23F"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so9723765a12.0;
+        Tue, 25 Feb 2025 05:02:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740488557; x=1741093357; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GfBv0+2Ig6Q/5M8ohpa5wt34MrwK4ksWEyDMsdwY+ag=;
+        b=W9VUX23Fj7pgwzBb20q5dEs1eaa+6P4komvm0zjJVnh/yV1DRyjgGOT53Odu/8RGj3
+         lmgbvG0zdUoTPhij8MxcibrpgVH3kfo4IIrthXJZW+LMXITuCIVQd5q8o659dJJO4pAA
+         /gKVWu+X79sPX3VMpuJb7Of5e5mxRUh7necwDNpvq7pwxDZyKJstwGoqit0nsaqr4RW9
+         glNvjhilj7hqiQwefx1LYqpFIfFno4f3T8wzYD5pl26Yagkx7+7PHxSAjByYDcvMxUsH
+         zUIBFQRVfOLynLEHW8eBqk4eWnXHtdXwO4vUPuGlKHjRdHXHc9eF8n8mrgpfc/SK/yK+
+         ridw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740488557; x=1741093357;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GfBv0+2Ig6Q/5M8ohpa5wt34MrwK4ksWEyDMsdwY+ag=;
+        b=dKN25JmjlQneVQw03JFY8h7RbVTcoUeqYcIveR4HyUEOm7vbn9My14ucKPmHjU+bfW
+         bmMtaaprzwZS/xgofJIYixoifDpXwvhYuVfMSw2hQisI90xalWcjftRrFgpja4ZF+Umq
+         xdF5QVQhe1/k35bEzkjKlcRTwbtkAxiprezeiIjC05aHFiK8tNjMqIUOj7wanAmm4O/v
+         rPfi+KQqk/PlhC4nJyNCGL2PxD6n6LgDDct0JaoOX67Z+c97tvRHUVmNF1+VBTLsaWFg
+         eB634M5if+i9w6W5ABZ70rhHwjAsb6IWTjkrthAMLMX9I2URM+b4PPXoRos+cVG9Wl4s
+         NlRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFiMf2WUfcJBDbSu/CRi1InBE656zlTC7hv84MRUJjMU6Kljt4LNZpCiwUKg0qYHkT/kuyhk3+@vger.kernel.org, AJvYcCVq5XBOznafgt/Nf133k/WvK06p3skkxMKlGqt0zvF0V5mX+iVykGL1gvElh9ug4y2vnC7zgkqUD8qn4A4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeSzw3XTDwP13LjrIR39OnafhTRYUcFhO4f093fP2DX4ecoxia
+	HyhxatDzAfUSdhUva/DRWCTnz0agKnlIid9kWN+r4Mhcdty5hy/nRaWuLQeeIDvISRpqqL11sbI
+	FBFBpKGoPEen1Ec683IMSBehewWtKX/5Xa5zSkA==
+X-Gm-Gg: ASbGnctO/N/OfbGP0GScxWdBzT23NjwVS+6DrgOtDAWUjz6tdLBcVJSwcum4SBMzZgn
+	4B1nbnUaFn+cdvhPM+3wBCz3tkwFyQ5TyG+1KDWFFGnSpnK36IxVYE3/hYjLPi+NYT9WF9ysd0B
+	aHjLQAeg==
+X-Google-Smtp-Source: AGHT+IGKsZfJvxcjb7PkMuNRzzrsgmgOoQbOBOqi+Lpi6M86G4RV2k2x4pLduAa2f8R0g20kTsF2wgHa4BPUgRCp4Kc=
+X-Received: by 2002:a05:6402:358f:b0:5de:5cb3:e82a with SMTP id
+ 4fb4d7f45d1cf-5e0a1116e25mr23027748a12.0.1740488556516; Tue, 25 Feb 2025
+ 05:02:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250225-upstream-lt3074-v2-2-18ad10ba542e@analog.com>
-References: <20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com>
-In-Reply-To: <20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        "Guenter Roeck" <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
-        "Delphine CC Chiu" <Delphine_CC_Chiu@Wiwynn.com>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hwmon@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>,
-        Cedric Encarnacion
-	<cedricjustine.encarnacion@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740488492; l=9737;
- i=cedricjustine.encarnacion@analog.com; s=20250124;
- h=from:subject:message-id; bh=cw4Sf8/z3PQjcTvY8TiUhKwNXxp/XRVM8wT6iEU8bsM=;
- b=rQGG/Gr8f0o8A1DgOM6QjDIS7kp/18Jj/mHf9B9NjEK5huvIlXstdzLVtrFNoIlHH22fexQ16
- WcEMjxTNKGKB2e831ak8PMa6/hX74rsfXl0hU/Xah/DAtC/vnaFKUH0
-X-Developer-Key: i=cedricjustine.encarnacion@analog.com; a=ed25519;
- pk=ZsngY3B4sfltPVR5j8+IO2Sr8Db8Ck+fVCs+Qta+Wlc=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: Y55xhiQdnnys8S8gsSil5yPSVtajyXN5
-X-Authority-Analysis: v=2.4 cv=SPa4VPvH c=1 sm=1 tr=0 ts=67bdbf45 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=YXy7gRrCG489l9pt98cA:9
- a=QEXdDO2ut3YA:10 a=feVPlwq_TaIA:10 a=tI3wEBspppMA:10 a=oVHKYsEdi7-vN-J5QA_j:22
-X-Proofpoint-ORIG-GUID: Y55xhiQdnnys8S8gsSil5yPSVtajyXN5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- spamscore=0 impostorscore=0 clxscore=1015 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502250090
+From: Gui-Dong Han <hanguidong02@gmail.com>
+Date: Tue, 25 Feb 2025 21:02:00 +0800
+X-Gm-Features: AWEUYZlvHmVokT8MMhqWrzdI6JeU7QSjxyre4OI-nzDa3gkCtbDXRBtbozQqtC4
+Message-ID: <CAOPYjvaOBke7QVqAwbxOGyuVVb2hQGi3t-yiN7P=4sK-Mt-+Dg@mail.gmail.com>
+Subject: [BUG] r8188eu: Potential deadlocks in rtw_wx_set_wap/essid functions
+To: Larry.Finger@lwfinger.net, phil@philpotter.co.uk, paskripkin@gmail.com, 
+	Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-staging@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	baijiaju1990@gmail.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add hardware monitoring and regulator support for LT3074. The LT3074 is an
-ultrafast, ultralow noise 3A, 5.5V dropout linear regulator. The PMBus
-serial interface allows telemetry for input/output voltage, bias voltage,
-output current, and die temperature.
+Hello maintainers,
 
-Signed-off-by: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
----
- Documentation/hwmon/index.rst  |   1 +
- Documentation/hwmon/lt3074.rst |  72 ++++++++++++++++++++++++
- MAINTAINERS                    |   2 +
- drivers/hwmon/pmbus/Kconfig    |  18 ++++++
- drivers/hwmon/pmbus/Makefile   |   1 +
- drivers/hwmon/pmbus/lt3074.c   | 122 +++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 216 insertions(+)
+I would like to report a potential lock ordering issue in the r8188eu
+driver. This may lead to deadlocks under certain conditions.
 
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index 874f8fd2632520d3be489154ddd0eb7ca24fc405..54b14f571db4d3b3e0b74a12b41cf8cf0d6fe8a7 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -122,6 +122,7 @@ Hardware Monitoring Kernel Drivers
-    lm95234
-    lm95245
-    lochnagar
-+   lt3074
-    lt7182s
-    ltc2992
-    ltc2945
-diff --git a/Documentation/hwmon/lt3074.rst b/Documentation/hwmon/lt3074.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..234f369153cf1374b8c7eaa2ed93358ac141fdf9
---- /dev/null
-+++ b/Documentation/hwmon/lt3074.rst
-@@ -0,0 +1,72 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver lt3074
-+====================
-+
-+Supported chips:
-+
-+  * Analog Devices LT3074
-+
-+    Prefix: 'lt3074'
-+
-+    Addresses scanned: -
-+
-+    Datasheet: https://www.analog.com/en/products/lt3074.html
-+
-+Authors: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
-+
-+
-+Description
-+-----------
-+
-+This driver supports hardware monitoring for Analog Devices LT3074 Linear
-+Regulator with PMBus interface.
-+
-+The LT3074 is a low voltage, ultra-low noise and ultra-fast transient
-+response linear regulator with PMBus serial interface. PMBus telemetry
-+feature provides information regarding the output voltage and current,
-+input voltage, bias voltage and die temperature.
-+
-+The driver is a client driver to the core PMBus driver. Please see
-+Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
-+
-+Usage Notes
-+-----------
-+
-+This driver does not auto-detect devices. You will have to instantiate
-+the devices explicitly. Please see Documentation/i2c/instantiating-devices.rst
-+for details.
-+
-+Platform data support
-+---------------------
-+
-+The driver supports standard PMBus driver platform data.
-+
-+Sysfs entries
-+-------------
-+
-+======================= =======================================================
-+in1_label		"vin"
-+in1_input		Measured input voltage
-+in1_max			Input overvoltage warning limit
-+in1_max_alarm		Input overvoltage warning status
-+in1_min			Input undervoltage warning limit
-+in1_min_alarm		Input undervoltage warning status
-+in2_label		"vmon"
-+in2_input		Measured bias voltage
-+in2_max			Bias overvoltage warning limit
-+in2_min			Bias undervoltage warning limit
-+in3_label		"vout1"
-+in3_input		Measured output voltage
-+in3_max			Output overvoltage warning limit
-+in3_max_alarm		Output overvoltage warning status
-+in3_min			Output undervoltage warning limit
-+in3_min_alarm		Output undervoltage warning status
-+curr1_label		"iout1"
-+curr1_input		Measured output current.
-+curr1_crit		Output overcurrent fault limit
-+curr1_crit_alarm	Output overcurrent fault status
-+temp1_input		Measured temperature
-+temp1_max		Maximum temperature limit
-+temp1_max_alarm		Overtemperature warning status
-+======================= =======================================================
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4a59ee6a03919af6a48717a0ddddabc7241a9e63..be9372cf020c246586646ad240a0c0c7880800f1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13693,6 +13693,8 @@ L:	linux-hwmon@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/hwmon/pmbus/adi,lt3074.yaml
-+F:	Documentation/hwmon/lt3074.rst
-+F:	drivers/hwmon/pmbus/lt3074.c
- 
- LTC1660 DAC DRIVER
- M:	Marcus Folkesson <marcus.folkesson@gmail.com>
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index 675b0d4703d87c9d5654489d0d770661ff0dba11..3edad8d7476cf78f4c2dfc94294013b33f2d8cae 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -209,6 +209,24 @@ config SENSORS_LM25066_REGULATOR
- 	  If you say yes here you get regulator support for National
- 	  Semiconductor LM25066, LM5064, and LM5066.
- 
-+config SENSORS_LT3074
-+	tristate "Analog Devices LT3074"
-+	help
-+	  If you say yes here you get hardware monitoring support for Analog
-+	  Devices LT3074.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called lt3074.
-+
-+config SENSORS_LT3074_REGULATOR
-+	tristate "Regulator support for LT3074"
-+	depends on SENSORS_LT3074 && REGULATOR
-+	help
-+	  If you say yes here you get regulator support for Analog Devices
-+	  LT3074. The LT3074 is a low voltage, ultralow noise, high PSRR,
-+	  dropout linear regulator. The device supplies up to 3A with a
-+	  typical dropout voltage of 45mV.
-+
- config SENSORS_LT7182S
- 	tristate "Analog Devices LT7182S"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index c7eb7739b7f861c5c105582b57ad16937649d4cf..5ef388c105811e73d5ea943648fb2f7a7ca59010 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
- obj-$(CONFIG_SENSORS_IRPS5401)	+= irps5401.o
- obj-$(CONFIG_SENSORS_ISL68137)	+= isl68137.o
- obj-$(CONFIG_SENSORS_LM25066)	+= lm25066.o
-+obj-$(CONFIG_SENSORS_LT3074)	+= lt3074.o
- obj-$(CONFIG_SENSORS_LT7182S)	+= lt7182s.o
- obj-$(CONFIG_SENSORS_LTC2978)	+= ltc2978.o
- obj-$(CONFIG_SENSORS_LTC3815)	+= ltc3815.o
-diff --git a/drivers/hwmon/pmbus/lt3074.c b/drivers/hwmon/pmbus/lt3074.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..a84bc5bddee7c4ae646b4fc7c5a57ed1eb233ab8
---- /dev/null
-+++ b/drivers/hwmon/pmbus/lt3074.c
-@@ -0,0 +1,122 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Hardware monitoring driver for Analog Devices LT3074
-+ *
-+ * Copyright (C) 2025 Analog Devices, Inc.
-+ */
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+
-+#include "pmbus.h"
-+
-+#define LT3074_MFR_READ_VBIAS			0xc6
-+#define LT3074_MFR_BIAS_OV_WARN_LIMIT		0xc7
-+#define LT3074_MFR_BIAS_UV_WARN_LIMIT		0xc8
-+#define LT3074_MFR_SPECIAL_ID			0xe7
-+
-+#define LT3074_SPECIAL_ID_VALUE			0x1c1d
-+
-+static const struct regulator_desc __maybe_unused lt3074_reg_desc[] = {
-+	PMBUS_REGULATOR_ONE("vout"),
-+};
-+
-+static int lt3074_read_word_data(struct i2c_client *client, int page,
-+				 int phase, int reg)
-+{
-+	switch (reg) {
-+	case PMBUS_VIRT_READ_VMON:
-+		return pmbus_read_word_data(client, page, phase,
-+					   LT3074_MFR_READ_VBIAS);
-+	case PMBUS_VIRT_VMON_UV_WARN_LIMIT:
-+		return pmbus_read_word_data(client, page, phase,
-+					   LT3074_MFR_BIAS_UV_WARN_LIMIT);
-+	case PMBUS_VIRT_VMON_OV_WARN_LIMIT:
-+		return pmbus_read_word_data(client, page, phase,
-+					   LT3074_MFR_BIAS_OV_WARN_LIMIT);
-+	default:
-+		return -ENODATA;
-+	}
-+}
-+
-+static int lt3074_write_word_data(struct i2c_client *client, int page,
-+				  int reg, u16 word)
-+{
-+	switch (reg) {
-+	case PMBUS_VIRT_VMON_UV_WARN_LIMIT:
-+		return pmbus_write_word_data(client, 0,
-+					    LT3074_MFR_BIAS_UV_WARN_LIMIT,
-+					    word);
-+	case PMBUS_VIRT_VMON_OV_WARN_LIMIT:
-+		return pmbus_write_word_data(client, 0,
-+					    LT3074_MFR_BIAS_OV_WARN_LIMIT,
-+					    word);
-+	default:
-+		return -ENODATA;
-+	}
-+}
-+
-+static struct pmbus_driver_info lt3074_info = {
-+	.pages = 1,
-+	.format[PSC_VOLTAGE_IN] = linear,
-+	.format[PSC_VOLTAGE_OUT] = linear,
-+	.format[PSC_CURRENT_OUT] = linear,
-+	.format[PSC_TEMPERATURE] = linear,
-+	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
-+		   PMBUS_HAVE_TEMP | PMBUS_HAVE_VMON |
-+		   PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_STATUS_IOUT |
-+		   PMBUS_HAVE_STATUS_INPUT | PMBUS_HAVE_STATUS_TEMP,
-+	.read_word_data = lt3074_read_word_data,
-+	.write_word_data = lt3074_write_word_data,
-+#if IS_ENABLED(CONFIG_SENSORS_LT3074_REGULATOR)
-+	.num_regulators = 1,
-+	.reg_desc = lt3074_reg_desc,
-+#endif
-+};
-+
-+static int lt3074_probe(struct i2c_client *client)
-+{
-+	int ret;
-+	struct device *dev = &client->dev;
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_READ_WORD_DATA))
-+		return -ENODEV;
-+
-+	ret = i2c_smbus_read_word_data(client, LT3074_MFR_SPECIAL_ID);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to read ID\n");
-+
-+	if (ret != LT3074_SPECIAL_ID_VALUE)
-+		return dev_err_probe(dev, -ENODEV, "ID mismatch\n");
-+
-+	return pmbus_do_probe(client, &lt3074_info);
-+}
-+
-+static const struct i2c_device_id lt3074_id[] = {
-+	{ "lt3074", 0 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(i2c, lt3074_id);
-+
-+static const struct of_device_id __maybe_unused lt3074_of_match[] = {
-+	{ .compatible = "adi,lt3074" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, lt3074_of_match);
-+
-+static struct i2c_driver lt3074_driver = {
-+	.driver = {
-+		.name = "lt3074",
-+		.of_match_table = of_match_ptr(lt3074_of_match),
-+	},
-+	.probe = lt3074_probe,
-+	.id_table = lt3074_id,
-+};
-+module_i2c_driver(lt3074_driver);
-+
-+MODULE_AUTHOR("Cedric Encarnacion <cedricjustine.encarnacion@analog.com>");
-+MODULE_DESCRIPTION("PMBus driver for Analog Devices LT3074");
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("PMBUS");
+The functions rtw_wx_set_wap() and rtw_wx_set_essid() acquire locks in
+an order that contradicts the established locking hierarchy observed
+in other parts of the driver:
 
--- 
-2.39.5
+1. They first take &pmlmepriv->scanned_queue.lock
+2. Then call rtw_set_802_11_infrastructure_mode() which takes &pmlmepriv->l=
+ock
 
+This is inverted compared to the common pattern seen in functions like
+rtw_joinbss_event_prehandle(), rtw_createbss_cmd_callback(), and
+others, which typically:
+
+1. Take &pmlmepriv->lock first
+2. Then take &pmlmepriv->scanned_queue.lock
+
+This lock inversion creates a potential deadlock scenario when these
+code paths execute concurrently.
+
+Moreover, the call chain: rtw_wx_set_* ->
+rtw_set_802_11_infrastructure_mode() -> rtw_free_assoc_resources()
+could lead to recursive acquisition of &pmlmepriv->scanned_queue.lock,
+potentially causing self-deadlock even without concurrency.
+
+This issue exists in longterm kernels containing the r8188eu driver:
+
+5.4.y (until 5.4.290)
+5.10.y (until 5.10.234)
+5.15.y (until 5.15.178)
+6.1.y (until 6.1.129)
+
+The r8188eu driver has been removed from upstream, but older
+maintained versions (5.4.x=E2=80=936.1.x) still include this driver and are
+affected.
+
+This issue was identified through static analysis. While I've verified
+the locking patterns through code review, I'm not sufficiently
+familiar with the driver's internals to propose a safe fix.
+
+Thank you for your attention to this matter.
+
+Best regards,
+Gui-Dong Han
