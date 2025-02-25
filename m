@@ -1,108 +1,94 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACAC198A32
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D87E198A32;
+	Tue, 25 Feb 2025 21:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740520627; cv=none; b=DR+lBrsdduCbMcJY/zKdtGHIyxv2teNtUvzt8TeTCvysEDxzSitVojUYrkJkUVy/QLsN2wBwIgxwyKhbtPwJstfZfQ9IPWYhfTvKVbAf8ek+tVC4u/ZqqV4sw5wrTQ3Hr7MImuR0WtIEH7tc0A4E/Cw0gFz6ZZ4Ets1uec1O5aQ=
+	t=1740520692; cv=none; b=CLxXCPjVr845bcjGO+Fpkh2pc5rST2vLbdOaH8HBW0aKGv94yABZU/C79GskCpkac1pSGdJfvifBcDKZNCNbC5ePrV01FJ9qQEne9NlEF0zrNxKZnPuLOauiNGneMF86Bu2kZFRPySsMi8NV//CwzNKL4JDO8A7aIFWOfwK9xYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740520627; c=relaxed/simple;
-	bh=ggH/rv0zrxGn17AKAJevu64PEOEFU+cC4ctj2O23jHQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C48xCt43It0fRGZE34wJhH7d80J4R0a0A34p5JayhP+scT1u/tBM4GrjP2WxfgfMfDS1ZZUTJS6M0zAgYvRooNSsMD3AIZk4X56nedmHeh48RVN+MvEXJUcpvhC5DMHZVqWCjrxTMTfUJ02ZmG2PhyATVVoO+wkbNjOYIX+GXSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LSO1b6Me; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740520692; c=relaxed/simple;
+	bh=hPcD2DXbQWYU6g1qckExXwya4Mc2wheV8b4OIiSU60A=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pqACwcND4RlBl4JxjtSIEKZDOZweIRFWE+KPY/1sWR0eU4C8kcGaeOO5t0lavrwiJhdWYmNcAA6m0ZpfsT2L9syXmsUO62g+n7FBRyEdMn8B2dkLLoduwe0Aq2l0yI+UDB5afi567cIYtZwv7+luBZD+YHKSAkjVMS+Fcxq9fU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuHq4FUy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LSO1b6Me"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30761be8fa8so67106411fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:57:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740520624; x=1741125424; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ggH/rv0zrxGn17AKAJevu64PEOEFU+cC4ctj2O23jHQ=;
-        b=LSO1b6MeInu6Vp/UMP7od0cRbL9K/JJls2xqsNMisd8r8DRCuMcFu2JVYUPdrLsaSg
-         v2pxnCDBj2aamhBKPwcv/auXIg2CcNkw6G21GPWLu3nSLesCCqzSF5Mo5hkPzF1hAWW6
-         S+Nog03TdJflLjhIDqDCZ++PY4+vEIHdEBNcp5USLHV3JjMMVsryo4EjvPaWV2FosHEC
-         SMqGpRghrMmeG0D/nzbkv3E9cfTaIwhqFhQ2AHYh4UHTFIzaX17F76uew7wbRyzvAGVd
-         4KAC8zpWu2dSYZPhda8P4jNfe9FqDj4XwVhTwmVrP2qZjF3eA1de5Lu/Y/9esZ8NIzHV
-         r0uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740520624; x=1741125424;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ggH/rv0zrxGn17AKAJevu64PEOEFU+cC4ctj2O23jHQ=;
-        b=pvcNUGDC3+UnI/6CYSg2Si6CYnAadShGjjiMSM07JjeVtcJKAVUJ8QeSejc5vQ+PkQ
-         mXnhE9ymkwNHQaI5gW/9vY8o+8kwRXGZSJPzlKkzc4URJVUNl86s9Ilai7ikHjPV3EIx
-         6hdgoP/yAaVY9qXSun4/2hhzUvuEpSNm8jq+Zty2NvUTqyOfaBn4u5snUSu5YkcMJ+qQ
-         OGCikahTexFJDyWvGBZkxhW910GBxaLKeOO096JKYxwnlXyWG3/by8Zuy0kk3WHLdO3q
-         y+G2Fvlk4p/m+HFKDU/0h7I9MBM57P7WwTz6dODJYFTdiGVzE2itl/AXUyQ3H1KhlgY5
-         ZZ0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWI2ucLaOkk9JrJh6CxuV1HKssMoNsrleswdtsNYHPcNfgdjMwgVVhuqZrnusppjOM5fCWkrWeuOZUcmao=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/P78dXhef/RfDjdkGO0qGBu4PkoFy5j45dpbMI0rx6/LTrMSW
-	xpiT4dF1jcMXr/qbn/G+rnPCORXgDaKeII7yBnDPfJV86pL3oHfHNXc73w6wBr/SMYz7YU6jBbx
-	uW9HRSj/47yUtkioXLtcpJLu5u76BBkiqpYbe
-X-Gm-Gg: ASbGncvb+8CEF5TQgwypIjU7gUfRy6FnpsN2fQe7kxeYMh+JXHniwFc7IHewl8ppHo7
-	u1cMX6+CsH6+kf8nfT2lvBhFjnJVGv7B0dbTovnKWZZcDv1DU4dRzpfeK5OVALxOTJkebBuh0mx
-	k+QudXm1vO4TQG84Z4B1+3HgiIERyYSp9Dp/vTYDT9
-X-Google-Smtp-Source: AGHT+IFXOYk90HMvua9LKDnybbyVvftTCDxipLFybKYbrDxATJIKE8rV5+qkvdMzNlPSSVVMO+3M3FZUBL0+pcoQcJw=
-X-Received: by 2002:a2e:8197:0:b0:308:e54d:61b1 with SMTP id
- 38308e7fff4ca-30a80c7dc01mr32910131fa.34.1740520623821; Tue, 25 Feb 2025
- 13:57:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuHq4FUy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E834AC4CEDD;
+	Tue, 25 Feb 2025 21:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740520691;
+	bh=hPcD2DXbQWYU6g1qckExXwya4Mc2wheV8b4OIiSU60A=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=fuHq4FUyC1zWzlwmkJ7tfX8vN2z8N/ec4eFOoUat3MsTnURgn3hNQ/xbRE6zk6nvi
+	 bJGHtcFJ6R86IjY6G2/okd0GDbG9iActvfFQgUuiKDYpA4h0wTUyRfzKU6/F6kwKq2
+	 i+K1q0gkA1K2PTCWI24eu4BNE3kSmjWCk+audri9E9fVvPHnP9ve7YZExYwZ4V0u9D
+	 OuDWWApBdYCRmz2H6DJJc4mRe8IJVO2pT8W8T1UUnXvAAwpzPTrbbdo46dicNH50T3
+	 3TV9x/Mgdh/KMGppX4dxUeiPD1RzFKDyBfdenIHl0XQfPKnrSaqRK2o5XC/FpbzJFx
+	 bZbgByUNxU9kg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Sam James <sam@gentoo.org>, 
+ Jesper Juhl <jesperjuhl76@gmail.com>, James Clark <james.clark@linaro.org>, 
+ Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+ Yicong Yang <yangyicong@hisilicon.com>, 
+ Thomas Richter <tmricht@linux.ibm.com>, Michael Petlan <mpetlan@redhat.com>, 
+ Anne Macedo <retpolanne@posteo.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Jean-Philippe Romain <jean-philippe.romain@foss.st.com>, 
+ Junhao He <hejunhao3@huawei.com>, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, 
+ =?utf-8?q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
+ Ian Rogers <irogers@google.com>
+In-Reply-To: <20250222061015.303622-1-irogers@google.com>
+References: <20250222061015.303622-1-irogers@google.com>
+Subject: Re: [PATCH v3 0/8] Add io_dir to avoid memory overhead from
+ opendir
+Message-Id: <174052069088.518612.8243648115065735498.b4-ty@kernel.org>
+Date: Tue, 25 Feb 2025 13:58:10 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1739790300.git.dvyukov@google.com> <ffd123bb0c73df5cdd3a5807b360bd390983150b.1739790300.git.dvyukov@google.com>
- <32af68b8-4280-4c15-8e5c-be807c282f94@intel.com> <CACT4Y+YmWrEW9m5zxKoD-Hu0TXKWPVAr0_Xe_X9WGtZWH5W1_g@mail.gmail.com>
- <d352ab70-6c13-453b-a018-dcf19d1a9924@intel.com>
-In-Reply-To: <d352ab70-6c13-453b-a018-dcf19d1a9924@intel.com>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Tue, 25 Feb 2025 22:56:51 +0100
-X-Gm-Features: AQ5f1JpNQuRlQogqyMUr4S60L9V2UKjAak2_7Mf9mxRQEoJBqthLumVCnyc1Tiw
-Message-ID: <CACT4Y+Ynq=21v0gwZxQ2sQhrJHibYoP6QvcfPoGBFYNXjzodDA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] pkeys: add API to switch to permissive pkey register
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
-	elver@google.com, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Tue, 25 Feb 2025 at 17:15, Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 2/24/25 05:25, Dmitry Vyukov wrote:
-> >>> +#ifndef CONFIG_ARCH_HAS_PERMISSIVE_PKEY
-> >>> +
-> >>> +/*
-> >>> + * Common name for value of the register that controls access to PKEYs
-> >>> + * (called differently on different arches: PKRU, POR, AMR).
-> >>> + */
-> >>> +typedef int pkey_reg_t;
-> >> Tiny nit: Should this be an unsigned type?
-> >>
-> >> Nobody should be manipulating it, but I'd be surprised if any of the
-> >> architectures have a signed type for it.
-> > Since this is a stub type, can matching the real types do any good
-> > besides masking programming errors?
-> > I've changed it to char in v4 to surface more potential programming errors.
->
-> I was more worried about copy-and-paste.
->
-> I agree that 'char' is the most fragile, but it's going to fragile in
-> subtle ways and I'm not sure subtly broken code (whether it's expected
-> to be compiled in or not) is great to have in a code base.
->
-> Do we have any types in sparse that would be appropriate? Could we mark
-> the pkey_reg_t as being in a different address space when pkeys is
-> compiled out so that sparse knows not to let it interact with other types?
+On Fri, 21 Feb 2025 22:10:05 -0800, Ian Rogers wrote:
+> glibc's opendir allocates a minimum of 32kb, when called recursively
+> for a directory tree the memory consumption can add up - nearly 300kb
+> during perf start-up when processing modules. Add a stack allocated
+> variant of readdir sized a little more than 1kb
+> 
+> v3: Rebase on top of Krzysztof Łopatowski's work. Add additional
+>     defines for SYS_getdents64 on all other architectures if its
+>     definition is missing. Add a patch to further reduce the
+>     stack/memory usage in machine__set_modules_path_dir by appending
+>     to a buffer rather than creating a copy.
+> v2: Remove the feature test and always use a perf supplied getdents64
+>     to workaround an Alpine Linux issue in v1:
+>     https://lore.kernel.org/lkml/20231207050433.1426834-1-irogers@google.com/
+>     As suggested by Krzysztof Łopatowski
+>     <krzysztof.m.lopatowski@gmail.com> who also pointed to the perf
+>     trace performance improvements in start-up time eliminating stat
+>     calls can achieve:
+>     https://lore.kernel.org/lkml/20250206113314.335376-2-krzysztof.m.lopatowski@gmail.com/
+>     Convert parse-events and hwmon_pmu to use io_dir.
+> v1: This was previously part of the memory saving change set:
+>     https://lore.kernel.org/lkml/20231127220902.1315692-1-irogers@google.com/
+>     It is separated here and a feature check and syscall workaround
+>     for missing getdents64 added.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-We could typedef it to some fake struct. Such a struct can't be passed
-to any function accepting an integer type (real pkeys), and any
-arithmetic won't work on it.
+Best regards,
+Namhyung
+
+
