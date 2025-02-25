@@ -1,622 +1,526 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C044F21ABBB;
-	Tue, 25 Feb 2025 15:38:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497908; cv=none; b=AltkWkS+KYnqqoop0y0MGkcGKSqDwwUlefnX8CH41Hfks8I7cZb3khtIXHACBUN1Xp1SDdbV0yZ3P1lutxNFZbpc9pm+6jhB3BM389NONAP0tNVZ8ilK+uumDlWCIldlt0f0thLwbpg0I6yE+4d6leD4V5NqnwqX9xydi38gjDE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497908; c=relaxed/simple;
-	bh=Avrt1xuRqXbLSJBbfx7E9b6duYNk+pwVqbEES2gAkQM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dFUMx/F/tpcFbOboFe0wiJ/7dWaI4ZDfJT3vRUVyDGNrZ3m4y3ulhJOAVvGt4Eu+DBUOYxa/XqGICPRMrGAhfrnNIOUWJfcSYp8KV8gZP/SNFSyh96aChJURaP3IZz+40Ubw3j7QMQT2+rE7JcEVks7Pnrs181XxqyAf29jirGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gE/10YWL; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C82C140E3C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740498019; cv=fail; b=dbz/2KWQ+xQhd47PijYL9N9Imy4Ypd8dNIBaeYMl2AlyxyOzA+9CNtrBptcZZksG0+ELQg1cV6lH6gRWQodPUF7Wxo5cgrXW2gLu31KNOVzCMYwq58LGMoWDBpVbPjmJtWk5gA/jlcsdfen5sOl2jUtjpsFnR3DQ76u8NHrISNI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740498019; c=relaxed/simple;
+	bh=cvxnDwWtmxFioAPSBqQikg76zTaVMy2prk21sY8zoGc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=oEuH4CgfNwhnVk30VJcRki6j52pUfgQuuZw3hsrW2gsjGc0i676oxSwQQjBs/bu25dQivnjf33U/gfi3EqcD5dQaQ4En2EVEJ8Cd6uxcRqh6JsQySwk38jI3bn1cfJu6a4HiVnabwjxpDTZreELYvl9vq8a9mbXseag2y0eewAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AK0NeKIo; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=agVrSo16; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gE/10YWL"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5452e6f2999so6120870e87.3;
-        Tue, 25 Feb 2025 07:38:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AK0NeKIo";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="agVrSo16"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PFMZRr006464;
+	Tue, 25 Feb 2025 15:40:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=NCX2sZak64GwAEfSuR
+	Sa/GFS3Y31q8Pf5alM7U5nZp0=; b=AK0NeKIovhVrnO8L++t072GsVrAhPy1jtV
+	b3AT+QvifvbPNp5kFQ/ZcK5LMWclzxHcKUbAkntBeFeyUVUCapC/s4/lKMBsSz7g
+	gUiYtHamKCctxYJw9Zr+CmYlEC6KXLOENSZ0xNEIsH5eUBJiPizLuHMtqZPrYNJ3
+	jKvub6imt3Tmlm59hF0+2gT9ivJPjQpZyy7ZmQs33kBc46da3FfxcIiQU8CPbsAP
+	+n0+fJzH+UrDDj47yl7J1QnhP1bGw02l8SZFbFJBOoMKOWAv4OFpQzsijLtQl+23
+	z+IHxBFLqIsJ+4/byJ8p03RlUPwjQ8t4nLQpouxgtNiQYgent0qw==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y50bnh7b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 15:40:05 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51PEL51j012522;
+	Tue, 25 Feb 2025 15:40:04 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y51amxsu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 15:40:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YPcRLxv5ZwhWAOW1buc1/B3JBLEIlaeTDk1Ulkua5KXY0RM/BFSI8hr4RGamhNMyGXO4p9q44D/4LX7Ijs0j7hMdssRkFlD0X2nW/SaL1pLB7eBmCu7z+wCuecteO3sjUW/RYQ8a+iwYbx3zJspEL50OSLkGfry5maiCr0S0QUKG8aaVSKZuXNvoK+xwTOxyiAPfOuq6HLe0xVIs29xxuNdJrv3ybR96EIitx3xjjLMVRnixs9cBZEnzoff0uqh9aZYX7sSu+iER8LZZvV/NluCvvnAHMutYas5iqV3plrHZtf3uBybHJhU3Ldo7yW53YzA5ozv3Li8NiG61txRKwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NCX2sZak64GwAEfSuRSa/GFS3Y31q8Pf5alM7U5nZp0=;
+ b=hsUyl1MLRNpSfyW9U24fx+c/5qu3TykDyqkq9Wpw1KtULHAy47Kap8Ed+8VbMdBGNF5aCx1g3ajsz7sIlBUzL+JgS9/Np090qPvU/K2RTzXSSP1Ay2TXPgAsQYwwUG7IRV+qFRwDV3WinxZpg6+XjLePlZDAB5ctocTx3AHOzrkcZ4lXhwabPNK3Dy9Sz/OQ0/GXUgkUdTM/oi5zw5WtjdGhD1HudsFqEzalfOnOUU2O+lWr/h+Zyf6EGIlZF6u6PmKrG/xgt2W3cIdVHy2AI5HXaJHl2SnILNZuLOPInJIYQU7FkiE1Q+izJhR7XGXhharWQmsTVVFhiLQRpEmmHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740497904; x=1741102704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HBuo4ZTGAcZmPD8DoAibx5cCZyo1ymbz6F2ATMcusrI=;
-        b=gE/10YWLy8ufxGr8Jc4l9fudBGsi2VkHw0ocqh5aODI5VB3R82XYGym5doNmmbvxCE
-         cnsRB9ka3i/PfJBJbZE4b2QRJ6hh4qbzQFqAB1F1lN4eCZeIiffDoKxRjOBaSObNdIuq
-         w+UMe8rr1JBMTRKFLO1XFEPPE6w5BVwJhtlyRg/zn/h8fOPYD5z1p8V0gTmqoI3YW+r+
-         V37hg1eZRsqV6/HOQ7Mnb0+kPQE3Kx2/PH0oZBR7YPuZky1IZrlDa86JTOqdvc3Ur+MB
-         5r6FFnMOPYcqtb66oi6fMxAW4HX6V5esg4G/8hF9U5LidYoivn4d/xOeVdofydnUkTgF
-         V96A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740497904; x=1741102704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HBuo4ZTGAcZmPD8DoAibx5cCZyo1ymbz6F2ATMcusrI=;
-        b=chyBH+GxFwmbqWkGjuHviJcoS3cghSrjeSJDVd2poiz+Q0dniwuEK2PJ3NTSiGlqaU
-         8S49LTzTNf5MlAdFLHG9ZSZeR6rdFuHUOlId8FP3C3fuSxi1211E1qYSGKAducdRHIBr
-         umBZh6WVz6VnKkcePfLpJ/5xBAvNu8gGZt9Wm5UuA3zL4vl2b1BYQZqLmF3rdH80AmQa
-         pjAboikeZ618OqdOKpMTni2ah7NJc/ztQMy0vjeJyB+DZ6Fnrhxk1EaarDWEfwhuYath
-         ks9DSeM2Q4RztWUKw12nDyNVHvf5waGhfr6Z4pEruFqMYyGWWdec3vK2nFLVYH47tzhx
-         hbUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWa7Zbwah+QezdOrql4mNkqMEvCFv49tyw85lzCaawa0J3zkK3TP5fryWsvkfnUy2g+cGtssnzOejpQVcc=@vger.kernel.org, AJvYcCX3pulPegnBvm/x1e1WLhV0h5wwzs7VTsbfXIM7wBQU6a0Pd1cG9h0l++76ndEgq2KywFZFbAZ0nRn9swYZlEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHhffbt/8N8SnGyH7I0OTSUVM1N1hI9sOhGKWW1c8sNDd08Qqo
-	To6n38NdoGu9XNXROA4+G+sC/UMijd133ltaHsfGxa05Oqj31vQoWcI2lY0I+YYXP5gu21SsBhT
-	xkTwEfD5oaqypwtYvHq8foV/XUrY=
-X-Gm-Gg: ASbGnct3pYQb4JcJgzwtl6G7LO3k8t30P0XX5JUjpOalDGMTj0HfNGLY9r+lmc+iioc
-	E3j4rgGO7PK27o08ij82IehqPVm08ZTTUtj/bR3VYWPDSCxE9S+36EfV4CwjdlXYrM2NJdWpgOO
-	W6joJHJIT3rILgS2IvU++pblg=
-X-Google-Smtp-Source: AGHT+IEK+FzquFRHTZXLLVboqMuRIg7h+sTJlcrH03aedHhMzXPWNGWSk3drw7eGDyrrXe4yw4ASyJQTepJYDgPd5qw=
-X-Received: by 2002:a05:6512:1293:b0:544:12b8:d9bc with SMTP id
- 2adb3069b0e04-548510c9954mr1616388e87.8.1740497903298; Tue, 25 Feb 2025
- 07:38:23 -0800 (PST)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NCX2sZak64GwAEfSuRSa/GFS3Y31q8Pf5alM7U5nZp0=;
+ b=agVrSo16lG4js/wkNiV5kVo0PPhEkqOjOIizL2KZhJ0D8gTkEReWDJZGy2EoY5Mb0/uM0aGsYmxxGGyPkVfZFrbIiQfVxL8v8hOhstJ+JkiObL39RrFfDv/8MeIZ4WcaWdLznFcZs+p1x2VXN3X4dIuoyorvYJkDFOWqJxHAJ/U=
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
+ by BL3PR10MB6257.namprd10.prod.outlook.com (2603:10b6:208:38c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 15:40:01 +0000
+Received: from PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
+ ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 15:40:01 +0000
+Date: Tue, 25 Feb 2025 10:39:58 -0500
+From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Cc: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        richard.weiyang@gmail.com
+Subject: Re: [PATCH v2 2/6] maple_tree: use height and depth consistently
+Message-ID: <adwnvy44e3x52u2f2qng2ltkvimjlibdt4n4hk3ws7w7rxuqou@jjunrlaqnwam>
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Sidhartha Kumar <sidhartha.kumar@oracle.com>, linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org, 
+	linux-mm@kvack.org, akpm@linux-foundation.org, richard.weiyang@gmail.com
+References: <20250221163610.578409-1-sidhartha.kumar@oracle.com>
+ <20250221163610.578409-3-sidhartha.kumar@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221163610.578409-3-sidhartha.kumar@oracle.com>
+User-Agent: NeoMutt/20240425
+X-ClientProxiedBy: YT4PR01CA0312.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10e::24) To PH0PR10MB5777.namprd10.prod.outlook.com
+ (2603:10b6:510:128::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
- <20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org>
- <q5sIYQbnCqKmdnZZy-eaKvSUY7O5pOy2-QzwWwCo9VoormFcKS6RS3OVIIby-Pf5PDpTRh67txem3sXQKSB1JQ==@protonmail.internalid>
- <CAJ-ks9nj8+fXM_oo0LJo4O6Q=skFRcHwz8TLxw-yB3QTcDF9GA@mail.gmail.com> <87cyf6xv7g.fsf@kernel.org>
-In-Reply-To: <87cyf6xv7g.fsf@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 25 Feb 2025 10:37:46 -0500
-X-Gm-Features: AQ5f1Jr38hwriyw3KxvZTEeZAMvKFJLqGqGC1dwLOb9nYyCEjaurBMQ_Vom4Rjc
-Message-ID: <CAJ-ks9=PR-Laj37NqG5s_TbKddONWxp4-Cf3C57AMk9z92mfDQ@mail.gmail.com>
-Subject: Re: [PATCH v9 01/13] rust: hrtimer: introduce hrtimer support
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|BL3PR10MB6257:EE_
+X-MS-Office365-Filtering-Correlation-Id: ce81691a-e644-4063-3f80-08dd55b2aa6e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|27256017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PccutYizcckZh5sS3Oa9qhDaMCjR7cayyHjR0l8rTXuPii4dmS6bh712pFNe?=
+ =?us-ascii?Q?JVhDHN7PigSfuWv/1ZnKhOuQvLX64FYXs/5k0y2hpSve3Iu5bUOwi7bS0JqX?=
+ =?us-ascii?Q?zUgd2VBAccAK+KXaoKYUg2BH70CzwCcJSEKEQkQcmNP836IEh5Dg5ytN2yxT?=
+ =?us-ascii?Q?+XHfbidxggFDUQQsQXuPQl/JGuFkxfV+RSolyqZHzqHvFFkfwZ7fLACxVUUW?=
+ =?us-ascii?Q?0d5yStT6yCfNnpkFa6WUWx94SUBNu5e3xV2Og9CQaBaQlWTT3G79pMMDEk2G?=
+ =?us-ascii?Q?KDNdalZXRjWhwK4jybErHZ3WMtPnZ8FP4Z6mTYTpxlHbRRjFhU8GU/A58/Uj?=
+ =?us-ascii?Q?V42JS/cGsaTRy/7GtjxyUfLVrRPr03pX/m13rscXujOwawzQVpbyFdlja3oH?=
+ =?us-ascii?Q?6LBwkLrD3IE2q0/E59tSKE1XGDuf+oUpDzCPP3kLRJJi9xMyflGyCqrYCStQ?=
+ =?us-ascii?Q?ygmq4Gbx1xTm6HZfVznVnB58m9cc3+XoOoivTvuO4zkovz79pjNk9j2ja3MS?=
+ =?us-ascii?Q?cshkR/D665UbnFABD9tzwLsjlTsK81wofc79Hu0WGEnyjTo4igaB/s7bNZQ5?=
+ =?us-ascii?Q?s/olSlMNsA0PORtDkqm6+jTG2KNcf/0ij1jO4lKq1qGPa7Ailh4QArPzD77b?=
+ =?us-ascii?Q?0uOTmfmMcibwGJgKFFhJ66slR+afwIoK47aIM2L6Vn8zPZOCsxLS0H/4rnqx?=
+ =?us-ascii?Q?f03Y3Trp7Tw6iTZFnRpsWO+quL48bGA5L7cJzPXoPp+x52QYUekKa9yCBseD?=
+ =?us-ascii?Q?O3gKbrUviGMUP2GfxzvUA+rTjkLjfpLFTZUOaYmCp+aR4ojhyN94hwdkcQZr?=
+ =?us-ascii?Q?7Kcs2Sjq3N+3bjGebKi5pv2qeWB7ipjxmBPMKgfFhqIS4yv0EOZlaIx1cUtZ?=
+ =?us-ascii?Q?dQIFsrxNpB87z5UMOd+bHdV2RPK8ZL9UQ9t9Agr4vn1Oc/e07c3gqQSBrsp1?=
+ =?us-ascii?Q?NPssyhkVC5qwpP3PBr70GxqgyRZ4DMcqPHBKMRhzAHvOJCNukFuNVyTfNryt?=
+ =?us-ascii?Q?xOiBdzjT5h3hm91wzsAZ/H79JwR4d6wX5yR55nOPoH2dHtjCxQ5IwiG2USIW?=
+ =?us-ascii?Q?MxZtyZwhg5NqUbnuG9kfVXEtuA+uzLUchCBcYU/QyAOXOeS+YFWjFh20Syzz?=
+ =?us-ascii?Q?8Ql5RV7iXbZBU2MRwHQawpq1VEW8jiL3SYa8xvD/xB6DlNOfR+cxUAJKQMHf?=
+ =?us-ascii?Q?I/oehfVJ41E6+q6+VwfqQ2MPf8kU+bR0K0Gl6UykBkxeP5UK5S6QYWcZ+ZJR?=
+ =?us-ascii?Q?euM9MqR7J9TbJr4L8RrwjwfzSfiGieKPYzl7++onkXxUAfD8XcP/2whuLPdK?=
+ =?us-ascii?Q?/hATduvK5x8pGhX0gkpCaMcQca4o1C5H0iGFwrFi/GzmJ0HHi9FY1J/KH4eL?=
+ =?us-ascii?Q?/F8vJ0MrnmUjUszgnsD2ENcmRu2uVwR0JTSEmAvnWO9l4+IDJX7+zP00znUy?=
+ =?us-ascii?Q?KpIOYvCd+uA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(27256017);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7n/Drh+CIMXQKTdzuYuJZzPcuelWMJCn0l6Iyk2ub8kjyFvD9AvD7ZzTwQ3Y?=
+ =?us-ascii?Q?lIEANI3hfvnfuOmYv741Nfy+0aDd/veZfoc6UgDdFj/DI/v8ENxy6yqnTcHW?=
+ =?us-ascii?Q?VHp24UFSgWxiCpZeL44nV9MNHr+xZuYeOBfrm9J25SSHJvkURBK0mt0zVIcw?=
+ =?us-ascii?Q?3JiuXgl65qMp+f8qScJy5qeo+XokQ/9FEQdawWo0txJSMSXfKJUHe7O8Cw17?=
+ =?us-ascii?Q?QuiIoMa04fLfs4iWF7rpts0Pwmd2VJpDMn3cMKOuOE3o4IQJdpcLDpgPp/Ib?=
+ =?us-ascii?Q?sOQcjOB/0dsKOr1soTiy27eJ8im95HnbA8FpT8K91tM5oiDH1R1ozlKrY3qK?=
+ =?us-ascii?Q?Hd6oBN/pSSFKaH7Uxzo+oo+sPpam8OyN+hfPzJ15wcfgClJlT7EVSbAIxTxa?=
+ =?us-ascii?Q?1qJg6/r8xxWkvlhKLsJIrAXOyXR76ZpBfH5VzyyLgVvzJU/fHC2fHnUE/1wq?=
+ =?us-ascii?Q?0qXkPQuanGsic/8W9YnBgDcx0lQKxtMU/RbWm7Lm40anB4urNKgRqAX1q8CO?=
+ =?us-ascii?Q?T+HibFgVzkrhl7Yx9Ch6rTtChAgkXyIuiUCrz4+slf8OXgx1wI8vZ+VhUc69?=
+ =?us-ascii?Q?b7K2iJDn7m8l4LathBpN+SJdFOJIr4lK+fx9zCcjJd0S7cssD5TgaWn1pHsg?=
+ =?us-ascii?Q?EVWdwDhfsD5pm5AsBtEUPp9RFx9nYxI8H5xbi0y+xUdODBGWlyM0uIrkkAsM?=
+ =?us-ascii?Q?OEnTGIbUzoQOcN8GtknQbzi3DgGOoWN9SJJswIq9eKnzLIgdpqed7ZA02QPm?=
+ =?us-ascii?Q?gL8aOAppWbfhKMKSWmqADs1bSewWENlXi7QEST8AmMGqPftg8E2Wv0QsZj9q?=
+ =?us-ascii?Q?sccAIUFwd+tMA0H2UZGo/OStffoOm8i9ezKiXDU5DyJMZu6DnyKbgAP4b+CS?=
+ =?us-ascii?Q?qrOu0ujLxbTPLJoBK5cNPCz9PzdXyq+SA9Ao6Uj3/MqwG9ZKfPhVpBMTtgPr?=
+ =?us-ascii?Q?Op+Fxva9ETwCrwyzeupvBwnbyLBrCSbhfsJ5HxkVE1uqPQzl0VJ4UnW84PI9?=
+ =?us-ascii?Q?dJKtUEcAcfIf22qzVSeSDYnJ+3jiOeLrZbAeKw4L+B5VelUALFkGfr+YPUtR?=
+ =?us-ascii?Q?/XdjmpE8WbD1f6PIZ4JRvoYpIxtNs8kwalxYkyqfTZp8n4RAtMYaxwUN2D8N?=
+ =?us-ascii?Q?CuRnCSqvKbJWUHen+7jjLh5jT5Xplg6AKF45DJ14IlUPlCqf13q7cIjiv4u5?=
+ =?us-ascii?Q?3H2Gkt93K08WgONE46ln/oBtUA2slRvxpkDlum6IUo/0ih4k+aBGP15h109g?=
+ =?us-ascii?Q?RpoZPGN1lpj8LF0VUO1adnmuGKgeuauxpsUIYPHnWc3uZ6JTTXDETf3fTbKX?=
+ =?us-ascii?Q?p+pvI8mq8eda6nbcJkFMYHTqbNZ0ZBg/OMmcdOpNZrTgxTtizkBnsy8updyo?=
+ =?us-ascii?Q?rfZglJScpMO9awfxQcaCPZEyOn5PdhcyJOUb4nhOsgjNbTwvYyEjNCiutT1m?=
+ =?us-ascii?Q?NNZP3g9Y9Hre5sy2z2qi+8lK7kWHteBZ6r0TRnL2ribURgtivoUsJhMwqku2?=
+ =?us-ascii?Q?RsrFX3sELE/EQLd0hupdtWX7DCG33LwBJWC3zdI1qXXFr7SjHF9eRUUSoOy6?=
+ =?us-ascii?Q?lB/j0eq9M2jAQnwbT20rk6dCVHAwetbAxQ8JENVO8pbuMuIZuuL5ddOEd8R7?=
+ =?us-ascii?Q?JA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	MvjOZBL3ItSzHw1z5muj8aUiblujhz0uDhSd5K5YiWK6np1J1dggw9/4PSiAJpo0hpRbSnmwfOpT1CdRw1/Dat2fgHfAj3hKsr+z9/00xN+w/D7xaaFoz7xTaWUxgVHltKHes9YxKTxW+EgYLO450geHhrhm+qZcQCJ80lOxW2d3eyp3HFmF0V/4Gox4O9yvex68e6UmekexxdYuGJcm4Ae7Sz3fWZbyKiGKGSlre9SMmeNdu/u6ysTht8El5Q0vNrLZZhtvXN4pkuyfcmWvowwR/18SzQzkFNCPT4W3R0KNrI4HJlsanWtKTySueIYq+7gOXHWHScZGyu07upSU9rlc+r2nizF5UWPNWa9fkrxV51ikr+pP/LtlCNW4mao4kfqdzMLh2lcq7falUjJ1nENF41cbSPJdWDNrDrP3o160r2+lDbzG+Fwoz6Fdx0PR+rr3l97Y74Km1mnVRYOtIDSAfqqUf2adBRJ38hV6Xax46IVmTxmOE0XdPQV8ac/qUS55sR+ZjY/vBLj/v29VrSUMPQmzIK1QqyX8/CsJL3dxVlrXxxAJmCDiNSo2G5vZcx+tBZtTSL7qoV95d8CPo7wUGt2h4+D1LshVBrjyByE=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce81691a-e644-4063-3f80-08dd55b2aa6e
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 15:40:01.0454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YXsoG7pS/VVFW4MZY26s+uLtQq5OqgtHuq+nZkzLZki6NYrhoBET8ggeXD1fvbPey8q+fmn3+HNFuv1B9DxVWQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6257
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 mlxscore=0
+ adultscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
+ definitions=main-2502250103
+X-Proofpoint-ORIG-GUID: ILcZjST6iFXlh6VGeB7ceBvhpWnhY_-6
+X-Proofpoint-GUID: ILcZjST6iFXlh6VGeB7ceBvhpWnhY_-6
 
-On Tue, Feb 25, 2025 at 3:52=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Tamir Duberstein" <tamird@gmail.com> writes:
->
-> > Hi Andreas, mostly grammar and prose clarity comments below.
-> >
-> > I still think HasHrTimer::OFFSET is less clear and more fragile than
-> > just generating compiler-checked implementations in the macro (you're
-> > already generating OFFSET and one method implementation rather than
-> > generating 2 method implementations).
->
-> I don't agree with you assessment. My argument is that I would rather
-> generate as little code as possible in the macro, and the trait would in
-> practice never be implemented by hand.
+* Sidhartha Kumar <sidhartha.kumar@oracle.com> [250221 11:36]:
+> For the maple tree, the root node is defined to have a depth of 0 with a
+> height of 1. Each level down from the node, these values are incremented
+> by 1. Various code paths define a root with depth 1 which is inconsisent
+> with the definition. Modify the code to be consistent with this
+> definition.
+> 
+> Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+> ---
+>  lib/maple_tree.c | 85 +++++++++++++++++++++++++-----------------------
+>  1 file changed, 45 insertions(+), 40 deletions(-)
+> 
+> diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+> index 0410e13a099e..d7dac3119748 100644
+> --- a/lib/maple_tree.c
+> +++ b/lib/maple_tree.c
+> @@ -211,14 +211,14 @@ static void ma_free_rcu(struct maple_node *node)
+>  	call_rcu(&node->rcu, mt_free_rcu);
+>  }
+>  
+> -static void mas_set_height(struct ma_state *mas)
+> +static void mt_set_height(struct maple_tree *mt, unsigned char height)
+>  {
+> -	unsigned int new_flags = mas->tree->ma_flags;
+> +	unsigned int new_flags = mt->ma_flags;
+>  
+>  	new_flags &= ~MT_FLAGS_HEIGHT_MASK;
+> -	MAS_BUG_ON(mas, mas->depth > MAPLE_HEIGHT_MAX);
+> -	new_flags |= mas->depth << MT_FLAGS_HEIGHT_OFFSET;
+> -	mas->tree->ma_flags = new_flags;
+> +	MT_BUG_ON(mt, height > MAPLE_HEIGHT_MAX);
+> +	new_flags |= height << MT_FLAGS_HEIGHT_OFFSET;
+> +	mt->ma_flags = new_flags;
+>  }
+>  
+>  static unsigned int mas_mt_height(struct ma_state *mas)
+> @@ -1375,7 +1375,7 @@ static inline struct maple_enode *mas_start(struct ma_state *mas)
+>  		root = mas_root(mas);
+>  		/* Tree with nodes */
+>  		if (likely(xa_is_node(root))) {
+> -			mas->depth = 1;
+> +			mas->depth = 0;
+>  			mas->status = ma_active;
+>  			mas->node = mte_safe_root(root);
+>  			mas->offset = 0;
+> @@ -1716,9 +1716,10 @@ static inline void mas_adopt_children(struct ma_state *mas,
+>   * node as dead.
+>   * @mas: the maple state with the new node
+>   * @old_enode: The old maple encoded node to replace.
+> + * @new_height: if we are inserting a root node, update the height of the tree
+>   */
+>  static inline void mas_put_in_tree(struct ma_state *mas,
+> -		struct maple_enode *old_enode)
+> +		struct maple_enode *old_enode, char new_height)
+>  	__must_hold(mas->tree->ma_lock)
+>  {
+>  	unsigned char offset;
+> @@ -1727,7 +1728,7 @@ static inline void mas_put_in_tree(struct ma_state *mas,
+>  	if (mte_is_root(mas->node)) {
+>  		mas_mn(mas)->parent = ma_parent_ptr(mas_tree_parent(mas));
+>  		rcu_assign_pointer(mas->tree->ma_root, mte_mk_root(mas->node));
+> -		mas_set_height(mas);
+> +		mt_set_height(mas->tree, new_height);
+>  	} else {
+>  
+>  		offset = mte_parent_slot(mas->node);
+> @@ -1747,10 +1748,10 @@ static inline void mas_put_in_tree(struct ma_state *mas,
+>   * @old_enode: The old maple encoded node.
+>   */
+>  static inline void mas_replace_node(struct ma_state *mas,
+> -		struct maple_enode *old_enode)
+> +		struct maple_enode *old_enode, unsigned char new_height)
+>  	__must_hold(mas->tree->ma_lock)
+>  {
+> -	mas_put_in_tree(mas, old_enode);
+> +	mas_put_in_tree(mas, old_enode, new_height);
+>  	mas_free(mas, old_enode);
+>  }
+>  
+> @@ -2543,7 +2544,7 @@ static inline void mas_topiary_node(struct ma_state *mas,
+>   *
+>   */
+>  static inline void mas_topiary_replace(struct ma_state *mas,
+> -		struct maple_enode *old_enode)
+> +		struct maple_enode *old_enode, unsigned char new_height)
+>  {
+>  	struct ma_state tmp[3], tmp_next[3];
+>  	MA_TOPIARY(subtrees, mas->tree);
+> @@ -2551,7 +2552,7 @@ static inline void mas_topiary_replace(struct ma_state *mas,
+>  	int i, n;
+>  
+>  	/* Place data in tree & then mark node as old */
+> -	mas_put_in_tree(mas, old_enode);
+> +	mas_put_in_tree(mas, old_enode, new_height);
+>  
+>  	/* Update the parent pointers in the tree */
+>  	tmp[0] = *mas;
+> @@ -2639,10 +2640,10 @@ static inline void mas_topiary_replace(struct ma_state *mas,
+>   * Updates gap as necessary.
+>   */
+>  static inline void mas_wmb_replace(struct ma_state *mas,
+> -		struct maple_enode *old_enode)
+> +		struct maple_enode *old_enode, unsigned char new_height)
+>  {
+>  	/* Insert the new data in the tree */
+> -	mas_topiary_replace(mas, old_enode);
+> +	mas_topiary_replace(mas, old_enode, new_height);
+>  
+>  	if (mte_is_leaf(mas->node))
+>  		return;
+> @@ -2828,6 +2829,7 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+>  {
+>  	unsigned char split, mid_split;
+>  	unsigned char slot = 0;
+> +	unsigned char new_height = 0; /* used if node is a new root */
+>  	struct maple_enode *left = NULL, *middle = NULL, *right = NULL;
+>  	struct maple_enode *old_enode;
+>  
+> @@ -2877,7 +2879,7 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+>  		 */
+>  		memset(mast->bn, 0, sizeof(struct maple_big_node));
+>  		mast->bn->type = mte_node_type(left);
+> -		l_mas.depth++;
+> +		new_height++;
+>  
+>  		/* Root already stored in l->node. */
+>  		if (mas_is_root_limits(mast->l))
+> @@ -2901,8 +2903,10 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+>  			continue;
+>  
+>  		/* May be a new root stored in mast->bn */
+> -		if (mas_is_root_limits(mast->orig_l))
+> +		if (mas_is_root_limits(mast->orig_l)) {
+> +			new_height++;
+>  			break;
+> +		}
+>  
+>  		mast_spanning_rebalance(mast);
+>  
+> @@ -2913,7 +2917,7 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+>  
+>  	l_mas.node = mt_mk_node(ma_mnode_ptr(mas_pop_node(mas)),
+>  				mte_node_type(mast->orig_l->node));
+> -	l_mas.depth++;
+> +
+>  	mab_mas_cp(mast->bn, 0, mt_slots[mast->bn->type] - 1, &l_mas, true);
+>  	mas_set_parent(mas, left, l_mas.node, slot);
+>  	if (middle)
+> @@ -2937,7 +2941,7 @@ static void mas_spanning_rebalance(struct ma_state *mas,
+>  	mas->min = l_mas.min;
+>  	mas->max = l_mas.max;
+>  	mas->offset = l_mas.offset;
+> -	mas_wmb_replace(mas, old_enode);
+> +	mas_wmb_replace(mas, old_enode, new_height);
+>  	mtree_range_walk(mas);
+>  	return;
+>  }
+> @@ -3013,6 +3017,7 @@ static inline void mas_destroy_rebalance(struct ma_state *mas, unsigned char end
+>  	void __rcu **l_slots, **slots;
+>  	unsigned long *l_pivs, *pivs, gap;
+>  	bool in_rcu = mt_in_rcu(mas->tree);
+> +	unsigned char new_height = mas_mt_height(mas);
+>  
+>  	MA_STATE(l_mas, mas->tree, mas->index, mas->last);
+>  
+> @@ -3107,7 +3112,7 @@ static inline void mas_destroy_rebalance(struct ma_state *mas, unsigned char end
+>  	mas_ascend(mas);
+>  
+>  	if (in_rcu) {
+> -		mas_replace_node(mas, old_eparent);
+> +		mas_replace_node(mas, old_eparent, new_height);
+>  		mas_adopt_children(mas, mas->node);
+>  	}
+>  
+> @@ -3118,10 +3123,9 @@ static inline void mas_destroy_rebalance(struct ma_state *mas, unsigned char end
+>   * mas_split_final_node() - Split the final node in a subtree operation.
+>   * @mast: the maple subtree state
+>   * @mas: The maple state
+> - * @height: The height of the tree in case it's a new root.
+>   */
+>  static inline void mas_split_final_node(struct maple_subtree_state *mast,
+> -					struct ma_state *mas, int height)
+> +					struct ma_state *mas)
+>  {
+>  	struct maple_enode *ancestor;
+>  
+> @@ -3130,7 +3134,6 @@ static inline void mas_split_final_node(struct maple_subtree_state *mast,
+>  			mast->bn->type = maple_arange_64;
+>  		else
+>  			mast->bn->type = maple_range_64;
+> -		mas->depth = height;
+>  	}
+>  	/*
+>  	 * Only a single node is used here, could be root.
+> @@ -3153,8 +3156,7 @@ static inline void mas_split_final_node(struct maple_subtree_state *mast,
+>   * @skip: The number of entries to skip for new nodes insertion.
+>   */
+>  static inline void mast_fill_bnode(struct maple_subtree_state *mast,
+> -					 struct ma_state *mas,
+> -					 unsigned char skip)
+> +					 struct ma_state *mas, unsigned char skip, int *height)
 
-In the current patch, the trait:
-- provides raw_get_timer
-- provides timer_container_of
-and the macro:
-- defines OFFSET
-- defines raw_get_timer
+Update the argument list in the comments?
 
-The justification for the redundancy is that without defining
-raw_get_timer in the macro the user might invoke the macro
-incorrectly. But why is that better than defining both methods in the
-macro? Either way the macro provides 2 items. The key benefit of
-defining both methods in the macro is that there's no dead-code
-implementation of raw_get_pointer in the trait. It also reduces the
-surface of the trait, which is always a benefit due to Hyrum's law.
+>  {
+>  	bool cp = true;
+>  	unsigned char split;
+> @@ -3226,7 +3228,7 @@ static inline void mast_split_data(struct maple_subtree_state *mast,
+>   *
+>   * Return: True if pushed, false otherwise.
+>   */
+> -static inline bool mas_push_data(struct ma_state *mas, int height,
+> +static inline bool mas_push_data(struct ma_state *mas, int *height,
+>  				 struct maple_subtree_state *mast, bool left)
 
->
-> >
-> > On Mon, Feb 24, 2025 at 7:06=E2=80=AFAM Andreas Hindborg <a.hindborg@ke=
-rnel.org> wrote:
-> >>
->
-> [...]
->
-> >> +//! # Vocabulary
-> >> +//!
-> >> +//! States:
-> >> +//!
-> >> +//! - Stopped: initialized but not started, or cancelled, or not rest=
-arted.
-> >> +//! - Started: initialized and started or restarted.
-> >> +//! - Running: executing the callback.
-> >> +//!
-> >> +//! Operations:
-> >> +//!
-> >> +//! * Start
-> >> +//! * Cancel
-> >> +//! * Restart
-> >> +//!
-> >> +//! Events:
-> >> +//!
-> >> +//! * Expire
-> >> +//!
-> >> +//! ## State Diagram
-> >> +//!
-> >> +//! ```text
-> >> +//!                                                   Return NoRestar=
-t
-> >> +//!                       +------------------------------------------=
----------------------------+
-> >> +//!                       |                                          =
-                           |
-> >> +//!                       |                                          =
-                           |
-> >> +//!                       |                                          =
-                           |
-> >> +//!                       |                                         R=
-eturn Restart              |
-> >> +//!                       |                                      +---=
----------------------+     |
-> >> +//!                       |                                      |   =
-                     |     |
-> >> +//!                       |                                      |   =
-                     |     |
-> >> +//!                       v                                      v   =
-                     |     |
-> >> +//!           +-----------------+      Start      +------------------=
-+           +--------+-----+--+
-> >> +//!           |                 +---------------->|                  =
-|           |                 |
-> >> +//! Init      |                 |                 |                  =
-|  Expire   |                 |
-> >> +//! --------->|    Stopped      |                 |      Started     =
-+---------->|     Running     |
-> >> +//!           |                 |     Cancel      |                  =
-|           |                 |
-> >> +//!           |                 |<----------------+                  =
-|           |                 |
-> >> +//!           +-----------------+                 +---------------+--=
-+           +-----------------+
-> >> +//!                                                     ^         |
-> >> +//!                                                     |         |
-> >> +//!                                                     +---------+
-> >> +//!                                                      Restart
-> >> +//! ```
-> >> +//!
-> >> +//!
-> >> +//! A timer is initialized in the **stopped** state. A stopped timer =
-can be
-> >> +//! **started** by the `start` operation, with an **expiry** time. Af=
-ter the
-> >> +//! `start` operation, the timer is in the **started** state. When th=
-e timer
-> >> +//! **expires**, the timer enters the **running** state and the handl=
-er is
-> >> +//! executed. After the handler has finished executing, the timer may=
- enter the
-> >> +//! **started* or **stopped** state, depending on the return value of=
- the
-> >> +//! handler. A running timer can be **canceled** by the `cancel` oper=
-ation. A
-> >> +//! timer that is cancelled enters the **stopped** state.
-> >
-> > This is a bit confusing because it sounds like you're describing a
-> > *started* timer. After reading the next paragraph I think this wording
-> > applies to both *started* and *running*, but it isn't unambiguous.
->
-> Right, I think I understand. It's a mistake. Last sentence should be:
->
->   A timer in the **started** or **running** state be **canceled** by the
->   `cancel` operation. A timer that is cancelled enters the **stopped**
->   state.
+Update the argument list in the comments?
 
-I think you meant "*may* be canceled"? I assume this replaces the last
-two sentences?
+>  {
+>  	unsigned char slot_total = mast->bn->b_end;
+> @@ -3283,8 +3285,8 @@ static inline bool mas_push_data(struct ma_state *mas, int height,
+>  		mast->orig_l->offset += end + 1;
+>  
+>  	mast_split_data(mast, mas, split);
+> -	mast_fill_bnode(mast, mas, 2);
+> -	mas_split_final_node(mast, mas, height + 1);
+> +	mast_fill_bnode(mast, mas, 2, height);
+> +	mas_split_final_node(mast, mas);
+>  	return true;
+>  }
+>  
+> @@ -3297,6 +3299,7 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  {
+>  	struct maple_subtree_state mast;
+>  	int height = 0;
+> +	unsigned int orig_height = mas_mt_height(mas);
+>  	unsigned char mid_split, split = 0;
+>  	struct maple_enode *old;
+>  
+> @@ -3323,7 +3326,7 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  	MA_STATE(prev_r_mas, mas->tree, mas->index, mas->last);
+>  
+>  	trace_ma_op(__func__, mas);
+> -	mas->depth = mas_mt_height(mas);
+> +	mas->depth = orig_height;
 
-I noticed below I had suggested talking about the handler as
-"returning" rather than "finishing execution"; please consider that
-throughout.
+Why is this still needed?  It might be worth adding a comment or
+removing it?
 
->
-> >
-> >> +//!
-> >> +//! A `cancel` or `restart` operation on a timer in the **running** s=
-tate takes
-> >> +//! effect after the handler has finished executing and the timer has=
- transitioned
-> >> +//! out of the **running** state.
-> >
-> > There's no external restart, right?
->
-> There will be, eventually. Conceptually there is, because the state
-> diagram and this text describe the operation.
-
-OK.
-
->
-> > I think this wording is confused
-> > by the unification of cancel and restart under operations, though they
-> > are not isomorphic.
->
-> Hmm, I am not following. Can you elaborate? The set of operations is
-> start, cancel, restart.
-
-I wrote this when I thought there was no external restart. By the way,
-what is the difference between restart and start? Can a running timer
-not be started, or does that do something other than reset it to the
-new expiry time?
-
-
-> > Restart (as I understand it) can only happen from
-> > the handler, and cancel can only happen via a call to hrtimer_cancel.
->
-> This text introduces the restart operation. There is no code path to
-> reach it from rust at the moment, but I am inclined to add the function
-> due to this confusion. It would be dead code for now though.
->
-> > It's also a bit strange that start isn't mentioned whenever cancel and
-> > restart are mentioned.
->
-> Why is that?
-
-See above - I think I am confused about the difference between start
-and restart when called on a running timer.
-
->
-> >
-> >> +//!
-> >> +//! A `restart` operation on a timer in the **stopped** state is equi=
-valent to a
-> >> +//! `start` operation.
-> >> +
-> >> +use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
-> >> +use core::marker::PhantomData;
-> >> +
-> >> +/// A timer backed by a C `struct hrtimer`.
-> >> +///
-> >> +/// # Invariants
-> >> +///
-> >> +/// * `self.timer` is initialized by `bindings::hrtimer_setup`.
-> >> +#[pin_data]
-> >> +#[repr(C)]
-> >> +pub struct HrTimer<T> {
-> >> +    #[pin]
-> >> +    timer: Opaque<bindings::hrtimer>,
-> >> +    _t: PhantomData<T>,
-> >> +}
-> >> +
-> >> +// SAFETY: Ownership of an `HrTimer` can be moved to other threads an=
-d
-> >> +// used/dropped from there.
-> >> +unsafe impl<T> Send for HrTimer<T> {}
-> >> +
-> >> +// SAFETY: Timer operations are locked on C side, so it is safe to op=
-erate on a
-> >> +// timer from multiple threads
-> >
-> > nit: missing article ("the" C side) and missing period.
->
-> Thanks.
->
-> >
-> >> +unsafe impl<T> Sync for HrTimer<T> {}
-> >> +
-> >> +impl<T> HrTimer<T> {
-> >> +    /// Return an initializer for a new timer instance.
-> >> +    pub fn new() -> impl PinInit<Self>
-> >> +    where
-> >> +        T: HrTimerCallback,
-> >> +    {
-> >> +        pin_init!(Self {
-> >> +            // INVARIANTS: We initialize `timer` with `hrtimer_setup`=
- below.
-> >
-> > Why plural INVARIANTS?
->
-> Mistake, will fix.
->
-> >
-> >> +            timer <- Opaque::ffi_init(move |place: *mut bindings::hrt=
-imer| {
-> >> +                // SAFETY: By design of `pin_init!`, `place` is a poi=
-nter to a
-> >> +                // live allocation. hrtimer_setup will initialize `pl=
-ace` and
-> >> +                // does not require `place` to be initialized prior t=
-o the call.
-> >> +                unsafe {
-> >> +                    bindings::hrtimer_setup(
-> >> +                        place,
-> >> +                        Some(T::Pointer::run),
-> >> +                        bindings::CLOCK_MONOTONIC as i32,
-> >> +                        bindings::hrtimer_mode_HRTIMER_MODE_REL,
-> >> +                    );
-> >> +                }
-> >> +            }),
-> >> +            _t: PhantomData,
-> >> +        })
-> >> +    }
-> >> +
-> >> +    /// Get a pointer to the contained `bindings::hrtimer`.
-> >> +    ///
-> >> +    /// This function do not create any references.
-> >
-> > s/do/does/
->
-> Thanks.
->
-> >
-> > But maybe this should use the same wording from Opaque::raw_get?
-> >
-> >     /// This function is useful to get access to the value without
-> > creating intermediate
-> >     /// references.
->
-> To me those two wordings have the same effect. I don't mind changing the
-> wording if you feel strongly about it.
-
-Yeah, I would prefer the wording be the exact same if it is intended
-to have the same meaning. Using different wording may trigger Chekov's
-Gun in the reader's mind (as it did for me).
-
-> >
-> > If so, consider also naming the argument "this" for consistency. Same
-> > for other methods below.
->
-> Sure.
->
-> >
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// `ptr` must point to a live allocation of at least the size of=
- `Self`.
-> >> +    unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
-> >> +        // SAFETY: The field projection to `timer` does not go out of=
- bounds,
-> >> +        // because the caller of this function promises that `ptr` po=
-ints to an
-> >> +        // allocation of at least the size of `Self`.
-> >> +        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).timer)) }
-> >> +    }
-> >> +
-> >> +    /// Cancel an initialized and potentially running timer.
-> >> +    ///
-> >> +    /// If the timer handler is running, this will block until the ha=
-ndler is
-> >> +    /// finished.
-> >
-> > nit: s/is finished/returns/ and maybe clarify the ordering, namely
-> > that the timer is definitely in a stopped state after this returns.
->
->     /// If the timer handler is running, this function will block until t=
-he
->     /// handler returns. Before this function returns, the timer will be =
-in the
->     /// stopped state.
->
-> If we have a concurrent call to start, the timer might actually be in
-> the started state when this function returns. But this function will
-> transition the timer to the stopped state.
-
-Got it. Consider dropping the last sentence ("before this function
-returns..."), I don't think it makes this clearer.
-
->
-> >
-> >> +    ///
-> >> +    /// Users of the `HrTimer` API would not usually call this method=
- directly.
-> >> +    /// Instead they would use the safe [`HrTimerHandle::cancel`] on =
-the handle
-> >> +    /// returned when the timer was started.
-> >> +    ///
-> >> +    /// This function does not create any references.
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// `self_ptr` must point to a valid `Self`.
-> >
-> > Why use different phrasing here than on raw_get? The parameter name is
-> > also different. Would be nice to be consistent.
->
-> They are different requirements, one is stronger than the other. I
-> construct safety requirements based on the unsafe operations in the
-> function. The unsafe operations in these two functions have different
-> requirements. I would not impose a stronger requirement than I have to.
-
-Ah, the requirement is stronger here than on `raw_get`. Thanks for clarifyi=
-ng.
-
-How about the parameter name bit? Can we be consistent?
-Opaque::raw_get calls it "this".
-
->
-> >
-> >> +    #[allow(dead_code)]
-> >> +    pub(crate) unsafe fn raw_cancel(self_ptr: *const Self) -> bool {
-> >> +        // SAFETY: timer_ptr points to an allocation of at least `HrT=
-imer` size.
-> >> +        let c_timer_ptr =3D unsafe { HrTimer::raw_get(self_ptr) };
-> >> +
-> >> +        // If the handler is running, this will wait for the handler =
-to finish
-> >> +        // before returning.
-> >> +        // SAFETY: `c_timer_ptr` is initialized and valid. Synchroniz=
-ation is
-> >> +        // handled on C side.
-> >
-> > missing article here.
->
-> =F0=9F=91=8D
->
-> >
-> >> +        unsafe { bindings::hrtimer_cancel(c_timer_ptr) !=3D 0 }
-> >> +    }
-> >> +}
-> >> +
-> >> +/// Implemented by pointer types that point to structs that embed a [=
-`HrTimer`].
-
-This comment says "embed a [`HrTimer`]" but in `trait HrTimer` the
-wording is "Implemented by structs that contain timer nodes." Is the
-difference significant?
-
-Also the naming of the two traits feels inconsistent; one contains
-"Has" and the other doesn't.
-
-> >> +///
-> >> +/// Target (pointee) must be [`Sync`] because timer callbacks happen =
-in another
-> >> +/// thread of execution (hard or soft interrupt context).
-> >
-> > Is this explaining the bound on the trait, or something that exists
-> > outside the type system? If it's the former, isn't the Sync bound on
-> > the trait going to apply to the pointer rather than the pointee?
->
-> It is explaining the bound on the trait, and as you say it is not
-> correct. Pointer types that do not apply synchronization internally can
-> only be `Sync` when their target is `Sync`, which was probably my line
-> of thought.
->
-> I will rephrase:
->
->   `Self` must be [`Sync`] because timer callbacks happen in another
->   thread of execution (hard or soft interrupt context).
-
-How about "...because it is passed to timer callbacks in another
-thread of execution ..."?
-
-> >
-> >> +///
-> >> +/// Starting a timer returns a [`HrTimerHandle`] that can be used to =
-manipulate
-> >> +/// the timer. Note that it is OK to call the start function repeated=
-ly, and
-> >> +/// that more than one [`HrTimerHandle`] associated with a [`HrTimerP=
-ointer`] may
-> >> +/// exist. A timer can be manipulated through any of the handles, and=
- a handle
-> >> +/// may represent a cancelled timer.
-> >> +pub trait HrTimerPointer: Sync + Sized {
-> >> +    /// A handle representing a started or restarted timer.
-> >> +    ///
-> >> +    /// If the timer is running or if the timer callback is executing=
- when the
-> >> +    /// handle is dropped, the drop method of [`HrTimerHandle`] shoul=
-d not return
-> >> +    /// until the timer is stopped and the callback has completed.
-> >> +    ///
-> >> +    /// Note: When implementing this trait, consider that it is not u=
-nsafe to
-> >> +    /// leak the handle.
-> >
-> > What does leak mean in this context?
->
-> The same as in all other contexts (I think?). Leave the object alive for
-> 'static and forget the address. Thus never drop it and thus never run
-> the drop method.
-
-Got it. Is leaking memory generally allowed in the kernel? In other
-words, is there nothing that will complain about such memory never
-being reclaimed?
-
->
-> >
-> >> +    type TimerHandle: HrTimerHandle;
-> >> +
-> >> +    /// Start the timer with expiry after `expires` time units. If th=
-e timer was
-> >> +    /// already running, it is restarted with the new expiry time.
-> >> +    fn start(self, expires: Ktime) -> Self::TimerHandle;
-> >> +}
-> >> +
-> >> +/// Implemented by [`HrTimerPointer`] implementers to give the C time=
-r callback a
-> >> +/// function to call.
-> >> +// This is split from `HrTimerPointer` to make it easier to specify t=
-rait bounds.
-> >> +pub trait RawHrTimerCallback {
-> >> +    /// This type is passed to [`HrTimerCallback::run`]. It may be a =
-borrow of
-> >> +    /// [`Self::CallbackTarget`], or it may be `Self::CallbackTarget`=
- if the
-> >> +    /// implementation can guarantee correct access (exclusive or sha=
-red
-> >> +    /// depending on the type) to the target during timer handler exe=
-cution.
-> >> +    type CallbackTarget<'a>;
-> >> +
-> >> +    /// Callback to be called from C when timer fires.
-> >> +    ///
-> >> +    /// # Safety
-> >> +    ///
-> >> +    /// Only to be called by C code in `hrtimer` subsystem. `ptr` mus=
-t point to
-> >
-> > missing article, should be "...in the `hrtimer`..."
->
-> English is difficult =F0=9F=98=85
->
-> >
-> >> +    /// the `bindings::hrtimer` structure that was used to start the =
-timer.
-> >> +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings=
-::hrtimer_restart;
-> >> +}
-> >> +
-> >> +/// Implemented by structs that can be the target of a timer callback=
-.
-> >> +pub trait HrTimerCallback {
-> >> +    /// The type whose [`RawHrTimerCallback::run`] method will be inv=
-oked when
-> >> +    /// the timer expires.
-> >> +    type Pointer<'a>: RawHrTimerCallback;
-> >> +
-> >> +    /// Called by the timer logic when the timer fires.
-> >> +    fn run(this: <Self::Pointer<'_> as RawHrTimerCallback>::CallbackT=
-arget<'_>)
-> >> +    where
-> >> +        Self: Sized;
-> >> +}
-> >> +
-> >> +/// A handle representing a potentially running timer.
-> >> +///
-> >> +/// More than one handle representing the same timer might exist.
-> >> +///
-> >> +/// # Safety
-> >> +///
-> >> +/// When dropped, the timer represented by this handle must be cancel=
-led, if it
-> >> +/// is running. If the timer handler is running when the handle is dr=
-opped, the
-> >> +/// drop method must wait for the handler to finish before returning.
-> >> +///
-> >> +/// Note: One way to satisfy the safety requirement is to call `Self:=
-:cancel` in
-> >> +/// the drop implementation for `Self.`
-> >> +pub unsafe trait HrTimerHandle {
-> >> +    /// Cancel the timer, if it is running. If the timer handler is r=
-unning, block
-> >> +    /// till the handler has finished.
-> >
-> > Here's another case where "running" is confusingly used to refer to
-> > the timer being in the state before the handler has begun to execute,
-> > and also to the state after the handler has begun to execute.
->
-> Thanks for catching this. How is this:
->
->     /// Cancel the timer, if it is in the started or running state. If th=
-e timer
->     /// is in the running state, block till the handler has finished exec=
-uting.
-
-Certainly better. Consider dropping "if it is in the started or running sta=
-te".
-
->
->
->
-> Thanks for the comments!
-
-You're welcome!
+>  
+>  	mast.l = &l_mas;
+>  	mast.r = &r_mas;
+> @@ -3333,7 +3336,7 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  
+>  	while (height++ <= mas->depth) {
+>  		if (mt_slots[b_node->type] > b_node->b_end) {
+> -			mas_split_final_node(&mast, mas, height);
+> +			mas_split_final_node(&mast, mas);
+>  			break;
+>  		}
+>  
+> @@ -3348,11 +3351,15 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  		 * is a significant savings.
+>  		 */
+>  		/* Try to push left. */
+> -		if (mas_push_data(mas, height, &mast, true))
+> +		if (mas_push_data(mas, &height, &mast, true)) {
+> +			height++;
+>  			break;
+> +		}
+>  		/* Try to push right. */
+> -		if (mas_push_data(mas, height, &mast, false))
+> +		if (mas_push_data(mas, &height, &mast, false)) {
+> +			height++;
+>  			break;
+> +		}
+>  
+>  		split = mab_calc_split(mas, b_node, &mid_split);
+>  		mast_split_data(&mast, mas, split);
+> @@ -3361,7 +3368,7 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  		 * r->max.
+>  		 */
+>  		mast.r->max = mas->max;
+> -		mast_fill_bnode(&mast, mas, 1);
+> +		mast_fill_bnode(&mast, mas, 1, &height);
+>  		prev_l_mas = *mast.l;
+>  		prev_r_mas = *mast.r;
+>  	}
+> @@ -3369,7 +3376,7 @@ static void mas_split(struct ma_state *mas, struct maple_big_node *b_node)
+>  	/* Set the original node as dead */
+>  	old = mas->node;
+>  	mas->node = l_mas.node;
+> -	mas_wmb_replace(mas, old);
+> +	mas_wmb_replace(mas, old, height);
+>  	mtree_range_walk(mas);
+>  	return;
+>  }
+> @@ -3428,8 +3435,7 @@ static inline void mas_root_expand(struct ma_state *mas, void *entry)
+>  	if (mas->last != ULONG_MAX)
+>  		pivots[++slot] = ULONG_MAX;
+>  
+> -	mas->depth = 1;
+> -	mas_set_height(mas);
+> +	mt_set_height(mas->tree, 1);
+>  	ma_set_meta(node, maple_leaf_64, 0, slot);
+>  	/* swap the new root into the tree */
+>  	rcu_assign_pointer(mas->tree->ma_root, mte_mk_root(mas->node));
+> @@ -3673,8 +3679,7 @@ static inline void mas_new_root(struct ma_state *mas, void *entry)
+>  	WARN_ON_ONCE(mas->index || mas->last != ULONG_MAX);
+>  
+>  	if (!entry) {
+> -		mas->depth = 0;
+> -		mas_set_height(mas);
+> +		mt_set_height(mas->tree, 0);
+>  		rcu_assign_pointer(mas->tree->ma_root, entry);
+>  		mas->status = ma_start;
+>  		goto done;
+> @@ -3688,8 +3693,7 @@ static inline void mas_new_root(struct ma_state *mas, void *entry)
+>  	mas->status = ma_active;
+>  	rcu_assign_pointer(slots[0], entry);
+>  	pivots[0] = mas->last;
+> -	mas->depth = 1;
+> -	mas_set_height(mas);
+> +	mt_set_height(mas->tree, 1);
+>  	rcu_assign_pointer(mas->tree->ma_root, mte_mk_root(mas->node));
+>  
+>  done:
+> @@ -3808,6 +3812,7 @@ static inline void mas_wr_node_store(struct ma_wr_state *wr_mas,
+>  	struct maple_node reuse, *newnode;
+>  	unsigned char copy_size, node_pivots = mt_pivots[wr_mas->type];
+>  	bool in_rcu = mt_in_rcu(mas->tree);
+> +	unsigned char height = mas_mt_height(mas);
+>  
+>  	if (mas->last == wr_mas->end_piv)
+>  		offset_end++; /* don't copy this offset */
+> @@ -3864,7 +3869,7 @@ static inline void mas_wr_node_store(struct ma_wr_state *wr_mas,
+>  		struct maple_enode *old_enode = mas->node;
+>  
+>  		mas->node = mt_mk_node(newnode, wr_mas->type);
+> -		mas_replace_node(mas, old_enode);
+> +		mas_replace_node(mas, old_enode, height);
+>  	} else {
+>  		memcpy(wr_mas->node, newnode, sizeof(struct maple_node));
+>  	}
+> -- 
+> 2.43.0
+> 
