@@ -1,155 +1,77 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from ci74p00im-qukt09082501.me.com (ci74p00im-qukt09082501.me.com [17.57.156.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07AF26AA93;
-	Tue, 25 Feb 2025 15:25:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD2C26E624
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.156.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497155; cv=none; b=FgKGX2w8FVCwnEtQjKAqHL9QJKYEFt+h8s6+Q+/O1Wzw2Ac7fZsgNLY0Q7nLwAvN23eEQy1pdTWWcS+cWUnLCwKR8c2kHrFO80WZ863bpXYdUEMdLjsF42fAicL+fUQQ+vu0CZy+y+mZWHcenUxbpoePwaxETpoKGfLK7Zg8Vg8=
+	t=1740497160; cv=none; b=FYwWAAQ185AgZ26h4hyB8aZlVN//Z6lum0NDAgoHO0GbtDqTyvb9AzguaH5FQC91P3uzaxE5HHyM250VpaO7KlaOe2PIIvvvE/gogjMOZQ7QNNS0XwG2BOlzOadPjoSwzxmURw9XbeEkcaDNpdZ0FwGKETYrqoPx22tZQDV6R4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497155; c=relaxed/simple;
-	bh=kZ993xbPUrqxt9evRYhTDaW4rgAsxIjUaJ0fumHopmc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UJEEvAHGDgFA5ZAu4awRbGShzs9DCxFIHBRjcC0Q/mx9jZxP+ORd/SNL4WNrqMIbRdpOhiVnoOI23puORRiZyRCA//kvDTtGVSWlyWFMecW3vTZik8TrZNl6KZiQmj/yiztmlFbNBwThgflUW2HyD8jhV74zgDTTcNhZIpHrs3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=BUMWjRPI; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1740497160; c=relaxed/simple;
+	bh=KLXVLS/xU4hxsPlFm59a4PAwo4LYu7uFun0ESUdBPz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kcsdqc5g1VGd1ef/l2sEhRU/N/Cqxz/QZxKu5T+F9c+69kFZJyBRuiaWASvJ1Y4LlGNi+gbSjR9oCRueyvCLvGDD26m/GD2WQsNguL6Gj9ipMq4Hm/z8q6NBrSI0gwfg2SJUn2t6DrzBPi54JO5VOdzhwBJ3GeEUhfX2jnAL2uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=i6CM1f7C; arc=none smtp.client-ip=17.57.156.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BUMWjRPI"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51PFLeJx1321966
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 25 Feb 2025 07:21:41 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51PFLeJx1321966
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740496908;
-	bh=IFxVykDS0g8xLLyPz9dDn1sgxptbnK+YyCXg+3CY3aM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=BUMWjRPIFaLk9eEljQvZOhLwrBHl5WiOz4myJbzxM1DiE4BYZIZywLpG+8lH6L2Ld
-	 bFtraaKU3/cK4+FeRWQF5FbFz83DA8Z/AQnawksvD4yyCe21dX2Z0rgdJKhBBHLj1z
-	 s4I9gcurp+Edn27zjQimLT1osW8ygdQmmUepB5mDrHI/BX4Xi6bUBzkmawhEaTO/H0
-	 x2/DVO+Y+FeNzDFJllD1SIrMR4JwTWu/5UrL2K1pJJDRRfeaeW4lVKsfyboLsLCJ0g
-	 GbLOzT769Ufnz8kospEBAiCZ1QDPJbYxD0w9NG/sbS9pBQyDxcESpuh28quuCen1V2
-	 4+wvwE+cqOncg==
-Date: Tue, 25 Feb 2025 07:21:38 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: David Laight <david.laight.linux@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-CC: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        yury.norov@gmail.com, akpm@linux-foundation.org, alistair@popple.id.au,
-        linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250224133431.2c38213f@pumpkin>
-References: <20250223164217.2139331-1-visitorckw@gmail.com> <20250223164217.2139331-3-visitorckw@gmail.com> <bde62fee-4617-4db7-b92c-59fb958c4ca6@kernel.org> <20250224133431.2c38213f@pumpkin>
-Message-ID: <949B0809-3BB9-4E18-8FA1-A12BD47F2843@zytor.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="i6CM1f7C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=KLXVLS/xU4hxsPlFm59a4PAwo4LYu7uFun0ESUdBPz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=i6CM1f7CdRYAS2msIKYrMwj1Jw4MFdOt4XXiwIr/I+U4fjVBdF5Rdjr3JpymHhV31
+	 oimzmLYFU/uX06Dzsf67TyGefd0gmbncfwuK2xDqlGxa5fFPm5naaEP6m1oDyPM8zU
+	 VcZbgeHpmmhBV5zRFi9KAmzgbHZyumAjNzHmeyhsVKmUy9tyvOC4ryGFUnwOZ554P3
+	 TNuWdvgcYdgnzh3htg+61LLNuEB1yA3U/UQspeIcDSedRUkhcbY2XFF5p+vpvy7z6C
+	 VnsRcbxivhH5UP4fdqKGV15mR05FAoH/mNJIMnB981JEdJNc2MNcKUhFp7mplpREjv
+	 gMSb0aDAf/YJQ==
+Received: from [192.168.1.26] (ci77p00im-dlb-asmtp-mailmevip.me.com [17.57.156.26])
+	by ci74p00im-qukt09082501.me.com (Postfix) with ESMTPSA id D486C4AA01E3;
+	Tue, 25 Feb 2025 15:25:54 +0000 (UTC)
+Message-ID: <8c51e02c-c262-4db8-b0fe-30462005f1c5@icloud.com>
+Date: Tue, 25 Feb 2025 23:25:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] of: Do not change property state under
+ __of_add_property() failure
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250224-of_bugfix-v1-0-03640ae8c3a6@quicinc.com>
+ <20250224-of_bugfix-v1-4-03640ae8c3a6@quicinc.com>
+ <20250225144108.GB2279028-robh@kernel.org>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250225144108.GB2279028-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: LYKRc1L5sPXYhq8OytkK3Uyp_dVSRYSG
+X-Proofpoint-ORIG-GUID: LYKRc1L5sPXYhq8OytkK3Uyp_dVSRYSG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=698 clxscore=1015
+ adultscore=0 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502250102
 
-On February 24, 2025 5:34:31 AM PST, David Laight <david=2Elaight=2Elinux@g=
-mail=2Ecom> wrote:
->On Mon, 24 Feb 2025 08:09:43 +0100
->Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->
->> On 23=2E 02=2E 25, 17:42, Kuan-Wei Chiu wrote:
->> > Several parts of the kernel open-code parity calculations using
->> > different methods=2E Add a generic parity64() helper implemented with=
- the
->> > same efficient approach as parity8()=2E
->> >=20
->> > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail=2Ecom>
->> > ---
->> >   include/linux/bitops=2Eh | 22 ++++++++++++++++++++++
->> >   1 file changed, 22 insertions(+)
->> >=20
->> > diff --git a/include/linux/bitops=2Eh b/include/linux/bitops=2Eh
->> > index fb13dedad7aa=2E=2E67677057f5e2 100644
->> > --- a/include/linux/bitops=2Eh
->> > +++ b/include/linux/bitops=2Eh
->> > @@ -281,6 +281,28 @@ static inline int parity32(u32 val)
->> >   	return (0x6996 >> (val & 0xf)) & 1;
->> >   }
->> >  =20
->> > +/**
->> > + * parity64 - get the parity of an u64 value
->> > + * @value: the value to be examined
->> > + *
->> > + * Determine the parity of the u64 argument=2E
->> > + *
->> > + * Returns:
->> > + * 0 for even parity, 1 for odd parity
->> > + */
->> > +static inline int parity64(u64 val)
->> > +{
->> > +	/*
->> > +	 * One explanation of this algorithm:
->> > +	 * https://funloop=2Eorg/codex/problem/parity/README=2Ehtml
->> > +	 */
->> > +	val ^=3D val >> 32; =20
->>=20
->> Do we need all these implementations? Can't we simply use parity64() fo=
-r=20
->> any 8, 16 and 32-bit values too? I=2Ee=2E have one parity()=2E
->
->I'm not sure you can guarantee that the compiler will optimise away
->the unnecessary operations=2E
->
->But:
->static inline int parity64(u64 val)
->{
->	return parity32(val ^ (val >> 32))
->}
->
->should be ok=2E
->It will also work on x86-32 where parity32() can just check the parity fl=
-ag=2E
->Although you are unlikely to manage to use the the PF the xor sets=2E
->
->	David
->
->>=20
->> > +	val ^=3D val >> 16;
->> > +	val ^=3D val >> 8;
->> > +	val ^=3D val >> 4;
->> > +	return (0x6996 >> (val & 0xf)) & 1;
->> > +}
->> > +
->> >   /**
->> >    * __ffs64 - find first set bit in a 64 bit word
->> >    * @word: The 64 bit word =20
->>=20
->>=20
->
+On 2025/2/25 22:41, Rob Herring wrote:
+> On Mon, Feb 24, 2025 at 10:28:00PM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Do not remove the property from list @np->deadprops if
+>> __of_add_property() encounters -EEXIST failure.
+> A property can never be on both np->deadprops and np->props.
 
-Sure you can; you do need an 8- and a 16-bit arch implementation though (t=
-he 16 bit one being xor %rh,%rl)
+i made this patch based on convention that
+
+partial task which has been done successfully needs to be undid if fails
+to do the remaining task.
+
+It is okay to drop this patch based on condition you mentioned.
+thank you. (^^)(^^)
