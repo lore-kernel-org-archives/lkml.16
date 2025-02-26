@@ -1,198 +1,179 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5257F1A5BBD;
-	Wed, 26 Feb 2025 09:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789122AE9A;
+	Wed, 26 Feb 2025 09:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563315; cv=none; b=SLJFFNWUhzQAYQg296jcFDq1btMPrsah5JBD1vi2pO0DyDHaY3WPiG50VGzAcWWn7/ErLyYspeJz6gUKdnPDiIenfY5/M+AURDINImFNZ5U5p4oCzdjXl0oqb/pCINcFU5aab+AyM8m/wwyY1dzL2CxjGcuB1vjH9BXUbzB0pMQ=
+	t=1740563327; cv=none; b=oYEhKhVTnf7D34yidv3vK8kECqoJcaSIK+/98qrRKcwNyFhqZ2xn1u1hxeUEhzHY4xwbsqWyGRnCb94UZxOL9MkdGK/ohVuA40R91JcvGxYAkjRrcGZAoq8oZdtpTBn2kdxMQEygMwWVKxMotOXzegBCMljEXk6EDRMnJHb5qdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563315; c=relaxed/simple;
-	bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uxQsFeDjdCo/nRhP3lA+grXEK6suENE/teCu+H3Y4ytvxm6YW0yILy9elHOMGpCBQ2MGpzivGmIbiROWNNSr/KbmTCAFK42smzVQhkmwUPK0xwPVIO05DH/u+M5QlD6bRdKdtUh1lNM6yhrebR7+dHJsVmsAtwvp8+2EW0L1AyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=UxU4kX0W; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=qN+vMNFA; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1740563327; c=relaxed/simple;
+	bh=YHnWMxsDd4NI3G57XP3K3uhiH2OsB3c9BFnE3iwI+R4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cc/UpfxmJ8Uu/hA+8eMoEEXoimXmcM23UGq7zpNhpwYnraeLysZUk5jwRekdU8OD1NDE15qfKggmAy4Ah9wb2SZahl5dFC20wN9qQP1zT5zKGYxRdqc+hRAnBnpBc9tAhAZykFiHjh4/rzlIorFzqhTnvwl1x52Q7Wum3P49PiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K18et+uI; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="UxU4kX0W";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="qN+vMNFA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1740562914; bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UxU4kX0WA0LEjSR/J2FuSEVinUUskselig4PGOcL/EPRm10/+o/zHB3c/ypjYOCPg
-	 OfqPdGDxqED72PH2HXJlN6iXKUTqzYos+R8GcmlMpTd/wQcKQRUN2CmlQh1KDS6+16
-	 vBGnnPfZaEjMaU5R7HqS6K5UAu5AD3TP3vHL5PfSJWb9fiZjmpb/dD7rCdPxLKaTi5
-	 EAMYmIDQKXV1t/TZSnY8gTAoz8bDMdW/Q8HmhZJRL6AgCPfqIBh6TxKvZpWjpag9cB
-	 QA8EtIMlT08DVOx58oAEO+8O6cH1Ed5kLb1GPit7PdiSVAmVMk1lCkUSNC/BE5oyWf
-	 LZUajO5NlzE6Q==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id ED6793A51E8;
-	Wed, 26 Feb 2025 09:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1740562913; bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qN+vMNFAtx/Iu0ktqgWpo7xMexJ2nKXDfu4hScTkH6zyw8Mg+Sbnzp2d+rff1UUs5
-	 J17m8Znqc2We6B/6D69yNmzdz5Baa4LBgozcyQTA0yzpcjJ+3oeKcy+cjI7/RFGgwF
-	 tC78FG/Q+SDUaeUL7wE1OdWV/rfNu+7wQrVzkAbezcYGTHF5r5TGEWNX4H/IZbBFre
-	 fcowh0akKI4Jq+edFpVuBOhHMXu49pWbDIbjtz0UKt3vHtI/E9WAlRl2fwaqE2qL3g
-	 JJgd7+E3L27DGDIcgN/vBKCCY5ThP9b4xgPusVechuviwyL+LMtWVYgRBzgH4Gxin/
-	 VAEhGCg48tTEw==
-Message-ID: <29ce9b9b-3993-4b88-a201-5d67050d53ae@mleia.com>
-Date: Wed, 26 Feb 2025 11:41:52 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K18et+uI"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso1113801a91.0;
+        Wed, 26 Feb 2025 01:48:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740563325; x=1741168125; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PLcQO0F1bTUCUpJSJ+y0elRMBmjObmFBfYrryjf1JY8=;
+        b=K18et+uICN9DCMmdeyVcVVaBkpMS7rHSOBkvHCwsO0JhW3pw4lUzvDhC7QAw6jAsYi
+         VxQtDocSn2MhToJ7+YFRvWT9Iycfjb+3PcWoVTa4AMbvv6zO4gVyMQMGYW5MeCBKIi9j
+         tFgnS1a0M+hI0y3qdkapYpSygRwwlPV3UIwbCrz60CnWbqM1S4nTl2iJB9U7etz3a6oH
+         XGplcSQrt778yAjm+lArVMHr7wPCdkLjgjYpXyDDrFY6pwoHdBUcBsPgrKF9+9QDzyDo
+         7lVcQnm9fZR/sTOR+EZCuVqCfSmI2bhW2AwngCAr+Nk9C3uVXMlgg4ROPcpxaswVAfi9
+         XZzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740563325; x=1741168125;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PLcQO0F1bTUCUpJSJ+y0elRMBmjObmFBfYrryjf1JY8=;
+        b=I/NwTdoeVAPQ4DgmmXHmPvNRrqJzD9CL1aahfHuURUx8Z8XJULOcEg/Kwy4juNtTqO
+         HSFnxmvJQIGspAah3F3AZzPDZiMiqE8La+DEiiVuzln3ITlf1TWOR6Pk5hj8ew5on9uI
+         Q2RraH2B8QlEL/7kAC3o331NesDVJ/6+7oxg/TvWkaksiGZGE6HFZC2wFjdVdX9G2gGX
+         wRImfyHBeP76LYIDCXt2DWIdrOJzha46lhRnlwQxCFKEAHrBSXEeoz1hVFyT+N6pw3Zx
+         J7/4z/WcsvtQ5f6y9oCDncRfH+xlsH7qQi2UZ8ABVSXiqKIIUQB2zH8ttwTFNiUqGHaH
+         BRXw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZgWG4wGhhUxJkRv5IIs8/pgG4fAogAyD7pHstfnFWMEUQasEhnQoJG6Eh4Tdlimn64vCNocUhyQLs56kO+LtD@vger.kernel.org, AJvYcCWdRJ2ln8xuP2wNVuoe6tGGAPKEtN8mcKl63ecCQ9zXT/rZ2t614g4wa/wf4bHdFJkhQB5xSjkOLorBQ2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1+HU5CBM5hptsRsqCqPcQZWU9xl87tfogXO1cpHuPmO4lPYHB
+	T2nTx92f8WMZ8OdTQAVN1yJnmHU6kzi7PYn+qp34y8Ccy+ShRAlq
+X-Gm-Gg: ASbGnctU5B8oE7w4xXGy6do1fijdi8RtnOv5QqIhP3MbX4Mw9PA5puJYUMdadCPu0I7
+	OlCedlKVDbO79shitnH/bITmcdVogjGxa3r/Fx5Pe+4H0Supv49JVMP+CJOIqQWLNLcgOqN2fpy
+	BZwbKfFAa4Y+Vm7286KOeAeviqQCyqhv1hisKk58orysV4kyjNheLDq2ptXOVT/7w2pF9LXBWWr
+	pk7UaKB7iiLW0BIrLGJM/dho6eNIIAfrutx/IvAGRrrRaq7oGtykjivd+uIOBlUMuQXlrlqtjHU
+	VlT6hTRjOb3/8t6DV6DpcPsD2za3z/Y=
+X-Google-Smtp-Source: AGHT+IFlo4foFMWPg/DN45x8tUVnr6ByaRax2qGODemzI9Qn99M3p6q6BuIgPgp4/81TS1aJavK+Nw==
+X-Received: by 2002:a17:90b:1f8c:b0:2fa:9c9:20a3 with SMTP id 98e67ed59e1d1-2fce763d546mr36534184a91.0.1740563324499;
+        Wed, 26 Feb 2025 01:48:44 -0800 (PST)
+Received: from fedora ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6cf92bcfsm1844153a91.0.2025.02.26.01.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 01:48:43 -0800 (PST)
+Date: Wed, 26 Feb 2025 09:48:35 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Cosmin Ratiu <cratiu@nvidia.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"jarod@redhat.com" <jarod@redhat.com>,
+	"razor@blackwall.org" <razor@blackwall.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
+	"jv@jvosburgh.net" <jv@jvosburgh.net>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+	Jianbo Liu <jianbol@nvidia.com>
+Subject: Re: [PATCHv2 net 1/3] bonding: move mutex lock to a work queue for
+ XFRM GC tasks
+Message-ID: <Z77jc8AB3D2xWczl@fedora>
+References: <20250225094049.20142-1-liuhangbin@gmail.com>
+ <20250225094049.20142-2-liuhangbin@gmail.com>
+ <d298da7bc638c323e6d492b2dec7f1b9ea1e1350.camel@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert
- nxp,lpc3220-mic.txt to yaml format
-Content-Language: ru-RU
-To: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>,
- tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-References: <20250226010956.50566-1-leo.fthirata@gmail.com>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250226010956.50566-1-leo.fthirata@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250226_094153_988776_2EF0AB3B 
-X-CRM114-Status: GOOD (  15.13  )
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d298da7bc638c323e6d492b2dec7f1b9ea1e1350.camel@nvidia.com>
 
-Hello Leonardo,
-
-thank you so much for working on this.
-
-On 2/26/25 03:09, Leonardo Felipe Takao Hirata wrote:
-> Convert NXP LPC3220-MIC to DT schema.
+Hi Cosmin,
+On Tue, Feb 25, 2025 at 02:00:05PM +0000, Cosmin Ratiu wrote:
+> This got me to stare at the code again. What if we move the removal of
+> the xs from bond->ipsec from bond_ipsec_del_sa to bond_ipsec_free_sa?
+> bond_ipsec_free_sa, unlike bond_ipsec_del_sa, is not called with x-
+> >lock held. It is called from the xfrm gc task or directly via
+> xfrm_state_put_sync and therefore wouldn't suffer from the locking
+> issue.
 > 
-> Signed-off-by: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>
-> ---
-> Changes in v2:
->   - Fix SoB
->   - Remove reg description
->   - List #interrupt-cell items
->   - Add interrupt restriction per variant
->   - Remove extra examples
-> ---
->   .../interrupt-controller/nxp,lpc3220-mic.txt  | 58 --------------
->   .../interrupt-controller/nxp,lpc3220-mic.yaml | 80 +++++++++++++++++++
->   2 files changed, 80 insertions(+), 58 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
->   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> The tricky part is to make sure that inactive bond->ipsec entries
+> (after bond_ipsec_del_sa calls) do not cause issues if there's a
+> migration (bond_ipsec_del_sa_all is called) happening before
+> bond_ipsec_free_sa. Perhaps filtering by x->km.state != XFRM_STATE_DEAD
+> in bond_ipsec_del_sa_all.
 > 
+> What do you think about this idea?
 
-<snip>
+Thanks a lot for the comments. I also skipped the DEAD xs in add_sa_all.
+What about the patch like:
 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
-> new file mode 100644
-> index 000000000000..489bd329bc4e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
-> @@ -0,0 +1,80 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/nxp,lpc3220-mic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
-> +
-> +maintainers:
-> +  - Vladimir Zapolskiy <vz@mleia.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nxp,lpc3220-mic
-> +      - nxp,lpc3220-sic
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupts:
-> +    items:
-> +      - description:
-> +          IRQ number.
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index e45bba240cbc..0e4db43a833a 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -537,6 +537,12 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
+ 	}
+ 
+ 	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
++		/* No need to handle DEAD XFRM, as it has already been
++		 * deleted and will be freed later.
++		 */
++		if (ipsec->xs->km.state == XFRM_STATE_DEAD)
++			continue;
++
+ 		/* If new state is added before ipsec_lock acquired */
+ 		if (ipsec->xs->xso.real_dev == real_dev)
+ 			continue;
+@@ -592,15 +598,6 @@ static void bond_ipsec_del_sa(struct xfrm_state *xs)
+ 	real_dev->xfrmdev_ops->xdo_dev_state_delete(xs);
+ out:
+ 	netdev_put(real_dev, &tracker);
+-	mutex_lock(&bond->ipsec_lock);
+-	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
+-		if (ipsec->xs == xs) {
+-			list_del(&ipsec->list);
+-			kfree(ipsec);
+-			break;
+-		}
+-	}
+-	mutex_unlock(&bond->ipsec_lock);
+ }
+ 
+ static void bond_ipsec_del_sa_all(struct bonding *bond)
+@@ -617,6 +614,12 @@ static void bond_ipsec_del_sa_all(struct bonding *bond)
+ 
+ 	mutex_lock(&bond->ipsec_lock);
+ 	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
++		/* No need to handle DEAD XFRM, as it has already been
++		 * deleted and will be freed later.
++		 */
++		if (ipsec->xs->km.state == XFRM_STATE_DEAD)
++			continue;
++
+ 		if (!ipsec->xs->xso.real_dev)
+ 			continue;
+ 
+@@ -666,6 +669,16 @@ static void bond_ipsec_free_sa(struct xfrm_state *xs)
+ 		real_dev->xfrmdev_ops->xdo_dev_state_free(xs);
+ out:
+ 	netdev_put(real_dev, &tracker);
++
++	mutex_lock(&bond->ipsec_lock);
++	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
++		if (ipsec->xs == xs) {
++			list_del(&ipsec->list);
++			kfree(ipsec);
++			break;
++		}
++	}
++	mutex_unlock(&bond->ipsec_lock);
+ }
+ 
+ /**
+-- 
+2.46.0
 
-For sake of better understanding SIC1 and SIC2 interrupt controllers
-are chained to MIC, that's why there is 'interrupts' property present,
-and here 0/1 interrupt values are for regular IRQ, 30/31 are for fast IRQ.
-
-Also please add here
-
-   minItems: 2
-   maxItems: 2
-
-I believe that the 'interrupts' property can be just left without any
-given description, or just give a simple description like
-
-   IRQ and FIQ outputs of sub interrupt controllers to the main interrupt controller
-
-> +      - description: |
-> +          IRQ type. Can be one of:
-> +
-> +              IRQ_TYPE_EDGE_RISING = Low-to-high edge triggered,
-> +              IRQ_TYPE_EDGE_FALLING = High-to-low edge triggered,
-> +              IRQ_TYPE_LEVEL_HIGH = Active high level-sensitive,
-> +              IRQ_TYPE_LEVEL_LOW = Active low level-sensitive.
-> +
-> +          Reset value is IRQ_TYPE_LEVEL_LOW.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: nxp,lpc3220-sic
-> +    then:
-> +      required:
-> +        - interrupts
-> +    else:
-> +      properties:
-> +        interrupts: false
-
-Please check if this 'else' condition can be removed.
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    mic: interrupt-controller@40008000 {
-> +      compatible = "nxp,lpc3220-mic";
-> +      reg = <0x40008000 0x4000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +    };
-> +
-> +    sic1: interrupt-controller@4000c000 {
-> +      compatible = "nxp,lpc3220-sic";
-> +      reg = <0x4000c000 0x4000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      interrupt-parent = <&mic>;
-> +      interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
-> +                  <30 IRQ_TYPE_LEVEL_LOW>;
-> +    };
-
---
-Best wishes,
-Vladimir
