@@ -1,122 +1,181 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0011B22154F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B58421D5A9;
+	Wed, 26 Feb 2025 13:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740578038; cv=none; b=ZRJHMNCL+fkdz4knV17+kHwAUp7whUzFYoumfykXqe1apuM4weXD4GhcpHPRv4dX7r+2B91CHue8YbI9WIHoy7KwALHYZe3WjMUilOZInkCJWFptAunEtJOg/TMEF3vO9d1uGVIKcdgLQHG9Ayr6fFtnqbUxxiO+DhGUaiEIrNU=
+	t=1740578056; cv=none; b=D2dThYK8MZjQlNxH3vsOGMNxVvtiPYkfslTKI3P4tozP+zGN8lwepNepBd1GOB6wBuUuOx0TLOE7dbxTDKs0VWoRa3+OhOMgz7YlgGtNkNNI2HDaXdCafcY9rdSi5NrbzBZ/Wbwu2oc1kScmbZyaUZYqIUE79kzdihgx9WF4VBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740578038; c=relaxed/simple;
-	bh=1l3fOC61E5RTw0AZOPG1OtGKg+IVpB0rhJErnTlwZJI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dgJmxIHuhV2qcsTVVqcZNu0QlGmi9DETf22GImI2CtgcFL05fYUWx5LbbG8/tHiICky98vZ6jb+lxsjhQTCqKG/KLh82ye4FCORlu+Np3jzt+fZI0HaN3bcfzEUDRh5KBrIRRWnzjz9SxyuYRauAAYmHUwY0CS8b88KJSdrv/+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BflfOoIK; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740578056; c=relaxed/simple;
+	bh=gQX2EhjQCZh2IUd+WAcw3BaScS2Oq6g/34BKi5te1Fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oRzRwba+/GR5YMen2tH/basGCJIWgNUN3TmH2Q06BpVNS++8iuPtIs7B5BvYw0hH/6EVMVhwZMZ/ca5UaR8wrx4t353F2ogQxDASpCIkpHu9vn+YhXF02eOj7VZ8rsJmSe8aDw86RyqUn/mQvwkj9sOVPs+BuRHYRKKwEKoELbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=Ra7wF8bl; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BflfOoIK"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QDrXEg1558673
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 07:53:33 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740578013;
-	bh=2EOvlAclHzeQp38EozYAQpR/NIfs720sD/vFVN9IDmA=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=BflfOoIKoe3ZMuBooXdYzUcIURGor7uEcCvrRrE7hwrDtxFPyPAUDQLK9WFwgKo7e
-	 mFzx6HAvmdpG9Y30AHISfDanoeG+kOzh4lysq4jVK2LEt1zoArEMjreuwiDjMa+V9d
-	 iPeCbZRvSnAIWa/M/CMJ1LDdcaRxl7wmnjrksY1k=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QDrXm1128702
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 07:53:33 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 07:53:32 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 07:53:32 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QDrW4B126476;
-	Wed, 26 Feb 2025 07:53:32 -0600
-Date: Wed, 26 Feb 2025 07:53:32 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Meghana Malladi <m-malladi@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        <elinor.montmasson@savoirfairelinux.com>,
-        <javier.carrasco@wolfvision.net>, <ebiggers@google.com>,
-        <biju.das.jz@bp.renesas.com>, <quic_tdas@quicinc.com>,
-        <nfraprado@collabora.com>, <arnd@arndb.de>,
-        <dmitry.baryshkov@linaro.org>, <krzysztof.kozlowski@linaro.org>,
-        <geert+renesas@glider.be>, <quic_bjorande@quicinc.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
-        "Ravi
- Gunasekaran" <r-gunasekaran@ti.com>
-Subject: Re: [PATCH v2] arm64: defconfig: Enable HSR driver
-Message-ID: <20250226135332.5g3ydyukzy5oqivo@legume>
-References: <20250226104517.1746190-1-m-malladi@ti.com>
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="Ra7wF8bl"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1740578051; bh=gQX2EhjQCZh2IUd+WAcw3BaScS2Oq6g/34BKi5te1Fg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ra7wF8blWjFG5eByeU+PrWfiqYyK1J8o0cT+USD9rgOelUAjeD3HcM1FTuKNbcUQR
+	 mfAgeuYxPyNLz0ZFutVawMwOApntWXkcAT41rdn1F7a6rQ50HxY3efhYccxYdRlHa/
+	 ZUgLlJTHg9p7k4Z3t5edG74Ooepm4LZWdKBYWtyw=
+Received: from [IPV6:2001:67c:10ec:5784:8000::87] (2001-67c-10ec-5784-8000--87.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::87])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 83F4E2052D08;
+	Wed, 26 Feb 2025 14:54:11 +0100 (CET)
+Message-ID: <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+Date: Wed, 26 Feb 2025 14:54:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250226104517.1746190-1-m-malladi@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Alice Ryhl <aliceryhl@google.com>
+Cc: Ventura Jack <venturajack85@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo>
+ <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+ <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+ <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 16:15-20250226, Meghana Malladi wrote:
-> From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> 
-> HSR is a redundancy protocol that can be realized with any
-> two port ethernet controller.
-> 
-> Many of TI's K3 SoCs support multi port ethernet controller.
-> So enable HSR driver inorder to support this protocol on
-> such SoCs.
+Hi all,
 
-Which boards use this? cam you update the commit message for the same?
+>> I think all of this worrying about Rust not having defined its
+>> aliasing model is way overblown. Ultimately, the status quo is that
+>> each unsafe operation that has to do with aliasing falls into one of
+>> three categories:
+>>
+>> * This is definitely allowed.
+>> * This is definitely UB.
+>> * We don't know whether we want to allow this yet.
+> 
+> Side note: can I please ask that the Rust people avoid the "UD" model
+> as much as humanly possible?
+> 
+> In particular, if there is something that is undefined behavior - even
+> if it's in some "unsafe" mode, please please please make the rule be
+> that
+> 
+>   (a) either the compiler ends up being constrained to doing things in
+> some "naive" code generation
+> 
+> or it's a clear UB situation, and
+> 
+>   (b) the compiler will warn about it
+
+That would be lovely, wouldn't it?
+
+Sadly, if you try to apply this principle at scale in a compiler that does 
+non-trivial optimizations, it is very unclear what this would even mean. I am 
+not aware of any systematic/rigorous description of compiler correctness in the 
+terms you are suggesting here. The only approach we know that we can actually 
+pull through systematically (in the sense of "at least in principle, we can 
+formally prove this correct") is to define the "visible behavior" of the source 
+program, the "visible behavior" of the generated assembly, and promise that they 
+are the same. (Or, more precisely, that the latter is a refinement of the 
+former.) So the Rust compiler promises nothing about the shape of the assembly 
+you will get, only about its "visible" behavior (and which exact memory access 
+occurs when is generally not considered "visible").
+There is a *long* list of caveats here for things like FFI, volatile accesses, 
+and inline assembly. It is possible to deal with them systematically in this 
+framework, but spelling this out here would take too long. ;)
+
+Once you are at a level of "visible behavior", there are a bunch of cases where 
+UB is the only option. The most obvious ones are out-of-bounds writes, and 
+calling a function pointer that doesn't point to valid code with the right ABI 
+and signature. There's just no way to constrain the effect on program behavior 
+that such an operation can have.
+
+We also *do* want to let programmers explicitly tell the compiler "this code 
+path is unreachable, please just trust me on this and use that information for 
+your optimizations". This is a pretty powerful and useful primitive and gives 
+rise to things like unwrap_unchecked in Rust.
+
+So our general stance in Rust is that we minimize as much as we can the cases 
+where there is UB. We avoid gratuitous UB e.g. for integer overflow or sequence 
+point violations. We guarantee there is no UB in entirely safe code. We provide 
+tooling, documentation, and diagnostics to inform programmers about UB and help 
+them understand what is and is not UB. (We're always open to suggestions for 
+better diagnostics.)
+But if a program does have UB, then all bets are indeed off. We see UB as a 
+binding contract between programmer and compiler: the programmer promises to 
+never cause UB, the compiler in return promises to generate code whose "visible 
+behavior" matches that of the source program. There's a very pragmatic reason 
+for that (it's how LLVM works, and Rust wouldn't be where it is without LLVM 
+proving that it can compete with C/C++ on performance), but there's also the 
+reason mentioned above that it is not at all clear what the alternative would 
+actually look like, once you dig into it systematically (short of "don't 
+optimize unsafe code", which most people using unsafe for better performance 
+would dislike very much -- and "better performance" is one of the primary 
+reasons people reach for unsafe Rust).
+
+In other words, in my view it's not the "unconstrained UB" model that is wrong 
+with C, it is *how easy* it is to accidentally make a promise to the compiler 
+that you cannot actually uphold. Having every single (signed) addition be a 
+binding promise is a disaster, of course nobody can keep up with all those 
+promises. Having an explicit "add_unchecked" be a promise is entirely fine and 
+there are cases where this can help generate a lot better code.
+Having the use of an "&mut T" or "&T" reference be a promise is certainly more 
+subtle, and maybe too subtle, but my understanding is that the performance wins 
+from those assumptions even just on the Rust compiler itself are substantial.
+
+Kind regards,
+Ralf
 
 > 
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
-> ---
+> IOW, *please* avoid the C model of "Oh, I'll generate code that
+> silently takes advantage of the fact that if I'm wrong, this case is
+> undefined".
 > 
-> v1: https://lore.kernel.org/all/20240419060013.14909-1-r-gunasekaran@ti.com/
+> And BTW, I think this is _particularly_ true for unsafe rust. Yes,
+> it's "unsafe", but at the same time, the unsafe parts are the fragile
+> parts and hopefully not _so_ hugely performance-critical that you need
+> to do wild optimizations.
 > 
-> v2-v1:
-> - Rebase to the latest tip
-> - Included TI specific maintainers in 'to'
+> So the cases I'm talking about is literally re-ordering accesses past
+> each other ("Hey, I don't know if these alias or not, but based on
+> some paper standard - rather than the source code - I will assume they
+> do not"), and things like integer overflow behavior ("Oh, maybe this
+> overflows and gives a different answer than the naive case that the
+> source code implies, but overflow is undefined so I can screw it up").
 > 
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
+> I'd just like to point to one case where the C standards body seems to
+> have actually at least consider improving on undefined behavior (so
+> credit where credit is due, since I often complain about the C
+> standards body):
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index c3df5120b23d..f3afc0ec68f0 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -177,6 +177,7 @@ CONFIG_NET_CLS_FLOWER=m
->  CONFIG_NET_CLS_ACT=y
->  CONFIG_NET_ACT_GACT=m
->  CONFIG_NET_ACT_MIRRED=m
-> +CONFIG_HSR=m
->  CONFIG_NET_ACT_GATE=m
->  CONFIG_QRTR_SMD=m
->  CONFIG_QRTR_TUN=m
+>     https://www9.open-std.org/JTC1/SC22/WG14/www/docs/n3203.htm
 > 
-> base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
-> -- 
-> 2.43.0
+> where the original "this is undefined" came from the fact that
+> compilers were simple and restricting things like evaluation order
+> caused lots of problems. These days, a weak ordering definition causes
+> *many* more problems, and compilers are much smarter, and just saying
+> that the code has to act as if there was a strict ordering of
+> operations still allows almost all the normal optimizations in
+> practice.
+> 
+> This is just a general "please avoid the idiocies of the past". The
+> potential code generation improvements are not worth the pain.
+> 
+>                Linus
 > 
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
