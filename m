@@ -1,263 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E74321CFF0;
-	Wed, 26 Feb 2025 03:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 920D418801A;
+	Wed, 26 Feb 2025 03:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539160; cv=none; b=QZJhiUyjIMUfV9uDdWi0EmEgOPTN8Si9Qmfg6Rc+jQk8/f0cdx44ImoeOvOXlYemAPtkOFH95XMxSJoN1I9WNplsshx+/9uMxS7tps5VxpqpcgTIVxvAMMpaeB0vqCse3czmFNUpwkw/F3UaYNh0HE1+EpDnWgKi0VwIlK8KQm8=
+	t=1740539196; cv=none; b=pfqta2Y+KLxltXuzOv3jDPQQK6blYWLb4LR9ojsYkYIhpR5CTLIkiMckxgBB1YMo2YHxpNoHm8Ayp/EPrW+ujJS2kMAKs6gZA9+p3ZAlQN+qSXTPMImRZQRTHL+C+5P5iFQC3Nej9P8PoyjQJyAz1e5H2FKpypuVBqrFQP4Yjtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539160; c=relaxed/simple;
-	bh=sAnrnDiqmmu+twpkvTp+YjYokbJnVI5dUkatxEoUo9M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hU+bnihDzYDmhP9kVzHvQv+VAbbV+pg7/0qOF+Cu6eoD+0VNCfRAg5I1H1iqScUahGwrDZZnkT3gYbaEhCkRNbgq6KYZu+tUb1RVmzeezEv8q77gNpUiik8byh7aKm1CF+P99R+z/lq0SzIrbagYfc6p1ikXIRZTv3geP2Qirl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMWAAffn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMWAAffn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E367C4CEDD;
-	Wed, 26 Feb 2025 03:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740539159;
-	bh=sAnrnDiqmmu+twpkvTp+YjYokbJnVI5dUkatxEoUo9M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=XMWAAffn44d+2aX37Gv1Mu6kkrLyK40ELF84IaSsXnprQ46w1YXInkYDQ90Mnh7kC
-	 pbuRGMHyV1OvqymVByHl/Hu2WkxdbNYjx8t08I0LYjg6BlI+2Ki+nXer/XSEe4R4KQ
-	 amUK5CJREoXEURGUDUbJf9ch/u1KU9oztPaioavpaH+Y/URzAP0DRHDRNxKEk6Pa7n
-	 9w9tUGN745RCOPHkfIz0i96kAyZ7IVnfsWMmOoGdqcJoRFgcYlxditBdpe8jZCpSWU
-	 QizghxL7zUWoVbNz4UGDUcF5MDUUFvk80epiqyihAh4MrEFq7O4UGCWvfspN5SWHf+
-	 YqgMzuDiVgwBQ==
-Date: Wed, 26 Feb 2025 13:35:55 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] net/mlx5e: Avoid a hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <Z76FE8oZO2Ssuj9T@kspp>
+	s=arc-20240116; t=1740539196; c=relaxed/simple;
+	bh=CvQdaps0lzjfY5LYvPCYQCwqY3/4JGg+X1TYkOjJ+FA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LYEiD1PlO093GhBF5nhbHeH/Bav5fC8RoQEoo/ZGXWybPSPdIv3FvG7BcS7y7ee666GY1YnNtex7y0sSpZV05jJSp6tt1BfxiC8qme9brLw5yy0wCy4iE9hMeLEaDTl6hDoNjyn7PS0aIUw4WauA9fl120llpMYDif2t/RjQ7wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8Bx63E4hb5neuuCAA--.27942S3;
+	Wed, 26 Feb 2025 11:06:32 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMDxPcU3hb5n7BIpAA--.19667S2;
+	Wed, 26 Feb 2025 11:06:31 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>,
+	Yinggang Gu <guyinggang@loongson.cn>
+Subject: [PATCH v4 5/6] tpm: Add a driver for Loongson TPM device
+Date: Wed, 26 Feb 2025 11:05:49 +0800
+Message-Id: <20250226030550.15973-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxPcU3hb5n7BIpAA--.19667S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAr4Dtw1xXw1ktFy5tF1rKrX_yoWrKw1rpF
+	45Ca4akr45JFWUt39xJF1DuF9xJ34kXFWUKrW7Jas8ur90yas8WFsrtFyUJ3W3ZrWkGrya
+	qFZa9rW3WF15AwcCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26F1j6w1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF04k26c
+	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j6rWOUUUUU=
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in the Loongson
+security engine firmware. This driver is responsible for copying data
+into the memory visible to the firmware and receiving data from the
+firmware.
 
-So, in this particular case, we create a new `struct mlx5e_umr_wqe_hdr`
-to enclose the header part of flexible structure `struct mlx5e_umr_wqe`.
-This is, all the members except the flexible arrays `inline_mtts`,
-`inline_klms` and `inline_ksms` in the anonymous union. We then replace
-the header part with `struct mlx5e_umr_wqe_hdr hdr;` in `struct
-mlx5e_umr_wqe`, and change the type of the object currently causing
-trouble `umr_wqe` from `struct mlx5e_umr_wqe` to `struct
-mlx5e_umr_wqe_hdr` --this last bit gets rid of the flex-array-in-the-middle
-part and avoid the warnings.
-
-Also, no new members should be added to `struct mlx5e_umr_wqe`, instead
-any new members must be included in the header structure `struct
-mlx5e_umr_wqe_hdr`. To enforce this, we use `static_assert()`, ensuring
-that the memory layout of both the flexible structure and the newly
-created header struct remain consistent.
-
-The next step is to refactor the rest of the related code accordingly,
-which means adding a bunch of `hdr.` wherever needed.
-
-Lastly, we use `container_of()` whenever we need to retrieve a pointer
-to the flexible structure `struct mlx5e_umr_wqe`.
-
-So, with these changes, fix 125 of the following warnings:
-
-drivers/net/ethernet/mellanox/mlx5/core/en.h:664:48: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
 ---
-Changes in v2:
- - Split the header members of `struct mlx5e_umr_wqe` into a
-   separate `struct mlx5e_umr_wqe_hdr`, and refactor the code
-   accordingly. (Jakub)
- - Update the changelog text.
- - Also, this part is intentionally left as-is (to keep the assertion
-   as close as possible to the flex struct):
+v4: Prefix all with tpm_lsse instead of tpm.
+    Removed MODULE_AUTHOR fields.
 
-| CHECK: Please use a blank line after function/struct/union/enum declarations
-| #63: FILE: drivers/net/ethernet/mellanox/mlx5/core/en.h:249:
-| };
-| +static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
+v3: Added reminder about Loongson security engine to git log.
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/Z6GCJY8G9EzASrwQ@kspp/
+ drivers/char/tpm/Kconfig    |   9 ++++
+ drivers/char/tpm/Makefile   |   1 +
+ drivers/char/tpm/tpm_lsse.c | 103 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 113 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_lsse.c
 
- drivers/net/ethernet/mellanox/mlx5/core/en.h  | 10 +++++++--
- .../ethernet/mellanox/mlx5/core/en/xsk/rx.c   |  6 ++---
- .../net/ethernet/mellanox/mlx5/core/en_main.c |  8 ++++---
- .../net/ethernet/mellanox/mlx5/core/en_rx.c   | 22 +++++++++----------
- 4 files changed, 27 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 979fc56205e1..0e8f4ace8b87 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -232,16 +232,22 @@ struct mlx5e_rx_wqe_cyc {
- 	DECLARE_FLEX_ARRAY(struct mlx5_wqe_data_seg, data);
- };
+diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+index 0fc9a510e0..56d0417065 100644
+--- a/drivers/char/tpm/Kconfig
++++ b/drivers/char/tpm/Kconfig
+@@ -225,5 +225,14 @@ config TCG_FTPM_TEE
+ 	help
+ 	  This driver proxies for firmware TPM running in TEE.
  
--struct mlx5e_umr_wqe {
-+struct mlx5e_umr_wqe_hdr {
- 	struct mlx5_wqe_ctrl_seg       ctrl;
- 	struct mlx5_wqe_umr_ctrl_seg   uctrl;
- 	struct mlx5_mkey_seg           mkc;
++config TCG_LSSE
++	tristate "Loongson TPM Interface"
++	depends on MFD_LS6000SE
++	help
++	  If you want to make Loongson TPM support available, say Yes and
++	  it will be accessible from within Linux. To compile this
++	  driver as a module, choose M here; the module will be called
++	  tpm_lsse.
++
+ source "drivers/char/tpm/st33zp24/Kconfig"
+ endif # TCG_TPM
+diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+index 9bb142c752..bf2280352d 100644
+--- a/drivers/char/tpm/Makefile
++++ b/drivers/char/tpm/Makefile
+@@ -44,3 +44,4 @@ obj-$(CONFIG_TCG_XEN) += xen-tpmfront.o
+ obj-$(CONFIG_TCG_CRB) += tpm_crb.o
+ obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+ obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
++obj-$(CONFIG_TCG_LSSE) += tpm_lsse.o
+diff --git a/drivers/char/tpm/tpm_lsse.c b/drivers/char/tpm/tpm_lsse.c
+new file mode 100644
+index 0000000000..b476309c97
+--- /dev/null
++++ b/drivers/char/tpm/tpm_lsse.c
+@@ -0,0 +1,103 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
++
++#include <linux/device.h>
++#include <linux/mfd/ls6000se.h>
++#include <linux/platform_device.h>
++#include <linux/wait.h>
++
++#include "tpm.h"
++
++struct tpm_lsse_msg {
++	u32 cmd;
++	u32 data_off;
++	u32 data_len;
++	u32 info[5];
 +};
 +
-+struct mlx5e_umr_wqe {
-+	struct mlx5e_umr_wqe_hdr hdr;
- 	union {
- 		DECLARE_FLEX_ARRAY(struct mlx5_mtt, inline_mtts);
- 		DECLARE_FLEX_ARRAY(struct mlx5_klm, inline_klms);
- 		DECLARE_FLEX_ARRAY(struct mlx5_ksm, inline_ksms);
- 	};
- };
-+static_assert(offsetof(struct mlx5e_umr_wqe, inline_mtts) == sizeof(struct mlx5e_umr_wqe_hdr),
-+	      "struct member likely outside of struct_group_tagged()");
- 
- enum mlx5e_priv_flag {
- 	MLX5E_PFLAG_RX_CQE_BASED_MODER,
-@@ -660,7 +666,7 @@ struct mlx5e_rq {
- 		} wqe;
- 		struct {
- 			struct mlx5_wq_ll      wq;
--			struct mlx5e_umr_wqe   umr_wqe;
-+			struct mlx5e_umr_wqe_hdr umr_wqe;
- 			struct mlx5e_mpw_info *info;
- 			mlx5e_fp_skb_from_cqe_mpwrq skb_from_cqe_mpwrq;
- 			__be32                 umr_mkey_be;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
-index 1b7132fa70de..2b05536d564a 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
-@@ -123,7 +123,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
- 	bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
- 	wi->consumed_strides = 0;
- 
--	umr_wqe->ctrl.opmod_idx_opcode =
-+	umr_wqe->hdr.ctrl.opmod_idx_opcode =
- 		cpu_to_be32((icosq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) | MLX5_OPCODE_UMR);
- 
- 	/* Optimized for speed: keep in sync with mlx5e_mpwrq_umr_entry_size. */
-@@ -134,7 +134,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
- 		offset = offset * sizeof(struct mlx5_klm) * 2 / MLX5_OCTWORD;
- 	else if (unlikely(rq->mpwqe.umr_mode == MLX5E_MPWRQ_UMR_MODE_TRIPLE))
- 		offset = offset * sizeof(struct mlx5_ksm) * 4 / MLX5_OCTWORD;
--	umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
-+	umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
- 
- 	icosq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
- 		.wqe_type = MLX5E_ICOSQ_WQE_UMR_RX,
-@@ -144,7 +144,7 @@ int mlx5e_xsk_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
- 
- 	icosq->pc += rq->mpwqe.umr_wqebbs;
- 
--	icosq->doorbell_cseg = &umr_wqe->ctrl;
-+	icosq->doorbell_cseg = &umr_wqe->hdr.ctrl;
- 
- 	return 0;
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 2fdc86432ac0..9abc6ce13ac9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -311,8 +311,8 @@ static inline void mlx5e_build_umr_wqe(struct mlx5e_rq *rq,
- 				       struct mlx5e_icosq *sq,
- 				       struct mlx5e_umr_wqe *wqe)
- {
--	struct mlx5_wqe_ctrl_seg      *cseg = &wqe->ctrl;
--	struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->uctrl;
-+	struct mlx5_wqe_ctrl_seg      *cseg = &wqe->hdr.ctrl;
-+	struct mlx5_wqe_umr_ctrl_seg *ucseg = &wqe->hdr.uctrl;
- 	u16 octowords;
- 	u8 ds_cnt;
- 
-@@ -393,7 +393,9 @@ static int mlx5e_rq_alloc_mpwqe_info(struct mlx5e_rq *rq, int node)
- 		bitmap_fill(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
- 	}
- 
--	mlx5e_build_umr_wqe(rq, rq->icosq, &rq->mpwqe.umr_wqe);
-+	mlx5e_build_umr_wqe(rq, rq->icosq,
-+			    container_of(&rq->mpwqe.umr_wqe,
-+					 struct mlx5e_umr_wqe, hdr));
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-index 1963bc5adb18..5fd70b4d55be 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
-@@ -631,16 +631,16 @@ static void build_ksm_umr(struct mlx5e_icosq *sq, struct mlx5e_umr_wqe *umr_wqe,
- 			  __be32 key, u16 offset, u16 ksm_len)
- {
- 	memset(umr_wqe, 0, offsetof(struct mlx5e_umr_wqe, inline_ksms));
--	umr_wqe->ctrl.opmod_idx_opcode =
-+	umr_wqe->hdr.ctrl.opmod_idx_opcode =
- 		cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
- 			     MLX5_OPCODE_UMR);
--	umr_wqe->ctrl.umr_mkey = key;
--	umr_wqe->ctrl.qpn_ds = cpu_to_be32((sq->sqn << MLX5_WQE_CTRL_QPN_SHIFT)
-+	umr_wqe->hdr.ctrl.umr_mkey = key;
-+	umr_wqe->hdr.ctrl.qpn_ds = cpu_to_be32((sq->sqn << MLX5_WQE_CTRL_QPN_SHIFT)
- 					    | MLX5E_KSM_UMR_DS_CNT(ksm_len));
--	umr_wqe->uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | MLX5_UMR_INLINE;
--	umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
--	umr_wqe->uctrl.xlt_octowords = cpu_to_be16(ksm_len);
--	umr_wqe->uctrl.mkey_mask     = cpu_to_be64(MLX5_MKEY_MASK_FREE);
-+	umr_wqe->hdr.uctrl.flags = MLX5_UMR_TRANSLATION_OFFSET_EN | MLX5_UMR_INLINE;
-+	umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
-+	umr_wqe->hdr.uctrl.xlt_octowords = cpu_to_be16(ksm_len);
-+	umr_wqe->hdr.uctrl.mkey_mask     = cpu_to_be64(MLX5_MKEY_MASK_FREE);
- }
- 
- static struct mlx5e_frag_page *mlx5e_shampo_hd_to_frag_page(struct mlx5e_rq *rq, int header_index)
-@@ -704,7 +704,7 @@ static int mlx5e_build_shampo_hd_umr(struct mlx5e_rq *rq,
- 
- 	shampo->pi = (shampo->pi + ksm_entries) & (shampo->hd_per_wq - 1);
- 	sq->pc += wqe_bbs;
--	sq->doorbell_cseg = &umr_wqe->ctrl;
-+	sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
- 
- 	return 0;
- 
-@@ -814,12 +814,12 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
- 	bitmap_zero(wi->skip_release_bitmap, rq->mpwqe.pages_per_wqe);
- 	wi->consumed_strides = 0;
- 
--	umr_wqe->ctrl.opmod_idx_opcode =
-+	umr_wqe->hdr.ctrl.opmod_idx_opcode =
- 		cpu_to_be32((sq->pc << MLX5_WQE_CTRL_WQE_INDEX_SHIFT) |
- 			    MLX5_OPCODE_UMR);
- 
- 	offset = (ix * rq->mpwqe.mtts_per_wqe) * sizeof(struct mlx5_mtt) / MLX5_OCTWORD;
--	umr_wqe->uctrl.xlt_offset = cpu_to_be16(offset);
-+	umr_wqe->hdr.uctrl.xlt_offset = cpu_to_be16(offset);
- 
- 	sq->db.wqe_info[pi] = (struct mlx5e_icosq_wqe_info) {
- 		.wqe_type   = MLX5E_ICOSQ_WQE_UMR_RX,
-@@ -829,7 +829,7 @@ static int mlx5e_alloc_rx_mpwqe(struct mlx5e_rq *rq, u16 ix)
- 
- 	sq->pc += rq->mpwqe.umr_wqebbs;
- 
--	sq->doorbell_cseg = &umr_wqe->ctrl;
-+	sq->doorbell_cseg = &umr_wqe->hdr.ctrl;
- 
- 	return 0;
- 
++struct tpm_lsse_dev {
++	struct lsse_ch *se_ch;
++	struct completion tpm_lsse_completion;
++};
++
++static void tpm_lsse_complete(struct lsse_ch *ch)
++{
++	struct tpm_lsse_dev *td = ch->priv;
++
++	complete(&td->tpm_lsse_completion);
++}
++
++static int tpm_lsse_recv(struct tpm_chip *chip, u8 *buf, size_t count)
++{
++	struct tpm_lsse_dev *td = dev_get_drvdata(&chip->dev);
++	struct tpm_lsse_msg *rmsg;
++	int sig;
++
++	sig = wait_for_completion_interruptible(&td->tpm_lsse_completion);
++	if (sig)
++		return sig;
++
++	rmsg = td->se_ch->rmsg;
++	memcpy(buf, td->se_ch->data_buffer, rmsg->data_len);
++
++	return rmsg->data_len;
++}
++
++static int tpm_lsse_send(struct tpm_chip *chip, u8 *buf, size_t count)
++{
++	struct tpm_lsse_dev *td = dev_get_drvdata(&chip->dev);
++	struct tpm_lsse_msg *smsg = td->se_ch->smsg;
++
++	memcpy(td->se_ch->data_buffer, buf, count);
++	smsg->data_len = count;
++
++	return se_send_ch_requeset(td->se_ch);
++}
++
++static const struct tpm_class_ops tpm_lsse_ops = {
++	.flags = TPM_OPS_AUTO_STARTUP,
++	.recv = tpm_lsse_recv,
++	.send = tpm_lsse_send,
++};
++
++static int tpm_lsse_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct tpm_lsse_msg *smsg;
++	struct tpm_lsse_dev *td;
++	struct tpm_chip *chip;
++
++	td = devm_kzalloc(dev, sizeof(struct tpm_lsse_dev), GFP_KERNEL);
++	if (!td)
++		return -ENOMEM;
++
++	init_completion(&td->tpm_lsse_completion);
++	td->se_ch = se_init_ch(dev->parent, SE_CH_TPM, PAGE_SIZE,
++			       2 * sizeof(struct tpm_lsse_msg), td,
++			       tpm_lsse_complete);
++	if (!td->se_ch)
++		return -ENODEV;
++	smsg = td->se_ch->smsg;
++	smsg->cmd = SE_CMD_TPM;
++	smsg->data_off = td->se_ch->off;
++
++	chip = tpmm_chip_alloc(dev, &tpm_lsse_ops);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
++	dev_set_drvdata(&chip->dev, td);
++
++	return tpm_chip_register(chip);
++}
++
++static struct platform_driver tpm_lsse_driver = {
++	.probe   = tpm_lsse_probe,
++	.driver  = {
++		.name  = "ls6000se-tpm",
++	},
++};
++module_platform_driver(tpm_lsse_driver);
++
++MODULE_ALIAS("platform:ls6000se-tpm");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Loongson TPM driver");
 -- 
 2.43.0
 
