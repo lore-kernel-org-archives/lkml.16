@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75F07221562
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1118922A4EC
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571439; cv=none; b=noA3CXqNHhdxaGLn2MP7gYRVMJYeaX5XEImkmr+HxAGJukxAdBGtbk1743H/nTrjh0naRlO0pHXDS9mGxqhoF4FE+xuGqQDt42KyUYF1uhTJzNjZRsp3AxxrBtcjxgSswG1GPDqoTd6KrRJbEp6yfqq/f4svoVWVLJFDVKb63qU=
+	t=1740571442; cv=none; b=KWWdSv3sIqh9Ludx2vdjUnzgf3dhFmDwb7PjXQ2GRBZ93hIQ0x1UmVQpXilMkc81sdjxbQtRWuRNeDscXM2t1LyO/H2UZ0jbGWkYY+JTOq1MrteWR5Ak+oa949KVfXqi0g3yGqEuKYVw8eDt+aJFyW+OKg8bt7wIyp/acNYcvNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740571439; c=relaxed/simple;
-	bh=7oWv0Hgui0RdP8NPP9zP1bwQrQv7GBrXYIxyAU7uXa8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=JsGCiK4z4ftbzei3Ua6S7nbLEXXOodvZAcr6JunT7O5tbzafAAoWZzZu9uerHfwvaIoAZHKx0dD1W3Jwe1RmAmjwnhJhbv5o9yXDKsL4IPrwjXyNpnl8pSiC1CHo3l1Y8xCZqUdfB42qLCmy51gUqE9scqUOICQIzcDJIWX5qJw=
+	s=arc-20240116; t=1740571442; c=relaxed/simple;
+	bh=u+FnsDkL7CE8oSHJ+f4cRGS8tMOkPxkaXe3H1qSNSGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=rsNsqM2QFSuTrVFBYOTR9li8C4x+d8oSw54PSQcSF1AnGmNLnF7iGZViVgjDCYwe7iZtIqLEvKqGDmLDewWBPFgvGiDpZltXVoriUght28iYRdPFLzKuO6j36VkCNitZMctYuAiX43fnZr76HirHqe76hnlKmCBpJlQFP4/iNz4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-48-67bf03239cb8
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-6b-67bf03231e30
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on v6.14-rc4 17/25] x86/tlb, riscv/tlb, arm64/tlbflush, mm: remove cpus from tlb shootdown that already have been done
-Date: Wed, 26 Feb 2025 21:03:28 +0900
-Message-Id: <20250226120336.29565-17-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on v6.14-rc4 24/25] mm/vmscan: apply luf mechanism to unmapping during folio reclaim
+Date: Wed, 26 Feb 2025 21:03:35 +0900
+Message-Id: <20250226120336.29565-24-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120336.29565-1-byungchul@sk.com>
 References: <20250226113024.GA1935@system.software.com>
  <20250226120336.29565-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnka4y8/50gy+T+SzmrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrALMWRmVeSWpSXmKPExsXC9ZZnoa4y8/50gy8TFCzmrF/DZvF5wz82
 	i6/rfzFbPP3Ux2JxedccNot7a/6zWpzftZbVYsfSfUwWlw4sYLI43nuAyWL+vc9sFps3TWW2
 	OD5lKqPF7x9z2Bz4PL639rF47Jx1l91jwaZSj80rtDw2repk89j0aRK7x7tz59g9Tsz4zeLx
-	ft9VNo+tv+w8GqdeY/P4vEkugCeKyyYlNSezLLVI3y6BK+P33I/sBU9qKy4e28fSwDg3vYuR
-	k0NCwETiXUsfC4x9r7MDzGYTUJe4ceMnM4gtImAmcbD1D3sXIxcHs8AyJom9JxrYQBxhgSmM
-	Els6lwM5HBwsAqoS088mgJi8QA0zj+VBzJSXWL3hANgcTqDwp2nH2EBsIYFkiZ2//zCBjJEQ
-	uM0m8ebqX6gjJCUOrrjBMoGRdwEjwypGocy8stzEzBwTvYzKvMwKveT83E2MwKBeVvsnegfj
-	pwvBhxgFOBiVeHgfnNmbLsSaWFZcmXuIUYKDWUmElzNzT7oQb0piZVVqUX58UWlOavEhRmkO
-	FiVxXqNv5SlCAumJJanZqakFqUUwWSYOTqkGRt6LRo4z3ljahRZLFHK7ndtYKDqR9d/uTo7a
-	6/t//bstx9GYwcxy7fRLG1eRD73ZBXpTLJjmpdQnyjmf8tdJyDTRc+P6GvUv18fh16qIyfab
-	c87Jc/gf32EYVOhQl/yWb9GJHJkGPXG/+n7HO+yPvW01/JV2BKmJqqQd41pty60vpiNz21mJ
-	pTgj0VCLuag4EQBkq1b8ZgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsXC5WfdrKvEvD/d4NUBG4s569ewWXze8I/N
+	ft9VNo+tv+w8GqdeY/P4vEkugCeKyyYlNSezLLVI3y6BK2PGkeiCi/oVfw7uZWxgfKnWxcjB
+	ISFgIrHyuGoXIyeYObP3PxuIzSagLnHjxk9mEFtEwEziYOsf9i5GLg5mgWVMEntPNIAVCQsU
+	Scw7tAysiEVAVaJ/xX0WkJm8QA0XbltDzJSXWL3hAFgJJ1D407RjYK1CAskSO3//YYKouc0m
+	cfKOH4QtKXFwxQ2WCYy8CxgZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIEhvOy2j/ROxg/XQg+
+	xCjAwajEw/vgzN50IdbEsuLK3EOMEhzMSiK8nJl70oV4UxIrq1KL8uOLSnNSiw8xSnOwKInz
+	Gn0rTxESSE8sSc1OTS1ILYLJMnFwSjUwlnBuvvlQl/FCLrPVDpXC9z/8t5VH3yzl9rogreWy
+	a+ufdPXahAVnvPbs+vvh3AK7a+ULnycdZVYTD5ee1M1nax71c8EX/sVtZckuuUIegp1fjdp+
+	fOgRSuGKmZrUyhzGIXh+Z1VMS8r3pPxO5Rtzve1fzd3Gk+Sw+1/VSVE+39Pnl+w/tfqfEktx
+	RqKhFnNRcSIAU/DYKmMCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJLMWRmVeSWpSXmKPExsXC5WfdrKvMvD/d4Mh0cYs569ewWXze8I/N
 	4uv6X8wWTz/1sVgcnnuS1eLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
 	Nm+aymxxfMpURovfP+awOfB7fG/tY/HYOesuu8eCTaUem1doeWxa1cnmsenTJHaPd+fOsXuc
-	mPGbxeP9vqtsHotffGDy2PrLzqNx6jU2j8+b5AJ4o7hsUlJzMstSi/TtErgyfs/9yF7wpLbi
-	4rF9LA2Mc9O7GDk5JARMJO51drCA2GwC6hI3bvxkBrFFBMwkDrb+Ye9i5OJgFljGJLH3RAMb
-	iCMsMIVRYkvnciCHg4NFQFVi+tkEEJMXqGHmsTyImfISqzccAJvDCRT+NO0YG4gtJJAssfP3
-	H6YJjFwLGBlWMYpk5pXlJmbmmOoVZ2dU5mVW6CXn525iBIbosto/E3cwfrnsfohRgINRiYf3
-	wZm96UKsiWXFlbmHGCU4mJVEeDkz96QL8aYkVlalFuXHF5XmpBYfYpTmYFES5/UKT00QEkhP
-	LEnNTk0tSC2CyTJxcEo1MFbpLm2zva2vZnpo1u0DzJkKDgccOL3Sc0Jttt196Wu+z9zjYI7G
-	3eLr4W+KMxZUpcm5puzRL54472TOz+O7Tr6V36JaWXFY73Nt2cIPMW1nF4bOarl8I8G4Z+7d
-	HVI1GfdSyxoj+G2O9dbENSkJ/v12pFNr+Q2+Z4ZntWYUqc1XcrjbGWYvosRSnJFoqMVcVJwI
-	AE4I4GZNAgAA
+	mPGbxeP9vqtsHotffGDy2PrLzqNx6jU2j8+b5AJ4o7hsUlJzMstSi/TtErgyZhyJLrioX/Hn
+	4F7GBsaXal2MnBwSAiYSM3v/s4HYbALqEjdu/GQGsUUEzCQOtv5h72Lk4mAWWMYksfdEA1iR
+	sECRxLxDy8CKWARUJfpX3GfpYuTg4AVquHDbGmKmvMTqDQfASjiBwp+mHQNrFRJIltj5+w/T
+	BEauBYwMqxhFMvPKchMzc0z1irMzKvMyK/SS83M3MQIDdFntn4k7GL9cdj/EKMDBqMTD++DM
+	3nQh1sSy4srcQ4wSHMxKIrycmXvShXhTEiurUovy44tKc1KLDzFKc7AoifN6hacmCAmkJ5ak
+	ZqemFqQWwWSZODilGhiLZwdfDuLnLb1rvft3XuJ+b+ktxnnHWh5OXZt8JmfBwTzfxHMnq94d
+	vii+K2bBlPN9F5Zfk1I1eHDBb6WdHlut2LKCqhcdDIzOt2f8uXPrk9J6rdcvpY0jr0+RjrF+
+	lxsukePCrdScYvJhQgjn3tAy8flWSxxf5HtHX16ocnDSMq2Fgv83V/sosRRnJBpqMRcVJwIA
+	9alR/EwCAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,548 +66,179 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-luf mechanism performs tlb shootdown for mappings that have been
-unmapped in lazy manner.  However, it doesn't have to perform tlb
-shootdown to cpus that already have been done by others since the tlb
-shootdown was desired.
+A new mechanism, LUF(Lazy Unmap Flush), defers tlb flush until folios
+that have been unmapped and freed, eventually get allocated again.  It's
+safe for folios that had been mapped read only and were unmapped, since
+the contents of the folios don't change while staying in pcp or buddy
+so we can still read the data through the stale tlb entries.
 
-Since luf already introduced its own generation number used as a global
-timestamp, luf_ugen, it's possible to selectively pick cpus that have
-been done tlb flush required.
-
-This patch introduced APIs that use the generation number to select and
-remove those cpus so that it can perform tlb shootdown with a smaller
-cpumask, for all the CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH archs,
-x86, riscv, and arm64.
+Applied the mechanism to unmapping during folio reclaim.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- arch/arm64/include/asm/tlbflush.h |  26 +++++++
- arch/riscv/include/asm/tlbflush.h |   4 ++
- arch/riscv/mm/tlbflush.c          | 108 ++++++++++++++++++++++++++++++
- arch/x86/include/asm/tlbflush.h   |   4 ++
- arch/x86/mm/tlb.c                 | 108 ++++++++++++++++++++++++++++++
- include/linux/sched.h             |   1 +
- mm/internal.h                     |   4 ++
- mm/page_alloc.c                   |  32 +++++++--
- mm/rmap.c                         |  46 ++++++++++++-
- 9 files changed, 327 insertions(+), 6 deletions(-)
+ include/linux/rmap.h |  5 +++--
+ mm/rmap.c            | 11 +++++++----
+ mm/vmscan.c          | 37 ++++++++++++++++++++++++++++++++-----
+ 3 files changed, 42 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-index acac53a21e5d1..5547ab1ffb3c3 100644
---- a/arch/arm64/include/asm/tlbflush.h
-+++ b/arch/arm64/include/asm/tlbflush.h
-@@ -354,6 +354,32 @@ static inline void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	dsb(ish);
+diff --git a/include/linux/rmap.h b/include/linux/rmap.h
+index cedba4812ccc7..854b41441d466 100644
+--- a/include/linux/rmap.h
++++ b/include/linux/rmap.h
+@@ -661,7 +661,7 @@ int folio_referenced(struct folio *, int is_locked,
+ 			struct mem_cgroup *memcg, unsigned long *vm_flags);
+ 
+ bool try_to_migrate(struct folio *folio, enum ttu_flags flags);
+-void try_to_unmap(struct folio *, enum ttu_flags flags);
++bool try_to_unmap(struct folio *, enum ttu_flags flags);
+ 
+ int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
+ 				unsigned long end, struct page **pages,
+@@ -794,8 +794,9 @@ static inline int folio_referenced(struct folio *folio, int is_locked,
+ 	return 0;
  }
  
-+static inline bool arch_tlbbatch_check_done(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen)
-+{
-+	/*
-+	 * Nothing is needed in this architecture.
-+	 */
-+	return true;
-+}
-+
-+static inline bool arch_tlbbatch_diet(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen)
-+{
-+	/*
-+	 * Nothing is needed in this architecture.
-+	 */
-+	return true;
-+}
-+
-+static inline void arch_tlbbatch_mark_ugen(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen)
-+{
-+	/* nothing to do */
-+}
-+
-+static inline void arch_mm_mark_ugen(struct mm_struct *mm, unsigned long ugen)
-+{
-+	/* nothing to do */
-+}
-+
- static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
+-static inline void try_to_unmap(struct folio *folio, enum ttu_flags flags)
++static inline bool try_to_unmap(struct folio *folio, enum ttu_flags flags)
  {
- 	/* nothing to do */
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index 1dc7d30273d59..ec5caeb3cf8ef 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -65,6 +65,10 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
- 			       unsigned long uaddr);
- void arch_flush_tlb_batched_pending(struct mm_struct *mm);
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
-+bool arch_tlbbatch_check_done(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+bool arch_tlbbatch_diet(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+void arch_tlbbatch_mark_ugen(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+void arch_mm_mark_ugen(struct mm_struct *mm, unsigned long ugen);
- 
- static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
- {
-diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
-index 36f996af6256c..93afb7a299003 100644
---- a/arch/riscv/mm/tlbflush.c
-+++ b/arch/riscv/mm/tlbflush.c
-@@ -202,3 +202,111 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	__flush_tlb_range(&batch->cpumask, FLUSH_TLB_NO_ASID, 0,
- 			  FLUSH_TLB_MAX_SIZE, PAGE_SIZE);
- }
-+
-+static DEFINE_PER_CPU(atomic_long_t, ugen_done);
-+
-+static int __init luf_init_arch(void)
-+{
-+	int cpu;
-+
-+	for_each_cpu(cpu, cpu_possible_mask)
-+		atomic_long_set(per_cpu_ptr(&ugen_done, cpu), LUF_UGEN_INIT - 1);
-+
-+	return 0;
-+}
-+early_initcall(luf_init_arch);
-+
-+/*
-+ * batch will not be updated.
-+ */
-+bool arch_tlbbatch_check_done(struct arch_tlbflush_unmap_batch *batch,
-+			unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		goto out;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		unsigned long done;
-+
-+		done = atomic_long_read(per_cpu_ptr(&ugen_done, cpu));
-+		if (ugen_before(done, ugen))
-+			return false;
-+	}
-+	return true;
-+out:
-+	return cpumask_empty(&batch->cpumask);
-+}
-+
-+bool arch_tlbbatch_diet(struct arch_tlbflush_unmap_batch *batch,
-+			unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		goto out;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		unsigned long done;
-+
-+		done = atomic_long_read(per_cpu_ptr(&ugen_done, cpu));
-+		if (!ugen_before(done, ugen))
-+			cpumask_clear_cpu(cpu, &batch->cpumask);
-+	}
-+out:
-+	return cpumask_empty(&batch->cpumask);
-+}
-+
-+void arch_tlbbatch_mark_ugen(struct arch_tlbflush_unmap_batch *batch,
-+			     unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		return;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		atomic_long_t *done = per_cpu_ptr(&ugen_done, cpu);
-+		unsigned long old = atomic_long_read(done);
-+
-+		/*
-+		 * It's racy.  The race results in unnecessary tlb flush
-+		 * because of the smaller ugen_done than it should be.
-+		 * However, it's okay in terms of correctness.
-+		 */
-+		if (!ugen_before(old, ugen))
-+			continue;
-+
-+		/*
-+		 * It's for optimization.  Just skip on fail than retry.
-+		 */
-+		atomic_long_cmpxchg(done, old, ugen);
-+	}
-+}
-+
-+void arch_mm_mark_ugen(struct mm_struct *mm, unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		return;
-+
-+	for_each_cpu(cpu, mm_cpumask(mm)) {
-+		atomic_long_t *done = per_cpu_ptr(&ugen_done, cpu);
-+		unsigned long old = atomic_long_read(done);
-+
-+		/*
-+		 * It's racy.  The race results in unnecessary tlb flush
-+		 * because of the smaller ugen_done than it should be.
-+		 * However, it's okay in terms of correctness.
-+		 */
-+		if (!ugen_before(old, ugen))
-+			continue;
-+
-+		/*
-+		 * It's for optimization.  Just skip on fail than retry.
-+		 */
-+		atomic_long_cmpxchg(done, old, ugen);
-+	}
-+}
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index c27e61bd274a5..dbcbf0477ed2a 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -294,6 +294,10 @@ static inline void arch_flush_tlb_batched_pending(struct mm_struct *mm)
++	return false;
  }
  
- extern void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch);
-+extern bool arch_tlbbatch_check_done(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+extern bool arch_tlbbatch_diet(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+extern void arch_tlbbatch_mark_ugen(struct arch_tlbflush_unmap_batch *batch, unsigned long ugen);
-+extern void arch_mm_mark_ugen(struct mm_struct *mm, unsigned long ugen);
- 
- static inline void arch_tlbbatch_clear(struct arch_tlbflush_unmap_batch *batch)
- {
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 523e8bb6fba1f..be6068b60c32d 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1270,6 +1270,114 @@ void __flush_tlb_all(void)
- }
- EXPORT_SYMBOL_GPL(__flush_tlb_all);
- 
-+static DEFINE_PER_CPU(atomic_long_t, ugen_done);
-+
-+static int __init luf_init_arch(void)
-+{
-+	int cpu;
-+
-+	for_each_cpu(cpu, cpu_possible_mask)
-+		atomic_long_set(per_cpu_ptr(&ugen_done, cpu), LUF_UGEN_INIT - 1);
-+
-+	return 0;
-+}
-+early_initcall(luf_init_arch);
-+
-+/*
-+ * batch will not be updated.
-+ */
-+bool arch_tlbbatch_check_done(struct arch_tlbflush_unmap_batch *batch,
-+			unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		goto out;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		unsigned long done;
-+
-+		done = atomic_long_read(per_cpu_ptr(&ugen_done, cpu));
-+		if (ugen_before(done, ugen))
-+			return false;
-+	}
-+	return true;
-+out:
-+	return cpumask_empty(&batch->cpumask);
-+}
-+
-+bool arch_tlbbatch_diet(struct arch_tlbflush_unmap_batch *batch,
-+			unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		goto out;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		unsigned long done;
-+
-+		done = atomic_long_read(per_cpu_ptr(&ugen_done, cpu));
-+		if (!ugen_before(done, ugen))
-+			cpumask_clear_cpu(cpu, &batch->cpumask);
-+	}
-+out:
-+	return cpumask_empty(&batch->cpumask);
-+}
-+
-+void arch_tlbbatch_mark_ugen(struct arch_tlbflush_unmap_batch *batch,
-+			     unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		return;
-+
-+	for_each_cpu(cpu, &batch->cpumask) {
-+		atomic_long_t *done = per_cpu_ptr(&ugen_done, cpu);
-+		unsigned long old = atomic_long_read(done);
-+
-+		/*
-+		 * It's racy.  The race results in unnecessary tlb flush
-+		 * because of the smaller ugen_done than it should be.
-+		 * However, it's okay in terms of correctness.
-+		 */
-+		if (!ugen_before(old, ugen))
-+			continue;
-+
-+		/*
-+		 * It's for optimization.  Just skip on fail than retry.
-+		 */
-+		atomic_long_cmpxchg(done, old, ugen);
-+	}
-+}
-+
-+void arch_mm_mark_ugen(struct mm_struct *mm, unsigned long ugen)
-+{
-+	int cpu;
-+
-+	if (!ugen)
-+		return;
-+
-+	for_each_cpu(cpu, mm_cpumask(mm)) {
-+		atomic_long_t *done = per_cpu_ptr(&ugen_done, cpu);
-+		unsigned long old = atomic_long_read(done);
-+
-+		/*
-+		 * It's racy.  The race results in unnecessary tlb flush
-+		 * because of the smaller ugen_done than it should be.
-+		 * However, it's okay in terms of correctness.
-+		 */
-+		if (!ugen_before(old, ugen))
-+			continue;
-+
-+		/*
-+		 * It's for optimization.  Just skip on fail than retry.
-+		 */
-+		atomic_long_cmpxchg(done, old, ugen);
-+	}
-+}
-+
- void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- {
- 	struct flush_tlb_info *info;
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 47a0a3ccb7b1a..31efc88ce911a 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1403,6 +1403,7 @@ struct task_struct {
- #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
- 	int luf_no_shootdown;
- 	int luf_takeoff_started;
-+	unsigned long luf_ugen;
- #endif
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
-diff --git a/mm/internal.h b/mm/internal.h
-index 43e91f04d6d1c..a95c46355e93d 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -1259,6 +1259,7 @@ void try_to_unmap_flush(void);
- void try_to_unmap_flush_dirty(void);
- void try_to_unmap_flush_takeoff(void);
- void flush_tlb_batched_pending(struct mm_struct *mm);
-+void reset_batch(struct tlbflush_unmap_batch *batch);
- void fold_batch(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src, bool reset);
- void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src);
- #else
-@@ -1274,6 +1275,9 @@ static inline void try_to_unmap_flush_takeoff(void)
- static inline void flush_tlb_batched_pending(struct mm_struct *mm)
- {
- }
-+static inline void reset_batch(struct tlbflush_unmap_batch *batch)
-+{
-+}
- static inline void fold_batch(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src, bool reset)
- {
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index db1460c07b964..8e1ed80f304cd 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -668,9 +668,11 @@ bool luf_takeoff_start(void)
+ static inline int folio_mkclean(struct folio *folio)
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 284fc48aef2de..df350b4dfddd0 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -2386,10 +2386,11 @@ static int folio_not_mapped(struct folio *folio)
+  * Tries to remove all the page table entries which are mapping this
+  * folio.  It is the caller's responsibility to check if the folio is
+  * still mapped if needed (use TTU_SYNC to prevent accounting races).
++ * Return true if all the mappings are read-only, otherwise false.
+  *
+  * Context: Caller must hold the folio lock.
   */
- void luf_takeoff_end(void)
+-void try_to_unmap(struct folio *folio, enum ttu_flags flags)
++bool try_to_unmap(struct folio *folio, enum ttu_flags flags)
  {
-+	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
- 	unsigned long flags;
- 	bool no_shootdown;
- 	bool outmost = false;
-+	unsigned long cur_luf_ugen;
+ 	struct rmap_walk_control rwc = {
+ 		.rmap_one = try_to_unmap_one,
+@@ -2408,10 +2409,12 @@ void try_to_unmap(struct folio *folio, enum ttu_flags flags)
+ 	else
+ 		rmap_walk(folio, &rwc);
  
- 	local_irq_save(flags);
- 	VM_WARN_ON(!current->luf_takeoff_started);
-@@ -697,10 +699,19 @@ void luf_takeoff_end(void)
- 	if (no_shootdown)
- 		goto out;
- 
-+	cur_luf_ugen = current->luf_ugen;
-+
-+	current->luf_ugen = 0;
-+
-+	if (cur_luf_ugen && arch_tlbbatch_diet(&tlb_ubc_takeoff->arch, cur_luf_ugen))
-+		reset_batch(tlb_ubc_takeoff);
-+
- 	try_to_unmap_flush_takeoff();
- out:
--	if (outmost)
-+	if (outmost) {
- 		VM_WARN_ON(current->luf_no_shootdown);
-+		VM_WARN_ON(current->luf_ugen);
+-	if (can_luf_test())
++	if (can_luf_test()) {
+ 		fold_batch(tlb_ubc_luf, tlb_ubc_ro, true);
+-	else
+-		fold_batch(tlb_ubc, tlb_ubc_ro, true);
++		return true;
 +	}
++	fold_batch(tlb_ubc, tlb_ubc_ro, true);
++	return false;
  }
  
  /*
-@@ -757,6 +768,7 @@ bool luf_takeoff_check_and_fold(struct page *page)
- 	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
- 	unsigned short luf_key = page_luf_key(page);
- 	struct luf_batch *lb;
-+	unsigned long lb_ugen;
- 	unsigned long flags;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a31a7cf87315f..065b40f36bbdd 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1092,14 +1092,17 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		struct reclaim_stat *stat, bool ignore_references)
+ {
+ 	struct folio_batch free_folios;
++	struct folio_batch free_folios_luf;
+ 	LIST_HEAD(ret_folios);
+ 	LIST_HEAD(demote_folios);
+ 	unsigned int nr_reclaimed = 0, nr_demoted = 0;
+ 	unsigned int pgactivate = 0;
+ 	bool do_demote_pass;
+ 	struct swap_iocb *plug = NULL;
++	unsigned short luf_key;
  
- 	/*
-@@ -770,13 +782,25 @@ bool luf_takeoff_check_and_fold(struct page *page)
- 	if (!luf_key)
- 		return true;
+ 	folio_batch_init(&free_folios);
++	folio_batch_init(&free_folios_luf);
+ 	memset(stat, 0, sizeof(*stat));
+ 	cond_resched();
+ 	do_demote_pass = can_demote(pgdat->node_id, sc);
+@@ -1111,6 +1114,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		enum folio_references references = FOLIOREF_RECLAIM;
+ 		bool dirty, writeback;
+ 		unsigned int nr_pages;
++		bool can_luf = false;
  
--	if (current->luf_no_shootdown)
--		return false;
+ 		cond_resched();
+ 
+@@ -1344,7 +1348,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 			if (folio_test_large(folio))
+ 				flags |= TTU_SYNC;
+ 
+-			try_to_unmap(folio, flags);
++			can_luf = try_to_unmap(folio, flags);
+ 			if (folio_mapped(folio)) {
+ 				stat->nr_unmap_fail += nr_pages;
+ 				if (!was_swapbacked &&
+@@ -1488,6 +1492,8 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 					 * leave it off the LRU).
+ 					 */
+ 					nr_reclaimed += nr_pages;
++					if (can_luf)
++						luf_flush(fold_unmap_luf());
+ 					continue;
+ 				}
+ 			}
+@@ -1520,6 +1526,19 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		nr_reclaimed += nr_pages;
+ 
+ 		folio_unqueue_deferred_split(folio);
++
++		if (can_luf) {
++			if (folio_batch_add(&free_folios_luf, folio) == 0) {
++				mem_cgroup_uncharge_folios(&free_folios);
++				mem_cgroup_uncharge_folios(&free_folios_luf);
++				luf_key = fold_unmap_luf();
++				try_to_unmap_flush();
++				free_unref_folios(&free_folios, 0);
++				free_unref_folios(&free_folios_luf, luf_key);
++			}
++			continue;
++		}
++
+ 		if (folio_batch_add(&free_folios, folio) == 0) {
+ 			mem_cgroup_uncharge_folios(&free_folios);
+ 			try_to_unmap_flush();
+@@ -1554,9 +1573,21 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 		list_add(&folio->lru, &ret_folios);
+ 		VM_BUG_ON_FOLIO(folio_test_lru(folio) ||
+ 				folio_test_unevictable(folio), folio);
++		if (can_luf)
++			luf_flush(fold_unmap_luf());
+ 	}
+ 	/* 'folio_list' is always empty here */
+ 
++	/*
++	 * Finalize this turn before demote_folio_list().
++	 */
++	mem_cgroup_uncharge_folios(&free_folios);
++	mem_cgroup_uncharge_folios(&free_folios_luf);
++	luf_key = fold_unmap_luf();
++	try_to_unmap_flush();
++	free_unref_folios(&free_folios, 0);
++	free_unref_folios(&free_folios_luf, luf_key);
++
+ 	/* Migrate folios selected for demotion */
+ 	nr_demoted = demote_folio_list(&demote_folios, pgdat);
+ 	nr_reclaimed += nr_demoted;
+@@ -1590,10 +1621,6 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
+ 
+ 	pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
+ 
+-	mem_cgroup_uncharge_folios(&free_folios);
+-	try_to_unmap_flush();
+-	free_unref_folios(&free_folios, 0);
 -
- 	lb = &luf_batch[luf_key];
- 	read_lock_irqsave(&lb->lock, flags);
-+	lb_ugen = lb->ugen;
-+
-+	if (arch_tlbbatch_check_done(&lb->batch.arch, lb_ugen)) {
-+		read_unlock_irqrestore(&lb->lock, flags);
-+		return true;
-+	}
-+
-+	if (current->luf_no_shootdown) {
-+		read_unlock_irqrestore(&lb->lock, flags);
-+		return false;
-+	}
-+
- 	fold_batch(tlb_ubc_takeoff, &lb->batch, false);
- 	read_unlock_irqrestore(&lb->lock, flags);
-+
-+	if (!current->luf_ugen || ugen_before(current->luf_ugen, lb_ugen))
-+		current->luf_ugen = lb_ugen;
- 	return true;
- }
- #endif
-diff --git a/mm/rmap.c b/mm/rmap.c
-index c3df36cf7ac16..fcd27200efa04 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -656,7 +656,7 @@ static unsigned long new_luf_ugen(void)
- 	return ugen;
- }
+ 	list_splice(&ret_folios, folio_list);
+ 	count_vm_events(PGACTIVATE, pgactivate);
  
--static void reset_batch(struct tlbflush_unmap_batch *batch)
-+void reset_batch(struct tlbflush_unmap_batch *batch)
- {
- 	arch_tlbbatch_clear(&batch->arch);
- 	batch->flush_required = false;
-@@ -743,8 +743,14 @@ static void __fold_luf_batch(struct luf_batch *dst_lb,
- 	 * more tlb shootdown might be needed to fulfill the newer
- 	 * request.  Conservertively keep the newer one.
- 	 */
--	if (!dst_lb->ugen || ugen_before(dst_lb->ugen, src_ugen))
-+	if (!dst_lb->ugen || ugen_before(dst_lb->ugen, src_ugen)) {
-+		/*
-+		 * Good chance to shrink the batch using the old ugen.
-+		 */
-+		if (dst_lb->ugen && arch_tlbbatch_diet(&dst_lb->batch.arch, dst_lb->ugen))
-+			reset_batch(&dst_lb->batch);
- 		dst_lb->ugen = src_ugen;
-+	}
- 	fold_batch(&dst_lb->batch, src_batch, false);
- }
- 
-@@ -772,17 +778,45 @@ void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src)
- 	read_unlock_irqrestore(&src->lock, flags);
- }
- 
-+static unsigned long tlb_flush_start(void)
-+{
-+	/*
-+	 * Memory barrier implied in the atomic operation prevents
-+	 * reading luf_ugen from happening after the following
-+	 * tlb flush.
-+	 */
-+	return new_luf_ugen();
-+}
-+
-+static void tlb_flush_end(struct arch_tlbflush_unmap_batch *arch,
-+		struct mm_struct *mm, unsigned long ugen)
-+{
-+	/*
-+	 * Prevent the following marking from placing prior to the
-+	 * actual tlb flush.
-+	 */
-+	smp_mb();
-+
-+	if (arch)
-+		arch_tlbbatch_mark_ugen(arch, ugen);
-+	if (mm)
-+		arch_mm_mark_ugen(mm, ugen);
-+}
-+
- void try_to_unmap_flush_takeoff(void)
- {
- 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
- 	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
- 	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
- 	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
-+	unsigned long ugen;
- 
- 	if (!tlb_ubc_takeoff->flush_required)
- 		return;
- 
-+	ugen = tlb_flush_start();
- 	arch_tlbbatch_flush(&tlb_ubc_takeoff->arch);
-+	tlb_flush_end(&tlb_ubc_takeoff->arch, NULL, ugen);
- 
- 	/*
- 	 * Now that tlb shootdown of tlb_ubc_takeoff has been performed,
-@@ -871,13 +905,17 @@ void try_to_unmap_flush(void)
- 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
- 	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
- 	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
-+	unsigned long ugen;
- 
- 	fold_batch(tlb_ubc, tlb_ubc_ro, true);
- 	fold_batch(tlb_ubc, tlb_ubc_luf, true);
- 	if (!tlb_ubc->flush_required)
- 		return;
- 
-+	ugen = tlb_flush_start();
- 	arch_tlbbatch_flush(&tlb_ubc->arch);
-+	tlb_flush_end(&tlb_ubc->arch, NULL, ugen);
-+
- 	reset_batch(tlb_ubc);
- }
- 
-@@ -1009,7 +1047,11 @@ void flush_tlb_batched_pending(struct mm_struct *mm)
- 	int flushed = batch >> TLB_FLUSH_BATCH_FLUSHED_SHIFT;
- 
- 	if (pending != flushed) {
-+		unsigned long ugen;
-+
-+		ugen = tlb_flush_start();
- 		arch_flush_tlb_batched_pending(mm);
-+		tlb_flush_end(NULL, mm, ugen);
- 
- 		/*
- 		 * If the new TLB flushing is pending during flushing, leave
 -- 
 2.17.1
 
