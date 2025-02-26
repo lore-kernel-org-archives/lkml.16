@@ -1,103 +1,91 @@
-Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D64321B9CC;
-	Wed, 26 Feb 2025 14:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BEB19CD0B;
+	Wed, 26 Feb 2025 14:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580672; cv=none; b=oKsOvlYCojx7+2XGiwymNzt4s1CB5eCo0vwu3CcT0gIF/gZ8d5CSBvWJHZ7eE5Jyk4E03reWiY0gbb+AGol08hl2HQk6OJgkysmFc7YO0qAUPnmKcyOlWwr6y09RrnEYAADOziSVcP6iaDrFcaKadcnwGuuAEIqzFfI3XaD49f8=
+	t=1740580738; cv=none; b=MxEJ8N1mxvynBOGldJFf65RaNBtV6f414L+c910X7Hl/1fXvNBn+gDRbj4ozEeD21YyPqvu9V6OkSuCBjX5t+yXs4guH30G/uyz5PJzhaUOYYM72zToU1d1nN8BIpKclIlRjpBYraMrLL4mv6UKUSXxzFvtUVMIRsMpfIiHi5x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580672; c=relaxed/simple;
-	bh=1uBLwcqK1D8Ilr2JTnatyS4/HsSqyloEpvfZyxMxfW4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O4jCVCTQ8hgsDhQ9yniG4gk4fJFRqAFyLX6vfuXj81w5Wguxj1ZHDQHgdP381S7PR1FNRDZO9KMr5W6juDgNp0LOGXDSQLLC8Pf/juldDQsmLtZ789rRQZC74YG02S03mEvw/nr8SGsCKzJYwsz8BfYpb/tIxp3Fi5//Da+orNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=IgWeA/uH; arc=none smtp.client-ip=45.141.101.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1740580738; c=relaxed/simple;
+	bh=5/u6wDS/lA76jxL4Byqt/Yw7pq51XwXuara9YjYfKZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIxsiOzdxRbYPpm+cN/5St1S4mq6TuYURHQWLxmaK9PZ1N6Bo+XTlp5YwL0rSApixZoRorjW2VI/VhVlSh1QaNfsOYG6/vKX8rgQbrEff38OyZhDZDBdzTe7zAgcjZObscjxm+Fy4+IS/9WdGvKDGVQVoqlYU2XDZJSDpXWPHHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=xPG6PppQ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="IgWeA/uH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1740580230; bh=1uBLwcqK1D8Ilr2JTnatyS4/HsSqyloEpvfZyxMxfW4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IgWeA/uHw7Uvj++XG+gKQVNJ7brkNdOYn7QgcLdQqG4UIMaoqXZ2JBbWfkn6Bldx2
-	 q2iteow3N3TFk6cuua12pPnObxl3zG+M3yNu76plnVZ2KyTlqFvG6yO4wHSDMkqBgv
-	 a//2Fz2sESmn3/wV9Apd2yKyCYAopI9MNjFzT9rGn+tLkZnSjdlpTQpxRFu3LOPTbI
-	 o+xzO2fyF3k2qBbRB+bVWLbp8X51xJm3cKZbUKOJ9+dx6yIPxMSs8Vx0PryqBlXXes
-	 thlN/4hSs1Z8493SElAEDWFQNU6gFc/g4+kKyzEamNRVT4mfwi1j4JKL5Dmed6uF2l
-	 UdUYJ4RVU/OxA==
-Received: from authenticated-user (box.trvn.ru [45.141.101.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 23B451B2BD;
-	Wed, 26 Feb 2025 19:30:29 +0500 (+05)
-From: Nikita Travkin <nikita@trvn.ru>
-Date: Wed, 26 Feb 2025 19:29:55 +0500
-Subject: [PATCH 1/2] arm64: dts: qcom: qrb5165-rb5-vision-mezzanine: Fix
- broken overlay root
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xPG6PppQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LyM9C/8dkXjwtrW01/wQoFLq/6QdRLnBhdNwslNvl5c=; b=xPG6PppQVoVHxQ50hWNFQM7IJf
+	wJjfHN9rpc0uuV1fLvu5XZHpmodrt27SzEi4h/mQMom4WEVy0jY5MlO2iEa+zHVAfYLpUat+ND7+J
+	Q8wpXQBOh+h2qkAy/tQ+AYcgU6e3XPncsDGxnvZwQGp/7c+AqflFAPJLV1DvBiHQl4DEiSilY6FPa
+	KR5XwOpLmGWGdt2im9Ghzytf+z+j42u9atQ0khm/8iMPfCbDuxZHOWoP6U+ffIFD6AP2l+OrJt9d5
+	xENXHesHMrtBm2A2CFbYDrqkbcan9gA5nm1C8+DDbn3sAaQgKWnp+S6xJK010i8iM5iJXsaGWR1/p
+	NGYf7hWA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:55100)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tnIYk-0004Zg-1r;
+	Wed, 26 Feb 2025 14:38:50 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tnIYi-0007AA-1m;
+	Wed, 26 Feb 2025 14:38:48 +0000
+Date: Wed, 26 Feb 2025 14:38:48 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Martin Schiller <ms@dev.tdt.de>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: sfp: add quirk for FS SFP-10GM-T copper
+ SFP+ module
+Message-ID: <Z78neFoGNPC0PYjt@shell.armlinux.org.uk>
+References: <20250226141002.1214000-1-ms@dev.tdt.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-qcom-nonroot-overlays-v1-1-26c6e7605833@trvn.ru>
-References: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
-In-Reply-To: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1187; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=1uBLwcqK1D8Ilr2JTnatyS4/HsSqyloEpvfZyxMxfW4=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBnvyWDvByyl7D6So/j0B9xg14KBOLPoxlmH5wg3
- NqbhnFKAyOJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZ78lgwAKCRBDHOzuKBm/
- dZskD/wKMTIdaCKXnES4Zzjb1id+p0R5ZgnuUejw58VbrrZLuJ8ZmV7KVjZmyjkElN1V9X2Q3dM
- JNCT/haX3OUURYyUphG2WkW8yBzNTao54nxFPp9X7hFI/T9asRsQhZeD9Vx5Zs+GdCzgLJRKa3h
- AJ1jDRXnjCc03UQqZ/+LN8zzxYfNN2qPYKO32LK9UxOaywMMPhiF8hv6LfYsHAI/L3MODmNaVtn
- tJSymGs0mjON2uwkjWM1yaVUg9BM6ITXqyknVNo1irhP0jXFH97TfiHbOPN53v3p6io+3sq/VKs
- xjZUsWftUPtscRgTre9NOQDjDuE4AUbhRZ2QZNfFdQ1NPLlx4nZPD91qqwmwKNWWv+ABBECvx/N
- 08hqxzxqIxZKCjWIf5zFl72rzJGHOZpOuVcyJjHTpAASbatD4bSssrqgUUGT+z9KHGQuhaA6TxV
- Tp1+LCqVSGIAUtS8KijcEGlS1luU0CWIQMWlWpoJD/R8Vd0nVpb2nz9kgxoQ4dk6NY22m1DonlW
- H2HKGCRxHhPcawuCv0pyPpcPB+bdzqMrAgPXwRsvjnf7QIj8Gj+Lak++86gP52d2zTnnrDgRqbA
- v9j4ltGJDxF6MLBqMVEHrTMg3gaUiYu6wvO18QrSOB78Pvr6hmztkXNwmuoS6/RE1BCil4yCRvg
- lblc0onQbeBjw4A==
-X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
- fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226141002.1214000-1-ms@dev.tdt.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-When converting to the overlay format, it was missed that "/" in the
-overlay corresponds to the overlay's own root node and not the fragment
-targeted to update root of the base dts, which should be "&{/}" instead.
-This results in the cma node never actually being applied by libfdt.
+On Wed, Feb 26, 2025 at 03:10:02PM +0100, Martin Schiller wrote:
+> Add quirk for a copper SFP that identifies itself as "FS" "SFP-10GM-T".
+> It uses RollBall protocol to talk to the PHY and needs 4 sec wait before
+> probing the PHY.
+> 
+> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+> ---
+>  drivers/net/phy/sfp.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> index 9369f5297769..15284be4c38c 100644
+> --- a/drivers/net/phy/sfp.c
+> +++ b/drivers/net/phy/sfp.c
+> @@ -479,9 +479,10 @@ static const struct sfp_quirk sfp_quirks[] = {
+>  	// PHY.
+>  	SFP_QUIRK_F("FS", "SFP-10G-T", sfp_fixup_fs_10gt),
+>  
+> -	// Fiberstore SFP-2.5G-T uses Rollball protocol to talk to the PHY and
+> -	// needs 4 sec wait before probing the PHY.
+> +	// Fiberstore SFP-2.5G-T and SFP-10GM-T uses Rollball protocol to talk
+> +	// to the PHY and needs 4 sec wait before probing the PHY.
+>  	SFP_QUIRK_F("FS", "SFP-2.5G-T", sfp_fixup_fs_2_5gt),
+> +	SFP_QUIRK_F("FS", "SFP-10GM-T", sfp_fixup_fs_2_5gt),
 
-Fix the overlay to use correct target node.
-
-Fixes: 231c03c6119d ("arm64: dts: qcom: qrb5165-rb5-vision-mezzanine: Convert mezzanine riser to dtbo")
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
----
- arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso b/arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso
-index ae256c713a36078afdadc67193f381a19ea8e5d3..254df3d518d8cbfb1082511f38e132435b7fdf59 100644
---- a/arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso
-+++ b/arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso
-@@ -9,7 +9,7 @@
- #include <dt-bindings/clock/qcom,camcc-sm8250.h>
- #include <dt-bindings/gpio/gpio.h>
- 
--/ {
-+&{/} {
- 	reserved-memory {
- 		linux,cma {
- 			compatible = "shared-dma-pool";
+Which makes sfp_fixup_fs_2_5gt mis-named. Please rename.
 
 -- 
-2.48.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
