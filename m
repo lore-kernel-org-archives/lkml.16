@@ -1,136 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DF4258CED;
-	Wed, 26 Feb 2025 09:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 836F023817E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563671; cv=none; b=AJZbFAQ//RimSmbVydLn6y+ZbzS/4RD3ncokdweaApYcdmPLFc8HaC/mXoQne9gdtLba6BWA0uwo9O9cujHUZQAdHAQFf+5I8SgTZUfJDl49yaEYG4U3yynKc0XRjjBL00Tb9F3qM+Wgm5yhcWhr5ptWfbc7fV1mmov/hst0Wrg=
+	t=1740563707; cv=none; b=g0uxDqEeOM860vatNOnwImDb8sk/9UGu9IODeHmP6f1toVz4ULUd1GOfrm83y9c2Yfm1hNFb68rWMkD+q6UDYG7L1LuQWHLz7pp7gDJ+Gs5Yr1YPNoAw+uFy0mPW4h1eqEZYjGjz4/rr46zK9CRTJyosWdaZBC0fJruhRowv5MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563671; c=relaxed/simple;
-	bh=ynYdVPkFH8NphPZahSZ/UfNkTCSOldanlpu9GJfKG88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CKmwl+UKCjsfSSoFgOJmhH0u1ZuZNkNdRJo8LDXx1pUwweups3rJ13omgyQ3xpCjQEWl+p7iUAY6/wfk+Afdmdd3ntUP5vmMLmSRSuu/INVVPPSHYknKaGjccaDcHnyqH1RkZaYnNLtohzxZirDYnpqO10NsYP+1nbvJIpKrPS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T37V6VPH; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T37V6VPH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740563670; x=1772099670;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ynYdVPkFH8NphPZahSZ/UfNkTCSOldanlpu9GJfKG88=;
-  b=T37V6VPHWz/GvggZXfYQhvn/Vylz0zulHjHkAYtg8l+/2QhV9ZKgjSHj
-   GP7p+FcqWaFfBKpwJ/x7yKXIXZIukDxJrOGhgSi4y4D8XJzxKZHb0Hbmv
-   6QY/Yc7JzdNsxHm4Na7ePYvfx7FBSHUvCj66E2mUbqozEKk1R+/8fM/H/
-   Ds7HJRcHJ3HKFa7hbFMek5bhpJim6LWNVGSiSX73cYoBEcJCJpChDSKU5
-   v8fZy+nfgXaAJawmKDIPyq7/a7do3aGaMVrFBiZ2JOjNN7UjJxuv/5nni
-   /rJ6SXc4Ur5jnsgeUipLYDSKELPlJqqOgG5zDH5JK1XqR6419x44ZPR/Q
-   w==;
-X-CSE-ConnectionGUID: lj33qjGSQHW47ySUgZIqLg==
-X-CSE-MsgGUID: nh/OEQprQDy/x0CYk/3coQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41103265"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="41103265"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 01:54:29 -0800
-X-CSE-ConnectionGUID: GwLkxpNnRbeFlR8dW1iuiQ==
-X-CSE-MsgGUID: y3dxM7/VQJaUwMmx3AzrdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="121269320"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa005.fm.intel.com with SMTP; 26 Feb 2025 01:54:25 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 26 Feb 2025 11:54:24 +0200
-Date: Wed, 26 Feb 2025 11:54:24 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Johan Hovold <johan+linaro@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Abel Vesa <abel.vesa@linaro.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] usb: typec: ps883x: fix registration race
-Message-ID: <Z77k0MzLV3htrIbd@kuha.fi.intel.com>
-References: <20250218152933.22992-1-johan+linaro@kernel.org>
- <20250218152933.22992-2-johan+linaro@kernel.org>
+	s=arc-20240116; t=1740563707; c=relaxed/simple;
+	bh=GuF2zhBiuHNUMkgF1b0uzct85c9ZWKI0+WqJvodQPdg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NxEpkTgcUdAV57eDVDxyU5a4GkdrGzHLOarjACFvSQAuhf9Kt+Soz3ciemPSPeh7VVeSa70Nkg8hsfB/7cIsxxROMOSRNxu7tW1y+C8dWO/C8lMPIX49VXEMHEbu3PHhPi/6oWNaBNSJCk0/+8AvFj54cirbWvOqEc/L4raiLaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAC9E150C;
+	Wed, 26 Feb 2025 01:45:52 -0800 (PST)
+Received: from [10.57.84.229] (unknown [10.57.84.229])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 849503F6A8;
+	Wed, 26 Feb 2025 01:45:35 -0800 (PST)
+Message-ID: <2c465bdf-8028-4b05-8e18-3154735ce906@arm.com>
+Date: Wed, 26 Feb 2025 09:45:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218152933.22992-2-johan+linaro@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] arm64/mm: Fix Boot panic on Ampere Altra
+Content-Language: en-GB
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Luiz Capitulino <luizcap@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250225114638.2038006-1-ryan.roberts@arm.com>
+ <CAMj1kXHNO+iB4vNFz-4tR_9CPzv96hn+RW=eqyZXMGy_AySDpw@mail.gmail.com>
+ <20250226001047.GA24197@willie-the-truck>
+ <CAMj1kXH=tPuM+irCsKgycUTbts8h9vD4m3tEtw51YFzWafdSUA@mail.gmail.com>
+ <b0578d21-95cd-4d8a-add1-87299f36b491@arm.com>
+ <CAMj1kXHJGC9aYCwwb2XTWfhAjH6GDKQptNdLwO+hfv6hazivHQ@mail.gmail.com>
+ <b6b999c9-79cd-4945-9d7a-c5ee8158b7dc@arm.com>
+ <CAMj1kXHesY77QhnW_U19UURGUqiBuQrNcL-kWQs7niaMa4nAng@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAMj1kXHesY77QhnW_U19UURGUqiBuQrNcL-kWQs7niaMa4nAng@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 18, 2025 at 04:29:31PM +0100, Johan Hovold wrote:
-> Make sure that the retimer is fully setup before registering it to avoid
-> having consumers try to access it while it is being reset.
+On 26/02/2025 09:04, Ard Biesheuvel wrote:
+> On Wed, 26 Feb 2025 at 09:55, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 26/02/2025 08:33, Ard Biesheuvel wrote:
+>>> On Wed, 26 Feb 2025 at 09:07, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 26/02/2025 06:59, Ard Biesheuvel wrote:
+>>>>> On Wed, 26 Feb 2025 at 01:10, Will Deacon <will@kernel.org> wrote:
+>>>>>>
+>>>>>> On Tue, Feb 25, 2025 at 07:05:35PM +0100, Ard Biesheuvel wrote:
+>>>>>>> Apologies for the breakage, and thanks for the fix.
+>>>>>>>
+>>>>>>> I have to admit that I was a bit overzealous here: there is no point
+>>>>>>> yet in using the sanitised value, given that we don't actually
+>>>>>>> override the PA range in the first place.
+>>>>
+>>>> But unless I've misunderstood something, parange is overridden; Commit
+>>>> 62cffa496aac (the same one we are fixing) adds an override to force parange to
+>>>> 48 bits when arm64.nolva is specified for LPA2 systems (see mmfr2_varange_filter()).
+>>>>
+>>>> I thought it would be preferable to honour that override, hence my use of
+>>>> arm64_apply_feature_override() in the fix. Are you saying we don't need to worry
+>>>> about that case?
+>>>>
+>>>
+>>> I wouldn't think so (but I'm glad you brought it up because this
+>>> didn't occur to me at all tbh)
+>>>
+>>> With arm64.nolva, both the VA and PA ranges will be reduced, and so
+>>> the range of the linear map will be 47 bits. So if the PA range is
+>>> being reduced from 52 to 48, it will still exceed the size of the
+>>> linear map, and so it should make no difference in this particular
+>>> case.
+>>
+>> OK, so I think you're saying it'll happen to work correctly even if we ignore
+>> that override? That sounds a bit fragile to me. Surely we should be consistent
+>> and either always honour the override or remove the override in the first place?
+>>
 > 
-> Fixes: 257a087c8b52 ("usb: typec: Add support for Parade PS8830 Type-C Retimer")
-> Cc: Abel Vesa <abel.vesa@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-> ---
->  drivers/usb/typec/mux/ps883x.c | 31 ++++++++++++++++---------------
->  1 file changed, 16 insertions(+), 15 deletions(-)
+> I'm trying to walk a fine line here between consistent use of the
+> override, and fixing something that I broke in a nasty way all the way
+> back to 6.12.
 > 
-> diff --git a/drivers/usb/typec/mux/ps883x.c b/drivers/usb/typec/mux/ps883x.c
-> index ef086989231f..274de7abe585 100644
-> --- a/drivers/usb/typec/mux/ps883x.c
-> +++ b/drivers/usb/typec/mux/ps883x.c
-> @@ -346,6 +346,22 @@ static int ps883x_retimer_probe(struct i2c_client *client)
->  		goto err_vregs_disable;
->  	}
->  
-> +	/* skip resetting if already configured */
-> +	if (regmap_test_bits(retimer->regmap, REG_USB_PORT_CONN_STATUS_0,
-> +			     CONN_STATUS_0_CONNECTION_PRESENT) == 1) {
-> +		gpiod_direction_output(retimer->reset_gpio, 0);
-> +	} else {
-> +		gpiod_direction_output(retimer->reset_gpio, 1);
-> +
-> +		/* VDD IO supply enable to reset release delay */
-> +		usleep_range(4000, 14000);
-> +
-> +		gpiod_set_value(retimer->reset_gpio, 0);
-> +
-> +		/* firmware initialization delay */
-> +		msleep(60);
-> +	}
-> +
->  	sw_desc.drvdata = retimer;
->  	sw_desc.fwnode = dev_fwnode(dev);
->  	sw_desc.set = ps883x_sw_set;
-> @@ -368,21 +384,6 @@ static int ps883x_retimer_probe(struct i2c_client *client)
->  		goto err_switch_unregister;
->  	}
->  
-> -	/* skip resetting if already configured */
-> -	if (regmap_test_bits(retimer->regmap, REG_USB_PORT_CONN_STATUS_0,
-> -			     CONN_STATUS_0_CONNECTION_PRESENT) == 1)
-> -		return gpiod_direction_output(retimer->reset_gpio, 0);
-> -
-> -	gpiod_direction_output(retimer->reset_gpio, 1);
-> -
-> -	/* VDD IO supply enable to reset release delay */
-> -	usleep_range(4000, 14000);
-> -
-> -	gpiod_set_value(retimer->reset_gpio, 0);
-> -
-> -	/* firmware initialization delay */
-> -	msleep(60);
-> -
->  	return 0;
->  
->  err_switch_unregister:
-> -- 
-> 2.45.3
+> So yes, I agree that it would be better to use the override
+> consistently, and this is what we should do going forward. But the
+> purpose of the original patch was mainly to ensure that we
+> consistently program the MMU either in LPA2 or in non-LPA2 mode, and
+> not in a mix of the two. The linear mapping randomization change was
+> kind of secondary.
+> 
+> So perhaps this should be two patches:
+> - backing out the use of the sanitised register, as proposed by Will,
+> with cc:stable
+> - a follow up based on your proposal, which can be backported later if
+> needed, but without tagging it for stable.
 
--- 
-heikki
+I suspect I'm misunderstanding something crucial about the way the linear map
+randomization works (TBH the details of the signed comparisons went a little
+over my head).
+
+But my rough understanding is that there are 2 values you want to compare; the
+size of the linear map and the PA range. If the PA range is significantly bigger
+than the linear map size then we conclude we have enough room to randomize. (I
+think this assumes that VA size is always GTE PA size). But if linear map size
+is based on an overridden VA and overridden PA size (which I assume it must be,
+given the pgtables will be limitted to the overridden VA size) and PA size is
+not overridden, isn't it possible to wrongly conclude that there is enough room
+to randomize when there really is not?
+
+By that logic, you must include any PA override in this decision and so Will's
+patch does not fix this case. Mine does.
+
+But as I say, I'm not confident I understand this logic properly. If my
+understanding is incorrect, let's go with your proposal.
+
+Thanks,
+Ryan
+
+
