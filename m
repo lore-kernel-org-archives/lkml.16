@@ -1,195 +1,285 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4EC79D0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585646; cv=none; b=N0D1bcoVTceupQxkRzN5mMZgIIue+CvfWsNgoQ1f+UpXU8uPnMc9AQP1vUipmB9TbR/nH7c4rOjztu1P5Dejt3h3aCq73i+UmOmy19WIUrr0bHwxZTeqY0WyD6SRW1IwYNlwZ/QCPEo5AMRDPKxIy4rZNJWeS3eN/ujJm7bgigA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585646; c=relaxed/simple;
-	bh=PzU4b01qO2LwfblWa/oKQuFMDxEUtm45DRVjkCcoteY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j0l4Y0BYMA1Nv2HvTbVl6g4IplhJ2I5uUhI6Qm48/wQa6Z06IIv7F1TJMCxWHkGA2ztqz37AgtCcQ/b84WFUXwhVlEtYWgroYX1jrT4I64FaDpLoh1LAH/b1/crYWwrQGhg1LSStDXjlFjK6yh95g7f1TZZXXCz22IPtVE2wNgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cgAd6pzO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530DD2248AA;
+	Wed, 26 Feb 2025 16:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740585655; cv=fail; b=sSue3VFT83qLKqRU95mT0hwfph2FPmF37Wvwpp7iqc36jqEMVM0GcKrwEt9SHAx5ZXe+A7tfhGlAvf/RPAfQzMjOGS5zcjARVFSVkYGZXvQikSU5QdD7rdNBTnbCn4EXDh20xDx6loViAA5jozz/3nD8rTdw69SbHtN6AxpHMDs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740585655; c=relaxed/simple;
+	bh=fqDyEFHwKAZ/WbQL1gMiKkNYLuR1myy5Vrqv59LVN1E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=CHBLWWkYuUi8HfWvJB7fCTwh6D+HL//NMWOOLv3gnnx4gHbyNfKMe1eXlVKFwPaq5TBOAjC0U/QE0YuyDRetEFhTt/SOJxYvzUqtmGkxU5aolOTQj+LGI7fP9ReQ3xUm8XMTeRXU9XpCFgQug7qJStc9BXvqvPqo7aTo2JIhW30=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m4e268aq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Xmb4gZSI; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgAd6pzO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740585643;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lqa5gQlqS9US5GtfUQPHzeFlJi9ebohvbqbVThoHRcI=;
-	b=cgAd6pzOEJuz8vcml6ta9hJZw/bV0c+3bDz4HOj465LlP2hPY9LBBuzn8aGiMmwY1UQQ21
-	mb1Coz5rh5vg6BTSUHGpFW5nms4q0FqHqXSvNZh2p+M19dNWvOxpb9ae7LbRe0Z/Py2MjF
-	BqqIEwdQP/vUPHsSvVhvPIvoAlw8mts=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-146-xbL7-FDlOPCPnvHbdr577w-1; Wed, 26 Feb 2025 11:00:42 -0500
-X-MC-Unique: xbL7-FDlOPCPnvHbdr577w-1
-X-Mimecast-MFC-AGG-ID: xbL7-FDlOPCPnvHbdr577w_1740585641
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43945f32e2dso64230335e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:00:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740585641; x=1741190441;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lqa5gQlqS9US5GtfUQPHzeFlJi9ebohvbqbVThoHRcI=;
-        b=MhvhFb42x77jNAWbHf/931xiQ7vPUi2P6MMvtTwAVBMF8VdPRikpfw6i/UqiEERAYg
-         Ofd5dqEFQdyXgC+jdT14qsJzw37Gjx/K8WkMtM2MG+t48Ts0+5DREfP01vtPeqnZRGaP
-         d7IfXW+7ZZVkhA9U4mTfmLFAibnuozC/+qfez9fiHGjY6nl3ygD2wkYTqbzX6+pTjZ0/
-         MPLBlql/rvDnfoJnWz79Dr7Mn24ILERFGmbgKhbhZfnWb32SPpCNJeYBv+Z110fPVkg0
-         YTtsABZ3daPmPXJzr0INEckA3DTpJDZzjn3wOZpkAH53FzDswGjcflMOsP1yhZZt0ybj
-         +Wkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU1T6NnArZ7tbOBBGghDR/SzwfNzUqokqRCH+RXDwT2+DevyaHaAXXBVmNbXxgGtpIPicXaio4koT9N0DQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHNL0KxBlTrXAufpyB9pcrrQjL+uos3L+tcrLLKxgj/BjdUSeb
-	/UD6Gu+oyKKdwCIzng5iM2qXcEhFh+vxZbAdMiWhJBrE0EEo/0N8eKqbZf3ihmojtx4qSVaeiKw
-	HfsdS70T5cke9jkG+kHcVydsPiqTdxFNoi9mNQHAhwg+bSqQHHLtqoRzTDFbfaw==
-X-Gm-Gg: ASbGncsffIJCzYIoujefiHpAKsU+YDd1CQFR2DG1d5iIWSDIBYSb3Qe53sJJXVcF7oP
-	kaWVOoziv6SveEQT5LITXfuv+IZmQfnynN/YBJOw1xozzFP5axPelukiWwxN8hu+WuJpQovi+rt
-	54xWzSGgdCSgMDv6RsLB8feQbujSMKuKYRsYgzy8V/WTwoGPXzF5LnPvGkIjza6qbxofXRtNuJo
-	RtuyosDTvXP95ddUc9ej1vpwlLuzlzHp/q56Oth3yAqW6o8FsUFCIMkQ4GBRI16S0DpbgsFhogu
-	4575FC1wg44K8KG4eQFJTfIgplnrN08spUhCw1p+nTuIPTbOVWk9XEeND0aqedc=
-X-Received: by 2002:a05:600c:1c86:b0:439:8b05:66a6 with SMTP id 5b1f17b1804b1-43ab0f64425mr75173515e9.22.1740585639366;
-        Wed, 26 Feb 2025 08:00:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEGOJUxfNkJ47dOepAoS3DkNdGuo0CohyHyhD/GA0TMRONmh8zeK9C4FdbnePVZ6SIE8cqCJg==
-X-Received: by 2002:a05:600c:1c86:b0:439:8b05:66a6 with SMTP id 5b1f17b1804b1-43ab0f64425mr75170455e9.22.1740585637323;
-        Wed, 26 Feb 2025 08:00:37 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5393e5sm26113765e9.20.2025.02.26.08.00.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 08:00:36 -0800 (PST)
-Date: Wed, 26 Feb 2025 17:00:33 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
- =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
- <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
- <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
- <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
- <marcel.apfelbaum@gmail.com>, Markus Armbruster <armbru@redhat.com>,
- Michael Roth <michael.roth@amd.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
- <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
- <zhao1.liu@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/14] Change ghes to use HEST-based offsets and add
- support for error inject
-Message-ID: <20250226170033.5c4687dd@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20250226155143.0e4a05f8@imammedo.users.ipa.redhat.com>
-References: <cover.1740148260.git.mchehab+huawei@kernel.org>
-	<20250226151656.10665bc9@imammedo.users.ipa.redhat.com>
-	<20250226153913.27255b1e@sal.lan>
-	<20250226155143.0e4a05f8@imammedo.users.ipa.redhat.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m4e268aq";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Xmb4gZSI"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QEtfas005884;
+	Wed, 26 Feb 2025 16:00:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=7Cw/HKcBOraU+x+tpTWDlCz5fRrL5X4AARikgluV8e4=; b=
+	m4e268aqgkYbEDIvUQ+QMVLW4Vg/+JOLIGK/DzUKrGrMNoHhPBs4CJLqO+QbE95X
+	4EEjTeQ95JGEPDmaF0m4tJcMEy8gTSz36SrrQOjL0aeAhixIaSCxSTsbEsJPrRT+
+	L6CjEMF84jtKxaXZnKpilMH6MUWI932ckChgHXgzh9ghk4mJpSCtC7tDE3LoLJkt
+	rQI01QcGLlUwpBZ/bS6078icrJ584yFfU9vUKSlOmNm9MzUiBHPA61MbA1o/elYR
+	3OpHgOQlhjTydaNqsYXe1BNbZkbYknLMFCm9PLsqdFGntUS0xXGGTLXeYiYTtfJ4
+	Hk8MO+iNoVNBoXyPmIfpcw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 451psf1dvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 16:00:48 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51QF1xnF024543;
+	Wed, 26 Feb 2025 16:00:47 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51avy9b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 16:00:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eA4uCf3NVmCTIq115zMd3PlEd84/vCR/KLb5meFJ+uEADUyXxyXUfuC1Kt1tH0d/eM/FHM7Eh+oXDdLkOmD+qlZBoYfV4jd7YyqV35PYGRnMbLJH3ccf1HN/iWK3ctpRxnlSgfXgLlr0WjJHQSgltU6VkgWKUikJ6E47XtXDmZXAOUEqWzBO6SvwB3H141qt7Bma//tMAGulgR7tEzLSpe3TRnGqVFSJKBcwxInusNxCyzLnkLO2IP8hqe//Tl5d9D7SefbPOkAOEelujl+hzLra2W2Kb9+26tE/Mxoc9SpAlnvhoAhVVdaYX2lLxCRrDuuzGhggteuGnRGmNG3Srg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Cw/HKcBOraU+x+tpTWDlCz5fRrL5X4AARikgluV8e4=;
+ b=P9uUjzz1F4Lei8t+LQtvHEQDM15Lez++0GF15PyTD4+ysz7sEAng2DnV4MedpX+7tP3lxk49FPSPoAqAkp7SFZqx4f8Zfnnbqo2jQlmAWcacRK8lYzeUU+PNcYvLWlmUEdN6ElWFqEE2aXwCYN6MKFdK1VlDK8vI0zTepfVE8AJF+zdYBWU6wCEjICdU3rR8H6UajsJY/D9ApNHPmN5oKyqIKIZPgIDivlWZk3MHeMcsbV3ChFAEtRS050HVJrrF2dDTV1PHlu5dkkvcszoiAyPhr/txmORIbgagi8vj7HW4h2iFPagNZHgzkbHSZ5Q9Bu9ZNzm63thjK2iTwMOKLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Cw/HKcBOraU+x+tpTWDlCz5fRrL5X4AARikgluV8e4=;
+ b=Xmb4gZSIqcSqcC7MEiWQvkBxGbeo3P0I2RbgO1VWlQp0FocBE9uUy9fN4ghlPbjs5B+50zFTOelG8gQKTvKWZ9bGAcUtTSpG9/nA3Itwxpd/UlOvw3CWBLKBsW4qIFUQT7YigMA3h4Gxa8mCiPwIAPi7lauYJjWTbefVvfDOUJc=
+Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
+ by CH3PR10MB7562.namprd10.prod.outlook.com (2603:10b6:610:167::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
+ 2025 16:00:44 +0000
+Received: from DS7PR10MB5134.namprd10.prod.outlook.com
+ ([fe80::39b2:9b47:123b:fc63]) by DS7PR10MB5134.namprd10.prod.outlook.com
+ ([fe80::39b2:9b47:123b:fc63%5]) with mapi id 15.20.8489.019; Wed, 26 Feb 2025
+ 16:00:44 +0000
+Message-ID: <5ff2354e-3bc6-4bb8-a481-bb81d717d698@oracle.com>
+Date: Wed, 26 Feb 2025 11:00:43 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+To: Takashi Iwai <tiwai@suse.de>
+Cc: regressions@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+ <87jz9d5cdp.wl-tiwai@suse.de>
+ <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+ <87h64g4wr1.wl-tiwai@suse.de>
+ <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+ <87eczk4vui.wl-tiwai@suse.de>
+Content-Language: en-US
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <87eczk4vui.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR07CA0015.namprd07.prod.outlook.com
+ (2603:10b6:610:20::28) To DS7PR10MB5134.namprd10.prod.outlook.com
+ (2603:10b6:5:3a1::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5134:EE_|CH3PR10MB7562:EE_
+X-MS-Office365-Filtering-Correlation-Id: 37144a53-ceaf-4541-9fdb-08dd567eba1c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UUxPeVJGWjBhVjBqNk0zaWJwaTRzOUI2SjZDU29xU1RocVdNeExLNEVRRVZN?=
+ =?utf-8?B?R0E1OS9qSHZsVitQaDFvNXFabUdjOC95aXMybGt2Z2psekZoUkRDdG1Eb3dq?=
+ =?utf-8?B?dTdxMHR6aUwzYmc5N2tuL3V0UnJwRWliMW0vUGxPUm53SEU1MCt1WGxISUN1?=
+ =?utf-8?B?MlRBZkZobDdMM1FVV2RjZ0Yzc0dMeVl3N202WG1GUHdQSkJnNnJSYlkvOTky?=
+ =?utf-8?B?T2UvM1lwMGEwMkd4RmlFeElSRDc0TDAzVEJzU2pEMXpuNmpscno0TEpKOUpW?=
+ =?utf-8?B?YjVJQzFaMlJ6YmdIMTZYU2YwVWZ1N0UvUmE4b3N0N2g4cjJwb3hwTnA0QlRz?=
+ =?utf-8?B?eFlxZkFoazUzQll0QmJ1enVoNFRFdWNpOFlLczg4eGRLUzhOTWtKZVM1b0dS?=
+ =?utf-8?B?UTlwQ1J1c1VDNGh4UzBuZ2ZWV3E5cnVQM0MrTVZxTG90VjA2eHhEVjA2VW5L?=
+ =?utf-8?B?QUx4QjdST1dGUDNEMDV3dm5kYVZsK2pGMTNSb2Y4aEh0TGZFNlNEVzdNOXJj?=
+ =?utf-8?B?dW03czV0bjU1akZmYjF5Q2IySDJtUnQ3OFhGM0g4TURVYVRaMS9wanBiV0s5?=
+ =?utf-8?B?OFRZRGQxTWFsWmtBbG95Sk02NmkvU2NDd05ka3N0ZVBzbmdvdG45UzVrM0pN?=
+ =?utf-8?B?eEVpU285R2Yrdi94cmlkL3JidnRxWUdzempOUXlGaUV0M1c3L2V0V3V2OHJR?=
+ =?utf-8?B?QTl3c2RhU2EyV09WLyswTW1mNG9IMXU0Z2c2WUl6VFVDb0prS1hSV2M4L0JR?=
+ =?utf-8?B?elB3Vk5SYnM0dlZQc09uMjZVSEN1U2V0UkpYcUtCUzhpSGRHRy8rb0NOVVhL?=
+ =?utf-8?B?MEljSW05cjJKamtwMUx6SG1lU3ZsT09SWGdyRmNQWWhBOGhVT3VPMHMxaFNT?=
+ =?utf-8?B?VmZTeUFEdzBNRUlraTBuOFJvd2E3R0czNm55ZllHUlFiUGdFTm5jUjRhMVJB?=
+ =?utf-8?B?TTUvUlcxN2o0aWdYSTVBdHJ5U05lTVhDV0FtV0pSaE1uMCtzVHhGcDhHOVli?=
+ =?utf-8?B?S251TmdrL1ZhSGRPamUrYysvY2JWZmRyTkxBZVVkVnFnUTFYWExmVkw1VmFZ?=
+ =?utf-8?B?R0xzc2tTc1dWQytQZ2d4ZFBqc3plMUdTbEZ3RWw4L2M3dVRaOHd4RXpFeGRF?=
+ =?utf-8?B?MVljdGdsdk95TnJEQjUyZy93VEFKUm5mVG9IS2p2aFUxRmRBK1VSbG5Ka0Y5?=
+ =?utf-8?B?MWE2TmZSOTBwL3RHRFJEMmczMENiTXg0TVROdmlYK3pQcEdKN2dtcUg5b0Fa?=
+ =?utf-8?B?dzltL0xDU2I0TEpPYVNhM00vQSsyTUFHU3lQU2hmZG8xLy9MMDc4Yk10b1Q3?=
+ =?utf-8?B?Ymw0YnZ0eVRJY000V29saUFIK3liZzN2V0xUY0ZySWdTc2NBYVhKcUovWi9z?=
+ =?utf-8?B?OXRuSmJVbUFBQTd4M1FCR2Y5RkdjYW9MUGlncWZ3ZXowZUJRajZBZnF2NlZP?=
+ =?utf-8?B?VWI1d2d5MFdxOW1oU1ZCY0xWVjhOaW9nZHNnM1lBdkdiL0RRY2REcE1KbG5G?=
+ =?utf-8?B?TzZCNE1SdGZRcTBEME5pS0puamFPeEgxY0lZSG0vbWhyNmdNN0ZLbm5YNFJ0?=
+ =?utf-8?B?RkNBR3ZkbUFUbzYwSURoTXY3K09QY1VjaW41Q2lBSjZOc1ZaQ2c1RWlXU2pY?=
+ =?utf-8?B?VjN6dHdPYlB2ZlorVGVZZUF2SG0vOEkvWDd0dFJ2SFZIMTZVelNnZWdldExT?=
+ =?utf-8?B?L2I4MXpsdzljbjh0OHdEUUVrTS9ta1QyNVBjT3RhRHBTMlpnSisyUHQyeXNm?=
+ =?utf-8?B?czdSN1pOUnBlbC83c0VTOHVRdGJHRk9kQWFza1FaNDR3NEN5NUdMeXc5cUZp?=
+ =?utf-8?B?T1lVWGxoYnNub1I1WGZ3QT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V1pvSncyUFU2MHQrSVFnb3AxVzJKOVF1cnlXd0pZR0lFbHc1eWRTWTB3VEx3?=
+ =?utf-8?B?N2FhcEJTQmprdFBNQkh1andMb1dlSlUxOUVkNEJlODBuOG5TK1JZcW5CRUtS?=
+ =?utf-8?B?RVcyRGlPakVvL2pPMTdBaTRleFVSdCtrY1dYSUhIa0RHNzVoVVdKR1cxY2FC?=
+ =?utf-8?B?aWxoRlpwU0dqZlFoR2JoNUU4aTdaVUxMcGVFbExudVMzb01PK0x1MTJ4OUdV?=
+ =?utf-8?B?VFF3WXpyVUhrNnZNN1luZVZ2OTE2Q3gzU2QzeXlaSDBoS0s1aEpUVVZ0eGcx?=
+ =?utf-8?B?eVZLaWlDdEFHTENiUDdiUC9yNVd4NlVKRHVQSVp2RVVkV1M4RHdBSDgrczln?=
+ =?utf-8?B?ZitIZzdGcjlWYW82OEJPOTRoTW8xR3E3K1Vrd1oyY21jaXJVL1VxZmhHSkxj?=
+ =?utf-8?B?Zjc2WGJwOHpVZVZZWW81T0RQUkRQZURvQ0FBM2R1c3lyRzUvTVVHNStnWThP?=
+ =?utf-8?B?VUR3R1d6Z055alJiK0hFdHVFMUs3b1JPK3J3WURjN3lCdjBHQllkSUFFM203?=
+ =?utf-8?B?SmtIUDlYMnNJeVFyK1Y2bzNSVkdzWmJnb1E5WDJpRXpoYXV2MmF6VzNmNUN4?=
+ =?utf-8?B?MS9YdkVnS3FvVWxhY3BodDd4UzFwTGl6dkJPbklqbVJEYWRmaDFWWlNMOWZD?=
+ =?utf-8?B?RWFFbzZHVFdhMkpBNERsZzdqakJNeDdyOVhlU1ZyVDV4Zldwek1XNVF3dmxD?=
+ =?utf-8?B?eWM4UHEvNUthZEtLQ1AzMFRwVFZ6SzBHS0NyYkY1dFJ3OTVXVDR1MGNsRjU0?=
+ =?utf-8?B?dEYvWEhBMXdrNXlXWmN1RkUveXhxcklKRjc3NDdhVHlyUGZ1bUxHU2RVbXdX?=
+ =?utf-8?B?WTVValpSakNNLytYaEhrM1NZVzlIcjVyemNMWXR1TkpzdUY1TEQwTDFvbDJN?=
+ =?utf-8?B?d1JZWjV4NWxTMElsZXAvZkF3NUdrVGdXR01EWENTSmc0VnNPcldrRVV5TXpv?=
+ =?utf-8?B?ODFxZWFTZ2VaaUVzWGNQRVJKdE93WjFEdFlHdDZackRIanVmd0JrcFU3Yjd0?=
+ =?utf-8?B?NUlFSlZ6UmxNWXg0Z3Qwam12dHFmcHp1M3kyZStTbHMzMVlteHBhK0NpZkli?=
+ =?utf-8?B?Y0tEQytSVmFqTnlZSmhMWXNVRjN6N2ZPSk9iQ21uQVNmRjdCVmRZRzI2YW1K?=
+ =?utf-8?B?SllvYVkxeVFZS212cE5udGxHbUQyaFJ5R1dHSjFEWkxReVlnL2g1dFJHZHEv?=
+ =?utf-8?B?Q0ZXUlpRdWp1b29WdmxuNG9uVFZVSVNHYkNPUnFVTEVPMXdqWVNVVDhIdkIv?=
+ =?utf-8?B?T3dnT0NDNUFBc0Uyb0lJdHhJWnBJb21HcHRVUUN1MlkzdmpMTGNFWVVVU1ps?=
+ =?utf-8?B?dEtpL1ZWemRob3Z6M3lpWmFlVEhrNjhOMEFZMFFZK2tPc0E4c2ZXOWpCRHBL?=
+ =?utf-8?B?Q3haSmE5WmlZUVBucEwrVVhSblFad0Mzb0xBM2VGQkZZakcxVzRpc1NkVXB5?=
+ =?utf-8?B?c1M3Tkdnck5OUXhvS2hzZGZNazd2SlU4V0tYeURwYVk3czhhU3VsdzFMU0I1?=
+ =?utf-8?B?bDFjUzdWMUR5S1lzRENpcGs2bkNzMXN6Q3AzZmczVm9QbzBwT1JoNS9kWkh6?=
+ =?utf-8?B?a2JCZWg5aXUveVRoTUpuVHdJMTNCcVhZSG4yN3NQVGorWDZkYm1vam1wSmJ1?=
+ =?utf-8?B?dHd4QWE5bnRibU1Nam4yRHZWekgrSW5EVC92ZzNFaHpoZmJrc0Faei9nU0M2?=
+ =?utf-8?B?R0lLVlVFbjRHVEhxNC84Rk9wR0Rjd3NCSHQ2YXc2c2dPRHJ5MGxrU20wb0da?=
+ =?utf-8?B?TGF3b01yemh2RmFOSm4xb0h4dmxwVjRsQW5XNHFlYnBIWm5DNS9TUXF0REt1?=
+ =?utf-8?B?bEJ1NzE4R0pSaUtCNUlxb1ZzeWtSNnY1Y3NmVUNuUERrVlhsVUFEaGpBNjVw?=
+ =?utf-8?B?OGJMdEVLOFQzSUpIcHFSRzBUd21BQWV5bXpDaFZLRzZnQzVpZmpXeXNCK2pY?=
+ =?utf-8?B?NXJxOHVseHFaNVRobGNkUS9OR2wxRmJrenJ5bU50aysycnBVeDJId1hvVlFU?=
+ =?utf-8?B?UkdyV2VZaVVGUCtyRDhpMFlCSExNUWhCQ1d6RC9OMjFydGNjZjd0N3dXSVRa?=
+ =?utf-8?B?RDJRRGdHQTNGN2RWNkJUWVMzME1VZkIzMVFKWEU5OXpxWm9FaWhvQlljTVk4?=
+ =?utf-8?B?RWJYNmlVbXFUN1hDczVtbHJHdG5xWHJCRE5BUXJUR0gzaEZhUjRkdG1tek9s?=
+ =?utf-8?B?dFE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	h2f2qNEHAIyFf3DHo8siZ7Csxk19/UkcQP/VeF5YWiDz3+WKfmPlsczAxKVU/Xrq3DuI6i+RSxGeiCpYeFhn3oSA5NfqzDde9hP9TbwlASO+ipHTfFgnrDRxUuvgOC+zEAZSYelB6QPvXGHOFoFI09WCuvClY7ZTt2OLgtHGw8vl/cqG2stdZ87NUsHKQuhwRJFta8zL40J6zBn4gDtcib0dgJA3t5LgemCFimwk2Dvn9TlAyKMsQO3M+9oUj+FzIkCOASx7NJBwPxgD8l0uaf+bhDjl6FBimnu0G5XKdvyFdE7XP+TeMFLH61lG26PAqFwb1/5O50W3Fb9SolvrXhEb6BNIaH6b5JKs7iqkjrlcaT3XvXxHBVpjltg1xJkiR+BwRtK3MmNLS1zmqBqKhNrOionwvWWznRUl/6U7y7xTo4nxhpfvkbCBnOEduKnBJSznzFy+SLDXkf8D9nZY2aXXCsjLrbERw0C7t3zmbiJskRCP9nq2Foe5B5QjQr+BxrZM1MrsY9UGmLRD9tBhzblLcoTljd8G7t+h2sRIi8bNd1AouCnZj6sb6MeDAoXfVhP5R4B+JFObHfCt1+vhErrmfcVGJ6Vb+eLNd7N9U3w=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37144a53-ceaf-4541-9fdb-08dd567eba1c
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 16:00:44.7662
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EVv9K2pgAN8hL39HhiN2oS/m6iXalu96tW9f79OyJJUQlFAIrDWk++wLGCKeunPE0yw6l/LtX/AQUUgL8qnPlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7562
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502260127
+X-Proofpoint-ORIG-GUID: 3x-Jb2ApqAhHcqo1QR2BW3trk3J-CZiM
+X-Proofpoint-GUID: 3x-Jb2ApqAhHcqo1QR2BW3trk3J-CZiM
 
-On Wed, 26 Feb 2025 15:51:43 +0100
-Igor Mammedov <imammedo@redhat.com> wrote:
-
-> On Wed, 26 Feb 2025 15:39:13 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-[...]
+On 2/26/25 9:35 AM, Takashi Iwai wrote:
+> On Wed, 26 Feb 2025 15:20:20 +0100,
+> Chuck Lever wrote:
+>>
+>> On 2/26/25 9:16 AM, Takashi Iwai wrote:
+>>> On Wed, 26 Feb 2025 15:11:04 +0100,
+>>> Chuck Lever wrote:
+>>>>
+>>>> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+>>>>> On Sun, 23 Feb 2025 16:18:41 +0100,
+>>>>> Chuck Lever wrote:
+>>>>>>
+>>>>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+>>>>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> we received a bug report showing the regression on 6.13.1 kernel
+>>>>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+>>>>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+>>>>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+>>>>>>>
+>>>>>>> Quoting from there:
+>>>>>>> """
+>>>>>>> I use the latest TW on Gnome with a 4K display and 150%
+>>>>>>> scaling. Everything has been working fine, but recently both Chrome
+>>>>>>> and VSCode (installed from official non-openSUSE channels) stopped
+>>>>>>> working with Scaling.
+>>>>>>> ....
+>>>>>>> I am using VSCode with:
+>>>>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+>>>>>>> """
+>>>>>>>
+>>>>>>> Surprisingly, the bisection pointed to the backport of the commit
+>>>>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+>>>>>>> to iterate simple_offset directories").
+>>>>>>>
+>>>>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+>>>>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+>>>>>>> release is still affected, too.
+>>>>>>>
+>>>>>>> For now I have no concrete idea how the patch could break the behavior
+>>>>>>> of a graphical application like the above.  Let us know if you need
+>>>>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+>>>>>>> and ask there; or open another bug report at whatever you like.)
+>>>>>>>
+>>>>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+>>>>>>>
+>>>>>>>
+>>>>>>> thanks,
+>>>>>>>
+>>>>>>> Takashi
+>>>>>>>
+>>>>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+>>>>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+>>>>>>
+>>>>>> We received a similar report a few days ago, and are likewise puzzled at
+>>>>>> the commit result. Please report this issue to the Chrome development
+>>>>>> team and have them come up with a simple reproducer that I can try in my
+>>>>>> own lab. I'm sure they can quickly get to the bottom of the application
+>>>>>> stack to identify the misbehaving interaction between OS and app.
+>>>>>
+>>>>> Do you know where to report to?
+>>>>
+>>>> You'll need to drive this, since you currently have a working
+>>>> reproducer.
+>>>
+>>> No, I don't have, I'm merely a messenger.
+>>
+>> Whoever was the original reporter has the ability to reproduce this and
+>> answer any questions the Chrome team might have. Please have them drive
+>> this. I'm already two steps removed, so it doesn't make sense for me to
+>> report a problem for which I have no standing.
 > 
-> PS: do not respin until I've finish this review.
+> Yeah, I'm going to ask the original reporter, but this is still not
+> perfect at all; namely, you'll be missed in the loop.  e.g. who can
+> answer to the questions from Chrome team about the breakage commit?
+> That's why I asked you posting it previously.  If it has to be done by
+> the original reporter, at least, may your name / mail be put as the
+> contact for the kernel stuff in the report?
 
-finished
+Certainly! Perhaps add Cc: linux-fsdevel@ as well.
 
->  
-> > >     
-> > > > 
-> > > > ---
-> > > > v4:
-> > > > - added an extra comment for AcpiGhesState structure;
-> > > > - patches reordered;
-> > > > - no functional changes, just code shift between the patches in this series.
-> > > > 
-> > > > v3:
-> > > > - addressed more nits;
-> > > > - hest_add_le now points to the beginning of HEST table;
-> > > > - removed HEST from tests/data/acpi;
-> > > > - added an extra patch to not use fw_cfg with virt-10.0 for hw_error_le
-> > > > 
-> > > > v2: 
-> > > > - address some nits;
-> > > > - improved ags cleanup patch and removed ags.present field;
-> > > > - added some missing le*_to_cpu() calls;
-> > > > - update date at copyright for new files to 2024-2025;
-> > > > - qmp command changed to: inject-ghes-v2-error ans since updated to 10.0;
-> > > > - added HEST and DSDT tables after the changes to make check target happy.
-> > > >   (two patches: first one whitelisting such tables; second one removing from
-> > > >    whitelist and updating/adding such tables to tests/data/acpi)
-> > > > 
-> > > > 
-> > > > 
-> > > > Mauro Carvalho Chehab (14):
-> > > >   acpi/ghes: prepare to change the way HEST offsets are calculated
-> > > >   acpi/ghes: add a firmware file with HEST address
-> > > >   acpi/ghes: Use HEST table offsets when preparing GHES records
-> > > >   acpi/ghes: don't hard-code the number of sources for HEST table
-> > > >   acpi/ghes: add a notifier to notify when error data is ready
-> > > >   acpi/ghes: create an ancillary acpi_ghes_get_state() function
-> > > >   acpi/generic_event_device: Update GHES migration to cover hest addr
-> > > >   acpi/generic_event_device: add logic to detect if HEST addr is
-> > > >     available
-> > > >   acpi/generic_event_device: add an APEI error device
-> > > >   tests/acpi: virt: allow acpi table changes for a new table: HEST
-> > > >   arm/virt: Wire up a GED error device for ACPI / GHES
-> > > >   tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
-> > > >   qapi/acpi-hest: add an interface to do generic CPER error injection
-> > > >   scripts/ghes_inject: add a script to generate GHES error inject
-> > > > 
-> > > >  MAINTAINERS                                   |  10 +
-> > > >  hw/acpi/Kconfig                               |   5 +
-> > > >  hw/acpi/aml-build.c                           |  10 +
-> > > >  hw/acpi/generic_event_device.c                |  43 ++
-> > > >  hw/acpi/ghes-stub.c                           |   7 +-
-> > > >  hw/acpi/ghes.c                                | 231 ++++--
-> > > >  hw/acpi/ghes_cper.c                           |  38 +
-> > > >  hw/acpi/ghes_cper_stub.c                      |  19 +
-> > > >  hw/acpi/meson.build                           |   2 +
-> > > >  hw/arm/virt-acpi-build.c                      |  37 +-
-> > > >  hw/arm/virt.c                                 |  19 +-
-> > > >  hw/core/machine.c                             |   2 +
-> > > >  include/hw/acpi/acpi_dev_interface.h          |   1 +
-> > > >  include/hw/acpi/aml-build.h                   |   2 +
-> > > >  include/hw/acpi/generic_event_device.h        |   1 +
-> > > >  include/hw/acpi/ghes.h                        |  54 +-
-> > > >  include/hw/arm/virt.h                         |   2 +
-> > > >  qapi/acpi-hest.json                           |  35 +
-> > > >  qapi/meson.build                              |   1 +
-> > > >  qapi/qapi-schema.json                         |   1 +
-> > > >  scripts/arm_processor_error.py                | 476 ++++++++++++
-> > > >  scripts/ghes_inject.py                        |  51 ++
-> > > >  scripts/qmp_helper.py                         | 702 ++++++++++++++++++
-> > > >  target/arm/kvm.c                              |   7 +-
-> > > >  tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
-> > > >  .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
-> > > >  tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
-> > > >  tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
-> > > >  tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
-> > > >  29 files changed, 1677 insertions(+), 79 deletions(-)
-> > > >  create mode 100644 hw/acpi/ghes_cper.c
-> > > >  create mode 100644 hw/acpi/ghes_cper_stub.c
-> > > >  create mode 100644 qapi/acpi-hest.json
-> > > >  create mode 100644 scripts/arm_processor_error.py
-> > > >  create mode 100755 scripts/ghes_inject.py
-> > > >  create mode 100755 scripts/qmp_helper.py
-> > > >       
-> > >     
-> >   
-> 
 
+-- 
+Chuck Lever
