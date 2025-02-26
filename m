@@ -1,93 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f73.google.com (mail-qv1-f73.google.com [209.85.219.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B93D6217701;
-	Wed, 26 Feb 2025 11:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989EE217F48
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570462; cv=none; b=csBDUdiE2bo5FauQmRtAqqsKApUmhy3MOPw+mk8WVpZkqFrG2a/w/1QAeJMSUaVaGkhrBGTq4lBM4NNBMqrAAioo2xUzjDmMLOuVeJBM+huZcdNjczhSSqlv02lkzYHnjATGik/te1j844S3KpL+KcNgLK8PTideRWdV8zscCXs=
+	t=1740570504; cv=none; b=Wn7O3wGM/BujxIcJVYHix8z4UrLyb/O8ge68nmM9kICyZeSkgiqnF4hCiAPFAy5KCx5L86GIaymXfaTL0j4yR/iE/Sf7y3+e76sWl8oFO/A2xikjK8X9viMidCtyNzQpDIDU2mBOtMeMuC6pUXkhStFl7vuNXicZcmPSaIjCXCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570462; c=relaxed/simple;
-	bh=JOQo3/AMvkrL1dqwOqth1Sz1S7IiFRAbwLyLHcQKuZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nwdDL4TXrzTXNwizhB24jd/RgfEZ1Ja6v77GW4ocr6m8Xkh9gZWOHLfFpA4p7J8yiulzCD+oOcjh8AZbI9NQVMOuadh+QEXp5gLePCPoB3JTu3GYzfo02usMCHIy1T8vM2gC8tpptIRF+SL9PmqWKvZJI1b6+ht16ob/vhH2KLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LBvHyzQd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740570504; c=relaxed/simple;
+	bh=NluUjPQ1lcXSGNSXHKkI9g2tFhg8Z04LMSmLkLhacJg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=RoUQ21dEE9/VuJd45ccvSs1Ig40Zc+y0o0XQW+gcJhcflvoxPbR+cmGj09u6/AJ91CPAlf2c8fgOLvCiy07tjlz2kNhekd/7PTAcG3Lg8/su63wNy/PeH8+125BGssIfJCgHXCaeYurHtsKdOsZOuS+yR/j+BkTzRTJ6A/F+D2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bgeffon.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bASzfkXc; arc=none smtp.client-ip=209.85.219.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bgeffon.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LBvHyzQd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE318C4CED6;
-	Wed, 26 Feb 2025 11:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740570461;
-	bh=JOQo3/AMvkrL1dqwOqth1Sz1S7IiFRAbwLyLHcQKuZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LBvHyzQdQCpEbjbuVZQynljxXW4ZIyfPT+HBhocchWPRqewWdlQgD3A4zsUTR1Ijx
-	 daVc1JVwYN6hev7qQrS2S7ciZGAgjExyXFq7mw7hpyaezkgmih9UlQ5wfkeh4DMSOJ
-	 CV2GtFzC/e1ABejStfX5ejCjYmykN0vxNhLXbw4SF4RUTu8nWU1a3gE/35NtHCG3q7
-	 wH/V3JDjIENUcecZ+0tiu/Vkz2ZrL9vUTdQ96q29/aJHIExaxYTiQnIFNQvvEYTZ9i
-	 q7zqA1wCr+UorcQ7ZpdS2ZKsmElUX/5fD8nFwpCzzMLfZ5Qv+PqSdifWUg/KQv4mTW
-	 t9BZ/LHKbEHrQ==
-Date: Wed, 26 Feb 2025 11:47:36 +0000
-From: Mark Brown <broonie@kernel.org>
-To: "Torreno, Alexis Czezar" <AlexisCzezar.Torreno@analog.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: regulator: add adi,adp5055-regulator
-Message-ID: <dd547319-f8c8-4c3a-979d-4610971cdd25@sirena.org.uk>
-References: <20250225-upstream-adp5055-v1-0-a5a7f8e46986@analog.com>
- <20250225-upstream-adp5055-v1-1-a5a7f8e46986@analog.com>
- <cf90cf64-202b-456c-9a9a-ba33d0e68961@sirena.org.uk>
- <SA1PR03MB6340A94474EBFE0F8428A581F1C22@SA1PR03MB6340.namprd03.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bASzfkXc"
+Received: by mail-qv1-f73.google.com with SMTP id 6a1803df08f44-6e867ab3537so54563536d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:48:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740570501; x=1741175301; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BW2sDZbGgcaHae82O3nWDg50TbU9r5oNGjDpd8Bq0yg=;
+        b=bASzfkXcq6uDxnM3z9vcz2+aGdJN4NKqtup4GK2vxVtnyP+fgJVvuMkARXpYDOpwk8
+         IeNYqrWvf2DvIibDUErf/peL/5JR+W9MCyRE6yhQJnLeK3CKy/x59dcxKjwcuVNwsTyr
+         N9cvyW5v6B+ZL/nO3JO7WfqoA6zYqOA1Gors36mb/aD1SK1A9ZGR5+ql1u6NOuOR4ycd
+         0WPia3G/HXFZw2qyfV7W9si6O0hS9uu9fsHffeiDPgwtmSVeEunBS+hDcRkFsGS75+uv
+         1rnj3tcxDuZzymkpiv/xNQAcVzWjlsvlzDZdmerOMPVKVdt5LUA7ZhjyA+89UjSISl1h
+         vqsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740570501; x=1741175301;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BW2sDZbGgcaHae82O3nWDg50TbU9r5oNGjDpd8Bq0yg=;
+        b=vi6v+Tc+Pm9r4TAgPi1A0WpHLn2jRM9/ALgue+of2ce5lOjXPOCAqFFNmZ1pDxkSv+
+         FGpm1/RgDKuc7exBRVduvDmGal+hdpT7+KYs0hAGBnus8aHSQYs1Zo6dOGh121QwoaNl
+         24JopSVt0W/aIWJAEjFOw6O5e0xN9hl8+8owhYvFDCiDVaIv7GqgoPBo7kTpsDyXEUnz
+         anbGwiJor4t/1v5F4XZ3PF6vglPb52cPFPwXAbIl5Qyu3vHETMQBGMeecwdI09z7eESi
+         v6MWI2ucbGltIzxwQGkZhKgbB1Ppq3dvbBovZxz8dA67fbGiU3kVw8rXKRmZ7Jp+edN1
+         xSoA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6NsEVvywkeiiqLV5FYnVd3MGQOYZcWcV8qM9s3b/r/Agt6zQN+FnwIWc925hovzLjrZGNRsssbzx2i2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjdLLK6k9Bzvr0nLF5zZIXAOWZWvnAgzgom3mIDJErz5JFK/cY
+	ma2Hc1VuyWNxge4GcapYQFXvikXkPV5dkYyKOqmWr9zupbBToVNHEZkzhb1EF27mjsbA9mzZeHi
+	M2RLdlw==
+X-Google-Smtp-Source: AGHT+IHJUITF5zclnwhhjHbh20BakF71z5r6tgDhP0AK9kt5E28tAnRR/N6wBQQHHEoX4jc66xvFWRnCg9Rw
+X-Received: from qvbkh18.prod.google.com ([2002:a05:6214:5152:b0:6e6:62c7:9f79])
+ (user=bgeffon job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6214:4119:b0:6d8:99cf:d2db
+ with SMTP id 6a1803df08f44-6e6b01c6a01mr279510756d6.38.1740570501527; Wed, 26
+ Feb 2025 03:48:21 -0800 (PST)
+Date: Wed, 26 Feb 2025 06:48:15 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vyNIygDModyIpM3c"
-Content-Disposition: inline
-In-Reply-To: <SA1PR03MB6340A94474EBFE0F8428A581F1C22@SA1PR03MB6340.namprd03.prod.outlook.com>
-X-Cookie: I've been there.
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250226114815.758217-1-bgeffon@google.com>
+Subject: [PATCH] mm: fix finish_fault() handling for large folios
+From: Brian Geffon <bgeffon@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Zi Yan <ziy@nvidia.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, 
+	Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Brian Geffon <bgeffon@google.com>, stable@vger.kernel.org, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Hugh Dickins <hughd@google.com>, 
+	Marek Maslanka <mmaslanka@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
+When handling faults for anon shmem finish_fault() will attempt to install
+ptes for the entire folio. Unfortunately if it encounters a single
+non-pte_none entry in that range it will bail, even if the pte that
+triggered the fault is still pte_none. When this situation happens the
+fault will be retried endlessly never making forward progress.
 
---vyNIygDModyIpM3c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch fixes this behavior and if it detects that a pte in the range
+is not pte_none it will fall back to setting just the pte for the
+address that triggered the fault.
 
-On Wed, Feb 26, 2025 at 02:25:02AM +0000, Torreno, Alexis Czezar wrote:
+Cc: stable@vger.kernel.org
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Hugh Dickins <hughd@google.com>
+Fixes: 43e027e41423 ("mm: memory: extend finish_fault() to support large folio")
+Reported-by: Marek Maslanka <mmaslanka@google.com>
+Signed-off-by: Brian Geffon <bgeffon@google.com>
+---
+ mm/memory.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-> > > +      adi,disable-delay-us:
-> > > +        description:
-> > > +          Configures the disable delay for each channel. Dependent on Tset.
-> > > +        enum: [0, 5200, 10400, 15600, 20800, 26000, 31200, 36400]
-> > > +        default: 0
+diff --git a/mm/memory.c b/mm/memory.c
+index b4d3d4893267..32de626ec1da 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5258,9 +5258,22 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+ 		ret = VM_FAULT_NOPAGE;
+ 		goto unlock;
+ 	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+-		update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+-		ret = VM_FAULT_NOPAGE;
+-		goto unlock;
++		/*
++		 * We encountered a set pte, let's just try to install the
++		 * pte for the original fault if that pte is still pte none.
++		 */
++		pgoff_t idx = (vmf->address - addr) / PAGE_SIZE;
++
++		if (!pte_none(ptep_get_lockless(vmf->pte + idx))) {
++			update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
++			ret = VM_FAULT_NOPAGE;
++			goto unlock;
++		}
++
++		vmf->pte = vmf->pte + idx;
++		page = folio_page(folio, idx);
++		addr = vmf->address;
++		nr_pages = 1;
+ 	}
+ 
+ 	folio_ref_add(folio, nr_pages - 1);
+-- 
+2.48.1.711.g2feabab25a-goog
 
-> > This looks a lot like the driver should implemnt the enable_time() and/or
-> > set_ramp_delay() operations and use the constraints to configure this.
-
-> Based on what I understand I agree implementing the enable_time() core
-> function for this. However, shall I keep the code for the disable-delay-us?
-> I don't think I saw a disable_time() equivalent
-
-We don't generally worry about disable times, they're hugely load
-dependent so the numbers tend to involve a lot of wishful thinking.
-
---vyNIygDModyIpM3c
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme+/1gACgkQJNaLcl1U
-h9AJRgf/SbMsNIjw2JAqtkYzbbLh4A52BF7wEa29RpyV6CGwgPnhj84DYF3aRqfM
-04oRlSwVzFRIUSTo2bzc6cf2uT8eUMCEVSpRCyfsPy9pZsy8Bma7d8sRwPyXO/vc
-FUZIj8nNVDiFYLaKCAxOyj8iY4KmpPfoEnmpa8fXpEOH2dnyJoZA0dR3cArL/Cwx
-XYcE5K9KyaK7wRfjWHF9M2g5AYklTespWcisxiAKJLBbUX+oqzuGAWEh0cfJfM4a
-WzErIOflLqFm5npZE3HcI+FsTDi8g9pIsihhk1ppcPiYU4EI9Z2/3REbnHn1gGz7
-y5y3ZM7j0RFp+rZiOJcL8y4dBMpsPw==
-=HtnD
------END PGP SIGNATURE-----
-
---vyNIygDModyIpM3c--
