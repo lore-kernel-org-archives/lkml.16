@@ -1,92 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABCAD2397B4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0D722D784;
+	Wed, 26 Feb 2025 18:46:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740595584; cv=none; b=uPKufKoWTuAUquR/YbKvHpWxQFjIIGB4E/U51vMyEMoGKFruTkkAC2mdGs6dDZTf+ZAfTI28of4oknuRdIqlWz/PXPLdLhOaulXeZcKu2aaEkPTPcfz/XoUyfiBESsbnk2KKAZs9UQaV3V2iOAgI0DjMhSN1JePxRQ5ZAeXB+eU=
+	t=1740595594; cv=none; b=AjOJKyojRLnb87yukzz42YRU8Zom4pn9d6neejomCERG73ZfJfHEOgn1FR/RPCifR4W8SsQBKRgzAnO3UH6c8iZwURIWiLXszzITYxs2mmGNyKtoopR179NEP0WrrARi/u21SBs87mCwy/r7Gww8RT8ORkKssM1I4HvKnSTeJIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740595584; c=relaxed/simple;
-	bh=J6AUMJGnaDgNqGbm3jWxZfLL/F5J/3cqMBGDn8TxEhU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HagxXijL4JYGdy2r1b47Lf3IanJ6jC0xgkQOMC1yGpkwEJueKlu094vBwbmI28og0OFWSjq+ztqnQadNMFl2KS+pRLtPtL67kPiZfpTIf4Xp987LtFiFBeTjvXCUWD01gP5les+Yd7x5AYTW4EvqgzIKdAFZj06kKiSmyjj2PW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSVuxNPs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740595594; c=relaxed/simple;
+	bh=av0A0EgMmZuF7k4uVACqRkbAc5DuEtFyJ21KJyF35nw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSZ0plLOTJjr1zBeIFDsNVtw+VX6z1E723wdxSY5pfR5aKKPSEDHJOGNPt0e9CZY2VZ230nNheNLLlo326MRT9MhqMwVEfTUDgayGSDkrNjWFbfiqPUXzZbaKQWy8JGyTG+tDcPiP/I6C8hx1VXfgcTaM5FUW9wNl3Ehkh09juw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pBfjg8U5; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSVuxNPs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F2AC4CEEA;
-	Wed, 26 Feb 2025 18:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740595584;
-	bh=J6AUMJGnaDgNqGbm3jWxZfLL/F5J/3cqMBGDn8TxEhU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kSVuxNPsr5z8gfv9sJnCSxMOn+PWP4P+YDtvlktP6ScmbMxgDBaNrzz9Q07Pn7ZQE
-	 pwUlgw/TVx7Kv5tYf6IGsEpAQaTx9+/BRsbhZA+OcLiiyW1I4TNjMd65o9mqLwcwaE
-	 I5eR3wVxFGSrT8BqHtK4KmNmYgFFQlodkWkW/LL6kta96lvFSrgVRKT0AoijUxJTey
-	 ofCBjfdtdvvPBS11BETaVNzn/ugQ4Hp8JTFgoYJIIHgCgTkt1pEqHoQZJR0ZArHz4J
-	 gkc26nTWMd3gvh7qI9poiRsrE1i6Ij7g1+a1IkmqnfXmvmAJ9MHQCl4HWlJ/0swl7F
-	 Soj5jWtWNqWnA==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 26 Feb 2025 19:46:03 +0100
-Subject: [PATCH 11/11] nvmet-fc: inline nvmet_fc_free_hostport
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pBfjg8U5"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QIi9ms2156450
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 12:44:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740595450;
+	bh=esbbA0aHxV2C7K7XPMRSKO3A35omNfgqBS1hPBjtmXg=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=pBfjg8U5jkATBCxBRPgW1hxkKxkjGDHEVGISh7VcEj5YIYrbU+fYbnsayWPzlFKcI
+	 47JaBvj4ZjrahbShEttZOLhtpYWrZvE+Dn2iMeKZduVs2P1eJ3xxTWysLT/29QlYTd
+	 cP2MVrU0/cHm+OCLt+4sGqm7SAwgQRmoH/hTrANA=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QIi9GH029156
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Feb 2025 12:44:09 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Feb 2025 12:44:08 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Feb 2025 12:44:08 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QIi8S8076566;
+	Wed, 26 Feb 2025 12:44:08 -0600
+Date: Wed, 26 Feb 2025 12:44:08 -0600
+From: Nishanth Menon <nm@ti.com>
+To: parvathi <parvathi@couthit.com>
+CC: <danishanwar@ti.com>, <rogerq@kernel.org>, <andrew+netdev@lunn.ch>,
+        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <ssantosh@kernel.org>,
+        <richardcochran@gmail.com>, <basharath@couthit.com>,
+        <schnelle@linux.ibm.com>, <diogo.ivo@siemens.com>,
+        <m-karicheri2@ti.com>, <horms@kernel.org>, <jacob.e.keller@intel.com>,
+        <m-malladi@ti.com>, <javier.carrasco.cruz@gmail.com>, <afd@ti.com>,
+        <s-anna@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <pratheesh@ti.com>, <prajith@ti.com>,
+        <vigneshr@ti.com>, <praneeth@ti.com>, <srk@ti.com>, <rogerq@ti.com>,
+        <krishna@couthit.com>, <pmohan@couthit.com>, <mohan@couthit.com>
+Subject: Re: [PATCH net-next v3 00/10] PRU-ICSSM Ethernet Driver
+Message-ID: <20250226184408.d4gpr3uu2dm7oxa2@handwork>
+References: <20250214054702.1073139-1-parvathi@couthit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-nvmet-fcloop-v1-11-c0bd83d43e6a@kernel.org>
-References: <20250226-nvmet-fcloop-v1-0-c0bd83d43e6a@kernel.org>
-In-Reply-To: <20250226-nvmet-fcloop-v1-0-c0bd83d43e6a@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250214054702.1073139-1-parvathi@couthit.com>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-No need for this tiny helper with only user, let's inline it.
-And since the hostport ref counter needs to stay in sync, it's not
-optional anymore to give back the reference.
+On 11:16-20250214, parvathi wrote:
+[...]
+> The patches presented in this series have gone through the patch verification
+> tools and no warnings or errors are reported. Sample test logs verifying the
+> functionality on Linux next kernel are available here:
+> 
+> [Interface up Testing](https://gist.github.com/ParvathiPudi/f481837cc6994e400284cb4b58972804)
+> 
+> [Ping Testing](https://gist.github.com/ParvathiPudi/a121aad402defcef389e93f303d79317)
+> 
+> [Iperf Testing](https://gist.github.com/ParvathiPudi/581db46b0e9814ddb5903bdfee73fc6f)
+> 
 
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- drivers/nvme/target/fc.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index fcf191aa1c6bf73e7fb84213bbb7eb76a486734f..f42f7c674f69b87a43bf06639a8da60d14a48509 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -1009,16 +1009,6 @@ nvmet_fc_hostport_get(struct nvmet_fc_hostport *hostport)
- 	return kref_get_unless_zero(&hostport->ref);
- }
- 
--static void
--nvmet_fc_free_hostport(struct nvmet_fc_hostport *hostport)
--{
--	/* if LLDD not implemented, leave as NULL */
--	if (!hostport || !hostport->hosthandle)
--		return;
--
--	nvmet_fc_hostport_put(hostport);
--}
--
- static struct nvmet_fc_hostport *
- nvmet_fc_match_hostport(struct nvmet_fc_tgtport *tgtport, void *hosthandle)
- {
-@@ -1187,7 +1177,7 @@ nvmet_fc_target_assoc_free(struct kref *ref)
- 	/* Send Disconnect now that all i/o has completed */
- 	nvmet_fc_xmt_disconnect_assoc(assoc);
- 
--	nvmet_fc_free_hostport(assoc->hostport);
-+	nvmet_fc_hostport_put(assoc->hostport);
- 	spin_lock_irqsave(&tgtport->lock, flags);
- 	oldls = assoc->rcv_disconn;
- 	spin_unlock_irqrestore(&tgtport->lock, flags);
+I am looking at https://lore.kernel.org/all/20250214085315.1077108-11-parvathi@couthit.com/
+and wondering if i can see the test log for am335x and am47xx to make
+sure that PRUs are functional on those two?
 
 -- 
-2.48.1
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
