@@ -1,167 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BCD15C0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572782; cv=none; b=jcE8E/7DnsMYYuGaQEFhnWK3zUmaFPaYq7I8UXs6Auc8vC0hyZG+1uCeEKg6bkdDVpLqlLDm6lIRCUJNUHGm1OCXhqouKPd/2rD0RMjZk8BMNxigvT7yCama3SbB9ybqOA+aBmSIRCms0mxSCpoJaYxToJ8bXYixvdRX8P/Y16w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572782; c=relaxed/simple;
-	bh=nHWvsrHzl0E3PKpKoxyFzPuy69gPj6TL5GxMEdtgmYE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cb2aPUcC5KrxR2Ijud23s8zqdxEw8bpVDgDU7vsE1NGo6BrH7sCBEGjJRD3jQob6Jw6qKZzlpv6igHSfy9VisSri7CzqZOqqwC7TYQRe7QflcGnI+3My0kLCUdl7xiLAIYRMci1SFUO4SxtgG1sC32+qTbzsIzJi9IzMs06RqY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cAl43xnE; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D5E2192F0;
+	Wed, 26 Feb 2025 12:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740572806; cv=fail; b=U+gt6Fn+vJvM8C7CLZRfcT+A9ACB0J95HnWrGOrQaIr9VZKoeJ/a8Ssvy7dkjkD3V4zmHyEYKz8yiDMR4tJGr9fkq0ZOFoJjoCrpuFDFlTlhL1VUbdt7wjueGTigPtJYBTzW/Jr7gwwcQYvZDba2+nq6lEMX7gZmlSF0nj9tKOM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740572806; c=relaxed/simple;
+	bh=N0OqY87cTH7MD2/xN4J/QNoI+JHUFsAjGA1Ed8btgTM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=m6FNeY03EK9BHm7oe6zjQDvzXnu25ckJXjSUY8aVAuHLa3a4TOugBi6FKmjnfHLXhNYBqmHYjSc2YkbsR+mlLyHfFPVMGvec7QARLhjsnZTKQ0kAHNfg7EQDGX61ki4/QiPRAHRqiOYJwsK8dtVoCD1WMT2oJ18QSNvzw85kqxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ehylPM6X; arc=fail smtp.client-ip=40.107.236.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cAl43xnE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740572781; x=1772108781;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=nHWvsrHzl0E3PKpKoxyFzPuy69gPj6TL5GxMEdtgmYE=;
-  b=cAl43xnEIoiDdXkGwSorZD2LgDPLuw73FZZt/90vW9/o/qF16WzmIVhP
-   CZpuygTcQdL0JsABECjlhluxwww1WmTHXJAg4tkOE17PwqFcAMytlWSxL
-   F0zMit+3JOuS8LVR18Petw15aWKV9g8g49AFYAPuu3zE3DMH/fcipdKtd
-   d9w1S0NfHE6t/XuLkPTx/sFkpahoQpGxJrr2vJ4uR4xS8mXgLFpVz5rR+
-   9Yq++R0MzAsLteuEZSgrf3wuwOwYuV3gK/g7wImgAJ0AQY62WykfUIk91
-   POluhas2DjErFd/4AuF4MkedVxmfawtOCxKpUirvthkaFyFHxNIL+zcxb
-   A==;
-X-CSE-ConnectionGUID: v5aHbC7mQH28j+8i6NazPQ==
-X-CSE-MsgGUID: 8UUYF0fxQOOAvlb+mmynQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="29007918"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="29007918"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 04:26:20 -0800
-X-CSE-ConnectionGUID: yDO3I0TZTc+YJydC1eF25A==
-X-CSE-MsgGUID: oz93/ECPRmWpqDFJr7jZLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="147507690"
-Received: from bergbenj-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.123])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 04:26:12 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
- Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Dmitry
- Baryshkov <dmitry.baryshkov@linaro.org>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 1/2] drm/bridge: move bridges_show logic from
- drm_debugfs.c
-In-Reply-To: <20250226123208.272e7766@booty>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250225-drm-debugfs-show-all-bridges-v7-0-8826037ada37@bootlin.com>
- <20250225-drm-debugfs-show-all-bridges-v7-1-8826037ada37@bootlin.com>
- <878qpu56cm.fsf@intel.com> <20250225183621.6b33684b@booty>
- <871pvl6g1t.fsf@intel.com> <20250226123208.272e7766@booty>
-Date: Wed, 26 Feb 2025 14:26:09 +0200
-Message-ID: <87mse851um.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ehylPM6X"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n98qBHNRG5V3+fYEZjQfWGXpIUOvoscaQqAsjRKZ+S8jO9tLuWC0nNDz+61VLAAxi2pFjGddj8xHPQNLQMwRy2Xa/scTkxbeASvDxHZ/v8KVT3Ayj+6XtXE8pZK+1JWnfvecNTcY8SG08unD5AKUgJ7NkTCNrGt/GJ9ozKyycZtf5vR8+JY7wbLCl9+5bfSlGyTAgNfp908LT6dT6Dze2uYU0oN+gju81sL+DZ5sr1N5F+eLE2wIWrAOf7YZapPli1gYMWBLnOJdCQbnhsgJ7N22xJNvpql8KdtKnpM0AJydDFAO4yTxuZmDesM2CLTGkjFSMuoSaxh93UVF0z87oA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OZaoyhA/iMp3zulxy2dTrgMRzcHCqaGrwFSMeh+KHr4=;
+ b=Son+XNBXFOn1LimoH7kJK+Z/SqeuOg1jNEOMA2f3EA3z4pc1CvV/jWmas8L9cA6to6cYOWr1vN2kwn+nZQT/6pAF3J52lho+BHL+EVWe/bEIvbM9a9rkaYdHvQIjjmbdjPcbNpxhZVkZzgt35Z0fpiSCGTCCwDndCAyrazSJtV6nXQCGn+WEi2o/pgBJCvNYO2OuKoR5avaZPK0ga440+XyOf2H1o7HCHk978+HyhxK25opHcUE+jSzTsYlhQ5OV8jd8o+F7R7CJDXytLjiWGZSXq7pthsmBeGGrnUW1U77KtKjEosxCtrYOuHaZ/2M4IH6eLSXiH6UyLqSIWuW/iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OZaoyhA/iMp3zulxy2dTrgMRzcHCqaGrwFSMeh+KHr4=;
+ b=ehylPM6X89RXh4eyBw6KRRynNwUlbADlpvGYfZwrptfDhF05dl9QyOM6W5K3TEGAl8GHDVTU2M1NwswSaULaHPPiZC98KdaFF7PzWYnMJXMGN0wJdhYxLVCWi7dVtBUR4DiV4P1VXqoXn0aqnBcs+PZUU/F4fomq2Yt6wS4/GLq9u54iEXRB3fqzLGUS8iUSnYsurQI/hg3EKCJgV4tA1lYCSBc26LU/onJdYVLZhcfqJP1hyagBbGo3HMuHog1LFg3SK3TQVwFF9HzVRXaeus4dnSAf6jtCSU7YrovclidEnoq9eIRJnuJxhKVz7aESpb/RKEGLR24KaDfglemGGg==
+Received: from CH0PR03CA0402.namprd03.prod.outlook.com (2603:10b6:610:11b::23)
+ by SJ5PPF09E5F035B.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::988) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.22; Wed, 26 Feb
+ 2025 12:26:41 +0000
+Received: from CH1PEPF0000A34B.namprd04.prod.outlook.com
+ (2603:10b6:610:11b:cafe::92) by CH0PR03CA0402.outlook.office365.com
+ (2603:10b6:610:11b::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.18 via Frontend Transport; Wed,
+ 26 Feb 2025 12:26:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CH1PEPF0000A34B.mail.protection.outlook.com (10.167.244.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 12:26:40 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Feb
+ 2025 04:26:35 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 26 Feb 2025 04:26:35 -0800
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Wed, 26 Feb 2025 04:26:32 -0800
+From: Tariq Toukan <tariqt@nvidia.com>
+To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
+ Lunn" <andrew+netdev@lunn.ch>
+CC: Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
+ Romanovsky" <leonro@nvidia.com>, Leon Romanovsky <leon@kernel.org>, "Tariq
+ Toukan" <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 0/4] mlx5: Trust lockdown health syndrome
+Date: Wed, 26 Feb 2025 14:25:39 +0200
+Message-ID: <20250226122543.147594-1-tariqt@nvidia.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A34B:EE_|SJ5PPF09E5F035B:EE_
+X-MS-Office365-Filtering-Correlation-Id: 47c20878-85ae-4b7e-908c-08dd5660d2b4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0bd9CJcyGH4xkAyQj7HDSqd6suij03X9jbgAv943Ldp0Wc2gx4vUpHXYtWYN?=
+ =?us-ascii?Q?gbWih4BCVfAhXaLJcOkjoGrx/t9WbH5Dq+hw9x8j1VekXvw9qoRGD3PkBeBx?=
+ =?us-ascii?Q?VJxtdyo87AkIEGXSwDu+wKfQ1r4Q51PyXbXNRUKBpqCGyW678SyqWxf45prX?=
+ =?us-ascii?Q?7Mf8Q5JPNoZH2sMiCALZ8rdfqhO4eNjhZS0PFAoaxofW1ct8kDDECxypPeuQ?=
+ =?us-ascii?Q?+e7AN1xbhI+wGKgReiJDIjUk42VGv7PDPGHesVs8CqmVqy1WGD+4wxQCOmS+?=
+ =?us-ascii?Q?L9gU981+fRkfrobGEsE/PlFvAi2iTzcZ5RMXe9p8canaZEWens+AyM4JzSno?=
+ =?us-ascii?Q?JY7WUV3AoenVLkVZxXlTZ5p7rMuw98qNiVWRsNMxVzPoPoR/f+7cGkuLSNCM?=
+ =?us-ascii?Q?6LfgRMJGMl1yAIRljWxxpohsAu7iD0EU17iHhqX/MwLKyD2AEy+JmhkHGR7F?=
+ =?us-ascii?Q?aUizFIG2sHX8M4RcuqLu0o5fUXQgGKZTelKLywndVaAu0rKOAb7jxlfYBVGI?=
+ =?us-ascii?Q?aeV9H1Sl9hT9ZoExZnA7oFcggKk74XNKPC/H3g0thJ9AEi2Z4Ewfl4V75vCn?=
+ =?us-ascii?Q?QSjKdxEpMKVRDsIoV7ZnmmrsTqLh5FZfjz/7iHP7K4T2g3ZodedmlddpeBVY?=
+ =?us-ascii?Q?unTtouQVhGFPcd5DTk1ApcEBOaHotWkDmRYS3NLUjMT5whacNCKcFzxgt5TZ?=
+ =?us-ascii?Q?ag/2064pP4v+iF53j00JZZyykR/ZWgzS7iiJjfXKpOKbaY5Q6NHsyVchOjrp?=
+ =?us-ascii?Q?0baGH1x6SwqKvb2uy8KrUxyZz326cvF+fTyEQ8znYPbMesr5GSdrSCn+uUn2?=
+ =?us-ascii?Q?W55lNFLvSvu4IZ2XA54Mwcs7IYhdCzsS84g8HeoG5E0cRBQs7dYA/JKxTrom?=
+ =?us-ascii?Q?a9zBy4IdJeTG7Y+Oxm+TeTBLYtl9gyw6VgEEKKsA2M6X41whdQckUiJtuVTZ?=
+ =?us-ascii?Q?JgqHJf5B9tHVuO2NiQruwwz3x7S7JcVZAhC9ixry6I1EXJHC+cWR+wtSFpnf?=
+ =?us-ascii?Q?/NthS8NQf//OxZigkf5os1sSs8gnPVRFl4UwhmFNKOyW3/KOxCYjP9dNL/4m?=
+ =?us-ascii?Q?hHEoD9B7yvmPONHqHvZYaW9WSipp1Z7keXwXp26VU0Sdr8i/JlC6z71xZBWO?=
+ =?us-ascii?Q?sp75R329EliewKXY4aKQ98VeSbj9JH8fG1vPAiBb6ZZ+2lYqJBVncux6yi+6?=
+ =?us-ascii?Q?IQ+4gDL0IQoHlf0W7e7qz6hw0bgDQ9zMEJpTeW/LomyocOVCGmHs9TnA1qDC?=
+ =?us-ascii?Q?s3i8HVEUDs//yDt76eFfN3lbcQEFreFmM0T7+vpJvVqwILMWqsg+X5xRKOVg?=
+ =?us-ascii?Q?SYKvX52I/8i/ELs9XTbLhVVyRx2fEA9OFWDY9FRN+2x4w30qyFKhE+AeNEm+?=
+ =?us-ascii?Q?ds9XpcIn89nhkDEq3jysK4/xxgDZFeu4Ago7YO7pHVGhDnRLwm1PIn/1vZ7T?=
+ =?us-ascii?Q?GGSyqMwGh6a9otYGSf4NpCcp1gFXSGuNHeau2P+frxaa6Tx0soVYIEt93Pf5?=
+ =?us-ascii?Q?n10PDR6Qi+UbM94=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 12:26:40.6970
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47c20878-85ae-4b7e-908c-08dd5660d2b4
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A34B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF09E5F035B
 
-On Wed, 26 Feb 2025, Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
-> Hello Jani,
->
-> On Tue, 25 Feb 2025 20:21:50 +0200
-> Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
->> On Tue, 25 Feb 2025, Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
->> > Hello Jani,
->> >
->> > On Tue, 25 Feb 2025 18:36:41 +0200
->> > Jani Nikula <jani.nikula@linux.intel.com> wrote:
->> >  
->> >> On Tue, 25 Feb 2025, Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:  
->> >> > In preparation to expose more info about bridges in debugfs, which will
->> >> > require more insight into drm_bridge data structures, move the bridges_show
->> >> > code to drm_bridge.c.
->> >> >
->> >> > Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> >> > Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>    
->> >> 
->> >> I hate myself for doing this on a patch that's at v7... but here goes.  
->> >
->> > Please don't! :-) This patch is new in v7, and a different (and
->> > definitely worse) approach was present in v6, but there was nothing
->> > before.
->> >  
->> >> Perhaps consider moving the bridges debugfs creation and fops to
->> >> drm_bridge.c instead of just adding
->> >> drm_bridge_debugfs_show_encoder_bridges().
->> >> 
->> >> For example, add drm_bridge_debugfs_add(struct drm_encoder *encoder),
->> >> which then contains the debugfs_create_file() call.  
->> >
->> > I think it should go in drm_encoder.c, not drm_bridge.c, right? Here we
->> > are showing the bridges attached to an encoder, so the entry point is
->> > each encoder.  
->> 
->> I'm still thinking drm_bridge.c, because it's about bridges and their
->> details. The encoder shouldn't care about bridge implementation details.
->
-> Ah, I think I now get what you mean.
->
-> Current code is:
->
-> drm_encoder_register_all()                             [drm_encoder.c]
->  -> drm_debugfs_encoder_add                            [drm_debugfs.c]
->    -> debugfs_create_file("bridges"...  &bridges_fops) [drm_debugfs.c]
->                                     [bridges_fops is in drm_debugfs.c]
->
-> Moving the last 2 lines to drm_bridge.c and into a new function we'd
-> have:
->
-> drm_encoder_register_all()                             [drm_encoder.c]
->  -> drm_debugfs_encoder_add [*]                        [drm_debugfs.c]
->   -> drm_bridge_debugfs_add_encoder_bridges_file (NEW) [drm_bridge.c]
->    -> debugfs_create_file("bridges"...  &bridges_fops) [drm_bridge.c]
->                                     [bridges_fops is in drm_bridge.c]
->
-> Potentially [*] could be moved to drm_encoder.c, but that is not bridge
-> related and can be done as a future step.
->
-> Is this what you had in mind?
+Hi,
 
-Yes!
+This series introduces a new error type in the health syndrome,
+specifically for trust lock-down.  Additionally, it exposes the CRR bit
+in the health buffer, which, when set, indicates that the error cannot
+be recovered without a process involving a cold reset. We add The CRR
+bit value to the health buffer info log and update it to be logged on
+any syndrome.
 
-(Though I'd give drm_bridge_debugfs_add_encoder_bridges_file() a shorter
-and more generic name.)
-
-BR,
-Jani.
+Regards,
+Tariq
 
 
->
->> > On the other hand in patch 2 we should move the
->> > drm_debugfs_global_add() code to drm_bridge.c, as it's showing bridges
->> > ina encoder-independent way.  
->> 
->> Agreed on that.
->> 
->> > And finally drm_bridge should export the common
->> > drm_bridge_debugfs_show_bridge() function to drm_encoder.c.  
->> 
->> Disagree. That will still require the EXPORT and #ifdefs around
->> CONFIG_DEBUG_FS.
->
-> With the above-sketched idea I agree we wouldn't need to export
-> drm_bridge_debugfs_show_bridge().
->
-> Luca
+Moshe Shemesh (2):
+  net/mlx5: Avoid report two health errors on same syndrome
+  net/mlx5: Log health buffer data on any syndrome
 
+Shahar Shitrit (2):
+  net/mlx5: Expose crr in health buffer
+  net/mlx5: Add trust lockdown error to health syndrome print function
+
+ drivers/net/ethernet/mellanox/mlx5/core/health.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+
+base-commit: 91c8d8e4b7a38dc099b26e14b22f814ca4e75089
 -- 
-Jani Nikula, Intel
+2.45.0
+
