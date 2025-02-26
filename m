@@ -1,90 +1,186 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A20B18801A;
-	Wed, 26 Feb 2025 03:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509A6224B0E;
+	Wed, 26 Feb 2025 03:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539214; cv=none; b=nrdFAcrUvYs2UwIvGDtZMs/7S8WRDoXqkwzd3BVJ0OqMQ/ZnzZS5Y7AipG+M3B4Qx+LEavhs5SnKpY9/QCvGX+ygJthSPW96VPvID0shuucL1nHlYoUgw/DnWrVp7uAm4p/Vf6wdxFf5wdkxh0e3BLx/ug6CVGFhbwKQLue8cUY=
+	t=1740539307; cv=none; b=Bdj0YFK0nTVbiJY5V44/U8mQRmXmYtZE8FqKQdArSvaLM6a+NqtAXT4mlAp0Zfoh6YV0wnKe2P7UIWAV+BH8Fsejc0fzaTRK3u3YI/2pbUhIcR3TjLU9GXS2THb5jmYZ8vByXIGPXOKXX8LmHlkExrFtEGocqQl4IVYY6ci4UYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539214; c=relaxed/simple;
-	bh=gNIo3QHnwp30TXL+iprEpvUn4IGOec5Dm/ZsPwUVeXc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LjD/rHY5UTeuUa2s3WyvWNhb4nOOjyIakwAsYNIRPJcZ/u1v6nZDY7qOp1rTGBhJ1zH3LEW4AePyqRfNZaJxyBh4Es/vFAqPt7Wp2vri8/tu3phI6fRk+1mr9Uhs14bWI7vh3hQwiN9o62wbOiFVx1aC86Uw0QAJzSKFpXeKzVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.40.54.90])
-	by gateway (Coremail) with SMTP id _____8AxaeBGhb5nm+uCAA--.29587S3;
-	Wed, 26 Feb 2025 11:06:46 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.40.54.90])
-	by front1 (Coremail) with SMTP id qMiowMDxPcU3hb5n7BIpAA--.19667S3;
-	Wed, 26 Feb 2025 11:06:32 +0800 (CST)
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-To: lee@kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de,
-	Qunqin Zhao <zhaoqunqin@loongson.cn>
-Subject: [PATCH v4 6/6] MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
-Date: Wed, 26 Feb 2025 11:05:50 +0800
-Message-Id: <20250226030550.15973-2-zhaoqunqin@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250226030550.15973-1-zhaoqunqin@loongson.cn>
-References: <20250226030550.15973-1-zhaoqunqin@loongson.cn>
+	s=arc-20240116; t=1740539307; c=relaxed/simple;
+	bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tPzIMKd8QYBCampZqgYc576tfbOODYgL5A6wktvellaLwrJV4LTaR1aGs1J862vLx46uoU459acVtYbRyALqTMz/8FGiJGC0s7+s+A4uvfE4ic5RedRKPaty2IIO4lqbLPVc3Mg+0dRGEfcLt8uWWuD2FTVqSSDyMXEvYAZ8Zd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=XpNjFti0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=vnVNPGAc; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="XpNjFti0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vnVNPGAc"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 363381380A38;
+	Tue, 25 Feb 2025 22:08:24 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 22:08:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1740539304;
+	 x=1740625704; bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=; b=
+	XpNjFti0qRuBGJ7Y9PHjuVG4AT2iF8uGzdGtR5Nok2cgCd/NKZwPHK9K2E+GGJEt
+	cUirfpENXMLiMCjdWu64QJbopozD8ry9rrH6yvvjZY3xe5Tf2MKSAFprTg6rawd7
+	jp6i153322NzQNxvcWUzXnKXjoGHKm4hfkGWYaCkC0HRRAreNQtfptrRU+mKyitu
+	0hiEGVVDEdfc4EadMI4rlEa73C+29dFFF+RLHMpEtGz0PwOVKXGTIiZt+6eiIj5+
+	js3NzoYQiWaaUcZB5CTynnR6S4uGI1kplLSi24yHPYX05ayGhZ9EqUYexErefRpU
+	gbrbOIRPidu4d/dk1orsGw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740539304; x=
+	1740625704; bh=+WpUxyhixO+xvs7xpfPGl9WG65KdWQhk1GqatJbAmIA=; b=v
+	nVNPGAcajaKNdC7/3mswz1ulFKg6vmBW4MVV0o+0HoMWeB+dTttQ64VOAHiEF4zY
+	g03CKAb95lNgrEJq3WBR+2N63IwhcR8QnxEvHsHMlpo3UdQBc1eix7wig1i3BZMV
+	RW9jK7y2tFoe9HqhnTceXegfNp3sbDJ39SJIy6CAQXToQVTI0UzrMUFKkbnrPe+K
+	V47owvczDJ+UQFJzWRgNqdzn5ix/kp5txG9jk74lHT1p/eNTxdZjJrx1u5MT1Vai
+	fGHbhySNF5xg12NILi2oDelOIOpM+NQ1XIy3t81mgZ+Z9Q0FRsLpPs8iCV6H+CKO
+	KJPf7aCmBLuc5DOk1udrg==
+X-ME-Sender: <xms:poW-Z6r2beDFH8rRGoNn9Fq-uiKbcCy2bEl5tSzac9Psz8vE4qi0GA>
+    <xme:poW-Z4reHHOyTTgFuNcfJDVnSB3CVldJyruj5ieJLDtA_cy39SrMI3wGgVcOjPH4s
+    lB8E9k5kJhJthEP5Lc>
+X-ME-Received: <xmr:poW-Z_MU072OqUA7AMRqBjQOVBPBkLX3-1TN9ZwDstDH3ZWn0Pd3rpNobMnSFX0W-6Djbp7Cce_2xt6clQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekfeeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepkffuhf
+    fvveffjghftgfgfgggsehtqhertddtreejnecuhfhrohhmpefnuhhkvgculfhonhgvshcu
+    oehluhhkvgeslhhjohhnvghsrdguvghvqeenucggtffrrghtthgvrhhnpeekfeffueejve
+    eujeeugeelleehtdegvdeludektddtfffhieefledvudehfeejieenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehluhhkvgeslhhjohhnvghsrd
+    guvghvpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehlkhhmlhesrghnthhhvggrshdruggvvhdprhgtphhtthhopegsvghnthhishhssehkvg
+    hrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhm
+    pdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlhdrtg
+    homhdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
+    ihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    phhlrghtfhhorhhmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:poW-Z56pmcbhkl_KT2ceEZY_uuK_KAg-_3lpL42XRuuEyZzlPbT6NQ>
+    <xmx:poW-Z57wvDvW4JbTh1TLLWSZZVM58qXCxh5y8zmen_F5g1zoJvJc4Q>
+    <xmx:poW-Z5gDL4ZB-yKqfN1qLmfsYiUbQ5jN16LuYM4IzrFzLZ7J68Md6g>
+    <xmx:poW-Zz6p_PG8aZfyKBKKcAPxSy7zZ6GBc17kUIfnly0sBvFdZwWjVQ>
+    <xmx:qIW-Z0YfA_3rIN5rM7NbJisHV8xukvenfwH4LGWJQoPY1EdkGcE_9kkX>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Feb 2025 22:08:20 -0500 (EST)
+Message-ID: <027706ba7b19a4eefb51aeddb5d10cc235751780.camel@ljones.dev>
+Subject: Re: [PATCH 2/2] platform/x86: asus-wmi: Refactor Ally suspend/resume
+From: Luke Jones <luke@ljones.dev>
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: bentiss@kernel.org, hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, 
+	jikos@kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	platform-driver-x86@vger.kernel.org
+Date: Wed, 26 Feb 2025 16:08:15 +1300
+In-Reply-To: <20250225141549.11165-1-lkml@antheas.dev>
+References: <20250225081744.92841-3-luke@ljones.dev>
+	 <20250225141549.11165-1-lkml@antheas.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcU3hb5n7BIpAA--.19667S3
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-	ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-	BjDU0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-	xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-	j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
-	AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26rWY6Fy7McIj6I8E87Iv
-	67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
-	kI7VAKI48JMxAqzxv262kKe7AKxVWUAVWUtwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCF
-	x2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r
-	1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij
-	64vIr41lIxAIcVC0I7IYx2IY67AKxVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr
-	0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0beOPUUUU
-	U==
 
-Changes to Loongson TPM driver would be best reviewed by the Loongson
-crypto driver maintainers.
+On Tue, 2025-02-25 at 15:15 +0100, Antheas Kapenekakis wrote:
+> Hi Luke,
+> setting MCU powersave too close to the boot-up sequence can cause the
+> controller of the original Ally to malfunction.
 
-Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
----
-v4: None
+Read the code. It doesn't, as it is set by hid driver. Zero issues in
+all our testing.
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Which is why you created
+> this little init sequence in which you call CSEE manually. In
+> addition,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3f04f43ffe..75760e6ec2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13606,6 +13606,7 @@ LOONGSON CRYPTO DRIVER
- M:	Qunqin Zhao <zhaoqunqin@loongson.com>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
-+F:	drivers/char/tpm/tpm_lsse.c
- F:	drivers/crypto/loongson/
- 
- LOONGSON-2 APB DMA DRIVER
--- 
-2.43.0
+No it wasn't.
 
+> MCU powersave (which is called Extreme Standby in Windows and you
+> named
+> incorrectly in asus-wmi), causes a very large 8 second delay in the
+
+That is a UI label. ASUS call it Mcu Powersave in internal emails to
+me. It is also called *MCUPowerSaving in their source code.
+
+> resume
+> process. It should under no circumstance be set enabled by default.
+>=20
+> Users that want it can enable it manually. Following, distributions
+> that
+> want it and lack the appropriate configuration interface can use a
+> udev
+> rule with an 8 second delay to enable it, and then, the udev rule
+> should
+> first check if mcu_powersave is disabled before enabling it. This is
+> because writing to it even with the same value causes an issue
+> regardless.
+>=20
+
+No it does not.
+
+> Therefore, please remove both parts of it from the second patch in
+> your
+> series and produce a v2, which contains no hints of CSEE. When you
+> do:
+>=20
+> Suggested-by: Antheas Kapenekakis <lkml@antheas.dev>
+>=20
+
+No. You've suggested changes with zero testing, simply in an attempt to
+get a tag.
+
+> Following, when you do finish the new Asus Armoury patch series,
+> please
+> rename MCU powersave to extreme standby, and add a suggested-by in
+> the
+> appropriate patch. Since to avoid user confusion, the names should
+> match
+> their windows branding.
+>=20
+
+No. See first response.
+
+> During our testing of the controller, we found that the lack of a
+> delay
+> causes the RGB of both the Ally and the Ally X to malfunction, so
+
+This is to do with your own code in userspace.=20
+
+> this is
+> a small nack for me (the old quirk is preferable in that regard). But
+> then
+> again, this patch series is not getting anywhere close to our users
+> even
+> if it is accepted, so you can do as you wish (given appropriate
+> attribution).
+>=20
+
+Your message attempts to frame this as a personal matter ("small nack
+for me," "you can do as you wish") rather than providing substantive
+technical feedback appropriate for LKML.
+
+To be clear: This patch is submitted for mainline Linux kernel
+consideration, not your downstream project. Your NACK lacks technical
+merit relevant to mainline development, as you yourself acknowledge
+these changes would not affect your users.
+
+As I am the maintainer on this driver I will proceed with the
+submission process as there are no valid technical objections to
+address. Further non-technical commentary on this thread is
+unnecessary.
+
+Cheers,
+Luke.
