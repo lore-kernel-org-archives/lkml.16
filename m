@@ -1,105 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04DE26B968;
-	Wed, 26 Feb 2025 22:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560AC26F465;
+	Wed, 26 Feb 2025 22:12:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740607962; cv=none; b=u1zgnpEw0I8saw9kOW1eRp+4EwocNSzUUlHlpITUgkci9gwldkFliJt36j7XBJ3CQIXqWFbmb3dY52fIZTmcKPTqC2RxK/80IxmM3f+2EBU32FxpXAA7CI5LzaRryX/7BI6G9Bg5o/1CR5Gq7XRn4kki9G4T2gTiZP761OfZrKs=
+	t=1740607979; cv=none; b=jJg7b7VnOnoyIpuWEuWztFLgN7zV+s/zlmH0gtkM8rbZHqVxiYic6vZuUS/r/XZpypktuARIG+FFWBwkXw6ooAALWq6kDoyNN2bGddpESXeDkX/yW6PGS0ddPYd+QyPW3gpjrsCCeL0eErKD+xlpZ4zn5JgHgSMPJYiZTnoXPL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740607962; c=relaxed/simple;
-	bh=b9p2oinWw2oCx1q5fKm/fozu+hAAAf97Q6gyM8373gY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gWZUiIXocSNbcWUn3XJw1vqO6erOo9Va+L5pAU0fZ9TXZ9bUVHb2pN+t3ER9v8qu0t5S1jLBWjLvTlSkh+8tDk7x1tIcuXug2Rtq0h1y5ALDq2ZehiPoSB6gBWWPfs8qNoFBfh2K/09qj7axgk1BdJR2QzBxGTtLN7DUQOXPhrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4498DC4CED6;
-	Wed, 26 Feb 2025 22:12:40 +0000 (UTC)
-Date: Wed, 26 Feb 2025 17:13:21 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Martin Uecker <uecker@tugraz.at>, Ralf Jung <post@ralfj.de>, "Paul E.
- McKenney" <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Ventura
- Jack <venturajack85@gmail.com>, Kent Overstreet
- <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
- airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
- ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
- ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
- miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <20250226171321.714f3b75@gandalf.local.home>
-In-Reply-To: <20250226165619.64998576@gandalf.local.home>
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
-	<20250222141521.1fe24871@eugeo>
-	<CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
-	<6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
-	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
-	<CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
-	<CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-	<CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-	<5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
-	<CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
-	<ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
-	<CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
-	<20250226162655.65ba4b51@gandalf.local.home>
-	<CAHk-=wjAcA4KrZ-47WiPd3haQU7rh+i315ApH82d=oZmgBUT_A@mail.gmail.com>
-	<20250226165619.64998576@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740607979; c=relaxed/simple;
+	bh=AyITmA8rf9pMLh099tYprgLtyEciAbbLGdntk9qGI60=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=h8QEmOvaAmbLEzQygHjkw1aHKdYZPQfEX7tHAcnZXpJdDK39gpIUPZwSEDqftmLXra95L+b+OkfatCu+BgKOJ8H0Cs17BF3j9uN1d3CxiCk6UuDlAczWJUDhzIQozHpI5fkaqYLXPKDyBZXf1ZpxklRLIad1vnf4QyOcx1cE+uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XZcLE6rH; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XZcLE6rH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE78C4CEE9;
+	Wed, 26 Feb 2025 22:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740607978;
+	bh=AyITmA8rf9pMLh099tYprgLtyEciAbbLGdntk9qGI60=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=XZcLE6rH24Lom8DmUNZKENo7PwJQ/pixzYhyTfDgEUaSLt+KSpFefYJseuhnvDYCy
+	 Aa5pU4gq4QnOm/axD6ArmqMt2q7Z0QX0q8hHNL33dwPYjd7lwjEIRa6YEuxYfyA3Fn
+	 2B6TJZCkme4O/PvBFj/dqtnBT1/DnNWu+W+4JF/0bP7n9dgAnx75ahOCohlyPSN3GE
+	 tRSmZgqr2ck6WEIjWdeGaK7DuM0UpbvZPBhr+eGWqma//YwgDCVwN+H6ZRMzO4QwAu
+	 cBsdfD2VVtBLRAl1gZVhkAmyj2Q8dbH5xQCIsRRFGo1EKoPF8WCwmxfSKH/6ONomr5
+	 Eak0Yc1WgWIYg==
+Date: Wed, 26 Feb 2025 16:12:54 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	quic_mrana@quicinc.com, quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v7 2/4] PCI: of: Add API to retrieve equalization presets
+ from device tree
+Message-ID: <20250226221254.GA561689@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225-preset_v6-v7-2-a593f3ef3951@oss.qualcomm.com>
 
-On Wed, 26 Feb 2025 16:56:19 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> 	r = *p;
-> 	if (r > 1000)
-> 		goto out;
-> 	x = r;
+On Tue, Feb 25, 2025 at 05:15:05PM +0530, Krishna Chaitanya Chundru wrote:
+> PCIe equalization presets are predefined settings used to optimize
+> signal integrity by compensating for signal loss and distortion in
+> high-speed data transmission.
 > 
-> to:
+> As per PCIe spec 6.0.1 revision section 8.3.3.3 & 4.2.4 for data rates
+> of 8.0 GT/s, 16.0 GT/s, 32.0 GT/s, and 64.0 GT/s, there is a way to
+> configure lane equalization presets for each lane to enhance the PCIe
+> link reliability. Each preset value represents a different combination
+> of pre-shoot and de-emphasis values. For each data rate, different
+> registers are defined: for 8.0 GT/s, registers are defined in section
+> 7.7.3.4; for 16.0 GT/s, in section 7.7.5.9, etc. The 8.0 GT/s rate has
+> an extra receiver preset hint, requiring 16 bits per lane, while the
+> remaining data rates use 8 bits per lane.
 > 
-> 	if (*p > 1000)
-> 		goto out;
-> 	x = *p;
+> Based on the number of lanes and the supported data rate, this function
+> reads the device tree property and stores in the presets structure.
 
-And you could replace *p with any variable that is visible outside the
-function. As that's where I have to remember to use READ_ONCE() all the
-time. When I need to access a variable that may change, but the old value
-may still be fine to use as long as it is consistent.
+Can you mention the function name here somewhere so we don't have to
+dig it out of the patch?  If you put it in the subject, the function
+name is descriptive enough that you hardly need anything more, e.g.,
 
-I take this is what you meant by following what the code does.
+  PCI: of: Add of_pci_get_equalization_presets() API
 
-	r = global;
-	if (r > 1000)
-		goto out;
-	x = r;
+> + * of_pci_get_equalization_presets - Parses the "eq-presets-Ngts" property.
+> + *
+> + * @dev: Device containing the properties.
+> + * @presets: Pointer to store the parsed data.
+> + * @num_lanes: Maximum number of lanes supported.
+> + *
+> + * If the property is present read and store the data in the preset structure
+> + * else assign default value 0xff to indicate property is not present.
+> + *
+> + * Return: 0 if the property is not available or successfully parsed; errno otherwise.
 
-Is the code saying to read "global" once. But today the compiler may not do
-that and we have to use READ_ONCE() to prevent it.
+Wrap to fit in 80 columns like the rest of the file.
 
-But if I used:
-
-	if (global > 1000)
-		goto out;
-	x = global;
-
-Then the code itself is saying it is fine to re-read global or not, and the
-compiler is fine with converting that to:
-
-	r = global;
-	if (r > 1000)
-		goto out;
-	x = r;
-
-I guess this is where you say "volatile" is too strong, as this isn't an
-issue and is an optimization the compiler can do. Where as the former
-(reading global twice) is a bug because the code did not explicitly state
-to do that.
-
-
--- Steve
+> + */
+> +int of_pci_get_equalization_presets(struct device *dev,
+> +				    struct pci_eq_presets *presets,
+> +				    int num_lanes)
+> +{
