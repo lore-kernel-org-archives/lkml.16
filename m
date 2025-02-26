@@ -1,294 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2074.outbound.protection.outlook.com [40.107.94.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE4A2561D6
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 22:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740607886; cv=none; b=u+Kq36vG+8LYLCX1s2cnPeyK4qcu9Z8wKlghB4y1AN3PiPxDAvql8KFxchIcvbfTt2Yx/ayqxF3ZsN/87Swc7SD5hXJcYDgWn0r0aiZ9IoPmN2X+DWptzMEgPw7yarQ/EAMv8fYTWj0xmqSnOe9UbiwD/Z3mcAgV/pSkgh3vxrw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740607886; c=relaxed/simple;
-	bh=V++Xmlo2Nswu93mayQmVsWDhp4ss6pyFSfa1fzm2HeM=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BiTbB6W4vCez/uectLfH9I+Uxnao74fmZrpzK+3TDuipjv8Oxzf83usyiimenPk7itZfoidvXZCy46yEdxeLspGKE2/jmMXpZe7CNLN6v8mW6Xeuj+6TaC+ZFPvw2sMoxiPLBkIvEUJvsCLXu4SKoOMztIk7g/SOJ6iaYZPsOoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LEugKU2W; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A0326B95B;
+	Wed, 26 Feb 2025 22:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740607934; cv=fail; b=idg8nNQ1jHKVKyW9/iWVRz8DW2DTe4r68n/XwsUpVqTuvXfjkqtNR6vDEfe78NztP/Q7rSW/0l1lTky1pmRBC8ULVamuQwoK0pKOzfgBx9QaFqCm/6VjGTc8XRG0KI72qQpGupNA1CIgXdxE9NKJ568ziOFWSMcwbAZaVueId6U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740607934; c=relaxed/simple;
+	bh=hwUyM4njh4cOzXYWT3DVA5BzxB3mOlJ/W9tw1gUn+SQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZF/jwO0qc0n/JlmsLMH9rVG5jOC9TD2noBPVXi29Rl3MYcmWdH5bPgcmj8jd6kjL4aB4q4zfN+4gegjiX1hWmU9Z444UCsCAfc8fV8aJWVYaP2FuYXsrDLXp5RsdgdGmQQffL0fZqRKIA89fBB6FUT43zG8EzrAuebyB0iB6+a4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Nf3HlTkc; arc=fail smtp.client-ip=40.107.94.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LEugKU2W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740607883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SDLn/itlfNCF0HlLfDkYsSVrwBFlxuyO81r68eizKZU=;
-	b=LEugKU2WMJMt+Hxfxagjb0yMraDJiyMbQU2eSDGaPbx8BxHOwTJzGbD+eHZw+BIXaWxw4+
-	lgYuSJRoqsQ2Dt3v1WaPMscnrnK7BVUupiKO71caje+ncYlIqo/rvjMat+wYtte2Iljith
-	E6dthLxtl80b/hNp9luKY+oR+jXrkdg=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-28-STlzqmG7PHakyTaNHf0GUg-1; Wed, 26 Feb 2025 17:11:21 -0500
-X-MC-Unique: STlzqmG7PHakyTaNHf0GUg-1
-X-Mimecast-MFC-AGG-ID: STlzqmG7PHakyTaNHf0GUg_1740607881
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43947a0919aso3510755e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:11:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740607880; x=1741212680;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SDLn/itlfNCF0HlLfDkYsSVrwBFlxuyO81r68eizKZU=;
-        b=Pj9H4Aa4ezBuTiph3ocNPowdRCkuketTflp513XGtYgU480HCX+NaxgakaKi4kJbdD
-         lhTpFXE6zNtO3e0mfyV1KdacWDuulTiSdgmop+lJD2Ng8HJjRCn+z7LP34TWNx9RtT/M
-         Jktb+WPq3ZSCF/7cT2cMnnC6FwlEvs9Zmeusb8XZWbZVZwSDNYH8/vLzggKobrd4GOEz
-         kKh+xMJhIBBCJiZL3WfYakiXUuKpfxNGCg4BUZoAfbwDiM+9PyIOc0cIFQbusXcU53mf
-         uU8BVbs00GDJulNOMOFz+mgKyGR51ovKHydjtRdGD8Sda5OMV+EKtjcOXOzdGMBTNABT
-         0KqA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLkSnZZSpcQOZPa4BrgdMWVatJh1CRlQitZ3V1RjqyF23qjEacyGFYS7Y9BbuDccgm+1L/Rr2EoHeArdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCIDbfM/GtpIxWcj5wIwBRPKMqVl4jJD3qgeqHLeaF+d1/rNKo
-	lAegNMoApwohyfPtxxIjqXwZa1adsbNPiJmgHdBcMuzqCnEGF0tLlYDjPp4FcKBu2yWOSLFoExJ
-	0LTjBw74k3iNS2mpRhcKetAxJbf6NXLFoSJ4alS56L7YHPihyMw952Eb2T1a8xA==
-X-Gm-Gg: ASbGncuVrk1Kg4k6YDVtN3G0lJU8gkNahoR6hjuuTYAa5KHgeKSr9gK4jn/tt2L+NfI
-	Z0TY235REQwVpA7jLUka6sv+jBp9mLH2WkB13T8MY4sLJILuwo5QxmXBhySfjmUnyyZNRlauisF
-	En9hIrih7dbv/FA8DRgdyFO8eB3Fu3wsIT2NDTNpyiOQx/raSaPLeax/A+rdZai0n+bJTLHl+8M
-	91SJD14EM25Wa+oLMBTG/9p71iV/GZfGPZ4S9iA6F3Ve+X7jCqb0cMFk4tR5qAvomgkPnG62eLJ
-	zXhcg+drvw==
-X-Received: by 2002:a05:600c:3b12:b0:439:86c4:a8ec with SMTP id 5b1f17b1804b1-43ad6834cedmr18689525e9.15.1740607880656;
-        Wed, 26 Feb 2025 14:11:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEaelfXZLDUuHI3CpMumlbbQdNQDUp+SKRLlXHIvXK8BQFYRaYdUr1OnrM+q+ZUTw6/bJjjHA==
-X-Received: by 2002:a05:600c:3b12:b0:439:86c4:a8ec with SMTP id 5b1f17b1804b1-43ad6834cedmr18689355e9.15.1740607880188;
-        Wed, 26 Feb 2025 14:11:20 -0800 (PST)
-Received: from redhat.com ([2a02:14f:1eb:e270:8595:184c:7546:3597])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a28bcfdsm2512865e9.40.2025.02.26.14.11.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 14:11:19 -0800 (PST)
-Date: Wed, 26 Feb 2025 17:11:15 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Joe Damato <jdamato@fastly.com>, Jason Wang <jasowang@redhat.com>,
-	netdev@vger.kernel.org, mkarsten@uwaterloo.ca,
-	gerhard@engleder-embedded.com, xuanzhuo@linux.alibaba.com,
-	kuba@kernel.org,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v4 3/4] virtio-net: Map NAPIs to queues
-Message-ID: <20250226171034-mutt-send-email-mst@kernel.org>
-References: <20250225020455.212895-1-jdamato@fastly.com>
- <20250225020455.212895-4-jdamato@fastly.com>
- <CACGkMEv6y+TkZnWWLPG4UE59iyREhkiaby8kj==cnp=6chmu+w@mail.gmail.com>
- <Z79XXQjp9Dz7OYYQ@LQ3V64L9R2>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Nf3HlTkc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=naz9pkjJ/wycxfYZM9YM9lB3ZE4SaKLDVvem7GFE9MGY/ZgYCyXMGABRz+aW4FfyzgyeajF5oXDIqjsVNuO39SuraK0kbBzjcLvKQ6bVsT33gLAGAJs6t2N+LheWCXmDjDDSF0NxcAhc3bmjmziLG+z+fem1oELz0cfRe0N19Ib3Ay71qoWypyzJ7c7m4EcXcdI3XPt4XIYHmxV1sDZa1Fn13+MFPW93BlPQGV6Z/fJptLMIvJpv7UrmSpeV3t4U1Sx/lqIveKri9raLGBgbNxiRKu73BvR7HMEiZNrZenRixm4XCMQau8TxBNSQFspDEOP6ny++xrMZg+P17hgS0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aY6CDvkfOchfnWgnYB2zpRg1IBAbWUnObA1PEMpsQHo=;
+ b=sk+zE5UzXmcqhTp9Jwa7aqDt4263XoVUKlltVPlU5k5f24dPpF9OSe+WBgOpnO4OCq9iFcsM9WcCISODMbiH6t3287JVlGhIudMR/OZB7M6h+uV18bo6/E/O8nzxeH33E4eRaX1KYA7TN4poDWW5xGlFkRlutpkTNRaiVP++dydw8X3QwWZ1yhW+uHeJq7XZKabSno2L16YBn8tYSYnwdZYIML7CscbvyWHRSHjOxOHRifmpYBKpJYigauDs9do3Ru3ppvY/LlkjJGNFy/wQ0Wv0Oq0XAguN5/g91IMooc9X6MKs7kk+UQ8yw5og3R0WCpGo+qNSygdVdWR0mEWq5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aY6CDvkfOchfnWgnYB2zpRg1IBAbWUnObA1PEMpsQHo=;
+ b=Nf3HlTkcdcbwZvbMh/v1YJJqZZW2s6XIbls2GsoVGW9/W6NEWEJ011ZQ2mgC/bjBcMfGrW5haNrcfollXNMkIabURn203eZuWGH5fS6QmGdfXgq1bpkQbcrdBnB+pWJWfkeLzX9ANaNiGKP1JbIdMMz6Nvb2ezbhELbcmFX6vqU=
+Received: from BL1PR13CA0357.namprd13.prod.outlook.com (2603:10b6:208:2c6::32)
+ by SJ1PR12MB6172.namprd12.prod.outlook.com (2603:10b6:a03:459::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 22:12:09 +0000
+Received: from BN1PEPF0000467F.namprd03.prod.outlook.com
+ (2603:10b6:208:2c6:cafe::83) by BL1PR13CA0357.outlook.office365.com
+ (2603:10b6:208:2c6::32) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.16 via Frontend Transport; Wed,
+ 26 Feb 2025 22:12:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN1PEPF0000467F.mail.protection.outlook.com (10.167.243.84) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 22:12:08 +0000
+Received: from ethanolx50f7host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 16:12:07 -0600
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To: <linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-cxl@vger.kernel.org>
+CC: Ard Biesheuvel <ardb@kernel.org>, Alison Schofield
+	<alison.schofield@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, "Ira
+ Weiny" <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Yazen Ghannam
+	<yazen.ghannam@amd.com>, Terry Bowman <terry.bowman@amd.com>, "Smita
+ Koralahalli" <Smita.KoralahalliChannabasappa@amd.com>
+Subject: [PATCH v7 0/2] acpi/ghes, cper, cxl: Process CXL CPER Protocol errors
+Date: Wed, 26 Feb 2025 22:11:55 +0000
+Message-ID: <20250226221157.149406-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z79XXQjp9Dz7OYYQ@LQ3V64L9R2>
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN1PEPF0000467F:EE_|SJ1PR12MB6172:EE_
+X-MS-Office365-Filtering-Correlation-Id: 69665647-2886-4412-6369-08dd56b29c90
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ngpnM336q24PkebbtTUvzQKzTZwy3Zxjkg1bfe7altb+c/VAN2Tf8/toh6/i?=
+ =?us-ascii?Q?E8f2p/ysWV/0wUNEyH7+pj2Jswq2RmY7dJolOHXPRkQDNqVYoulyZNOyInpr?=
+ =?us-ascii?Q?2EYLCbEfZOV5M4do8D8fAFcFTJYbzuhXkb8WNM6PRWrmABfIbKB3XWu5hMHR?=
+ =?us-ascii?Q?dZWZ0fjqyaLJS9Q6/6TmUi31XLmBWUwrUfizAIPtE0tE/zeHXH50J/UfD/MK?=
+ =?us-ascii?Q?ORa9N5cvzLdeFtXEROFXe1iM/mmmxC79SqdZJBdQCoglAJapb/F4ZRy3Sl9h?=
+ =?us-ascii?Q?ZQkjSPZCA7+nUN3THzt0L0PtXQ+Xi2GPqqHolPNPGhH637zTKPNeVoy5fVMa?=
+ =?us-ascii?Q?3o1yqVJmEwzZOHF7wyqeDmyY9KyDZyEad5gF+5nVTsiLb13yR3VPKj4xX7+e?=
+ =?us-ascii?Q?5Yn6G3FuQnLHGBWmi3thdaojHUQk9ENfP0Lqk/+2JJX0j4qq0UW9V+6Ccx9Y?=
+ =?us-ascii?Q?88/Z2Y7L3yxJNDtooEhxEzrY3LMKIYD3NxAm4BqEVcsjDoG/pbzQHM5zHRy4?=
+ =?us-ascii?Q?1Rh3WBBw49hxcw1F36za07Z6VJnbftmEBJch78PaNAyfh+DJ0HdUcBNJrRnR?=
+ =?us-ascii?Q?l8F65FvMcz5FgXc2xH7XcLa6qV7sCClfBx1EkQbIjwGVMvuyG6y+0FQAwadV?=
+ =?us-ascii?Q?l3NZNRQ+SF9cLNeIVhqviswamsEgjKm5lZQ6Xy+4+koDjCkcdvgwdxJLOWAS?=
+ =?us-ascii?Q?vaeJ9P1+QLQo32J9ptbRTk1zSuiY3hPi/BQISJe9sCiYcvcKIM6t+1cmzpqT?=
+ =?us-ascii?Q?FI7ammB/DwQ1/8fkjgvII/fa5kgt4XrgFzMs+k9aMJzhsguSXNbmRj3789nV?=
+ =?us-ascii?Q?9zmmqw7+CpbStiwXrpxF69rjpddxvWywzObLhaYeL3DsfYZV2wsbWnojeYpY?=
+ =?us-ascii?Q?idx9KmAQcdVy9E13oStgAJSJBFeBIXJyL7sCvLnTwvuDyvSvJzF3pj83Izb4?=
+ =?us-ascii?Q?4C95lYTfRCRmX8Hf9taNgIt8S2yuf9RddmHG49HfcSMo41pagy7PoplxCzxz?=
+ =?us-ascii?Q?Cr9rDXNQenpHrf7nV7u7Ts+PBAV7QrCzYxmkXiP7HhnGc+crfPKAY953DUfE?=
+ =?us-ascii?Q?Yd9oQbFj5tjBLMC8EwfJSGW0GjMJKm637GoBzQLFXfLbk7dQf4hO4E72G2Ej?=
+ =?us-ascii?Q?ZHD2IV5RpLKRDx/QLCAs62tUornL3aFFg8ICYW7TMy+BL80ccC/x70575zPx?=
+ =?us-ascii?Q?vzBOoz/eo2TB83ylfyTVCoOEIpsfLRsedeRZCCkqsLpWUg6lMM+k8PsCoIe5?=
+ =?us-ascii?Q?wzVP0lgczlE8MBiXvE37EvQ4PatPRTbtPhfRaINIOpvC6TsarZs1zESjyl2N?=
+ =?us-ascii?Q?g8j7BWP2QlhJxdXhg3XCIJl8ZvfmCWcl7BWnfCoBv1rPrzTmO6ynjypPw3GJ?=
+ =?us-ascii?Q?WpKd3pVWUHLh7wKTpIeixQwhpZVI8ADTTeoD0DiHjSMLTZpyRM+jihXPUKxc?=
+ =?us-ascii?Q?/JlOg0u7XevX/dKC4vZwVj+lS6Af9OaWLEWyBO9+dKf+E6QE9RASqehhiRTI?=
+ =?us-ascii?Q?8wjFTHlX67n1qnU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 22:12:08.6729
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69665647-2886-4412-6369-08dd56b29c90
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN1PEPF0000467F.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6172
 
-On Wed, Feb 26, 2025 at 01:03:09PM -0500, Joe Damato wrote:
-> On Wed, Feb 26, 2025 at 01:48:50PM +0800, Jason Wang wrote:
-> > On Tue, Feb 25, 2025 at 10:05 AM Joe Damato <jdamato@fastly.com> wrote:
-> > >
-> > > Use netif_queue_set_napi to map NAPIs to queue IDs so that the mapping
-> > > can be accessed by user apps, taking care to hold RTNL as needed.
-> > 
-> > I may miss something but I wonder whether letting the caller hold the
-> > lock is better.
-> 
-> Hmm...
-> 
-> Double checking all the paths over again, here's what I see:
->   - refill_work, delayed work that needs RTNL so this change seems
->     right?
-> 
->   - virtnet_disable_queue_pair, called from virtnet_open and
->     virtnet_close. When called via NDO these are safe and hold RTNL,
->     but they can be called from power management and need RTNL.
-> 
->   - virtnet_enable_queue_pair called from virtnet_open, safe when
->     used via NDO but needs RTNL when used via power management.
-> 
->   - virtnet_rx_pause called in both paths as you mentioned, one
->     which needs RTNL and one which doesn't.
-> 
-> I think there are a couple ways to fix this:
-> 
->   1. Edit this patch to remove the virtnet_queue_set_napi helper,
->      and call netif_queue_set_napi from the napi_enable and
->      napi_disable helpers directly. Modify code calling into these
->      paths to hold rtnl (or not) as described above.
-> 
->   2. Modify virtnet_enable_queue_pair, virtnet_disable_queue_pair,
->      and virtnet_rx_pause to take a "bool need_rtnl" as an a
->      function argument and pass that through.
-> 
-> I'm not sure which is cleaner and I do not have a preference.
-> 
-> Can you let me know which you prefer? I am happy to implement either
-> one for the next revision.
+This patchset adds logging support for CXL CPER endpoint and port Protocol
+errors.
 
+Based on top of cxl-next.
 
-1  seems cleaner.
-taking locks depending on paths is confusing
+Link to v6:
+https://lore.kernel.org/linux-cxl/20250123084421.127697-1-Smita.KoralahalliChannabasappa@amd.com
 
-> [...]
-> 
-> > > ---
-> > >  drivers/net/virtio_net.c | 73 ++++++++++++++++++++++++++++------------
-> > >  1 file changed, 52 insertions(+), 21 deletions(-)
-> > >
-> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> > > index e578885c1093..13bb4a563073 100644
-> > > --- a/drivers/net/virtio_net.c
-> > > +++ b/drivers/net/virtio_net.c
-> > > @@ -2807,6 +2807,20 @@ static void skb_recv_done(struct virtqueue *rvq)
-> > >         virtqueue_napi_schedule(&rq->napi, rvq);
-> > >  }
-> > >
-> > > +static void virtnet_queue_set_napi(struct net_device *dev,
-> > > +                                  struct napi_struct *napi,
-> > > +                                  enum netdev_queue_type q_type, int qidx,
-> > > +                                  bool need_rtnl)
-> > > +{
-> > > +       if (need_rtnl)
-> > > +               rtnl_lock();
-> > > +
-> > > +       netif_queue_set_napi(dev, qidx, q_type, napi);
-> > > +
-> > > +       if (need_rtnl)
-> > > +               rtnl_unlock();
-> > > +}
-> > > +
-> > >  static void virtnet_napi_do_enable(struct virtqueue *vq,
-> > >                                    struct napi_struct *napi)
-> > >  {
-> > > @@ -2821,15 +2835,21 @@ static void virtnet_napi_do_enable(struct virtqueue *vq,
-> > >         local_bh_enable();
-> > >  }
-> > >
-> > > -static void virtnet_napi_enable(struct receive_queue *rq)
-> > > +static void virtnet_napi_enable(struct receive_queue *rq, bool need_rtnl)
-> > >  {
-> > > +       struct virtnet_info *vi = rq->vq->vdev->priv;
-> > > +       int qidx = vq2rxq(rq->vq);
-> > > +
-> > >         virtnet_napi_do_enable(rq->vq, &rq->napi);
-> > > +       virtnet_queue_set_napi(vi->dev, &rq->napi,
-> > > +                              NETDEV_QUEUE_TYPE_RX, qidx, need_rtnl);
-> > >  }
-> > >
-> > > -static void virtnet_napi_tx_enable(struct send_queue *sq)
-> > > +static void virtnet_napi_tx_enable(struct send_queue *sq, bool need_rtnl)
-> > >  {
-> > >         struct virtnet_info *vi = sq->vq->vdev->priv;
-> > >         struct napi_struct *napi = &sq->napi;
-> > > +       int qidx = vq2txq(sq->vq);
-> > >
-> > >         if (!napi->weight)
-> > >                 return;
-> > > @@ -2843,20 +2863,31 @@ static void virtnet_napi_tx_enable(struct send_queue *sq)
-> > >         }
-> > >
-> > >         virtnet_napi_do_enable(sq->vq, napi);
-> > > +       virtnet_queue_set_napi(vi->dev, napi, NETDEV_QUEUE_TYPE_TX, qidx,
-> > > +                              need_rtnl);
-> > >  }
-> > >
-> > > -static void virtnet_napi_tx_disable(struct send_queue *sq)
-> > > +static void virtnet_napi_tx_disable(struct send_queue *sq, bool need_rtnl)
-> > >  {
-> > > +       struct virtnet_info *vi = sq->vq->vdev->priv;
-> > >         struct napi_struct *napi = &sq->napi;
-> > > +       int qidx = vq2txq(sq->vq);
-> > >
-> > > -       if (napi->weight)
-> > > +       if (napi->weight) {
-> > > +               virtnet_queue_set_napi(vi->dev, NULL, NETDEV_QUEUE_TYPE_TX,
-> > > +                                      qidx, need_rtnl);
-> > >                 napi_disable(napi);
-> > > +       }
-> > >  }
-> > >
-> > > -static void virtnet_napi_disable(struct receive_queue *rq)
-> > > +static void virtnet_napi_disable(struct receive_queue *rq, bool need_rtnl)
-> > >  {
-> > > +       struct virtnet_info *vi = rq->vq->vdev->priv;
-> > >         struct napi_struct *napi = &rq->napi;
-> > > +       int qidx = vq2rxq(rq->vq);
-> > >
-> > > +       virtnet_queue_set_napi(vi->dev, NULL, NETDEV_QUEUE_TYPE_TX, qidx,
-> > > +                              need_rtnl);
-> > >         napi_disable(napi);
-> > >  }
-> > >
-> > > @@ -2870,9 +2901,9 @@ static void refill_work(struct work_struct *work)
-> > >         for (i = 0; i < vi->curr_queue_pairs; i++) {
-> > >                 struct receive_queue *rq = &vi->rq[i];
-> > >
-> > > -               virtnet_napi_disable(rq);
-> > > +               virtnet_napi_disable(rq, true);
-> > >                 still_empty = !try_fill_recv(vi, rq, GFP_KERNEL);
-> > > -               virtnet_napi_enable(rq);
-> > > +               virtnet_napi_enable(rq, true);
-> > >
-> > >                 /* In theory, this can happen: if we don't get any buffers in
-> > >                  * we will *never* try to fill again.
-> > > @@ -3069,8 +3100,8 @@ static int virtnet_poll(struct napi_struct *napi, int budget)
-> > >
-> > >  static void virtnet_disable_queue_pair(struct virtnet_info *vi, int qp_index)
-> > >  {
-> > > -       virtnet_napi_tx_disable(&vi->sq[qp_index]);
-> > > -       virtnet_napi_disable(&vi->rq[qp_index]);
-> > > +       virtnet_napi_tx_disable(&vi->sq[qp_index], false);
-> > > +       virtnet_napi_disable(&vi->rq[qp_index], false);
-> > >         xdp_rxq_info_unreg(&vi->rq[qp_index].xdp_rxq);
-> > >  }
-> > >
-> > > @@ -3089,8 +3120,8 @@ static int virtnet_enable_queue_pair(struct virtnet_info *vi, int qp_index)
-> > >         if (err < 0)
-> > >                 goto err_xdp_reg_mem_model;
-> > >
-> > > -       virtnet_napi_enable(&vi->rq[qp_index]);
-> > > -       virtnet_napi_tx_enable(&vi->sq[qp_index]);
-> > > +       virtnet_napi_enable(&vi->rq[qp_index], false);
-> > > +       virtnet_napi_tx_enable(&vi->sq[qp_index], false);
-> > >
-> > >         return 0;
-> > >
-> > > @@ -3342,7 +3373,7 @@ static void virtnet_rx_pause(struct virtnet_info *vi, struct receive_queue *rq)
-> > >         bool running = netif_running(vi->dev);
-> > >
-> > >         if (running) {
-> > > -               virtnet_napi_disable(rq);
-> > > +               virtnet_napi_disable(rq, true);
-> > 
-> > During the resize, the rtnl lock has been held on the ethtool path
-> > 
-> >         rtnl_lock();
-> >         rc = __dev_ethtool(net, ifr, useraddr, ethcmd, state);
-> >         rtnl_unlock();
-> > 
-> > virtnet_rx_resize()
-> >     virtnet_rx_pause()
-> > 
-> > and in the case of XSK binding, I see ASSERT_RTNL in xp_assign_dev() at least.
-> 
-> Thanks for catching this. I re-read all the paths and I think I've
-> outlined a few other issues above.
-> 
-> Please let me know which of the proposed methods above you'd like me
-> to implement to get this merged.
-> 
-> Thanks.
-> 
-> ---
-> pw-bot: cr
+Changes in v6 -> v7:
+Reworked to move registration and protocol error handling into a new
+file inside CXL core. (cxl/core/ras.c).
+
+Changes in v5 -> v6:
+[Dave, Jonathan, Ira]: Reviewed-by tags.
+[Dave]: Check for cxlds before assigning fe.
+Merge one of the patches (Port error trace logging) from Terry's Port
+error handling.
+Rename host -> parent.
+
+Changes in v4 -> v5:
+[Dave]: Reviewed-by tags.
+[Jonathan]: Remove blank line.
+[Jonathan, Ira]: Change CXL -> "CXL".
+[Ira]: Fix build error for CONFIG_ACPI_APEI_PCIEAER.
+
+Changes in v3 -> v4:
+[Ira]: Use memcpy() for RAS Cap struct.
+[Jonathan]: Commit description edits.
+[Jonathan]: Use separate work registration functions for protocol and
+component errors.
+[Jonathan, Ira]: Replace flags with separate functions for port and
+device errors.
+[Jonathan]: Use goto for register and unregister calls.
+
+Changes in v2 -> v3:
+[Dan]: Define a new workqueue for CXL CPER Protocol errors and avoid
+reusing existing workqueue which handles CXL CPER events.
+[Dan] Update function and struct names.
+[Ira] Don't define common function get_cxl_devstate().
+[Dan] Use switch cases rather than defining array of structures.
+[Dan] Pass the entire cxl_cper_prot_err struct for CXL subsystem.
+[Dan] Use pr_err_ratelimited().
+[Dan] Use AER_ severities directly. Don't define CXL_ severities.
+[Dan] Limit either to Device ID or Agent Info check.
+[Dan] Validate size of RAS field matches expectations.
+
+Changes in v2 -> v1:
+[Jonathan] Refactor code for trace support. Rename get_cxl_dev()
+to get_cxl_devstate().
+[Jonathan] Cleanups for get_cxl_devstate().
+[Alison, Jonathan]: Define array of structures for Device ID and Serial
+number comparison.
+[Dave] p_err -> rec/p_rec.
+[Jonathan] Remove pr_warn.
+
+Smita Koralahalli (2):
+  acpi/ghes, cxl/pci: Process CXL CPER Protocol Errors
+  cxl/pci: Add trace logging for CXL PCIe Port RAS errors
+
+ drivers/acpi/apei/ghes.c  |  49 +++++++++++++++
+ drivers/cxl/core/Makefile |   1 +
+ drivers/cxl/core/core.h   |   3 +
+ drivers/cxl/core/port.c   |   7 +++
+ drivers/cxl/core/ras.c    | 122 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/core/trace.h  |  47 +++++++++++++++
+ include/cxl/event.h       |  15 +++++
+ 7 files changed, 244 insertions(+)
+ create mode 100644 drivers/cxl/core/ras.c
+
+-- 
+2.17.1
 
