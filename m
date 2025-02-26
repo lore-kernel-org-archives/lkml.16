@@ -1,219 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m1973183.qiye.163.com (mail-m1973183.qiye.163.com [220.197.31.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973B622FDE4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E643325D537;
+	Wed, 26 Feb 2025 07:05:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740553474; cv=none; b=XMyMLEu2YHMJVhZ5SZpNxfcdAaXKhlvr3jPKyKVDJb9CMB4+KhImD5j8Aq/mqf9xJxUT7zGm0FsZ7sFdEA3Mex7uGdsYdNOHcv0CjxsgYv7JQlMcYRr+umlGj52cnSk2b5pjyK06iyQ9HdGtJXPQ0SJ93yaM12bVhWQe+db4bTs=
+	t=1740553505; cv=none; b=fXGwLIYkzlqw0BnliZyL8bL70j2rCK1ghPcr6CFDaQjjlhJXr/dZezVU7I/e/N+rQv9UtlvIRj8uxAsz4He9aetMRaH7Kss0CsY/h2GnHRFMWvtIrbrk5AW1MXhdDip4UchFbDiQitkC9fMcW136iUctamSqkepvgviNqxXKKk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740553474; c=relaxed/simple;
-	bh=Cdk9MvMUW2TT8jgiIyxLp/6WErcMa8mAoOICUjgb/3E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pAE2B5GyPQf+MOJ7jmlMtLBmV6OFYhjlflI26QhAsFQiDborgIM+YLnDTSau3o1DeCueQhMdYBt32a9b0g4C33XAb16qcQ1Qj4OKFyWROGxgRIVDaI43IwAfeAopYHnBtAakdqHdN2M+g456qocDgdNx62INGwS336en/W6xaqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qVf6/BTb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740553505; c=relaxed/simple;
+	bh=WLYZ9EBuwNXnwCUWsdQ1Ij0Qo8E9Crm4xrtth2ViDFE=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=i+9cqqGB9QEp3z5AoKNABJeNwUelt2y5teLyRpmmdOSYltVqiNkUFGlcWCv2mAga4On/Zrj9jIWSU9v/6Th28MERZ1tzoziFMivMRO52cF9av+1+K2KYwRU1rGFsXagOAHfqPDK6+uJGF5LkXE8Z4rC4aMLkKrZv68ENUyxJ75g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GDaQiCWD; arc=none smtp.client-ip=220.197.31.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qVf6/BTb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432F6C4CED6;
-	Wed, 26 Feb 2025 07:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740553474;
-	bh=Cdk9MvMUW2TT8jgiIyxLp/6WErcMa8mAoOICUjgb/3E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qVf6/BTbm1oF7OHumSQDhs9QWhBc+9D1OF0j/o7yV+gSanr3bxbWIR9yKq9BsEcVw
-	 W/8r8SN+TA8DgxO2H53L/Ptmvm4y/+cCAqMTnC8PSwaCW4Gc5iVNnI9KDkfCo3By53
-	 xnqibn4kx648hmnrbt3KSOdWtc8xX2AWnz+PfhmsEQ4mCwvWj3G+fkMeCKaYQSOh1z
-	 HSX3HofPvqSKBZiT9cR0OFUipXz/lhVMcdhvvgDYbONsxXAuOB9KVG5rGKNJLvP/rf
-	 8JkosOpwJhfDFwq9SQ4SL3jViacHWoUkKCwWE6h//DPPZ5klaPIgxlZa69AIgdm4Qq
-	 4t5xNBTL4n+Rw==
-Date: Wed, 26 Feb 2025 16:04:30 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>, Joel
- Granados <joel.granados@kernel.org>, Anna Schumaker
- <anna.schumaker@oracle.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Yongliang Gao <leonylgao@tencent.com>, Steven Rostedt
- <rostedt@goodmis.org>, Tomasz Figa <tfiga@chromium.org>, Sergey Senozhatsky
- <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] samples: Add hung_task detector mutex blocking
- sample
-Message-Id: <20250226160430.d74c50d370dcef2904417d1e@kernel.org>
-In-Reply-To: <CAK1f24nLDHLChnwG14rNa5RYik-3+Sqz74OAR1PsWvg3Zu_2+w@mail.gmail.com>
-References: <174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com>
-	<174046696281.2194069.4567490148001547311.stgit@mhiramat.tok.corp.google.com>
-	<CAK1f24nLDHLChnwG14rNa5RYik-3+Sqz74OAR1PsWvg3Zu_2+w@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GDaQiCWD"
+Received: from [172.16.12.45] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c3c47c7b;
+	Wed, 26 Feb 2025 14:49:41 +0800 (GMT+08:00)
+Message-ID: <a18fb035-3e7f-443a-8b24-9a51cba5604a@rock-chips.com>
+Date: Wed, 26 Feb 2025 14:49:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, martin.petersen@oracle.com, heiko@sntech.de,
+ linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Abaci Robot <abaci@linux.alibaba.com>, James.Bottomley@HansenPartnership.com
+Subject: Re: [PATCH -next] scsi: ufs: rockchip: Simplify bool conversion
+To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+References: <20250226021157.77934-1-jiapeng.chong@linux.alibaba.com>
+Content-Language: en-GB
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20250226021157.77934-1-jiapeng.chong@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0NNT1ZKH0hOS0NKHx8ZHkhWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
+	5VSktLVUpCS0tZBg++
+X-HM-Tid: 0a954104b35509cckunmc3c47c7b
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kz46Fjo*GDIKMwsDTh4qMxwW
+	VktPCRxVSlVKTE9LTk5JTkNISEtJVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpKSU03Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=GDaQiCWDoYocllNU6WqKHl5m9xRxpcznUkUedTxHBomfvOO/UfsHDYxKuNmU/5Vl7SAtbkmy79QcfIew8C3GU5v5i1+sB1KHMHcsG7KO2GgLXUbCoUht9ILjVM/mZW3hwIRmTlkOljc6BudXvicBkuIWTqQ54c2maLyOufFlvqQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=cvkxqloIlTXo9JLh9EsUKKF24vwSjOiMeRjag/XPRuc=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, 26 Feb 2025 09:50:32 +0800
-Lance Yang <ioworker0@gmail.com> wrote:
-
-> On Tue, Feb 25, 2025 at 3:02 PM Masami Hiramatsu (Google)
-> <mhiramat@kernel.org> wrote:
-> >
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Add a hung_task detector mutex blocking test sample code.
-> >
-> > This module will create a dummy file on the debugfs. That file will
-> > cause the read process to sleep for enough long time (256 seconds)
-> > while holding a mutex. As a result, the second process will wait on
-> > the mutex for a prolonged duration and be detected by the hung_task
-> > detector.
-> >
-> > Usage is;
-> >
-> >  > cd /sys/kernel/debug/hung_task
-> >  > cat mutex & cat mutex
-> >
-> > and wait for hung_task message.
-> >
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  samples/Kconfig                     |    9 +++++
-> >  samples/Makefile                    |    1 +
-> >  samples/hung_task/Makefile          |    2 +
-> >  samples/hung_task/hung_task_mutex.c |   66 +++++++++++++++++++++++++++++++++++
-> >  4 files changed, 78 insertions(+)
-> >  create mode 100644 samples/hung_task/Makefile
-> >  create mode 100644 samples/hung_task/hung_task_mutex.c
-> >
-> > diff --git a/samples/Kconfig b/samples/Kconfig
-> > index 820e00b2ed68..09011be2391a 100644
-> > --- a/samples/Kconfig
-> > +++ b/samples/Kconfig
-> > @@ -300,6 +300,15 @@ config SAMPLE_CHECK_EXEC
-> >           demonstrate how they should be used with execveat(2) +
-> >           AT_EXECVE_CHECK.
-> >
-> > +config SAMPLE_HUNG_TASK
-> > +       tristate "Hung task detector test code"
-> > +       depends on DETECT_HUNG_TASK && DEBUG_FS
-> > +       help
-> > +         Build a module which provide a simple debugfs file. If user reads
-> > +         the file, it will sleep long time (256 seconds) with holding a
-> > +         mutex. Thus if there are 2 or more processes read this file, it
-> > +         will be detected by the hung_task watchdog.
-> > +
-> >  source "samples/rust/Kconfig"
+在 2025/2/26 10:11, Jiapeng Chong 写道:
+> ./drivers/ufs/host/ufs-rockchip.c:268:70-75: WARNING: conversion to bool not needed here.
 > 
-> I'm just wondering if we should also make the SAMPLE_HUNG_TASK
-> depend on !PREEMPT_RT for now?
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19055
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 
-Yeah, I also have a question. This does not check the blocker,
-but just providing the testing interface with mutex. So there is
-no direct connection with DETECT_HUNG_TASK_BLOCKER. Thus I didn't
-add the dependency.
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-Thank you,
+Thanks Jiapeng.
 
+
+> ---
+>   drivers/ufs/host/ufs-rockchip.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks,
-> Lance
-> 
-> >
-> >  source "samples/damon/Kconfig"
-> > diff --git a/samples/Makefile b/samples/Makefile
-> > index f24cd0d72dd0..bf6e6fca5410 100644
-> > --- a/samples/Makefile
-> > +++ b/samples/Makefile
-> > @@ -42,3 +42,4 @@ obj-$(CONFIG_SAMPLE_FPROBE)           += fprobe/
-> >  obj-$(CONFIG_SAMPLES_RUST)             += rust/
-> >  obj-$(CONFIG_SAMPLE_DAMON_WSSE)                += damon/
-> >  obj-$(CONFIG_SAMPLE_DAMON_PRCL)                += damon/
-> > +obj-$(CONFIG_SAMPLE_HUNG_TASK)         += hung_task/
-> > diff --git a/samples/hung_task/Makefile b/samples/hung_task/Makefile
-> > new file mode 100644
-> > index 000000000000..fe9dde799880
-> > --- /dev/null
-> > +++ b/samples/hung_task/Makefile
-> > @@ -0,0 +1,2 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +obj-$(CONFIG_SAMPLE_HUNG_TASK) += hung_task_mutex.o
-> > \ No newline at end of file
-> > diff --git a/samples/hung_task/hung_task_mutex.c b/samples/hung_task/hung_task_mutex.c
-> > new file mode 100644
-> > index 000000000000..7a29f2246d22
-> > --- /dev/null
-> > +++ b/samples/hung_task/hung_task_mutex.c
-> > @@ -0,0 +1,66 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * hung_task_mutex.c - Sample code which causes hung task by mutex
-> > + *
-> > + * Usage: load this module and read `<debugfs>/hung_task/mutex`
-> > + *        by 2 or more processes.
-> > + *
-> > + * This is for testing kernel hung_task error message.
-> > + * Note that this will make your system freeze and maybe
-> > + * cause panic. So do not use this except for the test.
-> > + */
-> > +
-> > +#include <linux/debugfs.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/fs.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +
-> > +#define HUNG_TASK_DIR   "hung_task"
-> > +#define HUNG_TASK_FILE  "mutex"
-> > +#define SLEEP_SECOND 256
-> > +
-> > +static const char dummy_string[] = "This is a dummy string.";
-> > +static DEFINE_MUTEX(dummy_mutex);
-> > +struct dentry *hung_task_dir;
-> > +
-> > +static ssize_t read_dummy(struct file *file, char __user *user_buf,
-> > +                         size_t count, loff_t *ppos)
-> > +{
-> > +       /* If the second task waits on the lock, it is uninterruptible sleep. */
-> > +       guard(mutex)(&dummy_mutex);
-> > +
-> > +       /* When the first task sleep here, it is interruptible. */
-> > +       msleep_interruptible(SLEEP_SECOND * 1000);
-> > +
-> > +       return simple_read_from_buffer(user_buf, count, ppos,
-> > +                               dummy_string, sizeof(dummy_string));
-> > +}
-> > +
-> > +static const struct file_operations hung_task_fops = {
-> > +       .read = read_dummy,
-> > +};
-> > +
-> > +static int __init hung_task_sample_init(void)
-> > +{
-> > +       hung_task_dir = debugfs_create_dir(HUNG_TASK_DIR, NULL);
-> > +       if (IS_ERR(hung_task_dir))
-> > +               return PTR_ERR(hung_task_dir);
-> > +
-> > +       debugfs_create_file(HUNG_TASK_FILE, 0400, hung_task_dir,
-> > +                           NULL, &hung_task_fops);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void __exit hung_task_sample_exit(void)
-> > +{
-> > +       debugfs_remove_recursive(hung_task_dir);
-> > +}
-> > +
-> > +module_init(hung_task_sample_init);
-> > +module_exit(hung_task_sample_exit);
-> > +
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_AUTHOR("Masami Hiramatsu");
-> > +MODULE_DESCRIPTION("Simple sleep under mutex file for testing hung task");
-> >
+> diff --git a/drivers/ufs/host/ufs-rockchip.c b/drivers/ufs/host/ufs-rockchip.c
+> index 5b0ea9820767..350cb0f8d0c2 100644
+> --- a/drivers/ufs/host/ufs-rockchip.c
+> +++ b/drivers/ufs/host/ufs-rockchip.c
+> @@ -265,7 +265,7 @@ static int ufs_rockchip_runtime_suspend(struct device *dev)
+>   	clk_disable_unprepare(host->ref_out_clk);
+>   
+>   	/* Do not power down the genpd if rpm_lvl is less than level 5 */
+> -	dev_pm_genpd_rpm_always_on(dev, hba->rpm_lvl < UFS_PM_LVL_5 ? true : false);
+> +	dev_pm_genpd_rpm_always_on(dev, hba->rpm_lvl < UFS_PM_LVL_5);
+>   
+>   	return ufshcd_runtime_suspend(dev);
+>   }
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
