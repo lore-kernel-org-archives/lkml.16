@@ -1,161 +1,203 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F301B21C9E7;
-	Wed, 26 Feb 2025 14:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A0B22331B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580555; cv=none; b=Eyya6EzITsxUG3UdaJbwd8VX+cb4/x1mx2hhKs9AcRTVqTO88lS1//OlW2dl0FR6Z+JzpHMuS78qQXdbtTDV7LMw7+/LPAlKiveEDgIyMwUZpeIfaDy6xKPPIAWOa80bK0zh4mSd6cWbat3afyldXJfQI+2SQXccL4eYnCaLFUM=
+	t=1740580561; cv=none; b=IVGOfbX3FCnyuASTPXjMLKS36SqoR8ci+5DUiokOL08u2f4tkfGCdU+S7fGBi1HwZqGgmxO9eUa300yt5ynTLzCUgjOHNRGmiRzpB+h0uBEX6ZgcjQzu9hOnmDfsETWpHHPyuvXhyUvQ4HI1eyeEiCAq/bHC/Yk6XWbUS6MXw0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580555; c=relaxed/simple;
-	bh=h68gsh2XEk8LO4IEBYVLcCuerDrPBhtD2D2GRTB8yzM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hAVmYiwo4KO3Drb9sKzTrvjTQwbvJr/tSjpdBs0vyITUw7gxvHex1mO5BqNY1x0+SuNRyCuc0FQ4cIzrOFZN2qTTExbafyGR5zZ0JqUakrdd6MdIrHIuwwcVe7V3m6uHVRK1aHTxNMwJJHBkShLz/O3bBjA1vS0vJpnuq0symq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SvrskYHZ; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740580561; c=relaxed/simple;
+	bh=G/ve45/onfpAnZ3RV1JGsK3x9yIrXwNuU5Lk2KU+J0I=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BMRFzoKj1FxSB3YyRA5ojJAOLXadzOfu8o69rxnPNeyWm6WZT+8YjEMxIKIQ9jwi3SHTjbwT+M+oco27urUJwqTItDShvS1nKBQIWJ8bGl2+BqNBuNKSOUHEJGGYbptrKkyPvmvYEKjbuytE5WvhyS3DPewpj/hSTMZ1U5SZit4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q0atVV/M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVRi0DoC; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Q0atVV/M; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZVRi0DoC; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SvrskYHZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740580552;
-	bh=h68gsh2XEk8LO4IEBYVLcCuerDrPBhtD2D2GRTB8yzM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=SvrskYHZYjMsocmKfAxUKmqMkvx05rKHkcpXkK4y1Hb0BSIomRFS9wcKjLK/FfDzW
-	 SRJGnKnMNSd3vnCySTQ74kp0ZhLKJQpX/4j8fh5fmEScfcVicULdLqGy1Ri9YtQ34G
-	 3pBEVQmaHakN8XAZ3gq1CFCAuGlnQ/U0ZdRDeeWGdU76wwHaPfnS64S/2EmtaFytAi
-	 kT56/ixj77tgiWqDjG8VQSeoMAkd2BS2PPGRp35qcOiCsBzEJpQcJ1PW0HqJ/KkNNj
-	 65KUxpSWJOePnVIsT+vcJ41/jgMF5V1Sm+mle9V336TAM8r9PEUTXIPzXxz8BtOnXH
-	 98xZh49YNX3qw==
-Received: from apertis-1.home (2a01cb088CcA73006086F5F072c6a07a.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:8cca:7300:6086:f5f0:72c6:a07a])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q0atVV/M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVRi0DoC";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Q0atVV/M";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZVRi0DoC"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id BA22017E066F;
-	Wed, 26 Feb 2025 15:35:51 +0100 (CET)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Wed, 26 Feb 2025 15:35:28 +0100
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt8395-radxa-nio-12l: Add Radxa
- 8 HD panel
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 403E321114;
+	Wed, 26 Feb 2025 14:35:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=Q0atVV/MiLpk65gHZtcnmm17Cw6+1XYgeb3OIjaImyV7kTUJB68fMnxBSgh7NXa4GLYGW6
+	xqcLJ661ZTl99TMSDTYFyah0eiScr6fK8BwOvTyL/HevXnA3Z+yn1nduOuSCFEzxxNpXiq
+	6Qc2F9s09yCuILkPsnQVr4Rb3tY6KRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=ZVRi0DoCeBq3f8n9uu9uFDoPsxCpj0NzrOSKbTSTPeU19SfRmDEu0btOpyohSxpjSceX1n
+	Tdw6lKgRKTvLqCBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580554; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=Q0atVV/MiLpk65gHZtcnmm17Cw6+1XYgeb3OIjaImyV7kTUJB68fMnxBSgh7NXa4GLYGW6
+	xqcLJ661ZTl99TMSDTYFyah0eiScr6fK8BwOvTyL/HevXnA3Z+yn1nduOuSCFEzxxNpXiq
+	6Qc2F9s09yCuILkPsnQVr4Rb3tY6KRI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580554;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QpecWeaQluUonsBvLohYlcoG6HigcU9LrmOVFPkefk8=;
+	b=ZVRi0DoCeBq3f8n9uu9uFDoPsxCpj0NzrOSKbTSTPeU19SfRmDEu0btOpyohSxpjSceX1n
+	Tdw6lKgRKTvLqCBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8F1B1377F;
+	Wed, 26 Feb 2025 14:35:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id BI1XOMkmv2dNRwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 26 Feb 2025 14:35:53 +0000
+Date: Wed, 26 Feb 2025 15:35:49 +0100
+Message-ID: <87eczk4vui.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit b9b588f22a0c
+In-Reply-To: <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+References: <874j0lvy89.wl-tiwai@suse.de>
+	<dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+	<87jz9d5cdp.wl-tiwai@suse.de>
+	<263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+	<87h64g4wr1.wl-tiwai@suse.de>
+	<7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-radxa-panel-overlay-v1-2-9e8938dfbead@collabora.com>
-References: <20250226-radxa-panel-overlay-v1-0-9e8938dfbead@collabora.com>
-In-Reply-To: <20250226-radxa-panel-overlay-v1-0-9e8938dfbead@collabora.com>
-To: kernel@collabora.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- kernel@collabora.com, Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Score: -3.30
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.994];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_FIVE(0.00)[6];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-The Radxa 8 HD touchscreen can be used with various Radxa board
-and is sold appart from the Radxa NIO 12L development kit.
+On Wed, 26 Feb 2025 15:20:20 +0100,
+Chuck Lever wrote:
+> 
+> On 2/26/25 9:16 AM, Takashi Iwai wrote:
+> > On Wed, 26 Feb 2025 15:11:04 +0100,
+> > Chuck Lever wrote:
+> >>
+> >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> >>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> >>> Chuck Lever wrote:
+> >>>>
+> >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> we received a bug report showing the regression on 6.13.1 kernel
+> >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>
+> >>>>> Quoting from there:
+> >>>>> """
+> >>>>> I use the latest TW on Gnome with a 4K display and 150%
+> >>>>> scaling. Everything has been working fine, but recently both Chrome
+> >>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> >>>>> working with Scaling.
+> >>>>> ....
+> >>>>> I am using VSCode with:
+> >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> >>>>> """
+> >>>>>
+> >>>>> Surprisingly, the bisection pointed to the backport of the commit
+> >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> >>>>> to iterate simple_offset directories").
+> >>>>>
+> >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> >>>>> release is still affected, too.
+> >>>>>
+> >>>>> For now I have no concrete idea how the patch could break the behavior
+> >>>>> of a graphical application like the above.  Let us know if you need
+> >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> >>>>> and ask there; or open another bug report at whatever you like.)
+> >>>>>
+> >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> >>>>>
+> >>>>>
+> >>>>> thanks,
+> >>>>>
+> >>>>> Takashi
+> >>>>>
+> >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>
+> >>>> We received a similar report a few days ago, and are likewise puzzled at
+> >>>> the commit result. Please report this issue to the Chrome development
+> >>>> team and have them come up with a simple reproducer that I can try in my
+> >>>> own lab. I'm sure they can quickly get to the bottom of the application
+> >>>> stack to identify the misbehaving interaction between OS and app.
+> >>>
+> >>> Do you know where to report to?
+> >>
+> >> You'll need to drive this, since you currently have a working
+> >> reproducer.
+> > 
+> > No, I don't have, I'm merely a messenger.
+> 
+> Whoever was the original reporter has the ability to reproduce this and
+> answer any questions the Chrome team might have. Please have them drive
+> this. I'm already two steps removed, so it doesn't make sense for me to
+> report a problem for which I have no standing.
 
-Add a DTS overlay for this panel.
+Yeah, I'm going to ask the original reporter, but this is still not
+perfect at all; namely, you'll be missed in the loop.  e.g. who can
+answer to the questions from Chrome team about the breakage commit?
+That's why I asked you posting it previously.  If it has to be done by
+the original reporter, at least, may your name / mail be put as the
+contact for the kernel stuff in the report?
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
----
- arch/arm64/boot/dts/mediatek/Makefile              |  2 +
- .../mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso  | 64 ++++++++++++++++++++++
- 2 files changed, 66 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index ae1147eca9a915f117487101e2ad4acead97adfe..58484e8300632edbdef24bbda33ccf00db9df937 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -100,9 +100,11 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-genio-1200-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8390-genio-700-evk.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-kontron-3-5-sbc-i1200.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8395-radxa-nio-12l-8-hd-panel.dtbo
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
- 
- # Device tree overlays support
- DTC_FLAGS_mt7986a-bananapi-bpi-r3 := -@
- DTC_FLAGS_mt7986a-bananapi-bpi-r3-mini := -@
- DTC_FLAGS_mt7988a-bananapi-bpi-r4 := -@
-+DTC_FLAGS_mt8395-radxa-nio-12l := -@
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso
-new file mode 100644
-index 0000000000000000000000000000000000000000..5d633f61a62c3175fbfa133f3ea5b1a6a0b0fec5
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l-8-hd-panel.dtso
-@@ -0,0 +1,64 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Radxa Display 8 HD touchscreen module
-+ * Copyright (C) 2025 Collabora Ltd.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+&dsi0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "radxa,display-8hd-ad002", "jadard,jd9365da-h3";
-+		reg = <0>;
-+		backlight = <&backlight>;
-+		vdd-supply = <&mt6359_vcn33_2_bt_ldo_reg>;
-+		vccio-supply = <&mt6360_ldo2>;
-+		reset-gpios = <&pio 108 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&panel_default_pins>;
-+
-+		port {
-+			dsi_panel_in: endpoint {
-+				remote-endpoint = <&dsi0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&disp_pwm0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_default_pins>;
-+	status = "okay";
-+};
-+
-+&dsi0_out {
-+	remote-endpoint = <&dsi_panel_in>;
-+};
-+
-+&mipi_tx0 {
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	touchscreen@14 {
-+		compatible = "goodix,gt911";
-+		reg = <0x14>;
-+		interrupts-extended = <&pio 132 IRQ_TYPE_EDGE_RISING>;
-+		irq-gpios = <&pio 132 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&pio 133 GPIO_ACTIVE_HIGH>;
-+		VDDIO-supply = <&mt6359_vcn33_2_bt_ldo_reg>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touch_pins>;
-+	};
-+};
+thanks,
 
--- 
-2.48.1
-
+Takashi
