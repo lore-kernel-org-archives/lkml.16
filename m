@@ -1,156 +1,162 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634A3EEBB;
-	Wed, 26 Feb 2025 01:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379A1151991
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740532838; cv=none; b=iEpcerMbNYeDSqR5JNimtm7D07HAgXKjB2dtCjjwoXFOsHWAAiT/pF5rOuWiJ+JSiRUtT0JWkgcl1/KFX4GDWnQmf4hXjvKENEcqTk5ofpHLBedBVCIzh6kw5D1UsZNZHi/xhwlCckIt0emtnuZxBCEOTll1YCgib79X4enrr14=
+	t=1740532862; cv=none; b=XWnREOr/JGh20AWl0OfRXKC73hJt+O0QfET1bVXjizUygaetIGInVG+kAP/nInYdmLkMVwCDsbsH/egPtzLmOgEmkSEyRzyGgNr0ItyZzRXOaLLHKQiwqW9K4i1PbpMOXxF+KxQT+MU2buFrxPx5IKUjqBLeNWvH2Qgvzto5vhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740532838; c=relaxed/simple;
-	bh=1y+CsCuTNBZX2g/3ocZNhC6n59KFuU6Pz+bZyclOKXY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bTS0SoLj3sl2sRNunxTJ1Wi9PkgmN4X/i/rDC9z7L6XyWgumYys5lFr4RWWrbY9k/mM5uKBClFdFot1iI8Nom63lupLoJ8gHo6cm2UeG0TXCgqTTI3v4c9GdfppqtBM8h295Jd3NnS83iustI3xxHf6/ZENJOg0q4J/YtS6TTW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z2c8m06hZz4f3l2C;
-	Wed, 26 Feb 2025 09:20:08 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 43BF11A06DC;
-	Wed, 26 Feb 2025 09:20:31 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgD3W2BbbL5nY96kEw--.12272S4;
-	Wed, 26 Feb 2025 09:20:29 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: ming.lei@redhat.com,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk,
-	vgoyal@redhat.com
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH] blk-throttle: fix lower bps rate by throtl_trim_slice()
-Date: Wed, 26 Feb 2025 09:16:27 +0800
-Message-Id: <20250226011627.242912-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1740532862; c=relaxed/simple;
+	bh=ej9DtK6/GIC7P6gUFFvgcMeLI/e2OMKxKBwv3JUqlfA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=b/KG+I4B3aUksQbOiy5DXr7L0zIH2Dlo6p9kNt3HrInOhDeBSRIhTy8jGxYXAv/I1aSMO/JJei6MVGxGHZG4bv9KpJjk07fVWIbVmw6ewWnu2N8qMpO7nHHEU5xhNWyln2WJfThgTovnTiGNMhG+tKV4JHHDjchnI9rPlYRiSRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JF8J6OZH; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JF8J6OZH"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so13507251a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:21:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740532860; x=1741137660; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2evnJTAT7xA7jPdud/d0boBZNUrVlDGplkZhVlal7I=;
+        b=JF8J6OZHs3i/gprr3UH6HFCXbV2H8SxYVBS1/TrmeLbPBZBVoKZhQHe1tOrziB2AC0
+         a4fm7XlKk/bKfIJjGlZ/tv/2AHSAl5Zs9DRgcHtbih6aRM7ME0MwbMSNNAE3fbl7EGSY
+         lO21Qt6+3XHZKtc4lae6iy/C3VSKza8D156/ePu4kpwEXdNT3pqepIcQEJS5la8wposL
+         xzGyXDSAQ117ZPS6ROVcp/glKCS/0zGMALiS7K3+hI0pLNPsOKA8U1Iq5cEvZutOkSbb
+         /sl/F8eV1dIP9fDl6VDMqkQD8W8sDVrKc+mM1m7Lwv0OZl5cUKld0My8gXb9MMZxVDFj
+         ACqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740532860; x=1741137660;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2evnJTAT7xA7jPdud/d0boBZNUrVlDGplkZhVlal7I=;
+        b=oxhn1RWXyIlAa1an/yrqKXmvWhmy57u80zn/gQNm1/J0EgPnKRoJOaNRLBNrNe1x0W
+         sCq0g4Y+Mq6oLByAN394paK/Jc5cOAhdUiBE5/eTqwvbf1dT97zU8gVKT3TelVXAtFmp
+         WNIYhOLpMb2qKv+Gu5m0YEQdKgCGZ8nDnZH3hAOjM5eIET1wA2QdNGmxvRfEYt9LPG3n
+         +IGlohYLmRNq2y/m97ocOLPcFTQsQMw2R6he28oqqYO2z2jyfbj9sbN0Xnq+9AW1YxR5
+         IE1YQC03lIoG24s7NZIjXTNnp1LdJpa3SHIsB5Exty443G1nxySHKephPL4vTasdd/e0
+         zCxg==
+X-Forwarded-Encrypted: i=1; AJvYcCV4deCM+jPSt8lyJ9AmuEbcq/Wu+qZ6IgJ14LFACUIp7FrVyMfa1evyv6KA86ZLGnwrReTXqT6Hdrtr13M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ8QjVIb0voUabLkMUxbmfdjxrIEsgKWE+vBqLUIBitDj2Uz4V
+	nhX+8JuC8qUpbbCBqu3x71VDeRIosyK88s2A6xE2v7YJHa4TblwZ1oNkfWKKkbVaSmqHd6PchnB
+	fRg==
+X-Google-Smtp-Source: AGHT+IHg18aY5r8Tckm8ifppI9xalzebABi31M7tGArAxnDvvCsGP5kXSFQLYelbvQ5IR8I5g7C00iuW5NM=
+X-Received: from pjbsw12.prod.google.com ([2002:a17:90b:2c8c:b0:2fa:284f:adae])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:f944:b0:2ee:f440:53ed
+ with SMTP id 98e67ed59e1d1-2fe68d058e5mr7870141a91.31.1740532860549; Tue, 25
+ Feb 2025 17:21:00 -0800 (PST)
+Date: Tue, 25 Feb 2025 17:20:59 -0800
+In-Reply-To: <20250128015345.7929-4-szy0127@sjtu.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgD3W2BbbL5nY96kEw--.12272S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4DCr4UArWfGF1fuw18Grg_yoW5Cw13pF
-	W3Ar4agFWUXFy2kFW3X3Z3Jay0k3yrGFy5Gwn5ur4rAa45Cr1fKFnxAr4Yka43A3s3ur4a
-	v3WqvryxCF1jyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Mime-Version: 1.0
+References: <20250128015345.7929-1-szy0127@sjtu.edu.cn> <20250128015345.7929-4-szy0127@sjtu.edu.cn>
+Message-ID: <Z75se_OZQvaeQE-4@google.com>
+Subject: Re: [PATCH v7 3/3] KVM: SVM: Flush cache only on CPUs running SEV guest
+From: Sean Christopherson <seanjc@google.com>
+To: Zheyun Shen <szy0127@sjtu.edu.cn>
+Cc: thomas.lendacky@amd.com, pbonzini@redhat.com, tglx@linutronix.de, 
+	kevinloughlin@google.com, mingo@redhat.com, bp@alien8.de, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Tue, Jan 28, 2025, Zheyun Shen wrote:
+> On AMD CPUs without ensuring cache consistency, each memory page
+> reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(),
+> thereby affecting the performance of other programs on the host.
+> 
+> Typically, an AMD server may have 128 cores or more, while the SEV guest
+> might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
+> to bind these 8 vCPUs to specific physical CPUs.
+> 
+> Therefore, keeping a record of the physical core numbers each time a vCPU
+> runs can help avoid flushing the cache for all CPUs every time.
+> 
+> Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
+> ---
+>  arch/x86/kvm/svm/sev.c | 30 +++++++++++++++++++++++++++---
+>  arch/x86/kvm/svm/svm.c |  2 ++
+>  arch/x86/kvm/svm/svm.h |  5 ++++-
+>  3 files changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 1ce67de9d..4b80ecbe7 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -252,6 +252,27 @@ static void sev_asid_free(struct kvm_sev_info *sev)
+>  	sev->misc_cg = NULL;
+>  }
+>  
+> +void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
 
-The bio submission time may be a few jiffies more than the expected
-waiting time, due to 'extra_bytes' can't be divided in
-tg_within_bps_limit(), and also due to timer wakeup delay. In this
-case, adjust slice_start to jiffies will discard the extra wait time,
-causing lower rate than expected.
+And now I'm very confused.
 
-This problem will cause blktests throtl/001 failure in case of
-CONFIG_HZ_100=y, fix it by preserving one finished slice in
-throtl_trim_slice() and allowing deviation between [0, 2 slices).
+v1 and v2 marked the CPU dirty in pre_sev_run(), which AFAICT is exactly when a
+CPU should be recorded as having dirtied memory.  v3 fixed a bug with using
+get_cpu(), but otherwise was unchanged.  Tom even gave a Tested-by for v3.
 
-For example, assume bps_limit is 1000bytes, 1 jiffes is 10ms, and
-slice is 20ms(2 jiffies), expected rate is 1000 / 1000 * 20 = 20 bytes
-per slice.
+Then v4 comes along, and without explanation, moved the code to vcpu_load().
 
-If user issues two 21 bytes IO, then wait time will be 30ms for the
-first IO:
+  Changed the time of recording the CPUs from pre_sev_run() to vcpu_load().
 
-bytes_allowed = 20, extra_bytes = 1;
-jiffy_wait = 1 + 2 = 3 jiffies
+Why?  If there's a good reason, then that absolutely, positively belongs in the
+changelog and in the code as a comment.  If there's no good reason, then...
 
-and consider
-extra 1 jiffies by timer, throtl_trim_slice() will be called at:
+Unless I hear otherwise, my plan is to move this back to pre_sev_run().
 
-jiffies = 40ms
-slice_start = 0ms, slice_end= 40ms
-bytes_disp = 21
+> +{
+> +	/*
+> +	 * To optimize cache flushes when memory is reclaimed from an SEV VM,
+> +	 * track physical CPUs that enter the guest for SEV VMs and thus can
+> +	 * have encrypted, dirty data in the cache, and flush caches only for
+> +	 * CPUs that have entered the guest.
+> +	 */
+> +	cpumask_set_cpu(cpu, to_kvm_sev_info(vcpu->kvm)->wbinvd_dirty_mask);
+> +}
+> +
+> +static void sev_do_wbinvd(struct kvm *kvm)
+> +{
+> +	/*
+> +	 * TODO: Clear CPUs from the bitmap prior to flushing.  Doing so
+> +	 * requires serializing multiple calls and having CPUs mark themselves
+> +	 * "dirty" if they are currently running a vCPU for the VM.
+> +	 */
 
-In this case, before the patch, real rate in the first two slices is
-10.5 bytes per slice, and slice will be updated to:
+A comment is definitely warranted, but I don't think we should mark it TODO.  I'm
+not convinced the benefits justify the complexity, and I don't want someone trying
+to "fix" the code because it has a TODO.
 
-jiffies = 40ms
-slice_start = 40ms, slice_end = 60ms,
-bytes_disp = 0;
+> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+> index 43fa6a16e..82ec80cf4 100644
+> --- a/arch/x86/kvm/svm/svm.h
+> +++ b/arch/x86/kvm/svm/svm.h
+> @@ -112,6 +112,8 @@ struct kvm_sev_info {
+>  	void *guest_req_buf;    /* Bounce buffer for SNP Guest Request input */
+>  	void *guest_resp_buf;   /* Bounce buffer for SNP Guest Request output */
+>  	struct mutex guest_req_mutex; /* Must acquire before using bounce buffers */
+> +	/* CPUs invoked VMRUN call wbinvd after guest memory is reclaimed */
+> +	struct cpumask *wbinvd_dirty_mask;
 
-Hence the second IO will have to wait another 30ms;
+This needs to be cpumask_var_t, as the cpumask APIs expect the mask to be
+statically allocated when CONFIG_CPUMASK_OFFSTACK=n.  E.g. this will hit a NULL
+pointer deref.
 
-With the patch, the real rate in the first slice is 20 bytes per slice,
-which is the same as expected, and slice will be updated:
+  static __always_inline bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
+  {
+	cpumask_clear(*mask);
+	return true;
+  }
 
-jiffies=40ms,
-slice_start = 20ms, slice_end = 60ms,
-bytes_disp = 1;
+The wbinvd_dirty_mask name also turns out to be less than good.  In part because
+of the looming WBNOINVD change, but also because it kinda sorta collides with
+wbinvd_dirty_mask in kvm_vcpu_arch, which gets really confusing when trying to
+read the code.
 
-And now, there is still 19 bytes allowed in the second slice, and the
-second IO will only have to wait 10ms;
-
-Fixes: e43473b7f223 ("blkio: Core implementation of throttle policy")
-Reported-by: Ming Lei <ming.lei@redhat.com>
-Closes: https://lore.kernel.org/linux-block/20250222092823.210318-3-yukuai1@huaweicloud.com/
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 8d149aff9fd0..cb472cf7b6b6 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -599,14 +599,23 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- 	 * sooner, then we need to reduce slice_end. A high bogus slice_end
- 	 * is bad because it does not allow new slice to start.
- 	 */
--
- 	throtl_set_slice_end(tg, rw, jiffies + tg->td->throtl_slice);
- 
- 	time_elapsed = rounddown(jiffies - tg->slice_start[rw],
- 				 tg->td->throtl_slice);
--	if (!time_elapsed)
-+	/* Don't trim slice until at least 2 slices are used */
-+	if (time_elapsed < tg->td->throtl_slice * 2)
- 		return;
- 
-+	/*
-+	 * The bio submission time may be a few jiffies more than the expected
-+	 * waiting time, due to 'extra_bytes' can't be divided in
-+	 * tg_within_bps_limit(), and also due to timer wakeup delay. In this
-+	 * case, adjust slice_start to jiffies will discard the extra wait time,
-+	 * causing lower rate than expected. Therefore, one slice is preserved,
-+	 * allowing deviation that is less than two slices.
-+	 */
-+	time_elapsed -= tg->td->throtl_slice;
- 	bytes_trim = calculate_bytes_allowed(tg_bps_limit(tg, rw),
- 					     time_elapsed) +
- 		     tg->carryover_bytes[rw];
--- 
-2.39.2
-
+I don't have any great ideas, the best I came up with was have_run_cpus.
