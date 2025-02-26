@@ -1,96 +1,117 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [91.198.224.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09CA221D9F;
-	Wed, 26 Feb 2025 14:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.198.224.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DDC21171A;
+	Wed, 26 Feb 2025 14:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580156; cv=none; b=pSGsyzc7Fp+PWRIh6U29KcJ8VSrcFkiEsrMwwQuAMSPGQoiIwEOn6rpa23OkUisnet4voRe2clWWs2Fi7yevCwySLqZ3ZKnMzFQkhcX8QuLliPecewUgwcIE3KNlgF9Eyp0OQcBnbJ3Z19j8pf0PX840rsFFLhPFRs4wUB1Fuv4=
+	t=1740580157; cv=none; b=tuu2dZzDMuS9zAmYfISzbYirMa0vQKZ3i9yHK94IJRa3/nKvp0Cxb6YHAcJvo6XYloKsvS3sVvGOCTPJnzAWbOJXYfHVUJdu+aGjiMo1cShXhEWEqqgnzieeojLCy/Wzkl2WADvLK6+3aZddUsLOPiU/87ffqfcArZHoIrjYOpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580156; c=relaxed/simple;
-	bh=hsH3z8+Fe83MSGygibT8r+xbnfbuooikdd5M6Z1Gi8Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P2Xik0VcpkAjLe3tN+CmHI/W/gTAh2IpbaAfdk7HRVIyPxYe9BbzhCrOo/MNcuAmW/GRYgpQIbDz/eecosxdmohpxqtvf3RAerhTLXtin44EGYVKJp3Q+DTSU2qdtTSsA0jMvxpOZ3nhQKrhFd3WLynLDuMrtm3+D1gueVPLACk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b=gDfvb9tv; arc=none smtp.client-ip=91.198.224.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+	s=arc-20240116; t=1740580157; c=relaxed/simple;
+	bh=U3XRu9BKSm5XctFw50gAsIGx5i29PiCx3IkvGID+i84=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lUYUH3sMvhf3rR/mQ78EP3Zz5oBACJKgSEKuMLwuvhYQUShnQHH3u3D3bXT5TaFOZugEQS3dEoo5D2lT89AaloxQcy08I5p4LFqLOctc4wDXigSrc+6qsl5ELzR2jWyBqcjVvxG4SW+1ETkZ0P5EO0bF96EXb64hUcYEYKQXgtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOt/uCgm; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b="gDfvb9tv"
-Received: from [194.37.255.9] (helo=mxout.expurgate.net)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=916645903c=ms@dev.tdt.de>)
-	id 1tnI71-00EzaC-8y; Wed, 26 Feb 2025 15:10:11 +0100
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1tnI70-00Bwwr-59; Wed, 26 Feb 2025 15:10:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev.tdt.de;
-	s=z1-selector1; t=1740579009;
-	bh=Z7M5M5uuzltxq1/nZr/jD9f7D60n9T0rSoTt1WRqIZU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gDfvb9tvmb8UDr0r2OK5vwRUB4MArzo4Y+E1AM/wAAlNDC8I/c+5BY+9Tr1QvWfSw
-	 i/6wGrJYCJz50zwCTd0vx2FZqtNqznVOdlGr1w1jGwl4E2acgpCRVZHkIYFoW4Uz4Y
-	 YwiyZp6T+4UtkFeJZh3H9VxnTSHu8NeiHQ0NcK9ELL3Xv2uuGXY3Q0mK4NrFaKiKCO
-	 R0sYB4fc/DQjZkt+RPiS0Y6/afAuAg/VfRr/Krn2gBtKGBdf+IYJNGv/qN44URJFns
-	 x29KNpPi5zi1WVwA8mRxPap97VWre6zV0iAmpt4bb+2+oXo8WO9VeDdBnOfbKkYRO4
-	 DGUBGjh0bzKsA==
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id AA1A9240041;
-	Wed, 26 Feb 2025 15:10:09 +0100 (CET)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id A21EF240036;
-	Wed, 26 Feb 2025 15:10:09 +0100 (CET)
-Received: from mschiller1.dev.tdt.de (unknown [10.2.3.20])
-	by mail.dev.tdt.de (Postfix) with ESMTPSA id 1DCDA238A3;
-	Wed, 26 Feb 2025 15:10:09 +0100 (CET)
-From: Martin Schiller <ms@dev.tdt.de>
-To: linux@armlinux.org.uk, andrew@lunn.ch, hkallweit1@gmail.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net-next] net: sfp: add quirk for FS SFP-10GM-T copper SFP+ module
-Date: Wed, 26 Feb 2025 15:10:02 +0100
-Message-ID: <20250226141002.1214000-1-ms@dev.tdt.de>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOt/uCgm"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so7852115e87.1;
+        Wed, 26 Feb 2025 06:29:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740580153; x=1741184953; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P2kiu/HsUSKw59lXGQxuGghGnHIXAC6zHsBsQ9Wyn90=;
+        b=WOt/uCgmB52JDNqvMqBaxDvo0DLTgMguPGtyUm/n5XIgK7pBF6lSvMNxpH06awe7bK
+         fJpTNQ0gbIj1hyZmdEKYBZezvwFWf9vhkzk8y+Q6uzfvK9TaogVXsswB7hX/FYqU7DDh
+         uc0bDQXzAwvVN4Of2G5+2Y9V3BrrmQGuqNga9Oir/mXZqLxC+kgtRMmU9FFy2cg48KMk
+         bJCJ7NhPi37bAXxyxKuxujc2e7s6/5V7Pivz0DSHcAzKIr+wIxklQevXnHcU5EEs3P5Z
+         bHEwgj2J6nXW15OFpnMb2HcgphKcZhoLwZQhFbWHxavPrVCHJz6e5GmgLGGcKJ9qPaUY
+         bhrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740580153; x=1741184953;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P2kiu/HsUSKw59lXGQxuGghGnHIXAC6zHsBsQ9Wyn90=;
+        b=KzGLpYanAsaaAMLMci1OPmTDf1CQD5zQ52kwIRUy/guVlu0XAfYGRkBbs5JojyUTGI
+         8hBHbH/5N7E6+VgOB08XskavYrlO2StnXTCrHovZq6DtjdLNEH9oFdgN7suCEhMnUMyL
+         jqhuzUMSbmbK0FZhnEyiSpa4jhW324foDap+2UeTHd5KXM+NE+FbNstV1X3Z1t0XMHbF
+         tXZeOeKOElwcCErZj3fPtyy5cTlZqQCud6n2gQpVLvNMCZ5oqFGLcDIMWU96nGSji2fX
+         rM5AOg7Kc1+kmKnWqFOfSVGGTAzVPwJSOLBpBJEg1iMfxU4egWEIeNHLUUI9dEIo4NHf
+         DUHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJr7MdqhQm7TK7ja55aXe7tueRTg0PpjwzAgcId2dBgkRUgqVQJJFF525SW4GqpGZXSsQmw0/imO30YSo=@vger.kernel.org, AJvYcCX84ojp5EdXVtGOjAsPJzkA26BD/e2RGhMOLvw4GROc64JqzhxjQ5smVoCyz9ygRcxtq8X/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSWpPvEFzqJEyrAZg8wySEXvvkk79C8D1kozvZwXMWtuOSnBAo
+	Dx+0WZdQxxO6mRhU9JoR68Hm1P6MeSClimxORsjZLyApWocg+aH9Wfq8/GNc
+X-Gm-Gg: ASbGncv33g/XUVBXjyi/zoBXXV+gTU2VabVTCL/dK/K5lIPT1B+1CCDHSAeDLn5L/Lg
+	kMqUQr1k1Y+bxYIyKC75AIxFvbF7BCMc1sPm6vcTKxHuh4DlzdIT9e1wj6ktRbi/gWTbA/aEnn0
+	ebX1i5jjL+FoOx99f+rE2QQf1gBdmdOU7hb6mavfeNLzeOppaRIa5WE+GlTLLEoDgkDc6ozih8l
+	oEHbi2DHeSL9eoNGJIlECR3Kr3/ostOuZqlUAUc0RlY3UR5Qf1if9lkPf/eaIIXWw+zMSNUwALA
+	NhCn3r2lV0SL0zixJBubl6DjCNNJqwsZnsXl9EgBV4YnlDlN
+X-Google-Smtp-Source: AGHT+IEwjEWmxx978qjGI809JUeWj0qQG87ubxYGrnt++ojs9L+/TlCz0ZiMFqjIWL2+srJwoWhmfw==
+X-Received: by 2002:a05:6512:3c99:b0:549:38eb:d690 with SMTP id 2adb3069b0e04-5493c5c11b5mr1910652e87.36.1740580152930;
+        Wed, 26 Feb 2025 06:29:12 -0800 (PST)
+Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548b3fc7a07sm391300e87.20.2025.02.26.06.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:29:12 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 26 Feb 2025 15:29:09 +0100
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Cheung Wall <zzqq0103.hey@gmail.com>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v3 1/3] rcutorture: Allow a negative value for
+ nfakewriters
+Message-ID: <Z78lNRKjLQKigyLw@pc636>
+References: <20250225110020.59221-1-urezki@gmail.com>
+ <20250225212409.GA1807836@joelnvbox>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-purgate: clean
-X-purgate-type: clean
-X-purgate-ID: 151534::1740579010-AFFAF3DC-1E7331F6/0/0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225212409.GA1807836@joelnvbox>
 
-Add quirk for a copper SFP that identifies itself as "FS" "SFP-10GM-T".
-It uses RollBall protocol to talk to the PHY and needs 4 sec wait before
-probing the PHY.
+On Tue, Feb 25, 2025 at 04:24:09PM -0500, Joel Fernandes wrote:
+> On Tue, Feb 25, 2025 at 12:00:18PM +0100, Uladzislau Rezki (Sony) wrote:
+> > Currently "nfakewriters" parameter can be set to any value but
+> > there is no possibility to adjust it automatically based on how
+> > many CPUs a system has where a test is run on.
+> > 
+> > To address this, if the "nfakewriters" is set to negative it will
+> > be adjusted to num_online_cpus() during torture initialization.
+> > 
+> > Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > ---
+> >  kernel/rcu/rcutorture.c | 22 ++++++++++++++++------
+> >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> > index d98b3bd6d91f..f376262532ce 100644
+> > --- a/kernel/rcu/rcutorture.c
+> > +++ b/kernel/rcu/rcutorture.c
+> > @@ -148,6 +148,7 @@ MODULE_PARM_DESC(torture_type, "Type of RCU to torture (rcu, srcu, ...)");
+> 
+> IMO, this should also be updated to reflect the possibily to set it negative
+> and hence to number CPUs:
+> 
+> torture_param(int, nfakewriters, 4, "Number of RCU fake writer threads");
+> 
+You can set it to a negative as well as to number of CPUs or any other
+number.
 
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
----
- drivers/net/phy/sfp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index 9369f5297769..15284be4c38c 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -479,9 +479,10 @@ static const struct sfp_quirk sfp_quirks[] =3D {
- 	// PHY.
- 	SFP_QUIRK_F("FS", "SFP-10G-T", sfp_fixup_fs_10gt),
-=20
--	// Fiberstore SFP-2.5G-T uses Rollball protocol to talk to the PHY and
--	// needs 4 sec wait before probing the PHY.
-+	// Fiberstore SFP-2.5G-T and SFP-10GM-T uses Rollball protocol to talk
-+	// to the PHY and needs 4 sec wait before probing the PHY.
- 	SFP_QUIRK_F("FS", "SFP-2.5G-T", sfp_fixup_fs_2_5gt),
-+	SFP_QUIRK_F("FS", "SFP-10GM-T", sfp_fixup_fs_2_5gt),
-=20
- 	// Fiberstore GPON-ONU-34-20BI can operate at 2500base-X, but report 1.=
-2GBd
- 	// NRZ in their EEPROM
---=20
-2.39.5
-
+--
+Uladzislau Rezki
