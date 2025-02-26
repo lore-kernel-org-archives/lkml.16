@@ -1,162 +1,156 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2130.outbound.protection.outlook.com [40.107.117.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379A1151991
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740532862; cv=none; b=XWnREOr/JGh20AWl0OfRXKC73hJt+O0QfET1bVXjizUygaetIGInVG+kAP/nInYdmLkMVwCDsbsH/egPtzLmOgEmkSEyRzyGgNr0ItyZzRXOaLLHKQiwqW9K4i1PbpMOXxF+KxQT+MU2buFrxPx5IKUjqBLeNWvH2Qgvzto5vhI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740532862; c=relaxed/simple;
-	bh=ej9DtK6/GIC7P6gUFFvgcMeLI/e2OMKxKBwv3JUqlfA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=b/KG+I4B3aUksQbOiy5DXr7L0zIH2Dlo6p9kNt3HrInOhDeBSRIhTy8jGxYXAv/I1aSMO/JJei6MVGxGHZG4bv9KpJjk07fVWIbVmw6ewWnu2N8qMpO7nHHEU5xhNWyln2WJfThgTovnTiGNMhG+tKV4JHHDjchnI9rPlYRiSRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JF8J6OZH; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00C314EC73;
+	Wed, 26 Feb 2025 01:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.130
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740532905; cv=fail; b=kaXPMIYgndEIzBHkVdlS8EaoLfEAVz2YWJWt57Egugc9fmeZN45HMOrlV1YxU5cAfMLq60P8BzgIUobBGQ628qWnmI5I1TNGnrD6oywALJcT5ZTNaWDbZ1gbEQmCE4bwALmSVMD9AGTXCT+3RUU5McpIJJiN8i/y8pKw66zuwg4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740532905; c=relaxed/simple;
+	bh=KB0NMbgO03a79xTXx5GKporeC59JkvNcL9mcIwjBK3g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qNC24Y19EHqj7IRbBDEA7FKj0NXb7mrHmXFB2y10bzo2B0IdqiPvWhuTTG6CGD2yXS2jve6lqHk/pZu8wlSE+kn1I6XtrCjJZVqcY+Uo8fHM3t5zcuCNimVzEnHt51o5+Jv2XLA+xIflT5CZd2t8y911IX/OyZQTnGkgpVlitUk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b=XAdk3kVy; arc=fail smtp.client-ip=40.107.117.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JF8J6OZH"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so13507251a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:21:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740532860; x=1741137660; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2evnJTAT7xA7jPdud/d0boBZNUrVlDGplkZhVlal7I=;
-        b=JF8J6OZHs3i/gprr3UH6HFCXbV2H8SxYVBS1/TrmeLbPBZBVoKZhQHe1tOrziB2AC0
-         a4fm7XlKk/bKfIJjGlZ/tv/2AHSAl5Zs9DRgcHtbih6aRM7ME0MwbMSNNAE3fbl7EGSY
-         lO21Qt6+3XHZKtc4lae6iy/C3VSKza8D156/ePu4kpwEXdNT3pqepIcQEJS5la8wposL
-         xzGyXDSAQ117ZPS6ROVcp/glKCS/0zGMALiS7K3+hI0pLNPsOKA8U1Iq5cEvZutOkSbb
-         /sl/F8eV1dIP9fDl6VDMqkQD8W8sDVrKc+mM1m7Lwv0OZl5cUKld0My8gXb9MMZxVDFj
-         ACqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740532860; x=1741137660;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2evnJTAT7xA7jPdud/d0boBZNUrVlDGplkZhVlal7I=;
-        b=oxhn1RWXyIlAa1an/yrqKXmvWhmy57u80zn/gQNm1/J0EgPnKRoJOaNRLBNrNe1x0W
-         sCq0g4Y+Mq6oLByAN394paK/Jc5cOAhdUiBE5/eTqwvbf1dT97zU8gVKT3TelVXAtFmp
-         WNIYhOLpMb2qKv+Gu5m0YEQdKgCGZ8nDnZH3hAOjM5eIET1wA2QdNGmxvRfEYt9LPG3n
-         +IGlohYLmRNq2y/m97ocOLPcFTQsQMw2R6he28oqqYO2z2jyfbj9sbN0Xnq+9AW1YxR5
-         IE1YQC03lIoG24s7NZIjXTNnp1LdJpa3SHIsB5Exty443G1nxySHKephPL4vTasdd/e0
-         zCxg==
-X-Forwarded-Encrypted: i=1; AJvYcCV4deCM+jPSt8lyJ9AmuEbcq/Wu+qZ6IgJ14LFACUIp7FrVyMfa1evyv6KA86ZLGnwrReTXqT6Hdrtr13M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ8QjVIb0voUabLkMUxbmfdjxrIEsgKWE+vBqLUIBitDj2Uz4V
-	nhX+8JuC8qUpbbCBqu3x71VDeRIosyK88s2A6xE2v7YJHa4TblwZ1oNkfWKKkbVaSmqHd6PchnB
-	fRg==
-X-Google-Smtp-Source: AGHT+IHg18aY5r8Tckm8ifppI9xalzebABi31M7tGArAxnDvvCsGP5kXSFQLYelbvQ5IR8I5g7C00iuW5NM=
-X-Received: from pjbsw12.prod.google.com ([2002:a17:90b:2c8c:b0:2fa:284f:adae])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:f944:b0:2ee:f440:53ed
- with SMTP id 98e67ed59e1d1-2fe68d058e5mr7870141a91.31.1740532860549; Tue, 25
- Feb 2025 17:21:00 -0800 (PST)
-Date: Tue, 25 Feb 2025 17:20:59 -0800
-In-Reply-To: <20250128015345.7929-4-szy0127@sjtu.edu.cn>
+	dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b="XAdk3kVy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BDN1JJmCBkf8UDeDZPHysAxJR7nsHQ/ONoQfrepZf1uVlusW+tsia5Bh409+eIkDVGCnRYuXT0RkiXFEjqD58J9byS3GooUaefx8PPMwg2aAxReGQIyQGV8+Wq5ViMWGCpEsiANrizQkjDEDMjzxNTdVC4WdkzYYBuzk9SfRmS+/z/0rxgLYXwur9xrgK2g1+k5dUuqnVP0HHTlCfa/9bfOYNhOsL8k6jECGAttOlEVXfq7cSRavHaVDx0E95XZXLKVTv81C2P3P/Ej2s/Jc80a3WJcBPZvdSFFbHZWVGcT6fZqFbHYjT1g2KQAMVlZ52WFgAQvpzHlOjWe+NHoQcA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ASEOde3FKdXXGfs0wJN/vrVK1YqOLY0Hwr6UhkvoauA=;
+ b=UeYmSXbN3ttF8r6PUljUgwh/otu2/CvgBUcZw0SFxrLA2y3YDo6ymBMwdTRGAhYuh0yB01NnGlHm7eIlvnZOh7pA+8VXtIjkvsIBsjJvVAj5+w6uFkX6ndxaxA4AEe7bDMjVUC/IIxGCAKj9XXBaXKaUZ4xn3QVfZg0nqeE2dBkLDj8dRTSRdO561n8hIqBJ2tVk6t/zzNGh8xOiP0Cy3ODo2dMGRf1k3jSih6Q3CkMaFS3UKBMP0+ZYNtlyKCiK0TBRM1tb2B3EMiK7Seto0Hi/IVlRx9tNzJI/7Dg6mrtzEWiVrNTlVxwUEpRyZQFDzge4SsV6AnWuhoAhM0oqdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cixtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ASEOde3FKdXXGfs0wJN/vrVK1YqOLY0Hwr6UhkvoauA=;
+ b=XAdk3kVyqFrIIHUCmE48JqyqUFK4flVznu44PxKcyV7roa47rwszeXnr4aCHJbt0iB95oJQL1fYBFDBDYEKC5N2f1YBGK42BQx7KA820YSnDAMhOGqlWt0YB6bduY0ZZd+t4/YmH+JZM0Vh5H/FVkfCRItUp0Fzv/1XKxNY6ag47HTkpHvDSfPVGyGvqOqGlmdztBa/sEmWb+OzZTnahfVIAMuTe/6L1+BOpppnh/4eMDHMZpLslkCVbRWCXcg5Wpf0AVF0SUmV457utq1N43PFAdbvtP2PXoFGy16OX4bYddaR5cGfrOURhN0fxFva1vEOizKXf9z6NFifULO5Dig==
+Received: from SI2P153CA0003.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::20) by
+ SEZPR06MB5622.apcprd06.prod.outlook.com (2603:1096:101:c8::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.20; Wed, 26 Feb 2025 01:21:38 +0000
+Received: from SG1PEPF000082E3.apcprd02.prod.outlook.com
+ (2603:1096:4:140:cafe::3d) by SI2P153CA0003.outlook.office365.com
+ (2603:1096:4:140::20) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.6 via Frontend Transport; Wed,
+ 26 Feb 2025 01:21:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E3.mail.protection.outlook.com (10.167.240.6) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 01:21:37 +0000
+Received: from localhost.localdomain (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 6C3B341604E7;
+	Wed, 26 Feb 2025 09:21:36 +0800 (CST)
+From: Peter Chen <peter.chen@cixtech.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	marcin@juszkiewicz.com.pl,
+	Peter Chen <peter.chen@cixtech.com>,
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: [PATCH v2 1/6] dt-bindings: vendor-prefixes: Add CIX Technology Group Co., Ltd.
+Date: Wed, 26 Feb 2025 09:21:31 +0800
+Message-Id: <20250226012136.854614-2-peter.chen@cixtech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250226012136.854614-1-peter.chen@cixtech.com>
+References: <20250226012136.854614-1-peter.chen@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250128015345.7929-1-szy0127@sjtu.edu.cn> <20250128015345.7929-4-szy0127@sjtu.edu.cn>
-Message-ID: <Z75se_OZQvaeQE-4@google.com>
-Subject: Re: [PATCH v7 3/3] KVM: SVM: Flush cache only on CPUs running SEV guest
-From: Sean Christopherson <seanjc@google.com>
-To: Zheyun Shen <szy0127@sjtu.edu.cn>
-Cc: thomas.lendacky@amd.com, pbonzini@redhat.com, tglx@linutronix.de, 
-	kevinloughlin@google.com, mingo@redhat.com, bp@alien8.de, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E3:EE_|SEZPR06MB5622:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 0b329291-7978-4caf-f1ed-08dd5603ea52
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?GWoCZogjXzzVRilZ0CvTj5VChkLxALcBx2i2Oo+7TZ6lTogYxTKNn4ayEWf4?=
+ =?us-ascii?Q?wpIuNH8CB22geiCWUBU+pThYxg3t1e7NKPyPSLns8ETz7m3Jpv4ikVhUWBkx?=
+ =?us-ascii?Q?zD80sHkKJkKPIJoKe4nKNtV8nHxNIDSV6Q5yy8bUc6gdLFoGsFQKe8OhMytt?=
+ =?us-ascii?Q?mb9oSBDLW6yCPGYCpBljLeWuMG69B1+g69kwEjkYIRqgyxRwKtRp2MCv9B6Z?=
+ =?us-ascii?Q?I6GaogWpakDFZHOYlv326HHyXlGRZ4kNLF0CXTrJqZ4OxWOuBFIubOR2pCC0?=
+ =?us-ascii?Q?HiRa4fDLlXm/olsm2VjSUm09yp1FOrEPQo+Zkefz3yhvH5G+g/V1XbSngFZE?=
+ =?us-ascii?Q?/YVjINsnZqSZnspaQLcGGOz3OUpdW7Be/uY/0Vpgf6H7QqM5bXdR0xJCnnOt?=
+ =?us-ascii?Q?LBd2jD5Bl2dRlhNGeyaCw2sLaWwZqFc91MqvFyTWSUBBq8poX9B8AXbe+yFy?=
+ =?us-ascii?Q?/x85suBxUUrDxhCUSdXN+lYAx0P7YlPL733eT+G3kWeNTL9G9HH60HepmnuD?=
+ =?us-ascii?Q?h0+vKXa8DLGiMxccN0Bvavas05ldfr+zISlS6QAgfFeqdy56acM//Jd6jkDI?=
+ =?us-ascii?Q?XRNWj86VJwmdLMy/6YbSOVGXSnuPMleB4MMsRRrfKSCeUNjzuvjxa0ICYGaw?=
+ =?us-ascii?Q?31NxlUYY4e99lDijqE8BwNvtQpcsAy83u5yX/9b2CuLeq7fFBgocuyS/J9Ro?=
+ =?us-ascii?Q?yLp5NU1z57ZUmGEKeujEeIgaUxXoCTaC62DtHeGfBY3tOKf1/aI7aOex99j5?=
+ =?us-ascii?Q?/EC0s5ZcjZrCd7Iw/GHmpgD/QRLhZEPr/j0iQ1ayW0HxFGU9MAUiev8ixbpG?=
+ =?us-ascii?Q?pWjFltTmn3tV+lIP/NLt+MZfQvwzmWPCfNtK4U/+a4XEH0ga+Kpa3wrIV4v1?=
+ =?us-ascii?Q?LI7hxBtYEEuzAXMydwrmpwf00MH0EihrKWvumS+uZIA/4cBLZulXFkSgseNv?=
+ =?us-ascii?Q?euCF8+XeMUftyRLyQEKFTw3nfXvGOp9lO7qyOsewQYrx0vaw+POq+dSUbUwO?=
+ =?us-ascii?Q?8FOkj9rSPiqoIIFQzK7gPWRLciwPiRj2BwPh+kxMAqWadk6GPg3EmRDRRsLV?=
+ =?us-ascii?Q?rRWaXzUGWDTp7WWPMIeiHj97NzkfxT4MNy/aw3yiKNRy6jqMD2qj3QWCY2Lz?=
+ =?us-ascii?Q?rCK8sSP8zE0oKQERMEvJhpDyqb3Si3jTBUrBiiIt0YvTTRvJsyTdcZ7yYuSn?=
+ =?us-ascii?Q?jrMdR9zjEIkJiAVUZg/N7vpERvs2IUMBv/PzwCTFChuIjIZ3yfLafTCUYvIp?=
+ =?us-ascii?Q?OXGwJ0Wm9gynaFiduHuueTEYwJoKR85Ni4QZ5hT3vYIsxvwcuthew8SiZpna?=
+ =?us-ascii?Q?//ogEcY+BP+ZUBwga/xY6rvaM/bc7R2r9/QzRlXEoQbBvh9EOSWBW7obh//z?=
+ =?us-ascii?Q?RCYBtycOsNWpa5tU9pB2VDNkU1PteuW/npUnwtCURjo09I3vCurDrv7s+HWz?=
+ =?us-ascii?Q?xLJgiPCMmBg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 01:21:37.0798
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b329291-7978-4caf-f1ed-08dd5603ea52
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E3.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR06MB5622
 
-On Tue, Jan 28, 2025, Zheyun Shen wrote:
-> On AMD CPUs without ensuring cache consistency, each memory page
-> reclamation in an SEV guest triggers a call to wbinvd_on_all_cpus(),
-> thereby affecting the performance of other programs on the host.
-> 
-> Typically, an AMD server may have 128 cores or more, while the SEV guest
-> might only utilize 8 of these cores. Meanwhile, host can use qemu-affinity
-> to bind these 8 vCPUs to specific physical CPUs.
-> 
-> Therefore, keeping a record of the physical core numbers each time a vCPU
-> runs can help avoid flushing the cache for all CPUs every time.
-> 
-> Signed-off-by: Zheyun Shen <szy0127@sjtu.edu.cn>
-> ---
->  arch/x86/kvm/svm/sev.c | 30 +++++++++++++++++++++++++++---
->  arch/x86/kvm/svm/svm.c |  2 ++
->  arch/x86/kvm/svm/svm.h |  5 ++++-
->  3 files changed, 33 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 1ce67de9d..4b80ecbe7 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -252,6 +252,27 @@ static void sev_asid_free(struct kvm_sev_info *sev)
->  	sev->misc_cg = NULL;
->  }
->  
-> +void sev_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+CIX Technology Group Co., Ltd. is a high performance Arm SoC design
+company. Link: https://www.cixtech.com/.
 
-And now I'm very confused.
+Acked-by: Fugang Duan <fugang.duan@cixtech.com>
+Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v1 and v2 marked the CPU dirty in pre_sev_run(), which AFAICT is exactly when a
-CPU should be recorded as having dirtied memory.  v3 fixed a bug with using
-get_cpu(), but otherwise was unchanged.  Tom even gave a Tested-by for v3.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1..5e76223e4570 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -302,6 +302,8 @@ patternProperties:
+     description: Cirrus Logic, Inc.
+   "^cisco,.*":
+     description: Cisco Systems, Inc.
++  "^cix,.*":
++    description: CIX Technology Group Co., Ltd.
+   "^clockwork,.*":
+     description: Clockwork Tech LLC
+   "^cloos,.*":
+-- 
+2.25.1
 
-Then v4 comes along, and without explanation, moved the code to vcpu_load().
-
-  Changed the time of recording the CPUs from pre_sev_run() to vcpu_load().
-
-Why?  If there's a good reason, then that absolutely, positively belongs in the
-changelog and in the code as a comment.  If there's no good reason, then...
-
-Unless I hear otherwise, my plan is to move this back to pre_sev_run().
-
-> +{
-> +	/*
-> +	 * To optimize cache flushes when memory is reclaimed from an SEV VM,
-> +	 * track physical CPUs that enter the guest for SEV VMs and thus can
-> +	 * have encrypted, dirty data in the cache, and flush caches only for
-> +	 * CPUs that have entered the guest.
-> +	 */
-> +	cpumask_set_cpu(cpu, to_kvm_sev_info(vcpu->kvm)->wbinvd_dirty_mask);
-> +}
-> +
-> +static void sev_do_wbinvd(struct kvm *kvm)
-> +{
-> +	/*
-> +	 * TODO: Clear CPUs from the bitmap prior to flushing.  Doing so
-> +	 * requires serializing multiple calls and having CPUs mark themselves
-> +	 * "dirty" if they are currently running a vCPU for the VM.
-> +	 */
-
-A comment is definitely warranted, but I don't think we should mark it TODO.  I'm
-not convinced the benefits justify the complexity, and I don't want someone trying
-to "fix" the code because it has a TODO.
-
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 43fa6a16e..82ec80cf4 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -112,6 +112,8 @@ struct kvm_sev_info {
->  	void *guest_req_buf;    /* Bounce buffer for SNP Guest Request input */
->  	void *guest_resp_buf;   /* Bounce buffer for SNP Guest Request output */
->  	struct mutex guest_req_mutex; /* Must acquire before using bounce buffers */
-> +	/* CPUs invoked VMRUN call wbinvd after guest memory is reclaimed */
-> +	struct cpumask *wbinvd_dirty_mask;
-
-This needs to be cpumask_var_t, as the cpumask APIs expect the mask to be
-statically allocated when CONFIG_CPUMASK_OFFSTACK=n.  E.g. this will hit a NULL
-pointer deref.
-
-  static __always_inline bool zalloc_cpumask_var(cpumask_var_t *mask, gfp_t flags)
-  {
-	cpumask_clear(*mask);
-	return true;
-  }
-
-The wbinvd_dirty_mask name also turns out to be less than good.  In part because
-of the looming WBNOINVD change, but also because it kinda sorta collides with
-wbinvd_dirty_mask in kvm_vcpu_arch, which gets really confusing when trying to
-read the code.
-
-I don't have any great ideas, the best I came up with was have_run_cpus.
