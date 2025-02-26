@@ -1,207 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D7B192B77;
-	Wed, 26 Feb 2025 14:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1EA218AAB;
+	Wed, 26 Feb 2025 14:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580263; cv=none; b=Dx6EPGvcFfDkVKF/Raxge+xXWD4UpsiHpOHxtW1S8GyJ3kgjMOPkJ2aoClPbrmYko9iBAX5HzUX5d1wLevkJRxDWcn+l/+PVSyvcrcbR7jsUBX8IBRYp+HAgPcbAOoeM6J19H9BQAdaMGvsaoZtfMvspSt5IhTgNKrRo2Bj8sfI=
+	t=1740580269; cv=none; b=XfUQjDiRekla9z3AkNtnoAwg9f8+WtvKNBjUsPIDi6kG7p8sdD6tV8+CNcK1bfR6bAqOQquL9WLTsc9JM9PMyDP5hQAnw3a5Fy+SR7iue21MYwK7LdkqOH3IkmZYat62sIi938w4u+jA63kyM+M2oV5qKG0O9xqtxEm16TbrEfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580263; c=relaxed/simple;
-	bh=E3sm61jZe/lp7YwwF12TBEhOBv3rz1T48nGVqAYjySU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QxbgcTBhjuocgxYtQzerYaJOqt2L9dx5LE8L8Ru/9BBOhrZFNcI4qR2Xb2cRfbIbrSqvM+swCb1ZQqdz3Q/fsTb2RHiDZRxoMDu1ePdjNcEnjRz5n/td+wipxc3lXVX0U44NOvBvvij89ZR5EJvp2eXvx3/Aow+6IvZl1hsOkBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nXrDxxV2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740580269; c=relaxed/simple;
+	bh=32HpFo50ac9idpc84DjD9AHiRDMLXxEkvUovO/ujBfo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cFiUHeq57RU+09NCXb83pGOwzSuvsnDYdL2qyPAFj+uD5ibc7XBP4aO+zKLRv3YXV+RA1BzgobYKJzjg/OzPRVEwcLuvZrxkvrCinnooQ2Tsx4sXr90/umq7wGvUZYpqCFMruMeEQ1t2HSrRtM7K9ewa8m8yc6KGNotJNhM7nWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6Z20c4v; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nXrDxxV2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77A7DC4CED6;
-	Wed, 26 Feb 2025 14:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740580262;
-	bh=E3sm61jZe/lp7YwwF12TBEhOBv3rz1T48nGVqAYjySU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=nXrDxxV2jqRVqz5FCBgOTaYTmI5+m217Z/CYjCjWvU7rj2aLrTkv1dHiyOzEVJWqT
-	 jXfCRi3VG6kVj/b5m89RRcmrVGZebbqrHOpWaA1AJwr0i4pghUHCHM1FY9a7pnY4FO
-	 DAMP6/B8mN+r5Kejke5yiklaPvrfFv0I3ALmwUls=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable <stable@kernel.org>,
-	Takashi Iwai <tiwai@suse.de>,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: [PATCH] Revert "libfs: Use d_children list to iterate simple_offset directories"
-Date: Wed, 26 Feb 2025 15:29:45 +0100
-Message-ID: <2025022644-blinked-broadness-c810@gregkh>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6Z20c4v"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30a2d4b61e4so50550961fa.1;
+        Wed, 26 Feb 2025 06:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740580266; x=1741185066; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eswWLfkEnQpdtu+isG+K14u+ZfJSvAbvqWCgztSMnzs=;
+        b=g6Z20c4vzn6m7QRftTJifouyaoZmqTzg8hKvrifQAU6mEdPd9IYscYbGxuGXg7y5VH
+         xKsSnCvx+ZFWP4WZB7nVMh9dE5r7ccNr92YKKwFyqT1mDoePZ0uwTTkYu54jfYAwZh/v
+         TEydLx4Ut6AFIc1hc+Ulp8L9+knwp5RFb/ObiLyZpi5WMzHJFlMcGJJ56jkEd/EoVyta
+         x8dURyDQjiSjTIg3dsOhG7Uq8G8yhyrA2Iyu8032Q1a5V65jFtQUyuY9L3ikdjr1BsXG
+         ++zogDGQiXJUNJ4AXvJVpJB54IkEoVuPt5s2/iUQhiIRIhYjN+jUBVyjPUK5vIFYJ1fd
+         kU8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740580266; x=1741185066;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eswWLfkEnQpdtu+isG+K14u+ZfJSvAbvqWCgztSMnzs=;
+        b=FLu2zfuleyWJXT5in/nWns6t3+PLGSGs2O08Ibij+zy7RZi8zf3S5Zg3GdrxvGBV/K
+         KvjW0N0G/jrpmt/cEO+imzl3XZjUKnqPbz27TP6RIOwzipOhZQ0NpOAwQcJEfjBIiih4
+         VM72np+bwaYpUxZzi7P/fdD83D1cDdzGXQ5T2uF6EeMIz1+blGN2nOX9r7G+UDgUeTRP
+         PrfWZyexz8KhW0EmUpbNqnQxLQAMoUs+S7k9MmXxla/49mHk3vKVp9o99mS9fmWE6Cqp
+         gYQ/C+DGmQYvHxDXLAIYJOBGlbkPaQTLbSlpTZyVYy5TQOYZvYjzgyKv/H/swNptZ5vE
+         +UNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUekZpOrtxLnHt7wJKv3L02+ACMb1wijMdatWGCq4HCtLJGI586BiT0eZ4yRhIXl0wiJBos/rXVT4GgMvQ=@vger.kernel.org, AJvYcCVtVvu8Sz3Pp9vm4ERbmyQg8HQ15aSHlifbYpiZnHR3grdsEVlWtKC9i2Q15MaOHaK+n2sM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkQe+9WCR78YUx0ijP6VWwpwRS/p+yHQhfuwGXV81iTbNtaa3A
+	rXxNZI0kFD9iPESfSWlKhrDfKm8CA403rq9GdPGleR3k7sG4crPv
+X-Gm-Gg: ASbGnctUWuW6Xo9gH/TbljQfj5nZ4sMYu+WnuYvT6CejqzMBUbXpOYMWhUhZN5sOM12
+	tE8o8gjKoSfm6NgV5zyMIwoWFeWbg8375PnopLWGz8ev7D+mRu3ydEpwu+Qvov5x0EHSrXopAT7
+	pBXqQYlaxT06qXLManD+mC3EsGqhuIrathuyX9JM/xCWwNpqac1IKzwtnIX7OAeh8wNwIKMgkiX
+	bghRit56VIy+VdZ6BHC82URwk0EwUIaJSK5J2PNh713IuaR+usLxCvpO9qjvC+0hneRny4cQNoM
+	35FlGgiYpEDvQjgJlOvpOjMU8VdwL0MAoNTl2vOE2UqOarDT
+X-Google-Smtp-Source: AGHT+IGJW1NAlywvROVKX3Fy47FV/keZ7CVdQO/S4ffINoO6dO3Lou+LoCLXMQL+bGSH5kPPCn5/wg==
+X-Received: by 2002:a2e:9a98:0:b0:307:5879:e7d8 with SMTP id 38308e7fff4ca-30b792cb29cmr26025521fa.30.1740580265244;
+        Wed, 26 Feb 2025 06:31:05 -0800 (PST)
+Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819f5e4asm5422341fa.63.2025.02.26.06.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:31:04 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 26 Feb 2025 15:31:01 +0100
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Keith Busch <keith.busch@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-nvme@lists.infradead.org,
+	leitao@debian.org
+Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from
+ kmem_cache_destroy()
+Message-ID: <Z78lpfLFvNxjoTNf@pc636>
+References: <20240807-b4-slab-kfree_rcu-destroy-v2-6-ea79102f428c@suse.cz>
+ <Z7iqJtCjHKfo8Kho@kbusch-mbp>
+ <2811463a-751f-4443-9125-02628dc315d9@suse.cz>
+ <Z7xbrnP8kTQKYO6T@pc636>
+ <ef97428b-f6e7-481e-b47e-375cc76653ad@suse.cz>
+ <Z73p2lRwKagaoUnP@kbusch-mbp>
+ <CAOSXXT6-oWjKPV1hzXa5Ra4SPQg0L_FvxCPM0Sh0Yk6X90h0Sw@mail.gmail.com>
+ <Z74Av6tlSOqcfb-q@pc636>
+ <Z74KHyGGMzkhx5f-@pc636>
+ <8d7aabb2-2836-4c09-9fc7-8bde271e7f23@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4709; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=E3sm61jZe/lp7YwwF12TBEhOBv3rz1T48nGVqAYjySU=; b=owGbwMvMwCRo6H6F97bub03G02pJDOn7VSOYerSvm4q/NDy4oPboNBt25pQr9o+c1126qBiY2 izitnNhRywLgyATg6yYIsuXbTxH91ccUvQytD0NM4eVCWQIAxenAEzk/0mGeRbTnAWCb0Y+mllp OCkgWbBsob3zDYYF60T6Xebv7eFNi/C9e5dHaKuE7dcCAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d7aabb2-2836-4c09-9fc7-8bde271e7f23@suse.cz>
 
-This reverts commit b9b588f22a0c049a14885399e27625635ae6ef91.
+On Wed, Feb 26, 2025 at 11:59:53AM +0100, Vlastimil Babka wrote:
+> On 2/25/25 7:21 PM, Uladzislau Rezki wrote:
+> >>
+> > WQ_MEM_RECLAIM-patch fixes this for me:
+> 
+> Sounds good, can you send a formal patch then?
+>
+Do you mean both? Test case and fix? I can :)
 
-There are reports of this commit breaking Chrome's rendering mode.  As
-no one seems to want to do a root-cause, let's just revert it for now as
-it is affecting people using the latest release as well as the stable
-kernels that it has been backported to.
+> Some nits below:
+> 
+> > <snip>
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 4030907b6b7d..1b5ed5512782 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -1304,6 +1304,8 @@ module_param(rcu_min_cached_objs, int, 0444);
+> >  static int rcu_delay_page_cache_fill_msec = 5000;
+> >  module_param(rcu_delay_page_cache_fill_msec, int, 0444);
+> > 
+> > +static struct workqueue_struct *rcu_reclaim_wq;
+> > +
+> >  /* Maximum number of jiffies to wait before draining a batch. */
+> >  #define KFREE_DRAIN_JIFFIES (5 * HZ)
+> >  #define KFREE_N_BATCHES 2
+> > @@ -1632,10 +1634,10 @@ __schedule_delayed_monitor_work(struct kfree_rcu_cpu *krcp)
+> >         if (delayed_work_pending(&krcp->monitor_work)) {
+> >                 delay_left = krcp->monitor_work.timer.expires - jiffies;
+> >                 if (delay < delay_left)
+> > -                       mod_delayed_work(system_unbound_wq, &krcp->monitor_work, delay);
+> > +                       mod_delayed_work(rcu_reclaim_wq, &krcp->monitor_work, delay);
+> >                 return;
+> >         }
+> > -       queue_delayed_work(system_unbound_wq, &krcp->monitor_work, delay);
+> > +       queue_delayed_work(rcu_reclaim_wq, &krcp->monitor_work, delay);
+> >  }
+> > 
+> >  static void
+> > @@ -1733,7 +1735,7 @@ kvfree_rcu_queue_batch(struct kfree_rcu_cpu *krcp)
+> >                         // "free channels", the batch can handle. Break
+> >                         // the loop since it is done with this CPU thus
+> >                         // queuing an RCU work is _always_ success here.
+> > -                       queued = queue_rcu_work(system_unbound_wq, &krwp->rcu_work);
+> > +                       queued = queue_rcu_work(rcu_reclaim_wq, &krwp->rcu_work);
+> >                         WARN_ON_ONCE(!queued);
+> >                         break;
+> >                 }
+> > @@ -1883,7 +1885,7 @@ run_page_cache_worker(struct kfree_rcu_cpu *krcp)
+> >         if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
+> >                         !atomic_xchg(&krcp->work_in_progress, 1)) {
+> >                 if (atomic_read(&krcp->backoff_page_cache_fill)) {
+> > -                       queue_delayed_work(system_unbound_wq,
+> > +                       queue_delayed_work(rcu_reclaim_wq,
+> >                                 &krcp->page_cache_work,
+> >                                         msecs_to_jiffies(rcu_delay_page_cache_fill_msec));
+> >                 } else {
+> > @@ -2120,6 +2122,10 @@ void __init kvfree_rcu_init(void)
+> >         int i, j;
+> >         struct shrinker *kfree_rcu_shrinker;
+> > 
+> > +       rcu_reclaim_wq = alloc_workqueue("rcu_reclaim",
+> 
+> Should we name it "kvfree_rcu_reclaim"? rcu_reclaim sounds too generic
+> as if it's part of rcu itself?
+> 
+> > +               WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
+> 
+> Do we want WQ_SYSFS? Or maybe only when someone asks, with a use case?
+> 
+If someone asks, IMO.
 
-Link: https://lore.kernel.org/r/874j0lvy89.wl-tiwai@suse.de
-Fixes: b9b588f22a0c ("libfs: Use d_children list to iterate simple_offset directories")
-Cc: stable <stable@kernel.org>
-Reported-by: Takashi Iwai <tiwai@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/libfs.c | 90 ++++++++++++++++++------------------------------------
- 1 file changed, 29 insertions(+), 61 deletions(-)
-
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 8444f5cc4064..96f491f82f99 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -247,13 +247,12 @@ EXPORT_SYMBOL(simple_dir_inode_operations);
- 
- /* simple_offset_add() never assigns these to a dentry */
- enum {
--	DIR_OFFSET_FIRST	= 2,		/* Find first real entry */
- 	DIR_OFFSET_EOD		= S32_MAX,
- };
- 
- /* simple_offset_add() allocation range */
- enum {
--	DIR_OFFSET_MIN		= DIR_OFFSET_FIRST + 1,
-+	DIR_OFFSET_MIN		= 2,
- 	DIR_OFFSET_MAX		= DIR_OFFSET_EOD - 1,
- };
- 
-@@ -458,82 +457,51 @@ static loff_t offset_dir_llseek(struct file *file, loff_t offset, int whence)
- 	return vfs_setpos(file, offset, LONG_MAX);
- }
- 
--static struct dentry *find_positive_dentry(struct dentry *parent,
--					   struct dentry *dentry,
--					   bool next)
-+static struct dentry *offset_find_next(struct offset_ctx *octx, loff_t offset)
- {
--	struct dentry *found = NULL;
--
--	spin_lock(&parent->d_lock);
--	if (next)
--		dentry = d_next_sibling(dentry);
--	else if (!dentry)
--		dentry = d_first_child(parent);
--	hlist_for_each_entry_from(dentry, d_sib) {
--		if (!simple_positive(dentry))
--			continue;
--		spin_lock_nested(&dentry->d_lock, DENTRY_D_LOCK_NESTED);
--		if (simple_positive(dentry))
--			found = dget_dlock(dentry);
--		spin_unlock(&dentry->d_lock);
--		if (likely(found))
--			break;
--	}
--	spin_unlock(&parent->d_lock);
--	return found;
--}
--
--static noinline_for_stack struct dentry *
--offset_dir_lookup(struct dentry *parent, loff_t offset)
--{
--	struct inode *inode = d_inode(parent);
--	struct offset_ctx *octx = inode->i_op->get_offset_ctx(inode);
-+	MA_STATE(mas, &octx->mt, offset, offset);
- 	struct dentry *child, *found = NULL;
- 
--	MA_STATE(mas, &octx->mt, offset, offset);
--
--	if (offset == DIR_OFFSET_FIRST)
--		found = find_positive_dentry(parent, NULL, false);
--	else {
--		rcu_read_lock();
--		child = mas_find(&mas, DIR_OFFSET_MAX);
--		found = find_positive_dentry(parent, child, false);
--		rcu_read_unlock();
--	}
-+	rcu_read_lock();
-+	child = mas_find(&mas, DIR_OFFSET_MAX);
-+	if (!child)
-+		goto out;
-+	spin_lock(&child->d_lock);
-+	if (simple_positive(child))
-+		found = dget_dlock(child);
-+	spin_unlock(&child->d_lock);
-+out:
-+	rcu_read_unlock();
- 	return found;
- }
- 
- static bool offset_dir_emit(struct dir_context *ctx, struct dentry *dentry)
- {
- 	struct inode *inode = d_inode(dentry);
-+	long offset = dentry2offset(dentry);
- 
--	return dir_emit(ctx, dentry->d_name.name, dentry->d_name.len,
--			inode->i_ino, fs_umode_to_dtype(inode->i_mode));
-+	return ctx->actor(ctx, dentry->d_name.name, dentry->d_name.len, offset,
-+			  inode->i_ino, fs_umode_to_dtype(inode->i_mode));
- }
- 
--static void offset_iterate_dir(struct file *file, struct dir_context *ctx)
-+static void offset_iterate_dir(struct inode *inode, struct dir_context *ctx)
- {
--	struct dentry *dir = file->f_path.dentry;
-+	struct offset_ctx *octx = inode->i_op->get_offset_ctx(inode);
- 	struct dentry *dentry;
- 
--	dentry = offset_dir_lookup(dir, ctx->pos);
--	if (!dentry)
--		goto out_eod;
- 	while (true) {
--		struct dentry *next;
--
--		ctx->pos = dentry2offset(dentry);
--		if (!offset_dir_emit(ctx, dentry))
--			break;
--
--		next = find_positive_dentry(dir, dentry, true);
--		dput(dentry);
--
--		if (!next)
-+		dentry = offset_find_next(octx, ctx->pos);
-+		if (!dentry)
- 			goto out_eod;
--		dentry = next;
-+
-+		if (!offset_dir_emit(ctx, dentry)) {
-+			dput(dentry);
-+			break;
-+		}
-+
-+		ctx->pos = dentry2offset(dentry) + 1;
-+		dput(dentry);
- 	}
--	dput(dentry);
- 	return;
- 
- out_eod:
-@@ -572,7 +540,7 @@ static int offset_readdir(struct file *file, struct dir_context *ctx)
- 	if (!dir_emit_dots(file, ctx))
- 		return 0;
- 	if (ctx->pos != DIR_OFFSET_EOD)
--		offset_iterate_dir(file, ctx);
-+		offset_iterate_dir(d_inode(dir), ctx);
- 	return 0;
- }
- 
--- 
-2.48.1
-
+--
+Uladzislau Rezki
