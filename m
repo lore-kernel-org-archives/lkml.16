@@ -1,127 +1,105 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6554A322A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8274322A;
+	Wed, 26 Feb 2025 11:35:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740569635; cv=none; b=r6qANpT36NnBbCuMYJl/TmcxNcRvrJn5scfoF/e83/eg2Kanp6hV3OWHldURau+Ia8aYgqH7hYu7o1J0ck4v7rypxg6Dy1pAwYBllEDmsCrmF4toOxYPL4PZWiLY6MzrmK3pdpNGIC3+8zHoqbFVWCmjxAlatwxbLiLx7RVi4l4=
+	t=1740569732; cv=none; b=RH8nWKQDbdY4DF03MGlYXO99soNGb5pY3nay/sgouZycg3QjQQH2OT/9mJwME0JSzq2bqphf/BBiA4koZ2HMFVAPJWuwZlgfC1xGV8taY5sD1DXMM/q3JgqgZzA/0oowYDdcY9RMcNBK3vu4yBbriWbuu7qubQLSwibNxeDK9IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740569635; c=relaxed/simple;
-	bh=VEcaaA2VUlEIIxyi7R5bg4TfuTafRFf0fzKtDg9/U0s=;
+	s=arc-20240116; t=1740569732; c=relaxed/simple;
+	bh=Y18CQNs0L+XFUrMs7xJNhaibdlj4yhyXeV9G5NktoPs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S9XhhxKBdTi4ap4JilOcHjiDVWTqCatFsExBdBzd+xBl6+7RZvZno16rST4s9+79ymmWQs2xohzZ0ZQ9tB556DIrb8PeNsgC3FI+ehV9ngDKkbZD5ZrifIwGDN0gD28/WAGta4R1EHKD76VONRqrKQC/8uwaYUegMXMwm4nQlwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3c9ff7000001d7ae-2f-67befc1cc8a2
-Date: Wed, 26 Feb 2025 20:33:43 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kernel_team@skhynix.com,
-	akpm@linux-foundation.org, ying.huang@intel.com,
-	vernhao@tencent.com, mgorman@techsingularity.net, hughd@google.com,
-	willy@infradead.org, david@redhat.com, peterz@infradead.org,
-	luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	rjgolo@gmail.com
-Subject: RFC v12 rebased on mm-unstable as of Feb 21, 2025
-Message-ID: <20250226113342.GB1935@system.software.com>
-References: <20250220052027.58847-1-byungchul@sk.com>
- <8accbd91-ca59-43f8-b190-7e1ac3df5e11@intel.com>
- <fc94c383-5788-43c8-beb3-2fd76acae7bd@suse.cz>
- <20250220233710.GB39373@system.software.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=V+En9aXmU8JQWLtGsuFbV4FG/DujIFUHiojoG/bjhvbfHTjj5WBroqzOeJT8Mu18TaIutFrPnMbuTzzkACkQUiHEAgcYk1ktbDay97Gdk2eXldR9ruUEEJgMm+VsToF8tOHsgxn98G2yfLWMpJwwSr8++Zhhlxmi5UwzTT8nas8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vDcQvtCa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vDcQvtCa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAFF2C4CED6;
+	Wed, 26 Feb 2025 11:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740569731;
+	bh=Y18CQNs0L+XFUrMs7xJNhaibdlj4yhyXeV9G5NktoPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vDcQvtCag2xtXASOLbx7dX/58yvrbkfroUGes9kKr3X0TykKR2tU/rnIfR13Y5uWL
+	 OHNwy8n8S/nRf2FzyNYBAIegKqqUjKngWLokARqVN3v6Z0b/IyM+u+tDrRSYJxKunw
+	 Rr3v7ts1t8xOJpaE7n0uClORzCpHbwLB0QObO8lrqGE4f45ryZcsJ9IKUHESYm0Zhh
+	 JEptOD1t/gTYtwHtHyvRPzAVgV1E1kACszJTA38CnEuoeY2XepbzOFKiG4pCQDZ1bm
+	 wbY+ZQI0vNadashXAu+x9sth0PbBL9sDYT1u275J9j0qOD/jfzWfNUfT6RJ987oWSC
+	 kAJ0xD0kfrxRA==
+Date: Wed, 26 Feb 2025 11:35:27 +0000
+From: Mark Brown <broonie@kernel.org>
+To: "Torreno, Alexis Czezar" <AlexisCzezar.Torreno@analog.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/2] regulator: adp5055: Add driver for adp5055
+Message-ID: <8afb3d94-336c-4e33-a73b-fc690f287556@sirena.org.uk>
+References: <20250225-upstream-adp5055-v1-0-a5a7f8e46986@analog.com>
+ <20250225-upstream-adp5055-v1-2-a5a7f8e46986@analog.com>
+ <a7f7d4dc-283a-40b9-bb1b-0bc8aceb99c1@sirena.org.uk>
+ <SA1PR03MB634020464A151651A08ECAACF1C22@SA1PR03MB6340.namprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2Je8O42lRvDoqDRl"
+Content-Disposition: inline
+In-Reply-To: <SA1PR03MB634020464A151651A08ECAACF1C22@SA1PR03MB6340.namprd03.prod.outlook.com>
+X-Cookie: I've been there.
+
+
+--2Je8O42lRvDoqDRl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220233710.GB39373@system.software.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMIsWRmVeSWpSXmKPExsXC9ZZnoa7Mn33pBlN3KljMWb+GzeLzhn9s
-	Fp9ePmC0+Lr+F7PF0099LBaXd81hs7i35j+rxflda1ktdizdx2Rx6cACJovjvQeYLObf+8xm
-	sXnTVGaL2Y19jBbHp0xltPj9A6jj5KzJLA6CHt9b+1g8ds66y+6xYFOpx+YVWh6L97xk8ti0
-	qpPNY9OnSewe786dY/c4MeM3i8f7fVfZPM4sOMLusfWXnUfj1GtsHp83yQXwRXHZpKTmZJal
-	FunbJXBlzFlnXrBapOJ+w37GBsZn/F2MnBwSAiYSH78sZYOxr725wQRiswioSsxatAgsziag
-	LnHjxk9mEFtEQEXi0YajrF2MXBzMAu3MEhs6p4ElhAWsJJ6vXckIYvMKmEts3nkWrEhI4ASj
-	xMz+RhaIhKDEyZlPwGxmAS2JG/9eAm3jALKlJZb/4wAJcwpYSpxrP8kOYosKKEsc2HacCWSO
-	hMA2dol1k+eyQ1wqKXFwxQ2WCYwCs5CMnYVk7CyEsQsYmVcxCmXmleUmZuaY6GVU5mVW6CXn
-	525iBEblsto/0TsYP10IPsQowMGoxMP74MzedCHWxLLiytxDjBIczEoivJyZe9KFeFMSK6tS
-	i/Lji0pzUosPMUpzsCiJ8xp9K08REkhPLEnNTk0tSC2CyTJxcEo1MFqaKt8Vmx1SbSexQGi+
-	R82Hr3c5fyzKm77yiHXS+9eb5T133zB67/Nwvo2myob9DKLzNBw3VJfPkEljaz638Wz8ldIN
-	n94vnT5H6c7XN8aTp/Qr7z168bqVs9BTQ/EPWgsO/lqSNflJg8OzKCG1BrsoW8etKp+bWndz
-	for9J9wqqSzE1vV2b5oSS3FGoqEWc1FxIgCoLs8uxgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsXC5WfdrCvzZ1+6weWrghZz1q9hs/i84R+b
-	xaeXDxgtvq7/xWzx9FMfi8XhuSdZLS7vmsNmcW/Nf1aL87vWslrsWLqPyeLSgQVMFsd7DzBZ
-	zL/3mc1i86apzBazG/sYLY5Pmcpo8fsHUMfJWZNZHIQ8vrf2sXjsnHWX3WPBplKPzSu0PBbv
-	ecnksWlVJ5vHpk+T2D3enTvH7nFixm8Wj/f7rrJ5LH7xgcnjzIIj7B5bf9l5NE69xubxeZNc
-	AH8Ul01Kak5mWWqRvl0CV8acdeYFq0Uq7jfsZ2xgfMbfxcjJISFgInHtzQ0mEJtFQFVi1qJF
-	bCA2m4C6xI0bP5lBbBEBFYlHG46ydjFycTALtDNLbOicBpYQFrCSeL52JSOIzStgLrF551mw
-	IiGBE4wSM/sbWSASghInZz4Bs5kFtCRu/HsJtI0DyJaWWP6PAyTMKWApca79JDuILSqgLHFg
-	23GmCYy8s5B0z0LSPQuhewEj8ypGkcy8stzEzBxTveLsjMq8zAq95PzcTYzAGFtW+2fiDsYv
-	l90PMQpwMCrx8D44szddiDWxrLgy9xCjBAezkggvZ+aedCHelMTKqtSi/Pii0pzU4kOM0hws
-	SuK8XuGpCUIC6YklqdmpqQWpRTBZJg5OqQbGaRfVS+QnRK4N2uoTpKzEwVOv7Ryzl1GeUSNb
-	yMhQzq1Q3vGr4L/jyyT/BXnNi5Pz3uBZe4e/TPn97wf7EmQNHvQZMJr8KT+woFVjZ/VaBhuz
-	nOCbrt4MjI/rudV49rjP6nzusLjhayAz79Hk/BusmutmxK/cW7JXdk3+KZ0wHvX1yzqfMiqx
-	FGckGmoxFxUnAgCk/JsKrQIAAA==
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 08:37:10AM +0900, Byungchul Park wrote:
-> On Thu, Feb 20, 2025 at 04:29:51PM +0100, Vlastimil Babka wrote:
-> > On 2/20/25 16:15, Dave Hansen wrote:
-> > > On 2/19/25 21:20, Byungchul Park wrote:
-> > >> I'm posting the latest version so that anyone can try luf mechanism if
-> > >> wanted by any chance.  However, I tagged RFC again because there are
-> > >> still issues that should be resolved to merge to mainline:
-> > > 
-> > > I don't see anything fundamentally different here from the last 11
-> > > versions. I think the entire approach is dangerous and basically makes
-> > > things impossible to debug. It's not clear that some of the failure
-> > > scenarios that I've brought up in the past have actually been fixed.
-> > 
-> > Yes, and it's still an invasive change to the buddy allocator.
-> 
-> Didn't want.. but admit.
-> 
-> > IIRC at Plumbers the opinion in the audience was that there might be ways to
-> > improve the batching on unmap to reduce the flushes without such an invasive
-> > and potentially dangerous change? Has that been investigated?
-> 
-> Sure.  I tried like, by holding those pages not freed until either no
-> one accesses the interesting pages or memory pressure is high.  However,
-> unfortunately it was super hard to fix performance degradation by the
-> number of page reclaim increased due to the unfreed pages.
-> 
-> > Also "Rebase on akpm/mm.git mm-unstable(5a7056135b) as of Nov 22, 2024." is
-> > very outdated at this point?
-> 
-> Sorry for that.  I will rebase and share.
+On Wed, Feb 26, 2025 at 02:24:58AM +0000, Torreno, Alexis Czezar wrote:
 
-This is the same patch set but rebased on akpm/mm.git
-mm-unstable(f7ed46277aa) as of Feb 21, 2025.
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Regulator driver for Analog Devices ADP5055
+> > > + *
+> > > + * Copyright (C) 2025 Analog Devices, Inc.
+> > > + */
 
-	Byungchul
+> > Please make the entire comment block a C++ one so things look more
+> > intentional.
 
-> 	Byungchul
-> > 
-> > Thanks,
-> > Vlastimil
-> > 
-> > > What I've said here still stands:
-> > > 
-> > >> https://lore.kernel.org/all/fab1dd64-c652-4160-93b4-7b483a8874da@intel.com/
-> > > 
-> > >> I think tglx would call all of this "tinkering".  The approach to this
-> > >> series is to "fix" narrow, specific cases that reviewers point out, make
-> > >> it compile, then send it out again, hoping someone will apply it.
-> > >> 
-> > >> So, for me, until the approach to this series changes: NAK, for x86.
-> > >> Andrew, please don't take this series.  Or, if you do, please drop the
-> > >> patch enabling it on x86.
-> > > 
-> > > I think I'd also like to stop being cc'd on this. If LUF is merged into
-> > > mainline and proven to work on arm64 or riscv for a year, I'd be happy
-> > > to take another look at enabling it on x86. I think that's just about
-> > > the only thing that would make me reconsider.
-> > > 
+> Am not familiar with this, is this where each line use // rather than /**=
+/?
+
+Yes.
+
+> > > +static int adp5055_en_func(struct regulator_dev *dev, int en_val) {
+> > > +	struct adp5055 *adp5055 =3D rdev_get_drvdata(dev);
+
+> > Just use the standard GPIO and regmap helpers for this.
+
+> Confused on this, I thought these were standard 'regmap_update_bits' and=
+=20
+> 'gpiod_set_value_cansleep'
+
+You've open coded the operations instead of using the framework helpers,
+you shouldn't need to anything other than supply data here.
+
+--2Je8O42lRvDoqDRl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme+/H4ACgkQJNaLcl1U
+h9B+XQf+P/mXfUV7Xo03nASx7ByqkyBy+VqAFOV8jDrwsw6tOmybAhlTpuC2we7w
+fklbKSvRmpMz2uU2lQwQ9q3eywDPEwlG3ezhb4fkujAy2pYxVhoRrmz4QyPpE7aM
+VDGnRcm1V2cRO5L0roR31kGvC7tSoMmNkl+Cb0cfeAuEpF5zdA+0T+OVR8s7/2LR
+uAqMh/pPeDd4ydL9QoIltNqzgDWUMhp/JcLyuaNchs0rEK0LhwAXzJwra2DkmjGs
+gh+wtVKPea5CX+SSq2C7A/4KGiGadrJWqFiZYA1nXsv1N6PlHqrFvXhTLHyNe8p/
+y6Z/kZLYuzRFZOgXTAG+gx879XaW3w==
+=bu8m
+-----END PGP SIGNATURE-----
+
+--2Je8O42lRvDoqDRl--
