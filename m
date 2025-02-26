@@ -1,43 +1,44 @@
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B564A41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5B5137E
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740528483; cv=none; b=PGCTsXXBLyCW/JgE40C4rpCJAr6F1vPUDxd10YBtHdJ4T0S3y41TeMXeLImb0Ma0scDhdOLlvxaAFQHEf+mcrZ90OVZp7st7TbCCra4waWCtpuYh/M3UnyxIAA0Sf6IgnAqiwf1zPyNf/t/vuNAArFODiBtFC6wX9mhKIFa6NKU=
+	t=1740528484; cv=none; b=kdA5bGfFmyUSDcv2iElksYACK8eGzcfgLAg2a0WgsYO3NPoddKj1/6ahCAzlpJlUjHLOa4XAXefXJHCNH5LIgYuTy3nOYnEehNhpKdshfDbUYi+BOpN4fP2yhjZPeqxWYtHuCG4EH6dNr8IoMFm0CqK4NiikRue2FzB+x92eoV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740528483; c=relaxed/simple;
-	bh=zDFtsWgi7vJw/z4QjqAL8vfoG+KVI4FTjtLprtAEssU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bF4p7MegVtaClKbEeGRhXP9gncZFYV5O3kylr3c+eKylSydS2kTe0UQIoLICThUJVJZLaTSVtOok7CCLJOkkBguSLvI5jWOfsLMBELdLR1NQc0VjqPQ9ZN//6mRz6z6Wbu6DtYju5S+jdUPVbCl4DfSUJXxydaAAPf5TE/mjQoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=T1ffb+zW; arc=none smtp.client-ip=202.36.163.20
+	s=arc-20240116; t=1740528484; c=relaxed/simple;
+	bh=Zu5Gh9u3vWCOPeyMueyqnevSxVwPXlURSSnX/6Ov2Ro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q6lOGLTqMMZU5uvP1IQcVeNPYqK009Ak+5/pfe01cEHLfx8ux4uqWC95R+PdQ46EvxZN428xB2DpDHoszz55XbkM8Jy+ma1/KEogjvkkRfu6WYnET/WnvIDGg168VpIJwyptYY8nlksNq49DJZL/ESznwxhdXzW3Dl5XkhrJT0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=eDYCsOZl; arc=none smtp.client-ip=202.36.163.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="T1ffb+zW"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="eDYCsOZl"
 Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C0AC72C0343;
-	Wed, 26 Feb 2025 13:07:52 +1300 (NZDT)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 29C0A2C064D;
+	Wed, 26 Feb 2025 13:07:59 +1300 (NZDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1740528472;
-	bh=+mRI7AEmzMx7gATbp4THP8aY4eXcjoUMqWC7MV2BTdU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T1ffb+zW07JHG6tr9ChwuqXEZAYLY9zr6xwr/gn3+nY7/7c1HqcjELVL30GmblHJX
-	 j3zKRSciORJGH0otlE57gmU/fHisbYEhnRPoEChS5D8QDsOn+0JvveVclTJmMsrCMH
-	 wcKkik8Y67YGy+jOmZm2hg0FeGSqBE3vjDMAH7ulppqqkA6tB59+9vrZKLVA0JbonJ
-	 ExVzS371nLpxnTWVAZTL4DSuTwGNfIVmY2sSt3HMLo7hf13PeVaxoO6g9LQZqf7bvt
-	 2CzaSJYNzodP1sbIFFrseFe2pVM8wiIB2ArZOSL7GHeDADFdI4/nwdVyl37cG1PniV
-	 zraS2qfASfkFQ==
+	s=mail181024; t=1740528479;
+	bh=3GwO7BhrysL3Ix8kE0b5g9JR02RYSx1ZF5aIGqoanH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=eDYCsOZl2lC+8B90JQ4J0U0qaohEKGcKY5gM2aTOdMFt3uBiAHB+mOQunGFi8Miv8
+	 RNWQsMMUH4Gs71QrAOjrwfFfrtsA44yA3ob0H54ZIT1gep6/vQ6kKxyw1lPmILP5aM
+	 Rr39tv5IGLdtl0O2CqyDKGM6PfrZ8kNkx0u8t5lde33yqU9x9Yu+zMjTIAFGi7rQah
+	 WeUwiYKKW3GzpOdE/pfBj1DhviR6BameNdvOImey1l400bt9oA/Z8ypsBbLbAYyaRE
+	 +1nJsvxEfLCX02/ckpmTLpE3bY19EGH+2MJ2vvV+637MjXMicsCt/74fy0AYr6qoxq
+	 jQ1P+X7TVssVQ==
 Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67be5b580000>; Wed, 26 Feb 2025 13:07:52 +1300
+	id <B67be5b5e0000>; Wed, 26 Feb 2025 13:07:59 +1300
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-	by pat.atlnz.lc (Postfix) with ESMTP id 952A713EE7A;
-	Wed, 26 Feb 2025 13:07:52 +1300 (NZDT)
+	by pat.atlnz.lc (Postfix) with ESMTP id ECF0913EE7A;
+	Wed, 26 Feb 2025 13:07:58 +1300 (NZDT)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-	id 91BC6280594; Wed, 26 Feb 2025 13:07:52 +1300 (NZDT)
+	id EAFCA280594; Wed, 26 Feb 2025 13:07:58 +1300 (NZDT)
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -57,10 +58,12 @@ Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH net-next v7 0/2] RTL9300 MDIO driver
-Date: Wed, 26 Feb 2025 13:07:46 +1300
-Message-ID: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH net-next v7 2/2] mips: dts: realtek: Add MDIO controller
+Date: Wed, 26 Feb 2025 13:07:48 +1300
+Message-ID: <20250226000748.3979148-3-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
+References: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,35 +71,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=ccpxrWDM c=1 sm=1 tr=0 ts=67be5b58 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=H2aqgZpJBgBZoEMRn60A:9 a=3ZKOabzyN94A:10 a=zZCYzV9kfG8A:10
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=ccpxrWDM c=1 sm=1 tr=0 ts=67be5b5f a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=Vd_wJYyKU8c0xNhbhIwA:9 a=3ZKOabzyN94A:10
 X-SEG-SpamProfiler-Score: 0
 x-atlnz-ls: pat
 
-This series adds a driver for the MDIO controller on the RTL9300 family
-of devices. The controller is a little unique in that we can't access the=
- SMI
-interfaces directly. This means we need to use the hardware description f=
-rom
-the DTS to compute a mapping of switch port to mdio bus/address.
+Add a device tree node for the MDIO controller on the RTL9300 chips.
 
-The dt-bindings have been applied to net-next.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-I've dropped a patch that added PHYs to the cameo-rtl9302c board as I kno=
-w that
-will need updating once some of the other in-flight changes make it into
-linux-mips.
+Notes:
+    Changes in v7:
+    - None
+    Changes in v6:
+    - None
+    Changes in v5:
+    - Add reg property to mdio-controller
+    Changes in v4:
+    - Have a single mdio-controller with the individual buses as child
+      nodes
+    Changes in v3:
+    - None
+    Changes in v2:
+    - None
 
-Chris Packham (2):
-  net: mdio: Add RTL9300 MDIO driver
-  mips: dts: realtek: Add MDIO controller
+ arch/mips/boot/dts/realtek/rtl930x.dtsi | 33 +++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
- arch/mips/boot/dts/realtek/rtl930x.dtsi |  33 ++
- drivers/net/mdio/Kconfig                |   7 +
- drivers/net/mdio/Makefile               |   1 +
- drivers/net/mdio/mdio-realtek-rtl9300.c | 475 ++++++++++++++++++++++++
- 4 files changed, 516 insertions(+)
- create mode 100644 drivers/net/mdio/mdio-realtek-rtl9300.c
-
+diff --git a/arch/mips/boot/dts/realtek/rtl930x.dtsi b/arch/mips/boot/dts=
+/realtek/rtl930x.dtsi
+index f2e57ea3a60c..101bab72a95f 100644
+--- a/arch/mips/boot/dts/realtek/rtl930x.dtsi
++++ b/arch/mips/boot/dts/realtek/rtl930x.dtsi
+@@ -69,6 +69,39 @@ i2c1: i2c@388 {
+ 			#size-cells =3D <0>;
+ 			status =3D "disabled";
+ 		};
++
++		mdio_controller: mdio-controller@ca00 {
++			compatible =3D "realtek,rtl9301-mdio";
++			reg =3D <0xca00 0x200>;
++			#address-cells =3D <1>;
++			#size-cells =3D <0>;
++			status =3D "disabled";
++
++			mdio0: mdio-bus@0 {
++				reg =3D <0>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++			mdio1: mdio-bus@1 {
++				reg =3D <1>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++			mdio2: mdio-bus@2 {
++				reg =3D <2>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++			mdio3: mdio-bus@3 {
++				reg =3D <3>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++				status =3D "disabled";
++			};
++		};
+ 	};
+=20
+ 	soc: soc@18000000 {
 --=20
 2.48.1
 
