@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D636218AC8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D599191F6A;
 	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579452; cv=none; b=XKWm4F7/iewotrX1g+H4bk/WkxdnW2IGlJzjfPI7pLW165Vp3qD78BCVcIiz/XYjtCsHDzyxUZkwzNl3RLvhy2JMBaBp1spJ6CFv9+FefvbBWFE7T7+mYdJGPs2w8obmCeTpseb4Y10b3HPLLFHEYbnGL8RvdJOKOynSjdZgU4E=
+	t=1740579452; cv=none; b=NzOGEBlhMn8woJV1gHT/EI8x1mxK7wy9Qzmjoq6j1e1yJtqrSqAggx0fn8D6idh9yeINwlzc2KHNwHHkmH2760OzfPu0HBVTbt3LDcLe7qJIAjgkHdlC2gj11dGOGXVVW1UGlQpsln0qX/j8jJrgD+qqkBqmI7hvJ6JXvGlNDgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740579452; c=relaxed/simple;
-	bh=fwV5Igl0YjoYekgCo39bGuXYUSU/ztIwTAkRyvKRrqw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QVisu0Zaa6ClnXi7cbtMFU4DVjSCXQ818YfG/3OxREemCL9+ZXHiCz8QWc0n6ue70NrMY9xX2ZZofARug43Hgv7m7BGqU0PElOcIDZcb24pV7BS145a8y9mMgwe8u2FeqXxYnVwjZl6vkldXReBrX0mlZoUPbbsFKKJBnOz51aQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtU0fFzl; arc=none smtp.client-ip=10.30.226.201
+	bh=cG41MNyc8x+QEktsxSBjUBrLBNatZCQO437Ub1tz6tI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=rNF+s6rMr1A88NBAO/I49qtuve0CczNvxWQ1hFIfd/ydS9tpFg3XcnIYLFrRVa3p3EZPPy7cndq4tazI+nd/+au3sndGL0VPulzsMHRo4A+cKIkpV/e0piNbwBYXfL+6NcPVJ5GqJNZ0gutBrEfqCdF7QzAyuLFoVQpAa+N6LpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyYM6wiO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtU0fFzl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7FE9CC4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyYM6wiO"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B64EAC4CEEB;
 	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740579451;
-	bh=fwV5Igl0YjoYekgCo39bGuXYUSU/ztIwTAkRyvKRrqw=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=dtU0fFzlkNAnroJ8Hauv5Ufq27f20TXvDHzv3Pfe0zqZfge8c34DYUj6z7zRv7ZSL
-	 8h7l0fwuTFYfz9QZ/sFhF+vXviJzRYm20jzL4uK0SuFEAGwwulqkJujtzoUI5U5R7Y
-	 rN5l4Q2yWg3BfgG4PucMvYgfkHh1uxb81U87vuR+h8LsoBa9jxdFiDoohzVQ6s/FPA
-	 kXGiecXjjKbA2wg753z789J2IATGfswPLPPgrC2w0wObJDOkqYZFgyeF1P33A65HKa
-	 Usrv1ezqQzuhW1OuuvrZ0S3xy7v3WdFENQLn7ONH2fb/V8Vz4iaYPpMFfAmygw/Tyf
-	 mcILK8rlCoKPQ==
+	bh=cG41MNyc8x+QEktsxSBjUBrLBNatZCQO437Ub1tz6tI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=YyYM6wiOjALYvTxi8K3R7VtOMav2exWrbFdZhEFvRg6f1/npY+1rPhQ4tjtB+BsEx
+	 6CeIHhZ3tMPf173fRjOm8F1+1hdl7GC7NrdjGEBzptik64GLE603IGbSwJ8Evf83WS
+	 MtXTCUHeNCra4I3mDauss/+2KyFPAlUh0gzQL5RykfEn8bni4LWCBhDEUg2ZyTLVIC
+	 trxsIYz2tqc4Pme/37fdXCZu+sts+BuuYZUOqvbuHFTkwyWTFIruPnuCjzpY3jonzQ
+	 QQrjOeBIM73anKJ8UJBXZ1akupsZFJ6inklX3Xi8soCtQ829gEIP56ACy4RcczDLr/
+	 FBEJ4ZnO1dQig==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 662EAC021B8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84DC021B8;
 	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
 From: =?utf-8?q?Jonathan_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Subject: [PATCH v2 0/9] usb: storage: Mark various arrays as const
-Date: Wed, 26 Feb 2025 15:17:22 +0100
-Message-Id: <20250226-misc-const-v2-0-ab655a4a29cc@posteo.net>
+Date: Wed, 26 Feb 2025 15:17:26 +0100
+Subject: [PATCH v2 4/9] usb: storage: datafab: Use const for constant
+ arrays
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,21 +41,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAHIiv2cC/03MwQ6CMAzG8VchPTuzlSHKyfcwHGR00oMbWReiI
- by7g5Pp6d/k+60glJgEumqFRAsLx1ACTxW46RlepHgsDajRaquNerM45WKQrKgdrPOox8bfoAz
- mRJ4/B/boS08sOabvYS9m/+5MoxGbf2Yxqhwa7+vherF1e5+jZIrnQBn6bdt+jdaCTqUAAAA=
-X-Change-ID: 20240401-misc-const-e7b4cf20d5f9
+Message-Id: <20250226-misc-const-v2-4-ab655a4a29cc@posteo.net>
+References: <20250226-misc-const-v2-0-ab655a4a29cc@posteo.net>
+In-Reply-To: <20250226-misc-const-v2-0-ab655a4a29cc@posteo.net>
 To: Alan Stern <stern@rowland.harvard.edu>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net, 
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579450; l=1711;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579450; l=2349;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=fwV5Igl0YjoYekgCo39bGuXYUSU/ztIwTAkRyvKRrqw=;
- b=cAY4Rp6m9M3AvBzybF691EpSlg/bOe3SSQGlpgxsasvXQbedMVBuVulj6Zf+ouOBi6nKXQE0k
- QdsBdhUC+08AxBp3ev6/NJGILI74xu5IsDqO2kQcONXgyBdj8x00U9A
+ bh=5889APtKFFab054l3Ee3spnWaj/UxBWmua1IlElw8Hk=;
+ b=AU338qvvEAePEg9jLLeMUgQzbkLqosqROpA/Ngu4KxLu0N+nAlUKqOim3VKzHIX3mqqaxeZI3
+ G8p/zLIP7eqDxP/YhPj6atkVfpOeIsNmgqt3iUYzyhUsbrC2t/R0+9l
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -62,47 +62,73 @@ X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
 X-Original-From: =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.ne@posteo.net>
 Reply-To: j.ne@posteo.net
 
-While reading code, I noticed that some arrays in USB mass storage
-drivers are declared static but not const, even though they are not
-modified. This patchset marks them const.
+From: Jonathan Neuschäfer <j.ne@posteo.net>
 
-All patches were compile-tested.
+These arrays are only read, not modified.
 
 Signed-off-by: Jonathan Neuschäfer <j.ne@posteo.net>
 ---
-Changes in v2:
-- Add new patches 2-9
-- Use consistent authorship information
-- Link to v1: https://lore.kernel.org/r/20250225-misc-const-v1-1-121ff3b86437@posteo.net
 
+V2:
+- new patch
 ---
-Jonathan Neuschäfer (9):
-      usb: storage: jumpshot: Use const for constant arrays
-      usb: storage: transport: Use const for constant array
-      usb: storage: alauda: Use const for card ID array
-      usb: storage: datafab: Use const for constant arrays
-      usb: storage: initializers: Use const for constant array
-      usb: storage: realtek_cr: Use const for constant arrays
-      usb: storage: sddr09: Use const for constant arrays
-      usb: storage: sddr55: Use const for constant arrays
-      usb: storage: shuttle_usbat: Use const for constant array
+ drivers/usb/storage/datafab.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- drivers/usb/storage/alauda.c        |  8 ++++----
- drivers/usb/storage/datafab.c       | 14 +++++++-------
- drivers/usb/storage/initializers.c  |  2 +-
- drivers/usb/storage/jumpshot.c      | 10 +++++-----
- drivers/usb/storage/realtek_cr.c    |  6 +++---
- drivers/usb/storage/sddr09.c        | 14 +++++++-------
- drivers/usb/storage/sddr55.c        |  4 ++--
- drivers/usb/storage/shuttle_usbat.c |  2 +-
- drivers/usb/storage/transport.c     |  2 +-
- 9 files changed, 31 insertions(+), 31 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20240401-misc-const-e7b4cf20d5f9
+diff --git a/drivers/usb/storage/datafab.c b/drivers/usb/storage/datafab.c
+index bbfa2398b17036f431c0692bbf794bdb01d68cdf..9ba369483c9b36c2f662749c32bf81b525ae897f 100644
+--- a/drivers/usb/storage/datafab.c
++++ b/drivers/usb/storage/datafab.c
+@@ -319,7 +319,7 @@ static int datafab_determine_lun(struct us_data *us,
+ 	//
+ 	// There might be a better way of doing this?
+ 
+-	static unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
++	static const unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
+ 	unsigned char *command = us->iobuf;
+ 	unsigned char *buf;
+ 	int count = 0, rc;
+@@ -384,7 +384,7 @@ static int datafab_id_device(struct us_data *us,
+ 	// to the ATA spec, 'Sector Count' isn't used but the Windows driver
+ 	// sets this bit so we do too...
+ 	//
+-	static unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
++	static const unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
+ 	unsigned char *command = us->iobuf;
+ 	unsigned char *reply;
+ 	int rc;
+@@ -437,16 +437,16 @@ static int datafab_handle_mode_sense(struct us_data *us,
+ 				     struct scsi_cmnd * srb, 
+ 				     int sense_6)
+ {
+-	static unsigned char rw_err_page[12] = {
++	static const unsigned char rw_err_page[12] = {
+ 		0x1, 0xA, 0x21, 1, 0, 0, 0, 0, 1, 0, 0, 0
+ 	};
+-	static unsigned char cache_page[12] = {
++	static const unsigned char cache_page[12] = {
+ 		0x8, 0xA, 0x1, 0, 0, 0, 0, 0, 0, 0, 0, 0
+ 	};
+-	static unsigned char rbac_page[12] = {
++	static const unsigned char rbac_page[12] = {
+ 		0x1B, 0xA, 0, 0x81, 0, 0, 0, 0, 0, 0, 0, 0
+ 	};
+-	static unsigned char timer_page[8] = {
++	static const unsigned char timer_page[8] = {
+ 		0x1C, 0x6, 0, 0, 0, 0
+ 	};
+ 	unsigned char pc, page_code;
+@@ -550,7 +550,7 @@ static int datafab_transport(struct scsi_cmnd *srb, struct us_data *us)
+ 	int rc;
+ 	unsigned long block, blocks;
+ 	unsigned char *ptr = us->iobuf;
+-	static unsigned char inquiry_reply[8] = {
++	static const unsigned char inquiry_reply[8] = {
+ 		0x00, 0x80, 0x00, 0x01, 0x1F, 0x00, 0x00, 0x00
+ 	};
+ 
 
-Best regards,
 -- 
-Jonathan Neuschäfer <j.ne@posteo.net>
+2.48.0.rc1.219.gb6b6757d772
 
 
