@@ -1,112 +1,177 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184121A421
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8081F2206B2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740576470; cv=none; b=Pvoc6zEjdnc40jP4Qn6NVkJt7lNQEwmq/DxwN+abGaaMRu1e78fSnoJiK+h2nk3rUD7raviW2A5agqJ5gVEqBNJy6SsxUVM5GTt0hxO7d4nxGAGt5FqE7Jjkk+RrfgMX1iCtXn2qCvlwkhqM7iCwvclndpnWb8fcFS11zVazPtM=
+	t=1740576477; cv=none; b=A3/6El8JYL0R9so3u2GMstIWBkY+PrxDaSGdf4vRTcxsIBFc37dC36HIju9A+seaX591eIFcihDhkAbJKJK6UW7xBsOq6N5dboO7H0B8LtHzJrNnqmKxZ25mCHJxhijUAyroh6VQeDc7FoP9XN3L2pnoLxoJMzOXo90fa7NDuek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740576470; c=relaxed/simple;
-	bh=U4JXAdHq1oPHV5jfSimQVO3olPzSss/NVG5Q/o0L3a0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M+dRDmZW9L4EjKz9OYyLAF/PL4d2fi05VnuyzACfa8KzzbAl46vitw8HIZJo1EhstO0h9HVbQTdh3Dte/lC0LYc4l9GWHz22kEwVnm62cQQMSaEmxWCwQyOg0ZRITYfDTAu1sutFl99lHUDqP7IEsPlbEjfuY44nqTGxjB3yKfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=iI5vuBVo; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1740576477; c=relaxed/simple;
+	bh=5SM/9/owmkDx5S9rZFg1l84pKDKj1wcM0u4tbPsmB9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qq9pgK9iZY8ZUC/pTQnFgif1c4Us2WxEQ0HYn6ppvXxHyN5d9a1PIrHn7qHSKI606c3Qr1twMgM4M01CqZXJSIV9lUAAM7R9sC+OfxeBKztBWY4OGbLcRUAtiB59HXvMa4nrYjr3i5KSeNT2xoXX02gCKpxBqyG5CnC4DcsxU2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=trd1pxjY; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="iI5vuBVo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=2H+4Lee7WxfCIUmBwi0YGZZHinb7DCHLwsRbSAu6RYM=; b=iI5vuBVonypsJ6z4rILCSdMyYC
-	vHo9O5UBplc9fUv/kZQhIeooLmljai1dcNRZh+ld4T1n4Lp0PvYmY5SZIdesthnVgYKTfU+ehaDhh
-	ML2flSeninZRKJDMtVk2R9Rxu3ujqj2gIZbGW20R2kUbhEY12Zme6JR0Ga89xjN8x6XB4isfK6AxI
-	/DXtDfd9Un1TUFNfk4fuXntjJkzLIQ9xu0sxXFeuNCV3W0iNhFfWut93MH/24h786kYSSbhkOakoC
-	7CRDFJwI7tNw0Pte764dfW5S/sOY7prDJQ+qMg2tg/chLWwR1xaiAzrQ3Y2c8wVLckh1tAEseF2zq
-	9dEPUEUA==;
-Received: from [177.83.214.207] (helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tnHRo-000yjA-LF; Wed, 26 Feb 2025 14:27:43 +0100
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	kernel@gpiccoli.net,
-	kernel-dev@igalia.com,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Subject: [PATCH] x86/tsc: Add debugfs entry to mark TSC as unstable after boot
-Date: Wed, 26 Feb 2025 10:27:13 -0300
-Message-ID: <20250226132733.58327-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="trd1pxjY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xwCZx8c9t9hDTDMK5HhzdMJ8PVdlAqJvtZkV7eh2zIo=; b=trd1pxjY8KRp9r5vAp9ja3gXUl
+	hL0A6THYdInD64jg3MfZkHQ9K/wMCfYP5iiHsduBlLp6Z+qAl21vUnEX0iN0mREI6Nk6q1J1bwiJC
+	cx8ASPnbr2JFwhj0iSnByu6mnqgTQfHgjk/35M5OqfxGRt23CrWrPg0uS7U7wnC1u4O6ddaBBhT0J
+	6rQW61GUGFQaLxb04GHnpx6fOxrnUt3uilsFZLnOVtlqcViV5llwIZ7rUfXHeC7qtrmXN3pWLXNlX
+	L6I7gkmDzyyd6PXUd4MLUoVOqNsTycyQEFlZf82iKNcUq0akjqi1TpWr0wUw0oU7ILtqI5Itfos2U
+	OHSP1AAQ==;
+Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tnHS2-0008RO-4q; Wed, 26 Feb 2025 14:27:50 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, lukasz.czechowski@thaumatec.com,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject:
+ Re: [PATCH v3] arm64: dts: rockchip: add usb typec host support to
+ rk3588-jaguar
+Date: Wed, 26 Feb 2025 14:27:49 +0100
+Message-ID: <3119048.xgJ6IN8ObU@diego>
+In-Reply-To: <28a16ca5-42f7-4aa1-9bc7-fc6b72364556@cherry.de>
+References:
+ <20250226102507.3743437-1-heiko@sntech.de>
+ <28a16ca5-42f7-4aa1-9bc7-fc6b72364556@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Right now, we can force the TSC to be marked as unstable through
-boot parameter. There are debug / test cases though in which would
-be preferable to simulate the clocksource watchdog behavior, i.e.,
-marking TSC as unstable during the system run. Some paths might
-change, for example: the tracing clock is auto switched to global
-if TSC is marked as unstable on boot, but it could remain local if
-TSC gets marked as unstable after tracing initialization.
+Am Mittwoch, 26. Februar 2025, 14:17:37 MEZ schrieb Quentin Schulz:
+> Hi Heiko,
+>=20
+> On 2/26/25 11:25 AM, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> >=20
+> > Jaguar has two type-c ports connected to fusb302 controllers that can
+> > work both in host and device mode and can also run in display-port
+> > altmode.
+> >=20
+> > While these ports can work in dual-role data mode, they do not support
+> > powering the device itself as power-sink. This causes issues because
+> > the current infrastructure does not cope well with dual-role data
+> > without dual-role power.
+> >=20
+> > So add the necessary nodes for the type-c controllers as well
+> > as enable the relevant core usb nodes, but limit the mode to host-mode
+> > for now until we figure out device mode.
+> >=20
+>=20
+> We're not limiting the mode to host-mode anymore in v3.
+>=20
+> I tested and indeed peripheral mode doesn't work. While my ACM gadget=20
+> device is created, I cannot communicate with it.
+>=20
+> Maybe reword in the commit log that only host mode is supported even=20
+> though we don't enforce it?
+>=20
+> The USB2-only issue I experienced in v2 has been fixed with:
+> https://lore.kernel.org/linux-rockchip/20250226103810.3746018-1-heiko@snt=
+ech.de/T/#t
+>=20
+> Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
+>=20
+> See below for further comments.
+>=20
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > ---
+> > changes in v3:
+> > - more review comments from Quentin
+> >    (sbu-pin pinctrl, comments)
+> > changes in v2:
+> > - address review comments from Quentin
+> >    (comments, pinctrl, sbu-gpios and much more)
+> >=20
+> >   .../arm64/boot/dts/rockchip/rk3588-jaguar.dts | 218 ++++++++++++++++++
+> >   1 file changed, 218 insertions(+)
+> >=20
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm6=
+4/boot/dts/rockchip/rk3588-jaguar.dts
+> > index 20b566d4168f..5dbcdf67f0a5 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
+> [...]
+> > @@ -483,6 +583,26 @@ pcie30x4_waken_m0: pcie30x4-waken-m0 {
+> >   			rockchip,pins =3D <0 RK_PC7 12 &pcfg_pull_none>;
+> >   		};
+> >   	};
+> > +
+> > +	usb3 {
+> > +		cc_int1: cc-int1 {
+> > +			rockchip,pins =3D <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +
+> > +		cc_int2: cc-int2 {
+> > +			rockchip,pins =3D <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +
+> > +		typec0_sbu_pins: typec0-sbu-pins {
+>=20
+> Please rename to typec<x>_sbu_dc_pins as they aren't SBU pins, they are=20
+> pins for DC coupling of SBU as far as I could tell from the DT binding.
+>=20
+> > +			rockchip,pins =3D <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>,
+> > +					<1 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+> > +
+> > +		typec1_sbu_pins: typec1-sbu-pins {
+> > +			rockchip,pins =3D <0 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>,
+> > +					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
+> > +		};
+>=20
+> We're the first ones to declare a pinmux/pinconf for the SBU-DC pins and=
+=20
+> I'm not too sure if we should let them "float" or not. The default=20
+> pinconf for those pins is PD, so maybe we should keep that PD. (For C1=20
+> they are PU).
+>=20
+> Rock 5 ITX routes the SBU-DC pins to GPIOs whose pinconf defaults to PU.=
+=20
+> CM3588 from FriendlyElec, Orange Pi 5, Orange Pi 5 Plus and NanoPC-T6=20
+> use GPIOs whose pinconf defaults to PD.
+>=20
+> I don't see external HW PU/PD in our or their designs so I would=20
+> recommend to respect the default pinconf and put PD for the sbu-dc pins=20
+> for USB-C0 and PU for USB-C1?
 
-Hence, the proposal here is to have a simple debugfs file that
-gets TSC marked as unstable when written.
+But if you're worried about behaviour wrt. floating, having them pulled in
+different direction for typec0 and typec1 also wouldn't result in differing
+behaviour?
 
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
----
- arch/x86/kernel/tsc.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Also the pins are output-only, so the phy will always set them in some way?
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 88e5a4ed9db3..6bce5f3a2848 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -9,6 +9,7 @@
- #include <linux/timer.h>
- #include <linux/acpi_pmtmr.h>
- #include <linux/cpufreq.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/clocksource.h>
- #include <linux/percpu.h>
-@@ -1602,3 +1603,24 @@ unsigned long calibrate_delay_is_known(void)
- 	return 0;
- }
- #endif
-+
-+#ifdef CONFIG_DEBUG_FS
-+static ssize_t tsc_debugfs_write(struct file *f, const char __user *ubuf,
-+				 size_t count, loff_t *ppos)
-+{
-+	mark_tsc_unstable("debugfs write");
-+	return count;
-+}
-+
-+static const struct file_operations tsc_debugfs_fops = {
-+	.write	= tsc_debugfs_write,
-+};
-+
-+static __init int tsc_debugfs_init(void)
-+{
-+	debugfs_create_file("mark_tsc_unstable", 0200, /* write only */
-+			    arch_debugfs_dir, NULL, &tsc_debugfs_fops);
-+	return 0;
-+}
-+late_initcall(tsc_debugfs_init);
-+#endif /* CONFIG_DEBUG_FS */
--- 
-2.48.1
+But now you made me looks things up ;-)
+
+=46or the TS3USBCA4 USB Type-C SBU Multiplexer [0], the sbu pins on it are
+described as "This pin has an internal nominally 1.6-M=CE=A9 pull-down resi=
+stor."
+
+In the block-diagram of the NX20P0407 Protection IC [1], it also looks like
+a pull down is the config of choice.
+
+
+Heiko
+
+[0] https://www.ti.com/lit/ds/symlink/ts3usbca4.pdf - page 3
+[1] https://www.nxp.com/docs/en/data-sheet/NX20P0407.pdf - page 3
+
 
