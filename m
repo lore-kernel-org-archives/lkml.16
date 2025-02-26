@@ -1,122 +1,122 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709AD7462;
-	Thu, 27 Feb 2025 00:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [61.152.208.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16443C2FA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.152.208.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617179; cv=none; b=VTVmXpPaqkXTStWQLlsPO3pX/QTzhnA5QKEaG7O8h66ckvd0gTqml7vK1xYXbFcMcy6wDTlLgPI71XESjxLB0Yzfw+eY9gy6y/82s7C16yAc1BWlY1zYJfxjeql4r0So8QozXaEVNV5QnEWNgL4CHYtp8v3GUi1u4U3jNqwhR/E=
+	t=1740617311; cv=none; b=qGDUZChIo2Lc78BArrKUcQi/Lp21WFOL5C25fjzgBrbiH6CxMywWcr7dRzaznBMub2lj3elQYh4QDDiNtn8PaUDbfM8iEDk6Ky2cUQTe5YUVRfcDKImjKgK+jF2eE5xTW+zpvabixhN8xz72VJcWKu37iLtTG6UHX7yu2kIPES0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617179; c=relaxed/simple;
-	bh=mXzZ0BmaQS0yzGWDeFwERyTqnUkdRAA9/VSw1crzZlA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=BS5Wtf8BvtY4kv7O/HY19/L1UdRNDm9XqHvdWOOz1oHpeYH3hXj7qIjxeMp+DbNQaO9i75rn4oGR6msR0aaBsbvbO2JMP6j97Gnzae5PXlHUeqHi3ETLAYVgVB2espGka8eNxHOcPUxdcXHh3eryn7YwLOnRiJ8zlRoz6tTfScQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=JK9JophO; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="JK9JophO"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 11C0F210C313; Wed, 26 Feb 2025 16:46:18 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 11C0F210C313
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1740617178;
-	bh=ZftA8Or9AuHhHcKwPIKZDu5IOAx79F4qZJUHq+qO1GU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JK9JophOsvP5UY+utUXAht+ZBcmvxMPWb3Q7dAbaPFoemssa6yMCCq0EuOiQH0Z2D
-	 e5vNjMO+9r0hBh/c4hRBVttptJjw+G54hQgpR5HpuYO00luSbs/+oS4eRaeAgykM56
-	 LZqVfJ4dnzZQTonUwP9wF0/jstZ2/Ko1n2LSDlXw=
-From: longli@linuxonhyperv.com
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Long Li <longli@microsoft.com>
-Subject: [PATCH] uio_hv_generic: Set event for all channels on the device
-Date: Wed, 26 Feb 2025 16:45:58 -0800
-Message-Id: <1740617158-15902-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1740617311; c=relaxed/simple;
+	bh=qF5gZmW0JLCR9LhRYrfGiGmhHEed336IGVYFp0nZRuY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PyN07uwbrNIgPcmlnH/Bi4ekydEzhiqtiMfWkVJZhcVLSNL2gnGBN9OpHhYwra7RYp6dqvgZEmggtuTp/7TPhEnsDSp4p3fkeEjaSbc/+R+ETxIseOmAxuss52lfiyu9Dk7ruFtOw6jdwoa2RZQOuR1NOW6oCo6n+BeTdML5Ggs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=61.152.208.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1740616658-1eb14e79fd31330001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx2.zhaoxin.com with ESMTP id ymFLplNQY0D8ibWL (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 08:37:38 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
+ 2025 08:37:38 +0800
+Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
+ ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
+ 15.01.2507.044; Thu, 27 Feb 2025 08:37:38 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 26 Feb
+ 2025 20:18:39 +0800
+From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
+	<robert.moore@intel.com>, <yazen.ghannam@amd.com>, <avadhut.naik@amd.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
+	<leoliu@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH v5 0/4] Parse the HEST PCIe AER and set to relevant registers
+Date: Wed, 26 Feb 2025 20:18:34 +0800
+X-ASG-Orig-Subj: [PATCH v5 0/4] Parse the HEST PCIe AER and set to relevant registers
+Message-ID: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Moderation-Data: 2/27/2025 8:37:31 AM
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1740616658
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1962
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137756
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-From: Long Li <longli@microsoft.com>
+From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
 
-Hyper-V may offer a non latency sensitive device with subchannels without
-monitor bit enabled. The decision is entirely on the Hyper-V host not
-configurable within guest.
+According to the Section 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI SPEC r6.5,
+the register value form HEST PCI Express AER Structure should be written to
+relevant PCIe Device's AER Capabilities. So the purpose of the patch set is
+to extract register value from HEST PCI Express AER structures and program
+them into PCIe Device's AER registers. Refer to the ACPI SPEC r6.5 for the
+more detailed description.
 
-When a device has subchannels, also signal events for the subchannel
-if its monitor bit is disabled.
+Changes in v2:
+- Move the definition of structure "hest_parse_aer_info" to file apei.h.
+- Link to v1: https://lore.kernel.org/all/20231115091612.580685-1-LeoLiu-oc=
+@zhaoxin.com/
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/uio/uio_hv_generic.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+Changes in v3:
+- The applicable hardware for this patch is added to the commit
+  information.
+- Change the function name "program_hest_aer_endpoint" to
+  "program_hest_aer_common".
+- Add the comment to function "program_hest_aer_common".
+- Remove the "PCI_EXP_TYPE_PCIE_BRIDGE" branch handling in function
+  "program_hest_aer_params".
+- Link to v2: https://lore.kernel.org/all/20231218030430.783495-1-LeoLiu-oc=
+@zhaoxin.com/
 
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 3976360d0096..8b6df598a728 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -65,6 +65,16 @@ struct hv_uio_private_data {
- 	char	send_name[32];
- };
- 
-+static void set_event(struct vmbus_channel *channel, s32 irq_state)
-+{
-+	channel->inbound.ring_buffer->interrupt_mask = !irq_state;
-+	if (!channel->offermsg.monitor_allocated && irq_state) {
-+		/* MB is needed for host to see the interrupt mask first */
-+		virt_mb();
-+		vmbus_setevent(channel);
-+	}
-+}
-+
- /*
-  * This is the irqcontrol callback to be registered to uio_info.
-  * It can be used to disable/enable interrupt from user space processes.
-@@ -79,12 +89,13 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
- {
- 	struct hv_uio_private_data *pdata = info->priv;
- 	struct hv_device *dev = pdata->device;
-+	struct vmbus_channel *primary, *sc;
- 
--	dev->channel->inbound.ring_buffer->interrupt_mask = !irq_state;
--	virt_mb();
-+	primary = dev->channel;
-+	set_event(primary, irq_state);
- 
--	if (!dev->channel->offermsg.monitor_allocated && irq_state)
--		vmbus_setevent(dev->channel);
-+	list_for_each_entry(sc, &primary->sc_list, sc_list)
-+		set_event(sc, irq_state);
- 
- 	return 0;
- }
-@@ -95,12 +106,19 @@ hv_uio_irqcontrol(struct uio_info *info, s32 irq_state)
- static void hv_uio_channel_cb(void *context)
- {
- 	struct vmbus_channel *chan = context;
--	struct hv_device *hv_dev = chan->device_obj;
--	struct hv_uio_private_data *pdata = hv_get_drvdata(hv_dev);
-+	struct hv_device *hv_dev;
-+	struct hv_uio_private_data *pdata;
- 
- 	chan->inbound.ring_buffer->interrupt_mask = 1;
- 	virt_mb();
- 
-+	/*
-+	 * The callback may come from a subchannel, in which case look
-+	 * for the hv device in the primary channel
-+	 */
-+	hv_dev = chan->primary_channel ?
-+		 chan->primary_channel->device_obj : chan->device_obj;
-+	pdata = hv_get_drvdata(hv_dev);
- 	uio_event_notify(&pdata->info);
- }
- 
--- 
+Changes in v4:
+- Fix some compilation warnings.
+- Link to v3: https://lore.kernel.org/all/20240718062405.30571-1-LeoLiu-oc@=
+zhaoxin.com/
+
+Changes in v5:
+- Optimize the code according to the suggestions.
+- Link to v4: https://lore.kernel.org/all/20241205114048.60291-1-LeoLiu-oc@=
+zhaoxin.com/
+
+LeoLiuoc (4):
+  ACPI: APEI: Move apei_hest_parse() to apei.h
+  ACPI: APEI: Add new hest_parse_pcie_aer()
+  PCI: Add AER bits #defines for PCIe to PCI/PCI-X Bridge
+  PCI: ACPI: Add new pci_acpi_program_hest_aer_params()
+
+ drivers/acpi/apei/hest.c      | 54 ++++++++++++++++++++-
+ drivers/pci/pci-acpi.c        | 90 +++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h             |  6 +++
+ drivers/pci/probe.c           |  1 +
+ include/acpi/apei.h           | 13 +++++
+ include/uapi/linux/pci_regs.h |  4 ++
+ 6 files changed, 166 insertions(+), 2 deletions(-)
+
+--=20
 2.34.1
 
