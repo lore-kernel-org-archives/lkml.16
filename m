@@ -1,192 +1,296 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9B9A59
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9928D21CC76
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585153; cv=none; b=AgrnDqSpQoKT3UGjmzxxb1VvbBFYSQONcjMh8UROe5Rs0UbkLYkyBuRJLaax/F2eYXFKvPs4Vt5hbH266HLG9vsuZBHusReMTHWjnAe67qKaTZ4VcxKsJ5iPuaTvDs38m7+ER7Xuxh7SVc+TZJ48OjyYeCvlzmgEFNsf9Npbeaw=
+	t=1740585172; cv=none; b=P4inkHBfirVDCC4pbJIu21F6XsTb0aP/YrjFPd++NF20cmzhzMh0yUDRWelHKn5iAQK4aGpuvbioLbVkl1CFAURF1cGMERa6/WNLmGPy5O3CN19YUwiJiavsAzUL4b0vGsC8gKRW8wP6Js+UyteQneP/BHGtIZAhWiodLlhCcyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585153; c=relaxed/simple;
-	bh=qPB663T4kl1k9A98bJqE2oAERM175SEskuCOorlwSaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SxdLP63ts0Kd4oa0J3jJpNDu8uCfNwkvJT2sKAAsiu7XM9cSl86GiG8zi7wsNan2vVCyxCc8u+rXcaOfH2e8I7V/b+QdZKmQKVkxuA2D2cPmc5BX7Hw5oxRtfoXzudsH9BqetowYxCCUznanr7PQT5/r1BI2NWT1yrG2uIbedcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eRk6izB8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740585172; c=relaxed/simple;
+	bh=ugu1pUk9aQoCbZ3IE2K0HAMGPO5Mnb3WJ7jxvC5lFY4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MTJsqq956ZGeZLGjExut1TXzVZ4CIeQ6hw03DwnvRTDKCJKWEP3S9W2rvCVvGCEothW2IgbTFJ2azHCiKPOyBwQTvY4F3F2P3WcF3e2QtuQRzTImzzIckbUccdUnQ71X4/1wArQ3GKvrh6ZP/6mdF0wrt9Fui/XCqOJyjnoRVD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QpBZD1hz; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eRk6izB8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740585150;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QpBZD1hz"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740585167;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8KGq5La7yk+czEiF+6Xo77Jf5JrsRdt59tbf6s0nbt8=;
-	b=eRk6izB8LEH6bnrBWKkcs1xfXmxtM1JJf93mRa5pOmPlrCJSxsl+Pgn79Dqs9XtzgSIfXn
-	87HIxlpEEqvrgahelnQVNiEUrNz9m5KkesABGTV+ZSjuB6O+iIWiEYhY4oCShws79leeem
-	JgHg103LD5P/s1MYH8n61gifxycS3J8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-456-1S5yoal6OMq7qvbTo7BhQQ-1; Wed, 26 Feb 2025 10:52:29 -0500
-X-MC-Unique: 1S5yoal6OMq7qvbTo7BhQQ-1
-X-Mimecast-MFC-AGG-ID: 1S5yoal6OMq7qvbTo7BhQQ_1740585148
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43998ec3733so35526065e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:52:29 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740585148; x=1741189948;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8KGq5La7yk+czEiF+6Xo77Jf5JrsRdt59tbf6s0nbt8=;
-        b=MBaF5nDRP0kZHX7Mx05fNOqEUqjw+2s6yup7e9X8wM0Zxz4is3UHQ2aSGepULgSYZJ
-         KqezMj6h+rxzXODkozbafDaumqOiJlh0mjLhFpw+hWxwY5HAlBphFYt32Zv0eLoHfYh4
-         qz9F2mRMm6ORZ4fvAhd+r0H/zcYRfCa4xvlV+kgmYJkVoeoo6CNAyqZr9HtX4Ts1UNTT
-         wglvLBaIyNo4RXehi5/fNflf9j3Yxyksi2EPyonQmhPaAuMAndheGOdJyKNy5ambxaHy
-         EtrSXMNd3e9eUIr9FuUXNQfP49FTvgYN0IT7M6ZOgNeL9lovTB/CNyGskjOKU6Whz1fO
-         mzpw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0SlG1yUn/fQGFBf5fEGmq6IorrNL/QQcB4nbNqIPEdG1BdJrI07xXnTVXvN8vlipIGwf0VTQMbdZ65wQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg+2A2zsbqDURGU9pXRHlU98bLhGIdUSb7oM6oPINrk/5GremL
-	+TRHQKV/mf4LaiCUMRHSvx/95qejs5LfFB3EGECdjndMe8L81T7IVPGVRbQ7ejIgr00eOFLauhx
-	yY+G2d0mBykGku4DCvqSEa08lHXZbJX4HLfay9EZFiVuLwTciPffLHt/tWBbZMA==
-X-Gm-Gg: ASbGncsLUXYqa62YG7IIgjz/BEaflMGqJiKCcHEqjNk42hWHnIwYn5xlP9+mljuU/iC
-	kYdOzxh5jBfPmboHL48iMZN2yseiLIddDGYvdNHPnbdzMTRW4FbgzRfAiQBCL9ilaNIt6mx7PLR
-	O9Q6pMMM4AfNzZxcRmN4wENOV3q9HQAgWaQ9W5DwipKiqyrdrhaMY6aBFOatIRxzHub9s21JRgV
-	2FKsQDQb7CiR/Fkps6w3e8p5TA0AqznuAUvuaamKLecq7M51RgTogiU/2iQHwKXp7fWpd0wGTvB
-	bnczDRdy5bhxMOk2Xiz5MRsMtQBVyrINPGv+J2YykNYAlTWDEKypCmfLVVMoQmE=
-X-Received: by 2002:a05:600c:5493:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-43ab0f27170mr57873515e9.1.1740585148399;
-        Wed, 26 Feb 2025 07:52:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFFhPBq1dHswsswtne5Hy7yfVLOgg9RZzruRywauu4DAenatyPVYw3EqKeA58NQ2oZQlV7VJQ==
-X-Received: by 2002:a05:600c:5493:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-43ab0f27170mr57873335e9.1.1740585147976;
-        Wed, 26 Feb 2025 07:52:27 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba571274sm26036365e9.31.2025.02.26.07.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 07:52:27 -0800 (PST)
-Date: Wed, 26 Feb 2025 16:52:26 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
- =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
- <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
- Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
- <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
- Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 08/14] acpi/generic_event_device: add logic to detect
- if HEST addr is available
-Message-ID: <20250226165226.49b88429@imammedo.users.ipa.redhat.com>
-In-Reply-To: <e9e0aafd7cc8613709171ec5d8a6d9d9be62d7c1.1740148260.git.mchehab+huawei@kernel.org>
-References: <cover.1740148260.git.mchehab+huawei@kernel.org>
-	<e9e0aafd7cc8613709171ec5d8a6d9d9be62d7c1.1740148260.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iaWogmezSHYR9AiWcl15rVOFVsw8GjabRPkn09PMMK8=;
+	b=QpBZD1hzqSLHJcJuv0R7coDaZ3Ps7V7L3ftiNjU90PgME/4X5Yyi1d3R9rZoxqlRuI/xm4
+	9TGb4Yx3AwfxyVj6wRcYyzuWoEvr5sZmhMVa4tY/OFtDzi2Nofsmhlm6oCShOxdCuyd8Zv
+	Bl0Ij4MdyO8IKv15+fLasdO9v6zWSdY=
+From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Udit Kumar <u-kumar1@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Subject: [PATCH v10 00/13] drm/bridge: cdns-dsi: Fix the color-shift issue
+Date: Wed, 26 Feb 2025 21:22:15 +0530
+Message-Id: <20250226155228.564289-1-aradhya.bhatia@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 21 Feb 2025 15:35:17 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+Hello all,
 
-> Create a new property (x-has-hest-addr) and use it to detect if
-> the GHES table offsets can be calculated from the HEST address
-> (qemu 10.0 and upper) or via the legacy way via an offset obtained
-> from the hardware_errors firmware file.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  hw/acpi/generic_event_device.c |  1 +
->  hw/arm/virt-acpi-build.c       | 18 ++++++++++++++++--
->  hw/core/machine.c              |  2 ++
->  3 files changed, 19 insertions(+), 2 deletions(-)
-> 
-> diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-> index 5346cae573b7..14d8513a5440 100644
-> --- a/hw/acpi/generic_event_device.c
-> +++ b/hw/acpi/generic_event_device.c
-> @@ -318,6 +318,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
->  
->  static const Property acpi_ged_properties[] = {
->      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
-> +    DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState, ghes_state.use_hest_addr, false),
+This series provides some crucial fixes and improvements for the Cadence's DSI
+TX (cdns-dsi) controller found commonly in Texas Instruments' J7 family of SoCs,
+as well as in Sitara AM62P and AM62L SoCs.
 
-you below set it for 9.2 to false, so
-shouldn't it be set to true by default here?
+Along with that, this series aims to fix the color-shift issue that has been
+going on with the DSI controller. This controller requires to be enabled before
+the previous entity enables its stream[0]. It's a strict requirement which, if
+not followed, causes the colors to "shift" on the display. The fix happens in
+2 steps.
 
->  };
->  
->  static const VMStateDescription vmstate_memhp_state = {
-> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
-> index 4439252e1a75..9de51105a513 100644
-> --- a/hw/arm/virt-acpi-build.c
-> +++ b/hw/arm/virt-acpi-build.c
-> @@ -897,6 +897,10 @@ static const AcpiNotificationSourceId hest_ghes_notify[] = {
->      { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
->  };
->  
-> +static const AcpiNotificationSourceId hest_ghes_notify_9_2[] = {
-> +    { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
-> +};
-> +
->  static
->  void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
->  {
-> @@ -950,7 +954,9 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
->      build_dbg2(tables_blob, tables->linker, vms);
->  
->      if (vms->ras) {
-> +        static const AcpiNotificationSourceId *notify;
->          AcpiGedState *acpi_ged_state;
-> +        unsigned int notify_sz;
->          AcpiGhesState *ags;
->  
->          acpi_ged_state = ACPI_GED(object_resolve_path_type("", TYPE_ACPI_GED,
-> @@ -959,9 +965,17 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
->              ags = &acpi_ged_state->ghes_state;
->  
->              acpi_add_table(table_offsets, tables_blob);
-> +
-> +            if (!ags->use_hest_addr) {
-> +                notify = hest_ghes_notify_9_2;
-> +                notify_sz = ARRAY_SIZE(hest_ghes_notify_9_2);
-> +            } else {
-> +                notify = hest_ghes_notify;
-> +                notify_sz = ARRAY_SIZE(hest_ghes_notify);
-> +            }
-> +
->              acpi_build_hest(ags, tables_blob, tables->hardware_errors,
-> -                            tables->linker, hest_ghes_notify,
-> -                            ARRAY_SIZE(hest_ghes_notify),
-> +                            tables->linker, notify, notify_sz,
->                              vms->oem_id, vms->oem_table_id);
->          }
->      }
-> diff --git a/hw/core/machine.c b/hw/core/machine.c
-> index 02cff735b3fb..7a11e0f87b11 100644
-> --- a/hw/core/machine.c
-> +++ b/hw/core/machine.c
-> @@ -34,6 +34,7 @@
->  #include "hw/virtio/virtio-pci.h"
->  #include "hw/virtio/virtio-net.h"
->  #include "hw/virtio/virtio-iommu.h"
-> +#include "hw/acpi/generic_event_device.h"
->  #include "audio/audio.h"
->  
->  GlobalProperty hw_compat_9_2[] = {
-> @@ -43,6 +44,7 @@ GlobalProperty hw_compat_9_2[] = {
->      { "virtio-balloon-pci-non-transitional", "vectors", "0" },
->      { "virtio-mem-pci", "vectors", "0" },
->      { "migration", "multifd-clean-tls-termination", "false" },
-> +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
->  };
->  const size_t hw_compat_9_2_len = G_N_ELEMENTS(hw_compat_9_2);
->  
+    1. The bridge pre_enable calls have been shifted before the crtc_enable and
+       the bridge post_disable calls have been shifted after the crtc_disable.
+       This has been done as per the definition of bridge pre_enable.
+
+       "The display pipe (i.e. clocks and timing signals) feeding this bridge
+       will not yet be running when this callback is called".
+
+       Since CRTC is also a source feeding the bridge, it should not be enabled
+       before the bridges in the pipeline are pre_enabled.
+
+       The sequence of enable after this patch will look like:
+
+	        bridge[n]_pre_enable
+	        ...
+	        bridge[1]_pre_enable
+
+	        crtc_enable
+	        encoder_enable
+
+	        bridge[1]_enable
+	        ...
+	        bridge[n]_enable
+
+       and vice-versa for the bridge chain disable sequence.
+
+
+    2. The cdns-dsi enable / disable sequences have now been moved to pre_enable
+       and post_disable sequences. This is the only way to have cdns-dsi drivers
+       be up and ready before the previous entity is enables its streaming.
+
+The DSI also spec requires the Clock and Data Lanes be ready before the DSI TX
+enables its stream[0]. A patch has been added to make the code wait for that to
+happen. Going ahead with further DSI (and DSS configuration), while the lanes
+are not ready, has been found to be another reason for shift in colors.
+
+These patches have been tested with J721E based BeagleboneAI64 along with a
+RaspberryPi 7" DSI panel. The extra patches can be found in the
+"next_dsi-v10_1-tests" branch[1] of my github fork if anyone would like to test
+them.
+
+Thanks,
+Aradhya
+
+
+* Important note about the authorship of patches *
+
+All but one of the patches have been authored when I owned a "ti.com" based
+email id, i.e. <a-bhatia1@ti.com>. This email id is not in use anymore, and all
+the work done later has been part of my personal work. Since the original
+patches were authored using TI's email id, I have maintained the original
+authorships as they are, as well as their sign offs.
+
+I have further added another sign off that uses my current (and personal) email
+id, the one that is being used to send this revision, i.e.
+<aradhya.bhatia@linux.dev>.
+
+
+* Note on checkpatch warning in patch 11/13 *
+Patch 11/13 causes the checkpatch to flare up for 1 checkpatch 'check' -
+
+CHECK: Lines should not end with a '('
+#77: FILE: drivers/gpu/drm/drm_atomic_helper.c:1304:
++                       new_crtc_state = drm_atomic_get_new_crtc_state(
+
+This patch is largely duplicating the original code, with minor differences to
+perform different operations. This line of code pre-exists in the file and
+have simply been duplicated. I have decided to keep it as is to maintain the
+uniformity and the originally intended readability. Should perhaps a fix be
+required, this patch/series is not the right place, and another patch can be
+created to fix this across the whole file.
+
+
+[0]: Section 12.6.5.7.3: "Start-up Procedure" [For DSI TX controller]
+     in TDA4VM Technical Reference Manual https://www.ti.com/lit/zip/spruil1
+
+[1]: https://github.com/aradhya07/linux-ab/tree/next_dsi-v10_1-tests
+
+
+Change Log:
+  - Changes in v10:
+    - Rebase on latest linux-next (next-20250226).
+    - As part of rebase, update the patches to accommodate a couple of
+      widespread changes in DRM Framework -
+        - All the ("drm/atomic-helper: Change parameter name of ***") commits.
+        - All the ("drm/bridge: Pass full state to ***") commits.
+      (These updates are only trivial substitutions.)
+    - Add Tomi Valkeinen's T-b tags in all the patches.
+
+  - Changes in v9:
+    - Fix the oops in 11/13 - where the encoder_bridge_enable _was_ pre_enabling
+      the bridges instead of enabling.
+    - Add the following tags:
+      - Dmitry Baryshkov's R-b in patches 2, 10, 11, and A-b in patch 12.
+      - Jayesh Choudhary's R-b in patch 12.
+      - Tomi Valkeinen's R-b in patches 2, 10, 11, 12.
+
+  - Changes in v8:
+    - Move the phy de-initialization to bridge post_disable() instead of bridge
+      disable() in patch-3.
+    - Copy the private bridge state (dsi_cfg), in addition to the bridge_state,
+      in patch-9.
+    - Split patch v7:11/12 into three patches, v8:{10,11,12}/13, to separate out
+      different refactorings into different patches, and improve bisectability.
+    - Move patch v7:02/12 down to v8:06/12, to keep the initial patches for
+      fixes only.
+    - Drop patch v7:04/12 as it doesn't become relevant until patch v7:12/12.
+    - Add R-b tags of Dmitry Baryshkov in patch-9 and patch-3, and of
+      Tomi Valkeinen in patch-9.
+   
+  - Changes in v7:
+    - phy_init()/exit() were called from the PM path in v6. Change it back to
+      the bridge enable/disable path in patch-3, so that the phy_init() can go
+      back to being called after D-Phy reset assert.
+    - Reword commit text in patch-5 to explain the need of the fix.
+    - Drop the stray code in patch-10.
+    - Add R-b tag of Dmitry Baryshkov in patch-6.
+
+  - Changes in v6:
+    - Reword patch 3 to better explain the fixes around phy de-init.
+    - Fix the Lane ready timeout condition in patch 7.
+    - Fix the dsi _bridge_atomic_check() implementation by adding a new
+      bridge state structure in patch 10.
+    - Rework and combine patches v5:11/13 and v5:12/13 to v6:11/12.
+    - Generate the patches of these series using the "patience" algorithm.
+      Note: All patches, except v6:11/12, *do not* differ from their default
+      (greedy) algorithm variants.
+      For patch 11, the patience algorithm significantly improves the readability.
+    - Rename and move the Bridge enable/disable enums from public to private
+      in patch 11.
+    - Add R-b tags of Tomi Valkeinen in patch 6, and Dmitry Baryshkov in patch 2.
+
+  - Changes in v5:
+    - Fix subject and description in patch 1/13.
+    - Add patch to check the return value of
+      phy_mipi_dphy_get_default_config() (patch: 6/13).
+    - Change the Clk and Data Lane ready timeout from forever to 5s.
+    - Print an error instead of calling WARN_ON_ONCE in patch 7/13.
+    - Drop patch v4-07/11: "drm/bridge: cdns-dsi: Reset the DCS write FIFO".
+      There has been some inconsistencies found with this patch upon further
+      testing. This patch was being used to enable a DSI panel based on ILITEK
+      ILI9881C bridge. This will be debugged separately.
+    - Add patch to move the DSI mode check from _atomic_enable() to
+      _atomic_check() (patch: 10/13).
+    - Split patch v4-10/11 into 2 patches - 11/13 and 12/13.
+      Patch 11/13 separates out the Encoder-Bridge operations into a helper
+      function *without* changing the logic. Patch 12/13 then changes the order
+      of the encoder-bridge operations as was intended in the original patch.
+    - Add detailed comment for patch 13/13.
+    - Add Tomi Valkeinen's R-b in patches 1, 2, 4, 5, 7, 8, 9, 13.
+
+  - Changes in v4:
+    - Add new patch, "drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()",
+      to update to an auto-managed way of finding next bridge in the chain.
+    - Drop patch "drm/bridge: cdns-dsi: Fix the phy_initialized variable" and
+      add "drm/bridge: cdns-dsi: Fix Phy _init() and _exit()" that properly
+      de-initializes the Phy and maintains the initialization state.
+    - Reword patch "drm/bridge: cdns-dsi: Reset the DCS write FIFO" to explain
+      the HW concerns better.
+    - Add R-b tag from Dmitry Baryshkov for patches 1/11 and 8/11.
+
+  - Changes in v3:
+    - Reword the commit message for patch "drm/bridge: cdns-dsi: Fix OF node
+      pointer".
+    - Add a new helper API to figure out DSI host input pixel format
+      in patch "drm/mipi-dsi: Add helper to find input format".
+    - Use a common function for bridge pre-enable and enable, and bridge disable
+      and post-disable, to avoid code duplication.
+    - Add T-b tag from Dominik Haller in patch 5/10. (Missed to add it in v2).
+    - Add R-b tag from Dmitry Baryshkov for patch 8/10.
+
+  - Changes in v2:
+    - Drop patch "drm/tidss: Add CRTC mode_fixup"
+    - Split patch "drm/bridge: cdns-dsi: Fix minor bugs" into 4 separate ones
+    - Drop support for early_enable/late_disable APIs and instead re-order the
+      pre_enable / post_disable APIs to be called before / after crtc_enable /
+      crtc_disable.
+    - Drop support for early_enable/late_disable in cdns-dsi and use
+      pre_enable/post_disable APIs instead to do bridge enable/disable.
+
+
+Previous versions:
+
+v1: https://lore.kernel.org/all/20240511153051.1355825-1-a-bhatia1@ti.com/
+v2: https://lore.kernel.org/all/20240530093621.1925863-1-a-bhatia1@ti.com/
+v3: https://lore.kernel.org/all/20240617105311.1587489-1-a-bhatia1@ti.com/
+v4: https://lore.kernel.org/all/20240622110929.3115714-1-a-bhatia1@ti.com/
+v5: https://lore.kernel.org/all/20241019195411.266860-1-aradhya.bhatia@linux.dev/
+v6: https://lore.kernel.org/all/20250111192738.308889-1-aradhya.bhatia@linux.dev/
+v7: https://lore.kernel.org/all/20250114055626.18816-1-aradhya.bhatia@linux.dev/
+v8: https://lore.kernel.org/all/20250126191551.741957-1-aradhya.bhatia@linux.dev/
+v9: https://lore.kernel.org/all/20250209121032.32655-1-aradhya.bhatia@linux.dev/
+
+Aradhya Bhatia (13):
+  drm/bridge: cdns-dsi: Fix connecting to next bridge
+  drm/bridge: cdns-dsi: Fix phy de-init and flag it so
+  drm/bridge: cdns-dsi: Fix the clock variable for mode_valid()
+  drm/bridge: cdns-dsi: Check return value when getting default PHY
+    config
+  drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
+  drm/bridge: cdns-dsi: Move to devm_drm_of_get_bridge()
+  drm/mipi-dsi: Add helper to find input format
+  drm/bridge: cdns-dsi: Support atomic bridge APIs
+  drm/bridge: cdns-dsi: Move DSI mode check to _atomic_check()
+  drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
+    separate functions
+  drm/atomic-helper: Separate out bridge pre_enable/post_disable from
+    enable/disable
+  drm/atomic-helper: Re-order bridge chain pre-enable and post-disable
+  drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
+
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 224 ++++++++++++++----
+ .../gpu/drm/bridge/cadence/cdns-dsi-core.h    |   2 -
+ drivers/gpu/drm/drm_atomic_helper.c           | 160 +++++++++++--
+ drivers/gpu/drm/drm_mipi_dsi.c                |  37 +++
+ include/drm/drm_mipi_dsi.h                    |   1 +
+ 5 files changed, 348 insertions(+), 76 deletions(-)
+
+
+base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
+-- 
+2.34.1
 
