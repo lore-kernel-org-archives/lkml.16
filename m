@@ -1,81 +1,70 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8319E23A564
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3F123E23C;
+	Wed, 26 Feb 2025 18:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593175; cv=none; b=oWZ7f8RapSjih/RHEhgZRpIrUrOFW2IyQy547GLIBrfeg5znfCdXWHtyzTRheU3BLDXFfHGHhsN88NCwJ6KBpzSNmU5nJEZC39BXMnttXHsvnR/OVst+ATMAZ75NdARWBjQZjIYDS9as1ST8LVgvjOOYVp7FrbtyR6Lcz9I9vW8=
+	t=1740593178; cv=none; b=HEUzoSs4oAridy7mrtmrKBFH5S6ar2RuJX4sM3Z5l8UwW+LfT2fTG/jXLpAfDMk8MCwZuWoHoYXIE1ZuCL5/cHavUM00oJro28gD7Exh1y232y6pNn+1XffIRofJYHXHKl+2kLubFBSt2NU7cgp6DJVBqXMQCL0W1f3QKnFVtfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593175; c=relaxed/simple;
-	bh=gbeR1LC6epTxL5hjM57IzLXNWDQ+GaAp9Yh449sHR1o=;
+	s=arc-20240116; t=1740593178; c=relaxed/simple;
+	bh=E8Ecymq8CBrhz4/hOFJWe+WkF4M7ObE/VCe/8ADPU6w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g1x5E1E3nwHIlqDaLoNZP8q4OaSQdrKJ2w2UICAU36OYAzSamF5BhrnkKRsaXjA+7syYhPKwRnFQ175wCgXpH4WpRknvwuQLyBVOmV9rgegsp0BRrhyEieR1F8kHKR5t33YjKjS9J5fTG0Ko0VnXJTOEVrDsM6JPMscdcJAxoFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RErttnN9; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=VnX7eq7IAno21RF/yfROsXM3I9qAbU21uKrcJRBOciDRR9Xq7kcCTwsz9NOsDnd4AP4opN6Ijh6hKtCZaCq35KL7UJwlepHpcC4fiOxBVv171XAcvEwdyspA83wFxpnVAS+vLLg5LtcT2e8BF4832/UB5OVL3T1gQmOxQoXkYdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dGnsdQaP; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RErttnN9"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5f6b65c89c4so21317eaf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:06:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740593172; x=1741197972; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ib/up2lq4vie8y203Us1LjVuEcmMH4a7XcIoSxmd8Ww=;
-        b=RErttnN9u742rYFY4uL2Lh61sCFEb8ipMca0FsN9bi2Ld8bSVw7ReIVjPXG3K3mJUB
-         U7Qo32BxqmEOAdOcacMeYftfNm3UapzHoO1irInnwni8KUqvoPAazigdCVpgJ9HJagvS
-         DHlH/l5COHtL5+Q4//Lp1xr0O7gI+f8JwWPy6FxpCGhB5QcD8vBm4b2Q2O5rD7j5V5rz
-         +J83DIs4Ijj0JLrL+dBxWplDXVeiE08kzy43l8uwT0bhfJfnXuiZ085tWB2U3JDTJorw
-         KPTol96p6ILrFsMhMSrKJl7jjp2dPXyUWpi0o865/FtYtw49DyF9i+q+1cyl1SEIi4Z0
-         Hwmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740593172; x=1741197972;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ib/up2lq4vie8y203Us1LjVuEcmMH4a7XcIoSxmd8Ww=;
-        b=lpQ/niTzOuUAxFEidKq1bpW4PjOv4KyB5qwtuCyhI4Ge/7VAfC0dX/8syNKZZGFDTK
-         aWuTM96+w9ijz5Txrwg01kZgOfpcn6dN3RDQZsNFJAl+EHQrMpoEeDe/NPkXUaXrnWqB
-         419MGpWYvXxtIFeLAr/Rtb05ydPwEzasdL6KdQqCyXgahLDiN/Z58UrPzh1pstbfPJvQ
-         NqKBMTlTpRtOYZiFCNNg2oS97n3bM8fRq89MsXFbkW4lCrpefgoYB4qtrv2Oy73KdrJd
-         iXVJRIR1Q1hgfdb0GkiDtJXEP+2oRaz73pUtpidS1wEDRH+4vwyTbCbE5fPp+cQhPldY
-         xOdA==
-X-Gm-Message-State: AOJu0Yze+VBYiEY5PNmavwUbp+ZZaUsYgqnim5WjyaS/KtOATm388Lp6
-	GenTKsxZ3N/pvuaV8IGMyh9c170/V4CUr+X5exgNOldYHI8b+GG112Is
-X-Gm-Gg: ASbGncuHPmEbZf8AnSEcadINnlTp6GXO2LgFsOr3Tl4LmZiwTeHa+OP+uFBG0JomBKl
-	IxS4IEclYB+80XuDamZoHlobaT11l/fbnz0F/fuETLiQ0VEVIQsDVdLzODGh1gA5zolN2caELZb
-	6QFCB1eTnbW26bwGQfLLQLGZKUrzfurMDbfYkX7SObj1TRJ61YaKl11u769JTJGeACD9I/rP1wx
-	S2BB8RjKgOKGRRB85jzWhufyqC8vyRcqE99UVOme4X1ryU/loM0B+AOz+d6oaw1T8vSKSs0+ywF
-	tmEQsSw=
-X-Google-Smtp-Source: AGHT+IEEw2uHIFBgv6fuSgOXXKvyHfckRf/gCuwJonZJVz2UKrz+YgfxDShvuBLOs6wsHI4meNd+hA==
-X-Received: by 2002:a05:6808:2105:b0:3f4:af3:74c0 with SMTP id 5614622812f47-3f540fbdf5fmr5020591b6e.29.1740593172172;
-        Wed, 26 Feb 2025 10:06:12 -0800 (PST)
-Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fe9428c8b3sm755069eaf.39.2025.02.26.10.06.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 10:06:11 -0800 (PST)
-From: Brian Gerst <brgerst@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Uros Bizjak <ubizjak@gmail.com>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: [PATCH v2 11/11] x86/smp: Move this_cpu_off to percpu hot section
-Date: Wed, 26 Feb 2025 13:05:30 -0500
-Message-ID: <20250226180531.1242429-12-brgerst@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dGnsdQaP"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QBGEuZ027849;
+	Wed, 26 Feb 2025 18:06:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=h6zpg6zC5z/rQVzpN
+	2FehhGN502lUYMO052KpWM4Tjw=; b=dGnsdQaPH2q/esiRJelYW50b2CveRM4d0
+	5ECq6+vtgrHTi8USndDV+Tf4mD1zk97/UumzqqZQQ4Nq+EjhTg+WWZSL/ZyTiOU0
+	WqOmRysuEeUyncMg7wwhCVcY4qPz4avEHlLqD7rslvBnQWJxAI89mxiXxKnQVZ9F
+	o47YguClcXRl8PIZ4PUzVaDtQEQONqv7dp0rqH7A0cUW0mw7CdDT4j37vlyckjv6
+	6paGHCzRi2VSZ/J2PnS7k+i6RD787VcwIVUxhgWDKcs8h+racEBWae4S1mf/Jtc+
+	laCUTbr/Sw7DWW/ZsVeno2v7rzZzA3xtp6Mph+NLSZwni6uDQB2bg==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451q5jcx27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 18:06:11 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFKW6j026269;
+	Wed, 26 Feb 2025 18:06:10 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswnm53f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 18:06:09 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51QI68ae30737044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 18:06:08 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A5CF75805A;
+	Wed, 26 Feb 2025 18:06:08 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DA3D258056;
+	Wed, 26 Feb 2025 18:06:07 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.61.248.9])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 26 Feb 2025 18:06:07 +0000 (GMT)
+From: Rorie Reyes <rreyes@linux.ibm.com>
+To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc: hca@linux.ibm.com, borntraeger@de.ibm.com, agordeev@linux.ibm.com,
+        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
+        alex.williamson@redhat.com, akrowiak@linux.ibm.com,
+        rreyes@linux.ibm.com
+Subject: [RFC PATCH v3 2/2] s390/vfio-ap: Adding mdev remove notification
+Date: Wed, 26 Feb 2025 13:06:05 -0500
+Message-ID: <20250226180605.15810-3-rreyes@linux.ibm.com>
 X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250226180531.1242429-1-brgerst@gmail.com>
-References: <20250226180531.1242429-1-brgerst@gmail.com>
+In-Reply-To: <20250226180605.15810-1-rreyes@linux.ibm.com>
+References: <20250226180605.15810-1-rreyes@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,41 +72,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: ffL4sV97Vb7PfKd_zhlD1KQ9f-70t_7w
+X-Proofpoint-ORIG-GUID: ffL4sV97Vb7PfKd_zhlD1KQ9f-70t_7w
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 phishscore=0 adultscore=0 clxscore=1015 bulkscore=0
+ priorityscore=1501 mlxscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260142
 
-No functional change.
+This patch is based on the s390/features branch.
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
+The first patch, b26ed71f9647, was missing a
+notification based on the process to remove a
+mediated device from the AP configuration. In
+the original patch, b26ed71f9647, the guest is
+notified immediately for any AP configuration
+changes that are queued during the following
+processes:
+- assign/unassign_adapter
+- assign/unassign_domain
+- bind/unbind
+
+However, the original patch, b26ed71f9647, was
+missing a notification for the process to remove
+the entire mediated device.
+
+This patch addresses the missing notification and
+successfully notifies the guest when a mediated device
+is removed.
+
+Notes:
+- Removed eventfd from vfio_ap_mdev_unset_kvm
+- Update and release locks along with the eventfd added
+to vfio_ap_mdev_request
+
+Signed-off-by: Rorie Reyes <rreyes@linux.ibm.com>
 ---
- arch/x86/include/asm/percpu.h  | 2 +-
- arch/x86/kernel/setup_percpu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/s390/crypto/vfio_ap_ops.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index e347c6656ce8..f29c85a0abf4 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -589,7 +589,7 @@ do {									\
- #include <asm-generic/percpu.h>
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index 9a6845064ff3..e0237ea27d7e 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -2056,6 +2056,14 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
  
- /* We can use this directly for local CPU (faster). */
--DECLARE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
-+DECLARE_PER_CPU_CACHE_HOT(unsigned long, this_cpu_off);
+ 	matrix_mdev = container_of(vdev, struct ap_matrix_mdev, vdev);
  
- #endif /* !__ASSEMBLY__ */
++	if (matrix_mdev->kvm) {
++		get_update_locks_for_kvm(matrix_mdev->kvm);
++		kvm_arch_crypto_clear_masks(matrix_mdev->kvm);
++		signal_guest_ap_cfg_changed(matrix_mdev);
++	} else {
++		mutex_lock(&matrix_dev->mdevs_lock);
++	}
++
+ 	if (matrix_mdev->req_trigger) {
+ 		if (!(count % 10))
+ 			dev_notice_ratelimited(dev,
+@@ -2067,6 +2075,12 @@ static void vfio_ap_mdev_request(struct vfio_device *vdev, unsigned int count)
+ 		dev_notice(dev,
+ 			   "No device request registered, blocked until released by user\n");
+ 	}
++
++	if (matrix_mdev->kvm)
++		release_update_locks_for_kvm(matrix_mdev->kvm);
++	else
++		mutex_unlock(&matrix_dev->mdevs_lock);
++
+ }
  
-diff --git a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
-index 175afc3ffb12..bfa48e7a32a2 100644
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -26,7 +26,7 @@
- DEFINE_PER_CPU_CACHE_HOT(int, cpu_number);
- EXPORT_PER_CPU_SYMBOL(cpu_number);
- 
--DEFINE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
-+DEFINE_PER_CPU_CACHE_HOT(unsigned long, this_cpu_off);
- EXPORT_PER_CPU_SYMBOL(this_cpu_off);
- 
- unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init;
+ static int vfio_ap_mdev_get_device_info(unsigned long arg)
 -- 
 2.48.1
 
