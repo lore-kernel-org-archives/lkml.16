@@ -1,215 +1,110 @@
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892BC224249
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E945224249;
+	Wed, 26 Feb 2025 07:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740556288; cv=none; b=uLV06VPWkT7VORrpaXybw/DbXIxhUK6/WDRsUNPchgo4fvPHPzPpU2GrE6H+NrYDCAVP1BzJZsv6ZdOO3Zj+dpO/s7UkX/SsBWbHBgOKC75/LmbART2l39mM/pqrRVIijxZjdznfheanUleFzJeP6XI4kT3jyr8zAhxxrtIjne4=
+	t=1740556299; cv=none; b=kBNUp3zd8tijN4z1qa+KADTyhiv5J5gxiv6MPNmp5ppLvbIqmclh8Yz6mMbJu4OYy1b13+7eGfkZ59cX+yXfdFcFPlob5J2K/eQGs9tf/iK5LXDTTbyA8ewKm8ghdm6pY+MPHkkQ135LwFVyb5IbUkdcZKzxo5nPC/1xgbPGCwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740556288; c=relaxed/simple;
-	bh=cTvB2TQyMmoo7IX4X/o4AVO8Uwnf9L51w9URhRJnWf8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GCHlAlYj8Cwj7w/mkEHj/Y/ioFjQKMMfvIINboIvw5zQCxjHsI9DonXc66sljYjOV66Hg4uc1jz1cVl3u0pH+rCB6r/hq6IcE1yr/rGW6Sj53oNQ5UgBDBYPYJlMUSYrfz8PAiYN0d67vc36LR+vPWRKVt8hcRljcwC2f3Z9TNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G4RCE+eG; arc=none smtp.client-ip=209.85.217.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740556299; c=relaxed/simple;
+	bh=ZenfNeMV6+9GnXRrsF8Grg09WBJF1uOFpAAdO2uG1Pk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=HT1s4ZjsS3MTCRjEbl6X0DPX/wOMU8yruDkiNGlmLFkwJQ6uHULQddL+iXbTQJrVq5Ob5ImI4SC7aMQs06uajTd/gLNbyMVCeiCHHaPs0txScFzMRlaeuODqDqD9VKL9ageMGeiOS5Iss2/19snjTzfWdiZHbGVKQ6YmlxSTi3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A4WLs/BD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t9/OFfAe; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G4RCE+eG"
-Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-4bd3c887545so4055393137.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 23:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740556285; x=1741161085; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yLNwWOg4S2F2XLqkfuFJOf77RDzn7cf3N5W3Gy5iD6A=;
-        b=G4RCE+eGkXVMixjgpoUZcGzUikvtZFomnC6plsJ1tLmR2dAlCsmh2ysJOJkoEOokKN
-         i2bC1bjoB9taNZV7tzVm/GtIJC78VJculj3DhVwpWLns27y5BgBdD4EdfWgBWS/wvkUO
-         qFrCVpK3ZmiFGnP5ri5F20uYEWft3PPHpDtCh6fAFdsV7hqrW+rcun5B/AqE8UZW4Or+
-         bC5YJaaOBCz+Q10en7hjQ/R6AXxwHk30nzQK6ybjwPcqcNdGltGd02xB/ljJeY61hDjn
-         4JGor3hp0WIVZg7SjlqiY6+y4QEK1NqPvVe9qpft68YXQaohwV67ElVjFOIIvl3b+nSV
-         GVgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740556285; x=1741161085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yLNwWOg4S2F2XLqkfuFJOf77RDzn7cf3N5W3Gy5iD6A=;
-        b=gcVMaqYbwsNmOkw61/RL5zfsN4JMo3ZITVo8GNPCPzC7pZxmbHvNk/SL648ZxMMdBf
-         d87qQycgLX/RelIm0GIXqFKXviBjxl79LEbT2PcHvuTwHla85IG1glwrrN5lYmvXUvhf
-         uy/FXKiny0oeIeL0yZN+F9WTGRGYB2y1DgPI4i+uermvT4k4QXHtUW2exE1E49eGy8Lh
-         dwon+X7ioJd5Cs0MQqsg5Bym/tCBgKpY8aWc76CdvsBcU6snIBMmaqXjnpGYIoiP+VU8
-         2FFWoNOF97+TLGW/p+f6btNXnhsgf6Etfyb24inZ7pdEbg6asfpfDgOm1hOrpwCsp2ac
-         9p+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWOnPXk/jxhFPpOxXFat/nEg6/Mo9TONGJTiTF3AuzH8PJYTetyjctJ0Pa1xxngKv75c5Bjq656L6HmMM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjUgZ9BqxP0m1/tRBaqBE2F1kP0qHBMtcziF+dMUkVe1bTQP37
-	EbNtTb0qigGWx1ga7Sm2ZmfH1p+Yae9YH3rkm1JrN/0YQNk2gv08ZNPbRFrO+Qzs7l4M7vvKsgz
-	5jhp8yftkarvlAaGEmgrhNYnt+dxeUBiRsygE40B750PF1Y9HByE=
-X-Gm-Gg: ASbGncvDcO7rs2hpyuDeBl9/SunF5R6L94lk0WrZ18VhddaWel9dodTXuUxdLg+BGWI
-	dmQkVfSszfoSLCLuWJ17zW0jmQ0pHURMMMU3sGVrIFiqqWysIASYlJePeQskYByTBsQ4Dv77/I9
-	nvyLputyd9VyXU0WTQVd9TNeTfiB6tf++vJLxhXKFa
-X-Google-Smtp-Source: AGHT+IEUPEXM1aFeKdWgzqQkyRkjimPDoS+HtxKMtCZLUDKFm9cz4hTaQl8z5TOgKK+1ZhX21aRlRC/OXSiAglQ1/Mo=
-X-Received: by 2002:a05:6102:a51:b0:4b2:5ca3:f82a with SMTP id
- ada2fe7eead31-4c01e1adb9fmr1362265137.7.1740556285291; Tue, 25 Feb 2025
- 23:51:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A4WLs/BD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t9/OFfAe"
+Date: Wed, 26 Feb 2025 07:51:31 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740556295;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l+cv/hHQA4Bxqa7Tdev9Mtys53BxoXr0ORorFZ5HD2Y=;
+	b=A4WLs/BD2jdXiYPqpS1pNAi3zDKjqrAM35xEE6dvnHrPP5UWK4fSBCA7mc8JteNjL7zBun
+	YN89TL0bDEwy5rVI0T+iX+3Xd3Z1edMXtSfMzdCChjVVEC2flpD6GAFStbuenSZY60IUn7
+	Ix3DuzuM1WXDwlD19SHGmp9+NXPZbIHQD8IeskLO9ATfeBy4RNGaT/TtWTwbnhh4tyauVS
+	t6Qs3Vcr1DuB/OpALSLJkE9OLlW2tECen4XLjVApDOC9VgRqTxdCCAUmTYgMP5BuCNFirg
+	DoI8xZl/BSVKMAadLpfv7m9aRoguR2LU3PMhcGTpDdQBB8ZRD7weRtdPU41GHw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740556295;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l+cv/hHQA4Bxqa7Tdev9Mtys53BxoXr0ORorFZ5HD2Y=;
+	b=t9/OFfAeS/9WV9qIKsk8phrqbD5KgJFp4eibk+tPYUm3rs0a/IQ3VYqGM1iAaCAuEWoV7r
+	2YF/iBg1GlBa0WBw==
+From: "tip-bot2 for Chen Wang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/drivers] riscv: sophgo: dts: Add msi controller for SG2042
+Cc: Chen Wang <unicorn_wang@outlook.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3Cf47c6c3f0309a543d495cb088d6c8c5750bb5647=2E17405?=
+ =?utf-8?q?35748=2Egit=2Eunicorn=5Fwang=40outlook=2Ecom=3E?=
+References: =?utf-8?q?=3Cf47c6c3f0309a543d495cb088d6c8c5750bb5647=2E174053?=
+ =?utf-8?q?5748=2Egit=2Eunicorn=5Fwang=40outlook=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224142602.998423469@linuxfoundation.org>
-In-Reply-To: <20250224142602.998423469@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 26 Feb 2025 13:21:14 +0530
-X-Gm-Features: AQ5f1Jpl_a9-toTC9pWH12H5cMWMUd9tdGXenz-9TdtTJyLMJ9NvQJ3aPee2ZQM
-Message-ID: <CA+G9fYuwFrrUUggcKPjuTWwON=-JSv8itmsngSdHZARgoCYfyA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/140] 6.6.80-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174055629167.10177.2318536825336903930.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, 24 Feb 2025 at 20:07, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.80 release.
-> There are 140 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 26 Feb 2025 14:25:29 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.80-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+The following commit has been merged into the irq/drivers branch of tip:
 
+Commit-ID:     0edaa4593efe9377b4536211f9bc3812e3e53315
+Gitweb:        https://git.kernel.org/tip/0edaa4593efe9377b4536211f9bc3812e3e53315
+Author:        Chen Wang <unicorn_wang@outlook.com>
+AuthorDate:    Wed, 26 Feb 2025 10:15:37 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 26 Feb 2025 08:41:28 +01:00
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+riscv: sophgo: dts: Add msi controller for SG2042
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Add msi-controller node to dts for SG2042.
 
-## Build
-* kernel: 6.6.80-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 6bde7e001d6392e3eb4bac681e702af17984e6bd
-* git describe: v6.6.78-294-g6bde7e001d63
-* test details:
-https://staging.qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/buil=
-d/v6.6.78-294-g6bde7e001d63/
+Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/f47c6c3f0309a543d495cb088d6c8c5750bb5647.1740535748.git.unicorn_wang@outlook.com
 
-## Test Regressions (compared to 6.6.78-rc1)
+---
+ arch/riscv/boot/dts/sophgo/sg2042.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-## Metric Regressions (compared to 6.6.78-rc1)
-
-## Test Fixes (compared to 6.6.78-rc1)
-
-## Metric Fixes (compared to 6.6.78-rc1)
-
-## Test result summary
-total: 123184, pass: 100614, fail: 3747, skip: 18823, xfail: 259
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 127 total, 127 passed, 0 failed
-* arm64: 39 total, 39 passed, 0 failed
-* i386: 26 total, 22 passed, 4 failed
-* mips: 24 total, 24 passed, 0 failed
-* parisc: 3 total, 3 passed, 0 failed
-* powerpc: 30 total, 30 passed, 0 failed
-* riscv: 18 total, 18 passed, 0 failed
-* s390: 13 total, 12 passed, 1 failed
-* sh: 12 total, 10 passed, 2 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 32 total, 32 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-crypto
-* ltp-cve
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
+index e62ac51..fef2a0e 100644
+--- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
++++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
+@@ -173,6 +173,16 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		msi: msi-controller@7030010304 {
++			compatible = "sophgo,sg2042-msi";
++			reg = <0x70 0x30010304 0x0 0x4>,
++			      <0x70 0x30010300 0x0 0x4>;
++			reg-names = "clr", "doorbell";
++			msi-controller;
++			#msi-cells = <0>;
++			msi-ranges = <&intc 64 IRQ_TYPE_LEVEL_HIGH 32>;
++		};
++
+ 		rpgate: clock-controller@7030010368 {
+ 			compatible = "sophgo,sg2042-rpgate";
+ 			reg = <0x70 0x30010368 0x0 0x98>;
