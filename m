@@ -1,45 +1,62 @@
-Received: from mail-m49222.qiye.163.com (mail-m49222.qiye.163.com [45.254.49.222])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB2E23816F;
-	Wed, 26 Feb 2025 10:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC532459D8;
+	Wed, 26 Feb 2025 10:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564581; cv=none; b=cbg0f6eaIwrTNctuUNfT/+PpGi6ZUIcEc9ZNw0SJymoe66r/wK//9LDF+fn95o3HOoyBJOfb+aZRDvh6SxLtuf8WlPHfwBhrJH2SjlagXmpcf/CDSrN1J6yBGQ0KFg/ZikSxnrCpUcJp9do5Tnw2OBUYmGKPSBWr4txyxqOQdwY=
+	t=1740564581; cv=none; b=gC40xFTdTZMBTrjfeT0779Z2NIpYCks8los/DPzvE48prfQB79t6vqAgi+SDTRsHFofcydOTlaphJLE/HxY/zXONoPRa1UAyodLIIFn1CuNLQBMWrSoyDhMHvFm61L8X/SnryTjnFmvTCQccn9zQN79m3wBT75BF828kHLYqVZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740564581; c=relaxed/simple;
-	bh=mXll4kOrJS2RYX/fu5Ga6AY++aXx3ovIghYituZIu3g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VyYZpN7HYojmXehYiK38gJ6sMCYSP/VnWCAw2spriDYSu2NsB/FaGOZtZ5ssc3+/rE6FTHPyQIoFRE7n6N2yxPjbkfPn3n0N3FsVt9yypZN8Npvz4SF04GgeG5UQVdNrWRksM3FU66TkoiZ4Sv9Zvc6AgWVGrNwbYQHZc9RhrDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=DftBZyq1; arc=none smtp.client-ip=45.254.49.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	bh=11efVofafcjVEaBggcqnja9cqBWEgy3Pg6XbORSM1Jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W44JDzJDys/zHqtVO5eKrHhqvlPD2UAL8QxGFnHN2sYOV1ap+ej+QbhkgllNytLpRt7cTmHZBPXSoky5AawNIAhUeEmj0VDZQEY+6rBxGRwppOfQznbNlad/zE5HKCTUgKPWxqcpgr95cacTr3P3EFq7jmpjsbmGFP/gciNKFjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JrdzE456; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="DftBZyq1"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c43156e5;
-	Wed, 26 Feb 2025 17:54:15 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Simon Xue <xxm@rock-chips.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JrdzE456"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9437C431FE;
+	Wed, 26 Feb 2025 10:09:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740564577;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vV93BVjZroPC5dy6gUgFd7slydBGTPFoWoDWa15NRmw=;
+	b=JrdzE456EF3U0jCJy0Uk1cC8g6cdeiscZYhUc/pot+8AOEuLQuNXkGS1u92CEsyQEenCYX
+	BpdWq5FwYhZ8Tj8U/+I8MBveZf4jfTMmteFG/tOXUhggG+hs7uLAEQUt+L1xrWaN0r9V+J
+	F434FU+ZIq0qD9WIpMm7OsSmhl1bjo/nAXPFazch7Tc5I065zwhtE+g857BO9ODKVaX4k9
+	FRN8YuAaZjZQQEF6ewUsRsIFR12wSrRi9rln9BxjY02x/R9ZwxLSo9O8Wj1PES41WQis7D
+	WOBNS8d5E4qELF/eazbGF04jB5hl8ywf9x8UqLLJ/sVgvu+DvFzc3o39uNQJGw==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Shawn Lin <shawn.lin@rock-chips.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v8 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
-Date: Wed, 26 Feb 2025 17:54:13 +0800
-Message-Id: <20250226095414.2173410-1-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+	thomas.petazzoni@bootlin.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v2 03/13] net: phy: phy_caps: Move phy_speeds to phy_caps
+Date: Wed, 26 Feb 2025 11:09:18 +0100
+Message-ID: <20250226100929.1646454-4-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
+References: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,166 +64,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGU0eGlZPSBkdQkxJSU5MGBpWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9541adad4403afkunmc43156e5
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6FRw4KTIcMwoTGEkcFQsv
-	CixPCg5VSlVKTE9LTk1ITU5MTk9LVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPTktDNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=DftBZyq1kVe+u2e2A+F4tUJTnrHIcEcB8ciyc3OnouZLacAuk9PMU2mLx8KSfwcEcAWO15gGL02go8EOL2cPpmwpsLLaeu1lZ7e2BdKJvd8GFFsPhHoKSr/rn6xJHnkIQzYeZwyKEU8f4wGiVyPHzJDiF0fP/86RFLgRbPtNpF4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=vjXYFkddkt9PDyEj3qPNIpcqvdoLV3GTDFsK6D1hKxk=;
-	h=date:mime-version:subject:message-id:from;
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-rk3576 is using DWC PCIe controller, with msi interrupt directly to GIC
-instead of using GIC ITS, so
-- no ITS support is required and the 'msi-map' is not required,
-- a new 'msi' interrupt is needed.
+Use the newly introduced link_capabilities array to derive the list of
+possible speeds when given a combination of linkmodes. As
+link_capabilities is indexed by speed, we don't have to iterate the
+whole phy_settings array.
 
-Co-developed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
+V1 -> V2: - No changes
 
-Changes in v8:
-- Collect review tag and add Co-developed-by tag.
+ drivers/net/phy/phy-caps.h |  3 +++
+ drivers/net/phy/phy-core.c | 15 ---------------
+ drivers/net/phy/phy.c      |  3 ++-
+ drivers/net/phy/phy_caps.c | 27 +++++++++++++++++++++++++++
+ include/linux/phy.h        |  2 --
+ 5 files changed, 32 insertions(+), 18 deletions(-)
 
-Changes in v7:
-- Move the rk3576 device specific schema out of common.yaml
-
-Changes in v6:
-- Fix make dt_binding_check and make CHECK_DTBS=y
-
-Changes in v5:
-- Add constraints per device for interrupt-names due to the interrupt is
-different from rk3588.
-
-Changes in v4:
-- Fix wrong indentation in dt_binding_check report by Rob
-
-Changes in v3:
-- Fix dtb check broken on rk3588
-- Update commit message
-
-Changes in v2:
-- remove required 'msi-map'
-- add interrupt name 'msi'
-
- .../bindings/pci/rockchip-dw-pcie-common.yaml | 10 +++-
- .../bindings/pci/rockchip-dw-pcie.yaml        | 55 +++++++++++++++++--
- 2 files changed, 57 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-index cc9adfc7611c..2150bd8b5fc2 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
-@@ -65,7 +65,11 @@ properties:
-           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
-           nf_err_rx, f_err_rx, radm_qoverflow
-       - description:
--          eDMA write channel 0 interrupt
-+          If the matching interrupt name is "msi", then this is the combinded
-+          MSI line interrupt, which is to support MSI interrupts output to GIC
-+          controller via GIC SPI interrupt instead of GIC its interrupt.
-+          If the matching interrupt name is "dma0", then this is the eDMA write
-+          channel 0 interrupt.
-       - description:
-           eDMA write channel 1 interrupt
-       - description:
-@@ -81,7 +85,9 @@ properties:
-       - const: msg
-       - const: legacy
-       - const: err
--      - const: dma0
-+      - enum:
-+          - msi
-+          - dma0
-       - const: dma1
-       - const: dma2
-       - const: dma3
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 550d8a684af3..4764a0173ae4 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -16,16 +16,13 @@ description: |+
-   PCIe IP and thus inherits all the common properties defined in
-   snps,dw-pcie.yaml.
+diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
+index 846d483269f6..f8cdfdb09242 100644
+--- a/drivers/net/phy/phy-caps.h
++++ b/drivers/net/phy/phy-caps.h
+@@ -41,4 +41,7 @@ struct link_capabilities {
  
--allOf:
--  - $ref: /schemas/pci/snps,dw-pcie.yaml#
--  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
+ void phy_caps_init(void);
+ 
++size_t phy_caps_speeds(unsigned int *speeds, size_t size,
++		       unsigned long *linkmodes);
++
+ #endif /* __PHY_CAPS_H */
+diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+index b1c1670de23b..8533e57c3500 100644
+--- a/drivers/net/phy/phy-core.c
++++ b/drivers/net/phy/phy-core.c
+@@ -339,21 +339,6 @@ phy_lookup_setting(int speed, int duplex, const unsigned long *mask, bool exact)
+ }
+ EXPORT_SYMBOL_GPL(phy_lookup_setting);
+ 
+-size_t phy_speeds(unsigned int *speeds, size_t size,
+-		  unsigned long *mask)
+-{
+-	size_t count;
+-	int i;
 -
- properties:
-   compatible:
-     oneOf:
-       - const: rockchip,rk3568-pcie
-       - items:
-           - enum:
-+              - rockchip,rk3576-pcie
-               - rockchip,rk3588-pcie
-           - const: rockchip,rk3568-pcie
+-	for (i = 0, count = 0; i < ARRAY_SIZE(settings) && count < size; i++)
+-		if (settings[i].bit < __ETHTOOL_LINK_MODE_MASK_NBITS &&
+-		    test_bit(settings[i].bit, mask) &&
+-		    (count == 0 || speeds[count - 1] != settings[i].speed))
+-			speeds[count++] = settings[i].speed;
+-
+-	return count;
+-}
+-
+ static void __set_linkmode_max_speed(u32 max_speed, unsigned long *addr)
+ {
+ 	const struct phy_setting *p;
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index 16ffc00b419c..3128df03feda 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -37,6 +37,7 @@
+ #include <net/sock.h>
  
-@@ -71,8 +68,54 @@ properties:
+ #include "phylib-internal.h"
++#include "phy-caps.h"
  
-   vpcie3v3-supply: true
+ #define PHY_STATE_TIME	HZ
  
--required:
--  - msi-map
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-+  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: rockchip,rk3576-pcie
-+    then:
-+      required:
-+        - msi-map
+@@ -245,7 +246,7 @@ unsigned int phy_supported_speeds(struct phy_device *phy,
+ 				  unsigned int *speeds,
+ 				  unsigned int size)
+ {
+-	return phy_speeds(speeds, size, phy->supported);
++	return phy_caps_speeds(speeds, size, phy->supported);
+ }
+ 
+ /**
+diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+index 367ca7110ddc..e5c716365b36 100644
+--- a/drivers/net/phy/phy_caps.c
++++ b/drivers/net/phy/phy_caps.c
+@@ -76,3 +76,30 @@ void phy_caps_init(void)
+ 		__set_bit(i, link_caps[capa].linkmodes);
+ 	}
+ }
 +
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: rockchip,rk3576-pcie
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 6
-+          maxItems: 6
-+        interrupt-names:
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: msi
-+    else:
-+      properties:
-+        interrupts:
-+          minItems: 5
-+        interrupt-names:
-+          minItems: 5
-+          items:
-+            - const: sys
-+            - const: pmc
-+            - const: msg
-+            - const: legacy
-+            - const: err
-+            - const: dma0
-+            - const: dma1
-+            - const: dma2
-+            - const: dma3
++/**
++ * phy_caps_speeds() - Fill an array of supported SPEED_* values for given modes
++ * @speeds: Output array to store the speeds list into
++ * @size: Size of the output array
++ * @linkmodes: Linkmodes to get the speeds from
++ *
++ * Fills the speeds array with all possible speeds that can be achieved with
++ * the specified linkmodes.
++ *
++ * Returns: The number of speeds filled into the array. If the input array isn't
++ *	    big enough to store all speeds, fill it as much as possible.
++ */
++size_t phy_caps_speeds(unsigned int *speeds, size_t size,
++		       unsigned long *linkmodes)
++{
++	size_t count;
++	int capa;
 +
++	for (capa = 0, count = 0; capa < __LINK_CAPA_MAX && count < size; capa++) {
++		if (linkmode_intersects(link_caps[capa].linkmodes, linkmodes) &&
++		    (count == 0 || speeds[count - 1] != link_caps[capa].speed))
++			speeds[count++] = link_caps[capa].speed;
++	}
++
++	return count;
++}
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 7bfbae51070a..5749aad96862 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1322,8 +1322,6 @@ struct phy_setting {
+ const struct phy_setting *
+ phy_lookup_setting(int speed, int duplex, const unsigned long *mask,
+ 		   bool exact);
+-size_t phy_speeds(unsigned int *speeds, size_t size,
+-		  unsigned long *mask);
  
- unevaluatedProperties: false
- 
+ /**
+  * phy_is_started - Convenience function to check whether PHY is started
 -- 
-2.25.1
+2.48.1
 
