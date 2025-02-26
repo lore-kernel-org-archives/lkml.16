@@ -1,46 +1,45 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99212153F0;
-	Wed, 26 Feb 2025 11:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA5F258CDB;
+	Wed, 26 Feb 2025 11:45:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570313; cv=none; b=tLs43/6pR/Zf5AWiVk17O0AZ3MoZbu2pYiQSsWTFP+zQNti/p6rIvAK2lYaI+iiD+Wsno1ZdwqUnuYujqXJgvXiZwGpSduNawbJnaBy5GuXQR/Z9xOtyipxnlE0BEym2sbie0DXdKj50xuwsUD6D5YXAYD/Veas/XRreqtdQeac=
+	t=1740570313; cv=none; b=HxRSMYw2tovUfX/MsJ4M+rBRzlqzeoX9K+wLpx70S+/DqN+KKCrc/6gOoQIyHPUaWDBEr0Bl1shgA55KrXhvb27lc8Slc/dfCAdqWe6S7hORXWKpb5/l7/oBbmuLxrm7JAPlM7AFP0BphY0SyXFzNdmMHY1Cpd+ikF7mLyvMJz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740570313; c=relaxed/simple;
-	bh=jOcl4jChzaOfnuMhe6CWOzQik5bw/m/LULE4SM4Wwic=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=slEANvLYB6GT+rp68VMrNuXkUtqT2tmFi97k1CQDy1DM2sX1Vn07QJ0Ei+sKWlqRpRyByYa53W7+gZaYv+lvr2owcoWsEmKidQ3z8b/xsR+hpYkF2IEk36mUnthbTdCkvYFqVX4LXV+I2R58purhVquUq1Q98e76v3YEX2fmzpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JPxjA3rj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NogC8iL5; arc=none smtp.client-ip=193.142.43.55
+	bh=DsKFmSVUXHIq2lUncqo1DiHx1M4YqIuFyrpISSxzmuQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VD0jOOvl6XKV2CRNpKv+wed7J683+4RVXmzV42z46U0HXarblQWcBcABGJfguP21g0QzmiN7B4YguvcSleoVpcTuJatIbP+CNb8h24QFqouomQ/olPH5pOJbKSJSTgeaqJMHmJ5r6mB24rAYGjQPFy/b5oWxVe/MBs+rPHpNVaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zmdofZKq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M2Wms+X9; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPxjA3rj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NogC8iL5"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zmdofZKq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M2Wms+X9"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740570310;
+	s=2020; t=1740570309;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lMDiGbYVSI2UFf1LCxWO6nyQEZB+Om9MsywMKZqQgCo=;
-	b=JPxjA3rjz6xx4GTC7I8oaWdo6JKP5/SU+MZYtxrPCtbpIT6X3MBJTtspm+D3CEgeb/rGz0
-	TIwScseTkmK+tv0QaLucWZcdi7zu5lWTZllLIPEth+U6QNA7ZDutG838PWSniAlvZ5ahWC
-	0LU6v2uQDsmxRX5nsy9c/Cis8PC/Q1IHXZb+7MWEbaxt9tUHqJ7kKtA4EYETE4lsDIKZpa
-	HJfXRZJvOSLXJNl442y+s1e545AMCTgZpPgaVWCujHEFBcobNhSRSsLqNr7p75EmCu1fCB
-	3UPM8em6xc+wLNOxbvByppfB07n2A/LCz2/v9s/kEJqPMEna1tDWxq6xKKZ3vQ==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hPrRbYetXyN7EKcl5LmJ1P46VSZ9vvX2TwbzkjWRBsw=;
+	b=zmdofZKqnF5afZoMtDDABs/s8ck4H0d6qXMrb2VK48v//E15sLebMbpam6otSiOOptNd8Z
+	ovNq4+QRhb5j3MFlhrHsWX/qsPxsTPZC/zfJBOp3mMjcP5Nd4V5Vq+ZbswtF+MD2kFvVuh
+	FqdQiGPuIYcFzg8t+ZVmL7j6YNIZ2hqNeB5BwJIMdxO1dSPic4Fu8esBFt1eff5LSx7rKI
+	Dco0Y/41bvQw1pyKb8lUEn9k6eazDhsn8BUoDPuIOeRNpvH5Ndsy0NTAbBTX4anxNJ8Fqr
+	E5Dekbt2jlXZkS4HxA91OOiwzHR7zL3hUPN+twMSV16Py/V3s7SVfmYgHcl0MQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740570310;
+	s=2020e; t=1740570309;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lMDiGbYVSI2UFf1LCxWO6nyQEZB+Om9MsywMKZqQgCo=;
-	b=NogC8iL5YzrQpwMRQZ93LpyvPa5B8vMn/uJTGvcGCDvF9ORegZ4u77l7P0pYsd9hV5eT+D
-	tm/sp4VhOqmVeBCg==
-Date: Wed, 26 Feb 2025 12:44:41 +0100
-Subject: [PATCH v2 02/16] elf, uapi: Add definition for STN_UNDEF
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hPrRbYetXyN7EKcl5LmJ1P46VSZ9vvX2TwbzkjWRBsw=;
+	b=M2Wms+X9MOl6/Gm7t1HEt3gxuX6NPlE1lbWyIQHmxqAKMwc98nEfFAUlvRgXOrUE9W00nM
+	XBIj/4dU+P52F6CQ==
+Subject: [PATCH v2 00/16] selftests: vDSO: parse_vdso: Make compatible with
+ nolibc
+Date: Wed, 26 Feb 2025 12:44:39 +0100
+Message-Id: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,9 +48,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250226-parse_vdso-nolibc-v2-2-28e14e031ed8@linutronix.de>
-References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
-In-Reply-To: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAKf+vmcC/3WNywrCMBQFf6VkbSSJtWld+R9SJI8be0GSktRQK
+ f130y5Fl3Ng5iwkQURI5FItJELGhMEXEIeKmEH5B1C0hYlgouaMSzqqmOCebQrUhydqQ4E1nVZ
+ KOle3pHhjBIfz3rz1hQdMU4jv/SLzbd1qZ8YF+1HLnDKqnQWuu1rVhl+f6F9TDB7no4XtYLcFO
+ /2zO6Mb0bRWSg1fdr+u6wcLOFkP9AAAAA==
+X-Change-ID: 20241017-parse_vdso-nolibc-e069baa7ff48
 To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
  Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
  Nick Desaulniers <ndesaulniers@google.com>, 
@@ -64,39 +65,79 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=885;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=3393;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=jOcl4jChzaOfnuMhe6CWOzQik5bw/m/LULE4SM4Wwic=;
- b=qt2UpwulQT6NmPqm+BCm/x9gmi8yb5q4QxLrpncjEM195FECfP4GUiMb0tEXnI6jNVxzs5MLk
- c8OLcJCsa1SBT8bdPVaKrK+Hc3gm7a3UVHR9oQ0/xyDKxXTMTcKdumk
+ bh=DsKFmSVUXHIq2lUncqo1DiHx1M4YqIuFyrpISSxzmuQ=;
+ b=TC6HO3n1Fyr0Lj0hLMyg0/ixUTpUZ+35yMdWTwE8xXub343tQnGH7Rach2zk0DD5JzUBeKJ2W
+ Jg6/cXXIKiDDMcUHTLoJNg25mjaT6VJ1Pl6t+TJOGHoDMKCRhY1cRzM
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The definition is used by tools/testing/selftests/vDSO/parse_vdso.c.
-To be able to build the vDSO selftests without a libc dependency,
-add the definition to the kernels own UAPI headers.
+For testing the functionality of the vDSO, it is necessary to build
+userspace programs for multiple different architectures.
+It is additional work to acquire matching userspace cross-compilers with
+full C libraries and then building root images out of those.
+The kernel tree already contains nolibc, a small, header-only C library.
+By using it, it is possible to build userspace programs without any
+additional dependencies.
+For example the kernel.org crosstools or multi-target clang can be used
+to build test programs for a multitude of architectures.
+While nolibc is very limited, it is enough for many selftests.
+With some minor adjustments it is possible to make parse_vdso.c
+compatible with nolibc.
+As an example, vdso_standalone_test_x86 is now built from the same C
+code as the regular vdso_test_gettimeofday, while still being completely
+standalone.
+Also drop the dependency of parse_vdso.c on the elf.h header from libc and only
+use the one from the kernel's UAPI.
 
-Link: https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html
-Reviewed-by: Kees Cook <kees@kernel.org>
+While this series is useful on its own now, it will also integrate with the
+kunit UAPI framework currently under development:
+https://lore.kernel.org/lkml/20250217-kunit-kselftests-v1-0-42b4524c3b0a@linutronix.de/
+
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/uapi/linux/elf.h | 2 ++
- 1 file changed, 2 insertions(+)
+Changes in v2:
+- Provide a limits.h header in nolibc
+- Pick up Reviewed-by tags from Kees
+- Link to v1: https://lore.kernel.org/r/20250203-parse_vdso-nolibc-v1-0-9cb6268d77be@linutronix.de
 
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index b44069d29cecc0f9de90ee66bfffd2137f4275a8..448695c7364042b10682acc8223eb6053ad039dd 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -125,6 +125,8 @@ typedef __s64	Elf64_Sxword;
- #define STB_GLOBAL 1
- #define STB_WEAK   2
- 
-+#define STN_UNDEF 0
-+
- #define STT_NOTYPE  0
- #define STT_OBJECT  1
- #define STT_FUNC    2
+---
+Thomas Weißschuh (16):
+      MAINTAINERS: Add vDSO selftests
+      elf, uapi: Add definition for STN_UNDEF
+      elf, uapi: Add definition for DT_GNU_HASH
+      elf, uapi: Add definitions for VER_FLG_BASE and VER_FLG_WEAK
+      elf, uapi: Add type ElfXX_Versym
+      elf, uapi: Add types ElfXX_Verdef and ElfXX_Veraux
+      tools/include: Add uapi/linux/elf.h
+      selftests: Add headers target
+      tools/nolibc: add limits.h shim header
+      selftests: vDSO: vdso_standalone_test_x86: Use vdso_init_form_sysinfo_ehdr
+      selftests: vDSO: parse_vdso: Drop vdso_init_from_auxv()
+      selftests: vDSO: parse_vdso: Use UAPI headers instead of libc headers
+      selftests: vDSO: parse_vdso: Test __SIZEOF_LONG__ instead of ULONG_MAX
+      selftests: vDSO: vdso_test_gettimeofday: Clean up includes
+      selftests: vDSO: vdso_test_gettimeofday: Make compatible with nolibc
+      selftests: vDSO: vdso_standalone_test_x86: Switch to nolibc
 
+ MAINTAINERS                                        |   1 +
+ include/uapi/linux/elf.h                           |  38 ++
+ tools/include/nolibc/Makefile                      |   1 +
+ tools/include/nolibc/limits.h                      |   7 +
+ tools/include/uapi/linux/elf.h                     | 524 +++++++++++++++++++++
+ tools/testing/selftests/lib.mk                     |   5 +-
+ tools/testing/selftests/vDSO/Makefile              |  11 +-
+ tools/testing/selftests/vDSO/parse_vdso.c          |  19 +-
+ tools/testing/selftests/vDSO/parse_vdso.h          |   1 -
+ .../selftests/vDSO/vdso_standalone_test_x86.c      | 143 +-----
+ .../selftests/vDSO/vdso_test_gettimeofday.c        |   4 +-
+ 11 files changed, 590 insertions(+), 164 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20241017-parse_vdso-nolibc-e069baa7ff48
+
+Best regards,
 -- 
-2.48.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
