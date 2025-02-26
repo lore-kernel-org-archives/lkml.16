@@ -1,165 +1,180 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF67227560B;
-	Wed, 26 Feb 2025 20:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740603536; cv=pass; b=ShzM+P2Hnfbmgz8UjOxW9dbP2/3N/M21nJGKzm+ywHeEqRKPe9OwNlazcQa33s+Bp43lb/zzpdvMUqkes2cQfN72QaGsxFt1ltdz/Gq63D2k7q28eesB4se3Dap/4Lf5GsSAeY4GyrqGbeZeokGS+ZkyFz2VeQ/4snPvLW41MNk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740603536; c=relaxed/simple;
-	bh=ItMIEect07iZrce8OqfHopyNgKyjZYgYrqhgxBBlGjA=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=efykqYgJ12X+Vx9we7oAPWzscsGzaZodxhszDv+OQeFtyGWU2H+TqP+GEi9UKZDQJ78d5P27Jm74tOfB06hP9N8SHig05EHeeu3Cx0sgN7+VqkCS65fgadwH+TRsMd8vFPnefed7vMtWVlKtbjO408M4VTBPYdnObuK5ZLE8x50=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=Aa6QASK0; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=YpQV3ZIU; arc=pass smtp.client-ip=81.169.146.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15D02566F1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740603589; cv=none; b=EHu8LISQosZGWQrJWAB2ApqqAHwaYikUfc/uERaUR2hdBMvHkrFoSLstyOFzmHaiwuFx23Q5u3KkrApaMUMkrbMEhjfKTYdmG29yw/19E9gvW3RyLyKloj0INLWVAmzxX77wJZ0ZGNjvdthyx6IE8ngsr9+gS4zExT+TXaKXas8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740603589; c=relaxed/simple;
+	bh=N2Rf2FQCm+P8gqVxbHJ17gpvziMvAMEqa0WJiN63eFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OqktTvkrXkQTsm5k/thd6pxOkq7BAJadnXaGld00HcFzcsv4DBA7GpVl0TUw/SrY2KuAjm0uaJXq8qRt6iJPALG+GUyOx85JZwg17zhPpaIORu9yhveZqNHmYHUYUDKEp8bY6nObOcXDk7nJLiS7ewgeXJaS2I/xzbSd2RMeiBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=viJwsSP/; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Aa6QASK0";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="YpQV3ZIU"
-ARC-Seal: i=1; a=rsa-sha256; t=1740603349; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=TmnStTm7F9jfKZQAE26BHIjR7RdXSkpIJRGr2DQIoGYTZQP874+pXY59Ilv2f/SpZx
-    bKi5xQrYc9brfDAAzw6lnsJdPg8bk+wyGCO/YYcr1ilnubJnHJUtNTfLztmysR8ufjTu
-    eKcexDupQAMrRF0UJ30v5LdVXyqbwh/Ki4HJfV5RcEqjBLBvZmU7qLYQQo/jyCaMgwSM
-    v1OEt9Vk2rHO8otg1EilqmnsQBLRIemzcHraYNfqYc9tkYN9VCRPfGYFVkuL7EGge0zy
-    wEeOZAomlqJ+ijRtpKbBOzbHXrK6V/ImD7oCuanhtkOpGGsyEkgj7RX0PoCsRO/Nci8U
-    uDSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740603349;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=h3kwnl84GKFzcYqD2MZXAD5G+Hc11YASNteYVcGkOjw=;
-    b=DZN3SJxWWnVLVSpP76zQ5Z2uVDNJedT9sLF353DH+m1U311Z3d+VF1FeEmTC2AEG15
-    tz4nyFxNd3fjcl5yjw8KFBykqmwk6ORrwIJ3RbdWP6eTxKF3VEHhMyaIHO1TcxyAZmCD
-    IHQ1GdaYPeBzEQztaRKtsAxRzMighbj9hV13UwyFk38sUE7gM4CHQBDKNKVo2MMiCdzg
-    v4PYvnq6PW80IbliD4U0cSO0qhFw05PL70kGE0uOyxrAhoarfW2hlb+C9KdBC1jlOp5+
-    MKoWO8l11XP4/PG4U2mGezgI/yL57rGHrdxkTtznS9eHd64kDQ5mxtEaWn4N9SOs6ml5
-    DPbw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740603349;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=h3kwnl84GKFzcYqD2MZXAD5G+Hc11YASNteYVcGkOjw=;
-    b=Aa6QASK0lqZbPyqq+kwDc28DXnlwgUXsQGKhYAb0ihUmWJKe7xLIE4NQFMB9sF4OTI
-    gyYzvN3WIf0sSfVrrJnpz0xaB8kYYdP/Y+0ZqL4UMV0HfsBgFwmaZ+DpIdFTTnJvOjNQ
-    qwrShwWy1Xoa+PW/RPxzqEnkZkvUlVL/f/y6l7JnKxO33CfFZVp2r86hf4y6C/VvGCi7
-    3ReQonUM1FrkwRWZ805H2m3KVIPJ7j8GI61xIHslcUG67YkejYM3TwAUaUntG1dIlXGs
-    B221ApdYu0clk5BmhI41Tz77QY04X86M+MY8tB6NXdXro6CvcAi5rMwoUFHlaG8LsPio
-    41Xw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740603349;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=h3kwnl84GKFzcYqD2MZXAD5G+Hc11YASNteYVcGkOjw=;
-    b=YpQV3ZIUiPaYJtPqOQmucq9zNX0Y0s0RCOTaRO7ceLqtebmcXUKsjUmZ7S/ze5ZKpx
-    awLD6ZkE+fIoAqCzjAAA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
-Received: from smtpclient.apple
-    by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
-    with ESMTPSA id Qe5b2211QKtnizH
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-	(Client did not present a certificate);
-    Wed, 26 Feb 2025 21:55:49 +0100 (CET)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="viJwsSP/"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22342c56242so41965ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740603586; x=1741208386; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hpDfAIGhp1H1pQsE6PqmIBzS1xXtlGV1blracxJrRqE=;
+        b=viJwsSP/d0gxPnvN6z3gaSH2M903gwLHTZyujZ6KwE8lA7GraT6rvqct5zE+rhmu0i
+         b6E+iQxltNlqCUtWdBV+ZSsheSV0vdhGWsaYnQoHoIE8CtjUZamuLT74FofRD2YFC9B6
+         ONgVmfsxeR3g6IaZ7YghAeRXwrV9wPiXwpaxfGNgb0QS3RGth/iAfT3V3lvhtafNPHIK
+         BW5luR85VY665bd5vt3uGLw1FBrs3Gcbng4Kr1rp0bnjB4PuSfPjf9MNJboL0dCpe7qY
+         W+96II0Z+MVyIHzqiLMkE0bHA7P1GaGN4vPypwKK/Nl+sTfMxQa+sCWN0eOH1ynDlZ2s
+         4rrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740603586; x=1741208386;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hpDfAIGhp1H1pQsE6PqmIBzS1xXtlGV1blracxJrRqE=;
+        b=MYBAD2p53bqLMPJs1E9XCo6bs4XgJVdS1l9p4PWEM0OdyXaALWPCg+4BkdzmfeTy08
+         mgHuTxYzXzsASRcXjhiHII83a79B6M0m9vUGkdIKJd8KglB3FKkiOJnl1o7fjNe2p/GR
+         KS0AC3gNTCDgaro09eHcayipGlR7LzQ0MW9NYvgmXXIYaLjD93pk31csVL5w/YHTNnpp
+         7tds0w4hFsbwA9qJIuFX9m9K025rHXl0WymljI/s8G9970you+tkvLauHuqq5FDdpqGK
+         0f6hhRvhYlolsJhTEcsN39wa37nC7xg9Ysxf4vooCgJ+XjSwN6JsK46kdq4EIQzBGbem
+         COLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUGQ9G8xNBCbwt3a2dfv7/3zRILiqDvtKCDxVKjSEXFLuMpbe6heeRhnMSrL5YkphRERiqUPmgbZTfbbjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypsgfOjfNI9Ivi91wrL5KXduBN6CSnsc9wXB/TJbxoSdk5KHkX
+	7uQsKMwB7eXG8/Rw0h+7a4oqUAssepiRngemJOp8TMmQnM0qCUVepj/JrcE8IoBqXoOTuIKPbDW
+	xduDJr5cwhjVWNEE5Lp2VHmgoJgQJnh//EcGi
+X-Gm-Gg: ASbGncsmo4Sy9RWjxjFKVtvOXzttEtlEqCmFH/u3v2Ptij7H+HcCe/oS1YDVK9h23sa
+	9HQyM9zIyx2Tww6zH5tg6wWhFFh12xyHXsXoBVH/V1hXhOZ9Pbd2fMQmftki9f3+PnmNgY1YX0F
+	O4afzbU4XIwpAaL7C14szXuCOFc0+oGn9y6po=
+X-Google-Smtp-Source: AGHT+IErSMhbekrHYqaP1wrOlN6DjS+bvccnZmVDEJgXkfri8fufy+RUIPZMy2DNosH+Gy44rSU6iNaTrXz1wCUUORQ=
+X-Received: by 2002:a17:903:2788:b0:215:367f:2967 with SMTP id
+ d9443c01a7336-2234d5a097cmr564165ad.2.1740603585776; Wed, 26 Feb 2025
+ 12:59:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH RESEND] phy: ingenic: fix unbalanced regulator_disable()
- warning
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <ab308c135c3ea5e050bbfb0b94a832c8d52d5380.camel@crapouillou.net>
-Date: Wed, 26 Feb 2025 21:54:52 +0100
-Cc: Zhou Yanjie <zhouyanjie@wanyeetech.com>,
- linux-phy@lists.infradead.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
- kernel@pyra-handheld.com,
- linux-mips@vger.kernel.org
+MIME-Version: 1.0
+References: <20250226203039.1099131-1-namhyung@kernel.org>
+In-Reply-To: <20250226203039.1099131-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 26 Feb 2025 12:59:33 -0800
+X-Gm-Features: AQ5f1Jr7nGn8m3ucAcU7Zv_Fe0QHxkl4_j87Hgs7zT3dRKWfSnQz01WeXzVqdU8
+Message-ID: <CAP-5=fVh2tTD22sFrPt37OJAhOsggvt2AVwf45p_pxTa=pnVKA@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Skip BPF sideband event for userspace profiling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	James Clark <james.clark@linaro.org>, Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <AF49A39E-0534-4ADC-8E50-606A636D167A@goldelico.com>
-References: <96da5fe557f3b2501447358895bd78decc4633ef.1735482146.git.hns@goldelico.com>
- <ab308c135c3ea5e050bbfb0b94a832c8d52d5380.camel@crapouillou.net>
-To: Paul Cercueil <paul@crapouillou.net>,
- Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>
-X-Mailer: Apple Mail (2.3776.700.51.11.1)
 
-Hi,
+On Wed, Feb 26, 2025 at 12:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> The BPF sideband information is tracked using a separate thread and
+> evlist.  But it's only useful for profiling kernel and we can skip it
+> when users profile their application only.
 
-I just wonder if anyone is picking this up?
+nit: It may be worth noting that profiling an application implicitly
+excludes the kernel samples.
 
-There seems to be no MAINTAINER specific for drivers/phy/ingenic.
+> It seems it already fails to open the sideband event in that case.
+> Let's remove the noise in the verbose output anyway.
+>
+> Cc: Song Liu <song@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-BR,
-Nikolaus
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-> Am 02.01.2025 um 13:53 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
-> Le dimanche 29 d=C3=A9cembre 2024 =C3=A0 15:22 +0100, H. Nikolaus =
-Schaller a
-> =C3=A9crit :
->> if ingenic_usb_phy_exit is called the regulator is already disabled
->> through ingenic_usb_phy_power_off() leading to
->>=20
->> [    5.367301] WARNING: CPU: 0 PID: 20 at
->> drivers/regulator/core.c:2953 _regulator_disable+0x200/0x230
->> [    5.368209] unbalanced disables for regulator-dummy
->> [    5.370364] Modules linked in: phy_ingenic_usb
->> ...
->> [    5.373441] [<8054601c>] regulator_disable+0x40/0x80
->> [    5.372952] [<c02450f8>] ingenic_usb_phy_exit+0x48/0x60
->> [phy_ingenic_usb]
->> [    5.374283] [<8050839c>] phy_exit+0xd8/0x104
->> [    5.373104] [<80657a24>] __dwc2_lowlevel_hw_disable+0xe0/0xe8
->> [    5.373393] [<80658ad4>] dwc2_driver_probe+0x818/0x834
->> ...
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> Looks good to me. The regulator is not enabled in
-> ingenic_usb_phy_init(), so it should not be disabled in
-> ingenic_usb_phy_exit().
->=20
-> Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->=20
-> Cheers,
-> -Paul
->=20
->=20
->> ---
->>=20
->> Notes:
->>     Resent because linux-mips@vger.kernel.org was not automatically
->> added by
->>     get_maintainer.pl (drivers/phy/ingenic missing in MAINTAINERS
->> record?)
->>=20
->>  drivers/phy/ingenic/phy-ingenic-usb.c | 1 -
->>  1 file changed, 1 deletion(-)
->>=20
->> diff --git a/drivers/phy/ingenic/phy-ingenic-usb.c
->> b/drivers/phy/ingenic/phy-ingenic-usb.c
->> index eb2721f72a4c1..35984dd8a1bd7 100644
->> --- a/drivers/phy/ingenic/phy-ingenic-usb.c
->> +++ b/drivers/phy/ingenic/phy-ingenic-usb.c
->> @@ -124,7 +124,6 @@ static int ingenic_usb_phy_exit(struct phy *phy)
->>   struct ingenic_usb_phy *priv =3D phy_get_drvdata(phy);
->> =20
->>   clk_disable_unprepare(priv->clk);
->> - regulator_disable(priv->vcc_supply);
->> =20
->>   return 0;
->>  }
+I wonder if the second evlist could be avoided similar to Howard's
+off-CPU sample events?
+I also wonder if we should make the evlist responsible for BPF and
+dummy/sideband events. Having unnecessary events increases the list
+size iterated over when creating sideband data, and so has a runtime
+cost. Having the logic separated in places like builtin-top and
+builtin-record feels suboptimal.
 
+Thanks,
+Ian
 
+> ---
+>  tools/perf/builtin-record.c |  3 +++
+>  tools/perf/builtin-top.c    |  3 +++
+>  tools/perf/util/evlist.c    | 14 ++++++++++++++
+>  tools/perf/util/evlist.h    |  1 +
+>  4 files changed, 21 insertions(+)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 0e45bd64185403ae..cc61f5d6c599039c 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -2535,6 +2535,9 @@ static int __cmd_record(struct record *rec, int arg=
+c, const char **argv)
+>                 goto out_free_threads;
+>         }
+>
+> +       if (!evlist__needs_bpf_sb_event(rec->evlist))
+> +               opts->no_bpf_event =3D true;
+> +
+>         err =3D record__setup_sb_evlist(rec);
+>         if (err)
+>                 goto out_free_threads;
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 6440b5c1757d92ce..c284a384542ff822 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1833,6 +1833,9 @@ int cmd_top(int argc, const char **argv)
+>                 goto out_delete_evlist;
+>         }
+>
+> +       if (!evlist__needs_bpf_sb_event(top.evlist))
+> +               top.record_opts.no_bpf_event =3D true;
+> +
+>  #ifdef HAVE_LIBBPF_SUPPORT
+>         if (!top.record_opts.no_bpf_event) {
+>                 top.sb_evlist =3D evlist__new();
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f0dd174e2debdbe8..43adf6b3d855771a 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -2594,3 +2594,17 @@ bool evlist__has_bpf_output(struct evlist *evlist)
+>
+>         return false;
+>  }
+> +
+> +bool evlist__needs_bpf_sb_event(struct evlist *evlist)
+> +{
+> +       struct evsel *evsel;
+> +
+> +       evlist__for_each_entry(evlist, evsel) {
+> +               if (evsel__is_dummy_event(evsel))
+> +                       continue;
+> +               if (!evsel->core.attr.exclude_kernel)
+> +                       return true;
+> +       }
+> +
+> +       return false;
+> +}
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index adddb1db1ad2b25d..edcbf1c10e92f0c4 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -435,5 +435,6 @@ void evlist__check_mem_load_aux(struct evlist *evlist=
+);
+>  void evlist__warn_user_requested_cpus(struct evlist *evlist, const char =
+*cpu_list);
+>  void evlist__uniquify_name(struct evlist *evlist);
+>  bool evlist__has_bpf_output(struct evlist *evlist);
+> +bool evlist__needs_bpf_sb_event(struct evlist *evlist);
+>
+>  #endif /* __PERF_EVLIST_H */
+> --
+> 2.48.1.658.g4767266eb4-goog
+>
