@@ -1,40 +1,39 @@
 Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5DB1A01BF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D75821C9E7;
 	Wed, 26 Feb 2025 14:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580672; cv=none; b=F2iiIyamv0xgV8E5ZRGqBY4waC9yQhUAAk+cwHeaK/BFe8qsnHWytxU9UtdjPJPp7XMMlaGXiqidjYT5TF/MUV7NFPE6b3+so6qENhorxbyFDqWuFR6G2vPC3DwHUmamt6QNVaWeRHHgKdQVaVazHdevqDJf7+o/BWJAee/6RrQ=
+	t=1740580672; cv=none; b=orXW7ZFbK1vsrxK2rAODIOWio0mCBkX0vROJ5galhhiKMI+VEnE+lirI/HdXNC0g8RIm9YX1oOoGXyCR8fWRLd9duzXZ6933/zbA3s4LtkqgnxE3EwiftZNTWbocw6+TfSfYeuNCrW84tGy/w3Svrjeo1Lc6czMLZLr/vF7TjZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740580672; c=relaxed/simple;
-	bh=J3OeqIzPFKPB+WA/gVtAcJYjDsj3Dkc+2pfbrvfQvTo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SsAzatdtZMJzI94WJteMDbBkXHFh/UEJK+ASz5/UyuBriRxJ0lQYkQr4y/l2wuSvhvQb357bGYWasrWztC5NGUTWOqyE3nwBsKPIUnNXZnBGoxEPMuevwK/Jz5ONlRn7iMZwg3erkVYYkxlsHz8AVzonz6pWVtUYTg5IucbnGuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=hxxx/PkJ; arc=none smtp.client-ip=45.141.101.25
+	bh=K179TIMBNAwzzei+3sFPo1T4KrBk2+3+P31OITHT+To=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KEYdCxmfy3/HQQYyflktWqyt8AUvvHqd/OYU2U0AGdffEziQMBKgP44LKI3e/kLiSKykvETg+2gxGLbNWP0ZzFCoS6LOiPPQG3Cm8XTzjwqjoRywv3xlWSwEC+epDS2lJSdVTdbCNi6Kf50RkmUVld6OZMRdlcyJSJun/6pE/a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=HOGU+wHP; arc=none smtp.client-ip=45.141.101.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="hxxx/PkJ"
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="HOGU+wHP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1740580231; bh=J3OeqIzPFKPB+WA/gVtAcJYjDsj3Dkc+2pfbrvfQvTo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hxxx/PkJHwL8ZiOa00+T5buESuDGINQnL+oJ8Sr8CxgI10gsQ4c+Vc/HT6wX8950H
-	 cA7YwIFqH4WGXSj8ve86YDchoEi/RLUnJPtbgUDS1JM5jsRFKctX37ljXi9Y56MG8e
-	 UZaD9ptn0ObvboWzwc8B428ua7R2Pg/+6YUdJ5Ou7fcVDvYdRbTGaOJLe9h2qagGdN
-	 57r+T/lxJVqklr9k5olZdsGOMO7dK4ScovcPtHpePZoa2i15sOdff9zZ0/Mhx4XnLa
-	 kvfN2YRSkN3O3pQNpGPsBA2LS341Frg82E3fVATWCkLtiKHeNLvirVmmWbL1ZU0FLa
-	 eHA2gicpqaBBg==
+	t=1740580228; bh=K179TIMBNAwzzei+3sFPo1T4KrBk2+3+P31OITHT+To=;
+	h=From:Subject:Date:To:Cc:From;
+	b=HOGU+wHPFLJESrVdUnB9KSg/csDyWbhEn+L+EyqF3BqTzLQxbcfsrQrWEyQ1Hhypy
+	 CpOYxtfn8sWvFs4Ap9LrJ6/bqYvqqDOxLCt5+aSRZNruHdRD++JXFjgUgEBwQQoQAV
+	 RMhKg2uxW93pe2Wb8uM76jZ3VoveNGOnU6YQB7E4HhPsrrXA1MQoxMziZMHG2EvMhN
+	 3+GPVSV0IJLkIMx8npTJ9vo88CHUMz9V7QeAckB2aHryeXy7zJK6qgWeGl6kbyYNjF
+	 CrLb5dJSWAj+bkQ+jTujuz4aknGpKeRMPHxADRV1cxorDHda9ZLVtXHOCDpxH0Q52Z
+	 7OL9t2V5WOiDQ==
 Received: from authenticated-user (box.trvn.ru [45.141.101.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 732CD1B2BE;
-	Wed, 26 Feb 2025 19:30:30 +0500 (+05)
+	by box.trvn.ru (Postfix) with ESMTPSA id CB6343305;
+	Wed, 26 Feb 2025 19:30:27 +0500 (+05)
 From: Nikita Travkin <nikita@trvn.ru>
-Date: Wed, 26 Feb 2025 19:29:56 +0500
-Subject: [PATCH 2/2] arm64: dts: qcom: sdm845-db845c-navigation-mezzanine:
- Fix the overlay root
+Subject: [PATCH 0/2] {vision/navigation}-mezzanine: Fix overlay root node
+Date: Wed, 26 Feb 2025 19:29:54 +0500
+Message-Id: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,9 +42,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-qcom-nonroot-overlays-v1-2-26c6e7605833@trvn.ru>
-References: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
-In-Reply-To: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
+X-B4-Tracking: v=1; b=H4sIAGIlv2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMz3cLk/FzdvPy8ovz8Et38stSinMTKYt2ktFQjwxRj46RUi2QloN6
+ CotS0zAqwudGxtbUANK3d4WcAAAA=
+X-Change-ID: 20250226-qcom-nonroot-overlays-bfe21d33be8c
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -54,50 +54,104 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=J3OeqIzPFKPB+WA/gVtAcJYjDsj3Dkc+2pfbrvfQvTo=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBnvyWDJ2WBTpOYZfIs+9+zBKtvdFf9ztudPMBP8
- zQIfFvlC0OJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZ78lgwAKCRBDHOzuKBm/
- daKsD/9IoHExUKzuCp430E/igBf1wm9tCaa5dwlpz/8QjCxhGK7Ju5bT/DyoSijd5b5DXYNGYmq
- JofB+E0BqDvkbTRKel67UCXQpgFR9H2VGiPcZTbWcWNiSyLClZ3w367Yza1C1WPWMoprzDkvw5g
- YeYXXcIT7shij+TMOZoGSa2c02dH9ryNUFlXI2pyKeabc//v2jzn2D5dP1PFWuaS09R80jCKIjz
- KTh9k+jhp+8SnLRZLnpBEXMVEeiG93UXH5v7cAPbeNuTmP23F9rGIMsJdO9SEb7hPOP8ywlx1mS
- B2huuaoOKHvWtYj2qt5wVZqnNgkaIuA0pX72IocU76FaQNPf/DHBp70AOk04Usj6zY0ShdTfDP8
- lPPmoLAIF2UbHAfVYwcoF4ovb+HO+3xU39jK2cq7QOO36/uolYfOFE4yWSHXraZMpq13bBcJ+lV
- 6tiWR6Wz5qSk+t/R8IpJiybuDCEQrljOsxGmkxc5y9KfInWqpGcF29ko2eqgcrg+cd7DrNsChT0
- dCCHWFdKbnHcyKV5rxdYkVQinTtFxZIdiHnsV+iiA+gxj61M/pYFQ+jSxNAH6aU6WiOaOcfAnkA
- yj1+MH84PcrCJhCVTKSzazzISruGBL8IM0F7tvVKP65sSdxd3eak8lIOEitLIceG+H9r/0nEMJK
- oLoiz1DrXs4Nnqg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1847; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=K179TIMBNAwzzei+3sFPo1T4KrBk2+3+P31OITHT+To=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBnvyWAvw50tbJuC6rZ+1/kX5iibwmoEN+6I3RK8
+ 4Glgqxn1/6JAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZ78lgAAKCRBDHOzuKBm/
+ dfh7D/4wQom19dboxkdcU8S08u3yposYehNTu06mFooaWgW8QhMX0zypWiHDy/UUprnC4ULj9ZU
+ jjCYER5e6rknq1Z9L3/PnNSrCwPQlq/8qNbFhku62ulXBJ5xo6383FiyO/YXPs9XpEYGAc9/bOL
+ 8lRTz/4lXht0BqjNb+OnfMot/WJJG45olteLQJDGg/M27g1yTILnAe3nE1zWwuva7+ZRv9Z4Zsw
+ FaI0eXSQUYxD18PWM4Tz7tg+Iv2Lu+xenSGB/UGiX8HPuolYIBejJ5pi0+9/KpkwQoy47nYR8KI
+ 6/NX3u7I2Boew1DX+59qzswdZhvPtOpgdx2PW1EB8hpemOQVL3TSMMsO9iHA3ticIrTs5YSuspD
+ 97RYEByTLOKSnMH/PBXvfU4GIUSL+eU2jRE4m8MuF8yjk53d+yRB/XjPtSRXxeZxg/FQReaXH1/
+ am0HsYen8CldcfUGPUsa8OuqP7lwiwC1Pa5OMiDoxK458GB/21jxP+26BGf+4HeIgnULULCBj93
+ uzLCWE5bfjUqTmIyhMIW/mBbrf9aqt1lm1DooFJ3ddMSuVi3QEC/Pv0kxpNrPoPGytoo9TCncTx
+ CbtlRlPQ8GR45m4LBP2bXNHKnSNulNayFBvXTSV7lU0m3KQumw7He2MpKsDaS7gmMSv6DtOWL4A
+ xTksbKTKWid/Orw==
 X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
  fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-When converting to the overlay format, it was missed that "/" in the
-overlay corresponds to the overlay's own root node and not the fragment
-targeted to update root of the base dts, which should be "&{/}" instead.
-This results in the cma node never actually being applied by libfdt.
+While considering to propose WoA EL2 dt overlays upstream I was looking
+at existing overlays and noticed that some of them are broken: they put
+seemingly meaningful fixups into the overlay's "/" node, which places
+them into the overlay "metadata" itself, not into a fixup fragment to be
+applied to the actual dtb. This series fixes those two by changing to
+full path "&{/}" which should work as it was initially intended.
 
-Fix the overlay to use correct target node.
+See demonstration of the problem below:
 
-Fixes: 30df676a31b7 ("arm64: dts: qcom: sdm845-db845c-navigation-mezzanine: Convert mezzanine riser to dtso")
+$ cat base.dts
+/dts-v1/;
+/ {
+	compatible = "fake,board";
+	fake,value = <42>;
+};
+
+$ cat extra.dtso
+/dts-v1/;
+/plugin/;
+
+/ {
+	foo;
+	bar { baz; };
+};
+&{/} { whatever-comes-next-after-baz; };
+
+$ dtc base.dts -o base.dtb
+$ dtc extra.dtso -o extra.dtbo
+$ fdtoverlay -i base.dtb -o combine.dtb extra.dtbo
+$ dtc base.dtb
+/dts-v1/;
+
+/ {
+	compatible = "fake,board";
+	fake,value = <0x2a>;
+};
+
+$ dtc extra.dtbo
+/dts-v1/;
+
+/ {
+	foo;
+
+	bar {
+		baz;
+	};
+
+	fragment@0 {
+		target-path = "/";
+
+		__overlay__ {
+			whatever-comes-next-after-baz;
+		};
+	};
+};
+
+$ dtc combine.dtb
+/dts-v1/;
+
+/ {
+	whatever-comes-next-after-baz;
+	compatible = "fake,board";
+	fake,value = <0x2a>;
+};
+
+In the resulting dtb foo bar and baz are missing.
+
 Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
+Nikita Travkin (2):
+      arm64: dts: qcom: qrb5165-rb5-vision-mezzanine: Fix broken overlay root
+      arm64: dts: qcom: sdm845-db845c-navigation-mezzanine: Fix the overlay root
+
+ arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso       | 2 +-
  arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+---
+base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
+change-id: 20250226-qcom-nonroot-overlays-bfe21d33be8c
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso b/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-index 59970082da45203311146cc5249298f6188bf67a..d8c0021b23cb51bd19e1826b6cd8544f9e10a2fe 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-@@ -9,7 +9,7 @@
- #include <dt-bindings/clock/qcom,camcc-sdm845.h>
- #include <dt-bindings/gpio/gpio.h>
- 
--/ {
-+&{/} {
- 	reserved-memory {
- 		linux,cma {
- 			compatible = "shared-dma-pool";
-
+Best regards,
 -- 
-2.48.1
+Nikita Travkin <nikita@trvn.ru>
 
