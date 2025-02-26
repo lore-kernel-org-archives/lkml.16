@@ -1,115 +1,131 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B1625E81A;
-	Wed, 26 Feb 2025 22:52:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E6F25E800;
+	Wed, 26 Feb 2025 22:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740610340; cv=none; b=QPW4/5nCJiSxu9MvS4gpgMlD6HWZN+wmtTQ6ntBvNMhgJ+p2e3NNeNSrDhtyy3LTlsGFoFNJRx2M/gmCnYOsRKCipKRg4Z557G8RqnZv5bt94PQbDbdLpYeu5O+TiqGHnRWqn9JpJ8h5v/N9OFadPCKAP6jNuSNf8Of5qMNMMHI=
+	t=1740610460; cv=none; b=cPi0raZzwIOK6L+jI6GBhPOw8w2qrtxfxAv4IX+HNL16Xphl2+uNw7HKqOJfz3p292W90/kGnGk3VdffbYaHXQshK/cuKVCsxBryq9Qx1AuoPiNeCdBJAR24Jy784WL8NiWTg2jys3yH7Sjmu5MrR/yHaBSYs3+XMDte53BXna8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740610340; c=relaxed/simple;
-	bh=c8pm/RLQcFzlThTF6jt2RIPrCFmAIpiK1XJK/Dy/Le0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WhE7M3bIsL6aRC/APuR6JdoDBF8BsLZIX587rVypgNL495MtRIQSbN3pGFTInfGs56BjcGx3BiENZiV9/pbbNlnPMb+DXZs6XogLhfAlTefAidaLratFNuxdHPg10zOAjYRJnK5f0C0LJpK9TcLJj+TYI+xkoh/zZXubsVZTEVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lI1al3X5; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1740610460; c=relaxed/simple;
+	bh=1sPPljet3ACTgKI4+mgP1c5oGZKB8Hf8G8BN7ZnjVIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K0icqHbCAuxMwauNgLxsJD6UNUDxOXm/8oIWbRr+glOxA/5C2yERLDSxYfuGxlz74IIb2VULKf3501ISWLMbHrEtcZYmn7S+OnqVRW98Yd16Eb4IEiK5oHbKjcclQV/Ju1C2zQE40mWx6MOYL+4tDH5Rs/gg1PdjGoTM8bEBPz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRSvzFfz; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lI1al3X5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=MkQ8uUHQ+uezvHICBEfyNTjs8v7ihKU40F0pUzTSAuA=; b=lI1al3X5MiKMt2ao5EstWg5YTb
-	fKd0BT5389tq2N7O8iD/8kGfBWC52DX/SDEOWObN/PSVuJn+jy/ysmwFj9tD/ax8cXw+v5H+c3+p3
-	S+oH2uTzJde1ele0RY2yUiqNjdf6OWqAl6yFLrIJtjGVuuso/9hgBw9xTKMaHZcQLKtI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tnQG1-000PBp-Ql; Wed, 26 Feb 2025 23:52:01 +0100
-Date: Wed, 26 Feb 2025 23:52:01 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] e1000e: Link flap workaround option for false IRP events
-Message-ID: <36ae9886-8696-4f8a-a1e4-b93a9bd47b2f@lunn.ch>
-References: <mpearson-lenovo@squebb.ca>
- <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRSvzFfz"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f31f7732dso224668f8f.1;
+        Wed, 26 Feb 2025 14:54:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740610454; x=1741215254; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1SLvO084dN+2d+/gLjub5lI3vWtdzNWw7Y3/rBNHH74=;
+        b=TRSvzFfzKnjx46pzkPDgkDZGeWWejeA067W26Gm+iuFGTMdpqvg52S+7015Uudj2JY
+         SwVjJ+Bs8y2O9TbLHBP14u1vwNIb91ERYER1FThG+q5Jn/JiNiv7NarKd7tIfT6U8f+Y
+         uRZQ7OevivgVRpBNzFNaQCaw6e8pvXOShdGfYgDHxG79o72cr94TV9aNbvOLBZioSx/M
+         hp2vqnO1akPZ5f7IPz5jJtKk1oydUZlz7GM6xWYcP7I+Wx5mECHgZaX+LEbPCIVJSO+O
+         4pJ3p/MjdZ3cud8uu70Uzj0OCuMM821wHAqvtRyvbZiQk//Cp0VoTkiyN1LF2We/YKZp
+         rFmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740610454; x=1741215254;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1SLvO084dN+2d+/gLjub5lI3vWtdzNWw7Y3/rBNHH74=;
+        b=IId2oPjG4448j4kOZ6WnONVlNTP585kzQPUE7XXDrgeBJkLKa05pu2l5hnJB9LSLZM
+         9GR8rskM1oXHESxYsgBOmPFgJY28BMnPWXVj9+yEJk7KMbzfoDxVJbUKfOT4eNHxzfCh
+         dor3Vcw6mHH7lGVupsHio+/VuEym4HxAKm9xzy4PDYAcJNkPDE1u/v9Pioh+aXFsmSEr
+         Z36Jw0wv5pQexvoKqLSUpvCYqWo0iusDnOdCQhLnr0Sns39MXjlvs3R+KZMqaeOmfdLD
+         K8MsE+C4XfC5d0P3Nh4jpstPcFtbmM97p+FxdU4voFSRFdAK2deczeOgS+H2Lt9+8yFD
+         JJdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOMXkN9M+Akiulbs94PSoejgKXdryx85aW50K6SUNzo8gvVLk/3IPsdr/ahJItTFAlqmkBCzwVJ6zm6xDD0vw=@vger.kernel.org, AJvYcCW2hvMv7fJ4kJ0+78d2bt0C/f/S/dgtP47lddqeS1CuWrBt5vowlpNALAnIdhQsgF1jpRJGxdeMYtRYsR8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8PQ78oiLUKmyOGxJk5YITzoKRyZnNzNFYUE3gNh1QFSRawvIm
+	LOm8meVsDLKRmP4xlg+3vO+MCXQxctxnBadnzXlN9hlN12oZrsR4
+X-Gm-Gg: ASbGncvrTHcAGdVhdeS6QaWxjuQPcAMR9fPuy8szw42N2DP+NH7+pcIDRUPsZXXOjQT
+	f9Bx7qAKN0Hgx4JWGFUmqfWCdcozSQi9Ak8eArl5gsga9SppO0XF0Ph5Crb61BP8zt6Rejokzo+
+	32byvrxOMXaPSc4bslf8eaais7dpK/omtZacoA57bNbKsX40f1kwATX0elXpz1ltAGPjVInxxUA
+	jjFmqV0aaEzze2+apWI5rIiT5qdZFjai/NUmT8DNSxmkFHADEs/uypJeLkTXjFwaEi0MbXGTrFN
+	LCNE2/x+DcT34f3VSLfAZDiBbysCf9z4Q9UR6Ao3VPEiGVOjm+n39vJS8tg8MxeV
+X-Google-Smtp-Source: AGHT+IHC+KkP1LTJHqKHVvWCgThNFJjKkJxpW6IERDcsLbEjELPz4ud+GHuN+VTB6Z2Q7/ZHjZSbAQ==
+X-Received: by 2002:a05:6000:188f:b0:38d:b028:d906 with SMTP id ffacd0b85a97d-390e169981emr1006277f8f.21.1740610453752;
+        Wed, 26 Feb 2025 14:54:13 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e484452asm184751f8f.61.2025.02.26.14.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 14:54:13 -0800 (PST)
+Date: Wed, 26 Feb 2025 22:54:12 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Uecker <uecker@tugraz.at>, Ralf Jung <post@ralfj.de>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Ventura
+ Jack <venturajack85@gmail.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, ej@inai.de,
+ gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <20250226225412.35133185@pumpkin>
+In-Reply-To: <CAHk-=wj3C7Gc7pB0BD+5dvrFWh8xNJLYgupq6parOCFk94VyoA@mail.gmail.com>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+	<20250222141521.1fe24871@eugeo>
+	<CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+	<6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+	<CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+	<CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+	<CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+	<5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+	<CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
+	<ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
+	<CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
+	<CAHk-=wj3C7Gc7pB0BD+5dvrFWh8xNJLYgupq6parOCFk94VyoA@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 02:44:12PM -0500, Mark Pearson wrote:
-> Issue is seen on some Lenovo desktop workstations where there
-> is a false IRP event which triggers a link flap.
-> Condition is rare and only seen on networks where link speed
-> may differ along the path between nodes (e.g 10M/100M)
+On Wed, 26 Feb 2025 13:21:41 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+
+> On Wed, 26 Feb 2025 at 13:14, Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > That "single read done as multiple reads" is sadly still accepted by
+> > the C standard, as far as I can tell. Because the standard still
+> > considers it "unobservable" unless I've missed some update.  
 > 
-> Intel are not able to determine root cause but provided a
-> workaround that does fix the issue. Tested extensively at Lenovo.
+> I want to clarify that I'm talking about perfectly normal and entirely
+> unannotated variable accesses.
 > 
-> Adding a module option to enable this workaround for users
-> who are impacted by this issue.
-
-Why is a module option needed? Does the workaround itself introduce
-issues? Please describe those issues?
-
-In general, module options are not liked. So please include in the
-commit message why a module option is the only option.
- 
-> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
-> ---
->  drivers/net/ethernet/intel/e1000e/netdev.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+> Don't say "programmers should annotate their special accesses with
+> volatile if they want to avoid compiler-introduced TOCTOU issues".
 > 
-> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-> index 286155efcedf..06774fb4b2dd 100644
-> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
-> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-> @@ -37,6 +37,10 @@ static int debug = -1;
->  module_param(debug, int, 0);
->  MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
->  
-> +static int false_irp_workaround;
-> +module_param(false_irp_workaround, int, 0);
-> +MODULE_PARM_DESC(false_irp_workaround, "Enable workaround for rare false IRP event causing link flap");
-> +
->  static const struct e1000_info *e1000_info_tbl[] = {
->  	[board_82571]		= &e1000_82571_info,
->  	[board_82572]		= &e1000_82572_info,
-> @@ -1757,6 +1761,21 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
->  	/* read ICR disables interrupts using IAM */
->  	if (icr & E1000_ICR_LSC) {
->  		hw->mac.get_link_status = true;
-> +
-> +		/*
-> +		 * False IRP workaround
-> +		 * Issue seen on Lenovo P5 and P7 workstations where if there
-> +		 * are different link speeds in the network a false IRP event
-> +		 * is received, leading to a link flap.
-> +		 * Intel unable to determine root cause. This read prevents
-> +		 * the issue occurring
-> +		 */
-> +		if (false_irp_workaround) {
-> +			u16 phy_data;
-> +
-> +			e1e_rphy(hw, PHY_REG(772, 26), &phy_data);
+> Having humans have to work around failures in the language is not the way to go.
+> 
+> Particularly when there isn't even any advantage to it. I'm pretty
+> sure neither clang nor gcc actually rematerialize reads from memory,
 
-Please add some #define for these magic numbers, so we have some idea
-what PHY register you are actually reading. That in itself might help
-explain how the workaround actually works.
+I thought some of the very early READ_ONCE() were added because there
+was an actual problem with the generated code.
+But it has got entirely silly.
+In many cases gcc will generate an extra register-register transfer
+for a volatile read - I've seen it do a byte read, register move and
+then and with 0xff.
+I think adding a separate memory barrier would stop the read being
+rematerialized - but you also need to stop it doing (for example)
+two byte accesses for a 16bit variable - arm32 has a limited offset
+for 16bit memory accesses, so the compiler might be tempted to do
+two byte writes.
 
-    Andrew
+	David
 
----
-pw-bot: cr
