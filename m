@@ -1,164 +1,136 @@
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4183F263C86
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4722745E;
+	Wed, 26 Feb 2025 21:40:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740605978; cv=none; b=IqPSK/PfFlneiibNdoQx55RoAAHJ6Ln1A+PF/QmkGus0VlI+8QGMiSBEh3Tdd0kiOQEv7SesHwfavck3MJIcOpb5EmxNZCmw7QkwQIY3rrYcPonyyeb+NjM0ITar/dc3X9O+AGigbq7ShZCIgd5Z+8oIvnW06FL5TO3B2kRVG2Y=
+	t=1740606006; cv=none; b=aWZ8z7fJk0eq2Lfowog7YhOICQ/M2QuN166A+D4Iubk3AV4G5rP4PxH39iGogHJkvYJ22WpqHbTlj25BUkxbltASitZVLm97fDrARulaJRKJnVUbdKOex7Rog3AKzBbkkR9Ap3fjCVXSjTOACgKar/yQ+6rWKhxgYGhj3qtXw1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740605978; c=relaxed/simple;
-	bh=V0nqe9pGk9+j+rvT7OsE68sn/woHcCy9DXCv+4P0T4s=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B/g1Z8//XBmzjJgMOayxqii1zh6CZYHctUwB6/s+4LaHQ6LU0bz7REa42MRw4+3VJsaE/izfbmOWnYe9zzYLLYBK2imt1Mv3WS9ZxdiLwWkGAFWJJuFnkvBQk1jSJo/7HDaYpeq8zYoeTfIJ9uqu9Q5gVXzu9WZ+oQM1If5RYPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=gO5fv8h7; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1740606006; c=relaxed/simple;
+	bh=B5Pl0F39NNjaJkCDzCw6Eg5v+4wqR8cVZY9hkGYMii0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nTMctj16qiSyctIwlJwOA4ZWg99xwzpqg3j2qvkdCLf1O6inHO3XifWW9ebT71O1gXrwDNvSvozVacwRi8Abvskr8c1tH3mhuN/3fdlytymeRsMo4uxCvTatCD3weXP+BCZumMSu1RVNghYxiiRLLvwV1oH9MzjDU5NGf+fShiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JXlaftwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="gO5fv8h7"
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-	by m0089730.ppops.net (8.18.1.2/8.18.1.2) with ESMTP id 51QKcSp4018501
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:39:34 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=+lNJAllL67o7hUjzAbl5N9quGu7zuBmVuph1MeFnj+0=; b=gO5fv8h7LaQF
-	RBnT+7NHPmaCb6v5InxilkVDqkewGj4ZDzDuB6bk+rpSeyq61Lj+BuZiWLxNOgDR
-	NMP1D9XcqlFF58dfvFTKHSAhg6lgqGqm/u0qOs2wau1IHDH+q1gEImfA+RtLPDs6
-	jtFnsOBcVS83e3ZgZsRMWlIBqvsMetBO9Qbgw28kogB4hs8fXRj4mIKSN8cRgbxe
-	72LKtoULSmoW5wul5I1isdB9KU4o0ZmFyC6qfYtqaBMXGmxV2vUhvr4oLM7kP0WB
-	RshhYYJFgIp5P1INS5+Ok8bPgQpczBZ/BaGrg3gvUu1enK1YdjOG7M93UM/cgfXQ
-	abcXOs7/SQ==
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by m0089730.ppops.net (PPS) with ESMTPS id 45257rb8d4-8
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:39:33 -0800 (PST)
-Received: from twshared11145.37.frc1.facebook.com (2620:10d:c085:108::4) by
- mail.thefacebook.com (2620:10d:c08b:78::2ac9) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 26 Feb 2025 21:38:49 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 3AC4E187DD503; Wed, 26 Feb 2025 13:38:45 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <pbonzini@redhat.com>, <seanjc@google.com>, <kvm@vger.kernel.org>
-CC: <x86@kernel.org>, <virtualization@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 2/2] kvm: retry nx_huge_page_recovery_thread creation
-Date: Wed, 26 Feb 2025 13:38:44 -0800
-Message-ID: <20250226213844.3826821-3-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250226213844.3826821-1-kbusch@meta.com>
-References: <20250226213844.3826821-1-kbusch@meta.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JXlaftwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B28BCC4CED6;
+	Wed, 26 Feb 2025 21:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740606004;
+	bh=B5Pl0F39NNjaJkCDzCw6Eg5v+4wqR8cVZY9hkGYMii0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JXlaftwNhTvsbSJFi2WuyxKTGJ5z/6LPZOgY88fQ2guL2Ron8SNUAVXUqoWZ88sS1
+	 ua0oSDiMc+KZMys6juRTsdjmrTfh7Phdr92ixazCPgCvWe5sFYqoLq4IO3+JD+Mwja
+	 FWjIFZzJg4N8rVTUPRY6MQDFvKt1tfOanlUW+wsVM3NFDbqIUWpvK/HMUv5KDLLINF
+	 nI/O8dTREtghtWLxz7u+zb9s7QtmcaUl6AScLdss84Uj0tBdodQAhiw/CAD3BG4c+/
+	 cnekK6JX5y59jWXSbZmEHCRAS24H/rJ1ddG3lJ+wF0vNGgz5stFFsEicVHPTrupiXm
+	 OeKkxit2vkDYg==
+Date: Wed, 26 Feb 2025 21:40:03 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+Message-ID: <20250226214003.GE3949421@google.com>
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+ <87jz9d5cdp.wl-tiwai@suse.de>
+ <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+ <20250226204229.GC3949421@google.com>
+ <4e1b220d-1737-468d-af0b-6050f8cdaf8b@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: 7XU4uLlAn8gP5pKG9T6MOum6zrGwAm6N
-X-Proofpoint-ORIG-GUID: 7XU4uLlAn8gP5pKG9T6MOum6zrGwAm6N
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e1b220d-1737-468d-af0b-6050f8cdaf8b@oracle.com>
 
-From: Sean Christopherson <seanjc@google.com>
+On Wed, Feb 26, 2025 at 04:01:18PM -0500, Chuck Lever wrote:
+> On 2/26/25 3:42 PM, Eric Biggers wrote:
+> > On Wed, Feb 26, 2025 at 09:11:04AM -0500, Chuck Lever wrote:
+> >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> >>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> >>> Chuck Lever wrote:
+> >>>>
+> >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> we received a bug report showing the regression on 6.13.1 kernel
+> >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>
+> >>>>> Quoting from there:
+> >>>>> """
+> >>>>> I use the latest TW on Gnome with a 4K display and 150%
+> >>>>> scaling. Everything has been working fine, but recently both Chrome
+> >>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> >>>>> working with Scaling.
+> >>>>> ....
+> >>>>> I am using VSCode with:
+> >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> >>>>> """
+> >>>>>
+> >>>>> Surprisingly, the bisection pointed to the backport of the commit
+> >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> >>>>> to iterate simple_offset directories").
+> >>>>>
+> >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> >>>>> release is still affected, too.
+> >>>>>
+> >>>>> For now I have no concrete idea how the patch could break the behavior
+> >>>>> of a graphical application like the above.  Let us know if you need
+> >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> >>>>> and ask there; or open another bug report at whatever you like.)
+> >>>>>
+> >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> >>>>>
+> >>>>>
+> >>>>> thanks,
+> >>>>>
+> >>>>> Takashi
+> >>>>>
+> >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>
+> >>>> We received a similar report a few days ago, and are likewise puzzled at
+> >>>> the commit result. Please report this issue to the Chrome development
+> >>>> team and have them come up with a simple reproducer that I can try in my
+> >>>> own lab. I'm sure they can quickly get to the bottom of the application
+> >>>> stack to identify the misbehaving interaction between OS and app.
+> >>>
+> >>> Do you know where to report to?
+> >>
+> >> You'll need to drive this, since you currently have a working
+> >> reproducer. You can report the issue here:
+> >>
+> >> https://support.google.com/chrome/answer/95315?hl=en&co=GENIE.Platform%3DDesktop
+> >>
+> >>
+> > 
+> > FYI this was already reported on the Chrome issue tracker 2 weeks ago:
+> > https://issuetracker.google.com/issues/396434686
+> 
+> That appears to be as a response to the first report to us. Thanks for
+> finding this.
+> 
+> I notice that this report indicates the problem is with a developer
+> build of Chrome, not a GA build.
+> 
+> If /dev/dri is a tmpfs file system, then it would indeed be affected by
+> b9b588f22a0c. No indication yet of how.
 
-A VMM may send a signal to its threads while they've entered KVM_RUN. If
-that thread happens to be trying to make the huge page recovery vhost
-task, it will fail with -ERESTARTNOINTR. We need to retry if that
-happens, so make call_once complete only if what it called was
-successful.
+Just to confirm, the commit did change the directory iteration order, right?
+The theory at https://issuetracker.google.com/issues/396434686#comment4 seems
+promising.  Just the exact code hasn't been identified yet.
 
-Based-on-a-patch-by: Sean Christopherson <seanjc@google.com>
-[implemented caller side, commit log]
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- arch/x86/kvm/mmu/mmu.c    | 10 ++++------
- include/linux/call_once.h | 16 +++++++++++-----
- 2 files changed, 15 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 18ca1ea6dc240..8160870398b90 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7460,7 +7460,7 @@ static bool kvm_nx_huge_page_recovery_worker(void *=
-data)
- 	return true;
- }
-=20
--static void kvm_mmu_start_lpage_recovery(struct once *once)
-+static int kvm_mmu_start_lpage_recovery(struct once *once)
- {
- 	struct kvm_arch *ka =3D container_of(once, struct kvm_arch, nx_once);
- 	struct kvm *kvm =3D container_of(ka, struct kvm, arch);
-@@ -7472,12 +7472,13 @@ static void kvm_mmu_start_lpage_recovery(struct o=
-nce *once)
- 				      kvm, "kvm-nx-lpage-recovery");
-=20
- 	if (IS_ERR(nx_thread))
--		return;
-+		return PTR_ERR(nx_thread);
-=20
- 	vhost_task_start(nx_thread);
-=20
- 	/* Make the task visible only once it is fully started. */
- 	WRITE_ONCE(kvm->arch.nx_huge_page_recovery_thread, nx_thread);
-+	return 0;
- }
-=20
- int kvm_mmu_post_init_vm(struct kvm *kvm)
-@@ -7485,10 +7486,7 @@ int kvm_mmu_post_init_vm(struct kvm *kvm)
- 	if (nx_hugepage_mitigation_hard_disabled)
- 		return 0;
-=20
--	call_once(&kvm->arch.nx_once, kvm_mmu_start_lpage_recovery);
--	if (!kvm->arch.nx_huge_page_recovery_thread)
--		return -ENOMEM;
--	return 0;
-+	return call_once(&kvm->arch.nx_once, kvm_mmu_start_lpage_recovery);
- }
-=20
- void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
-diff --git a/include/linux/call_once.h b/include/linux/call_once.h
-index 6261aa0b3fb00..ddcfd91493eaa 100644
---- a/include/linux/call_once.h
-+++ b/include/linux/call_once.h
-@@ -26,20 +26,26 @@ do {									\
- 	__once_init((once), #once, &__key);				\
- } while (0)
-=20
--static inline void call_once(struct once *once, void (*cb)(struct once *=
-))
-+static inline int call_once(struct once *once, int (*cb)(struct once *))
- {
-+	int r;
-+
-         /* Pairs with atomic_set_release() below.  */
-         if (atomic_read_acquire(&once->state) =3D=3D ONCE_COMPLETED)
--                return;
-+		return 0;
-=20
-         guard(mutex)(&once->lock);
-         WARN_ON(atomic_read(&once->state) =3D=3D ONCE_RUNNING);
-         if (atomic_read(&once->state) !=3D ONCE_NOT_STARTED)
--                return;
-+                return -EINVAL;
-=20
-         atomic_set(&once->state, ONCE_RUNNING);
--        cb(once);
--        atomic_set_release(&once->state, ONCE_COMPLETED);
-+	r =3D cb(once);
-+	if (r)
-+		atomic_set(&once->state, ONCE_NOT_STARTED);
-+	else
-+		atomic_set_release(&once->state, ONCE_COMPLETED);
-+	return r;
- }
-=20
- #endif /* _LINUX_CALL_ONCE_H */
---=20
-2.43.5
-
+- Eric
