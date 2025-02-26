@@ -1,117 +1,207 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3302F235C1D;
-	Wed, 26 Feb 2025 18:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E51DD235BE8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593159; cv=none; b=c01kGfgQDnIz/ni8ACRIXlWOCBKWKiThA+dFtwLZdyxD3i4xFncnNwhwfBTRDthrb1f3bq1EzafyOI+by/EUMRkFEBGNeu60D5wwluQ5v23WQilE2vRgBQFjH2VYb2w8fPsTeFKq+wyte9hVC2m0h2Lg5WR9IG5hLTzh+qcogiE=
+	t=1740593159; cv=none; b=qW8bCMrb3vHTaalunYmT6BurPWaQ45BMgcm5/+1fGiaFBU/G6GEqlEQkHVm5Jzik7EAhqcRNmGxbL7Xw6T2pDeUcDPxMVF1Xnytm3u6g5zmsvQixVDEqQ1L28EyA99TM0l12OAhpMehX5IDQKRfgOesEzfIolpJrCuOEiHHidsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740593159; c=relaxed/simple;
-	bh=VF043pIka15sJ1BK0E+G/cIHJyHcLh966Xv0M6dKIzU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lgtTkJGvm7O81i3c3pw0vvRtOEa6UL8/VU1i7Z3d9IbQXt6r5J+BP1Nlw5yfEmla+VqQY8K6F1xItC0fz4kkA04euXRr7xQfcZkSrgI3/RMwoXS3KYR55O5jwzzLePB0g2Xqo4tr1RdY9XHzv+CUm5T3+NLCIuYJ2Um67xQIjuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SBV6QVa+; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=y7qU9z7lgGcLUfd27np6xyc5Fks+vH2TibzUjRjdRHk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XTmt3jrlQxgP9wwHG0oAl0OOBIdm64tsWwcYS7ztuujegxpsz+sP1d9+tFixfQ8OtPq+uplYb5Ip7/FisWye+GoLSyU5e/LdGcfFGQekGGXna4Ar67OWqhMBCLjTFUXT/RHWPcTASE0FUGgF4xNmC8MFy21WpMGgtprWdCpZJrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GNnQu1MO; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SBV6QVa+"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QGi0Ml005793;
-	Wed, 26 Feb 2025 18:05:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wcRR48
-	GIkKSbwu0Ax6WMNQbCjFwOZear2JpkHKXZOys=; b=SBV6QVa+CKL2J//YE9rCvJ
-	UXTPbavQIcwnkEJ5yRscphPeRDroMqALELnY/g5s0A1JZACKxN3KcjznRSQPaS/C
-	4bf2t1a3ivyap6vcdIOEssF9fA6ZzSxUDpLjOAHdd+1uL/gtBwHBoIupqha1HQTE
-	IDWhbOUNNZD7QbaILNFBrP0AEbWiQI2HGUZz2WFZQSQlrA1hojwAb/yt4sdjz1Gj
-	6POKZ6y9QuLxFgsy1M9ZL+gYiXFurxln5RneKlasl0YLfgx7kWCWXgGTBV5HBigP
-	z8zPpUl/CPru4Ms4A24eyOb4TukLQSCOp8HAX8zk3XhfbUh/Q/OpUuAH4tvp+Nmw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451xnp32b3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:05:55 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51QHslMr012507;
-	Wed, 26 Feb 2025 18:05:54 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ys9ymbyu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:05:54 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51QI5qph24576662
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 18:05:53 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CE4D55803F;
-	Wed, 26 Feb 2025 18:05:52 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 305BA5805A;
-	Wed, 26 Feb 2025 18:05:52 +0000 (GMT)
-Received: from [9.61.248.9] (unknown [9.61.248.9])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Feb 2025 18:05:52 +0000 (GMT)
-Message-ID: <e420953e-418b-4ea5-a561-015597a59d9e@linux.ibm.com>
-Date: Wed, 26 Feb 2025 13:05:51 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNnQu1MO"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5fcd665af4eso23579eaf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:05:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740593156; x=1741197956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCuVEC58STAtilTMaj0CWifdxvlJ14gwFXexzm17na8=;
+        b=GNnQu1MOm+icmQ/V469Cesj76KN/aSCIENIgGaEgyVgmC8oMEVM+VMc4RAE8qwYvOS
+         b0Jh/jP+Wuj3M/USzSSyg8/9HBB2D/iSSooSR6gh2S6m5Kgx7vpNBlt+21kwpBv3Ml6d
+         taXXJRE2JadI4Gn5VN308hzVEJhFRaeMZu5FnQFkS4ComUEMxcaXbO39R5Rl2SlFHJ2M
+         jTFaIb6kNQXG2BGybJWlYhu88YzxNMy4OW/jFvNkQgb994+UEE6476/kErIDMCJ9ue10
+         X0n3DY+uBhChihRRu9EEgS0pnQoNUzbhPfK07xBvRTpMKaAN2vL5AHHm1cFm7x2WEq1K
+         uwgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740593156; x=1741197956;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aCuVEC58STAtilTMaj0CWifdxvlJ14gwFXexzm17na8=;
+        b=oUcJHh6Nky3T1r8IN35Q7q+vPcf145SrOmS1eeIdnkR72xAh/0n9+IfWfc6jEiRaCG
+         mDbeFFZUUmwHSu9F8QuHBHp1BeubjsaoBF2W8zakbQy1/4oVR+YdORIEoh/3vLsaF4a+
+         jbf9+omh5+Ar8SixYNmd/cYboXWi07pQOAkRzWeGOBQVMPgXDYGwptyKDlDjfALqsaoz
+         ZdudDpAbtV1ciWuUX57bLdDiYkyp4/9s5XeSULnunrt8HB4Grde2/UM9sJpUgtOucXLr
+         s+x8VZ1IBAwQdNJu3TppLfYRhSaOyoCWq4FAvLhqet9W5khAnil43qMHKlJ0zK73zxDn
+         S6fg==
+X-Gm-Message-State: AOJu0Ywx8T4AsP8tUHj1nMWxXuPy49TJCwX+B4g05Y1aRW8CAeqz5iBG
+	LAacUi87BCm3+dWcOURRfa+SiXtfHzSjoiKuvg31PIHPueSPbi2a3uAP
+X-Gm-Gg: ASbGncufpkUgFQNcc3CXbpupoqjJOc2JswLTEtxQCpWlzTuHeN9XmQ2lpFkBOzqIcdE
+	co4VClYgBhcgpShfTJujyoWlBUKiz0RpoNGC8y8fueVX3sk7W6HY9rrItVbyAS3y3z9Pq/XajMA
+	tUs+lQvDkU08nAyYn4Kdqzx12ELQcoMegNQOYDw1rjJoG8FwtB5Bj37J+4E3jIirPS6zrfRJpjx
+	9JoFZaBbFhFY9V1wgGlRAW0Nj5sbsNQfJSFN1LZdqWzoAtVWMf5qeZ28IDkbzQIpiiEqHXdMNia
+	3u3Nvgs=
+X-Google-Smtp-Source: AGHT+IH6mblwDIuISIBCJFBGnvcZ8OHaO+whcezMj+njDJfvbpYtOVoYKoE3kTgPGbUg495gGQPiXA==
+X-Received: by 2002:a05:6820:1c93:b0:5fd:d5b:f46c with SMTP id 006d021491bc7-5fd1a456ca4mr13897942eaf.0.1740593156508;
+        Wed, 26 Feb 2025 10:05:56 -0800 (PST)
+Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fe9428c8b3sm755069eaf.39.2025.02.26.10.05.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 10:05:55 -0800 (PST)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v2 05/11] x86/retbleed: Move call depth to percpu hot section
+Date: Wed, 26 Feb 2025 13:05:24 -0500
+Message-ID: <20250226180531.1242429-6-brgerst@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226180531.1242429-1-brgerst@gmail.com>
+References: <20250226180531.1242429-1-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/2] Eventfd signal on guest AP configuration
- change
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc: hca@linux.ibm.com, borntraeger@de.ibm.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
-        alex.williamson@redhat.com, akrowiak@linux.ibm.com
-References: <20250226180353.15511-1-rreyes@linux.ibm.com>
-Content-Language: en-US
-From: Rorie Reyes <rreyes@linux.ibm.com>
-In-Reply-To: <20250226180353.15511-1-rreyes@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 4TvnBDIZi2vzTb6rONKQWKP5TF2a44l4
-X-Proofpoint-GUID: 4TvnBDIZi2vzTb6rONKQWKP5TF2a44l4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=924 spamscore=0 phishscore=0
- mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502260142
+Content-Transfer-Encoding: 8bit
 
+No functional change.
 
-On 2/26/25 1:03 PM, Rorie Reyes wrote:
-> Changelog:
->
-> v2:
-> - Fixing remove notification for AP configuration
->
-> --------------------------------------------------------------------------
->
-> The purpose of this patch is to provide immediate notification of changes
-> made to a guest's AP configuration by the vfio_ap driver. This will enable
-> the guest to take immediate action rather than relying on polling or some
-> other inefficient mechanism to detect changes to its AP configuration.
->
-> Note that there are corresponding QEMU patches that will be shipped along
-> with this patch (see vfio-ap: Report vfio-ap configuration changes) that
-> will pick up the eventfd signal.
->
-> Rorie Reyes (2):
->    s390/vfio-ap: Signal eventfd when guest AP configuration is changed
->    s390/vfio-ap: Fixing mdev remove notification
->
->   drivers/s390/crypto/vfio_ap_ops.c     | 65 ++++++++++++++++++++++++++-
->   drivers/s390/crypto/vfio_ap_private.h |  2 +
->   include/uapi/linux/vfio.h             |  1 +
->   3 files changed, 67 insertions(+), 1 deletion(-)
->
-Please ignore this email. I sent the wrong version
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/current.h       |  3 ---
+ arch/x86/include/asm/nospec-branch.h | 11 ++++++-----
+ arch/x86/kernel/asm-offsets.c        |  3 ---
+ arch/x86/kernel/cpu/common.c         |  8 ++++++++
+ arch/x86/lib/retpoline.S             |  2 +-
+ 5 files changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
+index f988462d8b69..8ba2c0f8bcaf 100644
+--- a/arch/x86/include/asm/current.h
++++ b/arch/x86/include/asm/current.h
+@@ -14,9 +14,6 @@ struct task_struct;
+ 
+ struct pcpu_hot {
+ 	struct task_struct	*current_task;
+-#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+-	u64			call_depth;
+-#endif
+ 	unsigned long		top_of_stack;
+ 	void			*hardirq_stack_ptr;
+ 	u16			softirq_pending;
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index 7e8bf78c03d5..a5602055bfc9 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -12,7 +12,6 @@
+ #include <asm/msr-index.h>
+ #include <asm/unwind_hints.h>
+ #include <asm/percpu.h>
+-#include <asm/current.h>
+ 
+ /*
+  * Call depth tracking for Intel SKL CPUs to address the RSB underflow
+@@ -78,21 +77,21 @@
+ #include <asm/asm-offsets.h>
+ 
+ #define CREDIT_CALL_DEPTH					\
+-	movq	$-1, PER_CPU_VAR(pcpu_hot + X86_call_depth);
++	movq	$-1, PER_CPU_VAR(__x86_call_depth);
+ 
+ #define RESET_CALL_DEPTH					\
+ 	xor	%eax, %eax;					\
+ 	bts	$63, %rax;					\
+-	movq	%rax, PER_CPU_VAR(pcpu_hot + X86_call_depth);
++	movq	%rax, PER_CPU_VAR(__x86_call_depth);
+ 
+ #define RESET_CALL_DEPTH_FROM_CALL				\
+ 	movb	$0xfc, %al;					\
+ 	shl	$56, %rax;					\
+-	movq	%rax, PER_CPU_VAR(pcpu_hot + X86_call_depth);	\
++	movq	%rax, PER_CPU_VAR(__x86_call_depth);		\
+ 	CALL_THUNKS_DEBUG_INC_CALLS
+ 
+ #define INCREMENT_CALL_DEPTH					\
+-	sarq	$5, PER_CPU_VAR(pcpu_hot + X86_call_depth);	\
++	sarq	$5, PER_CPU_VAR(__x86_call_depth);		\
+ 	CALL_THUNKS_DEBUG_INC_CALLS
+ 
+ #else
+@@ -388,6 +387,8 @@ extern void call_depth_return_thunk(void);
+ 		    __stringify(INCREMENT_CALL_DEPTH),		\
+ 		    X86_FEATURE_CALL_DEPTH)
+ 
++DECLARE_PER_CPU_CACHE_HOT(u64, __x86_call_depth);
++
+ #ifdef CONFIG_CALL_THUNKS_DEBUG
+ DECLARE_PER_CPU(u64, __x86_call_count);
+ DECLARE_PER_CPU(u64, __x86_ret_count);
+diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+index a98020bf31bb..6fae88f8ae1e 100644
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -109,9 +109,6 @@ static void __used common(void)
+ 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
+ 	OFFSET(X86_top_of_stack, pcpu_hot, top_of_stack);
+ 	OFFSET(X86_current_task, pcpu_hot, current_task);
+-#ifdef CONFIG_MITIGATION_CALL_DEPTH_TRACKING
+-	OFFSET(X86_call_depth, pcpu_hot, call_depth);
+-#endif
+ #if IS_ENABLED(CONFIG_CRYPTO_ARIA_AESNI_AVX_X86_64)
+ 	/* Offset for fields in aria_ctx */
+ 	BLANK();
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 1470f687f8d6..01f33fb86f05 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2025,6 +2025,14 @@ DEFINE_PER_CPU_CACHE_HOT(int, __preempt_count) = INIT_PREEMPT_COUNT;
+ EXPORT_PER_CPU_SYMBOL(__preempt_count);
+ 
+ #ifdef CONFIG_X86_64
++/*
++ * Note: Do not make this dependant on CONFIG_MITIGATION_CALL_DEPTH_TRACKING
++ * so that this space is reserved in the hot cache section even when the
++ * mitigation is disabled.
++ */
++DEFINE_PER_CPU_CACHE_HOT(u64, __x86_call_depth);
++EXPORT_PER_CPU_SYMBOL(__x86_call_depth);
++
+ static void wrmsrl_cstar(unsigned long val)
+ {
+ 	/*
+diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
+index 391059b2c6fb..04502e843de0 100644
+--- a/arch/x86/lib/retpoline.S
++++ b/arch/x86/lib/retpoline.S
+@@ -342,7 +342,7 @@ SYM_FUNC_START(call_depth_return_thunk)
+ 	 * case.
+ 	 */
+ 	CALL_THUNKS_DEBUG_INC_RETS
+-	shlq	$5, PER_CPU_VAR(pcpu_hot + X86_call_depth)
++	shlq	$5, PER_CPU_VAR(__x86_call_depth)
+ 	jz	1f
+ 	ANNOTATE_UNRET_SAFE
+ 	ret
+-- 
+2.48.1
+
