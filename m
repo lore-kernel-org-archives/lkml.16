@@ -1,62 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB2223311;
-	Wed, 26 Feb 2025 12:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FA922A4F6;
+	Wed, 26 Feb 2025 12:15:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572112; cv=none; b=N6K5gmr+VCKOetFi6HwoW0b9C10WRUdYrSeMz4X8kiL5wm/fWgh0rY5rM+RifrpDAkNAQGl473CwQ6HA/K6E/ftxqIVG7yKA3TcbrOWLZ14PeSG454IhxD6lycoP+ajvv/yOmwDIuOVPg17x7ZEl33LwtgBJwsw5DLaEtunTXlc=
+	t=1740572114; cv=none; b=cjAqznSJdE8uAuRHXZKwfO+ro17mgiP3LrLxmpO1+EVHBqQi2BWQ33FvBs8ILamdxCNOe3LVjhIVk/g5qgRx5tPI2ZDYzaHBi6mTvTRMMhyvoJMLXxis2iwK3eWeY95+4HuAbX1KkUhVjyllVn8bHBEF7wUn4Kl9DJsyLhCWR6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572112; c=relaxed/simple;
-	bh=kqj0iuVozlL2gR0XZUcXjCuXQcs7Wl11m2FUnyoc1MA=;
+	s=arc-20240116; t=1740572114; c=relaxed/simple;
+	bh=PAva2RnZ8dQPfOKwJ4JV/ISOfIGnwAtI/XquK1p1Esg=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=PMkw5+4ekUMI5L0OeyTMqnbrTS/CqVOCc5Hak+ZDocs6w2GaWfQ+QszOD27LYAmbq9GZb3xG5hRlF/UEQnNexqe9U4sRmWASOcFdbpH8qPpT20qGPNpKOp32hlom/Z5/7iZYCRIOJ1j9teZAU8Cmvi5zHNSyBB98oKkE61YG79w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BwnxugIw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=672bSY3z; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=aZarolYjCxM/HXrWDKshQxcf33CYX3ILkkU/JZF/rptSQOXfVhyIVUqWnFs9krJ2yiKaMmr9+Sv4tbW+V9sNk+RRs2WHzDukJz6v+xHV2jQ3nzApthmS3kKHPaMhXFV8NTWdpu2gRz6cY+JI4XmLjaLicaJFAKsF5Qb/ATl2Al8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tttzlpG/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J0Fz4Xb/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BwnxugIw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="672bSY3z"
-Date: Wed, 26 Feb 2025 12:15:06 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tttzlpG/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J0Fz4Xb/"
+Date: Wed, 26 Feb 2025 12:15:09 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740572108;
+	s=2020; t=1740572110;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Npf5gcDPFUu2TgZcA1Eb1QL7Ec63YVLG8BCSYkVYueQ=;
-	b=BwnxugIwGCI7Eah5JQqooHi+4OY5mPOIgRnaTMjt4NB8Zz6RvOHTFfjKBhx2tnHXzj0Tln
-	4tkzSl49KvcvZuRck4b/jOzpRfK8mHVR/xkwshe6WwyN05vgivjPeahkZ2VQUrKKnrQngk
-	2Se/bpf1bt8zGuyfVBHW8NkBt/WLulVSGjnrbAapQSyrcoTRDo8XGexkO+E97apzd6AH/q
-	+sYhPCUx6tqZqJSg750Vu5uBgvOTqVk/2MWNV/eylyYCpvIdSZoXQI/Kau+LBeg6o2Bri/
-	t5vHFrhLKwquj1YiMTqQkogCAqIJmaEg5PmcgruZL1Bqtrmxc6BAf0iaQVFVIw==
+	bh=F/Iz5FiE4jbOg6Tn/9G1ReQ5rbKfLc+qGHxpYkUYmVM=;
+	b=tttzlpG/MhQ9ptdPMBoX2+HmbBg/M45A5an6c+IIIYtpo/UXNgpuLZoruL8IB419Z83JA3
+	NFUpdmv2f6//qhoylphGmbi6fp8EzKMtz8WGCk7nOEW4MyZvjMpE/OgxYYBdZiWrmd8rr4
+	tAkYbTkhUWtyTnQcWJiviwz6l6W/hUePNMCo32xbtuVHZBBzv1WPks5CGLLyZN+W3G5Sux
+	Fsw1pDRbw5J4NpEuZyTeYts4q7ZdzbuK0+7urxxJ6MeBfrMdlFl/f87f7nlmfH1tpf8QPM
+	GE6QYyhspRDQageKe76GQ9fbkx9jPqI0hERMkqnLdh9evyjzYR8rbrJI8ZBPPw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740572108;
+	s=2020e; t=1740572110;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Npf5gcDPFUu2TgZcA1Eb1QL7Ec63YVLG8BCSYkVYueQ=;
-	b=672bSY3zzQihEOKjMRbIaGB0dVKo7QpR0X95NY56zwFeZApaKu9zEdTeOMDFqWSb3LS26s
-	gPjVPSQKr1v2JJBQ==
+	bh=F/Iz5FiE4jbOg6Tn/9G1ReQ5rbKfLc+qGHxpYkUYmVM=;
+	b=J0Fz4Xb/b4q/wxuOp+RVtFLLOKjCXwuoFXAoZT4NRsMeJ1tODzk4kVkU4awwDPNJ2/KrlB
+	qnnWWK+b1Ovm6jAA==
 From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] selftests/x86/xstate: Refactor context switching test
+Subject:
+ [tip: x86/fpu] selftests/x86/xstate: Refactor XSAVE helpers for general use
 Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226010731.2456-5-chang.seok.bae@intel.com>
-References: <20250226010731.2456-5-chang.seok.bae@intel.com>
+In-Reply-To: <20250226010731.2456-3-chang.seok.bae@intel.com>
+References: <20250226010731.2456-3-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174057210678.10177.12394499663747386118.tip-bot2@tip-bot2>
+Message-ID: <174057210937.10177.1459681902178971387.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,472 +67,367 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/fpu branch of tip:
 
-Commit-ID:     40f6852ef2bffcd6fb3634cf71e6fbc2d1d6b768
-Gitweb:        https://git.kernel.org/tip/40f6852ef2bffcd6fb3634cf71e6fbc2d1d6b768
+Commit-ID:     0f6d91a327db4a36d6febb74d833cdc668c8661b
+Gitweb:        https://git.kernel.org/tip/0f6d91a327db4a36d6febb74d833cdc668c8661b
 Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Tue, 25 Feb 2025 17:07:24 -08:00
+AuthorDate:    Tue, 25 Feb 2025 17:07:22 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 26 Feb 2025 13:05:29 +01:00
+CommitterDate: Wed, 26 Feb 2025 13:05:28 +01:00
 
-selftests/x86/xstate: Refactor context switching test
+selftests/x86/xstate: Refactor XSAVE helpers for general use
 
-The existing context switching and ptrace tests in amx.c are not specific
-to dynamic states, making them reusable for general xstate testing.
+The AMX test introduced several XSAVE-related helper functions, but so
+far, it has been the only user of them. These helpers can be generalized
+for broader test of multiple xstate features.
 
-As a first step, move the context switching test to xstate.c. Refactor
-the test code to allow specifying which xstate component being tested.
+Move most XSAVE-related code into xsave.h, making it shareable. The
+restructuring includes:
 
-To decouple the test from dynamic states, remove the permission request
-code. In fact, The permission request inside the test wrapper was
-redundant.
+ * Establishing low-level XSAVE helpers for saving and restoring register
+  states, as well as handling XSAVE buffers.
 
-Additionally, replace fatal_error() with ksft_exit_fail_msg() for
-consistency in error handling.
+ * Generalizing state data manipuldations: set_rand_data()
 
-  Expected output:
-  $ amx_64
-  ...
-  [RUN]   AMX Tile data: check context switches, 10 iterations, 5 threads.
-  [OK]    No incorrect case was found.
+ * Introducing a generic feature query helper: get_xstate_info()
+
+While doing so, remove unused defines in amx.c.
 
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250226010731.2456-5-chang.seok.bae@intel.com
+Link: https://lore.kernel.org/r/20250226010731.2456-3-chang.seok.bae@intel.com
 ---
- tools/testing/selftests/x86/Makefile |   2 +-
- tools/testing/selftests/x86/amx.c    | 166 +----------------------
- tools/testing/selftests/x86/xstate.c | 198 ++++++++++++++++++++++++++-
- tools/testing/selftests/x86/xstate.h |   2 +-
- 4 files changed, 204 insertions(+), 164 deletions(-)
- create mode 100644 tools/testing/selftests/x86/xstate.c
+ tools/testing/selftests/x86/amx.c    | 142 +-------------------------
+ tools/testing/selftests/x86/xstate.h | 132 ++++++++++++++++++++++++-
+ 2 files changed, 142 insertions(+), 132 deletions(-)
+ create mode 100644 tools/testing/selftests/x86/xstate.h
 
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index d51249f..f15efdc 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -132,3 +132,5 @@ $(OUTPUT)/check_initial_reg_state_64: CFLAGS += -Wl,-ereal_start -static
- 
- $(OUTPUT)/nx_stack_32: CFLAGS += -Wl,-z,noexecstack
- $(OUTPUT)/nx_stack_64: CFLAGS += -Wl,-z,noexecstack
-+
-+$(OUTPUT)/amx_64: EXTRA_FILES += xstate.c
 diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
-index cde22f3..b3c51dd 100644
+index 0f355f3..366cfec 100644
 --- a/tools/testing/selftests/x86/amx.c
 +++ b/tools/testing/selftests/x86/amx.c
-@@ -3,7 +3,6 @@
- #define _GNU_SOURCE
- #include <err.h>
- #include <errno.h>
--#include <pthread.h>
- #include <setjmp.h>
- #include <stdio.h>
- #include <string.h>
-@@ -434,14 +433,6 @@ static inline bool __validate_tiledata_regs(struct xsave_buffer *xbuf1)
- 	return true;
- }
+@@ -19,46 +19,13 @@
+ #include <sys/wait.h>
+ #include <sys/uio.h>
  
--static inline void validate_tiledata_regs_same(struct xsave_buffer *xbuf)
--{
--	int ret = __validate_tiledata_regs(xbuf);
--
--	if (ret != 0)
--		fatal_error("TILEDATA registers changed");
--}
--
- static inline void validate_tiledata_regs_changed(struct xsave_buffer *xbuf)
- {
- 	int ret = __validate_tiledata_regs(xbuf);
-@@ -498,158 +489,6 @@ static void test_fork(void)
- 	_exit(0);
- }
+-#include "../kselftest.h" /* For __cpuid_count() */
+ #include "helpers.h"
++#include "xstate.h"
  
--/* Context switching test */
+ #ifndef __x86_64__
+ # error This test is 64-bit only
+ #endif
+ 
+-#define XSAVE_HDR_OFFSET	512
+-#define XSAVE_HDR_SIZE		64
 -
--static struct _ctxtswtest_cfg {
--	unsigned int iterations;
--	unsigned int num_threads;
--} ctxtswtest_config;
--
--struct futex_info {
--	pthread_t thread;
--	int nr;
--	pthread_mutex_t mutex;
--	struct futex_info *next;
+-struct xsave_buffer {
+-	union {
+-		struct {
+-			char legacy[XSAVE_HDR_OFFSET];
+-			char header[XSAVE_HDR_SIZE];
+-			char extended[0];
+-		};
+-		char bytes[0];
+-	};
 -};
 -
--static void *check_tiledata(void *info)
+-static inline void xsave(struct xsave_buffer *xbuf, uint64_t rfbm)
 -{
--	struct futex_info *finfo = (struct futex_info *)info;
--	struct xsave_buffer *xbuf;
--	int i;
+-	uint32_t rfbm_lo = rfbm;
+-	uint32_t rfbm_hi = rfbm >> 32;
 -
--	xbuf = alloc_xbuf();
--	if (!xbuf)
--		fatal_error("unable to allocate XSAVE buffer");
--
--	/*
--	 * Load random data into 'xbuf' and then restore
--	 * it to the tile registers themselves.
--	 */
--	load_rand_tiledata(xbuf);
--	for (i = 0; i < ctxtswtest_config.iterations; i++) {
--		pthread_mutex_lock(&finfo->mutex);
--
--		/*
--		 * Ensure the register values have not
--		 * diverged from those recorded in 'xbuf'.
--		 */
--		validate_tiledata_regs_same(xbuf);
--
--		/* Load new, random values into xbuf and registers */
--		load_rand_tiledata(xbuf);
--
--		/*
--		 * The last thread's last unlock will be for
--		 * thread 0's mutex.  However, thread 0 will
--		 * have already exited the loop and the mutex
--		 * will already be unlocked.
--		 *
--		 * Because this is not an ERRORCHECK mutex,
--		 * that inconsistency will be silently ignored.
--		 */
--		pthread_mutex_unlock(&finfo->next->mutex);
--	}
--
--	free(xbuf);
--	/*
--	 * Return this thread's finfo, which is
--	 * a unique value for this thread.
--	 */
--	return finfo;
+-	asm volatile("xsave (%%rdi)"
+-		     : : "D" (xbuf), "a" (rfbm_lo), "d" (rfbm_hi)
+-		     : "memory");
 -}
 -
--static int create_threads(int num, struct futex_info *finfo)
+-static inline void xrstor(struct xsave_buffer *xbuf, uint64_t rfbm)
 -{
--	int i;
+-	uint32_t rfbm_lo = rfbm;
+-	uint32_t rfbm_hi = rfbm >> 32;
 -
--	for (i = 0; i < num; i++) {
--		int next_nr;
--
--		finfo[i].nr = i;
--		/*
--		 * Thread 'i' will wait on this mutex to
--		 * be unlocked.  Lock it immediately after
--		 * initialization:
--		 */
--		pthread_mutex_init(&finfo[i].mutex, NULL);
--		pthread_mutex_lock(&finfo[i].mutex);
--
--		next_nr = (i + 1) % num;
--		finfo[i].next = &finfo[next_nr];
--
--		if (pthread_create(&finfo[i].thread, NULL, check_tiledata, &finfo[i]))
--			fatal_error("pthread_create()");
--	}
--	return 0;
+-	asm volatile("xrstor (%%rdi)"
+-		     : : "D" (xbuf), "a" (rfbm_lo), "d" (rfbm_hi));
 -}
 -
--static void affinitize_cpu0(void)
+ /* err() exits and will not return */
+ #define fatal_error(msg, ...)	err(1, "[FAIL]\t" msg, ##__VA_ARGS__)
+ 
+@@ -68,92 +35,12 @@ static inline void xrstor(struct xsave_buffer *xbuf, uint64_t rfbm)
+ #define XFEATURE_MASK_XTILEDATA	(1 << XFEATURE_XTILEDATA)
+ #define XFEATURE_MASK_XTILE	(XFEATURE_MASK_XTILECFG | XFEATURE_MASK_XTILEDATA)
+ 
+-#define CPUID_LEAF1_ECX_XSAVE_MASK	(1 << 26)
+-#define CPUID_LEAF1_ECX_OSXSAVE_MASK	(1 << 27)
+-
+ static uint32_t xbuf_size;
+ 
+-static struct {
+-	uint32_t xbuf_offset;
+-	uint32_t size;
+-} xtiledata;
+-
+-#define CPUID_LEAF_XSTATE		0xd
+-#define CPUID_SUBLEAF_XSTATE_USER	0x0
+-#define TILE_CPUID			0x1d
+-#define TILE_PALETTE_ID			0x1
+-
+-static void check_cpuid_xtiledata(void)
 -{
--	cpu_set_t cpuset;
+-	uint32_t eax, ebx, ecx, edx;
 -
--	CPU_ZERO(&cpuset);
--	CPU_SET(0, &cpuset);
--
--	if (sched_setaffinity(0, sizeof(cpuset), &cpuset) != 0)
--		fatal_error("sched_setaffinity to CPU 0");
--}
--
--static void test_context_switch(void)
--{
--	struct futex_info *finfo;
--	int i;
--
--	/* Affinitize to one CPU to force context switches */
--	affinitize_cpu0();
--
--	req_xtiledata_perm();
--
--	printf("[RUN]\tCheck tiledata context switches, %d iterations, %d threads.\n",
--	       ctxtswtest_config.iterations,
--	       ctxtswtest_config.num_threads);
--
--
--	finfo = malloc(sizeof(*finfo) * ctxtswtest_config.num_threads);
--	if (!finfo)
--		fatal_error("malloc()");
--
--	create_threads(ctxtswtest_config.num_threads, finfo);
+-	__cpuid_count(CPUID_LEAF_XSTATE, CPUID_SUBLEAF_XSTATE_USER,
+-		      eax, ebx, ecx, edx);
 -
 -	/*
--	 * This thread wakes up thread 0
--	 * Thread 0 will wake up 1
--	 * Thread 1 will wake up 2
--	 * ...
--	 * the last thread will wake up 0
+-	 * EBX enumerates the size (in bytes) required by the XSAVE
+-	 * instruction for an XSAVE area containing all the user state
+-	 * components corresponding to bits currently set in XCR0.
 -	 *
--	 * ... this will repeat for the configured
--	 * number of iterations.
+-	 * Stash that off so it can be used to allocate buffers later.
 -	 */
--	pthread_mutex_unlock(&finfo[0].mutex);
+-	xbuf_size = ebx;
 -
--	/* Wait for all the threads to finish: */
--	for (i = 0; i < ctxtswtest_config.num_threads; i++) {
--		void *thread_retval;
--		int rc;
+-	__cpuid_count(CPUID_LEAF_XSTATE, XFEATURE_XTILEDATA,
+-		      eax, ebx, ecx, edx);
+-	/*
+-	 * eax: XTILEDATA state component size
+-	 * ebx: XTILEDATA state component offset in user buffer
+-	 */
+-	if (!eax || !ebx)
+-		fatal_error("xstate cpuid: invalid tile data size/offset: %d/%d",
+-				eax, ebx);
 -
--		rc = pthread_join(finfo[i].thread, &thread_retval);
+-	xtiledata.size	      = eax;
+-	xtiledata.xbuf_offset = ebx;
+-}
++struct xstate_info xtiledata;
+ 
+ /* The helpers for managing XSAVE buffer and tile states: */
+ 
+-struct xsave_buffer *alloc_xbuf(void)
+-{
+-	struct xsave_buffer *xbuf;
 -
--		if (rc)
--			fatal_error("pthread_join() failed for thread %d err: %d\n",
--					i, rc);
--
--		if (thread_retval != &finfo[i])
--			fatal_error("unexpected thread retval for thread %d: %p\n",
--					i, thread_retval);
--
--	}
--
--	printf("[OK]\tNo incorrect case was found.\n");
--
--	free(finfo);
+-	/* XSAVE buffer should be 64B-aligned. */
+-	xbuf = aligned_alloc(64, xbuf_size);
+-	if (!xbuf)
+-		fatal_error("aligned_alloc()");
+-	return xbuf;
 -}
 -
- /* Ptrace test */
+-static inline void clear_xstate_header(struct xsave_buffer *buffer)
+-{
+-	memset(&buffer->header, 0, sizeof(buffer->header));
+-}
+-
+-static inline void set_xstatebv(struct xsave_buffer *buffer, uint64_t bv)
+-{
+-	/* XSTATE_BV is at the beginning of the header: */
+-	*(uint64_t *)(&buffer->header) = bv;
+-}
+-
+-static void set_rand_tiledata(struct xsave_buffer *xbuf)
+-{
+-	int *ptr = (int *)&xbuf->bytes[xtiledata.xbuf_offset];
+-	int data;
+-	int i;
+-
+-	/*
+-	 * Ensure that 'data' is never 0.  This ensures that
+-	 * the registers are never in their initial configuration
+-	 * and thus never tracked as being in the init state.
+-	 */
+-	data = rand() | 1;
+-
+-	for (i = 0; i < xtiledata.size / sizeof(int); i++, ptr++)
+-		*ptr = data;
+-}
+-
+ struct xsave_buffer *stashed_xsave;
  
- /*
-@@ -745,6 +584,7 @@ static void test_ptrace(void)
- 
- int main(void)
- {
-+	const unsigned int ctxtsw_num_threads = 5, ctxtsw_iterations = 10;
- 	unsigned long features;
- 	long rc;
- 
-@@ -772,9 +612,7 @@ int main(void)
- 
- 	test_fork();
- 
--	ctxtswtest_config.iterations = 10;
--	ctxtswtest_config.num_threads = 5;
--	test_context_switch();
-+	test_context_switch(XFEATURE_XTILEDATA, ctxtsw_num_threads, ctxtsw_iterations);
- 
- 	test_ptrace();
- 
-diff --git a/tools/testing/selftests/x86/xstate.c b/tools/testing/selftests/x86/xstate.c
-new file mode 100644
-index 0000000..e5b51e7
---- /dev/null
-+++ b/tools/testing/selftests/x86/xstate.c
-@@ -0,0 +1,198 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+
-+#include <pthread.h>
-+#include <stdbool.h>
-+
-+#include "helpers.h"
-+#include "xstate.h"
-+
-+static struct xstate_info xstate;
-+
-+struct futex_info {
-+	unsigned int iterations;
-+	struct futex_info *next;
-+	pthread_mutex_t mutex;
-+	pthread_t thread;
-+	bool valid;
-+	int nr;
-+};
-+
-+static inline void load_rand_xstate(struct xstate_info *xstate, struct xsave_buffer *xbuf)
-+{
-+	clear_xstate_header(xbuf);
-+	set_xstatebv(xbuf, xstate->mask);
-+	set_rand_data(xstate, xbuf);
-+	xrstor(xbuf, xstate->mask);
-+}
-+
-+static inline bool validate_xstate_same(struct xsave_buffer *xbuf1, struct xsave_buffer *xbuf2)
-+{
-+	int ret;
-+
-+	ret = memcmp(&xbuf1->bytes[xstate.xbuf_offset],
-+		     &xbuf2->bytes[xstate.xbuf_offset],
-+		     xstate.size);
-+	return ret == 0;
-+}
-+
-+static inline bool validate_xregs_same(struct xsave_buffer *xbuf1)
-+{
-+	struct xsave_buffer *xbuf2;
-+	bool ret;
-+
-+	xbuf2 = alloc_xbuf();
-+	if (!xbuf2)
-+		ksft_exit_fail_msg("failed to allocate XSAVE buffer\n");
-+
-+	xsave(xbuf2, xstate.mask);
-+	ret = validate_xstate_same(xbuf1, xbuf2);
-+
-+	free(xbuf2);
-+	return ret;
-+}
-+
-+/* Context switching test */
-+
-+static void *check_xstate(void *info)
-+{
-+	struct futex_info *finfo = (struct futex_info *)info;
-+	struct xsave_buffer *xbuf;
-+	int i;
-+
-+	xbuf = alloc_xbuf();
-+	if (!xbuf)
-+		ksft_exit_fail_msg("unable to allocate XSAVE buffer\n");
-+
-+	/*
-+	 * Load random data into 'xbuf' and then restore it to the xstate
-+	 * registers.
-+	 */
-+	load_rand_xstate(&xstate, xbuf);
-+	finfo->valid = true;
-+
-+	for (i = 0; i < finfo->iterations; i++) {
-+		pthread_mutex_lock(&finfo->mutex);
-+
-+		/*
-+		 * Ensure the register values have not diverged from the
-+		 * record. Then reload a new random value.  If it failed
-+		 * ever before, skip it.
-+		 */
-+		if (finfo->valid) {
-+			finfo->valid = validate_xregs_same(xbuf);
-+			load_rand_xstate(&xstate, xbuf);
-+		}
-+
-+		/*
-+		 * The last thread's last unlock will be for thread 0's
-+		 * mutex. However, thread 0 will have already exited the
-+		 * loop and the mutex will already be unlocked.
-+		 *
-+		 * Because this is not an ERRORCHECK mutex, that
-+		 * inconsistency will be silently ignored.
-+		 */
-+		pthread_mutex_unlock(&finfo->next->mutex);
-+	}
-+
-+	free(xbuf);
-+	return finfo;
-+}
-+
-+static void create_threads(uint32_t num_threads, uint32_t iterations, struct futex_info *finfo)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_threads; i++) {
-+		int next_nr;
-+
-+		finfo[i].nr = i;
-+		finfo[i].iterations = iterations;
-+
-+		/*
-+		 * Thread 'i' will wait on this mutex to be unlocked.
-+		 * Lock it immediately after initialization:
-+		 */
-+		pthread_mutex_init(&finfo[i].mutex, NULL);
-+		pthread_mutex_lock(&finfo[i].mutex);
-+
-+		next_nr = (i + 1) % num_threads;
-+		finfo[i].next = &finfo[next_nr];
-+
-+		if (pthread_create(&finfo[i].thread, NULL, check_xstate, &finfo[i]))
-+			ksft_exit_fail_msg("pthread_create() failed\n");
-+	}
-+}
-+
-+static bool checkout_threads(uint32_t num_threads, struct futex_info *finfo)
-+{
-+	void *thread_retval;
-+	bool valid = true;
-+	int err, i;
-+
-+	for (i = 0; i < num_threads; i++) {
-+		err = pthread_join(finfo[i].thread, &thread_retval);
-+		if (err)
-+			ksft_exit_fail_msg("pthread_join() failed for thread %d err: %d\n", i, err);
-+
-+		if (thread_retval != &finfo[i]) {
-+			ksft_exit_fail_msg("unexpected thread retval for thread %d: %p\n",
-+					   i, thread_retval);
-+		}
-+
-+		valid &= finfo[i].valid;
-+	}
-+
-+	return valid;
-+}
-+
-+static void affinitize_cpu0(void)
-+{
-+	cpu_set_t cpuset;
-+
-+	CPU_ZERO(&cpuset);
-+	CPU_SET(0, &cpuset);
-+
-+	if (sched_setaffinity(0, sizeof(cpuset), &cpuset) != 0)
-+		ksft_exit_fail_msg("sched_setaffinity to CPU 0 failed\n");
-+}
-+
-+void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t iterations)
-+{
-+	struct futex_info *finfo;
-+
-+	/* Affinitize to one CPU to force context switches */
-+	affinitize_cpu0();
-+
-+	xstate = get_xstate_info(feature_num);
-+
-+	printf("[RUN]\t%s: check context switches, %d iterations, %d threads.\n",
-+	       xstate.name, iterations, num_threads);
-+
-+	finfo = malloc(sizeof(*finfo) * num_threads);
-+	if (!finfo)
-+		ksft_exit_fail_msg("unable allocate memory\n");
-+
-+	create_threads(num_threads, iterations, finfo);
-+
-+	/*
-+	 * This thread wakes up thread 0
-+	 * Thread 0 will wake up 1
-+	 * Thread 1 will wake up 2
-+	 * ...
-+	 * The last thread will wake up 0
-+	 *
-+	 * This will repeat for the configured
-+	 * number of iterations.
-+	 */
-+	pthread_mutex_unlock(&finfo[0].mutex);
-+
-+	/* Wait for all the threads to finish: */
-+	if (checkout_threads(num_threads, finfo))
-+		printf("[OK]\tNo incorrect case was found.\n");
-+	else
-+		printf("[FAIL]\tFailed with context switching test.\n");
-+
-+	free(finfo);
-+}
-diff --git a/tools/testing/selftests/x86/xstate.h b/tools/testing/selftests/x86/xstate.h
-index d3461c4..5ef66f2 100644
---- a/tools/testing/selftests/x86/xstate.h
-+++ b/tools/testing/selftests/x86/xstate.h
-@@ -189,4 +189,6 @@ static inline void set_rand_data(struct xstate_info *xstate, struct xsave_buffer
- 		*ptr = data;
+ static void init_stashed_xsave(void)
+@@ -169,21 +56,6 @@ static void free_stashed_xsave(void)
+ 	free(stashed_xsave);
  }
  
-+void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t iterations);
+-/* See 'struct _fpx_sw_bytes' at sigcontext.h */
+-#define SW_BYTES_OFFSET		464
+-/* N.B. The struct's field name varies so read from the offset. */
+-#define SW_BYTES_BV_OFFSET	(SW_BYTES_OFFSET + 8)
+-
+-static inline struct _fpx_sw_bytes *get_fpx_sw_bytes(void *buffer)
+-{
+-	return (struct _fpx_sw_bytes *)(buffer + SW_BYTES_OFFSET);
+-}
+-
+-static inline uint64_t get_fpx_sw_bytes_features(void *buffer)
+-{
+-	return *(uint64_t *)(buffer + SW_BYTES_BV_OFFSET);
+-}
+-
+ /* Work around printf() being unsafe in signals: */
+ #define SIGNAL_BUF_LEN 1000
+ char signal_message_buffer[SIGNAL_BUF_LEN];
+@@ -281,7 +153,7 @@ static inline bool load_rand_tiledata(struct xsave_buffer *xbuf)
+ {
+ 	clear_xstate_header(xbuf);
+ 	set_xstatebv(xbuf, XFEATURE_MASK_XTILEDATA);
+-	set_rand_tiledata(xbuf);
++	set_rand_data(&xtiledata, xbuf);
+ 	return xrstor_safe(xbuf, XFEATURE_MASK_XTILEDATA);
+ }
+ 
+@@ -884,7 +756,13 @@ int main(void)
+ 		return KSFT_SKIP;
+ 	}
+ 
+-	check_cpuid_xtiledata();
++	xbuf_size = get_xbuf_size();
 +
- #endif /* __SELFTESTS_X86_XSTATE_H */
++	xtiledata = get_xstate_info(XFEATURE_XTILEDATA);
++	if (!xtiledata.size || !xtiledata.xbuf_offset) {
++		fatal_error("xstate cpuid: invalid tile data size/offset: %d/%d",
++			    xtiledata.size, xtiledata.xbuf_offset);
++	}
+ 
+ 	init_stashed_xsave();
+ 	sethandler(SIGILL, handle_noperm, 0);
+diff --git a/tools/testing/selftests/x86/xstate.h b/tools/testing/selftests/x86/xstate.h
+new file mode 100644
+index 0000000..6729ffd
+--- /dev/null
++++ b/tools/testing/selftests/x86/xstate.h
+@@ -0,0 +1,132 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#ifndef __SELFTESTS_X86_XSTATE_H
++#define __SELFTESTS_X86_XSTATE_H
++
++#include <stdint.h>
++
++#include "../kselftest.h"
++
++#define XSAVE_HDR_OFFSET	512
++#define XSAVE_HDR_SIZE		64
++
++struct xsave_buffer {
++	union {
++		struct {
++			char legacy[XSAVE_HDR_OFFSET];
++			char header[XSAVE_HDR_SIZE];
++			char extended[0];
++		};
++		char bytes[0];
++	};
++};
++
++static inline void xsave(struct xsave_buffer *xbuf, uint64_t rfbm)
++{
++	uint32_t rfbm_hi = rfbm >> 32;
++	uint32_t rfbm_lo = rfbm;
++
++	asm volatile("xsave (%%rdi)"
++		     : : "D" (xbuf), "a" (rfbm_lo), "d" (rfbm_hi)
++		     : "memory");
++}
++
++static inline void xrstor(struct xsave_buffer *xbuf, uint64_t rfbm)
++{
++	uint32_t rfbm_hi = rfbm >> 32;
++	uint32_t rfbm_lo = rfbm;
++
++	asm volatile("xrstor (%%rdi)"
++		     : : "D" (xbuf), "a" (rfbm_lo), "d" (rfbm_hi));
++}
++
++#define CPUID_LEAF_XSTATE		0xd
++#define CPUID_SUBLEAF_XSTATE_USER	0x0
++
++static inline uint32_t get_xbuf_size(void)
++{
++	uint32_t eax, ebx, ecx, edx;
++
++	__cpuid_count(CPUID_LEAF_XSTATE, CPUID_SUBLEAF_XSTATE_USER,
++		      eax, ebx, ecx, edx);
++
++	/*
++	 * EBX enumerates the size (in bytes) required by the XSAVE
++	 * instruction for an XSAVE area containing all the user state
++	 * components corresponding to bits currently set in XCR0.
++	 */
++	return ebx;
++}
++
++struct xstate_info {
++	uint32_t num;
++	uint32_t mask;
++	uint32_t xbuf_offset;
++	uint32_t size;
++};
++
++static inline struct xstate_info get_xstate_info(uint32_t xfeature_num)
++{
++	struct xstate_info xstate = { };
++	uint32_t eax, ebx, ecx, edx;
++
++	xstate.num  = xfeature_num;
++	xstate.mask = 1 << xfeature_num;
++
++	__cpuid_count(CPUID_LEAF_XSTATE, xfeature_num,
++		      eax, ebx, ecx, edx);
++	xstate.size        = eax;
++	xstate.xbuf_offset = ebx;
++	return xstate;
++}
++
++static inline struct xsave_buffer *alloc_xbuf(void)
++{
++	uint32_t xbuf_size = get_xbuf_size();
++
++	/* XSAVE buffer should be 64B-aligned. */
++	return aligned_alloc(64, xbuf_size);
++}
++
++static inline void clear_xstate_header(struct xsave_buffer *xbuf)
++{
++	memset(&xbuf->header, 0, sizeof(xbuf->header));
++}
++
++static inline void set_xstatebv(struct xsave_buffer *xbuf, uint64_t bv)
++{
++	/* XSTATE_BV is at the beginning of the header: */
++	*(uint64_t *)(&xbuf->header) = bv;
++}
++
++/* See 'struct _fpx_sw_bytes' at sigcontext.h */
++#define SW_BYTES_OFFSET		464
++/* N.B. The struct's field name varies so read from the offset. */
++#define SW_BYTES_BV_OFFSET	(SW_BYTES_OFFSET + 8)
++
++static inline struct _fpx_sw_bytes *get_fpx_sw_bytes(void *xbuf)
++{
++	return xbuf + SW_BYTES_OFFSET;
++}
++
++static inline uint64_t get_fpx_sw_bytes_features(void *buffer)
++{
++	return *(uint64_t *)(buffer + SW_BYTES_BV_OFFSET);
++}
++
++static inline void set_rand_data(struct xstate_info *xstate, struct xsave_buffer *xbuf)
++{
++	int *ptr = (int *)&xbuf->bytes[xstate->xbuf_offset];
++	int data, i;
++
++	/*
++	 * Ensure that 'data' is never 0.  This ensures that
++	 * the registers are never in their initial configuration
++	 * and thus never tracked as being in the init state.
++	 */
++	data = rand() | 1;
++
++	for (i = 0; i < xstate->size / sizeof(int); i++, ptr++)
++		*ptr = data;
++}
++
++#endif /* __SELFTESTS_X86_XSTATE_H */
