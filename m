@@ -1,144 +1,77 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B0445979
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2519B33DF;
+	Wed, 26 Feb 2025 04:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740542378; cv=none; b=IWwiqM/Z4vrd0vvltbjVpznnd7DeoPtovMXcO/Qsakhoh1ShSIiq0VsodRmhu5Nvy1LRmKzbNlCLUfYfwDpZBi5SlKaBe2RYbLYxF8LfNaS0rDLz4PG18gBqmPhFvYa8PdR2VuoHqzSRx6/QKAV0Fwz0En4eE9o/4OCfYYi41NY=
+	t=1740542449; cv=none; b=jBznl/DQl5JK6iWEcCy/egUbsb1lDI+qdHVBc0mGTTb6euHfd5zpgcn5R4rI71NGRpVLyHVy3b+pbhvuKzJ+NN/aNM6JLiOIKQIDpuMlbHl/agzE038W8SR+SwqggG1ZZsly+RGXuEEpI0KNatPf7DUtZYqgEWeCEWPDO9gOrEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740542378; c=relaxed/simple;
-	bh=JFem/7WPlM/rLN7r5J/ez/NiGMaJxDxukWm2SZ0acVw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=QxNCa+W8NkZ6zewc29O1u3+ojaGJ5yeNau9f1TpsQag/l3/3QhQpUCmgamaC4IH3L3GHlpiHg5mBBH4GzrJtpd3EVS0FMJ5Vj+Sz9T5vDVeQRdzbn/b9ZQ2RqIPA6mImtWS1GOrqnUfrxUVyR1015kGNkWfDdoTxNLEWAouCHvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ITac/vdw; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740542449; c=relaxed/simple;
+	bh=WuScmXdTnBOKhr8HRJmOnG3gODKtqA7a5/ra1ZNASMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MimapPncYcM30J0Haz0ESRYoWGOzsVpxPRAgsJlTKtu4VjqHXaAYiLWDjcUAZ4MathG/LvPooqYdRIs0VtO+iSQ/HhFD+SGySMUOXIVqm4nh/QgBtfKK/gRoUbF6ctX5Ee6e8RTdBOL/bDHMqH+3S7QWg9HLRO7n8vMRSDh4smo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PJEtCbWW; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ITac/vdw"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q1kqMD028572;
-	Wed, 26 Feb 2025 03:59:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pp1; bh=lbb2EYaTqrYLW/hbRhQ7MvoeKzpm
-	8rT2BSNrqeTkGZc=; b=ITac/vdweHEqKLHUFprLC0DoifcdK2JatGG02ZwLT6B2
-	7YsNXlvQqQgCQAQgJ6Z/gEMOKyo9ojkHylfHmijgXYNAxKKfMHej3oSP+4YpsV6l
-	D2i1jDxAUWne+OG0uRqvW1bpOIvUGkBKt9VqcjxZACZV0tPA8g3vcYX15sxnU+xi
-	sB/eZVfxWN+Tw5jysFUm+r6RXuWdBPSUIA+pP9k7SQRRN1TMaFhBObY9a+gT/rop
-	FGMoYXh5O3plMJMgmHZpJl1POhKNkGn6gD2tcM62DN8TfN9UYJjh0C4iKmRtLPjw
-	+u26Qjwl9K1IROSy3tHiAPURgw8JwvYGdSHV5JzsGw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451q5m8xug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 03:59:18 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51Q3xIQ2023050;
-	Wed, 26 Feb 2025 03:59:18 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451q5m8xtt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 03:59:18 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q08TD6026354;
-	Wed, 26 Feb 2025 03:59:02 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswngma6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 03:59:02 +0000
-Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51Q3x2CD21234144
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 03:59:02 GMT
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1A0245805F;
-	Wed, 26 Feb 2025 03:59:02 +0000 (GMT)
-Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E9D4658043;
-	Wed, 26 Feb 2025 03:58:55 +0000 (GMT)
-Received: from [9.43.65.188] (unknown [9.43.65.188])
-	by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Feb 2025 03:58:55 +0000 (GMT)
-Message-ID: <8ce77d4d-cd19-472b-a526-0c80feb2b028@linux.ibm.com>
-Date: Wed, 26 Feb 2025 09:28:52 +0530
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PJEtCbWW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=sWA4IJ/vY4wf60+zufAFhmWxQoWGPyKYXXMI/1ohZiY=; b=PJEtCbWWdeG/jJzk8JKTpwxqT/
+	pvpxbw79m2N2RJlxWbtTUpPmNx/2DcYw02cQ2Bv1c97KrusrmjTACcS/QAxS+SPM8JxHX7fl3byTm
+	rY61QPX5HFD6De0yymukKyhqJYGX+lLKtwDjV7v4tKdUj07wDTgmppbSK0mK/XxGDg+bDZ4+IcW93
+	8pieHYwNAUfijEKJVRv8ByavsCPdAPbTM73gzGLV9f5S5ZRDSq+1Kodg2EZKHZSIPyTBHAmckrk9e
+	PVMyocrd9lCh6Z/zRp9Sl3EQZgjsV2f+ayw8Jr+LHN4GUzfJfkIW6CLWSPnmUrfAQ/5W4sG4jeeW8
+	hXomD2KQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tn8bA-0000000DoXr-2Jt6;
+	Wed, 26 Feb 2025 04:00:40 +0000
+Date: Wed, 26 Feb 2025 04:00:40 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>,
+	Ingo Molnar <mingo@kernel.org>, x86@kernel.org
+Subject: Re: [tip: x86/mm] x86/mm: Clear _PAGE_DIRTY when we clear _PAGE_RW
+Message-ID: <Z76R6ESSwiYipQVn@casper.infradead.org>
+References: <174051422675.10177.13226545170101706336.tip-bot2@tip-bot2>
+ <CAHk-=whfkWMkQOVMCxqcJ6+GWdSZTLcyDUmSRCVHV4BtbwDrHA@mail.gmail.com>
+ <Z76APkysrjgHjgR2@casper.infradead.org>
+ <CAHk-=wj+VBV5kBMfXYNOb+aLt3WJqMKFT0wU=KaV3R12NvN5TA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>,
-        Bagas Sanjaya
- <bagasdotme@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.14-4 tag
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 0y8MZNw5xkoeLVax816qcmv3mZpeSElb
-X-Proofpoint-ORIG-GUID: SZz9kxXELDzWkYv7JjrGO4rsdSsu0lR-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_08,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 impostorscore=0 bulkscore=0 adultscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=679 mlxscore=0 lowpriorityscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502260029
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj+VBV5kBMfXYNOb+aLt3WJqMKFT0wU=KaV3R12NvN5TA@mail.gmail.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA256
+On Tue, Feb 25, 2025 at 07:31:01PM -0800, Linus Torvalds wrote:
+> > I don't understand why the dirty bit needs to be saved.  At least in
+> > the vfree() case, we're freeing the memory so any unflushed writes to
+> > it may as well disappear.  But I don't know all the circumstances in
+> > which these functions are called.
+> 
+> I'm not saying that it needs to be saved.
+> 
+> But I *am* saying that it needs to be explained why dropping it is fine.
+> 
+> And I am also saying that your explanation for why it should be
+> cleared makes no sense, since two out of three cases also cleared
+> _PAGE_PRESENT, at which point the whole shadow stack issue is
+> completely irrelevant.
+> 
+> So please explain *why* clearing PAGE_DIRTY is ok. Don't bring up
+> issues like the shadow stack setting that is irrelevant for at least
+> two of the cases that you changed.
+> 
+> If all of these are purely used for vmalloc() or direct mappings, then
+> *that* is a valid explanation ("we don't care about dirty bits on
+> kernel mappings"), for example.
 
-Hi Linus,
-
-Please pull powerpc fix for 6.14:
-
-The following changes since commit d262a192d38e527faa5984629aabda2e0d1c4f54:
-
-  powerpc/code-patching: Fix KASAN hit by not flagging text patching area as VM_ALLOC (2025-02-12 14:38:13 +0530)
-
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.14-4
-
-for you to fetch changes up to eff2eb592efd73f00590d578c3d6021f604df62c:
-
-  cxl: Fix cross-reference in documentation and add deprecation warning (2025-02-19 13:33:58 +0530)
-
-- ------------------------------------------------------------------
-powerpc fix for 6.14 #4
-
- - Fix for cross-reference in documentation and deprecation warning
-
-Thanks to: Andrew Donnellan, Bagas Sanjaya
-
-- ------------------------------------------------------------------
-Andrew Donnellan (1):
-      cxl: Fix cross-reference in documentation and add deprecation warning
-
-
- Documentation/arch/powerpc/cxl.rst | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEqX2DNAOgU8sBX3pRpnEsdPSHZJQFAme+kI4ACgkQpnEsdPSH
-ZJTRHg//cAiqHzzrYX9jErT/3QGrvjRLIUUSlZxXKnS1pObH1IjryIR+KXVh6Jsh
-IKuKRFtWGIiffX829hd7kwfVQ15T5iK0dIR4q2kFxWf4x6Znd1AUyVjrUTiGzs/R
-iP3JMItipD/q3uFfdJR/Dy0H4oV8/F+53g++m9EteZErBLvYjutq53mq9d40Teiw
-K+n21GVToZ5sHafILA9wRrj1MzkWhzFqZl84s9SV2ReBCTYSx2KixWXWFNLf4dvJ
-ynFPJIka1x3IZB4Lv6GlwxgRkUT3YMSrcMEKd4s2kWrPRxTBKd4Rvo6OjoGWleV8
-C7IunJtSABJDXuSAKq6S0cF0cvDbs6E8nMJEXjYwFKgNL0OWVBa38YEsSuVXndcy
-YdROZtHEjx9vNK+APpLZSaDD6TcShqCICgSccWSLFKssdsL0//ZRn7M1VKsqJ2La
-3RvXl5I1Uf7hxGAE/O4nfATW0SrYNUrXU4b4uSAnEBGzDI6Ot73XE+UXEao4y2bH
-c97IthhClqW3WD+mV/+3jFArK6QatEls4lsK6TqKYLdTjfaLTHdzs/SYkt9SYT1u
-XMfhDy5eg5WjjyxAQGbhuF+yu/Ljws+uRuALIalGpLCL/KFI8wsaaOYBKRLtt4Yl
-gSdsNDRFP4AJFZVwEM1ypC/xQ0uSU76LSsdcareljrzkrgiDi/8=
-=7YO9
------END PGP SIGNATURE-----
+I think the entire point of this file is to manipulate kernel mappings.
