@@ -1,122 +1,137 @@
-Received: from mxout70.expurgate.net (mxout70.expurgate.net [194.37.255.70])
+Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFC21A01BF;
-	Wed, 26 Feb 2025 16:51:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.37.255.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A318E21E082
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740588715; cv=none; b=cAXNCqwIO41w89dhEOIAy1U6PicDAVk/H1yeboDknrrRS7gslcp7sd0WLCkemKF9wBskmgdGQeyYbPtRUyfNdhK1l0AZ4VbqslNjPiZinmzKV7MX50KONggMSOkAW/JHqsq4yWgtGw2qsRIhaEBlh/XcjHP52P/9JzaCLQEvzm4=
+	t=1740588727; cv=none; b=oqXCgy2Epsh6hi5/O9BqdbLVMjIo/aQ69tgY0fquKu3+lJf9SLLmzz1TpYvNQA3lYDLNkJO+lEN30GfK2ZPTlAx3rhls63WKKp2esxQNdFsrI++poypa5LlFFx1hIpIsUuL056tyshfeTn9bu3ncn5VirMinUbFhKd7TcC7svjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740588715; c=relaxed/simple;
-	bh=ypRzZ2zObNci18/WsswuAcEa0/e0UBSYDjvPeqxQn8I=;
-	h=MIME-Version:Content-Type:Date:From:To:Cc:Subject:In-Reply-To:
-	 References:Message-ID; b=TU2hDgELqgC7bJ86wfd3qmhURr7XsnoHOKiFBCsCKgBDYfijfTcZwhWrbkWj0okQW5mahK+VYmik4t8Ftdf4JEivnLHWIUR3GB/Tu0WKohx0FzEaxa9THs+T6i5KIl7F1t41nJpEhbmc68CPWJUdVfSS9M91QOi0+ITV8oxzOHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de; spf=pass smtp.mailfrom=dev.tdt.de; dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b=QH4eEtXJ; arc=none smtp.client-ip=194.37.255.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dev.tdt.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dev.tdt.de
+	s=arc-20240116; t=1740588727; c=relaxed/simple;
+	bh=jAnxxUBZkMArF5ezoFHTnzmqC7CXXOP/qNQnnrdNBns=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=T4FD/FOXaA8h/W+DfaYX/jMwzYA5XX5W6RLEdYpvBV/8xUyvQ3HjYRmp+o1oQdRqJyWMQJ910nYMK22r1332vIVmO34EGWXteV2Ab0AeDUD+K7UHZPjW2eEOcCJsdEBJjxA1p+rUjVBYMiNsheso7U48DFEkWPYAdBa+tB39yxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=g4ieDrVv; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=KBJbDOIZ; arc=none smtp.client-ip=103.168.172.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=dev.tdt.de header.i=@dev.tdt.de header.b="QH4eEtXJ"
-Received: from [194.37.255.9] (helo=mxout.expurgate.net)
-	by relay.expurgate.net with smtp (Exim 4.92)
-	(envelope-from <prvs=916645903c=ms@dev.tdt.de>)
-	id 1tnKdM-00CVZJ-Ta; Wed, 26 Feb 2025 17:51:45 +0100
-Received: from [195.243.126.94] (helo=securemail.tdt.de)
-	by relay.expurgate.net with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ms@dev.tdt.de>)
-	id 1tnKdL-009CW5-QK; Wed, 26 Feb 2025 17:51:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dev.tdt.de;
-	s=z1-selector1; t=1740588703;
-	bh=GM0VcKZjCHnEUU6GMlRDDDCbN9fpMRBoWK8fN5/nSw0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QH4eEtXJIFjsEOqQpy+3RX3TWZQvU5S7VA6pzazGAhtZ9YXIuoy+IlIB6r10Rd2XW
-	 rG4PeixWun2jOawcNDSBA7lKlUjSgmJLAI4TPGiIjbf9C8pcmxWxxUslC/HQgg4F9T
-	 yz0FCxVI2y1IWpZOjOpwLeh0BRGCi2ZzMla1GD7CA+nK8KpxZXTLzqwzh6M3faUYET
-	 8Y5xErBp/F2Nvb0yiVuUt5vseTqoW/OzGgvp4eNOSrqijtdc8SD+NVgRj9MhmacFQp
-	 NGePDuUcO2nZG2Zc1Hw1p2ED/hj9N3RJxZd4OMfj7Zw0V7A1hurbpRBVc0JZvbjy6W
-	 KZTnLzrhkA4Dg==
-Received: from securemail.tdt.de (localhost [127.0.0.1])
-	by securemail.tdt.de (Postfix) with ESMTP id 3C0B7240041;
-	Wed, 26 Feb 2025 17:51:43 +0100 (CET)
-Received: from mail.dev.tdt.de (unknown [10.2.4.42])
-	by securemail.tdt.de (Postfix) with ESMTP id 2ACB3240036;
-	Wed, 26 Feb 2025 17:51:43 +0100 (CET)
-Received: from mail.dev.tdt.de (localhost [IPv6:::1])
-	by mail.dev.tdt.de (Postfix) with ESMTP id CB4D4237BB;
-	Wed, 26 Feb 2025 17:51:42 +0100 (CET)
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="g4ieDrVv";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KBJbDOIZ"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id AE8FB1140094;
+	Wed, 26 Feb 2025 11:52:02 -0500 (EST)
+Received: from phl-imap-07 ([10.202.2.97])
+  by phl-compute-10.internal (MEProxy); Wed, 26 Feb 2025 11:52:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1740588722; x=1740675122; bh=5iYy0IpLCeQb1PHojS9KoM42iYxcOqMQ
+	sa9CMfL/p/c=; b=g4ieDrVv/phXnemR3ZsNThAk6E6AZbzLbXJAMV8sJ8sYq63f
+	C9l1L+KTzRWxZCTuoBAsnCkGKNjKdkaiXGvcW8V1yzw2JaeSBvPwfp1WnpQ00Aut
+	XcKK3uF858Mr3vwuu1sx1GEzscaCN4U1QoMUj9ardGnUJzM31t9wa155iHJjauzl
+	27yl0jUZlnvRVIhJctmudrk2Y5FMOKZtgZ+8hxkQieIA7iKojT7IvwZGhDh9BKQW
+	zwOYVE9KoMX6Jg9URnZ7mXjzGkkSh19GhNxEeeNDI/cuNB+LrVgNTaOb1AG87X53
+	JLZMWsIUc/sPraV1lRNGXYEzEmIzeNczIwPR6Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740588722; x=
+	1740675122; bh=5iYy0IpLCeQb1PHojS9KoM42iYxcOqMQsa9CMfL/p/c=; b=K
+	BJbDOIZUmLK+w/0hXVbFDRphkfhDphV97il3nzweFbcxWAJEFDjU8Gqw2nFoBi0b
+	o6Av1GVysfMFWCuefVHOy+gjv9lAQGNwlHZ0cgGATLitdagCdzxv2o1zwgQGJdjg
+	OD4wZtqAUwI0OryKx/TDwrj2ZEcxKcvYD51ObUDPBMfg0lxVmDGnY2jp5KaHdKeA
+	hBzMHJRB9DH4vtbWij9TnQXMWtJCX9Br5OAGPf5mtX5CSUfB6ZGe4P1xmWJhS/sl
+	x2BPoNXdVQzAtxeoz9W6CqFswHcsAkNrKs56A8qeteHgSazbV/0EuaBLo6cJw6XP
+	QdosrjWtjktUSlZafCg8g==
+X-ME-Sender: <xms:sUa_Z4RY0KqV2cDjzbFvyZ_o0xAouYiCysSFrkIj_2NPaFiyWR1bnw>
+    <xme:sUa_Z1xk4kM9Jj9iW699vYSOR03jmfTc97a3GJ-ZLpZLijBgtf7SWtgsdLNy-7kPG
+    4x63_D32yAYzy662hI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekheduudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdfuvhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvg
+    hrrdguvghvqeenucggtffrrghtthgvrhhnpeegheduteffteeguefgteeugeffvdejgefg
+    gfegkedthffgudfhudduieelkeekkeenucffohhmrghinhepghhithhhuhgsrdgtohhmne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepshhvvghn
+    sehsvhgvnhhpvghtvghrrdguvghvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopehlihhn
+    uhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprh
+    gtphhtthhopegrshgrhhhisehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohep
+    mhgrrhgtrghnsehmrghrtggrnhdrshhtpdhrtghpthhtoheprghlhihsshgrsehrohhsvg
+    hniiifvghighdrihhopdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:sUa_Z127v5F1-tpz_DKAqecbUd9oZRtYLG4AJuxaWLIRoiaKOxaQFw>
+    <xmx:sUa_Z8DAl_UAdWwb2mIcj2iO8LqEc9RuvyJNj4d3i5B61o1RAhZqbA>
+    <xmx:sUa_ZxhWDVY2g5KByIq7c4dKW-uOc4w_ezxWdLEWpL8rw5rn2qKbRA>
+    <xmx:sUa_Z4rUDU6lA7RnFBhp6lG2kcbfeKFv3TrbtaM0DkoeIeQnC8V-nA>
+    <xmx:ska_Z_ZVP3Lm1_PJXM5UDde9viUfhnDEgXIdFDIYe7jvGiWoPzm8HmU9>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CA904BA006F; Wed, 26 Feb 2025 11:52:01 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Date: Wed, 26 Feb 2025 17:51:42 +0100
-From: Martin Schiller <ms@dev.tdt.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, andrew@lunn.ch,
-	hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: sfp: add quirk for FS SFP-10GM-T copper
- SFP+ module
-Organization: TDT AG
-In-Reply-To: <20250226172754.1c3b054b@kmaincent-XPS-13-7390>
-References: <20250226141002.1214000-1-ms@dev.tdt.de>
- <Z78neFoGNPC0PYjt@shell.armlinux.org.uk>
- <d03103b9cab4a1d2d779b3044f340c6d@dev.tdt.de>
- <20250226162649.641bba5d@kmaincent-XPS-13-7390>
- <b300404d2adf0df0199230d58ae83312@dev.tdt.de>
- <20250226172754.1c3b054b@kmaincent-XPS-13-7390>
-Message-ID: <daec1a6fe2a16988b0b0e59942a94ca9@dev.tdt.de>
-X-Sender: ms@dev.tdt.de
-User-Agent: Roundcube Webmail/1.3.17
-Content-Transfer-Encoding: quoted-printable
-X-purgate: clean
-X-purgate-ID: 151534::1740588704-2BC6995C-803E5AC5/0/0
-X-purgate-type: clean
+Date: Wed, 26 Feb 2025 17:51:40 +0100
+From: "Sven Peter" <sven@svenpeter.dev>
+To: "Alyssa Rosenzweig" <alyssa@rosenzweig.io>
+Cc: "Janne Grunau" <j@jannau.net>, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Hector Martin" <marcan@marcan.st>
+Message-Id: <63c5cbfe-4751-4409-9be7-2fda21b09503@app.fastmail.com>
+In-Reply-To: <Z7y14Q3ifu7U1tHI@blossom>
+References: <20250222-apple-soc-misc-v1-0-1a3af494a48a@svenpeter.dev>
+ <20250222-apple-soc-misc-v1-2-1a3af494a48a@svenpeter.dev>
+ <Z7y14Q3ifu7U1tHI@blossom>
+Subject: Re: [PATCH 2/4] soc: apple: rtkit: Implement OSLog buffers properly
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-26 17:27, Kory Maincent wrote:
-> On Wed, 26 Feb 2025 16:55:38 +0100
-> Martin Schiller <ms@dev.tdt.de> wrote:
->=20
->> On 2025-02-26 16:26, Kory Maincent wrote:
->> > On Wed, 26 Feb 2025 15:50:46 +0100
->> > Martin Schiller <ms@dev.tdt.de> wrote:
->> >
->> >> On 2025-02-26 15:38, Russell King (Oracle) wrote:
->>  [...]
->>  [...]
->>  [...]
->> >>
->> >> OK, I'll rename it to sfp_fixup_rollball_wait.
->> >
->> > I would prefer sfp_fixup_fs_rollball_wait to keep the name of the
->> > manufacturer.
->> > It can't be a generic fixup as other FSP could have other waiting ti=
-me
->> > values
->> > like the Turris RTSFP-10G which needs 25s.
->>=20
->> I think you're getting two things mixed up.
->> The phy still has 25 seconds to wake up. With sfp_fixup_rollball_wait
->> there simply is an additional 4s wait at the beginning before we start
->> searching for a phy.
->=20
-> Indeed you are right, I was looking in older Linux sources, sorry.
-> Still, the additional 4s wait seems relevant only for FS SFP, so it=20
-> should
-> be included in the function naming to avoid confusion.
->=20
 
-You may be right for the moment. But perhaps there will soon be SFP
-modules from other manufacturers that also need this quirk.
 
-There is also the function sfp_fixup_rollball_cc, which is currently
-only used for modules with vendor string =E2=80=9COEM=E2=80=9D. However, =
-the function is
-not called sfp_fixup_oem_rollball_cc.
+On Mon, Feb 24, 2025, at 19:09, Alyssa Rosenzweig wrote:
+>> +	if (ep == APPLE_RTKIT_EP_OSLOG) {
+>> +		buffer->size = FIELD_GET(APPLE_RTKIT_OSLOG_SIZE, msg);
+>> +		buffer->iova = FIELD_GET(APPLE_RTKIT_OSLOG_IOVA, msg) << 12;
+>> +	} else {
+>> +		buffer->size = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg) << 12;
+>> +		buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
+>> +	}
+>
+> The shifts are suspiciously asymmetric. Are we really sure this is
+> correct? My guess is that both size & iova for both oslog & buffer need
+> to be page-aligned, so all 4 lines should be shifted, and the bit
+> offsets should be adjusted in turn, and the lower 12-bits in oslog_size
+> and buffer_iova are reserved. But that's just a guess.
+>
+> Anyway if this logic is really what we want it deserves a comment
+> because it looks like a typo.
 
-Regards,
-Martin
+That guess can't be true for syslog since there's no change in behavior here
+and the syslog endpoint has been working fine so far. This common code is
+also used for other endpoints that request buffers and there haven't been
+any issues there either. The size is just passed in "number of 4k chunks"
+and the IOVA needs no additional fixups.
+
+
+The entire reason for this commit is because this common logic just didn't
+work for oslog. Our u-boot fork uses the same logic as used here [1]. We're stealing
+a chunk of MTP's SRAM to make hand-off to Linux easier there. If either size or
+IOVA was off by a factor 0x4000 this would've never worked in the first
+place.
+
+I'll add a comment that this is really what we want even though it looks odd.
+
+
+Sven
+
+
+[1] https://github.com/AsahiLinux/u-boot/blob/582f851413c3fd1fcd60d701ed54fff2e840b9cf/arch/arm/mach-apple/rtkit.c#L144
+
