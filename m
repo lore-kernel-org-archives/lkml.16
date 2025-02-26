@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D4342A9D;
-	Wed, 26 Feb 2025 01:07:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0612178372;
+	Wed, 26 Feb 2025 01:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740532058; cv=none; b=jRIAOPRgTAxUuFK+4K2Z9NoFHy4hh+6dOlQzrZEm0SvLosn3JObaLpzYiqHRQSTqxEut/STaTdqj0/TlYndjDwWTGVotD+YSmRIoELRRBY1g4tzCzmStgrIIJetFBzMzEmzHuVcywokJkISK5lkyB2r9r1asWdWEVRkpgyLSCic=
+	t=1740532060; cv=none; b=HVHXfS/omylmWSsuU9JyoWv8g15hEEswVZKni5rkZeu396h5xF7JHKBsjCfKy2bOD1pU/eixxzUv/jlDTJJkKdUk+4mMFbkcBIKs3CKMGJ6qqhTdGwq17ir80ifGrpD7UlNmAk5sELOlGpCBml/kq4w1NBtCk0uZOdAvX0Apg78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740532058; c=relaxed/simple;
-	bh=CDBcft1we3o/9e/Ovr02k3sW+m+b+C4klkPtxBiADrI=;
+	s=arc-20240116; t=1740532060; c=relaxed/simple;
+	bh=b+YHZn2oe7fZ7lyCIm3gb0IseuEDVm4QkMMYsFhiiT8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TfGYx02Xd1n82OxzLkjzMjo6T07SocDKXFErR+soM0NrNQ21truQiSZ0FtPvAachN3xZUb0sAUkpdxfz6uPXSsYDeg7c74il/qLR55+W6Yj3IQUch0ho/oBT30vK6KB/fmztHqXR8AS8g6owFiv/b7T4AkxTLs3kMke51An2q8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S6wJRlTP; arc=none smtp.client-ip=198.175.65.13
+	 MIME-Version; b=sl0Ui2ppO0dkZZ47xciOExTGq2Ah0nKi0zZQC4/z9bykQSzKgFkxa7fKeLN0TdpV1G217gL4bAk38At7Y5IqjRWFWlmI9XQvqkXxbFhwbZ27cZRnMkBGNC2Ht1Begm0y6n5YpDFOPJe7M/nihOazhKPnVDpVttOhIf002UqTjUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FAIeS7Nm; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S6wJRlTP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FAIeS7Nm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740532055; x=1772068055;
+  t=1740532059; x=1772068059;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=CDBcft1we3o/9e/Ovr02k3sW+m+b+C4klkPtxBiADrI=;
-  b=S6wJRlTP7j/YNnNuqtd/FBhdJpv4I2UssZapI2kaOLfW7C6/6xoHSNwW
-   WBXos4vnhBvuZnPcsmK3VOxWryTh1ft/p0r/lNEkaPS/lv+eQfd52Ajmb
-   WUNrDfO11GpmP1UN+XGYKa5juiDcNvlt34VAl87/59wnOsiSli1/Yn396
-   T1z1CZE5QFm/0kv/vHu7IRqefMhZCO6beTZ/EiyJ3O5E1IViZh2cRca98
-   kf6nn4cl+4z5IRiAfRJ06cuET3ejTVdTDBHhv7mf2wPY+frMAUxdtAcXF
-   hSML001vqeox5zxZ9x+rPKU6vn9qHfzbjCyWp04kx4wR/7rQX19icr5az
-   g==;
-X-CSE-ConnectionGUID: 8OjaT546SFOGaxe/N5XcWw==
-X-CSE-MsgGUID: ThwQq+EvRTyFaebYyj4Ttg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52362178"
+  bh=b+YHZn2oe7fZ7lyCIm3gb0IseuEDVm4QkMMYsFhiiT8=;
+  b=FAIeS7Nmu00CgX/H2ETGVZn3E414OxWBlspA4EXa/eb8zlfFZZ3CMW4H
+   dSmJFy4xgkuSE7WFH2OBeo4w8uiUvIqgQb+BjiWBO7crduzT5go4SOhF2
+   vjeVZKe8asecAcI7c+A1N0aH93piDpuSeOJC563iQEjZRC4hUu2vt4Fcy
+   bBdB3OnF3d58bUcO9+/EyWHs8iYca9iUNvzLJEKtLck4OUWHDyXgRzCAf
+   qwRy2cVdKH/fPTLbqcjCdDedvVM4UCd68mB9E8SPGRII4b37HZa3OrVi+
+   XcHYJEWvdjedlDxsvd91/w0H3sWjK23ynBCUn8Uo/YUMOc4K0ZnlLF10d
+   w==;
+X-CSE-ConnectionGUID: 9IcWbaYDTPWEvlrCW3NQUg==
+X-CSE-MsgGUID: jV8WEgZJTMe410czHx8pxg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52362208"
 X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="52362178"
+   d="scan'208";a="52362208"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 17:07:34 -0800
-X-CSE-ConnectionGUID: Dk7yFpSgR96F6IbRCfxjCQ==
-X-CSE-MsgGUID: V3oTVSOnTL6JDtR63UvfLA==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 17:07:38 -0800
+X-CSE-ConnectionGUID: r1xqzPQjQDKN/mH9hUC9sw==
+X-CSE-MsgGUID: eXxteRbpRmWJOiUTaTDVfg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147467335"
+   d="scan'208";a="147467352"
 Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.124.166.169])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Feb 2025 17:07:33 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 25 Feb 2025 17:07:38 -0800
 From: "Chang S. Bae" <chang.seok.bae@intel.com>
 To: linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
@@ -53,9 +53,9 @@ Cc: x86@kernel.org,
 	dave.hansen@linux.intel.com,
 	shuah@kernel.org,
 	chang.seok.bae@intel.com
-Subject: [PATCH 1/9] selftests/x86: Consolidate redundant signal helper functions
-Date: Tue, 25 Feb 2025 17:07:21 -0800
-Message-ID: <20250226010731.2456-2-chang.seok.bae@intel.com>
+Subject: [PATCH 5/9] selftests/x86/xstate: Refactor ptrace ABI test
+Date: Tue, 25 Feb 2025 17:07:25 -0800
+Message-ID: <20250226010731.2456-6-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250226010731.2456-1-chang.seok.bae@intel.com>
 References: <20250226010731.2456-1-chang.seok.bae@intel.com>
@@ -67,705 +67,352 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The x86 selftests frequently register and clean up signal handlers, but
-the sethandler() and clearhandler() functions have been redundantly
-copied across multiple .c files.
+Following the refactor of the context switching test, the ptrace test is
+another component reusable for other xstate features. As part of this
+restructuring, add a missing check to validate the
+user_xstateregs->xstate_fx_sw field in the ABI.
 
-Move these functions to helpers.h to enable reuse across tests,
-eliminating around 250 lines of duplicate code.
-
-Converge the error handling by using ksft_exit_fail_msg(), which is
-functionally equivalent with err() within the selftest framework.
+Also, replace err() and fatal_error() with ksft_exit_fail_msg() for
+consistency in error handling.
 
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 ---
-This change is a prerequisite for the upcoming xstate selftest, which
-requires signal handling for registering and cleaning up handlers.
-
-References:
-* ksft_exit_fail_msg()
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/testing/selftests/kselftest.h#n383
-* err()
-  https://sourceware.org/git/?p=glibc.git;a=blob;f=misc/err.c;h=2528d36e2da0f9c020c9a0bea3e18ae444f17ea8;hb=HEAD#l103
+Expected out:
+$ amx_64
+...
+[RUN]   AMX Tile data: inject xstate via ptrace().
+[OK]    'xfeatures' in SW reserved area was correctly written
+[OK]    xstate was correctly updated.
 ---
- tools/testing/selftests/x86/amx.c             | 25 +----------------
- .../selftests/x86/corrupt_xstate_header.c     | 14 +---------
- tools/testing/selftests/x86/entry_from_vm86.c | 24 ++--------------
- tools/testing/selftests/x86/fsgsbase.c        | 24 ++--------------
- tools/testing/selftests/x86/helpers.h         | 28 +++++++++++++++++++
- tools/testing/selftests/x86/ioperm.c          | 25 ++---------------
- tools/testing/selftests/x86/iopl.c            | 25 ++---------------
- tools/testing/selftests/x86/ldt_gdt.c         | 18 +++---------
- tools/testing/selftests/x86/mov_ss_trap.c     | 14 +---------
- tools/testing/selftests/x86/ptrace_syscall.c  | 24 ++--------------
- tools/testing/selftests/x86/sigaltstack.c     | 26 ++---------------
- tools/testing/selftests/x86/sigreturn.c       | 24 ++--------------
- .../selftests/x86/single_step_syscall.c       | 22 ---------------
- .../testing/selftests/x86/syscall_arg_fault.c | 12 --------
- tools/testing/selftests/x86/syscall_nt.c      | 12 --------
- tools/testing/selftests/x86/sysret_rip.c      | 24 ++--------------
- tools/testing/selftests/x86/test_vsyscall.c   | 13 ---------
- tools/testing/selftests/x86/unwind_vdso.c     | 12 --------
- 18 files changed, 51 insertions(+), 315 deletions(-)
+ tools/testing/selftests/x86/amx.c    | 108 +---------------------
+ tools/testing/selftests/x86/xstate.c | 129 +++++++++++++++++++++++++++
+ tools/testing/selftests/x86/xstate.h |   1 +
+ 3 files changed, 131 insertions(+), 107 deletions(-)
 
 diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
-index 1fdf35a4d7f6..0f355f331f41 100644
+index b3c51dd25abc..4bafbb72aa1b 100644
 --- a/tools/testing/selftests/x86/amx.c
 +++ b/tools/testing/selftests/x86/amx.c
-@@ -20,6 +20,7 @@
- #include <sys/uio.h>
- 
- #include "../kselftest.h" /* For __cpuid_count() */
-+#include "helpers.h"
- 
- #ifndef __x86_64__
- # error This test is 64-bit only
-@@ -61,30 +62,6 @@ static inline void xrstor(struct xsave_buffer *xbuf, uint64_t rfbm)
- /* err() exits and will not return */
- #define fatal_error(msg, ...)	err(1, "[FAIL]\t" msg, ##__VA_ARGS__)
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		fatal_error("sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		fatal_error("sigaction");
--}
--
- #define XFEATURE_XTILECFG	17
- #define XFEATURE_XTILEDATA	18
- #define XFEATURE_MASK_XTILECFG	(1 << XFEATURE_XTILECFG)
-diff --git a/tools/testing/selftests/x86/corrupt_xstate_header.c b/tools/testing/selftests/x86/corrupt_xstate_header.c
-index cf9ce8fbb656..93a89a5997ca 100644
---- a/tools/testing/selftests/x86/corrupt_xstate_header.c
-+++ b/tools/testing/selftests/x86/corrupt_xstate_header.c
-@@ -18,6 +18,7 @@
- #include <sys/wait.h>
- 
- #include "../kselftest.h" /* For __cpuid_count() */
-+#include "helpers.h"
- 
- static inline int xsave_enabled(void)
- {
-@@ -29,19 +30,6 @@ static inline int xsave_enabled(void)
- 	return ecx & (1U << 27);
- }
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static void sigusr1(int sig, siginfo_t *info, void *uc_void)
- {
- 	ucontext_t *uc = uc_void;
-diff --git a/tools/testing/selftests/x86/entry_from_vm86.c b/tools/testing/selftests/x86/entry_from_vm86.c
-index d1e919b0c1dc..5cb8393737d0 100644
---- a/tools/testing/selftests/x86/entry_from_vm86.c
-+++ b/tools/testing/selftests/x86/entry_from_vm86.c
-@@ -24,31 +24,11 @@
- #include <errno.h>
- #include <sys/vm86.h>
- 
-+#include "helpers.h"
-+
- static unsigned long load_addr = 0x10000;
- static int nerrs = 0;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static sig_atomic_t got_signal;
- 
- static void sighandler(int sig, siginfo_t *info, void *ctx_void)
-diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 50cf32de6313..0a75252d31b6 100644
---- a/tools/testing/selftests/x86/fsgsbase.c
-+++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -28,6 +28,8 @@
- #include <sys/wait.h>
- #include <setjmp.h>
- 
-+#include "helpers.h"
-+
- #ifndef __x86_64__
- # error This test is 64-bit only
- #endif
-@@ -39,28 +41,6 @@ static unsigned short *shared_scratch;
- 
- static int nerrs;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static void sigsegv(int sig, siginfo_t *si, void *ctx_void)
- {
- 	ucontext_t *ctx = (ucontext_t*)ctx_void;
-diff --git a/tools/testing/selftests/x86/helpers.h b/tools/testing/selftests/x86/helpers.h
-index 4ef42c4559a9..6deaad035161 100644
---- a/tools/testing/selftests/x86/helpers.h
-+++ b/tools/testing/selftests/x86/helpers.h
-@@ -2,8 +2,13 @@
- #ifndef __SELFTESTS_X86_HELPERS_H
- #define __SELFTESTS_X86_HELPERS_H
- 
-+#include <signal.h>
-+#include <string.h>
-+
- #include <asm/processor-flags.h>
- 
-+#include "../kselftest.h"
-+
- static inline unsigned long get_eflags(void)
- {
- #ifdef __x86_64__
-@@ -22,4 +27,27 @@ static inline void set_eflags(unsigned long eflags)
- #endif
- }
- 
-+static inline void sethandler(int sig, void (*handler)(int, siginfo_t *, void *), int flags)
-+{
-+	struct sigaction sa;
-+
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_sigaction = handler;
-+	sa.sa_flags = SA_SIGINFO | flags;
-+	sigemptyset(&sa.sa_mask);
-+	if (sigaction(sig, &sa, 0))
-+		ksft_exit_fail_msg("sigaction failed");
-+}
-+
-+static inline void clearhandler(int sig)
-+{
-+	struct sigaction sa;
-+
-+	memset(&sa, 0, sizeof(sa));
-+	sa.sa_handler = SIG_DFL;
-+	sigemptyset(&sa.sa_mask);
-+	if (sigaction(sig, &sa, 0))
-+		ksft_exit_fail_msg("sigaction failed");
-+}
-+
- #endif /* __SELFTESTS_X86_HELPERS_H */
-diff --git a/tools/testing/selftests/x86/ioperm.c b/tools/testing/selftests/x86/ioperm.c
-index 57ec5e99edb9..69d5fb7050c2 100644
---- a/tools/testing/selftests/x86/ioperm.c
-+++ b/tools/testing/selftests/x86/ioperm.c
-@@ -20,31 +20,10 @@
- #include <sched.h>
- #include <sys/io.h>
- 
-+#include "helpers.h"
-+
- static int nerrs = 0;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static jmp_buf jmpbuf;
- 
- static void sigsegv(int sig, siginfo_t *si, void *ctx_void)
-diff --git a/tools/testing/selftests/x86/iopl.c b/tools/testing/selftests/x86/iopl.c
-index 7e3e09c1abac..457b6715542b 100644
---- a/tools/testing/selftests/x86/iopl.c
-+++ b/tools/testing/selftests/x86/iopl.c
-@@ -20,31 +20,10 @@
- #include <sched.h>
- #include <sys/io.h>
- 
-+#include "helpers.h"
-+
- static int nerrs = 0;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static jmp_buf jmpbuf;
- 
- static void sigsegv(int sig, siginfo_t *si, void *ctx_void)
-diff --git a/tools/testing/selftests/x86/ldt_gdt.c b/tools/testing/selftests/x86/ldt_gdt.c
-index 3a29346e1452..bb99a71380a5 100644
---- a/tools/testing/selftests/x86/ldt_gdt.c
-+++ b/tools/testing/selftests/x86/ldt_gdt.c
-@@ -26,6 +26,8 @@
- #include <asm/prctl.h>
- #include <sys/prctl.h>
- 
-+#include "helpers.h"
-+
- #define AR_ACCESSED		(1<<8)
- 
- #define AR_TYPE_RODATA		(0 * (1<<9))
-@@ -506,20 +508,6 @@ static void fix_sa_restorer(int sig)
- }
- #endif
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--
--	fix_sa_restorer(sig);
--}
--
- static jmp_buf jmpbuf;
- 
- static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
-@@ -549,9 +537,11 @@ static void do_multicpu_tests(void)
- 	}
- 
- 	sethandler(SIGSEGV, sigsegv, 0);
-+	fix_sa_restorer(SIGSEGV);
- #ifdef __i386__
- 	/* True 32-bit kernels send SIGILL instead of SIGSEGV on IRET faults. */
- 	sethandler(SIGILL, sigsegv, 0);
-+	fix_sa_restorer(SIGILL);
- #endif
- 
- 	printf("[RUN]\tCross-CPU LDT invalidation\n");
-diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
-index cc3de6ff9fba..f22cb6b382f9 100644
---- a/tools/testing/selftests/x86/mov_ss_trap.c
-+++ b/tools/testing/selftests/x86/mov_ss_trap.c
-@@ -36,7 +36,7 @@
- #include <setjmp.h>
- #include <sys/prctl.h>
- 
--#define X86_EFLAGS_RF (1UL << 16)
-+#include "helpers.h"
- 
- #if __x86_64__
- # define REG_IP REG_RIP
-@@ -94,18 +94,6 @@ static void enable_watchpoint(void)
- 	}
- }
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static char const * const signames[] = {
- 	[SIGSEGV] = "SIGSEGV",
- 	[SIGBUS] = "SIBGUS",
-diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
-index 12aaa063196e..360ec88d5432 100644
---- a/tools/testing/selftests/x86/ptrace_syscall.c
-+++ b/tools/testing/selftests/x86/ptrace_syscall.c
-@@ -15,6 +15,8 @@
- #include <asm/ptrace-abi.h>
+@@ -13,10 +13,8 @@
  #include <sys/auxv.h>
- 
-+#include "helpers.h"
-+
- /* Bitness-agnostic defines for user_regs_struct fields. */
- #ifdef __x86_64__
- # define user_syscall_nr	orig_rax
-@@ -93,18 +95,6 @@ static siginfo_t wait_trap(pid_t chld)
- 	return si;
- }
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static void setsigign(int sig, int flags)
- {
- 	struct sigaction sa;
-@@ -116,16 +106,6 @@ static void setsigign(int sig, int flags)
- 		err(1, "sigaction");
- }
- 
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- #ifdef __x86_64__
- # define REG_BP REG_RBP
- #else
-diff --git a/tools/testing/selftests/x86/sigaltstack.c b/tools/testing/selftests/x86/sigaltstack.c
-index f689af75e979..0ae1b784498c 100644
---- a/tools/testing/selftests/x86/sigaltstack.c
-+++ b/tools/testing/selftests/x86/sigaltstack.c
-@@ -14,6 +14,8 @@
- #include <sys/resource.h>
- #include <setjmp.h>
- 
-+#include "helpers.h"
-+
- /* sigaltstack()-enforced minimum stack */
- #define ENFORCED_MINSIGSTKSZ	2048
- 
-@@ -27,30 +29,6 @@ static bool sigalrm_expected;
- 
- static unsigned long at_minstack_size;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static int setup_altstack(void *start, unsigned long size)
- {
- 	stack_t ss;
-diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
-index 0b75b29f794b..26ef562f4232 100644
---- a/tools/testing/selftests/x86/sigreturn.c
-+++ b/tools/testing/selftests/x86/sigreturn.c
-@@ -46,6 +46,8 @@
- #include <sys/ptrace.h>
- #include <sys/user.h>
- 
-+#include "helpers.h"
-+
- /* Pull in AR_xyz defines. */
- typedef unsigned int u32;
- typedef unsigned short u16;
-@@ -138,28 +140,6 @@ static unsigned short LDT3(int idx)
- 	return (idx << 3) | 7;
- }
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static void add_ldt(const struct user_desc *desc, unsigned short *var,
- 		    const char *name)
- {
-diff --git a/tools/testing/selftests/x86/single_step_syscall.c b/tools/testing/selftests/x86/single_step_syscall.c
-index 9a30f443e928..280d7a22b9c9 100644
---- a/tools/testing/selftests/x86/single_step_syscall.c
-+++ b/tools/testing/selftests/x86/single_step_syscall.c
-@@ -33,28 +33,6 @@
- 
- #include "helpers.h"
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
--static void clearhandler(int sig)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static volatile sig_atomic_t sig_traps, sig_eflags;
- sigjmp_buf jmpbuf;
- 
-diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
-index 48ab065a76f9..f67a2df335ba 100644
---- a/tools/testing/selftests/x86/syscall_arg_fault.c
-+++ b/tools/testing/selftests/x86/syscall_arg_fault.c
-@@ -17,18 +17,6 @@
- 
- #include "helpers.h"
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static sigjmp_buf jmpbuf;
- 
- static volatile sig_atomic_t n_errs;
-diff --git a/tools/testing/selftests/x86/syscall_nt.c b/tools/testing/selftests/x86/syscall_nt.c
-index a108b80dd082..f9c9814160f0 100644
---- a/tools/testing/selftests/x86/syscall_nt.c
-+++ b/tools/testing/selftests/x86/syscall_nt.c
-@@ -18,18 +18,6 @@
- 
- static unsigned int nerrs;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
--
- static void sigtrap(int sig, siginfo_t *si, void *ctx_void)
- {
- }
-diff --git a/tools/testing/selftests/x86/sysret_rip.c b/tools/testing/selftests/x86/sysret_rip.c
-index b30de9aaa6d4..5fb531e3ad7c 100644
---- a/tools/testing/selftests/x86/sysret_rip.c
-+++ b/tools/testing/selftests/x86/sysret_rip.c
-@@ -22,6 +22,8 @@
  #include <sys/mman.h>
- #include <assert.h>
+ #include <sys/shm.h>
+-#include <sys/ptrace.h>
+ #include <sys/syscall.h>
+ #include <sys/wait.h>
+-#include <sys/uio.h>
  
-+#include "helpers.h"
-+
- /*
-  * These items are in clang_helpers_64.S, in order to avoid clang inline asm
-  * limitations:
-@@ -31,28 +33,6 @@ extern const char test_page[];
+ #include "helpers.h"
+ #include "xstate.h"
+@@ -32,8 +30,6 @@
+ #define XFEATURE_MASK_XTILEDATA	(1 << XFEATURE_XTILEDATA)
+ #define XFEATURE_MASK_XTILE	(XFEATURE_MASK_XTILECFG | XFEATURE_MASK_XTILEDATA)
  
- static void const *current_test_page_addr = test_page;
+-static uint32_t xbuf_size;
+-
+ struct xstate_info xtiledata;
  
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
+ /* The helpers for managing XSAVE buffer and tile states: */
+@@ -154,13 +150,6 @@ static inline bool load_rand_tiledata(struct xsave_buffer *xbuf)
+ 	return xrstor_safe(xbuf, XFEATURE_MASK_XTILEDATA);
+ }
+ 
+-/* Return XTILEDATA to its initial configuration. */
+-static inline void init_xtiledata(void)
 -{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
+-	clear_xstate_header(stashed_xsave);
+-	xrstor_safe(stashed_xsave, XFEATURE_MASK_XTILEDATA);
 -}
 -
--static void clearhandler(int sig)
+ enum expected_result { FAIL_EXPECTED, SUCCESS_EXPECTED };
+ 
+ /* arch_prctl() and sigaltstack() test */
+@@ -489,99 +478,6 @@ static void test_fork(void)
+ 	_exit(0);
+ }
+ 
+-/* Ptrace test */
+-
+-/*
+- * Make sure the ptracee has the expanded kernel buffer on the first
+- * use. Then, initialize the state before performing the state
+- * injection from the ptracer.
+- */
+-static inline void ptracee_firstuse_tiledata(void)
 -{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_handler = SIG_DFL;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
+-	load_rand_tiledata(stashed_xsave);
+-	init_xtiledata();
 -}
 -
- /* State used by our signal handlers. */
- static gregset_t initial_regs;
- 
-diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
-index 6de11b4df458..05e1e6774fba 100644
---- a/tools/testing/selftests/x86/test_vsyscall.c
-+++ b/tools/testing/selftests/x86/test_vsyscall.c
-@@ -310,19 +310,6 @@ static void test_getcpu(int cpu)
- static jmp_buf jmpbuf;
- static volatile unsigned long segv_err;
- 
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
+-/*
+- * Ptracer injects the randomized tile data state. It also reads
+- * before and after that, which will execute the kernel's state copy
+- * functions. So, the tester is advised to double-check any emitted
+- * kernel messages.
+- */
+-static void ptracer_inject_tiledata(pid_t target)
 -{
--	struct sigaction sa;
+-	struct xsave_buffer *xbuf;
+-	struct iovec iov;
 -
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		ksft_exit_fail_msg("sigaction failed\n");
+-	xbuf = alloc_xbuf();
+-	if (!xbuf)
+-		fatal_error("unable to allocate XSAVE buffer");
+-
+-	printf("\tRead the init'ed tiledata via ptrace().\n");
+-
+-	iov.iov_base = xbuf;
+-	iov.iov_len = xbuf_size;
+-
+-	memset(stashed_xsave, 0, xbuf_size);
+-
+-	if (ptrace(PTRACE_GETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
+-		fatal_error("PTRACE_GETREGSET");
+-
+-	if (!__compare_tiledata_state(stashed_xsave, xbuf))
+-		printf("[OK]\tThe init'ed tiledata was read from ptracee.\n");
+-	else
+-		printf("[FAIL]\tThe init'ed tiledata was not read from ptracee.\n");
+-
+-	printf("\tInject tiledata via ptrace().\n");
+-
+-	load_rand_tiledata(xbuf);
+-
+-	memcpy(&stashed_xsave->bytes[xtiledata.xbuf_offset],
+-	       &xbuf->bytes[xtiledata.xbuf_offset],
+-	       xtiledata.size);
+-
+-	if (ptrace(PTRACE_SETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
+-		fatal_error("PTRACE_SETREGSET");
+-
+-	if (ptrace(PTRACE_GETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
+-		fatal_error("PTRACE_GETREGSET");
+-
+-	if (!__compare_tiledata_state(stashed_xsave, xbuf))
+-		printf("[OK]\tTiledata was correctly written to ptracee.\n");
+-	else
+-		printf("[FAIL]\tTiledata was not correctly written to ptracee.\n");
 -}
 -
- static void sigsegv(int sig, siginfo_t *info, void *ctx_void)
+-static void test_ptrace(void)
+-{
+-	pid_t child;
+-	int status;
+-
+-	child = fork();
+-	if (child < 0) {
+-		err(1, "fork");
+-	} else if (!child) {
+-		if (ptrace(PTRACE_TRACEME, 0, NULL, NULL))
+-			err(1, "PTRACE_TRACEME");
+-
+-		ptracee_firstuse_tiledata();
+-
+-		raise(SIGTRAP);
+-		_exit(0);
+-	}
+-
+-	do {
+-		wait(&status);
+-	} while (WSTOPSIG(status) != SIGTRAP);
+-
+-	ptracer_inject_tiledata(child);
+-
+-	ptrace(PTRACE_DETACH, child, NULL, NULL);
+-	wait(&status);
+-	if (!WIFEXITED(status) || WEXITSTATUS(status))
+-		err(1, "ptrace test");
+-}
+-
+ int main(void)
  {
- 	ucontext_t *ctx = (ucontext_t *)ctx_void;
-diff --git a/tools/testing/selftests/x86/unwind_vdso.c b/tools/testing/selftests/x86/unwind_vdso.c
-index 4c311e1af4c7..9cc17588d818 100644
---- a/tools/testing/selftests/x86/unwind_vdso.c
-+++ b/tools/testing/selftests/x86/unwind_vdso.c
-@@ -43,18 +43,6 @@ int main()
- #include <dlfcn.h>
- #include <unwind.h>
+ 	const unsigned int ctxtsw_num_threads = 5, ctxtsw_iterations = 10;
+@@ -594,8 +490,6 @@ int main(void)
+ 		return KSFT_SKIP;
+ 	}
  
--static void sethandler(int sig, void (*handler)(int, siginfo_t *, void *),
--		       int flags)
--{
--	struct sigaction sa;
--	memset(&sa, 0, sizeof(sa));
--	sa.sa_sigaction = handler;
--	sa.sa_flags = SA_SIGINFO | flags;
--	sigemptyset(&sa.sa_mask);
--	if (sigaction(sig, &sa, 0))
--		err(1, "sigaction");
--}
+-	xbuf_size = get_xbuf_size();
 -
- static volatile sig_atomic_t nerrs;
- static unsigned long sysinfo;
- static bool got_sysinfo = false;
+ 	xtiledata = get_xstate_info(XFEATURE_XTILEDATA);
+ 	if (!xtiledata.size || !xtiledata.xbuf_offset) {
+ 		fatal_error("xstate cpuid: invalid tile data size/offset: %d/%d",
+@@ -614,7 +508,7 @@ int main(void)
+ 
+ 	test_context_switch(XFEATURE_XTILEDATA, ctxtsw_num_threads, ctxtsw_iterations);
+ 
+-	test_ptrace();
++	test_ptrace(XFEATURE_XTILEDATA);
+ 
+ 	clearhandler(SIGILL);
+ 	free_stashed_xsave();
+diff --git a/tools/testing/selftests/x86/xstate.c b/tools/testing/selftests/x86/xstate.c
+index e5b51e7d13e1..d318b35ba547 100644
+--- a/tools/testing/selftests/x86/xstate.c
++++ b/tools/testing/selftests/x86/xstate.c
+@@ -2,12 +2,25 @@
+ 
+ #define _GNU_SOURCE
+ 
++#include <elf.h>
+ #include <pthread.h>
+ #include <stdbool.h>
+ 
++#include <sys/ptrace.h>
++#include <sys/uio.h>
++#include <sys/wait.h>
++
+ #include "helpers.h"
+ #include "xstate.h"
+ 
++static inline uint64_t xgetbv(uint32_t index)
++{
++	uint32_t eax, edx;
++
++	asm volatile("xgetbv" : "=a" (eax), "=d" (edx) : "c" (index));
++	return eax + ((uint64_t)edx << 32);
++}
++
+ static struct xstate_info xstate;
+ 
+ struct futex_info {
+@@ -27,6 +40,19 @@ static inline void load_rand_xstate(struct xstate_info *xstate, struct xsave_buf
+ 	xrstor(xbuf, xstate->mask);
+ }
+ 
++static inline void load_init_xstate(struct xstate_info *xstate, struct xsave_buffer *xbuf)
++{
++	clear_xstate_header(xbuf);
++	xrstor(xbuf, xstate->mask);
++}
++
++static inline void copy_xstate(struct xsave_buffer *xbuf_dst, struct xsave_buffer *xbuf_src)
++{
++	memcpy(&xbuf_dst->bytes[xstate.xbuf_offset],
++	       &xbuf_src->bytes[xstate.xbuf_offset],
++	       xstate.size);
++}
++
+ static inline bool validate_xstate_same(struct xsave_buffer *xbuf1, struct xsave_buffer *xbuf2)
+ {
+ 	int ret;
+@@ -196,3 +222,106 @@ void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t it
+ 
+ 	free(finfo);
+ }
++
++/*
++ * Ptrace test for the ABI format as described in arch/x86/include/asm/user.h
++ */
++
++/*
++ * Make sure the ptracee has the expanded kernel buffer on the first use.
++ * Then, initialize the state before performing the state injection from
++ * the ptracer. For non-dynamic states, this is benign.
++ */
++static inline void ptracee_touch_xstate(void)
++{
++	struct xsave_buffer *xbuf;
++
++	xbuf = alloc_xbuf();
++
++	load_rand_xstate(&xstate, xbuf);
++	load_init_xstate(&xstate, xbuf);
++
++	free(xbuf);
++}
++
++/*
++ * Ptracer injects the randomized xstate data. It also reads before and
++ * after that, which will execute the kernel's state copy functions.
++ */
++static void ptracer_inject_xstate(pid_t target)
++{
++	uint32_t xbuf_size = get_xbuf_size();
++	struct xsave_buffer *xbuf1, *xbuf2;
++	struct iovec iov;
++
++	/*
++	 * Allocate buffers to keep data while ptracer can write the
++	 * other buffer
++	 */
++	xbuf1 = alloc_xbuf();
++	xbuf2 = alloc_xbuf();
++	if (!xbuf1 || !xbuf2)
++		ksft_exit_fail_msg("unable to allocate XSAVE buffer\n");
++
++	iov.iov_base = xbuf1;
++	iov.iov_len  = xbuf_size;
++
++	if (ptrace(PTRACE_GETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
++		ksft_exit_fail_msg("PTRACE_GETREGSET failed\n");
++
++	printf("[RUN]\t%s: inject xstate via ptrace().\n", xstate.name);
++
++	load_rand_xstate(&xstate, xbuf1);
++	copy_xstate(xbuf2, xbuf1);
++
++	if (ptrace(PTRACE_SETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
++		ksft_exit_fail_msg("PTRACE_SETREGSET failed\n");
++
++	if (ptrace(PTRACE_GETREGSET, target, (uint32_t)NT_X86_XSTATE, &iov))
++		ksft_exit_fail_msg("PTRACE_GETREGSET failed\n");
++
++	if (*(uint64_t *)get_fpx_sw_bytes(xbuf1) == xgetbv(0))
++		printf("[OK]\t'xfeatures' in SW reserved area was correctly written\n");
++	else
++		printf("[FAIL]\t'xfeatures' in SW reserved area was not correctly written\n");
++
++	if (validate_xstate_same(xbuf2, xbuf1))
++		printf("[OK]\txstate was correctly updated.\n");
++	else
++		printf("[FAIL]\txstate was not correctly updated.\n");
++
++	free(xbuf1);
++	free(xbuf2);
++}
++
++void test_ptrace(uint32_t feature_num)
++{
++	pid_t child;
++	int status;
++
++	xstate = get_xstate_info(feature_num);
++
++	child = fork();
++	if (child < 0) {
++		ksft_exit_fail_msg("fork() failed\n");
++	} else if (!child) {
++		if (ptrace(PTRACE_TRACEME, 0, NULL, NULL))
++			ksft_exit_fail_msg("PTRACE_TRACEME failed\n");
++
++		ptracee_touch_xstate();
++
++		raise(SIGTRAP);
++		_exit(0);
++	}
++
++	do {
++		wait(&status);
++	} while (WSTOPSIG(status) != SIGTRAP);
++
++	ptracer_inject_xstate(child);
++
++	ptrace(PTRACE_DETACH, child, NULL, NULL);
++	wait(&status);
++	if (!WIFEXITED(status) || WEXITSTATUS(status))
++		ksft_exit_fail_msg("ptracee exit error\n");
++}
+diff --git a/tools/testing/selftests/x86/xstate.h b/tools/testing/selftests/x86/xstate.h
+index 5ef66f247eb9..2bf11d3a3ce9 100644
+--- a/tools/testing/selftests/x86/xstate.h
++++ b/tools/testing/selftests/x86/xstate.h
+@@ -190,5 +190,6 @@ static inline void set_rand_data(struct xstate_info *xstate, struct xsave_buffer
+ }
+ 
+ void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t iterations);
++void test_ptrace(uint32_t feature_num);
+ 
+ #endif /* __SELFTESTS_X86_XSTATE_H */
 -- 
 2.45.2
 
