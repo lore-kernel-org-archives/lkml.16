@@ -1,86 +1,147 @@
-Received: from mail-m1973183.qiye.163.com (mail-m1973183.qiye.163.com [220.197.31.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E643325D537;
-	Wed, 26 Feb 2025 07:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6312267B7C;
+	Wed, 26 Feb 2025 07:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740553505; cv=none; b=fXGwLIYkzlqw0BnliZyL8bL70j2rCK1ghPcr6CFDaQjjlhJXr/dZezVU7I/e/N+rQv9UtlvIRj8uxAsz4He9aetMRaH7Kss0CsY/h2GnHRFMWvtIrbrk5AW1MXhdDip4UchFbDiQitkC9fMcW136iUctamSqkepvgviNqxXKKk8=
+	t=1740553507; cv=none; b=rc5i8j833NTqf/N/EOILPRTmP2Fp+nS4DAw8W3/VhBlCUk9Ci6f4e/kTu6L5Ht9PkRKTund5AaYm0l5cuqcQk4EzgeRXOfqqDYqP3zsQSaChYpBglYoisvDVo7wFgMe3BVEwWPNHVrJb1mE2z1EjOqUZyjo4gSLeJw/eW2aWVbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740553505; c=relaxed/simple;
-	bh=WLYZ9EBuwNXnwCUWsdQ1Ij0Qo8E9Crm4xrtth2ViDFE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i+9cqqGB9QEp3z5AoKNABJeNwUelt2y5teLyRpmmdOSYltVqiNkUFGlcWCv2mAga4On/Zrj9jIWSU9v/6Th28MERZ1tzoziFMivMRO52cF9av+1+K2KYwRU1rGFsXagOAHfqPDK6+uJGF5LkXE8Z4rC4aMLkKrZv68ENUyxJ75g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=GDaQiCWD; arc=none smtp.client-ip=220.197.31.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740553507; c=relaxed/simple;
+	bh=Mwe1Q6lK+MDpBCu+LDN9wvfYhowtWJBOsvWFBI5wg7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UjxgV3eYzlQ7/dUWyNuaCyprbVDEQ+EvNFsQ51YcETX0r2BGkQllgxBFniFKiYd/QanFqhkRH6zAndR3Mf9tenivFhE3H58/n62trwNRpyL9AFkEeOSfRFxobaXb8OXVwHvpKbxy8RKGCeNNR5m/kVxMWgPI8SztPV98bFFLGnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PcsBVOTo; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="GDaQiCWD"
-Received: from [172.16.12.45] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c3c47c7b;
-	Wed, 26 Feb 2025 14:49:41 +0800 (GMT+08:00)
-Message-ID: <a18fb035-3e7f-443a-8b24-9a51cba5604a@rock-chips.com>
-Date: Wed, 26 Feb 2025 14:49:42 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcsBVOTo"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so10318040a12.3;
+        Tue, 25 Feb 2025 23:05:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740553504; x=1741158304; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qZfqkUpDLwGIxh59vSygbGAq14kIWND9MVXfHaC/zN8=;
+        b=PcsBVOTo42QkLeZRjNy9whJCopElgprKDpPN8UvaZNfmDI02FcLPWx1/blzolGAgsZ
+         5JugOBjG4mkMEc9WBL0A//dWeVrfIyklJDONvTC+/chaMON7uS/J+9o/bPXr3DZ/momX
+         mN+t3TchR9Hx+roEczgQDG/IeEJt9jKLLFRuUG3+1Vf0fQWZicqB4EqE4IASqLWzMvVW
+         F0h3K5jetbMaRWqClKzbwEZl8upQZPmvUilOob6DKOASG5h83ytd/LMslWCJ/YKCx7aX
+         woyWnTWaQdVAeaWa9szTBEL7QX5urNWIiNyqWCpLMwEnmNgn/JM+g2oJhp74v9LNMXpw
+         pehg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740553504; x=1741158304;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qZfqkUpDLwGIxh59vSygbGAq14kIWND9MVXfHaC/zN8=;
+        b=oET+V6yayFO47LPD8hV8PvKUCFcT5SUwNJDUWcX+sN34wb1wthEAW9JW4YqZCd4N9F
+         lgZLp+HRWBqCzyLe4IRktI1ghDe4kVOceCtZCsAtafMZEFFYxPpShrPxXMs7d/dgSF1S
+         tKDOgYMSPfrQ9h2g6CPe+rtsKWuhiUhEnv+AZYD2Uy8GWYltgzq/cesEhTc6xn1fLnLA
+         3faSn1uMnfyLvNx5+SbFDUptDqo85S5+qY4LFKuGn7PxqxbjeZ7ZQQTgEOtTGb7LSc5U
+         IfGkiU6pKY6Wjst5AJGkyvIFLoyoy6DuTh09wzaoDrgancUFXiFhvl5MPB5fJVi2j43q
+         rVDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVn5YnqfzT3IbT9NQkV/Lpv5QLCbc2Q78ey1F5yT5N/rIpHmlyUVFMqoP+HwiysyfNnsR5RvkWkDNUpiQ=@vger.kernel.org, AJvYcCWaVpyZqh/FMD/1qG5kT/pCovEOnT/WO1qUDNlxq6NJ5Q9RAzjfFdWJke/pF23C+kjHM6jaAQ/hsyIc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyiLKY1Q2h73jm7ejOaH71MkvFohTZ53uTapTVshW07lM3NXHB
+	ls5oKO0qNpHve/cKrYuQpdfw4T2oLgenY+fKQmfzscJd/qanvIFb
+X-Gm-Gg: ASbGnctzZuPGp1VRkm37VHLLR2chvs9AAYWPjCC26JLtwefbci2Yo+n5WN4uYwjsFtJ
+	ABuTRUSyaPV4wbq4xbsoNXnr2xC3a9OchROOD/OKiWMWrfJE/vwi3yaML4xtS0Ev0ajsHAqDK1z
+	DhOjXmVYggrhFYSJwTcitVcoSlzM9jJN3zSOMGI6PTktUAAbHhvdhLRU4ro2WwFUGGH0GhZBPqD
+	9KYGBzxkgCFLAfWmraOP/uAzXBPQthiEG+muR6l2EOS6nnJy8CmFDqXsSZ9JS/IqRjXWeaHi7f9
+	31elt30GLMulNDi/lgBuEWs4VaULwSA2T3Bwb1SK
+X-Google-Smtp-Source: AGHT+IHYcwYNitr6Qg5vYK1r+V82tKKkgntkWLDcD3tpc23zc0lbhcAIrXViLxi0Yu1694jE3mP9ew==
+X-Received: by 2002:a05:6402:354c:b0:5dc:c531:e5c0 with SMTP id 4fb4d7f45d1cf-5e4a0e19b0fmr2269918a12.27.1740553503845;
+        Tue, 25 Feb 2025 23:05:03 -0800 (PST)
+Received: from foxbook (adqi59.neoplus.adsl.tpnet.pl. [79.185.142.59])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4a6353eb6sm540138a12.48.2025.02.25.23.05.03
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 25 Feb 2025 23:05:03 -0800 (PST)
+Date: Wed, 26 Feb 2025 08:05:00 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: Niklas Neronin <niklas.neronin@linux.intel.com>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 4/5] usb: xhci: Expedite skipping missed isoch TDs on
+ modern HCs
+Message-ID: <20250226080500.4299ff8a@foxbook>
+In-Reply-To: <20250226080202.7eb5e142@foxbook>
+References: <20250226080202.7eb5e142@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shawn.lin@rock-chips.com, martin.petersen@oracle.com, heiko@sntech.de,
- linux-scsi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Abaci Robot <abaci@linux.alibaba.com>, James.Bottomley@HansenPartnership.com
-Subject: Re: [PATCH -next] scsi: ufs: rockchip: Simplify bool conversion
-To: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-References: <20250226021157.77934-1-jiapeng.chong@linux.alibaba.com>
-Content-Language: en-GB
-From: Shawn Lin <shawn.lin@rock-chips.com>
-In-Reply-To: <20250226021157.77934-1-jiapeng.chong@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0NNT1ZKH0hOS0NKHx8ZHkhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpOTE
-	5VSktLVUpCS0tZBg++
-X-HM-Tid: 0a954104b35509cckunmc3c47c7b
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kz46Fjo*GDIKMwsDTh4qMxwW
-	VktPCRxVSlVKTE9LTk5JTkNISEtJVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
-	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUpKSU03Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=GDaQiCWDoYocllNU6WqKHl5m9xRxpcznUkUedTxHBomfvOO/UfsHDYxKuNmU/5Vl7SAtbkmy79QcfIew8C3GU5v5i1+sB1KHMHcsG7KO2GgLXUbCoUht9ILjVM/mZW3hwIRmTlkOljc6BudXvicBkuIWTqQ54c2maLyOufFlvqQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=cvkxqloIlTXo9JLh9EsUKKF24vwSjOiMeRjag/XPRuc=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-在 2025/2/26 10:11, Jiapeng Chong 写道:
-> ./drivers/ufs/host/ufs-rockchip.c:268:70-75: WARNING: conversion to bool not needed here.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19055
-> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+xHCI spec rev. 1.0 allowed the TRB pointer of Missed Service events
+to be NULL. Having no idea which of the queued TDs were missed and
+which are waiting, we can only set a flag to skip missed TDs later.
 
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+But HCs are also allowed to give us pointer to the last missed TRB,
+and this became mandatory in spec rev. 1.1 and later.
 
-Thanks Jiapeng.
+Use this pointer, if available, to immediately skip all missed TDs.
+This reduces latency and risk of skipping-related bugs, because we
+can now leave the skip flag cleared for future events.
 
+Handle Missed Service Error events as 'error mid TD', if applicable,
+because rev. 1.0 spec excplicitly says so in notes to 4.10.3.2 and
+later revs in 4.10.3.2 and 4.11.2.5.2. Notes to 4.9.1 seem to apply.
 
-> ---
->   drivers/ufs/host/ufs-rockchip.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-rockchip.c b/drivers/ufs/host/ufs-rockchip.c
-> index 5b0ea9820767..350cb0f8d0c2 100644
-> --- a/drivers/ufs/host/ufs-rockchip.c
-> +++ b/drivers/ufs/host/ufs-rockchip.c
-> @@ -265,7 +265,7 @@ static int ufs_rockchip_runtime_suspend(struct device *dev)
->   	clk_disable_unprepare(host->ref_out_clk);
->   
->   	/* Do not power down the genpd if rpm_lvl is less than level 5 */
-> -	dev_pm_genpd_rpm_always_on(dev, hba->rpm_lvl < UFS_PM_LVL_5 ? true : false);
-> +	dev_pm_genpd_rpm_always_on(dev, hba->rpm_lvl < UFS_PM_LVL_5);
->   
->   	return ufshcd_runtime_suspend(dev);
->   }
+Tested on ASM1142 and ASM3142 v1.1 xHCs which provide TRB pointers.
+Tested on AMD, Etron, Renesas v1.0 xHCs which provide TRB pointers.
+Tested on NEC v0.96 and VIA v1.0 xHCs which send a NULL pointer.
 
+Change inspired by a discussion about realtime USB audio.
+
+Link: https://lore.kernel.org/linux-usb/76e1a191-020d-4a76-97f6-237f9bd0ede0@gmx.net/T/
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+---
+ drivers/usb/host/xhci-ring.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index 995f8a9b5b53..ad5f0e439200 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -2481,6 +2481,12 @@ static void process_isoc_td(struct xhci_hcd *xhci, struct xhci_virt_ep *ep,
+ 		if (ep_trb != td->end_trb)
+ 			td->error_mid_td = true;
+ 		break;
++	case COMP_MISSED_SERVICE_ERROR:
++		frame->status = -EXDEV;
++		sum_trbs_for_length = true;
++		if (ep_trb != td->end_trb)
++			td->error_mid_td = true;
++		break;
+ 	case COMP_INCOMPATIBLE_DEVICE_ERROR:
+ 	case COMP_STALL_ERROR:
+ 		frame->status = -EPROTO;
+@@ -2791,8 +2797,8 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+ 		 */
+ 		ep->skip = true;
+ 		xhci_dbg(xhci,
+-			 "Miss service interval error for slot %u ep %u, set skip flag\n",
+-			 slot_id, ep_index);
++			 "Miss service interval error for slot %u ep %u, set skip flag%s\n",
++			 slot_id, ep_index, ep_trb_dma ? ", skip now" : "");
+ 		break;
+ 	case COMP_NO_PING_RESPONSE_ERROR:
+ 		ep->skip = true;
+@@ -2841,8 +2847,8 @@ static int handle_tx_event(struct xhci_hcd *xhci,
+ 		xhci_dequeue_td(xhci, td, ep_ring, td->status);
+ 	}
+ 
+-	/* Missed TDs will be skipped on the next event */
+-	if (trb_comp_code == COMP_MISSED_SERVICE_ERROR)
++	/* If the TRB pointer is NULL, missed TDs will be skipped on the next event */
++	if (trb_comp_code == COMP_MISSED_SERVICE_ERROR && !ep_trb_dma)
+ 		return 0;
+ 
+ 	if (list_empty(&ep_ring->td_list)) {
+-- 
+2.48.1
