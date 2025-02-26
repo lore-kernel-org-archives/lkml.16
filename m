@@ -1,219 +1,113 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn19011077.outbound.protection.outlook.com [52.103.32.77])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF23238D2F;
-	Wed, 26 Feb 2025 19:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.32.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740598477; cv=fail; b=T2bJDc8FX7hqAcBP07XYGdFrXOxZyTopRGnIjLDcoo138GG4ums1MzRmhz1ebcxPXdEIOna/KOxSiis5gMS4FbASUfrpESdNLbEVYfSl4VkXSDlSrEKyjsaO7RXGiQPwDXd1snjxtJiFl+2xHDlh29R/apJvw8/qHCBUMdqhvOM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740598477; c=relaxed/simple;
-	bh=ACOFdcjyzEMrrUEVtj8xsPuWQ6feABuf35kwC4CSxHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JIuH69VL9u4dfiSNmQESb6KNpkXpQ3ASgqVD33wLdr+lMM7ocRwIvBE+Mc1EWqOO2Ul04OV7/19pN33WDYhB89RRGfO59rW1+yvTbAD4vVKe/CtzrdehJ/pIxDtJ9bRLTi2slNcfQBodzEg/+sNIw87bEADa3K2WqrDhs0DN4yI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=I5dNNmTd; arc=fail smtp.client-ip=52.103.32.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BFD241672
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740598507; cv=none; b=GHNsOFAQffh1FZBHtMCgED+2DtnUVbq7nIsTnZbhhwDEzhO5Sfctd/+nf78SG87wqzo/GRraXIMR+2Vr973D9XWmd3PGQYLsTXjld2f9cZFziCVr8TgsRktaA3OM5Jh1+P0vQGtkteJEtrmrz+mfOY14ZzU/52IpIegR3wvYRuI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740598507; c=relaxed/simple;
+	bh=bvEh2cJJ8fQdCKZqF4/MHgwher79PNLHTe2wORKT3qI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=LTea3UX77Up+N9pIa9RtdqJk8SOAgdEOwWsg8XRJSG3S8V1ZnxZJ9eY7xLGVWujHSW2YUrijq8BYT9DTOh2ZhpVffuqHPT/xTaa6XoLngScAVj2D+mrSiDdczIncsaDZuWC4At1c/vI30AmRbzCQMCC2TWcWbAyCc9XqXm7wJJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=dlWusk4Z; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="I5dNNmTd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MsYMDFX0JD8++LSybR0w/tKbpUdnzt1rbQY+XG1S7PdeY66GEEJa0Ictj8f6I3NVBcn0gk0WHSUW/7lNMqOHn7duXAzcoax2yhK3GOaoomtgyVKQhbMVK+gRzehm7U01vRw6I4U3OugXOqlvFNZV04xfM+bhyUU8r/fbFdpUE9iuU6jqgtNsp8/Ud+2vti4QgRg0dIxPwrym2+TgUHr97hDFN0xV/ii47e7prhKfxdVL2YEHrG1U7whMm1Y5AOS+Kl1w37jnFZpIJ+ulgjQ1ao4L3M336acgyJVUQXpMie43sg/SRplrkTaIf4iorkNiU7yXwWZHrBOynJnbDi8gVA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vFkNWT9qi7ZMq+d4X59uKo9TPr7WcNyc1CNt4P36duA=;
- b=LOpanNnLwm76m8A3PP/ARFbLk8Zsdkhp9Zu569ST9CYjLzBxrVs9B9kKZ13NYtCxeqkmxVccGrBAApKoz75Ro3uWfXYK8pF63b3oBrUccnveJDhfLAuUOhRlBtaAoG7n791LngoZcc7bnfRL3tHE1eWMNJ7xKkqxsXweVVCsbn/0dWyn6WFCULMsZ8uEBRqht+Yrrsq97pkt11jtHX9CXCTLRmgyantMug/Jx7Pc+H+3hOMk10WApdYBc9Al3LqEMSw73aXH5HNpVffgPPWU/HdCpZRRQyoZH2MGc15J9+xxRqUYbejQvmPfad0FFux67kSqqOokjVlM7PHRUgycVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vFkNWT9qi7ZMq+d4X59uKo9TPr7WcNyc1CNt4P36duA=;
- b=I5dNNmTdIC18qBiYF7G4lpleDQiJr6yqojRHtcPxZAF8BlWkSFoApdhJ7bR5xqbnxKpeQsDWuf89pMHzysnEfQC5jDwxBC59TFNJ4zBmQ9NRGNwAkvkC+FgENiffLE1ChxCtdChic/nypnBw4gaGNjuJaEz2XXEJ9vhoMBYwI8+/9dsaAgZeNp+GAZT0dZ1be5RKvq5VkkGVcDJ6wPCVXaNNIhz3MavzY4eXYylUH0f6l68Zudx6XMA7gGced7MptZtCdKbSDyAWwwnrV0P426fWSdOeYCPdWBTdtq3BICq25BIEAuUJjfJXK1RPUqDImz69eGtplrg4z4FnL8rSCg==
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com (2603:10a6:20b:90::20)
- by DBBPR03MB7451.eurprd03.prod.outlook.com (2603:10a6:10:20e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
- 2025 19:34:31 +0000
-Received: from AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8]) by AM6PR03MB5080.eurprd03.prod.outlook.com
- ([fe80::a16:9eb8:6868:f6d8%5]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
- 19:34:31 +0000
-From: Juntong Deng <juntong.deng@outlook.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	memxor@gmail.com,
-	tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH sched_ext/for-6.15 v3 5/5] selftests/sched_ext: Update enq_select_cpu_fails to adapt to struct_ops context filter
-Date: Wed, 26 Feb 2025 19:28:20 +0000
-Message-ID:
- <AM6PR03MB5080996A206B9BE042C7C6D599C22@AM6PR03MB5080.eurprd03.prod.outlook.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <AM6PR03MB50806070E3D56208DDB8131699C22@AM6PR03MB5080.eurprd03.prod.outlook.com>
-References: <AM6PR03MB50806070E3D56208DDB8131699C22@AM6PR03MB5080.eurprd03.prod.outlook.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0349.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18d::12) To AM6PR03MB5080.eurprd03.prod.outlook.com
- (2603:10a6:20b:90::20)
-X-Microsoft-Original-Message-ID:
- <20250226192820.156545-5-juntong.deng@outlook.com>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="dlWusk4Z"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 359C02C041E;
+	Thu, 27 Feb 2025 08:35:01 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1740598501;
+	bh=bvEh2cJJ8fQdCKZqF4/MHgwher79PNLHTe2wORKT3qI=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=dlWusk4Z8rr/xuuuGKE7FB4vkMzOYJGFxd4ZxxK8/XdTeP4EYsOUU97Zag4JB3t/0
+	 qSOp+848SX3CKtUdHh97rJVgEUJ6s/H2JMhV7gshtC2j0yPGAoSMQedEi981ymutrY
+	 GYTIyEYOMS4Tj6NHJgMjqp78gsiiF3glMNtBwYMlbTwHinSer/s7Ra8xpcO/nSoRP0
+	 AuYAslN5oFhQ89oMcFuQBGt+UhjB93xlND/plC8gKdfWenTu2TGCXvyRdz/4dfQNfr
+	 beHREWjyT0jXfZP8e5GMBWPOHKwzHpU6BFAmnqXNg7J0tesAgNauMUremESfofrxye
+	 Qf/UDvQJb9pGQ==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67bf6ce50001>; Thu, 27 Feb 2025 08:35:01 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 27 Feb 2025 08:35:00 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1544.014; Thu, 27 Feb 2025 08:35:00 +1300
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+CC: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>, "andrew@lunn.ch"
+	<andrew@lunn.ch>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>, "davem@davemloft.net"
+	<davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>,
+	"sander@svanheule.net" <sander@svanheule.net>, "markus.stockhausen@gmx.de"
+	<markus.stockhausen@gmx.de>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-mips@vger.kernel.org"
+	<linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v7 1/2] net: mdio: Add RTL9300 MDIO driver
+Thread-Topic: [PATCH net-next v7 1/2] net: mdio: Add RTL9300 MDIO driver
+Thread-Index: AQHbh+J8lt76RIU/40yozHOVVg4xD7NYWweAgADGUgA=
+Date: Wed, 26 Feb 2025 19:35:00 +0000
+Message-ID: <121f35fc-f151-4c5e-a644-87485acf2eda@alliedtelesis.co.nz>
+References: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
+ <20250226000748.3979148-2-chris.packham@alliedtelesis.co.nz>
+ <20250226084511.5f8f4c62@fedora.home>
+In-Reply-To: <20250226084511.5f8f4c62@fedora.home>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <FAA606CD114D8C44959722D921238B9D@alliedtelesis.co.nz>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR03MB5080:EE_|DBBPR03MB7451:EE_
-X-MS-Office365-Filtering-Correlation-Id: 47ee319f-607e-4f5e-11cb-08dd569c97a9
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199028|15080799006|19110799003|8060799006|5072599009|440099028|3412199025|21061999003|41001999003|12071999003;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?OLVLa2/MSIDJo/L7uSQ418vgWT6lbHDzJIHObDR/1zu5k2CpOXb0DlNZSXDp?=
- =?us-ascii?Q?2nyWVpSlaMoz7u9bc5EvTMMzmV6uhbjSDJdIbpXYrZ9MG0v/D8TgYhQk0DeW?=
- =?us-ascii?Q?Gy9lgpSMnvBRX/yna1EC+G8c3Jd3uCE6s8BmmTx3qnqXomYRTg5Wrp+ZvaL9?=
- =?us-ascii?Q?OipWlJIgZnHMwvUDIJ/R82Stjsw+Dqo8hVstgzWSLOlbVvP1jRaFoLDXk+Rl?=
- =?us-ascii?Q?vGrbAELFhv5u8ZwwyutVYEwqh0ATlZ21zxwxbneUi7srM+QksWY3poLqheNG?=
- =?us-ascii?Q?GAWCJMhFCpktxtUR10kH7wNqMPh28GhVluVRcO/VnLeCRU8Pah+eNeUl69de?=
- =?us-ascii?Q?Le/DzT/BRrn94eBgIPXT6zaJztkIVCdpwiHmqqOlhWabNGr0SesouBdJg1J8?=
- =?us-ascii?Q?btwR4Tp7zyJmaL1EzIbiyTqXPpF277QClSsNgCahkduRSekQNh7TkACq5hZp?=
- =?us-ascii?Q?Ry0jfyQevVwI1f0PUFZzhv66wjkw5M152gKPcqKdR4MiW1OLw4+Fc8jrK8zJ?=
- =?us-ascii?Q?6232Ie0MPk2PTHukF1MT4uR9jBUGSkldg00OZpXVk9YIQjdozwIa3n65GWHe?=
- =?us-ascii?Q?1QA0p3oWwRCgB8bQrfh3wbCad4nEPEyhBhdzN0Jqr/VAEc739BsHYI8u5L1h?=
- =?us-ascii?Q?2prbG0sDiDvFnbn7IkmMhW6esA2324cLPiXZKN+a2g3l0bH+Ay+tTjlS61Uf?=
- =?us-ascii?Q?VHtArO1I8wRK2WTK6i5PzXQJXS2R2txsf2rzeVDt9vReZurZ7pdZ7X6knDJC?=
- =?us-ascii?Q?6mhu16hDcaYmLJ0Utxw3W03ZDYQLjxUnDwvfpv5oQmjcTIdG4Cu95+2x37D8?=
- =?us-ascii?Q?MlOi6pcUzk1Z8hvadWU5NUpOWYsAIw3rL81xCD4O4uJH6ddZpFe1QI1fqYL8?=
- =?us-ascii?Q?LS7zfGjd5YvrxD/eZigKxS4ruPoYXxHJQRBeL2oaT+B9pfCIiUtL7dziNMrG?=
- =?us-ascii?Q?Xh47JosPHSejklesidZK9rurwpD69GhihcQk6mF6yGjwWLbql8P1NRGozZGG?=
- =?us-ascii?Q?p2h5vOwkiag4w9df9rYAvnpvT2SneJRcAax170Sz9FgkgrD1XmzfDY77uUtb?=
- =?us-ascii?Q?7Ub6Q8kVa4ET66L+Mwck/TZUwHdD7bbF+t7FOKkpBxVtSX7W6KL1zXE/DoS0?=
- =?us-ascii?Q?TeZsjZl3M65olCisDz7aETVM6Y2qEtT7eQ=3D=3D?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YfyosufItesbFH7StDoM+vNTbL1T3Taj4e3mWidJ3VxS4PGJGbd746VTQFNL?=
- =?us-ascii?Q?UGzGCNYp/+TSh9rSTEQ0jOwzfhbDIrKgWaQr8CKGxpkQvql16JENY3ovlOSP?=
- =?us-ascii?Q?P565l9e1XVuoZF96nhD7nNSeKvCGqXpcuIdpx3lt/rL+S4j6xdtnEjDVkOZH?=
- =?us-ascii?Q?UtlPuP7JJ6X01ZJqXHGQz4+5ymXvUI/PHEyBs7kRJ/uNzyzKcSq3/YjS49bb?=
- =?us-ascii?Q?m4zAlT0GpydsgZLCcRcx4nST6zygZTjniTwRozyH69wT8KyKZU+FBpqaGtMK?=
- =?us-ascii?Q?TBILWYpHlZChqrJ9Nppb+mjR9ligUP4E37Wxp91yU333ZtT5cfh6SvuuPNUB?=
- =?us-ascii?Q?1yLyLeW2r8HoRV0tbbTl8PKMh5CdCKKZZQMjgBtSlz+P/WIlojTrXTcSiOjV?=
- =?us-ascii?Q?GtPq1Xp7b+f8ulfQ3ATZ4oq2YSIcTh2WuU0DeVM1pVYEndgcpYrRAFpELIAB?=
- =?us-ascii?Q?Pd1Bd8a8NkpUaqNhjtzYfo21Z/MKGQAFqqOmYyxWavKPs3pSG0F4yjWB922x?=
- =?us-ascii?Q?93loRfcMKS8Rai91rgIWOksDjf6GYYN8BLL7S0F52QT8v8xK2qQ6ruMhe4VN?=
- =?us-ascii?Q?ExODKaOosR464D8yyDj+i92yT8u0O+ldTi4w9i1qerFgRDo6wFjNqeJUOn7B?=
- =?us-ascii?Q?C71EckY7IcFTqAi8D9Hbhh/pUgMN4Z65jwBK+S6r+KXHAjoapxeDk+ha2lr9?=
- =?us-ascii?Q?b20+3aZG1U0x3xFUjft5DJAIm/iIlOO9t1XyH6kgyeMuQpyqbItAOHUxvKJq?=
- =?us-ascii?Q?dj/zmO11FMzoQhfF9sZQbXY+7EHO06nleizpj1Q+IDS21zgGOb8KV1NHDt+M?=
- =?us-ascii?Q?ornqMuXzbL9eeaIkCFN0dGlRFbSLK60JdoUp1YuN7kl/xSulcin71WWsxHJS?=
- =?us-ascii?Q?p0grIqYhbe6td434Alshrk/OJJDSLxpxh+QtLJ/KsQvHTLbGVikT4vAPskGs?=
- =?us-ascii?Q?pFiG/2KUh5FaWUmEKrfNIlKWzHyGpXyiknm/yR3T0ByvPlI8zo+3h71GtqJh?=
- =?us-ascii?Q?vZqrB/xlG5qt6JAVnAHdq4tp5AqqCOXCLtPGgN3C1lhz32uGWp62f6ejxP/5?=
- =?us-ascii?Q?qZ7nbmmWJD/26oLG0CWiOEL2DUSdegdDS4Z4VTXdnDSIyuSb6yj6JFFFUePV?=
- =?us-ascii?Q?gYB02XXmt1XPn9MhGkFeyP4UBefIlyvpD2cWuvs1OxJ1Nj9aT4REhzBdXkyV?=
- =?us-ascii?Q?AYkI0Bj7z2+zVWpMf9cSvlx0flexcWVTaNNILxhBNcivsKynvpsARq3laDNp?=
- =?us-ascii?Q?BZW0HJakvxduQzCT2fPb?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47ee319f-607e-4f5e-11cb-08dd569c97a9
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR03MB5080.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 19:34:31.8208
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR03MB7451
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=ccpxrWDM c=1 sm=1 tr=0 ts=67bf6ce5 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=p39UaIAQFBWNGi97qX4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-After kfunc filters support struct_ops context information, SCX programs
-that call incorrect context-sensitive kfuncs will fail to load.
-
-This patch updates the enq_select_cpu_fails test case to adapt to the
-failed load situation.
-
-Signed-off-by: Juntong Deng <juntong.deng@outlook.com>
----
- .../sched_ext/enq_select_cpu_fails.c          | 37 +++----------------
- 1 file changed, 5 insertions(+), 32 deletions(-)
-
-diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-index a80e3a3b3698..a04ad9a48a8f 100644
---- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-+++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-@@ -11,51 +11,24 @@
- #include "enq_select_cpu_fails.bpf.skel.h"
- #include "scx_test.h"
- 
--static enum scx_test_status setup(void **ctx)
--{
--	struct enq_select_cpu_fails *skel;
--
--	skel = enq_select_cpu_fails__open();
--	SCX_FAIL_IF(!skel, "Failed to open");
--	SCX_ENUM_INIT(skel);
--	SCX_FAIL_IF(enq_select_cpu_fails__load(skel), "Failed to load skel");
--
--	*ctx = skel;
--
--	return SCX_TEST_PASS;
--}
--
- static enum scx_test_status run(void *ctx)
- {
--	struct enq_select_cpu_fails *skel = ctx;
--	struct bpf_link *link;
-+	struct enq_select_cpu_fails *skel;
- 
--	link = bpf_map__attach_struct_ops(skel->maps.enq_select_cpu_fails_ops);
--	if (!link) {
--		SCX_ERR("Failed to attach scheduler");
-+	skel = enq_select_cpu_fails__open_and_load();
-+	if (skel) {
-+		enq_select_cpu_fails__destroy(skel);
-+		SCX_ERR("This program should fail to load");
- 		return SCX_TEST_FAIL;
- 	}
- 
--	sleep(1);
--
--	bpf_link__destroy(link);
--
- 	return SCX_TEST_PASS;
- }
- 
--static void cleanup(void *ctx)
--{
--	struct enq_select_cpu_fails *skel = ctx;
--
--	enq_select_cpu_fails__destroy(skel);
--}
--
- struct scx_test enq_select_cpu_fails = {
- 	.name = "enq_select_cpu_fails",
- 	.description = "Verify we fail to call scx_bpf_select_cpu_dfl() "
- 		       "from ops.enqueue()",
--	.setup = setup,
- 	.run = run,
--	.cleanup = cleanup,
- };
- REGISTER_SCX_TEST(&enq_select_cpu_fails)
--- 
-2.39.5
-
+SGkgTWF4aW1lLA0KDQpPbiAyNi8wMi8yMDI1IDIwOjQ1LCBNYXhpbWUgQ2hldmFsbGllciB3cm90
+ZToNCj4gSGkgQ2hyaXMsDQo+DQo+IE9uIFdlZCwgMjYgRmViIDIwMjUgMTM6MDc6NDcgKzEzMDAN
+Cj4gQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3cm90
+ZToNCj4NCj4+IEFkZCBhIGRyaXZlciBmb3IgdGhlIE1ESU8gY29udHJvbGxlciBvbiB0aGUgUlRM
+OTMwMCBmYW1pbHkgb2YgRXRoZXJuZXQNCj4+IHN3aXRjaGVzIHdpdGggaW50ZWdyYXRlZCBTb0Mu
+IFRoZXJlIGFyZSA0IHBoeXNpY2FsIFNNSSBpbnRlcmZhY2VzIG9uIHRoZQ0KPj4gUlRMOTMwMCBo
+b3dldmVyIGFjY2VzcyBpcyBkb25lIHVzaW5nIHRoZSBzd2l0Y2ggcG9ydHMuIFRoZSBkcml2ZXIg
+dGFrZXMNCj4+IHRoZSBNRElPIGJ1cyBoaWVyYXJjaHkgZnJvbSB0aGUgRFRTIGFuZCB1c2VzIHRo
+aXMgdG8gY29uZmlndXJlIHRoZQ0KPj4gc3dpdGNoIHBvcnRzIHNvIHRoZXkgYXJlIGFzc29jaWF0
+ZWQgd2l0aCB0aGUgY29ycmVjdCBQSFkuIFRoaXMgbWFwcGluZw0KPj4gaXMgYWxzbyB1c2VkIHdo
+ZW4gZGVhbGluZyB3aXRoIHNvZnR3YXJlIHJlcXVlc3RzIGZyb20gcGh5bGliLg0KPj4NCj4+IFNp
+Z25lZC1vZmYtYnk6IENocmlzIFBhY2toYW0gPGNocmlzLnBhY2toYW1AYWxsaWVkdGVsZXNpcy5j
+by5uej4NCj4gSXQgYWxsIG1vc3RseSBsb29rcyBnb29kIHRvIG1lLCB0aGVyZSdzIG9uZSB0eXBv
+IHRob3VnaCBhbmQgYXMgaXQgbWF5DQo+IGJlIHVzZXIgdmlzaWJsZSwgSSB0aGluayBpdCdzIHdv
+cnRoIGZpeGluZy4uLg0KPg0KPiBbLi4uXQ0KPg0KPj4gK3N0YXRpYyBpbnQgcnRsOTMwMF9tZGlv
+YnVzX3Byb2JlX29uZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBydGw5MzAwX21kaW9fcHJp
+diAqcHJpdiwNCj4+ICsJCQkJICAgICBzdHJ1Y3QgZndub2RlX2hhbmRsZSAqbm9kZSkNCj4+ICt7
+DQo+PiArCXN0cnVjdCBydGw5MzAwX21kaW9fY2hhbiAqY2hhbjsNCj4+ICsJc3RydWN0IGZ3bm9k
+ZV9oYW5kbGUgKmNoaWxkOw0KPj4gKwlzdHJ1Y3QgbWlpX2J1cyAqYnVzOw0KPj4gKwl1MzIgbWRp
+b19idXM7DQo+PiArCWludCBlcnI7DQo+PiArDQo+PiArCWVyciA9IGZ3bm9kZV9wcm9wZXJ0eV9y
+ZWFkX3UzMihub2RlLCAicmVnIiwgJm1kaW9fYnVzKTsNCj4+ICsJaWYgKGVycikNCj4+ICsJCXJl
+dHVybiBlcnI7DQo+PiArDQo+PiArCWZ3bm9kZV9mb3JfZWFjaF9jaGlsZF9ub2RlKG5vZGUsIGNo
+aWxkKQ0KPj4gKwkJaWYgKGZ3bm9kZV9kZXZpY2VfaXNfY29tcGF0aWJsZShjaGlsZCwgImV0aGVy
+bmV0LXBoeS1pZWVlODAyLjMtYzQ1IikpDQo+PiArCQkJcHJpdi0+c21pX2J1c19pc19jNDVbbWRp
+b19idXNdID0gdHJ1ZTsNCj4+ICsNCj4+ICsJYnVzID0gZGV2bV9tZGlvYnVzX2FsbG9jX3NpemUo
+ZGV2LCBzaXplb2YoKmNoYW4pKTsNCj4+ICsJaWYgKCFidXMpDQo+PiArCQlyZXR1cm4gLUVOT01F
+TTsNCj4+ICsNCj4+ICsJYnVzLT5uYW1lID0gIlJlYWt0ZWsgU3dpdGNoIE1ESU8gQnVzIjsNCj4g
+WW91IHByb2JhYmx5IG1lYW4gUmVhbHRlayA/IDopDQoNCkdvb2QgY2F0Y2ggdGhhbmtzLiBJJ3Zl
+IGZpeGVkIHRoZSB0eXBvIGxvY2FsbHkgYW5kIEknbGwgc2VuZCBvdXQgYSB2OCANCnRvbW9ycm93
+IGlmIHRoZXJlIGFyZW4ndCBhbnkgb3RoZXIgY29tbWVudHMuDQo=
