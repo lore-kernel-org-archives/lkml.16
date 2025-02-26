@@ -1,213 +1,101 @@
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011051.outbound.protection.outlook.com [40.107.74.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F12E18DB00;
-	Wed, 26 Feb 2025 01:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740532464; cv=fail; b=OkLaT1ZvWOK6RncpqTON8QBKUfeeHo62sNAHrmyrCMq8iRa/fc0kJ0LzKyM6C1ZGIOVr33xk6HPRTUJtU0E+EVmh5WuZDgfa1nRBPSXprzIVPaTRKCHKVBrYvRYEhNNkuXJjWMzfVxGlwXSzJNv5z/yKI2koN6KRMp3aNcZg85A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740532464; c=relaxed/simple;
-	bh=o00VCQYvXcO2oAYd5m6FXEuodtzzzwYbY4hFSB0cAZQ=;
-	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=BnuwUx4qpt2r52zo4HToZFdLaNmnvhamQP0KUEilc/bslewye2k/jr3R16vOC5k/fqnn3Lp1NOCgcEx34f071vyMcHj0ON4hKwyzcX25iSJ7J9AuoTdYDG/ZOg5UJVBT/bwD+iNHYvFGxYLhmUVzevZnXQ8VMlzVgYBYkk+j5gs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=GJeLbRxN; arc=fail smtp.client-ip=40.107.74.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7994A21;
+	Wed, 26 Feb 2025 01:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740532624; cv=none; b=CrSSbynekKO+kCbnscPNCJUX9smmRwCVqLiloXqxUdpDC9RfzWSqUGYhQ32NlwzUVG0sgknH4+7UmzCPO92K750IJSjz/VIACEKcr+SQEPMAwn7e4KW5bcz4bvEEN7jQS8FUkdFzsXn6S1gCxiVf7MPbaK5a2E1NAwHIW0NOjUk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740532624; c=relaxed/simple;
+	bh=/7QHcznAJAo2yO+ZPSdY6irpP6OfrWikh/lcuG95OFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MEAeeImfOdX9r+gyoF1gFMpmbHR49vDkCxcoYfHODHPVMWJzLHmpENmz8WUDpgJxovyiiQZfmXfIvoi6chgXJt8ZAfkBoyJO4ydyCGBklGUAx7nkztb5W8P3m4a8VuubU2q76S9hxCPW5jiSeZdQhRpBHrolxsg1ZsgJYPDR+0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p11TR35k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="GJeLbRxN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=s0Aqof7IU4XDcg+Sg0kUgEbaMcHdkHEIASAR5yDWqLTHSKLorK3Y9/PwcndoysTV3nNa6LeCRnxgRFLD/3kEZNOnDp3pJ/1azM4sTfLzk6N7yT4jpO/B04O/xk+odgm8IJQCSJet4fmDJN3T5zE7mvTJ6ZiOfou2Cd0fng7Du6mGQxrmAM5xvj0DMmffK1W52xcpjoHFOlsvdw1xWORqEOn3S4nIXhi//+T24l/FCpYXJL1HP6QEkWG89R7uuduh/xN8QBi6Cql6dLvrBIe0ftwSPvhsy+JshqmUkr53Et09hbElBt91Qhc0VMxVsniyIe5OGSvL0Yw5yL+iSq4mDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=R7zaSWw6FmY0E0Rujx9PGo2q8mZHstDo8RanybewW3M=;
- b=xcpEPcFcEcLwS94NNS9o7JNXS6vqVarPkbD5IlpzOpnDVNTPR+sYBZLMrP0cpQf1gFVo8ZInERGnl2JQadK/YGVuiO9RWOIhTu+JFNkZ3le7GQhCno+DkoxWU4ECWBvmOhiS+f4dYdVpE1W6PmOHewa9y1PiHNWpM9UWrtXYdbQ9CdNUaLvxFXjmiRhEO6qFe/mD2wGSZFUjBS9BOOlwU3LteVAGe7a/MDRW7sYue+R9hwT2mUCXx8lHQAbqSZCf8FrcwW+rWdhX7jBP21SsYmjR+QI4o62aAA1uK6J9nK21zAA/z1bYBdPBBvhqOWL1QaT2v1jeOmeFSHPLRuo7iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R7zaSWw6FmY0E0Rujx9PGo2q8mZHstDo8RanybewW3M=;
- b=GJeLbRxNedNgfrtn4MHb7cRYoqfebyTerCggGtMy5R2hagnfERgAMMR3bp+TWjwesf/ELbyEArUFuSSYWDx6xVCpoEqbzM7yQ4pZ+a/KBgNa/TYrMps1gUvnFsSspLsyzqxIUIPmXVYovcIWoyKMdndhBfWS8hksQiLSXwoxrvE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11) by TY3PR01MB11771.jpnprd01.prod.outlook.com
- (2603:1096:400:376::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
- 2025 01:14:17 +0000
-Received: from TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11]) by TYCPR01MB10914.jpnprd01.prod.outlook.com
- ([fe80::c568:1028:2fd1:6e11%5]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
- 01:14:17 +0000
-Message-ID: <87h64hh5hz.wl-kuninori.morimoto.gx@renesas.com>
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-To: Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Robert Foss <rfoss@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Linux-Kernel <linux-kernel@vger.kernel.org>,
-	Linux-DT <devicetree@vger.kernel.org>,
-	Linux-ARM <linux-arm-kernel@lists.infradead.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	David Airlie <airlied@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Algea Cao <algea.cao@rock-chips.com>,
-	Alexey Charkov <alchark@gmail.com>,
-	linux-rockchip@lists.infradead.org,
-	kernel@collabora.com,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
-In-Reply-To: <3337030.aeNJFYEL58@trenzalore>
-References: <20250217215641.372723-1-detlev.casanova@collabora.com>
-	<87frk2sumw.wl-kuninori.morimoto.gx@renesas.com>
-	<8734g2sg4t.wl-kuninori.morimoto.gx@renesas.com>
-	<3337030.aeNJFYEL58@trenzalore>
-User-Agent: Wanderlust/2.15.9 Emacs/29.3 Mule/6.0
-Content-Type: text/plain; charset=US-ASCII
-Date: Wed, 26 Feb 2025 01:14:16 +0000
-X-ClientProxiedBy: TYCPR01CA0201.jpnprd01.prod.outlook.com
- (2603:1096:405:7a::18) To TYCPR01MB10914.jpnprd01.prod.outlook.com
- (2603:1096:400:3a9::11)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p11TR35k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22B45C4CEDD;
+	Wed, 26 Feb 2025 01:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740532624;
+	bh=/7QHcznAJAo2yO+ZPSdY6irpP6OfrWikh/lcuG95OFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p11TR35kWUbmfwGxMqGmTqthyQsbWbW+CFGBtI5o/Ob8QMYY1UnP4MtYbTKTKEsgH
+	 FDFsOntZsdBX+turZ9wTl0d7BkacQd12/dVNgMLSEEN3gR7PnN708BO79xgfKX7xcF
+	 NaDUpeRCaupQBQ5LxeXT8g733HGkQLnoeWp/vVaI8Op1fNZp3N7licTuG71KCl+UHG
+	 GYJrZHgyb1ZLvbHXTe2fqHiZBXVKL+hLpdg6EibLqVp8VJuQP/+x1BE4jNP97570D4
+	 KSCdGtnoxJZM89fuGrkrgS8Dl3yEE7vr6/zkF7fFe0qnwwkTW4qkWX5hEU7BhnBWf0
+	 VaX+E7EGN3F1g==
+Date: Wed, 26 Feb 2025 02:16:58 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <Z75riltJo0WvOsS5@cassiopeiae>
+References: <Z7xg8uArPlr2gQBU@pollux>
+ <Z7xh5bEyh_MII4WV@pollux>
+ <20250224184502.GA1599486@joelnvbox>
+ <Z70EcwNIX0KtWy36@cassiopeiae>
+ <2f062199-8d69-48a2-baa6-abb755479a16@nvidia.com>
+ <Z73rP4secPlUMIoS@cassiopeiae>
+ <20250225210228.GA1801922@joelnvbox>
+ <20250225225756.GA4959@nvidia.com>
+ <Z75WKSRlUVEqpysJ@cassiopeiae>
+ <20250226004916.GB4959@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCPR01MB10914:EE_|TY3PR01MB11771:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2c16b9d5-e7aa-48d3-3a64-08dd5602e3e4
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|376014|7416014|1800799024|52116014|366016|7053199007|38350700014;
-X-Microsoft-Antispam-Message-Info:
- =?us-ascii?Q?ZSb4NMpYNo49TkbgjefhWLPadjvt1IYBNGFKJSQ4m1CR5NoIi8ZtOzQ8qzQT?=
- =?us-ascii?Q?dtptFj7xjsuCu9hmDYpZpv0gAtRgLiciW2l60mBn8A25ESaltc6OV7u3xYlj?=
- =?us-ascii?Q?rFUMcJgpacn7ZiXQJO7ohfa+uICrwP6c/3p0Z3XP37cb4dlgFSPYGIhQt+1C?=
- =?us-ascii?Q?u43Vri46vB1TVc6kHRJyuMuLw0Y8/cEWseNaJ1HaAW1fEcOx2zTuM2a7FsBL?=
- =?us-ascii?Q?NXhZ5hwHxrigYAnbIrTvp/FAHtDT+F7J/r0bkCBqA3JSpJ1u3/RFnCCCxX0n?=
- =?us-ascii?Q?zjFHKDKSO3Jk7SX1op9o6/hu3ul39IFJL34UbBRd09fJjuZT+5XjTc1hkLh3?=
- =?us-ascii?Q?vIpXC3DUUIT9WXCLKhI2Hc5ifb0XnuYv6vB4+fty/lYj/WEGn464YPvN8W/G?=
- =?us-ascii?Q?TNnQLNiliTJx+KDaHUVTQ6DDvCGxtmH+CO6Z2cuXr3MohoNtIu0v/J9soxCJ?=
- =?us-ascii?Q?ircNDUDzLVwMM91H8ACIJG1hTHEBSnL5/wTEkeQCqDR6/dQVpLlm1dMLyrCu?=
- =?us-ascii?Q?tCmje4EhZmsVZ5wxhn4DW7jYmGQZXZffX2IGOt880mRD+nHPiuTQbhYCrTTp?=
- =?us-ascii?Q?74QkTOQPxYbhxyA156QS37ZgheivXvYI/mj3dIIOvYSHlcfaKzAAznKnGp+u?=
- =?us-ascii?Q?f2ondoN8v9b5pGYUpWto0BRjdgPQ/Jp3hAzTwSPJ53ODyfpMEyZ4So3LgJUG?=
- =?us-ascii?Q?8ufrpgwrW0O5Qt2W/CQZ1eV3PKUqOvDU+DISP18PK14Y+gPJjvFJe3WcQ300?=
- =?us-ascii?Q?r0pY5JVFzPMjDK1H3wrUCWOmnrlxK47PYnNENUMZkcyPXELhf4treGz0bkq5?=
- =?us-ascii?Q?t7kS2jfuaqQ8wUn01C01a/LLGohKz1XL7SkAysDmuKWztxiWSQlJMQz3S0pe?=
- =?us-ascii?Q?IxgdsAu1iQ7bkwAEaMdfxaNUO46bHzMB20RW6I5CeLFNXgSBLu7QQpkRM3hA?=
- =?us-ascii?Q?JFof30cf1CKFaM13h98Mq7XNnXq4Yp9yQDWW+mKo2DakSbsyJTbTM9I/gBqz?=
- =?us-ascii?Q?cIe63tSkMlO8RlSM/pyzSmVcZQ1Y4iG7ND6rmG4LllSTHHqQ42jvTLX1x4xx?=
- =?us-ascii?Q?jVWG4wmfxvUo3XRnS8RBowCMoWI0nF2V4Kak5XvZddHVP3rBiiIznw4XSYsw?=
- =?us-ascii?Q?WHbjjjj+SaD7dB14SnMst1/JDhsyVBxoTTQBWXjx126HgU56xDa3/ZVhU65P?=
- =?us-ascii?Q?HcWBFcPFkJ09GB3buuSRaxtESKgnw0yjjNhaSnfcXzYBATfLNnkDte1saRFF?=
- =?us-ascii?Q?F2jnd2A6R530rE+5dszANdsEzbvDSiHMvEaUY2vmRJ90x5ziFL0qp2o7GRZL?=
- =?us-ascii?Q?sVIGECdWcBPEhJiX1eujQhNh/uiumtWmMaExyXke/X1tYnVrqOKXhtmagsab?=
- =?us-ascii?Q?b6M4E7X9VprLaO59Gbs/B8HCd7XqKjC/8KN+BY/nEgZ6rmecuEPPvi1/iMe3?=
- =?us-ascii?Q?n84Pukxq/1Fv/gJJeywYADruer/FhXWv?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB10914.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(52116014)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?us-ascii?Q?a5a4x6IUj0J8GmI21pBOIUZ7/Qxilekt+a9wLDjnaDOad6zbXmNCGxzCQi1e?=
- =?us-ascii?Q?Oc/jn4zIL78NoDso6Hm+J9pw+MbLqDKcOc52X0il5y9wSGSB7ZNbtS7kv58l?=
- =?us-ascii?Q?brlWXkwwldQt+gGhQHWK9/seHcUu2dQSTKDBq/i/Bh3uwaCipaX+GA2GsF6K?=
- =?us-ascii?Q?gZvtv/dJyAIeE/FHLRwNtWcepv8YuHuCd6q8592x1KXLUOcL39cQ/Fvkaxvp?=
- =?us-ascii?Q?aaQbGVQmBXAkZ5Uflc3LAg2rTu+dR1wfZ/ZWtMLd+uPZxlXFD3YHXRRT2g9L?=
- =?us-ascii?Q?baAWT89RpMFPUVfNixNDkcl57WztcIyUh51PpnGsFazXpaJgCH+gAaC2L67t?=
- =?us-ascii?Q?bZmyN5zKOJB4gJC3mkd9g4GrSA3PNgKVW1gdAuUkrQke8rRaoMn4jUDPcCCk?=
- =?us-ascii?Q?ETqu8LwBg2uEFZFnzmr09JDLZ0Ai5Sfk6siiD/LmedbWpjdx2/vcTS4yrDqk?=
- =?us-ascii?Q?CmxOBeaAcIPIh8OGSZf7hGolr6LhIHg1Wj6hHsnFOufCtFLyd2ts0O6cR9fX?=
- =?us-ascii?Q?u/9H50hZvD4VHnvc6W5nfX+MS3+SY/47q93HcrlXEKbWxqWlkGrIsOwlvyrM?=
- =?us-ascii?Q?J0jLUVmmgcF6vp7pVXrwyKm16d7d9w4x4LkloDGG49ETGiAN0FTjd9Utnql8?=
- =?us-ascii?Q?242oZDf6S13GzX5XChGns0qGXQYqbBcW2g1nGEtRyVqPSK91uKHjoEMKhSZt?=
- =?us-ascii?Q?2kYGgyx+3eoTuUbJL16gYvA3hqW40RgTz1x4XypKmWK9SOghlcBy8g+JC0Ha?=
- =?us-ascii?Q?7aZJyWO7vUUmkLinR8sZDzZI7zvgazN4Rt3/YJkNotFuRc0chD524STAeTMZ?=
- =?us-ascii?Q?cmddnZGw65dkIYKR5tsJIHSZOWwOKhPzwE/REPtocKCqRIXyG8HARzr3TuCP?=
- =?us-ascii?Q?6UYAbcOZCkLDqB7Gs5TzO4M1ZuJzxam7Sfzud/bmaJZf85FJYfBCR82Ipltd?=
- =?us-ascii?Q?nwbfZkq3B86B4LF4JEgmeMm5yzBwG87jWYFxwNrGpbpS0uCat1/PqCp1juev?=
- =?us-ascii?Q?mFRk3HFzo6CGoPSlNI6AXep/JpFZp6sJRRvekiB+9iJzRWR0Fq/wCVdfUfGi?=
- =?us-ascii?Q?KeLeEuIvSowRdGZ2/18l/2FDcggdRMkNXtjr4KGPw32Tr4szaFUVrrrYZM7k?=
- =?us-ascii?Q?NCZHGZdX/CX5+yuTXXQoEy0HlpL5Q/o+gVXNtPC+e4guddIpUEc2LsdNU6uA?=
- =?us-ascii?Q?zqFGCwVbIMR2Y4VtYxFnm9xlz28wgS3u0sWgwUDsGn0k/OHlNo8kKuH8yQtW?=
- =?us-ascii?Q?dWaxPq/Bcs5WiQRQ2fXULyKbhAriWbi+nzJfgTSCxT9PGTh56IAOsluTAzVk?=
- =?us-ascii?Q?KNkohFliDzkSYnEPZufCgneUGxC3DazBfmEal8pC6XivoXG6uaLCKymovHOq?=
- =?us-ascii?Q?16DrNwX1dFcHdrzWFZwjZyRIXUrE0MAwjDtIFYy4DdqcIfG5GFAjK+33eEF4?=
- =?us-ascii?Q?6HrbEgVfximK4Uyh53oTZLyaIVYNylwYog6XXcirSCW2x4fza9zrEOWiYkrI?=
- =?us-ascii?Q?+WjYVErEEWsULJKnS6sUCgV38Ux+hd5d6iojHTEFijembvWNl9hVyt/DlRVw?=
- =?us-ascii?Q?kaa2SIBLD56srrEPFfrjMGr2RgoCrv0VYqZ/7hde0jy54dnHJMylpCsXCfsQ?=
- =?us-ascii?Q?48K33Fjaf4k5HJakSt6DHTQ=3D?=
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c16b9d5-e7aa-48d3-3a64-08dd5602e3e4
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB10914.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 01:14:17.1388
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bT7zs/K7zdnHUQa7CYoqndmUDlTxyWpq4h+VDVawOiC1ac/F4VS87vU145iCsldknQqQJaIA2p9VX0DlW9LMG8HB1td8g85RhhB1+NzMaDhkTi6r4KJ+uskMOyUO3k/9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11771
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226004916.GB4959@nvidia.com>
 
+On Tue, Feb 25, 2025 at 08:49:16PM -0400, Jason Gunthorpe wrote:
+> I'm pointing out the fundamental different in approachs. The typical
+> widely used pattern results in __device_release_driver() completing
+> with no concurrent driver code running.
 
-Hi Detlev
+Typically yes, but there are exceptions, such as DRM.
 
-Thank you for the testing.
+> 
+> DRM achieves this, in part, by using drm_dev_unplug().
 
-> I got same report from our test team. I'm now tring to solve it.
+No, DRM can have concurrent driver code running, which is why drm_dev_enter()
+returns whether the device is unplugged already, such that subsequent
+operations, (e.g. I/O) can be omitted.
 
-It seems our test team and your team are encounter same issues by different
-way, and it seems it happen if some kind of deffer issue happen (?).
+> 
+> The Rust approach ends up with __device_release_driver() completing
+> and leaving driver code still running in other threads.
 
-> That being said, I'm not sure I completely understand why that extra line fixes 
-> the issue. Is the __free() attribute smart enough to know that the pointer has 
-> been copied and not free it at the end of scope ?
+No, this has nothing to do with Rust device / driver or I/O abstractions.
 
-__free(device_node) attribute will automatically calls of_node_put() when it
-lost the scope. By below patch, graph_util_parse_dai() will use
-__free(device_node) and thus dlc->of_node counter was not increased.
+It entirely depends on the driver you implement. If you register a DRM device,
+then yes, there may be concurrent driver code running after
+__device_release_driver() completes. But this is specific to the DRM
+implementation, *not* to Rust.
 
-	419d1918105e5d9926ab02f1f834bb416dc76f65
-	("ASoC: simple-card-utils: use __free(device_node) for device node")
+Again, the reason a pci::Bar needs to be revocable in Rust is that we can't have
+the driver potentially keep the pci::Bar alive (or even access it) after the
+device is unbound.
 
-In such situation, if some kind of deffer issue happened, xxx-card probe()
-will failed and calls simple_util_clean_reference(). It calls of_node_put()
-for each dlc->of_node, but above one was already called of_node_put() via
-__free(device_node). So you encounter the error.
+A driver can also be unbound without the module being removed, and if the driver
+would be able to keep the pci::Bar alive, it would mean that the resource region
+is not freed and the MMIO mapping is not unmapped, because the resource region
+and the MMIO mapping is bound to the lifetime of the pci::Bar object. This would
+not be acceptable for a Rust driver.
 
-I'm not 100% sure why dabbd325b2 commit removed the issue, but I think
-it is just luck, I think.
-
-Thank you for your test !!
-I will post the patch with below tag if our test team could confirm it.
-
-	Tested-by: Detlev Casanova <detlev.casanova@collabora.com>
-
-Best regards
----
-Kuninori Morimoto
+That this also comes in handy for subsystems like DRM, where we could have
+attempts to access to the pci::Bar object after the device is unbound by design,
+can be seen as a nice side effect.
