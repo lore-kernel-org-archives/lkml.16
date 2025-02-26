@@ -1,111 +1,96 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38F524E00E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6FD425C6E9;
+	Wed, 26 Feb 2025 10:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567358; cv=none; b=KPG6CrSUXkP8cYRhio+LGEfxA3drQkYXRFEb1xGo9aH+awqLL36gx/SxtjZT8USIiUBhkh5MTk14QhyGWxPr7GXSeNAn+ZRyxKOLn0ozgAwf83q0mKnnkqvcSc0UMprhx6VoSEvETyHhtJ9bKvh4g1pxCWylM7ViU2RWNBX+tP4=
+	t=1740567359; cv=none; b=Mr+Rtdnt+5ulrJkxXBtiYYWhLxo3IvunFb4OzGxtOHUxrSxRW6YKDd+jZ8ctlWQJWYzoY3Ctggn2R8mjsNgi2QR6TmWvzPzibIvFR+pgnH3qFczgEe5EWEB5IdBe6FpOYi3zbXUpTGr4xAXoK2HX9Uhh/Zn4hp4xQEM+xhQ3YwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740567358; c=relaxed/simple;
-	bh=hw4n8uJE0LcLADDBnJlFqcuib42uD/ho8CDkJ6P0W60=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fADUHnl1LSdafepuhHEkhO68P+lF+TqG+DtCHXS4P63HEAJtI/WYvs0oNa/ymLBmwy7Y133Oc44TFKu014+wf9b1dUm+ZRmNmP9XSw5pHHL31W5fIaM2uybBO7kLvqYw8W1n2cYxue5/K2Du9sVBnvtODIYkCfYuCvIguBeRFOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YcUOE5w5; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740567359; c=relaxed/simple;
+	bh=ZU+ZyR4aLY3x0j3q2rbfwoqtx+ltymMrrVIRBW7+YG4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbR4br/v5gVH4+HGlgsDHVm7nXIQejL9gs9p/ghzRl2bIn2Awy7CGI/0uP9ZyLhnNarCQ4VCECWv8aczl95TQeGsEPYHwpyG4q5MjbND08Zwwzn/vYAomVcxaI+kxjJkL+EAdFa3vBeA32xL0iyktvnXX9euScsxeidDbDmxly4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UQEAK98a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YcUOE5w5"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QAjN2r1525492
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 04:45:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740566723;
-	bh=sjX+tO2Pkybis8N/p9WpJQ8YymWnX6z/Zza9cSgrmoc=;
-	h=From:To:CC:Subject:Date;
-	b=YcUOE5w5qKcTrnKoP7Up9bzMlwYEtkiQBaR2vB/iRa59e0vTsmjT27bvFTFuI/NRV
-	 4FLc5Uu9eYke/d+3c0d26geY+qRJm4Ljc/6aMYJrUlpgajaKMgNe0tk7AiRe+8sPNT
-	 S+qsR6i117OMzkBzw3nhIZ43kQ7V0bSTMknClct4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QAjNxg024798
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 04:45:23 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 04:45:22 -0600
-Received: from fllvsmtp7.itg.ti.com (10.64.40.31) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 04:45:23 -0600
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by fllvsmtp7.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QAjNrv075701;
-	Wed, 26 Feb 2025 04:45:23 -0600
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 51QAjMY3014137;
-	Wed, 26 Feb 2025 04:45:22 -0600
-From: Meghana Malladi <m-malladi@ti.com>
-To: Vignesh Raghavendra <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>
-CC: <elinor.montmasson@savoirfairelinux.com>, <javier.carrasco@wolfvision.net>,
-        <ebiggers@google.com>, <biju.das.jz@bp.renesas.com>,
-        <quic_tdas@quicinc.com>, <nfraprado@collabora.com>, <arnd@arndb.de>,
-        <dmitry.baryshkov@linaro.org>, <krzysztof.kozlowski@linaro.org>,
-        <geert+renesas@glider.be>, <quic_bjorande@quicinc.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
-        <m-malladi@ti.com>, Ravi Gunasekaran <r-gunasekaran@ti.com>
-Subject: [PATCH v2] arm64: defconfig: Enable HSR driver
-Date: Wed, 26 Feb 2025 16:15:17 +0530
-Message-ID: <20250226104517.1746190-1-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UQEAK98a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6A38C4CED6;
+	Wed, 26 Feb 2025 10:55:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740567358;
+	bh=ZU+ZyR4aLY3x0j3q2rbfwoqtx+ltymMrrVIRBW7+YG4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UQEAK98a9QsxVuUm4D+p3xKTQ8MVebjyVtb1s6tWkACMs3hlnKv6+T31miCwY1kIh
+	 PiTr1b7Lp89NngG+P0fdlzGCOqhrhC42qtV9ht2jvSv+5HrlLNIxw3w8Hp8gSnZEZg
+	 6DGna/DFkja7qjtlQMZ/HX/Lmo1fw2QrjCIU3IySKHQu8OA/XOu/X3M6QHeT5tjq7z
+	 UDZLDkLgf01Gk6ww34mSoQfEE8Nz3MA5Cpfq9oWS/sI620jNtMi9BjuVoTr8PRN9NE
+	 mp7g4AADraboKmZA5ICnooX09Dtv/aYuRc7WPHpp34SbtsH94KcmRzZbl5fmbeWJvE
+	 4TEzhlXjD9qug==
+Date: Wed, 26 Feb 2025 11:55:48 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-tip-commits@vger.kernel.org,
+	kernel test robot <oliver.sang@intel.com>, x86@kernel.org
+Subject: Re: [tip: x86/mm] x86/mm: Clear _PAGE_DIRTY when we clear _PAGE_RW
+Message-ID: <Z77zNK7mRdjwILL7@gmail.com>
+References: <174051422675.10177.13226545170101706336.tip-bot2@tip-bot2>
+ <CAHk-=whfkWMkQOVMCxqcJ6+GWdSZTLcyDUmSRCVHV4BtbwDrHA@mail.gmail.com>
+ <Z76APkysrjgHjgR2@casper.infradead.org>
+ <CAHk-=wj+VBV5kBMfXYNOb+aLt3WJqMKFT0wU=KaV3R12NvN5TA@mail.gmail.com>
+ <Z76R6ESSwiYipQVn@casper.infradead.org>
+ <CAHk-=whS1uq_4hEgkZJogv_HMhe_PJ-RyMs6E303_Pa+W0zx0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whS1uq_4hEgkZJogv_HMhe_PJ-RyMs6E303_Pa+W0zx0A@mail.gmail.com>
 
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
 
-HSR is a redundancy protocol that can be realized with any
-two port ethernet controller.
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Many of TI's K3 SoCs support multi port ethernet controller.
-So enable HSR driver inorder to support this protocol on
-such SoCs.
+> On Tue, 25 Feb 2025 at 20:00, Matthew Wilcox <willy@infradead.org> wrote:
+> >
+> > I think the entire point of this file is to manipulate kernel mappings.
+> 
+> Very likely. But just looking at the patch, it was very non-obvious.
 
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
----
+Yeah, agreed - and I've extended the changelog the following way:
 
-v1: https://lore.kernel.org/all/20240419060013.14909-1-r-gunasekaran@ti.com/
+  Subject: [PATCH] x86/mm: Clear _PAGE_DIRTY for kernel mappings when we clear _PAGE_RW
+  
+  The bit pattern of _PAGE_DIRTY set and _PAGE_RW clear is used to mark 
+  shadow stacks.  This is currently checked for in mk_pte() but not 
+  pfn_pte().  If we add the check to pfn_pte(), it catches vfree() 
+  calling set_direct_map_invalid_noflush() which calls 
+  __change_page_attr() which loads the old protection bits from the 
+  PTE, clears the specified bits and uses pfn_pte() to construct the 
+  new PTE.
+  
+  We should, therefore, for kernel mappings, clear the _PAGE_DIRTY bit 
+  consistently whenever we clear _PAGE_RW.  I opted to do it in the 
+  callers in case we want to use __change_page_attr() to create shadow 
+  stacks inside the kernel at some point in the future.  Arguably, we 
+  might also want to clear _PAGE_ACCESSED here.
+  
+  Note that the 3 functions involved:
+  
+    __set_pages_np()
+    kernel_map_pages_in_pgd()
+    kernel_unmap_pages_in_pgd()
+  
+  Only ever manipulate non-swappable kernel mappings, so maintaining 
+  the DIRTY:1|RW:0 special pattern for shadow stacks and DIRTY:0 
+  pattern for non-shadow-stack entries can be maintained consistently 
+  and doesn't result in the unintended clearing of a live dirty bit 
+  that could corrupt (destroy) dirty bit information for user mappings.
 
-v2-v1:
-- Rebase to the latest tip
-- Included TI specific maintainers in 'to'
+Is this explanation better?
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c3df5120b23d..f3afc0ec68f0 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -177,6 +177,7 @@ CONFIG_NET_CLS_FLOWER=m
- CONFIG_NET_CLS_ACT=y
- CONFIG_NET_ACT_GACT=m
- CONFIG_NET_ACT_MIRRED=m
-+CONFIG_HSR=m
- CONFIG_NET_ACT_GATE=m
- CONFIG_QRTR_SMD=m
- CONFIG_QRTR_TUN=m
-
-base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
--- 
-2.43.0
-
+	Ingo
