@@ -1,134 +1,158 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C5922157E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502942236FC;
+	Wed, 26 Feb 2025 15:24:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583376; cv=none; b=FFKi0OS5qlaIxIcJC/WlCbvh1HXOhKxfKV1jjFCFpgT/9aS89OKV1audwena4JW95pfT7yf+OHJ5RkwVktEsbpCA76mB/jxNvmOWlvDX2hGjajsI36GuvrC6YOqvQ4JgAyp2v9mjqt1bo14PWIAKDP0RUf+cMuOrA4PnoDinyvQ=
+	t=1740583483; cv=none; b=HvHeS2AdAdOmStLbsUQpVdb89OWrXutkIRC6l/HkIo3WFfM2Tmf0/lBzrU1aqZ/09LxIWAVGJgLISjFPIoo9x1Rt77PpCc+QhH4alH+Ntvz7MU4zANTkp9Kr4CEglxTup0BK4E915PzC2gGvRRPnKd1eGbwGqF429Y4ss5z+Shk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583376; c=relaxed/simple;
-	bh=qXUkSBWqIXjyHNE+1PdUrwHzhW39aWdQa5SBkLY+AQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QVk+4/jzKJfo6qQ1vZJMGN3moA2RHmlNRGC30ITWcbljFlkk6BVdl+7hsZ9tvEcxiilOtpZqxvlaIRHluhPUKnqbAXDDAxJ62RLAtMWgloXu9azD1MYx9CGq5xVvjRtrjtCtfOf/0estOfU/jo2b3sZ8QNrVwiF2OULnTS46dTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=L1sM9q/X; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1740583483; c=relaxed/simple;
+	bh=3/PfVD/S0beWYFNeAotOPd40DSLrT6WAE68cwuy4Z/4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dDFCM0tcVkoXbonjZ8YcebWXz1xTqnuzLQ2hQvRDj6g7HcNeKkmOzOMXAskwD3k1PMLtKusfP4krYB+QcqVL+0VFM2Hmlf2bMVQpHgwT+Crha+6TetFXTCdryO/WEESiO1xyEe6toZ5KKjNXwOZsbrxbrhS9HrlH8QrcQJtcH2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ims9Rm9e; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="L1sM9q/X"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-855923e7f53so489798039f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:22:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ims9Rm9e"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4399d14334aso61126405e9.0;
+        Wed, 26 Feb 2025 07:24:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1740583373; x=1741188173; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zJcEK4sOf8nkoSH+sJw+bKRznJ9CM5hAQnbFbGBpuK0=;
-        b=L1sM9q/XuizxVua0lIcokcExSjDg1lBMDID/FGvwvGDPN2zdSIc/v6aL/nUr4ViIHj
-         NuTmuE4bEZoD5omXIW7q1G8yXirK79ayNpOGRaubmQacR42H40koVrQE6Rdkj9as+rD3
-         OpeSs3163tSqtXJVsMwlcOdyykLax+kmdskmqquD8DRziAM/FPFmq7MhrdNVbxUPDIvH
-         hezrfi5KC9Xh8J7VpPKAWeVd3WvDfZHTTM1temTovibLafqnFyLm1ztnYA8XGbtxgcgi
-         PTWyWQ2KU2pLQRFQDFi/jrglkW/XXIR1v2iqNf3qDXkvQi1PYBAv1Vj0OS11INUYvX2M
-         bETA==
+        d=gmail.com; s=20230601; t=1740583479; x=1741188279; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hsuCvPIYOZxMSn5nKFFEtm5mHOuqFxBxK/9CbbLtirI=;
+        b=Ims9Rm9eossstZC7XUZwLgl5/Qpf0CgvkKrY53U9ee7W1KiX6wyNXPNAbtSUChKpRj
+         vUFkXM0m6HFMhP5M6GGyRWc6hXlnpd1pQ6le++fZroyjF8l2deoTPeNkMM9xEU2jT7IQ
+         u2rSYh9kviIPZW3JeuC5vfffAaql9yjG4pDa+ctjCr4ZXzBd4vt7G3m+HAUUmkl0hJla
+         ipGQ7nmw2YHnCINgnZ08xxjGH2YqJYZslVTNx6OMZAP5ZJcMwwJvwMmzSD2khPYKCxRW
+         1V5rZIyw3+sYwAH4feGE7nR+/nKwVZZb6pezUtiuPCu/PZzMlpUnJC2T8V3oyz+wJJ6T
+         WkRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740583373; x=1741188173;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zJcEK4sOf8nkoSH+sJw+bKRznJ9CM5hAQnbFbGBpuK0=;
-        b=Z5JiXLxbhhD1yzq3NEm8moF5b13ZdZLoUY/qVu6hlBqyAe24cVtDSKsbLd1mrdVUv2
-         VhSl3182o/gkRcTHmEMir3LffCME27OUEujhhqPTomrFt/GPh3mo+NGranKm7nAa+iz4
-         UUhreWMOtuzvDQnnPXWXqOLtaUcSZZ8iryjpKw8dsv0w/zohF6QVvYx6ptUE/j8p1AE/
-         cLCeK0NrJqmxrg+mlobhTX7Erwa9Y7i4ZVR3V5+LkODEDp8nogf6yHmzq5B8dyI/hCCg
-         ycDKFsgszty7f3wn4s0sjNWOTnBEmgiOTPNkydD53Oz7jxmcA5/rruXJhYRT6bhpb9ml
-         rWtg==
-X-Gm-Message-State: AOJu0Yz+j8k6nIYLp/y+J7TbZ7SX9+t2uUdowJFvypFI8QftUhtyUGBZ
-	e7h0lCrrWgoKKVsj1yUV6aMwCVbVWwVmPgKjumpBj+zj6qjlVkY/cSqceZGEI0Y=
-X-Gm-Gg: ASbGnctMS5V7It1oLKK0D7F+CUrUIoO8RcT1CVnA2l8h56Wy+GWclYgYrGuaHt/xF0H
-	/YKfvM+XgI0+joB8dj2X82dqizGaNIH3wPSXDrG/VJtG1Ggmbdsjg/jEdtYjApPXR1kxywHkj4G
-	wqagJ+RswzTM/Hf57pZ0qxjcfukRbQdAyRNPDzDgxrj/Qr8mogEaTlZrPDYzdjGJr1ytxyPYb9U
-	/iiCHcWJOgFo+RGVzORXGC9lzhUgh4rcqfyouEem0GcdMOnVDRE/6nbV/W9y93vx173W+edKR2o
-	IdtatICn9rxCUK7itL/VVJ7zEeUQM40gVod/cegM+9nVlmPZpQ==
-X-Google-Smtp-Source: AGHT+IH3JGSazN4a7DLB5z3B9JItdUDgi5/0Ituv+SUpjy9S1mPfOmAWS57i2QTwFrEPGyFnUtPTMA==
-X-Received: by 2002:a05:6602:1693:b0:855:c476:8b95 with SMTP id ca18e2360f4ac-856203c36b3mr919158839f.12.1740583373401;
-        Wed, 26 Feb 2025 07:22:53 -0800 (PST)
-Received: from [100.64.0.1] ([165.188.116.9])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f04753070esm941666173.120.2025.02.26.07.22.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 07:22:53 -0800 (PST)
-Message-ID: <60900b42-298c-4b9f-86cf-af31aa5a02d3@sifive.com>
-Date: Wed, 26 Feb 2025 09:22:51 -0600
+        d=1e100.net; s=20230601; t=1740583479; x=1741188279;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hsuCvPIYOZxMSn5nKFFEtm5mHOuqFxBxK/9CbbLtirI=;
+        b=IdbtgEcF2CMupQ27FbTqiCxmbQETitNZuYH080Ejt2+iZvkjz+kDok1RbHnvi8RJLP
+         vo9mocBcD61kXaUTxRgEUuRJDoz86qu8tgO/dIFx3LCjK7mG0tqTwrEw8qSZ/hywm3iv
+         vtxL9aU0RauHQyxqhOcPTGABs7AZyEptyOtDMSIleyU1ZqMKqnuRraIQrgNccoeOrUiu
+         /jzSJIYvn0ivacYk6VjtRdhMcmcg+SjO5cFHO5mZObEUCXnkVqsfRlTHriXo7amrmuI1
+         78aKtsKyQjd73iRTUwEkybKiBykgQM4mfcKgEuy7/t16O6mGwJ6+QAZpa4gW4FwjHvIU
+         LIvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhAQW6pXibSMhNRTomZn2RNeIUymLykBWtiIUiL8wF7GMXXXMhvpktcQmOw2QvrbVm8NByina8uFFVFJOr@vger.kernel.org, AJvYcCVy6TMBp73UcretsHRUHy0V6lAI11VF/H01M/92TImKFDfxxvQUyNVHOtBoK1Chfi6mMuGr6za+eHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqRNdP/VHl+g+inZMm9IV7vgCdjNkTYhaklsugaKPDkXtj6L+8
+	DIOX2ArO+5dcTeoAAm3p8OLvz6AR+6QMwM8fw2JkXiceXHRSXBbBAaoPCasI6HB1DwcncSnN6hm
+	lbVyJysfQMBQEYW1Rkh3eRh5k5jA=
+X-Gm-Gg: ASbGncs8CFaHs5TuPUUlaavT3bIjCUwT+iqYQbgWhVMb29zpL2LEYQuIMkTigBdFXj0
+	py9hw44tArRgo7miEvH7pzKpT2G4yys6vUTNDOT5BnalLarlJIfaSSI+N9BLc/lpSOQvbje5g2m
+	0migWXimPhqA==
+X-Google-Smtp-Source: AGHT+IHrvicEAjuDRUywYtjbdluORS9DbtcVPJQWBJkKvDDRVQNrfEoh71Lo3le8ngVV4cTzym1PeNRSV0ffNMSQYUc=
+X-Received: by 2002:a05:600c:3548:b0:439:8a44:1e68 with SMTP id
+ 5b1f17b1804b1-43ab9046de3mr32060425e9.28.1740583479193; Wed, 26 Feb 2025
+ 07:24:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6] riscv: Relocatable NOMMU kernels
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
- akpm@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
- alexghiti@rivosinc.com
-References: <mhng-25ab7f97-42b6-40a8-b96d-d387cbf54ad1@palmer-ri-x1c9>
-From: Samuel Holland <samuel.holland@sifive.com>
-Content-Language: en-US
-In-Reply-To: <mhng-25ab7f97-42b6-40a8-b96d-d387cbf54ad1@palmer-ri-x1c9>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+ <2a2f08bc8118b369610d34e4d190a879d44f76b8.1739866028.git.maciej.wieczor-retman@intel.com>
+ <CA+fCnZdtJj7VcEJfsjkjr3UhmkcKS25SEPTs=dB9k3cEFvfX2g@mail.gmail.com>
+ <lcbigfjrgkckybimqx6cjoogon7nwyztv2tbet62wxbkm7hsyr@nyssicid3kwb>
+ <CA+fCnZcOjyFrT7HKeSEvAEW05h8dFPMJKMB=PC_11h2W6g5eMw@mail.gmail.com>
+ <uov3nar7yt7p3gb76mrmtw6fjfbxm5nmurn3hl72bkz6qwsfmv@ztvxz235oggw>
+ <CA+fCnZcsg13eoaDJpueZ=erWjosgLDeTrjXVaifA305qAFEYDQ@mail.gmail.com> <ffr673gcremzfvcmjnt5qigfjfkrgchipgungjgnzqnf6kc7y6@n4kdu7nxoaw4>
+In-Reply-To: <ffr673gcremzfvcmjnt5qigfjfkrgchipgungjgnzqnf6kc7y6@n4kdu7nxoaw4>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Wed, 26 Feb 2025 16:24:28 +0100
+X-Gm-Features: AQ5f1Jpqwg1oQbqitjHoWgohREHEbfWOkzeGk2nGzOh9RmhEEI44EKvWgfDP0bM
+Message-ID: <CA+fCnZejp4YKT0-9Ak_8kauXDg5MsTLy0CVNQzzvtP29rqQ6Bw@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] x86: runtime_const used for KASAN_SHADOW_END
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>, Florian Mayer <fmayer@google.com>, 
+	Vitaly Buka <vitalybuka@google.com>
+Cc: kees@kernel.org, julian.stecklina@cyberus-technology.de, 
+	kevinloughlin@google.com, peterz@infradead.org, tglx@linutronix.de, 
+	justinstitt@google.com, catalin.marinas@arm.com, wangkefeng.wang@huawei.com, 
+	bhe@redhat.com, ryabinin.a.a@gmail.com, kirill.shutemov@linux.intel.com, 
+	will@kernel.org, ardb@kernel.org, jason.andryuk@amd.com, 
+	dave.hansen@linux.intel.com, pasha.tatashin@soleen.com, 
+	ndesaulniers@google.com, guoweikang.kernel@gmail.com, dwmw@amazon.co.uk, 
+	mark.rutland@arm.com, broonie@kernel.org, apopple@nvidia.com, bp@alien8.de, 
+	rppt@kernel.org, kaleshsingh@google.com, richard.weiyang@gmail.com, 
+	luto@kernel.org, glider@google.com, pankaj.gupta@amd.com, 
+	pawan.kumar.gupta@linux.intel.com, kuan-ying.lee@canonical.com, 
+	tony.luck@intel.com, tj@kernel.org, jgross@suse.com, dvyukov@google.com, 
+	baohua@kernel.org, samuel.holland@sifive.com, dennis@kernel.org, 
+	akpm@linux-foundation.org, thomas.weissschuh@linutronix.de, surenb@google.com, 
+	kbingham@kernel.org, ankita@nvidia.com, nathan@kernel.org, ziy@nvidia.com, 
+	xin@zytor.com, rafael.j.wysocki@intel.com, andriy.shevchenko@linux.intel.com, 
+	cl@linux.com, jhubbard@nvidia.com, hpa@zytor.com, 
+	scott@os.amperecomputing.com, david@redhat.com, jan.kiszka@siemens.com, 
+	vincenzo.frascino@arm.com, corbet@lwn.net, maz@kernel.org, mingo@redhat.com, 
+	arnd@arndb.de, ytcoode@gmail.com, xur@google.com, morbo@google.com, 
+	thiago.bauermann@linaro.org, linux-doc@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-mm@kvack.org, 
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Palmer,
+On Wed, Feb 26, 2025 at 12:53=E2=80=AFPM Maciej Wieczor-Retman
+<maciej.wieczor-retman@intel.com> wrote:
+>
+> After adding
+>         kasan_params +=3D hwasan-instrument-with-calls=3D0
+> to Makefile.kasan just under
+>         kasan_params +=3D hwasan-mapping-offset=3D$(KASAN_SHADOW_OFFSET)
+> inline works properly in x86. I looked into assembly and before there wer=
+e just
+> calls to __hwasan_load/store. After adding the the
+> hwasan-instrument-with-calls=3D0 I can see no calls and the KASAN offset =
+is now
+> inlined, plus all functions that were previously instrumented now have th=
+e
+> kasan_check_range inlined in them.
+>
+> My LLVM investigation lead me to
+>         bool shouldInstrumentWithCalls(const Triple &TargetTriple) {
+>           return optOr(ClInstrumentWithCalls, TargetTriple.getArch() =3D=
+=3D Triple::x86_64);
+>         }
+> which I assume defaults to "1" on x86? So even with inline mode it doesn'=
+t care
+> and still does an outline version.
 
-On 2025-02-13 8:17 AM, Palmer Dabbelt wrote:
-> On Sat, 26 Oct 2024 10:13:52 PDT (-0700), samuel.holland@sifive.com wrote:
->> Currently, RISC-V NOMMU kernels are linked at CONFIG_PAGE_OFFSET, and
->> since they are not relocatable, must be loaded at this address as well.
->> CONFIG_PAGE_OFFSET is not a user-visible Kconfig option, so its value is
->> not obvious, and users must patch the kernel source if they want to load
->> it at a different address.
->>
->> Make NOMMU kernels more portable by making them relocatable by default.
->> This allows a single kernel binary to work when loaded at any address.
->>
->>
->> Samuel Holland (6):
->>   riscv: Remove duplicate CONFIG_PAGE_OFFSET definition
->>   riscv: Allow NOMMU kernels to access all of RAM
->>   riscv: Support CONFIG_RELOCATABLE on NOMMU
->>   asm-generic: Always define Elf_Rel and Elf_Rela
->>   riscv: Support CONFIG_RELOCATABLE on riscv32
->>   riscv: Remove CONFIG_PAGE_OFFSET
->>
->>  arch/riscv/Kconfig               | 10 +---
->>  arch/riscv/Makefile              |  1 -
->>  arch/riscv/include/asm/page.h    | 27 ++++-----
->>  arch/riscv/include/asm/pgtable.h |  6 +-
->>  arch/riscv/mm/init.c             | 97 ++++++++++++++++----------------
->>  include/asm-generic/module.h     |  8 ---
->>  6 files changed, 68 insertions(+), 81 deletions(-)
-> 
-> I'm getting some build failures
-> 
-> riscv64-unknown-linux-gnu-ld: arch/riscv/errata/sifive/errata.o: relocation
-> R_RISCV_HI20 against `tlb_flush_all_threshold' can not be used when making a
-> shared object; recompile with -fPIC
-> riscv64-unknown-linux-gnu-ld: arch/riscv/errata/thead/errata.o: relocation
-> R_RISCV_HI20 against `riscv_cbom_block_size' can not be used when making a
-> shared object; recompile with -fPIC
+Ah, indeed. Weird discrepancy between x86 and arm.
 
-What toolchain and config do you see failures with? I have tried building this
-series on top of v6.14-rc4 with GCC 14.2.1 and
- * defconfig
- * defconfig + NOMMU + S-mode
- * defconfig + NOMMU + M-mode
- * defconfig + 32-bit
- * defconfig + 32-bit + NOMMU + S-mode
- * defconfig + 32-bit + NOMMU + M-Mode
- * nommu_k210_defconfig
- * nommu_k210_sdcard_defconfig
- * nommu_virt_defconfig
-and all succeed.
+Florian, Vitaly, do you recall why this was implemented like this?
 
-Regards,
-Samuel
+To account for this, let's then set hwasan-instrument-with-calls=3D0
+when CONFIG_KASAN_INLINE is enabled. And also please add a comment
+explaining why this is done.
 
+[...]
+
+> >What do you mean by "The alignment doesn't fit the shadow memory size"?
+>
+> Maybe that's the wrong way to put it. I meant that KASAN_SHADOW_END and
+> KASAN_SHADOW_END aren't aligned to the size of shadow memory.
+
+I see. And the negative side-effect of this would be that we'll need
+extra page table entries to describe the shadow region?
+
+[...]
+
+> I think this was a false alarm, sorry. I asked Kirill about turning
+> pgtable_l5_enabled() into a runtime_const value but it turns out it's alr=
+eady
+> patched by alternative code during boot. I just saw a bunch more stuff th=
+ere
+> because I was looking at the assembly output and the code isn't patched t=
+here
+> yet.
+
+Great!
