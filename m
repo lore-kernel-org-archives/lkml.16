@@ -1,47 +1,47 @@
 Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AD822259C;
-	Wed, 26 Feb 2025 15:32:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B4F223324;
+	Wed, 26 Feb 2025 15:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583923; cv=none; b=jFsWoGjIdfQDr+Gt+EhNhtaJ4S6j4vN/2W7zi5EtqYK2xiYigheDnutgLGqaX84fP1K5sEba72D5r4/QLZM09rDmIvEHfIhMrfwarkf+xlJA1MvpmRNtFm1p2jjRziq4hxA/T4Ht3aJiEo9PxkUSaeB+SrSLiGkq0e5COA0PAuc=
+	t=1740583923; cv=none; b=CVEIF3BiR5PejpCUCA5+dROZM3q0qWPdeQcRPChsp1csALAdNIF7SSPEthURQsOAOm3fij4S93VAqIkyADTFuqndOckfHPDoCczMrLHcqqRJKQJtJ2SD9b0Sn1Ne864hAOxD9iuqyzRKWftBBocdJ/bWy6S9ZkONGkJ3sS5WmB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740583923; c=relaxed/simple;
-	bh=mX1Ef/ro9gNsbQOiYPM49ljjKAuRYbPh+mOcDi0rO/U=;
+	bh=xSTOWQz7w7PTjO8l0/0h8UX6goqy09fm7ackPwmZWMc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sBb6Lrm3knvw81nD2rBiVQku2Iyvev6QoqSvoNwZ1v8kJGXhrahhwBJcLw7vdPmUgBGzmgEY7GhUmkWgj0uf41FwL6wWUGiWevNjhiNVJl2t7vIpssBx9PUDERUVRc90rTbAwIh9LmYZsF3UtMZq3OGCEXfuqih2xvUu81Ayu8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mVOQ9Ss4; arc=none smtp.client-ip=67.231.152.168
+	 MIME-Version:Content-Type; b=omttBgUL/Pz5J4B8acJML74UU54RGZfc85D8pg3NEu0YLcHTxJim2P3vIeZqtAO69oFmcOq20M6Qu84oDcfWUkiKNMekSja0q/JhpDgCqo0lRoXaGqhIqZjeQP1yO2w+2nnvOZQ6oVB6Rwy40L07mzaOQvlfSMNJBnw01L4XeG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=XG+/NUhs; arc=none smtp.client-ip=67.231.152.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mVOQ9Ss4"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="XG+/NUhs"
 Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFIYLk001993;
-	Wed, 26 Feb 2025 09:31:41 -0600
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFIYLm001993;
+	Wed, 26 Feb 2025 09:31:42 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=ODRQrKEQ2CWaEfNEpD7LDwWk9Td86Aqzt95iMZ2VidM=; b=
-	mVOQ9Ss4a49wgVy5ULMC6TGrCchg5N0LTjvs0Yet1HZIAM11gongS42ylXU0RD32
-	yIpW/KKMtsOkaSX6d2pSO2ebJtk2sAqucO1C0QqxHRoRVmsOGqYbc6L+HdfkaFCh
-	RPQhl+NgvvxqwWjmICBDAkLxGvQcfvcGsr4z2YCZ4EEKnlw/a1JY2nRt6srbYQsy
-	3WxJfnkJNNZmrg+GTnh4wYsdcoHI7Yj6rsKK7y1oxQMmOnlqDgBO//hmlnO6b1hh
-	F/4hx2xM0EnQEc3vqY4gUaXRl14QD91FjJxCa2dM0J2BOWREvM6qN/so8WKpzkX+
-	Hbifb0DPyUntYT5lw6WkAA==
+	PODMain02222019; bh=OMNTumwjkDvIVUDIPTygYbbQiYLiFDUJ7kkZjWOANU8=; b=
+	XG+/NUhsWzFFUmHtimfkq7MyK/3Man0s36qtngd4SGfR5d0nbPX9ZZ0jfmhQmjO7
+	KtcTueOTr2F3/SM7IcmSgaWp53ayuxj4mJ9adDL2sBzAdHfaA4gOXd072aJ++XtE
+	XM3bI9qEO2ld8kg52TwbqBh0EhmHY6VEwi471k8/QNJiBSG7eYF1JbIIiT2SPW4N
+	gPlXaYyAmLLM84hKlt1wtGP7TE02ztGjLW1+yLpQ+N1Y3IfxhAYtjxladvBsAONO
+	ntaywogMLJ6TVyPaH7ZXfa0mpwACIeHOe4HrgNRgKwqlqfFs3QTKapJyeGLea2sa
+	2G0bSvkNkPnTVvzDhq38fA==
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 451pspsr13-4
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 451pspsr13-6
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 09:31:40 -0600 (CST)
+	Wed, 26 Feb 2025 09:31:42 -0600 (CST)
 Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 26 Feb
- 2025 15:31:37 +0000
+ 2025 15:31:38 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 26 Feb 2025 15:31:37 +0000
+ 15.2.1544.14 via Frontend Transport; Wed, 26 Feb 2025 15:31:38 +0000
 Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id C71E782025A;
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id E8C86820270;
 	Wed, 26 Feb 2025 15:31:37 +0000 (UTC)
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
 To: <broonie@kernel.org>
@@ -51,9 +51,9 @@ CC: <lgirdwood@gmail.com>, <peda@axentia.se>, <andrei.simion@microchip.com>,
         <baojun.xu@ti.com>, <srinivas.kandagatla@linaro.org>,
         <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <patches@opensource.cirrus.com>
-Subject: [PATCH 06/12] ASoC: wm9713: Use SOC_DOUBLE_EXT() helper macro
-Date: Wed, 26 Feb 2025 15:31:31 +0000
-Message-ID: <20250226153137.2791938-7-ckeepax@opensource.cirrus.com>
+Subject: [PATCH 08/12] ASoC: atmel: tse850-pcm5142: Use SOC_SINGLE_EXT() helper macro
+Date: Wed, 26 Feb 2025 15:31:33 +0000
+Message-ID: <20250226153137.2791938-9-ckeepax@opensource.cirrus.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250226153137.2791938-1-ckeepax@opensource.cirrus.com>
 References: <20250226153137.2791938-1-ckeepax@opensource.cirrus.com>
@@ -65,39 +65,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-GUID: qPMFKWqrY4CfVLZT7lwUDST-EHKRGEbF
-X-Proofpoint-ORIG-GUID: qPMFKWqrY4CfVLZT7lwUDST-EHKRGEbF
-X-Authority-Analysis: v=2.4 cv=U8ZoDfru c=1 sm=1 tr=0 ts=67bf33dc cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=PzMjCjVtb1Ub-jEo5JkA:9 a=YXXWInSmI4Sqt1AkVdoW:22
+X-Proofpoint-GUID: fIa8xEdolOIrVQYoZG5V82k-d9KkUIqv
+X-Proofpoint-ORIG-GUID: fIa8xEdolOIrVQYoZG5V82k-d9KkUIqv
+X-Authority-Analysis: v=2.4 cv=U8ZoDfru c=1 sm=1 tr=0 ts=67bf33de cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=0mOSjS8g2lfFcO4yiOgA:9 a=YXXWInSmI4Sqt1AkVdoW:22
 X-Proofpoint-Spam-Reason: safe
 
-Rather than open coding use the helper macro provided by the ASoC core.
+The TSE850_DAPM_SINGLE_EXT() macro is an identical duplicate of the
+core SOC_SINGLE_EXT() marco. Use the macro provided by the core.
 
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- sound/soc/codecs/wm9713.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ sound/soc/atmel/tse850-pcm5142.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/codecs/wm9713.c b/sound/soc/codecs/wm9713.c
-index 64b69316e4c70..0aa6491f2c842 100644
---- a/sound/soc/codecs/wm9713.c
-+++ b/sound/soc/codecs/wm9713.c
-@@ -284,13 +284,9 @@ static int wm9713_hp_mixer_get(struct snd_kcontrol *kcontrol,
- 	return 0;
- }
+diff --git a/sound/soc/atmel/tse850-pcm5142.c b/sound/soc/atmel/tse850-pcm5142.c
+index 0a9efd5f28615..2a1d0408a4cf1 100644
+--- a/sound/soc/atmel/tse850-pcm5142.c
++++ b/sound/soc/atmel/tse850-pcm5142.c
+@@ -227,16 +227,9 @@ static const struct snd_kcontrol_new mux1 =
+ static const struct snd_kcontrol_new mux2 =
+ 	SOC_DAPM_ENUM_EXT("MUX2", mux_enum, tse850_get_mux2, tse850_put_mux2);
  
--#define WM9713_HP_MIXER_CTRL(xname, xmixer, xshift) { \
--	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
+-#define TSE850_DAPM_SINGLE_EXT(xname, reg, shift, max, invert, xget, xput) \
+-{	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
 -	.info = snd_soc_info_volsw, \
--	.get = wm9713_hp_mixer_get, .put = wm9713_hp_mixer_put, \
--	.private_value = SOC_DOUBLE_VALUE(SND_SOC_NOPM, \
--		xshift, xmixer, 1, 0, 0) \
--}
-+#define WM9713_HP_MIXER_CTRL(xname, xmixer, xshift) \
-+	SOC_DOUBLE_EXT(xname, SND_SOC_NOPM, xshift, xmixer, 1, 0, \
-+		       wm9713_hp_mixer_get, wm9713_hp_mixer_put)
+-	.get = xget, \
+-	.put = xput, \
+-	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
+-
+ static const struct snd_kcontrol_new mix[] = {
+-	TSE850_DAPM_SINGLE_EXT("IN Switch", SND_SOC_NOPM, 0, 1, 0,
+-			       tse850_get_mix, tse850_put_mix),
++	SOC_SINGLE_EXT("IN Switch", SND_SOC_NOPM, 0, 1, 0,
++		       tse850_get_mix, tse850_put_mix),
+ };
  
- /* Left Headphone Mixers */
- static const struct snd_kcontrol_new wm9713_hpl_mixer_controls[] = {
+ static const char * const ana_text[] = {
 -- 
 2.39.5
 
