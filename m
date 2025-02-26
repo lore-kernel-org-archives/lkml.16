@@ -1,70 +1,70 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4530C22424B;
-	Wed, 26 Feb 2025 17:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B98224896;
+	Wed, 26 Feb 2025 17:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740590367; cv=pass; b=WRzRn8z9ILlubrns3FqTPQuzMSzb8mC+Xu7OwvkzN2YIeTYLF7VAZRae5fUekdNNgubeXaRmHOwpG/GcH39zXpmLkT5paUAUhL9+VyIKSAUcuYiPP5Jv2eSp9b1eolba47obg+N/HppkHOvTEk2OwBFP0S3sfOmNcEyKWDyjBZs=
+	t=1740590369; cv=pass; b=e+/XoC5JCpr2Vp2F7E34HvFNTrmLjqM6zp+1eihItwhQyrm4yqpAYfXsBHA0NHqdoxQMu6UfGl3+xJxmSxPIbTV5XeYW7QA/i41e88Ke180uCxnIWu15BskPbRlrKohvlXqGvMrD03sD7R1pi3+Y7ZMJcfYTy7fxNR3ird85amg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740590367; c=relaxed/simple;
-	bh=5mwePBCwCXvsjiJovyQttiroz9hahldAy3COpDFXjWU=;
+	s=arc-20240116; t=1740590369; c=relaxed/simple;
+	bh=aTe8bIBDw9cNT4V5VGDu63y5GXCtXugACmEJ+LcwWoA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OyZdUE4F/uJFPutgdYfDIMUeZvdrvTuiTgW4s8YNuWYWGXfsTpjIpHiqYABQbUxxjNt6jp0c9YV5AbSKv9iG3U/CM+OAf6p0rVjYw0/19giar3nhiwuT92hKC3UTTeDkbJ+YfMj1VMHZx9uFtq06HHLmV7079ViJ8Nw7c7Eiup4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=bntJpfrl; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=CqpcHxVg; arc=pass smtp.client-ip=85.215.255.81
+	 MIME-Version:Content-Type; b=dLWV98g2rAlBovzM4yDwfr/B+PPz8H7y1Lt67fcQtIVPxghJ9Hdl8aQ+SPQjS0QErocj94YuOeOvjl1tfv9rGUHqOUCSSozxPPH8AyTZx2a/cBncYINTKjAWNLIyTwukEpSozle4oKwX9so+XuTuO4OEX1MJY1phdALPcgfVmWM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=FqX8vr+2; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=8ISGMUX+; arc=pass smtp.client-ip=85.215.255.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="bntJpfrl";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="CqpcHxVg"
-ARC-Seal: i=1; a=rsa-sha256; t=1740590185; cv=none;
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FqX8vr+2";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="8ISGMUX+"
+ARC-Seal: i=1; a=rsa-sha256; t=1740590184; cv=none;
     d=strato.com; s=strato-dkim-0002;
-    b=BXigO50lUmZDJc0eYvf3TbRwC+uMMNBCFub7Y/bN/cND393aAJHc8r2+MipqqBTJvi
-    ehFSYQ7+bMVPsTkIV894KEBdPdzIrwd4Klv4TIvtHuj/hrorWRMa9kN3JNX8z9iVycBH
-    9uNLtGaibfIC3i1eEH8D9/w7BPUVhSgwiWip0atGJSOlXBU8r6DXPmwVCiYIYGkkfs+O
-    UjKosVfW+5lLbeP4CIONTZXIilHIL2axO24xcM5puJpVoCgy5pdaYnum7C3tbaBJv5H8
-    wqmop0CSff1u/zJtnDCGel8eoP+C08TpgyCnJI4oFRsOWl9bO79xCLI0GcXk2cuab6za
-    C6BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590185;
+    b=rZD1eBj48lT2kBGBtbS0fSK9xISjR1Ih2LIgsMlWURi6FoXmXlIOUuYBuG2gx6K+5h
+    oomWFSkokJIwBDzO/8NjFZ78KlVP9bGZ73M4pinOYM4yQUxm/m02tYNfJpfoYxyCsNg+
+    p3J3K9gCMCipbMkFxGYzMDbCkLT+Ik+ICP+NGI9D6z8P0KCYSnN8oGfMfVGOiC773phs
+    w0yllm7xbkCSG38xar6S+kgH+vAIeBChp6yGQeTC7IAC3eCC8PxpvvkhluBlFnqlOmt+
+    TiDmj8p9Jg9z8KrQ/2pWo3UMlR0Kus3JP5SI0X7ZVws9BO5nP6Ht1L7BQPU964SEGBpf
+    5Dag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
     s=strato-dkim-0002; d=strato.com;
     h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=h8CwoKvG9Pwt69O9WiZ6bp0I9e71uskXS7kq1c8Dssg=;
-    b=Uts6vIT0qQg4lnoDXsLmI+v2OuyzhloIZ0BVBLCq3D6wAeguVv9Itn5j1nsX08Rytq
-    AIr2DJHfrDR2FGwsz7zGAzZ43eoBbF+uBL1ecg1godWJGotJ8Nt7M6Z9fS3zjGPcj6iE
-    f3hVOxb0bxJxP1xf6HgTo8Upw7lysVRijE47yFO26CO5PMcRmFmpbdWTghLENMgzN3kA
-    jTCsonPzI3x+POXh+VkhVbHvZEsBOSGtDUfgvlNTBpSTXKr1V8MchPrlpnAaYmcknrxo
-    P4KJZVMmlczPI0s11s6AsSBe8RzBvGJGYshoddWc62vMU/brGKbeNJzAqorJkVy8fy3o
-    v38Q==
+    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
+    b=tg/caXYQ8b6ViZ+7YFGhj0BppCMHY7JJxwlElkLteTDv4VU6WAls1d1mua5kZbgh8g
+    5m8Z2okV130cbTBDPCMrWVtBuLz1thNkCVgGoVl51pfeV5ZHDOzJIIiTYG/JHNAXAW0a
+    5zJihPbo1ptRobYkTx8asS3sEqibu1AEWkh7cvW3lsIofY33FpYpw6JNfCGKjC1/S781
+    U4Fb7rxAdPidX2WFg3vGUfkglZxpuY+HkFt4ukq8bHlDBcDpZia9g2NvMWkmQHh2N4xE
+    MrnOIeruK721s0GDLBgF5yslo97V/iQeHAOmQ6spZUeeVf4aWn4CYE3j668BzzfHVTZ0
+    aCEw==
 ARC-Authentication-Results: i=1; strato.com;
     arc=none;
     dkim=none
 X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590185;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
     s=strato-dkim-0002; d=goldelico.com;
     h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=h8CwoKvG9Pwt69O9WiZ6bp0I9e71uskXS7kq1c8Dssg=;
-    b=bntJpfrlseWP8h0sdy9qc9UnUMRqZ+bivXTegTZYrHrGMo9XZs8iGDnSaGSq+TjqpQ
-    aYn403ZfGXyFmftqWtQiSVGQwKPviZgP6BRNvCvjLCXIwc1OzHI8pMsZkcIZPNUNuIqp
-    4h8IEqV0nkNANnAmX3Yt7rNOKgRD01zABdMGQcMVnCL3GA5HHGbMaZda7drkD9A33J1e
-    dYCdDSbBLlZvqDYc3z1J93LgdjOj09o6ruDMSMF3qHB9C0JCWs4rf9vrJCMXTelGci91
-    o/XwII+qMXJfyQT/TRT3s41cSHaKoxq1oJk61I1f3nD7eg4BHObsRAv7w+Bv4JWjOFs5
-    m/Uw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590185;
+    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
+    b=FqX8vr+2A6JIldkC58obS549PwHkZzHqKj+35pEN/MxQpOCr2/D3VpOaGkBCOvq/vQ
+    5Nq36Xrt6gae9jpRgA3tW9dztIQCReNsiv0DSid/4ob9QWGlnpitp/PBm6Bp9hubkcSf
+    Ye/+wlSZPm6zCxaoVLnZ0riZkLEmrqRo3FJ1FvGMI1zqIMDTMPcNQvRE53I/FYgU9Kd5
+    XhWIXi3aeZz/NKVEwL04RAGrU/UNs5LPXGzA7QJ9WjZEiZH7Y/QPOiQ6tgOqQJsVebdS
+    heyQvfZsGGF3MAUJSdKeO+fXU5CXXZJlwbsKzkbCMmGueU01SOapfrPAivCM64pmHTPF
+    zh5A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590184;
     s=strato-dkim-0003; d=goldelico.com;
     h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
     From:Subject:Sender;
-    bh=h8CwoKvG9Pwt69O9WiZ6bp0I9e71uskXS7kq1c8Dssg=;
-    b=CqpcHxVgfXE5jvVZ8w26IFrOVvbulQCs9KYtf4HKz1hntaychfninFZ3L61JfYeQj1
-    MBrimqkHPDmb8ThaRIBQ==
+    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
+    b=8ISGMUX+cjHbDdsVM6DpAom13p1mfC0EaFFMwyruaabUMS00qPCSliQXjJUoNeVPt3
+    ztQyAvaNjqusS8dt1bAQ==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
 Received: from localhost.localdomain
     by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
-    with ESMTPSA id Qe5b2211QHGOfpz
+    with ESMTPSA id Qe5b2211QHGNfpx
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
 	(Client did not present a certificate);
-    Wed, 26 Feb 2025 18:16:24 +0100 (CET)
+    Wed, 26 Feb 2025 18:16:23 +0100 (CET)
 From: "H. Nikolaus Schaller" <hns@goldelico.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -80,9 +80,9 @@ Cc: Andreas Kemnade <andreas@kemnade.info>,
 	linux-mips@vger.kernel.org,
 	letux-kernel@openphoenux.org,
 	"H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 3/4] pinctrl: ingenic: jz4730: add pinmux for MII
-Date: Wed, 26 Feb 2025 18:16:06 +0100
-Message-ID: <17fd3f58a3c565b6dd6e2a7dc2783fe20474381b.1740590093.git.hns@goldelico.com>
+Subject: [PATCH 1/4] bindings: ingenic,pinctrl: add x1600
+Date: Wed, 26 Feb 2025 18:16:04 +0100
+Message-ID: <c42f0ad1aeedbfc90b9a5f10a36b2f5f2da528e2.1740590093.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.47.0
 In-Reply-To: <cover.1740590093.git.hns@goldelico.com>
 References: <cover.1740590093.git.hns@goldelico.com>
@@ -95,51 +95,33 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="us-ascii"
 
-The MII interface is used for the Ethernet connection of the Alpha400.
+Add bindings for the Lumissil/Ingenic X1600 SoC.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index dfdc89ece9b8a..86d285a800c5d 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -210,6 +210,9 @@ static int jz4730_nand_cs5_pins[] = { 0x57, };
- static int jz4730_pwm_pwm0_pins[] = { 0x5e, };
- static int jz4730_pwm_pwm1_pins[] = { 0x5f, };
- 
-+static int jz4730_mii_pins[] = { 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
-+				 0x77, 0x78, 0x19, 0x7a, 0x1b, 0x7c, };
-+
- static u8 jz4730_lcd_8bit_funcs[] = { 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, };
- 
- static const struct group_desc jz4730_groups[] = {
-@@ -231,6 +234,7 @@ static const struct group_desc jz4730_groups[] = {
- 	INGENIC_PIN_GROUP("nand-cs5", jz4730_nand_cs5, 1),
- 	INGENIC_PIN_GROUP("pwm0", jz4730_pwm_pwm0, 1),
- 	INGENIC_PIN_GROUP("pwm1", jz4730_pwm_pwm1, 1),
-+	INGENIC_PIN_GROUP("mii", jz4730_mii, 1),
- };
- 
- static const char *jz4730_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
-@@ -246,6 +250,7 @@ static const char *jz4730_nand_groups[] = {
- };
- static const char *jz4730_pwm0_groups[] = { "pwm0", };
- static const char *jz4730_pwm1_groups[] = { "pwm1", };
-+static const char *jz4730_mii_groups[] = { "mii", };
- 
- static const struct function_desc jz4730_functions[] = {
- 	INGENIC_PIN_FUNCTION("mmc", jz4730_mmc),
-@@ -257,6 +262,7 @@ static const struct function_desc jz4730_functions[] = {
- 	INGENIC_PIN_FUNCTION("nand", jz4730_nand),
- 	INGENIC_PIN_FUNCTION("pwm0", jz4730_pwm0),
- 	INGENIC_PIN_FUNCTION("pwm1", jz4730_pwm1),
-+	INGENIC_PIN_FUNCTION("mii", jz4730_mii),
- };
- 
- static const struct ingenic_chip_info jz4730_chip_info = {
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+index 890961826c6f0..84e960255a36d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
+@@ -42,6 +42,7 @@ properties:
+           - ingenic,jz4780-pinctrl
+           - ingenic,x1000-pinctrl
+           - ingenic,x1500-pinctrl
++          - ingenic,x1600-pinctrl
+           - ingenic,x1830-pinctrl
+           - ingenic,x2000-pinctrl
+           - ingenic,x2100-pinctrl
+@@ -81,6 +82,7 @@ patternProperties:
+           - ingenic,jz4780-gpio
+           - ingenic,x1000-gpio
+           - ingenic,x1500-gpio
++          - ingenic,x1600-gpio
+           - ingenic,x1830-gpio
+           - ingenic,x2000-gpio
+           - ingenic,x2100-gpio
 -- 
 2.47.0
 
