@@ -1,192 +1,235 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2081.outbound.protection.outlook.com [40.107.212.81])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54331A317C;
-	Wed, 26 Feb 2025 18:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740595676; cv=fail; b=nrLwkpo5J292xE2QnBtHiD/7aLQMCL5QGvZY78hG+ZOln3lSS/7Pt0MPk/PIPvA7FxMPqy12iAJg/Aklyamt83N6QLI9Vfa1rpZEBOhFDWkpHASHZreYQFG/9zOmxWPbnrW5iFmt/1JPkJUaqoyGloacb8nx7kLJHkCwtWXiJwY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740595676; c=relaxed/simple;
-	bh=BjZbihMkvhIjUkU1Gc7tWFdZY5lrsilh388kiQRYhCs=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rlr8Otkrn1j5GqlHS+hIwCH5vRtROVLJlggSL5vLAFQzWzki8j/l7It5um9tleE/Bs22Qur4zCRr6J0amaIGd0nlDXp18Mn7ZUqwuAYE/S58xsEKeX7TMev8xJJX6eynJoazE/G1AF3WHH6pIaO3eOS4IG3lM89TIfCG5zSa9rE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WumaBWk5; arc=fail smtp.client-ip=40.107.212.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A615C225768
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:49:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740595766; cv=none; b=qpc2Udv+rnTsDi7PbNCOtWGWo1t+nRAhbalsSjJDIVA1uOc4zG0q0b323rqqmg4tg7jxIa1e1WWg5j8dtUpZqaI4yLU4hPPvJMHgpKHB3RG44iqPqqH4RdOj0xf/1Yi/urb9zZezOCKC1+brwFc6ugscvB25r0KjC6lYjwtX8Bs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740595766; c=relaxed/simple;
+	bh=lT/l+oV926s1PxTIvlgci5M/fqjzVL08IOVsaaJydq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1iBGPti0nDmPUNkeRDLvLxBeIgDi4s8xask5W+NerVlYOdgdjVmeU8ycQT5ypSMoxMAUgdG6LN191gwIPKwVFRaC5u9vQe80zSmOF4Z+AEWLGcDj6VEpuQV4bwfH3WL0iTg3eEpMi2y5iYhUuxRLPQfmENr8lsAhjl46cKs5j0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DnF3rouf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WumaBWk5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GayRiyoArYhfOA3wy9QwEFTqMmNDhiRTII6BwnG5AXwwA1ocL1Nat737Thpp3DjmgV1moqJkcZYMVsYtkQL5RN/BeQgRuZw64bqIytcdbjC1y0nLhud/rqCvuFPHMG4zu8Zrab8AEYYmqDNci8xqkC/rY6ekDzFImumczMqECyz0H7lrR66L8RwysflLryXsvyFfwJvFHvNTOGrIugv5rR27k4TfjP74FsXtEKyKpSb/g//RpskbUfurXCZGeGsmoFETg6A7k5ruf22/SKb8AB7OKidJm3iFfrYEZ7deJ43O3XX5bBuJejP4SJoDoPjQtUkWVny9qppJv5u5K1o50Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3yOxEDnsDskv3juzcK+EYT613AdVeyzWA3PEv9FVfec=;
- b=Axv5t9/QdqkfSZDG7D/HnrjL0mx7GkRTLMTFoFc4wy3rwg0AoDjEF2P+jsalJ8kyUK2RslheL3uRgQIG+VnEFxmuSir9UibRyY67AHOzkQxEwBHJeBerqxYIOU/te8rzyplKUDBjtjDLRK1VvdLxzYy2tN/vwCKwqk33b59XC1xydaex8BedTKlNFdZR8/byn+5ei4xSRMcyp5AUvZy1CJGytNK9ut3wLFp0vOXn/rsPhyJverkxwDWn1y6plSB+gstBKXXKoSMNO61tE0HMo+ge2Meu+JFFxX2qfvVQoSxHgGSt5PmbYGYDwmDEyzV/v0cEkDAdzr/2tosoUrOZ4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3yOxEDnsDskv3juzcK+EYT613AdVeyzWA3PEv9FVfec=;
- b=WumaBWk5t/kCesdH7EkA/KzBukMesp+V9OSa+0Tr3UE+YMxyzJXk9pihCz0hTA4dYNsFbcw5aHoRfVGxhmoNu2qOkw/RlXr6CafVoVuLvGqQmtZ6ClZq0WDdd8gcHPGy2yn+lazpQQ9Cd0kZ2TS6dwsviI1kvJFdAgRZ7xR1Jj0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
- by PH8PR12MB6771.namprd12.prod.outlook.com (2603:10b6:510:1c6::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8422.18; Wed, 26 Feb
- 2025 18:47:51 +0000
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1%4]) with mapi id 15.20.8489.019; Wed, 26 Feb 2025
- 18:47:51 +0000
-Message-ID: <749a1601-fa9f-468b-92d1-1a1548a08471@amd.com>
-Date: Wed, 26 Feb 2025 11:47:48 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/amd/display: Fix null check for
- pipe_ctx->plane_state in resource_build_scaling_params
-To: Ma Ke <make24@iscas.ac.cn>, dillon.varone@amd.com, Samson.Tam@amd.com,
- chris.park@amd.com, aurabindo.pillai@amd.com, george.shen@amd.com,
- gabe.teeger@amd.com, Yihan.Zhu@amd.com, Tony.Cheng@amd.com
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250226083731.3584509-1-make24@iscas.ac.cn>
-Content-Language: en-US
-From: Alex Hung <alex.hung@amd.com>
-In-Reply-To: <20250226083731.3584509-1-make24@iscas.ac.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT1P288CA0032.CANP288.PROD.OUTLOOK.COM (2603:10b6:b01::45)
- To DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DnF3rouf"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QB0i59004593
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:49:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=MITHVxmcAQ6A43ETluCVH8qk
+	tHM9iyaVcLEvG9Imcc0=; b=DnF3rouf+nplhh4zddEr6fKmz9N/DWigWG+ZNOVq
+	v0h2EbK6YIEi9YyRZFRod5ya6bj+mxq1uAQTh2PcYNktHXF/+RtV7pg6+K9j25tL
+	2mIBkb+Ldrkj9/H3+aeUo+/eI2VQ8Di9WpqrVHsWy9onkkTpTazjeDoSC/UQF0ZH
+	NUI/P4HmNZucyUX5ZsMim7VGq36MpjUJyhzUZ12fz7k8IKEavvguRkkMP7ZlwxLo
+	B8KjMH1jp5zZr0i5zINPpuVDTL8zcfstIW3Xm21ribnyM+uvgsSp2C5NWHpb2/k8
+	85YLzIPZGYx24acms0w2dlwEIQMgCeVP5mofjoOk52v0nQ==
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4521ph99ku-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:49:23 +0000 (GMT)
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2233b154004so1644205ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:49:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740595763; x=1741200563;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MITHVxmcAQ6A43ETluCVH8qktHM9iyaVcLEvG9Imcc0=;
+        b=xIqJhMt2QdMhqLfGHIn50+qr9enZxmmDJQqPNwz3o21X5IRPoGmiqtR4GJwS6/TqZ7
+         pNaZ7yDX+qIABhfU//gDuEN2q7tXA5Blyh+4Io6uyDVIoVcZzG3dcWigsxf8am2TYjia
+         jqT4EcbjC8CoZqQ5jGPXIzf+7/TcMv8qUFdrggf3futsx9qbgc50zESi80uw008O+Zgz
+         Ogb0xlFLmYGNGjpaWG05F5pxO5vo8VXVL/ZoUa0XN9WkclvJuXw7z+CQJ2KB0XSdie7c
+         QBquybeTfLu/8eRkDmCn1dlTCXfGAXBtHOeLRnJQzJ6JqpDszyu8nx5kspxmHQy3z/Aa
+         XICQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfUMbC2aR9hWNqNaHTubkd9g5eejT8XoODzgXyo+oB3b9LbLx6m2Dy+qnYHCYw05jYBrbZi2Uj4bbnXXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+nUGudqrv7jZCZOUY3ff0neV9Hwd1TKZZ6cBMcSr3fA1aXh1z
+	BIblcccUVQls13fVXjfFSjLnqJ3mtmM8dnsyKnOgX3n9le4sFTYmudIET50W5IOMptmVHGDfYVU
+	WinFNxY+CQEhMrlWz+OTgCcUpOQyXL2ScDu2AB/3O8hVCY3radW2SamUzkzr8LBA=
+X-Gm-Gg: ASbGncu8WkT/v81rALNCh43Z40b/Pu+sI1OyndNkDmYauChIf9BpopQUz+9cyIlujab
+	cHxk7O7I4eMoowkwfSm4MCJlRPYizZ3Vin0/WOHHa+X2fwoZCAxqnHBZenph7+K6D4FZ+qK6Wc/
+	IhS+C0kNhsqAHFPRq5Yfxqameur5mfO8XSBz/qsu0b2WYsj61iqvbC0eXzAuXd36PBzHbLnauoq
+	F9XF9qZrlybpVzcGsRXC5wySibaQXI4brKMaJ23EJvIaITHSnMdGw3NXjsV9+geqoKdqEme8HsA
+	LUn7HOd5BJA10fde7tMjRT5SwLnxeu0izY7qC7uZ8Hb8KaGB/PSRY6CW8SQOX5mE4GyPuwo=
+X-Received: by 2002:a17:903:40d1:b0:220:d79f:60f1 with SMTP id d9443c01a7336-2232020856bmr63132625ad.42.1740595762859;
+        Wed, 26 Feb 2025 10:49:22 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHRjzWrcltS/SmKz3Q5inlltvidwmKOdKizJT4TsTs1McdWObFowvI+RYwMenjlWzuLSoAsJA==
+X-Received: by 2002:a17:903:40d1:b0:220:d79f:60f1 with SMTP id d9443c01a7336-2232020856bmr63132325ad.42.1740595762411;
+        Wed, 26 Feb 2025 10:49:22 -0800 (PST)
+Received: from hu-eberman-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0944d4sm36517005ad.140.2025.02.26.10.49.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 10:49:22 -0800 (PST)
+Date: Wed, 26 Feb 2025 10:49:20 -0800
+From: Elliot Berman <elliot.berman@oss.qualcomm.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Elliot Berman <quic_eberman@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, cros-qcom-dts-watchers@chromium.org,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Shivendra Pratap <quic_spratap@quicinc.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v8 3/6] firmware: psci: Read and use vendor reset types
+Message-ID: <20250226101913390-0800.eberman@hu-eberman-lv.qualcomm.com>
+References: <20241107-arm-psci-system_reset2-vendor-reboots-v8-0-e8715fa65cb5@quicinc.com>
+ <20241107-arm-psci-system_reset2-vendor-reboots-v8-3-e8715fa65cb5@quicinc.com>
+ <Z78lH/XErc7G8bL9@lpieralisi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|PH8PR12MB6771:EE_
-X-MS-Office365-Filtering-Correlation-Id: 149ab81b-5a5b-4d55-dccb-08dd569612a7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SWZrcWxJWTIvS0dqdVN2ckhMUSs5enNsaDZsTHE4cVRNOEdmZHAydERiVkYv?=
- =?utf-8?B?MXY0UHlnSklsZUtqMlJuK2Y3Wm9nckFyQnVtYncxU2lrVU8ycmVHaGhsUGky?=
- =?utf-8?B?K1NLalhFWERkKy9HUDhEdTM1STlodFUvOXg1UHdhcnZKT2RieEhmV1dKMEx6?=
- =?utf-8?B?NGVHQXE2T2JzMERaSUI4Y0pFVk1jL3I0NjdNamRFVnRobjRhK2dNeVpxWWFC?=
- =?utf-8?B?SzdKNk1tclFMUjA5L240UDZzR2Y3T1ZFczJyL0hOYW83eGtnUjdKZWZ0bkVo?=
- =?utf-8?B?anVFalgvR1Z1M2pJbmMrczVpR0t0NTNsaCtKSTkrQWs2T2Q5aTgxMEk1K2Jz?=
- =?utf-8?B?YTFtMVVQcWorZXR1WEFrOU1LM0VROVFZVm5DRVNFeDN3QWVtOHBCa3VXM1lr?=
- =?utf-8?B?MnJYekVWcGxaSUt5SFlmMWozc0cvTGhnaDVudTVERElmb1VrdDhTSm5OemRP?=
- =?utf-8?B?TVdIREFZSzJWUG1JRFdaRFFEeDZraFRlTjlWLzA5Sy9RdXdsR3BmQU9QVHRU?=
- =?utf-8?B?NnRGUG5mWGM5dlFMWUd2SXMwOUg5MTJhdHovMThFUi84cHpiT1FISURnaWpD?=
- =?utf-8?B?cWRHYnFlMUVMdm9KS3VXaER3NVlvUnVNUjRXTWZPTXZNQXB0bVR2NnlsamxJ?=
- =?utf-8?B?eENGR1E2YmpOMVlXU3c2d1dYZHdjVzU1OHB5ZVNRWGFZNjhacW5HMVpSdlh5?=
- =?utf-8?B?Rm05RXl6TVNUWW0wNkdWZ2tFNGZhenNGU2dLR1NDQlROcktIc3J0MW9vVnNN?=
- =?utf-8?B?eWxrMWhVWWE4eEViTzhNSS9nZHJhWUF5T3BGbFhlODdtREE4dlZOWEhXN0xG?=
- =?utf-8?B?aVgvMmlzc0ZkRXRpckdoeTBLMFprM09DVEo0enBmc3crRjNqbTZKVWtOM2VS?=
- =?utf-8?B?eGg1RW9uNENMVXRpVElNNjAvOVhKdWgyUEZ1THljbXlCTjJYZFRIeGw0TjdS?=
- =?utf-8?B?S1czcndzZEZMZWxvTmljQ3JuSVhaQ1dpTCtHOWJnOTJDVWQxbXM3OVpLSEkw?=
- =?utf-8?B?aWJUdEttY3BLVzZ1anBtaW5yajA5N2RmTU9oZXF4VUNWaVYxeDBlUVBuL1d5?=
- =?utf-8?B?Tzk4bmZTSlZhbHdwTXphN0l4NCtBMWlqNDhVOWd5RjNGNnNCTUIwMkZMR0Vh?=
- =?utf-8?B?UTFraDVCSUpJdlB4akZrd0ZMY0FkNXIyME1hZnNaN0dId1NwTnZSRUE2cWZK?=
- =?utf-8?B?MzNCcS9RRis4T0lwb2RMVjMrdjh0bEdmUVRKVklqNWNNbmx2SU55dmZCRjJX?=
- =?utf-8?B?U1ZZOURlUkRFTWt3RTA2Zk9lcUlKWEdmTzduZVMvUmZXT1dkMlArMGVMR2R0?=
- =?utf-8?B?R1VDOCtOb09HWkd1aWRxM0NlZWlUZjdvcGF5WXFVblIvZzhEV3Vua3BySTFz?=
- =?utf-8?B?OTdJSEVTRkhpbWZ3RFhPV2I5Q0dFN2wxN0NzNkJjaXVsdjR3TlFLVFg1ancy?=
- =?utf-8?B?d1VaZm9yV01DbDArcFZoeENIcjNIMjh6aWVNeG5tZURuR21tdnQ0MTEvWFBw?=
- =?utf-8?B?UGU0aXZ5ZlhMYWVkTTRXN0E3K0JJVEIxNHlibjlqaWx1a2cwSG10RTEzSG55?=
- =?utf-8?B?UnA2VzlxcEFmbjYrb0VTdTh2bjlOb0hJVjBnRGRFVzM0bUhreWlhMTlIaFhj?=
- =?utf-8?B?cjVVNUtaZ0FhamZ1SjZhSDVZZ0l3WndWK2U1VlpZS29IMFdhem5CRzZNN3ZX?=
- =?utf-8?B?YzZXemxUNkRLMW9ndzhreDd3UTYyUEUvMnBxNE9aRks5M3BsejlZbFBObkhU?=
- =?utf-8?B?bm1TVU1MOGRQL29uZlBndEpNanFCYnc5VUFqNFZVQXcxUnQvaTFvc0JwUVhD?=
- =?utf-8?B?SXowNW5zM3F0NVZVOWR0b2lqZnBjODJOVE1YQUNPSTl2Uk1KeFlCWkZtTHlS?=
- =?utf-8?Q?Uph7w5N54nhii?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WmhhZzNLbkNVSWNMOHhWdXRGQlRQMVF0RlkzdG1MazgzV0s1eTdlZlJsQ2Qx?=
- =?utf-8?B?a3NtZTFtRkJzS1NmYy9aY29oUjNkek9tTXdjK2VRR3RSSUd6aU9kTEs3bXd6?=
- =?utf-8?B?ZlBtaldTLzRuc0tFY2RZU0R3TEhFdnMzTUpIcEZrWmtXWUZaWFlmSW1mcWs4?=
- =?utf-8?B?TzlRQ28wb1hnYUd1TjI2N203Y0RmM0xiVG1oeXRHMTZzUkl4SGk4RlBPWmUw?=
- =?utf-8?B?Z1J2UXdOTmVjL3c4YWlONFE4T1ZwSXBrNVF2T3pMaVVOVzI1eUQyeC9Dc2J4?=
- =?utf-8?B?OVBOV1N1bDJQRmFiNmR6NnlFVnBxNGY2ZW90WitZR3pUSGpBQ1YyQnRlTHN1?=
- =?utf-8?B?NTE0YitHblJpT1JCejl1UktJTG82NmhEeUU1c3NLVW9MMWgyVGFpWk9rUmRh?=
- =?utf-8?B?Ym94aUtmc3dnS2M2Tll4ZE9sSEJkaHhNYjRPRThXTk5Ya0g4c3ZCdGUwUnN3?=
- =?utf-8?B?NVZqWDVrcmZvQkpJNHZLSUFNQTRBQXpyTHNhdmw5Nm5JNnE5cUtPcDZTNW55?=
- =?utf-8?B?Um16MkE1TCtndVhlQ01XVWp5ZVVoZ0l3c3ZOUmRUQ09NRHJZUkk5SS9kSi9K?=
- =?utf-8?B?eTZyWDN2WHhUdWJ1UHplVExibUFVM0k4dklBRGRUeWJnR2IzTmJ1R1pBSDhl?=
- =?utf-8?B?SkVPczBVRUxDMTNIR01UUXZlNVl3bGtST0tIOXdMeDYvYWlqVDN2ekRSZXkv?=
- =?utf-8?B?b2dWbXN4RElNTWJibGZnNWhISkFyeXpsVmtoeGszWjVEdUlPTGNuT01NaG13?=
- =?utf-8?B?alRZcXBPcHFNaFg5cDE0eVltL2tCR3hkckZpaFZRNjg0WDJxcjJyMkgrTmNr?=
- =?utf-8?B?bU50R0dqK0tUcEVTbTNGVFdCK21HeXY1WTNXQjZDK2NXVzh6bnM3YTEyRGNl?=
- =?utf-8?B?UXJrYy9OL1JqSExTZTlRbmRYY3dLN2xBOURDR1BFOVZuRUVKMjZ4ajBKTEtL?=
- =?utf-8?B?dWF0ZTcxcTZReVNyeWpzL0c0c3JoZ3pXcGlycXE2Y3MxMHJ4dkJVTEtWN0dM?=
- =?utf-8?B?L0xlU2dsb3ZzQTJGM2ZzYm9Scm4rL0xWVlZhQ1hqQWl0QXROU0Y4cVBiOGxM?=
- =?utf-8?B?d0Mrb0w5SnJzTE40K1diQ2NqeERDZHB3bjFRWTlERC9hWGNobElLY3hISWVw?=
- =?utf-8?B?ZmxDNHkxSlBJVHlzMEUzMjZmaW5ObFk1YVE2UHZyWlIyLzRQSE9weE9TL3FD?=
- =?utf-8?B?M1RQL04weWFrK1Q1cmYrVzQvdktXeVBqVGgvQ3dvYlVrb1F4UDk3OGRvdCtj?=
- =?utf-8?B?M2FUd3o4ckJTVHdTRGNCZWE4M3pBNmM4NUpXYVVOU2l4dlVBT2Rkb0Izckox?=
- =?utf-8?B?cE5ZSjZkZnZ3ME5JZkRqSkhnRTV0aEFLSGhzRCtFUG5BcE5RNFRoNkNvQmZ5?=
- =?utf-8?B?bW9VU0g4RHdMRTVZQ3pFSU9pZkkvUmNKeVZIQWplRnBvWUQ2dFRuVlljY3Vt?=
- =?utf-8?B?c3pWUGlsbFR1dnlDeUNwVFhWaFV1dlRKcmIvR2NhZklBTDV0ZzJnNjNZd2xv?=
- =?utf-8?B?M1JjbzhMeVR6ZkNkMGE3dDJZZ0diaTFHRlg3TjFQRVFSS003S0tSbnJOSS9h?=
- =?utf-8?B?cm84REtuY1h1TGhXd3RiZGRCYjByOE1UK2lJRXpDdmxEMzJtajVtS2NhS0d5?=
- =?utf-8?B?M1BMaElPN3VoRGtwRGJ6T0tLVmF3UzUyWDB4NlJWYUt3UXN5M1pHb2VDa2Na?=
- =?utf-8?B?ZldzYmUwTkw2SFZXSmkwV3o2cGlRQW5tUm9EVW9qWHgxNkFHNzR0a3V2dmp6?=
- =?utf-8?B?aDZpdk8xU3drOUt2QUZhT09ueG45S1l3R1J5MFdndzFJY2NLK0VXVUhQY0dm?=
- =?utf-8?B?bC9ObkxRclZrb0tDRVBVY3Q2VGp6Y1pKb2o4bDI5cmhnWnliTlUrSmpFaVhp?=
- =?utf-8?B?cW9kTnZEY0hGcDJwK2NTTUgxNnJYdHFDdTBNNnNoTVZwOFpxZnRNU0ZVdFBB?=
- =?utf-8?B?c3gzTk5kalVFSzBUVDRQRnpDNkJwSGpvUC8yNWN1OEN2KzNUWk16Mjg4Uzla?=
- =?utf-8?B?TjFJQWNTcHNlK253dC9PZGkreEJCY1N4c21ibTJOVVpTZFlKRzNTYmVtRmdB?=
- =?utf-8?B?WVNQK1BHNDJSQi82cm1uMDlhVUMvc2lCUWl1RnZYUUxoZlVJeDRtckVtQ3BT?=
- =?utf-8?Q?H6utNtJ9ovz7XSLE1Vp7zPY0P?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 149ab81b-5a5b-4d55-dccb-08dd569612a7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 18:47:51.6171
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oibc533VW0VoaY5eE7BlLtlZmA27mQADjI0OxzUbkKwi6t0xr7wk7ebWo1SGGp8bfTSjpbGbpQSHUac9raSNfQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6771
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z78lH/XErc7G8bL9@lpieralisi>
+X-Proofpoint-GUID: vU3U1CB7IJIsNvd7ZjdBS6dka20gKEiM
+X-Proofpoint-ORIG-GUID: vU3U1CB7IJIsNvd7ZjdBS6dka20gKEiM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260148
 
-Reviewed-by: Alex Hung <alex.hung@amd.com>
+On Wed, Feb 26, 2025 at 03:28:47PM +0100, Lorenzo Pieralisi wrote:
+> On Thu, Nov 07, 2024 at 03:38:27PM -0800, Elliot Berman wrote:
+> > SoC vendors have different types of resets and are controlled through
+> > various registers. For instance, Qualcomm chipsets can reboot to a
+> > "download mode" that allows a RAM dump to be collected. Another example
+> > is they also support writing a cookie that can be read by bootloader
+> > during next boot. PSCI offers a mechanism, SYSTEM_RESET2, for these
+> > vendor reset types to be implemented without requiring drivers for every
+> > register/cookie.
+> > 
+> > Add support in PSCI to statically map reboot mode commands from
+> > userspace to a vendor reset and cookie value using the device tree.
+> > 
+> > A separate initcall is needed to parse the devicetree, instead of using
+> > psci_dt_init because mm isn't sufficiently set up to allocate memory.
+> > 
+> > Reboot mode framework is close but doesn't quite fit with the
+> > design and requirements for PSCI SYSTEM_RESET2. Some of these issues can
+> > be solved but doesn't seem reasonable in sum:
+> >  1. reboot mode registers against the reboot_notifier_list, which is too
+> >     early to call SYSTEM_RESET2. PSCI would need to remember the reset
+> >     type from the reboot-mode framework callback and use it
+> >     psci_sys_reset.
+> >  2. reboot mode assumes only one cookie/parameter is described in the
+> >     device tree. SYSTEM_RESET2 uses 2: one for the type and one for
+> >     cookie.
+> >  3. psci cpuidle driver already registers a driver against the
+> >     arm,psci-1.0 compatible. Refactoring would be needed to have both a
+> >     cpuidle and reboot-mode driver.
+> > 
+> > Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+> > Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+> > ---
+> >  drivers/firmware/psci/psci.c | 104 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 104 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+> > index 2328ca58bba61fdb677ac20a1a7447882cd0cf22..e60e3f8749c5a6732c51d23a2c1f453361132d9a 100644
+> > --- a/drivers/firmware/psci/psci.c
+> > +++ b/drivers/firmware/psci/psci.c
+> > @@ -79,6 +79,14 @@ struct psci_0_1_function_ids get_psci_0_1_function_ids(void)
+> >  static u32 psci_cpu_suspend_feature;
+> >  static bool psci_system_reset2_supported;
+> >  
+> > +struct psci_reset_param {
+> > +	const char *mode;
+> > +	u32 reset_type;
+> > +	u32 cookie;
+> > +};
+> > +static struct psci_reset_param *psci_reset_params __ro_after_init;
+> > +static size_t num_psci_reset_params __ro_after_init;
+> > +
+> >  static inline bool psci_has_ext_power_state(void)
+> >  {
+> >  	return psci_cpu_suspend_feature &
+> > @@ -305,9 +313,38 @@ static int get_set_conduit_method(const struct device_node *np)
+> >  	return 0;
+> >  }
+> >  
+> > +static void psci_vendor_system_reset2(const char *cmd)
+> > +{
+> > +	unsigned long ret;
+> > +	size_t i;
+> > +
+> > +	for (i = 0; i < num_psci_reset_params; i++) {
+> > +		if (!strcmp(psci_reset_params[i].mode, cmd)) {
+> > +			ret = invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2),
+> > +					     psci_reset_params[i].reset_type,
+> > +					     psci_reset_params[i].cookie, 0);
+> > +			/*
+> > +			 * if vendor reset fails, log it and fall back to
+> > +			 * architecture reset types
+> > +			 */
+> > +			pr_err("failed to perform reset \"%s\": %ld\n", cmd,
+> > +			       (long)ret);
+> > +			return;
+> > +		}
+> > +	}
+> > +}
+> > +
+> >  static int psci_sys_reset(struct notifier_block *nb, unsigned long action,
+> >  			  void *data)
+> >  {
+> > +	/*
+> > +	 * try to do the vendor system_reset2
+> > +	 * If the reset fails or there wasn't a match on the command,
+> > +	 * fall back to architectural resets
+> > +	 */
+> > +	if (data && num_psci_reset_params)
+> > +		psci_vendor_system_reset2(data);
+> 
+> Mulling over this. If a command (data) was provided and a PSCI vendor
+> reset parsed at boot, if the vendor reset fails, isn't it correct to
+> just fail reboot instead of falling back to architectural resets ?
+> 
 
-On 2/26/25 01:37, Ma Ke wrote:
-> Null pointer dereference issue could occur when pipe_ctx->plane_state
-> is null. The fix adds a check to ensure 'pipe_ctx->plane_state' is not
-> null before accessing. This prevents a null pointer dereference.
-> 
-> Found by code review.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 3be5262e353b ("drm/amd/display: Rename more dc_surface stuff to plane_state")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
-> Changes in v2:
-> - modified the patch as suggestions.
-> ---
->   drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-> index 520a34a42827..a45037cb4cc0 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
-> @@ -1455,7 +1455,8 @@ bool resource_build_scaling_params(struct pipe_ctx *pipe_ctx)
->   	DC_LOGGER_INIT(pipe_ctx->stream->ctx->logger);
->   
->   	/* Invalid input */
-> -	if (!plane_state->dst_rect.width ||
-> +	if (!plane_state ||
-> +			!plane_state->dst_rect.width ||
->   			!plane_state->dst_rect.height ||
->   			!plane_state->src_rect.width ||
->   			!plane_state->src_rect.height) {
+Sure! I can change the behavior here.
 
+> What's missing is defining the "contract" between the
+> LINUX_REBOOT_CMD_RESTART2 arg parameter and the kernel reboot
+> type that is executed.
+> 
+> I do wonder whether this is an opportunity to deprecate reboot_mode
+> altogether on arm64 (I think that the relationship between REBOOT_WARM
+> and REBOOT_SOFT with PSCI arch warm reset is already loose - let alone
+> falling back to cold reset if reboot_mode == REBOOT_GPIO - which does
+> not make any sense at all simply because REBOOT_GPIO is ill-defined to
+> say the least).
+> 
+> Thoughts ?
+> 
+
+I'm not opposed to seeing how we can deprecate the reboot_mode enum for
+arm64, but I think this should be an independent effort from the vendor
+resets. I'm worried this takes us down the "don't let perfect be the
+enemy of good" path to support vendor resets. I haven't seen much
+interest in this issue outside the two of us, and thus changing
+important infrastructure like reboot seems to me to be a long shot.
+
+Thanks,
+Elliot
