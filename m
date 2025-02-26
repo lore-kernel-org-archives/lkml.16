@@ -1,96 +1,198 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0D722D784;
-	Wed, 26 Feb 2025 18:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C06822D784
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:46:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740595594; cv=none; b=AjOJKyojRLnb87yukzz42YRU8Zom4pn9d6neejomCERG73ZfJfHEOgn1FR/RPCifR4W8SsQBKRgzAnO3UH6c8iZwURIWiLXszzITYxs2mmGNyKtoopR179NEP0WrrARi/u21SBs87mCwy/r7Gww8RT8ORkKssM1I4HvKnSTeJIc=
+	t=1740595619; cv=none; b=XW+S7WoPasBdibuXmEZCjMnjfxnpHrTD90AWTV3v6AMUfDtYmt2UJ4dks/8QN+XXo4d3WYTdOSD51EqanGearboo5j8sTjassHOSbJaNQQVMy5/k5ZcwbUqkXhZq7fq8Yu6UMRJt6ltF4Ie7y3AejE4lsEAzRnPPisb67nNRn8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740595594; c=relaxed/simple;
-	bh=av0A0EgMmZuF7k4uVACqRkbAc5DuEtFyJ21KJyF35nw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSZ0plLOTJjr1zBeIFDsNVtw+VX6z1E723wdxSY5pfR5aKKPSEDHJOGNPt0e9CZY2VZ230nNheNLLlo326MRT9MhqMwVEfTUDgayGSDkrNjWFbfiqPUXzZbaKQWy8JGyTG+tDcPiP/I6C8hx1VXfgcTaM5FUW9wNl3Ehkh09juw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pBfjg8U5; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740595619; c=relaxed/simple;
+	bh=JodBzx7M4AQGobZza2uhbaZSvsPMslokXhqcEliSGAY=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=UVk9RfCE+USb4JQktK5PdsK/AYy51jCKJ0SMtlvpOZW7RXa7QNMJN+oXZYn9KDjuQAvQ3P1IIEgGPjfB6YJQj/h2amLtoHGIkLtDLweskxpLhaQLDH303WjkWorzIPlHQhw4Oj/Yhq1EoHEptzxQdBHD86/R6MGrsWBGgaqHYLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--derkling.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PBE2H7eo; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--derkling.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pBfjg8U5"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QIi9ms2156450
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 12:44:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740595450;
-	bh=esbbA0aHxV2C7K7XPMRSKO3A35omNfgqBS1hPBjtmXg=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=pBfjg8U5jkATBCxBRPgW1hxkKxkjGDHEVGISh7VcEj5YIYrbU+fYbnsayWPzlFKcI
-	 47JaBvj4ZjrahbShEttZOLhtpYWrZvE+Dn2iMeKZduVs2P1eJ3xxTWysLT/29QlYTd
-	 cP2MVrU0/cHm+OCLt+4sGqm7SAwgQRmoH/hTrANA=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QIi9GH029156
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 12:44:09 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 12:44:08 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 12:44:08 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QIi8S8076566;
-	Wed, 26 Feb 2025 12:44:08 -0600
-Date: Wed, 26 Feb 2025 12:44:08 -0600
-From: Nishanth Menon <nm@ti.com>
-To: parvathi <parvathi@couthit.com>
-CC: <danishanwar@ti.com>, <rogerq@kernel.org>, <andrew+netdev@lunn.ch>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <ssantosh@kernel.org>,
-        <richardcochran@gmail.com>, <basharath@couthit.com>,
-        <schnelle@linux.ibm.com>, <diogo.ivo@siemens.com>,
-        <m-karicheri2@ti.com>, <horms@kernel.org>, <jacob.e.keller@intel.com>,
-        <m-malladi@ti.com>, <javier.carrasco.cruz@gmail.com>, <afd@ti.com>,
-        <s-anna@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <pratheesh@ti.com>, <prajith@ti.com>,
-        <vigneshr@ti.com>, <praneeth@ti.com>, <srk@ti.com>, <rogerq@ti.com>,
-        <krishna@couthit.com>, <pmohan@couthit.com>, <mohan@couthit.com>
-Subject: Re: [PATCH net-next v3 00/10] PRU-ICSSM Ethernet Driver
-Message-ID: <20250226184408.d4gpr3uu2dm7oxa2@handwork>
-References: <20250214054702.1073139-1-parvathi@couthit.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PBE2H7eo"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43947979ce8so606975e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:46:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740595615; x=1741200415; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sOguHpycwUX8eihJ1N7vZXsBa1ko3FW4hupJ5yAhZ8c=;
+        b=PBE2H7eox33eoJAMIFOS5adyQ4BsMfq4y8S8zbjWu7hL6InF3QJ3wbp1ytKyEEGR4d
+         9buwgOgC4sxsCItSrRMPBwT2YwCKyNjaol6kQThPCF4ukv3VqzbqAv34xkXC4nyBZ57q
+         qamm0Z8I+ZyOcDpIRgn0JXH+07BEXI24YN8UGrgO90HtuRL/5124S7O4zG2uRRl9lPJa
+         EVhDhvRx3VUL7cs4PnU4YYK50JuwCMRkk5rRaWp8f/9FQvLEke1RPIYp60Bg2eg9mNub
+         98Hk3WyxyCfki+8NBSGZLUcLVUusgSe3gplK440Ztb9zgmuzAZraOuhlM8FYNbEGYWda
+         ddTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740595615; x=1741200415;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOguHpycwUX8eihJ1N7vZXsBa1ko3FW4hupJ5yAhZ8c=;
+        b=DN6Wf7cgwOHJm2gcHnPsnzPEhjzW74soXsgvKrpmo/TH7VBnSCx1A34NJL8OIQLdSG
+         tXBLwAzQoAJagAqtrJZqu+sdxlaoqD5PZIQNZ1VOo770hhmDVjuh9B4lJ6Z1BV2FNi82
+         qaFEDuq5e5Ug1cnpGZlxtvCdCgGmYiPEHenAGRAvxwy5yPRMBhWvDAp0CU8pafypBjqg
+         xZAj0TRVi4p7aaFkEOqpdmVM4wNW9KGBwFk/ZBInc7ANtQ1cic8vd45SL816NjnRUFws
+         ozXVKOTw3+QTfMEV2fqLEknrLBeNvLHbl1zTkrvdx1hfB9kZx86LRXFdrdzN/K6uRBaf
+         3d5w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3fqrpVH5UIvS3SXsFRUUzc0NKvtVq7f9NNHpKmFTcAghm8DWOI3q3zie/1TXdasATgZudt7wc8m+KDaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGbns9iHtH+4cevGF1l6H115yT//8RDoKvGBadIYvhmpdkbTFj
+	dp0Q6XbXACMtAuYvpOJVU9PjFx6lxtLhdDJ0GhXkEVRcbBV8h4EdvOycKfojfiUo4311FtSvlO+
+	at4kMNFnHGQ==
+X-Google-Smtp-Source: AGHT+IHASSc7e4RmQTri0Z7g3+xd3N5kxnQGr9pL116mxIOSxNQO+ye9Qs7fGUpkV1t41+kDq2AToRr56faLhg==
+X-Received: from wmpz20.prod.google.com ([2002:a05:600c:a14:b0:439:9558:cfae])
+ (user=derkling job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3151:b0:439:a1ef:c242 with SMTP id 5b1f17b1804b1-439ae18fdc1mr219774895e9.0.1740595615641;
+ Wed, 26 Feb 2025 10:46:55 -0800 (PST)
+Date: Wed, 26 Feb 2025 18:45:40 +0000
+In-Reply-To: 20250218153414.GMZ7Sodh_eQXqTNE2x@fat_crate.local
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250214054702.1073139-1-parvathi@couthit.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250226184540.2250357-1-derkling@google.com>
+Subject: Re: [PATCH final?] x86/bugs: KVM: Add support for SRSO_MSR_FIX
+From: Patrick Bellasi <derkling@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Patrick Bellasi <derkling@google.com>, Sean Christopherson <seanjc@google.com>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Patrick Bellasi <derkling@matbug.net>, Brendan Jackman <jackmanb@google.com>, 
+	David Kaplan <David.Kaplan@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 11:16-20250214, parvathi wrote:
-[...]
-> The patches presented in this series have gone through the patch verification
-> tools and no warnings or errors are reported. Sample test logs verifying the
-> functionality on Linux next kernel are available here:
+> On Tue, Feb 18, 2025 at 02:42:57PM +0000, Patrick Bellasi wrote:
+> > Maybe a small improvement we could add on top is to have a separate and
+> > dedicated cmdline option?
+> > 
+> > Indeed, with `X86_FEATURE_SRSO_USER_KERNEL_NO` we are not effectively using an
+> > IBPB on VM-Exit anymore. Something like the diff down below?
 > 
-> [Interface up Testing](https://gist.github.com/ParvathiPudi/f481837cc6994e400284cb4b58972804)
-> 
-> [Ping Testing](https://gist.github.com/ParvathiPudi/a121aad402defcef389e93f303d79317)
-> 
-> [Iperf Testing](https://gist.github.com/ParvathiPudi/581db46b0e9814ddb5903bdfee73fc6f)
-> 
+> Except that I don't see the point of this yet one more cmdline option. Our
+> mitigations options space is a nightmare. Why do we want to add another one?
 
+The changelog of the following patch provides the motivations.
 
-I am looking at https://lore.kernel.org/all/20250214085315.1077108-11-parvathi@couthit.com/
-and wondering if i can see the test log for am335x and am47xx to make
-sure that PRUs are functional on those two?
+Do you think something like the following self contained change can be added on
+top of your change?
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Best,
+Patrick
+
+---
+From 62bd6151cdb5f8e3322d8c91166cf89b6ed9f5b6 Mon Sep 17 00:00:00 2001
+From: Patrick Bellasi <derkling@google.com>
+Date: Mon, 24 Feb 2025 17:41:30 +0000
+Subject: [PATCH] x86/bugs: Add explicit BP_SPEC_REDUCE cmdline
+
+Some AMD CPUs are vulnerable to SRSO only limited to the Guest->Host
+attack vector. When no command line options are specified, the default
+SRSO mitigation on these CPUs is "safe-ret", which is optimized to use
+"ibpb-vmexit". A further optimization, introduced in [1], replaces IBPB
+on VM-Exits with the more efficient BP_SPEC_REDUCE mitigation when the
+CPU reports X86_FEATURE_SRSO_BP_SPEC_REDUCE support.
+
+The current implementation in bugs.c automatically selects the best
+mitigation for a CPU when no command line options are provided. However,
+it lacks the ability to explicitly choose between IBPB and
+BP_SPEC_REDUCE.
+In some scenarios it could be interesting to mitigate SRSO only when the
+low overhead of BP_SPEC_REDUCE is available, without overwise falling
+back to an IBPB at each VM-Exit.
+More in general, an explicit control is valuable for testing,
+benchmarking, and comparing the behavior and overhead of IBPB versus
+BP_SPEC_REDUCE.
+
+Add a new kernel cmdline option to explicitly select BP_SPEC_REDUCE.
+Do that with a minimal change that does not affect the current SafeRET
+"fallback logic". Do warn when reduced speculation is required but the
+support not available and properly report the vulnerability reason.
+
+[1] https://lore.kernel.org/lkml/20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local/
+
+Signed-off-by: Patrick Bellasi <derkling@google.com>
+---
+ arch/x86/kernel/cpu/bugs.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 7fafd98368b91..2d785b2ca4e2e 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -2523,6 +2523,7 @@ enum srso_mitigation {
+ 	SRSO_MITIGATION_IBPB,
+ 	SRSO_MITIGATION_IBPB_ON_VMEXIT,
+ 	SRSO_MITIGATION_BP_SPEC_REDUCE,
++	SRSO_MITIGATION_BP_SPEC_REDUCE_NA,
+ };
+
+ enum srso_mitigation_cmd {
+@@ -2531,6 +2532,7 @@ enum srso_mitigation_cmd {
+ 	SRSO_CMD_SAFE_RET,
+ 	SRSO_CMD_IBPB,
+ 	SRSO_CMD_IBPB_ON_VMEXIT,
++	SRSO_CMD_BP_SPEC_REDUCE,
+ };
+
+ static const char * const srso_strings[] = {
+@@ -2542,6 +2544,7 @@ static const char * const srso_strings[] = {
+ 	[SRSO_MITIGATION_IBPB]			= "Mitigation: IBPB",
+ 	[SRSO_MITIGATION_IBPB_ON_VMEXIT]	= "Mitigation: IBPB on VMEXIT only",
+ 	[SRSO_MITIGATION_BP_SPEC_REDUCE]	= "Mitigation: Reduced Speculation",
++	[SRSO_MITIGATION_BP_SPEC_REDUCE_NA]	= "Vulnerable: Reduced Speculation, not available",
+ };
+
+ static enum srso_mitigation srso_mitigation __ro_after_init = SRSO_MITIGATION_NONE;
+@@ -2562,6 +2565,8 @@ static int __init srso_parse_cmdline(char *str)
+ 		srso_cmd = SRSO_CMD_IBPB;
+ 	else if (!strcmp(str, "ibpb-vmexit"))
+ 		srso_cmd = SRSO_CMD_IBPB_ON_VMEXIT;
++	else if (!strcmp(str, "bp-spec-reduce"))
++		srso_cmd = SRSO_CMD_BP_SPEC_REDUCE;
+ 	else
+ 		pr_err("Ignoring unknown SRSO option (%s).", str);
+
+@@ -2672,12 +2677,8 @@ static void __init srso_select_mitigation(void)
+
+ ibpb_on_vmexit:
+ 	case SRSO_CMD_IBPB_ON_VMEXIT:
+-		if (boot_cpu_has(X86_FEATURE_SRSO_BP_SPEC_REDUCE)) {
+-			pr_notice("Reducing speculation to address VM/HV SRSO attack vector.\n");
+-			srso_mitigation = SRSO_MITIGATION_BP_SPEC_REDUCE;
+-			break;
+-		}
+-
++		if (boot_cpu_has(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
++			goto bp_spec_reduce;
+ 		if (IS_ENABLED(CONFIG_MITIGATION_IBPB_ENTRY)) {
+ 			if (has_microcode) {
+ 				setup_force_cpu_cap(X86_FEATURE_IBPB_ON_VMEXIT);
+@@ -2694,6 +2695,17 @@ static void __init srso_select_mitigation(void)
+ 			pr_err("WARNING: kernel not compiled with MITIGATION_IBPB_ENTRY.\n");
+ 		}
+ 		break;
++
++	case SRSO_CMD_BP_SPEC_REDUCE:
++		if (boot_cpu_has(X86_FEATURE_SRSO_BP_SPEC_REDUCE)) {
++bp_spec_reduce:
++			pr_notice("Reducing speculation to address VM/HV SRSO attack vector.\n");
++			srso_mitigation = SRSO_MITIGATION_BP_SPEC_REDUCE;
++			break;
++		} else {
++			srso_mitigation = SRSO_MITIGATION_BP_SPEC_REDUCE_NA;
++			pr_warn("BP_SPEC_REDUCE not supported!\n");
++		}
+ 	default:
+ 		break;
+ 	}
+--
+2.48.1.711.g2feabab25a-goog
