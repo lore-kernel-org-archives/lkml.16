@@ -1,194 +1,136 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2073.outbound.protection.outlook.com [40.107.237.73])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CA921D587
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:18:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740586699; cv=fail; b=nldYcXOSAXA1us9WM8x0Sj7aA/OBeFPPCV3wEMBJuhw0JsWEmL8B6sHBGkCk2FQyT0qFPv6ovepJOhxDuFtkEv96Gi9NWeJurY+LRvowp4LH8L5V2a2adb6OKvy3RMaQlS11t00lBCB1njRxHEkowFCjuQrLxjlhIN3Ub/tI+Jg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740586699; c=relaxed/simple;
-	bh=R4bWMzrwB/YkwAf0NNH33ZTH4QoteFihMqcQ1RJ+16U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TLJRB2HzA4dBnuB7uWoyzVmcf1u8g+vd5om/2idkvXTOeQfA022fa8HSu3K6U/yelUY0pZzwlbSkd/kbZlVj+2su/FhGOkEaDEhCngNIe+18VMbaqffSYExpvgYoUYgLQ3Gj1lYwPgc9HLBUTWyVdzPupOJHm0CGinP6K+DACUg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vFS/ao43; arc=fail smtp.client-ip=40.107.237.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D413A21D58C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740586732; cv=none; b=mTeFYGtOUHUXjmMVCc+W79N7Gv0pBpWI3T3wAVg/nRocDO5sNCDs+koyZunRaanh58BdYzoc2twu+BT62tlVQ84huI9N62AUIcHJO1hYekBt5N6odkqazxKBUXubInquEtDVlVTKz8JqAh7nHfldT6BDcuebPJuTk9GZH18NTHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740586732; c=relaxed/simple;
+	bh=ihff/4I114zmlq2rerVgXVzRtRbXazjckeOZ3R2piFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hdz9uEEURG0dSow+QvorXjx8liQT76bhCWEjByia0EZOztlSSbRsdJt2U2vZNH1g22+owFMRlVvT2fU6Y4Q8ukV9dCD655NOuqS6SUXUrcqF+Kx/w4b+YvA5EE43Zqj2yxl3vnUS9viA76pR1HxP/ZVYeFF7dd26hW5wOoOtbT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oVcdN4cU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=u6/Sb2yQ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vFS/ao43"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d2DSgFtZWVeoRzrDjgM1TmT3g7uwQi5g3yGbuYnWXA1mVjWv3fgvcGupBFbKwWeWpg0cI8T1j0ERgdWV2nVWNFIIDS5375unmoufbl8uZ+qAnCCw0GjvAfuoBsi44gu2MN/hlKEbhP/FT24f7roTDBGjkhr6xxH29imt6Z+Pam2o3RnUAMiF+O3z62OOVaRHPXDfBDOKxDlJ9Pq7PCXNVPi2UFBv3D4RFMjMNmN9QxBOwXH0iuB0r6tuSlUgfQYOrL9Dn3/OaZ8bFqMejZ+WK5eOJMeILpc2ND34UMG6xGXteUz5Tq8kDtGGsYSFNCrNCs4oenEyzeAljGw3mVlEQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vPhSzFnpa/2E3L78eVlox8lYx83YZDcAWI4SG1xpzJc=;
- b=m+b1gtIpd6ofNAfDF8niOxbU4/G7R6p47esNR6slCV0geQoSRL4wDk66Sfz7X9n3DgjY7vynllcsPzR9gXi75QSZ/iHn5dUS/dkJ9L//c1bZFObORETooH2KuxH52vvriSO+cRwC+fPHX3gru5kTUK/f0EKHL0PxlLAfDmBsl1fLrlpLdjwAR4nXMx8pqQbyPhgj/aT3gfRGVRg6nWEYpR7CAKUrjD7ftaEj+BP6yGVmTRpcxv7lqZ11PFnfkkasqnzAWqf4nv0Z4cOcVdUBu9IvObbWT2UOuYH7ntV3phpFMJcPqk+KAxuDg2FY05Iq0kZbr98SQMdPNs5JDLs0bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vPhSzFnpa/2E3L78eVlox8lYx83YZDcAWI4SG1xpzJc=;
- b=vFS/ao43UF1dBXpPNDiPxuMOJBaYPYgASW8iBNnib3LEEkFHNDN/XuW6KXKyW2P19yDtgGPJLoaK7xaIrRhR4Yvfy8rLc+2UhnGAWoM1KA9QPY0NT/oUPFRfq5qLQcz3crvnizm9q1QL1emuARugzMcK66mzKKWWr54XYwcZlFc=
-Received: from SJ0PR13CA0198.namprd13.prod.outlook.com (2603:10b6:a03:2c3::23)
- by MN0PR12MB5907.namprd12.prod.outlook.com (2603:10b6:208:37b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Wed, 26 Feb
- 2025 16:18:14 +0000
-Received: from MWH0EPF000971E7.namprd02.prod.outlook.com
- (2603:10b6:a03:2c3:cafe::f3) by SJ0PR13CA0198.outlook.office365.com
- (2603:10b6:a03:2c3::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.16 via Frontend Transport; Wed,
- 26 Feb 2025 16:18:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- MWH0EPF000971E7.mail.protection.outlook.com (10.167.243.75) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 16:18:13 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 10:18:12 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 10:18:12 -0600
-Received: from xsjlizhih51.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 26 Feb 2025 10:18:12 -0600
-From: Lizhi Hou <lizhi.hou@amd.com>
-To: <ogabbay@kernel.org>, <quic_jhugo@quicinc.com>,
-	<Mario.Limonciello@amd.com>, <jacek.lawrynowicz@linux.intel.com>,
-	<dri-devel@lists.freedesktop.org>
-CC: Lizhi Hou <lizhi.hou@amd.com>, <linux-kernel@vger.kernel.org>,
-	<min.ma@amd.com>, <max.zhen@amd.com>, <sonal.santan@amd.com>,
-	<king.tam@amd.com>
-Subject: [PATCH V2] accel/amdxdna: Check interrupt register before mailbox_rx_worker exits
-Date: Wed, 26 Feb 2025 08:18:10 -0800
-Message-ID: <20250226161810.4188334-1-lizhi.hou@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oVcdN4cU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u6/Sb2yQ"
+Date: Wed, 26 Feb 2025 17:18:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740586728;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rkNenM+yKDUaHBy3c3ZJgUQZ1lxQ7VuCx5GrvAyocnE=;
+	b=oVcdN4cUEvI4Wg6URhwtMZf3ufDVwWaLkwAQl+0MpUZ/7QZ7CJcRiinJ4m4r6cFPqdo6Je
+	ukgTK0kBDQs1lJX3NMijk/G+df+NlvrWyxtIVC3VM+C7OUun+ILrgfOu0zPnZe++3RXkFK
+	OoDN8QZF1X2CgTltQixGn2JuP3L5Xoo4qRyV/BRYtvP0irlQpLjRuzwSNwxjBc3m0xTC+w
+	e8Quqru//HfCIqpJDBNM4u982aO0JOyT6Ku7WMPsA+OFOHPm0xmSXtILgLTj0Jcx9gN5tp
+	HzAptuOts1QUzn1zSfzvXWJYsqwEw5Og+16AAqFqU/k7nq54ZoAA4zafk9DcjA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740586728;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rkNenM+yKDUaHBy3c3ZJgUQZ1lxQ7VuCx5GrvAyocnE=;
+	b=u6/Sb2yQ71oHgzAOdMElkLcJUxQpGhk/dHPZE4ejIPciElUZIgA1sx3LBgzdCBoXjHK+Kb
+	MgEXefNK1J0qOaCw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Tejun Heo <tj@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] workqueue: Always use wq_select_unbound_cpu() for
+ WORK_CPU_UNBOUND.
+Message-ID: <20250226161847.eYrJFpIg@linutronix.de>
+References: <20250221112003.1dSuoGyc@linutronix.de>
+ <Z7iSboU-05uMJ7-e@localhost.localdomain>
+ <Z7iuUObJGgZtsaJe@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB05.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000971E7:EE_|MN0PR12MB5907:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e3c5dbe-77c3-4df2-da56-08dd56812b9f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?t2c2Sb4siHSdkagrQTxi6h3oAG9y11ZV/QYQoiAG74kym3Ty72D7bQ4J+XOo?=
- =?us-ascii?Q?6ZXNT+hufh76smXuFbcl9OzU5e1dqGRy8nhtqcDKbvZ9hKmtHmaYNbBWZ6Fy?=
- =?us-ascii?Q?CZgNI5cdW9kf8Cp78bNCQP6r0LUrqq2QQd8dC4GJQDt7PypWV2EkpKYXyKKk?=
- =?us-ascii?Q?ADxemtHoyUw0uKLMLi/0vCNVXsUoGeqC72kSKOIFMFMLs7yybZImOEta6jei?=
- =?us-ascii?Q?+nhhvTHOTCK5oE0ddcqsPFE90NOcDpB9MziqgQmwcHD38x6/dgZV//2e8WUZ?=
- =?us-ascii?Q?7dIjYXcBFi6pw/G+1/UpPVBrqARYa8tWUVZC1JsVIrGAajNTEbtlCNrWuCr+?=
- =?us-ascii?Q?qzp5QXboCd9tTZjZKdYAw+M+ZKMnQ/QPDZkZokqjVudNHS4oNMTJC1RqFWLm?=
- =?us-ascii?Q?+6/nVqWC6FFshac3WQjhtB5LGvugDR8eXQHC7+0kJhbfM8nMvyLyP8QfcvPy?=
- =?us-ascii?Q?VS1z8U/pwjiuKdlxPY9aVoEvZ09UI79ejx7G8f/owgW+VJFCjzLY/yLTRFpz?=
- =?us-ascii?Q?kKvIbFSvZzA9/yQNlmHz4u6LumwTBjN3rtjy7LxYoSwFs+DRU6+gvIsCItmK?=
- =?us-ascii?Q?/cpxWqhsoDLs3ayYTZ7x4kNs2FlVFHjZbjMj2SdCorD+7xhgCtKT2A0V7XFC?=
- =?us-ascii?Q?o4n7BFZyQECakECh/LRCZiXNJp/+vvxWVscknuByP547+BPY/IMbvXGS4RIq?=
- =?us-ascii?Q?BEgp4mERKKHm8siymPyjuQxHezcdF4T7iske8AX1zyZDfjBhvSYIY5GXE4vx?=
- =?us-ascii?Q?+xOh7zphBO2UwMR5nrJuhrh2oJFGAe5ZVtvnRIA2rcbSNpg6pjSq6pxd4L6V?=
- =?us-ascii?Q?RkPkz1GzUiu2d1mqUP4fa9OLBGb1y8c9bFuVSmFZEVDZXLmwb78J+RI1poAn?=
- =?us-ascii?Q?Ia/qISUWJNGtEwve7Y/83OZgJ5rEDjO+yuMfb8bdUv94x4LBoCgf8eovr93R?=
- =?us-ascii?Q?+OGRJGPaCU0rs+l4wk8H8mUKfFMx1tojGE4zT6YbNcJYWhzXUuieDzBaBdZX?=
- =?us-ascii?Q?ZcHCUgKqQnGEpJxk46ZusX84N8kBwW7VZU0Cmk7tBinPuh3kJUmAQF1oqBhg?=
- =?us-ascii?Q?AbISUuCrhz3Qk4LMVU7VrB5upXciTaU8VZO0dOUGEw4K6UgwOI5PlDccV6jI?=
- =?us-ascii?Q?wo0VTGjY7u0nuKhTz7OJepIryo9/RHgF7vbFWXWsU0ldkszN/0Z65SLNqkFN?=
- =?us-ascii?Q?Dewv4Sd6tMS3JMK853NY3ByT5NHtYdK05xRqYa9UT8IzDLlC4T0kE/hwhR4T?=
- =?us-ascii?Q?u1bh5Q8x8Uu2vDWwUptU/RA1KK5BzkFa6cnkAlJy9ngvVKrotKnzhFtvJCkG?=
- =?us-ascii?Q?kaVe9WjlQgwqVGvTMyvJBBITxz+pFDQTuaMlOwISad1h0CNjKvlkZCZk+yl4?=
- =?us-ascii?Q?FPjTBwXWQo6+A0q5BZ4BJ4XvrKBCWrSVoRq5Ux8B+vvT7B+4yIP6+jy4KB+y?=
- =?us-ascii?Q?oy8TNylcTRzXYrlt7NTRzSP1paNhxOB4kgTOt1ktk6+ph9+cwpdeg66sUPML?=
- =?us-ascii?Q?uj/3+iQftCoLvRY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 16:18:13.7426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e3c5dbe-77c3-4df2-da56-08dd56812b9f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000971E7.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5907
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <Z7iuUObJGgZtsaJe@slm.duckdns.org>
 
-There is a timeout failure been found during stress tests. If the firmware
-generates a mailbox response right after driver clears the mailbox channel
-interrupt register, the hardware will not generate an interrupt for the
-response. This causes the unexpected mailbox command timeout.
+On 2025-02-21 06:48:16 [-1000], Tejun Heo wrote:
+> Hello,
+Hi,
 
-To handle this failure, driver checks the interrupt register before
-exiting mailbox_rx_worker(). If there is a new response, driver goes back
-to process it.
+> > I'm tempted to just assume that none of its users depend on the
+> > work locality?
+>=20
+> That's API guarantee and there are plenty of users who depend on
+> queue_work() and schedule_work() on per-cpu workqueues to be actually
+> per-cpu.=20
 
-Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
----
- drivers/accel/amdxdna/amdxdna_mailbox.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+You mean queue_work(), not queue_work_on()?
+Even with the latter you need to ensure the CPU does not go away and
+hardly someone does this.
 
-diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
-index de7bf0fb4594..8651b1d3c3ab 100644
---- a/drivers/accel/amdxdna/amdxdna_mailbox.c
-+++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
-@@ -348,8 +348,6 @@ static irqreturn_t mailbox_irq_handler(int irq, void *p)
- 	trace_mbox_irq_handle(MAILBOX_NAME, irq);
- 	/* Schedule a rx_work to call the callback functions */
- 	queue_work(mb_chann->work_q, &mb_chann->rx_work);
--	/* Clear IOHUB register */
--	mailbox_reg_write(mb_chann, mb_chann->iohub_int_addr, 0);
- 
- 	return IRQ_HANDLED;
- }
-@@ -366,6 +364,9 @@ static void mailbox_rx_worker(struct work_struct *rx_work)
- 		return;
- 	}
- 
-+again:
-+	mailbox_reg_write(mb_chann, mb_chann->iohub_int_addr, 0);
-+
- 	while (1) {
- 		/*
- 		 * If return is 0, keep consuming next message, until there is
-@@ -379,10 +380,18 @@ static void mailbox_rx_worker(struct work_struct *rx_work)
- 		if (unlikely(ret)) {
- 			MB_ERR(mb_chann, "Unexpected ret %d, disable irq", ret);
- 			WRITE_ONCE(mb_chann->bad_state, true);
--			disable_irq(mb_chann->msix_irq);
--			break;
-+			return;
- 		}
- 	}
-+
-+	/*
-+	 * The hardware will not generate interrupt if firmware creates a new
-+	 * response right after driver clears interrupt register. Check
-+	 * the interrupt register to make sure there is not any new response
-+	 * before exiting.
-+	 */
-+	if (mailbox_reg_read(mb_chann, mb_chann->iohub_int_addr))
-+		goto again;
- }
- 
- int xdna_mailbox_send_msg(struct mailbox_channel *mb_chann,
--- 
-2.34.1
+>          I don't think we can pull the rug from under them. If we want to=
+ do
+> this, which I think is a good idea, we should:
+>
+> 1. Convert per-cpu workqueue users to unbound workqueues. Most users don't
+>    care whether work item is executed locally or not. However, historical=
+ly,
+>    we've been preferring per-cpu workqueues because unbound workqueues ha=
+d a
+>    lot worse locality properties. Unbound workqueue's topology awareness =
+is
+>    a lot better now, so this should be less of a problem and we should be
+>    able to move a lot of users over to unbound workqueues.
 
+you mean convert each schedule_work() to schedule_unbound_work() which
+uses system_unbound_wq instead?
+
+I would really like to make it default because otherwise most people
+will stick to the old function and the "convert" is never ending.
+
+Maybe I misunderstood you.
+
+> 2. There still are cases where local execution isn't required for
+>    correctness but local & concurrency controlled executions yield
+>    performance gains. Workqueue API currently doesn't distinguish these t=
+wo
+>    cases. We should add a new API which prefers local execution but doesn=
+'t
+>    require it, which can then do what's suggested in this patch.
+
+I see. So we get rid of the old naming and have them something like
+	schedule_bound_work()
+	schedule_unbound_work()
+	schedule_hopefully_local_work()
+
+? The last one would attempt the local CPU for performance reasons
+unless the CPU is not part the workqueue' cpumask. So the difference is
+that the middle one would be queued on WQ_UNBOUND while the latter might
+be queued on a different CPU but on WQ without WQ_UNBOUND. Both would
+respect workqueue' cpumask.
+
+> Unfortunately, I don't see a way forward without auditing and converting =
+the
+> users.
+
+So tried to pull the "in WORK_CPU_UNBOUND the has unbound" card and
+comment where it says "prefer local CPU" card.
+We have already different behaviour with queue_delayed_work(,,0) vs
+queue_delayed_work(,,!0) but this does not count here?
+I don't insist in doing this always, just if the CPU is "isolated" as in
+not part of the workmask. But then, this path gets probably less testing
+so it might be not a good idea if something relies on but does not know=E2=
+=80=A6
+
+> Thanks.
+
+Sebastian
