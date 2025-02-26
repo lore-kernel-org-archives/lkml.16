@@ -1,17 +1,17 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A5321A425
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AD6E21B192
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:03:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571432; cv=none; b=moT7d4Vn8ogtWtJR1cBw2FCLUHIT/KViLmZWhKvDfu0XBnU/7dq6F0ZUNnY9HFVeA7cTp2tGidRP4twYe02vR3XYMlKVfjRwn9eP7m6oymObypwjSVetNdPAV0QJZcp/6Qwb2Go3DN5R3znf34qf72a3Ysy1ywdKeibLS7qE540=
+	t=1740571432; cv=none; b=q+UPrTrsAKa6OtcDmnUV3RzMjIkDI7h0MOFAzdwcyTZ9mDIj9llDUKJiEqEA3M7HulG7OpuKM4voM9FQtCjYbzoUbkznRzWBnYmhvfoYLkPdcxwRcPWIisESE9JEgt7AMrT+ZMUNqwJdHZLrFLBoYn+HnMTOUc1fDwFNzZQodes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740571432; c=relaxed/simple;
-	bh=AI8KzdVgDo3mMhBeNPeH68ATHjEiC1BiJojhkl0I6w4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=anLH+X6syu+XhJR+VDSswCfzrzr0JlIu2wgtSEWZEYz48EWJ+EhVNbCqpdunOMiqNXnuhE+yBLKoH52C0QLVjv8sHvMDNb3Yu8C1nhhS6CBBI6xIIBnXXW7CGUWd2Xud2qQ03KnhO8VrxDdhDBIu3/3g3Mee48sqbdiQsVABPBk=
+	bh=KQ5kR5KOjuG5TT1NQ9BdZaD9WIwgrogpeFMNlJHIjgY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=XBUII3FAfHVoUcqe+k+DJpTBJ518K2xB1Q4DRm0csei/Nr4kgcFHP468hm5SinvgXJx1+S1m8U8POfTI2mjy2r097Xznifaoimr20gUwOwMqx7dwbM9xGCGd0Y8ukDwlYKMwDR0gk9B08qBunfxAY50pv5HdVyh2sWUNgLpxBhU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-14-67bf032243b6
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-1e-67bf032265ed
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on v6.14-rc4 07/25] mm: introduce luf_ugen to be used as a global timestamp
-Date: Wed, 26 Feb 2025 21:03:18 +0900
-Message-Id: <20250226120336.29565-7-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on v6.14-rc4 09/25] mm: introduce API to perform tlb shootdown on exit from page allocator
+Date: Wed, 26 Feb 2025 21:03:20 +0900
+Message-Id: <20250226120336.29565-9-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120336.29565-1-byungchul@sk.com>
 References: <20250226113024.GA1935@system.software.com>
  <20250226120336.29565-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrELMWRmVeSWpSXmKPExsXC9ZZnoa4S8/50g55+DYs569ewWXze8I/N
-	4uv6X8wWTz/1sVhc3jWHzeLemv+sFud3rWW12LF0H5PFpQMLmCyO9x5gsph/7zObxeZNU5kt
-	jk+Zymjx+8ccNgc+j++tfSweO2fdZfdYsKnUY/MKLY9NqzrZPDZ9msTu8e7cOXaPEzN+s3i8
-	33eVzWPrLzuPxqnX2Dw+b5IL4InisklJzcksSy3St0vgyphw4yVTwTvRinszt7I3MN4Q7GLk
-	5JAQMJE4NecpSxcjB5i9/3Y1SJhNQF3ixo2fzCC2iICZxMHWP+xdjFwczALLmCT2nmhgA0kI
-	C2RKvOvewQ5iswioSpy8f5YdZA6vgKnExK2SEOPlJVZvOAA2hxNozqdpx8BahQSSJXb+/sME
-	MlNC4DGbxNTWXWwQDZISB1fcYJnAyLuAkWEVo1BmXlluYmaOiV5GZV5mhV5yfu4mRmBIL6v9
-	E72D8dOF4EOMAhyMSjy8D87sTRdiTSwrrsw9xCjBwawkwsuZuSddiDclsbIqtSg/vqg0J7X4
-	EKM0B4uSOK/Rt/IUIYH0xJLU7NTUgtQimCwTB6dUA+Oahx8ZVkjfP87m9y1v38kXD7bw3Gy/
-	rmDtPnvejXMfeMtWqfoIvlnZemk73/eJ3uvntWwT6d/t9TWm6syeisqvKt/XGrQHLj1bdMen
-	7kTHfG23LcuK9G1EFFwP+ei6lnZ+e1ayOf7xqoOdr8Quz4lMaZyjsf9HQoTZch+zV/78Xy71
-	7u9kviSpxFKckWioxVxUnAgA1zaIxGUCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJLMWRmVeSWpSXmKPExsXC5WfdrKvEvD/dYPYyeYs569ewWXze8I/N
-	4uv6X8wWTz/1sVgcnnuS1eLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
-	Nm+aymxxfMpURovfP+awOfB7fG/tY/HYOesuu8eCTaUem1doeWxa1cnmsenTJHaPd+fOsXuc
-	mPGbxeP9vqtsHotffGDy2PrLzqNx6jU2j8+b5AJ4o7hsUlJzMstSi/TtErgyJtx4yVTwTrTi
-	3syt7A2MNwS7GDk4JARMJPbfru5i5ORgE1CXuHHjJzOILSJgJnGw9Q97FyMXB7PAMiaJvSca
-	2EASwgKZEu+6d7CD2CwCqhIn759lB5nDK2AqMXGrJEhYQkBeYvWGA2BzOIHmfJp2DKxVSCBZ
-	YufvP0wTGLkWMDKsYhTJzCvLTczMMdUrzs6ozMus0EvOz93ECAzQZbV/Ju5g/HLZ/RCjAAej
-	Eg/vgzN704VYE8uKK3MPMUpwMCuJ8HJm7kkX4k1JrKxKLcqPLyrNSS0+xCjNwaIkzusVnpog
-	JJCeWJKanZpakFoEk2Xi4JRqYKw5f6xrl+mxn51MLNXMB6+b73u+Te+MwY/F2pKOi5bnz798
-	MyvNfoLhtPia193Tzs0SrP6YebGw0t3wZm764Wu/n2wNVTopOeMay4vTSn2fKzcvFnvh+C7l
-	wI52WUbtBaFPArZkuinznXnhLy751laTSX7XoVgX3/xn2k19IUnsXdsX+tjzVCmxFGckGmox
-	FxUnAgD9F61dTAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnoa4S8/50g6//9SzmrF/DZvF5wz82
+	i6/rfzFbPP3Ux2JxedccNot7a/6zWpzftZbVYsfSfUwWlw4sYLI43nuAyWL+vc9sFps3TWW2
+	OD5lKqPF7x9z2Bz4PL639rF47Jx1l91jwaZSj80rtDw2repk89j0aRK7x7tz59g9Tsz4zeLx
+	ft9VNo+tv+w8GqdeY/P4vEkugCeKyyYlNSezLLVI3y6BK2PFldqCR6IVzRd7GRsYZwt1MXJy
+	SAiYSHyb+ZAJxt59bwkLiM0moC5x48ZPZhBbRMBM4mDrH/YuRi4OZoFlTBJ7TzSwgSSEBSok
+	psx4CtbAIqAqsX3PVkYQm1fAVOJUx1VGiKHyEqs3HAAbxAk06NO0Y2C9QgLJEjt//2ECGSoh
+	cJtNoqnnJ1SDpMTBFTdYJjDyLmBkWMUolJlXlpuYmWOil1GZl1mhl5yfu4kRGNTLav9E72D8
+	dCH4EKMAB6MSD++DM3vThVgTy4orcw8xSnAwK4nwcmbuSRfiTUmsrEotyo8vKs1JLT7EKM3B
+	oiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAyFo79fkXfhsfrtQZre0nLkU9SGi74MpcHvh1
+	RmPewXdTRS8zzs8XPHrQ1OlcSfW1VMWFm27IsfAw72q3/PRu/R7289tUw6+weRZmuV5yK7Ns
+	bLi7ir/F/JZ+1vF0yWNerTYxBhvSHtXyvq47d8NpD1v2W/fXzn5L+B0msDbJzszY9PXhUx53
+	JZbijERDLeai4kQAYsuXG2YCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsXC5WfdrKvEvD/dYHu/msWc9WvYLD5v+Mdm
+	8XX9L2aLp5/6WCwOzz3JanF51xw2i3tr/rNanN+1ltVix9J9TBaXDixgsjjee4DJYv69z2wW
+	mzdNZbY4PmUqo8XvH3PYHPg9vrf2sXjsnHWX3WPBplKPzSu0PDat6mTz2PRpErvHu3Pn2D1O
+	zPjN4vF+31U2j8UvPjB5bP1l59E49Rqbx+dNcgG8UVw2Kak5mWWpRfp2CVwZK67UFjwSrWi+
+	2MvYwDhbqIuRk0NCwERi970lLCA2m4C6xI0bP5lBbBEBM4mDrX/Yuxi5OJgFljFJ7D3RwAaS
+	EBaokJgy4ylYA4uAqsT2PVsZQWxeAVOJUx1XGSGGykus3nAAbBAn0KBP046B9QoJJEvs/P2H
+	aQIj1wJGhlWMIpl5ZbmJmTmmesXZGZV5mRV6yfm5mxiBIbqs9s/EHYxfLrsfYhTgYFTi4X1w
+	Zm+6EGtiWXFl7iFGCQ5mJRFezsw96UK8KYmVValF+fFFpTmpxYcYpTlYlMR5vcJTE4QE0hNL
+	UrNTUwtSi2CyTBycUg2Ms6Jm1iuslbD7+TRqxjqltWF2tS7fb7ros1kcyAje+/sCS1/Vec9H
+	68OX3H9psLnN439Cv/Phr7584f+WHD3Zd90y9dXTifZ/VNu/rzomuyBFbYNf2w+5lZ9fZDPI
+	e0TfYH67zGb2b09bc/tw1jvuKx5O/M/df6365LWXyW3Jfnas5+cc9WjXVGIpzkg01GIuKk4E
+	AHMyoZlNAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,90 +67,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Functionally, no change.  This is a preparation for luf mechanism that
-needs to evaluate the temporal sequence of events to determine whether
-tlb flush required has been done on each CPU.
+performs tlb shootdown required on exit from page allocator.
 
-To achieve that, this patch introduced a generation number, luf_ugen,
-and a few APIs manipulating the number.  It's worth noting the number is
-designed to wraparound so care must be taken when using it.
+This patch introduced a new API rather than making use of existing
+try_to_unmap_flush() to avoid repeated and redundant tlb shootdown due
+to frequent page allocations during a session of batched unmap flush.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm.h | 34 ++++++++++++++++++++++++++++++++++
- mm/rmap.c          | 22 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
+ include/linux/sched.h |  1 +
+ mm/internal.h         |  4 ++++
+ mm/rmap.c             | 20 ++++++++++++++++++++
+ 3 files changed, 25 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7b1068ddcbb70..8c3481402d8cb 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4155,4 +4155,38 @@ int arch_get_shadow_stack_status(struct task_struct *t, unsigned long __user *st
- int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status);
- int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 9632e3318e0d6..86ef426644639 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1401,6 +1401,7 @@ struct task_struct {
+ #endif
  
-+#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
-+/*
-+ * luf_ugen will start with 2 so that 1 can be regarded as a passed one.
-+ */
-+#define LUF_UGEN_INIT 2
-+
-+static inline bool ugen_before(unsigned long a, unsigned long b)
+ 	struct tlbflush_unmap_batch	tlb_ubc;
++	struct tlbflush_unmap_batch	tlb_ubc_takeoff;
+ 
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+diff --git a/mm/internal.h b/mm/internal.h
+index 3333d8d461c2c..b52e14f86c436 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1252,6 +1252,7 @@ extern struct workqueue_struct *mm_percpu_wq;
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ void try_to_unmap_flush(void);
+ void try_to_unmap_flush_dirty(void);
++void try_to_unmap_flush_takeoff(void);
+ void flush_tlb_batched_pending(struct mm_struct *mm);
+ void fold_batch(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src, bool reset);
+ void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src);
+@@ -1262,6 +1263,9 @@ static inline void try_to_unmap_flush(void)
+ static inline void try_to_unmap_flush_dirty(void)
+ {
+ }
++static inline void try_to_unmap_flush_takeoff(void)
 +{
-+	/*
-+	 * Consider wraparound.
-+	 */
-+	return (long)(a - b) < 0;
 +}
-+
-+static inline unsigned long next_ugen(unsigned long ugen)
-+{
-+	if (ugen + 1)
-+		return ugen + 1;
-+	/*
-+	 * Avoid invalid ugen, zero.
-+	 */
-+	return ugen + 2;
-+}
-+
-+static inline unsigned long prev_ugen(unsigned long ugen)
-+{
-+	if (ugen - 1)
-+		return ugen - 1;
-+	/*
-+	 * Avoid invalid ugen, zero.
-+	 */
-+	return ugen - 2;
-+}
-+#endif
- #endif /* _LINUX_MM_H */
+ static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+ {
+ }
 diff --git a/mm/rmap.c b/mm/rmap.c
-index 2de01de164ef0..ed345503e4f88 100644
+index 74fbf6c2fb3a7..72c5e665e59a4 100644
 --- a/mm/rmap.c
 +++ b/mm/rmap.c
-@@ -634,6 +634,28 @@ struct anon_vma *folio_lock_anon_vma_read(const struct folio *folio,
+@@ -772,6 +772,26 @@ void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src)
+ 	read_unlock_irqrestore(&src->lock, flags);
  }
  
- #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-+
-+/*
-+ * This generation number is primarily used as a global timestamp to
-+ * determine whether tlb flush required has been done on each CPU.  The
-+ * function, ugen_before(), should be used to evaluate the temporal
-+ * sequence of events because the number is designed to wraparound.
-+ */
-+static atomic_long_t __maybe_unused luf_ugen = ATOMIC_LONG_INIT(LUF_UGEN_INIT);
-+
-+/*
-+ * Don't return invalid luf_ugen, zero.
-+ */
-+static unsigned long __maybe_unused new_luf_ugen(void)
++void try_to_unmap_flush_takeoff(void)
 +{
-+	unsigned long ugen = atomic_long_inc_return(&luf_ugen);
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
 +
-+	if (!ugen)
-+		ugen = atomic_long_inc_return(&luf_ugen);
++	if (!tlb_ubc_takeoff->flush_required)
++		return;
 +
-+	return ugen;
++	arch_tlbbatch_flush(&tlb_ubc_takeoff->arch);
++
++	/*
++	 * Now that tlb shootdown of tlb_ubc_takeoff has been performed,
++	 * it's good chance to shrink tlb_ubc if possible.
++	 */
++	if (arch_tlbbatch_done(&tlb_ubc->arch, &tlb_ubc_takeoff->arch))
++		reset_batch(tlb_ubc);
++
++	reset_batch(tlb_ubc_takeoff);
 +}
 +
  /*
