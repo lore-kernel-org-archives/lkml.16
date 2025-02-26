@@ -1,160 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018C71DE2A9;
-	Wed, 26 Feb 2025 17:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589252; cv=none; b=LH7Bx7C+KHGI3nC2tD7fLWP7gwp/FAY5YQc3NgGdY8q8kDlstItWP3oDEr+GkB28BWmwVuEYeIqvBIOmgl4aJ/8RpdYOTuC6ICrz+E8MWittLczerHFoHh8i+iQW/5q0CCXZtONsvFt4PkYN/YRcBX+3RPYqxA3tTD3jzkdxXvI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589252; c=relaxed/simple;
-	bh=MdqkHWUEtv7tjnvc1shi+RAak0dflbv0rf/oThbljPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D7w5U+iHgEUv+/v3IhtZb9DMq44yovMUz0GVmXQsj1tNgeyxyzaHG+j6Qq9HJa9WCYJQB8CutzRMqh0km1z0OYtt7wBRjND2X6O7R87vo9gxY/NlgFkeBjcj86cvdDF5yWxcBMZFX8q3OvX/rLCZAE+qTuXbaP8XxPPvAuP5gJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=miRfNZe+; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443F01DE2A9;
+	Wed, 26 Feb 2025 17:01:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740589265; cv=pass; b=OjD1Wfx62Ic3sFRS5EvWY5c+DK2L2vXlVKHoYiMOnlbFwTaUPoHUuk7KvKROUf7jE/gXVAyzYznoMcGJLuPdzTJN+8XPbJ/R7C4yNarPP+C5LEkMzIZiVEewbLxt1zd0s19eqGdHtKkzzJSEkvHzNJRBbcMCQ0k5330frhbNux8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740589265; c=relaxed/simple;
+	bh=rrBHkoNYX1SE8vJwLOW7Vd34VXpCljs+VmhE2AbWq7Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jttQeb+HL/IWP2FOlB0NR/0A/96sX6o5SGq/FNkyKYUFzM5yUb4kXoxDYck6NglfFCWOs8MdTHa7++tibSi50BJpCx18eNzq1J3IYHHuLwvBh5/p51j7xnDLXF7gtmsB9pIf0DCwXRCu8YURoVCRw4oOvu5d6UhJ2LLBvA9hqOI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=H9Z+9Vz+; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="miRfNZe+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740589250; x=1772125250;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MdqkHWUEtv7tjnvc1shi+RAak0dflbv0rf/oThbljPQ=;
-  b=miRfNZe+9jnrZ3kYF0xVwFDYmwXu7UCnX1h5zSor/s5sOwyolXFV0Spp
-   AD6AKuNHah0o9IK1Fqps/bxb52hC7qZNL6jQdkImn8POLVBx7Ja8wZ8dx
-   CmrDyESDCkXzqZ4Y81Gvz1sVC5D24WHXjGKZ8kapoO6tZMEAFPouyXsif
-   NKD7qH2UABlXuDTdudSvRKlx9T/e1y7RbLYWP4SirwNqk0sJ5adSfzMPB
-   mK5DHIgiqVvEFT49mKPsxPJ0fwg9TJVJaOK0U8c3pnoNKK0qvPTpUE15c
-   kcDJexJkK8IIzKSmFikAJztnWhVaE05FyUMW5s+Qs3HeDrFQelHCP2y4N
-   w==;
-X-CSE-ConnectionGUID: b8vKBc5aTUqGBqTbMy0d7w==
-X-CSE-MsgGUID: +amB/NTSSHG9rf7UVEzldg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41577104"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="41577104"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 09:00:49 -0800
-X-CSE-ConnectionGUID: GekzjP7zTV2iLQdCigxZcw==
-X-CSE-MsgGUID: SjUIbYiwSgatyjlq00pQKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="121751950"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.220.27])
-  by orviesa004.jf.intel.com with ESMTP; 26 Feb 2025 09:00:47 -0800
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Kan Liang <kan.liang@intel.com>
-Subject: [PATCH v4] perf script: Fix output type for dynamically allocated core PMU's
-Date: Wed, 26 Feb 2025 11:00:43 -0600
-Message-ID: <20250226170043.762219-1-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="H9Z+9Vz+"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 838FE182736;
+	Wed, 26 Feb 2025 17:01:00 +0000 (UTC)
+Received: from pdx1-sub0-mail-a233.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.105.75.36])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 70770181692;
+	Wed, 26 Feb 2025 17:00:58 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740589258; a=rsa-sha256;
+	cv=none;
+	b=gNJjOPFNunL1nqCsbTRCRknPIVd6DuX69gifzTsy6zr1snPrBuiysDiTStyyYdUA/Xi5P9
+	f/d7SnYoeiOo5/w76XkEjIthRYw7Pme2JUgwjmhZJip2mQQzwM5RSP2DT9GFpkYE1BOYt6
+	zW9yU1vTgC9H2PkVMVD6gex2H0Wzu5B4bWhwsdO/Aez2tBJqwkkeCv4OtMTQHOETg5ntZQ
+	63gaRc6DNYDuBvLfJQ4IgjgBf4aQoSdZnKZv+/lc+QHGnNYyCScG3+I19RuQLQa0xboYl3
+	59VGBnf3amxjwSIQBWW7uh4Dh/774sCPKILsKDyB7n0G31Yz6DS0Uzp/4+xlFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740589258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=rrBHkoNYX1SE8vJwLOW7Vd34VXpCljs+VmhE2AbWq7Q=;
+	b=wYuXiHFQN8vBbFXELBqFKIdFnXwaZ+SvvpYlj1tNiCoPQ047ngoYkPMY7NB6Yi963IVZLf
+	nDBUfItUc4hLZ3jLSzhUtjfde77cwehG2XAsRO9yMafRN8b681JN6GZPpBbSlzkypPyOK7
+	7hoCoyxqrdE7kn5ao7PlgDXKEM9rrlhifUSu5YV1fXBSjqesRBDHBK39pPqaNNc+GBXLXX
+	RiAW08o/tYq7KSzcBLXW/ASzwEkbIxbx4+L1sXOns25+lmZZbclQdT1tLmDDUDNwAtod3X
+	Oo8SyOoCZGT9XoKtGKacG2xeyTzof4dPj/IXGSO/Kr5ueyJ1FyJyWWhPX4Tgjg==
+ARC-Authentication-Results: i=1;
+	rspamd-6d7cc6b78d-q7f2g;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Inform-Army: 07a574fa4dec4754_1740589259053_1304349702
+X-MC-Loop-Signature: 1740589259053:1725531657
+X-MC-Ingress-Time: 1740589259053
+Received: from pdx1-sub0-mail-a233.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.105.75.36 (trex/7.0.2);
+	Wed, 26 Feb 2025 17:00:59 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a233.dreamhost.com (Postfix) with ESMTPSA id 4Z312K32h6z3d;
+	Wed, 26 Feb 2025 09:00:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1740589258;
+	bh=rrBHkoNYX1SE8vJwLOW7Vd34VXpCljs+VmhE2AbWq7Q=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=H9Z+9Vz+cD+MI0Pi9BowQUIIe0YJ/pcjIXzsZElUUQwt48i4fukX0C1XtiYX/8E9n
+	 KFsRP216yCoNSmcAQx6aaq+nt5L9b7zk/zvov0kzU1ucYiXYYcIr17geZqofGYPB9E
+	 7CZ6MlfAUTsHjq7k1VWNhPteHHQsPSwQ1fvaMlp/vTN0lVA7Ir+rTPGoiAMOgAaJv6
+	 BS1q8azoySijrHL1iqMv4TaGT6tKcGyR4DA12BUMjt4LN28ET5/AIIGRmgNvMnvpqg
+	 P+hr59fJZmlvO3tSIPeCDEY6mvOF4vK2x00fe+spu29gFFjyKvOsdx2IxAWaObUw+D
+	 qIPWGENLtOC0g==
+Date: Wed, 26 Feb 2025 09:00:53 -0800
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH RFC v2 03/10] locking/local_lock: Introduce
+ localtry_lock_t
+Message-ID: <20250226170053.lxpreaegz5tysef7@offworld>
+Mail-Followup-To: Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	maple-tree@lists.infradead.org,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Alexei Starovoitov <ast@kernel.org>
+References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
+ <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250214-slub-percpu-caches-v2-3-88592ee0966a@suse.cz>
+User-Agent: NeoMutt/20220429
 
-This patch was originally posted here:
+On Fri, 14 Feb 2025, Vlastimil Babka wrote:
 
-https://lore.kernel.org/all/20241213215421.661139-1-thomas.falcon@intel.com/
+>From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>
+>In !PREEMPT_RT local_lock_irqsave() disables interrupts to protect
+>critical section, but it doesn't prevent NMI, so the fully reentrant
+>code cannot use local_lock_irqsave() for exclusive access.
+>
+>Introduce localtry_lock_t and localtry_lock_irqsave() that
+>disables interrupts and sets acquired=1, so localtry_lock_irqsave()
+>from NMI attempting to acquire the same lock will return false.
+>
+>In PREEMPT_RT local_lock_irqsave() maps to preemptible spin_lock().
+>Map localtry_lock_irqsave() to preemptible spin_trylock().
+>When in hard IRQ or NMI return false right away, since
+>spin_trylock() is not safe due to PI issues.
+>
+>Note there is no need to use local_inc for acquired variable,
+>since it's a percpu variable with strict nesting scopes.
+>
 
-I have rebased on top of Arnaldo's patch here:
+LGTM.
 
-https://lore.kernel.org/all/Z2XCi3PgstSrV0SE@x1/
-
-The original commit message:
-"
-perf script output may show different fields on different core PMU's
-that exist on heterogeneous platforms. For example,
-
-perf record -e "{cpu_core/mem-loads-aux/,cpu_core/event=0xcd,\
-umask=0x01,ldlat=3,name=MEM_UOPS_RETIRED.LOAD_LATENCY/}:upp"\
--c10000 -W -d -a -- sleep 1
-
-perf script:
-
-chromium-browse   46572 [002] 544966.882384:      10000 	cpu_core/MEM_UOPS_RETIRED.LOAD_LATENCY/: 7ffdf1391b0c     10268100142 \
- |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK    N/A    5   7    0   7fad7c47425d [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
-
-perf record -e cpu_atom/event=0xd0,umask=0x05,ldlat=3,\
-name=MEM_UOPS_RETIRED.LOAD_LATENCY/upp -c10000 -W -d -a -- sleep 1
-
-perf script:
-
-gnome-control-c  534224 [023] 544951.816227:      10000 cpu_atom/MEM_UOPS_RETIRED.LOAD_LATENCY/:   7f0aaaa0aae0  [unknown] (/usr/lib64/libglib-2.0.so.0.8000.3)
-
-Some fields, such as data_src, are not included by default.
-
-The cause is that while one PMU may be assigned a type such as
-PERF_TYPE_RAW, other core PMU's are dynamically allocated at boot time.
-If this value does not match an existing PERF_TYPE_X value,
-output_type(perf_event_attr.type) will return OUTPUT_TYPE_OTHER.
-
-Instead search for a core PMU with a matching perf_event_attr type
-and, if one is found, return PERF_TYPE_RAW to match output of other
-core PMU's.
-"
-
-Suggested-by: Kan Liang <kan.liang@intel.com>
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
-v2: restrict pmu lookup to platforms with more than one core pmu
-v3: only scan core pmu list
-v4: rebase on top of Arnaldo's patch
----
- tools/perf/builtin-script.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index d797cec4f054..abc860d01420 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -398,10 +398,28 @@ static inline int output_type(unsigned int type)
- 	return OUTPUT_TYPE_OTHER;
- }
- 
-+static bool output_type_check_core_pmus(unsigned int type)
-+{
-+	struct perf_pmu *pmu = NULL;
-+
-+	if (perf_pmus__num_core_pmus() > 1) {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			if (pmu->type == type)
-+				return true;
-+		}
-+	}
-+	return false;
-+}
-+
- static inline int evsel__output_type(struct evsel *evsel)
- {
--	if (evsel->script_output_type == OUTPUT_TYPE_UNSET)
--		evsel->script_output_type = output_type(evsel->core.attr.type);
-+	if (evsel->script_output_type == OUTPUT_TYPE_UNSET) {
-+		if (output_type(evsel->core.attr.type) == OUTPUT_TYPE_OTHER &&
-+		    output_type_check_core_pmus(evsel->core.attr.type))
-+			evsel->script_output_type = PERF_TYPE_RAW;
-+		else
-+			evsel->script_output_type = output_type(evsel->core.attr.type);
-+	}
- 
- 	return evsel->script_output_type;
- }
--- 
-2.48.1
-
+Acked-by: Davidlohr Bueso <dave@stgolabs.net>
