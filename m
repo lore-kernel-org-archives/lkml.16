@@ -1,162 +1,455 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2055.outbound.protection.outlook.com [40.107.223.55])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEC92135B7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE790224220;
 	Wed, 26 Feb 2025 09:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740560952; cv=fail; b=lymTCHWJh4fEg/sYYzRIhDIBZJPzifYOSDC/oaCAeowB1XZB1ZYOXr7YRVO6W5E3Z//UABUOIJB4+Qg1DD7g8QJqjnJhGdOix1tWTBdTDGzQ4DCQXpJpTLaDFIeD4NyJQCV2qKAhV3+7bCOGrU2Tuh1P6XVsU4A1Scf4sqgCtiY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740560952; c=relaxed/simple;
-	bh=Adkc41nKKcUzv6S93hYXJBzmPxwEoPAjGiwiw4cb8Es=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u9NNvehK4Y8uwNVlD4/krzKgxLfD6Xfki1DsTEnCY9coQZoUneE9BLBEE92I2bSRL4IRu6V/Uar/UNiep8+sSj+buIjOokm82PZ9s0Ln1/DCzPjD0AzejtnViQasgsZaotnW0pkruuttpk/hAPbvXjV5DcOMm94bIXZAQIz+9cU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WW7iXPHG; arc=fail smtp.client-ip=40.107.223.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740560955; cv=none; b=i+EKYgWbm7KQdNqrZuObKMAxcldMvkkF+2qtEeSvGdsC2SwhOvl0cnydD8WUr7KsOX83tGxpIqrPnxCj2h85kKQ26H/Zkvci+VYKPYTaNx9pwxSlQop/ZrN7GfUdzWRZVuU0qkDrHhr43DjKVSjG4Z7yctmU51p0tubvV82sle8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740560955; c=relaxed/simple;
+	bh=mWtuE0d+HNUmp/zyolAa21VUgkJzuk9wG7mXxuiq3eQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O5sReh7MkwDOcyeQLL6ukGoJsMCnmPIN20sZC/5L8/Udg3UOcQwk3RgxDIX+axkFw9N+2brctvPfXobqM6a2N69aJK9+GjE4kZvDun/1l/pngLoed2M6qGG0f3M5z6Joz74XKdnk5u/V3ZbbzqiJpKAGwqWLiC6lAco017f8Sz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=FSQXFrRc; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WW7iXPHG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=boHvPbbtpSYhGYAzo5kgO5sZTMh7b5D7W8h99MS8qucTmKJ1/jgcBxdBuZwNtkXGJOpmDXR85ER6Igo5QtLiYFrUSDC820nuT+Rk/9S01zd8VEuCZ9WuqB3UZ/FYwYdREJkt3Z2swGb9eJahf2o5XIIWkpNEoWRBCfJoRkMMoIsxISeRGoIpNDLArnwiobBJZTsNHJdBe1Gu8PWHPYgCDyoGOyKf9dLtNyCVQU9kwqsSx8XX4e0NyJ02BHI+7T+K7TxtqNOJ74B8GdCFqIIVD2uBuEknQ3zzsgeB3ENNaW2ycfxC+n9x8h1bu7QvEC8oeWmxYr7wUalhJi8FEzHVGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VbHN7887P5jV1fLbLmTagSeV1hOPIrcrTM8OzFtOvN4=;
- b=oa670cUFPRdPMwLZ2MDxt0HRp9PcYjJ+23BUfTy5rzFAqEscB01HQA1Fcu78dwLowG0J0qkYL3ytmr8Fvxo3ZEboly3GLtwMRaGy6EZJ1BnsfMEwQ4xGSWK5hBDwCj0obOnFeSf6Wbjsys33nKC/43YGJA7PqShhPaOZCET16kT4gxqyAlcL+Sl1EOqR/N1WJHarpHfwd6+NaebPCqnPY1ayUQgdYDohCCnmqKYi++dHahPWXziF3kgrlIlMqmOgPGlG8B7DLpINjWU9W+dem/Z3jpgJx6R8LeMguieeP/4ls6sxyoeF8FkCypilCPU/ytv5M6wgZvJ4lJuTHD8f1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VbHN7887P5jV1fLbLmTagSeV1hOPIrcrTM8OzFtOvN4=;
- b=WW7iXPHGot9yqCe1r7PD7iCcjAxXb6dfmqBJXkVhugBrHaQqLUgQTVm8eq/yIuTsgsZoeuaMGFxVinhpkOPdFi6xGMtPcxWy29MdvfEmkI0rllFqjipcpts8Gy+3cGv2KhGgfSmcXrimEAgD84bq/aLBaZtkGdZkX3VFfLt1KQo=
-Received: from MW2PR2101CA0017.namprd21.prod.outlook.com (2603:10b6:302:1::30)
- by SJ0PR12MB6878.namprd12.prod.outlook.com (2603:10b6:a03:483::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
- 2025 09:09:07 +0000
-Received: from SJ1PEPF00002324.namprd03.prod.outlook.com
- (2603:10b6:302:1:cafe::4a) by MW2PR2101CA0017.outlook.office365.com
- (2603:10b6:302:1::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.11 via Frontend Transport; Wed,
- 26 Feb 2025 09:09:07 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002324.mail.protection.outlook.com (10.167.242.87) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 09:09:06 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 03:09:00 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>, <naveen.rao@amd.com>
-Subject: [RFC v2 11/17] x86/sev: Enable NMI support for Secure AVIC
-Date: Wed, 26 Feb 2025 14:35:19 +0530
-Message-ID: <20250226090525.231882-12-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
-References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="FSQXFrRc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=CBgt3Q2RUqu1G3RGyPq/Cq1jOTSZdtLEOZ0UeAUsMNE=; b=FSQXFrRcX+ZC4u1vlsZA2JZI+p
+	RtWeDBIgjL37PoUBF587B4eF3K1ojR0emEMTmENuCHy0NPIMupAj9u/fZIPutFqGUcj02bcXQbrbc
+	Q3OZZymwZhSPwhJaaold2D8C4zFhSsQDj/BATPgfSa3SNOwTpRHYrpLPVpvR5TPc3Ff3M6eLL/zij
+	f6WYQel7+0ktoop8T9iNg8b9zN4PGQQ1pZ4gP6g0AXRwF+InKGfyuOJxlt1kViEdoCg5f7UMsmY3H
+	Zk3w8FtgSCL9x4li1/vq3X8jlCnC4WFN6UMrycAxY0ecyKZ1P1uhMq+UTlmv+RGmIdvtIVE1S5P95
+	1sNDxYkw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tnDPA-001suY-18;
+	Wed, 26 Feb 2025 17:08:37 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Feb 2025 17:08:36 +0800
+Date: Wed, 26 Feb 2025 17:08:36 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [v2 PATCH] crypto: lib/Kconfig - Hide arch options from user
+Message-ID: <Z77aFJCVuXeDXRrs@gondor.apana.org.au>
+References: <20250225164216.4807-1-arnd@kernel.org>
+ <20250225213344.GA23792@willie-the-truck>
+ <f7c298b8-7989-49e7-90a2-5356029a6283@app.fastmail.com>
+ <c4896a12-8abe-4fe6-b381-86b23d32b332@app.fastmail.com>
+ <Z75xKexTUNm_FnSK@gondor.apana.org.au>
+ <Z76aUfPIbhPAsHbv@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002324:EE_|SJ0PR12MB6878:EE_
-X-MS-Office365-Filtering-Correlation-Id: 446779c4-aa1d-45df-7cdf-08dd56453939
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?VgsGhzKNXeUs9U85UOwusNUFgbxsBfK/e+ITxAL5IddX7vmA9YtQ75/FvpaU?=
- =?us-ascii?Q?cL8KN3wVesW7aCZqwWm+n/CHJ3YF0xtm6kxz+o6bdS1b97JK6Al8a00iqgbA?=
- =?us-ascii?Q?RdWAwDcwgDCYP4jjHyXEbow+2kCxLPRpoGPzsw6xM/AjnlQ36/oOtKY4eEDq?=
- =?us-ascii?Q?q6d2/zMXYzU3T6WqleMNMwIu2x4HEESz2YKfddwmGaPJ35yoPFUcvVrxO2kn?=
- =?us-ascii?Q?PCS87azYr00kYeq04n3TzXA/nQ1B2lkVrG4cgE/AFsd4WiYKLQ8FZyin0Jb0?=
- =?us-ascii?Q?/0mWwR4zjcVahl9zI3D2ruV0dU+8gids4Scu9Lj2JQwlulOZ9/k/XAf2H59y?=
- =?us-ascii?Q?R6z6x88VF8sogLJRFmmNMYUsZA9+iJ28ECq8GG1BJ2UYLkz/jxGnYggRUOGh?=
- =?us-ascii?Q?ccPrnMH0grnkaOtjJJy8d9Up/MDco+2PdiZeZp2c5Fh7bNMyIfvCh7UyXxxC?=
- =?us-ascii?Q?mPmontTNWF0sDsjBg+JE60qz/VVA83RwTSg2J7bNQyZHVZYJ2TcjeTxOC7hk?=
- =?us-ascii?Q?NI+9fM4yzI2yt8dKwfd8v3ZYcRy0+aE/EdtVNX5j3+CVpS16uvzB7euHtn1Q?=
- =?us-ascii?Q?YCpu6AWalyVX6z9wKFsG5lOsTd4xMT0HiGP0UrhuBab8eSO8lYXOLqsOcF9w?=
- =?us-ascii?Q?/bs023L4UBw+9uiECPwWII6ElvtiBfKBLekFcc1BQ78a9NlwH70nuQTpnusW?=
- =?us-ascii?Q?i6jY8K/g+uAy5speN7J46mu08X/cLXKnzvPWhFBoZYO6XjjVwQ2ArYzVxfSQ?=
- =?us-ascii?Q?sEPE4qLXISpvCVe4wgbggn0+uckS9MX92d5VZzmOFuWKBoA+1jfbbH4lgEbx?=
- =?us-ascii?Q?VRbEGIG89BWylPXAdGHl7UbrDjypPjU45bwo3QUK/LOOdZTIgdGq3hj9+fCP?=
- =?us-ascii?Q?ByHsy9dAaS44mIpkiqwmk7l6WTqUX+eECUjJnDeS6IdmNfK8eIaXIQe0SheV?=
- =?us-ascii?Q?f/95HfUjOfRtGQ2clFiVCAQKF4vGCbdF6yh4r64hYmLLAZDYhIu69ospb2Zo?=
- =?us-ascii?Q?IMXkGCNIbRj3ccu7bCtj6Ck/fVPW5Ge+ekIAI6aRqRTCVVn3qKgeZYyDfAjn?=
- =?us-ascii?Q?NDvLE6T0EARt5U2XvgoMob/KkB5gUT4VYv7zK8siS0Yt2Je1JpNIUVUcYt4f?=
- =?us-ascii?Q?wuzA+1C5PAfTp5ih8XUQ0I1tfAY+5Nq0TwSsZyaVz0mwTAzB5emxhC0Nvdaz?=
- =?us-ascii?Q?Lph8q/g3l31Mt09ktGyN9NR7LMbgq4SNs9FO9CeyVTAfO6UOwj6LK6RPobV8?=
- =?us-ascii?Q?dUY7RzytnbCtXMBK84506GmoB/1ZXYoHP8pENTy4zc3YdgNbNj8maeoXxd2u?=
- =?us-ascii?Q?rQBibUQjclKE1gVnyOGa73pKzZ8NLfCAGk5bmdBhb6SKz4jxCGaaLuV2f1M5?=
- =?us-ascii?Q?WuQSAkG+/sPel42xr7nTQPEl/E4EHmnxJW6tY2/cUctGwRqRI7GOlZot8WE0?=
- =?us-ascii?Q?1KppQ6106pYBLCsMJBKTYqD43XGCp7a48sG4HsMzQI/4Kfnc495Mlac5svzo?=
- =?us-ascii?Q?5+WjOnz/mYUuXZg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 09:09:06.7716
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 446779c4-aa1d-45df-7cdf-08dd56453939
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002324.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6878
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z76aUfPIbhPAsHbv@gondor.apana.org.au>
 
-From: Kishon Vijay Abraham I <kvijayab@amd.com>
+The ARCH_MAY_HAVE patch missed arm64, mips and s390.  But it may
+also lead to arch options being enabled but ineffective because
+of modular/built-in conflicts.
 
-Now that support to send NMI IPI and support to inject NMI from
-hypervisor has been added, set V_NMI_ENABLE in VINTR_CTRL field of
-VMSA to enable NMI.
+As the primary user of all these options wireguard is selecting
+the arch options anyway, make the same selections at the lib/crypto
+option level and hide the arch options from the user.
 
-Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v1:
- - No change
+Instead of selecting them centrally from lib/crypto, simply set
+the default of each arch option as suggested by Eric Biggers.
 
- arch/x86/coco/sev/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Change the Crypto API generic algorithms to select the top-level
+lib/crypto options instead of the generic one as otherwise there
+is no way to enable the arch options (Eric Biggers).  Introduce a
+set of INTERNAL options to work around dependency cycles on the
+CONFIG_CRYPTO symbol.
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 8a4ad392d188..248ffd593bc3 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1273,7 +1273,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	vmsa->x87_fcw		= AP_INIT_X87_FCW_DEFAULT;
+Fixes: 1047e21aecdf ("crypto: lib/Kconfig - Fix lib built-in failure when arch is modular")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Arnd Bergmann <arnd@kernel.org>
+Closes: https://lore.kernel.org/oe-kbuild-all/202502232152.JC84YDLp-lkp@intel.com/
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
+index 47d9cc59f254..0c19317a9ce0 100644
+--- a/arch/arm/crypto/Kconfig
++++ b/arch/arm/crypto/Kconfig
+@@ -3,10 +3,11 @@
+ menu "Accelerated Cryptographic Algorithms for CPU (arm)"
  
- 	if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
--		vmsa->vintr_ctrl	|= V_GIF_MASK;
-+		vmsa->vintr_ctrl	|= (V_GIF_MASK | V_NMI_ENABLE_MASK);
+ config CRYPTO_CURVE25519_NEON
+-	tristate "Public key crypto: Curve25519 (NEON)"
++	tristate
+ 	depends on KERNEL_MODE_NEON
+-	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
++	select CRYPTO_KPP
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	default CRYPTO_LIB_CURVE25519_INTERNAL
+ 	help
+ 	  Curve25519 algorithm
  
- 	/* SVME must be set. */
- 	vmsa->efer		= EFER_SVME;
+@@ -45,9 +46,10 @@ config CRYPTO_NHPOLY1305_NEON
+ 	  - NEON (Advanced SIMD) extensions
+ 
+ config CRYPTO_POLY1305_ARM
+-	tristate "Hash functions: Poly1305 (NEON)"
++	tristate
+ 	select CRYPTO_HASH
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
++	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	default CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -212,9 +214,10 @@ config CRYPTO_AES_ARM_CE
+ 	  - ARMv8 Crypto Extensions
+ 
+ config CRYPTO_CHACHA20_NEON
+-	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (NEON)"
++	tristate
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/arm64/crypto/Kconfig b/arch/arm64/crypto/Kconfig
+index 5636ab83f22a..1b14551cc301 100644
+--- a/arch/arm64/crypto/Kconfig
++++ b/arch/arm64/crypto/Kconfig
+@@ -26,10 +26,11 @@ config CRYPTO_NHPOLY1305_NEON
+ 	  - NEON (Advanced SIMD) extensions
+ 
+ config CRYPTO_POLY1305_NEON
+-	tristate "Hash functions: Poly1305 (NEON)"
++	tristate
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_HASH
+ 	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	default CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -186,11 +187,11 @@ config CRYPTO_AES_ARM64_NEON_BLK
+ 	  - NEON (Advanced SIMD) extensions
+ 
+ config CRYPTO_CHACHA20_NEON
+-	tristate "Ciphers: ChaCha (NEON)"
++	tristate
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_LIB_CHACHA_GENERIC
+ 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/mips/crypto/Kconfig b/arch/mips/crypto/Kconfig
+index 7decd40c4e20..545fc0e12422 100644
+--- a/arch/mips/crypto/Kconfig
++++ b/arch/mips/crypto/Kconfig
+@@ -3,9 +3,11 @@
+ menu "Accelerated Cryptographic Algorithms for CPU (mips)"
+ 
+ config CRYPTO_POLY1305_MIPS
+-	tristate "Hash functions: Poly1305"
++	tristate
+ 	depends on MIPS
++	select CRYPTO_HASH
+ 	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	default CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -52,10 +54,11 @@ config CRYPTO_SHA512_OCTEON
+ 	  Architecture: mips OCTEON using crypto instructions, when available
+ 
+ config CRYPTO_CHACHA_MIPS
+-	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (MIPS32r2)"
++	tristate
+ 	depends on CPU_MIPS32_R2
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/powerpc/crypto/Kconfig b/arch/powerpc/crypto/Kconfig
+index e453cb0c82d2..5beed03869c9 100644
+--- a/arch/powerpc/crypto/Kconfig
++++ b/arch/powerpc/crypto/Kconfig
+@@ -3,10 +3,11 @@
+ menu "Accelerated Cryptographic Algorithms for CPU (powerpc)"
+ 
+ config CRYPTO_CURVE25519_PPC64
+-	tristate "Public key crypto: Curve25519 (PowerPC64)"
++	tristate
+ 	depends on PPC64 && CPU_LITTLE_ENDIAN
+-	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
++	select CRYPTO_KPP
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	default CRYPTO_LIB_CURVE25519_INTERNAL
+ 	help
+ 	  Curve25519 algorithm
+ 
+@@ -91,11 +92,11 @@ config CRYPTO_AES_GCM_P10
+ 	  later CPU. This module supports stitched acceleration for AES/GCM.
+ 
+ config CRYPTO_CHACHA20_P10
+-	tristate "Ciphers: ChaCha20, XChacha20, XChacha12 (P10 or later)"
++	tristate
+ 	depends on PPC64 && CPU_LITTLE_ENDIAN && VSX
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
+index ad58dad9a580..c67095a3d669 100644
+--- a/arch/riscv/crypto/Kconfig
++++ b/arch/riscv/crypto/Kconfig
+@@ -22,7 +22,6 @@ config CRYPTO_CHACHA_RISCV64
+ 	tristate "Ciphers: ChaCha"
+ 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_LIB_CHACHA_GENERIC
+ 	help
+ 	  Length-preserving ciphers: ChaCha20 stream cipher algorithm
+ 
+diff --git a/arch/s390/crypto/Kconfig b/arch/s390/crypto/Kconfig
+index b760232537f1..f6f82dab3594 100644
+--- a/arch/s390/crypto/Kconfig
++++ b/arch/s390/crypto/Kconfig
+@@ -108,11 +108,11 @@ config CRYPTO_DES_S390
+ 	  As of z196 the CTR mode is hardware accelerated.
+ 
+ config CRYPTO_CHACHA_S390
+-	tristate "Ciphers: ChaCha20"
++	tristate
+ 	depends on S390
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_LIB_CHACHA_GENERIC
+ 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving cipher: ChaCha20 stream cipher (RFC 7539)
+ 
+diff --git a/arch/x86/crypto/Kconfig b/arch/x86/crypto/Kconfig
+index c189dad0969b..d3128e99bac5 100644
+--- a/arch/x86/crypto/Kconfig
++++ b/arch/x86/crypto/Kconfig
+@@ -3,10 +3,11 @@
+ menu "Accelerated Cryptographic Algorithms for CPU (x86)"
+ 
+ config CRYPTO_CURVE25519_X86
+-	tristate "Public key crypto: Curve25519 (ADX)"
++	tristate
+ 	depends on X86 && 64BIT
+-	select CRYPTO_LIB_CURVE25519_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
++	select CRYPTO_KPP
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
++	default CRYPTO_LIB_CURVE25519_INTERNAL
+ 	help
+ 	  Curve25519 algorithm
+ 
+@@ -348,11 +349,11 @@ config CRYPTO_ARIA_GFNI_AVX512_X86_64
+ 	  Processes 64 blocks in parallel.
+ 
+ config CRYPTO_CHACHA20_X86_64
+-	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (SSSE3/AVX2/AVX-512VL)"
++	tristate
+ 	depends on X86 && 64BIT
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	default CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+@@ -417,10 +418,11 @@ config CRYPTO_POLYVAL_CLMUL_NI
+ 	  - CLMUL-NI (carry-less multiplication new instructions)
+ 
+ config CRYPTO_POLY1305_X86_64
+-	tristate "Hash functions: Poly1305 (SSE2/AVX2)"
++	tristate
+ 	depends on X86 && 64BIT
+-	select CRYPTO_LIB_POLY1305_GENERIC
+-	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
++	select CRYPTO_HASH
++	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	default CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index 74ae5f52b784..b7771d7bd3b3 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -317,7 +317,7 @@ config CRYPTO_ECRDSA
+ config CRYPTO_CURVE25519
+ 	tristate "Curve25519"
+ 	select CRYPTO_KPP
+-	select CRYPTO_LIB_CURVE25519_GENERIC
++	select CRYPTO_LIB_CURVE25519_INTERNAL
+ 	help
+ 	  Curve25519 elliptic curve (RFC7748)
+ 
+@@ -615,7 +615,7 @@ config CRYPTO_ARC4
+ 
+ config CRYPTO_CHACHA20
+ 	tristate "ChaCha"
+-	select CRYPTO_LIB_CHACHA_GENERIC
++	select CRYPTO_LIB_CHACHA_INTERNAL
+ 	select CRYPTO_SKCIPHER
+ 	help
+ 	  The ChaCha20, XChaCha20, and XChaCha12 stream cipher algorithms
+@@ -936,7 +936,7 @@ config CRYPTO_POLYVAL
+ config CRYPTO_POLY1305
+ 	tristate "Poly1305"
+ 	select CRYPTO_HASH
+-	select CRYPTO_LIB_POLY1305_GENERIC
++	select CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index c542ef1d64d0..b09e78da959a 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -48,11 +48,6 @@ config CRYPTO_ARCH_HAVE_LIB_CHACHA
+ 	  accelerated implementation of the ChaCha library interface,
+ 	  either builtin or as a module.
+ 
+-config CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+-	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_LIB_CHACHA=m
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA=y
+-
+ config CRYPTO_LIB_CHACHA_GENERIC
+ 	tristate
+ 	select CRYPTO_LIB_UTILS
+@@ -63,9 +58,14 @@ config CRYPTO_LIB_CHACHA_GENERIC
+ 	  implementation is enabled, this implementation serves the users
+ 	  of CRYPTO_LIB_CHACHA.
+ 
++config CRYPTO_LIB_CHACHA_INTERNAL
++	tristate
++	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
++
+ config CRYPTO_LIB_CHACHA
+ 	tristate "ChaCha library interface"
+-	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
++	select CRYPTO
++	select CRYPTO_LIB_CHACHA_INTERNAL
+ 	help
+ 	  Enable the ChaCha library interface. This interface may be fulfilled
+ 	  by either the generic implementation or an arch-specific one, if one
+@@ -78,13 +78,9 @@ config CRYPTO_ARCH_HAVE_LIB_CURVE25519
+ 	  accelerated implementation of the Curve25519 library interface,
+ 	  either builtin or as a module.
+ 
+-config CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+-	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_LIB_CURVE25519=m
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519=y
+-
+ config CRYPTO_LIB_CURVE25519_GENERIC
+ 	tristate
++	select CRYPTO_LIB_UTILS
+ 	help
+ 	  This symbol can be depended upon by arch implementations of the
+ 	  Curve25519 library interface that require the generic code as a
+@@ -92,10 +88,14 @@ config CRYPTO_LIB_CURVE25519_GENERIC
+ 	  implementation is enabled, this implementation serves the users
+ 	  of CRYPTO_LIB_CURVE25519.
+ 
++config CRYPTO_LIB_CURVE25519_INTERNAL
++	tristate
++	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
++
+ config CRYPTO_LIB_CURVE25519
+ 	tristate "Curve25519 scalar multiplication library"
+-	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
+-	select CRYPTO_LIB_UTILS
++	select CRYPTO
++	select CRYPTO_LIB_CURVE25519_INTERNAL
+ 	help
+ 	  Enable the Curve25519 library interface. This interface may be
+ 	  fulfilled by either the generic implementation or an arch-specific
+@@ -118,11 +118,6 @@ config CRYPTO_ARCH_HAVE_LIB_POLY1305
+ 	  accelerated implementation of the Poly1305 library interface,
+ 	  either builtin or as a module.
+ 
+-config CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+-	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_LIB_POLY1305=m
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305=y
+-
+ config CRYPTO_LIB_POLY1305_GENERIC
+ 	tristate
+ 	help
+@@ -132,9 +127,14 @@ config CRYPTO_LIB_POLY1305_GENERIC
+ 	  implementation is enabled, this implementation serves the users
+ 	  of CRYPTO_LIB_POLY1305.
+ 
++config CRYPTO_LIB_POLY1305_INTERNAL
++	tristate
++	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
++
+ config CRYPTO_LIB_POLY1305
+ 	tristate "Poly1305 library interface"
+-	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
++	select CRYPTO
++	select CRYPTO_LIB_POLY1305_INTERNAL
+ 	help
+ 	  Enable the Poly1305 library interface. This interface may be fulfilled
+ 	  by either the generic implementation or an arch-specific one, if one
+@@ -142,9 +142,10 @@ config CRYPTO_LIB_POLY1305
+ 
+ config CRYPTO_LIB_CHACHA20POLY1305
+ 	tristate "ChaCha20-Poly1305 AEAD support (8-byte nonce library version)"
+-	depends on CRYPTO
++	select CRYPTO
+ 	select CRYPTO_LIB_CHACHA
+ 	select CRYPTO_LIB_POLY1305
++	select CRYPTO_LIB_UTILS
+ 	select CRYPTO_ALGAPI
+ 
+ config CRYPTO_LIB_SHA1
 -- 
-2.34.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
