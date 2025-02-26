@@ -1,103 +1,87 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49236.qiye.163.com (mail-m49236.qiye.163.com [45.254.49.236])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EA5258CCB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5E2258CCB;
+	Wed, 26 Feb 2025 08:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740557059; cv=none; b=jbtk3zK6lbLFp6Pk/t4wl6iX4qIap7apzRVq5/8HXCqMyraO9bOek9DpGDtLa0/gFVb+/6Unn1IjUKRYolcR3PxsxeHQx1QjFFCTLl6NGcTU6hyuAhydi4HKS4lpKSRD9ANPLKbUcySzQjRtAytlSXSe55VNKDTiE8DhAaYxth8=
+	t=1740557091; cv=none; b=u2iinM3ewDtgUSX/bEmBUjkfdE5mCBaxYHw+xSXXdrXOakTEGbpvHkGCF6qxRSdtIqNo9R42IVUD3mwLyArpJGdaMe82volLu7Rznh3Z6E2iRHPUJ2gwToVnAbvPvXcCqxz2v688Es5FWwbd5BZ2Gf4J7zD3hz4t6yQIOaf8w3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740557059; c=relaxed/simple;
-	bh=jsumqoAZtsnV93FqZKBwSFrqg/j51Y+YhAKy+e5uYxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gS57VCfqGlW+LTXb4BfV6CXgf1YOyJIun+84G/fyst2z0uJT6YxL0C6ypoG2XTxTjve0QNDewbZxqu/BS2JsxlTDAAesE9AT8LoBj8ntH88ET2+7/svXW8XB4mF+SLWIUI73vzZcPv5Go6IejVxFwYLTffR1dlzaEZsiTXJzx9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8Ke4lcF; arc=none smtp.client-ip=209.85.216.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740557091; c=relaxed/simple;
+	bh=l8E5RKP2L+w9L35Iyf+g+FiycmYARSKEIs/aumVhbF8=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HzT+vILxpjNC0TvE5yK7DqRtZLehQwW9RCk0tLTZhu+eh/WxOoqv1t8yig2WJzaLXnzSvjOaEjSHPDTOm2LGjD6w1FiRwsU3HkYrejKgQdAL7kWatBm3HN/dFOVIibnFl+wgnsNrAzxJzt8gREXAhvC+YKXCRS/ZbB3OISZLRF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=M1sany9x; arc=none smtp.client-ip=45.254.49.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8Ke4lcF"
-Received: by mail-pj1-f66.google.com with SMTP id 98e67ed59e1d1-2fe82430bb4so106257a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:04:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740557058; x=1741161858; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uhge1RzCIgKYICCXPIteVGJArxw+qifw/5nzfDaF6yA=;
-        b=E8Ke4lcFLCK38xQ+1IRrQ3QLwpiZNZWObG0LFkwocG2MfwkgLA7O5b9WdKevxSYZG1
-         G0M96nbJVkJ4bzLfhkN7FUkt+O3Db+9YIbczF6fFBogFs7OPrS73dBE+3M9niklqchj9
-         coXqcAQhI++fhRzNbeJJ5jKR9+jq0cEinRTrkTBB6b42S5+7gpSrdN1FJs5GQReUwGiy
-         DfC6wcZu+Rn7INF2tLY/L1BZSpFp7nnoUqxhBh89dsuC1WZ6wIYrFW8RzAJ3X4WgaJmn
-         g8rMUCcaYIoGThFre6neN47gcaiAq2wNNinSqCyoj7GMxT/DxiRjJSWNo67WhZ13sMxu
-         S8Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740557058; x=1741161858;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uhge1RzCIgKYICCXPIteVGJArxw+qifw/5nzfDaF6yA=;
-        b=jJIcgXksaHiA2VY8x3++ZpOlAQIN97NtHP2O7/b90ibeLSxG51xzMaqodh978cLogb
-         4LDpmwERP0Ss2yGvTfsqD2MGAeME+wnv+aGXFqesSQMLER7yJev/ieAwLR9CpMs3uMRI
-         17wQsw6Dkaf5ASIdEJa+4r7jvnV50rreMIP1RhjpYKbzUzZYS5iM4wEbEW0Yx0Cn126E
-         DG++mzyY+9EHAdrAy8FyzR8m4MUSKsNsHerUI75pfURZJj+Yj28vZWvxpTTZDWrOdOZY
-         dbIazV1spEQXdwxUaGHsocR9rMc/SszNMoUowgPmcTqLUHk8jlOKBLfcP0Ijc9ifReI6
-         INLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtmYDqIWVJKGb07ErgktwtfumWtFhb8Rac6kMtmegfuugYZFivhl3BOgk+RBNJSKV/rjsqQzU19DGHmJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjIa1GE6iTm74LEaM/nGMurb0e89sS65TFlrmfgPBFfpsWwfma
-	HXG8sReYEh6LXiFAfNz9kRUwhwctbfXOhKfavcNCe1kwH904ldnG
-X-Gm-Gg: ASbGnctNbcDrGVgNNE7HQnbWrfeHoIXp+Loe/cyfLe5rAGaaZ6ASUByHdttjZLoMvep
-	vZr/gTnQv0JTvQWWwraJr+LISuxziAknOOphEARm6rAE54z8RADEExHPkuRtb2H7HFkyZMrbuVE
-	S6VHFNduFeSNWOVMa/LPu32dlRCUVBPS+B+XlYIOtdxK1exr/dpjgx3AvYUYMJJv3NOy7Ix1Usm
-	FmpkemNqFdx/cZ3VacrRg+zXt8L5R2iEx4LEICw28yh6huPBMnI7TdUOCyhVPD+xE8yUkTaxZSe
-	6Wcjf0W8xpoqm3WpCTDLntmvebM=
-X-Google-Smtp-Source: AGHT+IEDDzTqf15l3tFjA018Ley5b7a6ScYZq99mwQ2F46rQF4a8741e37Wl35PpKDxXeG3ScOoXFw==
-X-Received: by 2002:a17:90b:1d84:b0:2fc:3262:9465 with SMTP id 98e67ed59e1d1-2fce7b4f5dcmr13725402a91.5.1740557057730;
-        Wed, 26 Feb 2025 00:04:17 -0800 (PST)
-Received: from SaltyKitkat.. ([2403:18c0:5:400:bca6:d6ff:fe8f:8ac0])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825d2ed3sm844156a91.29.2025.02.26.00.04.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 00:04:17 -0800 (PST)
-From: Sun YangKai <sunk67188@gmail.com>
-To: nphamcs@gmail.com
-Cc: Sun YangKai <sunk67188@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-mm@kvack.org (open list:ZSWAP COMPRESSED SWAP CACHING),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] [fix] mm: zswap: use ATOMIC_LONG_INIT to initialize zswap_stored_pages
-Date: Wed, 26 Feb 2025 16:04:09 +0800
-Message-ID: <20250226080410.10433-1-sunk67188@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="M1sany9x"
+Received: from [172.16.12.45] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c3c2a2d3;
+	Wed, 26 Feb 2025 14:48:58 +0800 (GMT+08:00)
+Message-ID: <a4f43d3e-2e41-4163-8938-5aa1592db371@rock-chips.com>
+Date: Wed, 26 Feb 2025 14:48:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: shawn.lin@rock-chips.com, kernel-janitors@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: ufs: rockchip: Fix spelling mistake "susped"
+ -> "suspend"
+To: Colin Ian King <colin.i.king@gmail.com>,
+ "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Heiko Stuebner <heiko@sntech.de>, linux-scsi@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250225101142.161474-1-colin.i.king@gmail.com>
+Content-Language: en-GB
+From: Shawn Lin <shawn.lin@rock-chips.com>
+In-Reply-To: <20250225101142.161474-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkNCHlYdTBlJHhodGBpOSENWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9541040a1509cckunmc3c2a2d3
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6PBw4UTILHQsaTh4TMzIq
+	VhkKCSNVSlVKTE9LTk5JTkhCTEpJVTMWGhIXVQgTGgwVVRcSFTsJFBgQVhgTEgsIVRgUFkVZV1kS
+	C1lBWU5DVUlJVUxVSkpPWVdZCAFZQUNNTjcG
+DKIM-Signature:a=rsa-sha256;
+	b=M1sany9xNBK7VREkWV+9K9oI/K7EOJWY8i/mkHFni5If+uuFp4nTfsfWo9NCBVfDJdv9SDXXVnASaacyLeGHJB5rIQt9n3k0cBugM1hAYPP0B+QlPaT6e/DmwYoHFTvU8BUo6xe397yo4rW3fLRhW2Du3oV/FRStof5aetgnBqQ=; s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
+	bh=vU92AfkXpo1upHQPW1E57oSrBRV5YkhXMeN9wMA5lys=;
+	h=date:mime-version:subject:message-id:from;
 
-This is currently the only atomic_long_t variable initialized by
-ATOMIC_INIT macro found in the kernel by using
-`grep -r atomic_long_t | grep ATOMIC_INIT`
+在 2025/2/25 18:11, Colin Ian King 写道:
+> There is a spelling mistake in a dev_err message. Fix it.
+> 
 
-Signed-off-by: Sun YangKai <sunk67188@gmail.com>
----
- mm/zswap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index ac9d299e7d0c..23365e76a3ce 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -43,7 +43,7 @@
- * statistics
- **********************************/
- /* The number of compressed pages currently stored in zswap */
--atomic_long_t zswap_stored_pages = ATOMIC_INIT(0);
-+atomic_long_t zswap_stored_pages = ATOMIC_LONG_INIT(0);
- 
- /*
-  * The statistics below are not protected from concurrent access for
--- 
-2.48.1
+Thanks Colin.
+
+
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>   drivers/ufs/host/ufs-rockchip.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-rockchip.c b/drivers/ufs/host/ufs-rockchip.c
+> index 5b0ea9820767..dddff5f538b9 100644
+> --- a/drivers/ufs/host/ufs-rockchip.c
+> +++ b/drivers/ufs/host/ufs-rockchip.c
+> @@ -307,7 +307,7 @@ static int ufs_rockchip_system_suspend(struct device *dev)
+>   
+>   	err = ufshcd_system_suspend(dev);
+>   	if (err) {
+> -		dev_err(hba->dev, "UFSHCD system susped failed %d\n", err);
+> +		dev_err(hba->dev, "UFSHCD system suspend failed %d\n", err);
+>   		return err;
+>   	}
+>   
 
