@@ -1,169 +1,80 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2062.outbound.protection.outlook.com [40.107.92.62])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F41238144;
-	Wed, 26 Feb 2025 09:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740561042; cv=fail; b=azIvP4umhOvB1RrBPSd0lmb9X8EUAfuATNo6JtdVM5cDbVLbDb/3owF0wXkx+MZeRiiHG+xed5EGov/elyD0ENd/CqDa3gsZ5DJuyj8nf14UNlxt/XFj4YvCnTmuNh4JqP8BVdR9jEQzA1M8u7DjRT/HP4lLaMi70hnfjuWwWlc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740561042; c=relaxed/simple;
-	bh=+Xfnr8MphZpO5UPasZrEyvdfar6bs/DjsXE0jSJEj7E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gG0o7Blcq3zF3zJGLP2bIYGtRoK20qkXAPT7Ad4eGg2wH6yJGtGljbaXpAXnmxes3YVlCXP4lezey3OcnK+c9XOzCc16ZPzA4dMqwm+pF5ywNvcHKu2JorTmi9VeAE/XWCrLl9ELW5l+q5bjYtpf9QNv28FfKRAGli70HKZq40M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=c/pTMwIK; arc=fail smtp.client-ip=40.107.92.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="c/pTMwIK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XSRfFXn85JaTKiUX+7UJFIgKYbF9yrUKFZJ1kVlBpn0+qO0busxOpa6qhavkH7iYKFbmBGHQn0PVztE7tuMk8uEq1SvLJegUU6M1shtQPJ29rFEYsO4n1fsVZ4cvsTH00NxPEroZMV32zj8qlVEDZvaG2z40iB4xYgDeFBi4+VDgEAAqT6Z4gCnI0I+CifC2WLnJdJF2eqB0AR1amDJeCORnFjWH/NUwEeWwHuq+fjXVlRyvOAbjSdtcFBhrJoRfCSDCA1gDi7hKnwz3mqsq0vK4lNCV4GRCVV4C+yRc9ZJW5TGQ3jLs40ot/RgvKHEUB3gYBQ2XnoZl2r1e1UDl9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yBAORP36+LI/H8y1KciXv1sNQQQDjvx7jAtkOVOA/No=;
- b=fU/b1K4cTJI6LJ0FXGuNaee+Jd+qVnSrIZv7139wXasAAmap7ZXGZDHHHpQQDMeui8XB0Wu4Fi6sFrkZQ+kt8xAosT4E8M/XZLpfdn/XbPhkQ3+4y9iwsCH+rT68iJqLzgu6P+Ho62Gf4mcW+5iSBpCAPb1kQp48edy8oB5hr9NNd90iPxH1A0+cijGSRsZxdEOUkZjmXbp/8tJntlxU0Bwb7bLwkPv6bdjPH1WPVZN7fDLKGvFGCmNE1rpqxMK8l6rv41pCC7BUs7PAxO5hKXcre3gHgYU7TpYDdWbRnaNqXM6AY1O+VVDbgYPbaKjANWxV5DE0bg1wZNaCMRjfPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yBAORP36+LI/H8y1KciXv1sNQQQDjvx7jAtkOVOA/No=;
- b=c/pTMwIKh1qs3qX+9TC6Z/YpoQlg2IaOEwvW1cnruDAYnip8F2qT4bhendvdaPP8D/Xnie/Zd4xMKJ+4tZnXu/2/1ctSD/xqnwvgcMeIbwQCMlfwA31edyVKXrei680ecfvBshOuNUY7YG8I6kZ8/4cEf/wuMZkw4LZJkxy8cfM=
-Received: from BYAPR06CA0055.namprd06.prod.outlook.com (2603:10b6:a03:14b::32)
- by DS7PR12MB9501.namprd12.prod.outlook.com (2603:10b6:8:250::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Wed, 26 Feb
- 2025 09:10:37 +0000
-Received: from SJ1PEPF00002325.namprd03.prod.outlook.com
- (2603:10b6:a03:14b:cafe::60) by BYAPR06CA0055.outlook.office365.com
- (2603:10b6:a03:14b::32) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Wed,
- 26 Feb 2025 09:10:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002325.mail.protection.outlook.com (10.167.242.88) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 09:10:36 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 03:10:30 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <linux-kernel@vger.kernel.org>
-CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
-	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
-	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
-	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
-	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>, <naveen.rao@amd.com>
-Subject: [RFC v2 16/17] x86/sev: Prevent SECURE_AVIC_CONTROL MSR interception for Secure AVIC guests
-Date: Wed, 26 Feb 2025 14:35:24 +0530
-Message-ID: <20250226090525.231882-17-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
-References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C3B22423B;
+	Wed, 26 Feb 2025 09:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740561055; cv=none; b=tLgGlTWabYzmnmhSuhfaJBH76S0gagv5wRmi6405HEMexOKiAOLGXrGTa8zgws6EkCZps/4PbW+q3OkbxJfhOoaut5woCtpplExWbpUcLjgu8Yq7hPe+rHFM2DzOW5Tz4e7NGy9n2jMvmq1kU7blJIwHVndTyYI71Ob3BuMdAQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740561055; c=relaxed/simple;
+	bh=rcMqlFYxtJSC7BnsHuZqlms/0j16JvJJLK/QKfFC4VU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSeyyLmr9to6nP3ML2d0W4e/tCsD/PSWiO5n+RL5am0CHBf8dHYBw9hZ4TkCJEp7MbtPEnH8jsnoY9jfItLKFe7407QuavIw1beFvd7svkSFhMekTPbvqZ0vDJLrqEOWrpVishHtFLbfx7OHV0ZHpfEgYI760IG+I35o4xOhGzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 3D7E82800C7D0;
+	Wed, 26 Feb 2025 10:10:43 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 3780ECC668; Wed, 26 Feb 2025 10:10:43 +0100 (CET)
+Date: Wed, 26 Feb 2025 10:10:43 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Kenneth Crudup <kenny@panix.com>, Bjorn Helgaas <helgaas@kernel.org>,
+	ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+Message-ID: <Z77ak-4YsdAKXbHr@wunner.de>
+References: <20250210210502.GA15655@bhelgaas>
+ <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002325:EE_|DS7PR12MB9501:EE_
-X-MS-Office365-Filtering-Correlation-Id: cc209ac2-03ce-4090-1978-08dd56456eb5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ARd/OCJOZlIee13PvjpqdGSIfm5FPwLJ1zb1NZP2LzOAlrQdnzVrY7OGVg5K?=
- =?us-ascii?Q?K+76/RQSkC6GcMEgNlFsFpcX8jB2fSTQNBlOtC7rReEfoXCRF7mh5SsZx3jC?=
- =?us-ascii?Q?TIcq4l+shVakGQj1UebXQZqDsCLO/Rlw6XftngsbIp2qlstkJqXhOoe46VJD?=
- =?us-ascii?Q?PvoMSL1IsizfG1K7+ldqEkbHcAggfn1JLDYDCU0E1jrfpih7OR1cLJgHXubr?=
- =?us-ascii?Q?oSqJyhUQCijtTEzrU9LibS6nwvYCyIPYRk4WyOqiUqOZjH54bESs0U7/Qvzh?=
- =?us-ascii?Q?t1sNQY6hjGXQZrteq9rJdnLQszF3NGjsr+BjcWMZoP58yZMxgGIzDmhuipto?=
- =?us-ascii?Q?39XDlDgHYNLhxA71vCQJfsJP+KP+PpUu7fq/sH4XlJEaBfaPfVoTOXCBjfJH?=
- =?us-ascii?Q?46t93WYxHFdglGih/rxFe9UVSnAJ8x1In7zpX/kdnD5vJ5fhHLXwOxnF6jXz?=
- =?us-ascii?Q?1+cdtBtNq5yzzXMRCjTXirJPbDfWGDvpgZEkuxjk0Doyzn7cSNV1cxBbOy/j?=
- =?us-ascii?Q?VA9UeAeUxr9BcDCxauUEMfFBY18Oa4a+faWRqCK+GWltvXbiJ/WeANeEIU5B?=
- =?us-ascii?Q?R5lAsD9H4R8pyDmRq90md4lVOO2zEDlEkBrGWCB2UGbKJb2JHMI6pCWQG6/X?=
- =?us-ascii?Q?xz+AQpCS6GHjaSdcsk73TBDPcr4crjUf5/AN7NtzviCOCstGzlnytsbIyoRh?=
- =?us-ascii?Q?xXMFy5lQ/EG5RosKzMgrShXC4OVMagS/H3hMjvVD4WNFV0SL+FtGIr2wCeh7?=
- =?us-ascii?Q?vpXXxSgkg2yIl5NazEF8WHNCOjm0LhKny98Bh7YSA6w7IkZgX4mJH+hrKrBy?=
- =?us-ascii?Q?INJB8gT9xDC9iREnIgpX5dJF7YAeZqB/at+2GchxRj5uNd/hBY+OwAtbhcim?=
- =?us-ascii?Q?tS4h7a9/8RwsP1QF7NQzUYaTWa4TLdVilwpq+IS3uyCX5+v8ApSC+e3KIXyw?=
- =?us-ascii?Q?q6P+i65lq3bLXR02YGBOyQ/YUtymrJZbaN4IgTQJ9mZ+GjQqs2bOBPiLqXEX?=
- =?us-ascii?Q?AtMUZfo3Fpg2MiLROEIEQH/sk0Oxp/n8ej1pd6Dqjb/9NjZivxoMCgkTjEyv?=
- =?us-ascii?Q?dwK4p7k4Z6xv78PM3vpaNQHgylFpuQjLM1aXrjeOPQz155f3pIfRpR/URWwx?=
- =?us-ascii?Q?u+jl6F0jSV76yLwQ7ksPl43BiSxB76+azjL9zXfbRlDXeoVQ3ri1St8fhhDO?=
- =?us-ascii?Q?6z8y5qIq5B7sYB2nZfCcD/qCa/vkE1CBiQcZ3mMEId+A0aOiH49g0SyKqQns?=
- =?us-ascii?Q?FKofoU4OUQc6wc7enU+6CoJAn9b2U+5HamSko+uMfTY6XCuNeX4MnJkZV9xb?=
- =?us-ascii?Q?UpGQdbPDscL4TMyXG7ndIqJPGJfW2lCkvOsZsbrcDSadYRQbh9/5x8WMUEQF?=
- =?us-ascii?Q?lcn96JR7F/sjxrVOAEvIPi9f6K8FTKU4mJsrw+A48GDW9k4R3QK+2kCLcnqA?=
- =?us-ascii?Q?s6rSTg7xgF2xyfCCjqo4Aem5NLWygyPo0BB+vecd5WBOdlSgXnB15yQNpmTq?=
- =?us-ascii?Q?JaZKIoPhjhXmHZE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 09:10:36.5010
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc209ac2-03ce-4090-1978-08dd56456eb5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002325.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9501
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226084404.GM3713119@black.fi.intel.com>
 
-The SECURE_AVIC_CONTROL MSR (0xc0010138) holds the GPA of the guest
-APIC  backing page and bitfields to enable Secure AVIC and NMI.
-This MSR is  populated by the guest and the hypervisor should not
-intercept it. A #VC exception will be generated otherwise. If
-this should occur and Secure AVIC is enabled, terminate guest
-execution.
+On Wed, Feb 26, 2025 at 10:44:04AM +0200, Mika Westerberg wrote:
+>   [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
+[...]
+> I added "no_console_suspend" to the command line and the did sysrq-w to
+> get list of blocked tasks. I've attached it just in case it is needed.
+[...]
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
-Changes since v1:
- - New change.
+This looks like the deadlock we've had for years when hot-removing
+nested hotplug ports.
 
- arch/x86/coco/sev/core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+If you attach only a single device to the host, I guess the issue
+does not occur, right?
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index e48834d29518..0372779dae70 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1483,6 +1483,15 @@ static enum es_result __vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt
- 			return __vc_handle_secure_tsc_msrs(regs, write);
- 		else
- 			break;
-+	case MSR_AMD64_SECURE_AVIC_CONTROL:
-+		/*
-+		 * AMD64_SECURE_AVIC_CONTROL should not be intercepted when
-+		 * Secure AVIC is enabled. Terminate the Secure AVIC guest
-+		 * if the interception is enabled.
-+		 */
-+		if (cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
-+			return ES_VMM_ERROR;
-+		fallthrough;
- 	default:
- 		break;
- 	}
--- 
-2.34.1
+Previous attempts to fix this:
 
+https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+
+https://lore.kernel.org/all/20240612181625.3604512-1-kbusch@meta.com/
+
+Thanks,
+
+Lukas
