@@ -1,180 +1,120 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15D02566F1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF966189903
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740603589; cv=none; b=EHu8LISQosZGWQrJWAB2ApqqAHwaYikUfc/uERaUR2hdBMvHkrFoSLstyOFzmHaiwuFx23Q5u3KkrApaMUMkrbMEhjfKTYdmG29yw/19E9gvW3RyLyKloj0INLWVAmzxX77wJZ0ZGNjvdthyx6IE8ngsr9+gS4zExT+TXaKXas8=
+	t=1740603635; cv=none; b=IbHtdLeC0cY14dlhhzbiGwgVejWZLq907e8cVHodJ3g9+aaWYsXCZo79lCHvqhC1Qtsuxh95ZgqNj1yLzxtE/AAo+I6BOV7DfC3KpQ/ZcPpYLYL9hIUXytyAzHQEh8lk2uJAtRSiX7qb7PhD0I3TAZSSuTCkUSk8m1A07vBgNzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740603589; c=relaxed/simple;
-	bh=N2Rf2FQCm+P8gqVxbHJ17gpvziMvAMEqa0WJiN63eFs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OqktTvkrXkQTsm5k/thd6pxOkq7BAJadnXaGld00HcFzcsv4DBA7GpVl0TUw/SrY2KuAjm0uaJXq8qRt6iJPALG+GUyOx85JZwg17zhPpaIORu9yhveZqNHmYHUYUDKEp8bY6nObOcXDk7nJLiS7ewgeXJaS2I/xzbSd2RMeiBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=viJwsSP/; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1740603635; c=relaxed/simple;
+	bh=7SNSW21a/ek+7uv3YZtZF5knX4fa6jrBafX53dSSz5A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kKOqaZEsqX/qRSuCzRI1aGbXXWHcTFlP1HXmuRZfjS1fXWRCNOmqY+UIA1S4ooQ0/sddb/20nLDMb1VBbcRQIcPJszDT49CYBdIxj5LadGKaqABZQtj8TOtbbBuKZBY151eNBOw88qWv4ZsDm5N8lspNkivgiXcf/pewQYtqKUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zca5T0Bw; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="viJwsSP/"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22342c56242so41965ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:59:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zca5T0Bw"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc43be27f8so790089a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:00:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740603586; x=1741208386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hpDfAIGhp1H1pQsE6PqmIBzS1xXtlGV1blracxJrRqE=;
-        b=viJwsSP/d0gxPnvN6z3gaSH2M903gwLHTZyujZ6KwE8lA7GraT6rvqct5zE+rhmu0i
-         b6E+iQxltNlqCUtWdBV+ZSsheSV0vdhGWsaYnQoHoIE8CtjUZamuLT74FofRD2YFC9B6
-         ONgVmfsxeR3g6IaZ7YghAeRXwrV9wPiXwpaxfGNgb0QS3RGth/iAfT3V3lvhtafNPHIK
-         BW5luR85VY665bd5vt3uGLw1FBrs3Gcbng4Kr1rp0bnjB4PuSfPjf9MNJboL0dCpe7qY
-         W+96II0Z+MVyIHzqiLMkE0bHA7P1GaGN4vPypwKK/Nl+sTfMxQa+sCWN0eOH1ynDlZ2s
-         4rrQ==
+        d=google.com; s=20230601; t=1740603633; x=1741208433; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7SNSW21a/ek+7uv3YZtZF5knX4fa6jrBafX53dSSz5A=;
+        b=zca5T0BwK+ke4wRiImunYF0pMI6yAkZn5L/iSuBIwUaXv4GUUjgbsBI8tncRbNsVdR
+         mivuDOph51kfVlqd1il2bnAs3qusAMHAbhMJwNBTSRVHsDUobn5s0Amn8WE9KaVZOzfT
+         D4ABdh1bzy8nGT3EUHNgdSvJFOCfW5h9ACEy/8hJDrzzxhgyNVChBYjcd1vu3IhEdZg6
+         27XQq0GGWNujWTetR4iX61PIYZ0vDlw8BAb+mxsmssyj8poAGxL6rJjd/FRoM4Tyf/Bf
+         o5JI94/4cLbdIHN4jLzVrOznDsUzKoOdqdtn8Jm+F8MiiTCgdpVIEiY/JV+WXhXQHUz+
+         CTCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740603586; x=1741208386;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hpDfAIGhp1H1pQsE6PqmIBzS1xXtlGV1blracxJrRqE=;
-        b=MYBAD2p53bqLMPJs1E9XCo6bs4XgJVdS1l9p4PWEM0OdyXaALWPCg+4BkdzmfeTy08
-         mgHuTxYzXzsASRcXjhiHII83a79B6M0m9vUGkdIKJd8KglB3FKkiOJnl1o7fjNe2p/GR
-         KS0AC3gNTCDgaro09eHcayipGlR7LzQ0MW9NYvgmXXIYaLjD93pk31csVL5w/YHTNnpp
-         7tds0w4hFsbwA9qJIuFX9m9K025rHXl0WymljI/s8G9970you+tkvLauHuqq5FDdpqGK
-         0f6hhRvhYlolsJhTEcsN39wa37nC7xg9Ysxf4vooCgJ+XjSwN6JsK46kdq4EIQzBGbem
-         COLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGQ9G8xNBCbwt3a2dfv7/3zRILiqDvtKCDxVKjSEXFLuMpbe6heeRhnMSrL5YkphRERiqUPmgbZTfbbjs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypsgfOjfNI9Ivi91wrL5KXduBN6CSnsc9wXB/TJbxoSdk5KHkX
-	7uQsKMwB7eXG8/Rw0h+7a4oqUAssepiRngemJOp8TMmQnM0qCUVepj/JrcE8IoBqXoOTuIKPbDW
-	xduDJr5cwhjVWNEE5Lp2VHmgoJgQJnh//EcGi
-X-Gm-Gg: ASbGncsmo4Sy9RWjxjFKVtvOXzttEtlEqCmFH/u3v2Ptij7H+HcCe/oS1YDVK9h23sa
-	9HQyM9zIyx2Tww6zH5tg6wWhFFh12xyHXsXoBVH/V1hXhOZ9Pbd2fMQmftki9f3+PnmNgY1YX0F
-	O4afzbU4XIwpAaL7C14szXuCOFc0+oGn9y6po=
-X-Google-Smtp-Source: AGHT+IErSMhbekrHYqaP1wrOlN6DjS+bvccnZmVDEJgXkfri8fufy+RUIPZMy2DNosH+Gy44rSU6iNaTrXz1wCUUORQ=
-X-Received: by 2002:a17:903:2788:b0:215:367f:2967 with SMTP id
- d9443c01a7336-2234d5a097cmr564165ad.2.1740603585776; Wed, 26 Feb 2025
- 12:59:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740603633; x=1741208433;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7SNSW21a/ek+7uv3YZtZF5knX4fa6jrBafX53dSSz5A=;
+        b=HpEOSDul6/B0fgoxXgGhKsJ3wZkxtku9FbDbX4Zu+HFpIiTeIxm3ISXaKwAcVDQJlh
+         AJqghFs81ioxO9YLAFbuDnsq9YI2Db7VRW09GngBII8JEG2d4g8O8wdZ7Ew+79nmD1Y8
+         dqneloBzdL1N3wikotL1Q8/xC59edFqUVtkBljvwMtl0ULn2mO0FFlo/iUf2uj39/m3S
+         mFR/vx1u7i1+0YdGYfsWB2Cf6Fq4oxsW4aaPJsYZTgP7TjrRIoIVGFvIssG09wyMjwrx
+         fXdcSXrPeu/1tvkbvnrJ0Cdhbcj/IQTXDBdfgWjhuoRa1tiJ8ei0kAKGso7zu5FtXpLZ
+         HnJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVoAQZLcvujHsQcq26pnrdO8Ok1uvqCGIu8HfGKdx/e76sxPksI8mQth0X4cl2z+3z2cZ7HcFoJw3YK/Vc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2/Ffys3vShtoN7p12LuPDq5VGRDyL1GwbXMgws3JEQ8FFSdkP
+	Brwv/EPICR9RoayB5m+spxgUpixtL+2eN1PYqIOL3outRZ2IJI9iKwrnm85tbPTzCAu1LLtUEix
+	u2A==
+X-Google-Smtp-Source: AGHT+IH7m6qi/77wBus+xiJc2WZWUUiZwJ67cH3PlD/10eBY4F6ImmSl6igipQU5wBdKgTZ4ndmuB6us57Q=
+X-Received: from pjbdb16.prod.google.com ([2002:a17:90a:d650:b0:2fa:15aa:4d1e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:540e:b0:2ee:d193:f3d5
+ with SMTP id 98e67ed59e1d1-2fe7e2ed9e1mr8424364a91.7.1740603633142; Wed, 26
+ Feb 2025 13:00:33 -0800 (PST)
+Date: Wed, 26 Feb 2025 13:00:31 -0800
+In-Reply-To: <e8cd99b4c4f93a581203449db9caee29b9751373.camel@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250226203039.1099131-1-namhyung@kernel.org>
-In-Reply-To: <20250226203039.1099131-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 26 Feb 2025 12:59:33 -0800
-X-Gm-Features: AQ5f1Jr7nGn8m3ucAcU7Zv_Fe0QHxkl4_j87Hgs7zT3dRKWfSnQz01WeXzVqdU8
-Message-ID: <CAP-5=fVh2tTD22sFrPt37OJAhOsggvt2AVwf45p_pxTa=pnVKA@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Skip BPF sideband event for userspace profiling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	James Clark <james.clark@linaro.org>, Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20250218202618.567363-1-sieberf@amazon.com> <Z755r4S_7BLbHlWa@google.com>
+ <e8cd99b4c4f93a581203449db9caee29b9751373.camel@amazon.com>
+Message-ID: <Z7-A76KjcYB8HAP8@google.com>
+Subject: Re: [RFC PATCH 0/3] kvm,sched: Add gtime halted
+From: Sean Christopherson <seanjc@google.com>
+To: Fernand Sieber <sieberf@amazon.com>
+Cc: "x86@kernel.org" <x86@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"nh-open-source@amazon.com" <nh-open-source@amazon.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 12:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> The BPF sideband information is tracked using a separate thread and
-> evlist.  But it's only useful for profiling kernel and we can skip it
-> when users profile their application only.
+On Wed, Feb 26, 2025, Fernand Sieber wrote:
+> On Tue, 2025-02-25 at 18:17 -0800, Sean Christopherson wrote:
+> > > In this RFC we introduce the concept of guest halted time to address
+> > > these concerns. Guest halted time (gtime_halted) accounts for cycles
+> > > spent in guest mode while the cpu is halted. gtime_halted relies on
+> > > measuring the mperf msr register (x86) around VM enter/exits to compu=
+te
+> > > the number of unhalted cycles; halted cycles are then derived from th=
+e
+> > > tsc difference minus the mperf difference.
+> >=20
+> > IMO, there are better ways to solve this than having KVM sample MPERF o=
+n
+> > every entry and exit.
+> >=20
+> > The kernel already samples APERF/MPREF on every tick and provides that
+> > information via /proc/cpuinfo, just use that.=C2=A0 If your userspace i=
+s unable
+> > to use /proc/cpuinfo or similar, that needs to be explained.
+>=20
+> If I understand correctly what you are suggesting is to have userspace
+> regularly sampling these values to detect the most idle CPUs and then
+> use CPU affinity to repin housekeeping tasks to these. While it's
+> possible this essentially requires to implement another scheduling
+> layer in userspace through constant re-pinning of tasks. This also
+> requires to constantly identify the full set of tasks that can induce
+> undesirable overhead so that they can be pinned accordingly. For these
+> reasons we would rather want the logic to be implemented directly in
+> the scheduler.
+>=20
+> > And if you're running vCPUs on tickless CPUs, and you're doing HLT/MWAI=
+T
+> > passthrough, *and* you want to schedule other tasks on those CPUs, then=
+ IMO
+> > you're abusing all of those things and it's not KVM's problem to solve,
+> > especially now that sched_ext is a thing.
+>=20
+> We are running vCPUs with ticks, the rest of your observations are
+> correct.
 
-nit: It may be worth noting that profiling an application implicitly
-excludes the kernel samples.
-
-> It seems it already fails to open the sideband event in that case.
-> Let's remove the noise in the verbose output anyway.
->
-> Cc: Song Liu <song@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-
-I wonder if the second evlist could be avoided similar to Howard's
-off-CPU sample events?
-I also wonder if we should make the evlist responsible for BPF and
-dummy/sideband events. Having unnecessary events increases the list
-size iterated over when creating sideband data, and so has a runtime
-cost. Having the logic separated in places like builtin-top and
-builtin-record feels suboptimal.
-
-Thanks,
-Ian
-
-> ---
->  tools/perf/builtin-record.c |  3 +++
->  tools/perf/builtin-top.c    |  3 +++
->  tools/perf/util/evlist.c    | 14 ++++++++++++++
->  tools/perf/util/evlist.h    |  1 +
->  4 files changed, 21 insertions(+)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 0e45bd64185403ae..cc61f5d6c599039c 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -2535,6 +2535,9 @@ static int __cmd_record(struct record *rec, int arg=
-c, const char **argv)
->                 goto out_free_threads;
->         }
->
-> +       if (!evlist__needs_bpf_sb_event(rec->evlist))
-> +               opts->no_bpf_event =3D true;
-> +
->         err =3D record__setup_sb_evlist(rec);
->         if (err)
->                 goto out_free_threads;
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 6440b5c1757d92ce..c284a384542ff822 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1833,6 +1833,9 @@ int cmd_top(int argc, const char **argv)
->                 goto out_delete_evlist;
->         }
->
-> +       if (!evlist__needs_bpf_sb_event(top.evlist))
-> +               top.record_opts.no_bpf_event =3D true;
-> +
->  #ifdef HAVE_LIBBPF_SUPPORT
->         if (!top.record_opts.no_bpf_event) {
->                 top.sb_evlist =3D evlist__new();
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index f0dd174e2debdbe8..43adf6b3d855771a 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -2594,3 +2594,17 @@ bool evlist__has_bpf_output(struct evlist *evlist)
->
->         return false;
->  }
-> +
-> +bool evlist__needs_bpf_sb_event(struct evlist *evlist)
-> +{
-> +       struct evsel *evsel;
-> +
-> +       evlist__for_each_entry(evlist, evsel) {
-> +               if (evsel__is_dummy_event(evsel))
-> +                       continue;
-> +               if (!evsel->core.attr.exclude_kernel)
-> +                       return true;
-> +       }
-> +
-> +       return false;
-> +}
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index adddb1db1ad2b25d..edcbf1c10e92f0c4 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -435,5 +435,6 @@ void evlist__check_mem_load_aux(struct evlist *evlist=
-);
->  void evlist__warn_user_requested_cpus(struct evlist *evlist, const char =
-*cpu_list);
->  void evlist__uniquify_name(struct evlist *evlist);
->  bool evlist__has_bpf_output(struct evlist *evlist);
-> +bool evlist__needs_bpf_sb_event(struct evlist *evlist);
->
->  #endif /* __PERF_EVLIST_H */
-> --
-> 2.48.1.658.g4767266eb4-goog
->
+If there's a host tick, why do you need KVM's help to make scheduling decis=
+ions?
+It sounds like what you want is a scheduler that is primarily driven by MPE=
+RF
+(and APERF?), and sched_tick() =3D> arch_scale_freq_tick() already knows ab=
+out MPERF.
