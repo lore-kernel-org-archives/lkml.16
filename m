@@ -1,253 +1,205 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2087.outbound.protection.outlook.com [40.107.243.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77332262D12;
-	Wed, 26 Feb 2025 20:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740600024; cv=none; b=QkJnk05XsdE+pOiQid2OqKzlQMgDCUxmPe0jXEBvNNgZUXbBOW7ND5bXX8BmqqlsTSGRVsPA/vi7k0mwbXf/42e8qxnK2dX6cEJ8HMJlt1EgPXmajCwCBd/B2WVD3Qg1P7HeM8fbNEHsThcY10DVXYAKeFFB51s2Jy8zQ9kxKJc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740600024; c=relaxed/simple;
-	bh=LfFyrdi3p+fSTlPHrvITPMsJFwZas28Qz09A3L/Dt2A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ka/KoOyW2JNexXIEKgyOFOV3TN/XDGllJ42SSQlR6jpCpk9Rsx8OcmqDoE5CRjxPdZ9UXIWpk+Y6s58NPm8xRq/q2gAKwrdCjeCtwYNpLqyH+0D7k8QN6/ZN8BGkRAcprnOn4H6BrZnXJUxMXHXj4iryX+Tvf3KrTqupitSagfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=Yp7bCQt9; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44578262D12;
+	Wed, 26 Feb 2025 20:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740600057; cv=fail; b=bwP7dgpdGQr8bc9jnbfIulSm+WXHInVUqlYSEgbMFIENIiR4jN2aqFJ+pyMjWwaLmsJOeCbdSWbKjDXl8d65hDLj4ZtPY9+Vqktt7uEJXLhzUDIB/Ld8UVIxgAuceF1VPQXFZP4dinM3qtwYe1EXJLTu+uw6ke8LlZdvc31mD/s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740600057; c=relaxed/simple;
+	bh=bybFBrlH34meCOdcm2cfB4isjVUI91d05hgM05gAE18=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sMz+Ib5zn2buu/+Uoi5WgAKSQD0/gaRR6SayUqOeWkQGEc1v79oUVvZfL6Ex52xBVyXVlMp6noqUSjCM+oN/tRdH0DfzJ/dZuHIWOwR6LWMBXwOwdO5fF9svmNjRpwKQf1vFYc1J66w7zTyHtZzwEo7w70AiLtZMlgYtQCGt55I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u/kWefc9; arc=fail smtp.client-ip=40.107.243.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="Yp7bCQt9"
-Received: from vra-172-88.tugraz.at (vra-172-88.tugraz.at [129.27.172.88])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4Z351857Byz1LZ2f;
-	Wed, 26 Feb 2025 21:00:12 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailrelay.tugraz.at 4Z351857Byz1LZ2f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1740600013;
-	bh=DyLAPIgkUJPj4u0uXbf2C16aXcYlu8baPQSuG9CxPYc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Yp7bCQt9ubJfwFb6RLXQoQ2iF5g/w2OVyds54oY3Rimlx6/LDvY/YUtNAwWZrcKm6
-	 cT9oFvaKnAUgwCuut3b0wXxHyZG8gloiuv1sZfSUoKdrDV4ObFcW5ZqN8sQ2V+qXHM
-	 Se6XM69pLGSe8IT4WapgJeB6ppitPv/Ausjq0Jlo=
-Message-ID: <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
-Subject: Re: C aggregate passing (Rust kernel policy)
-From: Martin Uecker <uecker@tugraz.at>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Ralf Jung
- <post@ralfj.de>,  "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Ventura Jack
- <venturajack85@gmail.com>,  Kent Overstreet <kent.overstreet@linux.dev>,
- Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com, 
- david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
- hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
- rust-for-linux@vger.kernel.org
-Date: Wed, 26 Feb 2025 21:00:12 +0100
-In-Reply-To: <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
-References: 
-	<CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
-	 <20250222141521.1fe24871@eugeo>
-	 <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
-	 <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
-	 <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
-	 <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
-	 <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-	 <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-	 <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
-	 <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u/kWefc9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gLkMGeOSMANJSG1NirpaGwlS0cyPMgcnXNKOOZam/3z+C3MyZmZ8+xcmtybHqi0vtT9uV6bDszdirPRYRSe44eamxfrw7NdUco/KYQo0QpB+HtNkVLxx2Co1Wj673LR+Uqh8fk/pO0XQdra6OY+OL9OnT1v2rwJ7alqVh2u9qAw5/Na6K/CO4ANtoXz2B+vzPkampjCe8MRR6e8i9gBxwRhwEsdeYGdmoGPJt4Qgm9qUW0M97JHNvh9InheGvYOlGYhWM1pw75teKItXTm/2atejvXnGFZyKoXriEcCY0WrwTtdnYKWjDWqdNftjx1FjLvp6OkCnDbxu9TI0UFd5LQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kOpcNjzZQH+G6MvjZkQ0U0mJZ/4R1o8PfIADvNcTUGU=;
+ b=wFLZC5ycOUuI8TCjiaHsHhlztQ0SDpz3NL5AGkceuM3UhzhkFqO6zsss7m+lKX880AEQ92gs4XRNoB451IFN/Af0jwKanhmPwfQq9XOSWiIFqG7nXIa+apdIVVIIPTQRNaNU9erf/eZSHQ1rc6dDnrkaIGLojf9+T0ylOQ12HTtGPcMQXRTcBT+5ywKPkBJD8Jnw9IK5fVTiR9bOdLGvkoDEiQdPeSwyY6G2igaq/8kfkNXw6wtj08CPJK4BzjlLGBD+/HmnC9q0GmSsUFGAKk5/g5O4xi0O5GrseHQEcNAl1f9wbx/cCX/9anTD+6mxEzMw5jynB7hpwYkwEvrIQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kOpcNjzZQH+G6MvjZkQ0U0mJZ/4R1o8PfIADvNcTUGU=;
+ b=u/kWefc9JPdIkHVeq27YOVIG3oYhBGVHccDACfdyW2AgF7dcsgJlGOEUNgASNEuizWvcsH0UHEK/BBCpdQPhPouaX3afYxsc7UmJilAG0QyKsRbkSnTge/ONh5qASxHbH3kr/X/0tQ0cDq8pxzwsEcGAHAtkacTv45e3UYiUzqA=
+Received: from DS7PR07CA0005.namprd07.prod.outlook.com (2603:10b6:5:3af::15)
+ by MW4PR12MB7238.namprd12.prod.outlook.com (2603:10b6:303:229::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 20:00:53 +0000
+Received: from DS3PEPF000099E1.namprd04.prod.outlook.com
+ (2603:10b6:5:3af:cafe::61) by DS7PR07CA0005.outlook.office365.com
+ (2603:10b6:5:3af::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.18 via Frontend Transport; Wed,
+ 26 Feb 2025 20:00:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099E1.mail.protection.outlook.com (10.167.17.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 20:00:52 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 14:00:52 -0600
+Received: from amd-BIRMANPLUS.mshome.net (10.180.168.240) by
+ SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
+ via Frontend Transport; Wed, 26 Feb 2025 14:00:51 -0600
+From: Jason Andryuk <jason.andryuk@amd.com>
+To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
+	<sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, Jiqian Chen <Jiqian.Chen@amd.com>, Huang Rui
+	<ray.huang@amd.com>
+CC: Jason Andryuk <jason.andryuk@amd.com>, <stable@vger.kernel.org>,
+	<xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] xen/pciback: Make missing GSI non-fatal
+Date: Wed, 26 Feb 2025 15:01:34 -0500
+Message-ID: <20250226200134.29759-1-jason.andryuk@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: 0.0
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: jason.andryuk@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099E1:EE_|MW4PR12MB7238:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88561c76-9d37-4c4d-8b69-08dd56a04633
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Vmqnu3TfGjbPbmzA7/6gLmZbRZpE02cGOfWCiqBHRzWdoxcHGz+j0rfn5Y4M?=
+ =?us-ascii?Q?b8mfaz/+z7ujIxP81Yrgoi8hu056kb7Oy4bFuX7SNIuC1Xv9smVy9btOGCxa?=
+ =?us-ascii?Q?DUTz8engmWQvUNu82sVvXM5CRnOQP5uxhq7+MkfrgSRvMaNCWM6BnphM6MvE?=
+ =?us-ascii?Q?zIzn9RNdtUQETgydJ+d0oRglbtgS9KgzNvBDzA1C6sYlguM0XpC0io4g7UDq?=
+ =?us-ascii?Q?cYh/DXweG9h7ZiFrGAafeuMVKbJ9L9DDQ8FKwSNshPFraVj8ZkZW7PNPy53K?=
+ =?us-ascii?Q?LCuqhkws9J4pHaPRCcSdERtnbOsuAwbM0CgytgEyaH0+dQQwYeP8iorPF2Hy?=
+ =?us-ascii?Q?GXDtAomlPYafJLIQ9l16wOEVnq9rdFx6rxQTpa09haNk1BQQf8lV1Xpue7Vw?=
+ =?us-ascii?Q?0Kr/mPNQCaBRWAUenUMffTR9YwZq5+j8Y7MXseOsU+LEoOMQ9le7Ifm0FIE9?=
+ =?us-ascii?Q?I1vijAaS2FW+AI26s+ym+sGQz6STtY44eUtCpwBimg5baB86d5SVqfoAyhS/?=
+ =?us-ascii?Q?CC/dthyQsAKEiRbLon66FA50zHvlAALu1mEJNE0p4wbR+oR1Wnm8xLyWgaM8?=
+ =?us-ascii?Q?ORud/+m+8Y3VPuJkytZ+gmH8SVXKokY+TjTNkLPQdzxASO9BqWxvEoDQxfDX?=
+ =?us-ascii?Q?hcuRB+LhSn5aYoaH30HQQBJI97kP6w1rjVzn5kjFehy3/pb25PZcyBncceHW?=
+ =?us-ascii?Q?utozP/whTx/ZXU3GEsLbfCgD5otQ6xBzSI5sdJpgs2L011lhK6/VIUtg9JN4?=
+ =?us-ascii?Q?bwEylI1sV5OJT1uzB39Z9qxaVGLwYvSEfvGkuYE93a3TySw7h7kh08T7tKUw?=
+ =?us-ascii?Q?8PkDJxQlFeRRKxSF3hsGbDyKR9ZQfCw1umb8Kpc1/sM7gbYSrZI2QCqogl13?=
+ =?us-ascii?Q?RVJ5Hl/tz+5Jf+4FySglI/6uzFNQenVJqvgWAlvr8a/n0m1xGfUIIHdRneO3?=
+ =?us-ascii?Q?gE2AUAr/MHQQhovPN65sF67pQiOWtdun0Bm+QPwWooo1yYo7ii1m7C7I1BUn?=
+ =?us-ascii?Q?9E1GeVG0q9ufAlFZFC49DxFbs1ADBs3ctJio2g++QSS4WSyhFsuVK5QHkFOQ?=
+ =?us-ascii?Q?CmXHMem6vYJT9IavODrZHi/cnFfn8tZ444YD4kLz+2CZ+to9WxkfAStJfczT?=
+ =?us-ascii?Q?5xohM7yoLZuV5Qfykf0UsK2Qk/gkBHy9a6xLX80j8vgUoheZgpnm3a22wyL1?=
+ =?us-ascii?Q?Kjkf2YG4uMUvFXqrG/i8ttz3NEJ0MzvOPs67z11vDqAscdZt7rshhx3oE3gg?=
+ =?us-ascii?Q?+N3kObsoFQizAYR/mKJAVoMahACbKyU0Z+1bpSHxE44G2AWcbFNY8BtVTFKi?=
+ =?us-ascii?Q?NJ2HOWX0gXlPFGmSYn5Ibt7oPGqL5OwCwptixX/l35JIHucZu+dkUb6J2idz?=
+ =?us-ascii?Q?IOoR64Yk5fp0fDGSzdZ/+NYk4p1wPdX2OcM0cewIJT4dwr2KAGDL/mmeeAz7?=
+ =?us-ascii?Q?HdrgTidscn/IH7phJdUmwHsREIxtgY5evoLjw01pE9VF56h9asfGVVFVDscs?=
+ =?us-ascii?Q?QOfQZb1mKSjvgHA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 20:00:52.8080
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88561c76-9d37-4c4d-8b69-08dd56a04633
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099E1.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7238
 
-Am Mittwoch, dem 26.02.2025 um 09:59 -0800 schrieb Linus Torvalds:
-> On Wed, 26 Feb 2025 at 05:54, Ralf Jung <post@ralfj.de> wrote:
-> >=20
-> >      The only approach we know that we can actually
-> > pull through systematically (in the sense of "at least in principle, we=
- can
-> > formally prove this correct") is to define the "visible behavior" of th=
-e source
-> > program, the "visible behavior" of the generated assembly, and promise =
-that they
-> > are the same.
->=20
-> That's literally what I ask for with that "naive" code generation, you
-> just stated it much better.
+A PCI may not have a legacy IRQ.  In that case, do not fail assigning
+to the pciback stub.  Instead just skip xen_pvh_setup_gsi().
 
-The model is exactly the same as in C.  One defines "observable
-behavior" (to use C terminology) and compiler can do whatever it
-wants as long as it preserves this.=20
+This will leave psdev->gsi == -1.  In that case, when reading the value
+via IOCTL_PRIVCMD_PCIDEV_GET_GSI, return -ENOENT.  Userspace can used
+this to distinquish from other errors.
 
-Regarding undefined behavior, the idea the C standard had originally
-was that compilers do something "naive" (e.g. what the architecture
-does for some operation) or at least reasonable.  This worked well
-until modern optimizers started rather aggressively exploit
-that there is UB. C and Rust are are in the same boat here.
+Fixes: b166b8ab4189 ("xen/pvh: Setup gsi for passthrough device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Jason Andryuk <jason.andryuk@amd.com>
+---
+ drivers/xen/acpi.c                 |  4 ++--
+ drivers/xen/xen-pciback/pci_stub.c | 17 ++++++++++-------
+ 2 files changed, 12 insertions(+), 9 deletions(-)
 
-As Ralf said, the difference is that Rust makes it much harder to
-accidentally trigger UB.
-
-
->=20
-> I think some of the C standards problems came from the fact that at
-> some point the standards people decided that the only way to specify
-> the language was from a high-level language _syntax_ standpoint.
->=20
-> Which is odd, because a lot of the original C semantics came from
-> basically a "this is how the result works". It's where a lot of the
-> historical C architecture-defined (and undefined) details come from:
-> things like how integer division rounding happens, how shifts bigger
-> than the word size are undefined, etc. But most tellingly, it's how
-> "volatile" was defined.
-
-Compiler changed here, not the C standard.  Of course, later the
-compiler people in ISO WG14 may have pushed back against=C2=A0
-*removing* UB or even clarifying things (e.g. TS 6010 is not in C23
-because compiler people want to evaluate the impact on optimization
-first)
-
->=20
-> I suspect that what happened is that the C++ people hated the volatile
-> definition *so* much (because of how they changed what an "access"
-> means), that they then poisoned the C standards body against
-> specifying behavior in terms of how the code *acts*, and made all
-> subsequent C standards rules be about some much more abstract
-> higher-level model that could not ever talk about actual code
-> generation, only about syntax.
-
-At least since C89 the model did not change.
-For example, see "5.1.2.3 Program execution" in this draft
-for C89:
-
-https://www.open-std.org/JTC1/sc22/wg14/www/docs/n1256.pdf
-
-
-C++ was not standardized until 1998.
-
-> And that was a fundamental shift, and not a good one.
->=20
-> It caused basically insurmountable problems for the memory model
-> descriptions. Paul McKenney tried to introduce the RCU memory model
-> requirements into the C memory model discussion, and it was entirely
-> impossible. You can't describe memory models in terms of types and
-> syntax abstractions. You *have* to talk about what it means for the
-> actual code generation.
-
-The C model for concurrency indeed came to C11 from C++.  It is defined
-in terms of accesses to memory objects and when those accesses
-become visible to other threads.
->=20
-> The reason? The standards people wanted to describe the memory model
-> not at a "this is what the program does" level, but at the "this is
-> the type system and the syntactic rules" level. So the RCU accesses
-> had to be defined in terms of the type system, but the actual language
-> rules for the RCU accesses are about how the data is then used after
-> the load.
-
-If your point is that this should be phrased in terms of atomic
-accesses instead of accesses to atomic objects, then I absolutely
-agree with you.  This is something I tried to get fixed, but it
-is difficult. The concurrency work mostly happens in WG21=20
-and not WG14.
-
-But still, the fundamental definition of the model is in terms
-of accesses and when those become visible to other threads, and
-not in terms of syntax and types.
-
->=20
-> (We have various memory model documentation in
-> tools/memory-model/Documentation and that goes into the RCU rules in
-> *much* more detail, but simplified and much shortened: a
-> "rcu_dereference()" could be seen as a much weaker form of
-> "load_acquire": it's a barrier only to accesses that are
-> data-dependencies, and if you turn a data dependency into a control
-> dependency you have to then add specific barriers.
->=20
-> When a variable access is no longer about "this loads this value from
-> memory", but is something much more high-level, trying to describe
-> that is complete chaos. Plus the description gets to be so abstract
-> that nobody understands it - neither the user of the language nor the
-> person implementing the compiler.
->=20
-> So I am personally - after having seen that complete failure as a
-> by-stander - 100% convinced that the semantics of a language *should*
-> be defined in terms of behavior, not in terms of syntax and types.
-> Sure, you have to describe the syntax and type system *too*, but then
-> you use those to explain the behavior and use the behavior to explain
-> what the allowable optimizations are.
->=20
-> > So the Rust compiler promises nothing about the shape of the assembly
-> > you will get, only about its "visible" behavior
->=20
-> Oh, absolutely. That should be the basic rule of optimization: you can
-> do anything AT ALL, as long as the visible behavior is the same.
->=20
-> > (and which exact memory access occurs when is generally
-> > not considered "visible").
->=20
-> .. but this really has to be part of it. It's obviously part of it
-> when there might be aliases, but it's also part of it when there is
-> _any_ question about threading and/or memory ordering.
->=20
-> And just as an example: threading fundamentally introduces a notion of
-> "aliasing" because different *threads* can access the same location
-> concurrently. And that actually has real effects that a good language
-> absolutely needs to deal with, even when there is absolutely *no*
-> memory ordering or locking in the source code.
->=20
-> For example, it means that you cannot ever widen stores unless you
-> know that the data you are touching is thread-local. Because the bytes
-> *next* to you may not be things that you control.
->=20
-> It also *should* mean that a language must never *ever* rematerialize
-> memory accesses (again, unless thread-local).
->=20
-> Seriously - I consider memory access rematerialization a huge bug, and
-> both a security and correctness issue. I think it should be expressly
-> forbidden in *any* language that claims to be reliablel.
-> Rematerialization of memory accesses is a bug, and is *hugely* visible
-> in the end result. It introduces active security issues and makes
-> TOCTOU (Time-of-check to time-of-use) a much bigger problem than it
-> needs to be.
-
-Rematerialization or widening is essentially forbidden by=C2=A0
-the C++ / C memory model.
-
->=20
-> So memory accesses need to be part of the "visible" rules.
->=20
-> I claim that C got that right with "volatile". What C got wrong was to
-> move away from that concept, and _only_ have "volatile" defined in
-> those terms. Because "volatile" on its own is not very good (and that
-> "not very good" has nothing to do with the mess that C++ made of it).
-
-I don't get your point. The compiler needs to preserve
-observable behavior (which includes volatile accesses), while
-the concurrency model is defined in terms of visibility of
-stored values as seen by loads from other threads.  This
-visibility does not imply observable behavior, so all non-volatile
-accesses do not have to be preserved by optimizations. Still this
-model fundamentally constrains the optimization, e.g. by ruling
-out the widening stores you mention above.   I think this is
-basically how this *has* to work, or at least I do not see how
-this can be done differently.=20
-
-I think C++ messed up a lot (including time-travel UB, uninitialized
-variables, aliasing ules and much more), but I do not see
-the problem here.
-
-
-Martin
-
-
-
-=20
-
+diff --git a/drivers/xen/acpi.c b/drivers/xen/acpi.c
+index d2ee605c5ca1..d6ab0cb3ba3f 100644
+--- a/drivers/xen/acpi.c
++++ b/drivers/xen/acpi.c
+@@ -101,7 +101,7 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+ 
+ 	pin = dev->pin;
+ 	if (!pin)
+-		return -EINVAL;
++		return -ENOENT;
+ 
+ 	entry = acpi_pci_irq_lookup(dev, pin);
+ 	if (entry) {
+@@ -116,7 +116,7 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+ 		gsi = -1;
+ 
+ 	if (gsi < 0)
+-		return -EINVAL;
++		return -ENOENT;
+ 
+ 	*gsi_out = gsi;
+ 	*trigger_out = trigger;
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index b616b7768c3b..9715c2f70586 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -240,6 +240,9 @@ static int pcistub_get_gsi_from_sbdf(unsigned int sbdf)
+ 	if (!psdev)
+ 		return -ENODEV;
+ 
++	if (psdev->gsi == -1)
++		return -ENOENT;
++
+ 	return psdev->gsi;
+ }
+ #endif
+@@ -475,14 +478,14 @@ static int pcistub_init_device(struct pcistub_device *psdev)
+ #ifdef CONFIG_XEN_ACPI
+ 	if (xen_initial_domain() && xen_pvh_domain()) {
+ 		err = xen_acpi_get_gsi_info(dev, &gsi, &trigger, &polarity);
+-		if (err) {
+-			dev_err(&dev->dev, "Fail to get gsi info!\n");
+-			goto config_release;
++		if (err && err != -ENOENT) {
++			dev_err(&dev->dev, "Failed to get gsi info! %d\n", err);
++		} else if (!err) {
++			err = xen_pvh_setup_gsi(gsi, trigger, polarity);
++			if (err)
++				goto config_release;
++			psdev->gsi = gsi;
+ 		}
+-		err = xen_pvh_setup_gsi(gsi, trigger, polarity);
+-		if (err)
+-			goto config_release;
+-		psdev->gsi = gsi;
+ 	}
+ #endif
+ 
+-- 
+2.34.1
 
