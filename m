@@ -1,160 +1,134 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E04415278E;
-	Wed, 26 Feb 2025 15:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C3D190665
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582121; cv=none; b=MTvuNSYpdXAkYjS2n6cqYPaDpmMMdVvJhboQMrAfhuKKscBTJVOgcs/D8fGoXWloT301lYOmgE09eoXvGCixtLQnoiE5vUjaOyfpPlg2SAt3XxQR+5IQqPf3Eg6fjj8iZEyQbte7X1+1LygS63Di+PtbzF2ZQSNAfGrkJmnHlqQ=
+	t=1740582143; cv=none; b=MqWXFe9VK6dsHBZMa5arcCmpd/G0X9s7RuGuj2ZTjLKFhRK7FkbiG9cGzKRdaqq1i1HdSFUBcQokOkBFQmXiy4lvEIy77qFAe69cCbBQVGJ6T+WjZ154/aJyGyL1B6cKSn+KsAzo6E0wqqESC3qteXVLQiIn+OIBgK5XdA2MPvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582121; c=relaxed/simple;
-	bh=celbQI4md4Nw9NiTcdx99RF7CX7CNJgN/S3lD5ArXGI=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=J26rD4/3UNZUrdD9uiMwvQQg87OCVdNqcZxisIc3fowrXTXqWpA5s4GDNCLxTXIq22AlKo9ngd1k+EHQwcucdCc9p9m4b0J5dTeB9AxTGeox/CIhi9Er8/iTGUdJsFW+q3q7VcZaa9UWPkvgKQr3SViAah0+p8WimKwlxDxbn0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ozu8qxXD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0M7GPZf3; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740582143; c=relaxed/simple;
+	bh=lW1uVxiz1zwkZfsdu2FvG52Ph55luPTOoJCgdMZItXA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCyxqVAkwVDyXAPFpME3tXWaE0Nvlrdjm+OQfWE9gMvt8guPYhDvOH7p4cpcDocdusKpIhnzkeKQzmf3mNdFQGE5qbB4YZ2Rh2krJWqS0P+OAgEkAca3w0rAIGumLaSmUQDLMzUKXh7WUUOHAXjsYUsq36c+NhRRf/qDMrxS0p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMxOtcWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ozu8qxXD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0M7GPZf3"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740582118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JWlX9TJLo6j7kLc4k/KFCY/zN5HPB61jkl2jDj8mI+4=;
-	b=Ozu8qxXDgHlyYDgOIOrHxApCO4stPIj6JjjCbdNoJMzVCmA1zGPro86S1pXvvhGk4LmEp+
-	XSAS0m/tKXYVxXvKNCKzcVgIaAsDdON/wFO9TqZAcULl8eVTLe2EGVkcdBaJgArIJ44m7W
-	6gljhBtPvnu4o4uO0q1EiJjmm8icUBGiJK4O8CI3WiiS0sNXiq4ODv17LqBkayLOZwUKH6
-	7aEtFQq3hx6bcyUKcXklxLJCsx8+FXzPHMrFO42mMAcRJrKyCOYlMVtUzrvr0dsWioWx9l
-	B9diGFKhAsLety4R0kbJSGlw6SChnU0svqLjpEftN9Sq4ryHL3BGHUyBO7Vfdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740582118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JWlX9TJLo6j7kLc4k/KFCY/zN5HPB61jkl2jDj8mI+4=;
-	b=0M7GPZf3s+9CFrwhjsGBGwadoUM4Lp5OV+6AA7HjCpgMYRqYgK3FzTWHSJGxVnYD/I+QrS
-	lqfT8G6EytwcmUCw==
-To: syzbot <syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com>,
- asml.silence@gmail.com, axboe@kernel.dk, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, mingo@redhat.com,
- syzkaller-bugs@googlegroups.com, x86@kernel.org
-Subject: [PATCH] x86/iopl: Cure TIF_IO_BITMAP inconsistencies
-In-Reply-To: <67bead04.050a0220.38b081.0002.GAE@google.com>
-References: <67bead04.050a0220.38b081.0002.GAE@google.com>
-Date: Wed, 26 Feb 2025 16:01:57 +0100
-Message-ID: <87wmdceom2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMxOtcWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D43DC4CEE4;
+	Wed, 26 Feb 2025 15:02:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740582142;
+	bh=lW1uVxiz1zwkZfsdu2FvG52Ph55luPTOoJCgdMZItXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XMxOtcWrU/RFP969LF589aMic0wVLrITjYRqReOSEFaCXsrCjdlAwnfsTEUb6nbxf
+	 zmsJi4CcfQ6qh712C0UTUxvw8ZpupFh3FtYLstDKdHYSYRzCjDevpq8FzrvoRv+FIC
+	 BUC7ESgv1vvXmcG2K3Dd6SuY0JTgjaguHs1qlBYZO93xv7J2bIOw+DP9oI4OouOzhA
+	 +bA0IFiUriEV9RKoktxUZDuT2p//BScIIpMkDdpX8096DIpIpZDBHCD5lM3QXzew0d
+	 t1pLWSv4x1qmH1dTdg15EpF8HfoECNRyCO1n+s0Wfr7ilbPk5R5t3JYQ6zGtMmcQOW
+	 oENIobmmUAq0g==
+Date: Wed, 26 Feb 2025 16:02:19 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	open list <linux-kernel@vger.kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] workqueue: Always use wq_select_unbound_cpu() for
+ WORK_CPU_UNBOUND.
+Message-ID: <Z78s-1jHXehA33px@localhost.localdomain>
+References: <20250221112003.1dSuoGyc@linutronix.de>
+ <Z7iSboU-05uMJ7-e@localhost.localdomain>
+ <Z7iuUObJGgZtsaJe@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7iuUObJGgZtsaJe@slm.duckdns.org>
 
-io_bitmap_exit() is invoked from exit_thread() when a task exists or
-when a fork fails. In the latter case the exit_thread() cleans up
-resources which were allocated during fork().
+Le Fri, Feb 21, 2025 at 06:48:16AM -1000, Tejun Heo a écrit :
+> Hello,
+> 
+> On Fri, Feb 21, 2025 at 03:49:18PM +0100, Frederic Weisbecker wrote:
+> > Le Fri, Feb 21, 2025 at 12:20:03PM +0100, Sebastian Andrzej Siewior a écrit :
+> > > If the user did not specify a CPU while enqueuing a work item then
+> > > WORK_CPU_UNBOUND is passed. In this case, for WQ_UNBOUND a CPU is
+> > > selected based on wq_unbound_cpumask while the local CPU is preferred.
+> > > For !WQ_UNBOUND the local CPU is selected.
+> > > For NOHZ_FULL system with isolated CPU wq_unbound_cpumask is set to the
+> > > not isolated (housekeeping) CPUs. This leads to different behaviour if a
+> > > work item is scheduled on an isolated CPU where
+> > > 	schedule_delayed_work(, 1);
+> > > 
+> > > will move the timer to the housekeeping CPU and then schedule the work
+> > > there (on the housekeeping CPU) while
+> > > 	schedule_delayed_work(, 0);
+> > > 
+> > > will schedule the work item on the isolated CPU.
+> > > 
+> > > The documentation says WQ_UNBOUND prefers the local CPU. It can
+> > > preferer the local CPU if it is part of wq_unbound_cpumask.
+> > > 
+> > > Restrict WORK_CPU_UNBOUND to wq_unbound_cpumask via
+> > > wq_select_unbound_cpu().
+> > > 
+> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > 
+> > I really would like to have this patch in. I have considered
+> > doing that a few month ago but got sort-of discouraged by the
+> > lack of properly defined semantics for schedule_work(). And that
+> > function has too many users to check their locality assumptions.
+> > 
+> > Its headers advertize to queue in global workqueue but the target
+> > is system_wq and not system_unbound_wq. But then it's using
+> > WORK_CPU_UNBOUND through queue_work().
+> > 
+> > I'm tempted to just assume that none of its users depend on the
+> > work locality?
+> 
+> That's API guarantee and there are plenty of users who depend on
+> queue_work() and schedule_work() on per-cpu workqueues to be actually
+> per-cpu. I don't think we can pull the rug from under them. If we want to do
+> this, which I think is a good idea, we should:
+> 
+> 1. Convert per-cpu workqueue users to unbound workqueues. Most users don't
+>    care whether work item is executed locally or not. However, historically,
+>    we've been preferring per-cpu workqueues because unbound workqueues had a
+>    lot worse locality properties. Unbound workqueue's topology awareness is
+>    a lot better now, so this should be less of a problem and we should be
+>    able to move a lot of users over to unbound workqueues.
 
-io_bitmap_exit() invokes task_update_io_bitmap(), which in turn ends up
-in tss_update_io_bitmap(). tss_update_io_bitmap() operates on the
-current task. If current has TIF_IO_BITMAP set, but no bitmap installed,
-tss_update_io_bitmap() crashes with a NULL pointer dereference.
+But we must check those ~1951 schedule_work() users one by one to make sure they
+don't rely on locality for correctness, right? :-)
 
-There are two issues, which lead to that problem:
+> 
+> 2. There still are cases where local execution isn't required for
+>    correctness but local & concurrency controlled executions yield
+>    performance gains. Workqueue API currently doesn't distinguish these two
+>    cases. We should add a new API which prefers local execution but doesn't
+>    require it, which can then do what's suggested in this patch.
 
-  1) io_bitmap_exit() should not invoke task_update_io_bitmap() when
-     the task, which is cleaned up, is not the current task. That's a
-     clear indicator for a cleanup after a failed fork().
+That is much trickier to find out and requires to know about the subsystem
+details and history.
 
-  2) A task should not have TIF_IO_BITMAP set and neither a bitmap
-     installed nor IOPL emulation level 3 activated.
+For those that don't rely on locality for correctness, we would really like
+to be able to offload them to unbound pool at least when nohz_full= is filled.
+Because in that case we don't care much on workqueues performance.
 
-     This happens, when a kernel thread is created in the context of a
-     user space thread, which has TIF_IO_BITMAP set as the thread flags
-     are copied and the IO bitmap pointer is cleared.
+> 
+> Unfortunately, I don't see a way forward without auditing and converting the
+> users.
 
-     Other than in the failed fork() case this has no impact because
-     kernel threads including IO workers never return to user space and
-     therefore never invoke tss_update_io_bitmap().
+I see...
 
-Cure this by adding the missing cleanups and checks:
+Thanks.
 
-  1) Prevent io_bitmap_exit() to invoke task_update_io_bitmap() if
-     the to be cleaned up task is not the current task.
-
-  2) Clear TIF_IO_BITMAP in copy_thread() unconditionally. For user
-     space forks it is set later, when the IO bitmap is inherited in
-     io_bitmap_share().
-
-For paranoia sake, add a warning into tss_update_io_bitmap() to catch
-the case, when that code is invoked with inconsistent state.
-
-Fixes: ea5f1cd7ab49 ("x86/ioperm: Remove bitmap if all permissions dropped")
-Reported-by: syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
----
-
---- a/arch/x86/kernel/ioport.c
-+++ b/arch/x86/kernel/ioport.c
-@@ -33,8 +33,9 @@ void io_bitmap_share(struct task_struct
- 	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
- }
- 
--static void task_update_io_bitmap(struct task_struct *tsk)
-+static void task_update_io_bitmap(void)
- {
-+	struct task_struct *tsk = current;
- 	struct thread_struct *t = &tsk->thread;
- 
- 	if (t->iopl_emul == 3 || t->io_bitmap) {
-@@ -54,7 +55,12 @@ void io_bitmap_exit(struct task_struct *
- 	struct io_bitmap *iobm = tsk->thread.io_bitmap;
- 
- 	tsk->thread.io_bitmap = NULL;
--	task_update_io_bitmap(tsk);
-+	/*
-+	 * Don't touch the TSS when invoked on a failed fork(). TSS
-+	 * reflects the state of @current and not the state of @tsk.
-+	 */
-+	if (tsk == current)
-+		task_update_io_bitmap();
- 	if (iobm && refcount_dec_and_test(&iobm->refcnt))
- 		kfree(iobm);
- }
-@@ -192,8 +198,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, leve
- 	}
- 
- 	t->iopl_emul = level;
--	task_update_io_bitmap(current);
--
-+	task_update_io_bitmap();
- 	return 0;
- }
- 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -176,6 +176,7 @@ int copy_thread(struct task_struct *p, c
- 	frame->ret_addr = (unsigned long) ret_from_fork_asm;
- 	p->thread.sp = (unsigned long) fork_frame;
- 	p->thread.io_bitmap = NULL;
-+	clear_tsk_thread_flag(p, TIF_IO_BITMAP);
- 	p->thread.iopl_warn = 0;
- 	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
- 
-@@ -464,6 +465,11 @@ void native_tss_update_io_bitmap(void)
- 	} else {
- 		struct io_bitmap *iobm = t->io_bitmap;
- 
-+		if (WARN_ON_ONCE(!iobm)) {
-+			clear_thread_flag(TIF_IO_BITMAP);
-+			native_tss_invalidate_io_bitmap();
-+		}
-+
- 		/*
- 		 * Only copy bitmap data when the sequence number differs. The
- 		 * update time is accounted to the incoming task.
+> 
+> Thanks.
+> 
+> -- 
+> tejun
