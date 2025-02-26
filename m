@@ -1,151 +1,132 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E221E22370A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85A821CA09
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585212; cv=none; b=lMpG3J9BKvJv2JfIqUKT7WVuzjUtbqPDrM0xB/zClFVKwEkBOcxxAkqvK+vaVmgNPRppdAiVHvo55DVbgQKFLWY8qJhk3Lv53VQUGziQ0MSrnRnFYVrK2c2Hht+4LOX5m899rLZijq1HQrd8ozGdLIKuAUdkqEb49aW9jUbrUHE=
+	t=1740585234; cv=none; b=QvmF1Ix/Gx+rYzlVAJbwANO2znUeTXf+sDuLdBFYRUIBrKHiQejQBKc/iu3ywEatgPzn2TuH302EbYAgh8X/RKHMARSzCt/DXafxVJ3nwU/3D2DE67Cu9W9Y5KabU+JOINxDXEqQ7DpmMJKBJ6PhtQduDxjl9cTaXUFjYwmpYCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585212; c=relaxed/simple;
-	bh=+l9+q+ZpJR/2zzQFN7qY30Hlk5wVNR0Mp31jHBFT5qc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nkbzHRh4t7VbpPxqceCDbIBZKr3xR7hFdxS24zXMsfLL9tE+3rrWZxwGDhsZJlONupV/Rfg3z3f5P5DC9s00wLNaVrTKlPwVtVfEfev6vhGwupYj8vVwOhqtsB09oJxtqc+VYqd89Wx+u3G3JHNWw91bucLfUD63U3U6OMLp5Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B1iAtqqQ; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740585234; c=relaxed/simple;
+	bh=ACP8bz47YGTzKqzNwMzMejjC9YzYSJC526Xi7vesKBM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D9jdstwK85z1pvQs8XgeBoKTvMQFXqD9IjxeMDuKkQiClSB2nm09MtKpMBVUoU8OyUhXmmXuh4vfQRcSk0GpjEMHimODMRo5oafLZKF2Ca94DeOhAL57T2SVrW36DfRC9IOwL55gZQnWUuK8YcH/gs7S8SE03PWtnuF/FAD7ouM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tiHog+I2; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B1iAtqqQ"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740585209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LGo5A1qwTPvIwUTBzzm6zcRuuolGFzB54L0V7i4Wa5c=;
-	b=B1iAtqqQMgRGIGbewYzHTUXLt3rW53YozwuCdWPz9ldfcZSdCR1ZhR19MWpWiYYIVW8QZE
-	XJq6UQTi5HWXQ0pzFZaX2AzpUZXlF/HD6ay7q14/hLjqoAoU9rVu5qKX3FPcuRkkwoZCT0
-	8lVA3UTydWHG/9fKYa9/IOIAayoIRTA=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v10 07/13] drm/mipi-dsi: Add helper to find input format
-Date: Wed, 26 Feb 2025 21:22:22 +0530
-Message-Id: <20250226155228.564289-8-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250226155228.564289-1-aradhya.bhatia@linux.dev>
-References: <20250226155228.564289-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tiHog+I2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:To:From:Sender:Reply-To:Cc:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Sp2RArpH+SxqIvNipgdR8UTH8wCQ4VMdPZhhVAjR59Q=; b=tiHog+I26s/LWX4WCV9x/RGYhw
+	HswqddxSRwDVM8cALeNQ12xrX03BBlHKh08VP/8QZG48SCUtBdR1//NT40ic6a73gNbgUqt1kafi0
+	ph8mV6VD/8QAa5Ab59TnnaMF52mnKx9qnKanZ9gZqaG4HEW7ci5vEUf2Zz5Ej9dd/MxH98Revgk2q
+	1aGgrjTcEz30XpxrQa17d+fMx6EDqvh7FbOwlyRM+kMSNGG1ZFFey8OkJUGVnVs4VByc0N6fe6pbh
+	teGYkhKCPoiqCwmKOW3gvw5JEUJR/fIS7BDoMEkIxs1aa2ef4Lsfr27nZvMghozTlqN7cHZvo4jcO
+	4tE/+yMw==;
+Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tnJjG-0001Ve-KY; Wed, 26 Feb 2025 16:53:46 +0100
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: =?UTF-8?B?T25kxZllag==?= Jirman <megi@xff.cz>,
+ Heiko Stuebner <heiko@sntech.de>, vkoul@kernel.org, kishon@kernel.org,
+ linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ quentin.schulz@cherry.de, sebastian.reichel@collabora.com,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject:
+ Re: [PATCH 2/2] phy: rockchip: usbdp: re-init the phy on orientation-change
+Date: Wed, 26 Feb 2025 16:53:45 +0100
+Message-ID: <1878927.BzM5BlMlMQ@diego>
+In-Reply-To: <7q5yn466xd7emebhjze4ixkswgyxjjjt5rwvyww2hwbts6bamd@i5vwvegy2os6>
+References:
+ <20250225184519.3586926-1-heiko@sntech.de>
+ <20250225184519.3586926-3-heiko@sntech.de>
+ <7q5yn466xd7emebhjze4ixkswgyxjjjt5rwvyww2hwbts6bamd@i5vwvegy2os6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+Hey Ond=C5=99ej,
 
-Add a helper API that can be used by the DSI hosts to find the required
-input bus format for the given output dsi pixel format.
+Am Mittwoch, 26. Februar 2025, 15:46:11 MEZ schrieb Ond=C5=99ej Jirman:
+> On Tue, Feb 25, 2025 at 07:45:19PM +0100, Heiko Stuebner wrote:
+> > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> >=20
+> > Until now the usbdp in the orientation-handler set the new lane setup in
+> > its internal state variables and adapted the sbu gpios as needed.
+> > It never actually updated the phy itself though, but relied on the
+> > controlling usb-controller to disable and re-enable the phy.
+> >=20
+> > And while on the vendor-kernel, I could see that on every unplug the dw=
+c3
+> > did go to its suspend and woke up on the next device plug-in event,
+> > thus toggling the phy as needed, this does not happen in all cases and =
+we
+> > should not rely on that behaviour.
+>=20
+> On RK3399 there's a similar issue with the equivalent type-c PHY driver.
+> The TRM (part 2) states that:
+>=20
+> 4.6.1 Some Special Settings before Initialization
+>=20
+> - Set USB3.0 OTG controller AXI master setting.
+> - Clear USB2.0 only mode setting (bit 3 of register GRF_USB3PHY0/1_CON0 i=
+n Chapter GRF)
+> - USB3.0 OTG controller should be hold in reset during the initialization=
+ of the corresponding
+>   TypeC PHY until TypeC PHY is ready for USB operation.
+> - Set PHYIF to 1 to use 16-bit UTMI+ interface (see register GUSB2PHYCFG0)
+> - Clear ENBLSLPM to 0 to disable sleep and l1 suspend (see register GUSB2=
+PHYCFG0)
+>   ...
+>=20
+> The PHY for Superspeed signals is expected to be set up while the USB
+> controller is held in reset, which makes sense HW wise, and it's what dow=
+nstream
+> kernel efectivelly does, via its RPM based hack.
+>=20
+> RK3588 TRM doesn't have very detailed notes on this, but I expect it will=
+ be
+> similar.
+>=20
+> So reconfiguring the phy here, while it's actively linked to the USB cont=
+roller
+> without the controller driver driving the process so it reliably happens =
+while
+> it's in reset, or at least so that USB controller reset happens afterward=
+s, may
+> not be correct way to approach this.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- drivers/gpu/drm/drm_mipi_dsi.c | 37 ++++++++++++++++++++++++++++++++++
- include/drm/drm_mipi_dsi.h     |  1 +
- 2 files changed, 38 insertions(+)
+the function here, is using infrastructure from the type-c framework.
 
-diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
-index 2e148753ea97..58326ccc7c79 100644
---- a/drivers/gpu/drm/drm_mipi_dsi.c
-+++ b/drivers/gpu/drm/drm_mipi_dsi.c
-@@ -36,6 +36,8 @@
- #include <drm/drm_mipi_dsi.h>
- #include <drm/drm_print.h>
- 
-+#include <linux/media-bus-format.h>
-+
- #include <video/mipi_display.h>
- 
- /**
-@@ -870,6 +872,41 @@ ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
- }
- EXPORT_SYMBOL(mipi_dsi_generic_read);
- 
-+/**
-+ * drm_mipi_dsi_get_input_bus_fmt() - Get the required MEDIA_BUS_FMT_* based
-+ *				      input pixel format for a given DSI output
-+ *				      pixel format
-+ * @dsi_format: pixel format that a DSI host needs to output
-+ *
-+ * Various DSI hosts can use this function during their
-+ * &drm_bridge_funcs.atomic_get_input_bus_fmts operation to ascertain
-+ * the MEDIA_BUS_FMT_* pixel format required as input.
-+ *
-+ * RETURNS:
-+ * a 32-bit MEDIA_BUS_FMT_* value on success or 0 in case of failure.
-+ */
-+u32 drm_mipi_dsi_get_input_bus_fmt(enum mipi_dsi_pixel_format dsi_format)
-+{
-+	switch (dsi_format) {
-+	case MIPI_DSI_FMT_RGB888:
-+		return MEDIA_BUS_FMT_RGB888_1X24;
-+
-+	case MIPI_DSI_FMT_RGB666:
-+		return MEDIA_BUS_FMT_RGB666_1X24_CPADHI;
-+
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		return MEDIA_BUS_FMT_RGB666_1X18;
-+
-+	case MIPI_DSI_FMT_RGB565:
-+		return MEDIA_BUS_FMT_RGB565_1X16;
-+
-+	default:
-+		/* Unsupported DSI Format */
-+		return 0;
-+	}
-+}
-+EXPORT_SYMBOL(drm_mipi_dsi_get_input_bus_fmt);
-+
- /**
-  * mipi_dsi_dcs_write_buffer() - transmit a DCS command with payload
-  * @dsi: DSI peripheral device
-diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
-index bd40a443385c..d6796ce9f5ff 100644
---- a/include/drm/drm_mipi_dsi.h
-+++ b/include/drm/drm_mipi_dsi.h
-@@ -293,6 +293,7 @@ void mipi_dsi_generic_write_multi(struct mipi_dsi_multi_context *ctx,
- 				  const void *payload, size_t size);
- ssize_t mipi_dsi_generic_read(struct mipi_dsi_device *dsi, const void *params,
- 			      size_t num_params, void *data, size_t size);
-+u32 drm_mipi_dsi_get_input_bus_fmt(enum mipi_dsi_pixel_format dsi_format);
- 
- #define mipi_dsi_msleep(ctx, delay)	\
- 	do {				\
--- 
-2.34.1
+The function in question tcpm_mux_set(), which then ends up in the
+usbdp_phy only gets called from tcpm_reset_port() .
+
+Which I think will do the right already - judging by its name ;-) .
+[and also by the fact that the referenced qcom phy behaves similarly
+ when talking to the type-c framework]
+
+
+=46or the rk3399 I would think converting the old typec-phy-driver over to
+use the actual kernel type-c framework, might just magically solve the
+issue you have on it.
+
+Rockchip actually has converted the rk3399 typec-phy to use the type-c
+framework in their vendor kernel.
+
+
+Heiko
+
 
