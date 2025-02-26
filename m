@@ -1,191 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8075B21B9CC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9160743166
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575039; cv=none; b=A7Dhm/dvkoKWPlYqN0TQBDuxiwQHUo7WDyA8UFTKeUYtoqsEYFBtPys4RivwxF1Y+pMV5mBrllv+tqMof/kyly9pUNubOnY/H/cAZaxybe+noAkcffbbBiHxxExbOzTpEuZG8DvbDA5gi2MgWKL4VKDb+mhzMIPY1W6lB4DtwHw=
+	t=1740575067; cv=none; b=QsswLo/HXpokxtoXNBtSBIiuVygjV+UzRIB1rLCmdFoHdfvefdIWD+fFjeoI5/SbMC5KmAQG4WPrhLizSdzzXerOx2qWjUtOSob6YS+YX6EXOPp3VlZlruW2DmPnAyXutN5LOtJxdiXufLfUazGibUkNmo1RWWbDIviyQvYoRGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740575039; c=relaxed/simple;
-	bh=8jiS+kPdQZP7EWPxn7Of1UXgpTQ62xuev1qCkeye9+0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JplG0i8f7j6MaH3KLUDHotH9xqJSlzniMWFw3twa0la5661FPDIWgASnJ1UtgsMdWMfhynWAgaGIACTjFLkdRSThO3CtWIXUb3zCNjyDVnEfsGiXFJaSG7ivvUgs8J+GNETD6CyVh8+qirm3FDYxB4Hd0bzmIWYhAULxDaW9LQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WD4V6KQ3; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740575067; c=relaxed/simple;
+	bh=D5ZlC5M0pfwNbiqQwR8fbHoOjPuQ/ClIFXStOmgzmDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tR+CVS9vfqbPreI+jHf8N377EL8Qol31zRoLHTZWKEa+1cXUIWE0wc41JkWeCIBG+gF39uD3yGBsRxykouh7uHXX55BtC4HG+b3EiRK7jg3YP3rCr1ewJxcn1pS6IsPuf7ORc6bFZbUNPjBNdCDfZ5ssf+3UhhKmowYOT9+FWUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=GB1bAkhX; arc=none smtp.client-ip=209.85.219.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WD4V6KQ3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740575038; x=1772111038;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8jiS+kPdQZP7EWPxn7Of1UXgpTQ62xuev1qCkeye9+0=;
-  b=WD4V6KQ3kyWGM6cnCyLpCh7sjJY4oHtn/27WBchHJxPSKRi8ffPjdELj
-   C0C+24eC5HI82UjPY/ZV0IT/n8vr5h2x+OKemaacv0Ig7PDVb/trGfGJm
-   6Md/y9pONLsjEd/trGCLmkk+TbUjjHXZiIZS64zApraqAcKlUW21ix8kb
-   Sz4SeR15MCCYKwyLKbd87HtjNO2HZ4CGPgc+ZlYrPDhHCdY93RfS4ddCm
-   Aqnp67R/RDt7JTF/4cqFt7I1DsoVw3rbYVSuYIWKOsmBI+IIUT+3+9vVd
-   5HQCAKzY2s6tI9BYM75KrDt47X6UsuGB7eSKN7ZZK6U5ID2IjYQ14bX2V
-   A==;
-X-CSE-ConnectionGUID: awmYf1mJR+e3+gOxr0o4jQ==
-X-CSE-MsgGUID: bWQkbgcTQ8GBrMVDNBOaxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41341675"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="41341675"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:58 -0800
-X-CSE-ConnectionGUID: kh+122C9SgecQqqNpusQEg==
-X-CSE-MsgGUID: A21xIJetS9CbUuTMCxUurQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="121691034"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:52 -0800
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v5 11/11] drm/xe/nvm: add support for access mode
-Date: Wed, 26 Feb 2025 14:51:43 +0200
-Message-ID: <20250226125143.3791515-12-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250226125143.3791515-1-alexander.usyskin@intel.com>
-References: <20250226125143.3791515-1-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="GB1bAkhX"
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6dd049b5428so63799226d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:04:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1740575064; x=1741179864; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D5ZlC5M0pfwNbiqQwR8fbHoOjPuQ/ClIFXStOmgzmDU=;
+        b=GB1bAkhX+0Bj+0sUSU1tTfHww2GVL/Rx73XNR0GG4GQmClVB9oVeqQ09pFMjUbRcm6
+         N4NzpHZ2DxJKSkUVgmHZgXbCSscEZBmO0fvuA4MfnzTaLulFhr9QGCyD3oBpuqh8WDqb
+         tvzRq3HZoKk0wZACIaWbab+GwhXOrEONKqf7IJLBdBEp552uSOgmGGn9PaY3v+al1ltq
+         mNXoE5d8ZbZVfFxnrc4SBnd+ULpkpJYMoHRP4YacjdCLDb1fJS7ShYC7lt8HkpCc6jW1
+         7f0q9naiLb+2kndC6/uCuMyjJiBrGcOVFI0wRhEtUzUw4CB+p1+7axu27l5/Mo05bPtB
+         Oq4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740575064; x=1741179864;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D5ZlC5M0pfwNbiqQwR8fbHoOjPuQ/ClIFXStOmgzmDU=;
+        b=ULnSxrr08HCSHt5+TN4KbVSqDRTTY9kb7Z4Q9GFaNd/+tJJILfRtrqifr6dT2tnv57
+         8L+/4CXPOe3OMvcEzx9jA12Cd8xE6Pk/LLpBjtLU7r3i42ojoN2l7ALaHbU7u2MuwjZY
+         iaDw7ZyVa1pS1qVUnOudtxe1ZwrpAZdrZ1vgNCEF5SKMVluxlHipn6ffrG3RCfcy1bQa
+         itRf8wKmkOFiL4Pofu+rbiTKgEGQRE9+XbFN7yLQ1gmjegyGyOICqZIuNz85LG3WZ6FV
+         pP1z0TxUGOvh2kfDuosV5fY/g2KPteMaZ1XGrl+0CMNHoJgg0hJbnkmcMGcdB3ZvxucC
+         Zpkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVcgJt25Sbr3E7swSZkKk4LUTXklh4MB6oFli0dWwECfL2fEWNFQxiIDJXmRb5RT1veMlYL7DYl5SeTqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQA5xsndQbrQ//rHfiiV1U6p8c2bQa8FVCnsjskcjfW/CjQ+rU
+	jJtRVN/5oLNpVibBKiK3W5KCSPCezzCeYaPnLXX/eYygFORwya+pRjnZuhhZy9c=
+X-Gm-Gg: ASbGnct9i1hc69Y9U5RFdRehkB3xuO1SPD8M5g6vBZwwxv6sTupO/a/Sn/3GrH+ytG0
+	jyMCCJ6DD3FmwGu5tAGvcUsOchqAu5vtt7ORHj4kZWXoyJkHWm82TyBiB4+fQ1FgV1Y0ogCvUPZ
+	HLOT//uRVWHIIf4Qa8Qzfc9596LoWO1WtdrST5KQN5ecIn5GyWMhe2coQOvANQV/3yAwguZk2tA
+	tOLhJbdRrMFVbdFIKoCEgHFQ0x69ljBc48JFuj4N8aNIJWpNUmJcEtfPh06urwHAzTfSvugQwET
+	2ZJMRXSVzg0Fh6csGWwz53s87N5I0fjDFwaXCREgmS18XRiveh/CrWTou1eNyMh7M6d9SPyqRkk
+	=
+X-Google-Smtp-Source: AGHT+IGhcywQo9UynmReNgmz8cK5z3uBFN04iFF5tXUNfFAh7UeVZti54hY8rHdrWU7tmvvAXTj/hg==
+X-Received: by 2002:a05:6214:212c:b0:6e6:5a42:8560 with SMTP id 6a1803df08f44-6e886899d51mr50000726d6.23.1740575064570;
+        Wed, 26 Feb 2025 05:04:24 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e87b089bbfsm21751036d6.50.2025.02.26.05.04.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 05:04:24 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tnH5L-000000007It-2YCf;
+	Wed, 26 Feb 2025 09:04:23 -0400
+Date: Wed, 26 Feb 2025 09:04:23 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
+Message-ID: <20250226130423.GF5011@ziepe.ca>
+References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
+ <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
+ <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+ <20250225142610.GB545008@ziepe.ca>
+ <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
+ <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
+ <83039906-77f7-4318-94bf-4c98bb3f0e32@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <83039906-77f7-4318-94bf-4c98bb3f0e32@linux.intel.com>
 
-Check NVM access mode from GSC FW status registers
-and overwrite access status read from SPI descriptor, if needed.
+On Wed, Feb 26, 2025 at 01:55:28PM +0800, Ethan Zhao wrote:
+> > Provided the system does not respond to those events when this function
+> > is called, it's fine to remove the lock.
+> I agree.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/xe/regs/xe_gsc_regs.h |  4 ++++
- drivers/gpu/drm/xe/xe_heci_gsc.c      |  5 +----
- drivers/gpu/drm/xe/xe_nvm.c           | 32 ++++++++++++++++++++++++++-
- 3 files changed, 36 insertions(+), 5 deletions(-)
+I think it is running the destruction of the iommu far too late in the
+process. IMHO it should be done after all the drivers have been
+shutdown, before the CPUs go single threaded.
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_gsc_regs.h b/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-index 7702364b65f1..9b66cc972a63 100644
---- a/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-+++ b/drivers/gpu/drm/xe/regs/xe_gsc_regs.h
-@@ -16,6 +16,10 @@
- #define MTL_GSC_HECI1_BASE	0x00116000
- #define MTL_GSC_HECI2_BASE	0x00117000
- 
-+#define DG1_GSC_HECI2_BASE	0x00259000
-+#define PVC_GSC_HECI2_BASE	0x00285000
-+#define DG2_GSC_HECI2_BASE	0x00374000
-+
- #define HECI_H_CSR(base)	XE_REG((base) + 0x4)
- #define   HECI_H_CSR_IE		REG_BIT(0)
- #define   HECI_H_CSR_IS		REG_BIT(1)
-diff --git a/drivers/gpu/drm/xe/xe_heci_gsc.c b/drivers/gpu/drm/xe/xe_heci_gsc.c
-index 3ea325d3db99..266097a5b98b 100644
---- a/drivers/gpu/drm/xe/xe_heci_gsc.c
-+++ b/drivers/gpu/drm/xe/xe_heci_gsc.c
-@@ -11,15 +11,12 @@
- #include "xe_device_types.h"
- #include "xe_drv.h"
- #include "xe_heci_gsc.h"
-+#include "regs/xe_gsc_regs.h"
- #include "xe_platform_types.h"
- #include "xe_survivability_mode.h"
- 
- #define GSC_BAR_LENGTH  0x00000FFC
- 
--#define DG1_GSC_HECI2_BASE			0x259000
--#define PVC_GSC_HECI2_BASE			0x285000
--#define DG2_GSC_HECI2_BASE			0x374000
--
- static void heci_gsc_irq_mask(struct irq_data *d)
- {
- 	/* generic irq handling */
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 26de7d4472c8..08fe3bf04cf0 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -6,8 +6,11 @@
- #include <linux/intel_dg_nvm_aux.h>
- #include <linux/pci.h>
- 
-+#include "xe_device.h"
- #include "xe_device_types.h"
-+#include "xe_mmio.h"
- #include "xe_nvm.h"
-+#include "regs/xe_gsc_regs.h"
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-@@ -25,6 +28,33 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_writeable_override(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+	resource_size_t base;
-+	bool writeable_override;
-+
-+	if (xe->info.platform == XE_BATTLEMAGE) {
-+		base = DG2_GSC_HECI2_BASE;
-+	} else if (xe->info.platform == XE_PVC) {
-+		base = PVC_GSC_HECI2_BASE;
-+	} else if (xe->info.platform == XE_DG2) {
-+		base = DG2_GSC_HECI2_BASE;
-+	} else if (xe->info.platform == XE_DG1) {
-+		base = DG1_GSC_HECI2_BASE;
-+	} else {
-+		drm_err(&xe->drm, "Unknown platform\n");
-+		return true;
-+	}
-+
-+	writeable_override =
-+		!(xe_mmio_read32(&gt->mmio, HECI_FWSTS2(base)) &
-+		  HECI_FW_STATUS_2_NVM_ACCESS_MODE);
-+	if (writeable_override)
-+		drm_info(&xe->drm, "NVM access overridden by jumper\n");
-+	return writeable_override;
-+}
-+
- void xe_nvm_init(struct xe_device *xe)
- {
- 	struct pci_dev *pdev = to_pci_dev(xe->drm.dev);
-@@ -49,7 +79,7 @@ void xe_nvm_init(struct xe_device *xe)
- 
- 	nvm = xe->nvm;
- 
--	nvm->writeable_override = false;
-+	nvm->writeable_override = xe_nvm_writeable_override(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
--- 
-2.43.0
-
+Jason
