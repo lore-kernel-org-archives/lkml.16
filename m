@@ -1,68 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00881A01BF;
-	Wed, 26 Feb 2025 15:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93762222582;
+	Wed, 26 Feb 2025 15:10:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582612; cv=none; b=o7/cooAGZTYn2JTtOfl+/Q5XnbxkzhhaQo54i67Hc/dXz4W3NUdWbVB0F6kI3yaF18v6lumH5SuZ3EVAKk8do3KaOUN2R/IqSlo+RMYU8JUHey5KrKw9YkPbXp2KBjj8VvHmjYaCHoyAJCKTDC2dN99DessBHtsMey12Kn5dDXs=
+	t=1740582641; cv=none; b=oy7gKnQglOsBf9Ja3hbsJ0wom2LsRuIjEgJ8mbF+Cpsnns5BPzsoeWjBsmnFbe69JGIis6Hcpd9n7PkAaGIMkliVBK9V84FNFk69kqqCzmWxBa0FokuvV+8gX8y1pOP6vj/8pTSNCiFmVZ8mmSZcTp2XzU+UV368rnfg91qJKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582612; c=relaxed/simple;
-	bh=/tbzthtXQ2spNV8JpbzGS3/e0POqAJEmpN9Ki+K+4hA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y8C5HD8lIQa1qC2ni7vAnFohxucmjCiaZ9k+09+vHHI2hvC7QpKwP6Ml3rmptRulLIrMQ/eiPJ9oLCPRpCRPCQoRC/gUPEsotg/SPaCEXyxEWscjYr1opd+LGEv7hRrznC8T74B7fE9PrBQr8fwwUwmym5aXKOvt12DFKQYpTO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D1DDC4CED6;
-	Wed, 26 Feb 2025 15:10:11 +0000 (UTC)
-Date: Wed, 26 Feb 2025 10:10:52 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Hari Bathini <hbathini@linux.ibm.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/8] tracing: tprobe-events: Reject invalid tracepoint
- name
-Message-ID: <20250226101052.2fa3ce66@gandalf.local.home>
-In-Reply-To: <174055073461.4079315.15875502830565214255.stgit@mhiramat.tok.corp.google.com>
-References: <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
-	<174055073461.4079315.15875502830565214255.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740582641; c=relaxed/simple;
+	bh=YolhIxlnD/KFo71BB2N1+kGv0r3k8mAuWJLh1TvzXDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tr7va8jpyvP2te5gycDorJZFUVqkcsqC2mHiNjdkJ0fvj+Owut1Wzhecdr3M6diZTGTVUkaA0Uwy1pdt+dK14CjE9oEjp0Axi9EeuNOGItXhiJ9Mgx7blpPcio7GUhq5uShT19hQBlPkGP5nO057xbP15CBdZnOMnOC9gVkyq4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=TO4UsmVX; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TO4UsmVX"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QCD3Hx012382;
+	Wed, 26 Feb 2025 16:10:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	8ewL/+uVM2seWyrZlyz4H0RFQuaYKzC45+3Da4nH/t0=; b=TO4UsmVXLWNtMv4Z
+	Yh9qIQNeRvGI9qcLvgtzAb3wZNmt6WdJ8e9aatcrI1BVtx7+grrEXzNPhKTnzhVo
+	8UkQFSfHTBz0XIsGcdK1HqRENglIQ6g5M/v9ljtvMgiT2uTLAXvJ59kmodhREVpv
+	qWagnLPoK48zABDtsyT2/f79aAXq570oMn6ibK/hbcXyf69i8/RLhtktR/BQFIFW
+	zjJ/jIm38zrlCZM6gIvydsf1R5DiynJGK/1ER8JsFsQcOMVaoM7bq/a+wsBhKafZ
+	J3N1AyuqpojgVEBX6rLC3tT1Spflz6IgtpyH3T/9zQvIxwVYKSd4iSgSchm4W6Yr
+	OHMImQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv5a9g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 16:10:21 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4DAF1400BB;
+	Wed, 26 Feb 2025 16:08:55 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C731C5792D9;
+	Wed, 26 Feb 2025 14:24:54 +0100 (CET)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 14:24:54 +0100
+Message-ID: <2c8683f7-2c1c-4e18-9f76-53c528029b40@foss.st.com>
+Date: Wed, 26 Feb 2025 14:24:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] Add support for Priva E-Measuringbox board
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Woojung Huh
+	<woojung.huh@microchip.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>
+CC: <kernel@pengutronix.de>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20250203085820.609176-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250203085820.609176-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
 
-On Wed, 26 Feb 2025 15:18:54 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hi
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 2/3/25 09:58, Oleksij Rempel wrote:
+> This patch series introduces support for the Priva E-Measuringbox board
+> based on the ST STM32MP133 SoC. The set includes all the necessary
+> changes for device tree bindings, vendor prefixes, thermal support, and
+> board-specific devicetree to pass devicetree validation and checkpatch
+> tests.
 > 
-> Commit 57a7e6de9e30 ("tracing/fprobe: Support raw tracepoints on
-> future loaded modules") allows user to set a tprobe on non-exist
-> tracepoint but it does not check the tracepoint name is acceptable.
-> So it leads tprobe has a wrong character for events (e.g. with
-> subsystem prefix). In this case, the event is not shown in the
-> events directory.
+> changes v2:
+> - drop: dt-bindings: net: Add TI DP83TD510 10BaseT1L PHY
 > 
-> Reject such invalid tracepoint name.
+> Oleksij Rempel (2):
+>    dt-bindings: vendor-prefixes: Add prefix for Priva
+>    dt-bindings: arm: stm32: Add Priva E-Measuringbox board
 > 
-> The tracepoint name must consist of alphabet or digit or '_'.
+> Roan van Dijk (2):
+>    arm: dts: stm32: Add thermal support for STM32MP131
+>    arm: dts: stm32: Add Priva E-Measuringbox devicetree
 > 
-> Fixes: 57a7e6de9e30 ("tracing/fprobe: Support raw tracepoints on future loaded modules")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Cc: stable@vger.kernel.org
+>   .../devicetree/bindings/arm/stm32/stm32.yaml  |   6 +
+>   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>   arch/arm/boot/dts/st/Makefile                 |   1 +
+>   arch/arm/boot/dts/st/stm32mp131.dtsi          |  35 ++
+>   arch/arm/boot/dts/st/stm32mp133c-prihmb.dts   | 496 ++++++++++++++++++
+>   5 files changed, 540 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/st/stm32mp133c-prihmb.dts
+> 
+> --
+> 2.39.5
+> 
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Series applied on stm32-next.
 
--- Steve
-
-
-> ---
->  kernel/trace/trace_fprobe.c |   13 +++++++++++++
->  kernel/trace/trace_probe.h  |    1 +
->  2 files changed, 14 insertions(+)
+Cheers
+Alex
