@@ -1,194 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024811E1E18
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E7D15573A;
+	Wed, 26 Feb 2025 09:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740562919; cv=none; b=pYNJnr9FZdFlfQMOYxOeRcAkRh1DVZ6dvjnrxEoRXrXVpBmLpNcHwObUuAtDzqsL/EzxM3UkbN9HvpR3MIeLlCCn6Choh7eSndyNjSfoMgiMEyJ6TfDOuaFbNctaJjtZ7Qc+M/9kfOb3JxdgbhvwBh3F7DbxBU7ojX3wN3DExEc=
+	t=1740562969; cv=none; b=TGktkNwHurxV03jV6wxw8T08G9HrAlAv7ne2dk0oUTiNK5tAe1c263YHYMgsIf96L/sSAslVIFUWyzf3xW4QdrkZyhPMM0Nl0BR0Toi8PGLnsvsk8SOHh04BZzCx3FxY3Hg3o9LhiME6hvZI/er59djQzDK0o8zI9P4h4JISc8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740562919; c=relaxed/simple;
-	bh=vlwe3g7egmkzEBkQSzX3LSMTW10UmJaDYSyt6uIJXOg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=apnbUqNQ7CIkokINpHl9a6Cp1Q5Gd5Sk7shsoh8K+8GaJoVWW5C9gmAnLSwMjmV4gude0VgmiNw7ZNiZPL/zRSQ1g+JeTBJuGYDDF0szPXqD7gg8xKNbk8yRWgR1WLp3tQv2xWcBqnJdGSt9lvEqyr2ZSX+GIbwe7MVj20THiqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AvRqVXgA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740562969; c=relaxed/simple;
+	bh=TXsD6cyaUs1vrboGEfw3swxZlrVrTV10qnITKOu4cqs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UaaATFu5WK55CYtbVx2SYzPHYnlfszkY2hM/4e6k215t5H5rgVKx1y5DxKuOJ7DgcQFct0EeR/FUnIcS0+5KDjjaqQ4Pm1Of03Uh8z8kQUR3VatNJngG8SaRjloosgvKrgF64xaLxZdgfhtQ8ViMX8yBJxUinCh0rz41RlZu7uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8TjwwNU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvRqVXgA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740562916;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=35a45e+KUNfgdwWER78OhdI0cbUBUXNz7n/UkAMYBnI=;
-	b=AvRqVXgAowx28RhouMLQKbXFaIuXl/B634eGk75Ibz+S6xV4izvVSFtnJ5q8BYdAl3GM0B
-	leqWbsBqThS0yrqwwACW/JxikQ5z+X9zREfAHOJYdAZs0grv2pCSrCxmfIE93zwidtkxbx
-	OebBHxz25sk18bzRaYi4zst2L3iLK3o=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-79-lnyG06BTMCWrRkRcZ7RYnQ-1; Wed, 26 Feb 2025 04:41:55 -0500
-X-MC-Unique: lnyG06BTMCWrRkRcZ7RYnQ-1
-X-Mimecast-MFC-AGG-ID: lnyG06BTMCWrRkRcZ7RYnQ_1740562914
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fe862ea448so1416508a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:41:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740562914; x=1741167714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=35a45e+KUNfgdwWER78OhdI0cbUBUXNz7n/UkAMYBnI=;
-        b=vT3W2S4QZF4zkb3hZFIQDdeEkD+10tgm6tfStUiaCs+LWOYIFode7KozQA9YyOYkr5
-         cedM570Rps1XA5JgZP0MZFNoS/BkwLz8xPsKT4N4ifpBp17EJH6ZEW23fSYYuR9FwsDM
-         AlfFv/AODRxuULlNVqYtlQ8OCARXIJ3xtAIJNmHIVHPLRSxQpYXTb80oxLKlxowHFuY1
-         eIhzaAQbQ1wo8OCxS6udYAEWWE/4RNBhTXWiEYSzEwSAyOwGBivxUuDoWBeeogEg6EVL
-         /0bG5xw48JSpzQeqY5vPpRwxOghYQ5beiQX7xzLc10AjlIQGKZM2jU3wWgCMIdDVMSfN
-         PVXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVw95YF190reZYQbxtTwqsgeHPH5HS+69F0OU39ahYw5inTeRwnlNtoZaoVCrzEQxbBNbMAjOdwXQFghLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxceRk4Q/zb6BujdW7tbGuIpjEsy7LLd7klmja4nsoMImipsQzc
-	SKU7QfRTRGNNMTbN+1Ny0AqT2jr1p1soVose98OZH50hUk8jMhKj05epuQc+0c9aKpDCIbt4oJT
-	jwzbyUQT7pW5JCnZU2lQg/djo60vlK96EbvVREQgg+XWQG1nEvGX4xVaNBv12ULWD7iFMgHamEl
-	K2kD21OKd1c5zKm9CcJHPnF43ZGHs05jpktLSE
-X-Gm-Gg: ASbGncsgTScGZ0MOI1iGd3i4kSWNCeB2tswvdGjpR4jMJDGGgdPOBHs55pmeYxB8H7d
-	ESPvuiHeZfGG79xTJ20Auu0PUE9ygzd9VwzRB+jWs6PWM6p/e1J/KpUqAGaCcQ+kpxnOYptSLcw
-	==
-X-Received: by 2002:a17:90b:3bcb:b0:2ea:b564:4b31 with SMTP id 98e67ed59e1d1-2fe68ae7147mr9875979a91.19.1740562914029;
-        Wed, 26 Feb 2025 01:41:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFd2VtFq1+EBSUe5YRiKx2c1b8xErNTKsEKpyNpzK8NMUkxluegLLjCSvqusnZyPT8sBH5l6nTPU/LhghJl6kU=
-X-Received: by 2002:a17:90b:3bcb:b0:2ea:b564:4b31 with SMTP id
- 98e67ed59e1d1-2fe68ae7147mr9875939a91.19.1740562913645; Wed, 26 Feb 2025
- 01:41:53 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8TjwwNU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 632BCC4CEE2;
+	Wed, 26 Feb 2025 09:42:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740562969;
+	bh=TXsD6cyaUs1vrboGEfw3swxZlrVrTV10qnITKOu4cqs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R8TjwwNUM3RywPhcrwFEqs/7Yo3Bby9+S0lynM9NHItSSTuYvMRJaI5pjulX6wk9m
+	 YbsMvEhMEXBYPmxjJkpXUOoaPqq+KBen9+WiKVWQzGQo2sYhSuvE/ZOZiUndgPqguV
+	 TapHEdDFASK/lTyhAgIFtfQ3c2pGMXiIgpzRoioROhb88+snUMkQqg6GnMyPDvUBd8
+	 5k/wS+4GMYMLSZj++LlA0yvkZOOYMk+lFxRC9sPmSXY8c0734ZZK7xhMPW7/cRIach
+	 b7nRq8JyhkX5AAI281kW3q/N2jJIkeepd0g+y2w4NR6Zyc1ojBuuu5AQo8YZvWNAdI
+	 v0bYkBRErKZrA==
+Message-ID: <e3713d6c-acf1-45eb-90a6-3a135a281562@kernel.org>
+Date: Wed, 26 Feb 2025 10:42:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225020455.212895-1-jdamato@fastly.com> <CAPpAL=w7e8F_0_RRhBuyM-qyaYxgR=miYf_h90j78HzR4dvQxg@mail.gmail.com>
-In-Reply-To: <CAPpAL=w7e8F_0_RRhBuyM-qyaYxgR=miYf_h90j78HzR4dvQxg@mail.gmail.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Wed, 26 Feb 2025 17:41:41 +0800
-X-Gm-Features: AWEUYZkhxJqSexlmCxlZ4MpaYPDcVZbl2V5cw5njrD7GTgOGPeEvAyX7SCzxTvM
-Message-ID: <CACGkMEvaYvrxsbOdiN8tfba4t5vH_L8=5MnZqb_P6qNwv2x0Tw@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 0/4] virtio-net: Link queues to NAPIs
-To: Lei Yang <leiyang@redhat.com>
-Cc: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org, mkarsten@uwaterloo.ca, 
-	gerhard@engleder-embedded.com, xuanzhuo@linux.alibaba.com, kuba@kernel.org, 
-	Alexei Starovoitov <ast@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"open list:XDP (eXpress Data Path):Keyword:(?:b|_)xdp(?:b|_)" <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	open list <linux-kernel@vger.kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Paolo Abeni <pabeni@redhat.com>, 
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 3/5] dt-bindings: iio: adc: Add support for QCOM PMIC5
+ Gen3 ADC
+To: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, agross@kernel.org, andersson@kernel.org,
+ dmitry.baryshkov@linaro.org, konradybcio@kernel.org,
+ daniel.lezcano@linaro.org, sboyd@kernel.org, amitk@kernel.org,
+ thara.gopinath@gmail.com, lee@kernel.org, rafael@kernel.org,
+ subbaraman.narayanamurthy@oss.qualcomm.com, david.collins@oss.qualcomm.com,
+ anjelique.melendez@oss.qualcomm.com, quic_kamalw@quicinc.com,
+ rui.zhang@intel.com, lukasz.luba@arm.com, lars@metafoo.de,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, cros-qcom-dts-watchers@chromium.org,
+ quic_skakitap@quicinc.com, neil.armstrong@linaro.org
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+ <20250131183242.3653595-4-jishnu.prakash@oss.qualcomm.com>
+ <20250202-pragmatic-sparkling-spider-ccd90b@krzk-bin>
+ <b5707f37-cc5d-47fb-a8d6-a1da8a9a7ff1@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <b5707f37-cc5d-47fb-a8d6-a1da8a9a7ff1@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 11:47=E2=80=AFPM Lei Yang <leiyang@redhat.com> wrot=
-e:
->
-> I tested this series of patches with virtio-net regression tests,
-> everything works fine.
->
-> Tested-by: Lei Yang <leiyang@redhat.com>
+On 26/02/2025 09:51, Jishnu Prakash wrote:
+>>> +
+>>> +  interrupts:
+>>> +    items:
+>>> +      - description: SDAM0 end of conversion (EOC) interrupt
+>>> +      - description: SDAM1 EOC interrupt
+>>> +    minItems: 1
+>>
+>> Same question.
+> 
+> To explain why "reg" and "interrupts" are flexible:
+> 
+> We need to add one item under each of these properties, per ADC SDAM. The number of PMIC SDAM peripherals allocated for ADC is not correlated with the PMIC used, 
+> it is programmed in FW (PBS) and is fixed per SOC, based on the SOC requirements.
+> 
+> The number of ADC SDAMs used on a given SOC with a given PMIC (like PMK8550) will be fixed, but it is possible for
+> the same PMIC to have 1 of its SDAMs allocated for ADC when used on one SOC and 2 SDAMs allocated for ADC when used on another SOC.  
+> 
+> All boards using a particular (SOC + PMIC) combination will have the same number of ADC SDAMs supported on that PMIC.
 
-If it's possible, I would like to add the resize (via ethtool) support
-in the regression test.
+OK. Parts of above should be captured in commit msg or binding description.
 
-Thanks
 
->
->
-> On Tue, Feb 25, 2025 at 10:05=E2=80=AFAM Joe Damato <jdamato@fastly.com> =
-wrote:
-> >
-> > Greetings:
-> >
-> > Welcome to v4.
-> >
-> > Jakub recently commented [1] that I should not hold this series on
-> > virtio-net linking queues to NAPIs behind other important work that is
-> > on-going and suggested I re-spin, so here we are :)
-> >
-> > This is a significant refactor from the rfcv3 and as such I've dropped
-> > almost all of the tags from reviewers except for patch 4 (sorry Gerhard
-> > and Jason; the changes are significant so I think patches 1-3 need to b=
-e
-> > re-reviewed).
-> >
-> > As per the discussion on the v3 [2], now both RX and TX NAPIs use the
-> > API to link queues to NAPIs. Since TX-only NAPIs don't have a NAPI ID,
-> > commit 6597e8d35851 ("netdev-genl: Elide napi_id when not present") now
-> > correctly elides the TX-only NAPIs (instead of printing zero) when the
-> > queues and NAPIs are linked.
-> >
-> > See the commit message of patch 3 for an example of how to get the NAPI
-> > to queue mapping information.
-> >
-> > See the commit message of patch 4 for an example of how NAPI IDs are
-> > persistent despite queue count changes.
-> >
-> > Thanks,
-> > Joe
-> >
-> > v4:
-> >   - Dropped Jakub's patch (previously patch 1).
-> >   - Significant refactor from v3 affecting patches 1-3.
-> >   - Patch 4 added tags from Jason and Gerhard.
-> >
-> > rfcv3: https://lore.kernel.org/netdev/20250121191047.269844-1-jdamato@f=
-astly.com/
-> >   - patch 3:
-> >     - Removed the xdp checks completely, as Gerhard Engleder pointed
-> >       out, they are likely not necessary.
-> >
-> >   - patch 4:
-> >     - Added Xuan Zhuo's Reviewed-by.
-> >
-> > v2: https://lore.kernel.org/netdev/20250116055302.14308-1-jdamato@fastl=
-y.com/
-> >   - patch 1:
-> >     - New in the v2 from Jakub.
-> >
-> >   - patch 2:
-> >     - Previously patch 1, unchanged from v1.
-> >     - Added Gerhard Engleder's Reviewed-by.
-> >     - Added Lei Yang's Tested-by.
-> >
-> >   - patch 3:
-> >     - Introduced virtnet_napi_disable to eliminate duplicated code
-> >       in virtnet_xdp_set, virtnet_rx_pause, virtnet_disable_queue_pair,
-> >       refill_work as suggested by Jason Wang.
-> >     - As a result of the above refactor, dropped Reviewed-by and
-> >       Tested-by from patch 3.
-> >
-> >   - patch 4:
-> >     - New in v2. Adds persistent NAPI configuration. See commit message
-> >       for more details.
-> >
-> > v1: https://lore.kernel.org/netdev/20250110202605.429475-1-jdamato@fast=
-ly.com/
-> >
-> > [1]: https://lore.kernel.org/netdev/20250221142650.3c74dcac@kernel.org/
-> > [2]: https://lore.kernel.org/netdev/20250127142400.24eca319@kernel.org/
-> >
-> > Joe Damato (4):
-> >   virtio-net: Refactor napi_enable paths
-> >   virtio-net: Refactor napi_disable paths
-> >   virtio-net: Map NAPIs to queues
-> >   virtio_net: Use persistent NAPI config
-> >
-> >  drivers/net/virtio_net.c | 100 ++++++++++++++++++++++++++++-----------
-> >  1 file changed, 73 insertions(+), 27 deletions(-)
-> >
-> >
-> > base-commit: 7183877d6853801258b7a8d3b51b415982e5097e
-> > --
-> > 2.45.2
-> >
-> >
->
-
+Best regards,
+Krzysztof
