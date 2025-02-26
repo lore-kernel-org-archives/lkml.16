@@ -1,38 +1,48 @@
-Received: from l2mail1.panix.com (l2mail1.panix.com [166.84.1.75])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B221721CC6D;
-	Wed, 26 Feb 2025 15:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.84.1.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABF4218ACA;
+	Wed, 26 Feb 2025 15:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584993; cv=none; b=CM2IZxBS5VddB+uziutYGVC9hEpohKYrzdhp1cwO5yKA9VC6a2SB2StmqRgDYeBdM54vJZCTfvntfoBzR5dXZajjxiSdOKbnR25sWLy9l7uPKeWefLPvD/O0gNKmtIFrlV/wZQCTa3xMtl75KFid1ShFgWWf35omAfMyn3yHkfg=
+	t=1740585012; cv=none; b=A8IRPGCZZBcDoj+BvnUFunSIrJRdrMdd1/UNcGzPKyB75TXk3oR2ksVg3QOerRXhpb1LUO+jIcbpYv7gI0+dtWl4YUo+ibfUJnMfzC6u/NTzR8LQH0zF8BzzR+h8YrzXaqFEgqIeZCQebxMYg/v0VETp1SDoOWEl9FqN7QSmo/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584993; c=relaxed/simple;
-	bh=Vj5uE4ESzohsxDwURRoN/xqYlLO93wlxFGqvOeU2v0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YfjR3AllY26UMVzIVCgbwGbLgQiXJpxjvD7J8SezWhnbku6vNfhz/eaxgO80mmXdwr+/oblG/WrFkle+wrKYWvkDp8FxQNSbhTZBojDYfMsQ0O6xhcuiekK1Jny4O6dKy43p3IL6uCuCgLGB+lRRaHfu95GzqqIxSKx939y+RK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com; spf=pass smtp.mailfrom=panix.com; dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b=BXgM6QBV; arc=none smtp.client-ip=166.84.1.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=panix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=panix.com
+	s=arc-20240116; t=1740585012; c=relaxed/simple;
+	bh=jtMVU9DBse/GUZE0tOPY2dHj/3Bxy11Ptn65yODVaYE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QzqLcdTCP4jtkScBdtOQkKSPU7bM4PDn07wN7QkmzzU4GYgSjwN7Sjdq4oL8C3jcf8kTAN0bdIGomCgqVfKYmlhRsbdH5L5xeBm4uidYf3DChQ01H3g8xgEehD5R0mLVq7pdm6CZsNDHVgewb9vD826p36GVklViqG/RgA43Nkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=q6xDfecG; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=panix.com header.i=@panix.com header.b="BXgM6QBV"
-Received: from mailbackend.panix.com (mailbackend.panix.com [166.84.1.89])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (1024 bits) server-digest SHA256)
-	(No client certificate requested)
-	by l2mail1.panix.com (Postfix) with ESMTPS id 4Z2z3S3y1QzDSH;
-	Wed, 26 Feb 2025 10:31:48 -0500 (EST)
-Received: from [172.16.225.207] (unknown [47.154.181.182])
-	by mailbackend.panix.com (Postfix) with ESMTPSA id 4Z2z3H0zQqz56g5;
-	Wed, 26 Feb 2025 10:31:39 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=panix.com; s=panix;
-	t=1740583900; bh=Vj5uE4ESzohsxDwURRoN/xqYlLO93wlxFGqvOeU2v0Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=BXgM6QBVMxwP3HtMLYG4ARsarO/GAmA/r+WnIFR2oNA23NwVHsnuLEh0L+6KLiHzR
-	 zvPLpInkIjwPGTmJI4/IzrWXf4g53/MAVosroZNl6NJj6Ktt0L8HDYhAfCTyifKOC6
-	 BeQOfik9xOSbLC6e4zLTnMNqzX/kh4I44VOrwn4k=
-Message-ID: <7b472880-32d0-4783-b9d2-3d4230403975@panix.com>
-Date: Wed, 26 Feb 2025 07:31:37 -0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q6xDfecG"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QFnxne2112906
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 26 Feb 2025 09:49:59 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740584999;
+	bh=VbW2t9EwpIS5Ha4EesUhK91rBFjcgNiBhbAE8z1q18s=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=q6xDfecG+mHPY30GFFkDvARlLSpp6aqSqsceAuiSoMHVfMkYUg8pKycQqI31gduNB
+	 anlVKTRgzBcKzolvqiitcmk3z1sZ7HB8Znb8IvJ0O4TNiikUhtmF4CjFtPgv1iUbAS
+	 w5HSbAM1OF+Vbzi1r/3nhEJEVwiV1KlDeZBt5Oac=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QFnxjj035621;
+	Wed, 26 Feb 2025 09:49:59 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Feb 2025 09:49:58 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Feb 2025 09:49:58 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QFnvkZ052803;
+	Wed, 26 Feb 2025 09:49:57 -0600
+Message-ID: <74b85562-15c2-42fc-8ee0-990f5718dcb0@ti.com>
+Date: Wed, 26 Feb 2025 09:49:57 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,142 +50,338 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
- Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ilpo.jarvinen@linux.intel.com,
- Bjorn Helgaas <bhelgaas@google.com>, Jian-Hong Pan <jhp@endlessos.org>,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- =?UTF-8?B?TmlrbMSBdnMgS2/EvGVzxYZpa292cw==?= <pinkflames.linux@gmail.com>,
- Andreas Noever <andreas.noever@gmail.com>,
- Michael Jamet <michael.jamet@intel.com>, Lukas Wunner <lukas@wunner.de>,
- Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org,
- Kenneth Crudup <kenny@panix.com>
-References: <20250210210502.GA15655@bhelgaas>
- <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
- <20250211055722.GW3713119@black.fi.intel.com>
- <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
- <20250213135911.GG3713119@black.fi.intel.com>
- <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
- <20250214162948.GJ3713119@black.fi.intel.com>
- <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
- <20250226084404.GM3713119@black.fi.intel.com>
+Subject: Re: [PATCH 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
+To: Dhruva Gole <d-gole@ti.com>, Robert Nelson <robertcnelson@gmail.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Vignesh
+ Raghavendra" <vigneshr@ti.com>, Nishanth Menon <nm@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>, Judith Mendez
+	<jm@ti.com>,
+        Andrei Aldea <a-aldea@ti.com>,
+        Jason Kridner
+	<jkridner@beagleboard.org>,
+        Deepak Khatri <lorforlinux@beagleboard.org>,
+        Ayush Singh <ayush@beagleboard.org>
+References: <20250211181839.1575497-1-robertcnelson@gmail.com>
+ <20250211181839.1575497-2-robertcnelson@gmail.com>
+ <20250224111318.3wlbhpm7pggsbqdb@lcpd911>
 Content-Language: en-US
-From: Kenneth Crudup <kenny@panix.com>
-In-Reply-To: <20250226084404.GM3713119@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250224111318.3wlbhpm7pggsbqdb@lcpd911>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-Trying to do a "control" test before I try out your bisected commit, and 
-Lukas' changes, but of course now I can't get it to fail (I'm on Linus' 
-master as of this morning (b5799106b4).
-
-I'm using my portable USB4 dock (Plugable TBT4-HUB3C) this time (vs. my 
-CalDigit 4 dock) but the same ASMedia USB4-to-NVMe adapter as always; in 
-any case everything is PCIe so it shouldn't matter.
-
-I don't normally use "tbauth" (I think that's all done for me via the 
-"boltctl" suite) but I grabbed and built the GIT and ran it anyway, for 
-good measure.
-
-I'll keep you updated, I'll be at my CalDigit dock soon enough if I 
-can't get any failures this morning.
-
--K
-
-On 2/26/25 00:44, Mika Westerberg wrote:
-> Hi Kenneth,
+On 2/24/25 5:13 AM, Dhruva Gole wrote:
+> On Feb 11, 2025 at 12:18:39 -0600, Robert Nelson wrote:
+>> BeagleBoard.org PocketBeagle 2 is an upgraded version of the popular
+>> PocketBeagle.  It is based on Texas Instruments AM6232 SoC. Its dual
+>> A53 cores can provide higher performance than classic PocketBeagle.
 > 
-> On Fri, Feb 14, 2025 at 09:39:33AM -0800, Kenneth Crudup wrote:
+> You can say that classic PB was based on AM335 just for more context,
+> else it's not clear what the upgrade is w.r.t..
+> 
+>> The new design comes with pre-soldered headers, a 3-pin JST-SH 1.00mm
+>> UART debug port, a USB-C port, Texas Instruments MSPM0L1105 Cortex-M0+
+>> MCU for ADC, 512MB RAM, and a LiPo Battery charger.
 >>
->> This is excellent news that you were able to reproduce it- I'd figured this
->> regression would have been caught already (as I do remember this working
->> before) and was worried it may have been specific to a particular piece of
->> hardware (or software setup) on my system.
+>> https://www.beagleboard.org/boards/pocketbeagle-2
+>> https://openbeagle.org/pocketbeagle/pocketbeagle-
 >>
->> I'll see what I can dig up on my end, but as I'm not expert in these
->> subsystems I may not be able to diagnose anything until your return.
-> 
-> [Back now]
-> 
-> My git bisect ended up to this commit:
-> 
->    9d573d19547b ("PCI: pciehp: Detect device replacement during system sleep")
-> 
-> Adding Lukas who is the expert.
-> 
-> My steps to reproduce on Intel Meteor Lake based reference system are:
-> 
-> 1. Boot the system up, nothing connected.
-> 2. Once up, connect Thunderbolt 4 dock and Thunderbolt 3 NVMe in a chain:
-> 
->    [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
-> 
-> 3. Authorize PCIe tunnels (whatever your distro provides, my buildroot just
->      has the debugging tools so running 'tbauth -r 301')
-> 
-> 4. Check that the PCIe topology matches the expected (lspci)
-> 
-> 5. Enter s2idle:
-> 
->    # rtcwake -s 30 -mmem
-> 
-> 6. Once it is suspended, unplug the cable between the host and the dock.
-> 
-> 7. Wait for the resume to happen.
-> 
-> Expectation: The system wakes up fine, notices that the TB and PCIe devices
-> are gone, stays responsive and usable.
-> 
-> Actual result: Resume never completes.
-> 
-> I added "no_console_suspend" to the command line and the did sysrq-w to
-> get list of blocked tasks. I've attached it just in case it is needed.
-> 
-> If I revert the above commit the issue is gone. Now I'm not sure if this is
-> exactly the same issue that you are seeing but nevertheless this is kind of
-> normal use case so definitely something we should get fixed.
-> 
-> Lukas, if you need any more information let me know. I can reproduce this
-> easily.
-> 
->> I also saw some DRM/connected fixes posted to Linus' master so maybe one of
->> them corrects this new display-crash issue (I'm not home on my big monitor
->> to be able to test yet).
+>> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+>> CC: Rob Herring <robh@kernel.org>
+>> CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+>> CC: Conor Dooley <conor+dt@kernel.org>
+>> CC: Vignesh Raghavendra <vigneshr@ti.com>
+>> CC: Nishanth Menon <nm@ti.com>
+>> CC: Andrew Davis <afd@ti.com>
+>> CC: Roger Quadros <rogerq@kernel.org>
+>> CC: Siddharth Vadapalli <s-vadapalli@ti.com>
+>> CC: Judith Mendez <jm@ti.com>
+>> CC: Andrei Aldea <a-aldea@ti.com>
+>> CC: Jason Kridner <jkridner@beagleboard.org>
+>> CC: Deepak Khatri <lorforlinux@beagleboard.org>
+>> CC: Ayush Singh <ayush@beagleboard.org>
+>> ---
+>>   arch/arm64/boot/dts/ti/Makefile               |   1 +
+>>   .../boot/dts/ti/k3-am62-pocketbeagle2.dts     | 520 ++++++++++++++++++
+>>   2 files changed, 521 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts
 >>
->> -Kenny
->>
->> On 2/14/25 08:29, Mika Westerberg wrote:
->>> Hi,
->>>
->>> On Thu, Feb 13, 2025 at 11:19:35AM -0800, Kenneth Crudup wrote:
->>>>
->>>> On 2/13/25 05:59, Mika Westerberg wrote:
->>>>
->>>>> Hi,
->>>>
->>>> As Murphy's would have it, now my crashes are display-driver related (this
->>>> is Xe, but I've also seen it with i915).
->>>>
->>>> Attached here just for the heck of it, but I'll be better testing the NVMe
->>>> enclosure-related failures this weekend. Stay tuned!
->>>
->>> Okay, I checked quickly and no TB related crash there but I was actually
->>> able to reproduce hang when I unplug the device chain during suspend. I did
->>> not yet have time to look into it deeper. I'm sure this has been working
->>> fine in the past as we tested all kinds of topologies including similar to
->>> this.
->>>
->>> I will be out next week for vacation but will continue after that if the
->>> problem is not alraedy solved ;-)
->>>
->>
->> -- 
->> Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange County
->> CA
+>> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+>> index 8a4bdf87e2d4..46b9a667bda4 100644
+>> --- a/arch/arm64/boot/dts/ti/Makefile
+>> +++ b/arch/arm64/boot/dts/ti/Makefile
+>> @@ -27,6 +27,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am625-verdin-wifi-yavia.dtb
+>>   dtb-$(CONFIG_ARCH_K3) += k3-am62x-phyboard-lyra-gpio-fan.dtbo
+>>   dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk.dtb
+>>   dtb-$(CONFIG_ARCH_K3) += k3-am62-lp-sk-nand.dtbo
+>> +dtb-$(CONFIG_ARCH_K3) += k3-am62-pocketbeagle2.dtb
+>>   
+>>   # Boards with AM62Ax SoC
+>>   dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
+>> diff --git a/arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts b/arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts
+>> new file mode 100644
+>> index 000000000000..ef79bd0bf238
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts
+>> @@ -0,0 +1,520 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+>> +/*
+>> + * https://www.beagleboard.org/boards/pocketbeagle-2
+>> + *
+>> + * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+>> + * Copyright (C) 2024 Robert Nelson, BeagleBoard.org Foundation
+> 
+> Nit: Please update copyrights.
+> 
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/leds/common.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>> +#include "k3-am625.dtsi"
+> 
+> Any particular reason we can't inherit from k3-am62x-sk-common.dtsi like
+> the SK and LP-SK DTS do?
+> 
 
--- 
-Kenneth R. Crudup / Sr. SW Engineer, Scott County Consulting, Orange 
-County CA
+Because PocketBeagle 2 is not based on our TI SK boards.. Some
+things are common (PMIC, some carveouts), but not nearly enough
+to make this a good idea.
 
+Any changes to the SK board DT would have to be checked against
+this DTB, which will break things at some point as the DT becomes
+more complete.
+
+Andrew
+
+> Also, you're calling out in the commit message that this is based on
+> AM6232 - which has only 2 cores right? Do we not want to delete the
+> additional 2 cores from the AM625 DT which has 4 cores?
+> 
+>> +
+>> +/ {
+>> +	compatible = "beagle,am62-pocketbeagle2", "ti,am625";
+>> +	model = "BeagleBoard.org PocketBeagle2";
+>> +
+>> +	aliases {
+>> +		serial0 = &wkup_uart0;
+>> +		serial1 = &main_uart1;
+>> +		serial2 = &main_uart6;
+>> +		serial3 = &main_uart3;
+>> +		serial4 = &main_uart4;
+>> +		serial5 = &main_uart5;
+>> +		serial6 = &main_uart2;
+>> +		serial7 = &main_uart0;
+>> +		mmc0 = &sdhci0;
+>> +		mmc1 = &sdhci1;
+>> +		usb0 = &usb0;
+>> +		usb1 = &usb1;
+>> +		i2c0 = &main_i2c0;
+>> +		i2c1 = &wkup_i2c0;
+>> +		i2c2 = &main_i2c2;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = &main_uart6;
+>> +	};
+>> +
+>> +	memory@80000000 {
+>> +		/* 512MB RAM */
+>> +		reg = <0x00000000 0x80000000 0x00000000 0x20000000>;
+>> +		device_type = "memory";
+>> +		bootph-pre-ram;
+>> +	};
+>> +
+>> +	reserved_memory: reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+> 
+> Let's try to follow [1] here and elsewhere
+> [1] https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
+> 
+>> +
+>> +		secure_tfa_ddr: tfa@9e780000 {
+>> +			reg = <0x00 0x9e780000 0x00 0x80000>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		secure_ddr: optee@9e800000 {
+>> +			reg = <0x00 0x9e800000 0x00 0x01800000>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9db00000 {
+>> +			compatible = "shared-dma-pool";
+>> +			reg = <0x00 0x9db00000 0x00 0xc00000>;
+>> +			no-map;
+>> +		};
+> 
+> Nothing for OPTEE/ M4/ etc...?
+> CMA?
+> Just trying to compare against sk-common... I understand the DDR is
+> smaller but we can't just ignore OPTEE / shared DMA pool right?
+> 
+>> +	};
+>> +
+>> +	vsys_5v0: regulator-1 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vsys_5v0";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	vdd_3v3: regulator-2 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vdd_3v3";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		vin-supply = <&vsys_5v0>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	vdd_mmc1: regulator-3 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vdd_mmc1";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&vdd_3v3_sd_pins_default>;
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +		enable-active-high;
+>> +		regulator-always-on;
+>> +		vin-supply = <&vdd_3v3>;
+>> +		gpio = <&main_gpio0 0 GPIO_ACTIVE_HIGH>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	vdd_sd_dv: regulator-4 {
+>> +		compatible = "regulator-gpio";
+>> +		regulator-name = "sd_hs200_switch";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&vdd_sd_dv_pins_default>;
+>> +		regulator-min-microvolt = <1800000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +		vin-supply = <&vdd_3v3>;
+>> +		gpios = <&main_gpio1 49 GPIO_ACTIVE_HIGH>;
+>> +		states = <1800000 0x0>,
+>> +			 <3300000 0x1>;
+>> +		bootph-all;
+>> +	};
+>> +
+>> +	adc_vref: regulator-5 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "default";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>> +	leds {
+>> +		bootph-all;
+> 
+> Is this needed? child nodes seem to have bootph-all already right?
+> 
+>> +		compatible = "gpio-leds";
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&led_pins_default>;
+>> +
+>> +		led-1 {
+>> +			bootph-all;
+>> +			gpios = <&main_gpio0 6 GPIO_ACTIVE_HIGH>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			linux,default-trigger = "heartbeat";
+>> +			function = LED_FUNCTION_HEARTBEAT;
+>> +			default-state = "on";
+>> +		};
+>> +
+>> +		led-2 {
+>> +			bootph-all;
+>> +			gpios = <&main_gpio0 5 GPIO_ACTIVE_HIGH>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			function = LED_FUNCTION_DISK_ACTIVITY;
+>> +			linux,default-trigger = "mmc1";
+>> +		};
+>> +
+>> +		led-3 {
+>> +			bootph-all;
+>> +			gpios = <&main_gpio0 4 GPIO_ACTIVE_HIGH>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +		};
+>> +
+>> +		led-4 {
+>> +			bootph-all;
+>> +			gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
+>> +			color = <LED_COLOR_ID_GREEN>;
+>> +			function = LED_FUNCTION_INDICATOR;
+>> +			default-state = "off";
+>> +		};
+>> +	};
+>> +};
+> [....]
+>> +
+>> +&wkup_uart0 {
+>> +	/* WKUP UART0 is used by Device Manager firmware */
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&wkup_uart0_pins_default>;
+>> +	bootph-all;
+>> +	status = "reserved";
+>> +};
+> 
+> See things like these you get for free from k3-am62x-sk-common.dtsi ;)
+> 
+>> +
+>> +&wkup_i2c0 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&wkup_i2c0_pins_default>;
+>> +	clock-frequency = <100000>;
+>> +	bootph-all;
+> 
+> Child nodes have bootph, no need for their parents to repeat it unless
+> you've a good cause.
+> 
+>> +	status = "okay";
+>> +
+>> +	tps65219: pmic@30 {
+>> +		compatible = "ti,tps65219";
+>> +		reg = <0x30>;
+>> +		buck1-supply = <&vsys_5v0>;
+>> +		buck2-supply = <&vsys_5v0>;
+>> +		buck3-supply = <&vsys_5v0>;
+>> +		ldo1-supply = <&vdd_3v3>;
+>> +		ldo2-supply = <&buck2_reg>;
+>> +		ldo3-supply = <&vdd_3v3>;
+>> +		ldo4-supply = <&vdd_3v3>;
+>> +
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pmic_irq_pins_default>;
+>> +		interrupt-parent = <&gic500>;
+>> +		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <1>;
+>> +
+>> +		bootph-all;
+>> +		system-power-controller;
+>> +		ti,power-button;
+> [...]
+> 
+> Overall I think the DT needs a bit of revisiting of which nodes to reuse
+> from common-DT and what all to delete/ trim. Revisit all the bootph
+> properties and remove the redundant one's...
+> 
