@@ -1,142 +1,166 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D6B236449
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38682236A7A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596116; cv=none; b=JGxRD1fEQ8Sw//WDi46PpxNcz7+XpQEjuG5OSPCbxXJiIoFU+fu6dlE9mLsVDEAxrURTcMRRrzF1rGy2hy6ThJzhnzplo366sCweOiALCsSjIOhx0rBJvCiqBl75wLVM0TltuDC8t06QYS9OE0p1uNt2+WTS2pEJx23s0MdjpsI=
+	t=1740596117; cv=none; b=U58XMXnC02IsEKSdcPIJMUe06Eu8F9tia5rgzNX9IzAAwMRo6wBCdefFuYyg5sT6KfnJR5dCt9fIeydoKUUpg+Y0vP7kE3YF15mlf9MCTgqPrcoUFhdzswDFl4jmz6LGgqE7mXKmXT195qljVjGbZqOs9zq5BEW31UkLrkO963Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596116; c=relaxed/simple;
-	bh=3oc8qhgJaB+qEvfVeOdFIBZPr+vcrIabY8Hr67IuZWk=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=hlvDPr7y04MathUak270OfzZxeTBxepUj1p2PI3B/RNE1fRfjWvx3yMqgy5tKPQiSBpmW4Hzyke5c8S5Hj4TaQMoSLy4nyAUOPKS3OX2KxudjipklohHknZpNsofdRIRU0sP0GI2zxfuiyo3F2hdmW3BcH1zJUuL8sIyJc/nZdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WOy+655G; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1740596117; c=relaxed/simple;
+	bh=Sd20295/OHQnaZMcApYJTd7Cd2Wh17OwbyGl6CLOl/4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ihIYdVs7tNLwUTXWNxgnG8gMPLaE4Z8GRltEmrNwVyGbSTYeJXir6FIUG1qkyscXKHIbmxQsmQzmBV87P/uBaU1/hlq2wCDnkX8xexHpwqhJVgwewZIUG/2m0UgOVpxDdao3z1vZ9STo/HuDC94Z5E34WFhkU5riTCqWxCJ2eK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=foF0lP3C; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WOy+655G"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc2b258e82so335061a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:55:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="foF0lP3C"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fbff6426f5so321192a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:55:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740596114; x=1741200914; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pMxjrmr+C2lqhTDO1AsbIyjKpGntAjw/Nw4lGuuG6FA=;
-        b=WOy+655GRlTqbi7xoiyFxeeB56NI2NmesFky22Qwy5WsgXcjOYIa2lwhtrF8FFVw5G
-         OqDiIKDRFt+TVOby+Rmu4ylIQYA0/ObHiH4VYEyWqP5sBBOGRWQgWa4fkHzgKmwRMak2
-         2d6kWe+bFe6uFZ6t/xafzo7Ycc1qb/UaBl8ihhzOjkeJoz/vHsQ347hd8PQ+uQ1skFxa
-         As5tIcdybRRdaTTaGkp2vVOX9UiYVVTilEkyNdbpDN2FWIg4YvR46eDWJewAAIMS5tzF
-         ifLnWIBRUBg2RXIsZdOG4orXbqYMCDNm22FpMX4Fn8bChqgkIVM/u7J+Kt9Zz4cdVYaz
-         xlow==
+        d=google.com; s=20230601; t=1740596115; x=1741200915; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ds9BQrxGPLyNAd9raX4LmiVN9lc2UNQzgASQxqxWRTg=;
+        b=foF0lP3Cr74kyUtIn44/nKFMNauhp4jTasME0Le7z+CsUlPla7NtcWrwBeGGkRjNvX
+         Hapc4qPPRQ9ofync6fcNN1bssIDHMcUOB7I4/a01FBTP9H5bKYhTei/fGX3QxoUVkClu
+         C5AbaZ6SbGHbvNlfR3YwFyVMmQjBA2VgRg79kSOir1YXmALhx/XFm/d3CI0lRlKEeB/B
+         x3Db7sEB2EjOeXtRCFG7+95QUJwq9sQUGhrI307DtbM59iLG7G5gLTiBuMP7r+V61F2Y
+         +mwjJn2NxUrpT9ohe8OSzb++syHHAd3KWE2tFyPWX+sQANnVzrpOBGp05sLT2aTjEdeY
+         JXfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740596114; x=1741200914;
-        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pMxjrmr+C2lqhTDO1AsbIyjKpGntAjw/Nw4lGuuG6FA=;
-        b=OLLe7LfTL9YQEUGNMBQnRdWT0+lWUHcTC61M9/u4shpLi5hsyNjdLI6YWBbTJZDv4b
-         DlNc8IS4nLCcJQRd6veIaGu+XkUbgZqSYZKFaLcc2CvCh/hcYj3tl4/jEDnr9Z82FGmD
-         QpKKalqX0KXkHKzFYhIQa9IwWqX7R6qyxtRCzavQgxflD6wtPDyTEXLBteeaU1c7QMeZ
-         5wwXthc8N8QDxx7mJ2PyarO5OKeZk6J/EdBBBsYUA+LUX0y+7m9uyOJcdc9v9yKiW4uj
-         PHFvTY3QTMJav7pIS2nVp50LU22xmIcIbZ8O1wCHzclDdK6sG/PNNEpNyhp1k9x8geXX
-         OOtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUw8efSEtPx29dE+930EWm0KOx7cwA22Gkjn3fAOyMjpKJvOD9qGILj8nUys33qN6DJTxodquhwrDucCO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6hhpRVx54vMYWf6YRU8jnsSngtAPqPIIQmHOo6h+cDrkHbyQR
-	wE5SeZ3t6dkXc1DCuOnzgzXwvLxTD0TtwY1L3v3L2NKQ243pxqdvgtTybeQRSf2fWXc4gNkeoEg
-	1DOVGZBoT0kUUiL7WjJkKcg==
-X-Google-Smtp-Source: AGHT+IHXoYciUWfZJpCpSwX24N+e+ntqta9etAMpkRTScD6zTBwVRDGyD1SA1Qg0PQJM6OFM5du14J4bw5ZP8rzFVg==
-X-Received: from pjbqi7.prod.google.com ([2002:a17:90b:2747:b0:2f5:4762:e778])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:cf8e:b0:2fe:7fea:ca34 with SMTP id 98e67ed59e1d1-2fe7feaca86mr5657943a91.32.1740596114259;
- Wed, 26 Feb 2025 10:55:14 -0800 (PST)
-Date: Wed, 26 Feb 2025 18:55:12 +0000
-In-Reply-To: <diqz5xle9nwq.fsf@ackerleytng-ctop.c.googlers.com> (message from
- Ackerley Tng on Thu, 13 Feb 2025 09:47:33 +0000)
+        d=1e100.net; s=20230601; t=1740596115; x=1741200915;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ds9BQrxGPLyNAd9raX4LmiVN9lc2UNQzgASQxqxWRTg=;
+        b=AXdCEzwN3Z+l+XrO5ClN/02Nhy+2Gt+SsT5PD/KB5135BfkpgnH3Ir3fuVP73Ba21F
+         if+KZjk+Lpg+x74nhee7pLl56rLWR/0gArI25fSBoJYVQ8n6aiaqUM+Poj/5U8ofIqfH
+         C49xLxW8icsBtdqvFzXo+hqVT5fw7Ufuom268bqp2MJMggTjTz1UYQxwwYF3V4FALcmJ
+         /4jgYZRg/rJaFzdiZvvwhjgcl+cYqqpCVAY4BMRoheVleyLP0KwSAsSL31odTyHd4ZIy
+         U5MS/S4/sJd1x9oPF8t2q5Sz9J0nvxb+Rb3NahrkUewD5/nvPs7f/d1v5ZW8/dHVQhgv
+         DAbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX6HgAWCqB9hhRcc8U8tejsMpocFNLwi2sMPlmpyJ6R3f+vi1Zm4a59J9S1ViItBZk7m7Jx8+UdyCSnXWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR7aE0ZT0H/XqOv5xUmutZhaFtG5R3kIWBzjLUYN/keLqSJG1E
+	AdZbICdLT3Wgc5lc7NOI1Bfqve06iZLGiyX5GsR+ehgLhZZDG4PIdNaJ2hBAONBLjldlsjsdnG2
+	jqQ==
+X-Google-Smtp-Source: AGHT+IFcJCXuyF0wiZx7bOR1HEPmTXt8+rT2+rQ4qFqtP/5aygIpSvhmaCmY0HxoJ0P5eJwqc4YHPU/rkPM=
+X-Received: from pjboi16.prod.google.com ([2002:a17:90b:3a10:b0:2fc:1eb0:5743])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54c7:b0:2ee:5111:a54b
+ with SMTP id 98e67ed59e1d1-2fe68d05e2bmr12186917a91.31.1740596115492; Wed, 26
+ Feb 2025 10:55:15 -0800 (PST)
+Date: Wed, 26 Feb 2025 10:55:08 -0800
+In-Reply-To: <20250226185510.2732648-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Message-ID: <diqzldtsfsdr.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 14/39] KVM: guest_memfd: hugetlb: initialization and cleanup
-From: Ackerley Tng <ackerleytng@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: peterx@redhat.com, tabba@google.com, quic_eberman@quicinc.com, 
-	roypat@amazon.co.uk, jgg@nvidia.com, david@redhat.com, rientjes@google.com, 
-	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
-	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
-	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
-	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
-	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
-	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-fsdevel@kvack.org
+References: <20250226185510.2732648-1-surenb@google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250226185510.2732648-2-surenb@google.com>
+Subject: [PATCH 1/2] userfaultfd: do not block on locking a large folio with
+ raised refcount
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: lokeshgidra@google.com, aarcange@redhat.com, 21cnbao@gmail.com, 
+	v-songbaohua@oppo.com, david@redhat.com, peterx@redhat.com, 
+	willy@infradead.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	hughd@google.com, jannh@google.com, kaleshsingh@google.com, surenb@google.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Ackerley Tng <ackerleytng@google.com> writes:
+Lokesh recently raised an issue about UFFDIO_MOVE getting into a deadlock
+state when it goes into split_folio() with raised folio refcount.
+split_folio() expects the reference count to be exactly
+mapcount + num_pages_in_folio + 1 (see can_split_folio()) and fails with
+EAGAIN otherwise. If multiple processes are trying to move the same
+large folio, they raise the refcount (all tasks succeed in that) then
+one of them succeeds in locking the folio, while others will block in
+folio_lock() while keeping the refcount raised. The winner of this
+race will proceed with calling split_folio() and will fail returning
+EAGAIN to the caller and unlocking the folio. The next competing process
+will get the folio locked and will go through the same flow. In the
+meantime the original winner will be retried and will block in
+folio_lock(), getting into the queue of waiting processes only to repeat
+the same path. All this results in a livelock.
+An easy fix would be to avoid waiting for the folio lock while holding
+folio refcount, similar to madvise_free_huge_pmd() where folio lock is
+acquired before raising the folio refcount. Since we lock and take a
+refcount of the folio while holding the PTE lock, changing the order of
+these operations should not break anything.
+Modify move_pages_pte() to try locking the folio first and if that fails
+and the folio is large then return EAGAIN without touching the folio
+refcount. If the folio is single-page then split_folio() is not called,
+so we don't have this issue.
+Lokesh has a reproducer [1] and I verified that this change fixes the
+issue.
 
-> Peter Xu <peterx@redhat.com> writes:
->
->> On Tue, Sep 10, 2024 at 11:43:45PM +0000, Ackerley Tng wrote:
->>> +/**
->>> + * Removes folios in range [@lstart, @lend) from page cache of inode, updates
->>> + * inode metadata and hugetlb reservations.
->>> + */
->>> +static void kvm_gmem_hugetlb_truncate_folios_range(struct inode *inode,
->>> +						   loff_t lstart, loff_t lend)
->>> +{
->>> +	struct kvm_gmem_hugetlb *hgmem;
->>> +	struct hstate *h;
->>> +	int gbl_reserve;
->>> +	int num_freed;
->>> +
->>> +	hgmem = kvm_gmem_hgmem(inode);
->>> +	h = hgmem->h;
->>> +
->>> +	num_freed = kvm_gmem_hugetlb_filemap_remove_folios(inode->i_mapping,
->>> +							   h, lstart, lend);
->>> +
->>> +	gbl_reserve = hugepage_subpool_put_pages(hgmem->spool, num_freed);
->>> +	hugetlb_acct_memory(h, -gbl_reserve);
->>
->> I wonder whether this is needed, and whether hugetlb_acct_memory() needs to
->> be exported in the other patch.
->>
->> IIUC subpools manages the global reservation on its own when min_pages is
->> set (which should be gmem's case, where both max/min set to gmem size).
->> That's in hugepage_put_subpool() -> unlock_or_release_subpool().
->>
->
-> Thank you for pointing this out! You are right and I will remove
-> hugetlb_acct_memory() from here.
->
+[1] https://github.com/lokeshgidra/uffd_move_ioctl_deadlock
 
-I looked further at the folio cleanup process in free_huge_folio() and I
-realized I should be returning the pages to the subpool via
-free_huge_folio(). There should be no call to
-hugepage_subpool_put_pages() directly from this truncate function.
+Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
+Reported-by: Lokesh Gidra <lokeshgidra@google.com>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Cc: stable@vger.kernel.org
+---
+Note this patch is v2 of [2] but I did not bump up the version because now
+it's part of the patchset which is at its v1. Hopefully that's not too
+confusing.
 
-To use free_huge_folio() to return the pages to the subpool, I will
-clear the restore_reserve flag once guest_memfd allocates a folio. All
-the guest_memfd hugetlb folios will always have the restore_reserve flag
-cleared.
+Changes since v1 [2]:
+- Rebased over mm-hotfixes-unstable to avoid merge conflicts with [3]
+- Added Reviewed-by, per Peter Xu
+- Added a note about PTL lock in the changelog, per Liam R. Howlett
+- CC'ed stable
 
-With the restore_reserve flag cleared, free_huge_folio() will do
-hugepage_subpool_put_pages(), and then restore the reservation in hstate
-as well.
+[2] https://lore.kernel.org/all/20250225204613.2316092-1-surenb@google.com/
+[3] https://lore.kernel.org/all/20250226003234.0B98FC4CEDD@smtp.kernel.org/
 
-Returning the folio to the subpool on freeing is important and correct,
-since if/when the folio_put() callback is used, the filemap may not hold
-the last refcount on the folio, so truncation may not be when the folio
-should not be returned to the subpool.
+ mm/userfaultfd.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
->>> +
->>> +	spin_lock(&inode->i_lock);
->>> +	inode->i_blocks -= blocks_per_huge_page(h) * num_freed;
->>> +	spin_unlock(&inode->i_lock);
->>> +}
+diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+index 8eae4ea3cafd..e0f1e38ac5d8 100644
+--- a/mm/userfaultfd.c
++++ b/mm/userfaultfd.c
+@@ -1250,6 +1250,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 		 */
+ 		if (!src_folio) {
+ 			struct folio *folio;
++			bool locked;
+ 
+ 			/*
+ 			 * Pin the page while holding the lock to be sure the
+@@ -1269,12 +1270,26 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
+ 				goto out;
+ 			}
+ 
++			locked = folio_trylock(folio);
++			/*
++			 * We avoid waiting for folio lock with a raised refcount
++			 * for large folios because extra refcounts will result in
++			 * split_folio() failing later and retrying. If multiple
++			 * tasks are trying to move a large folio we can end
++			 * livelocking.
++			 */
++			if (!locked && folio_test_large(folio)) {
++				spin_unlock(src_ptl);
++				err = -EAGAIN;
++				goto out;
++			}
++
+ 			folio_get(folio);
+ 			src_folio = folio;
+ 			src_folio_pte = orig_src_pte;
+ 			spin_unlock(src_ptl);
+ 
+-			if (!folio_trylock(src_folio)) {
++			if (!locked) {
+ 				pte_unmap(&orig_src_pte);
+ 				pte_unmap(&orig_dst_pte);
+ 				src_pte = dst_pte = NULL;
+-- 
+2.48.1.658.g4767266eb4-goog
+
