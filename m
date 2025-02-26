@@ -1,97 +1,199 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEF94A1C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38EC22155B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740578369; cv=none; b=C00HKhmDO10IPztgDf1EzC0yN7XL78KNar1PRyJcizoW+a0IgLJPk2UGecrEc4HPsbc8zi6BwS9k9GjmGGM9HlP7lXmV4J+/kTcBCQswIxlzTRpmv0yD4I1jA553qUI0OdIYdohFFrF5kfdtd61ZwnITPuNMOcra2XQiFkxBnxA=
+	t=1740578382; cv=none; b=FVm6T8aPM1fJdBtqX4r+kUjjM91zEK9M7rpmAbJTqo9c7jnU02vJG2sDAzGIaSAqRj0044v4tqgYSeOcGO/R3JBpACI+g7mhJ3FKggtvY/tSs9bHI/N4dZJ6GmRlDZvqzTw97rqFJfgQJkYITIjIQeQZlKnRC4UNIYwfYJFpcIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740578369; c=relaxed/simple;
-	bh=FaNJbP28GrwA0xqX71qpviLKU4s/iLv9ygoXh3IRVjc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AZRMuWP5ObIwcanJM1adnc6AiILxeaMtApGR8hsHu8As6tS9x8Q14D+7iOrQlalo0AImOfd9bBA3KxB52yp9b74uuivp6hq2A7UbhemraeOHLOTe4NQzTSwse4jsU/zB7OkfXhIJQudwEY+orwDXUadBAaaLju0GgcWPB9h8c9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=ZuyzHR4F; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1740578382; c=relaxed/simple;
+	bh=Or1vhAzrLXj8sBtJvVnR3Zqn6OKOqLEBPTIBcNae0+s=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Op9naJes5iifoVQC6Cn22/KZevRAmlrp1riiAUV5Fx+lfJcf/j1y30Pex7oQmj7YmEH3UeXfvzPnNvFz7PIFXZVKcuTIYAH0erJt+94HXaw/p5vW2NPQfTU0EGNQPbcaSDtYdTyspVlYooMoe82sAT+6OJ1jEKbnrqrNSrkKMjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=oawCbxDY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xYg1qcCv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0hJn7xJn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=KHuW2BlK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="ZuyzHR4F"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c0892e4b19so803976785a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1740578366; x=1741183166; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnxH9uSAX9kLW2aHAnB9zwl34wSWVlyTXJAkrl1jEgk=;
-        b=ZuyzHR4F9nTkh0hJEqM5eDJYvG5YjFNxFPRCN0gROJHzrlLUQwPk6cMV8WNy9pR7Xz
-         T80WwPsdG/7xy+/ypqUJ1KzQQle/di6TYQ6jp9t3GQlDys7j47zR03cAQTTDXRWQ8SPc
-         W0Eg+K117v+9Do+4SpnI5sAozVeK/e6L2qQsThnjJR/VzCe7fROxPBKOAfHVNDP7uO18
-         ph13zmY8RrqO9pmxy2JNDRY889QU/NOjL+/0wOaTdwmQ5tVYvtEgPESZt8F/+LmSyzwA
-         HFM8BZHnIkg5gS08N7N1+bfvkv1IEtp28krep4w5+SfcGnok3/+iF9ETy/coen8D6d4Y
-         OTEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740578366; x=1741183166;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QnxH9uSAX9kLW2aHAnB9zwl34wSWVlyTXJAkrl1jEgk=;
-        b=MhFx0+oVLQt3I5nFwEY5TOqqdd+WMG9ZNaj2Hz+AenZL4fXllh+ywJPrkKjE4tThQI
-         yiCx1wtnNyOM4YaFQWMfOt1ZHxm04BJfMHSTVwj8SKBWA4Fhk/J16Xk9wBj6AKhSC6N+
-         EMKo+d68Sj1upHxQy+V6PIhswbWn6ylNdh6kefPbC1FwEmfyHnHdLvL+wkOedeR2Am8O
-         oNMfNdHVJ7YrxSCan9rc0yMjMeL+ujSCbSeDdEN5XkVcSD6SgVdGmKeDsJ1e2qmde8nt
-         XC2qUdspaJfTmcmcjpBrI0V43Hb5YbRIGiLc9PoPjwihi7BgUZnFeD6laptkrybLPyhU
-         5QTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUY7/VIgCw5/Id2Z8m5pVYC+rW9ChAkjWL4kOOia60IjBnZcMgE5OvXHldwCAm+fW83UJzCqrIWDWTcOC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+Fk3aTFORtltL17n9OLPM/0n0SHGPOuqJdlsWzR/FIdl5CoN+
-	jfUPxZYAAs3n2GFxY0TmEe+uytct05DcK1GQvIU30svPi7Y4gvQ9ex9c078oTVZel9JF56rN2WS
-	/T/90rX9C+RgLD6FyaMkzRroz2cQpPwxuqhvvbw==
-X-Gm-Gg: ASbGncs1YydEcO8tWvObRbssSokIsVGN++Q1Oij7cKLUVLaIieB6rr7PhNY2Sqk9kCk
-	e2oj+o3D1PtffqNT+CWE67SrZAyi+vj60v9CLz+75c7sMH9U7QC08r8ZtNT9piT5NUC6wtLgfoD
-	splVyV
-X-Google-Smtp-Source: AGHT+IH3LH2E7qdLqaSbVmbd0vwQgYzSLFH3zYoBT6JZblmu5a/hbpYOUjW39/0dbNVn1kAPYr4FC5G28TPPww11BC4=
-X-Received: by 2002:a05:620a:2453:b0:7c0:7aab:9b43 with SMTP id
- af79cd13be357-7c247fcb787mr576156185a.40.1740578366648; Wed, 26 Feb 2025
- 05:59:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oawCbxDY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xYg1qcCv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0hJn7xJn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="KHuW2BlK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 019CD1F387;
+	Wed, 26 Feb 2025 13:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740578379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=47WruSlvITW/87soN26JYKTh1c5Xgaylhx0YYHmlUME=;
+	b=oawCbxDYOFdTZZh1bHpEQkdkOOMGq+pe9cjU5Jw6jQh03yKsHAMmHjUGJ08zns9n1jOn6e
+	dAzMFmgzYPmADruWpUoYLQIDSl3DrCl01r05bES2iLqvrd4dYM02oLESVdoH0j98sh/aHv
+	/B9esBgs5F6vcUX0Pns2XMM5tav24HM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740578379;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=47WruSlvITW/87soN26JYKTh1c5Xgaylhx0YYHmlUME=;
+	b=xYg1qcCvpmJQWQ1XhMi/UQloO81E/db1iIbqz7wjXb1i/tenB6judPXo9I4Q1YikGu6C64
+	MDt+nwygxj/Xp3AA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=0hJn7xJn;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=KHuW2BlK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740578378; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=47WruSlvITW/87soN26JYKTh1c5Xgaylhx0YYHmlUME=;
+	b=0hJn7xJnr1L7TmqNBGWX6jLWZePpWzxuT7wVrnQviTodIANGp2tjTI5aY9GzdOLv2VO+R+
+	t862Somj7qKpWu/sMS3pmG4h57l5I59bEZfoYSATp40FB/bMFywlXNW4W0Uzj4z9VtrS3K
+	Wq/xlnBsVu3sEzHAPFj9BoWjmyRzksA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740578378;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=47WruSlvITW/87soN26JYKTh1c5Xgaylhx0YYHmlUME=;
+	b=KHuW2BlKXeq+Uk0gtrJRPOmZOPvy15mM8P99Us8usZEm8BvRbhcQpx/bdcols9u3eYfjlu
+	B5Qkl3R3rcgEX9Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CD80213A53;
+	Wed, 26 Feb 2025 13:59:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jyFcMUkev2cgOgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 26 Feb 2025 13:59:37 +0000
+Date: Wed, 26 Feb 2025 14:59:36 +0100
+Message-ID: <87o6yo4xiv.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Adrien =?ISO-8859-1?Q?Verg=E9?= <adrienverge@gmail.com>
+Cc: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Kailang Yang <kailang@realtek.com>,
+	Stefan Binding <sbinding@opensource.cirrus.com>,
+	Simon Trimmer <simont@opensource.cirrus.com>,
+	Joshua Grisham <josh@joshuagrisham.com>,
+	Athaariq Ardhiansyah <foss@athaariq.my.id>,
+	Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Chris Chiu <chris.chiu@canonical.com>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/realtek: Fix microphone regression on ASUS N705UD
+In-Reply-To: <20250226135515.24219-1-adrienverge@gmail.com>
+References: <20250226135515.24219-1-adrienverge@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250226135415.363605-1-vignesh.raman@collabora.com>
-In-Reply-To: <20250226135415.363605-1-vignesh.raman@collabora.com>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Wed, 26 Feb 2025 13:59:15 +0000
-X-Gm-Features: AWEUYZmmxdS5ypGHcyPPeldS7LVaWK9H32Imx1ThxzBXN-bcd6PFnzxtamWHxx8
-Message-ID: <CAPj87rNAaPUEmk1edcuHX1+bMWysF=aOMceUsCxnk2SMJUjqKg@mail.gmail.com>
-Subject: Re: [PATCH v1] drm/ci: fix merge request rules
-To: Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
-	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, 
-	robdclark@gmail.com, dmitry.baryshkov@linaro.org, 
-	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, 
-	valentine.burley@collabora.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 019CD1F387
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[perex.cz,suse.com,realtek.com,opensource.cirrus.com,joshuagrisham.com,athaariq.my.id,gmail.com,canonical.com,vger.kernel.org];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,canonical.com:email,suse.de:dkim,suse.de:mid];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.51
+X-Spam-Flag: NO
 
-Hi Vignesh,
+On Wed, 26 Feb 2025 14:55:15 +0100,
+Adrien Vergé wrote:
+> 
+> This fixes a regression introduced a few weeks ago in stable kernels
+> 6.12.14 and 6.13.3. The internal microphone on ASUS Vivobook N705UD /
+> X705UD laptops is broken: the microphone appears in userspace (e.g.
+> Gnome settings) but no sound is detected.
+> I bisected it to commit 3b4309546b48 ("ALSA: hda: Fix headset detection
+> failure due to unstable sort").
+> 
+> I figured out the cause:
+> 1. The initial pins enabled for the ALC256 driver are:
+>        cfg->inputs == {
+>          { pin=0x19, type=AUTO_PIN_MIC,
+>            is_headset_mic=1, is_headphone_mic=0, has_boost_on_pin=1 },
+>          { pin=0x1a, type=AUTO_PIN_MIC,
+>            is_headset_mic=0, is_headphone_mic=0, has_boost_on_pin=1 } }
+> 2. Since 2017 and commits c1732ede5e8 ("ALSA: hda/realtek - Fix headset
+>    and mic on several ASUS laptops with ALC256") and 28e8af8a163 ("ALSA:
+>    hda/realtek: Fix mic and headset jack sense on ASUS X705UD"), the
+>    quirk ALC256_FIXUP_ASUS_MIC is also applied to ASUS X705UD / N705UD
+>    laptops.
+>    This added another internal microphone on pin 0x13:
+>        cfg->inputs == {
+>          { pin=0x13, type=AUTO_PIN_MIC,
+>            is_headset_mic=0, is_headphone_mic=0, has_boost_on_pin=1 },
+>          { pin=0x19, type=AUTO_PIN_MIC,
+>            is_headset_mic=1, is_headphone_mic=0, has_boost_on_pin=1 },
+>          { pin=0x1a, type=AUTO_PIN_MIC,
+>            is_headset_mic=0, is_headphone_mic=0, has_boost_on_pin=1 } }
+>    I don't know what this pin 0x13 corresponds to. To the best of my
+>    knowledge, these laptops have only one internal microphone.
+> 3. Before 2025 and commit 3b4309546b48 ("ALSA: hda: Fix headset
+>    detection failure due to unstable sort"), the sort function would let
+>    the microphone of pin 0x1a (the working one) *before* the microphone
+>    of pin 0x13 (the phantom one).
+> 4. After this commit 3b4309546b48, the fixed sort function puts the
+>    working microphone (pin 0x1a) *after* the phantom one (pin 0x13). As
+>    a result, no sound is detected anymore.
+> 
+> It looks like the quirk ALC256_FIXUP_ASUS_MIC is not needed anymore for
+> ASUS Vivobook X705UD / N705UD laptops. Without it, everything works
+> fine:
+> - the internal microphone is detected and records actual sound,
+> - plugging in a jack headset is detected and can record actual sound
+>   with it,
+> - unplugging the jack headset makes the system go back to internal
+>   microphone and can record actual sound.
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Kuan-Wei Chiu <visitorckw@gmail.com>
+> Cc: Chris Chiu <chris.chiu@canonical.com>
+> Fixes: 3b4309546b48 ("ALSA: hda: Fix headset detection failure due to unstable sort")
+> Tested-by: Adrien Vergé <adrienverge@gmail.com>
+> Signed-off-by: Adrien Vergé <adrienverge@gmail.com>
 
-On Wed, 26 Feb 2025 at 13:55, Vignesh Raman <vignesh.raman@collabora.com> wrote:
-> Merge request pipelines were only created when changes
-> were made to drivers/gpu/drm/ci/, causing MRs that didn't
-> touch this path to break. Fix MR pipeline rules to trigger
-> jobs for all changes.
+Thanks, applied now.
 
-Thanks a lot for fixing this up!
 
->      # Build everything after someone bypassed the CI
->      - if: *is-direct-push
->        when: on_success
-
-Should these be when: manual? I think it would be good to align with
-the rules we have for Mesa: run automatically for marge-bot and also
-for scheduled pipelines, but in all other cases (MR context but not
-scheduled for merge, direct push to ref, etc) be manual, so we don't
-overwhelm the CI by testing everything everyone pushed.
-
-Cheers,
-Daniel
+Takashi
