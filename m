@@ -1,90 +1,167 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9787421D3C3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D862218AAB
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580491; cv=none; b=NA5LK6f6SmpCT+UVTHjmz7XGbUyyku12Ha9UIF+68rGxC7tp5SfBgZ6V9pC/IQeRR/5Fa+kfel5l1Zu3HRKAlP1nMuU7xOYYdfFUdBi6oayxPaSfQgMi9j42IJj5gDjsUwwzyMu3Z454QsBsj6Ewl1pYDruAAXemwQJ9fTW/Pi4=
+	t=1740580499; cv=none; b=IV1tjwb1l/L13Ue5nReoQQDzMP7CsPVkY0D/lLBrcHkMP0CETQZbVs8/pn02336MzTmm1jo1FWvc5v9WV3PF260xBgd/sFL6578X/il75iwBnctZosB2Lq5hMN0EBENzPWbtcUtKvAEnNroA3a5ABA7rW2fJourr/EAmGix9xj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580491; c=relaxed/simple;
-	bh=fsVj2Aus3xQzzjk0qAqr0Apz0tN8gWLbCfqS98wb8y8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iRsW3/+Y0ex0/n/44hS5t0U3bsgJ+YRf6r9GWfPyCoGnP53p69L95fKJhALGCuHh6xmzyAESQFqtUHvozSzr0LcRcZD1xUPOsmFJo2K6WSz4vmxVcuU8DPIVqSqM20E+672VBUS3SsbAZTFj7raViZpOJFzzCVVzABSFvQEHksE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=BCIPI4pU; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1740580499; c=relaxed/simple;
+	bh=GqqQQsNA4ipMlgHM1b1lGDiKa6nAvwxuipFO3NvD51M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tS+RCr9dRbrmB0XXpIdx7sfuDu5xFcuJBqOZExnVi32Y31LwLUhO7H/dtNnYn+WCMd1xTQEfDdA6UVv0YWV7epJQFjDvLPNwoJA07vQwn6gk3vRL9tv0/50G8HHGvlSl0xV2VlYg4Iyxz+tgMY4q1S84FJ15s4X6qgRJ3P47/fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SnEImesK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rncUprZj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=SnEImesK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rncUprZj; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BCIPI4pU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1740580489; x=1772116489;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fsVj2Aus3xQzzjk0qAqr0Apz0tN8gWLbCfqS98wb8y8=;
-  b=BCIPI4pU5n78NQD0iww2X5rHeyd9lPTHvxJQpLyL1urbSAKGPBeXKm4b
-   6sJ9mCuvVYLx5t08du+ZCYJfx5BeI3jcp8Vwtc84jvWds3gXQ5etyPkId
-   i2WOwJFhF+Vm5AdaeQnbNvpCuQM5emMke+lYKJkASMn5ygbkm+Iw8p01s
-   yZvwUGhWAjs0jNO7jwfpdVms/bn+vZWXM8vlXu2Qrs46+PvlcUkVGvl2t
-   aA62p0pjdCE53BvZVqPHEeiu1wwX2oCR6nVnk8Vo40FU703rkxc9uCp91
-   3PUfft3X4EgDGXt1glBThT47dbzkahwiuOvA+QOAFnWVU51TEWbjxCPdS
-   g==;
-X-CSE-ConnectionGUID: ZF1JjHn6RqyhKjwOKIMcxA==
-X-CSE-MsgGUID: A9pe4hv+SyiQoyQRgDR0Yg==
-X-IronPort-AV: E=Sophos;i="6.13,317,1732604400"; 
-   d="scan'208";a="37753840"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Feb 2025 07:34:42 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 26 Feb 2025 07:34:06 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Wed, 26 Feb 2025 07:34:05 -0700
-Date: Wed, 26 Feb 2025 15:32:12 +0100
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-CC: <Steen.Hegelund@microchip.com>, <daniel.machon@microchip.com>,
-	<UNGLinuxDriver@microchip.com>, <herve.codina@bootlin.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] reset: mchp: sparx5: Fix for lan966x
-Message-ID: <20250226143212.h2rtfxbbspdnmybq@DEN-DL-M31836.microchip.com>
-References: <20250225105329.3037853-1-horatiu.vultur@microchip.com>
- <b31fa21c7bd352fe77d50da82c4d2c333b8566d8.camel@pengutronix.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SnEImesK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rncUprZj";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="SnEImesK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rncUprZj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4E9241F388;
+	Wed, 26 Feb 2025 14:34:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740580496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GqqQQsNA4ipMlgHM1b1lGDiKa6nAvwxuipFO3NvD51M=;
+	b=SnEImesKwOD2S5x1Ryp5YTodtXari0n6ncFypTf+CqYWjxPdddG1i07uvixKhKP5OQ8wfO
+	xaIwoRSKhgbmr6dks/7aHQQKW7XrRApM4c3OEJK/zZ9XDVYhMskn0YHHu0KkZQHtfzFl2Y
+	zy7kjIYXDQblXewHIRaBy7ugFaUP5iM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740580496;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GqqQQsNA4ipMlgHM1b1lGDiKa6nAvwxuipFO3NvD51M=;
+	b=rncUprZjfBAUyzR37zy5gRhswbxwek9mpX1A5H653qs5HHaiktGtNM113SJU6tyA+xn80D
+	DikggDwysqOfkYAg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=SnEImesK;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rncUprZj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740580496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GqqQQsNA4ipMlgHM1b1lGDiKa6nAvwxuipFO3NvD51M=;
+	b=SnEImesKwOD2S5x1Ryp5YTodtXari0n6ncFypTf+CqYWjxPdddG1i07uvixKhKP5OQ8wfO
+	xaIwoRSKhgbmr6dks/7aHQQKW7XrRApM4c3OEJK/zZ9XDVYhMskn0YHHu0KkZQHtfzFl2Y
+	zy7kjIYXDQblXewHIRaBy7ugFaUP5iM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740580496;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GqqQQsNA4ipMlgHM1b1lGDiKa6nAvwxuipFO3NvD51M=;
+	b=rncUprZjfBAUyzR37zy5gRhswbxwek9mpX1A5H653qs5HHaiktGtNM113SJU6tyA+xn80D
+	DikggDwysqOfkYAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2B29E1377F;
+	Wed, 26 Feb 2025 14:34:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id elz1CZAmv2fWRgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 26 Feb 2025 14:34:56 +0000
+Message-ID: <93f03922-3d3a-4204-89c1-90ea4e1fc217@suse.cz>
+Date: Wed, 26 Feb 2025 15:36:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <b31fa21c7bd352fe77d50da82c4d2c333b8566d8.camel@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from
+ kmem_cache_destroy()
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Keith Busch <keith.busch@gmail.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Julia Lawall <Julia.Lawall@inria.fr>, Jakub Kicinski <kuba@kernel.org>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+ Jann Horn <jannh@google.com>, Mateusz Guzik <mjguzik@gmail.com>,
+ linux-nvme@lists.infradead.org, leitao@debian.org
+References: <20240807-b4-slab-kfree_rcu-destroy-v2-6-ea79102f428c@suse.cz>
+ <Z7iqJtCjHKfo8Kho@kbusch-mbp> <2811463a-751f-4443-9125-02628dc315d9@suse.cz>
+ <Z7xbrnP8kTQKYO6T@pc636> <ef97428b-f6e7-481e-b47e-375cc76653ad@suse.cz>
+ <Z73p2lRwKagaoUnP@kbusch-mbp>
+ <CAOSXXT6-oWjKPV1hzXa5Ra4SPQg0L_FvxCPM0Sh0Yk6X90h0Sw@mail.gmail.com>
+ <Z74Av6tlSOqcfb-q@pc636> <Z74KHyGGMzkhx5f-@pc636>
+ <8d7aabb2-2836-4c09-9fc7-8bde271e7f23@suse.cz> <Z78lpfLFvNxjoTNf@pc636>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+In-Reply-To: <Z78lpfLFvNxjoTNf@pc636>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4E9241F388
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,joelfernandes.org,joshtriplett.org,linux.com,google.com,goodmis.org,efficios.com,inria.fr,zx2c4.com,linux-foundation.org,linux.dev,kvack.org,vger.kernel.org,googlegroups.com,lists.infradead.org,debian.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLctujmen6hjyrx8fu4drawbuj)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-The 02/26/2025 11:27, Philipp Zabel wrote:
-> 
-> On Di, 2025-02-25 at 11:53 +0100, Horatiu Vultur wrote:
-> > With the blamed commit it seems that lan966x doesn't seem to boot
-> > anymore when the internal CPU is used.
-> > The reason seems to be the usage of the devm_of_iomap, if we replace
-> > this with of_iomap, this seems to fix the issue as we use the same
-> > region also for other devices.
-> 
-> So the issue is the devm_request_mem_region() called by
-> devm_ioremap_resource()?
+On 2/26/25 3:31 PM, Uladzislau Rezki wrote:
+> On Wed, Feb 26, 2025 at 11:59:53AM +0100, Vlastimil Babka wrote:
+>> On 2/25/25 7:21 PM, Uladzislau Rezki wrote:
+>>>>
+>>> WQ_MEM_RECLAIM-patch fixes this for me:
+>>
+>> Sounds good, can you send a formal patch then?
+>>
+> Do you mean both? Test case and fix? I can :)
 
-That is correct.
+Sure, but only the fix is for stable. Thanks!
 
-> 
-> Wouldn't it be easier to switch to devm_ioremap() instead?
-
-That would be easier and the change set will be also smaller.
-
-> 
-> regards
-> Philipp
-
--- 
-/Horatiu
