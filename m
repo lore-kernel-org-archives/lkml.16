@@ -1,98 +1,74 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C0921CFE2
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62DB72253EA;
+	Wed, 26 Feb 2025 17:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740591997; cv=none; b=ZsVX8AFXyfJqh9852BVRdtNbce1Cftccppe9SPe3NzPlQS0K2vxQhNRgRbO0BDeTcXNKrQZr4ih7lsAhoyhO7u2iGIhRy6p0X3qkueS6Ta1/9/47bYVjDpGPyc8i7imbTha0a2ea23wOffbgwCCUm3mKmQIAbfeabYtYV4nTX1E=
+	t=1740592015; cv=none; b=gO3ivZnfRd5o/BuV4Wnp1gfj8yXNDI7RBrSakWTu09b5EJjqN2Vt0u+E2D0p+Afb6cgZTlo5yE88XW7w91Ar0P5gaHJLtWkSsVYXAczBdJBA30q7+oPbjieLGYOcVI/CghWS4elJ9/x9JykiiXUL1b8hq7C2A1PKDHwVW9hJ0k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740591997; c=relaxed/simple;
-	bh=6rxbzTLnrzxVXJw2G7rpYfU2hfgraUJoBkOjZM7JlRE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sUi7LtlqzQMR6S+3ibHHQZP3M0sSVyOuBFFB/E0RiyFyrYG4Jh4d5QU7QrCDy4hKCoQeTQSQRPxe1ZaEWwvq2P26apjHfL9wHhnu0rT1k3nNza4VsEZ+wjiZ8m1P7fUbgEEvtQj69LztaNCsS7R7Tp+/cnEzjRJvK+bWB4+U9Tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tnLU5-000000004NG-14r2;
-	Wed, 26 Feb 2025 12:46:13 -0500
-Message-ID: <9086371cfe69760780d67ec279f69e91f65086a7.camel@surriel.com>
-Subject: Re: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page
- reclaim TLB flushing
-From: Rik van Riel <riel@surriel.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	kernel-team@meta.com, linux-mm@kvack.org,
- akpm@linux-foundation.org, 	jackmanb@google.com, jannh@google.com,
- mhklinux@outlook.com, 	andrew.cooper3@citrix.com, Manali.Shukla@amd.com,
- mingo@kernel.org
-Date: Wed, 26 Feb 2025 12:46:13 -0500
-In-Reply-To: <059ba03a-a892-6a68-6000-c7db3dd6cf9c@amd.com>
-References: <20250223194943.3518952-1-riel@surriel.com>
-	 <20250223194943.3518952-7-riel@surriel.com>
-	 <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
-	 <7c2baf33265444089ab780848de29a1336a9a4cc.camel@surriel.com>
-	 <20250225203803.GGZ74qK1oZWk8u69O4@fat_crate.local>
-	 <20250225210300.GHZ74wBP2ogmM5P5lP@fat_crate.local>
-	 <680053d3-4cf9-534a-1c52-c6e259b85452@amd.com>
-	 <297b28e9ef9f4cd983ae2e3dd4cf1fce8b74d0f1.camel@surriel.com>
-	 <059ba03a-a892-6a68-6000-c7db3dd6cf9c@amd.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1740592015; c=relaxed/simple;
+	bh=s28fAAtrCsEV8LWpIpCCPdesX6uySksYcloQ5mjso0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iDr3tKOzhOQR4NhkkBccAsA+EnI3QTjRQ92NCQYdKAroErwedNnzkUbJspax2vizCOdQreKKbRj0te8+ce+2Xj+Is6q1xf5Kql1UCq6GLSF4xkh2eMKXak7FEUVKUKS5MsJeAfju67OtCpu3uOGFkJkYwhhr501OafAOYVP3TAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05DC4C4CED6;
+	Wed, 26 Feb 2025 17:46:52 +0000 (UTC)
+Date: Wed, 26 Feb 2025 12:47:33 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Greg KH
+ <gregkh@linuxfoundation.org>, Miguel Ojeda
+ <miguel.ojeda.sandonis@gmail.com>, Ventura Jack <venturajack85@gmail.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Alice Ryhl <aliceryhl@google.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ hch@infradead.org, ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, Ralf Jung <post@ralfj.de>, Josh Poimboeuf
+ <jpoimboe@redhat.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <20250226124733.10b4b5fa@gandalf.local.home>
+In-Reply-To: <olxh7iwz5yjuuqwpbzgohrl3dkcurbmzij3o2dbha5mtkr2ipn@wtee4jjj7ope>
+References: <2rrp3fmznibxyg3ocvsfasfnpwfp2skhf4x7ihrnvm72lemykf@lwp2jkdbwqgm>
+	<CAFJgqgS-SMMEE2FktuCUimdGkPWMV3HB2Eg38SiUDQK1U8=rNg@mail.gmail.com>
+	<CANiq72mOp0q1xgAHod1Y_mX86OESzdDsgSghtQCwe6iksNt-sA@mail.gmail.com>
+	<f2bf76553c666178505cb9197659303a39faf7aa.camel@HansenPartnership.com>
+	<2025022611-work-sandal-2759@gregkh>
+	<16127450a24e9df8112a347fe5f6df9c9cca2926.camel@HansenPartnership.com>
+	<20250226110033.53508cbf@gandalf.local.home>
+	<9c443013493f8f380f9c4d51b1eeeb9d29b208a3.camel@HansenPartnership.com>
+	<ylsffirqsrogli5fqlyhklhy6s54ngolvk5hj5fnpn3ceglyii@cgcvtm4ohtra>
+	<20250226115726.27530000@gandalf.local.home>
+	<olxh7iwz5yjuuqwpbzgohrl3dkcurbmzij3o2dbha5mtkr2ipn@wtee4jjj7ope>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-02-26 at 11:36 -0600, Tom Lendacky wrote:
->=20
-> Right, but the ASID valid bit is not set, so the flushing may match
-> more
-> than just host/hypervisor TLB entries.
->=20
-Good point, when using SVM these flushes could result
-in flushing more TLB entries than we really want.
+On Wed, 26 Feb 2025 12:41:30 -0500
+Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-On the flip side, when SVM is not initialized, the
-invlpgb instruction will fail with a general protection
-fault if we have anything at all in the ASID field.
+> It's been awhile since I've looked at one, I've been just automatically
+> switching back to frame pointers for awhile, but - I never saw
+> inaccurate backtraces, just failure to generate a backtrace - if memory
+> serves.
 
-I don't know whether setting the ASID valid bit in
-rAX will cause a system to crash when SVM is not
-enabled or initialized.
+OK, maybe if the bug was bad enough, it couldn't get access to the ORC
+tables for some reason. Not having a backtrace on crash is not as bad as
+incorrect back traces, as the former is happening when the system is dieing
+and live kernel patching doesn't help with that.
 
---=20
-All Rights Reversed.
+> 
+> When things die down a bit more I might be able to switch back and see
+> if I get something reportable, I'm still in bug crunching mode :)
+
+Appreciate it.
+
+Thanks,
+
+-- Steve
