@@ -1,358 +1,130 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD782620D5
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5532620D5
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740613186; cv=none; b=Co8uCi7Iq7spNEHFHE669+MvME0VBNYDV8wPnGalq8WigSdDIwHT25VbgeC4lBuGJ8aRvJsD3/j5sj0InJZiHKM6OpjBHDtwNeuWRC+cca66dZITD3pJYfsOWKRtY/9D4Lxrl4gbNVbtT8h3vOOYuNPEZR3NA+qjSQUYwH9jz7g=
+	t=1740613309; cv=none; b=NsUNhA+bBNdUHI7gOiKJFDeeCSzJCqEYESF6CkB/+eFE8iiK+wvlBdi3eQp0mwjGibjrmerLIoCPdAtLwFgPpOAiAi/fGXLAqB5FhKw33M+kSzEi+RXImPnv6XTsGEavf3stOjqGTUtboP0Ke5aILqVXve9J7CL+JpQp7RowD4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740613186; c=relaxed/simple;
-	bh=AAdMzRItw5u8Z3pq5x6wBuPGuXbIHP7wGRXpr/AiUnI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1rsQSyMfLrQmqlhG0xq6je4lv22kYjskL1W1lAANDgQE300m2S8s2beBRHcJynFB18d9OOIWB0ayHzNo8RGDrImv7R6wXmcFvZY3mAopHTn0Dp8ZyF70IcjqAoh713KgAbrBKVbE1g+V5ah0BbQV76mTNUYDhzR9EMu8Y3mIqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mmNIgpKD; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740613309; c=relaxed/simple;
+	bh=8Bwz6Uwyna28A9u7qfhyqwnfqrwLq4MaRl2ezjSy15Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=pk+DeuLjhNRm+Ln5/UnkrZbbSAxGQBIzf/+O74uzP4Y5YnPS2nEkx4rtDD7gLOJHp6kAaVvEoA2Vsh/82l+UFA6T+gYZ2gjTDhuw2VQx+3TxyvgjRccEnEjgV7l89/kXs8u0ytzppXDYBmHlLRkZT7aJS9j7czNTPv5M3UlsXbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WwcvegKB; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmNIgpKD"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6e891e447dcso4594626d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740613182; x=1741217982; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jO8unIjk6WhFhXXqpZKlfwdKZx7fvG8rKIMB2b/fkqI=;
-        b=mmNIgpKDRHc5GWQh21N0zKgtF2DasNtqOUYOp/cVL1L/pwOTge/2jDMhuzcLmnC6Ah
-         bqbh1KBzdiVcOqEBuodbEDgrHtrwKPpT5mG9KrITigl9p6+IQhfPBw4K/FXHkBEQV7Gt
-         PFpT3B2whkVkv7c67PmdlOWTJw8j8A7huVx8H9I15GO8d3xXmGSI/rDZyk+aZxRrT2Km
-         FeSugeTI9Ql88N5SmfrWqayDvr9DpxzLN5KSMjKsAzkMaI/pP/QNhLp8+qboV2eL+vL9
-         RGaGdd7RrMMN+l/Y94IHGsjfEbrJRaa0N1oQ3gmuHgRVX7X+aLA63ln4qTKeKDaRxT5n
-         WlyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740613182; x=1741217982;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jO8unIjk6WhFhXXqpZKlfwdKZx7fvG8rKIMB2b/fkqI=;
-        b=Y+C5yYcX8zOn+NAbiK/WTZE3B9QoBK2KOrVSpOmsFh9mFCorRI/t8lvZOSce7Il0Wz
-         Kj4B+N0a/amFTKJzmy5jJDjkT8tfXBsu5Ri9sMtEN9jxzU87Ji7XjSOBjTYWZ9adCLl9
-         cDE49qjkxgPCljPmNkxnp5jH7Bt9b9tYcYx2oAcIY0pgERFvWNn7RYfxv31rhXELhRw0
-         ny2FXxCqu/bV5qfqY2JJboMlDlNC3WByX03fjEnKQ4u/uZHyVYyHeQzhn0nTU84FZU5y
-         ifEqoDsKmK/uzSGd49u5cj0UO6cPJ7PFTb6BzarJVUegje408h/ld7WfS9lVOHBPLWj7
-         chUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9SIU0+bbmZG5sB1ldz9BvqhFinS7P2Hv8AZpAp65A4jqtoN1cMwBjfBJ+/JLqxop0MHiHx8C9ENP2AT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNSAG9+DZIRP5Ohc39z5Vkij9+QgTuq3pTVDj2dzOmwOR2Cu2c
-	S3eDOTyBPpVKKUg8ro7B7sT9cSenEYAxNs/KE/0++2RlnRjEC8IDxPL5XFrb35fH55xzeq/h9TK
-	tPEoitPmhMtrsS/X8No6PXuMhG+s=
-X-Gm-Gg: ASbGncv/ygJrsf/HIk9OthIq6GFkk09dchKkRi/bDvcfijwTfNwGOeDgz86ek9kjBYp
-	ZiLLqOC7x26fAwH2kwqk7zlqxHlVVpQqLt5U4Czbz5IKPvHxsN5c6TYeuCICPDGsXvywLOLQ4T6
-	Ce6LokL+KqJ0iveKxUV0xNgiI=
-X-Google-Smtp-Source: AGHT+IEprGxmtQGmRmu8emL/rhRpbJuhtHqqOMlGOnJi4gQe9LbnxKk7r2CKDR6UC1ALFapO9mdvuXGqyqVvy+U9QtI=
-X-Received: by 2002:a05:6214:1253:b0:6e4:9b59:d9ce with SMTP id
- 6a1803df08f44-6e87ab08f70mr132068366d6.5.1740613182581; Wed, 26 Feb 2025
- 15:39:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WwcvegKB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740613307; x=1772149307;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=8Bwz6Uwyna28A9u7qfhyqwnfqrwLq4MaRl2ezjSy15Y=;
+  b=WwcvegKBZWX+ouMczLvubxjle0aj8w//tcL7LDpNPWmRhppNdpeKsx00
+   lNjm9MXkln9rdo7JdY2pTyteShw1mcX5mVjiaOXBLlEAzGpn3RGMgAvD9
+   kgipL6B7L+ycdd0nanujM3uZPJ8VLK+NH3ns9L7BSS/Xqd+uZk2BtkkiF
+   0xcTYiH4CaLpp5vGtuZivFAFLZdsP1/asLkxp/B7TTesqAVRH+p5q2MJ/
+   NJfCX95xGT4kY2nNWdJJYwNawLh5N6ljJAiaVMFK3gL5gctnWFR9k/g1S
+   /qCNXUiN+WJYOAoQRTlxmTse5knX2voBQeyWiN1T9+SLu7oBPcR6ZmxYH
+   Q==;
+X-CSE-ConnectionGUID: H0svRCN/TwelPR8NtKiQ/w==
+X-CSE-MsgGUID: eos45tY5TM6vhcOaplXR3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="29088402"
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="29088402"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 15:41:47 -0800
+X-CSE-ConnectionGUID: RiJsh+UlQeywQDYkgACb6g==
+X-CSE-MsgGUID: ie/z0suQRXuj9EEPHnB5cA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
+   d="scan'208";a="121446392"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 26 Feb 2025 15:41:45 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnR27-000CbY-2T;
+	Wed, 26 Feb 2025 23:41:43 +0000
+Date: Thu, 27 Feb 2025 07:41:38 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Mark Brown <broonie@kernel.org>
+Subject: sound/soc/renesas/sh7760-ac97.c:43:17: sparse: sparse: incorrect
+ type in argument 1 (different base types)
+Message-ID: <202502270743.XHyhWKWp-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225213200.729056-1-nphamcs@gmail.com> <20250226005149.GA1500140@cmpxchg.org>
-In-Reply-To: <20250226005149.GA1500140@cmpxchg.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 26 Feb 2025 15:39:30 -0800
-X-Gm-Features: AQ5f1Jpq90G4KonsSQDFYQ3OM0JnJjgykDVZgHkoO8K85t28GIEF2NFohJjyBsI
-Message-ID: <CAKEwX=PPFVoXv3BEYMvTUR-_dHCmVXA=CQnnLoNctqnj95Y9iQ@mail.gmail.com>
-Subject: Re: [PATCH] zswap: do not crash the kernel on decompression failure
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: akpm@linux-foundation.org, yosryahmed@google.com, chengming.zhou@linux.dev, 
-	linux-mm@kvack.org, kernel-team@meta.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Feb 25, 2025 at 4:51=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
->
-> On Tue, Feb 25, 2025 at 01:32:00PM -0800, Nhat Pham wrote:
-> > Currently, we crash the kernel when a decompression failure occurs in
-> > zswap (either because of memory corruption, or a bug in the compression
-> > algorithm). This is overkill. We should only SIGBUS the unfortunate
-> > process asking for the zswap entry on zswap load, and skip the corrupte=
-d
-> > entry in zswap writeback.
-> >
-> > See [1] for a recent upstream discussion about this.
-> >
-> > [1]: https://lore.kernel.org/all/ZsiLElTykamcYZ6J@casper.infradead.org/
-> >
-> > Suggested-by: Matthew Wilcox <willy@infradead.org>
-> > Suggested-by: Yosry Ahmed <yosryahmed@google.com>
-> > Signed-off-by: Nhat Pham <nphamcs@gmail.com>
-> > ---
-> >  mm/zswap.c | 85 +++++++++++++++++++++++++++++++++++++-----------------
-> >  1 file changed, 58 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/mm/zswap.c b/mm/zswap.c
-> > index f6316b66fb23..31d4397eed61 100644
-> > --- a/mm/zswap.c
-> > +++ b/mm/zswap.c
-> > @@ -62,6 +62,8 @@ static u64 zswap_reject_reclaim_fail;
-> >  static u64 zswap_reject_compress_fail;
-> >  /* Compressed page was too big for the allocator to (optimally) store =
-*/
-> >  static u64 zswap_reject_compress_poor;
-> > +/* Load and writeback failed due to decompression failure */
-> > +static u64 zswap_reject_decompress_fail;
->
-> "reject" refers to "rejected store", so the name doesn't quite make
-> sense. zswap_decompress_fail?
+Hi Lad,
 
-SGTM :)
+First bad commit (maybe != root cause):
 
->
-> >  /* Store failed because underlying allocator could not get memory */
-> >  static u64 zswap_reject_alloc_fail;
-> >  /* Store failed because the entry metadata could not be allocated (rar=
-e) */
-> > @@ -953,11 +955,12 @@ static bool zswap_compress(struct page *page, str=
-uct zswap_entry *entry,
-> >       return comp_ret =3D=3D 0 && alloc_ret =3D=3D 0;
-> >  }
-> >
-> > -static void zswap_decompress(struct zswap_entry *entry, struct folio *=
-folio)
-> > +static bool zswap_decompress(struct zswap_entry *entry, struct folio *=
-folio)
-> >  {
-> >       struct zpool *zpool =3D entry->pool->zpool;
-> >       struct scatterlist input, output;
-> >       struct crypto_acomp_ctx *acomp_ctx;
-> > +     bool ret =3D true;
-> >       u8 *src;
-> >
-> >       acomp_ctx =3D raw_cpu_ptr(entry->pool->acomp_ctx);
-> > @@ -984,12 +987,19 @@ static void zswap_decompress(struct zswap_entry *=
-entry, struct folio *folio)
-> >       sg_init_table(&output, 1);
-> >       sg_set_folio(&output, folio, PAGE_SIZE, 0);
-> >       acomp_request_set_params(acomp_ctx->req, &input, &output, entry->=
-length, PAGE_SIZE);
-> > -     BUG_ON(crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &=
-acomp_ctx->wait));
-> > -     BUG_ON(acomp_ctx->req->dlen !=3D PAGE_SIZE);
-> > +     if (crypto_wait_req(crypto_acomp_decompress(acomp_ctx->req), &aco=
-mp_ctx->wait) ||
-> > +                     acomp_ctx->req->dlen !=3D PAGE_SIZE) {
-> > +             ret =3D false;
-> > +             zswap_reject_decompress_fail++;
-> > +             pr_alert_ratelimited(
-> > +                     "decompression failed on zswap entry with offset =
-%08lx\n",
-> > +                     entry->swpentry.val);
->
-> Since this is a pretty dramatic failure scenario, IMO it would be
-> useful to dump as much info as possible.
->
-> The exact return value of crypto_wait_req() could be useful,
-> entry->length and req->dlen too.
->
-> entry->pool->tfm_name just to make absolute sure there is no
-> confusion, as the compressor can be switched for new stores.
->
-> Maybe swp_type() and swp_offset() of entry->swpentry? Those could be
-> easy markers to see if the entry was corrupted for example.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   f4ce1f3318ad4bc12463698696ebc36b145a6aa3
+commit: c087a94bea49acf34d651f7308506fe462a937b3 ASoC: Rename "sh" to "renesas"
+date:   4 months ago
+config: sh-randconfig-r132-20250226 (https://download.01.org/0day-ci/archive/20250227/202502270743.XHyhWKWp-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250227/202502270743.XHyhWKWp-lkp@intel.com/reproduce)
 
-I'll include them all :)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502270743.XHyhWKWp-lkp@intel.com/
 
->
-> > +     }
-> >       mutex_unlock(&acomp_ctx->mutex);
-> >
-> >       if (src !=3D acomp_ctx->buffer)
-> >               zpool_unmap_handle(zpool, entry->handle);
-> > +     return ret;
-> >  }
-> >
-> >  /*********************************
-> > @@ -1018,6 +1028,7 @@ static int zswap_writeback_entry(struct zswap_ent=
-ry *entry,
-> >       struct writeback_control wbc =3D {
-> >               .sync_mode =3D WB_SYNC_NONE,
-> >       };
-> > +     int ret =3D 0;
-> >
-> >       /* try to allocate swap cache folio */
-> >       mpol =3D get_task_policy(current);
-> > @@ -1034,8 +1045,8 @@ static int zswap_writeback_entry(struct zswap_ent=
-ry *entry,
-> >        * and freed when invalidated by the concurrent shrinker anyway.
-> >        */
-> >       if (!folio_was_allocated) {
-> > -             folio_put(folio);
-> > -             return -EEXIST;
-> > +             ret =3D -EEXIST;
-> > +             goto put_folio;
-> >       }
-> >
-> >       /*
-> > @@ -1048,14 +1059,17 @@ static int zswap_writeback_entry(struct zswap_e=
-ntry *entry,
-> >        * be dereferenced.
-> >        */
-> >       tree =3D swap_zswap_tree(swpentry);
-> > -     if (entry !=3D xa_cmpxchg(tree, offset, entry, NULL, GFP_KERNEL))=
- {
-> > -             delete_from_swap_cache(folio);
-> > -             folio_unlock(folio);
-> > -             folio_put(folio);
-> > -             return -ENOMEM;
-> > +     if (entry !=3D xa_load(tree, offset)) {
-> > +             ret =3D -ENOMEM;
-> > +             goto fail;
-> >       }
-> >
-> > -     zswap_decompress(entry, folio);
-> > +     if (!zswap_decompress(entry, folio)) {
-> > +             ret =3D -EIO;
-> > +             goto fail;
-> > +     }
-> > +
-> > +     xa_erase(tree, offset);
-> >
-> >       count_vm_event(ZSWPWB);
-> >       if (entry->objcg)
-> > @@ -1071,9 +1085,14 @@ static int zswap_writeback_entry(struct zswap_en=
-try *entry,
-> >
-> >       /* start writeback */
-> >       __swap_writepage(folio, &wbc);
-> > -     folio_put(folio);
-> > +     goto put_folio;
-> >
-> > -     return 0;
-> > +fail:
-> > +     delete_from_swap_cache(folio);
-> > +     folio_unlock(folio);
-> > +put_folio:
-> > +     folio_put(folio);
-> > +     return ret;
-> >  }
->
-> Nice, yeah it's time for factoring out the error unwinding. If you
-> write it like this, you can save a jump in the main sequence:
->
->         __swap_writepage(folio, &wbc);
->         ret =3D 0;
-> put:
->         folio_put(folio);
->         return ret;
-> delete_unlock:
->         delete_from_swap_cache(folio);
->         folio_unlock(folio);
->         goto put;
+sparse warnings: (new ones prefixed by >>)
+>> sound/soc/renesas/sh7760-ac97.c:43:17: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected void const volatile [noderef] __iomem *ptr @@     got unsigned int @@
+   sound/soc/renesas/sh7760-ac97.c:43:17: sparse:     expected void const volatile [noderef] __iomem *ptr
+   sound/soc/renesas/sh7760-ac97.c:43:17: sparse:     got unsigned int
+   sound/soc/renesas/sh7760-ac97.c:44:9: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected void const volatile [noderef] __iomem *ptr @@     got unsigned int @@
+   sound/soc/renesas/sh7760-ac97.c:44:9: sparse:     expected void const volatile [noderef] __iomem *ptr
+   sound/soc/renesas/sh7760-ac97.c:44:9: sparse:     got unsigned int
+--
+>> sound/soc/renesas/hac.c:77:3: sparse: sparse: symbol 'hac_cpu_data' was not declared. Should it be static?
 
-SGTM :)
+vim +43 sound/soc/renesas/sh7760-ac97.c
 
->
-> >
-> >  /*********************************
-> > @@ -1600,6 +1619,29 @@ bool zswap_load(struct folio *folio)
-> >       if (WARN_ON_ONCE(folio_test_large(folio)))
-> >               return true;
-> >
-> > +     /*
-> > +      * We cannot invalidate the zswap entry before decompressing it. =
-If
-> > +      * decompression fails, we must keep the entry in the tree so tha=
-t
-> > +      * a future read by another process on the same swap entry will a=
-lso
-> > +      * have to go through zswap. Otherwise, we risk silently reading
-> > +      * corrupted data for the other process.
-> > +      */
-> > +     entry =3D xa_load(tree, offset);
-> > +     if (!entry)
-> > +             return false;
->
-> The explanation in the comment makes sense in the context of this
-> change. But fresh eyes reading this function and having never seen
-> that this *used to* open with xa_erase() will be confused. It answers
-> questions the reader doesn't have at this point - it's just a function
-> called zswap_load() beginning with an xa_load(), so what?
->
-> At first I was going to suggest moving it down to the swapcache
-> branch. But honestly after reading *that* comment again, in the new
-> sequence, I don't think the question will arise there either. It's
-> pretty self-evident that the whole "we can invalidate when reading
-> into the swapcache" does not apply if the read failed.
->
-> > +     /*
-> > +      * If decompression fails, we return true to notify the caller th=
-at the
-> > +      * folio's data were in zswap, but do not mark the folio as up-to=
--date.
-> > +      * This will effectively SIGBUS the calling process.
-> > +      */
->
-> It would be good to put a lampshade on this weirdness that the return
-> value has nothing to do with success or not. This wasn't as important
-> a distinction, but with actual decompression failures I think it is.
->
-> Something like this?
->
->         if (!zswap_decompress(entry, folio)) {
->                 /*
->                  * The zswap_load() return value doesn't indicate success=
- or
->                  * failure, but whether zswap owns the swapped out conten=
-ts.
->                  * This MUST return true here, otherwise swap_readpage() =
-will
->                  * read garbage from the backend.
->                  *
->                  * Success is signaled by marking the folio uptodate.
->                  */
->                 return true;
->         }
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  36  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  37  static int __init sh7760_ac97_init(void)
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  38  {
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  39  	int ret;
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  40  	unsigned short ipsel;
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  41  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  42  	/* enable both AC97 controllers in pinmux reg */
+48ccb2ceec6fb1d sound/soc/sh/sh7760-ac97.c Paul Mundt    2010-10-27 @43  	ipsel = __raw_readw(IPSEL);
+48ccb2ceec6fb1d sound/soc/sh/sh7760-ac97.c Paul Mundt    2010-10-27  44  	__raw_writew(ipsel | (3 << 10), IPSEL);
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  45  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  46  	ret = -ENOMEM;
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  47  	sh7760_ac97_snd_device = platform_device_alloc("soc-audio", -1);
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  48  	if (!sh7760_ac97_snd_device)
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  49  		goto out;
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  50  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  51  	platform_set_drvdata(sh7760_ac97_snd_device,
+f0fba2ad1b6b53d sound/soc/sh/sh7760-ac97.c Liam Girdwood 2010-03-17  52  			     &sh7760_ac97_soc_machine);
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  53  	ret = platform_device_add(sh7760_ac97_snd_device);
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  54  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  55  	if (ret)
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  56  		platform_device_put(sh7760_ac97_snd_device);
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  57  
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  58  out:
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  59  	return ret;
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  60  }
+aef3b06ac69783d sound/soc/sh/sh7760-ac97.c Manuel Lauss  2007-05-14  61  
 
-Per Yosry's comment, I'll just move this into zswap_load()'s function
-documentation.
+:::::: The code at line 43 was first introduced by commit
+:::::: 48ccb2ceec6fb1d46d1bc92dadc602d4341a0149 sound: sh: ctrl_in/outX to __raw_read/writeX conversion.
 
->
->         folio_mark_uptodate(folio);
->
-> > +     if (!zswap_decompress(entry, folio))
-> > +             return true;
-> > +
-> > +     count_vm_event(ZSWPIN);
-> > +     if (entry->objcg)
-> > +             count_objcg_events(entry->objcg, ZSWPIN, 1);
-> > +
-> >       /*
-> >        * When reading into the swapcache, invalidate our entry. The
-> >        * swapcache can be the authoritative owner of the page and
-> > @@ -1612,21 +1654,8 @@ bool zswap_load(struct folio *folio)
-> >        * files, which reads into a private page and may free it if
-> >        * the fault fails. We remain the primary owner of the entry.)
-> >        */
-> > -     if (swapcache)
-> > -             entry =3D xa_erase(tree, offset);
-> > -     else
-> > -             entry =3D xa_load(tree, offset);
-> > -
-> > -     if (!entry)
-> > -             return false;
-> > -
-> > -     zswap_decompress(entry, folio);
-> > -
-> > -     count_vm_event(ZSWPIN);
-> > -     if (entry->objcg)
-> > -             count_objcg_events(entry->objcg, ZSWPIN, 1);
-> > -
-> >       if (swapcache) {
-> > +             xa_erase(tree, offset);
-> >               zswap_entry_free(entry);
-> >               folio_mark_dirty(folio);
-> >       }
+:::::: TO: Paul Mundt <lethal@linux-sh.org>
+:::::: CC: Paul Mundt <lethal@linux-sh.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
