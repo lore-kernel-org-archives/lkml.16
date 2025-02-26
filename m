@@ -1,192 +1,162 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A7E22B8C8;
-	Wed, 26 Feb 2025 18:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99F3E23536F;
+	Wed, 26 Feb 2025 18:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740595025; cv=none; b=WFYPcVpHPsBMiqCeu8I+ee1SJfQfQ6R/qZbR/aX/Ug0ov/ULUpG61O9jTqqO2ayR40WjK9m0UjD+xUkXpTqfa8x1211Gp6QnMNUPxEKI5oRfV9sJgqyD+VkVYXtx/18BvHIQ6oDqeb+dN84LhOUQjEU0bvD4jmBsgGbjQF8AehE=
+	t=1740595033; cv=none; b=gz9wqYrG9GyfNR8X6OKLzo3CGAEmzQLCxzSKgDsKy9b14pou89jhjN86rxeS1ggYaDADjTkua/BpWMZWdU7XrPmPQ3q0ea8tLMWtlbwXosa9PNkls4BRrJ9+HoiOz0+d5jICRuafK/kyv1i8gBDK1BWWoe2tOT8Ej5hZFvgHozM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740595025; c=relaxed/simple;
-	bh=Q1CdKYoWeQaWHh1A4Jd8Lmu6bUJ1cYGTizHjUbmuoB0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bD8EKXz8tHJboU+f38g1JU5ebvr0JEA7m/1ocB9ceYZ0MkqyLXvoZNrHGs03GXe7xqaI7hA2cXlgpLefh45WYKhqmAo8bYxAzdlpDtN4dNMYqDfQD1Uel8izi6my24wr579h9n6zB4Ax0uv4VQOnz4m/s3JMt8ffMV3GAqUcuuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fIblk4NI; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740595033; c=relaxed/simple;
+	bh=k5ajxCLl2hy7Mwsz9QDoIJjT29KvjQa89jMM3NFwxSY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OxIlFtP3539YJG1zDdYhvbtmZVSibYauL2TmPNc+tvM4r4roxgdpQVa9Hjj1RajFeAebXr5UHfJaHGV6tcMFLNUJek23CAmz79r+FpBmB9kpOMA1JSDSGvy6cfcwFuFIi027FkpUPNxwjMpvRaz61o8Uio2qoCMD9agWw+aobZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A1j3IIA3; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fIblk4NI"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QACbh9017602;
-	Wed, 26 Feb 2025 18:35:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	15W1y3P4DrOFNj99P2Uho9amWPmNpGqqq17R4/J0xDU=; b=fIblk4NIc51f/gzr
-	iTvZdk3SWtgyhS41bj5/f+av7c79uqX/o+QNt27ZkCTfwVve9rQKp3fatDZ8bqn4
-	i7dIbyFRumkg3e2NYE1ZsJ/2PEJD7BuCaeYj+1n7Zp157MK5EsKoBVZFK0u+EUu7
-	3D2P+kQTwZxTS4YaqNLwOLuqSkoLKuZlsiVfyRBD2WCJoy79kWxXyUnNhZjQ8uQe
-	JprQHTQ6H1aDn7CKa37mxSY0jwzuDPmuU3LkyOo+OI1MH6KKVG2qnlbujRJI4jIt
-	qNEAqinYi9+F6yDDiaQRJjfdSWE5uvMYgRlRvL2YrEnCOv40OO2xTfVtZ023wquh
-	vqZ8iw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prn2ykk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:35:38 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51QIZbI3022564
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:35:37 GMT
-Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Feb
- 2025 10:35:36 -0800
-Message-ID: <f9cbfa96-19c9-4187-a6fb-338296128c11@quicinc.com>
-Date: Wed, 26 Feb 2025 10:35:35 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1j3IIA3"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso30451a12.1;
+        Wed, 26 Feb 2025 10:37:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740595030; x=1741199830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tDyTJwKN7xH8PBcSTb/l/mb6insdu/+iQsdQ5QiBDRo=;
+        b=A1j3IIA3HP25wYytjKHm4QuxHw4F0XszGNvW6LzDLW661FCV9zDudXXwFFzTHRzZef
+         1PdGkwtuX86UdRGNG8S3PWPyT5cdqO3uEaiJ6F+r54ra95oh880ey9RMNzZbhPTE21Gy
+         vL1tavC9+M9xPEPT3x9+FOoLE6EZqF/XEbIWe9bP3VBZ5bFsTzM/EW1F6IK3dEcXLCcj
+         /FwotQ7rosr1qj+Ud2fs8YAfQOVk/+keCvuowvNijphaPEWnlQ+HqPDr7+77Ff1Xp8dx
+         2ChHdX0bQkr/rqGpA+fLk/ANS7EyO1Pohow0hvtupdPFLQGZVFCBTP/+l51qm9Ck0mwz
+         3fTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740595030; x=1741199830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tDyTJwKN7xH8PBcSTb/l/mb6insdu/+iQsdQ5QiBDRo=;
+        b=ZR/My9sK9raLQ2ZMaGFOwdMaxOt9R65S1vj6+fQ3moeCDuCishNuD8uFPx9cXVJmoU
+         Z8mkL2x2CyCWav+eSb30HoSwYpDp90ksQxQEzdy1yhmfLJ1xzj38NFNRbfddxsBaEY4h
+         ziRgsLQ/+GOdR1RJJOjnqdsXdgapbKS3oqqicBj3m0C4w6z5EBNH1O3E8E6ZFSzp89Jq
+         ybPvGD6f88bJ8uRdDKKYA51SSRkwF6I73cURwUeht1la5yWrfsRRs0icPsqS9fLxJRGp
+         myTvFw3C6RQeppr8OVSVtbh+WcCMBmbtNn44d1HokPyf9qserEF8N5mcdbSkW28NQKsa
+         qg2g==
+X-Forwarded-Encrypted: i=1; AJvYcCV1tnCnRz1q9q0lcyMDmitt6Sw3o7nNCtiOZKuVccOi/HxA+l6Bvz0DbZ4gsr7+e+DSOYACBIj7Rz024Bg=@vger.kernel.org, AJvYcCXoNSrDKhFdYJs2eEYtl8mEY+9xS1yZbp31r0mDfXoGVn9xwAaDjSxx9UIHh6KTVFs7UCH7c9oH1RRurAvGSXo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVe8IMpAey4MuHdlqy+DxUQbzRhEK8gWpRIfkk16tJkMwqJZqI
+	BP72IrDZzgyJPqLox4n1g4hUws2E4iCG+f3D1mnZNH8WNdo2gW2zEdlL3/MDTb1t2i27fTcLvpT
+	k3awPe5f6JToCbUTTICX7F1BYzCs=
+X-Gm-Gg: ASbGnctiCRxlhYmBgTqJiGhYCaEQ0PlxMckkkadpLRDNkhk1NW6sf2MfxgdUlO1YpdX
+	KcIVrktyAVXbLMvRIq8rbVoY62eV102eg4c7438L4wTOlEwGU513jjTGNVDwoT9h+LKVIhDR5R6
+	7f19sj4Yhv
+X-Google-Smtp-Source: AGHT+IFwLcDUFQzoI6ZilFXHLns1F2OC4wA9RbEZ2yK1MOX7/UATdtevigNUWQXX1Z3qVM5GQ+e+CMmylXNmvo/pWiY=
+X-Received: by 2002:a05:6402:34cf:b0:5e4:96d6:c125 with SMTP id
+ 4fb4d7f45d1cf-5e496d6c286mr7924846a12.18.1740595029719; Wed, 26 Feb 2025
+ 10:37:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] drm/msm/dpu: don't set crtc_state->mode_changed
- from atomic_check()
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Rob Clark <robdclark@gmail.com>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        Chandan Uddaraju
-	<chandanu@codeaurora.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        "Jordan
- Crouse" <jordan@cosmicpenguin.net>,
-        Sravanthi Kollukuduru
-	<skolluku@codeaurora.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        "Archit
- Taneja" <architt@codeaurora.org>,
-        Rajesh Yadav <ryadav@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <freedreno@lists.freedesktop.org>,
-        "Simona
- Vetter" <simona.vetter@ffwll.ch>
-References: <20250123-drm-dirty-modeset-v2-0-bbfd3a6cd1a4@linaro.org>
- <20250123-drm-dirty-modeset-v2-4-bbfd3a6cd1a4@linaro.org>
- <vn3f6jzx27twq7maamdmeqahvn4zzoxmdttkm7epg2qgn4ueov@hqzjzzzw3mog>
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <vn3f6jzx27twq7maamdmeqahvn4zzoxmdttkm7epg2qgn4ueov@hqzjzzzw3mog>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: T4g1JIGXwrjoQ5jXyxU1v6m5r8jw-Oun
-X-Proofpoint-GUID: T4g1JIGXwrjoQ5jXyxU1v6m5r8jw-Oun
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1011 mlxscore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502260146
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+ <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+ <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com>
+ <CAH5fLghEMtT663SNogAGad-qk7umefGeBKbm+QjKKzoskjOubw@mail.gmail.com>
+ <CAFJgqgRxfTVxrWja=ZW=mTj1ShPE5s-atAqxzMOq5poajMh=4A@mail.gmail.com>
+ <CANiq72mA4Pbx1BeCZdg7Os3FtGkrwx6T8_+=+-=-o9+TOMv+EA@mail.gmail.com>
+ <CAFJgqgSzqGKdeT88fJzrFOex7i-yvVte3NiQDdgXeWEFtnq=9A@mail.gmail.com> <CANiq72m8zKABR0dXtkB-UiF-GeP5J4nAGqoabdmR=CfPsJejzg@mail.gmail.com>
+In-Reply-To: <CANiq72m8zKABR0dXtkB-UiF-GeP5J4nAGqoabdmR=CfPsJejzg@mail.gmail.com>
+From: Ventura Jack <venturajack85@gmail.com>
+Date: Wed, 26 Feb 2025 11:36:55 -0700
+X-Gm-Features: AQ5f1JoMsdSV_5Q6RV31sCAY_-vLSrZRd2z8Vs5ljTGycnjUxfCGKTNJLyBrya0
+Message-ID: <CAFJgqgREAtPkx+r_QNPnt-bOekjVjCNBv=tAuuEC6dT2HCA0jg@mail.gmail.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
+	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
+	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
+	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Ralf Jung <post@ralfj.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 26, 2025 at 10:49=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Wed, Feb 26, 2025 at 4:21=E2=80=AFPM Ventura Jack <venturajack85@gmail=
+.com> wrote:
+> >
+> > I am not certain that I understand either you or Alice correctly.
+> > But Ralf Jung or others will probably help clarify matters.
+>
+> When you said:
+>
+>     "In a preprint paper, both stacked borrows and tree burrows
+>      are as far as I can tell described as having false positives."
+>
+> I think that you mean to say that the new model allows/rejects
+> something that unsafe code out there wants/doesn't want to do. That is
+> fine and expected, although of course it would be great to have a
+> model that is simple, fits perfectly all the code out there and
+> optimizes well.
+>
+> However, that is very different from what you say afterwards:
+>
+>     "Are you sure that both stacked borrows and tree borrows are
+>      meant to be full models with no false positives and false negatives,=
+"
+>
+> Which I read as you thinking that the new model doesn't say whether a
+> given program has UB or not.
+>
+> Thus I think you are using the phrase "false positives" to refer to
+> two different things.
 
+Ralf Jung explained matters well, I think I understood him. I found his
+answer clearer than both your answers and Alice's on this topic.
 
-On 2/26/2025 3:55 AM, Dmitry Baryshkov wrote:
-> On Thu, Jan 23, 2025 at 02:43:36PM +0200, Dmitry Baryshkov wrote:
->> The MSM driver uses drm_atomic_helper_check() which mandates that none
->> of the atomic_check() callbacks toggles crtc_state->mode_changed.
->> Perform corresponding check before calling the drm_atomic_helper_check()
->> function.
->>
->> Fixes: 8b45a26f2ba9 ("drm/msm/dpu: reserve cdm blocks for writeback in case of YUV output")
->> Reported-by: Simona Vetter <simona.vetter@ffwll.ch>
->> Closes: https://lore.kernel.org/dri-devel/ZtW_S0j5AEr4g0QW@phenom.ffwll.local/
->> Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 32 +++++++++++++++++++++++++----
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.h |  4 ++++
->>   drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 26 +++++++++++++++++++++++
->>   drivers/gpu/drm/msm/msm_atomic.c            | 13 +++++++++++-
->>   drivers/gpu/drm/msm/msm_kms.h               |  7 +++++++
->>   5 files changed, 77 insertions(+), 5 deletions(-)
->>
-> 
-> JFI, this patch generates following warnings, deferred now:
-> 
-> 10:49:07.279: [  235.096198] WARNING: CPU: 1 PID: 515 at drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c:459 dpu_kms_check_mode_changed+0xb0/0xbc
-> 10:49:07.279: [  235.107375] Modules linked in:
-> 10:49:07.279: [  235.110532] CPU: 1 UID: 0 PID: 515 Comm: kms_atomic_tran Tainted: G        W          6.14.0-rc4-gd229bc98da6b #1
-> 10:49:07.279: [  235.121069] Tainted: [W]=WARN
-> 10:49:07.279: [  235.124130] Hardware name: Google Lazor Limozeen without Touchscreen (rev5 - rev8) (DT)
-> 10:49:07.279: [  235.132356] pstate: 20400009 (nzCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> 10:49:07.279: [  235.139513] pc : dpu_kms_check_mode_changed+0xb0/0xbc
-> 10:49:07.279: [  235.144712] lr : msm_atomic_check+0xc0/0xe0
-> 10:49:07.279: [  235.149023] sp : ffff8000843f3960
-> 10:49:07.279: [  235.150686] usb 1-1.1: new high-speed USB device number 100 using xhci-hcd
-> 10:49:07.279: [  235.152439] x29: ffff8000843f3960 x28: ffff65a18386d080 x27: ffff65a184826a80
-> 10:49:07.279: [  235.166848] x26: 0000000000000038 x25: 0000000000000008 x24: ffff65a1866fd580
-> 10:49:07.279: [  235.174188] x23: 0000000000000028 x22: 0000000000000028 x21: 0000000000000038
-> 10:49:07.279: [  235.181527] x20: ffff65a184826a80 x19: 0000000000000000 x18: 0000000000000000
-> 10:49:07.279: [  235.188866] x17: 0000000000000000 x16: 0000000000000000 x15: 0000aaab013dfeb8
-> 10:49:07.279: [  235.196215] x14: 00000000000c0000 x13: 0040a00000400800 x12: 0000000000000000
-> 10:49:07.279: [  235.203553] x11: 0000000000000050 x10: 0000000000000000 x9 : ffffbdf7fc448530
-> 10:49:07.279: [  235.210892] x8 : 00000000ffffffff x7 : ffff65a182610400 x6 : 0000000000000038
-> 10:49:07.279: [  235.218231] x5 : ffff65a18314b000 x4 : 0000000000000000 x3 : 0000000000000001
-> 10:49:07.279: [  235.225570] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff65a18ca7a600
-> 10:49:07.279: [  235.232910] Call trace:
-> 10:49:07.279: [  235.235440]  dpu_kms_check_mode_changed+0xb0/0xbc (P)
-> 10:49:07.279: [  235.240641]  msm_atomic_check+0xc0/0xe0
-> 10:49:07.279: [  235.244594]  drm_atomic_check_only+0x498/0x934
-> 10:49:07.279: [  235.249169]  drm_atomic_commit+0x48/0xc4
-> 10:49:07.279: [  235.253209]  drm_mode_atomic_ioctl+0xa98/0xd00
-> 10:49:07.279: [  235.257791]  drm_ioctl_kernel+0xbc/0x12c
-> 10:49:07.280: [  235.261832]  drm_ioctl+0x228/0x4e4
-> 10:49:07.280: [  235.265339]  __arm64_sys_ioctl+0xb4/0xec
-> 10:49:07.280: [  235.269381]  invoke_syscall+0x48/0x110
-> 10:49:07.280: [  235.273248]  el0_svc_common.constprop.0+0x40/0xe0
-> 10:49:07.280: [  235.278090]  do_el0_svc+0x1c/0x28
-> 10:49:07.280: [  235.281512]  el0_svc+0x48/0x110
-> 10:49:07.280: [  235.284753]  el0t_64_sync_handler+0x10c/0x138
-> 10:49:07.280: [  235.289234]  el0t_64_sync+0x198/0x19c
+> > You are right that I should have written "currently tied", not "tied", =
+and
+> > I do hope and assume that the work with aliasing will result
+> > in some sorts of specifications.
+> >
+> > The language reference directly referring to LLVM's aliasing rules,
+> > and that the preprint paper also refers to LLVM, does indicate a tie-in=
+,
+> > even if that tie-in is incidental and not desired. With more than one
+> > major compiler, such tie-ins are easier to avoid.
+>
+> Ralf, who is pretty much the top authority on this as far as I
+> understand, already clarified this:
+>
+>     "we absolutely do *not* want Rust to be tied to LLVM's aliasing rules=
+"
+>
+> The paper mentioning LLVM to explain something does not mean the model
+> is tied to LLVM.
+>
+> And the Rust reference, which you quote, is not the Rust specification
+> -- not yet at least. From its introduction:
+>
+>     "should not be taken as a specification for the Rust language"
+>
+> When the Rust specification is finally published, if they still refer
+> to LLVM (in a normative way), then we could say it is tied, yes.
 
-Hey Dmitry,
+"Currently tied" is accurate as far as I can tell. Ralf Jung
+did explain it well. He suggested removing those links from the
+Rust reference, as I understand him. But, importantly, having
+more than 1 major Rust compiler would be very helpful in my opinion.
+It is easy to accidentally or incidentally tie language definition
+to compiler implementation, and having at least 2 major compilers
+helps a lot with this. Ralf Jung described it as a risk of overfitting I th=
+ink,
+and that is a good description in my opinion.
 
-This warning is eventually dropped in the CRTC RM refactor (specifically 
-[1]).
-
-Applying in this order might fix the warning:
-
-1. CRTC RM refactor
-2. This mode_changed() series
-3. The rest of the CWB series
-
-This will cause some merge conflicts with the CRTC RM refactor though 
-and you'll need to move the dpu_kms changes in [1] to this patch.
-
-What do you think?
-
-Thanks,
-
-Jessica Zhang
-
-[1] https://patchwork.freedesktop.org/patch/637487/?series=144912&rev=1
-
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
-
+Best, VJ.
