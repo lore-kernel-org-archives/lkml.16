@@ -1,203 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFA31EB5EB;
-	Thu, 27 Feb 2025 05:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616681EB5C7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740632401; cv=none; b=KYL8xTY+bTWqepnjy0/jkkiyooBUGCtm9ua48fWHnZtINCAZcc4r4KFk8qzKRmyFIIYbOFmo4vKra/QVINpsZZLJreDcum0p4OhoxKg1AOe7IkJJ71EGynwATdUhi+Y09eOynvXHUrBLYbaECyaYcmuDgsIpTcU5lhGu4863ZNQ=
+	t=1740632403; cv=none; b=dC4zFEyU3syy2gSZtc032t4PEvPOcB9RX1T/4+Bb5HB7yIQd4XmqhyKajuecEZ4CiU7B7bGmBOFT68fyOohifcF2exNmloPX3dzWvMyooddqcpcS7yh1FFJXmyAwQoXGRiVuKLF2E372bqmc6ptp/ezs/Q73eeBNY3/pBlTiSj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740632401; c=relaxed/simple;
-	bh=fVzKEBD6VeAoIwJny8URD+9oqLIX9UMzQFDONoxOgWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nGAfG+xKFvKn70gfj3XUMmKl5oVVaAcvZdY/SPY4Uug2EM8x1nihaHQvNOF5clHMsYZeh+NpRyaiLQx1FeOfpVU4zu8HIuCXGLTEqsMsLk/6cvgcdKZ5kmzvVCQ1z0hyjL1NmQEDpG8X/nMsj9cuHx1pEJ64p9783j0aVtg+ZVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYBgkYvA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYBgkYvA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6054C4CEDD;
-	Thu, 27 Feb 2025 04:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740632401;
-	bh=fVzKEBD6VeAoIwJny8URD+9oqLIX9UMzQFDONoxOgWY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BYBgkYvAO2nz9ZOAdSIAZDTxasYGU/s1iPJFbZLRloMXsgJUKZT8kA6DKDpP4t+lS
-	 sN8wn1DSv7HdYWjlOiyNKN+DfXfveSHlLMoKZgreptSdnaSpdAuDegDxR7bfeaGSbm
-	 5UmHc9PGNuXAmbMuzGejsrnLCYycGHvocOWZcPlfSq355ZBEef4Ekkl+5MvTELa26H
-	 V/bmOauh4tx0Tk7BlffaQzYCcZwcbf59goU2XNmWLpx9TIi6JXuECPew6c+2NtqYFZ
-	 6It83pfm5hIgURScGp5f/++4X7aAZf3HtpRFuJ1ibz6CeXd4D7I1iSDomRliycduoV
-	 oAZTZFLgLIH5A==
-Date: Thu, 27 Feb 2025 13:59:57 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Dharma.B@microchip.com,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 0/2] microchip-tcb-capture: Add Capture, Compare,
- Overflow etc. events
-Message-ID: <Z7_xTQeTzD-RH3nH@ishi>
-References: <20250211151914.313585-3-csokas.bence@prolan.hu>
- <Z7h0AXV1zlgp9Nw-@ishi>
- <8fb9f188-3065-4fdc-a9f1-152cc5959186@prolan.hu>
- <Z7vihBqOgP3fBUVq@ishi>
- <bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu>
+	s=arc-20240116; t=1740632403; c=relaxed/simple;
+	bh=9wKlRlfh6+hqaiNsar4uUlJBFTr/ICWvyAUWcrw+Tm4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
+	 In-Reply-To:Content-Type; b=rxMYv9tPngAWAZkoPjsnRwUiuEpCVS1HdQPu9fgGHQPD26vrYD/yl/tBY3Hm6xaIW+ZJw+1EgOPdXszbqXyCUyEq73WgoG+nqGZxZavT4voSxZokH0bD5LpK+r9kyXc9xMdRMDHd82jGgSGIj9zhpsrc6NyXDk0kWPfIEYMFe48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1740632384-086e23601915ff00001-xx1T2L
+Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id D1GWUQnXWUTW6gOV (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 12:59:44 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX3.zhaoxin.com
+ (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
+ 2025 12:59:44 +0800
+Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
+ ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
+ 15.01.2507.044; Thu, 27 Feb 2025 12:59:44 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
+Received: from [10.32.64.4] (10.32.64.4) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Wed, 26 Feb
+ 2025 17:40:02 +0800
+Message-ID: <ab631e27-ee35-47b9-879b-2b8d6a245512@zhaoxin.com>
+Date: Wed, 26 Feb 2025 17:39:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Zy2ksh5Qd2xK/uRQ"
-Content-Disposition: inline
-In-Reply-To: <bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu>
-
-
---Zy2ksh5Qd2xK/uRQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+From: LeoLiu-oc <leoliu-oc@zhaoxin.com>
+Subject: Re: [PATCH v4 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+To: Yazen Ghannam <yazen.ghannam@amd.com>
+X-ASG-Orig-Subj: Re: [PATCH v4 1/3] ACPI/APEI: Add hest_parse_pcie_aer()
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
+	<robert.moore@intel.com>, <avadhut.naik@amd.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>,
+	<CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>
+References: <20241205114048.60291-1-LeoLiu-oc@zhaoxin.com>
+ <20241205114048.60291-2-LeoLiu-oc@zhaoxin.com>
+ <20241211192048.GA1960478@yaz-khff2.amd.com>
+In-Reply-To: <20241211192048.GA1960478@yaz-khff2.amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Moderation-Data: 2/27/2025 12:59:43 PM
+X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
+X-Barracuda-Start-Time: 1740632384
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Barracuda-BRTS-Status: 1
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 6440
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137764
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On Wed, Feb 26, 2025 at 01:58:37PM +0100, Cs=F3k=E1s Bence wrote:
-> On 2025. 02. 24. 4:07, William Breathitt Gray wrote:
-> > On Fri, Feb 21, 2025 at 03:14:44PM +0100, Cs=F3k=E1s Bence wrote:
-> > > On 2025. 02. 21. 13:39, William Breathitt Gray wrote:
-> > > > First, register RC seems to serve only as a threshold value for a
-> > > > compare operation. So it shouldn't be exposed as "capture2", but ra=
-ther
-> > > > as its own dedicated threshold component. I think the 104-quad-8 mo=
-dule
-> > > > is the only other driver supporting THRESHOLD events; it exposes the
-> > > > threshold value configuration via the "preset" component, but perha=
-ps we
-> > > > should introduce a proper "threshold" component instead so counter
-> > > > drivers have a standard way to expose this functionality. What do y=
-ou
-> > > > think?
-> > >=20
-> > > Possibly. What's the semantics of the `preset` component BTW? If we c=
-an
-> > > re-use that here as well, that could work too.
-> >=20
-> > You can find the semantics of each attribute under the sysfs ABI doc
-> > file located at Documentation/ABI/testing/sysfs-bus-counter. For the
-> > `preset` component, its essential purpose is to configure a value to
-> > preset register to reload the Count when some condition is met (e.g.
-> > when an external INDEX/SYNC trigger line goes high).
+
+
+=E5=9C=A8 2024/12/12 3:20, Yazen Ghannam =E5=86=99=E9=81=93:
 >=20
-> Hmm, that doesn't really match this use case. All right, then, for now, I=
-'ll
-> skip the RC part, and then we can add it in a later patch when the
-> "threshold" component is in place and used by the 104-quad-8 module.
-
-Understood, I'll work on a separate patchset introducing a "threshold"
-component (perhaps "compare" is a better name) to the 104-quad-8 and
-once that is complete we can add it to the microchip-tcb-capture as its
-own patch to support the RC register functionality.
-
-> > In the same vein, move the uapi header introduction to its own patch.
-> > That will separate the userspace-exposed changes and make things easier
-> > for future users when bisecting the linux kernel history when tracking
-> > down possible bugs.
 >=20
-> Isn't it better to keep API header changes in the same commit as the
-> implementation using them? That way if someone bisects/blames the API
-> header, they get the respective implementation as well.
-
-Fair enough, we'll keep the header together with the implementation.
-
-> > and it looks like this chip has
-> > three timer counter channels described in section 54. Currently, the
-> > microchip-tcb-capture module is exposing only one timer counter channel
-> > (as Count0), correct? Should this driver expose all three channels (as
-> > Count0, Count1, and Count2)?
+> [=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E6=9D=A5=E8=87=AA=E5=A4=96=E9=83=A8=
+=E5=8F=91=E4=BB=B6=E4=BA=BA =E8=B0=A8=E9=98=B2=E9=A3=8E=E9=99=A9]
 >=20
-> No, as this device is actually instantiated per-channel, i.e. in the DT,
-> there are two TCB nodes (as the SoC has two peripherals, each with 3
-> channels), and then the counter is a sub-node with `reg =3D <0/1/2>`,
-> specifying which timer channel to use. Or, in quadrature decode mode, you=
-'d
-> have two elements in `reg`, i.e. `reg =3D <0>, <1>`.
-
-So right now each timer counter channel is exposed as an independent
-Counter device? That means we're exposing the timer counter blocks
-incorrectly.
-
-You're not at fault Bence, so you don't need to address this problem
-with your current patchset, but I do want to discuss it briefly here so
-we can come up with a plan for how to resolve it for the future. The
-Generic Counter Interface was nascent at the time, so we likely
-overlooked this problem at the time. I'm CCing some of those present
-during the original introduction of the microchip-tcb-capture driver so
-they are aware of this discussion.
-
-Let me make sure I understand the situation correctly. This SoC has two
-Timer Counter Blocks (TCB) and each TCB has three Timer Counter Channels
-(TCC); each TCC has a Counter Value (CV) and three general registers
-(RA, RB, RC); RA and RB can store Captures, and RC can be used for
-Compare operations.
-
-If that is true, then the correct way for this hardware to be exposed is
-to have each TCB be a Counter device where each TCC is exposed as a
-Count. So for this SoC: two Counter devices as counter0 and counter1;
-count0, count1, and count2 as the three TCC; i.e. counter0/count{0,1,2}
-and counter1/count{0,1,2}.
-
-With that setup, configurations that affect the entire TCB (e.g. Block
-Mode Register) can be exposed as Counter device components. Furthermore,
-this would allow users to set Counter watches to collect component
-values for the other two Counts while triggering off of the events of
-any particular one, which wouldn't be possible if each TCC is isolated
-to its own Counter device as is the case right now.
-
-Regardless, the three TCC of each TCB should be grouped together
-logically as they can represent related values. For example,  when using
-the quadrature decoder TTC0 CV can represent Speed/Position while TTC1
-CV represents rotation, thus giving a high level of precision on motion
-system position as the datasheet points out.
-
-Kamel, what would it take for us to rectify this situation so that the
-TCC are organized together by TCB under the same Counter devices?
-
-> > > The `mchp_tc_count_function_write()` function already disables PWM mo=
-de by
-> > > clearing the `ATMEL_TC_WAVE` bit from the Channel Mode Register (CMR).
-> >=20
-> > So capture mode is unconditionally set by mchp_tc_count_function_write()
-> > which means the first time the user sets the Count function then PWM
-> > mode will be disabled. However, what happens if the user does not set
-> > the Count function? Should PWM mode be disabled by default in
-> > mchp_tc_probe(), or does that already happen?
+> On Thu, Dec 05, 2024 at 07:40:46PM +0800, LeoLiu-oc wrote:
+>> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+>>
+>> The purpose of the function apei_hest_parse_aer() is used to parse and
+>> extract register value from HEST PCIe AER structures. This applies to
+>> all hardware platforms that has a PCI Express AER structure in HEST.
+>>
+>> Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+>> ---
+>>   drivers/acpi/apei/hest.c | 77 ++++++++++++++++++++++++++++++++++++++--
+>>   include/acpi/apei.h      | 17 +++++++++
+>>   2 files changed, 92 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
+>> index 20d757687e3d..13075f5aea25 100644
+>> --- a/drivers/acpi/apei/hest.c
+>> +++ b/drivers/acpi/apei/hest.c
+>> @@ -22,6 +22,7 @@
+>>   #include <linux/kdebug.h>
+>>   #include <linux/highmem.h>
+>>   #include <linux/io.h>
+>> +#include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>>   #include <acpi/apei.h>
+>>   #include <acpi/ghes.h>
+>> @@ -132,9 +133,81 @@ static bool is_ghes_assist_struct(struct acpi_hest_=
+header *hest_hdr)
+>>        return false;
+>>   }
+>>
+>> -typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void=
+ *data);
+>> +#ifdef CONFIG_ACPI_APEI
 >=20
-> You're right, and it is a problem I encounter regularly: almost all HW
-> initialization happens in `mchp_tc_count_function_write()`, the probe()
-> function mostly just allocates stuff. Meaning, if you want to do anything
-> with the counter, you have to set the "increase" function first (even
-> though, if you `cat function`, it will seem like it's already in "increas=
-e"
-> mode). I don't know if it was deliberate, or what, but again, that would =
-be
-> a separate bugfix patch.
+> Why is this needed? The entire hest.c file is only built if
+> CONFIG_ACPI_APEI is enabled.
+>=20
+I agree with your point.
 
-That does seem like an oversight that goes back to the original commit
-106b104137fd ("counter: Add microchip TCB capture counter"). I'll submit
-a bug fix patch later separately to address this and we can continue
-discussions about the issue there.
+>> +static bool hest_match_pci_devfn(struct acpi_hest_aer_common *p,
+>> +                              struct pci_dev *dev)
+>> +{
+>> +     return ACPI_HEST_SEGMENT(p->bus) =3D=3D pci_domain_nr(dev->bus) &&
+>> +            ACPI_HEST_BUS(p->bus) =3D=3D dev->bus->number &&
+>> +            p->device =3D=3D PCI_SLOT(dev->devfn) &&
+>> +            p->function =3D=3D PCI_FUNC(dev->devfn);
+>=20
+> It may be nice to align all these lines on the "=3D=3D".
+>=20
+Okay, I will make the changes in the next version
 
-William Breathitt Gray
+>> +}
+>> +
+>> +static bool hest_source_is_pcie_aer(struct acpi_hest_header *hest_hdr,
+>> +                                 struct pci_dev *dev)
+>> +{
+>> +     u16 hest_type =3D hest_hdr->type;
+>> +     u8 pcie_type =3D pci_pcie_type(dev);
+>> +     struct acpi_hest_aer_common *common;
+>> +
+>> +     common =3D (struct acpi_hest_aer_common *)(hest_hdr + 1);
+>> +
+>> +     switch (hest_type) {
+>> +     case ACPI_HEST_TYPE_AER_ROOT_PORT:
+>> +             if (pcie_type !=3D PCI_EXP_TYPE_ROOT_PORT)
+>> +                     return false;
+>> +     break;
+>=20
+> The breaks should be indented to the "if". Same for the rest of the
+> file.
+>=20
+I agree with your point of view and will make modifications in the next=20
+version.
 
---Zy2ksh5Qd2xK/uRQ
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +     case ACPI_HEST_TYPE_AER_ENDPOINT:
+>> +             if (pcie_type !=3D PCI_EXP_TYPE_ENDPOINT)
+>> +                     return false;
+>> +     break;
+>> +     case ACPI_HEST_TYPE_AER_BRIDGE:
+>> +             if (pcie_type !=3D PCI_EXP_TYPE_PCI_BRIDGE &&
+>> +                 pcie_type !=3D PCI_EXP_TYPE_PCIE_BRIDGE)
+>> +                     return false;
+>> +     break;
+>> +     default:
+>> +             return false;
+>> +     break;
+>> +     }
+>> +
+>> +     if (common->flags & ACPI_HEST_GLOBAL)
+>> +             return true;
+>> +
+>> +     if (hest_match_pci_devfn(common, dev))
+>> +             return true;
+>> +
+>> +     return false;
+>> +}
+>> +
+>> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data)
+>> +{
+>> +     struct hest_parse_aer_info *info =3D data;
+>> +
+>> +     if (!hest_source_is_pcie_aer(hest_hdr, info->pci_dev))
+>> +             return 0;
+>> +
+>> +     switch (hest_hdr->type) {
+>> +     case ACPI_HEST_TYPE_AER_ROOT_PORT:
+>> +             info->hest_aer_root_port =3D (struct acpi_hest_aer_root *)=
+hest_hdr;
+>> +             return 1;
+>> +     break;
+>> +     case ACPI_HEST_TYPE_AER_ENDPOINT:
+>> +             info->hest_aer_endpoint =3D (struct acpi_hest_aer *)hest_h=
+dr;
+>> +             return 1;
+>> +     break;
+>> +     case ACPI_HEST_TYPE_AER_BRIDGE:
+>> +             info->hest_aer_bridge =3D (struct acpi_hest_aer_bridge *)h=
+est_hdr;
+>> +             return 1;
+>> +     break;
+>> +     default:
+>> +             return 0;
+>> +     break;
+>> +     }
+>> +}
+>> +#endif
+>>
+>> -static int apei_hest_parse(apei_hest_func_t func, void *data)
+>> +int apei_hest_parse(apei_hest_func_t func, void *data)
+>>   {
+>>        struct acpi_hest_header *hest_hdr;
+>>        int i, rc, len;
+>> diff --git a/include/acpi/apei.h b/include/acpi/apei.h
+>> index dc60f7db5524..82d3cdf53e22 100644
+>> --- a/include/acpi/apei.h
+>> +++ b/include/acpi/apei.h
+>> @@ -23,6 +23,15 @@ enum hest_status {
+>>        HEST_NOT_FOUND,
+>>   };
+>>
+>> +#ifdef CONFIG_ACPI_APEI
+>> +struct hest_parse_aer_info {
+>> +     struct pci_dev *pci_dev;
+>> +     struct acpi_hest_aer *hest_aer_endpoint;
+>> +     struct acpi_hest_aer_root *hest_aer_root_port;
+>> +     struct acpi_hest_aer_bridge *hest_aer_bridge;
+>=20
+> These three pointers are mutually exclusive. Can you save just one
+> pointer and then cast it when checking the "port_type" in patch 3?
+>=20
+>> +};
+>> +#endif
+>=20
+> I think the #ifdef is not needed, because this is not declaring an
+> instance of the struct.
+>=20
+I agree with your point of view and will make modifications in the next=20
+version.
 
------BEGIN PGP SIGNATURE-----
+>> +
+>>   extern int hest_disable;
+>>   extern int erst_disable;
+>>   #ifdef CONFIG_ACPI_APEI_GHES
+>> @@ -33,10 +42,18 @@ void __init acpi_ghes_init(void);
+>>   static inline void acpi_ghes_init(void) { }
+>>   #endif
+>>
+>> +typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void=
+ *data);
+>> +int apei_hest_parse(apei_hest_func_t func, void *data);
+>> +
+>=20
+> Minor nit: this could be done as a separate patch.
+>=20
+> Patch 1: Move apei_hest_parse() to apei.h
+> Patch 2: Add new hest_parse_pcie_aer()
+>=20
+Ok, your suggestion is very reasonable, I will modify it in the next=20
+version.
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ7/xTQAKCRC1SFbKvhIj
-K8XfAQDXDNB+DPfhs2rLhgUunNI+KBUL+vccWxpggWZ5E1Jg7wEAkV9CHrxKcsxC
-Kf3aKOwwSpwBBqtWpg9v3c/QpcrhCgE=
-=Pxrl
------END PGP SIGNATURE-----
+Leoliu-oc
+Best Regards
 
---Zy2ksh5Qd2xK/uRQ--
+>>   #ifdef CONFIG_ACPI_APEI
+>>   void __init acpi_hest_init(void);
+>> +int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr, void *data);
+>>   #else
+>>   static inline void acpi_hest_init(void) { }
+>> +static inline int hest_parse_pcie_aer(struct acpi_hest_header *hest_hdr=
+, void *data)
+>> +{
+>> +     return 0;
+>> +}
+>>   #endif
+>>
+>>   int erst_write(const struct cper_record_header *record);
+>> --
+>=20
+> Thanks,
+> Yazen
+
