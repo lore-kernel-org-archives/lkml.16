@@ -1,96 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3257220680
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FE021E096
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:04:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596643; cv=none; b=N3JnOqe8U0lJJN9er+G9UcjB6hhVT/B3YisFY8LMBfMXnjg7wohavSNN/yBq1t372xeg3OM2v7YvvE+Zc4yBeoExKL6JiJzfwFyr1EEk7yaoGmGQdE8U+NqiGZhoPTjxD8gnpzOlPIBy2gq38pQk0vyG2JDJjOEqGfDaRbjRc2w=
+	t=1740596701; cv=none; b=Bph+omq0QbdLKjTQZYZByEd6q/npIF68OE4SrCf5qRI43qNJ1+KM8nMHH6Q50irj3G7uWas8826hfySxfCsHIubG5CM1M+oB37wHTq4rcR8sI6NNSYiIX0RLg7g5LwDX9Kx830Q/zmXsPDVzR44eZHPLqG2OaTu/O63R4+FJzeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596643; c=relaxed/simple;
-	bh=CP1ZQTGcS1XGDk8705yrsyn1P0HHQp7ZwLXpNdZVTts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sZTGpfg1xjC6WjQRcq4dXS2voar4IVXZfe/iCyzFiObts4EkgV5l4kEgIXYlXdBN6AJJmoX3ZcaeFKarNl5gIK7IPw9I/HhRGzptzczJQ49kyy1IbgBcErSkbvtd8FpODIpomQMAckzA3GBU9wY1G/NpAiykuqJf1B5fWJck+ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a98mfXM+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740596701; c=relaxed/simple;
+	bh=oObld18sy9ycD1axG9R4X3r+PCnCflSuK4sPzqBaqzY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=HpxT7swLTBlR+pHPHkcFEAR9Nu3ybV2UYI3H9D7lGSO4Pu52X2ZkMzusKpKM5nNsWqMVnW/Wa+ickyoG+7lja0UAOdf+SrzLOJXOMxrnCRzTHJZYI+bHkGu7bOf3WVq0P0lkWksUYDIEZZWMT7Im5f9ooA+H98movs4vzpHJ/Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NRhtJ3Ma; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a98mfXM+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740596640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PIunKPS4UZCFjPvS7Od7AUtu0dxUhH3F4cLQKO6l55Y=;
-	b=a98mfXM+v6m0XWJdtedn0Gv3t3hi/JQ32/cB8/CtjozlSKgRnheLh3arZC6abFDPchKmMv
-	ImkU8eNKoWdiH4MsVsvEQRY/t5A0tgciggS7f7YS0Tj7tB5ATQNRejd9KQpGNfk9ppJqh+
-	EejrJACMvwEOCUwE1sJkVcbfdaTEYJ8=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-172-ITJtCnapMwyKxZSD11cetQ-1; Wed,
- 26 Feb 2025 14:03:58 -0500
-X-MC-Unique: ITJtCnapMwyKxZSD11cetQ-1
-X-Mimecast-MFC-AGG-ID: ITJtCnapMwyKxZSD11cetQ_1740596637
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B2AD1800874;
-	Wed, 26 Feb 2025 19:03:57 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 2D49E1800352;
-	Wed, 26 Feb 2025 19:03:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Feb 2025 20:03:27 +0100 (CET)
-Date: Wed, 26 Feb 2025 20:03:23 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [GIT PULL] KVM changes for Linux 6.14
-Message-ID: <20250226190322.GL8995@redhat.com>
-References: <20250126142034.GA28135@redhat.com>
- <CAHk-=wiOSyfW3sgccrfVtanZGUSnjFidSbaP3tg9wapydb-u6g@mail.gmail.com>
- <20250126185354.GB28135@redhat.com>
- <CAHk-=wiA7wzJ9TLMbC6vfer+0F6S91XghxrdKGawO6uMQCfjtQ@mail.gmail.com>
- <20250127140947.GA22160@redhat.com>
- <CABgObfaar9uOx7t6vR0pqk6gU-yNOHX3=R1UHY4mbVwRX_wPkA@mail.gmail.com>
- <20250204-liehen-einmal-af13a3c66a61@brauner>
- <CABgObfaBizrwP6mh82U20Y0h9OwYa6OFn7QBspcGKak2r+5kUw@mail.gmail.com>
- <20250205-bauhof-fraktionslos-b1bedfe50db2@brauner>
- <20250226-portieren-staudamm-10823e224307@brauner>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRhtJ3Ma"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740596700; x=1772132700;
+  h=date:from:to:cc:subject:message-id;
+  bh=oObld18sy9ycD1axG9R4X3r+PCnCflSuK4sPzqBaqzY=;
+  b=NRhtJ3MaPuK9svPyYascElnd5e+St6rRnkOCr2VXZ8XFTOAKEN4qokhA
+   ry9AUG+v/J6542mqmdvpPm3LjlGhw75ENuAO3J1IPW/Y4Y5i5kSiYHcxQ
+   S7yQPrrP9wbRt0asmuftvtXl4H20VjI0Dq/WbawCSRmGoGMPaqJ4r2bLq
+   9qbKpuTltAqTTHll4JAeqt34AcOghU1JeSaodBY4S4eE2aJZD2wuJQcEV
+   Nalq2SRVqe+zXKGDs2Gv0aCrfPKZe95QcPWCX90NhR5tjalCGfdTGFiAz
+   h6bPxNWOKWlXJoz5YjABN19eEDYLpgUvOdtT9ejSEQ6a/qdJOlkMPrVmJ
+   Q==;
+X-CSE-ConnectionGUID: B1ttoZCDShywulWjPmMOEg==
+X-CSE-MsgGUID: jb9RxUI1SQuCsfE/lY3mow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="29062028"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="29062028"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 11:04:59 -0800
+X-CSE-ConnectionGUID: pHF2lCznQdm8MrQsY9eK+Q==
+X-CSE-MsgGUID: LfTNifjQQG+pj2P5BCQu4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="117421641"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa009.fm.intel.com with ESMTP; 26 Feb 2025 11:04:57 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnMiG-000CH8-0s;
+	Wed, 26 Feb 2025 19:04:56 +0000
+Date: Thu, 27 Feb 2025 03:04:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev.2025.02.24a] BUILD SUCCESS
+ d6558730a4def01aa55c442dbbc5b32640c06c0e
+Message-ID: <202502270328.CwJRapr6-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226-portieren-staudamm-10823e224307@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Sorry, didn't have time to actually read this patch, but after a quick
-glance...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2025.02.24a
+branch HEAD: d6558730a4def01aa55c442dbbc5b32640c06c0e  EXP hrtimers: Force migrate away hrtimers queued after CPUHP_AP_HRTIMERS_DYING
 
-On 02/26, Christian Brauner wrote:
->
-> @@ -3949,7 +3955,7 @@ static int proc_task_readdir(struct file *file, struct dir_context *ctx)
->  	tid = (int)(intptr_t)file->private_data;
->  	file->private_data = NULL;
->  	for (task = first_tid(proc_pid(inode), tid, ctx->pos - 2, ns);
-> -	     task;
-> +	     task && !(task->flags & PF_USER_WORKER);
+elapsed time: 2637m
 
-unless I am totally confused this looks "obviously wrong".
+configs tested: 62
+configs skipped: 1
 
-proc_task_readdir() should not stop if it sees a PF_USER_WORKER task, this
-check should go into first_tid/next_tid.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Oleg.
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                  randconfig-001-20250226    gcc-13.2.0
+arc                  randconfig-002-20250226    gcc-13.2.0
+arm                  randconfig-001-20250226    gcc-14.2.0
+arm                  randconfig-002-20250226    clang-21
+arm                  randconfig-003-20250226    gcc-14.2.0
+arm                  randconfig-004-20250226    gcc-14.2.0
+arm64                randconfig-001-20250226    gcc-14.2.0
+arm64                randconfig-002-20250226    gcc-14.2.0
+arm64                randconfig-003-20250226    clang-21
+arm64                randconfig-004-20250226    gcc-14.2.0
+csky                 randconfig-001-20250226    gcc-14.2.0
+csky                 randconfig-002-20250226    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250226    clang-21
+hexagon              randconfig-002-20250226    clang-21
+i386       buildonly-randconfig-001-20250226    gcc-12
+i386       buildonly-randconfig-002-20250226    gcc-12
+i386       buildonly-randconfig-003-20250226    gcc-12
+i386       buildonly-randconfig-004-20250226    clang-19
+i386       buildonly-randconfig-005-20250226    gcc-12
+i386       buildonly-randconfig-006-20250226    gcc-12
+loongarch            randconfig-001-20250226    gcc-14.2.0
+loongarch            randconfig-002-20250226    gcc-14.2.0
+nios2                randconfig-001-20250226    gcc-14.2.0
+nios2                randconfig-002-20250226    gcc-14.2.0
+parisc               randconfig-001-20250226    gcc-14.2.0
+parisc               randconfig-002-20250226    gcc-14.2.0
+powerpc              randconfig-001-20250226    gcc-14.2.0
+powerpc              randconfig-002-20250226    clang-18
+powerpc              randconfig-003-20250226    clang-21
+powerpc64            randconfig-001-20250226    clang-18
+powerpc64            randconfig-002-20250226    gcc-14.2.0
+powerpc64            randconfig-003-20250226    gcc-14.2.0
+riscv                randconfig-001-20250226    clang-18
+riscv                randconfig-002-20250226    gcc-14.2.0
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250226    gcc-14.2.0
+s390                 randconfig-002-20250226    clang-15
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250226    gcc-14.2.0
+sh                   randconfig-002-20250226    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250226    gcc-14.2.0
+sparc                randconfig-002-20250226    gcc-14.2.0
+sparc64              randconfig-001-20250226    gcc-14.2.0
+sparc64              randconfig-002-20250226    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250226    clang-18
+um                   randconfig-002-20250226    gcc-12
+x86_64     buildonly-randconfig-001-20250226    clang-19
+x86_64     buildonly-randconfig-002-20250226    clang-19
+x86_64     buildonly-randconfig-003-20250226    gcc-12
+x86_64     buildonly-randconfig-004-20250226    clang-19
+x86_64     buildonly-randconfig-005-20250226    gcc-12
+x86_64     buildonly-randconfig-006-20250226    gcc-12
+xtensa               randconfig-001-20250226    gcc-14.2.0
+xtensa               randconfig-002-20250226    gcc-14.2.0
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
