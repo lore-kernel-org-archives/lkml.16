@@ -1,17 +1,17 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B1CD211A31
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:44 +0000 (UTC)
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ECB3217F36
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571308; cv=none; b=uPg5u5da7GGozd55QhSa11WJTqXJSWnoMOk15Mf8uCOh8AQMUd7mRIMh7TqSjUQvuAcBj4no20J+x4gsP+dryYGn6fMf+jxeLAHlPGiACDo4g+i+ZyvRSBWULt2GXvI3flFlzHdoD4DFVRWQ3TaZN4hzIlLxCo4IvR3bvlfEi3Y=
+	t=1740571310; cv=none; b=L9Ox6TWDwhy4Kj0zPdS27VgpM8gYwYtSuUXndFI7X//rkTr2IDtEK6KHKVutrFvVctMhlN7es0CKseVruqNw/8a3+dSIxsB81mMw+pYdOSoIB/AxecTJcxdPVJra2a9z4v5qb4PWPtTUe46HTURH0ak/4lSLDqONc3awupxeMuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740571308; c=relaxed/simple;
-	bh=7QhseHPCi+UOmWXtn5V9DOemXEr8BLB83Uy4G7N8sjA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=QOKR8EfD/p2HjqmcFdBx94UR1qLbxC0Lh0xr1wlhrtwmCR1xSIVrmXBCcCUvEsdCnWHi2t3GLPjA4S5OuE1PeVvZyi/DDU/eTUmJL9CPe2K4fL+UHpCLX9xLh8nvFkOBbU2P0zs5yrnrsiLokxTqag+UEIE1C+0ME5N0vxjD7nc=
+	s=arc-20240116; t=1740571310; c=relaxed/simple;
+	bh=uSX+HLNVKuz3OtxOWFNAhOjTNngq2uZA6QqEUZbceko=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=I6py2c/80Vfsjc4F1lgSpCYRCr/MMErOsStJXnjQOJ1ifZT6RzeFkapH4XyRgqNyUrXDPFiCzJi7sZWicf4DwBR1XZvdc8XqTm81Yp2aJ6MFHM9AGKXOcJImarsfVMBDoJSnR3iFpj2bKzp5kZRSH2zRlmP8/9Zi6YXQTyUQamw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-db-67bf02a6e88f
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-e5-67bf02a658e0
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 05/25]  mm/buddy: make room for a new variable, luf_key, in struct page
-Date: Wed, 26 Feb 2025 21:01:12 +0900
-Message-Id: <20250226120132.28469-5-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 07/25] mm: introduce luf_ugen to be used as a global timestamp
+Date: Wed, 26 Feb 2025 21:01:14 +0900
+Message-Id: <20250226120132.28469-7-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120132.28469-1-byungchul@sk.com>
 References: <20250226113342.GB1935@system.software.com>
  <20250226120132.28469-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsXC9ZZnke4ypv3pBtOeyFnMWb+GzeLzhn9s
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsXC9ZZnke4ypv3pBqeuqVjMWb+GzeLzhn9s
 	Fl/X/2K2ePqpj8Xi8q45bBb31vxntTi/ay2rxY6l+5gsLh1YwGRxvPcAk8X8e5/ZLDZvmsps
 	cXzKVEaL3z/msDnweXxv7WPx2DnrLrvHgk2lHptXaHlsWtXJ5rHp0yR2j3fnzrF7nJjxm8Xj
-	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV8bGR3sZC9bIVPTtb2JtYJwr1sXI
-	ySEhYCIx/2EbG4zdv+wqC4jNJqAucePGT2YQW0TATOJg6x/2LkYuDmaBZUwSe080sIE4wgLt
-	jBJd77+BVbEIqEp8nfYerJtXwFTieMdzdoip8hKrNxwAq+EEmvRv92+wuJBAskTL+t8sIIMk
-	BG6zSUx70QF1hqTEwRU3WCYw8i5gZFjFKJSZV5abmJljopdRmZdZoZecn7uJERjYy2r/RO9g
-	/HQh+BCjAAejEg/vgzN704VYE8uKK3MPMUpwMCuJ8HJm7kkX4k1JrKxKLcqPLyrNSS0+xCjN
-	waIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwChcYvCwoK9EMqOuKnlNbWPGnwdzpaQrHvd+
-	c32xa8t3s2i/xb8M8u5WPEtVm//44fb4ueXF0Q1Ga8x6y+ZqL1E5H+yWf9a39XecvtLqVe+X
-	qG5/fIo3obKU0+OvDadgxUuNTds2ePszuh+8elYg59q3d2zSjpOrLE/WiUU2uqt9mMK6+Zn+
-	WyWW4oxEQy3mouJEAFLeKnxoAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsXC5WfdrLuMaX+6QVufqMWc9WvYLD5v+Mdm
-	8XX9L2aLp5/6WCwOzz3JanF51xw2i3tr/rNanN+1ltVix9J9TBaXDixgsjjee4DJYv69z2wW
-	mzdNZbY4PmUqo8XvH3PYHPg9vrf2sXjsnHWX3WPBplKPzSu0PDat6mTz2PRpErvHu3Pn2D1O
-	zPjN4vF+31U2j8UvPjB5bP1l59E49Rqbx+dNcgG8UVw2Kak5mWWpRfp2CVwZGx/tZSxYI1PR
-	t7+JtYFxrlgXIyeHhICJRP+yqywgNpuAusSNGz+ZQWwRATOJg61/2LsYuTiYBZYxSew90cAG
-	4ggLtDNKdL3/BlbFIqAq8XXae7BuXgFTieMdz9khpspLrN5wAKyGE2jSv92/weJCAskSLet/
-	s0xg5FrAyLCKUSQzryw3MTPHVK84O6MyL7NCLzk/dxMjMEyX1f6ZuIPxy2X3Q4wCHIxKPLwP
-	zuxNF2JNLCuuzD3EKMHBrCTCy5m5J12INyWxsiq1KD++qDQntfgQozQHi5I4r1d4aoKQQHpi
-	SWp2ampBahFMlomDU6qBUS+ZieNlcOKk5LookfCjW3bvy/HjcI2dsDhB0Yen0ajvut+NbSVz
-	vx7R/roh4/PzF7qqC/WTNt2tPD79UJ11xeLaIl2hKKVby7KT1jT+S1H8mirVcdwwI2vOP6En
-	P07a1D3z9Hs5f9YatTfy8Ytqk4/1szQJpZT9OFAenH9KPPD3nR0imtnLlViKMxINtZiLihMB
-	1g+7Ok8CAAA=
+	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV0bzqwusBe9EK570nmNsYLwh2MXI
+	ySEhYCJxdf4zdhj71YmfLCA2m4C6xI0bP5lBbBEBM4mDrX+Aarg4mAWWMUnsPdHABpIQFqiT
+	2LP4FFgzi4CqxNymD2ANvAKmEn9ftrNADJWXWL3hAFicE2jQv92/weqFBJIlWtb/ZgEZKiFw
+	m01i3cKrrBANkhIHV9xgmcDIu4CRYRWjUGZeWW5iZo6JXkZlXmaFXnJ+7iZGYFgvq/0TvYPx
+	04XgQ4wCHIxKPLwPzuxNF2JNLCuuzD3EKMHBrCTCy5m5J12INyWxsiq1KD++qDQntfgQozQH
+	i5I4r9G38hQhgfTEktTs1NSC1CKYLBMHp1QDI8OV5vXM9kcfzHxh5eYz7bzQx/c1B14UPdHy
+	O1zU5Szb3147U+poxKsk52+nkn4LH5vgYvWZ1WTC2mreHW9NStT2y16WFbBq7b67TWeOo+KT
+	46lf510o0qtg22V6+8DXzF01pRc+Ti20ObTtQ7v8Ls29LTPyM3bsPpzzp1vTXnoBq9yDiKr5
+	h5RYijMSDbWYi4oTAWFdUNZnAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsXC5WfdrLuMaX+6wemP0hZz1q9hs/i84R+b
+	xdf1v5gtnn7qY7E4PPckq8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
+	bN40ldni+JSpjBa/f8xhc+D3+N7ax+Kxc9Zddo8Fm0o9Nq/Q8ti0qpPNY9OnSewe786dY/c4
+	MeM3i8f7fVfZPBa/+MDksfWXnUfj1GtsHp83yQXwRnHZpKTmZJalFunbJXBlNL+6wFrwTrTi
+	Se85xgbGG4JdjJwcEgImEq9O/GQBsdkE1CVu3PjJDGKLCJhJHGz9w97FyMXBLLCMSWLviQY2
+	kISwQJ3EnsWn2EFsFgFViblNH8AaeAVMJf6+bGeBGCovsXrDAbA4J9Cgf7t/g9ULCSRLtKz/
+	zTKBkWsBI8MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2MwCBdVvtn4g7GL5fdDzEKcDAq8fA+
+	OLM3XYg1say4MvcQowQHs5IIL2fmnnQh3pTEyqrUovz4otKc1OJDjNIcLErivF7hqQlCAumJ
+	JanZqakFqUUwWSYOTqkGxjRprpfy61ZX31/ldHqa5/pFHmt0ktwKO+V/Lbr18tK1umbnHrkk
+	7V9bNA27uQ+a626vie62fj2rvWnOgTV3L356YvDJtKRlcSP/vlyFDYf3az/l8FFk/d+doKbY
+	IBM298bFD6GlLZv6uCbaS/9KNTzy59e/vcEVf0+pHA9s2V64IcKz4IHZdiWW4oxEQy3mouJE
+	ABhXBHZOAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,115 +67,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Functionally, no change.  This is a preparation for luf mechanism that
-tracks need of tlb flush for each page residing in buddy.
+needs to evaluate the temporal sequence of events to determine whether
+tlb flush required has been done on each CPU.
 
-Since the private field in struct page is used only to store page order
-in buddy, ranging from 0 to MAX_PAGE_ORDER, that can be covered with
-unsigned short.  So splitted it into two smaller ones, order and luf_key,
-so that the both can be used in buddy at the same time.
+To achieve that, this patch introduced a generation number, luf_ugen,
+and a few APIs manipulating the number.  It's worth noting the number is
+designed to wraparound so care must be taken when using it.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm_types.h | 42 +++++++++++++++++++++++++++++++++-------
- mm/internal.h            |  4 ++--
- mm/page_alloc.c          |  2 +-
- 3 files changed, 38 insertions(+), 10 deletions(-)
+ include/linux/mm.h | 34 ++++++++++++++++++++++++++++++++++
+ mm/rmap.c          | 22 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 689b2a7461892..7b15efbe9f529 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -107,13 +107,27 @@ struct page {
- 				pgoff_t index;		/* Our offset within mapping. */
- 				unsigned long share;	/* share count for fsdax */
- 			};
--			/**
--			 * @private: Mapping-private opaque data.
--			 * Usually used for buffer_heads if PagePrivate.
--			 * Used for swp_entry_t if swapcache flag set.
--			 * Indicates order in the buddy system if PageBuddy.
--			 */
--			unsigned long private;
-+			union {
-+				/**
-+				 * @private: Mapping-private opaque data.
-+				 * Usually used for buffer_heads if PagePrivate.
-+				 * Used for swp_entry_t if swapcache flag set.
-+				 * Indicates order in the buddy system if PageBuddy.
-+				 */
-+				unsigned long private;
-+				struct {
-+					/*
-+					 * Indicates order in the buddy system if PageBuddy.
-+					 */
-+					unsigned short order;
-+
-+					/*
-+					 * For tracking need of tlb flush,
-+					 * by luf(lazy unmap flush).
-+					 */
-+					unsigned short luf_key;
-+				};
-+			};
- 		};
- 		struct {	/* page_pool used by netstack */
- 			/**
-@@ -577,6 +591,20 @@ static inline void set_page_private(struct page *page, unsigned long private)
- 	page->private = private;
- }
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d82feabbe44f8..74a37cb132caa 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -4240,4 +4240,38 @@ int arch_get_shadow_stack_status(struct task_struct *t, unsigned long __user *st
+ int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status);
+ int arch_lock_shadow_stack_status(struct task_struct *t, unsigned long status);
  
-+#define page_buddy_order(page)		((page)->order)
++#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
++/*
++ * luf_ugen will start with 2 so that 1 can be regarded as a passed one.
++ */
++#define LUF_UGEN_INIT 2
 +
-+static inline void set_page_buddy_order(struct page *page, unsigned int order)
++static inline bool ugen_before(unsigned long a, unsigned long b)
 +{
-+	page->order = (unsigned short)order;
++	/*
++	 * Consider wraparound.
++	 */
++	return (long)(a - b) < 0;
 +}
 +
-+#define page_luf_key(page)		((page)->luf_key)
-+
-+static inline void set_page_luf_key(struct page *page, unsigned short luf_key)
++static inline unsigned long next_ugen(unsigned long ugen)
 +{
-+	page->luf_key = luf_key;
++	if (ugen + 1)
++		return ugen + 1;
++	/*
++	 * Avoid invalid ugen, zero.
++	 */
++	return ugen + 2;
 +}
 +
- static inline void *folio_get_private(struct folio *folio)
- {
- 	return folio->private;
-diff --git a/mm/internal.h b/mm/internal.h
-index b07550db2bfd1..c4d2018a7cf8e 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -543,7 +543,7 @@ struct alloc_context {
- static inline unsigned int buddy_order(struct page *page)
- {
- 	/* PageBuddy() must be checked by the caller */
--	return page_private(page);
-+	return page_buddy_order(page);
++static inline unsigned long prev_ugen(unsigned long ugen)
++{
++	if (ugen - 1)
++		return ugen - 1;
++	/*
++	 * Avoid invalid ugen, zero.
++	 */
++	return ugen - 2;
++}
++#endif
+ #endif /* _LINUX_MM_H */
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 546b7a6a30a44..8439dbb194c8c 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -634,6 +634,28 @@ struct anon_vma *folio_lock_anon_vma_read(const struct folio *folio,
  }
  
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
++
++/*
++ * This generation number is primarily used as a global timestamp to
++ * determine whether tlb flush required has been done on each CPU.  The
++ * function, ugen_before(), should be used to evaluate the temporal
++ * sequence of events because the number is designed to wraparound.
++ */
++static atomic_long_t __maybe_unused luf_ugen = ATOMIC_LONG_INIT(LUF_UGEN_INIT);
++
++/*
++ * Don't return invalid luf_ugen, zero.
++ */
++static unsigned long __maybe_unused new_luf_ugen(void)
++{
++	unsigned long ugen = atomic_long_inc_return(&luf_ugen);
++
++	if (!ugen)
++		ugen = atomic_long_inc_return(&luf_ugen);
++
++	return ugen;
++}
++
  /*
-@@ -557,7 +557,7 @@ static inline unsigned int buddy_order(struct page *page)
-  * times, potentially observing different values in the tests and the actual
-  * use of the result.
-  */
--#define buddy_order_unsafe(page)	READ_ONCE(page_private(page))
-+#define buddy_order_unsafe(page)	READ_ONCE(page_buddy_order(page))
- 
- /*
-  * This function checks whether a page is free && is the buddy
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 16dfcf7ade74a..86c9fa45d36fe 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -576,7 +576,7 @@ void prep_compound_page(struct page *page, unsigned int order)
- 
- static inline void set_buddy_order(struct page *page, unsigned int order)
- {
--	set_page_private(page, order);
-+	set_page_buddy_order(page, order);
- 	__SetPageBuddy(page);
- }
- 
+  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
+  * important if a PTE was dirty when it was unmapped that it's flushed
 -- 
 2.17.1
 
