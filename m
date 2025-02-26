@@ -1,138 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C6F258CED
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543D21E5B85;
+	Wed, 26 Feb 2025 09:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740561524; cv=none; b=OVi7ZPXw1dfyXILoojADTqmoWDctrhiNUNzkjNppL2BRBaZYwYUziNiW2ashkuB3RYdaAi7IPCfQoJ4YI/o6NPf01yS1phoLGV0blQleUfCgLhJC3/HEElCWYDARuNFV5tvNVF/3K20LfrEAGO8RmMSJgzEQzCgK6jTCROQLikU=
+	t=1740561606; cv=none; b=OGSixK4hGGyvnOniUMeSmuQm2Cs0osGGet/irGyTSFIjf3vt2MhVH6T1UDTQfBDUK6XpI4ErtpzX5dGpBjhJAeezc4mxgd7LuZqqdyMyPAryetZY4L0vYpcO0XSTUqaKzlBBx0ZEbQCH5Mm1NKFMU2rSBGZO/26+g22pzq6sHTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740561524; c=relaxed/simple;
-	bh=5zEfvEUUsLGTCHX4AwEafQpReN3akvlINVbTahuLpDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r4xrOi/Ji3Q5L9rdWj2HLeQJQHmE731sjR3DMpq48hcFb6gqHDSb3Irenf0arM+HSovf8fyk3XXvzrjwxGCWDb6LU8q0KuU7QUYW6Ium97o4AF46Uz9Eyumoqx0dNAVpFHJGZ/6CglqHP31CWzDXRlRKMa+VPO4Ym2UL9bUKT/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OV8WN3Qu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740561606; c=relaxed/simple;
+	bh=24vtFRKNjBqptcl97/HocSl/lK2e+Ib0xTWtLuTQxVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bPMSqWC5wDTcM2bpDl7cc+OruKzo00S4rAuY7Mq5wKFRXJoJ+2Criupv00XGI2ZLPgTluYAUmYfECUOzscLz1RdlWlA2Po3dv6wVkIetR0THFbJjGorkbCmRzhCdvkOdwL20mZIbKNDGUrloMAPoNTSUDVu9Exl/HS+/E3xXLRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KdZk546r; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OV8WN3Qu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740561521;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0MIbia0vRPyl/EASI4bbBzkpXlN9D9cFmNZ+w8QhjMs=;
-	b=OV8WN3QuZRSS9QE/BbwWQ69pDKW/5o/ZD6/MJD1R5MXMhunftpXUtbDaZKD9/uD/9n/06G
-	SYv5dzVm24aNW6NK1RBpb0aUbmYlZXJUPq2UhyHVbgI3Je2bq/nFJocy6UA5Rd5qX/YX8O
-	TJfXROk0Kqdzemek7SAIRKmBTSPySgY=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-gTrcx5fGMFiKOyTIPtzVZA-1; Wed, 26 Feb 2025 04:18:39 -0500
-X-MC-Unique: gTrcx5fGMFiKOyTIPtzVZA-1
-X-Mimecast-MFC-AGG-ID: gTrcx5fGMFiKOyTIPtzVZA_1740561518
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f2f438fb6so7487800f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:18:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740561518; x=1741166318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0MIbia0vRPyl/EASI4bbBzkpXlN9D9cFmNZ+w8QhjMs=;
-        b=EJgDW6WCs7gtggPW91mjpbdVk1ATL++y1lWYQVGWrXS/p+6ag4m7yieJiqrMgPH0RW
-         ZhDLwe+KE4nwlIs33XavlZY+0cWKgy++KzKrreL4HB2ScKkstR1ugjpFt6IVuU/cvEPx
-         1sVIn+8ctV29+l3yhItKQ/kwZZXnXBZAo0ORU0mP/dJ6wQMBw0c7hdMCy74KSPYWX6iK
-         yGV+08e9T10BZwL1WQl9nFHea/ipAK3wY17CTg2Akfiy9ENI50CR3sFO+vG1UJYWRba6
-         mnMSXFZNsZYNY8C1JDTezgx7N1PFN5zz7AbJyEdYGNHdLhEBt/Gdq5yoA+L6yf4GLkYH
-         20Vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcxfjgyz4/fYi3hPbc2lg38oIM6yG+G4wwgOgENBpzEqxMjILeL6HaW3XEKZauxhnpnWWVKp+pL9+wTXI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx81cApSRdPHicTR9HzlgtiiKAq9flNiAWAHZ1k/zFkVoX8bv/4
-	9g2dAB3C7489BZXlxCcmySDYCcbxbKsK9rDLdDw5RaIHaWLybedgupstYtGGmJYCJK7ni9gjWt2
-	9BY3XNqxnfd9+0EK6RUgqCUU2K5pzQ+Xc19n4KzetTVhKlCCeDXJIFQ7b2TTsTWzfnnOLqXF39c
-	b9FVtcnZM0jCsRQbRjD6NCI387F8DUMVnxziII
-X-Gm-Gg: ASbGncvixDd/4olJcu7MiqZZAU8JR1vXMve9yaTvE/cU3pVHSs3vKwAo+B6JAcXvodW
-	VHGOuDm1IPeY6ktziGZG6Nz7IBnCjVBTiZ2Cok0yw2+EAw9RATUS7r1lmdng06Y8K6bgtvvvGIw
-	==
-X-Received: by 2002:a5d:47af:0:b0:390:d61c:c777 with SMTP id ffacd0b85a97d-390d61cc85fmr1296790f8f.46.1740561517869;
-        Wed, 26 Feb 2025 01:18:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGM8QJcltKK3icbvaiTIyjEom27+uMjjmS3V6slM8kbmQaHs57lufLQIp1ODz/r9AND77qyPMNyl+BQOe7Hd40=
-X-Received: by 2002:a5d:47af:0:b0:390:d61c:c777 with SMTP id
- ffacd0b85a97d-390d61cc85fmr1296733f8f.46.1740561517436; Wed, 26 Feb 2025
- 01:18:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KdZk546r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740561604; x=1772097604;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=24vtFRKNjBqptcl97/HocSl/lK2e+Ib0xTWtLuTQxVI=;
+  b=KdZk546rRQPnBrxh49mIU9RfsvMCSFbfunvVhyQEg0UknS0M3DJEX57V
+   4eblprwFnZqQdMJJJyRfEQm/SVZPxuX+rMOL4ulpPVLhGx47IG+IRQzsg
+   Jl4NU93udNXxdfmlxG21RhTZfdHmxKDAwCQUjWAI6CJX/QkAT/cRik2YZ
+   +K9GnmewrpLZTI1VPd6PkgxvIKK+cYht7BD+q63uHTLBqoimVCkSOKM5N
+   r00UTO6b15whfr8vFfpgQ4PM3VSngK5EpluQZ9jA1upOv6+OKhvTROgbr
+   rhYDPkn6Br0744yYaYcEfH/UAf/76Xvlv+ZGz3q/krJS0dIe72F2+SuiH
+   w==;
+X-CSE-ConnectionGUID: UWEhTeHsQgGDNqs8hk03GQ==
+X-CSE-MsgGUID: Oc9c+kroR2GG4ZWiBHrCcg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52034580"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="52034580"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 01:20:03 -0800
+X-CSE-ConnectionGUID: wKK8ga4UTGSDhn9l/jSoAA==
+X-CSE-MsgGUID: PdOqyUDORV+syCxYFE6Ncw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="121580275"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 26 Feb 2025 01:20:00 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 6183B1FF; Wed, 26 Feb 2025 11:19:58 +0200 (EET)
+Date: Wed, 26 Feb 2025 11:19:58 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: Kenneth Crudup <kenny@panix.com>, Bjorn Helgaas <helgaas@kernel.org>,
+	ilpo.jarvinen@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+	Jian-Hong Pan <jhp@endlessos.org>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Nikl??vs Ko??es??ikovs <pinkflames.linux@gmail.com>,
+	Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>, linux-usb@vger.kernel.org
+Subject: Re: diagnosing resume failures after disconnected USB4 drives (Was:
+ Re: PCI/ASPM: Fix L1SS saving (linus/master commit 7507eb3e7bfac))
+Message-ID: <20250226091958.GN3713119@black.fi.intel.com>
+References: <20250210210502.GA15655@bhelgaas>
+ <21b72adf-aac6-49fa-af40-6db596c87432@panix.com>
+ <20250211055722.GW3713119@black.fi.intel.com>
+ <83d9302a-f743-43e4-9de2-2dd66d91ab5b@panix.com>
+ <20250213135911.GG3713119@black.fi.intel.com>
+ <a8d6ca75-8f50-4c46-8c67-fcf20d870dcc@panix.com>
+ <20250214162948.GJ3713119@black.fi.intel.com>
+ <661459dd-67d0-4e1c-bb28-9adf1417f660@panix.com>
+ <20250226084404.GM3713119@black.fi.intel.com>
+ <Z77ak-4YsdAKXbHr@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224235542.2562848-1-seanjc@google.com> <20250224235542.2562848-2-seanjc@google.com>
- <6475f9c7-304a-4e0b-8000-3dc5c8e718e9@redhat.com> <Z75f9GuA9NfKo37c@google.com>
-In-Reply-To: <Z75f9GuA9NfKo37c@google.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Wed, 26 Feb 2025 10:18:26 +0100
-X-Gm-Features: AQ5f1JqpfKleIgYhNDBuhYOTkE7mUvo6hlKxjC4ts72PAS8Q4WmxhhjJCWdlkGA
-Message-ID: <CABgObfZWqBm089dkOpWwX-d6Bgp84zP_0Gow4ow7ZKHov=8oxg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] KVM: x86: Free vCPUs before freeing VM state
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
-	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Aaron Lewis <aaronlewis@google.com>, 
-	Jim Mattson <jmattson@google.com>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Isaku Yamahata <isaku.yamahata@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Z77ak-4YsdAKXbHr@wunner.de>
 
-On Wed, Feb 26, 2025 at 1:27=E2=80=AFAM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Wed, Feb 26, 2025, Paolo Bonzini wrote:
-> > On 2/25/25 00:55, Sean Christopherson wrote:
-> > > Free vCPUs before freeing any VM state, as both SVM and VMX may acces=
-s
-> > > VM state when "freeing" a vCPU that is currently "in" L2, i.e. that n=
-eeds
-> > > to be kicked out of nested guest mode.
-> > >
-> > > Commit 6fcee03df6a1 ("KVM: x86: avoid loading a vCPU after .vm_destro=
-y was
-> > > called") partially fixed the issue, but for unknown reasons only move=
-d the
-> > > MMU unloading before VM destruction.  Complete the change, and free a=
-ll
-> > > vCPU state prior to destroying VM state, as nVMX accesses even more s=
-tate
-> > > than nSVM.
-> >
-> > I applied this to kvm-coco-queue, I will place it in kvm/master too unl=
-ess
-> > you shout.
->
-> Depends on what "this" is :-)
->
-> My plan/hope is to land patches 1 and 2 in 6.14, i.e. in kvm/master
+On Wed, Feb 26, 2025 at 10:10:43AM +0100, Lukas Wunner wrote:
+> On Wed, Feb 26, 2025 at 10:44:04AM +0200, Mika Westerberg wrote:
+> >   [Meteor Lake host] <--> [TB 4 dock] <--> [TB 3 NVMe]
+> [...]
+> > I added "no_console_suspend" to the command line and the did sysrq-w to
+> > get list of blocked tasks. I've attached it just in case it is needed.
+> [...]
+> 
+> This looks like the deadlock we've had for years when hot-removing
+> nested hotplug ports.
+> 
+> If you attach only a single device to the host, I guess the issue
+> does not occur, right?
 
-I meant only 1, but if you want to have 2 as well then that's fine too.
+Yes.
 
-As to kvm-coco-queue, based on Yan's reply I have 1 (of course), 4 and
-an extra patch to move kvm_x86_call(vm_destroy) at the very end of
-kvm_arch_destroy_vm; I'll post everything as soon as I finish building
-and testing.
+> Previous attempts to fix this:
+> 
+> https://lore.kernel.org/all/4c882e25194ba8282b78fe963fec8faae7cf23eb.1529173804.git.lukas@wunner.de/
+> 
+> https://lore.kernel.org/all/20240612181625.3604512-1-kbusch@meta.com/
 
-Paolo
-
-> rest are firmly 6.15 IMO.  And based on Yan's feedback, I'm planning on a=
-dding a
-> few more cleanups (though I think they're fully additive, i.e. can go on =
-top).
->
-
+Well, it does not happen if I revert the commit so isn't that a
+regresssion?
