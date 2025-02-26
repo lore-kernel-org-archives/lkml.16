@@ -1,65 +1,67 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8CF2139A2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9532139C7;
 	Wed, 26 Feb 2025 11:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567844; cv=none; b=Ws9bhEA0nAnHWCEH09Hxy2OzVxbwfgfkF2c6IxvfI7BkaXILkrSVhec1vEslsq0a9QghzM9qf2DhousaC5J5xvUicHWKgdYYVrQO3Qmw4tO27jkeUxYS5ZPi5spgy40U0NCd7h0qVKGAfidZ+cJBbwHT4kwoRQd8nyDsuSE8sHo=
+	t=1740567844; cv=none; b=SigD/fRdMjXezvnsduTykL+195Lv0oCcwgsFvZ52Ml7ULCDuHd42fnCHH/gc5uUCpU22FWVx0tiJ9BPZforZR+o/EcqZo4jxfMXO2lMd/i8VEovuVi1Qrx40QS8h5Ng+E+V7wDvwmTIaDZhWAKakOiGGQnBHWkZUWUKI26m1qKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740567844; c=relaxed/simple;
-	bh=8dBxGIqYlqnqgZ5UZUQ9rqFCZ0oTXzCihAABO56r43g=;
+	bh=oqfXfpxrvr0OU2IRiv1PoIC4IXuc5tVBF7Y4Tm3tc58=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=V92QlIc5oAF4l9uZ61wanr1FeUyTUB+OrgEmd4SAORaXDuJwW/h5VNqx2vcbIr/01XfpKyFnILZ05Xtof4uMpbPYCNjbOPQDv8vZrcSFx4V0vpKwCXklQMewOvs/gzANruMBG/wrdoSICeiTgTl5HDSoAjXFU4DhJfn8TU+/cC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GcUNrHaR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mhzlHAPe; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=pR0/mkWppE4QeBFBdMP+X+iJgyiM1RTE+PGEkT3ozXsXER/Ff6Aql7Yw8BlHeVEcZUACZTai7OYkBuVk2TLRlJhcdI1T3BWecMO37A7Kcw7d64ESavH+Q71IXT9vXfpbGnEv/gpZOAQ/F58usX4RIXJw8JuvHcDvmhrd1pheYMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FfgH1sv4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kY7qxfkK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GcUNrHaR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mhzlHAPe"
-Date: Wed, 26 Feb 2025 11:03:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FfgH1sv4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kY7qxfkK"
+Date: Wed, 26 Feb 2025 11:04:00 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740567840;
+	s=2020; t=1740567841;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lF0GpGVOc8MpElj6bPSB9T4tGuRWVTgQ1zSdhGvgGho=;
-	b=GcUNrHaRxtH6mhrLz0Mklfyk+/DO5glvxkROWE3RX2LjZhdjN7hR48TFFhv0ovzRtyA8JG
-	bjHU4NyFOf/DIaTTiJDFJBs0FSETCcumCL/tW3Gfl0gCdmwPwx0SXPpgMRpOeyl8jV/Xmp
-	mksF8DXhgu4mnE+1In5/gCKyCOGB+C8I+uhUfLKcYnKwsIcnht1nWf2KgzpPrVneSDPeYe
-	0sC/qiWwThfm7DVA1x9LZRTl8QmBpWFxrdDpBAJPQuY1kjj347a5fO6K2mx3qaoQlQ7MIA
-	2eNAOwxpPGDoZAvHvBayLuss4fn9mcvocNgl4DKL4SEbA3wrPoxfXo+oz3Wing==
+	bh=AhQoBX6muvswlAyWc4hFiQIz4dKPUEePI/jYaEeTosk=;
+	b=FfgH1sv4CDCOGwhSsW66OWseThFeZGo+TDacSOx080dMPvknUQPh/5sg82pUz0xnbnNr4Y
+	c/zZYojyKws/T8oXcr48kB1kAPMHe69o4jqqybF+y5XPRzZpgZQ2TVUa/pvVdT2DESWNFE
+	WVT1lIgvTHveFD0XsXX/O9q+l1p6re0iuRAUNhhtTRfCgiojtgxXFAeSWNK9I5dGM6BwGX
+	oi+KY5kCBaqpcL/S7ITPzKxYEHRL3pPxF+L7Pu4fEjbBXRylv99o+WfpAt0IM2ozHRHxrF
+	5bzc1TZnAGM7HYfIpxqTdTg0OWzzFIEPti4fYWpLfpyTUASrzw6zh7WVW07aBQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740567840;
+	s=2020e; t=1740567841;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lF0GpGVOc8MpElj6bPSB9T4tGuRWVTgQ1zSdhGvgGho=;
-	b=mhzlHAPe6O/XqwE5PrjYiD2seDU6RS4161U03VDlEJagfRWQDHPObD3K+nIIxanB1r9wUC
-	U2GCN2gnAQCgJuAg==
+	bh=AhQoBX6muvswlAyWc4hFiQIz4dKPUEePI/jYaEeTosk=;
+	b=kY7qxfkKhgZur6O/HgF5++t2ZYAcrofFFIudbU2riZ06Lpfd+8GjP7cIp1BOQIMiBLh12T
+	73+8uorlVsFbZ0BQ==
 From: "tip-bot2 for Biju Das" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: irq/drivers] irqchip/renesas-rzv2h: Use devm_pm_runtime_enable()
+Subject: [tip: irq/drivers] irqchip/renesas-rzv2h: Use
+ devm_reset_control_get_exclusive_deasserted()
 Cc: Biju Das <biju.das.jz@bp.renesas.com>,
- Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>, x86@kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Philipp Zabel <p.zabel@pengutronix.de>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250224131253.134199-7-biju.das.jz@bp.renesas.com>
-References: <20250224131253.134199-7-biju.das.jz@bp.renesas.com>
+In-Reply-To: <20250224131253.134199-6-biju.das.jz@bp.renesas.com>
+References: <20250224131253.134199-6-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174056783995.10177.8290609097099086622.tip-bot2@tip-bot2>
+Message-ID: <174056784045.10177.11051015421435876494.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,56 +71,56 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the irq/drivers branch of tip:
 
-Commit-ID:     5ec8cabc3b8622f95de973c1a245245c65e3337b
-Gitweb:        https://git.kernel.org/tip/5ec8cabc3b8622f95de973c1a245245c65e3337b
+Commit-ID:     ad773ebc6e41f0004487726e432b86795ae426d9
+Gitweb:        https://git.kernel.org/tip/ad773ebc6e41f0004487726e432b86795ae426d9
 Author:        Biju Das <biju.das.jz@bp.renesas.com>
-AuthorDate:    Mon, 24 Feb 2025 13:11:22 
+AuthorDate:    Mon, 24 Feb 2025 13:11:21 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 26 Feb 2025 11:59:50 +01:00
+CommitterDate: Wed, 26 Feb 2025 11:59:49 +01:00
 
-irqchip/renesas-rzv2h: Use devm_pm_runtime_enable()
+irqchip/renesas-rzv2h: Use devm_reset_control_get_exclusive_deasserted()
 
-Simplify rzv2h_icu_init() by using devm_pm_runtime_enable().
+Use devm_reset_control_get_exclusive_deasserted() to simplify
+rzv2h_icu_init().
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/all/20250224131253.134199-7-biju.das.jz@bp.renesas.com
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Link: https://lore.kernel.org/all/20250224131253.134199-6-biju.das.jz@bp.renesas.com
 
 ---
- drivers/irqchip/irq-renesas-rzv2h.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-renesas-rzv2h.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/irqchip/irq-renesas-rzv2h.c b/drivers/irqchip/irq-renesas-rzv2h.c
-index edae54f..10b9b63 100644
+index d724f32..edae54f 100644
 --- a/drivers/irqchip/irq-renesas-rzv2h.c
 +++ b/drivers/irqchip/irq-renesas-rzv2h.c
-@@ -468,11 +468,16 @@ static int rzv2h_icu_init(struct device_node *node, struct device_node *parent)
+@@ -461,13 +461,10 @@ static int rzv2h_icu_init(struct device_node *node, struct device_node *parent)
  		return ret;
  	}
  
--	pm_runtime_enable(&pdev->dev);
-+	ret = devm_pm_runtime_enable(&pdev->dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "devm_pm_runtime_enable failed, %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = pm_runtime_resume_and_get(&pdev->dev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "pm_runtime_resume_and_get failed: %d\n", ret);
--		goto pm_disable;
-+		return ret;
+-	resetn = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+-	if (IS_ERR(resetn))
+-		return PTR_ERR(resetn);
+-
+-	ret = reset_control_deassert(resetn);
+-	if (ret) {
+-		dev_err(&pdev->dev, "failed to deassert resetn pin, %d\n", ret);
++	resetn = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
++	if (IS_ERR(resetn)) {
++		ret = PTR_ERR(resetn);
++		dev_err(&pdev->dev, "failed to acquire deasserted reset: %d\n", ret);
+ 		return ret;
  	}
  
- 	raw_spin_lock_init(&rzv2h_icu_data->lock);
-@@ -493,8 +498,6 @@ static int rzv2h_icu_init(struct device_node *node, struct device_node *parent)
- 
- pm_put:
+@@ -498,7 +495,6 @@ pm_put:
  	pm_runtime_put(&pdev->dev);
--pm_disable:
--	pm_runtime_disable(&pdev->dev);
+ pm_disable:
+ 	pm_runtime_disable(&pdev->dev);
+-	reset_control_assert(resetn);
  
  	return ret;
  }
