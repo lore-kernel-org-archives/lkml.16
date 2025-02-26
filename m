@@ -1,60 +1,60 @@
 Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C707F22D79F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:21:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C80B23A99C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:21:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740597663; cv=none; b=QPm5Ul4qPbxain1Z3rapf+QwOlZpYLjCGO5lBQFY5vrK5PmWP/BAkSD38Phwc/uJ15J47PJ8aO3LK4nw5zSBaOu7jkBXoxjEswtyLT+sIzZH1l1xASPSL9Y2brp9S/D8wGRlRo+G7N46RrJY7hp/D11xE9FgH9TCkqL2UTEwtw4=
+	t=1740597667; cv=none; b=IK/Vz4iF1HO0vxp1brnPZXpMXncQX05psYLmo6t7tF8KNrWaxaWW0M1H1DVHcwsMMyk1ZH2S9s8kX/fLrUnU2SzaorSCcsYk6B0d8SSPrpPgwGR2oDGwhWxf0mygA3yJKG1K9NDVmwVuSV6youvmy8ScCnNM5qRjopuflo65qFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740597663; c=relaxed/simple;
-	bh=f3D5SzrEgNHbb8uoACbdyA7D/ocFrbJamaLh8HLKBTE=;
+	s=arc-20240116; t=1740597667; c=relaxed/simple;
+	bh=WpYr04p1UkLDWtl5dIg7zK3U1th+UqvFkMU1unWOfHA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dcfU+91yPLSaB54X+UzMbYnyii8oaWtUARFP6CWoXttNSKzq1tz/8arnf1uhKa7Y+AN5fOidP52BwushC21CCIxAvGuICBL08NwREyIuliiGOefNb1xrVq2kHR72PeL9yTd4iYnoZogPrAyARgXthf48JAz9keD0B8oYNFyzBuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=T9CLWFGF; arc=none smtp.client-ip=209.85.214.176
+	 MIME-Version; b=ZaxLPGXnBMb6IgNT8o0TiCFtlY79Q9DOakygsPZPJbjs4Z1Y6kYTT1mOABJQHZ/JWAGZLskHAK417t3JTmiI+W8xU8jqM/JD8zyd5GzCJi3s+UwrJFJjzKibebyahWSvy8/yR5EiV8To11KsG38NQjRpSAF+GoinWHYAf8jlR8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jtrJ28NW; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T9CLWFGF"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2234bec7192so2524835ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:21:00 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jtrJ28NW"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22104c4de96so1699415ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:21:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740597660; x=1741202460; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740597663; x=1741202463; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ftDlP5dl9GiHDKQQcwmxqQBAFQOLT3kYr7RqF+evPv4=;
-        b=T9CLWFGFyxObY7Qdi9ncQ7o6G+xyuOxMupLBqbOD9c3DAw/QZfPyBVK27YA50802io
-         qORMbZQpF/wfrBqnpiPnoX2Gl+fA4zbS7JrILqyiKmOupXC+iK6/rXHbtEPowXIvsAYz
-         OaCr5vzX/awnAEXfEjknAMKq03TMaICLZl0qY=
+        bh=8N3fCiVrbRYJnsDcemalRElfbpkz7bQc2o4sOKvhYDA=;
+        b=jtrJ28NWEq3+3bKSZhT4zVDOqQFdnr9bXCfdSJRkLhNwFa9eZETgqOh8kUBo/wNyHe
+         Dy6pUxlZDCzqQYU0Rw2/SUk09ufzCimHjUL5EsARgjW8D383fLd8bX/fuaFVifqNFrFs
+         jPbpJwAXjloMzODIX48KfqnyLElw1ZJO08wwc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740597660; x=1741202460;
+        d=1e100.net; s=20230601; t=1740597663; x=1741202463;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ftDlP5dl9GiHDKQQcwmxqQBAFQOLT3kYr7RqF+evPv4=;
-        b=tJhSa7Zcox3gvOpAixalBjr4DHiE5qLi9a2h9bGqr2+u6gV71FzxJbzCOKACb42WFN
-         FV9MpFyJMAe7JGD7lqLk5REOGis88nl1DR2Oh08CJZ1uIcTekk07jL7JXOKjDdPjKD/H
-         nTYFDlrTIxB183lGIF4Ad7R0+v2c8V2RkovMdzPLpRl0p2IT7BuWPFVWEbNliG6efTKx
-         kEGY8dKrgqXqlqPMzPOaCFtjX8AZvkvEKnJmdx+kWhEt1HvO8SjbGviaX55MOMwx+Nj6
-         KvHp0aOM6s0Iravgxo6sPh0Qk51hSTJZlcg3//csb6C9VLYnWN+atxPTaCE1qHSlqyyf
-         A2Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqKnHszaJGXkHGKDwl3sa2x74IIdi0m0sza/fLQiX0ZuxD8+rCQYy8Mwuhk88x/PQbbvmoStmJBFDkO/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxAQ3kEBOwIBinT7UJP3oJVntoQOG6SMsGMNlWG70BuPUmfCns
-	yy8I0N/nja4JSQ7YFHm5lh2cfRxEZl8f74zUCBRYlKieA6lrlkh9x1KZlTfKHw==
-X-Gm-Gg: ASbGnctz3upcfj1NKgjuoaMHf0H+fXnEjaQV6DyjJmRlX8BThAV/sA4PQksVIpqRW/6
-	DBxfTdFh335pCE7FSy0liz3zka3NYcxia+riWxLCbdPvtA3uVoFvz67qjPjMPvgOlN9O8ksbPxc
-	fA+IZXuorUoCocfG0bbSvoWqwq+qbdL+T2RBfl7xHT2G1U3nrnSiU2NWDWhRnP9ek55NRU/ITX9
-	/lG1TEvjFFn+jkJkmTtzYbFco2z9Twd4JIP1TwAVlg3Hbpy7wwa8ddKhR8zXmcQ3nvGibOEc/hC
-	WYnKn5mJfMmwhN/pHAXeq4ZmT1a/FxY0V06GqOcsKaTnufKjNp72WOvFtucENP4w9tcoPFgLcT8
-	+KebjmCL0m1bi
-X-Google-Smtp-Source: AGHT+IEw7fjT6gjAu149mqZBw/+HbKxFMCO0gdM2niphUvj6eNocm8iaPbU/SjDPbzzxoTCe6NQ10A==
-X-Received: by 2002:a17:902:d50a:b0:220:d1c3:24d1 with SMTP id d9443c01a7336-223202136b8mr65669475ad.46.1740597659906;
-        Wed, 26 Feb 2025 11:20:59 -0800 (PST)
+        bh=8N3fCiVrbRYJnsDcemalRElfbpkz7bQc2o4sOKvhYDA=;
+        b=EJDHaFKbr0WbgRKQtbpJGwqjSsY4PQHTCABHnT1sOLzmed6qQZmv7Gp837qAY7ty+a
+         oABEc5yaEEah2pvBMV4UAY7uDwIlBfllGLIwus53s+W0A8mXgyiEurN6ArfbP3yeeOUh
+         y7A/Xp016idqQRq3k2rNHwJqL1hR3HyVLZvnNLAXnZ2pD40gxy0iw3hgQceghP4XE+7l
+         aWSUpamgU4mD6TQGL9mom5r32Mp0mHFn0BhB4cvNei+VLBtJusbNXfwjTSI7eToQCKV9
+         Rh2Am8CsRNubR52Fyd7tDj1saWcs8uX9c3zq6YqPPgwN04jD6MbWIOELxY/woN03+vMc
+         OxSg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8iC1JwXUHLPUVGbn7WeUw+PuAn7zNvJ1nnUeyYR/LpzmUHooJGAlNz9dw09VeFoeJdjLXkmcOBuxwSXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyh0B8e7Viy+3JL2WEgqcEkKRWEZQYgb2S5KptNU/SSEwiSGz8G
+	i9XmCcI3qOLA4bZfbb5UNM7i8irrlfAg0g7pW3fOTeRupo2eCJBEi9E42/rN7w==
+X-Gm-Gg: ASbGnctSMwzAaD4LN4WemD6BG/jHyqrqWRCZOg0m0lfbVEqNhQlq1Q1wyvwO+BftUZq
+	+oB5vYHZKvHQTDci1Ujo9g3JvZHIoPQ8Ocz2PzEJ9l77Gi7GjliawwkvMqJSdGlJzu9dYwxSjjm
+	hTj4hGI8Bku3eOtZN74F0iFhO17dyVJHXaYeiqxo7+PW174F7EWhaz7A9b1aahNoLvlXh3N7Zom
+	HzLNVCluS8UH0LRv0HAg6s/E3jfdkLj75cFgqnwzSpdPZLYHgF8vbZx/mmKsT74roUAKG7aDBhp
+	XGi6wnMfuTOPNkBluN1C2BGmFEq6JTurGc7lq4uUIhwlLhncDOYBun2MWXezk+a+dr/FnRSPyUT
+	abkYWkC0viqw0
+X-Google-Smtp-Source: AGHT+IHloyY5llsRwZmYOAMtChiquooiL7oF22Jfz6xhil9TWQQpChOD8vyx6ebjqWqMfIQbsvyx2w==
+X-Received: by 2002:a17:902:d48c:b0:216:7ee9:220b with SMTP id d9443c01a7336-22307b4cc17mr117990425ad.22.1740597663658;
+        Wed, 26 Feb 2025 11:21:03 -0800 (PST)
 Received: from li-cloudtop.c.googlers.com.com (4.198.125.34.bc.googleusercontent.com. [34.125.198.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22341c04d16sm8473865ad.190.2025.02.26.11.20.58
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22341c04d16sm8473865ad.190.2025.02.26.11.21.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 11:20:59 -0800 (PST)
+        Wed, 26 Feb 2025 11:21:03 -0800 (PST)
 From: Li Li <dualli@chromium.org>
 To: dualli@google.com,
 	corbet@lwn.net,
@@ -86,9 +86,9 @@ To: dualli@google.com,
 Cc: smoreland@google.com,
 	ynaffit@google.com,
 	kernel-team@android.com
-Subject: [PATCH v15 1/3] lsm, selinux: Add setup_report permission to binder
-Date: Wed, 26 Feb 2025 11:20:45 -0800
-Message-ID: <20250226192047.734627-2-dualli@chromium.org>
+Subject: [PATCH v15 3/3] binder: generic netlink binder_features flag
+Date: Wed, 26 Feb 2025 11:20:47 -0800
+Message-ID: <20250226192047.734627-4-dualli@chromium.org>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
 In-Reply-To: <20250226192047.734627-1-dualli@chromium.org>
 References: <20250226192047.734627-1-dualli@chromium.org>
@@ -98,112 +98,64 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Thiébaud Weksteen <tweek@google.com>
+From: Li Li <dualli@google.com>
 
-Introduce a new permission "setup_report" to the "binder" class.
-This persmission controls the ability to set up the binder generic
-netlink driver to report certain binder transactions.
+Add a flag to binder_features to indicate that the generic netlink
+feature is available.
 
-Signed-off-by: Thiébaud Weksteen <tweek@google.com>
 Signed-off-by: Li Li <dualli@google.com>
 ---
- include/linux/lsm_hook_defs.h       |  1 +
- include/linux/security.h            |  1 +
- security/security.c                 | 13 +++++++++++++
- security/selinux/hooks.c            |  7 +++++++
- security/selinux/include/classmap.h |  3 ++-
- 5 files changed, 24 insertions(+), 1 deletion(-)
+ drivers/android/binderfs.c                                | 8 ++++++++
+ .../selftests/filesystems/binderfs/binderfs_test.c        | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 9eb313bd0c93..5291cd712147 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -33,6 +33,7 @@ LSM_HOOK(int, 0, binder_transfer_binder, const struct cred *from,
- 	 const struct cred *to)
- LSM_HOOK(int, 0, binder_transfer_file, const struct cred *from,
- 	 const struct cred *to, const struct file *file)
-+LSM_HOOK(int, 0, binder_setup_report, const struct cred *to)
- LSM_HOOK(int, 0, ptrace_access_check, struct task_struct *child,
- 	 unsigned int mode)
- LSM_HOOK(int, 0, ptrace_traceme, struct task_struct *parent)
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 27f64a9747f8..28fcd7047051 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -338,6 +338,7 @@ int security_binder_transfer_binder(const struct cred *from,
- 				    const struct cred *to);
- int security_binder_transfer_file(const struct cred *from,
- 				  const struct cred *to, const struct file *file);
-+int security_binder_setup_report(const struct cred *to);
- int security_ptrace_access_check(struct task_struct *child, unsigned int mode);
- int security_ptrace_traceme(struct task_struct *parent);
- int security_capget(const struct task_struct *target,
-diff --git a/security/security.c b/security/security.c
-index c9fae447327e..6212158cec72 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1043,6 +1043,19 @@ int security_binder_transfer_file(const struct cred *from,
- 	return call_int_hook(binder_transfer_file, from, to, file);
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 94c6446604fc..b3d21ccd81f2 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -59,6 +59,7 @@ struct binder_features {
+ 	bool oneway_spam_detection;
+ 	bool extended_error;
+ 	bool freeze_notification;
++	bool generic_netlink;
+ };
+ 
+ static const struct constant_table binderfs_param_stats[] = {
+@@ -76,6 +77,7 @@ static struct binder_features binder_features = {
+ 	.oneway_spam_detection = true,
+ 	.extended_error = true,
+ 	.freeze_notification = true,
++	.generic_netlink = true,
+ };
+ 
+ static inline struct binderfs_info *BINDERFS_SB(const struct super_block *sb)
+@@ -619,6 +621,12 @@ static int init_binder_features(struct super_block *sb)
+ 	if (IS_ERR(dentry))
+ 		return PTR_ERR(dentry);
+ 
++	dentry = binderfs_create_file(dir, "generic_netlink",
++				      &binder_features_fops,
++				      &binder_features.generic_netlink);
++	if (IS_ERR(dentry))
++		return PTR_ERR(dentry);
++
+ 	return 0;
  }
  
-+/**
-+ * security_binder_setup_report() - Check if process allowed to set up binder reports.
-+ * @to: receiving process
-+ *
-+ * Check whether @to is allowed to set up binder reports.
-+ *
-+ * Return: Returns 0 if permission is granted.
-+ */
-+int security_binder_setup_report(const struct cred *to)
-+{
-+	return call_int_hook(binder_setup_report, to);
-+}
-+
- /**
-  * security_ptrace_access_check() - Check if tracing is allowed
-  * @child: target process
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index b49f28f15ed1..12da5861ec18 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -2092,6 +2092,12 @@ static int selinux_binder_transfer_file(const struct cred *from,
- 			    &ad);
- }
+diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+index 81db85a5cc16..96e64ebf910f 100644
+--- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
++++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+@@ -65,6 +65,7 @@ static int __do_binderfs_test(struct __test_metadata *_metadata)
+ 		"oneway_spam_detection",
+ 		"extended_error",
+ 		"freeze_notification",
++		"generic_netlink",
+ 	};
  
-+static int selinux_binder_setup_report(const struct cred *to)
-+{
-+	return avc_has_perm(current_sid(), cred_sid(to), SECCLASS_BINDER,
-+			    BINDER__SETUP_REPORT, NULL);
-+}
-+
- static int selinux_ptrace_access_check(struct task_struct *child,
- 				       unsigned int mode)
- {
-@@ -7176,6 +7182,7 @@ static struct security_hook_list selinux_hooks[] __ro_after_init = {
- 	LSM_HOOK_INIT(binder_transaction, selinux_binder_transaction),
- 	LSM_HOOK_INIT(binder_transfer_binder, selinux_binder_transfer_binder),
- 	LSM_HOOK_INIT(binder_transfer_file, selinux_binder_transfer_file),
-+	LSM_HOOK_INIT(binder_setup_report, selinux_binder_setup_report),
- 
- 	LSM_HOOK_INIT(ptrace_access_check, selinux_ptrace_access_check),
- 	LSM_HOOK_INIT(ptrace_traceme, selinux_ptrace_traceme),
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 8a8f3908aac8..11e6fa92799b 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -133,7 +133,8 @@ const struct security_class_mapping secclass_map[] = {
- 	{ "kernel_service", { "use_as_override", "create_files_as", NULL } },
- 	{ "tun_socket", { COMMON_SOCK_PERMS, "attach_queue", NULL } },
- 	{ "binder",
--	  { "impersonate", "call", "set_context_mgr", "transfer", NULL } },
-+	  { "impersonate", "call", "set_context_mgr", "transfer",
-+	    "setup_report", NULL } },
- 	{ "cap_userns", { COMMON_CAP_PERMS, NULL } },
- 	{ "cap2_userns", { COMMON_CAP2_PERMS, NULL } },
- 	{ "sctp_socket",
+ 	change_mountns(_metadata);
 -- 
 2.48.1.658.g4767266eb4-goog
 
