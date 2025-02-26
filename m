@@ -1,148 +1,182 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013064.outbound.protection.outlook.com [40.107.159.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A652321505D;
-	Wed, 26 Feb 2025 11:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570181; cv=none; b=knFhLJEaabqn6M5HPjEtbz2l8Y2RR5pru3joBFLMKd1tJCY0mNp1rFekE5hJToheBAdzpPzYBss0n+7DLDjOVt3F0brjFVK+EWRyr1sex9iPJRbNuiubQ4ooBabvyhjuwtYZU1w8OrnE/rHBI/XPfXhN1UI08jlQbVJ6aSx3c54=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570181; c=relaxed/simple;
-	bh=5i/OknVHZIgAS7fy0fc/g2sApGx+XqAVMHcU0hKTur8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i5oK8zgAgIF8/Pc9QEB1eBQMCc5t01hvT0Wrj2+zMWDE1eQEsXIw+Wir1KqOsSPPjpTGoNmMy2xPsuryCGnhvdRUDpOU3wQZdIbitQsW4W/DMFoHFfFVUpKt2epgQ59T60jnhtSzf4ZZ2Gvoj7GvgnYEPgZG7YOhOHXDb+mpWso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBLyiBHY; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0E92153C8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740570227; cv=fail; b=WUOQASu7lt+LA20nXcX+jIeTtbY3UAAFPUJga1vvfsz1k8SX4GPU5KBGR/Yd9YTd9oPekntWcDq554aztvDs6hmXZQ4DJddMQJu7a3py+293qdy6BiqgdzG3c16PZcXvC7r3s0EzMyxpB2sVdEVMnVVFa82wVXhYX2xxqhlj3Rw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740570227; c=relaxed/simple;
+	bh=tmcv+BwmUsvpD8sGWNFEisOYeTvXtl+yni1um+EEajU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fdEiPurvjIC/TB7mjq5lCpq8r/n4b78wiaHVkAEAcjWC77JbgXQ5YD2ZeI55xdjWCc8gDlwKVcf7Ub46o+HQXcj5QeG4Smw/kSKYWM1TYyn9/Q4Eixj5QqxfpEVb/fkHVUOBvfRxXKDkjPUssSGOxNwiDF/2rx9lt5t/rjjL/pI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=gHldOx0q; arc=fail smtp.client-ip=40.107.159.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBLyiBHY"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54838cd334cso5763908e87.1;
-        Wed, 26 Feb 2025 03:42:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740570178; x=1741174978; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L5hrGQtYfhc5Y+HY7h904Luh/ddK0W6WhpT8KbPVtUc=;
-        b=NBLyiBHYCPyuZ6VxRa/b9eUn51wslQDiMgx8zyTznQ4UcE/rzXKLMfIkJgTc27gYrT
-         UlGrFIM9S5MBv2onMJnbB8WMIbfMfZORn9bfOK6CJkjHeDzdIyco99V69L+hbRSxHsTb
-         6AzLDlIossix8m478tYzP+OLcjd1HaOJ0enyNDbEZ/sZJg+WmQJZuj3m0oLj77XU1nEN
-         qyXctGUdx7KJR7/kavkBusr1V6jfJ82+wdxKcR61OMTcz7AYpbsXBw/yekiGo8MkSAVK
-         DkkVTnXVsQ+/G6tTWs7tYjaHwKPpchVk+K1vaqiwz7hNwScQ4RA6OqlaN5KS26bahlv9
-         OO4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740570178; x=1741174978;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5hrGQtYfhc5Y+HY7h904Luh/ddK0W6WhpT8KbPVtUc=;
-        b=aUV/wsBJGOeGUlZfVvVewiHQyTOpidqh3xQCaB41rt3UQkbaMgwf7raJ8Hhg+fVcN4
-         uy1qYIxOIuMMr66kxmwQZujEbRy37nQ09k1ZotUeWlbg1ZR0PNo9i0sm05XKND/ox1go
-         cCXyKYPGcm0Xq5LotPmjhEIUWVt+175l9h/or4ZEA1yX1Ma6BjDCqeoABNZIaHVvYLSy
-         F1CktVxVNMg8NzmBGH3T46x3MJntkXg39ZveUeWatA0l6lYMzm8PtvxYypJy+sFOVyhn
-         /Y2eEPOmy9X5D/vsmsgKQA539SymKbjsSz685jSXvmveCrm6jEeCkHg3aIYfPwSnyY+y
-         JK4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUUFUJJuRvEsbVzqtMtNphkkIw1wctvR1K/MvXFpd8TCZHJyTQOTeJjyj7UDeLZ/S7MRsNvS+JLSOdJqcpo@vger.kernel.org, AJvYcCX4f7XMVtkQo7jfgCKeamMJrxbMt316/7REqxTJ/+jXR32eGnDEOBvlXaD/bzHp0f3AQtqFv4HZldp3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+l4ikjAB9YIkdECl5NKgAzQvRax7OzDg9+vUVpgEzTECNwT63
-	EaENA2g5SSpIj0EW2brnt2jUSkZ+KKpvhJyhOPAm4n70V/aUZVbeuG3GHw==
-X-Gm-Gg: ASbGncsjkyHZ8Q7dCPAqhty1y7sqi8mC1QLxWKkxGoHyYhiLEXCV3G73A8aScPjPt88
-	jrPIHE7ZPwZbOomQ82OfjPgZh60/z/mHiVGMcOvdcfa27xicGaYc4CRHli/pxwRECrLqiYu3l8N
-	LFD48H7L0mcOCtBGl7gi7fzYdw6Rz42QOoFg+IDDpL+9zgEDxNGgeq6HdGY2yirid3ytxGJaEE6
-	boAkAr6lJoz6QmPD/MjcoKX9D1+NLnqIvb52B7TawjHrzhtU1D4jqjghPOeeQJIWcQXI9h7wviS
-	IbUo8QlaoaZNqgTPtwGfJ5l0b54YCNIK6i8JmuM/dKW0+88QpK0QphsifUv3R9E2B52iWsYAXq5
-	5x5tpyAM=
-X-Google-Smtp-Source: AGHT+IGWmhNVTANspZfihUtvglm0GZovp+BUZPoZB6tq8t5oZerY9iOeHToM9Prhn88TfpdSdzHrIg==
-X-Received: by 2002:a05:6512:3f07:b0:545:a1a:556b with SMTP id 2adb3069b0e04-5493c373156mr2643553e87.0.1740570177524;
-        Wed, 26 Feb 2025 03:42:57 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efcd5sm432787e87.141.2025.02.26.03.42.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 03:42:56 -0800 (PST)
-Message-ID: <8979f8d4-8768-40b0-a3a7-6638ddb626cd@gmail.com>
-Date: Wed, 26 Feb 2025 13:42:55 +0200
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="gHldOx0q"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KaK6DN87anPx+lz6MwABnSi9UJMqD/w0rcy/wno5aFUrXPhs9OXP2Y2QV70DWbTKXdmhMPTDwfZ4X2qz3Qf9AlmYdG4hUL34KJdNLJ1UoLS6pvoaI/9NOWVG6pYAV7CCuTUw1VfpfaIjPBtmblp403BH7AZ2DhrfiokkMEthHwPtIgf/69iiL+Z3kSLRrfMu8RLvt7GrxoJozzT2QQx4aTe6xLvk8fG6hddIjNwMdDNwGnAKSejsF33fNHEPZEXN+uqHngmhDm0uanNDSsNVa9W1WrZ9pllNPQV7SxPa1S+dgmD2QZMNC6i3fPaVpbH3DctLmWCqJIWj03UYsS4QOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ARlc+xcri0AhBumXNBXSoRsvaYTls3eVdJeFZXsDum4=;
+ b=bz311Kx2rRCnheIgepASD8UxXKdN17Q2+Ov5kzu6l7h/lBji2Ih8F8HYgTucs6Qb8u/VD3bSVqIeP8hLya1P3varbOepf1chAct//zbN4KuxTyeorP0WK7KQ10kfdXnAUsQfjE9nn0e3zDgZ8FwGDsbeCXLdn5y27CPw7jrXuBQR2m6jopyBxpyB5Ueheq6nqt6RnsDe6C3IVJqDO76msLalbDWGmUcseIv7DhxdJC2Akk4txc+sfowwQT2GKi3K96nUCcTzMhxExy1FKi0Zw5lc8/9yabK3Z+KhbXZnrpEh4LUaC4vSTDb/fjimK2tZnzbyU0dWf+MxUt1/Pyxsew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ARlc+xcri0AhBumXNBXSoRsvaYTls3eVdJeFZXsDum4=;
+ b=gHldOx0q0+0YIhA50USfm+OUmObD34eCWm4G6E394No5AId0lwawe1wc9xRMSNONj2gVKi5lRoyJRILDgecEanKNQIfj3TknONY2DbbGOTqv1s4023hDuFgbLjS1vDq4o5MDHSJcHWE+3u0DPXWoamvO20eqSsOFaXr9oFJ8l1I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com (2603:10a6:20b:42c::20)
+ by DB8PR04MB6860.eurprd04.prod.outlook.com (2603:10a6:10:112::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 11:43:40 +0000
+Received: from AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a]) by AS8PR04MB8897.eurprd04.prod.outlook.com
+ ([fe80::35f6:bc7d:633:369a%6]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
+ 11:43:40 +0000
+Message-ID: <05f16054-13f1-4826-a2a7-2533e2a5943e@cherry.de>
+Date: Wed, 26 Feb 2025 12:43:39 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] phy: rockchip: usbdp: move type-orientation-switch
+ further down
+To: Heiko Stuebner <heiko@sntech.de>, vkoul@kernel.org, kishon@kernel.org
+Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ sebastian.reichel@collabora.com, christophe.jaillet@wanadoo.fr,
+ Heiko Stuebner <heiko.stuebner@cherry.de>
+References: <20250226103810.3746018-1-heiko@sntech.de>
+ <20250226103810.3746018-2-heiko@sntech.de>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20250226103810.3746018-2-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0361.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:f8::17) To AS8PR04MB8897.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42c::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z71qphikHPGB0Yuv@mva-rohm>
- <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
- <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
- <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8897:EE_|DB8PR04MB6860:EE_
+X-MS-Office365-Filtering-Correlation-Id: e3007c19-4260-4479-59bc-08dd565ad097
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Tm1Ba2d0YkNGTThHbkR2aDRHQnVlSmNNS2EwWWVUNitBMHVUSTNraDNubmlK?=
+ =?utf-8?B?S3Z4QVRFT2IzZlB6d3MyT2FreHJlU2RNa0lMWUkvL0pEdDlQN2JYbTJ2QXBq?=
+ =?utf-8?B?T1hMcWxLckdUN1dVVURGZzdMMG0rNTRyTlhkb0M2c211Ry9yZTF5L1ZiNGVu?=
+ =?utf-8?B?NU9zZm90YWJscjVNOXRNU3g3bUU0aTk2Q2dSVnBHYndKNUEwODVsYnBJS3RD?=
+ =?utf-8?B?M2g5bnpvRVRtZkFOampXeWRRdCtDYURPUzJTWWxHVUQ5YWhzZEZTczlHbEFi?=
+ =?utf-8?B?WmtadzBGTzJsK1gvMUVUM0ExSDVkZEl3STE1TTBJK0s5NEp1UEV3bURqVmho?=
+ =?utf-8?B?ajAvSUdQZUxQR25CWHp2cS9qdGwyMXFML1l3QzRvb0RvYkVGUSs5WklnbzR5?=
+ =?utf-8?B?Mm5RQXdwdUxYNUZuRndZZXB0d3dDb2pob2MvcDU0cjJWT2NPc2dmWHlCdDVT?=
+ =?utf-8?B?T1pZT2thTGRTYUxtWUoyZUpLUk5QTUlXYjRjK09pdTlNWDNIdzRwU0oySkd6?=
+ =?utf-8?B?Qjc0SjJDcEpHN0MvbGVrcThDM0kvaDlTZmMwUkVibnZLVWQ5MDhxWnFsWU5a?=
+ =?utf-8?B?QkxBNWhOcloyZG0wbHZqakZNclI2YmtTampoSlkxMnJySzlkNk9ObDN0Vmwy?=
+ =?utf-8?B?cmJyOEhOUm5XRHJBSHorZ0JhM2dRUjhOb0h6MTd6Wk90TG5iTExOcGc2TVpM?=
+ =?utf-8?B?UTdXTmJjck1iWDNCeGJwWGo5TGt6OFhtS1Z1TmljUDJTRGR1dENGcDFLR0Fl?=
+ =?utf-8?B?M1p1MVY4OWZ4MXZsRTNrRWZMSU9ZVlR5U2x5allaV0x4bmpkcWJpaUltOWZX?=
+ =?utf-8?B?S05YSzRpQVRTUkc4MmI5bGJPZVZKaWtkZktpVHlCeHlhYW1jTGcwTnNwbUdw?=
+ =?utf-8?B?c1V0MzI1MjVpWi9PanVaak1nR0hnWlZqUkE0OXN5TTQ0M2hJSzZRa3puaVRk?=
+ =?utf-8?B?d3FPd1ZrNHlFek5hdCs4NjE5YjcxK0VhM2lHb3B2OTV0SW1KWDdzY0VkVmRS?=
+ =?utf-8?B?c090bTZBdTN0ajFRWmMzZzJVcFRBeWNCTTNHVmc4UzFqcy9VbG15L2tTUHJl?=
+ =?utf-8?B?QW9rUXhZRVRlMk1zL3lsTi8xa3N2bVhZbU1IK2VzenNuK3M3bVUxYXVWWXoy?=
+ =?utf-8?B?R1BFcUJGZzlvMmpSbzRuYXBBMVFXQ3I2NzVrYTZRUldJeDZUWTBtWlhPQWhN?=
+ =?utf-8?B?c3ZqbU9RYU9IUWNMS0xFWTFQeGh2TFRBYjlOMHFWOG1tV0xzZTNHVkIwOXgx?=
+ =?utf-8?B?WkpINGtvZ1FnVEhXcWxlbEpqYk5keTRRVkhINVhKZngxYXlCeUt2anphSGlJ?=
+ =?utf-8?B?am41L1Vtd0Z6eEpNWGpOMnhBQ2IzTkd1NXVPdTE1UEo3QlpITklGemJxTWdQ?=
+ =?utf-8?B?dEplTlZSS0p5d20zcktndmtCTUJsNDhvM2RiMWswYXVBVkNjNjhBblphUFFq?=
+ =?utf-8?B?c0Vua0lrVWpiT3ZXVHVqN3hTODRlVmttbE84c3Zsa1lGQmxhUnFWRFkzalEr?=
+ =?utf-8?B?Y3p3dG5FdzNYZUlRd0lacFdWYXhQQmpHc0J3RXBiNklHQjRNcXpaaVRLN3hj?=
+ =?utf-8?B?cEhTUmJvZEdsVlNGS0tNNG1oNlZBNmI3S2t3SG5TYmFyMk5ycTg2Q092UGJJ?=
+ =?utf-8?B?T3FtdzJ4ZUxvWmdoSkF0RDdUYUQ4QlRkNDNmQXM2eWQwYjRVVExFSVNRNjh4?=
+ =?utf-8?B?M2N5ajJLRkFHSjQybEJlRENtTUxPcEsvcURvelRsbWt5TmhHeCtGODd1b2RX?=
+ =?utf-8?B?MDdzcTdQanVyb1Jhd2tUUG4xS09kL0tRWGRhTHNZZWlOMnNtcVJqU1ZxYk9I?=
+ =?utf-8?B?UTJWTndGNmZWbW9rVTBpVVJtWHgybGRmbFJyRGZ6eUZFYnVQUEVUcUphREQ5?=
+ =?utf-8?Q?gxx5EUr08s79x?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8897.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NDNRVVRIQ21HVTR1MzZlWTNGdTMwMkE5OURpazZWZ0l5N2ZCYjdZK3lVL2ho?=
+ =?utf-8?B?REpIQzN3ejVadkw2eDBzR0NFV0xLRXQrOWdOdHREODUvc2hnUFRNdXdoU1Z4?=
+ =?utf-8?B?ZXdrMmdaaktscXF0RW03RzdDb3hvNWtKcTdnL3BXV3NCZU1qMVdPQit0U0lT?=
+ =?utf-8?B?QmwrdkJ1bjMvblBFclZZZWp1WXJybmVrMXIreTBNRzlHOTJkMWdJYlVLVlUx?=
+ =?utf-8?B?UW95ZlJxanhnNnZ6cms5VWIrVEcwUDR1eldQNEtPT1JIRDZjc0tGNHBVeWZI?=
+ =?utf-8?B?N3hmUEtCK0xCZTMyM256WkJNTWJXQm9Tb2JwdDBhY1MwZXNsdnRiQ3NXeDlP?=
+ =?utf-8?B?dFJjZ1IyZy8yMnp4czhiZzc0L0tuZDdCNG4vdFZpZXdlc1JkcmpWMlBRRUI0?=
+ =?utf-8?B?MjdTV3JOaXNGS1RYTElmSThpRHA3Zmd1VTJMdkducFp1N0Zaa0ZRUzNkWDZC?=
+ =?utf-8?B?ckdNdHd6Z3JtMklYN3J3M3ZyT3IwMzIxWWdiQlhjYmpwNXBqQkxyMWdyT3hQ?=
+ =?utf-8?B?L1V6d2t5Nm5oUUhCRU9pUTNKVkk2VEZZU2ozYzBuZ0FxZmJTVmQycXhFUHJC?=
+ =?utf-8?B?ZEV5QWdVREcraE40bERNNFdmTXhUODBWeDFNTmVVUzlxZStXOWVNa0tVMURP?=
+ =?utf-8?B?bVhtSWtoM3pjV2NITmo4SFVnOWJwWnJpU1ZIZ0RkM2cwaEc2cjZFK3E5dEh5?=
+ =?utf-8?B?cDQrQ0dPQVg0MzlQQktXYjV6N0ZvVHZUdlc3UHlHWXhEQzlEZ1BFTlJmTGhq?=
+ =?utf-8?B?b3pGdjg1bVVEQzIvUDlZWE5acHNKUjV2MjBQN3VRZ01nVDcrdDR0dG9sbVBE?=
+ =?utf-8?B?bjk4dEFHanYwT0xxNTFkb20rd05Vd1RvaWVZZ3ZtOXVzQmY4ZG1iNWJ4eVdY?=
+ =?utf-8?B?TGowOC80cC9NMW84SkNmL0w2Y2FTTWxvelBIbWQva1VTczFaT0xnRHJZQmRu?=
+ =?utf-8?B?U3BhcmJLVFpiOTZabjB0akNJVndLMXhMdGQxY3RmbW5LU29jRTFoQkxhSGVw?=
+ =?utf-8?B?S21BZGhwKzBKVXdNVTBxTTJkeWNjK2dOY1dGcDgwdmx3aHZhWjQvLzVNYWJo?=
+ =?utf-8?B?WnQ0UEU3ZmJzR2k3RFozckREZDNvY3B0b21FSWlGY2NIb1RadjBrYVRBcDlN?=
+ =?utf-8?B?K3N6OG41VS9palRKSytNalM4RHRuVC9TTXVJbmNsK1JURExVaThYZnlEN3Zv?=
+ =?utf-8?B?RkVrc2VFbkc1Y3NLQ0dzTGdjWDRHc0I2UmQrL3RDejZQM1MwNWYrVzR3b29k?=
+ =?utf-8?B?OHp6VlhJaHVxeDRkUTdjSWkvcDZqeDdhckhvQ3NJVG5RK3hFa2ZvOUFrbXl2?=
+ =?utf-8?B?SkRXYllZSDQrQ2g3Z2x6YXlIc1JaM0lGcU9UdEJldW5YZFcreGxZdmZDc0xW?=
+ =?utf-8?B?UUovaUk1bEFQN1lsczFuOXlsT1AyT1pwamhOZmVHMWZBRWdFNWZRVVlEQWlS?=
+ =?utf-8?B?Z2pIdXlJbTgwcC9keEtyeTIxQUdLZHdpKzJWWWNYRlN1OWo2aitPWWh2KzI2?=
+ =?utf-8?B?aFlzSnErbkVXOGowTm1TS1pvd011RGFuamNqTXdpVU1HdklvcU95cC82ZGdz?=
+ =?utf-8?B?aytNUCtUU1VJSTkwNUk2ZXpIKzlMU1k3UnBnbjI3b0dVRXIyeDhrL20zajh3?=
+ =?utf-8?B?K3RXaHJhS2xuWWFsRW96ODZXdkhlMUF6ejhGejlFajlJcE9YRWgrTFA4SHBi?=
+ =?utf-8?B?TjVhME9Ka2J4cCtxSDY3bnBtcklSZUVTcmpGV1MwNGlRa1Mwc2Y5alZjWTNV?=
+ =?utf-8?B?b01wTzNna083UHNLdGJhcWE2TTEvY0x2YkZGTWtaa0xkeDVETk9mbytBd3hE?=
+ =?utf-8?B?NHJVWENoQ3FNQ3M0RDRUU2ttcnVBeUlBYXpzWXRyN3kxMEliV1ZjdStWbEZj?=
+ =?utf-8?B?aW1tZGdkd2NkR3VGNFdWbW80MlVPUkRocmoxSU9wRFhQR1FUVTd1dWpnSnlk?=
+ =?utf-8?B?dDFhQ0VCY240Q2RBWS9NbUViNThUa3d1ZThsTWtBWFAvemZvTGdPMm1wMnV4?=
+ =?utf-8?B?M0dVK2FWUGdOMDRZekhoYVlrQzFnY2tRTWg2RFBPR053dGZJWWdJdUZaTEhk?=
+ =?utf-8?B?bFhZVGFMcnJqRjZpeHIxbTJqbnlJZnY4N2lyMnpkTDhWdEtVTk5DWHF2QjBE?=
+ =?utf-8?B?WkhwdmRnbVp0aFhHbWlwcWtaZEtRVmlCR0FxbGNSSElpazNhQ3BscWR1MFl4?=
+ =?utf-8?B?V0E9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3007c19-4260-4479-59bc-08dd565ad097
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8897.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 11:43:40.4666
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YmS4T2u+kZRutd+eQ9HhZ9EcReaVtVPj0WTSJll8JmEAptzdIET6MGzROefy1Ag6xs3TpJeKIJ6tSilBpGtZJhvJdq3lLqPsfqWa50CgZJ0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6860
 
-On 26/02/2025 12:18, Linus Walleij wrote:
-> On Wed, Feb 26, 2025 at 7:09 AM Matti Vaittinen
-> <mazziesaccount@gmail.com> wrote:
->> On 25/02/2025 23:36, Linus Walleij wrote:
->>> we can maybe move it to struct gpio_device in
->>> drivers/gpio/gpiolib.h?
->>>
->>> This struct exist for every gpio_chip but is entirely gpiolib-internal.
->>>
->>> Then it becomes impossible to do it wrong...
->>
->> True. I can try seeing what it'd require to do that. But ... If there
->> are any drivers out there altering the valid_mask _after_ registering
->> the driver to the gpio-core ... Then it may be a can of worms and I may
->> just keep the lid closed :)
+Hi Heiko,
+
+On 2/26/25 11:38 AM, Heiko Stuebner wrote:
+> From: Heiko Stuebner <heiko.stuebner@cherry.de>
 > 
-> That's easy to check with some git grep valid_mask
-
-True. I just tried. It seems mostly Ok, but...
-For example the drivers/gpio/gpio-rcar.c uses the contents of the 
-'valid_mask' in it's set_multiple callback to disallow setting the value 
-of masked GPIOs.
-
-For uneducated person like me, it feels this check should be done and 
-enforced by the gpiolib and not left for untrustworthy driver writers 
-like me! (I am working on BD79124 driver and it didn't occur to me I 
-should check for the valid_mask in driver :) If gpiolib may call the 
-driver's set_multiple() with masked lines - then the bd79124 driver just 
-had one unknown bug less :rolleyes:) )
-
-I tried looking at the gpiolib to see how this works... It seems to me:
-
-gpio_chip_set_multiple() does not seem to check for valid_mask. This is 
-called from the gpiod_set_array_value_complex() - which gave me a 
-headache as it is, as name says, complex. Well, I didn't spot valid_mask 
-check but I may have missed a thing or 2...
-
-If someone remembers straight away how this is supposed to work - I 
-appreciate any guidance. If not, then I try doing some testing when I 
-wire the BD79124 to my board for the next version of the BD79124 series.
-
-> and intuition. I think all calls actually changing the valid_mask
-> are in the init_valid_mask() callback as they should be.
+> Move the typec-orientation-switch functionality further down, next to
+> the typec-mux code. Not only brings this the typec-related functionality
+> closer together, but also the following change needs access to other
+> driver functions, that are below the current position.
 > 
->> Furthermore, I was not 100% sure the valid_mask was not intended to be
->> used directly by the drivers. I hoped you and Bart have an opinion on that.
+> No functional change.
 > 
-> Oh it was. First we just had .valid_mask and then it was
-> manipulated directly.
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-I still can't decide if hiding the valid_mask is the right thing to do, 
-or if we should just respect it if it is set by driver (as it was 
-originally intended).
+Checked with `meld`, the - and + diff are identical.
 
-> Then we introduced init_valid_mask() and all users switched over
-> to using that.
-> 
-> So evolution, not intelligent design...
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 
-Like anything we actually get done ^_^;
-
-Yours,
-	-- Matti
-
+Thanks!
+Quentin
