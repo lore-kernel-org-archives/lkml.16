@@ -1,112 +1,140 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447851F4177
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:41:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2631D42A9D;
+	Wed, 26 Feb 2025 10:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566486; cv=none; b=Uon/UWSBUn750W7S52KTsIrd2FiKboj8pbLbuvVQCvSZfAWtayGDzl/ajDKy5If8yw+Hnv+Xw1OxVpQPEmKRWmNMp3zsh4iWPSAfqIlMKzfPP3k63cRvTbIuxae6VotS9OHuaG9HZwfDRZ7+G8E8so7nKg0FoBPiXH/rf/1ejAQ=
+	t=1740566489; cv=none; b=E4onEfnujZZczEYZm/Rqzz8+HuwUYP2GSmxJPylHCWxZmlIEhgd1ZcHwq6T7zyg/oxajxyqL4bDU/zDeR9c1bQYA/XloUVJNNVhrkY1I7oNgMa1rZlt/0xZfZnrlDC1dUKsYGbRhm2nVvD8LYdAlpsZyc8UxbMZZcZ4YuwsE9Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566486; c=relaxed/simple;
-	bh=XRXy6RSItxNq6QnKOnKdXg5Yk8DodK9KEgrENi0WQ2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lmse00uwdeoolwAYuJjJmFwJXe02PALVu50MPX5sHdxRBRnBg+KOpDAIJpB4awbPfNa8ESaFj3lenM26AMM5C9pey1CX9SAm5Y7Fm5o9dwTzLLSmLTbjFfWLBigmLRED2VTzNnmljDym20FCCLvmsJwtlAeAjB8mci3seH/3U2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AejhHYXM; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740566489; c=relaxed/simple;
+	bh=BSMw+04gEqWq3Msk3LXpsoriHTDgOv1NVpgVH9B4mzU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RWgz+VE67CgWWIuAQY9QzG8QU9FHQlMQQpPCX6GDDRQoTqRlfdqV6l4gPnROFpyYNICdRDBThk7aGt2EmUAXOd51kahXTGNxhx5rW6MfdTO5ytkiTTLDWgGPEeE3XfkQDxcfmZb1fAC8vMy2RA5pjeT+UcQe566L7ktIQa2elWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOIOEQIp; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AejhHYXM"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4398e3dfc66so58089245e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:41:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOIOEQIp"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e04861e7a6so12360999a12.1;
+        Wed, 26 Feb 2025 02:41:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740566483; x=1741171283; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Io4l6/kfa0Abr7c2gr2/O0xUhpbW7CfkwJb9n48BOE0=;
-        b=AejhHYXM1X2OqFulETr1+E5mdC+oPAllJ4ttBkAK18cSs7YRVg61z1TMVs6y3nTL1p
-         ufoSUADTlOTl7rxVN/a5+42rq3iuHgFzWP1n0PhxkOlnY9Dsp4iEY+Jqse2uEpQtwLQc
-         +VZuQtM8AF7iWB6IQMVSISmojak2X8LoYvvN5lx7jDoqto1GeMdJa4dEfr5EHAf8WCcj
-         BkovwLHZjCcxU5BxDtoWDcWhGPF506QkIABbWGtNM5dtSZUEgY57B3bSRNxFxc2C4nZ7
-         w5gYssY1jGopo79D4t1nrq01/Jo9Yn2/t3SPQUadKQa5h7K7+lIeSwq7fcqOB3y+9EgY
-         JcAw==
+        d=gmail.com; s=20230601; t=1740566476; x=1741171276; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
+        b=gOIOEQIpS3B/Gq5rqyz+Y4oS7g2+Mk9NQW16U5L6kddGQs/lcnOptmTnWVAeLVzYbr
+         0cCDXn/MeJfiKkV9hRvc5fIfGsrb4NO+Ab8TfVGIDp4cfsNl4EDXL6bcidcQ4IQixiQR
+         YU3TLu9eWBXwnYjtdrd8i2NUGmCAiClKqmRutKt5R01CbS1X22fxy4n/tC/KqILsyRWV
+         tLh0NwT7B9MCTk7gEgibuD8PMclGfGem0adexsV3dO7REQCTLSDvLK2W10QcMkyealqU
+         zJDlZO+bp2HL64BmE7dZvfNiFOYsbKwrm7GRBpniv5FQJHDF29vARXdiPI7ehGfLAkKC
+         XwJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740566483; x=1741171283;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Io4l6/kfa0Abr7c2gr2/O0xUhpbW7CfkwJb9n48BOE0=;
-        b=r3qeRY6AcXcoHyK0cCyejHD1mmSWMpe/kmy5B1LUed+JpcdJ8BC/4tiOB5QQszublU
-         oym35jQ+u7NtZFLigUIVFC6Yfh1M8Vy7hYcHZVmCltl12OQh9ijjcHPmEOOsFV4BAwN2
-         02Mm8ORVnDesjAg96vemWbrgOV/LMUgIu2ICXL+WrCvOus8bttU0ZY1fV/ST23JLv5sy
-         hyFozNFShO1BLXbbWkg9SmfqZeYVv7fwreSwF4Y//jkauxaxxzQ+6diW7bJfzNdiQJ03
-         P6M3DCtOHh/oymnshU06oHp4zTY8/pwUxXSl1Y6hFD64M+pio0VZX146tJQlwDLHqujO
-         SCdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtzEy0MM6iLyK/fuAGU9ZKsGKnPKa4ZASSH/CBG2suepvsJeAXsQHBs6bNQYvaAP/h7gUfF45e0KeaPf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu9uDL223P4zBFNP9R+Ld56w7ZKg83vhuazSKhjXCkSYWaHk1w
-	9nLq7LUsfCjJmxJyQgJpHD+BC7xo1UGE4ohRze4woPf5nUCf6lFyqBuGphM1CSg=
-X-Gm-Gg: ASbGncsUXQziuA66lyiKWxyRUgPCtVXfz7juRiUQ1UtdR6zc4JtCEEQ5gizhIx8BAOl
-	8RUvZWwgcQl9r53NEBOhw0kYdgPlssbsjnT4G6rCCrs+tKmffj9TRbc2jZBmVI/sU2DUsn+r6CH
-	PTiZyGmQ1Z5Y+8i9P5umBZXXg7A4Na0Kc1nWS8OtywAXR0je7fEn1FgosniNEtSLNd7Sr3722O9
-	KCRj/KnbfSf4DJYS9XgjEfoi66F2zLz3OW2LDO8SNLcnPQD5NkFa+8Y7PGpN1UZ9ehwgmgTcDUr
-	PFVTNpTrdVm6js2ADcKGbmjUCnI=
-X-Google-Smtp-Source: AGHT+IGM/5sKGlj2yIGkYDThiqtYqRuGy0u3oCOTR3Uv1tGaYGxuD0FRM9XnnIUJokzK6qFNma0+pg==
-X-Received: by 2002:a05:600c:19d4:b0:439:34dd:c3cc with SMTP id 5b1f17b1804b1-43ab90169c6mr20461805e9.22.1740566483568;
-        Wed, 26 Feb 2025 02:41:23 -0800 (PST)
-Received: from pop-os.lan ([145.224.66.72])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd86c93bsm5080832f8f.26.2025.02.26.02.41.22
+        d=1e100.net; s=20230601; t=1740566476; x=1741171276;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
+        b=aoSlW+LIPDg0isZOpX9iwgp43VQw0c2Fg6wq3GCNQJYJ6SNmUmQduhiaUArCAYUvV6
+         FFmR++et6mNjYRBk5qZYS6GdKaKlGT2Fy7ADlV3OzB4iqtTwCn4U0m7ZzfuEe9bn2cvD
+         IJ/DTpa0zCBEYtC3QuCsD/VTNve52yDlg1fR6RssFl4qyi7T/1AwCqMQ8xnaEX7nhnkL
+         grMFpmHDW6kMVqdP9jaR4QDo2Jdnt1/s+/M7m2ZEhRUTiV9nyONHerwPaVuyObYLh7Du
+         oP5RPUtnBJ64SXplNDxdqDrQNcrGdok/EAIuqyzsep430XBYa9oLfYb+2Szd8b1xKg+9
+         dhZg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0qCk7DAok8NTbXwoC1fTTsl+gxEaszYcxcNwzXOzMFMw2Le2EuXsEQhL4UrxdZiRtSZXP/x/gMSs2HXRI@vger.kernel.org, AJvYcCX7MXpJSLSp/9c8kQWQ3HHowyslFXQ5hfhBg9LURtb0JlUILUiatC4fi5ILV4KXAqLsJLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKbkEe9Qrvq1/y7lMfmg6xdC+Qg/gM8EJg+trUSV7KqkMegqGt
+	v3FzqSH0o4htX6BrqWrcm3c95FDhZCqkhXK4WSUulbVbOq6wI0v2
+X-Gm-Gg: ASbGncuDczZRZoWajQdeBT7eArkX/ezSk05Iie2hLG0O3ddWz5LjvvOPuHjwVonSaed
+	DNyS96niThmm8v4jz7VJOTm/FNy4dk8O/mGNzBK5GEo1/QNC70473wjZuReioqaEsXN1a+0QX+5
+	TUjnEQzMYcc2s7lp9ZtQ+xqvVaINRV3o+EsSQAgYWbY21G6Axuy7gVex89ciXDJL9LMM88RfjjQ
+	rx2KfuzWBjURwHko+PJCOPqRXZ3jEUXlBf0F/wB6QkvokjyeqpKbQBWAXddxV5ja570rpMURaoe
+	+dS5uaOLqql1
+X-Google-Smtp-Source: AGHT+IHH9F1IYBz1le8xW/KqZ54BHrkJ9A72amTbhME1pL0CzrJPPjM7s4jtPYMcv2g8PbVdUFENAA==
+X-Received: by 2002:a05:6402:5518:b0:5e0:8c35:a137 with SMTP id 4fb4d7f45d1cf-5e44a2545d8mr6074759a12.23.1740566475856;
+        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
+Received: from krava ([173.38.220.53])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e492120418sm2189620a12.14.2025.02.26.02.41.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 02:41:23 -0800 (PST)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	namhyung@kernel.org,
-	cyy@cyyself.name
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] perf pmu: Dynamically allocate tool PMU
-Date: Wed, 26 Feb 2025 10:40:59 +0000
-Message-Id: <20250226104111.564443-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 26 Feb 2025 11:41:12 +0100
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, oleg@redhat.com, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com,
+	Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH perf/core] uprobes: remove too strict lockdep_assert()
+ condition in hprobe_expire()
+Message-ID: <Z77vyIKkLyliF0zz@krava>
+References: <20250225223214.2970740-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225223214.2970740-1-andrii@kernel.org>
 
-A few minor fixes that I came across when poking around with the Perf
-list behavior on hybrid Arm.
+On Tue, Feb 25, 2025 at 02:32:14PM -0800, Andrii Nakryiko wrote:
+> hprobe_expire() is used to atomically switch pending uretprobe instance
+> (struct return_instance) from being SRCU protected to be refcounted.
+> This can be done from background timer thread, or synchronously within
+> current thread when task is forked.
+> 
+> In the former case, return_instance has to be protected through RCU read
+> lock, and that's what hprobe_expire() used to check with
+> lockdep_assert(rcu_read_lock_held()).
+> 
+> But in the latter case (hprobe_expire() called from dup_utask()) there
+> is no RCU lock being held, and it's both unnecessary and incovenient.
+> Inconvenient due to the intervening memory allocations inside
+> dup_return_instance()'s loop. Unnecessary because dup_utask() is called
+> synchronously in current thread, and no uretprobe can run at that point,
+> so return_instance can't be freed either.
+> 
+> So drop rcu_read_lock_held() condition, and expand corresponding comment
+> to explain necessary lifetime guarantees. lockdep_assert()-detected
+> issue is a false positive.
+> 
+> Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
+> Reported-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Changes since v1:
-  * Rename perf_pmus__new_tool_pmu() -> tool_pmu__new()
+lgtm
 
-James Clark (3):
-  perf pmu: Dynamically allocate tool PMU
-  perf pmu: Don't double count common sysfs and json events
-  perf list: Document -v option deduplication feature
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
- tools/perf/Documentation/perf-list.txt |  2 +-
- tools/perf/builtin-list.c              |  2 +-
- tools/perf/util/pmu.c                  |  7 ++++---
- tools/perf/util/pmu.h                  |  5 +++++
- tools/perf/util/pmus.c                 |  2 +-
- tools/perf/util/tool_pmu.c             | 23 +++++++++++------------
- tools/perf/util/tool_pmu.h             |  2 +-
- 7 files changed, 24 insertions(+), 19 deletions(-)
+jirka
 
--- 
-2.34.1
-
+> ---
+>  kernel/events/uprobes.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index e783da1d1762..4d2140cab7ec 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -762,10 +762,14 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
+>  	enum hprobe_state hstate;
+>  
+>  	/*
+> -	 * return_instance's hprobe is protected by RCU.
+> -	 * Underlying uprobe is itself protected from reuse by SRCU.
+> +	 * Caller should guarantee that return_instance is not going to be
+> +	 * freed from under us. This can be achieved either through holding
+> +	 * rcu_read_lock() or by owning return_instance in the first place.
+> +	 *
+> +	 * Underlying uprobe is itself protected from reuse by SRCU, so ensure
+> +	 * SRCU lock is held properly.
+>  	 */
+> -	lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
+> +	lockdep_assert(srcu_read_lock_held(&uretprobes_srcu));
+>  
+>  	hstate = READ_ONCE(hprobe->state);
+>  	switch (hstate) {
+> -- 
+> 2.43.5
+> 
