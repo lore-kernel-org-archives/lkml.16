@@ -1,159 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C67258CE0
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:07:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE212459C0;
+	Wed, 26 Feb 2025 10:09:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564453; cv=none; b=BIieRzYdKHgcRNThziDSvMQ1stYyX+Ljw60nL1ruf9bkgbR+Tblwtb/qYM8HhSwS7jRo57GIY73mhRtzJGI1qJ3OlMYZAipnrbjrWXWmQ4jwGCG3yXDa2mrDQXcnqHN58R2ISsYxhUXfvO1nmcvkK9jq7PvjtE9/TIeTWx+zH5o=
+	t=1740564579; cv=none; b=rrcZXT/Pz4Yt+2cTm/FLki53oStGR75kfobHQYdASsYP+9S4Ik8eh1/zlv+GUfF1ZfB/4CQbG4iVlcKWvQjH8Jyqd5sPp5s7M8Ku6uBMsf4wzpbZy1RJVbMRIOtiqM9GHEWJ6eINp/fEKFHtOTKUCiumt9PXyqACOeMpBkuUdgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740564453; c=relaxed/simple;
-	bh=AyAHIQeVxV7KJDnqLXHbeSFECRBR40Nsmn5QJdOcsts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PDPSQZf1IhhHfVpvqpd7HTvACanybqpa3GpqmwZ5h80hTSt4857MaOveg1NDkrr2QelNJizl1izz1d6tvMZfu0XFqjX37FRXx8U+xUVRhk5DAcOVE4/ydFr5Ges3arHASKtDDYZqweP5fxOJRRmBzoxD1/nUoUJ9qHaQ691xqw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgVsLb6a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740564579; c=relaxed/simple;
+	bh=/Wi5a4BUyZWRuGrcL3hOrl0Imw4cPny7X0672tCV2B0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HnXfGX0oWizd7xNVXPuNnKOdkB5oo2d61B1SxXNkOG3gSuwHZ8AAJc2lMhju0QypZ2Wm6tgm6Mun3japF44L+L2knWjJLY4gvYuVBIHUlSymjjVbFI5n9tq45ZsGjZ8vwYrM7IjvVzFmoQa97WfE2eQkee9lJ3B3hj7JZfQIDe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KCc3BfM6; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgVsLb6a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5892C4CEE2
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:07:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740564452;
-	bh=AyAHIQeVxV7KJDnqLXHbeSFECRBR40Nsmn5QJdOcsts=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LgVsLb6ae+6LZxYgCVoI/D5XVgpm6Cz/p1SVdgYH18ndzrPdcLpBd+x3IDZU8Go8i
-	 gGsnx3pAaSA8BxbaCutK6L5h9gBJkAwR7r38p/ljcw1QNlBMAVOhCjwkXg3KFr9lHi
-	 Ul2GZK+GzGGoiuQYETJDEcBLGN3Z+m8s5dDA2AbmI1lDST3qmHUQHAEnNS28xYlYGX
-	 Fmrv/oTt00u+8w/a8YOqJsUDnfXvXhxcchOxz+kZj1dvVJyq1AofUSoouMf7NhXs2x
-	 X1q8NGBNLy+b1ojpKIQ4N9tH79OIMMsbRCsRT6go97QHSd9PL1iT3Ii8UqEsEkG/Yi
-	 TNLsxJK37cyRQ==
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3072f8dc069so68635861fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:07:32 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUt6Nqielxyhdswi+e8junSQ4vOpKOM/B18moLkx9SrUlKCk7k1RtjJSOGqb5YuWgC/Tghd4rlzPvJIqg0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpceEmqzsZ+IWOPEzXFiYa2mMImh3Zd0wuOtn0725iXBQg3eqO
-	jrSGCWiKnYVa6Eoz3qSTrvScivQpt8wYZOIuCeG7OAQMsKKndN1dsaq7BUalcp2YA51liRdx3yD
-	JJIuVRWYfy4GLZH3LXgSmetPS7Og=
-X-Google-Smtp-Source: AGHT+IH77s07/831v/UsWRW9X8Qt2tEO6lngODAKoum/ihUKwQXpXxPbkOfYTJKPMisMdLAWL73xuBPJxdwhVpBZ4kk=
-X-Received: by 2002:a05:6512:234e:b0:543:e406:6363 with SMTP id
- 2adb3069b0e04-5493c570ed1mr2417228e87.3.1740564451208; Wed, 26 Feb 2025
- 02:07:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KCc3BfM6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 496FA431F3;
+	Wed, 26 Feb 2025 10:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740564575;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LzNBdKuFi8Do9kBnujj8KHZD3Z1XOY/pDKnjHb7bSE8=;
+	b=KCc3BfM6qiXcIeP6oxm7dcTtc6uikeTEYireTaTa7AzgNIQHgyb76Bo8/OQCFhkQV+J8V8
+	g3YaEMk8s5q2+t0YcyQIHCV42yMQG+5v90y3NWf2CtMNeOkB+FhD1a3OAClfAEpZC0q7Tj
+	mt6Un6/xevxnL3LUDFP58e34YyWip4MblGr5VEV18YMc6l7DgYG8p/UFt+XpykVdtXoKpD
+	8fEdglMxbn6k7AQkDj5WD0pV6533VWkNm5YP+VcPtbW3k70J8z8PDczuYHm99JVOl0+QND
+	ursYnH5mRsOGSddt8OcHxqKfD5gmC0+oSUTP7hNovdV+v4vjCUJyn0ZqtDBwdQ==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v2 01/13] net: ethtool: Export the link_mode_params definitions
+Date: Wed, 26 Feb 2025 11:09:16 +0100
+Message-ID: <20250226100929.1646454-2-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
+References: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225114638.2038006-1-ryan.roberts@arm.com>
- <CAMj1kXHNO+iB4vNFz-4tR_9CPzv96hn+RW=eqyZXMGy_AySDpw@mail.gmail.com>
- <20250226001047.GA24197@willie-the-truck> <CAMj1kXH=tPuM+irCsKgycUTbts8h9vD4m3tEtw51YFzWafdSUA@mail.gmail.com>
- <b0578d21-95cd-4d8a-add1-87299f36b491@arm.com> <CAMj1kXHJGC9aYCwwb2XTWfhAjH6GDKQptNdLwO+hfv6hazivHQ@mail.gmail.com>
- <b6b999c9-79cd-4945-9d7a-c5ee8158b7dc@arm.com> <CAMj1kXHesY77QhnW_U19UURGUqiBuQrNcL-kWQs7niaMa4nAng@mail.gmail.com>
- <2c465bdf-8028-4b05-8e18-3154735ce906@arm.com>
-In-Reply-To: <2c465bdf-8028-4b05-8e18-3154735ce906@arm.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 26 Feb 2025 11:07:19 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGQSFh9A_uK6-i1-sd59i+yKg3vZxD+cYQ_vyz-HZJZKg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqAlass0uE8mVVRnhELpOjzjIKuYqX8xCtGGpSz6emoBSwU3fQmwrmDzrg
-Message-ID: <CAMj1kXGQSFh9A_uK6-i1-sd59i+yKg3vZxD+cYQ_vyz-HZJZKg@mail.gmail.com>
-Subject: Re: [PATCH v1] arm64/mm: Fix Boot panic on Ampere Altra
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Luiz Capitulino <luizcap@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Wed, 26 Feb 2025 at 10:45, Ryan Roberts <ryan.roberts@arm.com> wrote:
->
-> On 26/02/2025 09:04, Ard Biesheuvel wrote:
-> > On Wed, 26 Feb 2025 at 09:55, Ryan Roberts <ryan.roberts@arm.com> wrote:
-> >>
-> >> On 26/02/2025 08:33, Ard Biesheuvel wrote:
-> >>> On Wed, 26 Feb 2025 at 09:07, Ryan Roberts <ryan.roberts@arm.com> wrote:
-> >>>>
-> >>>> On 26/02/2025 06:59, Ard Biesheuvel wrote:
-> >>>>> On Wed, 26 Feb 2025 at 01:10, Will Deacon <will@kernel.org> wrote:
-> >>>>>>
-> >>>>>> On Tue, Feb 25, 2025 at 07:05:35PM +0100, Ard Biesheuvel wrote:
-> >>>>>>> Apologies for the breakage, and thanks for the fix.
-> >>>>>>>
-> >>>>>>> I have to admit that I was a bit overzealous here: there is no point
-> >>>>>>> yet in using the sanitised value, given that we don't actually
-> >>>>>>> override the PA range in the first place.
-> >>>>
-> >>>> But unless I've misunderstood something, parange is overridden; Commit
-> >>>> 62cffa496aac (the same one we are fixing) adds an override to force parange to
-> >>>> 48 bits when arm64.nolva is specified for LPA2 systems (see mmfr2_varange_filter()).
-> >>>>
-> >>>> I thought it would be preferable to honour that override, hence my use of
-> >>>> arm64_apply_feature_override() in the fix. Are you saying we don't need to worry
-> >>>> about that case?
-> >>>>
-> >>>
-> >>> I wouldn't think so (but I'm glad you brought it up because this
-> >>> didn't occur to me at all tbh)
-> >>>
-> >>> With arm64.nolva, both the VA and PA ranges will be reduced, and so
-> >>> the range of the linear map will be 47 bits. So if the PA range is
-> >>> being reduced from 52 to 48, it will still exceed the size of the
-> >>> linear map, and so it should make no difference in this particular
-> >>> case.
-> >>
-> >> OK, so I think you're saying it'll happen to work correctly even if we ignore
-> >> that override? That sounds a bit fragile to me. Surely we should be consistent
-> >> and either always honour the override or remove the override in the first place?
-> >>
-> >
-> > I'm trying to walk a fine line here between consistent use of the
-> > override, and fixing something that I broke in a nasty way all the way
-> > back to 6.12.
-> >
-> > So yes, I agree that it would be better to use the override
-> > consistently, and this is what we should do going forward. But the
-> > purpose of the original patch was mainly to ensure that we
-> > consistently program the MMU either in LPA2 or in non-LPA2 mode, and
-> > not in a mix of the two. The linear mapping randomization change was
-> > kind of secondary.
-> >
-> > So perhaps this should be two patches:
-> > - backing out the use of the sanitised register, as proposed by Will,
-> > with cc:stable
-> > - a follow up based on your proposal, which can be backported later if
-> > needed, but without tagging it for stable.
->
-> I suspect I'm misunderstanding something crucial about the way the linear map
-> randomization works (TBH the details of the signed comparisons went a little
-> over my head).
->
-> But my rough understanding is that there are 2 values you want to compare; the
-> size of the linear map and the PA range. If the PA range is significantly bigger
-> than the linear map size then we conclude we have enough room to randomize.
+link_mode_params contains a lookup table of all 802.3 link modes that
+are currently supported with structured data about each mode's speed,
+duplex, number of lanes and mediums.
 
-It is the other way around: the linear map should be able to cover all
-system RAM that may appear anywhere in the PA space, and so if the PA
-space is very large (and memory hotplug is enabled), no randomization
-is possible, as it may end up mapping RAM that appears later past the
-top of the VA space. Note that the same is fundamentally true for
-running a 39-bit VA kernel on hardware that has a PA range that
-exceeds that.
+As a preparation for a port representation, export that table for the
+rest of the net stack to use.
 
-As for the signed arithmetic: the randomization works by substracting
-from memstart_addr (aka PHYS_OFFSET). Normally, if system RAM starts
-at 1G, memstart_addr will be 1G, and the linear map will associate
-PAGE_OFFSET with PA 1G.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+V1 -> V2: Moved that patch at the beginning of the series
 
-To randomize the linear mapping, the system RAM has to be moved up in
-the linear map (as this is the only direction it can be moved), and so
-PAGE_OFFSET needs to map to a lower value, and so memstart_addr may
-wrap around and become negative.
+ include/linux/ethtool.h | 8 ++++++++
+ net/ethtool/common.c    | 1 +
+ net/ethtool/common.h    | 7 -------
+ 3 files changed, 9 insertions(+), 7 deletions(-)
 
-> (I
-> think this assumes that VA size is always GTE PA size). But if linear map size
-> is based on an overridden VA and overridden PA size (which I assume it must be,
-> given the pgtables will be limitted to the overridden VA size) and PA size is
-> not overridden, isn't it possible to wrongly conclude that there is enough room
-> to randomize when there really is not?
->
+diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+index 7f222dccc7d1..8210ece94fa6 100644
+--- a/include/linux/ethtool.h
++++ b/include/linux/ethtool.h
+@@ -210,6 +210,14 @@ static inline u8 *ethtool_rxfh_context_key(struct ethtool_rxfh_context *ctx)
+ 
+ void ethtool_rxfh_context_lost(struct net_device *dev, u32 context_id);
+ 
++struct link_mode_info {
++	int                             speed;
++	u8                              lanes;
++	u8                              duplex;
++};
++
++extern const struct link_mode_info link_mode_params[];
++
+ /* declare a link mode bitmap */
+ #define __ETHTOOL_DECLARE_LINK_MODE_MASK(name)		\
+ 	DECLARE_BITMAP(name, __ETHTOOL_LINK_MODE_MASK_NBITS)
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 7149d07e90c6..6b0178c09d72 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -422,6 +422,7 @@ const struct link_mode_info link_mode_params[] = {
+ 	__DEFINE_LINK_MODE_PARAMS(800000, VR4, Full),
+ };
+ static_assert(ARRAY_SIZE(link_mode_params) == __ETHTOOL_LINK_MODE_MASK_NBITS);
++EXPORT_SYMBOL_GPL(link_mode_params);
+ 
+ const char netif_msg_class_names[][ETH_GSTRING_LEN] = {
+ 	[NETIF_MSG_DRV_BIT]		= "drv",
+diff --git a/net/ethtool/common.h b/net/ethtool/common.h
+index 58e9e7db06f9..b9f99fb1d8e1 100644
+--- a/net/ethtool/common.h
++++ b/net/ethtool/common.h
+@@ -15,12 +15,6 @@
+ #define __SOF_TIMESTAMPING_CNT (const_ilog2(SOF_TIMESTAMPING_LAST) + 1)
+ #define __HWTSTAMP_FLAG_CNT (const_ilog2(HWTSTAMP_FLAG_LAST) + 1)
+ 
+-struct link_mode_info {
+-	int				speed;
+-	u8				lanes;
+-	u8				duplex;
+-};
+-
+ struct genl_info;
+ struct hwtstamp_provider_desc;
+ 
+@@ -33,7 +27,6 @@ tunable_strings[__ETHTOOL_TUNABLE_COUNT][ETH_GSTRING_LEN];
+ extern const char
+ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN];
+ extern const char link_mode_names[][ETH_GSTRING_LEN];
+-extern const struct link_mode_info link_mode_params[];
+ extern const char netif_msg_class_names[][ETH_GSTRING_LEN];
+ extern const char wol_mode_names[][ETH_GSTRING_LEN];
+ extern const char sof_timestamping_names[][ETH_GSTRING_LEN];
+-- 
+2.48.1
 
-No, if the linear map is only 47 bits, and the PA space is either 52
-or 48 bits, no randomization is possible. We might even run out of
-space without randomization, but this is an existing problem for
-non-LPA2 too.
