@@ -1,247 +1,294 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010042.outbound.protection.outlook.com [52.101.229.42])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1813227BA4;
-	Wed, 26 Feb 2025 15:27:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583625; cv=fail; b=m1K7fYABR/x/l8bHx5H07ZBOe4HIgoTZp+lch4fZ8lISRumJLb9I5C6sUo7tnxYQ0UmcXUhovmjBNJIBZisfJpEgcEruyj957enpiep1y4UCdRRfimbQoRmhHshNpjv7etlvC5Vj/Fvy4qT60CTKP+CwoQXUZerT9eOJrnVeRFQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583625; c=relaxed/simple;
-	bh=5uvchA5nH03kiGbMXqq3m8CbWhBlFahJRNj26wjaNJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GE5e86kBqll4rOVXFllTCk8JbpiSGDcAhOX9brhjgv2lGCFincrDX0dROse8QtRVyjUm4gEOI8kWNdpI2m84N5XEfgc47pIP83EU4nkQLIfKwv66QoUSh2kJvd9DAM4dPzdjIu7KcAsXUrAwfwzN9ERYge3FOYmkmt62Di3aniQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=MV26heHc; arc=fail smtp.client-ip=52.101.229.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9549227BA4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740583632; cv=none; b=tAe9xXQH0JzFSM/I6xhNwUuOoiukGjeuC4yYV7gBLsQsQxOyrAwxs+ESGbr/NVWu0jjUQ2yB5gZeU2gmnkvmJDkq2itahyJ1npcRnzBb432Qv0Hsfoub8A6YrEzpM1Gh+vaRVOvCbLa5/O5FHfTCEoSq5GZ3VU9gIfnpz5VbuIw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740583632; c=relaxed/simple;
+	bh=T4Baa59RSsii1/+I1kF4FXFme9v/EnqNMR7oY5tvLz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YQgH3j2ayYYnsCiz2VMXLFnV5VRtqseU6CMlH6QMyBqawIf2vLom3npuXilbr7tVvRjraSsLzWLqaF5krlJV10asZ+OAanAJ1uLfO7MsmHmxe3K9UylDjoi/grPMtt2mRhJvf9c3fgBQng1oGbaSfNT4sarOcFnWvarmiEyIUx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JbcNsXOL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="MV26heHc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UcI2IEczp46c3/913PuzdP85lrASfj9iJLcixCSfAVsGwpfqK/4ljy2vesn8LGR/Sf7jRejXjkWtvh9BJ2NwfamuTP4Bbb8IeNWfGKsFTrPNX/4OawnDDXr5VAqs8jw58H7H/qAb3+HQxZTMLWnkgNw8QUif6sbIezc4VKmKRy706/SPn2LFk0D1adQpML709VZHBfTdPBuGJXUeLfcDD3LVAQtnimM+AuQAm6e7ezQ7mJfYAJWKyExO6woIYMjWFu+OQa0Hrk1DHQc4+Pb4rlgp7mM6jQpAd/kQCWh1SrhkxbnbdxS8qYDObbOTbGTc4x72tlaUZVMpDg5YA6H/jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2MiP5/sRjKZ1lKqYtzwX6HFn7IU/Os8AGNJYk9K2eF0=;
- b=yV7f6/xxhwJ5UXeCg5RjH1HxVgHAhwD3cFG42CFyRqVxrYLeg+axvXA5rLmG4CGPCgxhq1B4bIaahDRuEcxBGeFLp1aW9NavzDHYrIUxWDZL5WDNW2QiiIK+vpeGpucfOhHxwoV1L7fWhWXLut+xdBJX7XJKk5OUyDyiTcOC++UnSRTMPHtbH2yTK8cG4PDaY7GO5QUQFU7lbhBQ+0/mMz0B64JmKkviIQG80GyllfT0RmedXu8Fj/MHy4KP1ilHi1fOljDMcvJTOtPkn3LcFEWed/ub8QjPiupQ5N3swbl3LWzIVC5ixLyDDv/kzspHoK6cUhgwrA+MFq0cveMvpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2MiP5/sRjKZ1lKqYtzwX6HFn7IU/Os8AGNJYk9K2eF0=;
- b=MV26heHcZMpiHbqxTlfjVFGqSO/emNNCXPEkWD4j/12D1xi4Bn3IjnIdcOCFamaBuPATuw6QaQDSP8/7Cet4S3n6fyWQ5BaRAOJxh70qi8PtXaf+pnThewGyloRfLe2f6ma8rEXa7mb6zSZv8DjJIApgZd81AfnWDmccCKZcSog=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by OS3PR01MB10248.jpnprd01.prod.outlook.com (2603:1096:604:1e4::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.22; Wed, 26 Feb
- 2025 15:27:01 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%5]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
- 15:27:01 +0000
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-To: tomm.merciai@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 13/17] media: rzg2l-cru: Add image_conv offset to OF data
-Date: Wed, 26 Feb 2025 16:23:37 +0100
-Message-ID: <20250226152418.1132337-14-tommaso.merciai.xr@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com>
-References: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR4P281CA0073.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:ce::13) To OS9PR01MB13950.jpnprd01.prod.outlook.com
- (2603:1096:604:35e::5)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbcNsXOL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740583629;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=opCox9KVcehhy1NQGp4HS1lXiyGpPcoip0UbMOR0ICE=;
+	b=JbcNsXOLL0jO4NG6ryd3uRLjVGE7J78Xb1w0U/xYAAwsbhehsZDspedfr1j6ukA/0vW3/4
+	L1W7Ktd8pWYGugcsNCgsr//uBZ2FQfIVmcaaIcYlvNpxH70R2zkQzZk7Jb+O6zJzO2a5Fb
+	XhlLIjZaL1bL71ifSYa9p9cfFjdMCTA=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-bZ2VoH86O2Ku7PGseltwTw-1; Wed, 26 Feb 2025 10:27:08 -0500
+X-MC-Unique: bZ2VoH86O2Ku7PGseltwTw-1
+X-Mimecast-MFC-AGG-ID: bZ2VoH86O2Ku7PGseltwTw_1740583627
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f31e96292so4372842f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:27:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740583627; x=1741188427;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=opCox9KVcehhy1NQGp4HS1lXiyGpPcoip0UbMOR0ICE=;
+        b=ubgyM5n1xX6bRndJJl/4Fq0kGeq2HQ1TJZzNC0DRpRqa2G2hS4LKLNcJtz4nCXyOJq
+         AOFJjknB6sffjSX3hoeUB1H23/OS8ask2yWI6MBGNYoX9H3hyqMbBuflYqGYr9WY/dEE
+         E8+ebQidb4aCgHSvJDT/ICFJIpAx3mU0vyOZ23234C+2rhZEcaiL8kl8WJ4qGCcXwIZ+
+         +gSKU3FTONLW6VEFSd5dfaAs3rMlXUt231Haz4wbUe95TKpvp6qLfkXqO7cDcOSwbjaW
+         xZX+zTDiPfZacRtGxqq1AYmYu3T1GBjt+KtMBQzaTpOOledTSQYaXzpP8+lgl/Pp22CP
+         5yGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXM/+JGCkwqICKyHiicyan9+RCpYdMHN9ogdC29sx/lcniTjOGgJcg+F6OYr4qy83Jir9FIUL0D7zKI+s8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLPdV+P7JVZhiLqOhF0iDSx5e0V+8VPgh5+OczoCeG9swCGuaF
+	wND0V4SBYoOo4vzZHtNnPwahz7jCwg0T8630RAvP8fJiONXM1h87U0aYJf9I8wMPV+NyScrswDc
+	iy1sd+bT/z10htpSRrV8pFVgHqRg66FZ2uiu8yfJiviDSroAoRyTj1bDRtIuDtw==
+X-Gm-Gg: ASbGncsda9Lmdl0Pq09aQa+J1P9e0zgHmNo5jBc+Mi+IYaiw6SiSUdeX3u4QQ2FxDsZ
+	rnDE4/hu4OYbgfRNkTiChoQx/z3Cej3fhmc3NTXl9fX9RBhNrmkgX5E7+KcN7E6wAh8+1R35vWf
+	CF7RgreZnWNyEtA0EpcBg4MPe2Q0zvMJyBbw32MOoDJfOtCAz2P2ftFdgctIgE5PEEuIR4AMkQr
+	nfj6ibFcznANzboNAMkKlGhzDJg3zAFiwvfmKUxKZDRC+HgnPFBxukmAElavAR89CqHISsSb1De
+	OA9Ppa/HroNPBFGkX4M2NGEzE/p8ha93Z3rsKfSUygXqeaKLw8jWU7Mclg2AKD8=
+X-Received: by 2002:a5d:5887:0:b0:38f:355b:141e with SMTP id ffacd0b85a97d-390d4f378ebmr3452617f8f.3.1740583626899;
+        Wed, 26 Feb 2025 07:27:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF1DwZYHHCSs8+Mdqpg+KX0YNs2WqUN7TodnTaxIGwwctMTc50nKGidchiWQV2RbC4q0fkVAw==
+X-Received: by 2002:a5d:5887:0:b0:38f:355b:141e with SMTP id ffacd0b85a97d-390d4f378ebmr3452587f8f.3.1740583626458;
+        Wed, 26 Feb 2025 07:27:06 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd882a64sm5769008f8f.46.2025.02.26.07.27.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 07:27:05 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:27:05 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
+ <anisinha@redhat.com>, Dongjiu Geng <gengdongjiu1@gmail.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Peter Maydell <peter.maydell@linaro.org>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/14] acpi/ghes: create an ancillary
+ acpi_ghes_get_state() function
+Message-ID: <20250226162705.67875661@imammedo.users.ipa.redhat.com>
+In-Reply-To: <2288cfe02f8cfec4b35759fd748366c885018b59.1740148260.git.mchehab+huawei@kernel.org>
+References: <cover.1740148260.git.mchehab+huawei@kernel.org>
+	<2288cfe02f8cfec4b35759fd748366c885018b59.1740148260.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|OS3PR01MB10248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2bc7195f-e8d8-4266-1d05-08dd567a0436
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BKWiO2j6DyKLQ/h8xI8dKq9nixPVnnMmqsPWh4PftiO+sTBfdp6Rhtc8Gr1U?=
- =?us-ascii?Q?oHBaiEkJCXPyXbHBhNwbdehuxiaTN1hQDFENpcJvjPuJ9PV8+Npojjy+Xpg6?=
- =?us-ascii?Q?tkfgo2QornizldsIzzw7oYk5kO5ksBT4MRgQOBb3RYAEiXZSDCC1Yk9gp0mo?=
- =?us-ascii?Q?N9u2/c5v7/Vm3XxhXWFUq22mGt573nlhmpyaPFm6P187sQVI5nx9j5cikOYh?=
- =?us-ascii?Q?LARb4UNiREAm//Fp3+DLKIMIUuIAuveeUnMrLS8J+y+AhVlntyzPa7xbOUP5?=
- =?us-ascii?Q?5JEy7PpylyIoBTHiaS4P1/h77nJ9GybxDBBzu73cBTIazohLocRTcNKmYpgK?=
- =?us-ascii?Q?WAeI1LfUCfFCfLzeQVbaKZSjYmds/t52sHSR4sgSCMq6eGwcwrUKBL562Y40?=
- =?us-ascii?Q?7v0wh9hUyY2Jvg0WHZ5LbYw62Xl0j0XvZLoY5Q8tKsDsdCYqKbchv/uW+R70?=
- =?us-ascii?Q?UXP4a3I2TQuX7DqDr1Y6muoW/X75TT5XefaIO+hvCHNgmbwcaXOZ6eb2W+R0?=
- =?us-ascii?Q?iF/SZjKVoUDd+BuINdBhKbz3cZaECdXMITLlcS5Zw7yf+5LEsx5RUIL5wbGg?=
- =?us-ascii?Q?MdgY4h5OukrVKBsNS0+tO/lp609MmPCnkgwfAaR4ulDBl9TBZxZ0BP5ZTRI1?=
- =?us-ascii?Q?/xRitIC7oZTs9SoD7eC0omrg/erV0jgCr5nuQX1pBimr94MhgUkYRJfz2lYJ?=
- =?us-ascii?Q?t3vgatmboIRkpcqDZL9NwyfK44FJERHF+NGBw+LOY6LRrylz6vGAMukVJ6bQ?=
- =?us-ascii?Q?5hX/64mUqn0pljgjA8Mo8fgdNNlcX4Ksl/qCaAAL1y8N7nNkaZ00tmQxIpcu?=
- =?us-ascii?Q?Jy8MmJSP+YASZM+PwU4JmLkOePOwdrIn/5D1JW2wOpqj8yBXOzBQh+aSPcZU?=
- =?us-ascii?Q?KA+w+0QXTukz4V2HuMIZblAoDlUdsvVBMGqmrK6lKjdqPiJVr4/Ndk+kUU8x?=
- =?us-ascii?Q?GidFwwhH1AM65so8LPvOIbqsRM63KWOgZSbC0MiC8nWLbpGsq6uD8M5gfq/P?=
- =?us-ascii?Q?HX1kUVVCNsnW+efIoJh8KO/NKPKoDWBK55o/O352fz0eNUbsvDTarfbQpXkI?=
- =?us-ascii?Q?5GNOTl7ieG6Fxwh9RhZf833ss2E759zkRbuBA7RJShMkyQy51NZsT7W5Kvuk?=
- =?us-ascii?Q?WXVL4qnym0RRBM9txZWBPqGF/vPEB9L9tWtTZXc8ZJXAH0RSB0aCfmLw9Fq/?=
- =?us-ascii?Q?13xJcYPtNWGzpsAspz+1y6SeS8/zKK/XM1ReKgsghQmdOT4u8Rn3W3wWea+R?=
- =?us-ascii?Q?/6RVktqcBo9Mw1/MTRH5c2frErM8PTRNNGMQg/TPyci2iUvtkclXEsdRGpSA?=
- =?us-ascii?Q?vK6pSjKw6Agns/pT4iPAGlQ134M+A6+3sH6Kb6pzU8GaAV0yLCcxvhaIcdiU?=
- =?us-ascii?Q?+KZmbNKAAXQKCkwKa7+tK9kSsBw/52aLuc791ytvv9c7oF3xFeakeC99GS8x?=
- =?us-ascii?Q?ky/1vECLFOxyf/aQv8KVsArn1NJ0WKdm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?81gZLaoGhGSCg+PS14Wn0pqZVJULs5tViuxN4GN9rUup0DrPZ9Ikc2a5W0nF?=
- =?us-ascii?Q?2eZZCEuBp/uCGeRjJFyAAU54dCDy2TsNn+TEZzPxrD3+Bj5+P842PUSWyODR?=
- =?us-ascii?Q?eKEd4m6IgZKjaFRP0RPyyOtxUOeVt2PnA/QvAsLWhiI+N7i4hhyDpI3rJlqN?=
- =?us-ascii?Q?L1G9EpbP9lLukBwzKQXLxjYmD696NqFOemJV/GoE7Cfgl/nakC86CxkJrWTl?=
- =?us-ascii?Q?AfksCJu+SrKnPQuNc/P1afb0I3eUO3qP737S+RA6qtXzhMktkVhI9ZTrQL0S?=
- =?us-ascii?Q?Bx/tOBxldziRbgJpnFLfS9zSBaxpRrVzu7xMOeH8ppuh6WMbnmWmiswb9ugn?=
- =?us-ascii?Q?FC2Pp63UEvIDbOX9arwEWe97hQDrA3w2TF72c4EMil9GNvn703M+hebw6c+v?=
- =?us-ascii?Q?CqnnOYQzBbvhiDsF7voJMpiBOy3ORR9CywoUGAyv95O5+TinHDrMu4b2DqhY?=
- =?us-ascii?Q?WBDRJuY4iOf75pq+aXc6BxdaAmMlLdYinU+sKl93foM75h28dPR8NTPaPbQT?=
- =?us-ascii?Q?94My0zPM7UEytJ6MQJkeeVzQ3C6Z3KrczMkWegmypDxa/y38YA5kPxOlRucj?=
- =?us-ascii?Q?8t7Yv/q9EPvZzdJ3WaGCXE6MJ7ezJsB5zntY1esN8ZHD8MToCNGtq+3k1piC?=
- =?us-ascii?Q?rupWbcpkA5pAPxgquTesgfpDNAv06AFGRJWdEYL35zZpHC1bvtlWhgmU0Q+b?=
- =?us-ascii?Q?uZFIl4oV1JtzgAgYXe1NKY8KkWTXCIz4aA35Ppx58tyglRvDnexys9SfPbfq?=
- =?us-ascii?Q?O7spTmlRJ6zeZ12FxcKQsbmHEqH/eFotb14ue8JCazvnYrJeG3rwzeCh6GMp?=
- =?us-ascii?Q?EFlkxR8a7SsfqfGFWxU3EcGrNDg5ChnurDNW5ygg2NDM/MiAv9U6eovY7BQb?=
- =?us-ascii?Q?9i0ydl8IwozXK5yNuM6h39TqiO9e/NTXO2+PAQIs5BcJ3+1cdQB6OwXB2L/Y?=
- =?us-ascii?Q?U1Gbqn18PiD08a2wk+i5VpHE3mBVShH3g7oPUm2v5lW+c30AHYN8ODBSizOi?=
- =?us-ascii?Q?WetGkVQt2yVwjZB731uL6ONDHwsM5aO0Crkqdyqa3/bAtg9TVPoBeATvFw8P?=
- =?us-ascii?Q?ChuWL/SLZt+GC+pKmESNwRwZ3BOuPknRcV4qt2caL+y/owLL5xiy5RKnCCq0?=
- =?us-ascii?Q?8ZdYj+cLPIIpGIEC+tCHQxFSDb4ITHoB+cMJsbrrrPWXQX3ReMSLBisGtzCG?=
- =?us-ascii?Q?HUBfPJXVN6RVhZrTxxCoQ4AoHtg/YOBg3GVDAX1DwUa+5IzqkJEXgtQUkGwM?=
- =?us-ascii?Q?XgUMvVj338ai6TWpAaqMYWDTqY05BtrmOtMFWmR4eNyArC+v62rEwzMsJvwM?=
- =?us-ascii?Q?Rc5MVAU9eMt/RxAwfwqh1q7c+Q3vTdP6CzcI5MfdxoC6kDzzb4tjYEFAkTFn?=
- =?us-ascii?Q?e99lG9MkwYJjfzSU9E1z/rCSFimVdubimRlC8ZKsftVYnTGOJ5tykI9NNaiG?=
- =?us-ascii?Q?Ez9MR2GKMx+9xT8WeMCJNFWOtyZ1okXczJE1YzVuWSaOoU8oP2GT5JJx0de5?=
- =?us-ascii?Q?Rssww34nXf6xcAxK5B8pLU6vZyngGhikXAaOpWoim+awheM1tjvJzy86eBJA?=
- =?us-ascii?Q?SqQUArz7h3k0MmXtfOcxDbkcIkbyNcGO1GslZAOMjFumKjNESprFCQN4G5a8?=
- =?us-ascii?Q?rQbg1dSliYu23Z2gr2z2b2E=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bc7195f-e8d8-4266-1d05-08dd567a0436
-X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 15:27:01.6652
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oGfv77J5gakC/BFBdOE22+k5J80rTlBzQW3qzh+PEiUVI9Li3dElVn7djEMtsHaJywEw/QQHR/IKfnyYhLAcJ0D2D4kaLh/QemuamjKFT+iffyYDRvsx/UquKmL/y5eP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10248
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, 21 Feb 2025 15:35:15 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Add `image_conv` field to the `rzg2l_cru_info` structure to store the
-register offset for image conversion control. RZ/G2L uses `ICnMC`, while
-RZ/G3E and RZ/V2H(P) use `ICnIPMC_C0`.
+> Instead of having a function to check if ACPI is enabled
+> (acpi_ghes_present), change its logic to be more generic,
+> returing a pointed to AcpiGhesState.
+> 
+> Such change allows cleanup the ghes GED state code, avoiding
+> to read it multiple times, and simplifying the code.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by:  Igor Mammedov <imammedo@redhat.com>
+> ---
+>  hw/acpi/ghes-stub.c    |  7 ++++---
+>  hw/acpi/ghes.c         | 38 ++++++++++----------------------------
+>  include/hw/acpi/ghes.h | 14 ++++++++------
+>  target/arm/kvm.c       |  7 +++++--
+>  4 files changed, 27 insertions(+), 39 deletions(-)
+> 
+> diff --git a/hw/acpi/ghes-stub.c b/hw/acpi/ghes-stub.c
+> index 7cec1812dad9..40f660c246fe 100644
+> --- a/hw/acpi/ghes-stub.c
+> +++ b/hw/acpi/ghes-stub.c
+> @@ -11,12 +11,13 @@
+>  #include "qemu/osdep.h"
+>  #include "hw/acpi/ghes.h"
+>  
+> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
+> +                            uint64_t physical_address)
+>  {
+>      return -1;
+>  }
+>  
+> -bool acpi_ghes_present(void)
+> +AcpiGhesState *acpi_ghes_get_state(void)
+>  {
+> -    return false;
+> +    return NULL;
+>  }
+> diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
+> index f2d1cc7369f4..401789259f60 100644
+> --- a/hw/acpi/ghes.c
+> +++ b/hw/acpi/ghes.c
+> @@ -425,10 +425,6 @@ static void get_hw_error_offsets(uint64_t ghes_addr,
+>                                   uint64_t *cper_addr,
+>                                   uint64_t *read_ack_register_addr)
+>  {
+> -    if (!ghes_addr) {
+> -        return;
+> -    }
+> -
+>      /*
+>       * non-HEST version supports only one source, so no need to change
+>       * the start offset based on the source ID. Also, we can't validate
+> @@ -517,27 +513,16 @@ static void get_ghes_source_offsets(uint16_t source_id,
+>  NotifierList acpi_generic_error_notifiers =
+>      NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
+>  
+> -void ghes_record_cper_errors(const void *cper, size_t len,
+> +void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+>                               uint16_t source_id, Error **errp)
+>  {
+>      uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
+> -    AcpiGedState *acpi_ged_state;
+> -    AcpiGhesState *ags;
+>  
+>      if (len > ACPI_GHES_MAX_RAW_DATA_LENGTH) {
+>          error_setg(errp, "GHES CPER record is too big: %zd", len);
+>          return;
+>      }
+>  
+> -    acpi_ged_state = ACPI_GED(object_resolve_path_type("", TYPE_ACPI_GED,
+> -                                                       NULL));
+> -    if (!acpi_ged_state) {
+> -        error_setg(errp, "Can't find ACPI_GED object");
+> -        return;
+> -    }
+> -    ags = &acpi_ged_state->ghes_state;
+> -
+> -
+>      if (!ags->use_hest_addr) {
+>          get_hw_error_offsets(le64_to_cpu(ags->hw_error_le),
+>                               &cper_addr, &read_ack_register_addr);
+> @@ -546,11 +531,6 @@ void ghes_record_cper_errors(const void *cper, size_t len,
+>                                  &cper_addr, &read_ack_register_addr, errp);
+>      }
+>  
+> -    if (!cper_addr) {
+> -        error_setg(errp, "can not find Generic Error Status Block");
+> -        return;
+> -    }
+> -
+>      cpu_physical_memory_read(read_ack_register_addr,
+>                               &read_ack_register, sizeof(read_ack_register));
+>  
+> @@ -576,7 +556,8 @@ void ghes_record_cper_errors(const void *cper, size_t len,
+>      notifier_list_notify(&acpi_generic_error_notifiers, NULL);
+>  }
+>  
+> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
+> +                            uint64_t physical_address)
+>  {
+>      /* Memory Error Section Type */
+>      const uint8_t guid[] =
+> @@ -602,7 +583,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+>      acpi_ghes_build_append_mem_cper(block, physical_address);
+>  
+>      /* Report the error */
+> -    ghes_record_cper_errors(block->data, block->len, source_id, &errp);
+> +    ghes_record_cper_errors(ags, block->data, block->len, source_id, &errp);
+>  
+>      g_array_free(block, true);
+>  
+> @@ -614,7 +595,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
+>      return 0;
+>  }
+>  
+> -bool acpi_ghes_present(void)
+> +AcpiGhesState *acpi_ghes_get_state(void)
+>  {
+>      AcpiGedState *acpi_ged_state;
+>      AcpiGhesState *ags;
+> @@ -623,11 +604,12 @@ bool acpi_ghes_present(void)
+>                                                         NULL));
+>  
+>      if (!acpi_ged_state) {
+> -        return false;
+> +        return NULL;
+>      }
+>      ags = &acpi_ged_state->ghes_state;
+> -    if (!ags->hw_error_le && !ags->hest_addr_le)
+> -        return false;
+>  
+> -    return true;
+> +    if (!ags->hw_error_le && !ags->hest_addr_le) {
+> +        return NULL;
+> +    }
+> +    return ags;
+>  }
+> diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
+> index 219aa7ab4fe0..276f9dc076d9 100644
+> --- a/include/hw/acpi/ghes.h
+> +++ b/include/hw/acpi/ghes.h
+> @@ -99,15 +99,17 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
+>                       const char *oem_id, const char *oem_table_id);
+>  void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
+>                            GArray *hardware_errors);
+> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t error_physical_addr);
+> -void ghes_record_cper_errors(const void *cper, size_t len,
+> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
+> +                            uint64_t error_physical_addr);
+> +void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+>                               uint16_t source_id, Error **errp);
+>  
+>  /**
+> - * acpi_ghes_present: Report whether ACPI GHES table is present
+> + * acpi_ghes_get_state: Get a pointer for ACPI ghes state
+>   *
+> - * Returns: true if the system has an ACPI GHES table and it is
+> - * safe to call acpi_ghes_memory_errors() to record a memory error.
+> + * Returns: a pointer to ghes state if the system has an ACPI GHES table,
+> + * it is enabled and it is safe to call acpi_ghes_memory_errors() to record
+      ^^^^^^^^^^^^^ can't link 'it' with anything, I'd drop this
 
-Update `rzg2l_cru_initialize_image_conv()` and `rzg2l_cru_csi2_setup()`
-to use this `image_conv` offset from the OF data, facilitating future
-support for RZ/G3E and RZ/V2H(P) SoCs.
+> + * a memory error. Returns false, otherwise.
+                              ^^^ NULL ??
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
----
- .../media/platform/renesas/rzg2l-cru/rzg2l-core.c  |  1 +
- .../media/platform/renesas/rzg2l-cru/rzg2l-cru.h   |  1 +
- .../media/platform/renesas/rzg2l-cru/rzg2l-video.c | 14 ++++++++------
- 3 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-index 19f93b7fe6fb..7e94ae803967 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-@@ -357,6 +357,7 @@ static const u16 rzg2l_cru_regs[] = {
- static const struct rzg2l_cru_info rzgl2_cru_info = {
- 	.max_width = 2800,
- 	.max_height = 4095,
-+	.image_conv = ICnMC,
- 	.regs = rzg2l_cru_regs,
- };
- 
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-index 6a621073948a..ca156772b949 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-@@ -81,6 +81,7 @@ struct rzg2l_cru_ip_format {
- struct rzg2l_cru_info {
- 	unsigned int max_width;
- 	unsigned int max_height;
-+	u16 image_conv;
- 	const u16 *regs;
- };
- 
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-index 93a105dec8f1..5033c8d98639 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-@@ -246,20 +246,22 @@ static void rzg2l_cru_csi2_setup(struct rzg2l_cru_dev *cru,
- 				 const struct rzg2l_cru_ip_format *ip_fmt,
- 				 u8 csi_vc)
- {
-+	const struct rzg2l_cru_info *info = cru->info;
- 	u32 icnmc = ICnMC_INF(ip_fmt->datatype);
- 
--	icnmc |= (rzg2l_cru_read(cru, ICnMC) & ~ICnMC_INF_MASK);
-+	icnmc |= (rzg2l_cru_read(cru, info->image_conv) & ~ICnMC_INF_MASK);
- 
- 	/* Set virtual channel CSI2 */
- 	icnmc |= ICnMC_VCSEL(csi_vc);
- 
--	rzg2l_cru_write(cru, ICnMC, icnmc);
-+	rzg2l_cru_write(cru, info->image_conv, icnmc);
- }
- 
- static int rzg2l_cru_initialize_image_conv(struct rzg2l_cru_dev *cru,
- 					   struct v4l2_mbus_framefmt *ip_sd_fmt,
- 					   u8 csi_vc)
- {
-+	const struct rzg2l_cru_info *info = cru->info;
- 	const struct rzg2l_cru_ip_format *cru_video_fmt;
- 	const struct rzg2l_cru_ip_format *cru_ip_fmt;
- 
-@@ -276,11 +278,11 @@ static int rzg2l_cru_initialize_image_conv(struct rzg2l_cru_dev *cru,
- 
- 	/* If input and output use same colorspace, do bypass mode */
- 	if (cru_ip_fmt->yuv == cru_video_fmt->yuv)
--		rzg2l_cru_write(cru, ICnMC,
--				rzg2l_cru_read(cru, ICnMC) | ICnMC_CSCTHR);
-+		rzg2l_cru_write(cru, info->image_conv,
-+				rzg2l_cru_read(cru, info->image_conv) | ICnMC_CSCTHR);
- 	else
--		rzg2l_cru_write(cru, ICnMC,
--				rzg2l_cru_read(cru, ICnMC) & (~ICnMC_CSCTHR));
-+		rzg2l_cru_write(cru, info->image_conv,
-+				rzg2l_cru_read(cru, info->image_conv) & (~ICnMC_CSCTHR));
- 
- 	/* Set output data format */
- 	rzg2l_cru_write(cru, ICnDMR, cru_video_fmt->icndmr);
--- 
-2.43.0
+>   */
+> -bool acpi_ghes_present(void);
+> +AcpiGhesState *acpi_ghes_get_state(void);
+>  #endif
+> diff --git a/target/arm/kvm.c b/target/arm/kvm.c
+> index da30bdbb2349..80ca7779797b 100644
+> --- a/target/arm/kvm.c
+> +++ b/target/arm/kvm.c
+> @@ -2366,10 +2366,12 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
+>  {
+>      ram_addr_t ram_addr;
+>      hwaddr paddr;
+> +    AcpiGhesState *ags;
+>  
+>      assert(code == BUS_MCEERR_AR || code == BUS_MCEERR_AO);
+>  
+> -    if (acpi_ghes_present() && addr) {
+> +    ags = acpi_ghes_get_state();
+> +    if (ags && addr) {
+>          ram_addr = qemu_ram_addr_from_host(addr);
+>          if (ram_addr != RAM_ADDR_INVALID &&
+>              kvm_physical_memory_addr_from_host(c->kvm_state, addr, &paddr)) {
+> @@ -2387,7 +2389,8 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
+>               */
+>              if (code == BUS_MCEERR_AR) {
+>                  kvm_cpu_synchronize_state(c);
+> -                if (!acpi_ghes_memory_errors(ACPI_HEST_SRC_ID_SEA, paddr)) {
+> +                if (!acpi_ghes_memory_errors(ags, ACPI_HEST_SRC_ID_SEA,
+> +                                             paddr)) {
+>                      kvm_inject_arm_sea(c);
+>                  } else {
+>                      error_report("failed to record the error");
 
