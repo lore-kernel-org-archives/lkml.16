@@ -1,194 +1,102 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E74026A1C1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9CE15B99E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:43:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740552121; cv=none; b=aOp+jUDKzuCpbw2USZJ6W9L25XRLamIz6QyLJtOyCj/JHKwrBGnazgcg15EoAMF1wrfzcBE/Ji1GGfo/bYZQqvJaiQ0FKV644ex3h4KB8w7W2a8o60Lk6YDCRV4ZhKDD6dEz9+SWUTSvdVIOcL0mbRlLG4buywSdiNPsr8rq8YQ=
+	t=1740552203; cv=none; b=Q9mNGlATIoYbi1Jsm5uITbcQQGvTTNiffBXZ3OOm8mquvxo+GUO//hq33dLf/8LIXBPfquj2v+sKQdiOy+Wsgg3/x0yeZzx6oP9XGJb7MANwKkmVGmDCD84fj25oDIjKJSLVFRiWvoVfT5GNfYZNfMyq8N/fLgSTpbX6k7oaXJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740552121; c=relaxed/simple;
-	bh=n+Yt3bSNARsv2zVZr7WU5SJ470AOo235Hu+RaCY2aO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GJlBxsXyJ7zJ+UTAyxFliCPS5fbuml2pDNvelj6+r/PWSWVjG+GwlcOfZZPfpAMJjFJ9yG2YRSYOLfIt9aYfPrZCqcyeXo0csWmXfLYP1QVavOBw+nl4WU6ThGlZZ+fwZWeGU+DC1ZpqP/bePkcpK+5BG7aBlajFerYwOW9yFTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HQlohq2k; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740552203; c=relaxed/simple;
+	bh=qnlMfGzvX2xlMSjWfM7AQuU6kYZPDfXz1wZRUrYXbew=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QLwyA8f+RQ+gFUCxI48cLzzbEtTRBiHrE1TzukgVI5MsVicbUPt4yUYPAZ9iJs3PGCYJpTGrbF+1wjomO0eKKw4pPyfcPTcheg9tfZ7F9a2f4r5Hwwiwb2wEDMUR2tjX1EvR25Rk9LlSbkESAc5v/U7qHnVqRSTXwZ7oc6QmMKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oxUBhg5j; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HQlohq2k"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54622e97753so572503e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:41:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740552117; x=1741156917; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=slhhH1OWDPhNxuUWfIi9e2TTyh07XT8L5EcIfOsNnAc=;
-        b=HQlohq2kWSx7qY/hlRJ4QOXprHjqrGZyzuB4iRk5iWOkm1vVv81PnAgw8GoCIKzYpg
-         aO5fW+swOJOzJVXpyjrDFmmwLtqgc5tuZuq9pg7N0Y8pocayvujEc8BjAGO2Yfiw3zXP
-         n7EiAAgU6RGtxYzzjaOfYg8pc4gUDW39Olawh6Xfjdwj4gfaCHWlrTuilzU+tdHbh/so
-         Mm7MT498Z1tga+vlMvDjlUh7apCt/ElaHluBuYjjrBOPbadSSp0D7efYqxEaQxbckhWS
-         JYbG7fTgjaFHlpA7yqP/4qPDptqL4g6P+s26CEFmoPfK9CegSU2rDziOhGVVVdWkSbmr
-         CXJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740552117; x=1741156917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=slhhH1OWDPhNxuUWfIi9e2TTyh07XT8L5EcIfOsNnAc=;
-        b=eoI9wPOLwSlDDg6brKtn9rvCvlLLRfYKWp0mRuoHtshM5JzwSTT8+jXc4aeFNd0Zeu
-         BtVEiI7oQ6MGzCYI06rwebD2DKaBlXNA3LdnRNoAhu+LHZnL5Mc3AJdR/kiZ2XAILGfH
-         B6A6MJlClKva3ex1uA76tfGNfuFUj+1TvlM2dlySby28OQ8Toabvhnj84z2fKkyOG7A/
-         UhTCTPSG3ySg02SYMGfd09xF0DzTQRcvqlbFP35NZWQ6wdWkHLRwJVM1AYEPJnaGKoDR
-         j0/9VjhPvKJdvGUyJ+2JMNg7UJIl3M5fhbMibtSdrL/kYfBlj9FDRSFufLhCsf3J9ZDu
-         26MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBb7BBDc4Xz4HZ1UvVxKFZ6i1x8X7twRp2qvrNniHQKaPAZCvUSxLfDGrhiE4BAlvb2+PPcWIEX66MgJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYEwTsho5B/BFD1D/VDuX81VTWISwB5h5ZgmUh8OwFhrhH32R3
-	OYAoE0rjzuA7/SvvUv3TJt2/5xfwgk+YHdipGVOphgcDodjjYxr1Uf7/AVDB8N4=
-X-Gm-Gg: ASbGnctfiI39O/mIOngo3M50VCgFzXAFT9y5faoYVTA3zC2bbp6blJqn7lqZPOXh9Jn
-	MyFB2cZnZj4k8wZ1TP9C2PVwoY9lCpSEqqpCxRKWfdIGdOLrz5kxloFBdUhiAY+lf+Op+nTpdMt
-	3FTRN32kqMaaJL0pGoQwwg7kkiRqyXMkHFMuJ8Nj+9nqcyS0uAjeVJvjWw1kFVf8uP4vJuMjqVh
-	VbyYpPSzEfdHymJyAvULDHRVivy4tzTuJ8+5DOllTyfcz6WS3oiZeGSCxU0dVOor5424BZ7ksqj
-	MIAWEIp4YtSRdZ5mK/L3NvidiC2RHOPcfbZKHEpCXgqSwZzzTlxNa6qlz6tgK9PMuXq79iGpzY0
-	QJEwJrA==
-X-Google-Smtp-Source: AGHT+IF8CNQ53YpP1ppilap6LhhTVanQkQOb2cwMukzGWQfv2mevxc1ON9jFy4KyLi6x6nClDMW1fw==
-X-Received: by 2002:a05:6512:e8b:b0:545:dc8:9376 with SMTP id 2adb3069b0e04-546e3c9c979mr9782380e87.5.1740552117486;
-        Tue, 25 Feb 2025 22:41:57 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514fa052sm359461e87.228.2025.02.25.22.41.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 22:41:57 -0800 (PST)
-Date: Wed, 26 Feb 2025 08:41:54 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
-	Herve Codina <herve.codina@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Simona Vetter <simona.vetter@ffwll.ch>
-Subject: Re: [PATCH v4 07/15] drm/bridge: Add helper to reset bridge pipeline
-Message-ID: <sqsk3ievl3kujkljqosww233yio4uke5met7zqhzssmehzdck5@doaikab7bggr>
-References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
- <20250225-bridge-connector-v4-7-7ecb07b09cad@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oxUBhg5j"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6EbMA1988892
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 00:14:37 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740550477;
+	bh=4GvDwBZD4roAF/SEeFoR3akJsASSfyq/Z0vYBe+bC/I=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=oxUBhg5jlOUavE2PfQvYffDco9krGEJnYdAr8LdVoxqjbTpitIryBF473WMgGQVdZ
+	 izS7JiPwER2NDErhH/mFzE1x/jVwMkfcsFbASWj2Qz3xUTzjXEl5VHabaXV5YRrkpt
+	 J4AufRIpCdpPRVgYKi6Y0X7BfbNC5HwSucW5yXKo=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6Eb11056311
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Feb 2025 00:14:37 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Feb 2025 00:14:37 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Feb 2025 00:14:37 -0600
+Received: from [172.24.18.117] (lt9560gk3.dhcp.ti.com [172.24.18.117])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51Q6EYfG062836;
+	Wed, 26 Feb 2025 00:14:34 -0600
+Message-ID: <503fcc32-8062-4b17-bb5d-1a2254afcf58@ti.com>
+Date: Wed, 26 Feb 2025 11:44:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225-bridge-connector-v4-7-7ecb07b09cad@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: defconfig: Enable HSR driver
+To: Ravi Gunasekaran <r-gunasekaran@ti.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>
+CC: <quic_bjorande@quicinc.com>, <krzysztof.kozlowski@linaro.org>,
+        <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>
+References: <20240419060013.14909-1-r-gunasekaran@ti.com>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <20240419060013.14909-1-r-gunasekaran@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Tue, Feb 25, 2025 at 05:43:55PM +0100, Maxime Ripard wrote:
-> Let's provide an helper to make it easier for bridge drivers to
-> power-cycle their bridge.
+Hi all,
+
+Any reason why this patch hasn't been merged yet. Other than re-basing 
+this to the tip, anything else which needs to be addressed to get this 
+merged?
+
+Thanks & Regards,
+Meghana Malladi.
+
+On 4/19/2024 11:30 AM, Ravi Gunasekaran wrote:
+> HSR is a redundancy protocol that can be realized with any
+> two port ethernet controller.
 > 
-> Co-developed-by: Simona Vetter <simona.vetter@ffwll.ch>
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> Many of TI's K3 SoCs support multi port ethernet controller.
+> So enable HSR driver inorder to support this protocol on
+> such SoCs.
+> 
+> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
 > ---
->  drivers/gpu/drm/drm_bridge.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  include/drm/drm_bridge.h     |  2 ++
->  2 files changed, 46 insertions(+)
+>   arch/arm64/configs/defconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-> index 8241c00e4506eceeb9bb4ba74a38d8f360c65d38..ca894531a2042fc9296c40a1f51a6cdea6e97ed7 100644
-> --- a/drivers/gpu/drm/drm_bridge.c
-> +++ b/drivers/gpu/drm/drm_bridge.c
-> @@ -24,10 +24,11 @@
->  #include <linux/err.h>
->  #include <linux/media-bus-format.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  
-> +#include <drm/drm_atomic_helper.h>
->  #include <drm/drm_atomic_state_helper.h>
->  #include <drm/drm_bridge.h>
->  #include <drm/drm_debugfs.h>
->  #include <drm/drm_edid.h>
->  #include <drm/drm_encoder.h>
-> @@ -1269,10 +1270,53 @@ void drm_bridge_hpd_notify(struct drm_bridge *bridge,
->  		bridge->hpd_cb(bridge->hpd_data, status);
->  	mutex_unlock(&bridge->hpd_mutex);
->  }
->  EXPORT_SYMBOL_GPL(drm_bridge_hpd_notify);
->  
-> +/**
-> + * drm_bridge_reset_crtc - Reset the pipeline feeding a bridge
-> + * @bridge: DRM bridge to reset
-> + * @ctx: lock acquisition context
-> + *
-> + * Reset a @bridge pipeline. It will power-cycle all active components
-> + * between the CRTC and connector that bridge is connected to.
-> + *
-> + * Returns:
-> + *
-> + * 0 on success or a negative error code on failure. If the error
-> + * returned is EDEADLK, the whole atomic sequence must be restarted.
-> + */
-> +int drm_bridge_reset_crtc(struct drm_bridge *bridge,
-> +			  struct drm_modeset_acquire_ctx *ctx)
-> +{
-> +	struct drm_connector *connector;
-> +	struct drm_encoder *encoder = bridge->encoder;
-> +	struct drm_device *dev = encoder->dev;
-> +	struct drm_crtc *crtc;
-> +	int ret;
-> +
-> +	ret = drm_modeset_lock(&dev->mode_config.connection_mutex, ctx);
-> +	if (ret)
-> +		return ret;
-> +
-> +	connector = drm_atomic_get_connector_for_encoder(encoder, ctx);
-> +	if (IS_ERR(connector)) {
-> +		ret = PTR_ERR(connector);
-> +		goto out;
-> +	}
-> +
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 11fa4aa40094..750343564f41 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -176,6 +176,7 @@ CONFIG_NET_CLS_FLOWER=m
+>   CONFIG_NET_CLS_ACT=y
+>   CONFIG_NET_ACT_GACT=m
+>   CONFIG_NET_ACT_MIRRED=m
+> +CONFIG_HSR=m
+>   CONFIG_NET_ACT_GATE=m
+>   CONFIG_QRTR_SMD=m
+>   CONFIG_QRTR_TUN=m
 
-Should there be a check for connector->state before accessing
-connector->state->crtc ?
-
-> +	crtc = connector->state->crtc;
-> +	ret = drm_atomic_helper_reset_crtc(crtc, ctx);
-> +	if (ret)
-> +		goto out;
-> +
-> +out:
-> +	drm_modeset_unlock(&dev->mode_config.connection_mutex);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL(drm_bridge_reset_crtc);
-> +
->  #ifdef CONFIG_OF
->  /**
->   * of_drm_find_bridge - find the bridge corresponding to the device node in
->   *			the global bridge list
->   *
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index 6fb1da7c195e99143a67a999d16fe361c1e3f4ab..32169e62463bb268a281a5903c0c9f448a1042b3 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -1085,10 +1085,12 @@ void drm_bridge_hpd_enable(struct drm_bridge *bridge,
->  				      enum drm_connector_status status),
->  			   void *data);
->  void drm_bridge_hpd_disable(struct drm_bridge *bridge);
->  void drm_bridge_hpd_notify(struct drm_bridge *bridge,
->  			   enum drm_connector_status status);
-> +int drm_bridge_reset_crtc(struct drm_bridge *bridge,
-> +			  struct drm_modeset_acquire_ctx *ctx);
->  
->  #ifdef CONFIG_DRM_PANEL_BRIDGE
->  bool drm_bridge_is_panel(const struct drm_bridge *bridge);
->  struct drm_bridge *drm_panel_bridge_add(struct drm_panel *panel);
->  struct drm_bridge *drm_panel_bridge_add_typed(struct drm_panel *panel,
-> 
-> -- 
-> 2.48.1
-> 
-
--- 
-With best wishes
-Dmitry
