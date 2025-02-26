@@ -1,15 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC73D1624E0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6DA57C9F
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740538908; cv=none; b=YwLomvOJS7ybraDZxYqtj6VXwU68/DYYa8P30vgvxw3T919I48UwnKvnWc6BFBDCOazHX0i60LGU/7ZHrF0rJtNQ2bmI2VHxRWtEbt20TUZpia0QwhbGyCvGghr5z4yN94+L9hErD5l04tmDxFsivCtlkvM30BySoRzCzAlIccU=
+	t=1740538908; cv=none; b=RJOkg+wqQFq4AZBkZMrayUQT/Z9kCCcRvs2qwXVFQo3NUML82oXLCPjIaF8kWeuK9PWObhDCsGN9ECDLGXqsnUEOUhDyWQnVXmBm+/pnGaf3OyqiLfxPqIlb5RBDH69F909M1kKzECzI36jN40pfAIge33Z6cVEutUoCuNf07WI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740538908; c=relaxed/simple;
-	bh=2B0jRg2pHEqGU0fVvecN1s9XWljnzy0dsfVv8Ike5s4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hYyT7VHiQY3flvtQZ+24Mur/3zOJbDz3PRxd2jmYtoi/1Fv9uiZnzUKGxQdNQer9WDVzp0ObSp5QhOUKGqzsWSrGUK4EVMCRu01iCzjYG8wSSJ0r5pNW/c86phkrlWJpgZg/8DpW7T3QT2RVrGjXWEsafWKjaLouNB7M3Hx+iLE=
+	bh=9VsIggUcet/BTN7xhv3DNtZlFpYTn9tatMxGSPQKgcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JKRcWE6DUfwzztRcD/ayd9Dgeoo4rTXdaGgR619ExAz9AZHfjOcn9y+PffGmJ9lisYPU0zJ8c1uv7EVfI8rMYPtcxC1tyV9kxDzGeg4cGkWJb8afoUH8qJpMosbe9YHvZ0lMjS5ibM4qNB7hI4yqNjW5n0scJkD5rERKSxHwM/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -17,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tn7fw-000000001Y5-0Eni;
+	id 1tn7fw-000000001Y5-1O36;
 	Tue, 25 Feb 2025 22:01:32 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -36,11 +37,14 @@ Cc: linux-kernel@vger.kernel.org,
 	mhklinux@outlook.com,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
-	mingo@kernel.org
-Subject: [PATCH v14 00/13] AMD broadcast TLB invalidation
-Date: Tue, 25 Feb 2025 22:00:35 -0500
-Message-ID: <20250226030129.530345-1-riel@surriel.com>
+	mingo@kernel.org,
+	Rik van Riel <riel@surriel.com>
+Subject: [PATCH v14 12/13] x86/mm: enable AMD translation cache extensions
+Date: Tue, 25 Feb 2025 22:00:47 -0500
+Message-ID: <20250226030129.530345-13-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250226030129.530345-1-riel@surriel.com>
+References: <20250226030129.530345-1-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,103 +54,89 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Add support for broadcast TLB invalidation using AMD's INVLPGB instruction.
+With AMD TCE (translation cache extensions) only the intermediate mappings
+that cover the address range zapped by INVLPG / INVLPGB get invalidated,
+rather than all intermediate mappings getting zapped at every TLB invalidation.
 
-This allows the kernel to invalidate TLB entries on remote CPUs without
-needing to send IPIs, without having to wait for remote CPUs to handle
-those interrupts, and with less interruption to what was running on
-those CPUs.
+This can help reduce the TLB miss rate, by keeping more intermediate
+mappings in the cache.
 
-Because x86 PCID space is limited, and there are some very large
-systems out there, broadcast TLB invalidation is only used for
-processes that are active on 3 or more CPUs, with the threshold
-being gradually increased the more the PCID space gets exhausted.
+From the AMD manual:
 
-Combined with the removal of unnecessary lru_add_drain calls
-(see https://lkml.org/lkml/2024/12/19/1388) this results in a
-nice performance boost for the will-it-scale tlb_flush2_threads
-test on an AMD Milan system with 36 cores:
+Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit
+to 1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on
+TLB entries. When this bit is 0, these instructions remove the target PTE
+from the TLB as well as all upper-level table entries that are cached
+in the TLB, whether or not they are associated with the target PTE.
+When this bit is set, these instructions will remove the target PTE and
+only those upper-level entries that lead to the target PTE in
+the page table hierarchy, leaving unrelated upper-level entries intact.
 
-- vanilla kernel:           527k loops/second
-- lru_add_drain removal:    731k loops/second
-- only INVLPGB:             527k loops/second
-- lru_add_drain + INVLPGB: 1157k loops/second
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+Tested-by: Brendan Jackman <jackmanb@google.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
+---
+ arch/x86/include/asm/msr-index.h       | 2 ++
+ arch/x86/kernel/cpu/amd.c              | 4 ++++
+ tools/arch/x86/include/asm/msr-index.h | 2 ++
+ 3 files changed, 8 insertions(+)
 
-Profiling with only the INVLPGB changes showed while
-TLB invalidation went down from 40% of the total CPU
-time to only around 4% of CPU time, the contention
-simply moved to the LRU lock.
-
-Fixing both at the same time about doubles the
-number of iterations per second from this case.
-
-Some numbers closer to real world performance
-can be found at Phoronix, thanks to Michael:
-
-https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
-
-My current plan is to implement support for Intel's RAR
-(Remote Action Request) TLB flushing in a follow-up series,
-after this thing has been merged into -tip. Making things
-any larger would just be unwieldy for reviewers.
-
-v14:
- - code & comment cleanups (Boris)
- - drop "noinvlpgb" commandline option (Boris)
- - fix !CONFIG_X86_BROADCAST_TLB_FLUSH compile anywhere in the series
-v13:
- - move invlpgb_count_max back to amd.c for resume (Boris, Oleksandr)
- - fix Kconfig circular dependency (Tom, Boris)
- - add performance numbers to the patch adding invlpgb for userspace (Ingo)
- - drop page table RCU free patches (already in -tip)
-v12
- - make sure "nopcid" command line option turns off invlpgb (Brendan)
- - add "noinvlpgb" kernel command line option
- - split out kernel TLB flushing differently (Dave & Yosry)
- - split up the patch that does invlpgb flushing for user processes (Dave)
- - clean up get_flush_tlb_info (Boris)
- - move invlpgb_count_max initialization to get_cpu_cap (Boris)
- - bunch more comments as requested
-v11:
- - resolve conflict with CONFIG_PT_RECLAIM code
- - a few more cleanups (Peter, Brendan, Nadav)
-v10:
- - simplify partial pages with min(nr, 1) in the invlpgb loop (Peter)
- - document x86 paravirt, AMD invlpgb, and ARM64 flush without IPI (Brendan)
- - remove IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH) (Brendan)
- - various cleanups (Brendan)
-v9:
- - print warning when start or end address was rounded (Peter)
- - in the reclaim code, tlbsync at context switch time (Peter)
- - fix !CONFIG_CPU_SUP_AMD compile error in arch_tlbbatch_add_pending (Jan)
-v8:
- - round start & end to handle non-page-aligned callers (Steven & Jan)
- - fix up changelog & add tested-by tags (Manali)
-v7:
- - a few small code cleanups (Nadav)
- - fix spurious VM_WARN_ON_ONCE in mm_global_asid
- - code simplifications & better barriers (Peter & Dave)
-v6:
- - fix info->end check in flush_tlb_kernel_range (Michael)
- - disable broadcast TLB flushing on 32 bit x86
-v5:
- - use byte assembly for compatibility with older toolchains (Borislav, Michael)
- - ensure a panic on an invalid number of extra pages (Dave, Tom)
- - add cant_migrate() assertion to tlbsync (Jann)
- - a bunch more cleanups (Nadav)
- - key TCE enabling off X86_FEATURE_TCE (Andrew)
- - fix a race between reclaim and ASID transition (Jann)
-v4:
- - Use only bitmaps to track free global ASIDs (Nadav)
- - Improved AMD initialization (Borislav & Tom)
- - Various naming and documentation improvements (Peter, Nadav, Tom, Dave)
- - Fixes for subtle race conditions (Jann)
-v3:
- - Remove paravirt tlb_remove_table call (thank you Qi Zheng)
- - More suggested cleanups and changelog fixes by Peter and Nadav
-v2:
- - Apply suggestions by Peter and Borislav (thank you!)
- - Fix bug in arch_tlbbatch_flush, where we need to do both
-   the TLBSYNC, and flush the CPUs that are in the cpumask.
- - Some updates to comments and changelogs based on questions.
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 9a71880eec07..a7ea9720ba3c 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+ 
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 3c75c174a274..2bd512a1b4d0 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -1075,6 +1075,10 @@ static void init_amd(struct cpuinfo_x86 *c)
+ 
+ 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
+ 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
++
++	/* Enable Translation Cache Extension */
++	if (cpu_feature_enabled(X86_FEATURE_TCE))
++		msr_set_bit(MSR_EFER, _EFER_TCE);
+ }
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..dc1c1057f26e 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -25,6 +25,7 @@
+ #define _EFER_SVME		12 /* Enable virtualization */
+ #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
+ #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
++#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
+ #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+ 
+ #define EFER_SCE		(1<<_EFER_SCE)
+@@ -34,6 +35,7 @@
+ #define EFER_SVME		(1<<_EFER_SVME)
+ #define EFER_LMSLE		(1<<_EFER_LMSLE)
+ #define EFER_FFXSR		(1<<_EFER_FFXSR)
++#define EFER_TCE		(1<<_EFER_TCE)
+ #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
+ 
+ /*
+-- 
+2.47.1
 
