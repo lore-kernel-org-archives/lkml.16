@@ -1,93 +1,91 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44C3E2CAB;
-	Wed, 26 Feb 2025 12:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC34D13BAE3;
+	Wed, 26 Feb 2025 12:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740574191; cv=none; b=bJBpYs/2FUlaC8tGjYd7enjd3RvDPoEWUeNu4vNRolsRex9waMT+ed09DUIF6oEwlazOCusmarSMJZFpeLlaSZk6rv7i8l6j/PvF94wFPdkZp6TNZo7Epurd1mVUW/lSpTQKb8HU5W866nVP5aNyM6ReHwhzEx1f8dh8cyEGGGg=
+	t=1740574206; cv=none; b=tR6/C0KIMBVrdO5m11npcIr5K+FlidLP93hKF1FSXMGLYCAxVzlmKOaYyon6ktKxpL+1lemkhju3MKWCWL/h1Y4YB6EzyzTdwklCV82sQmYBc21UPowVLBFdLppQaezz5fuYAiuAY/j4HyAdaTv+7mP+oW6GQ3dQUz+zwx04a0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740574191; c=relaxed/simple;
-	bh=dITrfhYfSkTRNCxmowtpI3OCz2F+YfFl9lEZ/TAdmKo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F6aYL9YfTJIq+MA7oDtORBSHCZMpmoiiqWQz90vvI7MneaOfaqZ/LBNGPPUJTE51epHpQQS1vFmFxHzgsdXjR2furH/dfiMAzICvlh5VUJfRRaprFHM0orq5xWhwVe0A8j7iTAElUdY5rHHrldjYkPeIMBVpw3iJLin4L8YDg3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=nzYbAjZS; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="nzYbAjZS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=QbUGY
-	YPk+RS02VOby7U4Hzj9A50xV95MDQb2+4Sc4fk=; b=nzYbAjZSLXuN1R9HpRduk
-	uTi7yN3OH3OxCDyQ4CIFx11vTfVfj80XAWeV+SMaQ+XPyqQ1ARm5DeX3Tp//JsCN
-	aHxstxpfZhN1iQqB4CoevWtcCaRIvk+FcVgQxLQ0JRpHbZ3F5GuDekN51UgNUfAD
-	RV8hafKmGoC8mBmuuzf+eY=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDX767UDb9nemzXOA--.48555S4;
-	Wed, 26 Feb 2025 20:49:25 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: devarsht@ti.com,
-	mchehab@kernel.org,
-	hverkuil@xs4all.nl,
-	d-huang@ti.com,
-	benjamin.gaignard@collabora.com,
-	sebastian.fricke@collabora.com
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] media: imagination: fix a potential memory leak in e5010_probe()
-Date: Wed, 26 Feb 2025 20:49:22 +0800
-Message-Id: <20250226124922.3601755-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740574206; c=relaxed/simple;
+	bh=D4CfnLGRRWil1JbQ8gsJ3k6bmBQY0jBa0w65O6jptmQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=msKMJumw0Ru4SNsOnwNHbb/cn/ymZRcREtTCQBo+y5l/khU7FGZI2kMeGxHc8EMsB0FMAGHqbOc59NhJV9Pgf/0mvI1DG/FXdD6VRy/K31pYFM08djQNLbzQSlbV5uTVerEcwWnEE5tnNi5uIGE/P7iV6praMa8At2GLE6M3VIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z2v3t6vSKz9sSN;
+	Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id FPLDBYGk5ZSX; Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z2v3t62h2z9sSL;
+	Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id BBC958B78B;
+	Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id ep8JbNxoBOZU; Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+Received: from [10.25.207.138] (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 85E558B77C;
+	Wed, 26 Feb 2025 13:31:54 +0100 (CET)
+Message-ID: <c58f3fef-82a6-43a4-a222-1cc8ab62a93b@csgroup.eu>
+Date: Wed, 26 Feb 2025 13:31:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/5] mm: Make DEBUG_WX depdendent on GENERIC_PTDUMP
+To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+ Steven Price <steven.price@arm.com>
+References: <20250226122404.1927473-1-anshuman.khandual@arm.com>
+ <20250226122404.1927473-5-anshuman.khandual@arm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250226122404.1927473-5-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX767UDb9nemzXOA--.48555S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7KF17GF4kZw48XrWUXFW5Jrb_yoW8XF1rpa
-	1DJay3tFWUKrsFqwsrJF4UZF98Kw1S9ayrKrsrCwn3u3s3ZasxJw45JFy0q34rJFWIk3W8
-	Xr9rtF4rAF4jvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pimhF7UUUUU=
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqA0Abme-B1eUmgAAsN
 
-Add video_device_release() to release the memory allocated by
-video_device_alloc() if something goes wrong.
 
-Fixes: a1e294045885 ("media: imagination: Add E5010 JPEG Encoder driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
- drivers/media/platform/imagination/e5010-jpeg-enc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/imagination/e5010-jpeg-enc.c b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-index c194f830577f..53e501b5ac0a 100644
---- a/drivers/media/platform/imagination/e5010-jpeg-enc.c
-+++ b/drivers/media/platform/imagination/e5010-jpeg-enc.c
-@@ -1057,8 +1057,11 @@ static int e5010_probe(struct platform_device *pdev)
- 	e5010->vdev->lock = &e5010->mutex;
- 
- 	ret = v4l2_device_register(dev, &e5010->v4l2_dev);
--	if (ret)
--		return dev_err_probe(dev, ret, "failed to register v4l2 device\n");
-+	if (ret) {
-+		dev_err_probe(dev, ret, "failed to register v4l2 device\n");
-+		goto fail_after_video_device_alloc;
-+	}
-+
- 
- 	e5010->m2m_dev = v4l2_m2m_init(&e5010_m2m_ops);
- 	if (IS_ERR(e5010->m2m_dev)) {
-@@ -1118,6 +1121,8 @@ static int e5010_probe(struct platform_device *pdev)
- 	v4l2_m2m_release(e5010->m2m_dev);
- fail_after_v4l2_register:
- 	v4l2_device_unregister(&e5010->v4l2_dev);
-+fail_after_video_device_alloc:
-+	video_device_release(e5010->vdev);
- 	return ret;
- }
- 
--- 
-2.25.1
+Le 26/02/2025 à 13:24, Anshuman Khandual a écrit :
+> DEBUG_WX selects PTDUMP_CORE without even ensuring that the given platform
+> implements GENERIC_PTDUMP. This problem has been latent until now, as all
+> the platforms subscribing ARCH_HAS_DEBUG_WX also subscribe GENERIC_PTDUMP.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Steven Price <steven.price@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+> ---
+>   mm/Kconfig.debug | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+> index 41a58536531d..a51a1149909a 100644
+> --- a/mm/Kconfig.debug
+> +++ b/mm/Kconfig.debug
+> @@ -186,6 +186,7 @@ config ARCH_HAS_DEBUG_WX
+>   config DEBUG_WX
+>   	bool "Warn on W+X mappings at boot"
+>   	depends on ARCH_HAS_DEBUG_WX
+> +	depends on GENERIC_PTDUMP
+>   	depends on MMU
+>   	select PTDUMP_CORE
+>   	help
 
