@@ -1,147 +1,107 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E722A4EE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E2522F384
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593608; cv=none; b=p42OAQKFZCG3Uv+a1KBTt2+jKvBCxCMgsZQ8ps1S/LDL0iqxVwsEqCFz/G4w02PtNVyA4aHBj0VHdrilMJX4qPFId8ZkjBp8C53jwvOa9ZR01NVtMD3LrV90mK9kmFOJoJ77FlR90+O75q4jhGGGInZhx3B82/YpLHJ4uuoBfRs=
+	t=1740593615; cv=none; b=sjvMtRQE0ZRhuoxvoizTYzodBsKQENfSfn+x+NVnWhLmEb0Em3RMivYe2P4s/D+cWuCEN+uRbCKZFbRpAaAY5rjh1VZg+OY3cGtN0hi4V8z7S2WQl9uBxh8bJAT8oNSwfNUk//WgbPihmfrLTH7lKn5z/5cOLuky/4wJ27xbuDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593608; c=relaxed/simple;
-	bh=wW4Yb4k811hfOMyG74Ap9zlXELETQEvn4l8NRQymTxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KpjC/yyoLaQsWgPAzMGVc4n25Jdx3qPtvwDzLSnmKiD5naOcphc21G0R8+I0gUZ8qGHXiQv8L9/T9d5tjcH/E0AvfH8PTt2YczSEjGqtASJ5+3aO/7kR/R9zUwL4FUF2ZfncS+YnEH69vN+S63demfbq3K/OsfotLT6Jt85VUy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b5lZwF4/; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740593615; c=relaxed/simple;
+	bh=XLAtlLUXwKK8ny06xKZ7zYu8j6udBGfXLlBXiJ9RE3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bH0a6tQqxU0+dufaq/+aT3MGUPA9XvUBt5KoKgqR1tDIUCfaNw5UwbOUuPAef545umtGkIf1J/xfIt3az3FeLxh3MDJZBHMCcU2FRhQi+EzvKO3UuWoITFcoq8eYCjGLvfj9Xo2/zdZb+lUsQSCHbrOB7fDJ8LVnoWwqCSFhUaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZQp5Qxbg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b5lZwF4/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740593604;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQp5Qxbg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740593612;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VxBUkk1DvFLkx89NqB/B8hcpjG+LAFccllAcdC+VY7E=;
-	b=b5lZwF4/BZ8sSjHh57JPsZu4p/8IAdaWPj9O1b8XpEpYKiOBVVgYS2BHQppLaEol/4d+N7
-	rqu2zVFNk84K/mHv2waX3KrIlggpIrw51P+oeGmZUvZfcunBikW2qOF1uJrauPIG2xaMkj
-	qJH1ABddleCBxhCewQntsauzj04v/4s=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Jyri Sarha <jyri.sarha@iki.fi>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Devicetree List <devicetree@vger.kernel.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v6 1/4] dt-bindings: display: ti,am65x-dss: Re-indent the example
-Date: Wed, 26 Feb 2025 23:42:57 +0530
-Message-Id: <20250226181300.756610-2-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250226181300.756610-1-aradhya.bhatia@linux.dev>
-References: <20250226181300.756610-1-aradhya.bhatia@linux.dev>
+	bh=XLAtlLUXwKK8ny06xKZ7zYu8j6udBGfXLlBXiJ9RE3k=;
+	b=ZQp5QxbgK6lFCxxhBQirYe4UHdB175Zst8vVhHc4pxQ3Pr+s5qSV4PWBT9l985HSR03GGR
+	HK9w5CiH9YnNuk0FC/tBDCPBdhYRUTekVCjtKE0S1ZS0uhKtX5+guShnS3V66z5+xEyudP
+	/Y5FWwaU2ZGQ+tG3qzymXnYadxXD6KA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-2kt4h1ThNnaDv1YG9PAUkg-1; Wed,
+ 26 Feb 2025 13:13:22 -0500
+X-MC-Unique: 2kt4h1ThNnaDv1YG9PAUkg-1
+X-Mimecast-MFC-AGG-ID: 2kt4h1ThNnaDv1YG9PAUkg_1740593600
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5EFC71800876;
+	Wed, 26 Feb 2025 18:13:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9F3EF19560B9;
+	Wed, 26 Feb 2025 18:13:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 26 Feb 2025 19:12:50 +0100 (CET)
+Date: Wed, 26 Feb 2025 19:12:20 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
+Cc: Manfred Spraul <manfred@colorfullife.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+	Neeraj.Upadhyay@amd.com, mjguzik@gmail.com
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250226181220.GJ8995@redhat.com>
+References: <20250102140715.GA7091@redhat.com>
+ <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
+ <20250224142329.GA19016@redhat.com>
+ <20250225115736.GA18523@redhat.com>
+ <2a0a8e1e-1c37-4655-8a82-54681b2a83ae@amd.com>
+ <20250226113845.GB8995@redhat.com>
+ <b8f0fc4c-7b54-4bec-b3cf-9e0b542832f4@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8f0fc4c-7b54-4bec-b3cf-9e0b542832f4@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+On 02/26, Sapkal, Swapnil wrote:
+>
+> >Can you reproduce with "--process" rather than "--threads" ?
+> >
+> I was able to reproduce the issue with processes also. Total 33 processes
+> were sleeping out of which 20 were readers and 13 were writers.
 
-Reduce tab size from 8 spaces to 4 spaces to make the bindings
-consistent, and easy to expand.
+Thanks a lot. I am wondering what makes your machine (or .config?)
+special ;) A lot of people and robots tested this patch with these
+options.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- .../bindings/display/ti/ti,am65x-dss.yaml     | 54 +++++++++----------
- 1 file changed, 27 insertions(+), 27 deletions(-)
+> The stack trace for main hackbench process is as follows:
+>
+> [<0>] do_wait+0xb5/0x110
 
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-index 31c4ffcb599c..07c3b792ff5a 100644
---- a/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am65x-dss.yaml
-@@ -142,32 +142,32 @@ examples:
-     #include <dt-bindings/soc/ti,sci_pm_domain.h>
- 
-     dss: dss@4a00000 {
--            compatible = "ti,am65x-dss";
--            reg =   <0x04a00000 0x1000>, /* common */
--                    <0x04a02000 0x1000>, /* vidl1 */
--                    <0x04a06000 0x1000>, /* vid */
--                    <0x04a07000 0x1000>, /* ovr1 */
--                    <0x04a08000 0x1000>, /* ovr2 */
--                    <0x04a0a000 0x1000>, /* vp1 */
--                    <0x04a0b000 0x1000>, /* vp2 */
--                    <0x04a01000 0x1000>; /* common1 */
--            reg-names = "common", "vidl1", "vid",
--                    "ovr1", "ovr2", "vp1", "vp2", "common1";
--            ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
--            power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
--            clocks =        <&k3_clks 67 1>,
--                            <&k3_clks 216 1>,
--                            <&k3_clks 67 2>;
--            clock-names = "fck", "vp1", "vp2";
--            interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
--            ports {
--                    #address-cells = <1>;
--                    #size-cells = <0>;
--                    port@0 {
--                            reg = <0>;
--                            oldi_out0: endpoint {
--                                    remote-endpoint = <&lcd_in0>;
--                            };
--                    };
-+        compatible = "ti,am65x-dss";
-+        reg = <0x04a00000 0x1000>, /* common */
-+              <0x04a02000 0x1000>, /* vidl1 */
-+              <0x04a06000 0x1000>, /* vid */
-+              <0x04a07000 0x1000>, /* ovr1 */
-+              <0x04a08000 0x1000>, /* ovr2 */
-+              <0x04a0a000 0x1000>, /* vp1 */
-+              <0x04a0b000 0x1000>, /* vp2 */
-+              <0x04a01000 0x1000>; /* common1 */
-+        reg-names = "common", "vidl1", "vid",
-+                "ovr1", "ovr2", "vp1", "vp2", "common1";
-+        ti,am65x-oldi-io-ctrl = <&dss_oldi_io_ctrl>;
-+        power-domains = <&k3_pds 67 TI_SCI_PD_EXCLUSIVE>;
-+        clocks =        <&k3_clks 67 1>,
-+                        <&k3_clks 216 1>,
-+                        <&k3_clks 67 2>;
-+        clock-names = "fck", "vp1", "vp2";
-+        interrupts = <GIC_SPI 166 IRQ_TYPE_EDGE_RISING>;
-+        ports {
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+            port@0 {
-+                reg = <0>;
-+                oldi_out0: endpoint {
-+                    remote-endpoint = <&lcd_in0>;
-+                };
-             };
-+        };
-     };
--- 
-2.34.1
+Yes, this is clear, the main thread/process is not interesting.
+
+> I am trying to reproduce the issue with suggestions by Mateusz.
+
+Great.
+
+So far I still have no clue. Most probably I will ask you to do
+more testing after that, perhaps with some debugging patches.
+
+Thanks again for your help,
+
+Oleg.
 
