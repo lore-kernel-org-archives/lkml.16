@@ -1,115 +1,110 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D3C22256E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DDB8BE5;
+	Wed, 26 Feb 2025 16:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740588874; cv=none; b=lcQExTxPuLgEnFm+fOtWsKMUOh6oplZ3G9vZEiZ2NUrFzYJjGEQwLgs4HHh7hsgqPaRbRGes971Bidf7hS36G13z1S1l+iH10Y/cBhGv8n7OjnLBPCgYN6m4OlRtADScPeaAwT0eFIdy5d0mAdC2XtbNa4X46AhvTv4P3uBwXYE=
+	t=1740589008; cv=none; b=dTNWlcn4TQUPESVrHjYIgk9zcIN4j7nxbZLaUDLSPOXU/XpeDMr3S4iyooo8xPWKqGFYyWGR9w7ZhTsYoc762Dag8sIaffqYVhriTmCWZp6Xd1vlnAMmRb7e0GrkB2QDmV2yQZil37bn776vpc0ZKful5aEkBtKC7pKYjOKKL6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740588874; c=relaxed/simple;
-	bh=sFeqh9nKZoEYQ+a6IXzXR8geyg5sacchQjdojt4E2As=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eVysNaSLOnn9aG/X5v0zF/Ro2XkicQnvtNoLVnggR43TITm/98Ust/C8Lzb/XIjXb/s9bCM6V1TLjBOTM+A8/JZtuBFWtnGXWbjJdurH++lxNqv4tUsvCvlO5/zANrTN3vovfKLwzGRRyi5GnycZBX+dwPWCuvmFeonAjuyFsgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Slq/rI3p; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Slq/rI3p"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-439a2780b44so293245e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:54:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740588871; x=1741193671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oZpy5GPgAtfFVvCtInpJGMk0J6F8LViPBE4i9el70qY=;
-        b=Slq/rI3paciLpqsyLMIMYqrl/29P2NHSuKtfV7j+fEPtbtkkZ3TUe2zurBQHtyV3a+
-         RFwZ7jt4sS38IGtfICkV7itaAHAqNiLX9QbS/g+28wCj9o+4i8o+ZV6TuAQEvP2vXxvk
-         xyVMiHp4yW93x5ku3StG67/4Si7ByxKP6gIP/12mZp9sDcLRh6LvUsRxCSZpHyYtKP4U
-         2s3gtztYVnCrMJ39WytDdDj0TPNaFxEHCTkgyOf/IqYzkGccLcMTkZI7+z6MdeThrgf1
-         U7NeGrrAmxZrEAuHPg16ml3PRsfe+DPRBRRFqwtN+UIwW52AXAlkvvBvhL1AVQkEPUVi
-         2dBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740588871; x=1741193671;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oZpy5GPgAtfFVvCtInpJGMk0J6F8LViPBE4i9el70qY=;
-        b=pQzez4NR6E5LQ7lrUdDE/xa+yqrO3dOC+aQULyf/dnj++M3g1OuYdgqWZ5mxto+tfq
-         5kjRuEkWtmvHQnWrz9Bxh+t2JXutKF2MlDgH7JQxTvwo1qDSbl1rmeOWbVAQsfm1fNpm
-         WGq1hVLe8ZjPYif1r7HVLlnKgv0K053ng697/47wq9g0QE+FzOsQYQRtTuVwHG0183/c
-         mB7j8Zywm8fZPrh1PTkPBUQlT014D3mKfn2mOilhloToJY8uk8/ZwTcWWsElWS3HEG2j
-         zcMGIjFhdybomh2lxzbTyiXt6KE7szq4apOj8Eqj/6HlpzqZ1/6xnpUASMh9LYPQtYYr
-         zhOA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVrponvPQlQ+GaoLaL2XF3VgHBpiNh1gN+5wXBBDx5f4oAJXgkOWtGYQjltLPruvXV7UoG0SVgrHqT1aI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5DLigIHIEt81MAZH3Y5FyVqkoVdRofSOaY8R2Zr0wEU2npSt9
-	7b89PuXgs7RAdv3a2SZHY9QU2jliDMfOBzyz5mcSYuH0qXJVpgGp
-X-Gm-Gg: ASbGncsnMbHs9xFrpZvxqqu/JeLQguLjZj5JdU2k+hELNObIO3XkTc+pSztylUvk5OJ
-	IG4gcfT318X5Su5Ax9x91k8azRWBoFkKcR5POncuG+/kYEiMHkxH4evSpMLIXkVeWQ9eF6JbYBA
-	SPK4azwLtjNPojhrVq+B9ndkjxMkwZV26QT7qTeY6c5IWWxw2/HF3moTRWhsCQllbwUvfWMWtad
-	w4VCAyg+LbfK+/NDMneaJCbAdI82+UMTcUjVJ47bDNN+GWBm+HSSk/VdDxX+6ngCyiDBqi1NgG1
-	lkevmYPgBvDRUI37iFdLY8sJJZZX8XU9Hg46w61PfLp53f1U8jwu+Yh1oYZCxJiR
-X-Google-Smtp-Source: AGHT+IHImZk8rItKoGgyrvgUbtToZbbr8RHyX95hu/4NZrjTjx7+3Bt9rfSiRS3zYUPBD5ly6hBYtg==
-X-Received: by 2002:a05:600c:5123:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-43ab8fd8ee4mr38322665e9.7.1740588870582;
-        Wed, 26 Feb 2025 08:54:30 -0800 (PST)
-Received: from playground.localdomain ([188.25.208.27])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba587163sm27672515e9.36.2025.02.26.08.54.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 08:54:30 -0800 (PST)
-From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Daniel Baluta <daniel.baluta@nxp.com>,
-	Shengjiu Wang <shengjiu.wang@nxp.com>,
-	Frank Li <Frank.li@nxp.com>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/5] arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
-Date: Wed, 26 Feb 2025 11:53:14 -0500
-Message-Id: <20250226165314.34205-6-laurentiumihalcea111@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226165314.34205-1-laurentiumihalcea111@gmail.com>
-References: <20250226165314.34205-1-laurentiumihalcea111@gmail.com>
+	s=arc-20240116; t=1740589008; c=relaxed/simple;
+	bh=aZDXeRG6Tv3oHJ75HiBSg1cMMCX7EbM0Tt8WZ07i38g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Fwccmc1zaVVNTglFJi4JKVQWFEijuX9zdXn4coEPND19CqCB/U1KavCGbmYv0Bn+bsO9jSEqUxE6/GUd4BZUp6Kn0kSkWY3zzyJT4CpxarfCUB63hyz04UDm1DTqvms7Uf1Nv26P1DBlJN9zCNKrkHaDY5o7OgKMVrhWP6RHgWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82C58C4CED6;
+	Wed, 26 Feb 2025 16:56:45 +0000 (UTC)
+Date: Wed, 26 Feb 2025 11:57:26 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, Greg KH
+ <gregkh@linuxfoundation.org>, Miguel Ojeda
+ <miguel.ojeda.sandonis@gmail.com>, Ventura Jack <venturajack85@gmail.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Alice Ryhl <aliceryhl@google.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ hch@infradead.org, ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, Ralf Jung <post@ralfj.de>, Josh Poimboeuf
+ <jpoimboe@redhat.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <20250226115726.27530000@gandalf.local.home>
+In-Reply-To: <ylsffirqsrogli5fqlyhklhy6s54ngolvk5hj5fnpn3ceglyii@cgcvtm4ohtra>
+References: <CAH5fLghEMtT663SNogAGad-qk7umefGeBKbm+QjKKzoskjOubw@mail.gmail.com>
+	<5E3FEDC4-DBE3-45C7-A331-DAADD3E7EB42@zytor.com>
+	<2rrp3fmznibxyg3ocvsfasfnpwfp2skhf4x7ihrnvm72lemykf@lwp2jkdbwqgm>
+	<CAFJgqgS-SMMEE2FktuCUimdGkPWMV3HB2Eg38SiUDQK1U8=rNg@mail.gmail.com>
+	<CANiq72mOp0q1xgAHod1Y_mX86OESzdDsgSghtQCwe6iksNt-sA@mail.gmail.com>
+	<f2bf76553c666178505cb9197659303a39faf7aa.camel@HansenPartnership.com>
+	<2025022611-work-sandal-2759@gregkh>
+	<16127450a24e9df8112a347fe5f6df9c9cca2926.camel@HansenPartnership.com>
+	<20250226110033.53508cbf@gandalf.local.home>
+	<9c443013493f8f380f9c4d51b1eeeb9d29b208a3.camel@HansenPartnership.com>
+	<ylsffirqsrogli5fqlyhklhy6s54ngolvk5hj5fnpn3ceglyii@cgcvtm4ohtra>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-The DSP needs to access peripherals on AIPSTZ5 (to communicate with
-the AP using AUDIOMIX MU, for instance). To do so, the security-related
-registers of the bridge have to be configured before the DSP is started.
-Enforce a dependency on AIPSTZ5 by adding the 'access-controllers'
-property to the 'dsp' node.
+[ Adding Josh ]
 
-Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8mp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, 26 Feb 2025 11:47:09 -0500
+Kent Overstreet <kent.overstreet@linux.dev> wrote:
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-index 3097acb4bd21..3550e44d00b5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-@@ -2423,6 +2423,7 @@ dsp: dsp@3b6e8000 {
- 			mboxes = <&mu2 2 0>, <&mu2 2 1>,
- 				<&mu2 3 0>, <&mu2 3 1>;
- 			memory-region = <&dsp_reserved>;
-+			access-controllers = <&aips5>;
- 			status = "disabled";
- 		};
- 	};
--- 
-2.34.1
+> On Wed, Feb 26, 2025 at 11:42:41AM -0500, James Bottomley wrote:
+> > On Wed, 2025-02-26 at 11:00 -0500, Steven Rostedt wrote: =20
+> > > On Wed, 26 Feb 2025 09:45:53 -0500
+> > > James Bottomley <James.Bottomley@HansenPartnership.com> wrote:
+> > >  =20
+> > > > > From some other rust boot system work, I know that the quality of
+> > > > > a=C2=A0  =20
+> > > > simple backtrace in rust where you just pick out addresses you
+> > > > think you know in the stack and print them as symbols can sometimes
+> > > > be rather misleading, which is why you need an unwinder to tell you
+> > > > exactly what happened. =20
+> > >=20
+> > > One thing I learned at GNU Cauldron last year is that the kernel
+> > > folks use the term "unwinding" incorrectly. Unwinding to the compiler
+> > > folks mean having full access to all the frames and variables and
+> > > what not for all the previous functions.
+> > >=20
+> > > What the kernel calls "unwinding" the compiler folks call "stack
+> > > walking". That's a much easier task than doing an unwinding, and that
+> > > is usually all we need when something crashes. =20
+> >=20
+> > Well, that's not the whole story.  We do have at least three unwinders
+> > in the code base.  You're right in that we don't care about anything
+> > other than the call trace embedded in the frame, so a lot of unwind
+> > debug information isn't relevant to us and the unwinders ignore it.  In
+> > the old days we just used to use the GUESS unwinder which looks for
+> > addresses inside the text segment in the stack and prints them in
+> > order.  Now we (at least on amd64) use the ORC unwinder because it
+> > gives better traces:
+> >=20
+> > https://docs.kernel.org/arch/x86/orc-unwinder.html =20
 
+Note, both myself and Josh (creator of ORC) were arguing with the GCC folks
+until we all figured out we were talking about two different things. Once
+they said "Oh, you mean stack walking. Yeah that can work" and the
+arguments stopped. Lessons learned that day was that compiler folks take
+the term "unwinding" to mean much more than kernel folks, and since we have
+compiler folks on this thread, I'd figure I would point that out.
+
+We still use the term "unwinder" in the kernel, but during the sframe
+meetings, we need to point out that we all just care about stack walking.
+
+>=20
+> More accurate perhaps, but I still don't see it working reliably - I'm x
+> still having to switch all my test setups (and users) to frame pointers
+> if I want to be able to debug reliably.
+
+Really? The entire point of ORC was to have accurate stack traces so that
+live kernel patching can work. If there's something incorrect, then please
+report it.
+
+-- Steve
