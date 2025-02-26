@@ -1,99 +1,142 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76F525D54B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC36526B08C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567259; cv=none; b=FGjCJefnBM6zLbVAmaPp/wx5aYeB+tLgn8dXTS+fR+SZDQRPaPVwoACGh4QLUJmm9zp64q+3B7fWWAoT/YyvhoiMM6BzdbPOs1rKR7yD88h9//fYzhi9H5p1hp+SPuZmsjJ7dkKJv5lyZlELvYZpu7hObN1B7ki7OD1bJE98NBw=
+	t=1740567262; cv=none; b=FOFKQ04V4cclbgpF9YsQxpFOy0IW9KG76h3QQNKgYRghy4QT+IK3iuGtiXlUoAxNVsM3GQcKlC2SbUQ2/jrWzs47YwBhMe6G/YoYH99OY6l0io2tqnCFhBChmIcd38Bg4aEeh3aQO16KY1pMZOinVZeEj2gyjF6WFtxVVGeA7jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740567259; c=relaxed/simple;
-	bh=x5xg3LwibJXQQaaKDM6VQ+lAP9lfPVdOz0gIsQg4kuE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R9bxXsi3hpJOvdg9WixGBek6KExfthUQjn3k5tpVQgR43dxPgvHLctWCnnFKRFtAg6kJE70RFIhCxza6TbUER+YRgbHCRUkr+DcnipPACRLzSKkN+8IGEkBEkHV42LT/Rq34CJDywoIw5mjnvwY/7nAoPgYAXQeT6sBUlN6rsk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5cYX4Bx; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5cYX4Bx"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-471f1dd5b80so160871cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:54:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740567255; x=1741172055; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8k9ussjgNfo7XH+19sy9pLzES4opNKoTTPxfbK8Va7w=;
-        b=f5cYX4Bxd88dY7t4MQPx2AdKVuvpWEE3sUTMD5Jt266TY61hY3xGRVW70Vqrl+JlXp
-         GmjZ3uYavX61DLSFyCGFiReZZwlz2zxpIA3s/AliLyENIkDafEH4e/brrCLRaHhpveDu
-         r5hKll0tbE4C1DFitzluA7Sf71R0mZYEyi0seewgN/ApoVPSlQXNM9IWm5I2OKQ4mfGO
-         hkMkNcj0csnZ0Es/kIviCoiQfFFEG4BOwxsQCMkqLGZI3A6fw0yAKqsOiSH60JzKtqLO
-         akpTZ8THMO24/QPtnkXpjUNkwLwJ7G/BucQUfBhiaXxbfTD+DlwDJGB05gd9+BXfLsxr
-         A1Uw==
+	s=arc-20240116; t=1740567262; c=relaxed/simple;
+	bh=Qs2eopeLtj6FqaBsS/f9Lvq9GwF7fXrRnRy9gdlOVDw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pJNnvqjL8ULOgTs2BH54qzT/qa1CzxKyVdrZZqDj8/A/XE73381fWkWX+UE9T6IxWrZRVhmynNXBQU59EkLi3/XOZ/6BTgCXH1Q5gf4u6CgNARghivkE+LG9bZoCtjJvO9AlSxrMktKm3D5jvXyEoRnEjCVBCxHrIJiWT4HIpBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d060cfe752so54186375ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:54:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740567255; x=1741172055;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8k9ussjgNfo7XH+19sy9pLzES4opNKoTTPxfbK8Va7w=;
-        b=sQ+3DdwuUE1w7hMF7ujSBsYRHD1Ktx8A+EsCauj+YYtt5swXlZ/86FJNzruilcyKEb
-         yJGi0g2F0ZIySgOkaPklQJrvXS13m7HWN7qsEC4MINZ7ks8yoLqzrlS2QrQRmyWuFzEs
-         f2sRbhBd8BXjg6K8FERzkONcnaVS0ArwwOJYb+diCbGaYbXduczKGqWkvY5OdMxerZNs
-         klvdu2QBxt5jWatI9NXQR13PHR8FHV5iXFe1wxzRGX9GOjwiEBcMOxaSSkJWNbiLw1v1
-         TAfn3WZPA4Wf9xCZ9BOt2yplPWM6pbK2tCoG6wMcnMCuaqwCdpaZBVAbx8pVBI0HwZAi
-         IDFw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5crEBBWYrLMloI+vU5wBjK17Xg84ouhD9oqsC5ujy9IUy41DV2E2dXwdj/0sJxfr3o5TcF/Ydjyiy8YI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdZwRMYViDDiW78/y0rJFDRCEwR+3FZGiFgi39hST8nnSuAvHx
-	Zn8q1nj2EjeKyZOmwitHdGiDQghSjixgO668wRjYevIy4mooYD59T2nbLIRUCqjxvNQ8ANoTltE
-	Mow86/U/qd72YNYrxhYIPMZpZxIyBdm7SBRyw
-X-Gm-Gg: ASbGncswQhUO7200LZbsazl0vRH3cQ+PjNOy4YCFNsu9xaCdEtnEIMvPd5tmMKSjpOu
-	wrcGh2hLgTHsWnKFAgh4tOOFIxHC6YQgcb/32OWVNK+T4D13c2OvtxUxclbY4l/TivO9A92/fhd
-	8MHMBrXUqJN4CFhilqcXMYvsYprfEBXZm+uaY=
-X-Google-Smtp-Source: AGHT+IEtUNEH5PpKZRBVaacFBgRUGjAhw23RRBB5/3TVjGiyJAVndyaT1T40ETOgSGf0gVSz9gyrvjommoMUte+jJtQ=
-X-Received: by 2002:ac8:5a10:0:b0:471:fefc:f002 with SMTP id
- d75a77b69052e-47376e81cf3mr8973501cf.9.1740566831709; Wed, 26 Feb 2025
- 02:47:11 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740567260; x=1741172060;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6ywVTkBOTGXpD4dtX6/3aeHzuNHi338K7wvDLA2azj8=;
+        b=phQoXWFMt2tRpihQl0mpZg1dNZM+9MygM9WGsT7O06wOoWiT7N63NehytRr2fODEuY
+         URiAiIOSMdBx7MQOd4J37sspIv9tzNeiHYjUWw2gqXTex+qHOwUx0txhG3nH3yOfltv0
+         p1h2Jk5Wagk4pJWx698UZhzpU++WEexItnO6nIpSZE2eB+rCszwDDng9P7oehPd5Uw4p
+         vRyogIY2ggOZvRV4PnJWQRf7aTu8JzNJ4hAcrcECw4PmD10bN23ORQ8H7H1AxKDS+fUp
+         8pkEea4/jtGOaPP5CKA5jTWRVYAR6Q0oDjU0QHUQ7Nf1aSTYC16U0HR0/e2YG57bSwgR
+         ZGkw==
+X-Forwarded-Encrypted: i=1; AJvYcCXVRstYF9k2HxLWRcAtjlCZrsF8uWywKHmAOtbEuKc3xTEiXAyQG2V5JE2FVtYoLnTaPmR50rYIHvm4YbE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyWWEkPBxSaeeqMpETHgVytlfInT8SkuoNueRODZPYCStx72UE
+	6JZmyG+t8NS+IzRz8iOaDyCdt2LV9W0T29Sd/Iz9ilEpsPkglatEew/zRp0avVATT+rKtu9LYvS
+	rUsByXyBnnVOG/d87J+DTrhhPAanNGalnAyAopl9ex4yjqi2FT7os77E=
+X-Google-Smtp-Source: AGHT+IF8gLd4yzsv1WPHl52n1M8hACs+R+LGrr6hGH0ZFK52nrRI7fUoPV6viMHZct4cOmlyoMGezzjmXyyVoIK1u1F2nsklBAC9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224-page-alloc-kunit-v1-0-d337bb440889@google.com> <20250224-page-alloc-kunit-v1-4-d337bb440889@google.com>
-In-Reply-To: <20250224-page-alloc-kunit-v1-4-d337bb440889@google.com>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Wed, 26 Feb 2025 11:47:00 +0100
-X-Gm-Features: AQ5f1JrJDmTOqjWilOWeguYEmp9d0N0gM7ZtyDHGC2VpER2YE2U_sG3dR8rzJXg
-Message-ID: <CA+i-1C2C4GSd3Jhw56WfccKizoeLj4ychCz2BpOU6AwESjzSyg@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/4] mm/page_alloc_test: Add smoke-test for page allocation
-To: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Michal Hocko <mhocko@kernel.org>, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>
+X-Received: by 2002:a05:6e02:12e8:b0:3d1:966c:fc8c with SMTP id
+ e9e14a558f8ab-3d2cb514b1emr187392555ab.17.1740567260091; Wed, 26 Feb 2025
+ 02:54:20 -0800 (PST)
+Date: Wed, 26 Feb 2025 02:54:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bef2dc.050a0220.38b081.00f9.GAE@google.com>
+Subject: [syzbot] [wireless?] WARNING in ieee80211_set_disassoc
+From: syzbot <syzbot+91d7214a5ebebe3792cf@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 24 Feb 2025 at 15:47, Brendan Jackman <jackmanb@google.com> wrote:
-> +static inline struct page *alloc_pages_force_nid(struct kunit *test,
-> +                                                gfp_t gfp, int order, int nid)
-> +{
-> +       NODEMASK_ALLOC(nodemask_t, nodemask, GFP_KERNEL);
-> +       struct page *page;
-> +
-> +       KUNIT_ASSERT_NOT_NULL(test, nodemask);
-> +       kunit_add_action(test, action_nodemask_free, &nodemask);
-> +       nodes_clear(*nodemask);
-> +       node_set(nid, *nodemask);
-> +
-> +       page = __alloc_pages_noprof(GFP_KERNEL, 0, nid, nodemask);
+Hello,
 
-Oops, it's ignoring the gfp argument here.
+syzbot found the following issue on:
 
-> +       { .gfp_flags = GFP_DMA32,       .want_zone = ZONE_NORMAL },
+HEAD commit:    e5d3fd687aac Add linux-next specific files for 20250218
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b73498580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4e945b2fe8e5992f
+dashboard link: https://syzkaller.appspot.com/bug?extid=91d7214a5ebebe3792cf
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-And with that fixed, it becomes clear DMA32 allocations can't be
-expected to succeed in this zone setup.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-(Anyway, it's a bit of a silly test regardless, just something to
-illustrate the KUnit idea).
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ef079ccd2725/disk-e5d3fd68.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/99f2123d6831/vmlinux-e5d3fd68.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/eadfc9520358/bzImage-e5d3fd68.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+91d7214a5ebebe3792cf@syzkaller.appspotmail.com
+
+wlan1: deauthenticating from 08:02:11:00:00:00 by local choice (Reason: 3=DEAUTH_LEAVING)
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 18257 at net/mac80211/mlme.c:3920 ieee80211_set_disassoc+0x1177/0x1620 net/mac80211/mlme.c:3920
+Modules linked in:
+CPU: 0 UID: 0 PID: 18257 Comm: kworker/u8:17 Not tainted 6.14.0-rc3-next-20250218-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: netns cleanup_net
+RIP: 0010:ieee80211_set_disassoc+0x1177/0x1620 net/mac80211/mlme.c:3920
+Code: 00 00 00 48 3b 84 24 a0 00 00 00 0f 85 b1 04 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 2a 4b 2d f6 90 <0f> 0b 90 eb b4 e8 1f 4b 2d f6 90 0f 0b 90 eb a9 e8 14 4b 2d f6 90
+RSP: 0018:ffffc9000b7aed20 EFLAGS: 00010293
+RAX: ffffffff8b94b3b6 RBX: 0000000000000001 RCX: ffff88802ff78000
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffffc9000b7aee10 R08: ffffffff8b94a435 R09: 1ffffffff207b48e
+R10: dffffc0000000000 R11: fffffbfff207b48f R12: 0000000000000001
+R13: dffffc0000000000 R14: ffff88804fc70d80 R15: ffffc9000b7aeda8
+FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f651f2d7d60 CR3: 0000000068174000 CR4: 00000000003526f0
+Call Trace:
+ <TASK>
+ ieee80211_mgd_deauth+0xa88/0x1080 net/mac80211/mlme.c:9754
+ rdev_deauth net/wireless/rdev-ops.h:509 [inline]
+ cfg80211_mlme_deauth+0x582/0x930 net/wireless/mlme.c:519
+ cfg80211_sme_disconnect net/wireless/sme.c:667 [inline]
+ cfg80211_disconnect+0x3e7/0x7e0 net/wireless/sme.c:1557
+ cfg80211_netdev_notifier_call+0x1ba/0x1490 net/wireless/core.c:1540
+ notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
+ call_netdevice_notifiers_extack net/core/dev.c:2180 [inline]
+ call_netdevice_notifiers net/core/dev.c:2194 [inline]
+ __dev_close_many+0x145/0x350 net/core/dev.c:1663
+ dev_close_many+0x24e/0x4c0 net/core/dev.c:1714
+ dev_close+0x1c0/0x2c0 net/core/dev.c:1740
+ cfg80211_shutdown_all_interfaces+0xbb/0x1d0 net/wireless/core.c:277
+ ieee80211_remove_interfaces+0x108/0x700 net/mac80211/iface.c:2285
+ ieee80211_unregister_hw+0x5d/0x2c0 net/mac80211/main.c:1681
+ mac80211_hwsim_del_radio+0x2c4/0x4c0 drivers/net/wireless/virtual/mac80211_hwsim.c:5665
+ hwsim_exit_net+0x5c1/0x670 drivers/net/wireless/virtual/mac80211_hwsim.c:6545
+ ops_exit_list net/core/net_namespace.c:172 [inline]
+ cleanup_net+0x812/0xd60 net/core/net_namespace.c:652
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
