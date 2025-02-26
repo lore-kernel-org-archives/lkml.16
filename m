@@ -1,102 +1,79 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E86F218AAB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5521D3FE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580328; cv=none; b=WttpeEs0B4BG71glwDqgFWTGwdPKIdtLalQ8bjQh4wqxi1ncNCN7CUeFIWRwq5fygKEH91oveHWGhqZqIjI5ccK345o+BYYUw9esu786i3T+71Oa8cCCdmZhUpAeN5uSfcs0fHTGS2sMV5Dw6LBLOdU4HLmWzKIgTRXKLIA8d6o=
+	t=1740580344; cv=none; b=eTsLvR3A/lDQ3w7cxcsA8RTmiGmNg6oGPRtRMLvLAXDlJOYRub0wmaS5X2o8im0O+HSKdiBDKzf0FWC2POXuNp/0rkcmk7OcW2tSQYAZPn0syYyQnmDiJcilJ5OCMB+PnHsFaAr6bcWn+HaCgS6nrANcFdohboCJjjYP3IjOvGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580328; c=relaxed/simple;
-	bh=fMVSvdO9Qk7XWWOU/kG7NyzMG+VeN5WdRjOKq8C7m9M=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jh8j8jHRmEs4TISBhDfU/Dj15B3iDt573CaPxMZbmPkDJ4eLmP9B6HMMgWaNG/UM96Qqv0h2P85+YlULwtUYqIPJpkNZzY8KZprYAv0ulbsDgTT8ZSLt7fvvfT/u15yeCB7Cxjm+Zq/bxZu7QwS+ywye8ueHD10wdd4TYEdj5G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MUqMlJkL; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740580344; c=relaxed/simple;
+	bh=/Lv5dLzEHvMto0dqDZ+4akFVh1B4xomspGePhh7mwt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRrJsZbAkwyM8c0EKS+6e89yDdoiPkrLHEyd4Rd7fo4t/FfywKPO+g/j0bUyhpmUATQAuvsz27wbZQMVoDZ9jQPuP4EztLG1dbL2VZiyTIyurx+iDTdsFCY5BMiw1WXhE8WqDj90gRciO1cWbEAQlPSG3zULLbvr5a0dx6z3//o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oj8IU1jG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dVTJE0Dq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MUqMlJkL"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-855183fdcafso28584939f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:32:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740580325; x=1741185125; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=trZK1Q0XJm3EAQhjNCUlku9wqjbsls2X+EuichAbMRQ=;
-        b=MUqMlJkLnXRu2zadwbmb28wbke+nzPeyqUKHL4eHpRUy81Szhy2oeYrFFX2Ig/FuKh
-         3i0pUJcrUdsCEqZJNGK3OkUFiweEPOVLCeloT/Nvk+Qsmq/7AQ3y3Fr9Vet5orTiFkP4
-         CQu2MLeurK2yIGcWNZQlWScGsulXD6gKxXfPDDvuPO69LPx3OhD5N07+feV+Gt9DuH1o
-         GTCGKnGUPEItwSzuCc+sp552y2UNpQrWY0icbB6qEU3lgSPBqqlYAoyxr2SxygX873EM
-         es6Zvi0iIUXgRJomuSddnLzfbfv+T2a/ZI4W0Hxpe/jHLXVHwaUrpHije/RU1jfAJI1p
-         KIdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740580325; x=1741185125;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=trZK1Q0XJm3EAQhjNCUlku9wqjbsls2X+EuichAbMRQ=;
-        b=IOTuXhi6/eAhG08GiTBHi+D9lx9yalIJX7N5TLDAaVFKqCNDF8cpYQ8twbB2oScJJZ
-         IhNHkRoHwEyPlElF7Rorh4JQ/aOYXxf/oTI6WjvIK4MEHSy0N2cyfiONEeMSjFNdvho8
-         TY/b5eOv1hdBZ7cBZjLvJlohY9YJ0bxD8gI80DsAg9sWNWxm0DGRZqpYzJshJQSpjwBs
-         7kKBldVj+l6Qwr9IaXday+vDOcuWzWdFctVtYaPv1HKcl+RNcnJZ5wS26c/y9MvKWdRA
-         VIvmB5cXo7S7XiybQExd8eKEfrGZ0D06v8Ve3zpJa3+T75Q6rdOQFvTYZHiqR/XEdbot
-         pc9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW5b8nIuErw+ZVuh0s9cYR/uTqm9foenUGDU8Vi2BiLJxbw1AO8E8wkW0kTG3nGFh50690gncvIIKLaWU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfnKxeJ+jJdNmTp6xAHoSnzWD7tI+he29U9vXsGVGdfgu2vGAx
-	9dmpzeUhNM5x2v05kAdkdSg3zwqqop3l/ZQpg/s3uxGE/KqGES3HZnO04JnwvgA=
-X-Gm-Gg: ASbGncugm325RLo6PLMUu1nmLBqUaHPS42DIWgGsYmBtcuqWhpL8v4UdV1eo+t/HpKp
-	nrWelQCMxSyWxqgM2YZ66GgpsS8681qdTcEmBF9PliTIabTsFm796op5nzyGVC44jPGL6Wavt6J
-	Do4bR/5jpfi5Z0401yRjDWnA4RHVrzyxIS0+1QHuPh96NT5ZGWGwH3/eXohIq5UftajFYVG/vVi
-	FNpuary1g2mOQvvL35M4KuK6ZekXY0arloTpsL06JXwtS2fH4UqfWbRxIXoOclSh7npsBBzLm/H
-	j/fgbhNmfhgeHVdZ
-X-Google-Smtp-Source: AGHT+IHabXtiuY9p9FWUehezndCWyS3XMFRLX6LH+PTKhkqUOLGI+DxXj2jxDHmMWTb/jH8LLzzPVw==
-X-Received: by 2002:a05:6e02:791:b0:3d1:9bca:cf28 with SMTP id e9e14a558f8ab-3d2c0239750mr196114715ab.8.1740580325652;
-        Wed, 26 Feb 2025 06:32:05 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f04744daebsm908534173.27.2025.02.26.06.32.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:32:05 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Keith Busch <kbusch@kernel.org>, Ming Lei <ming.lei@redhat.com>, 
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250225212456.2902549-1-csander@purestorage.com>
-References: <20250225212456.2902549-1-csander@purestorage.com>
-Subject: Re: [PATCH] ublk: complete command synchronously on error
-Message-Id: <174058032466.2230500.13734000197859662068.b4-ty@kernel.dk>
-Date: Wed, 26 Feb 2025 07:32:04 -0700
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oj8IU1jG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dVTJE0Dq"
+Date: Wed, 26 Feb 2025 15:32:19 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740580340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Lv5dLzEHvMto0dqDZ+4akFVh1B4xomspGePhh7mwt4=;
+	b=oj8IU1jGNvV2C/uIb6rFbWn0QnvNVJcjpKkk8l66AvRnxnclU+fWIsA6dh1M20wnPxpC4m
+	fuF2TGTgdSlGiCr/Gt6r55Mnmdz3dBSOk6A2bBm3PNweBE0pGRoHsixYwsZ2zKy+YfvglN
+	aECRlCC11qF2rk0ukzR2K5m0udrTTanowaTNQkYoAjed99pB2OQbUf+11jDe6DOkn/dxQY
+	g3bchQ9RgVoAyRNwsWBw30OLVk0FrM0oJsq1NR1oFajcjPPZEouYxkogTk0nQYuru/rQhp
+	hMfgx7EX4/oPwtnGP62PxdUKBW7+dyunZsVomiXhW/RS1abaG34EEivtacF7/Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740580340;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/Lv5dLzEHvMto0dqDZ+4akFVh1B4xomspGePhh7mwt4=;
+	b=dVTJE0DqzqbiCRCo6xuSpYe81pF1v0NpcyOqruLZsqPG7osV+y0D7ibh/Cn46JscTw4ygJ
+	aALI6qV5hU/iPHCA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] task_work: Consume only item at a time while invoking
+ the callbacks.
+Message-ID: <20250226143219.-T7dpcmy@linutronix.de>
+References: <20250221170530.L3yMvO0i@linutronix.de>
+ <20250223224014.GC23282@redhat.com>
+ <20250226141601.VBQ91ZDb@linutronix.de>
+ <20250226142914.GF8995@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250226142914.GF8995@redhat.com>
 
+On 2025-02-26 15:29:15 [+0100], Oleg Nesterov wrote:
+>=20
+> Not really, they can run in any order, so fifo can't really help.
+>=20
+> But this doesn't matter, please see another email:
+> https://lore.kernel.org/all/20250226125048.GC8995@redhat.com/
 
-On Tue, 25 Feb 2025 14:24:55 -0700, Caleb Sander Mateos wrote:
-> In case of an error, ublk's ->uring_cmd() functions currently return
-> -EIOCBQUEUED and immediately call io_uring_cmd_done(). -EIOCBQUEUED and
-> io_uring_cmd_done() are intended for asynchronous completions. For
-> synchronous completions, the ->uring_cmd() function can just return the
-> negative return code directly. This skips io_uring_cmd_del_cancelable(),
-> and deferring the completion to task work. So return the error code
-> directly from __ublk_ch_uring_cmd() and ublk_ctrl_uring_cmd().
-> 
-> [...]
+Yes, I just got to it. So it looks like that wait part from task_work
+should go=E2=80=A6 Let me check Frederic's patch in this thread=E2=80=A6
 
-Applied, thanks!
+> Oleg.
 
-[1/1] ublk: complete command synchronously on error
-      commit: 6376ef2b6af3bbcb7c50dc657bdfb83aba467aef
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+Sebastian
