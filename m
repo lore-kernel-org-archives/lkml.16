@@ -1,62 +1,78 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C8F229B27;
-	Wed, 26 Feb 2025 15:32:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C13209
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583936; cv=none; b=QaS+vRAVI+RrE6N/NBq7oBUClrlIaY+3NeoHvWg2/ecT9vtcbf1Ll3uu+xV3ZpeDJjTq3wW3EdZNTKi1Tr0h01pEZ3LMqmNxKFGHq43xzCu1Ive4Lppp0sD61f+hEhKRku/kJrhFXhIDTrzYlfWM/1lrYgkwKDyGZK5ig6L2xxs=
+	t=1740583984; cv=none; b=E0UTdzIdZEqLmwCBltUJaDZyrQqV3rseW15XNdcU/d9DUDnVMNqbYeNSItZ2HQu/RlGmQiEFSYbz0Qh/pk+RQcW2V3l2pcWvlKcwiZ5ubx0ufvrcCYDxGT8Y1aJHhSpX+LjVbVFuZJ4mlSO0POrbZbSdBtIEtxaUKc7RlpRefOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583936; c=relaxed/simple;
-	bh=GP14c/N7IybcGglpwY5AgZfDbOHUX4VZIEO4OwFewEs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jiH8prNU34twM54Q0IQR0LoZG7rhjN682B8DPsExJKL3LpIyZGcBwvCdiq4PAOkDCWWQ/V3SLyACbwLtSK8l1eQJZ0Opinffc5XO6uo0Tc5zFfU3noXbiYZEl+9P8RFNvHon4i4cuCSM3mGfCMcuM0/7GNvOw+u0Dmb31kBv0uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DEvtpH/7; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1740583984; c=relaxed/simple;
+	bh=ddfEzWSCkfMka5YMwW6mZE6JEzzDPNpoKkDuvZz6YE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QjEDtWAry4V/7yUlKZQGEBGDetrkTEjBtwZ9Zhij+32usL6hMq5ZM1arPJ8iXHAP7r7wbjpKXz8OPmRMs78uxUzbyzxJ2KuIH6Lvz38IAzS48C/XH3XGkd8M7QNfhsFbXGwUqyy7Zs0f2Y/PdMfx7IuHJdrQwJbJmXeEiJ0+k9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EliFiViU; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DEvtpH/7"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFJEx4014247;
-	Wed, 26 Feb 2025 09:31:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=76ijef4UCe5nb9rX9ISSn5SeDuo8SSHxJvfwJfgjhR0=; b=
-	DEvtpH/76NoV2MrZtsnvrashFtF2aatMF7mMCQKRd+r0o1ZZXKPNYt6KyrEm0cbp
-	/QipNApOdk6T3O2pt4jm2t6wtZs+HGTRnt6o8frWUxdcYsta1AhdZYIhDuyxWSrL
-	D12EBQIEVE8k/USCNe799K2xlyGKh7dtVDkUOfyBMP93mNEZtXgGSDI0sAX/Ovfl
-	6RIyNissVjEBB3ULCisTViaYtpY2gW0wJ9pd2nzJqmotVGtqUU76PyVKuRJ0/FYr
-	1QqlOXLcKpLZoiTpJ9Ixx2nwJjVOY1kxGy1A3Y+vZJqAmGHRFCLxV14+n0z+7d/u
-	8sr4SDgSzlEdAlC35mmQPA==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 451pt3hq9w-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 09:31:42 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 26 Feb
- 2025 15:31:38 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 26 Feb 2025 15:31:38 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2D7FE820270;
-	Wed, 26 Feb 2025 15:31:38 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <peda@axentia.se>, <andrei.simion@microchip.com>,
-        <nuno.sa@analog.com>, <paul@crapouillou.net>, <oder_chiou@realtek.com>,
-        <kiseok.jo@irondevice.com>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, <srinivas.kandagatla@linaro.org>,
-        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 12/12] ASoC: Tidy up SOC_DOUBLE_* and SOC_SINGLE_* helpers
-Date: Wed, 26 Feb 2025 15:31:37 +0000
-Message-ID: <20250226153137.2791938-13-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250226153137.2791938-1-ckeepax@opensource.cirrus.com>
-References: <20250226153137.2791938-1-ckeepax@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EliFiViU"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2232aead21aso2014065ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:33:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740583982; x=1741188782; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6oLaVxK/peyXmX/hfhFSKRYTEC4hb7vBZQRW6g6goaU=;
+        b=EliFiViUxYQsrc+6GPplD3QKw2NONyXJ3uWifcy/DLkfk0RxLNlswxZC09N4l2Y62G
+         jlFDtHoAc/pDZWXSXOjO8y185vCZ+zZozUVIhS39B5Vm6Ol/zfRBzGRm7avKRQ1K0M/E
+         Xp9gZwCxo7Yjy97varWWgtCPFgS0x8TQA1Dv31W0EfLUG6e0Gd1RPcb7GxOtfH8lwhbN
+         6i/F4N7yma9g8EMHf2I0IiMUcagP1WH0+tx+ieIzOoUI6WOyOK10DOE/6LtrxI7WYM+8
+         ntNAX6wUhdvoT8o7Bn5GmtSOfESbaHFE3geDcMKQlWFuJYfrQYOdABjbEfA+Ft6f96qG
+         lPQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740583982; x=1741188782;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6oLaVxK/peyXmX/hfhFSKRYTEC4hb7vBZQRW6g6goaU=;
+        b=YnvwKxs6KSFZec8Vdi+Zvl7ToEftIZApgaG5FwRUvLR5NFlIUMhdWanRx2PwxEEoW4
+         qaqj7cQphVGcrbLoaorm6Qsi7efjKHgu5kqwq0QJnL2JXGfBeDDZ6sh8lz5Vmp5hD/PR
+         eRpzneQmZBCL7clBEBdHlLFBKNAZ176MWCw1TOAX8HprZbTQlw7rQdiczPCpD2hHqm1r
+         RcPfaVvAYD9FZ2BFoedoEyYN/nnFvivnSe/CKoE36HUJraO1TM6gx7rHCWNklFm6U+wJ
+         S1nOpxX4MDk1bapQ7324x/4MQERlPp2z+e712MXKtTLq0jdGPPQhIJbLSILaSd+dfGss
+         eKOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ra3olXXoh+LPUHSXpfnJW1amUyXSH7/woyc39nqzBxHkJxQk4HTzOO2Bqr2651+/bnsxNVeobCIfQGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe7DQfB4DcaBOr2Msq0TDk+zGMdkhtebZ6Qis5U+0W0hbAET8H
+	6CBlbzjYJBAdNUe43Bwerl5xGlZPjVC5xd/8+TOAakK3sDzmF/eT
+X-Gm-Gg: ASbGncvMD5CG3Y2kL6HZvg85iaGUMYTVOenEJNB2HiNPN6mmfJWi8iIEdiTiRqgZM2D
+	HI+pULhq25gXrmxOlbdU/WZgZsV7jDJZ7pcXyb1rWGDAcOLfkdkApu0/HhLUnY0ulEm701qWtgk
+	uD46983DTb4QAiPiKTiascf8a3yfeeKcGUo60bhlaTQ4izs0tvvxV1GWHjN+ENe+j1MZidzBGuc
+	mmRncKWxSHR2XmtjWE97pFH83/j79hNdSHamYyhlpzZRKw3Z9h9mZ0dzEjYMo8DTqGi9fgzbsgQ
+	5dZTUaCPXQvk2IG1RBbdiuOlgXY=
+X-Google-Smtp-Source: AGHT+IEF5cukPMgHk1iC0V81Fu/6h3UP1oe65hIXnY53yBkz7HopBDeZIQt7xK2dewuo8IMAsRHdVg==
+X-Received: by 2002:a17:902:d508:b0:223:49cb:5ec4 with SMTP id d9443c01a7336-22349cb80ebmr100325ad.3.1740583982196;
+        Wed, 26 Feb 2025 07:33:02 -0800 (PST)
+Received: from SaltyKitkat.. ([2a12:f8c1:41:1:f0df:d3ff:fe1a:fa0a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0215f1sm34116485ad.63.2025.02.26.07.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 07:33:01 -0800 (PST)
+From: Sun YangKai <sunk67188@gmail.com>
+To: yosry.ahmed@linux.dev
+Cc: Sun YangKai <sunk67188@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
+	linux-mm@kvack.org (open list:ZSWAP COMPRESSED SWAP CACHING),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] mm: zswap: use ATOMIC_LONG_INIT to initialize zswap_stored_pages
+Date: Wed, 26 Feb 2025 23:32:43 +0800
+Message-ID: <20250226153253.19179-1-sunk67188@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226124141.22218-1-sunk67188@gmail.com>
+References: <20250226124141.22218-1-sunk67188@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,224 +80,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=XrQAOUF9 c=1 sm=1 tr=0 ts=67bf33de cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=w1d2syhTAAAA:8 a=LuYPZTa0VuMH1JCmcYwA:9 a=YXXWInSmI4Sqt1AkVdoW:22
-X-Proofpoint-ORIG-GUID: -bP2yqci2CCTnJBZ3RPV6FoKEqEu_oh6
-X-Proofpoint-GUID: -bP2yqci2CCTnJBZ3RPV6FoKEqEu_oh6
-X-Proofpoint-Spam-Reason: safe
 
-Re-implement SOC_DOUBLE_VALUE() in terms of SOC_DOUBLE_S_VALUE().
-SOC_DOUBLE_S_VALUE() already had a minimum value so add this to
-SOC_DOUBLE_VALUE as well, this allows replacement of several hard coded
-value entries. Likewise update SOC_SINGLE_VALUE to match, which allows
-replacement of even more hard coded values.
+This is currently the only atomic_long_t variable initialized by
+ATOMIC_INIT macro found in the kernel by using
+`grep -r atomic_long_t | grep ATOMIC_INIT`
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+This was introduced in 6e1fa555ec77, in which we modified
+the type of zswap_stored_pages to atomic_long_t,
+but didn't change the initialization.
+
+Fixes: 6e1fa555ec77 ("mm: zswap: modify zswap_stored_pages to be atomic_long_t")
+Signed-off-by: Sun YangKai <sunk67188@gmail.com>
 ---
- include/sound/soc-dapm.h |  4 +--
- include/sound/soc.h      | 65 +++++++++++++++-------------------------
- 2 files changed, 26 insertions(+), 43 deletions(-)
+ mm/zswap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
-index 4b8ef5b8a391e..af802ef536e73 100644
---- a/include/sound/soc-dapm.h
-+++ b/include/sound/soc-dapm.h
-@@ -356,14 +356,14 @@ struct soc_enum;
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.info = snd_soc_info_volsw, \
- 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
--	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 1) }
-+	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 1) }
- #define SOC_DAPM_SINGLE_TLV_AUTODISABLE(xname, reg, shift, max, invert, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.info = snd_soc_info_volsw, \
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,\
- 	.tlv.p = (tlv_array), \
- 	.get = snd_soc_dapm_get_volsw, .put = snd_soc_dapm_put_volsw, \
--	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 1) }
-+	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 1) }
- #define SOC_DAPM_PIN_SWITCH(xname) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname " Switch", \
- 	.info = snd_soc_dapm_info_pin_switch, \
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 390e08ba4dd45..a42d8d865eb12 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -39,18 +39,17 @@ struct platform_device;
+diff --git a/mm/zswap.c b/mm/zswap.c
+index ac9d299e7d0c..23365e76a3ce 100644
+--- a/mm/zswap.c
++++ b/mm/zswap.c
+@@ -43,7 +43,7 @@
+ * statistics
+ **********************************/
+ /* The number of compressed pages currently stored in zswap */
+-atomic_long_t zswap_stored_pages = ATOMIC_INIT(0);
++atomic_long_t zswap_stored_pages = ATOMIC_LONG_INIT(0);
+ 
  /*
-  * Convenience kcontrol builders
-  */
--#define SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, xmax, xinvert, xautodisable) \
--	((unsigned long)&(struct soc_mixer_control) \
--	{.reg = xreg, .rreg = xreg, .shift = shift_left, \
--	.rshift = shift_right, .max = xmax, \
--	.invert = xinvert, .autodisable = xautodisable})
--#define SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, xsign_bit, xinvert, xautodisable) \
-+#define SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, xsign_bit, \
-+			   xinvert, xautodisable) \
- 	((unsigned long)&(struct soc_mixer_control) \
- 	{.reg = xreg, .rreg = xreg, .shift = shift_left, \
- 	.rshift = shift_right, .min = xmin, .max = xmax, \
- 	.sign_bit = xsign_bit, .invert = xinvert, .autodisable = xautodisable})
--#define SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, xautodisable) \
--	SOC_DOUBLE_VALUE(xreg, xshift, xshift, xmax, xinvert, xautodisable)
-+#define SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, xmin, xmax, xinvert, xautodisable) \
-+	SOC_DOUBLE_S_VALUE(xreg, shift_left, shift_right, xmin, xmax, 0, xinvert, \
-+			   xautodisable)
-+#define SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, xautodisable) \
-+	SOC_DOUBLE_VALUE(xreg, xshift, xshift, xmin, xmax, xinvert, xautodisable)
- #define SOC_DOUBLE_R_S_VALUE(xlreg, xrreg, xshift, xmin, xmax, xsign_bit, xinvert) \
- 	((unsigned long)&(struct soc_mixer_control) \
- 	{.reg = xlreg, .rreg = xrreg, .shift = xshift, .rshift = xshift, \
-@@ -63,15 +62,12 @@ struct platform_device;
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
- 	.put = snd_soc_put_volsw, \
--	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
-+	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 0) }
- #define SOC_SINGLE_RANGE(xname, xreg, xshift, xmin, xmax, xinvert) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
- 	.info = snd_soc_info_volsw_range, .get = snd_soc_get_volsw_range, \
- 	.put = snd_soc_put_volsw_range, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, .shift = xshift, \
--		 .rshift = xshift,  .min = xmin, .max = xmax, \
--		 .invert = xinvert} }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
- #define SOC_SINGLE_TLV(xname, reg, shift, max, invert, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
-@@ -79,7 +75,7 @@ struct platform_device;
- 	.tlv.p = (tlv_array), \
- 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw,\
- 	.put = snd_soc_put_volsw, \
--	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert, 0) }
-+	.private_value = SOC_SINGLE_VALUE(reg, shift, 0, max, invert, 0) }
- #define SOC_SINGLE_SX_TLV(xname, xreg, xshift, xmin, xmax, tlv_array) \
- {       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
-@@ -88,10 +84,7 @@ struct platform_device;
- 	.info = snd_soc_info_volsw_sx, \
- 	.get = snd_soc_get_volsw_sx,\
- 	.put = snd_soc_put_volsw_sx, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, \
--		.shift = xshift, .rshift = xshift, \
--		.max = xmax, .min = xmin} }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, 0, 0) }
- #define SOC_SINGLE_RANGE_TLV(xname, xreg, xshift, xmin, xmax, xinvert, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
-@@ -99,16 +92,13 @@ struct platform_device;
- 	.tlv.p = (tlv_array), \
- 	.info = snd_soc_info_volsw_range, \
- 	.get = snd_soc_get_volsw_range, .put = snd_soc_put_volsw_range, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, .shift = xshift, \
--		 .rshift = xshift, .min = xmin, .max = xmax, \
--		 .invert = xinvert} }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
- #define SOC_DOUBLE(xname, reg, shift_left, shift_right, max, invert) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
- 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw, \
- 	.put = snd_soc_put_volsw, \
- 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right, \
--					  max, invert, 0) }
-+					  0, max, invert, 0) }
- #define SOC_DOUBLE_STS(xname, reg, shift_left, shift_right, max, invert) \
- {									\
- 	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),		\
-@@ -116,7 +106,7 @@ struct platform_device;
- 	.access = SNDRV_CTL_ELEM_ACCESS_READ |				\
- 		SNDRV_CTL_ELEM_ACCESS_VOLATILE,				\
- 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right,	\
--					  max, invert, 0) }
-+					  0, max, invert, 0) }
- #define SOC_DOUBLE_R(xname, reg_left, reg_right, xshift, xmax, xinvert) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
- 	.info = snd_soc_info_volsw, \
-@@ -138,7 +128,7 @@ struct platform_device;
- 	.info = snd_soc_info_volsw, .get = snd_soc_get_volsw, \
- 	.put = snd_soc_put_volsw, \
- 	.private_value = SOC_DOUBLE_VALUE(reg, shift_left, shift_right, \
--					  max, invert, 0) }
-+					  0, max, invert, 0) }
- #define SOC_DOUBLE_SX_TLV(xname, xreg, shift_left, shift_right, xmin, xmax, tlv_array) \
- {       .iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | \
-@@ -147,10 +137,8 @@ struct platform_device;
- 	.info = snd_soc_info_volsw_sx, \
- 	.get = snd_soc_get_volsw_sx, \
- 	.put = snd_soc_put_volsw_sx, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, \
--		.shift = shift_left, .rshift = shift_right, \
--		.max = xmax, .min = xmin} }
-+	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
-+					  xmin, xmax, 0, 0) }
- #define SOC_DOUBLE_RANGE_TLV(xname, xreg, xshift_left, xshift_right, xmin, xmax, \
- 			     xinvert, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
-@@ -159,10 +147,8 @@ struct platform_device;
- 	.tlv.p = (tlv_array), \
- 	.info = snd_soc_info_volsw, \
- 	.get = snd_soc_get_volsw, .put = snd_soc_put_volsw, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, \
--		 .shift = xshift_left, .rshift = xshift_right, \
--		 .min = xmin, .max = xmax, .invert = xinvert} }
-+	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
-+					  xmin, xmax, xinvert, 0) }
- #define SOC_DOUBLE_R_TLV(xname, reg_left, reg_right, xshift, xmax, xinvert, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
- 	.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ |\
-@@ -250,14 +236,14 @@ struct platform_device;
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = xname, \
- 	.info = snd_soc_info_volsw, \
- 	.get = xhandler_get, .put = xhandler_put, \
--	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, 0) }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, 0, xmax, xinvert, 0) }
- #define SOC_DOUBLE_EXT(xname, reg, shift_left, shift_right, max, invert,\
- 	 xhandler_get, xhandler_put) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
- 	.info = snd_soc_info_volsw, \
- 	.get = xhandler_get, .put = xhandler_put, \
- 	.private_value = \
--		SOC_DOUBLE_VALUE(reg, shift_left, shift_right, max, invert, 0) }
-+		SOC_DOUBLE_VALUE(reg, shift_left, shift_right, 0, max, invert, 0) }
- #define SOC_DOUBLE_R_EXT(xname, reg_left, reg_right, xshift, xmax, xinvert,\
- 	 xhandler_get, xhandler_put) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
-@@ -273,7 +259,7 @@ struct platform_device;
- 	.tlv.p = (tlv_array), \
- 	.info = snd_soc_info_volsw, \
- 	.get = xhandler_get, .put = xhandler_put, \
--	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmax, xinvert, 0) }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, 0, xmax, xinvert, 0) }
- #define SOC_SINGLE_RANGE_EXT_TLV(xname, xreg, xshift, xmin, xmax, xinvert, \
- 				 xhandler_get, xhandler_put, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname),\
-@@ -282,10 +268,7 @@ struct platform_device;
- 	.tlv.p = (tlv_array), \
- 	.info = snd_soc_info_volsw_range, \
- 	.get = xhandler_get, .put = xhandler_put, \
--	.private_value = (unsigned long)&(struct soc_mixer_control) \
--		{.reg = xreg, .rreg = xreg, .shift = xshift, \
--		 .rshift = xshift, .min = xmin, .max = xmax, \
--		 .invert = xinvert} }
-+	.private_value = SOC_SINGLE_VALUE(xreg, xshift, xmin, xmax, xinvert, 0) }
- #define SOC_DOUBLE_EXT_TLV(xname, xreg, shift_left, shift_right, xmax, xinvert,\
- 	 xhandler_get, xhandler_put, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
-@@ -295,7 +278,7 @@ struct platform_device;
- 	.info = snd_soc_info_volsw, \
- 	.get = xhandler_get, .put = xhandler_put, \
- 	.private_value = SOC_DOUBLE_VALUE(xreg, shift_left, shift_right, \
--					  xmax, xinvert, 0) }
-+					  0, xmax, xinvert, 0) }
- #define SOC_DOUBLE_R_EXT_TLV(xname, reg_left, reg_right, xshift, xmax, xinvert,\
- 	 xhandler_get, xhandler_put, tlv_array) \
- {	.iface = SNDRV_CTL_ELEM_IFACE_MIXER, .name = (xname), \
+  * The statistics below are not protected from concurrent access for
 -- 
-2.39.5
+2.48.1
 
