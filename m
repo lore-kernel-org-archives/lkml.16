@@ -1,63 +1,63 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3FE22171D
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0AB22173E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579813; cv=none; b=aRubF1NHGYJWFe9Gu80WQFr61uJaCluSZ2RZhfQD4XyEUphVeqzPogbTKhJCDqgqf2Xh1DsHANAbGVueIsapx8xnC8J0LoDolMWR2V6HtYlIDgmcs6ummTnFGbNIFsEZB2pNuvs+ZjtHy8HroNNarEY0R/qcpmko1kpjVgMqQL0=
+	t=1740579814; cv=none; b=JEvfopKVCUuAP8xJJdV7QsvRua/aYjBtFkWRgojgLataFgKNVnLRXUjX0+QuCqC5yyKvDA36Jt0qPDvMaReAog09OVe+43pDecvX3O8BdefhOkiRCrf1ZmOTkEb0XZNAw0MWhNB+YW8LPuMSGEk6nkUxN1MRh2x/Eh+JMvwf78Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740579813; c=relaxed/simple;
-	bh=kUrtbBhPfU47BIN9dxKT5jUwuyUmqkW+ixPlYUal9hA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AKVf/Sqk4uMIvN1qLK4FeLq36KzQin6O1hj3CN4F0W1djaU2sFATXaIS9/8e9bdF7cseMdxnuURWDZ0o1Thabzi8D64urKa4Iga4qoI1J6MqSkFbhUEMC/gU7hXfrO9MYcq9qak8+paoby4gKtLStNPdP+hRY1TubchB9++wzlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UgHQqe+C; arc=none smtp.client-ip=209.85.222.179
+	s=arc-20240116; t=1740579814; c=relaxed/simple;
+	bh=71qURUpKQyHqhn8hHrbpIZhkr9HtzexcGmxJCr00cjw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ey6iDClDVLTd3sFivI0j8IhFW4KeK6FoxZ8IILwdTdjbPVTEKsBsdWTBoBnAhMPz/gNx753vQ8re+6ewq7NaiY1kPUrNJ09QTIBj2ZzF9Hi9TL5KXQAJwaD32QVRmfNc7BPD9SChMAKr9Ia1mWTGyBWgV+hsZ9yqlqCoOB4YcgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VlTu6iqz; arc=none smtp.client-ip=209.85.222.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UgHQqe+C"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0818add57so692137085a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:23:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VlTu6iqz"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c24ae82de4so53671985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:23:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740579809; x=1741184609; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oYRh7XF95bM+yB0zA37tKM364WBKNiiWdqWz3L09IaY=;
-        b=UgHQqe+C/ukmoUPStXnE1g8iLJNieFwVV1aX1WCHBCA5lsn/7fh5QjzZTGQkkXmQvb
-         ystyG1BXtYa25XiNX46fpWPjIIsJtxNGX/RE4NX3wozk2iXkuSAZY+BFnXYCZ83qcAp+
-         y6CHFbzmQKEO2zGYTusBRKfYcnF08fOk2621Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740579809; x=1741184609;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=chromium.org; s=google; t=1740579812; x=1741184612; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=oYRh7XF95bM+yB0zA37tKM364WBKNiiWdqWz3L09IaY=;
-        b=D8RJuD+FzMEupi1liMuC3jQMPG43dcN7TfIkq5eo5a+Z0WATFy5Z2UwPckv8y/c/3f
-         19/Y9CJ9eli19kChXN+ButpDPhRzwq/Ozn3wfvMBq8DUyVYRV1kHvgT5dIv4sqkbFcG+
-         0HDx2BuriVdTVMGOV5h5uXdRiFsXSMIsoHnN4r3coc/RPRspSLKQwOoMl7WJBFAKOIfo
-         TbFiF/VTG9Nr/aNMy1cTYtxDce0eGbKgh+TLdnTJQZfZhIrB1sun36ruDPm0f8b6mRwP
-         zruAJ7tlSoZD0FIk/JU6j4lt0fa2cfCgVeC6m4WuVEdLozhjZlbdytlLLV/T714hZvqM
-         G+Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVvu6JJ3JCFtcJPypLyMOotzhqXeKfb2TUIEY9DcWlFXo34QraZ33dCyNlkqzG0+NEteVThI9gPOeLpH7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtUxde6I49RLGXElcaEnIV3ARfrAhz5j0AtupSn2q00YO9bDaT
-	kJpzHW2QlUdmNfN6ufM9NWzedd9GvymznV3dHZn3aVj6Q7Zn5/BjCO1e5+GhruWrTp64byRCR1o
-	=
-X-Gm-Gg: ASbGncsOnuEKMeGXCAJ7nsVls4MGBstzew4Nf2by3cz2xmsDV8uUl8eN5IIys6LCDao
-	pmGh/85cIwEoLhqJ2gtAmzu/jtMrTbd/HKhRf7J+Jf5JgnWhQnY1QLVNYl27rMKE1J8hDk0QD4Z
-	/u4eArTHzJOOnPud7PR7xQIzdabizqBQtODiK9mucS1cXTJbhnrTBSx8Zoe9Jst7mcCdt3asN8h
-	WFTRqVyahetDy3oE7MFeYYPC6v6x/7bGLiaZIQxjYEtXRJaV/SPAuWxdYbYRv8CNpdWHnF2N485
-	aQpuaTD4xFs6FcO0L8fblqLZgDHDv0t//k5vg0Cgy2z93R1bDjy09Tyk21dSb6jOUTLMkZq1zU/
-	hzc4=
-X-Google-Smtp-Source: AGHT+IFh7rod4VLiopNrrRx9x1fR3l/5IbitK00625UuT0JWMeRPvSxzNZpO3cdm74eCkQLsU6j9Yw==
-X-Received: by 2002:a05:620a:f14:b0:7c2:2a54:8810 with SMTP id af79cd13be357-7c22a54882dmr1797565285a.23.1740579809599;
-        Wed, 26 Feb 2025 06:23:29 -0800 (PST)
+        bh=I2vbUd0IkHjhLkq4YLUTxGcYI4X6Kojg8kTGYZFd8GM=;
+        b=VlTu6iqzZGlq3ht1GCmuK1OelGevKydVcN2QJdKdOAsETpuWJ3JS5PyJ+K4LM2ffRR
+         vSzZmrHPQU/HKIYwtyl2geSKkxVDygtH3ZIIlCvBkfL/xsd1DGrt7OHTsnhMQyq+vE27
+         t84hjsJdF9d4grfg6zgPj60bvKDm5Xnmpe2gY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740579812; x=1741184612;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=I2vbUd0IkHjhLkq4YLUTxGcYI4X6Kojg8kTGYZFd8GM=;
+        b=PLzpsWEkHLESs5VIZd8W7jxgqMiYkArTPG2jve8iaf2KdK+H1tQ4/yC+4wqFumYEDo
+         DTv5zHIgJNppXE9or+nCeMTVVoRIwivfXFukfpkl4tPCbGxd4Mhj1al0rAZbC/yQYSiQ
+         dEcaotiRtVU0SNiexeKzRjIpYIRa/ccFAGwUBV/2h9IGTt7Sqknl/o5iAtqHqZGLj9ed
+         dlL8pcyH/ypIlvh7F0VE1Gs4hoSi2xygcnEWzUXYV7KvXTPZnVzBz8uDuB+UfYxrIKSS
+         2o20jR4t07K7UGQ7furEpiX5qmmDmjENs8k9BHmHEgjlQXUh5CCcDY01Ce0Dv0SrVDX7
+         ERiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5WMhMwTzQ2Uqd5NIJWohRNYjFT1Y/4oB1GDKjJirFbgE/taouo+TdnZpvywNshKVX9uwJVXDY0vSa9mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSGCpmjehyt7WH8yspgNUG+7x8azt8Ce6X+k9mEBo+LS9K7ct1
+	B7W1eiz6ivTLhAJfK4ZLvuRur+oWRJcHCC06Gh7hEKsFkQTwNebiTN1k5ulacA==
+X-Gm-Gg: ASbGncsNhg1/WppdF7z7fzafkVuqUctBaQCzt5ZbZu/0Bp+vcDdQsu+q4B7qccBvEMG
+	Kqrdaas0wTu1PmqCHp3cwv9v9hVs7fD4o98zAk/ywV+tUYIs2oZEG6fEY1Y7gHqURAz8gJKFe8T
+	lKemuW2XOHTzcYa3kBQOntLb5AXkuRs7+tok5wF43/tEKGSJxQhL9PzWEdHbNHQa6atOQMNxjap
+	gkxQd+1WkI4wcsQsQ2vbOkncIMVq7QPn+JN86VsjP4fDA9QwMacfy/KHvCL+u5FLOcuTDAdjolE
+	u1wP8xC10CE4JxzepHuB8G6Zbq6MoiRv8+vIl/bd2xbh3+jkNV4JFd6ik8JnNbwmkKmeU+JrKv4
+	7AXI=
+X-Google-Smtp-Source: AGHT+IEIjZIDI9MFFXd5K8qshi0fFF0mSwbprLeHtnyDrbye91YUoOAfrTDjrDmjYqtIPY5GIvRxrQ==
+X-Received: by 2002:a05:620a:31a8:b0:7c0:bb3f:e285 with SMTP id af79cd13be357-7c0cf8ce834mr2663166985a.24.1740579811861;
+        Wed, 26 Feb 2025 06:23:31 -0800 (PST)
 Received: from denia.c.googlers.com (15.237.245.35.bc.googleusercontent.com. [35.245.237.15])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c33cfb0sm246336085a.103.2025.02.26.06.23.28
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c33cfb0sm246336085a.103.2025.02.26.06.23.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:23:29 -0800 (PST)
+        Wed, 26 Feb 2025 06:23:30 -0800 (PST)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Subject: [PATCH v4 0/5] media: uvcvideo: Implement Granular Power Saving
-Date: Wed, 26 Feb 2025 14:23:26 +0000
-Message-Id: <20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org>
+Date: Wed, 26 Feb 2025 14:23:28 +0000
+Subject: [PATCH v4 2/5] media: uvcvideo: Create uvc_pm_(get|put) functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,10 +66,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAN8jv2cC/33OSw6CMBCA4auQrq1ppw/QlfcwLugD6AJKWqkaw
- t0tJCbGEJf/JPPNzCja4GxE52JGwSYXnR9y8EOBdFcPrcXO5EZAgFMKEk9J4zbUw+gfNuChxUS
- eaCVqaXjJUV4bg23ccyOvt9ydi3cfXtuFRNfpHyxRTLBkFFQDUvCTvugu+N5N/dGHFq1ego8hC
- BC2Y0A2lG24EsKWSpY7Bvs29v5g2WBgiCkV0cJUP8ayLG8HaNxqOwEAAA==
+Message-Id: <20250226-uvc-granpower-ng-v4-2-3ec9be906048@chromium.org>
+References: <20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org>
+In-Reply-To: <20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org>
 To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
  Hans de Goede <hdegoede@redhat.com>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -79,54 +78,100 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.14.1
 
-Right now we power-up the device when a user open() the device and we
-power it off when the last user close() the first video node.
+Most of the times that we have to call uvc_status_(get|put) we need to
+call the usb_autopm_ functions.
 
-This behaviour affects the power consumption of the device is multiple
-use cases, such as:
-- Polling the privacy gpio
-- udev probing the device
-
-This patchset introduces a more granular power saving behaviour where
-the camera is only awaken when needed. It is compatible with
-asynchronous controls.
-
-While developing this patchset, two bugs were found. The patchset has
-been developed so these fixes can be taken independently.
+Create a new pair of functions that automate this for us. This
+simplifies the current code and future PM changes in the driver.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
-Changes in v4:
-- CodeStyle
-- Create uvc_pm_ functions
-- Link to v3: https://lore.kernel.org/r/20250206-uvc-granpower-ng-v3-0-32d0d7b0c5d8@chromium.org
+ drivers/media/usb/uvc/uvc_v4l2.c | 36 ++++++++++++++++++++++++------------
+ drivers/media/usb/uvc/uvcvideo.h |  4 ++++
+ 2 files changed, 28 insertions(+), 12 deletions(-)
 
-Changes in v3:
-- Fix build error on sh4.
-- Link to v2: https://lore.kernel.org/r/20250203-uvc-granpower-ng-v2-0-bef4b55e7b67@chromium.org
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index f9cd6db759c5..de1e105f7263 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -26,6 +26,27 @@
+ 
+ #include "uvcvideo.h"
+ 
++int uvc_pm_get(struct uvc_device *dev)
++{
++	int ret;
++
++	ret = usb_autopm_get_interface(dev->intf);
++	if (ret)
++		return ret;
++
++	ret = uvc_status_get(dev);
++	if (ret)
++		usb_autopm_put_interface(dev->intf);
++
++	return ret;
++}
++
++void uvc_pm_put(struct uvc_device *dev)
++{
++	uvc_status_put(dev);
++	usb_autopm_put_interface(dev->intf);
++}
++
+ static int uvc_acquire_privileges(struct uvc_fh *handle);
+ 
+ static int uvc_control_add_xu_mapping(struct uvc_video_chain *chain,
+@@ -636,20 +657,13 @@ static int uvc_v4l2_open(struct file *file)
+ 	stream = video_drvdata(file);
+ 	uvc_dbg(stream->dev, CALLS, "%s\n", __func__);
+ 
+-	ret = usb_autopm_get_interface(stream->dev->intf);
+-	if (ret < 0)
+-		return ret;
+-
+ 	/* Create the device handle. */
+ 	handle = kzalloc(sizeof(*handle), GFP_KERNEL);
+-	if (handle == NULL) {
+-		usb_autopm_put_interface(stream->dev->intf);
++	if (!handle)
+ 		return -ENOMEM;
+-	}
+ 
+-	ret = uvc_status_get(stream->dev);
++	ret = uvc_pm_get(stream->dev);
+ 	if (ret) {
+-		usb_autopm_put_interface(stream->dev->intf);
+ 		kfree(handle);
+ 		return ret;
+ 	}
+@@ -684,9 +698,7 @@ static int uvc_v4l2_release(struct file *file)
+ 	kfree(handle);
+ 	file->private_data = NULL;
+ 
+-	uvc_status_put(stream->dev);
+-
+-	usb_autopm_put_interface(stream->dev->intf);
++	uvc_pm_put(stream->dev);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index bc87e1f2c669..fbe3649c7cd6 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -763,6 +763,10 @@ void uvc_status_suspend(struct uvc_device *dev);
+ int uvc_status_get(struct uvc_device *dev);
+ void uvc_status_put(struct uvc_device *dev);
+ 
++/* PM */
++int uvc_pm_get(struct uvc_device *dev);
++void uvc_pm_put(struct uvc_device *dev);
++
+ /* Controls */
+ extern const struct v4l2_subscribed_event_ops uvc_ctrl_sub_ev_ops;
+ 
 
-Changes in v2:
-- Add missing semicolon.
-- Rebase on top of media-committers/next
-- Link to v1: https://lore.kernel.org/r/20241126-uvc-granpower-ng-v1-0-6312bf26549c@chromium.org
-
----
-Ricardo Ribalda (5):
-      media: uvcvideo: Keep streaming state in the file handle
-      media: uvcvideo: Create uvc_pm_(get|put) functions
-      media: uvcvideo: Increase/decrease the PM counter per IOCTL
-      media: uvcvideo: Make power management granular
-      media: uvcvideo: Do not turn on the camera for some ioctls
-
- drivers/media/usb/uvc/uvc_ctrl.c | 13 +++++-
- drivers/media/usb/uvc/uvc_v4l2.c | 99 ++++++++++++++++++++++++++++++----------
- drivers/media/usb/uvc/uvcvideo.h |  6 +++
- 3 files changed, 92 insertions(+), 26 deletions(-)
----
-base-commit: d98e9213a768a3cc3a99f5e1abe09ad3baff2104
-change-id: 20241126-uvc-granpower-ng-069185a6d474
-
-Best regards,
 -- 
-Ricardo Ribalda <ribalda@chromium.org>
+2.48.1.658.g4767266eb4-goog
 
