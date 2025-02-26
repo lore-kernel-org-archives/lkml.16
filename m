@@ -1,127 +1,655 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE69FA93D;
-	Wed, 26 Feb 2025 00:08:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6946B1C36
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740528484; cv=none; b=R12wVp+JFlnksSwqbQIxLuYC5ka88SfFcLmgirEZ+GJbFMY2rZMTdhxeY2qgubWIB2Ao2ah55/XhlnwG1w3EnHCJFlm2Rsrbbd4wtANaQ+tdHGpInw1XIXabbiI3Aq6X2optp3AKmPOaizwCW8H4XERug2hhAtF9Xrqmoeoc40k=
+	t=1740528484; cv=none; b=R/GzjQuJ9OO9kfcC1c2WyJU9uZScmqIDR4yi8IyYxifQf8RAmoXpBLi4rwak17/Vit6Vi7TpsisIBGTsqNfpdGa75H69/0Dr+OkWsvma04PtqOfrGjZz7xiMoTEHz0B9onNL+iLsr/3hKYQadidhkm8irkFaPBt+mEfvVyFJak0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740528484; c=relaxed/simple;
-	bh=uzH4sg8sEy7Ki0PJaM6Y2hLhbwD62ZHmh9IaBKjdWp8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfOl5nTP76ZSFPaumTyw/eqv5D0zSTdr8MGri+xJiEOJ0rpKkgUwKGbCFlV7yNi/d24NsI4oKbXlXrS81sN3uY7WaYxuyh7xneT98qnyT6J6lp66hi/J6PFIGiR8yUttRCmEUCw50X9PQ02CBQTyvYuyik462c/8PWwZzY/IxCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPaNoGDC; arc=none smtp.client-ip=10.30.226.201
+	bh=O+pO8SYUIkFwNowdBKcA3iT2J8wZEGhfIZe//uE0tqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OBZssjCIhN3EAqkKTjO2Nefd4axI/3SRnvKBrpYi8u1m08dAbQhGz1B2f5hUPvdY70cMeUCLTYI+N+zfa5cjMHHsBgO5yyuibA4cFxw+GZOB+48wFiRlIq0ddrd1E7lAmU/7/N0CnJnYzccMoFYTTxk6+OQpf4rj+MzVgRMJwSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=pY7nRkFf; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPaNoGDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183A5C4CEF1;
-	Wed, 26 Feb 2025 00:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740528484;
-	bh=uzH4sg8sEy7Ki0PJaM6Y2hLhbwD62ZHmh9IaBKjdWp8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=OPaNoGDCMqzKPnS+RNQqreB9pIto9JK9TFw2MnLSJxuV2/knfbYVkbw121MGHYqQU
-	 H7j08S/lPaqx/1ZInM8j7aUjyduswuT3Igm8mTgV6LqE1azVqnVXIHMX//jzSBMy06
-	 PRdR7+9Xar6DGOXCY+4bIwnJoLMnpQ5v8LhVr9M4EW+QIGwDUFBKZxLDEj9iFXpr7o
-	 c5V8CJJH74tizGZjTK4lYMAPDnPEu0tOupPswf1wOJkRBHOHwalPeJ+eUBOgLREdRr
-	 HKi+LxUMrCh7JPUJHn4XEwDlLN8r9RaFcorRY4IaoHdAJp1MEkuvhN3MVNK4D6E/i6
-	 UlJqRXaDTej/A==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 561C8CE0B75; Tue, 25 Feb 2025 16:08:03 -0800 (PST)
-Date: Tue, 25 Feb 2025 16:08:03 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
-Subject: Re: [PATCH 2/3] rcu/exp: Remove confusing needless full barrier on
- task unblock
-Message-ID: <f75ce493-f23e-4f55-b32f-77a7868f4e2d@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250213232559.34163-1-frederic@kernel.org>
- <20250213232559.34163-3-frederic@kernel.org>
- <20250225215908.GA1812344@joelnvbox>
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="pY7nRkFf"
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9685D2C062F;
+	Wed, 26 Feb 2025 13:07:55 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1740528475;
+	bh=Cs6TrdFkG/IHkZxqIl5dJKDJmaVshg4FOZtBAvT7fpA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=pY7nRkFfw4XjMeU/NAd7XAs4PtQ1TDvcDcx4mW/+AigriZVQ3StBo8HujmOwlKzNm
+	 rfZTeU5wCv0lo4q66xcpaTatAks5giMJ55nqzzwYVdryxBd4IheUUB3QYYa33rrV/o
+	 oV4CzQm0KizgURDNmCgoQTHnZTPqbjDtcD5DcUg0XjVFqPJH8NDRMVDg5D3EsgCL0n
+	 1S2ouclb1hGwXVZgvM8iC/6DHZrcv+4QIQz3C3VepLYxgAoydhoWHtsPPNhDv/FSu8
+	 qOnsyi5S0TfmVXeZR2UdhjE9F1Z+1XnGkrYqxBt+BSNTcBomNYygcwoty51ElUz5Sq
+	 dLNR73xlF/ImA==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B67be5b5b0000>; Wed, 26 Feb 2025 13:07:55 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+	by pat.atlnz.lc (Postfix) with ESMTP id 4CF1613EE7A;
+	Wed, 26 Feb 2025 13:07:55 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+	id 4ADC6280594; Wed, 26 Feb 2025 13:07:55 +1300 (NZDT)
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	tsbogend@alpha.franken.de,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	sander@svanheule.net,
+	markus.stockhausen@gmx.de
+Cc: devicetree@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH net-next v7 1/2] net: mdio: Add RTL9300 MDIO driver
+Date: Wed, 26 Feb 2025 13:07:47 +1300
+Message-ID: <20250226000748.3979148-2-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
+References: <20250226000748.3979148-1-chris.packham@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225215908.GA1812344@joelnvbox>
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=ccpxrWDM c=1 sm=1 tr=0 ts=67be5b5b a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=T2h4t0Lz3GQA:10 a=K5f48OwZufGdpAPWNvYA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-On Tue, Feb 25, 2025 at 04:59:08PM -0500, Joel Fernandes wrote:
-> On Fri, Feb 14, 2025 at 12:25:58AM +0100, Frederic Weisbecker wrote:
-> > A full memory barrier in the RCU-PREEMPT task unblock path advertizes
-> > to order the context switch (or rather the accesses prior to
-> > rcu_read_unlock()) with the expedited grace period fastpath.
-> > 
-> > However the grace period can not complete without the rnp calling into
-> > rcu_report_exp_rnp() with the node locked. This reports the quiescent
-> > state in a fully ordered fashion against updater's accesses thanks to:
-> > 
-> > 1) The READ-SIDE smp_mb__after_unlock_lock() barrier accross nodes
-> >    locking while propagating QS up to the root.
-> > 
-> > 2) The UPDATE-SIDE smp_mb__after_unlock_lock() barrier while holding the
-> >    the root rnp to wait/check for the GP completion.
-> > 
-> > 3) The (perhaps redundant given step 1) and 2)) smp_mb() in rcu_seq_end()
-> >    before the grace period completes.
-> > 
-> > This makes the explicit barrier in this place superflous. Therefore
-> > remove it as it is confusing.
-> > 
-> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > ---
-> >  kernel/rcu/tree_plugin.h | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > index 3c0bbbbb686f..d51cc7a5dfc7 100644
-> > --- a/kernel/rcu/tree_plugin.h
-> > +++ b/kernel/rcu/tree_plugin.h
-> > @@ -534,7 +534,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
-> >  		WARN_ON_ONCE(rnp->completedqs == rnp->gp_seq &&
-> >  			     (!empty_norm || rnp->qsmask));
-> >  		empty_exp = sync_rcu_exp_done(rnp);
-> > -		smp_mb(); /* ensure expedited fastpath sees end of RCU c-s. */
-> 
-> I was wondering though, this is a slow path and the smp_mb() has been there
-> since 2009 or so. Not sure if it is super valuable to remove it at this
-> point. But we/I should definitely understand it.
-> 
-> I was wondering if you could also point to the fastpath that this is racing
-> with, it is not immediately clear (to me) what this smp_mb() is pairing with :(
+Add a driver for the MDIO controller on the RTL9300 family of Ethernet
+switches with integrated SoC. There are 4 physical SMI interfaces on the
+RTL9300 however access is done using the switch ports. The driver takes
+the MDIO bus hierarchy from the DTS and uses this to configure the
+switch ports so they are associated with the correct PHY. This mapping
+is also used when dealing with software requests from phylib.
 
-My guess was one of the lock acquisitions or dyntick checks in
-__sync_rcu_exp_select_node_cpus(), but I am not seeing anything there.
-In this context, "fastpath" would be one of the early exits, for example,
-the "continue" statements in the second for_each_leaf_node_cpu_mask()
-loop.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-But again, I am not seeing anything that appears to need that smp_mb().
-As you say, that smp_mb() is not on a fastpath, so we need to check
-carefully before removing it.
+Notes:
+    Changes in v7:
+    - Update out of date comment
+    - Use for_each_set_bit() instead of open-coded iteration
+    - Use FIELD_PREP() in a few more places
+    - Add #defines for register field masks
+    Changes in v6:
+    - Parse port->phy mapping from devicetree removing the need for the
+      realtek,port property
+    - Remove erroneous code dealing with SMI_POLL_CTRL. When actually
+      implemented this stops the LED unit from updating correctly.
+    Changes in v5:
+    - Reword out of date comment
+    - Use GENMASK/FIELD_PREP where appropriate
+    - Introduce port validity bitmap.
+    - Use more obvious names for PHY_CTRL_READ/WRITE and
+      PHY_CTRL_TYPE_C45/C22
+    Changes in v4:
+    - rename to realtek-rtl9300
+    - s/realtek_/rtl9300_/
+    - add locking to support concurrent access
+    - The dtbinding now represents the MDIO bus hierarchy so we consume t=
+his
+      information and use it to configure the switch port to MDIO bus+add=
+r.
+    Changes in v3:
+    - Fix (another) off-by-one error
+    Changes in v2:
+    - Add clause 22 support
+    - Remove commented out code
+    - Formatting cleanup
+    - Set MAX_PORTS correctly for MDIO interface
+    - Fix off-by-one error in pn check
 
-						Thanx, Paul
+ drivers/net/mdio/Kconfig                |   7 +
+ drivers/net/mdio/Makefile               |   1 +
+ drivers/net/mdio/mdio-realtek-rtl9300.c | 475 ++++++++++++++++++++++++
+ 3 files changed, 483 insertions(+)
+ create mode 100644 drivers/net/mdio/mdio-realtek-rtl9300.c
 
-> thanks,
-> 
->  - Joel
-> 
-> 
-> 
-> 
-> 
-> >  		np = rcu_next_node_entry(t, rnp);
-> >  		list_del_init(&t->rcu_node_entry);
-> >  		t->rcu_blocked_node = NULL;
-> > -- 
-> > 2.46.0
-> > 
+diff --git a/drivers/net/mdio/Kconfig b/drivers/net/mdio/Kconfig
+index 4a7a303be2f7..058fcdaf6c18 100644
+--- a/drivers/net/mdio/Kconfig
++++ b/drivers/net/mdio/Kconfig
+@@ -185,6 +185,13 @@ config MDIO_IPQ8064
+ 	  This driver supports the MDIO interface found in the network
+ 	  interface units of the IPQ8064 SoC
+=20
++config MDIO_REALTEK_RTL9300
++	tristate "Realtek RTL9300 MDIO interface support"
++	depends on MACH_REALTEK_RTL || COMPILE_TEST
++	help
++	  This driver supports the MDIO interface found in the Realtek
++	  RTL9300 family of Ethernet switches with integrated SoC.
++
+ config MDIO_REGMAP
+ 	tristate
+ 	help
+diff --git a/drivers/net/mdio/Makefile b/drivers/net/mdio/Makefile
+index 1015f0db4531..c23778e73890 100644
+--- a/drivers/net/mdio/Makefile
++++ b/drivers/net/mdio/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_MDIO_MOXART)		+=3D mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)		+=3D mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_MVUSB)		+=3D mdio-mvusb.o
+ obj-$(CONFIG_MDIO_OCTEON)		+=3D mdio-octeon.o
++obj-$(CONFIG_MDIO_REALTEK_RTL9300)	+=3D mdio-realtek-rtl9300.o
+ obj-$(CONFIG_MDIO_REGMAP)		+=3D mdio-regmap.o
+ obj-$(CONFIG_MDIO_SUN4I)		+=3D mdio-sun4i.o
+ obj-$(CONFIG_MDIO_THUNDER)		+=3D mdio-thunder.o
+diff --git a/drivers/net/mdio/mdio-realtek-rtl9300.c b/drivers/net/mdio/m=
+dio-realtek-rtl9300.c
+new file mode 100644
+index 000000000000..4ce8aba7d2ae
+--- /dev/null
++++ b/drivers/net/mdio/mdio-realtek-rtl9300.c
+@@ -0,0 +1,475 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * MDIO controller for RTL9300 switches with integrated SoC.
++ *
++ * The MDIO communication is abstracted by the switch. At the software l=
+evel
++ * communication uses the switch port to address the PHY. We work out th=
+e
++ * mapping based on the MDIO bus described in device tree and phandles o=
+n the
++ * ethernet-ports property.
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bitmap.h>
++#include <linux/bits.h>
++#include <linux/cleanup.h>
++#include <linux/find.h>
++#include <linux/mdio.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mod_devicetable.h>
++#include <linux/mutex.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
++
++#define SMI_GLB_CTRL			0xca00
++#define   GLB_CTRL_INTF_SEL(intf)	BIT(16 + (intf))
++#define SMI_PORT0_15_POLLING_SEL	0xca08
++#define SMI_ACCESS_PHY_CTRL_0		0xcb70
++#define SMI_ACCESS_PHY_CTRL_1		0xcb74
++#define   PHY_CTRL_REG_ADDR		GENMASK(24, 20)
++#define   PHY_CTRL_PARK_PAGE		GENMASK(19, 15)
++#define   PHY_CTRL_MAIN_PAGE		GENMASK(14, 3)
++#define   PHY_CTRL_WRITE		BIT(2)
++#define   PHY_CTRL_READ			0
++#define   PHY_CTRL_TYPE_C45		BIT(1)
++#define   PHY_CTRL_TYPE_C22		0
++#define   PHY_CTRL_CMD			BIT(0)
++#define   PHY_CTRL_FAIL			BIT(25)
++#define SMI_ACCESS_PHY_CTRL_2		0xcb78
++#define   PHY_CTRL_INDATA		GENMASK(31, 16)
++#define   PHY_CTRL_DATA			GENMASK(15, 0)
++#define SMI_ACCESS_PHY_CTRL_3		0xcb7c
++#define   PHY_CTRL_MMD_DEVAD		GENMASK(20, 16)
++#define   PHY_CTRL_MMD_REG		GENMASK(15, 0)
++#define SMI_PORT0_5_ADDR_CTRL		0xcb80
++
++#define MAX_PORTS       28
++#define MAX_SMI_BUSSES  4
++#define MAX_SMI_ADDR	0x1f
++
++struct rtl9300_mdio_priv {
++	struct regmap *regmap;
++	struct mutex lock; /* protect HW access */
++	DECLARE_BITMAP(valid_ports, MAX_PORTS);
++	u8 smi_bus[MAX_PORTS];
++	u8 smi_addr[MAX_PORTS];
++	bool smi_bus_is_c45[MAX_SMI_BUSSES];
++	struct mii_bus *bus[MAX_SMI_BUSSES];
++};
++
++struct rtl9300_mdio_chan {
++	struct rtl9300_mdio_priv *priv;
++	u8 mdio_bus;
++};
++
++static int rtl9300_mdio_phy_to_port(struct mii_bus *bus, int phy_id)
++{
++	struct rtl9300_mdio_chan *chan =3D bus->priv;
++	struct rtl9300_mdio_priv *priv =3D chan->priv;
++	int i;
++
++	for_each_set_bit(i, priv->valid_ports, MAX_PORTS)
++		if (priv->smi_bus[i] =3D=3D chan->mdio_bus &&
++		    priv->smi_addr[i] =3D=3D phy_id)
++			return i;
++
++	return -ENOENT;
++}
++
++static int rtl9300_mdio_wait_ready(struct rtl9300_mdio_priv *priv)
++{
++	struct regmap *regmap =3D priv->regmap;
++	u32 val;
++
++	lockdep_assert_held(&priv->lock);
++
++	return regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
++					val, !(val & PHY_CTRL_CMD), 10, 1000);
++}
++
++static int rtl9300_mdio_read_c22(struct mii_bus *bus, int phy_id, int re=
+gnum)
++{
++	struct rtl9300_mdio_chan *chan =3D bus->priv;
++	struct rtl9300_mdio_priv *priv =3D chan->priv;
++	struct regmap *regmap =3D priv->regmap;
++	int port;
++	u32 val;
++	int err;
++
++	guard(mutex)(&priv->lock);
++
++	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
++	if (port < 0)
++		return port;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, FIELD_PREP(PHY_CTRL=
+_INDATA, port));
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_REG_ADDR, regnum) |
++	      FIELD_PREP(PHY_CTRL_PARK_PAGE, 0x1f) |
++	      FIELD_PREP(PHY_CTRL_MAIN_PAGE, 0xfff) |
++	      PHY_CTRL_READ | PHY_CTRL_TYPE_C22 | PHY_CTRL_CMD;
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1, val);
++	if (err)
++		return err;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	err =3D regmap_read(regmap, SMI_ACCESS_PHY_CTRL_2, &val);
++	if (err)
++		return err;
++
++	return FIELD_GET(PHY_CTRL_DATA, val);
++}
++
++static int rtl9300_mdio_write_c22(struct mii_bus *bus, int phy_id, int r=
+egnum, u16 value)
++{
++	struct rtl9300_mdio_chan *chan =3D bus->priv;
++	struct rtl9300_mdio_priv *priv =3D chan->priv;
++	struct regmap *regmap =3D priv->regmap;
++	int port;
++	u32 val;
++	int err;
++
++	guard(mutex)(&priv->lock);
++
++	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
++	if (port < 0)
++		return port;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_0, BIT(port));
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, FIELD_PREP(PHY_CTRL=
+_INDATA, value));
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_REG_ADDR, regnum) |
++	      FIELD_PREP(PHY_CTRL_PARK_PAGE, 0x1f) |
++	      FIELD_PREP(PHY_CTRL_MAIN_PAGE, 0xfff) |
++	      PHY_CTRL_WRITE | PHY_CTRL_TYPE_C22 | PHY_CTRL_CMD;
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1, val);
++	if (err)
++		return err;
++
++	err =3D regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
++				       val, !(val & PHY_CTRL_CMD), 10, 100);
++	if (err)
++		return err;
++
++	if (val & PHY_CTRL_FAIL)
++		return -ENXIO;
++
++	return 0;
++}
++
++static int rtl9300_mdio_read_c45(struct mii_bus *bus, int phy_id, int de=
+v_addr, int regnum)
++{
++	struct rtl9300_mdio_chan *chan =3D bus->priv;
++	struct rtl9300_mdio_priv *priv =3D chan->priv;
++	struct regmap *regmap =3D priv->regmap;
++	int port;
++	u32 val;
++	int err;
++
++	guard(mutex)(&priv->lock);
++
++	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
++	if (port < 0)
++		return port;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_INDATA, port);
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, val);
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_MMD_DEVAD, dev_addr) |
++	      FIELD_PREP(PHY_CTRL_MMD_REG, regnum);
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_3, val);
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1,
++			   PHY_CTRL_READ | PHY_CTRL_TYPE_C45 | PHY_CTRL_CMD);
++	if (err)
++		return err;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	err =3D regmap_read(regmap, SMI_ACCESS_PHY_CTRL_2, &val);
++	if (err)
++		return err;
++
++	return FIELD_GET(PHY_CTRL_DATA, val);
++}
++
++static int rtl9300_mdio_write_c45(struct mii_bus *bus, int phy_id, int d=
+ev_addr,
++				  int regnum, u16 value)
++{
++	struct rtl9300_mdio_chan *chan =3D bus->priv;
++	struct rtl9300_mdio_priv *priv =3D chan->priv;
++	struct regmap *regmap =3D priv->regmap;
++	int port;
++	u32 val;
++	int err;
++
++	guard(mutex)(&priv->lock);
++
++	port =3D rtl9300_mdio_phy_to_port(bus, phy_id);
++	if (port < 0)
++		return port;
++
++	err =3D rtl9300_mdio_wait_ready(priv);
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_0, BIT(port));
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_INDATA, value);
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_2, val);
++	if (err)
++		return err;
++
++	val =3D FIELD_PREP(PHY_CTRL_MMD_DEVAD, dev_addr) |
++	      FIELD_PREP(PHY_CTRL_MMD_REG, regnum);
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_3, val);
++	if (err)
++		return err;
++
++	err =3D regmap_write(regmap, SMI_ACCESS_PHY_CTRL_1,
++			   PHY_CTRL_TYPE_C45 | PHY_CTRL_WRITE | PHY_CTRL_CMD);
++	if (err)
++		return err;
++
++	err =3D regmap_read_poll_timeout(regmap, SMI_ACCESS_PHY_CTRL_1,
++				       val, !(val & PHY_CTRL_CMD), 10, 100);
++	if (err)
++		return err;
++
++	if (val & PHY_CTRL_FAIL)
++		return -ENXIO;
++
++	return 0;
++}
++
++static int rtl9300_mdiobus_init(struct rtl9300_mdio_priv *priv)
++{
++	u32 glb_ctrl_mask =3D 0, glb_ctrl_val =3D 0;
++	struct regmap *regmap =3D priv->regmap;
++	u32 port_addr[5] =3D { 0 };
++	u32 poll_sel[2] =3D { 0 };
++	int i, err;
++
++	/* Associate the port with the SMI interface and PHY */
++	for_each_set_bit(i, priv->valid_ports, MAX_PORTS) {
++		int pos;
++
++		pos =3D (i % 6) * 5;
++		port_addr[i / 6] |=3D (priv->smi_addr[i] & 0x1f) << pos;
++
++		pos =3D (i % 16) * 2;
++		poll_sel[i / 16] |=3D (priv->smi_bus[i] & 0x3) << pos;
++	}
++
++	/* Put the interfaces into C45 mode if required */
++	glb_ctrl_mask =3D GENMASK(19, 16);
++	for (i =3D 0; i < MAX_SMI_BUSSES; i++)
++		if (priv->smi_bus_is_c45[i])
++			glb_ctrl_val |=3D GLB_CTRL_INTF_SEL(i);
++
++	err =3D regmap_bulk_write(regmap, SMI_PORT0_5_ADDR_CTRL,
++				port_addr, 5);
++	if (err)
++		return err;
++
++	err =3D regmap_bulk_write(regmap, SMI_PORT0_15_POLLING_SEL,
++				poll_sel, 2);
++	if (err)
++		return err;
++
++	err =3D regmap_update_bits(regmap, SMI_GLB_CTRL,
++				 glb_ctrl_mask, glb_ctrl_val);
++	if (err)
++		return err;
++
++	return 0;
++}
++
++static int rtl9300_mdiobus_probe_one(struct device *dev, struct rtl9300_=
+mdio_priv *priv,
++				     struct fwnode_handle *node)
++{
++	struct rtl9300_mdio_chan *chan;
++	struct fwnode_handle *child;
++	struct mii_bus *bus;
++	u32 mdio_bus;
++	int err;
++
++	err =3D fwnode_property_read_u32(node, "reg", &mdio_bus);
++	if (err)
++		return err;
++
++	fwnode_for_each_child_node(node, child)
++		if (fwnode_device_is_compatible(child, "ethernet-phy-ieee802.3-c45"))
++			priv->smi_bus_is_c45[mdio_bus] =3D true;
++
++	bus =3D devm_mdiobus_alloc_size(dev, sizeof(*chan));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name =3D "Reaktek Switch MDIO Bus";
++	bus->read =3D rtl9300_mdio_read_c22;
++	bus->write =3D rtl9300_mdio_write_c22;
++	bus->read_c45 =3D rtl9300_mdio_read_c45;
++	bus->write_c45 =3D  rtl9300_mdio_write_c45;
++	bus->parent =3D dev;
++	chan =3D bus->priv;
++	chan->mdio_bus =3D mdio_bus;
++	chan->priv =3D priv;
++
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-%d", dev_name(dev), mdio_bus);
++
++	err =3D devm_of_mdiobus_register(dev, bus, to_of_node(node));
++	if (err)
++		return dev_err_probe(dev, err, "cannot register MDIO bus\n");
++
++	return 0;
++}
++
++/* The mdio-controller is part of a switch block so we parse the sibling
++ * ethernet-ports node and build a mapping of the switch port to MDIO bu=
+s/addr
++ * based on the phy-handle.
++ */
++static int rtl9300_mdiobus_map_ports(struct device *dev)
++{
++	struct rtl9300_mdio_priv *priv =3D dev_get_drvdata(dev);
++	struct device *parent =3D dev->parent;
++	struct fwnode_handle *port;
++	int err;
++
++	struct fwnode_handle *ports __free(fwnode_handle) =3D
++		device_get_named_child_node(parent, "ethernet-ports");
++	if (!ports)
++		return dev_err_probe(dev, -EINVAL, "%pfwP missing ethernet-ports\n",
++				     dev_fwnode(parent));
++
++	fwnode_for_each_child_node(ports, port) {
++		struct device_node *mdio_dn;
++		u32 addr;
++		u32 bus;
++		u32 pn;
++
++		struct device_node *phy_dn __free(device_node) =3D
++			of_parse_phandle(to_of_node(port), "phy-handle", 0);
++		/* skip ports without phys */
++		if (!phy_dn)
++			continue;
++
++		mdio_dn =3D phy_dn->parent;
++		/* only map ports that are connected to this mdio-controller */
++		if (mdio_dn->parent !=3D dev->of_node)
++			continue;
++
++		err =3D fwnode_property_read_u32(port, "reg", &pn);
++		if (err)
++			return err;
++
++		if (pn >=3D MAX_PORTS)
++			return dev_err_probe(dev, -EINVAL, "illegal port number %d\n", pn);
++
++		err =3D of_property_read_u32(mdio_dn, "reg", &bus);
++		if (err)
++			return err;
++
++		if (bus >=3D MAX_SMI_BUSSES)
++			return dev_err_probe(dev, -EINVAL, "illegal smi bus number %d\n", bus=
+);
++
++		err =3D of_property_read_u32(phy_dn, "reg", &addr);
++		if (err)
++			return err;
++
++		bitmap_set(priv->valid_ports, pn, 1);
++		priv->smi_bus[pn] =3D bus;
++		priv->smi_addr[pn] =3D addr;
++	}
++
++	return 0;
++}
++
++static int rtl9300_mdiobus_probe(struct platform_device *pdev)
++{
++	struct device *dev =3D &pdev->dev;
++	struct rtl9300_mdio_priv *priv;
++	struct fwnode_handle *child;
++	int err;
++
++	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	err =3D devm_mutex_init(dev, &priv->lock);
++	if (err)
++		return err;
++
++	priv->regmap =3D syscon_node_to_regmap(dev->parent->of_node);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	platform_set_drvdata(pdev, priv);
++
++	err =3D rtl9300_mdiobus_map_ports(dev);
++	if (err)
++		return err;
++
++	device_for_each_child_node(dev, child) {
++		err =3D rtl9300_mdiobus_probe_one(dev, priv, child);
++		if (err)
++			return err;
++	}
++
++	err =3D rtl9300_mdiobus_init(priv);
++	if (err)
++		return dev_err_probe(dev, err, "failed to initialise MDIO bus controll=
+er\n");
++
++	return 0;
++}
++
++static const struct of_device_id rtl9300_mdio_ids[] =3D {
++	{ .compatible =3D "realtek,rtl9301-mdio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, rtl9300_mdio_ids);
++
++static struct platform_driver rtl9300_mdio_driver =3D {
++	.probe =3D rtl9300_mdiobus_probe,
++	.driver =3D {
++		.name =3D "mdio-rtl9300",
++		.of_match_table =3D rtl9300_mdio_ids,
++	},
++};
++
++module_platform_driver(rtl9300_mdio_driver);
++
++MODULE_DESCRIPTION("RTL9300 MDIO driver");
++MODULE_LICENSE("GPL");
+--=20
+2.48.1
+
