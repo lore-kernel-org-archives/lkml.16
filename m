@@ -1,294 +1,294 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011052.outbound.protection.outlook.com [52.101.125.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9549227BA4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583632; cv=none; b=tAe9xXQH0JzFSM/I6xhNwUuOoiukGjeuC4yYV7gBLsQsQxOyrAwxs+ESGbr/NVWu0jjUQ2yB5gZeU2gmnkvmJDkq2itahyJ1npcRnzBb432Qv0Hsfoub8A6YrEzpM1Gh+vaRVOvCbLa5/O5FHfTCEoSq5GZ3VU9gIfnpz5VbuIw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583632; c=relaxed/simple;
-	bh=T4Baa59RSsii1/+I1kF4FXFme9v/EnqNMR7oY5tvLz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YQgH3j2ayYYnsCiz2VMXLFnV5VRtqseU6CMlH6QMyBqawIf2vLom3npuXilbr7tVvRjraSsLzWLqaF5krlJV10asZ+OAanAJ1uLfO7MsmHmxe3K9UylDjoi/grPMtt2mRhJvf9c3fgBQng1oGbaSfNT4sarOcFnWvarmiEyIUx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JbcNsXOL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E632231A37;
+	Wed, 26 Feb 2025 15:27:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740583639; cv=fail; b=dhKq0ypG2g187pLxlhre9wmdOzvtwVN3euHttfxqZyikMUK4Olmjljoip0j3hD/bL+3+q3uK6WAwIfvMCZgWVa0M86wGPWQhK8irURO8WKINhFb+eIavalDLQiXlFmxfkz00i6A3hMCq9jLwYKVI18w16yLjNkmKwHChpABkOxo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740583639; c=relaxed/simple;
+	bh=UKg1zHxKodbLnM5Z092xPJYbiyi9RVS9v5F4Nm3UE9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HiNbJy3VcfAsEbTTVS3hvOKgCuYPR8y2c278TMXOAxoGzQTDKBAGysPVLTNclu94zf2HNxIs2KA5mugmufRe9Oj5NVHftZ7125ocZSllYkcaN6p3GdCUrdiBPJNTZNhi9mIouUMb3zVAQiCdnR7VCaPl9Xd7jOPp8mYj1UQdm0c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=wvuZI8td; arc=fail smtp.client-ip=52.101.125.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JbcNsXOL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740583629;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=opCox9KVcehhy1NQGp4HS1lXiyGpPcoip0UbMOR0ICE=;
-	b=JbcNsXOLL0jO4NG6ryd3uRLjVGE7J78Xb1w0U/xYAAwsbhehsZDspedfr1j6ukA/0vW3/4
-	L1W7Ktd8pWYGugcsNCgsr//uBZ2FQfIVmcaaIcYlvNpxH70R2zkQzZk7Jb+O6zJzO2a5Fb
-	XhlLIjZaL1bL71ifSYa9p9cfFjdMCTA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-256-bZ2VoH86O2Ku7PGseltwTw-1; Wed, 26 Feb 2025 10:27:08 -0500
-X-MC-Unique: bZ2VoH86O2Ku7PGseltwTw-1
-X-Mimecast-MFC-AGG-ID: bZ2VoH86O2Ku7PGseltwTw_1740583627
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f31e96292so4372842f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:27:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740583627; x=1741188427;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=opCox9KVcehhy1NQGp4HS1lXiyGpPcoip0UbMOR0ICE=;
-        b=ubgyM5n1xX6bRndJJl/4Fq0kGeq2HQ1TJZzNC0DRpRqa2G2hS4LKLNcJtz4nCXyOJq
-         AOFJjknB6sffjSX3hoeUB1H23/OS8ask2yWI6MBGNYoX9H3hyqMbBuflYqGYr9WY/dEE
-         E8+ebQidb4aCgHSvJDT/ICFJIpAx3mU0vyOZ23234C+2rhZEcaiL8kl8WJ4qGCcXwIZ+
-         +gSKU3FTONLW6VEFSd5dfaAs3rMlXUt231Haz4wbUe95TKpvp6qLfkXqO7cDcOSwbjaW
-         xZX+zTDiPfZacRtGxqq1AYmYu3T1GBjt+KtMBQzaTpOOledTSQYaXzpP8+lgl/Pp22CP
-         5yGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXM/+JGCkwqICKyHiicyan9+RCpYdMHN9ogdC29sx/lcniTjOGgJcg+F6OYr4qy83Jir9FIUL0D7zKI+s8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLPdV+P7JVZhiLqOhF0iDSx5e0V+8VPgh5+OczoCeG9swCGuaF
-	wND0V4SBYoOo4vzZHtNnPwahz7jCwg0T8630RAvP8fJiONXM1h87U0aYJf9I8wMPV+NyScrswDc
-	iy1sd+bT/z10htpSRrV8pFVgHqRg66FZ2uiu8yfJiviDSroAoRyTj1bDRtIuDtw==
-X-Gm-Gg: ASbGncsda9Lmdl0Pq09aQa+J1P9e0zgHmNo5jBc+Mi+IYaiw6SiSUdeX3u4QQ2FxDsZ
-	rnDE4/hu4OYbgfRNkTiChoQx/z3Cej3fhmc3NTXl9fX9RBhNrmkgX5E7+KcN7E6wAh8+1R35vWf
-	CF7RgreZnWNyEtA0EpcBg4MPe2Q0zvMJyBbw32MOoDJfOtCAz2P2ftFdgctIgE5PEEuIR4AMkQr
-	nfj6ibFcznANzboNAMkKlGhzDJg3zAFiwvfmKUxKZDRC+HgnPFBxukmAElavAR89CqHISsSb1De
-	OA9Ppa/HroNPBFGkX4M2NGEzE/p8ha93Z3rsKfSUygXqeaKLw8jWU7Mclg2AKD8=
-X-Received: by 2002:a5d:5887:0:b0:38f:355b:141e with SMTP id ffacd0b85a97d-390d4f378ebmr3452617f8f.3.1740583626899;
-        Wed, 26 Feb 2025 07:27:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF1DwZYHHCSs8+Mdqpg+KX0YNs2WqUN7TodnTaxIGwwctMTc50nKGidchiWQV2RbC4q0fkVAw==
-X-Received: by 2002:a5d:5887:0:b0:38f:355b:141e with SMTP id ffacd0b85a97d-390d4f378ebmr3452587f8f.3.1740583626458;
-        Wed, 26 Feb 2025 07:27:06 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd882a64sm5769008f8f.46.2025.02.26.07.27.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 07:27:05 -0800 (PST)
-Date: Wed, 26 Feb 2025 16:27:05 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, Dongjiu Geng <gengdongjiu1@gmail.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Peter Maydell <peter.maydell@linaro.org>,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 06/14] acpi/ghes: create an ancillary
- acpi_ghes_get_state() function
-Message-ID: <20250226162705.67875661@imammedo.users.ipa.redhat.com>
-In-Reply-To: <2288cfe02f8cfec4b35759fd748366c885018b59.1740148260.git.mchehab+huawei@kernel.org>
-References: <cover.1740148260.git.mchehab+huawei@kernel.org>
-	<2288cfe02f8cfec4b35759fd748366c885018b59.1740148260.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="wvuZI8td"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FXRu0KeF00JUhjWhRv8g93XSUmSKMlc/Y8GvzyKwOwpuR2WwRyooSpgtveKUqHvAxVcWKgBLfzTGkwXy9/E9zMpDyGDWBBSOIOuWq5HQzLXYrSZ4nwZJgZOKqRxuTsCRXHRkuKurbPUYdNijXVMm2KbWjlHTjEuIANLnA3jhz973GIfV6yDdz/30T5mB8SijBY5o3/a1CIXq7Gjftg+xnvo8a8W9ojSuK1oOrK19vamWLQu2e4LaYg0+gfCzLZ6foCFmLylqaaAgy665C1Kt/veMrZ2UNzodHFXuATij6eo6vpZXxOd/taLzc0jMv3w3g4Vh4b5ioJBltqMKB+/bCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q1pltHDZfhSIrend9oly11YbV+aY6f95m/p4zfVuq1c=;
+ b=LSMPbb3APCv44x6rpdciP1tglCSlgXuw3rQNeRpVyARnokWYrAXJLq27XcXRE9lUW8r4DqJKUjHrCAbjAFimNjTiNoZZ8978lx/Rvkg7o2UZQ6B/Sr8R2V+Cyu/xC0JcOoooaGVaZI6cs4cqXtQ5LtSqeTL0CkMEBtoBGjla/GJtk0HScsIdhKmo9ffVXmiPfLvvKrt0ItzUkDV5vtjj3Gn9RaTzthgDQxKvVOuE2W3GE0nQP6fHPKodVeeEsvccUmd2d+ID3cPm9sfQQ982Q/x3mF9F8g8QHQdAbduGCM6EcBEgXvNllircBIczQy9Pc6BXWr+ODb7iNmTlaN3G7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q1pltHDZfhSIrend9oly11YbV+aY6f95m/p4zfVuq1c=;
+ b=wvuZI8tdJTsdJgp+oPTNI2YCHWk506lNW+8g8fcM7TB2KUmZlIIYpZTiYsPsZgoZ8SXf4tOCjDI9ialkl+Gk1tyG0TNYxMJttMvvutcBWZWu2igOl3rjYYa8aEI7OSj6FtpXT7k+NVpY6SSFW5B8aQ4n/6zQHZr1uWcY6jWrtNo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
+ by TY3PR01MB9826.jpnprd01.prod.outlook.com (2603:1096:400:229::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
+ 2025 15:27:11 +0000
+Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
+ ([fe80::244d:8815:7064:a9f3%5]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
+ 15:27:11 +0000
+From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+To: tomm.merciai@gmail.com
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	biju.das.jz@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 14/17] media: rzg2l-cru: Add IRQ handler to OF data
+Date: Wed, 26 Feb 2025 16:23:38 +0100
+Message-ID: <20250226152418.1132337-15-tommaso.merciai.xr@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com>
+References: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: FR4P281CA0073.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ce::13) To OS9PR01MB13950.jpnprd01.prod.outlook.com
+ (2603:1096:604:35e::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|TY3PR01MB9826:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9415820b-10c8-4c6c-d3a8-08dd567a0a1f
+X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/GSBLyjXLOo9UQs/O3ebdRv48Ua7dPOKD5zZVnUmjeJWCOfs7U8Enx3iKCR/?=
+ =?us-ascii?Q?IN5h5NhRKUZ2YG/s7SbYdE3qFkjwRS1ZLrVw1jLjP0CmK/uKk+4MMm3t7wc7?=
+ =?us-ascii?Q?6YpqRZrCEXupHkaL6OjGzX2JhqvQIy1ARulna+vmCrfpkysxMvbtmZSY69nB?=
+ =?us-ascii?Q?YNdCeLE1L6QFYq67/iB5tHy1RSOC2A1np68nBiPNJnKQlt3q6+iZF5E+uMIc?=
+ =?us-ascii?Q?rFt9iuIbkOUpUmX9iDqoX0SiIOzWLOLmtKEfYUSpJLgeIYC/EPQsq0vE8f3o?=
+ =?us-ascii?Q?TG8BAhNS0B0+WW8int3g6IHiS7/Nvc3Nx5U0lSYny+O3BhQJMdKNn81//9EV?=
+ =?us-ascii?Q?VdMtOKfi97oKEAK5maH47dE4Vr7cm+LRVEQDfpPe/3KNuoWIkCPTjD1XX1Of?=
+ =?us-ascii?Q?DIBB3Fn40Pf5fu2wNLf3bxoiOrP2pbbcdr0QwYkqh1TFpugYD6C6cop9XHKh?=
+ =?us-ascii?Q?vRUMbBPXAxIozx9DqOeWzBXfNCfMh5TIVsm3+lyaj2CfcDCbaDsFM9u87k7C?=
+ =?us-ascii?Q?W6xKK0qRgfH/xiviRo12AAUvkLkNldE20jc+bJdo5p2GOYLFfhVXWS54FoAA?=
+ =?us-ascii?Q?47FYdXxkOs3kDfSiDy08sNIbgc4sdLKh226dOsnj3d12MWvHuC6MtsNEJuff?=
+ =?us-ascii?Q?KYUEgi7gORhWiKi5p2+7B6UuG8lYkdLPqe/1a5SzMKZimOeeWGDG9XGBs0vm?=
+ =?us-ascii?Q?0QUsKv9slAIL033OGZ8S2KYfHeqpF0SXpBB9E/9tjTaNgR5zeLV1SrElV2ml?=
+ =?us-ascii?Q?WusSJXjJvpCqM5pYYcXr975JwweELSYRQY9MIEqgb5UwHJsoREiC9Yof9nCD?=
+ =?us-ascii?Q?YbVsGvmH2Q8I0V0i3f0wjTxlnW6wiDeUw/pQvJnSxvT//ReKQfBs97LlWQyX?=
+ =?us-ascii?Q?0F9uk2AYIR6pNH+XoDbIo3YtRnJb/0yByDoxp8tC6FDUE4K9wX3HyzEa3nVF?=
+ =?us-ascii?Q?RtIt+w6U5R4orMWC59H/DncNFVYQjZFDspIUpPrzshq413Dyj7naaj91JLh3?=
+ =?us-ascii?Q?DXQkjJGEXTjH94a5WFZtNh95sVc7KIz6AywWhduBGOZKRGsZifvgE+8IIGTA?=
+ =?us-ascii?Q?651/vF0P0sKiSC8gUcyTV471YlVN+OPa0+sTjRC7y4jl2KQWwuasRaWLnKiq?=
+ =?us-ascii?Q?WJq5IrhRYDzS9kk8rnCDw6WvXNcyAJwti/VIMNEQKE6voBhlhAda8v0x8j+z?=
+ =?us-ascii?Q?iGPXR8kvfzw4UGYePTkYV7wlYpQNWW70+DuueFav0j5uFQMlLqIqxV18kLsm?=
+ =?us-ascii?Q?l8NGsNwsormLR9z5dg5ZYa2GUwB2AZ+dK/i4yOWLFG/S08A0NIzS9zkgD4Tz?=
+ =?us-ascii?Q?efKdbaseXi9y5x9ib6CPQRXB0uqSMNhwvzEpJeA3ljfuXwpSvZ6Wqp1JOv6g?=
+ =?us-ascii?Q?MF66hWEWsRpQyyas0AsE80CzZuE8V5EshbNAk835OsWcfpAGOxskDgBDd1ln?=
+ =?us-ascii?Q?NQ9cnlOYbmPh3FRQ3wjYPblgwhbljAZ8?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MU1e60qt0digw0Fq0gyfbTT3xIdBk4ktlnHu65ZnuEmOw6z2GJ+CzEZnf0Ze?=
+ =?us-ascii?Q?6OIBbniDWjumw4S0Wp1cgFbtAZSm2u1DzWdx0cZJziw347WqZc/LfVOeprcN?=
+ =?us-ascii?Q?OZkAGAPayyNYDERnJxvr2Y4sbYsyIjceZ4Ga+zdaaTi5uOcYUqQDyBPJd2/1?=
+ =?us-ascii?Q?fCBUyormC3I6B2A5lbaM+LaCccQlCRqZykXDXsNDtsvBJvdkFr6cyuAB2+XS?=
+ =?us-ascii?Q?PpE1bafKkd5yBpiCF04/npQyAYKvPWxedInL3nkXMiaui+jN/hujkMzZycq8?=
+ =?us-ascii?Q?Z0Ir3AE5MeHRzWBn2253XFZjlrGX7tdgm7WfJCf3cgnn46pVe2Rxz1TsyWWM?=
+ =?us-ascii?Q?xB8Pbq+vj/CaFlADifCNcQ4d47NfRB8fJ2rgqvqBC7X4kLzw6MyO+/s8fzqn?=
+ =?us-ascii?Q?BoBtfON5sNPD2yzuNuobdiYSfBgVx8KFyjUguUh5B4q4f2RHykQuBY3uCHBH?=
+ =?us-ascii?Q?n+DpdsY7JLWeB01YL9wuRgBlXlphRcu02GlAuwaSQ3AcEoYkMiz+mJcE/FMW?=
+ =?us-ascii?Q?jw2+AwsQrIckyrCDQXJSmwrprPkkpEr7FWsxoWqdIzUU01yR128LAaWMoN0+?=
+ =?us-ascii?Q?S2aaHMt/DvQrxvvG3RHsfkoXH4UVEteWIcaS8XPmCo1NAhsTeXFdf00wNoz0?=
+ =?us-ascii?Q?0QeV0SDbsghcjf2+YEOgb0P/xwAAaE8kzrgc68QbRjlUqOfzmM8b5IIgm1DY?=
+ =?us-ascii?Q?4bPO5hte+h7z/MSGturYULhZv6vA4IBWETMwjFauZhhVW7fn17zzDggJtpSF?=
+ =?us-ascii?Q?b9a0X+479+IsjGKDAXqVZ0apTzXwY0YqKX5RfiYtFV6R3KE9Lvet11ukBCUM?=
+ =?us-ascii?Q?iG/a/LhWpk5OyjRjuziCnG3cakBUii+n0yZ3LGbLgBBp8T9hP1pOuq10O5Kz?=
+ =?us-ascii?Q?391JiXvjHz3u3umpf1QO5sP2XrpZNXZ5Cmupwq0TwTR/0pGXochLBbiv8BCH?=
+ =?us-ascii?Q?l3Nkr+8EuMIQoUhXux0L3XHxRhdmFR3jh8MJEV6GuD3wEIo37QJgg6/k1/HV?=
+ =?us-ascii?Q?awb9g9Rat1uhnp0zIGXdAkFtGxbcbi9+bIoSTZifjvSBd9DBD0vC97jFfqrn?=
+ =?us-ascii?Q?YOtwq8KXSDgXgOcoXP8CcsJ3PEqYGbyehwLEiMo//nFJ95rtKgQ6YvGJRXA7?=
+ =?us-ascii?Q?xa6y2umhzAxbL6DrwrlQGTBcX+VsvdEXDrJHAhJcBYiwNpSdhVmhkd4349sK?=
+ =?us-ascii?Q?JzOx/Lu5325MzwXHm10pP+AVGBtd3GYXgpxLXryh0rZ1ue3+PoDkWaKT1qJS?=
+ =?us-ascii?Q?Ox4v05twoHXw/7xfKG672XhNEcf890dk8YZ/Lk1lJTw6qsZE4cwW1caYb9aE?=
+ =?us-ascii?Q?V2m8Jgg8WPH+0UCzRWs1zCJDNXpdvxn13+jx5IKtClUha+oMXGZfmPTHqTGO?=
+ =?us-ascii?Q?RbGQ/X+epk3GZe9z3zCYxsqP20WH/jOig1a/4NAfPMYueMv/MaUjxRnEXyaA?=
+ =?us-ascii?Q?nAwONgQhxCE5gUKktUeMqH4T2OU7axj26XMwLs6lSEy0ow/cLeB0NT7M5yXu?=
+ =?us-ascii?Q?0Cps+OnjHBiKikd6GZ1gVf0l9Xo60CFq3raCeN1wds5tokgLjY+Y4EBDsext?=
+ =?us-ascii?Q?KZBzuCdy/YsLulOtpN5E0R3j6vy01OQQ0GkdALs14Xv9CPygy73Ipfn8SpBm?=
+ =?us-ascii?Q?5DLZnji18eTVakG/3Gam83U=3D?=
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9415820b-10c8-4c6c-d3a8-08dd567a0a1f
+X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 15:27:11.5716
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XgnQUga+I0jayPVPovI9sOy8NRemVFnC2XHY9jJMf2fYWbN+hXCkENumC/ZHkLJkp7TBkrw1JBsam4n4tfGc2V7b7MvYE6y3PdvDwZMicdgfC5tyn0thrHb+4eSpsqCi
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB9826
 
-On Fri, 21 Feb 2025 15:35:15 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> Instead of having a function to check if ACPI is enabled
-> (acpi_ghes_present), change its logic to be more generic,
-> returing a pointed to AcpiGhesState.
-> 
-> Such change allows cleanup the ghes GED state code, avoiding
-> to read it multiple times, and simplifying the code.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by:  Igor Mammedov <imammedo@redhat.com>
-> ---
->  hw/acpi/ghes-stub.c    |  7 ++++---
->  hw/acpi/ghes.c         | 38 ++++++++++----------------------------
->  include/hw/acpi/ghes.h | 14 ++++++++------
->  target/arm/kvm.c       |  7 +++++--
->  4 files changed, 27 insertions(+), 39 deletions(-)
-> 
-> diff --git a/hw/acpi/ghes-stub.c b/hw/acpi/ghes-stub.c
-> index 7cec1812dad9..40f660c246fe 100644
-> --- a/hw/acpi/ghes-stub.c
-> +++ b/hw/acpi/ghes-stub.c
-> @@ -11,12 +11,13 @@
->  #include "qemu/osdep.h"
->  #include "hw/acpi/ghes.h"
->  
-> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
-> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
-> +                            uint64_t physical_address)
->  {
->      return -1;
->  }
->  
-> -bool acpi_ghes_present(void)
-> +AcpiGhesState *acpi_ghes_get_state(void)
->  {
-> -    return false;
-> +    return NULL;
->  }
-> diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-> index f2d1cc7369f4..401789259f60 100644
-> --- a/hw/acpi/ghes.c
-> +++ b/hw/acpi/ghes.c
-> @@ -425,10 +425,6 @@ static void get_hw_error_offsets(uint64_t ghes_addr,
->                                   uint64_t *cper_addr,
->                                   uint64_t *read_ack_register_addr)
->  {
-> -    if (!ghes_addr) {
-> -        return;
-> -    }
-> -
->      /*
->       * non-HEST version supports only one source, so no need to change
->       * the start offset based on the source ID. Also, we can't validate
-> @@ -517,27 +513,16 @@ static void get_ghes_source_offsets(uint16_t source_id,
->  NotifierList acpi_generic_error_notifiers =
->      NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
->  
-> -void ghes_record_cper_errors(const void *cper, size_t len,
-> +void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
->                               uint16_t source_id, Error **errp)
->  {
->      uint64_t cper_addr = 0, read_ack_register_addr = 0, read_ack_register;
-> -    AcpiGedState *acpi_ged_state;
-> -    AcpiGhesState *ags;
->  
->      if (len > ACPI_GHES_MAX_RAW_DATA_LENGTH) {
->          error_setg(errp, "GHES CPER record is too big: %zd", len);
->          return;
->      }
->  
-> -    acpi_ged_state = ACPI_GED(object_resolve_path_type("", TYPE_ACPI_GED,
-> -                                                       NULL));
-> -    if (!acpi_ged_state) {
-> -        error_setg(errp, "Can't find ACPI_GED object");
-> -        return;
-> -    }
-> -    ags = &acpi_ged_state->ghes_state;
-> -
-> -
->      if (!ags->use_hest_addr) {
->          get_hw_error_offsets(le64_to_cpu(ags->hw_error_le),
->                               &cper_addr, &read_ack_register_addr);
-> @@ -546,11 +531,6 @@ void ghes_record_cper_errors(const void *cper, size_t len,
->                                  &cper_addr, &read_ack_register_addr, errp);
->      }
->  
-> -    if (!cper_addr) {
-> -        error_setg(errp, "can not find Generic Error Status Block");
-> -        return;
-> -    }
-> -
->      cpu_physical_memory_read(read_ack_register_addr,
->                               &read_ack_register, sizeof(read_ack_register));
->  
-> @@ -576,7 +556,8 @@ void ghes_record_cper_errors(const void *cper, size_t len,
->      notifier_list_notify(&acpi_generic_error_notifiers, NULL);
->  }
->  
-> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
-> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
-> +                            uint64_t physical_address)
->  {
->      /* Memory Error Section Type */
->      const uint8_t guid[] =
-> @@ -602,7 +583,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
->      acpi_ghes_build_append_mem_cper(block, physical_address);
->  
->      /* Report the error */
-> -    ghes_record_cper_errors(block->data, block->len, source_id, &errp);
-> +    ghes_record_cper_errors(ags, block->data, block->len, source_id, &errp);
->  
->      g_array_free(block, true);
->  
-> @@ -614,7 +595,7 @@ int acpi_ghes_memory_errors(uint16_t source_id, uint64_t physical_address)
->      return 0;
->  }
->  
-> -bool acpi_ghes_present(void)
-> +AcpiGhesState *acpi_ghes_get_state(void)
->  {
->      AcpiGedState *acpi_ged_state;
->      AcpiGhesState *ags;
-> @@ -623,11 +604,12 @@ bool acpi_ghes_present(void)
->                                                         NULL));
->  
->      if (!acpi_ged_state) {
-> -        return false;
-> +        return NULL;
->      }
->      ags = &acpi_ged_state->ghes_state;
-> -    if (!ags->hw_error_le && !ags->hest_addr_le)
-> -        return false;
->  
-> -    return true;
-> +    if (!ags->hw_error_le && !ags->hest_addr_le) {
-> +        return NULL;
-> +    }
-> +    return ags;
->  }
-> diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-> index 219aa7ab4fe0..276f9dc076d9 100644
-> --- a/include/hw/acpi/ghes.h
-> +++ b/include/hw/acpi/ghes.h
-> @@ -99,15 +99,17 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
->                       const char *oem_id, const char *oem_table_id);
->  void acpi_ghes_add_fw_cfg(AcpiGhesState *vms, FWCfgState *s,
->                            GArray *hardware_errors);
-> -int acpi_ghes_memory_errors(uint16_t source_id, uint64_t error_physical_addr);
-> -void ghes_record_cper_errors(const void *cper, size_t len,
-> +int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
-> +                            uint64_t error_physical_addr);
-> +void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
->                               uint16_t source_id, Error **errp);
->  
->  /**
-> - * acpi_ghes_present: Report whether ACPI GHES table is present
-> + * acpi_ghes_get_state: Get a pointer for ACPI ghes state
->   *
-> - * Returns: true if the system has an ACPI GHES table and it is
-> - * safe to call acpi_ghes_memory_errors() to record a memory error.
-> + * Returns: a pointer to ghes state if the system has an ACPI GHES table,
-> + * it is enabled and it is safe to call acpi_ghes_memory_errors() to record
-      ^^^^^^^^^^^^^ can't link 'it' with anything, I'd drop this
+Add `irq_handler` to the `rzg2l_cru_info` structure and pass it as part of
+the OF data. This prepares for supporting RZ/G3E and RZ/V2H(P) SoCs, which
+require a different IRQ handler. Update the IRQ request code to use the
+handler from the OF data.
 
-> + * a memory error. Returns false, otherwise.
-                              ^^^ NULL ??
+Add `enable_interrupts` and `disable_interrupts` function pointers to the
+`rzg2l_cru_info` structure and pass them as part of the OF data. This
+prepares for supporting RZ/G3E and RZ/V2H(P) SoCs, which require different
+interrupt configurations.
 
->   */
-> -bool acpi_ghes_present(void);
-> +AcpiGhesState *acpi_ghes_get_state(void);
->  #endif
-> diff --git a/target/arm/kvm.c b/target/arm/kvm.c
-> index da30bdbb2349..80ca7779797b 100644
-> --- a/target/arm/kvm.c
-> +++ b/target/arm/kvm.c
-> @@ -2366,10 +2366,12 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
->  {
->      ram_addr_t ram_addr;
->      hwaddr paddr;
-> +    AcpiGhesState *ags;
->  
->      assert(code == BUS_MCEERR_AR || code == BUS_MCEERR_AO);
->  
-> -    if (acpi_ghes_present() && addr) {
-> +    ags = acpi_ghes_get_state();
-> +    if (ags && addr) {
->          ram_addr = qemu_ram_addr_from_host(addr);
->          if (ram_addr != RAM_ADDR_INVALID &&
->              kvm_physical_memory_addr_from_host(c->kvm_state, addr, &paddr)) {
-> @@ -2387,7 +2389,8 @@ void kvm_arch_on_sigbus_vcpu(CPUState *c, int code, void *addr)
->               */
->              if (code == BUS_MCEERR_AR) {
->                  kvm_cpu_synchronize_state(c);
-> -                if (!acpi_ghes_memory_errors(ACPI_HEST_SRC_ID_SEA, paddr)) {
-> +                if (!acpi_ghes_memory_errors(ags, ACPI_HEST_SRC_ID_SEA,
-> +                                             paddr)) {
->                      kvm_inject_arm_sea(c);
->                  } else {
->                      error_report("failed to record the error");
+Implement `rzg2l_cru_enable_interrupts()` and
+`rzg2l_cru_disable_interrupts()` functions and update the code to use them
+instead of directly writing to interrupt registers.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+---
+Changes since v2:
+ - Squashed patch 15 and 14
+ - Collected tag
+
+ .../platform/renesas/rzg2l-cru/rzg2l-core.c   |  5 ++++-
+ .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  8 ++++++++
+ .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 19 ++++++++++++++-----
+ 3 files changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+index 7e94ae803967..302f792cb415 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
+@@ -278,7 +278,7 @@ static int rzg2l_cru_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
+ 
+-	ret = devm_request_irq(dev, irq, rzg2l_cru_irq, 0,
++	ret = devm_request_irq(dev, irq, cru->info->irq_handler, 0,
+ 			       KBUILD_MODNAME, cru);
+ 	if (ret)
+ 		return dev_err_probe(dev, ret, "failed to request irq\n");
+@@ -359,6 +359,9 @@ static const struct rzg2l_cru_info rzgl2_cru_info = {
+ 	.max_height = 4095,
+ 	.image_conv = ICnMC,
+ 	.regs = rzg2l_cru_regs,
++	.irq_handler = rzg2l_cru_irq,
++	.enable_interrupts = rzg2l_cru_enable_interrupts,
++	.disable_interrupts = rzg2l_cru_disable_interrupts,
+ };
+ 
+ static const struct of_device_id rzg2l_cru_of_id_table[] = {
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
+index ca156772b949..3f694044d8cd 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
+@@ -34,6 +34,8 @@ enum rzg2l_csi2_pads {
+ 	RZG2L_CRU_IP_SOURCE,
+ };
+ 
++struct rzg2l_cru_dev;
++
+ /**
+  * enum rzg2l_cru_dma_state - DMA states
+  * @RZG2L_CRU_DMA_STOPPED:   No operation in progress
+@@ -83,6 +85,9 @@ struct rzg2l_cru_info {
+ 	unsigned int max_height;
+ 	u16 image_conv;
+ 	const u16 *regs;
++	irqreturn_t (*irq_handler)(int irq, void *data);
++	void (*enable_interrupts)(struct rzg2l_cru_dev *cru);
++	void (*disable_interrupts)(struct rzg2l_cru_dev *cru);
+ };
+ 
+ /**
+@@ -177,4 +182,7 @@ const struct rzg2l_cru_ip_format *rzg2l_cru_ip_code_to_fmt(unsigned int code);
+ const struct rzg2l_cru_ip_format *rzg2l_cru_ip_format_to_fmt(u32 format);
+ const struct rzg2l_cru_ip_format *rzg2l_cru_ip_index_to_fmt(u32 index);
+ 
++void rzg2l_cru_enable_interrupts(struct rzg2l_cru_dev *cru);
++void rzg2l_cru_disable_interrupts(struct rzg2l_cru_dev *cru);
++
+ #endif
+diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+index 5033c8d98639..8995aa254c17 100644
+--- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
++++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
+@@ -300,8 +300,7 @@ void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
+ 	spin_lock_irqsave(&cru->qlock, flags);
+ 
+ 	/* Disable and clear the interrupt */
+-	rzg2l_cru_write(cru, CRUnIE, 0);
+-	rzg2l_cru_write(cru, CRUnINTS, 0x001F0F0F);
++	cru->info->disable_interrupts(cru);
+ 
+ 	/* Stop the operation of image conversion */
+ 	rzg2l_cru_write(cru, ICnEN, 0);
+@@ -393,6 +392,17 @@ static int rzg2l_cru_get_virtual_channel(struct rzg2l_cru_dev *cru)
+ 	return fd.entry[0].bus.csi2.vc;
+ }
+ 
++void rzg2l_cru_enable_interrupts(struct rzg2l_cru_dev *cru)
++{
++	rzg2l_cru_write(cru, CRUnIE, CRUnIE_EFE);
++}
++
++void rzg2l_cru_disable_interrupts(struct rzg2l_cru_dev *cru)
++{
++	rzg2l_cru_write(cru, CRUnIE, 0);
++	rzg2l_cru_write(cru, CRUnINTS, 0x001f000f);
++}
++
+ int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
+ {
+ 	struct v4l2_mbus_framefmt *fmt = rzg2l_cru_ip_get_src_fmt(cru);
+@@ -414,8 +424,7 @@ int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
+ 	rzg2l_cru_write(cru, CRUnRST, CRUnRST_VRESETN);
+ 
+ 	/* Disable and clear the interrupt before using */
+-	rzg2l_cru_write(cru, CRUnIE, 0);
+-	rzg2l_cru_write(cru, CRUnINTS, 0x001f000f);
++	cru->info->disable_interrupts(cru);
+ 
+ 	/* Initialize the AXI master */
+ 	rzg2l_cru_initialize_axi(cru);
+@@ -428,7 +437,7 @@ int rzg2l_cru_start_image_processing(struct rzg2l_cru_dev *cru)
+ 	}
+ 
+ 	/* Enable interrupt */
+-	rzg2l_cru_write(cru, CRUnIE, CRUnIE_EFE);
++	cru->info->enable_interrupts(cru);
+ 
+ 	/* Enable image processing reception */
+ 	rzg2l_cru_write(cru, ICnEN, ICnEN_ICEN);
+-- 
+2.43.0
 
