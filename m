@@ -1,113 +1,132 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-175.mta0.migadu.com (out-175.mta0.migadu.com [91.218.175.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071C13209
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035141624E0
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:33:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583984; cv=none; b=E0UTdzIdZEqLmwCBltUJaDZyrQqV3rseW15XNdcU/d9DUDnVMNqbYeNSItZ2HQu/RlGmQiEFSYbz0Qh/pk+RQcW2V3l2pcWvlKcwiZ5ubx0ufvrcCYDxGT8Y1aJHhSpX+LjVbVFuZJ4mlSO0POrbZbSdBtIEtxaUKc7RlpRefOk=
+	t=1740584032; cv=none; b=bOnvZd0TwRPrr8IW+C4yrDunf/5gO2tWq/qyQXUig0mZLTaNgArAbnljGw4P/PljA0DjJyvyivTZwP4Xl+ckQNzpacM6tf3YidibGIFJAvCTJgm2EpdZLapxim68Q9933AGnSOP6cg5QAbYGv+d5Q9IDWcovcObm76nqMqqoLHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583984; c=relaxed/simple;
-	bh=ddfEzWSCkfMka5YMwW6mZE6JEzzDPNpoKkDuvZz6YE8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QjEDtWAry4V/7yUlKZQGEBGDetrkTEjBtwZ9Zhij+32usL6hMq5ZM1arPJ8iXHAP7r7wbjpKXz8OPmRMs78uxUzbyzxJ2KuIH6Lvz38IAzS48C/XH3XGkd8M7QNfhsFbXGwUqyy7Zs0f2Y/PdMfx7IuHJdrQwJbJmXeEiJ0+k9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EliFiViU; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740584032; c=relaxed/simple;
+	bh=/bB/yZLGL3DWE2PUG3M5lw3kgRGqPeayAXHhqErbi10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QBKCEFOCCYkCnOj0OOZFUoDJIsKL7DeApCiNZEK6egzVc/+URLpPUTA8knf2pRe5TahXz5rZlEzKuMemCaEiIisR3muCT8pxcbVUBXiK9EryCfyroftX6kkKhGfn4gTHsJpiEL6X6YVuS5vk6e+vO/TpTVv8X6iZjxLbMygS4NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=AX7MX3wM; arc=none smtp.client-ip=91.218.175.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EliFiViU"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-2232aead21aso2014065ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:33:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740583982; x=1741188782; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6oLaVxK/peyXmX/hfhFSKRYTEC4hb7vBZQRW6g6goaU=;
-        b=EliFiViUxYQsrc+6GPplD3QKw2NONyXJ3uWifcy/DLkfk0RxLNlswxZC09N4l2Y62G
-         jlFDtHoAc/pDZWXSXOjO8y185vCZ+zZozUVIhS39B5Vm6Ol/zfRBzGRm7avKRQ1K0M/E
-         Xp9gZwCxo7Yjy97varWWgtCPFgS0x8TQA1Dv31W0EfLUG6e0Gd1RPcb7GxOtfH8lwhbN
-         6i/F4N7yma9g8EMHf2I0IiMUcagP1WH0+tx+ieIzOoUI6WOyOK10DOE/6LtrxI7WYM+8
-         ntNAX6wUhdvoT8o7Bn5GmtSOfESbaHFE3geDcMKQlWFuJYfrQYOdABjbEfA+Ft6f96qG
-         lPQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740583982; x=1741188782;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6oLaVxK/peyXmX/hfhFSKRYTEC4hb7vBZQRW6g6goaU=;
-        b=YnvwKxs6KSFZec8Vdi+Zvl7ToEftIZApgaG5FwRUvLR5NFlIUMhdWanRx2PwxEEoW4
-         qaqj7cQphVGcrbLoaorm6Qsi7efjKHgu5kqwq0QJnL2JXGfBeDDZ6sh8lz5Vmp5hD/PR
-         eRpzneQmZBCL7clBEBdHlLFBKNAZ176MWCw1TOAX8HprZbTQlw7rQdiczPCpD2hHqm1r
-         RcPfaVvAYD9FZ2BFoedoEyYN/nnFvivnSe/CKoE36HUJraO1TM6gx7rHCWNklFm6U+wJ
-         S1nOpxX4MDk1bapQ7324x/4MQERlPp2z+e712MXKtTLq0jdGPPQhIJbLSILaSd+dfGss
-         eKOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0ra3olXXoh+LPUHSXpfnJW1amUyXSH7/woyc39nqzBxHkJxQk4HTzOO2Bqr2651+/bnsxNVeobCIfQGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe7DQfB4DcaBOr2Msq0TDk+zGMdkhtebZ6Qis5U+0W0hbAET8H
-	6CBlbzjYJBAdNUe43Bwerl5xGlZPjVC5xd/8+TOAakK3sDzmF/eT
-X-Gm-Gg: ASbGncvMD5CG3Y2kL6HZvg85iaGUMYTVOenEJNB2HiNPN6mmfJWi8iIEdiTiRqgZM2D
-	HI+pULhq25gXrmxOlbdU/WZgZsV7jDJZ7pcXyb1rWGDAcOLfkdkApu0/HhLUnY0ulEm701qWtgk
-	uD46983DTb4QAiPiKTiascf8a3yfeeKcGUo60bhlaTQ4izs0tvvxV1GWHjN+ENe+j1MZidzBGuc
-	mmRncKWxSHR2XmtjWE97pFH83/j79hNdSHamYyhlpzZRKw3Z9h9mZ0dzEjYMo8DTqGi9fgzbsgQ
-	5dZTUaCPXQvk2IG1RBbdiuOlgXY=
-X-Google-Smtp-Source: AGHT+IEF5cukPMgHk1iC0V81Fu/6h3UP1oe65hIXnY53yBkz7HopBDeZIQt7xK2dewuo8IMAsRHdVg==
-X-Received: by 2002:a17:902:d508:b0:223:49cb:5ec4 with SMTP id d9443c01a7336-22349cb80ebmr100325ad.3.1740583982196;
-        Wed, 26 Feb 2025 07:33:02 -0800 (PST)
-Received: from SaltyKitkat.. ([2a12:f8c1:41:1:f0df:d3ff:fe1a:fa0a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0215f1sm34116485ad.63.2025.02.26.07.32.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 07:33:01 -0800 (PST)
-From: Sun YangKai <sunk67188@gmail.com>
-To: yosry.ahmed@linux.dev
-Cc: Sun YangKai <sunk67188@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
-	linux-mm@kvack.org (open list:ZSWAP COMPRESSED SWAP CACHING),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mm: zswap: use ATOMIC_LONG_INIT to initialize zswap_stored_pages
-Date: Wed, 26 Feb 2025 23:32:43 +0800
-Message-ID: <20250226153253.19179-1-sunk67188@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250226124141.22218-1-sunk67188@gmail.com>
-References: <20250226124141.22218-1-sunk67188@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="AX7MX3wM"
+Date: Wed, 26 Feb 2025 15:33:43 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740584027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YghUIUtGJFDQ2JIT44YnprUkmQqQzSSO6n1OgaplZRk=;
+	b=AX7MX3wMWgNLdA8YTvt8dSILGImJRuHBwZfP9SPk6Nd9B/IDdvnJogK8ehjKudK4AGLCH/
+	T4oOprYE0r6ihvzf6xnEmIstsYkgnvP2L0maEprSSu4xkQK5pvsUwcIoP2U6awEyoyHMse
+	zjCIDxX/rtym74xSdEBw1a5mqf/+fYg=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org,
+	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] zswap: do not crash the kernel on decompression failure
+Message-ID: <Z780VzBOE3LKY0yi@google.com>
+References: <20250225213200.729056-1-nphamcs@gmail.com>
+ <Z76Go1VGw272joly@google.com>
+ <20250226045727.GB1775487@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226045727.GB1775487@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
-This is currently the only atomic_long_t variable initialized by
-ATOMIC_INIT macro found in the kernel by using
-`grep -r atomic_long_t | grep ATOMIC_INIT`
+On Tue, Feb 25, 2025 at 11:57:27PM -0500, Johannes Weiner wrote:
+> On Wed, Feb 26, 2025 at 03:12:35AM +0000, Yosry Ahmed wrote:
+> > On Tue, Feb 25, 2025 at 01:32:00PM -0800, Nhat Pham wrote:
+> > > Currently, we crash the kernel when a decompression failure occurs in
+> > > zswap (either because of memory corruption, or a bug in the compression
+> > > algorithm). This is overkill. We should only SIGBUS the unfortunate
+> > > process asking for the zswap entry on zswap load, and skip the corrupted
+> > > entry in zswap writeback.
+> > 
+> > Some relevant observations/questions, but not really actionable for this
+> > patch, perhaps some future work, or more likely some incoherent
+> > illogical thoughts :
+> > 
+> > (1) It seems like not making the folio uptodate will cause shmem faults
+> > to mark the swap entry as hwpoisoned, but I don't see similar handling
+> > for do_swap_page(). So it seems like even if we SIGBUS the process,
+> > other processes mapping the same page could follow in the same
+> > footsteps.
+> 
+> It's analogous to what __end_swap_bio_read() does for block backends,
+> so it's hitchhiking on the standard swap protocol for read failures.
 
-This was introduced in 6e1fa555ec77, in which we modified
-the type of zswap_stored_pages to atomic_long_t,
-but didn't change the initialization.
+Right, that's also how I got the idea when I did the same for large
+folios handling.
 
-Fixes: 6e1fa555ec77 ("mm: zswap: modify zswap_stored_pages to be atomic_long_t")
-Signed-off-by: Sun YangKai <sunk67188@gmail.com>
----
- mm/zswap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> The page sticks around if there are other users. It can get reclaimed,
+> but since it's not marked dirty, it won't get overwritten. Another
+> access will either find it in the swapcache and die on !uptodate; if
+> it was reclaimed, it will attempt another decompression. If all
+> references have been killed, zswap_invalidate() will finally drop it.
+> 
+> Swapoff actually poisons the page table as well (unuse_pte).
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index ac9d299e7d0c..23365e76a3ce 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -43,7 +43,7 @@
- * statistics
- **********************************/
- /* The number of compressed pages currently stored in zswap */
--atomic_long_t zswap_stored_pages = ATOMIC_INIT(0);
-+atomic_long_t zswap_stored_pages = ATOMIC_LONG_INIT(0);
- 
- /*
-  * The statistics below are not protected from concurrent access for
--- 
-2.48.1
+Right. My question was basically why don't we also poison the page table
+in do_swap_page() in this case. It's like that we never swapoff.
 
+This will cause subsequent fault attempts to return VM_FAULT_HWPOISON
+quickly without doing through the swapcache or decompression. Probably
+not a big deal, but shmem does it so maybe it'd be nice to do it for
+consistency.
+
+> 
+> > (2) A hwpoisoned swap entry results in VM_FAULT_SIGBUS in some cases
+> > (e.g. shmem_fault() -> shmem_get_folio_gfp() -> shmem_swapin_folio()),
+> > even though we have VM_FAULT_HWPOISON. This patch falls under this
+> > bucket, but unfortunately we cannot tell for sure if it's a hwpoision or
+> > a decompression bug.
+> 
+> Are you sure? Actual memory failure should replace the ptes of a
+> mapped shmem page with TTU_HWPOISON, which turns them into special
+> swap entries that trigger VM_FAULT_HWPOISON in do_swap_page().
+
+I was looking at the shmem_fault() path. It seems like for this path we
+end up with VM_SIGBUS because shmem_swapin_folio() returns -EIO and not
+-EHWPOISON. This seems like something that can be easily fixed though,
+unless -EHWPOISON is not always correct for a diffrent reason.
+
+> 
+> Anon swap distinguishes as long as the swapfile is there. Swapoff
+> installs poison markers, which are then handled the same in future
+> faults (VM_FAULT_HWPOISON):
+> 
+> /*
+>  * "Poisoned" here is meant in the very general sense of "future accesses are
+>  * invalid", instead of referring very specifically to hardware memory errors.
+>  * This marker is meant to represent any of various different causes of this.
+>  *
+>  * Note that, when encountered by the faulting logic, PTEs with this marker will
+>  * result in VM_FAULT_HWPOISON and thus regardless trigger hardware memory error
+>  * logic.
+
+If that's the case, maybe it's better for zswap in the future if we stop
+relying on not marking the folio uptodate, and instead propagate an
+error through swap_read_folio() to the callers to make sure we always
+return VM_FAULT_HWPOISON and install poison markers.
+
+The handling is a bit quirky and inconsistent, but it ultimately results
+in VM_SIGBUS or VM_FAULT_HWPOISON which I guess is fine for now.
+
+>  */
+> #define  PTE_MARKER_POISONED                    BIT(1)
