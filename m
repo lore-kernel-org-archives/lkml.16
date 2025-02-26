@@ -1,120 +1,113 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2DE137E;
-	Wed, 26 Feb 2025 05:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E974027702
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740547304; cv=none; b=YfBu+ljoxBYshXtHVGb1mz2Vhk3XPkVIQLMogcldxNjOkcOeZNj+2xwjgBdnpL7HYsOudmiFKJWIxZzcU2FLi4vSKCg7B9QBoWM3hi2m8LZRXlJEgihLdDBEjXfFMAKN4lxvVGGz1pqxqkaoGlYY0gNlhA3nnuL4pBqyPguSrqw=
+	t=1740547327; cv=none; b=o4ag43P4YOAN1UMc+JX5zh6aWDp5nFFt9WEQloO9KRUCJQNX1i/WvzE+c0jWg9X6Q3pF63zgXfoUaaBI4fKw2pdM/G3oYg8jRrG8nbARfnw8tWY/dOq2/r39bqlSzaFddjX45uo9YTg6EJJnoy6CIegFlcUgeeeXFHqeDw0lHSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740547304; c=relaxed/simple;
-	bh=5u42TaZfiT7kHxPhHJHkG8B3VXwDOaJxgtIfoAyv++Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OjQMaX5wPhMicPd87NqqGz10odrLrguGv+IDDJhWiHkb4Ggk6jfM3Hpq+qSTJaE4Cjj9R7DrNdoZAEJSJg4SwcO1DsplN+otZgQfIVVnmAhBId/iqvPcpDoj6v64x04PtaW0NIuVSj/2LMST9ju05Ysz0D0w1o1oyU3Ms7L9fqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2cK3MWu; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740547327; c=relaxed/simple;
+	bh=iJStU4rLkR6zEaP5AH/aQL1uRUaH0G/Hw3uBBoYwypk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V1Ccna8DdSyyJ65UJPGKadWwwGxr3ughKdC1otiOKUU93kTO4ysfY5SsH2PcIEdTY85fi+B2CexcxwN11c4HuR6XweO4HCCxAxrSDOsQd8Il5cnkL6Siu40kJ0K3vmopeb/mC3c7jq83eQGI2mthJrqjG8LHYqzMmxIgmI5FmNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiLORtKS; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2cK3MWu"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e4ad1d67bdso39927a12.2;
-        Tue, 25 Feb 2025 21:21:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740547301; x=1741152101; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ilb2rxBJ3i7v6d7nLIk5GihtEfmnK3ceocDgl/ZfviY=;
-        b=D2cK3MWuAfq4GbSi/FlaDQL7ZOEkbWJjTJG+gJ8HLgpOr8yu9nwU0z7dnLypk8BQdi
-         RQslU7wCeNMU9+giWC+jgF5SPSWNoHl1QjKaLYv1Af6D7tHg7Wtiry9X8GzulgvMSndK
-         FySx7BT7MeDVXMLd85pBVV3aGsyqyDxvASpEuUKW34YIZh7BXuOkeiMW0uzgikBqdMRU
-         lK6patDYKu0gVGAsFrO6ZBQgK3qSzZWjiFEwoI7JUv8lGtyyJeLdt74n7WH5Y8qEC+gX
-         kB4065T+qo04J8sE2gVYUt10//ofl20ba3UktA3hHlFYEZoZZOCIx4d4QTwOjmOSJEI3
-         /DsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740547301; x=1741152101;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ilb2rxBJ3i7v6d7nLIk5GihtEfmnK3ceocDgl/ZfviY=;
-        b=eXZyeYIRjj7Q+HYOnQTnvi11avoyAPkTHGnfUZyQedM2CtfwsdTGmoOu9vY4YjhXrd
-         mO89uYTEkpMR9aatEDmSrYdS+wROUY91fG3B4x/sVeHnN4PJoaFLUJmNNX43BsU0tPqV
-         sAifKRDqzmQf690Ye2Nkgg4uFqJSZRfiaiHFSayGuffBWYorHxJW7Ivl1Hv+B5SaHHVk
-         owAUAiFoNzD+7HMQeDNXNDeCbz5v9aF1UvJLm5NdDbss8/t+9OPFP15KW5EhUFiL3dDc
-         S5BDdbS+iO2sWwMOq9wVlUAiMY4mvv6c3+5+5q5vcSSSiu/l/zNdQIyV1i/DFF8PGar5
-         TJ8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVk1ufrNceSzi3dV9LRgP5czASA5tmV0YGHsZSikN/3KOfiKEDvLL/+E2rk1I8UAxh3Ulul0O75qQA=@vger.kernel.org, AJvYcCWLSYSHQWqs4ewo5uL3jflVnSD1tiI25FzcWAB/HsACZFKdj8go5ZPvnqioBIO399AJRtxC4WcLm3v9r1/M@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGqagbAHhnizOOzxOvJ22Vc3XyS/1e2n0WOER7kcs5hhoEvaTO
-	gW7tGA7eVyiVf5lL6dixi0mJsgQtYvkirn8AIRLYEQkXDrWiLGdE3ZDueHviXZthFkMr5rR+eD8
-	3giTiubJaTymnFcDyr8sJkW8tE4A=
-X-Gm-Gg: ASbGncvnM5ftglSzyPVurfpLZdRB2pLlq0dHowVz+n9rOdYdf5+rkH2VZFuEIxY/HqX
-	RpJBhkTT+ficQ0ieU7V2KSwH3SZ7/dznFquLaftBftw97X4dT3wN5GhsrSpEEXRc6mjg5Ojm4fX
-	SMhN7X8Vn69g==
-X-Google-Smtp-Source: AGHT+IE+W97F9VNY3wyKM14FFFnj1CjB1eVhl7K+LtH0POkui0vVywM4ZUS9T6BfUlUgp2gR6UdEaPszqmSqMJY7hUs=
-X-Received: by 2002:a05:6402:1ed2:b0:5e4:96b5:1b20 with SMTP id
- 4fb4d7f45d1cf-5e4a0e1349bmr1851415a12.22.1740547300660; Tue, 25 Feb 2025
- 21:21:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiLORtKS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740547326; x=1772083326;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iJStU4rLkR6zEaP5AH/aQL1uRUaH0G/Hw3uBBoYwypk=;
+  b=RiLORtKSFjwcRUTmiferd3WVOgZBkkU+FGWMHfDKAPk+7x2nga4xUEbH
+   PTCucaFlJhfsA9vYRXf6574gOP9Ee/4hsD1CFB6vk+c++zhAWop4+bnhC
+   ZSenVs6oNCTuJTbZUvzvOFNA8BTg/G++RagJYllXmv67y/m0QL5kd5Gzr
+   R8S2j/cgwtevQHQs90ac3XCPN+TS+i1BnxUXK4zVAGJKwTjavSm7o5gQv
+   fwA31bt8sdzYFJypRCUTydZeMDBY5W/8WFnZzgyEBZ/WLFWtPUOgJJo/J
+   SeFOPHBwFyWouXEngfoI7cmyRYfhWxJGLILaev+es+1CHKjmaAxK6HTGx
+   w==;
+X-CSE-ConnectionGUID: PodstmClSEqEuidYUgEe8A==
+X-CSE-MsgGUID: Zs1puEIFTmq+Bz3hFM85Nw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41632632"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="41632632"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:22:05 -0800
+X-CSE-ConnectionGUID: S5C9QX9jRemvsEfdyiZBAQ==
+X-CSE-MsgGUID: CaH8f0PJQUqTHEDsSUdlvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="117089295"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:21:59 -0800
+Message-ID: <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
+Date: Wed, 26 Feb 2025 13:18:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226014942.2586561-1-yaxin_wang_uestc@163.com>
-In-Reply-To: <20250226014942.2586561-1-yaxin_wang_uestc@163.com>
-From: Dongliang Mu <mudongliangabcd@gmail.com>
-Date: Wed, 26 Feb 2025 13:21:14 +0800
-X-Gm-Features: AQ5f1Jqpi5uAVgci3pGRFDhCrjRk73KISMHA5f9W2dbyPZfHqmZWbXcTT7f0prQ
-Message-ID: <CAD-N9QV1vukcXNNtmasSjkWAAVHFi6D42RvUF572stDgmO7FLg@mail.gmail.com>
-Subject: Re: [PATCH linux next] Docs/zh_CN: Translate msg_zerocopy.rst to
- Simplified Chinese
-To: yaxin_wang <yaxin_wang_uestc@163.com>
-Cc: corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, xu.xin16@zte.com.cn, 
-	yang.yang29@zte.com.cn, wang.yaxin@zte.com.cn, fan.yu9@zte.com.cn, 
-	he.peilin@zte.com.cn, tu.qiang35@zte.com.cn, qiu.yutan@zte.com.cn, 
-	zhang.yunkai@zte.com.cn, ye.xingchen@zte.com.cn, jiang.kun2@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
+ joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
+ <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
+ <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+ <20250225142610.GB545008@ziepe.ca>
+ <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 9:50=E2=80=AFAM yaxin_wang <yaxin_wang_uestc@163.co=
-m> wrote:
->
-> ><jiang.kun2@zte.com.cn> writes:
-> >
-> >> From: Wang Yaxin <wang.yaxin@zte.com.cn>
-> >>
-> >> translate the "msg_zerocopy.rst" into Simplified Chinese
-> >>
-> >> Update to commit bac2cac12c26("docs: net: description of
-> >> MSG_ZEROCOPY for AF_VSOCK")
-> >>
-> >> Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-> >> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
-> >> Reviewed-by: xu xin <xu.xin16@zte.com.cn>
-> >> Reviewed-by: He Peilin <he.peilin@zte.com.cn>
-> >
-> >So how did these reviews happen?  I have certainly not seen them on the
-> >public lists...
-> >
-> >Thanks,
-> >
-> >jon
->
-> xu xin and he peilin are my colleagues. They helped me with the internal
-> review of the document and did not participate in the public lists review=
-.
+On 2/26/25 11:50, Ethan Zhao wrote:
+>>>>>
+>> If the schedular doesn't run how did we get from 4 -> 5?
+>>
+>> Maybe the issue is the shutdown handler here is running in the wrong
+>> time and it should not be running after the scheduler has been shut
+>> down.
+>>
+>> I don't think removing the lock is a great idea without more
+>> explanation.
+> 
+> Seems it is not so simple job to explain why there is no race window 
+> between
+> this iommu_shutdown() and following dmar_global_lock holders.
+> 
+> 1. PCIe hotplug dmar_pci_bus_notifier()
+> 
+> 2. mm_core_init detect_intel_iommu()
+> 
+> 3. late_initcall dmar_free_unused_resources()
+> 
+> 4. acpi attach dmar_device_hotplug()
+> 
+> 5. pci_iommu_init intel_iommu_init() init_dmars()
+> 
+> 6. rootfs_initcall ir_dev_scope_init()
+> 
+> though here is the last stage of reboot. then how about we turn back to v1
+> 
+> Just repalce with own_write() with down_write_trylock().
 
-One suggestion is that you can cc your patches to a public mailing
-list (e.g., https://groups.google.com/g/hust-os-kernel-patches, our
-club mailing list) during the internal review.
+I don't think trylock is a reasonable solution. intel_iommu_shutdown()
+should not become a no-op simply because it cannot acquire a lock
+immediately.
 
-So reviewers and maintainers could search the thread from the Internet.
+The lock here is to protect the drhd (representation of iommu hardware)
+list. It needs protection because this driver supports iommu hot-add and
+remove, which is triggered by an ACPI event for I/O board hotplug.
+Provided the system does not respond to those events when this function
+is called, it's fine to remove the lock.
 
-Dongliang Mu
-
->
-> Thanks,
->
-> Yaxin
->
->
+Thanks,
+baolu
