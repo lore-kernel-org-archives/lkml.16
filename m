@@ -1,214 +1,196 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCEE1E1DE8
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31FC20DD4D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740559857; cv=none; b=uBTanL5b0Cv9mFuLX9bqpBUmEGVipM3rETTffR8TCN6/+ogdETlSXez0/JYONgKPG2Lh+pFDKoVLKrEFcgOZ0LYqQ/zqIMhiK1h5imSw0LzXex0snraynRB7w/rDGUr5ZeC7o1HCNcmTrjHuTABIG2Pf0YrQoB2d9J8mBXEViQ0=
+	t=1740559874; cv=none; b=AUylh07CnCl9DDXTtvBkXOr02cD0qVpXoS6M1HJ8IFVJipt3uk15iiYnoetOrDa6p/XnhXTHfjS+Qb0QCc87ezXSJ28retT717MjktPrajQzTUmmotSVDBuUBjDxeT7AZQkqPvx54cD4PjcyeqVw6nABs5Zk9Ri7Z82bBA54rAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740559857; c=relaxed/simple;
-	bh=TlqIDV8RqYlxPo/b6yGAe9zWBggL5/w9qEsziGhHGZ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MhQtz/jK0p8QbYYQMV/tf5LPgLhAd9jTRTVhJK5znwPxwvRI8GT7NeNWweXOD4Fw0IREIcYioBv1t98mhF3mi0AiyXdWPVLoYLimvTFYyjodIqr5aUhddxXGqEVT/xajxwenl3BE39M4X106lnpwsi0vyJId7zTcsWYMjt1T8HM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BxqWzA6B; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740559874; c=relaxed/simple;
+	bh=2viEWV9e7kJ90xVYLnVBY1QMwCp8ekGrGx1sdCvA9Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZGgg/Ad/AElZDPsYhUeEPqDUox4MUQmKgbAm6x/lhJVU5Zy70pLkPhMcA40XDvV9bZTYH7wZbSSRee8GgX/1mFGWcF7bVTjDu2rjzEUHdB+ck6qlv83wpeRv9flbFGlzZ3XKLmRqBsxv+hODc/9MYTLZLjNklsrbi1nY8/Hy474=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gLT8qfUn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BxqWzA6B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740559853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W569uJXR/VXEzmXeXl4vPfAutQmoCsakKrgYooeW6j8=;
-	b=BxqWzA6BEAa3Fgkd7mINLnBTi92ZepZPFf0huM2qEmHB15Vfb9RJaO8mh9PAuWaVb2TuTm
-	tUgYN3ugpoB3yiDem7NePyhlIrcT7xsoBpv+ddAcP6ArHk4lEHRTs8xhFRZnHot1uYx9/t
-	Tpi78dAbtxMmF/ZxhgsIKB0n+M6S4VQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-635-3WwMwYbvP2SDeAnK7qewIg-1; Wed, 26 Feb 2025 03:50:52 -0500
-X-MC-Unique: 3WwMwYbvP2SDeAnK7qewIg-1
-X-Mimecast-MFC-AGG-ID: 3WwMwYbvP2SDeAnK7qewIg_1740559851
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4394c747c72so27749645e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:50:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gLT8qfUn"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PMWq1v011767
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:51:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7aWGZVyJ1OvaCe4Hv0tS3ZL8LfJtxhk7LYTNGSNU6L0=; b=gLT8qfUnLMac3K+0
+	2r+29PMc9DNYly3kgsw4apDA+HnfO6ibynP5Zz+19AXnbDx6RJKY0MzmBQSYn/2o
+	4TSOW+DNlBR3kvoIObHNWCdL1SLI5chFzQSIfwuji11T2X9W2onuI36OlNIu8A0L
+	xWsJAkbHxzG7NgMLJE+7R7OCR0wfVRgiobB293zpKxlxr22va5E7aAYeyvZ4NUMB
+	sgyNzxwm++rvZdUjj21rykf4XkRl2rzuupqPGRbQQmwUJsNv3nMyL0OFuNMdWC9Q
+	xUxayUb/fqAZ5evkcbvU7fPuv+bZ7scsey708vL1EJckuRT/SeRL4ZusiHyCp/Bk
+	KjODZg==
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prmhaj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:51:12 +0000 (GMT)
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-2f816a85facso13567025a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:51:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740559851; x=1741164651;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1740559871; x=1741164671;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W569uJXR/VXEzmXeXl4vPfAutQmoCsakKrgYooeW6j8=;
-        b=v6Z9feR6aYGLGhofxigEtJU06Ary34hnNy+dLKSdJmPYKiCGy3FubcGJT8e6vQ2BtE
-         Cy5K4o4ExOvHknF0wuwz6OLkSWzPHvoFGQ8acuQJgDFPdispbwgbGIg+BvY49GSZ48yJ
-         DIhTzlhuCC1KzuodQSe7oI8yjXvlhkR+8+lzZUbtbd4IB8yW7HpZ939x31WNEbnoeqIf
-         7e4LqIVR5SAolhfRt5ZAdBvP5KNnIRddlRXDefqJiyXVg33M9YfLsC3ITdFXuWavAnzR
-         Eb5xIHLZgzr9d8oLQ/k1u8L3eSN5kqv3WaMJ8J0UCzc7uhvTi6jjNd1Da/u76Vmfj6PD
-         egCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIAKryGg5Zzre11Y13x9SfdXDZpbJ+UaPnYDqSobkTbXN9dra0Z5Uv9vLpmDjT4uhYc/dNP9NyyPEuTPs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhtTTf+v2W80ngspRv8dwY13vx0WOtVt0xS4qKXd91y2MdwVyd
-	AIC/5oLlmOuYSPwaHgNXKG4RyaW32UQugoKkYc75XczZt2PqkKX/asZstOahbvtdSzcIlvZkx2h
-	OhPH/TDTrSYnuXfjk6IJQo0HSxZnaniUwx4erwNpitDfUOniNZTJm1O9SYDIvpg==
-X-Gm-Gg: ASbGncvp8KnBs+QPLQxq2g/r2Weyijbj7+95TTV1qopXfKppbYtpiFCgSEprD0ia/f4
-	4CNksj6HlB67epTcZFN62OiRz/6XLgZQng32be1FUZIqRuAUkz2rdoc2jjJ20WEXCQoIj/XOTP0
-	7UhBgqOZJsBNTzfZRagZVQOPSxFQeAFsHpc/KWnJBCuz5IEzOvf+EOHjtFisbjSxRKr0Pnn+66k
-	L4r4hFin01321GQkm7uCaj4KjQZp7tclMYgGHvVuOTRW6tM+j9bPJ2LTcGWEr5hVorKjuuCd7XK
-	ltyWFdbPsw==
-X-Received: by 2002:a05:600c:4f93:b0:439:9c0e:3692 with SMTP id 5b1f17b1804b1-439b75b6417mr141340505e9.28.1740559851183;
-        Wed, 26 Feb 2025 00:50:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHbMJ5mkQfjiSQborGir/O3+YljBsy/esutoUmpA27ZFyuTcn1+Xvu16xwWUH6sOldzPwK0qQ==
-X-Received: by 2002:a05:600c:4f93:b0:439:9c0e:3692 with SMTP id 5b1f17b1804b1-439b75b6417mr141340255e9.28.1740559850795;
-        Wed, 26 Feb 2025 00:50:50 -0800 (PST)
-Received: from redhat.com ([2a02:14f:1eb:e270:8595:184c:7546:3597])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba4c437asm14054485e9.0.2025.02.26.00.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 00:50:50 -0800 (PST)
-Date: Wed, 26 Feb 2025 03:50:46 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Cindy Lu <lulu@redhat.com>, jasowang@redhat.com,
-	michael.christie@oracle.com, linux-kernel@vger.kernel.org,
-	virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] vhost: Add new UAPI to support change to task mode
-Message-ID: <20250226035030-mutt-send-email-mst@kernel.org>
-References: <20250223154042.556001-1-lulu@redhat.com>
- <20250223154042.556001-6-lulu@redhat.com>
- <6vadeadshznfijaugusnwqprssqirxjtbtpprvokdk6yvvo6br@5ngvuz7peqoz>
- <CACLfguU8-F=i3N6cyouBxwneM1Fr0oNs9ac3+c5xoHr_zcZW6A@mail.gmail.com>
- <CAGxU2F7-UB+Jh41HkHKOqM+KNqSi2chEzVnFe9XAFmNun=0CTA@mail.gmail.com>
+        bh=7aWGZVyJ1OvaCe4Hv0tS3ZL8LfJtxhk7LYTNGSNU6L0=;
+        b=JA7L9LEn8oAZwh/YBEqVyeOY06vPg0RS3id3oOoRyCnS6XRsWCDlBIlJnY1MfKRbVs
+         lSJ+N9pxxFBj6DL6WG0QazAoZ+VzbXzjtVjYBBnx13isAsgE5WlMrRA3z4CmII4+IN4s
+         Pgb89S8ArNLI6nAEe1INCnMWfR3tMizTwjPq8T7AQnEtHRKAvzubIp1X+X4GbLRU0Hu7
+         S9nCHx3WmAlR5BTj/2mbAyPar/pBSfpMORLFD2JuukJh2x+tDdj3TjM8UMLJXsQDmLZV
+         M8bU1Lkkx651L26pg/Hpi8gDYpRhkg2kirlsqKdkDOrjoAP69/HAU8NmgOf/3lK9wCxD
+         6Y9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWqhbOYOKs200UgMklVPtwuUouubCel+wUDSweIZg1oA4QjO7xUz9uydSRm1+0dcIRIaVOMtb3pmUYR99U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWUpCwAusM3AITAw+pjQhHZreO90h8Ubmhen6uJjwNQwJU+Hwc
+	0uiWpuDFePk72GeTYci1WpsKcBlzByYudv2qEU8cvE9njr7KTwGouR26UlSKnn74BaUTpKykZSK
+	NLGUEj3GkzSuZJ70xylpSzFM/4eyTw1WCoSQqFUywubDjNlsNL4ZlGnGXTp2rrDY=
+X-Gm-Gg: ASbGncuHLgGuOPuH/nO+7nmdrrBLyrFgbK+FRf64vH0Xf5v7zLKKGo+Rf95F+6jROEP
+	KqtFCXHIQeeEF6EBYgEyjf1UfQ/kklZFy1fMH1J9tuVX88Y4t9qRDwiKB7vgAdcQtzt69tl+SKt
+	uC/feoRjb1jesqsfp7KFQHpz7OUkXMqggNnGAQdckEsuUr5SnK9jq6PFNSc36N4ANQHO3kPvcHq
+	oPu8ii+2+FF7QktxzT+DIWxl5FUXVRLYTkKkH8qqBJYPKy6+gmRATjOhuaED9z4A43Pw8aIgKcn
+	Y0KOqIffg24XDOmg64jGU/ZigdQCOAe8MLrIt/yvo7IH
+X-Received: by 2002:a17:90a:da87:b0:2fa:1f1b:3db6 with SMTP id 98e67ed59e1d1-2fce875b1e1mr32942246a91.29.1740559871047;
+        Wed, 26 Feb 2025 00:51:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IECiylrQlK960oN+myaYEe+QpHxYo2jDM3eXLVu6qHaHgHcEk+DCVPvWzFzdemQRAZ62hc97Q==
+X-Received: by 2002:a17:90a:da87:b0:2fa:1f1b:3db6 with SMTP id 98e67ed59e1d1-2fce875b1e1mr32942218a91.29.1740559870642;
+        Wed, 26 Feb 2025 00:51:10 -0800 (PST)
+Received: from [10.217.217.28] ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825d31f3sm1038485a91.28.2025.02.26.00.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 00:51:10 -0800 (PST)
+Message-ID: <cc328ade-a05e-4b1d-a8f0-55b18b4a0873@oss.qualcomm.com>
+Date: Wed, 26 Feb 2025 14:21:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGxU2F7-UB+Jh41HkHKOqM+KNqSi2chEzVnFe9XAFmNun=0CTA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 1/5] dt-bindings: iio/adc: Move QCOM ADC bindings to
+ iio/adc folder
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        "Rob Herring (Arm)"
+ <robh@kernel.org>
+Cc: jic23@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        agross@kernel.org, andersson@kernel.org, dmitry.baryshkov@linaro.org,
+        konradybcio@kernel.org, daniel.lezcano@linaro.org, sboyd@kernel.org,
+        amitk@kernel.org, thara.gopinath@gmail.com, lee@kernel.org,
+        rafael@kernel.org, subbaraman.narayanamurthy@oss.qualcomm.com,
+        david.collins@oss.qualcomm.com, anjelique.melendez@oss.qualcomm.com,
+        quic_kamalw@quicinc.com, rui.zhang@intel.com, lukasz.luba@arm.com,
+        lars@metafoo.de, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        cros-qcom-dts-watchers@chromium.org, quic_skakitap@quicinc.com,
+        neil.armstrong@linaro.org
+References: <20250131183242.3653595-1-jishnu.prakash@oss.qualcomm.com>
+ <20250131183242.3653595-2-jishnu.prakash@oss.qualcomm.com>
+ <20250202-convivial-stingray-of-promotion-1123b8@krzk-bin>
+Content-Language: en-US
+From: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+In-Reply-To: <20250202-convivial-stingray-of-promotion-1123b8@krzk-bin>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: rvpvbVULDggUWnHxVXsNbsI4vhT_SBXa
+X-Proofpoint-GUID: rvpvbVULDggUWnHxVXsNbsI4vhT_SBXa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_01,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260070
 
-On Wed, Feb 26, 2025 at 09:46:06AM +0100, Stefano Garzarella wrote:
-> Hi Cindy,
-> 
-> On Wed, 26 Feb 2025 at 07:14, Cindy Lu <lulu@redhat.com> wrote:
-> >
-> > On Tue, Feb 25, 2025 at 7:31 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
-> > >
-> > > On Sun, Feb 23, 2025 at 11:36:20PM +0800, Cindy Lu wrote:
-> > > >Add a new UAPI to enable setting the vhost device to task mode.
-> > > >The userspace application can use VHOST_SET_INHERIT_FROM_OWNER
-> > > >to configure the mode if necessary.
-> > > >This setting must be applied before VHOST_SET_OWNER, as the worker
-> > > >will be created in the VHOST_SET_OWNER function
-> > > >
-> > > >Signed-off-by: Cindy Lu <lulu@redhat.com>
-> > > >---
-> > > > drivers/vhost/vhost.c      | 24 ++++++++++++++++++++++--
-> > > > include/uapi/linux/vhost.h | 18 ++++++++++++++++++
-> > > > 2 files changed, 40 insertions(+), 2 deletions(-)
-> > > >
-> > > >diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> > > >index d8c0ea118bb1..45d8f5c5bca9 100644
-> > > >--- a/drivers/vhost/vhost.c
-> > > >+++ b/drivers/vhost/vhost.c
-> > > >@@ -1133,7 +1133,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *umem)
-> > > >       int i;
-> > > >
-> > > >       vhost_dev_cleanup(dev);
-> > > >-
-> > > >+      dev->inherit_owner = true;
-> > > >       dev->umem = umem;
-> > > >       /* We don't need VQ locks below since vhost_dev_cleanup makes sure
-> > > >        * VQs aren't running.
-> > > >@@ -2278,15 +2278,35 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
-> > > > {
-> > > >       struct eventfd_ctx *ctx;
-> > > >       u64 p;
-> > > >-      long r;
-> > > >+      long r = 0;
-> > > >       int i, fd;
-> > > >+      u8 inherit_owner;
-> > > >
-> > > >       /* If you are not the owner, you can become one */
-> > > >       if (ioctl == VHOST_SET_OWNER) {
-> > > >               r = vhost_dev_set_owner(d);
-> > > >               goto done;
-> > > >       }
-> > > >+      if (ioctl == VHOST_FORK_FROM_OWNER) {
-> > > >+              /*inherit_owner can only be modified before owner is set*/
-> > > >+              if (vhost_dev_has_owner(d)) {
-> > > >+                      r = -EBUSY;
-> > > >+                      goto done;
-> > > >+              }
-> > > >+              if (copy_from_user(&inherit_owner, argp, sizeof(u8))) {
-> > > >+                      r = -EFAULT;
-> > > >+                      goto done;
-> > > >+              }
-> > > >+              /* Validate the inherit_owner value, ensuring it is either 0 or 1 */
-> > > >+              if (inherit_owner > 1) {
-> > > >+                      r = -EINVAL;
-> > > >+                      goto done;
-> > > >+              }
-> > > >+
-> > > >+              d->inherit_owner = (bool)inherit_owner;
-> > > >
-> > > >+              goto done;
-> > > >+      }
-> > > >       /* You must be the owner to do anything else */
-> > > >       r = vhost_dev_check_owner(d);
-> > > >       if (r)
-> > > >diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> > > >index b95dd84eef2d..8f558b433536 100644
-> > > >--- a/include/uapi/linux/vhost.h
-> > > >+++ b/include/uapi/linux/vhost.h
-> > > >@@ -235,4 +235,22 @@
-> > > >  */
-> > > > #define VHOST_VDPA_GET_VRING_SIZE     _IOWR(VHOST_VIRTIO, 0x82,       \
-> > > >                                             struct vhost_vring_state)
-> > > >+
-> > > >+/**
-> > > >+ * VHOST_FORK_FROM_OWNER - Set the inherit_owner flag for the vhost device
-> > > >+ *
-> > > >+ * @param inherit_owner: An 8-bit value that determines the vhost thread mode
-> > > >+ *
-> > > >+ * When inherit_owner is set to 1:
-> > > >+ *   - The VHOST worker threads inherit its values/checks from
-> > > >+ *     the thread that owns the VHOST device, The vhost threads will
-> > > >+ *     be counted in the nproc rlimits.
-> > > >+ *
-> > > >+ * When inherit_owner is set to 0:
-> > > >+ *   - The VHOST worker threads will use the traditional kernel thread (kthread)
-> > > >+ *     implementation, which may be preferred by older userspace applications that
-> > > >+ *     do not utilize the newer vhost_task concept.
-> > > >+ */
-> > > >+#define VHOST_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
-> > >
-> > > I don't think we really care of the size of the parameter, so can we
-> > > just use `bool` or `unsigned int` or `int` for this IOCTL?
-> > >
-> > > As we did for other IOCTLs where we had to enable/disable something (e.g
-> > > VHOST_VSOCK_SET_RUNNING, VHOST_VDPA_SET_VRING_ENABLE).
-> > >
-> > hi Stefano
-> > I initially used it as a boolean, but during the code review, the
-> > maintainers considered it was unsuitable for the bool use as the
-> 
-> I see, indeed I found only 1 case of bool:
-> 
-> include/uapi/misc/xilinx_sdfec.h:#define XSDFEC_SET_BYPASS
-> _IOW(XSDFEC_MAGIC, 9, bool)
-> 
-> > interface in ioctl (I think in version 3 ?). So I changed it to u8,
-> > then will check if this is 1/0 in ioctl and the u8 should be
-> > sufficient for us to use
-> 
-> Okay, if Michael and Jason are happy with it, it's fine.
-> It just seemed strange to me that for other IOCTLs we use int or
-> unsigned int when we need a boolean instead of a sized type.
+Hi Krzysztof,
 
-I only found VHOST_VSOCK_SET_RUNNING. which other ioctls?
+On 2/2/2025 6:59 PM, Krzysztof Kozlowski wrote:
+> On Sat, Feb 01, 2025 at 12:02:38AM +0530, Jishnu Prakash wrote:
+>> There are several files containing QCOM ADC macros for channel names
+>> right now in the include/dt-bindings/iio folder. Since all of these
+>> are specifically for adc, move the files to the
+>> include/dt-bindings/iio/adc folder.
+>>
+>> Also update all affected devicetree and driver files to fix compilation
+>> errors seen with this move and update documentation files to fix
+>> dtbinding check errors for the same.
+>>
+>> Acked-by: Lee Jones <lee@kernel.org>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>
+>> ---
+>> Changes since v4:
+>> - Updated some more devicetree files requiring this change.
+> 
+> I don't get why this fails building and nothing here nor in cover letter
+> helps me to understand that.
+> 
 
-> Thanks for looking at it,
-> Stefano
+I have tried checking multiple ways for anything missing in my build setup, but I'm not getting this error when building in my local workspace. But the error itself looks invalid to me.
+
+This was the error:
+
+    dtschema/dtc warnings/errors:
+    In file included from Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.example.dts:80:
+    ./scripts/dtc/include-prefixes/dt-bindings/iio/adc/qcom,spmi-adc7-pmk8350.h:13:10: fatal error: dt-bindings/iio/adc/qcom,spmi-vadc.h: No such file or directory
+       13 | #include <dt-bindings/iio/adc/qcom,spmi-vadc.h>
+          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    compilation terminated.
+
+My patch moves both "qcom,spmi-adc7-pmk8350.h" and "qcom,spmi-vadc.h" from the "/include/dt-bindings/iio/" folder to the "/include/dt-bindings/iio/adc" folder. "qcom,spmi-adc7-pmk8350.h" internally includes "qcom,spmi-vadc.h" and I have updated its path too within the file. These are the relevant changes from my patch:
+
+
+
+    diff --git a/include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h b/include/dt-bindings/iio/adc/qcom,spmi-adc7-pmk8350.h
+    similarity index 97%
+    rename from include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+    rename to include/dt-bindings/iio/adc/qcom,spmi-adc7-pmk8350.h
+    index 3d1a41a22cef..161b211ec126 100644
+    --- a/include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+    +++ b/include/dt-bindings/iio/adc/qcom,spmi-adc7-pmk8350.h
+    @@ -10,7 +10,7 @@
+     #define PMK8350_SID					0
+     #endif
+ 
+    -#include <dt-bindings/iio/qcom,spmi-vadc.h>
+    +#include <dt-bindings/iio/adc/qcom,spmi-vadc.h>
+
+
+
+
+    diff --git a/include/dt-bindings/iio/qcom,spmi-vadc.h b/include/dt-bindings/iio/adc/qcom,spmi-vadc.h
+    similarity index 100%
+    rename from include/dt-bindings/iio/qcom,spmi-vadc.h
+    rename to include/dt-bindings/iio/adc/qcom,spmi-vadc.h
+
+
+I have tried checking for other similar changes where dt-binding header files were moved and other files (driver, DT, documentation) updated in the same patch, but I couldn't find any similar enough to this case.
+
+Perhaps the kernel bot is not able to properly handle this case where multiple dt-binding header files are moved and also one of the moved header files includes another of the moved header files, with the new correct path updated.
+
+
+Anyway, I think this could be fixed by splitting this patch into two. There are two ways I can see for doing this:
+
+1. In first patch, move qcom,spmi-vadc.h alone, updating its path in all other affected files. In second patch, move the remaining dt-binding header files referencing qcom,spmi-vadc.h, with similar corrections in other affected files.
+
+or
+
+2. In first patch, copy all the relevant dt-binding header files present in "/include/dt-bindings/iio/" folder to "/include/dt-bindings/iio/adc" folder. In second patch, update all other files (.c, .yaml, .dts/.dtsi) to use the newer ADC file paths and delete the header files in the older "/include/dt-bindings/iio/" path.
+
+Which approach do you think is better?
+
+Thanks,
+Jishnu
+
+> Best regards,
+> Krzysztof
+> 
 
