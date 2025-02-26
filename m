@@ -1,232 +1,209 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44F04269806
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2815442A9D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:16:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740550571; cv=none; b=JPVFthjGiWTB2rXvmXzMM4a6AT/piLMnQ4G9oEda2g8/+1Ehte7/wJZR5b/ljsWPRz3X5zvMGldMQXAjvXj9m5Dnc2ylZui69zz1ghxpS0xs0m994Ley9XkbIbeEpP6PjE93kZFe5W22BZjk3dghwjnvYyAb9Kj5cEZzsT13okM=
+	t=1740550616; cv=none; b=XIfidEqlsLg3PadJhmYQNY8QVAN2uLfAvMe2QDqIaTm9i75UwWlUNS3MiIhUUKSh4mhCWZ0Vvw+cpFkfpkJnX4O95XfL1JdLOwKYG4tBe9Hxac2hHQCadUvJ7k6T+v9MCelFYo1zdWaccFijKaXsS1KGNXGHlW74lUYMWoUBvMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740550571; c=relaxed/simple;
-	bh=QHNRHvG/OXkKvZb6dLBeHah+A42rdz+0hcZn9bEWh/w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DsN9xk5DWctZDZQH9upgwk50UPq1+q4q0k0rzeQKrjuvfN1s2/jrQ59cUk32I/5ZS5+LI4/Ltn7xAPtLTegqSDR6ZgxBDgEPmzwkdE55gmd7+ZqC8C0A1bapgwd6zkGn9YkL5atuVW9T/wJjjKofRxizgyoAlN0hcHBDXC7EBA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azwxf2z5; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740550616; c=relaxed/simple;
+	bh=s7RNNwS1VeCqaA1MtGD3SocRHTpkYCAIDVHP7LurC8E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=us73U+PMuDKmz9yhigmXf0RcQmr88S73gddjMzQ8gvhB9XRUWa8abMcYSm73nnywRyriRLu06oK8TFzMbmNyIPXlchxqj039T06oKH5GjFCplW4X/0vGj3QRqjrmEIdyGC+Rcg1SNsC/4L7vbfHuO4Z85dlBuKTnAPWZlkgEHjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LJRw2dJw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azwxf2z5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740550568; x=1772086568;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QHNRHvG/OXkKvZb6dLBeHah+A42rdz+0hcZn9bEWh/w=;
-  b=azwxf2z5xOBjXfbomRr1C5hcKU7hODzr5D2E6/QRVZacDMtJ4/uXlZUJ
-   nHr/clVgr2yA399noBWnIfXqIifEttBPixtHIMQgOSfjJSz1YtPEk9Y3G
-   LUxL9CmmgaJRV4bWQllZrQTVKB09LI4vNyk4lITf+43NF9A5p0hhpJccT
-   PgMDBaFkrUq1ofe5JlsuFlmJpAgJVk8qQkmiuQNT/rKmc8fIqxDNGz0rI
-   kinK1+tTzWzyQ6XvdSDYGRXWd1kJq5W1q2h6lkmSvQ2frxBqRhOfLPkDW
-   0vEeHPVg6u3vfO2vJlm8EoJemgYquDNC6/3HsqmahiuICim3yNvxxAqNB
-   A==;
-X-CSE-ConnectionGUID: AXdz+t2FQs6lgSVS/0xGQA==
-X-CSE-MsgGUID: nBGYD0xxRCaxjIE/JM71Hw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41636487"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="41636487"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 22:16:08 -0800
-X-CSE-ConnectionGUID: O/swzXeCSAqZ5z6LVTOOQg==
-X-CSE-MsgGUID: qpvMoH1jSjuGSiF8Pp4DvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="147434834"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa002.jf.intel.com with ESMTP; 25 Feb 2025 22:16:05 -0800
-From: Raag Jadav <raag.jadav@intel.com>
-To: lee@kernel.org,
-	giometti@enneenne.com,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com,
-	raymond.tan@intel.com
-Cc: linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v1 4/4] mfd: intel-ehl: Introduce Intel Elkhart Lake PSE GPIO and TIO
-Date: Wed, 26 Feb 2025 11:45:27 +0530
-Message-Id: <20250226061527.3031250-5-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226061527.3031250-1-raag.jadav@intel.com>
-References: <20250226061527.3031250-1-raag.jadav@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJRw2dJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740550611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1FB4LOVmyku7dBx/0yNo7XDVAzCNkcepNULZYDZTsFo=;
+	b=LJRw2dJwUhgUDRbsNf92s6C++zkQ38XoxngBfkkkoTodp/uEVMNQsTwAUNFDWtiGd33k0X
+	QcU6tBpad3DjeYgQxR0aI3x76/MTOga/TWbQCRUDN10eS3zgPtwgPdNMrokHkWH/QfZy3E
+	RwNsaHwL3yGftTk3a1EyD4jFFAB12xQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-124-YNgYyGENMo6xGVwNbBp1eg-1; Wed, 26 Feb 2025 01:16:49 -0500
+X-MC-Unique: YNgYyGENMo6xGVwNbBp1eg-1
+X-Mimecast-MFC-AGG-ID: YNgYyGENMo6xGVwNbBp1eg_1740550608
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5da0b47115aso8544591a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:16:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740550608; x=1741155408;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1FB4LOVmyku7dBx/0yNo7XDVAzCNkcepNULZYDZTsFo=;
+        b=h4Rg5izbgE/etil+kt6RTl/hfPvA5tiEkrVyi5ofo5pWHGoCBC4L9Ab9oALUirYeND
+         VTwBRLPfwwHfMTqW+nzMhgVAbIf3pnUTB47ExQP2B61OC0fqesXu7+W+WeU4hD8qnO1X
+         d3tGJFcAMERvGdASNAos/tkHMAa+OPdUPAmU9lLvq6HcSjNxTNMDiXoVayAQZa+x8Cc1
+         7MvGj2psarSb+esd3r4pMZDDpe2QXMxqMoA6deyCW0DQBnfBwSXiyIk54EnpN0Zc/dwj
+         xUbLrwh5tS0Dpxl6SoM6XDphZO9+g4kGW58Bms9Eob72Mio8IVZOyAnPnBwRKerDgBNo
+         ZA7g==
+X-Forwarded-Encrypted: i=1; AJvYcCViTeNmzFTozg4Ae1xopgFAxggYH/08f5j4VyUCJJwqvGGgXFTuvbuB0FBam0+hhwptMI3AWmlPEy6WYgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwukgyjJrErPee5Rl/fcnBmzxWbYDkJAEAZxdPafDZW124jI9UW
+	R/920AFHud8sAxMrYuGfCP/xOKRS9y8ZN27fohJdKcp2kh6UaZdTOhM0VWf/7ZsltWl2XI1CJY5
+	0NtQRfV7SUltGg6mgReys3UwG9UOtXJGrfzQbSNbW6U1yj+Xe4gS5ill41CoU8XyE9hyWvcQn3t
+	BBK+NS+Wrz9eUbhrWzyUbeyV87OqkqbwQEaJQ9
+X-Gm-Gg: ASbGncs7JAGwMBnb5mk7F/OQm0MzngpMbE8pw0KsKYcoUxePm7LWcQfyXHcCfwCIvj2
+	GDulgNUa5xc9ryK3LGqlpst4X3LmjRm+/PobO2qBoJJHhkOLpPlst5bjX7JdeGccNWAZb1OiiZA
+	==
+X-Received: by 2002:a05:6402:34cc:b0:5dc:cfc5:9305 with SMTP id 4fb4d7f45d1cf-5e4a0dfc8b9mr2496856a12.25.1740550607934;
+        Tue, 25 Feb 2025 22:16:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH1Svm9zCE7jvsU1DaFVhMr5yn9In9YqFnmIGZJOqqstdyPg6Py8o1nFKh/wslu91Gg/91zZXUIrxektg2nXhQ=
+X-Received: by 2002:a05:6402:34cc:b0:5dc:cfc5:9305 with SMTP id
+ 4fb4d7f45d1cf-5e4a0dfc8b9mr2496837a12.25.1740550607523; Tue, 25 Feb 2025
+ 22:16:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250223154042.556001-1-lulu@redhat.com> <20250223154042.556001-6-lulu@redhat.com>
+ <20250224164312-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250224164312-mutt-send-email-mst@kernel.org>
+From: Cindy Lu <lulu@redhat.com>
+Date: Wed, 26 Feb 2025 14:16:09 +0800
+X-Gm-Features: AQ5f1JoQwYeVFJ0uSnuf6OMlUOLtzkJzFZrJtoyQ-MQBSJ8pPR3vnflY_UdihLw
+Message-ID: <CACLfguWpj=-Ad3o731xbRdGRr3NT6oEQ67Z-FPBmd93gYEhAXw@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] vhost: Add new UAPI to support change to task mode
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: jasowang@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Intel Elkhart Lake Programmable Service Engine (PSE) includes two PCI
-devices that expose two different capabilities of GPIO and Timed I/O
-as a single PCI function through shared MMIO.
-
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
----
- MAINTAINERS                  |  5 ++
- drivers/mfd/Kconfig          |  9 ++++
- drivers/mfd/Makefile         |  1 +
- drivers/mfd/intel-ehl-gpio.c | 95 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+)
- create mode 100644 drivers/mfd/intel-ehl-gpio.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d4280facbe51..7e50a6892878 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11643,6 +11643,11 @@ F:	drivers/gpio/gpio-sodaville.c
- F:	drivers/gpio/gpio-tangier.c
- F:	drivers/gpio/gpio-tangier.h
- 
-+INTEL GPIO MFD DRIVER
-+M:	Raag Jadav <raag.jadav@intel.com>
-+S:	Supported
-+F:	drivers/mfd/intel-ehl-gpio.c
-+
- INTEL GVT-g DRIVERS (Intel GPU Virtualization)
- M:	Zhenyu Wang <zhenyuw@linux.intel.com>
- M:	Zhi Wang <zhi.wang.linux@gmail.com>
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6b0682af6e32..8ba3db736a8f 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -609,6 +609,15 @@ config MFD_INTEL_QUARK_I2C_GPIO
- 	  their respective IO driver.
- 	  The GPIO exports a total amount of 8 interrupt-capable GPIOs.
- 
-+config MFD_INTEL_EHL_PSE_GPIO
-+	tristate "Intel Elkhart Lake PSE GPIO MFD"
-+	depends on PCI && (X86 || COMPILE_TEST)
-+	select MFD_CORE
-+	help
-+	  This MFD provides support for GPIO and TIO that exist on Intel
-+	  Elkhart Lake PSE as a single PCI device. It splits the two I/O
-+	  devices to their respective I/O drivers.
-+
- config LPC_ICH
- 	tristate "Intel ICH LPC"
- 	depends on PCI
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9220eaf7cf12..bf7245fb6824 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -197,6 +197,7 @@ obj-$(CONFIG_PMIC_ADP5520)	+= adp5520.o
- obj-$(CONFIG_MFD_ADP5585)	+= adp5585.o
- obj-$(CONFIG_MFD_KEMPLD)	+= kempld-core.o
- obj-$(CONFIG_MFD_INTEL_QUARK_I2C_GPIO)	+= intel_quark_i2c_gpio.o
-+obj-$(CONFIG_MFD_INTEL_EHL_PSE_GPIO)	+= intel-ehl-gpio.o
- obj-$(CONFIG_LPC_SCH)		+= lpc_sch.o
- obj-$(CONFIG_LPC_ICH)		+= lpc_ich.o
- obj-$(CONFIG_MFD_RDC321X)	+= rdc321x-southbridge.o
-diff --git a/drivers/mfd/intel-ehl-gpio.c b/drivers/mfd/intel-ehl-gpio.c
-new file mode 100644
-index 000000000000..039c74c64848
---- /dev/null
-+++ b/drivers/mfd/intel-ehl-gpio.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Multi-Functional driver for Elkhart Lake - Programmable
-+ * Service Engine (PSE) GPIO & TIO
-+ *
-+ * Copyright (c) 2025 Intel Corporation
-+ *
-+ * Intel Elkhart Lake PSE includes two PCI devices that expose two
-+ * different capabilities of GPIO and Timed I/O as a single PCI
-+ * function through shared MMIO.
-+ */
-+
-+#include <linux/array_size.h>
-+#include <linux/ioport.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pci.h>
-+
-+#define PSE_GPIO_OFFSET		0x0000
-+#define PSE_GPIO_SIZE		0x0134
-+
-+#define PSE_TIO_OFFSET		0x1000
-+#define PSE_TIO_SIZE		0x06B0
-+
-+static struct resource ehl_pse_gpio_resources[] = {
-+	DEFINE_RES_MEM(PSE_GPIO_OFFSET, PSE_GPIO_SIZE),
-+	DEFINE_RES_IRQ(0),
-+};
-+
-+static struct resource ehl_pse_tio_resources[] = {
-+	DEFINE_RES_MEM(PSE_TIO_OFFSET, PSE_TIO_SIZE),
-+	DEFINE_RES_IRQ(1),
-+};
-+
-+static struct mfd_cell ehl_pse_gpio_devs[] = {
-+	{
-+		.name = "gpio-elkhartlake",
-+		.num_resources = ARRAY_SIZE(ehl_pse_gpio_resources),
-+		.resources = ehl_pse_gpio_resources,
-+		.ignore_resource_conflicts = true,
-+	},
-+	{
-+		.name = "pps-gen-tio",
-+		.num_resources = ARRAY_SIZE(ehl_pse_tio_resources),
-+		.resources = ehl_pse_tio_resources,
-+		.ignore_resource_conflicts = true,
-+	},
-+};
-+
-+static int ehl_pse_gpio_probe(struct pci_dev *pci, const struct pci_device_id *id)
-+{
-+	int ret;
-+
-+	ret = pcim_enable_device(pci);
-+	if (ret)
-+		return ret;
-+
-+	pci_set_master(pci);
-+
-+	ret = pci_alloc_irq_vectors(pci, 2, 2, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0)
-+		return ret;
-+
-+	return mfd_add_devices(&pci->dev, PLATFORM_DEVID_AUTO, ehl_pse_gpio_devs,
-+			       ARRAY_SIZE(ehl_pse_gpio_devs), &pci->resource[0],
-+			       pci_irq_vector(pci, 0), NULL);
-+}
-+
-+static void ehl_pse_gpio_remove(struct pci_dev *pdev)
-+{
-+	mfd_remove_devices(&pdev->dev);
-+	pci_free_irq_vectors(pdev);
-+}
-+
-+static const struct pci_device_id ehl_pse_gpio_ids[] = {
-+	{ PCI_VDEVICE(INTEL, 0x4b88) },
-+	{ PCI_VDEVICE(INTEL, 0x4b89) },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(pci, ehl_pse_gpio_ids);
-+
-+static struct pci_driver ehl_pse_gpio_driver = {
-+	.probe		= ehl_pse_gpio_probe,
-+	.remove		= ehl_pse_gpio_remove,
-+	.id_table	= ehl_pse_gpio_ids,
-+	.name		= "ehl_pse_gpio",
-+};
-+module_pci_driver(ehl_pse_gpio_driver);
-+
-+MODULE_AUTHOR("Raymond Tan <raymond.tan@intel.com>");
-+MODULE_AUTHOR("Raag Jadav <raag.jadav@intel.com>");
-+MODULE_DESCRIPTION("Intel MFD for Elkhart Lake PSE GPIO & TIO");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+On Tue, Feb 25, 2025 at 5:46=E2=80=AFAM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> better subject:
+>
+> vhost: uapi to control task mode (owner vs kthread)
+>
+>
+> On Sun, Feb 23, 2025 at 11:36:20PM +0800, Cindy Lu wrote:
+> > Add a new UAPI to enable setting the vhost device to task mode.
+>
+> better:
+>
+> Add a new UAPI to configure the vhost device to use the kthread mode
+>
+Thanks MST, will change this
+>
+> > The userspace application can use VHOST_SET_INHERIT_FROM_OWNER
+> > to configure the mode
+>
+> ... to either owner or kthread.
+>
+sure, will change this
+thanks
+cindy
+>
+> > if necessary.
+> > This setting must be applied before VHOST_SET_OWNER, as the worker
+> > will be created in the VHOST_SET_OWNER function
+> >
+> > Signed-off-by: Cindy Lu <lulu@redhat.com>
+> > ---
+> >  drivers/vhost/vhost.c      | 24 ++++++++++++++++++++++--
+> >  include/uapi/linux/vhost.h | 18 ++++++++++++++++++
+> >  2 files changed, 40 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> > index d8c0ea118bb1..45d8f5c5bca9 100644
+> > --- a/drivers/vhost/vhost.c
+> > +++ b/drivers/vhost/vhost.c
+> > @@ -1133,7 +1133,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev,=
+ struct vhost_iotlb *umem)
+> >       int i;
+> >
+> >       vhost_dev_cleanup(dev);
+> > -
+> > +     dev->inherit_owner =3D true;
+> >       dev->umem =3D umem;
+> >       /* We don't need VQ locks below since vhost_dev_cleanup makes sur=
+e
+> >        * VQs aren't running.
+> > @@ -2278,15 +2278,35 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsig=
+ned int ioctl, void __user *argp)
+> >  {
+> >       struct eventfd_ctx *ctx;
+> >       u64 p;
+> > -     long r;
+> > +     long r =3D 0;
+> >       int i, fd;
+> > +     u8 inherit_owner;
+> >
+> >       /* If you are not the owner, you can become one */
+> >       if (ioctl =3D=3D VHOST_SET_OWNER) {
+> >               r =3D vhost_dev_set_owner(d);
+> >               goto done;
+> >       }
+> > +     if (ioctl =3D=3D VHOST_FORK_FROM_OWNER) {
+> > +             /*inherit_owner can only be modified before owner is set*=
+/
+> > +             if (vhost_dev_has_owner(d)) {
+> > +                     r =3D -EBUSY;
+> > +                     goto done;
+> > +             }
+> > +             if (copy_from_user(&inherit_owner, argp, sizeof(u8))) {
+> > +                     r =3D -EFAULT;
+> > +                     goto done;
+> > +             }
+> > +             /* Validate the inherit_owner value, ensuring it is eithe=
+r 0 or 1 */
+> > +             if (inherit_owner > 1) {
+> > +                     r =3D -EINVAL;
+> > +                     goto done;
+> > +             }
+> > +
+> > +             d->inherit_owner =3D (bool)inherit_owner;
+> >
+> > +             goto done;
+> > +     }
+> >       /* You must be the owner to do anything else */
+> >       r =3D vhost_dev_check_owner(d);
+> >       if (r)
+> > diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+> > index b95dd84eef2d..8f558b433536 100644
+> > --- a/include/uapi/linux/vhost.h
+> > +++ b/include/uapi/linux/vhost.h
+> > @@ -235,4 +235,22 @@
+> >   */
+> >  #define VHOST_VDPA_GET_VRING_SIZE    _IOWR(VHOST_VIRTIO, 0x82,       \
+> >                                             struct vhost_vring_state)
+> > +
+> > +/**
+> > + * VHOST_FORK_FROM_OWNER - Set the inherit_owner flag for the vhost de=
+vice
+> > + *
+> > + * @param inherit_owner: An 8-bit value that determines the vhost thre=
+ad mode
+> > + *
+> > + * When inherit_owner is set to 1:
+> > + *   - The VHOST worker threads inherit its values/checks from
+> > + *     the thread that owns the VHOST device, The vhost threads will
+> > + *     be counted in the nproc rlimits.
+> > + *
+> > + * When inherit_owner is set to 0:
+> > + *   - The VHOST worker threads will use the traditional kernel thread=
+ (kthread)
+> > + *     implementation, which may be preferred by older userspace appli=
+cations that
+> > + *     do not utilize the newer vhost_task concept.
+> > + */
+> > +#define VHOST_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
+> > +
+> >  #endif
+> > --
+> > 2.45.0
+>
 
