@@ -1,148 +1,95 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAF4238171
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:55:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643C1236A9C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:56:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596119; cv=none; b=QWzWzWoi2ePL9FPSIeQjnGGucSVUBMza396Y6EUtvF0S9y5SzrmjGKpfq02YjlEaApnBG/YXuWOBJ5kePOMaz+nx4mbWdTJ10iymCgBW12fwF3qQfRLPos6gjqdgFYGArMnvppo2PVDsAhwUoeyWFdYbQ4tYLsbQ6ZkLcu6sibc=
+	t=1740596175; cv=none; b=eLOFHYjISpSTmx+tznPkCJvAmM6iUEfLGrxjZUSo9vPqLYdzJZA5iJ/AED4Gm2U0Eu6vl8k5njOIL3+N0NU5/TpnyEO52lZh1zKLC/ndHD6r7t+aQNvvw1EBHloqksbdO4d5rcaINFJR95JTCIafyauYn4HQId6Mhm3YZfNChww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596119; c=relaxed/simple;
-	bh=DFxYwmAu0gMhoxnx+btdSl7Kr+kO5+f1+DLTpvLY7K4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=h+jVNKAcaxW28FoiMMPJ+Tyi2vC3UqBDCJALexPIRmYaqXB8X/sGABWl0BXWZf3n7I57dfL9/4nzbrHOSjhW0HWnlcbhcoSIEqmOsWVpVWSp+nbIz5N0Es/oorD1NqvgetUM1SNhllilwrguoCkrGknbmL35mi67/Y37Rsu4MJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TvBT2RBT; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1740596175; c=relaxed/simple;
+	bh=GJLG6HT2p/F44pvEf+vdQir4GFIdOm/KN9Mpn40nQZ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fSL5j8nbynSgaJMdZxmpd9B5sPpxdJRAllmbfiCL3Lyel+0gn19J0mGXMbijesfsFAJ2zJtOdZ7PoOV5Udg1gXcsQ0vGFvOpLLCb8d+2Ub1GQXQFWwCh8pIO5C7RpMupEFWSPu1OgNvLEhcRc+l5mUk9JkiMTui0DqWCjR3shMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KGSqJ6pY; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TvBT2RBT"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1e7efdffso474376a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:55:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740596117; x=1741200917; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qq/w9efOrw1qEDi9Bk8gaY9sQUDKf8Mk4VZDdis8uDc=;
-        b=TvBT2RBT1nNEo9iB+0Igy/rWstsF1zvdj5KmKyBekWtHQ45bD08fY3vALVfIS+BBwd
-         jPQSxrwe9EiitGKwcnPoqrH7/u/V0QyisA3MyZJWQ4dmKQ9Q//app03giSFub+oRVE/f
-         76ACM4VxXkNptr1SPzHh2lEj4DrtIi8Tagngzs/73PBV1g9WDcyduHr+RCeud7/i90V1
-         J8JZF+aQ7+gfWL+zfKfwDX/pNX7aA7emtCuJPR7JYbuScqfT4utCI6Ci0ofzHEoURmLA
-         xzwMNk+mo6HwSB64/eNHRfe7usMqiNebhcxMW/5SUvqXiwGV6qSHnyVlKvpXWEWPB8Th
-         fpYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740596117; x=1741200917;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qq/w9efOrw1qEDi9Bk8gaY9sQUDKf8Mk4VZDdis8uDc=;
-        b=ufFou9zMK3lyCQCfuXG+4wOXG4FGuB8p0LsmY4ipdmzE1VjfzK+7PPeD4XZ8G+JcD4
-         2jqHjHe954Jb9lPw/9bLew99IjOCH8upsl3HWEamASclpRcs1kTH+fY4BTZ5cSqhpwTL
-         JEUST6c3J1gFtzBQ8PRMo4Cjb4LXQKzqtVWwqWTJBS7ztAzzXxz/Uarmyqm3QH6cbHcS
-         fUw0YI5CE00w+ehQi+4z4wwWyh5SN6OkWDFYxera/wv4M2YyWSfIDEd5iRYEm1bIDXAd
-         wXU7YgBr1fQmeu2cUhjBJ/qDFmo9yaTJAyiJJF3NMw4XHl1TFF7BFy2ol9Abu3KLI7s7
-         Unrw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9aPC5ihvUW/VpDOSILJAxpIVlUfD+CuMoB0uNiT8ojpzdoyh6MyafIUWwMt4MB3f/A8EkijPDv5nfrBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBhyDhfNu5Fk2FdEmyde80Aq2UWf4EDMKSuWMIE0Rpq1Nzyxb7
-	HwLsacOiIKTvjdF+vXOrxnaJFc8UcS3PGwp2acPIVJNJPej7FK12NDqg/ieeur6RSiAvPDjRc0G
-	xhQ==
-X-Google-Smtp-Source: AGHT+IEvcJQuoFon8k2xY5GFl4e5CXCv9wO73DmNtMZqod2CTTLE14+eDEJfscr06yWzvuu3MNI7/Hu/V4g=
-X-Received: from pjbqb10.prod.google.com ([2002:a17:90b:280a:b0:2e0:915d:d594])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2590:b0:2fa:d95:4501
- with SMTP id 98e67ed59e1d1-2fe68ae7111mr15283755a91.18.1740596117509; Wed, 26
- Feb 2025 10:55:17 -0800 (PST)
-Date: Wed, 26 Feb 2025 10:55:09 -0800
-In-Reply-To: <20250226185510.2732648-1-surenb@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KGSqJ6pY"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740596161;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=R4cAkbTSz/JJdoqp8OKkTxMEEUgI6W1GWFWWM9AMUuk=;
+	b=KGSqJ6pY9pcbZNl3CC3YM9Y/0xKyMoZuIZo4rAAadNchrEPFIKCH9PHH0jDCmdKmSTPMDv
+	bQoWFQeRk95IUq2IyGsw8qkvfSgSiq/+vasAtDvAcM4TpQkKurSyL0gHRaXf4PRkbeP33u
+	SJMJVQnn1OCqBRvbSkzs1m91kNDLiJw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: James Smart <james.smart@broadcom.com>,
+	Ram Vegesna <ram.vegesna@broadcom.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: elx: sli4: Replace deprecated strncpy() with strscpy()
+Date: Wed, 26 Feb 2025 19:55:26 +0100
+Message-ID: <20250226185531.1092-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250226185510.2732648-1-surenb@google.com>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250226185510.2732648-3-surenb@google.com>
-Subject: [PATCH 2/2] userfaultfd: fix PTE unmapping stack-allocated PTE copies
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: lokeshgidra@google.com, aarcange@redhat.com, 21cnbao@gmail.com, 
-	v-songbaohua@oppo.com, david@redhat.com, peterx@redhat.com, 
-	willy@infradead.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
-	hughd@google.com, jannh@google.com, kaleshsingh@google.com, surenb@google.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Current implementation of move_pages_pte() copies source and destination
-PTEs in order to detect concurrent changes to PTEs involved in the move.
-However these copies are also used to unmap the PTEs, which will fail if
-CONFIG_HIGHPTE is enabled because the copies are allocated on the stack.
-Fix this by using the actual PTEs which were kmap()ed.
+strncpy() is deprecated for NUL-terminated destination buffers; use
+strscpy() instead.
 
-Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-Reported-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable@vger.kernel.org
+Compile-tested only.
+
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
- mm/userfaultfd.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/scsi/elx/libefc_sli/sli4.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index e0f1e38ac5d8..dda1c9a3662a 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -1290,8 +1290,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 			spin_unlock(src_ptl);
+diff --git a/drivers/scsi/elx/libefc_sli/sli4.c b/drivers/scsi/elx/libefc_sli/sli4.c
+index 5e7fb110bc3f..d9a231fc0e0d 100644
+--- a/drivers/scsi/elx/libefc_sli/sli4.c
++++ b/drivers/scsi/elx/libefc_sli/sli4.c
+@@ -3804,7 +3804,7 @@ sli_cmd_common_write_object(struct sli4 *sli4, void *buf, u16 noc,
+ 	wr_obj->desired_write_len_dword = cpu_to_le32(dwflags);
  
- 			if (!locked) {
--				pte_unmap(&orig_src_pte);
--				pte_unmap(&orig_dst_pte);
-+				pte_unmap(src_pte);
-+				pte_unmap(dst_pte);
- 				src_pte = dst_pte = NULL;
- 				/* now we can block and wait */
- 				folio_lock(src_folio);
-@@ -1307,8 +1307,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 		/* at this point we have src_folio locked */
- 		if (folio_test_large(src_folio)) {
- 			/* split_folio() can block */
--			pte_unmap(&orig_src_pte);
--			pte_unmap(&orig_dst_pte);
-+			pte_unmap(src_pte);
-+			pte_unmap(dst_pte);
- 			src_pte = dst_pte = NULL;
- 			err = split_folio(src_folio);
- 			if (err)
-@@ -1333,8 +1333,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 				goto out;
- 			}
- 			if (!anon_vma_trylock_write(src_anon_vma)) {
--				pte_unmap(&orig_src_pte);
--				pte_unmap(&orig_dst_pte);
-+				pte_unmap(src_pte);
-+				pte_unmap(dst_pte);
- 				src_pte = dst_pte = NULL;
- 				/* now we can block and wait */
- 				anon_vma_lock_write(src_anon_vma);
-@@ -1352,8 +1352,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 		entry = pte_to_swp_entry(orig_src_pte);
- 		if (non_swap_entry(entry)) {
- 			if (is_migration_entry(entry)) {
--				pte_unmap(&orig_src_pte);
--				pte_unmap(&orig_dst_pte);
-+				pte_unmap(src_pte);
-+				pte_unmap(dst_pte);
- 				src_pte = dst_pte = NULL;
- 				migration_entry_wait(mm, src_pmd, src_addr);
- 				err = -EAGAIN;
-@@ -1396,8 +1396,8 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
- 			src_folio = folio;
- 			src_folio_pte = orig_src_pte;
- 			if (!folio_trylock(src_folio)) {
--				pte_unmap(&orig_src_pte);
--				pte_unmap(&orig_dst_pte);
-+				pte_unmap(src_pte);
-+				pte_unmap(dst_pte);
- 				src_pte = dst_pte = NULL;
- 				/* now we can block and wait */
- 				folio_lock(src_folio);
+ 	wr_obj->write_offset = cpu_to_le32(offset);
+-	strncpy(wr_obj->object_name, obj_name, sizeof(wr_obj->object_name) - 1);
++	strscpy(wr_obj->object_name, obj_name);
+ 	wr_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+ 
+ 	bde = (struct sli4_bde *)wr_obj->host_buffer_descriptor;
+@@ -3833,7 +3833,7 @@ sli_cmd_common_delete_object(struct sli4 *sli4, void *buf, char *obj_name)
+ 			 SLI4_SUBSYSTEM_COMMON, CMD_V0,
+ 			 SLI4_RQST_PYLD_LEN(cmn_delete_object));
+ 
+-	strncpy(req->object_name, obj_name, sizeof(req->object_name) - 1);
++	strscpy(req->object_name, obj_name);
+ 	return 0;
+ }
+ 
+@@ -3856,7 +3856,7 @@ sli_cmd_common_read_object(struct sli4 *sli4, void *buf, u32 desired_read_len,
+ 		cpu_to_le32(desired_read_len & SLI4_REQ_DESIRE_READLEN);
+ 
+ 	rd_obj->read_offset = cpu_to_le32(offset);
+-	strncpy(rd_obj->object_name, obj_name, sizeof(rd_obj->object_name) - 1);
++	strscpy(rd_obj->object_name, obj_name);
+ 	rd_obj->host_buffer_descriptor_count = cpu_to_le32(1);
+ 
+ 	bde = (struct sli4_bde *)rd_obj->host_buffer_descriptor;
 -- 
-2.48.1.658.g4767266eb4-goog
+2.48.1
 
