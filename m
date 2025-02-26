@@ -1,142 +1,274 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC36526B08C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8C926BD86;
+	Wed, 26 Feb 2025 10:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567262; cv=none; b=FOFKQ04V4cclbgpF9YsQxpFOy0IW9KG76h3QQNKgYRghy4QT+IK3iuGtiXlUoAxNVsM3GQcKlC2SbUQ2/jrWzs47YwBhMe6G/YoYH99OY6l0io2tqnCFhBChmIcd38Bg4aEeh3aQO16KY1pMZOinVZeEj2gyjF6WFtxVVGeA7jw=
+	t=1740567263; cv=none; b=MW36Z4TP0KSYW6YtpzCTGtOQXXEYCoHvI6eGrLAGgo3ELB7pj11ls6cOZBOnYZORfTOptUoirwZ9JNPLjL0pBHhjQNj9NeeiDB6m4717Joq3cjYBl0Ru3m0PnpOGWemD168TYWbBwfORoC1IyhI0fwekzcd7asMgO9spkDo9CmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740567262; c=relaxed/simple;
-	bh=Qs2eopeLtj6FqaBsS/f9Lvq9GwF7fXrRnRy9gdlOVDw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pJNnvqjL8ULOgTs2BH54qzT/qa1CzxKyVdrZZqDj8/A/XE73381fWkWX+UE9T6IxWrZRVhmynNXBQU59EkLi3/XOZ/6BTgCXH1Q5gf4u6CgNARghivkE+LG9bZoCtjJvO9AlSxrMktKm3D5jvXyEoRnEjCVBCxHrIJiWT4HIpBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d060cfe752so54186375ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:54:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740567260; x=1741172060;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6ywVTkBOTGXpD4dtX6/3aeHzuNHi338K7wvDLA2azj8=;
-        b=phQoXWFMt2tRpihQl0mpZg1dNZM+9MygM9WGsT7O06wOoWiT7N63NehytRr2fODEuY
-         URiAiIOSMdBx7MQOd4J37sspIv9tzNeiHYjUWw2gqXTex+qHOwUx0txhG3nH3yOfltv0
-         p1h2Jk5Wagk4pJWx698UZhzpU++WEexItnO6nIpSZE2eB+rCszwDDng9P7oehPd5Uw4p
-         vRyogIY2ggOZvRV4PnJWQRf7aTu8JzNJ4hAcrcECw4PmD10bN23ORQ8H7H1AxKDS+fUp
-         8pkEea4/jtGOaPP5CKA5jTWRVYAR6Q0oDjU0QHUQ7Nf1aSTYC16U0HR0/e2YG57bSwgR
-         ZGkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVRstYF9k2HxLWRcAtjlCZrsF8uWywKHmAOtbEuKc3xTEiXAyQG2V5JE2FVtYoLnTaPmR50rYIHvm4YbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyWWEkPBxSaeeqMpETHgVytlfInT8SkuoNueRODZPYCStx72UE
-	6JZmyG+t8NS+IzRz8iOaDyCdt2LV9W0T29Sd/Iz9ilEpsPkglatEew/zRp0avVATT+rKtu9LYvS
-	rUsByXyBnnVOG/d87J+DTrhhPAanNGalnAyAopl9ex4yjqi2FT7os77E=
-X-Google-Smtp-Source: AGHT+IF8gLd4yzsv1WPHl52n1M8hACs+R+LGrr6hGH0ZFK52nrRI7fUoPV6viMHZct4cOmlyoMGezzjmXyyVoIK1u1F2nsklBAC9
+	s=arc-20240116; t=1740567263; c=relaxed/simple;
+	bh=OqQnAw2NWCqhisOabxTIhWGor5P2x6AaN/rj+JD/jWk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=KSufVZsE+qxQcoHtZLThF4gr1oX5HUo09Iheu0QwBw7YgxNqOhM97KVGKFjpeJNaxOzsXX5zSWobaEHiJoisZjhVcV55DyihAsTYFgYmqEr70zyrL5d6HwotOj9PIg8xMTHJ0uSm12vBXwBUxNXNHvn5IwfbC0BwsX0k+DqwiQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kUR9fx48; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zVfz80rC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kUR9fx48";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zVfz80rC"
+Date: Wed, 26 Feb 2025 10:54:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740567260;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OehzpnzAsTcysqOLqQQ5xIUpzSXAVeyDBd+VIsdYB7I=;
+	b=kUR9fx48muSWRHgVj10zh0XiSJo52C8THALG9krB/WTrg3AWjc8N1NpZmOyeH7uL49KQBu
+	OPog7DJgt2eF0vGjetHjFdVPbzni993FwvLHEi3tNP0qLlZGwso2Y+/uIR9XpfwCW/RdYw
+	lCDNkgK3MGHCXpo8aRgRhcJ7n+BHdsloGX4VSDkHZGWmgHx+4/TP47eTaLEEGUhLlqMWDK
+	bWlCT6lIYpo7P36D1/DfS3VMy/FLx6VFEWv+iq+LHnZO7qhAfvKUjRmwBhEurz+1TVxki5
+	tQc5Q219TtHSkFksNmaa++NGVbqLTr450GSc+wxKH3mGkZlvCnZXzQleavjVzQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740567260;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OehzpnzAsTcysqOLqQQ5xIUpzSXAVeyDBd+VIsdYB7I=;
+	b=zVfz80rCl5G5SbgOde3UWSQSow6dKN2N7EARgLt05Yy/32F1dgx6JUG2gn1wfXzx2qDEgV
+	hd3/pO8i1tnWCjAA==
+From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86: BHI stubs
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Kees Cook <kees@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250224124200.717378681@infradead.org>
+References: <20250224124200.717378681@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12e8:b0:3d1:966c:fc8c with SMTP id
- e9e14a558f8ab-3d2cb514b1emr187392555ab.17.1740567260091; Wed, 26 Feb 2025
- 02:54:20 -0800 (PST)
-Date: Wed, 26 Feb 2025 02:54:20 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67bef2dc.050a0220.38b081.00f9.GAE@google.com>
-Subject: [syzbot] [wireless?] WARNING in ieee80211_set_disassoc
-From: syzbot <syzbot+91d7214a5ebebe3792cf@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <174056725970.10177.12368749154614064046.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hello,
+The following commit has been merged into the x86/core branch of tip:
 
-syzbot found the following issue on:
+Commit-ID:     53f12687ab00414965a96768bbf09a9c8485a669
+Gitweb:        https://git.kernel.org/tip/53f12687ab00414965a96768bbf09a9c8485a669
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 24 Feb 2025 13:37:11 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 26 Feb 2025 11:41:55 +01:00
 
-HEAD commit:    e5d3fd687aac Add linux-next specific files for 20250218
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15b73498580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4e945b2fe8e5992f
-dashboard link: https://syzkaller.appspot.com/bug?extid=91d7214a5ebebe3792cf
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+x86: BHI stubs
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Add an array of code thunks, to be called from the FineIBT preamble,
+clobbering the first 'n' argument registers for speculative execution.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ef079ccd2725/disk-e5d3fd68.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/99f2123d6831/vmlinux-e5d3fd68.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/eadfc9520358/bzImage-e5d3fd68.xz
+Notably the 0th entry will clobber no argument registers and will never
+be used, it exists so the array can be naturally indexed, while the 7th
+entry will clobber all the 6 argument registers and also RSP in order to
+mess up stack based arguments.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+91d7214a5ebebe3792cf@syzkaller.appspotmail.com
-
-wlan1: deauthenticating from 08:02:11:00:00:00 by local choice (Reason: 3=DEAUTH_LEAVING)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 18257 at net/mac80211/mlme.c:3920 ieee80211_set_disassoc+0x1177/0x1620 net/mac80211/mlme.c:3920
-Modules linked in:
-CPU: 0 UID: 0 PID: 18257 Comm: kworker/u8:17 Not tainted 6.14.0-rc3-next-20250218-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: netns cleanup_net
-RIP: 0010:ieee80211_set_disassoc+0x1177/0x1620 net/mac80211/mlme.c:3920
-Code: 00 00 00 48 3b 84 24 a0 00 00 00 0f 85 b1 04 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 2a 4b 2d f6 90 <0f> 0b 90 eb b4 e8 1f 4b 2d f6 90 0f 0b 90 eb a9 e8 14 4b 2d f6 90
-RSP: 0018:ffffc9000b7aed20 EFLAGS: 00010293
-RAX: ffffffff8b94b3b6 RBX: 0000000000000001 RCX: ffff88802ff78000
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: ffffc9000b7aee10 R08: ffffffff8b94a435 R09: 1ffffffff207b48e
-R10: dffffc0000000000 R11: fffffbfff207b48f R12: 0000000000000001
-R13: dffffc0000000000 R14: ffff88804fc70d80 R15: ffffc9000b7aeda8
-FS:  0000000000000000(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f651f2d7d60 CR3: 0000000068174000 CR4: 00000000003526f0
-Call Trace:
- <TASK>
- ieee80211_mgd_deauth+0xa88/0x1080 net/mac80211/mlme.c:9754
- rdev_deauth net/wireless/rdev-ops.h:509 [inline]
- cfg80211_mlme_deauth+0x582/0x930 net/wireless/mlme.c:519
- cfg80211_sme_disconnect net/wireless/sme.c:667 [inline]
- cfg80211_disconnect+0x3e7/0x7e0 net/wireless/sme.c:1557
- cfg80211_netdev_notifier_call+0x1ba/0x1490 net/wireless/core.c:1540
- notifier_call_chain+0x1a5/0x3f0 kernel/notifier.c:85
- call_netdevice_notifiers_extack net/core/dev.c:2180 [inline]
- call_netdevice_notifiers net/core/dev.c:2194 [inline]
- __dev_close_many+0x145/0x350 net/core/dev.c:1663
- dev_close_many+0x24e/0x4c0 net/core/dev.c:1714
- dev_close+0x1c0/0x2c0 net/core/dev.c:1740
- cfg80211_shutdown_all_interfaces+0xbb/0x1d0 net/wireless/core.c:277
- ieee80211_remove_interfaces+0x108/0x700 net/mac80211/iface.c:2285
- ieee80211_unregister_hw+0x5d/0x2c0 net/mac80211/main.c:1681
- mac80211_hwsim_del_radio+0x2c4/0x4c0 drivers/net/wireless/virtual/mac80211_hwsim.c:5665
- hwsim_exit_net+0x5c1/0x670 drivers/net/wireless/virtual/mac80211_hwsim.c:6545
- ops_exit_list net/core/net_namespace.c:172 [inline]
- cleanup_net+0x812/0xd60 net/core/net_namespace.c:652
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
- worker_thread+0x870/0xd30 kernel/workqueue.c:3400
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Kees Cook <kees@kernel.org>
+Link: https://lore.kernel.org/r/20250224124200.717378681@infradead.org
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/x86/include/asm/cfi.h |   4 +-
+ arch/x86/lib/Makefile      |   3 +-
+ arch/x86/lib/bhi.S         | 146 ++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 152 insertions(+), 1 deletion(-)
+ create mode 100644 arch/x86/lib/bhi.S
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
+index 7dd5ab2..7c15c4b 100644
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -101,6 +101,10 @@ enum cfi_mode {
+ 
+ extern enum cfi_mode cfi_mode;
+ 
++typedef u8 bhi_thunk[32];
++extern bhi_thunk __bhi_args[];
++extern bhi_thunk __bhi_args_end[];
++
+ struct pt_regs;
+ 
+ #ifdef CONFIG_CFI_CLANG
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 8a59c61..f453507 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -66,5 +66,6 @@ endif
+         lib-y += clear_page_64.o copy_page_64.o
+         lib-y += memmove_64.o memset_64.o
+         lib-y += copy_user_64.o copy_user_uncached_64.o
+-	lib-y += cmpxchg16b_emu.o
++        lib-y += cmpxchg16b_emu.o
++        lib-y += bhi.o
+ endif
+diff --git a/arch/x86/lib/bhi.S b/arch/x86/lib/bhi.S
+new file mode 100644
+index 0000000..421e307
+--- /dev/null
++++ b/arch/x86/lib/bhi.S
+@@ -0,0 +1,146 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#include <linux/linkage.h>
++#include <asm/unwind_hints.h>
++#include <asm/nospec-branch.h>
++
++/*
++ * Notably, the FineIBT preamble calling these will have ZF set and r10 zero.
++ *
++ * The very last element is in fact larger than 32 bytes, but since its the
++ * last element, this does not matter,
++ *
++ * There are 2 #UD sites, located between 0,1-2,3 and 4,5-6,7 such that they
++ * can be reached using Jcc.d8, these elements (1 and 5) have sufficiently
++ * big alignment holes for this to not stagger the array.
++ */
++
++.pushsection .noinstr.text, "ax"
++
++	.align 32
++SYM_CODE_START(__bhi_args)
++
++#ifdef CONFIG_FINEIBT_BHI
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_0, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_1, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 8
++	ANNOTATE_REACHABLE
++.Lud_1:	ud2
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_2, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_3, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_4, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_5, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 8
++	ANNOTATE_REACHABLE
++.Lud_2:	ud2
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_6, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	cmovne %r10, %r9
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_7, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	cmovne %r10, %r9
++	cmovne %r10, %rsp
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++#endif /* CONFIG_FINEIBT_BHI */
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_end, SYM_L_GLOBAL)
++	ANNOTATE_NOENDBR
++SYM_CODE_END(__bhi_args)
++
++.popsection
