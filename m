@@ -1,173 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68430229B2D;
-	Wed, 26 Feb 2025 17:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9EC22A81D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740592562; cv=none; b=XEQVMx1JWeTfbXAStdIVvkvrZiM2cHIBHG+WXwACEW+JEZP8QexUTjSYBJuLv2bTDkJ9R2T4Vx1cmYfo/lkETsEndoMJwZ55DsLwCt2M/pGE58fM5KOCtuhHT7WoLS++pYCkQ8fdICj4wzm4UzcliXl993FNP4Mnh4lrlK0l838=
+	t=1740592566; cv=none; b=nT9D0KEpUthjoRWY5qHkVSIziAgs67PiVP1RiPwsCrCUu4Ku1LOk6GhPiH7MUXY/SPsS8wLKMw9PP+IYeKveC4nLkghLNbbYx4QAaaI1uUanDj1vFWUvyGHUVMn9IZFtOF4Bs9m4ZVH+vbrbwZPHjGgAJarqABLG1IXRwLvrrSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740592562; c=relaxed/simple;
-	bh=QPYFUuaMu35HLYW7kKnNg81fs68Lz1/Mi5HfamjHDUQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tOnK8q8N76GgMr1ZTTxl45cwQ3VJDE8u5i2KFl397HHtP4hdZ2eON1dd/S5olGFAVfT6Cl8TqUCnb6/BLJQofUoRBYZVMqe/WbcYkYM3G0EbtCEyWRWuX2gRAdeyum5J0alMkZTCG0M+j3d+Y5TxOXCjRH39VqU5tD+EEXfuhxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HD5HAJCG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740592566; c=relaxed/simple;
+	bh=vnQ8yrmJ9Q1zs9FzhhEdVIS2SPOPcZQzkqPoxgy+4Bo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gCrEAkza5P4QtB2NVvUFev6zEhBwba+zGOWxTqiQE1xygsBnR3AMvuMPnrm/DEq1GADt7jafWwZft0RKxvzZ4qZIiGDZPcl+1SZUmoraxpt3/RO8eUetys0FgPrcp8aCse2INSA0vky2SbsoaK6lRL3SM8KsVkVXVFvbAm4tCYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lOw4qzAK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HD5HAJCG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A41E1C4CED6;
-	Wed, 26 Feb 2025 17:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740592561;
-	bh=QPYFUuaMu35HLYW7kKnNg81fs68Lz1/Mi5HfamjHDUQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HD5HAJCG9a/rJtsRlc7D4DIwHSobBAAqvA8qRLRovcyXgkpcC6IzynVJ8rnuvDXyD
-	 2FZqe0k5Qx7d9tDD57/gPW6pKtcBeRNS5xrRBbImP+pUCD9W8lQA3dnR7HmDIYKvqD
-	 QH1E/Y8Qh2yD+TAflg3SGKGQj5BRm4iQGNymqy6/x1MB7o3gsdqFNJDJA13VLceov8
-	 vkFyjnmys3wsj5Lk+gWRNKmxSUb+4SxT9YwyIFx1WCd7qzANx1tuowsizYn3gkv50s
-	 sI1jtoQ+hf1KJ6MlXQHEf05D1hci+Nd3S8QOA6ZcA7Deu3Zt+Xh06hh4kXDPnYUa43
-	 4n3wWS3y59FSQ==
-From: Danilo Krummrich <dakr@kernel.org>
-To: airlied@gmail.com,
-	simona@ffwll.ch,
-	corbet@lwn.net,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	ajanulgu@redhat.com,
-	lyude@redhat.com,
-	pstanner@redhat.com,
-	zhiw@nvidia.com,
-	cjia@nvidia.com,
-	jhubbard@nvidia.com,
-	bskeggs@nvidia.com,
-	acurrid@nvidia.com
-Cc: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	mcgrof@kernel.org,
-	russ.weight@linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nouveau@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v4 0/6] Initial Nova Core series
-Date: Wed, 26 Feb 2025 18:55:42 +0100
-Message-ID: <20250226175552.29381-1-dakr@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lOw4qzAK"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QCEJpH000529
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:56:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MiLkwWgDngD2cClR9A/kmeef7N8a6DcAA3tuT7l9MRU=; b=lOw4qzAK09QohoCs
+	NjT9i8BtQXQ8aT+E7PZ7h69IVu7W1qmopcaN+h0Co4g+ujN1TqUG69kLUhBPqvql
+	2d5teVBwDpmPnxnW07/px1j/82WzFtVTfzclNmpXXuPqC8RaR+b9Ob0pfMOEQqTQ
+	LWc+B6ZDlkIZ0kReHTnYCDAu4nSZ0YIXEV8x73vL483f7Ah7vhn8IHH16Fua7R7v
+	2VLJZaHn0hhqszTJKZFrf82gQ13++yMf5GmQOphvja7mKh+jp/1E5J79Sfwk873C
+	MqWfFPZDi37zeTNpQE3M9YzFsvK9Xt78yQeC142ldTcZJox4X50SA/s/JSi40TDI
+	cFLm/g==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4522skrwru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:56:03 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e422f1ceadso277436d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:56:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740592563; x=1741197363;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MiLkwWgDngD2cClR9A/kmeef7N8a6DcAA3tuT7l9MRU=;
+        b=J2Mxe9+aJbFlaJ95e1XKsUlamTur2nfYoqTZxMtmMf0nowht0n5spul1r+ybVjpqaA
+         kAu7IXUNVw+ZuR5CFUSAMZg8qRjGobEqLybVnssZgrZ3Nf2ucl2p795ON+oi/LxdsRhR
+         Qa6qWeNHzoau2LM9kVrDzbnFyLrbPLo065O3+yn3gi5NEsqSZ9zLblGLQyZyww6HA+cR
+         a0DxnbzJrg2CwzyCaF8UuxfZJ2A8CupI3baJbD87WzkdwctxRfvEE38Uas+40tDRFKZD
+         6QxDCA7iC+2e/0wfyZFeoUDj6AVqeYcB3TFkw87qGkvj7GNkG0jLHAGNL23iZSeYAF1t
+         MoKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVWTVPMybD0XE49pJhKJdTMX096m5pdc7+Id3GoP8QkmJUBjSJ+cmJ3KislvI9G9zJsEG86mXElq3Xci5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQKXxv5iivdO5YBdx0QLAh1Oicv9SLPk8sSgZHWHoFGr6Eytv2
+	1bT9N/n4GgQLrLWuQhyAB/aQX9fo9e1lGsfYHP6FAoqVJl7beL7pRrPihcx2XqIF5/jc1R400hb
+	fy9VLOOPGiV2JoGB5+a442o6akv97/yzq/FW+cKtrpwBxDRvwDIsyRVt+lHu5Ung=
+X-Gm-Gg: ASbGnctxz7wPF35TiBecMx4DOycFrHFUzvHu/M3yqUrb/oqVVc8+ws/0MwZdeBG4aQS
+	6M2LzfeIkBPCQysUZSwW+5G0amb3lSwPRKhk0s/sZ+rIWzIafjiSY0RZeqG8AN/FXxZIbQjQ4mX
+	WPFGOA/3OtDEhk+RbSNEVqyJCPO6sUx7KaMs7nlpviOV7IjqJxPR9mGrFSAXteeXVU3Sjc93gqy
+	WMtzTRf3dZn75uWClcp5+i5dTznWlBXOCTiTLj4XJZPpfZFva8LfgIS3KoqsUaMw5oVCYcFKCY0
+	RPfvgMQdFLfL3iz2yBq1movx8R3ZjFV0C8QKiD3oDr3xwXFezbi+H8/AxI08PJxbM242MA==
+X-Received: by 2002:a05:6214:2029:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e6ae9b0dcfmr104742456d6.7.1740592562667;
+        Wed, 26 Feb 2025 09:56:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHEKLmVc/JyOeQTde//JfKrKvvS44AaQioHZpmlj4kYMM7908+g/dV/BSchGOJ3gqH73/FWHw==
+X-Received: by 2002:a05:6214:2029:b0:6d8:a091:4f52 with SMTP id 6a1803df08f44-6e6ae9b0dcfmr104742226d6.7.1740592562260;
+        Wed, 26 Feb 2025 09:56:02 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1a01648sm367373166b.0.2025.02.26.09.56.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 09:56:01 -0800 (PST)
+Message-ID: <5e46f261-94e4-441b-a0be-fbf54c34a5f6@oss.qualcomm.com>
+Date: Wed, 26 Feb 2025 18:55:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: qcm6490-idp: Update protected clocks
+ list
+To: Trilok Soni <quic_tsoni@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250206-protected_clock_qcm6490-v1-1-5923e8c47ab5@quicinc.com>
+ <j43f4wu6wgoho2tl4crckemnngyvek5mma6ghkdyqcivk65dcf@gfsimovfuqy5>
+ <502e002d-f5a1-4b78-9a9c-4b227623e5b6@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <502e002d-f5a1-4b78-9a9c-4b227623e5b6@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: b65ISFJQ5Vb1QEeWEm1yOiGDxs4ppwWJ
+X-Proofpoint-ORIG-GUID: b65ISFJQ5Vb1QEeWEm1yOiGDxs4ppwWJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ suspectscore=0 bulkscore=0 adultscore=0 malwarescore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=636
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502260141
 
-This is the initial series for the nova-core stub driver.
+On 26.02.2025 6:01 AM, Trilok Soni wrote:
+> On 2/25/2025 8:42 PM, Bjorn Andersson wrote:
+>> On Thu, Feb 06, 2025 at 03:43:21PM +0530, Taniya Das wrote:
+>>> Certain clocks are not accessible on QCM6490-IDP board,
+>>> thus mark them as protected.
+>>>
+>>> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+>>> ---
+>>> Mark few clocks as protected on IDP of QCM6490.
+>>>
+>>> This patchset is separated out from the series[1] to remove dependency from
+>>> the LPASS reset.
+>>> [1]: https://lore.kernel.org/all/20240816-qcm6490-lpass-reset-v1-0-a11f33cad3c5@quicinc.com/
+>>> ---
+>>>  arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 21 +++++++++++++++++++++
+>>
+>> I merged the patch adding this board in November 2023, are you saying
+>> that for the last 15 months no one has actually booted it!?
+> 
+> Should we just delete these boards? I prefer to not have platforms which 
+> are not maintained.
 
-nova-core is intended to serve as a common base for nova-drm (the
-corresponding DRM driver) and the vGPU manager VFIO driver, serving as a
-hard- and firmware abstraction layer for GSP-based NVIDIA GPUs.
+I think there's enough RB3Gen2s in the wild now to get rid of this one..
+Unless anyone has a real use for it, but it doesn't seem like that's the
+case given the lack of activity
 
-The Nova project, including nova-core and nova-drm, in the long term,
-is intended to serve as the successor of Nouveau for all GSP-based GPUs.
-
-The motivation for both, starting a successor project for Nouveau and
-doing so using the Rust programming language, is documented in detail
-through a previous post on the mailing list [1], an LWN article [2] and a
-talk from LPC '24.
-
-In order to avoid the chicken and egg problem to require a user to
-upstream Rust abstractions, but at the same time require the Rust
-abstractions to implement the driver, nova-core kicks off as a driver
-stub and is subsequently developed upstream.
-
-Besides the driver itself and the corresponding documentation, i.e. guidelines,
-task list, etc., this series also carries a few more patches to more flexibly
-compose firmware path strings for the .modinfo section.
-
-Link: https://lore.kernel.org/dri-devel/Zfsj0_tb-0-tNrJy@cassiopeiae/T/#u [1]
-Link: https://lwn.net/Articles/990736/ [2]
-Link: https://youtu.be/3Igmx28B3BQ?si=sBdSEer4tAPKGpOs [3]
-
-Changes in v4:
-  - in `regs::Boot0` take a `&Bar0` and let deref coercion do its thing
-    (Alexandre)
-  - add missing firmware path string to the .modinfo section (Greg)
-  - add some infrastructure to compose firmware path strings more flexibly
-
-Changes in v3:
-  - impl TryFrom<u32> for Chipset
-  - add Chipset::arch()
-  - initialize revision from Boot0
-  - in Firmware, eliminate repeating code pattern using a closure (thanks to
-    Alexandre)
-  - use #[expect(dead_code)] for Firmware
-  - Replace some Rust specific rules with links to existing R4L documentation.
-  - Link in R4L submit checklist.
-  - Update task entry "Page abstraction for foreign pages" with Lina's work.
-
-Changes in v2:
-  - Fix module name in Kconfig description. (John)
-  - Expand Kconfig description a bit. (John)
-  - Expand name for PCI BAR0 region.
-  - Do not store / print boot0 raw register value. (John)
-  - Rename CardType to Architecture, rename enum names to represent the
-    architecture name and adjust enum values according to the register
-    definition. (John)
-  - Add an abstraction for register accesses.
-  - Print chipset, architecture and revision.
-  - Load bootloader firmware. (Timur)
-  - Add task "Generic register abstraction".
-  - Change complexity of "Debugfs abstractions".
-
-Danilo Krummrich (6):
-  rust: module: add type `LocalModule`
-  rust: str: provide const fn as_bytes() for BStr
-  rust: firmware: introduce `firmware::ModInfoBuilder`
-  rust: firmware: add `module_firmware!` macro
-  gpu: nova-core: add initial driver stub
-  gpu: nova-core: add initial documentation
-
- Documentation/gpu/drivers.rst              |   1 +
- Documentation/gpu/nova/core/guidelines.rst |  24 ++
- Documentation/gpu/nova/core/todo.rst       | 446 +++++++++++++++++++++
- Documentation/gpu/nova/guidelines.rst      |  69 ++++
- Documentation/gpu/nova/index.rst           |  30 ++
- MAINTAINERS                                |  11 +
- drivers/gpu/Makefile                       |   1 +
- drivers/gpu/nova-core/Kconfig              |  14 +
- drivers/gpu/nova-core/Makefile             |   3 +
- drivers/gpu/nova-core/driver.rs            |  47 +++
- drivers/gpu/nova-core/firmware.rs          |  45 +++
- drivers/gpu/nova-core/gpu.rs               | 225 +++++++++++
- drivers/gpu/nova-core/nova_core.rs         |  19 +
- drivers/gpu/nova-core/regs.rs              |  55 +++
- drivers/video/Kconfig                      |   1 +
- rust/kernel/firmware.rs                    | 177 ++++++++
- rust/kernel/str.rs                         |   6 +
- rust/macros/module.rs                      |   2 +
- 18 files changed, 1176 insertions(+)
- create mode 100644 Documentation/gpu/nova/core/guidelines.rst
- create mode 100644 Documentation/gpu/nova/core/todo.rst
- create mode 100644 Documentation/gpu/nova/guidelines.rst
- create mode 100644 Documentation/gpu/nova/index.rst
- create mode 100644 drivers/gpu/nova-core/Kconfig
- create mode 100644 drivers/gpu/nova-core/Makefile
- create mode 100644 drivers/gpu/nova-core/driver.rs
- create mode 100644 drivers/gpu/nova-core/firmware.rs
- create mode 100644 drivers/gpu/nova-core/gpu.rs
- create mode 100644 drivers/gpu/nova-core/nova_core.rs
- create mode 100644 drivers/gpu/nova-core/regs.rs
-
-
-base-commit: ac9c34d1e45a4c25174ced4fc0cfc33ff3ed08c7
--- 
-2.48.1
-
+Konrad
