@@ -1,198 +1,111 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45B125E836
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA5E19597F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740610875; cv=none; b=XAWWRwOr+41jUkAgso9UTzugh1N4O9/QGXWysAby89RQ+4AAo9wdkXBIz58cd6ev54+zl5rteCPYS2Y/bZ4b6cWIdh0KWnlqasDEphE2sMQj3JcyqNYP7v+MnGNTsWVZPFmmbhwztbLu12AYW1gpAcaezakUwsc+1CUI/Si4ho8=
+	t=1740611253; cv=none; b=U8NzkDc0E4eQNao9G56gQ22FOmw7lL6xj/+ar7Od+CJL9a3nRqjOjLFyKScPzUSlsY/d6qWhAwWrd/C54I7Vl5he7jKkfKZEen6zo2zvTb0wn/zRzDap8H+5Z2cvEGaauzUaQZSwFcUe6zvvzjlgHLuzdtvoLFRirYbpq/Gzr0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740610875; c=relaxed/simple;
-	bh=f5oTp5SuUA9h/3I9N7juWjdnIYMZaPJU4Yhcj3JS9fo=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=RFum+lxUdLDNga8jpsL3Ogse84FqVEIPTo+72n5TzhtgEIoDRAME6zMmKnlHuURPo2qKdID1eSIabhS9wQ9aQ45olAwxw5qnNp7HQdP5zhsd4t3lq/4+v84ZLaStCt9GqEFYKvwOHBIyIrT8yh8GKvokqhX1y7sf8IW+jM5yBGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0EoOlfYR; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1740611253; c=relaxed/simple;
+	bh=pRoo4kt1j3t3xYS1cGP1drmXvTtaQO/4Q2bHSnftOEo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BXkOLFXMGX6aovdIGjrvuRwJYQsyU6TiHhFs3ef/Nz+ylQSktrdMJiFE+ukwVN0e1bKQk6bKdT0x8hdPI83Hw3s98Ugfwxqd8Iw47wCWGf/96zeRSYnAXan/MvZ9k9SOv3FqsA+l3ekzpnejnj7J7fqr9Iik3TOclalAa1jnknc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KveEzsr2; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0EoOlfYR"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f2737d115eso5009217b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:01:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KveEzsr2"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54298ec925bso405916e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:07:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740610873; x=1741215673; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Pu7sgl3+ZGn6x4LgYjWxEyBJxfFiut2VzzKduKXiRig=;
-        b=0EoOlfYR13/et9JriALQWl9jHrEvGG+Z8mMe03V7QOIIjuCpuWDMmEtA1gA5QaTMZ7
-         KxkJqC4K22vtVI3sylsxkrc2YxxDp87yPtlq+L00+BcQuGO3DnNDEY9l+E3LUwJ5CaD1
-         JgoQ1I1JUarK9z6Vh775EYdE18GhB+35g327FA2lu7b/eVZxh6sOKiUgpfycy5e5ETKX
-         oyOmJ1q2IfJ20UTeHyZAj9DCbpaQy/p/U2JxPQfnbVhvBH9/fQcRibhuKc/hSpKMSyil
-         pdD12+AilvSblzyeOFu/zwP/9AaZOYyMBgyUg6N/iV5gPeLlnv1VeFaHjbr7U439Q5qB
-         +MUA==
+        d=gmail.com; s=20230601; t=1740611250; x=1741216050; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n6EFFgter9gAlebiFMms2NvzaWeJFYWFjYw0olSs4d0=;
+        b=KveEzsr2qELuw9BoXej6iff2qoCkSw+zea4oGkjD2TZck4/Gmssfn24Cy2xYdkBlHx
+         RKoMbsUgMNMIaCgDPVTw35qWsxZ54BSSizBs8yBxpq778k56+Xlnokra0APCJkWpquWl
+         V+wJcRMe/lNQiQObLpXuWxJ+lIv+M1CKdNcbyrBLWy9E8eTDsSrhEuuh3pN7d+1lgTrA
+         4RqdlTrMu86qAaxtzYv1nlHMbQS4WJQbN+AojjZkyJYKXrI/vmzjjKg7yOYx3xDPwa1I
+         f1XfydUwBq87UOqOagcp/ows6ZtYFki117zeSoE5cNSxsvHCOHOAtRbLZL66aEVakb15
+         iruQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740610873; x=1741215673;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pu7sgl3+ZGn6x4LgYjWxEyBJxfFiut2VzzKduKXiRig=;
-        b=tpNPXnWussV+JchS1I/qtUO0FjDWnnBZFP7FyzMIbJ2cibujmNkfhCKabW+Fkh0adT
-         w17YmXZ6vAQV7F2iyrmYT7bHkXwS3SQ5xpQhFXXLN3AZgXV3YOB+3A0O0l02UnTEErlB
-         xq8QpvpBugkkmIEI3SVVqIMYuEvBzjYpo4Zl5+jh1jWlRShGBKB/3llSTSnQpc/zu7CM
-         8HLVQ7FSi7rIQwR1Fn3iAkRhc5XTV+Sjp4IWJSL3AeIvXtwEJZddSxabECLW9YsBxnRy
-         BoBnbbOpB/t2wic0sxZOxxxq2/cLtMCdgi5jjpi2TDj+za1XFRYdKw+mYh0TCQkvI3fr
-         iGSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNe+sWebnWO2K0t6CIr/oHwkTRkzjpUu81lr19Kx8nI6udOFg5hoIa3oo31j5bqBq+WMozlf28b7Oiw9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqUFdAy5sUjqVpt5kPyP+vPc1H6K78EhjbE7w82J4JNKkjhOXX
-	DAy/TcNtOaunr9LCzFsozIwZ660ihtQEQKJL1ti5PVZJEoAIOw2kk4RFFxLNxEzHf/DT1W+fNXe
-	x7+lLMA==
-X-Google-Smtp-Source: AGHT+IGv/0M1hTuvLFKK/FXKEHNI8rjDJXfn4bhSsJ4gwLOvaZkwvEpf7LqbCKAYvnH4Li2SpWcUPsfMXWij
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:ba33:e56c:ea26:80e7])
- (user=irogers job=sendgmr) by 2002:a05:690c:3809:b0:6fb:4f1a:42e0 with SMTP
- id 00721157ae682-6fbcc3785famr24379917b3.4.1740610872777; Wed, 26 Feb 2025
- 15:01:12 -0800 (PST)
-Date: Wed, 26 Feb 2025 15:01:09 -0800
-Message-Id: <20250226230109.314580-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1740611250; x=1741216050;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n6EFFgter9gAlebiFMms2NvzaWeJFYWFjYw0olSs4d0=;
+        b=knzE4JLKfJKWCJ21eDxrvRteYhJSq8yp+gWVGZuZxBv6sk8YH/VLdsTYnjhRQs2DpC
+         DwR6FrT9rdECCs8OIJbxc5e2HWnKmRhtaVkTSGn94R07apMWyUw7JbaiOJ3ZOq4FbRky
+         WaVZNnTSVYiMvBrDQEvyE3NSsha3h3bxUGvR0qg25t7FsI/Ypq94g6F7asHv8swIGm1e
+         3WriqDxHqClKU7X364ghElp1eiWj6DAXLXVjZGupSX7cDhjFbiHB9I1JL4h+X+hsVhhO
+         Vq7TKOvHHJHwabbJg7ajVGmXvNvlyd19cfyUhcGuYMftAhci5qIBjTw+BTz+peE9Bgys
+         yMiA==
+X-Forwarded-Encrypted: i=1; AJvYcCXN+4EVbZVffwG+81JsLS+J7hI3PQkV49DWWpaMPOqWTNh0fT36KFt49YEOcbJjMc9nGw7PL76Xek+BM8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfAah41R6djRb8ZkH+fjTL2ZmYPu5YZjE2D1drMd7oZz08h/cx
+	bLrofHEk7InTHWeJEvYcfaVruI/cP5KNIiEQBFUlq4p/1wlcb5XygAICxNm1AA6+D1ONhuiG6m0
+	xjVXgSsgYkaOuqjsI03Ygf8nrZpk=
+X-Gm-Gg: ASbGncuZ1upKibSX2rC6UNmtFGojkl9/2160eUiZpPf4eRedjt0n2osckC03i/zmveg
+	5/EWes80NfaVo4nfssG1MU5ZgH6zv44a3ldNpDTvZCgHk23xw3tEHizXdBenMghJdtK5INsEcsY
+	Vf9l8a/7s=
+X-Google-Smtp-Source: AGHT+IEuqB4IJ3OP9zoL3qsGgFn5WgCkzYkJqBEXvTaf6Vi7/Ve1nDsh1ZOGXPkSvwiNAEYISejaABGjP4jGd1d8vDQ=
+X-Received: by 2002:a05:6512:15aa:b0:545:944:aadd with SMTP id
+ 2adb3069b0e04-5493c5aebadmr3654432e87.37.1740611250067; Wed, 26 Feb 2025
+ 15:07:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Subject: [PATCH v1] perf tests: Fix data symbol test with LTO builds
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+MIME-Version: 1.0
+References: <20250226133703.3c9775c9e50e198abc9b9f6e@linux-foundation.org> <20250226225605.2000-1-sj@kernel.org>
+In-Reply-To: <20250226225605.2000-1-sj@kernel.org>
+From: bus710 <bus710@gmail.com>
+Date: Wed, 26 Feb 2025 15:07:18 -0800
+X-Gm-Features: AQ5f1JpzFvrGUf0R0qU0JfhyEu3jv6eTcZL62UzJE6wu__9AYfAiLdLM7x0iDbc
+Message-ID: <CAJGd785Eu7iuVwYnewaUm38NJcKzB-xkZwdRiYR9Yo9Qwaoffg@mail.gmail.com>
+Subject: Re: [PATCH] samples/damon: a typo in the kconfig - sameple
+To: SeongJae Park <sj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, damon@lists.linux.dev, kernel-team@meta.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With LTO builds, although regular builds could also see this as
-all the code is in one file, the datasym workload can realize the
-buf1.reserved data is never accessed. The compiler moves the
-variable to bss and only keeps the data1 and data2 parts as
-separate variables. This causes the symbol check to fail in the
-test. Make the variable volatile to disable the more aggressive
-optimization. Rename the variable to make which buf1 in perf is
-being referred to.
+On Wed, Feb 26, 2025 at 2:56=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
+:
+>
+> On Wed, 26 Feb 2025 13:37:03 -0800 Andrew Morton <akpm@linux-foundation.o=
+rg> wrote:
+>
+> > On Wed, 26 Feb 2025 10:42:04 -0800 SeongJae Park <sj@kernel.org> wrote:
+> >
+> > > From: bus710 <bus710@gmail.com>
+> >
+> > Full names are preferred, please.  Actually I think it's "required".
+>
+> Thank you for letting me clearly know this.  I'll request full names to D=
+AMON
+> patch authors from next time.
+>
+> bus710, we could still update the patch before it is merged into the main=
+line.
+> If you could, please let us know your full name and if we can update the =
+patch
+> with that.
+>
+> >
+> > I'll apply it anyway due to the patch's minor nature, thanks.
+>
+> I agree this is a simple enough patch that the name doesn't really matter=
+.
+> Thank you Andrew :)
+>
+>
+> Thanks,
+> SJ
 
-Before:
-```
-$ perf test -vv "data symbol"
-126: Test data symbol:
---- start ---
-test child forked, pid 299808
-perf does not have symbol 'buf1'
-perf is missing symbols - skipping test
----- end(-2) ----
-126: Test data symbol                                                : Skip
-$ nm perf|grep buf1
-0000000000a5fa40 b buf1.0
-0000000000a5fa48 b buf1.1
-```
-
-After:
-```
-$ nm perf|grep buf1
-0000000000a53a00 d buf1
-$ perf test -vv "data symbol"126: Test data symbol:
---- start ---
-test child forked, pid 302166
- a53a00-a53a39 l buf1
-perf does have symbol 'buf1'
-Recording workload...
-Waiting for "perf record has started" message
-OK
-Cleaning up files...
----- end(0) ----
-126: Test data symbol                                                : Ok
-```
-
-Fixes: 3dfc01fe9d12 ("perf test: Add 'datasym' test workload")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/test_data_symbol.sh | 17 +++++++++--------
- tools/perf/tests/workloads/datasym.c       | 11 ++++++-----
- 2 files changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/tests/shell/test_data_symbol.sh b/tools/perf/tests/shell/test_data_symbol.sh
-index c86da0235059..7da606db97cb 100755
---- a/tools/perf/tests/shell/test_data_symbol.sh
-+++ b/tools/perf/tests/shell/test_data_symbol.sh
-@@ -18,7 +18,7 @@ skip_if_no_mem_event() {
- 
- skip_if_no_mem_event || exit 2
- 
--skip_test_missing_symbol buf1
-+skip_test_missing_symbol workload_datasym_buf1
- 
- TEST_PROGRAM="perf test -w datasym"
- PERF_DATA=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-@@ -26,18 +26,19 @@ ERR_FILE=$(mktemp /tmp/__perf_test.stderr.XXXXX)
- 
- check_result() {
- 	# The memory report format is as below:
--	#    99.92%  ...  [.] buf1+0x38
-+	#    99.92%  ...  [.] workload_datasym_buf1+0x38
- 	result=$(perf mem report -i ${PERF_DATA} -s symbol_daddr -q 2>&1 |
--		 awk '/buf1/ { print $4 }')
-+		 awk '/workload_datasym_buf1/ { print $4 }')
- 
--	# Testing is failed if has no any sample for "buf1"
-+	# Testing is failed if has no any sample for "workload_datasym_buf1"
- 	[ -z "$result" ] && return 1
- 
- 	while IFS= read -r line; do
--		# The "data1" and "data2" fields in structure "buf1" have
--		# offset "0x0" and "0x38", returns failure if detect any
--		# other offset value.
--		if [ "$line" != "buf1+0x0" ] && [ "$line" != "buf1+0x38" ]; then
-+		# The "data1" and "data2" fields in structure
-+		# "workload_datasym_buf1" have offset "0x0" and "0x38", returns
-+		# failure if detect any other offset value.
-+		if [ "$line" != "workload_datasym_buf1+0x0" ] && \
-+		   [ "$line" != "workload_datasym_buf1+0x38" ]; then
- 			return 1
- 		fi
- 	done <<< "$result"
-diff --git a/tools/perf/tests/workloads/datasym.c b/tools/perf/tests/workloads/datasym.c
-index 8e08fc75a973..5074b3439835 100644
---- a/tools/perf/tests/workloads/datasym.c
-+++ b/tools/perf/tests/workloads/datasym.c
-@@ -7,7 +7,8 @@ typedef struct _buf {
- 	char data2;
- } buf __attribute__((aligned(64)));
- 
--static buf buf1 = {
-+/* volatile to try to avoid the compiler seeing reserved as unused. */
-+static volatile buf workload_datasym_buf1 = {
- 	/* to have this in the data section */
- 	.reserved[0] = 1,
- };
-@@ -15,8 +16,8 @@ static buf buf1 = {
- static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
- {
- 	for (;;) {
--		buf1.data1++;
--		if (buf1.data1 == 123) {
-+		workload_datasym_buf1.data1++;
-+		if (workload_datasym_buf1.data1 == 123) {
- 			/*
- 			 * Add some 'noise' in the loop to work around errata
- 			 * 1694299 on Arm N1.
-@@ -30,9 +31,9 @@ static int datasym(int argc __maybe_unused, const char **argv __maybe_unused)
- 			 * longer a continuous repeating pattern that interacts
- 			 * badly with the bias.
- 			 */
--			buf1.data1++;
-+			workload_datasym_buf1.data1++;
- 		}
--		buf1.data2 += buf1.data1;
-+		workload_datasym_buf1.data2 += workload_datasym_buf1.data1;
- 	}
- 	return 0;
- }
--- 
-2.48.1.711.g2feabab25a-goog
-
+Oh, yes. I was a little worried if I added too much noise for such a
+small work, but I shouldn't miss this opportunity to leave my name in
+Linux history.
+Let me prepare a new patch as soon as possible.
