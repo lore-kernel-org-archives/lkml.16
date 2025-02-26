@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9F4421B183
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C38921B1BE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571432; cv=none; b=NFxbCo0GdrGGIS8MMucCGyrqj3XWiAyQnXEDyUpG4dorjIBsYB/myl4PaBa9rxUJqZTYAZ88f1a8+ImJOHLr4PQAK+0HJizqvRFL8sjZDWCLGGzVhKbTcAkPPjnMHqpM1XdOkbLHpdVPjfRXuuitdR0VdfMUYRFVGe+kK3t/er8=
+	t=1740571432; cv=none; b=EVsh6C1LWr7RqXSVuwk3MWeShPorNri1uEdtsyqvo4XG2XwOa+JURS3+3xx48jirEH4BaCC/kmKkBNZWWr7+0q5o+1ZDqy5Lcx3rub6J4jPC5s8MMHIw1X0tYc7v7RSCnwoDUeEIkuI5h/RzC+P8X5lXl1Zc1740vuGAUSomios=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740571432; c=relaxed/simple;
-	bh=hsK6YG3lkSKEqSmTHltgcR83SgST+t2UMQg+o+HBxrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=KDKsjtjCVH5bPEZyNxZafyYWRVuhOSEKSr9UT3UOG5/ivCYQCqf1Sf9+KvBfKiNAGNQT2MPqZ+LEJlgXHhxx4+3NCVNWd9I4IB2aH/syn7d3gFhWAN2Bc9d8Jikj+XyXLCzv6jTYGm/wmle2tFEMDAGckQBw3DzN/2q2QYq2AUQ=
+	bh=1zo6F/+409UZLJiSTF/xB1rmKTTBQ/thLwhwg4bLRAU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=qlwEx5JLLtmgYR9285CI6wiz314HUMkKVkjLzrZmf73JV9Da1ihV9yqS7fQ/c8+nDVUJ2QwSdZMSXcFlS4WCcH3KYWkPAGMRkuBWxLoLK3ZfDpJGilatB2XcLKPfGhZCv6iwoV1ASVpzvoEhDBxio2DB7nGipdqdQZPNTAekKng=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-19-67bf03225d34
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-23-67bf0322c49c
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on v6.14-rc4 08/25] mm: introduce luf_batch to be used as hash table to store luf meta data
-Date: Wed, 26 Feb 2025 21:03:19 +0900
-Message-Id: <20250226120336.29565-8-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on v6.14-rc4 10/25] mm: introduce APIs to check if the page allocation is tlb shootdownable
+Date: Wed, 26 Feb 2025 21:03:21 +0900
+Message-Id: <20250226120336.29565-10-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120336.29565-1-byungchul@sk.com>
 References: <20250226113024.GA1935@system.software.com>
  <20250226120336.29565-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsXC9ZZnka4S8/50g4lrtSzmrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMLMWRmVeSWpSXmKPExsXC9ZZnka4S8/50g7UfDSzmrF/DZvF5wz82
 	i6/rfzFbPP3Ux2JxedccNot7a/6zWpzftZbVYsfSfUwWlw4sYLI43nuAyWL+vc9sFps3TWW2
 	OD5lKqPF7x9z2Bz4PL639rF47Jx1l91jwaZSj80rtDw2repk89j0aRK7x7tz59g9Tsz4zeLx
-	ft9VNo+tv+w8GqdeY/P4vEkugCeKyyYlNSezLLVI3y6BK6Nt2hHWgi0GFa92d7I1MB5S72Lk
-	5JAQMJG4svgmI4z95cZsNhCbTUBd4saNn8wgtoiAmcTB1j/sXYxcHMwCy5gk9p5oACsSFqiU
-	2DC5AayIRUBV4n7rPbBBvAKmEgeO/WWBGCovsXrDAbAaTqBBn6YdA+sVEkiW2Pn7DxPIUAmB
-	22wSU3+uZINokJQ4uOIGywRG3gWMDKsYhTLzynITM3NM9DIq8zIr9JLzczcxAsN6We2f6B2M
-	ny4EH2IU4GBU4uF9cGZvuhBrYllxZe4hRgkOZiURXs7MPelCvCmJlVWpRfnxRaU5qcWHGKU5
-	WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGFn5veMu7Jo9v9hj8YPDmY+aBYXmr42M5Hl/
-	mmNa6VmLZGW5my1rFm2N1uwJehh3vm6a9a4sY5acl/u/esxin/rTn/e3+47n3y7V96/Jmf76
-	5IrP9e5BH5pC5d1mVbx3+c6w8w2Dr6dsY6XUdsZohR0TP7IWx2U3VJrdfPLlqHixYEj4rAkf
-	9iixFGckGmoxFxUnAgCGMxFcZwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsXC5WfdrKvEvD/d4P5pRYs569ewWXze8I/N
+	ft9VNo+tv+w8GqdeY/P4vEkugCeKyyYlNSezLLVI3y6BK+PG1mNsBT+NK9ZP38bcwHhcq4uR
+	k0NCwERi67p/TDD29G8PWEBsNgF1iRs3fjKD2CICZhIHW/+wdzFycTALLGOS2Huiga2LkYND
+	WKBSYsfpGJAaFgFViS93TjKC2LxA9Ssfz2ODmCkvsXrDAbA5nEDxT9OOgcWFBJIldv7+wwQy
+	U0LgPpvEh85DUEdIShxccYNlAiPvAkaGVYxCmXlluYmZOSZ6GZV5mRV6yfm5mxiBQb2s9k/0
+	DsZPF4IPMQpwMCrx8D44szddiDWxrLgy9xCjBAezkggvZ+aedCHelMTKqtSi/Pii0pzU4kOM
+	0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2MvL/PXT7G8VdX5OZb3reF2/sdtqj2Rl5/
+	MHklb7zpdt0NTBf/fLA8sUHTVOSa+BI1N5W9CvFv1i2+n+idoLn7wdF7uee8Qj7ZG/8LPFun
+	0H7wgbPrMRe1mGnsJT89Am8zxPeHC81SLRLzfHUv1OvV9McXnvOfrZJznlT5QaqTcUZ29Jtf
+	qiFWSizFGYmGWsxFxYkANVSxGmYCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFLMWRmVeSWpSXmKPExsXC5WfdrKvEvD/d4MZ0DYs569ewWXze8I/N
 	4uv6X8wWTz/1sVgcnnuS1eLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
 	Nm+aymxxfMpURovfP+awOfB7fG/tY/HYOesuu8eCTaUem1doeWxa1cnmsenTJHaPd+fOsXuc
-	mPGbxeP9vqtsHotffGDy2PrLzqNx6jU2j8+b5AJ4o7hsUlJzMstSi/TtErgy2qYdYS3YYlDx
-	ancnWwPjIfUuRk4OCQETiS83ZrOB2GwC6hI3bvxkBrFFBMwkDrb+Ye9i5OJgFljGJLH3RANY
-	kbBApcSGyQ1gRSwCqhL3W+8xgti8AqYSB479ZYEYKi+xesMBsBpOoEGfph0D6xUSSJbY+fsP
-	0wRGrgWMDKsYRTLzynITM3NM9YqzMyrzMiv0kvNzNzECg3RZ7Z+JOxi/XHY/xCjAwajEw/vg
-	zN50IdbEsuLK3EOMEhzMSiK8nJl70oV4UxIrq1KL8uOLSnNSiw8xSnOwKInzeoWnJggJpCeW
-	pGanphakFsFkmTg4pRoYnZVb1h3Trokzf3zIhynw8//k806zfs20vsVzJEfno8nbb5sWdsgp
-	W/fq8yXbF1nNOfO0Ze++bPlHFo/OiruVnq47YxJy+9qRD8VTczz/inf3zjqtdlXtesezdH+R
-	p7MORsmdFvt/V13uD5v1AXEzY7X6x36VSy4/vlQ0keULZw5nbsmeqoNdSizFGYmGWsxFxYkA
-	dXrYUU4CAAA=
+	mPGbxeP9vqtsHotffGDy2PrLzqNx6jU2j8+b5AJ4o7hsUlJzMstSi/TtErgybmw9xlbw07hi
+	/fRtzA2Mx7W6GDk5JARMJKZ/e8ACYrMJqEvcuPGTGcQWETCTONj6h72LkYuDWWAZk8TeEw1s
+	XYwcHMIClRI7TseA1LAIqEp8uXOSEcTmBapf+XgeG8RMeYnVGw6AzeEEin+adgwsLiSQLLHz
+	9x+mCYxcCxgZVjGKZOaV5SZm5pjqFWdnVOZlVugl5+duYgSG6LLaPxN3MH657H6IUYCDUYmH
+	98GZvelCrIllxZW5hxglOJiVRHg5M/ekC/GmJFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJI
+	TyxJzU5NLUgtgskycXBKNTA6mb2Z9zROaOuB2cx19w2TS85smnSY58WOj6XfmPgmTbcMED+X
+	NvvLsoXrFn9d9OxmQ1HXhL51S9Yq1r69KTy9a+PUBnH3VddqVjTnKPfVs043U/57Ly3jnd1H
+	M8O5jz4d5BEXTkpc/LPWwLDkucjWw+YPnP/Nt/kg+Xv/s4mMIbWyrlF3oz55KrEUZyQaajEX
+	FScCAO0dzwxNAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,218 +67,248 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
 Functionally, no change.  This is a preparation for luf mechanism that
-needs to keep luf meta data per page while staying in pcp or buddy
-allocator.  The meta data includes cpumask for tlb shootdown and luf's
-request generation number.
+should indentify if tlb shootdown can be performed on page allocation.
 
-Since struct page doesn't have enough room to store luf meta data, this
-patch introduces a hash table to store them and makes each page keep its
-hash key instead.
+In a context with irq disabled or non-task, tlb shootdown cannot be
+performed because of deadlock issue.  Thus, page allocator should work
+being aware of whether tlb shootdown can be performed on returning page.
 
-Since all the pages in pcp or buddy share the hash table, confliction is
-inevitable so care must be taken when reading or updating its entry.
+This patch introduced APIs that pcp or buddy page allocator can use to
+delimit the critical sections taking off pages and indentify whether
+tlb shootdown can be performed.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm_types.h |  10 ++++
- mm/internal.h            |   8 +++
- mm/rmap.c                | 122 +++++++++++++++++++++++++++++++++++++--
- 3 files changed, 136 insertions(+), 4 deletions(-)
+ include/linux/sched.h |   5 ++
+ mm/internal.h         |  14 ++++
+ mm/page_alloc.c       | 159 ++++++++++++++++++++++++++++++++++++++++++
+ mm/rmap.c             |   2 +-
+ 4 files changed, 179 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 7d78a285e52ca..4bfe8d072b0ea 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -32,6 +32,16 @@
- struct address_space;
- struct mem_cgroup;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 86ef426644639..a3049ea5b3ad3 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1400,6 +1400,11 @@ struct task_struct {
+ 	struct callback_head		cid_work;
+ #endif
  
-+#ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
-+struct luf_batch {
-+	struct tlbflush_unmap_batch batch;
-+	unsigned long ugen;
-+	rwlock_t lock;
-+};
-+#else
-+struct luf_batch {};
++#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
++	int luf_no_shootdown;
++	int luf_takeoff_started;
 +#endif
 +
- /*
-  * Each physical page in the system has a struct page associated with
-  * it to keep track of whatever it is we are using the page for at the
+ 	struct tlbflush_unmap_batch	tlb_ubc;
+ 	struct tlbflush_unmap_batch	tlb_ubc_takeoff;
+ 
 diff --git a/mm/internal.h b/mm/internal.h
-index 4c8ed93a792ec..3333d8d461c2c 100644
+index b52e14f86c436..5e67f009d23c6 100644
 --- a/mm/internal.h
 +++ b/mm/internal.h
-@@ -1253,6 +1253,8 @@ extern struct workqueue_struct *mm_percpu_wq;
- void try_to_unmap_flush(void);
- void try_to_unmap_flush_dirty(void);
- void flush_tlb_batched_pending(struct mm_struct *mm);
-+void fold_batch(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src, bool reset);
-+void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src);
- #else
- static inline void try_to_unmap_flush(void)
- {
-@@ -1263,6 +1265,12 @@ static inline void try_to_unmap_flush_dirty(void)
- static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+@@ -1580,6 +1580,20 @@ static inline void accept_page(struct page *page)
  {
  }
-+static inline void fold_batch(struct tlbflush_unmap_batch *dst, struct tlbflush_unmap_batch *src, bool reset)
-+{
-+}
-+static inline void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src)
-+{
-+}
- #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
+ #endif /* CONFIG_UNACCEPTED_MEMORY */
++#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
++extern struct luf_batch luf_batch[];
++bool luf_takeoff_start(void);
++void luf_takeoff_end(void);
++bool luf_takeoff_no_shootdown(void);
++bool luf_takeoff_check(struct page *page);
++bool luf_takeoff_check_and_fold(struct page *page);
++#else
++static inline bool luf_takeoff_start(void) { return false; }
++static inline void luf_takeoff_end(void) {}
++static inline bool luf_takeoff_no_shootdown(void) { return true; }
++static inline bool luf_takeoff_check(struct page *page) { return true; }
++static inline bool luf_takeoff_check_and_fold(struct page *page) { return true; }
++#endif
  
- extern const struct trace_print_flags pageflag_names[];
-diff --git a/mm/rmap.c b/mm/rmap.c
-index ed345503e4f88..74fbf6c2fb3a7 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -641,7 +641,7 @@ struct anon_vma *folio_lock_anon_vma_read(const struct folio *folio,
-  * function, ugen_before(), should be used to evaluate the temporal
-  * sequence of events because the number is designed to wraparound.
-  */
--static atomic_long_t __maybe_unused luf_ugen = ATOMIC_LONG_INIT(LUF_UGEN_INIT);
-+static atomic_long_t luf_ugen = ATOMIC_LONG_INIT(LUF_UGEN_INIT);
- 
- /*
-  * Don't return invalid luf_ugen, zero.
-@@ -656,6 +656,122 @@ static unsigned long __maybe_unused new_luf_ugen(void)
- 	return ugen;
+ /* pagewalk.c */
+ int walk_page_range_mm(struct mm_struct *mm, unsigned long start,
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 27aeee0cfcf8f..a964a98fbad51 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -622,6 +622,165 @@ compaction_capture(struct capture_control *capc, struct page *page,
  }
+ #endif /* CONFIG_COMPACTION */
  
-+static void reset_batch(struct tlbflush_unmap_batch *batch)
++#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
++static bool no_shootdown_context(void)
 +{
-+	arch_tlbbatch_clear(&batch->arch);
-+	batch->flush_required = false;
-+	batch->writable = false;
++	/*
++	 * If it performs with irq disabled, that might cause a deadlock.
++	 * Avoid tlb shootdown in this case.
++	 */
++	return !(!irqs_disabled() && in_task());
 +}
 +
-+void fold_batch(struct tlbflush_unmap_batch *dst,
-+		struct tlbflush_unmap_batch *src, bool reset)
++/*
++ * Can be called with zone lock released and irq enabled.
++ */
++bool luf_takeoff_start(void)
 +{
-+	if (!src->flush_required)
-+		return;
++	unsigned long flags;
++	bool no_shootdown = no_shootdown_context();
++
++	local_irq_save(flags);
 +
 +	/*
-+	 * Fold src to dst.
++	 * It's the outmost luf_takeoff_start().
 +	 */
-+	arch_tlbbatch_fold(&dst->arch, &src->arch);
-+	dst->writable = dst->writable || src->writable;
-+	dst->flush_required = true;
-+
-+	if (!reset)
-+		return;
++	if (!current->luf_takeoff_started)
++		VM_WARN_ON(current->luf_no_shootdown);
 +
 +	/*
-+	 * Reset src.
++	 * current->luf_no_shootdown > 0 doesn't mean tlb shootdown is
++	 * not allowed at all.  However, it guarantees tlb shootdown is
++	 * possible once current->luf_no_shootdown == 0.  It might look
++	 * too conservative but for now do this way for simplity.
 +	 */
-+	reset_batch(src);
++	if (no_shootdown || current->luf_no_shootdown)
++		current->luf_no_shootdown++;
++
++	current->luf_takeoff_started++;
++	local_irq_restore(flags);
++
++	return !no_shootdown;
 +}
 +
 +/*
-+ * The range that luf_key covers, which is 'unsigned short' type.
++ * Should be called within the same context of luf_takeoff_start().
 + */
-+#define NR_LUF_BATCH (1 << (sizeof(short) * 8))
-+
-+/*
-+ * Use 0th entry as accumulated batch.
-+ */
-+static struct luf_batch luf_batch[NR_LUF_BATCH];
-+
-+static void luf_batch_init(struct luf_batch *lb)
++void luf_takeoff_end(void)
 +{
-+	rwlock_init(&lb->lock);
-+	reset_batch(&lb->batch);
-+	lb->ugen = atomic_long_read(&luf_ugen) - 1;
++	unsigned long flags;
++	bool no_shootdown;
++	bool outmost = false;
++
++	local_irq_save(flags);
++	VM_WARN_ON(!current->luf_takeoff_started);
++
++	/*
++	 * Assume the context and irq flags are same as those at
++	 * luf_takeoff_start().
++	 */
++	if (current->luf_no_shootdown)
++		current->luf_no_shootdown--;
++
++	no_shootdown = !!current->luf_no_shootdown;
++
++	current->luf_takeoff_started--;
++
++	/*
++	 * It's the outmost luf_takeoff_end().
++	 */
++	if (!current->luf_takeoff_started)
++		outmost = true;
++
++	local_irq_restore(flags);
++
++	if (no_shootdown)
++		goto out;
++
++	try_to_unmap_flush_takeoff();
++out:
++	if (outmost)
++		VM_WARN_ON(current->luf_no_shootdown);
 +}
 +
-+static int __init luf_init(void)
++/*
++ * Can be called with zone lock released and irq enabled.
++ */
++bool luf_takeoff_no_shootdown(void)
 +{
-+	int i;
++	bool no_shootdown = true;
++	unsigned long flags;
 +
-+	for (i = 0; i < NR_LUF_BATCH; i++)
-+		luf_batch_init(&luf_batch[i]);
++	local_irq_save(flags);
 +
-+	return 0;
++	/*
++	 * No way.  Delimit using luf_takeoff_{start,end}().
++	 */
++	if (unlikely(!current->luf_takeoff_started)) {
++		VM_WARN_ON(1);
++		goto out;
++	}
++	no_shootdown = current->luf_no_shootdown;
++out:
++	local_irq_restore(flags);
++	return no_shootdown;
 +}
-+early_initcall(luf_init);
 +
 +/*
-+ * key to point an entry of the luf_batch array
-+ *
-+ * note: zero means invalid key
++ * Should be called with either zone lock held and irq disabled or pcp
++ * lock held.
 + */
-+static atomic_t luf_kgen = ATOMIC_INIT(1);
-+
-+/*
-+ * Don't return invalid luf_key, zero.
-+ */
-+static unsigned short __maybe_unused new_luf_key(void)
++bool luf_takeoff_check(struct page *page)
 +{
-+	unsigned short luf_key = atomic_inc_return(&luf_kgen);
++	unsigned short luf_key = page_luf_key(page);
++
++	/*
++	 * No way.  Delimit using luf_takeoff_{start,end}().
++	 */
++	if (unlikely(!current->luf_takeoff_started)) {
++		VM_WARN_ON(1);
++		return false;
++	}
 +
 +	if (!luf_key)
-+		luf_key = atomic_inc_return(&luf_kgen);
++		return true;
 +
-+	return luf_key;
++	return !current->luf_no_shootdown;
 +}
 +
-+static void __fold_luf_batch(struct luf_batch *dst_lb,
-+		struct tlbflush_unmap_batch *src_batch,
-+		unsigned long src_ugen)
++/*
++ * Should be called with either zone lock held and irq disabled or pcp
++ * lock held.
++ */
++bool luf_takeoff_check_and_fold(struct page *page)
 +{
-+	/*
-+	 * dst_lb->ugen represents one that requires tlb shootdown for
-+	 * it, that is, sort of request number.  The newer it is, the
-+	 * more tlb shootdown might be needed to fulfill the newer
-+	 * request.  Conservertively keep the newer one.
-+	 */
-+	if (!dst_lb->ugen || ugen_before(dst_lb->ugen, src_ugen))
-+		dst_lb->ugen = src_ugen;
-+	fold_batch(&dst_lb->batch, src_batch, false);
-+}
-+
-+void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src)
-+{
++	struct tlbflush_unmap_batch *tlb_ubc_takeoff = &current->tlb_ubc_takeoff;
++	unsigned short luf_key = page_luf_key(page);
++	struct luf_batch *lb;
 +	unsigned long flags;
 +
 +	/*
-+	 * Exactly same.  Nothing to fold.
++	 * No way.  Delimit using luf_takeoff_{start,end}().
 +	 */
-+	if (dst == src)
-+		return;
-+
-+	if (&src->lock < &dst->lock) {
-+		read_lock_irqsave(&src->lock, flags);
-+		write_lock(&dst->lock);
-+	} else {
-+		write_lock_irqsave(&dst->lock, flags);
-+		read_lock(&src->lock);
++	if (unlikely(!current->luf_takeoff_started)) {
++		VM_WARN_ON(1);
++		return false;
 +	}
 +
-+	__fold_luf_batch(dst, &src->batch, src->ugen);
++	if (!luf_key)
++		return true;
 +
-+	write_unlock(&dst->lock);
-+	read_unlock_irqrestore(&src->lock, flags);
++	if (current->luf_no_shootdown)
++		return false;
++
++	lb = &luf_batch[luf_key];
++	read_lock_irqsave(&lb->lock, flags);
++	fold_batch(tlb_ubc_takeoff, &lb->batch, false);
++	read_unlock_irqrestore(&lb->lock, flags);
++	return true;
 +}
++#endif
 +
+ static inline void account_freepages(struct zone *zone, int nr_pages,
+ 				     int migratetype)
+ {
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 72c5e665e59a4..1581b1a00f974 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -693,7 +693,7 @@ void fold_batch(struct tlbflush_unmap_batch *dst,
  /*
-  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
-  * important if a PTE was dirty when it was unmapped that it's flushed
-@@ -670,9 +786,7 @@ void try_to_unmap_flush(void)
- 		return;
+  * Use 0th entry as accumulated batch.
+  */
+-static struct luf_batch luf_batch[NR_LUF_BATCH];
++struct luf_batch luf_batch[NR_LUF_BATCH];
  
- 	arch_tlbbatch_flush(&tlb_ubc->arch);
--	arch_tlbbatch_clear(&tlb_ubc->arch);
--	tlb_ubc->flush_required = false;
--	tlb_ubc->writable = false;
-+	reset_batch(tlb_ubc);
- }
- 
- /* Flush iff there are potentially writable TLB entries that can race with IO */
+ static void luf_batch_init(struct luf_batch *lb)
+ {
 -- 
 2.17.1
 
