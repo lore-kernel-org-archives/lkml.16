@@ -1,69 +1,88 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50CB02459CB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:27:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A7019CC11
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740565653; cv=none; b=HzLuMlbv4JcNCqQ1IPGWQAq1wsVNEKczfyM4f6lnCTHtqYXIpPIuI78an2TaE6skhuE8IHAqlhaIsMZ61s6kV3emK7tSPvinYWFT15o7PDeMF/e3jiQa1uc8MPA94rFxylPQA00gFQjRo56kolsHegUQr12P+q5xYKzlEFQtJoM=
+	t=1740565747; cv=none; b=XStxTgUgRsQeRiTh+Dt0Sxu5oZ1ksSYXes1ZgcPJZgPfOJmKkDWW5TIgdQeyTy/Jq7GK1zQ8j8ppTWX4xLNp2ELpEfIqpdIatMfm/EjUaTk+GyW5ta7jMP0HPnEbrEFsrbT54iXKC28Na25ze3Iu9fErdEH+zDeZYFC3bZjTlWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740565653; c=relaxed/simple;
-	bh=2OqVpQhL3M7afzGEo2RVBoCfV2wxnjYwaEhiWniHeJE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OW05yF6dAWqknUrjMtw2KHeZT08JaOPwGPnWvk+oJ3WxZeI3xvEcdKjilIWkuTl9/kA2jxDC95OrljTodIBcPFxySdO+oo2IOj1PsxoevuwhZdWPvra0q/FXaRZyYWzC+qHElRcfEnn4OX6b8Jbk4LX2Dgf8yHkjEr9ZQosAIU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnEdM-0004Ga-23; Wed, 26 Feb 2025 11:27:20 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnEdL-002vsT-2E;
-	Wed, 26 Feb 2025 11:27:19 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnEdL-0003OU-21;
-	Wed, 26 Feb 2025 11:27:19 +0100
-Message-ID: <b31fa21c7bd352fe77d50da82c4d2c333b8566d8.camel@pengutronix.de>
-Subject: Re: [PATCH v2] reset: mchp: sparx5: Fix for lan966x
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, herve.codina@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Wed, 26 Feb 2025 11:27:19 +0100
-In-Reply-To: <20250225105329.3037853-1-horatiu.vultur@microchip.com>
-References: <20250225105329.3037853-1-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1740565747; c=relaxed/simple;
+	bh=jd6d/YrQJp7u3Y35vAF2ccKmJq+B0QJtfHp4EK5whA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ffMCu3AXzfqoTWgQTxGT8z1qgasXhSR9Soz/tlceIWbvvv/xWkvR7innImxJZVqFur09jpR91fJaVD/8urCBMbXTTwT4vfAnUI0sW3Ttzhr+IhiYrckSdO2/648VBgM2FvN3DN685LLHpt4uetuJZ7MRD39etXke2q9Uhvu3cBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yBridAji; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yBridAji"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30a303a656aso69385551fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:29:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740565744; x=1741170544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jd6d/YrQJp7u3Y35vAF2ccKmJq+B0QJtfHp4EK5whA8=;
+        b=yBridAjiaILeMGd5v9MnMGozwOkxf3NcMPkpgosgBDi7C/oU3htIPLR4LXK2C9OLjh
+         WOODerMRvsC5QmvKhUbDLBQGmLQ+OMPpL930iZg/DdLAxiSh8koQT/Vcz5Qn2WYZ1SWs
+         d/7Dc/aECZIvNk2ZHIDCHoIMUtINilP22BKVqDbTtFDn4RCg4RvMV38olNUu2Xw6mA69
+         Msuh6boaw80Rtsqw2yex/z2hlrUFyiJtBdJgUMevSbWlYHOfBF9Mni4ujNB85S8duX87
+         GnLnMJ49wy3/TRUAdKOJvSVDc9AN/bxb0N9Uzx+XorfZUTTGjbA8tsvmYYHaTqTkwUmw
+         0xYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740565744; x=1741170544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jd6d/YrQJp7u3Y35vAF2ccKmJq+B0QJtfHp4EK5whA8=;
+        b=mDC8gqSnqjYkdes43DoCvUk1pPR1wbuSFG+8UpNbS4kVJGKxClKJl55Q7PZrW+FDyz
+         yajo8pDqvMWlEL7d15LKMryjGn1aoHq29eV2GK+lpGS6abGnGJXrR8aj5bkUE3b32/D/
+         6GbdZLv9UztcoGA6ZoxPM4qpd8H3SvoaBN4BUysu3DrflNx/pQi9x0M+5l9Tl0Hz7nmD
+         dQvoT8fxLh14Sxm739TEACz4z5A4rh2I1BgXSVW2YFrOVXtCzHNzhrFI6s0IZTRy7A+P
+         i3DFmgLyyuxcAOB3+BJgsRCfkV5tQ5RijKUHruOpXhnrUmDEckd2vhxjvc9scCJEabHF
+         Imhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLcgZxPNnV1EThgvr64iMUTqBgQrgxFACw4EOwMdClZ1/zTDiATcbwgzUApcERmJHaYMa0g9eNWn9ZHrs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylNKjyIuxGTnImK4K+jbTfeew57I0HN+EOI441ezSjTVtESw3b
+	/HPRXsEMDzRzGDqtjezNQNoKfZTzEH5rIYXwK1DfXmOXTHlejnkU1+yPobVDw1fOIACVhDpGOjV
+	MK4Db5fiAbmOmMzoNRdhiZzlHs/g2xVRthIUfqmaB/vq4Y20Q6pI=
+X-Gm-Gg: ASbGncs5eOxI7fQW95MeKidJOJk6p/epGCCbYfvlBcwZYsxVyHCF3YPWnJ/JwwfTR7N
+	/MArosXfYU3vZwzQQRRVJKNlIovlu1q83czNuhWIX0AvnUBIQ0PE8hflPTqjs5XbAn+Edq9y3J/
+	N04IXUUhepS4+bp9pVhS8sLyisdvsnI5zWMv5P
+X-Google-Smtp-Source: AGHT+IHHpGE08k0eF3GlP5E4RiiF0DoICSftFLqWpeYwYEYJllw2uhxtszoAU4mx0vs+6OEdCixULAjPR4Rd+B9jS3o=
+X-Received: by 2002:a2e:98cb:0:b0:308:e803:118e with SMTP id
+ 38308e7fff4ca-30a5af477d0mr82028861fa.0.1740565744057; Wed, 26 Feb 2025
+ 02:29:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250223121931.579031-1-salah.triki@gmail.com>
+In-Reply-To: <20250223121931.579031-1-salah.triki@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 26 Feb 2025 11:28:52 +0100
+X-Gm-Features: AQ5f1Jo2WoZUN5CqFOCb6NBQfPETkTmOZejfsXHK-3TG35mQ7MQv0u6erKTTILU
+Message-ID: <CAMRc=Mdn1NNKz+2-aA6qCcu=TMDvD8KcbWYgryhi6XDk72Zd1g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-stmpe: Use str_hi_lo() helper in stmpe_dbg_show_one()
+To: Salah Triki <salah.triki@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-gpio@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Di, 2025-02-25 at 11:53 +0100, Horatiu Vultur wrote:
-> With the blamed commit it seems that lan966x doesn't seem to boot
-> anymore when the internal CPU is used.
-> The reason seems to be the usage of the devm_of_iomap, if we replace
-> this with of_iomap, this seems to fix the issue as we use the same
-> region also for other devices.
+On Sun, Feb 23, 2025 at 1:35=E2=80=AFPM Salah Triki <salah.triki@gmail.com>=
+ wrote:
+>
+> Remove hard-coded strings by using str_hi_lo() helper function.
+>
+> Signed-off-by: Salah Triki <salah.triki@gmail.com>
+> ---
 
-So the issue is the devm_request_mem_region() called by
-devm_ioremap_resource()?
+This no longer applies, can you resend it rebased on top of current
+gpio/for-next?
 
-Wouldn't it be easier to switch to devm_ioremap() instead?
-
-regards
-Philipp
+Bart
