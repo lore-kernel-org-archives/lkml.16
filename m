@@ -1,336 +1,143 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2060.outbound.protection.outlook.com [40.107.92.60])
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16516221DBD;
-	Wed, 26 Feb 2025 11:49:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570548; cv=fail; b=t81YHF3FHw0xs4gTWgvaLdF7IDP9SqYT1uQ5EP90Z9h2UlUKvmtF6VqPXrde7N+fcPjNlsLhAs07uzDdbPqfctSdMMHNMxYEJCcTvOeE6WAotLEa5TGzpCuz/eUvZr02swoxE0mCO36DHuLKjKOXP33C9BXHx46Py0NqAVdM0W8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570548; c=relaxed/simple;
-	bh=/g6jTL2adeVjGCMS4kIFiFEnN6YDGZUYlEUt3MhdFY8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oi3wi8kg2j87tai6Un9VcB5Xn2de16+9VnKpnCfi+9BjBCAVKjTAoIdMmKQuDefB8JgDIy740ckgFfyUUzoB+QKIwDf5Vgp6ZUPYl6yzeKrAY3Qai1Z6cvhRANTgzVQ2pPxowvJ2jR5bMuhChWdXYTZXTshrBDDQL27MnlAzh6A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=e4b+4n/g; arc=fail smtp.client-ip=40.107.92.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D89216E19;
+	Wed, 26 Feb 2025 11:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740570588; cv=none; b=DQ4KezbwnYoDOpYEWRlcK7N9Uk3YfJYM3dYpMtAtwN4Er8CHcZIHaWfSs7T41UrrT3XDYRMeiE2agX/PBpqg/O12Nk7ETmf9kkygC8de9bk0X4+yGEuAt2d6BJCMTSLK/NPuTp/eVfTTLB6oFi56u2gTH1WSQqWQPr1MQTeMDzw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740570588; c=relaxed/simple;
+	bh=VpmMUY7wY/BS7Pk+f5B3auP2ZypMNupjv4juq8FsjbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O6xPQqH4BENk0jkBp2aS6mP5oUd8DfFCpak9yT7DPmyyiQgJH6SLhUMUKPmpJkM0puS/YWvndMdR5oCljm3OggHgMQEsO9iJ4BusZTZe9E0c70VA5Oj3ElHq9SpU6z8WKer7cPh406BGq1eNWiPRcjIKpy+vnWR7CCk8G61r6QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=Y+3lYlte; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=34ZhmKcj; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="e4b+4n/g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=V0YEeI3NSGQAqFZxmM6U9s/kiBnJnagumJ1INNOuLSA86y/fsQ/VgwyD+71bUKUPlSBYlLL4IDooTwva4l0fTEoTuM2vmJ2XmHlpGVG1iTNl/1q7gs7xOuR/lf6tzHBOgVH7o2WYINkM0GtdhNag316QnXagRab5bLmJUnQx3dP5xRk7Z9j70TH7+Y0+XQHKDDouNyCi3Khe1RGnSzqnKoUsSu/cDpcuxAVKJCWC0/XPVpNF172ueWBfIcUg2fnCEAy79T0LLoq9WSPxE1ud3x5dE6LMpyqvGoSr00p5zq+fwugqvpRS980K3VbIUPa7zVqOw17fX82ruSBVnZjdzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=spTsY7bKjVPHS7Z4ve7fdJL9M7Yb0Fy0vW+OO5nooqw=;
- b=BgHa+0NrA8df16/1iRr7T48jd91/DYH4cvEoXDjZaiZz1ZTdg7vD8tA/nhlnZSdd0iP4NMCeLL8vkFGX3ns4OXwzobIoECK7SWNT2cJliMjGutb3Ta/90MtfhNT1jic+tM4XUN5D1nE/jxBdNse3EI+hmDY5OhP5S5YclsMIph8Np1HIqfTJQlobiJJb/wbPl2ncaxgoGhJ/a5nv+Y78If3x5wb3cXTU/dofk8cjABCmBNzi+Gem0NizwIPNj8tomdBGKT5nHWRpMU7Kr6bUEVu+rNFqCdk8Ni3OJI7/QfYYiHUYzHeJ01EpDBFnOAjXQMxnIoy82u7XUzwPYhSGmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=spTsY7bKjVPHS7Z4ve7fdJL9M7Yb0Fy0vW+OO5nooqw=;
- b=e4b+4n/gw2sqp2uwBVqm9i3Cce5Exf7K+VACg1ymrU225ucIrmmIGaQ2YSy2TlQLyDpTN7+AnYqtYahIAkbHMNZpCYRSNFYCyjP0L8ZRJ2XTgruhbiOuu+F47uIx5AwlJIMhMtgnvQxfxVVNtnmaLeQ616JPty6x+pv5UdiWM64vYuj9Ii1Lvu/m8wljRl/6JSDCxaZvAIynfnpV1Co1O9XIk0jUHN6pg7v/K9GSBeLfTJQY539Z/JiRu7AO71kvgTI/K+sQnhJHZ1dLs5Nhwi2xg7UFCPEjWyDqc/GV+c9I0/0XHT7Ps+jxNCQUOfY27fmJxXVRL/4cnb26ebRs+Q==
-Received: from SA0PR11CA0166.namprd11.prod.outlook.com (2603:10b6:806:1bb::21)
- by MN2PR12MB4207.namprd12.prod.outlook.com (2603:10b6:208:1d9::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
- 2025 11:49:01 +0000
-Received: from SA2PEPF00003AE9.namprd02.prod.outlook.com
- (2603:10b6:806:1bb:cafe::6a) by SA0PR11CA0166.outlook.office365.com
- (2603:10b6:806:1bb::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Wed,
- 26 Feb 2025 11:49:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- SA2PEPF00003AE9.mail.protection.outlook.com (10.167.248.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 11:49:00 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Feb
- 2025 03:48:45 -0800
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 26 Feb
- 2025 03:48:44 -0800
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.6)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Wed, 26
- Feb 2025 03:48:41 -0800
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
- Romanovsky" <leonro@nvidia.com>, Leon Romanovsky <leon@kernel.org>, "Tariq
- Toukan" <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 6/6] net/mlx5e: Properly match IPsec subnet addresses
-Date: Wed, 26 Feb 2025 13:47:52 +0200
-Message-ID: <20250226114752.104838-7-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20250226114752.104838-1-tariqt@nvidia.com>
-References: <20250226114752.104838-1-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="Y+3lYlte";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="34ZhmKcj"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8A77011401BD;
+	Wed, 26 Feb 2025 06:49:45 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Wed, 26 Feb 2025 06:49:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm2; t=1740570585; x=
+	1740656985; bh=NUV6XQ7b1xL3JnX+3WnfxkiyKE8c72Tyb0qS0broJwE=; b=Y
+	+3lYlte5EmJcJWEt2f+7MS4Os164ocN+bPsGNY/MYlMGWulxvxPfJdtvl2fDv9ik
+	bTXyQScCciCHsr1LCCauwhbpedXl5l03/ApwRcwr/HP6sphRpH2K25aPLn0Qyqzy
+	VHaGthhvGNNbq84N/Sgo92KE45v7ywb1MFpm2n6CMvNmo0bLxVbQ9kAM7MpqRyj1
+	9HpUYZLFqQDqeQTcFuKPcHIxNUWxEq0GN/c2yxkP6aVVaKVz6fwr7f7gWOvAtcim
+	U+6MkxWj1bAxCgRaEh04GJfBOIx2P3Q1h5rEfFBHTATBapXynS8DeZMlC151RjhU
+	P7/QqIHw5MW9dO/+6R5Aw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740570585; x=1740656985; bh=NUV6XQ7b1xL3JnX+3WnfxkiyKE8c72Tyb0q
+	S0broJwE=; b=34ZhmKcjT4ByBDZWw2nHG1CfFp0CXR9QQuD2S5LS7RiK1aRryuk
+	U9nq1PdX8Ng6nAo4KydzMu4ExzgBvxfxV+6uu6N4R5jbpSc9Awe7/X/9MT7bn+G0
+	inT4pSBexS4Dtnj/nvWpdx69Tv29q93HvCx8scG0MH9L1m7oA6sL9jlcmlKW/fYE
+	bvjcQW9QrsQhD2crdRf1+uzjFdlwArmRBPWJFLU82CJKHWii3WOGP+t2WdW1cR3g
+	/4/uf80M4/9+rwc+XQRljMCINZAHIidlqP/rXr/jWHb2pEHYOVACOjDG1h4cmQgr
+	r3MO3u+lSJfRghYCESD7zHbrzwT91VJ1FKw==
+X-ME-Sender: <xms:2P--Z0xjIADr4gf4kqZzE6XbVlHMc9jNVZdNJA85a7RR6x3I6qzHYg>
+    <xme:2P--Z4SrBuFVusf8FOAmIWtrw9nGZmL4KRzW-cPAzeVzAohRQu5-Izo0J3QFqxjLs
+    9Ls09odPimvYmbv5oY>
+X-ME-Received: <xmr:2P--Z2X3_1pSDndN3W4CcUAt6CG4kHsSzNyVcHPeaNNpTblmw2lW3vE5HQ1-ZlMm39uZrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeehtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdfstddttddv
+    necuhfhrohhmpedfmfhirhhilhhlucetrdcuufhhuhhtvghmohhvfdcuoehkihhrihhllh
+    esshhhuhhtvghmohhvrdhnrghmvgeqnecuggftrfgrthhtvghrnhepffdvveeuteduhffh
+    ffevlefhteefveevkeelveejudduvedvuddvleetudevhfeknecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhho
+    vhdrnhgrmhgvpdhnsggprhgtphhtthhopeefvddpmhhouggvpehsmhhtphhouhhtpdhrtg
+    hpthhtohepvhgrnhhnrghpuhhrvhgvsehgohhoghhlvgdrtghomhdprhgtphhtthhopegu
+    rghvvgdrhhgrnhhsvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepkh
+    hirhhilhhlrdhshhhuthgvmhhovheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphht
+    thhopehjghhrohhsshesshhushgvrdgtohhmpdhrtghpthhtoheprghjrgihrdhkrghhvg
+    hrsegsrhhorggutghomhdrtghomhdprhgtphhtthhopegrkheslhhinhhugidrihhnthgv
+    lhdrtghomhdprhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhmpdhrtg
+    hpthhtohepthhhohhmrghsrdhlvghnuggrtghkhiesrghmugdrtghomhdprhgtphhtthho
+    pehtghhlgieslhhinhhuthhrohhnihigrdguvg
+X-ME-Proxy: <xmx:2P--ZyiAQKOFRnxyOzpeqCouZL8yXR5O0Z1uAGDl2AzgePchztVPLA>
+    <xmx:2P--Z2BFvoasHzlVzsB6ZwmpavJNmNunVnf_ozZVmCxuQcwxCQ7a7g>
+    <xmx:2P--ZzJmvgbpt5_9r6nXFhFSK3m76UBuDJRveiN9f9YKuSIEO60fsg>
+    <xmx:2P--Z9AAmPPQje4t-8vfSh04lk6sCU__6b4u3BnCegBa-MQ6XPC8TQ>
+    <xmx:2f--Z-a27CiKqq2ElAYuuRFNsyxas3XqkH1PFWDhpzTloP3iA4ZefGzk>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Feb 2025 06:49:34 -0500 (EST)
+Date: Wed, 26 Feb 2025 13:49:31 +0200
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: dave.hansen@linux.intel.com, kirill.shutemov@linux.intel.com, 
+	jgross@suse.com, ajay.kaher@broadcom.com, ak@linux.intel.com, tony.luck@intel.com, 
+	thomas.lendacky@amd.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	hpa@zytor.com, pbonzini@redhat.com, seanjc@google.com, kai.huang@intel.com, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
+	sagis@google.com, afranji@google.com, kees@kernel.org, jikos@kernel.org, 
+	peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
+	bcm-kernel-feedback-list@broadcom.com, stable@vger.kernel.org
+Subject: Re: [PATCH v6 2/3] x86/tdx: Fix arch_safe_halt() execution for TDX
+ VMs
+Message-ID: <pvbwlmkknw7cwln4onmi5mujpykyaxisb73khlriq7pzqhgno2@nvu3cbchp4am>
+References: <20250225004704.603652-1-vannapurve@google.com>
+ <20250225004704.603652-3-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE9:EE_|MN2PR12MB4207:EE_
-X-MS-Office365-Filtering-Correlation-Id: 43bc5d86-da56-4c36-a720-08dd565b8f36
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?xsgHdkmv9LNJs3Vkvrr4Hi5T8iDtTDBwiqM7c6JTOBLkTJxLpIgISqN6baDg?=
- =?us-ascii?Q?dEeTo0zWFSvBzsWriL7uzVTuOT/aGZ+2YL+lrWjJ5LE6jvoy7W21NorW2QQ5?=
- =?us-ascii?Q?ElIMVIIZXLLjc9YsDH9zmXBCKortTsic4pwSZ8ynIUQM5ccfyIykapkxFhgt?=
- =?us-ascii?Q?y7NydZGWA1hcwLCsKC3etRuaiYCAuWHrlwqaUMwDjLSOpiC4O1H3On9f8NsU?=
- =?us-ascii?Q?rw/FWDTVbMRvRTjQhbrQLk1PskWTyL3gDGAc5mgaY5jj/FJlTzcKgKiNBiHE?=
- =?us-ascii?Q?oMuFTV3uJbuV9XD5RowdoRzjuV0Qy2JaQskgdaaaF4MDbcACdK2WbaH2Bkcm?=
- =?us-ascii?Q?BhujzbdWvVfkrkuktgerbwAax3iNBaWTTi0GZJY/GfP5vXlMkW9tkfsxBN1s?=
- =?us-ascii?Q?60hv2GKl48HOnRRowWqQJLy4i4vPYU2LmjFlLNF83nr0xp9bf9xc1mASpIhJ?=
- =?us-ascii?Q?4093uaU2FR9Xj4Yu0FjOsd38IOpWIctQP9Otx2azbPm9x9p2Z4137pmCsqcV?=
- =?us-ascii?Q?9Rtus6I3MnhKr3CqBzvqA/OoaxSlir5Gb7YkRyq1See6VxYmPN8qvkcdWWig?=
- =?us-ascii?Q?/HVY0jOsuTQ/W+hbLng4JF+dZUZ0n4uiQHAqSro4ssdbymUWnJOHaRA3Ohvq?=
- =?us-ascii?Q?ZqD/N5yb1k1BuDmofDv+CQTwC/qgo02EBuB1FOJWeCA2o6pvCwjjm+q71euF?=
- =?us-ascii?Q?mxHsEw+MlCTmHOYSgZ+A+yEO++894NzJuptUbpYzOFLB+RBR+90GZlVrtg1v?=
- =?us-ascii?Q?fd6s+K8hXc+e9N0HDJpH695gPDD5eF//9j2StlNIyxcP8lK+mDzJxdcL0Lif?=
- =?us-ascii?Q?383HzvXfINBS1AU2vGeKmiWSV5+ncLUQbnSL35FK+Yjh2+7Q66tdodSyAy4N?=
- =?us-ascii?Q?UBDH4HVKud+m6uQYIU04OyszqE6gPjPNOJ7+0Wu88CF5+JiOQRBCr4ZhbXVI?=
- =?us-ascii?Q?CQkfHxuL0kn2rpEWQxVQPvZueGJ7knsuXvI/T1YflN0/VGWmIXs31WhbVgR1?=
- =?us-ascii?Q?UsElX8o1K4LsLF+RAncxJ8/HeM+JQIxWZ/yE4AvxB9oHnGGA+d0w/Z/hdLeD?=
- =?us-ascii?Q?kCdQLts2vdN09vaH79lHWfVyQIMKDz9hhRCRhxn/42D+dcrTV0QmIQpl6m/p?=
- =?us-ascii?Q?PACD14zKl6dLbEAaklgaespYJeN98oSjX+ztdoGTOi17mQZnELyi3fYevqlY?=
- =?us-ascii?Q?nXwpG840qhp43ljfZ3dyh0PdGf572eyonvvnoslalFqYOsgIyv8vxEF7TPGK?=
- =?us-ascii?Q?vZfPc7oo81s2e1nB6w9+Ja/WXDVBdeUMbfM7Tjm4t3S5tN9Qoc4JURIrr4rr?=
- =?us-ascii?Q?ul2a42svGvFFfpJbmi9o9R17109B4qFUJQgorAaU3US1MUlzE2gSCzwyeKwg?=
- =?us-ascii?Q?tXNxvpRlEs6F/3cQB/xhmsL0LYrHNdP7dG+DRoLjmB17c5/zICXsAdtiM4xp?=
- =?us-ascii?Q?bofqp0tkgglBvxvySOM/p2RkY1AiZ6vjtgZbi7tzSvyrwF2JEQqkyIqKIUrx?=
- =?us-ascii?Q?67W55zQSKdEQQ54=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 11:49:00.0121
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43bc5d86-da56-4c36-a720-08dd565b8f36
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225004704.603652-3-vannapurve@google.com>
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On Tue, Feb 25, 2025 at 12:47:03AM +0000, Vishal Annapurve wrote:
+> Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+> to hypervisor via TDCALL. If HLT is executed in STI-shadow, resulting #VE
+> handler will enable interrupts before TDCALL is routed to hypervisor
+> leading to missed wakeup events.
+> 
+> Current TDX spec doesn't expose interruptibility state information to
+> allow #VE handler to selectively enable interrupts. To bypass this
+> issue, TDX VMs need to replace "sti;hlt" execution with direct TDCALL
+> followed by explicit interrupt flag update.
+> 
+> Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+> prevented the idle routines from executing HLT instruction in STI-shadow.
+> But it missed the paravirt routine which can be reached like this as an
+> example:
+>         acpi_safe_halt() =>
+>         raw_safe_halt()  =>
+>         arch_safe_halt() =>
+>         irq.safe_halt()  =>
+>         pv_native_safe_halt()
 
-Existing match criteria didn't allow to match whole subnet and
-only by specific addresses only. This caused to tunnel mode do not
-forward such traffic through relevant SA.
+I would rather use paravirt spinlock example. It is less controversial.
+I still see no point in ACPI cpuidle be a thing in TDX guests.
 
-In tunnel mode, policies look like this:
-src 192.169.0.0/16 dst 192.169.0.0/16
-        dir out priority 383615 ptype main
-        tmpl src 192.169.101.2 dst 192.169.101.1
-                proto esp spi 0xc5141c18 reqid 1 mode tunnel
-        crypto offload parameters: dev eth2 mode packet
+> 
+> To reliably handle arch_safe_halt() for TDX VMs, introduce explicit
+> dependency on CONFIG_PARAVIRT and override paravirt halt()/safe_halt()
+> routines with TDX-safe versions that execute direct TDCALL and needed
+> interrupt flag updates. Executing direct TDCALL brings in additional
+> benefit of avoiding HLT related #VEs altogether.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+> Signed-off-by: Vishal Annapurve <vannapurve@google.com>
 
-In this case, the XFRM core code handled all subnet calculations and
-forwarded network address to the drivers e.g. 192.169.0.0.
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
-For mlx5 devices, there is a need to set relevant prefix e.g. 0xFFFF00
-to perform flow steering match operation.
-
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- .../mellanox/mlx5/core/en_accel/ipsec.c       | 49 +++++++++++++++++++
- .../mellanox/mlx5/core/en_accel/ipsec.h       |  9 +++-
- .../mellanox/mlx5/core/en_accel/ipsec_fs.c    | 20 +++++---
- 3 files changed, 69 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-index beb7275d721a..782f6d51434d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.c
-@@ -303,6 +303,16 @@ static void mlx5e_ipsec_init_macs(struct mlx5e_ipsec_sa_entry *sa_entry,
- 	neigh_release(n);
- }
- 
-+static void mlx5e_ipsec_state_mask(struct mlx5e_ipsec_addr *addrs)
-+{
-+	/*
-+	 * State doesn't have subnet prefixes in outer headers.
-+	 * The match is performed for exaxt source/destination addresses.
-+	 */
-+	memset(addrs->smask.m6, 0xFF, sizeof(__be32) * 4);
-+	memset(addrs->dmask.m6, 0xFF, sizeof(__be32) * 4);
-+}
-+
- void mlx5e_ipsec_build_accel_xfrm_attrs(struct mlx5e_ipsec_sa_entry *sa_entry,
- 					struct mlx5_accel_esp_xfrm_attrs *attrs)
- {
-@@ -378,6 +388,7 @@ void mlx5e_ipsec_build_accel_xfrm_attrs(struct mlx5e_ipsec_sa_entry *sa_entry,
- 	       sizeof(attrs->addrs.saddr));
- 	memcpy(&attrs->addrs.daddr, x->id.daddr.a6, sizeof(attrs->addrs.daddr));
- 	attrs->addrs.family = x->props.family;
-+	mlx5e_ipsec_state_mask(&attrs->addrs);
- 	attrs->type = x->xso.type;
- 	attrs->reqid = x->props.reqid;
- 	attrs->upspec.dport = ntohs(x->sel.dport);
-@@ -1046,6 +1057,43 @@ static void mlx5e_xfrm_update_stats(struct xfrm_state *x)
- 	x->curlft.bytes += success_bytes - headers * success_packets;
- }
- 
-+static __be32 word_to_mask(int prefix)
-+{
-+	if (prefix < 0)
-+		return 0;
-+
-+	if (!prefix || prefix > 31)
-+		return cpu_to_be32(0xFFFFFFFF);
-+
-+	return cpu_to_be32(((1U << prefix) - 1) << (32 - prefix));
-+}
-+
-+static void mlx5e_ipsec_policy_mask(struct mlx5e_ipsec_addr *addrs,
-+				    struct xfrm_selector *sel)
-+{
-+	int i;
-+
-+	if (addrs->family == AF_INET) {
-+		addrs->smask.m4 = word_to_mask(sel->prefixlen_s);
-+		addrs->saddr.a4 &= addrs->smask.m4;
-+		addrs->dmask.m4 = word_to_mask(sel->prefixlen_d);
-+		addrs->daddr.a4 &= addrs->dmask.m4;
-+		return;
-+	}
-+
-+	for (i = 0; i < 4; i++) {
-+		if (sel->prefixlen_s != 32 * i)
-+			addrs->smask.m6[i] =
-+				word_to_mask(sel->prefixlen_s - 32 * i);
-+		addrs->saddr.a6[i] &= addrs->smask.m6[i];
-+
-+		if (sel->prefixlen_d != 32 * i)
-+			addrs->dmask.m6[i] =
-+				word_to_mask(sel->prefixlen_d - 32 * i);
-+		addrs->daddr.a6[i] &= addrs->dmask.m6[i];
-+	}
-+}
-+
- static int mlx5e_xfrm_validate_policy(struct mlx5_core_dev *mdev,
- 				      struct xfrm_policy *x,
- 				      struct netlink_ext_ack *extack)
-@@ -1121,6 +1169,7 @@ mlx5e_ipsec_build_accel_pol_attrs(struct mlx5e_ipsec_pol_entry *pol_entry,
- 	memcpy(&attrs->addrs.saddr, sel->saddr.a6, sizeof(attrs->addrs.saddr));
- 	memcpy(&attrs->addrs.daddr, sel->daddr.a6, sizeof(attrs->addrs.daddr));
- 	attrs->addrs.family = sel->family;
-+	mlx5e_ipsec_policy_mask(&attrs->addrs, sel);
- 	attrs->dir = x->xdo.dir;
- 	attrs->action = x->action;
- 	attrs->type = XFRM_DEV_OFFLOAD_PACKET;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.h b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.h
-index 37ef1e331135..a63c2289f8af 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec.h
-@@ -81,11 +81,18 @@ struct mlx5e_ipsec_addr {
- 		__be32 a4;
- 		__be32 a6[4];
- 	} saddr;
--
-+	union {
-+		__be32 m4;
-+		__be32 m6[4];
-+	} smask;
- 	union {
- 		__be32 a4;
- 		__be32 a6[4];
- 	} daddr;
-+	union {
-+		__be32 m4;
-+		__be32 m6[4];
-+	} dmask;
- 	u8 family;
- };
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
-index 23b63dea2f7f..98b6a3a623f9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/ipsec_fs.c
-@@ -1488,7 +1488,9 @@ static void setup_fte_addr4(struct mlx5_flow_spec *spec,
- 			    struct mlx5e_ipsec_addr *addrs)
- {
- 	__be32 *saddr = &addrs->saddr.a4;
-+	__be32 *smask = &addrs->smask.m4;
- 	__be32 *daddr = &addrs->daddr.a4;
-+	__be32 *dmask = &addrs->dmask.m4;
- 
- 	if (!*saddr && !*daddr)
- 		return;
-@@ -1501,15 +1503,15 @@ static void setup_fte_addr4(struct mlx5_flow_spec *spec,
- 	if (*saddr) {
- 		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_value,
- 				    outer_headers.src_ipv4_src_ipv6.ipv4_layout.ipv4), saddr, 4);
--		MLX5_SET_TO_ONES(fte_match_param, spec->match_criteria,
--				 outer_headers.src_ipv4_src_ipv6.ipv4_layout.ipv4);
-+		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-+				    outer_headers.src_ipv4_src_ipv6.ipv4_layout.ipv4), smask, 4);
- 	}
- 
- 	if (*daddr) {
- 		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_value,
- 				    outer_headers.dst_ipv4_dst_ipv6.ipv4_layout.ipv4), daddr, 4);
--		MLX5_SET_TO_ONES(fte_match_param, spec->match_criteria,
--				 outer_headers.dst_ipv4_dst_ipv6.ipv4_layout.ipv4);
-+		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-+				    outer_headers.dst_ipv4_dst_ipv6.ipv4_layout.ipv4), dmask, 4);
- 	}
- }
- 
-@@ -1517,7 +1519,9 @@ static void setup_fte_addr6(struct mlx5_flow_spec *spec,
- 			    struct mlx5e_ipsec_addr *addrs)
- {
- 	__be32 *saddr = addrs->saddr.a6;
-+	__be32 *smask = addrs->smask.m6;
- 	__be32 *daddr = addrs->daddr.a6;
-+	__be32 *dmask = addrs->dmask.m6;
- 
- 	if (addr6_all_zero(saddr) && addr6_all_zero(daddr))
- 		return;
-@@ -1530,15 +1534,15 @@ static void setup_fte_addr6(struct mlx5_flow_spec *spec,
- 	if (!addr6_all_zero(saddr)) {
- 		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_value,
- 				    outer_headers.src_ipv4_src_ipv6.ipv6_layout.ipv6), saddr, 16);
--		memset(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
--				    outer_headers.src_ipv4_src_ipv6.ipv6_layout.ipv6), 0xff, 16);
-+		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-+				    outer_headers.src_ipv4_src_ipv6.ipv6_layout.ipv6), dmask, 16);
- 	}
- 
- 	if (!addr6_all_zero(daddr)) {
- 		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_value,
- 				    outer_headers.dst_ipv4_dst_ipv6.ipv6_layout.ipv6), daddr, 16);
--		memset(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
--				    outer_headers.dst_ipv4_dst_ipv6.ipv6_layout.ipv6), 0xff, 16);
-+		memcpy(MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-+				    outer_headers.dst_ipv4_dst_ipv6.ipv6_layout.ipv6), smask, 16);
- 	}
- }
- 
 -- 
-2.45.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
