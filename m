@@ -1,110 +1,524 @@
-Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC8325E81A;
-	Wed, 26 Feb 2025 22:48:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69E625E81A;
+	Wed, 26 Feb 2025 22:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740610135; cv=none; b=MNUeYpyROeh+4PzTwDpqbu5X1wQVzcbO9M3L3Gtwf2lPdGEwagSEHhAOfffJ6p8+Qy1XSKBX80wxagfkazQJy+ZCJsS030OULBiOvZwaJJgNJ2ZOJlRshEpzVCvBnsx5VeM/lLaq77HZdsNX33UPO2G/WzralSqnEfT+GT5QsTw=
+	t=1740610200; cv=none; b=Zx/TAMjqqGoUhv76qRmFUeZ9yibstJjfsRRA3R1di2SfbWIyNo6Q8PHXGhl86aSe+gJdeRNvxC2P9xIS+dQEPrUgeWnP/esznK+OB0t+hD0lv8HD5BPopWPcUW0y/KELXM3ae8PEUQHHs2kl1ZUBc3PJIWddKQCskIaxp36GGYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740610135; c=relaxed/simple;
-	bh=GB66l7DCSsgFBNQM0YRk5SJK5IcBy6j62f4sABcXj3Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IV+DOjUN6PGR7uGWnvJPiMKxEKmOsmg0KUF8/9+kf5SclMVPbP5qkvt/+OkCKJpWNQ0UV85IOZJxQmtGpTpKarAEw+0/D0Rm+S1v3m/sUe80poFy3YzDtR/W0NaiabeAV8HJWnf2JS3AaImbXGILwMzalShCkgbcxfGWBSL2IEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
-Message-ID: <73ef8000-661e-47b4-a8b0-a02d3a849645@assembler.cz>
-Date: Wed, 26 Feb 2025 23:48:14 +0100
+	s=arc-20240116; t=1740610200; c=relaxed/simple;
+	bh=u5BrbLSKoImwOQ39LOGZDLX6yVxbrpriRILb+9eXAsI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dVomraqfgut5XHAFHzojUfDCeOpIRBAvp2PyFi7kUfBwHxvSN0oV5wgTGvp+ghdRCf7GtRQaxwzUiF4Llme410T7LgId4M0WhBzAUk91Dcjj54FdhQ4ajeRUC+8TGl7+4ylRz7kgl+v6/FWU4K4tVF63BGU/ZX/uYmIQ7DBHJag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JLTH7PK1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JLTH7PK1"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QLLYwt017692;
+	Wed, 26 Feb 2025 22:49:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zKKCmmB9W2cGynst/e6IbldZw1mWne79Ma4D1y1yOoA=; b=JLTH7PK1RGBZBWOY
+	A+REVDrUpGNsqAar72nCrHcGYvUOCc+L4yh7hURcIqprAPuXm8bgzVjMUroNjEQW
+	JWgl1L0Df5spcl9ICfTiQ/JtELXZsZNH0/0MUnof9OrZFXDPjIVKHg4iwqacMOCS
+	Wp7Zs3JIVhfl43pwqegXcFlGK9ExQ7gGAOYwT+aUAT/P+Ue71h4D0mguWCSPKyrQ
+	RROQjsKkEEQt1/f7VAQzHW1t1NRzsZM1AAWne0vCVKx6rXGV0ayFIgdYk0+EDRKb
+	rMFKS0lOaxwd3+smnG2MjtqOOXSaolEUbdQ018Q/d00xy3QSIauWrcaJLRmAr3DZ
+	xYDXeQ==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prn3j26-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 22:49:49 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51QMnm6j007147
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 22:49:48 GMT
+Received: from [10.134.70.212] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Feb
+ 2025 14:49:48 -0800
+Message-ID: <164c92ec-050a-43d4-b567-2cf9d5ba1eae@quicinc.com>
+Date: Wed, 26 Feb 2025 14:49:47 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-To: Andrew Cooper <andrew.cooper3@citrix.com>, Jann Horn <jannh@google.com>
-Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
- samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
- x86 maintainers <x86@kernel.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
- <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
- <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
- <fa66e2f1-4770-45f5-aa4d-1a0ebec8a912@citrix.com>
- <d50dac43-51da-4b18-9fab-214896bdc9a5@assembler.cz>
- <8b82b394-3f54-437b-bd3a-7ac0eabda687@citrix.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 10/15] drm/msm/dpu: handle pipes as array
 Content-Language: en-US
-From: Rudolf Marek <r.marek@assembler.cz>
-In-Reply-To: <8b82b394-3f54-437b-bd3a-7ac0eabda687@citrix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: mail2.medvecky.net;
-	auth=pass smtp.mailfrom=r.marek@assembler.cz
-X-Spamd-Bar: /
+To: Jun Nie <jun.nie@linaro.org>, Rob Clark <robdclark@gmail.com>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-0-8d5f5f426eb2@linaro.org>
+ <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-10-8d5f5f426eb2@linaro.org>
+From: Jessica Zhang <quic_jesszhan@quicinc.com>
+In-Reply-To: <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-10-8d5f5f426eb2@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: a98jF4GGKXOuUmYrxvaPI05xJ89BHq53
+X-Proofpoint-GUID: a98jF4GGKXOuUmYrxvaPI05xJ89BHq53
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_07,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260177
 
-Hi Andrew,
 
-Dne 25. 02. 25 v 22:14 Andrew Cooper napsal(a):
-> As stand-in for "the reader", I'll point out that you need to add #DB to
-> that list or you're in for a rude surprise when running the x86 selftests.
 
-Thanks for pointing this out. I forgot about the interrupt shadow on SYSCALL
-and possibly some breakpoints possibilities in the kernel.
-
->> The SYSCALL/SYSENTER startup has interrupts disabled, so it is the
->> problem of NMI/#MC
->> handler which would need deal with the normal case and attack case.
+On 2/26/2025 4:30 AM, Jun Nie wrote:
+> There are 2 pipes in a drm plane at most currently, while 4 pipes are
+> required for quad-pipe case. Generalize the handling to pipe pair and
+> ease handling to another pipe pair later. Store pipes in array with
+> removing dedicated r_pipe.
 > 
-> Right, but in the case of the attack, regular interrupts are most likely
-> enabled too.  And writing this has just caused me to realise a
-> yet-more-fun case.
-> An interrupt hitting the syscall entry path (prior to SWAPGS) will cause
-> the interrupt handler's CPL check and conditional SWAPGS to do the wrong
-> thing and switch onto the user GS base too.  (Prior research e.g.
-> GhostRace has shown how to get an hrtimer to reliably hit an instruction
-> boundary.)
+> Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I don't see it, because if attacker starts at syscall entry and interrupts are 
-enabled and the interrupt happens right there the handler will just see proper 
-IRET frame with %cs of kernel and will not perform swapgs. I will try to think 
-about it again tomorrow I likely missed something.
+Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
 
-> Interrupts and exceptions look at %cs in the IRET frame to judge whether
-> to SWAPGS or not (and this is one of the main things that paranoid_entry
-> does differently).  In the case of the attack, there's no IRET frame
-> pushed on the stack and the read of %cs is out-of-bounds, most likely
-> the stack frame of the function which followed the corrupt function pointer.
-
-Thank you for your detailed explanation.
-
-> The SYSCALL entrypoint is simply the easiest to pivot on, but all can be
-> attacked in this manner.  Fixing only the SYSCALL entrypoint doesn't
-> improve things much.
-
-Maybe more elegant and cheap check on IDT entry "authenticity" would be to check 
-for current %ss which needs to be NULL and possibly check the %CS on stack frame
-by checking kernel %cs and not just two CPL bits and/or perform more checks.
-
-Another ideas if you think it is still worth to discuss this topic:
-
-What about to use completely different %CS selector for all entry code? The 
-early entry code would check the %cs selector and panic if it is wrong one.
-
-After swapgs dance, we need to perform far jump to normal kernel %CS, which 
-might cost something.
-
-To fix the interrupt on fake entry problem, we could check in relevant IDT 
-handlers that we never come from "completely different" %CS used above for the 
-early entry code.
-
-And very last idea would be to somehow persuade the Last Branch Recording to 
-record exception entries only and just check it from MSR. But maybe it is too 
-costly and/or not possible.
-
-Thanks,
-Rudolf
-
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c  |  35 +++----
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 169 +++++++++++++++++-------------
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h |  12 +--
+>   3 files changed, 113 insertions(+), 103 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> index 05abe2d05d8d81fbaac58cf0b298abb8d2164735..193818b02197d0737c86de7765d98732fa914e8e 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+> @@ -442,7 +442,7 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
+>   	const struct msm_format *format;
+>   	struct dpu_hw_ctl *ctl = mixer->lm_ctl;
+>   
+> -	uint32_t lm_idx;
+> +	uint32_t lm_idx, i;
+>   	bool bg_alpha_enable = false;
+>   	DECLARE_BITMAP(fetch_active, SSPP_MAX);
+>   
+> @@ -463,20 +463,15 @@ static void _dpu_crtc_blend_setup_mixer(struct drm_crtc *crtc,
+>   		if (pstate->stage == DPU_STAGE_BASE && format->alpha_enable)
+>   			bg_alpha_enable = true;
+>   
+> -		set_bit(pstate->pipe.sspp->idx, fetch_active);
+> -		_dpu_crtc_blend_setup_pipe(crtc, plane,
+> -					   mixer, cstate->num_mixers,
+> -					   pstate->stage,
+> -					   format, fb ? fb->modifier : 0,
+> -					   &pstate->pipe, 0, stage_cfg);
+> -
+> -		if (pstate->r_pipe.sspp) {
+> -			set_bit(pstate->r_pipe.sspp->idx, fetch_active);
+> +		for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +			if (!pstate->pipe[i].sspp)
+> +				continue;
+> +			set_bit(pstate->pipe[i].sspp->idx, fetch_active);
+>   			_dpu_crtc_blend_setup_pipe(crtc, plane,
+>   						   mixer, cstate->num_mixers,
+>   						   pstate->stage,
+>   						   format, fb ? fb->modifier : 0,
+> -						   &pstate->r_pipe, 1, stage_cfg);
+> +						   &pstate->pipe[i], i, stage_cfg);
+>   		}
+>   
+>   		/* blend config update */
+> @@ -1440,15 +1435,15 @@ static int _dpu_debugfs_status_show(struct seq_file *s, void *data)
+>   		seq_printf(s, "\tdst x:%4d dst_y:%4d dst_w:%4d dst_h:%4d\n",
+>   			state->crtc_x, state->crtc_y, state->crtc_w,
+>   			state->crtc_h);
+> -		seq_printf(s, "\tsspp[0]:%s\n",
+> -			   pstate->pipe.sspp->cap->name);
+> -		seq_printf(s, "\tmultirect[0]: mode: %d index: %d\n",
+> -			pstate->pipe.multirect_mode, pstate->pipe.multirect_index);
+> -		if (pstate->r_pipe.sspp) {
+> -			seq_printf(s, "\tsspp[1]:%s\n",
+> -				   pstate->r_pipe.sspp->cap->name);
+> -			seq_printf(s, "\tmultirect[1]: mode: %d index: %d\n",
+> -				   pstate->r_pipe.multirect_mode, pstate->r_pipe.multirect_index);
+> +
+> +		for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +			if (!pstate->pipe[i].sspp)
+> +				continue;
+> +			seq_printf(s, "\tsspp[%d]:%s\n",
+> +				   i, pstate->pipe[i].sspp->cap->name);
+> +			seq_printf(s, "\tmultirect[%d]: mode: %d index: %d\n",
+> +				   i, pstate->pipe[i].multirect_mode,
+> +				   pstate->pipe[i].multirect_index);
+>   		}
+>   
+>   		seq_puts(s, "\n");
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index feb90c42fef58f3385625f6d8165bfcdabf46d2d..ef44af5ab681c8f526333fa92531a2225983aa09 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -619,6 +619,7 @@ static void _dpu_plane_color_fill(struct dpu_plane *pdpu,
+>   	struct msm_drm_private *priv = plane->dev->dev_private;
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(plane->state);
+>   	u32 fill_color = (color & 0xFFFFFF) | ((alpha & 0xFF) << 24);
+> +	int i;
+>   
+>   	DPU_DEBUG_PLANE(pdpu, "\n");
+>   
+> @@ -632,12 +633,13 @@ static void _dpu_plane_color_fill(struct dpu_plane *pdpu,
+>   		return;
+>   
+>   	/* update sspp */
+> -	_dpu_plane_color_fill_pipe(pstate, &pstate->pipe, &pstate->pipe_cfg.dst_rect,
+> -				   fill_color, fmt);
+> -
+> -	if (pstate->r_pipe.sspp)
+> -		_dpu_plane_color_fill_pipe(pstate, &pstate->r_pipe, &pstate->r_pipe_cfg.dst_rect,
+> +	for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +		if (!pstate->pipe[i].sspp)
+> +			continue;
+> +		_dpu_plane_color_fill_pipe(pstate, &pstate->pipe[i],
+> +					   &pstate->pipe_cfg[i].dst_rect,
+>   					   fill_color, fmt);
+> +	}
+>   }
+>   
+>   static int dpu_plane_prepare_fb(struct drm_plane *plane,
+> @@ -827,8 +829,8 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+>   	struct dpu_kms *kms = _dpu_plane_get_kms(&pdpu->base);
+>   	u64 max_mdp_clk_rate = kms->perf.max_core_clk_rate;
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+> -	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> -	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
+> +	struct dpu_sw_pipe_cfg *pipe_cfg;
+> +	struct dpu_sw_pipe_cfg *r_pipe_cfg;
+>   	struct drm_rect fb_rect = { 0 };
+>   	uint32_t max_linewidth;
+>   
+> @@ -853,6 +855,9 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+>   		return -EINVAL;
+>   	}
+>   
+> +	/* move the assignment here, to ease handling to another pairs later */
+> +	pipe_cfg = &pstate->pipe_cfg[0];
+> +	r_pipe_cfg = &pstate->pipe_cfg[1];
+>   	/* state->src is 16.16, src_rect is not */
+>   	drm_rect_fp_to_int(&pipe_cfg->src_rect, &new_plane_state->src);
+>   
+> @@ -949,10 +954,10 @@ static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
+>   		drm_atomic_get_new_plane_state(state, plane);
+>   	struct dpu_plane *pdpu = to_dpu_plane(plane);
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+> -	struct dpu_sw_pipe *pipe = &pstate->pipe;
+> -	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> -	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> -	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
+> +	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
+> +	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
+> +	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
+> +	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
+>   	int ret = 0;
+>   
+>   	ret = dpu_plane_atomic_check_pipe(pdpu, pipe, pipe_cfg,
+> @@ -1011,10 +1016,10 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
+>   	struct dpu_plane *pdpu = to_dpu_plane(plane);
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(new_plane_state);
+>   	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+> -	struct dpu_sw_pipe *pipe = &pstate->pipe;
+> -	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> -	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> -	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
+> +	struct dpu_sw_pipe *pipe = &pstate->pipe[0];
+> +	struct dpu_sw_pipe *r_pipe = &pstate->pipe[1];
+> +	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg[0];
+> +	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->pipe_cfg[1];
+>   	const struct drm_crtc_state *crtc_state = NULL;
+>   	uint32_t max_linewidth = dpu_kms->catalog->caps->max_linewidth;
+>   
+> @@ -1058,7 +1063,7 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
+>   		drm_atomic_get_old_plane_state(state, plane);
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(plane_state);
+>   	struct drm_crtc_state *crtc_state;
+> -	int ret;
+> +	int ret, i;
+>   
+>   	if (plane_state->crtc)
+>   		crtc_state = drm_atomic_get_new_crtc_state(state,
+> @@ -1073,8 +1078,8 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
+>   		 * resources are freed by dpu_crtc_assign_plane_resources(),
+>   		 * but clean them here.
+>   		 */
+> -		pstate->pipe.sspp = NULL;
+> -		pstate->r_pipe.sspp = NULL;
+> +		for (i = 0; i < PIPES_PER_STAGE; i++)
+> +			pstate->pipe[i].sspp = NULL;
+>   
+>   		return 0;
+>   	}
+> @@ -1111,19 +1116,21 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   	struct dpu_sw_pipe_cfg *pipe_cfg;
+>   	struct dpu_sw_pipe_cfg *r_pipe_cfg;
+>   	const struct msm_format *fmt;
+> +	int i;
+>   
+>   	if (plane_state->crtc)
+>   		crtc_state = drm_atomic_get_new_crtc_state(state,
+>   							   plane_state->crtc);
+>   
+>   	pstate = to_dpu_plane_state(plane_state);
+> -	pipe = &pstate->pipe;
+> -	r_pipe = &pstate->r_pipe;
+> -	pipe_cfg = &pstate->pipe_cfg;
+> -	r_pipe_cfg = &pstate->r_pipe_cfg;
+>   
+> -	pipe->sspp = NULL;
+> -	r_pipe->sspp = NULL;
+> +	pipe = &pstate->pipe[0];
+> +	r_pipe = &pstate->pipe[1];
+> +	pipe_cfg = &pstate->pipe_cfg[0];
+> +	r_pipe_cfg = &pstate->pipe_cfg[1];
+> +
+> +	for (i = 0; i < PIPES_PER_STAGE; i++)
+> +		pstate->pipe[i].sspp = NULL;
+>   
+>   	if (!plane_state->fb)
+>   		return -EINVAL;
+> @@ -1213,6 +1220,7 @@ void dpu_plane_flush(struct drm_plane *plane)
+>   {
+>   	struct dpu_plane *pdpu;
+>   	struct dpu_plane_state *pstate;
+> +	int i;
+>   
+>   	if (!plane || !plane->state) {
+>   		DPU_ERROR("invalid plane\n");
+> @@ -1233,8 +1241,8 @@ void dpu_plane_flush(struct drm_plane *plane)
+>   		/* force 100% alpha */
+>   		_dpu_plane_color_fill(pdpu, pdpu->color_fill, 0xFF);
+>   	else {
+> -		dpu_plane_flush_csc(pdpu, &pstate->pipe);
+> -		dpu_plane_flush_csc(pdpu, &pstate->r_pipe);
+> +		for (i = 0; i < PIPES_PER_STAGE; i++)
+> +			dpu_plane_flush_csc(pdpu, &pstate->pipe[i]);
+>   	}
+>   
+>   	/* flag h/w flush complete */
+> @@ -1335,15 +1343,12 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
+>   	struct dpu_plane *pdpu = to_dpu_plane(plane);
+>   	struct drm_plane_state *state = plane->state;
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(state);
+> -	struct dpu_sw_pipe *pipe = &pstate->pipe;
+> -	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+>   	struct drm_crtc *crtc = state->crtc;
+>   	struct drm_framebuffer *fb = state->fb;
+>   	bool is_rt_pipe;
+>   	const struct msm_format *fmt =
+>   		msm_framebuffer_format(fb);
+> -	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> -	struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
+> +	int i;
+>   
+>   	pstate->pending = true;
+>   
+> @@ -1358,12 +1363,12 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
+>   			crtc->base.id, DRM_RECT_ARG(&state->dst),
+>   			&fmt->pixel_format, MSM_FORMAT_IS_UBWC(fmt));
+>   
+> -	dpu_plane_sspp_update_pipe(plane, pipe, pipe_cfg, fmt,
+> -				   drm_mode_vrefresh(&crtc->mode),
+> -				   &pstate->layout);
+> -
+> -	if (r_pipe->sspp) {
+> -		dpu_plane_sspp_update_pipe(plane, r_pipe, r_pipe_cfg, fmt,
+> +	/* move the assignment here, to ease handling to another pairs later */
+> +	for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +		if (!pstate->pipe[i].sspp)
+> +			continue;
+> +		dpu_plane_sspp_update_pipe(plane, &pstate->pipe[i],
+> +					   &pstate->pipe_cfg[i], fmt,
+>   					   drm_mode_vrefresh(&crtc->mode),
+>   					   &pstate->layout);
+>   	}
+> @@ -1371,15 +1376,17 @@ static void dpu_plane_sspp_atomic_update(struct drm_plane *plane,
+>   	if (pstate->needs_qos_remap)
+>   		pstate->needs_qos_remap = false;
+>   
+> -	pstate->plane_fetch_bw = _dpu_plane_calc_bw(pdpu->catalog, fmt,
+> -						    &crtc->mode, pipe_cfg);
+> -
+> -	pstate->plane_clk = _dpu_plane_calc_clk(&crtc->mode, pipe_cfg);
+> -
+> -	if (r_pipe->sspp) {
+> -		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt, &crtc->mode, r_pipe_cfg);
+> +	pstate->plane_fetch_bw = 0;
+> +	pstate->plane_clk = 0;
+> +	for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +		if (!pstate->pipe[i].sspp)
+> +			continue;
+> +		pstate->plane_fetch_bw += _dpu_plane_calc_bw(pdpu->catalog, fmt,
+> +							     &crtc->mode, &pstate->pipe_cfg[i]);
+>   
+> -		pstate->plane_clk = max(pstate->plane_clk, _dpu_plane_calc_clk(&crtc->mode, r_pipe_cfg));
+> +		pstate->plane_clk = max(pstate->plane_clk,
+> +					_dpu_plane_calc_clk(&crtc->mode,
+> +							    &pstate->pipe_cfg[i]));
+>   	}
+>   }
+>   
+> @@ -1387,17 +1394,31 @@ static void _dpu_plane_atomic_disable(struct drm_plane *plane)
+>   {
+>   	struct drm_plane_state *state = plane->state;
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(state);
+> -	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> +	struct dpu_sw_pipe *pipe;
+> +	int i;
+>   
+> -	trace_dpu_plane_disable(DRMID(plane), false,
+> -				pstate->pipe.multirect_mode);
+> +	for (i = 0; i < PIPES_PER_STAGE; i += 1) {
+> +		pipe = &pstate->pipe[i];
+> +		if (!pipe->sspp)
+> +			continue;
+>   
+> -	if (r_pipe->sspp) {
+> -		r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -		r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		trace_dpu_plane_disable(DRMID(plane), false,
+> +					pstate->pipe[i].multirect_mode);
+> +
+> +		if (!pipe->sspp)
+> +			continue;
+>   
+> -		if (r_pipe->sspp->ops.setup_multirect)
+> -			r_pipe->sspp->ops.setup_multirect(r_pipe);
+> +		if (i % PIPES_PER_STAGE == 0)
+> +			continue;
+> +
+> +		/*
+> +		 * clear multirect for the right pipe so that the SSPP
+> +		 * can be further reused in the solo mode
+> +		 */
+> +		pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +		pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		if (pipe->sspp->ops.setup_multirect)
+> +			pipe->sspp->ops.setup_multirect(pipe);
+>   	}
+>   
+>   	pstate->pending = true;
+> @@ -1492,31 +1513,26 @@ static void dpu_plane_atomic_print_state(struct drm_printer *p,
+>   		const struct drm_plane_state *state)
+>   {
+>   	const struct dpu_plane_state *pstate = to_dpu_plane_state(state);
+> -	const struct dpu_sw_pipe *pipe = &pstate->pipe;
+> -	const struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> -	const struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> -	const struct dpu_sw_pipe_cfg *r_pipe_cfg = &pstate->r_pipe_cfg;
+> +	const struct dpu_sw_pipe *pipe;
+> +	const struct dpu_sw_pipe_cfg *pipe_cfg;
+> +	int i;
+>   
+>   	drm_printf(p, "\tstage=%d\n", pstate->stage);
+>   
+> -	if (pipe->sspp) {
+> -		drm_printf(p, "\tsspp[0]=%s\n", pipe->sspp->cap->name);
+> -		drm_printf(p, "\tmultirect_mode[0]=%s\n",
+> +	for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +		pipe = &pstate->pipe[i];
+> +		if (!pipe->sspp)
+> +			continue;
+> +		pipe_cfg = &pstate->pipe_cfg[i];
+> +		drm_printf(p, "\tsspp[%d]=%s\n", i, pipe->sspp->cap->name);
+> +		drm_printf(p, "\tmultirect_mode[%d]=%s\n", i,
+>   			   dpu_get_multirect_mode(pipe->multirect_mode));
+> -		drm_printf(p, "\tmultirect_index[0]=%s\n",
+> +		drm_printf(p, "\tmultirect_index[%d]=%s\n", i,
+>   			   dpu_get_multirect_index(pipe->multirect_index));
+> -		drm_printf(p, "\tsrc[0]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&pipe_cfg->src_rect));
+> -		drm_printf(p, "\tdst[0]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&pipe_cfg->dst_rect));
+> -	}
+> -
+> -	if (r_pipe->sspp) {
+> -		drm_printf(p, "\tsspp[1]=%s\n", r_pipe->sspp->cap->name);
+> -		drm_printf(p, "\tmultirect_mode[1]=%s\n",
+> -			   dpu_get_multirect_mode(r_pipe->multirect_mode));
+> -		drm_printf(p, "\tmultirect_index[1]=%s\n",
+> -			   dpu_get_multirect_index(r_pipe->multirect_index));
+> -		drm_printf(p, "\tsrc[1]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&r_pipe_cfg->src_rect));
+> -		drm_printf(p, "\tdst[1]=" DRM_RECT_FMT "\n", DRM_RECT_ARG(&r_pipe_cfg->dst_rect));
+> +		drm_printf(p, "\tsrc[%d]=" DRM_RECT_FMT "\n", i,
+> +			   DRM_RECT_ARG(&pipe_cfg->src_rect));
+> +		drm_printf(p, "\tdst[%d]=" DRM_RECT_FMT "\n", i,
+> +			   DRM_RECT_ARG(&pipe_cfg->dst_rect));
+>   	}
+>   }
+>   
+> @@ -1554,14 +1570,17 @@ void dpu_plane_danger_signal_ctrl(struct drm_plane *plane, bool enable)
+>   	struct dpu_plane *pdpu = to_dpu_plane(plane);
+>   	struct dpu_plane_state *pstate = to_dpu_plane_state(plane->state);
+>   	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+> +	int i;
+>   
+>   	if (!pdpu->is_rt_pipe)
+>   		return;
+>   
+>   	pm_runtime_get_sync(&dpu_kms->pdev->dev);
+> -	_dpu_plane_set_qos_ctrl(plane, &pstate->pipe, enable);
+> -	if (pstate->r_pipe.sspp)
+> -		_dpu_plane_set_qos_ctrl(plane, &pstate->r_pipe, enable);
+> +	for (i = 0; i < PIPES_PER_STAGE; i++) {
+> +		if (!pstate->pipe[i].sspp)
+> +			continue;
+> +		_dpu_plane_set_qos_ctrl(plane, &pstate->pipe[i], enable);
+> +	}
+>   	pm_runtime_put_sync(&dpu_kms->pdev->dev);
+>   }
+>   #endif
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> index acd5725175cdde4fcf7a9f71bb446251c5a14d22..052fd046e8463855b16b30389c2efc67c0c15281 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> @@ -18,10 +18,8 @@
+>    * struct dpu_plane_state: Define dpu extension of drm plane state object
+>    * @base:	base drm plane state object
+>    * @aspace:	pointer to address space for input/output buffers
+> - * @pipe:	software pipe description
+> - * @r_pipe:	software pipe description of the second pipe
+> - * @pipe_cfg:	software pipe configuration
+> - * @r_pipe_cfg:	software pipe configuration for the second pipe
+> + * @pipe:	software pipe description array
+> + * @pipe_cfg:	software pipe configuration array
+>    * @stage:	assigned by crtc blender
+>    * @needs_qos_remap: qos remap settings need to be updated
+>    * @multirect_index: index of the rectangle of SSPP
+> @@ -35,10 +33,8 @@
+>   struct dpu_plane_state {
+>   	struct drm_plane_state base;
+>   	struct msm_gem_address_space *aspace;
+> -	struct dpu_sw_pipe pipe;
+> -	struct dpu_sw_pipe r_pipe;
+> -	struct dpu_sw_pipe_cfg pipe_cfg;
+> -	struct dpu_sw_pipe_cfg r_pipe_cfg;
+> +	struct dpu_sw_pipe pipe[PIPES_PER_STAGE];
+> +	struct dpu_sw_pipe_cfg pipe_cfg[PIPES_PER_STAGE];
+>   	enum dpu_stage stage;
+>   	bool needs_qos_remap;
+>   	bool pending;
+> 
+> -- 
+> 2.34.1
+> 
 
