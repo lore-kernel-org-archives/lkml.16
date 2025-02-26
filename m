@@ -1,77 +1,96 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43C1CEBE;
-	Wed, 26 Feb 2025 01:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35CFE56A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740535011; cv=none; b=Sneyts+m7fm4Gzq5oXLiXOHp+3V6TuU0Fp2dC6Cm0b0Tm9coOPMceUbOrWgUQf8cUxvb7VHDHxe/OYmWKiaaVDml9xI2UQ4bADb/z0yVZ35w5v7nctsq6DdTff+HQJUcvP9qUVFa/ZC0i06ftE4knH+RFG+euk4ISrZjgbN51ts=
+	t=1740535039; cv=none; b=IfRzlDbEv6nS/Po/pF1tu8h34x4joL+dfGxWNTBu/AlUYVjPbn0YoikjuqoWYI0ukK0gzJmKMWHxg9PRxAqkNtLArwC5aic0nuIWT7DhM1nbkJFiyIbtdAF4QyDS1i1H6S2dAbBj1s4gOaMto2rKcBRweKNUdEFb+a5wZRy3zkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740535011; c=relaxed/simple;
-	bh=khsGAjmguSesc1UDHJD16EP2lGM7e5GTL1ZwuD7wpXU=;
+	s=arc-20240116; t=1740535039; c=relaxed/simple;
+	bh=2AjpPUgwyW35ZlY25/RBMK6h76d3ORQR2twl+cHmmAE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y9wzg3Gf73/YQpedI27TniQDmSAMgrLPFODTvmLf1lu6BW3qn3oZ2w+7TUTEUKlTOsSh35AIljxIvvBTlADLwyWkXPWVVtJv0U8jmACuu41Yd4pJ2AkvuUGrq1FhNYBE9q3Mf69XDk6cBvPFhfvB6EunmoxyKB5dkVxUw4oERwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=fzlaxSrG; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	 In-Reply-To:Content-Type; b=S5dVVEbq2WRDyy2bk5SQp0DKnucbCZlxmRma2x8z2QR6LKXXiuK3f6bIXWaoMqfZ1P7GMEEJtzqzijbSZ/AKLZPf+kvZafcXaa0MJpPBXsvAGpvUD4cBTlPDwVSQPD6yA6Fc+qVF846ixEGhaqT9lcTFhy6bO5/9W2KJNSc+2nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vuy8I0AX; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="fzlaxSrG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=GerhdZtK456QL3AJuJ2m1hlKNpTWmVQbj+hrnztgqKU=;
-	b=fzlaxSrG0tJSuiRT/wizX5esaGjZx2Oc8lIMcPKMiE+AWJyzd9xZ22dbK0eDtz
-	ZDXe6LboE7I6vgKo24+mYA+Iu3ZPVOjrsq89bwO6H8zDBM85Oi4vHO1TBMOB47hv
-	wnYn3UTJyF0fvHs3x7lOMOBVrxsHUiFIhoBvEj3TEm+Bo=
-Received: from [192.168.34.52] (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wAHhC+odL5nuzNDOA--.496S2;
-	Wed, 26 Feb 2025 09:55:54 +0800 (CST)
-Message-ID: <e25e5d68-7fb7-4157-825c-eb973f7e1321@163.com>
-Date: Wed, 26 Feb 2025 09:55:52 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vuy8I0AX"
+Message-ID: <3db2c2fd-5125-4664-83d0-a0706ef2050f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740535034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2AjpPUgwyW35ZlY25/RBMK6h76d3ORQR2twl+cHmmAE=;
+	b=vuy8I0AX2kkd1NjVZbGg37cUhDQeJMeKe5nEoM65o5UfhKmbIqzYuU9pBMUWsU4YmLjjI2
+	gjcRzkpsMyaCXuTGcI8mbvFGA+9gy8a/YMGgFP3LeKxcEvr+aB1+fNGWNe/JLmacQq47RQ
+	FKRd9rCECzhjSHl8Z1zYg+AfqpPSUeM=
+Date: Wed, 26 Feb 2025 09:57:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] PCI: dwc-debugfs: Couple of fixes
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- jingoohan1@gmail.com, lpieralisi@kernel.org, kw@linux.com
-Cc: robh@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, shradha.t@samsung.com, cassel@kernel.org
-References: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH net-next v3 2/4] stmmac: loongson: Remove surplus loop
+To: Philipp Stanner <pstanner@redhat.com>, Philipp Stanner
+ <phasta@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yinggang Gu <guyinggang@loongson.cn>,
+ Feiyang Chen <chenfeiyang@loongson.cn>, Jiaxun Yang
+ <jiaxun.yang@flygoat.com>, Qing Zhang <zhangqing@loongson.cn>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250224135321.36603-2-phasta@kernel.org>
+ <20250224135321.36603-4-phasta@kernel.org>
+ <437d4fad-6cd4-4f90-a1bb-07193d015cad@linux.dev>
+ <7df6e1846ed6932c789a913c6a10aa8df5e26519.camel@redhat.com>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <7df6e1846ed6932c789a913c6a10aa8df5e26519.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wAHhC+odL5nuzNDOA--.496S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrur1DXr4fGF43CrW5Zw1fWFg_yoWxKFbEkF
-	95trW8CFyUuFW29a9ayr1kJFZIya1fX3WSga43trnrWry5JrZ8Gr4ruw17XFy5ur97A3Z3
-	Gr90qrWrJ3429jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRRCzuJUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDwQAo2e+bv28yAAAsW
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Mani,
 
-Can you submit after this patch? Otherwise, will my patch conflict?
+在 2/25/25 5:15 PM, Philipp Stanner 写道:
+> On Tue, 2025-02-25 at 17:06 +0800, Yanteng Si wrote:
+>> 在 2/24/25 9:53 PM, Philipp Stanner 写道:
+>>> loongson_dwmac_probe() contains a loop which doesn't have an
+>>> effect,
+>>> because it tries to call pcim_iomap_regions() with the same
+>>> parameters
+>>> several times. The break statement at the loop's end furthermore
+>>> ensures
+>>> that the loop only runs once anyways.
+>>>
+>>> Remove the surplus loop.
+>>>
+>>> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>> It seems that the fix-tag has been forgotten, next two patches as
+>> well.
+> Not forgotten, I just think that patches 2-4 are code improvements, not
+> bug fixes.
+>
+> The issue in patch 1 would cause actual misbehavior (a useless debug
+> information print in case of a resource collision), whereas 2-4 are
+> just ugly code, but not actual bugs: the loop always just runs once;
+> and unmapping the PCI resources manually is valid, but obviously
+> unnecessary.
+>
+> Agreed?
 
-https://patchwork.kernel.org/project/linux-pci/patch/20250223141848.231232-1-18255117159@163.com/
+You bet!
 
-Best regards
-Hans
 
-On 2025/2/26 01:12, Manivannan Sadhasivam wrote:
-> Hi,
-> 
-> This series has a couple of fixes for the recently merged debugfs patches.
-> This series is rebased on top of pci/controller/dwc branch.
-> 
-> - Mani
-> 
-> Manivannan Sadhasivam (2):
->    PCI: dwc-debugfs: Perform deinit only when the debugfs is initialized
->    PCI: dwc-debugfs: Return -EOPNOTSUPP if an event counter is not
->      supported
-> 
->   .../controller/dwc/pcie-designware-debugfs.c   | 18 ++++++++++++++++++
->   1 file changed, 18 insertions(+)
+Thanks,
 
+Yanteng
+
+>
