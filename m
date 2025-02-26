@@ -1,94 +1,102 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3278621B1AC;
-	Wed, 26 Feb 2025 12:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51DB258CD1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740574216; cv=none; b=D7OT7Oe5heUMfVCCRHYRzg3T+bEmFZkTT2/igcTUEGUU3GJxruAmp9jwNkF6HkPAbYLv9MufAX8y8CQ9G55jfRHhkwBonsXVwMmjftc3lXQLFkmjFa14murE+v8JsNUu7taaOK6bMyFcgbatstU2fn2yGrvwH0IoTm5bh1Fy5Jg=
+	t=1740574291; cv=none; b=sQ4w6TwfJgIxEufQu2FYXOyQ7mVoh+eyGrIdZ0Ng5ztCYGWKt8S6Yxpb+U8l8VPD+vSzTtZ82lWTaR2oGP/d6Ca7kLlQLXrYJVGyeE5/07hXNcqy4p/ykW17OHmh/1szHqLsa897MIwMaHFORBl0TdRmOaNMyo1vQGvmVQZ0jV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740574216; c=relaxed/simple;
-	bh=fN3Sb53xeNCJ9LjtIsyWpWduSaQsGJv6Bs/u5lAlxME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fhT3DbRQ5fWmOYWEtuzl3UqKZGp9h5VK2tE+Gh0WAwORHuT1TfgEDWqba3oD+Ldh6ksP4OQOhZbm5V9RYAxZG+Fo6adB//IxogfwI/AB+ZjCyAr2WJdSNTjNqSP/7AdJPUvGZefzmdL2BhVAR5iqerLgsK6l5zH4JHhhcCACzCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Z2v3D0g7Fz9sSK;
-	Wed, 26 Feb 2025 13:31:20 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id zdl6tAtT0ddh; Wed, 26 Feb 2025 13:31:19 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z2v3C6tl5z9sSH;
-	Wed, 26 Feb 2025 13:31:19 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D853B8B78B;
-	Wed, 26 Feb 2025 13:31:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id lyR8MYIwt_Lw; Wed, 26 Feb 2025 13:31:19 +0100 (CET)
-Received: from [10.25.207.138] (unknown [10.25.207.138])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 96D918B77C;
-	Wed, 26 Feb 2025 13:31:19 +0100 (CET)
-Message-ID: <50339b41-9b4d-4315-a69b-ee32fc86baa6@csgroup.eu>
-Date: Wed, 26 Feb 2025 13:31:19 +0100
+	s=arc-20240116; t=1740574291; c=relaxed/simple;
+	bh=gLgtRdYXRFEO9G9Ax4yxK0U6zVjbthiZ9FuqZisBCIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ph2SnuPgoKaFTL934znFg5/MO3M6D2XyoKiZjZeh8lT+JHThc0iXTRXYSaa7DKkg5DxjG/Ig/EIDnb3gPrZp/PnGBtrFSlhUTLD6DMlNr52MijwkMcufO9GJ18J/JB0vmzyCMAus6KjeBCii54TKcXlna/QjuOKJ4ZA0B8+YEi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TDf2yUN1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDf2yUN1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740574288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LF/R7p8PMiEr0VAjoxkpXagHEzypvyA54y3GVLAB1Tw=;
+	b=TDf2yUN1O7hHI04JEd3gAXYpPsYmUkWTuqUvKZICvjDmDi2TnLEQk2Bn+oKbx3XZIuRH8S
+	o2wiqPXTlo60ERIX3U8tuXhY0W3ZpeesNLcpY51k7TTjKeI6bri70RW0TNZnKCCw8LVLDt
+	5jE4fpBfOEy8okaUbta+t0Q5P2iyxtU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-PL7Uh6A9Nkqz9ZoiQYkNaA-1; Wed,
+ 26 Feb 2025 07:51:24 -0500
+X-MC-Unique: PL7Uh6A9Nkqz9ZoiQYkNaA-1
+X-Mimecast-MFC-AGG-ID: PL7Uh6A9Nkqz9ZoiQYkNaA_1740574283
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25C3919783B6;
+	Wed, 26 Feb 2025 12:51:23 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E5B421800945;
+	Wed, 26 Feb 2025 12:51:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 26 Feb 2025 13:50:52 +0100 (CET)
+Date: Wed, 26 Feb 2025 13:50:48 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] task_work: Consume only item at a time while invoking
+ the callbacks.
+Message-ID: <20250226125048.GC8995@redhat.com>
+References: <20250221170530.L3yMvO0i@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/5] arch/powerpc: Drop GENERIC_PTDUMP from
- mpc885_ads_defconfig
-To: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Mark Rutland <mark.rutland@arm.com>, kvmarm@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>
-References: <20250226122404.1927473-1-anshuman.khandual@arm.com>
- <20250226122404.1927473-3-anshuman.khandual@arm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250226122404.1927473-3-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221170530.L3yMvO0i@linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+On 02/21, Sebastian Andrzej Siewior wrote:
+>
+> Yi and syzbot managed to hang the task within task_run().
+>
+> The problem is
+>  task_work_run() -> __fput() -> perf_release() ->
+>  perf_event_release_kernel() -> _free_event() ->
+>  perf_pending_task_sync() -> task_work_cancel() failed ->
+>  rcuwait_wait_event().
+>
+> Once task_work_run() is running, the list of callbacks removed from the
+> task_struct and from this point on task_work_cancel() can't remove any
+> pending and not yet started work items.
 
+But can this patch really solve the problem?
 
-Le 26/02/2025 à 13:24, Anshuman Khandual a écrit :
-> GENERIC_PTDUMP gets selected on powerpc explicitly and hence can be dropped
-> off from mpc885_ads_defconfig. Replace with CONFIG_PTDUMP_DEBUGFS instead.
-> 
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-kernel@vger.kernel.org
-> Fixes: e084728393a5 ("powerpc/ptdump: Convert powerpc to GENERIC_PTDUMP")
-> Suggested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Suppose we have two tasks, T1 and T2.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+T1 does fd = perf_event_open(pid => T2->pid);
+T2 does fd = perf_event_open(pid => T1->pid);
 
-> ---
->   arch/powerpc/configs/mpc885_ads_defconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/configs/mpc885_ads_defconfig b/arch/powerpc/configs/mpc885_ads_defconfig
-> index 77306be62e9e..129355f87f80 100644
-> --- a/arch/powerpc/configs/mpc885_ads_defconfig
-> +++ b/arch/powerpc/configs/mpc885_ads_defconfig
-> @@ -78,4 +78,4 @@ CONFIG_DEBUG_VM_PGTABLE=y
->   CONFIG_DETECT_HUNG_TASK=y
->   CONFIG_BDI_SWITCH=y
->   CONFIG_PPC_EARLY_DEBUG=y
-> -CONFIG_GENERIC_PTDUMP=y
-> +CONFIG_PTDUMP_DEBUGFS=y
+Now, both T1 and T2 do close(fd), call task_work_run(), dequeue the
+____fput work, and finally call __fput(). Now suppose that both perf
+events fire before T1/T2 call perf_event_release_kernel/_free_event.
+
+Now, T1 and T2 will hang forever in perf_pending_task_sync() waiting
+for each other. task_work_cancel(current) can't succeed with or without
+this patch.
+
+No?
+
+Oleg.
 
