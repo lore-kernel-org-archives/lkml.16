@@ -1,203 +1,188 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01olkn2051.outbound.protection.outlook.com [40.92.53.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB921E097;
-	Wed, 26 Feb 2025 12:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572439; cv=fail; b=r4D7ICwoCUuV+D0qNuSX/25h/tSom8iS1NldjmO/+75Ih8yryPMKgPPMXgkALUGr1pZvlTDX6tGh4LQ+tqD/TrLm39h2mpGfn0wWd8eb7ZudWvYu6+9UeB/AhThZc687OLkzrWXNMmj1ugTw9BlMYXTKtuZ46GnEKdn927hyhzw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572439; c=relaxed/simple;
-	bh=0YP27jwv4+GI5s9tBOfa5G7u7gzG6cFeAt76HnWauTg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=NQws6tqwsl9O0asH2TrpFbGqglzEHRZ+89bew3WrcuxPfcdzUFKEv+ku9HGOmKT7OaLositqA/j7ZJVGElRkaJap3qdrfIrRNboIIwleP3ltF7bCNKTnNQtAE+N//GjXBBDi/Xg2gbWBPw/e83D5i7WlzrdX9pdYpPl/f+vR+vU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HUCrkptn; arc=fail smtp.client-ip=40.92.53.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5D815C0;
+	Wed, 26 Feb 2025 12:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740572512; cv=none; b=aAh59YFPrjr4OJlWZMQl9E46TVZMH8s0nogCztlTL4WrI/2RMgEY876I3QW3Ci5/Jd7zHJ7mGyX7PrUR+o9SDWX7zCTCn0A4dExC7+8wcru7EOhnLMyZ5avEYSIs7IXzoVTRJyfaDQTJTkAmBhVQUJkZlmGtBwYHUoAV1Y2k6c4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740572512; c=relaxed/simple;
+	bh=XFlpru4HT2cDn6bnGT2IlGUhhMyYfvHdQwQ8YIK93nk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c/ypageHUeuLeZxnd8Kie7HX+BK+WhWCqw+V2fNWEe3TX+AVVlX4dkE78Icxxem7PoKiMFL6z94AXYZI1dL8V3MWwgP49xo+OrcNUaVqnMX4dHAQ4n5EPA9cM0FXMqD0/JIMgrg/tTbZGG5e17V6nPIvmhhbTGfHRxficTwAEpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YBzXRM7w; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HUCrkptn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=GJFIcaX3Xj/iZjUTgPIeU9Ef/UiTQ/2+fDsnk1Ogsz9QKgwbcigiuEXzSmBVkBYk0y2pGHioxVC3Vt6r+m3rr6HG9GThcne90ly7H/2AnmnCy1GzQFIdLh8+7BprPsygHqk3/lCVYRAi3uRslzBELI8jy6hJPHoWW1DhqLNY1my8rMyD6pdzkWcmMeUxiBxW4kKOou4RrpuzrR7vuxMrOotds8qONbEdHqRD6bhn0Af0PY7pdkGiBqt0H1t63dyhdRe4TL4pwVjNsSggZwcr8V5Bpir6ZXni1uCtrg70gs4rCYXItt6wNvTJdji9N0PKeumKU87UQF7RY4cpwkNd0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fZ1MmjNm+FJaK/HoGxo+7DfSD9fcnJ3Y2/pOwZ/JU2w=;
- b=CJMy8RxGPzzj2W/59QD9rYySThAg2avBEERQhQd1ZTKJ3r53LlTxkZDbVCVvd5lBe3ynYa1erbKUpgeHecKL2NJRjEsTzy5cFfdXJuuSbIcymUwRK/Yxy0D2rn7+E4MB0U7lsBZ4vbkwfUoUX3RumogNWvheESflHr7FSdcPxIa13WCs5R3fQnHzcxV6VsvkoRBuC1P7m8NMkFwlhPLLFGAXlMeCzt+ETfFTZLHlT8agwLDtotVrZZy3GD7dUTw+3AunLtta0SVSbb5QTBBw41gpUOW/IXqBDDoVNb/+MeUuGO7QiDttI1JG5nevDN4f1hgIam3Q1yAax+0EZqxSlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fZ1MmjNm+FJaK/HoGxo+7DfSD9fcnJ3Y2/pOwZ/JU2w=;
- b=HUCrkptnQqtwdZMIR0+Jj+IaW5NanXa5CjtNFFfdcxq0XjZYsz6DxjkzKkPESAwA0c07m2gRfSA6w4T+RIn1daCR0AUp6vs+xHzsm+S0lQaR940C1J9bZbzEvw4OjR4sQvp/zyh1a2+TDLVpdCA4iTVXmd5PKamCFM8eFl/Z1IEEQRK433belEPnIY1dVE3vfvMXsU1s8ZtJKH5vYbAJt1oNcYCcvR8NBpnSUm/zEr4PniV8v70JSO9e2dTbNC6le00ShSdgUIi4jkbj1Ud0DTETqnsslgracXTEBwXkfJKreMl70d2MVQWvnU+YpDgSoQUXL7db0WMzbVjV7Wifsw==
-Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- (2603:1096:101:76::5) by SEZPR01MB6080.apcprd01.prod.exchangelabs.com
- (2603:1096:101:221::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
- 2025 12:20:32 +0000
-Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- ([fe80::653b:3492:9140:d2bf]) by SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- ([fe80::653b:3492:9140:d2bf%5]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
- 12:20:32 +0000
-Message-ID:
- <SEZPR01MB452764342165B17819AAF554A8C22@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
-Date: Wed, 26 Feb 2025 20:20:26 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] PCI: Fix the issue of failed speed limit lifting
-To: Jiwei Sun <sjiwei@163.com>, macro@orcam.me.uk,
- ilpo.jarvinen@linux.intel.com, bhelgaas@google.com
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- helgaas@kernel.org, lukas@wunner.de, ahuang12@lenovo.com,
- sunjw10@lenovo.com, jiwei.sun.bj@qq.com
-References: <20250123055155.22648-1-sjiwei@163.com>
-Content-Language: en-US
-From: Jiwei Sun <sunjw10@outlook.com>
-In-Reply-To: <20250123055155.22648-1-sjiwei@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCP301CA0073.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:7d::11) To SEZPR01MB4527.apcprd01.prod.exchangelabs.com
- (2603:1096:101:76::5)
-X-Microsoft-Original-Message-ID:
- <9d6440de-1909-4629-9798-1965b0799efe@outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YBzXRM7w"
+Received: from [100.79.160.79] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CF81B206ADE3;
+	Wed, 26 Feb 2025 04:21:47 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF81B206ADE3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740572510;
+	bh=0qk0lG6fEudYnLnAjNAk9vu7Jq0ZrZ0mFb8apziXmoc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YBzXRM7wseDdFCtzdrp9U4jUxqxjtigZIQlX4nWqMU7JX8EBqOl5UPlekHEpV88sf
+	 CZNiGVSupwBWUMiH9XtbKGuRdI+N2brkESsyrh6eBG7hI3RFqML9QvFGkkb5cvrJT1
+	 edX0Aof5ijszSvf6WlEFgVEtasosU8D60QXVVoek=
+Message-ID: <0a694947-809d-48b2-9138-d3f6175fe09d@linux.microsoft.com>
+Date: Wed, 26 Feb 2025 17:51:46 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR01MB4527:EE_|SEZPR01MB6080:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c4a47ba-efad-4b08-bc22-08dd565ff6e0
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|5072599009|7042599007|6090799003|19110799003|8060799006|15080799006|461199028|3412199025|4302099013|440099028|10035399004|1602099012;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZmpaK1RiYnlZbTRCYWttNmV3eGJNZFFlcWhPd2dubU52QzhMc2ZqTjJPY3Vs?=
- =?utf-8?B?VVJnMmNHV1BmVHQwRGc1cUIxc1BXKzQ2TEFydVdONFp2ZE1OSmNpQmJiK0Nj?=
- =?utf-8?B?aVlyb0E3dHVwYjhZMThNbXpjZUJ1Q0dUT21yZXUwR09vSnhIbDUrSnRubTdP?=
- =?utf-8?B?Y2kzZERybGhvVXNSejVsWjY4OVFGMHJYNlIvaUt0YmRJWHFQdU9JaVZnRHo2?=
- =?utf-8?B?a2o1SVhleUh5dDlnL0tKM1ZBSytTRHZBV2M4akRmMVhpZTNSWWhpQUFrbHpy?=
- =?utf-8?B?QjRHWjVvZDBxbkJ0Z0lCMWVMdWxGT0ZaN242bTZKSXpVM0FkZVBLMngwTWtU?=
- =?utf-8?B?TDJ1cmh3ZDhQMXhxbW9VaGdsMjFDYjI4Sm92UTJJaEl1K08yanFvUm1ld1p6?=
- =?utf-8?B?dFRuS3RLTDZHbzROY3RHQTZBR1V0K3dIZzNIUVRHay85U3EyK3B0MDBPOTFw?=
- =?utf-8?B?a0ZSUzlUcm1TODJaWGRGc3VBcVU4ZHFCWTl6eWtpN04veWk0aHplekZubm81?=
- =?utf-8?B?UmE3SzhxSWVmWitiUy9sOU91VUltcE5rZWdBVWdiaW5kNXZBVzBaUG50SmRF?=
- =?utf-8?B?YVBDZUZpaXJ0czNUMG01QU42VUo3Y0FlbnFZdE9UeS82VVRJSlltUmE2eDFt?=
- =?utf-8?B?czJiZVBXSzFlUGNCd2NQQVhTQ2VhZmFLZy9Edk5KVVFUSjNxNVBJRzVsdEZQ?=
- =?utf-8?B?VVdXK1hKNzkvQ1MxUm1ZclFhUko2NkJUMTNhYVR4VlBFemMrTFhlWTRNVUU4?=
- =?utf-8?B?TjlkUlNvMWJDTWgvTXIxTFFUTG1UTldURUNJTFlESm44dDFBVHZlK2dIUEgw?=
- =?utf-8?B?OXpub2tYOXgxVmIrR1ZVTXBHUWhOQllpMW9hQWRwMTRwOWRaQ2Y0OWM4ZTFv?=
- =?utf-8?B?bzdGZTN3cTZmS2kyeHVsdVdDQkVGK2tYbkJQTFVaNDZSeUp2VUZBVnJsdTND?=
- =?utf-8?B?VDR2T1VqSVlFb042emxnQUU1Zk5RdzMrOUFwbzBuV1BMRlczbnN5T0lvKzJ6?=
- =?utf-8?B?UmdSRGVPcStKbll0WUoxY09ESnB3WUtzMXVyV1BKVG9ScnRlN29kWWhZVzNR?=
- =?utf-8?B?cldwR3JYZzdvbFU2alVXZTJkOWRuaFNRcSt0bFpPckZwamx4QXhnWTRQMWlI?=
- =?utf-8?B?VE9HQUZVaWpOeVBrNE9LZXhuRStGdWpySVhyckJkQjZVcU85LzI0bGx1RGlL?=
- =?utf-8?B?NzJ0eG5vQzZVOFVoZlppdXFBL08yRDhiYVlxMUVJQ3ViSTgraFJDSmdsUjRF?=
- =?utf-8?B?NjlCMWdLUHZzUisyemt4WHZiTjUyck96YTdQVWI3KzZhOXhLNEpXY2dqMlEx?=
- =?utf-8?B?RWEvaXVodUMzSG5PdlJYM0hxS2FoWGU2NVRPQVdWQkZXVnRSakliMFBtNEg2?=
- =?utf-8?B?ck1UY1lmRHYxNzhNWEVhb0wwcG9za1pubjFCRkFnYVZsZEdrSGk1WWN2WHQ2?=
- =?utf-8?B?b1ViekpMcUFDY21Ma2lMdmNnT0NpMEZQdVpZUjhGajNCRGlhZjFqUS85QldD?=
- =?utf-8?B?WEZFd3JEK3JoYUJSMVVKeGNkanlSeHdzYnZBMEtzVG1KRFF6VkVDanpwekN2?=
- =?utf-8?B?dFhyVG1OWmVtYWxpSmNKUmhnaHgxNTV4eURSWjQ3NGhCSzRKK2ZIOFRBLy9h?=
- =?utf-8?B?bjdsS1VNaWtVSGwrMVAwVjM1MlY5UTh3Skp5SkMrbWxPamtRL1Q2WG1YUGl1?=
- =?utf-8?B?SGliWklPTVlvMFc1eDk3OTJnOXBhZnQyRjFzNmxTektvVkFnODBCTHhRPT0=?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V2pqSkVjTklVTFJjY0Y2SzdtNk9IUFoxcmEzbGg5dVQ5RDljQSsxMTJKYjB6?=
- =?utf-8?B?YmFYWlc0UEV0UFBLTlZwa0FZMmdtdlg4L0QvSjE3QlExcGY5dzRwdDYyNXFX?=
- =?utf-8?B?MWJjWWlKOGc0RTZjZjZrbVBWSk9rL1QrSWJaTmc3WGpFN0lRT2Y4TkpaUkRC?=
- =?utf-8?B?RHE0VFNRWUdSZDljUlQ1eG1oOUpKOWQrSnFJaG1abWlwaTd0SU9JTDFaRTJu?=
- =?utf-8?B?MUdTV1hHWThRcU1DTVFpN1o5Q2IrR3J6Qy9GeXEvS1JxNm93RHVvYWc2QWdH?=
- =?utf-8?B?Qm9hL1dISzhPdVMyRmMyUm5odjBUeFZYbEplSGEyS05ua0JIcWVvbXFjUVhY?=
- =?utf-8?B?bEVwVW9pTTZNNjdDZi9vOHBJTWh4WThWOTN1ZFFJS2Z0bnNabXNzN1RFTUNG?=
- =?utf-8?B?NDMxSlE4SGJhS1BueHplWTRJZUpnRnlFUjJxTExjUjVnV0VPMS9EV1pxTm82?=
- =?utf-8?B?czU0RnBieTJSRyt6czZpTkVHVTczdzhvaFIxWjhLWEp1TEJhdXBYSWlOZ01J?=
- =?utf-8?B?Y2hZSTRnL0VIN3hOZ0VIcmJFTnpvaEQyeXo3UUVKbTlEM3FlaWNmcjEwT0J0?=
- =?utf-8?B?K3JFalBpNFdOUjNLTmZFNXNGVUQrbVIyMVFLQ09qWHhpUUtiay9MTWxITTVG?=
- =?utf-8?B?K2RWaTN2Z2c3RVQyQWMyRzh6ZXFFblhtdlFyT1RhaHdsejVNcUYrN2FyTnhy?=
- =?utf-8?B?c3YwRlMwOGFIM0ZDRG5zandlT002Zi8vWUVQRUd4U252WnQ5WFQramlEcGZk?=
- =?utf-8?B?WEIyemhnY0ZYaFJDVUgveU0zMkF0cFpKSWxLTUFJRUNsQnJPZ1JXU0ZiKzhG?=
- =?utf-8?B?UDlONG9FK3FralUwV3NDT3BlSVJiRXNIQlZPc2I5TmpwTVY5dEpvUWdtL2d0?=
- =?utf-8?B?aExMc08xanJ5VTdkZUErNldrbGVieHNldUMrRnNlMVp3Y0REZi8rdXJvTkUr?=
- =?utf-8?B?aElMQm1YMW41ZHBLOFE5b2pEQnFQRlJFNFluM2JEalpNbXpiYytGNGtWRzI0?=
- =?utf-8?B?Z09Mb2dqMFM4bDhqaW1pNmhXZjQ3WlF1d1A0QmJmWDh2T3dTZHcrOEpwYmVL?=
- =?utf-8?B?S1FFREJGNHFIYUk4bFJqK3JPOGZrWTZFQVg5WmxvVUxxSGd6R2EvamtMd2p5?=
- =?utf-8?B?VzlPT1h0cmprRWtQb1NQVnE5K2h3ZVMrYXlBZDJJM3JYenlzbG5Ia3UyeFJS?=
- =?utf-8?B?ZUtQY3NwYVE1TkR4Y0NlaXdYZmwwNmNtYkNZY29tMFJnY3F6NWJ1cUdqbVYr?=
- =?utf-8?B?bGZBT2ZaSDRZZHNqdkdNdTFoaHY2cTFkQktnUFBvMU12aWMzSUVZWXZFV0Zl?=
- =?utf-8?B?SzI5M01KV0MwWE9ULzcvemFlTi9tV2JPOTlaRVFza0FaRnRRTERvQjFvZm4z?=
- =?utf-8?B?Q1RHdjJHdUhEcjlaUjZ6anlPb2RPamFpdEJsQlBCTmFSdXE2bzRTRTVnTGFO?=
- =?utf-8?B?VlNCeVErend1bVpjUHFyTGlZZTlrdHlmcU5XVlZJWW1LVGdlWGRPTjQyTE9I?=
- =?utf-8?B?NjA2bU1zUTVvT0RuN1g4bk54RnVBMTVFaXpuVFREOWNTMUxVZWlDalUxSUU0?=
- =?utf-8?B?cSs5YWIzYkxZVlhxNWZDQ3Y5TUZiWHh3R1FDempSWm9OY20xYnZYTkxadDlr?=
- =?utf-8?B?MnFXSkx1OVVPVlUxaG5tYW44Z2hNTkgwWjZlZGJ5L2VSR2NsNUlEQ0JJVXRN?=
- =?utf-8?B?bEplQ2NwQ2ZBSGM0Q3pYazFqU29ESnd0Vnd2MUJEV0pkQTJBQXI1WVJXbi9n?=
- =?utf-8?Q?G88YD4JqgqCadJeLGU=3D?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c4a47ba-efad-4b08-bc22-08dd565ff6e0
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR01MB4527.apcprd01.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 12:20:32.4914
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB6080
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>,
+ Stephen Hemminger <stephen@networkplumber.org>,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Michael Kelley <mhklinux@outlook.com>, Long Li <longli@microsoft.com>
+References: <20250225052001.2225-1-namjain@linux.microsoft.com>
+ <2025022504-diagnosis-outsell-684c@gregkh>
+ <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
+ <2025022515-lasso-carrot-4e1d@gregkh>
+ <541c63d6-8ae6-4a32-8a02-d86eea64827e@linux.microsoft.com>
+ <2025022627-deflate-pliable-6da0@gregkh>
+Content-Language: en-US
+From: Naman Jain <namjain@linux.microsoft.com>
+In-Reply-To: <2025022627-deflate-pliable-6da0@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 1/23/25 13:51, Jiwei Sun wrote:
-> From: Jiwei Sun <sunjw10@lenovo.com>
-> 
-> Since commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set
-> PCIe Link Speed"), there are two potential issues in the function
-> pcie_failed_link_retrain().
-> 
-> (1) The macro PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() just
-> use the link speed field of the registers. However, there are many other
-> different function fields in the Link Control 2 Register or the Link
-> Capabilities Register. If the register value is directly used by the two
-> macros, it may cause getting an error link speed value (PCI_SPEED_UNKNOWN).
-> 
-> (2) In the pcie_failed_link_retrain(), the local variable lnkctl2 is not
-> changed after reading from PCI_EXP_LNKCTL2. It might cause that the
-> removing 2.5GT/s downstream link speed restriction codes are not executed.
-> 
-> In order to avoid the above-mentioned potential issues, only keep link
-> speed field of the two registers before using and reread the Link Control 2
-> Register before using.
-> 
-> This series focuses on the first patch of the original series [1]. The
-> second one of the original series will submitted via the other single
-> patch.
-> 
-> [1] https://lore.kernel.org/linux-pci/tencent_DD9CBE5B44210B43A04EF8DAF52506A08509@qq.com/
-> ---
-> v4 changes:
->  - rename the variable name in the macro
-> 
-> v3 changes:
->  - add fix tag in the commit messages of first patch
->  - add an empty line after the local variable definition in the macro
->  - adjust the position of reading the Link Control 2 register in the code
-> 
-> v2 changes:
->  - divide the two issues into different patches
->  - get fixed inside the macros
-> 
-> Jiwei Sun (2):
->   PCI: Fix the wrong reading of register fields
->   PCI: Adjust the position of reading the Link Control 2 register
-> 
->  drivers/pci/pci.h    | 32 +++++++++++++++++++-------------
->  drivers/pci/quirks.c |  6 ++++--
->  2 files changed, 23 insertions(+), 15 deletions(-)
-> 
+On 2/26/2025 3:33 PM, Greg Kroah-Hartman wrote:
+> On Wed, Feb 26, 2025 at 10:43:41AM +0530, Naman Jain wrote:
+>>
+>>
+>> On 2/25/2025 2:09 PM, Greg Kroah-Hartman wrote:
+>>> On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
+>>>>
+>>>>
+>>>> On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
+>>>>> On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
+>>>>>> On regular bootup, devices get registered to vmbus first, so when
+>>>>>> uio_hv_generic driver for a particular device type is probed,
+>>>>>> the device is already initialized and added, so sysfs creation in
+>>>>>> uio_hv_generic probe works fine. However, when device is removed
+>>>>>> and brought back, the channel rescinds and device again gets
+>>>>>> registered to vmbus. However this time, the uio_hv_generic driver is
+>>>>>> already registered to probe for that device and in this case sysfs
+>>>>>> creation is tried before the device gets initialized completely.
+>>>>>>
+>>>>>> Fix this by moving the core logic of sysfs creation for ring buffer,
+>>>>>> from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
+>>>>>> attributes for the channels are defined. While doing that, make use
+>>>>>> of attribute groups and macros, instead of creating sysfs directly,
+>>>>>> to ensure better error handling and code flow.
 
-Gentle ping.
+<snip>
+
+>>>>>> +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
+>>>>>> +				       const struct bin_attribute *attr,
+>>>>>> +				       struct vm_area_struct *vma)
+>>>>>> +{
+>>>>>> +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
+>>>>>> +
+>>>>>> +	if (!channel->mmap_ring_buffer)
+>>>>>> +		return -ENODEV;
+>>>>>> +	return channel->mmap_ring_buffer(channel, vma);
+>>>>>
+>>>>> What is preventing mmap_ring_buffer from being set to NULL right after
+>>>>> checking it and then calling it here?  I see no locks here or where you
+>>>>> are assigning this variable at all, so what is preventing these types of
+>>>>> races?
+>>>>>
+>>>>> thanks,
+>>>>>
+>>>>> greg k-h
+>>>>
+>>>> Thank you so much for reviewing.
+>>>> I spent some time to understand if this race condition can happen and it
+>>>> seems execution flow is pretty sequential, for a particular channel of a
+>>>> device.
+>>>>
+>>>> Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) can be
+>>>> called in parallel to hv_uio_probe (which had set
+>>>> channel->mmap_ring_buffer to non NULL), I doubt race can happen here.
+>>>>
+>>>> Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
+>>>>
+>>>> vmbus_device_register
+>>>>     device_register
+>>>>       hv_uio_probe
+>>>> 	  hv_create_ring_sysfs (W to non NULL)
+>>>>           sysfs_update_group
+>>>>             vmbus_chan_attr_is_visible (R)
+>>>>     vmbus_add_channel_kobj
+>>>>       sysfs_create_group
+>>>>         vmbus_chan_attr_is_visible  (R)
+>>>>         hv_mmap_ring_buffer_wrapper (critical section)
+>>>>
+>>>> hv_uio_remove
+>>>>     hv_remove_ring_sysfs (W to NULL)
+>>>
+>>> Yes, and right in here someone mmaps the file.
+>>>
+>>> I think you can race here, no locks at all feels wrong.
+>>>
+>>> Messing with sysfs groups and files like this is rough, and almost never
+>>> a good idea, why can't you just do this all at once with the default
+>>> groups, why is this being added/removed out-of-band?
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> The decision to avoid creating a "ring" sysfs attribute by default
+>> likely stems from a specific use case where it wasn't needed for every
+>> device. By creating it automatically, it keeps the uio_hv_generic
+>> driver simpler and helps prevent potential race conditions. However, it
+>> has an added cost of having ring buffer for all the channels, where it
+>> is not required. I am trying to find if there are any more implications
+>> of it.
+> 
+> You do know about the "is_visable" attribute callback, right?  Why not
+> just use that instead of manually mucking around with the
+> adding/removing of sysfs attributes at all?  That is what it was
+> designed for.
+> 
+> thanks,
+> 
+> greg k-h
+
+Hi Greg,
+Yes, I am utilizing that in my patch. For differentiating channels of a
+uio_hv_generic device, and for *selectively* creating sysfs, we
+introduced this field in channel struct "channel->mmap_ring_buffer",
+which we were setting only in uio_hv_generic. But, by the time we set
+this in uio_hv_generic driver, the sysfs creation has already gone
+through and sysfs doesn't get updated dynamically. That's where there
+was a need to call sysfs_update_group. I thought the better place to
+keep sysfs_update_group would be in vmbus driver, where we are creating
+the original sysfs entries, hence I had to add the wrapper functions.
+This led us to the race condition we are trying to address now.
+
+
+@@ -1838,6 +1872,10 @@ static umode_t vmbus_chan_attr_is_visible(struct 
+kobject *kobj,
+  	     attr == &chan_attr_monitor_id.attr))
+  		return 0;
+
++	/* Hide ring attribute if channel's mmap_ring_buffer function is not 
+yet initialised */
++	if (attr ==  &chan_attr_ring_buffer.attr && !channel->mmap_ring_buffer)
++		return 0;
++
+  	return attr->mode;
+  }
+
 
 Thanks,
-Regards,
-Jiwei
+Naman
