@@ -1,31 +1,31 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72902EBE;
-	Wed, 26 Feb 2025 01:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91B6EBE;
+	Wed, 26 Feb 2025 01:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740534952; cv=none; b=t1oW0UR1SShhWvJolEpFa1iNEXT+qmPIYV82zb5u/gGwJlOzwJUdN4kqES6a3s2MJNLwkWbTDUuGLTu0HZVl9rsvPujHM9Vyw35VUV64sfzGrWPduA1+rykDzCqbSjhcy+UkNeT9RhuXPQls+hUjau0djqbii4beMkW3FBP/hZg=
+	t=1740534960; cv=none; b=G+mzjPf1fgThwkVoiH+Z+Q+hd+/6W75y8Jk+4TGKFXxaXAVj6pPYOwcefoSQFW3ZigGDlkIbNJqM2YJf0aOb/Yorjpzrs+wQ3/4OUxpyf8sHCdrKDdpvwRM+C513NmOxBnvTaCmWA1v2D5qtQD46rCGEJo0tXbYBLRBKWNNVTys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740534952; c=relaxed/simple;
-	bh=hpo8SdVEcKI6pEDAOsFUUwXI4aD7oAd5zuM5+KJpZsY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HRmB3bMSLF4399HT+gARNNwEGDyy610MaG8TI1gAm7ijMuUY9RbnB2uMqcPD6MoOR/XwRFSN4/Nxp8OWdLz2BiUJUi6SCGgjoHqPspqIkSZ17M0tqxedrPdTvF1XpMbWQXXCBqyUIqcBSxxtYACNPRAVT8SMD54wTma398NIjzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dw8z0bBs; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dw8z0bBs"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740534940; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=SYGXr6ObxBCz/rMlq9BwzU4N8B+1nvlSFrvEr4NdUT8=;
-	b=dw8z0bBsxUhOZMmHzHYtDeeO/j2jLAMVUXVXhxEjqNYE9YRkzPf7d/qty8zCitUGUcshbJP+GFz8MBXx/ubsquf0fOvy6RzrI22HBHtScSSadwJPAQ8ihtye8xrdLXDhb0VlsqEM8ZWL9jEi0lEAssEMFcg70ak6tyCJ8+5iPFo=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQGACDe_1740534937 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Feb 2025 09:55:38 +0800
-Message-ID: <855b4178-cbd5-4d95-a2eb-32c5ee0e5894@linux.alibaba.com>
-Date: Wed, 26 Feb 2025 09:55:35 +0800
+	s=arc-20240116; t=1740534960; c=relaxed/simple;
+	bh=X2A7UwowDWu/Qmzix8RvMOFH9CCjbmuFESHKLu4VyVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=f2YBhEayxjY3QFbCZ4YD8RDmdi+NMCKXEMlWS2PM2V6XFcacdkJ0HiOV+1/x6N93ltL9jo9iv241BHsMPc1FDmypJUNXSpeHaW9AXlId4CJxg3sTkIEDm9Qu588I0fPdmCm/O2WYRLLJd6kUaGgfNWfBmbXPzmp4YcPN8iLjm2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z2crY2Zctzdb7f;
+	Wed, 26 Feb 2025 09:51:09 +0800 (CST)
+Received: from kwepemg500008.china.huawei.com (unknown [7.202.181.45])
+	by mail.maildlp.com (Postfix) with ESMTPS id 43C22140795;
+	Wed, 26 Feb 2025 09:55:54 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.71) by kwepemg500008.china.huawei.com
+ (7.202.181.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 26 Feb
+ 2025 09:55:53 +0800
+Message-ID: <1a1ff87b-6f75-4d43-ad7b-54883bea13f8@huawei.com>
+Date: Wed, 26 Feb 2025 09:55:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,154 +33,196 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] perf/dwc_pcie: Move common DWC struct definitions
- to 'pcie-dwc.h'
-To: Shradha Todi <shradha.t@samsung.com>, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org
-Cc: manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, kw@linux.com,
- robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
- Jonathan.Cameron@Huawei.com, fan.ni@samsung.com, nifan.cxl@gmail.com,
- a.manzanares@samsung.com, pankaj.dubey@samsung.com, cassel@kernel.org,
- 18255117159@163.com, renyu.zj@linux.alibaba.com, will@kernel.org,
- mark.rutland@arm.com
-References: <20250221131548.59616-1-shradha.t@samsung.com>
- <CGME20250221132024epcas5p13d6e617805e4ef0c081227b08119871b@epcas5p1.samsung.com>
- <20250221131548.59616-2-shradha.t@samsung.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250221131548.59616-2-shradha.t@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 1/2] ext4: only defer sb update on error if SB_ACTIVE
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+CC: <linux-ext4@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>, Jan Kara
+	<jack@suse.cz>, <linux-kernel@vger.kernel.org>, Mahesh Kumar
+	<maheshkumar657g@gmail.com>, Ritesh Harjani <ritesh.list@gmail.com>, Yang
+ Erkun <yangerkun@huawei.com>
+References: <cover.1740212945.git.ojaswin@linux.ibm.com>
+ <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com>
+ <3f9a67e2-ef08-47d4-b35e-41841e24bb71@huawei.com>
+ <Z72yUqGWHdRyCE25@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Content-Language: en-US
+From: Baokun Li <libaokun1@huawei.com>
+In-Reply-To: <Z72yUqGWHdRyCE25@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500008.china.huawei.com (7.202.181.45)
+
+On 2025/2/25 20:06, Ojaswin Mujoo wrote:
+> On Tue, Feb 25, 2025 at 09:53:10AM +0800, Baokun Li wrote:
+>> On 2025/2/22 16:40, Ojaswin Mujoo wrote:
+>>> Presently we always BUG_ON if trying to start a transaction on a journal
+>>> marked with JBD2_UNMOUNT, since this should never happen. However while
+>>> running stress tests it was observed that in case of some error handling
+>>> paths, it is possible for update_super_work to start a transaction after
+>>> the journal is destroyed eg:
+>>>
+>>> (umount)
+>>> ext4_kill_sb
+>>>     kill_block_super
+>>>       generic_shutdown_super
+>>>         sync_filesystem /* commits all txns */
+>>>         evict_inodes
+>>>           /* might start a new txn */
+>>>         ext4_put_super
+>>> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+>>>           jbd2_journal_destroy
+>>>             journal_kill_thread
+>>>               journal->j_flags |= JBD2_UNMOUNT;
+>>>             jbd2_journal_commit_transaction
+>>>               jbd2_journal_get_descriptor_buffer
+>>>                 jbd2_journal_bmap
+>>>                   ext4_journal_bmap
+>>>                     ext4_map_blocks
+>>>                       ...
+>>>                       ext4_inode_error
+>> Just curious, since jbd2_journal_bmap() only queries the map and does not
+>> create it, how does it fail here? Is there more information in dmesg?
+>> Is s_journal_inum normal after file system corruption?
+> Hey Baokun,
+Hello Ojaswin,
+
+Thanks for your detailed explanation!
+>
+> So I dug a bit more into the vmcore. The error information in sbi looks
+> like this:
+>
+>    s_add_error_count = 1,
+>    s_first_error_code = 117,
+>    s_first_error_line = 475,
+>    s_first_error_ino = 0,
+>    s_first_error_block = 0,
+>    s_first_error_func = 0xc0080000055300d0 <__func__.6> "ext4_read_block_bitmap_nowait",
+>    s_first_error_time = 1737023235,
+>
+>    s_last_error_code = 117,
+>    s_last_error_line = 609,
+>    s_last_error_ino = 8,
+>    s_last_error_block = 783,
+>    s_last_error_func = 0xc008000005531b10 <__func__.41> "ext4_map_blocks",
+>    s_last_error_time = 1737023236,
+>
+>    The first error is here:
+>
+>        if ((bitmap_blk <= le32_to_cpu(sbi->s_es->s_first_data_block)) ||
+>       474               (bitmap_blk >= ext4_blocks_count(sbi->s_es))) {
+>    *  475                   ext4_error(sb, "Invalid block bitmap block %llu in "
+>       476                              "block_group %u", bitmap_blk, block_group);
+>       477                   ext4_mark_group_bitmap_corrupted(sb, block_group,
+>       478                                           EXT4_GROUP_INFO_BBITMAP_CORRUPT);
+>       479                   return ERR_PTR(-EFSCORRUPTED);
+>       480           }
+>
+> and the last error is here:
+>
+>      608           if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+>   *  609                   ret = check_block_validity(inode, map);
+>      610                   if (ret != 0)
+>      611                           return ret;
+>      612           }
+>
+>
+> And indeed we have the traces of the first error in dmesg:
+>
+> [75284.713463] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
+> [75284.713470] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
+> [75284.713476] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
+>
+> However, the last error seems strange. It seems like check_block_validity
+> should ideally never fail for a journal inode.Unfortunately, sbi->s_es page is
+> not recorded in the crash dump for some reason so idk the exact value at the
+> time of the check, but looking in journal->j_inode->i_ino, the inode num is 8,
+> which seems fine to me. So yeah, I'm a bit unsure what caused the corruption.
+> I'll look a bit more into the proc01 ltp to see if we can recreate the failure
+> to get more info.
+Right, check_block_validity() skips the journal inode check. If
+the journal inode check fails, that shows s_es->s_journal_inum and
+journal->j_inode->i_ino are different. The file system doesn't modify
+s_journal_inum, so it should be modified by some other writer bypassing
+the file system (i.e. writing to bare disk).
+
+If that's how it is, we could avoid this issue by using EXT4_JOURNAL_INO
+directly or saving s_journal_inum to ext4_sb_info (which offers better
+compatibility).
 
 
+Cheers,
+Baokun
+>> Thanks,
+>> Baokun
+>>>                         ext4_handle_error
+>>>                           schedule_work(&sbi->s_sb_upd_work)
+>>>
+>>>                                                  /* work queue kicks in */
+>>>                                                  update_super_work
+>>>                                                    jbd2_journal_start
+>>>                                                      start_this_handle
+>>>                                                        BUG_ON(journal->j_flags &
+>>>                                                               JBD2_UNMOUNT)
+>>>
+>>> Hence, make sure we only defer the update of ext4 sb if the sb is still
+>>> active.  Otherwise, just fallback to an un-journaled commit.
+>>>
+>>> The important thing to note here is that we must only defer sb update if
+>>> we have not yet flushed the s_sb_update_work queue in umount path else
+>>> this race can be hit (point 1 below). Since we don't have a direct way
+>>> to check for that we use SB_ACTIVE instead. The SB_ACTIVE check is a bit
+>>> subtle so adding some notes below for future reference:
+>>>
+>>> 1. Ideally we would want to have a something like (flags & JBD2_UNMOUNT
+>>> == 0) however this is not correct since we could end up scheduling work
+>>> after it has been flushed:
+>>>
+>>>    ext4_put_super
+>>>     flush_work(&sbi->s_sb_upd_work)
+>>>
+>>>                              **kjournald2**
+>>>                              jbd2_journal_commit_transaction
+>>>                              ...
+>>>                              ext4_inode_error
+>>>                                /* JBD2_UNMOUNT not set */
+>>>                                schedule_work(s_sb_upd_work)
+>>>
+>>>      jbd2_journal_destroy
+>>>       journal->j_flags |= JBD2_UNMOUNT;
+>>>
+>>>                                         **workqueue**
+>>>                                         update_super_work
+>>>                                          jbd2_journal_start
+>>>                                           start_this_handle
+>>>                                             BUG_ON(JBD2_UNMOUNT)
+>>>
+>>> Something like the above doesn't happen with SB_ACTIVE check because we
+>>> are sure that the workqueue would be flushed at a later point if we are
+>>> in the umount path.
+>>>
+>>> 2. We don't need a similar check in ext4_grp_locked_error since it is
+>>> only called from mballoc and AFAICT it would be always valid to schedule
+>>> work here.
+>>>
+>>> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+>>> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+>>> Suggested-by: Ritesh Harjani <ritesh.list@gmail.com>
+>>> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+>>> ---
+>>>    fs/ext4/super.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+>>> index a963ffda692a..b7341e9acf62 100644
+>>> --- a/fs/ext4/super.c
+>>> +++ b/fs/ext4/super.c
+>>> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+>>>    		 * constraints, it may not be safe to do it right here so we
+>>>    		 * defer superblock flushing to a workqueue.
+>>>    		 */
+>>> -		if (continue_fs && journal)
+>>> +		if (continue_fs && journal && (sb->s_flags & SB_ACTIVE))
+>>>    			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+>>>    		else
+>>>    			ext4_commit_super(sb);
+>>
 
-在 2025/2/21 21:15, Shradha Todi 写道:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> Since these are common to all Desginware PCIe IPs, move them to a new
-> header 'pcie-dwc.h', so that other drivers like debugfs, perf and sysfs
-> could make use of them.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->   MAINTAINERS                 |  1 +
->   drivers/perf/dwc_pcie_pmu.c | 25 +++----------------------
->   include/linux/pcie-dwc.h    | 34 ++++++++++++++++++++++++++++++++++
->   3 files changed, 38 insertions(+), 22 deletions(-)
->   create mode 100644 include/linux/pcie-dwc.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3864d473f52f..6474a2d83de4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -18167,6 +18167,7 @@ S:	Maintained
->   F:	Documentation/devicetree/bindings/pci/snps,dw-pcie-ep.yaml
->   F:	Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml
->   F:	drivers/pci/controller/dwc/*designware*
-> +F:	include/linux/pcie-dwc.h
->   
->   PCI DRIVER FOR TI DRA7XX/J721E
->   M:	Vignesh Raghavendra <vigneshr@ti.com>
-> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
-> index cccecae9823f..da30f2c2d674 100644
-> --- a/drivers/perf/dwc_pcie_pmu.c
-> +++ b/drivers/perf/dwc_pcie_pmu.c
-> @@ -13,6 +13,7 @@
->   #include <linux/errno.h>
->   #include <linux/kernel.h>
->   #include <linux/list.h>
-> +#include <linux/pcie-dwc.h>
->   #include <linux/perf_event.h>
->   #include <linux/pci.h>
->   #include <linux/platform_device.h>
-> @@ -99,26 +100,6 @@ struct dwc_pcie_dev_info {
->   	struct list_head dev_node;
->   };
->   
-> -struct dwc_pcie_pmu_vsec_id {
-> -	u16 vendor_id;
-> -	u16 vsec_id;
-> -	u8 vsec_rev;
-> -};
-> -
-> -/*
-> - * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> - * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> - */
-> -static const struct dwc_pcie_pmu_vsec_id dwc_pcie_pmu_vsec_ids[] = {
-> -	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> -	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> -	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> -	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> -	{} /* terminator */
-> -};
-> -
->   static ssize_t cpumask_show(struct device *dev,
->   					 struct device_attribute *attr,
->   					 char *buf)
-> @@ -529,14 +510,14 @@ static void dwc_pcie_unregister_pmu(void *data)
->   
->   static u16 dwc_pcie_des_cap(struct pci_dev *pdev)
->   {
-> -	const struct dwc_pcie_pmu_vsec_id *vid;
-> +	const struct dwc_pcie_vsec_id *vid;
->   	u16 vsec;
->   	u32 val;
->   
->   	if (!pci_is_pcie(pdev) || !(pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT))
->   		return 0;
->   
-> -	for (vid = dwc_pcie_pmu_vsec_ids; vid->vendor_id; vid++) {
-> +	for (vid = dwc_pcie_rasdes_vsec_ids; vid->vendor_id; vid++) {
->   		vsec = pci_find_vsec_capability(pdev, vid->vendor_id,
->   						vid->vsec_id);
->   		if (vsec) {
-> diff --git a/include/linux/pcie-dwc.h b/include/linux/pcie-dwc.h
-> new file mode 100644
-> index 000000000000..40f3545731c8
-> --- /dev/null
-> +++ b/include/linux/pcie-dwc.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2021-2023 Alibaba Inc.
-> + *
-> + * Copyright 2025 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + */
-> +
-> +#ifndef LINUX_PCIE_DWC_H
-> +#define LINUX_PCIE_DWC_H
-> +
-> +#include <linux/pci_ids.h>
-> +
-> +struct dwc_pcie_vsec_id {
-> +	u16 vendor_id;
-> +	u16 vsec_id;
-> +	u8 vsec_rev;
-> +};
-> +
-> +/*
-> + * VSEC IDs are allocated by the vendor, so a given ID may mean different
-> + * things to different vendors.  See PCIe r6.0, sec 7.9.5.2.
-> + */
-> +static const struct dwc_pcie_vsec_id dwc_pcie_rasdes_vsec_ids[] = {
-> +	{ .vendor_id = PCI_VENDOR_ID_ALIBABA,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_AMPERE,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{ .vendor_id = PCI_VENDOR_ID_QCOM,
-> +	  .vsec_id = 0x02, .vsec_rev = 0x4 },
-> +	{} /* terminator */
-> +};
-> +
-> +#endif /* LINUX_PCIE_DWC_H */
-
-LGTM. Thanks.
-
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Shuai
