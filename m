@@ -1,93 +1,142 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2E2233724
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D6B236449
 	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596115; cv=none; b=OBUhJJ26M1bSmEAIcWzjB1oW8ogDFmel5htY3GUZ2u+MEEbwo+LeQBSp7e5VaIYe/RK8sy0h+TSr/auM5T7ETicH9QaHTiISI1gorJdjkNRDZPYf+6NSJH57y2/MggxTWotf9F5eMkEnEokHZ11OVeUAoMHTXuxjdEH4epg4XGI=
+	t=1740596116; cv=none; b=JGxRD1fEQ8Sw//WDi46PpxNcz7+XpQEjuG5OSPCbxXJiIoFU+fu6dlE9mLsVDEAxrURTcMRRrzF1rGy2hy6ThJzhnzplo366sCweOiALCsSjIOhx0rBJvCiqBl75wLVM0TltuDC8t06QYS9OE0p1uNt2+WTS2pEJx23s0MdjpsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596115; c=relaxed/simple;
-	bh=3hozpgoSS59OL/VEqqi5QtKt2hfzFcBfjU/Lbnupyjk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=sj2EW4t2Jgxv+rzRfnVFreEwym3iYks4N9gvsLc9QYUuR/2QHvQoh0JCzgotqTDyBW5H/r6QdvGvSAjsT8M4yBDjJPAKbo2UHAzZajRTIbn5TlehgMNvdIKdj0oO73HT/IDNyNYZYpcEjp3HqkkRK3cIE+SdKh+u34jbIgkYgfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QVrIBSZI; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1740596116; c=relaxed/simple;
+	bh=3oc8qhgJaB+qEvfVeOdFIBZPr+vcrIabY8Hr67IuZWk=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=hlvDPr7y04MathUak270OfzZxeTBxepUj1p2PI3B/RNE1fRfjWvx3yMqgy5tKPQiSBpmW4Hzyke5c8S5Hj4TaQMoSLy4nyAUOPKS3OX2KxudjipklohHknZpNsofdRIRU0sP0GI2zxfuiyo3F2hdmW3BcH1zJUuL8sIyJc/nZdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WOy+655G; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QVrIBSZI"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22101351b1dso1173755ad.3
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WOy+655G"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc2b258e82so335061a91.0
         for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:55:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20230601; t=1740596114; x=1741200914; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=tz4Qs953FyQ8pSwuSRRMRObCEn7/+1IJwtCxcvgUByo=;
-        b=QVrIBSZIgZzgdatwxWv/2nuYHAGYHzrrCe4RxydfADy2Yo32UId4uVC6SF/XFx+oF3
-         iTKYEBUPAwp+mjviMbykoIT+zV1oXoB2c9zPuqGBjxmUZbIdwjvXJR7hv0T+nWYB8BqT
-         En8KbJywhdIbQHDOavvTTxkC4wj3Aw685g0WiR4Djfa7vWNYjENL4JFEaJnYRf83NNbf
-         7pFK412HiGbl1aa7wJ479rbTT1lV3qOFVygGUg8mRKBJQlMDpBAi6m2+XonzCbVLgIgZ
-         dPKsSUnhI6+ng4UutNH1pya0uuotKQ0C10qwlsFDa1FyT/BDQa5iaU1Q4Gp50qvjZNGz
-         rtLw==
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pMxjrmr+C2lqhTDO1AsbIyjKpGntAjw/Nw4lGuuG6FA=;
+        b=WOy+655GRlTqbi7xoiyFxeeB56NI2NmesFky22Qwy5WsgXcjOYIa2lwhtrF8FFVw5G
+         OqDiIKDRFt+TVOby+Rmu4ylIQYA0/ObHiH4VYEyWqP5sBBOGRWQgWa4fkHzgKmwRMak2
+         2d6kWe+bFe6uFZ6t/xafzo7Ycc1qb/UaBl8ihhzOjkeJoz/vHsQ347hd8PQ+uQ1skFxa
+         As5tIcdybRRdaTTaGkp2vVOX9UiYVVTilEkyNdbpDN2FWIg4YvR46eDWJewAAIMS5tzF
+         ifLnWIBRUBg2RXIsZdOG4orXbqYMCDNm22FpMX4Fn8bChqgkIVM/u7J+Kt9Zz4cdVYaz
+         xlow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740596114; x=1741200914;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tz4Qs953FyQ8pSwuSRRMRObCEn7/+1IJwtCxcvgUByo=;
-        b=nsG43AzFR2649qaiGOqmKLW/LeSpqxiB6tDJAYv1OP19w1cyKyLjS47bDC4AfSiid7
-         pFPuawwXBVHFCIpLoD+Z6Oj6Oo1AfYMiWS1xrqFWCYM4AqHIvTbwFa4yq0K8lKoVzniG
-         uZ5qwobb4Ti5kZ7iUqlyOFkZZryjJCtfFJzeZbZsaY4RPRUXSEEJ1UN6nXfcpGmh4Jk+
-         8dWuUp+svv/OZALM6oGgq1tu+oN1ES7+J9kud17Bz3J/tcP9bOpgmTjfBMqHOteZLBR5
-         u6lHTyHl2lK5sqcAOhR1rRziIsIQ4fvIyUoVKFO60gFsFwdU6fIyKgx2SDEuR51WhaaX
-         eq6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWcSEM3t4skQawRQCG8F+4GQfvljxXbJgUiyJPg0Ab9wUU9yg3n94mcaVGIJ6TNUZVLIC16MbmE3v2plGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzfxQTexCx7aNGn3MagyJ3mlRj465B+uANkN+9tEzpn9CcL9RS
-	f07Bj8fsu4q9K7njiHYS660gXxB91REO0HVmeOMQtjbR8d/tJhQK6B8QZGxGkWYpIQOmgKLLht6
-	I5w==
-X-Google-Smtp-Source: AGHT+IEiiWKKK5H8nmcWMiqbiAfTi/yBBsoyxX+kvTyaicEXWSkrrWW/xyqbnD51MQeATwdUE4l+c4dsV6M=
-X-Received: from plhv15.prod.google.com ([2002:a17:903:238f:b0:220:e5d1:24c2])
- (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2c7:b0:21f:4c65:6290
- with SMTP id d9443c01a7336-2232006201dmr74561105ad.1.1740596113491; Wed, 26
- Feb 2025 10:55:13 -0800 (PST)
-Date: Wed, 26 Feb 2025 10:55:07 -0800
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pMxjrmr+C2lqhTDO1AsbIyjKpGntAjw/Nw4lGuuG6FA=;
+        b=OLLe7LfTL9YQEUGNMBQnRdWT0+lWUHcTC61M9/u4shpLi5hsyNjdLI6YWBbTJZDv4b
+         DlNc8IS4nLCcJQRd6veIaGu+XkUbgZqSYZKFaLcc2CvCh/hcYj3tl4/jEDnr9Z82FGmD
+         QpKKalqX0KXkHKzFYhIQa9IwWqX7R6qyxtRCzavQgxflD6wtPDyTEXLBteeaU1c7QMeZ
+         5wwXthc8N8QDxx7mJ2PyarO5OKeZk6J/EdBBBsYUA+LUX0y+7m9uyOJcdc9v9yKiW4uj
+         PHFvTY3QTMJav7pIS2nVp50LU22xmIcIbZ8O1wCHzclDdK6sG/PNNEpNyhp1k9x8geXX
+         OOtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUw8efSEtPx29dE+930EWm0KOx7cwA22Gkjn3fAOyMjpKJvOD9qGILj8nUys33qN6DJTxodquhwrDucCO4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6hhpRVx54vMYWf6YRU8jnsSngtAPqPIIQmHOo6h+cDrkHbyQR
+	wE5SeZ3t6dkXc1DCuOnzgzXwvLxTD0TtwY1L3v3L2NKQ243pxqdvgtTybeQRSf2fWXc4gNkeoEg
+	1DOVGZBoT0kUUiL7WjJkKcg==
+X-Google-Smtp-Source: AGHT+IHXoYciUWfZJpCpSwX24N+e+ntqta9etAMpkRTScD6zTBwVRDGyD1SA1Qg0PQJM6OFM5du14J4bw5ZP8rzFVg==
+X-Received: from pjbqi7.prod.google.com ([2002:a17:90b:2747:b0:2f5:4762:e778])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90a:cf8e:b0:2fe:7fea:ca34 with SMTP id 98e67ed59e1d1-2fe7feaca86mr5657943a91.32.1740596114259;
+ Wed, 26 Feb 2025 10:55:14 -0800 (PST)
+Date: Wed, 26 Feb 2025 18:55:12 +0000
+In-Reply-To: <diqz5xle9nwq.fsf@ackerleytng-ctop.c.googlers.com> (message from
+ Ackerley Tng on Thu, 13 Feb 2025 09:47:33 +0000)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250226185510.2732648-1-surenb@google.com>
-Subject: [PATCH 0/2] move_pages_pte() fixes
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: lokeshgidra@google.com, aarcange@redhat.com, 21cnbao@gmail.com, 
-	v-songbaohua@oppo.com, david@redhat.com, peterx@redhat.com, 
-	willy@infradead.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
-	hughd@google.com, jannh@google.com, kaleshsingh@google.com, surenb@google.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Message-ID: <diqzldtsfsdr.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 14/39] KVM: guest_memfd: hugetlb: initialization and cleanup
+From: Ackerley Tng <ackerleytng@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: peterx@redhat.com, tabba@google.com, quic_eberman@quicinc.com, 
+	roypat@amazon.co.uk, jgg@nvidia.com, david@redhat.com, rientjes@google.com, 
+	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
+	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
+	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-fsdevel@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Patchset bundles two *unrelated* fixes in move_pages_pte because otherwise
-they would create a merge conflict. The first fix which was posted before
-at [1] fixes a livelock issue. The second change corrects the use of PTEs
-when unmapping them.
+Ackerley Tng <ackerleytng@google.com> writes:
 
-The patchset applies cleanly over mm-hotfixes-unstable which contains
-Barry's fix [2] that changes related code.
+> Peter Xu <peterx@redhat.com> writes:
+>
+>> On Tue, Sep 10, 2024 at 11:43:45PM +0000, Ackerley Tng wrote:
+>>> +/**
+>>> + * Removes folios in range [@lstart, @lend) from page cache of inode, updates
+>>> + * inode metadata and hugetlb reservations.
+>>> + */
+>>> +static void kvm_gmem_hugetlb_truncate_folios_range(struct inode *inode,
+>>> +						   loff_t lstart, loff_t lend)
+>>> +{
+>>> +	struct kvm_gmem_hugetlb *hgmem;
+>>> +	struct hstate *h;
+>>> +	int gbl_reserve;
+>>> +	int num_freed;
+>>> +
+>>> +	hgmem = kvm_gmem_hgmem(inode);
+>>> +	h = hgmem->h;
+>>> +
+>>> +	num_freed = kvm_gmem_hugetlb_filemap_remove_folios(inode->i_mapping,
+>>> +							   h, lstart, lend);
+>>> +
+>>> +	gbl_reserve = hugepage_subpool_put_pages(hgmem->spool, num_freed);
+>>> +	hugetlb_acct_memory(h, -gbl_reserve);
+>>
+>> I wonder whether this is needed, and whether hugetlb_acct_memory() needs to
+>> be exported in the other patch.
+>>
+>> IIUC subpools manages the global reservation on its own when min_pages is
+>> set (which should be gmem's case, where both max/min set to gmem size).
+>> That's in hugepage_put_subpool() -> unlock_or_release_subpool().
+>>
+>
+> Thank you for pointing this out! You are right and I will remove
+> hugetlb_acct_memory() from here.
+>
 
-[1] https://lore.kernel.org/all/20250225204613.2316092-1-surenb@google.com/
-[2] https://lore.kernel.org/all/20250226003234.0B98FC4CEDD@smtp.kernel.org/
+I looked further at the folio cleanup process in free_huge_folio() and I
+realized I should be returning the pages to the subpool via
+free_huge_folio(). There should be no call to
+hugepage_subpool_put_pages() directly from this truncate function.
 
-Suren Baghdasaryan (2):
-  userfaultfd: do not block on locking a large folio with raised
-    refcount
-  userfaultfd: fix PTE unmapping stack-allocated PTE copies
+To use free_huge_folio() to return the pages to the subpool, I will
+clear the restore_reserve flag once guest_memfd allocates a folio. All
+the guest_memfd hugetlb folios will always have the restore_reserve flag
+cleared.
 
- mm/userfaultfd.c | 37 ++++++++++++++++++++++++++-----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+With the restore_reserve flag cleared, free_huge_folio() will do
+hugepage_subpool_put_pages(), and then restore the reservation in hstate
+as well.
 
+Returning the folio to the subpool on freeing is important and correct,
+since if/when the folio_put() callback is used, the filemap may not hold
+the last refcount on the folio, so truncation may not be when the folio
+should not be returned to the subpool.
 
-base-commit: a88b5ef577dd7ddb8606ef233c0634f05e884d4a
--- 
-2.48.1.658.g4767266eb4-goog
-
+>>> +
+>>> +	spin_lock(&inode->i_lock);
+>>> +	inode->i_blocks -= blocks_per_huge_page(h) * num_freed;
+>>> +	spin_unlock(&inode->i_lock);
+>>> +}
