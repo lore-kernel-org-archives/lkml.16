@@ -1,348 +1,67 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A72226D03
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 600A71E1DE1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740565523; cv=none; b=Vs5jINWMz3JFOJbEREnN6ii4kOhp+P7vnBw5UqAtrXzXsoYNhKIydKhy7DmCXvhoYfVsRw8hRFadwOF3xGve1NTlMpzJgXXWw1z0weIzbRCRKv78TYQcmRPKOjlSUTvt900rjWuX7V6aM3hx3H3iIooy09dyRfmnK9q1k1OySy8=
+	t=1740565581; cv=none; b=LqbJi7wf4Ng4kpHRprDQHjEg3RgIZVKfcKrLCeYjIC7+I+Sdxzwdf+jfpmJ8T1PpiP4V1gA7vmwjvjks2gWJNDnVVNz0ZJpziRZ3zOgwzMXrJMU9OKYUnor0diWDrUjS6435DTzQKJBR40V//aEW3qjvk+B7Su0e5mGeXd5crBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740565523; c=relaxed/simple;
-	bh=+h++cLSineGel2oThcDp5bZpYh/LUhniSQMK++ibchY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l21+vMjBIM3R89tN92gI1hy4f4zST3XUkAOKozdyjvCVdj2I5J0P0dhgtYqGqHg8MAFezN5GWzeNmDVqSPEEQt9QN2+6oTZ61aejV0MyjP6tifMTLxqofoBjB1j8FyfBTRIk/HyG4mdVXG4CCNn3i9Z6kF4ZcIdjX5snGATwQeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=FImBJ3bm; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="FImBJ3bm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=iwgg7Sa/hYFUPfapeDs/PKCErbJNAXvFMQwYU2jvLh8=; b=FImBJ3bmcH/yFRK7MwpJuYKlci
-	uQTgM2zmZUSGc2WqHVlNUBp8dYwD5Mic3VXFWnu/o3Z6FmxYDr2+yuZLf+r0KRvlyAOz4PTZdcbaY
-	m9Xd5kV4RawJmneQ93qIxokesaK0m6n0j6+Q67MJwV58nD/mWrf29iFuakHmDCAVvMBX+AXvEh9Ez
-	UrKf9HPkqbFKAg8stEuSXyWqDFNMi/ARhIFhi9oblr5zdlhXCzduAtu9aB5IJGONFqcjZksdWtAUI
-	8yzqfZQTIxKNOrmN0DQKCAMAsqTLchrVrY/lp5TZQv7N2koCFzpw4h1hOkC87TKq9PoOHBaM5DXYT
-	YwFxVhzQ==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tnEbO-0006Ro-8f; Wed, 26 Feb 2025 11:25:18 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: quentin.schulz@cherry.de,
+	s=arc-20240116; t=1740565581; c=relaxed/simple;
+	bh=ZXCH/7yRwlRW+bd48KB7gPCKxzcfW06BFnSMRuuPl9w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E2odrRVNW7uoAWGAK8GG0qhjySfFTal2OGNIKU8B+bvPrTs6z2WH+YnKZU3fu/OCaCOz4kwZoTL8ognqgntKH8ZmGzND+Oy/CF+Xmoa8pO7S8EPWMHb1FV7ZneSPjHx0Fr8vp8Erx5FI8DdX2Sw7RlbZQtYKoLARaawUxQz9M1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F1121BA8;
+	Wed, 26 Feb 2025 02:26:35 -0800 (PST)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 40F503F6A8;
+	Wed, 26 Feb 2025 02:26:18 -0800 (PST)
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Yuanfang Zhang <quic_yuanfang@quicinc.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	kernel@quicinc.com,
+	coresight@lists.linaro.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	lukasz.czechowski@thaumatec.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH v3] arm64: dts: rockchip: add usb typec host support to rk3588-jaguar
-Date: Wed, 26 Feb 2025 11:25:07 +0100
-Message-ID: <20250226102507.3743437-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] coresight-etm4x: add isb() before reading the TRCSTATR
+Date: Wed, 26 Feb 2025 10:26:09 +0000
+Message-ID: <174056556176.1596152.13438853429197428752.b4-ty@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250116-etm_sync-v4-1-39f2b05e9514@quicinc.com>
+References: <20250116-etm_sync-v4-1-39f2b05e9514@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-Jaguar has two type-c ports connected to fusb302 controllers that can
-work both in host and device mode and can also run in display-port
-altmode.
+On Thu, 16 Jan 2025 17:04:20 +0800, Yuanfang Zhang wrote:
+> As recommended by section 4.3.7 ("Synchronization when using system
+> instructions to progrom the trace unit") of ARM IHI 0064H.b, the
+> self-hosted trace analyzer must perform a Context synchronization
+> event between writing to the TRCPRGCTLR and reading the TRCSTATR.
+> Additionally, add an ISB between the each read of TRCSTATR on
+> coresight_timeout() when using system instructions to program the
+> trace unit.
+> 
+> [...]
 
-While these ports can work in dual-role data mode, they do not support
-powering the device itself as power-sink. This causes issues because
-the current infrastructure does not cope well with dual-role data
-without dual-role power.
+Applied, thanks!
 
-So add the necessary nodes for the type-c controllers as well
-as enable the relevant core usb nodes, but limit the mode to host-mode
-for now until we figure out device mode.
+[1/1] coresight-etm4x: add isb() before reading the TRCSTATR
+      commit: 5bb4fbbcaa3a66c0fd9347a19e6dae86a48e63ab
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
-changes in v3:
-- more review comments from Quentin
-  (sbu-pin pinctrl, comments)
-changes in v2:
-- address review comments from Quentin
-  (comments, pinctrl, sbu-gpios and much more)
-
- .../arm64/boot/dts/rockchip/rk3588-jaguar.dts | 218 ++++++++++++++++++
- 1 file changed, 218 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-index 20b566d4168f..5dbcdf67f0a5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-@@ -333,6 +333,56 @@ rtc_twi: rtc@6f {
- 		};
- 	};
- 
-+	typec-portc@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cc_int1>;
-+		vbus-supply = <&vcc_5v0_usb_c1>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			data-role = "dual";
-+			label = "USBC-1 P11";
-+			power-role = "source";
-+			self-powered;
-+			source-pdos =
-+				<PDO_FIXED(5000, 1500, PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)>;
-+			vbus-supply = <&vcc_5v0_usb_c1>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					usbc0_hs: endpoint {
-+						remote-endpoint = <&usb_host0_xhci_drd_sw>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					usbc0_ss: endpoint {
-+						remote-endpoint = <&usbdp_phy0_typec_ss>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					usbc0_sbu: endpoint {
-+						remote-endpoint = <&usbdp_phy0_typec_sbu>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	vdd_npu_s0: regulator@42 {
- 		compatible = "rockchip,rk8602";
- 		reg = <0x42>;
-@@ -394,6 +444,56 @@ &i2c8 {
- 	pinctrl-0 = <&i2c8m2_xfer>;
- 	status = "okay";
- 
-+	typec-portc@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PA4 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cc_int2>;
-+		vbus-supply = <&vcc_5v0_usb_c2>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			data-role = "dual";
-+			label = "USBC-2 P12";
-+			power-role = "source";
-+			self-powered;
-+			source-pdos =
-+				<PDO_FIXED(5000, 1500, PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)>;
-+			vbus-supply = <&vcc_5v0_usb_c2>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					usbc1_hs: endpoint {
-+						remote-endpoint = <&usb_host1_xhci_drd_sw>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					usbc1_ss: endpoint {
-+						remote-endpoint = <&usbdp_phy1_typec_ss>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					usbc1_sbu: endpoint {
-+						remote-endpoint = <&usbdp_phy1_typec_sbu>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	vdd_cpu_big0_s0: regulator@42 {
- 		compatible = "rockchip,rk8602";
- 		reg = <0x42>;
-@@ -483,6 +583,26 @@ pcie30x4_waken_m0: pcie30x4-waken-m0 {
- 			rockchip,pins = <0 RK_PC7 12 &pcfg_pull_none>;
- 		};
- 	};
-+
-+	usb3 {
-+		cc_int1: cc-int1 {
-+			rockchip,pins = <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		cc_int2: cc-int2 {
-+			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		typec0_sbu_pins: typec0-sbu-pins {
-+			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>,
-+					<1 RK_PC3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		typec1_sbu_pins: typec1-sbu-pins {
-+			rockchip,pins = <0 RK_PD4 RK_FUNC_GPIO &pcfg_pull_none>,
-+					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
- };
- 
- &saradc {
-@@ -850,6 +970,24 @@ &tsadc {
- 	status = "okay";
- };
- 
-+/* USB-C P11 connector */
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+/* USB-C P12 connector */
-+&u2phy1 {
-+	status = "okay";
-+};
-+
-+&u2phy1_otg {
-+	status = "okay";
-+};
-+
- &u2phy2 {
- 	status = "okay";
- };
-@@ -892,6 +1030,56 @@ &uart7 {
- 	status = "okay";
- };
- 
-+/* Type-C on P11 */
-+&usbdp_phy0 {
-+	orientation-switch;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&typec0_sbu_pins>;
-+	sbu1-dc-gpios = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>; /* Q7_USB_C0_SBU1_DC */
-+	sbu2-dc-gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>; /* Q7_USB_C0_SBU2_DC */
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy0_typec_ss: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_ss>;
-+		};
-+
-+		usbdp_phy0_typec_sbu: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usbc0_sbu>;
-+		};
-+	};
-+};
-+
-+/* Type-C on P12 */
-+&usbdp_phy1 {
-+	orientation-switch;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&typec1_sbu_pins>;
-+	sbu1-dc-gpios = <&gpio0 RK_PD4 GPIO_ACTIVE_HIGH>; /* Q7_USB_C1_SBU1_DC */
-+	sbu2-dc-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>; /* Q7_USB_C1_SBU2_DC */
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy1_typec_ss: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc1_ss>;
-+		};
-+
-+		usbdp_phy1_typec_sbu: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usbc1_sbu>;
-+		};
-+	};
-+};
-+
- /* host0 on P10 USB-A */
- &usb_host0_ehci {
- 	status = "okay";
-@@ -902,6 +1090,36 @@ &usb_host0_ohci {
- 	status = "okay";
- };
- 
-+/* host0 on P11 USB-C */
-+&usb_host0_xhci {
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb_host0_xhci_drd_sw: endpoint {
-+			remote-endpoint = <&usbc0_hs>;
-+		};
-+	};
-+};
-+
-+/* host1 on P12 USB-C */
-+&usb_host1_xhci {
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb_host1_xhci_drd_sw: endpoint {
-+			remote-endpoint = <&usbc1_hs>;
-+		};
-+	};
-+};
-+
- /* host1 on M.2 E-key */
- &usb_host1_ehci {
- 	status = "okay";
+Best regards,
 -- 
-2.47.2
-
+Suzuki K Poulose <suzuki.poulose@arm.com>
