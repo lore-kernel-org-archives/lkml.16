@@ -1,71 +1,33 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B1821D3E6
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF237194AF9;
+	Wed, 26 Feb 2025 15:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582319; cv=none; b=KAVv87STTqBJvLymaX6MAYzYSHLC9uSbD3+AkYw665vcFK+m/Zl+V4tEDYkwhGSngk7fobFGo1z+gx2WR0kiD4zFfKdQo7r9fruIw8ymgRDqfvxmtOfbWxNI83m/ODUAQXJ6QWNXF1xvFOSHCedQ268VmJUlTCvv5bQQdIsvjjk=
+	t=1740582336; cv=none; b=EeeMXabd6GZXN1Cog1JOvBWXyho3tLyZ+Fd2aSmIOrKbGWn0+80PAPYT/LUtvyU8Sa29ZvJXBK4zGpCxtC42+cgyyPj1aO4GhrFLE+oxO3TMqDnSSrqeNpt1dZ98DdWoNK+Ch073aHZE5YbB3WHnIsizpeEu1iZDrvrr+BNPDfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582319; c=relaxed/simple;
-	bh=UbsznBB7Ta4OOWxE6Q76ciArrmMaaUYgQLE2J5Bd0ok=;
+	s=arc-20240116; t=1740582336; c=relaxed/simple;
+	bh=aKsWQB1CAlUK5Cm9Str0bXC/fuAE5a6GytVvT9WpSwQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fHAq5IU2MZdoh5zH6Hjo9sOCo7RzFGjlQ5imEZhuf9qtl4PfP0OTNlhawHrjGe7k9ymtlwQ9bNeyDNzj3DXxflv+gL1zd5JitHew/15E0feVigucAK9IkGfBUIWJ+CgRm4Pz9yZfXAYlxkA7OgZF7Decf8cGyQCLqYtj+CpJrTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e5OexUTr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=biUOWo+n2rcrxJ25GP1LT7dk3qEL+wuFRbdCAoAa+tlZQoqK/sDs82oTa2cTYpglqtXkw0tU5pB9ei/97kxVD0RlwpZLi/pW3Lfrb5nn2xuHvMKBn30Cqmze3N6eV9L6RuPWRp0ebxV6JBIHojgKXmAQkjOiCH2pvrdsRSOD2BA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5lR1/Rz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5OexUTr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740582317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DtaKuouL0Y3pv+96Ex3YwJXMFO8jE7lmxjvjb5LQJDY=;
-	b=e5OexUTrjjchN/aAZRzlYvbY2Hb65SDzox7PqIJJD+WchVV+sGaojxHhk9sL9Hsso1lBVe
-	n5NKWSCVw2fhvCxawo0grI0Yh4cgQhsPxywcYjOiua44xGiQvhOpAYIrJxCguMjafn94yB
-	nmsr3g/CDUQ5S0rRwKZtijR8+CUoCtE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-88-8MADYtq2MBG6xZE9ENFucA-1; Wed, 26 Feb 2025 10:05:15 -0500
-X-MC-Unique: 8MADYtq2MBG6xZE9ENFucA-1
-X-Mimecast-MFC-AGG-ID: 8MADYtq2MBG6xZE9ENFucA_1740582315
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4398e841963so52764085e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:05:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740582314; x=1741187114;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=DtaKuouL0Y3pv+96Ex3YwJXMFO8jE7lmxjvjb5LQJDY=;
-        b=jy1EMPsweZINJGoGkpbvsARgDOWdN+pUb1ZO38ZbFKzYCJ1UcndpU/5JGBm67Rt6Nt
-         IUUTsHAaaifHLuJHR8RUGlkC64K4JLjETCB3e3trl9TPqj+UzVtqeO60MzPX5JMe5u5a
-         rfgJlGHt+1eHjsUgJmsKmpomoi2x6hnDSIEg91SRKcw5ZyF0JZKBZ0zi9Sk0labHjkfX
-         3WHgg5S9XRTRKJdaRZCLJeN2z73P02cRdnNcLYBZy7oxf+etinOGKn33SYWEW0zQ4ojn
-         obTUMjiYvVCO8mg1HO0YNT4JVVN0oYMZyMST0mhBBCfkPXpgWlqZK/gFPVa/B5JryF/F
-         lxfA==
-X-Gm-Message-State: AOJu0Yx7eFGpEKiu9JRhbJjxV3J8+tI26Jlox3UtQGzLCFnl3bMGGRqj
-	JoTfEqoSen/5RdtzjANIrvZ0bB/ifkISqCN62jpsiHUhGrO/BwSL1lF3k5C1dgxW9Oy2oS8Jo/o
-	4iKaPZse9VqgbYqNryhP84aaYYQGhWcF9tgLHyOi9uAGccu0tpoAcVDjsMVfRUA==
-X-Gm-Gg: ASbGncuK9AxOA/gSoqUrgynjeFPGnzJC9IoEVYu7jJMhYOSKnwaXnE3ZpU0qerwl5wx
-	C/KT4r7OfD2uSk6sTsio9+SGhLROWo62832uMGaoz0o3+Jph8OxAYQ2Nwp7UUAAxh6AtlmJuXxn
-	hHNfGKkyXCl381SoG49t+VO77YRTgLwgbzIDBDqx1N0Yx05HTLbDy3IcPv4pAqmBCMKIeewKKiz
-	LRhPOE7uvR1kmyIP/HPtLkktI+NYlI+RrOG/wjFlSdi95S+90L7dFi7/c6gkcCU3Oz5kpmdlgDj
-	8pUTuVj01m5LWhhJTip4JVU85Kjs4vGvXQRMr1cK9gXj
-X-Received: by 2002:a05:600c:3506:b0:439:9f97:7d6c with SMTP id 5b1f17b1804b1-439aebcfc40mr173325155e9.29.1740582312995;
-        Wed, 26 Feb 2025 07:05:12 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE3bcYNh8Rp+gjnHI+8lWknh+fmKRrB7o51AAIckCXQu2kuHMMgbo940KVzsy6o7t0A+oKQMQ==
-X-Received: by 2002:a05:600c:3506:b0:439:9f97:7d6c with SMTP id 5b1f17b1804b1-439aebcfc40mr173324475e9.29.1740582312582;
-        Wed, 26 Feb 2025 07:05:12 -0800 (PST)
-Received: from [192.168.3.141] (p5b0c6611.dip0.t-ipconnect.de. [91.12.102.17])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5442c0sm24142145e9.32.2025.02.26.07.05.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 07:05:12 -0800 (PST)
-Message-ID: <0dfeabca-5c41-4555-a43b-341a54096036@redhat.com>
-Date: Wed, 26 Feb 2025 16:05:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5lR1/Rz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61D4C4CED6;
+	Wed, 26 Feb 2025 15:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740582335;
+	bh=aKsWQB1CAlUK5Cm9Str0bXC/fuAE5a6GytVvT9WpSwQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=E5lR1/RzHzUkxREwq/zFpM6dNAJg6FBORcTq34Ngz7n5jss+MumqXyhv6zoOh6YPB
+	 BvEvhistIvvVIpX5iXQxhuZ/EBzeQBHyDeYtui2LKJvXSXqHzIN/H7akmlDkuBO2IM
+	 cHMKTudtb8oqdHSWQL6GSxnl1pF7+K5y2omNbl7i5ueNo/Ttn1gaRW1SjSYWKyFz6I
+	 5KIMD8JX89o+0nl42BW7/pdQuHfoyWfAZTtfb61bZJFnD1vXoR+XvJXAWi5Hjqwkhx
+	 p1OiiBUvNrw6Yj0o9QDlPZc68ew74TqKTQCd4zITnWpXC0sYn8xw7JmRo7veXEXyON
+	 n8uTyZl1GJbrg==
+Message-ID: <46fbdccb-610a-4b73-8697-d7bcf4942a41@kernel.org>
+Date: Wed, 26 Feb 2025 16:05:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,81 +35,171 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] KVM: s390: pv: fix race when making a page secure
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- frankja@linux.ibm.com, borntraeger@de.ibm.com, nrb@linux.ibm.com,
- seiden@linux.ibm.com, nsg@linux.ibm.com, schlameuss@linux.ibm.com,
- hca@linux.ibm.com
-References: <20250226123725.247578-1-imbrenda@linux.ibm.com>
- <20250226123725.247578-2-imbrenda@linux.ibm.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
+ <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
+ <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
+ <00526b1d-b753-4ee5-8f83-67d27d66a43c@kernel.org>
+ <264d7fb8-06c2-4ada-82bc-4d3a7cc5e184@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250226123725.247578-2-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <264d7fb8-06c2-4ada-82bc-4d3a7cc5e184@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> +int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
-> +{
-> +	struct folio *folio;
-> +	spinlock_t *ptelock;
-> +	pte_t *ptep;
-> +	int rc;
-> +
-> +	ptep = get_locked_valid_pte(mm, hva, &ptelock);
-> +	if (!ptep)
-> +		return -ENXIO;
+On 26/02/2025 11:52, Clement LE GOFFIC wrote:
+> On 2/26/25 08:21, Krzysztof Kozlowski wrote:
+>> On 25/02/2025 16:51, Clement LE GOFFIC wrote:
+>>> On 2/25/25 14:04, Krzysztof Kozlowski wrote:
+>>>> On 25/02/2025 09:48, Clément Le Goffic wrote:
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
+>>>>> +
+>>>>> +description: |
+>>>>
+>>>>
+>>>> Do not need '|' unless you need to preserve formatting.
+>>>
+>>> Ok
+>>>
+>>>>> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
+>>>>> +  It allows to output internal signals on SoC's GPIO.
+>>>>> +
+>>>>> +properties:
+>>>>> +  compatible:
+>>>>> +    const: st,stm32mp-hdp
+>>>>
+>>>> There is a mess in STM SoCs. Sometimes you call SoC stm32, sometimes
+>>>> stm32mp and sometimes stm32mpXX.
+>>>>
+>>>> Define for all your STM contributions what is the actual SoC. This
+>>>> feedback was already given to ST.
+>>>>
+>>>>> +
+>>>>> +  reg:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +  clocks:
+>>>>> +    maxItems: 1
+>>>>> +
+>>>>> +patternProperties:
+>>>>> +  '-pins$':
+>>>>> +    type: object
+>>>>> +    $ref: pinmux-node.yaml#
+>>>>> +
+>>>>> +    properties:
+>>>>> +      function:
+>>>>> +        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
+>>>>> +                "8", "9", "10", "11", "12", "13", "14",
+>>>>> +                "15" ]
+>>>>
+>>>> Function which has a number is not really useful. What does it even express?
+>>>
+>>> As said in my previous answer, function names are very different from
+>>> one platform to another. Numbers were used as string to be generic.
+>>> I'll consider it in a V2.
+>>
+>> What does it mean "one platform to another"? This is one platform! Is
+>> this some sort of continuation of SoC compatible mess?
+> 
+> I may used incorrectly the word platform.
+> This driver is the same for the three SoC families STM32MP13, STM32MP15 
 
-You very likely need a pte_write() check we had there before, as you 
-might effectively modify page content by clearing the page.
+That's driver and it is fine, but we talk about hardware here. The
+binding is for given specific hardware.
 
--- 
-Cheers,
+> and STM32MP25 because the hardware is mostly the same.
+> 
+> Why mostly ?
+> 
+> The peripheral is behaving as a mux, there are 8 HDP ports, for each 
+> port there is up to 16 possible hardware signals. Numbered from 0 to 15.
+> Each of this number represent a signal on the port.
+> 
+> But the hardware signal behind the number is not the same from one SoC 
+> family to another.
+> As example, in STM32MP15 family the HDP is able to output GPU hardware 
+> signals because the family has a GPU but in the STM32MP13 family this 
+> signal is not present.
 
-David / dhildenb
+It looks like you have clear mapping between function and port number
+(your header also suggests that), so the function property should follow
+that user-visible function.
 
+Just like we do for many other architectures - it is not that very, very
+different, I think. all of platform hardwares do not operate on strings
+but some bits in registers (so numbers) but all (ideally) bindings
+operate on strings. You created here exception on basis this is somehow
+special, but the point is: it is not special.
+
+> 
+> The purpose of my helpers was to give a readable name to facilitate the 
+> configuration in boards devicetree's. If needed I can get rid of that 
+> and use only the number as string.
+
+If you use "names" you do not need even that helper header.
+
+> 
+>> What are the exact functions written in datasheet?
+> 
+> The exact functions name written in the datasheet are the ones of my 
+> helper file without the HDP prefix.
+
+so full strings "pwr_pwrwake_sys" and these should be used.
+
+Best regards,
+Krzysztof
