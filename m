@@ -1,96 +1,77 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27297C8FE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1E74A32;
+	Wed, 26 Feb 2025 13:30:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740576624; cv=none; b=k3EQWQ/tXC63jcdsAfCRBmsnuZre0FFCm4rH/IFO5tR2Zc7y1l4ULNC537OhF5MGdVcMEQUAUsGfx4/tBWWuDF/nCSHRBaEYeu7P1dZa+k8i750QTfFbCdCjQjSAvUEvxNVHbmVv1DboIY495mh9W0DDzeu9+B5GPzmMgQ/P4oo=
+	t=1740576635; cv=none; b=D/Jlra/ZnwxZHy/PnBauAL5su7CiVR10TZulPUbT0TGDMWO1gC2ywMSQSbIYs4KEwBZpeKJooR0WhKOXm+fYT0VzmQy2fu/GHFiVpy8aZ9k8uBC1nKNd+Xl6IXQPmSKF54qK++234Legl3PlMgykJAF7M21/GgPxP0cInGDFllE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740576624; c=relaxed/simple;
-	bh=3dDkhn1fLF4MVhPHRiRvY7cjk3QUZvQQu314ISBNtzA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CnhDeP/Jl5lM1w6axEaTPf6Hk9t2M2DzEWoaM+RKNq4ohVQ9RdAQeJ9hdqxkPVsd1zkVgBAV9caM6m2BYk/DAQ3vDViQ14oycUCQNhHkVX0Z5sAsZtb0BVJb8CW2o58+gqmGl0gGstJhXH0kpe+8hWb8/uHA4bfE46sGCFefWhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lQt/OrFS; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740576635; c=relaxed/simple;
+	bh=WUCn3NR9PxdbMqa3sx2Zz8b2LWvwcQQuQ0f4+sSp+oA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=amWPlyVkHAZYNV94rihz2g/CIuLJv/D5dpMz9DU7i2Iv/kt5FhWWbMFphn4kaxCz2HdjJWX9ExsScOsgStJb0B9iLVFRIygiTIJ6o459AqBbe5Ji9oRx8kO/FpiZnhQryY/asoXr2B54BwwOIDDYRoGNCUc4Ye0W7WA7wVx3smE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=mQIX7WSq; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lQt/OrFS"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QDTklD1469543
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 07:29:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740576586;
-	bh=ci5vAe+2l6Sr2oYlsn9z5Et83nVZjCvDi9dpoxa55vw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=lQt/OrFSvSN3I0KrMZwPomoSdv1fbWfG8fbc8qC95+isYSmwGnxBm5u6vovHYJ9Ab
-	 ZPKgezJfy3+FW1IJLGU94/kdx5yHb1mf+6QKPy36YtUq+8xfoPPEfijfwqdKaqcwvs
-	 LmTG93Mah6/tYVDcLhsMdnzAYx3n22veslktRaZQ=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QDTkC0044010
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 07:29:46 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 07:29:46 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 07:29:46 -0600
-Received: from [10.249.129.76] ([10.249.129.76])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QDTZw1013607;
-	Wed, 26 Feb 2025 07:29:36 -0600
-Message-ID: <5dd84e6e-61c6-4496-811d-cf7af7ace2d2@ti.com>
-Date: Wed, 26 Feb 2025 18:59:34 +0530
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="mQIX7WSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1740576633;
+	bh=nMbc5CnbI6I8clY9cZ5d8AQEmOjE8gCVJmupuYyFtt0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mQIX7WSqXvqz9PMK9PFNmIZaPG6MY5KC4HyPJypgirSNR/qsrng82mlOU2oyKk7Bi
+	 AS+gjxsRrPEOExEPQgrqqkHuFDaK/CVD2VPLaXYQaDA6T/7pqmLrwcR/rkWKxgr3sw
+	 2NCYmJP+4KNNgP2oG4Cp4D4UiUXIErFkEq+fMJ28=
+Received: from stargazer.. (unknown [IPv6:240e:456:1120:44ab:6cbe:bf9d:b543:fee6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id AA6C01A3F54;
+	Wed, 26 Feb 2025 08:30:28 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH] kbuild: add dependency from vmlinux to sorttable
+Date: Wed, 26 Feb 2025 21:30:14 +0800
+Message-ID: <20250226133014.381585-1-xry111@xry111.site>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: defconfig: Enable HSR driver
-To: Meghana Malladi <m-malladi@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Nishanth Menon <nm@ti.com>
-CC: <elinor.montmasson@savoirfairelinux.com>, <javier.carrasco@wolfvision.net>,
-        <ebiggers@google.com>, <biju.das.jz@bp.renesas.com>,
-        <quic_tdas@quicinc.com>, <nfraprado@collabora.com>, <arnd@arndb.de>,
-        <dmitry.baryshkov@linaro.org>, <krzysztof.kozlowski@linaro.org>,
-        <geert+renesas@glider.be>, <quic_bjorande@quicinc.com>,
-        <will@kernel.org>, <catalin.marinas@arm.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
-        "Ravi
- Gunasekaran" <r-gunasekaran@ti.com>
-References: <20250226104517.1746190-1-m-malladi@ti.com>
-Content-Language: en-US
-From: "Anwar, Md Danish" <a0501179@ti.com>
-In-Reply-To: <20250226104517.1746190-1-m-malladi@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
 
+Without this dependency it's really puzzling when we bisect for a "bad"
+commit in a series of sorttable change: when "git bisect" switches to
+another commit, "make" just does nothing to vmlinux.
 
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ scripts/Makefile.vmlinux | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-On 2/26/2025 4:15 PM, Meghana Malladi wrote:
-> From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> 
-> HSR is a redundancy protocol that can be realized with any
-> two port ethernet controller.
-> 
-> Many of TI's K3 SoCs support multi port ethernet controller.
-> So enable HSR driver inorder to support this protocol on
-> such SoCs.
-> 
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
-
-Reviewed-by: MD Danish Anwar <danishanwar@ti.com>
-
+diff --git a/scripts/Makefile.vmlinux b/scripts/Makefile.vmlinux
+index 873caaa55313..fb79fd6b2465 100644
+--- a/scripts/Makefile.vmlinux
++++ b/scripts/Makefile.vmlinux
+@@ -79,6 +79,10 @@ ifdef CONFIG_DEBUG_INFO_BTF
+ vmlinux: $(RESOLVE_BTFIDS)
+ endif
+ 
++ifdef CONFIG_BUILDTIME_TABLE_SORT
++vmlinux: scripts/sorttable
++endif
++
+ # module.builtin.ranges
+ # ---------------------------------------------------------------------------
+ ifdef CONFIG_BUILTIN_MODULE_RANGES
 -- 
-Thanks and Regards,
-Md Danish Anwar
+2.48.1
 
