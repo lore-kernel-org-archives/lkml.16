@@ -1,75 +1,118 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F748224B1E;
-	Wed, 26 Feb 2025 03:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060DC18A6A6;
+	Wed, 26 Feb 2025 03:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539318; cv=none; b=TUzEdXydezwMvFxA9v7p3UX3DJDhfa4SDNsHeUa+l1WNkYQGc4l9q3vkwuwWTLF1rNJZCeDzCFx0X0ZCveAk2e7fK81Zi8k0TlESGdNoK3sH/f+CiW8OuKqY33hpkvvsahF6FPoStwSPSP7SErxcwpaoqZAytHba4AL21BYCCOU=
+	t=1740539378; cv=none; b=oXfS+CoJrlaVHwd2KqCrY/kEQq6IV/P5DRua5sSwZ1vjZQmdkI7nHbsF5jex6zVSZvCh1imqyGRxEhdxr4DlOcI2MKTaWkgBZ9/bgxAFY6D3pBkfnyxtmu6+Fm8c6hYwtK1pEdkjX3W7yGyKuv2oz0ksjfzoH/oyY8wT6VvUgSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539318; c=relaxed/simple;
-	bh=3b5TsZZvS3/lwiA5SwS5rXu+T9HCFeqIBigOYrUnQTo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tdpjZKNmOu3xSlPbbytIry6AsEDVnsRfbn2Ejjt1hf1NB6TCFYbtoYuaf3E5xUnUdoJg9SYTI+PHpPv4LaBX33kdr4+yCWehsScuczxwWWjcj2w8kqBwp4X+gwu3DHutOATAPl7j7Yn4CdUbUAO03WJwHa3UdVmX7ZE7RrKdxPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=PxVS32XF; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1740539378; c=relaxed/simple;
+	bh=3cFHXH3/oJVY2LF35AS3JhelpUSBST3QH3X63TIStX8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EMZtdaVm5E8gLFWNYnPgqT+SQjnMb+8I4mFh1KmEAa1PYVHYLM5NIDZWZnddmLjZW1+k4w80VRVLG1q60D6Uk6EeeczSMUU5J+z/CLhDfTLtvMGm/J3VY3DW6CUJjE8icAv2wpkk3F5v7nYFhl6s4wQxlXm1SAayqDLKRy6fitU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gj8Gh0iL; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="PxVS32XF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Dws9BOk5y6tixhfVzZcU9yZM1Tg/ShQfBBQAMIde0P4=; b=PxVS32XFffHn1HAeRYgxkj3qFH
-	o3LQTpS+8KrMfytOvFAEMcDeTvtSUIdWdKVd+fPRo6BUUSuOtY+hf9nPv9R0Za6MSJFxrbAhukcUa
-	OzIlaPKDQ4t01/xDHPyWc3/9xXBuyBvfMeAOHVDHb1VKl98V/AroYHXzttOqstr8rfn72VvauCLE8
-	B6U9YhpLkC7UFM4Pik5EK5mG1Up5utGrHMu65ESQPjdGk5ghStWu9u+15n1HBe7A6BPjTBXJTvRtP
-	B4jk4OqZRpsUL88+eE31r0PugDrBMFYavFiiIs8nCUag7tFdFJbAk4dp0lfGiKHUd4IJTmvZ555D5
-	OTLlaUGQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tn7ma-001ojv-0Y;
-	Wed, 26 Feb 2025 11:08:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Feb 2025 11:08:24 +0800
-Date: Wed, 26 Feb 2025 11:08:24 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: syzbot <syzbot+1a517ccfcbc6a7ab0f82@syzkaller.appspotmail.com>,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: Re: mm: zswap: fix crypto_free_acomp deadlock in zswap_cpu_comp_dead
-Message-ID: <Z76FqBdP9EZJ8MWQ@gondor.apana.org.au>
-References: <67bcea51.050a0220.bbfd1.0096.GAE@google.com>
- <Z72FJnbA39zWh4zS@gondor.apana.org.au>
- <3482501981b13aedda3c1c6b54d83d496bd05922@linux.dev>
- <Z75tg3wXoDnGtLis@gondor.apana.org.au>
- <Z753jsValuBdcvnv@google.com>
- <Z754DloF4TpoRr7P@gondor.apana.org.au>
- <Z76AnbQVZybcAi3g@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gj8Gh0iL"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6fcd8090fe7so33501867b3.2;
+        Tue, 25 Feb 2025 19:09:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740539376; x=1741144176; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IyZj4C9K1d8odw/tqUKy0+IlH8OYCthaQSH+++9eU+4=;
+        b=gj8Gh0iLfyF4BAxHZZTkmF1keGrYIa8Ddug6NhPlJV3uiFOsIgPR2t4J8tYek2YQIA
+         cYptWRniZNqp+xW+6QCcysDO1H2EbqQzGE5cQM3Wij6JOgqYk/SAPU99vlWmUESs+ShH
+         oAJ+XroHxF0siOI1yL/C0XdgpWNSLVQ9Xcc17JXTLHQD4ZCP3ROrceRJ40mgOfZs/lcE
+         cSexnxU4qpfzySf20Un03LpWpu61Cgugq5HQJgs3ZS3gebmsSkPOn6qrJUgq4KIBFrUW
+         Lba9lgVMWVg0FbVnzPCTe4am14D2eh2DdLH70X4TuvhhneMCCyv05eEutFEvkXcbi/Db
+         q2yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740539376; x=1741144176;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IyZj4C9K1d8odw/tqUKy0+IlH8OYCthaQSH+++9eU+4=;
+        b=tXjkuVmttnDfOx0hrymnMPFtGKuEY2UzGssEYxM58IfevNFObffxtoTNwjc4iAPRXb
+         nP+MN8Z58m6oRXvu0X8eVStTyomYO1OvY4bDryeInyVkFbaeKEJhloiAuK3m4dTVrBx6
+         8zHLagVdq/ep1UFyOW/qpqXxfxoijEk5jN/F1iyAx2y+tLDUJDdkp/bOmZU7s1R26gcO
+         ++/jVWrr6//3eDuCB6aG6W9lyg0mCz7c5TGQpFMdJveX0LZxitIQpxNEZ2yydA7dSqRC
+         uQgxEfOiVptZeMCZkAsWhzLpABSGaD0z1RAmxsFnqwd5IgyVY22on/s56CPa/roYPhMn
+         aGkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+gxCKxFoiibZRXOvBbfPn7kQb8oEXMr4MclZjs4JmfH6BWX+MXbjqiQoJBDFh1RarbpAZ0O+Q4AOM6D4=@vger.kernel.org, AJvYcCUJ7z5bqSeE/770e20/0V/aJJDLyzWYAaym1asQOlOL9xrnks+xLyMou+zitzrc0Cuj2OLV/QHz@vger.kernel.org, AJvYcCX94dlEXA7g0avlkgrruNhoKasx1mrDwtlqAw8B9Oze+8HVQ/b/g1E6CJyUOQBuq2lGfprZNM7f@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY2fUvhL+r7GnsEfgJbuuzqN25LmfBw1QAUxGFbzzD3GHNW0Lg
+	S3oYazT1kmPZqL2oL5/bc3+OBG7VhWrqpfNlDV8n/fmrHYpI8mK3UnTXPQ==
+X-Gm-Gg: ASbGncvfgoCiGVZ1H3jxKaHSRVzEVvCnxNWZmNsm4OzTa605kFhiiZx511EuE1SwtI3
+	RtpU8chUr3GqeRwej4LlRrzFD9zSlZNwR6a70iJ409kMp/kO63PFe7Tep5lHD76Z1G+hF26Uskm
+	Bmrk2YWG1TH024nfAo6zcKs+4ap/wmyIUXvvCyU+CFw9wfqkUItlx2djUpHfoyOpRJi8zYFgkC6
+	STisfx4Zv5jd2YfxhT4PonOO8bdlkLzZNzV+txPaYvvyyxK52ldn9nukDayLexYpH14hMrXDBjc
+	mWpMaVt1MQMLh40qpK2GHvSfiDRLiHVtI9pMgp04qoLm49Sk
+X-Google-Smtp-Source: AGHT+IFFKcNLWVfI7M4avlepQKeUTdEOtQy14361siRLOko8JW4UoQuFMSAmlw/9Dggv5KZGXJ9H2w==
+X-Received: by 2002:a05:690c:3803:b0:6ef:48ac:9d21 with SMTP id 00721157ae682-6fd10ae9ec2mr48590927b3.24.1740539374446;
+        Tue, 25 Feb 2025 19:09:34 -0800 (PST)
+Received: from newman.cs.purdue.edu ([128.10.127.250])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fd2cf2f01csm449317b3.103.2025.02.25.19.09.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 19:09:34 -0800 (PST)
+From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+To: jiri@resnulli.us
+Cc: arkadiusz.kubalewski@intel.com,
+	davem@davemloft.net,
+	jan.glaza@intel.com,
+	jiashengjiangcool@gmail.com,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	przemyslaw.kitszel@intel.com,
+	stable@vger.kernel.org,
+	vadim.fedorenko@linux.dev
+Subject: [PATCH v2] dpll: Add an assertion to check freq_supported_num
+Date: Wed, 26 Feb 2025 03:09:30 +0000
+Message-Id: <20250226030930.20574-1-jiashengjiangcool@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <txrxpe7tmpsyiu4cwjd2gbs3udogmzdo5ertjwmhbeynu23iep@dcryfdoi7o5x>
+References: <txrxpe7tmpsyiu4cwjd2gbs3udogmzdo5ertjwmhbeynu23iep@dcryfdoi7o5x>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z76AnbQVZybcAi3g@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 02:46:53AM +0000, Yosry Ahmed wrote:
->
-> Can do :) May I add your Co-developed-by and Signed-off-by since this
-> would be based off your patch?
+Since the driver is broken in the case that src->freq_supported is not
+NULL but src->freq_supported_num is 0, add an assertion for it.
 
-Sure you can also add my ack:
+Fixes: 830ead5fb0c5 ("dpll: fix pin dump crash for rebound module")
+Cc: <stable@vger.kernel.org> # v6.8+
+Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+---
+Changelog:
 
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+v1 -> v2:
 
-Thanks,
+1. Replace the check with an assertion.
+---
+ drivers/dpll/dpll_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
+index 32019dc33cca..3296776c1ebb 100644
+--- a/drivers/dpll/dpll_core.c
++++ b/drivers/dpll/dpll_core.c
+@@ -443,8 +443,9 @@ static void dpll_pin_prop_free(struct dpll_pin_properties *prop)
+ static int dpll_pin_prop_dup(const struct dpll_pin_properties *src,
+ 			     struct dpll_pin_properties *dst)
+ {
++	BUG_ON(src->freq_supported && !src->freq_supported_num);
+ 	memcpy(dst, src, sizeof(*dst));
+-	if (src->freq_supported && src->freq_supported_num) {
++	if (src->freq_supported) {
+ 		size_t freq_size = src->freq_supported_num *
+ 				   sizeof(*src->freq_supported);
+ 		dst->freq_supported = kmemdup(src->freq_supported,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
