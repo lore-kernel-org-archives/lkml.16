@@ -1,83 +1,146 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E282135C8
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79128258CE2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:31:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740562142; cv=none; b=H6RFugQQevRs4RkVMloFMWAg8pYI3wotxHWtF++posBd9En6CXfGcIXzyK3B5NEXAcixVKs72XZGuSj9JghY1TeyUgbRLYPqtx/xtO1KbVcXztYaz1Ignau1gCn5AToLAUHXIvwo4WOsNlwSd/oocVq95F8+sf1dSckXTVHMa+o=
+	t=1740562269; cv=none; b=coGgnm3UC/pEoAgmp7IeVzUM1zImADzkXKatZVM5zejnDkLSQjwB/uTj+Cb9z0XHk++YlhY8paK2EYOXCJnPT4IHP1eZNBfigkr8WP+agEhEajhcSMV+M/nmZBS8a1w4OWGogg3EaNHMkHMjRkHV6exQ0nT2ww7EZVBlsJCRBck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740562142; c=relaxed/simple;
-	bh=a+F458GU1I94B8Pd1fiZZSFktaTFIM7f8pqraQhH+8I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X+YTntUTApqsgolvW+ruPFZKQkCiSKJIkKOkHRT+MfAGLCol8sLMEQe+MN4F6qDldjZhARlfpCWaqEx+uwzEl5JUIwvy0xzM1sy1osqX40PzaGiFIJisKf0rtAm0huntMD+vZaW6SlFCT/S6kuDN5X1NAug0tkeZxWZN+OASQFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z2q0Q5GHWz4f3jqj
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:28:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 414CE1A0847
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:28:55 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP2 (Coremail) with SMTP id Syh0CgCXU2bV3r5naYetEw--.50393S2;
-	Wed, 26 Feb 2025 17:28:55 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org,
-	kasong@tencent.com
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: swap: fix build warning when CONFIG_SWAP is not set
-Date: Thu, 27 Feb 2025 02:25:11 +0800
-Message-Id: <20250226182511.592796-1-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1740562269; c=relaxed/simple;
+	bh=aA4r9kRPrOXQ3QUTG85erLmJ/9y+2oi5pl5vJZHAoBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P9rHU54vyh1x7MUiuujGgxfX2ewO9CJBJreUY5ZUTUDOhEVtBPKV6aOUupd1fwzcKnqDh4nctW0GjRXXY59ZXaNEw/Mz3mLTniKXW6w6uEVTzSEHI21SDhFEUtJ5TBl2fZytJN3OWO10vwODnFvdwN7DT1kFiC/i7FEHr+uvqWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9M72BxF; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9M72BxF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740562268; x=1772098268;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aA4r9kRPrOXQ3QUTG85erLmJ/9y+2oi5pl5vJZHAoBc=;
+  b=W9M72BxFjKGCx7PYUQXCfOUu4WRoSxaNOfC0nFKgf3Okc7qnICmgkvx4
+   qehvUkt5eanFCe+f4uOjkB4yziB/aQjrKUOV66EmeiN7B2+O+leIfNtdI
+   7Ryx1yhJ5uq6RKjln8VKrVp0ny9Ptm8t6raC+nfzE5BFzO0sGJeuXCYoi
+   Uo5ZEAe7y2amAy/Bh5B2SfyzdUEqG1gu3uzsEdtAdOLnOBZSui7Wa1lNC
+   wX7yGBN9yX1DOvhOsU4zm3t+IClM7F2SliQ9qwrekkB1H/OZtyHrXd2EM
+   NELD/qq8amKnjq14VQJ+wHZ4iwAZwSiQf1rsFMnzhc8PaLMwse41/FYH3
+   A==;
+X-CSE-ConnectionGUID: MZnGt4/RSguS6PWJkKQdYw==
+X-CSE-MsgGUID: 4csYuftmTjShv8PyplY/DQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="66771144"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="66771144"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 01:31:07 -0800
+X-CSE-ConnectionGUID: sVN5g470S+ehj+gWsf2C5Q==
+X-CSE-MsgGUID: vlU7jzCmRFCNI6l159fVpg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117572913"
+Received: from avijaya-mobl2.gar.corp.intel.com (HELO [10.245.115.15]) ([10.245.115.15])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 01:31:03 -0800
+Message-ID: <8c8fbd0a-7c5f-49e7-b02d-031e8b712883@linux.intel.com>
+Date: Wed, 26 Feb 2025 10:30:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgCXU2bV3r5naYetEw--.50393S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFW5JF48Xr1xGF4rArW3GFg_yoW3Grc_u3
-	s3JayrWr4kGF1xuwn2kas2qFyaga4xWr1DuFn5GF12vF15Aan5twn2gryfXry7W3Z7CrW8
-	J3W8ur4fZrnFkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
-	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWD
-	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gc
-	CE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxI
-	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87
-	Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IY
-	c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-	026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-	0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-	vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j-6pPUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] accel/amdxdna: Check interrupt register before
+ mailbox_rx_worker exits
+To: Lizhi Hou <lizhi.hou@amd.com>, ogabbay@kernel.org,
+ quic_jhugo@quicinc.com, Mario.Limonciello@amd.com,
+ dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, min.ma@amd.com, max.zhen@amd.com,
+ sonal.santan@amd.com, king.tam@amd.com
+References: <20250225172616.3804796-1-lizhi.hou@amd.com>
+Content-Language: en-US
+From: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298
+ Gdansk - KRS 101882 - NIP 957-07-52-316
+In-Reply-To: <20250225172616.3804796-1-lizhi.hou@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix build warning that folio_alloc_swap is defined but not used when
-CONFIG_SWAP is not set.
+Hi,
 
-Fixes: b79768ab943cf ("mm, swap: simplify folio swap allocation")
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- include/linux/swap.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2/25/2025 6:26 PM, Lizhi Hou wrote:
+> There is a timeout failure been found during stress tests. If the firmware
+> generates a mailbox response right after driver clears the mailbox channel
+> interrupt register, the hardware will not generate an interrupt for the
+> response. This causes the unexpected mailbox command timeout.
+> 
+> To handle this failure, driver checks the interrupt register before
+> exiting mailbox_rx_worker(). If there is a new response, driver goes back
+> to process it.
+> 
+> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> ---
+>  drivers/accel/amdxdna/amdxdna_mailbox.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/accel/amdxdna/amdxdna_mailbox.c b/drivers/accel/amdxdna/amdxdna_mailbox.c
+> index de7bf0fb4594..efe6cbc44d14 100644
+> --- a/drivers/accel/amdxdna/amdxdna_mailbox.c
+> +++ b/drivers/accel/amdxdna/amdxdna_mailbox.c
+> @@ -348,8 +348,6 @@ static irqreturn_t mailbox_irq_handler(int irq, void *p)
+>  	trace_mbox_irq_handle(MAILBOX_NAME, irq);
+>  	/* Schedule a rx_work to call the callback functions */
+>  	queue_work(mb_chann->work_q, &mb_chann->rx_work);
+> -	/* Clear IOHUB register */
+> -	mailbox_reg_write(mb_chann, mb_chann->iohub_int_addr, 0);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> @@ -357,6 +355,7 @@ static irqreturn_t mailbox_irq_handler(int irq, void *p)
+>  static void mailbox_rx_worker(struct work_struct *rx_work)
+>  {
+>  	struct mailbox_channel *mb_chann;
+> +	u32 iohub;
+There is no need for this variable. Just use if (mailbox_reg_read()).
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 3a68da686c4e..d1f5414ea537 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -587,7 +587,7 @@ static inline int swp_swapcount(swp_entry_t entry)
- 	return 0;
- }
- 
--static int folio_alloc_swap(struct folio *folio, gfp_t gfp_mask)
-+static inline int folio_alloc_swap(struct folio *folio, gfp_t gfp_mask)
- {
- 	return -EINVAL;
- }
--- 
-2.30.0
+>  	int ret;
+>  
+>  	mb_chann = container_of(rx_work, struct mailbox_channel, rx_work);
+> @@ -366,6 +365,9 @@ static void mailbox_rx_worker(struct work_struct *rx_work)
+>  		return;
+>  	}
+>  
+> +again:
+> +	mailbox_reg_write(mb_chann, mb_chann->iohub_int_addr, 0);
+> +
+>  	while (1) {
+>  		/*
+>  		 * If return is 0, keep consuming next message, until there is
+> @@ -380,9 +382,19 @@ static void mailbox_rx_worker(struct work_struct *rx_work)
+>  			MB_ERR(mb_chann, "Unexpected ret %d, disable irq", ret);
+>  			WRITE_ONCE(mb_chann->bad_state, true);
+>  			disable_irq(mb_chann->msix_irq);
+> -			break;
+> +			return;
+disable_irq() should not be called here. It will be called for the second time in xdna_mailbox_stop_channel() and enable/disable calls should be balanced.
 
+>  		}
+>  	}
+> +
+> +	/*
+> +	 * The hardware will not generate interrupt if firmware creates a new
+> +	 * response right after driver clears interrupt register. Check
+> +	 * the interrupt register to make sure there is not any new response
+> +	 * before exiting.
+> +	 */
+> +	iohub = mailbox_reg_read(mb_chann, mb_chann->iohub_int_addr);
+> +	if (iohub)
+> +		goto again;
+>  }
+>  
+>  int xdna_mailbox_send_msg(struct mailbox_channel *mb_chann,
+
+Regards,
+Jacek
