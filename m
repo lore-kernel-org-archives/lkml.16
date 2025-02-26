@@ -1,21 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC0619CC11;
-	Wed, 26 Feb 2025 10:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9327220E302
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564996; cv=none; b=bq0BMLm4Aex3nVO9b+phLiNf5qPKaqXFj2YxVCs8zviP5dTgV/6GzQwJf9BbkyhjOQGasqXNt7fabMcXVM6MylfFuWQelnq/oqWuyPdCXzbRelCASeGJqgbC3AxGikTAhRaudOqbqeokZeTO6iCiIThvf3u1+2gr7M+hnGZUE2g=
+	t=1740565141; cv=none; b=OaJsVAU1sD8NESKjH/LAuG1z62uE2r35Gcjz9DgQesUiADzqhJyCrDGX9g96jRaKU38PLtdQI5BEm0P+PTA4NMJmv219dPcEvMUvuJPodRmg7uUADSe7PAL37NY1Y9wv/WafN9HE3fJXL2M9mxvjZtT7BWDqpmvVBtR5hsz0zMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740564996; c=relaxed/simple;
-	bh=/CcL2F/cVbDssQ66xgDLuEBSQTiJSj/VCfAF0UsU5rw=;
+	s=arc-20240116; t=1740565141; c=relaxed/simple;
+	bh=QBD9h35PawRRg3Hu2fMVGX1BDXovZOq2VZ4btu6Yqew=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mVDcXt5CxNJXpWW9PDo/3S45AaMu7cgN0Rc224slhqKUKu2BJvaqpdqpag7au+8aCYqdmnIPJlue/Xzu5CdzFkzsRElAylDTwdfegEJQ3m8SVWLpQJ58IgeWFxWEXZw9dTtQEbCdE7P4SMkbsQvLlVzGwSSYb/huq8HwSx7hfnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031EFC4CED6;
-	Wed, 26 Feb 2025 10:16:31 +0000 (UTC)
-Message-ID: <6b261f80-6713-430d-93ee-9dac77f47580@xs4all.nl>
-Date: Wed, 26 Feb 2025 11:16:30 +0100
+	 In-Reply-To:Content-Type; b=aV35V33rXl0a9jFz8UX+azfb9HKuwtDPcf3fi/LCkgdzvhQIKgue79Ri+e/QJ0YgRAAPUNMssuTI1Yx5Mw9+5aitzlXyTR8H2Qekp1xAillRnD1LJBHzUSggto/MPesI24ky7b+xC9cpB6SUoALrVvq3v8hFyHYl4ymgtDRdlzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D0C0C1BA8;
+	Wed, 26 Feb 2025 02:19:14 -0800 (PST)
+Received: from [10.57.84.229] (unknown [10.57.84.229])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C09D3F6A8;
+	Wed, 26 Feb 2025 02:18:57 -0800 (PST)
+Message-ID: <26a7ba50-e1cd-4c33-8b91-232413790786@arm.com>
+Date: Wed, 26 Feb 2025 10:18:55 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,130 +27,130 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-References: <20250226094946.665963-1-dmitry.osipenko@collabora.com>
- <20250226094946.665963-4-dmitry.osipenko@collabora.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
- BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
- yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
- C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
- BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
- E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
- YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
- JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
- 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
- UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSFIYW5zIFZlcmt1
- aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD7CwZUEEwEKAD8CGwMGCwkIBwMCBhUIAgkKCwQWAgMB
- Ah4BAheAFiEEBSzee8IVBTtonxvKvS1hSGYUO0wFAmaU3GkFCRf7lXsACgkQvS1hSGYUO0wZ
- cw//cLMiaV+p2rCyzdpDjWon2XD6M646THYvqXLb9eVWicFlVG78kNtHrHyEWKPhN3OdWWjn
- kOzXseVR/nS6vZvqCaT3rwgh3ZMb0GvOQk1/7V8UbcIERy036AjQoZmKo5tEDIv48MSvqxjj
- H6wbKXbCyvnIwpGICLyb0xAwvvpTaJkwZjvGqeo5EL0Z+cQ8fCelfKNO5CFFP3FNd3dH8wU6
- CHRtdZE03iIVEWpgCTjsG2zwsX/CKfPx0EKcrQajW3Tc50Jm0uuRUEKCVphlYORAPtFAF1dj
- Ly8zpN1bEXH+0FDXe/SHhzbvgS4sL0J4KQCCZ/GcbKh/vsDC1VLsGS5C7fKOhAtOkUPWRjF+
- kOEEcTOROMMvSUVokO+gCdb9nA/e3WMgiTwWRumWy5eCEnCpM9+rfI2HzTeACrVgGEDkOTHW
- eaGHEy8nS9a25ejQzsBhi+T7MW53ZTIjklR7dFl/uuK+EJ6DLbDpVbwyYo2oeiwP+sf8/Rgv
- WfJv4wzfUo/JABwrsbfWfycVZwFWBzqq+TaKFkMPm017dkLdg4MzxvvTMP7nKfJxU1bQ2OOr
- xkPk5KDcz+aRYBvTqEXgYZ6OZtnOUFKD+uPlbWf68vuz/1iFbQYnNJkTxwWhiIMN7BULK74d
- Ek89MU7JlbYNSv0v21lRF+uDo0J6zyoTt0ZxSPzOwU0EVDzhbQEQANzLiI6gHkIhBQKeQaYs
- p2SSqF9c++9LOy5x6nbQ4s0X3oTKaMGfBZuiKkkU6NnHCSa0Az5ScRWLaRGu1PzjgcVwzl5O
- sDawR1BtOG/XoPRNB2351PRp++W8TWo2viYYY0uJHKFHML+ku9q0P+NkdTzFGJLP+hn7x0RT
- DMbhKTHO3H2xJz5TXNE9zTJuIfGAz3ShDpijvzYieY330BzZYfpgvCllDVM5E4XgfF4F/N90
- wWKu50fMA01ufwu+99GEwTFVG2az5T9SXd7vfSgRSkzXy7hcnxj4IhOfM6Ts85/BjMeIpeqy
- TDdsuetBgX9DMMWxMWl7BLeiMzMGrfkJ4tvlof0sVjurXibTibZyfyGR2ricg8iTbHyFaAzX
- 2uFVoZaPxrp7udDfQ96sfz0hesF9Zi8d7NnNnMYbUmUtaS083L/l2EDKvCIkhSjd48XF+aO8
- VhrCfbXWpGRaLcY/gxi2TXRYG9xCa7PINgz9SyO34sL6TeFPSZn4bPQV5O1j85Dj4jBecB1k
- z2arzwlWWKMZUbR04HTeAuuvYvCKEMnfW3ABzdonh70QdqJbpQGfAF2p4/iCETKWuqefiOYn
- pR8PqoQA1DYv3t7y9DIN5Jw/8Oj5wOeEybw6vTMB0rrnx+JaXvxeHSlFzHiD6il/ChDDkJ9J
- /ejCHUQIl40wLSDRABEBAAHCwXwEGAEKACYCGwwWIQQFLN57whUFO2ifG8q9LWFIZhQ7TAUC
- ZpTcxwUJF/uV2gAKCRC9LWFIZhQ7TMlPD/9ppgrN4Z9gXta9IdS8a+0E7lj/dc0LnF9T6MMq
- aUC+CFffTiOoNDnfXh8sfsqTjAT50TsVpdlH6YyPlbU5FR8bC8wntrJ6ZRWDdHJiCDLqNA/l
- GVtIKP1YW8fA01thMcVUyQCdVUqnByMJiJQDzZYrX+E/YKUTh2RL5Ye0foAGE7SGzfZagI0D
- OZN92w59e1Jg3zBhYXQIjzBbhGIy7usBfvE882GdUbP29bKfTpcOKkJIgO6K+w82D/1d5TON
- SD146+UySmEnjYxHI8kBYaZJ4ubyYrDGgXT3jIBPq8i9iZP3JSeZ/0F9UIlX4KeMSG8ymgCR
- SqL1y9pl9R2ewCepCahEkTT7IieGUzJZz7fGUaxrSyexPE1+qNosfrUIu3yhRA6AIjhwPisl
- aSwDxLI6qWDEQeeWNQaYUSEIFQ5XkZxd/VN8JeMwGIAq17Hlym+JzjBkgkm1LV9LXw9D8MQL
- e8tSeEXX8BZIen6y/y+U2CedzEsMKGjy5WNmufiPOzB3q2JwFQCw8AoNic7soPN9CVCEgd2r
- XS+OUZb8VvEDVRSK5Yf79RveqHvmhAdNOVh70f5CvwR/bfX/Ei2Szxz47KhZXpn1lxmcds6b
- LYjTAZF0anym44vsvOEuQg3rqxj/7Hiz4A3HIkrpTWclV6ru1tuGp/ZJ7aY8bdvztP2KTw==
-In-Reply-To: <20250226094946.665963-4-dmitry.osipenko@collabora.com>
+Subject: Re: [PATCH v1] arm64/mm: Fix Boot panic on Ampere Altra
+Content-Language: en-GB
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>, Luiz Capitulino <luizcap@redhat.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250225114638.2038006-1-ryan.roberts@arm.com>
+ <CAMj1kXHNO+iB4vNFz-4tR_9CPzv96hn+RW=eqyZXMGy_AySDpw@mail.gmail.com>
+ <20250226001047.GA24197@willie-the-truck>
+ <CAMj1kXH=tPuM+irCsKgycUTbts8h9vD4m3tEtw51YFzWafdSUA@mail.gmail.com>
+ <b0578d21-95cd-4d8a-add1-87299f36b491@arm.com>
+ <CAMj1kXHJGC9aYCwwb2XTWfhAjH6GDKQptNdLwO+hfv6hazivHQ@mail.gmail.com>
+ <b6b999c9-79cd-4945-9d7a-c5ee8158b7dc@arm.com>
+ <CAMj1kXHesY77QhnW_U19UURGUqiBuQrNcL-kWQs7niaMa4nAng@mail.gmail.com>
+ <2c465bdf-8028-4b05-8e18-3154735ce906@arm.com>
+ <CAMj1kXGQSFh9A_uK6-i1-sd59i+yKg3vZxD+cYQ_vyz-HZJZKg@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAMj1kXGQSFh9A_uK6-i1-sd59i+yKg3vZxD+cYQ_vyz-HZJZKg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/02/2025 10:49, Dmitry Osipenko wrote:
-> From: Shreeya Patel <shreeya.patel@collabora.com>
+On 26/02/2025 10:07, Ard Biesheuvel wrote:
+> On Wed, 26 Feb 2025 at 10:45, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 26/02/2025 09:04, Ard Biesheuvel wrote:
+>>> On Wed, 26 Feb 2025 at 09:55, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 26/02/2025 08:33, Ard Biesheuvel wrote:
+>>>>> On Wed, 26 Feb 2025 at 09:07, Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>>>
+>>>>>> On 26/02/2025 06:59, Ard Biesheuvel wrote:
+>>>>>>> On Wed, 26 Feb 2025 at 01:10, Will Deacon <will@kernel.org> wrote:
+>>>>>>>>
+>>>>>>>> On Tue, Feb 25, 2025 at 07:05:35PM +0100, Ard Biesheuvel wrote:
+>>>>>>>>> Apologies for the breakage, and thanks for the fix.
+>>>>>>>>>
+>>>>>>>>> I have to admit that I was a bit overzealous here: there is no point
+>>>>>>>>> yet in using the sanitised value, given that we don't actually
+>>>>>>>>> override the PA range in the first place.
+>>>>>>
+>>>>>> But unless I've misunderstood something, parange is overridden; Commit
+>>>>>> 62cffa496aac (the same one we are fixing) adds an override to force parange to
+>>>>>> 48 bits when arm64.nolva is specified for LPA2 systems (see mmfr2_varange_filter()).
+>>>>>>
+>>>>>> I thought it would be preferable to honour that override, hence my use of
+>>>>>> arm64_apply_feature_override() in the fix. Are you saying we don't need to worry
+>>>>>> about that case?
+>>>>>>
+>>>>>
+>>>>> I wouldn't think so (but I'm glad you brought it up because this
+>>>>> didn't occur to me at all tbh)
+>>>>>
+>>>>> With arm64.nolva, both the VA and PA ranges will be reduced, and so
+>>>>> the range of the linear map will be 47 bits. So if the PA range is
+>>>>> being reduced from 52 to 48, it will still exceed the size of the
+>>>>> linear map, and so it should make no difference in this particular
+>>>>> case.
+>>>>
+>>>> OK, so I think you're saying it'll happen to work correctly even if we ignore
+>>>> that override? That sounds a bit fragile to me. Surely we should be consistent
+>>>> and either always honour the override or remove the override in the first place?
+>>>>
+>>>
+>>> I'm trying to walk a fine line here between consistent use of the
+>>> override, and fixing something that I broke in a nasty way all the way
+>>> back to 6.12.
+>>>
+>>> So yes, I agree that it would be better to use the override
+>>> consistently, and this is what we should do going forward. But the
+>>> purpose of the original patch was mainly to ensure that we
+>>> consistently program the MMU either in LPA2 or in non-LPA2 mode, and
+>>> not in a mix of the two. The linear mapping randomization change was
+>>> kind of secondary.
+>>>
+>>> So perhaps this should be two patches:
+>>> - backing out the use of the sanitised register, as proposed by Will,
+>>> with cc:stable
+>>> - a follow up based on your proposal, which can be backported later if
+>>> needed, but without tagging it for stable.
+>>
+>> I suspect I'm misunderstanding something crucial about the way the linear map
+>> randomization works (TBH the details of the signed comparisons went a little
+>> over my head).
+>>
+>> But my rough understanding is that there are 2 values you want to compare; the
+>> size of the linear map and the PA range. If the PA range is significantly bigger
+>> than the linear map size then we conclude we have enough room to randomize.
 > 
-> Add initial support for the Synopsys DesignWare HDMI RX
-> Controller Driver used by Rockchip RK3588. The driver
-> supports:
->  - HDMI 1.4b and 2.0 modes (HDMI 4k@60Hz)
->  - RGB888, YUV422, YUV444 and YCC420 pixel formats
->  - CEC
->  - EDID configuration
+> It is the other way around: the linear map should be able to cover all
+> system RAM that may appear anywhere in the PA space, and so if the PA
+> space is very large (and memory hotplug is enabled), no randomization
+> is possible, as it may end up mapping RAM that appears later past the
+> top of the VA space. Note that the same is fundamentally true for
+> running a 39-bit VA kernel on hardware that has a PA range that
+> exceeds that.
 > 
-> The hardware also has Audio and HDCP capabilities, but these are
-> not yet supported by the driver.
+> As for the signed arithmetic: the randomization works by substracting
+> from memstart_addr (aka PHYS_OFFSET). Normally, if system RAM starts
+> at 1G, memstart_addr will be 1G, and the linear map will associate
+> PAGE_OFFSET with PA 1G.
 > 
-> Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> ---
->  drivers/media/platform/Kconfig                |    1 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/synopsys/Kconfig       |    3 +
->  drivers/media/platform/synopsys/Makefile      |    2 +
->  .../media/platform/synopsys/hdmirx/Kconfig    |   27 +
->  .../media/platform/synopsys/hdmirx/Makefile   |    4 +
->  .../platform/synopsys/hdmirx/snps_hdmirx.c    | 2752 +++++++++++++++++
->  .../platform/synopsys/hdmirx/snps_hdmirx.h    |  394 +++
->  .../synopsys/hdmirx/snps_hdmirx_cec.c         |  284 ++
->  .../synopsys/hdmirx/snps_hdmirx_cec.h         |   44 +
->  10 files changed, 3512 insertions(+)
->  create mode 100644 drivers/media/platform/synopsys/Kconfig
->  create mode 100644 drivers/media/platform/synopsys/Makefile
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/Kconfig
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/Makefile
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_cec.c
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_cec.h
+> To randomize the linear mapping, the system RAM has to be moved up in
+> the linear map (as this is the only direction it can be moved), and so
+> PAGE_OFFSET needs to map to a lower value, and so memstart_addr may
+> wrap around and become negative.
 > 
+>> (I
+>> think this assumes that VA size is always GTE PA size). But if linear map size
+>> is based on an overridden VA and overridden PA size (which I assume it must be,
+>> given the pgtables will be limitted to the overridden VA size) and PA size is
+>> not overridden, isn't it possible to wrongly conclude that there is enough room
+>> to randomize when there really is not?
+>>
+> 
+> No, if the linear map is only 47 bits, and the PA space is either 52
+> or 48 bits, no randomization is possible. We might even run out of
+> space without randomization, but this is an existing problem for
+> non-LPA2 too.
 
-<snip>
+Ahh that all makes much more sense now! I'm happy to go with the patch Will
+proposed.
 
-> +/* vb2 queue */
-> +static const struct vb2_ops hdmirx_vb2_ops = {
-> +	.queue_setup = hdmirx_queue_setup,
-> +	.buf_queue = hdmirx_buf_queue,
-> +	.wait_prepare = vb2_ops_wait_prepare,
-> +	.wait_finish = vb2_ops_wait_finish,
+Thanks,
+Ryan
 
-These two ops are no longer needed. New drivers must not use them. I'm
-working on removing these ops, but it's not quite there yet.
 
-I will remove these two lines manually for this v11, but if a v12 is needed,
-then make sure you drop these two lines.
 
-Regards,
-
-	Hans
-
-> +	.stop_streaming = hdmirx_stop_streaming,
-> +	.start_streaming = hdmirx_start_streaming,
-> +};
