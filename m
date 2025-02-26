@@ -1,31 +1,33 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB76F19DF62;
-	Wed, 26 Feb 2025 07:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91BD01993B1;
+	Wed, 26 Feb 2025 07:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740553921; cv=none; b=gwgMNnJJbiWyQXd3MMDbEo3Twp0zu+kcCRusuda1FLADyn9fBe/jWbGnb5DkJk54qrx/x79KWW+vgfhP66BOsU6trDLGhM/dkdaC+hEzuKJ76f7QC24tXa5GzvF3lv9CVN/Zkk0HXGY1gGRHAY9mt+919uIjM/L1RuXyz7CVkSE=
+	t=1740554067; cv=none; b=O89MPQYKmIbU05RYMagaa9yF7rRBE2NK2giI4EXLOaIdfXfe2ahwJUm8mhfgqWA7o5XZnH5BEo4mOp61ES9bqhLFx8rtVx0BgP5S7GNdDfHqRnXjz6+L/Yq4d4ZccVtQiggglZ+Eh3Qfe+Pn5ryeukO9FQE/roNXKLV60WKEFBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740553921; c=relaxed/simple;
-	bh=wMBCCKteRxGD2wi9MxPm3ylBCleCTAsMmVmsBVLamCE=;
+	s=arc-20240116; t=1740554067; c=relaxed/simple;
+	bh=lQkzvtRW6Jq4FuyRixXr8DUVI6AFJhoAhKyzE5400LQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y6bBh7HgLzbh8JKuPWshRbHqUiHXf3KdP8I90JtVc3+1zSLmnMIfrDVRH+tw6VWWFo7Xi2LpGjk73j+CtOV8J5Pf1W8AofPu4eQ571f8R5HxI/d8KN8wsAg7sAPAnBjhiq9Pr1i1f6qioXEw8S+c4XChQi2HlHh1B0fcWsvGjV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=guCTusCI; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=Ftl+Sg/WlN61ekFMAgp0leX83VZZh3QC3ZXyFbYuxeI4ewWhPH+JzNiflef39mFFAy/DNpm1kS9EpRK/TnZsx47XEAmyBAWC/Ffp1EzymADbB6BTyInjkbYUP5mbkVMKyyEUw6KaavOtWf1ja9+6EsKBQrKn/aaynhF6jYrkE1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9xkau5H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="guCTusCI"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740553907; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=yDdB4bIyML299YEUA1lHDugeZxZJO/0yzLNbJ+H1stA=;
-	b=guCTusCIgt3gg3pXZWmj8lBU/6e3ZZly/yqNbg3BJuSAU+ecqSIuU6KPVCdZG5JWihykT6mY9AK8pgwqTsOCbMj3jBmvDQjWO43isg7eXh5tQMq26c6R4y2Dckh0Mgv5gWWy9IyQ7fftfoNy00Pwfr7E0KdKYVnzRvAFPsmgUDI=
-Received: from 30.74.144.124(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQHLFQu_1740553905 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Feb 2025 15:11:45 +0800
-Message-ID: <e5d967b9-fbc0-497f-a4a4-6f2bdc902400@linux.alibaba.com>
-Date: Wed, 26 Feb 2025 15:11:45 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9xkau5H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438FBC4CED6;
+	Wed, 26 Feb 2025 07:14:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740554067;
+	bh=lQkzvtRW6Jq4FuyRixXr8DUVI6AFJhoAhKyzE5400LQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c9xkau5HstyyjAg+iCdOXFOoMRN9gnbT8mNRacDl1qqOOEr2Pq8Bc3D7hnNRKDz/L
+	 Tu9ZvDrY/wElfwtV1neqWspf8wbf4oC2L/j+OEvpjw/goqGU26MmrFZ9Oc2pJ6Hs0B
+	 72RYUhuo2JcIrJxETLtfaIqRY49WkLjZ1zEMNhnoqjDdkXTBqXJru/B9qDLncNi/Eb
+	 e2nVCZsoZ66fneV3XoE/ALeo1pAmgwoXp6eKOoa7e18dlurjsRFLv0hSmH7K3QK9sS
+	 SQbIpkVIf/syJfo7iHK93LiG8SEzI5DMNZfERkxh5iXkxNV5JkYSnyoqdg3SAM/shb
+	 3hDZQq7nH9bkw==
+Message-ID: <b5236ae4-7ebe-4a88-bbc9-3b9b3374de53@kernel.org>
+Date: Wed, 26 Feb 2025 08:14:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,242 +35,122 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/8] xarray: add xas_try_split() to split a multi-index
- entry
-To: Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
- Andrew Morton <akpm@linux-foundation.org>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Hugh Dickins <hughd@google.com>,
- David Hildenbrand <david@redhat.com>, Yang Shi
- <yang@os.amperecomputing.com>, Miaohe Lin <linmiaohe@huawei.com>,
- Kefeng Wang <wangkefeng.wang@huawei.com>, Yu Zhao <yuzhao@google.com>,
- John Hubbard <jhubbard@nvidia.com>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250218235012.1542225-1-ziy@nvidia.com>
- <20250218235012.1542225-2-ziy@nvidia.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250218235012.1542225-2-ziy@nvidia.com>
+Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
+To: Kuan-Wei Chiu <visitorckw@gmail.com>, Yury Norov <yury.norov@gmail.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org, joel@jms.id.au,
+ eajames@linux.ibm.com, andrzej.hajda@intel.com, neil.armstrong@linaro.org,
+ rfoss@kernel.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
+ hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
+ vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+ johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+ akpm@linux-foundation.org, hpa@zytor.com, alistair@popple.id.au,
+ linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
+ jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
+ linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+ dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+ linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+ oss-drivers@corigine.com, netdev@vger.kernel.org,
+ linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+ brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+ bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+ Yu-Chun Lin <eleanor15x@gmail.com>
+References: <20250223164217.2139331-1-visitorckw@gmail.com>
+ <20250223164217.2139331-3-visitorckw@gmail.com> <Z7zIBwH4aUA7G9MY@thinkpad>
+ <Z73FxIv353lbXO3A@visitorckw-System-Product-Name>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <Z73FxIv353lbXO3A@visitorckw-System-Product-Name>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Zi,
+On 25. 02. 25, 14:29, Kuan-Wei Chiu wrote:
+>> +#define parity(val)					\
+>> +({							\
+>> +	u64 __v = (val);				\
+>> +	int __ret;					\
+>> +	switch (BITS_PER_TYPE(val)) {			\
+>> +	case 64:					\
+>> +		__v ^= __v >> 32;			\
+>> +		fallthrough;				\
+>> +	case 32:					\
+>> +		__v ^= __v >> 16;			\
+>> +		fallthrough;				\
+>> +	case 16:					\
+>> +		__v ^= __v >> 8;			\
+>> +		fallthrough;				\
+>> +	case 8:						\
+>> +		__v ^= __v >> 4;			\
+>> +		__ret =  (0x6996 >> (__v & 0xf)) & 1;	\
+>> +		break;					\
+>> +	default:					\
+>> +		BUILD_BUG();				\
+>> +	}						\
+>> +	__ret;						\
+>> +})
+>> +
+>> +#define parity8(val)	parity((u8)(val))
+>> +#define parity32(val)	parity((u32)(val))
+>> +#define parity64(val)	parity((u64)(val))
+>>   
+> What do you think about using these inline functions instead of macros?
+> Except for parity8(), each function is a single line and follows the
+> same logic. I find inline functions more readable, and coding-style.rst
+> also recommends them over macros.
 
-On 2025/2/19 07:50, Zi Yan wrote:
-> A preparation patch for non-uniform folio split, which always split a
-> folio into half iteratively, and minimal xarray entry split.
-> 
-> Currently, xas_split_alloc() and xas_split() always split all slots from a
-> multi-index entry.  They cost the same number of xa_node as the
-> to-be-split slots.  For example, to split an order-9 entry, which takes
-> 2^(9-6)=8 slots, assuming XA_CHUNK_SHIFT is 6 (!CONFIG_BASE_SMALL), 8
-> xa_node are needed.  Instead xas_try_split() is intended to be used
-> iteratively to split the order-9 entry into 2 order-8 entries, then split
-> one order-8 entry, based on the given index, to 2 order-7 entries, ...,
-> and split one order-1 entry to 2 order-0 entries.  When splitting the
-> order-6 entry and a new xa_node is needed, xas_try_split() will try to
-> allocate one if possible.  As a result, xas_try_split() would only need
-> one xa_node instead of 8.
-> 
-> When a new xa_node is needed during the split, xas_try_split() can try to
-> allocate one but no more.  -ENOMEM will be return if a node cannot be
-> allocated.  -EINVAL will be return if a sibling node is split or cascade
-> split happens, where two or more new nodes are needed, and these are not
-> supported by xas_try_split().
-> 
-> xas_split_alloc() and xas_split() split an order-9 to order-0:
-> 
->           ---------------------------------
->           |   |   |   |   |   |   |   |   |
->           | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
->           |   |   |   |   |   |   |   |   |
->           ---------------------------------
->             |   |                   |   |
->       -------   ---               ---   -------
->       |           |     ...       |           |
->       V           V               V           V
-> ----------- -----------     ----------- -----------
-> | xa_node | | xa_node | ... | xa_node | | xa_node |
-> ----------- -----------     ----------- -----------
-> 
-> xas_try_split() splits an order-9 to order-0:
->     ---------------------------------
->     |   |   |   |   |   |   |   |   |
->     | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
->     |   |   |   |   |   |   |   |   |
->     ---------------------------------
->       |
->       |
->       V
-> -----------
-> | xa_node |
-> -----------
-> 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Cc: Kirill A. Shuemov <kirill.shutemov@linux.intel.com>
-> Cc: Miaohe Lin <linmiaohe@huawei.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Yang Shi <yang@os.amperecomputing.com>
-> Cc: Yu Zhao <yuzhao@google.com>
-> Cc: Zi Yan <ziy@nvidia.com>
-> ---
->   Documentation/core-api/xarray.rst |  14 ++-
->   include/linux/xarray.h            |   7 ++
->   lib/test_xarray.c                 |  47 ++++++++++
->   lib/xarray.c                      | 138 ++++++++++++++++++++++++++----
->   tools/testing/radix-tree/Makefile |   1 +
->   5 files changed, 190 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/core-api/xarray.rst b/Documentation/core-api/xarray.rst
-> index f6a3eef4fe7f..c6c91cbd0c3c 100644
-> --- a/Documentation/core-api/xarray.rst
-> +++ b/Documentation/core-api/xarray.rst
-> @@ -489,7 +489,19 @@ Storing ``NULL`` into any index of a multi-index entry will set the
->   entry at every index to ``NULL`` and dissolve the tie.  A multi-index
->   entry can be split into entries occupying smaller ranges by calling
->   xas_split_alloc() without the xa_lock held, followed by taking the lock
-> -and calling xas_split().
-> +and calling xas_split() or calling xas_try_split() with xa_lock. The
-> +difference between xas_split_alloc()+xas_split() and xas_try_alloc() is
-> +that xas_split_alloc() + xas_split() split the entry from the original
-> +order to the new order in one shot uniformly, whereas xas_try_split()
-> +iteratively splits the entry containing the index non-uniformly.
-> +For example, to split an order-9 entry, which takes 2^(9-6)=8 slots,
-> +assuming ``XA_CHUNK_SHIFT`` is 6, xas_split_alloc() + xas_split() need
-> +8 xa_node. xas_try_split() splits the order-9 entry into
-> +2 order-8 entries, then split one order-8 entry, based on the given index,
-> +to 2 order-7 entries, ..., and split one order-1 entry to 2 order-0 entries.
-> +When splitting the order-6 entry and a new xa_node is needed, xas_try_split()
-> +will try to allocate one if possible. As a result, xas_try_split() would only
-> +need 1 xa_node instead of 8.
->   
->   Functions and structures
->   ========================
-> diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-> index 0b618ec04115..9eb8c7425090 100644
-> --- a/include/linux/xarray.h
-> +++ b/include/linux/xarray.h
-> @@ -1555,6 +1555,8 @@ int xa_get_order(struct xarray *, unsigned long index);
->   int xas_get_order(struct xa_state *xas);
->   void xas_split(struct xa_state *, void *entry, unsigned int order);
->   void xas_split_alloc(struct xa_state *, void *entry, unsigned int order, gfp_t);
-> +void xas_try_split(struct xa_state *xas, void *entry, unsigned int order,
-> +		gfp_t gfp);
->   #else
->   static inline int xa_get_order(struct xarray *xa, unsigned long index)
->   {
-> @@ -1576,6 +1578,11 @@ static inline void xas_split_alloc(struct xa_state *xas, void *entry,
->   		unsigned int order, gfp_t gfp)
->   {
->   }
-> +
-> +static inline void xas_try_split(struct xa_state *xas, void *entry,
-> +		unsigned int order, gfp_t gfp)
-> +{
-> +}
->   #endif
->   
->   /**
+Not in cases where macros are inevitable. I mean, do we need parityXX() 
+for XX in (8, 16, 32, 64) at all? Isn't the parity() above enough for 
+everybody? And if not, you can have all those parityXX() as inlines as 
+you suggest, but also provide a macro such as the above to call 
+(optimized) parityXX() as per datatype len.
 
-[snip]
-
-> diff --git a/lib/xarray.c b/lib/xarray.c
-> index 116e9286c64e..b9a63d7fbd58 100644
-> --- a/lib/xarray.c
-> +++ b/lib/xarray.c
-> @@ -1007,6 +1007,31 @@ static void node_set_marks(struct xa_node *node, unsigned int offset,
->   	}
->   }
->   
-> +static struct xa_node *__xas_alloc_node_for_split(struct xa_state *xas,
-> +		void *entry, gfp_t gfp)
-> +{
-> +	unsigned int i;
-> +	void *sibling = NULL;
-> +	struct xa_node *node;
-> +	unsigned int mask = xas->xa_sibs;
-> +
-> +	node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
-> +	if (!node)
-> +		return NULL;
-> +	node->array = xas->xa;
-> +	for (i = 0; i < XA_CHUNK_SIZE; i++) {
-> +		if ((i & mask) == 0) {
-> +			RCU_INIT_POINTER(node->slots[i], entry);
-> +			sibling = xa_mk_sibling(i);
-> +		} else {
-> +			RCU_INIT_POINTER(node->slots[i], sibling);
-> +		}
-> +	}
-> +	RCU_INIT_POINTER(node->parent, xas->xa_alloc);
-> +
-> +	return node;
-> +}
-> +
->   /**
->    * xas_split_alloc() - Allocate memory for splitting an entry.
->    * @xas: XArray operation state.
-> @@ -1025,7 +1050,6 @@ void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
->   		gfp_t gfp)
->   {
->   	unsigned int sibs = (1 << (order % XA_CHUNK_SHIFT)) - 1;
-> -	unsigned int mask = xas->xa_sibs;
->   
->   	/* XXX: no support for splitting really large entries yet */
->   	if (WARN_ON(xas->xa_shift + 2 * XA_CHUNK_SHIFT <= order))
-> @@ -1034,23 +1058,9 @@ void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
->   		return;
->   
->   	do {
-> -		unsigned int i;
-> -		void *sibling = NULL;
-> -		struct xa_node *node;
-> -
-> -		node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
-> +		struct xa_node *node = __xas_alloc_node_for_split(xas, entry, gfp);
->   		if (!node)
->   			goto nomem;
-> -		node->array = xas->xa;
-> -		for (i = 0; i < XA_CHUNK_SIZE; i++) {
-> -			if ((i & mask) == 0) {
-> -				RCU_INIT_POINTER(node->slots[i], entry);
-> -				sibling = xa_mk_sibling(i);
-> -			} else {
-> -				RCU_INIT_POINTER(node->slots[i], sibling);
-> -			}
-> -		}
-> -		RCU_INIT_POINTER(node->parent, xas->xa_alloc);
->   		xas->xa_alloc = node;
->   	} while (sibs-- > 0);
->   
-> @@ -1122,6 +1132,102 @@ void xas_split(struct xa_state *xas, void *entry, unsigned int order)
->   	xas_update(xas, node);
->   }
->   EXPORT_SYMBOL_GPL(xas_split);
-> +
-> +/**
-> + * xas_try_split() - Try to split a multi-index entry.
-> + * @xas: XArray operation state.
-> + * @entry: New entry to store in the array.
-> + * @order: Current entry order.
-> + * @gfp: Memory allocation flags.
-> + *
-> + * The size of the new entries is set in @xas.  The value in @entry is
-> + * copied to all the replacement entries. If and only if one xa_node needs to
-> + * be allocated, the function will use @gfp to get one. If more xa_node are
-> + * needed, the function gives EINVAL error.
-> + *
-> + * Context: Any context.  The caller should hold the xa_lock.
-> + */
-> +void xas_try_split(struct xa_state *xas, void *entry, unsigned int order,
-> +		gfp_t gfp)
-
-The xas_try_split() may sleep if ‘gfp’ flags permit while holding the 
-xa_lock, which can cause issues. So can we add a check for the ‘gfp’ or 
-only use GFP_NOWAIT?
+thanks,
+-- 
+js
+suse labs
