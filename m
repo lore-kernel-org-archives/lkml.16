@@ -1,184 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtpdh17-1.aruba.it (smtpdh17-1.aruba.it [62.149.155.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311F924DFEF;
-	Wed, 26 Feb 2025 07:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CEA24DFEC
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740556248; cv=none; b=SNTT8VdfO75E+nhEaCEik8+KRzw0VacjBl+l0cajLceyE5IRQoi2ocngrRZdBqp29DbLGD7J+xN9+CxS/3YNCFwboTqkJeyyHjQuk3HDa6BT+arrxOony46XOym5Ftp+EPKiVbrQy92Xo1TBVPUtF/ltvlHRvxxPuTEMHa61WUs=
+	t=1740556249; cv=none; b=KNO7TYOVYFrsH4lUeZtZ1rRIgAlBAqwrSXBoxgWVdGm8awxWudxBanpofMMRwlF4rYoit2wKoAj1Xs9DRWiUz8qk4vWXceDLDZEfU8lAxekByR6jHGbmW4CZ9OKGIZwjIlwap6TVmsvzzjw/QJh0FpbfbxWNuhV6custeVouMqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740556248; c=relaxed/simple;
-	bh=cmKtuwnc2KIDaRI+wvWtnzBRpft8byHlKWXn0enjH2M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PSbpj7qqFkyShcXLnmHXyZV2lRSpwp+8sxAoeS8VkvygEfxDcc8vDDHoH1xQyBHd5fOmBlxNyzvPuOtZMo7XrbrnLfisPzq6rn8OchIws2S6Wsiv7Bs3fbepyCexO+qVZ+GIla2Q1LLzijoQbswwcBvTw+2YIXp0qpIlHEBlciU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VlJEpF85; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740556249; c=relaxed/simple;
+	bh=GcsaqDs7XXfUGXiuDdj8xhCvwLxA0He6mlrJrdvyky8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuUgXxQ+SYiyY/pL5yaGQSKTfiEG/w5ZpjuCkDz+DJBRLvQynXjsu08jNBDRic4t90yWnRY+xShi6S/z2oiImMkxvUvU4UHLJ88CZ+DtXJYKoQ3o07sVbZ9PyWUM1Jh6soRrpo8k6ssGTSHDi5ccrHAH18uVobHrpDF1UQ9SIfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=bt0+g0s+; arc=none smtp.client-ip=62.149.155.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VlJEpF85"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740556247; x=1772092247;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cmKtuwnc2KIDaRI+wvWtnzBRpft8byHlKWXn0enjH2M=;
-  b=VlJEpF85vpxG1blfr57K0TBp4rTSl0ZFXlGtB8aLLzSV9ucD9bL5At38
-   rlYTX2enFVN64WPBnTlFHXHgXYWd5h8YyK4RflhaoLjptPB7OF4JJUFn0
-   ++WXHe/dJg0b1BhSCfQZkTiSx2vNxCZXHpEKwCePAKQtfNzf1kcnMyi+Y
-   vaenx4C7oMMVNgbbFV/z0NhuWtcAi2CbqwQT17m2BzEvycNJac1J1kGaY
-   x0IljjrCzFHLCPTSenc0jcHfYydpEqOVuUVkuacbBYaAaYupdZkAGmbpK
-   Jo1SnIwV+mkiHgsreIV5yCTnvo6l6VvRgOPB44YhTqEU5nVLRPjRnfr+d
-   g==;
-X-CSE-ConnectionGUID: 2jHTjH6nTJWsIQ2eJxjdzA==
-X-CSE-MsgGUID: KpAWf5wyRyycFvw0tTt4xQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="45305236"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="45305236"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 23:50:46 -0800
-X-CSE-ConnectionGUID: fM5vSBR0ToyfuZ21hlmvgA==
-X-CSE-MsgGUID: 7VkCjDaiTceTPs/wK8065A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120743067"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Feb 2025 23:50:39 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v8 6/6] stmmac: intel: interface switching support for ADL-N platform
-Date: Wed, 26 Feb 2025 15:48:37 +0800
-Message-Id: <20250226074837.1679988-7-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226074837.1679988-1-yong.liang.choong@linux.intel.com>
-References: <20250226074837.1679988-1-yong.liang.choong@linux.intel.com>
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="bt0+g0s+"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id nCBotOWShfFewnCBotIqQX; Wed, 26 Feb 2025 08:50:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1740556245; bh=GcsaqDs7XXfUGXiuDdj8xhCvwLxA0He6mlrJrdvyky8=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=bt0+g0s+xtVJ1co7WRU8EGUtO1s+ie7ekiBGUR1QDm2aqCtIc4JLbuoOWLZOcpQad
+	 0R8UzrJ4w3bVupWVKvaaa1C23fXblFZq6nKSxmxQoNnCLPIoyim9grKUdLLVbQxhcQ
+	 UZJKSuTs9O0aOdJ32hK9LR2Wd3oS4X4vRyOSKgrq6TioEsqVZkVvDsBA/a/6Vu1Dl1
+	 CtdtEjIYQqC8GLXwU7yPPwF5ihgccwIlDJ8d6OutrDwDngP8kFEvtU5I4IB727pfJ3
+	 kz1ckjkSuG5PipPlBtYLR0mmpthk31uOZgwXWMfdeswHc33VkXPylH68FpGiVw4ynn
+	 kwvRmImQKtDSw==
+Message-ID: <2c5bd165-d95e-4b66-a3ef-ad40f9b8e0ad@enneenne.com>
+Date: Wed, 26 Feb 2025 08:50:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/4] pps: generators: tio: move to match_data() model
+Content-Language: en-US
+To: Raag Jadav <raag.jadav@intel.com>, lee@kernel.org,
+ gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+ raymond.tan@intel.com
+Cc: linux-kernel@vger.kernel.org
+References: <20250226061527.3031250-1-raag.jadav@intel.com>
+ <20250226061527.3031250-3-raag.jadav@intel.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <20250226061527.3031250-3-raag.jadav@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfH6f/IaPEjWErBJ8wMlsTje4I+k3ggpk338mRxu1dtZR+umE6a7EKFw+Ny+R569X2Uznskm+xN7ZkcEWQOBwqndBcVj4PTW5XlVbD2rxKJ1FRt0Z0s8F
+ e6+/J1WcR6UQ+bW4J7JYmYaVY0DfNU0V39lG6BTH6LFZNdZ4zQH9iklmcBF45MS6OGfZhQxetWfeEuLwmoSkn/i09pVDY6XdiqXmjNfFi0Y6bqXww6su6zzl
+ a8YCgcqTnokLWANfxaYfksh7COItd2LDi0GppHBf3lVXD0sYzNHm3ZlfahmYI1oA6eCwfcdRMi2b2wLmxwC7CJaRgKZ7++VaaJ7iTezETGAR3kT0K2+BTP7i
+ SyDL8vLAIYL5JiHb+MaDOi+paRrpTw==
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+On 26/02/25 07:15, Raag Jadav wrote:
+> Use device_get_match_data() which allows configuring platform
+> specific data like number of pins and MMIO registers for TIO.
+> 
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
 
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 52 ++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
+> ---
+>   drivers/pps/generators/pps_gen_tio.c | 33 ++++++++++++++++++++--------
+>   drivers/pps/generators/pps_gen_tio.h | 19 +++++++++++++---
+>   2 files changed, 40 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pps/generators/pps_gen_tio.c b/drivers/pps/generators/pps_gen_tio.c
+> index 7f2aab1219af..89b08301d21e 100644
+> --- a/drivers/pps/generators/pps_gen_tio.c
+> +++ b/drivers/pps/generators/pps_gen_tio.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/module.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/pps_gen_kernel.h>
+> +#include <linux/property.h>
+>   #include <linux/timekeeping.h>
+>   #include <linux/types.h>
+>   
+> @@ -21,6 +22,14 @@
+>   
+>   #include "pps_gen_tio.h"
+>   
+> +static const struct pps_tio_data pmc_data = {
+> +	.regs = {
+> +		.ctl = TIOCTL_PMC,
+> +		.compv = TIOCOMPV_PMC,
+> +		.ec = TIOEC_PMC,
+> +	},
+> +};
+> +
+>   static inline u32 pps_tio_read(u32 offset, struct pps_tio *tio)
+>   {
+>   	return readl(tio->base + offset);
+> @@ -28,7 +37,7 @@ static inline u32 pps_tio_read(u32 offset, struct pps_tio *tio)
+>   
+>   static inline void pps_ctl_write(u32 value, struct pps_tio *tio)
+>   {
+> -	writel(value, tio->base + TIOCTL);
+> +	writel(value, tio->base + tio->regs.ctl);
+>   }
+>   
+>   /*
+> @@ -37,7 +46,7 @@ static inline void pps_ctl_write(u32 value, struct pps_tio *tio)
+>    */
+>   static inline void pps_compv_write(u64 value, struct pps_tio *tio)
+>   {
+> -	hi_lo_writeq(value, tio->base + TIOCOMPV);
+> +	hi_lo_writeq(value, tio->base + tio->regs.compv);
+>   }
+>   
+>   static inline ktime_t first_event(struct pps_tio *tio)
+> @@ -49,7 +58,7 @@ static u32 pps_tio_disable(struct pps_tio *tio)
+>   {
+>   	u32 ctrl;
+>   
+> -	ctrl = pps_tio_read(TIOCTL, tio);
+> +	ctrl = pps_tio_read(tio->regs.ctl, tio);
+>   	pps_compv_write(0, tio);
+>   
+>   	ctrl &= ~TIOCTL_EN;
+> @@ -63,7 +72,7 @@ static void pps_tio_enable(struct pps_tio *tio)
+>   {
+>   	u32 ctrl;
+>   
+> -	ctrl = pps_tio_read(TIOCTL, tio);
+> +	ctrl = pps_tio_read(tio->regs.ctl, tio);
+>   	ctrl |= TIOCTL_EN;
+>   	pps_ctl_write(ctrl, tio);
+>   	tio->pps_gen->enabled = true;
+> @@ -112,7 +121,7 @@ static enum hrtimer_restart hrtimer_callback(struct hrtimer *timer)
+>   	 * Check if any event is missed.
+>   	 * If an event is missed, TIO will be disabled.
+>   	 */
+> -	event_count = pps_tio_read(TIOEC, tio);
+> +	event_count = pps_tio_read(tio->regs.ec, tio);
+>   	if (tio->prev_count && tio->prev_count == event_count)
+>   		goto err;
+>   	tio->prev_count = event_count;
+> @@ -172,6 +181,7 @@ static int pps_tio_get_time(struct pps_gen_device *pps_gen,
+>   static int pps_gen_tio_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+> +	const struct pps_tio_data *data;
+>   	struct pps_tio *tio;
+>   
+>   	if (!(cpu_feature_enabled(X86_FEATURE_TSC_KNOWN_FREQ) &&
+> @@ -184,6 +194,11 @@ static int pps_gen_tio_probe(struct platform_device *pdev)
+>   	if (!tio)
+>   		return -ENOMEM;
+>   
+> +	data = device_get_match_data(dev);
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	tio->regs = data->regs;
+>   	tio->gen_info.use_system_clock = true;
+>   	tio->gen_info.enable = pps_tio_gen_enable;
+>   	tio->gen_info.get_time = pps_tio_get_time;
+> @@ -217,10 +232,10 @@ static void pps_gen_tio_remove(struct platform_device *pdev)
+>   }
+>   
+>   static const struct acpi_device_id intel_pmc_tio_acpi_match[] = {
+> -	{ "INTC1021" },
+> -	{ "INTC1022" },
+> -	{ "INTC1023" },
+> -	{ "INTC1024" },
+> +	{ "INTC1021", (kernel_ulong_t)&pmc_data },
+> +	{ "INTC1022", (kernel_ulong_t)&pmc_data },
+> +	{ "INTC1023", (kernel_ulong_t)&pmc_data },
+> +	{ "INTC1024", (kernel_ulong_t)&pmc_data },
+>   	{}
+>   };
+>   MODULE_DEVICE_TABLE(acpi, intel_pmc_tio_acpi_match);
+> diff --git a/drivers/pps/generators/pps_gen_tio.h b/drivers/pps/generators/pps_gen_tio.h
+> index 78d4d7c25221..e652f976e455 100644
+> --- a/drivers/pps/generators/pps_gen_tio.h
+> +++ b/drivers/pps/generators/pps_gen_tio.h
+> @@ -14,9 +14,10 @@
+>   #include <linux/pps_gen_kernel.h>
+>   #include <linux/spinlock_types.h>
+>   
+> -#define TIOCTL			0x00
+> -#define TIOCOMPV		0x10
+> -#define TIOEC			0x30
+> +/* PMC Registers */
+> +#define TIOCTL_PMC			0x00
+> +#define TIOCOMPV_PMC			0x10
+> +#define TIOEC_PMC			0x30
+>   
+>   /* Control Register */
+>   #define TIOCTL_EN			BIT(0)
+> @@ -32,9 +33,21 @@
+>   #define MAGIC_CONST			(NSEC_PER_SEC - SAFE_TIME_NS)
+>   #define ART_HW_DELAY_CYCLES		2
+>   
+> +struct pps_tio_regs {
+> +	u32 ctl;
+> +	u32 compv;
+> +	u32 ec;
+> +};
+> +
+> +struct pps_tio_data {
+> +	struct pps_tio_regs regs;
+> +	u32 num_pins;
+> +};
+> +
+>   struct pps_tio {
+>   	struct pps_gen_source_info gen_info;
+>   	struct pps_gen_device *pps_gen;
+> +	struct pps_tio_regs regs;
+>   	struct hrtimer timer;
+>   	void __iomem *base;
+>   	u32 prev_count;
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index f73a48f98581..9c8de47ee149 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -87,6 +87,7 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- };
- 
- static const int ehl_tsn_lane_regs[] = {7, 8, 9, 10, 11};
-+static const int adln_tsn_lane_regs[] = {6};
- 
- static int stmmac_pci_find_phy_addr(struct pci_dev *pdev,
- 				    const struct dmi_system_id *dmi_list)
-@@ -1004,6 +1005,55 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_regs = adln_tsn_lane_regs;
-+	intel_priv->max_tsn_lane_regs = ARRAY_SIZE(adln_tsn_lane_regs);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->mac_finish = intel_mac_finish;
-+
-+	intel_priv->pid_1g.regs = pid_modphy1_1g_regs;
-+	intel_priv->pid_1g.num_regs = ARRAY_SIZE(pid_modphy1_1g_regs);
-+	intel_priv->pid_2p5g.regs = pid_modphy1_2p5g_regs;
-+	intel_priv->pid_2p5g.num_regs = ARRAY_SIZE(pid_modphy1_2p5g_regs);
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1386,7 +1436,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
 -- 
-2.34.1
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
