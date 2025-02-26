@@ -1,112 +1,119 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DB020AF8E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441CF21CC5B;
+	Wed, 26 Feb 2025 15:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584242; cv=none; b=s+MHi/6yRAJ5kNEquloh8R3t2biqWhbk71gZVDBN3yfw6gfqKhrbySVQ/Hf/gZjq2/ygKLEdzgcBRxAwfVGULekQfLX0cQXufMRrh4d43vOD2rtIzOxp2whASVp3JLNKHr7DQyn1u2NRvasS2iGquLPOPxmE9BHFW9e1ZPGjEnU=
+	t=1740584292; cv=none; b=u5/70rf+/YDYWpwcU+bHtjSbVqQy34MrI+UoyCtHj884X7IyDMGu1hmhlfiquqR0Y1mzTTbFTlTu8BreJ8ZyggPfT/xFklOamx4SwGjuXvC6/ZBTn5gkuTHsrL8KHASLcNFKBb3mYZF3h97MUqF/v2VKCdJDAJMUvh4XT+Czd70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584242; c=relaxed/simple;
-	bh=LPMeOR16SbuxjqKPHN67owvO+O7nYbioSjfnFMDz/HU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QFFDHVqdYAoc4SkWy8xnx1lnKrHG5BzVtXj1UbGj3jsAYZJA439/1VSG/bIA34+tBzPcK1/KQzKZpl+NBt3xkL59n/fLC+8FY0R5W4YMNcxDXW5Fw92DWttozguSDFNNtKHlSD4LRFsOt/NztNx8+XDd977qNNjQCjoVADVtlt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1ff8Jfq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740584292; c=relaxed/simple;
+	bh=tcRMozX9e/qFFqOuAJP2caCl0qWMhOn4bApkOgqU7D0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B2VxDXLiJ2afPIEwsc3jNslOoY4fwPZDNPdH1I2c4FXl+m8jkZLgYHHkmgQyqL52zwfEBzVfZow9Fk0u6hmQLRKneCWJ6wKuqiCGTDd6OQHBmpLkyMNf0XVuN5my8tn2BH8/zreP4RQEn1oWoS4e7Gf+NsfSXAmK8zvOzuuH8T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=hqQmJw3B; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zFZVtVeR; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1ff8Jfq"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abb86beea8cso1238738066b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:37:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740584238; x=1741189038; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2mR8w25aDW2SxfUyp+4vH7DZUdoBKGAVuoCZ2tcfghU=;
-        b=Z1ff8JfqamTcMXQXfSK4URjlqmG4GOySfJa8lqm8CP+VlVBD4Fn0VSzMG/2LP1W1Rg
-         kX6Tno+RYHE4QpgJRPlVjaN9vE1auGEL/GujcHG+Hsz/OGjjj7XlB/DFdOfGLq1uqPXq
-         l6OoJU1PsTZPuFLwtRup4xzXcjEWW7pql+iqSiHd60PaMyoZJ3m0JAd8lfZfXKPudUQH
-         P1Qvypn+u2VRwY3jDfQf/FQDi61es2n+roe0YQZSg8zGJ5xIzzZQ4ztPwpuJgt4R9Aqe
-         XAMa5zL8//OTrjvw5x9yDdzqGfMk5r0mT3kJxHuOuxWOyp+LXFCZgFsaHszIeHqIV8HG
-         SJMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740584238; x=1741189038;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2mR8w25aDW2SxfUyp+4vH7DZUdoBKGAVuoCZ2tcfghU=;
-        b=Vk9Du74EKG+o+FXX7QFyRrW68IJL2UyCn4GBkUgK28guYKgPmAx2L2uqjLy3FJbiSa
-         Gp/blsHW6lIqsW/FkGL91Lz9eknZcm91ysvjPOze/acpkAMjyv/88jTWWFJ7IPXUTh1w
-         IuZWCMUzNCW6k8Hrit0bcNYDuv5XTwCNdHOzrnqVpzNT6XZu4VePAibuKTVS+y6NNvbV
-         1HkawuQz3WUVkcyMud/laxd6n7XqAsrijvPWyqkWJl+P4vPL4II3DwKcEgvwDatfQbad
-         Pmv7G3sC6595oPiCtY5ilIqmCFfAhhpOc5hIjasBJ+qU+cJ8JCaiKvhaRfcFZt96jb8Y
-         N0Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKvUXqRRa8ZQsCnySx8wluyAVDaEOGaiF28rUKsR/PWtYs4PVJRyPBoXpYE1kbwBoUZziD2buzIfYstdA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyda+OHoTBYZLLkx6764O2qIdGF9F1+YkKeXRwKag0rTc7GVeTg
-	Y0h4mtu6LR0qD0ntEPcmRqlVyIl/giUimTWo0a71rk3022H85Dww
-X-Gm-Gg: ASbGnctv+CMgJAh48kNfhzQwj4cZABPzHGxoLesErsI3o73fd6g5Mn/Ditb+N/IdElq
-	4yaQ7Zte8cC8+GhIhDFXK7TnJBN+ewl1XqTp26xaiev79uMe9r8uPve3m6leVZ5vHkCQJ4ATATg
-	XBDAQbq8YOv0JAttmQ3UgvtoMireLRnOSPKX/hjpzqeM8WeA/lA2Ur+HZxOsoLNQfGUVHkTYG/N
-	cS27lw3vdi+/MPd76lsh8jY1w67ixgvwVsrxUZr8/+MKbMbdVjp0CCBjeS5vUefLyBvtvKUR0kq
-	eWlgRLJNK6pfuWLqJF2JgspEzal8PhW8Y94=
-X-Google-Smtp-Source: AGHT+IEC8n7+ktWGHdwPd8OG1yevv54a7MkSQLOasQdYH/ebVYPD8D357ageZmhdLCb3ItoP82tX/Q==
-X-Received: by 2002:a17:906:c142:b0:ab7:beeb:d1f1 with SMTP id a640c23a62f3a-abeeef76330mr436320866b.51.1740584238099;
-        Wed, 26 Feb 2025 07:37:18 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed20133dcsm344781566b.119.2025.02.26.07.37.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 07:37:17 -0800 (PST)
-From: Uros Bizjak <ubizjak@gmail.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Uros Bizjak <ubizjak@gmail.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH -tip] x86/bootflag: Micro-optimize sbf_write()
-Date: Wed, 26 Feb 2025 16:36:56 +0100
-Message-ID: <20250226153709.6370-1-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="hqQmJw3B";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zFZVtVeR"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2BC1013800D4;
+	Wed, 26 Feb 2025 10:38:09 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Wed, 26 Feb 2025 10:38:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1740584289; x=1740670689; bh=7BRNNMSZ1nsDm78pbs23hdXvMS5Y1hQR
+	DJsmGna8aKU=; b=hqQmJw3B6O87WgF9RFzJZuo2e90Jnbe65wb2PG/LOQpLYqpe
+	sWyEpfnpa6ifghRlejdo51/t/YAyE8cEIW9CMwVrnnUvhzaFt3HFjluLR70+Y7yG
+	LXn+TtcSIn+6irAmf29HOJOymWHNj3LZOxcpKw9U+GSSqEv09a8PNvR/h115ZGJT
+	wcZjheM94RjwwOMgkeavH9gjv5pYwbbVCnP4UMPt32DG6OonHkjbn1AzCO1PycHd
+	WbI8xu5jv+LkGTCdxFRLy4YeGObv5q2O57xEyc99Tggz7/6mfnpekcYQ4gPrIy9D
+	OgTuKRQw2AyhFxe3Gm2chkAis1iNSWxCCH9OAA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740584289; x=
+	1740670689; bh=7BRNNMSZ1nsDm78pbs23hdXvMS5Y1hQRDJsmGna8aKU=; b=z
+	FZVtVeRtpptHolXr5+BA3DBIHFIM9vZlizPH9VUwBkoxbNltxh9bJAHaR7QtMgds
+	qf+6sjvYmJlNRlmeuuYLnhf7IOMZRXJDtlJWEVs1bWNTjGzwIjtYqlFvnieANcWR
+	efl4Js9qYZPi52tLRugu+ZNEHdZQYRfhmOr7Qyk7WqPZDiXBZPTebHBumhc8mKZH
+	2ss/5ac1fDcCvQZAV+b7kvskaJl/I5S012PnLQHCsZj7yHP7JI6hB21du+mHZT59
+	IVpWuYTkuqiJvfJURr2qhssKgCZT8Qlipn51SR6rbzMcy5sy9qYdzScPJrdgm8Zt
+	+plmOpjP5WbrZTwIWiyjw==
+X-ME-Sender: <xms:YDW_Z3N_Xze10n7C5Jk1t24xEpByoRSCfc7H6tA3BL-LobH3rtXpUA>
+    <xme:YDW_Zx-yJOCDw9VGxDLqFu6YHFJRW5YBjC9R48hG04ddBx87-HMuWB0MBaHreE_fG
+    zcYwxTKLQXiyZhZvgw>
+X-ME-Received: <xmr:YDW_Z2QJnHUMzk7K3XHy5rzUWuV9FbpZwTQuXcD0efBt-cM0M49joT2TYcvXekqh0IBvUltTUImYCTWAWbXKLYZ4-GLssxQOa_6LN_JfJdDjT-xlXdA0FcfUyWsXg5s>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeliecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
+    jeenucfhrhhomhepufhvvghnucfrvghtvghruceoshhvvghnsehsvhgvnhhpvghtvghrrd
+    guvghvqeenucggtffrrghtthgvrhhnpeegieehffethffhffefhfehkeevleevieetfeeg
+    keehhfeifffgheehieejheeihfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghrtghp
+    thhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghrtggrnhesmh
+    grrhgtrghnrdhsthdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhi
+    ohdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhrii
+    hkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghr
+    nhgvlhdrohhrghdprhgtphhtthhopehfnhhklhdrkhgvrhhnvghlsehgmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhrtghpthhtohep
+    rghsrghhiheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqd
+    grrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
+X-ME-Proxy: <xmx:YDW_Z7tD8-h1Frp9eX9qoXYhMUNxPad7YtzBFaFmedhJUiKFhSA6JQ>
+    <xmx:YDW_Z_ecFZWnICHi0-UBLkkGmyrcjWb2WlHhNysX6GKZ0kTu6T9l9g>
+    <xmx:YDW_Z31b1Eudz90MjAiWvuQpW42GY-srpSYlJceM_i0M8FgZeQ49bA>
+    <xmx:YDW_Z7_TdkOtpbPGVPxKoIB6Zpe0H43gj912mzX_a09Ang4xRGRMjw>
+    <xmx:YTW_Z68UFZIgjV22UGAs1wIof1oJzP1nWKiGY01lBcVP8lGpX_iI5LGC>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 26 Feb 2025 10:38:06 -0500 (EST)
+From: Sven Peter <sven@svenpeter.dev>
+To: Hector Martin <marcan@marcan.st>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc: Sven Peter <sven@svenpeter.dev>,
+	asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Janne Grunau <j@jannau.net>,
+	Neal Gompa <neal@gompa.dev>
+Subject: Re: [PATCH] arm64: dts: apple: Add touchbar digitizer nodes
+Date: Wed, 26 Feb 2025 16:37:53 +0100
+Message-Id: <174058420088.275008.203693012021387035.b4-ty@svenpeter.dev>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+In-Reply-To: <20250225-z2-dts-v1-1-df101a7c17c8@gmail.com>
+References: <20250225-z2-dts-v1-1-df101a7c17c8@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Change parity bit with XOR when !parity instead of masking bit out
-and conditionally setting it when !parity.
 
-Saves a couple of bytes in the object file.
+On Tue, 25 Feb 2025 22:19:54 +0100, Sasha Finkelstein wrote:
+> Adds device tree entries for the touchbar digitizer
+> 
+> 
 
-Co-developed-by: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
----
- arch/x86/kernel/bootflag.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied, thanks!
 
-diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
-index 4d89a2d80d0f..b935c3e42bfd 100644
---- a/arch/x86/kernel/bootflag.c
-+++ b/arch/x86/kernel/bootflag.c
-@@ -38,9 +38,8 @@ static void __init sbf_write(u8 v)
- 	unsigned long flags;
- 
- 	if (sbf_port != -1) {
--		v &= ~SBF_PARITY;
- 		if (!parity(v))
--			v |= SBF_PARITY;
-+			v ^= SBF_PARITY;
- 
- 		printk(KERN_INFO "Simple Boot Flag at 0x%x set to 0x%x\n",
- 			sbf_port, v);
+[1/1] arm64: dts: apple: Add touchbar digitizer nodes
+      commit: 44db68dee1f77260d7037319e911e9883a6ffe0e
+
+Best regards,
 -- 
-2.42.0
-
+Sven Peter <sven@svenpeter.dev>
