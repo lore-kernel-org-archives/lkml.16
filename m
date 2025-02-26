@@ -1,99 +1,108 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157B018801A;
-	Wed, 26 Feb 2025 01:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690D67DA66
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740534098; cv=none; b=OHFDF8ISjo0+1c30r+cEFs5m4hj1l4yv/7DWUv8C1DOY+JK9VaPwl6H6puC/ZNHzeC14bak0NjQuPRwb4L3Vl52XBp7CSVDM+es46JvpCrj2WBUPCi9+lFsyK1ec09P69hm0bBULt7ODwh7SmbMszQ3giu7UI4qqUynDSNTWJ98=
+	t=1740534324; cv=none; b=Cefb+qp+fOdFZ2F8xr6RWvec7VEe4z8PGuzZqXtdQks5erD+PqUEzJ0Dh0EWF4ZdTcwPMW7eFeLDw6SaqCPH3uw8Ftxl+W9FCq3ZtaG5SSsHaNSM0WJHe6k4orKAJtkRe/0gCBRaKx5nvOTjO0aU4SA9QLMZCL8qDZgwveqIIN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740534098; c=relaxed/simple;
-	bh=58ZMG8/1/Uh1xkS5yKwRQCg82oBoxBK2uJYcSHkp4rw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SLOsXc77hwhzFJV7vbWYxOA3ZrfGnanKdx9DptQmxPCLNwbKBIhFpRfqXBjClTdWGCQG0CEC+41Udpkh+CGKGQ+GOxSIV/mg38qLzBxQ0+qmhQSE8PLYLHvFOiZUxKOV+UyzltFg3GPT4Dq6heATUUV8UUo5aBFiNhD4YQ3whpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=CvN5XUDJ; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1740534324; c=relaxed/simple;
+	bh=ngX5hmUBid2B/leasE/ldqcaQuKWY4R/b6bE5lXGa9g=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=K9TLj6FobBQkDVLR08ZPIXsTEh/HpOo3ooDpUcBeWQ7n33azySDGaPjTsg/GRsZslmVwuo+2NoAsK9Op+doRZBDz48GOnxzA/ZOxUA6+GHquuYIkIW8Yk/y/lZfFcqBlHd5BkuxXVzSKJRZGIq1ULtF3KvmceFJJjyQjtDngu+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTpTTGjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="CvN5XUDJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=jdo3/IxMwB8Q6RAm8ZwQFpjzIGffxAXyzhXHZ3RcNYQ=; b=CvN5XUDJLLlwrhy2yvZ3JOn+mA
-	66llyxU9BmPbO5yXQyiku1NmjCiS1kuS9BFF8Yp06Eqq24WFuOy39micBVHNgX3ViXpXs19PthvR/
-	Wn9fLbmpxq9kdrF/dni3e0lPtym++ScEocHEK8MLciUAsI6lsVqr//2bFdZX5STFbLXwXndIoKsVO
-	PZQ6MhZXoT/BiTrKcnlI/OL350i3vgAWwJmB8o8De+KtnrV2a6lTFKQ/ouDwLkRElW691cwJl0YRk
-	/SiR5VaATjvDIh1KOZqglSm6ktFZm7wqGo36ulqjhlizNZB/3F21vRn8vd7OKxW/bwYZ5ZOJXuLL1
-	sUyRl2ag==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tn6Px-001nh1-2C;
-	Wed, 26 Feb 2025 09:40:58 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Feb 2025 09:40:57 +0800
-Date: Wed, 26 Feb 2025 09:40:57 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH] crypto: lib/Kconfig - fix chacha/poly1305 dependencies
- more more
-Message-ID: <Z75xKexTUNm_FnSK@gondor.apana.org.au>
-References: <20250225164216.4807-1-arnd@kernel.org>
- <20250225213344.GA23792@willie-the-truck>
- <f7c298b8-7989-49e7-90a2-5356029a6283@app.fastmail.com>
- <c4896a12-8abe-4fe6-b381-86b23d32b332@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTpTTGjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 850BBC4CEDD;
+	Wed, 26 Feb 2025 01:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740534323;
+	bh=ngX5hmUBid2B/leasE/ldqcaQuKWY4R/b6bE5lXGa9g=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=rTpTTGjYdx2MUuAKzqQZmH2+d0v8Kbdea04pfGIjqYXLovNpjxmSR8xlnwTElkR5M
+	 NxR1SjvxFJzLlqpXpEee9cB2M4LI+3e4m5pVxmKeKNB/CWu0/XIZ61PxW22rhvaAzy
+	 Av/PjMEKjuEYbM0ThtE04yKXMjEzQyHbLIf0v6W4g6Cs1kog/ZtaFj1rLDqcP8EU/h
+	 dnimeoOuJT1aNQXi9P7NyRvSTvPNtoa0B9y1m3D9cx37DRICtbTZg6f6nk4YCzcex/
+	 oWWrwdX6iZ0hW63LtdVPVKhtT87sCsrrHmciWynV4qCI00HKk7TMCuAWdDECl+yYTV
+	 Ba4STfOufVZNQ==
+Message-ID: <6f097ce3-5a0b-4d58-bd48-6b2ed135747f@kernel.org>
+Date: Wed, 26 Feb 2025 09:45:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4896a12-8abe-4fe6-b381-86b23d32b332@app.fastmail.com>
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, Daeho Jeong <daehojeong@google.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs-tools: add ftruncate command in f2fs_io
+To: Daeho Jeong <daeho43@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+References: <20250226002707.358601-1-daeho43@gmail.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250226002707.358601-1-daeho43@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 10:50:10PM +0100, Arnd Bergmann wrote:
->
-> After looking at the original 0day report, I think the fix for
-> that problem would have been
+On 2/26/25 08:27, Daeho Jeong wrote:
+> From: Daeho Jeong <daehojeong@google.com>
 > 
-> --- a/drivers/net/Kconfig
-> +++ b/drivers/net/Kconfig
-> @@ -94,6 +94,7 @@ config WIREGUARD
->         select CRYPTO_CHACHA_MIPS if CPU_MIPS32_R2
->         select CRYPTO_POLY1305_MIPS if MIPS
->         select CRYPTO_CHACHA_S390 if S390
-> +       select CRYPTO_CURVE25519_PPC64 if PPC64 && CPU_LITTLE_ENDIAN
->         help
->           WireGuard is a secure, fast, and easy to use replacement for IPSec
->           that uses modern cryptography and clever networking tricks. It's
+> add ftruncate command to do file truncate.
 
-Thanks.  I wasn't aware wireguard was doing this.
-
-Let me see if I can replicate this select matrix in lib/crypto
-instead.
+Need to update manual of f2fs_io as well?
 
 Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+> 
+> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+> ---
+>  tools/f2fs_io/f2fs_io.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/tools/f2fs_io/f2fs_io.c b/tools/f2fs_io/f2fs_io.c
+> index fa01f8f..08056a9 100644
+> --- a/tools/f2fs_io/f2fs_io.c
+> +++ b/tools/f2fs_io/f2fs_io.c
+> @@ -1887,6 +1887,31 @@ static void do_get_advise(int argc, char **argv, const struct cmd_desc *cmd)
+>  	printf("\n");
+>  }
+>  
+> +#define ftruncate_desc "ftruncate a file"
+> +#define ftruncate_help					\
+> +"f2fs_io ftruncate [length] [file_path]\n\n"	\
+> +"Do ftruncate a file in file_path with the length\n"	\
+> +
+> +static void do_ftruncate(int argc, char **argv, const struct cmd_desc *cmd)
+> +{
+> +	int fd, ret;
+> +	off_t length;
+> +
+> +	if (argc != 3) {
+> +		fputs("Excess arguments\n\n", stderr);
+> +		fputs(cmd->cmd_help, stderr);
+> +		exit(1);
+> +	}
+> +
+> +	length = atoll(argv[1]);
+> +	fd = xopen(argv[2], O_WRONLY, 0);
+> +
+> +	ret = ftruncate(fd, length);
+> +	if (ret < 0)
+> +		die_errno("ftruncate failed");
+> +	exit(0);
+> +}
+> +
+>  #define CMD_HIDDEN 	0x0001
+>  #define CMD(name) { #name, do_##name, name##_desc, name##_help, 0 }
+>  #define _CMD(name) { #name, do_##name, NULL, NULL, CMD_HIDDEN }
+> @@ -1932,6 +1957,7 @@ const struct cmd_desc cmd_list[] = {
+>  	CMD(removexattr),
+>  	CMD(lseek),
+>  	CMD(get_advise),
+> +	CMD(ftruncate),
+>  	{ NULL, NULL, NULL, NULL, 0 }
+>  };
+>  
+
