@@ -1,88 +1,98 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F120CCEB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7433218DB2D;
+	Wed, 26 Feb 2025 11:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570237; cv=none; b=pKbrkw8+0zcUV3+1n7AlP3sxphXRS5MeJRcaus7Q5qkKkjvGzVCzjEt6/wXztj/dBpwpO4ySLFi5RjHcGO/zGEjC/fQm3wn+QMCG7qTYck8YVfxEV2hyc/ks9j5a09+dgzQa+fohSqn8NnHWgqiXmmZqonrDOu0xcvpjdI5Wqm4=
+	t=1740570313; cv=none; b=GHpdydMnU9Zyu9foXse9C9l6fahgLR75m0f7Z8O4XEVMCqkZLJEBVFLQNYdOaB1FT/6BnmPll7MfTajHsYBjyU/QgCXF6/T4qOhaV+1z1onpsXfIr40RIvuk6CK88BOY/rDcl0Aa/rYwH1UJHWxtG+gMDPDI3ylgl8ZTsB2LBeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570237; c=relaxed/simple;
-	bh=sniYNrvNUWro087KyCuTDWcHiLJf2phQ6kPrOWDLdgo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cm4qfMUaZ4RLgykfKFcxEM4LtM4MRyYpBfSoHBbnqWUc2zIAwqe02H6igX42aQTAwU5P+TzQoASFEEgpXPn3uWi0Cyo8+QlC0p5tUVDDvkroIECp7Fyv6EkcKlccMMcvlBtaG+58FTlEYx6YRpfKWWenY41iwaFz0YEaOjxSA74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 51QBheXL091362;
-	Wed, 26 Feb 2025 19:43:40 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4Z2stx2SXHz2PqL3B;
-	Wed, 26 Feb 2025 19:39:05 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Wed, 26 Feb 2025 19:43:38 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <juri.lelli@redhat.com>,
-        <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>
-CC: <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
-        <vschneid@redhat.com>, <ke.wang@unisoc.com>, <di.shen@unisoc.com>,
-        <xuewen.yan94@gmail.com>, <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] sched/fair: Prevent from cpufreq not being updated when delayed-task is iowait
-Date: Wed, 26 Feb 2025 19:43:01 +0800
-Message-ID: <20250226114301.4900-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740570313; c=relaxed/simple;
+	bh=s3dkTBDXdzo+I16hjaEXfC4T5xD6NlAF4J47urRaCBo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Qr3wP7om28tBtRuLaf37T6OiU9Q3Uxi0q0jcc5qo83iYRcabPnN9/EI+K2wmpAsn/NNjViahOcmrjZLVEQZM3rWdlZyYYP8/Sg6eBw6ZQswYRSjZd/JjrqQrV6eTF37mPRIyUBCt32BQGng7OVJ5Spp8/7ak6iuhrW3LbcVVjZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HG2/OSTT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nld6xex1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HG2/OSTT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nld6xex1"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740570309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mc60C8g9Fb1tmdPaCWjP2wsKb3/BHTAaOKy7dD4Q/9Y=;
+	b=HG2/OSTTB6A6DxnV9fJlxcbHxinFNkvCoc5Av0QoN/O5O+YI/YJJ/bruh7X8hN/Pw9tgph
+	IvazjtlrEHvE70F096sE5glzpOsk/2seGBEE6mnWqKyR7quNplEuJULu48Ip6K1P9ALaSc
+	CcIEO0Wx17XWQkF/v0cKIMDE2HGNkckrrXzPp8dEFRrg3wND1aSJFNIdawyf9uLxaTABRo
+	ZaLQlEl5Ls8TI0NZ/sV4xP68+0hmYhn07h0uUoBEBcFcOZKdXrp6IW2fE9PtWJkDyHEUD0
+	oQtSjyeQ/Xpg2WNBMg2fGnBibELpAJAVp21s+DjKJ5dw3tCPwi51eWcUjp5leg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740570309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Mc60C8g9Fb1tmdPaCWjP2wsKb3/BHTAaOKy7dD4Q/9Y=;
+	b=nld6xex166KgiTl4cwebgevCV8SivocBIvcZsJEvFPKYFQRriCZczK7R2BtRLLOQ4JjzCQ
+	SUUrhpc+PqFJSfDQ==
+Date: Wed, 26 Feb 2025 12:44:40 +0100
+Subject: [PATCH v2 01/16] MAINTAINERS: Add vDSO selftests
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 51QBheXL091362
+Message-Id: <20250226-parse_vdso-nolibc-v2-1-28e14e031ed8@linutronix.de>
+References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
+In-Reply-To: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
+To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
+ Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Willy Tarreau <w@1wt.eu>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ llvm@lists.linux.dev, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=675;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=s3dkTBDXdzo+I16hjaEXfC4T5xD6NlAF4J47urRaCBo=;
+ b=RmTkrNBpC+8rUj4SUZbDrfqW5Rz+2JesNkGa22nnnObwaeaPhHsLR2eLjesHwiz9iee7NIV4Q
+ XJaNIHxUageD+jmnkXoAdx2diftbLQQUokA/XWcB8tDXaA54QQQwuSI
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Because the sched-delayed task maybe in io-wait state,
-so we should place the requeue_delayed_entity() after the
-cpufreq_update_util(), to prevent not boosting iowait cpufreq
-before return.
+These currently have no maintainer besides the default kselftest ones.
+Add the general vDSO maintainers, too.
 
-Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- kernel/sched/fair.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2d6d5582c3e9..040674734128 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6931,11 +6931,6 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & ENQUEUE_RESTORE))))
- 		util_est_enqueue(&rq->cfs, p);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa06545e2861abe46ea7029f9b4d3628e..959c8a86844eb1e5c6218e8fdbde6c3ebf68e25d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9777,6 +9777,7 @@ F:	include/asm-generic/vdso/vsyscall.h
+ F:	include/vdso/
+ F:	kernel/time/vsyscall.c
+ F:	lib/vdso/
++F:	tools/testing/selftests/vDSO/
  
--	if (flags & ENQUEUE_DELAYED) {
--		requeue_delayed_entity(se);
--		return;
--	}
--
- 	/*
- 	 * If in_iowait is set, the code below may not trigger any cpufreq
- 	 * utilization updates, so do it here explicitly with the IOWAIT flag
-@@ -6944,6 +6939,11 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
- 	if (p->in_iowait)
- 		cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT);
- 
-+	if (flags & ENQUEUE_DELAYED) {
-+		requeue_delayed_entity(se);
-+		return;
-+	}
-+
- 	if (task_new && se->sched_delayed)
- 		h_nr_runnable = 0;
- 
+ GENWQE (IBM Generic Workqueue Card)
+ M:	Frank Haverkamp <haver@linux.ibm.com>
+
 -- 
-2.25.1
+2.48.1
 
