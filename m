@@ -1,87 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE9820AF8E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:21:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3822221F39;
+	Wed, 26 Feb 2025 15:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583289; cv=none; b=aMNXYKbI/+iI1clrMn8YidQ2bLuEnVOEeFR99ohG+gM86l/6koOPiFUPQmNYBLK05LZggzNgY1GrTrXyHF23Dny5fJEHecnRy3JZFPxi6HkQak/Q99xf3E+y8gIL6XWeATmBJu9Bx4fLQ53UMUprd2fXHzak7BRr0r4Mp8Y3mZ8=
+	t=1740583305; cv=none; b=aNjqnC7e43BBsksppHhfbbgFXJfxYhcrJhXiuq33mFRMQZ0J64v3Ug9UFpPuj332uOll0TQ1l8D70tkDaEGtEHk4T+yhMAjANbGF1RXhgnAReKBnRX/BSWZMWz308G0OzNJzzbepN6dXHKFHWByfgUmx7b+/B5DpSBzKavBgqe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583289; c=relaxed/simple;
-	bh=kGuDluKlBGVXw7uhB+/9lut/CvhX3J7r0WIB6MvbzaM=;
-	h=In-Reply-To:References:To:Cc:Subject:MIME-Version:Content-Type:
-	 From:Date:Message-ID; b=ozankCJgby01zHauz6WsZmsk6+MgWA3TYhC7XI8lkiZLicxh1cnV5x+VPnktKfno+JLHecLVW34n35hGj/Cyof8xzJk/OCIELMEzXvv/JNq1ruO2kU1wsLD3oPeM4qi6W9MsQWljFXfL+j9ZMLaDfYNd2LkgZpHHhe0TpxmT5rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OUaNq6kK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OUaNq6kK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740583287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NXbyCdmoziShPeJAChKxNKhUqohQ4PH+KJxEBCv0dis=;
-	b=OUaNq6kKnN6qIqFamH/9XfumkHhJoiLA90U727qZ/arSj8odc+hI5C71KjtpvAAQEMWHY5
-	eM1EjepujZfrgXfNfpUNHLMbapSMGgMeAedjDcAi+/2+Dv5204hbAwMP8XNrEywSiEHXGR
-	BUfD2xgIv4GRObU5YZC5+tCESTT/ATE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-iwyn0p17N66pFYe-_2Gb-g-1; Wed,
- 26 Feb 2025 10:21:25 -0500
-X-MC-Unique: iwyn0p17N66pFYe-_2Gb-g-1
-X-Mimecast-MFC-AGG-ID: iwyn0p17N66pFYe-_2Gb-g_1740583283
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 48D2E1800264;
-	Wed, 26 Feb 2025 15:21:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 66FA3180035F;
-	Wed, 26 Feb 2025 15:21:18 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-In-Reply-To: <2602345.1740576046@warthog.procyon.org.uk>
-References: <2602345.1740576046@warthog.procyon.org.uk>
-To: Christian Brauner <brauner@kernel.org>
-Cc: dhowells@redhat.com, Steve French <stfrench@microsoft.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Ihor Solodrai <ihor.solodrai@pm.me>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Latchesar Ionkov <lucho@ionkov.net>,
-    Christian Schoenebeck <linux_oss@crudebyte.com>,
-    Paulo Alcantara <pc@manguebit.com>, Jeff Layton <jlayton@kernel.org>,
-    v9fs@lists.linux.dev, linux-cifs@vger.kernel.org,
-    netfs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfs: Fix unbuffered writes
+	s=arc-20240116; t=1740583305; c=relaxed/simple;
+	bh=67CeRvEnNp00FoBhzcmiCD4JfLwcNDyJn1UwXBzzFmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QrAeoSSi0NHzqfBe/L3cioZvdXRA/M0fFtVTwCGsHS3Z0tSd/KxDlmXKObSMt/igssGmdAE/Hw1rAoSW/i6CZQy3w4yrts8/VUYwKPp2xSg+LuuF6vs+troBddpPfcIHV9HsxkOHjft3swyYxV/Vj59vmyI5VjeP8a9mKDw8pk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8600CC4CED6;
+	Wed, 26 Feb 2025 15:21:43 +0000 (UTC)
+Date: Wed, 26 Feb 2025 10:22:23 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Hari Bathini <hbathini@linux.ibm.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/8] tracing: fprobe-events: Log error for exceeding the
+ number of entry args
+Message-ID: <20250226102223.586d7119@gandalf.local.home>
+In-Reply-To: <174055074269.4079315.17809232650360988538.stgit@mhiramat.tok.corp.google.com>
+References: <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
+	<174055074269.4079315.17809232650360988538.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2616590.1740580941.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-From: David Howells <dhowells@redhat.com>
-Date: Wed, 26 Feb 2025 15:21:17 +0000
-Message-ID: <2635841.1740583277@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-David Howells <dhowells@redhat.com> wrote:
+On Wed, 26 Feb 2025 15:19:02 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Fixes: 9dc06eff2097 ("netfs: Fix wait/wake to be consistent about the wa=
-itqueue used")
+> index 85f037dc1462..e27305d31fc5 100644
+> --- a/kernel/trace/trace_fprobe.c
+> +++ b/kernel/trace/trace_fprobe.c
+> @@ -1230,6 +1230,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+>  	if (is_return && tf->tp.entry_arg) {
+>  		tf->fp.entry_handler = trace_fprobe_entry_handler;
+>  		tf->fp.entry_data_size = traceprobe_get_entry_data_size(&tf->tp);
 
-Actually, you can ignore this.  It's for a patch that's not upstream and c=
-an
-be folded in.
+Looking at traceprobe_get_entry_data_size(), the setting of the offset and
+what it returns is a bit of magic. It's not intuitive and really could use
+some comments. This isn't against this patch, but it does make it hard to
+review this patch.
 
-David
+> +		if (ALIGN(tf->fp.entry_data_size, sizeof(long)) > MAX_FPROBE_DATA_SIZE) {
+> +			trace_probe_log_set_index(2);
+> +			trace_probe_log_err(0, TOO_MANY_EARGS);
+> +			return -E2BIG;
+> +		}
+>  	}
+>  
+>  	ret = traceprobe_set_print_fmt(&tf->tp,
 
+
+We have this in trace_probe.c:
+
+static int __store_entry_arg(struct trace_probe *tp, int argnum)
+{
+	struct probe_entry_arg *earg = tp->entry_arg;
+	bool match = false;
+	int i, offset;
+
+	if (!earg) {
+		earg = kzalloc(sizeof(*tp->entry_arg), GFP_KERNEL);
+		if (!earg)
+			return -ENOMEM;
+		earg->size = 2 * tp->nr_args + 1;
+		earg->code = kcalloc(earg->size, sizeof(struct fetch_insn),
+				     GFP_KERNEL);
+		if (!earg->code) {
+			kfree(earg);
+			return -ENOMEM;
+		}
+		/* Fill the code buffer with 'end' to simplify it */
+		for (i = 0; i < earg->size; i++)
+			earg->code[i].op = FETCH_OP_END;
+		tp->entry_arg = earg;
+	}
+
+	offset = 0;
+	for (i = 0; i < earg->size - 1; i++) {
+		switch (earg->code[i].op) {
+		case FETCH_OP_END:
+			earg->code[i].op = FETCH_OP_ARG;
+			earg->code[i].param = argnum;
+			earg->code[i + 1].op = FETCH_OP_ST_EDATA;
+			earg->code[i + 1].offset = offset;
+
+// There's definitely some dependency between FETCH_OP_END, FETCH_OP_ARG
+// and FETCH_OP_ST_EDATA that isn't documented. At least not in this file.
+
+			return offset;
+		case FETCH_OP_ARG:
+			match = (earg->code[i].param == argnum);
+			break;
+		case FETCH_OP_ST_EDATA:
+			offset = earg->code[i].offset;
+			if (match)
+				return offset;
+			offset += sizeof(unsigned long);
+			break;
+		default:
+			break;
+		}
+	}
+	return -ENOSPC;
+}
+
+int traceprobe_get_entry_data_size(struct trace_probe *tp)
+{
+	struct probe_entry_arg *earg = tp->entry_arg;
+	int i, size = 0;
+
+	if (!earg)
+		return 0;
+
+	for (i = 0; i < earg->size; i++) {
+		switch (earg->code[i].op) {
+		case FETCH_OP_END:
+			goto out;
+		case FETCH_OP_ST_EDATA:
+			size = earg->code[i].offset + sizeof(unsigned long);
+
+// What makes earg->code[i].offset so special?
+// What is the guarantee that code[i + 1].offset is greater than code[i].offset?
+// I guess the above function guarantees that, but it's not obvious here.
+
+			break;
+		default:
+			break;
+		}
+	}
+out:
+	return size;
+}
+
+Assuming that traceprobe_get_entry_data_size() does properly return the max size.
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
