@@ -1,102 +1,72 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307D342AA5;
-	Wed, 26 Feb 2025 11:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567733; cv=pass; b=JbkWs1FYwOYuQGZQhnHFla7+r08ChMdQp0HsLGlkpZmFOMzjGz1EqSKwtPQm2C4/z/5eSmIrvfZpXlMX5xF+q4Opa5aCamc28IChyh9kmPOobhxHOA6NAqcfrqhuruM0w5cEgFF5t/JiCacmb68YnzA7y3ShZDwvz5672ICNuRY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740567733; c=relaxed/simple;
-	bh=PFQ+EYK/8O8aCGX6DneukYkRMliA11MfeP0OGf/4Nhc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KuWwB7r6vrxGHf2Au+I8VaNtj9fCNq+JPg4SfEWb3OpsUUZstHzsHQtHX0qfxo3XMUFh7o8JtEh4SqK7qJqpDZgEtt6jC3A+pdUbM+u3swxd0r+0hbbe/mpWOruRvNhwxcFihzNgwgVuf4uMd8ffAFgCJ2649qWo0+U1yiQ3HKg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=Pqnuy1cd; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361605383;
+	Wed, 26 Feb 2025 11:02:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740567767; cv=none; b=dlfHsZDHXY5vgV07tY+AridgWCi143pZA9JG1WrmSTer2ZzYrbS32OlCVCsKfj3VndS4BHrL7s2U3Mv2+E6bi7icsd7D4heIHLPow0dm2FT+oi1zmZCtOvF1gVE5Xyxh3B3dAAarfmndHxgsNa8VFsO3jbDURw0cHVbPzhZ1DBk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740567767; c=relaxed/simple;
+	bh=iSD4Z5lcR52lioqNrIqieEQJwLbz630xNMhePckaLms=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLogmYY+h/oS1kPqqPfHxV+uKEmTXpJRiaDWVYsxqoG8egFa2yRgWuifAk8adLxyQIEvsYJ/4kDjScXduNEBCpEQ86OQn2m/qI+jSJkt2wdGSbsQc0liZiBhcSySa5Nv5eysj1wAZ47n3iCEGbyhaNomDTAhwGwVApSrIgZ/sZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=N0u7EtvL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="Pqnuy1cd"
-ARC-Seal: i=1; a=rsa-sha256; t=1740567688; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=OHsDb7qi1Q6V5cXXa+YwxRDw8cJL6/TX5DzDe+cmvdZmYIUxkaQlNlknKCAZYLlALZqtbBA67LDbcR8LX0SfCCV9GF3bbiDMCfulZHfpK9K+Rg/zb8OIyjTBVaIJ7awcqkjSmrcb4khM3tIKQaAJTeIwtUXLrSG7v9FEaZJncS8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740567688; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PFQ+EYK/8O8aCGX6DneukYkRMliA11MfeP0OGf/4Nhc=; 
-	b=EbOZIp7auPL055mgS9OAypJ0Me3pj7acA7q6jcB2A5IadsDoALo/FLmB/w3f9mnXL6ajBSPqevKRNUYf7VoOvenM31LimL8CNpIXtA5aPwm7+K9zQUQcP32dmtGgWqLoogINjpETwjYFp7Ie64tNDij6VOqdPrprlEqSVNkUMCo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740567688;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=PFQ+EYK/8O8aCGX6DneukYkRMliA11MfeP0OGf/4Nhc=;
-	b=Pqnuy1cdlVxfvgCICDSklrgS9RX7RbAtLq6CNEwg0w7lWu1hVbp11s2h9Gp7+n1u
-	pBDTlMExaN1+A1dUef26MN0FZ6wXWlh4Bd5k1aj+oeZ6GQHX38JUK4k4bImN0dxsWbN
-	99H4QJjcunoe7QNcf/etCvN/Vb5cCx1IbIYmbMUs=
-Received: by mx.zohomail.com with SMTPS id 1740567685853948.6812241070395;
-	Wed, 26 Feb 2025 03:01:25 -0800 (PST)
-Message-ID: <3ec81e9083afae19f672afed3809ad5db20f7d9a.camel@collabora.com>
-Subject: Re: [PATCH v2 0/2] Add driver for Himax HX8279 DriverIC panels
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	neil.armstrong@linaro.org
-Cc: quic_jesszhan@quicinc.com, airlied@gmail.com, simona@ffwll.ch, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@collabora.com, pablo.sun@mediatek.com,
- 	christophe.jaillet@wanadoo.fr
-Date: Wed, 26 Feb 2025 12:01:20 +0100
-In-Reply-To: <20250218143952.84261-1-angelogioacchino.delregno@collabora.com>
-References: <20250218143952.84261-1-angelogioacchino.delregno@collabora.com>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="N0u7EtvL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903B6C4CED6;
+	Wed, 26 Feb 2025 11:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740567766;
+	bh=iSD4Z5lcR52lioqNrIqieEQJwLbz630xNMhePckaLms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N0u7EtvLiBTOBi4xcuGleuhWPBwSzJl3tDCE7L7s2awTX1EQ1DWMpgXqsO8ONFicr
+	 vng2B5I1kg4qZGGBbcciNoHFa9smzNVmbpY5vDelrcFfxZdLkkHGr0ivmIoFdK3Kuq
+	 ej4a5lyuOO8nU/RlyF8oQ7uN6rCJlSZRBGseWTlo=
+Date: Wed, 26 Feb 2025 12:01:38 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, kernel@dakr.org,
+	a.hindborg@kernel.org, alex.gaynor@gmail.com,
+	benno.lossin@proton.me, bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net,
+	linux-kernel@vger.kernel.org, lyude@redhat.com,
+	mairacanal@riseup.net, ojeda@kernel.org, rafael@kernel.org,
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu
+Subject: Re: [PATCH 2/2] rust/faux: Add missing parent argument to
+ Registration::new()
+Message-ID: <2025022609-hamper-paging-8761@gregkh>
+References: <ea2466c4d250ff953b3be9602a3671fb@dakr.org>
+ <20250226092339.989767-1-aliceryhl@google.com>
+ <Z77iHj56551mDybd@pollux>
+ <2025022659-spray-treble-759f@gregkh>
+ <Z77vYxUYVyFtW2lG@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z77vYxUYVyFtW2lG@cassiopeiae>
 
-On Tue, 2025-02-18 at 15:39 +0100, AngeloGioacchino Del Regno wrote:
-> Changes in v2:
-> =C2=A0- Removed unneeded mipi_dsi_device_unregister() call for secondary
-> =C2=A0=C2=A0 DSI: as the driver is using devm, that's not necessary (CJ)
-> =C2=A0- Removed superfluous if branch as pointed out by CJ
->=20
-> This series adds a driver for DSI panels using the Himax HX8279 and
-> HX8279-D DriverICs, and introduces one panel using such a
-> configuration,
-> the Startek KX070FHFID078.
->=20
-> This panel is found on the latest hardware revisions of some MediaTek
-> Genio Evaluation Kits, and specifically, at least:
-> =C2=A0- Genio 510 EVK
-> =C2=A0- Genio 700 EVK
-> =C2=A0- Genio 1200 EVK
->=20
-> This driver was tested on all of the aforementioned boards.
->=20
-> AngeloGioacchino Del Regno (2):
-> =C2=A0 dt-bindings: display: panel: Add Himax HX8279/HX8279-D
-> =C2=A0 drm: panel: Add driver for Himax HX8279 and Startek KD070FHFID078
->=20
-> =C2=A0.../bindings/display/panel/himax,hx8279.yaml=C2=A0 |=C2=A0 74 ++
-> =C2=A0drivers/gpu/drm/panel/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 11 +
-> =C2=A0drivers/gpu/drm/panel/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
-> =C2=A0drivers/gpu/drm/panel/panel-himax-hx8279.c=C2=A0=C2=A0=C2=A0 | 905
-> ++++++++++++++++++
-> =C2=A04 files changed, 991 insertions(+)
-> =C2=A0create mode 100644
-> Documentation/devicetree/bindings/display/panel/himax,hx8279.yaml
-> =C2=A0create mode 100644 drivers/gpu/drm/panel/panel-himax-hx8279.c
->=20
-Tested-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> # on
-Genio 510 EVK and Genio 1200 EVK
+On Wed, Feb 26, 2025 at 11:39:31AM +0100, Danilo Krummrich wrote:
+> > > I think if we want to add something to the safety comment, it should be somthing
+> > > along the line of "the type of `parent` implies that for the duration of this
+> > > call `parent` is a valid device with a non-zero reference count".
+> > 
+> > I don't understand the need for any safety comment about the parent
+> > here.  Again, as long as it is valid when the call is made, that is all
+> > that is needed.
+> 
+> Right, and we could mention that in the safety comment that something of the
+> type `&device::Device` is indeed valid by definition and hence fullfills the
+> requirement of faux_device_create() to get a valid pointer (or NULL).
 
+Agreed.  I'll go apply patch 1 of the series now and wait for a new
+version of 2/2.
+
+thanks!
+
+greg k-h
