@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D65C2222D1;
-	Wed, 26 Feb 2025 14:19:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C15D222589;
+	Wed, 26 Feb 2025 14:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579559; cv=none; b=iNONffvcbyfVNbLpuJkmIFvy8JkNqBbyudJ5jVMsF5NlMsMhxUpBBgiJC6UkakHvA3Qku8bmpWKY8TirW0JkVvMkGyS1EMkq6n9y79M/SYGhE2QYhva4NoE0iXIZ4J5CdrSgPkmtOzXSUSkDp4sXtH1/Kn+PgHxyu981nli/LF4=
+	t=1740579559; cv=none; b=auLvt17Whcwf4IWR9qfYKe0GTf+iiZQqLsjrBwNGUaO1XWQwkS8oB3W9v64gOIfKOoKk+BN6TV/2272JeAlOa2qsjTEztiWGEjKhr90nHYDJvqsA5Gqbib/dKUQRwlTu6iW+Sq4zxIx+hv4NvLKtkiuWV12WANhmRgqGN/ot48w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740579559; c=relaxed/simple;
-	bh=osfiWDazaUUhIdjl88Wsp3F8y+CDBUMkVLAgYN+JnH8=;
+	bh=9qpPM7N9vuJGBAdiNYiFYqBpqZja21Y/Swf+Oy1Pdo8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CpwvrPG0GRrQlrND9/5qVQ/YGFn7PTOXu8cTuXCieGc2DSTASDYpG728FDR2bQTMdFPPYjJonFS5gLDODzpASOfEiM+99RltFyojq41ECTuNIL//XZjZRhBWifWXuVEKc5UBqfQgbXf+o/8kLWy1hKAxwopBKzhnSHj/LlREssA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rvSnPX9b; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=TPnHtGqSxCXKkvEn+tfgkyTcPEyg3kYFKeBMtZzJb/8U9w+5X4pRQH+inu9ObT2hQhnCp+wFinkr+k+JxHGGXGueBl2/S7iGthme+Z8l6mG93Bledn0S3TuOCIATKT7DNVIZJlIDCG1EWsU31JgDOm8/RxO7L6T+otNm4Nj7XwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mwm8sfWD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rvSnPX9b"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B451BC4CEED;
-	Wed, 26 Feb 2025 14:19:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mwm8sfWD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 159D6C4CEF2;
+	Wed, 26 Feb 2025 14:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740579558;
-	bh=osfiWDazaUUhIdjl88Wsp3F8y+CDBUMkVLAgYN+JnH8=;
+	s=k20201202; t=1740579559;
+	bh=9qpPM7N9vuJGBAdiNYiFYqBpqZja21Y/Swf+Oy1Pdo8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rvSnPX9b4IMPt5UqTG/4eLqsYj0/DwHMOjH/wsWG1mkivnH11hP3vfIYRmbBmOQsv
-	 tzc8GaFi47nXAyQpnqx6aAoPF/83mj8EbSb4en4kQqCXwgFKeyP794jjKWKh3z+ZtA
-	 erhKBs84jLaPk5oC8WyyfyeJ9oPRc7s/7GrtBGhamZfV9sSGmLFIe0k9AbT09dkgEP
-	 PTZ738Zh9a1uuFYuygsZVN4c5fgpkvK8cdzwvG6mAODGmhlP95s61WOeu5Yhm4euoB
-	 WzwrRbVcv/VZlk6cNLjaKMEtIon54RdGeyaHtCD2CyvdIbtBgKJOsr+B9kewD0ABlO
-	 xiHvI9C4Rg4KA==
+	b=Mwm8sfWDAghhoVCU3JKF4khAIR9U2i0rRDUAvxsYHc+34H3KfrApcE9aqk4HIBA0i
+	 pnbyi7NoyModZkjs9Zkgo4YnWElVRRzfqm4oqDdLOrvwJ3mFTMvQ04wlxCsbImHorQ
+	 S9Gf3yoC/MmXpNedhEx06QYKLASykFRVvL3V01m4D27I/9UVZM6A3NdBy6kF8g55O4
+	 QF8LFY8mGomZh57EVk2gBp4jIfzY8RjWHetv5CvSjON+6jVstxQCLzVK997pIL8nBx
+	 bX3aszL35LqeLk01hvxSj2iJp7QR5vTaeV1zsZo+LCWNrcpEINBx3itGM0fY9EflvK
+	 nJ77qr7fbCorQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A15C021B8;
-	Wed, 26 Feb 2025 14:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B5DC021B8;
+	Wed, 26 Feb 2025 14:19:19 +0000 (UTC)
 From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Wed, 26 Feb 2025 15:19:14 +0100
-Subject: [PATCH v2 03/12] dt-bindings: connector: Add the GOcontroll
- Moduline module slot bindings
+Date: Wed, 26 Feb 2025 15:19:16 +0100
+Subject: [PATCH v2 05/12] MAINTAINERS: add maintainer for the Ka-Ro
+ tx8p-ml81 COM module
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-initial_display-v2-3-23fafa130817@gocontroll.com>
+Message-Id: <20250226-initial_display-v2-5-23fafa130817@gocontroll.com>
 References: <20250226-initial_display-v2-0-23fafa130817@gocontroll.com>
 In-Reply-To: <20250226-initial_display-v2-0-23fafa130817@gocontroll.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -61,11 +61,11 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, 
  Maud Spierings <maudspierings@gocontroll.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579556; l=5048;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579556; l=938;
  i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=pJTRryEUH61y/AD454hzp/uuXsK9vkVHu0FC9+9tIo4=;
- b=5Vy65hAOZ6+zDffYGJ4I89iOR6gkn9v6VIpxtfvaD3g4iEr4vK6fOm3hDLEHBc73H+EZYNOzC
- B4UQQjssmy/DnyeOH0kqf0Lwj/p2P6Svkw30uRwwBAvZPQG4emMmWoa
+ bh=7OO/jW02mlmITYurf1caNsK1hmpbzWDELvNR0DyCiU4=;
+ b=JQF5eJLd8TKcCGD2C+Z9zMlLVrO2fpysnJnOF+AScUx86YmdKVjIT1WI0RHmfVs/wwWBOll1s
+ tmLhs/5IralB0S4so8L4M795iuHqJdftuaxrDYcNgqM95obpIrELjwx
 X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
  pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
 X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
@@ -75,142 +75,34 @@ Reply-To: maudspierings@gocontroll.com
 
 From: Maud Spierings <maudspierings@gocontroll.com>
 
-Add the bindings that describe a GOcontroll Moduline module slot. This
-slot provides all the interfaces to interface with a Moduline compatible
-IO module. The actual module is not reasonable to describe as it can be
-swapped at will, with this connector the driver will be able to probe
-for a module on boot.
+Add GOcontroll as unofficial maintainers of the Ka-Ro tx8p-ml81 COM
+module bindings.
 
-The connector consists of 2 parts, one part for interfacing with the SoC
-and main board, the other part has 13 IO channels for the module to
-interact with the outside world. The functions of these IO channels are
-determined by the type of module in the slot. The IO on the SoC side is
-as follows:
-
- - a 3v3 supply, this tends to be the logic level of the module and its
-   microcontroller
- - a 5v0 supply, this can be used to power low power peripherals on the
-   module
- - a 6v-8v supply, this can be used for high power peripherals on the
-   module
- - a 6v-30v supply, this tends to be a dirty supply that comes from the
-   controller supply after some circuit protection, or is the same as
-   the 6v-8v supply.
- - an SPI bus which carries the communication between the SoC and the
-   microcontroller on the module.
- - an I2C bus shared between the SoC and all module slots which can
-   carry direct module-to-module communication.
- - a reset line
- - an interrupt line that indicates a clear to transmit signal
- - a sync line shared between the SoC and all module slots which could
-   be used to synchronize modules for time sensitive IO spread across
-   modules.
- - a SMBus alert line that is shared between the modules but is not
-   connected to the SoC so that is ignored.
-
-A slot-number property is used to identify the physical location of a
-module slot. Without it, it would be impossible to identify which module
-to control if there are multiple of one type, to address the desired IO.
+This support is not officially done by Ka-Ro electronics, if they at
+some point will supporting mainline, this should be changed to them.
 
 Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
 ---
- .../connector/gocontroll,moduline-module-slot.yaml | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/connector/gocontroll,moduline-module-slot.yaml b/Documentation/devicetree/bindings/connector/gocontroll,moduline-module-slot.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..a16ae2762d160180d5b163e20f5294235e65053b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/connector/gocontroll,moduline-module-slot.yaml
-@@ -0,0 +1,88 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/connector/gocontroll,moduline-module-slot.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f076360ce3c60123e9afa61e6e5822326f72f244..b4c76d7ad890be0f618109918ad89328bc72e8cd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12510,6 +12510,12 @@ S:	Maintained
+ F:	Documentation/hwmon/k8temp.rst
+ F:	drivers/hwmon/k8temp.c
+ 
++KA-RO TX8P COM MODULE
++M:	Maud Spierings <maudspierings@gocontroll.com>
++L:	devicetree@vger.kernel.org
++S:	Maintained
++F:	arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi
 +
-+title: GOcontroll Moduline Module slot
-+
-+maintainers:
-+  - Maud Spierings <maudspierings@gocontroll.com>
-+
-+description:
-+  The GOcontroll Moduline module slot represents a connector that fullfills the
-+  Moduline slot specification, and can thus house any IO module that is also
-+  built to this spec.
-+
-+properties:
-+  compatible:
-+    const: gocontroll,moduline-module-slot
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    description: indicates readiness, high means busy.
-+    maxItems: 1
-+  reset-gpios:
-+    description: resets the module, active low.
-+    maxItems: 1
-+  sync-gpios:
-+    description: sync line between all module slots.
-+    maxItems: 1
-+
-+  vdd-supply:
-+    description: low power 3v3 supply generally for the microcontroller.
-+  vddp-supply:
-+    description: medium power 5v0 supply for on module low power peripherals.
-+  vddhpp-supply:
-+    description: high power 6v-8v supply for on module high power peripherals.
-+  power-supply:
-+    description: high power 6v-30v supply for high power module circuits.
-+
-+  i2c-bus:
-+    description: i2c bus shared between module slots and the SoC
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  slot-number:
-+    description:
-+      The number of the module slot representing the location of on the pcb.
-+      This enables access to the modules based on slot location.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  spi-max-frequency: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - reset-gpios
-+  - interrupts
-+  - sync-gpios
-+  - i2c-bus
-+  - slot-number
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        connector@0 {
-+            reg = <0>;
-+            compatible = "gocontroll,moduline-module-slot";
-+            reset-gpios = <&gpio5 10 GPIO_ACTIVE_LOW>;
-+            sync-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
-+            interrupt-parent = <&gpio4>;
-+            interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+            vdd-supply = <&reg_3v3_per>;
-+            vddp-supply = <&reg_5v0>;
-+            vddhpp-supply = <&reg_6v4>;
-+            i2c-bus = <&i2c2>;
-+            slot-number = <1>;
-+        };
-+    };
+ KASAN
+ M:	Andrey Ryabinin <ryabinin.a.a@gmail.com>
+ R:	Alexander Potapenko <glider@google.com>
 
 -- 
 2.48.1
