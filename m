@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D599191F6A;
-	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73689221738;
+	Wed, 26 Feb 2025 14:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579452; cv=none; b=NzOGEBlhMn8woJV1gHT/EI8x1mxK7wy9Qzmjoq6j1e1yJtqrSqAggx0fn8D6idh9yeINwlzc2KHNwHHkmH2760OzfPu0HBVTbt3LDcLe7qJIAjgkHdlC2gj11dGOGXVVW1UGlQpsln0qX/j8jJrgD+qqkBqmI7hvJ6JXvGlNDgs=
+	t=1740579452; cv=none; b=n6iZeWnIFIHQ5T4W3149Tyn2kmlPubPUgp7Ti9DsoWchZ9sOVL3xNg+6HqjieUdMAnGNfyg9UXW0wN208cNpt2zGav1KExELMAPVYFifUVCafWLnXFE3LVpplINJEoE0JOOkeUGPF5dnJCwKiEbWecyW+fz4LmA23qH5J6Zi/v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740579452; c=relaxed/simple;
-	bh=cG41MNyc8x+QEktsxSBjUBrLBNatZCQO437Ub1tz6tI=;
+	bh=w8aMXJ+NU/5C6KBOxx5hHJUngYjg57KJkqVbAGaaDDk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rNF+s6rMr1A88NBAO/I49qtuve0CczNvxWQ1hFIfd/ydS9tpFg3XcnIYLFrRVa3p3EZPPy7cndq4tazI+nd/+au3sndGL0VPulzsMHRo4A+cKIkpV/e0piNbwBYXfL+6NcPVJ5GqJNZ0gutBrEfqCdF7QzAyuLFoVQpAa+N6LpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyYM6wiO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DhTfyQTHegY5znFJbh+KIf2X6CRvvYeiB7u0UmCjCF0cG0LbojCkJeEU9zAe9Mbvs6n82Pe1rt5c9dB3gTN/1fLY8RgQqv20yMQzPUOvfw6xUlsLFk5UDybfZcSuUs+iXC3QCpdMoxTC7snLw9bipal3cGr3c6u0QHy0fSldG7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1TW05CY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyYM6wiO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B64EAC4CEEB;
-	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1TW05CY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 12B20C4CEF0;
+	Wed, 26 Feb 2025 14:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740579451;
-	bh=cG41MNyc8x+QEktsxSBjUBrLBNatZCQO437Ub1tz6tI=;
+	s=k20201202; t=1740579452;
+	bh=w8aMXJ+NU/5C6KBOxx5hHJUngYjg57KJkqVbAGaaDDk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=YyYM6wiOjALYvTxi8K3R7VtOMav2exWrbFdZhEFvRg6f1/npY+1rPhQ4tjtB+BsEx
-	 6CeIHhZ3tMPf173fRjOm8F1+1hdl7GC7NrdjGEBzptik64GLE603IGbSwJ8Evf83WS
-	 MtXTCUHeNCra4I3mDauss/+2KyFPAlUh0gzQL5RykfEn8bni4LWCBhDEUg2ZyTLVIC
-	 trxsIYz2tqc4Pme/37fdXCZu+sts+BuuYZUOqvbuHFTkwyWTFIruPnuCjzpY3jonzQ
-	 QQrjOeBIM73anKJ8UJBXZ1akupsZFJ6inklX3Xi8soCtQ829gEIP56ACy4RcczDLr/
-	 FBEJ4ZnO1dQig==
+	b=P1TW05CYq18CmhYa1SsaOA0YV0Ee70Ec0EpOFGYWX+NGNf1oOL9IwrIUWiyQcSSzG
+	 7rC6UXJ+qDjlmeHX/s6Pk46vxSvW0xs8lAytE7+a24WYoH2SnWfqh/ctNksy/5cuGg
+	 uYMtuTheIJFUYW2v8kL8jLioNXuLoyVlumN9Mfgc0aUtJnhgrfbZD3tSPHbmySDgBJ
+	 N2aW8RXUrlUtGtWpcdh9AlTzAKhWy+FxBomVU11ge6ciYdYr24N6AQ76rm5oo22M8W
+	 WLmoXy4lSoO20v0WlmKFBGOQ0UrS4rkJxM6J0Rpd7k4SQ4QT9QmqMJ/4Pvi6ily1+m
+	 akoyv9R60YE4w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD84DC021B8;
-	Wed, 26 Feb 2025 14:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6F3C18E7C;
+	Wed, 26 Feb 2025 14:17:32 +0000 (UTC)
 From: =?utf-8?q?Jonathan_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Wed, 26 Feb 2025 15:17:26 +0100
-Subject: [PATCH v2 4/9] usb: storage: datafab: Use const for constant
- arrays
+Date: Wed, 26 Feb 2025 15:17:31 +0100
+Subject: [PATCH v2 9/9] usb: storage: shuttle_usbat: Use const for constant
+ array
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250226-misc-const-v2-4-ab655a4a29cc@posteo.net>
+Message-Id: <20250226-misc-const-v2-9-ab655a4a29cc@posteo.net>
 References: <20250226-misc-const-v2-0-ab655a4a29cc@posteo.net>
 In-Reply-To: <20250226-misc-const-v2-0-ab655a4a29cc@posteo.net>
 To: Alan Stern <stern@rowland.harvard.edu>, 
@@ -50,11 +50,11 @@ Cc: linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579450; l=2349;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740579450; l=924;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=5889APtKFFab054l3Ee3spnWaj/UxBWmua1IlElw8Hk=;
- b=AU338qvvEAePEg9jLLeMUgQzbkLqosqROpA/Ngu4KxLu0N+nAlUKqOim3VKzHIX3mqqaxeZI3
- G8p/zLIP7eqDxP/YhPj6atkVfpOeIsNmgqt3iUYzyhUsbrC2t/R0+9l
+ bh=v11yX1jHyBzwioDip32r3C5+SG/nGSwnzcapdw5f/+I=;
+ b=yTY/YVeDIcz1oPqt/3tMNvIL+X+JBEfVSdcEGQiPavrbg/dA86vlZ53iZ8WWkrM27T2qUMCvW
+ Ha2BVh4wvqKABomcpZw0heowIJEmh1Rc+/7B9NC/oZWKDzWpruJ3w6o
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -64,7 +64,7 @@ Reply-To: j.ne@posteo.net
 
 From: Jonathan Neuschäfer <j.ne@posteo.net>
 
-These arrays are only read, not modified.
+This array is only read, not modified.
 
 Signed-off-by: Jonathan Neuschäfer <j.ne@posteo.net>
 ---
@@ -72,58 +72,19 @@ Signed-off-by: Jonathan Neuschäfer <j.ne@posteo.net>
 V2:
 - new patch
 ---
- drivers/usb/storage/datafab.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/usb/storage/shuttle_usbat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/storage/datafab.c b/drivers/usb/storage/datafab.c
-index bbfa2398b17036f431c0692bbf794bdb01d68cdf..9ba369483c9b36c2f662749c32bf81b525ae897f 100644
---- a/drivers/usb/storage/datafab.c
-+++ b/drivers/usb/storage/datafab.c
-@@ -319,7 +319,7 @@ static int datafab_determine_lun(struct us_data *us,
- 	//
- 	// There might be a better way of doing this?
- 
--	static unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
-+	static const unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
- 	unsigned char *command = us->iobuf;
- 	unsigned char *buf;
- 	int count = 0, rc;
-@@ -384,7 +384,7 @@ static int datafab_id_device(struct us_data *us,
- 	// to the ATA spec, 'Sector Count' isn't used but the Windows driver
- 	// sets this bit so we do too...
- 	//
--	static unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
-+	static const unsigned char scommand[8] = { 0, 1, 0, 0, 0, 0xa0, 0xec, 1 };
- 	unsigned char *command = us->iobuf;
- 	unsigned char *reply;
- 	int rc;
-@@ -437,16 +437,16 @@ static int datafab_handle_mode_sense(struct us_data *us,
- 				     struct scsi_cmnd * srb, 
- 				     int sense_6)
- {
--	static unsigned char rw_err_page[12] = {
-+	static const unsigned char rw_err_page[12] = {
- 		0x1, 0xA, 0x21, 1, 0, 0, 0, 0, 1, 0, 0, 0
- 	};
--	static unsigned char cache_page[12] = {
-+	static const unsigned char cache_page[12] = {
- 		0x8, 0xA, 0x1, 0, 0, 0, 0, 0, 0, 0, 0, 0
- 	};
--	static unsigned char rbac_page[12] = {
-+	static const unsigned char rbac_page[12] = {
- 		0x1B, 0xA, 0, 0x81, 0, 0, 0, 0, 0, 0, 0, 0
- 	};
--	static unsigned char timer_page[8] = {
-+	static const unsigned char timer_page[8] = {
- 		0x1C, 0x6, 0, 0, 0, 0
- 	};
- 	unsigned char pc, page_code;
-@@ -550,7 +550,7 @@ static int datafab_transport(struct scsi_cmnd *srb, struct us_data *us)
- 	int rc;
+diff --git a/drivers/usb/storage/shuttle_usbat.c b/drivers/usb/storage/shuttle_usbat.c
+index c33cbf177e6fcaa80e0d2639594d1314c59f4950..27faa0ead11d1b0ee9e45ba6a3ee5bade8a416e4 100644
+--- a/drivers/usb/storage/shuttle_usbat.c
++++ b/drivers/usb/storage/shuttle_usbat.c
+@@ -1683,7 +1683,7 @@ static int usbat_flash_transport(struct scsi_cmnd * srb, struct us_data *us)
+ 	struct usbat_info *info = (struct usbat_info *) (us->extra);
  	unsigned long block, blocks;
  	unsigned char *ptr = us->iobuf;
--	static unsigned char inquiry_reply[8] = {
-+	static const unsigned char inquiry_reply[8] = {
+-	static unsigned char inquiry_response[36] = {
++	static const unsigned char inquiry_response[36] = {
  		0x00, 0x80, 0x00, 0x01, 0x1F, 0x00, 0x00, 0x00
  	};
  
