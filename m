@@ -1,143 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB7C62904;
-	Wed, 26 Feb 2025 15:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9B9A59
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585102; cv=none; b=TgvWW17cYPZJKZVytXBXKtPhHaLREZHOmXg2wAf4UgSK569yeXK1ulwZ93sR8uAiZTB6nK5IX3PYbCOqmxobN9pJl7ohaKJjTMIUs7aq2OtU1TygpcMhfOXIm2ZzDQEBZdOkvkaeBgSM+FmIykBruwoNtSqFTKzVyNmPV8VRJjM=
+	t=1740585153; cv=none; b=AgrnDqSpQoKT3UGjmzxxb1VvbBFYSQONcjMh8UROe5Rs0UbkLYkyBuRJLaax/F2eYXFKvPs4Vt5hbH266HLG9vsuZBHusReMTHWjnAe67qKaTZ4VcxKsJ5iPuaTvDs38m7+ER7Xuxh7SVc+TZJ48OjyYeCvlzmgEFNsf9Npbeaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585102; c=relaxed/simple;
-	bh=dystgmSF/TCO8+uxX80prLd9mmlEKMg2wmXGUfrA378=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cD2PbHZ1dbmstvKL3M3eDvyPylXut+c9LD9vVUhGNX+COSxQM9QaYSNRiGdl3v9wHMttOJkYK3emTLPhDBVyMzBz8xwBI8LsicxHy1u8HZ+flnHlIk0PlcWOaig6Ybes1+VmyaY0jOicBwnbv/v9y6hcDIHhIKmIF3bWPGccFKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/wtZVHD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740585153; c=relaxed/simple;
+	bh=qPB663T4kl1k9A98bJqE2oAERM175SEskuCOorlwSaY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SxdLP63ts0Kd4oa0J3jJpNDu8uCfNwkvJT2sKAAsiu7XM9cSl86GiG8zi7wsNan2vVCyxCc8u+rXcaOfH2e8I7V/b+QdZKmQKVkxuA2D2cPmc5BX7Hw5oxRtfoXzudsH9BqetowYxCCUznanr7PQT5/r1BI2NWT1yrG2uIbedcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eRk6izB8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/wtZVHD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B506C4CED6;
-	Wed, 26 Feb 2025 15:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740585101;
-	bh=dystgmSF/TCO8+uxX80prLd9mmlEKMg2wmXGUfrA378=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J/wtZVHDOkcHb7Wj/XoTGhFH+jxWlVoY/3JmSc85XIsQBGuD3Gxmv325CJ64iW62I
-	 sLn3ueeKUKKEkkKxXG1r3zuySs0GQNjC2xBBRb9EJlIYFWS6GbsPUfrvvmRV2a6dvf
-	 XZAXHrOF0l30oLCks2wqUQnLjyU0cWBHUEWG6Y+ePaw0Mbm1ktvpkoGZBHjhBfKYwi
-	 B7uFEabl3vRtrjctHeND1AeJpBZ72c+gaKOg/ZzNTibJxVnK7fN2grML69IQB6MsBH
-	 BpVyRJswqscjYs7RJNdAbTx/Zlf0XO+ANH2X/3e4oTROLG/KcresZY91V6qxiCWYPA
-	 BqIqJwDfWeC1Q==
-Date: Wed, 26 Feb 2025 08:51:37 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Keith Busch <keith.busch@gmail.com>, Vlastimil Babka <vbabka@suse.cz>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Christoph Lameter <cl@linux.com>,
-	David Rientjes <rientjes@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-nvme@lists.infradead.org,
-	leitao@debian.org
-Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from
- kmem_cache_destroy()
-Message-ID: <Z784iRR13v6SkJv5@kbusch-mbp>
-References: <20240807-b4-slab-kfree_rcu-destroy-v2-0-ea79102f428c@suse.cz>
- <20240807-b4-slab-kfree_rcu-destroy-v2-6-ea79102f428c@suse.cz>
- <Z7iqJtCjHKfo8Kho@kbusch-mbp>
- <2811463a-751f-4443-9125-02628dc315d9@suse.cz>
- <Z7xbrnP8kTQKYO6T@pc636>
- <ef97428b-f6e7-481e-b47e-375cc76653ad@suse.cz>
- <Z73p2lRwKagaoUnP@kbusch-mbp>
- <CAOSXXT6-oWjKPV1hzXa5Ra4SPQg0L_FvxCPM0Sh0Yk6X90h0Sw@mail.gmail.com>
- <Z74Av6tlSOqcfb-q@pc636>
- <Z74KHyGGMzkhx5f-@pc636>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eRk6izB8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740585150;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8KGq5La7yk+czEiF+6Xo77Jf5JrsRdt59tbf6s0nbt8=;
+	b=eRk6izB8LEH6bnrBWKkcs1xfXmxtM1JJf93mRa5pOmPlrCJSxsl+Pgn79Dqs9XtzgSIfXn
+	87HIxlpEEqvrgahelnQVNiEUrNz9m5KkesABGTV+ZSjuB6O+iIWiEYhY4oCShws79leeem
+	JgHg103LD5P/s1MYH8n61gifxycS3J8=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-456-1S5yoal6OMq7qvbTo7BhQQ-1; Wed, 26 Feb 2025 10:52:29 -0500
+X-MC-Unique: 1S5yoal6OMq7qvbTo7BhQQ-1
+X-Mimecast-MFC-AGG-ID: 1S5yoal6OMq7qvbTo7BhQQ_1740585148
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43998ec3733so35526065e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:52:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740585148; x=1741189948;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8KGq5La7yk+czEiF+6Xo77Jf5JrsRdt59tbf6s0nbt8=;
+        b=MBaF5nDRP0kZHX7Mx05fNOqEUqjw+2s6yup7e9X8wM0Zxz4is3UHQ2aSGepULgSYZJ
+         KqezMj6h+rxzXODkozbafDaumqOiJlh0mjLhFpw+hWxwY5HAlBphFYt32Zv0eLoHfYh4
+         qz9F2mRMm6ORZ4fvAhd+r0H/zcYRfCa4xvlV+kgmYJkVoeoo6CNAyqZr9HtX4Ts1UNTT
+         wglvLBaIyNo4RXehi5/fNflf9j3Yxyksi2EPyonQmhPaAuMAndheGOdJyKNy5ambxaHy
+         EtrSXMNd3e9eUIr9FuUXNQfP49FTvgYN0IT7M6ZOgNeL9lovTB/CNyGskjOKU6Whz1fO
+         mzpw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0SlG1yUn/fQGFBf5fEGmq6IorrNL/QQcB4nbNqIPEdG1BdJrI07xXnTVXvN8vlipIGwf0VTQMbdZ65wQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg+2A2zsbqDURGU9pXRHlU98bLhGIdUSb7oM6oPINrk/5GremL
+	+TRHQKV/mf4LaiCUMRHSvx/95qejs5LfFB3EGECdjndMe8L81T7IVPGVRbQ7ejIgr00eOFLauhx
+	yY+G2d0mBykGku4DCvqSEa08lHXZbJX4HLfay9EZFiVuLwTciPffLHt/tWBbZMA==
+X-Gm-Gg: ASbGncsLUXYqa62YG7IIgjz/BEaflMGqJiKCcHEqjNk42hWHnIwYn5xlP9+mljuU/iC
+	kYdOzxh5jBfPmboHL48iMZN2yseiLIddDGYvdNHPnbdzMTRW4FbgzRfAiQBCL9ilaNIt6mx7PLR
+	O9Q6pMMM4AfNzZxcRmN4wENOV3q9HQAgWaQ9W5DwipKiqyrdrhaMY6aBFOatIRxzHub9s21JRgV
+	2FKsQDQb7CiR/Fkps6w3e8p5TA0AqznuAUvuaamKLecq7M51RgTogiU/2iQHwKXp7fWpd0wGTvB
+	bnczDRdy5bhxMOk2Xiz5MRsMtQBVyrINPGv+J2YykNYAlTWDEKypCmfLVVMoQmE=
+X-Received: by 2002:a05:600c:5493:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-43ab0f27170mr57873515e9.1.1740585148399;
+        Wed, 26 Feb 2025 07:52:28 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFFhPBq1dHswsswtne5Hy7yfVLOgg9RZzruRywauu4DAenatyPVYw3EqKeA58NQ2oZQlV7VJQ==
+X-Received: by 2002:a05:600c:5493:b0:439:9a40:a9ff with SMTP id 5b1f17b1804b1-43ab0f27170mr57873335e9.1.1740585147976;
+        Wed, 26 Feb 2025 07:52:27 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba571274sm26036365e9.31.2025.02.26.07.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 07:52:27 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:52:26 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Eduardo Habkost <eduardo@habkost.net>, Marcel
+ Apfelbaum <marcel.apfelbaum@gmail.com>, Peter Maydell
+ <peter.maydell@linaro.org>, Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan
+ Wang <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/14] acpi/generic_event_device: add logic to detect
+ if HEST addr is available
+Message-ID: <20250226165226.49b88429@imammedo.users.ipa.redhat.com>
+In-Reply-To: <e9e0aafd7cc8613709171ec5d8a6d9d9be62d7c1.1740148260.git.mchehab+huawei@kernel.org>
+References: <cover.1740148260.git.mchehab+huawei@kernel.org>
+	<e9e0aafd7cc8613709171ec5d8a6d9d9be62d7c1.1740148260.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z74KHyGGMzkhx5f-@pc636>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 07:21:19PM +0100, Uladzislau Rezki wrote:
-> WQ_MEM_RECLAIM-patch fixes this for me:
+On Fri, 21 Feb 2025 15:35:17 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-This is successful with the new kuint test for me as well. I can't
-readily test this in production where I first learned of this issue (at
-least not in the near term), but for what it's worth, this looks like a
-good change to me.
-
-Reviewed-by: Keith Busch <kbusch@kernel.org>
- 
-> <snip>
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 4030907b6b7d..1b5ed5512782 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1304,6 +1304,8 @@ module_param(rcu_min_cached_objs, int, 0444);
->  static int rcu_delay_page_cache_fill_msec = 5000;
->  module_param(rcu_delay_page_cache_fill_msec, int, 0444);
+> Create a new property (x-has-hest-addr) and use it to detect if
+> the GHES table offsets can be calculated from the HEST address
+> (qemu 10.0 and upper) or via the legacy way via an offset obtained
+> from the hardware_errors firmware file.
 > 
-> +static struct workqueue_struct *rcu_reclaim_wq;
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>  hw/acpi/generic_event_device.c |  1 +
+>  hw/arm/virt-acpi-build.c       | 18 ++++++++++++++++--
+>  hw/core/machine.c              |  2 ++
+>  3 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
+> index 5346cae573b7..14d8513a5440 100644
+> --- a/hw/acpi/generic_event_device.c
+> +++ b/hw/acpi/generic_event_device.c
+> @@ -318,6 +318,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
+>  
+>  static const Property acpi_ged_properties[] = {
+>      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
+> +    DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState, ghes_state.use_hest_addr, false),
+
+you below set it for 9.2 to false, so
+shouldn't it be set to true by default here?
+
+>  };
+>  
+>  static const VMStateDescription vmstate_memhp_state = {
+> diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+> index 4439252e1a75..9de51105a513 100644
+> --- a/hw/arm/virt-acpi-build.c
+> +++ b/hw/arm/virt-acpi-build.c
+> @@ -897,6 +897,10 @@ static const AcpiNotificationSourceId hest_ghes_notify[] = {
+>      { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
+>  };
+>  
+> +static const AcpiNotificationSourceId hest_ghes_notify_9_2[] = {
+> +    { ACPI_HEST_SRC_ID_SYNC, ACPI_GHES_NOTIFY_SEA },
+> +};
 > +
->  /* Maximum number of jiffies to wait before draining a batch. */
->  #define KFREE_DRAIN_JIFFIES (5 * HZ)
->  #define KFREE_N_BATCHES 2
-> @@ -1632,10 +1634,10 @@ __schedule_delayed_monitor_work(struct kfree_rcu_cpu *krcp)
->         if (delayed_work_pending(&krcp->monitor_work)) {
->                 delay_left = krcp->monitor_work.timer.expires - jiffies;
->                 if (delay < delay_left)
-> -                       mod_delayed_work(system_unbound_wq, &krcp->monitor_work, delay);
-> +                       mod_delayed_work(rcu_reclaim_wq, &krcp->monitor_work, delay);
->                 return;
->         }
-> -       queue_delayed_work(system_unbound_wq, &krcp->monitor_work, delay);
-> +       queue_delayed_work(rcu_reclaim_wq, &krcp->monitor_work, delay);
->  }
-> 
->  static void
-> @@ -1733,7 +1735,7 @@ kvfree_rcu_queue_batch(struct kfree_rcu_cpu *krcp)
->                         // "free channels", the batch can handle. Break
->                         // the loop since it is done with this CPU thus
->                         // queuing an RCU work is _always_ success here.
-> -                       queued = queue_rcu_work(system_unbound_wq, &krwp->rcu_work);
-> +                       queued = queue_rcu_work(rcu_reclaim_wq, &krwp->rcu_work);
->                         WARN_ON_ONCE(!queued);
->                         break;
->                 }
-> @@ -1883,7 +1885,7 @@ run_page_cache_worker(struct kfree_rcu_cpu *krcp)
->         if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
->                         !atomic_xchg(&krcp->work_in_progress, 1)) {
->                 if (atomic_read(&krcp->backoff_page_cache_fill)) {
-> -                       queue_delayed_work(system_unbound_wq,
-> +                       queue_delayed_work(rcu_reclaim_wq,
->                                 &krcp->page_cache_work,
->                                         msecs_to_jiffies(rcu_delay_page_cache_fill_msec));
->                 } else {
-> @@ -2120,6 +2122,10 @@ void __init kvfree_rcu_init(void)
->         int i, j;
->         struct shrinker *kfree_rcu_shrinker;
-> 
-> +       rcu_reclaim_wq = alloc_workqueue("rcu_reclaim",
-> +               WQ_UNBOUND | WQ_MEM_RECLAIM, 0);
-> +       WARN_ON(!rcu_reclaim_wq);
+>  static
+>  void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
+>  {
+> @@ -950,7 +954,9 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
+>      build_dbg2(tables_blob, tables->linker, vms);
+>  
+>      if (vms->ras) {
+> +        static const AcpiNotificationSourceId *notify;
+>          AcpiGedState *acpi_ged_state;
+> +        unsigned int notify_sz;
+>          AcpiGhesState *ags;
+>  
+>          acpi_ged_state = ACPI_GED(object_resolve_path_type("", TYPE_ACPI_GED,
+> @@ -959,9 +965,17 @@ void virt_acpi_build(VirtMachineState *vms, AcpiBuildTables *tables)
+>              ags = &acpi_ged_state->ghes_state;
+>  
+>              acpi_add_table(table_offsets, tables_blob);
 > +
->         /* Clamp it to [0:100] seconds interval. */
->         if (rcu_delay_page_cache_fill_msec < 0 ||
->                 rcu_delay_page_cache_fill_msec > 100 * MSEC_PER_SEC) {
-> <snip>
+> +            if (!ags->use_hest_addr) {
+> +                notify = hest_ghes_notify_9_2;
+> +                notify_sz = ARRAY_SIZE(hest_ghes_notify_9_2);
+> +            } else {
+> +                notify = hest_ghes_notify;
+> +                notify_sz = ARRAY_SIZE(hest_ghes_notify);
+> +            }
+> +
+>              acpi_build_hest(ags, tables_blob, tables->hardware_errors,
+> -                            tables->linker, hest_ghes_notify,
+> -                            ARRAY_SIZE(hest_ghes_notify),
+> +                            tables->linker, notify, notify_sz,
+>                              vms->oem_id, vms->oem_table_id);
+>          }
+>      }
+> diff --git a/hw/core/machine.c b/hw/core/machine.c
+> index 02cff735b3fb..7a11e0f87b11 100644
+> --- a/hw/core/machine.c
+> +++ b/hw/core/machine.c
+> @@ -34,6 +34,7 @@
+>  #include "hw/virtio/virtio-pci.h"
+>  #include "hw/virtio/virtio-net.h"
+>  #include "hw/virtio/virtio-iommu.h"
+> +#include "hw/acpi/generic_event_device.h"
+>  #include "audio/audio.h"
+>  
+>  GlobalProperty hw_compat_9_2[] = {
+> @@ -43,6 +44,7 @@ GlobalProperty hw_compat_9_2[] = {
+>      { "virtio-balloon-pci-non-transitional", "vectors", "0" },
+>      { "virtio-mem-pci", "vectors", "0" },
+>      { "migration", "multifd-clean-tls-termination", "false" },
+> +    { TYPE_ACPI_GED, "x-has-hest-addr", "false" },
+>  };
+>  const size_t hw_compat_9_2_len = G_N_ELEMENTS(hw_compat_9_2);
+>  
+
