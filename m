@@ -1,303 +1,342 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2071.outbound.protection.outlook.com [40.107.100.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8690420AF8E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740560779; cv=none; b=jPE7eOdYBOFMYCymC/qjP4ZX4GhPluOIkB5ujYRVPoybqfC8l9d4UJcYO/Kfh0wopkBm6yhndcuywIimdYC+X8S0/NFO5UuXB4dXpbwtHVSDH0UBFMQTW/uzft5uAzzWnEcK12qe/Gj/e2C4VWJplyuCjekGu/v/uIiNnLmqdu0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740560779; c=relaxed/simple;
-	bh=8Y+SH4RKeR3fsA/CbY4I4G95dSHDHAjuH6FzLaVVm+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VHfKQKMa/gYntLb8NIgE8ELTqOwZwxW3KnkKKfrg9wXBy/VV/vsnWzh3wus/C+1OGmSFQPJ8c+ucjPGgu4bsRX9iapU03YDMhld70FqoCwKxGGJ+Mgkg15teRuYatkGxrrHcwm9AWrXGYq5prpWIvGuSEXFjcQayh3PbhjFT5rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=YVTWjluY; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0890F20AF8E;
+	Wed, 26 Feb 2025 09:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740560787; cv=fail; b=G/GzypAg60IX0zoARFnCowqX/T28K4G+kasN9YKstGKdHqA11kgLDCahv08UDM+E+zE+MLFzJ8bX6i8C53DfjEUAtGVc7IYkNCIS3wZxNAIU9XLUA4JT5ISMo45Vh1FBfWJu4D0IsnzKlEPK3+f/0BqkKoxCK77GUcGdY9fO60g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740560787; c=relaxed/simple;
+	bh=+SYu31qiseV5CtPL40d2jOGctjaYJsf1UeEDd1Nai88=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dOYDf/GEJRzjp/iP7zegtoIeO9a8MMK20odGb6fe2kiHmNVwmD/9gFEiSotN88hO3WES/YG9P+9l3UIayCaoolgCGtBUlqMm034O6C6/+ZOjOcHg8WVE7vOC8cen7+1YXCEDDh58wctRhquFrcaZold7/GcRmHGNz59uDVOLkvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=01iAPTt5; arc=fail smtp.client-ip=40.107.100.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="YVTWjluY"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4398c8c8b2cso65494505e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:06:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1740560773; x=1741165573; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wFqjJ5s+Z0xnd9r2pX3ADIi2my/okJGh5BKAReVcsKc=;
-        b=YVTWjluY7aEoD9sE/nq0TPb2uZOwNA1VEheNONAEimp9VVAWg/FHF0cI9TjLUnafYI
-         PHL61ydoyN0eTbpEwNb4jWt56OwNYPwu0mpuexx4rlfQmL5X8cYQqPCyHdoSTuuzKL8i
-         vyVE0/QKbRg5b8HZMvShKpSSmYWxraXdO946b7asRcou1CgCaCR287uF4n+SjsNkTKOu
-         71TzCklAf0HeSC53anCH60oZ4vqsmkhNwb5FqKS9MpemuIIjmNyQ+lmaPpCv3b3MdNpi
-         faZ+r6ukh2zzxdCr6cMrBgQUf5NOcmhPKsszIc7JDi4+eHTsHbuYDcn9D81Mb/pk0Wog
-         5Vgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740560773; x=1741165573;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wFqjJ5s+Z0xnd9r2pX3ADIi2my/okJGh5BKAReVcsKc=;
-        b=wkywFbJPOSpKmpSYZoJNhanuKCUHEZ7NrenlIZR4N1VIBGMclnl3kMPN6Q358Ul/8u
-         eO9hZDo01EOGJJX1w4sd8lW7qVibaiBDyTmjyjs8RGGK6H6fkeeWsUM8F4WXUN4IijaD
-         XwJWC+Ryk+wM23C6eItgz+Mi9EE2IMkNh4Guue2zTq+P7XV+GMDTyKumCK6wIvvbMHNJ
-         Mxuf93eeJhl4MIF2ewHUfSfJI6KLliChMUhW05N5fzNULrHYOsthWF5qvBJ3kL0O2TA0
-         II8etDoPFFeUirgXri9FQrNlYSjMZS1wdTDz1t6UY1YqinrLY2h+BJMaY7HVvPXdPMrv
-         bdRg==
-X-Forwarded-Encrypted: i=1; AJvYcCV6NkbiiNNw7fpmt6/9VaDI2uOmD/2MtLLTTRmYgoAOQFSn26/Ds7kCF3J0cYV8h2STNidREXdgRyCV0C8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNLMSU9FviAFxgqUJ2DUIm2Qy9OC9g8VJK45OyDGbeLxhSAikc
-	/FdEBMbjNUbQzpPvlfOpg5BhI2hdaDN6++Lx8UMd1IdJ3J10CuOBO13LM++SmXE=
-X-Gm-Gg: ASbGncsWrF8o/VVaEzsCyTAFifswaG8zM06xhJxpzXdLgb4V5nWIx85zwQzXu1gqI3r
-	/oPywBjDCrXqrTkdHYDdrEXhvweBWI0n+sI6f9Ia33vLPP8ledjfAamQLFjGl3NR9yfz3w++PNX
-	IEMS+hA7bOt9W9X8McqnRSBTG1vO7RWHqb9P4wirzas5tlpsJW5Qn7n+TyK6C2w8uW1wTIKTAR8
-	5m+MaMthWXgntH7Y+PQsiWdOcz4AdRJlMNRdnC5Rj1hrCtc/+9QBspitDPNRJys1eJIx8FaXB7V
-	VJ12JWB4mkLnIPMtNkyBP7l33MZB13L78A==
-X-Google-Smtp-Source: AGHT+IF2jL/6HEshRKQgvDuJGZdSFLJT33KiaiMqikmoObJ0F4VSY/h7X0zQKfIsnmcQGTgCryyo3w==
-X-Received: by 2002:a05:600c:190c:b0:439:3d5c:8c19 with SMTP id 5b1f17b1804b1-43ab0f6440emr52386245e9.24.1740560773326;
-        Wed, 26 Feb 2025 01:06:13 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba52b7ecsm13869615e9.3.2025.02.26.01.06.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 01:06:12 -0800 (PST)
-Message-ID: <7dd5a0a2-4f56-48b4-8861-c7d75754faab@tuxon.dev>
-Date: Wed, 26 Feb 2025 11:06:10 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="01iAPTt5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=epdyPn9j3wGfBLwMcki6mCS9qwSsnd6gLcBcEiq4u5S5nwJi34V1Jkie4pCA7wFpmh5fQI4FzipA6Cc1y6Pdr14Z23I1J3jRdlXqyMTA5QXbtRR2arVywhB3ADuSiV/ApvDIFq/IquKUzCVqZqqWnsw8fANtMzTMkr9CgMzKmBg6W7UDrF3wdBePP6eV+CfFYSjHDIY6w/Twcjmfqns8HB30YsrM07g7SuqOqLQ8Th1pQmuP/VD8NX7FtoPwJQLZOo+llyaEZX2wS4/HBQ8eiUBPoE1P7XJnpm8JZtA5Gv/yp5kxI6wBKagUJYRJV6q0/XftHmXznDP9h/HG+564CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fQ72ZTQ8IAzZQMuyhjih4kEsBpl5nqht3oQkjU1CWuc=;
+ b=QPDy6euR7yx/yb0C9n1cjYVCs0/1uQ0jYpwASa4s8X89ajv8zgbQyjL1dWm29/2feWKK7xbbM/EV9SEMjvs0NKHVvdPuvEr8Y9fRweU++0upNTcxFFtBFr2wt2EpxLAtgkxj4Y4Yppq3rS9guREu4cMGK5V1FT1d9CsA+zA/bXJmtd2TxqExzGvdBlO8E05RhV5ZxQRAMrlh7YAEXwgp3ZcHdWBzJFywwOeurLvLL9Qn8kyqlaIpgiBiv94/vwA7HJZ5XQQWKt4GCNa6tgUlH4iIxUICWzuGKuXWvTSInrLVePXDJ2gS1qWoWMxebJsXFlCDHGFJs7tOQCIU8khrWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fQ72ZTQ8IAzZQMuyhjih4kEsBpl5nqht3oQkjU1CWuc=;
+ b=01iAPTt5dL7MxJBQyt3ZN9/k+GaaxM1oGPGf+9EadOKNTUJfstixC3DM6MaczYP0BOxfA7HvXdLravBfJg37M5pWxg/cRDSFKiY286EBXcDo8k+DskmoXM+LkFS7WTGhoizWsniD2/IDzegcsGFqjQ0gHTWkwJhdH/7eqQ7mP0w=
+Received: from SJ0PR03CA0245.namprd03.prod.outlook.com (2603:10b6:a03:3a0::10)
+ by DM4PR12MB7696.namprd12.prod.outlook.com (2603:10b6:8:100::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 09:06:20 +0000
+Received: from SJ1PEPF0000231B.namprd03.prod.outlook.com
+ (2603:10b6:a03:3a0:cafe::8a) by SJ0PR03CA0245.outlook.office365.com
+ (2603:10b6:a03:3a0::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Wed,
+ 26 Feb 2025 09:06:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF0000231B.mail.protection.outlook.com (10.167.242.232) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 09:06:19 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 03:06:14 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <linux-kernel@vger.kernel.org>
+CC: <bp@alien8.de>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>, <nikunj@amd.com>,
+	<Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <seanjc@google.com>,
+	<pbonzini@redhat.com>, <kvm@vger.kernel.org>,
+	<kirill.shutemov@linux.intel.com>, <huibo.wang@amd.com>, <naveen.rao@amd.com>
+Subject: [RFC v2 02/17] x86/apic: Initialize Secure AVIC APIC backing page
+Date: Wed, 26 Feb 2025 14:35:10 +0530
+Message-ID: <20250226090525.231882-3-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] AT91 Clock Adjustments
-To: Ryan.Wanner@microchip.com, mturquette@baylibre.com, sboyd@kernel.org,
- nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, mripard@kernel.org
-References: <cover.1738864727.git.Ryan.Wanner@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <cover.1738864727.git.Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231B:EE_|DM4PR12MB7696:EE_
+X-MS-Office365-Filtering-Correlation-Id: 87e7a623-f1ae-4383-5d26-08dd5644d5c1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|36860700013|82310400026|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?XmE6JoRFArdJs6JRfoeAeyWfkqsfK3qnmEZrnKGN2gsbPpIL1KGHvMcUMTHD?=
+ =?us-ascii?Q?7ECHFYiAIFVraEmPnOSdgm2RM/Uue1yjwuVLyQ38OZViEEWeO5COxLDJQExn?=
+ =?us-ascii?Q?purLvKe5toxEUzHTWqh2JaqgTsQVITH/3UrOcDiRwcY829xVJ6dyGT82SCMj?=
+ =?us-ascii?Q?yk/BpdJHGmer0moZW4QfqAnpqX7wI24f1TG3wLMnbiDfr8NZjTt9GXHZFSBW?=
+ =?us-ascii?Q?Sn8e2lSE0BI8P2P8FMuDQDElOIcYOvltLrJ5lNO7dqL20bgZSxntPw1IH5dY?=
+ =?us-ascii?Q?696RZsVh26sTEGYWMnh6O9L9n//Yyk0QL3YZbcKL2qL6ZXaS+t3Qez5VhMjp?=
+ =?us-ascii?Q?UnFbMZG2SJeKN6qXyRjAAkmOMvaFRLMFA2+gK+I3vAWPQMpI1mvnUoUvV1bg?=
+ =?us-ascii?Q?2qkhlrl1PLwaUcF3CjMLdkEgEWCj0+RlmvHdlyja7ZeW6BC0Fg4lROMltYUs?=
+ =?us-ascii?Q?RZRY/Eer5wQl2PljSD9EDmECtFbFRqWdn6mibLDhsty5rjP7/t2ap6aTZkHy?=
+ =?us-ascii?Q?1BlPcQrCT8RFXC/gjqYn4Tqljf2BAAoW+W/X8GrhfTW4pTO0T9pFbBGMYxvh?=
+ =?us-ascii?Q?+Fh2UMaoaw8z/vT3zyuas8+L9+aga4C+x2GZ+RA2VtIwi1lI3o/A2bK11qxA?=
+ =?us-ascii?Q?vM+VjAeZfE+YS2835Ou4aZbuYq+ogVMCjRrB020l8ePy5BQ/a0WgyU8v/aQq?=
+ =?us-ascii?Q?1NOWKELqDPVyl1Rh/anCrgQm7QONnFmMCE5G1AeJNNNdGrgqiOQwcy/sOPVy?=
+ =?us-ascii?Q?n5hoczM0pf1VDM8WDiB58wwq5R+hhfltfIVgzmiKlYTpvzYwoMOHEksViZYd?=
+ =?us-ascii?Q?ZPWC2VPxi12WATLgif4g9CnoqUjzhtRYqRLacepTwHJ3lSOu47PwCCdlQAUq?=
+ =?us-ascii?Q?81NsbZDsJb2Ob6jovsr7RPyq0F4JhAJX0r+4l83aPaoSA4PS7gn6MzmwxmTS?=
+ =?us-ascii?Q?G5+t0JMGUmTHF8bP5V310N/0fS3NmFwULH2bA9J6jc25VRQiLVr1WiPe0WPd?=
+ =?us-ascii?Q?UZiF5qbEKhi2cOrjWDVPCRhB63VmEWWcBioP2Fu2UcKc0LdWyBoUZs19h8bP?=
+ =?us-ascii?Q?1oTD1Vb0sTW1m5UiknKISFv7y7eCl30HqiCKhPK+9yccqz0EgEsecaCArnnN?=
+ =?us-ascii?Q?mkpwDItS+zbk+2T23FlgR1uXI+3boH/B+LZE4PGja+EWQo/B8vVCmyItZM1k?=
+ =?us-ascii?Q?ZLmc5F6lUENny85NYazFsNvQ2d3XVyNbjYoRfBumQ/O0RP1DrsxObMQ7DMk+?=
+ =?us-ascii?Q?Iwy0mUFQ74jFofGlMVtb2iHwLhPutmQRICPc13iUQ4hXnKGuO+9zYO0KuyVv?=
+ =?us-ascii?Q?uJZgSdz/ZoylncqxUDi26r1LvRC2mxYiJhWT1QIjmDWbf6/XwFkArbk3axyw?=
+ =?us-ascii?Q?8O4IRx7LuYq9evkktWuUK8rmY3SCOzWuxIb7WUBt1ZU5dH1H87yAxHyS8a2M?=
+ =?us-ascii?Q?UEoBs4CxyQ8fspaC+DI3iuP9ufz4WsZOYQWUUvIMLK4NFf3wF34P/9HMIBZP?=
+ =?us-ascii?Q?+ATRWpY8Muh4tHs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(36860700013)(82310400026)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 09:06:19.8900
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87e7a623-f1ae-4383-5d26-08dd5644d5c1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF0000231B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7696
 
+With Secure AVIC, the APIC backing page is owned and managed by guest.
+Allocate and initialize APIC backing page for all guest CPUs.
 
+The NPT entry for the vCPU's APIC backing page must always be present
+when the vCPU is running in order for Secure AVIC to function. A
+VMEXIT_BUSY is returned on VMRUN and the vCPU cannot be resumed if
+the NPT entry for the APIC backing page is not present. Notify GPA of
+the vCPU's APIC backing page to the hypervisor by using the
+SVM_VMGEXIT_SECURE_AVIC GHCB protocol event. Before executing VMRUN,
+the hypervisor makes use of this information to make sure the APIC backing
+page is mapped in NPT.
 
-On 06.02.2025 20:14, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> This set has clock system adjustments for the AT91 clock system.
-> 
-> The first is to adjust the slow clock driver to account for the updated
-> DT node-naming for clocks and xtals and ensuring the driver is still
-> backwards compatible.
-> 
-> The second is a adding a missing clk_hw struct that is not added into
-> parent_data struct causing a incorrect parent for main_osc.
-> 
-> Ryan Wanner (2):
->   clk: at91: sckc: Fix parent_data struct for slow osc
->   clk: at91: sama7d65: Add missing clk_hw to parent_data
-> 
->  drivers/clk/at91/sama7d65.c |  1 +
->  drivers/clk/at91/sckc.c     | 12 ++++++------
->  2 files changed, 7 insertions(+), 6 deletions(-)
-> 
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+Changes since v1:
 
-There are boot failures on sama7g5 with this series on top of at91-next and
-the following diff on sama7g5 dts to mimic the sama7d65 use case:
+ - Updated commit log.
+ - Allocate APIC backing page for each CPU as a separate PAGE_SIZE
+   allocation with GFP_KERNEL flag.
+ - Update the GPA registeration API as per the latest GHCB spec updates
+   for Secure AVIC GHCB protocol event (yet to be published).
+   Corresponding KVM support is here:
+   https://github.com/AMDESE/linux-kvm/commit/5fbf231861207edf73bb31742f75e22cae18607b
+ - Remove savic_setup_done variable.
+ - Removed initialization of LVT* regs in backing page from Hv values.
+   These regs will reads/writes will be propagated to Hv in subsequent
+   patches.
+ - Move savic_ghcb_msr_read() definition to a later patch where it will
+   be first used.
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
-b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
-index 0f5e6ad438dd..1bce9f999431 100644
---- a/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama7g5ek.dts
-@@ -35,16 +35,6 @@ aliases {
-                i2c2 = &i2c9;
-        };
+ arch/x86/coco/sev/core.c            | 32 +++++++++++++++++++++++++++
+ arch/x86/include/asm/apic.h         |  1 +
+ arch/x86/include/asm/sev.h          |  3 +++
+ arch/x86/include/uapi/asm/svm.h     |  3 +++
+ arch/x86/kernel/apic/apic.c         |  2 ++
+ arch/x86/kernel/apic/x2apic_savic.c | 34 +++++++++++++++++++++++++++++
+ 6 files changed, 75 insertions(+)
 
--       clocks {
--               slow_xtal {
--                       clock-frequency = <32768>;
--               };
--
--               main_xtal {
--                       clock-frequency = <24000000>;
--               };
--       };
--
-        gpio-keys {
-                compatible = "gpio-keys";
-
-@@ -132,6 +122,15 @@ spdif_out: spdif-out {
-        };
- };
-
-+&slow_xtal {
-+       clock-frequency = <32768>;
-+};
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 82492efc5d94..300bc8f6eb6f 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1504,6 +1504,38 @@ static enum es_result vc_handle_msr(struct ghcb *ghcb, struct es_em_ctxt *ctxt)
+ 	return ret;
+ }
+ 
++/*
++ * Register GPA of the Secure AVIC backing page.
++ *
++ * @apic_id: APIC ID of the vCPU. Use -1ULL for the current vCPU
++ *           doing the call.
++ * @gpa    : GPA of the Secure AVIC backing page.
++ */
++enum es_result savic_register_gpa(u64 apic_id, u64 gpa)
++{
++	struct ghcb_state state;
++	struct es_em_ctxt ctxt;
++	unsigned long flags;
++	struct ghcb *ghcb;
++	int ret = 0;
 +
-+&main_xtal {
-+       clock-frequency = <24000000>;
-+};
++	local_irq_save(flags);
 +
++	ghcb = __sev_get_ghcb(&state);
 +
- &adc {
-        vddana-supply = <&vddout25>;
-        vref-supply = <&vddout25>;
-diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi
-b/arch/arm/boot/dts/microchip/sama7g5.dtsi
-index 17bcdcf0cf4a..3158c2f0b4c0 100644
---- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
-@@ -117,12 +117,12 @@ map1 {
-        };
-
-        clocks {
--               slow_xtal: slow_xtal {
-+               slow_xtal: clk-slowxtal {
-                        compatible = "fixed-clock";
-                        #clock-cells = <0>;
-                };
-
--               main_xtal: main_xtal {
-+               main_xtal: clk-mainxtal {
-                        compatible = "fixed-clock";
-                        #clock-cells = <0>;
-                };
-
-I've identified the following:
-
-
-cpu cpu0: _opp_config_clk_single: failed to set clock rate: -22
-cpufreq: __target_index: Failed to change cpu frequency: -22
-------------[ cut here ]------------
-kernel BUG at drivers/cpufreq/cpufreq.c:1523!
-Internal error: Oops - BUG: 0 [#1] ARM
-Modules linked in:
-CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.14.0-rc1+ #11
-Hardware name: Microchip SAMA7
-PC is at cpufreq_online+0x8d8/0xa30
-LR is at __wake_up+0x20/0x30
-pc : [<c063cca0>]    lr : [<c0151254>]    psr: a0000013
-sp : e0821d30  ip : 00000000  fp : c0e50508
-r10: c434830c  r9 : c4348204  r8 : c0e97230
-r7 : c4348264  r6 : 00000000  r5 : 000ca511  r4 : c4348200
-r3 : 047e0d67  r2 : 047e0d67  r1 : 00000003  r0 : ffffffea
-Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-Control: 10c53c7d  Table: 60004059  DAC: 00000051
-Register r0 information: non-paged memory
-Register r1 information: non-paged memory
-Register r2 information: non-paged memory
-Register r3 information: non-paged memory
-Register r4 information: slab kmalloc-512 start c4348200 pointer offset 0
-size 512
-Register r5 information: non-paged memory
-Register r6 information: NULL pointer
-Register r7 information: slab kmalloc-512 start c4348200 pointer offset 100
-size 512
-Register r8 information: non-slab/vmalloc memory
-Register r9 information: slab kmalloc-512 start c4348200 pointer offset 4
-size 512
-Register r10 information: slab kmalloc-512 start c4348200 pointer offset
-268 size 512
-Register r11 information: non-slab/vmalloc memory
-Register r12 information: NULL pointer
-Process swapper (pid: 1, stack limit = 0x08d7ca6b)
-Stack: (0xe0821d30 to 0xe0822000)
-1d20:                                     00000000 e0821d98 c4348208 c0c00250
-1d40: 00000001 00000000 e0821d98 c0e50508 c4048000 00000000 c406f480 c4048000
-1d60: c4341ec0 c0e50508 c4341ec8 c063ce8c c0e593a8 c4048000 c406f4bc c406f480
-1d80: c4048000 c04c8bb0 c406f4cc c40704b0 00000000 047e0d67 3b9aca03 c0e5986c
-1da0: c0e5931c c0e97230 00000000 c063a618 00000000 c4048000 c0e59858 c40d0a10
-1dc0: c0e597f0 c063f80c c0d31830 00000000 00000000 00000000 00000000 00000000
-1de0: 00000000 00000000 e0821df4 00000000 00000000 c0ba32fc 00000000 047e0d67
-1e00: c40d75d8 00000000 c40d0a10 c0e59804 00000000 00000000 c0d31830 c0c2b5a0
-1e20: c0c776b0 c04cc8dc c40d0a10 00000000 c0e59804 c04ca1f4 c40d0a10 c0e59804
-1e40: c40d0a10 00000000 00000000 c04ca47c 00000000 c0be8598 c0e94b28 c0e59804
-1e60: c40d0a10 00000000 00000000 c04ca658 c40d0a10 c0e59804 c40d0a54 c4048000
-1e80: 00000000 c04ca8c4 c0e59804 c04ca834 c406f3c0 c04c8494 c4048000 c406f40c
-1ea0: c4070d30 047e0d67 c0e59804 c4341e00 00000000 c406f3c0 c4341e34 c04c959c
-1ec0: c0c00c14 c0e6c000 c0e59804 c0d2113c c4070800 00000000 c0e6c000 c04cb598
-1ee0: c4048000 c0d2113c c4070800 c010d21c 000003c0 00000000 c407084e c4070800
-1f00: c407084d c013e9e0 c0bee764 000000c0 00000000 00000000 c0d004d0 c4048000
-1f20: 00000006 00000006 373126cc c407086a 00000000 047e0d67 00000012 047e0d67
-1f40: 00000007 c0d42bd8 00000007 c4070800 000000c0 c0d31850 c0d31830 c0d011f4
-1f60: 00000006 00000006 00000000 c0d004d0 e0821f6c c0d004d0 00000000 c0e03380
-1f80: c0905828 00000000 00000000 00000000 00000000 00000000 00000000 c0905844
-1fa0: 00000000 c0905828 00000000 c010014c 00000000 00000000 00000000 00000000
-1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-Call trace:
- cpufreq_online from cpufreq_add_dev+0x84/0x94
- cpufreq_add_dev from subsys_interface_register+0xf0/0x108
- subsys_interface_register from cpufreq_register_driver+0x13c/0x2e4
- cpufreq_register_driver from dt_cpufreq_probe+0xb4/0x380
- dt_cpufreq_probe from platform_probe+0x5c/0xb8
- platform_probe from really_probe+0xc8/0x2c8
- really_probe from __driver_probe_device+0x88/0x19c
- __driver_probe_device from driver_probe_device+0x30/0x104
- driver_probe_device from __driver_attach+0x90/0x178
- __driver_attach from bus_for_each_dev+0x6c/0xb4
- bus_for_each_dev from bus_add_driver+0xcc/0x1ec
- bus_add_driver from driver_register+0x7c/0x114
- driver_register from do_one_initcall+0x40/0x21c
- do_one_initcall from kernel_init_freeable+0x194/0x1f8
- kernel_init_freeable from kernel_init+0x1c/0x128
- kernel_init from ret_from_fork+0x14/0x28
-Exception stack(0xe0821fb0 to 0xe0821ff8)
-1fa0:                                     00000000 00000000 00000000 00000000
-1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-Code: e3a02000 ebfff87e e3500000 0a000043 (e7f001f2)
----[ end trace 0000000000000000 ]---
-note: swapper[1] exited with irqs disabled
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
----[ end Kernel panic - not syncing: Attempted to kill init!
-exitcode=0x0000000b ]---
-
-
-And this one:
-
-Starting kernel ...
-
-Booting Linux on physical CPU 0x0
-Linux version 6.14.0-rc1+ (claudiu@claudiu-X670E-Pro-RS)
-(arm-none-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture
-10.3-2021.07 (arm-10.29)) 10.3.1 20210621, GNU ld (GNU Toolchain for the
-A-profile Architecture 10.3-2021.07 (arm-10.29)) 2.36.1.20210621) #11 Wed
-Feb 26 11:01:10 EET 2025
-CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c53c7d
-CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-OF: fdt: Machine model: Microchip SAMA7G5-EK
-printk: legacy bootconsole [earlycon0] enabled
-Memory policy: Data cache writeback
-cma: Reserved 192 MiB at 0x70000000 on node -1
-Zone ranges:
-  Normal   [mem 0x0000000060000000-0x000000007fffffff]
-Movable zone start for each node
-Early memory node ranges
-  node   0: [mem 0x0000000060000000-0x000000007fffffff]
-Initmem setup node 0 [mem 0x0000000060000000-0x000000007fffffff]
-OF: reserved mem: Reserved memory: No reserved-memory node in the DT
-CPU: All CPU(s) started in SVC mode.
-Kernel command line: console=ttyS0,115200 root=/dev/mmcblk1p2
-rootfstype=ext4 rw rootwait cma=192m atmel.pm_modes=standby,ulp0 earlyprintk
-printk: log buffer data + meta data: 65536 + 204800 = 270336 bytes
-Dentry cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
-Inode-cache hash table entries: 32768 (order: 5, 131072 bytes, linear)
-Built 1 zonelists, mobility grouping on.  Total pages: 131072
-mem auto-init: stack:off, heap alloc:off, heap free:off
-SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
-NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-Main crystal frequency not set, using approximate value
-timer_probe: no matching timers found
-Console: colour dummy device 80x30
-sched_clock: 32 bits at 100 Hz, resolution 10000000ns, wraps every
-21474836475000000ns
-
-
-I suspect parent_data in sama7g5_pmc_setup() need to be initialized with zero.
-
-Thank you,
-Claudiu
-
-
++	vc_ghcb_invalidate(ghcb);
++
++	ghcb_set_rax(ghcb, apic_id);
++	ghcb_set_rbx(ghcb, gpa);
++	ret = sev_es_ghcb_hv_call(ghcb, &ctxt, SVM_VMGEXIT_SECURE_AVIC,
++			SVM_VMGEXIT_SECURE_AVIC_REGISTER_GPA, 0);
++
++	__sev_put_ghcb(&state);
++
++	local_irq_restore(flags);
++	return ret;
++}
++
+ static void snp_register_per_cpu_ghcb(void)
+ {
+ 	struct sev_es_runtime_data *data;
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index f21ff1932699..3f70aa2f3aba 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -305,6 +305,7 @@ struct apic {
+ 
+ 	/* Probe, setup and smpboot functions */
+ 	int	(*probe)(void);
++	void	(*setup)(void);
+ 	int	(*acpi_madt_oem_check)(char *oem_id, char *oem_table_id);
+ 
+ 	void	(*init_apic_ldr)(void);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 1581246491b5..626588386cf2 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -483,6 +483,7 @@ int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_guest_req *req
+ 
+ void __init snp_secure_tsc_prepare(void);
+ void __init snp_secure_tsc_init(void);
++enum es_result savic_register_gpa(u64 apic_id, u64 gpa);
+ 
+ #else	/* !CONFIG_AMD_MEM_ENCRYPT */
+ 
+@@ -526,6 +527,8 @@ static inline int snp_send_guest_request(struct snp_msg_desc *mdesc, struct snp_
+ 					 struct snp_guest_request_ioctl *rio) { return -ENODEV; }
+ static inline void __init snp_secure_tsc_prepare(void) { }
+ static inline void __init snp_secure_tsc_init(void) { }
++static inline enum es_result savic_register_gpa(u64 apic_id,
++						u64 gpa) { return ES_UNSUPPORTED; }
+ 
+ #endif	/* CONFIG_AMD_MEM_ENCRYPT */
+ 
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index 1814b413fd57..0bb70c5988bb 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -116,6 +116,9 @@
+ #define SVM_VMGEXIT_AP_CREATE			1
+ #define SVM_VMGEXIT_AP_DESTROY			2
+ #define SVM_VMGEXIT_SNP_RUN_VMPL		0x80000018
++#define SVM_VMGEXIT_SECURE_AVIC			0x8000001a
++#define SVM_VMGEXIT_SECURE_AVIC_REGISTER_GPA	0
++#define SVM_VMGEXIT_SECURE_AVIC_UNREGISTER_GPA	1
+ #define SVM_VMGEXIT_HV_FEATURES			0x8000fffd
+ #define SVM_VMGEXIT_TERM_REQUEST		0x8000fffe
+ #define SVM_VMGEXIT_TERM_REASON(reason_set, reason_code)	\
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index e893dc6f11c1..1c0b5f14435e 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1504,6 +1504,8 @@ static void setup_local_APIC(void)
+ 		return;
+ 	}
+ 
++	if (apic->setup)
++		apic->setup();
+ 	/*
+ 	 * If this comes from kexec/kcrash the APIC might be enabled in
+ 	 * SPIV. Soft disable it before doing further initialization.
+diff --git a/arch/x86/kernel/apic/x2apic_savic.c b/arch/x86/kernel/apic/x2apic_savic.c
+index c3a4d387c63f..c444161d81b3 100644
+--- a/arch/x86/kernel/apic/x2apic_savic.c
++++ b/arch/x86/kernel/apic/x2apic_savic.c
+@@ -9,12 +9,15 @@
+ 
+ #include <linux/cpumask.h>
+ #include <linux/cc_platform.h>
++#include <linux/percpu-defs.h>
+ 
+ #include <asm/apic.h>
+ #include <asm/sev.h>
+ 
+ #include "local.h"
+ 
++static DEFINE_PER_CPU(void *, apic_backing_page);
++
+ static int x2apic_savic_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
+ {
+ 	return x2apic_enabled() && cc_platform_has(CC_ATTR_SNP_SECURE_AVIC);
+@@ -61,6 +64,36 @@ static void x2apic_savic_send_IPI_mask_allbutself(const struct cpumask *mask, in
+ 	__send_IPI_mask(mask, vector, APIC_DEST_ALLBUT);
+ }
+ 
++static void x2apic_savic_setup(void)
++{
++	void *backing_page;
++	enum es_result ret;
++	unsigned long gpa;
++
++	if (this_cpu_read(apic_backing_page))
++		return;
++
++	backing_page = kzalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!backing_page)
++		snp_abort();
++	this_cpu_write(apic_backing_page, backing_page);
++	gpa = __pa(backing_page);
++
++	/*
++	 * The NPT entry for the vCPU's APIC backing page must always be
++	 * present when the vCPU is running in order for Secure AVIC to
++	 * function. A VMEXIT_BUSY is returned on VMRUN and the vCPU cannot
++	 * be resumed if the NPT entry for the APIC backing page is not
++	 * present. Notify GPA of the vCPU's APIC backing page to the
++	 * hypervisor by calling savic_register_gpa(). Before executing
++	 * VMRUN, the hypervisor makes use of this information to make sure
++	 * the APIC backing page is mapped in NPT.
++	 */
++	ret = savic_register_gpa(-1ULL, gpa);
++	if (ret != ES_OK)
++		snp_abort();
++}
++
+ static int x2apic_savic_probe(void)
+ {
+ 	if (!cc_platform_has(CC_ATTR_SNP_SECURE_AVIC))
+@@ -81,6 +114,7 @@ static struct apic apic_x2apic_savic __ro_after_init = {
+ 	.name				= "secure avic x2apic",
+ 	.probe				= x2apic_savic_probe,
+ 	.acpi_madt_oem_check		= x2apic_savic_acpi_madt_oem_check,
++	.setup				= x2apic_savic_setup,
+ 
+ 	.dest_mode_logical		= false,
+ 
+-- 
+2.34.1
 
