@@ -1,142 +1,108 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612DB21CC64;
-	Wed, 26 Feb 2025 03:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7483718801A;
+	Wed, 26 Feb 2025 03:04:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740538962; cv=none; b=acAcEPBiTZc5GBFbyEiEl21cMJ2Bnmb0MlMCjqZgrvOmjprkgCd7jBKoMyAyN+ldu3e8fE8jqTma+plwObIMj+39ctzxxBZL8Yxw+8syWjFcbNVOeDujTmWpe4Ao5tjLwtFH9tiQI4LlMQ+S+rET4umYLvU/vlKr7FOjCRaoYmM=
+	t=1740539072; cv=none; b=YKa1qYB4wYDDZdW2IfdcTdTWEb2Jovz3A4LgKll2JoN3ahkf7Vsr7214zVXNrRnPD/ykSKjCY5VcFszoinIXnYaR3ZskvoveaTXqfxCBfLC/K4KfVyph/RdCRRDjnaxR1LAklEtc2uXoKuiTJAT/aVpMIz9O8hOaSRkZ0Yc6pVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740538962; c=relaxed/simple;
-	bh=3c24Yaa6aoJNA+XE0rs2FKAD32/m13f70OfUYHsvMEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IH9nQVj+l2P4vmk3alUoCIQ1OA+U6J8Oc8fIu7SKcOeE3m8mPVHqo68DcCxGX8LxzzmnWlLnXsv4XYw3PYwUZViSToM87h1fnrLd0hzBeBEFn2uwRR+FIHHDT8m/vxgh2egtuLeBZmYHkpxY3quPoBuPR18R3XSLCYWU+P+d1Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nAoqkI/o; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nAoqkI/o"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c0a3d6a6e4so585464385a.1;
-        Tue, 25 Feb 2025 19:02:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740538959; x=1741143759; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pWGPjFHgSWrGIWxwthBdQ/xcx/InimPCbKnNLIXUuQg=;
-        b=nAoqkI/oSsQB8LnKhy9urtmqb2akwgDf46KB4x7GT0McIi2SWAKJJVYOMiTdC4LZQg
-         HJUdK53yhE4c4obAPkKSUG1A+v/niyiVvXxzZqy1du2HCcMgdBiHfCXu1ormYeLaP8fM
-         ockYSMGck3wOdyfwjdIOr5YrO2mirXjSUT2ZX05gUvzOZ5H34ghf/qZhGvl6JCw+nBJf
-         /unEBj8gp73CqEyxiuMRDgbInQG+ZiXCSxpmlktkEPrYWsAvgTLF4HQVHksBFK2TvMPm
-         7pQpUhovFqrvHDqZnbo5eXe1HV8IKwVEGn8Aa11+e4jfyuIDVe8PZrUFEqWpaNcy03Yh
-         yPyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740538959; x=1741143759;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pWGPjFHgSWrGIWxwthBdQ/xcx/InimPCbKnNLIXUuQg=;
-        b=vIsEuBEnMBEsLZA5PrvpmesY9OzYNFzgnhptuCt/ajbIhFYn8PjmbdpvZZAywzZi4S
-         oIylkq+DsUlY0femLD/ZnEycgDmw/3AalwRZce07R661tZ7v9EJjqaFdaNqAyT40xcuR
-         kDF335H42SdIlFQxwFp1MnR7vQFbcgg87xjcFuyOTInl5w/pBxPbTp9fj+1TEp+KTmGt
-         ekTiGyl+meHr0FAWELp85WtXFRHLrkSOMXyEfaDNeHxtEizEylaUs0p8pTuvxIoQy3dQ
-         3AqfB5djYyIhiwkFQLOkPbWgcNjoHe4pyjUeWdxxkyyDrN0UKF1QChONwqmOvgtd2lhR
-         mKjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUf1hY/EDYFt9WuWU0iQOWq50ZjGiOdAzLV8ksdx00UVGDNLh5S9YW9Sn/YBmi2yXo7CV+sWv8erFpzG8TD@vger.kernel.org, AJvYcCVQUVm8ptPRelPCdNaV26tukc0sSOKCumLrDEqc01SFejYJSyLKQh0qNLRBwM1r3le/9wovUb5N@vger.kernel.org, AJvYcCWAngN9xk2TJplSRxjrRFLgPO3isIKy8aVE/vSCyvqewod0NqTDDbMMbLZ+/gpvYeDL+UKmyvbhUOW1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIVMF72LAGV6zR15/O43CMhvjOVWin7yurZb8hJZrqr3sNN0oJ
-	fNTDw2cGAC55UWq1oOHaCwwJ7ADQXIMoKoksBRo0OCwWzjKUTByx
-X-Gm-Gg: ASbGncvYHraXV/nfIRHty6b1J9PiB4nA9IzqA2XUrguhUXxXqIqFZ+jOJBFORdWoCIc
-	bnTO5NSImp5WsMHs88k89VHP9u3sOruHtlaNceZ8vM1QPBRGJei9/5612gRCfjCMlzSBgIRhBk+
-	Qsz3hyiZx/BMdTFYbyj8PiJXwVWhmffH3eJRfzS3vhsQq7wKVVaOhWi718RnCLqSVm0CzRTGnor
-	6TyohAKvxasqgyLxT/XRRAxgYTkZEU7FO/JCjWFhQAaAZ8Na5GzhCvLpPBd+ptFMr8OjDb+3lza
-	iw==
-X-Google-Smtp-Source: AGHT+IHHpOcJnkRPQaoqWYQ3IiTuUkMc/Lf+N3a5XwCkc3EpHwBEssBvkqtKRau97kDkFIbjmuq4Pw==
-X-Received: by 2002:a05:620a:2495:b0:7c0:a3bd:a780 with SMTP id af79cd13be357-7c0cef5d1a1mr3696532585a.54.1740538959130;
-        Tue, 25 Feb 2025 19:02:39 -0800 (PST)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c23c2a72d1sm187707785a.34.2025.02.25.19.02.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 19:02:38 -0800 (PST)
-Date: Wed, 26 Feb 2025 11:02:18 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Michael Turquette <mturquette@baylibre.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Inochi Amaoto <inochiama@outlook.com>, 
-	Richard Cochran <richardcochran@gmail.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Yixun Lan <dlan@gentoo.org>, 
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH v2 2/2] clk: sophgo: Add clock controller support for
- SG2044 SoC
-Message-ID: <m724pjlil3ghmgfikfnyp4hu6iwd4fkcj2mnsbl4gzfufpmnov@lu4al3iqpfss>
-References: <20250204084439.1602440-1-inochiama@gmail.com>
- <20250204084439.1602440-3-inochiama@gmail.com>
- <PN0PR01MB9166482E059F3C4FC7A6134DFEC22@PN0PR01MB9166.INDPRD01.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1740539072; c=relaxed/simple;
+	bh=WVzS0lrko+iwd9TRGf+P9gh1kuQeNV5z7+Qwtc6kmec=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TwmUuCA5VZdRmopF/Ar5my+k+zfGknmAHUYREYz/QYlnCi9WIXuwt2eqZAPjkAeKW+4wl7ytbg9HwpTviatQmJFfvHpNN0ckECKYFXrGYzNAAR9i+jVjZvM+lhkEngdK27ozFb81cL8Ok+A1+YGpj2qhtF4VxPz/wYVMAfTnDbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.40.54.90])
+	by gateway (Coremail) with SMTP id _____8AxmnG3hL5ntOqCAA--.27824S3;
+	Wed, 26 Feb 2025 11:04:23 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.40.54.90])
+	by front1 (Coremail) with SMTP id qMiowMCxPseyhL5nLxIpAA--.23547S2;
+	Wed, 26 Feb 2025 11:04:19 +0800 (CST)
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+To: lee@kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	peterhuewe@gmx.de,
+	jarkko@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-crypto@vger.kernel.org,
+	jgg@ziepe.ca,
+	linux-integrity@vger.kernel.org,
+	pmenzel@molgen.mpg.de,
+	Qunqin Zhao <zhaoqunqin@loongson.cn>
+Subject: [PATCH v4 0/6] Drivers for Loongson security engine
+Date: Wed, 26 Feb 2025 11:03:52 +0800
+Message-Id: <20250226030358.15924-1-zhaoqunqin@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PN0PR01MB9166482E059F3C4FC7A6134DFEC22@PN0PR01MB9166.INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCxPseyhL5nLxIpAA--.23547S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7tr1xKry3Aw4DGw4UGry5Jrc_yoW8Ar4DpF
+	45AayFkr4UJrZrGrn3Jry8uFyfXa4fXrW3KFW2qwn8W3sxAa48J3yakFy7Aa9rJF17JryI
+	qF93Cr4UGF1UZacCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
+	Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
+	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
+	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v2
+	6r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
 
-On Wed, Feb 26, 2025 at 10:57:46AM +0800, Chen Wang wrote:
-> 
-> On 2025/2/4 16:44, Inochi Amaoto wrote:
-> [......]
-> > diff --git a/drivers/clk/sophgo/clk-sg2044.c b/drivers/clk/sophgo/clk-sg2044.c
-> > new file mode 100644
-> > index 000000000000..7185c11ea2a5
-> > --- /dev/null
-> > +++ b/drivers/clk/sophgo/clk-sg2044.c
-> > @@ -0,0 +1,2271 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Sophgo SG2042 clock controller Driver
-> > + *
-> > + * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
-> 
-> I'm afraid you may need to use your new gmail emailbox address.
-> 
-> [......]
-> 
+Loongson security engine supports random number generation, hash,
+symmetric encryption and asymmetric encryption. Based on these
+encryption functions, TPM2 have been implemented in it.
 
-OK, I will change it.
+mfd is the baser driver, crypto and tpm are users.
 
-> > +static int sg2044_clk_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device *dev = &pdev->dev;
-> > +	struct sg2044_clk_ctrl *ctrl;
-> > +	const struct sg2044_clk_desc_data *desc;
-> > +	void __iomem *reg;
-> > +	struct regmap *regmap;
-> > +	u32 num_clks;
-> > +
-> > +	reg = devm_platform_ioremap_resource(pdev, 0);
-> > +	if (IS_ERR(reg))
-> > +		return PTR_ERR(reg);
-> > +
-> > +	regmap = syscon_regmap_lookup_by_compatible("sophgo,sg2044-top-syscon");
-> 
-> What's this? Do you miss some descritpion about dependency (in
-> cover-letter?)
-> 
+v4: Please look at changelog in tpm and MAINTAINERS. No changes to tpm
+    and crypto. 
+v3: Put the updates to the MAINTAINERS in a separate patch.
+v2: Removed misc driver. Added tpm driver.
 
-It is just a generic syscon device in the device tree
-(It only add compatiable string in syscon.yaml).
-As the clock dts always require minimal dts to be
-functional, I do not add a dependency for requesting
-it.
+Qunqin Zhao (6):
+  mfd: Add support for Loongson Security Module
+  MAINTAINERS: Add entry for Loongson Security Module driver
+  crypto: loongson - add Loongson RNG driver support
+  MAINTAINERS: Add entry for Loongson RNG driver
+  tpm: Add a driver for Loongson TPM device
+  MAINTAINERS: Add tpm_lsse.c to LOONGSON CRYPTO DRIVER entry
 
-> Others LGTM.
-> 
-> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> 
-> Regards,
-> 
-> Chen
-> 
-> [......]
-> 
+ MAINTAINERS                            |  14 +
+ drivers/char/tpm/Kconfig               |   9 +
+ drivers/char/tpm/Makefile              |   1 +
+ drivers/char/tpm/tpm_lsse.c            | 103 +++++++
+ drivers/crypto/Kconfig                 |   1 +
+ drivers/crypto/Makefile                |   1 +
+ drivers/crypto/loongson/Kconfig        |   6 +
+ drivers/crypto/loongson/Makefile       |   2 +
+ drivers/crypto/loongson/ls6000se-rng.c | 190 +++++++++++++
+ drivers/mfd/Kconfig                    |  10 +
+ drivers/mfd/Makefile                   |   2 +
+ drivers/mfd/ls6000se.c                 | 374 +++++++++++++++++++++++++
+ include/linux/mfd/ls6000se.h           |  75 +++++
+ 13 files changed, 788 insertions(+)
+ create mode 100644 drivers/char/tpm/tpm_lsse.c
+ create mode 100644 drivers/crypto/loongson/Kconfig
+ create mode 100644 drivers/crypto/loongson/Makefile
+ create mode 100644 drivers/crypto/loongson/ls6000se-rng.c
+ create mode 100644 drivers/mfd/ls6000se.c
+ create mode 100644 include/linux/mfd/ls6000se.h
+
+
+base-commit: bd315242821784e9384abae911a70d5fda9a3298
+-- 
+2.43.0
+
