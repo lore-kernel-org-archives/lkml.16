@@ -1,156 +1,83 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92BC2459ED
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E801E1DF7;
+	Wed, 26 Feb 2025 10:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566604; cv=none; b=V0p0BNEx3JTeMpDgCLtQ5agSD7OBbKXTmdwholxIlBsGUpRFaBVFL9Vi9+udDr8YW8TTLkPT/kfg3gYWmN53xDnYq78xTVBG5YOlUOfp+WGtM4sDKBSM698nlvQb98NHhG1tqSM+1SZbPwYj/7Jn43ucB+t9qPiU432YQ2dBgxI=
+	t=1740566671; cv=none; b=QJevtKOzESqaweVSu5LJIYiYONja9RY2d9O16fTjUJfJjFXCNPj8i+UZ5gteWpN/AURIXvBaNF4m5UC+wXuJT8gqQ4fFxbCBDb5iEuw8UF67iRn3DYaWDqdRo2k+W8Ku+8ilcDPCoGtKcZYqt8ylOTuLfc73KOTWTkzoaueh+8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566604; c=relaxed/simple;
-	bh=/1D2hWZ33Wvm8tZchRpvwsmFkPCAijJoSs7d8EyqLjg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NFwZNwhAaZYTt3hUbr6J8FlIYXzbKeoTkqunknrmhYSTs0Jup74Ux8W+WVcw5HkoGzV18GHtT4uyvw5ifiiag54CYexPu00WyBOP058EYbbOl60REnAfmB8+ty/wlxkh4hJu09wSwnYvHfYHkwYoY+ub+PfAHcLYkq6zbMcUTCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-851a991cf8bso49708339f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:43:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740566602; x=1741171402;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CLamul0Qy1bSNuPWUSE2AWn8j3h3sPf3L6/qyPeSfR8=;
-        b=DJl/3Jqrw6XgBlZxsMwyglaIEv2YYknDhTdbSrkqliajVnwlqi8zZF2BhoV1uttwa0
-         wU2w8CuFAA1HicOxI0pjAattcbaNLpMQcw1LbH23bqA53xFGc9Ap8o3kDzQwX9aJb2NI
-         mnUQ+prGJ2Saw/sr4dySoBTUahPzOS00yOne3EXvL2bntwQCNDiJJIpHXOMY0Ua+nhDc
-         OQSoxR9PcAGt8cZnDjNxulA4KR/G9zFpTGchzGDy/eGVFdIvlE0ZvtqOIHdpEMysIsvH
-         pU50AAWJftB7fONs6IVkQpuVduK5wPpBDqp2t/jVBm3QOjK6sRtrpu98tTiMIVIhdQ7f
-         +rxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUcxgHjIDobl0JOKyLYvGoTaNm8pCeUvgaiLAYS4/dJ/hx5S5C+DvDIUsSnxM3oTM12TPpzsiC60mQdczg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHMj5OgTLREg828ihgiE+VKHi0quOg/BrFPw+5nBJHvonkxz9T
-	mZnE9UoqS4csOM1lII2ruJEW7tx5jECOiAoRgjEajhVz/FXKmv5sVJNfgf0A+3EGLlAhi9qUvpn
-	fngU28/YD/03YNwE4/biDbrnPoTjRNw1IM71NBTyezm+09wGdGF29icY=
-X-Google-Smtp-Source: AGHT+IEozNnp1RtmNrcxO3YpCynOBqGVr75Ha2A7UsRZoGZ85WoOwK1VOHFxodkoYYhmcdFTIg3Tv6nG2Vgy81FdzccUMzmPTSz9
+	s=arc-20240116; t=1740566671; c=relaxed/simple;
+	bh=eNYaagGBQl3zI4PG/iw1/+t9855oK/Pqf/7j9jiqRWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nolc8FdVZqA+fzNHZxi2IeMicJwz0oAUkVej2Y1BKvZGcB+oNP1H0phTlEV8qd+zhC92zVMlm2BNOx6AWT/WrjDoNogXPnXmdjP3KhxMyHMS7ApAPgY8I3Wni3FzSBu3KbmtZTfeN2/h6gjO7k2ga/h44vKQe2DKqBKaiizy79g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=U5FQXFP/; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="U5FQXFP/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740566660;
+	bh=eNYaagGBQl3zI4PG/iw1/+t9855oK/Pqf/7j9jiqRWg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=U5FQXFP/5o25fTSqQ0Okey4UykTudRi0qQ7P8qymo77inRkdD/U+d9xv+5nNtxrSX
+	 24uakRMkjyasTEvwf4YvO3IPgBI7E2ReaQVYYbRcGGI3oMed3HTVqUkThm0QiQ3iH5
+	 8S4s4fmUijpB5GH/IFg/o15X2fX/hOnIzKBP5mqNf4OYDBsmh1wGt0QUhHs5J91L6n
+	 xzIAJwCdJsO1lKq0z5cWNQ67al1Hrpc90icq0YPZmC5bZTnxyvATwp2UsL/MHUBWz/
+	 mWfjY3gHNbk31sowpKkr6WRVdKD35P6Nd8yFBoYcSdjOfpy4WdlBsQuViN3xMl9Luy
+	 UIlgFnqKzUAiw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AE57317E0605;
+	Wed, 26 Feb 2025 11:44:19 +0100 (CET)
+Message-ID: <ca325a7f-fdcf-4561-9e5b-8153ca7b8f0e@collabora.com>
+Date: Wed, 26 Feb 2025 11:44:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cb4e:0:b0:3d1:84ad:165e with SMTP id
- e9e14a558f8ab-3d2c020ccabmr203896295ab.7.1740566601966; Wed, 26 Feb 2025
- 02:43:21 -0800 (PST)
-Date: Wed, 26 Feb 2025 02:43:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67bef049.050a0220.38b081.00ef.GAE@google.com>
-Subject: [syzbot] [mm?] [ext4?] WARNING in get_dump_page
-From: syzbot <syzbot+0b544778e9923a3de766@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, akpm@linux-foundation.org, cem@kernel.org, 
-	clm@fb.com, djwong@kernel.org, dsterba@suse.com, jack@suse.cz, 
-	josef@toxicpanda.com, linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: display: mediatek: dsc: Add MT8188
+ compatible
+To: chunkuang.hu@kernel.org
+Cc: p.zabel@pengutronix.de, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com,
+ dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@collabora.com,
+ pablo.sun@mediatek.com, Rob Herring <robh@kernel.org>
+References: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
+ <CAL_Jsq+4+=3ccuwa1whv+UQ56H6ueia4Mqy2z73M-5D15zZw=Q@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAL_Jsq+4+=3ccuwa1whv+UQ56H6ueia4Mqy2z73M-5D15zZw=Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    d082ecbc71e9 Linux 6.14-rc4
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=107eec98580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5b4c41bdaeea1964
-dashboard link: https://syzkaller.appspot.com/bug?extid=0b544778e9923a3de766
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176626e4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147eec98580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/1e5dabe499e7/disk-d082ecbc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1e0f27be469a/vmlinux-d082ecbc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7e058c08d6c9/bzImage-d082ecbc.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/24600c6adfb8/mount_0.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=16397fdf980000)
-
-The issue was bisected to:
-
-commit 5121711eb8dbcbed70b1db429a4665f413844164
-Author: Josef Bacik <josef@toxicpanda.com>
-Date:   Fri Nov 15 15:30:32 2024 +0000
-
-    fs: enable pre-content events on supported file systems
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10ae1db0580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12ae1db0580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ae1db0580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0b544778e9923a3de766@syzkaller.appspotmail.com
-Fixes: 5121711eb8db ("fs: enable pre-content events on supported file systems")
-
-WARNING: CPU: 0 PID: 5840 at mm/gup.c:1856 __get_user_pages_locked mm/gup.c:1856 [inline]
-WARNING: CPU: 0 PID: 5840 at mm/gup.c:1856 get_dump_page+0x242/0x2f0 mm/gup.c:2275
-Modules linked in:
-CPU: 0 UID: 0 PID: 5840 Comm: syz-executor267 Not tainted 6.14.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:__get_user_pages_locked mm/gup.c:1856 [inline]
-RIP: 0010:get_dump_page+0x242/0x2f0 mm/gup.c:2275
-Code: 00 00 00 48 3b 8c 24 80 00 00 00 0f 85 a3 00 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d e9 1f 37 03 ff e8 0f b4 b4 ff 90 <0f> 0b 90 eb ae 44 89 c9 80 e1 07 80 c1 03 38 c1 0f 8c db fe ff ff
-RSP: 0018:ffffc900032c7180 EFLAGS: 00010293
-RAX: ffffffff820d09f1 RBX: 0000000000000000 RCX: ffff8880346f0000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc900032c7250 R08: ffffffff820d0968 R09: 1ffffd4000399126
-R10: dffffc0000000000 R11: fffff94000399127 R12: 1ffff92000658e38
-R13: dffffc0000000000 R14: 1ffff92000658e34 R15: 0000000000000000
-FS:  0000555587160380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fff9150b8f8 CR3: 0000000075dae000 CR4: 0000000000350ef0
-Call Trace:
- <TASK>
- dump_user_range+0x14d/0x970 fs/coredump.c:943
- elf_core_dump+0x4054/0x4a80 fs/binfmt_elf.c:2129
- do_coredump+0x232c/0x32c0 fs/coredump.c:758
- get_signal+0x13e5/0x1720 kernel/signal.c:3021
- arch_do_signal_or_restart+0x96/0x860 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- irqentry_exit_to_user_mode+0x7e/0x250 kernel/entry/common.c:231
- exc_page_fault+0x590/0x8b0 arch/x86/mm/fault.c:1541
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-RIP: 0033:0x7ff653b312d1
-Code: c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 48 3d 01 f0 ff ff 73 01 <c3> 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f
-RSP: 002b:00000000fffffe10 EFLAGS: 00010217
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007ff653b312c9
-RDX: 0000000000000000 RSI: 00000000fffffe10 RDI: 0000000000000000
-RBP: 00007fff9150b940 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000f4240
-R13: 00007ff653b7f9dc R14: 00007ff653b7a0e2 R15: 00007fff9150b930
- </TASK>
+Il 21/02/25 18:08, Rob Herring ha scritto:
+> On Tue, Feb 18, 2025 at 3:04 AM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> Add compatible for Display Stream Compression (DSC) IP found in
+>> the display controller of the MT8188 SoC.
+>>
+>> This IP is fully compatible with the one found on MT8195.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../devicetree/bindings/display/mediatek/mediatek,dsc.yaml     | 3 +++
+>>   1 file changed, 3 insertions(+)
+> 
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+CK, please don't forget to pick this patch :-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+Angelo
