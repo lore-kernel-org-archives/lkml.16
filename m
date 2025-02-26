@@ -1,124 +1,168 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D671F16B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE702222584;
+	Wed, 26 Feb 2025 16:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740587555; cv=none; b=QChwJ5j/C74gknhDoMg8shValMY8rSQwwpfofWSlPcGFHp/S/gfjkmYOPM1DW1sXKzTYoYIjXDEDswsXIEexFj9toACI3VQ7OYKLFl2wIRL9Rqv9QkJib/lW2d6ZQRIJqSgDdsT7v/bP+qjjflHl1jQ9mDwCF63t1/hu8bHOmNA=
+	t=1740587561; cv=none; b=Q3Do+WiuXiVzwSxuAQhpUZqlpSsXg8j8m7H+MdgRQaeezSkOBdRVvGf9roqWL79eUnuc0W2A9tDPbgdwYDOfWpaO1i+l1RBg9VdnyjIb8m+SV3slnPsV/MoXg3V9gQ1wVAXi4ocw0FzX6MVJJzppCNa7oTTaZvxlAKCUdYy95Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740587555; c=relaxed/simple;
-	bh=dw1wfjrIgg5Yfzrk6knIB6Q7CAuRt+Ztip3fcneRWB0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QpET9Q6wPGLeshIbYrxfOofQKE8yUK+ppJy1sVRhMgymV9t0egsbcu0Y5CKs3Ob7rBh2DE4Fpx+w81oVZQfvT3Lt/tOLZWNZfP63Ks5p6TrdeXb8QmCUx0Fp/Zyx82c4OZhnRYSlJj49xhADb13wypgCMQMoAAk6xVUWHI59EGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnKKd-0005Fo-3P; Wed, 26 Feb 2025 17:32:23 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnKKc-002yqg-2M;
-	Wed, 26 Feb 2025 17:32:22 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnKKc-000CSv-27;
-	Wed, 26 Feb 2025 17:32:22 +0100
-Message-ID: <5cc5cd05e0a481773212fff0bce574dcfea3f74d.camel@pengutronix.de>
-Subject: Re: [PATCH v3] reset: mchp: sparx5: Fix for lan966x
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, herve.codina@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Wed, 26 Feb 2025 17:32:22 +0100
-In-Reply-To: <20250226144645.1950451-1-horatiu.vultur@microchip.com>
-References: <20250226144645.1950451-1-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1740587561; c=relaxed/simple;
+	bh=dLY21KoCoTtcPIJVWDbdSVxDOSaKowQVO40jIG8etkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BdiOOrhw/CC/Uz0XOw6RQGyZmWgbYCoyVGhJ1ti+5LFJProptGDc/lpeQPeAFrIUAzwqhnUy3J4JQbQ8jroOoLolH7eE3TYFUXOgNRvHlNbepXXlFgUGxilJn7JRLuqe93HXDxayn+lWhHYcxzG8tQB0LSK5Wg+DXbeJkd6IfyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=YjrkjbhZ; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="YjrkjbhZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1740587557; bh=dLY21KoCoTtcPIJVWDbdSVxDOSaKowQVO40jIG8etkA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YjrkjbhZwXRhQvII1s4aE5PcJLxidQ/y3EUYVfd5ao/jPD7hmKeH8Rpg+FBFYr/Z3
+	 GEW6dR8QNGwvdds5XTb5WZSomLCSYU1H++hfP9y/zasRqsWX1IV0If0Bj4w/hOsyNl
+	 0DikD4LnE3FzgTSweiaRv2duZ+Dv3bYYoVTJrGjY=
+Received: from [IPV6:2001:67c:10ec:5784:8000::12e7] (2001-67c-10ec-5784-8000--12e7.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::12e7])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 143A22052D08;
+	Wed, 26 Feb 2025 17:32:37 +0100 (CET)
+Message-ID: <f3a83d60-3506-4e20-b202-ef2ea99ef4dc@ralfj.de>
+Date: Wed, 26 Feb 2025 17:32:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Ventura Jack <venturajack85@gmail.com>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo <gary@garyguo.net>,
+ torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com,
+ david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org,
+ hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo>
+ <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
+ <lz7hsnvexoywjgdor33mcjrcztxpf7lzvw3khwzd5rifetwrcf@g527ypfkbhp2>
+ <780ff858-4f8e-424f-b40c-b9634407dce3@ralfj.de>
+ <CAFJgqgRN0zwwaNttS_9qnncTDnSA-HU5EgAXFrNHoPQ7U8fUxw@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <CAFJgqgRN0zwwaNttS_9qnncTDnSA-HU5EgAXFrNHoPQ7U8fUxw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mi, 2025-02-26 at 15:46 +0100, Horatiu Vultur wrote:
-> With the blamed commit it seems that lan966x doesn't seem to boot
-> anymore when the internal CPU is used.
-> The reason seems to be the usage of the devm_of_iomap, if we replace
-> this with of_iomap, this seems to fix the issue as we use the same
-            ^^^^^^^^
-The is not accurate anymore.
+Hi VJ,
 
-> region also for other devices.
->=20
-> Fixes: 0426a920d6269c ("reset: mchp: sparx5: Map cpu-syscon locally in ca=
-se of LAN966x")
-> Reviewed-by: Herve Codina <herve.codina@bootlin.com>
-> Tested-by: Herve Codina <herve.codina@bootlin.com>
+>>
+>>> - Rust has not defined its aliasing model.
+>>
+>> Correct. But then, neither has C. The C aliasing rules are described in English
+>> prose that is prone to ambiguities and misintepretation. The strict aliasing
+>> analysis implemented in GCC is not compatible with how most people read the
+>> standard (https://bugs.llvm.org/show_bug.cgi?id=21725). There is no tool to
+>> check whether code follows the C aliasing rules, and due to the aforementioned
+>> ambiguities it would be hard to write such a tool and be sure it interprets the
+>> standard the same way compilers do.
+>>
+>> For Rust, we at least have two candidate models that are defined in full
+>> mathematical rigor, and a tool that is widely used in the community, ensuring
+>> the models match realistic use of Rust.
+> 
+> But it is much more significant for Rust than for C, at least in
+> regards to C's "restrict", since "restrict" is rarely used in C, while
+> aliasing optimizations are pervasive in Rust. For C's "strict aliasing",
+> I think you have a good point, but "strict aliasing" is still easier to
+> reason about in my opinion than C's "restrict". Especially if you
+> never have any type casts of any kind nor union type punning.
 
-Is this still correct?
+Is it easier to reason about? At least GCC got it wrong, making no-aliasing 
+assumptions that are not justified by most people's interpretation of the model:
+https://bugs.llvm.org/show_bug.cgi?id=21725
+(But yes that does involve unions.)
 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
-> v2->v3:
-> - forward error from of_address_to_resource
-> - use devm_ioremap instead of_iomap
-> v1->v2:
-> - make sure to use iounmap when driver is removed
-> ---
->  drivers/reset/reset-microchip-sparx5.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset=
--microchip-sparx5.c
-> index aa5464be7053b..176b3f46e9243 100644
-> --- a/drivers/reset/reset-microchip-sparx5.c
-> +++ b/drivers/reset/reset-microchip-sparx5.c
-> @@ -8,6 +8,7 @@
->   */
->  #include <linux/mfd/syscon.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
-> @@ -72,14 +73,19 @@ static struct regmap *mchp_lan966x_syscon_to_regmap(s=
-truct device *dev,
->  						    struct device_node *syscon_np)
->  {
->  	struct regmap_config regmap_config =3D mchp_lan966x_syscon_regmap_confi=
-g;
-> -	resource_size_t size;
-> +	struct resource res;
->  	void __iomem *base;
-> +	int err;
-> +
-> +	err =3D of_address_to_resource(syscon_np, 0, &res);
-> +	if (err)
-> +		return ERR_PTR(err);
-> =20
-> -	base =3D devm_of_iomap(dev, syscon_np, 0, &size);
-> -	if (IS_ERR(base))
-> -		return ERR_CAST(base);
+>>> - The aliasing rules in Rust are possibly as hard or
+>>>      harder than for C "restrict", and it is not possible to
+>>>      opt out of aliasing in Rust, which is cited by some
+>>>      as one of the reasons for unsafe Rust being
+>>>      harder than C.
+>>
+>> That is not quite correct; it is possible to opt-out by using raw pointers.
+> 
+> Again, I did have this list item:
+> 
+> - Applies to certain pointer kinds in Rust, namely
+>      Rust "references".
+>      Rust pointer kinds:
+>      https://doc.rust-lang.org/reference/types/pointer.html
+> 
+> where I wrote that the aliasing rules apply to Rust "references".
 
-It would be nice to add a comment here that devm_of_iomap() can't be
-used because the resource is shared with other devices. Do you know
-which ones?
+Okay, fair. But it is easy to misunderstand the other items in your list in 
+isolation.
 
-Otherwise, this looks good to me.
+> 
+>>>      the aliasing rules, may try to rely on MIRI. MIRI is
+>>>      similar to a sanitizer for C, with similar advantages and
+>>>      disadvantages. MIRI uses both the stacked borrow
+>>>      and the tree borrow experimental research models.
+>>>      MIRI, like sanitizers, does not catch everything, though
+>>>      MIRI has been used to find undefined behavior/memory
+>>>      safety bugs in for instance the Rust standard library.
+>>
+>> Unlike sanitizers, Miri can actually catch everything. However, since the exact
+>> details of what is and is not UB in Rust are still being worked out, we cannot
+>> yet make in good conscience a promise saying "Miri catches all UB". However, as
+>> the Miri README states:
+>> "To the best of our knowledge, all Undefined Behavior that has the potential to
+>> affect a program's correctness is being detected by Miri (modulo bugs), but you
+>> should consult the Reference for the official definition of Undefined Behavior.
+>> Miri will be updated with the Rust compiler to protect against UB as it is
+>> understood by the current compiler, but it makes no promises about future
+>> versions of rustc."
+>> See the Miri README (https://github.com/rust-lang/miri/?tab=readme-ov-file#miri)
+>> for further details and caveats regarding non-determinism.
+>>
+>> So, the situation for Rust here is a lot better than it is in C. Unfortunately,
+>> running kernel code in Miri is not currently possible; figuring out how to
+>> improve that could be an interesting collaboration.
+> 
+> I do not believe that you are correct when you write:
+> 
+>      "Unlike sanitizers, Miri can actually catch everything."
+> 
+> Critically and very importantly, unless I am mistaken about MIRI, and
+> similar to sanitizers, MIRI only checks with runtime tests. That means
+> that MIRI will not catch any undefined behavior that a test does
+> not encounter. If a project's test coverage is poor, MIRI will not
+> check a lot of the code when run with those tests. Please do
+> correct me if I am mistaken about this. I am guessing that you
+> meant this as well, but I do not get the impression that it is
+> clear from your post.
 
+Okay, I may have misunderstood what you mean by "catch everything". All 
+sanitizers miss some UB that actually occurs in the given execution. This is 
+because they are inserted in the pipeline after a bunch of compiler-specific 
+choices have already been made, potentially masking some UB. I'm not aware of a 
+sanitizer for sequence point violations. I am not aware of a sanitizer for 
+strict aliasing or restrict. I am not aware of a sanitizer that detects UB due 
+to out-of-bounds pointer arithmetic (I am not talking about OOB accesses; just 
+the arithmetic is already UB), or UB due to violations of "pointer lifetime end 
+zapping", or UB due to comparing pointers derived from different allocations. Is 
+there a sanitizer that correctly models what exactly happens when a struct with 
+padding gets copied? The padding must be reset to be considered "uninitialized", 
+even if the entire struct was zero-initialized before. Most compilers implement 
+such a copy as memcpy; a sanitizer would then miss this UB.
 
-regards
-Philipp
+In contrast, Miri checks for all the UB that is used anywhere in the Rust 
+compiler -- everything else would be a critical bug in either Miri or the compiler.
+But yes, it only does so on the code paths you are actually testing. And yes, it 
+is very slow.
+
+Kind regards,
+Ralf
+
