@@ -1,179 +1,144 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2924215189;
-	Wed, 26 Feb 2025 09:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06BA2135C8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740561973; cv=none; b=WVqqoUNsKprQv3KPcYyxR8evjuJc8p9A/jR35aaLorNcXiEnKy4OdRHvSTWVELmMZ0R1Yz6BpD+OciptqlicmtPiRcCccnKcaMVgzh3gznhKjPSzVoUhYbUsOjRa8vWhgwm2QELGB7IOUL0OGmKjVDJm96P+UHRcMtu1HFt4lLE=
+	t=1740562086; cv=none; b=jxCdS4v30D8lgNqL/V0wWlh1o5OSrwmCjqVmu/R80DwWAHDP7IJKE0F2l1t3E2jW61ExXOvqPTee6h7yYu1e6XgFuTcneWCOYlHYBjg/sg7ZaiQQ5e52aaov4XD35zujq735Q21A4CPr1/tGvTSiZYIIp2zhsLxYRqN13GlJgl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740561973; c=relaxed/simple;
-	bh=snXsEhf+LNi9fdlosqnbK4Qm4UNaUVu8+oUbUR/A6+M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ce68aP8A0HTTc4W08baic+o3oINx26Lpf1Ak+qLubh20zDdD8P1SCf8E39bdHqQOgq0saNpbo3re6w3VjxtwceiuXYWS77C7/HtJm+mgHuK6KjhFup+R0xg7eI64OndqHt4m829ws/ajw7B06Oxrb3XQ0Igt6BajoyQz1TG4hbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z2pvJ1wwcz6K9Fn;
-	Wed, 26 Feb 2025 17:24:12 +0800 (CST)
-Received: from frapeml500005.china.huawei.com (unknown [7.182.85.13])
-	by mail.maildlp.com (Postfix) with ESMTPS id 72B0814097D;
-	Wed, 26 Feb 2025 17:26:07 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (7.182.85.71) by
- frapeml500005.china.huawei.com (7.182.85.13) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 26 Feb 2025 10:26:07 +0100
-Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
- frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
- Wed, 26 Feb 2025 10:26:07 +0100
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: liulongfang <liulongfang@huawei.com>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, "jgg@nvidia.com" <jgg@nvidia.com>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [PATCH v4 5/5] hisi_acc_vfio_pci: bugfix live migration function
- without VF device driver
-Thread-Topic: [PATCH v4 5/5] hisi_acc_vfio_pci: bugfix live migration function
- without VF device driver
-Thread-Index: AQHbh07C3f9e7H+vQ0mq3v4m2vU4obNZTIOQ
-Date: Wed, 26 Feb 2025 09:26:07 +0000
-Message-ID: <fa8cd8c1cdbe4849b445ffd8f4894515@huawei.com>
-References: <20250225062757.19692-1-liulongfang@huawei.com>
- <20250225062757.19692-6-liulongfang@huawei.com>
-In-Reply-To: <20250225062757.19692-6-liulongfang@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1740562086; c=relaxed/simple;
+	bh=dJPCxbdNAiNlrZRyQQhDnRk4XKlVsJHtvWrBLTapGMw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uMuITGxTAS2g5T3MlNl0VulixDHDnaZ05JS6myjX+yZl42efqxRYFrqvgCUWnUR/CTgNbH0ICuThnmtM7xYQmwzzOGDEQ/BPiNbUggLkNSzsF7vrsRboGIM7wngK14gKqUfVHXCJt60e3Zvv2pE/5YGIvUtXfRU+omakSeXP65g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2557243403;
+	Wed, 26 Feb 2025 09:27:58 +0000 (UTC)
+Message-ID: <c6974bec-851e-4fdf-8af3-23cfdc9dd50f@ghiti.fr>
+Date: Wed, 26 Feb 2025 10:27:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: Add riscv_force_qspinlock for early_param
+Content-Language: en-US
+To: Guo Ren <guoren@kernel.org>
+Cc: conor@kernel.org, alexghiti@rivosinc.com,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, bjorn@rivosinc.com,
+ leobras@redhat.com, peterz@infradead.org, parri.andrea@gmail.com,
+ longman@redhat.com, boqun.feng@gmail.com, arnd@arndb.de, will@kernel.org,
+ corbet@lwn.net, Guo Ren <guoren@linux.alibaba.com>
+References: <20241214043510.3795984-1-guoren@kernel.org>
+ <330c7596-cd93-4ae5-b00d-789c72a944aa@ghiti.fr>
+ <CAJF2gTRt0c78jPGN8ZX-u3dJKBrOkoV7VZQW2A+rVpuVOzdvLg@mail.gmail.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CAJF2gTRt0c78jPGN8ZX-u3dJKBrOkoV7VZQW2A+rVpuVOzdvLg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgedvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdeguefhhfevueejteevveeikeelkedvffdufeelveeggfeikeekgfeghfdttdevnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepghhuohhrvghnsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgihghhhithhisehrihhvohhsihhntgdrtghomhdprhgtphhtthhop
+ ehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtohepsghjohhrnhesrhhivhhoshhinhgtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
+
+Hi Guo,
+
+First sorry I did not follow up on this patch.
+
+On 22/12/2024 05:03, Guo Ren wrote:
+> On Mon, Dec 16, 2024 at 5:15 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+>> Hi Guo,
+>>
+>> On 14/12/2024 05:35, guoren@kernel.org wrote:
+>>> From: Guo Ren <guoren@linux.alibaba.com>
+>>>
+>>> When CONFIG_RISCV_COMBO_SPINLOCKS is enabled, permit qspinlock
+>>> force enabled. See the Kconfig entry for RISCV_COMBO_SPINLOCKS.
+>>>
+>>> Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+>>> Signed-off-by: Guo Ren <guoren@kernel.org>
+>>> ---
+>>>    Documentation/admin-guide/kernel-parameters.txt |  5 +++++
+>>>    arch/riscv/kernel/setup.c                       | 13 ++++++++++++-
+>>>    2 files changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>>> index 3872bc6ec49d..43d0df2922b2 100644
+>>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>>> @@ -5887,6 +5887,11 @@
+>>>                        [KNL] Disable ring 3 MONITOR/MWAIT feature on supported
+>>>                        CPUs.
+>>>
+>>> +     riscv_force_qspinlock [RISCV, EARLY]
+>>> +                     When CONFIG_RISCV_COMBO_SPINLOCKS is enabled, permit
+>>> +                     qspinlock force enabled. See the Kconfig entry for
+>>> +                     RISCV_COMBO_SPINLOCKS.
+>>> +
+>>>        riscv_isa_fallback [RISCV,EARLY]
+>>>                        When CONFIG_RISCV_ISA_FALLBACK is not enabled, permit
+>>>                        falling back to detecting extension support by parsing
+>>> diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+>>> index 45010e71df86..74b13bc64c9c 100644
+>>> --- a/arch/riscv/kernel/setup.c
+>>> +++ b/arch/riscv/kernel/setup.c
+>>> @@ -247,6 +247,15 @@ static void __init parse_dtb(void)
+>>>    #if defined(CONFIG_RISCV_COMBO_SPINLOCKS)
+>>>    DEFINE_STATIC_KEY_TRUE(qspinlock_key);
+>>>    EXPORT_SYMBOL(qspinlock_key);
+>>> +
+>>> +static bool force_qspinlock;
+>>> +
+>>> +static int __init riscv_force_qspinlock(char *p)
+>>> +{
+>>> +     force_qspinlock = true;
+>>> +     return 0;
+>>> +}
+>>> +early_param("riscv_force_qspinlock", riscv_force_qspinlock);
+>>>    #endif
+>>>
+>>>    static void __init riscv_spinlock_init(void)
+>>> @@ -267,7 +276,9 @@ static void __init riscv_spinlock_init(void)
+>>>                using_ext = "using Ziccrse";
+>>>        }
+>>>    #if defined(CONFIG_RISCV_COMBO_SPINLOCKS)
+>>> -     else {
+>>> +     else if (force_qspinlock) {
+>>> +             using_ext = "force";
+>>> +     } else {
+>>>                static_branch_disable(&qspinlock_key);
+>>>                pr_info("Ticket spinlock: enabled\n");
+>>>                return;
+>>
+>> What's the use case for this early param? To me that implies that a
+>> platform may have another extension which would allow the usage of
+> We want to use it for sg2042 & th1520. No new extension was
+> introduced, and some micro-architecture could give LR/SC
+> implementation a forward progress guarantee more than the spec
+> required.
 
 
-
-> -----Original Message-----
-> From: liulongfang <liulongfang@huawei.com>
-> Sent: Tuesday, February 25, 2025 6:28 AM
-> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
-> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
-> Subject: [PATCH v4 5/5] hisi_acc_vfio_pci: bugfix live migration function
-> without VF device driver
->=20
-> If the driver of the VF device is not loaded in the Guest OS,
-> then perform device data migration. The migrated data address will
-> be NULL.
-
-May be rephrase:
-
-If the VF device driver is not loaded in the Guest OS and we attempt to
-perform device data migration, the address of the migrated data will
-be NULL.
-
-> The live migration recovery operation on the destination side will
-> access a null address value, which will cause access errors.
-=20
-> Therefore, live migration of VMs without added VF device drivers
-> does not require device data migration.
-> In addition, when the queue address data obtained by the destination
-> is empty, device queue recovery processing will not be performed.
->=20
-> Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live
-> migration")
-> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-> ---
->  drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> index 3f0bcd855839..77872fc4cd34 100644
-> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> @@ -440,6 +440,7 @@ static int vf_qm_get_match_data(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev,
->  				struct acc_vf_data *vf_data)
->  {
->  	struct hisi_qm *pf_qm =3D hisi_acc_vdev->pf_qm;
-> +	struct hisi_qm *vf_qm =3D &hisi_acc_vdev->vf_qm;
->  	struct device *dev =3D &pf_qm->pdev->dev;
->  	int vf_id =3D hisi_acc_vdev->vf_id;
->  	int ret;
-> @@ -466,6 +467,13 @@ static int vf_qm_get_match_data(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev,
->  		return ret;
->  	}
->=20
-> +	/* Get VF driver insmod state */
-> +	ret =3D qm_read_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state,
-> 1);
-
-We already have qm_wait_dev_not_ready() function that checks the QM_VF_STAT=
-E.=20
-Why can't we use that here?
-
-Also we are getting this vf_qm_state already in vf_qm_state_save(). And you=
- don't
-seem to check the vf_qm_state in vf_qm_check_match(). So why it is read=20
-early in this function?
-
+But then those platforms support Ziccrse which is enough to use 
+qspinlocks right?
 
 Thanks,
-Shameer
 
-> +	if (ret) {
-> +		dev_err(dev, "failed to read QM_VF_STATE!\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->=20
-> @@ -505,6 +513,12 @@ static int vf_qm_load_data(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev,
->  	qm->qp_base =3D vf_data->qp_base;
->  	qm->qp_num =3D vf_data->qp_num;
->=20
-> +	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
-> +	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
-> +		dev_err(dev, "resume dma addr is NULL!\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	ret =3D qm_set_regs(qm, vf_data);
->  	if (ret) {
->  		dev_err(dev, "set VF regs failed\n");
-> @@ -727,6 +741,9 @@ static int hisi_acc_vf_load_state(struct
-> hisi_acc_vf_core_device *hisi_acc_vdev)
->  	struct hisi_acc_vf_migration_file *migf =3D hisi_acc_vdev-
-> >resuming_migf;
->  	int ret;
->=20
-> +	if (hisi_acc_vdev->vf_qm_state !=3D QM_READY)
-> +		return 0;
-> +
->  	/* Recover data to VF */
->  	ret =3D vf_qm_load_data(hisi_acc_vdev, migf);
->  	if (ret) {
-> @@ -1530,6 +1547,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct
-> vfio_device *core_vdev)
->  	hisi_acc_vdev->vf_id =3D pci_iov_vf_id(pdev) + 1;
->  	hisi_acc_vdev->pf_qm =3D pf_qm;
->  	hisi_acc_vdev->vf_dev =3D pdev;
-> +	hisi_acc_vdev->vf_qm_state =3D QM_NOT_READY;
->  	mutex_init(&hisi_acc_vdev->state_mutex);
->  	mutex_init(&hisi_acc_vdev->open_mutex);
->=20
-> --
-> 2.24.0
+Alex
 
+
+>
+>> qspinlock, so why not listing it in riscv_spinlock_init() instead?
+> List all platforms in riscv_spinlock_init is noisy, maybe give a
+> qspinlock param in cmdline, and they could put it in their boot args.
+>
+>> Thanks,
+>>
+>> Alex
+>>
+>
