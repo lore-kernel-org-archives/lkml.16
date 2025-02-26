@@ -1,104 +1,82 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A401B29D0E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B371D16DEB1;
+	Wed, 26 Feb 2025 06:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740550708; cv=none; b=LjECKxZaGF6cV7IWXe/S11pF+T7HoY3vjpJTrKhwWuNySo2k5yeyy1riB3JQjHNu6j9DHCHeWvoYRDXP/FoZH38MRKWtPKatAjzsUQRC9SaHc5dzkJACdCLCJn2XjKdfx9Z5v8eQ7BJhEG0Uw+YtvXZY/G2Cn0eXt30xMK0NTHg=
+	t=1740550721; cv=none; b=SPWb+7Q/2MQP8I6kM9ciqbC81l2X0qRYfxB0E1nfV0B+gueqvZom6iwo13LIPXR6CknVKryqLSWpACRhIEZWvS/NnUaCVsDdlvEynpKCyAm7VNt7AYzcgNH1x926MAI/Rq+RorvXtB1FhLRoqF2/3/53TLfUJy0EVc0hm6djiIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740550708; c=relaxed/simple;
-	bh=rnGhfy7NnUxsUsjov/XDOXWGIuCyAAiKL4iAb7KmuyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=L4PRWXycvBiXsJfANvqrfGuTyYnAKZnRxsKYQV63ptPZCeJT1r8+AJlk9y8LHskfabpUn4NAaewrfr/O9RCDjSwhj5xuiwt661/6j8hVRhN7EFaFnDZX1jWVQQ+DmrJP256cXp2PaRG/xeJv6ITvj9I5ygGWEvKkWU6pe2j6fRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sxP3HswG; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740550721; c=relaxed/simple;
+	bh=ih0Il9VNpXYbKf9bvdfY0gWj93ycLMrwGzMmW0dJ+fY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OsyAyeH7VEpxud0Ba3sLEAEwAQ7LoSeVXIM6pz0Jnxv+JlbWZQ5v0HoheeLWVoPCs06Q8LNskBbo+RSCZ2DLXrSgKS6C2e0igdgo8VPSA9g81/n0Gi3ybNoHuF7Haac5IaWpGiyw+rXQsTGJjtVE+nH9A/sjZ+sZKGmA6KFTN9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbzL73He; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sxP3HswG"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6IEE71383194
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 00:18:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740550694;
-	bh=G8TuloVcDoxRcDVBKwXj6LZhpioTi4Wo9bQZpOdphDk=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=sxP3HswGCwWbrDxJsI19Ccv5P4GIoMX95NtmgkUrHnoFZOTNpJdgfgTLnnfzvrxnC
-	 maKAzLi1q3d75Ox6loFNLYDCIW/RiTxt2zF+TfCdZbIYG6FnbQAnqvuV41afz1h24Y
-	 Zm2Gv1EU3ZAYMXUYdxPMDCndXtqO6Zl/by3W3lsI=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6IEwS125352
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 00:18:14 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 00:18:14 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 00:18:14 -0600
-Received: from [172.24.18.117] (lt9560gk3.dhcp.ti.com [172.24.18.117])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51Q6IBcG068437;
-	Wed, 26 Feb 2025 00:18:12 -0600
-Message-ID: <686f583d-6bf4-4486-b9e4-20c1e268eda6@ti.com>
-Date: Wed, 26 Feb 2025 11:48:10 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbzL73He"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE67C4CED6;
+	Wed, 26 Feb 2025 06:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740550721;
+	bh=ih0Il9VNpXYbKf9bvdfY0gWj93ycLMrwGzMmW0dJ+fY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AbzL73HehKGV2Yfi4pr6Iw/PzCjphe0OupUVlfAS4QQ/cPn9isb2Ug2ROIbI2vOvh
+	 SUX3bF4ZVNpa+G4XA/qe4Xc08Z4kSIduDftSW/UYkMX6cmedEgxGOWi2AzdXVnCQim
+	 4BN0kxFn1unZ4bOIK9jPLAcDXdQiWZIRYhgVLfojcFpXfHM9yswHhmO7wZKoGjP7DJ
+	 u1BIgWDELd6srw2SxcbWaBuPbd+BbV34vVMj2p5BCozjnnOlP0g61QMo3Ar03QmYsX
+	 whYENUeUe//eqRafVWKsHD4YT4ltzUk28isLlgdJEUdCd4pfO0o+eOuj8viJWS9api
+	 gK9difvOiXatw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/8] tracing: probes: Fixes and enhancing error logs
+Date: Wed, 26 Feb 2025 15:18:37 +0900
+Message-ID:  <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable HSR driver
-To: <catalin.marinas@arm.com>, <will@kernel.org>
-CC: <quic_bjorande@quicinc.com>, <krzysztof.kozlowski@linaro.org>,
-        <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        "Anwar, Md Danish"
-	<danishanwar@ti.com>
-References: <20240419060013.14909-1-r-gunasekaran@ti.com>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <20240419060013.14909-1-r-gunasekaran@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi all,
+The following series fixes some bugs and adding some error messages
+which are not handled.
+This also add some selftests which tests the new error messages.
 
-Apologies in case you are receiving this email for the second time.
-Any reason why this patch hasn't been merged yet. Other than re-basing 
-this to the tip, anything else which needs to be addressed to get this 
-merged?
+Thank you,
 
-Thanks & Regards,
-Meghana Malladi.
+---
 
-On 4/19/2024 11:30 AM, Ravi Gunasekaran wrote:
-> HSR is a redundancy protocol that can be realized with any
-> two port ethernet controller.
-> 
-> Many of TI's K3 SoCs support multi port ethernet controller.
-> So enable HSR driver inorder to support this protocol on
-> such SoCs.
-> 
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
-> ---
->   arch/arm64/configs/defconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 11fa4aa40094..750343564f41 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -176,6 +176,7 @@ CONFIG_NET_CLS_FLOWER=m
->   CONFIG_NET_CLS_ACT=y
->   CONFIG_NET_ACT_GACT=m
->   CONFIG_NET_ACT_MIRRED=m
-> +CONFIG_HSR=m
->   CONFIG_NET_ACT_GATE=m
->   CONFIG_QRTR_SMD=m
->   CONFIG_QRTR_TUN=m
+Masami Hiramatsu (Google) (8):
+      tracing: tprobe-events: Fix a memory leak when tprobe with $retval
+      tracing: tprobe-events: Reject invalid tracepoint name
+      tracing: fprobe-events: Log error for exceeding the number of entry args
+      tracing: probe-events: Log errro for exceeding the number of arguments
+      tracing: probe-events: Remove unused MAX_ARG_BUF_LEN macro
+      selftests/ftrace: Expand the tprobe event test to check wrong format
+      selftests/ftrace: Add new syntax error test
+      selftests/ftrace: Add dynamic events argument limitation test case
 
+
+ kernel/trace/trace_eprobe.c                        |    2 +
+ kernel/trace/trace_fprobe.c                        |   25 +++++++++++-
+ kernel/trace/trace_kprobe.c                        |    5 ++
+ kernel/trace/trace_probe.h                         |    6 ++-
+ kernel/trace/trace_uprobe.c                        |    9 +++-
+ .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   14 +++++++
+ .../ftrace/test.d/dynevent/dynevent_limitations.tc |   42 ++++++++++++++++++++
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    1 
+ 8 files changed, 98 insertions(+), 6 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
