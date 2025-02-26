@@ -1,195 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A22218AB4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C350B21CC48;
+	Wed, 26 Feb 2025 14:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581291; cv=none; b=ai0F3CKq9qBppIa7XJcFq24J/E6Daot5WaVg3kmdgSEKE/TItG3olbfVtCITmooFkik8Nsqv2Ou882ks76gJ56MuZz/ieEuQOKKY4IryVfXSyId+D+z9LsqFAibKnwciUlkHaFMJXY5dxVosqH1mCy2x+EJsc8oqrU+5fxcJ3qI=
+	t=1740581292; cv=none; b=antb6JWnN7I039Da8euPCbPYWN26hoLV5Ged7A7ezVN4cKm0ECDALyNq9Y3IGeRnP25Vg44jm92NfgpOdXpMx9Ufc6wFK1QVtKelyQ7TYrTupY0lWN0bhO3+N3FfiosZb9ERN7hnKAIaYnFW5MFpLueK8zB1DduZLC06qT/1fqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581291; c=relaxed/simple;
-	bh=NR8acvY9HBtKknXlzOTnCjVI4CMDvxPe/sjYzEh3OII=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r93f7cwc8UtyvEVccClYLRqRoIhETwXRLQG6o5AKT3XupqwDz30RTJnFWL2zw+2hAs/bnzlcu/qvNstgKCZetutQjiiRH/bXtIfFYz8u5IMGSKAN6DtfTAxqW1REGJ4OJHwSSUdyH6kpLgMqsZlDD8VBsOnKx5iG799PbUXDBzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SOLuc4c+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740581292; c=relaxed/simple;
+	bh=R2Gx1N8K9KgoekiAVlPfyhUXC/d2nYfvQ5VD+gdozZ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pkDWasA1hNKRceQqFz0/rbVbh2zVuMjJ6N8Dan/z9HxUIc5yi1rHwhY6LtByCAJP0uqSD8xq14Utr7uTvMunv0TUbsp1FOPOu7CmJWsDrEzVWs9GsV1zZeHnjzUBQLx1WuX6OxaAq1BCfD85Ty61EgeOb2tdHJb472F3Kcn3Pso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mApHC7rW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOLuc4c+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740581288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8vkoWrSDvFL6bPp2+SBWRgFUy47QB4e69nH0NyHiTjI=;
-	b=SOLuc4c+9bmRVovV52VscO/v0dfT/V96gryQWGfkQB7IkbXrVy2Obghlv3MxUf5Wq1koH2
-	ILlnpiutXhESp3WNo8EFyLwmDaSQrLOx3dRqFuwz9Liqv4ix9drqumRU+ave7NW0kgf0B1
-	dYGVL7TYRVsA1uKas/l+CJBb0xe+7Wo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-ydHncu8eMk2VRrIHpxP4Zw-1; Wed, 26 Feb 2025 09:48:06 -0500
-X-MC-Unique: ydHncu8eMk2VRrIHpxP4Zw-1
-X-Mimecast-MFC-AGG-ID: ydHncu8eMk2VRrIHpxP4Zw_1740581284
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f2ef5f0dbso2642546f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:48:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581284; x=1741186084;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8vkoWrSDvFL6bPp2+SBWRgFUy47QB4e69nH0NyHiTjI=;
-        b=bl8OMXUogUGij7mRiLhsixmQz3P2pxYez0rJwk3E/gUNClQDopkKCsHwtAdZCMLx12
-         deDj8mmHOPb+j7C3g4Ki0SK3VtSgxRm7NFuPBsuZaocGWn7CtTDB/4BviC4/m9UH/igr
-         UQvwY2Q5+STkdxRx7CtrXIcarRw5WcUB4ZEPAvdVBO6YonmcDwZ2YvxxTzrdIgsQWJql
-         /GH70PUc3htBrqysXyGBBkKik2FnzgAxpsfQa3nPzlC9RETiV32Cm/s0+vBtgmmcOJJB
-         65raHM5mT0PeTK2E32R6kljOUZHJV2qYGvxrdlfN1+t7LYN7aFEw68dx6L8FbF3WGZFn
-         Ijng==
-X-Forwarded-Encrypted: i=1; AJvYcCUtGA6JHENNw/ZvMppWkxifK65ucUBAs3QCtdoveOWNjYugeiY0VZfmEZrg9O63Y1PzbsXn7GpGPgcvPyU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxO+Wth4llEHfcrrr+t9+Le0q7qlT0zFt9mfVp0kthUjXrqOjWK
-	qPd4D13GIRYaoj36cpz/0LmE9oxuXlZAVvjXM6F0YoZR0b3fUgW0uEelBr1FwKiGtfXL+GI5MCf
-	yz7IOGE/BwdmOUUARECoJqd5qIE20L6knenp9zMNMuDyb8bBWt1qdD5S0e8Hvyw==
-X-Gm-Gg: ASbGncunph+H+aLvGK41sd36X2UXRRCRUTBOVWoPCukQSoOvz2sZUrg8MAruphVAr0M
-	GSAAo5sKzsJo/DeYTiYSkLSkfPzd3LPn5Tj7avOM9YBeP/sMs/2NahOEnBu1wQX8njUXXMs3jyM
-	3dQYIg40qqsfgKNqvSIB5knsTS3deA8I2W60VV9xusn5ABT/uVxxi3a71SwiPEvsWtQAcbcCTVT
-	I6hHv2W6oZz9D05XFj2L3KYF7ptua5hL9QFfy24846r6d1TaPLEojaNvqk157d37ffxAyG1mY/5
-	HTOfeuU2o1DqkxOLEBChVoaVzL/8WOwqP6Eb0DCyEQNkrfXv2Y/z3e30gjPKhbc=
-X-Received: by 2002:a05:6000:1541:b0:38f:38eb:fcff with SMTP id ffacd0b85a97d-390cc60a682mr6467902f8f.29.1740581284324;
-        Wed, 26 Feb 2025 06:48:04 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHt0IdIIux70KZSKj21MuPK89m+sivEs5JGNzpiw8G6lG8AV6fs8fa3K3La96P0ieYxPdZd0Q==
-X-Received: by 2002:a05:6000:1541:b0:38f:38eb:fcff with SMTP id ffacd0b85a97d-390cc60a682mr6467878f8f.29.1740581283918;
-        Wed, 26 Feb 2025 06:48:03 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8e725dsm5991101f8f.63.2025.02.26.06.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:48:03 -0800 (PST)
-Date: Wed, 26 Feb 2025 15:48:02 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, Dongjiu Geng <gengdongjiu1@gmail.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/14] acpi/ghes: add a firmware file with HEST
- address
-Message-ID: <20250226154802.58d865a8@imammedo.users.ipa.redhat.com>
-In-Reply-To: <0866291724e8c276c5f7066991ce08250d7857d3.1740148260.git.mchehab+huawei@kernel.org>
-References: <cover.1740148260.git.mchehab+huawei@kernel.org>
-	<0866291724e8c276c5f7066991ce08250d7857d3.1740148260.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mApHC7rW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B021EC4CED6;
+	Wed, 26 Feb 2025 14:48:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740581292;
+	bh=R2Gx1N8K9KgoekiAVlPfyhUXC/d2nYfvQ5VD+gdozZ8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mApHC7rWxqw1e5UqFq0sDaKSoI4NkQu7LB1ljIILqMN0JjNxHvceSMwUIkXVxxNom
+	 1G0Nyk5XM30FeLOiOiBNnBv6x/HUwPXtiakVbjALWlrEXZh5S0WnhuYVQda8xGrfAZ
+	 nr3BxFeo4NG4jZs+g8UZ3El7iT9yREbDcaJT5sL9qMF66fqQEuElw3nWKPY8blZKli
+	 iGZK3o162kcTBe1ELSFF4rxVAciArDijitJkBGi9k3sTLjgww7QcWMF3zKjBKsttJZ
+	 us1mTGNayqOu8jrgRuxyFmH5cn/BI7Gcsuh67owAcwxVbvrSpnSSpWMuEPySYgLQO4
+	 TmYabkCkmWmhw==
+From: Maxime Ripard <mripard@kernel.org>
+To: Joel Stanley <joel@jms.id.au>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Stefan Agner <stefan@agner.ch>,
+	Alison Wang <alison.wang@nxp.com>,
+	Xinliang Liu <xinliang.liu@linaro.org>,
+	Tian Tao <tiantao6@hisilicon.com>,
+	Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Yongqin Liu <yongqin.liu@linaro.org>,
+	John Stultz <jstultz@google.com>,
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Marek Vasut <marex@denx.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Alain Volmat <alain.volmat@foss.st.com>,
+	Raphael Gallais-Pou <rgallaispou@gmail.com>,
+	Yannick Fertre <yannick.fertre@foss.st.com>,
+	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
+	Philippe Cornu <philippe.cornu@foss.st.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexey Brodkin <abrodkin@synopsys.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Anusha Srivatsa <asrivats@redhat.com>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	linux-aspeed@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org,
+	imx@lists.linux.dev,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-tegra@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	CK Hu <ck.hu@mediatek.com>
+Subject: Re: (subset) [PATCH RESEND 04/12] drm/mediatek: move to devm_platform_ioremap_resource() usage
+Date: Wed, 26 Feb 2025 15:47:54 +0100
+Message-ID: <174058126145.2737122.14070360232416372378.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250225-memory-drm-misc-next-v1-4-9d0e8761107a@redhat.com>
+References: <20250225-memory-drm-misc-next-v1-0-9d0e8761107a@redhat.com> <20250225-memory-drm-misc-next-v1-4-9d0e8761107a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 21 Feb 2025 15:35:11 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> Store HEST table address at GPA, placing its the start of the table at
-> hest_addr_le variable.
+On Tue, 25 Feb 2025 17:20:45 -0500, Anusha Srivatsa wrote:
+> Replace platform_get_resource + devm_ioremap_resource
+> with just devm_platform_ioremap_resource()
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
-> ---
->  hw/acpi/ghes.c         | 22 ++++++++++++++++++++--
->  include/hw/acpi/ghes.h |  7 ++++++-
->  2 files changed, 26 insertions(+), 3 deletions(-)
+> Used Coccinelle to do this change. SmPl patch:
+> @rule_1@
+> identifier res;
+> expression ioremap_res;
+> identifier pdev;
+> @@
+> -struct resource *res;
+> ...
+> -res = platform_get_resource(pdev,...);
+> -ioremap_res = devm_ioremap_resource(...);
+> +ioremap_res = devm_platform_ioremap_resource(pdev,0);
 > 
-> diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
-> index e49a03fdb94e..ba37be9e7022 100644
-> --- a/hw/acpi/ghes.c
-> +++ b/hw/acpi/ghes.c
-> @@ -30,6 +30,7 @@
->  
->  #define ACPI_HW_ERROR_FW_CFG_FILE           "etc/hardware_errors"
->  #define ACPI_HW_ERROR_ADDR_FW_CFG_FILE      "etc/hardware_errors_addr"
-> +#define ACPI_HEST_ADDR_FW_CFG_FILE          "etc/acpi_table_hest_addr"
->  
->  /* The max size in bytes for one error block */
->  #define ACPI_GHES_MAX_RAW_DATA_LENGTH   (1 * KiB)
-> @@ -341,6 +342,9 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
->  {
->      AcpiTable table = { .sig = "HEST", .rev = 1,
->                          .oem_id = oem_id, .oem_table_id = oem_table_id };
-> +    uint32_t hest_offset;
-> +
-> +    hest_offset = table_data->len;
->  
->      build_ghes_error_table(ags, hardware_errors, linker);
->  
-> @@ -352,6 +356,17 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
->                    ACPI_GHES_NOTIFY_SEA, ACPI_HEST_SRC_ID_SEA);
->  
->      acpi_table_end(linker, &table);
-> +
-> +    if (ags->use_hest_addr) {
-> +        /*
-> +         * Tell firmware to write into GPA the address of HEST via fw_cfg,
-> +         * once initialized.
-> +         */
-> +        bios_linker_loader_write_pointer(linker,
-> +                                         ACPI_HEST_ADDR_FW_CFG_FILE, 0,
-> +                                         sizeof(uint64_t),
-> +                                         ACPI_BUILD_TABLE_FILE, hest_offset);
-> +    }
->  }
->  
->  void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
-> @@ -361,7 +376,10 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
->      fw_cfg_add_file(s, ACPI_HW_ERROR_FW_CFG_FILE, hardware_error->data,
->                      hardware_error->len);
->  
-> -    if (!ags->use_hest_addr) {
-> +    if (ags->use_hest_addr) {
-> +        fw_cfg_add_file_callback(s, ACPI_HEST_ADDR_FW_CFG_FILE, NULL, NULL,
-> +            NULL, &(ags->hest_addr_le), sizeof(ags->hest_addr_le), false);
-> +    } else {
->          /* Create a read-write fw_cfg file for Address */
->          fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
->              NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
-> @@ -501,7 +519,7 @@ bool acpi_ghes_present(void)
->          return false;
->      }
->      ags = &acpi_ged_state->ghes_state;
-> -    if (!ags->hw_error_le)
-> +    if (!ags->hw_error_le && !ags->hest_addr_le)
->          return false;
->  
->      return true;
-> diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
-> index a3d62b96584f..454e97b5341c 100644
-> --- a/include/hw/acpi/ghes.h
-> +++ b/include/hw/acpi/ghes.h
-> @@ -71,9 +71,14 @@ enum {
->   * meaning an offset from the etc/hardware_errors firmware address. This
->   * is the default on QEMU 9.x.
->   *
-> - * An offset value equal to zero means that GHES is not present.
+> [...]
 
-> + * When use_hest_addr is true, the stored offset is placed at hest_addr_le,
-> + * meaning an offset from theHEST table address from etc/acpi/tables firmware.
-                             ^^^^^^ missing whitespace
+Applied to misc/kernel.git (drm-misc-next).
 
-'offset' language is confusing here, is asks for explanation offset from what?
-
-what is kept in hest_addr_le is GPA of HEST table, it would be better to address
-wording here.
-The same applies to similar comment in previous patch
-
-> + * This is the default for QEMU 10.x and above.
-> + *
-> + * If both offset values are equal to zero, it means that GHES is not present
->   */
->  typedef struct AcpiGhesState {
-> +    uint64_t hest_addr_le;
->      uint64_t hw_error_le;
->      bool use_hest_addr;         /* Currently, always false */
->  } AcpiGhesState;
-
+Thanks!
+Maxime
