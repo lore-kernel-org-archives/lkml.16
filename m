@@ -1,79 +1,54 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2077.outbound.protection.outlook.com [40.107.223.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D6425A2A9;
-	Wed, 26 Feb 2025 20:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740601013; cv=fail; b=Zdfavd/znstQp6ZLWCS+cRxnRONArNelnt63388nJaSmhtv9cOatRoW8M8rF0TH5cTKTA15zVu6m2+89Lu9IXKsRqIf8TMb75ijaV4R2UKnUQiUTO8Mtbz9b/x0GxIJWxE+O3NdBUVmnJuXusB/vf3wGD6bUAXlJVHKsjhe/je0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740601013; c=relaxed/simple;
-	bh=Qu5Mwut372S13myttPITGdgYmfoNnbw5dl9oOKCuLUo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mv/bsRfs6BSYU7Wsz9KJ1R7/Uw6MvGahMOW1cycibVdu3ofP8whnHx44gUYU170XdJyxCzr+QfFtgHIjPOY+JKwGhfmxUH/x4Uhl8YW/66Woyqyx5eRsdMWqw2BI4GCmmyTkBYnboHTfqeVItneN4EwU0zoLtP/fNdv9+jzRKlo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lgjpW3TW; arc=fail smtp.client-ip=40.107.223.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870C210F2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740601129; cv=none; b=qiMP++5axP2ZV56zizFhJ2Hl915wOm0RRY+q+zuWpL8NMBn5P6dvt393Q7RDIEki26z/AnJDfSPJQgatSBs+LsYdvF87UsA0LAZ/vZnps/Nei5BPr3eYSD8SVlYL5ILf3gR6hhStB6XzFT6KXbJ+MrRwAtNqGIrnz7UsOSQgzk0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740601129; c=relaxed/simple;
+	bh=a6Gr2fGBsSIxKNBsdnR8AcB356TYiEQ2ev9BeMjs/7s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZJ85F0bPYz7rhKdGNGyWavWvy/DJ9bk0wWcbJo78sNr/bB8splBGgKlUlW1u0C0lpkfG807QtXcQf3jv+aTGGsrWI1QequTsQxLJAu4Kc2cPl3Fi7PEXLdTL2P+wCJjCka93UYbIzzUPW6wJDfO8y12jvfPaRfaKM/BzdLfYIFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SHNt6EG/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lgjpW3TW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jhXYfssChm5kmJg+zDJkdke3ChYr/Te3jcok/jdQA2BjUV3ZPqozW0MjwyL9XiaAfwfkRCqAGYeb3yE498wQG2sdrHUR6EQ+r4D0iyr93RAep/nw1o+R3Qnq4PARIk30tNEjzm7d46N91P5AgiBl0d6noYvTapJ8ggPHfEO95VCDXiENvZ158FD7lNk1UJUNHKZ+UoZaeZbeT9m0fJXDxmqdsu/umPTxRQyOY3lT4O3qxgJofpVvb3WzekObfbzFDpQUFvziaX7s9dF3HiPqYv0GYG4Zx7h9UY+ICG5mH094KOs7t30xgjKZKoM8vIqRAsnBFMIM8mkzrkUjwpp1mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Aeg6ooCKjnGO8bNeBStLml4+yoRoi1aSlEKouCdPsic=;
- b=cjHVAH0hHM2hqRxW0WodeU46KgzEzRSE08MarMQX7MKlhrR4+fzuU6oMHc5+HG0d99RUomOEsKQyXeBHuJqJBBPi8V/CCamDpe5UwYSBU8/A+bkhatFDAg+gC2Hi2RHatvvKJt9WNuwtnZk7tW/NCF2yoH0DyZKE8r/Z3Yk6xaSXPig9IrxzB5y28PrYoUL+WQ95417uBDiODKPYCbxwKhEXa9/CVr0yzMApv+sIffzH78PeUR0VaZ7pRM21sgplYJUdtLqOMgmFtYdSodRGqToiiIhju1TH/T4qbo8QDcZBOr3NnkyoWg6xytfXsmuX3MHttfPnnn+0TvLerfSFuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=arm.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aeg6ooCKjnGO8bNeBStLml4+yoRoi1aSlEKouCdPsic=;
- b=lgjpW3TW91HKsIMeUcCbD8W4AVLSwW8u69afDsfGpHW+Tqow/kEDCHVcCuHerCzr6yzTffa8jI5BWdDErSbgoWqhV8W6pvjy2vpF7mIIWGo/g/dZw12RgPjS9t6NDd3tU9nC7vdXB35krkzGWjqj0hWqtcOMPsrha69EPpR1nuBhgMnO589IUgfJhcZTv/MFcbf6d6ix5mqgDs6HctQ/u6eBo14f6vyBPcK8GQ/N5dz1GMwyHawFPbN5zzE6NFIR9teLOz1zwtbgPebKPOMuH6D9JwEqN6PN90AqOLYRTMrj7lwjWlkklKHhbjeML74iXezJ0YbPvhjcJ1YfbKlKHQ==
-Received: from CY8PR11CA0035.namprd11.prod.outlook.com (2603:10b6:930:4a::21)
- by SJ1PR12MB6241.namprd12.prod.outlook.com (2603:10b6:a03:458::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
- 2025 20:16:46 +0000
-Received: from CY4PEPF0000EE32.namprd05.prod.outlook.com
- (2603:10b6:930:4a:cafe::27) by CY8PR11CA0035.outlook.office365.com
- (2603:10b6:930:4a::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Wed,
- 26 Feb 2025 20:16:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CY4PEPF0000EE32.mail.protection.outlook.com (10.167.242.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Wed, 26 Feb 2025 20:16:45 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 26 Feb
- 2025 12:16:30 -0800
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 26 Feb 2025 12:16:29 -0800
-Received: from Asurada-Nvidia.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Wed, 26 Feb 2025 12:16:29 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: <robin.murphy@arm.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<alex.williamson@redhat.com>
-CC: <jgg@nvidia.com>, <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>
-Subject: [PATCH v1 4/4] iommu: Turn iova_cookie to dma-iommu private pointer
-Date: Wed, 26 Feb 2025 12:16:07 -0800
-Message-ID: <c51c2543992b686934f7daab56a3f1c6c46ad206.1740600272.git.nicolinc@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1740600272.git.nicolinc@nvidia.com>
-References: <cover.1740600272.git.nicolinc@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SHNt6EG/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740601126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DnRnPXT+HxB6Fa3LnjUopL2yefmMufyBefSBY059ozY=;
+	b=SHNt6EG/Nj0tBjDjRuMvs7EVaxpl4YfCXQxqTyVPdPt+Gcu8adzcbhfMMTxCPzj21kFWKm
+	+pzjA4WuqOpUlM4hmMHf8IVYi+kn4+zYAm2UD3Y3LUC3n0/AAniE6gDBNUIRHnUAhlaFpX
+	R/ch8e55XnfpAaVWjDezRdTWVUhOqxQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-457-DoOsbRtPN8qMr5OBIIobMA-1; Wed,
+ 26 Feb 2025 15:18:45 -0500
+X-MC-Unique: DoOsbRtPN8qMr5OBIIobMA-1
+X-Mimecast-MFC-AGG-ID: DoOsbRtPN8qMr5OBIIobMA_1740601124
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B20A418009A5;
+	Wed, 26 Feb 2025 20:18:42 +0000 (UTC)
+Received: from random.internal.datastacks.com (unknown [10.22.82.64])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9C5B7180035E;
+	Wed, 26 Feb 2025 20:18:41 +0000 (UTC)
+From: Peter Jones <pjones@redhat.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	Lenny Szubowicz <lszubowi@redhat.com>,
+	Peter Jones <pjones@redhat.com>
+Subject: [PATCH] efi: don't map the entire mokvar table to determine its size
+Date: Wed, 26 Feb 2025 15:18:39 -0500
+Message-ID: <20250226201839.2374631-1-pjones@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,89 +56,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE32:EE_|SJ1PR12MB6241:EE_
-X-MS-Office365-Filtering-Correlation-Id: 513b3c9c-a891-48e5-6212-08dd56a27e3f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8H7ZD4lE63MBmzrSnWoeedn0q6ziubudiGIAdZADToJSIKjMBbx2sPtHfZDR?=
- =?us-ascii?Q?7rIMb5jAfVu1A33WIb06fN2zJVy13MBT3qZUk/gGgTDVqmlT8m5jFqqmQD28?=
- =?us-ascii?Q?nfI//ds55pK41EoFQMkuKQ3Dlu5W5TRtGXCXrEXM1LXyMun9QWzfyFHnt80x?=
- =?us-ascii?Q?SJpJT+ldRzU4wefWEmL5w3Y+77pbQTkF1bYj3cXa5b7pP0YGDqOXyGoPZQ3z?=
- =?us-ascii?Q?sg5IXdO4CN7J8TVbwJe+cZMpIf4Ya040PhaUTrOjpK9mQzpa4ga6hKFyE2U9?=
- =?us-ascii?Q?zX6KLXz95ydHdy3eE++zCRkzxFxHquvvNxctywDmqGhwLEzxz3C4xF2FWnDg?=
- =?us-ascii?Q?NQCPgeeLxlkzdyYr9Yz5jCzmMU5VE1dNLYJu+aog5eklVhfJHE9+hb+Ynpfm?=
- =?us-ascii?Q?WbZcstjDCGrGDKma9N4ak9FlCaWWOceH7oYUrx+T1hkG++/JJieFDksujaM/?=
- =?us-ascii?Q?L4aXzZ/ckBMvSUxKqHvTjRh3QR0D1VVRWzZu2n1wuJxC/dI0ES1bWRitpqWC?=
- =?us-ascii?Q?gbNbGHV446Gr87Epps773aLYPKS8JsMOsODpIE+0s4BNXsvXbphWQrpNC9aQ?=
- =?us-ascii?Q?QoK4QbddguDS+4nP7I2BJ+2MAdE1qABO+SiOlrY6bjR23kyv2sGWOhGwhMwt?=
- =?us-ascii?Q?lrs+tk78SOvPO5qoK020oENJM9sCoK6fgkOBD7ZhYVgcZ1WZmfoLugkGe/hZ?=
- =?us-ascii?Q?rMn2n23UPXlyKKniaG/qo7keyxLBwSfc1l045s5wJJJNU057pj9ogypFB682?=
- =?us-ascii?Q?k+NlbhuGMDyib16xvOOMlJ0O5E6cKnbqIp8kPhxCYeIUn+96L/7igDe8fJ1q?=
- =?us-ascii?Q?vjXVINsS2TJThWOr0jMBiU8pUxdm0DIkiVG7AVHUUWd6YQfslBDOct1iaaFL?=
- =?us-ascii?Q?DoB3/14XppxvoBzxOA0ukaaxzORY52O1hcGem9zwusT93zKYadljLnznlJyb?=
- =?us-ascii?Q?I8A2Rlxydz4X+UhDqsTwUHPnI6iT+jBR4FDcq0x2eL6hJEJGh/Z4n4nVqGAg?=
- =?us-ascii?Q?3MdccPmHUPfDTlzhEy5s64QD4m6r4tkjDl7PfgR/8tk4cnREIBxhsMlA3Sf0?=
- =?us-ascii?Q?DJVluKySsRXYYNXe4ZncRGPEz7k2+3r8Ru45cEogflWscyyHvsP6rMXLPR3t?=
- =?us-ascii?Q?Fdp6JLBUbUCsKmcSEU8kBky3NUG0yu8J3QuM5aUi6MK17fcBkYyyIIso8Wdq?=
- =?us-ascii?Q?Xweyh4CIwvHk1C85akdesnKC38HvbBF9Z8PDZN+9yS2kwVQXKrxhTq/WWp42?=
- =?us-ascii?Q?MmZzODK5B1TYgzXO14PUCF2jFUxXli3wcfnR6ZM7fI64i5YEZnKa/CCj47ZN?=
- =?us-ascii?Q?Ffhep7fF2C1PeeEuxW8HzHMw0AAoI4Lj8gwje7FTEJWawpp2N9ZnDvumbM7N?=
- =?us-ascii?Q?64MJfbpfrTGZYoXfxaMAT39ltYx8iZZPtQpBYOW72VKuEfcsaArTllq6rlun?=
- =?us-ascii?Q?jPE847VU0Rc5EaexcDLxq5RMWlS1bUNouEkZgigoGQOdm8qK7v2fm7/Nv42j?=
- =?us-ascii?Q?cYydsKiwpxSpGEc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 20:16:45.7845
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 513b3c9c-a891-48e5-6212-08dd56a27e3f
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE32.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6241
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Now that iommufd does not rely on dma-iommu.c for any purpose. We can
-combine the dma-iommu.c iova_cookie and the iommufd_hwpt under the same
-union. This union is effectively 'owner data' and can be used by the
-entity that allocated the domain. Note that legacy vfio type1 flows
-continue to use dma-iommu.c for sw_msi and still need iova_cookie.
+Currently when validating the mokvar table, we (re)map the entire table
+on each iteration of the loop, adding space as we discover new entries.
+If the table grows over a certain size, this fails due to limitations of
+early_memmap(), and we get a failure and traceback:
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at mm/early_ioremap.c:139 __early_ioremap+0xef/0x220
+  Modules linked in:
+  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.12.15-200.fc41.x86_64 #1
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20250221-6.copr8698600 02/21/2025
+  RIP: 0010:__early_ioremap+0xef/0x220
+  Code: e5 00 f0 ff ff 48 81 e5 00 f0 ff ff 4c 89 6c 24 08 41 81 e4 ff 0f 00 00 4c 29 ed 48 89 e8 48 c1 e8 0c 41 89 c7 83 f8 40 76 04 <0f> 0b eb 82 45 6b ee c0 41 81 c5 ff 05 00 00 45 85 ff 74 36 83 3d
+  RSP: 0000:ffffffff96803dd8 EFLAGS: 00010002 ORIG_RAX: 0000000000000000
+  RAX: 0000000000000041 RBX: 0000000000000001 RCX: ffffffff97768250
+  RDX: 8000000000000163 RSI: 0000000000000001 RDI: 000000007c4c3000
+  RBP: 0000000000041000 R08: ffffffffff201630 R09: 0000000000000030
+  R10: 000000007c4c3000 R11: ffffffff96803e20 R12: 0000000000000000
+  R13: 000000007c4c3000 R14: 0000000000000001 R15: 0000000000000041
+  FS:  0000000000000000(0000) GS:ffffffff97291000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffff9f1d8000040e CR3: 00000000653a4000 CR4: 00000000000000f0
+  Call Trace:
+   <TASK>
+   ? __early_ioremap+0xef/0x220
+   ? __warn.cold+0x93/0xfa
+   ? __early_ioremap+0xef/0x220
+   ? report_bug+0xff/0x140
+   ? early_fixup_exception+0x5d/0xb0
+   ? early_idt_handler_common+0x2f/0x3a
+   ? __early_ioremap+0xef/0x220
+   ? efi_mokvar_table_init+0xce/0x1d0
+   ? setup_arch+0x864/0xc10
+   ? start_kernel+0x6b/0xa10
+   ? x86_64_start_reservations+0x24/0x30
+   ? x86_64_start_kernel+0xed/0xf0
+   ? common_startup_64+0x13e/0x141
+   </TASK>
+  ---[ end trace 0000000000000000 ]---
+  mokvar: Failed to map EFI MOKvar config table pa=0x7c4c3000, size=265187.
+
+Mapping the entire structure isn't actually necessary, as we don't ever
+need more than one entry header mapped at once.
+
+This patch changes efi_mokvar_table_init() to only map each entry
+header, not the entire table, when determining the table size.  Since
+we're not mapping any data past the variable name, it also changes the
+code to enforce that each variable name is NUL terminated, rather than
+attempting to verify it in place.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
- include/linux/iommu.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/firmware/efi/mokvar-table.c | 41 +++++++++--------------------
+ 1 file changed, 13 insertions(+), 28 deletions(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 6f66980e0c86..c2f9dc0572da 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -216,7 +216,6 @@ struct iommu_domain {
- 	const struct iommu_ops *owner; /* Whose domain_alloc we came from */
- 	unsigned long pgsize_bitmap;	/* Bitmap of page sizes in use */
- 	struct iommu_domain_geometry geometry;
--	struct iommu_dma_cookie *iova_cookie;
- 	int (*iopf_handler)(struct iopf_group *group);
+diff --git a/drivers/firmware/efi/mokvar-table.c b/drivers/firmware/efi/mokvar-table.c
+index 5ed0602c2f7..66eb83a0f12 100644
+--- a/drivers/firmware/efi/mokvar-table.c
++++ b/drivers/firmware/efi/mokvar-table.c
+@@ -103,7 +103,6 @@ void __init efi_mokvar_table_init(void)
+ 	void *va = NULL;
+ 	unsigned long cur_offset = 0;
+ 	unsigned long offset_limit;
+-	unsigned long map_size = 0;
+ 	unsigned long map_size_needed = 0;
+ 	unsigned long size;
+ 	struct efi_mokvar_table_entry *mokvar_entry;
+@@ -134,48 +133,34 @@ void __init efi_mokvar_table_init(void)
+ 	 */
+ 	err = -EINVAL;
+ 	while (cur_offset + sizeof(*mokvar_entry) <= offset_limit) {
+-		mokvar_entry = va + cur_offset;
+-		map_size_needed = cur_offset + sizeof(*mokvar_entry);
+-		if (map_size_needed > map_size) {
+-			if (va)
+-				early_memunmap(va, map_size);
+-			/*
+-			 * Map a little more than the fixed size entry
+-			 * header, anticipating some data. It's safe to
+-			 * do so as long as we stay within current memory
+-			 * descriptor.
+-			 */
+-			map_size = min(map_size_needed + 2*EFI_PAGE_SIZE,
+-				       offset_limit);
+-			va = early_memremap(efi.mokvar_table, map_size);
+-			if (!va) {
+-				pr_err("Failed to map EFI MOKvar config table pa=0x%lx, size=%lu.\n",
+-				       efi.mokvar_table, map_size);
+-				return;
+-			}
+-			mokvar_entry = va + cur_offset;
++		if (va)
++			early_memunmap(va, sizeof(*mokvar_entry));
++		va = early_memremap(efi.mokvar_table + cur_offset, sizeof(*mokvar_entry));
++		if (!va) {
++			pr_err("Failed to map EFI MOKvar config table pa=0x%lx, size=%zu.\n",
++			       efi.mokvar_table + cur_offset, sizeof(*mokvar_entry));
++			return;
+ 		}
++		mokvar_entry = va;
  
- #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
-@@ -225,6 +224,7 @@ struct iommu_domain {
- #endif
+ 		/* Check for last sentinel entry */
+ 		if (mokvar_entry->name[0] == '\0') {
+ 			if (mokvar_entry->data_size != 0)
+ 				break;
+ 			err = 0;
++			map_size_needed = cur_offset + sizeof(*mokvar_entry);
+ 			break;
+ 		}
  
- 	union { /* Pointer usable by owner of the domain */
-+		struct iommu_dma_cookie *iova_cookie; /* dma-iommu */
- 		struct iommufd_hw_pagetable *iommufd_hwpt; /* iommufd */
- 	};
- 	union { /* Fault handler */
+-		/* Sanity check that the name is null terminated */
+-		size = strnlen(mokvar_entry->name,
+-			       sizeof(mokvar_entry->name));
+-		if (size >= sizeof(mokvar_entry->name))
+-			break;
++		/* Enforce that the name is null terminated */
++		mokvar_entry->name[sizeof(mokvar_entry->name)-1] = '\0';
+ 
+ 		/* Advance to the next entry */
+-		cur_offset = map_size_needed + mokvar_entry->data_size;
++		cur_offset += sizeof(*mokvar_entry) + mokvar_entry->data_size;
+ 	}
+ 
+ 	if (va)
+-		early_memunmap(va, map_size);
++		early_memunmap(va, sizeof(*mokvar_entry));
+ 	if (err) {
+ 		pr_err("EFI MOKvar config table is not valid\n");
+ 		return;
 -- 
-2.43.0
+2.48.1
 
