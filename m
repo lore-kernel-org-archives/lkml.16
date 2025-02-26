@@ -1,85 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79E92206B3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28F921CC4D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740576192; cv=none; b=ouF1jjtgK84Yd42OLu8fhcmIK9kVOK3TXYU0sN9XNwImVjdneqgt1P4LpDIQXCpcI7gF9Z3HYgUtn28RWlCErDVyCZET7UXy9IGU4UDsZbT4rNDxUaTSwmNh+yI3UK+EQzhf0dj1cdeEAffP5zGTbNKicL1VJZRENYCLmW7Z+tA=
+	t=1740576200; cv=none; b=lPpwqskwj/VvEgKQfSi1jOb/A5LG+KVLhvAm+0pLRBeRSnzWUEZJ/szJOBfONXXOftbyQ70Jl5cJks80Kuu3wlyBkwpA+F/GGHht9qiPBG47HrFh3ubWZA5tDinTiuGhL5fNV3Q/e83ZMFKlIeBVn8sY+ImgFBNW872Fq0QQXsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740576192; c=relaxed/simple;
-	bh=zb/ywQkAU/VZTJpUdxuoaD5DmJ0FlMmVf/JFfsbEDjY=;
+	s=arc-20240116; t=1740576200; c=relaxed/simple;
+	bh=DxPWP8rrv4ONenG/F6SsO3l4pfuop1FPheHU8L80WlE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JNplgUEFlTuJQVD7vX0RwOpaFL/gwMSpWOM8x304OBgwx7PkEYAEjq7Rapw38zCvpjWbd31pzof3ii2DKqT0QRBBXkWahU4fR+FsiHNqhHSuplWchF9tR5emJEGaisCvWSNqkejHebgQkl1GNQF1nyeH3OrPxSUazU22R8074TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dNSHaRpU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=p65063HmsOf9Wy/t8hVE4s4hHJc1wy/avbQ94S0phFtyuMXZ7JRF6WzJjTl6qDZw2X3brQCzhjRRxO+XHOiCOYMB8Zh65yHjvzUpR851HH0z6cJdt87Wy+Xo810pIfCnX1z0xGqYiliG6rUNnd5680/Tjrvg5ldX8GuK4CszAXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mV9OhvO4; arc=none smtp.client-ip=91.218.175.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dNSHaRpU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740576190;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mV9OhvO4"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740576195;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3ayxqWdfZtpuuFLEW5/IWnRh3wjbr3t43oqj3ksvw18=;
-	b=dNSHaRpUYDX3N7mvoITAObQIOsFm9HcKge/SuO7l+GtI2h6vNdwZ0GyW1EP9BPlsfjIAGr
-	lvTEBIUz6O1riBKTiZcvgciLRSiKRYBz09/Q4ta4X+PKBUVJDqyq2QeFRrcam3hQHVMtt4
-	J+lWuKRzEZRB3Vawv9PPUcg5VhC41lw=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-SsZGLmv6MsW6jatUHce-9Q-1; Wed, 26 Feb 2025 08:23:08 -0500
-X-MC-Unique: SsZGLmv6MsW6jatUHce-9Q-1
-X-Mimecast-MFC-AGG-ID: SsZGLmv6MsW6jatUHce-9Q_1740576187
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43945f32e2dso62331395e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:23:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740576187; x=1741180987;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ayxqWdfZtpuuFLEW5/IWnRh3wjbr3t43oqj3ksvw18=;
-        b=R2s8Np6tVUDaFGu6FmwxCE5/xcpu+naRALUlu+2uea/zym5VK4kjypTII2pIGP1azx
-         1ko8bdSDL+pAhC8a9CjDgZH+lD0iW3aJFSbRig7PS/mmsuoIjWd/Wck3k9yrhLf6aQRv
-         jrzLAy1bKun5FgW413THbqMEeBYxmF/s+x3ENLXxw390c7H3DKJekrAPygg/awIaioBZ
-         2IGZNPmzGElwWkkgxijXLIgHCA3suRpH6RpZHwD+PWuXUC+nhL6suF4ra7JIGbMI01p7
-         lXmylNW2Idxs8qfJ+LPEzgyLY+2rfW4i9oYrbtYVimVGjLbYRb/kwIdxXtGds1ov1YOy
-         LdFg==
-X-Gm-Message-State: AOJu0YwPUZ/US7exg64vCbDBnmAygKO2xhdtu4NcJY2vRkq3FDPg9GDH
-	olmPYKBLqUS0VjDv9jGwjwJfR3wr36k5vR6fHVGL7+dE3d9MD9vptrXWsN/JYch+nzpgNhWJ0yu
-	sE3vT6PLSk/7TDYpKRR6jPFywiXJbaVohw5+bh1xblNFM67MRKG33IRFUo0hbeX05swT8dfq4xD
-	krNVSGZd7+9A5rb8BUSOjEaU9PZC2/G71HhsXnsNnP+Ly/
-X-Gm-Gg: ASbGncszwWiUmtOTGIwtJXl5Mb9nPqMeZ6l0phVPyljFzGfxaR9GiM6kBU0EzgnoMro
-	4Knik8s4qkNWhaSyKf1K4vnQqOSemzwnchw1bFwjJoSQnL/nKNlpIOkhf5pAgFuFa1Ofhq3OvUp
-	0pA/STkuCVvHKkLUPsgV5ilxBIiKe1tU32c7vHQ/T/61Heft4MWj2PSzhfIa2xvpbSG5MPWQKux
-	VE4PLpm7a5HQUh0fSpoLqpbsi1pzCElhvPuvDuTAUtI9Vr70sB/l4aj7WScwVgwkSC+NlCqg5HS
-	hg+tedTwLifLjPL4ygbWeUzQkYsQKlRzldZ3t9crm1yOEfnnSqeVjbwma7CiDVZfjBy441eauFT
-	P
-X-Received: by 2002:a05:600c:1d1a:b0:439:916a:b3db with SMTP id 5b1f17b1804b1-43ab0f28872mr74312735e9.6.1740576187255;
-        Wed, 26 Feb 2025 05:23:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEZecayt4WE/OXHMqhCrGeiiVFvJ2H3x+MAoGPf+DIopmjwISLHjYgRgetExDyOwLcEx7l8uw==
-X-Received: by 2002:a05:600c:1d1a:b0:439:916a:b3db with SMTP id 5b1f17b1804b1-43ab0f28872mr74312325e9.6.1740576186833;
-        Wed, 26 Feb 2025 05:23:06 -0800 (PST)
-Received: from localhost (p200300cbc747ff009d854afba7df6c45.dip0.t-ipconnect.de. [2003:cb:c747:ff00:9d85:4afb:a7df:6c45])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba544029sm21379795e9.29.2025.02.26.05.23.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 05:23:06 -0800 (PST)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Alistair Popple <apopple@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v2 5/5] mm/mmu_notifier: use MMU_NOTIFY_CLEAR in remove_device_exclusive_entry()
-Date: Wed, 26 Feb 2025 14:22:57 +0100
-Message-ID: <20250226132257.2826043-6-david@redhat.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250226132257.2826043-1-david@redhat.com>
-References: <20250226132257.2826043-1-david@redhat.com>
+	bh=sz9Qjoc4T3rOFnOy9pSBe7N5DwMb8DWcqD7jnhchAio=;
+	b=mV9OhvO46Jn4Y10khTwmaVDDqE9IPSMjc8H05+YyNGaUk/mvD8zERXwvGf0AWsEu0M9XJ/
+	TrulscdG7HjTAW8vcTffVqW7P8yT2iJioRzw/Gej4EhoHRIcWeMNt9zTxF8Rp2cq/ubtXF
+	EvYYoLy4Q192+yi3s0IjylKHJUm5QIE=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: cong.wang@bytedance.com,
+	john.fastabend@gmail.com,
+	jakub@cloudflare.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	mykolal@fb.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	mhal@rbox.co,
+	jiayuan.chen@linux.dev,
+	sgarzare@redhat.com,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mrpre@163.com,
+	syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
+Subject: [PATCH bpf-next v1 1/3] bpf, sockmap: avoid using sk_socket after free
+Date: Wed, 26 Feb 2025 21:22:40 +0800
+Message-ID: <20250226132242.52663-2-jiayuan.chen@linux.dev>
+In-Reply-To: <20250226132242.52663-1-jiayuan.chen@linux.dev>
+References: <20250226132242.52663-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,56 +70,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Let's limit the use of MMU_NOTIFY_EXCLUSIVE to the case where we convert
-a present PTE to device-exclusive. For the other case, we can simply
-use MMU_NOTIFY_CLEAR, because it really is clearing the
-device-exclusive entry first, to then install the present entry.
+Use RCU lock to protect sk_socket, preventing concurrent close and release
+by another thread.
 
-Update the documentation of MMU_NOTIFY_EXCLUSIVE, to document the single
-use case more thoroughly.
+Because TCP/UDP are already within a relatively large critical section:
+'''
+ip_local_deliver_finish
+  rcu_read_lock
+  ip_protocol_deliver_rcu
+      tcp_rcv/udp_rcv
+  rcu_read_unlock
+'''
 
-If ever required, we could add a separate MMU_NOTIFY_CLEAR_EXCLUSIVE;
-for now using MMU_NOTIFY_CLEAR seems to be sufficient.
+Adding rcu_read_{un}lock() at the entrance and exit of sk_data_ready
+will not increase performance overhead.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Reported-by: syzbot+dd90a702f518e0eac072@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/6734c033.050a0220.2a2fcc.0015.GAE@google.com/
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 ---
- include/linux/mmu_notifier.h | 8 ++++----
- mm/memory.c                  | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ net/core/skmsg.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index d4e7146618262..bc2402a45741d 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -43,10 +43,10 @@ struct mmu_interval_notifier;
-  * a device driver to possibly ignore the invalidation if the
-  * owner field matches the driver's device private pgmap owner.
-  *
-- * @MMU_NOTIFY_EXCLUSIVE: to signal a device driver that the device will no
-- * longer have exclusive access to the page. When sent during creation of an
-- * exclusive range the owner will be initialised to the value provided by the
-- * caller of make_device_exclusive(), otherwise the owner will be NULL.
-+ * @MMU_NOTIFY_EXCLUSIVE: conversion of a page table entry to device-exclusive.
-+ * The owner is initialized to the value provided by the caller of
-+ * make_device_exclusive(), such that this caller can filter out these
-+ * events.
-  */
- enum mmu_notifier_event {
- 	MMU_NOTIFY_UNMAP = 0,
-diff --git a/mm/memory.c b/mm/memory.c
-index 50a305d7efcb9..79acd2d95dcff 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4046,7 +4046,7 @@ static vm_fault_t remove_device_exclusive_entry(struct vm_fault *vmf)
- 		folio_put(folio);
- 		return ret;
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 0ddc4c718833..1b71ae1d1bf5 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -1222,27 +1222,35 @@ static int sk_psock_verdict_recv(struct sock *sk, struct sk_buff *skb)
+ 
+ static void sk_psock_verdict_data_ready(struct sock *sk)
+ {
+-	struct socket *sock = sk->sk_socket;
++	struct socket *sock;
+ 	const struct proto_ops *ops;
+ 	int copied;
+ 
+ 	trace_sk_data_ready(sk);
+ 
++	/* We need RCU to prevent the sk_socket from being released.
++	 * Especially for Unix sockets, we are currently in the process
++	 * context and do not have RCU protection.
++	 */
++	rcu_read_lock();
++	sock = sk->sk_socket;
+ 	if (unlikely(!sock))
+-		return;
++		goto unlock;
++
+ 	ops = READ_ONCE(sock->ops);
+ 	if (!ops || !ops->read_skb)
+-		return;
++		goto unlock;
++
+ 	copied = ops->read_skb(sk, sk_psock_verdict_recv);
+ 	if (copied >= 0) {
+ 		struct sk_psock *psock;
+ 
+-		rcu_read_lock();
+ 		psock = sk_psock(sk);
+ 		if (psock)
+ 			sk_psock_data_ready(sk, psock);
+-		rcu_read_unlock();
  	}
--	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_EXCLUSIVE, 0,
-+	mmu_notifier_range_init_owner(&range, MMU_NOTIFY_CLEAR, 0,
- 				vma->vm_mm, vmf->address & PAGE_MASK,
- 				(vmf->address & PAGE_MASK) + PAGE_SIZE, NULL);
- 	mmu_notifier_invalidate_range_start(&range);
++unlock:
++	rcu_read_unlock();
+ }
+ 
+ void sk_psock_start_verdict(struct sock *sk, struct sk_psock *psock)
 -- 
-2.48.1
+2.47.1
 
