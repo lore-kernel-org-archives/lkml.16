@@ -1,201 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C45D19ADA2;
-	Wed, 26 Feb 2025 02:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740535768; cv=fail; b=kzlBRDMjwJGKCIZthx09PH9MHvoz5IyLVgF5TQY6MqIwV9b80wgVVP6oOd7TB1RPXSlQIve8EqwtV5b5X8H5xXrklRQx1C4LsrGTzk0P4JBStuP6WBsWLpYoxVi/utd3fd/Cwy89HXFTYme0G21Z6rhKypeSIk3gilTLO2+79Dw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740535768; c=relaxed/simple;
-	bh=V1VLTGNOdwVwBKL3CftdmlQkb8Iwamb1SSjyESkQqgU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=thzpuWAQvgwgGP+fyVTY59Af0GiwWE2lYHhx3tKpLqa2gBY46pLapl6yWv7ZIu3XrnKaBO7cs1jyquDZR7E/kEj2gUXjPfN9D4qrbLS4zEXqBH9UNzgdq/nWkYy0v3v0Ivf6sutVgO1Nefv1AgUhNPNZoUs7XjjCQr0nCUdl+Dk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LZlOzHcl; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101672153FE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740535775; cv=none; b=T/xy/uO0L4Tq9mxJ7tVFqfcI4feaJFS3wVnStIIjhwPLBmf3ycv+UoPPOcWcwMKBDWtaYVJ/tSYp1V58vYpXNxt/LuSELz16YqF0c1C+U4HyKYV3vO1TtP9LmAt4bKZIkwKXT3UhRrT0R4Q1hODGeIsna29WxQbvUDvfgolLLeQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740535775; c=relaxed/simple;
+	bh=NSHYMvLkdyKWlrJ8TUrBFvBlFGqXUq8fzgDW+/N42tQ=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=cDep9GQ60oVxnM0O194ZL/ZpsJrFcdl/PCelL5j2NWOV9sVQi95/B1TEZC7erW+ce/99GYrz/+sLKcH/gVehboYQ3bJ00rKBkPZNYrrIVL9GRBTlCf+nN77uO7byL8VN0XuXm8P7mTBIkUO9eqgu1ctDlKDW4Hgt55a0hzdlpSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=u0yVGzYi; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eet465dc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XtO52lJP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=k0wvKTl8; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LZlOzHcl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740535767; x=1772071767;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=V1VLTGNOdwVwBKL3CftdmlQkb8Iwamb1SSjyESkQqgU=;
-  b=LZlOzHclAwvLGx8sOrUxCGDDvtoSiKMKMzbwu3kac6SRp91kqjixMpgV
-   jN667MTUVDh6SA/VwV0tTStHG77wn+x+fekAVU/E9o5SIVdZzfGzXzVQr
-   SO7ObyelIRiuHq6PQpaKOWJcejWiDDTdZXR7NYsVgL2avn17pZhq/NY9T
-   vfXKq1zIrNnxnrv2+MKbVHKU+v0GDN9RltBy0lBapmYR0ptvSLiL0gvLh
-   6eFNpxUnkioIE1x010JAj1/QEegyX86CGgDOE7st4qvO9IxxFGcNNUNap
-   kCkGwSum7njRgbVgtL3C43hJzZ2W2OGjxoBVMeja8QWA/KpCtuX1q9yks
-   A==;
-X-CSE-ConnectionGUID: wTW+s1Y9S6u7/7tBRAs2zg==
-X-CSE-MsgGUID: Nwi14xcgS8WiTraPc/P+Xw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41504722"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="41504722"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 18:09:27 -0800
-X-CSE-ConnectionGUID: VVIt46n/T4COhsJxsZIkiw==
-X-CSE-MsgGUID: 2yhw1+3ERESGVzgRdBKBFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147478007"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Feb 2025 18:09:26 -0800
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 25 Feb 2025 18:09:25 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 18:09:25 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 25 Feb 2025 18:09:26 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=arxs3P7xdW3wtyga5K7q5wepCLREwChy4+FOCmjOHeTM9bk3FdSYGnFQWlalZyA5IO46ywScGd09KpFnm0ukyrsPxaYtYYJ5M6JXn6TtaTwHQ9optCPRtUZGIKjhO8pSeOTRNBq8pmbtMDH5LQEyeFvJ/+TLlg6I2h6XfB0m+UD8lUxKss1b+SaWhlMAt95CNwuQN1w4t/Xut4SUvcFNGzB9fRoxGnw6YDphSgQyvSgyjVSOZ8Ab26x2q/G0QLwB4pURe1xa00dIVgwypsCkMpxo71pSYxXKK/Dm7dSODs8cWxNMN6yyPCyE0Lc+P6ccA7kQxxa1xJvQii3+OxK0jQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f6w8hqlP7DakTKcD1uo3n+nGLXdhhWgtkZAbtOND/aw=;
- b=IZ43KBqnH4jkOruaPJTM6WfcW2oZBm++h4IXR3XVSKBKqZqHqRKeXgsO2JsY/XCYNLqVEWTgWV7KjMx4Tl22+M5O/8SjtbRgxIkDLMOifKpZsoWPBCJUbvqwOC7DjPJ5UgT3RZpKG5nALrEcYPJat0L9nSG83MbBPSKjyOhtrbyBtGzlSUUjqN1RAUymFgxF3tRVzhvU7xrG2bnTGSPxYaX57PL39UM3EczSW20hnroyi7N9p7uO67/eyotZ5CjKItfrnyYY8sdJLxpgnbWm1sk1dDYgfMnUTG2YnowyOU1E4PA4c3v4pXr5ehx0tVMnKVnrvv/DprKvmIl46JX2Lw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- PH7PR11MB5885.namprd11.prod.outlook.com (2603:10b6:510:134::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
- 2025 02:09:10 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%4]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
- 02:09:10 +0000
-Date: Wed, 26 Feb 2025 10:07:53 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Rick P Edgecombe <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: selftests: Wait mprotect_ro_done before write to RO
- in mmu_stress_test
-Message-ID: <Z753eenv5NKkw2j/@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250208105318.16861-1-yan.y.zhao@intel.com>
- <23ea46d54e423b30fa71503a823c97213a864a98.camel@intel.com>
- <Z6qrEHDviKB2Hf6o@yzhao56-desk.sh.intel.com>
- <69a1443e73dc1c10a23cf0632a507c01eece9760.camel@intel.com>
- <Z750LaPTDS6z6DAK@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z750LaPTDS6z6DAK@google.com>
-X-ClientProxiedBy: SGBP274CA0021.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::33)
- To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="u0yVGzYi";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eet465dc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XtO52lJP";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="k0wvKTl8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EA1BB1F387;
+	Wed, 26 Feb 2025 02:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740535771; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NSHYMvLkdyKWlrJ8TUrBFvBlFGqXUq8fzgDW+/N42tQ=;
+	b=u0yVGzYiNkzoEPIVHZee60sXFj3ne+Wb8tPzwZ/NcZWX1ofnfNRGRJwIXcAb9D/IDMGyb/
+	usUaRMHuPkFExNna4bYaKzoK+yUhpgWHHy3u+WOTuKI/FFaPgHGWzE79KiJGQruftUWdpU
+	x83Pz3gK8Sl5gqJalcZ0usKWFh24ZfY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740535771;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NSHYMvLkdyKWlrJ8TUrBFvBlFGqXUq8fzgDW+/N42tQ=;
+	b=eet465dcLupY2TpMQbmmQdvX+TDfghJ8aIFuG7/Cr1OyR05t8xUbytdq1Ic3lU5zNdpoai
+	tKqVPW+naUF6X/Dg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=XtO52lJP;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=k0wvKTl8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740535770; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NSHYMvLkdyKWlrJ8TUrBFvBlFGqXUq8fzgDW+/N42tQ=;
+	b=XtO52lJPWuBEyOccT4EnXjjeFJ8fOtInDyKUUA+yznmb22nEwsuDzq0wTYEAhVOWZ4Ej4n
+	c81NWXZ7ui/GzQeXRfXCxgGwwyVF1wx9qjPBVvVe7ThQ7GrTCxaP31V4kPpim4xu6ClB1C
+	fST4cM1wVZ+Udh/RiZIS+H0sLKady7Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740535770;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NSHYMvLkdyKWlrJ8TUrBFvBlFGqXUq8fzgDW+/N42tQ=;
+	b=k0wvKTl8JYtMrGy37fuIOg7D7oNXeJY52zKjSvtUfDhxeGoKL9/5A72/9kHcQIhk4UAB76
+	Ioq34eDDLVWaC1AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E0BC213404;
+	Wed, 26 Feb 2025 02:09:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id C85nJNJ3vmdDXgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 26 Feb 2025 02:09:22 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH7PR11MB5885:EE_
-X-MS-Office365-Filtering-Correlation-Id: c5b35eec-87a9-4b7a-4d7e-08dd560a8ec1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?2fFxrwa7mL4Ywtz2PnM24CojqfveTMoEz9aJChmPF29H0q0URD3p6nmE1Jmf?=
- =?us-ascii?Q?xZrW1VwrIEoLEGRYF0OdGkwNSHrHBAD7LxKlNcql3UJot6hJ3XjC7LPynifp?=
- =?us-ascii?Q?8mkJ8E0lbc0fWJ4RlefVcKWT8uDFkWwRos1Ne0rKBu74Oi0XbsR3/XFDCUIU?=
- =?us-ascii?Q?r2Du2ucfBe5Clzwhpe7iArEizdsD6UeHvtQDxsLkYfSSVwIOX+9+NrQmp2Vw?=
- =?us-ascii?Q?tnO7lmf6GO6oKZxOZ5GWrk7RJhCwldOiusQQMeWRqpv8ZKdLsACB0mzEeOtI?=
- =?us-ascii?Q?tU1GdlY9R6Z1TrUUDQOBmQS4YRpQMdzdylV7dnMGUudPStrZIdsqKxwvL7By?=
- =?us-ascii?Q?VvEFjudclNpdOjOgYSlK5b29PLy6TLBVuVt4SW/z7OmpBC9x9WJ/Fsx3bnX9?=
- =?us-ascii?Q?dsD43J6gSW7U7SE1Pv2FI1QKOKHoTvoZcdEh5iIB6Z4SunwMZqVani3vEj99?=
- =?us-ascii?Q?W14Rd9K2W3GqfD8pnmNtc+au2SLmgIhTyFhzljlO/4XvT48cFDk5RpHFryX+?=
- =?us-ascii?Q?JwPATaGlOy35Svc+MuUQEl7TP/Gr1W+aXeyViE4liBhA7qbGhHAivEqi0ZD1?=
- =?us-ascii?Q?EIrhFyNMeWxuC0VWJVp8mf1IJfoCNGPfv0lvGN+puvkcgl21GMxlVEnyDP3U?=
- =?us-ascii?Q?F/SRP7yyKjqrtq99p7VEUyz2B8u1tJzc00ynNDughqvc3tcr6l+dQNy8auyL?=
- =?us-ascii?Q?eg8Gg192p36/XCj7i4SZfb5rv/q0wblNWoTaDB4dooDwGLfxNb5J80zTJTx3?=
- =?us-ascii?Q?mWTGe5KBiPC/z6R1nSzaY0cT0FzQaCScbasrzH5mQZmY6xrsXyyvzofxTn0o?=
- =?us-ascii?Q?9mStXhyDFGTpkAJMiPLAzbxZhgqRTQA1zkg0SXBR/XnDINp+L4pAYY90jvAH?=
- =?us-ascii?Q?N7BEuClx0sk1x9SbpkiBsLyia92Ou+QDjc387JUcnKO+cSKhxNbGvYs5BFqK?=
- =?us-ascii?Q?ZaeU9FYjVKuTL5O/uHzlWJMGsmlJyeh7eTgs0w8A1nHHoj0WagagEcyxfpMe?=
- =?us-ascii?Q?FMogmWCO5oElb2Kf6YKOoyXEsdN9pjBE0P+w2VMfgeo/1ABsuYQdESIHl/l2?=
- =?us-ascii?Q?DcPuqsb8vgQKIReoZGmp1S/VN7ABIG+BCkNm1cwX1rOZPaYpvdW1Iv3vzaqn?=
- =?us-ascii?Q?BjdI1cPxjapYyjkIzIwlNbErIYED0dHVl4PrVeEHkJSfyDywIvNNb9y1d8g6?=
- =?us-ascii?Q?nwlsQQs4ASMf1qvjq0oy2gKr2BEfzrUzWjTnfAKn9cdAf/fh4aWpU/eqm05s?=
- =?us-ascii?Q?JfU+M3Yg+ciLHG4m3ywuS5jTq7FpLJQD60hVTCPqApMPdXBQ4W0m0KwGgabh?=
- =?us-ascii?Q?69CRIOKW50lYzH5CLQ5hqi2Ilq1STz3yGriQ69nWR2uxvujnu9/A01SAkB81?=
- =?us-ascii?Q?Uw9qicVvlvrlwTbQXFn7y0VPwA1/?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JkoK/FajejQyzvhCiSPh4qlaucG0GS0h9nO2ZxuKuNPy0+6txnHmEpaQOERH?=
- =?us-ascii?Q?dZO55iDiDAqkzzb0slEPAtssophH2yyLshMW9ISu70cLoi/E/JUbBqwZYB5C?=
- =?us-ascii?Q?seOtIp32mO4MAG1XJPzPE4R2hZ4U9RyMVoEsAulid3xe97Fvs4aferB+J8mz?=
- =?us-ascii?Q?RrkBm54qZLWCzCdsQyfY7fqgXJOS8/euXhQDDQ31fx7CSYSJCWFa0Xo8tKk8?=
- =?us-ascii?Q?kmlpRhIBEZbmqEfwOs5ZgsUcKO9lhurz+kjm3AbQqL0XoEYI2iopzTKkeM/w?=
- =?us-ascii?Q?rHjNi4YZV8fLVjyaN/pJd0bdmzN1nV4EZR6Tk8m/JodncxvCQuMX4IZfqqo/?=
- =?us-ascii?Q?wPnMMN0iiZguUfXrRljHXJzBoVuz8LT1o/SZpzsQaqV+TdfS90VIk04Cp3Uk?=
- =?us-ascii?Q?Hkc+U00zR5tHyglk8IN5QbK5x5wqz/YXoCh46QrmAYdCa6XAPy3Q6NraCh2+?=
- =?us-ascii?Q?h4mjXFJLOYWCv3VYJOFRA5Kan4mb165PR+Dpl3iyjIOJYSR2CnFgVaMQV0Hh?=
- =?us-ascii?Q?69YFQC0sPCsFjDPOLjI9VT4A/nd0tAbPxkpEv5be/Qd2At8rkPRsjaBEfGHu?=
- =?us-ascii?Q?BeDana4ASsgDgiHjNSfCq8ZXKEdidewghfa48rqztdDNlqv5o63OIVGMPu77?=
- =?us-ascii?Q?pFNi2IDuYr0E1Msg/IN4ao/HrksSZIoW9upktAkj9GRiqUT6CHGdzmgfJEKh?=
- =?us-ascii?Q?zrL0ODEoem21otp4kZG2xCiEvOMBc1iaStIJda5xbucvtqhlljFy8Wf5TYXp?=
- =?us-ascii?Q?wuHh0ZnVO+zyhr3r8txPw4d1fMJwK4G2+AzigzBPl+5TkE4kIhjrevXmOuf9?=
- =?us-ascii?Q?k1jOPNCbiw5NmaT7KSHVC0BUANvx4BLR1ReMQJ1D0xduWMhwvOTK2p/iCA9L?=
- =?us-ascii?Q?Z2wloln1jppayXPptrnXDHxHNGGUjOOS4iZ8EVPx2yOfvkB7spW3cXMPWBmD?=
- =?us-ascii?Q?WGr0XO1RPO4a4KusGjuO+fO5YIRe4Enkits33RaQybcvfMUEWVClEYWTUOlv?=
- =?us-ascii?Q?N9O2PVcM7he9bFCEhS+SBe0WsSVtuIG1HrhR5jzFz4kkBcy4odk+l8CJbzD6?=
- =?us-ascii?Q?GUv2eEQjg83DV3Mfrfi+nH5X8C0N8GQFcDjUPnW18B95mMvX6RWdGrjG4DNu?=
- =?us-ascii?Q?MnZ9XxqaGyvlL67426aB8EQWZj+y1Zdwc30pFXl1Sde2waFi/uwVTeoW6Ira?=
- =?us-ascii?Q?qRf8NoK5F/kyc2qIcGo2J0XtQmQlRGRkbuv0s3rqWGR0qAqmkAdEDdWCmfxK?=
- =?us-ascii?Q?tBy46XRN4g5o1pblbipdO8BzUjmHAQvLfFGGfWXK5PgVMZqz+m5rjyF1jJv6?=
- =?us-ascii?Q?Ze/bTdtyThl6435CUS5T/l7WU50nyVaDm0R2gvwG9IJCwFsQ3KRmxZ+VhqNS?=
- =?us-ascii?Q?26T1UWYYE/2JJ+eta8Rrbv+26tkDdolfqwjOXxFfAYwviXB+mJcWXcPtRlk9?=
- =?us-ascii?Q?4iUkdTPpxcI02UTmh229hgi7Y0+1mu4MAvnyq+jgTDJrWq5+VXrWIwx/GZow?=
- =?us-ascii?Q?/OhUGUxKV/qDexb7Rbqt5iIQ7trGEFKqZJqn1+daFG29GU6lRzi0wDWiWKq8?=
- =?us-ascii?Q?szrOeLy4z/blNLECo+aszpFNJWG7M15bFHdmmmUC?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5b35eec-87a9-4b7a-4d7e-08dd560a8ec1
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 02:09:10.3401
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0bVpsfPdF2LgLzKtrEy0Gr47hG8QJfoFoCsQ68TdRpybzJ8Ie70GSDRRLV0oCVPlulMjaPKsPVUeLCCOq5RKhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5885
-X-OriginatorOrg: intel.com
+From: "NeilBrown" <neilb@suse.de>
+To: "Trond Myklebust" <trondmy@hammerspace.com>
+Cc: "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "brauner@kernel.org" <brauner@kernel.org>,
+ "xiubli@redhat.com" <xiubli@redhat.com>,
+ "idryomov@gmail.com" <idryomov@gmail.com>,
+ "okorniev@redhat.com" <okorniev@redhat.com>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+ "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+ "jlayton@kernel.org" <jlayton@kernel.org>,
+ "anna@kernel.org" <anna@kernel.org>, "miklos@szeredi.hu" <miklos@szeredi.hu>,
+ "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
+ "jack@suse.cz" <jack@suse.cz>, "tom@talpey.com" <tom@talpey.com>,
+ "richard@nod.at" <richard@nod.at>,
+ "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "netfs@lists.linux.dev" <netfs@lists.linux.dev>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>
+Subject:
+ Re: [PATCH 1/6] Change inode_operations.mkdir to return struct dentry *
+In-reply-to: <d4aaba8c09f68d8a8264474ce81b9e818eaa60d7.camel@hammerspace.com>
+References:
+ <>, <d4aaba8c09f68d8a8264474ce81b9e818eaa60d7.camel@hammerspace.com>
+Date: Wed, 26 Feb 2025 13:09:19 +1100
+Message-id: <174053575968.102979.1033896985966452059@noble.neil.brown.name>
+X-Rspamd-Queue-Id: EA1BB1F387
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,redhat.com,gmail.com,vger.kernel.org,oracle.com,sipsolutions.net,szeredi.hu,cambridgegreys.com,suse.cz,talpey.com,nod.at,lists.infradead.org,lists.linux.dev,chromium.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	MISSING_XM_UA(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Tue, Feb 25, 2025 at 05:53:49PM -0800, Sean Christopherson wrote:
-> On Tue, Feb 11, 2025, Rick P Edgecombe wrote:
-> > On Tue, 2025-02-11 at 09:42 +0800, Yan Zhao wrote:
-> > > > On the fix though, doesn't this remove the coverage of writing to a
-> > > > region that is in the process of being made RO? I'm thinking about
-> > > > warnings, etc that may trigger intermittently based on bugs with a race
-> > > > component. I don't know if we could fix the test and still leave the
-> > > > write while the "mprotect(PROT_READ) is underway". It seems to be
-> > > > deliberate.
-> > > Write before "mprotect(PROT_READ)" has been tested in stage 0.
-> > > Not sure it's deliberate to test write in the process of being made RO.
-> 
-> Writing while VMAs are being made RO is 100% intended.  The goal is to stress
-> KVM's interactions with the mmu_notifier, and to verify KVM delivers -EFAULT to
-> userspace.
-> 
-> Something isn't quite right in the original analysis.  We need to drill down on
-> that before change anything.
-> 
-> FWIW, I run this test frequently on large systems and have never observed failures.
-Could you try adding CONFIG_LOCK_STAT=y?
+On Tue, 25 Feb 2025, Trond Myklebust wrote:
+> On Mon, 2025-02-24 at 14:09 +1100, NeilBrown wrote:
+> > On Mon, 24 Feb 2025, Al Viro wrote:
+> > > On Mon, Feb 24, 2025 at 12:34:06PM +1100, NeilBrown wrote:
+> > > > On Sat, 22 Feb 2025, Al Viro wrote:
+> > > > > On Fri, Feb 21, 2025 at 10:36:30AM +1100, NeilBrown wrote:
+> > > > >=20
+> > > > > > +In general, filesystems which use d_instantiate_new() to
+> > > > > > install the new
+> > > > > > +inode can safely return NULL.=C2=A0 Filesystems which may not
+> > > > > > have an I_NEW inode
+> > > > > > +should use d_drop();d_splice_alias() and return the result
+> > > > > > of the latter.
+> > > > >=20
+> > > > > IMO that's a bad pattern, _especially_ if you want to go for
+> > > > > "in-update"
+> > > > > kind of stuff later.
+> > > >=20
+> > > > Agreed.=C2=A0 I have a draft patch to change d_splice_alias() and
+> > > > d_exact_alias() to work on hashed dentrys.=C2=A0 I thought it should
+> > > > go after
+> > > > these mkdir patches rather than before.
+> > >=20
+> > > Could you give a braindump on the things d_exact_alias() is needed
+> > > for?
+> > > It's a recurring headache when doing ->d_name/->d_parent audits;
+> > > see e.g.
+> > > https://lore.kernel.org/all/20241213080023.GI3387508@ZenIV/=C2=A0for
+> > > related
+> > > mini-rant from the latest iteration.
+> > >=20
+> > > Proof of correctness is bloody awful; it feels like the primitive
+> > > itself
+> > > is wrong, but I'd never been able to write anything concise
+> > > regarding
+> > > the things we really want there ;-/
+> > >=20
+> >=20
+> > As I understand it, it is needed (or wanted) to handle the
+> > possibility
+> > of an inode becoming "stale" and then recovering.=C2=A0 This could happen,
+> > for example, with a temporarily misconfigured NFS server.
+> >=20
+> > If ->d_revalidate gets a NFSERR_STALE from the server it will return
+> > '0'
+> > so lookup_fast() and others will call d_invalidate() which will
+> > d_drop()
+> > the dentry.=C2=A0 There are other paths on which -ESTALE can result in
+> > d_drop().
+> >=20
+> > If a subsequent attempt to "open" the name successfully finds the
+> > same
+> > inode we want to reuse the old dentry rather than create a new one.
+> >=20
+> > I don't really understand why.=C2=A0 This code was added 20 years ago
+> > before
+> > git.
+> > It was introduced by
+> >=20
+> > commit 89a45174b6b32596ea98fa3f89a243e2c1188a01
+> > Author: Trond Myklebust <trond.myklebust@fys.uio.no>
+> > Date:=C2=A0=C2=A0 Tue Jan 4 21:41:37 2005 +0100
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0 VFS: Avoid dentry aliasing problems in filesyste=
+ms like NFS,
+> > where
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inodes may be mark=
+ed as stale in one instance (causing the
+> > dentry
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to be dropped) the=
+n re-enabled in the next instance.
+> > =C2=A0=C2=A0=C2=A0=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0 Signed-off-by: Trond Myklebust <trond.myklebust@=
+fys.uio.no>
+> >=20
+> > in history.git
+> >=20
+> > Trond: do you have any memory of this?=C2=A0 Can you explain what the
+> > symptom
+> > was that you wanted to fix?
+> >=20
+> > The original patch used d_add_unique() for lookup and atomic_open and
+> > readdir prime-dcache.=C2=A0 We now only use it for v4 atomic_open.=C2=A0 =
+Maybe
+> > we
+> > don't need it at all?=C2=A0 Or maybe we need to restore it to those other
+> > callers?=20
+> >=20
+>=20
+> 2005? That looks like it was trying to deal with the userspace NFS
+> server. I can't remember when it was given the ability to use the inode
+> generation counter, but I'm pretty sure that in 2005 there were plenty
+> of setups out there that had the older version that reused filehandles
+> (due to inode number reuse). So you would get spurious ESTALE errors
+> sometimes due to inode number reuse, sometimes because the filehandle
+> fell out of the userspace NFS server's cache.
 
-With this config, the failure rate is more than 90% in my SPR non-TDX machine,
-and 20%~80% in my TDX machine.
+So this was likely done to work-around known weaknesses in NFS servers
+at the time.
 
-> Maybe Rick and I should go buy lottery tickets?
+The original d_add_unique() was used in nfs_lookup() nfs_atomic_lookup()
+and nfs_readdir_lookup() but the current descendent d_exact_alias() is
+only used in _nfs4_open_and_get_state() called only by nfs4_do_open()
+which is only used in nfs4_atomic_open() and nfs4_proc_create().
+
+So the usage in 'lookup' and 'readdir' have fallen by the wayside with
+no apparent negative consequences. =20
+The old NFS servers have probably been fixed.
+
+So do you have any concerns with us discarding d_exact_alias() and only
+using d_splice_alias() in _nfs4_open_get_state() ??
+
+Thanks,
+NeilBrown
+
