@@ -1,134 +1,113 @@
-Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CED20DD7A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8998926619B;
+	Wed, 26 Feb 2025 21:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740605973; cv=none; b=UYzIFJtB4jgUpOaB+tUuuqhyL5gypXrOBKgAJkhW7YtQMhGQi+O2gRodDaBVh3dM1BzM9Z0d27mYZS1YkROWa1Rmz2e2y+7jOEo2SPwCXrCxpPLVLODPaAe4FQge2dzn3rSOFmwgmumU5XTIKz5sVGANM/sw/v6jya7DvMxjExE=
+	t=1740605977; cv=none; b=Pu/Bp1hGt0BWjTQw/9xcFqt5ZxqKCjEv0xyaIlHB6O0U0sVBwSWqmZg9WeW+/O2zlcLb2jIzg48VSYGRwsf77SRSuqdNx3h33hhEhW+6jpccDUG2E67J59UduYdzmuXR6Pj8Up1wlQlFZOASXVk6u4l6bdc2nM/nMjy0BhxhApo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740605973; c=relaxed/simple;
-	bh=QrmEP8tN0yyZl54302laf2o0i1y0v20R661+ErCqyqE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fY1lYIuXSrXw/lPJ31fDM2VA6VLGrGLQ1gIJhUZ4okMJjMVAmtUVu3+0/rAKdaDEq5G3yM5b4OYz4bAwCUeHHMztcv617icggwHYh1/cC7t3d+zWvKEhL7CfSCQU50pQs6/7N5jdGbOuXjAioPLFPDIQ9Onw7A511OV2fLU4CSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=EhJ+rQ5g; arc=none smtp.client-ip=67.231.153.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1740605977; c=relaxed/simple;
+	bh=VETQmyxyjF0N4tZ9I2Egpc42vNVtgQlUq1h/Mf1W7qM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jk0DtCxxpIMuJ9MR2UJhbXQa4W8BllQlvwNgZK8IFVshw0XLina8e0yHofIOxFr1rW24g3s9XHQSOKix+qNqy9W1GlvXTqXXqL13M5yfoqj72KtokGxmyBmNfxDpufTAEV3zl2QTF9nz1GcoDGjWA8OfimYbpEr722ZwRWVTXok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=kWFmf5ia; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="EhJ+rQ5g"
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QKcd8a011226
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:39:30 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
-	 bh=6QWMRWFJaMkolJ4N5fn/a7XdpweKZa/QIaMY7SwUwCE=; b=EhJ+rQ5gnA22
-	LPjCW3FVCVOMYRKkT8w6EINOcbZO2B++l2lp1qwEq18MH8Dbp0mNAASd790R/86m
-	5+BDX8Wu4McTHfEwdGQWTOssNXUmeIY5SnWPYUBjsQrb8U7MhrMr11R7zp17HVe+
-	ViGB+0HL1JA1rYNpZGTI+lW4T6FR7zzUuqUWGPguNxCnZMC71CAaRUdBldwKacJm
-	c9JxXoHIY1WOfXcUMetvPH+ACcCodqvTiLzV9L1oOL6n44jAFMEyXxsqv8DIp7TJ
-	5nqChHZmU/bt7e/OjCRx8q6VsOZ5Q3ZtbSv5jGGZI7+Dd1xnCVJTjEP2x3wLZ8RA
-	lh7k6PZGKA==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 45257gu7am-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:39:30 -0800 (PST)
-Received: from twshared11082.06.ash8.facebook.com (2620:10d:c0a8:1b::30) by
- mail.thefacebook.com (2620:10d:c0a9:6f::237c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 26 Feb 2025 21:38:48 +0000
-Received: by devbig638.nha1.facebook.com (Postfix, from userid 544533)
-	id 32A80187DD500; Wed, 26 Feb 2025 13:38:45 -0800 (PST)
-From: Keith Busch <kbusch@meta.com>
-To: <pbonzini@redhat.com>, <seanjc@google.com>, <kvm@vger.kernel.org>
-CC: <x86@kernel.org>, <virtualization@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2 1/2] vhost: return task creation error instead of NULL
-Date: Wed, 26 Feb 2025 13:38:43 -0800
-Message-ID: <20250226213844.3826821-2-kbusch@meta.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250226213844.3826821-1-kbusch@meta.com>
-References: <20250226213844.3826821-1-kbusch@meta.com>
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="kWFmf5ia"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1740605973; bh=VETQmyxyjF0N4tZ9I2Egpc42vNVtgQlUq1h/Mf1W7qM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kWFmf5iawAEQwRJ++zvc0dZVOkVpZryx0DJI8AM/alTYgy5fcVWuZbravN7jEf61L
+	 os6+9TS9rA4IMdEOMb46Irx8AwyiSv0TPE22OsscC+tbGR7kzioeD7ErROPhRPNe/h
+	 QkmsTC5v8flCKEVDdMS2yBOB1GMm3m8zfR3LXZaA=
+Received: from [IPV6:2001:8e0:207e:3500:4ab6:48fe:df57:b084] (2001-8e0-207e-3500-4ab6-48fe-df57-b084.ewm.ftth.ip6.as8758.net [IPv6:2001:8e0:207e:3500:4ab6:48fe:df57:b084])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id A416B2052D08;
+	Wed, 26 Feb 2025 22:39:33 +0100 (CET)
+Message-ID: <7ab2de35-8fc8-42cf-9464-81384e227dba@ralfj.de>
+Date: Wed, 26 Feb 2025 22:39:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: 3bKkHc11QqpxgssWmWqANtGLxx3xRbfO
-X-Proofpoint-ORIG-GUID: 3bKkHc11QqpxgssWmWqANtGLxx3xRbfO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Ventura Jack <venturajack85@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo>
+ <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+ <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+ <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com>
+ <CAH5fLghEMtT663SNogAGad-qk7umefGeBKbm+QjKKzoskjOubw@mail.gmail.com>
+ <CAFJgqgRxfTVxrWja=ZW=mTj1ShPE5s-atAqxzMOq5poajMh=4A@mail.gmail.com>
+ <91dbba64-ade3-4e46-854e-87cd9ecaa689@ralfj.de>
+ <CAFJgqgTTgy=yae68AE29oJQc7Bi+NvkgsrBtOkVUvRt1O0GzSQ@mail.gmail.com>
+ <6983015e-4d6a-44d4-9f2e-203688263018@ralfj.de>
+ <CAFJgqgTJ+GBvdkZf4bPHPoUgJj5ZzENZaLzVV2bnDOEG+3OMtw@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <CAFJgqgTJ+GBvdkZf4bPHPoUgJj5ZzENZaLzVV2bnDOEG+3OMtw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Keith Busch <kbusch@kernel.org>
+Hi,
 
-Lets callers distinguish why the vhost task creation failed. No one
-currently cares why it failed, so no runtime change from this patch, but
-that will not be the case for long.
+>> Yes. There's various projects, from bounded model checkers (Kani) that can
+>> "only" statically guarantee "all executions that run loops at most N times are
+>> fine" to full-fledged static verification tools (Gillian-Rust, VeriFast, Verus,
+>> Prusti, RefinedRust -- just to mention the ones that support unsafe code). None
+>> of the latter tools is production-ready yet, and some will always stay research
+>> prototypes, but there's a lot of work going on, and having a precise model of
+>> the entire Abstract Machine that is blessed by the compiler devs (i.e., Miri) is
+>> a key part for this to work. It'll be even better when this Abstract Machine
+>> exists not just implicitly in Miri but explicitly in a Rust Specification, and
+>> is subject to stability guarantees -- and we'll get there, but it'll take some
+>> more time. :)
+>>
+>> Kind regards,
+>> Ralf
+>>
+> 
+> Thank you for the answer. Almost all of those projects look active,
+> though Prusti's GitHub repository has not had commit activity for many
+> months. Do you know if any of the projects are using stacked borrows
+> or tree borrows yet? Gillian-Rust does not seem to use stacked borrows
+> or tree borrows. Verus mentions stacked borrows in "related work" in
+> one paper.
 
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
- arch/x86/kvm/mmu/mmu.c | 2 +-
- drivers/vhost/vhost.c  | 2 +-
- kernel/vhost_task.c    | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+VeriFast people are working on Tree Borrows integration, and Gillian-Rust people 
+also have some plans if I remember correctly. For the rest, I am not aware of 
+plans, but that doesn't mean there aren't any. :)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index d4ac4a1f8b81b..18ca1ea6dc240 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7471,7 +7471,7 @@ static void kvm_mmu_start_lpage_recovery(struct onc=
-e *once)
- 				      kvm_nx_huge_page_recovery_worker_kill,
- 				      kvm, "kvm-nx-lpage-recovery");
-=20
--	if (!nx_thread)
-+	if (IS_ERR(nx_thread))
- 		return;
-=20
- 	vhost_task_start(nx_thread);
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index 9ac25d08f473e..61dd19c7f99f1 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -666,7 +666,7 @@ static struct vhost_worker *vhost_worker_create(struc=
-t vhost_dev *dev)
-=20
- 	vtsk =3D vhost_task_create(vhost_run_work_list, vhost_worker_killed,
- 				 worker, name);
--	if (!vtsk)
-+	if (!IS_ERR(vtsk))
- 		goto free_worker;
-=20
- 	mutex_init(&worker->mutex);
-diff --git a/kernel/vhost_task.c b/kernel/vhost_task.c
-index 8800f5acc0071..2ef2e1b800916 100644
---- a/kernel/vhost_task.c
-+++ b/kernel/vhost_task.c
-@@ -133,7 +133,7 @@ struct vhost_task *vhost_task_create(bool (*fn)(void =
-*),
-=20
- 	vtsk =3D kzalloc(sizeof(*vtsk), GFP_KERNEL);
- 	if (!vtsk)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 	init_completion(&vtsk->exited);
- 	mutex_init(&vtsk->exit_mutex);
- 	vtsk->data =3D arg;
-@@ -145,7 +145,7 @@ struct vhost_task *vhost_task_create(bool (*fn)(void =
-*),
- 	tsk =3D copy_process(NULL, 0, NUMA_NO_NODE, &args);
- 	if (IS_ERR(tsk)) {
- 		kfree(vtsk);
--		return NULL;
-+		return ERR_PTR(PTR_ERR(tsk));
- 	}
-=20
- 	vtsk->task =3D tsk;
---=20
-2.43.5
+> On the other hand, RefinedRust reuses code from Miri.
+
+No, it does not use code from Miri, it is based on RustBelt -- my PhD thesis 
+where I formalized a (rather abstract) version of the borrow checker in Coq/Rocq 
+(i.e., in a tool for machine-checked proofs) and manually proved some pieces of 
+small but tricky unsafe code to be sound.
+
+> It does sound exciting. It reminds me in some ways of Scala. Though
+> also like advanced research where some practical goals for the
+> language (Rust) have not yet been reached.
+
+Yeah it's all very much work-in-progress research largely driven by small 
+academic groups, and at some point industry collaboration will become crucial to 
+actually turn these into usable products, but there's at least a lot of exciting 
+starting points. :)
+
+Kind regards,
+Ralf
 
