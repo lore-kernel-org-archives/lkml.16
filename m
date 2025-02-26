@@ -1,50 +1,48 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B0A23536F;
-	Wed, 26 Feb 2025 18:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A9523718D;
+	Wed, 26 Feb 2025 18:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593432; cv=none; b=HU78Hlq+8Ut8MOe5OqBgY0DVpFTRvjJoE99UbsCsIZH1HHCgA6krAer5SXfxrOKwclkQPtMKO4uKWtMMqWL31pZHW7g1sXnpV0e4/y6E8PVpMqLxCNS6G2A1/tPUwXTg9vcocYgKULiN6xHy8rm4C857rgkBbyPRBz6QB0TiwhI=
+	t=1740593435; cv=none; b=ZzSeK8UZ1rWj9dBbJ62bY6pLVZNlng8rBZCPBVa/uFqT2CGBrrXl00soAZwp/+g54cTk7Ad9y94SrwJlpVLmZZSBvasM7FgvC+CgamCqxWphoz1Glu2TcURlEgryGWOYxJPQhUJr9y12eIz0jUa28n0hG7zfh+NOfIXWNI22qrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593432; c=relaxed/simple;
-	bh=P8EWsV4hQ3wrom+Ukqqd/U/Ho0Oxrn3j9NkCRkOJMi0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=FOaJHt4XoZaWbb42Z+8+l1u8TQ3W8sdv300pqs92oIZZVGmSX2i/3lHkYPUa3EW2ch9grDyQcuqKBzOFQ6lM3ArgKj8J3xUQrsyc8KqgjCG1h2pTy16nDYDcijVcWAXmOyvvMeLn5FtNUb1XjVpe+C/t3fHtfHkeU35NqyH7CX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3yKEGCAk; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740593435; c=relaxed/simple;
+	bh=uJq+bu2Gsv/1YcZFXXCnCHftr5EM8VJZUuYq6kB50pw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Lg9QreFfdNws+z8PeViAFHvkvbprTrPcmtCChcUCBBOdbRX2sGAfmYnHAqZydkL+moR5XMmVVT4EEszb/uadn8F6R9fj6/io2cAH+UyV/s5NT++xax3oHnUsAeNcSlzb705MN9N50EfJ8+nDdNj2PSv4ohqb66MbV68j9SKCLkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cKy6Ledy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3yKEGCAk"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFHewT022188;
-	Wed, 26 Feb 2025 19:10:15 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cKy6Ledy"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QABfer017692;
+	Wed, 26 Feb 2025 18:10:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	rG1C6cXlzhh7ZHVodv74JTH3XP7VRDVgNV9VI18sWQA=; b=3yKEGCAk+JFFurwh
-	A/VoQvxQfCKgGyaGnzIscwH3s+avLqtQF9jyGAM7Q8HJo1+YCqdsXZAMdn8BP6u/
-	CeXYiF+QLc6DLfZWZr0z2+xXkt5/4va74qko67jNOQgFE6cDu8BFXGe+0EmG7kSY
-	cTEDQGf4LYCbfka9Mb/BNB7kEMSiZon8GDaI0vs3xl8EZtCv4EiqcP1gjNirbfk2
-	qWlBZj0kXIRiWf8ZTnl0oKuRrc/VFvJ4rDL7FbLciaLu+5Xcv16F26YZY2+P5bAe
-	6zbx1fpBdjFOxQQruEsjc5SyOeM+AMyApBDu9C1ch9uB4RUvlydBagM5dlqsKkat
-	06y4xA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psrea92-1
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	UK3OEtZglCgu0R7nEVLQN2ZciwLgMdqHWEcxO4yfvYk=; b=cKy6LedyUGC4b41E
+	djkwQAkYxcEdDS1/Z6x2BAvo0dff7z5ppXWNNJ9FwbUhJ+kZIRzmvA4obhJrN5gD
+	zgWeR95pS5hMCqmYb1dlTDYiq/spPxXKkIdwlj+oDtn90RBzLux2G0+NwIrWzOVP
+	moUMPQUZ0MpIGDVNrueQHQ/nMnfq+d7VQq0JW3kjcEFGF4aW+br+BbZFzFEgAsWP
+	rOz9K/Ui1vrt8DSYyrObgiEUFQQUOoeOl2sfPwuuHingaEOr9DVGtx1RAhPruiVk
+	k2knsVULYN9AhIQJkkxdFRaXHHMTTo0DFXGd6RVTGyITBdLCW93hquphsHiP3ibD
+	V9P8AA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prn2wca-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 19:10:14 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 86625400C8;
-	Wed, 26 Feb 2025 19:09:05 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 10BB54FF132;
-	Wed, 26 Feb 2025 17:54:13 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 17:54:12 +0100
-Message-ID: <248f63ff-b6ec-4f58-8a96-7aee2fcd6038@foss.st.com>
-Date: Wed, 26 Feb 2025 17:54:11 +0100
+	Wed, 26 Feb 2025 18:10:26 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51QIAPdM011606
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 18:10:25 GMT
+Received: from [10.216.2.27] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Feb
+ 2025 10:10:22 -0800
+Message-ID: <cc3c73ac-409c-479f-8c51-11c6d60dd2f8@quicinc.com>
+Date: Wed, 26 Feb 2025 23:40:19 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,101 +50,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Clement LE GOFFIC
-	<clement.legoffic@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Subject: Re: [RFC PATCH 0/5] wifi: ath12k: Enable IPQ5424 AHB WiFi device
+To: Krzysztof Kozlowski <krzk@kernel.org>, <ath12k@lists.infradead.org>
+CC: <linux-wireless@vger.kernel.org>, Kalle Valo <kvalo@kernel.org>,
         Rob
  Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor
  Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
- <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
- <55beb3e7-65ac-4145-adae-fb064378c78d@kernel.org>
- <8cdc7e52-f9e2-4fc9-be68-0dd72a25ee1b@foss.st.com>
+        Jeff Johnson <jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
+ <3db11710-8ad7-439b-8674-ce07fa221920@kernel.org>
 Content-Language: en-US
-In-Reply-To: <8cdc7e52-f9e2-4fc9-be68-0dd72a25ee1b@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <3db11710-8ad7-439b-8674-ce07fa221920@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Xp64ga6p3dXO-sWUO8H3PHQjjKvwwnXi
+X-Proofpoint-GUID: Xp64ga6p3dXO-sWUO8H3PHQjjKvwwnXi
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=618
+ suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260143
 
-
-
-On 2/26/25 16:30, Alexandre TORGUE wrote:
+On 1/30/2025 1:07 PM, Krzysztof Kozlowski wrote:
+> On 30/01/2025 06:18, Raj Kumar Bhagat wrote:
+>> Add support for the new ath12k AHB device IPQ5424, as currently, Ath12k
+>> AHB only supports IPQ5332 WiFi devices.
+>>
+>> The IPQ5424 is an IEEE 802.11be 2 GHz WiFi device, supporting 4x4
+>> configurations. To enable the IPQ5424 device:
+>> - Add the necessary hardware parameters for IPQ5424.
+>> - Modify the boot-up sequence for ath12k AHB to accommodate the
+>>   requirements of the IPQ5424 device.
+>>
+>> Depends-On: [PATCH v5 00/13] wifi: ath12k: add Ath12k AHB driver support for IPQ5332
+>> Link: https://lore.kernel.org/all/20250130043508.1885026-1-quic_rajkbhag@quicinc.com/
+>>
+> You marked this a RFC, so this is not ready, but nothing explains this
+> here. What sort of comments are you looking for? What's incomplete with
+> this work?
 > 
-> 
-> On 2/26/25 16:08, Krzysztof Kozlowski wrote:
->> On 26/02/2025 10:33, Alexandre TORGUE wrote:
->>>>>>> +        hdp: pinctrl@44090000 {
->>>>>>> +            compatible = "st,stm32mp-hdp";
->>>>>>
->>>>>> So here again - you have stm32mp251 SoC, but use entirely different
->>>>>> compatible.
->>>>>
->>>>> Ok so I will use "st,stm32mp15-hdp"
->>>>
->>>>
->>>> This means this is stm32mp15 SoC. I do not see such SoC on list of your
->>>> SoCs in bindings. What's more, there are no bindings for other SoC
->>>> components for stm32mp15!
->>>
->>> Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the
->>> STM32 story we didn't have a clear rule/view to correctly naming our
->>> compatible. We tried to improve the situation to avoid compatible like
->>> "st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced
->>> "st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes
->>> it represents a SoC family and not a real SoC. We haven't had much
->>> negative feedback it.
->>>
->>> But, if it's not clean to do it in this way, lets define SoC compatible
->>> for any new driver.
->>
->> Compatibles are for hardware.
->>
->>> For the HDP case it is: "st,stm32mp157" and used for STM32MP13,
->>> STM32MP15 end STM32MP25 SoC families (if driver is the same for all
->>> those SoCs).
->>
->> No, it's three compatibles, because you have three SoCs. BTW, writing
->> bindings (and online resources and previous reviews and my talks) are
->> saying that, so we do not ask for anything new here, anything different.
->> At least not new when looking at last 5 years, because 10 years ago many
->> rules were relaxed...
-> 
-> So adding 3 times the same IP in 3 different SoCs implies to have 3 
-> different compatibles. So each time we use this same IP in a new SoC, we 
-> have to add a new compatible. My (wrong) understanding was: as we have 
-> the same IP (same hardware) in each SoC we have the same compatible (and 
-> IP integration differences (clocks, interrupts) are handled by DT 
-> properties.
 
-Just to complete, reading the Linux kernel doc, as device are same we 
-will use fallbacks like this:
-
-MP15: compatible = "st,stm32mp151-hdp";
-MP13: compatible = "st,stm32mp131-hdp", "st,stm32mp151-hdp";
-MP25: compatible = "st,stm32mp251-hdp", "st,stm32mp151-hdp";
-
-> 
->>
->>
->> Best regards,
->> Krzysztof
+Only the basic validation has been done hence marked as RFC. For the next version
+v2, we will have complete validation and will change from RFC to normal patch.
