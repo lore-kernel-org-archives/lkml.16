@@ -1,101 +1,161 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC65F1DE2A9
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8F41DE2A9
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589394; cv=none; b=u3oa7uY/47CTWlqBUnskGVARs3ilFqUgsOKEQXwblPszEA9lY6CotbXetIPZ03t7nzQR4Xu10U90AKpEnmH+FEkNZlFIEYrzJSIz7xhJBcOv0EKwO8sLzouzOCDG+2clPySBUdNUTUdFD7p0TNsVh3U32Lx33pZGvdZmyjv/cYw=
+	t=1740589429; cv=none; b=jqKFpN8vfh8GuepCpPyOdwttZ0Bbk3I9Ih7wsiH9tol0/+W5X782YQeBz5C9E2ez/1ofe53T4xYpMt8XMOoWSxVJAa1s/hqTFh8f76iTDfxOrKjGrwIxHasPiJnt3LeT17Oo3FOYkoN9PP9NmUcWwi+uKXHKdviBApWeZR6AIA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589394; c=relaxed/simple;
-	bh=TLXA1FoRHn2QluKXWO9dXWWYzbhjA3gHd7Gt5zghIDI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nl3ZbKo3dsQBL5ASYbNQhUWpyIfkTxa2poBPEKIMFVy+BWosL/Zs56zYPrAOtP1BXnZViJ0cDjmGVNDuaS/Pd1yBnaE+1iEfidtuHEDyk1E+m+3mC11vnzQzAysBLmv3Wb7DmALBv2hkjIIE0WRkln53ZDk8oDrgyoOt77iliOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tnKo3-000000003P0-3dj6;
-	Wed, 26 Feb 2025 12:02:47 -0500
-Message-ID: <297b28e9ef9f4cd983ae2e3dd4cf1fce8b74d0f1.camel@surriel.com>
-Subject: Re: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page
- reclaim TLB flushing
-From: Rik van Riel <riel@surriel.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>, Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	kernel-team@meta.com, linux-mm@kvack.org,
- akpm@linux-foundation.org, 	jackmanb@google.com, jannh@google.com,
- mhklinux@outlook.com, 	andrew.cooper3@citrix.com, Manali.Shukla@amd.com,
- mingo@kernel.org
-Date: Wed, 26 Feb 2025 12:02:47 -0500
-In-Reply-To: <680053d3-4cf9-534a-1c52-c6e259b85452@amd.com>
-References: <20250223194943.3518952-1-riel@surriel.com>
-	 <20250223194943.3518952-7-riel@surriel.com>
-	 <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
-	 <7c2baf33265444089ab780848de29a1336a9a4cc.camel@surriel.com>
-	 <20250225203803.GGZ74qK1oZWk8u69O4@fat_crate.local>
-	 <20250225210300.GHZ74wBP2ogmM5P5lP@fat_crate.local>
-	 <680053d3-4cf9-534a-1c52-c6e259b85452@amd.com>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1740589429; c=relaxed/simple;
+	bh=lRgrbi89RAPj6wGopHjUn9XlnG+mldWaZKc9kQI81BM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpixYdfZiKym6v2LTcyEhkel44BVviQXdUgaJvXipQbfM4gtWb/QvBtOO3dQqDYQ6oTm0rZuDyRprUpJowZf2m3fqBxl/xBOcHY9zYU5fXFnteg9qia6Fr/CBn/nxzSbkV1SFVLIuSZ9Q42KB/Sz6iXybuPvfgzjIX6u3EL4Hk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=gQHXn0zn; arc=none smtp.client-ip=195.181.215.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="gQHXn0zn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
+	t=1740589423; bh=lRgrbi89RAPj6wGopHjUn9XlnG+mldWaZKc9kQI81BM=;
+	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
+	b=gQHXn0znSp/8ZBlIxfHyCNCgpKK4cR5SioN6O6ISpdQq2+jwSLvwqhHHv0NfKjhtb
+	 rU2LJzexQAyi1Q5GmcWGeBqqB+QQglxxprhsuHyKPhDwnjwI4LH5bz+i3T/+LJTPoF
+	 d+Wb5Qh68dK5uQ9KHQoi/LbGct10+71omlWOVBj8=
+Date: Wed, 26 Feb 2025 18:03:42 +0100
+From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
+To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
+Cc: vkoul@kernel.org, kishon@kernel.org, linux-phy@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	quentin.schulz@cherry.de, sebastian.reichel@collabora.com, 
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: Re: [PATCH 2/2] phy: rockchip: usbdp: re-init the phy on
+ orientation-change
+Message-ID: <h57ok2hw6os7bcafqkrqknfvm7hnu25m2oe54qmrsuzdwqlos3@m4och2fcdm7s>
+Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
+	Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, vkoul@kernel.org, kishon@kernel.org, 
+	linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, quentin.schulz@cherry.de, 
+	sebastian.reichel@collabora.com, Heiko Stuebner <heiko.stuebner@cherry.de>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
+References: <20250225184519.3586926-1-heiko@sntech.de>
+ <20250225184519.3586926-3-heiko@sntech.de>
+ <7q5yn466xd7emebhjze4ixkswgyxjjjt5rwvyww2hwbts6bamd@i5vwvegy2os6>
+ <1878927.BzM5BlMlMQ@diego>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1878927.BzM5BlMlMQ@diego>
 
-On Wed, 2025-02-26 at 11:00 -0600, Tom Lendacky wrote:
-> On 2/25/25 15:03, Borislav Petkov wrote:
-> > On Tue, Feb 25, 2025 at 09:38:03PM +0100, Borislav Petkov wrote:
-> > > On Tue, Feb 25, 2025 at 02:17:20PM -0500, Rik van Riel wrote:
-> > > > Who do we need to ask to confirm that reading?
-> > >=20
-> > > Lemme figure it out.
-> >=20
-> > Confirmed - that really is the case.
->=20
-> Hmmm... since this is for host/hypervisor TLB handling, this makes me
-> think that we should always be setting the ASID valid bit with 0 for
-> the
-> ASID value in EDX[15:0] on all INVLPGB instructions in this series.
-> Otherwise we will also be flushing any guest ASID TLB entries that
-> match
-> the conditions, when that isn't intended.
+Hi Heiko,
 
-The ASID is always zero in this series.
+On Wed, Feb 26, 2025 at 04:53:45PM +0100, Heiko Stübner wrote:
+> Hey Ondřej,
+> 
+> Am Mittwoch, 26. Februar 2025, 15:46:11 MEZ schrieb Ondřej Jirman:
+> > On Tue, Feb 25, 2025 at 07:45:19PM +0100, Heiko Stuebner wrote:
+> > > From: Heiko Stuebner <heiko.stuebner@cherry.de>
+> > > 
+> > > Until now the usbdp in the orientation-handler set the new lane setup in
+> > > its internal state variables and adapted the sbu gpios as needed.
+> > > It never actually updated the phy itself though, but relied on the
+> > > controlling usb-controller to disable and re-enable the phy.
+> > > 
+> > > And while on the vendor-kernel, I could see that on every unplug the dwc3
+> > > did go to its suspend and woke up on the next device plug-in event,
+> > > thus toggling the phy as needed, this does not happen in all cases and we
+> > > should not rely on that behaviour.
+> > 
+> > On RK3399 there's a similar issue with the equivalent type-c PHY driver.
+> > The TRM (part 2) states that:
+> > 
+> > 4.6.1 Some Special Settings before Initialization
+> > 
+> > - Set USB3.0 OTG controller AXI master setting.
+> > - Clear USB2.0 only mode setting (bit 3 of register GRF_USB3PHY0/1_CON0 in Chapter GRF)
+> > - USB3.0 OTG controller should be hold in reset during the initialization of the corresponding
+> >   TypeC PHY until TypeC PHY is ready for USB operation.
+> > - Set PHYIF to 1 to use 16-bit UTMI+ interface (see register GUSB2PHYCFG0)
+> > - Clear ENBLSLPM to 0 to disable sleep and l1 suspend (see register GUSB2PHYCFG0)
+> >   ...
+> > 
+> > The PHY for Superspeed signals is expected to be set up while the USB
+> > controller is held in reset, which makes sense HW wise, and it's what downstream
+> > kernel efectivelly does, via its RPM based hack.
+> > 
+> > RK3588 TRM doesn't have very detailed notes on this, but I expect it will be
+> > similar.
+> > 
+> > So reconfiguring the phy here, while it's actively linked to the USB controller
+> > without the controller driver driving the process so it reliably happens while
+> > it's in reset, or at least so that USB controller reset happens afterwards, may
+> > not be correct way to approach this.
+> 
+> the function here, is using infrastructure from the type-c framework.
+> 
+> The function in question tcpm_mux_set(), which then ends up in the
+> usbdp_phy only gets called from tcpm_reset_port() .
+>
+> Which I think will do the right already - judging by its name ;-) .
 
-We only ever use the PCID for address space identification.
+No. This function has nothing to do with USB controller reset. And while  dwc3
+driver consumes usb_role_switch interface, calling set_role on that interface
+just translates to calling dwc3_set_mode(), which will do nothing if the mode
+did not change from what it was previously. (and it stays the same if you just
+re-plug the same device in same mode but just in different cable orientation)
 
---=20
-All Rights Reversed.
+Only time DWC3 reset seems to happen currently is sometimes in dwc3_set_mode()
+depending on driver state, and then in dwc3_init()/exit() which is called only
+at driver probe/remove time and in suspend/resume.
+
+So if PHY driver reconfigures/"power-cycles" the PHY on its own, DWC3 driver
+will not issue any reset to the controller HW, at least not based on the
+set_role signal from usb_role_switch alone most of the time.
+
+Also tcpm_orientation interface you use for PHY reset is called from many places
+in TCPM driver, based on many events, mainly from tcpm_set_roles(), so you'll
+be resetting the PHY quite a bit in uncoordinated manner with the dwc3 MAC
+interface it's connected to in HW.
+
+> [and also by the fact that the referenced qcom phy behaves similarly
+>  when talking to the type-c framework]
+> 
+> 
+> For the rk3399 I would think converting the old typec-phy-driver over to
+> use the actual kernel type-c framework, might just magically solve the
+> issue you have on it.
+
+It will not. The problem is not getting the information about roles between the
+drivers. extcon works fine for that. Problem is that your proposed solution
+doesn't coordinate the PHY reset with USB controller to ensure proper ordering,
+or even ensuring that any USB controller reset happens, or the controller knows
+about the PHY reset.
+
+Resulting issues may happen only occasionally, dunno. I guess it depends on
+whether SS MAC will happen to be accessing USBDP PHY at the time when you're
+turning off the PHY, and if this messes up the internal state of the MAC pipe
+interface, so after PHY comes back up from reset state, whether that locks up
+the MAC interface logic or not will depend on luck. :)
+
+You can ask Rockchip what they think about uncoordinated PHY reset, while DWC3
+is up and ready. Maybe it's ok on RK3588, but they're not doing it in their
+vendor driver this way, and they forbid it on RK3399, so perhaps it's not? From
+HW point of view it looks sketchy.
+
+Kind regards,
+	o.
+
+> Rockchip actually has converted the rk3399 typec-phy to use the type-c
+> framework in their vendor kernel.
+> 
+> 
+> Heiko
+> 
+> 
