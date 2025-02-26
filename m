@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2220C238D45;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F19238D50;
 	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596417; cv=none; b=sLS+Ban/cVvBnApDEYat1EjwTaMZqpGVWqScxx334UEPaQNz287aQvTM+JbGsC5UirS4x8q6oluvEaV+uKXOKTf5+gnwCC/PjiI+8uEEZ+lRnCjzdNeJbefwsPcaM1l7N4wG5j+GPYEn5XoJ4JA7rUyK9fOSgtDhvMqpIx9ViDs=
+	t=1740596417; cv=none; b=SqRIG7xFN0v5GVrjLJJ5EKVTtXmmki3l6vknxAAgxfS2EhXeL9a+UqGKCpCUIqqkvUMmbA9DmNxQlvCQ5X/dVt/KDMbnjmGiKEbNOnWFr+QkwEtQnpqXbjaUaHEyIxuRxRDR2NNc1JlsffAmvPDhow7+QJno5C62B5C2Aa2lZTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740596417; c=relaxed/simple;
-	bh=wRpTgVNyj3uFgb5wwu79FFUhOzFVyOzLcCfMgdRPLUM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uHX8KDigbtafqsYzNdUJhCoYWUBxOmpthECSFpJNShfjoUsVKCfBlrKSLDScYp7Kp+urdC507ySPJU5FR1ZKDy8UD3ca1tTyRk+TBOCU0hNHHjV58B1faCiuyZCZkpyLXf9dUkor/Te2J+ve35FY2Ttud+Ctg5Xxd4NGuASz11w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lRm3ned/; arc=none smtp.client-ip=10.30.226.201
+	bh=efHDZc+VZMO22pyTz8bbQ9t4hJW8gBFp6rwM21UYaFs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Tm7fR499AuBo+jhAai/ldKaXtKhJxPjzrpjqgLMeAF+QUyfviUwSdL7cI0UEGDMPEcIR3kDHzkkNd8Cri1aSFsS9vgAd5qvZenG5qQgv7T87FliCGmnJDuSWezk/T15uhVlxRgmjOYFFpVbfW7r9/oDB9YY61ZtD1YTsEj3PcBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EU9j0MnR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRm3ned/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A3035C4CED6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EU9j0MnR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D0313C4CEE9;
 	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740596416;
-	bh=wRpTgVNyj3uFgb5wwu79FFUhOzFVyOzLcCfMgdRPLUM=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=lRm3ned/BUYf6GvWxpgCOO8QFq0tstqJRUiEyXTgUmphlSq/KNZ2g9vEMjPaJN6fZ
-	 53QIPBAUNEr3J/bMDqJoy69IctFdFrPzJ0TWsquINlXC5lylaZd+8DyMVrD3tZDnBk
-	 wN1LVVuCmiXu783iLZ4z/XCDcwO1srFHyECKo46pcCOhcsAczakaHtizpRdzFBF6IB
-	 ZoEUMHAFNWBUgq/Sf2sDD0vXxyQ96348PWD4b6HNpzfxouzpUMB/LNeFGoZSDiDbDA
-	 kc5hOWbt7EaGrET+x+asYSMybMdx/L54cfuj4+G701/BbW/fXlCSJIwkY2V0vwd0Oh
-	 hKBKiRD/J6T+Q==
+	bh=efHDZc+VZMO22pyTz8bbQ9t4hJW8gBFp6rwM21UYaFs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=EU9j0MnRwNITYvf2vonhEdW+AF/04yg+zg83Laf8oCZOio0b3At/PjT12zGaunr/Z
+	 zojBhs71rA9JH1hn4TXzI/vWIKoHZ0Ojaftr36PxqV1JxyY7zfbWB/0M27f5C6yHhW
+	 DItVmuXkrOJwPvwyaEyvjXFhLFQu0E8MxngF4++2EznzWdzonwiLu6Ae8UfX5ToSY0
+	 zX3q9N4hmWJiluYsETNGD/ls5zckpYgHdHln+FYGZwsABsxZ92lY+EsDPleHedbrg9
+	 9GJhyKGlXKkIbMlBXbmYFKzJ8im1AJhdoiGAgBhrgfBwVU4nUniuCZivUoVeP1IJX6
+	 eL8xlmxogW0BA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F09C021B8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CFFC19F2E;
 	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Subject: [PATCH v2 0/4] Miscellaneous Apple RTKit fixes
-Date: Wed, 26 Feb 2025 19:00:02 +0000
-Message-Id: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
+Date: Wed, 26 Feb 2025 19:00:05 +0000
+Subject: [PATCH v2 3/4] soc: apple: rtkit: Use high prio work queue
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,22 +40,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALJkv2cC/13MQQrCMBCF4auUWTuSjClUV95Dugjp1A5oGzIlK
- CV3NxbcuPwfvG8D5SSscGk2SJxFZZlr0KGBMPn5zihDbSBDrSEy6GN8MOoS8CkasG05WHK2c+M
- A9RQTj/LawVtfexJdl/Te/Wy/64+ifypbNGj9yY/u7Lzr/FUzz5FXTseBM/SllA9SysEtsAAAA
- A==
+Message-Id: <20250226-apple-soc-misc-v2-3-c3ec37f9021b@svenpeter.dev>
+References: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
+In-Reply-To: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
 To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
  Sven Peter <sven@svenpeter.dev>
 Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
+ linux-kernel@vger.kernel.org
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1200; i=sven@svenpeter.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1203; i=sven@svenpeter.dev;
  h=from:subject:message-id;
- bh=wRpTgVNyj3uFgb5wwu79FFUhOzFVyOzLcCfMgdRPLUM=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lF0rtmXPCKrcHZwkdkdrq9kvHjMe3mcezRsknjxdt
- ERMTVyqo5SFQYyDQVZMkWX7fnvTJw/fCC7ddOk9zBxWJpAhDFycAjARrQaG/zHO/8T+hOSnBcwU
- Yw9u38vbtfb/l+/zvW9eiuPY+cD2GhfDf3fjQ68NFCcdn3JxEtuRx7IqsixdG2dIrJ8xgfHQ1oV
- cAvwA
+ bh=iv/ffBDDwqiEAfuhFDw9qjf225eWoJ8zsBxA5fDCkeQ=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lL3ym1uNXD12Pz7lKsp732r7wsbyZdIKzy6Lftwfw
+ eaf9uddRykLgxgHg6yYIsv2/famTx6+EVy66dJ7mDmsTCBDGLg4BWAiC7sY/vD822NWt4O9RlY2
+ wcvXTDr+S7PNTd2k+712/2q0l3nUpjD8FT3rNT9ZiCOGR6NbYEdr/lO/0+uE3L93uGoteFP0XU2
+ VEwA=
 X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
  fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
 X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
@@ -63,43 +62,38 @@ X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
 X-Original-From: Sven Peter <sven@svenpeter.dev>
 Reply-To: sven@svenpeter.dev
 
-Hi,
+From: Janne Grunau <j@jannau.net>
 
-This series contains four unrelated minor fixes to our RTKit driver.
-These are mainly required for drivers which aren't upstream yet but
-have been part of our downstream tree for quite a while now.
+rtkit messages as communication with the DCP firmware for framebuffer
+swaps or input events are time critical so use WQ_HIGHPRI to prevent
+user space CPU load to increase latency.
+With kwin_wayland 6's explicit sync mode user space load was able to
+delay the IOMFB rtkit communication enough to miss vsync for surface
+swaps. Minimal test scenario is constantly resizing a glxgears
+Xwayland window.
 
-Best,
-
-Sven
-
+Signed-off-by: Janne Grunau <j@jannau.net>
+Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
 ---
-Changes in v2:
-- Changed commit message for APPLE_RTKIT_PWR_STATE_INIT to make it clear
-  this is a behavioral change
-- Added a comment for the new oslog logic that the asymetric shifts are
-  indeed correct
-- Collected r-b tags
-- Link to v1: https://lore.kernel.org/r/20250222-apple-soc-misc-v1-0-1a3af494a48a@svenpeter.dev
+ drivers/soc/apple/rtkit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
----
-Hector Martin (1):
-      soc: apple: rtkit: Implement OSLog buffers properly
+diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+index 7e7b4f64ab17..4b78463dd5a1 100644
+--- a/drivers/soc/apple/rtkit.c
++++ b/drivers/soc/apple/rtkit.c
+@@ -696,7 +696,7 @@ struct apple_rtkit *apple_rtkit_init(struct device *dev, void *cookie,
+ 	rtk->mbox->rx = apple_rtkit_rx;
+ 	rtk->mbox->cookie = rtk;
+ 
+-	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_MEM_RECLAIM,
++	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_HIGHPRI | WQ_MEM_RECLAIM,
+ 					  dev_name(rtk->dev));
+ 	if (!rtk->wq) {
+ 		ret = -ENOMEM;
 
-Janne Grunau (3):
-      soc: apple: rtkit: Add and use PWR_STATE_INIT instead of _ON
-      soc: apple: rtkit: Use high prio work queue
-      soc: apple: rtkit: Cut syslog messages after the first '\0'
-
- drivers/soc/apple/rtkit-internal.h |  1 +
- drivers/soc/apple/rtkit.c          | 63 +++++++++++++++++++++++---------------
- 2 files changed, 39 insertions(+), 25 deletions(-)
----
-base-commit: 00834971f0d9e38beae37e92055b1432782827d0
-change-id: 20250220-apple-soc-misc-55ec124184fd
-
-Best regards,
 -- 
-Sven Peter <sven@svenpeter.dev>
+2.34.1
 
 
