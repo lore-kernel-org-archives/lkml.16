@@ -1,189 +1,99 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A626D20E70A;
-	Wed, 26 Feb 2025 10:54:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76F525D54B
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740567256; cv=none; b=XSO6Pei8AoQNP3LV4g64AAfTpe6o4jrohr0Xignwtzvvxsp7mJ6Fl/qtAI81Cu3Xi1JzvteqRlid/Xy7t3ii1Skw/7Ow8dkiD3Pe1MxSH5Du+MFNIcDxVfP2Ui9F8GV5+KFecXmzCjeeDymMjQhrTokwSaZkUW/KIgUfB/LTKSE=
+	t=1740567259; cv=none; b=FGjCJefnBM6zLbVAmaPp/wx5aYeB+tLgn8dXTS+fR+SZDQRPaPVwoACGh4QLUJmm9zp64q+3B7fWWAoT/YyvhoiMM6BzdbPOs1rKR7yD88h9//fYzhi9H5p1hp+SPuZmsjJ7dkKJv5lyZlELvYZpu7hObN1B7ki7OD1bJE98NBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740567256; c=relaxed/simple;
-	bh=oba1Zw2GKIAv2+xd4YeaYs+D7LWFUlq2X+TDom7gFVo=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Vb5QMMolzOzkp+fP/9jDT6BAYmSIo/ZMA2s5YCxuC4c+Po/2M3dTpKExKi14jaa+hfdNOx03usr0Kq9ZKi+YzydrpbVXSg6eXffIc8sRQnnXW2UtTyAgRpDTd/cQfHdIjOooMRc2/AKHszLmYXcD+q/nvXpecIdC0TVgBG3VHrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qZcjmPvp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cNYDaHj0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740567259; c=relaxed/simple;
+	bh=x5xg3LwibJXQQaaKDM6VQ+lAP9lfPVdOz0gIsQg4kuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R9bxXsi3hpJOvdg9WixGBek6KExfthUQjn3k5tpVQgR43dxPgvHLctWCnnFKRFtAg6kJE70RFIhCxza6TbUER+YRgbHCRUkr+DcnipPACRLzSKkN+8IGEkBEkHV42LT/Rq34CJDywoIw5mjnvwY/7nAoPgYAXQeT6sBUlN6rsk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=f5cYX4Bx; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qZcjmPvp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cNYDaHj0"
-Date: Wed, 26 Feb 2025 10:54:10 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740567252;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJCW4a844tt56pwFX89d/F0xj40X9Qz/+OPlGjNZA4Q=;
-	b=qZcjmPvpgbsiXpn35WKkIdAQa/q1gOY+kZ8en742/ammx2Wm0uBkYOFaLzPsrnuEnnpesL
-	c/cmzDq5PXEI616UQK95Fy5wsOGGge6mZOQKsbs1fJ1mLLTI+AhB8ImTM/qwvIbYpsyPnJ
-	oCf4TJQC0JsD/e3F85hnN53OVdYSws9cKQJrx6aO7XaoEquyh0Uy2O2Rzt4JosQwtdnK2b
-	zymOUcjajjSwLAof/JYOJ2vc/T1ZvRWWYUQPDvZecRGKGMHf+h/XOcPHsOCXSbE8kdlcWN
-	T8GtlYvu3lhMNHV+s6WlWAqfb7VmgCvQOhxyDroUzdzHZEkMiUyo0BN8nxZXtA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740567252;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yJCW4a844tt56pwFX89d/F0xj40X9Qz/+OPlGjNZA4Q=;
-	b=cNYDaHj0utGod6xQSVo+E1k77IhOsodAcx26AAEfU7crKEmISKhLVQtj38IJAcNDuDe2Cl
-	gtv73mrBOtbrKxBg==
-From: "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/ibt: Optimize fineibt-bhi arity 1 case
-Cc: Scott Constable <scott.d.constable@intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, Kees Cook <kees@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250224124200.927885784@infradead.org>
-References: <20250224124200.927885784@infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f5cYX4Bx"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-471f1dd5b80so160871cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:54:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740567255; x=1741172055; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8k9ussjgNfo7XH+19sy9pLzES4opNKoTTPxfbK8Va7w=;
+        b=f5cYX4Bxd88dY7t4MQPx2AdKVuvpWEE3sUTMD5Jt266TY61hY3xGRVW70Vqrl+JlXp
+         GmjZ3uYavX61DLSFyCGFiReZZwlz2zxpIA3s/AliLyENIkDafEH4e/brrCLRaHhpveDu
+         r5hKll0tbE4C1DFitzluA7Sf71R0mZYEyi0seewgN/ApoVPSlQXNM9IWm5I2OKQ4mfGO
+         hkMkNcj0csnZ0Es/kIviCoiQfFFEG4BOwxsQCMkqLGZI3A6fw0yAKqsOiSH60JzKtqLO
+         akpTZ8THMO24/QPtnkXpjUNkwLwJ7G/BucQUfBhiaXxbfTD+DlwDJGB05gd9+BXfLsxr
+         A1Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740567255; x=1741172055;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8k9ussjgNfo7XH+19sy9pLzES4opNKoTTPxfbK8Va7w=;
+        b=sQ+3DdwuUE1w7hMF7ujSBsYRHD1Ktx8A+EsCauj+YYtt5swXlZ/86FJNzruilcyKEb
+         yJGi0g2F0ZIySgOkaPklQJrvXS13m7HWN7qsEC4MINZ7ks8yoLqzrlS2QrQRmyWuFzEs
+         f2sRbhBd8BXjg6K8FERzkONcnaVS0ArwwOJYb+diCbGaYbXduczKGqWkvY5OdMxerZNs
+         klvdu2QBxt5jWatI9NXQR13PHR8FHV5iXFe1wxzRGX9GOjwiEBcMOxaSSkJWNbiLw1v1
+         TAfn3WZPA4Wf9xCZ9BOt2yplPWM6pbK2tCoG6wMcnMCuaqwCdpaZBVAbx8pVBI0HwZAi
+         IDFw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5crEBBWYrLMloI+vU5wBjK17Xg84ouhD9oqsC5ujy9IUy41DV2E2dXwdj/0sJxfr3o5TcF/Ydjyiy8YI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdZwRMYViDDiW78/y0rJFDRCEwR+3FZGiFgi39hST8nnSuAvHx
+	Zn8q1nj2EjeKyZOmwitHdGiDQghSjixgO668wRjYevIy4mooYD59T2nbLIRUCqjxvNQ8ANoTltE
+	Mow86/U/qd72YNYrxhYIPMZpZxIyBdm7SBRyw
+X-Gm-Gg: ASbGncswQhUO7200LZbsazl0vRH3cQ+PjNOy4YCFNsu9xaCdEtnEIMvPd5tmMKSjpOu
+	wrcGh2hLgTHsWnKFAgh4tOOFIxHC6YQgcb/32OWVNK+T4D13c2OvtxUxclbY4l/TivO9A92/fhd
+	8MHMBrXUqJN4CFhilqcXMYvsYprfEBXZm+uaY=
+X-Google-Smtp-Source: AGHT+IEtUNEH5PpKZRBVaacFBgRUGjAhw23RRBB5/3TVjGiyJAVndyaT1T40ETOgSGf0gVSz9gyrvjommoMUte+jJtQ=
+X-Received: by 2002:ac8:5a10:0:b0:471:fefc:f002 with SMTP id
+ d75a77b69052e-47376e81cf3mr8973501cf.9.1740566831709; Wed, 26 Feb 2025
+ 02:47:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174056725018.10177.4597725285165049417.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250224-page-alloc-kunit-v1-0-d337bb440889@google.com> <20250224-page-alloc-kunit-v1-4-d337bb440889@google.com>
+In-Reply-To: <20250224-page-alloc-kunit-v1-4-d337bb440889@google.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Wed, 26 Feb 2025 11:47:00 +0100
+X-Gm-Features: AQ5f1JrJDmTOqjWilOWeguYEmp9d0N0gM7ZtyDHGC2VpER2YE2U_sG3dR8rzJXg
+Message-ID: <CA+i-1C2C4GSd3Jhw56WfccKizoeLj4ychCz2BpOU6AwESjzSyg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/4] mm/page_alloc_test: Add smoke-test for page allocation
+To: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@redhat.com>, Oscar Salvador <osalvador@suse.de>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Michal Hocko <mhocko@kernel.org>, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-The following commit has been merged into the x86/core branch of tip:
+On Mon, 24 Feb 2025 at 15:47, Brendan Jackman <jackmanb@google.com> wrote:
+> +static inline struct page *alloc_pages_force_nid(struct kunit *test,
+> +                                                gfp_t gfp, int order, int nid)
+> +{
+> +       NODEMASK_ALLOC(nodemask_t, nodemask, GFP_KERNEL);
+> +       struct page *page;
+> +
+> +       KUNIT_ASSERT_NOT_NULL(test, nodemask);
+> +       kunit_add_action(test, action_nodemask_free, &nodemask);
+> +       nodes_clear(*nodemask);
+> +       node_set(nid, *nodemask);
+> +
+> +       page = __alloc_pages_noprof(GFP_KERNEL, 0, nid, nodemask);
 
-Commit-ID:     af908171aed7b0a7f6376f3ee6c53f40c84ae494
-Gitweb:        https://git.kernel.org/tip/af908171aed7b0a7f6376f3ee6c53f40c84ae494
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Mon, 24 Feb 2025 13:37:13 +01:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 26 Feb 2025 11:41:56 +01:00
+Oops, it's ignoring the gfp argument here.
 
-x86/ibt: Optimize fineibt-bhi arity 1 case
+> +       { .gfp_flags = GFP_DMA32,       .want_zone = ZONE_NORMAL },
 
-Saves a CALL to an out-of-line thunk for the common case of 1
-argument.
+And with that fixed, it becomes clear DMA32 allocations can't be
+expected to succeed in this zone setup.
 
-Suggested-by: Scott Constable <scott.d.constable@intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kees Cook <kees@kernel.org>
-Link: https://lore.kernel.org/r/20250224124200.927885784@infradead.org
----
- arch/x86/include/asm/ibt.h    |  4 ++-
- arch/x86/kernel/alternative.c | 59 ++++++++++++++++++++++++++++------
- 2 files changed, 54 insertions(+), 9 deletions(-)
-
-diff --git a/arch/x86/include/asm/ibt.h b/arch/x86/include/asm/ibt.h
-index f0ca5c0..9423a29 100644
---- a/arch/x86/include/asm/ibt.h
-+++ b/arch/x86/include/asm/ibt.h
-@@ -70,6 +70,10 @@ static inline bool __is_endbr(u32 val)
- 	if (val == gen_endbr_poison())
- 		return true;
- 
-+	/* See cfi_fineibt_bhi_preamble() */
-+	if (IS_ENABLED(CONFIG_FINEIBT_BHI) && val == 0x001f0ff5)
-+		return true;
-+
- 	val &= ~0x01000000U; /* ENDBR32 -> ENDBR64 */
- 	return val == gen_endbr();
- }
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 93dccb2..8d8871a 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1307,6 +1307,53 @@ static int cfi_rand_preamble(s32 *start, s32 *end)
- 	return 0;
- }
- 
-+static void cfi_fineibt_bhi_preamble(void *addr, int arity)
-+{
-+	if (!arity)
-+		return;
-+
-+	if (!cfi_warn && arity == 1) {
-+		/*
-+		 * Crazy scheme to allow arity-1 inline:
-+		 *
-+		 * __cfi_foo:
-+		 *  0: f3 0f 1e fa             endbr64
-+		 *  4: 41 81 <ea> 78 56 34 12  sub     0x12345678, %r10d
-+		 *  b: 49 0f 45 fa             cmovne  %r10, %rdi
-+		 *  f: 75 f5                   jne     __cfi_foo+6
-+		 * 11: 0f 1f 00                nopl    (%rax)
-+		 *
-+		 * Code that direct calls to foo()+0, decodes the tail end as:
-+		 *
-+		 * foo:
-+		 *  0: f5                      cmc
-+		 *  1: 0f 1f 00                nopl    (%rax)
-+		 *
-+		 * which clobbers CF, but does not affect anything ABI
-+		 * wise.
-+		 *
-+		 * Notably, this scheme is incompatible with permissive CFI
-+		 * because the CMOVcc is unconditional and RDI will have been
-+		 * clobbered.
-+		 */
-+		const u8 magic[9] = {
-+			0x49, 0x0f, 0x45, 0xfa,
-+			0x75, 0xf5,
-+			BYTES_NOP3,
-+		};
-+
-+		text_poke_early(addr + fineibt_preamble_bhi, magic, 9);
-+
-+		return;
-+	}
-+
-+	text_poke_early(addr + fineibt_preamble_bhi,
-+			text_gen_insn(CALL_INSN_OPCODE,
-+				      addr + fineibt_preamble_bhi,
-+				      __bhi_args[arity]),
-+			CALL_INSN_SIZE);
-+}
-+
- static int cfi_rewrite_preamble(s32 *start, s32 *end)
- {
- 	s32 *s;
-@@ -1337,14 +1384,8 @@ static int cfi_rewrite_preamble(s32 *start, s32 *end)
- 			  "kCFI preamble has wrong register at: %pS %*ph\n",
- 			  addr, 5, addr);
- 
--		if (!cfi_bhi || !arity)
--			continue;
--
--		text_poke_early(addr + fineibt_preamble_bhi,
--				text_gen_insn(CALL_INSN_OPCODE,
--					      addr + fineibt_preamble_bhi,
--					      __bhi_args[arity]),
--				CALL_INSN_SIZE);
-+		if (cfi_bhi)
-+			cfi_fineibt_bhi_preamble(addr, arity);
- 	}
- 
- 	return 0;
-@@ -1357,7 +1398,7 @@ static void cfi_rewrite_endbr(s32 *start, s32 *end)
- 	for (s = start; s < end; s++) {
- 		void *addr = (void *)s + *s;
- 
--		if (!is_endbr(addr + 16))
-+		if (!exact_endbr(addr + 16))
- 			continue;
- 
- 		poison_endbr(addr + 16);
+(Anyway, it's a bit of a silly test regardless, just something to
+illustrate the KUnit idea).
