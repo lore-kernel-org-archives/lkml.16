@@ -1,111 +1,88 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284F925A343
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43C222A814
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740540948; cv=none; b=J+JVYH1JMFKdFCK4NH63THm8R92lfc70O0sgtG4Xd2KwbZaYc4wbEYXBq9NKOKIemp5kggPVtALHh2sIeQlBj1NKatnISrRjwefZgTRK4zOR45LQbHi7LSZS6fakdoan7CbphsRF1Rz7/8E0E23FpHejXFdLP6zo4DK2+4SNKQM=
+	t=1740541032; cv=none; b=IRx6ARTFcmAA2g5IHU57WVsha9QqvxknJBy/OPH6xKtPVG54plZteK1Fdq6/ErAq96Eb8r/Dw89VuwijLyGLg6uuoCbDeqnwNlKQkScdRmUaD5SUdrhvO5Qu8zQINwhJiD4DrXA5y3lwjILSKIQgDRxCwC8arU8oXEQ3/7wD17c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740540948; c=relaxed/simple;
-	bh=5Zi8aCuYqoBMpMJoAQuFe9XXnBo6JhN7c628hykREwI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WaLaQKtKzcw3FuKVs8UKiOZ0QgZBx386OetVSH9+ejV1/cdx2yV3Wl+B41JS7/8Zxs9rDaktUjqmcO++ZgGtr3r2K9rhlSNrJunE7TqdMXr1jJX/PmVlJI2tpL0Gfbf6ryIhvKuTqI7/QF1Gr6LqhyILIUXyHXxHb9myha5P8Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lpr8h+Wn; arc=none smtp.client-ip=95.215.58.189
+	s=arc-20240116; t=1740541032; c=relaxed/simple;
+	bh=+d150ORAuwcNcBo0bktXkOORXUeaVvLFU+FwfnagMfw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGPLVlJvha5rUs+KhvOGQ3VEN0Ew9mSzQ5AvBfxy7NgMvcUpD9xrK+byB8Ag055hXUJVP22TUTIhC7LD2YfUO/iIZNBgWfesFJdCz28HNdzu/ngSkgZA3pn1jS4qSVZquBJj0kay8FNCYn1/n5fsD3kWu5W74R3YEekZa43Ah+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z3T5jCnf; arc=none smtp.client-ip=95.215.58.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lpr8h+Wn"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z3T5jCnf"
+Date: Wed, 26 Feb 2025 03:37:05 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740540935;
+	t=1740541029;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=aMgncgwo54ntG1eJYN0oZGDokP7lPxw8+ChbEuj9iIM=;
-	b=Lpr8h+WnNYDIG4HdnllKV3E0lgpbpQs1aW/OXWe15MAsng5FIUrz3w723U9Fk01CehEygC
-	8j5xGq8uqTMPjSILNMSR6Sd3Q/ZvpUxSvsj8oXm9O4uTG7Z6mh5SxQ5zL7JPMpIcxpz9dA
-	LS9UFkc48QJpbe3liCp9EQ0pfLsGLGc=
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OSEd15iaG/YVJV5R/ef6IG1gpof8ihg018EdijbCkTM=;
+	b=Z3T5jCnfrOToJENKnoI4nrqp8h67TYclznwQJonLGnH1MdtaRh3U+rUtMFZPuW0Dk8odJH
+	R4iQgoi7LhyL5GTLrvs8kGPdUDv01NPJGyMemu9nACJyOIPWXt0cJb/0+8XAOmWn/tADbD
+	O2yePYAenoNjBuS57LxLyRnB5A5YBNs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>,
-	Leon Romanovsky <leon@kernel.org>,
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Parav Pandit <parav@mellanox.com>, Leon Romanovsky <leon@kernel.org>,
 	Maher Sanalla <msanalla@nvidia.com>,
-	Parav Pandit <parav@mellanox.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] net: RDMA: explicitly enumerate ib_device attribute groups
-Date: Wed, 26 Feb 2025 03:35:25 +0000
-Message-ID: <20250226033526.2769817-1-roman.gushchin@linux.dev>
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RDMA/core: fix a NULL-pointer dereference in
+ hw_stat_device_show()
+Message-ID: <Z76MYRaWm9AE0SaW@google.com>
+References: <Z7gARTF0mpbOj7gN@google.com>
+ <CY8PR12MB7195F3ACB8CFA05C4B8D26D3DCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <20250221174347.GA314593@nvidia.com>
+ <CY8PR12MB7195A82F6CE17D9BDC674D72DCC62@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <20250224151127.GT50639@nvidia.com>
+ <CY8PR12MB7195E91917FD5329932FA3FCDCC02@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <Z7z_NcGWIr3_Dxtt@google.com>
+ <20250224233004.GD520155@nvidia.com>
+ <Z708JNt6-vPIuDBm@google.com>
+ <20250225131618.GN520155@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225131618.GN520155@nvidia.com>
 X-Migadu-Flow: FLOW_OUT
 
-Explicitly enumerate ib_device's attribute groups.
+On Tue, Feb 25, 2025 at 09:16:18AM -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 25, 2025 at 03:42:28AM +0000, Roman Gushchin wrote:
+> 
+> > diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+> > index 0ded91f056f3..6998907fc779 100644
+> > --- a/drivers/infiniband/core/device.c
+> > +++ b/drivers/infiniband/core/device.c
+> > @@ -956,6 +956,7 @@ static int add_one_compat_dev(struct ib_device *device,
+> >         ret = device_add(&cdev->dev);
+> >         if (ret)
+> >                 goto add_err;
+> > +       device->groups[2] = NULL;
+> >         ret = ib_setup_port_attrs(cdev);
+> >         if (ret)
+> >                 goto port_err;
+> 
+> That's horrible - but OK, maybe something like that..
+> 
+> Does it work? Or does the driver core need groups after the initial
+> setup?
+> 
+> Could we have two group lists and link them together? IIRC there was a
+> way to do that without creating a sub directory
 
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Maher Sanalla <msanalla@nvidia.com>
-Cc: Parav Pandit <parav@mellanox.com>
-Cc: linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/infiniband/core/device.c |  4 ++--
- include/rdma/ib_verbs.h          | 14 ++++++++------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+It does work.
 
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 0ded91f056f3..8dea307addf1 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -1404,8 +1404,8 @@ int ib_register_device(struct ib_device *device, const char *name,
- 		return ret;
- 	}
- 
--	device->groups[0] = &ib_dev_attr_group;
--	device->groups[1] = device->ops.device_group;
-+	device->groups[IB_ATTR_GROUP_DEV_ATTR] = &ib_dev_attr_group;
-+	device->groups[IB_ATTR_GROUP_DRIVER_ATTR] = device->ops.device_group;
- 	ret = ib_setup_device_attrs(device);
- 	if (ret)
- 		goto cache_cleanup;
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index b59bf30de430..9c4c4238e6fc 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -2728,6 +2728,13 @@ struct ib_core_device {
- 	struct ib_device *owner; /* reach back to owner ib_device */
- };
- 
-+enum ib_device_attr_group {
-+	IB_ATTR_GROUP_DEV_ATTR = 0,	/* Device attributes */
-+	IB_ATTR_GROUP_DRIVER_ATTR = 1,	/* Driver-provided attributes */
-+	IB_ATTR_GROUP_HW_STATS = 2,	/* hw_stats */
-+	IB_ATTR_GROUP_LAST,		/* NULL pointer terminating array */
-+};
-+
- struct rdma_restrack_root;
- struct ib_device {
- 	/* Do not access @dma_device directly from ULP nor from HW drivers. */
-@@ -2761,12 +2768,7 @@ struct ib_device {
- 		struct ib_core_device	coredev;
- 	};
- 
--	/* First group is for device attributes,
--	 * Second group is for driver provided attributes (optional).
--	 * Third group is for the hw_stats
--	 * It is a NULL terminated array.
--	 */
--	const struct attribute_group	*groups[4];
-+	const struct attribute_group	*groups[IB_ATTR_GROUP_LAST + 1];
- 
- 	u64			     uverbs_cmd_mask;
- 
--- 
-2.48.1.658.g4767266eb4-goog
+I just sent a decent implementation of this idea, please, take a look.
 
+Thank you!
