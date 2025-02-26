@@ -1,140 +1,182 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2631D42A9D;
-	Wed, 26 Feb 2025 10:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D84942A9D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566489; cv=none; b=E4onEfnujZZczEYZm/Rqzz8+HuwUYP2GSmxJPylHCWxZmlIEhgd1ZcHwq6T7zyg/oxajxyqL4bDU/zDeR9c1bQYA/XloUVJNNVhrkY1I7oNgMa1rZlt/0xZfZnrlDC1dUKsYGbRhm2nVvD8LYdAlpsZyc8UxbMZZcZ4YuwsE9Tc=
+	t=1740566497; cv=none; b=BPpdwPMqXNqtOG/NyxQn+LonJd18uTOAUlfXAAHmOwHYIMlQSjgvV2r1qufcrGhyUBpQZZ7Hv5FNebgNp1jM0Rbdi6UcQyLbP5ktGB2rNVsKRszDxkajb2f+OqILBX8Sa/aOCPUbjDA3V4bJheJobqf3d1TbifjWpYjyGlhH4WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566489; c=relaxed/simple;
-	bh=BSMw+04gEqWq3Msk3LXpsoriHTDgOv1NVpgVH9B4mzU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWgz+VE67CgWWIuAQY9QzG8QU9FHQlMQQpPCX6GDDRQoTqRlfdqV6l4gPnROFpyYNICdRDBThk7aGt2EmUAXOd51kahXTGNxhx5rW6MfdTO5ytkiTTLDWgGPEeE3XfkQDxcfmZb1fAC8vMy2RA5pjeT+UcQe566L7ktIQa2elWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOIOEQIp; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740566497; c=relaxed/simple;
+	bh=I+I/8/xf34EbwKSApSqeEKtUP8iTESCQ7V0oqUtLUC8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=j3JufO0m54wwrKPxkQg6lE3FiORlQje2LTZuYDFmPDchr06GSnp/boqF8BPWLmv0/XLvtpbJuuxC/YoqROWr6783RIFfCamJJ2hXFJ6wmnReDBYZQtoP7Hs6cdbpEPw5IWusUydENgOXVV+lUVzJlcE1k8YfaFNdtatiRE7nwTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hCJC/TyQ; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOIOEQIp"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e04861e7a6so12360999a12.1;
-        Wed, 26 Feb 2025 02:41:17 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hCJC/TyQ"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f5fc33602so463539f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:41:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740566476; x=1741171276; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
-        b=gOIOEQIpS3B/Gq5rqyz+Y4oS7g2+Mk9NQW16U5L6kddGQs/lcnOptmTnWVAeLVzYbr
-         0cCDXn/MeJfiKkV9hRvc5fIfGsrb4NO+Ab8TfVGIDp4cfsNl4EDXL6bcidcQ4IQixiQR
-         YU3TLu9eWBXwnYjtdrd8i2NUGmCAiClKqmRutKt5R01CbS1X22fxy4n/tC/KqILsyRWV
-         tLh0NwT7B9MCTk7gEgibuD8PMclGfGem0adexsV3dO7REQCTLSDvLK2W10QcMkyealqU
-         zJDlZO+bp2HL64BmE7dZvfNiFOYsbKwrm7GRBpniv5FQJHDF29vARXdiPI7ehGfLAkKC
-         XwJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740566476; x=1741171276;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1740566493; x=1741171293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
-        b=aoSlW+LIPDg0isZOpX9iwgp43VQw0c2Fg6wq3GCNQJYJ6SNmUmQduhiaUArCAYUvV6
-         FFmR++et6mNjYRBk5qZYS6GdKaKlGT2Fy7ADlV3OzB4iqtTwCn4U0m7ZzfuEe9bn2cvD
-         IJ/DTpa0zCBEYtC3QuCsD/VTNve52yDlg1fR6RssFl4qyi7T/1AwCqMQ8xnaEX7nhnkL
-         grMFpmHDW6kMVqdP9jaR4QDo2Jdnt1/s+/M7m2ZEhRUTiV9nyONHerwPaVuyObYLh7Du
-         oP5RPUtnBJ64SXplNDxdqDrQNcrGdok/EAIuqyzsep430XBYa9oLfYb+2Szd8b1xKg+9
-         dhZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0qCk7DAok8NTbXwoC1fTTsl+gxEaszYcxcNwzXOzMFMw2Le2EuXsEQhL4UrxdZiRtSZXP/x/gMSs2HXRI@vger.kernel.org, AJvYcCX7MXpJSLSp/9c8kQWQ3HHowyslFXQ5hfhBg9LURtb0JlUILUiatC4fi5ILV4KXAqLsJLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKbkEe9Qrvq1/y7lMfmg6xdC+Qg/gM8EJg+trUSV7KqkMegqGt
-	v3FzqSH0o4htX6BrqWrcm3c95FDhZCqkhXK4WSUulbVbOq6wI0v2
-X-Gm-Gg: ASbGncuDczZRZoWajQdeBT7eArkX/ezSk05Iie2hLG0O3ddWz5LjvvOPuHjwVonSaed
-	DNyS96niThmm8v4jz7VJOTm/FNy4dk8O/mGNzBK5GEo1/QNC70473wjZuReioqaEsXN1a+0QX+5
-	TUjnEQzMYcc2s7lp9ZtQ+xqvVaINRV3o+EsSQAgYWbY21G6Axuy7gVex89ciXDJL9LMM88RfjjQ
-	rx2KfuzWBjURwHko+PJCOPqRXZ3jEUXlBf0F/wB6QkvokjyeqpKbQBWAXddxV5ja570rpMURaoe
-	+dS5uaOLqql1
-X-Google-Smtp-Source: AGHT+IHH9F1IYBz1le8xW/KqZ54BHrkJ9A72amTbhME1pL0CzrJPPjM7s4jtPYMcv2g8PbVdUFENAA==
-X-Received: by 2002:a05:6402:5518:b0:5e0:8c35:a137 with SMTP id 4fb4d7f45d1cf-5e44a2545d8mr6074759a12.23.1740566475856;
-        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
-Received: from krava ([173.38.220.53])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e492120418sm2189620a12.14.2025.02.26.02.41.14
+        bh=ojcUEtfO91j+JO9KXm+lQGJj1Y8aR3j+uQwF6xWxzOk=;
+        b=hCJC/TyQGw/rzbRVnbIvHgQNTTQUleZ8aCxLtbJeQAfxU+au2ljZYRF/IkWK3ljUV/
+         uHEbYUQgJFv4PX7cbe+mgl/iNMFOh/BAhaBRBb5BBtVvTux3wTGkJWydAS8Osc/Jgw+5
+         UAE2vpIm9k92TbFiTBc0dUBHVCIYjRP1gnsCdIDgd5HC/tuH+q1UeKg8CAiHvSfxxWxb
+         LGJugioIH/XodQBEBOGhxDGDx8RB/jIYJQhl14vD4oMru30JHGrbW01N9U1uZacg+Vsb
+         6KI/8JtbWYnwLV8o0WrVC4DYCPpHYl45IJ+O01QR9A41o7PFJkThQ5bZQMEHESOpg9od
+         sZpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740566493; x=1741171293;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ojcUEtfO91j+JO9KXm+lQGJj1Y8aR3j+uQwF6xWxzOk=;
+        b=dCoyOPqRi9Wr1dZoONWA1Qj+yi7bOVhHBdK6Qbt/5s3LjKtSNAKfXVWh+7AllCHvCq
+         kmLit5vsNenr2rOUNzn9eImUBWZIiBYRhpXaLXsng8aO0mNO/NQnAvQQV5WXKITLPHhc
+         mSjgB5YdRItnL58TWZPYUgBCkKBc/ip3yHBX7/c+eW372fyNjxFlWYRkB4M1ZX5/I3XS
+         PjNrqXNrsGm/otO3NL2IqyypJrTImHKOrw7MAwAZ0q21c9eQxFDgOJSraeyn09sPCswC
+         JzXITIZ6nmhZhENMiB+sN2mUiQ7PyfZztT9ct1hR0o/mprwJsKjKnv8cHYg3V8C+h6mB
+         fF4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVVtRux3C0duRhm3gJv6y60bD833Fgq0OOhM2FprMwmtpjaZk+BKBt4ZsmZv8E2dcXVwt/sKNJDlomd6Gc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysaHRAkF4QVTWfb1hm+jHobB+eBRJ87BJyHkjxpv+13IqKoVBN
+	IZh2qPPf9pAT+nKYRiT8r0jF18Ze6xt4/cQCBtql8S9UZhOyie5xsbpZxHBi6g8=
+X-Gm-Gg: ASbGncsky1NgaCq7kE4G6g7tbw6KHSt+01Sk/KPDEIaIN0B2wj2vCUsZ5fL3ob08sVX
+	NRhXPLQ2JqstaOIFlGaSkxQNCTAHAEzwNUnYblKKxmDOlZqQ02kwhwWUBYDX/GeV7csEtF27dEM
+	32qhUN5g53aRU7wtRb/jgEwfEXtM01JRZQoT83aiqQaZweksd/ry6nKBxtYGtz53L0PnvgprJgm
+	TxnpGODqS7i3C5p857LT7bjmVq6XbXgAhLobhhIOUkglGJgOOaRrf3OQABc30tn8eYsrZXhxRMw
+	vaC++3+0KwFq6q3g/KOEEBvFkXc=
+X-Google-Smtp-Source: AGHT+IHeEQGMuScqdt+otMxEcTZ0w/KlZkRLRkmqcLWLGizQi7xw1jIAhR1WxzNLVabB3EHEyGVDUA==
+X-Received: by 2002:a5d:6486:0:b0:38f:2c10:da1e with SMTP id ffacd0b85a97d-38f6f51db8amr15902752f8f.27.1740566493501;
+        Wed, 26 Feb 2025 02:41:33 -0800 (PST)
+Received: from pop-os.lan ([145.224.66.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd86c93bsm5080832f8f.26.2025.02.26.02.41.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 26 Feb 2025 11:41:12 +0100
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	mingo@kernel.org, oleg@redhat.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH perf/core] uprobes: remove too strict lockdep_assert()
- condition in hprobe_expire()
-Message-ID: <Z77vyIKkLyliF0zz@krava>
-References: <20250225223214.2970740-1-andrii@kernel.org>
+        Wed, 26 Feb 2025 02:41:33 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org,
+	cyy@cyyself.name
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] perf pmu: Dynamically allocate tool PMU
+Date: Wed, 26 Feb 2025 10:41:00 +0000
+Message-Id: <20250226104111.564443-2-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250226104111.564443-1-james.clark@linaro.org>
+References: <20250226104111.564443-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225223214.2970740-1-andrii@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 25, 2025 at 02:32:14PM -0800, Andrii Nakryiko wrote:
-> hprobe_expire() is used to atomically switch pending uretprobe instance
-> (struct return_instance) from being SRCU protected to be refcounted.
-> This can be done from background timer thread, or synchronously within
-> current thread when task is forked.
-> 
-> In the former case, return_instance has to be protected through RCU read
-> lock, and that's what hprobe_expire() used to check with
-> lockdep_assert(rcu_read_lock_held()).
-> 
-> But in the latter case (hprobe_expire() called from dup_utask()) there
-> is no RCU lock being held, and it's both unnecessary and incovenient.
-> Inconvenient due to the intervening memory allocations inside
-> dup_return_instance()'s loop. Unnecessary because dup_utask() is called
-> synchronously in current thread, and no uretprobe can run at that point,
-> so return_instance can't be freed either.
-> 
-> So drop rcu_read_lock_held() condition, and expand corresponding comment
-> to explain necessary lifetime guarantees. lockdep_assert()-detected
-> issue is a false positive.
-> 
-> Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+perf_pmus__destroy() treats all PMUs as allocated and free's them so we
+can't have any static PMUs that are added to the PMU lists. Fix it by
+allocating the tool PMU in the same way as the others. Current users of
+the tool PMU already use find_pmu() and not perf_pmus__tool_pmu(), so
+rename the function to add 'new' to avoid it being misused in the
+future.
 
-lgtm
+perf_pmus__fake_pmu() can remain as static as it's not added to the
+PMU lists.
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Fixes the following error:
 
-jirka
+  $ perf bench internals pmu-scan
 
-> ---
->  kernel/events/uprobes.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index e783da1d1762..4d2140cab7ec 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -762,10 +762,14 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
->  	enum hprobe_state hstate;
->  
->  	/*
-> -	 * return_instance's hprobe is protected by RCU.
-> -	 * Underlying uprobe is itself protected from reuse by SRCU.
-> +	 * Caller should guarantee that return_instance is not going to be
-> +	 * freed from under us. This can be achieved either through holding
-> +	 * rcu_read_lock() or by owning return_instance in the first place.
-> +	 *
-> +	 * Underlying uprobe is itself protected from reuse by SRCU, so ensure
-> +	 * SRCU lock is held properly.
->  	 */
-> -	lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
-> +	lockdep_assert(srcu_read_lock_held(&uretprobes_srcu));
->  
->  	hstate = READ_ONCE(hprobe->state);
->  	switch (hstate) {
-> -- 
-> 2.43.5
-> 
+  # Running 'internals/pmu-scan' benchmark:
+  Computing performance of sysfs PMU event scan for 100 times
+  munmap_chunk(): invalid pointer
+  Aborted (core dumped)
+
+Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
+Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/util/pmus.c     |  2 +-
+ tools/perf/util/tool_pmu.c | 23 +++++++++++------------
+ tools/perf/util/tool_pmu.h |  2 +-
+ 3 files changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 8a0a919415d4..6498021acef0 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -268,7 +268,7 @@ static void pmu_read_sysfs(unsigned int to_read_types)
+ 
+ 	if ((to_read_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) != 0 &&
+ 	    (read_pmu_types & PERF_TOOL_PMU_TYPE_TOOL_MASK) == 0) {
+-		tool_pmu = perf_pmus__tool_pmu();
++		tool_pmu = tool_pmu__new();
+ 		list_add_tail(&tool_pmu->list, &other_pmus);
+ 	}
+ 	if ((to_read_types & PERF_TOOL_PMU_TYPE_HWMON_MASK) != 0 &&
+diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+index 3a68debe7143..9156745ea180 100644
+--- a/tools/perf/util/tool_pmu.c
++++ b/tools/perf/util/tool_pmu.c
+@@ -490,17 +490,16 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
+ 	return 0;
+ }
+ 
+-struct perf_pmu *perf_pmus__tool_pmu(void)
++struct perf_pmu *tool_pmu__new(void)
+ {
+-	static struct perf_pmu tool = {
+-		.name = "tool",
+-		.type = PERF_PMU_TYPE_TOOL,
+-		.aliases = LIST_HEAD_INIT(tool.aliases),
+-		.caps = LIST_HEAD_INIT(tool.caps),
+-		.format = LIST_HEAD_INIT(tool.format),
+-	};
+-	if (!tool.events_table)
+-		tool.events_table = find_core_events_table("common", "common");
+-
+-	return &tool;
++	struct perf_pmu *tool = zalloc(sizeof(struct perf_pmu));
++
++	tool->name = strdup("tool");
++	tool->type = PERF_PMU_TYPE_TOOL;
++	INIT_LIST_HEAD(&tool->aliases);
++	INIT_LIST_HEAD(&tool->caps);
++	INIT_LIST_HEAD(&tool->format);
++	tool->events_table = find_core_events_table("common", "common");
++
++	return tool;
+ }
+diff --git a/tools/perf/util/tool_pmu.h b/tools/perf/util/tool_pmu.h
+index a60184859080..c6ad1dd90a56 100644
+--- a/tools/perf/util/tool_pmu.h
++++ b/tools/perf/util/tool_pmu.h
+@@ -51,6 +51,6 @@ int evsel__tool_pmu_open(struct evsel *evsel,
+ 			 int start_cpu_map_idx, int end_cpu_map_idx);
+ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread);
+ 
+-struct perf_pmu *perf_pmus__tool_pmu(void);
++struct perf_pmu *tool_pmu__new(void);
+ 
+ #endif /* __TOOL_PMU_H */
+-- 
+2.34.1
+
