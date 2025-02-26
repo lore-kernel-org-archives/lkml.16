@@ -1,283 +1,228 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE66256C77;
-	Wed, 26 Feb 2025 20:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740601437; cv=fail; b=PSWHUnJsJralsm6OHPTeDPsGlzQ6AXbDvMtOKFMqDj05BgE5VKIytp1J/NKBMCry0RS9RZJZ2z6PcqXqZsKqg1AlxnNi9Na1yjUJxScpMOhlkLq0mmYY06sKnShbKhUuIfiWF433GTEH1tjarScFK5vJB0zcYOI93o8cjRBo9dQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740601437; c=relaxed/simple;
-	bh=iVlpCBzruQnEMepfAwxBL4pTTHoOCH4vYQAkgC56anI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HqiCDgxgpLylQJsOeZa5PvPKoNUNKOCmIWftJN2Rcc+4z3VSiG41ppTdhlBe3frTxYIS7VNXVFNO8F/E5ovSp8nFRkBmnZcx1G3aXKqs7C/MaihfffrSwB3L76Jeptcw5GEr8Hhw9OFxOT4mnWrC3bekWzg1ur+SlJLxL8jWI/A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AwPJmEic; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=GZMqfXJR; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE472755E7
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740601463; cv=none; b=DqW7fIIfQylAKGPgmlH6b7RXA3tXgE5d0eEvdlBdE10oZdD+8r+cNOw6nSEVEkBw8pD2vCsxgrDASK6K1YWyewCnRJ/4MU8wmUz0nKSQ1M+f8/zYZbDskULr4/FpO4t+xImf1yle1y9epmlKmcpZrQDUMs1hEvue1/zuVqZ1HV4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740601463; c=relaxed/simple;
+	bh=OLmkv9g4Bv+E1XrXEkkHYRlPrzGEUaC/lk0OczD2sUI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X/1sal+JhPp2Ajeivqoxy3WGUFixHZZZedlMf84avCLqzdwLFj5/wHaiuitCV6MM3G0o9xp8kdppJ0XrkEWdp/2T/FtQ0hKYn+noI6Pdo6eq8bQI22NPldERH8EM1nlFevMzKfUTXKK4r5l4cNgqWm2iaJnPJEvCMHDJv8elQE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ywe9rtDm; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AwPJmEic";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="GZMqfXJR"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QKMcp2005171;
-	Wed, 26 Feb 2025 20:23:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=TaHrcyS5WcKp8ZVvuy
-	Ncd1jbIf2sCLn5pnMaxnxE5Qg=; b=AwPJmEicJY/EDzJ7/sE8YQBsj77syKcnR5
-	NUd+n0LItcmt4JBsp6iaPDQ7XnWRpgYS2yHbO3X0XTkOG5BjGXARFrLz9ZjO4PSf
-	LX7BCsPmJRiazajtvd9YHpUjViQ6yYXfrJHDM4We7T+YT1/WxwD2n3Aytmp8+7Jk
-	JUBAWmh4SuH5IlXSjRuYJ58ZwIRBrtXaWQQPKf7PmcaFtLX6/n389/L+QSWJS0h7
-	PaaRcd0mzwMf1P6bSjbeqMIcp9UGecVwUCsHrfWw0IxC2b+ioCXNnZt/47eomMGY
-	zMHuHgsWu+pPrRU3gT0D2wmdthx77M9B3yBVxvglpDnRjJ/W7upg==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 451psca4jf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 20:23:38 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51QKMPob012630;
-	Wed, 26 Feb 2025 20:23:37 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y51cep01-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 20:23:37 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rF5g6CzKAJu9php2qidq+HcGYS3+Ccf7OMaRWeTpWpAcDEhz0d6Arm2+h+Gq8k0lMLt2GnnHa5n0MkS+D+5C9CCXpBK+J+QKztKiPO2+FaWmNYoZTaWafb/JR3DPxDzKAajpf6iepU2qLgDQ0ydvvclH9Dbz9dFv25t2tZfkGlQ9s+jO0RHaOoew10gH16JL4ngN1fdwalMXLdOaAA+aruCwhprp9JSLyRKkzkp+x0qI6MgGAqpZKthBUI9J6MbRt94/mFRGZK+G67SfDXJd1HvAUUqAdcpOWdj/lijOoUfTbyAPkcGAwQKZIRIVURSnUHmVQpYyDmmkGUcWA39QIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TaHrcyS5WcKp8ZVvuyNcd1jbIf2sCLn5pnMaxnxE5Qg=;
- b=me1N7I5ampY9LrhniiKV+q2s4oSVpTfVcaZYYh5AIC8GKkuFMR3QqkD0Rh8AD2eEGR+iBS1UMgHESj5y2z583HGaiuLuP0y5fszc3Lckuqgu4Ng2oi+OQ7ybx9WLLJfkkLvmyD0uPMkQYLT1EMYTv9teV1ZBmQNqpefoXMBlOvwBf5Ra8M7zp1imqGKXri3dBkOQTRs6oJR2P7AM/M32bky+PWkxPZr2ALTDcQxhP+FHiMcdL7xBuplhH1eNpwAQK2nhmKRvCS7W5VkSt17JLLa3W8Kj5bhB8jOHgYoItfhydBEtYWrrHDaxm8WVrd/BL2Vyb1/TP59GQv/6ujVrmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ywe9rtDm"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb81285d33so37009366b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:24:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TaHrcyS5WcKp8ZVvuyNcd1jbIf2sCLn5pnMaxnxE5Qg=;
- b=GZMqfXJR/uZpZC7aDsVOb13M+d7EUuphY4OPHSGg1oPjOCq4anE4DPXAsYXW5bc5dtxpRmvwqPsrqTyO73QaQb6VDsMJdIBrz9iZZRGrcqVTL9/gr5sH/9onjhvTLw1ImYoWIZ3YPoIFNSQ7LqKWzegz56CnT6b5RlNlx4q84xQ=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by MN6PR10MB7423.namprd10.prod.outlook.com (2603:10b6:208:46c::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Wed, 26 Feb
- 2025 20:23:35 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%4]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
- 20:23:35 +0000
-Date: Wed, 26 Feb 2025 15:23:17 -0500
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, lokeshgidra@google.com, aarcange@redhat.com,
-        21cnbao@gmail.com, v-songbaohua@oppo.com, david@redhat.com,
-        peterx@redhat.com, willy@infradead.org, lorenzo.stoakes@oracle.com,
-        hughd@google.com, jannh@google.com, kaleshsingh@google.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] userfaultfd: do not block on locking a large folio
- with raised refcount
-Message-ID: <ow7clyrac62xam6u2saasghgfky44yso7uldq2qqilapnp5ojv@rlx2cra3zk7r>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, lokeshgidra@google.com, 
-	aarcange@redhat.com, 21cnbao@gmail.com, v-songbaohua@oppo.com, david@redhat.com, 
-	peterx@redhat.com, willy@infradead.org, lorenzo.stoakes@oracle.com, 
-	hughd@google.com, jannh@google.com, kaleshsingh@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250226185510.2732648-1-surenb@google.com>
- <20250226185510.2732648-2-surenb@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226185510.2732648-2-surenb@google.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT3PR01CA0061.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:84::31) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+        d=gmail.com; s=20230601; t=1740601460; x=1741206260; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O2LPlZ9elyCBQd7HfWkhng7/ATOs+tQHMcn3jLxff7s=;
+        b=Ywe9rtDmco82gqPcxqOdQ8MewyovYlWyUQGmj160DxSt+mK6O7IceQZHzxTphmHHKo
+         mIrJavspclp4HHCS6lSNDc6OGdo8mG4g+0DfeYIKLYvNUuSEgiX43/gLCV9Bur1yvPMq
+         0pYKdW88Vh/7Ql5L7lfCIOpg127aaY74xxmQL8vjcv5bonxhZTDAk/QOQDokFGeL7hvF
+         FZBZY83lUZexgu3QjU0KYl0y6+DFdaJ5uL7u47L/9kBMUa4fV2JJPSgdvZ+VIaMeKIla
+         fl05zmYHujoZ9kqAhJlHqkuW3tHveqz1feW/oyE4DHeRbVE4mS6k5UyZqwlPLtmYQBfM
+         4bVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740601460; x=1741206260;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O2LPlZ9elyCBQd7HfWkhng7/ATOs+tQHMcn3jLxff7s=;
+        b=jlMwMs7/o0u9P76Z8ORo4S4LowBAZZNirxur4Siym+T5WTsJKOaVJJXhrhR3hBVufM
+         cnN6Smwbv3pCSmC185zJ5ja8k43UGb/gtjwA03jFVACSmfsmwTKdJuEOEdi8zSY/Vs4h
+         Tj9oS7MktwYbqFcs+hgrIs7v3i5qtPitVuu1w+l35vUQWAJgySJsIE4Z+f94dfEsMhkx
+         KZzQLobLNfozkJ6XfQKjuvzvWYsuvkP36B547/2tSZVSS7oESM+fRx5BhjkplgjlVcVQ
+         S3RxZ3GFia4AOybshMWqt/BRdCjnd8VlCRTVozIX36J85khZSAeJUddUUYqrJLhLRErV
+         7E1A==
+X-Forwarded-Encrypted: i=1; AJvYcCXLEyxv0Y+Zt1jFax9OLvn/ByPK4evAHMidNvCTedFSPop9rLeUa2A6y0bha6ywUMc32wWDXIWgXZM04dg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcEFMzLHznisvbCRWNDXj4fSbXKldNyaCXNyq1JhODsKqE71Bs
+	hs6A2+V8/OiXteBMcqtby/vR5HdhCDMPD4tjf29ULIft0u212Xro+4HEmNo8Ek5emau3H2L2FT4
+	75Q7i2cNR87QAgc3mIvcxNX7ePzE=
+X-Gm-Gg: ASbGnctbq9KuWOv/iMzKhPZuWml0T5g7hZ5RWs+iXeXc90NRP/D8iOudFdiLPTmw382
+	gKoR14G5aeZW9dwjnNk8rmGqtDAU+zpRK1Pmydhy3hCrdfYHQqs90uom4fLrKhkTvWdie3/mZqv
+	Tjokl6fvTE5Q==
+X-Google-Smtp-Source: AGHT+IHZ9zn71hNPT073Seajv5QnbK+at0Y15ixdVsmdFgRf5ISg78/Yg+aTci4yWLn61MO0cOt5KTcxEdtKgnYuIoU=
+X-Received: by 2002:a17:907:a317:b0:abe:fd0c:68a8 with SMTP id
+ a640c23a62f3a-abefd0c7853mr416229466b.52.1740601459612; Wed, 26 Feb 2025
+ 12:24:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|MN6PR10MB7423:EE_
-X-MS-Office365-Filtering-Correlation-Id: e420fc5c-5a1f-42e8-5edf-08dd56a3720f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zE8Ygt8ny79YmoPLPfTMQfOqpTKXEh+3EcmPBk5pK7EnTCeUUHqpH6N6CBDG?=
- =?us-ascii?Q?4yBDpSDblaTMcDlJlHocuZkoatMkG7HSjEYlonzkxJq7iNpHM+RmYUbXUAJk?=
- =?us-ascii?Q?bV3jH9CfuuZGKF+KUu4KJeuV884dCfDrnlc2DvftAV2sQsYcxR3OUpKb421N?=
- =?us-ascii?Q?HS+bmHS+QF1ZhgZ+TOyEG7jLAtJOjmVvH08R9MNhgE5w1hWTkcrfSOwkOu8U?=
- =?us-ascii?Q?kbeOvsMRdxAkB5s897dETvXZ80hyvoZZujQ1hXIIvGm/kuwusBas0Dk0DW3J?=
- =?us-ascii?Q?xuzimf1SXzD/fHamEZ9oR3+lkYCKccMejePHh3I02p2fV+YFN82NJDA1vyhu?=
- =?us-ascii?Q?9pfmfD0LcuoeLXZkWDVuOGa6fFsKdncXMQk4Ye/18DX3ZwrKvNm81zZ78vW2?=
- =?us-ascii?Q?GHIbXv++OdH9inRH1rhyWH+G3L17BpQN3xR2NULAvDLa9C9IcthOVA7Oe1uO?=
- =?us-ascii?Q?31C+OHqyghvoZfh1K76woIX6+uoTn3p7kbDsE7ihiExTtepELKy5XqZvoRa4?=
- =?us-ascii?Q?MxRioXnS9QleFx0vabSiLYMEUOgJzi0eqV7SGfbOe3fn9BMSIvlbcqfKu28x?=
- =?us-ascii?Q?SO6206CJAvOEO7ieQQIz67Fdhrt72MzwDDA0BwV69HyF4bp31WKDrzVpfQa7?=
- =?us-ascii?Q?d95RH5MDuRz5ct8tq/bT7oxwyfwBf8ffXczBmuMiOXGrAz4TwbSsPZcmvPln?=
- =?us-ascii?Q?HvC8swzvEFg3ju8JaEwbw4LIZaK860cRFlxRv0erXyBKCmSnxceT986Pxqv7?=
- =?us-ascii?Q?+daOphGhsGRfq3dUIejx98V4JwC/Q9hjTiZqDx0Qhu34o8k5hVI7NxuHXSB5?=
- =?us-ascii?Q?Z1a2ac41r3qIdoObO3GXYhx4lSJiBhWT6b1yu22oLdnydsuvt38mzm79pPec?=
- =?us-ascii?Q?+g558MuFmX5gPuQ6EYcNrtxEiAm+S4GaCXmfQixO+MjOBU/iYDjeN9wuzDNn?=
- =?us-ascii?Q?HB9XqFH2slpbt8h37IKuNklq/u9Wg1+7SuNDTEaRQNCODdPxJ180WXddT9S+?=
- =?us-ascii?Q?SnoDRVGejvmiWH2c83TpA8HOUVi7j0ibBuaOX5l1Ybm73HfKvtru8exezq4B?=
- =?us-ascii?Q?waZBntIJ+FGqUIT3jbPXgElSEQAk1iBbTnVIh54FR0ootl2oJ+wDo38t97B4?=
- =?us-ascii?Q?+bhSCXHkKdSaT8RTHEmMwjYtkASCQ0Zt5nwN9MFk8Z78To333B6gH8LjOYxT?=
- =?us-ascii?Q?8T8Le9JLwl7BZI8Bsugx7CkLpiL3R6LtGfBz/xnO5uLdghkJlsQAxfHGBEfN?=
- =?us-ascii?Q?Hqgxo30m4P7hobS//l8LDjJSJxXkeW2OV1Jel3oCwxBOzJrWivraYHst4hqy?=
- =?us-ascii?Q?41pabGVynfrJQmazzP72piD374MK3cnVzvQxOdFZg+Uu3RhqQDWrgj30RJqj?=
- =?us-ascii?Q?LTjDwblyEQVhq6ki7JatjSjIUL7Un1IPLmMwdY0v2aKz8ITYeA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?siye0YY/lAh4xO/Rns38DiJQ/BxEevniSGP9OdAvVz7s3vdH6QK7f4FQLr1Q?=
- =?us-ascii?Q?kb+oSZmviuOcNnUffLKaC0q8bu8Kk/7UIzvjVgDWBu5ieSf0TZaRuehNWQNF?=
- =?us-ascii?Q?P31p0bdxou9kp6ak8fHI2Y+Q3+PdlQOi8MKJJzWUKIhXTBHWLgNROqfKXznt?=
- =?us-ascii?Q?NkmOeWsBlQWe69qHVDa9/mXdHjHSmfUcoYG6FC3CLRcfoWrN7OU7LtTgjk5T?=
- =?us-ascii?Q?31wqh/4HG4tG4RBMItW08fCXKWp8wCG7x1xW5Gukn3U4Q6HFayDFvyUj+wng?=
- =?us-ascii?Q?TfPeX/2IQvXkkKVoA/M1PnuoaHn5iUYwSyT9ufgILIZaXMGbOhQc7Ytk3aVs?=
- =?us-ascii?Q?EMlfj5k4iOkLXB1tQ/5WxRx2bdtcIgvRw2T20yeZSxmiRnBEQkI/20DuF+Uf?=
- =?us-ascii?Q?5TI5XshCwaG1HnnPruuhrpRLLY4KDompJZto0hT+urNLXcLfgRv//zCtg6hP?=
- =?us-ascii?Q?17W/qC8wQgDEUnbsDwCxK7rznNdADIiG8WZowuRTcTzU0fiHBaYV7UDkJNqB?=
- =?us-ascii?Q?tOK4ATsqNkEJ/FfX930Tcsvl43B3q4IsK/yUXXJV7T9pmpe98beQrtCaiPQI?=
- =?us-ascii?Q?E2wLIgSYisfoePAR8+XFr90uz+U1GC6iBJEHqyLmkDZbtSklhOkwpU5gtChC?=
- =?us-ascii?Q?9KFJpKsXAsGwOT96XVtxMFTHKifIHAiiZyUUskKgthBJ+l/7tMarr3LqvWkS?=
- =?us-ascii?Q?mkYQzPSGQF+24Tn57cxuUDOmyuFW4EgGyxjXwsakVA89pNvIbkIrsPxhq0gS?=
- =?us-ascii?Q?qOJY6tOHebZlEoBaDWr1Kyw/2qzEWq8fppk2bb041lJZtR7luzmrP60rvFJr?=
- =?us-ascii?Q?00N9eplpyTP82RrxKUd2xZAbai0hoILYEfLo8+URs0MM4wc6tjY9wCyypWeY?=
- =?us-ascii?Q?Icm7tNX/FfS3oW8KnehV72aVyd/7Y8s7WJuU/I8Uihy3186jqUI4aEVAspN9?=
- =?us-ascii?Q?MwKBuJioz0+GVAHSN6CZw6sXeopqkDY+77BtgXhGHPK7X1/K+T3+8DjSZ0sF?=
- =?us-ascii?Q?A0gEKQ8WB9K4GwatnR8GDM5uwYDFMbf7A+uAgftO6AUh6sXmpBkl8rWA9Tgy?=
- =?us-ascii?Q?BRaGqj6Dn+wgiYypQczPyT/FhurbSKWgc4WEi3KKJ0URxdI3FlkELujN45cw?=
- =?us-ascii?Q?LHwGvp8MsoJkJSUYNENEq5CIrtyA90M1Isyb4cIp3oUrbdGUToJo3hssNTAL?=
- =?us-ascii?Q?GX2O6rQ2PeTGNdf8SAY4HJP3vqiMqiUz1n+mV8+XxT+cRG+AutpiugtyYr8p?=
- =?us-ascii?Q?/V+rYZv6YtwRCybRpf7pPNb461ZDLXOay0S6h8ZZ3v3pCjnm4GrSGoeUaPEj?=
- =?us-ascii?Q?n7pD5aT7cmvod21afdNs2l8dq+8gp5z707B1CRgUKVb91K9+S0z0m/+9I3vv?=
- =?us-ascii?Q?xQZiYKXB3Mry01QKISaaZ/jf9sjER6y3QHvzA4ULXdjB6t76kb0F2kWAE4O0?=
- =?us-ascii?Q?XLc1+xzgRbZoa/E7lkCTUZ+r7VT/KjluV2nC5Kpvyw8QRC5gKURztENm87L4?=
- =?us-ascii?Q?emuporn5ExrB0WmsIDKhpPHYKfxybFeDi87EuWKe8GWn6tVYhngyGbCOUKSm?=
- =?us-ascii?Q?q1KrCccTylgfUUpV+n2NK0et4m9PpLb7ans/DxL6?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	gpfn5ifWgvHTi6hL3g2647x1NT83QChkWvp+MI48DksT39ZWWJgfExZgT8PsFUoBBVlPKaAK3MJn7/TilW6CFFSLpToSc9hdxWXpQB7bAkDHIpytEHqS2Yk6tiMyQmHLhq3tvr++CnXazCQTFeWerOdHip/0ELZ1aRUKr++nYhjJRFP3RAUjZiPrEj1SelMGpjQlGhHDCUFmVNdXvqyCHk2K1YehJF2W/RIQt11jejkwApO8MTPoNfjEgmnkqrEazka1p6qKEOR/a4hwIfElsqBUb8xTk4W91PbSl0V0d0XNRPfx+wDIDOM/0tjoDluikcgmYX8qTmVFyvzGZRUCW2jKb9s1iWP+nSZ3S8fuQPcBRHJA6fTfi1aCf0Tw4KiOuIHQEPnjfV4A3QikDnYIl0kMhfojf4YhVhXLCLVGlCZux28FqaNbt7LpTcjASzGrLei7HSy2tXAwMdcSIRr1lgRGNdWk5BK089qNcct+MaQruEqnsWI2gaZgPUnhkny49PgHW3JiyAMxEAA2mHvAh/lYKOnXjb/sx54KWLUa+//3gVPKwpAYR9gBUj72J38EVGoulgAAJg1bDMEyY6oYCe35oonybFkcXC1Ar5oo2fc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e420fc5c-5a1f-42e8-5edf-08dd56a3720f
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 20:23:35.0927
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PEQQs7uX5ezOBcsi8AI0wZdp4MJuvbaD8gJU6uqo5umnrxVDX0mcJAHXa0+4lDkEmiMZQzgkaL1g4ttYafKWUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR10MB7423
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 mlxscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502260160
-X-Proofpoint-GUID: JvFBIObZTQUAc6_7hDys6Bb3JX1Vd3P8
-X-Proofpoint-ORIG-GUID: JvFBIObZTQUAc6_7hDys6Bb3JX1Vd3P8
+References: <20250217053719.442644-1-vignesh.raman@collabora.com> <20250217053719.442644-4-vignesh.raman@collabora.com>
+In-Reply-To: <20250217053719.442644-4-vignesh.raman@collabora.com>
+From: Helen Mae Koike Fornazier <helen.fornazier@gmail.com>
+Date: Wed, 26 Feb 2025 17:24:08 -0300
+X-Gm-Features: AQ5f1JoEGij5s02EkXcJQX2XuiqAewaehTaMPjCiNOd3tf5DXYODa9_T83CTx04
+Message-ID: <CAPW4XYZ-yinJovLJDCPoriOLyV-q2V7JdFktkiAZK7Uwh8zmVg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] drm/ci: enable lockdep detection
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, airlied@gmail.com, 
+	simona.vetter@ffwll.ch, robdclark@gmail.com, guilherme.gallo@collabora.com, 
+	sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
+	jani.nikula@linux.intel.com, dmitry.baryshkov@linaro.org, mripard@kernel.org, 
+	boqun.feng@gmail.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Suren Baghdasaryan <surenb@google.com> [250226 13:55]:
-> Lokesh recently raised an issue about UFFDIO_MOVE getting into a deadlock
-> state when it goes into split_folio() with raised folio refcount.
-> split_folio() expects the reference count to be exactly
-> mapcount + num_pages_in_folio + 1 (see can_split_folio()) and fails with
-> EAGAIN otherwise. If multiple processes are trying to move the same
-> large folio, they raise the refcount (all tasks succeed in that) then
-> one of them succeeds in locking the folio, while others will block in
-> folio_lock() while keeping the refcount raised. The winner of this
-> race will proceed with calling split_folio() and will fail returning
-> EAGAIN to the caller and unlocking the folio. The next competing process
-> will get the folio locked and will go through the same flow. In the
-> meantime the original winner will be retried and will block in
-> folio_lock(), getting into the queue of waiting processes only to repeat
-> the same path. All this results in a livelock.
-> An easy fix would be to avoid waiting for the folio lock while holding
-> folio refcount, similar to madvise_free_huge_pmd() where folio lock is
-> acquired before raising the folio refcount. Since we lock and take a
-> refcount of the folio while holding the PTE lock, changing the order of
-> these operations should not break anything.
-> Modify move_pages_pte() to try locking the folio first and if that fails
-> and the folio is large then return EAGAIN without touching the folio
-> refcount. If the folio is single-page then split_folio() is not called,
-> so we don't have this issue.
-> Lokesh has a reproducer [1] and I verified that this change fixes the
-> issue.
-> 
-> [1] https://github.com/lokeshgidra/uffd_move_ioctl_deadlock
-> 
-> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> Reported-by: Lokesh Gidra <lokeshgidra@google.com>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Reviewed-by: Peter Xu <peterx@redhat.com>
-> Cc: stable@vger.kernel.org
+Em seg., 17 de fev. de 2025 =C3=A0s 02:37, Vignesh Raman
+<vignesh.raman@collabora.com> escreveu:
+>
+> We have enabled PROVE_LOCKING (which enables LOCKDEP) in drm-ci.
+> This will output warnings when kernel locking errors are encountered
+> and will continue executing tests. To detect if lockdep has been
+> triggered, check the debug_locks value in /proc/lockdep_stats after
+> the tests have run. When debug_locks is 0, it indicates that lockdep
+> has detected issues and turned itself off. Check this value, and if
+> lockdep is detected, exit with an error and configure it as a warning
+> in GitLab CI.
+>
+> GitLab CI ignores exit codes other than 1 by default. Pass the correct
+> exit code with variable FF_USE_NEW_BASH_EVAL_STRATEGY set to true or
+> exit on failure.
+>
+> Also update the documentation.
+>
+> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 
-Acked-by: Liam R. Howlett <Liam.Howlett@Oracle.com>
+Acked-by: Helen Koike <helen.fornazier@gmail.com>
 
 > ---
-> Note this patch is v2 of [2] but I did not bump up the version because now
-> it's part of the patchset which is at its v1. Hopefully that's not too
-> confusing.
-> 
-> Changes since v1 [2]:
-> - Rebased over mm-hotfixes-unstable to avoid merge conflicts with [3]
-> - Added Reviewed-by, per Peter Xu
-> - Added a note about PTL lock in the changelog, per Liam R. Howlett
-> - CC'ed stable
-> 
-> [2] https://lore.kernel.org/all/20250225204613.2316092-1-surenb@google.com/
-> [3] https://lore.kernel.org/all/20250226003234.0B98FC4CEDD@smtp.kernel.org/
-> 
->  mm/userfaultfd.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> index 8eae4ea3cafd..e0f1e38ac5d8 100644
-> --- a/mm/userfaultfd.c
-> +++ b/mm/userfaultfd.c
-> @@ -1250,6 +1250,7 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
->  		 */
->  		if (!src_folio) {
->  			struct folio *folio;
-> +			bool locked;
->  
->  			/*
->  			 * Pin the page while holding the lock to be sure the
-> @@ -1269,12 +1270,26 @@ static int move_pages_pte(struct mm_struct *mm, pmd_t *dst_pmd, pmd_t *src_pmd,
->  				goto out;
->  			}
->  
-> +			locked = folio_trylock(folio);
-> +			/*
-> +			 * We avoid waiting for folio lock with a raised refcount
-> +			 * for large folios because extra refcounts will result in
-> +			 * split_folio() failing later and retrying. If multiple
-> +			 * tasks are trying to move a large folio we can end
-> +			 * livelocking.
-> +			 */
-> +			if (!locked && folio_test_large(folio)) {
-> +				spin_unlock(src_ptl);
-> +				err = -EAGAIN;
-> +				goto out;
-> +			}
+>
+> v2:
+>   - Lockdep failures are reported as pipeline warnings,
+>     and the documentation is updated.
+>
+> v3:
+>   - Add a common job for exit code handling and extend it in other jobs.
+>
+> ---
+>  Documentation/gpu/automated_testing.rst |  4 ++++
+>  drivers/gpu/drm/ci/igt_runner.sh        | 11 +++++++++++
+>  drivers/gpu/drm/ci/test.yml             | 17 ++++++++++++++---
+>  3 files changed, 29 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/gpu/automated_testing.rst b/Documentation/gpu/=
+automated_testing.rst
+> index 6d7c6086034d..62aa3ede02a5 100644
+> --- a/Documentation/gpu/automated_testing.rst
+> +++ b/Documentation/gpu/automated_testing.rst
+> @@ -115,6 +115,10 @@ created (eg. https://gitlab.freedesktop.org/janedoe/=
+linux/-/pipelines)
+>  5. The various jobs will be run and when the pipeline is finished, all j=
+obs
+>  should be green unless a regression has been found.
+>
+> +6. Warnings in the pipeline indicate that lockdep
+> +(see Documentation/locking/lockdep-design.rst) issues have been detected
+> +during the tests.
 > +
->  			folio_get(folio);
->  			src_folio = folio;
->  			src_folio_pte = orig_src_pte;
->  			spin_unlock(src_ptl);
->  
-> -			if (!folio_trylock(src_folio)) {
-> +			if (!locked) {
->  				pte_unmap(&orig_src_pte);
->  				pte_unmap(&orig_dst_pte);
->  				src_pte = dst_pte = NULL;
-> -- 
-> 2.48.1.658.g4767266eb4-goog
-> 
+>
+>  How to update test expectations
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_ru=
+nner.sh
+> index 68b042e43b7f..2a0599f12c58 100755
+> --- a/drivers/gpu/drm/ci/igt_runner.sh
+> +++ b/drivers/gpu/drm/ci/igt_runner.sh
+> @@ -85,5 +85,16 @@ deqp-runner junit \
+>     --limit 50 \
+>     --template "See $ARTIFACTS_BASE_URL/results/{{testcase}}.xml"
+>
+> +# Check if /proc/lockdep_stats exists
+> +if [ -f /proc/lockdep_stats ]; then
+> +    # If debug_locks is 0, it indicates lockdep is detected and it turns=
+ itself off.
+> +    debug_locks=3D$(grep 'debug_locks:' /proc/lockdep_stats | awk '{prin=
+t $2}')
+> +    if [ "$debug_locks" -eq 0 ] && [ "$ret" -eq 0 ]; then
+> +        echo "Warning: LOCKDEP issue detected. Please check dmesg logs f=
+or more information."
+> +        cat /proc/lockdep_stats
+> +        ret=3D101
+> +    fi
+> +fi
+> +
+>  cd $oldpath
+>  exit $ret
+> diff --git a/drivers/gpu/drm/ci/test.yml b/drivers/gpu/drm/ci/test.yml
+> index 0eab020a33b9..dbc4ff50d8ff 100644
+> --- a/drivers/gpu/drm/ci/test.yml
+> +++ b/drivers/gpu/drm/ci/test.yml
+> @@ -1,6 +1,14 @@
+> +.allow_failure_lockdep:
+> +  variables:
+> +    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
+> +  allow_failure:
+> +    exit_codes:
+> +      - 101
+> +
+>  .lava-test:
+>    extends:
+>      - .container+build-rules
+> +    - .allow_failure_lockdep
+>    timeout: "1h30m"
+>    rules:
+>      - !reference [.scheduled_pipeline-rules, rules]
+> @@ -69,6 +77,7 @@
+>    extends:
+>      - .baremetal-test-arm64
+>      - .use-debian/baremetal_arm64_test
+> +    - .allow_failure_lockdep
+>    timeout: "1h30m"
+>    rules:
+>      - !reference [.scheduled_pipeline-rules, rules]
+> @@ -91,6 +100,8 @@
+>
+>  .software-driver:
+>    stage: software-driver
+> +  extends:
+> +    - .allow_failure_lockdep
+>    timeout: "1h30m"
+>    rules:
+>      - !reference [.scheduled_pipeline-rules, rules]
+> @@ -153,7 +164,7 @@ msm:apq8016:
+>      BM_KERNEL_EXTRA_ARGS: clk_ignore_unused
+>      RUNNER_TAG: google-freedreno-db410c
+>    script:
+> -    - ./install/bare-metal/fastboot.sh
+> +    - ./install/bare-metal/fastboot.sh || exit $?
+>
+>  msm:apq8096:
+>    extends:
+> @@ -167,7 +178,7 @@ msm:apq8096:
+>      GPU_VERSION: apq8096
+>      RUNNER_TAG: google-freedreno-db820c
+>    script:
+> -    - ./install/bare-metal/fastboot.sh
+> +    - ./install/bare-metal/fastboot.sh || exit $?
+>
+>  msm:sdm845:
+>    extends:
+> @@ -181,7 +192,7 @@ msm:sdm845:
+>      GPU_VERSION: sdm845
+>      RUNNER_TAG: google-freedreno-cheza
+>    script:
+> -    - ./install/bare-metal/cros-servo.sh
+> +    - ./install/bare-metal/cros-servo.sh || exit $?
+>
+>  msm:sm8350-hdk:
+>    extends:
+> --
+> 2.43.0
+>
+
+
+--=20
+Helen Koike
