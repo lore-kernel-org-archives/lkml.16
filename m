@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03D721E0AA;
-	Wed, 26 Feb 2025 15:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F865224B08;
+	Wed, 26 Feb 2025 15:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584211; cv=none; b=XMGOvvTpP2ZL1eCzFL24jhWKYqLnGU5x3xViOxoeeFPBjdpvxb8wrln68qq/JufkfmjYNWsvBwvSzs6I7Ua5ZipOcjtNJldWo3vHKTo+4bac3VZjlvi0ZsqQI1UwPGukefj7ytXwlC6iHj9cy2YephVWg8VFoT+RgePv8VQhFPQ=
+	t=1740584215; cv=none; b=LgUVLvfSQXNHX78QObVUF6ip8/VXR9x/0XYvOBQGyYVIwhPoivTK0uK4VIRaSvu6D/DzPGOV+8Ed5PsnvubogfrKGG6SmHAmPPiuYpwRN79lFtqsdd022WVWL+sJEcULDdYLISoamfaxbIskbCUB3KU9DMcT0Ut0w61OFlyCat0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584211; c=relaxed/simple;
-	bh=Kcxlg+wkdwQqRcewEbnIH5bR8ZjExYIUPT/bKiPZZzA=;
+	s=arc-20240116; t=1740584215; c=relaxed/simple;
+	bh=jk2YnpRwdl0zqWfzI0pQtgICnWog+RgigvgaUWzoto8=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=FKsGtzfk8E9Os/fu4OkZz2lolyGjnAWM0OhXjmk7O/dxYSpmBBfm6+7YXRTnoi+JfIY7v0rnLMOb3+RAUm9ZKXyqruucriNQlcwU+Q0nUSuWptQLVi6HGGZJKQ+QMMfda/O3iKS7mL33aq8tnd+VNFo+SXFqRsxiAZFC2a1QkIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPiIIrpc; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=TWs68GynExuFHXkjcGv1FCVt75w/UpkFZp6OsRpTwXvVGPzFYRpk17SPRdpFDsAS0yew05qFdwrGaW8xAGboxb5fB8f/npMwx4DX/awWRnYGBbjc7Jit8KvJBpS37Z6BmaQyDJ7b332jnmA3BkfftxfbIiCgpdIptjnxL94b3NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rWb0Qpvh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPiIIrpc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC8C9C4CED6;
-	Wed, 26 Feb 2025 15:36:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rWb0Qpvh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D209CC4CED6;
+	Wed, 26 Feb 2025 15:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740584211;
-	bh=Kcxlg+wkdwQqRcewEbnIH5bR8ZjExYIUPT/bKiPZZzA=;
+	s=k20201202; t=1740584215;
+	bh=jk2YnpRwdl0zqWfzI0pQtgICnWog+RgigvgaUWzoto8=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=jPiIIrpcBQVeaLUguCnE87OKpBphKCIQfTlQz+vcSIczYpVQ64VB/o+lcViLlKG1Z
-	 1tYvK4Iqgx4+qMw2GZx6BgbCkn5MS7TxFQSD5RWKB8F3Vah68MeDQgss2MrdGRE/j0
-	 Qz96eWw+jFIjVdXqNA/i4aA7wrG0Bc/3Im/DHKKyHntOzH+ygaG3hZt7ogO9SYFnyv
-	 WRWxe58bAbz9p019/dVtcPlGswsEw+FaFRSK4KvOoDup58AJR/iY1DJGV+37OuSwEt
-	 0MYoLrYZXmhPhxBQWUbPflEF8XkJg9AVZ/E+bYIiZG5oeg4YiiwTfcEFOYPbnMWOJe
-	 xz5HzbdDfK1bA==
-Date: Wed, 26 Feb 2025 09:36:49 -0600
+	b=rWb0Qpvhvefui+YIaT1AKdUiuLVmVx72K/GJWZcwQ0tgkfV2HW25qAaUzgb0QK68g
+	 lZep904ebvCGINPTPj7MQvFzwdT79Wx97bZQAwteV4jUM+BiOF+dWAYGbgWfUGHGrg
+	 SkdhHiMronBVvlQcs4obbw+XadqhVLoCsn3+uXLnuazBAvlU2nHogr62Phmq6aE0nA
+	 zPuFj8YqepR5YC6AunhJiFtL0wYeq7U8ISwW34cy7H4P/lRZXI+WK84UfzLwfAPJQ0
+	 oH8tj8JKLE12P8U73kIpwKXgny5/kO3zNGBQKNSayX2GABqzy67AEfmUqKMnQV/JwL
+	 kz034moZPbM6Q==
+Date: Wed, 26 Feb 2025 09:36:53 -0600
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,132 +36,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+Cc: Conor Dooley <conor+dt@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- cros-qcom-dts-watchers@chromium.org, Mark Brown <broonie@kernel.org>, 
- devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, 
- linux-arm-msm@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>, 
- Bjorn Andersson <andersson@kernel.org>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-To: Dzmitry Sankouski <dsankouski@gmail.com>
-In-Reply-To: <20250225-starqltechn_integration_upstream-v9-0-a5d80375cb66@gmail.com>
-References: <20250225-starqltechn_integration_upstream-v9-0-a5d80375cb66@gmail.com>
-Message-Id: <174058387176.2466803.5224190356165061330.robh@kernel.org>
-Subject: Re: [PATCH v9 00/12] This is continued work on Samsung S9(SM-9600)
- starqltechn
+ Neil Armstrong <neil.armstrong@linaro.org>, devicetree@vger.kernel.org, 
+ Heiner Kallweit <hkallweit1@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jerome Brunet <jbrunet@baylibre.com>, linux-arm-kernel@lists.infradead.org, 
+ Thomas Gleixner <tglx@linutronix.de>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <20250226-irqchip-gpio-a4-a5-v2-0-c55b1050cb55@amlogic.com>
+References: <20250226-irqchip-gpio-a4-a5-v2-0-c55b1050cb55@amlogic.com>
+Message-Id: <174058387423.2466938.7799013716611230822.robh@kernel.org>
+Subject: Re: [PATCH v2 0/4] Add GPIO interrupt support for Amlogic A4 and
+ A5 SoCs
 
 
-On Tue, 25 Feb 2025 19:38:51 +0300, Dzmitry Sankouski wrote:
-> Contains starqltechn device tree changes.
-> Add support for new features:
-> - sound (headphones and mics only)
-> - gpu
-> - panel
-> - buttons
-> - MAX77705 MFD:
->   - charger
->   - fuelgauge
->   - haptic
->   - led
+On Wed, 26 Feb 2025 13:47:51 +0800, Xianwei Zhao wrote:
+> This patch adds GPIO interrupt support for Amlogic A4 and A5 SoCs
 > 
-> Binding Dependencies:
-> - s2dos05: https://lore.kernel.org/r/20241007-starqltechn_integration_upstream-v6-0-264309aa66de@gmail.com
->   - This series was applied to krzk/linux.git (for-next)
-> 
-> - max77705: https://lore.kernel.org/r/20241209-starqltechn_integration_upstream-v11-4-dc0598828e01@gmail.com
->   - applied to
->     git@gitolite.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
-> 
-> - s6e3ha8 panel: https://lore.kernel.org/r/20241006-starqltechn_integration_upstream-v6-0-8336b9cd6c34@gmail.com
->   - applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
-> 
-> Runtime Dependencies:
-> - gcc845 gp clock: https://lore.kernel.org/r/20241007-starqltechn_integration_upstream-v6-0-dd75c06c708d@gmail.com
->   - applied to clk-next
-> 
-> Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > ---
-> Changes in v9:
-> - update applied dependency patchsets
-> - Link to v8: https://lore.kernel.org/r/20241209-starqltechn_integration_upstream-v8-0-ec604481d691@gmail.com
-> 
-> Changes in v8:
-> - add reviewed tags
-> - minor fixes
-> - remove 'reg' property in fuel-gauge to comply with v11 max77705 mfd
-> - Link to v7: https://lore.kernel.org/r/20241205-starqltechn_integration_upstream-v7-0-84f9a3547803@gmail.com
-> 
-> Changes in v7:
-> - review fixes.
-> - new patch with dt-binding header for wcd934x
-> - Link to v6: https://lore.kernel.org/r/20241008-starqltechn_integration_upstream-v6-0-5445365d3052@gmail.com
-> 
-> Changes in v6:
-> - refactor: no space between tags in commit message
-> - rename starqltechn to sdm845-starqltechn in commit summaries
-> - Link to v5: https://lore.kernel.org/r/20240926-starqltechn_integration_upstream-v5-0-d2084672ff2f@gmail.com
-> 
-> Changes in v5:
-> - Split patchset per subsystem
-> - Add links to subsystem patchsets in description
-> - Link to v4: https://lore.kernel.org/r/20240913-starqltechn_integration_upstream-v4-0-2d2efd5c5877@gmail.com
-> 
-> Changes in v4:
-> - Rewrite max77705, max77705_charger, max77705_fuel_gauge from scratch
-> - Reorder patches:
->   - squash max77705 subdevice bindings in core file because
->     no resources there
->   - split device tree changes
-> - Use _ as space for filenames in power/supply like the majority
-> - Replace gcc-845 freq_tbl frequencies patch with new approach,
->   based on automatic m/n/pre_div value generation
-> - Link to v3: https://lore.kernel.org/r/20240618-starqltechn_integration_upstream-v3-0-e3f6662017ac@gmail.com
-> 
-> Changes in version 3:
-> - disable crypto patch removed(disabled on distro level)
-> - dts framebuffer node along with related patches removed,
-> because panel driver added
-> - fix 'make O=.output_arm64 CHECK_DTBS=y qcom/sdm845-samsung-starqltechn.dtb'
-> errors, but it still complains on 'monitored-battery' and
-> 'power-supplies' though I have 'power-supply.yaml' link in charger
-> and fuel gauge bindings.
+> Changes in v2:
+> - Use if/then instead of direct modification minimum value for property 'amlogic,channel-interrupts'.
+> - Add register offsets to the parameter structure to reduce definition of a function.
+> - Link to v1: https://lore.kernel.org/r/20250219-irqchip-gpio-a4-a5-v1-0-3c8e44ae42df@amlogic.com
 > 
 > ---
-> Dzmitry Sankouski (12):
->       arm64: dts: qcom: sdm845: enable gmu
->       arm64: dts: qcom: sdm845-starqltechn: remove wifi
->       arm64: dts: qcom: sdm845-starqltechn: fix usb regulator mistake
->       arm64: dts: qcom: sdm845-starqltechn: refactor node order
->       arm64: dts: qcom: sdm845-starqltechn: remove excess reserved gpios
->       arm64: dts: qcom: sdm845-starqltechn: add gpio keys
->       arm64: dts: qcom: sdm845-starqltechn: add max77705 PMIC
->       arm64: dts: qcom: sdm845-starqltechn: add display PMIC
->       arm64: dts: qcom: sdm845-starqltechn: add touchscreen support
->       arm64: dts: qcom: sdm845-starqltechn: add initial sound support
->       arm64: dts: qcom: sdm845-starqltechn: add graphics support
->       arm64: dts: qcom: sdm845-starqltechn: add modem support
+> Xianwei Zhao (4):
+>       dt-bindings: interrupt-controller: Add support for Amlogic A4 and A5 SoCs
+>       irqchip: Add support for Amlogic A4 and A5 SoCs
+>       arm64: dts: Add gpio_intc node for Amlogic A4 SoCs
+>       arm64: dts: Add gpio_intc node for Amlogic A5 SoCs
 > 
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi                   |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts                   |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts                      |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-oneplus-common.dtsi          |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts      | 600 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----
->  arch/arm64/boot/dts/qcom/sdm845-shift-axolotl.dts            |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-sony-xperia-tama.dtsi        |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium-common.dtsi |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dts           |   4 ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi                         |   2 --
->  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts         |   4 ---
->  11 files changed, 591 insertions(+), 47 deletions(-)
+>  .../amlogic,meson-gpio-intc.yaml                   | 13 +++++++
+>  arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        | 21 +++++++++++
+>  arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi        | 12 +++++++
+>  drivers/irqchip/irq-meson-gpio.c                   | 42 +++++++++++++++++++---
+>  4 files changed, 83 insertions(+), 5 deletions(-)
 > ---
-> base-commit: d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8afa
-> change-id: 20240617-starqltechn_integration_upstream-bc86850b2fe3
+> base-commit: 953913df9c3ab6f496c6facd5aa7fc9f2f847ac2
+> change-id: 20241213-irqchip-gpio-a4-a5-80c50a1456c4
 > 
 > Best regards,
 > --
-> Dzmitry Sankouski <dsankouski@gmail.com>
+> Xianwei Zhao <xianwei.zhao@amlogic.com>
+> 
 > 
 > 
 
@@ -180,12 +100,10 @@ make sure dt-schema is up to date:
   pip3 install dtschema --upgrade
 
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250225-starqltechn_integration_upstream-v9-0-a5d80375cb66@gmail.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/amlogic/' for 20250226-irqchip-gpio-a4-a5-v2-0-c55b1050cb55@amlogic.com:
 
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: /soc@0/geniqup@ac0000/i2c@a98000/pmic@66: failed to match any schema with compatible: ['maxim,max77705']
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: /soc@0/geniqup@ac0000/i2c@a98000/pmic@66/leds: failed to match any schema with compatible: ['maxim,max77705-rgb']
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: /soc@0/geniqup@ac0000/i2c@a98000/pmic@66/haptic: failed to match any schema with compatible: ['maxim,max77705-haptic']
-arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dtb: /soc@0/geniqup@ac0000/i2c@a98000/charger@69: failed to match any schema with compatible: ['maxim,max77705-charger']
+arch/arm64/boot/dts/amlogic/amlogic-a4-a113l2-ba400.dtb: interrupt-controller@8e72c: amlogic,channel-interrupts: [140, 141] is too short
+	from schema $id: http://devicetree.org/schemas/interrupt-controller/amlogic,meson-gpio-intc.yaml#
 
 
 
