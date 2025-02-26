@@ -1,194 +1,296 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E758023A9B3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61FB62505A4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539884; cv=none; b=mUfx2hcL4/T4orlvrogbnLapLGmOaYpUhiNXMaXcmK34Qrbz2+UPY5vD8iPY3zZwpmfT4SLttnvKhQP6ucsKdc+EqfyM3cxv0ZUC5bf+L771reCoR6NDVmGKWMfPeBtWbMN1NqH14kTqRvYXs/Lvimvcl3UPmE/RrjrjYb1sz7s=
+	t=1740539902; cv=none; b=XymYkiBS4VzJbNWyZTxUfdhYULz7h8DN/sKXfMUglUvtpJwPsVHhE5wuY80BPOx7XxTp4dTVeYn/QGKIgiV0JeDqPBRQNZVuhttiinMQd8/wuqQzB2VlmNk+QVWDM0iB86NCJDKr5O3TqVlwtlKctSmDgJZyAdEJg6Gr25oOhbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539884; c=relaxed/simple;
-	bh=FlRtG5Qg0GsSwLV0DMQVtkpwIcyO/yTA4JLXKw3G1C4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 References; b=bGbe7MOm3z28zut1twcqqjzqBdqnkjE55N7Jz0iGoOZWV36pYWvRM1isoJSzA8XtSh3bQkAjnfq1bwNAX6gAQdku1ILRdP6J2FXF8l9mbH2+i78NRG8GgOApOCIFWE2eG1+c0O8BufbA4nWZI1jzk9NKiep0FM/P4WeYo8beuI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WdLpB0Fe; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740539902; c=relaxed/simple;
+	bh=bLoqe3iWK2rHJMWZK3S1g1ZUAkxrMh2WccF3afuhLgM=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=oL7IuKPOiPw0ZDLC6nEnejg17YWtOX/adC5eMXVK4QtSJp0OGBIPZ+U1DBOArL2/NjXFHo5lyRzRExls9G5fYVzeLy8+XH6k6zBxvcqaas037Et2jpzlojjbQ3Impgh4FnhGUowMdx7ZH/I/PRjSLl9vAFmEgpkVBfMQ41wFFdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=zEhuAFTf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=E1+pozVj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=tU6jn1Vc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uSu6mEyJ; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WdLpB0Fe"
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250226031757epoutp0306fb531f7241e64e91b16bfac93f6f80~no8wD5YvF1099310993epoutp03b
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:17:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250226031757epoutp0306fb531f7241e64e91b16bfac93f6f80~no8wD5YvF1099310993epoutp03b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740539877;
-	bh=whgbmdNBjy2fxsYiRHNo+K3C3SdesV6ZWCOz7KtrJD0=;
-	h=Date:From:To:Cc:Subject:References:From;
-	b=WdLpB0Fe+K2BBMXPKOGHRFozRHuBeWuGOV6qd578jdeAl9kIfa4Z4uiQuH/rurszW
-	 y00Uii4DUJW7gUrFL4cjGtLyv4F+3SNbB9TVWSY+9DLKgeLT+KTEym4WYQfnJ7ebJy
-	 qjoeRP6ypg0WwmDPV+rod+H5yMJ8YZDj2kEz3qmU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-	20250226031757epcas2p2c9e76c65a2adc0990a1d51e714876d62~no8vxjcYa3165731657epcas2p2y;
-	Wed, 26 Feb 2025 03:17:57 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.69]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z2fmh3gC2z4x9Pp; Wed, 26 Feb
-	2025 03:17:56 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	88.8A.22938.4E78EB76; Wed, 26 Feb 2025 12:17:56 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250226031756epcas2p3674cccc82687effb40575aa5fa2956e0~no8uq02oB2201822018epcas2p3d;
-	Wed, 26 Feb 2025 03:17:56 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250226031756epsmtrp2c1a292fe43e82fad3696e4df7bd64e3c~no8uqK6sH1292112921epsmtrp21;
-	Wed, 26 Feb 2025 03:17:56 +0000 (GMT)
-X-AuditID: b6c32a43-99d9b2400000599a-52-67be87e47463
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	A9.FA.23488.3E78EB76; Wed, 26 Feb 2025 12:17:56 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250226031755epsmtip28f1ff721349e0bbaf40d1b156a9e4bd6~no8ufzFc60226702267epsmtip2l;
-	Wed, 26 Feb 2025 03:17:55 +0000 (GMT)
-Date: Wed, 26 Feb 2025 12:16:28 +0900
-From: Donghyeok Choe <d7271.choe@samsung.com>
-To: pmladek@suse.com
-Cc: linux-kernel@vger.kernel.org, john.ogness@linutronix.de,
-	takakura@valinux.co.jp, youngmin.nam@samsung.com, hajun.sung@samsung.com,
-	seungh.jung@samsung.com, jh1012.choi@samsung.com
-Subject: printk: selective deactivation of feature ignoring non panic cpu's
- messages
-Message-ID: <20250226031628.GB592457@tiffany>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="zEhuAFTf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="E1+pozVj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="tU6jn1Vc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uSu6mEyJ"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DECD921185;
+	Wed, 26 Feb 2025 03:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740539897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hi2lTyABX6F+Zk3VP84YZcYJcPAqNVeDNsTUYCj+h2E=;
+	b=zEhuAFTfm6IsEpNDNJO5Xc6cZVW0QiFbDHnBLr5VGWBbUXXJvhGp3wbd7V3zsUUbN1qVXu
+	q3+qo4z7iDXaODumFWhNwKWXWXjILwySTbGzkJj8E8fepbmX+wFwS6NjlL9sJ0H/ELtAMw
+	Q352GtSO7Rts7C31MWlPIXD2LAzQsYI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740539897;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hi2lTyABX6F+Zk3VP84YZcYJcPAqNVeDNsTUYCj+h2E=;
+	b=E1+pozVjwSpODLNi6k/C/UGijOjJ62EqcPQYuabXGiu7p9SbLDtEvFqYZPm9IsQBQJpzJ7
+	c1TbLOiIjXr5oUAA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=tU6jn1Vc;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uSu6mEyJ
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740539896; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hi2lTyABX6F+Zk3VP84YZcYJcPAqNVeDNsTUYCj+h2E=;
+	b=tU6jn1Vc/w9SxfcdTk9W0KPhwzFtRkstbWKw33r4giZ8UqAGBhbuLK7cf1l4cHzRopo5uz
+	lVK5VR3uWx48Fwlz6WqHDLdnkwOUIB9vNI9D3GaGqyviA1Ukb2qobmV758a10khWtB0zjJ
+	B2MSUbrJ2SEJkjxOb+UqPxZAQ4JCGA8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740539896;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hi2lTyABX6F+Zk3VP84YZcYJcPAqNVeDNsTUYCj+h2E=;
+	b=uSu6mEyJStRTu5JWG6fW8zpu+ADnh0C1nN2rbqrQuxPLjI050eHP/t3WY/o7ZUxt9e5nPQ
+	rM6O40yxt9DEoDBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CEEEF13404;
+	Wed, 26 Feb 2025 03:18:08 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id x4+RH/CHvmfcbwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Wed, 26 Feb 2025 03:18:08 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdljTVPdJ+750g6m3JS2a9l9itng0fS2r
-	xbYr8xktLu+aw2bx//FXVoujt56yW0za18hksfjAJ3YHDo93586xe/RtWcXosX7LVRaPT9Om
-	sXt83iQXwBqVbZORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
-	lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8C8QK84Mbe4NC9dLy+1xMrQ
-	wMDIFKgwITvj2b6b7AWtEhULvy5jamCcL9TFyMkhIWAi8WbyR9YuRi4OIYEdjBInprazQzif
-	GCV63k9gB6kSEvjGKHHkbAZMR8vkeWwQRXsZJR5OX8QE4TxllJh6fiFYB4uAqsTElW/ZQGw2
-	AV2JSZ3bgGwODhEBEYlb6xRA6pkFdjNKtN7cwQRSIywQJvGzew0jiM0LVH/p8CQoW1Di5Mwn
-	LBCbb7FLrL5gCWG7SHS+WcYKYQtLvDq+hR3ClpL4/G4v2HUSAs2MEpNuvGaCcGYwSlyZ/JkJ
-	ospYYtazdrANzAKZEjuPL2EBuU5CQFniyC0WiDCfRMfhv+wQYV6JjjZoeKlInO97wAiza8Pc
-	t1ATPSTmv9rHBAmtWIl3rycyT2CUnYXkhVlIlkHYOhILdn9imwW0gVlAWmL5Pw4IU1Ni/S79
-	BYysqxjFUguKc9NTk40KDOGRmpyfu4kRnBy1nHcwXpn/T+8QIxMH4yFGCQ5mJRFezsw96UK8
-	KYmVValF+fFFpTmpxYcYTYHxMZFZSjQ5H5ie80riDU0sDUzMzAzNjUwNzJXEeat3tKQLCaQn
-	lqRmp6YWpBbB9DFxcEo1MDFty6r/lGy1SOnRh5C2P2eLfWKviXfws0i2fAq/kSAlaVllytNY
-	pmuuet/2watNcTGtm6OSvC+dTLuxtbznRvrUhxunsv5g6Q1fmvmq+65xQF9iPquewYW1uvNX
-	hYfyXYxcVTT94XGxd3Lnl6Sv918jZax5ocjqENNjUcXU0pfsqW9+PDD++iGL+yGDvuHLd3cn
-	eyio3xK8ePX3NM1VPO03uZLk+2vsf9/SuFd75eup6S6KL7uunuy751tlVMNmaua/8DXvOaEq
-	RW+B7XubqyLm71NI0N+/nWPuyxSvTQGljldjH2keV5uv+HXdqvvZp+xi+DY/dWb/EdhZsmfr
-	8yuX7HXOcb7o+u/6cv6GNCWW4oxEQy3mouJEAG2hnYEXBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsWy7bCSvO6T9n3pBp8uMFs07b/EbPFo+lpW
-	i21X5jNaXN41h83i/+OvrBZHbz1lt5i0r5HJYvGBT+wOHB7vzp1j9+jbsorRY/2Wqywen6ZN
-	Y/f4vEkugDWKyyYlNSezLLVI3y6BK2PS9d3sBYdEK5Yfymtg/MrfxcjJISFgItEyeR5bFyMX
-	h5DAbkaJ/w8vM0IkpCTat8xkgrCFJe63HGGFKHrMKHHi8V5WkASLgKrExJVv2UBsNgFdiUmd
-	24BsDg4RARGJW+sUQOqZBfYySix4fYQZpEZYIEziZ/casAW8QPWXDk+CsgUlTs58wgJiMwto
-	Sdz495IJZA6zgLTE8n8cExj5ZiGpmoWkahZC1QJG5lWMkqkFxbnpucmGBYZ5qeV6xYm5xaV5
-	6XrJ+bmbGMEhrKWxg/Hdtyb9Q4xMHIyHGCU4mJVEeDkz96QL8aYkVlalFuXHF5XmpBYfYpTm
-	YFES511pGJEuJJCeWJKanZpakFoEk2Xi4JRqYGpQm7fVVlbI2VJe0KftSl/oPnuWmqnRJ9/P
-	PfDj8wJLG7mLtSZ2arOtSlI7H+hLWJVJ1jrZqv+0jaqprbb8EMqyr8P7fEvV1zpFwQU/P4ap
-	rfv1P+jrXYN6qSKnvT94JnItPKvoHZ7XsPOmWYmgQpnjEqbZ854dZZ/JycnBE/TuYcCK87ff
-	lVkxqjzoO9Vqc413kaDLf997q/xN+j++9r/MEs3WX+mxd5fJuUjn6IxNB1sTjVdMzJNTkPs+
-	cWaE/y7X3muts4PubKw1vBD06/zkSNXzjGs/3MnfEnD3Wa29tljsssOe12qi8s8yacSlROnk
-	phr3frVKv/ib+Wlb6tWr+z28nPZcS763a5apEktxRqKhFnNRcSIAVQfyRNACAAA=
-X-CMS-MailID: 20250226031756epcas2p3674cccc82687effb40575aa5fa2956e0
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----7MjMDun-wBTKD0aJGk8MrTq1WBha5gge0B_F3lDBYtizvuhb=_147cc5_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250226031756epcas2p3674cccc82687effb40575aa5fa2956e0
-References: <CGME20250226031756epcas2p3674cccc82687effb40575aa5fa2956e0@epcas2p3.samsung.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Trond Myklebust" <trondmy@hammerspace.com>
+Cc: "xiubli@redhat.com" <xiubli@redhat.com>,
+ "brauner@kernel.org" <brauner@kernel.org>,
+ "idryomov@gmail.com" <idryomov@gmail.com>,
+ "okorniev@redhat.com" <okorniev@redhat.com>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+ "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+ "jlayton@kernel.org" <jlayton@kernel.org>,
+ "anna@kernel.org" <anna@kernel.org>, "miklos@szeredi.hu" <miklos@szeredi.hu>,
+ "anton.ivanov@cambridgegreys.com" <anton.ivanov@cambridgegreys.com>,
+ "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "jack@suse.cz" <jack@suse.cz>, "tom@talpey.com" <tom@talpey.com>,
+ "richard@nod.at" <richard@nod.at>,
+ "linux-um@lists.infradead.org" <linux-um@lists.infradead.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "netfs@lists.linux.dev" <netfs@lists.linux.dev>,
+ "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>
+Subject:
+ Re: [PATCH 1/6] Change inode_operations.mkdir to return struct dentry *
+In-reply-to: <50e6b21c644b050a29e159c9484a5e01061434f6.camel@hammerspace.com>
+References:
+ <>, <50e6b21c644b050a29e159c9484a5e01061434f6.camel@hammerspace.com>
+Date: Wed, 26 Feb 2025 14:18:01 +1100
+Message-id: <174053988113.102979.18024415194793753569@noble.neil.brown.name>
+X-Rspamd-Queue-Id: DECD921185
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,kernel.org,gmail.com,vger.kernel.org,oracle.com,sipsolutions.net,szeredi.hu,cambridgegreys.com,zeniv.linux.org.uk,suse.cz,talpey.com,nod.at,lists.infradead.org,lists.linux.dev,chromium.org];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DKIM_TRACE(0.00)[suse.de:+];
+	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-------7MjMDun-wBTKD0aJGk8MrTq1WBha5gge0B_F3lDBYtizvuhb=_147cc5_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+On Wed, 26 Feb 2025, Trond Myklebust wrote:
+> On Wed, 2025-02-26 at 13:09 +1100, NeilBrown wrote:
+> > On Tue, 25 Feb 2025, Trond Myklebust wrote:
+> > > On Mon, 2025-02-24 at 14:09 +1100, NeilBrown wrote:
+> > > > On Mon, 24 Feb 2025, Al Viro wrote:
+> > > > > On Mon, Feb 24, 2025 at 12:34:06PM +1100, NeilBrown wrote:
+> > > > > > On Sat, 22 Feb 2025, Al Viro wrote:
+> > > > > > > On Fri, Feb 21, 2025 at 10:36:30AM +1100, NeilBrown wrote:
+> > > > > > >=20
+> > > > > > > > +In general, filesystems which use d_instantiate_new() to
+> > > > > > > > install the new
+> > > > > > > > +inode can safely return NULL.=C2=A0 Filesystems which may not
+> > > > > > > > have an I_NEW inode
+> > > > > > > > +should use d_drop();d_splice_alias() and return the
+> > > > > > > > result
+> > > > > > > > of the latter.
+> > > > > > >=20
+> > > > > > > IMO that's a bad pattern, _especially_ if you want to go
+> > > > > > > for
+> > > > > > > "in-update"
+> > > > > > > kind of stuff later.
+> > > > > >=20
+> > > > > > Agreed.=C2=A0 I have a draft patch to change d_splice_alias() and
+> > > > > > d_exact_alias() to work on hashed dentrys.=C2=A0 I thought it
+> > > > > > should
+> > > > > > go after
+> > > > > > these mkdir patches rather than before.
+> > > > >=20
+> > > > > Could you give a braindump on the things d_exact_alias() is
+> > > > > needed
+> > > > > for?
+> > > > > It's a recurring headache when doing ->d_name/->d_parent
+> > > > > audits;
+> > > > > see e.g.
+> > > > > https://lore.kernel.org/all/20241213080023.GI3387508@ZenIV/=C2=A0for
+> > > > > related
+> > > > > mini-rant from the latest iteration.
+> > > > >=20
+> > > > > Proof of correctness is bloody awful; it feels like the
+> > > > > primitive
+> > > > > itself
+> > > > > is wrong, but I'd never been able to write anything concise
+> > > > > regarding
+> > > > > the things we really want there ;-/
+> > > > >=20
+> > > >=20
+> > > > As I understand it, it is needed (or wanted) to handle the
+> > > > possibility
+> > > > of an inode becoming "stale" and then recovering.=C2=A0 This could
+> > > > happen,
+> > > > for example, with a temporarily misconfigured NFS server.
+> > > >=20
+> > > > If ->d_revalidate gets a NFSERR_STALE from the server it will
+> > > > return
+> > > > '0'
+> > > > so lookup_fast() and others will call d_invalidate() which will
+> > > > d_drop()
+> > > > the dentry.=C2=A0 There are other paths on which -ESTALE can result in
+> > > > d_drop().
+> > > >=20
+> > > > If a subsequent attempt to "open" the name successfully finds the
+> > > > same
+> > > > inode we want to reuse the old dentry rather than create a new
+> > > > one.
+> > > >=20
+> > > > I don't really understand why.=C2=A0 This code was added 20 years ago
+> > > > before
+> > > > git.
+> > > > It was introduced by
+> > > >=20
+> > > > commit 89a45174b6b32596ea98fa3f89a243e2c1188a01
+> > > > Author: Trond Myklebust <trond.myklebust@fys.uio.no>
+> > > > Date:=C2=A0=C2=A0 Tue Jan 4 21:41:37 2005 +0100
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 VFS: Avoid dentry aliasing problems in files=
+ystems like NFS,
+> > > > where
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 inodes may be =
+marked as stale in one instance (causing
+> > > > the
+> > > > dentry
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 to be dropped)=
+ then re-enabled in the next instance.
+> > > > =C2=A0=C2=A0=C2=A0=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0 Signed-off-by: Trond Myklebust <trond.mykleb=
+ust@fys.uio.no>
+> > > >=20
+> > > > in history.git
+> > > >=20
+> > > > Trond: do you have any memory of this?=C2=A0 Can you explain what the
+> > > > symptom
+> > > > was that you wanted to fix?
+> > > >=20
+> > > > The original patch used d_add_unique() for lookup and atomic_open
+> > > > and
+> > > > readdir prime-dcache.=C2=A0 We now only use it for v4 atomic_open.=C2=
+=A0
+> > > > Maybe
+> > > > we
+> > > > don't need it at all?=C2=A0 Or maybe we need to restore it to those
+> > > > other
+> > > > callers?=20
+> > > >=20
+> > >=20
+> > > 2005? That looks like it was trying to deal with the userspace NFS
+> > > server. I can't remember when it was given the ability to use the
+> > > inode
+> > > generation counter, but I'm pretty sure that in 2005 there were
+> > > plenty
+> > > of setups out there that had the older version that reused
+> > > filehandles
+> > > (due to inode number reuse). So you would get spurious ESTALE
+> > > errors
+> > > sometimes due to inode number reuse, sometimes because the
+> > > filehandle
+> > > fell out of the userspace NFS server's cache.
+> >=20
+> > So this was likely done to work-around known weaknesses in NFS
+> > servers
+> > at the time.
+> >=20
+> > The original d_add_unique() was used in nfs_lookup()
+> > nfs_atomic_lookup()
+> > and nfs_readdir_lookup() but the current descendent d_exact_alias()
+> > is
+> > only used in _nfs4_open_and_get_state() called only by nfs4_do_open()
+> > which is only used in nfs4_atomic_open() and nfs4_proc_create().
+> >=20
+> > So the usage in 'lookup' and 'readdir' have fallen by the wayside
+> > with
+> > no apparent negative consequences.=C2=A0=20
+> > The old NFS servers have probably been fixed.
+> >=20
+> > So do you have any concerns with us discarding d_exact_alias() and
+> > only
+> > using d_splice_alias() in _nfs4_open_get_state() ??
+> >=20
+>=20
+> AFAIK, there were never any NFSv4 servers in public use that mimicked
+> the quirks of the userspace NFSv2/NFSv3 server. So I'm thinking it
+> should be safe to retire d_exact_alias.
 
-Hello.
+Thanks.  I'll submit a patch through the VFS tree as I have other VFS
+patches in the works that will depend on that so having them together
+would be good.
 
-In 'Commit 779dbc2e78d7', a feature was included in which the message
-from non panic cpu was ignored. I understand that panic cpu's message
-is the most important feature in the SW livelockup issue.
-
-However, SOC vendor's linux kernel device driver developers
-in environments where hw reliability is not guaranteed The message
-from non panic cpu is also important.
-
-In the process of performing a panic when a specific cpu is fault,
-another cpu has the ability to output important err information
-through interrupt. If a particular cpu has an incorrect sfr access,
-the debugging device driver's ISR behavior to debug it helps you
-identify the problem easily.
-
-I can output non panic cpu's backtrace through Commit bcc954c6caba,
-but this seems to be not enough for me.
-I would like to print out the message of non panic cpu as it is.
-Can I use early_param to selectively disable that feature?
-
-For example, as below.
-I'm sending you an inquiry instead of a patch because I need to share
-more about my problem situation.
-Please forgive me if I broke the mailing etiquette.
-
-ex)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index fb242739aec8..3f420e8bdb2c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2368,6 +2368,17 @@ void printk_legacy_allow_panic_sync(void)
-        }
- }
-
-+static bool __read_mostly keep_printk_all_cpu_in_panic;
-+
-+static int __init keep_printk_all_cpu_in_panic_setup(char *str)
-+{
-+       keep_printk_all_cpu_in_panic = true;
-+       pr_info("printk: keep printk all cpu in panic.\n");
-+
-+       return 0;
-+}
-+early_param("keep_printk_all_cpu_in_panic", keep_printk_all_cpu_in_panic_setup);
-+
- asmlinkage int vprintk_emit(int facility, int level,
-                            const struct dev_printk_info *dev_info,
-                            const char *fmt, va_list args)
-@@ -2379,13 +2390,15 @@ asmlinkage int vprintk_emit(int facility, int level,
-        if (unlikely(suppress_printk))
-                return 0;
-
--       /*
--        * The messages on the panic CPU are the most important. If
--        * non-panic CPUs are generating any messages, they will be
--        * silently dropped.
--        */
--       if (other_cpu_in_panic() && !panic_triggering_all_cpu_backtrace)
--               return 0;
-+       if (!keep_printk_all_cpu_in_panic) {
-+               /*
-+                * The messages on the panic CPU are the most important. If
-+                * non-panic CPUs are generating any messages, they will be
-+                * silently dropped.
-+                */
-+               if (other_cpu_in_panic() && !panic_triggering_all_cpu_backtrace)
-+                       return 0;
-+       }
-
-Thank you.
-
-------7MjMDun-wBTKD0aJGk8MrTq1WBha5gge0B_F3lDBYtizvuhb=_147cc5_
-Content-Type: text/plain; charset="utf-8"
-
-
-------7MjMDun-wBTKD0aJGk8MrTq1WBha5gge0B_F3lDBYtizvuhb=_147cc5_--
+Thanks,
+NeilBrown
