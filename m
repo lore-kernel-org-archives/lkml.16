@@ -1,204 +1,82 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49021257AFC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:25:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB19C236A74
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740601517; cv=none; b=TelQXSMW3Q3kEMfvyDxxnaBwY591bk55LeOGVIVc1/uPY892URPYOsCRSQnVFL+9muSb95sVESYOFGXqj2WflEdKJm7hSRZdcLJqHK2TbiTqe6S1vPBP4C2PfzHlaqPyOetf67AkY2hu+pY3rt1nFR+zsTF+PhNi4sakuoZpmXY=
+	t=1740601552; cv=none; b=sOEgCG0vEUMHhmtp7yLKtb6S2Tuh1OHjiaLgnHo4DGCH13mAK60kG8riSMmcP3sW3gJsHySgtOrtkRpOZgyD8nuQDjITyUh/DMICxBJhyj6puzQfd0NmazvJdPPonmB0GppwpvyTF4nXTreXa2H3BFcSbDAWY75vfpu1LMfaFgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740601517; c=relaxed/simple;
-	bh=9XSeIVk0INKB27lpWUTKEMf0kFLfVrH++iNpjyRvsG0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ftE7A2ZKlzx3BE4/eE+cbt/5zikju1aQEPDk4w6zZto7BvqP+a9qL49RtfFAFQ4bjyRNszuSbdmxyzZjFETtcEq7rA1rYNV5Ecnq+oYmOv9gL+fXz69larPf/92cd6YXJbm9dgTCzryoJnZdtOm8hDASwksC4voX8vJuSIrZ0W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PMEK6OfK; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1740601552; c=relaxed/simple;
+	bh=Q8sYku9aMCtWhflJLwH91vUGtFPSQw2rleG8nUX/WAg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4gJP8Pg/cy13HT91XLt2WoDPqxPbkZ9yyAmBwbCKQAs2vghy36S8qwsP9rFoZ8y/uvvATOJRfPJXNG0nVmYny5u/2VPfclZ8XHVgtZOGSBEAurnAIDdbwl5pS0P4WLFNWf1wORYIVhhWsc/Vh1w4lyHYx/Jefr8AEWd9Fl6nNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UPw11DU5; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PMEK6OfK"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2211cd4463cso2660115ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:25:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1740601513; x=1741206313; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CUL9vPYfIsBYwLRgV8qB6RCZqGNjsrfsVU1Ka6aFYBY=;
-        b=PMEK6OfKiv7r5lLXvZ4FIM4i3tlZZZicCAz+1V3T6kbjOGfImsREskI3N8d7UBipzw
-         JAf61SmxKwGSHRnEwgH/0cREdBgd0DfYrNTRB09as7G8AXpl0PGzQ7kJPmfSPZFMLWZH
-         R40VxRTdUyEM2q3FghqX4NCCwS0qF3SMuT/9rPU6ZYYAwMFiub32a7LIKMN1fWT/MTSS
-         6GE/v7Hl+JN1BjPRFJtomZAt88q9Cwio8PQiOnTm/5cEAwwxkW1NjlocQAeyEEZA5NcR
-         4ZrK8PyBUKk7YUtR0rzAiHB/MgFFEx0b5nlLqpEALk3PnGF1aS5EQ1Z425dPqge8TSzc
-         9AXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740601513; x=1741206313;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CUL9vPYfIsBYwLRgV8qB6RCZqGNjsrfsVU1Ka6aFYBY=;
-        b=qnbi0/W0N8ymaiw7UbcCcmFXOGNAXSyBUEcmrh1zWJLvdDlavAyjyGo7QZAO85FVnm
-         y+3ta+szxtvwA5GMK/9rZLVRPluGEgysgR8ZJ9B+cVK4dgnMHYOe2QnC/zL8Jr9HtyOA
-         YIJ4LCOoT31X6aAStVMI88pTCdoekheoxG5/pyAP6nNIHDuUyw4khkWp9m/e78iQsldR
-         hB+GWBLviPGDwh0F0tNcdblEHY/skuMfDVz5kFsqVyPZkh4wPjSBmy5lbstDAUmAXTKH
-         Xy2hkrnK8mdvGGrqgkbNSDoRkPGgZI02iLC64C9QXlRf4LdtnLafJauggDnAd1H2RIwL
-         oIAA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7diJadKr4rKv6/OokJBnd0a8onYPdqxZ9uvDiROcGjT5hbF1EYTtsMqr6verRpYMLUtpBOs/hp7mKFYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE2UL3aT2FE8kdspNS1huqrif99o9xxsra/VnLioXW1lDoecYs
-	NYB7W3XDoikwvDziv/p/Dc8IV53DAkWtXLv0WC3XiFfUOTd+yvyRufs6vhotKjYteQG5H+ebFp0
-	+
-X-Gm-Gg: ASbGncs7bZv8TtARvQkgbyj6gyjZvFG586QofHW1evUOw0H04sb+CnrL96nrHrILmc4
-	fYrwrBZFMR2R8v6ZvA/DXC1F6c69NfQBgkdYFkGvAIQdvMv2jWkejCsxR0QfF8m9ZjTZuqkMEYb
-	8G8yqz7VX4biO1YBMxeCYugy41ku8cutrNHT0B/PjmzNYfhiOsuvuJTnH9ZLDQU6/uxwZV4USDb
-	pNJN+g4LxZ9B2rdxdrbNll1JLKlLLw2iZknfjvGAx35CEl7F9V9y+B03O+UiXctQ5nQOd16SwmK
-	OWZ6GkJUqwO9hDBK+5oc4ElJdfVi5Bb7JAoMe4c=
-X-Google-Smtp-Source: AGHT+IHVxqxBZKHrXRbMLQx94rePhcj/KMG3dvOa85IKXsVDVZmW7p4O5rV92MpOYiz4YyuBZBfk6Q==
-X-Received: by 2002:a05:6a00:1828:b0:732:5b10:572b with SMTP id d2e1a72fcca58-734790cbaf5mr13305359b3a.10.1740601513545;
-        Wed, 26 Feb 2025 12:25:13 -0800 (PST)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a7f7de2sm4100963b3a.106.2025.02.26.12.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 12:25:13 -0800 (PST)
-From: Atish Patra <atishp@rivosinc.com>
-Date: Wed, 26 Feb 2025 12:25:05 -0800
-Subject: [PATCH 3/4] KVM: riscv: selftests: Change command line option
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UPw11DU5"
+Date: Wed, 26 Feb 2025 15:25:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740601538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lQTz2Z60ErneXO5HjXDw3PfvKwLnnAXF84o/4WSH4M8=;
+	b=UPw11DU5IPn/iHj10Ngjhcml/9OUHZnnKj9E2cJ4h84crN3jw+5ziDj18Y767dYbhqdkmm
+	uGz6qTm72fDQtIetBj4i1vcsAUtKMFS4TPvVQ6CvIw+TcalQpLwEtnXJ9BmOVUSoQOdmVm
+	4bfI+ozZUvgBete7FVNLQCQjAURgEFE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ralf Jung <post@ralfj.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Ventura Jack <venturajack85@gmail.com>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
+	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
+	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <amebiomyty3gw7gwgpz3sbztzdac6ce2pslq3jjfe3no4w72dn@sskvzdp6l67w>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo>
+ <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+ <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+ <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+ <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+ <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-kvm_pmu_improve-v1-3-74c058c2bf6d@rivosinc.com>
-References: <20250226-kvm_pmu_improve-v1-0-74c058c2bf6d@rivosinc.com>
-In-Reply-To: <20250226-kvm_pmu_improve-v1-0-74c058c2bf6d@rivosinc.com>
-To: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Andrew Jones <ajones@ventanamicro.com>, 
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Atish Patra <atishp@rivosinc.com>
-X-Mailer: b4 0.15-dev-13183
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-The PMU test commandline option takes an argument to disable a
-certain test. The initial assumption behind this was a common use case
-is just to run all the test most of the time. However, running a single
-test seems more useful instead. Especially, the overflow test has been
-helpful to validate PMU virtualizaiton interrupt changes.
+On Wed, Feb 26, 2025 at 09:59:41AM -0800, Linus Torvalds wrote:
+> And just as an example: threading fundamentally introduces a notion of
+> "aliasing" because different *threads* can access the same location
+> concurrently. And that actually has real effects that a good language
+> absolutely needs to deal with, even when there is absolutely *no*
+> memory ordering or locking in the source code.
+> 
+> For example, it means that you cannot ever widen stores unless you
+> know that the data you are touching is thread-local. Because the bytes
+> *next* to you may not be things that you control.
 
-Switching the command line option to run a single test instead
-of disabling a single test also allows to provide additional
-test specific arguments to the test. The default without any options
-remains unchanged which continues to run all the tests.
+In Rust, W^X references mean you know that if you're writing to an
+object you've got exclusive access - the exception being across an
+UnsafeCell boundary, that's where you can't widen stores.
 
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
- tools/testing/selftests/kvm/riscv/sbi_pmu_test.c | 40 +++++++++++++++---------
- 1 file changed, 26 insertions(+), 14 deletions(-)
+Which means all those old problems with bitfields go away, and the
+compiler people finally know what they can safely do - and we have to
+properly annotate access from multiple threads.
 
-diff --git a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-index 284bc80193bd..533b76d0de82 100644
---- a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-+++ b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
-@@ -39,7 +39,11 @@ static bool illegal_handler_invoked;
- #define SBI_PMU_TEST_SNAPSHOT	BIT(2)
- #define SBI_PMU_TEST_OVERFLOW	BIT(3)
- 
--static int disabled_tests;
-+struct test_args {
-+	int disabled_tests;
-+};
-+
-+static struct test_args targs;
- 
- unsigned long pmu_csr_read_num(int csr_num)
- {
-@@ -604,7 +608,11 @@ static void test_vm_events_overflow(void *guest_code)
- 	vcpu_init_vector_tables(vcpu);
- 	/* Initialize guest timer frequency. */
- 	timer_freq = vcpu_get_reg(vcpu, RISCV_TIMER_REG(frequency));
-+
-+	/* Export the shared variables to the guest */
- 	sync_global_to_guest(vm, timer_freq);
-+	sync_global_to_guest(vm, vcpu_shared_irq_count);
-+	sync_global_to_guest(vm, targs);
- 
- 	run_vcpu(vcpu);
- 
-@@ -613,28 +621,30 @@ static void test_vm_events_overflow(void *guest_code)
- 
- static void test_print_help(char *name)
- {
--	pr_info("Usage: %s [-h] [-d <test name>]\n", name);
--	pr_info("\t-d: Test to disable. Available tests are 'basic', 'events', 'snapshot', 'overflow'\n");
-+	pr_info("Usage: %s [-h] [-t <test name>]\n", name);
-+	pr_info("\t-t: Test to run (default all). Available tests are 'basic', 'events', 'snapshot', 'overflow'\n");
- 	pr_info("\t-h: print this help screen\n");
- }
- 
- static bool parse_args(int argc, char *argv[])
- {
- 	int opt;
--
--	while ((opt = getopt(argc, argv, "hd:")) != -1) {
-+	int temp_disabled_tests = SBI_PMU_TEST_BASIC | SBI_PMU_TEST_EVENTS | SBI_PMU_TEST_SNAPSHOT |
-+				  SBI_PMU_TEST_OVERFLOW;
-+	while ((opt = getopt(argc, argv, "h:t:n:")) != -1) {
- 		switch (opt) {
--		case 'd':
-+		case 't':
- 			if (!strncmp("basic", optarg, 5))
--				disabled_tests |= SBI_PMU_TEST_BASIC;
-+				temp_disabled_tests &= ~SBI_PMU_TEST_BASIC;
- 			else if (!strncmp("events", optarg, 6))
--				disabled_tests |= SBI_PMU_TEST_EVENTS;
-+				temp_disabled_tests &= ~SBI_PMU_TEST_EVENTS;
- 			else if (!strncmp("snapshot", optarg, 8))
--				disabled_tests |= SBI_PMU_TEST_SNAPSHOT;
-+				temp_disabled_tests &= ~SBI_PMU_TEST_SNAPSHOT;
- 			else if (!strncmp("overflow", optarg, 8))
--				disabled_tests |= SBI_PMU_TEST_OVERFLOW;
-+				temp_disabled_tests &= ~SBI_PMU_TEST_OVERFLOW;
- 			else
- 				goto done;
-+			targs.disabled_tests = temp_disabled_tests;
- 			break;
- 		case 'h':
- 		default:
-@@ -650,25 +660,27 @@ static bool parse_args(int argc, char *argv[])
- 
- int main(int argc, char *argv[])
- {
-+	targs.disabled_tests = 0;
-+
- 	if (!parse_args(argc, argv))
- 		exit(KSFT_SKIP);
- 
--	if (!(disabled_tests & SBI_PMU_TEST_BASIC)) {
-+	if (!(targs.disabled_tests & SBI_PMU_TEST_BASIC)) {
- 		test_vm_basic_test(test_pmu_basic_sanity);
- 		pr_info("SBI PMU basic test : PASS\n");
- 	}
- 
--	if (!(disabled_tests & SBI_PMU_TEST_EVENTS)) {
-+	if (!(targs.disabled_tests & SBI_PMU_TEST_EVENTS)) {
- 		test_vm_events_test(test_pmu_events);
- 		pr_info("SBI PMU event verification test : PASS\n");
- 	}
- 
--	if (!(disabled_tests & SBI_PMU_TEST_SNAPSHOT)) {
-+	if (!(targs.disabled_tests & SBI_PMU_TEST_SNAPSHOT)) {
- 		test_vm_events_snapshot_test(test_pmu_events_snaphost);
- 		pr_info("SBI PMU event verification with snapshot test : PASS\n");
- 	}
- 
--	if (!(disabled_tests & SBI_PMU_TEST_OVERFLOW)) {
-+	if (!(targs.disabled_tests & SBI_PMU_TEST_OVERFLOW)) {
- 		test_vm_events_overflow(test_pmu_events_overflow);
- 		pr_info("SBI PMU event verification with overflow test : PASS\n");
- 	}
-
--- 
-2.43.0
-
+E.g. if you're doing a ringbuffer with head and tail pointers shared
+between multiple threads, you no longer do that with bare integers, you
+use atomics (even if you're not actually using any atomic operations on
+them).
