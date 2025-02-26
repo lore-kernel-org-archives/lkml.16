@@ -1,124 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9022F1624F3;
-	Wed, 26 Feb 2025 07:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21AD26A1A1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740553338; cv=none; b=YMRwa9t/NdiVJ5bUeHqYQqb9mrB8sLxwpWQsk7zpuz6vZJcF+kuHCFqaVRjvhgQMDT/zjc9PEnhSGdCmf0ukQvamU9AjI6PpfK5ggtp79yoM47JzuqFacLf/0PftXj4KWFsHQl8Gkw0hwFCp034cTW6RP4lTQAJWtQ6MdBFY3VI=
+	t=1740553343; cv=none; b=DmOda4ZPEXJ7hkbb5LilbCqAACS6c80ap4uZYo+/qobc8tKr5ZgQ11Gvd8dys3JMnxc1/D5F9bCnTuKadbxfxR7LNuhIIEmT3ICTisQv0P7nqCd50Q6BlDezanukK0/Q71d7PeZYBuADm+G0mvpa5X2w/vfTCu58ufM7pfh9G4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740553338; c=relaxed/simple;
-	bh=LNW2RCAz3S4DPK/VKv4XUbUdFMgW/79zioxJj69XsEs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V9LZzoCKpxyb7qjib+OkA/c0E6egyRU+EcH26SWF1qWKIxE5k6Chn/48HXYYnTBOyAeDr9rM+ZEfFMkOrCnctqcfI0DPTLJ/xPmcsvFx6LPD1rUFbo1zs3ouYKXIm3vqdIewPo3YHpo5xp5J4ajEXte5vOxS5Q+MtnG6kEXpfKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWGfhsRk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740553343; c=relaxed/simple;
+	bh=Q5I9Pkeml9cJl6usZj1J3takhaEmrag0a0evTvANxS8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ECKaVZ3u/XAgcPaQNzk/uYgW/gkP+kYzHc+6UZxt+RzSUqjbsUhH9ysRyCrda7UMcC6sLwe/32hFa5WGte4CfZ4XJskhQBndnwoTZrFn6K9Ig23yWBQOnsAqfIpApgxe6XZvel2wuuYdmGw8yMFTjgX1HDatScpJhDH60IP4RsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=enLWC8kd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWGfhsRk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AF39C4CEE2;
-	Wed, 26 Feb 2025 07:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740553338;
-	bh=LNW2RCAz3S4DPK/VKv4XUbUdFMgW/79zioxJj69XsEs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gWGfhsRkOdAtLrTKIuG5ReuA2Y9V7HLVEmt6fVZYZGDpAhc/ZLyBbFw2g3/N5WoM7
-	 zChlSdRtojeYdaXOjy2MYk27V6pWYUAQTyxzDj7Fqr+VLzh3cqr48L+XRDKxx7I0UO
-	 wCnfSmohznvbTKBDzVCsgdk92Mm3hx7MFfqYvEOtTw+i6wCmFBYqvwo+afgkkPC8kr
-	 0fc5o6XX0g++VIm456Wz1XGcTxcua8ywGNCa9L92TFvdUi0tgB5WPEXCwobWjjV66b
-	 wNLS7uihw/HEaRmv9imPKU9lpTqtqa0Td5txpuCa7vUYEB+agWQZbN1agBdC/T5ePn
-	 rKIpgaf4MGx5Q==
-Message-ID: <f89817fe-22af-460e-9f5c-a3347eba1892@kernel.org>
-Date: Wed, 26 Feb 2025 08:02:12 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="enLWC8kd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740553338;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vxB68g68QiedLPMv3JniMhpmWTXluIo7YRTxavGMwfg=;
+	b=enLWC8kdIx1binRUXKBgK9ld1lsuauI3O+ppS2PRax/i0luX0+o1ymnU5SJ556uAypjpjD
+	k+S6riivM74Hhx5hrVPMY+hqZwHvOlpdaBeOId6hiShklUaTheSnPT0Cw78Udr3waFU5YF
+	Rjb6BdbgZZ0XsD2wF9P9NEWC+RQNBVM=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-R1oqnMOWNnWd17E60IpaHQ-1; Wed,
+ 26 Feb 2025 02:02:14 -0500
+X-MC-Unique: R1oqnMOWNnWd17E60IpaHQ-1
+X-Mimecast-MFC-AGG-ID: R1oqnMOWNnWd17E60IpaHQ_1740553332
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7955D180034E;
+	Wed, 26 Feb 2025 07:02:12 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.200])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6EB0A19560AD;
+	Wed, 26 Feb 2025 07:02:08 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v10 0/3] sched: Restructure task_mm_cid_work for predictability
+Date: Wed, 26 Feb 2025 08:01:57 +0100
+Message-ID: <20250226070202.95062-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: arm: add CIX P1 (SKY1) SoC
-To: Peter Chen <peter.chen@cixtech.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- marcin@juszkiewicz.com.pl, Fugang Duan <fugang.duan@cixtech.com>
-References: <20250226012136.854614-1-peter.chen@cixtech.com>
- <20250226012136.854614-3-peter.chen@cixtech.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250226012136.854614-3-peter.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On 26/02/2025 02:21, Peter Chen wrote:
-> Add device tree bindings for CIX P1 (Internal name sky1) Arm SoC,
-> it consists several SoC models like CP8180, CD8180, etc.
-> 
-> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
-> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
-> ---
+This patchset moves the task_mm_cid_work to a preemptible and migratable
+context. This reduces the impact of this work to the scheduling latency
+of real time tasks.
+The change makes the recurrence of the task a bit more predictable.
 
-<form letter>
-This is a friendly reminder during the review process.
+The behaviour causing latency was introduced in commit 223baf9d17f2
+("sched: Fix performance regression introduced by mm_cid") which
+introduced a task work tied to the scheduler tick.
+That approach presents two possible issues:
+* the task work runs before returning to user and causes, in fact, a
+  scheduling latency (with order of magnitude significant in PREEMPT_RT)
+* periodic tasks with short runtime are less likely to run during the
+  tick, hence they might not run the task work at all
 
-It looks like you received a tag and forgot to add it.
+Patch 1 add support for prev_sum_exec_runtime to the RT, deadline and
+sched_ext classes as it is supported by fair, this is required to avoid
+calling rseq_preempt on tick if the runtime is below a threshold.
 
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
+Patch 2 contains the main changes, removing the task_work on the
+scheduler tick and using a work_struct scheduled more reliably during
+__rseq_handle_notify_resume.
 
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+Patch 3 adds a selftest to validate the functionality of the
+task_mm_cid_work (i.e. to compact the mm_cids).
 
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
+Changes since V9:
+* Simplify and move checks from task_queue_mm_cid to its call site
 
-Best regards,
-Krzysztof
+Changes since V8 [1]:
+* Add support for prev_sum_exec_runtime to RT, deadline and sched_ext
+* Avoid rseq_preempt on ticks unless executing for more than 100ms
+* Queue the work on the unbound workqueue
+
+Changes since V7:
+* Schedule mm_cid compaction and update at every tick too
+* mmgrab before scheduling the work
+
+Changes since V6 [2]:
+* Switch to a simple work_struct instead of a delayed work
+* Schedule the work_struct in __rseq_handle_notify_resume
+* Asynchronously disable the work but make sure mm is there while we run
+* Remove first patch as merged independently
+* Fix commit tag for test
+
+Changes since V5:
+* Punctuation
+
+Changes since V4 [3]:
+* Fixes on the selftest
+    * Polished memory allocation and cleanup
+    * Handle the test failure in main
+
+Changes since V3 [4]:
+* Fixes on the selftest
+    * Minor style issues in comments and indentation
+    * Use of perror where possible
+    * Add a barrier to align threads execution
+    * Improve test failure and error handling
+
+Changes since V2 [5]:
+* Change the order of the patches
+* Merge patches changing the main delayed_work logic
+* Improved self-test to spawn 1 less thread and use the main one instead
+
+Changes since V1 [6]:
+* Re-arm the delayed_work at each invocation
+* Cancel the work synchronously at mmdrop
+* Remove next scan fields and completely rely on the delayed_work
+* Shrink mm_cid allocation with nr thread/affinity (Mathieu Desnoyers)
+* Add self test
+
+[1] - https://lore.kernel.org/lkml/20250220102639.141314-1-gmonaco@redhat.com
+[2] - https://lore.kernel.org/lkml/20250210153253.460471-1-gmonaco@redhat.com
+[3] - https://lore.kernel.org/lkml/20250113074231.61638-4-gmonaco@redhat.com
+[4] - https://lore.kernel.org/lkml/20241216130909.240042-1-gmonaco@redhat.com
+[5] - https://lore.kernel.org/lkml/20241213095407.271357-1-gmonaco@redhat.com
+[6] - https://lore.kernel.org/lkml/20241205083110.180134-2-gmonaco@redhat.com
+
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.org>
+To: Paul E. McKenney <paulmck@kernel.org>
+To: Shuah Khan <shuah@kernel.org>
+
+Gabriele Monaco (3):
+  sched: Add prev_sum_exec_runtime support for RT, DL and SCX classes
+  sched: Move task_mm_cid_work to mm work_struct
+  selftests/rseq: Add test for mm_cid compaction
+
+ include/linux/mm_types.h                      |   8 +
+ include/linux/rseq.h                          |   2 +
+ include/linux/sched.h                         |   7 +-
+ kernel/rseq.c                                 |   3 +
+ kernel/sched/core.c                           |  47 ++--
+ kernel/sched/deadline.c                       |   1 +
+ kernel/sched/ext.c                            |   1 +
+ kernel/sched/rt.c                             |   1 +
+ kernel/sched/sched.h                          |   2 -
+ tools/testing/selftests/rseq/.gitignore       |   1 +
+ tools/testing/selftests/rseq/Makefile         |   2 +-
+ .../selftests/rseq/mm_cid_compaction_test.c   | 200 ++++++++++++++++++
+ 12 files changed, 242 insertions(+), 33 deletions(-)
+ create mode 100644 tools/testing/selftests/rseq/mm_cid_compaction_test.c
+
+
+base-commit: ac9c34d1e45a4c25174ced4fc0cfc33ff3ed08c7
+-- 
+2.48.1
+
