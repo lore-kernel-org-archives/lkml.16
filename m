@@ -1,139 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0891B19CD0B;
-	Wed, 26 Feb 2025 14:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552E5218AB4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580800; cv=none; b=IZnNbP7jd0eng3ezvC/gKZxYapQnkAz6yY1J0ByX1gs6iT8Kk1Z0P8uc1+cZDioGOLrp3SvSa8jw0hqUUwHz73/83pWPJBtr51oJ+abH49X9Xjxagw32fMmPyMIQIZgCqmer1YGOMPBY7SD3im0yXp8Pkm3URTUGWBTMqRRsEtU=
+	t=1740580812; cv=none; b=n8a0g6EX35y7IxMyfYt/SDERFOckTEnbrMPXcYn8WK0ddNUtdZbDCVPRMjExnV1GRGekjuUZA0H39pWan6c+YhA5l02RIZljQQEqtTjO/XPpumbDeR+MTeSYz+joEeHV7DxgBYgeajQfgJYHbi8iR9WesLZvJ/IB4Dbpp+t4hP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580800; c=relaxed/simple;
-	bh=UizutcGrQROvMXVefR0tVZ4gwid3/rjhlsvjPSmD9iE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AZNc0WqgiATaSmnaSP0xfIX5o3kaEI4+BnbLmfb/nS1fb+cKPgrKvSvYKy5EibT/8U7FVHcUdmQtNfwqRdBtz0WPOyYLt1nQKGACvTgbAbe607LRJRtO5rjTVKd+tHmIYfZ1REZSeawwo9EsPNSDJDr3Dh49Jq4AASqkN4kfqqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iSdIy5Yl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740580812; c=relaxed/simple;
+	bh=gzgLkQrlMVrKRkc+f083jvOCMJCBvyornDXSONhTj2A=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dA2PKlNgkM9SvxdK+sACryS8bn+KzyBq20V7SEKuyX3NmzKf5WeltItaRoGWAIkOtTV+uVdbGgdfkPou3j26+XUa7qOw+fKNzkrqS62f3dOZxM6QVpDHMPe0wRhsAGceXJ3HZ4FBfq85eJ29uTJaEKF/5Pf/0NtCtjT/VXA6QyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XTVibonf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TMv9IRLx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=XTVibonf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TMv9IRLx; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iSdIy5Yl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0DCC4CEE8;
-	Wed, 26 Feb 2025 14:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740580799;
-	bh=UizutcGrQROvMXVefR0tVZ4gwid3/rjhlsvjPSmD9iE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iSdIy5YlY9OjefogR2PNerBmmXht7wVcASIsAdgfHZjvfXcruSn9OpkJScfau3LwS
-	 NgGCYv9i+aRQsPXAEazB2ddgSi9EFSsDLtU54VxS6uIEfYwm70n5kCv3iqj4zSxq0z
-	 R5kKld/SXucL01J5frvAnHraua4g5fpPKb4F7kGFRd/TPdHGTthJe9Onhqh4BoBcrk
-	 3IMTnhjouOCKBU3PjmJyBk4OSIzGDQYTjAx1zd5qsUbgBau11WIRPtK+GjitGmRQnR
-	 qxIZrBhsnVi6kek4/urdheDB3JvE3TEBp4ZLrKgjeGjVtFCjCbk5XWwlaJ3Ty/eN7j
-	 oztEErZPQKj7A==
-Message-ID: <f134c607-2a03-4ee2-9f7a-befa1e4feb74@kernel.org>
-Date: Wed, 26 Feb 2025 15:39:54 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XTVibonf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TMv9IRLx";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="XTVibonf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TMv9IRLx"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5935D21157;
+	Wed, 26 Feb 2025 14:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580808; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kMwkagBb3OSkFxt1zCwHHQVo5cOY39VhHxnQhHuA2OI=;
+	b=XTVibonfnAQjc8xj33ZksqK3Np337lSxmUKH2qL0wH2smBqkf9vH/aNcLiZNTlYbKKvgmj
+	flsGkruBmzoJ2Gsy/8uEEqt2L5zM7bzat8EQ31hfVhz5SwboDVt+nfL+ghFis6IpgLQ9lm
+	csAprURoj/yARS4ho3VXfG7xoM5Cqmw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580808;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kMwkagBb3OSkFxt1zCwHHQVo5cOY39VhHxnQhHuA2OI=;
+	b=TMv9IRLxVR9DZtjgLTXFOpjE+hCTc1i22F7xnwAnd9OND0C6Wn+8yBN9xhFtbmgNjCqOG2
+	dgem1H5fCHXA0/Bg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=XTVibonf;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=TMv9IRLx
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740580808; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kMwkagBb3OSkFxt1zCwHHQVo5cOY39VhHxnQhHuA2OI=;
+	b=XTVibonfnAQjc8xj33ZksqK3Np337lSxmUKH2qL0wH2smBqkf9vH/aNcLiZNTlYbKKvgmj
+	flsGkruBmzoJ2Gsy/8uEEqt2L5zM7bzat8EQ31hfVhz5SwboDVt+nfL+ghFis6IpgLQ9lm
+	csAprURoj/yARS4ho3VXfG7xoM5Cqmw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740580808;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kMwkagBb3OSkFxt1zCwHHQVo5cOY39VhHxnQhHuA2OI=;
+	b=TMv9IRLxVR9DZtjgLTXFOpjE+hCTc1i22F7xnwAnd9OND0C6Wn+8yBN9xhFtbmgNjCqOG2
+	dgem1H5fCHXA0/Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E87DC1377F;
+	Wed, 26 Feb 2025 14:40:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7G4xOMcnv2fWSAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 26 Feb 2025 14:40:07 +0000
+Date: Wed, 26 Feb 2025 15:40:07 +0100
+Message-ID: <87cyf44vnc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit b9b588f22a0c
+In-Reply-To: <2025022626-octane-rickety-304a@gregkh>
+References: <874j0lvy89.wl-tiwai@suse.de>
+	<dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+	<87jz9d5cdp.wl-tiwai@suse.de>
+	<263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+	<87h64g4wr1.wl-tiwai@suse.de>
+	<7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+	<2025022657-credit-undrilled-81f1@gregkh>
+	<2025022626-octane-rickety-304a@gregkh>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/13] arm64: defconfig: Enable Renesas RZ/T2H SoC
- option
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
- "thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
- "geert@linux-m68k.org" <geert@linux-m68k.org>,
- Paul Barker <paul.barker.ct@bp.renesas.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250226130935.3029927-1-thierry.bultel.yh@bp.renesas.com>
- <20250226130935.3029927-14-thierry.bultel.yh@bp.renesas.com>
- <fe4ccf6d-bdf0-41eb-bffe-83d459319689@kernel.org>
- <TYCPR01MB1149252F0825C9BCF6A1B832F8AC22@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <TYCPR01MB1149252F0825C9BCF6A1B832F8AC22@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 5935D21157
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,suse.com:url];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 26/02/2025 15:32, Thierry Bultel wrote:
-> Hi Krysztof,
+On Wed, 26 Feb 2025 15:35:34 +0100,
+Greg KH wrote:
 > 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org> 
->> Sent: mercredi 26 février 2025 15:22
->> To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>; thierry.bultel@linatsea.fr
->> Cc: linux-renesas-soc@vger.kernel.org; geert@linux-m68k.org; Paul Barker <paul.barker.ct@bp.renesas.com>; linux-arm->kernel@lists.infradead.org; linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH v3 13/13] arm64: defconfig: Enable Renesas RZ/T2H SoC option
->>
->> On 26/02/2025 14:09, Thierry Bultel wrote:
->>> Selects support for RZ/T2H (aka r9a09g077), and SCI (serial) specific 
->>> code for it.
->>>
->>> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
->>> Reviewed-by: Paul Barker <paul.barker.ct@bp.renesas.com>
->>> ---
->>
->> You never responded to my comments at v1. So I asked at v2. Still no answer.
->>
->> That's v3 and still silence from your side.
+> On Wed, Feb 26, 2025 at 03:26:44PM +0100, Greg KH wrote:
+> > On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
+> > > On 2/26/25 9:16 AM, Takashi Iwai wrote:
+> > > > On Wed, 26 Feb 2025 15:11:04 +0100,
+> > > > Chuck Lever wrote:
+> > > >>
+> > > >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> > > >>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> > > >>> Chuck Lever wrote:
+> > > >>>>
+> > > >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> > > >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> > > >>>>>
+> > > >>>>> Hi,
+> > > >>>>>
+> > > >>>>> we received a bug report showing the regression on 6.13.1 kernel
+> > > >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> > > >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> > > >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> > > >>>>>
+> > > >>>>> Quoting from there:
+> > > >>>>> """
+> > > >>>>> I use the latest TW on Gnome with a 4K display and 150%
+> > > >>>>> scaling. Everything has been working fine, but recently both Chrome
+> > > >>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> > > >>>>> working with Scaling.
+> > > >>>>> ....
+> > > >>>>> I am using VSCode with:
+> > > >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> > > >>>>> """
+> > > >>>>>
+> > > >>>>> Surprisingly, the bisection pointed to the backport of the commit
+> > > >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> > > >>>>> to iterate simple_offset directories").
+> > > >>>>>
+> > > >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> > > >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> > > >>>>> release is still affected, too.
+> > > >>>>>
+> > > >>>>> For now I have no concrete idea how the patch could break the behavior
+> > > >>>>> of a graphical application like the above.  Let us know if you need
+> > > >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> > > >>>>> and ask there; or open another bug report at whatever you like.)
+> > > >>>>>
+> > > >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> > > >>>>>
+> > > >>>>>
+> > > >>>>> thanks,
+> > > >>>>>
+> > > >>>>> Takashi
+> > > >>>>>
+> > > >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> > > >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> > > >>>>
+> > > >>>> We received a similar report a few days ago, and are likewise puzzled at
+> > > >>>> the commit result. Please report this issue to the Chrome development
+> > > >>>> team and have them come up with a simple reproducer that I can try in my
+> > > >>>> own lab. I'm sure they can quickly get to the bottom of the application
+> > > >>>> stack to identify the misbehaving interaction between OS and app.
+> > > >>>
+> > > >>> Do you know where to report to?
+> > > >>
+> > > >> You'll need to drive this, since you currently have a working
+> > > >> reproducer.
+> > > > 
+> > > > No, I don't have, I'm merely a messenger.
+> > > 
+> > > Whoever was the original reporter has the ability to reproduce this and
+> > > answer any questions the Chrome team might have. Please have them drive
+> > > this. I'm already two steps removed, so it doesn't make sense for me to
+> > > report a problem for which I have no standing.
+> > 
+> > Ugh, no.  The bug was explictly bisected to the offending commit.  We
+> > should just revert that commit for now and it can come back in the
+> > future if the root-cause is found.
+> > 
+> > As the revert seems to be simple, and builds here for me, I guess I'll
+> > have to send it in. {sigh}
+> > 
+> > Takashi, thanks for the report and the bisection, much appreciated.
 > 
-> Yes, I understand your position and have added a paragraph 
-> at the end of the cover letter about this point.
+> Now sent:
+> 	https://lore.kernel.org/r/2025022644-blinked-broadness-c810@gregkh
 
-We do no read cover letters, unless look for dependencies, so if you
-disagree with someone you ought to respond to the email directly. Not
-silently discard.
+Thanks Greg!
 
-You keep adding more and more symbols, so your "out of scope of this
-patchset" is no true. Otherwise every contributor will use exactly the
-same arguments - "not my problem".
-
-So again NAK because it is something ought to be finally fixed (and is
-not even tricky to, so I don't ask for impossible).
+Let's continue hunting the cause before 6.14 release, meanwhile.
 
 
-Best regards,
-Krzysztof
+Takashi
