@@ -1,197 +1,172 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C2721CA1E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFE621CA1E;
+	Wed, 26 Feb 2025 15:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584531; cv=none; b=VDV4jZqIIfGpjFXBTwV9XZV1HpXI5wSsgIrr+/hkhZm4P/s0UGpR6WecLEBChYzmsIV49/rmouib1uYAVl9Xrm9QelEoInrenH7szdxEOiqVrbNThwfmOEf3RfnsecbHe+WeGyqmyR7aUmnbDjo+GN3yalJdCZ5KARsFX9w/bok=
+	t=1740584547; cv=none; b=DUtfsqQ1QN0aoci+hDA9KkZnULu+nTmztO7tl3ao/L240NbJpIZ28qJW87cBWSO69v302E8pUv0KzsBGXFoniXeWOb9C9tO02EwETqPIU1R+JwiBVGtlY9jhqipTvMubaHM6tprorrPQW2WC/3dBIyEESF69cznIjMgOV41/HME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584531; c=relaxed/simple;
-	bh=X/2mRuNpOCsKfLqIY1rhKBcbI/1znlC5uDg55ux+Qk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TXvcFv/cV33KVLBqcdOwJthPX9V+QQCTBa+JbrltW4c04ItpOfEPD7s/oN7DCR/Xy8TTAUazt3Yssas6reM4kHxizcPZ7Ey0bPN1jK4z9ueqqW2P6q4sHSAakJdUVuxizoykdKUEuTZ/T1JvZWaby6wI7GTv0XDu/Z5SuiyYfDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y92Tuumh; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740584547; c=relaxed/simple;
+	bh=5f2oYRMymOyXWg8oig+0mtUHGVHmikl0iXvLN6O7avs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HXNvdaK775SW8AodloWuXrcM9gV4jId8J1nU1YNEKoTo4o26vSfhTcr2irBOIrqnyS0e+UF1MNUg6Gt3/Cn9v7LvKlmE0A2Gh40uOCJ3Me3Jg9wVpB191SOChRktKr4istNoMq8xtWndathxB1kU70VB/jihMQiFaz1AG59dq6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+A0NOMi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y92Tuumh"
-Date: Wed, 26 Feb 2025 15:42:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740584525;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0ka5+57U6hHrywsA4GiXl4SPgDlHG+Ia84OVSI5zrg=;
-	b=Y92TuumhhX48sxCcHAtjxEUE7+wn9akk6NdxpMBZJJQsRa2Iy/RzGC+H5P165D76CAHDX5
-	DnFw39WGfHZ9cBqyX3lD2rUlsB4zi9iWbAP89TxnMojgduqiPwtqjvR5Fc3jZhS6wd5wYt
-	fGHMPDavMUJaD9WK+vXJ/G//pOYAJOk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org,
-	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] zswap: do not crash the kernel on decompression failure
-Message-ID: <Z782SPcJI8DFISRa@google.com>
-References: <20250225213200.729056-1-nphamcs@gmail.com>
- <20250226005149.GA1500140@cmpxchg.org>
- <Z76AVZ_tjq2NvmLT@google.com>
- <20250226035730.GA1775487@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+A0NOMi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D4E03C4CED6;
+	Wed, 26 Feb 2025 15:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740584546;
+	bh=5f2oYRMymOyXWg8oig+0mtUHGVHmikl0iXvLN6O7avs=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=T+A0NOMiOZjt0INGPmIK6+2J1NasnxQ7rkZbSY0B9RFwNBpnvju+9PYxI/xhZ/qRt
+	 QaOhuf9rZBDbsf2Sqfu8MT0gMikG0S+cz5UufAFO36izPR5eoinepuSq6vSBfFIaKy
+	 KfUAzlkv3XyKnTbuaW5RvIUFWm2LLsJzh1ieL8k9qZXrIhs8gcB47LEI58Ye2PjJa9
+	 iXyGv8O9fo2E3gcRT4nvrwbxTefSJ33PgtDLT6zFh8W8H/5HB1XRLG/9KZt+jz+KZ6
+	 0Crz8DzJI89NnXm/VYxILA+2b5ggKfWPM/KXhRWO3hvMr6y5RHtKXQ0qa1KkYa6Vre
+	 pbB3reqdRr39A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE75EC021B8;
+	Wed, 26 Feb 2025 15:42:26 +0000 (UTC)
+From: Brendan King via B4 Relay <devnull+Brendan.King.imgtec.com@kernel.org>
+Date: Wed, 26 Feb 2025 15:42:19 +0000
+Subject: [PATCH v2] drm/imagination: avoid deadlock on fence release
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226035730.GA1775487@cmpxchg.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250226-fence-release-deadlock-v2-1-6fed2fc1fe88@imgtec.com>
+X-B4-Tracking: v=1; b=H4sIAFo2v2cC/4WNQQ6CMBBFr2Jm7Zi2BDCuvIdhUdoPTARqWkI0h
+ LtbuYDL95L//kYJUZDodtooYpUkYc5gzidyg517sPjMZJQplVEFd5gdOGKETWAP68fgnmxVXRZ
+ O1W3nPeXxK6KT9xF+NJkHSUuIn+Nn1T/7N7lq1lxBe2hTqba43mXqF7iLCxM1+75/ATA9Nne9A
+ AAA
+X-Change-ID: 20250203-fence-release-deadlock-a0753c07bfdd
+To: Frank Binns <frank.binns@imgtec.com>, 
+ Matt Coster <matt.coster@imgtec.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Brendan King <brendan.king@imgtec.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740584545; l=3702;
+ i=Brendan.King@imgtec.com; s=20250203; h=from:subject:message-id;
+ bh=bKMHhVTtJG43Lz66Kv6FNFtvsLiapP6vakNG5JK3jlE=;
+ b=AIcRT9pMXFXcHhbEtmfBoDYE5yT1XBAGdWkiIvjBQMohYC690SraSw4dAjj9UA7Ca8NbcFqfe
+ 9A1nWq+aUxsCx5k/EdINHeuOp3BSuPD8EKuyJslnyh9rvJBfM9hj6y/
+X-Developer-Key: i=Brendan.King@imgtec.com; a=ed25519;
+ pk=i3JvC3unEBLW+4r5s/aEWQZFsRCWaCBrWdFbMXIXCqg=
+X-Endpoint-Received: by B4 Relay for Brendan.King@imgtec.com/20250203 with
+ auth_id=335
+X-Original-From: Brendan King <Brendan.King@imgtec.com>
+Reply-To: Brendan.King@imgtec.com
 
-On Tue, Feb 25, 2025 at 10:57:30PM -0500, Johannes Weiner wrote:
-> On Wed, Feb 26, 2025 at 02:45:41AM +0000, Yosry Ahmed wrote:
-> > On Tue, Feb 25, 2025 at 07:51:49PM -0500, Johannes Weiner wrote:
-> > > On Tue, Feb 25, 2025 at 01:32:00PM -0800, Nhat Pham wrote:
-> > > > +	}
-> > > >  	mutex_unlock(&acomp_ctx->mutex);
-> > > >  
-> > > >  	if (src != acomp_ctx->buffer)
-> > > >  		zpool_unmap_handle(zpool, entry->handle);
-> > > > +	return ret;
-> > > >  }
-> > > >  
-> > > >  /*********************************
-> > > > @@ -1018,6 +1028,7 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
-> > > >  	struct writeback_control wbc = {
-> > > >  		.sync_mode = WB_SYNC_NONE,
-> > > >  	};
-> > > > +	int ret = 0;
-> > > >  
-> > > >  	/* try to allocate swap cache folio */
-> > > >  	mpol = get_task_policy(current);
-> > > > @@ -1034,8 +1045,8 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
-> > > >  	 * and freed when invalidated by the concurrent shrinker anyway.
-> > > >  	 */
-> > > >  	if (!folio_was_allocated) {
-> > > > -		folio_put(folio);
-> > > > -		return -EEXIST;
-> > > > +		ret = -EEXIST;
-> > > > +		goto put_folio;
-> > > >  	}
-> > > >  
-> > > >  	/*
-> > > > @@ -1048,14 +1059,17 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
-> > > >  	 * be dereferenced.
-> > > >  	 */
-> > > >  	tree = swap_zswap_tree(swpentry);
-> > > > -	if (entry != xa_cmpxchg(tree, offset, entry, NULL, GFP_KERNEL)) {
-> > > > -		delete_from_swap_cache(folio);
-> > > > -		folio_unlock(folio);
-> > > > -		folio_put(folio);
-> > > > -		return -ENOMEM;
-> > > > +	if (entry != xa_load(tree, offset)) {
-> > > > +		ret = -ENOMEM;
-> > > > +		goto fail;
-> > > >  	}
-> > > >  
-> > > > -	zswap_decompress(entry, folio);
-> > > > +	if (!zswap_decompress(entry, folio)) {
-> > > > +		ret = -EIO;
-> > > > +		goto fail;
-> > > > +	}
-> > > > +
-> > > > +	xa_erase(tree, offset);
-> > > >  
-> > > >  	count_vm_event(ZSWPWB);
-> > > >  	if (entry->objcg)
-> > > > @@ -1071,9 +1085,14 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
-> > > >  
-> > > >  	/* start writeback */
-> > > >  	__swap_writepage(folio, &wbc);
-> > > > -	folio_put(folio);
-> > > > +	goto put_folio;
-> > > >  
-> > > > -	return 0;
-> > > > +fail:
-> > > > +	delete_from_swap_cache(folio);
-> > > > +	folio_unlock(folio);
-> > > > +put_folio:
-> > > > +	folio_put(folio);
-> > > > +	return ret;
-> > > >  }
-> > > 
-> > > Nice, yeah it's time for factoring out the error unwinding. If you
-> > > write it like this, you can save a jump in the main sequence:
-> > > 
-> > > 	__swap_writepage(folio, &wbc);
-> > > 	ret = 0;
-> > > put:
-> > > 	folio_put(folio);
-> > > 	return ret;
-> > > delete_unlock:
-> > 
-> > (I like how you sneaked the label rename in here, I didn't like 'fail'
-> > either :P)
-> > 
-> > > 	delete_from_swap_cache(folio);
-> > > 	folio_unlock(folio);
-> > > 	goto put;
-> > 
-> > I would go even further and avoid gotos completely (and make it super
-> > clear what gets executed in the normal path vs the failure path):
-> > 
-> > 	__swap_writepage(folio, &wbc);
-> > 	folio_put(folio);
-> > 	if (ret) {
-> > 		delete_from_swap_cache(folio);
-> > 		folio_unlock(folio);
-> > 	}
-> > 	return ret;
-> 
-> The !folio_was_allocated case only needs the put. I guess that could
-> stay open-coded.
+From: Brendan King <Brendan.King@imgtec.com>
 
-We also do:
+Do scheduler queue fence release processing on a workqueue, rather
+than in the release function itself.
 
-	if (ret && ret != -EEXIST) {
-		...
-	}
+Fixes deadlock issues such as the following:
 
-or
+[  607.400437] ============================================
+[  607.405755] WARNING: possible recursive locking detected
+[  607.415500] --------------------------------------------
+[  607.420817] weston:zfq0/24149 is trying to acquire lock:
+[  607.426131] ffff000017d041a0 (reservation_ww_class_mutex){+.+.}-{3:3}, at: pvr_gem_object_vunmap+0x40/0xc0 [powervr]
+[  607.436728]
+               but task is already holding lock:
+[  607.442554] ffff000017d105a0 (reservation_ww_class_mutex){+.+.}-{3:3}, at: dma_buf_ioctl+0x250/0x554
+[  607.451727]
+               other info that might help us debug this:
+[  607.458245]  Possible unsafe locking scenario:
 
-	if (ret && !folio_was_allocated) {
-		...
-	}
+[  607.464155]        CPU0
+[  607.466601]        ----
+[  607.469044]   lock(reservation_ww_class_mutex);
+[  607.473584]   lock(reservation_ww_class_mutex);
+[  607.478114]
+                *** DEADLOCK ***
 
-Probably the latter is clearer. If the folio was already there, we
-didn't add it to the swapcache or lock it ourselves so we don't unwind
-that.
+Cc: stable@vger.kernel.org
+Fixes: eaf01ee5ba28 ("drm/imagination: Implement job submission and scheduling")
+Signed-off-by: Brendan King <brendan.king@imgtec.com>
+---
+Changes in v2:
+- Added 'Cc:' and 'Fixes:' tags
+- Link to v1: https://lore.kernel.org/r/20250203-fence-release-deadlock-v1-1-6e1de1260b38@imgtec.com
+---
+ drivers/gpu/drm/imagination/pvr_queue.c | 13 +++++++++++--
+ drivers/gpu/drm/imagination/pvr_queue.h |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-> 
-> And I think you still need one goto for the other two error legs to
-> jump past the __swap_writepage.
+diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
+index c4f08432882b12f5cdfeb7fc991fd941f0946676..f3f1c5212df7432161919ddc510cececacbbe143 100644
+--- a/drivers/gpu/drm/imagination/pvr_queue.c
++++ b/drivers/gpu/drm/imagination/pvr_queue.c
+@@ -109,12 +109,20 @@ pvr_queue_fence_get_driver_name(struct dma_fence *f)
+ 	return PVR_DRIVER_NAME;
+ }
+ 
++static void pvr_queue_fence_release_work(struct work_struct *w)
++{
++	struct pvr_queue_fence *fence = container_of(w, struct pvr_queue_fence, release_work);
++
++	pvr_context_put(fence->queue->ctx);
++	dma_fence_free(&fence->base);
++}
++
+ static void pvr_queue_fence_release(struct dma_fence *f)
+ {
+ 	struct pvr_queue_fence *fence = container_of(f, struct pvr_queue_fence, base);
++	struct pvr_device *pvr_dev = fence->queue->ctx->pvr_dev;
+ 
+-	pvr_context_put(fence->queue->ctx);
+-	dma_fence_free(f);
++	queue_work(pvr_dev->sched_wq, &fence->release_work);
+ }
+ 
+ static const char *
+@@ -268,6 +276,7 @@ pvr_queue_fence_init(struct dma_fence *f,
+ 
+ 	pvr_context_get(queue->ctx);
+ 	fence->queue = queue;
++	INIT_WORK(&fence->release_work, pvr_queue_fence_release_work);
+ 	dma_fence_init(&fence->base, fence_ops,
+ 		       &fence_ctx->lock, fence_ctx->id,
+ 		       atomic_inc_return(&fence_ctx->seqno));
+diff --git a/drivers/gpu/drm/imagination/pvr_queue.h b/drivers/gpu/drm/imagination/pvr_queue.h
+index e06ced69302fca47fc26451dfb09ebbb24b57f52..93fe9ac9f58ccc020615485e86be438548dcee43 100644
+--- a/drivers/gpu/drm/imagination/pvr_queue.h
++++ b/drivers/gpu/drm/imagination/pvr_queue.h
+@@ -5,6 +5,7 @@
+ #define PVR_QUEUE_H
+ 
+ #include <drm/gpu_scheduler.h>
++#include <linux/workqueue.h>
+ 
+ #include "pvr_cccb.h"
+ #include "pvr_device.h"
+@@ -63,6 +64,9 @@ struct pvr_queue_fence {
+ 
+ 	/** @queue: Queue that created this fence. */
+ 	struct pvr_queue *queue;
++
++	/** @release_work: Fence release work structure. */
++	struct work_struct release_work;
+ };
+ 
+ /**
 
-Oh yeah I meant eliminate the jumps within the cleanup/return code, not
-entirely. Sorry for the confusion. We still need an 'out' label or
-similar after __swap_writepage().
+---
+base-commit: 3ab334814dc7dff39075e055e12847d51878916e
+change-id: 20250203-fence-release-deadlock-a0753c07bfdd
 
-> 
-> > > Something like this?
-> > > 
-> > > 	if (!zswap_decompress(entry, folio)) {
-> > > 		/*
-> > > 		 * The zswap_load() return value doesn't indicate success or
-> > > 		 * failure, but whether zswap owns the swapped out contents.
-> > > 		 * This MUST return true here, otherwise swap_readpage() will
-> > > 		 * read garbage from the backend.
-> > > 		 *
-> > > 		 * Success is signaled by marking the folio uptodate.
-> > > 		 */
-> > 
-> > We use the same trick in the folio_test_large() branch, so maybe this
-> > should be moved to above the function definition. Then we can perhaps
-> > refer to it in places where we return true wihout setting uptodate for
-> > added clarity if needed.
-> 
-> That makes sense to me. Nhat, what do you think?
+Best regards,
+-- 
+Brendan King <Brendan.King@imgtec.com>
+
+
