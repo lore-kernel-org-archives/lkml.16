@@ -1,127 +1,207 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail-m3271.qiye.163.com (mail-m3271.qiye.163.com [220.197.32.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9552459E0;
-	Wed, 26 Feb 2025 09:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50223215189;
+	Wed, 26 Feb 2025 09:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563588; cv=none; b=cwyTO1GJHGGy/vQnxLOWNgZU4LeNMeuBSF8cI/8beED/cHAV4GQRzqpRA4qjyG+E2Nddpk/pzws2id7/2jirBmjU1f1fWW1q9XqnfEAIpiEp+R0PEzDVTEeleaGy6Nfw599C/2YqXCRRUGZofozTHEXVVIw85KISTqGWbIV9erg=
+	t=1740563670; cv=none; b=X1L3x+Wu3fWmN2Eguwi8/TLj5ujuwB5U6r5dyRj/J7fdWYDU6ilWdG89MTVEkzMl7ca5r5Y8LOieEtnGDpsgSwf/F+rtwKLBbr9KNqfmGey9WdoPfh1qE2/vSmZ+MbxR89eMwSkWrN6FtExHY7F3vDXa2MPz0V9YooN640zLihw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563588; c=relaxed/simple;
-	bh=23AzTlA3i3e+EmS9Av59UpbDgrdMi/L7vS6N1uObpJE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JX5KoUhk6dMvuUiBQ1bGNSasjtB3lgIRkPpymQ6jkKvTwLz2K2lHYmGE1mzzmvNTCvgOlyGdkk+SrBZ390kirKRviFKNv5Nqj3IC3hU02bQCxh9TE0VtgOB6K9VrsGX+bmelteH48XA5n0BriAi4OV6aCcTtzcfRuXlg4U6szyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=OPGZ5Uw8; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1740563670; c=relaxed/simple;
+	bh=d2MoaY5s44WtoOvG+7gn4C90+ksYq3yrMmibtZQaRmY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=twqqr58+1xWJrNSGEv/O2qZQZWXzIQWL0Qqu0p7JY897OJ5dZv49VLX/H9lmc30hPd4DUkP09J+5rr9nXJJoW6s3R3JDLotYnW8VoFb1JBiDz/gGlK2OK1dQKcOQo7jTDXiJ6uJvi/7ny8OfSw504XPyAQPBlg62cTzim5f6SUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Wv+KplCQ; arc=none smtp.client-ip=220.197.32.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OPGZ5Uw8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=AWAnLAcd4Ax9L2XjpW/XTk1Vc6xaPxRyyPPHRuN7d+0=; b=OPGZ5Uw8vm2+odS8tBnxh6bn5y
-	bMKasJwtYxa0VWmFmqzAohjow9oPWH5b8OMTZQvCa9wo09JRu6bE/sDd73lDgAh47se8VFabVThHr
-	ZEiE8aZTIDBA0m1Wve/02buldgj1FI8v2SRhJYXiIzAoIf97cT4DyazORIRNjwBOF5DDRK9WBnV6K
-	Y4qMJE77GtOgbxK8usYH4b2LD27i8CGjtu97MKuJ0UoVx1PTybavKFR98wAiyQwrFulF1ibmMLeIc
-	iMKwl7NTa38QBqSY5ibw8JS1Knpd3qKga8UVNrgiF8xTXt8mdyUx154pmR0LA3lBt6bYao0tocNRe
-	ymF8xUhQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51782)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tnE63-0003om-0c;
-	Wed, 26 Feb 2025 09:52:55 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tnE5y-0006xe-26;
-	Wed, 26 Feb 2025 09:52:50 +0000
-Date: Wed, 26 Feb 2025 09:52:50 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>,
-	"dqfext@gmail.com" <dqfext@gmail.com>,
-	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"horms@kernel.org" <horms@kernel.org>,
-	"daniel@makrotopia.org" <daniel@makrotopia.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>
-Subject: Re: [PATCH net-next v2 3/3] net: phy: mediatek: add driver for
- built-in 2.5G ethernet PHY on MT7988
-Message-ID: <Z77kcqzmCqdT6lE0@shell.armlinux.org.uk>
-References: <20250219083910.2255981-1-SkyLake.Huang@mediatek.com>
- <20250219083910.2255981-4-SkyLake.Huang@mediatek.com>
- <Z7WleP9v6Igx2MjC@shell.armlinux.org.uk>
- <5fae9c69a09320b0b24f25a178137bd0256a72d8.camel@mediatek.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Wv+KplCQ"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c43156e8;
+	Wed, 26 Feb 2025 17:54:17 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Liang Chen <cl@rock-chips.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v8 2/2] arm64: dts: rockchip: Add rk3576 pcie nodes
+Date: Wed, 26 Feb 2025 17:54:14 +0800
+Message-Id: <20250226095414.2173410-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250226095414.2173410-1-kever.yang@rock-chips.com>
+References: <20250226095414.2173410-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5fae9c69a09320b0b24f25a178137bd0256a72d8.camel@mediatek.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkhIGlZITkwZQ0pNSxodSE9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9541adb3f303afkunmc43156e8
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mjo6Qjo5LjIVAQoNGEksFQov
+	TAgaCUtVSlVKTE9LTk1ITU5DQkJOVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPQkJDNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=Wv+KplCQXyaUzFsPZzpjKC5lSS6iGXb8LGtOGfVEzB3Q6ZJXIsQZZiQYmtB3eiu4Fp+leF9WSyx6uvDqEJnaKys8EDfORBkInrGE8aedTateLt8wvF2Mo7GzMPT4fxxdmAjpl1u6pUuv++BOsm2Ho76BrlGZguxa+s6p67NLZEg=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=VAf8pqSxeICPBCrzLQD8FdbKBkIxLDfMcbMwm/0/4Vs=;
+	h=date:mime-version:subject:message-id:from;
 
-On Wed, Feb 26, 2025 at 06:48:34AM +0000, SkyLake Huang (黃啟澤) wrote:
-> On Wed, 2025-02-19 at 09:33 +0000, Russell King (Oracle) wrote:
-> > 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> > 
-> > 
-> > On Wed, Feb 19, 2025 at 04:39:10PM +0800, Sky Huang wrote:
-> > > +static int mt798x_2p5ge_phy_config_init(struct phy_device *phydev)
-> > > +{
-> > > +     struct pinctrl *pinctrl;
-> > > +     int ret;
-> > > +
-> > > +     /* Check if PHY interface type is compatible */
-> > > +     if (phydev->interface != PHY_INTERFACE_MODE_INTERNAL)
-> > > +             return -ENODEV;
-> > > +
-> > > +     ret = mt798x_2p5ge_phy_load_fw(phydev);
-> > > +     if (ret < 0)
-> > > +             return ret;
-> > 
-> > Firmware should not be loaded in the .config_init method. The above
-> > call will block while holding the RTNL which will prevent all other
-> > network configuration until the firmware has been loaded or the load
-> > fails.
-> > 
-> > Thanks.
-> > 
-> > --
-> > RMK's Patch system:
-> > https://urldefense.com/v3/__https://www.armlinux.org.uk/developer/patches/__;!!CTRNKA9wMg0ARbw!iV-1ViPFsUV-lLj7aIycan8nery6sQO3t6mkpdlb_GW8hswhxc4ejJozxqkU3s2WzxSizs4kfdC77yr7HGGRIuU$
-> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-> Hi Russell,
-> mt798x_p5ge_phy_load_fw() will only load firmware once after driver is
-> probed through priv->fw_loaded. And actually, firmware loading
-> procedure only takes about 11ms. This was discussed earlier in:
-> https://patchwork.kernel.org/project/linux-mediatek/patch/20240520113456.21675-6-SkyLake.Huang@mediatek.com/#25856462
-> https://patchwork.kernel.org/project/linux-mediatek/patch/20240520113456.21675-6-SkyLake.Huang@mediatek.com/#25857174
+rk3576 has two pcie controllers, both are pcie2x1 work with
+naneng-combphy.
 
-1. Wouldn't it be a good idea to include the loading time in the patch
-   description or a comment in the patch?
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-2. What about the time it takes for request_firmware() uses the sysfs
-   fallback, which essentially passes the firmware request to userspace
-   to deal with? That can block for an indeterminate amount of time.
+Changes in v8: None
+Changes in v7:
+- re-order the properties.
 
+Changes in v6: None
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- Update the subject
+
+Changes in v2:
+- Update clock and reset names and sequence to pass DTB check
+
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 108 +++++++++++++++++++++++
+ 1 file changed, 108 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+index 4dde954043ef..79e24b2c3c60 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
+@@ -1127,6 +1127,114 @@ qos_npu_m1ro: qos@27f22100 {
+ 			reg = <0x0 0x27f22100 0x0 0x20>;
+ 		};
+ 
++		pcie0: pcie@2a200000 {
++			compatible = "rockchip,rk3576-pcie", "rockchip,rk3568-pcie";
++			reg = <0x0 0x22000000 0x0 0x00400000>,
++			      <0x0 0x2a200000 0x0 0x00010000>,
++			      <0x0 0x20000000 0x0 0x00100000>;
++			reg-names = "dbi", "apb", "config";
++			bus-range = <0x0 0xf>;
++			clocks = <&cru ACLK_PCIE0_MST>, <&cru ACLK_PCIE0_SLV>,
++				 <&cru ACLK_PCIE0_DBI>, <&cru PCLK_PCIE0>,
++				 <&cru CLK_PCIE0_AUX>;
++			clock-names = "aclk_mst", "aclk_slv",
++				      "aclk_dbi", "pclk",
++				      "aux";
++			device_type = "pci";
++			interrupts = <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "sys", "pmc", "msg", "legacy", "err", "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie0_intc 0>,
++					<0 0 0 2 &pcie0_intc 1>,
++					<0 0 0 3 &pcie0_intc 2>,
++					<0 0 0 4 &pcie0_intc 3>;
++			linux,pci-domain = <0>;
++			max-link-speed = <2>;
++			num-ib-windows = <8>;
++			num-viewport = <8>;
++			num-ob-windows = <2>;
++			num-lanes = <1>;
++			phys = <&combphy0_ps PHY_TYPE_PCIE>;
++			phy-names = "pcie-phy";
++			power-domains = <&power RK3576_PD_PHP>;
++			ranges = <0x01000000 0x0 0x20100000 0x0 0x20100000 0x0 0x00100000
++				  0x02000000 0x0 0x20200000 0x0 0x20200000 0x0 0x00e00000
++				  0x03000000 0x9 0x00000000 0x9 0x00000000 0x0 0x80000000>;
++			resets = <&cru SRST_PCIE0_POWER_UP>, <&cru SRST_P_PCIE0>;
++			reset-names = "pwr", "pipe";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			status = "disabled";
++
++			pcie0_intc: legacy-interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 280 IRQ_TYPE_EDGE_RISING>;
++			};
++		};
++
++		pcie1: pcie@2a210000 {
++			compatible = "rockchip,rk3576-pcie", "rockchip,rk3568-pcie";
++			reg = <0x0 0x22400000 0x0 0x00400000>,
++			      <0x0 0x2a210000 0x0 0x00010000>,
++			      <0x0 0x21000000 0x0 0x00100000>;
++			reg-names = "dbi", "apb", "config";
++			bus-range = <0x20 0x2f>;
++			clocks = <&cru ACLK_PCIE1_MST>, <&cru ACLK_PCIE1_SLV>,
++				 <&cru ACLK_PCIE1_DBI>, <&cru PCLK_PCIE1>,
++				 <&cru CLK_PCIE1_AUX>;
++			clock-names = "aclk_mst", "aclk_slv",
++				      "aclk_dbi", "pclk",
++				      "aux";
++			device_type = "pci";
++			interrupts = <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "sys", "pmc", "msg", "legacy", "err", "msi";
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie1_intc 0>,
++					<0 0 0 2 &pcie1_intc 1>,
++					<0 0 0 3 &pcie1_intc 2>,
++					<0 0 0 4 &pcie1_intc 3>;
++			linux,pci-domain = <0>;
++			max-link-speed = <2>;
++			num-ib-windows = <8>;
++			num-viewport = <8>;
++			num-ob-windows = <2>;
++			num-lanes = <1>;
++			phys = <&combphy1_psu PHY_TYPE_PCIE>;
++			phy-names = "pcie-phy";
++			power-domains = <&power RK3576_PD_SUBPHP>;
++			ranges = <0x01000000 0x0 0x21100000 0x0 0x21100000 0x0 0x00100000
++				  0x02000000 0x0 0x21200000 0x0 0x21200000 0x0 0x00e00000
++				  0x03000000 0x9 0x80000000 0x9 0x80000000 0x0 0x80000000>;
++			resets = <&cru SRST_PCIE1_POWER_UP>, <&cru SRST_P_PCIE1>;
++			reset-names = "pwr", "pipe";
++			#address-cells = <3>;
++			#size-cells = <2>;
++			status = "disabled";
++
++			pcie1_intc: legacy-interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++				interrupt-parent = <&gic>;
++				interrupts = <GIC_SPI 266 IRQ_TYPE_EDGE_RISING>;
++			};
++		};
++
+ 		gmac0: ethernet@2a220000 {
+ 			compatible = "rockchip,rk3576-gmac", "snps,dwmac-4.20a";
+ 			reg = <0x0 0x2a220000 0x0 0x10000>;
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.25.1
+
