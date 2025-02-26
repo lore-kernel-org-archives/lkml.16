@@ -1,175 +1,146 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB0F621323B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A820B213E87;
+	Wed, 26 Feb 2025 11:10:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740568230; cv=none; b=iaH1kO7JWkrbKDxzEg2sJbVtayfN56e6bjIMB07vDTlkXvNcGClrl05dOj2ug2kg6Bcg4+sP02SnQNe47UoR2new8n10HH5M5QLLrm1OTpF+jg396KUf17gWcoLuxhajr9LctMtDYJV+2KcjtQQQ+otTsuyJzVDqL/AOXysTXkI=
+	t=1740568248; cv=none; b=S8pTOgrw/m0SiQ38YSOL7fR4yFhwuyIaVmjV3Q9NVQlqyjcel9lCqivbmKfi+qAD+lPNH8nU2wlsUjuGC1FvnMHrJQvZEY9+ujN5lCIpOURjjbiLOvE9e3qF05Nz4cN4khyvIg4xfBt8UUdhtgl3rl8sHHGzL5a0hW2FM0ZtttM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740568230; c=relaxed/simple;
-	bh=J0FW/ZpAPbGl+eGdpRYfVmEBIhxvySS/tVwrm7wt8mY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SROyq6s0nPTxrvlb+LrXb9xGI6AipJM//UYlNfbYrp0f9uAzP440Cx1hHxEhy3oB7yp+xxidWUl9e04IuHcJz5y1WmSI78XDVOVFGXAgn11Y8kosiY5NpolT3ket2NpdCwDNCC4i/w+actLnhbXowNmcBJjw13NQKKbc/+b+w6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=g8JJHqY1; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740568248; c=relaxed/simple;
+	bh=4I7omasySoZo/JUrFqUPmohfcJJOJWXiXsJQizCs3DE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DUea2mBUy2D7psLjB5gLpjaXDnh5EsmAJ5xypBHL3EcWUPoLofqUS7/52SOoXNYHpyvZJoDevxlYsTJUDkk7V1uvX1g9FwBOiu/H5jgNaVnEe3VvOQXAIEY9iyAoKjIVhzrmayPz4SUzwXQ271qJzcA/0dDQLvZlwyNI2NS/VqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=X7FSIOYi; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="g8JJHqY1"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3f3f149c334so3814242b6e.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740568227; x=1741173027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YBMoR/ArodhoSoFeh7LaWi6Owi/0ZX4Wd5Am5SNNHF4=;
-        b=g8JJHqY144jbtrjSVO1qoQkXDAtpTNgXMpqjzpnsyX1ngM+aG7uIxxwIyPea69B8AS
-         lbr/xGej6N6TdSdmgYNh6RM2x77hVcLFqZE5afe9r5ksmUXLENBQQjrOm7XqU0VVYW/4
-         sqzeFjrQbMsHwZh5C/tohLhIMpF2ZDMf9YEzDuNHNRlGJ+uoS3ZqXWYasdI2xbk9CCZq
-         VmtenI+h16mCG45xqywsqYQe+RmW1MEkrz07N4858RUz5BwB6TVsZs00M5dTddNhrh2I
-         Fd8OCE0dLZfb9LnfLMYUenwPM2ykaHP7xMS1ONGDoSjBaOUUvmIW/7r9YeruTRWNJNZn
-         P8dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740568227; x=1741173027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YBMoR/ArodhoSoFeh7LaWi6Owi/0ZX4Wd5Am5SNNHF4=;
-        b=TAnJEW+8uEYG1dA0LqkpdmbAQQLXcJVZqGvjt6pUn2xEji3eH2pAQMqW0XH6pX5VVB
-         AugDHmxsaq4r9mgXilnbpWyRg99CrbMcVlPHt+nV+FhzUx1VzxDGnl/VQQBOvUYw6lPL
-         i+h5owc+0RHGfh+T0/tG91iBzouxQBLyKjXADo0snu6IGKEwKI5yemstQih4KmdjIG0j
-         CbyH+r9iT9PzJE1GLbAHdujeu7bOByrRdrl4XX6m5HDqawXAst9XDx/ZNmgU/Npbkttd
-         785NW0ntY9KwtW9AW4z8pg0daJ7KUAACYgw5vw9v3qXJ6/oXs76O8iEcDU0kYNTnBzCV
-         yaPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxbmlRGHZtH1uXDg3TwUhAL+U/Hv+H8JCdCU5jYZxfWAdWuppYHpTf2NxxhETYuAZnjQQzmLsK/947PuI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgcx2D3QYy2RslB+e7NR8qmZggHUJQ6mwPvuhusL556IaRaZ0B
-	xMeEL9LaWaAXN8qvl+7uZ9JKuuZLR0X1MijgiHYFeVuPmgP8tkoDbCnwRrkQM11IoNSi74hWuHi
-	xyS0+6730ABRQ0x3Xl5ZF6k/hykj2wBlFBM0TDA==
-X-Gm-Gg: ASbGncsdyDu8W/pqzGqM2hPsmAkv7ar4jMy8yfFrYOtm2iRqjakaThg+TMd9vdDMy8C
-	lfGr11LozrQF64qmbauxFvicxYE767KsDi5rgqA5Y0yJGRU77fHAvoPN1zq9/ieLy2QizdBUcDM
-	tuojVgRICvBA==
-X-Google-Smtp-Source: AGHT+IFY+L/f4Zs9pF53F2VadmOaBwoDscmttE66sKkMkDrENSfkvd4Uv+2+QT/1Y3Me6cp5dQ64I9SS9F3F4i971AM=
-X-Received: by 2002:a05:6808:124b:b0:3f4:1fd2:1bac with SMTP id
- 5614622812f47-3f547e08930mr1518804b6e.20.1740568226922; Wed, 26 Feb 2025
- 03:10:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="X7FSIOYi"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740568240; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=vpAtcTJM/EJCDxxy2WMQ1RGo3EUw0Xe3GtPnY0G1MaE=;
+	b=X7FSIOYiW7AQXN6HaL0cIs7ZBQGdggEOG+3rwVAF2jfu9W17aoLsBFHyvYXNVJeH9OD4ACZV87APtHPAGvp+UdOqIuQQ+aNwQC24R5ixXBTVl8IvXqwB60m9Lqe+5GwLMGggNvvxFqKRdHCy7Db+owu2W2AQPz7tFP9gO7DyhtE=
+Received: from 30.221.130.195(mailfrom:mengferry@linux.alibaba.com fp:SMTPD_---0WQI5T1B_1740568238 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 26 Feb 2025 19:10:38 +0800
+Message-ID: <be8704b0-81a4-403b-8b42-d3612099279f@linux.alibaba.com>
+Date: Wed, 26 Feb 2025 19:10:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250115024024.84365-1-cuiyunhui@bytedance.com>
- <CAHVXubhapunBD_+cZ=WeEp9GPJec795xOWSnMKmh_iSH09r2Yw@mail.gmail.com>
- <CAEEQ3wkeLrTFVqVZEAYSsROSLHzkC-EeKvuPHmW=qH3CxamwhA@mail.gmail.com> <CAHVXubhCOivB8oxG7gcCNKTfK0DgHdu721SxsyGX2E4XAjbi6w@mail.gmail.com>
-In-Reply-To: <CAHVXubhCOivB8oxG7gcCNKTfK0DgHdu721SxsyGX2E4XAjbi6w@mail.gmail.com>
-From: yunhui cui <cuiyunhui@bytedance.com>
-Date: Wed, 26 Feb 2025 19:10:16 +0800
-X-Gm-Features: AQ5f1JqM3klrVlTfvA2HKaStjUgmmSxXZxwlOv1ogVvdE4509n751aKn9XVYGRs
-Message-ID: <CAEEQ3wnu11zS+C8xfF0-gk0S5Ck-W4Ep8DuqEU-kvgsX_DTSug@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v5 0/3] Enable Zicbom in usermode
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: ajones@ventanamicro.com, andybnac@gmail.com, aou@eecs.berkeley.edu, 
-	charlie@rivosinc.com, cleger@rivosinc.com, conor.dooley@microchip.com, 
-	conor@kernel.org, corbet@lwn.net, evan@rivosinc.com, jesse@rivosinc.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	palmer@dabbelt.com, paul.walmsley@sifive.com, samuel.holland@sifive.com, 
-	shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Alex,
-
-On Tue, Feb 25, 2025 at 10:07=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosin=
-c.com> wrote:
->
-> On Tue, Feb 25, 2025 at 2:27=E2=80=AFPM yunhui cui <cuiyunhui@bytedance.c=
-om> wrote:
-> >
-> > Hi Alex,
-> >
-> > On Tue, Feb 25, 2025 at 9:21=E2=80=AFPM Alexandre Ghiti <alexghiti@rivo=
-sinc.com> wrote:
-> > >
-> > > Hi Yunhui,
-> > >
-> > > On Wed, Jan 15, 2025 at 3:40=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedan=
-ce.com> wrote:
-> > > >
-> > > > v1/v2:
-> > > > There is only the first patch: RISC-V: Enable cbo.clean/flush in us=
-ermode,
-> > > > which mainly removes the enabling of cbo.inval in user mode.
-> > > >
-> > > > v3:
-> > > > Add the functionality of Expose Zicbom and selftests for Zicbom.
-> > > >
-> > > > v4:
-> > > > Modify the order of macros, The test_no_cbo_inval function is added
-> > > > separately.
-> > > >
-> > > > v5:
-> > > > 1. Modify the order of RISCV_HWPROBE_KEY_ZICBOM_BLOCK_SIZE in hwpro=
-be.rst
-> > > > 2. "TEST_NO_ZICBOINVAL" -> "TEST_NO_CBO_INVAL"
-> > > >
-> > > > Yunhui Cui (3):
-> > > >   RISC-V: Enable cbo.clean/flush in usermode
-> > > >   RISC-V: hwprobe: Expose Zicbom extension and its block size
-> > > >   RISC-V: selftests: Add TEST_ZICBOM into CBO tests
-> > > >
-> > > >  Documentation/arch/riscv/hwprobe.rst        |  6 ++
-> > > >  arch/riscv/include/asm/hwprobe.h            |  2 +-
-> > > >  arch/riscv/include/uapi/asm/hwprobe.h       |  2 +
-> > > >  arch/riscv/kernel/cpufeature.c              |  8 +++
-> > > >  arch/riscv/kernel/sys_hwprobe.c             |  6 ++
-> > > >  tools/testing/selftests/riscv/hwprobe/cbo.c | 66 +++++++++++++++++=
-----
-> > > >  6 files changed, 78 insertions(+), 12 deletions(-)
-> > > >
-> > > > --
-> > > > 2.39.2
-> > > >
-> > >
-> > > So a v6 needs to be sent with:
-> > >
-> > > - the fix for hwprobe_ext0_has() reported by kernel test robot
-> > > - a rebase on top of 6.14 since patch 2 will conflict with
-> > > RISCV_HWPROBE_KEY_VENDOR_EXT_THEAD_0
-> >
-> > Thank you for the reminder. In fact, version 6 was sent out almost a
-> > month ago. Reference:
-> > https://lore.kernel.org/lkml/20250124035959.45499-1-cuiyunhui@bytedance=
-.com/
->
-> Oh sorry, I missed it somehow!
->
-> I think we can fix RISCV_HWPROBE_MAX_KEY when merging the patch.
->
-> Sorry again and thanks!
-
-It's all good. I've rebased a version:
-https://lore.kernel.org/all/20250226063206.71216-1-cuiyunhui@bytedance.com/=
-.
-Could you help to merge it? Thanks.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/3] virtio-blk: add io_uring passthrough support.
+To: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>
+References: <20241218092435.21671-1-mengferry@linux.alibaba.com>
+ <20250219020112.GB38164@fedora>
+Content-Language: en-US
+From: Ferry Meng <mengferry@linux.alibaba.com>
+In-Reply-To: <20250219020112.GB38164@fedora>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
+On 2/19/25 10:01 AM, Stefan Hajnoczi wrote:
+> On Wed, Dec 18, 2024 at 05:24:32PM +0800, Ferry Meng wrote:
+>> This patchset implements io_uring passthrough surppot in virtio-blk
+>> driver, bypass vfs and part of block layer logic, resulting in lower
+>> submit latency and increased flexibility when utilizing virtio-blk.
+> Hi,
+> What is the status of this patch series?
 >
-> Alex
->
-> >
-> > >
-> > > Do you think you can do that soon so that it gets merged in 6.15? The
-> > > patchset received a lot of RB so it would be too bad to miss this
-> > > release.
-> > >
-> > > Thanks,
-> > >
-> > > Alex
-> >
-> > Thanks,
-> > Yunhui
+> Stefan
 
-Thanks,
-Yunhui
+I apologize for the delayed response. It seems that the maintainer has 
+not yet provided feedback on this patch series, and I was actually 
+waiting for his comments before proceeding. I have received the feedback 
+from the other reviewers & have already discovered some obvious mistakes 
+in v1 series.
+
+
+Although I'm occupied with other tasks recently, I expect to send out v2 
+patches *in a week*.
+
+
+Thanks.
+
+>> In this version, currently only supports READ/WRITE vec/no-vec operations,
+>> others like discard or zoned ops not considered in. So the userspace-related
+>> struct is not complicated.
+>>
+>> struct virtblk_uring_cmd {
+>> 	__u32 type;
+>> 	__u32 ioprio;
+>> 	__u64 sector;
+>> 	/* above is related to out_hdr */
+>> 	__u64 data;  // user buffer addr or iovec base addr.
+>> 	__u32 data_len; // user buffer length or iovec count.
+>> 	__u32 flag;  // only contains whether a vector rw or not.
+>> };
+>>
+>> To test this patch series, I changed fio's code:
+>> 1. Added virtio-blk support to engines/io_uring.c.
+>> 2. Added virtio-blk support to the t/io_uring.c testing tool.
+>> Link: https://github.com/jdmfr/fio
+>>
+>>
+>> ===========
+>> Performance
+>> ===========
+>>
+>> Using t/io_uring-vblk, the performance of virtio-blk based on uring-cmd
+>> scales better than block device access. (such as below, Virtio-Blk with QEMU,
+>> 1-depth fio)
+>> (passthru) read: IOPS=17.2k, BW=67.4MiB/s (70.6MB/s)
+>> slat (nsec): min=2907, max=43592, avg=3981.87, stdev=595.10
+>> clat (usec): min=38, max=285,avg=53.47, stdev= 8.28
+>> lat (usec): min=44, max=288, avg=57.45, stdev= 8.28
+>> (block) read: IOPS=15.3k, BW=59.8MiB/s (62.7MB/s)
+>> slat (nsec): min=3408, max=35366, avg=5102.17, stdev=790.79
+>> clat (usec): min=35, max=343, avg=59.63, stdev=10.26
+>> lat (usec): min=43, max=349, avg=64.73, stdev=10.21
+>>
+>> Testing the virtio-blk device with fio using 'engines=io_uring_cmd'
+>> and 'engines=io_uring' also demonstrates improvements in submit latency.
+>> (passthru) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O0 -n1 -u1 /dev/vdcc0
+>> IOPS=189.80K, BW=741MiB/s, IOS/call=4/3
+>> IOPS=187.68K, BW=733MiB/s, IOS/call=4/3
+>> (block) taskset -c 0 t/io_uring-vblk -b4096 -d8 -c4 -s4 -p0 -F1 -B0 -O0 -n1 -u0 /dev/vdc
+>> IOPS=101.51K, BW=396MiB/s, IOS/call=4/3
+>> IOPS=100.01K, BW=390MiB/s, IOS/call=4/4
+>>
+>> =======
+>> Changes
+>> =======
+>>
+>> Changes in v1:
+>> --------------
+>> * remove virtblk_is_write() helper
+>> * fix rq_flags type definition (blk_opf_t), add REQ_ALLOC_CACHE flag.
+>> https://lore.kernel.org/io-uring/202412042324.uKQ5KdkE-lkp@intel.com/
+>>
+>> RFC discussion:
+>> ---------------
+>> https://lore.kernel.org/io-uring/20241203121424.19887-1-mengferry@linux.alibaba.com/
+>>
+>> Ferry Meng (3):
+>>    virtio-blk: add virtio-blk chardev support.
+>>    virtio-blk: add uring_cmd support for I/O passthru on chardev.
+>>    virtio-blk: add uring_cmd iopoll support.
+>>
+>>   drivers/block/virtio_blk.c      | 320 +++++++++++++++++++++++++++++++-
+>>   include/uapi/linux/virtio_blk.h |  16 ++
+>>   2 files changed, 331 insertions(+), 5 deletions(-)
+>>
+>> -- 
+>> 2.43.5
+>>
