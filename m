@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A38C215764
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD5621C189
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740538909; cv=none; b=IGMIjOxS8FyBEF5ZK86INB64gBPXrmWqAptxNBPwlFGrvlGfH8W41qHPiENW4LVpQMGGgB1mg1W4lIqCMeDal7ezcC13aWQ2bedL6e4E8mXYfHO2eu1kQgNSz4eRhf9MuIBKfn7419mV80sK3T/Uo03BWIp/oiw3MDrFlj26k8c=
+	t=1740538909; cv=none; b=XNExRwQMw5n0pZKnyAzFeV3C7hJuJ4oaX6A9tiRNEi4orE1IU54gNJLAyn1Pb/PuOGKllLRoRH2JZlB035bxYpArtz3qdi1x/QfVq09ixnHEvASL0Ls84qRFnJHfLifJZ29yPNcxO3QT4Cz3OkZ8H9JMnk24tHveuc86CJ5/U0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740538909; c=relaxed/simple;
-	bh=JUwyQmPKvTyN71rE3To1nzsYszhH81j9dtrjka017cg=;
+	bh=Lh+tGf93XScZQgKqnSe27rnoFgCKCAHyXq4xGx840sU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IrWqAM/0Onw3EuHo1M0RZvbUoBPIqPHyWhLsI2/Eg3mKh9VS2lm09P0u5gx2yJOlqI2q1nfdQaxR24xQ3sBAprcYdalxV1KBPnFJHmnhjJeQ8mR11Qos+LbOEy5g99X/yz6me0EHuv9WOeqsA07Y6KtZ5TqscT54oAvlqbCV0u4=
+	 MIME-Version; b=VbG82mbQxxqQ+1V0HiJ3MP1aFW4TAnhQ7P/r+zhv+Y8Yb17tfPz6N/Kok8Zb/IXe8/jMA4Hl9XBAxzzonJtVcIH+/JabStw+cM47YxCCY6hT4xv8ZEkhuX/rbDpo5DY2AVYc5hICs9c+uyIQaPLa5YLldwGwxYifkWIJcaPjx3E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tn7fw-000000001Y5-0hvS;
+	id 1tn7fw-000000001Y5-1Tjt;
 	Tue, 25 Feb 2025 22:01:32 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Manali.Shukla@amd.com,
 	mingo@kernel.org,
 	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v14 04/13] x86/mm: use INVLPGB for kernel TLB flushes
-Date: Tue, 25 Feb 2025 22:00:39 -0500
-Message-ID: <20250226030129.530345-5-riel@surriel.com>
+Subject: [PATCH v14 13/13] x86/mm: only invalidate final translations with INVLPGB
+Date: Tue, 25 Feb 2025 22:00:48 -0500
+Message-ID: <20250226030129.530345-14-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250226030129.530345-1-riel@surriel.com>
 References: <20250226030129.530345-1-riel@surriel.com>
@@ -54,76 +54,86 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Use broadcast TLB invalidation for kernel addresses when available.
+Use the INVLPGB_FINAL_ONLY flag when invalidating mappings with INVPLGB.
+This way only leaf mappings get removed from the TLB, leaving intermediate
+translations cached.
 
-Remove the need to send IPIs for kernel TLB flushes.
+On the (rare) occasions where we free page tables we do a full flush,
+ensuring intermediate translations get flushed from the TLB.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
 ---
- arch/x86/mm/tlb.c | 32 ++++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/tlb.h | 10 ++++++++--
+ arch/x86/mm/tlb.c          | 13 +++++++------
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index e645884a1877..8d78667a2d1b 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -92,9 +92,15 @@ static inline void __tlbsync(void)
+ static inline void __invlpgb_flush_user_nr_nosync(unsigned long pcid,
+ 						  unsigned long addr,
+ 						  u16 nr,
+-						  bool pmd_stride)
++						  bool pmd_stride,
++						  bool freed_tables)
+ {
+-	__invlpgb(0, pcid, addr, nr, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
++	u8 flags = INVLPGB_PCID | INVLPGB_VA;
++
++	if (!freed_tables)
++		flags |= INVLPGB_FINAL_ONLY;
++
++	__invlpgb(0, pcid, addr, nr, pmd_stride, flags);
+ }
+ 
+ /* Flush all mappings for a given PCID, not including globals. */
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index dbcb5c968ff9..f44a03bca41c 100644
+index 4d56d22b9893..91680cfd5868 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -1077,6 +1077,18 @@ void flush_tlb_all(void)
- 	on_each_cpu(do_flush_tlb_all, NULL, 1);
- }
+@@ -497,9 +497,10 @@ static inline void tlbsync(void)
  
-+static void invlpgb_kernel_range_flush(struct flush_tlb_info *info)
-+{
-+	unsigned long addr, nr;
-+
-+	for (addr = info->start; addr < info->end; addr += nr << PAGE_SHIFT) {
-+		nr = (info->end - addr) >> PAGE_SHIFT;
-+		nr = clamp_val(nr, 1, invlpgb_count_max);
-+		invlpgb_flush_addr_nosync(addr, nr);
-+	}
-+	__tlbsync();
-+}
-+
- static void do_kernel_range_flush(void *info)
+ static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
+ 						unsigned long addr,
+-						u16 nr, bool pmd_stride)
++						u16 nr, bool pmd_stride,
++						bool freed_tables)
  {
- 	struct flush_tlb_info *f = info;
-@@ -1087,6 +1099,22 @@ static void do_kernel_range_flush(void *info)
- 		flush_tlb_one_kernel(addr);
+-	__invlpgb_flush_user_nr_nosync(pcid, addr, nr, pmd_stride);
++	__invlpgb_flush_user_nr_nosync(pcid, addr, nr, pmd_stride, freed_tables);
+ 	if (!cpu_need_tlbsync())
+ 		cpu_write_tlbsync(true);
  }
+@@ -542,9 +543,9 @@ static void broadcast_tlb_flush(struct flush_tlb_info *info)
+ 			nr = clamp_val(nr, 1, invlpgb_count_max);
+ 		}
  
-+static void kernel_tlb_flush_all(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_flush_all();
-+	else
-+		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+}
-+
-+static void kernel_tlb_flush_range(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_kernel_range_flush(info);
-+	else
-+		on_each_cpu(do_kernel_range_flush, info, 1);
-+}
-+
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
- 	struct flush_tlb_info *info;
-@@ -1097,9 +1125,9 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 				  TLB_GENERATION_INVALID);
+-		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
++		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd, info->freed_tables);
+ 		if (static_cpu_has(X86_FEATURE_PTI))
+-			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
++			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd, info->freed_tables);
  
- 	if (info->end == TLB_FLUSH_ALL)
--		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+		kernel_tlb_flush_all(info);
- 	else
--		on_each_cpu(do_kernel_range_flush, info, 1);
-+		kernel_tlb_flush_range(info);
+ 		addr += nr << info->stride_shift;
+ 	} while (addr < info->end);
+@@ -1688,10 +1689,10 @@ void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *batch,
+ 	u16 asid = mm_global_asid(mm);
  
- 	put_flush_tlb_info();
- }
+ 	if (asid) {
+-		invlpgb_flush_user_nr_nosync(kern_pcid(asid), uaddr, 1, false);
++		invlpgb_flush_user_nr_nosync(kern_pcid(asid), uaddr, 1, false, false);
+ 		/* Do any CPUs supporting INVLPGB need PTI? */
+ 		if (static_cpu_has(X86_FEATURE_PTI))
+-			invlpgb_flush_user_nr_nosync(user_pcid(asid), uaddr, 1, false);
++			invlpgb_flush_user_nr_nosync(user_pcid(asid), uaddr, 1, false, false);
+ 
+ 		/*
+ 		 * Some CPUs might still be using a local ASID for this
 -- 
 2.47.1
 
