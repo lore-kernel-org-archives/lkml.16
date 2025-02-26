@@ -1,82 +1,117 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEAE21D3FC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719D41A01BF;
+	Wed, 26 Feb 2025 15:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582578; cv=none; b=P6HHKIVotD7kJzzf4IodvPglmqT686g7TrDACayKCVtwOWjs7hfqhCkjWdcWK7sHdRqfxkoLaMy0dZUwkf14FGWwditgxnhLaEcuq/TOWttcu7AaNwGPb/AZovL5V3mmjFpDZnsAU3uPnwuv4sxujznMj+vACHb5LjnKRN3sZ80=
+	t=1740582590; cv=none; b=q2uYDed5rzxVnLK/NwhgUw/4LCx52fdbPUDutpMV7e4Q6tyOuhZfPWJXVPkCXPDXbpf6Tn9rVdvsil2dn5s8CSzIOJnusvthfr8TpcsyQ1mZeQLCaYhd7QdGbh8fZpc1xN/nafD5il9sRehQJKfoR23v/ngnRnx5eFsXyAsRIVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582578; c=relaxed/simple;
-	bh=ZrilHsSf4uozHG3QDObtiEewL5WQ28IzDxI5g784Khs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RvjYih4ycNsoj4H/Cx8u/JMJ0ExzFuR1ePwLV4jMi/mSmZoZWEEl/EpTb/KMXptX/nXa3Wrt69GFwlhcy0XBjtnf/ZwIYk6w5O9KHJ7k9v3XLpos0b3bIVm4WVW27TYl9dHBq428RWdhSO6tJYItgCLLeP1sqVt3ZtsO2wlbx3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org; spf=pass smtp.mailfrom=fooishbar.org; dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b=M8m6tuk8; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fooishbar.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fooishbar.org
+	s=arc-20240116; t=1740582590; c=relaxed/simple;
+	bh=AlPedn04wCTvnoDUgDbBua195xjkBTaAEu/DorTdYk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cDsOFfH6WGEN99Mfe8voBdjaqwBx2G70VOxg7/BXrU/vUHLqxEyFs1JVujgsPRdU4AAGvUW2a+qKp29zM+niWbGOfiWckNP4CX+5nSUCOq8Z611Pd9lYZ/gSr51K8A0PgPuoqEF0j3RX8Hjr3rbdQoSzt1QpSjlsMK8xEf1FUW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iKDOgaJ5; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fooishbar.org header.i=@fooishbar.org header.b="M8m6tuk8"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7c09a30e14dso1114069485a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fooishbar.org; s=google; t=1740582575; x=1741187375; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrilHsSf4uozHG3QDObtiEewL5WQ28IzDxI5g784Khs=;
-        b=M8m6tuk8fKyGZi7mPk2yPvvmui/c+R7JrQEDhWG3FtwGCMvXFdzmNkccG237o8p0bB
-         CigEZ4G6PNT0NhP+pekVCOhIO6dgCF6hExYP2w/ITrZj2XrhPmdSK/5i6tMDyMHZXtTc
-         ANHXF+hIdxHI4PM3hsUpDkFRx0oQZnsHzxeb020EkmaOR3kgJkriihYI0Dxvio3Gg9e7
-         IfkEMBaSdXz+0dtujW0Na9qDliJun6GEVSsp8F+2Sfw6CojGXk+OY5fDCre6bbncWhsb
-         qHHXeWLUUD0nPUscOXp06dKv831eZfTUZClplsjiTDkxmE+PAkrmA6cHqr3LKO/8RN7G
-         DNJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740582575; x=1741187375;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZrilHsSf4uozHG3QDObtiEewL5WQ28IzDxI5g784Khs=;
-        b=AH8qIx3iynFGHssd13QLdg6r0fqOMTjhmZA/irlpF8JVGDto32w/opOW4DcjsvS6+E
-         VgxDruavqAEcT+Lavgn9Jn2GjTYQbM8ZK5Zx7x8SfmJqMwaDTld+o6KhkjH8bkHuUQTs
-         jBeE4H4xO2JV5H0zkluxnrZb5uCnTGSZM46UwttwXbDygi3bMYmlJ+2tQWFpMkpjHChy
-         beh302rqktTEY1S+2A0PNTCBzcSmYFNHw3ktGdoXVwdfumPwl6GtTkkMol1DFTaJxbOx
-         udmd72XgerCWRsPoM2nxqUX+Yxc00sAbotvcV/eK7JL6ILKFKRtD9OFx6CnXOFFRDwh4
-         uoSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbUywk714/b+kMBXQtY9xKjo/xKLh2yrjDkj/SoKySPqV7XFq+glyNxJkz0bvH95yV2sfLik6JAUPj/wA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0T5XpFzt63eGjBIIk4hQuZ5DQMho3adCPTxYCjRGMULPvuws6
-	JdOPZhsDKkk/xLXCwRs9Zb3B8wu6dLlEJ7Mm99muAy+0iEFqLebjbT2FB2zPLDjMKZRu05lcNTn
-	V0myvfF2g6znhQ7I5ljcbX+lcLeIzEbxXXHjFnw==
-X-Gm-Gg: ASbGnctqWVHe1y3GjKZdMz7bTgIxmyVHjU+xPimJ1ETO038sQ74TznwvEok/yW6Bkz9
-	43BwOT8Dp03YuplnJwsipqSCPfb80yemH6vkDySL5BcdUE5j+lEMpT+i8zS9TbQu8srJ/EcvxR1
-	GeUazG
-X-Google-Smtp-Source: AGHT+IF/tg6cM8Vratykn7v7aPCgw8wtxyKpm/qbfk92lBpsgjX6Z9qRmt7KyODFfgOjzxshnTfEuqyZgNXJsi0PTAM=
-X-Received: by 2002:a05:620a:458b:b0:7c0:bd67:7dd2 with SMTP id
- af79cd13be357-7c23c048738mr1144044385a.48.1740582575363; Wed, 26 Feb 2025
- 07:09:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iKDOgaJ5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 57D6044262;
+	Wed, 26 Feb 2025 15:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740582581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qr8ZzAHwUGa1pa18g5lB7LpvO3T+N6fqzFerpRdWrhw=;
+	b=iKDOgaJ5wJ04L921BEqnnpQzVMZYbO+FPuNCfmaOfFvJBXvFXqSRGdmxiiyzN5wYUKGpTe
+	ksC8H3kElU61IV8Rgvtmtey+NZpSMOrM0I6A2CjP2BzPZZm/kzgTFcmqafGH1cndkgwIrA
+	gjzMkWft0EEuLzTYcjzr1+AqPdSpKUMStQB+KKVbnI0SNgp95ofpXrtoFHLWe5pabEGZWT
+	VZeOdtBO3EP0aXdvQ/kqXOAcpP5tLmJUdzvT8cIfUk3q4vayLkTlnZAHBR23IVzBGj9ob4
+	ZZRu/JA1Fp5OnabcH56WOTsUII9MNzAB2DK/3izzPlsaNB2PD1/wmndXu56vFQ==
+Date: Wed, 26 Feb 2025 16:09:38 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v2 11/13] net: phy: phylink: Add a mapping
+ between MAC_CAPS and LINK_CAPS
+Message-ID: <20250226160938.101be22d@fedora.home>
+In-Reply-To: <Z78fKCZl4-77NjeK@shell.armlinux.org.uk>
+References: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
+	<20250226100929.1646454-12-maxime.chevallier@bootlin.com>
+	<Z78fKCZl4-77NjeK@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226-ci-python-timeout-v1-1-0a9092a3d6fb@linaro.org>
-In-Reply-To: <20250226-ci-python-timeout-v1-1-0a9092a3d6fb@linaro.org>
-From: Daniel Stone <daniel@fooishbar.org>
-Date: Wed, 26 Feb 2025 15:09:23 +0000
-X-Gm-Features: AWEUYZnbEiebiVjonXIF7OkUNZGFkCDHvC0BpPhmqST5ONMPQP479p20hC6Al-w
-Message-ID: <CAPj87rOu-CSAvBmqrjp0oB8Y3yiTJJ5==i+OTHV=SO4CSEDLJA@mail.gmail.com>
-Subject: Re: [PATCH] drm/ci: extend python-artifacts timeout
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Helen Koike <helen.koike@collabora.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Vignesh Raman <vignesh.raman@collabora.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeltdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedugfelledvtdffvdekudeijeduueevvdevffehudehvdeuudetheekheeigfetheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepr
+ ghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Wed, 26 Feb 2025 at 08:35, Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
-> The job has a timeout of 10 minutes, which causes a build failures as it
-> is even unable to clone the repo within the specified limits. Extend
-> the job's timeout to 1 hour.
+Hello Russell,
 
-This is neither expected nor sensible. We should fix this some other way.
+On Wed, 26 Feb 2025 14:03:20 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+
+> On Wed, Feb 26, 2025 at 11:09:26AM +0100, Maxime Chevallier wrote:
+> > phylink allows MAC drivers to report the capabilities in terms of speed,
+> > duplex and pause support. This is done through a dedicated set of enum
+> > values in the form of the MAC_ capabilities. They are very close to what
+> > the LINK_CAPA_xxx can express, with the difference that LINK_CAPA don't
+> > have any information about Pause/Asym Pause support.
+> > 
+> > To prepare converting phylink to using the phy_caps, add the mapping
+> > between MAC capabilities and phy_caps. While doing so, we move the
+> > phylink_caps_params array up a bit to simplify future commits.  
+> 
+> I still want to know why we need to do this type of thing -
+
+Sorry not to have included more details on the why. The main reason is
+for the phy_port work. In the previous phy_port series [1] I included an
+attempt at making a first step forward with PHY-driven SFP, so that
+phylib itself provides the sfp_upstream_ops and not individual PHY
+drivers. That's to get a better handling for multi-port PHYs, which is
+one of the end-goals.
+
+[1]: https://lore.kernel.org/netdev/20250213101606.1154014-1-maxime.chevallier@bootlin.com/
+
+As part of that PHY-sfp work, I find it very useful for PHY drivers to
+be able to tell what phy_interface_t they can expose on their serdes
+interfaces, and from then build a list of linkmodes to get an idea of
+what we can support on that port. That's why I'm extracting that out of
+phylink.
+
+I did see that you suggested having phylink involved for PHY sfp maybe,
+but TBH I don't even know where to start, so I took a safer approach
+with phylib-driven SFPs.
+
+> unfortunately I don't have time to review all your patches at the
+> moment. I haven't reviewed all your patches since you've started
+> posting them. Sorry.
+
+No worries, I understand that that whole work is quite the mouthful and
+implies some involved reviews. But even discussing higher level stuff,
+like we do now, helps me steer that work in the right direction and
+hopefully make it easier for you and the other PHY maintainers to
+review that in the future.
+
+Maxime
