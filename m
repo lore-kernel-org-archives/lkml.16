@@ -1,33 +1,31 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15CD218DB11
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250B51993B1
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740554503; cv=none; b=G40yxweOGEfRkFhWMrn5Q4wU1+kK5uwRa7BHvnPjZ5+/k5/d1gQt7hW67BZcdoVL2RGb2dKW7KEXYGa3gwWMfZOwDCIn+ufvh6MWIBKiP7VRfZ48455DvRDb+1qQY/T2J6Boy6HE0JYQ7VR+3Kn2OkCBl2AV0Uy9Pq36fiXVCJ8=
+	t=1740554587; cv=none; b=XzaCqC3C+tf17S2nb639WaF439WSIFZ2Py/7sMinQwQqdF22q1DtDLueVAn6uOHPuaBAPtyIijR/ovzAuJC/uHNeLUEYeiEXkU0hNhGQ7pCXQ8KwicAiT/0zJ7y+sN+dsqRhEbwg0Ry0yxxWt77d1U3VmiFRqrxP3y0/hkTFjek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740554503; c=relaxed/simple;
-	bh=U2bcrImwpl9X6lPc3vxXB5L/OeJT90yTbUFng8az8i0=;
+	s=arc-20240116; t=1740554587; c=relaxed/simple;
+	bh=eHGaW29Cr2Hlr/1eF6CZ4olB+Jsv5yiB7eZxMMiiz0U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k37A2hkNnkljK+8zm11PUFbj9lV6XBtoHr+4ugCA4BYLtegzhFxtteU52rN3ik4IuR/36BxwLivT4GaqKJZIV5lJugmE2KAkL0wJSYmcuUABow4GxhhOHcv5iuvq24xoJN/XaSE/66dsr/TzM4LUSagxH+2Qhld+4Crhr8qlWTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdLBYy5K; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=A7JwXF95OF9SR57hOTSdQLWawXdYLKWvPIph8XAtBLb2VmGDF5WNZBMzGbf+VsM+DX+SaxECYdEfzZvbd283pVSWBTc+Z/AfXJQhrtir214szo02ZP0hQxg63XFhE31u76mri4wolZfvTpeGQ1SJTXLOZbQqNNwZoSVEPhsaKzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=t8LDdl1j; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdLBYy5K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB39C4CED6;
-	Wed, 26 Feb 2025 07:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740554502;
-	bh=U2bcrImwpl9X6lPc3vxXB5L/OeJT90yTbUFng8az8i0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CdLBYy5KaDAqDHkt3QfUYvJRD5P9ZVWZN84o0GOvobtGoNSAwBpFWI6pckRXr8nYA
-	 klUk3MhFJsUFw4RreZyKuDRArXs99Ka/sekpWXgmCZfsXwJ/HXV8mvOdXz+veXKpo2
-	 DyS40bpKldFGgfrxVuZm+KTJ67mZFm1Czb3iIuIikoAfFx4uMZCyez6xQYV5nw9sDL
-	 i0TAl3lsuT4xxuyrQmTuw2Vyg0V+xncXJni1OaIr8+fNDPbx2YxkY2cvcvMJbF8tUx
-	 PziwVLT3/Ep6q+6s2/lAwriI2FMJr1wdaIoYxfWASe/BZyIcNLPawmrVhQ9azt3QgL
-	 Psd7/33yNVdjw==
-Message-ID: <674a80d3-8a85-4d5a-a083-f948643479c6@kernel.org>
-Date: Wed, 26 Feb 2025 08:21:39 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="t8LDdl1j"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740554581; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Qsij7OF84wNUFWpZiJMKkhiePiHWb5NpTxQGGeVUXXg=;
+	b=t8LDdl1jCUX0VOh+Myjv3sLKHxG3/sinFkFAWDsHtZf5tzx+xTJv6rB9lHdD0dl61Gbh50UyZimkQQMDTpoibI/aJJIBZwMwYA10226iSubwZyhD3ktihgNG5sGrPo0NwwE5mq0URF54cFHH5woT8dulHINeQ0Pso/uKQUiFIIw=
+Received: from 30.74.144.124(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQHJRGw_1740554579 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 26 Feb 2025 15:23:00 +0800
+Message-ID: <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
+Date: Wed, 26 Feb 2025 15:22:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,109 +33,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/bootflag: Change some static functions to bool
-To: "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>
-References: <20250129154920.6773-1-ubizjak@gmail.com>
- <31e1c7e4-5b24-4e56-9f17-8be9553fb6f9@kernel.org>
- <CAFULd4a4qbMiP3dYXDp0_vPapkoi-i-ApOY5pHfKG1h7=vfbbA@mail.gmail.com>
- <43c41ab4-1771-4b01-853e-08e1689df7f3@kernel.org>
- <CAFULd4bTYudfNap1trVyjqA0xv5cQQeWxSZ8numv_uHqxz1Afw@mail.gmail.com>
- <ef6e2925-f005-41e9-bc24-b9adc3922706@kernel.org>
- <Z7zBXyywUEC2ieiR@gmail.com>
- <67544c34-2c6f-43d3-b429-c8752f57a7e6@kernel.org>
- <2229E260-CF5A-463C-8552-32ACA97BE30F@zytor.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <2229E260-CF5A-463C-8552-32ACA97BE30F@zytor.com>
+Subject: Re: Softlockup when test shmem swapout-swapin and compaction
+To: Liu Shixin <liushixin2@huawei.com>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>
+References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 26. 02. 25, 8:17, H. Peter Anvin wrote:
-> On February 25, 2025 10:31:37 PM PST, Jiri Slaby <jirislaby@kernel.org> wrote:
->> On 24. 02. 25, 19:58, Ingo Molnar wrote:
->>> So this CodingStyle entry is a red herring, and the !! is absolutely
->>> used in the kernel
+Add Zi.
 
-label1:
-
->> Sure, for intended conversion to either 0 or 1.
-
-
-
-
->>> as an explicit marker of intentional type conversion
->>> to bool.
->>
->> With this in mind, you would have to write "if (!!x)" everywhere.
->>
->> I don't want such constructions in code I maintain. (Nor for return values.) But this is not code I maintain (obviously), so your call after all.
->>
->> thanks,
+On 2025/2/26 15:03, Liu Shixin wrote:
+> Hi all,
 > 
-> Uh, no, that's not the point.
+> I found a softlockup when testing shmem large folio swapout-swapin and compaction:
 > 
-> The point is that:
+>   watchdog: BUG: soft lockup - CPU#30 stuck for 179s! [folio_swap:4714]
+>   Modules linked in: zram xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat xt_addrtype iptable_filter ip_tantel_rapl_msr intel_rapl_common intel_uncore_frequency_common skx_edac_common nfit libnvdimm kvm_intel kvm rapl cixt4 mbcache jbd2 sr_mod cdrom ata_generic ata_piix virtio_net net_failover ghash_clmulni_intel libata sha512_ssse3
+>   CPU: 30 UID: 0 PID: 4714 Comm: folio_swap Kdump: loaded Tainted: G             L     6.14.0-rc4-next-20250225+ #2
+>   Tainted: [L]=SOFTLOCKUP
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+>   RIP: 0010:xas_load+0x5d/0xc0
+>   Code: 08 48 d3 ea 83 e2 3f 89 d0 48 83 c0 04 48 8b 44 c6 08 48 89 73 18 48 89 c1 83 e1 03 48 83 f9 02 75 08 48 3d
+>   RSP: 0000:ffffadf142f1ba60 EFLAGS: 00000293
+>   RAX: ffffe524cc4f6700 RBX: ffffadf142f1ba90 RCX: 0000000000000000
+>   RDX: 0000000000000011 RSI: ffff9a3e058acb68 RDI: ffffadf142f1ba90
+>   RBP: fffffffffffffffe R08: ffffadf142f1bb50 R09: 0000000000000392
+>   R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000011
+>   R13: ffffadf142f1bb48 R14: ffff9a3e04e9c588 R15: 0000000000000000
+>   FS:  00007fd957666740(0000) GS:ffff9a41ac0e5000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 00007fd922860000 CR3: 000000025c360001 CR4: 0000000000772ef0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   PKRU: 55555554
+>   Call Trace:
+>    <IRQ>
+>    ? watchdog_timer_fn+0x1c9/0x250
+>    ? __pfx_watchdog_timer_fn+0x10/0x10
+>    ? __hrtimer_run_queues+0x10e/0x250
+>    ? hrtimer_interrupt+0xfb/0x240
+>    ? __sysvec_apic_timer_interrupt+0x4e/0xe0
+>    ? sysvec_apic_timer_interrupt+0x68/0x90
+>    </IRQ>
+>    <TASK>
+>    ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>    ? xas_load+0x5d/0xc0
+>    xas_find+0x153/0x1a0
+>    find_get_entries+0x73/0x280
+>    shmem_undo_range+0x1fc/0x640
+>    shmem_evict_inode+0x109/0x270
+>    evict+0x107/0x240
+>    ? fsnotify_destroy_marks+0x25/0x180
+>    ? _atomic_dec_and_lock+0x35/0x50
+>    __dentry_kill+0x71/0x190
+>    dput+0xd1/0x190
+>    __fput+0x128/0x2a0
+>    task_work_run+0x57/0x90
+>    syscall_exit_to_user_mode+0x1cb/0x1e0
+>    do_syscall_64+0x67/0x170
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>   RIP: 0033:0x7fd95776eb8b
 > 
-> !!x
+> If CONFIG_DEBUG_VM is enabled, we will meet VM_BUG_ON_FOLIO(!folio_test_locked(folio)) in
+> shmem_add_to_page_cache() too.  It seems that the problem is related to memory migration or
+> compaction which is necessary for reproduction,  although without a clear why.
 > 
-> ... is the same as
+> To reproduce the problem, we need firstly a zram device as swap backend, and then run the
+> reproduction program. The reproduction program consists of three parts:
+>   1. A process constantly changes the status of shmem large folio by these interfaces:
+>          /sys/kernel/mm/transparent_hugepage/hugepages-<size>/shmem_enabled
+>   2. A process constantly echo 1 > /proc/sys/vm/compact_memory
+>   3. A process constantly alloc/free/swapout/swapin shmem large folios.
 > 
-> x ? true : false
+> I'm not sure whether the first process is necessary but the second and third are. In addition,
+> I tried hacking to modify compaction_alloc to return NULL, and the problem disappeared,
+> so I guess the problem is in migration.
 > 
-> ... which if promoted to an integer, intentionally or not, becomes
-> 
-> x ? 1 : 0
+> The problem is different with https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
+> since I have confirmed this porblem still existed after merge the fixed patch.
 
-Which I write at label1 above. Sorry, am I missing something?
+Could you check if your version includes Zi's fix[1]? Not sure if it's 
+related to the shmem large folio split.
 
-
-"!!x" when implicitly converted to bool is the very same as simple "x".
-
--- 
-js
-suse labs
+[1] 
+https://lore.kernel.org/all/AF487A7A-F685-485D-8D74-756C843D6F0A@nvidia.com/
