@@ -1,146 +1,198 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE44238170;
-	Wed, 26 Feb 2025 10:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7B64642D;
+	Wed, 26 Feb 2025 10:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566365; cv=none; b=TN9iWkaus2Q+c9KS3URhuR6XBkbuc4A2Rtg/30xyfIxdXQCag2Vz8eq/IBmrjWx+K2HsvfCq3MTjGufwjS1QFVRXzg7Q9PdZ0dxhuGl88ShrA0aDgvE13wDg8NJArQQGKSIhCBTpO/yJlxt1gFmXG7m6M+3dLwEiH9luNh1+1Nw=
+	t=1740566378; cv=none; b=hzz9tSe3xEA0q0EL8VQqWgyZM8r5x5HAATcPUps09VY3EvgJhZVqLBeXLseJIdO7U+4oQavNwtns3C09IiUxhwg6NC5AHPqq9qAq96clSB3bUza8YMucUJvkzOdLCGRl4jriF8eGR2+wtqj3XkiMbLurkjlOwouSnDgnAk2Rzpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566365; c=relaxed/simple;
-	bh=NrarBek56uZxDZEPM93Oqgy8N6FqDNNWnxTnWqaqfFk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P8YYGcXuttqB88AGJ9smwc0p+KUVVSV8x1bcjhBY/LgtA2eYkWNQ4h0xCyjgbbOo1N8F2KJVyF4tvNs9EfpFEkqFC+LY5k8ugXNPO3hBI2/23ZB2hUsgpbKP6ecuUL4uq5N9Rl4LBLHEHj+u6+0j2wpwaP2N9z22b2whl0NOjvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=L5QE9qAH; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740566378; c=relaxed/simple;
+	bh=z+ACc9/vEmMyxvrB3zAJly+TnJcjuVrM2NtlojVPahc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jFqegw9qu9L/N8SR9PxMkoYcgsQX4UuM/lilcDNlcaJ8QTEHHVFGCmNARLdgyyEgYkGQLxfB+goemz80C8FLBx8GDOiLOueC6mepMghsdMPhm9ftGUzuAxZPLvp+xZsF0Ooo7tjBQ06eQHDbKW7d80QXijBK/9XXbK7o27LFMus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BiWnfKXA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="L5QE9qAH"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q8p0Zu015440;
-	Wed, 26 Feb 2025 11:39:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	r6EeS/1e2mk1YAgnjgtBzqRGy/8kMpjtGs49piq0D0c=; b=L5QE9qAHsY8p2q2y
-	GK0BVRIAOPU8OoNVa7s5NOyCOPheqBGKtNDvftIP7T4ipdE0mnTg65cidM8ReFuk
-	7C2yUAr/qqFd/1fLzL7KL39sGOn9EyWyOWNy5qoSfWkvJ+0wbQUlHGWxK869loTx
-	rya5AyDXShceg/vx3gmE6B83sZWoB79G0jqZhHpXDInQAs+qCR4E5W8AxT66XVYv
-	xduJw6vKpU5l1vGHMuTqTnrprUQ194zHSEUIZsVe5OHVosFYp3kCa0iTgOGLIKeD
-	h5yvghK+Mnn5oGDguugDLCkyI5X78jOsNq88slAI+GFPE7Dx9vtIU9uTuDyr32Wl
-	gqgxBw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psubfhv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 11:39:10 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4A22A4004C;
-	Wed, 26 Feb 2025 11:38:01 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 252624E1E64;
-	Wed, 26 Feb 2025 10:33:37 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 10:33:36 +0100
-Message-ID: <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
-Date: Wed, 26 Feb 2025 10:33:35 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BiWnfKXA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63B92C4CED6;
+	Wed, 26 Feb 2025 10:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740566377;
+	bh=z+ACc9/vEmMyxvrB3zAJly+TnJcjuVrM2NtlojVPahc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BiWnfKXAgC/TYQa9VF3IfGq1FIaDa8/lsitIellUfrpvLbrymFLgoQvv7udZM89xr
+	 QNIk0whBQhCSjJ3D6q+OS+yO/UgMzGXeyaLTC75w0+WcYPE4T9D7jbHQbK7Ov4zJZU
+	 velRFQWDb7lx5Wz3TQrNXetlemsGPNBByNLpyvdarH4yout5zvVwEnYMzuNSlJqOMW
+	 MQ1WKg5RZnx8KWnlY+OOnkJ36Yj2DSfVYbMSRlBDZDozzrGSPInIQeo0OU3r5odrDb
+	 RIWTbZBGNvVLncJy11IdhwsJayvC4BX56qvQl67D4QHp9uN6h9UwKkRWE8jtPL1icW
+	 6r2YJU/EMsFng==
+Date: Wed, 26 Feb 2025 11:39:31 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, kernel@dakr.org,
+	a.hindborg@kernel.org, alex.gaynor@gmail.com,
+	benno.lossin@proton.me, bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com, gary@garyguo.net,
+	linux-kernel@vger.kernel.org, lyude@redhat.com,
+	mairacanal@riseup.net, ojeda@kernel.org, rafael@kernel.org,
+	rust-for-linux@vger.kernel.org, tmgross@umich.edu
+Subject: Re: [PATCH 2/2] rust/faux: Add missing parent argument to
+ Registration::new()
+Message-ID: <Z77vYxUYVyFtW2lG@cassiopeiae>
+References: <ea2466c4d250ff953b3be9602a3671fb@dakr.org>
+ <20250226092339.989767-1-aliceryhl@google.com>
+ <Z77iHj56551mDybd@pollux>
+ <2025022659-spray-treble-759f@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Clement LE GOFFIC
-	<clement.legoffic@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
+In-Reply-To: <2025022659-spray-treble-759f@gregkh>
 
-Hi Krzysztof
+On Wed, Feb 26, 2025 at 10:58:17AM +0100, Greg KH wrote:
+> On Wed, Feb 26, 2025 at 10:42:54AM +0100, Danilo Krummrich wrote:
+> > On Wed, Feb 26, 2025 at 09:23:39AM +0000, Alice Ryhl wrote:
+> > > On Wed, Feb 26, 2025 at 10:06 AM <kernel@dakr.org> wrote:
+> > > >
+> > > > On 2025-02-26 09:38, Alice Ryhl wrote:
+> > > > > On Tue, Feb 25, 2025 at 10:31 PM Lyude Paul <lyude@redhat.com> wrote:
+> > > > >>
+> > > > >> A little late in the review of the faux device interface, we added the
+> > > > >> ability to specify a parent device when creating new faux devices -
+> > > > >> but
+> > > > >> this never got ported over to the rust bindings. So, let's add the
+> > > > >> missing
+> > > > >> argument now so we don't have to convert other users later down the
+> > > > >> line.
+> > > > >>
+> > > > >> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > >> ---
+> > > > >>  rust/kernel/faux.rs              | 10 ++++++++--
+> > > > >>  samples/rust/rust_driver_faux.rs |  2 +-
+> > > > >>  2 files changed, 9 insertions(+), 3 deletions(-)
+> > > > >>
+> > > > >> diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+> > > > >> index 41751403cd868..ae99ea3d114ef 100644
+> > > > >> --- a/rust/kernel/faux.rs
+> > > > >> +++ b/rust/kernel/faux.rs
+> > > > >> @@ -23,11 +23,17 @@
+> > > > >>
+> > > > >>  impl Registration {
+> > > > >>      /// Create and register a new faux device with the given name.
+> > > > >> -    pub fn new(name: &CStr) -> Result<Self> {
+> > > > >> +    pub fn new(name: &CStr, parent: Option<&device::Device>) ->
+> > > > >> Result<Self> {
+> > > > >>          // SAFETY:
+> > > > >>          // - `name` is copied by this function into its own storage
+> > > > >>          // - `faux_ops` is safe to leave NULL according to the C API
+> > > > >> -        let dev = unsafe {
+> > > > >> bindings::faux_device_create(name.as_char_ptr(), null_mut(), null())
+> > > > >> };
+> > > > >> +        let dev = unsafe {
+> > > > >> +            bindings::faux_device_create(
+> > > > >> +                name.as_char_ptr(),
+> > > > >> +                parent.map_or(null_mut(), |p| p.as_raw()),
+> > > > >> +                null(),
+> > > > >
+> > > > > This function signature only requires that `parent` is valid for the
+> > > > > duration of this call to `new`, but `faux_device_create` stashes a
+> > > > > pointer without touching the refcount. How do you ensure that the
+> > > > > `parent` pointer does not become dangling?
+> > > >
+> > > > I was wondering the same, but it seems that the subsequent device_add()
+> > > > call takes care of that:
+> > > >
+> > > > https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/base/core.c#L3588
+> > > >
+> > > > device_del() drops the reference.
+> > > >
+> > > > This makes device->parent only valid for the duration between
+> > > > faux_device_create() and faux_device_remove().
+> > > >
+> > > > But this detail shouldn’t be relevant for this API.
+> > > 
+> > > I think this could use a few more comments to explain it. E.g.:
+> > > 
+> > > diff --git a/drivers/base/faux.c b/drivers/base/faux.c
+> > > index 531e9d789ee0..674db8863d96 100644
+> > > --- a/drivers/base/faux.c
+> > > +++ b/drivers/base/faux.c
+> > > @@ -131,6 +131,7 @@ struct faux_device *faux_device_create_with_groups(const char *name,
+> > >  
+> > >         device_initialize(dev);
+> > >         dev->release = faux_device_release;
+> > > +       /* The refcount of dev->parent is incremented in device_add. */
+> > 
+> > Yeah, this one is a bit odd to rely on a subsequent device_add() call, it
+> > clearly deserves a comment.
+> 
+> What do you mean?  That's the way the driver model works, a parent
+> always gets the reference count incremented as it can not go away until
+> all of the children are gone.
 
-On 2/26/25 08:23, Krzysztof Kozlowski wrote:
-> On 25/02/2025 17:09, Clement LE GOFFIC wrote:
->> On 2/25/25 14:05, Krzysztof Kozlowski wrote:
->>> On 25/02/2025 09:48, Clément Le Goffic wrote:
->>>> Add the hdp devicetree node for stm32mp25 SoC family
->>>>
->>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>>> ---
->>>>    arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++++
->>>>    1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> index f3c6cdfd7008..43aaed4fcf10 100644
->>>> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
->>>> @@ -918,6 +918,13 @@ package_otp@1e8 {
->>>>    			};
->>>>    		};
->>>>    
->>>> +		hdp: pinctrl@44090000 {
->>>> +			compatible = "st,stm32mp-hdp";
->>>
->>> So here again - you have stm32mp251 SoC, but use entirely different
->>> compatible.
->>
->> Ok so I will use "st,stm32mp15-hdp"
+That's all correct and I agree. I said it's a bit off because the reference is
+not taken in the pointer assignment in faux_device_create_with_groups(), i.e.
+
+	if (parent)
+		dev->parent = parent;
+
+but subsequently in device_add(). That doesn't make it obvious to the reader
+that the driver core does indeed do the correct thing.
+
+> 
+> So if you pass a parent pointer into a "create" function in the driver
+> core, it will be incremented, you don't have to worry about it.
+> 
+> I don't understand the issue with the rust binding here, it's not saving
+> a pointer to the parent device, as long as it is valid going in, that's
+> all that matters.
+
+There's none, that's what I pointed out earlier too. :-)
+
 > 
 > 
-> This means this is stm32mp15 SoC. I do not see such SoC on list of your
-> SoCs in bindings. What's more, there are no bindings for other SoC
-> components for stm32mp15!
-
-Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the 
-STM32 story we didn't have a clear rule/view to correctly naming our 
-compatible. We tried to improve the situation to avoid compatible like 
-"st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced 
-"st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes 
-it represents a SoC family and not a real SoC. We haven't had much 
-negative feedback it.
-
-But, if it's not clean to do it in this way, lets define SoC compatible 
-for any new driver.
-For the HDP case it is: "st,stm32mp157" and used for STM32MP13, 
-STM32MP15 end STM32MP25 SoC families (if driver is the same for all 
-those SoCs).
-
-regards
-Alex
-
-
-> Something is here not matching - this change, this DTSI, top level
-> bindings or all of your SoC device/blocks bindings.
 > 
+> > >         if (parent)
+> > >                 dev->parent = parent;
+> > >         else
+> > > diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+> > > index 7673501ebe37..713ee6842e3f 100644
+> > > --- a/rust/kernel/faux.rs
+> > > +++ b/rust/kernel/faux.rs
+> > > @@ -28,6 +28,7 @@ pub fn new(name: &CStr, parent: Option<&device::Device>) -> Result<Self> {
+> > >          // SAFETY:
+> > >          // - `name` is copied by this function into its own storage
+> > >          // - `faux_ops` is safe to leave NULL according to the C API
+> > > +        // - `faux_device_create` ensures that `parent` stays alive until `faux_device_destroy`.
+> > 
+> > Not sure that's a safety requirement for faux_device_create().
 > 
+> It's by default what the driver model does for you.
 > 
-> Best regards,
-> Krzysztof
+> > The typical convention is that a caller must hold a reference to the object
+> > behind the pointer when passing it to another function. If the callee decides
+> > to store the pointer elsewhere, it's on the callee to take an additional
+> > reference.
+> 
+> Exactly, the driver core handles this.
+
+Agreed.
+
+> 
+> > I think if we want to add something to the safety comment, it should be somthing
+> > along the line of "the type of `parent` implies that for the duration of this
+> > call `parent` is a valid device with a non-zero reference count".
+> 
+> I don't understand the need for any safety comment about the parent
+> here.  Again, as long as it is valid when the call is made, that is all
+> that is needed.
+
+Right, and we could mention that in the safety comment that something of the
+type `&device::Device` is indeed valid by definition and hence fullfills the
+requirement of faux_device_create() to get a valid pointer (or NULL).
