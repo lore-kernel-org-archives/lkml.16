@@ -1,259 +1,233 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ADD194AF9
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582393; cv=none; b=ewX0BdRzXHtvb2Hf7M4hYjt1zpZjqhMqidJ6FPSM4Ui86v//f8zr2JP1k/YipfU0+TqM6r+3R73piGhcl6zOtxFeFLpExQ3dynBQ78u44Lccn9zs6Vj+GmV2Q6IJxwdDA/yQROm5CdhfM+LaQW4nhr6w+ID158X7n9CqCRKiDiQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582393; c=relaxed/simple;
-	bh=FMTgYR6+0rj0AeMRBsG4FmBPm5h6QoxPfbvWs3ptwbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CX/aNEXrMzCCqiyiAt2c4oyQ0wAift1iuNqmtQSTSpBRPu7vxegI3uMmRWgRziOehHBnygFLYLW3KZQv5RDE9e0TF5+sDCt6h01K3+2/BmgEMFz/2ObR0PfLwzn/qkw64iairxcc0/y2EA4diGEQ+1DfsGO8mxC4xz2qK0RzZa0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bYlvG+JB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cPsWv/Uf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bYlvG+JB; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cPsWv/Uf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D931223329;
+	Wed, 26 Feb 2025 15:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740582398; cv=fail; b=d0WQEHQWxXQXWKDCk9fX/A0UxCgQdpEeRdu7o5je4QzcAp3peqTsW35ZBywtwxx8ZPNpnwLW8DnbuYIj7MbOP4rtDMZrgh56UkMQOobjlslc8D2bNdoRJx/YKmTFKrvHS+kwrHpGRelGzCKkvk65LQAvHCiRQyrZ2U0qyr89XHU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740582398; c=relaxed/simple;
+	bh=YuACcydKKmZ4l/b4ipHIJNA8LNHVL8WmNziep64oTh0=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=J90PxEnhOnfdNDOvqYTOLMyfnNLgLsKtmMVKXrw8vXhuHiNtSgS+2JAkwxFi7XOC7Y5I2Qo2CVEQ0dYxdfNT0aZH87Lc4a0NC+QyJh01CDksf8gAR8W+H+l8+jGjFKmTvlNqEIF7dPrf1DSp8k1BqmGNiOa0ioD9I0C/cuH/4DU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nn0p8RvN; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bYlvG+JB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cPsWv/Uf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bYlvG+JB";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cPsWv/Uf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 821631F38F;
-	Wed, 26 Feb 2025 15:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740582389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxm8Pr+FqnfY8/g+l47LAw1z03IBsuprmZ2kuOjhmlE=;
-	b=bYlvG+JB/XoJDCzLp6IlQipEqh5LcQ7iVXu6/EwtfZ3EfQ7Yvk5IcUslX7prkSCrnc2/H7
-	DO+AgUDEf1j9VP2fwkW9WIIO15ByrBaS5uBchyKqshXy766W2P5r8/uV/W7wCR6ScVePMa
-	/v+fhWD1urCe+fwcdylOGNbnZ6ubz68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740582389;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxm8Pr+FqnfY8/g+l47LAw1z03IBsuprmZ2kuOjhmlE=;
-	b=cPsWv/UfIzC6/1oQqGDH2PY8IjoHcvtkbeXps2cQmSd8UDKxyBVg62iG3i2R2nWxKvnZsi
-	P2bOGucwMsHzwWBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740582389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxm8Pr+FqnfY8/g+l47LAw1z03IBsuprmZ2kuOjhmlE=;
-	b=bYlvG+JB/XoJDCzLp6IlQipEqh5LcQ7iVXu6/EwtfZ3EfQ7Yvk5IcUslX7prkSCrnc2/H7
-	DO+AgUDEf1j9VP2fwkW9WIIO15ByrBaS5uBchyKqshXy766W2P5r8/uV/W7wCR6ScVePMa
-	/v+fhWD1urCe+fwcdylOGNbnZ6ubz68=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740582389;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxm8Pr+FqnfY8/g+l47LAw1z03IBsuprmZ2kuOjhmlE=;
-	b=cPsWv/UfIzC6/1oQqGDH2PY8IjoHcvtkbeXps2cQmSd8UDKxyBVg62iG3i2R2nWxKvnZsi
-	P2bOGucwMsHzwWBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6D9871377F;
-	Wed, 26 Feb 2025 15:06:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id j4IrGvUtv2dAUgAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 26 Feb 2025 15:06:29 +0000
-Message-ID: <dae2179c-1562-447c-a4fc-d415b4a9ebfc@suse.cz>
-Date: Wed, 26 Feb 2025 16:08:09 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nn0p8RvN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740582396; x=1772118396;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=YuACcydKKmZ4l/b4ipHIJNA8LNHVL8WmNziep64oTh0=;
+  b=nn0p8RvNnRwgzyMuwYKM3SzMl9dYMNlEaZEGHvhmAp+6/VZ/fXeYMjq+
+   jQzNMg8l/xDxkTmi09YSAHo4crE7sZ3JmZr32PBp4/iiEZUV14E38LBeT
+   ltMq9f3ua9kz4D6NFIrtMpGQ2/h9szcRTG0U6rOsRCiwRcIgN+xG2WAue
+   8wKeklVGXpkTpyrVv36G2slcoCWhrgY+qYBo9jOK05i1nzSLyb6KtU2bq
+   U0tJkS6NfIJ9iHdKoXRYkAYGE2yOpX2EAHrnlhPP6rSj5E/AH+p2vQeVO
+   69PGcXP7jKNu28r30kif47ZjhTxFmFRif8OM1h3CAp5qyUJQxBmC27u4S
+   A==;
+X-CSE-ConnectionGUID: EtWt+tSCSVqBRGMRd+XquA==
+X-CSE-MsgGUID: AEEVEd5nQIKJsWe62xecmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52845893"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52845893"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 07:06:35 -0800
+X-CSE-ConnectionGUID: Rv+ZkLG1R7Sc3ih6DNXq0Q==
+X-CSE-MsgGUID: SuyymWZBRMakeIAO6B5Czg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117219817"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Feb 2025 07:06:35 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 26 Feb 2025 07:06:35 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 26 Feb 2025 07:06:35 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 26 Feb 2025 07:06:34 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=eUp4enZDajnEi4nPIcP2mL8pWE2unr5qX/HoOiEJYyKiuYBNxzHPUDGtQyeNg+zUP8cr7U4l16PbDKRBoKoMRYL9ndU4gsGS343DNjs/2VYBhIhSNnA4ac2B6hyV3QeYYLsrg7lNxbz9LV+9C/cswRViEuE/yh1TawlW8iswcUuD7kpQx+2pZe8uO+9qCVtAKB5MO9a/LouftKsJ1FdHAdFgJfkK8FHQmO0VNxtjlntkuG2qbEFRokA0f3jIIV12l1+7qrCZCtbGOVgGRVJ0T3P4736Xtja6v4cisKbzh/EJjX/JW91v5SanAJ3AINjMvAQl0aekHhoWfZOIQ9l5Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yt7Cq4MDofEmSlutBDOHT6V0emxKAnBalK1xrJbhzJs=;
+ b=ueQvUv1NX3+o3gCb4UYKVGwUwQlf3zlImedItZXJH6Akm9FWdwztV6zJapbHho+rzhS8EyA7YrketesEpdo3aTBMElgjxIY1Te7J7mU3uArV0SrLYq38KPttnwBf5o4V8CLm0GpwoezT+I8goJth9PZYfI/vvioy4DAU4T7L3I9TZvwBD6baGRoBvIBX6myb1bOZ+/F6sQdAhow6FWtPYVEMnWxn6WF8WLIOPQ9jd/+iyRq12uJ+/4P6p+WCCvTmletxWoemBLshb/CLG3toydt1lKkvEFBBGk8ss3l1d3jJBW9StRhXxuk3yBVxJjKgTa8/htR5A4RVRo30wVNU4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
+ by CH3PR11MB7894.namprd11.prod.outlook.com (2603:10b6:610:12c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Wed, 26 Feb
+ 2025 15:06:26 +0000
+Received: from MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::15b2:ee05:2ae7:cfd6]) by MN6PR11MB8102.namprd11.prod.outlook.com
+ ([fe80::15b2:ee05:2ae7:cfd6%6]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 15:06:26 +0000
+Message-ID: <31477321-c064-4f3d-b4c9-e858d98d5694@intel.com>
+Date: Wed, 26 Feb 2025 16:06:19 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC net-next v2 1/2] devlink: add whole device devlink instance
+To: Jiri Pirko <jiri@resnulli.us>
+CC: <intel-wired-lan@lists.osuosl.org>, Tony Nguyen
+	<anthony.l.nguyen@intel.com>, Jakub Kicinski <kuba@kernel.org>, Cosmin Ratiu
+	<cratiu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
+	<netdev@vger.kernel.org>, Konrad Knitter <konrad.knitter@intel.com>, "Jacob
+ Keller" <jacob.e.keller@intel.com>, <davem@davemloft.net>, Eric Dumazet
+	<edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
+	<andrew@lunn.ch>, <linux-kernel@vger.kernel.org>, ITP Upstream
+	<nxne.cnse.osdt.itp.upstreaming@intel.com>, Carolina Jubran
+	<cjubran@nvidia.com>
+References: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
+ <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
+ <ybrtz77i3hbxdwau4k55xn5brsnrtyomg6u65eyqm4fh7nsnob@arqyloer2l5z>
+ <87855c66-0ab4-4b40-81fa-b37149c17dca@intel.com>
+ <zzyls3te4he2l5spf4wzfb53imuoemopwl774dzq5t5s22sg7l@37fk7fvgvnrr>
+ <e027f9e5-ff3a-4bc1-8297-9400a4ff62a6@intel.com>
+ <iiemy2zwko4iehuw6cgbipszcxonanjpumxzv4nbdvgvdgi5fx@jz3hkez3lygw>
+From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Content-Language: en-US
+In-Reply-To: <iiemy2zwko4iehuw6cgbipszcxonanjpumxzv4nbdvgvdgi5fx@jz3hkez3lygw>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MR1P264CA0052.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:3e::27) To MN6PR11MB8102.namprd11.prod.outlook.com
+ (2603:10b6:208:46d::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] mm/page_alloc: Clarify terminology in migratetype
- fallback code
-To: Brendan Jackman <jackmanb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>, Michal Hocko
- <mhocko@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Yosry Ahmed <yosry.ahmed@linux.dev>
-References: <20250225-clarify-steal-v3-0-f2550ead0139@google.com>
- <20250225-clarify-steal-v3-1-f2550ead0139@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Content-Language: en-US
-In-Reply-To: <20250225-clarify-steal-v3-1-f2550ead0139@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_DN_SOME(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|CH3PR11MB7894:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c3c8fd4-acb5-4e0c-471b-08dd567723c2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?eGxiODhWc3cwckNJV2NsWVNiMVc3VHpsS1JQU1VQa1FrVkFBVUwyR25MOG1i?=
+ =?utf-8?B?S0gyRDE2WnhjdVMvVXJHcjdSdjRFVUZMQkNhK05DTmoyQ2JRMnIvTVBHcFI5?=
+ =?utf-8?B?UWZSRmpEOWMzUzZnREY3a003UlVLaDlHWndveGhEMWdqN2RIRGxlVXhheXVi?=
+ =?utf-8?B?WDZoeWFmYStJeW9QUkFpallUMWgyc2JVVzJjbE9yeGpoU2Qrd0JwK0FQUVJa?=
+ =?utf-8?B?QW04T3lKVVZtYTdYUko1eTBXWTNSb0k2aXgvNVFBaUUvSldtdXovelIvTzBE?=
+ =?utf-8?B?aTBxMHllamIvT0lIcERzdjhHMFR6TXhnbnRUTisyY1VJVFgybzdhRTZmT0lV?=
+ =?utf-8?B?eUxJcEptWENuZzFuRTdabkI2M0JSYXRQMW1nSC9Ba0lqN1krYVhtV2RFeHNh?=
+ =?utf-8?B?dGhBZWphbS9FSDdQbFlEeVQrYkNQVDIyajNESVJUayt2NGNXV05hMWt1aytl?=
+ =?utf-8?B?bE9zQTBaOUx3OE1RMVJGY0VIV1NmNk44K0psVXVmdXg4Nk15eFB0VXR3ZVZn?=
+ =?utf-8?B?QW56dklrZGxYakw2TXAzZ0p6UGlIT0tHYmVYUnlLRDBUMjFNT3BsMWhLeXpM?=
+ =?utf-8?B?c3UxV0xGOHdwbTFzaHhtRUp1bEhrVWRrbXJmNHRKa05EZFpJWlNidEkxSjVK?=
+ =?utf-8?B?aER4Q0RUKzQ1eGtMQTI0NFIydG1Xd1pqcEhyaGVjSnNFM2poY0hScFNmR3Vi?=
+ =?utf-8?B?VUlWZHdhSEc3OVJZRmU0c0ZnNGxnSnBCVkFtTHBnTEtUdkhtUTFaTFVTVkFD?=
+ =?utf-8?B?Ujh4YmlKcmdCRDhjZ2dTYjcxbEVwbUtqNEZXQ0NMWUxudExZYmRqVUIzdG9n?=
+ =?utf-8?B?c3g1N0Z0U2F6dVFlU1FlMGJjMTBVL1kzSlhHa3pmeFJ1ZlpQYTNSQ3RYcU9S?=
+ =?utf-8?B?VGo5Ni9LNXVnVmNudE9uK1FGeW9UL2NyQmJKYWw4aXJTQXdCNkk3bm4rL0FY?=
+ =?utf-8?B?VXJlL1ZWaktnL2ZjbEtIZG9CUVQyUVFBVDlFNUlsa1ZwRkI1OGplOU1CWnhX?=
+ =?utf-8?B?SkZscFlUTEJqVjJOdEM2aUhydWdTa0FyN1dDOXdGWWtCL0ZrMkkvWUxrbnE4?=
+ =?utf-8?B?REJlMkJLanNGd1RNQmlvSDB3dUFOYWYxWEV2N3NEL1krL0JqakVPNU4yWW9S?=
+ =?utf-8?B?aXJJTmd1aGN5MU5IWk1CL3lESGlJRDFJTEZwUGU5Q3dwNDV1aWVSbXBRVWFQ?=
+ =?utf-8?B?RFI3N2pPS2hqV2hoblVEMjNjV24wOGR0a0cxQVkwK25scTJ3Vld4MUtmbGRj?=
+ =?utf-8?B?UCt2elpKaVYxRzBjcGdFb1dPNE9ITTNCMkp4U1U0aGYrYkxjVDBKUGdKUVl1?=
+ =?utf-8?B?Wkw3cTlFOTlzc2s5WEJNUWpMZ25TcVJOR1l6K09RekhKanJ5cWpyRmNWUjYz?=
+ =?utf-8?B?MVVIenFoV1E4SHlMYUMrVE94ZXJRWmhnQTJ6d3NKNCtKUXB6RE14OVY5SXVh?=
+ =?utf-8?B?TjJyZVM0NW9TU1JzakN5R3ZQbjJsam5tUi9jWkRsZklmMUd0blZSbDI2UWhn?=
+ =?utf-8?B?Z3VXWTNMVjhIUWRKcnZReFVqdzJZMXVpR0pscGtPWVROTWRDRUE5L09mS0Fy?=
+ =?utf-8?B?aXFjNUIxeUxjR3NXTGpGMkMvNjdXSkZFekI1em1JRnRxaXdHb0VNUUxxMmZD?=
+ =?utf-8?B?ZDJSS00wVGs3SjBHMVFoRFBhdkExUWVwbm44VXAzTlYwbzZkamFyMzR4UlhT?=
+ =?utf-8?B?dTNpSFlha1RyK1RRbzRBbm5pQ0ZEcGxzWmtYQXZvZ1dZMzRnbVVSWmQzNUts?=
+ =?utf-8?B?V05jTFZTTlNsOHlBMzU0SlJOZ0dlSnBJaE8rQjlXZEFFZXdiajZZZktCaFlz?=
+ =?utf-8?B?b0JIZWZ1ZVJmeWkydU9Ldk5LcGU1aFA4R2RPUU5uK3p6M0hld1dRYzFQVmxU?=
+ =?utf-8?Q?j3gj2vs748Zkg?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VDlubXBLTUpQVTNPM2FjM3MvdXNSdHhyVFZ1b1VWOXNqV21jOGoxd1dwY2ZS?=
+ =?utf-8?B?TWg3Sm1FckFsY0dhWTlKRytuaHlEZmZ1OUkwck5VZHJSL3I3bDNOc29ObkRw?=
+ =?utf-8?B?QTFpNlk3UnpUOHhuREdhMG54WUp2MW90WXFVSGduZTAzeWZ3TWVrVk9xOGV1?=
+ =?utf-8?B?bkhOOWVtejVITExtNk1EcjV2Y2FUVDQrSm5tSDUwY2VMNFNKOGJhWmltV2ZR?=
+ =?utf-8?B?NVIwbnowUWlydEZDWVZRUTNnVnJGSDJYUHAyQm1OMkNOWWRmRmFKdUlVanA4?=
+ =?utf-8?B?dCt0WEZzRGczVHVGZjZxa2dpZnVXMXdqRDhENXJia2VHV2hVRktKNldPVVpQ?=
+ =?utf-8?B?UE02NEV2QitqK3hBaDhFZWo5MDN5L2w5Y0dZUmpxYVlnZVQzMzNmZVgvaHJK?=
+ =?utf-8?B?Q1RFbHNWdXp6WEZ5NUtXcE4wSkhNRFUwdVoxbmE0TFlvOWpWTmhVcFJ4d0pt?=
+ =?utf-8?B?N2swUk91TXpiV1dtQUFiaUUzTVNBZ0oxeE15VnhhN3liZEFIUVl1U2lYZnFK?=
+ =?utf-8?B?ZDFWTXNrYVBHQ0NVemo3VklHZTZ0SkdXWFV3L09qZHBvYXJ5K2JaS1lZVE8z?=
+ =?utf-8?B?SzZHV0NOM3ZQN0dxUFpNRDNrbFdlN3o1c1R5cml1N2RsRFVhTEZlWVlkcFZq?=
+ =?utf-8?B?M2kzUWVxcWRRMmNYVHNSS2xKelVvMU54NUhZYkQ5RDlEU1ZmODhseFJBTnY3?=
+ =?utf-8?B?T2FFcVoyMTh3RXZ5Y3I2cXBPYmxCZlI3ZnFjZm1QMW9QR3Fxc0U5UjA5VEZD?=
+ =?utf-8?B?a1NBQ1I4UkFGbjdLdW9IY09xVTZuZkxiMGRadll2TWNNTWIzVDZodVV1S2p2?=
+ =?utf-8?B?cXN6NzcrUFU2K0g4UWY3M2xGMnBNcVJXb3c2UzhyL3B4QkR4RWh0Z3ZOQWZV?=
+ =?utf-8?B?ZG5xSE5yeEE2TUFwNUpNL1FNd2x0ZGhQMndaOGRWMWVhak1hU3pPVW9xdk5F?=
+ =?utf-8?B?VlpIN0s1bzg2TDRpeURieWJSazlzV2hmOW1ENi8zR1hXNUQvblFzWFQvM1o2?=
+ =?utf-8?B?Zy83N1EvcGp4ek9LM0VrR0ZyMHRRRUR4VTdKZURUL3hwb2F2UDEvOXJaUVlW?=
+ =?utf-8?B?U1M2Wm9XRWF3OEdUZHBmWE5QZldLYlg0MFEwWW52eC9xQmE5SjUyczh6SVUx?=
+ =?utf-8?B?M1lMcWY5MWY2aGRnZHBLYmc3NTN3WXpFdkFxMXo5UVVKNEd0TU5pTGdNL050?=
+ =?utf-8?B?Ym5tWFRhOWZLUTU3N0hPRGVBbTg0bkMrQVEwRUljQndIMXZ3ZmZCQlZZV3RO?=
+ =?utf-8?B?VlV6dTd0NFh0aGZHNG5xUnQ4WmNINjVlZHdnQnFIUG1mMHY2UXdFUmMzMGNE?=
+ =?utf-8?B?VjZ1UWtmNy9PVTMwTTJ5eVVpNGh4RkFDdHAvMXFpdituM0p5eXp3bGNpU0Ev?=
+ =?utf-8?B?Ti9vMFlsUGFQN29NVDlDTGNBTitKL1J1UU4rM1lhV2xmejM1TGN3b2phNjFC?=
+ =?utf-8?B?QUIxN0NWdjE4YzdXWVpuZHpjdXFtNEtEMkxMWERReEdxNGZxUDNEaGQzVEhO?=
+ =?utf-8?B?cExNbXovaTRxbWlTYU9GYjRHZytQTnlmYlNPWHNha2F0OFd2UUl0ZmMzOUN1?=
+ =?utf-8?B?Yyt0WmZIeFR6VjkvNk41ekYrWGtmQ1BYVTZhL1A5VXRYRmVER3JCUVc3aEdR?=
+ =?utf-8?B?NG5ZUlRGSzFxM3c4Um1VVXBqb0kwNGRWZWhDbTI4SEZnVGlRYjU5SU04WSti?=
+ =?utf-8?B?UnhCNzhmMFFmVTdXQi9iclVMd2hPaG05NFdJQk9oaXVyN3BNd2tRNkdpQ0tZ?=
+ =?utf-8?B?REJFK3hOTlRoUHRETDIwOFVkU0NVUnN2cUV2U0ZoTVZoOWxBbUFia3FRTWZk?=
+ =?utf-8?B?MFMvSXVLTUF2TU5qcnVIRG9ieXJvTEVpRnV0a255c0lWTXZlemRsTE9qTEMy?=
+ =?utf-8?B?bTFVSE9GQW9tM0tqWnV4OHBkZlNJcS9WZTUwLy9KMUdNNjZtRXYxeW9aYUlr?=
+ =?utf-8?B?V2RtRjVBVE5PZU5iSUFjMVNXU3FtbFpwWU9BREZVSzNDVHowUmVVN0ovNDRa?=
+ =?utf-8?B?UDFOQ0pETnM0TWZHOXpFYWlvRmRpKy9yaXRTOEJ1aDNlSFhUT1Q3eXNkRytB?=
+ =?utf-8?B?YTE2THZqVk5tU0crUWQ0Nm9zSHZXU0VMN05sTGFhOUtlbVdRWVYxUDlNci9L?=
+ =?utf-8?B?eFVVdWR1cHg1OFozTit0azZxdXhxcEU3eWxKa2grSk1UNnoyd3Jha0c1Z1VD?=
+ =?utf-8?B?THc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c3c8fd4-acb5-4e0c-471b-08dd567723c2
+X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 15:06:26.0091
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xQ6oEDq87b5v44ixQBANfByfpR+UqOxCgru3qJ3mKTU7KFuGKYrWzvGelQxsyjJmAiAqT5+3TE4cIhoo6KCejnj3qoGD3cegsmLd30QkKMA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7894
+X-OriginatorOrg: intel.com
 
-On 2/25/25 4:29 PM, Brendan Jackman wrote:
-> This code is rather confusing because:
+On 2/26/25 15:48, Jiri Pirko wrote:
+> Tue, Feb 25, 2025 at 04:40:49PM +0100, przemyslaw.kitszel@intel.com wrote:
+>> On 2/25/25 15:35, Jiri Pirko wrote:
+>>> Tue, Feb 25, 2025 at 12:30:49PM +0100, przemyslaw.kitszel@intel.com wrote:
 > 
->  1. "Steal" is sometimes used to refer to the general concept of
->     allocating from a from a block of a fallback migratetype
->     (steal_suitable_fallback()) but sometimes it refers specifically to
->     converting a whole block's migratetype (can_steal_fallback()).
+> [...]
 > 
->  2. can_steal_fallback() sounds as though it's answering the question "am
->     I functionally permitted to allocate from that other type" but in
->     fact it is encoding a heuristic preference.
+>>>> output, for all PFs and VFs on given device:
+>>>>
+>>>> pci/0000:af:00:
+>>>>    name rss size 8 unit entry size_min 0 size_max 24 size_gran 1
+>>>>      resources:
+>>>>        name lut_512 size 0 unit entry size_min 0 size_max 16 size_gran 1
+>>>>        name lut_2048 size 8 unit entry size_min 0 size_max 8 size_gran 1
+>>>>
+>>>> What is contributing to the hardness, this is not just one for all ice
+>>>> PFs, but one per device, which we distinguish via pci BDF.
+>>>
+>>> How?
+>>
+>> code is in ice_adapter_index()
 > 
->  3. The same piece of data has different names in different places:
->     can_steal vs whole_block. This reinforces point 2 because it looks
->     like the different names reflect a shift in intent from "am I
->     allowed to steal" to "do I want to steal", but no such shift exists.
+> If you pass 2 pfs of the same device to a VM with random BDF, you get 2
+> ice_adapters, correct?
+
+Right now, yes
+
 > 
-> Fix 1. by avoiding the term "steal" in ambiguous contexts. Start using
-> the term "claim" to refer to the special case of stealing the entire
-> block.
-> 
-> Fix 2. by using "should" instead of "can", and also rename its
-> parameters and add some commentary to make it more explicit what they
-> mean.
-> 
-> Fix 3. by adopting the new "claim" terminology universally for this
-> set of variables.
-> 
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> [...]
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-
-Some nits:
-
-> ---
->  mm/compaction.c |  4 ++--
->  mm/internal.h   |  2 +-
->  mm/page_alloc.c | 72 ++++++++++++++++++++++++++++-----------------------------
->  3 files changed, 39 insertions(+), 39 deletions(-)
-> 
-> diff --git a/mm/compaction.c b/mm/compaction.c
-> index 0992106d4ea751f7f1f8ebf7c75cd433d676cbe0..550ce50218075509ccb5f9485fd84f5d1f3d23a7 100644
-> --- a/mm/compaction.c
-> +++ b/mm/compaction.c
-> @@ -2333,7 +2333,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
->  	ret = COMPACT_NO_SUITABLE_PAGE;
->  	for (order = cc->order; order < NR_PAGE_ORDERS; order++) {
->  		struct free_area *area = &cc->zone->free_area[order];
-> -		bool can_steal;
-> +		bool claim_block;
->  
->  		/* Job done if page is free of the right migratetype */
->  		if (!free_area_empty(area, migratetype))
-> @@ -2350,7 +2350,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
->  		 * other migratetype buddy lists.
->  		 */
->  		if (find_suitable_fallback(area, order, migratetype,
-> -						true, &can_steal) != -1)
-> +						true, &claim_block) != -1)
->  			/*
->  			 * Movable pages are OK in any pageblock. If we are
->  			 * stealing for a non-movable allocation, make sure
-> diff --git a/mm/internal.h b/mm/internal.h
-> index b07550db2bfd1d152fa90f91b3687b0fa1a9f653..aa30282a774ae26349944a75da854ae6a3da2a98 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -863,7 +863,7 @@ static inline void init_cma_pageblock(struct page *page)
->  
->  
->  int find_suitable_fallback(struct free_area *area, unsigned int order,
-> -			int migratetype, bool only_stealable, bool *can_steal);
-> +			int migratetype, bool claim_only, bool *claim_block);
->  
->  static inline bool free_area_empty(struct free_area *area, int migratetype)
->  {
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 5d8e274c8b1d500d263a17ef36fe190f60b88196..5e694046ef92965b34d4831e96d92f02681a8b45 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1942,22 +1942,22 @@ static inline bool boost_watermark(struct zone *zone)
->  
->  /*
->   * When we are falling back to another migratetype during allocation, try to
-> - * steal extra free pages from the same pageblocks to satisfy further
-> - * allocations, instead of polluting multiple pageblocks.
-> + * claim entire blocks to satisfy further allocations, instead of polluting
-> + * multiple pageblocks.
->   *
-> - * If we are stealing a relatively large buddy page, it is likely there will
-> - * be more free pages in the pageblock, so try to steal them all. For
-> - * reclaimable and unmovable allocations, we steal regardless of page size,
-> - * as fragmentation caused by those allocations polluting movable pageblocks
-> - * is worse than movable allocations stealing from unmovable and reclaimable
-> - * pageblocks.
-> + * If we are stealing a relatively large buddy page, it is likely there will be
-> + * more free pages in the pageblock, so try to claim the whole block. For
-> + * reclaimable and unmovable allocations, we claim the whole block regardless of
-
-It's also "try to claim" here as it may still fail due to not enough
-free/compatible pages even for those migratetypes. Maybe the question
-(out of scope of the patch) if they should get a lower threshold than
-half. Before migratetype hygiene, the "we steal regardless" meant that
-we really would steal all free pages even if not claiming the pageblock.
-
-> + * page size, as fragmentation caused by those allocations polluting movable
-> + * pageblocks is worse than movable allocations stealing from unmovable and
-> + * reclaimable pageblocks.
->   */
-> -static bool can_steal_fallback(unsigned int order, int start_mt)
-> +static bool should_claim_block(unsigned int order, int start_mt)
-
-So technically it's should_try_claim_block() if we want to be precise
-(but longer).
-
->  {
->  	/*
->  	 * Leaving this order check is intended, although there is
->  	 * relaxed order check in next check. The reason is that
-> -	 * we can actually steal whole pageblock if this condition met,
-> +	 * we can actually claim the whole pageblock if this condition met,
-
-try claiming
-
->  	 * but, below check doesn't guarantee it and that is just heuristic
->  	 * so could be changed anytime.
->  	 */
-> @@ -1970,7 +1970,7 @@ static bool can_steal_fallback(unsigned int order, int start_mt)
->  	 * reclaimable pages that are closest to the request size.  After a
->  	 * while, memory compaction may occur to form large contiguous pages,
->  	 * and the next movable allocation may not need to steal.  Unmovable and
-> -	 * reclaimable allocations need to actually steal pages.
-> +	 * reclaimable allocations need to actually claim the whole block.
-
-also
-
->  	 */
->  	if (order >= pageblock_order / 2 ||
->  		start_mt == MIGRATE_RECLAIMABLE ||
+What I want is to keep two ice_adapters for two actual devices (SDNs)
