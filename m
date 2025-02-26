@@ -1,182 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550ED33EC
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03448192D63;
+	Wed, 26 Feb 2025 14:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740578518; cv=none; b=N0q5C4ivBCCW8gTy5sDzt3d7OzowuQeWlclY9wudqQR+3f854laAsSStPZxGm7APw6ih03QKjlPk5c19dBvzx329CDCjyyEzMqd9mgFbwXNageaPPNnprU4jC7fINQ/FIPFc+JHy4t/MuWf1ed8jEOXQ6jbwifPZ2UpQfmdnYyY=
+	t=1740578532; cv=none; b=Dy41ZWtqhlDiJFl5GPOZEiG1H0yPZVm5JqAlCLCPVX/IzxhmHNXNfNCtOxC1Irt6omw8VNwWNFqncMGlEbwRtUZNQeAK77/ygpEVCWXLroe2Fpf+nGyKvL723Wi5rUAbLd4Y1Xfrj66OTJwbrWvhIudhldqgxsj9PhiVu6f0kYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740578518; c=relaxed/simple;
-	bh=I+OxKfcQydI4tB3i0AQ078Dwxniyn2sXERNVhUtiNeM=;
+	s=arc-20240116; t=1740578532; c=relaxed/simple;
+	bh=fa/1P7ogjNcW9edAeSgAD7fMtt8lrWug2G/rwmhqosI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XfVlmUFw8S4zclQ7CwHGiqyCbtkWsPGnE2h26xRZwDNSys1HLGrWTgH1dWeLS11NSEJ43jtU+/dOsP1XhSMwMTSRVqic45ztuZNyA8V1cR0RoljrqG7KEFymJwmFT0YtWpxtYqkOiavVkJXGBBlGSSwdybWZUi5UWS6caIoc83M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iI0MSZgq; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKJDG2pM9z0K0aP/Oye2+h1yLM+XjLUjwtfTfji+Umy58Y+t3Utb0QD3Q9TMNkcp++j2IHLmvc/UwwGq4sR1m70rOxyr0yozE3xGV/GMJrhpHuHnFJ7cnMX8fE1z0E3YxqQO30dCLTx5iSVWrLC9MYpvKg78mFVy8/QL2bp9KJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=eDzRA9aG; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iI0MSZgq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740578515;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lK0BGEEjl9jc4bHg/9SvhRzPaXYS4Q461+bnc0pkYPQ=;
-	b=iI0MSZgqE7YMdo5NFD+SR3erZVDr6rAqoskPg29hZYABBNyUdC+ahwM638GN3UomthPbZi
-	gqiSMuSAUOp9ij0ibEpahg74YyaQsvQ9z5dnz25a8oaXzYgT3FpmzNkOB7pBu0tciNHz2J
-	k6Suwa14PMKTpSSxF5SV2UKC5VIRodQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-M_KJ3lygO1yUYl7bilbk3A-1; Wed,
- 26 Feb 2025 09:01:51 -0500
-X-MC-Unique: M_KJ3lygO1yUYl7bilbk3A-1
-X-Mimecast-MFC-AGG-ID: M_KJ3lygO1yUYl7bilbk3A_1740578510
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 567411800874;
-	Wed, 26 Feb 2025 14:01:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B52E01800357;
-	Wed, 26 Feb 2025 14:01:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Feb 2025 15:01:20 +0100 (CET)
-Date: Wed, 26 Feb 2025 15:01:15 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] task_work: Consume only item at a time while invoking
- the callbacks.
-Message-ID: <20250226140114.GE8995@redhat.com>
-References: <20250221170530.L3yMvO0i@linutronix.de>
- <20250223224014.GC23282@redhat.com>
- <Z73Tj3SAzNjaHwV3@localhost.localdomain>
- <20250225163549.GB29585@redhat.com>
- <Z75CKDw6uJZmNKYt@pavilion.home>
- <20250226131315.GD8995@redhat.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eDzRA9aG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=y5HzTLv7sfh35EQ2e6vDNCEEGGk0nP1LY8agEPskJ2I=; b=eDzRA9aG3dT4rI9lZkaMzOrjmZ
+	rv+C9d15o3IJ3+YtPHUnTHtWlK8hAESaVfGfspCo975JDCmV933K8L7yqpkpuIQGH2gWjQG9ewtPV
+	YwtyJzU3OShw94RtyU2yApCNZ8C/kCh0AcduQYQP0CNK74cLRzN1uW2ebUwfOTChvcA102kfx7AkV
+	zH64ql/uIcsoXQDW5Xs9n1hDWlUmHrnGSivSXOOMIsFQ8wDIcooZvfUgY3MlVMeq2m/XgchSRV8a1
+	u2N5xutn/cXHlqVmuQkojsEy8VVnPTrkuSy7U8uE3eSRGSZi3c3GvwSts6+EDiRi/DIdtdbQmc87h
+	4//QnB4A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:58138)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1tnHz6-0004Pb-13;
+	Wed, 26 Feb 2025 14:02:00 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1tnHz3-00078s-0d;
+	Wed, 26 Feb 2025 14:01:57 +0000
+Date: Wed, 26 Feb 2025 14:01:57 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v2 09/13] net: phy: phylink: Use phy_caps_lookup
+ for fixed-link configuration
+Message-ID: <Z78e1dmEuQzMER5L@shell.armlinux.org.uk>
+References: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
+ <20250226100929.1646454-10-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250226131315.GD8995@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+In-Reply-To: <20250226100929.1646454-10-maxime.chevallier@bootlin.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 02/26, Oleg Nesterov wrote:
->
+Please use a subject line of "net: phylink: " for phylink patches, not
+"net: phy: " which is for phylib.
 
-Hmm. empty email? Let me resend.
+On Wed, Feb 26, 2025 at 11:09:24AM +0100, Maxime Chevallier wrote:
+> When phylink creates a fixed-link configuration, it finds a matching
+> linkmode to set as the advertised, lp_advertising and supported modes
+> based on the speed and duplex of the fixed link.
+> 
+> Use the newly introduced phy_caps_lookup to get these modes instead of
+> phy_lookup_settings(). This has the side effect that the matched
+> settings and configured linkmodes may now contain several linkmodes (the
+> intersection of supported linkmodes from the phylink settings and the
+> linkmodes that match speed/duplex) instead of the one from
+> phy_lookup_settings().
+> 
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+> V1 -> V2: - fixed pl->link_config.lp_advertising setting
+> 
+>  drivers/net/phy/phylink.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index 6c67d5c9b787..63fbf3d8708a 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -805,9 +805,10 @@ static int phylink_validate(struct phylink *pl, unsigned long *supported,
+>  static int phylink_parse_fixedlink(struct phylink *pl,
+>  				   const struct fwnode_handle *fwnode)
+>  {
+> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(match) = { 0, };
+>  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+> +	const struct link_capabilities *c;
+>  	struct fwnode_handle *fixed_node;
+> -	const struct phy_setting *s;
+>  	struct gpio_desc *desc;
+>  	u32 speed;
+>  	int ret;
+> @@ -879,8 +880,10 @@ static int phylink_parse_fixedlink(struct phylink *pl,
+>  	linkmode_copy(pl->link_config.advertising, pl->supported);
+>  	phylink_validate(pl, pl->supported, &pl->link_config);
+>  
+> -	s = phy_lookup_setting(pl->link_config.speed, pl->link_config.duplex,
+> -			       pl->supported, true);
+> +	c = phy_caps_lookup(pl->link_config.speed, pl->link_config.duplex,
+> +			    pl->supported, true);
+> +	if (c)
+> +		linkmode_and(match, pl->supported, c->linkmodes);
 
-On 02/25, Frederic Weisbecker wrote:
->
-> Le Tue, Feb 25, 2025 at 05:35:50PM +0100, Oleg Nesterov a écrit :
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -5304,12 +5304,12 @@ static void perf_pending_task_sync(struct perf_event *event)
-> >  		return;
-> >  	}
-> >
-> > -	/*
-> > -	 * All accesses related to the event are within the same RCU section in
-> > -	 * perf_pending_task(). The RCU grace period before the event is freed
-> > -	 * will make sure all those accesses are complete by then.
-> > -	 */
-> > -	rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_UNINTERRUPTIBLE);
-> > +	spin_lock(XXX_LOCK);
-> > +	if (event->pending_work) {
-> > +		local_dec(&event->ctx->nr_no_switch_fast);
-> > +		event->pending_work = -1;
-> > +	}
-> > +	spin_unlock(XXX_LOCK);
-> >  }
-> >
-> >  static void _free_event(struct perf_event *event)
-> > @@ -5369,7 +5369,15 @@ static void _free_event(struct perf_event *event)
-> >  	exclusive_event_destroy(event);
-> >  	module_put(event->pmu->module);
-> >
-> > -	call_rcu(&event->rcu_head, free_event_rcu);
-> > +	bool free = true;
-> > +	spin_lock(XXX_LOCK)
-> > +	if (event->pending_work == -1) {
-> > +		event->pending_work = -2;
-> > +		free = false;
-> > +	}
-> > +	spin_unlock(XXX_LOCK);
-> > +	if (free)
-> > +		call_rcu(&event->rcu_head, free_event_rcu);
-> >  }
-> >
-> >  /*
-> > @@ -6981,7 +6989,14 @@ static void perf_pending_task(struct callback_head *head)
-> >  {
-> >  	struct perf_event *event = container_of(head, struct perf_event, pending_task);
-> >  	int rctx;
-> > +	bool free = false;
-> >
-> > +	spin_lock(XXX_LOCK);
-> > +	if ((int)event->pending_work < 0) {
-> > +		free = event->pending_work == -2u;
-> > +		event->pending_work = 0;
-> > +		goto unlock;
-> > +	}
-> >  	/*
-> >  	 * All accesses to the event must belong to the same implicit RCU read-side
-> >  	 * critical section as the ->pending_work reset. See comment in
-> > @@ -7004,6 +7019,12 @@ static void perf_pending_task(struct callback_head *head)
-> >
-> >  	if (rctx >= 0)
-> >  		perf_swevent_put_recursion_context(rctx);
-> > +
-> > +unlock:
-> > +	spin_unlock(XXX_LOCK);
-> > +
-> > +	if (free)
-> > +		call_rcu(&event->rcu_head, free_event_rcu);
-> >  }
-> >
-> >  #ifdef CONFIG_GUEST_PERF_EVENTS
-> >
->
-> Heh, I suggested something similar also:
-> https://lore.kernel.org/lkml/ZyJUzhzHGDu5CLdi@localhost.localdomain/
+What's this for? Surely phy_caps_lookup() should not return a link mode
+that wasn't in phy_caps_lookup()'s 3rd argument.
 
-;)
+Otherwise...
 
-I can't comment your patch because I don't understand this code enough.
+>  	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mask);
+>  	linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, mask);
+> @@ -889,9 +892,10 @@ static int phylink_parse_fixedlink(struct phylink *pl,
+>  
+>  	phylink_set(pl->supported, MII);
+>  
+> -	if (s) {
+> -		__set_bit(s->bit, pl->supported);
+> -		__set_bit(s->bit, pl->link_config.lp_advertising);
+> +	if (c) {
+> +		linkmode_or(pl->supported, pl->supported, match);
+> +		linkmode_or(pl->link_config.lp_advertising,
+> +			    pl->link_config.lp_advertising, match);
+>  	} else {
+>  		phylink_warn(pl, "fixed link %s duplex %dMbps not recognised\n",
+>  			     pl->link_config.duplex == DUPLEX_FULL ? "full" : "half",
+> @@ -1879,21 +1883,21 @@ static int phylink_register_sfp(struct phylink *pl,
+>  int phylink_set_fixed_link(struct phylink *pl,
+>  			   const struct phylink_link_state *state)
+>  {
+> -	const struct phy_setting *s;
+> +	const struct link_capabilities *c;
+>  	unsigned long *adv;
+>  
+>  	if (pl->cfg_link_an_mode != MLO_AN_PHY || !state ||
+>  	    !test_bit(PHYLINK_DISABLE_STOPPED, &pl->phylink_disable_state))
+>  		return -EINVAL;
+>  
+> -	s = phy_lookup_setting(state->speed, state->duplex,
+> -			       pl->supported, true);
+> -	if (!s)
+> +	c = phy_caps_lookup(state->speed, state->duplex,
+> +			    pl->supported, true);
+> +	if (!c)
+>  		return -EINVAL;
+>  
+>  	adv = pl->link_config.advertising;
+>  	linkmode_zero(adv);
+> -	linkmode_set_bit(s->bit, adv);
+> +	linkmode_and(adv, pl->supported, c->linkmodes);
 
-My patch is more simple, it doesn't play with refcount.
+... this is wrong since this is basically doing the same as the above
+parsing.
 
-perf_pending_task_sync() sets ->pending_work = -1, after that
-perf_pending_task() (which can run in parallel on another CPU) will
-only clear ->pending_work and do nothing else.
+I'm not sure why you're generating different code for what is
+essentially the same thing.
 
-Then _free_event() rechecks ->pending_work before return, if it is still
-nonzero then perf_pending_task() is still pending. In this case _free_event()
-sets ->pending_work = -2 to offload call_rcu(free_event_rcu) to the pending
-perf_pending_task().
-
-But it is certainly more ugly, and perhaps the very idea is wrong. So I will
-be happy if we go with your patch.
-
-Either way, IMO we should try to kill this rcuwait_wait_event() logic. See
-another email I sent a minute ago in this thread. Quite possibly I missed
-something, but the very idea to wait for another task doesn't look safe
-to me.
-
-Thanks!
-
-Oleg.
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
