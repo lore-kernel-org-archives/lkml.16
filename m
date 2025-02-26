@@ -1,91 +1,181 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9852222A7FA
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE142A8C1;
+	Wed, 26 Feb 2025 17:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740592618; cv=none; b=i+WAFc+ntRK2DpX0l6tP1O60P4og/sB9L2TA/QhLwoeTY0ng9xW7pyo0qyE3pdXHpvn8LHukpnY0l96A0BkwePwl5WmJJfCC7gDWmLEzRbpPgDVH4RzcFdpfCrTMCBze8y7FKwzfp+zeVDtHzQNCO/cqEHjS7O7d/b08tZgrfVs=
+	t=1740592797; cv=none; b=Ip1Vx9dU1WA+Ai5aIOSPPVyCXKqgQWX4tDqNQpBNuR9ROQw4FqtKArMXyiDOaaErCrkC4wNGlDD34SlgP3zV3dQgIIYPHSquAqzIFuny0Nlma6Jkbapv1piEwRh70kATsZv79P1kpqIZAk2/MIvUTv2uSjsmzPR6z3/lVvmmIhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740592618; c=relaxed/simple;
-	bh=QhD4jDPZc1chgngu+R6RYZfudmSognn5cWoZ1UV82xs=;
+	s=arc-20240116; t=1740592797; c=relaxed/simple;
+	bh=NgL7kzU8DCxs2aqncslIBjrb2AeIRzc4rI9CzlkoJnw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kMo/OMY8xIUUQ0GIk8Yzz8c+aWaXrrjSoOsqkGHvk6bdI6lP8MpmqRpoUpm3qknF0dyTBLLbPJjq9CmPkau20hBpc5RbPhs2oM3iIEbuEVe7fgvokhkyQ7N0uJcC7c/vso1GtMXlqwlEhUC3zvazHUsVSY6Hm7AxrfmGhqgf3pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=U6nW5cz1; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhMuEReKCO3skQuUK5XriM1CQFkBK7WxSmL7gee5rVzI3FpDwRYIE10ZaobqlB9ToZi7yLxvueCpmLdkU332UdxHxVnle6Edfaz+RQ0GPm/jHVFWoOISshnuyW66Cf8+w7SVFG0JRHQBJNU3naQFPvIbu818966X0KF4jOdhvHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=STKhS2iH; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="U6nW5cz1"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 6B03040E0221;
-	Wed, 26 Feb 2025 17:56:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id HZ6nsa4EsGhx; Wed, 26 Feb 2025 17:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740592609; bh=pMkRtsHsna1qfm03zkpbLsqqii47KE6ChVcTR01OeHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U6nW5cz1sWFXJBjUIg9hcBXngFxHbbNZG1HZppjgjzhrHvpOxoUYB7VGG+6O8xjzA
-	 kWBo0/E43h0g/lgPHwTNCFncI5SUH+VybOvN8ufFnZ3s1u+QSz2wSi0VqV2gnFqB+a
-	 vhemqNSdwOiUMyUHxeVP7F380LhR+oWp/ynkmeHg/zuxfWUkHrG+oxnpuvinTY1k+h
-	 5KJqudz3YoqJuSghvPhJH2NWbc39PQl6VwdS5XhQVxR3DR9dsnERG3eZk7KmazcNzr
-	 vraatYfpH8OgkgWGQwpmfzHFUYy/ys+5Z8s2GjrfRmciF/gL4XtQbbS7K4yuPDupYv
-	 hKwED5egC2ruGq+32LlIt4bQLOiADfIYtyYlyVn0NJisST8Ln0v4CbZC+UTq2dcz8H
-	 j5UITSWHHUEW6AP5X7is6KRynMj86BDRkvOZ0Zk6iAjMGpRT8kKYA7uBD7skBKr1PE
-	 6ZUUmoT+WXcn68AYx49y+LP/nfXx3vb46ZxpliDt2Ui7bQEs8lf3IkmLyd79XQTW/M
-	 /CVemy2CyCbIhN2cRoGHvjiTnHowGrDTgz6aMpO08nqOFs4AWQ4UzSQUARmdaCicn+
-	 rCho56GoJbskDfj1Hhy4lnC5afR6SFIrYMqBCTfdLDXcYuockGfgCfzapfiKaUGtDM
-	 F3xFkHhCkEvKVUryl/6P+r6w=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0F4240E0202;
-	Wed, 26 Feb 2025 17:56:43 +0000 (UTC)
-Date: Wed, 26 Feb 2025 18:56:42 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com
-Subject: Re: [PATCH 4/6] x86/microcode/intel_staging: Implement staging logic
-Message-ID: <20250226175642.GOZ79V2jWQTH5rbuXo@fat_crate.local>
-References: <20241001161042.465584-1-chang.seok.bae@intel.com>
- <20241211014213.3671-1-chang.seok.bae@intel.com>
- <20241211014213.3671-5-chang.seok.bae@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STKhS2iH"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-220e83d65e5so623085ad.1;
+        Wed, 26 Feb 2025 09:59:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740592795; x=1741197595; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aLZRzBzitap92yZk251lvU9DytAtAlhsYa/CQwhvV8Q=;
+        b=STKhS2iHxgaS1szjmMC1mTeWJNsONfdDL581017gu22tcyyt6/pp98x+LxU5sC+Sti
+         ApQcwWfvuSGIJXAELy8JSaLK+rGLk9IlIJB9LWzC4QMPxQX63mEmxVZ57C1ADkgp5rJV
+         t7miUx8BoPH+OqJ0G/lnoXsfLE962k5o2ia0mIZdqGsQQ8cICnvMFJXr5y9hQ0kEiQNv
+         RwrQ0PgZlBPiVD7ZIpWCehCGp08qDGmqmjtJwENzTryrRBlkp1PDAEdeCJ9eBVEKFqqM
+         JwROLBvRJ4oTDfj0rVD4E3dFf+fcpBvoMnmoudRSaB5bPTwOJZUtK4dO0By5l5DIe0+A
+         Pmlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740592795; x=1741197595;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aLZRzBzitap92yZk251lvU9DytAtAlhsYa/CQwhvV8Q=;
+        b=exEe3HS7wDS2+mCAGN3cC8xcapyR8OYeyd8dsGoMet96ohBS9gBCQmpHz1hGZKTaIq
+         saIx4kpevpUHolDoRvnM4CHjeNNZXTJKBwJ4OtQ11Bo3/yQp2NLXCM8Lswa5y3EYx/eo
+         p+alN9x7wy1hWmoRX2NI6m4YmG3iVU04mN9RJXhCAExCbC37HkV7Z1F9rKpswwLha/hL
+         gKfwnhCarTQ0UvItS3Th9KGgWpAeG3OqPCBlAGky0gC3EMO/PhuQwr/JJjZgnIouOeJ9
+         fiS1TzhPZZ1zm+cy63ZFIOQfVWRu2uTxnlPvCKj4cfKD0Hsii0J2VC+5bsEhB5ktbUho
+         n4EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULRgjwXSuT2OYBCtx1z6f7dCT6UrjMKx/mSe4c604u10y3Od3tWfkBUoKLt0sd/sEySSLSDvtWfmN6ZrK+@vger.kernel.org, AJvYcCUYkpZJLUpFFiRxT+rj7LmpyE6LyXGenlANFZbRUx4RcYbsgvymibpSQulpwNYQsY/NvrY=@vger.kernel.org, AJvYcCUm3wcStNywyUZJ/3etPZwh0UwnPAbULmh3/Qk0IYMGowykySe6Z5hbKE9YGtE9AWj4eNC40aSvMvRqpA6ZoM0=@vger.kernel.org, AJvYcCUmKDn27OzRO56WcVx6ulKUOZ7iJKbCq1VhRIbxxaHZMm8RRgUXOeUcjF79XubT30Z6RLUrq6l1RYH+B9OE@vger.kernel.org, AJvYcCVjetR3QUCIUBQUkDIy6UNITur4t37hqXa7Pg/yxzVoWosWeFlIWBDXiM2KZT2xOPwdJMq63njP@vger.kernel.org, AJvYcCWKPuOq1tVS4KJUzR1bti82mmJigDRoRQgJB4RJ1/Hn8zFVSx0GkM64PlE/6ybmDlmDwYR66uXh5OGaUxs=@vger.kernel.org, AJvYcCXsG0iIQtQGdfB2KLZCXLgr0Nnff/a3iTew7JQZjpVsPIEbOn/pShV2BPMpwnSG5mOvGDD/Y8Sa0aRDXkc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf2nWMXe36z8Arjt5pAHCA96iuAbgEi4kls9wIECMYKxAxNLPs
+	lloDQKWgH7Qn9oEXOZ5gpjhS1v2amw2+iTTDeWB1TgWG3YPMm+xU
+X-Gm-Gg: ASbGnctqVgNRmO//Jb768n8lrIpykAnJPjIjWn8GdWk9oLqAZA9rMkCMayKV0tuluTe
+	3k3i0RuhhHIDAGVQNy5ZbnZH1UqktlT3PsvsvdRzVma5fd1yIJUObwfRLvN+at5fp0y/HzL25ja
+	7cdXsr8ZmW3/JB/h7qCJcsdX3VIB8tvISEo11S4vtZxkd+EsvQHRvtfTAyD6koKJw2Wp3A6sCmg
+	O4E8bOGoFjSGCHDcD98RuHlh9LebUXIrGkL/wTW6jvaupjEo/yxWwT2/3dHQcFeOTy0vAPk6ZLs
+	5m1K49BszDaDvwCSmYva19f/J7w5ZdkmzvjITSEikY6pKiSoBOEIkg==
+X-Google-Smtp-Source: AGHT+IFPX6/YemPi/DqumfrbMAfmVM+yJTxaN3xhdxU4AjgnAZPzxKGRLUd3gIiPdvk59fs7FScnAQ==
+X-Received: by 2002:a05:6a21:600c:b0:1ee:c74c:2436 with SMTP id adf61e73a8af0-1f10ae2ec90mr8029040637.34.1740592795469;
+        Wed, 26 Feb 2025 09:59:55 -0800 (PST)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aedaab2e8fbsm3541850a12.64.2025.02.26.09.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 09:59:54 -0800 (PST)
+Date: Thu, 27 Feb 2025 01:59:44 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Yury Norov <yury.norov@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org,
+	rfoss@kernel.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, dmitry.torokhov@gmail.com, mchehab@kernel.org,
+	awalls@md.metrocast.net, hverkuil@xs4all.nl,
+	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	louis.peens@corigine.com, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
+	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
+	akpm@linux-foundation.org, hpa@zytor.com, alistair@popple.id.au,
+	linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
+	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
+	oss-drivers@corigine.com, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
+	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
+	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
+	Yu-Chun Lin <eleanor15x@gmail.com>
+Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
+Message-ID: <Z79WkNp6p06fV/f9@visitorckw-System-Product-Name>
+References: <20250223164217.2139331-1-visitorckw@gmail.com>
+ <20250223164217.2139331-3-visitorckw@gmail.com>
+ <Z7zIBwH4aUA7G9MY@thinkpad>
+ <Z73FxIv353lbXO3A@visitorckw-System-Product-Name>
+ <b5236ae4-7ebe-4a88-bbc9-3b9b3374de53@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241211014213.3671-5-chang.seok.bae@intel.com>
+In-Reply-To: <b5236ae4-7ebe-4a88-bbc9-3b9b3374de53@kernel.org>
 
-On Tue, Dec 10, 2024 at 05:42:10PM -0800, Chang S. Bae wrote:
-> diff --git a/arch/x86/kernel/cpu/microcode/Makefile b/arch/x86/kernel/cpu/microcode/Makefile
-> index 193d98b33a0a..a9f79aaffcb0 100644
-> --- a/arch/x86/kernel/cpu/microcode/Makefile
-> +++ b/arch/x86/kernel/cpu/microcode/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  microcode-y				:= core.o
->  obj-$(CONFIG_MICROCODE)			+= microcode.o
-> -microcode-$(CONFIG_CPU_SUP_INTEL)	+= intel.o
-> +microcode-$(CONFIG_CPU_SUP_INTEL)	+= intel.o intel_staging.o
-						   ^^^^^^^^^^^^^^^
+Hi Jiri,
 
-No need for that guy - just stick everything in intel.c
+On Wed, Feb 26, 2025 at 08:14:14AM +0100, Jiri Slaby wrote:
+> On 25. 02. 25, 14:29, Kuan-Wei Chiu wrote:
+> > > +#define parity(val)					\
+> > > +({							\
+> > > +	u64 __v = (val);				\
+> > > +	int __ret;					\
+> > > +	switch (BITS_PER_TYPE(val)) {			\
+> > > +	case 64:					\
+> > > +		__v ^= __v >> 32;			\
+> > > +		fallthrough;				\
+> > > +	case 32:					\
+> > > +		__v ^= __v >> 16;			\
+> > > +		fallthrough;				\
+> > > +	case 16:					\
+> > > +		__v ^= __v >> 8;			\
+> > > +		fallthrough;				\
+> > > +	case 8:						\
+> > > +		__v ^= __v >> 4;			\
+> > > +		__ret =  (0x6996 >> (__v & 0xf)) & 1;	\
+> > > +		break;					\
+> > > +	default:					\
+> > > +		BUILD_BUG();				\
+> > > +	}						\
+> > > +	__ret;						\
+> > > +})
+> > > +
+> > > +#define parity8(val)	parity((u8)(val))
+> > > +#define parity32(val)	parity((u32)(val))
+> > > +#define parity64(val)	parity((u64)(val))
+> > What do you think about using these inline functions instead of macros?
+> > Except for parity8(), each function is a single line and follows the
+> > same logic. I find inline functions more readable, and coding-style.rst
+> > also recommends them over macros.
+> 
+> Not in cases where macros are inevitable. I mean, do we need parityXX() for
+> XX in (8, 16, 32, 64) at all? Isn't the parity() above enough for everybody?
+> And if not, you can have all those parityXX() as inlines as you suggest, but
+> also provide a macro such as the above to call (optimized) parityXX() as per
+> datatype len.
+> 
+I agree that we can add a macro to call parity8/16/32/64 based on the
+data type size. However, I think we should still keep parity8/16/32/64.
+As Peter and David discussed, the x86-specific implementations of
+parity8() and parity16() might use different instructions instead of
+just XORing and calling another function, as in the generic version.
 
-> +enum ucode_state do_stage(u64 pa, void *ucode_ptr, unsigned int totalsize)
+My current idea is to follow David's suggestion and use
+__builtin_parity when there is no architecture-specific implementation.
+In lib/, we can provide a generic weak function implementation of
+__parity[sdt]i2.
 
-static
+Any comments or suggestions are welcome!
 
--- 
-Regards/Gruss,
-    Boris.
+Regards,
+Kuan-Wei
 
-https://people.kernel.org/tglx/notes-about-netiquette
+static inline parity32(u32 val)
+{
+    return __builtin_const_p(val) ? _parity_const(val) : _parity32(val);
+}
+
+#ifndef _parity32
+static inline _parity32(u32 val)
+{
+    return __builtin_parity(val);
+}
+#endif
+
+int __weak __paritysi2(u32 val);
+int __weak __paritysi2(u32 val)
+{
+    val ^= val >> 16;
+    val ^= val >> 8;
+    val ^= val >> 4;
+    return (0x6996 >> (val & 0xf)) & 1;
+}
+EXPORT_SYMBOL(__paritysi2);
