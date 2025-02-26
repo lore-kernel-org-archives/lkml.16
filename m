@@ -1,118 +1,107 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692F2586CD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D132755E5;
+	Wed, 26 Feb 2025 21:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740604496; cv=none; b=VB2ILYUgsei93Dwm5qt5iTqDRh5IDEeF9HoiqawwpQpemiObu5Xkt7Fx7pnVK2YdSjiJDYsMLRWvn+IAVbMShFDBeZZZ1wEIGvdNi6Fy0hubxvzZJ5MUgYxxZj8JItUgQ/IQ00TtCSmmJ6pquXgZXpRcLHI/dl+btefG3LarJpw=
+	t=1740604590; cv=none; b=Qiqv+IZ7ufz6zXu8f+okEFgLozhqIj+m0NqfoCy3X2V2vYqsCSDpS1n1TLIpzoDoyelYytxR8dm0/gt+IxSmF1/XSXdxHzCwA05ik1Rh2EjYgaWsxDK1+yKocb5PdVLoik3sZSTUVw2FBrkej954Son8jp9DpmA6PIt2jkIVd7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740604496; c=relaxed/simple;
-	bh=E1c29q1k3+hPHBUs86giej64N6HgJOnbesOhyZVRWkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rY+7GNWbgfh0+KyUcbUH/Kdv9IaKDrVQPQeHWkFd59sdc0/WKVZEhRMJQpJktWs/UcVZbmxtf9ysHtRSa+a1NMOv/1/8GzdySJeRCPujoHo0OpK4rPNL5tUcho3WYo6BDxGGPIQQ4LRj9gIvEksj8DMIPrI3YDAVGVz2ulKI+ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cQyepYDK; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740604590; c=relaxed/simple;
+	bh=BlXrr5d0eV/LhE0K1ldO09vh9dZWhnRmDBzqcBJ+MDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9KkXfRCXZRzIGowlUr6fKL/dBA53TkMAjy9p5ezkmPpIRb2kUIxDiBp4LxsikLBC5YaNOsFGHcKzvi/jQEfg7iXikL0weldIjZF0FHJEPaRrp4eF69LfQAziMhhkpECx867W9bqiDqzF03el83jXgpfMaag5sTEwz/Css7lN6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PjJlQYC6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cQyepYDK"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-854a68f5a9cso25003039f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:14:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1740604494; x=1741209294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CfF1Iqu17zlnxPN/qbmmV6kCrFr+eSAtr+JvZ1nEl4Y=;
-        b=cQyepYDKsHin7kdPrt8zsJS3VF3p4J3phpKVPto6Ccc6yOB2z76ERWCynGxQGmwWGW
-         sFk4upSOOteWO6NktxiRCnlxKJlZYoNM0qXCDs/dImEpfTTl8pNIp6nA9GowaaBVLZDB
-         +9lQ9DVXHKuc9+Qf+P1HJWIfQj5z5iS3wpax8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740604494; x=1741209294;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CfF1Iqu17zlnxPN/qbmmV6kCrFr+eSAtr+JvZ1nEl4Y=;
-        b=Mr57O9We3e5dcJ12vMpLypfKB4SsoinGgU4vf3LEyhx5/RNtInhA8f8aEz+YOUuHnD
-         H83NPlS5PBMEhJXWULPTBb0P5uE7IiLyBZkPTJ2L8CJ1epV0T4av/E+f9qchE77o7yBJ
-         SZZFVrCMapHkCbWKERZFsn1GHxHPoV4zOExsomlNh6RnNzVoumz6F+ohNFW1GusUKCpL
-         LpoJn2MM3Vid0YrhvqAZqm/HAMxN/ea3pmCX005Ck91MszQUhqqUAr6tK0nXvl91gHWt
-         FjjviLtivq7Zel4WCDR57HKBGR8ah4gemUGR9wL77NVrius6fySk+2t0FsOkj7JDs1NB
-         m6bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVitM1veD1MkoirTFpLIzP6wW8KMOrSnPqOac52NBgT8bAbVOaX2tmqGXkDCbmpGWh0XEBCoGgDlFLo67M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpUtoJu82+byB3g0gxJZBc+KLZP0hzuhLnRWbUS+JL47JqqhXO
-	7ORNRDopBnjwrO0ACorDFB2lMrW+ZFYAMEhnr0DKO6t/2O6B8czF2nSFdDpjn4E=
-X-Gm-Gg: ASbGncuz3FtB26m1uypU+oRju+FG5Bd90DVRafyznBLIx2CjPhcZNKNS1zbmdQYHeJ6
-	urRmMTlFIeab2pouqN5P7W9tm4ZkdzMHSajBT1KNlliC3A4Fi22glsa3BpPOU5qOp1E22A91gV3
-	e8v+Lj9iG8EJs185nofuAbxugZBw7MCh5Nk/x1Eg+g9MY0kUW46KO3mqcdLy27Ncte8tkzp4Ro9
-	tOJ/yw1gsxf+VlOPpD4cjEmwF1i62HpyHhtIie6mAWONQt4E+wfv5AauZ06D7uHQhNTA8DgjdIz
-	7nxWgr5mA5gSaL2ViNpkQwD1iEIHMag+eOKe
-X-Google-Smtp-Source: AGHT+IG+jg50kIWbCGxmzZInd7J5jXcpjOWX98KOihuv5522c7CQ+evo5WxnYAC8GIaepTI0uvYjmg==
-X-Received: by 2002:a92:c246:0:b0:3d3:d229:f166 with SMTP id e9e14a558f8ab-3d3d229f29emr46992055ab.17.1740604493774;
-        Wed, 26 Feb 2025 13:14:53 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d36166099esm9453395ab.31.2025.02.26.13.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 13:14:53 -0800 (PST)
-Message-ID: <8b903a33-30bb-4229-92e0-f97c3ae0a906@linuxfoundation.org>
-Date: Wed, 26 Feb 2025 14:14:52 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PjJlQYC6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAEAAC4CEE7;
+	Wed, 26 Feb 2025 21:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740604590;
+	bh=BlXrr5d0eV/LhE0K1ldO09vh9dZWhnRmDBzqcBJ+MDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PjJlQYC6X0Ysyd0rN4GOVuwn8p1vTM0P/RTtiVegzerz7GdF/X8yBE1ul9r8dIvme
+	 v4pmKoPifGMG7esQKPU2DDle9YL8BV9r9Ifm31rUYkQEcthrbkqOCXf5+aiL3tIrna
+	 OC+bYnJxK8E4N9G86mVOs7hBOCP1d8R4B9Fz/cX7ZqgjPqfa7dFgjZK6UckAtvaU63
+	 FnTr+OXy399bfR/1hbmvQwKEbitnTw0w8Rd93GjUDUjtC47AwS5/tqB1JrMMuxHNDN
+	 KtIvu/UEGFElCZECX5tsqoBx1znqsJZVRuwd2q+fOYeLHY03n9m/fMXIkq1/2nkVFe
+	 cobiK/OYjJdWw==
+Date: Wed, 26 Feb 2025 21:16:28 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>, linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	syzbot+1a517ccfcbc6a7ab0f82@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: zswap: fix crypto_free_acomp() deadlock in
+ zswap_cpu_comp_dead()
+Message-ID: <20250226211628.GD3949421@google.com>
+References: <20250226185625.2672936-1-yosry.ahmed@linux.dev>
+ <20250226200016.GB3949421@google.com>
+ <Z796VjPjno2PLTut@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests/vDSO: fix GNU hash table entry size for
- s390x
-To: Vasily Gorbik <gor@linux.ibm.com>, Shuah Khan <shuah@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Fangrui Song <i@maskray.me>, Xi Ruoyao <xry111@xry111.site>,
- Heiko Carstens <hca@linux.ibm.com>, Jens Remus <jremus@linux.ibm.com>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250217-selftests-vdso-s390-gnu-hash-v2-1-f6c2532ffe2a@linutronix.de>
- <your-ad-here.call-01739836346-ext-7522@work.hours>
- <your-ad-here.call-01740598679-ext-1013@work.hours>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <your-ad-here.call-01740598679-ext-1013@work.hours>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z796VjPjno2PLTut@google.com>
 
-On 2/26/25 12:37, Vasily Gorbik wrote:
-> On Tue, Feb 18, 2025 at 12:52:31AM +0100, Vasily Gorbik wrote:
->> On Mon, Feb 17, 2025 at 02:04:18PM +0100, Thomas Weißschuh wrote:
->>> Commit 14be4e6f3522 ("selftests: vDSO: fix ELF hash table entry size for s390x")
->>> changed the type of the ELF hash table entries to 64bit on s390x.
->>> However the *GNU* hash tables entries are always 32bit.
->>> The "bucket" pointer is shared between both hash algorithms.
->> --
->>> On s390x the GNU algorithm assigns and dereferences this pointer to a
->>> 64bit value as a pointer to a 32bit value, leading to compiler warnings and
->>> runtime crashes.
->>
->> I would rephrase it as follows:
->>
->> On s390, this caused the GNU hash algorithm to access its 32-bit entries as if they
->> were 64-bit, triggering compiler warnings (assignment between "Elf64_Xword *" and
->> "Elf64_Word *") and runtime crashes.
->>
->> And take it via s390 tree.
->>
->> Shuah, if you don't mind, may I get your Acked-by?
+On Wed, Feb 26, 2025 at 08:32:22PM +0000, Yosry Ahmed wrote:
+> On Wed, Feb 26, 2025 at 08:00:16PM +0000, Eric Biggers wrote:
+> > On Wed, Feb 26, 2025 at 06:56:25PM +0000, Yosry Ahmed wrote:
+> > > Currently, zswap_cpu_comp_dead() calls crypto_free_acomp() while holding
+> > > the per-CPU acomp_ctx mutex. crypto_free_acomp() then holds scomp_lock
+> > > (through crypto_exit_scomp_ops_async()).
+> > > 
+> > > On the other hand, crypto_alloc_acomp_node() holds the scomp_lock
+> > > (through crypto_scomp_init_tfm()), and then allocates memory.
+> > > If the allocation results in reclaim, we may attempt to hold the per-CPU
+> > > acomp_ctx mutex.
+> > 
+> > The bug is in acomp.  crypto_free_acomp() should never have to wait for a memory
+> > allocation.  That is what needs to be fixed.
 > 
-> Hello Shuah,
+> crypto_free_acomp() does not explicitly wait for an allocation, but it
+> waits for scomp_lock (in crypto_exit_scomp_ops_async()), which may be
+> held while allocating memory from crypto_scomp_init_tfm().
 > 
-> friendly ping. Could you please respond with "Acked-by" if you don’t
-> mind me taking this patch via the s390 tree? Or let me know if you plan
-> to take it via your tree.
+> Are you suggesting that crypto_exit_scomp_ops_async() should not be
+> holding scomp_lock?
+
+I think the solution while keeping the bounce buffer in place would be to do
+what the patch
+https://lore.kernel.org/linux-crypto/Z6w7Pz8jBeqhijut@gondor.apana.org.au/ does,
+i.e. make the actual allocation and free happen outside the lock.
+
+> > But really the bounce buffering in acomp (which is what is causing this problem)
+> > should not exist at all.  There is really no practical use case for it; it's
+> > just there because of the Crypto API's insistence on shoehorning everything into
+> > scatterlists for no reason...
 > 
-> Thank you!
+> I am assuming this about scomp_scratch logic, which is what we need to
+> hold the scomp_lock for, resulting in this problem.
 
-Yes. Please take this through s390 tree.
+Yes.
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+> If this is something that can be done right away I am fine with dropping
+> this patch for an alternative fix, although it may be nice to reduce the
+> lock critical section in zswap_cpu_comp_dead() to the bare minimum
+> anyway.
 
-thanks,
--- Shuah
+Well, unfortunately the whole Crypto API philosophy of having a single interface
+for software and for hardware offload doesn't really work.  This is just yet
+another example of that; it's a problem caused by shoehorning software
+compression into an interface designed for hardware offload.  zcomp really
+should just use the compression libs directly (like most users of compression in
+the kernel already do), and have an alternate code path specifically for
+hardware offload (using acomp) for the few people who really want that.
+
+- Eric
