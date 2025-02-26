@@ -1,79 +1,46 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0704190665;
-	Wed, 26 Feb 2025 15:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17EC223329;
+	Wed, 26 Feb 2025 15:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582191; cv=none; b=R8xS+dOUL2q+TZBqIYGQFC9wDwN6trbpNlMO9s9rNnDQNNf1QefHxHFfUe4tLkAyunCpm4c3wR3UqIoyL9WYL4krfs8NKRWu1eUdSNYtXN/l4DY0zP2GToeORuSk89KgJ9vZXgAIAISEC5oCtJWuZBFvNEp146FmojCJYMO9mT0=
+	t=1740582194; cv=none; b=SfNG2uFJBZE7p3WmwObLKSl5qL5XE+mE8QfMCrQlvyZeV+cjmONSXkqdJk15mmaXGOQSOhZ0S2o19Rtt/L/hB4kcSE/mRbceENk1D0l1L+Z7LfcXhjEz6IrzQA+y0eShp7cTm6s4SZVD+jaHbV7A/zABldBEHQEGMTtOAIRyTrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582191; c=relaxed/simple;
-	bh=fMoKzn75GHUYA90ipZu+q71iCAH9WvdZFZJ+RHG3XAs=;
+	s=arc-20240116; t=1740582194; c=relaxed/simple;
+	bh=6Kf9Hy8Gkd2YHeBt3fvfpgCx0kTgH1gopcryskVAEQY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rGLxX3PSaBegnQZoe9z6PcbgvtwhSu0lMJiWFl9QQ0o2J2/Lr4yKkVF61P4ToLVi+tWPMD/Pl2bgfni8DKNXid9owjkD+eR3cqm5HX0HaTHNpy9Dp7U9uEXcr4GoxRrJSqf3/bK00Xopg7JRiCOHbzMuezOMgzCher+eW/0Dg4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YVFfL316; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIaSV5tYJIjIZtXGSSYa+n/pnj2oGK/sAFuSmypOJGjpdkR5VWGEjGdNUIpFYdsWYjfR2SXzRqH7NJk/SLJJx/mb5COTrlFFf60DSZOGgtsbV59Bv0i6hGizoFAGKopK/Z/DHhSL4bs39K1CmUEDJPEIDo86D85I9f7KehfpWgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1MXKeEXZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVFfL316"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220f4dd756eso149137065ad.3;
-        Wed, 26 Feb 2025 07:03:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740582189; x=1741186989; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lgmChzRUPWrxU/Ro0HZWigmuIxGgec64e1FE97Altvs=;
-        b=YVFfL3164/k2C18lmdJE9Wc5Xx3i/DzJaujEnVvW4fN+Q1l72XfnflOSiVo8FAhQkC
-         IrTPU5jlJAzqNLOAC+KqPHbebPA4cbjyzHACSW0TKfEn0mHWJ6mS4NhT4ZzTkgsq5n4M
-         ogS8Rzk9sb8MZVVg1YY/wnA1e8Vo+mrda2nocwPvgbZOmeT1urRh/vAc24VUcS+cMXGz
-         Edvxpac1EK9zOne/Kfg5vVlCkjRX9NBPbXwO2M0rebgE+OmCeOZtV2yp/Yah868bY7CO
-         gghY8rAQzxiuCOMvSS1VfenTEKp/ncD0vOeKXwRVxOulNAWSTjW1J3dYB/I+wwOjD8sj
-         tV/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740582189; x=1741186989;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lgmChzRUPWrxU/Ro0HZWigmuIxGgec64e1FE97Altvs=;
-        b=tB15cbaXnq1D8T/qOzT0PqoavkF6ACRVk4JbC92W4tdJyek6uy5/tyC5YgnQsbdjRu
-         RG9wndbJT5bcsbTtwFUrrzgkm+RN6ObQ1Je3mtVhRSklRWeZQfT30sK2gttGpgA2GK7t
-         G8KyqPLiOZmloSlViWXYzfC/67hIaF0TyIbq09DMplojDpnHcbkB83NwXFvTOEYzP1Tu
-         feVkV7ui27XsRT+5AsdfaYRHCl4PPY7rm4KREcsI8Vd4UZZrnTOOJH6x4p8Ux1MhT1AG
-         kAjA48biK8GdDjGJLt2Q6ln6qzK5bQdXucdN0j6Kr2ELBYyq6g63FRB6IBPiBdMAbfdJ
-         53mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV6uM2g+DY7DYpQvEB5mojjnNNoR9/GFHuNKSrNd/o/jiB8dXT6OpS6JK9jXnPFNYJHZaNaPKcZ+2q+nN8ZQqQ=@vger.kernel.org, AJvYcCVK4uoeTf63Wftk2QkvweZ5YIeZqay+FggWp40S4H9Cjdotsf07mL9OidDCoLDTPcH9IcvhQgCuaGl701M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWvqKD924RAOaTYgerKTetwO/2eMtalyNm+daEbxVldLUnDhuF
-	nMTVc+2KUX8ulJOnO6nqavmkEEJNg12wY8OljZFKZt/+ODT4ZJbd4OE9t/7d
-X-Gm-Gg: ASbGncuRVPNmOyK6rUlE5N44Tyz7NO1fNei2LdnUKu8IXU2lwz1EZvtGFcaWg36+WAY
-	7qbBX40tNC67dqwh/YmiJYyz8clu6DHLITf8ELBKaAxzM0Fd0bXgXP9gfayW2PMAtJQLv2fAZRi
-	6z9l3eBHwRu1adiMHCIZLQEYiEuqwt/Ae0e56y6HIwqGUwbtEySJnl+YfpwKu5VfjgNS2kHCNEI
-	JJLmZm7P5F5j4DR0Oferi0MybcJReW6Vcy8SCnvMhVoo8M5qzVOKiqioLcv2u7SNu/otJWakxxo
-	FrpjdERZ9qTCXdgWd7qLl2zdjCzIRc1s4IkKd24vNHD2OI8X1g==
-X-Google-Smtp-Source: AGHT+IFl++KPanhHASqmMVGgwPLmI6jBBycifC3LPnORcJTe5GZAgJBB2UNwedgMdxS/e6kNWR6Xhw==
-X-Received: by 2002:a17:902:e5c2:b0:215:9470:7e82 with SMTP id d9443c01a7336-22307b455dcmr130723185ad.4.1740582188873;
-        Wed, 26 Feb 2025 07:03:08 -0800 (PST)
-Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a01fe8bsm33339875ad.54.2025.02.26.07.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 07:03:08 -0800 (PST)
-Date: Wed, 26 Feb 2025 10:03:06 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Add entry for Rust bitmap API
-Message-ID: <Z78tKmTa3RVH327d@thinkpad>
-References: <cover.1740475625.git.viresh.kumar@linaro.org>
- <8c6249c6631f47565541d584fbec78cd2fbe60c1.1740475625.git.viresh.kumar@linaro.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1MXKeEXZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB333C4CEE9;
+	Wed, 26 Feb 2025 15:03:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740582193;
+	bh=6Kf9Hy8Gkd2YHeBt3fvfpgCx0kTgH1gopcryskVAEQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1MXKeEXZIkZ9aEjNk3bgNn9SVZnLkd84/woiWvzH62rlyT/+LY5oaiYYbEFnyfBVW
+	 CcWyjzRhYDKGB/AYspsbu5Qkw6Gdulz72lu4LOAZvb2w9d8LDvxvujel72Lg3yz25N
+	 D7nlHEWnt+1o7+i4j7yAOlz+Fc3hS00DMI3hghTM=
+Date: Wed, 26 Feb 2025 16:02:04 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Chuck Lever <chuck.lever@oracle.com>, regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+Message-ID: <2025022630-reseal-habitat-939a@gregkh>
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+ <87jz9d5cdp.wl-tiwai@suse.de>
+ <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+ <87h64g4wr1.wl-tiwai@suse.de>
+ <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+ <2025022657-credit-undrilled-81f1@gregkh>
+ <2025022626-octane-rickety-304a@gregkh>
+ <87cyf44vnc.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,39 +49,104 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8c6249c6631f47565541d584fbec78cd2fbe60c1.1740475625.git.viresh.kumar@linaro.org>
+In-Reply-To: <87cyf44vnc.wl-tiwai@suse.de>
 
-On Tue, Feb 25, 2025 at 03:17:15PM +0530, Viresh Kumar wrote:
-> Update the MAINTAINERS file to include the Rust abstractions for bitmap
-> API.
+On Wed, Feb 26, 2025 at 03:40:07PM +0100, Takashi Iwai wrote:
+> On Wed, 26 Feb 2025 15:35:34 +0100,
+> Greg KH wrote:
+> > 
+> > On Wed, Feb 26, 2025 at 03:26:44PM +0100, Greg KH wrote:
+> > > On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
+> > > > On 2/26/25 9:16 AM, Takashi Iwai wrote:
+> > > > > On Wed, 26 Feb 2025 15:11:04 +0100,
+> > > > > Chuck Lever wrote:
+> > > > >>
+> > > > >> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> > > > >>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> > > > >>> Chuck Lever wrote:
+> > > > >>>>
+> > > > >>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> > > > >>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> > > > >>>>>
+> > > > >>>>> Hi,
+> > > > >>>>>
+> > > > >>>>> we received a bug report showing the regression on 6.13.1 kernel
+> > > > >>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> > > > >>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> > > > >>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> > > > >>>>>
+> > > > >>>>> Quoting from there:
+> > > > >>>>> """
+> > > > >>>>> I use the latest TW on Gnome with a 4K display and 150%
+> > > > >>>>> scaling. Everything has been working fine, but recently both Chrome
+> > > > >>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> > > > >>>>> working with Scaling.
+> > > > >>>>> ....
+> > > > >>>>> I am using VSCode with:
+> > > > >>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> > > > >>>>> """
+> > > > >>>>>
+> > > > >>>>> Surprisingly, the bisection pointed to the backport of the commit
+> > > > >>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> > > > >>>>> to iterate simple_offset directories").
+> > > > >>>>>
+> > > > >>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> > > > >>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> > > > >>>>> release is still affected, too.
+> > > > >>>>>
+> > > > >>>>> For now I have no concrete idea how the patch could break the behavior
+> > > > >>>>> of a graphical application like the above.  Let us know if you need
+> > > > >>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> > > > >>>>> and ask there; or open another bug report at whatever you like.)
+> > > > >>>>>
+> > > > >>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> > > > >>>>>
+> > > > >>>>>
+> > > > >>>>> thanks,
+> > > > >>>>>
+> > > > >>>>> Takashi
+> > > > >>>>>
+> > > > >>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> > > > >>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> > > > >>>>
+> > > > >>>> We received a similar report a few days ago, and are likewise puzzled at
+> > > > >>>> the commit result. Please report this issue to the Chrome development
+> > > > >>>> team and have them come up with a simple reproducer that I can try in my
+> > > > >>>> own lab. I'm sure they can quickly get to the bottom of the application
+> > > > >>>> stack to identify the misbehaving interaction between OS and app.
+> > > > >>>
+> > > > >>> Do you know where to report to?
+> > > > >>
+> > > > >> You'll need to drive this, since you currently have a working
+> > > > >> reproducer.
+> > > > > 
+> > > > > No, I don't have, I'm merely a messenger.
+> > > > 
+> > > > Whoever was the original reporter has the ability to reproduce this and
+> > > > answer any questions the Chrome team might have. Please have them drive
+> > > > this. I'm already two steps removed, so it doesn't make sense for me to
+> > > > report a problem for which I have no standing.
+> > > 
+> > > Ugh, no.  The bug was explictly bisected to the offending commit.  We
+> > > should just revert that commit for now and it can come back in the
+> > > future if the root-cause is found.
+> > > 
+> > > As the revert seems to be simple, and builds here for me, I guess I'll
+> > > have to send it in. {sigh}
+> > > 
+> > > Takashi, thanks for the report and the bisection, much appreciated.
+> > 
+> > Now sent:
+> > 	https://lore.kernel.org/r/2025022644-blinked-broadness-c810@gregkh
 > 
-> Yury has indicated that he does not wish to maintain the Rust code but
-> would like to be listed as a reviewer.
+> Thanks Greg!
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Let's continue hunting the cause before 6.14 release, meanwhile.
 
-Reviewed-by: Yury Norov <yury.norov@gmail.com>
+I'd prefer that the revert land in Linus's tree first and I can take the
+revert from there for the stable releases, otherwise it's going to be a
+mess once 6.14-final is released :(
 
-> ---
->  MAINTAINERS | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ec2428b82103..17e98d757b9b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4034,6 +4034,12 @@ M:	Yury Norov <yury.norov@gmail.com>
->  S:	Maintained
->  F:	rust/helpers/cpumask.c
->  
-> +BITMAP API [RUST]
-> +M:	Viresh Kumar <viresh.kumar@linaro.org> (cpumask)
-> +R:	Yury Norov <yury.norov@gmail.com>
-> +S:	Maintained
-> +F:	rust/kernel/cpumask.rs
-> +
->  BITOPS API
->  M:	Yury Norov <yury.norov@gmail.com>
->  R:	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> -- 
-> 2.31.1.272.g89b43f80a514
+thanks,
+
+greg k-h
