@@ -1,41 +1,41 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B7E23535C
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFCB22D4E2
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740594675; cv=pass; b=CVGC3uTZ+lgUVTOtUmBTuS0Eqh6G0gYVvevbDnquTSKGZKVuG66NYTquKGIchQBksPNM1TgLllsqZdLWJaG7QYSqT8wJ9XQx4/qdWIfZY08FJg1KDeC5PmG+pKwfn/debHyDnM0xanEaBw2logLk+a7w6HxWBM+HEHd2wB81fX4=
+	t=1740594685; cv=pass; b=KdL/9j0ObNfda/W7kfxYDStprmzSm7tmVA877enS2cZJqsqX9G/EPw/za3ZTsiWZomxot9YmeaJmQxoHKShHRFszUAFIr1lKAnpn9GtJnsET5vVcezZAfEckJ76/786iys19Yp1EGlQkwKUP9n6DDtTLwCgKjZs6CR73Kdv9R0M=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740594675; c=relaxed/simple;
-	bh=c+YMGqAnFgguqdQfrzdBQ8QGzGxzkpViK00FUjjRwfE=;
+	s=arc-20240116; t=1740594685; c=relaxed/simple;
+	bh=RjIrj3LifxHD27NQaLEt/qFK5V8hezbJ/nCngSDulE4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z0G27qFAMr/wbuMjbuWA6WtR/U9Ym0JIDTrOHiDHjd/m7pOxnMbF+LXfqiXMNkFOkx+E0FjUi4tp1treu0lwwwqQB3EfwrALBGlMs9kOZu0Igan9hx2948DpQDYZKfVlXlRCw3cPFlPaLDjPpWXHCMpjVxK/w7GRZZpLh9TCPm0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=c3E8mzj3; arc=pass smtp.client-ip=136.143.188.112
+	 MIME-Version; b=kHKww10olC+UvxqQ8Utkafy5fb9lEdouq3UMyAcrOZOjOyo+ePcEvqR1AQrLdNJieq+y7H0/oud23/GzbLM8EsycJW66y1XM/1+Gc2n9qC6W5SqOPzlC0QiwSE0OLVdF1M+ugCXJk3n5t1+emLYyByw/vqB989b3syWWsxLua6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=aCkMFOAD; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="c3E8mzj3"
-ARC-Seal: i=1; a=rsa-sha256; t=1740594662; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="aCkMFOAD"
+ARC-Seal: i=1; a=rsa-sha256; t=1740594670; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=Q2BWvuDK91v5pAYlhgQ3R68ijrVK7tp6x9GZ1Q/tg59cnU8I2ISurwv36gMbJm90cq4/TurUVk42dvCng+W+z9fe8cT2/lQeg60kKwXTBWGUVr3YmKVLVUmCDC23ZH75Mp9ukF+Gm62EzzOrJA9ZVfyixBoXPcUT+yaaxOMbdAc=
+	b=UfqdIUbD87c+2aSgp3POmh2n5CDc8YAs4cWidwB5gI1Xpake3xl8pUJEbOiGE3by7fUsImKXixxylZsm+xZ2uNfHr+6PbgBgWLxjdmZitVkwPoNqUQ0/eYk+Z+ad/bEFda47P1eBHnC2rR0OjaWxI1HeoOkMAAd0PLWqXBXAb/Y=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740594662; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=spHL9DChNsuSuJujNgDcb0Loo1Px9GacjVAT9YjIB/U=; 
-	b=jrZ8RTHjNVau5iF/di6DVQjO1X4n6s0HlPjZRVKBeXergR8Fio35bmkD2ZbigMlkyGVP4yV3Ze0YyrznGpqjVhWdAVENEu7/Ej23RPvdKCtZVHQxVOMTxbkvWctl7cWn4P65wN2K9DCJDld2b8TT3XjKewhy9PKcyxMD6bnP8BQ=
+	t=1740594670; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hIkp+NnTJPxQcX2Rdgo+vdaGlwKLBcPZ5PRXpnJscic=; 
+	b=CelpxNQM/bvC8RQSCMgl//1krTGtg0WP7yMt6QgsmqpD1RuMfHROE82kFOPnoayqX9cEzqFpcHkvwjNcq1ZdVvJQoTW9VWyAY6yzVQw8K61uwychMrUU0UmxxnF7XnVm6+CXTs7M7+PBfnVFBwF0oLvNxr4W9TsiBSR0AXdluwg=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
 	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740594662;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740594670;
 	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=spHL9DChNsuSuJujNgDcb0Loo1Px9GacjVAT9YjIB/U=;
-	b=c3E8mzj3Ngexvafdh6DfpgeMOnyQxQpzv/c0J4CywtAhcSVEW/n+z/OJAmy/b65I
-	bizeV+2vlerIoY8oPNX7UuxfpQkAMBe9zN3Tack0CZHk4714Kho1lbEhulrw5u8Ehdd
-	NnWumHzFFGfTlKOXW2vlNXwcrgMdPjXzbLmETYVg=
-Received: by mx.zohomail.com with SMTPS id 174059465987479.41071816976432;
-	Wed, 26 Feb 2025 10:30:59 -0800 (PST)
+	bh=hIkp+NnTJPxQcX2Rdgo+vdaGlwKLBcPZ5PRXpnJscic=;
+	b=aCkMFOAD+KcvdKOxRNiKB9myydk1CLwklPIhBNBaKu7p0rF7qqz/MIcWXm9aTVVP
+	3N7uTc1aGY1sQEqAOrM6AIHjDBbtbuSbVezwXpiS3q8CI9s5SaACf5gYjG4lajmlEPh
+	2hfVPwNxSz9fGl1EOicGVDF0Lq7Kr1dFdK1cNxwM=
+Received: by mx.zohomail.com with SMTPS id 1740594668431951.5175651775419;
+	Wed, 26 Feb 2025 10:31:08 -0800 (PST)
 From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 To: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
@@ -48,9 +48,9 @@ Cc: boris.brezillon@collabora.com,
 	airlied@gmail.com,
 	simona@ffwll.ch,
 	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
-Subject: [RFC PATCH 2/4] drm/panfrost: Split LPAE MMU TRANSTAB register values
-Date: Wed, 26 Feb 2025 15:30:41 -0300
-Message-ID: <20250226183043.140773-3-ariel.dalessandro@collabora.com>
+Subject: [RFC PATCH 4/4] drm/panfrost: Set HW_FEATURE_AARCH64_MMU feature flag on Bifrost models
+Date: Wed, 26 Feb 2025 15:30:43 -0300
+Message-ID: <20250226183043.140773-5-ariel.dalessandro@collabora.com>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
 References: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
@@ -63,48 +63,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-The TRANSTAB (Translation table base address) layout is different
-depending on the legacy mode configuration.
-
-Currently, the defined values apply to the legacy mode. Let's rename
-them so we can add the ones for no-legacy mode.
+Mali Bifrost MMU support AArch64 4kB page tables. This feature is in
+panfrost based the HW_FEATURE_AARCH64_MMU feature flag.
 
 Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 ---
- drivers/gpu/drm/panfrost/panfrost_regs.h | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/panfrost/panfrost_features.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_regs.h b/drivers/gpu/drm/panfrost/panfrost_regs.h
-index b5f279a19a08..4e6064d5feaa 100644
---- a/drivers/gpu/drm/panfrost/panfrost_regs.h
-+++ b/drivers/gpu/drm/panfrost/panfrost_regs.h
-@@ -317,14 +317,19 @@
- #define MMU_AS_STRIDE			(1 << MMU_AS_SHIFT)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_features.h b/drivers/gpu/drm/panfrost/panfrost_features.h
+index 7ed0cd3ea2d4..52f9d69f6db9 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_features.h
++++ b/drivers/gpu/drm/panfrost/panfrost_features.h
+@@ -54,6 +54,7 @@ enum panfrost_hw_feature {
+ 	BIT_ULL(HW_FEATURE_THREAD_GROUP_SPLIT) | \
+ 	BIT_ULL(HW_FEATURE_FLUSH_REDUCTION) | \
+ 	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
++	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+ 	BIT_ULL(HW_FEATURE_COHERENCY_REG))
  
- /*
-- * Begin LPAE MMU TRANSTAB register values
-+ * Begin LPAE MMU TRANSTAB register values (legacy mode)
-  */
--#define AS_TRANSTAB_LPAE_ADDR_SPACE_MASK	0xfffffffffffff000
--#define AS_TRANSTAB_LPAE_ADRMODE_IDENTITY	0x2
--#define AS_TRANSTAB_LPAE_ADRMODE_TABLE		0x3
--#define AS_TRANSTAB_LPAE_ADRMODE_MASK		0x3
--#define AS_TRANSTAB_LPAE_READ_INNER		BIT(2)
--#define AS_TRANSTAB_LPAE_SHARE_OUTER		BIT(4)
-+#define AS_TRANSTAB_LEGACY_ADDR_SPACE_MASK	0xfffffffffffff000
-+#define AS_TRANSTAB_LEGACY_ADRMODE_IDENTITY	0x2
-+#define AS_TRANSTAB_LEGACY_ADRMODE_TABLE	0x3
-+#define AS_TRANSTAB_LEGACY_ADRMODE_MASK		0x3
-+#define AS_TRANSTAB_LEGACY_READ_INNER		BIT(2)
-+#define AS_TRANSTAB_LEGACY_SHARE_OUTER		BIT(4)
-+
-+/*
-+ * Begin LPAE MMU TRANSTAB register values (no-legacy mode)
-+ */
-+#define AS_TRANSTAB_LPAE_ADDR_SPACE_MASK	0xfffffffffffffff0
+ #define hw_features_g72 (\
+@@ -64,6 +65,7 @@ enum panfrost_hw_feature {
+ 	BIT_ULL(HW_FEATURE_FLUSH_REDUCTION) | \
+ 	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
+ 	BIT_ULL(HW_FEATURE_PROTECTED_DEBUG_MODE) | \
++	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+ 	BIT_ULL(HW_FEATURE_COHERENCY_REG))
  
- #define AS_STATUS_AS_ACTIVE			0x01
+ #define hw_features_g51 hw_features_g72
+@@ -77,6 +79,7 @@ enum panfrost_hw_feature {
+ 	BIT_ULL(HW_FEATURE_PROTECTED_MODE) | \
+ 	BIT_ULL(HW_FEATURE_PROTECTED_DEBUG_MODE) | \
+ 	BIT_ULL(HW_FEATURE_IDVS_GROUP_SIZE) | \
++	BIT_ULL(HW_FEATURE_AARCH64_MMU) | \
+ 	BIT_ULL(HW_FEATURE_COHERENCY_REG))
  
+ #define hw_features_g76 (\
 -- 
 2.47.2
 
