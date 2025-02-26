@@ -1,209 +1,107 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C739239573
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1920236A70
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740597009; cv=none; b=K8xrKT/ZJhnCzeyMehgufaBlorh+evdj/hf0BXBZ21AAsHalQU9SfXrC0iWb2jiaP/TLzocH9fPF54f8GQEr5IoyC7tl7rGuAu/ncp3OmRO1uAol2nRsF3feC8sHnhi3XpxR7AklbTxirDvZh235aS8hqkTPrWKal3z5Me/UkUE=
+	t=1740597241; cv=none; b=UybwjdTYgLtnNOgMB4IIC6qzYxrLMENis+ddQEj59y4/lWljcDMAnXLVt9eNtQip6GfLYLe2bzmfV7MXHyq2a6wQje6dSAe1BT+5qrjcCrliYKnEvSf4wFbACdmwE8mzmkVdbcjZPYJupcMsxTaNWjPegiGaO9KiM1xwNOkjsAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740597009; c=relaxed/simple;
-	bh=vNIB1Hk+ftHd0PmNoa5/tzFlgptXk+FeOKK8Mczu7A4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rrdGUSP5bXCjst26NecFiVwbgtZUsoL/8QzLReQJ6FJcON7hyFH0VZzVHZvCpeXvxp4awd5usbkKz/r9QG47/tUUAY0oVy3aiOijBLgAYqaowXVtO9b4XUVf1pev4UPdk3+dZL8vRXqLWGMmPOZ6YLwAod9jS6AUUR61Hecyjck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cyQQPcAd; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740597241; c=relaxed/simple;
+	bh=vHzrEzooH4K8CcIGUei7pRVS17MmHjHrMcmzZoer/Ec=;
+	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
+	 References:In-Reply-To; b=cSM7w6rX3KKFs8tEEXqTuA1ogIyFplPrcAtyyXjxUcKaoDTJwh4icq92CpM2KTS1Ka5wV0yXqGlkgBhdenebjovwphA9dn3XERGZZXy0cLLGMS2CkGiiG6vK9hy3EWdcVp16p2JBjMKIKJGrZ8bBJrQdbkYvp6IXOx7CYkl5ge8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=PrgrgjIB; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cyQQPcAd"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso1332435e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:10:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PrgrgjIB"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471f4909650so1293041cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:13:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740597005; x=1741201805; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oQXlwKW3fq22hjGTADQg3o4ICJGGdHwqlJHIeiJps70=;
-        b=cyQQPcAdWSnimFMMlrPjHXdP96RJYtyX/8ffMJ5G0FXRk2+BhXZG8U2b699ROW9ljQ
-         9X5YxrdvnakK9HULN3ChKcVPXC6v2ACXJWaHyDCtCC8D3bb5g6OPVUEsNKJyHWejOd0L
-         Zt3CvyCOs7so/qF8SwpturCV0ZP2MLrqQRKw0LI2gZWn6+Rdv66ctFSbNHnqQrs64vFA
-         f9YL5mePq4fNPEx1bayriEmcaC74SazXpKfE/l+XJUTw+Do5GJSsF7ejAKFgZ5mJm6az
-         9M9kbiJekNJ37iug3ez+m7xVfdWsEhaKEo+xGO/KYXkXh/0GxB7yvFC0WkLI5Adqy4lI
-         5Mjg==
+        d=paul-moore.com; s=google; t=1740597238; x=1741202038; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O/7HubgIS3yguXLFwagiKL0MIanaDsiXeL1ZcDJnpI0=;
+        b=PrgrgjIBDzFyuCW0/BkssmUrWr+ejDo9K2GOMxCGaRhnW6xhcbtTD1JwwVGKLo/83P
+         3dM9rKUsAMq62CVpok1RfQHA2wfcnXMzJ18qMcZcYUdGiwaEKk+ikc6U0hO+hXP5eQ2E
+         NyqwDG/QmtPKzQkkLdTGYwhvbp9CTaW2CN1tiR+JGk13bm+x5+rLq5IqlamFPgOFO8PM
+         HjoHxNDXIv68a/z/4EiqGgLE/s9X5kBDvYWorhxzCCaJ/Ef6jGrbARuL5iiZvdsP0RaR
+         Wk+ZOlH0gvpRUqepXN07eMUzObSySHsdNfhHZlo1wCex2FQyD78d2/r2De4OapeVF9iC
+         RAJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740597005; x=1741201805;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oQXlwKW3fq22hjGTADQg3o4ICJGGdHwqlJHIeiJps70=;
-        b=MtzYUcVd49sns+m0NEsR7DFMZAAmikaGB5cTtlxcIDQAiV3OLLVliaSZ4BvZisaRuW
-         3Omeewu/uNowihQSoPm9gxgmqQpXor/cmPW4wVmbxDClZSfkNkvRU2DWzYJZRO57xse9
-         ADkkh/UL1sXWOx52KSFa4pOz4JLe+8In7UCzY0BXsOIBN/bSpQCzR6pZ+BaLsS0moQc8
-         z0uVgmj5WLEUiV0REwLsOrz3Cq+rZ/SoBcQOO3BExxicCSSTaN92xW5JNIaKY+Hn8oF6
-         nxpqP9o2Z2tLn/J3eHLByq/q0Q5q2zgg/Ca849t2ZmoJ8LlSq+crfiI8zycSOsvNpOHJ
-         DR8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWuTzVUoS7qhJ0323mh3vmC7qiEVO3yxaYbt8tWDbYaWgHc2m5Z058YfaJrcvTIB3q9Z0/k5gBTAd3O4kQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKjfUobJtLu7KlyodCQtAY7GKFYoizvxeSaUY5BkgzLs5NUX3b
-	gbcEHgRIOdYzjAcudNI2py9+qm49hSQNg3ZB4GVWuWiPZ8g4/9aTDlKlTFnkTcN+rW5yQWKGklx
-	K6B0=
-X-Gm-Gg: ASbGnct5d+T1FNRG8wQyulzgry3gB6HWMkITrrMTpxVnCstoPVDEa1GarMIG74wsFM5
-	k3hsO2wwTD2frMSEkahFlQ1Fs3AInzaIsqs5c3tKpbvV8C5Ta4PabxBqOHBL3MVy5ZB0L05KPsP
-	LGxPq6AJhAK/XU3jUoDz/Fi1pt8H3CutZVfvDCdovvlmiHEFzyQb5/enAJL+6wC0koRKWP8Xdu5
-	LHWCJM/jlf/xGL39TdnQ+RjX21wxe5nObfBoBHPJi9jeYSG+KnAMIg3296i4zAqvobW8+G5hSuH
-	LS1uCbB6nYCw1UO4mRU5TZ4lexLNjA==
-X-Google-Smtp-Source: AGHT+IGa0oSIpnReOtNhlKYec3e5C0bkQn4YQGivV5J+eMq+hw7AG5nh0vwPYPQ8XEjaZUwX1ZbW4A==
-X-Received: by 2002:a05:600c:4753:b0:439:9a28:9e8d with SMTP id 5b1f17b1804b1-43ab0f313a0mr77194455e9.12.1740597004640;
-        Wed, 26 Feb 2025 11:10:04 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba549db4sm30545825e9.35.2025.02.26.11.10.03
+        d=1e100.net; s=20230601; t=1740597238; x=1741202038;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O/7HubgIS3yguXLFwagiKL0MIanaDsiXeL1ZcDJnpI0=;
+        b=HfaIKtpOSPs9E3BfF7i8IEsBk7NGNGDG7bHzPPv9reO6iCspDC0bdNiuPRKVHjIdvo
+         uSbzTNuTz4un/yCQPIUA6QMtJ6PpIIVpPr4SYLjxRz3XN+6LtR0bgrtY06a+WBoa4Wa4
+         ss3/RkCYJ+Unu8GzVojPdIlBlliS4/j4NGzZ7Vs41XWjcdxZuRpypA718IPodUCh7Tv8
+         uMDVN6sSQmRKUx4s9BsQMX5GgaSNqkWxsOdEdfKVjJgZ2GrMO8vZ98a2162NlWJNyo+z
+         lib8wk0KucJikvKd6vTdrSbTUd2/GyWBqpvkQi2qVlV9I9PSIqMODi1OjCgUICJLNMfv
+         qRPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUibs4NnAE4yI6eQziZjTrGwGEopas+nYNkntFQpwCIwwTuL+6a3XNYNZ4Ag051b4oWd3g+5Qtq02C63s0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYV1WGcqYtF/8P/of8Z7KPbUumuuzizzdBE6vO7lBo/HT/kJ3v
+	loLo2RMqSvg1xL70ljFw4/wPjlD7MY6aAAAdBzs9Vk4yVNldDvxNBXokfGlZYQ==
+X-Gm-Gg: ASbGncsaKhnjOQ2ydYlCyyrxZI/XiMwUHJPTU3P+SkESIPpNFrLgnZM5wbd0e/0ys+D
+	JxYZxHGkCjG1pphWUVv5dvTHDNrl2QY/mMdOePk6+3wIhXpQOPyeggkUDi5KJ0V2cB9DcJAbZWq
+	Qkb8/auXS9DMo9GGI+ORKb1sRaOnpQqA5WH56HI/XcQ3Xlksz8ZgeV9XsDDA+8svBG+k/30iHfA
+	bjuiV0Oc3Dgm/a0oVEDIOdlDgzMqNan0dkCprKPiy5vbomWmtS0k7FFBcGm+dhgjRtLrU0OA0K0
+	LcWJqxxTINTQAhy7L3BXDfxlHtlMvX7ctcdLchdsQeefMdZaxzFKigUR/lq37lMgFGWQ4Ic=
+X-Google-Smtp-Source: AGHT+IGZKQ763FRka4tXmeqX9uwcpJ0v96pIEchafXYFD2cwhU7ih42tfW2HHRWzr2HQKaEkzBO+qA==
+X-Received: by 2002:a05:622a:1a07:b0:472:201c:aa45 with SMTP id d75a77b69052e-47377116ed2mr109013401cf.9.1740597237709;
+        Wed, 26 Feb 2025 11:13:57 -0800 (PST)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47377e1543csm28407591cf.27.2025.02.26.11.13.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 11:10:04 -0800 (PST)
-Message-ID: <135bdfc38dad8994b94318174a970fd22dc87f45.camel@linaro.org>
-Subject: Re: [PATCH v2 2/2] power: reset: syscon-reboot: support different
- reset modes
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus	
- <tudor.ambarus@linaro.org>, Will McVicker <willmcvicker@google.com>, 
-	kernel-team@android.com, linux-pm@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org
-Date: Wed, 26 Feb 2025 19:10:02 +0000
-In-Reply-To: <20250226-syscon-reboot-reset-mode-v2-2-f80886370bb7@linaro.org>
-References: <20250226-syscon-reboot-reset-mode-v2-0-f80886370bb7@linaro.org>
-	 <20250226-syscon-reboot-reset-mode-v2-2-f80886370bb7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+        Wed, 26 Feb 2025 11:13:57 -0800 (PST)
+Date: Wed, 26 Feb 2025 14:13:56 -0500
+Message-ID: <41cb98ddf724ade0fc529b8c952f3efc@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=UTF-8 
+Content-Transfer-Encoding: 8bit 
+X-Mailer: pstg-pwork:20250226_1339/pstg-lib:20250226_1339/pstg-pwork:20250226_1339
+From: Paul Moore <paul@paul-moore.com>
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, jmorris@namei.org, serge@hallyn.com, rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, stephen.smalley.work@gmail.com, omosnace@redhat.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-security-module@vger.kernel.org, linux-trace-kernel@vger.kernel.org, selinux@vger.kernel.org, luogengkun@huaweicloud.com
+Subject: Re: [PATCH 1/2] perf: Remove unnecessary parameter of security check
+References: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
+In-Reply-To: <20241223070650.2810747-2-luogengkun@huaweicloud.com>
 
-On Wed, 2025-02-26 at 16:44 +0000, Andr=C3=A9 Draszik wrote:
-> Linux supports a couple different reset modes, but this driver here
-> doesn't distinguish between them and issues the same syscon register
-> write irrespective of the reset mode requested by the kernel.
->=20
-> Update this driver to support most of Linux' reset modes: cold, hard,
-> warm, and soft.
->=20
-> The actions to take for these are taken from DT, and are all new
-> optional properties. The property names match the existing properties
-> supported but should be prefixed with the reset mode.
->=20
-> This change is meant to be backwards compatible with existing DTs, and
-> if Linux requests a reset mode that this driver doesn't support, or
-> that the DT doesn't specify, the reset is triggered using the fallback
-> / default entry.
->=20
-> As an example why this is useful, other than properly supporting the
-> Linux reboot=3D kernel command line option or sysfs entry, this change
-> allows platforms to e.g. default to a more secure cold-reset, but
-> also to do a warm-reset in case RAM contents needs to be retained
-> across the reset.
->=20
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+On Dec 23, 2024 Luo Gengkun <luogengkun@huaweicloud.com> wrote:
+> 
+> It seems that the attr parameter was never been used in security
+> checks since it was first introduced by:
+> 
+> commit da97e18458fb ("perf_event: Add support for LSM and SELinux checks")
+> 
+> so remove it.
+> 
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> Reviewed-by: Ingo Molnar <mingo@kernel.org>
 > ---
-> =C2=A0drivers/power/reset/syscon-reboot.c | 88 ++++++++++++++++++++++++++=
-++++++-----
-> =C2=A01 file changed, 77 insertions(+), 11 deletions(-)
->=20
-> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/sy=
-scon-reboot.c
-> index d623d77e657e4c233d8ae88bb099bee13c48a9ef..1d3d8a3265ae8005c685b42d3=
-e554bd8bb0047ea 100644
-> --- a/drivers/power/reset/syscon-reboot.c
-> +++ b/drivers/power/reset/syscon-reboot.c
-> @@ -14,11 +14,29 @@
-> =C2=A0#include <linux/reboot.h>
-> =C2=A0#include <linux/regmap.h>
-> =C2=A0
-> -struct syscon_reboot_context {
-> -	struct regmap *map;
-> +/* REBOOT_GPIO doesn't make sense for syscon-reboot */
-> +static const struct {
-> +	enum reboot_mode mode;
-> +	const char *prefix;
-> +} prefix_map[] =3D {
-> +	{ .mode =3D REBOOT_COLD, .prefix =3D "cold"=C2=A0 },
-> +	{ .mode =3D REBOOT_WARM, .prefix =3D "warm"=C2=A0 },
-> +	{ .mode =3D REBOOT_HARD, .prefix =3D "hard"=C2=A0 },
-> +	{ .mode =3D REBOOT_SOFT, .prefix =3D "soft"=C2=A0 },
-> +};
-> +
-> +struct reboot_mode_bits {
-> =C2=A0	u32 offset;
-> =C2=A0	u32 value;
-> =C2=A0	u32 mask;
-> +	bool valid;
-> +};
-> +
-> +struct syscon_reboot_context {
-> +	struct regmap *map;
-> +
-> +	struct reboot_mode_bits mode_bits[REBOOT_SOFT + 1];
-> +	struct reboot_mode_bits catchall;
-> =C2=A0	struct notifier_block restart_handler;
-> =C2=A0};
-> =C2=A0
-> @@ -28,9 +46,16 @@ static int syscon_restart_handle(struct notifier_block=
- *this,
-> =C2=A0	struct syscon_reboot_context *ctx =3D
-> =C2=A0			container_of(this, struct syscon_reboot_context,
-> =C2=A0					restart_handler);
-> +	const struct reboot_mode_bits *mode_bits;
-> +
-> +	if (mode < ARRAY_SIZE(ctx->mode_bits) && ctx->mode_bits[mode].valid)
-> +		mode_bits =3D &ctx->mode_bits[mode];
-> +	else
-> +		mode_bits =3D &ctx->catchall;
-> =C2=A0
-> =C2=A0	/* Issue the reboot */
-> -	regmap_update_bits(ctx->map, ctx->offset, ctx->mask, ctx->value);
-> +	regmap_update_bits(ctx->map, mode_bits->offset, mode_bits->mask,
-> +			=C2=A0=C2=A0 mode_bits->value);
-> =C2=A0
-> =C2=A0	mdelay(1000);
-> =C2=A0
-> @@ -45,6 +70,7 @@ static int syscon_reboot_probe(struct platform_device *=
-pdev)
-> =C2=A0	int mask_err, value_err;
-> =C2=A0	int priority;
-> =C2=A0	int err;
-> +	char prop[32];
-> =C2=A0
-> =C2=A0	ctx =3D devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-> =C2=A0	if (!ctx)
-> @@ -60,12 +86,52 @@ static int syscon_reboot_probe(struct platform_device=
- *pdev)
-> =C2=A0	if (of_property_read_s32(pdev->dev.of_node, "priority", &priority)=
-)
-> =C2=A0		priority =3D 192;
-> =C2=A0
-> -	if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
-> -		if (of_property_read_u32(pdev->dev.of_node, "reg", &ctx->offset))
-> +	BUILD_BUG_ON(ARRAY_SIZE(prefix_map) !=3D ARRAY_SIZE(ctx->mode_bits));
-> +	BUILD_BUG_ON(ARRAY_SIZE(ctx->mode_bits) <=3D REBOOT_COLD);
-> +	BUILD_BUG_ON(ARRAY_SIZE(ctx->mode_bits) <=3D REBOOT_WARM);
-> +	BUILD_BUG_ON(ARRAY_SIZE(ctx->mode_bits) <=3D REBOOT_HARD);
-> +	BUILD_BUG_ON(ARRAY_SIZE(ctx->mode_bits) <=3D REBOOT_SOFT);
-> +
-> +	for (int i =3D 0; i < ARRAY_SIZE(prefix_map); ++i) {
-> +		const char * const prefix =3D prefix_map[i].prefix;
-> +		struct reboot_mode_bits * const mode_bits =3D
-> +			&ctx->mode_bits[prefix_map[i].mode];
-> +
-> +		snprintf(prop, sizeof(prop), "%s-offset", prefix);
-> +		if (of_property_read_u32(pdev->dev.of_node, "offset",
-> +					 &mode_bits->offset))
-> +			continue;
+>  arch/x86/events/intel/bts.c     |  2 +-
+>  arch/x86/events/intel/core.c    |  2 +-
+>  arch/x86/events/intel/p4.c      |  2 +-
+>  drivers/perf/arm_spe_pmu.c      |  4 ++--
+>  include/linux/lsm_hook_defs.h   |  2 +-
+>  include/linux/perf_event.h      | 10 +++++-----
+>  include/linux/security.h        |  5 ++---
+>  kernel/events/core.c            | 14 +++++++-------
+>  kernel/trace/trace_event_perf.c |  4 ++--
+>  security/security.c             |  5 ++---
+>  security/selinux/hooks.c        |  2 +-
+>  11 files changed, 25 insertions(+), 27 deletions(-)
 
-It should also check the %-reg property, and it needs
-to use prop instead of "offset" in of_property_read_u32().
+Now that we have Ingo's Reviewed-by, I've gone ahead and merged
+patch 1/2 into lsm/dev, thanks everyone!
 
-A.
-
+--
+paul-moore.com
