@@ -1,66 +1,66 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506CE221F26
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A0B2222D3
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581427; cv=none; b=jcurA9X4GaXN4NuSDQwQB0OvAnysR/jlriZZ6agsVCXDEZtu5P6oUEDJJzBiSXhCRsVpwtomB46/u8TbL5ehUcBj8VOi4ZqjJ7HEXkDC9U4LiFqtxkISlcyoCcGZkd5OVNb0ffrt1oBFzNKv/wOxQN2RZXi+1q4+uvY4F0cJhHg=
+	t=1740581429; cv=none; b=JD21lIk5mL0GnbmIoJsti+A1BEaxyRVNnjynzJfH18DIX395ugzT8tq0V8fjFYJ7GDihvIKnU25U4u4kZMxfWNtn7A2Q3QevRFKlL2WQ8e16aRDU6vVh3wGZtLb3rvjkuFe2SXVNCgnpgng6lIaOaNUiEKV/WH3LBcDVHeKLAvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581427; c=relaxed/simple;
-	bh=Lzx3CAaQiC8wlZS9M5mT2Yt2uq9rPwqTrQ3zqkOC5JQ=;
+	s=arc-20240116; t=1740581429; c=relaxed/simple;
+	bh=AiBtlkpcTdJmU62MyZVlruSSe6cY2MOj4UoJW00/I1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sq6XL04cDrWUc1t3z8McEmq0pv5TEXD+tqWS5iQRmVatQZls/Hewpl44yN+vkfTOmExyr5ca6xJat6qNHBUej4u5UyqS0jyh4PMb31/1u3arMrd0sztSEN9mbwTAO58YfGQhLWEV92MV+ijFbia8dtebM6h8VR7Cub058CDoR5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IbfhcDJ3; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=OBpHFROp1Bv4AAiZ6WConlsx1C41yvza3E2ioDB+34Jert8vexaZiZqCV80vRmNr9v3OWmMCfIZq6I+gtjsisEtPAmPRsAALe0jX9Jajj3VDVnQury072CN721cwRLYeKApk9N/ObEHM8ZTXxIercjh+b2KAmf6YAEBL9pIUIoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mMKkrk1U; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IbfhcDJ3"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso43363775e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:50:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mMKkrk1U"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43994ef3872so43213075e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:50:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740581423; x=1741186223; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740581425; x=1741186225; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YPdx7XAkaj1yG9dpdBhO/1wk2oAfUm8FihdFBSOr8GE=;
-        b=IbfhcDJ3DVOhiipZTDMrODB8tBq3ufnSau4UAtMAkMeSowrlL5CFYWcReo2byYrn2U
-         VqCUf3TkChTqpoAsgRBdJnoz4xS9Lb96eRfyZNRTLaYhyMfIRaYYSELLoeTNOWnALTEF
-         VgmkXoQDIk0O3TCpN+jZHXF6WrfXaC4VjeqPxGXOT3Km9h0sa924LBSlXwldAz+Ng4D8
-         V1AhOu0RL1OwNiazXqLDCHcTtAeEQnXS98q4DW0MvTpcmDvWX3e9QcF9AF+0YpfJtBks
-         SF9gcvd23eTmlYI4m0Q3uMeSfOQI551jHeD71xY3WVNftaKS/sE2CNPpS9gXw1IHBzvW
-         79tg==
+        bh=K0B5DTNgvnwka6JhdG1RxKRZQdylIuRKT1s0mr36XMI=;
+        b=mMKkrk1U4oAhvNgDUXYB7mPOhiLokBNta9dqDUjYUUB7apPrvr5pJLEGFpXHP+eRYx
+         qQrXSYLKGoz1HEHE82a/WLNRAefDTAp2VJHeagpuswD/LRMdHq+zvX1RPJMmSL6WHePO
+         ptYLh6xM9IBB1Y2ADb5wASqH/mnJnd1DjwoHkRBZdHXZjDc85Uxskgws9vjLnCUj9RsK
+         D1rNDJHtaiLgdCGeCQV/LdmkWWRR3dQ1FwMIiHMJ85H4PuioXu27clsdu5ZWAl+/UGQ4
+         9p8pNMUmZlnQJLGhMDOHRVdaYHbztPMwRPMjZW3jGMad2Q40Pq9zP8+5xFu5jlPzU7ZK
+         5Yrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581423; x=1741186223;
+        d=1e100.net; s=20230601; t=1740581425; x=1741186225;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YPdx7XAkaj1yG9dpdBhO/1wk2oAfUm8FihdFBSOr8GE=;
-        b=w6l8qsYBkXNBTz/ksNDJ1CBd2WVhPXP40O1+UhNdgf+hhMTMyhjoYgw1un8lQd6b5F
-         3neOotBoAPaGHSBXn5PEAEsHpDdNOhfVN8T4BtWjbnifse7bvEY0XxdLogor2pHmTIgU
-         okIMDfS3gqFV7wX+zg6O9YCT1p+Gm5bRO+AX0Uzc0PDRJOFz4MsUIjzuRmCIl1YgqItY
-         nWfgvwdF2vOrIFa8u5Z+Fks320gGnk7tkCs2+P7gLvXHv22ZXmxwshal3Gd9VScQG4QM
-         PcBDixxP+mA0QWqXGchJdqftoTkZUDwDGG35g00PWu39cdks1bYGTLP0Q2Jxvq7Hv8oT
-         Wl8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVvHpyTPBgkHoJiQYZSNfOE+9pxz95y4PWe7Sh1BBZY1yxIcgxtn+94LboTlwwRWWY+WJoTpXSCgfq0AFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8hanlc5L/A/VRJbk11r4gSbKLmoUIK+XQK22j73e2XezOHVWf
-	PBjNcFP4GYN56PtxdMCr5HlVSx1an7w2nm4K+41q5NdepnLtE9ujKQtWS6opVWM=
-X-Gm-Gg: ASbGnctjbMHOiYsdNsrq1KzI8sYdbf17dryFfcS3PFIMWUNXzlAkNqjmELajV0CKZDj
-	mDD+scOzrgAF4mkFIh7sdY3tPYhAZpo4QS9F5ksLbCEFzUg7G90UJ4qlAOzisdTj12Pp1zlGtwp
-	kDXH8jS4yEIsjGEmv6T1U1jEJFExiKQjAmw65+0fPOIY45/QJMqu1PHa82A2oHFMCaxqJtp6ZhH
-	XZwYUsXVcgNHqx66SRuKxBad7YXvEEIupIXuPlCwFhPYNaWN0nvfH+PXT9dw3nqaroRUvDQQvPK
-	4YbiYbV+rYtGxuG6ldeka4Yh6c9gVKnk4BbwVWUkjgOM+7Vx1AUBLbEjA/1LnFddeLmk5TP14NJ
-	9NivSxZLZ+/iG44CKtGOWcWY=
-X-Google-Smtp-Source: AGHT+IGvJMtPWFu7X3FYb/KUfGdGrzxdvYsV3KXmwMuSWdG1U/6djg+AF57pmGPwqA4QzHENbBngYg==
-X-Received: by 2002:a05:600c:5123:b0:439:88bb:d035 with SMTP id 5b1f17b1804b1-43ab0f2887dmr73969585e9.5.1740581423465;
-        Wed, 26 Feb 2025 06:50:23 -0800 (PST)
+        bh=K0B5DTNgvnwka6JhdG1RxKRZQdylIuRKT1s0mr36XMI=;
+        b=VWhckbQHU3YTgE2be/ynUbc4bPvmpAqeVYmrfSBlbJxlxAhNANRs8F8CbaJEHjP+jn
+         5eaUGI+/BrmXv8ByFVWutRRqnzl3NT0ASycf1byac41zHOmttKFnkdCPyn9o0u5b9Ndf
+         rtGEEkM8zFbrrgGTVTVC2XflXZcIldSfcuCWsutM/YGY62wL6PmhWDbD73u3+JF59NDb
+         YbM3bRwDW6pVGy+OV7t/zlAB2SkPspyeKLozcHsyaf5o2zdFmPnquVheK7ABqU1jc4R0
+         fILGAmkeIbjZJBIrcegkdGMm7xcVhiDD8zHvYBUlZephb+qmCFE30wEd/W2Ckf7racAb
+         F4ZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbvH3n4T8uMkbFaGkV1ATJBi8VGxDMSZ0O3RtpYgiXVz+UGY+WUAI9W5omBFinTKwgBXgLNhxmPYAXKh0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtg14ur9eADeJILgfGpcUVVU78Nud7EWD1B/ehaa68xgqQXJzZ
+	EG2MNUirRm4nBhYjiZOkNXxdKimaAa0RV6QSzROQNoGesIRiFlkbN64DoJHXeGA=
+X-Gm-Gg: ASbGncv4gmpZDeQzLAD65mPGMClPC3tVg4c7oz8m9myXd1c9iwf2KfRj2nekF9HDN4o
+	4CJAPWZeKNGYb7xHZhKYzYn7b3l8CM+jnq1L9ilogtbrVstsGz9G9D73v7QU9HKQNgeuJ9JaMb2
+	qVaK/pLHXRXLu4wM7oTV+U7stkHT73Z18+EeXwf8FQbZ9V15uuMGmT8jaX8tX/cxU/6e6GfJQrk
+	165kaNSE550/SKqpBjaxyCWmw8Pa+fHplkMcXpAYeJxd2upqxlYwHG6aG7Ek7Ojjsnlczht9PDe
+	1RBZ3mhVI+nYuWkNa3aEooQfyo6dXMZ2EcE7YgPx6PqFtUoFjT5lPCMRvNF0955GMcO8etpyCyr
+	PAazzT7nn+W1RO9WUtgvBmYM=
+X-Google-Smtp-Source: AGHT+IF606LkuiMsDjoxoFUsY5Gw5UF42U3bEMG+pWqETROOOXt9np0boII9VXCYLUynJeWaadJIDg==
+X-Received: by 2002:a05:600c:5123:b0:439:88bb:d035 with SMTP id 5b1f17b1804b1-43ab0f2887dmr73970795e9.5.1740581425531;
+        Wed, 26 Feb 2025 06:50:25 -0800 (PST)
 Received: from jstephan-bl.local (2a02-842a-d52e-6101-6fd0-06c4-5d68-f0a5.rev.sfr.net. [2a02:842a:d52e:6101:6fd0:6c4:5d68:f0a5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba549d6asm23747965e9.36.2025.02.26.06.50.22
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba549d6asm23747965e9.36.2025.02.26.06.50.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:50:22 -0800 (PST)
+        Wed, 26 Feb 2025 06:50:24 -0800 (PST)
 From: Julien Stephan <jstephan@baylibre.com>
-Date: Wed, 26 Feb 2025 15:50:03 +0100
-Subject: [PATCH 1/3] iio: adc: ad7380: add adaq4381-4 support
+Date: Wed, 26 Feb 2025 15:50:05 +0100
+Subject: [PATCH 3/3] docs: iio: ad7380: add adaq4381-4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-ad7380-add-adaq4381-4-support-v1-1-f350ab872d37@baylibre.com>
+Message-Id: <20250226-ad7380-add-adaq4381-4-support-v1-3-f350ab872d37@baylibre.com>
 References: <20250226-ad7380-add-adaq4381-4-support-v1-0-f350ab872d37@baylibre.com>
 In-Reply-To: <20250226-ad7380-add-adaq4381-4-support-v1-0-f350ab872d37@baylibre.com>
 To: Michael Hennerich <michael.hennerich@analog.com>, 
@@ -84,70 +84,37 @@ Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
  Julien Stephan <jstephan@baylibre.com>
 X-Mailer: b4 0.14.2
 
-adaq4381-4 is the 14 bits version of adaq4380-1 chip. Add support for
-it.
+adaq4381-4 is the 14 bits version of adaq4380-1 chip. Add it to the
+documentation.
 
 Signed-off-by: Julien Stephan <jstephan@baylibre.com>
 ---
- drivers/iio/adc/ad7380.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ Documentation/iio/ad7380.rst | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index f232ad1a49634baeedc655916bc7a967604a1206..407930f1f5dd107154a6c34c6afd4429ebb69826 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -15,6 +15,7 @@
-  * ad7386/7/8-4 : https://www.analog.com/media/en/technical-documentation/data-sheets/ad7386-4-7387-4-7388-4.pdf
-  * adaq4370-4 : https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4370-4.pdf
-  * adaq4380-4 : https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4380-4.pdf
-+ * adaq4381-4 : https://www.analog.com/media/en/technical-documentation/data-sheets/adaq4381-4.pdf
-  */
+diff --git a/Documentation/iio/ad7380.rst b/Documentation/iio/ad7380.rst
+index cff688bcc2d9601a9faf42d5e9c217486639ca66..35232a0e3ad730c19b5201b74280bdb6deaa9667 100644
+--- a/Documentation/iio/ad7380.rst
++++ b/Documentation/iio/ad7380.rst
+@@ -29,6 +29,7 @@ The following chips are supported by this driver:
+ * `AD7388-4 <https://www.analog.com/en/products/ad7388-4.html>`_
+ * `ADAQ4370-4 <https://www.analog.com/en/products/adaq4370-4.html>`_
+ * `ADAQ4380-4 <https://www.analog.com/en/products/adaq4380-4.html>`_
++* `ADAQ4381-4 <https://www.analog.com/en/products/adaq4381-4.html>`_
  
- #include <linux/align.h>
-@@ -287,6 +288,7 @@ DEFINE_AD7380_2_CHANNEL(ad7381_channels, 14, 1, s);
- DEFINE_AD7380_4_CHANNEL(ad7380_4_channels, 16, 1, s);
- DEFINE_AD7380_4_CHANNEL(ad7381_4_channels, 14, 1, s);
- DEFINE_ADAQ4380_4_CHANNEL(adaq4380_4_channels, 16, 1, s);
-+DEFINE_ADAQ4380_4_CHANNEL(adaq4381_4_channels, 14, 1, s);
- /* pseudo differential */
- DEFINE_AD7380_2_CHANNEL(ad7383_channels, 16, 0, s);
- DEFINE_AD7380_2_CHANNEL(ad7384_channels, 14, 0, s);
-@@ -599,6 +601,19 @@ static const struct ad7380_chip_info adaq4380_4_chip_info = {
- 	.timing_specs = &ad7380_4_timing,
- };
  
-+static const struct ad7380_chip_info adaq4381_4_chip_info = {
-+	.name = "adaq4381-4",
-+	.channels = adaq4381_4_channels,
-+	.num_channels = ARRAY_SIZE(adaq4381_4_channels),
-+	.num_simult_channels = 4,
-+	.supplies = adaq4380_supplies,
-+	.num_supplies = ARRAY_SIZE(adaq4380_supplies),
-+	.adaq_internal_ref_only = true,
-+	.has_hardware_gain = true,
-+	.available_scan_masks = ad7380_4_channel_scan_masks,
-+	.timing_specs = &ad7380_4_timing,
-+};
-+
- struct ad7380_state {
- 	const struct ad7380_chip_info *chip_info;
- 	struct spi_device *spi;
-@@ -1582,6 +1597,7 @@ static const struct of_device_id ad7380_of_match_table[] = {
- 	{ .compatible = "adi,ad7388-4", .data = &ad7388_4_chip_info },
- 	{ .compatible = "adi,adaq4370-4", .data = &adaq4370_4_chip_info },
- 	{ .compatible = "adi,adaq4380-4", .data = &adaq4380_4_chip_info },
-+	{ .compatible = "adi,adaq4381-4", .data = &adaq4381_4_chip_info },
- 	{ }
- };
+ Supported features
+@@ -52,8 +53,8 @@ declared in the device tree as ``refin-supply``.
+ ADAQ devices
+ ~~~~~~~~~~~~
  
-@@ -1602,6 +1618,7 @@ static const struct spi_device_id ad7380_id_table[] = {
- 	{ "ad7388-4", (kernel_ulong_t)&ad7388_4_chip_info },
- 	{ "adaq4370-4", (kernel_ulong_t)&adaq4370_4_chip_info },
- 	{ "adaq4380-4", (kernel_ulong_t)&adaq4380_4_chip_info },
-+	{ "adaq4381-4", (kernel_ulong_t)&adaq4381_4_chip_info },
- 	{ }
- };
- MODULE_DEVICE_TABLE(spi, ad7380_id_table);
+-adaq4370-4 and adaq4380-4 don't have an external reference, but use a 3.3V
+-internal reference derived from one of its supplies (``refin-supply``)
++ADAQ devices don't have an external reference, but use a 3.3V internal reference
++derived from one of its supplies (``refin-supply``)
+ 
+ All other devices from ad738x family
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- 
 2.47.1
