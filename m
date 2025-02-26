@@ -1,266 +1,212 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mail-m49222.qiye.163.com (mail-m49222.qiye.163.com [45.254.49.222])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1432623815F;
-	Wed, 26 Feb 2025 10:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB2E23816F;
+	Wed, 26 Feb 2025 10:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.222
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564578; cv=none; b=ovuutgSWq79IejHstmok7gs2nAVHKnwvDaAkg2uN1EpqclQT08SUXWLziHjEyicObEE1YDHqonRAuKS7+x2h9eMFdtN0Ui+yDg/R7Sx8trJ2VyX4IQAQUybF/IOVBY2CpAGk6tr44XWtdc4oHbqS9/W6mtPZjWHM6ZGHA2lNukM=
+	t=1740564581; cv=none; b=cbg0f6eaIwrTNctuUNfT/+PpGi6ZUIcEc9ZNw0SJymoe66r/wK//9LDF+fn95o3HOoyBJOfb+aZRDvh6SxLtuf8WlPHfwBhrJH2SjlagXmpcf/CDSrN1J6yBGQ0KFg/ZikSxnrCpUcJp9do5Tnw2OBUYmGKPSBWr4txyxqOQdwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740564578; c=relaxed/simple;
-	bh=w+6G/iZ6JZRUr2xq7OaaCs1aEdwbk2Z/2SarFa9fPrs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tLHjMK6dDn7A81Yy4oes7BO/jRq2522IRuQn6zG/Weitrjoy3Rso/lhdgWm3I7bSVfSdrMDt8/Vk9DGKTe9an0nPKhPRXvRV++exmZWLx1j7Mt64WXhid61IRIxPv4/Up55PYUS/EPrnQMGz4XAZ2zGALDR6RpxRr0KkWCqex6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Vl+8t0fT; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740564581; c=relaxed/simple;
+	bh=mXll4kOrJS2RYX/fu5Ga6AY++aXx3ovIghYituZIu3g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VyYZpN7HYojmXehYiK38gJ6sMCYSP/VnWCAw2spriDYSu2NsB/FaGOZtZ5ssc3+/rE6FTHPyQIoFRE7n6N2yxPjbkfPn3n0N3FsVt9yypZN8Npvz4SF04GgeG5UQVdNrWRksM3FU66TkoiZ4Sv9Zvc6AgWVGrNwbYQHZc9RhrDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=DftBZyq1; arc=none smtp.client-ip=45.254.49.222
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Vl+8t0fT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D54794321C;
-	Wed, 26 Feb 2025 10:09:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740564574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=irmKjgy54eKsa/wYtjIJ+UJ+LZLLIAEkq3oBzyxkhvQ=;
-	b=Vl+8t0fTI17niDSomkviT3W3Uv0NHyEusjarB94jIOFEoe9bH8kOD5pLoe3Pfpvq+Umu3w
-	q/qtZHOak0oadHxBr1MVv5XNWCuH/TmwxUp3iYMgschl0SppTMlUi+7i7MP1I94VI58uAG
-	AdIJcjKykD0m0+r3RrZk0rXoiW6aNv0efiS/061mBOMiVdrsd5kiUSN2spMOxfNo1RzkiE
-	nY+sJyvCIxcFzQh3niQ+asDSLDVSgZ54dB3Vsb9QxD6U4CM+swOO3djbI1S2OyM6gFHGue
-	u59B9UgHi6peebLLx14fqIJjI2znfbL07RSypbelzyBU13y3UUdCSIMx+gubGQ==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="DftBZyq1"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c43156e5;
+	Wed, 26 Feb 2025 17:54:15 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
 	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v2 00/13] net: phy: Rework linkmodes handling in a dedicated file
-Date: Wed, 26 Feb 2025 11:09:15 +0100
-Message-ID: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.48.1
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v8 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+Date: Wed, 26 Feb 2025 17:54:13 +0800
+Message-Id: <20250226095414.2173410-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieevffefgfevgeehveeftdeiheektddvheegtdevtdeivedtgffgvdejffefleffnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvl
- hdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGU0eGlZPSBkdQkxJSU5MGBpWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9541adad4403afkunmc43156e5
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PCo6FRw4KTIcMwoTGEkcFQsv
+	CixPCg5VSlVKTE9LTk1ITU5MTk9LVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPTktDNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=DftBZyq1kVe+u2e2A+F4tUJTnrHIcEcB8ciyc3OnouZLacAuk9PMU2mLx8KSfwcEcAWO15gGL02go8EOL2cPpmwpsLLaeu1lZ7e2BdKJvd8GFFsPhHoKSr/rn6xJHnkIQzYeZwyKEU8f4wGiVyPHzJDiF0fP/86RFLgRbPtNpF4=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=vjXYFkddkt9PDyEj3qPNIpcqvdoLV3GTDFsK6D1hKxk=;
+	h=date:mime-version:subject:message-id:from;
 
-Hello everyone,
+rk3576 is using DWC PCIe controller, with msi interrupt directly to GIC
+instead of using GIC ITS, so
+- no ITS support is required and the 'msi-map' is not required,
+- a new 'msi' interrupt is needed.
 
-This is the V2 of the phy_caps series. This series aims at reworking the way
-we do conversions between speed/duplex, linkmodes and interfaces. There's two
-goals here :
- - Make that conversion easier to maintain and somewhat more efficient, by
-   avoiding the re-definitions of capabilities to linkmodes to interfaces that
-   exist in phylib and phylink
- - create an internal API for these conversions, in preparation for the phy_port
-   work.
+Co-developed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
 
-This V2 reworks the way we deal with the phy_interface_t <-> caps <-> linkmodes,
-leaving the MAC_*** capabilities a phylink-only set of values.
+Changes in v8:
+- Collect review tag and add Co-developed-by tag.
 
-This V2 also addresses the comments from Köry as well as a kdoc warning.
+Changes in v7:
+- Move the rk3576 device specific schema out of common.yaml
 
-V1 : https://lore.kernel.org/netdev/20250222142727.894124-1-maxime.chevallier@bootlin.com/
+Changes in v6:
+- Fix make dt_binding_check and make CHECK_DTBS=y
 
-For context, The text below is an extract from the V1 cover :
+Changes in v5:
+- Add constraints per device for interrupt-names due to the interrupt is
+different from rk3588.
 
-Following the V4 of the phy_port series [1] we've discussed about attempting
-to extract some of the linkmode <-> capabilities (speed/duplex) <-> interface
-logic into a dedicated file, so that we can re-use that logic out of
-phylink.
+Changes in v4:
+- Fix wrong indentation in dt_binding_check report by Rob
 
-While trying to do that, I might have gotten a bit carried-away, and I'm
-therefore submitting this series to rework the way we are currently
-managing the linkmodes <-> capabilities handling.
+Changes in v3:
+- Fix dtb check broken on rk3588
+- Update commit message
 
-We are currently defining all the possible Ethernet linkmodes in an
-enum ethtool_link_mode_bit_indices value defined in uapi/linux/ethtool.h :
+Changes in v2:
+- remove required 'msi-map'
+- add interrupt name 'msi'
 
-	ETHTOOL_LINK_MODE_10baseT_Half_BIT	= 0,
-	ETHTOOL_LINK_MODE_10baseT_Full_BIT	= 1,
-	...
+ .../bindings/pci/rockchip-dw-pcie-common.yaml | 10 +++-
+ .../bindings/pci/rockchip-dw-pcie.yaml        | 55 +++++++++++++++++--
+ 2 files changed, 57 insertions(+), 8 deletions(-)
 
-Each of these modes represents a media-side link definition, and runs at
-a given speed and duplex.
-
-Specific attributes for each modes are stored in net/ethtool/common.c, as
-an array of struct link_mode_info :
-
-	struct link_mode_info {
-		int				speed;
-		u8				lanes;
-		u8				duplex;
-	}
-
-The link_mode_params[] array is the canonical definition for these modes,
-as (1) there are build-time checks to make sure any new linkmode
-definition is also defined in this array and (2) this array is always
-compiled-in, as it's part of the net stack (i.e. it is not phylib-specific).
-
-This array is however not optimized for lookups, as it is not ordered in
-any particular fashion (new modes go at the end, regardless of their speed
-and duplex).
-
-Phylib also includes a similar array, in the form of the phy_settings
-array in drivers/net/phy/phy-core.c :
-
-	struct phy_setting {
-		u32 speed;
-		u8 duplex;
-		u8 bit; // The enum index for the linkmode
-	};
-
-The phy_settings array however is ordered by descending speeds. A variety
-of helpers in phylib rely on that ordering to perform lookups, usually
-to get one or any linkmode corresponding to a requested speed and duplex.
-
-Finally, we have some helpers in phylink (phylink_caps_to_linkmodes) that
-allows getting the list of linkmodes that match a set of speed and duplex
-value, all at once.
-
-While the phylink and phylib helpers allows for efficient lookups, they
-have some drawbacks as well :
-
-	(1) : It's easy to forget updating of all of these helpers and structures
-		  when adding a new linkmode. New linkmodes are actually added fairly
-		  often, lately either for slow BaseT1 flavours, or for crazy-fast
-		  modes (800Gbps modes, but I guess people won't stop there)
-		  
-	(2) : Even though the phylink and phylib modes use carefull sorting
-		  to speed-up the lookup process, the phylib lookups are usually
-		  done in descending speed order and will therefore get slower
-		  as people add even faster link speeds.
-		  
-This series introduces a new "link_capabilities" structure that is used
-to build an array of link_caps :
-
-	struct link_capabilities {
-		int speed;                           
-		unsigned int duplex;
-		__ETHTOOL_DECLARE_LINK_MODE_MASK(linkmodes);
-	};
-
-We group these in an array, indexed with LINK_CAPA enums that are basically
-identical to the phylink MAC_CAPS :
-
-...
-LINK_CAPA_1000HD,             
-LINK_CAPA_1000FD,
-LINK_CAPA_2500FD,
-LINK_CAPA_5000FD,
-...
-
-We now have an associative array of <speed,duplex> <-> All compatible linkmodes
-
-This array is initialized at phylib-init time based on the content of
-the link_mode_params[] array from net/ethtool/common.c, that way it is
-always up-to-date with new modes, and always properly ordered.
-
-Patches 3 to 8 then convert all lookups from the phy_settings array into
-lookups from this link_caps array, hopefully speeding-up lookups in the
-meantime (we iterate over possible speeds instead of individual linkmodes)
-
-This series is not meant to introduce changes in behaviour, however patches
-9 and 10 do introduce functionnal changes. When configuring the advert
-for speeds >= 1G in PHY devices, as well as when constructing the link
-parameters for fixed links in phylink, we used to rely on phy_settings
-lookups returning one, and only one, compatible linkmode. This series will
-make so that the lookups will result on all matching linkmodes being
-returned, and MAY cause advert/fixed-link configuring more linkmodes.
-
-Patches 12 and 13 extract the conversion logic for interface <-> caps from
-phylink.
-
-There are cons as well for this, as this is a bit more init time for phylib,
-but maybe more importantly, we lose in the precision for the lookups in
-phy_settings. However, given all the uses for phy_settings (most are just
-to get speed/duplex), I think this is actually ok, but any comment would
-be very welcome.
-
-This series was tested with :
- - 10/100/1000M links
- - 2,5, 5, 10G BaseT links
- - 1G Fixed link
-
-I also made sure that this compiles with the following options :
-
-CONFIG_PHYLIB=n
-
-CNFIG_PHYLINK=m
-CONFIG_PHYLIB=m
-
-CNFIG_PHYLINK=m
-CONFIG_PHYLIB=y
-
-CNFIG_PHYLINK=y
-CONFIG_PHYLIB=y
-
-All the new helpers that were introduced (in drivers/net/phy/phy-caps.h)
-are for internal use only (only users should be core stuff, such as phylib and
-phylink, and in the future, phy_port).
-
-Thanks,
-
-Maxime
-
-[1]: https://lore.kernel.org/netdev/20250213101606.1154014-1-maxime.chevallier@bootlin.com/
-
-
-
-Maxime Chevallier (13):
-  net: ethtool: Export the link_mode_params definitions
-  net: phy: Use an internal, searchable storage for the linkmodes
-  net: phy: phy_caps: Move phy_speeds to phy_caps
-  net: phy: phy_caps: Move __set_linkmode_max_speed to phy_caps
-  net: phy: phy_caps: Introduce phy_caps_valid
-  net: phy: phy_caps: Implement link_capabilities lookup by linkmode
-  net: phy: phy_caps: Allow looking-up link caps based on speed and
-    duplex
-  net: phy: phy_device: Use link_capabilities lookup for PHY aneg config
-  net: phy: phylink: Use phy_caps_lookup for fixed-link configuration
-  net: phy: drop phy_settings and the associated lookup helpers
-  net: phy: phylink: Add a mapping between MAC_CAPS and LINK_CAPS
-  net: phy: phylink: Convert capabilities to linkmodes using phy_caps
-  net: phy: phy_caps: Allow getting an phy_interface's capabilities
-
- drivers/net/phy/Makefile     |   2 +-
- drivers/net/phy/phy-caps.h   |  62 +++++++
- drivers/net/phy/phy-core.c   | 253 ++------------------------
- drivers/net/phy/phy.c        |  37 ++--
- drivers/net/phy/phy_caps.c   | 340 +++++++++++++++++++++++++++++++++++
- drivers/net/phy/phy_device.c |  13 +-
- drivers/net/phy/phylink.c    | 337 +++++++++-------------------------
- include/linux/ethtool.h      |   8 +
- include/linux/phy.h          |  15 --
- net/ethtool/common.c         |   1 +
- net/ethtool/common.h         |   7 -
- 11 files changed, 532 insertions(+), 543 deletions(-)
- create mode 100644 drivers/net/phy/phy-caps.h
- create mode 100644 drivers/net/phy/phy_caps.c
-
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+index cc9adfc7611c..2150bd8b5fc2 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+@@ -65,7 +65,11 @@ properties:
+           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
+           nf_err_rx, f_err_rx, radm_qoverflow
+       - description:
+-          eDMA write channel 0 interrupt
++          If the matching interrupt name is "msi", then this is the combinded
++          MSI line interrupt, which is to support MSI interrupts output to GIC
++          controller via GIC SPI interrupt instead of GIC its interrupt.
++          If the matching interrupt name is "dma0", then this is the eDMA write
++          channel 0 interrupt.
+       - description:
+           eDMA write channel 1 interrupt
+       - description:
+@@ -81,7 +85,9 @@ properties:
+       - const: msg
+       - const: legacy
+       - const: err
+-      - const: dma0
++      - enum:
++          - msi
++          - dma0
+       - const: dma1
+       - const: dma2
+       - const: dma3
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 550d8a684af3..4764a0173ae4 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -16,16 +16,13 @@ description: |+
+   PCIe IP and thus inherits all the common properties defined in
+   snps,dw-pcie.yaml.
+ 
+-allOf:
+-  - $ref: /schemas/pci/snps,dw-pcie.yaml#
+-  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
+-
+ properties:
+   compatible:
+     oneOf:
+       - const: rockchip,rk3568-pcie
+       - items:
+           - enum:
++              - rockchip,rk3576-pcie
+               - rockchip,rk3588-pcie
+           - const: rockchip,rk3568-pcie
+ 
+@@ -71,8 +68,54 @@ properties:
+ 
+   vpcie3v3-supply: true
+ 
+-required:
+-  - msi-map
++allOf:
++  - $ref: /schemas/pci/snps,dw-pcie.yaml#
++  - $ref: /schemas/pci/rockchip-dw-pcie-common.yaml#
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              const: rockchip,rk3576-pcie
++    then:
++      required:
++        - msi-map
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: rockchip,rk3576-pcie
++    then:
++      properties:
++        interrupts:
++          minItems: 6
++          maxItems: 6
++        interrupt-names:
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: msi
++    else:
++      properties:
++        interrupts:
++          minItems: 5
++        interrupt-names:
++          minItems: 5
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: dma0
++            - const: dma1
++            - const: dma2
++            - const: dma3
++
+ 
+ unevaluatedProperties: false
+ 
 -- 
-2.48.1
+2.25.1
 
