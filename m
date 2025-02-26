@@ -1,34 +1,72 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2072.outbound.protection.outlook.com [40.107.237.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519161E1E16;
-	Wed, 26 Feb 2025 08:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740558397; cv=none; b=Iv6A2elLINJ9Wp95Jf+1/HVKhvPcTIO0XeZE5aW+sZJlFUKo5CJUR1TP5xDgGUw72oydaOzuThSgykjCiLBskuwKrzyVaDsSZNkUh2s0IklTeOvVVWdjUkjXz6nu4eoTJ62yxNu0AxRbIbrCFrlSozujm9OOpORXqECjrBuNiwk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740558397; c=relaxed/simple;
-	bh=b4i82R2FmV9k63Z7EvIxIr6sSAnBi+ov3WqHM/p8D6Q=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RcMLrBGRhcoCjYH9HQlpVMO/BFir+tD/t8ygLt33/3MYJymS92oNltmHJdq6iBgrEUnzX4xAP7KN/kz9QU6j+PPjTnWTEAktpxIWVIESXYLqYPvxqaZpMrLaaAYvW+UQfaTw6Ic1rWtXEHknTZgCppvh9ewtqzMZdRHxqQXglCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (178.207.205.146) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 26 Feb
- 2025 11:26:19 +0300
-From: Roman Smirnov <r.smirnov@omp.ru>
-To: Dave Kleikamp <shaggy@kernel.org>
-CC: Roman Smirnov <r.smirnov@omp.ru>, Ghanshyam Agrawal
-	<ghanshyam1898@gmail.com>, Edward Adam Davis <eadavis@qq.com>,
-	<jfs-discussion@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, syzbot
-	<syzbot+9120834fc227768625ba@syzkaller.appspotmail.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH] jfs: add index corruption check to DT_GETPAGE()
-Date: Wed, 26 Feb 2025 11:25:22 +0300
-Message-ID: <20250226082523.112081-1-r.smirnov@omp.ru>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A540664C6;
+	Wed, 26 Feb 2025 08:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740558468; cv=fail; b=CwoaOh49aqQ9xYbgelLvqLIzKH2L/iGVU5bVj6wwUinVJqdDVCaJIh3kAZxxInIsvJgYM5few9Iz/lAdDHQV9sq6skfKUBP81ZeyVj19P2fwC5Hvw0CEV8YHSaI7hMpRgXji4OhZpW+FJQF17yD/5dfDhPWqOqhDlD2vIPVUa1k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740558468; c=relaxed/simple;
+	bh=HKQN2rKJl/bezJ88Yixn4sec/DCcpKL1rDvGPOi2HA8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sDYJMcrI+bqE92Ac1wyomNCsAA5uEU7hQP0auDJipZMx8nCAlgJKy4RuT0eOivT8FhmGvrcNZqSiIqNTVQLaCKlXINIfWOc8cBC2JNnvjoW/FZVsgqurcNAjpwZDFoZOZC7dveSTxASst9AwAU/Ij24Ndpo7zyF0M8IoJtQegfo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4h6+esaP; arc=fail smtp.client-ip=40.107.237.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4h6+esaP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Y4LfgRejqBGFSPUAzOjR3RdyrwY1dWN4MkuN9zYJtwT3x4qsHJxcv9TMW3kyaZWRDKlavnmhfQH6q9cAWkbOeV9Tc/X056e6nfodEKAlJEwWp4fys1p7KfH4zzRJQuU7HG/D3Uzqz+r+fQ3T+HwA8YYnioJHNkwWxtTy9WZT1Tirc8MhJxm+h7xIloWsgWYjkSgsV5xc857S0+JMYzAQ1/9rgiMoVJLL4glOlW9PPU0jRRY4EDm5gbl1G/+vYgKHU12CPZ3J4FvOexsYVISsnO3JfB2qjwPvG46FJifNUe292OxSSYdhfLqfqpF/bN/LIyEdIJftupZg73ijeecv1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1Z1CMXo1Vzk7Qjy0gEXx2NtQMkXlq7LgoMdxVwHlt6M=;
+ b=AL+BtvsGRPj08Xw2hiGLOGBW+OuCsJyS940ZuHBdhhH8n/jnBbsvWl30AD2tQkhq8fEG3YRV90RNFNVeQ8QaFZo1A8IKIG2FBVZnugJ/PzPhfR5JHWzUI0ZbgBYVNFsF2EMew75Lmrff/vEDUqw4jo6ETYiXPa6c8wiLYr7IUJKyfiPVfCbG6txi5D1yzGoNKdI8nwrRLSWpt0grN1ilKe5Iv3/lySjHQzw2J3bxYum7Gqo+GoaIjBMUYvzGk2nr51ecKYOU3JqS/UNvHtnmN5cEwCY5kwPLxQMs0EoyV6th8O2Ez24P/2/XSLEPoyDmv/1XUdxfMqCVWVNeSj8JxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1Z1CMXo1Vzk7Qjy0gEXx2NtQMkXlq7LgoMdxVwHlt6M=;
+ b=4h6+esaPDeCVuj1P8t5//I1I7N//HY3TA+7dpQ6b5wo/R86u/J7TfH2RUnlmvW8Zk+AXeYnUxIaacmOqT6tKvCYhOodL+GgPxn8nk/+53Wa8DzPPSgq0dKxozbfYloau3lukgoYVT5MG15xXjl2iAMjNMmrMtyRX/TtP3o/ujVc=
+Received: from PH7P220CA0061.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:32c::25)
+ by CYYPR12MB9013.namprd12.prod.outlook.com (2603:10b6:930:c2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Wed, 26 Feb
+ 2025 08:27:42 +0000
+Received: from CO1PEPF000044FA.namprd21.prod.outlook.com
+ (2603:10b6:510:32c:cafe::77) by PH7P220CA0061.outlook.office365.com
+ (2603:10b6:510:32c::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Wed,
+ 26 Feb 2025 08:27:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FA.mail.protection.outlook.com (10.167.241.200) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8511.0 via Frontend Transport; Wed, 26 Feb 2025 08:27:41 +0000
+Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 02:27:35 -0600
+From: Shivank Garg <shivankg@amd.com>
+To: <akpm@linux-foundation.org>, <willy@infradead.org>, <pbonzini@redhat.com>
+CC: <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+	<linux-coco@lists.linux.dev>, <chao.gao@intel.com>, <seanjc@google.com>,
+	<ackerleytng@google.com>, <david@redhat.com>, <vbabka@suse.cz>,
+	<bharata@amd.com>, <nikunj@amd.com>, <michael.day@amd.com>,
+	<Neeraj.Upadhyay@amd.com>, <thomas.lendacky@amd.com>, <michael.roth@amd.com>,
+	<shivankg@amd.com>, <tabba@google.com>
+Subject: [PATCH v6 0/5] Add NUMA mempolicy support for KVM guest-memfd
+Date: Wed, 26 Feb 2025 08:25:44 +0000
+Message-ID: <20250226082549.6034-1-shivankg@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,101 +75,218 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 02/26/2025 08:15:02
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 191305 [Feb 26 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: r.smirnov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_one_url}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.207.205.146 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;omp.ru:7.1.1;127.0.0.199:7.1.2;syzkaller.appspot.com:7.1.1,5.0.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.207.205.146
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 02/26/2025 08:17:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 2/26/2025 7:40:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FA:EE_|CYYPR12MB9013:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2db46084-b7a8-49fd-9d84-08dd563f6fe0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?S6oeeia3Wh8Jmjg+sFS0BLTs3i/UcIxVL+7B7uMYGzpOOzU9Nqeaiv3QdX1b?=
+ =?us-ascii?Q?PJKmhiplTKH9OIFjSzCr5Grev3JbGisRLbZ5Da7FK9lg2TK3U0Ay0e5NiTs5?=
+ =?us-ascii?Q?Cz7fkF1vaN/W9YUJButTBRK174bMitG9zB9aXTEVkSXzu8pxmUTWboefLIuP?=
+ =?us-ascii?Q?dLLTaAhzmGnkvTljP+q8QZql9hwNIiN468CkV/MPdQzoPetg3z+oDDrl16yB?=
+ =?us-ascii?Q?30rRwxDUE5VruWCtormPzMOGygd46sVLPkVnhFYbdq9V+Bxc7xRpwplCJ9z+?=
+ =?us-ascii?Q?CSjHNzC2drKzktn8ey6VPubiYq/V24uCRhDGa5VMtp0i8k9EI9B8OSHLEZtB?=
+ =?us-ascii?Q?16dLwHscFPKUgDQxPUIJ591C0GbV649poDfb6Q3uMv2zkoRCIjaEDTNC+YbO?=
+ =?us-ascii?Q?HiyBBU2IUHH3zVThgcXO/3LGQXRy4X6d7IwrdnHw+JAsxSttCcIa/anfWQuV?=
+ =?us-ascii?Q?YskHNj7xy06BTrutZTs9PSl0MULVt/dpKY1pedAcI4aJZVGbPIEhDCdq0iYj?=
+ =?us-ascii?Q?zBXeWiwccLf/4hQx8UEkOVikEHrkb8Vhim2iHKEUal6z/gfbE9+KKI76eZMI?=
+ =?us-ascii?Q?6OTaLxHOinLc/wlH781Di71lpZgOhWxlRJB1Cy4RX24bblYJeAxYQxxaE8He?=
+ =?us-ascii?Q?Qw1II8y3ybDMufcDijjmACi86DIGsFeNFPLbC2rCfqLWPCMtUxGYIOccYzXx?=
+ =?us-ascii?Q?H2TwxQ+eFZznKhZcK9Iuv4tS7bZoxMrQrfK6m0aI+wHFzAIdle5aNMxczjAO?=
+ =?us-ascii?Q?wAjotm2C+zZATSByxPfP8Bpj7c1eXub/RGE4OEV4byHvU8DqhHHRTrtRp8Js?=
+ =?us-ascii?Q?YwIb++S8o5/JyLYR+NYapCYjqEpsDf9NaDcSRbIRF8CpB4op3OShtt4VmYZu?=
+ =?us-ascii?Q?Y98DCCJCWzDMIrX5VRStkt9PXov9ZPBpsiSNNJ+csbJ0mgEjJmM5eefS1DmX?=
+ =?us-ascii?Q?hB9FMBy7wrtIB7rGRljOMsmX1OrOTxwUDKhYjL/GdUCHOSTc/87P0BpX+DNY?=
+ =?us-ascii?Q?tTXgn5WQBQ/TtsDRYNZSXS5pe7H/hCZW05ET2dFAPgaCHJ5J/ZQatY/KPmPl?=
+ =?us-ascii?Q?t5LA3j+QTf5AwHBB4X2Wrla0v2FoZzRC+yXlp76+ro5t6ybxOFF2IYuG1SPA?=
+ =?us-ascii?Q?OzxuYv4c5ZepJwv2H7E7wALioUW+ic8lAn9fYsSZhrtdq6KNEN/9gtGCeAfG?=
+ =?us-ascii?Q?pIkDAreWYGx5EQf1j7/hdfwXpxcAkKs/qcHVk3VuQpM9Z8MI6YDUeon+FpmG?=
+ =?us-ascii?Q?Yh65lcdHAD4/rBeI5IRK5j/FP8X+vScZyE8LH1SV+/TVOvfYQRGmZsTGsQXw?=
+ =?us-ascii?Q?GGfdT7epxaEKM4QWbasPmxdlXprwGOu0swSYMB6ryBNI4eMLqy1LMUGIXFbm?=
+ =?us-ascii?Q?Z/uRMICIfgNGbx90h3ZKvqA2bWxG5J1FQWXgeCTOTtcheq55i1zRdyLLgWg+?=
+ =?us-ascii?Q?G7l57LB+s26KhCVjfHBdM0T7mlfqWBiJyiHvYOLAIwVSWpSgUVIBZpVjKB3s?=
+ =?us-ascii?Q?bX4mk0Dzrbp6HVc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 08:27:41.4835
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2db46084-b7a8-49fd-9d84-08dd563f6fe0
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FA.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB9013
 
-If the file system is corrupted, the header.stblindex variable
-may become greater than 127. Because of this, an array access out
-of bounds may occur:
+In this patch-series:
+Based on the discussion in the bi-weekly guest_memfd upstream call on
+2025-02-20[4], I have dropped the RFC tag, documented the memory allocation
+behavior after policy changes and added selftests.
 
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:3096:10
-index 237 is out of range for type 'struct dtslot[128]'
-CPU: 0 UID: 0 PID: 5822 Comm: syz-executor740 Not tainted 6.13.0-rc4-syzkaller-00110-g4099a71718b0 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
- dtReadFirst+0x622/0xc50 fs/jfs/jfs_dtree.c:3096
- dtReadNext fs/jfs/jfs_dtree.c:3147 [inline]
- jfs_readdir+0x9aa/0x3c50 fs/jfs/jfs_dtree.c:2862
- wrap_directory_iterator+0x91/0xd0 fs/readdir.c:65
- iterate_dir+0x571/0x800 fs/readdir.c:108
- __do_sys_getdents64 fs/readdir.c:403 [inline]
- __se_sys_getdents64+0x1e2/0x4b0 fs/readdir.c:389
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
- </TASK>
----[ end trace ]---
 
-Add a stblindex check for corruption.
+KVM's guest-memfd memory backend currently lacks support for NUMA policy
+enforcement, causing guest memory allocations to be distributed arbitrarily
+across host NUMA nodes regardless of the policy specified by the VMM. This
+occurs because conventional userspace NUMA control mechanisms like mbind()
+are ineffective with guest-memfd, as the memory isn't directly mapped to
+userspace when allocations occur.
 
-Reported-by: syzbot <syzbot+9120834fc227768625ba@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=9120834fc227768625ba
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Roman Smirnov <r.smirnov@omp.ru>
----
- fs/jfs/jfs_dtree.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+This patch-series adds NUMA binding capabilities to guest_memfd backend
+KVM guests. It has evolved through several approaches based on community
+feedback:
 
-diff --git a/fs/jfs/jfs_dtree.c b/fs/jfs/jfs_dtree.c
-index 8f85177f284b..93db6eec4465 100644
---- a/fs/jfs/jfs_dtree.c
-+++ b/fs/jfs/jfs_dtree.c
-@@ -117,7 +117,8 @@ do {									\
- 	if (!(RC)) {							\
- 		if (((P)->header.nextindex >				\
- 		     (((BN) == 0) ? DTROOTMAXSLOT : (P)->header.maxslot)) || \
--		    ((BN) && ((P)->header.maxslot > DTPAGEMAXSLOT))) {	\
-+		    ((BN) && (((P)->header.maxslot > DTPAGEMAXSLOT) ||	\
-+		    ((P)->header.stblindex >= DTPAGEMAXSLOT)))) {	\
- 			BT_PUTPAGE(MP);					\
- 			jfs_error((IP)->i_sb,				\
- 				  "DT_GETPAGE: dtree page corrupt\n");	\
+- v1,v2: Extended the KVM_CREATE_GUEST_MEMFD IOCTL to pass mempolicy.
+- v3: Introduced fbind() syscall for VMM memory-placement configuration.
+- v4-v6: Current approach using shared_policy support and vm_ops (based on
+      suggestions from David[1] and guest_memfd biweekly upstream call[2]).
+
+For SEV-SNP guests, which use the guest-memfd memory backend, NUMA-aware
+memory placement is essential for optimal performance, particularly for
+memory-intensive workloads.
+
+This series implements proper NUMA policy support for guest-memfd by:
+
+1. Adding mempolicy-aware allocation APIs to the filemap layer.
+2. Implementing get/set_policy vm_ops in guest_memfd to support shared policy.
+
+With these changes, VMMs can now control guest memory placement by
+specifying:
+- Policy modes: default, bind, interleave, or preferred
+- Host NUMA nodes: List of target nodes for memory allocation
+
+The policy change only affect future allocations and do not migrate
+existing memory. This matches mbind(2)'s default behavior which affects
+only new allocations unless overridden with MPOL_MF_MOVE/MPOL_MF_MOVE_ALL
+flags, which are not supported for guest_memfd as it is unmovable.
+
+This series builds on the existing guest-memfd support in KVM and provides
+a clean integration path for NUMA-aware memory management in confidential
+computing environments. The work is primarily focused on supporting SEV-SNP
+requirements, though the benefits extend to any VMM using the guest-memfd
+backend that needs control over guest memory placement.
+
+== Example usage with QEMU (requires patched QEMU from [3]) ==
+
+Snippet of the QEMU changes[3] needed to support this feature:
+
+        /* Create and map guest-memfd region */
+        new_block->guest_memfd = kvm_create_guest_memfd(
+                                  new_block->max_length, 0, errp);
+...
+        void *ptr_memfd = mmap(NULL, new_block->max_length,
+                               PROT_READ | PROT_WRITE, MAP_SHARED,
+                               new_block->guest_memfd, 0);
+...
+        /* Apply NUMA policy */
+        int ret = mbind(ptr_memfd, new_block->max_length,
+                        backend->policy, backend->host_nodes,
+                        maxnode+1, 0);
+...
+
+QEMU Command to run SEV-SNP guest with interleaved memory across
+nodes 0 and 1 of the host:
+
+$ qemu-system-x86_64 \
+   -enable-kvm \
+  ...
+   -machine memory-encryption=sev0,vmport=off \
+   -object sev-snp-guest,id=sev0,cbitpos=51,reduced-phys-bits=1 \
+   -numa node,nodeid=0,memdev=ram0,cpus=0-15 \
+   -object memory-backend-memfd,id=ram0,host-nodes=0-1,policy=interleave,size=1024M,share=true,prealloc=false
+
+== Experiment and Analysis == 
+
+SEV-SNP enabled host, AMD Zen 3, 2 socket 2 NUMA node system
+NUMA for Policy Guest Node 0: policy=interleave, host-node=0-1
+
+Test: Allocate and touch 50GB inside guest on node=0.
+
+
+* Generic Kernel (without NUMA supported guest-memfd):
+                          Node 0          Node 1           Total
+Before running Test:
+MemUsed                  9981.60         3312.00        13293.60
+After running Test:
+MemUsed                 61451.72         3201.62        64653.34
+
+Arbitrary allocations: all ~50GB allocated on node 0.
+
+
+* With NUMA supported guest-memfd:
+                          Node 0          Node 1           Total
+Before running Test:
+MemUsed                  5003.88         3963.07         8966.94
+After running Test:
+MemUsed                 30607.55        29670.00        60277.55
+
+Balanced memory distribution: Equal increase (~25GB) on both nodes.
+
+== Conclusion ==
+
+Adding the NUMA-aware memory management to guest_memfd will make a lot of
+sense. Improving performance of memory-intensive and locality-sensitive
+workloads with fine-grained control over guest memory allocations, as
+pointed out in the analysis.
+
+[1] https://lore.kernel.org/linux-mm/6fbef654-36e2-4be5-906e-2a648a845278@redhat.com
+[2] https://lore.kernel.org/linux-mm/82c53460-a550-4236-a65a-78f292814edb@redhat.com
+[3] https://github.com/shivankgarg98/qemu/tree/guest_memfd_mbind_NUMA
+[4] https://lore.kernel.org/linux-mm/2b77e055-98ac-43a1-a7ad-9f9065d7f38f@amd.com
+
+== Earlier postings and changelogs ==
+
+v6 (current):
+- Rebase to linux mainline
+- Drop RFC tag
+- Add selftests to ensure NUMA support for guest_memfd works correctly.
+
+v5:
+- https://lore.kernel.org/linux-mm/20250219101559.414878-1-shivankg@amd.com
+- Fix documentation and style issues.
+- Use EXPORT_SYMBOL_GPL
+- Split preparatory change in separate patch
+
+v4:
+- https://lore.kernel.org/linux-mm/20250210063227.41125-1-shivankg@amd.com
+- Dropped fbind() approach in favor of shared policy support.
+
+v3:
+- https://lore.kernel.org/linux-mm/20241105164549.154700-1-shivankg@amd.com
+- Introduce fbind() syscall and drop the IOCTL-based approach.
+
+v2:
+- https://lore.kernel.org/linux-mm/20240919094438.10987-1-shivankg@amd.com
+- Add fixes suggested by Matthew Wilcox.
+
+v1:
+- https://lore.kernel.org/linux-mm/20240916165743.201087-1-shivankg@amd.com
+- Proposed IOCTL based approach to pass NUMA mempolicy.
+
+Shivank Garg (4):
+  mm/mempolicy: export memory policy symbols
+  KVM: guest_memfd: Pass file pointer instead of inode pointer
+  KVM: guest_memfd: Enforce NUMA mempolicy using shared policy
+  KVM: guest_memfd: selftests: add tests for mmap and NUMA policy
+    support
+
+Shivansh Dhiman (1):
+  mm/filemap: add mempolicy support to the filemap layer
+
+ include/linux/pagemap.h                       | 39 +++++++++
+ mm/filemap.c                                  | 30 +++++--
+ mm/mempolicy.c                                |  6 ++
+ .../testing/selftests/kvm/guest_memfd_test.c  | 86 +++++++++++++++++-
+ virt/kvm/guest_memfd.c                        | 87 +++++++++++++++++--
+ 5 files changed, 233 insertions(+), 15 deletions(-)
+
 -- 
 2.34.1
 
