@@ -1,62 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A114B215785;
-	Wed, 26 Feb 2025 12:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB36C21C160;
+	Wed, 26 Feb 2025 12:15:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572107; cv=none; b=e8+Ay6UpHSD3ju9qzh4i6EQ+jt2QB1ESatAnqRNOzx6A9Wc2DAVvlzSSoC/PzZdPpekfKUz7gjjgCAujryB56NJdIpZj3r77MPTlBdapueopY0oh6luWfD/7nTpll5ehrI9fo2Kh0wreUj+ji/v1yYIY2Mu43vtUK/Uq/1pi5hE=
+	t=1740572108; cv=none; b=lvKxMfGjQGITtPKPZ80mB4mDDnzdg9ZK3nyT85udOLg9lSe0vat2P0Ku6qHMOAxtnYUKpvTvRUEK9HIMCiGJm/ul/pTXJzdnzc7aljejr4IJclGKLx+Uxi/lLhkoVzSATASoDsT0gOqiL5kcCE9DqvevAJSiSqpk8M+s62Re4A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572107; c=relaxed/simple;
-	bh=CI/x7cZ650TSKEUBceLQERMWrh7HSZUA1AUoUNhHSns=;
+	s=arc-20240116; t=1740572108; c=relaxed/simple;
+	bh=343PP+rMJscGrmVQXb4OfKerqxGnLO1aL9O7r0w2Zew=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=WuBHZS3X0WXfeXhuNo5ZOe5XW1ECbOi1LXbG+Y68aJFR9OOPD3CeV2KyGJsHLlJJ0WXD0ehUCR9bcK0mepW6eQG8hIWWT4wKM1pGJEB71f+kNzTcxpBqQbIkMYnOGlG+x17/38lkZq4GbvI44MjRu/LJWbDOE2P6O/OQMKUTCC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kTjPyL3q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PBM3DaTN; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=W8DDO1rgiQ0PLXRWYTwqpBQRBS0PgrkhzJa93BoECOYjd4tnEk37706kpLRLfNQ4X3dJgyAUnN184iSohN8aDew1Bp5javawi6APemm649H/4htzgceJDdzh1ZGu4Jz3NUDx0mcqjE0HBW+fyLnRk/D/D54/+cqpvIcOQtvijfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VfG0TpwD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cxs+beE4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kTjPyL3q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PBM3DaTN"
-Date: Wed, 26 Feb 2025 12:15:02 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VfG0TpwD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cxs+beE4"
+Date: Wed, 26 Feb 2025 12:15:04 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740572103;
+	s=2020; t=1740572105;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tZzB53QHmMmsfW5kzZagHwgEdYP4EveGloYBEbE/KAA=;
-	b=kTjPyL3qgYs1kQIPLbbKBygqX5ZAfCgmz4Ar4/Xd7VhiQjljjZnPZV8eDHGHYRtNExJK0P
-	6kX78qOi0w547BKfdMi1U8JDjT3lP7XKyjV5BqMktZt2ZIeWwt04ExxxdFlgdLIx9d9EOy
-	2UAkz25RpgZCGzlOZq8Ya9LzLo9x+Ln45OXIIBddAjMyIAOMJJY3es8rpQFUsyVx9qHwjB
-	ET9MgT+3zWGw8lWM3kXDw5KdgzdcyCyyON35V83dmaZEtfkl7c5qGtS7Xy5uUe4UPJkZkS
-	4LwO/2e6qofVNSNSVp5qNsM44PIFAkC4ewyP1EEi4ZpcK0knD3Wb38EA3SGGlA==
+	bh=n1b1SDCZF5N0dTJ9caIvP/lPlTSy/bPJIdiY2lXoI4Y=;
+	b=VfG0TpwDAZiQiBdMPgDIET4eI/67+dFq+Qp+e/KjFTBoN1VOqtbUg1TQKD2kZkTUXj54L3
+	5iPo0jq1hjgrt6DRX/kWFUBSk28ZgFTl4VzW3OHJLdGEHD2OFL4jx/AxJgsYWruiL8BD/m
+	YXC5o8x9+FIHRJY8nyWMrcUJqIAUi51+WeZQP7tGo3rlTHIwBmZljZwEu9dfc3WiRvHUYo
+	79GKuk2slhHnAFoM09c4+Ni7rgexoq9EKd4uCLNtTcU7R0yWJsH8wAlpX1Hbdz3dTJqLlS
+	v619FP/H/Z4wKvKxYq5wWVJK5iruyxKs39PAjiBQAJJaizdcgsu0OtmqD/1TMQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740572103;
+	s=2020e; t=1740572105;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tZzB53QHmMmsfW5kzZagHwgEdYP4EveGloYBEbE/KAA=;
-	b=PBM3DaTNELeBOr60xjfmb58hoG1Sx65P5ZOZGCCEDLjM05dyeKXWZnwdFb86b1Fh7iWENw
-	lhWSBhjs5YS50HAA==
+	bh=n1b1SDCZF5N0dTJ9caIvP/lPlTSy/bPJIdiY2lXoI4Y=;
+	b=cxs+beE4EFoRysi+ZYrOk0Kb1iH1cw/TAd18dD8HvN4NYHsoOGGfhm6rlqtdJ1QvgOmP2T
+	7tYcoN47CpY2voAA==
 From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] selftests/x86/avx: Add AVX tests
+Subject: [tip: x86/fpu] selftests/x86/xstate: Consolidate test invocations
+ into a single entry
 Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226010731.2456-10-chang.seok.bae@intel.com>
-References: <20250226010731.2456-10-chang.seok.bae@intel.com>
+In-Reply-To: <20250226010731.2456-8-chang.seok.bae@intel.com>
+References: <20250226010731.2456-8-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174057210260.10177.17899873701396575344.tip-bot2@tip-bot2>
+Message-ID: <174057210461.10177.8050759209259343036.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,92 +67,169 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/fpu branch of tip:
 
-Commit-ID:     bfc98dbcb3c75c6e2eb1dcf389d02a8c2419c41c
-Gitweb:        https://git.kernel.org/tip/bfc98dbcb3c75c6e2eb1dcf389d02a8c2419c41c
+Commit-ID:     10d8a204c5009fb8a6cb2790d17b5611b795c349
+Gitweb:        https://git.kernel.org/tip/10d8a204c5009fb8a6cb2790d17b5611b795c349
 Author:        Chang S. Bae <chang.seok.bae@intel.com>
-AuthorDate:    Tue, 25 Feb 2025 17:07:29 -08:00
+AuthorDate:    Tue, 25 Feb 2025 17:07:27 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 26 Feb 2025 13:05:30 +01:00
+CommitterDate: Wed, 26 Feb 2025 13:05:29 +01:00
 
-selftests/x86/avx: Add AVX tests
+selftests/x86/xstate: Consolidate test invocations into a single entry
 
-Add xstate testing specifically for those vector register states,
-validating kernel's context switching and ensuring ABI compliance.
-Use the established xstate testing framework.
+Currently, each of the three xstate tests runs as a separate invocation,
+requiring the xstate number to be passed and state information to be
+reconstructed repeatedly. This approach arose from their individual and
+isolated development, but now it makes sense to unify them.
 
-Alternatively, this invocation could be placed directly in
-xstate.c::main(). However, the current test file naming convention, which
-clearly specifies the tested area, seems reasonable. Adding avx.c
-considerably aligns with that convention.
+Introduce a wrapper function that first verifies feature availability
+from the kernel and constructs the necessary state information once. The
+wrapper then sequentially invokes all tests to ensure consistent
+execution.
 
-The test output should be like this for ZMM_Hi256 as an example:
-
-  $ avx_64
-  ...
-  [RUN]   AVX-512 ZMM_Hi256: check context switches, 10 iterations, 5 threads.
-  [OK]    No incorrect case was found.
-  [RUN]   AVX-512 ZMM_Hi256: inject xstate via ptrace().
-  [OK]    'xfeatures' in SW reserved area was correctly written
-  [OK]    xstate was correctly updated.
-  [RUN]   AVX-512 ZMM_Hi256: load xstate and raise SIGUSR1
-  [OK]    'magic1' is valid
-  [OK]    'xfeatures' in SW reserved area is valid
-  [OK]    'xfeatures' in XSAVE header is valid
-  [OK]    xstate delivery was successful
-  [OK]    'magic2' is valid
-  [RUN]   AVX-512 ZMM_Hi256: load new xstate from sighandler and check it after sigreturn
-  [OK]    xstate was restored correctly
-
-But systems without AVX-512 will look like:
-  ...
-  The kernel does not support feature number: 5
-  The kernel does not support feature number: 6
-  The kernel does not support feature number: 7
+Update the AMX test to use this unified invocation.
 
 Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250226010731.2456-10-chang.seok.bae@intel.com
+Link: https://lore.kernel.org/r/20250226010731.2456-8-chang.seok.bae@intel.com
 ---
- tools/testing/selftests/x86/Makefile |  4 +++-
- tools/testing/selftests/x86/avx.c    | 12 ++++++++++++
- 2 files changed, 15 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/x86/avx.c
+ tools/testing/selftests/x86/amx.c    | 11 +++-----
+ tools/testing/selftests/x86/xstate.c | 38 +++++++++++++++++++--------
+ tools/testing/selftests/x86/xstate.h |  5 +---
+ 3 files changed, 35 insertions(+), 19 deletions(-)
 
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index f15efdc..28422c3 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -19,7 +19,7 @@ TARGETS_C_32BIT_ONLY := entry_from_vm86 test_syscall_vdso unwind_vdso \
- 			test_FCMOV test_FCOMI test_FISTTP \
- 			vdso_restorer
- TARGETS_C_64BIT_ONLY := fsgsbase sysret_rip syscall_numbering \
--			corrupt_xstate_header amx lam test_shadow_stack
-+			corrupt_xstate_header amx lam test_shadow_stack avx
- # Some selftests require 32bit support enabled also on 64bit systems
- TARGETS_C_32BIT_NEEDED := ldt_gdt ptrace_syscall
+diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
+index 9cb691d..40769c1 100644
+--- a/tools/testing/selftests/x86/amx.c
++++ b/tools/testing/selftests/x86/amx.c
+@@ -480,7 +480,6 @@ static void test_fork(void)
  
-@@ -133,4 +133,6 @@ $(OUTPUT)/check_initial_reg_state_64: CFLAGS += -Wl,-ereal_start -static
- $(OUTPUT)/nx_stack_32: CFLAGS += -Wl,-z,noexecstack
- $(OUTPUT)/nx_stack_64: CFLAGS += -Wl,-z,noexecstack
+ int main(void)
+ {
+-	const unsigned int ctxtsw_num_threads = 5, ctxtsw_iterations = 10;
+ 	unsigned long features;
+ 	long rc;
  
-+$(OUTPUT)/avx_64: CFLAGS += -mno-avx -mno-avx512f
- $(OUTPUT)/amx_64: EXTRA_FILES += xstate.c
-+$(OUTPUT)/avx_64: EXTRA_FILES += xstate.c
-diff --git a/tools/testing/selftests/x86/avx.c b/tools/testing/selftests/x86/avx.c
-new file mode 100644
-index 0000000..11d5367
---- /dev/null
-+++ b/tools/testing/selftests/x86/avx.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -506,11 +505,11 @@ int main(void)
+ 
+ 	test_fork();
+ 
+-	test_context_switch(XFEATURE_XTILEDATA, ctxtsw_num_threads, ctxtsw_iterations);
+-
+-	test_ptrace(XFEATURE_XTILEDATA);
+-
+-	test_signal(XFEATURE_XTILEDATA);
++	/*
++	 * Perform generic xstate tests for context switching, ptrace,
++	 * and signal.
++	 */
++	test_xstate(XFEATURE_XTILEDATA);
+ 
+ 	clearhandler(SIGILL);
+ 	free_stashed_xsave();
+diff --git a/tools/testing/selftests/x86/xstate.c b/tools/testing/selftests/x86/xstate.c
+index b5600f4..fd8451e 100644
+--- a/tools/testing/selftests/x86/xstate.c
++++ b/tools/testing/selftests/x86/xstate.c
+@@ -6,7 +6,9 @@
+ #include <pthread.h>
+ #include <stdbool.h>
+ 
++#include <asm/prctl.h>
+ #include <sys/ptrace.h>
++#include <sys/syscall.h>
+ #include <sys/uio.h>
+ #include <sys/wait.h>
+ 
+@@ -189,15 +191,13 @@ static void affinitize_cpu0(void)
+ 		ksft_exit_fail_msg("sched_setaffinity to CPU 0 failed\n");
+ }
+ 
+-void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t iterations)
++static void test_context_switch(uint32_t num_threads, uint32_t iterations)
+ {
+ 	struct futex_info *finfo;
+ 
+ 	/* Affinitize to one CPU to force context switches */
+ 	affinitize_cpu0();
+ 
+-	xstate = get_xstate_info(feature_num);
+-
+ 	printf("[RUN]\t%s: check context switches, %d iterations, %d threads.\n",
+ 	       xstate.name, iterations, num_threads);
+ 
+@@ -299,13 +299,11 @@ static void ptracer_inject_xstate(pid_t target)
+ 	free(xbuf2);
+ }
+ 
+-void test_ptrace(uint32_t feature_num)
++static void test_ptrace(void)
+ {
+ 	pid_t child;
+ 	int status;
+ 
+-	xstate = get_xstate_info(feature_num);
+-
+ 	child = fork();
+ 	if (child < 0) {
+ 		ksft_exit_fail_msg("fork() failed\n");
+@@ -392,17 +390,14 @@ static void validate_sigfpstate(int sig, siginfo_t *si, void *ctx_void)
+ 	copy_xstate(stashed_xbuf, xbuf);
+ }
+ 
+-void test_signal(uint32_t feature_num)
++static void test_signal(void)
+ {
+ 	bool valid_xstate;
+ 
+-	xstate = get_xstate_info(feature_num);
+-
+ 	/*
+ 	 * The signal handler will access this to verify xstate context
+ 	 * preservation.
+ 	 */
+-
+ 	stashed_xbuf = alloc_xbuf();
+ 	if (!stashed_xbuf)
+ 		ksft_exit_fail_msg("unable to allocate XSAVE buffer\n");
+@@ -433,3 +428,26 @@ void test_signal(uint32_t feature_num)
+ 	clearhandler(SIGUSR1);
+ 	free(stashed_xbuf);
+ }
 +
-+#define _GNU_SOURCE /* Required for inline xstate helpers */
-+#include "xstate.h"
-+
-+int main(void)
++void test_xstate(uint32_t feature_num)
 +{
-+	test_xstate(XFEATURE_YMM);
-+	test_xstate(XFEATURE_OPMASK);
-+	test_xstate(XFEATURE_ZMM_Hi256);
-+	test_xstate(XFEATURE_Hi16_ZMM);
++	const unsigned int ctxtsw_num_threads = 5, ctxtsw_iterations = 10;
++	unsigned long features;
++	long rc;
++
++	rc = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_SUPP, &features);
++	if (rc || !(features & (1 << feature_num))) {
++		ksft_print_msg("The kernel does not support feature number: %u\n", feature_num);
++		return;
++	}
++
++	xstate = get_xstate_info(feature_num);
++	if (!xstate.size || !xstate.xbuf_offset) {
++		ksft_exit_fail_msg("invalid state size/offset (%d/%d)\n",
++				   xstate.size, xstate.xbuf_offset);
++	}
++
++	test_context_switch(ctxtsw_num_threads, ctxtsw_iterations);
++	test_ptrace();
++	test_signal();
 +}
+diff --git a/tools/testing/selftests/x86/xstate.h b/tools/testing/selftests/x86/xstate.h
+index 4d0ffe9..42af36e 100644
+--- a/tools/testing/selftests/x86/xstate.h
++++ b/tools/testing/selftests/x86/xstate.h
+@@ -189,8 +189,7 @@ static inline void set_rand_data(struct xstate_info *xstate, struct xsave_buffer
+ 		*ptr = data;
+ }
+ 
+-void test_context_switch(uint32_t feature_num, uint32_t num_threads, uint32_t iterations);
+-void test_ptrace(uint32_t feature_num);
+-void test_signal(uint32_t feature_num);
++/* Testing kernel's context switching and ABI support for the xstate. */
++void test_xstate(uint32_t feature_num);
+ 
+ #endif /* __SELFTESTS_X86_XSTATE_H */
