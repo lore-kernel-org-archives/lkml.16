@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC78518801A
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8010721C9EE
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740538910; cv=none; b=UB34Eu7f70kcA5qvFZ3534Y4c3+GgRToWMcOEsMWEgAvlgV3n2yuC/nF9hjBFQFe5yqYqNX95f8Z5KHI+Dlusoyk/aZmKgvWUs5WU5X4rONIPK02X5pS6HzUSHemD2/w13os2rJLT6jfoemYInbiW6rtbs+HGnwE6B4/0zXs83g=
+	t=1740538910; cv=none; b=Bl5E90q0iXac23N9dKg6Wl3p7tSLgbX1A4l5HOqCVlJMt8OcWPLWSILPOVk1xoUm3pWweXT2cOrTXE/6zajyZektN5eeQ1TH3ZDXmVgTbx5sKh9cPCrNTgDlSgKXsq8uC6fSSZSrysYKbPkhaB6u1m7qQB9O6tjyZW7z2jxAGRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740538910; c=relaxed/simple;
-	bh=g8vmp/uzQTrkyEAw/uOk9QKaOhpUgeH3UCuUM3E0TkA=;
+	bh=whtnn44Num0oisRgu2MRfKcA35w7YlCmd4XWm55Z2fA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D0LaQf+qXrKgWJe0uShS+ijuiz9M+DUyxOx8LhyWzIsAQHMaeEHc/NIsoHHYoUIz1naPZXHpogfGGCCOogAPggb4pNh6vwTCpyry/UyTPkipETNzC+mK4LpQP+6LIvvxhnV4cmdmQERQfDu9liHKU1NVY2G2CUZJWhz8A+6ZAZQ=
+	 MIME-Version; b=dKzxUKi7o7DFWWqFbzYm60ASx8L/gQhbyh4pqRDr5H9p3oSbQCncQ1jBWJWvjTlG0ncERNbqWNktJRcQwHnAvt6295ZBjcz0TQXlWqzcVkmEGPU9xcGq0odK30SAlJztPKHmk4g0BN4vgUaA1F2X7CPZJEMnkWA6RRDahf3+Ai4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tn7fw-000000001Y5-0MJ4;
+	id 1tn7fw-000000001Y5-1Bi8;
 	Tue, 25 Feb 2025 22:01:32 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -38,11 +38,10 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
 	mingo@kernel.org,
-	Rik van Riel <riel@surriel.com>,
-	Dave Hansen <dave.hansen@intel.com>
-Subject: [PATCH v14 01/13] x86/mm: consolidate full flush threshold decision
-Date: Tue, 25 Feb 2025 22:00:36 -0500
-Message-ID: <20250226030129.530345-2-riel@surriel.com>
+	Rik van Riel <riel@surriel.com>
+Subject: [PATCH v14 10/13] x86/mm: enable broadcast TLB invalidation for multi-threaded processes
+Date: Tue, 25 Feb 2025 22:00:45 -0500
+Message-ID: <20250226030129.530345-11-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250226030129.530345-1-riel@surriel.com>
 References: <20250226030129.530345-1-riel@surriel.com>
@@ -55,90 +54,230 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Reduce code duplication by consolidating the decision point
-for whether to do individual invalidations or a full flush
-inside get_flush_tlb_info.
+Use broadcast TLB invalidation, using the INVPLGB instruction.
+
+There is not enough room in the 12-bit ASID address space to hand
+out broadcast ASIDs to every process. Only hand out broadcast ASIDs
+to processes when they are observed to be simultaneously running
+on 4 or more CPUs.
+
+This also allows single threaded process to continue using the
+cheaper, local TLB invalidation instructions like INVLPGB.
+
+Due to the structure of flush_tlb_mm_range, the INVLPGB
+flushing is done in a generically named broadcast_tlb_flush
+function, which can later also be used for Intel RAR.
+
+Combined with the removal of unnecessary lru_add_drain calls
+(see https://lkml.org/lkml/2024/12/19/1388) this results in a
+nice performance boost for the will-it-scale tlb_flush2_threads
+test on an AMD Milan system with 36 cores:
+
+- vanilla kernel:           527k loops/second
+- lru_add_drain removal:    731k loops/second
+- only INVLPGB:             527k loops/second
+- lru_add_drain + INVLPGB: 1157k loops/second
+
+Profiling with only the INVLPGB changes showed while
+TLB invalidation went down from 40% of the total CPU
+time to only around 4% of CPU time, the contention
+simply moved to the LRU lock.
+
+Fixing both at the same time about doubles the
+number of iterations per second from this case.
+
+Comparing will-it-scale tlb_flush2_threads with
+several different numbers of threads on a 72 CPU
+AMD Milan shows similar results. The number
+represents the total number of loops per second
+across all the threads:
+
+threads		tip		invlpgb
+
+1		315k		304k
+2		423k		424k
+4		644k		1032k
+8		652k		1267k
+16		737k		1368k
+32		759k		1199k
+64		636k		1094k
+72		609k		993k
+
+1 and 2 thread performance is similar with and
+without invlpgb, because invlpgb is only used
+on processes using 4 or more CPUs simultaneously.
+
+The number is the median across 5 runs.
+
+Some numbers closer to real world performance
+can be found at Phoronix, thanks to Michael:
+
+https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Suggested-by: Dave Hansen <dave.hansen@intel.com>
+Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
+Tested-by: Manali Shukla <Manali.Shukla@amd.com>
+Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
-Acked-by: Dave Hansen <dave.hansen@intel.com>
-Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
 ---
- arch/x86/mm/tlb.c | 41 +++++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ arch/x86/include/asm/tlbflush.h |   9 +++
+ arch/x86/mm/tlb.c               | 107 +++++++++++++++++++++++++++++++-
+ 2 files changed, 115 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index ffc25b348041..dbcb5c968ff9 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1000,6 +1000,15 @@ static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
- 	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
- #endif
- 
-+	/*
-+	 * If the number of flushes is so large that a full flush
-+	 * would be faster, do a full flush.
-+	 */
-+	if ((end - start) >> stride_shift > tlb_single_page_flush_ceiling) {
-+		start = 0;
-+		end = TLB_FLUSH_ALL;
-+	}
-+
- 	info->start		= start;
- 	info->end		= end;
- 	info->mm		= mm;
-@@ -1026,17 +1035,8 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				bool freed_tables)
- {
- 	struct flush_tlb_info *info;
-+	int cpu = get_cpu();
- 	u64 new_tlb_gen;
--	int cpu;
--
--	cpu = get_cpu();
--
--	/* Should we flush just the requested range? */
--	if ((end == TLB_FLUSH_ALL) ||
--	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
--		start = 0;
--		end = TLB_FLUSH_ALL;
--	}
- 
- 	/* This is also a barrier that synchronizes with switch_mm(). */
- 	new_tlb_gen = inc_mm_tlb_gen(mm);
-@@ -1089,22 +1089,19 @@ static void do_kernel_range_flush(void *info)
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--	/* Balance as user space task's flush, a bit conservative */
--	if (end == TLB_FLUSH_ALL ||
--	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
--		on_each_cpu(do_flush_tlb_all, NULL, 1);
--	} else {
--		struct flush_tlb_info *info;
-+	struct flush_tlb_info *info;
-+
-+	guard(preempt)();
- 
--		preempt_disable();
--		info = get_flush_tlb_info(NULL, start, end, 0, false,
--					  TLB_GENERATION_INVALID);
-+	info = get_flush_tlb_info(NULL, start, end, PAGE_SHIFT, false,
-+				  TLB_GENERATION_INVALID);
- 
-+	if (info->end == TLB_FLUSH_ALL)
-+		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+	else
- 		on_each_cpu(do_kernel_range_flush, info, 1);
- 
--		put_flush_tlb_info();
--		preempt_enable();
--	}
-+	put_flush_tlb_info();
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 37b735dcf025..811dd70eb6b8 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -272,6 +272,11 @@ static inline void mm_assign_global_asid(struct mm_struct *mm, u16 asid)
+ 	smp_store_release(&mm->context.global_asid, asid);
  }
  
++static inline void clear_asid_transition(struct mm_struct *mm)
++{
++	WRITE_ONCE(mm->context.asid_transition, false);
++}
++
+ static inline bool in_asid_transition(struct mm_struct *mm)
+ {
+ 	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
+@@ -289,6 +294,10 @@ static inline void mm_assign_global_asid(struct mm_struct *mm, u16 asid)
+ {
+ }
+ 
++static inline void clear_asid_transition(struct mm_struct *mm)
++{
++}
++
+ static inline bool in_asid_transition(struct mm_struct *mm)
+ {
+ 	return false;
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index b7d461db1b08..cd109bdf0dd9 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -422,6 +422,108 @@ static bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
+ 	return false;
+ }
+ 
++/*
++ * x86 has 4k ASIDs (2k when compiled with KPTI), but the largest
++ * x86 systems have over 8k CPUs. Because of this potential ASID
++ * shortage, global ASIDs are handed out to processes that have
++ * frequent TLB flushes and are active on 4 or more CPUs simultaneously.
++ */
++static void consider_global_asid(struct mm_struct *mm)
++{
++	if (!static_cpu_has(X86_FEATURE_INVLPGB))
++		return;
++
++	/* Check every once in a while. */
++	if ((current->pid & 0x1f) != (jiffies & 0x1f))
++		return;
++
++	if (!READ_ONCE(global_asid_available))
++		return;
++
++	/*
++	 * Assign a global ASID if the process is active on
++	 * 4 or more CPUs simultaneously.
++	 */
++	if (mm_active_cpus_exceeds(mm, 3))
++		use_global_asid(mm);
++}
++
++static void finish_asid_transition(struct flush_tlb_info *info)
++{
++	struct mm_struct *mm = info->mm;
++	int bc_asid = mm_global_asid(mm);
++	int cpu;
++
++	if (!in_asid_transition(mm))
++		return;
++
++	for_each_cpu(cpu, mm_cpumask(mm)) {
++		/*
++		 * The remote CPU is context switching. Wait for that to
++		 * finish, to catch the unlikely case of it switching to
++		 * the target mm with an out of date ASID.
++		 */
++		while (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) == LOADED_MM_SWITCHING)
++			cpu_relax();
++
++		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) != mm)
++			continue;
++
++		/*
++		 * If at least one CPU is not using the global ASID yet,
++		 * send a TLB flush IPI. The IPI should cause stragglers
++		 * to transition soon.
++		 *
++		 * This can race with the CPU switching to another task;
++		 * that results in a (harmless) extra IPI.
++		 */
++		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm_asid, cpu)) != bc_asid) {
++			flush_tlb_multi(mm_cpumask(info->mm), info);
++			return;
++		}
++	}
++
++	/* All the CPUs running this process are using the global ASID. */
++	clear_asid_transition(mm);
++}
++
++static void broadcast_tlb_flush(struct flush_tlb_info *info)
++{
++	bool pmd = info->stride_shift == PMD_SHIFT;
++	unsigned long asid = mm_global_asid(info->mm);
++	unsigned long addr = info->start;
++
++	/*
++	 * TLB flushes with INVLPGB are kicked off asynchronously.
++	 * The inc_mm_tlb_gen() guarantees page table updates are done
++	 * before these TLB flushes happen.
++	 */
++	if (info->end == TLB_FLUSH_ALL) {
++		invlpgb_flush_single_pcid_nosync(kern_pcid(asid));
++		/* Do any CPUs supporting INVLPGB need PTI? */
++		if (static_cpu_has(X86_FEATURE_PTI))
++			invlpgb_flush_single_pcid_nosync(user_pcid(asid));
++	} else do {
++		unsigned long nr = 1;
++
++		if (info->stride_shift <= PMD_SHIFT) {
++			nr = (info->end - addr) >> info->stride_shift;
++			nr = clamp_val(nr, 1, invlpgb_count_max);
++		}
++
++		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
++		if (static_cpu_has(X86_FEATURE_PTI))
++			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
++
++		addr += nr << info->stride_shift;
++	} while (addr < info->end);
++
++	finish_asid_transition(info);
++
++	/* Wait for the INVLPGBs kicked off above to finish. */
++	__tlbsync();
++}
++
  /*
+  * Given an ASID, flush the corresponding user ASID.  We can delay this
+  * until the next time we switch to it.
+@@ -1252,9 +1354,12 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 	 * a local TLB flush is needed. Optimize this use-case by calling
+ 	 * flush_tlb_func_local() directly in this case.
+ 	 */
+-	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
++	if (mm_global_asid(mm)) {
++		broadcast_tlb_flush(info);
++	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
+ 		info->trim_cpumask = should_trim_cpumask(mm);
+ 		flush_tlb_multi(mm_cpumask(mm), info);
++		consider_global_asid(mm);
+ 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
+ 		lockdep_assert_irqs_enabled();
+ 		local_irq_disable();
 -- 
 2.47.1
 
