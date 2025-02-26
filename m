@@ -1,144 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5514421D003
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A94721B1A8;
+	Wed, 26 Feb 2025 13:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575028; cv=none; b=VwZ8NfXtK4PNvXe0v65TLVDPe5BUCXthj60RejyktWJ1Z/tyIwu1Mq9zIU4YLbUVcooH3mJ3ZXr5EwRhKrhhgaBEwR6chOiTxk3LcCebSi7vGhCw4FPsfmUGA5IgqIeeQJeGTCbkJXFSeqplOMhXVt/WrNdXXLoE751OMIz2fek=
+	t=1740575028; cv=none; b=hYzOFd+5nD1LSAPXCTGzUly09dO8zLt0NcghyeD/YGIRSnGf9+AW+/+UCjOdSkFZOX3y3/A5SFCjo6pf2yiZxBTPu+uMLDsdaiAjuW9lHot88Q7kC/z79W+w/0I4P4AswIUzgP0+nbrbV05ZodaDO3jlLJ3SBTUncjVAFItrWzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740575028; c=relaxed/simple;
-	bh=8st0GcF0LWZ1MQQer5WMDLRIdMrYVYWR9wmuvEfF6mw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cvacqipl7Uth3P9+KsNFruHrhLwNhO7nJPivgQENXFci70POAkN5XncqclVKgp8zdZG2F2OxGR4NIJYKouPZ2jaGQfQMahSx3mq9G/XcIclOH5rA9sFhOtD4/bI/gRLMsc3LPnfxl04Itlu7knSnRzUOC00IKBZRuOkcfNgjvEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IVIJOafL; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=mKv7YBrc1HDYrnTjdnEPPLdoe5b6l7JfEKTBG8/pQR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HF+XYI3NNre9UBXD32H957Fs3m2tXVfemdTltlep5i1s6F2yTEVF5PwYVXuCO5Lf/a8LHXg12Vj0sw0uoILpk0kibUSaUekUbnOJcizlr61qGBzGJRVxMARvI4OP94kx0AG/pZTojBquRlkKbouZW6yqFgRDVR1AawvhAtPYWoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g3438I56; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IVIJOafL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g3438I56"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1740575027; x=1772111027;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=8st0GcF0LWZ1MQQer5WMDLRIdMrYVYWR9wmuvEfF6mw=;
-  b=IVIJOafLAAHxDqxtWThOtWfoPmuLT2XCfw2i79Lz4aDzN1LTqjE609Um
-   lPPUuPGH0YYl0PMO/C6Py1hAp0xv7TolRpnV2LRG5OrlLjl6VrQLiZGzH
-   W3/Kqb3xM/9w2Dl1F+9hOQmGIaznnTNpBE4XG/fe9+jcuGrfr4NM77vac
-   rD/gtLEJb5KWyUw08se4v4yC96BJ7M042bWLhz3MsdrO1zvmpiittvnkG
-   1Mi8yfLHkEvqNwR6Ps/9cz7aRgitUVpAkoZRwmBIXZAtA/1FidM+AqRB9
-   OZSPB90PFiqbSvHaAX17A0aj//LiaLYPddgOvuo3h0Y76ucOlI+uWs3i9
-   w==;
-X-CSE-ConnectionGUID: ja3jxIh+SBaEnSIFccMk+Q==
-X-CSE-MsgGUID: zDXDyOqVSw2l3oNHa09S8Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41341643"
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mKv7YBrc1HDYrnTjdnEPPLdoe5b6l7JfEKTBG8/pQR4=;
+  b=g3438I567+ELXqvIQX/nFVIH4YGMaoKAxud0u2hvTnf62/R9ZE5A/HQE
+   t46lNOq6T/NgSCJqxiQZpgLDBGMwoie8SH68XXuVeE1i8zwPvaE/Pu27X
+   ++szGtDfmNgFgNxW5N72cDEo1PJAlo+ke22Pr1r0RGBguJyRIgJWKpVOZ
+   4H6vQqen5T0KaURWCSYvAuH/593f6hNJhXdGhdCOhbWRtb//Hgnr4G4Dt
+   BY7pcBg+GPQcqXsbnzvIycMz6mVCE/NZJas2mddI3abSpRaPKsJlSHU18
+   gEjyXs8N/cMzeZTudQTyAE4HdF/yIkExYuQ3zjjvKradpW5Gfj/BrQ8dQ
+   A==;
+X-CSE-ConnectionGUID: uY/tHS1eQFid0axOifui+g==
+X-CSE-MsgGUID: VzTqIO1UQnqeLyQoLCXUTA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="63882142"
 X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="41341643"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:47 -0800
-X-CSE-ConnectionGUID: 9d2qnndiTPmO9BQ70bE5yQ==
-X-CSE-MsgGUID: EgZM0NLKQwGt8pd3pE+YJA==
+   d="scan'208";a="63882142"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:47 -0800
+X-CSE-ConnectionGUID: lFonP+8URSeQu7LUa4uipg==
+X-CSE-MsgGUID: cR+O4uRqQVqyKd3/uyLPAA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="121691008"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:41 -0800
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>,
-	linux-mtd@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v5 09/11] drm/i915/nvm: add support for access mode
-Date: Wed, 26 Feb 2025 14:51:41 +0200
-Message-ID: <20250226125143.3791515-10-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250226125143.3791515-1-alexander.usyskin@intel.com>
-References: <20250226125143.3791515-1-alexander.usyskin@intel.com>
+   d="scan'208";a="121302329"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:45 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 8F03E11F944;
+	Wed, 26 Feb 2025 15:03:42 +0200 (EET)
+Date: Wed, 26 Feb 2025 13:03:42 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Qasim Ijaz <qasdev00@gmail.com>
+Cc: benjamin.mugnier@foss.st.com, sylvain.petinot@foss.st.com,
+	mchehab@kernel.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: i2c: Replace nested min() with single min3()
+Message-ID: <Z78RLvljBbiaHqtm@kekkonen.localdomain>
+References: <20250225125937.20413-1-qasdev00@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225125937.20413-1-qasdev00@gmail.com>
 
-Check NVM access mode from GSC FW status registers
-and overwrite access status read from SPI descriptor, if needed.
+Hi Qasim,
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/i915/intel_nvm.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+On Tue, Feb 25, 2025 at 12:59:37PM +0000, Qasim Ijaz wrote:
+> Use min3() macro instead of nesting min() to simplify the return
+> statement.
 
-diff --git a/drivers/gpu/drm/i915/intel_nvm.c b/drivers/gpu/drm/i915/intel_nvm.c
-index 75d3ebe669ff..d88f8b9b5ace 100644
---- a/drivers/gpu/drm/i915/intel_nvm.c
-+++ b/drivers/gpu/drm/i915/intel_nvm.c
-@@ -10,6 +10,7 @@
- #include "intel_nvm.h"
- 
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
- 	[0] = { .name = "DESCRIPTOR", },
-@@ -22,6 +23,28 @@ static void i915_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool i915_nvm_writeable_override(struct drm_i915_private *i915)
-+{
-+	resource_size_t base;
-+	bool writeable_override;
-+
-+	if (IS_DG1(i915)) {
-+		base = DG1_GSC_HECI2_BASE;
-+	} else if (IS_DG2(i915)) {
-+		base = DG2_GSC_HECI2_BASE;
-+	} else {
-+		drm_err(&i915->drm, "Unknown platform\n");
-+		return true;
-+	}
-+
-+	writeable_override =
-+		!(intel_uncore_read(&i915->uncore, HECI_FWSTS(base, 2)) &
-+		  HECI_FW_STATUS_2_NVM_ACCESS_MODE);
-+	if (writeable_override)
-+		drm_info(&i915->drm, "NVM access overridden by jumper\n");
-+	return writeable_override;
-+}
-+
- void intel_nvm_init(struct drm_i915_private *i915)
- {
- 	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
-@@ -43,7 +66,7 @@ void intel_nvm_init(struct drm_i915_private *i915)
- 
- 	nvm = i915->nvm;
- 
--	nvm->writeable_override = true;
-+	nvm->writeable_override = i915_nvm_writeable_override(i915);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
+Going forward, for this driver on subject:
+
+s/i2c/vgxy61/
+
+as this is a driver for vgxy61. I've done that this time.
+
 -- 
-2.43.0
+Regards,
 
+Sakari Ailus
