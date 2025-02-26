@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 508F521ABDF
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1443621D3F5
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571313; cv=none; b=GJh2oVg5MBgIJr444HKZPdqxeLW3GNc6gUlWEL0fucz7FDvC7NtkglAfrrIo8KM9vp9UKWX+jAyc1QQNLQUy/YKmSK/eZlpu4d4LMYdStF2+Vk/CR225WVZ56fW6V2DY4165EgX15DHr8iwEBoQx66jqX+p4fzIK/hgcZfKcTPg=
+	t=1740571313; cv=none; b=VAUXkMdQnqMZ7X7yBGodPS8CKpyzLX+zDkU8NzHC0ru4YK3sv8j/k4aXK37tNQpynIUo3dYDq2eMHw2NGRupeuAxaI/nFqfh/GqrqRry06I1H6rS4HXGlOQf0sJdGjiyOZdtc80NsyIhS0+mHF52TiuuerKSIEDBseCm8QB1sV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740571313; c=relaxed/simple;
-	bh=NUbuF0DqjtPbNaP0Crunij2FMhY9sRWmKOWkpVEphqs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=WEyVYFEbMmE6ZZhddlcw1b2W6BFo3YP1ca+8RlGCVRZ2y3s8g4PRnZ0ScA8uhhOSgUI377lvxdDXAICnRtg0QD4VzjCRB8d62Fm5M2tkg8J4/wsPXvSwVFiN6/ypQh1Y9RqQcK07q/KGqaZ8cE0UrH9QSVFFBD29KEFj7YEL7WA=
+	bh=IebXMzVjzhtgKw9wJcCtsEokmAkJ+0QpAvKulqGNLBA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Qp8JMOPt7eV+F25B2YPo7qwrB6FrhryQFw72B9DzqnVTEL5eU9FyQv89uyDAxKUc67H676ZKPY4cCxt24yqvG9tmGgVV6CAhINGTBw9f0HES8rzcl2rfmpFW0zU208aEDJmbJshe0vJMoWCDJd8r9auvNBxD1Fwx/1AixlnU/Jg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-fe-67bf02a6a7b1
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-0d-67bf02a79efb
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 12/25] mm: delimit critical sections to take off pages from pcp or buddy alloctor
-Date: Wed, 26 Feb 2025 21:01:19 +0900
-Message-Id: <20250226120132.28469-12-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 15/25] fs, filemap: refactor to gather the scattered ->write_{begin,end}() calls
+Date: Wed, 26 Feb 2025 21:01:22 +0900
+Message-Id: <20250226120132.28469-15-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120132.28469-1-byungchul@sk.com>
 References: <20250226113342.GB1935@system.software.com>
  <20250226120132.28469-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrGLMWRmVeSWpSXmKPExsXC9ZZnke5ypv3pBof3MFrMWb+GzeLzhn9s
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsXC9ZZnke5ypv3pBpN/8lrMWb+GzeLzhn9s
 	Fl/X/2K2ePqpj8Xi8q45bBb31vxntTi/ay2rxY6l+5gsLh1YwGRxvPcAk8X8e5/ZLDZvmsps
 	cXzKVEaL3z/msDnweXxv7WPx2DnrLrvHgk2lHptXaHlsWtXJ5rHp0yR2j3fnzrF7nJjxm8Xj
-	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV8a0L19YC3Y2M1as3/6arYFxclYX
-	IyeHhICJxPKtaxhh7LV/drCA2GwC6hI3bvxkBrFFBMwkDrb+Ye9i5OJgFljGJLH3RAMbiCMs
-	MJFRYlPDcVaQKhYBVYld36eD2bxAHT1fX7NATJWXWL3hANgkTqD4v92/2UFsIYFkiZb1v1lA
-	BkkI3GeTONy6ngmiQVLi4IobLBMYeRcwMqxiFMrMK8tNzMwx0cuozMus0EvOz93ECAztZbV/
-	oncwfroQfIhRgINRiYf3wZm96UKsiWXFlbmHGCU4mJVEeDkz96QL8aYkVlalFuXHF5XmpBYf
-	YpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYIwRsgj+cXZ7hk/HvMeW57m+nrsud130
-	2knWx2ytr033zJ3rOE9iziz+R01tbXue/NkZnb2qfnLxbEEpj0Msc5ZtO+ARcfqj7rS7IetX
-	3lfaq7Z3v4dK+794laydzOtu3D8Yzfl9mw1LkLbea73dYonVD0Vn/FLnSizxPDDdIKtUliEm
-	pzcu31+JpTgj0VCLuag4EQDQc5zvaQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLLMWRmVeSWpSXmKPExsXC5WfdrLuMaX+6wa2bJhZz1q9hs/i84R+b
+	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV8b9Fa3sBd+yK9Y9XM/cwHgutIuR
+	k0NCwERixbYrbF2MHGD2kl+BIGE2AXWJGzd+MoPYIgJmEgdb/7B3MXJxMAssY5LYe6KBDcQR
+	FpjAKDFvVQs7SBWLgKrEsc1rwGxeoI5F1/uZIRbIS6zecADM5gSK/9v9G6xGSCBZomX9bxaQ
+	QRIC99kkdszrYoRokJQ4uOIGywRG3gWMDKsYhTLzynITM3NM9DIq8zIr9JLzczcxAsN6We2f
+	6B2Mny4EH2IU4GBU4uF9cGZvuhBrYllxZe4hRgkOZiURXs7MPelCvCmJlVWpRfnxRaU5qcWH
+	GKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGKOPTc+YkDU7+9WRvPMnXbfzrM5KL3tw
+	4+8WoY//r5n4lNhpHX8f+1H73k+ukhtJX21WlP/stznGvDDzXF1zZxPvhlv9Wo2yxQ1Jyzs9
+	DFL7Lu8VkFt6xspSQuY0Y4XL6tU+t3SmRMxuvmJcrXPEN3qxksBu/sMP3nsVyPx/MzmBtc//
+	71wdUyWW4oxEQy3mouJEAGgv1UtnAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsXC5WfdrLucaX+6wc2DLBZz1q9hs/i84R+b
 	xdf1v5gtnn7qY7E4PPckq8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/f8xhc+D3+N7ax+Kxc9Zddo8Fm0o9Nq/Q8ti0qpPNY9OnSewe786dY/c4
-	MeM3i8f7fVfZPBa/+MDksfWXnUfj1GtsHp83yQXwRnHZpKTmZJalFunbJXBlTPvyhbVgZzNj
-	xfrtr9kaGCdndTFyckgImEis/bODBcRmE1CXuHHjJzOILSJgJnGw9Q97FyMXB7PAMiaJvSca
-	2EAcYYGJjBKbGo6zglSxCKhK7Po+HczmBero+fqaBWKqvMTqDQfAJnECxf/t/s0OYgsJJEu0
-	rP/NMoGRawEjwypGkcy8stzEzBxTveLsjMq8zAq95PzcTYzAQF1W+2fiDsYvl90PMQpwMCrx
-	8D44szddiDWxrLgy9xCjBAezkggvZ+aedCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8XuGpCUIC
-	6YklqdmpqQWpRTBZJg5OqQZGthU7JuW+263ezSC7VepZuusspjjpnDdzFr3cImjDEl1urHPM
-	b2f+rEfGr2PEUtUWBi3ZwzLRvoTjudS1B4VF95lUXGJV6nx3HDwp1FMpHd9/yu/yj5klp9bU
-	fT8lP6su3H5J+Y9lpiV87LJOpo4H/M+WL+vy0zyXsPuYX3DF4sjrP0NnSU9RYinOSDTUYi4q
-	TgQAYk0z41ACAAA=
+	MeM3i8f7fVfZPBa/+MDksfWXnUfj1GtsHp83yQXwRnHZpKTmZJalFunbJXBl3F/Ryl7wLbti
+	3cP1zA2M50K7GDk4JARMJJb8Cuxi5ORgE1CXuHHjJzOILSJgJnGw9Q97FyMXB7PAMiaJvSca
+	2EAcYYEJjBLzVrWwg1SxCKhKHNu8BszmBepYdL0frFtCQF5i9YYDYDYnUPzf7t9gNUICyRIt
+	63+zTGDkWsDIsIpRJDOvLDcxM8dUrzg7ozIvs0IvOT93EyMwSJfV/pm4g/HLZfdDjAIcjEo8
+	vA/O7E0XYk0sK67MPcQowcGsJMLLmbknXYg3JbGyKrUoP76oNCe1+BCjNAeLkjivV3hqgpBA
+	emJJanZqakFqEUyWiYNTqoFxYdWJv10t/g9y7OTsmX2VvDr1i5WZDluEcK8PPsOtZGoo+HN/
+	e8gN4d2/ZusGvzHdtC+zedW8m8df3RA8aiG970lQi2rBGbndr8x3rlV33vWzxiE52nvNRJvg
+	KbP5nnZwO1XM+2fp6v4zv9Ro65WjiX7BWtr3gx+1nUz6+cwuknnNtKqitBglluKMREMt5qLi
+	RACLtfHSTgIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,504 +66,370 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Now that luf mechanism has been introduced, tlb shootdown might be
-necessary when luf'd pages exit from pcp or buddy allocator.  Check if
-it's okay to take off pages and can perform for luf'd pages before use.
+Functionally, no change.  This is a preparation for luf mechanism that
+requires to hook when updating page cache that might have pages that
+have been mapped on any tasks so that tlb flush needed can be performed.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- mm/compaction.c     | 32 ++++++++++++++++--
- mm/internal.h       |  2 +-
- mm/page_alloc.c     | 79 +++++++++++++++++++++++++++++++++++++++++++--
- mm/page_isolation.c |  4 ++-
- mm/page_reporting.c | 20 +++++++++++-
- 5 files changed, 129 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 11 ++++-------
+ fs/affs/file.c                            |  4 ++--
+ fs/buffer.c                               | 14 ++++++--------
+ fs/exfat/file.c                           |  5 ++---
+ fs/ext4/verity.c                          |  5 ++---
+ fs/f2fs/super.c                           |  5 ++---
+ fs/f2fs/verity.c                          |  5 ++---
+ fs/namei.c                                |  5 ++---
+ include/linux/fs.h                        | 18 ++++++++++++++++++
+ mm/filemap.c                              |  5 ++---
+ 10 files changed, 42 insertions(+), 35 deletions(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index e5744f354edea..bf5ded83b9dd1 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -606,6 +606,7 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 
- 	page = pfn_to_page(blockpfn);
- 
-+	luf_takeoff_start();
- 	/* Isolate free pages. */
- 	for (; blockpfn < end_pfn; blockpfn += stride, page += stride) {
- 		int isolated;
-@@ -654,9 +655,12 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 				goto isolate_fail;
- 		}
- 
-+		if (!luf_takeoff_check(page))
-+			goto isolate_fail;
-+
- 		/* Found a free page, will break it into order-0 pages */
- 		order = buddy_order(page);
--		isolated = __isolate_free_page(page, order);
-+		isolated = __isolate_free_page(page, order, false);
- 		if (!isolated)
- 			break;
- 		set_page_private(page, order);
-@@ -684,6 +688,11 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	if (locked)
- 		spin_unlock_irqrestore(&cc->zone->lock, flags);
- 
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
-+
- 	/*
- 	 * Be careful to not go outside of the pageblock.
- 	 */
-@@ -1591,6 +1600,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 		if (!area->nr_free)
- 			continue;
- 
-+		luf_takeoff_start();
- 		spin_lock_irqsave(&cc->zone->lock, flags);
- 		freelist = &area->free_list[MIGRATE_MOVABLE];
- 		list_for_each_entry_reverse(freepage, freelist, buddy_list) {
-@@ -1598,6 +1608,10 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 
- 			order_scanned++;
- 			nr_scanned++;
-+
-+			if (!luf_takeoff_check(freepage))
-+				goto scan_next;
-+
- 			pfn = page_to_pfn(freepage);
- 
- 			if (pfn >= highest)
-@@ -1617,7 +1631,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 				/* Shorten the scan if a candidate is found */
- 				limit >>= 1;
- 			}
--
-+scan_next:
- 			if (order_scanned >= limit)
- 				break;
- 		}
-@@ -1635,7 +1649,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 
- 		/* Isolate the page if available */
- 		if (page) {
--			if (__isolate_free_page(page, order)) {
-+			if (__isolate_free_page(page, order, false)) {
- 				set_page_private(page, order);
- 				nr_isolated = 1 << order;
- 				nr_scanned += nr_isolated - 1;
-@@ -1652,6 +1666,11 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 
- 		spin_unlock_irqrestore(&cc->zone->lock, flags);
- 
-+		/*
-+		 * Check and flush before using the pages taken off.
-+		 */
-+		luf_takeoff_end();
-+
- 		/* Skip fast search if enough freepages isolated */
- 		if (cc->nr_freepages >= cc->nr_migratepages)
- 			break;
-@@ -2373,7 +2392,14 @@ static enum compact_result compact_finished(struct compact_control *cc)
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+index ae3343c81a645..22ce009d13689 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+@@ -418,7 +418,6 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
+ 	     const struct drm_i915_gem_pwrite *arg)
  {
- 	int ret;
+ 	struct address_space *mapping = obj->base.filp->f_mapping;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 	char __user *user_data = u64_to_user_ptr(arg->data_ptr);
+ 	u64 remain;
+ 	loff_t pos;
+@@ -477,7 +476,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
+ 		if (err)
+ 			return err;
  
-+	/*
-+	 * luf_takeoff_{start,end}() is required to identify whether
-+	 * this compaction context is tlb shootdownable for luf'd pages.
-+	 */
-+	luf_takeoff_start();
- 	ret = __compact_finished(cc);
-+	luf_takeoff_end();
-+
- 	trace_mm_compaction_finished(cc->zone, cc->order, ret);
- 	if (ret == COMPACT_NO_SUITABLE_PAGE)
- 		ret = COMPACT_CONTINUE;
-diff --git a/mm/internal.h b/mm/internal.h
-index fe1c879b41487..77b7e6d0bcc29 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -666,7 +666,7 @@ static inline void clear_zone_contiguous(struct zone *zone)
- 	zone->contiguous = false;
- }
+-		err = aops->write_begin(obj->base.filp, mapping, pos, len,
++		err = mapping_write_begin(obj->base.filp, mapping, pos, len,
+ 					&folio, &data);
+ 		if (err < 0)
+ 			return err;
+@@ -488,7 +487,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
+ 		pagefault_enable();
+ 		kunmap_local(vaddr);
  
--extern int __isolate_free_page(struct page *page, unsigned int order);
-+extern int __isolate_free_page(struct page *page, unsigned int order, bool willputback);
- extern void __putback_isolated_page(struct page *page, unsigned int order,
- 				    int mt);
- extern void memblock_free_pages(struct page *page, unsigned long pfn,
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 986fdd57e8e3a..a0182421da13e 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -869,8 +869,13 @@ static inline void del_page_from_free_list(struct page *page, struct zone *zone,
- static inline struct page *get_page_from_free_area(struct free_area *area,
- 					    int migratetype)
+-		err = aops->write_end(obj->base.filp, mapping, pos, len,
++		err = mapping_write_end(obj->base.filp, mapping, pos, len,
+ 				      len - unwritten, folio, data);
+ 		if (err < 0)
+ 			return err;
+@@ -654,7 +653,6 @@ i915_gem_object_create_shmem_from_data(struct drm_i915_private *i915,
  {
--	return list_first_entry_or_null(&area->free_list[migratetype],
-+	struct page *page = list_first_entry_or_null(&area->free_list[migratetype],
- 					struct page, buddy_list);
-+
-+	if (page && luf_takeoff_check(page))
-+		return page;
-+
-+	return NULL;
- }
+ 	struct drm_i915_gem_object *obj;
+ 	struct file *file;
+-	const struct address_space_operations *aops;
+ 	loff_t pos;
+ 	int err;
  
- /*
-@@ -1653,6 +1658,8 @@ static __always_inline void page_del_and_expand(struct zone *zone,
- 	int nr_pages = 1 << high;
+@@ -666,21 +664,20 @@ i915_gem_object_create_shmem_from_data(struct drm_i915_private *i915,
+ 	GEM_BUG_ON(obj->write_domain != I915_GEM_DOMAIN_CPU);
  
- 	__del_page_from_free_list(page, zone, high, migratetype);
-+	if (unlikely(!luf_takeoff_check_and_fold(page)))
-+		VM_WARN_ON(1);
- 	nr_pages -= expand(zone, page, low, high, migratetype);
- 	account_freepages(zone, -nr_pages, migratetype);
- }
-@@ -2023,6 +2030,13 @@ bool move_freepages_block_isolate(struct zone *zone, struct page *page,
- 
- 		del_page_from_free_list(buddy, zone, order,
- 					get_pfnblock_migratetype(buddy, pfn));
-+
-+		/*
-+		 * No need to luf_takeoff_check_and_fold() since it's
-+		 * going back to buddy. luf_key will be handed over in
-+		 * split_large_buddy().
-+		 */
-+
- 		set_pageblock_migratetype(page, migratetype);
- 		split_large_buddy(zone, buddy, pfn, order, FPI_NONE);
- 		return true;
-@@ -2034,6 +2048,13 @@ bool move_freepages_block_isolate(struct zone *zone, struct page *page,
- 
- 		del_page_from_free_list(page, zone, order,
- 					get_pfnblock_migratetype(page, pfn));
-+
-+		/*
-+		 * No need to luf_takeoff_check_and_fold() since it's
-+		 * going back to buddy. luf_key will be handed over in
-+		 * split_large_buddy().
-+		 */
-+
- 		set_pageblock_migratetype(page, migratetype);
- 		split_large_buddy(zone, page, pfn, order, FPI_NONE);
- 		return true;
-@@ -2166,6 +2187,8 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
- 		unsigned int nr_added;
- 
- 		del_page_from_free_list(page, zone, current_order, block_type);
-+		if (unlikely(!luf_takeoff_check_and_fold(page)))
-+			VM_WARN_ON(1);
- 		change_pageblock_range(page, current_order, start_type);
- 		nr_added = expand(zone, page, order, current_order, start_type);
- 		account_freepages(zone, nr_added, start_type);
-@@ -2246,6 +2269,9 @@ int find_suitable_fallback(struct free_area *area, unsigned int order,
- 		if (free_area_empty(area, fallback_mt))
- 			continue;
- 
-+		if (luf_takeoff_no_shootdown())
-+			continue;
-+
- 		if (can_steal_fallback(order, migratetype))
- 			*can_steal = true;
- 
-@@ -2337,6 +2363,11 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
- 					pageblock_nr_pages)
- 			continue;
- 
-+		/*
-+		 * luf_takeoff_{start,end}() is required for
-+		 * get_page_from_free_area() to use luf_takeoff_check().
-+		 */
-+		luf_takeoff_start();
- 		spin_lock_irqsave(&zone->lock, flags);
- 		for (order = 0; order < NR_PAGE_ORDERS; order++) {
- 			struct free_area *area = &(zone->free_area[order]);
-@@ -2394,10 +2425,12 @@ static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
- 			WARN_ON_ONCE(ret == -1);
- 			if (ret > 0) {
- 				spin_unlock_irqrestore(&zone->lock, flags);
-+				luf_takeoff_end();
- 				return ret;
- 			}
- 		}
- 		spin_unlock_irqrestore(&zone->lock, flags);
-+		luf_takeoff_end();
- 	}
- 
- 	return false;
-@@ -2539,6 +2572,7 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
- 	unsigned long flags;
- 	int i;
- 
-+	luf_takeoff_start();
- 	spin_lock_irqsave(&zone->lock, flags);
- 	for (i = 0; i < count; ++i) {
- 		struct page *page = __rmqueue(zone, order, migratetype,
-@@ -2563,6 +2597,10 @@ static int rmqueue_bulk(struct zone *zone, unsigned int order,
- 		list_add_tail(&page->pcp_list, list);
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
- 
- 	return i;
- }
-@@ -3057,7 +3095,7 @@ void split_page(struct page *page, unsigned int order)
- }
- EXPORT_SYMBOL_GPL(split_page);
- 
--int __isolate_free_page(struct page *page, unsigned int order)
-+int __isolate_free_page(struct page *page, unsigned int order, bool willputback)
- {
- 	struct zone *zone = page_zone(page);
- 	int mt = get_pageblock_migratetype(page);
-@@ -3076,6 +3114,8 @@ int __isolate_free_page(struct page *page, unsigned int order)
- 	}
- 
- 	del_page_from_free_list(page, zone, order, mt);
-+	if (unlikely(!willputback && !luf_takeoff_check_and_fold(page)))
-+		VM_WARN_ON(1);
- 
- 	/*
- 	 * Set the pageblock if the isolated page is at least half of a
-@@ -3155,6 +3195,7 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
- 
+ 	file = obj->base.filp;
+-	aops = file->f_mapping->a_ops;
+ 	pos = 0;
  	do {
- 		page = NULL;
-+		luf_takeoff_start();
- 		spin_lock_irqsave(&zone->lock, flags);
- 		if (alloc_flags & ALLOC_HIGHATOMIC)
- 			page = __rmqueue_smallest(zone, order, MIGRATE_HIGHATOMIC);
-@@ -3172,10 +3213,15 @@ struct page *rmqueue_buddy(struct zone *preferred_zone, struct zone *zone,
+ 		unsigned int len = min_t(typeof(size), size, PAGE_SIZE);
+ 		struct folio *folio;
+ 		void *fsdata;
  
- 			if (!page) {
- 				spin_unlock_irqrestore(&zone->lock, flags);
-+				luf_takeoff_end();
- 				return NULL;
- 			}
- 		}
- 		spin_unlock_irqrestore(&zone->lock, flags);
-+		/*
-+		 * Check and flush before using the pages taken off.
-+		 */
-+		luf_takeoff_end();
- 	} while (check_new_pages(page, order));
+-		err = aops->write_begin(file, file->f_mapping, pos, len,
++		err = mapping_write_begin(file, file->f_mapping, pos, len,
+ 					&folio, &fsdata);
+ 		if (err < 0)
+ 			goto fail;
  
- 	__count_zid_vm_events(PGALLOC, page_zonenum(page), 1 << order);
-@@ -3259,6 +3305,8 @@ struct page *__rmqueue_pcplist(struct zone *zone, unsigned int order,
- 		}
+ 		memcpy_to_folio(folio, offset_in_folio(folio, pos), data, len);
  
- 		page = list_first_entry(list, struct page, pcp_list);
-+		if (!luf_takeoff_check_and_fold(page))
-+			return NULL;
- 		list_del(&page->pcp_list);
- 		pcp->count -= 1 << order;
- 	} while (check_new_pages(page, order));
-@@ -3276,11 +3324,13 @@ static struct page *rmqueue_pcplist(struct zone *preferred_zone,
- 	struct page *page;
- 	unsigned long __maybe_unused UP_flags;
+-		err = aops->write_end(file, file->f_mapping, pos, len, len,
++		err = mapping_write_end(file, file->f_mapping, pos, len, len,
+ 				      folio, fsdata);
+ 		if (err < 0)
+ 			goto fail;
+diff --git a/fs/affs/file.c b/fs/affs/file.c
+index a5a861dd52230..10e7f53828e93 100644
+--- a/fs/affs/file.c
++++ b/fs/affs/file.c
+@@ -885,9 +885,9 @@ affs_truncate(struct inode *inode)
+ 		loff_t isize = inode->i_size;
+ 		int res;
  
-+	luf_takeoff_start();
- 	/* spin_trylock may fail due to a parallel drain or IRQ reentrancy. */
- 	pcp_trylock_prepare(UP_flags);
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
- 	if (!pcp) {
- 		pcp_trylock_finish(UP_flags);
-+		luf_takeoff_end();
- 		return NULL;
- 	}
- 
-@@ -3294,6 +3344,10 @@ static struct page *rmqueue_pcplist(struct zone *preferred_zone,
- 	page = __rmqueue_pcplist(zone, order, migratetype, alloc_flags, pcp, list);
- 	pcp_spin_unlock(pcp);
- 	pcp_trylock_finish(UP_flags);
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
- 	if (page) {
- 		__count_zid_vm_events(PGALLOC, page_zonenum(page), 1 << order);
- 		zone_statistics(preferred_zone, zone, 1);
-@@ -4892,6 +4946,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	if (unlikely(!zone))
- 		goto failed;
- 
-+	luf_takeoff_start();
- 	/* spin_trylock may fail due to a parallel drain or IRQ reentrancy. */
- 	pcp_trylock_prepare(UP_flags);
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
-@@ -4927,6 +4982,10 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 
- 	pcp_spin_unlock(pcp);
- 	pcp_trylock_finish(UP_flags);
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
- 
- 	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
- 	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
-@@ -4936,6 +4995,7 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 
- failed_irq:
- 	pcp_trylock_finish(UP_flags);
-+	luf_takeoff_end();
- 
- failed:
- 	page = __alloc_pages_noprof(gfp, 0, preferred_nid, nodemask);
-@@ -6989,6 +7049,7 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 
- 	offline_mem_sections(pfn, end_pfn);
- 	zone = page_zone(pfn_to_page(pfn));
-+	luf_takeoff_start();
- 	spin_lock_irqsave(&zone->lock, flags);
- 	while (pfn < end_pfn) {
- 		page = pfn_to_page(pfn);
-@@ -7017,9 +7078,15 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 		VM_WARN_ON(get_pageblock_migratetype(page) != MIGRATE_ISOLATE);
- 		order = buddy_order(page);
- 		del_page_from_free_list(page, zone, order, MIGRATE_ISOLATE);
-+		if (unlikely(!luf_takeoff_check_and_fold(page)))
-+			VM_WARN_ON(1);
- 		pfn += (1 << order);
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
- 
- 	return end_pfn - start_pfn - already_offline;
- }
-@@ -7095,6 +7162,7 @@ bool take_page_off_buddy(struct page *page)
- 	unsigned int order;
- 	bool ret = false;
- 
-+	luf_takeoff_start();
- 	spin_lock_irqsave(&zone->lock, flags);
- 	for (order = 0; order < NR_PAGE_ORDERS; order++) {
- 		struct page *page_head = page - (pfn & ((1 << order) - 1));
-@@ -7107,6 +7175,8 @@ bool take_page_off_buddy(struct page *page)
- 
- 			del_page_from_free_list(page_head, zone, page_order,
- 						migratetype);
-+			if (unlikely(!luf_takeoff_check_and_fold(page_head)))
-+				VM_WARN_ON(1);
- 			break_down_buddy_pages(zone, page_head, page, 0,
- 						page_order, migratetype);
- 			SetPageHWPoisonTakenOff(page);
-@@ -7117,6 +7187,11 @@ bool take_page_off_buddy(struct page *page)
- 			break;
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
- 	return ret;
- }
- 
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index ac45a5f4e7b9f..521ed32bdbf67 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -218,6 +218,7 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
- 	struct page *buddy;
- 
- 	zone = page_zone(page);
-+	luf_takeoff_start();
- 	spin_lock_irqsave(&zone->lock, flags);
- 	if (!is_migrate_isolate_page(page))
+-		res = mapping->a_ops->write_begin(NULL, mapping, isize, 0, &folio, &fsdata);
++		res = mapping_write_begin(NULL, mapping, isize, 0, &folio, &fsdata);
+ 		if (!res)
+-			res = mapping->a_ops->write_end(NULL, mapping, isize, 0, 0, folio, fsdata);
++			res = mapping_write_end(NULL, mapping, isize, 0, 0, folio, fsdata);
+ 		else
+ 			inode->i_size = AFFS_I(inode)->mmu_private;
+ 		mark_inode_dirty(inode);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index c66a59bb068b9..6655912f12c46 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2457,7 +2457,6 @@ EXPORT_SYMBOL(block_read_full_folio);
+ int generic_cont_expand_simple(struct inode *inode, loff_t size)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 	struct folio *folio;
+ 	void *fsdata = NULL;
+ 	int err;
+@@ -2466,11 +2465,11 @@ int generic_cont_expand_simple(struct inode *inode, loff_t size)
+ 	if (err)
  		goto out;
-@@ -236,7 +237,7 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
- 			buddy = find_buddy_page_pfn(page, page_to_pfn(page),
- 						    order, NULL);
- 			if (buddy && !is_migrate_isolate_page(buddy)) {
--				isolated_page = !!__isolate_free_page(page, order);
-+				isolated_page = !!__isolate_free_page(page, order, true);
- 				/*
- 				 * Isolating a free page in an isolated pageblock
- 				 * is expected to always work as watermarks don't
-@@ -276,6 +277,7 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
- 	zone->nr_isolate_pageblock--;
+ 
+-	err = aops->write_begin(NULL, mapping, size, 0, &folio, &fsdata);
++	err = mapping_write_begin(NULL, mapping, size, 0, &folio, &fsdata);
+ 	if (err)
+ 		goto out;
+ 
+-	err = aops->write_end(NULL, mapping, size, 0, 0, folio, fsdata);
++	err = mapping_write_end(NULL, mapping, size, 0, 0, folio, fsdata);
+ 	BUG_ON(err > 0);
+ 
  out:
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+	luf_takeoff_end(zone);
- }
+@@ -2482,7 +2481,6 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
+ 			    loff_t pos, loff_t *bytes)
+ {
+ 	struct inode *inode = mapping->host;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 	unsigned int blocksize = i_blocksize(inode);
+ 	struct folio *folio;
+ 	void *fsdata = NULL;
+@@ -2502,12 +2500,12 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
+ 		}
+ 		len = PAGE_SIZE - zerofrom;
  
- static inline struct page *
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-index c05afb7a395f1..03a7f5f6dc073 100644
---- a/mm/page_reporting.c
-+++ b/mm/page_reporting.c
-@@ -167,6 +167,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 	if (list_empty(list))
- 		return err;
+-		err = aops->write_begin(file, mapping, curpos, len,
++		err = mapping_write_begin(file, mapping, curpos, len,
+ 					    &folio, &fsdata);
+ 		if (err)
+ 			goto out;
+ 		folio_zero_range(folio, offset_in_folio(folio, curpos), len);
+-		err = aops->write_end(file, mapping, curpos, len, len,
++		err = mapping_write_end(file, mapping, curpos, len, len,
+ 						folio, fsdata);
+ 		if (err < 0)
+ 			goto out;
+@@ -2535,12 +2533,12 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
+ 		}
+ 		len = offset - zerofrom;
  
-+	luf_takeoff_start();
- 	spin_lock_irq(&zone->lock);
+-		err = aops->write_begin(file, mapping, curpos, len,
++		err = mapping_write_begin(file, mapping, curpos, len,
+ 					    &folio, &fsdata);
+ 		if (err)
+ 			goto out;
+ 		folio_zero_range(folio, offset_in_folio(folio, curpos), len);
+-		err = aops->write_end(file, mapping, curpos, len, len,
++		err = mapping_write_end(file, mapping, curpos, len, len,
+ 						folio, fsdata);
+ 		if (err < 0)
+ 			goto out;
+diff --git a/fs/exfat/file.c b/fs/exfat/file.c
+index 05b51e7217838..9a1002761f79f 100644
+--- a/fs/exfat/file.c
++++ b/fs/exfat/file.c
+@@ -539,7 +539,6 @@ static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
+ 	struct inode *inode = file_inode(file);
+ 	struct exfat_inode_info *ei = EXFAT_I(inode);
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *ops = mapping->a_ops;
  
- 	/*
-@@ -191,6 +192,11 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		if (PageReported(page))
- 			continue;
+ 	pos = ei->valid_size;
+ 	while (pos < new_valid_size) {
+@@ -551,14 +550,14 @@ static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
+ 		if (pos + len > new_valid_size)
+ 			len = new_valid_size - pos;
  
-+		if (!luf_takeoff_check(page)) {
-+			VM_WARN_ON(1);
-+			continue;
-+		}
+-		err = ops->write_begin(file, mapping, pos, len, &folio, NULL);
++		err = mapping_write_begin(file, mapping, pos, len, &folio, NULL);
+ 		if (err)
+ 			goto out;
+ 
+ 		off = offset_in_folio(folio, pos);
+ 		folio_zero_new_buffers(folio, off, off + len);
+ 
+-		err = ops->write_end(file, mapping, pos, len, len, folio, NULL);
++		err = mapping_write_end(file, mapping, pos, len, len, folio, NULL);
+ 		if (err < 0)
+ 			goto out;
+ 		pos += len;
+diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+index d9203228ce979..64fa43f80c73e 100644
+--- a/fs/ext4/verity.c
++++ b/fs/ext4/verity.c
+@@ -68,7 +68,6 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
+ 			   loff_t pos)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 
+ 	if (pos + count > inode->i_sb->s_maxbytes)
+ 		return -EFBIG;
+@@ -80,13 +79,13 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
+ 		void *fsdata = NULL;
+ 		int res;
+ 
+-		res = aops->write_begin(NULL, mapping, pos, n, &folio, &fsdata);
++		res = mapping_write_begin(NULL, mapping, pos, n, &folio, &fsdata);
+ 		if (res)
+ 			return res;
+ 
+ 		memcpy_to_folio(folio, offset_in_folio(folio, pos), buf, n);
+ 
+-		res = aops->write_end(NULL, mapping, pos, n, n, folio, fsdata);
++		res = mapping_write_end(NULL, mapping, pos, n, n, folio, fsdata);
+ 		if (res < 0)
+ 			return res;
+ 		if (res != n)
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 19b67828ae325..87c26f0571dab 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -2710,7 +2710,6 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ {
+ 	struct inode *inode = sb_dqopt(sb)->files[type];
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *a_ops = mapping->a_ops;
+ 	int offset = off & (sb->s_blocksize - 1);
+ 	size_t towrite = len;
+ 	struct folio *folio;
+@@ -2722,7 +2721,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 		tocopy = min_t(unsigned long, sb->s_blocksize - offset,
+ 								towrite);
+ retry:
+-		err = a_ops->write_begin(NULL, mapping, off, tocopy,
++		err = mapping_write_begin(NULL, mapping, off, tocopy,
+ 							&folio, &fsdata);
+ 		if (unlikely(err)) {
+ 			if (err == -ENOMEM) {
+@@ -2735,7 +2734,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+ 
+ 		memcpy_to_folio(folio, offset_in_folio(folio, off), data, tocopy);
+ 
+-		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
++		mapping_write_end(NULL, mapping, off, tocopy, tocopy,
+ 						folio, fsdata);
+ 		offset = 0;
+ 		towrite -= tocopy;
+diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
+index 2287f238ae09e..b232589546d39 100644
+--- a/fs/f2fs/verity.c
++++ b/fs/f2fs/verity.c
+@@ -72,7 +72,6 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
+ 			   loff_t pos)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 
+ 	if (pos + count > F2FS_BLK_TO_BYTES(max_file_blocks(inode)))
+ 		return -EFBIG;
+@@ -84,13 +83,13 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
+ 		void *fsdata = NULL;
+ 		int res;
+ 
+-		res = aops->write_begin(NULL, mapping, pos, n, &folio, &fsdata);
++		res = mapping_write_begin(NULL, mapping, pos, n, &folio, &fsdata);
+ 		if (res)
+ 			return res;
+ 
+ 		memcpy_to_folio(folio, offset_in_folio(folio, pos), buf, n);
+ 
+-		res = aops->write_end(NULL, mapping, pos, n, n, folio, fsdata);
++		res = mapping_write_end(NULL, mapping, pos, n, n, folio, fsdata);
+ 		if (res < 0)
+ 			return res;
+ 		if (res != n)
+diff --git a/fs/namei.c b/fs/namei.c
+index 3ab9440c5b931..e1c6d28c560da 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -5409,7 +5409,6 @@ EXPORT_SYMBOL(page_readlink);
+ int page_symlink(struct inode *inode, const char *symname, int len)
+ {
+ 	struct address_space *mapping = inode->i_mapping;
+-	const struct address_space_operations *aops = mapping->a_ops;
+ 	bool nofs = !mapping_gfp_constraint(mapping, __GFP_FS);
+ 	struct folio *folio;
+ 	void *fsdata = NULL;
+@@ -5419,7 +5418,7 @@ int page_symlink(struct inode *inode, const char *symname, int len)
+ retry:
+ 	if (nofs)
+ 		flags = memalloc_nofs_save();
+-	err = aops->write_begin(NULL, mapping, 0, len-1, &folio, &fsdata);
++	err = mapping_write_begin(NULL, mapping, 0, len-1, &folio, &fsdata);
+ 	if (nofs)
+ 		memalloc_nofs_restore(flags);
+ 	if (err)
+@@ -5427,7 +5426,7 @@ int page_symlink(struct inode *inode, const char *symname, int len)
+ 
+ 	memcpy(folio_address(folio), symname, len - 1);
+ 
+-	err = aops->write_end(NULL, mapping, 0, len - 1, len - 1,
++	err = mapping_write_end(NULL, mapping, 0, len - 1, len - 1,
+ 						folio, fsdata);
+ 	if (err < 0)
+ 		goto fail;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 2c3b2f8a621f7..820ff4752249e 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -531,6 +531,24 @@ struct address_space {
+ #define PAGECACHE_TAG_WRITEBACK	XA_MARK_1
+ #define PAGECACHE_TAG_TOWRITE	XA_MARK_2
+ 
++static inline int mapping_write_begin(struct file *file,
++				struct address_space *mapping,
++				loff_t pos, unsigned len,
++				struct folio **foliop, void **fsdata)
++{
++	return mapping->a_ops->write_begin(file, mapping, pos, len, foliop,
++			fsdata);
++}
 +
- 		/*
- 		 * If we fully consumed our budget then update our
- 		 * state to indicate that we are requesting additional
-@@ -204,7 +210,7 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 
- 		/* Attempt to pull page from list and place in scatterlist */
- 		if (*offset) {
--			if (!__isolate_free_page(page, order)) {
-+			if (!__isolate_free_page(page, order, false)) {
- 				next = page;
- 				break;
- 			}
-@@ -227,6 +233,11 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		/* release lock before waiting on report processing */
- 		spin_unlock_irq(&zone->lock);
- 
-+		/*
-+		 * Check and flush before using the pages taken off.
-+		 */
-+		luf_takeoff_end();
++static inline int mapping_write_end(struct file *file,
++				struct address_space *mapping,
++				loff_t pos, unsigned len, unsigned copied,
++				struct folio *folio, void *fsdata)
++{
++	return mapping->a_ops->write_end(file, mapping, pos, len, copied,
++			folio, fsdata);
++}
 +
- 		/* begin processing pages in local list */
- 		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
+ /*
+  * Returns true if any of the pages in the mapping are marked with the tag.
+  */
+diff --git a/mm/filemap.c b/mm/filemap.c
+index c6650de837d06..1c6fda5a43020 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -4141,7 +4141,6 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
+ 	struct file *file = iocb->ki_filp;
+ 	loff_t pos = iocb->ki_pos;
+ 	struct address_space *mapping = file->f_mapping;
+-	const struct address_space_operations *a_ops = mapping->a_ops;
+ 	size_t chunk = mapping_max_folio_size(mapping);
+ 	long status = 0;
+ 	ssize_t written = 0;
+@@ -4175,7 +4174,7 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
+ 			break;
+ 		}
  
-@@ -236,6 +247,8 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		/* update budget to reflect call to report function */
- 		budget--;
+-		status = a_ops->write_begin(file, mapping, pos, bytes,
++		status = mapping_write_begin(file, mapping, pos, bytes,
+ 						&folio, &fsdata);
+ 		if (unlikely(status < 0))
+ 			break;
+@@ -4190,7 +4189,7 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
+ 		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
+ 		flush_dcache_folio(folio);
  
-+		luf_takeoff_start();
-+
- 		/* reacquire zone lock and resume processing */
- 		spin_lock_irq(&zone->lock);
- 
-@@ -259,6 +272,11 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 
- 	spin_unlock_irq(&zone->lock);
- 
-+	/*
-+	 * Check and flush before using the pages taken off.
-+	 */
-+	luf_takeoff_end();
-+
- 	return err;
- }
- 
+-		status = a_ops->write_end(file, mapping, pos, bytes, copied,
++		status = mapping_write_end(file, mapping, pos, bytes, copied,
+ 						folio, fsdata);
+ 		if (unlikely(status != copied)) {
+ 			iov_iter_revert(i, copied - max(status, 0L));
 -- 
 2.17.1
 
