@@ -1,104 +1,162 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69AAB2755F8
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:25:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968E027560D;
+	Wed, 26 Feb 2025 20:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740601513; cv=none; b=YUhCf5VtyAnQKhqvSxUCBGMiF3qUciVy9u0JlxS0KmnM9JuTzfkKHT0ggN+ZdS+7Cw3LLmDhnK/it1oMGEJuLP2tdZBPDIUCxU3rj8OVJfVOST+Fof2U9gqGyoIXw1rHTkwOpAp2+SvGEYKFsgRluP3BjejPOqAHIRIPuYQ9m4g=
+	t=1740601513; cv=none; b=DwhR1HbJDp09hWf1SjyWIUL1yjAraIby7UUClffGa9LQGgK3BuUWlObomV06/LkAdsvYbKVewRnBR64hWTutrcloFfOeDvWQXRxJ4wQKBAPiELPBVAUptV2Ma16/7WiFCXqgpaQTBzF7pHRwMy4BMgc2lXjGNgyPpyUJWLr0DYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740601513; c=relaxed/simple;
-	bh=yOcQZkrZis4oPMTtV8S4se5F1ZKwXkbDx7myJ+Yf7Ck=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jcm4YtSHtRcp24CGUJsp6P5ZkBj004OF6r4dBuGBkihNuAj2sgfY9ijbV67xt/WLMeA+VPtqxD9qjExNKxxJ/CpwiIcs9SxP9rpxBylU+sYJIGymoJEGBXfRjcj7LZPRE8Eus4KKpP2TST32mdBK463ReyeN82OzQ2vsHC2FsH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=aN6dn1Pj; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	bh=rlBByjDAt6sDHgCxX2pYpDbkmv5bfOXWpM+O+cJme3U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bzkozeTryoqPcy9Fv+9OWfLFjo11MXq3kJ9swpGAstodVwgMZBODW0XUwRGl/01py5Fb9N0YsT9gbBh28SNhI9kZQgE8EFCTb4JnFcA4PCoh5kFVRfakO0Zkm2M2lOCtrOpY6yG9NU4F/ASjO9dugJqHXH7tqQRSBrrHvZLMMKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=zK2QGdzD; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="aN6dn1Pj"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22101839807so2636635ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:25:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1740601510; x=1741206310; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vJfRhZEo2RIsfouA3ZbiUgm3ilY6Xa6tZ9F+JSMVv7o=;
-        b=aN6dn1PjypZ0jQ5nNomEVa5i5fmA/Svbi1mljVduCK/K2AP1n7Qk8J9JItBWeG2LoU
-         3agWvhMMtKi8UPVsu9BSR+JeUEMWGHCGJonTxk7Ex+K90Pbf3DxFf7wCq1HWPh7I0zBI
-         r9EwTrdM4dqLppglovkSn/R0Zbal9xzRjWXG2yD23oaZqbG/FZrux1ncTS/b1qNH8yab
-         fbE8gE4hd6e/DndzjyTb6B8kpe18HgO2NgtjwATenbs69IrxwMl1zmo3e5DFC5QtXTkr
-         2fFiVOhkAruagWzjbRo0i8e4eLfkg9/2WUpL8va0oq1mc5UZ6KtwqLw0ItbHca6zaoHp
-         js6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740601510; x=1741206310;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vJfRhZEo2RIsfouA3ZbiUgm3ilY6Xa6tZ9F+JSMVv7o=;
-        b=lEFMWOqiiI5Auigydisylc3COjv63AxmTr129QYFaWpbsXkPjvdK1ITzJrsIovLM7Z
-         cfltuejv3uczuO7y8iDWBel6GuW5umPEyPeOggrfYA42dGyUnRNRWbY9dcYfh3/PxGzR
-         8zmZkJWEArNCuJ4K57HCt5JolHF12LaBEeHJdEpOmh+pDkl7TAEZPlWD61o9RVfbmAJk
-         93MwVFScm3xxk/KaeRylrxisgbRYiSUtsfp9QdLVsH2ZvViPxxGfqiE47XnHN211dD/T
-         FN3UTFzi4N9bRbbell7GmYiUOPTrmDqEs/MHaOJ+No0SZv7mRkXfAOEPdhUg+gH8eszf
-         oXnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHgGG28dqJnwcaP2c5B1ZaULL5dg179z/ntRsGlY3MIXKMuVkhX65EdJj2PBX5QjDFQMXMu6pABHJH5oY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwV0u4ljkqLV7QCVK+E/JC4Wpa33EFyPLzjMvq7uRudLAKzp5zA
-	UeBUPiRBG8XQKSLNqpmzpSq0S1NZcSmSzTAPdLBAhqMxJ4WO5zeMJQ1zYE8oSys=
-X-Gm-Gg: ASbGncvBNoeXFkOlrsf5puuD3HV+ufQFfR3a0gAPNbyi3RUDtG7+hC1vwsGHOhvtgaY
-	jGhtlV7IOmRyMkCDeeDFdNBTsS9ZEJKZy/gNh6/JXJc4FDYG1J6rh0gTQVj/WtCilXhYsPd832q
-	Nzn/tkDU2yBhyrgX26NAiOEososMC4wZ2LfthWOkiqvXzOJYzwPzkdstB+B0hI+AsPmzu+XHD97
-	Fe3Oq9895/V5l/Tj5bYktyfAQn+7LO+Z1stHRE2e6rxa8hNAWDo/dTAp1qigadAwCH8Kh+Ow1+A
-	tgPhpqcrOtRF2ZKRK8cCSHJOnDR+LHbOquLzOD4=
-X-Google-Smtp-Source: AGHT+IGBMBO+u+81QuNJ5bB+1erdTCTpC0irRH+rlBfJ+nJ9B7BPIr1HT+61UNH4TSBhiFyqAE9NUw==
-X-Received: by 2002:a17:902:ccc1:b0:223:2aab:4626 with SMTP id d9443c01a7336-2232aab496bmr63446705ad.11.1740601510471;
-        Wed, 26 Feb 2025 12:25:10 -0800 (PST)
-Received: from atishp.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a7f7de2sm4100963b3a.106.2025.02.26.12.25.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 12:25:10 -0800 (PST)
-From: Atish Patra <atishp@rivosinc.com>
-Subject: [PATCH 0/4] RISC-V KVM PMU fix and selftest improvement
-Date: Wed, 26 Feb 2025 12:25:02 -0800
-Message-Id: <20250226-kvm_pmu_improve-v1-0-74c058c2bf6d@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="zK2QGdzD"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QG3IeZ028965;
+	Wed, 26 Feb 2025 21:23:45 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	40P6YA6Gfjsk6WHscxOoeamuC5y6WvMtWXK5t1BqI08=; b=zK2QGdzDvDEwtaNd
+	jhHpzdye3apCHNzgIoAFSUSptp4j/yLQaM0OmteUdHVLpIkXDoooJnQazJeT1qhT
+	YoSZoPIlUViwT3l+Tzlwir+k9zv9A6nz/rImAL6WVi/mRqka4lbJ6pjtxitMg+b/
+	Cayt3540zUhomSar9Gvctmb03ILdrkBYvuI3C/XkfHb14LcxgVgvFlfBxBVle2mW
+	nbbHqkKcyQ8MZpn4Wy+wF3/e/hccjcfYPAXvw5kicp5UHzkhHlvLcL6Sxdy+TutG
+	oidbpuKMGawsOi32QXmrZafcxpI6kRq9xfq2vVEbC6a3kpWIGZqWcfZGobGp/CW9
+	IDD4rg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451pt3phb8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 21:23:45 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 06B0C40069;
+	Wed, 26 Feb 2025 21:22:35 +0100 (CET)
+Received: by euls16034.sgp.st.com (STMicroelectronics, from userid 89)
+	id 6DCAC4D33B6; Wed, 26 Feb 2025 19:17:26 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3B053443D2B;
+	Wed, 26 Feb 2025 19:17:26 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 19:17:26 +0100
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 19:17:25 +0100
+Message-ID: <4010c7b7-f285-40e6-a032-055c4252ecb7@foss.st.com>
+Date: Wed, 26 Feb 2025 19:17:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: stm32-lptimer: add support for
+ stm32mp25
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+ <20250224180150.3689638-2-fabrice.gasnier@foss.st.com>
+ <20250225-outgoing-scorpion-of-music-be0bea@krzk-bin>
+ <acabacb8-8ea1-4b16-a562-8ffba64fdd36@foss.st.com>
+ <8b42f0ad-2993-43b8-9055-6d74dc3bafbe@kernel.org>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <8b42f0ad-2993-43b8-9055-6d74dc3bafbe@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJ54v2cC/x3MQQqAIBBA0avErBNsSoiuEhGVYw2hiZIE4d2Tl
- m/x/wuRAlOEoXohUOLIlyto6gq2Y3E7CdbFgBKVRFTiTHb29p7Z+nAlEsYYLdt+xU52UCofyPD
- zH8cp5w8fth87YQAAAA==
-To: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Andrew Jones <ajones@ventanamicro.com>, 
- Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Atish Patra <atishp@rivosinc.com>
-X-Mailer: b4 0.15-dev-13183
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
 
-This series adds a fix for KVM PMU code and improves the pmu selftest
-by allowing generating precise number of interrupts. It also provided
-another additional option to the overflow test that allows user to
-generate custom number of LCOFI interrupts.
+On 2/26/25 08:51, Krzysztof Kozlowski wrote:
+> On 25/02/2025 15:57, Fabrice Gasnier wrote:
+>> On 2/25/25 13:02, Krzysztof Kozlowski wrote:
+>>> On Mon, Feb 24, 2025 at 07:01:43PM +0100, Fabrice Gasnier wrote:
+>>>>    pwm:
+>>>>      type: object
+>>>>      additionalProperties: false
+>>>>  
+>>>>      properties:
+>>>>        compatible:
+>>>> -        const: st,stm32-pwm-lp
+>>>> +        enum:
+>>>> +          - st,stm32-pwm-lp
+>>>> +          - st,stm32mp25-pwm-lp
+>>>>  
+>>>>        "#pwm-cells":
+>>>>          const: 3
+>>>> @@ -69,7 +76,9 @@ properties:
+>>>>  
+>>>>      properties:
+>>>>        compatible:
+>>>> -        const: st,stm32-lptimer-counter
+>>>> +        enum:
+>>>> +          - st,stm32-lptimer-counter
+>>>> +          - st,stm32mp25-lptimer-counter
+>>>
+>>> Driver changes suggest many of these are compatible. Why isn't this expressed?
+>>
+>> Hi Krzysztof,
+>>
+>> The Low Power Timer (LPTIM) hardware isn't fully backward compatible.
+>>
+>> At driver level, as indicated in the cover-letter, same feature list as
+>> on STM32MP1x is supported currently. This is probably what makes it look
+>> like it's compatible, but it's not fully compatible.
+> 
+> I don't understand. Same feature list is supported means fully
+> compatible, but you say not fully compatible. You are aware that
+> compatible means not the same?
+> 
+>>
+>> The hardware controller is a bit different. Some registers/bits has been
+>> revisited among other things. This is the purpose for these new compatibles.
+> 
+> We do not discuss new compatibles. We discuss lack of compatibility. If
+> registers/bits are changed, how existing driver can work with same ID table?
 
-Signed-off-by: Atish Patra <atishp@rivosinc.com>
----
-Atish Patra (4):
-      RISC-V: KVM: Disable the kernel perf counter during configure
-      KVM: riscv: selftests: Do not start the counter in the overflow handler
-      KVM: riscv: selftests: Change command line option
-      KVM: riscv: selftests: Allow number of interrupts to be configurable
+Hi Krzysztof,
 
- arch/riscv/kvm/vcpu_pmu.c                        |  1 +
- tools/testing/selftests/kvm/riscv/sbi_pmu_test.c | 81 ++++++++++++++++--------
- 2 files changed, 57 insertions(+), 25 deletions(-)
----
-base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
-change-id: 20250225-kvm_pmu_improve-fffd038b2404
---
-Regards,
-Atish patra
+To summarize on dt-bindings side, here is my view, following your
+comments on per driver basis of the compatible usage.
 
+Let's keep these new compatibles:
+- "st,stm32mp25-lptimer-trigger"
+- "st,stm32mp25-lptimer-counter"
+
+Both reflect not only LPTimer hardware update, but also specific
+interconnect to other hardware blocks throughout all the STM32MP25 SoC.
+
+Other compatible strings may be dropped. Reading the
+revision/identification register of the LPTimer should be enough for
+compatibility in the related drivers.
+
+I'll update this in next revision of the series.
+
+Thanks for reviewing,
+Best Regards,
+Fabrice
+
+> 
+> 
+> 
+> Best regards,
+> Krzysztof
