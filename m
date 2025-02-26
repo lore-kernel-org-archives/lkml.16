@@ -1,170 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CD1152196
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA11C25485A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740549335; cv=none; b=Y6ZoHAVZ89JT6yPCaEXeVPzOY53CCxZLltLazfa10FMigKw166waIDtMEj1F23tjAeeKowjWI9JDq6Tjwzylre0+uVY1ZUq1iQ9uLonUBT7OVybK1doBLpSWccUr27TaSlEtQ37z2RpV8EHCEUmPzOWeZAk/QyaXw775Ig0y9k8=
+	t=1740549383; cv=none; b=OYxrjICzcVEkBcVM8dmbK+SB1H0ON/Uia4AWETZl16BEGG5Pbh8wfJji9lahDBfIizKcbD0/hmk1V1mOpSVh391UCVfy9OwBqd+Tl58fFD/8mH0g1kEcxRQSO0holgxiK5X3tjm6dpjholyYrNbxrEq8pDUEupjx2ytA3TVn5yU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740549335; c=relaxed/simple;
-	bh=vaKDR9hbngLiZGD+p2sJcDm1T1lwxYB0m6SR8CKiniM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PTwwOa5fMPAHouDlBheerltQ7I92uy9rQWPDuBmphApuKrwUFg0LWzqlXwH3OHLZH/Y6Hl8ctaOhYLl9iRWkULTBLZ4ClaFnECoe2oB6nNQK7Cb92AUkH1gjYB1SYMOvUytbCu/y9sxrFQXXirbsuUCeh/wNXs91SFC8YR60A6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GJL2ZaKb; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GJL2ZaKb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740549333; x=1772085333;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vaKDR9hbngLiZGD+p2sJcDm1T1lwxYB0m6SR8CKiniM=;
-  b=GJL2ZaKbmqHLDxU79vOCmotSChyxtqazqfXQjhMMby5+4er74ScX4N4O
-   MrhA0JUV5ELgRh3b3OH2wV5xOXqsllXITPAH1NKaiQ3gEIKnx+1MaC0Zh
-   1pefWN2xrWAs40csaKyALydWMVZQBWqiPIC3lEPsxLuOcMJBcc2UOkgfK
-   GxsA1+gYb0tNd2Q9bUanFaw7Wn8r+11sgpYHHkiSq79iuWWzHb3zvc4f1
-   XtgekUasIEoGs+BnHNR1Ydrdv4Feb+cge0WU1MVQI1JjweQEQvH1biTwo
-   1lGtJ6ka6wC0V0h/rfx2VFMovrLJKyohsCTph1zIijKe6qTcW1OVz2jgX
-   A==;
-X-CSE-ConnectionGUID: a4yRLZ5ySqq3nNcBLd2hSg==
-X-CSE-MsgGUID: 1uB3NKioTAiA0PPb6j96jg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52018649"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="52018649"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:55:33 -0800
-X-CSE-ConnectionGUID: ngLwMS7AQDizina2Nsdrgw==
-X-CSE-MsgGUID: SC0JhgYBRIOsgWTqvRAPvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="121599573"
-Received: from unknown (HELO [10.238.129.135]) ([10.238.129.135])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:55:30 -0800
-Message-ID: <83039906-77f7-4318-94bf-4c98bb3f0e32@linux.intel.com>
-Date: Wed, 26 Feb 2025 13:55:28 +0800
+	s=arc-20240116; t=1740549383; c=relaxed/simple;
+	bh=aJ1CDj6IHG5CdCYhUfhaAMuHbGLGkJsU8mSDkSUKG/k=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=jU9+QJ9OfeWgSy3r1QcwD6v/Tghs075NCt7Z7Qfu0Csvv6UULHiKM3qg6dckuDHu8R1mbcggnbIS9uauCbE1MxWwgY5RwzLcoGxHWklLHJZJGUm1jpGWag5KVF+qai/KucALGrSZiFOAg9EDRXY7jTOfokBMrCFjLxDTjGx7Wi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ce843b51c3so131010495ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:56:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740549381; x=1741154181;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HSP8CbSQTbCE3z3gezg5yrid18Cgij6SuX+4IyN9t1k=;
+        b=RfXFdYQePxTHptChlw1E6yizWtk8SecVIshh0dqdIAvSDuaYJJO6VpIoVD6Ni/pORK
+         fPX8mwSOKhS8XZeex8dNiAMl3+rLhp8UaTusNI3YKvOBh9tVRW2ih85iwT/ujb9qWpKc
+         GVpxQVdLd15lkxmzreT9/EnL3SR0P+4d5vZB2z3Nw3gIfeuLzSdFo/g1MxKolyKs/Wc7
+         ngujz5Jbz+KbWyJ+Hqj2HCjS5/agwTUghpl48YDrCBhc6qTlTdtZQSL8xFyEUcWbHbCB
+         H2VotAMneSYDmMv8SzKDBti8g7gs6zm6g6DoribBRK5hpvwEDT+7Iu8NLj1xGxnZsHWM
+         gtmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPneB4rSWwngiXCA7HzwX2pOVb5o0O3EStyan5SjmOmrG8EcMkpHnHkjltLG0Ix/Pu6fqlsY68sdcR4RA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKY3oFJ1rAN023pVM8xbdDmd2HP3YuJwfLrMD0hhOum+IEhzy8
+	Ovx7ix/tB+k0E2ITPw2jKns+goFn+0yjIRL/rBnW4BPmQtrRMhIDSXor4otB20MKAYD6wWBJK3L
+	8Y/rPVki/C9mgJagRN55ZGFEuhWgQ6EA+3IkiErjo+MN9KOubvkY+nh4=
+X-Google-Smtp-Source: AGHT+IEI/C25oLPvNScwmmGwkgadLS4wD1Jjf3Kg5w27gYr7QxYS7Y67gF1WFdlmVBm20HQhF1It5bWJCaUtmVBn4tQ04g1Gf0mf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
-To: Baolu Lu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
- joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
- <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
- <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
- <20250225142610.GB545008@ziepe.ca>
- <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
- <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
- 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
- 8TCx1OJHpvWFmL4Deq8=
-In-Reply-To: <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:310f:b0:3cf:fe21:af8 with SMTP id
+ e9e14a558f8ab-3d2cb432219mr213116715ab.4.1740549380868; Tue, 25 Feb 2025
+ 21:56:20 -0800 (PST)
+Date: Tue, 25 Feb 2025 21:56:20 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bead04.050a0220.38b081.0002.GAE@google.com>
+Subject: [syzbot] [io-uring?] general protection fault in native_tss_update_io_bitmap
+From: syzbot <syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com>
+To: asml.silence@gmail.com, axboe@kernel.dk, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, io-uring@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mingo@redhat.com, 
+	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    e5d3fd687aac Add linux-next specific files for 20250218
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13fcd7f8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4e945b2fe8e5992f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e2b1803445d236442e54
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=149427a4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ed06e4580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ef079ccd2725/disk-e5d3fd68.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/99f2123d6831/vmlinux-e5d3fd68.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/eadfc9520358/bzImage-e5d3fd68.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e2b1803445d236442e54@syzkaller.appspotmail.com
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 1 UID: 0 PID: 5891 Comm: iou-sqp-5889 Not tainted 6.14.0-rc3-next-20250218-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:native_tss_update_io_bitmap+0x1f5/0x640 arch/x86/kernel/process.c:471
+Code: ff df 48 89 44 24 50 42 80 3c 38 00 74 08 48 89 df e8 cf 75 c7 00 48 89 5c 24 58 4c 8b 2b 4c 89 f0 48 c1 e8 03 48 89 44 24 48 <42> 80 3c 38 00 74 08 4c 89 f7 e8 ac 75 c7 00 49 8b 1e 4c 89 ef 48
+RSP: 0018:ffffc900042cf280 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8880b870a068 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: ffffc900042cf380 R08: ffffffff81620a34 R09: 1ffff1100fbacb40
+R10: dffffc0000000000 R11: ffffed100fbacb41 R12: 1ffff92000859e5c
+R13: 0000000000000014 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000555565746480(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f62e5469170 CR3: 000000002a054000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ task_update_io_bitmap+0xb8/0xf0 arch/x86/kernel/ioport.c:47
+ io_bitmap_exit+0x62/0xf0 arch/x86/kernel/ioport.c:57
+ exit_thread+0x76/0xa0 arch/x86/kernel/process.c:123
+ copy_process+0x277d/0x3cf0 kernel/fork.c:2638
+ create_io_thread+0x16a/0x1e0 kernel/fork.c:2746
+ create_io_worker+0x176/0x540 io_uring/io-wq.c:862
+ io_wq_create_worker io_uring/io-wq.c:332 [inline]
+ io_wq_enqueue+0x7b5/0xa00 io_uring/io-wq.c:989
+ io_queue_iowq+0x433/0x670 io_uring/io_uring.c:542
+ io_submit_state_end io_uring/io_uring.c:2215 [inline]
+ io_submit_sqes+0x1940/0x1cf0 io_uring/io_uring.c:2335
+ __io_sq_thread io_uring/sqpoll.c:189 [inline]
+ io_sq_thread+0xc8c/0x1fd0 io_uring/sqpoll.c:312
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:native_tss_update_io_bitmap+0x1f5/0x640 arch/x86/kernel/process.c:471
+Code: ff df 48 89 44 24 50 42 80 3c 38 00 74 08 48 89 df e8 cf 75 c7 00 48 89 5c 24 58 4c 8b 2b 4c 89 f0 48 c1 e8 03 48 89 44 24 48 <42> 80 3c 38 00 74 08 4c 89 f7 e8 ac 75 c7 00 49 8b 1e 4c 89 ef 48
+RSP: 0018:ffffc900042cf280 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8880b870a068 RCX: dffffc0000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: ffffc900042cf380 R08: ffffffff81620a34 R09: 1ffff1100fbacb40
+R10: dffffc0000000000 R11: ffffed100fbacb41 R12: 1ffff92000859e5c
+R13: 0000000000000014 R14: 0000000000000000 R15: dffffc0000000000
+FS:  0000555565746480(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f62e5469170 CR3: 000000002a054000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	df 48 89             	fisttps -0x77(%rax)
+   3:	44 24 50             	rex.R and $0x50,%al
+   6:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1)
+   b:	74 08                	je     0x15
+   d:	48 89 df             	mov    %rbx,%rdi
+  10:	e8 cf 75 c7 00       	call   0xc775e4
+  15:	48 89 5c 24 58       	mov    %rbx,0x58(%rsp)
+  1a:	4c 8b 2b             	mov    (%rbx),%r13
+  1d:	4c 89 f0             	mov    %r14,%rax
+  20:	48 c1 e8 03          	shr    $0x3,%rax
+  24:	48 89 44 24 48       	mov    %rax,0x48(%rsp)
+* 29:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1) <-- trapping instruction
+  2e:	74 08                	je     0x38
+  30:	4c 89 f7             	mov    %r14,%rdi
+  33:	e8 ac 75 c7 00       	call   0xc775e4
+  38:	49 8b 1e             	mov    (%r14),%rbx
+  3b:	4c 89 ef             	mov    %r13,%rdi
+  3e:	48                   	rex.W
 
 
-在 2025/2/26 13:18, Baolu Lu 写道:
-> On 2/26/25 11:50, Ethan Zhao wrote:
->>>>>>
->>> If the schedular doesn't run how did we get from 4 -> 5?
->>>
->>> Maybe the issue is the shutdown handler here is running in the wrong
->>> time and it should not be running after the scheduler has been shut
->>> down.
->>>
->>> I don't think removing the lock is a great idea without more
->>> explanation.
->>
->> Seems it is not so simple job to explain why there is no race window 
->> between
->> this iommu_shutdown() and following dmar_global_lock holders.
->>
->> 1. PCIe hotplug dmar_pci_bus_notifier()
->>
->> 2. mm_core_init detect_intel_iommu()
->>
->> 3. late_initcall dmar_free_unused_resources()
->>
->> 4. acpi attach dmar_device_hotplug()
->>
->> 5. pci_iommu_init intel_iommu_init() init_dmars()
->>
->> 6. rootfs_initcall ir_dev_scope_init()
->>
->> though here is the last stage of reboot. then how about we turn back 
->> to v1
->>
->> Just repalce with own_write() with down_write_trylock().
->
-> I don't think trylock is a reasonable solution. intel_iommu_shutdown()
-> should not become a no-op simply because it cannot acquire a lock
-> immediately.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-No other CPUs is holding lock after they were brought down by sync call to
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-functionnative_stop_other_cpus(1).
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-So actually it wouldn't fail to acquire a lock.  this is also the reason why we don't
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-need to down_write() thedmar_global_lock.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
->
-> The lock here is to protect the drhd (representation of iommu hardware)
-> list. It needs protection because this driver supports iommu hot-add and
-> remove, which is triggered by an ACPI event for I/O board hotplug.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Yup, the lock is used to protect the global listdmar_drhd_units.
-
-but here all IOAPIC/LAPIC are brought down, hotplug interrupts couldn't 
-happend either. (only legacy and NMI are alive).
-
-> Provided the system does not respond to those events when this function
-> is called, it's fine to remove the lock.
-I agree.
->
-> Thanks,
-> baolu
-
--- 
-"firm, enduring, strong, and long-lived"
-
+If you want to undo deduplication, reply with:
+#syz undup
