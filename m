@@ -1,118 +1,76 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060DC18A6A6;
-	Wed, 26 Feb 2025 03:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932D1225792
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539378; cv=none; b=oXfS+CoJrlaVHwd2KqCrY/kEQq6IV/P5DRua5sSwZ1vjZQmdkI7nHbsF5jex6zVSZvCh1imqyGRxEhdxr4DlOcI2MKTaWkgBZ9/bgxAFY6D3pBkfnyxtmu6+Fm8c6hYwtK1pEdkjX3W7yGyKuv2oz0ksjfzoH/oyY8wT6VvUgSA=
+	t=1740539404; cv=none; b=nCSTzC64+8Q83FxkZDqeezskyW0PgK3EEMBRlYwvk2zZ4Ol2Lpfuw4vfyFNFrVzj9mEZtAXAwr7+H9n8PrzbLjXx+NGboI3Otz+IEPGqaAz8oXXDFiSznf20XVvkuqk9b1gLpiHghdnrr/+JuWa/rvGUW+rMUccRxOnKsuITvuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539378; c=relaxed/simple;
-	bh=3cFHXH3/oJVY2LF35AS3JhelpUSBST3QH3X63TIStX8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EMZtdaVm5E8gLFWNYnPgqT+SQjnMb+8I4mFh1KmEAa1PYVHYLM5NIDZWZnddmLjZW1+k4w80VRVLG1q60D6Uk6EeeczSMUU5J+z/CLhDfTLtvMGm/J3VY3DW6CUJjE8icAv2wpkk3F5v7nYFhl6s4wQxlXm1SAayqDLKRy6fitU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gj8Gh0iL; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gj8Gh0iL"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6fcd8090fe7so33501867b3.2;
-        Tue, 25 Feb 2025 19:09:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740539376; x=1741144176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IyZj4C9K1d8odw/tqUKy0+IlH8OYCthaQSH+++9eU+4=;
-        b=gj8Gh0iLfyF4BAxHZZTkmF1keGrYIa8Ddug6NhPlJV3uiFOsIgPR2t4J8tYek2YQIA
-         cYptWRniZNqp+xW+6QCcysDO1H2EbqQzGE5cQM3Wij6JOgqYk/SAPU99vlWmUESs+ShH
-         oAJ+XroHxF0siOI1yL/C0XdgpWNSLVQ9Xcc17JXTLHQD4ZCP3ROrceRJ40mgOfZs/lcE
-         cSexnxU4qpfzySf20Un03LpWpu61Cgugq5HQJgs3ZS3gebmsSkPOn6qrJUgq4KIBFrUW
-         Lba9lgVMWVg0FbVnzPCTe4am14D2eh2DdLH70X4TuvhhneMCCyv05eEutFEvkXcbi/Db
-         q2yA==
+	s=arc-20240116; t=1740539404; c=relaxed/simple;
+	bh=obw1Sax1F2UAMmx1AGGj5gICIC2sjWZ9oZPNwJG9rfg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=uW326bTqP2Lg+hjfBSqQTdbhTlsmf6Xfpws/BZZ4Gsg+ePc8wo9wjqqcxbp9hdlqteQOB6joRV14+qgrIcnIpzMv/yoaiVlRgAnCJBjRPXDbRY6K/p1QyUlj5BJfbov+hBXQDujT/Z5TLZkl6TJ1cgrPtyUWZOQxTM9zBCcbfwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ce8cdf1898so53482585ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 19:10:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740539376; x=1741144176;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IyZj4C9K1d8odw/tqUKy0+IlH8OYCthaQSH+++9eU+4=;
-        b=tXjkuVmttnDfOx0hrymnMPFtGKuEY2UzGssEYxM58IfevNFObffxtoTNwjc4iAPRXb
-         nP+MN8Z58m6oRXvu0X8eVStTyomYO1OvY4bDryeInyVkFbaeKEJhloiAuK3m4dTVrBx6
-         8zHLagVdq/ep1UFyOW/qpqXxfxoijEk5jN/F1iyAx2y+tLDUJDdkp/bOmZU7s1R26gcO
-         ++/jVWrr6//3eDuCB6aG6W9lyg0mCz7c5TGQpFMdJveX0LZxitIQpxNEZ2yydA7dSqRC
-         uQgxEfOiVptZeMCZkAsWhzLpABSGaD0z1RAmxsFnqwd5IgyVY22on/s56CPa/roYPhMn
-         aGkA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+gxCKxFoiibZRXOvBbfPn7kQb8oEXMr4MclZjs4JmfH6BWX+MXbjqiQoJBDFh1RarbpAZ0O+Q4AOM6D4=@vger.kernel.org, AJvYcCUJ7z5bqSeE/770e20/0V/aJJDLyzWYAaym1asQOlOL9xrnks+xLyMou+zitzrc0Cuj2OLV/QHz@vger.kernel.org, AJvYcCX94dlEXA7g0avlkgrruNhoKasx1mrDwtlqAw8B9Oze+8HVQ/b/g1E6CJyUOQBuq2lGfprZNM7f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY2fUvhL+r7GnsEfgJbuuzqN25LmfBw1QAUxGFbzzD3GHNW0Lg
-	S3oYazT1kmPZqL2oL5/bc3+OBG7VhWrqpfNlDV8n/fmrHYpI8mK3UnTXPQ==
-X-Gm-Gg: ASbGncvfgoCiGVZ1H3jxKaHSRVzEVvCnxNWZmNsm4OzTa605kFhiiZx511EuE1SwtI3
-	RtpU8chUr3GqeRwej4LlRrzFD9zSlZNwR6a70iJ409kMp/kO63PFe7Tep5lHD76Z1G+hF26Uskm
-	Bmrk2YWG1TH024nfAo6zcKs+4ap/wmyIUXvvCyU+CFw9wfqkUItlx2djUpHfoyOpRJi8zYFgkC6
-	STisfx4Zv5jd2YfxhT4PonOO8bdlkLzZNzV+txPaYvvyyxK52ldn9nukDayLexYpH14hMrXDBjc
-	mWpMaVt1MQMLh40qpK2GHvSfiDRLiHVtI9pMgp04qoLm49Sk
-X-Google-Smtp-Source: AGHT+IFFKcNLWVfI7M4avlepQKeUTdEOtQy14361siRLOko8JW4UoQuFMSAmlw/9Dggv5KZGXJ9H2w==
-X-Received: by 2002:a05:690c:3803:b0:6ef:48ac:9d21 with SMTP id 00721157ae682-6fd10ae9ec2mr48590927b3.24.1740539374446;
-        Tue, 25 Feb 2025 19:09:34 -0800 (PST)
-Received: from newman.cs.purdue.edu ([128.10.127.250])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6fd2cf2f01csm449317b3.103.2025.02.25.19.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 19:09:34 -0800 (PST)
-From: Jiasheng Jiang <jiashengjiangcool@gmail.com>
-To: jiri@resnulli.us
-Cc: arkadiusz.kubalewski@intel.com,
-	davem@davemloft.net,
-	jan.glaza@intel.com,
-	jiashengjiangcool@gmail.com,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	przemyslaw.kitszel@intel.com,
-	stable@vger.kernel.org,
-	vadim.fedorenko@linux.dev
-Subject: [PATCH v2] dpll: Add an assertion to check freq_supported_num
-Date: Wed, 26 Feb 2025 03:09:30 +0000
-Message-Id: <20250226030930.20574-1-jiashengjiangcool@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <txrxpe7tmpsyiu4cwjd2gbs3udogmzdo5ertjwmhbeynu23iep@dcryfdoi7o5x>
-References: <txrxpe7tmpsyiu4cwjd2gbs3udogmzdo5ertjwmhbeynu23iep@dcryfdoi7o5x>
+        d=1e100.net; s=20230601; t=1740539401; x=1741144201;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pI5OF1BLxFeb9UKkgyFgef27z30POH6v7L/twCJv8dk=;
+        b=kcFTdbMEE5ctEO+KCuhzNDSAjRqJJxolRhXiuDlauWOB4ZYPiA0eGwdUxsYtUUMst4
+         v8jH6xCBl4nkDeltqiAknsdqZdHfm//066HlWnBNWNqBE0Au7vcv98e2wzAscZQw8xDu
+         5iIlCIBTYhBDrxdqfqvQrl3MJRWYs0YuxlWE7K+vpNoEZXpSqlFN9o7Ffr2kOiU3bgld
+         D89Rr0YiqyV9Bd4+Rcifj4x56dBspfiZ3wPh6hWxPYmbjd+qun/kIaySFAb4HsWncEmd
+         lSEtE3b5xZDdPz0+S5QxoEte5L3HiWjvqqkbGVqFp3EIT7vUBA6iZxamfrCWIaMlWZLe
+         HY1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWmDcbTJqez/tRUrSnwx+WN9uKnW85Y3Lk5w7C6a7FBZyE9u1+CCh5Exn24B5U7NG4BIP0KjPvU+O0ZKA8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYDT9v2XZdhfY7FkasFMfwdEIieri+xQGjfG1ObxNzmtx0cZEK
+	UOqJr7WJubAZFjYJiqXNO6rYn/9wYBxyMTTezA2XGZ89E4lVuvKOuRweHnPODKrOU0u7LHgMPiW
+	Z5J+QJRHBxcCy02heYDnf30wk8zj0QjorjbtCnd9Gyqt7RjgZXDQnbPk=
+X-Google-Smtp-Source: AGHT+IFnMGyYE6QlMavrFjUCDpJgSomAeZEaIsXHwmEdGE2tooAFABLuqmpirNOy8eiHcy3O++/DW6WQtKh7jTmkVkdyLUwNiJ++
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:368c:b0:3ce:6628:3c4 with SMTP id
+ e9e14a558f8ab-3d2cb44f8cfmr179693375ab.6.1740539401708; Tue, 25 Feb 2025
+ 19:10:01 -0800 (PST)
+Date: Tue, 25 Feb 2025 19:10:01 -0800
+In-Reply-To: <000000000000c27c9e06197d59c3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67be8609.050a0220.38b081.0000.GAE@google.com>
+Subject: Re: [syzbot] [usb?] [kernfs?] INFO: task hung in kernfs_add_one
+From: syzbot <syzbot+e4804edf2708e8b7d2a5@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-usb@vger.kernel.org, stern@rowland.harvard.edu, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Since the driver is broken in the case that src->freq_supported is not
-NULL but src->freq_supported_num is 0, add an assertion for it.
+syzbot suspects this issue was fixed by commit:
 
-Fixes: 830ead5fb0c5 ("dpll: fix pin dump crash for rebound module")
-Cc: <stable@vger.kernel.org> # v6.8+
-Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
----
-Changelog:
+commit 5189df7b8088268012882c220d6aca4e64981348
+Author: Alan Stern <stern@rowland.harvard.edu>
+Date:   Wed Oct 16 15:44:45 2024 +0000
 
-v1 -> v2:
+    USB: gadget: dummy-hcd: Fix "task hung" problem
 
-1. Replace the check with an assertion.
----
- drivers/dpll/dpll_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17ceffdf980000
+start commit:   2ccbdf43d5e7 Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa0ce06dcc735711
+dashboard link: https://syzkaller.appspot.com/bug?extid=e4804edf2708e8b7d2a5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ea2012980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12ba6851980000
 
-diff --git a/drivers/dpll/dpll_core.c b/drivers/dpll/dpll_core.c
-index 32019dc33cca..3296776c1ebb 100644
---- a/drivers/dpll/dpll_core.c
-+++ b/drivers/dpll/dpll_core.c
-@@ -443,8 +443,9 @@ static void dpll_pin_prop_free(struct dpll_pin_properties *prop)
- static int dpll_pin_prop_dup(const struct dpll_pin_properties *src,
- 			     struct dpll_pin_properties *dst)
- {
-+	BUG_ON(src->freq_supported && !src->freq_supported_num);
- 	memcpy(dst, src, sizeof(*dst));
--	if (src->freq_supported && src->freq_supported_num) {
-+	if (src->freq_supported) {
- 		size_t freq_size = src->freq_supported_num *
- 				   sizeof(*src->freq_supported);
- 		dst->freq_supported = kmemdup(src->freq_supported,
--- 
-2.25.1
+If the result looks correct, please mark the issue as fixed by replying with:
 
+#syz fix: USB: gadget: dummy-hcd: Fix "task hung" problem
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
