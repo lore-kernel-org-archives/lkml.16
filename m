@@ -1,105 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C99F20F060
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BECB2248B4;
+	Wed, 26 Feb 2025 20:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740602631; cv=none; b=ECYnpuuKGTfWEW5ojK6R8IUZgFCHHT4ncp8X9kAx9x7pUOnsc9k5ZMmxlteBFfyPI3128FQVBa83buWpsL7CPOeHMzvZmDWGTiCwl6oRrqYLRx1nqsdV6reCh76QrQ79dN03IEkv+6i3rjaDHFvAspV0/MLVwTH+Rh0syE/dAGg=
+	t=1740602654; cv=none; b=MmveOZ0RuDgArrUGisNJBKDU5aOsO9DlpzpHduY+vFx54q9qobAfl5itEtf4LJQwn2haJexu5uT9oxePCH2I+IyxQ9lC8m29vxf1lg31IMEADkw/dM8pGj5jImMFxlG1YYMRn8BPCZeuslapD/Bmg9Tl3Rnd/dTLbPUwAsIqOyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740602631; c=relaxed/simple;
-	bh=+ruaCMehGYFua+tFCSHEmxudmg2YDhg0fq3RTLX1bos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQct7+95scJQ88PeBtBBh18RFHhWpalczxLwWr7HGM2y2dkQBN/I0Nn6mF2lj0yxer/6gnc6hHeo6vIoEdgrODufXMUUiy1j5OIOBtCRO93ofC/YaRr9dSdsuiXcJBIP2TVr1jESDX0SzSI2qAnawoA4P8xBbqjLuPzWN3l8jPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eB8+emjF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740602654; c=relaxed/simple;
+	bh=oBZ0KKT3UUusD2Td66n5qHAldXEO/TqJIfPFxFe0Ltw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IsH1Fxy8hpVtBK150j8tMBjefw2GtpbAGLfYZxTPKwuagzwogZd44SgFTe48SBco9RugZBd14pFJvshd6Em9SjnXEc33xJC3NAmGpmlomWwzaT7uFG9wTRlHsYRZmdHGY1t/3o5sddoPSBKaqEWIW6CIsUqpYbBErOQ/5krpVIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=T5jWUNLP; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eB8+emjF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740602628;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P0dzl5SDcbfWTKxhGQl5HtUv9pp6OHwLmqZpG5FxCO8=;
-	b=eB8+emjF5ZvR8PgN4jYLpnyBNZXMZoVLJOarIRZCtoTKktFeGgFkd+fFYcA1doVRXZKhHy
-	TuLjwBWx8SEoFc8Dj5ph/35Mh9hRjJL1FXqfufnIHORqjksFGjn2Bi1g9Rp6woogq5AkW5
-	vjWyJhndRUdylf9OKOxHXtGsQmNqoWA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-558-o1PLBVz6Md-4vNeJ-PP2HA-1; Wed, 26 Feb 2025 15:43:47 -0500
-X-MC-Unique: o1PLBVz6Md-4vNeJ-PP2HA-1
-X-Mimecast-MFC-AGG-ID: o1PLBVz6Md-4vNeJ-PP2HA_1740602626
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e682a1c92aso2920766d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:43:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740602626; x=1741207426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P0dzl5SDcbfWTKxhGQl5HtUv9pp6OHwLmqZpG5FxCO8=;
-        b=n22b7v2/Rn9EJal28R3LhQ7HJBVH9UzV0eMFV5mHq6i82o2oT9sGPBU6g8owZnKJbB
-         4d+XLR3SnBCXFPvlSeqI6kZRlyT4FCST+/K0QiS6y1UIhXCMnQmjxD0AOlYqbfzEOGMo
-         G6BS+w+bERaEARRj/qiry2itwXWPD6iWnlzBWKLjghMT73zI3tDgMmwXRn2zlcBE663C
-         lggowDM5JKIDYastyDE7xlYPkt0zAybZnd3eq7bIEerklP0bCArgHJDhrfXAMu7pmLYh
-         QO70JilwKwkTyICmvtZDzuBzEnxKnXFF+Yj0PIzllDfL3lYPLnn/KoLNLkCgWnkgqvJO
-         UBcg==
-X-Forwarded-Encrypted: i=1; AJvYcCVGIRl6fuuBIFSc/eyi+uWZQpLhfg/kZEKi5hmgJbA2N+vOUzARWRes91HDnTyjH2ueAjj1w1rrGsFXwoQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6gKcNh+DuC+SIMcZStZkPMRO9q5cczB9ZK53PoB819R7MMmQd
-	/9LocwvadjflAnMDwL1cmgdO1pwD3FghgPYoEN3OauYaO81kquGwWd6qfRMTT8L3Bga7lvUjk9U
-	3s1PJP9Bs0BE07/pZETunfvBTINcxn0G8D3YPiBie5oqyiudMRBo/4oLZcm9s5Q==
-X-Gm-Gg: ASbGncufeuRmr/ZklXElGlBb2Cc16ianstB+vcdhgJ+jU+rtfPa8jLpLVW7u2GHvJPP
-	nXIUW4eaxmMXu/MBHa9LFpp+yldhZEt0JpGLiIdlswvaPQl6VjMJd6j8ALzWIKd+eLpTNE8y3pI
-	HYyBDlmHw0X4VYkc/FnC2fZ6PCg2mIMEsoCh5l6JM5KF1Ufl96QKOo1y3Q3/9HnsdfvynqmDDnS
-	vLXDLPKjTACt9inZElDagdRS/QFdcfTKV54bV4jLVjEkjGkVLfWcMAFxGbE6YYzuXObRg==
-X-Received: by 2002:a05:6214:492:b0:6e6:630c:71e8 with SMTP id 6a1803df08f44-6e886870f50mr77100636d6.7.1740602626568;
-        Wed, 26 Feb 2025 12:43:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGKXwQVAgk3jgl/49xngaYBX6oKJbXhVjpUcSNtUjB7QKk0vvqdGgR/UdpT1mhsnTG/+3HOWQ==
-X-Received: by 2002:a05:6214:492:b0:6e6:630c:71e8 with SMTP id 6a1803df08f44-6e886870f50mr77100256d6.7.1740602626235;
-        Wed, 26 Feb 2025 12:43:46 -0800 (PST)
-Received: from x1.local ([2604:7a40:2041:2b00::1001])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976608e7sm514216d6.51.2025.02.26.12.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 12:43:44 -0800 (PST)
-Date: Wed, 26 Feb 2025 15:43:42 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: akpm@linux-foundation.org, lokeshgidra@google.com, aarcange@redhat.com,
-	21cnbao@gmail.com, v-songbaohua@oppo.com, david@redhat.com,
-	willy@infradead.org, Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com, hughd@google.com, jannh@google.com,
-	kaleshsingh@google.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] userfaultfd: fix PTE unmapping stack-allocated PTE
- copies
-Message-ID: <Z798_nEvv6YVZntx@x1.local>
-References: <20250226185510.2732648-1-surenb@google.com>
- <20250226185510.2732648-3-surenb@google.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="T5jWUNLP"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QJm0Bh012384;
+	Wed, 26 Feb 2025 21:43:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	dV2n3+CLnbeCuZtQ8iB/PugFIDY5N/D9dFFtC0TMj4s=; b=T5jWUNLPIgzUEWCO
+	YsFZP+CS4VMpbQ/xEFui0SEFnCAKNbGI5QmWXBBkQ+ZyxKd+J4h0xxNIV7Gl1o7T
+	fcDnzMkrWCJlwfxc4lmtKKgMS5GF3MNzYxMsR5pY4rXev0anmqlz1fv9iTLMt7Vx
+	TDjypI7+ml3QH9ddILkqT1ZrzZBI8Li0fvYWNy4ElqHvfrXPFWO9U2luOHnK8aTG
+	iOqp2P5EQQburyIRHp3sEfmpsK1S7Ys57FN4nyJLkOqrGGEwc3kpyy1d6u7vj+X0
+	gAOZRUq8HMaqAIPQZhUogRgcbBqmOr0ziPiycE2AInccwaZWouaGfqPVw8ZRwS6q
+	r/QS6A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv6unw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 21:43:59 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8444C4004F;
+	Wed, 26 Feb 2025 21:42:40 +0100 (CET)
+Received: by euls16034.sgp.st.com (STMicroelectronics, from userid 89)
+	id 61EB44EECF2; Wed, 26 Feb 2025 19:14:28 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2078A41E191;
+	Wed, 26 Feb 2025 19:14:28 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 19:14:27 +0100
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
+ 2025 19:14:27 +0100
+Message-ID: <c38324ea-0cf2-49f0-8d3c-2cd0ffd958b2@foss.st.com>
+Date: Wed, 26 Feb 2025 19:14:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250226185510.2732648-3-surenb@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] pwm: stm32-lp: add support for stm32mp25
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+ <20250224180150.3689638-6-fabrice.gasnier@foss.st.com>
+ <20250225-psychedelic-iguana-of-education-d5fff7@krzk-bin>
+ <e309c016-4dcb-49e3-945e-54ddadfbddb8@foss.st.com>
+ <e15754dd-5f4e-424d-a3a9-308dae814708@kernel.org>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <e15754dd-5f4e-424d-a3a9-308dae814708@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
 
-On Wed, Feb 26, 2025 at 10:55:09AM -0800, Suren Baghdasaryan wrote:
-> Current implementation of move_pages_pte() copies source and destination
-> PTEs in order to detect concurrent changes to PTEs involved in the move.
-> However these copies are also used to unmap the PTEs, which will fail if
-> CONFIG_HIGHPTE is enabled because the copies are allocated on the stack.
-> Fix this by using the actual PTEs which were kmap()ed.
+On 2/26/25 08:54, Krzysztof Kozlowski wrote:
+> On 25/02/2025 15:58, Fabrice Gasnier wrote:
+>>
+>>
+>> On 2/25/25 13:04, Krzysztof Kozlowski wrote:
+>>> On Mon, Feb 24, 2025 at 07:01:47PM +0100, Fabrice Gasnier wrote:
+>>>>  	}
+>>>>  
+>>>>  	return pinctrl_pm_select_sleep_state(dev);
+>>>> @@ -246,6 +413,7 @@ static DEFINE_SIMPLE_DEV_PM_OPS(stm32_pwm_lp_pm_ops, stm32_pwm_lp_suspend,
+>>>>  
+>>>>  static const struct of_device_id stm32_pwm_lp_of_match[] = {
+>>>>  	{ .compatible = "st,stm32-pwm-lp", },
+>>>> +	{ .compatible = "st,stm32mp25-pwm-lp", },
+>>>
+>>> No driver data suggests device is backwards compatible. Commit msg
+>>> suggests not, so that's confusing.
+>>
+>>
+>> The LPTimer PWM driver takes benefit of the MFD parent driver to feed in
+>> data, e.g. 'num_cc_chans'. Number of channels is now variable, on
 > 
-> Fixes: adef440691ba ("userfaultfd: UFFDIO_MOVE uABI")
-> Reported-by: Peter Xu <peterx@redhat.com>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> Cc: stable@vger.kernel.org
+> This means this ID table is useless. You do the matching via parent
+> device, so stop growing the table and call it deprecated or something.
+> 
+>> STM32MP25 (e.g. not a single channel). But it can't be hard-coded as
+>> compatible data. (there's only 1 channel on earlier LP Timer hardware
+>> revision).
+>>
+>> The hardware controller is a bit different, hence the new compatible
+> 
+> If it works with old compatible, it's an easy proof that it is
+> compatible, so please counter argument that with something specific.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
+Ack, I'll drop the "st,stm32mp25-pwm-lp" compatible, as match through
+the parent device is achieved here.
+Alternatively, reading directly the hardware configuration register
+could be used to retrieve the 'num_cc_chans'.
 
--- 
-Peter Xu
-
+Thanks for reviewing,
+Best regards,
+Fabrice
+> What is different that driver cannot work with new device using old
+> interface or old features?
+> 
+> 
+> Best regards,
+> Krzysztof
