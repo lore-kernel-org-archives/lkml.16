@@ -1,84 +1,99 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED7C1624C5;
-	Wed, 26 Feb 2025 02:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94F147F4A;
+	Wed, 26 Feb 2025 02:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740535398; cv=none; b=pnbDY2zFv41qFfa2s8YA2y5PZx5os+d8rCOUsG9UpLZsYUxuuYHhfP9ah16WYisAJgkdFdmZglIBBN6e+cefcxTl85TX4FgKtu6QG0+p6kMJH112Cyuk47c1A2CUYLWwEj+U6iiYWk0EvDApwbV68yxHOTdme1ZMxFecJXveHCw=
+	t=1740535430; cv=none; b=APTk6krYMKlfAe/S4YPe4wc/lzJSnQBTsMt0NAybAmO1vKkG6T1Ss0GnrluyJVdkM0sa+eTyncLurkz1EenjkHodiHgQ5+B/hhK7MaIROTOeor6kH+rQ5NU8XopohR3pdyvkASf9MjAlLr4DhwJuTG8Tr3txZgEtNi+oKRjZUXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740535398; c=relaxed/simple;
-	bh=7ZTH7oq2IoiaqJT7Ob6dFeLdBZygCMDgXFWf8c//0eI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VeIwzBti19vj1t2pQO2HhlyUoPHCYJq/AlO6ApE67vhf4iUJ5x40ixNX+WLwB7k1VZVv/JbnHYh4mkyoMqHZWG+iOZfKhZWskpAQWpos6V7nPo5hUoF678ZGEdaj01KsEZ9fn6JLmO2KH2+hKn8hmZfFcMWiaP0GmykpAExfiG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=NOSD3O5r; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1740535430; c=relaxed/simple;
+	bh=8eCh4A5o3GNS8GRHee/m7J2MLUsmPbtSX21L8prJpzA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=azr7Lz/aznEWViaEbBLbc+IrFKfdmt2une2eOdsFO4YLDTs4OV7Y28KHrddxX1zHkwei3gowzhWenlQgilPQ2qt6wtxh8A6oDYdGvmKvwPoPJRtkAxJsU9Gzx7mT4x1a8uOn8AMpdDeoCGKcnmIX8X5MBvwTBge2LxG52jLARCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GizMn7ss; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="NOSD3O5r"
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.154])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id D6EC4200C0;
-	Wed, 26 Feb 2025 02:03:14 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id 9418F20317;
-	Wed, 26 Feb 2025 02:03:06 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id A1AA74002D;
-	Wed, 26 Feb 2025 02:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1740535384; bh=7ZTH7oq2IoiaqJT7Ob6dFeLdBZygCMDgXFWf8c//0eI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NOSD3O5rqygmeAV52Pgnu6LRV7B9Crhqlq6Ew0ZFI0CLtJiSW08xb6Es8CMUKuML0
-	 86XEA+du+VikmuZG3H4ObrxzAuBRIhRtye7x+/3ezEIQSdGHvPBQBRn9M5oXZqVq2m
-	 Soa9XdrcgtZm2RMBjT6+w99uQLNteAnZB6BORPFQ=
-Received: from [198.18.0.1] (unknown [58.32.35.189])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 63A2E4151A;
-	Wed, 26 Feb 2025 02:03:02 +0000 (UTC)
-Message-ID: <26fc7fdb-fa43-451b-8ad9-29298e354dc5@aosc.io>
-Date: Wed, 26 Feb 2025 10:02:58 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GizMn7ss"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740535429; x=1772071429;
+  h=from:to:cc:subject:date:message-id;
+  bh=8eCh4A5o3GNS8GRHee/m7J2MLUsmPbtSX21L8prJpzA=;
+  b=GizMn7ssMdb8LuZUAleQSijdudrFCM7SnHQ1tZ9SIoqjB68b7OHUTWNt
+   e6r2BMKx4L0d2F0gzqvWuQwAaNDCVk8/PqwDeq7f0YLU4x45URJd6kkhG
+   y2mdWrdmpwRh7BMawDfeZbkXlz0F2bDR9U7JfdunJMOn7IVyQDw0o3T+a
+   jThV/zgMaCpzPib63j7aDtOp+R4rB+oOyJR6c0gMFHRmGqdXwsihRJSg1
+   NMJ/YfLmA1H4lhYC7uXkZjB+4Yt/WMTcZIGe0DpUcTxY0JbroYcyJJVns
+   B3Y4J9zOkIhmIVgX92UaWMbolKcd0qP8LIb5drMJTdkeyCOS2YK7t+su1
+   w==;
+X-CSE-ConnectionGUID: lDcKveKbTeKXLLuXUB5r8Q==
+X-CSE-MsgGUID: 8x7JDsSGQoW3Ah2LB9FQxQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="28959508"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="28959508"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 18:03:25 -0800
+X-CSE-ConnectionGUID: lYJwZv5fS5aVrfSlm/S+zQ==
+X-CSE-MsgGUID: k9+x47KkTAGzldJF3ZrpZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="121179524"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 18:03:22 -0800
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Jason Baron <jbaron@akamai.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	Gary Wang <gary.c.wang@intel.com>,
+	Yi Lai <yi1.lai@intel.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] EDAC/ie31200: Add EDAC support for Intel Raptor Lake-S SoCs
+Date: Wed, 26 Feb 2025 09:51:51 +0800
+Message-Id: <20250226015202.36576-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Thunderbird Daily
-Subject: Re: [PATCH 0/5] drm/xe: enable driver usage on non-4KiB kernels
-To: intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Mingcong Bai <jeffbai@aosc.io>
-References: <20250226-xe-non-4k-fix-v1-0-e61660b93cc3@aosc.io>
-Content-Language: en-US
-From: Kexy Biscuit <kexybiscuit@aosc.io>
-In-Reply-To: <20250226-xe-non-4k-fix-v1-0-e61660b93cc3@aosc.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: A1AA74002D
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [-0.09 / 10.00];
-	MIME_GOOD(-0.10)[text/plain];
-	XM_UA_NO_VERSION(0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	URIBL_BLOCKED(0.00)[mail20.mymailcheap.com:helo,mail20.mymailcheap.com:rdns];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5]
-X-Rspamd-Action: no action
 
-Superseded by 
-https://lore.kernel.org/all/20250226-xe-non-4k-fix-v1-0-80f23b5ee40e@aosc.io/.
+This series refactors the ie31200_edac driver to add EDAC support for Intel
+client SoCs with multiple memory controllers and out-of-band ECC capability.
+The first SoC with multiple memory controllers to be added is Raptor Lake-S.
 
+Patch 0001 ~ 0005: Bug fixes and cleanup.
+Patch 0006 ~ 0009: Refactor and make resource data configurable.
+Patch 0010 ~ 0011: Add EDAC support for Raptor Lake-S.
+
+This series is on top of:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
+
+Qiuxu Zhuo (11):
+  EDAC/ie31200: Fix the size of EDAC_MC_LAYER_CHIP_SELECT layer
+  EDAC/ie31200: Fix the DIMM size mask for several SoCs
+  EDAC/ie31200: Fix the error path order of ie31200_init()
+  EDAC/ie31200: Fix the 3rd parameter name of *populate_dimm_info()
+  EDAC/ie31200: Simplify the pci_device_id table
+  EDAC/ie31200: Make the memory controller resources configurable
+  EDAC/ie31200: Make struct dimm_data contain decoded information
+  EDAC/ie31200: Fold the two channel loops into one loop
+  EDAC/ie31200: Break up ie31200_probe1()
+  EDAC/ie31200: Add Intel Raptor Lake-S SoCs support
+  EDAC/ie31200: Switch Raptor Lake-S to interrupt mode
+
+ drivers/edac/Kconfig        |   2 +-
+ drivers/edac/ie31200_edac.c | 637 ++++++++++++++++++++++--------------
+ 2 files changed, 387 insertions(+), 252 deletions(-)
+
+
+base-commit: b3205f5a415b88d73b18130af1bacefd876de8bf
 -- 
-Best Regards,
-Kexy Biscuit
+2.17.1
+
