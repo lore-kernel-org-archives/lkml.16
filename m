@@ -1,159 +1,73 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D9525E479
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:59:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E761E21CC6D;
+	Wed, 26 Feb 2025 20:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740599972; cv=none; b=S7Sh6swfCRtEOP8UFLOOgVaXT4BC3xbb7ycoVeef5YZYbGByjIhGXBoVfYWUk7IxU5VATgmXkx9bBb61tGjC3NUDLJC3nbK8yNRPQ/BbbHrykddrNlKKuBr3jZMhG94KFczn3xflWAcHupwmoEsbHVhYFMf1uYVV8rIVf05ILPs=
+	t=1740600020; cv=none; b=N6lGIrTJQwYy0sd5Q7nHWH8rmZWB32NdmZz79yP8hh25vrX5QbBkoabaxb0fJ1hrmjcivpw/3+YR1q4QZRTT5Nw3XkT7Xl4RHkRBwf0qRgYkaCBeOddkKu3LEofEv3vILEjFTCPwbvFlMZji9cT8jQBBNMMRBOj/SB8Ro2/xOf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740599972; c=relaxed/simple;
-	bh=JRnPNS2R+SoIrKYk5hs0jEUL60OqbTaEnku8x/ZnQT4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dbNkeLOv63ftzQWGFSzaYBLNOdRe/93UWVueN7TWbxCTS+yVWxtA5iQ3dGmvYseytO00BPCLZjiD19C4pCs3owIOf3hDWFaxz2MiO2Jr6r5q/zU2I5JPwiefLbj/57VnN/VP0VDGBeTI0Vr0kthCeY1NB1XR0kynO2se3jV4Ba0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gu5rAJ4l; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=gu5rAJ4l; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740600020; c=relaxed/simple;
+	bh=2NZZNRHCN1D1wJBiE7xyhOIwsgdG234riLaTh6G31Ew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1iX3B/9CkrRvu1bGsl/gp2vLKHagRgOsR4XY6gIyRDzO+ogzK+WgQLbenJkJxVEIJCYUJBm50wjIB28KdeNi7SWzZTWZiNbmU3X+g7n9DaB/XAuQemyjQEiJi+Yap+RYBZM85N2zvyjKHlBrCuC/T9WFvo7KpBmev6Pm3U1tmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bs5zT0IP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gu5rAJ4l";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="gu5rAJ4l"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2A803211A1;
-	Wed, 26 Feb 2025 19:59:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P3WmfFEnCvDs4KrvRf1+gcJdaZ6nkRrsX2UH5OZ2D/Y=;
-	b=gu5rAJ4ln2UxWzssNDciupNk61EvKVzSJankbY07PY9XaK3SnqBmfZj8lsUw62H0oO5eMj
-	GMJoxtpmApYaTW1HI3w0aoDX8Gr58rp2mmDyTi1yM5GLcISMc6wo7pvpRZ4sXtKpyOtgCr
-	u2LGAjokAzm1aecIi73WSBfpa6jYdTw=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740599969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=P3WmfFEnCvDs4KrvRf1+gcJdaZ6nkRrsX2UH5OZ2D/Y=;
-	b=gu5rAJ4ln2UxWzssNDciupNk61EvKVzSJankbY07PY9XaK3SnqBmfZj8lsUw62H0oO5eMj
-	GMJoxtpmApYaTW1HI3w0aoDX8Gr58rp2mmDyTi1yM5GLcISMc6wo7pvpRZ4sXtKpyOtgCr
-	u2LGAjokAzm1aecIi73WSBfpa6jYdTw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AA30713A53;
-	Wed, 26 Feb 2025 19:59:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id myk8HKByv2ddMgAAD6G6ig
-	(envelope-from <mpdesouza@suse.com>); Wed, 26 Feb 2025 19:59:28 +0000
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-Date: Wed, 26 Feb 2025 16:59:05 -0300
-Subject: [PATCH 5/5] printk: Check CON_SUSPEND when unblanking a console
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bs5zT0IP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C263C4CED6;
+	Wed, 26 Feb 2025 20:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740600019;
+	bh=2NZZNRHCN1D1wJBiE7xyhOIwsgdG234riLaTh6G31Ew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bs5zT0IPho7ZJiovwtijGcEwt3DdmOO9LTEEirR9VhizuuoLVhuhzvzU8xitLlRhC
+	 m111NfEJmSn4p/cLUL7aMq+1RND0f/EADUUjXODJuU4vA2Wd+weN8keyJDs0YeIc9H
+	 fn2EdJEwzUkxo7g5b/ciCpzd0xxLuPZ8paQ2gQX0ueeKoCClJjielKEGecPPLUoxQL
+	 QUM5HvSnjsjD4NP3MhkxuaMf2Xmj7U7Iu6Ly7ecLJeWVKVJRA9QlVpC+fixHhKmE4B
+	 8FCFOGukkObRVQQ2Q3NIYb4uD2J1yRR07CV4aVa+pFadZlka2hrsLYv06Rv+l40HY/
+	 FnoricZTxFoQw==
+Date: Wed, 26 Feb 2025 20:00:16 +0000
+From: Eric Biggers <ebiggers@kernel.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	"David S. Miller" <davem@davemloft.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>, linux-mm@kvack.org,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	syzbot+1a517ccfcbc6a7ab0f82@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm: zswap: fix crypto_free_acomp() deadlock in
+ zswap_cpu_comp_dead()
+Message-ID: <20250226200016.GB3949421@google.com>
+References: <20250226185625.2672936-1-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-printk-renaming-v1-5-0b878577f2e6@suse.com>
-References: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
-In-Reply-To: <20250226-printk-renaming-v1-0-0b878577f2e6@suse.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Eric Biederman <ebiederm@xmission.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>, 
- Pavel Machek <pavel@ucw.cz>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- John Ogness <john.ogness@linutronix.de>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Todd E Brandt <todd.e.brandt@linux.intel.com>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, 
- linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, 
- Marcos Paulo de Souza <mpdesouza@suse.com>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740599947; l=1376;
- i=mpdesouza@suse.com; s=20231031; h=from:subject:message-id;
- bh=JRnPNS2R+SoIrKYk5hs0jEUL60OqbTaEnku8x/ZnQT4=;
- b=YZG7GhXC7DlbzU/tfnWu5ZJWEdMcKKy+w3hDjFcb440sfvdbAMzpmhJ3Bxk21gPTiahZl9MRA
- xAt8RkWljJoCoHFjFTT5BAcz42UiIfBD1jRnQDzOo0STCf7ts7Cddnd
-X-Developer-Key: i=mpdesouza@suse.com; a=ed25519;
- pk=/Ni/TsKkr69EOmdZXkp1Q/BlzDonbOBRsfPa18ySIwU=
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLsew83exbyfiapi7twtunf83p)];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email,suse.com:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226185625.2672936-1-yosry.ahmed@linux.dev>
 
-The commit 9e70a5e109a4 ("printk: Add per-console suspended state")
-introduced the CON_SUSPENDED flag for consoles. The suspended consoles
-will stop receiving messages, so don't unblank suspended consoles
-because it won't be showing anything either way.
+On Wed, Feb 26, 2025 at 06:56:25PM +0000, Yosry Ahmed wrote:
+> Currently, zswap_cpu_comp_dead() calls crypto_free_acomp() while holding
+> the per-CPU acomp_ctx mutex. crypto_free_acomp() then holds scomp_lock
+> (through crypto_exit_scomp_ops_async()).
+> 
+> On the other hand, crypto_alloc_acomp_node() holds the scomp_lock
+> (through crypto_scomp_init_tfm()), and then allocates memory.
+> If the allocation results in reclaim, we may attempt to hold the per-CPU
+> acomp_ctx mutex.
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
----
- kernel/printk/printk.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+The bug is in acomp.  crypto_free_acomp() should never have to wait for a memory
+allocation.  That is what needs to be fixed.
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index fbbaec06c9f3..4b7ed40bf808 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3342,7 +3342,12 @@ void console_unblank(void)
- 	 */
- 	cookie = console_srcu_read_lock();
- 	for_each_console_srcu(c) {
--		if ((console_srcu_read_flags(c) & CON_ENABLED) && c->unblank) {
-+		short flags = console_srcu_read_flags(c);
-+
-+		if (flags & CON_SUSPENDED)
-+			continue;
-+
-+		if ((flags & CON_ENABLED) && c->unblank) {
- 			found_unblank = true;
- 			break;
- 		}
-@@ -3379,7 +3384,12 @@ void console_unblank(void)
- 
- 	cookie = console_srcu_read_lock();
- 	for_each_console_srcu(c) {
--		if ((console_srcu_read_flags(c) & CON_ENABLED) && c->unblank)
-+		short flags = console_srcu_read_flags(c);
-+
-+		if (flags & CON_SUSPENDED)
-+			continue;
-+
-+		if ((flags & CON_ENABLED) && c->unblank)
- 			c->unblank();
- 	}
- 	console_srcu_read_unlock(cookie);
+But really the bounce buffering in acomp (which is what is causing this problem)
+should not exist at all.  There is really no practical use case for it; it's
+just there because of the Crypto API's insistence on shoehorning everything into
+scatterlists for no reason...
 
--- 
-2.48.1
-
+- Eric
