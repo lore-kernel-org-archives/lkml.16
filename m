@@ -1,35 +1,35 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E24524DFE8;
-	Wed, 26 Feb 2025 10:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB1026FA7B;
+	Wed, 26 Feb 2025 10:09:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740564582; cv=none; b=YcCv/6BjsRGnguzfqnDmL28iltgGcJHRnli8mdVtn5IXUtNbk5Zz12KFBnGvIDhnw5FTaT8YyDrU3W1+5Tuj7Jjj8whtGiEgZionVbTkCSowrMoKNAdDObkblJ4BI0t8xiLrNPUthzQBFSGa586d6omdN+h+F9onwmv1fYIrgwo=
+	t=1740564586; cv=none; b=RSxNnPuvYf7lqaDUO1fUyyLLcZxTsS/NIwpxA6dhlSEhWGqoIBlEH9j3whnBUhXydlAW+l+5lBklvKoVpP9Gc91ayFEeQG/diS9kN9J3qlzSsMZwzcK/gJ7rAEQCUt+YW0Ar7BIJXHrjzIjzvh9elAe2m02oVHmkbxXPtAYkbQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740564582; c=relaxed/simple;
-	bh=oE6eJhf100L0WubLseBF2l1C7MDTM7YdD4hjpLHaeu4=;
+	s=arc-20240116; t=1740564586; c=relaxed/simple;
+	bh=hHnlZ09Wmny3rECnS6HpfxeyyKG/m3nPIKrPeYZPzo4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EfWt5jM+MX/Kd8gac0IbBs1O2irLeR3lAke5+5OSuX2Ze9kDcd/68OMUHYqKpsnR9Y+xuvTEwt4lQHGrQMvOkwR8RKcOyLO/HMkw0wzpDUDz2YX3zluTeVvTPXUEpBqYs2LpCFhN9U0+7VGUidMrOCmmonmtc3bj264cBNVXxN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=c8eEFAdS; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=KHcfERKwst9dv/+hYXXTReB+hVnqiaYCtu9iN9tXjmROaq9GVflyPw71mjLD4sHRZUjMlSP5ZT9p70X9UoxoWNMj/rpBI7iAkYPyqd6eiWNLulLDELdarbInfMeTqWdvG1S14z/ZVvFlrPiyMQ/J8pK9C7DwTfZE6ELN9Ev8ZkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MVJ6pqhA; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="c8eEFAdS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AE6B243205;
-	Wed, 26 Feb 2025 10:09:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MVJ6pqhA"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 392E0431ED;
+	Wed, 26 Feb 2025 10:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740564578;
+	t=1740564583;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/w7BQyIiPpV4zPRkyKLRGrqXvrGqvxHrkRYXlg5xSSk=;
-	b=c8eEFAdS+zaX3hYwdfaFYOqYUIalOGfx/pa5HSdQhuIzQdWLWsZz+drc+5olEsAr10YRCP
-	+EdOjp4QqDEGtproEhC8cyS6nLzJHsTrNX2tBxmx7mUIk1QiPik44ANSxQcn18EBFitv4v
-	WPAa49t+aENONpfKoG92A1eYA1sa+zc3PtyQA/38IY+CGaeftMvuiRVLV7L7zwpLPUr3vq
-	FgrMpNwKQs61xkyOHcbnAOJgHQpGBBw1N71IG+0VBV0Me3/pGx/QR97OsVha8AFPOFxl/+
-	mW36vT1qbuCyjZbcvq4vBHGXDoFxo7N/iTUsg6VXIFSvxtTYpW40dDy3ycsUcQ==
+	bh=qRZnCkRd/pRUWUVIjUvsJ3u5w4R+09pPHDgXUlxSO3o=;
+	b=MVJ6pqhAqW4HzCWo0DXuyGtS6EEHNQ+nRiei2/3vkxAwz4/VnZHNEBnFnzfHJ5B8HuKFMf
+	qVep68hgtnr6cpdBQGp6cZi3WDdCeZAe9YNgxHed/fvMrdDf38CI+JIE0bEh6//zZnXl1q
+	Yr5A4uGwTFdbIlZxkJ9NvCKlPCHlEsq72oPZyNPpFB5kxPsu2UD9DSQoldN8ls7w90ZxCl
+	Ofd8d4WzG6mjNfmEcaRC94sao8vqZN4QfGkl0t8H592HnAowUwg8LHV2hDxTmWAHPuO0X5
+	6Xixtzl7j04SnN9AD/L29qRwO+LLbfdyYIpU7wquhsdBKjIH/BnDNbVhXjAt+A==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -51,9 +51,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next v2 04/13] net: phy: phy_caps: Move __set_linkmode_max_speed to phy_caps
-Date: Wed, 26 Feb 2025 11:09:19 +0100
-Message-ID: <20250226100929.1646454-5-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v2 08/13] net: phy: phy_device: Use link_capabilities lookup for PHY aneg config
+Date: Wed, 26 Feb 2025 11:09:23 +0100
+Message-ID: <20250226100929.1646454-9-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
 References: <20250226100929.1646454-1-maxime.chevallier@bootlin.com>
@@ -66,105 +66,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeeftdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeeinecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
  igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Convert the __set_linkmode_max_speed to use the link_capabilities array.
-This makes it easy to clamp the linkmodes to a given max speed.
-Introduce a new helper phy_caps_linkmode_max_speed to replace the
-previous one that used phy_settings.
+When configuring PHY advertising with autoneg disabled, we lookd for an
+exact linkmode to advertise and configure for the requested Speed and
+Duplex, specially at or over 1G.
+
+Using phy_caps_lookup allows us to build a list of the supported
+linkmodes at that speed that we can advertise instead of the first mode
+that matches.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
 V1 -> V2: - No changes
 
- drivers/net/phy/phy-caps.h |  2 ++
- drivers/net/phy/phy-core.c | 18 +++---------------
- drivers/net/phy/phy_caps.c | 16 ++++++++++++++++
- 3 files changed, 21 insertions(+), 15 deletions(-)
+ drivers/net/phy/phy_device.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
-index f8cdfdb09242..3f011b63a417 100644
---- a/drivers/net/phy/phy-caps.h
-+++ b/drivers/net/phy/phy-caps.h
-@@ -43,5 +43,7 @@ void phy_caps_init(void);
- 
- size_t phy_caps_speeds(unsigned int *speeds, size_t size,
- 		       unsigned long *linkmodes);
-+void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes);
-+
- 
- #endif /* __PHY_CAPS_H */
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index 8533e57c3500..f62bc1be67b2 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -7,6 +7,7 @@
- #include <linux/of.h>
- 
- #include "phylib-internal.h"
-+#include "phy-caps.h"
- 
- /**
-  * phy_speed_to_str - Return a string representing the PHY link speed
-@@ -339,22 +340,9 @@ phy_lookup_setting(int speed, int duplex, const unsigned long *mask, bool exact)
- }
- EXPORT_SYMBOL_GPL(phy_lookup_setting);
- 
--static void __set_linkmode_max_speed(u32 max_speed, unsigned long *addr)
--{
--	const struct phy_setting *p;
--	int i;
--
--	for (i = 0, p = settings; i < ARRAY_SIZE(settings); i++, p++) {
--		if (p->speed > max_speed)
--			linkmode_clear_bit(p->bit, addr);
--		else
--			break;
--	}
--}
--
- static void __set_phy_supported(struct phy_device *phydev, u32 max_speed)
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 9c573555ac49..57b90ec6477e 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2357,7 +2357,7 @@ EXPORT_SYMBOL(genphy_check_and_restart_aneg);
+ int __genphy_config_aneg(struct phy_device *phydev, bool changed)
  {
--	__set_linkmode_max_speed(max_speed, phydev->supported);
-+	phy_caps_linkmode_max_speed(max_speed, phydev->supported);
- }
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(fixed_advert);
+-	const struct phy_setting *set;
++	const struct link_capabilities *c;
+ 	unsigned long *advert;
+ 	int err;
  
- /**
-@@ -557,7 +545,7 @@ int phy_speed_down_core(struct phy_device *phydev)
- 	if (min_common_speed == SPEED_UNKNOWN)
- 		return -EINVAL;
+@@ -2383,10 +2383,11 @@ int __genphy_config_aneg(struct phy_device *phydev, bool changed)
+ 	} else {
+ 		linkmode_zero(fixed_advert);
  
--	__set_linkmode_max_speed(min_common_speed, phydev->advertising);
-+	phy_caps_linkmode_max_speed(min_common_speed, phydev->advertising);
+-		set = phy_lookup_setting(phydev->speed, phydev->duplex,
+-					 phydev->supported, true);
+-		if (set)
+-			linkmode_set_bit(set->bit, fixed_advert);
++		c = phy_caps_lookup(phydev->speed, phydev->duplex,
++				    phydev->supported, true);
++		if (c)
++			linkmode_and(fixed_advert, phydev->supported,
++				     c->linkmodes);
  
- 	return 0;
- }
-diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-index e5c716365b36..9075f9840ebd 100644
---- a/drivers/net/phy/phy_caps.c
-+++ b/drivers/net/phy/phy_caps.c
-@@ -103,3 +103,19 @@ size_t phy_caps_speeds(unsigned int *speeds, size_t size,
- 
- 	return count;
- }
-+
-+/**
-+ * phy_caps_linkmode_max_speed() - Clamp a linkmodes set to a max speed
-+ * @max_speed: Speed limit for the linkmode set
-+ * @linkmodes: Linkmodes to limit
-+ */
-+void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes)
-+{
-+	int capa;
-+
-+	for (capa = __LINK_CAPA_LAST; capa >= 0; capa--)
-+		if (link_caps[capa].speed > max_speed)
-+			linkmode_andnot(linkmodes, linkmodes, link_caps[capa].linkmodes);
-+		else
-+			break;
-+}
+ 		advert = fixed_advert;
+ 	}
 -- 
 2.48.1
 
