@@ -1,285 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF1321CC79
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB0421CC79
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740590146; cv=none; b=YlExumhktmxMds/oc4XfAg/5KOYDJHTNxO9cJKT281348Nn7EUdp1GSiSAK5ErtVRI8rqS2QVWjbNZaCV5BKshEd27dkZrtGWSTjT1x3uHZqlDRG+IeR9afs6SC+Hz1L3Dej35ZKqJLL2nLzDiE67nLR4GmQbSsrhlTSnQQz8KE=
+	t=1740590244; cv=none; b=HHOMSCJNTP7DRN/EWg19gn+wTbKvbqTZlkE0lUNSruHaNrQXwirYqxoSTyCKPJ2f4W+wrP3W1ZTij/axAOyv+V2tQVFd92ZFAD6+JULPuzF01A2HdXCmccDfBMDGhajyfn4FiUCU0SS6jtRr/f6cFedEbonQUiZ62VhYsI5G3AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740590146; c=relaxed/simple;
-	bh=UoPnTdbJLJQE+q8L7tv8wr8p+J58pzOnlTrkDapNqZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SCQYY6Mcz3Ay0IVgwnA4Ufw4PIdg79wc7BA3RIg7cT3c89LBD1ZN9zBLhkb48S3hLG8m8VGvtcQ3adGeZ9dC/YCdKHa1iJBY+dbj0erUdzAybcfs4gAodHR0LysMmTCpasFL4Qeet1soeh5umluu+cBDhXkc3w+QvTPGtbDcTs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHLp0+1P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740590244; c=relaxed/simple;
+	bh=MJbYFWFkAR+EfKDyS6iZ1oNNVh5vDqYiyywcAm87DHQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=jkO/ShlMqvPWc+ggi9rgElTxTc5pTNwfiXBIpIoqSS0ZsYpssmpxprZ6X60UFJxdM5ZPkpEb1LP99yoPaIgPswj21PO9Q2N3kabJJjCJwRVU1z4O9D7/+cq+gbmk56eCRjzmi7ZoZhRMRcIzc8gRryCl0vGMhWfpkXJg05RDjVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=byXE6yyU; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHLp0+1P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C04C4CED6;
-	Wed, 26 Feb 2025 17:15:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740590146;
-	bh=UoPnTdbJLJQE+q8L7tv8wr8p+J58pzOnlTrkDapNqZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hHLp0+1Plq3OWZJLCFMa1JNsQLAIss1vdEIqIu0dVneV7ThjhG7ap9FUyxLhNMckh
-	 fHfe2zgidM5vWn5qFDHvXfVwSy5BlJfciQqQYCrHD65dEiUKb06s9rOHHdbuSrNP6K
-	 jxCoJ4YVPdWkJx6IuJgRtXFzhn/QDrhh6tEeFzDUttXlWv/pAcLHAdR5LZSoxecOOX
-	 vcNYnLG9xvJggyE9Cy2xcVUHGBhxD+MAcIoAnpmPbJ/+V/plKy/1kIzP+ruAWMLLVT
-	 fsDn4K/u0P4aPMNHUiLRnY6whOBGAkCWVb19RsTXSdgocHtfDSxKKC50AYG9tMQv3G
-	 BMU8pvddHalQw==
-Date: Wed, 26 Feb 2025 17:15:44 +0000
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-	Leo Stone <leocstone@gmail.com>,
-	syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
-Subject: Re: [PATCH v4] f2fs: add check for deleted inode
-Message-ID: <Z79MQD3Qr3HkfUDX@google.com>
-References: <20250212072742.977248-1-chao@kernel.org>
- <Z6zQoyNp5td-Wgd1@google.com>
- <d8be79a2-9470-45b7-9df1-b571f2219c30@kernel.org>
- <Z64uA2ys4nhV54lI@google.com>
- <666e62d1-3446-485e-bac9-0cc8089b04de@kernel.org>
- <5f390129-1b93-42d2-8db7-276c370db90f@kernel.org>
- <Z76KaW6iAsafDDbB@google.com>
- <7fb3ffcb-4513-45da-8f83-eebe8f5e008b@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="byXE6yyU"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72755fc91d9so601574a34.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:17:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740590242; x=1741195042; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f3KO84anUnmKTrv3jqEjVpEjsPZO/Jbwk39A8x7cWXQ=;
+        b=byXE6yyUJ+BvoQps0572J0WjD2NWMjlsZC2OZjc23YWmBXEcayhE8HKl0z/e+Tr8g1
+         UnknQASV0ScEyhjiZ/XNaKH8F/SYXvWuS4ekHZBoeu3YMf+S//Jkqgf6HQ5eU5/0hV4b
+         UQrZxmRKCgnDtGk3V1gu0nVVMPDargVH3F6Ko=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740590242; x=1741195042;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f3KO84anUnmKTrv3jqEjVpEjsPZO/Jbwk39A8x7cWXQ=;
+        b=A6jnw1/KfUI2XSGg6a03UU/3iC7DZ4VSPqZdeXe3pEAtrtSxdYv3/P1dg65dA2rAlf
+         ezlAm0FLRJvbdpCj2qpdgje8dyH18fr+q1nKKSKbySdC3KDun9yRSKqkfzpBTr0Nw6Pp
+         Fn3F+VXaETSA0jJC9IFdES2fSNIB16iMZX+NF3z2MHJl1fqG+7M667WbC0FsepBohBR5
+         0WnF8rrVtBAFctqoHZiYiK7J8ja+ey/FdecO5m9N5xair8jbsvFt4ypHKvCnZ1zRrS8q
+         5LIkFP5ZWt94JWSXMWqnPxVB2QcyrdtEQqKNHWd4eF+dRJfLeyL2UyBr3iMpgyALfjT4
+         FjlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW628bJCg8n8jFloFp9fiHy5AJgjbJVs/qSRfAdgRR0pkmi6yFbg/w74jRpGEXQq1zje/FvhepvziS5U5U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6wYXAl0cvGnr8kRNMc3IjvXzOKwkG+Nn3tpGIOgJ9FY8TR68C
+	OCYnxcZoqSZQpyibKTSJLFHaAzoAhlC6Ql7b7fGq/V5iBEwTRrO7/n9d5gcMSY8pLLdxU8PChZO
+	BnHgMlmJOUCd+3REg3VM8tfmaenz+LIunYga4
+X-Gm-Gg: ASbGncvIdZ9N4ci4f/j4JTPNaAi5o0jhs9gSsetkB25xDQ87NqlkW+iQveRfVrq/Z59
+	JWCxpPrVo/gw4Otl5y61ZTSSUH7wL/HAdSJ1EuoUgiQ/4+FOJrS1XLvJ9js9mnRL4hHu+FpWHh8
+	tQTFtzKog=
+X-Google-Smtp-Source: AGHT+IEl2EDbG9u5ILAtanAIm0mTUyqIM9Ntd3T2NX5/6VfFM53xNzN8hXgARNQiVlyNgTzogTh4ECQvmcondAgTChA=
+X-Received: by 2002:a05:6830:2693:b0:727:25d0:7f45 with SMTP id
+ 46e09a7af769-7274c0b5017mr5459303a34.0.1740590242451; Wed, 26 Feb 2025
+ 09:17:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7fb3ffcb-4513-45da-8f83-eebe8f5e008b@kernel.org>
+References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-5-jeffxu@google.com>
+ <899d39af-08d2-4cd9-9698-9741d37186b8@lucifer.local> <CABi2SkX0oGnqM4BDfRt0+7Pcf31td8np3=dVg1ixcaDNoUyHkQ@mail.gmail.com>
+ <ea970928-ccea-4314-9cde-b64fa1a7824e@lucifer.local> <qk4m74uscjxdnlchcxolvgbw7ijppzqk57ajyc4m6jjixq5gti@lokjqegpftzh>
+In-Reply-To: <qk4m74uscjxdnlchcxolvgbw7ijppzqk57ajyc4m6jjixq5gti@lokjqegpftzh>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Wed, 26 Feb 2025 09:17:10 -0800
+X-Gm-Features: AQ5f1JqJf9n4Unmz6uj_lnvCtH51CFyB4M8cqMKOxzhVNsJkXQyDA1ITrfYaz_4
+Message-ID: <CABi2SkUprOT=TEDQb62SByjyW+csarKnGypdmxVdktj=+C9_yg@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] mseal, system mappings: enable arm64
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
+	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 02/26, Chao Yu wrote:
-> On 2/26/25 11:28, Jaegeuk Kim wrote:
-> > On 02/24, Chao Yu wrote:
-> >> On 2/14/25 09:44, Chao Yu wrote:
-> >>> On 2/14/25 01:38, Jaegeuk Kim wrote:
-> >>>> On 02/13, Chao Yu wrote:
-> >>>>> On 2/13/25 00:47, Jaegeuk Kim wrote:
-> >>>>>> On 02/12, Chao Yu wrote:
-> >>>>>>> From: Leo Stone <leocstone@gmail.com>
-> >>>>>>>
-> >>>>>>> The syzbot reproducer mounts a f2fs image, then tries to unlink an
-> >>>>>>> existing file. However, the unlinked file already has a link count of 0
-> >>>>>>> when it is read for the first time in do_read_inode().
-> >>>>>>>
-> >>>>>>> Add a check to sanity_check_inode() for i_nlink == 0.
-> >>>>>>>
-> >>>>>>> [Chao Yu: rebase the code and fix orphan inode recovery issue]
-> >>>>>>> Reported-by: syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
-> >>>>>>> Closes: https://syzkaller.appspot.com/bug?extid=b01a36acd7007e273a83
-> >>>>>>> Fixes: 39a53e0ce0df ("f2fs: add superblock and major in-memory structure")
-> >>>>>>> Signed-off-by: Leo Stone <leocstone@gmail.com>
-> >>>>>>> Signed-off-by: Chao Yu <chao@kernel.org>
-> >>>>>>> ---
-> >>>>>>>  fs/f2fs/checkpoint.c | 4 ++++
-> >>>>>>>  fs/f2fs/f2fs.h       | 1 +
-> >>>>>>>  fs/f2fs/inode.c      | 6 ++++++
-> >>>>>>>  3 files changed, 11 insertions(+)
-> >>>>>>>
-> >>>>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> >>>>>>> index bd890738b94d..ada2c548645c 100644
-> >>>>>>> --- a/fs/f2fs/checkpoint.c
-> >>>>>>> +++ b/fs/f2fs/checkpoint.c
-> >>>>>>> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
-> >>>>>>>  	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
-> >>>>>>>  		f2fs_info(sbi, "orphan cleanup on readonly fs");
-> >>>>>>>  
-> >>>>>>> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
-> >>>>>>
-> >>>>>> What about using SBI_POR_DOING?
-> >>>>>
-> >>>>> SBI_POR_DOING will cover most flow of f2fs_fill_super(), I think we can add a
-> >>>>> separated flag just covering f2fs_recover_orphan_inodes(), so that we can allow
-> >>>>> iget() of root_inode and all inodes during roll-forward recovery to do sanity
-> >>>>> check nlink w/ zero. What do you think?
-> >>>>
-> >>>> Can we do this sanity check after f2fs_iget in the f2fs_unlink() only?
-> >>>
-> >>> Sure, we need to cover f2fs_rename() as well, please check this:
-> >>>
-> >>> https://lore.kernel.org/all/67450f9a.050a0220.21d33d.0003.GAE@google.com
-> >>
-> >> Hi Jaegeuk,
-> >>
-> >> I'm testing this, seems there is a problem, once we opened an inode that
-> >> has zeroed nlink, in f2fs_evict_inode(), the inode and all its data will be
-> >> deleted, then leaving its stale dir entry in parent directory.
-> >>
-> >> What do you think using v4? so that we may has chance to repair it w/ fsck
-> >> rather than just deleting it?
-> > 
-> > Do you mean v4 as the below change?
-> 
-> I mean this v4 patch:
+On Wed, Feb 26, 2025 at 9:12=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * Lorenzo Stoakes <lorenzo.stoakes@oracle.com> [250226 00:26]:
+> > On Tue, Feb 25, 2025 at 02:26:50PM -0800, Jeff Xu wrote:
+> > > On Mon, Feb 24, 2025 at 10:20=E2=80=AFPM Lorenzo Stoakes
+> > > <lorenzo.stoakes@oracle.com> wrote:
+> > > >
+> > > > On Mon, Feb 24, 2025 at 10:52:43PM +0000, jeffxu@chromium.org wrote=
+:
+> > > > > From: Jeff Xu <jeffxu@chromium.org>
+> > > > >
+> > > > > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on arm64, coveri=
+ng
+> > > > > the vdso, vvar, and compat-mode vectors and sigpage mappings.
+> > > > >
+> > > > > Production release testing passes on Android and Chrome OS.
+> > > >
+> > > > This is pretty limited (yes yes I know android is massive etc. but =
+we must
+> > > > account for all the weird and wonderful arm64 devices out there in =
+context of
+> > > > upstream :)
+> > > >
+> > > > Have you looking through all arm64-code relating to vdso, vvar, com=
+pat-mode
+> > > > vectors, sigpage mapping and ensured nothing kernel-side relies upo=
+n relocation?
+> > > > Some arches actually seem to want to do this. Pretty sure PPC does.=
+.. so a bit
+> > > > nervous of that.
+> > > >
+> > > Can you please point out where PPC munmap/mremap the vdso ?
+> > >
+> > > Previously, when you mentioned that, I thought you meant user space i=
+n
+> > > PPC, I didn't realize that you meant that kernel code in PPC.  I
+> > > tried, but didn't find anything, hence asking.
+> >
+> > Jeff, please stick to replying to review. 'Have you looking through all
+> > arm64-code'.
+> >
+> > I ended up doing this myself yesterday and found no issues, as with x86=
+-64.
+> >
+> > I said I'm _pretty sure_ PPC does this. Liam mentioned something about
+> > it. We can discuss it, and I can find specifics if + when you try to ad=
+d
+> > this to PPC.
+> >
+>
+> PPC allows the vma to be munmapped then detects and falls back to the
+> slower method, iirc.
+>
+Is this code in the kernel or userspace?
 
-What about checking i_nlink right after f2fs_iget in f2fs_lookup?
+If PPC doesn't want to create vdso for all its userspace apps, we
+could instead "don't create" vdso during the execve call.
 
-> 
-> ---
->  fs/f2fs/checkpoint.c | 4 ++++
->  fs/f2fs/f2fs.h       | 1 +
->  fs/f2fs/inode.c      | 6 ++++++
->  3 files changed, 11 insertions(+)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index bd890738b94d..ada2c548645c 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->  	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
->  		f2fs_info(sbi, "orphan cleanup on readonly fs");
-> 
-> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
-> +
->  	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
->  	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
-> 
-> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->  		}
->  		f2fs_put_page(page, 1);
->  	}
-> +
->  	/* clear Orphan Flag */
->  	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
->  out:
-> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
->  	set_sbi_flag(sbi, SBI_IS_RECOVERED);
-> 
->  	return err;
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 05879c6dc4d6..1c75081c0c14 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1322,6 +1322,7 @@ enum {
->  	SBI_IS_CLOSE,				/* specify unmounting */
->  	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
->  	SBI_POR_DOING,				/* recovery is doing or not */
-> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
->  	SBI_NEED_SB_WRITE,			/* need to recover superblock */
->  	SBI_NEED_CP,				/* need to checkpoint */
->  	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
-> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> index d6ad7810df69..02f1b69d03d8 100644
-> --- a/fs/f2fs/inode.c
-> +++ b/fs/f2fs/inode.c
-> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
->  		}
->  	}
-> 
-> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
-> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
-> +			  __func__, inode->i_ino);
-> +		return false;
-> +	}
-> +
->  	return true;
->  }
-> 
+
+> They were against the removal of the fallback; other archs also have
+> this infrastructure.  Really, if we fixed the fallback to work for
+> all platforms then it would probably also remove the possibility of a
+> remap over the VDSO being a problem (if it is today, which still isn't
+> clear?).
+>
+Any past thread/communication about this that I can read ?
+
+Thanks
+-Jeff
+
+
 > Thanks,
-> 
-> > 
-> >>
-> >> ---
-> >>  fs/f2fs/namei.c | 19 +++++++++++++++++++
-> >>  1 file changed, 19 insertions(+)
-> >>
-> >> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-> >> index a278c7da8177..949621bc0d07 100644
-> >> --- a/fs/f2fs/namei.c
-> >> +++ b/fs/f2fs/namei.c
-> >> @@ -547,6 +547,16 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
-> >>  		goto fail;
-> >>  	}
-> >>
-> >> +	if (unlikely(S_ISDIR(inode->i_mode) ?
-> >> +			inode->i_nlink <= 1 : inode->i_nlink == 0)) {
-> >> +		f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
-> >> +				__func__, inode->i_ino, inode->i_nlink,
-> >> +				S_ISDIR(inode->i_mode));
-> >> +		err = -EFSCORRUPTED;
-> >> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
-> >> +		goto fail;
-> >> +	}
-> >> +
-> >>  	err = f2fs_dquot_initialize(dir);
-> >>  	if (err)
-> >>  		goto fail;
-> >> @@ -968,6 +978,15 @@ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
-> >>  	}
-> >>
-> >>  	if (new_inode) {
-> >> +		if (unlikely(old_is_dir ?
-> >> +			new_inode->i_nlink <= 1 : new_inode->i_nlink == 0)) {
-> >> +			f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
-> >> +				__func__, new_inode->i_ino, new_inode->i_nlink,
-> >> +				S_ISDIR(new_inode->i_mode));
-> >> +			err = -EFSCORRUPTED;
-> >> +			set_sbi_flag(sbi, SBI_NEED_FSCK);
-> >> +			goto out_dir;
-> >> +		}
-> >>
-> >>  		err = -ENOTEMPTY;
-> >>  		if (old_is_dir && !f2fs_empty_dir(new_inode))
-> >> -- 
-> >> 2.48.1.601.g30ceb7b040-goog
-> >>
-> >>>
-> >>> Thanks,
-> >>>
-> >>>>
-> >>>>>
-> >>>>> Thanks,
-> >>>>>
-> >>>>>>
-> >>>>>>> +
-> >>>>>>>  	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
-> >>>>>>>  	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
-> >>>>>>>  
-> >>>>>>> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
-> >>>>>>>  		}
-> >>>>>>>  		f2fs_put_page(page, 1);
-> >>>>>>>  	}
-> >>>>>>> +
-> >>>>>>>  	/* clear Orphan Flag */
-> >>>>>>>  	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
-> >>>>>>>  out:
-> >>>>>>> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
-> >>>>>>>  	set_sbi_flag(sbi, SBI_IS_RECOVERED);
-> >>>>>>>  
-> >>>>>>>  	return err;
-> >>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>>>>>> index 05879c6dc4d6..1c75081c0c14 100644
-> >>>>>>> --- a/fs/f2fs/f2fs.h
-> >>>>>>> +++ b/fs/f2fs/f2fs.h
-> >>>>>>> @@ -1322,6 +1322,7 @@ enum {
-> >>>>>>>  	SBI_IS_CLOSE,				/* specify unmounting */
-> >>>>>>>  	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
-> >>>>>>>  	SBI_POR_DOING,				/* recovery is doing or not */
-> >>>>>>> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
-> >>>>>>>  	SBI_NEED_SB_WRITE,			/* need to recover superblock */
-> >>>>>>>  	SBI_NEED_CP,				/* need to checkpoint */
-> >>>>>>>  	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
-> >>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-> >>>>>>> index d6ad7810df69..02f1b69d03d8 100644
-> >>>>>>> --- a/fs/f2fs/inode.c
-> >>>>>>> +++ b/fs/f2fs/inode.c
-> >>>>>>> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
-> >>>>>>>  		}
-> >>>>>>>  	}
-> >>>>>>>  
-> >>>>>>> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
-> >>>>>>> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
-> >>>>>>> +			  __func__, inode->i_ino);
-> >>>>>>> +		return false;
-> >>>>>>> +	}
-> >>>>>>> +
-> >>>>>>>  	return true;
-> >>>>>>>  }
-> >>>>>>>  
-> >>>>>>> -- 
-> >>>>>>> 2.48.1.502.g6dc24dfdaf-goog
-> >>>
+> Liam
