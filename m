@@ -1,70 +1,73 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBC718DB11;
-	Wed, 26 Feb 2025 07:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7218526B089;
+	Wed, 26 Feb 2025 07:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740555998; cv=none; b=V+ZfBLjbchDJw0jRVugFSxR2W1M6V8WjARbijwGcG/GMpwHHTesBenKPNQVVxYQIVXVUQ1V0zHnStlt7Hn8YQfqOK4NuGx2hYprq1YEOqLWADGLwJ7/UUK6VXXy62+hIU+NiaJ8fO/KCrIytIhQtf319WZ6uotIJ8VpHI9TEdGA=
+	t=1740556016; cv=none; b=Ztnn5LNRVdXNjW6enplwMCwZm+5RmKZu35Iwd9M151cuJOUrd1EB0jiolf85rWyRTEjbpn0a2zh0Ukl1r5J+bJhrBhpoM825tys+RTJhHqvM0o68UhoNIMyJ2piKauRi31iLX/LFJ3MdPAqTBRoo/ghGNQYBjWY82PdwCbtw8SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740555998; c=relaxed/simple;
-	bh=htiIrsPneWwoDMjes2uabsPqPPOGfdwTIXYloRnlEnU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sPuoPgzs5K89rtUnOUAv3nLK/0o3v6jBPMtvw92a6QqzEJ55RX5HglvITLN3sV9IyuotwY0KFyraL56/tCxnqYxA0IHslcHApp2JrYjoyXOcQ7skBuhVLoFucko3m/y8a7/2kS5hrRMbNpLvEYVo8eZ6GxJGDjgLZBtsbgyBtM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=BTzTBsiI; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740556016; c=relaxed/simple;
+	bh=JoAj9xLaECtQl+Lj5BZuQBxUIeb2+n1Z1pxP79r2H3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eU9lyG/z4UHwTeSKKNts5ArqPqrLQThZNRaMXBXR5d9HzllUCI6FawshxGfYL9EVfBNS4VAU/T+R5nTnRwEsCK61bQU2WfrlbWgqpm8binmKcCC8kJB613GSQKC/zWhA0+eO5lMNoE0MrHBf/hjDGdnXOS7nCLOqCx8LRFoVpoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgqyvX99; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="BTzTBsiI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=GvGqFtLmKyOHXz5diZhctPlmaDYH2nUi5LINlcE7Gig=;
-	b=BTzTBsiIIgEAYGVn+6th2oQ2vVpPmEywHgHOppON3fRLINyaMgmFRQQ5DqqZMH
-	2awwNxHMvLjWZA/oZs/92MLhcz3TLDKwb6k9QfObDPCYTKBVssBvcYiysha3EE3l
-	uI1BO5v3nP4W3pK4ymmiemnR0ZN8N8bfdyX3EBWXzlXLI=
-Received: from [192.168.34.52] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgBH_zmkxr5nGvUvBA--.18617S2;
-	Wed, 26 Feb 2025 15:45:41 +0800 (CST)
-Message-ID: <13844a59-ab3a-409c-a43a-b3b29e56a5a0@163.com>
-Date: Wed, 26 Feb 2025 15:45:40 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgqyvX99"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40DD5C4CED6;
+	Wed, 26 Feb 2025 07:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740556013;
+	bh=JoAj9xLaECtQl+Lj5BZuQBxUIeb2+n1Z1pxP79r2H3Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QgqyvX991q884nQHjvQHuZwzm9PwsbnVmBzYqk3CBYUFaJ+IehlBR3Uc/dYSSApK8
+	 Ers6An5ej3cLmBul0T3wXnqmqZVpjcp8B+G1zE6YzWwkEvSMY1oLRUQagoKt14v7SK
+	 qksaH7l01YxnXAm+jKHOuNdqwauJdD8dc6yqrUrnN3NMKL7pCHetBWb1b2hfpgWWJH
+	 Hc01Ac9dcH4cvsYcyoL0GaXqoJZ2s+NEq8nYuzV+M+RGs9iib1uuuMO8suO2kVTOVk
+	 gXK/8oQVI9uLrC+De8O5bk7aP3pEQ1j+7QFaYzsPOc7d6VbrxB//6T6tgwF4IlKn2m
+	 GmBiGYyfnN1lg==
+Date: Wed, 26 Feb 2025 08:46:50 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Luca Weiss <luca@lucaweiss.eu>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: display: panel: Add Himax HX83112B
+Message-ID: <20250226-speedy-dark-mushroom-5d7c4b@krzk-bin>
+References: <20250225-fp3-display-v2-0-0b1f05915fae@lucaweiss.eu>
+ <20250225-fp3-display-v2-2-0b1f05915fae@lucaweiss.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] PCI: dwc-debugfs: Couple of fixes
-To: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- jingoohan1@gmail.com, lpieralisi@kernel.org, robh@kernel.org,
- bhelgaas@google.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, shradha.t@samsung.com, cassel@kernel.org
-References: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
- <e25e5d68-7fb7-4157-825c-eb973f7e1321@163.com>
- <20250226074339.GE951736@rocinante>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250226074339.GE951736@rocinante>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgBH_zmkxr5nGvUvBA--.18617S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUOXdjDUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxUAo2e+xEZPFAAAs5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250225-fp3-display-v2-2-0b1f05915fae@lucaweiss.eu>
 
-
-
-On 2025/2/26 15:43, Krzysztof Wilczyński wrote:
-> Hello,
+On Tue, Feb 25, 2025 at 10:14:30PM +0100, Luca Weiss wrote:
+> Himax HX83112B is a display driver IC used to drive LCD DSI panels.
+> Describe it and the Fairphone 3 panel (98-03057-6598B-I) from DJN using
+> it.
 > 
->> Can you submit after this patch? Otherwise, will my patch conflict?
->>
->> https://patchwork.kernel.org/project/linux-pci/patch/20250223141848.231232-1-18255117159@163.com/
-> 
-> No worries.  We can resolve conflicts while applying. :)
+> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+> ---
+>  .../bindings/display/panel/himax,hx83112b.yaml     | 75 ++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
 > 
 
-I see, thanks Krzysztof for replying.
+Discussion is still going. Sending v2 after two days is hiding that
+previous talk, so that makes me sad.
 
-Best regards
-Hans
+I am still at v1 and I am not going to review this one here.
+
+Best regards,
+Krzysztof
 
