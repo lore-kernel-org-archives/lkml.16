@@ -1,86 +1,198 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail.mleia.com (mleia.com [178.79.152.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C65E19EED7;
-	Wed, 26 Feb 2025 09:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5257F1A5BBD;
+	Wed, 26 Feb 2025 09:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563223; cv=none; b=F0oBCeTtUVMGtFcVtUbTlBnk4NqOm0+vQNqXXOnQHWpFdGOIHlEoSrF9dEFDeftNSCK7ElGIteu55wFiz/kpZJfA0gMlKHegYapPoYiCcthq5qqDXOB9Mmkc65abyRMNVlzm8V1ik4yF/oJz3/GGLpxzFP0wfS/Rt5eCX3lcspo=
+	t=1740563315; cv=none; b=SLJFFNWUhzQAYQg296jcFDq1btMPrsah5JBD1vi2pO0DyDHaY3WPiG50VGzAcWWn7/ErLyYspeJz6gUKdnPDiIenfY5/M+AURDINImFNZ5U5p4oCzdjXl0oqb/pCINcFU5aab+AyM8m/wwyY1dzL2CxjGcuB1vjH9BXUbzB0pMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563223; c=relaxed/simple;
-	bh=65mCvrCgQ8vUabuuLrrDfQqdfH8PfOiynZ1+gS5LqcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J3GpXJ5reIUcl9X5akXHv6VjGZJPW9W/3KIWDzIZ85ScnWEXgUInO+3uEcxEQduya8xAs1Zb1yu1C0sJdVEyoDGS8vMX0rUp+FSW6hvvGSF2PJTbkWElr32aFRbp1WQElawgmrUngrtgxq85PXo/HSfTzehSDdamAo8tQZF5zIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GR8ZTEI2; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1740563315; c=relaxed/simple;
+	bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uxQsFeDjdCo/nRhP3lA+grXEK6suENE/teCu+H3Y4ytvxm6YW0yILy9elHOMGpCBQ2MGpzivGmIbiROWNNSr/KbmTCAFK42smzVQhkmwUPK0xwPVIO05DH/u+M5QlD6bRdKdtUh1lNM6yhrebR7+dHJsVmsAtwvp8+2EW0L1AyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=UxU4kX0W; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=qN+vMNFA; arc=none smtp.client-ip=178.79.152.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GR8ZTEI2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YtowJyTfySe91smR0qJ/muHbcExkBlLYkwOcrWOMYg0=; b=GR8ZTEI2cDfxbbLGLTUqMau5x8
-	QU3gurHsTGFVIe1eAvVAGwAY/J75XF8XyeaaAurSkh+fufJHMbOokeO6+4vENMZ5oVhxBWZNRLfIm
-	5Pr592CUB/oZsCmKVj0wwvv/UNx17MqjkjazitGIeaiWOi6nBrtbquf+H5dTlI6kvzduZYUctgCNg
-	EpEP71ClhZ9Z0QFbV/kRLznf26IH6lgnU+3IjQCV1+6v7RLEQaF25A8WCFtyXZ/ao6kwyUISCaJUl
-	QvhrV42Uft2Vb8mb9oETo0p1Beox4u3KSyx26qi+iOuFhuFnDzOgxZtInOK9e+icO8dlV1HU12h2E
-	q498Gy3Q==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnE0G-00000003ZNY-3ZXz;
-	Wed, 26 Feb 2025 09:46:57 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C9CD300677; Wed, 26 Feb 2025 10:46:56 +0100 (CET)
-Date: Wed, 26 Feb 2025 10:46:56 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v2 12/24] perf/x86/intel: Allocate arch-PEBS buffer and
- initialize PEBS_BASE MSR
-Message-ID: <20250226094656.GS11590@noisy.programming.kicks-ass.net>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-13-dapeng1.mi@linux.intel.com>
- <20250225111805.GL11590@noisy.programming.kicks-ass.net>
- <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="UxU4kX0W";
+	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="qN+vMNFA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1740562914; bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UxU4kX0WA0LEjSR/J2FuSEVinUUskselig4PGOcL/EPRm10/+o/zHB3c/ypjYOCPg
+	 OfqPdGDxqED72PH2HXJlN6iXKUTqzYos+R8GcmlMpTd/wQcKQRUN2CmlQh1KDS6+16
+	 vBGnnPfZaEjMaU5R7HqS6K5UAu5AD3TP3vHL5PfSJWb9fiZjmpb/dD7rCdPxLKaTi5
+	 EAMYmIDQKXV1t/TZSnY8gTAoz8bDMdW/Q8HmhZJRL6AgCPfqIBh6TxKvZpWjpag9cB
+	 QA8EtIMlT08DVOx58oAEO+8O6cH1Ed5kLb1GPit7PdiSVAmVMk1lCkUSNC/BE5oyWf
+	 LZUajO5NlzE6Q==
+Received: from mail.mleia.com (localhost [127.0.0.1])
+	by mail.mleia.com (Postfix) with ESMTP id ED6793A51E8;
+	Wed, 26 Feb 2025 09:41:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
+	t=1740562913; bh=LkZyuKwaSW8zcDmPya1x245tMT6mymapIih8JYe3piE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qN+vMNFAtx/Iu0ktqgWpo7xMexJ2nKXDfu4hScTkH6zyw8Mg+Sbnzp2d+rff1UUs5
+	 J17m8Znqc2We6B/6D69yNmzdz5Baa4LBgozcyQTA0yzpcjJ+3oeKcy+cjI7/RFGgwF
+	 tC78FG/Q+SDUaeUL7wE1OdWV/rfNu+7wQrVzkAbezcYGTHF5r5TGEWNX4H/IZbBFre
+	 fcowh0akKI4Jq+edFpVuBOhHMXu49pWbDIbjtz0UKt3vHtI/E9WAlRl2fwaqE2qL3g
+	 JJgd7+E3L27DGDIcgN/vBKCCY5ThP9b4xgPusVechuviwyL+LMtWVYgRBzgH4Gxin/
+	 VAEhGCg48tTEw==
+Message-ID: <29ce9b9b-3993-4b88-a201-5d67050d53ae@mleia.com>
+Date: Wed, 26 Feb 2025 11:41:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: Convert
+ nxp,lpc3220-mic.txt to yaml format
+Content-Language: ru-RU
+To: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>,
+ tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20250226010956.50566-1-leo.fthirata@gmail.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+In-Reply-To: <20250226010956.50566-1-leo.fthirata@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20250226_094153_988776_2EF0AB3B 
+X-CRM114-Status: GOOD (  15.13  )
 
-On Wed, Feb 26, 2025 at 01:48:52PM +0800, Mi, Dapeng wrote:
+Hello Leonardo,
+
+thank you so much for working on this.
+
+On 2/26/25 03:09, Leonardo Felipe Takao Hirata wrote:
+> Convert NXP LPC3220-MIC to DT schema.
 > 
-> On 2/25/2025 7:18 PM, Peter Zijlstra wrote:
-> > On Tue, Feb 18, 2025 at 03:28:06PM +0000, Dapeng Mi wrote:
-> >> Arch-PEBS introduces a new MSR IA32_PEBS_BASE to store the arch-PEBS
-> >> buffer physical address. This patch allocates arch-PEBS buffer and then
-> >> initialize IA32_PEBS_BASE MSR with the buffer physical address.
-> > Not loving how this patch obscures the whole DS area thing and naming.
+> Signed-off-by: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>
+> ---
+> Changes in v2:
+>   - Fix SoB
+>   - Remove reg description
+>   - List #interrupt-cell items
+>   - Add interrupt restriction per variant
+>   - Remove extra examples
+> ---
+>   .../interrupt-controller/nxp,lpc3220-mic.txt  | 58 --------------
+>   .../interrupt-controller/nxp,lpc3220-mic.yaml | 80 +++++++++++++++++++
+>   2 files changed, 80 insertions(+), 58 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
 > 
-> arch-PEBS uses a totally independent buffer to save the PEBS records and
-> don't use the debug store area anymore. To reuse the original function as
-> much as possible and don't mislead users to think arch-PEBS has some
-> relationship with debug store, the original key word "ds" in the function
-> names are changed to "BTS_PEBS". I know the name maybe not perfect, do you
-> have any suggestion? Thanks.
 
-Right, so I realize it has a new buffer, but why do you need to make it
-all complicated like this?
+<snip>
 
-Just leave the existing stuff and stick the new arch pebs buffer
-somewhere new. All that reserve nonsense shouldn't be needed anymore.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> new file mode 100644
+> index 000000000000..489bd329bc4e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> @@ -0,0 +1,80 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/nxp,lpc3220-mic.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
+> +
+> +maintainers:
+> +  - Vladimir Zapolskiy <vz@mleia.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,lpc3220-mic
+> +      - nxp,lpc3220-sic
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    items:
+> +      - description:
+> +          IRQ number.
 
-Just add it to the intel_pmu_cpu_{prepare,starting,dying,dead} things.
+For sake of better understanding SIC1 and SIC2 interrupt controllers
+are chained to MIC, that's why there is 'interrupts' property present,
+and here 0/1 interrupt values are for regular IRQ, 30/31 are for fast IRQ.
+
+Also please add here
+
+   minItems: 2
+   maxItems: 2
+
+I believe that the 'interrupts' property can be just left without any
+given description, or just give a simple description like
+
+   IRQ and FIQ outputs of sub interrupt controllers to the main interrupt controller
+
+> +      - description: |
+> +          IRQ type. Can be one of:
+> +
+> +              IRQ_TYPE_EDGE_RISING = Low-to-high edge triggered,
+> +              IRQ_TYPE_EDGE_FALLING = High-to-low edge triggered,
+> +              IRQ_TYPE_LEVEL_HIGH = Active high level-sensitive,
+> +              IRQ_TYPE_LEVEL_LOW = Active low level-sensitive.
+> +
+> +          Reset value is IRQ_TYPE_LEVEL_LOW.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: nxp,lpc3220-sic
+> +    then:
+> +      required:
+> +        - interrupts
+> +    else:
+> +      properties:
+> +        interrupts: false
+
+Please check if this 'else' condition can be removed.
+
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    mic: interrupt-controller@40008000 {
+> +      compatible = "nxp,lpc3220-mic";
+> +      reg = <0x40008000 0x4000>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +    };
+> +
+> +    sic1: interrupt-controller@4000c000 {
+> +      compatible = "nxp,lpc3220-sic";
+> +      reg = <0x4000c000 0x4000>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +      interrupt-parent = <&mic>;
+> +      interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
+> +                  <30 IRQ_TYPE_LEVEL_LOW>;
+> +    };
+
+--
+Best wishes,
+Vladimir
