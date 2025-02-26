@@ -1,84 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7701227E84;
-	Wed, 26 Feb 2025 14:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD242221732
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:23:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579785; cv=none; b=dP8ZD4tFmehUeNkH+lJ6iB9E/yuO5bFCp7+QJ43Xu0URgT4eR32kiPGTWUSSWTxUCDh4AdVBsFN6N2m100wbi+gf6v9tslOOcvEx7TFm6MnXI8ay0ZYAc/WCS5yhCNGAvwO44HiP76cxbqM5oDfJVYxkuaSFn3Fc6A9/4TCJZ0o=
+	t=1740579813; cv=none; b=HLYpvmpzp6wnwSM0yPuTKkqn0gAZjsEanKgZHPWdoG7/dXF6u6R/Mkw3SA7H1obhTbNv6l/OAeo+8CP5Nep/jRQJeTge8QQQBXlQKlwaUq4SRLKnxvd+zNImcnfW6W8GiHLFYDAxaWEa75vskclLOYqqxmztiBns7Ao95Ygc910=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740579785; c=relaxed/simple;
-	bh=OrOB40cYbVLCfH0lnAsYoiZZ2zB91mfdMiAb0yEbrLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mkNhILPA2ZhRQPgJgOyXBgqpDZiFJ8j2XgQ/hQ3212v48X6Gtr8h1Aicfsdvh7zh1nN8et6TXqA4mVnDiSLw2LXoGG5MfMJBVpgHmF9DJ7dm/SDDy2CTPu3Lw9vbu7eDcRHQYv0KHq50iAp2E9flm076qBjyTihMgLqoTPNyA38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GrHNHGgL; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740579813; c=relaxed/simple;
+	bh=ri+j1q9HNTbPxqJ5PKx8hnKBR80LOJzmJuwIpKv0D6k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ToJPQrZH2T6BP/7puhIFonIn5f6kL3DgHl5SMoljKSMOc2X9QbGpsEohLJcXYhBnZ0oxJcS226O1w4fIhduqsELDPDdiaa/yEUu3kXzklUUvlRX739sj5GBE1dS42yFUBUELyaI5Gj16lNFLVSrkp0+2G+DCwtDa96lKQHI1Pd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ED5Bnt73; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GrHNHGgL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740579784; x=1772115784;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OrOB40cYbVLCfH0lnAsYoiZZ2zB91mfdMiAb0yEbrLQ=;
-  b=GrHNHGgL+O0wMr+2WkVlR+mCtD1pseDSTD7LCJE/cGH+vH/3U6BzOYQm
-   GlRwg9uIQB133YkZFIuaCDvWZFSDdQbZ0Yo2xyA54KBQxPHRdmGy5l3y+
-   IWmjPn5qyW9/wy874k9nkbFSval02JXC5DwITxG2Jsj6RC/qj5QvF5VVA
-   fIvdfXsP7fyrlY5+Zw7NIaOU+MsBClJBKvbQGHiiGS4+Mwm3qKhhm3GRH
-   eJyODHSwdMrtW48KMoDO6zkkevEdVnv7z9YRbveW53wcqqLd0vaoh7622
-   x8AoW0IAlLD1vGeEf0PY+ga3RZONwnKXUp6bAcqA3KZzBTzkvYsJeJS4c
-   w==;
-X-CSE-ConnectionGUID: /8sdt59+QMm8DwoA0bkS1A==
-X-CSE-MsgGUID: GD/M6vmXRlmIe6gH6aphKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="63890715"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="63890715"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 06:23:04 -0800
-X-CSE-ConnectionGUID: qRUPd3CBTbyC46Q47oFPzA==
-X-CSE-MsgGUID: WVf+wpDaR9a69sA3ZOCNwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="117202774"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 06:23:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnIJO-0000000FLVY-2saw;
-	Wed, 26 Feb 2025 16:22:58 +0200
-Date: Wed, 26 Feb 2025 16:22:58 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>,
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/1] pinctrl: wpcm450: Switch to use
- for_each_gpiochip_node() helper
-Message-ID: <Z78jwi8s34t3H8fG@smile.fi.intel.com>
-References: <20250220155036.2734838-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ED5Bnt73"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c0b9f35dc7so933878285a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:23:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740579810; x=1741184610; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FR7Ypv0Sg+ewXBIGdoxyyeMv+vtDJwycIUjyx2MKkFY=;
+        b=ED5Bnt73wpD3fChX3kqbJa3/XhmoG76Oyzv4FTfkR8UQR0x0iInvO6gv/vZp9HnW+E
+         ++7HupKvm6+/9hlElPdS+ocGL/JEWZILR1TTtZ9mb1ufUgjklUru3tJAOj26yxZNg+A8
+         uIgIieCR+Z13WkyFwWno2Au6D0TdRjVwtlV0A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740579810; x=1741184610;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FR7Ypv0Sg+ewXBIGdoxyyeMv+vtDJwycIUjyx2MKkFY=;
+        b=ccJoZSvtjqAIaVr4csJ7bpCS2Sv14cpMvdIRdclVq5LL7C+x1Jls2wXUKWjE5gdWX1
+         JtUA4scnR7K+45ACkgQLs1haGpEUzsOO0tbpQRy8xYCoOU+yoIq7mwadspwq3tuACpqc
+         8mrGo/uhmhrNRx/U99ZNVmndhkQIGCcDO0uvn4CMmYKs8GgR9oNgRWb9gs0YmLkGFPH3
+         7AD/e2wG8LxdFytsHXik7E/tWltWm/0f98+eGPf30J9eqa7nCqkMHo69CL4F4fRIfC84
+         vkWtdXWIRhby0egYPrcrxyyoD5KNAagQK0Tp34jW4RSTvxY91I9ssfEqQI+Qo0MhRFFH
+         L35A==
+X-Forwarded-Encrypted: i=1; AJvYcCWOCsJjSi4CBt6Lr1RZSMB0xsqTtVT8/k2iDeDDYu/z32OqVXcXidA7eRls4y/7Bkk8wZcqp2d32mXUsa4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywxv0rDVBPjSybT8s3WG/ggdr1KFG8QJj6kFbmS/FJq92aQltL7
+	osRiZ0bjja5CTXh/SyvfCkSoDmleNJZsgbxM9A5F2YFL7N7tiSmwDyQGEKbG/A==
+X-Gm-Gg: ASbGncueNz944O+ruFUCkdz1VYWWwhGeVXlZyy1pv/MncYOOeBkfl5v4fl55AUo23VZ
+	xuXi7DSXUsDj+ZgaUak4zGj9dYYcW2z4kDPzKX13wPR/j/vsuy2psN8VF4wJ/76mDPP54Uy1loO
+	J+UBXASI9yAcUk0NSgwIgTW526H/dKVCavQx0hwCQGzVwmkfgb7HA3YRnEOU+hicvkvRwNwcTKS
+	cFDipD/VbYb0jPhXAk0b21/ebhEEW5Rwt5BoLScxo+kb5SDnTOAcqf37bDFWaiZ3hF9Cs9Yh7bv
+	40mMBrfQ1zT2zly2djMerHA9dvJQjCXS/OY77fPgVoXusE7OmVAKLgBqzaPcEAmxEpj9UwB3T+S
+	eQxw=
+X-Google-Smtp-Source: AGHT+IH79EX6T3W52JGBBGWui/gHd8e8j+HpD2LiLS0W30noVcOURaOisGZHFg886wnhbnBhazedTQ==
+X-Received: by 2002:a05:620a:404a:b0:7c0:808b:1c78 with SMTP id af79cd13be357-7c247fcb611mr700665085a.36.1740579810731;
+        Wed, 26 Feb 2025 06:23:30 -0800 (PST)
+Received: from denia.c.googlers.com (15.237.245.35.bc.googleusercontent.com. [35.245.237.15])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c33cfb0sm246336085a.103.2025.02.26.06.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:23:29 -0800 (PST)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Wed, 26 Feb 2025 14:23:27 +0000
+Subject: [PATCH v4 1/5] media: uvcvideo: Keep streaming state in the file
+ handle
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220155036.2734838-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250226-uvc-granpower-ng-v4-1-3ec9be906048@chromium.org>
+References: <20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org>
+In-Reply-To: <20250226-uvc-granpower-ng-v4-0-3ec9be906048@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.1
 
-On Thu, Feb 20, 2025 at 05:50:11PM +0200, Andy Shevchenko wrote:
-> Switch the code to use for_each_gpiochip_node() helper.
-> 
-> While at it, correct header inclusion as device property APIs
-> are provided in property.h.
+Add a variable in the file handle state to figure out if a camera is in
+the streaming state or not. This variable will be used in the future for
+power management policies.
 
-Linus, Are you okay with the change?
+Now that we are at it, make use of guards to simplify the code.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+---
+ drivers/media/usb/uvc/uvc_v4l2.c | 18 +++++++++++++-----
+ drivers/media/usb/uvc/uvcvideo.h |  1 +
+ 2 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+index 93c6cdb23881..f9cd6db759c5 100644
+--- a/drivers/media/usb/uvc/uvc_v4l2.c
++++ b/drivers/media/usb/uvc/uvc_v4l2.c
+@@ -835,11 +835,18 @@ static int uvc_ioctl_streamon(struct file *file, void *fh,
+ 	if (!uvc_has_privileges(handle))
+ 		return -EBUSY;
+ 
+-	mutex_lock(&stream->mutex);
++	guard(mutex)(&stream->mutex);
++
++	if (handle->is_streaming)
++		return 0;
++
+ 	ret = uvc_queue_streamon(&stream->queue, type);
+-	mutex_unlock(&stream->mutex);
++	if (ret)
++		return ret;
+ 
+-	return ret;
++	handle->is_streaming = true;
++
++	return 0;
+ }
+ 
+ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+@@ -851,9 +858,10 @@ static int uvc_ioctl_streamoff(struct file *file, void *fh,
+ 	if (!uvc_has_privileges(handle))
+ 		return -EBUSY;
+ 
+-	mutex_lock(&stream->mutex);
++	guard(mutex)(&stream->mutex);
++
+ 	uvc_queue_streamoff(&stream->queue, type);
+-	mutex_unlock(&stream->mutex);
++	handle->is_streaming = false;
+ 
+ 	return 0;
+ }
+diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+index 5e388f05f3fc..bc87e1f2c669 100644
+--- a/drivers/media/usb/uvc/uvcvideo.h
++++ b/drivers/media/usb/uvc/uvcvideo.h
+@@ -618,6 +618,7 @@ struct uvc_fh {
+ 	struct uvc_streaming *stream;
+ 	enum uvc_handle_state state;
+ 	unsigned int pending_async_ctrls;
++	bool is_streaming;
+ };
+ 
+ struct uvc_driver {
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1.658.g4767266eb4-goog
 
