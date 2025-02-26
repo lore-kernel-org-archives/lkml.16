@@ -1,128 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23CE2222CB;
-	Wed, 26 Feb 2025 14:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED502222C7
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581303; cv=none; b=V0bRN+qdZC2UKLtihRWITOdkurUw55rZqhCZZhkCT3DkJZqOAnQ7cE+DvLbT5JG6kBuz0VK8w3fPsU+egiBOOy0kX8RXAh/inVIvRPVMBV8ZRgm/0ng3xck/HqsLVwOUQ+t4k1KRcxpd/JoUgSc1mt5ttZUqjgmJiojv0+7e2/g=
+	t=1740581321; cv=none; b=DsLeLCAwcxDeA8a/jehA2vuHcOLqsYCm29RX4LHwq/iqFQJ22b9ESX09kZL0FXqYolWn3YSMKwYhyEdjJ+Cr8JX06adyZF0GqjIpczm19rX/ONNNlWZRnflE/uNj7DsDGTjFvG3QW+qpfqnL3cTrOFyihb7M5DBQa67qwbn3FXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581303; c=relaxed/simple;
-	bh=0kWYmB/zokqmJ9Xk1NaO2fJR2wQi5MCDrrTHi5pb4GI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q+morXbJe87ZDMvCMgZwsjBRPVAU06hWtRa4UgRXkMQzWP3izYQvdI4JjIVfT1FYcpRqwKsF9CJEAv/ACxhXujqeyG98qo0lUcpcSwfjp6iThnReeyNgi9jbDCyZKV38i/em9oB95DgVYs/adC60ML/NLJDs2YcrWIPWb1vnKjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ei0b9YtU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740581321; c=relaxed/simple;
+	bh=su0PyH6fk/umxyHrvcwmhEHJXABA6CnmzbapAUQDlIc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z7JRIW8r+/nCDni++nLirejtNkAxlEHCRBogfeN110q5CwYD+SDR2t9xmjKAFY5gwyMt/afvqEWIlrHniwI8NXJ980W8nVS2mmcDB/bhhGZYPKkr/+6c/es53a3mdS4VFNk0xWT//aoGYDR71CkmGAFgGJaGj4emUglw4ESVW6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=inpkz+vP; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ei0b9YtU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89C32C4CEEC;
-	Wed, 26 Feb 2025 14:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740581303;
-	bh=0kWYmB/zokqmJ9Xk1NaO2fJR2wQi5MCDrrTHi5pb4GI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ei0b9YtUHY3RZh/d2khLUG5C74xzOhBX1EAlmeWMT3qMtUbccY5JK3IHd5f+69Tjn
-	 U5AGfaZbZo/+Q8ZOiDWEORqcb7vBkCRsvsn4sUS9qG7d9vyDXFu//LUkIU0gcse6o0
-	 FU8irzW9zoTkpDzXPXiyNzuoo/5F0b+UP0Jdp3P1cykHscDpzEyDZhDqFcxErlGDP4
-	 QfFuISqvCfQIerRJk7hKmAkB8r3Y7CBPKWFklXXrxZmX2YHYp6wPuh2rgHo/aoDwwS
-	 moSj0GKQWflQP2QWx/b8IwaOrbXv3R+W2+A+4x0mJEFkQdC3GI4BTonmi0LyRp4GoB
-	 55upu3YK9Edkg==
-From: Maxime Ripard <mripard@kernel.org>
-To: Joel Stanley <joel@jms.id.au>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Stefan Agner <stefan@agner.ch>,
-	Alison Wang <alison.wang@nxp.com>,
-	Xinliang Liu <xinliang.liu@linaro.org>,
-	Tian Tao <tiantao6@hisilicon.com>,
-	Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Yongqin Liu <yongqin.liu@linaro.org>,
-	John Stultz <jstultz@google.com>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Marek Vasut <marex@denx.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Orson Zhai <orsonzhai@gmail.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Chunyan Zhang <zhang.lyra@gmail.com>,
-	Alain Volmat <alain.volmat@foss.st.com>,
-	Raphael Gallais-Pou <rgallaispou@gmail.com>,
-	Yannick Fertre <yannick.fertre@foss.st.com>,
-	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>,
-	Philippe Cornu <philippe.cornu@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Alexey Brodkin <abrodkin@synopsys.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mcanal@igalia.com>,
-	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Anusha Srivatsa <asrivats@redhat.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	linux-aspeed@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-tegra@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: (subset) [PATCH RESEND 11/12] drm/vc4: move to devm_platform_ioremap_resource() usage
-Date: Wed, 26 Feb 2025 15:47:57 +0100
-Message-ID: <174058126147.2737122.5690208783260352743.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225-memory-drm-misc-next-v1-11-9d0e8761107a@redhat.com>
-References: <20250225-memory-drm-misc-next-v1-0-9d0e8761107a@redhat.com> <20250225-memory-drm-misc-next-v1-11-9d0e8761107a@redhat.com>
+	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="inpkz+vP"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso10602689a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:48:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1740581318; x=1741186118; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nMoILKIF7N8WQlVNtPKgkkC84yA+V5fRgKd3rLXRVvE=;
+        b=inpkz+vPNl0mlm9nSbeeNnKOTt1q+9n6oHZNQrX7CjQukEe9Avk9f8bqnPOxPu0XDW
+         2+hMyEhuzWWNA3Jzaw9AD8Or1ANsQAhJ+IT+M08iyUH99AJ3MkhkOMZSm2jLWDPmjWBv
+         78ZZUHS+AjxLiiV0aOpALNWZoIDcoUD+Yy4EyAsFTIFSAlUI9jLw8vKNaj8YF2FWg0eq
+         PrnjADb6w0dMtB9ytr7dq8WcoXjUNe7QfJWWOL3YiR0mcEA9Gwiup+qsdrKX+MAwN/I0
+         EKoIH+9MNh4vjab2EQBAqv311ZV9B1LtdgsSb7WA9Cx0g3sDOyvibT/smDai2GDpMHuR
+         jEkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740581319; x=1741186119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nMoILKIF7N8WQlVNtPKgkkC84yA+V5fRgKd3rLXRVvE=;
+        b=TLMPOn5IxHs2Qw2GjtR6S5QDSZXKVP7U6elkIID1SExOPWW8mG28h2ssKoVqftzvur
+         4qUso6FNKSrp/zQIYykSyKJe9lKUZtfx79yO4LKLSexUxsnd1hCsoAb6ZfozLI+HvUdV
+         eBawqmVZppZ4XknCn63PSn6Ju2gvsl+LJccvBe3qUxqZTRHQxV7OA9ZX+o7zllvfQg2J
+         IKaCFzWGZN785ipd/E//5ISYbIyIETiAE9nV6OAtYbX+WwvwWX1nO9c3Gx+OzYFQMSQe
+         TMdC20gOtDilmSUeYC9diDjhqGK1dNWL8mNnZ3FQx6PsCXeYAFZH1xjM9P+W1yCVIo1o
+         IP9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWd3NvDNu7YqgfWe8llJDFQYp81F5Yyd0j/2ZvlsBL77S58Kx2aMGFO8A1sQjosHut0A/r+OhiAdC8yeTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpkokxPqG/yhXAl66/upd3v7JGRhRvdMzcSUeI6TdMp6a3VmDL
+	OXBt/CWeKikHEijGRTC/MJcO+E4IcZt3FmSTAQxCLCO3BlnITS6N/PtnFr3wUDw=
+X-Gm-Gg: ASbGncs5ou4zynhwNPdcKdN7KHHJphMP/ZpmOyYkbx9DzSCWvq38I4AdJMDT8RDKYJ6
+	YnOqJ6yxXIvMd3+ZJzOVt9cETWBFge0gAga0QvAw26k2CvDvXWdhMcvkfFlwLpaezmoR7QFJbFL
+	6Rhgh7fOKGhN627ZZlIic4U4Zojvo8XVI7GY1lnUIgFvLCir3QxACuLBjUYIEyiN65aIM/pVSQc
+	uYJaZTHt0HCs3fK5ycG2gIi8xhZWT9J6vPLHNSzJqD87PB63rrMntAHpJgYFM8iyr8ZUtF5wQp8
+	behz6iaKBbFS0+U7WMSH4Y63LITLnAI8GrrSHpCV9s4w0h4SKEcl/g==
+X-Google-Smtp-Source: AGHT+IGtH1CcVMxMCJwtVi3LYJ16g2hv5Xsh1dW0fQCUJV+H/J70PtPy1kYytDJYuVvZvlxBA+dtIg==
+X-Received: by 2002:a05:6402:5202:b0:5e0:7f52:226 with SMTP id 4fb4d7f45d1cf-5e4a0d45e24mr4468134a12.4.1740581317806;
+        Wed, 26 Feb 2025 06:48:37 -0800 (PST)
+Received: from jiri-mlt.client.nvidia.com ([140.209.217.212])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e462032b00sm2912497a12.68.2025.02.26.06.48.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:48:37 -0800 (PST)
+Date: Wed, 26 Feb 2025 15:48:35 +0100
+From: Jiri Pirko <jiri@resnulli.us>
+To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, 
+	Tony Nguyen <anthony.l.nguyen@intel.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Cosmin Ratiu <cratiu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>, netdev@vger.kernel.org, 
+	Konrad Knitter <konrad.knitter@intel.com>, Jacob Keller <jacob.e.keller@intel.com>, davem@davemloft.net, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, 
+	linux-kernel@vger.kernel.org, ITP Upstream <nxne.cnse.osdt.itp.upstreaming@intel.com>, 
+	Carolina Jubran <cjubran@nvidia.com>
+Subject: Re: [RFC net-next v2 1/2] devlink: add whole device devlink instance
+Message-ID: <iiemy2zwko4iehuw6cgbipszcxonanjpumxzv4nbdvgvdgi5fx@jz3hkez3lygw>
+References: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
+ <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
+ <ybrtz77i3hbxdwau4k55xn5brsnrtyomg6u65eyqm4fh7nsnob@arqyloer2l5z>
+ <87855c66-0ab4-4b40-81fa-b37149c17dca@intel.com>
+ <zzyls3te4he2l5spf4wzfb53imuoemopwl774dzq5t5s22sg7l@37fk7fvgvnrr>
+ <e027f9e5-ff3a-4bc1-8297-9400a4ff62a6@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e027f9e5-ff3a-4bc1-8297-9400a4ff62a6@intel.com>
 
-On Tue, 25 Feb 2025 17:20:52 -0500, Anusha Srivatsa wrote:
-> Replace platform_get_resource_byname + devm_ioremap_resource
-> with just devm_platform_ioremap_resource()
-> 
-> Used Coccinelle to do this change. SmPl patch:
-> //rule s/(devm_)platform_get_resource_byname +
-> //(devm_)ioremap/devm_platform_ioremap_resource.
-> @rule_3@
-> identifier res;
-> expression ioremap;
-> identifier pdev;
-> constant mem;
-> expression name;
-> @@
-> -struct resource *res;
-> <+...
-> -res = platform_get_resource_byname(pdev,mem,name);
-> <...
-> -if (!res) {
-> -...
-> -}
-> ...>
-> -ioremap = devm_ioremap(...);
-> +ioremap = devm_platform_ioremap_resource_byname(pdev,name);
-> ...+>
-> 
-> [...]
+Tue, Feb 25, 2025 at 04:40:49PM +0100, przemyslaw.kitszel@intel.com wrote:
+>On 2/25/25 15:35, Jiri Pirko wrote:
+>> Tue, Feb 25, 2025 at 12:30:49PM +0100, przemyslaw.kitszel@intel.com wrote:
 
-Applied to misc/kernel.git (drm-misc-next).
+[...]
 
-Thanks!
-Maxime
+>> > output, for all PFs and VFs on given device:
+>> > 
+>> > pci/0000:af:00:
+>> >   name rss size 8 unit entry size_min 0 size_max 24 size_gran 1
+>> >     resources:
+>> >       name lut_512 size 0 unit entry size_min 0 size_max 16 size_gran 1
+>> >       name lut_2048 size 8 unit entry size_min 0 size_max 8 size_gran 1
+>> > 
+>> > What is contributing to the hardness, this is not just one for all ice
+>> > PFs, but one per device, which we distinguish via pci BDF.
+>> 
+>> How?
+>
+>code is in ice_adapter_index()
+
+If you pass 2 pfs of the same device to a VM with random BDF, you get 2
+ice_adapters, correct?
+
+[...]
