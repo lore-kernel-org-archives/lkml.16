@@ -1,129 +1,155 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7351C221736;
-	Wed, 26 Feb 2025 14:55:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23DF2222D0
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581755; cv=none; b=PLalj+fmvR/1+8kkfG4KlFpuyt7EZ/hdbjpbs80Q7a5Yt1e9O6XTL0u+G52qDnDySzgCXZiM5EsMr+BWwWDchA0e5zDWJoB3rH/4qs1BmJKm8DgXA2rtjTvzYifLrTkcQ7WDjHf1xLJrAfBxG6dUlekkuVtvJkf9h+/K4WQWva4=
+	t=1740581758; cv=none; b=TVnFw6jaWarH6yyd3dsjFC6M10BsFwtOem9srRnP6/tYDQsYU6FjVWymvx1AzwKrUiXayiuCwf5KDiXNs9bV7jEhg357bBBzkPG20AdP1hGL06/xmvh6OrddAgSj/07KdqHxk+aAAT0I8Y+zPSUOl1f9/MP+A7Y4If+zXH1unds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581755; c=relaxed/simple;
-	bh=tr5lbU3wGEr6BN68LboeolUuB8Kv0BBPiAchVDKlxcQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L2dQs9QmjxQtLtorXRtqF0m6nA5Fmbm2WLtC2fy3WNU+qBhnu9fiw0aGjHfvzEy8AAt+8MvtbdcWO2cce6swlyRUm8/TE8DdeJtR9oQnJuFfQ8Ez/PTyn3zW2P5GR6l1OjSEgy1euMqnFL2nZLWQiop5K8G60G1nm9GwIkMrP0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GwTz48Pw; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740581758; c=relaxed/simple;
+	bh=zuIqAKgte0TNhWMQcUFuXFOS6ml4+tb80DkOVV5ygEE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qEzgh8PheRijMN1R8zM3oVDC8ciMlg9ivm8c4EYud/8Ny+NYcKHkU3PDLnnKDh7y57xGz/U5iPYkqRWYQmDVQ1sZU+Zzr36/owsCcTTZKflKonG6+vY15P/7aigpe303Hh7q4p2sci6Tzh46r3JIOsMFa2HNxb1XNHUYXbYiqS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rwVvg8dt; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GwTz48Pw"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fe82430bb4so208696a91.2;
-        Wed, 26 Feb 2025 06:55:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rwVvg8dt"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-390d6b29ba4so421783f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:55:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740581754; x=1741186554; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oocQ0fbbk+dYcG+8o2rJPHRghcOSBtECMM/3xI25Xs0=;
-        b=GwTz48PwIaNBsrFqeaVMOqzl3dEqedZujaa31COPzwTpWmpZseLgQv162H9hhocstX
-         QrM6av2bCltwWV9q30fadT2DOGJcW4lpfSQGhXrH8SN2yzzYF+DI6P3fSilUtZT8HWiu
-         DvK5vmihFsORTCjrtYuBuv9BHN88EMevug3Sm1kKKih6wxix83QElfHH3YD+URuGA0Bt
-         8z4K4efPLVklKuxfL+G8tcJAl3n0m8ChL2Z4fjHt8Uss47vtYMLgmZMYKdcH2H0i7Wkn
-         7vtqFfUOS8Toa35SCisMocrpjP4t0kPGdkMjun+oWK4CWwJHWG8K3kMNb55z1iQGRePj
-         we0w==
+        d=linaro.org; s=google; t=1740581755; x=1741186555; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0Lh9ErM/3Q+yhun0mC3IR97PyDjsGz9W3qYuqQOhapo=;
+        b=rwVvg8dtSyjqf2cBJQZYtLAdMkjb48y/F25Ks32i8ZC6Jrw6pg1JhcNtpfjTxBUIDz
+         tqAzwdl5M56k42XPFbA0V7bRuJb2fRYb76MycjSNk8ay3mcj09DBpaEhs+cmpD105/YC
+         Bvlby+uU6pkF3nGCcEKY9FZSTInmumVDbk0s2fiIu+n42Lh550vKYTunV5f2NTcKELRi
+         rnWj1QApVPpaX8+ySKH3sImPTNAH8XzLv+PGvkx+h0/UyHunC+3Epwr82Qj5iJyJFSkk
+         NpnUBqRhwTFVSIBip0F374k9JlyqBvAs7U9WDtr2S4C3t0FqYF/VUx0iu5+arxvoKAZC
+         YJ5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581754; x=1741186554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oocQ0fbbk+dYcG+8o2rJPHRghcOSBtECMM/3xI25Xs0=;
-        b=ZLMglcUmvKOU0SABdmfbNHx/AVmTDkZKGvJcnHoHexihH5mpueSD+yGnUgHTbHXStc
-         CnaEVeb436/UcjKjTWpUNmJSFdBaXe98K59M7o83ni8kW82QE2p/88keBFNO6CF3GYXp
-         WAvDcyb/09WGRqfsx9R9KyQ6m7tUba+MM7haC4GprH4hLd9YxlGDLYcZW6iT5CFcbTbh
-         9Muo7yjeUH6fvMyQH0op6J64no1n9DVbiqFCKTkd6TwkYic9JLHHpyh3KayZqoZkuy2J
-         +tpxmavtq8G5UhNxGEjQiVMWexNYFblBe73ANpIdVnU68cTudovGTYAqetzEHU72zZnq
-         VLVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVpdaCqwRvEUUYamo4KuIfwkh//fn1qQYVztClD0woTnWzP42n2mFJOJ4wtmf0t8rymReLgNeOCbUo+UHuIme8=@vger.kernel.org, AJvYcCXeKVX+AcRNMlbfU/qe5xqW5E+yspsoFk7JpVExIR8z6ONlI1uL9yMbwXeI3M5WJrL1nJj4LxFDgiCADnBy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBuJuteK+z5P6qC1ggj4LuL3mqcGEOmXYhwuxB/ekutlYHGnj0
-	pfCb+SfPv5g8C1I6FRv13gaZRoHGAwkkK660UI9tj5dB6ZvUbkHbgjEldd01u1q/ntOJwGW9VJ3
-	mGhQnLpFv2/IeXOc2155tX+wx0EA=
-X-Gm-Gg: ASbGncuKhxzLJsKKRbwZ9LIT58c1bj5byx73Y/ukirgmSCVVH02I20C8wo+k73AY4Yp
-	ZKgjtt951H3OjbG/zpZA/vZ9+gdiHu60VYXuGRLD2Tr3u9P4cIug+k8N2wBUfE1iPjCF8oAaE8H
-	tiIPtJ5XU=
-X-Google-Smtp-Source: AGHT+IEwr1YXnoiZrxne6OHHnEmFMi5XjAExocD2439PvRUuxjM8MGlaORcc7Sw9f9Vsehx+BFssOco752kKMgOV07g=
-X-Received: by 2002:a17:90b:4c04:b0:2ee:f59a:94d3 with SMTP id
- 98e67ed59e1d1-2fce75eed74mr14141075a91.0.1740581753615; Wed, 26 Feb 2025
- 06:55:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740581755; x=1741186555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Lh9ErM/3Q+yhun0mC3IR97PyDjsGz9W3qYuqQOhapo=;
+        b=ZOXm6jvx9p7+6hObmpZ64N86c/ZeHTdcsccL7oHJ2atUFqA+t9/LMrto7hrov+i7yO
+         yv2lbyMGuwor0krKP9s78pJLKKIbU2wrQEGEqipEzGDhVqY2jMsHTpeW2BrRf+5ViQoo
+         6beJS+DI22grGyyOuAAxLZF2WWXSOyuytQJ1dgBmzpCwHDGkU/RirtMs6rxaSmqe2Jx6
+         YBB3GU0mXJjyH0/aEvu5rEYZ0n3Oro2Gqxlua65jX0Va2MUugOgFnTrNeINnyO4KlqEW
+         mstt4DSwHjE/78TErvUqXxzdThraxs9nQJfPwPb8i5iHArVJnX+Q9eZT5rZkYiBB6vTX
+         nY2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUToK6kdT8NJmv9ZcnymR472e3lqPuuuxC4SbsnOAzp2HlAX/qaHLqKO+6E00GSKDu1j7vF8nlGlH5JTwg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjepd/aRcdZtchBSr3jXBIGUXCiFLkHdRrFF1RInGM2C23zVT0
+	10qwUBQBTEyt3O3WFRXtmWUbCzYlGhuRnjZ9619tD736PwOEZQQiUkM8wF7mDWI=
+X-Gm-Gg: ASbGncs3VO86Heq7uNL7ZtAFEQO6jk2Cl2Aq5Rf9Ev3YLdHOysRUlegEjHA68BjM04H
+	/nzDcQju8tdAtlAz35A1L1vtoObFGn9CWWz2+L6UrZU8RJ8UktTVbIFLH3nphAqrKm2M+T00vpw
+	1LfMdobgii0iDAlH0VMhn/s8lI8rQ16FQPWB9mYbIwL7gclBXIfUY3TAE/YAgkeJqtEm6iTVvfX
+	4QO4SCXSdyWgG39u0mmELVkTVLCztbkwf7vvRApNcw2c0rqgz72V6Cw0ZrN67aHEgtxtR8yCWZM
+	kKTuLX/XYpgVIKkQJY0sLS42xEo=
+X-Google-Smtp-Source: AGHT+IHSR7ol++tcQ3t55KxpPADDKkuJUrc5pqPg7oVpe58mjcbGDwgbdiIc/J1H2cHUewzyAYI/RA==
+X-Received: by 2002:a05:6000:1fa3:b0:38d:d603:ff46 with SMTP id ffacd0b85a97d-38f7d1ffbfemr15478346f8f.14.1740581755300;
+        Wed, 26 Feb 2025 06:55:55 -0800 (PST)
+Received: from pop-os.lan ([145.224.66.72])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8e71c0sm5803309f8f.78.2025.02.26.06.55.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:55:54 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf stat: Fix non-uniquified hybrid legacy events
+Date: Wed, 26 Feb 2025 14:55:25 +0000
+Message-Id: <20250226145526.632380-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226085733.230185-1-colin.i.king@gmail.com> <PH7PR12MB87968F09CAC17487AD48AC0DB0C22@PH7PR12MB8796.namprd12.prod.outlook.com>
-In-Reply-To: <PH7PR12MB87968F09CAC17487AD48AC0DB0C22@PH7PR12MB8796.namprd12.prod.outlook.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 26 Feb 2025 09:55:41 -0500
-X-Gm-Features: AWEUYZlWFg3ahOUpyNGJhQerEe51HZ046Q_K1gV7V6JMdhPKUuBT6KNIpq1OACs
-Message-ID: <CADnq5_NvFJZT8y0aC_HQh4-6N8awZc97mvCHvOODxmnn2Jwq7Q@mail.gmail.com>
-Subject: Re: [PATCH][next] drm/amdgpu: Fix spelling mistake "initiailize" ->
- "initialize" and grammar
-To: "Zhou1, Tao" <Tao.Zhou1@amd.com>
-Cc: Colin Ian King <colin.i.king@gmail.com>, 
-	"Deucher, Alexander" <Alexander.Deucher@amd.com>, "Koenig, Christian" <Christian.Koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Applied.  Thanks!
+Legacy hybrid events have attr.type == PERF_TYPE_HARDWARE, so they look
+like plain legacy events if we only look at attr.type. But legacy events
+should still be uniquified if they were opened on a non-legacy PMU. Fix
+it by checking if the evsel is hybrid and forcing needs_uniquify
+before looking at the attr.type.
 
-On Wed, Feb 26, 2025 at 4:13=E2=80=AFAM Zhou1, Tao <Tao.Zhou1@amd.com> wrot=
-e:
->
-> [AMD Official Use Only - AMD Internal Distribution Only]
->
-> Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
->
-> > -----Original Message-----
-> > From: Colin Ian King <colin.i.king@gmail.com>
-> > Sent: Wednesday, February 26, 2025 4:58 PM
-> > To: Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
-> > <Christian.Koenig@amd.com>; David Airlie <airlied@gmail.com>; Simona Ve=
-tter
-> > <simona@ffwll.ch>; Zhou1, Tao <Tao.Zhou1@amd.com>; amd-
-> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org
-> > Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: [PATCH][next] drm/amdgpu: Fix spelling mistake "initiailize" -=
-> "initialize"
-> > and grammar
-> >
-> > There is a spelling mistake and a grammatical error in a dev_err messag=
-e. Fix it.
-> >
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> > ---
-> >  drivers/gpu/drm/amd/amdgpu/amdgpu_cper.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_cper.c
-> > b/drivers/gpu/drm/amd/amdgpu/amdgpu_cper.c
-> > index 5b6bdabb8012..7b9c98be5b1a 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_cper.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_cper.c
-> > @@ -545,7 +545,7 @@ int amdgpu_cper_init(struct amdgpu_device *adev)
-> >
-> >       r =3D amdgpu_cper_ring_init(adev);
-> >       if (r) {
-> > -             dev_err(adev->dev, "fail to initiailize cper ring, r =3D =
-%d\n", r);
-> > +             dev_err(adev->dev, "failed to initialize cper ring, r =3D=
- %d\n", r);
-> >               return r;
-> >       }
-> >
-> > --
-> > 2.47.2
->
+This restores PMU names on hybrid systems and also changes "perf stat
+metrics (shadow stat) test" from a FAIL back to a SKIP (on hybrid). The
+test was gated on "cycles" appearing alone which doesn't happen on
+here.
+
+Before:
+  $ perf stat -- true
+  ...
+     <not counted>      instructions:u                           (0.00%)
+           162,536      instructions:u            # 0.58  insn per cycle
+  ...
+
+After:
+  $ perf stat -- true
+  ...
+      <not counted>      cpu_atom/instructions/u                  (0.00%)
+            162,541      cpu_core/instructions/u   # 0.62  insn per cycle
+  ...
+
+Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
+Suggested-by: Ian Rogers <irogers@google.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+
+Changes since V1:
+ * Move the existing evsel__is_hybrid() test earlier instead of looking
+   at the PMU of the evsel. Looking at the PMU creates a dependency that
+   the PMU is assigned which may prevent refactors in the future.
+
+ tools/perf/util/stat-display.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e65c7e9f15d1..e852ac0d9847 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1688,6 +1688,12 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
++	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
++		/* Unique hybrid counters necessary. */
++		counter->needs_uniquify = true;
++		return;
++	}
++
+ 	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
+ 		/* Legacy event, don't uniquify. */
+ 		return;
+@@ -1705,12 +1711,6 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
+ 		return;
+ 	}
+ 
+-	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
+-		/* Unique hybrid counters necessary. */
+-		counter->needs_uniquify = true;
+-		return;
+-	}
+-
+ 	/*
+ 	 * Do other non-merged events in the evlist have the same name? If so
+ 	 * uniquify is necessary.
+-- 
+2.34.1
+
