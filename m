@@ -1,179 +1,96 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48B718F2CF
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D844D192B63
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740533618; cv=none; b=eNLFWOSS2HfPICSXC26XTSlEb6yrO5QGfpAuH32V0Iwn61RU8QuP4o7Q38tiSbB4kd0I6KnFgwZ+4jUSSjeiQ+HffAbEo6s92CoB/NIWt77R1gSAZ6lP9k0y4hGAZjnaxCisXyOK8Yq6jFpPxojX8IyxWGVvcGbc1A+zPwwdpKo=
+	t=1740533758; cv=none; b=DZ7zFXN1692n/pbBJYWQ5tYAGwmt5qeGQGewodDr+oUcnDrAhy2fmnuN2NiaArIeEJn40ggNN+NgPmJgwhPikUR57Y7a07NrpHFCec6gEbuRJQugNjmVYxe7atuyPG8gdM+EZ8BaXPnAM3Ao/FcGSzd1kDaJZoSoeUKGVoqArIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740533618; c=relaxed/simple;
-	bh=LhjbSv4au6MwH7sOdXIixpDlfbsqQWEbooKY/OePEMw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DHhAGZWli+fjngTI42BQyGPGItogrWPb2lhPjDvFG/ESM9F0JLbyHjH+kpVqeNIW627nErdihCgFpm8klAZlZV7U9/e+8fVKH79tL84uEuHq6kNRz32ywQojqlsCnIavysNiUV7+xBS1yXgvKgn4Knhtad05tU8BxLw3hRhF3pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=SVH2ht+O; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740533758; c=relaxed/simple;
+	bh=+a/8Rnwq3M59jG/h6pOx1MvWKehiDVKh9LFb8+XkUcU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=koHfhijWJvSpcgc6zjobVA/6y+NjH0Mk6MUzyg0alwFZlzhlWfFKZQ3azoqnvJEKoozWxdxUcQjk6tFCP3J+RZQUbQPK9lbiqZZFdcA50F4muGaGMSzbc1b3U/YKMYUW8Q8/3JpqFJxYjygoRZ48bD81dVVsNOIerotfjR5G64E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MO3PZ/Xw; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SVH2ht+O"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-7271b86c102so1070823a34.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:33:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MO3PZ/Xw"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fbff6426f5so12960450a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:35:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740533616; x=1741138416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ebnR0JarUmGpdugflrkwySQrLMMn1nm/13vqMSjIKHA=;
-        b=SVH2ht+OtSk4SAnZMP1jJWUa6+SlELsTYmaC1Xzavjy5wZInLfwsLpQK3BP1G+tfeQ
-         NBi7b60X86/txyGb6mBOXOSZM8Nqef5FQtEAt6jcWv5lM81GzlVRyVIa+Kn085YVhO5v
-         vu4oFaoUxbUJmfjZX2nmf3kZZDLUXzsEVAFBk=
+        d=google.com; s=20230601; t=1740533756; x=1741138556; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4bwkMEQZZWa7h4K0NWv+dMOi3x/q9ujiLZV0nsTlZNA=;
+        b=MO3PZ/XwrqsIIu9qVwWotKKccrRiKZEd5f0ARTK59RvwHH0Xi91qDaaWnjf2u6RamC
+         FEszGhUW+lDA5cXSiQuV5HajExtkVaqJPFu9LJ4X4DaLaODuND7nhe15k7IRtSW29/v/
+         ZORgLclzrambUeOokxZ3GA2m1Y3GG4lqNm6uGrzJH0qWyH184cpyLbHOP2wNzwBRBOmZ
+         Hmdc6ktNq2wvy3StqfWZz3fhLIWBYRNezDat6s/H9WzrQwiLP1SAetBaYKNEP+1MjGVB
+         MrrhiHrQkETs7W4EX8dG0eMnx9mxTXLpimPRmqroJx3e4vvWc2mQ+VLthP/jlhFCgwbv
+         3JJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740533616; x=1741138416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ebnR0JarUmGpdugflrkwySQrLMMn1nm/13vqMSjIKHA=;
-        b=OQ1LUnFRHMDG24Mp6d8bbMark8FehIM/UwfXmbmN+cYSVYMhjLDNgdVFX9rCpsDla3
-         SfteLT4qIejWZM6rfins345OAxRRD+tWJEuAJe56jJJqR0DcpoMS+rxNb2fb4bdxAQIY
-         lX/MPsrjv7Ils2YTwP8njBpg/uKt6ehBjffNjHzeIy1qY6Qp7iZT336BgQ4ABvS5IXAN
-         H5JbuOJmvxqLaKHYKiyBk3hHJlincuqSsrykM9aebONKfdkVoP4JQf6u8xCaGGEoKeB/
-         mztdPAc7T46Zd9341SVnqW6R3yBO0a7pJWQhJqrYbqHrpTMAmoo3DApHF3MBKngj5V+B
-         3H0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWNHALMF3hs0Lj34N6vK5Fmw4jzD7S9awIHSf8Yp31EUAkh2LjQg+psBAbOqw2ZjPRjRzWNCP2AbiEEsZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwipuXwPSGFaHIRBC03wUzR8ixsPCysWEXBZnmkpWe5iSsFWm8d
-	RgxhXJ9sWQHwPtNJDduaGOHcMVptSFgBKQKN2NTc83zZhXrUorK41grwUu6F0gp7Dz77bEVhIHE
-	EVM4jQI33zm4CfGSmmj8Yc2dBw9qdJ6iYkHax
-X-Gm-Gg: ASbGnctXJrbWGh065SRcH5ZWA/KMFSEpa0xIWtBI83d8Rzk0rlSW+YE0r9EtH9hewsq
-	hnbnVg36OSHlmgc3u8KGzktVmXe25lz4JhOa8qW+pouYaQ0g/sHRMfJZ170FaxVlW21QIjVBeCq
-	/0D3oS0dGWtseemxJ6+PvUhxqafRbX9dhX1yI=
-X-Google-Smtp-Source: AGHT+IFfBkogeI+J+TIhuVzZ9liBdFBVMLOI9W8jdXh42R/dMGuOgxyd/PaAvwBTUDzVj6zG3B2V7PXvso8cUKCSbEU=
-X-Received: by 2002:a05:6830:2b22:b0:727:2d05:aa9b with SMTP id
- 46e09a7af769-7274c25fa25mr3476833a34.6.1740533615690; Tue, 25 Feb 2025
- 17:33:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740533756; x=1741138556;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4bwkMEQZZWa7h4K0NWv+dMOi3x/q9ujiLZV0nsTlZNA=;
+        b=F9F1xF57SIjgvQEMzjz2bG74/AzfHPSHfLUa1Na38n6FTMlZKDfUAuG7OxrTVUuI7k
+         0A+53fJmRWP4arLyi2m3xzrklLUC0TY3mxY1fspHwkEZWxGIvpfuSOYTCcyl4Rri3Gu2
+         IGRcz309wULEfjoc1MIx3imzEn7WC1V/mH5/OETutyU+cdqsfy2+YIoFk85mw9scjtdK
+         6+p2OV/hGVLC3K0I+vwruLDg+/1v8bhmetJs1/6POGHoicqc1hn+wp5iE+/jw+MtgIGO
+         jeNTK6wg2HOtz/Fmfk+BhKQvGB8Ptj00OpzOGXzk/BRQUj/o6cc5tcvddurlzR2FSB8V
+         uvrQ==
+X-Gm-Message-State: AOJu0YykyEN7V3ISDmc2n4IX9OSBfwYipMKSsk5HVwHbxxjueuGRJ9OI
+	OIktFUj4jpMnr5V9euE8mlsY64uTtsA8jKPGXd42K8M9tx24OgUPDi4IOzZlrgVNRmdLT9hprm5
+	3ag==
+X-Google-Smtp-Source: AGHT+IETvbRVrxXRHnpW+9mE2FrumQ0EMxOPE73/r92E+MK8Sttdkq2JT/HBaFrwixzCkTPTbJac7xQUoeM=
+X-Received: from pjboh3.prod.google.com ([2002:a17:90b:3a43:b0:2fc:af0c:4be])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2d0:b0:2ea:37b4:5373
+ with SMTP id 98e67ed59e1d1-2fe68ada2a5mr8962899a91.10.1740533755483; Tue, 25
+ Feb 2025 17:35:55 -0800 (PST)
+Date: Tue, 25 Feb 2025 17:35:54 -0800
+In-Reply-To: <20250123002422.1632517-1-kevinloughlin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250224225246.3712295-1-jeffxu@google.com> <20250224225246.3712295-2-jeffxu@google.com>
- <9abd68d9-3e6d-46a0-b92c-5aee0a90abf3@lucifer.local>
-In-Reply-To: <9abd68d9-3e6d-46a0-b92c-5aee0a90abf3@lucifer.local>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Tue, 25 Feb 2025 17:33:24 -0800
-X-Gm-Features: AQ5f1Jp3JOWAzv-64Vb5PKwzbpnpGSYiSOq3FsK4TQhOwG3l29ADM_4sybBE2Pc
-Message-ID: <CABi2SkXT0z9YFsEkf3-HH0r_NuXXs_SJid9yzjuu0SwuxxWmZw@mail.gmail.com>
-Subject: Re: [PATCH v7 1/7] mseal, system mappings: kernel config and header change
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
-	torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com, 
-	adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
-	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250122013438.731416-1-kevinloughlin@google.com> <20250123002422.1632517-1-kevinloughlin@google.com>
+Message-ID: <Z75v-hT5SxKlqdwt@google.com>
+Subject: Re: [PATCH v5 0/2] KVM: SEV: Prefer WBNOINVD over WBINVD for cache
+ maintenance efficiency
+From: Sean Christopherson <seanjc@google.com>
+To: Kevin Loughlin <kevinloughlin@google.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	pbonzini@redhat.com, kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
+	ubizjak@gmail.com, jgross@suse.com, kvm@vger.kernel.org, 
+	thomas.lendacky@amd.com, pgonda@google.com, sidtelang@google.com, 
+	mizhang@google.com, rientjes@google.com, manalinandan@google.com, 
+	szy0127@sjtu.edu.cn
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Feb 24, 2025 at 10:05=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> > +config ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
-> > +     bool
-> > +     help
-> > +       Control MSEAL_SYSTEM_MAPPINGS access based on architecture.
-> > +
-> > +       A 64-bit kernel is required for the memory sealing feature.
-> > +       No specific hardware features from the CPU are needed.
-> > +
-> > +       To enable this feature, the architecture needs to update their
-> > +       special mappings calls to include the sealing flag and confirm
-> > +       that it doesn't unmap/remap system mappings during the life
-> > +       time of the process. After the architecture enables this, a
-> > +       distribution can set CONFIG_MSEAL_SYSTEM_MAPPING to manage acce=
-ss
-> > +       to the feature.
->
-> Architectures also need to be confirmed not to require any form of VDSO
-> relocation, which as discussed in previous series some arches appear to
-> need to do. I'd mention that here.
->
-This might need clarification, the system mapping includes vdso, right
-? Why the focus on vdso ?
+On Thu, Jan 23, 2025, Kevin Loughlin wrote:
+> v5:
+> - explicitly encode wbnoinvd as 0xf3 0x0f 0x09 for binutils backwards compatibility
 
-The sentence  "... it doesn't unmap/remap system mappings during the
-lifetime of the process."  already cover what you want here, I think.
+Please, please, please do not send new series with In-Reply-To.  Trying to sort
+through the different versions in my workflow was painful.  From
+Documentation/process/maintainer-kvm-x86.rst:
 
+Links
+~~~~~
+Do not explicitly reference bug reports, prior versions of a patch/series, etc.
+via ``In-Reply-To:`` headers.  Using ``In-Reply-To:`` becomes an unholy mess
+for large series and/or when the version count gets high, and ``In-Reply-To:``
+is useless for anyone that doesn't have the original message, e.g. if someone
+wasn't Cc'd on the bug report or if the list of recipients changes between
+versions.
 
-> > +
-> > +       For complete descriptions of memory sealing, please see
-> > +       Documentation/userspace-api/mseal.rst
-> > +
-> >  config HAVE_PERF_EVENTS
-> >       bool
-> >       help
-> > diff --git a/security/Kconfig b/security/Kconfig
-> > index f10dbf15c294..15a86a952910 100644
-> > --- a/security/Kconfig
-> > +++ b/security/Kconfig
-> > @@ -51,6 +51,24 @@ config PROC_MEM_NO_FORCE
-> >
-> >  endchoice
-> >
-> > +config MSEAL_SYSTEM_MAPPINGS
-> > +     bool "mseal system mappings"
-> > +     depends on 64BIT
-> > +     depends on ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
-> > +     depends on !CHECKPOINT_RESTORE
-> > +     help
-> > +       Seal system mappings such as vdso, vvar, sigpage, uprobes, etc.
->
-> Let's be specific here, 'etc.' could mean _anything_. Also you aren't
-> sealing most of this, let's just list what you are _actually_ sealing
-> here. Which is AFAIK VDSO only?
->
-I will remove "etc" and list all the mappings.
-
-Those mappings are:
-vdso, vvar, vvar_vclock, vectors (arm compact-mode) and sigpage (arm
-compact-mode), uprobe.
-
-We seal all system mappings that x86-64 and arm64 have.
-
-> You can update this later as time goes on if/when you expand this.
->
-> > +
-> > +       A 64-bit kernel is required for the memory sealing feature.
-> > +       No specific hardware features from the CPU are needed.
-> > +
-> > +       Note: CHECKPOINT_RESTORE, UML, gVisor, rr are known to relocate=
- or
-> > +       unmap system mapping, therefore this config can't be enabled
-> > +       universally.
->
-> Thanks for putting this here, appreciate it!
->
-> Could we tweak this though? I'd like to make it crystal clear, so I don't
-> think 'note' sufficies and this sounds a little too vague.
->
-> I think 'warning' is more appropriate here since you're breaking things f=
-or
-> people who might be unaware. And we need to say this -breaks- programs:
->
-> WARNING: This feature breaks programs which rely on relocating or
->          unmapping system mappings.
->
->          Known broken software at the time of writing includes
->          CHECKPOINT_RESTORE, UML, gVisor and rr.
->
-> I think this is critical.
->
-Sure.
+To link to a bug report, previous version, or anything of interest, use lore
+links.  For referencing previous version(s), generally speaking do not include
+a Link: in the changelog as there is no need to record the history in git, i.e.
+put the link in the cover letter or in the section git ignores.  Do provide a
+formal Link: for bug reports and/or discussions that led to the patch.  The
+context of why a change was made is highly valuable for future readers.
