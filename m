@@ -1,101 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BE24634F;
-	Wed, 26 Feb 2025 19:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34E9F2505C5;
+	Wed, 26 Feb 2025 19:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740598811; cv=none; b=VwA35YsC2SgfKbPXib6K3f9Ix/KC1MGNG0GjTko1E2/mZWdl65y3S4eJ0NTMCVVjZTIhF94Q0+0t2ZCKvz0IGir6vIzpiHZleJqvspbWlQ4te0LToGkMcvY7DAJH9OtIv1e4rwU+lJUYad+6+l/NSJhreFK7ZqzrRQqJz3PxOBM=
+	t=1740598818; cv=none; b=WIkrBeJmwBa8glVXO0BFNaRmjXMipbjvM7dsieP3AqdfhJdRRr/UGlrXW8CczfoIH0Kbrs64KLvi3vJ2kiQi1sHnyK7y2VXF6+q1Z/zrCvfVKY2LGX6m93pZm0ox40UK+xFAFBMsOuQoTHi2NmHS1wZTIsVwn0zeiqw9GLEQ8QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740598811; c=relaxed/simple;
-	bh=iqsdq2p5uze2ya4zhfPOi6HCsOmbEwMOmKjx129lr6A=;
+	s=arc-20240116; t=1740598818; c=relaxed/simple;
+	bh=IUheWlSSUJ/8vMzGkjBK+S3uf36PkLWD7up/x3PrCag=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=lGrrgI3hiwqetymkLvnOJxWVXGKnrkY0xrB8o+IaP60mTMIXCCQRo5lCOj0uNkiaL+Dyo1MYHWx4ulYOAcGQrG8XdiuWoleu0VE7vhimWyg6aCaxg3Y/vhvJlnjh4ImxhTawro43QVJAVpwqeCeVmf1zOHP2B5dj35oHGp/4otE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXp5HnXI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CVXXdmUtSgjhM+nnsPVvCTVE99HP3Cx41bkadTWP1xL4uMvp+Q4qE5o5I5EsRCl1PShUI4FhuljzXQAyFw597Eo8Cn9uLyyQk/1SJrzWn9CQwmfAUb8TmzFLskBBOir8LPYPMq3YGz/LsHaxX6uD5+Q3AovV+SCBOB29TXLYzmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YkO3EX0R; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXp5HnXI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDDDC4CEE7;
-	Wed, 26 Feb 2025 19:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740598809;
-	bh=iqsdq2p5uze2ya4zhfPOi6HCsOmbEwMOmKjx129lr6A=;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YkO3EX0R"
+Received: from narnia (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 8826C2107AAB;
+	Wed, 26 Feb 2025 11:40:11 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8826C2107AAB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740598816;
+	bh=yAUqEIXMpQVqzzO/rrGdO+RRJpFARicVp+JsEMr+UQA=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=LXp5HnXIU93C2GpA3Ioh6xBPLKGb8n8eIb+n3KK6ZSi1RAFO4i4taQT9DLrlTqon+
-	 WiV6Z1KTeHYfDqm3YFqRhVwZdM39aV1c8V2vWUwOZmWw/UQ+4hX7LAAJjhIZrjBDAv
-	 WvpJjLhC/ghljgU+UxQHaGGXqcRSgSD3PrDhH9Q0XU2yBMPyBoqd1MkxjstC8XAKyi
-	 yOvauVBlwqVQn3ww+Kp0pNKv87DrfUVn9T64QJB7VRRE7GhW2Wmo1KN5VWOAkIT5DU
-	 7sKHC4gsUm+W3gBQMw5f+tktMBaapO5D9ALsazdXLDfeLGnK+g7WnYCQUAzsLu2FPi
-	 CVds/UXAMdeQw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <x86@kernel.org>,  <linux-riscv@lists.infradead.org>,
-  <linux-arm-kernel@lists.infradead.org>,  <loongarch@lists.linux.dev>,
-  <tglx@linutronix.de>,  <mingo@redhat.com>,  <bp@alien8.de>,
-  <dave.hansen@linux.intel.com>,  <peterz@infradead.org>,  <hpa@zytor.com>,
-  <paul.walmsley@sifive.com>,  <palmer@dabbelt.com>,
-  <aou@eecs.berkeley.edu>,  <catalin.marinas@arm.com>,  <will@kernel.org>,
-  <chenhuacai@kernel.org>,  <kernel@xen0n.name>,
-  <tangyouling@loongson.cn>,  <hejinyang@loongson.cn>,
-  <yangtiezhu@loongson.cn>,  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
-  <boqun.feng@gmail.com>,  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
-  <benno.lossin@proton.me>,  <aliceryhl@google.com>,  <tmgross@umich.edu>
-Subject: Re: [PATCH v3 0/5] rust: Add bug/warn abstractions
-In-Reply-To: <20250213135759.190006-1-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Thu, 13 Feb 2025 22:57:54 +0900")
-References: <yy_ESUuchCjlaGIJHzCPAcP_d9ucSD0CGXaoZNNkY7BmN5Ch1J8avsA9QpKO5LkTjlGpu99jl8NrFl5NFSQXuw==@protonmail.internalid>
-	<20250213135759.190006-1-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 26 Feb 2025 20:39:45 +0100
-Message-ID: <8734g0v6ke.fsf@kernel.org>
+	b=YkO3EX0R5EzmxjLKaYYWj0JsXC3WdDaznQqsJZsWLBvVMh9IdTgQSyiQWoHwTt32K
+	 bb/rZql6j3R7Nz1hM17MON4RkIg2sC5Nb4mupokc3NeAlEt2cx0+rYWA/Mi4AQ6kt+
+	 kQi1oRRMj71nuHEdS7hlGoqf00zxodC6L/m0GTbQ=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Paul Moore <paul@paul-moore.com>, Song Liu <song@kernel.org>
+Cc: James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, Andrii
+ Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
+ Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song
+ <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
+ Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
+ <jolsa@kernel.org>, Stephen Smalley <stephen.smalley.work@gmail.com>,
+ Ondrej Mosnacek <omosnace@redhat.com>,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, selinux@vger.kernel.org
+Subject: Re: [PATCH 1/1] security: Propagate universal pointer data in bpf
+ hooks
+In-Reply-To: <CAHC9VhS8ST6ODB2pFJTMK4qu8FdM2J=6qEbB=XGxo2ZAZgo1Aw@mail.gmail.com>
+References: <20250226003055.1654837-1-bboscaccy@linux.microsoft.com>
+ <20250226003055.1654837-2-bboscaccy@linux.microsoft.com>
+ <CAPhsuW7=uALYiLfKfApvSG0V+RV+M20w5x3myTZVLNRyYnBFnQ@mail.gmail.com>
+ <CAHC9VhS8ST6ODB2pFJTMK4qu8FdM2J=6qEbB=XGxo2ZAZgo1Aw@mail.gmail.com>
+Date: Wed, 26 Feb 2025 11:40:08 -0800
+Message-ID: <87mse8jy07.fsf@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Paul Moore <paul@paul-moore.com> writes:
 
-Hi Fujita,
-
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
-
-> This patchset adds warn_on and warn_on_once macros with the bug/warn
-> abstraction.
+> On Wed, Feb 26, 2025 at 2:06=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>> On Tue, Feb 25, 2025 at 4:31=E2=80=AFPM Blaise Boscaccy
+>> <bboscaccy@linux.microsoft.com> wrote:
+>> >
+>> > Certain bpf syscall subcommands are available for usage from both
+>> > userspace and the kernel. LSM modules or eBPF gatekeeper programs may
+>> > need to take a different course of action depending on whether or not
+>> > a BPF syscall originated from the kernel or userspace.
+>> >
+>> > Additionally, some of the bpf_attr struct fields contain pointers to
+>> > arbitrary memory. Currently the functionality to determine whether or
+>> > not a pointer refers to kernel memory or userspace memory is exposed
+>> > to the bpf verifier, but that information is missing from various LSM
+>> > hooks.
+>> >
+>> > Here we augment the LSM hooks to provide this data, by simply passing
+>> > the corresponding universal pointer in any hook that contains already
+>> > contains a bpf_attr struct that corresponds to a subcommand that may
+>> > be called from the kernel.
+>>
+>> I think this information is useful for LSM hooks.
 >
-> Wrapping C's BUG/WARN macros does not work well for x86, RISC-V,
-> ARM64, and LoongArch. Rust code needs to directly execute the same
-> assembly code used on the C side. To avoid duplicating the assembly
-> code, this approach mirrors what the static branch code does: it
-> generates the assembly code for Rust using the C preprocessor at
-> compile time.
+> I've only looked at it quickly, but so far it seems reasonable.  I'm
+> going to take a closer look today.
 >
-> The 1st to 4th patches export the BUG/WARN assembly code for Rust on
-> each architecture, with no functional changes on the C side. The
-> changes for x86 and RISC-V are straightforward. However, the ARM64 and
-> LoongArch assembly code are designed differently; they are used by
-> both C inline assembly and assembly code. As a result, sharing this
-> code with Rust is complicated.
+>> Question: Do we need a full bpfptr_t for these hooks, or just a boolean
+>> "is_kernel or not"?
 >
-> The last patch adds the bug abstraction with warn_on and warn_on_once
-> implementations.
+> I may be misunderstanding the patch, but what if we swapped the
+> existing 'union bpf_attr' parameter for a 'bpfptr_t' parameter?  That
+> would allow for both kernel and usermode pointers, complete with a
+> 'is_kernel' flag; or am I missing something (likely)?
 >
-> This has been tested on x86, ARM64, and RISC-V (QEMU), with only a
-> compile test performed for LoongArch.
->
-> The assembly code can be used for both BUG and WARN, but currently
-> only supports warn_on and warn_on_once. I will work on the remaining
-> functionality after this abstraction is merged.
->
+> --=20
+> paul-moore.com
 
-How does this series compare/overlap with [1] ?
+bpfptr_t is just a typedef for a sockptr_t, which contains a void
+pointer and bool, so if we replaced bpf_attr with it, we might lose a
+bit of type safety going that route.
 
+In syscall.c a most of the subcommand handlers have a
 
-Best regards,
-Andreas Hindborg
+static int bpf_foo(union bpf_attr *attr, bpfptr_t uattr);
 
+pattern that is used. I was trying to mimic for this patch.
 
+The actual parts where the is_kernel flag gets used currently, is for
+pointer chasing/copy stuff, e.g.
 
-[1] https://lore.kernel.org/all/20241126-pr_once_macros-v4-0-410b8ca9643e@tuta.io/
+make_bpfptr(attr->insns, uattr.is_kernel)
+make_bpfptr(attr->license, uattr.is_kernel)
+make_bpfptr(attr->fd_array, uattr.is_kernel)
 
+and subcommand structs may contain multiple pointers.
+
+-blaise
