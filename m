@@ -1,293 +1,203 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sg2apc01olkn2051.outbound.protection.outlook.com [40.92.53.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7113D21885A;
-	Wed, 26 Feb 2025 12:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572409; cv=none; b=X8s5Q4hii9cR2x4rokY5a77Q5p2b+D+ToWVincmchW6aci60OEwDd5F95pzjXeBk3bjzzICOaNNTdBTCyaxO8bBanjZX/Y6aOjwC9a7XmEkSuawU6FhN5WNhIvVpKwrh1v8RztdsikszM88fA4MBeMv/7edI+i7IBUIBmCG/NSA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572409; c=relaxed/simple;
-	bh=/FyuWVmFebGQ6sVthFa/IGOjQBomPPP2g7Tz/sWI/lY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k2iLvmw7u7WRW4KSeJjJN2zsOkGXvr1jHyys8O52Qq0+TcPDngE+pzQ7/8FJbCKt1r9F3suGB4K6++bIhiFEYWxlopXHOkJ9h6Rli5HzwI6+D7oorxKeAuAsE0wG5qgS4hPFVJS9yo/BlPyUs4zFihpiTwTK5ZiP8bAbQq8w7ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bAm2bLKq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBB921E097;
+	Wed, 26 Feb 2025 12:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.53.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740572439; cv=fail; b=r4D7ICwoCUuV+D0qNuSX/25h/tSom8iS1NldjmO/+75Ih8yryPMKgPPMXgkALUGr1pZvlTDX6tGh4LQ+tqD/TrLm39h2mpGfn0wWd8eb7ZudWvYu6+9UeB/AhThZc687OLkzrWXNMmj1ugTw9BlMYXTKtuZ46GnEKdn927hyhzw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740572439; c=relaxed/simple;
+	bh=0YP27jwv4+GI5s9tBOfa5G7u7gzG6cFeAt76HnWauTg=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NQws6tqwsl9O0asH2TrpFbGqglzEHRZ+89bew3WrcuxPfcdzUFKEv+ku9HGOmKT7OaLositqA/j7ZJVGElRkaJap3qdrfIrRNboIIwleP3ltF7bCNKTnNQtAE+N//GjXBBDi/Xg2gbWBPw/e83D5i7WlzrdX9pdYpPl/f+vR+vU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=HUCrkptn; arc=fail smtp.client-ip=40.92.53.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bAm2bLKq"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q9Ur01025442;
-	Wed, 26 Feb 2025 12:19:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LszQRn/ay/FhXAzTM7WwW7Q1riyQTVUsLgvVZqo3HzU=; b=bAm2bLKqeMRvtMze
-	pPil7rojJA22zyfpcFiljF2p0bKNa39gt3vW5v24xSjbWuC01vthPF8bS7z8sL+y
-	CSrqmhE+OJlBa/jj3GHheA4j3Evfx1xFIxbX9l9AO6dVYmdHSpVvC5Gn8F958Gbp
-	gG06DrHq7GFz4lNWEBrvbaUcueOEkIoOjK9g0W6XzySSoYy/YOReG1XYyXJ7mNmu
-	Uy+mAufptVdExjsKoxBwojpt//iy0xzU8qiDg4Eby9romxkMPkkhx2Sfo8M+GZux
-	zI8ONThKOA0Fkhobg9QbMY+3qMjq8Xt/+KrZEp/tooqq1berRrtQBKQZSDe5tX0C
-	+zvSXA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prmhxcs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 12:19:56 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51QCJt6P017408
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 12:19:55 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 26 Feb 2025 04:19:55 -0800
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 1/2] dt-bindings: arm: Add label in the coresight  components
-Date: Wed, 26 Feb 2025 04:19:25 -0800
-Message-ID: <20250226121926.2687497-2-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250226121926.2687497-1-quic_jinlmao@quicinc.com>
-References: <20250226121926.2687497-1-quic_jinlmao@quicinc.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="HUCrkptn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GJFIcaX3Xj/iZjUTgPIeU9Ef/UiTQ/2+fDsnk1Ogsz9QKgwbcigiuEXzSmBVkBYk0y2pGHioxVC3Vt6r+m3rr6HG9GThcne90ly7H/2AnmnCy1GzQFIdLh8+7BprPsygHqk3/lCVYRAi3uRslzBELI8jy6hJPHoWW1DhqLNY1my8rMyD6pdzkWcmMeUxiBxW4kKOou4RrpuzrR7vuxMrOotds8qONbEdHqRD6bhn0Af0PY7pdkGiBqt0H1t63dyhdRe4TL4pwVjNsSggZwcr8V5Bpir6ZXni1uCtrg70gs4rCYXItt6wNvTJdji9N0PKeumKU87UQF7RY4cpwkNd0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fZ1MmjNm+FJaK/HoGxo+7DfSD9fcnJ3Y2/pOwZ/JU2w=;
+ b=CJMy8RxGPzzj2W/59QD9rYySThAg2avBEERQhQd1ZTKJ3r53LlTxkZDbVCVvd5lBe3ynYa1erbKUpgeHecKL2NJRjEsTzy5cFfdXJuuSbIcymUwRK/Yxy0D2rn7+E4MB0U7lsBZ4vbkwfUoUX3RumogNWvheESflHr7FSdcPxIa13WCs5R3fQnHzcxV6VsvkoRBuC1P7m8NMkFwlhPLLFGAXlMeCzt+ETfFTZLHlT8agwLDtotVrZZy3GD7dUTw+3AunLtta0SVSbb5QTBBw41gpUOW/IXqBDDoVNb/+MeUuGO7QiDttI1JG5nevDN4f1hgIam3Q1yAax+0EZqxSlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fZ1MmjNm+FJaK/HoGxo+7DfSD9fcnJ3Y2/pOwZ/JU2w=;
+ b=HUCrkptnQqtwdZMIR0+Jj+IaW5NanXa5CjtNFFfdcxq0XjZYsz6DxjkzKkPESAwA0c07m2gRfSA6w4T+RIn1daCR0AUp6vs+xHzsm+S0lQaR940C1J9bZbzEvw4OjR4sQvp/zyh1a2+TDLVpdCA4iTVXmd5PKamCFM8eFl/Z1IEEQRK433belEPnIY1dVE3vfvMXsU1s8ZtJKH5vYbAJt1oNcYCcvR8NBpnSUm/zEr4PniV8v70JSO9e2dTbNC6le00ShSdgUIi4jkbj1Ud0DTETqnsslgracXTEBwXkfJKreMl70d2MVQWvnU+YpDgSoQUXL7db0WMzbVjV7Wifsw==
+Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:76::5) by SEZPR01MB6080.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:221::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
+ 2025 12:20:32 +0000
+Received: from SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ ([fe80::653b:3492:9140:d2bf]) by SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ ([fe80::653b:3492:9140:d2bf%5]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 12:20:32 +0000
+Message-ID:
+ <SEZPR01MB452764342165B17819AAF554A8C22@SEZPR01MB4527.apcprd01.prod.exchangelabs.com>
+Date: Wed, 26 Feb 2025 20:20:26 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] PCI: Fix the issue of failed speed limit lifting
+To: Jiwei Sun <sjiwei@163.com>, macro@orcam.me.uk,
+ ilpo.jarvinen@linux.intel.com, bhelgaas@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ helgaas@kernel.org, lukas@wunner.de, ahuang12@lenovo.com,
+ sunjw10@lenovo.com, jiwei.sun.bj@qq.com
+References: <20250123055155.22648-1-sjiwei@163.com>
+Content-Language: en-US
+From: Jiwei Sun <sunjw10@outlook.com>
+In-Reply-To: <20250123055155.22648-1-sjiwei@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYCP301CA0073.JPNP301.PROD.OUTLOOK.COM
+ (2603:1096:405:7d::11) To SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+ (2603:1096:101:76::5)
+X-Microsoft-Original-Message-ID:
+ <9d6440de-1909-4629-9798-1965b0799efe@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OYkSxgb0VYPnny7XURLPDzEsOmzvEhFY
-X-Proofpoint-ORIG-GUID: OYkSxgb0VYPnny7XURLPDzEsOmzvEhFY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 phishscore=0 bulkscore=0 malwarescore=0 mlxscore=0
- priorityscore=1501 adultscore=0 spamscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502260098
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR01MB4527:EE_|SEZPR01MB6080:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3c4a47ba-efad-4b08-bc22-08dd565ff6e0
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|5072599009|7042599007|6090799003|19110799003|8060799006|15080799006|461199028|3412199025|4302099013|440099028|10035399004|1602099012;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZmpaK1RiYnlZbTRCYWttNmV3eGJNZFFlcWhPd2dubU52QzhMc2ZqTjJPY3Vs?=
+ =?utf-8?B?VVJnMmNHV1BmVHQwRGc1cUIxc1BXKzQ2TEFydVdONFp2ZE1OSmNpQmJiK0Nj?=
+ =?utf-8?B?aVlyb0E3dHVwYjhZMThNbXpjZUJ1Q0dUT21yZXUwR09vSnhIbDUrSnRubTdP?=
+ =?utf-8?B?Y2kzZERybGhvVXNSejVsWjY4OVFGMHJYNlIvaUt0YmRJWHFQdU9JaVZnRHo2?=
+ =?utf-8?B?a2o1SVhleUh5dDlnL0tKM1ZBSytTRHZBV2M4akRmMVhpZTNSWWhpQUFrbHpy?=
+ =?utf-8?B?QjRHWjVvZDBxbkJ0Z0lCMWVMdWxGT0ZaN242bTZKSXpVM0FkZVBLMngwTWtU?=
+ =?utf-8?B?TDJ1cmh3ZDhQMXhxbW9VaGdsMjFDYjI4Sm92UTJJaEl1K08yanFvUm1ld1p6?=
+ =?utf-8?B?dFRuS3RLTDZHbzROY3RHQTZBR1V0K3dIZzNIUVRHay85U3EyK3B0MDBPOTFw?=
+ =?utf-8?B?a0ZSUzlUcm1TODJaWGRGc3VBcVU4ZHFCWTl6eWtpN04veWk0aHplekZubm81?=
+ =?utf-8?B?UmE3SzhxSWVmWitiUy9sOU91VUltcE5rZWdBVWdiaW5kNXZBVzBaUG50SmRF?=
+ =?utf-8?B?YVBDZUZpaXJ0czNUMG01QU42VUo3Y0FlbnFZdE9UeS82VVRJSlltUmE2eDFt?=
+ =?utf-8?B?czJiZVBXSzFlUGNCd2NQQVhTQ2VhZmFLZy9Edk5KVVFUSjNxNVBJRzVsdEZQ?=
+ =?utf-8?B?VVdXK1hKNzkvQ1MxUm1ZclFhUko2NkJUMTNhYVR4VlBFemMrTFhlWTRNVUU4?=
+ =?utf-8?B?TjlkUlNvMWJDTWgvTXIxTFFUTG1UTldURUNJTFlESm44dDFBVHZlK2dIUEgw?=
+ =?utf-8?B?OXpub2tYOXgxVmIrR1ZVTXBHUWhOQllpMW9hQWRwMTRwOWRaQ2Y0OWM4ZTFv?=
+ =?utf-8?B?bzdGZTN3cTZmS2kyeHVsdVdDQkVGK2tYbkJQTFVaNDZSeUp2VUZBVnJsdTND?=
+ =?utf-8?B?VDR2T1VqSVlFb042emxnQUU1Zk5RdzMrOUFwbzBuV1BMRlczbnN5T0lvKzJ6?=
+ =?utf-8?B?UmdSRGVPcStKbll0WUoxY09ESnB3WUtzMXVyV1BKVG9ScnRlN29kWWhZVzNR?=
+ =?utf-8?B?cldwR3JYZzdvbFU2alVXZTJkOWRuaFNRcSt0bFpPckZwamx4QXhnWTRQMWlI?=
+ =?utf-8?B?VE9HQUZVaWpOeVBrNE9LZXhuRStGdWpySVhyckJkQjZVcU85LzI0bGx1RGlL?=
+ =?utf-8?B?NzJ0eG5vQzZVOFVoZlppdXFBL08yRDhiYVlxMUVJQ3ViSTgraFJDSmdsUjRF?=
+ =?utf-8?B?NjlCMWdLUHZzUisyemt4WHZiTjUyck96YTdQVWI3KzZhOXhLNEpXY2dqMlEx?=
+ =?utf-8?B?RWEvaXVodUMzSG5PdlJYM0hxS2FoWGU2NVRPQVdWQkZXVnRSakliMFBtNEg2?=
+ =?utf-8?B?ck1UY1lmRHYxNzhNWEVhb0wwcG9za1pubjFCRkFnYVZsZEdrSGk1WWN2WHQ2?=
+ =?utf-8?B?b1ViekpMcUFDY21Ma2lMdmNnT0NpMEZQdVpZUjhGajNCRGlhZjFqUS85QldD?=
+ =?utf-8?B?WEZFd3JEK3JoYUJSMVVKeGNkanlSeHdzYnZBMEtzVG1KRFF6VkVDanpwekN2?=
+ =?utf-8?B?dFhyVG1OWmVtYWxpSmNKUmhnaHgxNTV4eURSWjQ3NGhCSzRKK2ZIOFRBLy9h?=
+ =?utf-8?B?bjdsS1VNaWtVSGwrMVAwVjM1MlY5UTh3Skp5SkMrbWxPamtRL1Q2WG1YUGl1?=
+ =?utf-8?B?SGliWklPTVlvMFc1eDk3OTJnOXBhZnQyRjFzNmxTektvVkFnODBCTHhRPT0=?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V2pqSkVjTklVTFJjY0Y2SzdtNk9IUFoxcmEzbGg5dVQ5RDljQSsxMTJKYjB6?=
+ =?utf-8?B?YmFYWlc0UEV0UFBLTlZwa0FZMmdtdlg4L0QvSjE3QlExcGY5dzRwdDYyNXFX?=
+ =?utf-8?B?MWJjWWlKOGc0RTZjZjZrbVBWSk9rL1QrSWJaTmc3WGpFN0lRT2Y4TkpaUkRC?=
+ =?utf-8?B?RHE0VFNRWUdSZDljUlQ1eG1oOUpKOWQrSnFJaG1abWlwaTd0SU9JTDFaRTJu?=
+ =?utf-8?B?MUdTV1hHWThRcU1DTVFpN1o5Q2IrR3J6Qy9GeXEvS1JxNm93RHVvYWc2QWdH?=
+ =?utf-8?B?Qm9hL1dISzhPdVMyRmMyUm5odjBUeFZYbEplSGEyS05ua0JIcWVvbXFjUVhY?=
+ =?utf-8?B?bEVwVW9pTTZNNjdDZi9vOHBJTWh4WThWOTN1ZFFJS2Z0bnNabXNzN1RFTUNG?=
+ =?utf-8?B?NDMxSlE4SGJhS1BueHplWTRJZUpnRnlFUjJxTExjUjVnV0VPMS9EV1pxTm82?=
+ =?utf-8?B?czU0RnBieTJSRyt6czZpTkVHVTczdzhvaFIxWjhLWEp1TEJhdXBYSWlOZ01J?=
+ =?utf-8?B?Y2hZSTRnL0VIN3hOZ0VIcmJFTnpvaEQyeXo3UUVKbTlEM3FlaWNmcjEwT0J0?=
+ =?utf-8?B?K3JFalBpNFdOUjNLTmZFNXNGVUQrbVIyMVFLQ09qWHhpUUtiay9MTWxITTVG?=
+ =?utf-8?B?K2RWaTN2Z2c3RVQyQWMyRzh6ZXFFblhtdlFyT1RhaHdsejVNcUYrN2FyTnhy?=
+ =?utf-8?B?c3YwRlMwOGFIM0ZDRG5zandlT002Zi8vWUVQRUd4U252WnQ5WFQramlEcGZk?=
+ =?utf-8?B?WEIyemhnY0ZYaFJDVUgveU0zMkF0cFpKSWxLTUFJRUNsQnJPZ1JXU0ZiKzhG?=
+ =?utf-8?B?UDlONG9FK3FralUwV3NDT3BlSVJiRXNIQlZPc2I5TmpwTVY5dEpvUWdtL2d0?=
+ =?utf-8?B?aExMc08xanJ5VTdkZUErNldrbGVieHNldUMrRnNlMVp3Y0REZi8rdXJvTkUr?=
+ =?utf-8?B?aElMQm1YMW41ZHBLOFE5b2pEQnFQRlJFNFluM2JEalpNbXpiYytGNGtWRzI0?=
+ =?utf-8?B?Z09Mb2dqMFM4bDhqaW1pNmhXZjQ3WlF1d1A0QmJmWDh2T3dTZHcrOEpwYmVL?=
+ =?utf-8?B?S1FFREJGNHFIYUk4bFJqK3JPOGZrWTZFQVg5WmxvVUxxSGd6R2EvamtMd2p5?=
+ =?utf-8?B?VzlPT1h0cmprRWtQb1NQVnE5K2h3ZVMrYXlBZDJJM3JYenlzbG5Ia3UyeFJS?=
+ =?utf-8?B?ZUtQY3NwYVE1TkR4Y0NlaXdYZmwwNmNtYkNZY29tMFJnY3F6NWJ1cUdqbVYr?=
+ =?utf-8?B?bGZBT2ZaSDRZZHNqdkdNdTFoaHY2cTFkQktnUFBvMU12aWMzSUVZWXZFV0Zl?=
+ =?utf-8?B?SzI5M01KV0MwWE9ULzcvemFlTi9tV2JPOTlaRVFza0FaRnRRTERvQjFvZm4z?=
+ =?utf-8?B?Q1RHdjJHdUhEcjlaUjZ6anlPb2RPamFpdEJsQlBCTmFSdXE2bzRTRTVnTGFO?=
+ =?utf-8?B?VlNCeVErend1bVpjUHFyTGlZZTlrdHlmcU5XVlZJWW1LVGdlWGRPTjQyTE9I?=
+ =?utf-8?B?NjA2bU1zUTVvT0RuN1g4bk54RnVBMTVFaXpuVFREOWNTMUxVZWlDalUxSUU0?=
+ =?utf-8?B?cSs5YWIzYkxZVlhxNWZDQ3Y5TUZiWHh3R1FDempSWm9OY20xYnZYTkxadDlr?=
+ =?utf-8?B?MnFXSkx1OVVPVlUxaG5tYW44Z2hNTkgwWjZlZGJ5L2VSR2NsNUlEQ0JJVXRN?=
+ =?utf-8?B?bEplQ2NwQ2ZBSGM0Q3pYazFqU29ESnd0Vnd2MUJEV0pkQTJBQXI1WVJXbi9n?=
+ =?utf-8?Q?G88YD4JqgqCadJeLGU=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3c4a47ba-efad-4b08-bc22-08dd565ff6e0
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR01MB4527.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 12:20:32.4914
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR01MB6080
 
-Current name of coresight component's folder consists of prefix of
-the device and the id in the device list. When run 'ls' command,
-we can get the register address of the device. Take CTI for example,
-if we want to set the config for modem CTI, but we can't know which
-CTI is modem CTI from all current information.
 
-cti_sys0 -> ../../../devices/platform/soc@0/138f0000.cti/cti_sys0
-cti_sys1 -> ../../../devices/platform/soc@0/13900000.cti/cti_sys1
 
-Add label to show hardware context information of each coresight
-device. There will be a sysfs node label in each device folder.
+On 1/23/25 13:51, Jiwei Sun wrote:
+> From: Jiwei Sun <sunjw10@lenovo.com>
+> 
+> Since commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set
+> PCIe Link Speed"), there are two potential issues in the function
+> pcie_failed_link_retrain().
+> 
+> (1) The macro PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() just
+> use the link speed field of the registers. However, there are many other
+> different function fields in the Link Control 2 Register or the Link
+> Capabilities Register. If the register value is directly used by the two
+> macros, it may cause getting an error link speed value (PCI_SPEED_UNKNOWN).
+> 
+> (2) In the pcie_failed_link_retrain(), the local variable lnkctl2 is not
+> changed after reading from PCI_EXP_LNKCTL2. It might cause that the
+> removing 2.5GT/s downstream link speed restriction codes are not executed.
+> 
+> In order to avoid the above-mentioned potential issues, only keep link
+> speed field of the two registers before using and reread the Link Control 2
+> Register before using.
+> 
+> This series focuses on the first patch of the original series [1]. The
+> second one of the original series will submitted via the other single
+> patch.
+> 
+> [1] https://lore.kernel.org/linux-pci/tencent_DD9CBE5B44210B43A04EF8DAF52506A08509@qq.com/
+> ---
+> v4 changes:
+>  - rename the variable name in the macro
+> 
+> v3 changes:
+>  - add fix tag in the commit messages of first patch
+>  - add an empty line after the local variable definition in the macro
+>  - adjust the position of reading the Link Control 2 register in the code
+> 
+> v2 changes:
+>  - divide the two issues into different patches
+>  - get fixed inside the macros
+> 
+> Jiwei Sun (2):
+>   PCI: Fix the wrong reading of register fields
+>   PCI: Adjust the position of reading the Link Control 2 register
+> 
+>  drivers/pci/pci.h    | 32 +++++++++++++++++++-------------
+>  drivers/pci/quirks.c |  6 ++++--
+>  2 files changed, 23 insertions(+), 15 deletions(-)
+> 
 
-cat /sys/bus/coresight/devices/cti_sys0/label
+Gentle ping.
 
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
----
- .../devicetree/bindings/arm/arm,coresight-cti.yaml          | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-dummy-sink.yaml   | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-dummy-source.yaml | 6 ++++++
- .../bindings/arm/arm,coresight-dynamic-funnel.yaml          | 6 ++++++
- .../bindings/arm/arm,coresight-dynamic-replicator.yaml      | 6 ++++++
- .../bindings/arm/arm,coresight-static-funnel.yaml           | 6 ++++++
- .../bindings/arm/arm,coresight-static-replicator.yaml       | 6 ++++++
- .../devicetree/bindings/arm/arm,coresight-tmc.yaml          | 6 ++++++
- .../devicetree/bindings/arm/qcom,coresight-tpda.yaml        | 6 ++++++
- .../devicetree/bindings/arm/qcom,coresight-tpdm.yaml        | 6 ++++++
- 10 files changed, 60 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-index 2d5545a2b49c..5ca6d3d313a3 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-cti.yaml
-@@ -98,6 +98,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   arm,cti-ctm-id:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description:
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-index 08b89b62c505..bc82cd1f3595 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-sink.yaml
-@@ -39,6 +39,12 @@ properties:
-     enum:
-       - arm,coresight-dummy-sink
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-index 742dc4e25d3b..3010055d5ad6 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dummy-source.yaml
-@@ -38,6 +38,12 @@ properties:
-     enum:
-       - arm,coresight-dummy-source
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   arm,static-trace-id:
-     description: If dummy source needs static id support, use this to set trace id.
-     $ref: /schemas/types.yaml#/definitions/uint32
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-index 44a1041cb0fc..30776610d4b4 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-funnel.yaml
-@@ -57,6 +57,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-index 03792e9bd97a..178a3861ee29 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-dynamic-replicator.yaml
-@@ -54,6 +54,12 @@ properties:
-       - const: apb_pclk
-       - const: atclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   power-domains:
-     maxItems: 1
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-index cc8c3baa79b4..39b291909cc4 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-funnel.yaml
-@@ -30,6 +30,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-index a6f793ea03b6..022a1097af3c 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-static-replicator.yaml
-@@ -30,6 +30,12 @@ properties:
-   power-domains:
-     maxItems: 1
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     $ref: /schemas/graph.yaml#/properties/ports
-     additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-index 4787d7c6bac2..6a37ebaf474b 100644
---- a/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-+++ b/Documentation/devicetree/bindings/arm/arm,coresight-tmc.yaml
-@@ -55,6 +55,12 @@ properties:
-       - const: apb_pclk
-       - const: atclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   iommus:
-     maxItems: 1
- 
-diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-index 76163abed655..986b9b4f360d 100644
---- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpda.yaml
-@@ -65,6 +65,12 @@ properties:
-     items:
-       - const: apb_pclk
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   in-ports:
-     description: |
-       Input connections from TPDM to TPDA
-diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-index 8eec07d9d454..59e533720bdd 100644
---- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
-@@ -77,6 +77,12 @@ properties:
-     minimum: 0
-     maximum: 32
- 
-+  label:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description:
-+      Define the label which can describe what kind of HW or system the
-+      coresight device belongs to.
-+
-   clocks:
-     maxItems: 1
- 
--- 
-2.25.1
-
+Thanks,
+Regards,
+Jiwei
