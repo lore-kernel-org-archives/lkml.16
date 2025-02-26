@@ -1,118 +1,83 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93762222582;
-	Wed, 26 Feb 2025 15:10:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988BB22332C
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:11:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582641; cv=none; b=oy7gKnQglOsBf9Ja3hbsJ0wom2LsRuIjEgJ8mbF+Cpsnns5BPzsoeWjBsmnFbe69JGIis6Hcpd9n7PkAaGIMkliVBK9V84FNFk69kqqCzmWxBa0FokuvV+8gX8y1pOP6vj/8pTSNCiFmVZ8mmSZcTp2XzU+UV368rnfg91qJKGg=
+	t=1740582681; cv=none; b=KZqVt+rHBSZAP0FXpCytnksjW+9iOFJyrJ07ncklin5IMvvhCkIokMTuryH4vnpzE4Y7U3+uHlpXVWqKUejVUCJx9ud/nXaKBYmo8vcfXs3zekl/Px/PsNoz7t6E5JY4Xr76lzA25q1oJlMEellPhbIeeS7zitEMj69cWiIBDYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582641; c=relaxed/simple;
-	bh=YolhIxlnD/KFo71BB2N1+kGv0r3k8mAuWJLh1TvzXDY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tr7va8jpyvP2te5gycDorJZFUVqkcsqC2mHiNjdkJ0fvj+Owut1Wzhecdr3M6diZTGTVUkaA0Uwy1pdt+dK14CjE9oEjp0Axi9EeuNOGItXhiJ9Mgx7blpPcio7GUhq5uShT19hQBlPkGP5nO057xbP15CBdZnOMnOC9gVkyq4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=TO4UsmVX; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="TO4UsmVX"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QCD3Hx012382;
-	Wed, 26 Feb 2025 16:10:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	8ewL/+uVM2seWyrZlyz4H0RFQuaYKzC45+3Da4nH/t0=; b=TO4UsmVXLWNtMv4Z
-	Yh9qIQNeRvGI9qcLvgtzAb3wZNmt6WdJ8e9aatcrI1BVtx7+grrEXzNPhKTnzhVo
-	8UkQFSfHTBz0XIsGcdK1HqRENglIQ6g5M/v9ljtvMgiT2uTLAXvJ59kmodhREVpv
-	qWagnLPoK48zABDtsyT2/f79aAXq570oMn6ibK/hbcXyf69i8/RLhtktR/BQFIFW
-	zjJ/jIm38zrlCZM6gIvydsf1R5DiynJGK/1ER8JsFsQcOMVaoM7bq/a+wsBhKafZ
-	J3N1AyuqpojgVEBX6rLC3tT1Spflz6IgtpyH3T/9zQvIxwVYKSd4iSgSchm4W6Yr
-	OHMImQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv5a9g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 16:10:21 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4DAF1400BB;
-	Wed, 26 Feb 2025 16:08:55 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C731C5792D9;
-	Wed, 26 Feb 2025 14:24:54 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 14:24:54 +0100
-Message-ID: <2c8683f7-2c1c-4e18-9f76-53c528029b40@foss.st.com>
-Date: Wed, 26 Feb 2025 14:24:53 +0100
+	s=arc-20240116; t=1740582681; c=relaxed/simple;
+	bh=F5MHjnxjp60UbX7C7VXPZhdokYMbjfeRTKKE56j9AOw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ABfTVakVTc5MNKl18Qpb5QmNtn3CYC4WoXH8O8bXL7CiqEabIHZkwOk0I6ictnks1N/c8S7o5vMilCKsLaXNbpKDstSx/9WH5cOkxX7TZ5p1W97UfN9eZz0rS0jBwdjEEAQOIeOh9w/Wcabdej3KUgrjyH9yZQ16scMu6hwtbpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d18a1a0f0eso136576775ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:11:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740582679; x=1741187479;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/dLauZLjtD1/TVsQ0moWTJx5/4WHIVlZCeig0SlGWPs=;
+        b=QLtbFlwjtlExWJ98Wt/OsNBdyeNW57gK7EVfnCRTAt24uXuk2Tq+gSXFnHXzel++Ih
+         yCQwhbqVaRXC4yBZKEeInn035uOz9TbnzszQtQIaIqPiBhUzVe8sVFJx34iTzbI28ssL
+         Fg2pcSei6HQr7aUCxR9dsoYE43ZnvCFI+om4+QIgy4t51WTPDrN5M5QxkYPA6X8tQiT+
+         l0pqfec1gZ3BiiDJUzrPLHWsVQ6h4rSDE6pEHt4QD3t1JnnC8Rcaf1QnlKZ8LEF/DZzB
+         Imc9JIo9tBhp+2bvcIQfrL9N8C3ptwu2umZYJi1GWZwLcxNVjENRivB54xuM8XoAXZZA
+         1LRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV+4WjmQA72YJkMpWuQexKgs5AvBSooyW7vIoa3HCMmO4Pd4Ju1h3rwJ60wGBUKTN/oeh4fZMYgbp6YULA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPoILET4kscGJTFpOeUhrjyze/I1hj5MLbAg5Pc9FK7rXfEyhi
+	xTwCgflZa8fXa7pJwn4BymUXCIx8Z0jdyrATJk2G21D4tEsjbTo7f6BvWdeBlmbqoKEkUcRB4Rw
+	GXwr2dolIQ88GZ6HUXxvrzcAPmqlxZlAXVN+UlTrEvNukCYOOAqRhctU=
+X-Google-Smtp-Source: AGHT+IFWNkOZPpbWaIscX0T93fyWvSpD2MSpDIArX7UaxaX13x6kE4c5nSkLpJPQdJ+/g0COYhrtnDi65vQXePfzfrS1M6ldb2DK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/4] Add support for Priva E-Measuringbox board
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Woojung Huh
-	<woojung.huh@microchip.com>,
-        Andrew Lunn <andrew+netdev@lunn.ch>
-CC: <kernel@pengutronix.de>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20250203085820.609176-1-o.rempel@pengutronix.de>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20250203085820.609176-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Received: by 2002:a05:6e02:1a64:b0:3d1:9cee:3d1d with SMTP id
+ e9e14a558f8ab-3d3d1fa94camr44865315ab.19.1740582678784; Wed, 26 Feb 2025
+ 07:11:18 -0800 (PST)
+Date: Wed, 26 Feb 2025 07:11:18 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bf2f16.050a0220.1ebef.0020.GAE@google.com>
+Subject: [syzbot] Monthly wireguard report (Feb 2025)
+From: syzbot <syzbot+list4d08105289e0b54474d4@syzkaller.appspotmail.com>
+To: Jason@zx2c4.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi
+Hello wireguard maintainers/developers,
 
-On 2/3/25 09:58, Oleksij Rempel wrote:
-> This patch series introduces support for the Priva E-Measuringbox board
-> based on the ST STM32MP133 SoC. The set includes all the necessary
-> changes for device tree bindings, vendor prefixes, thermal support, and
-> board-specific devicetree to pass devicetree validation and checkpatch
-> tests.
-> 
-> changes v2:
-> - drop: dt-bindings: net: Add TI DP83TD510 10BaseT1L PHY
-> 
-> Oleksij Rempel (2):
->    dt-bindings: vendor-prefixes: Add prefix for Priva
->    dt-bindings: arm: stm32: Add Priva E-Measuringbox board
-> 
-> Roan van Dijk (2):
->    arm: dts: stm32: Add thermal support for STM32MP131
->    arm: dts: stm32: Add Priva E-Measuringbox devicetree
-> 
->   .../devicetree/bindings/arm/stm32/stm32.yaml  |   6 +
->   .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->   arch/arm/boot/dts/st/Makefile                 |   1 +
->   arch/arm/boot/dts/st/stm32mp131.dtsi          |  35 ++
->   arch/arm/boot/dts/st/stm32mp133c-prihmb.dts   | 496 ++++++++++++++++++
->   5 files changed, 540 insertions(+)
->   create mode 100644 arch/arm/boot/dts/st/stm32mp133c-prihmb.dts
-> 
-> --
-> 2.39.5
-> 
+This is a 31-day syzbot report for the wireguard subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/wireguard
 
-Series applied on stm32-next.
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 5 issues are still open and 19 have already been fixed.
 
-Cheers
-Alex
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 356     No    INFO: task hung in wg_netns_pre_exit (5)
+                  https://syzkaller.appspot.com/bug?extid=f2fbf7478a35a94c8b7c
+<2> 125     No    INFO: task hung in netdev_run_todo (4)
+                  https://syzkaller.appspot.com/bug?extid=894cca71fa925aabfdb2
+<3> 121     Yes   INFO: task hung in wg_destruct (2)
+                  https://syzkaller.appspot.com/bug?extid=7da6c19dc528c2ebc612
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
