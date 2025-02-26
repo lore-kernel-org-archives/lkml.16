@@ -1,176 +1,86 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6018621CA0B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947B118BC3B;
+	Wed, 26 Feb 2025 15:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584698; cv=none; b=M60WXxtCjJjiuoo744WQwPVwQe3Uqq59i03KlZ18v3tVojCGpFBmLTlyNu4gRkFC//Xk8ZCnu+dAgvp9X/aCEz/Dosacdba+DTLf3LZx0LPselH0fAUf/SP4ZZo7mDRKWOOUwSn6izU8SJXxVpy96amUERsfVqBZaooWsxAnA04=
+	t=1740584711; cv=none; b=k/c6h5QlTLHR+yDkCnLSxU5nlG1bIphVtar0J4gQazPBlJSmYcGJqayGJDOFQmD7PmT3T9e2Hp8dKAgQfgZoc3K/Vwlg4oeN3UTetK2n1dzI6a35CMInIyFFxhyLxwSGiA4qv0eGs3b2lJP3k1rn8TdYzQV+bVlNv8FJjtTkBZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584698; c=relaxed/simple;
-	bh=COgq8LpyrFC8DNQstL1tTvqWX3TQYT2DrGFVJrf/W54=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iucFHUb38gU1YedY3dzpdSHzrUBxCAxi+SaQhfCd1GCHvEtrQKLbhUlN+jE78IKkbAPzdeNYmd+0z8qPDEn2XGnPJ5TOgaWJIixleGnILJCUw/ZvTNkoyDg5nE6gY+OuoiomuLNWE9pXgBUD4M9MGYNAKFYohnzJSenWHkaew5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YkCGpM5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KLEXvqrj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=YkCGpM5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KLEXvqrj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740584711; c=relaxed/simple;
+	bh=JAsKYRCmpSi3tnXTqqLf4H3CovqP6Od5db5bBj4KatA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=QrwM1NnII137aXS8FG9yZvbyj9ysdU9JwMt0O3inLhfxxfPO3sNnN4aRTCZw13CWDM53j5TWuleUmlVt/KPBuN+S13kdfjjg6ScwXORi6+Vx0FgicRT8RP+zVHxInFUfCtutkDkwNawKYhN4Ube5UlkzAoPUnzfpWM/K68WA/rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Kv9/3dWd; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ixIkh3m0; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YkCGpM5I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KLEXvqrj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="YkCGpM5I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KLEXvqrj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 23D841F387;
-	Wed, 26 Feb 2025 15:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740584695; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Kv9/3dWd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ixIkh3m0"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740584707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WT/e1NPqFVPRk0VeexpY3gu2bFX/ah2sTyCgZLZp0Ds=;
-	b=YkCGpM5I9acZohiD9dnyxFl64Ab+0li8mwf7b2KvVBM3/w/f0Z577nF1/U6vroigXHI9Iu
-	NgYQhfqnbhQrHt+K4a07w8DF2wS/yJXcptwRqYcn8SBRgJQ37jEoBthT/Zp/1CSqFKpswN
-	+LSKgt5zFDI07eUh2eHHTHvtGP/bv50=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740584695;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	bh=s9YAfmlQr9Pd5bXVqXHzhDo0hk63Ti5/f8ktIw5AJhI=;
+	b=Kv9/3dWd+GXsGs7cU1xLIlW2zlePQy31R7G6Jy6QJFpJYBbsDogO0A4tPcqH2iqy6FlsJ+
+	YJk/B9nxmFA+MHnOA5EB5BazjUZeXo6ZO2GhQ0a2odsrE0E5pf/JF4UlNInVv+1AS14qV5
+	8SDQwtT8m3Jp50XfzUOOsnhjBuO9ZK7WHUIDQO/queig6lykW1ZfuXsqIi1NE7RNtPwL/c
+	1ubsW8nlIrnKz0QuzMEA1aFYFs2v2rCg2zxSeLSQ1ne86Cq4FQpOeD1L+HwRiy8DIZuPoc
+	uo9TcSrDqf/s5V4bB+NkfCaTvTvtKgOHTjpU0X8aujMZabOz2GZ7wsVL2CLN5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740584707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WT/e1NPqFVPRk0VeexpY3gu2bFX/ah2sTyCgZLZp0Ds=;
-	b=KLEXvqrjK4dGTbjFTELtm2VMerhUVC1+n+Vg9iuvEAcR9oQSRRAKM3xyqksiCHjvva9lW0
-	wDlMwmC/O/lo+RCA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YkCGpM5I;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=KLEXvqrj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740584695; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WT/e1NPqFVPRk0VeexpY3gu2bFX/ah2sTyCgZLZp0Ds=;
-	b=YkCGpM5I9acZohiD9dnyxFl64Ab+0li8mwf7b2KvVBM3/w/f0Z577nF1/U6vroigXHI9Iu
-	NgYQhfqnbhQrHt+K4a07w8DF2wS/yJXcptwRqYcn8SBRgJQ37jEoBthT/Zp/1CSqFKpswN
-	+LSKgt5zFDI07eUh2eHHTHvtGP/bv50=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740584695;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WT/e1NPqFVPRk0VeexpY3gu2bFX/ah2sTyCgZLZp0Ds=;
-	b=KLEXvqrjK4dGTbjFTELtm2VMerhUVC1+n+Vg9iuvEAcR9oQSRRAKM3xyqksiCHjvva9lW0
-	wDlMwmC/O/lo+RCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0020413A53;
-	Wed, 26 Feb 2025 15:44:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xn9bO/Y2v2e0XwAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 26 Feb 2025 15:44:54 +0000
-Message-ID: <8899bfa5-bd8b-4d34-a149-40f30d12cb1e@suse.cz>
-Date: Wed, 26 Feb 2025 16:46:38 +0100
+	bh=s9YAfmlQr9Pd5bXVqXHzhDo0hk63Ti5/f8ktIw5AJhI=;
+	b=ixIkh3m0apqeFPy9Qpy7CjIrvlJ4/WlAEuk0T/7wkqfv/ktP1pgsZB5HNeC5O7xJsKatxe
+	FnzDFatK/PE7L1DA==
+To: Yixun Lan <dlan@gentoo.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Alex
+ Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang
+ <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, Inochi Amaoto
+ <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, Meng Zhang
+ <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Subject: Re: [PATCH v7 0/4] riscv: spacemit: add gpio support for K1 SoC
+In-Reply-To: <20250226135635-GYA45740@gentoo>
+References: <20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org>
+ <20250226010108-GYA44567@gentoo>
+ <CACRpkdY7nzzu3-+FwpSYqmX+O559LoXHiqcvP2OxkhX+9f-3wg@mail.gmail.com>
+ <20250226115957-GYA45508@gentoo> <20250226135635-GYA45740@gentoo>
+Date: Wed, 26 Feb 2025 16:45:07 +0100
+Message-ID: <87tt8gemm4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from
- kmem_cache_destroy()
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Keith Busch <keith.busch@gmail.com>, "Paul E. McKenney"
- <paulmck@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
- Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Jakub Kicinski <kuba@kernel.org>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
- Jann Horn <jannh@google.com>, Mateusz Guzik <mjguzik@gmail.com>,
- linux-nvme@lists.infradead.org, leitao@debian.org
-References: <2811463a-751f-4443-9125-02628dc315d9@suse.cz>
- <Z7xbrnP8kTQKYO6T@pc636> <ef97428b-f6e7-481e-b47e-375cc76653ad@suse.cz>
- <Z73p2lRwKagaoUnP@kbusch-mbp>
- <CAOSXXT6-oWjKPV1hzXa5Ra4SPQg0L_FvxCPM0Sh0Yk6X90h0Sw@mail.gmail.com>
- <Z74Av6tlSOqcfb-q@pc636> <Z74KHyGGMzkhx5f-@pc636>
- <8d7aabb2-2836-4c09-9fc7-8bde271e7f23@suse.cz> <Z78lpfLFvNxjoTNf@pc636>
- <93f03922-3d3a-4204-89c1-90ea4e1fc217@suse.cz> <Z782eoh-d48KXhTn@pc636>
-From: Vlastimil Babka <vbabka@suse.cz>
-Content-Language: en-US
-In-Reply-To: <Z782eoh-d48KXhTn@pc636>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 23D841F387
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_TO(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[gmail.com,kernel.org,joelfernandes.org,joshtriplett.org,linux.com,google.com,goodmis.org,efficios.com,inria.fr,zx2c4.com,linux-foundation.org,linux.dev,kvack.org,vger.kernel.org,googlegroups.com,lists.infradead.org,debian.org];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLctujmen6hjyrx8fu4drawbuj)];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain
 
-On 2/26/25 4:42 PM, Uladzislau Rezki wrote:
-> On Wed, Feb 26, 2025 at 03:36:39PM +0100, Vlastimil Babka wrote:
->> On 2/26/25 3:31 PM, Uladzislau Rezki wrote:
->>> On Wed, Feb 26, 2025 at 11:59:53AM +0100, Vlastimil Babka wrote:
->>>> On 2/25/25 7:21 PM, Uladzislau Rezki wrote:
->>>>>>
->>>>> WQ_MEM_RECLAIM-patch fixes this for me:
->>>>
->>>> Sounds good, can you send a formal patch then?
->>>>
->>> Do you mean both? Test case and fix? I can :)
->>
->> Sure, but only the fix is for stable. Thanks!
->>
-> It is taken by Gregg if there is a Fixes tag in the commit.
-> What do you mean: the fix is for stable? The current Linus
-> tree is not suffering from this?
+On Wed, Feb 26 2025 at 13:56, Yixun Lan wrote:
+> sounds we need to implement .select() or .match() in irq_domain_ops,
+> then find the irq_domain.. here is a prototype version 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 995e5e0ec2db..c4d18267e86e 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -553,7 +553,7 @@ struct irq_domain *irq_find_matching_fwspec(struct irq_fwspec *fwspec,
+>  	 */
+>  	mutex_lock(&irq_domain_mutex);
+>  	list_for_each_entry(h, &irq_domain_list, link) {
+> -		if (h->ops->select && bus_token != DOMAIN_BUS_ANY)
+> +		if (h->ops->select /* && bus_token != DOMAIN_BUS_ANY */)
 
-I just meant the fix should be a Cc: stable, and the testcase not.
-mm/ has an exception from "anything with Fixes: can be taken to stable"
+This breaks existing usage and reintroduces the regression, which was
+fixed with the commit which added the bus token check....
 
-> 
-> --
-> Uladzislau Rezki
+Thanks,
 
+        tglx
