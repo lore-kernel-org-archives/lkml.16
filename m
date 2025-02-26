@@ -1,90 +1,280 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA01215772
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:30:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61D017BB35;
+	Wed, 26 Feb 2025 11:31:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740569450; cv=none; b=gU2ltdfbguOOdUw8bC5vm0uk7FAHdqC6/5egSDbTSydG+E9j8x9OssTTbcWzewDMbGt1z8k3ACitqyA9gzi5ngx5md5vIDMUUo8XzIM3r9ncMhlLx2IMxQP042YlLssgW5tkLiaNq7l/pHtPkTtcWAoEYnp80X74QL/TR4CtseA=
+	t=1740569477; cv=none; b=W+lSOxDaEefh1d99yT1aVNT8uDr/5FrvvrgG3j8iYDESVvEV/SGn8bm0Xf/JduXDERgsDnE624ifWIqsrkKZIVCUg1uN+yeAoa7+HJVMC4NRoZ0dSDRuufnquLFA6HAdnVgQjHOOwPF4pDuCUATidVl/+xgN2QLzQMwNmQZEtlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740569450; c=relaxed/simple;
-	bh=FO6z9XAnbl99r5mAf5xNI8wGp7r/Mn9K4KKIHeLztyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OZyuf+5ThP1A8OJc2RYHk4WHvH0SqXGBCEApIY7vgkCBEpC9hRA27fE7gjLvovNAug2ltMxov1wnjupZIoQZ6fP+IvLkW4Zx6ZkYA5Lk9mhLV5jEJ3Q4Y/LckaC7rvbwrMXKnQmtF7T0dYX6GnQGWFYK5Z+Tgj1GBl+YMwJ9BjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iTi5nPo2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740569477; c=relaxed/simple;
+	bh=AqaQc47KScGcVr3eESFC0LndEz0Dr5eNjmVGnvzicIk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RxeRXf//5UeowglVpZljL0lM+u/18zf0KIhQP5N4DunWHUhGcHYA1a3p25/AL2h2CEK9pOjPxTpdikjnOA+OrGmioXHSQpD4fglmyRC5UGRn1H9ZM3ud8oEVEOxdCloWO8xuYdYSsNlZlSiIAalWRTFA3QAgPyaHGf+UzHCWDpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Izt1h1lk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iTi5nPo2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740569447;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zMbwlR55IsYFkSNbcLoRNPldNYhmk+s65IhIsLBnOf8=;
-	b=iTi5nPo2kdMl47smbI29P8V01XcSPoz1+SoPgaNvsLmcMGIHyAZKFOdU7Sivdy+f288iyf
-	lDxf2Wk7TAKxMd0o9bODlhNdT6FttbpYeYrrmnZpjrIPhJ321NnqfGMZIsdSMl73gTycq/
-	9XVq2FPGQbHe1I2gPq7Qou82w7HjdEo=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-6-MOq10sPNaHoK_XgBLyrA-1; Wed,
- 26 Feb 2025 06:30:45 -0500
-X-MC-Unique: 6-MOq10sPNaHoK_XgBLyrA-1
-X-Mimecast-MFC-AGG-ID: 6-MOq10sPNaHoK_XgBLyrA_1740569444
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09A6818EB2C9;
-	Wed, 26 Feb 2025 11:30:44 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8411C180087F;
-	Wed, 26 Feb 2025 11:30:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Feb 2025 12:30:13 +0100 (CET)
-Date: Wed, 26 Feb 2025 12:30:09 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org, kernel-team@meta.com,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH perf/core] uprobes: remove too strict lockdep_assert()
- condition in hprobe_expire()
-Message-ID: <20250226113008.GA8995@redhat.com>
-References: <20250225223214.2970740-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Izt1h1lk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3D5C4CED6;
+	Wed, 26 Feb 2025 11:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740569475;
+	bh=AqaQc47KScGcVr3eESFC0LndEz0Dr5eNjmVGnvzicIk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Izt1h1lkeViZUXbX7cUqtNidC2hDYndE19VlJ7nGxVdqiwfFPZNThnALtoJ1mRWTv
+	 FE9n1R8I9Mgvq/nb+A53gSSg7gD4Ds67aUoWH3FCViVhbUq86OVIoPt4kXRp+YkWpS
+	 vGa7GoOWEQ93bedM7Y/MQQSShgCM47hyqZ7eN3RLwUIJGWW1HVAGtni1ppEqEtgsR4
+	 B1I7LDg6NM+yebNMf71VyoizsgFUp/Av92aKxUzQ0Dv0pXEe/ZMQ4XyhjWcYMySBoa
+	 ASmUSChsBrLtBLtXPu24jxH4NJuPkpv2+W2LVXjUFOJHPd9YkEdhJXn65VJMkJAVgs
+	 Pxj052z2bRgrQ==
+Date: Wed, 26 Feb 2025 12:31:07 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Michael S . Tsirkin"
+ <mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>,
+ <qemu-arm@nongnu.org>, <qemu-devel@nongnu.org>, Philippe =?UTF-8?B?TWF0?=
+ =?UTF-8?B?aGlldS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
+ <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
+ <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
+ <marcel.apfelbaum@gmail.com>, "Markus Armbruster" <armbru@redhat.com>,
+ Michael Roth <michael.roth@amd.com>, "Paolo Bonzini" <pbonzini@redhat.com>,
+ Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
+ <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
+ <zhao1.liu@intel.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH v3 00/14] Change ghes to use HEST-based offsets and add
+ support for error inject
+Message-ID: <20250226123107.0cdb2e17@foz.lan>
+In-Reply-To: <20250226122303.0131ce8b@foz.lan>
+References: <cover.1738345063.git.mchehab+huawei@kernel.org>
+	<20250203110934.000038d8@huawei.com>
+	<20250203162236.7d5872ff@imammedo.users.ipa.redhat.com>
+	<20250221073823.061a1039@foz.lan>
+	<20250221102127.000059e6@huawei.com>
+	<20250225110115.6090e416@imammedo.users.ipa.redhat.com>
+	<20250226105628.7e60f952@foz.lan>
+	<20250226122303.0131ce8b@foz.lan>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225223214.2970740-1-andrii@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 02/25, Andrii Nakryiko wrote:
->
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -762,10 +762,14 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
->  	enum hprobe_state hstate;
->
->  	/*
-> -	 * return_instance's hprobe is protected by RCU.
-> -	 * Underlying uprobe is itself protected from reuse by SRCU.
-> +	 * Caller should guarantee that return_instance is not going to be
-> +	 * freed from under us. This can be achieved either through holding
-> +	 * rcu_read_lock() or by owning return_instance in the first place.
-> +	 *
-> +	 * Underlying uprobe is itself protected from reuse by SRCU, so ensure
-> +	 * SRCU lock is held properly.
->  	 */
-> -	lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
-> +	lockdep_assert(srcu_read_lock_held(&uretprobes_srcu));
+Em Wed, 26 Feb 2025 12:23:03 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> Em Wed, 26 Feb 2025 10:56:28 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+> 
+> > Em Tue, 25 Feb 2025 11:01:15 +0100
+> > Igor Mammedov <imammedo@redhat.com> escreveu:
+> >   
+> > > On Fri, 21 Feb 2025 10:21:27 +0000
+> > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> > >     
+> > > > On Fri, 21 Feb 2025 07:38:23 +0100
+> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > >       
+> > > > > Em Mon, 3 Feb 2025 16:22:36 +0100
+> > > > > Igor Mammedov <imammedo@redhat.com> escreveu:
+> > > > >         
+> > > > > > On Mon, 3 Feb 2025 11:09:34 +0000
+> > > > > > Jonathan Cameron <Jonathan.Cameron@huawei.com> wrote:
+> > > > > >           
+> > > > > > > On Fri, 31 Jan 2025 18:42:41 +0100
+> > > > > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > > > > >             
+> > > > > > > > Now that the ghes preparation patches were merged, let's add support
+> > > > > > > > for error injection.
+> > > > > > > > 
+> > > > > > > > On this series, the first 6 patches chang to the math used to calculate offsets at HEST
+> > > > > > > > table and hardware_error firmware file, together with its migration code. Migration tested
+> > > > > > > > with both latest QEMU released kernel and upstream, on both directions.
+> > > > > > > > 
+> > > > > > > > The next patches add a new QAPI to allow injecting GHESv2 errors, and a script using such QAPI
+> > > > > > > >    to inject ARM Processor Error records.
+> > > > > > > > 
+> > > > > > > > If I'm counting well, this is the 19th submission of my error inject patches.              
+> > > > > > > 
+> > > > > > > Looks good to me. All remaining trivial things are in the category
+> > > > > > > of things to consider only if you are doing another spin.  The code
+> > > > > > > ends up how I'd like it at the end of the series anyway, just
+> > > > > > > a question of the precise path to that state!            
+> > > > > > 
+> > > > > > if you look at series as a whole it's more or less fine (I guess you
+> > > > > > and me got used to it)
+> > > > > > 
+> > > > > > however if you take it patch by patch (as if you've never seen it)
+> > > > > > ordering is messed up (the same would apply to everyone after a while
+> > > > > > when it's forgotten)
+> > > > > > 
+> > > > > > So I'd strongly suggest to restructure the series (especially 2-6/14).
+> > > > > > re sum up my comments wrt ordering:
+> > > > > > 
+> > > > > > 0  add testcase for HEST table with current HEST as expected blob
+> > > > > >    (currently missing), so that we can be sure that we haven't messed
+> > > > > >    existing tables during refactoring.          
+> > > > 
+> > > > To potentially save time I think Igor is asking that before you do anything
+> > > > at all you plug the existing test hole which is that we don't test HEST
+> > > > at all.   Even after this series I think we don't test HEST.  You add
+> > > > a stub hest and exclusion but then in patch 12 the HEST stub is deleted whereas
+> > > > it should be replaced with the example data for the test.      
+> > > 
+> > > that's what I was saying.
+> > > HEST table should be in DSDT, but it's optional and one has to use
+> > > 'ras=on' option to enable that, which we aren't doing ATM.
+> > > So whatever changes are happening we aren't seeing them in tests
+> > > nor will we see any regression for the same reason.
+> > > 
+> > > While white listing tables before change should happen and then updating them
+> > > is the right thing to do, it's not sufficient since none of tests
+> > > run with 'ras' enabled, hence code is not actually executed.     
+> > 
+> > Ok. Well, again we're not modifying HEST table structure on this
+> > changeset. The only change affecting HEST is when the number of entries
+> > increased from 1 to 2.
+> > 
+> > Now, looking at bios-tables-test.c, if I got it right, I should be doing
+> > something similar to the enclosed patch, right?
+> > 
+> > If so, I have a couple of questions:
+> > 
+> > 1. from where should I get the HEST table? dumping the table from the
+> >    running VM?
+> > 
+> > 2. what values should I use to fill those variables:
+> > 
+> > 	int hest_offset = 40 /* HEST */;
+> > 	int hest_entry_size = 4;  
+> 
+> Thanks,
+> Mauro
+> 
+> As a reference, this is the HEST table before the patch series:
 
+This is the diff of the HEST table before/after this series.
+
+As already commented, the diff is basically:
+
+	-[024h 0036 004h]          Error Source Count : 00000001
+	+[024h 0036 004h]          Error Source Count : 00000002
+
+Plus the new entry for source ID 1 using notify type 7 (GPIO):
+
+	+[084h 0132 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
+	+[086h 0134 002h]                   Source Id : 0001
+	+[088h 0136 002h]           Related Source Id : FFFF
+	...
+	+[0A4h 0164 001h]                 Notify Type : 07 [GPIO]
+	...
+	+[0D0h 0208 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
+	+[0D8h 0216 008h]              Read Ack Write : 0000000000000001
+
+Complete diff follows.
+
+Regards,
+Mauro
+
+---
+
+diff -u hest-before-changes.dsl hest-after-changes.dsl
+--- hest-before-changes.dsl     2025-02-26 11:23:30.845089077 +0000
++++ hest-after-changes.dsl      2025-02-26 11:25:29.095066026 +0000
+@@ -11,16 +11,16 @@
+  */
+ 
+ [000h 0000 004h]                   Signature : "HEST"    [Hardware Error Source Table]
+-[004h 0004 004h]                Table Length : 00000084
++[004h 0004 004h]                Table Length : 000000E0
+ [008h 0008 001h]                    Revision : 01
+-[009h 0009 001h]                    Checksum : E0
++[009h 0009 001h]                    Checksum : 68
+ [00Ah 0010 006h]                      Oem ID : "BOCHS "
+ [010h 0016 008h]                Oem Table ID : "BXPC    "
+ [018h 0024 004h]                Oem Revision : 00000001
+ [01Ch 0028 004h]             Asl Compiler ID : "BXPC"
+ [020h 0032 004h]       Asl Compiler Revision : 00000001
+ 
+-[024h 0036 004h]          Error Source Count : 00000001
++[024h 0036 004h]          Error Source Count : 00000002
+ 
+ [028h 0040 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
+ [02Ah 0042 002h]                   Source Id : 0000
+@@ -55,19 +55,62 @@
+ [069h 0105 001h]                   Bit Width : 40
+ [06Ah 0106 001h]                  Bit Offset : 00
+ [06Bh 0107 001h]        Encoded Access Width : 04 [QWord Access:64]
+-[06Ch 0108 008h]                     Address : 0000000139E40008
++[06Ch 0108 008h]                     Address : 0000000139E40010
+ 
+ [074h 0116 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
+ [07Ch 0124 008h]              Read Ack Write : 0000000000000001
+ 
+-Raw Table Data: Length 132 (0x84)
++[084h 0132 002h]               Subtable Type : 000A [Generic Hardware Error Source V2]
++[086h 0134 002h]                   Source Id : 0001
++[088h 0136 002h]           Related Source Id : FFFF
++[08Ah 0138 001h]                    Reserved : 00
++[08Bh 0139 001h]                     Enabled : 01
++[08Ch 0140 004h]      Records To Preallocate : 00000001
++[090h 0144 004h]     Max Sections Per Record : 00000001
++[094h 0148 004h]         Max Raw Data Length : 00000400
++
++[098h 0152 00Ch]        Error Status Address : [Generic Address Structure]
++[098h 0152 001h]                    Space ID : 00 [SystemMemory]
++[099h 0153 001h]                   Bit Width : 40
++[09Ah 0154 001h]                  Bit Offset : 00
++[09Bh 0155 001h]        Encoded Access Width : 04 [QWord Access:64]
++[09Ch 0156 008h]                     Address : 0000000139E40008
++
++[0A4h 0164 01Ch]                      Notify : [Hardware Error Notification Structure]
++[0A4h 0164 001h]                 Notify Type : 07 [GPIO]
++[0A5h 0165 001h]               Notify Length : 1C
++[0A6h 0166 002h]  Configuration Write Enable : 0000
++[0A8h 0168 004h]                PollInterval : 00000000
++[0ACh 0172 004h]                      Vector : 00000000
++[0B0h 0176 004h]     Polling Threshold Value : 00000000
++[0B4h 0180 004h]    Polling Threshold Window : 00000000
++[0B8h 0184 004h]       Error Threshold Value : 00000000
++[0BCh 0188 004h]      Error Threshold Window : 00000000
++
++[0C0h 0192 004h]   Error Status Block Length : 00000400
++[0C4h 0196 00Ch]           Read Ack Register : [Generic Address Structure]
++[0C4h 0196 001h]                    Space ID : 00 [SystemMemory]
++[0C5h 0197 001h]                   Bit Width : 40
++[0C6h 0198 001h]                  Bit Offset : 00
++[0C7h 0199 001h]        Encoded Access Width : 04 [QWord Access:64]
++[0C8h 0200 008h]                     Address : 0000000139E40018
+ 
+-    0000: 48 45 53 54 84 00 00 00 01 E0 42 4F 43 48 53 20  // HEST......BOCHS 
++[0D0h 0208 008h]           Read Ack Preserve : FFFFFFFFFFFFFFFE
++[0D8h 0216 008h]              Read Ack Write : 0000000000000001
++
++Raw Table Data: Length 224 (0xE0)
++
++    0000: 48 45 53 54 E0 00 00 00 01 68 42 4F 43 48 53 20  // HEST.....hBOCHS 
+     0010: 42 58 50 43 20 20 20 20 01 00 00 00 42 58 50 43  // BXPC    ....BXPC
+-    0020: 01 00 00 00 01 00 00 00 0A 00 00 00 FF FF 00 01  // ................
++    0020: 01 00 00 00 02 00 00 00 0A 00 00 00 FF FF 00 01  // ................
+     0030: 01 00 00 00 01 00 00 00 00 04 00 00 00 40 00 04  // .............@..
+     0040: 00 00 E4 39 01 00 00 00 08 1C 00 00 00 00 00 00  // ...9............
+     0050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  // ................
+-    0060: 00 00 00 00 00 04 00 00 00 40 00 04 08 00 E4 39  // .........@.....9
++    0060: 00 00 00 00 00 04 00 00 00 40 00 04 10 00 E4 39  // .........@.....9
+     0070: 01 00 00 00 FE FF FF FF FF FF FF FF 01 00 00 00  // ................
+-    0080: 00 00 00 00                                      // ....
++    0080: 00 00 00 00 0A 00 01 00 FF FF 00 01 01 00 00 00  // ................
++    0090: 01 00 00 00 00 04 00 00 00 40 00 04 08 00 E4 39  // .........@.....9
++    00A0: 01 00 00 00 07 1C 00 00 00 00 00 00 00 00 00 00  // ................
++    00B0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  // ................
++    00C0: 00 04 00 00 00 40 00 04 18 00 E4 39 01 00 00 00  // .....@.....9....
++    00D0: FE FF FF FF FF FF FF FF 01 00 00 00 00 00 00 00  // ................
+
+
+Thanks,
+Mauro
