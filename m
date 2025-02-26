@@ -1,96 +1,114 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D844D192B63
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489FD198A06
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 01:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740533758; cv=none; b=DZ7zFXN1692n/pbBJYWQ5tYAGwmt5qeGQGewodDr+oUcnDrAhy2fmnuN2NiaArIeEJn40ggNN+NgPmJgwhPikUR57Y7a07NrpHFCec6gEbuRJQugNjmVYxe7atuyPG8gdM+EZ8BaXPnAM3Ao/FcGSzd1kDaJZoSoeUKGVoqArIw=
+	t=1740533844; cv=none; b=IvPwWWMrA3TgXUoTs1R9Ejh9ZlUxN8D+hkXB0WykDx8lhKLPCn7dcFIEPR/ss9B+Ko2kBx+6ydoi2GnU1PU0W6+gj6Mj1mb5llW6aCSy5jrJPM2dnu1BgZqkM0vv9sjq6GYyRctFhtFGrJKhcBEwi91QWDAlBCnvk6cmlTZrh3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740533758; c=relaxed/simple;
-	bh=+a/8Rnwq3M59jG/h6pOx1MvWKehiDVKh9LFb8+XkUcU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=koHfhijWJvSpcgc6zjobVA/6y+NjH0Mk6MUzyg0alwFZlzhlWfFKZQ3azoqnvJEKoozWxdxUcQjk6tFCP3J+RZQUbQPK9lbiqZZFdcA50F4muGaGMSzbc1b3U/YKMYUW8Q8/3JpqFJxYjygoRZ48bD81dVVsNOIerotfjR5G64E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MO3PZ/Xw; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740533844; c=relaxed/simple;
+	bh=6jMqSHCB1b/d3tIPznfvnPv5y2TPzXfyEbziUHnLOwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sZsfHP7IqCck+pFMu+aclPoJTBzEgDQS01nfKZ8JLspCq7WurTQK2kcRDk5GV4YRSeEZ+NYyI8ouwaM0nTwdp4BJdLlK9citauIlDRMrxaa/9BFdF9TrKikZAxkr4TFKALcayapOqjDjcFsAEJh8Wh4vSH1mrvPZL+ScctM/CXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kp7NLbUb; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MO3PZ/Xw"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fbff6426f5so12960450a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:35:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740533756; x=1741138556; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bwkMEQZZWa7h4K0NWv+dMOi3x/q9ujiLZV0nsTlZNA=;
-        b=MO3PZ/XwrqsIIu9qVwWotKKccrRiKZEd5f0ARTK59RvwHH0Xi91qDaaWnjf2u6RamC
-         FEszGhUW+lDA5cXSiQuV5HajExtkVaqJPFu9LJ4X4DaLaODuND7nhe15k7IRtSW29/v/
-         ZORgLclzrambUeOokxZ3GA2m1Y3GG4lqNm6uGrzJH0qWyH184cpyLbHOP2wNzwBRBOmZ
-         Hmdc6ktNq2wvy3StqfWZz3fhLIWBYRNezDat6s/H9WzrQwiLP1SAetBaYKNEP+1MjGVB
-         MrrhiHrQkETs7W4EX8dG0eMnx9mxTXLpimPRmqroJx3e4vvWc2mQ+VLthP/jlhFCgwbv
-         3JJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740533756; x=1741138556;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bwkMEQZZWa7h4K0NWv+dMOi3x/q9ujiLZV0nsTlZNA=;
-        b=F9F1xF57SIjgvQEMzjz2bG74/AzfHPSHfLUa1Na38n6FTMlZKDfUAuG7OxrTVUuI7k
-         0A+53fJmRWP4arLyi2m3xzrklLUC0TY3mxY1fspHwkEZWxGIvpfuSOYTCcyl4Rri3Gu2
-         IGRcz309wULEfjoc1MIx3imzEn7WC1V/mH5/OETutyU+cdqsfy2+YIoFk85mw9scjtdK
-         6+p2OV/hGVLC3K0I+vwruLDg+/1v8bhmetJs1/6POGHoicqc1hn+wp5iE+/jw+MtgIGO
-         jeNTK6wg2HOtz/Fmfk+BhKQvGB8Ptj00OpzOGXzk/BRQUj/o6cc5tcvddurlzR2FSB8V
-         uvrQ==
-X-Gm-Message-State: AOJu0YykyEN7V3ISDmc2n4IX9OSBfwYipMKSsk5HVwHbxxjueuGRJ9OI
-	OIktFUj4jpMnr5V9euE8mlsY64uTtsA8jKPGXd42K8M9tx24OgUPDi4IOzZlrgVNRmdLT9hprm5
-	3ag==
-X-Google-Smtp-Source: AGHT+IETvbRVrxXRHnpW+9mE2FrumQ0EMxOPE73/r92E+MK8Sttdkq2JT/HBaFrwixzCkTPTbJac7xQUoeM=
-X-Received: from pjboh3.prod.google.com ([2002:a17:90b:3a43:b0:2fc:af0c:4be])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2d0:b0:2ea:37b4:5373
- with SMTP id 98e67ed59e1d1-2fe68ada2a5mr8962899a91.10.1740533755483; Tue, 25
- Feb 2025 17:35:55 -0800 (PST)
-Date: Tue, 25 Feb 2025 17:35:54 -0800
-In-Reply-To: <20250123002422.1632517-1-kevinloughlin@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kp7NLbUb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740533840;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c6lV2O/MV07x2xCD5gRyXKU/naKq49lc8wVecRpyzJY=;
+	b=kp7NLbUbFkijnU8Nd3tRXnRzRt88xeE3r6qyYDNVsdcLu//PHlllllF9cw62u2LxU+5zBp
+	ECjKglKSRLHKZdKCdpmRA7RKSee9ZF81DFTevlbWlk7M0DsneewFBlbRtrXhJhTBYJ1e9j
+	Gyr3tKio/MAG0NQGh5i0tQCoI+cqNus=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: horms@kernel.org,
+	kuba@kernel.org
+Cc: bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	ricardo@marliere.net,
+	viro@zeniv.linux.org.uk,
+	dmantipov@yandex.ru,
+	aleksander.lobakin@intel.com,
+	linux-ppp@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
+Subject: [PATCH net-next v4 1/1] ppp: Fix KMSAN warning by initializing 2-byte header
+Date: Wed, 26 Feb 2025 09:36:58 +0800
+Message-ID: <20250226013658.891214-2-jiayuan.chen@linux.dev>
+In-Reply-To: <20250226013658.891214-1-jiayuan.chen@linux.dev>
+References: <20250226013658.891214-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250122013438.731416-1-kevinloughlin@google.com> <20250123002422.1632517-1-kevinloughlin@google.com>
-Message-ID: <Z75v-hT5SxKlqdwt@google.com>
-Subject: Re: [PATCH v5 0/2] KVM: SEV: Prefer WBNOINVD over WBINVD for cache
- maintenance efficiency
-From: Sean Christopherson <seanjc@google.com>
-To: Kevin Loughlin <kevinloughlin@google.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	pbonzini@redhat.com, kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
-	ubizjak@gmail.com, jgross@suse.com, kvm@vger.kernel.org, 
-	thomas.lendacky@amd.com, pgonda@google.com, sidtelang@google.com, 
-	mizhang@google.com, rientjes@google.com, manalinandan@google.com, 
-	szy0127@sjtu.edu.cn
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Jan 23, 2025, Kevin Loughlin wrote:
-> v5:
-> - explicitly encode wbnoinvd as 0xf3 0x0f 0x09 for binutils backwards compatibility
+The PPP driver adds an extra 2-byte header to enable socket filters to run
+correctly. However, the driver only initializes the first byte, which
+indicates the direction. For normal BPF programs, this is not a problem
+since they only read the first byte.
 
-Please, please, please do not send new series with In-Reply-To.  Trying to sort
-through the different versions in my workflow was painful.  From
-Documentation/process/maintainer-kvm-x86.rst:
+Nevertheless, for carefully crafted BPF programs, if they read the second
+byte, this will trigger a KMSAN warning for reading uninitialized data.
 
-Links
-~~~~~
-Do not explicitly reference bug reports, prior versions of a patch/series, etc.
-via ``In-Reply-To:`` headers.  Using ``In-Reply-To:`` becomes an unholy mess
-for large series and/or when the version count gets high, and ``In-Reply-To:``
-is useless for anyone that doesn't have the original message, e.g. if someone
-wasn't Cc'd on the bug report or if the list of recipients changes between
-versions.
+Reported-by: syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/bpf/000000000000dea025060d6bc3bc@google.com/
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ drivers/net/ppp/ppp_generic.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-To link to a bug report, previous version, or anything of interest, use lore
-links.  For referencing previous version(s), generally speaking do not include
-a Link: in the changelog as there is no need to record the history in git, i.e.
-put the link in the cover letter or in the section git ignores.  Do provide a
-formal Link: for bug reports and/or discussions that led to the patch.  The
-context of why a change was made is highly valuable for future readers.
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index 4583e15ad03a..b4433badf03c 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -72,6 +72,10 @@
+ #define PPP_PROTO_LEN	2
+ #define PPP_LCP_HDRLEN	4
+ 
++/* These are fields recognized by libpcap */
++#define PPP_FILTER_OUTBOUND_TAG 0x0100
++#define PPP_FILTER_INBOUND_TAG  0x0000
++
+ /*
+  * An instance of /dev/ppp can be associated with either a ppp
+  * interface unit or a ppp channel.  In both cases, file->private_data
+@@ -1762,10 +1766,15 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
+ 
+ 	if (proto < 0x8000) {
+ #ifdef CONFIG_PPP_FILTER
+-		/* check if we should pass this packet */
+-		/* the filter instructions are constructed assuming
+-		   a four-byte PPP header on each packet */
+-		*(u8 *)skb_push(skb, 2) = 1;
++		/* Check if we should pass this packet.
++		 * The filter instructions are constructed assuming
++		 * a four-byte PPP header on each packet. The first byte
++		 * indicates the direction, and the second byte is meaningless,
++		 * but we still need to initialize it to prevent crafted BPF
++		 * programs from reading them which would cause reading of
++		 * uninitialized data.
++		 */
++		*(__be16 *)skb_push(skb, 2) = htons(PPP_FILTER_OUTBOUND_TAG);
+ 		if (ppp->pass_filter &&
+ 		    bpf_prog_run(ppp->pass_filter, skb) == 0) {
+ 			if (ppp->debug & 1)
+-- 
+2.47.1
+
