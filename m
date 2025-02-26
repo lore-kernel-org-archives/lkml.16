@@ -1,190 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF003235BF1;
-	Wed, 26 Feb 2025 18:09:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593353; cv=fail; b=ZJQGY0n8TEeCE3xw9je0KgFT/rV+3ishjBO7gOS1IX5yH8THaZ4iEb05Oc4XQ/DXXIxqvvGxo11nqF2r4+yfUhX6AOAX1M0GaeyJXtB3xLr+1aydatmK2uI5dPyzE8UiiyUWJh1heyleL0TJEOsSnWiC5nyRpRgGX4pw2rM9yjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593353; c=relaxed/simple;
-	bh=aVVO4qbJHGlQ9Vk93tFck35Ml0P0ZQz8U4Ivs69TEmk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=irdufzIQ5jxGvIx/hrG9TYeH01kJgxoCOh7w6kVxnZOCgqI7aJwywvEkRW97c4a1M8HCDBoSpxhoHDQDETOl2x6Wb62ppQSJS1OoSs2bB+SpMkLwJPQwAATTNg62fhen/q36TXZG5MZ12uCEyymBKHWr7ODRkQSHcq8AQjxBw5Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bmwfe+nw; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF38622D78A;
+	Wed, 26 Feb 2025 18:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740593364; cv=none; b=EvAtHkWxcsPGNbQohminihIp/upvAIxPeAJVA88zRZeUvyPBUMPx3D1fho1K014QY5nCC5ynnaBEFhX0vBhEhESoW0iqviTVFIuQaIJjDQUKKUcTjsYtp2c3HDhtYjr9JzGn1La8J5FCNMDiTlspC9I75nF6H4IaL/yLwxOr7/Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740593364; c=relaxed/simple;
+	bh=ghaLJqFogOvVe+OLYpjWEiRrvLS3b1151qU4t9x9ggU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VOMErP0+hYb142inhi5qSfd9/RiwGhlsvNagJx8RzChiz+/svTenkcS6e1nvzTkok8WbtAdctzDEYPignMxEBqzRIMw3neeLkupkPiWVrvCaGBNIz4KWC2w4sbyqdG3LdWUVa9N51ei/X6Xn9WN97sqz93AFWsH3pRkm7emAgXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/OP1QJW; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bmwfe+nw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740593352; x=1772129352;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=aVVO4qbJHGlQ9Vk93tFck35Ml0P0ZQz8U4Ivs69TEmk=;
-  b=bmwfe+nw3GtdPeUvIR+A02A0jPs25s0ZbxJam+pRzDIG5WsxBpwAJPpK
-   21TqjZ0oju637UCYO4YTklmPP+rtjrSWznpVwytDgfBKKgr+RJjLgEH0t
-   RQxtcAHlgdeVlkgiaZGg7GvLHA5C6O+AvtnzNEebJuOOAz0kym7lPVPha
-   K3QzsskLaEDHzzgf+9KsbRF1+2UigDxg2RDExrw/GMEJfxDu4ClC6xMUX
-   E99CWd7qEQK0raCvOnsw5Gd/qHD+of2mjxeBwI1293ZYM1BQCE2FESWaj
-   W8nSU7AD/AIDwn6/QXYFWvReqhUab+DPXa9KBGVf1Ar9lCZHIxKUa99ye
-   w==;
-X-CSE-ConnectionGUID: 9Qc+TuO7S9SeZig73Rl30Q==
-X-CSE-MsgGUID: uhFWdpkkQX20x+kzzwKtkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="45109799"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="45109799"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 10:09:11 -0800
-X-CSE-ConnectionGUID: /hiUdZ4+QuCyhlBcJMGuHA==
-X-CSE-MsgGUID: 2sdU9u88S6K8KxorHnqm+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="122036139"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 10:09:11 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Wed, 26 Feb 2025 10:09:10 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Wed, 26 Feb 2025 10:09:10 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 26 Feb 2025 10:09:10 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gI7jI/O4bUBsZZtjg8FFjnA8c4x41oiKuOV6XckAGkRdmkzQgQuNrl/hoNwUmuCsTo/XtCYpQs/Ha7KlrEm69Bw7T2y2vKy9kAQ2h2D5uHBhfI4yBY4QQ1AUQCKjt/lngUdzK5ptuTIpDn4KNXguiM9Z4geqm+Ofsr0+lVDOOiUoUnMaJAOyhGxTDqFxOfEq8CqHK5rh1l4meRwRaGIISh2OL2RGURi29udm1sE1AyatU8SBPVg3TbRPTVJoazqepTKFgt0dNLERCOc/h1rfzU8k0wZnzdQ9pXK8RwWUdgxUcGffG5xTv19SEN23+ylP4Xl5q+2kH1z35B8wy7heaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aVVO4qbJHGlQ9Vk93tFck35Ml0P0ZQz8U4Ivs69TEmk=;
- b=O+4d6MmZ/YLsX6QWFTX6kmk+ryvFTNzLd8ArojEJ1ZvgSPIScSwcNgJ1P7nX7dFSMaS2HW1G3Zvyx5LYZAgXkfYF7/lmUYG6YB0++pNGsXkExbGEwY52NVhIx9RSewkBEDmPn8hUItCNtA2g82BobrnZwqIFQe2xKNgRsajPOVQlT+cQ2h2tWtwDlsHa8oKMV7N+NzlZsMmSul+BaFpHrioZ47krrM5tyJ1RaNZB5dKjvGT1k+T+mvvQKpye3PJF+yFM8jE/gTEMmT9E/VWU8GWIXIVXOzzmTudnfUiv4z2yj0Nso0GfxGAz9GtNlSAFnQO2WjaAlz6Qo8LoDflcww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
- by SA1PR11MB6968.namprd11.prod.outlook.com (2603:10b6:806:2be::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
- 2025 18:09:03 +0000
-Received: from CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
- ([fe80::7141:316f:77a0:9c44%3]) with mapi id 15.20.8489.018; Wed, 26 Feb 2025
- 18:09:03 +0000
-Date: Wed, 26 Feb 2025 12:08:59 -0600
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-CC: Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Jonathan Cavitt <jonathan.cavitt@intel.com>,
-	<intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] drm/xe: Fix uninitialized pointer def
-Message-ID: <4k7g5jn56f4adgyihxj2r3arjo563hzsdyrrtet43jasper5gi@ux2cuab7pvmb>
-References: <20250226160524.566074-1-colin.i.king@gmail.com>
- <6hrfddlbvpk2nxhwcx73nm6cmet272fhxulvmfeiqfiansq6tf@rdgyjn5fofov>
-Content-Type: text/plain; charset="us-ascii"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <6hrfddlbvpk2nxhwcx73nm6cmet272fhxulvmfeiqfiansq6tf@rdgyjn5fofov>
-X-ClientProxiedBy: MW4PR04CA0145.namprd04.prod.outlook.com
- (2603:10b6:303:84::30) To CY5PR11MB6139.namprd11.prod.outlook.com
- (2603:10b6:930:29::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/OP1QJW"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30a2dfcfd83so1135051fa.1;
+        Wed, 26 Feb 2025 10:09:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740593361; x=1741198161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A6P8EkSd3yrtJe7fRrTsqN53CGSCMEbijuvinHNryBE=;
+        b=E/OP1QJWb0EzH4ih5YXvRsuG8cAMFsTQCS/LmIxsSEN9S+j1f4V5P6f8cNq9CQY9Im
+         zHu8Qlu33n/Dfw9k6m91fS7KlGYDNVPPiq4BQ7KF7AbkdYT13jMkY3Uix3raYxbRwxDJ
+         QDVmnKfblHlCcFxdW61eAUjuM+DrAePsXuckDZWAtikm7eigRFc014MhOMEvgmT1XyUS
+         g4KK5od1omzQW40tOTd4zwefWcpZCIO5BktxkEWgsU+WDQeYunF1JGUqXqRSy7ygFNOb
+         5ZGdpEbY7YyRyU8QHRuIsVFKb8/0ydW6yfelZvTXdQthUcp12u/RAdWeQVnul6RZarMs
+         bzjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740593361; x=1741198161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A6P8EkSd3yrtJe7fRrTsqN53CGSCMEbijuvinHNryBE=;
+        b=Pez/eLHu1yyK9r5DrdFVXbvqewEIvvoUypuvazsxHmg1DlSuqi3ss8oO1loI2ndNo1
+         bmAqd5/g4SJ3QEG4JTUByw65jMkCOfrJLxy7LbbtwMFjKsMjHV0exheS5sbH0t11CD+W
+         kGUa05p6heZ1l9X0LN7ZC1KjDpCLCAsFqABWIDAGHnywCy49aU7nWITuIChu//lxDztO
+         WnkrEbY2KV2eknTwsucOr7WsLTQGBHHW0kCqqBrzLfkf3d7HuxKZ9N24jrbEcdDq6RFc
+         U3fCXQXhtUa8deUUb8j6uHdxdti8A2B/EmoEgO9JZd50pk+wPtntbw3S1JilSQKsEFKO
+         sakA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7/BCgj+zhiD8c7YxsWwJEHfQyxAkF84dkKRyQGSC1Oq5en9mZeySfN6j/9Y/Fq4K3MqlXg4JIJODnU1Q=@vger.kernel.org, AJvYcCXPKkqrLVcq0XVPcjHSZFDtvAaTAM8pnXo1boVU9X+FNUIyY51APHMUx6625ZdHpyo5AdnwV+flyI+l9fPjC/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmqMZvOlxwbhoUx9zJmjdjWyMHNtWvqf7xyifqkWkTvsOL9Jq8
+	ddXILsyj8AbTYjC92dXyjE9LcRgw2XWjiXX3zfsEGY5Marc79CCgUXFpDfcxXftr0ArUssqazUt
+	WY14WqsdUfxeyfyMkwJ3u+cQz18IIbmuh
+X-Gm-Gg: ASbGncsFJdBsX6q/QQJdv/mf4IW4n3OGChcSeaC/bk5iWST0DPzkw2Jph4olnPpTS1a
+	yCnU9y8tXf+9mccYqRS58tFqzvnLmF3YWOiDlxylq7mNWiEY91KyjakXyDfTsvcs7arwTlDyS2w
+	E6x/2MHHp3
+X-Google-Smtp-Source: AGHT+IGJNa+ri2Oao//go0VSlyRtOlg3wgaCSf6LWBeLXhaVuBr+YK/0oze/PXh/F38YbXkdqfmir870UMfoNc57uc8=
+X-Received: by 2002:a2e:9590:0:b0:307:e498:1269 with SMTP id
+ 38308e7fff4ca-30a599a2963mr92116491fa.37.1740593360376; Wed, 26 Feb 2025
+ 10:09:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|SA1PR11MB6968:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62a2db52-28c1-40ba-982b-08dd5690a6c3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uqLqUcQlKsGetNXIosSOiiwMfbBdn8WpuC4gV1FghaGDat8Pq9tc7axkowL1?=
- =?us-ascii?Q?HIOCU3ncZl1cYFjRVhytYvPRXGfI63jLjxgfJlTe9FKITmDJtdRoctT6R0Wu?=
- =?us-ascii?Q?+1pD2Tyf4YQyp5sXeIzJOMzD6yH4pDbUSpEZh5dRnCYdYEysUu4tdBWKt5gt?=
- =?us-ascii?Q?nqd1IQOv93SI8rt0+KtboKZt1ZfslazxLRNtiGxkrbMZ+TDe9RzSQ45sMMhL?=
- =?us-ascii?Q?Zc+BOIRZlbqygtW5nveKgHTfplu2v0bMd/IY/VpPbQsXkYJddb/fzl0GpAJx?=
- =?us-ascii?Q?i0wC19zLB6h28GhazVytdUGfRSvFtskMjPcrSM1v9UaI4QNWxQWprNHTeckr?=
- =?us-ascii?Q?guLpenTHOjQkNe6HAv4bILyVlptBnMZETNnb6e/XYsrVD4S6TBmcah0Bb6v/?=
- =?us-ascii?Q?VuC9neITWTw+MigHxO0SEsgJw6WfDfrmcXZzkgoRXB+URijyEkj5jE4h1Xw1?=
- =?us-ascii?Q?/sQvI9FwPXMFc6z9P33pzlVsvFKMi2YWyZ6hXD+SVqafl1Vbg+t/kH2A480I?=
- =?us-ascii?Q?X1Ga7C9LhrIYISef+H5kFBuGTshSIilVwZlZX0sa/97YXIqaqGDm7S88w4Hr?=
- =?us-ascii?Q?ueheFaBTP4xGcEq64xiPTOu33jZuv2TGzDS23v3n99AU8HrLuqmBqmym4W3A?=
- =?us-ascii?Q?aUZb3/oxgvwlm2O0yUpWLTvdyFAi+xdbhBZDO6i9TJplCkdg2Lye2AwWGyD+?=
- =?us-ascii?Q?FgKKyIwQmqxzG/3Yw4xVs29fslOhdcY8G59pncOucOBiuIc8MQKa4w0dKhQC?=
- =?us-ascii?Q?vpznABEBlhOi1CYk58p8P5ooONpy8lyk3DNlFywWgtgx+bspKyg137u3a9uk?=
- =?us-ascii?Q?CSDkNrovQEecu/yO84g4nbtXYjSQe7T/xqfCsDTyctfN1O7lR3WzRgew0d/n?=
- =?us-ascii?Q?QnDidW1kioHyyqnoyqkBO9853ibLwJNxbSc2MhQ0xWSFFTRJwdGlOSC6zfsd?=
- =?us-ascii?Q?zjDcpw/8e4NhSntcCN35x0B9pyQqgNTIL3W1zUIhwA32ZC/+DoeZShE51Mta?=
- =?us-ascii?Q?jngMnCKc6ucM34XJC7sJZFjWcFLyitm2MV+na7wnBlCCcbvfbHEaROPehuC3?=
- =?us-ascii?Q?WhlFfEijcMAcGXwnd5tz6e6IkubEvRzGxnTy0S8dI40w7nd8pOKifakRyv/m?=
- =?us-ascii?Q?GeH0EzKd7LW2Jb1vFg8lslTXisgGQ7ICQK0qir//sWZe+7qiVD/EdfRhgvfc?=
- =?us-ascii?Q?A+XJ37/UNdkkI8LPk2Doqz/l8M95jPVGDlaLCFVZ3r4SuPX5H80LTBVR8HXV?=
- =?us-ascii?Q?1ARfQD8CeDhftg+pNPshxGPjGqXZjsi/L8pz9rBtQfG4gHtQ6I66S38vm+Eo?=
- =?us-ascii?Q?CyRX+5ylLGcOAVpoZ8VwxeGyOXcCvG8NPUqIlK/OnxPog5Lough2CpZtVTtY?=
- =?us-ascii?Q?fKHmqqPUcaYNEqoJFGhrXlUfyKwx?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?glTvUZLDXIW3gZsIXHViWjX9wN78P8+/4U/UlxW05nrTcauI8K4Hk/cx2IdD?=
- =?us-ascii?Q?meysCpF7gwfDGfQx5o0OaSszc8lf9/rxFj7jJ/b7ZpmgpS/11iKK6UDvoj4O?=
- =?us-ascii?Q?xXoFAnw7+V1ABGHLT9R8X+7s3vtOKL6wA/4OtFdoyinKLA0AqWsqbshpp+zY?=
- =?us-ascii?Q?e9SgW/47BVQjI6Ms+iY7eOqQXSaRlUFYUvfXqtnpHo2nOScmaPhogPraZ0aS?=
- =?us-ascii?Q?D20bvBmQS1jLZUzh5xPxLkZ9vSCCPBYAPXp8BrkgwTgXcRR3reodafname9u?=
- =?us-ascii?Q?wJ8iP+zGmPyTuH8g5tr1qW6evYArYdh0k6RA1XhYX5tgGV7P3Gd3ikJKE0Nq?=
- =?us-ascii?Q?UXHs1syX2ZwWBv3xy3y+ns+sd2fnfZzRiDBVvXrGpy6aeQSxASSOmOpNKBUa?=
- =?us-ascii?Q?24/1yxQ+QfYB5cZncjTufeEETFeUxTVtJw7tVp880EPv07+ZwgH9SNwbJCLL?=
- =?us-ascii?Q?Ky+V6CX6iMUKyASl2l124dF3iLhtwNoft1bvTrbF4d0jzUcsWCTGyGv/wzm/?=
- =?us-ascii?Q?pPvDiKXB+xQFlO0aw3oBO7mzotHPP5uRgnGByI/qEXpALpA/8vJEysUjUjfB?=
- =?us-ascii?Q?OIehhAs4Rk9Asq9iiwkfQC2Z++/5D9EKHEWkpYoQQ0LRNfRfBcDrkU6tElkT?=
- =?us-ascii?Q?JpVykPQ5QYh8X+rfEBnUsvAjI4/E0mYz4+41P4opgkQN7HHHiby9ysve0jen?=
- =?us-ascii?Q?aFkaflPuxfErxeyDrjHbOJmsRQ3AxgAizKtFe2NyT9XT0fuxOC2iwNZWNk9F?=
- =?us-ascii?Q?EUV8K2P4nBXx7OXTjIjWHZkhjL6liPr6DUpd4GtZd/CZewzk2sW3msn5lTw4?=
- =?us-ascii?Q?poFga6soVXO0d+8X+Mk39kS0K0DRTfN/b2eYtLP+9/MzjcDGdVxiO+ByU5Ic?=
- =?us-ascii?Q?z/GuY4lyLoULdnNohYVBaauprfFUMQrxwS+PreX8NtYEFFoICT2oDjd9W3bP?=
- =?us-ascii?Q?6x+600av+0lEULXrEwCa4Mo8rJoTxLot4nx6qE5q8qhujX46A8S2JVMjTEpu?=
- =?us-ascii?Q?Zsocp9Q7eJEjbJlYGk7nIcFHQfPJzHLfH/UYAsYdBZrLwiuhXepDlcTZoQsz?=
- =?us-ascii?Q?9oxZNal2oMAgZifTjYXCIm8WGaPhs/w1OyFsDb6aYyKRn6ir1R+XKzCSIs91?=
- =?us-ascii?Q?5fNKg3HEbQ5nKcVNmJB5zLux/cFR34FoJ59/1F0GVLY3+crXGYtldKvaVi8N?=
- =?us-ascii?Q?7Ybr+NuNYxN2a0YnNzMaDeAtEUuckL4505f3g6d2uimH66EuzQ8+ne1Ocknj?=
- =?us-ascii?Q?LdRJ0G5kMjWQ51w7bkklY09Z3c3PmMNXHaHjQ+w9w1zejieIeXZ7fzHgvrwE?=
- =?us-ascii?Q?LSjfIlW+Hd5mXFVNgySeVMTk0NsG+f0pI/4/5aWRVSiV4EymycUI0HF/ppse?=
- =?us-ascii?Q?LxZjjGKBOZzrD3IhGHmd/I5sJPquaccayR9p8zjv0XHOQ9seTeLHYLo1fgDA?=
- =?us-ascii?Q?7okmbc7dF1vy9SZ4SLjMOgk45VMRLH4BXzLofxCpPb7/AHBGiRUU5R59Cz2e?=
- =?us-ascii?Q?4Zk3h7D59v6BakJn70uLgSdJF032kezFE/VesVXgFL+MAZB6nZ2JR4Pzfu9n?=
- =?us-ascii?Q?pCqwHkq5fnzM5FkPfhquwc2QlXqc9BtOlicAExreBxH1ITTgvJr90A1xPURE?=
- =?us-ascii?Q?dw=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62a2db52-28c1-40ba-982b-08dd5690a6c3
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 18:09:03.1547
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: c6YKgjIhAugb2JwJ8ww7gUPLmJOwFxxvVrvVDzT2IXrPyGSYLyxx2QAfZSUq9NluHrJY+Plblbzsh289W/7E9c1EY/dprlLDQp0i1U2Sbzk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6968
-X-OriginatorOrg: intel.com
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
+ <lz7hsnvexoywjgdor33mcjrcztxpf7lzvw3khwzd5rifetwrcf@g527ypfkbhp2>
+ <780ff858-4f8e-424f-b40c-b9634407dce3@ralfj.de> <CAFJgqgRN0zwwaNttS_9qnncTDnSA-HU5EgAXFrNHoPQ7U8fUxw@mail.gmail.com>
+ <f3a83d60-3506-4e20-b202-ef2ea99ef4dc@ralfj.de>
+In-Reply-To: <f3a83d60-3506-4e20-b202-ef2ea99ef4dc@ralfj.de>
+From: Ventura Jack <venturajack85@gmail.com>
+Date: Wed, 26 Feb 2025 11:09:06 -0700
+X-Gm-Features: AQ5f1JpKwr8B5qkGZ9Z_bzqjhe0vCBiX0W_T_JL0hCE3Frc9QZXyZjcDXlFrTOQ
+Message-ID: <CAFJgqgR4Q=uDKNnU=2yo5zoyFOLERG+48bFuk4Dd-c+S6x+N5w@mail.gmail.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Ralf Jung <post@ralfj.de>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com, 
+	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
+	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 10:28:56AM -0600, Lucas De Marchi wrote:
->On Wed, Feb 26, 2025 at 04:05:24PM +0000, Colin Ian King wrote:
->>In the case where a set of checks on xe->info.platform don't assign
->>a value to pointer def the pointer remains uninitialized and hence
->>can fail the following !def check. Fix this be ensuring pointer
->>def is initialized to NULL.
->>
->>Fixes: 292b1a8a5054 ("drm/xe: Stop ignoring errors from xe_heci_gsc_init()")
->>Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+On Wed, Feb 26, 2025 at 9:32=E2=80=AFAM Ralf Jung <post@ralfj.de> wrote:
 >
+> Hi VJ,
 >
->Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> >>
+> >>> - Rust has not defined its aliasing model.
+> >>
+> >> Correct. But then, neither has C. The C aliasing rules are described i=
+n English
+> >> prose that is prone to ambiguities and misintepretation. The strict al=
+iasing
+> >> analysis implemented in GCC is not compatible with how most people rea=
+d the
+> >> standard (https://bugs.llvm.org/show_bug.cgi?id=3D21725). There is no =
+tool to
+> >> check whether code follows the C aliasing rules, and due to the aforem=
+entioned
+> >> ambiguities it would be hard to write such a tool and be sure it inter=
+prets the
+> >> standard the same way compilers do.
+> >>
+> >> For Rust, we at least have two candidate models that are defined in fu=
+ll
+> >> mathematical rigor, and a tool that is widely used in the community, e=
+nsuring
+> >> the models match realistic use of Rust.
+> >
+> > But it is much more significant for Rust than for C, at least in
+> > regards to C's "restrict", since "restrict" is rarely used in C, while
+> > aliasing optimizations are pervasive in Rust. For C's "strict aliasing"=
+,
+> > I think you have a good point, but "strict aliasing" is still easier to
+> > reason about in my opinion than C's "restrict". Especially if you
+> > never have any type casts of any kind nor union type punning.
+>
+> Is it easier to reason about? At least GCC got it wrong, making no-aliasi=
+ng
+> assumptions that are not justified by most people's interpretation of the=
+ model:
+> https://bugs.llvm.org/show_bug.cgi?id=3D21725
+> (But yes that does involve unions.)
 
-and pushed to drm-xe-next, thanks.
+For that specific bug issue, there is a GitHub issue for it.
 
-Lucas De Marchi
+    https://github.com/llvm/llvm-project/issues/22099
+
+And the original test case appears to have been a compiler bug
+and have been fixed, at least when I run on Godbolt against
+a recent version of Clang. Another comment says.
+
+    "The original testcase seems to be fixed now but replacing
+    the union by allocated memory makes the problem come back."
+
+And the new test case the user mentions involves a void pointer.
+
+I wonder if they could close the issue and open a new issue
+in its stead that only contains the currently relevant compiler
+bugs if there are any. And have this new issue refer to the old
+issue. They brought the old issue over from the old bug tracker.
+But I do not have a good handle on that issue.
+
+Unions in C, C++ and Rust (not Rust "enum"/tagged union) are
+generally sharp. In Rust, it requires unsafe Rust to read from
+a union.
+
+> > [Omitted]
+>
+> Okay, fair. But it is easy to misunderstand the other items in your list =
+in
+> isolation.
+
+I agree, I should have made it unambiguous and made each item
+not require the context of other items, or have made the
+dependencies between items clearer, or some other way.
+I remember not liking the way I organized it, but did not
+improve it before sending, apologies.
+
+> >>
+> >> [Omitted].
+> >
+> > I do not believe that you are correct when you write:
+> >
+> >      "Unlike sanitizers, Miri can actually catch everything."
+> >
+> > Critically and very importantly, unless I am mistaken about MIRI, and
+> > similar to sanitizers, MIRI only checks with runtime tests. That means
+> > that MIRI will not catch any undefined behavior that a test does
+> > not encounter. If a project's test coverage is poor, MIRI will not
+> > check a lot of the code when run with those tests. Please do
+> > correct me if I am mistaken about this. I am guessing that you
+> > meant this as well, but I do not get the impression that it is
+> > clear from your post.
+>
+> Okay, I may have misunderstood what you mean by "catch everything". All
+> sanitizers miss some UB that actually occurs in the given execution. This=
+ is
+> because they are inserted in the pipeline after a bunch of compiler-speci=
+fic
+> choices have already been made, potentially masking some UB. I'm not awar=
+e of a
+> sanitizer for sequence point violations. I am not aware of a sanitizer fo=
+r
+> strict aliasing or restrict. I am not aware of a sanitizer that detects U=
+B due
+> to out-of-bounds pointer arithmetic (I am not talking about OOB accesses;=
+ just
+> the arithmetic is already UB), or UB due to violations of "pointer lifeti=
+me end
+> zapping", or UB due to comparing pointers derived from different allocati=
+ons. Is
+> there a sanitizer that correctly models what exactly happens when a struc=
+t with
+> padding gets copied? The padding must be reset to be considered "uninitia=
+lized",
+> even if the entire struct was zero-initialized before. Most compilers imp=
+lement
+> such a copy as memcpy; a sanitizer would then miss this UB.
+>
+> In contrast, Miri checks for all the UB that is used anywhere in the Rust
+> compiler -- everything else would be a critical bug in either Miri or the=
+ compiler.
+> But yes, it only does so on the code paths you are actually testing. And =
+yes, it
+> is very slow.
+
+I may have been ambiguous again, or unclear or misleading,
+I need to work on that.
+
+The description you have here indicates that Miri is in many ways
+significantly better than sanitizers in general.
+
+I think it is more accurate of me to say that Miri in some aspects
+shares some of the advantages and disadvantages of sanitizers,
+and in other aspects is much better than sanitizers.
+
+Is Miri the only one of its kind in the programming world?
+There are not many system languages in mass use, and
+those are the languages that first and foremost deal
+with undefined behavior. That would make Miri extra impressive.
+
+>
+
+There are some issues in Rust that I am curious as to
+your views on. rustc or the Rust language has some type
+system holes, which still causes problems for rustc and
+their developers.
+
+    https://github.com/lcnr/solver-woes/issues/1
+    https://github.com/rust-lang/rust/issues/75992
+
+Those kinds of issues seem difficult to solve.
+
+In your opinion, is it accurate to say that the Rust language
+developers are working on a new type system for
+Rust-the-language and a new solver for rustc, and that
+they are trying to make the new type system and new solver
+as backwards compatible as possible?
+
+Best, VJ.
