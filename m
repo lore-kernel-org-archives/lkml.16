@@ -1,133 +1,117 @@
-Received: from out-14.pe-b.jellyfish.systems (out-14.pe-b.jellyfish.systems [198.54.127.82])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAC121CFFB;
-	Wed, 26 Feb 2025 17:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.54.127.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A08223322;
+	Wed, 26 Feb 2025 17:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589834; cv=none; b=WG9tG3QaWonW1n/nYmrm6+mqKEryXMmAN86InNK+62+5Lgcw/fTjvB2jNYZ0540/z1kPYss9y3LJ+1D+RTiuiDmCyLCMWZGZuRWt9j6igep72KCt1a1hPPIGCyB2MUF+SzsJB1OBUoeivIXGcRXOBjeUoi8XvNGnVZx5Vdxj10c=
+	t=1740589924; cv=none; b=LLAYeot0F827h1Dad2wOhqTCiaKQTBbYYMija95P1UW8YtrwNuMPQl8gCCFMEJfGFNwZdXPQsm6+bLOUsHY3Rb7YBvE6F8pqIS0TiDfCDC/rUvo7vACdVRcvy71u5S15sCQdK4Ni9Q8Q18J5iHaBWi8Kus4EsaDIbkumqwZioeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589834; c=relaxed/simple;
-	bh=ET6MnGOAw+tmFtDYLv/Ch2D8SAlnx0O5Qbh8oHJdoso=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sCjlrcUsllZoOuyB/0XDc2TxzgC6dDoK4rF24rxo3R0URGFC2wTBKFTxD0E2F8PAGTgC1leF9TuLBUfc186CaGHpYzaIDfrr+qKkh+LstRSo1+xE3y/22gO1bMq6buHTaLkSZen/PofObRvTTKoFAuZO6ncBTTSzfVoHrU0kH3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org; spf=pass smtp.mailfrom=framepointer.org; dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b=WlEkZEIM; arc=none smtp.client-ip=198.54.127.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=framepointer.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=framepointer.org
+	s=arc-20240116; t=1740589924; c=relaxed/simple;
+	bh=8d7pXk0HpTU5re5dKZEsqJdCrpujp2MZ3eVVBvSdbjI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F9oRffYyvWL7Nka7F8YEJEwx3LJPBblYzHj3ZoMjNFf441wGQmlhGuQkJMtQ9lU5e9QzXqTm0r+ZzSkXKUaDH+88J2wTwKBBQOHQpjw9WtZHSOTAfQgCDY1QFGO+xEp0Gvu6oVSKj14CWZXx3ZT6+3WFgRyu3ZJVADXqMeIvy4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eqpsOcO5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=framepointer.org header.i=@framepointer.org header.b="WlEkZEIM"
-Received: from prod-lbout-phx.jellyfish.systems (new-01.privateemail.com [198.54.118.220])
-	by pe-b.jellyfish.systems (Postfix) with ESMTPA id 4Z31F85lf1zDqfN;
-	Wed, 26 Feb 2025 17:10:20 +0000 (UTC)
-Received: from MTA-05.privateemail.com (unknown [10.50.14.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by NEW-01.privateemail.com (Postfix) with ESMTPS id 4Z31F85FvZz3hhVj;
-	Wed, 26 Feb 2025 12:10:20 -0500 (EST)
-Received: from mta-05.privateemail.com (localhost [127.0.0.1])
-	by mta-05.privateemail.com (Postfix) with ESMTP id 4Z31F83yDwz3hhVF;
-	Wed, 26 Feb 2025 12:10:20 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=framepointer.org;
-	s=default; t=1740589820;
-	bh=ET6MnGOAw+tmFtDYLv/Ch2D8SAlnx0O5Qbh8oHJdoso=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WlEkZEIMW+KffMjCPDH6+idMT3DAJuMMkd3eaQoKDW3VvaRGO0J3tOIXHGGlqJxv1
-	 JisZa8byIBamvcutb6I+rXFqevtlxyFBrmvtPYks7GylmOBh8GGIFN01rUPGrQD5x/
-	 0FuTTdr4OIt5exSvZNGJptZ+tlQD+3pGQw84YnilKTN3hcQH63wzYHR4CulQ4WcemX
-	 Qm9CW9fyg6Rng3J2fBAL+Y9yqLx4Ibi0/dfSh8WsqQztA6FF7n9kAopBo4ZfSZciWj
-	 FlYP2fNjmDH2TBMjX9/ceKw+rFv9fNgHKvji1NBvU7D8D6rAO0qxWEA+qgzZif4TxF
-	 svfud/0j7u+vA==
-Received: from 65YTFL3.secure.tethers.com (unknown [152.44.190.141])
-	by mta-05.privateemail.com (Postfix) with ESMTPA;
-	Wed, 26 Feb 2025 12:10:08 -0500 (EST)
-Date: Wed, 26 Feb 2025 12:10:08 -0500
-From: Sam Winchenbach <sam.winchenbach@framepointer.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, antoniu.miclaus@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: filter: Add lpf/hpf freq margins
-Message-ID: <Z79K8Ag4SJYtJTtM@65YTFL3.secure.tethers.com>
-References: <20250225134612.577022-1-sam.winchenbach@framepointer.org>
- <20250225134612.577022-2-sam.winchenbach@framepointer.org>
- <20250226-sparkling-caped-saluki-b1cbad@krzk-bin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eqpsOcO5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6DBC4CED6;
+	Wed, 26 Feb 2025 17:12:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740589924;
+	bh=8d7pXk0HpTU5re5dKZEsqJdCrpujp2MZ3eVVBvSdbjI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=eqpsOcO5oqpd8lH/7QEMfPwcdcJxYGS6cu657fLeNsUdHVzOxhHyfPqpUDlI7gbUf
+	 0y/j4ETvmrgw18OwF7LnEDBJAbmDedh7O3r/7MOIYEdAZKUNbLiPkC0GeR1+UqRIiy
+	 pD4XyfKlY202it9sMWHs8X4cDYo1ezMKj02I6Vztro/59VPyF9OmIlJOCbSiP/BgWS
+	 mpwhaCWSP+pmxVi0Wur2haI2UpTS9RAxWnl2HvNICvr5vNesi8Vt8W0hR6Q+URalQr
+	 nNvfuaERZG7YT1fykhunx13FXfvh0bWjPRFrTOcuzS2RfqETxhBlOrwxCXNmUO5uAu
+	 7rwWbLtVKjzCQ==
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2bcc0c6c149so71477fac.1;
+        Wed, 26 Feb 2025 09:12:03 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWciMELQq4aZeesZbR9YYXvJnkMpVLgXV7SEt/Fwnubd/eDVhxzOk8LsBoloRiExn0tTOTN0e8zbHg=@vger.kernel.org, AJvYcCXp1nxK6/mJ8x2FtPAy+sMBBm1aoUrbqJ4rlb4ySWbnjHVG10BOLAh9/MDw1JQjMXcmTk2MOgY3nN4iuYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvKmEoQ9xEezucNgaoufFwkeNfD14IxCzDySNESL1Oi00EJ02S
+	lZMnPjkP1oXFWLTK7nMv5BYxrJs1CHdNoEOdW5NSMt00tklWGLBWw3LU0OVhGggNb0Xmet20+a3
+	Yjo4TpHwb09WVd2jh6omomOUkVvk=
+X-Google-Smtp-Source: AGHT+IGOQtG4imaWtjVB36oHGBnn0kzMUBu9ZK/Gy0K7WNz0tTlaMPCL2RgMqVmIroVqs3HfGgr1FS+6QCLMZ/W+QWA=
+X-Received: by 2002:a05:6871:e08b:b0:2b8:e6f2:ba7e with SMTP id
+ 586e51a60fabf-2c1303173fdmr2424681fac.12.1740589923331; Wed, 26 Feb 2025
+ 09:12:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226-sparkling-caped-saluki-b1cbad@krzk-bin>
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <CF154B5C3C8E7E64+20250224074357.673094-1-wangyuli@uniontech.com>
+In-Reply-To: <CF154B5C3C8E7E64+20250224074357.673094-1-wangyuli@uniontech.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Feb 2025 18:11:51 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0iigAB97mGBe6Uvr0v0spjqDKan-0O9XGObt5b4ZBvM7A@mail.gmail.com>
+X-Gm-Features: AQ5f1JrDsoEUFo51jxqs59N5d6ysIgoT6Y8CZSdjEJ4moStcIKIu27NHo6HnpkQ
+Message-ID: <CAJZ5v0iigAB97mGBe6Uvr0v0spjqDKan-0O9XGObt5b4ZBvM7A@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86 / hibernate: Eliminate the redundant
+ smp_ops.play_dead assignment
+To: WangYuli <wangyuli@uniontech.com>
+Cc: rafael@kernel.org, pavel@kernel.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, zhanjun@uniontech.com, 
+	niecheng1@uniontech.com, chenlinxuan@uniontech.com, 
+	Huacai Chen <chenhuacai@loongson.cn>, Wentao Guan <guanwentao@uniontech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 26, 2025 at 09:03:13AM +0100, Krzysztof Kozlowski wrote:
-> On Tue, Feb 25, 2025 at 08:46:12AM -0500, Sam Winchenbach wrote:
-> > Adds two properties to add a margin when automatically finding the
-> > corner frequencies.
-> > 
-> > Signed-off-by: Sam Winchenbach <sam.winchenbach@framepointer.org>
-> > ---
-> >  .../bindings/iio/filter/adi,admv8818.yaml          | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> 
-> Bindings are before users (see DT submitting patches), so this should be
-> re-ordered.
-> 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml b/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
-> > index b77e855bd594..2acdbd8d84cb 100644
-> > --- a/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/filter/adi,admv8818.yaml
-> > @@ -44,6 +44,18 @@ properties:
-> >    '#clock-cells':
-> >      const: 0
-> >  
-> > +  adi,lpf-margin-hz:
-> > +    description:
-> > +      Sets minimum low-pass corner frequency to the frequency of rf_in plus
-> > +      this value when in auto mode.
-> > +    default: 0
-> > +
-> > +  adi,hpf-margin-hz:
-> > +    description:
-> > +      Sets maximum high-pass corner frequency to the frequency of rf_in minus
-> > +      this value when in auto mode.
-> 
-> IIUC, these are two bounds - lower and upper - in relation to something
-> else (like rf_in frequency)? If so, make it an array (naming to be
-> discuss, I assume you know better what's that):
+On Mon, Feb 24, 2025 at 8:45=E2=80=AFAM WangYuli <wangyuli@uniontech.com> w=
+rote:
+>
+> It's unnecessary to re-initialize smp_ops.play_dead to play_dead as
+> it naturally goes back to play_dead in the freshly booted kernel upon
+> device resume.
 
-It is true that these are both related to rf_in but both the low and high pass
-filters can operate independently. Logically, IMO, it makes more sense to have
-them as separate controls but I am happy to put them into an array if that is
-the idiomatic approach to situations like this. That said, I am having a
-difficult time getting dt_binding_check to pass when I have an array of uint64.
+Is it really?
 
-When listing two items, as in your example below, I get the following:
-adi,admv8818.example.dtb: admv8818@0: adi,filter-margins-hz: [[0, 30000000], [0, 30000000]] is too long
+And what if freeze_secondary_cpus() returns an error, for one example?
 
-I have tried specifying the scheme for each item, setting minItems/maxItems.
-
-Any advice on this would be appreciated.
-Thanks.
-
-> 
-> adi,filter-margin-hz:
->   items:
->     - description: low-pass corner frequency to the freq.....
->       minimum: xxxx?
->       maximum: xxxx?
->       default: 0
->     - description: high-pass ....
->       minimum: xxxx?
->       maximum: xxxx?
->       default: 0
-> 
-> Best regards,
-> Krzysztof
-> 
+> Suggested-by: Huacai Chen <chenhuacai@loongson.cn>
+> Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
+> ---
+>  arch/x86/power/cpu.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+> index 63230ff8cf4f..023cf9421467 100644
+> --- a/arch/x86/power/cpu.c
+> +++ b/arch/x86/power/cpu.c
+> @@ -297,9 +297,6 @@ static void __noreturn resume_play_dead(void)
+>
+>  int hibernate_resume_nonboot_cpu_disable(void)
+>  {
+> -       void (*play_dead)(void) =3D smp_ops.play_dead;
+> -       int ret;
+> -
+>         /*
+>          * Ensure that MONITOR/MWAIT will not be used in the "play dead" =
+loop
+>          * during hibernate image restoration, because it is likely that =
+the
+> @@ -316,13 +313,11 @@ int hibernate_resume_nonboot_cpu_disable(void)
+>          * resume) sleep afterwards, and the resumed kernel will decide i=
+tself
+>          * what to do with them.
+>          */
+> -       ret =3D cpuhp_smt_enable();
+> +       int ret =3D cpuhp_smt_enable();
+>         if (ret)
+>                 return ret;
+>         smp_ops.play_dead =3D resume_play_dead;
+> -       ret =3D freeze_secondary_cpus(0);
+> -       smp_ops.play_dead =3D play_dead;
+> -       return ret;
+> +       return freeze_secondary_cpus(0);
+>  }
+>  #endif
+>
+> --
+> 2.47.2
+>
