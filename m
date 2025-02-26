@@ -1,228 +1,201 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1662419F13F;
-	Wed, 26 Feb 2025 02:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740535760; cv=none; b=ZX4l/+pSY8/aVw1Zn0XZj6CZMMY5ERspTmIya5QnNAV3TTQrtaY8Wte5k9AyULTO2inuN6t5r2iQr7xRDwXaDSkw3hXqEbqRYO7T/wYOXi1Rrt8Kbk1Bx7Z0gGHQKdGPeXUCt54fdxQZzxdkwNMV9CdjZEHZWWAfJAIAwTg1Um8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740535760; c=relaxed/simple;
-	bh=IEbds4yphJOI94QKHcQ3WECEM4kLPwgihOa8v/Lflno=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W5+HWgNQEtbyy75yZjvx7CBuhf/vSD6ry8UUrc86vgJ9ox00A/uNAs0c4jWJVB6FN3y5tLuNMTr7G7oU02g6DxmS/r4XZsEsjnLX9sSpi+yWV6VKlyMKwQCN+aSsmigyVevxDRmO5Rri1r9bx9BC2MRaOcvD+fU7GLp070Fne10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L3dw8Qjk; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C45D19ADA2;
+	Wed, 26 Feb 2025 02:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740535768; cv=fail; b=kzlBRDMjwJGKCIZthx09PH9MHvoz5IyLVgF5TQY6MqIwV9b80wgVVP6oOd7TB1RPXSlQIve8EqwtV5b5X8H5xXrklRQx1C4LsrGTzk0P4JBStuP6WBsWLpYoxVi/utd3fd/Cwy89HXFTYme0G21Z6rhKypeSIk3gilTLO2+79Dw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740535768; c=relaxed/simple;
+	bh=V1VLTGNOdwVwBKL3CftdmlQkb8Iwamb1SSjyESkQqgU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=thzpuWAQvgwgGP+fyVTY59Af0GiwWE2lYHhx3tKpLqa2gBY46pLapl6yWv7ZIu3XrnKaBO7cs1jyquDZR7E/kEj2gUXjPfN9D4qrbLS4zEXqBH9UNzgdq/nWkYy0v3v0Ivf6sutVgO1Nefv1AgUhNPNZoUs7XjjCQr0nCUdl+Dk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LZlOzHcl; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L3dw8Qjk"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso9519627a12.3;
-        Tue, 25 Feb 2025 18:09:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740535757; x=1741140557; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jNDX0bDy82gk9QmnrN58DpzxWTxMxMF4PEgthtYO/y8=;
-        b=L3dw8QjkDEd+mikXhB0AoirPeK6EdAFYgTb3OIJ0Ni+JAkRwQE27xAl+McP/yPQDKg
-         x3Tz3YWoZXW8b8FCBAYyac5eCAXfx4IeKdeXzZLmiwkKf/IBKRc9fboEB/zJtXIeYnwk
-         O7HmnqVLVUlxaTtj//PQvrFodTlQgKydcWI2hNcB4kEnArA3x+TwcQ0P6QmBrERxl8RQ
-         oEVi1jgP55SdvFH8kk0Z+YMpnP7x2P2p3yvcw/s4gJOVo4sJh8GYE+RqJ5vEVH5XmXDo
-         S0TUKsu5AX8lzjb104uVn/lHYZ2DqBQNI72yafS0fGnr/0cFUhYkLhjhNLV1bnjCc4tg
-         x2PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740535757; x=1741140557;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jNDX0bDy82gk9QmnrN58DpzxWTxMxMF4PEgthtYO/y8=;
-        b=FtfPvIa13dVGCioIZ7B2QkqM4HTp0XwhM0114NWkxSHZM4ZYXnjYsCjLwYEfm4xnaR
-         Gl4mR4jySKXZfPU15bvbJHGpSr+ntHL9bCk33gXOjfyYPtNLQi7KmQeBvbAQMT0IVP/0
-         909PVzQd5Zc6GXhRcriJgZ1LP+dHhmQLg/DhVDF2YcXkIr5OC7+Cy2Df+D8blsMtfO+m
-         FxBGX8SGlcVO4LVNrwuU/fQ5WNAcIwYIRDijjRq/7mZ55Ru0Sa7hv9avPwH+Xs0kTvvC
-         yK33DbnfMoLcslugiyz3UoMxWOkHown1Yh3iwrwhdR89QcTAgfyMn1DjEsv4+Xy80XGw
-         JWqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIEgSQfW9HxW6Sn0D10B2IJbAda7YFs5NQMn2s2MlQQIGxtjWXMLX07iTbMZTGo48IIjtRQjD2FNzb@vger.kernel.org, AJvYcCUoAohxHfwkuRxatq5H5zatDdDea9pvX+9DJlSzN+uDFdS5ig0Bd2gCayZ0BMHe32OdHf/XgK7FWi5+QC0n@vger.kernel.org, AJvYcCW7bW6EUZK7CtA6/gjkO5CoPTgH+ZATbw76hjXSPd7LrH4Klu+5ABWrHqU5Bygvrki/kmr+hmMJ2hOc@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJf54fckw4ADKwmeC3SztW1K9w32f/jX6AyFM887Hzm9a2VOY2
-	FgNJ7QVvc6iizJOvGhTfCnjuk38bv6KUAmHQPdu+5SyP++HPhqn1
-X-Gm-Gg: ASbGncuxuVIYpuH1dfTUw/H5X5ooynFZYoHhc+2Jv8banW1O+YvN+xmdTMgP+z4HOFn
-	dUw4q8TkY7qzQmNGmLnDrq10/VJUh2BmZ84q6Sf2HKTcRHEVtAIM/2JTHtxRM0PHMuipzdX4lyr
-	FSeW/G8k3GqbemwsY+wmROEtC9kzcrYvJcpi1nn3Cx+QwOPUxcB05GkR1n9JJZtzfvOS9fHwG5t
-	TVzF0YPicsPqOEAgvAEhXKVOUL8Dd5mxzaQ3PQ5m0JMvShL8xT7Xoavn6Z7xPqnQBkpnpJLQNV8
-	2L8vXfo3xX4EDHhyMgARcnfiXA==
-X-Google-Smtp-Source: AGHT+IGRtYD7rWXN/Sb7N5YCwL4iwg6Gy2cLXak4su8dMR+fikHn63505aewDuiYmopReDoTjLpqLQ==
-X-Received: by 2002:a05:6402:5508:b0:5dc:cc02:5d25 with SMTP id 4fb4d7f45d1cf-5e4a0d71d15mr1703278a12.11.1740535757056;
-        Tue, 25 Feb 2025 18:09:17 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e461f3e675sm1976282a12.72.2025.02.25.18.09.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Feb 2025 18:09:16 -0800 (PST)
-Date: Wed, 26 Feb 2025 02:09:15 +0000
-From: Wei Yang <richard.weiyang@gmail.com>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, linux-kernel@vger.kernel.org,
-	Alexander Graf <graf@amazon.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Pratyush Yadav <ptyadav@amazon.de>,
-	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Usama Arif <usama.arif@bytedance.com>,
-	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v4 02/14] memblock: add MEMBLOCK_RSRV_KERN flag
-Message-ID: <20250226020915.ytxusrrl7rv4g64l@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <20250206132754.2596694-3-rppt@kernel.org>
- <20250218155004.n53fcuj2lrl5rxll@master>
- <Z7WHL_Xqgoln9oLg@kernel.org>
- <20250224013131.fzz552bn7fs64umq@master>
- <Z711VP45tjBi0kwx@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LZlOzHcl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740535767; x=1772071767;
+  h=date:from:to:cc:subject:message-id:reply-to:references:
+   in-reply-to:mime-version;
+  bh=V1VLTGNOdwVwBKL3CftdmlQkb8Iwamb1SSjyESkQqgU=;
+  b=LZlOzHclAwvLGx8sOrUxCGDDvtoSiKMKMzbwu3kac6SRp91kqjixMpgV
+   jN667MTUVDh6SA/VwV0tTStHG77wn+x+fekAVU/E9o5SIVdZzfGzXzVQr
+   SO7ObyelIRiuHq6PQpaKOWJcejWiDDTdZXR7NYsVgL2avn17pZhq/NY9T
+   vfXKq1zIrNnxnrv2+MKbVHKU+v0GDN9RltBy0lBapmYR0ptvSLiL0gvLh
+   6eFNpxUnkioIE1x010JAj1/QEegyX86CGgDOE7st4qvO9IxxFGcNNUNap
+   kCkGwSum7njRgbVgtL3C43hJzZ2W2OGjxoBVMeja8QWA/KpCtuX1q9yks
+   A==;
+X-CSE-ConnectionGUID: wTW+s1Y9S6u7/7tBRAs2zg==
+X-CSE-MsgGUID: Nwi14xcgS8WiTraPc/P+Xw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41504722"
+X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
+   d="scan'208";a="41504722"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 18:09:27 -0800
+X-CSE-ConnectionGUID: VVIt46n/T4COhsJxsZIkiw==
+X-CSE-MsgGUID: 2yhw1+3ERESGVzgRdBKBFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147478007"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Feb 2025 18:09:26 -0800
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 25 Feb 2025 18:09:25 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 18:09:25 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.49) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 25 Feb 2025 18:09:26 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=arxs3P7xdW3wtyga5K7q5wepCLREwChy4+FOCmjOHeTM9bk3FdSYGnFQWlalZyA5IO46ywScGd09KpFnm0ukyrsPxaYtYYJ5M6JXn6TtaTwHQ9optCPRtUZGIKjhO8pSeOTRNBq8pmbtMDH5LQEyeFvJ/+TLlg6I2h6XfB0m+UD8lUxKss1b+SaWhlMAt95CNwuQN1w4t/Xut4SUvcFNGzB9fRoxGnw6YDphSgQyvSgyjVSOZ8Ab26x2q/G0QLwB4pURe1xa00dIVgwypsCkMpxo71pSYxXKK/Dm7dSODs8cWxNMN6yyPCyE0Lc+P6ccA7kQxxa1xJvQii3+OxK0jQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f6w8hqlP7DakTKcD1uo3n+nGLXdhhWgtkZAbtOND/aw=;
+ b=IZ43KBqnH4jkOruaPJTM6WfcW2oZBm++h4IXR3XVSKBKqZqHqRKeXgsO2JsY/XCYNLqVEWTgWV7KjMx4Tl22+M5O/8SjtbRgxIkDLMOifKpZsoWPBCJUbvqwOC7DjPJ5UgT3RZpKG5nALrEcYPJat0L9nSG83MbBPSKjyOhtrbyBtGzlSUUjqN1RAUymFgxF3tRVzhvU7xrG2bnTGSPxYaX57PL39UM3EczSW20hnroyi7N9p7uO67/eyotZ5CjKItfrnyYY8sdJLxpgnbWm1sk1dDYgfMnUTG2YnowyOU1E4PA4c3v4pXr5ehx0tVMnKVnrvv/DprKvmIl46JX2Lw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
+ PH7PR11MB5885.namprd11.prod.outlook.com (2603:10b6:510:134::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
+ 2025 02:09:10 +0000
+Received: from DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
+ ([fe80::e971:d8f4:66c4:12ca%4]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 02:09:10 +0000
+Date: Wed, 26 Feb 2025 10:07:53 +0800
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: Sean Christopherson <seanjc@google.com>
+CC: Rick P Edgecombe <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: selftests: Wait mprotect_ro_done before write to RO
+ in mmu_stress_test
+Message-ID: <Z753eenv5NKkw2j/@yzhao56-desk.sh.intel.com>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20250208105318.16861-1-yan.y.zhao@intel.com>
+ <23ea46d54e423b30fa71503a823c97213a864a98.camel@intel.com>
+ <Z6qrEHDviKB2Hf6o@yzhao56-desk.sh.intel.com>
+ <69a1443e73dc1c10a23cf0632a507c01eece9760.camel@intel.com>
+ <Z750LaPTDS6z6DAK@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z750LaPTDS6z6DAK@google.com>
+X-ClientProxiedBy: SGBP274CA0021.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b0::33)
+ To DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z711VP45tjBi0kwx@kernel.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|PH7PR11MB5885:EE_
+X-MS-Office365-Filtering-Correlation-Id: c5b35eec-87a9-4b7a-4d7e-08dd560a8ec1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?2fFxrwa7mL4Ywtz2PnM24CojqfveTMoEz9aJChmPF29H0q0URD3p6nmE1Jmf?=
+ =?us-ascii?Q?xZrW1VwrIEoLEGRYF0OdGkwNSHrHBAD7LxKlNcql3UJot6hJ3XjC7LPynifp?=
+ =?us-ascii?Q?8mkJ8E0lbc0fWJ4RlefVcKWT8uDFkWwRos1Ne0rKBu74Oi0XbsR3/XFDCUIU?=
+ =?us-ascii?Q?r2Du2ucfBe5Clzwhpe7iArEizdsD6UeHvtQDxsLkYfSSVwIOX+9+NrQmp2Vw?=
+ =?us-ascii?Q?tnO7lmf6GO6oKZxOZ5GWrk7RJhCwldOiusQQMeWRqpv8ZKdLsACB0mzEeOtI?=
+ =?us-ascii?Q?tU1GdlY9R6Z1TrUUDQOBmQS4YRpQMdzdylV7dnMGUudPStrZIdsqKxwvL7By?=
+ =?us-ascii?Q?VvEFjudclNpdOjOgYSlK5b29PLy6TLBVuVt4SW/z7OmpBC9x9WJ/Fsx3bnX9?=
+ =?us-ascii?Q?dsD43J6gSW7U7SE1Pv2FI1QKOKHoTvoZcdEh5iIB6Z4SunwMZqVani3vEj99?=
+ =?us-ascii?Q?W14Rd9K2W3GqfD8pnmNtc+au2SLmgIhTyFhzljlO/4XvT48cFDk5RpHFryX+?=
+ =?us-ascii?Q?JwPATaGlOy35Svc+MuUQEl7TP/Gr1W+aXeyViE4liBhA7qbGhHAivEqi0ZD1?=
+ =?us-ascii?Q?EIrhFyNMeWxuC0VWJVp8mf1IJfoCNGPfv0lvGN+puvkcgl21GMxlVEnyDP3U?=
+ =?us-ascii?Q?F/SRP7yyKjqrtq99p7VEUyz2B8u1tJzc00ynNDughqvc3tcr6l+dQNy8auyL?=
+ =?us-ascii?Q?eg8Gg192p36/XCj7i4SZfb5rv/q0wblNWoTaDB4dooDwGLfxNb5J80zTJTx3?=
+ =?us-ascii?Q?mWTGe5KBiPC/z6R1nSzaY0cT0FzQaCScbasrzH5mQZmY6xrsXyyvzofxTn0o?=
+ =?us-ascii?Q?9mStXhyDFGTpkAJMiPLAzbxZhgqRTQA1zkg0SXBR/XnDINp+L4pAYY90jvAH?=
+ =?us-ascii?Q?N7BEuClx0sk1x9SbpkiBsLyia92Ou+QDjc387JUcnKO+cSKhxNbGvYs5BFqK?=
+ =?us-ascii?Q?ZaeU9FYjVKuTL5O/uHzlWJMGsmlJyeh7eTgs0w8A1nHHoj0WagagEcyxfpMe?=
+ =?us-ascii?Q?FMogmWCO5oElb2Kf6YKOoyXEsdN9pjBE0P+w2VMfgeo/1ABsuYQdESIHl/l2?=
+ =?us-ascii?Q?DcPuqsb8vgQKIReoZGmp1S/VN7ABIG+BCkNm1cwX1rOZPaYpvdW1Iv3vzaqn?=
+ =?us-ascii?Q?BjdI1cPxjapYyjkIzIwlNbErIYED0dHVl4PrVeEHkJSfyDywIvNNb9y1d8g6?=
+ =?us-ascii?Q?nwlsQQs4ASMf1qvjq0oy2gKr2BEfzrUzWjTnfAKn9cdAf/fh4aWpU/eqm05s?=
+ =?us-ascii?Q?JfU+M3Yg+ciLHG4m3ywuS5jTq7FpLJQD60hVTCPqApMPdXBQ4W0m0KwGgabh?=
+ =?us-ascii?Q?69CRIOKW50lYzH5CLQ5hqi2Ilq1STz3yGriQ69nWR2uxvujnu9/A01SAkB81?=
+ =?us-ascii?Q?Uw9qicVvlvrlwTbQXFn7y0VPwA1/?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JkoK/FajejQyzvhCiSPh4qlaucG0GS0h9nO2ZxuKuNPy0+6txnHmEpaQOERH?=
+ =?us-ascii?Q?dZO55iDiDAqkzzb0slEPAtssophH2yyLshMW9ISu70cLoi/E/JUbBqwZYB5C?=
+ =?us-ascii?Q?seOtIp32mO4MAG1XJPzPE4R2hZ4U9RyMVoEsAulid3xe97Fvs4aferB+J8mz?=
+ =?us-ascii?Q?RrkBm54qZLWCzCdsQyfY7fqgXJOS8/euXhQDDQ31fx7CSYSJCWFa0Xo8tKk8?=
+ =?us-ascii?Q?kmlpRhIBEZbmqEfwOs5ZgsUcKO9lhurz+kjm3AbQqL0XoEYI2iopzTKkeM/w?=
+ =?us-ascii?Q?rHjNi4YZV8fLVjyaN/pJd0bdmzN1nV4EZR6Tk8m/JodncxvCQuMX4IZfqqo/?=
+ =?us-ascii?Q?wPnMMN0iiZguUfXrRljHXJzBoVuz8LT1o/SZpzsQaqV+TdfS90VIk04Cp3Uk?=
+ =?us-ascii?Q?Hkc+U00zR5tHyglk8IN5QbK5x5wqz/YXoCh46QrmAYdCa6XAPy3Q6NraCh2+?=
+ =?us-ascii?Q?h4mjXFJLOYWCv3VYJOFRA5Kan4mb165PR+Dpl3iyjIOJYSR2CnFgVaMQV0Hh?=
+ =?us-ascii?Q?69YFQC0sPCsFjDPOLjI9VT4A/nd0tAbPxkpEv5be/Qd2At8rkPRsjaBEfGHu?=
+ =?us-ascii?Q?BeDana4ASsgDgiHjNSfCq8ZXKEdidewghfa48rqztdDNlqv5o63OIVGMPu77?=
+ =?us-ascii?Q?pFNi2IDuYr0E1Msg/IN4ao/HrksSZIoW9upktAkj9GRiqUT6CHGdzmgfJEKh?=
+ =?us-ascii?Q?zrL0ODEoem21otp4kZG2xCiEvOMBc1iaStIJda5xbucvtqhlljFy8Wf5TYXp?=
+ =?us-ascii?Q?wuHh0ZnVO+zyhr3r8txPw4d1fMJwK4G2+AzigzBPl+5TkE4kIhjrevXmOuf9?=
+ =?us-ascii?Q?k1jOPNCbiw5NmaT7KSHVC0BUANvx4BLR1ReMQJ1D0xduWMhwvOTK2p/iCA9L?=
+ =?us-ascii?Q?Z2wloln1jppayXPptrnXDHxHNGGUjOOS4iZ8EVPx2yOfvkB7spW3cXMPWBmD?=
+ =?us-ascii?Q?WGr0XO1RPO4a4KusGjuO+fO5YIRe4Enkits33RaQybcvfMUEWVClEYWTUOlv?=
+ =?us-ascii?Q?N9O2PVcM7he9bFCEhS+SBe0WsSVtuIG1HrhR5jzFz4kkBcy4odk+l8CJbzD6?=
+ =?us-ascii?Q?GUv2eEQjg83DV3Mfrfi+nH5X8C0N8GQFcDjUPnW18B95mMvX6RWdGrjG4DNu?=
+ =?us-ascii?Q?MnZ9XxqaGyvlL67426aB8EQWZj+y1Zdwc30pFXl1Sde2waFi/uwVTeoW6Ira?=
+ =?us-ascii?Q?qRf8NoK5F/kyc2qIcGo2J0XtQmQlRGRkbuv0s3rqWGR0qAqmkAdEDdWCmfxK?=
+ =?us-ascii?Q?tBy46XRN4g5o1pblbipdO8BzUjmHAQvLfFGGfWXK5PgVMZqz+m5rjyF1jJv6?=
+ =?us-ascii?Q?Ze/bTdtyThl6435CUS5T/l7WU50nyVaDm0R2gvwG9IJCwFsQ3KRmxZ+VhqNS?=
+ =?us-ascii?Q?26T1UWYYE/2JJ+eta8Rrbv+26tkDdolfqwjOXxFfAYwviXB+mJcWXcPtRlk9?=
+ =?us-ascii?Q?4iUkdTPpxcI02UTmh229hgi7Y0+1mu4MAvnyq+jgTDJrWq5+VXrWIwx/GZow?=
+ =?us-ascii?Q?/OhUGUxKV/qDexb7Rbqt5iIQ7trGEFKqZJqn1+daFG29GU6lRzi0wDWiWKq8?=
+ =?us-ascii?Q?szrOeLy4z/blNLECo+aszpFNJWG7M15bFHdmmmUC?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5b35eec-87a9-4b7a-4d7e-08dd560a8ec1
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 02:09:10.3401
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0bVpsfPdF2LgLzKtrEy0Gr47hG8QJfoFoCsQ68TdRpybzJ8Ie70GSDRRLV0oCVPlulMjaPKsPVUeLCCOq5RKhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5885
+X-OriginatorOrg: intel.com
 
-On Tue, Feb 25, 2025 at 09:46:28AM +0200, Mike Rapoport wrote:
->On Mon, Feb 24, 2025 at 01:31:31AM +0000, Wei Yang wrote:
->> On Wed, Feb 19, 2025 at 09:24:31AM +0200, Mike Rapoport wrote:
->> >Hi,
->> >
->> >On Tue, Feb 18, 2025 at 03:50:04PM +0000, Wei Yang wrote:
->> >> On Thu, Feb 06, 2025 at 03:27:42PM +0200, Mike Rapoport wrote:
->> >> >From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
->> >> >
->> >> >to denote areas that were reserved for kernel use either directly with
->> >> >memblock_reserve_kern() or via memblock allocations.
->> >> >
->> >> >Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
->> >> >---
->> >> > include/linux/memblock.h | 16 +++++++++++++++-
->> >> > mm/memblock.c            | 32 ++++++++++++++++++++++++--------
->> >> > 2 files changed, 39 insertions(+), 9 deletions(-)
->> >> >
->> >> >diff --git a/include/linux/memblock.h b/include/linux/memblock.h
->> >> >index e79eb6ac516f..65e274550f5d 100644
->> >> >--- a/include/linux/memblock.h
->> >> >+++ b/include/linux/memblock.h
->> >> >@@ -50,6 +50,7 @@ enum memblock_flags {
->> >> > 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
->> >> > 	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
->> >> > 	MEMBLOCK_RSRV_NOINIT	= 0x10,	/* don't initialize struct pages */
->> >> >+	MEMBLOCK_RSRV_KERN	= 0x20,	/* memory reserved for kernel use */
->> >> 
->> >> Above memblock_flags, there are comments on explaining those flags.
->> >> 
->> >> Seems we miss it for MEMBLOCK_RSRV_KERN.
->> >
->> >Right, thanks!
->> > 
->> >> > 
->> >> > #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
->> >> >@@ -1459,14 +1460,14 @@ phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
->> >> > again:
->> >> > 	found = memblock_find_in_range_node(size, align, start, end, nid,
->> >> > 					    flags);
->> >> >-	if (found && !memblock_reserve(found, size))
->> >> >+	if (found && !__memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN))
->> >> 
->> >> Maybe we could use memblock_reserve_kern() directly. If my understanding is
->> >> correct, the reserved region's nid is not used.
->> >
->> >We use nid of reserved regions in reserve_bootmem_region() (commit
->> >61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")) but KHO needs to
->> >know the distribution of reserved memory among the nodes before
->> >memmap_init_reserved_pages().
->> > 
->> >> BTW, one question here. How we handle concurrent memblock allocation? If two
->> >> threads find the same available range and do the reservation, it seems to be a
->> >> problem to me. Or I missed something?
->> >
->> >memblock allocations end before smp_init(), there is no possible concurrency.
->> > 
->> 
->> Thanks, I still have one question here.
->> 
->> Below is a simplified call flow.
->> 
->>     mm_core_init()
->>         mem_init()
->>             memblock_free_all()
->>                 free_low_memory_core_early()
->>                     memmap_init_reserved_pages()
->>                         memblock_set_node(..., memblock.reserved, )   --- (1)
->>                     __free_memory_core()
->>         kmem_cache_init()
->>             slab_state = UP;                                          --- (2)
->> 
->> And memblock_allloc_range_nid() is not supposed to be called after
->> slab_is_available(). Even someone do dose it, it will get memory from slab
->> instead of reserve region in memblock.
->> 
->> From the above call flow and background, there are three cases when
->> memblock_alloc_range_nid() would be called:
->> 
->>   * If it is called before (1), memblock.reserved's nid would be adjusted correctly.
->>   * If it is called after (2), we don't touch memblock.reserved.
->>   * If it happens between (1) and (2), it looks would break the consistency of
->>     nid information in memblock.reserved. Because when we use
->>     memblock_reserve_kern(), NUMA_NO_NODE would be stored in region.
->> 
->> So my question is if the third case happens, would it introduce a bug? If it
->> won't happen, seems we don't need to specify the nid here?
->
->We don't really care about proper assignment of nodes between (1) and (2)
->from one side and the third case does not happen on the other side. Nothing
->should call membloc_alloc() after memblock_free_all(). 
->
-
-My point is if no one would call memblock_alloc() after memblock_free_all(),
-which set nid in memblock.reserved properly, it seems not necessary to do
-__memblock_reserve() with exact nid during memblock_alloc()? 
-
-As you did __memblock_reserve(found, size, nid, MEMBLOCK_RSRV_KERN) in this
-patch.
-
->But it's easy to make the window between (1) and (2) disappear by replacing
->checks for slab_is_available() in memblock with a variable local to
->memblock.
+On Tue, Feb 25, 2025 at 05:53:49PM -0800, Sean Christopherson wrote:
+> On Tue, Feb 11, 2025, Rick P Edgecombe wrote:
+> > On Tue, 2025-02-11 at 09:42 +0800, Yan Zhao wrote:
+> > > > On the fix though, doesn't this remove the coverage of writing to a
+> > > > region that is in the process of being made RO? I'm thinking about
+> > > > warnings, etc that may trigger intermittently based on bugs with a race
+> > > > component. I don't know if we could fix the test and still leave the
+> > > > write while the "mprotect(PROT_READ) is underway". It seems to be
+> > > > deliberate.
+> > > Write before "mprotect(PROT_READ)" has been tested in stage 0.
+> > > Not sure it's deliberate to test write in the process of being made RO.
 > 
->> -- 
->> Wei Yang
->> Help you, Help me
->
->-- 
->Sincerely yours,
->Mike.
+> Writing while VMAs are being made RO is 100% intended.  The goal is to stress
+> KVM's interactions with the mmu_notifier, and to verify KVM delivers -EFAULT to
+> userspace.
+> 
+> Something isn't quite right in the original analysis.  We need to drill down on
+> that before change anything.
+> 
+> FWIW, I run this test frequently on large systems and have never observed failures.
+Could you try adding CONFIG_LOCK_STAT=y?
 
--- 
-Wei Yang
-Help you, Help me
+With this config, the failure rate is more than 90% in my SPR non-TDX machine,
+and 20%~80% in my TDX machine.
+
+> Maybe Rick and I should go buy lottery tickets?
