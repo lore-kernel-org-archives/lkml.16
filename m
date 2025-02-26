@@ -1,108 +1,140 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAB951A0BCD
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E67F21324E
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740565150; cv=none; b=K/DI+emCOwxujcJHDAuyBIDlHHs2CUt7D1VYPJNk+dhazAjMidQ5ycN0M5Nw33aa5wBqbPPeu+lqBH76CosT879XyLk4UB3Cr86IRJhzkrh7Yh9XYdhn0Ls+cR1ZHeXE0lQ0kLhh2DJmtflbXXIvJy48Av98NHIqQkHTAMbQnxM=
+	t=1740565172; cv=none; b=ZcluwPQ0jGW2QrH0T8oLhp27HAkltNz4sSzKwTZb+BIOXYdoRSzdeGdMrGUJP6B9dnmnzRgTKAdJVMPlhKTNqV15NtLB6Yhh6fUkjBenCvGfhyveBAb3Wy5fIL+C9tQ0Ox9k64HjeIZndzXar7JViXMFpL8dCCR/QQNZgeR4tWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740565150; c=relaxed/simple;
-	bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nr729N7cLwCzGXzJCOu1bf/CRNd3Cf1eOamXSwrdFT7DmBueSCGSKpL/GsvLnYjUWcHci6s6pAQOeEJ++6rN0fS0qqhcl+cXh/up1eshLTw65V9d/T4hOQ7dzxBf/RlZD7msNusY5Rk6COJ4psMp8gEA6IdNDLmBZuW1xxnnNcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=utWFaXvL; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740565172; c=relaxed/simple;
+	bh=lsqUHQiNLeacHnEbKXQeLViXVU0UgO/D/+5OdoncwL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FkZGkWxOW0+1o0VqdSzrSa5x7uTpFQoa8wEZA1fHqjZDkhSFoT2d5flWQFx2x1hovF/9mFN5GYybXBJhYqeseuhQEAyb1AmNEQaIX46gEeGW5lBUbIQxWGocsbt/wA+aIBtloU56sDpM3cq7BaiEcuKihfRvqc/xIOYutcSnfMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LV+kBunC; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="utWFaXvL"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30a440effcfso7940031fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:19:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LV+kBunC"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439a4fc2d65so64057325e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:19:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740565147; x=1741169947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740565169; x=1741169969; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
-        b=utWFaXvLMnJxUSS5zmFp1zMLVLctrM8Cbe1nzLsNRGWhBJoACvjkquhXJBV+3rkJHW
-         rtzapm8lDzWTq2lmp8rNzk3Qe5NkHrMHC+9kYftMvfzDHusMfhnav9JyRMz2jICebb6h
-         O+iepKZpSvAXjmf+f3NkFWoeWhdxTqj0UbgvPDJeCpz0owP78ivQsQfzf543q32lZbDW
-         RXH9PCQBklsOO2OJpTx9AU1u8Gx3KLm9AuyriTecz7/PX4IJ9UQEnp+0YLTrltNZqght
-         DoAWSdnmQLnxe3fPn2vTM8vXJkx5FBbWNXmn3kOVz8bSybKyXhO7iq5xMiRpCiRscy9Z
-         wWMA==
+        bh=WvejRLHxI7cWJHZ6jttnlknQfuM1gunX4QyfWK6KcOM=;
+        b=LV+kBunCODO6lNpe09E6YU70eUNp8Tz73QMd+pt+hmBjEkv0FDY4BvWPdAHJeTYc1W
+         MXqHgtWsyiXcw98aAlKPEDufMvqYEhTq/jymcrYd3LPLrhRAKyvw8VII8vS6v61gLheV
+         auVt1V9scAqQAIB9COd2ZG72QRMo/hRBjiFqSRpKDRuXVXrHNdOlE6z+RU02f3ETnZe+
+         QlBwm6B00fkMSpZZgvre249Vs/eK3hc3xC18xidHfAVq95P7fbLp+k1JXo4FBuEIzdXQ
+         SU2yruFaEXzF2gDZmZpxAlllhKBjwOJy5Uo6M49pPMvoXJyJomldEztFujZa4WD7NUpD
+         glTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740565147; x=1741169947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740565169; x=1741169969;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DKJPAUCWpMarL6wTRvPVlA7VYpvvjyB6zrJZ3/cdENU=;
-        b=sRxUcDcpWvvbhS0AHmmelhAoET1Zl2MoBoBUEKyGDhabWgqmh5Vqsa27XLqlWvtM2/
-         I7e3kSTjyJBFMRJE8YIgPUrCq0Y1GXCjX/z4T0JJ67N7ypICsjD9s8qlUxACVnloiX1i
-         ktSj0lJF98dNE3YUihy9a1Gmnqrk3y6tysDnEpL339M33qX997qcucB34m4M8RWPeIQW
-         tOpIqf7/QJLMobL7AfuYzTeRrfto2NTxIGTGs4kBBM49PLSpc3A5fcNe2BdIy91kjFAn
-         6a6ImTwdz1je2C0+7knNzOrLFi/tgkaImQT64IAC3fgIBzd4RRtVGRZwo9zr+0jhdChU
-         +jNg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/bXHxQU5XCOhpR+/jut8pWNwMKdaI2uhs/oICbI/BhrAU+B05k05nqNXbZOoRIiTaKhT8s2+dZzW5abg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvVoS6Rz0jhxgPqFBuA3z2wM/pIpdr4uceopp1t0x1Kb9Ddu0p
-	kdqNF4kXZ3LuCbBpyy4mkEvUUG1gVAEpVqaKN7Wx3bEIebwTYIM6CNKZSRiwAnCmf6Q9diHw1La
-	XlIEs2Ehp+3edqHO8LGXn3mh/50yuRmBYzIZXnA==
-X-Gm-Gg: ASbGncvcQ+bPxdkk6O2rgIfgpzro3CpG+eAIz/v9ZRttxkTh2aqbTUs9g6q7cqWqLj0
-	Rl2TV80zqcRtq/fMAc7FpVTCAJxS55OlFqvPn0uq/ASUXbi3/dNDzcjb0AWdEFQ8bMyQeYnUAnb
-	pUXnY19gk=
-X-Google-Smtp-Source: AGHT+IH9IyLn8GVoExU+oQLlxh7oTefH69fzA03PH2aYFHwj0v/wUocnCBinUIb/4NLpBPrOJ0p2aprs1CvgBYqqRcA=
-X-Received: by 2002:a05:6512:308f:b0:546:1d8c:60f1 with SMTP id
- 2adb3069b0e04-546e4662ce7mr11792066e87.15.1740565146777; Wed, 26 Feb 2025
- 02:19:06 -0800 (PST)
+        bh=WvejRLHxI7cWJHZ6jttnlknQfuM1gunX4QyfWK6KcOM=;
+        b=OEtLdxWbFPW1LJJWCUwheBlbQb+gzXJugTiGRni6YlBDvR6h7ZvawVydqHj9YGlbLp
+         lWApDe1XF8gY7KX8+dW24oMmm3r+JOp2LjEEw5fpAgTV0vIBDji6Y05OB4PllYwUXeUk
+         JX/q+qmd8NJOqEKN3S42uQbFs0T2ewz6PbzRlqyHmYifzlu1Ex+u3dD0oCmVWHeue96r
+         fu0K/xg/0BTNh/6HqfabiD4Fv4+2DOQGuI4mRSUlNVmaUoD1+XlWTCvy6jXEt0dLP34d
+         NvP4D1TP+Hf8LQzBSpYguyzw1SlrOPSIoM75fFjj9oQPIvOwWCkhitalwYHERgaHXLvJ
+         2uUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUONwB+CRA3rAjoizJ45DRqNNwiFygwwKKPZkeKz3qX1M0Y+xrq9mBq4SafN71pdNc51w34Q01GKeaCHvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw512CGa1OynggjPvEyHOhpX0RaSHAEIkxhEtRY/fW+b18wYlEi
+	xwmI/J5I6L+ptntzRiFBLQbT/fMPgI9e2Q+tYGHFOCW/vTaT0pgg4R/YtbkNvVg=
+X-Gm-Gg: ASbGncslStAoGqJkz4AAYjteYxRi9/RqsTRazE6P86GOuP+I6inxW9xt3BMVzlfnU6R
+	atiSSF80kyXKwvC8nWAifcTSFLujVpgaG7vnhhALodmqgZzAnHFTxu7NT6b19iLsGr+dtozObmR
+	BogHKjd5CC5Ls5QIfWQ54Rik9SJmBmKCxLXrMd3PHMT37xA3NvmF0cWSCQ/PwndEicnt1oqPmgn
+	mJ4ujqPc/fRQimc+9y4T+4lnrVCQ+9RyZPQFrFy7hUzXPfpuHnfQOSpomxqLQI4ZFd7FrQyqtuD
+	OO2VRZ3NRRvWg95rcEjX+Jg=
+X-Google-Smtp-Source: AGHT+IHtX44cvyUZkHpacOhemqLTunu3D50Mgcq1iaIh7ou+6BH/jVVPHw9q66AFLdQeQkeaqpkm8A==
+X-Received: by 2002:a05:600c:444d:b0:439:89d1:30dc with SMTP id 5b1f17b1804b1-43ab0f2dcbcmr72336785e9.10.1740565169301;
+        Wed, 26 Feb 2025 02:19:29 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:7d02:26:5770:658c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba532bbcsm15963045e9.11.2025.02.26.02.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 02:19:28 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Bamvor Jian Zhang <bamv2005@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Keerthy <j-keerthy@ti.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	linux-leds@vger.kernel.org,
+	kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 00/15] gpiolib: indicate errors in value setters
+Date: Wed, 26 Feb 2025 11:19:27 +0100
+Message-ID: <174056512537.35186.16775359979829251031.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
+References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z71qphikHPGB0Yuv@mva-rohm> <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
- <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
-In-Reply-To: <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 26 Feb 2025 11:18:54 +0100
-X-Gm-Features: AQ5f1Jp5WtBrqIoIAmiHI68a90umMToYtMRHUCvv-S3W-GZVg3ZNkYQ-qANM-U8
-Message-ID: <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 7:09=E2=80=AFAM Matti Vaittinen
-<mazziesaccount@gmail.com> wrote:
-> On 25/02/2025 23:36, Linus Walleij wrote:
-> > we can maybe move it to struct gpio_device in
-> > drivers/gpio/gpiolib.h?
-> >
-> > This struct exist for every gpio_chip but is entirely gpiolib-internal.
-> >
-> > Then it becomes impossible to do it wrong...
->
-> True. I can try seeing what it'd require to do that. But ... If there
-> are any drivers out there altering the valid_mask _after_ registering
-> the driver to the gpio-core ... Then it may be a can of worms and I may
-> just keep the lid closed :)
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That's easy to check with some git grep valid_mask
-and intuition. I think all calls actually changing the valid_mask
-are in the init_valid_mask() callback as they should be.
 
-> Furthermore, I was not 100% sure the valid_mask was not intended to be
-> used directly by the drivers. I hoped you and Bart have an opinion on tha=
-t.
+On Thu, 20 Feb 2025 10:56:57 +0100, Bartosz Golaszewski wrote:
+> The value setter callbacks (both for single and multiple lines) return
+> void even though we have many types of controllers that can fail to set
+> a line's value: i2c, SPI, USB, etc.
+> 
+> For the consumer API: single line setters return void. Multiple line
+> setters do have an integer return value but due to the above, they still
+> cannot be used to indicate problems within the driver.
+> 
+> [...]
 
-Oh it was. First we just had .valid_mask and then it was
-manipulated directly.
+Applied, thanks!
 
-Then we introduced init_valid_mask() and all users switched over
-to using that.
+[01/15] leds: aw200xx: don't use return with gpiod_set_value() variants
+        commit: 129fdfe25ac513018d5fe85b0c493025193ef19f
+[02/15] gpiolib: make value setters have return values
+        commit: 8ce258f62f90cb2d339cc39fa43e5634594a9dfb
+[03/15] gpiolib: wrap gpio_chip::set()
+        commit: d36058b89a4aa30865d4cfeb101bbfd1d1dcb22f
+[04/15] gpiolib: rework the wrapper around gpio_chip::set_multiple()
+        commit: 9b407312755fd5db012413ca005f0f3a661db8dd
+[05/15] gpiolib: introduce gpio_chip setters that return values
+        commit: 98ce1eb1fd87ea1b016e0913ef6836ab0139b5c4
+[06/15] gpio: sim: use value returning setters
+        commit: fe69bedc77c119ffd4e27778eec03c89acb8e87b
+[07/15] gpio: regmap: use value returning setters
+        commit: a458d2309c81902dc6ca19b5037b9d25eb60a4a8
+[08/15] gpio: pca953x: use value returning setters
+        commit: e32ce8f62dd9c0ec923cfb9c783fc04070edb24e
+[09/15] gpio: mockup: use value returning setters
+        commit: 66d231b12eb8d39c21835a9bf553299a278ae363
+[10/15] gpio: aggregator: use value returning setters
+        commit: 468eae4166ab796cd2f9ad2bbb141d914e19c0b1
+[11/15] gpio: max77650: use value returning setters
+        commit: 97c9b59f6658671f3f13f57de1352ec9d16ad13d
+[12/15] gpio: latch: use lock guards
+        commit: 14628b692707fa8e61d0a068ef012156d23dc776
+[13/15] gpio: latch: use value returning setters
+        commit: 4b28762caa7b85609ee1a9a5e1038ae7bbd24892
+[14/15] gpio: davinci: use value returning setters
+        commit: f01436c2a038fe8d7b69a5fe701ab98028ce5cc4
+[15/15] gpio: mvebu: use value returning setters
+        commit: 9080b5d1b9c259645cd0e3694ffba85ccdd25352
 
-So evolution, not intelligent design...
-
-Yours,
-Linus Walleij
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
