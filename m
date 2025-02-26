@@ -1,104 +1,115 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B227D25E81A;
-	Wed, 26 Feb 2025 22:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B1625E81A;
+	Wed, 26 Feb 2025 22:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740610212; cv=none; b=A03o8hznUTtn7+bDoAf5WS1HT5c6LU9sPUf/rPHmJSGjRBX6WIwDnsjpQVeePEOK35BYyVEAB+BVJsEFBglbH1Gh/LgkHBf/u6jcp30wd7yO6Kf9pM959mDjusuRihRZ72Gp5yqpmEAPTBOwxa1opQIu2FYMuEgE6bFsOlKrVcw=
+	t=1740610340; cv=none; b=QPW4/5nCJiSxu9MvS4gpgMlD6HWZN+wmtTQ6ntBvNMhgJ+p2e3NNeNSrDhtyy3LTlsGFoFNJRx2M/gmCnYOsRKCipKRg4Z557G8RqnZv5bt94PQbDbdLpYeu5O+TiqGHnRWqn9JpJ8h5v/N9OFadPCKAP6jNuSNf8Of5qMNMMHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740610212; c=relaxed/simple;
-	bh=5mApkXKPUUu8fT/pMotJnNKInAuHFBHG31AVjsDfbhI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=e5p+MPSQSsUtqljdYZ7qxpuYJOi7CO5FMB1Q3j8ZLcdFpVcdQjf4vbupXNrd+uFnQmGiy9YfGhJLrSY1rNKcvCNGGKGfW9zesgbIttTUTeaGZAd3jpBM6fSIECIjIiGwn+zBL+6mWB3v8K2ZnoTPaTbpeaHdZIvjV5Q9eq8zH1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2m998LV; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740610340; c=relaxed/simple;
+	bh=c8pm/RLQcFzlThTF6jt2RIPrCFmAIpiK1XJK/Dy/Le0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WhE7M3bIsL6aRC/APuR6JdoDBF8BsLZIX587rVypgNL495MtRIQSbN3pGFTInfGs56BjcGx3BiENZiV9/pbbNlnPMb+DXZs6XogLhfAlTefAidaLratFNuxdHPg10zOAjYRJnK5f0C0LJpK9TcLJj+TYI+xkoh/zZXubsVZTEVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=lI1al3X5; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2m998LV"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38f1e8efe82so372558f8f.0;
-        Wed, 26 Feb 2025 14:50:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740610209; x=1741215009; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z9Z5E8n6kLDfAj5O59rt6w34+w06lR7Z40O7p+qUX1k=;
-        b=F2m998LVGqechT8mmrTqBq2gI1DoLKqY5fyzeoPHXiyk6aTQLc832MUvEn0ebJp4hC
-         XC3j44IFIDVeKoX2XYy7ActQ1JK8nEbPDZcbMDGH3On52MW2pqs5BG42s3Qq5eA03rn7
-         jQKcQst+eL3LY4Yk72tQwGqgWBquhN6FaUx/H7CKrI0ASCZrsD0bOkQP/dXpReFFENMm
-         lI89jUclbL0qhxTdiXgATsY3rEM+9yC74w3VkKyJdKLuyz7EyJjxmIJbZoDl3sGr1ARI
-         7JIeOL3kbhTyuFmBFevBtm0MU1ExPmMJ4MOJehE3k9wItV3a2ZHJW+J02OO41rVRYRrr
-         OB+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740610209; x=1741215009;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z9Z5E8n6kLDfAj5O59rt6w34+w06lR7Z40O7p+qUX1k=;
-        b=TE3TDcS7AcGeF1OZ5ddaIDhiffuDGwtDguRefojjlqR4Zf5TaioFy3utgAwHD5jenh
-         GhhesSx1J+YRC393/xYJjfK0nBOwgifB1XWKUJJ+/PV2n7FV4q3fmTPYGz0+UAH10Fss
-         rRop7K1+60U22P+kdyo5OW7Ds7yGAHXzD03pxwngd4ij/ZdI5baAFt6NBbH/c0udzsgU
-         ns1y0pUFXTDe/OkuGMRHSsVpuj26/x6t4gMnXxWd2/Lwomx/HFmVy7zxD1LZagJtqKzq
-         nhU+AcZUaAB276Y5BOZp5xAp5tbFvKHXXV2BNFBqc6vh3KOu+3g0bqXw3RdnmHJvNVAV
-         8voQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX4BylAY0fcmhPEiSCKQtams+/nO2M9quQZUWFUyZI5FMn7IxqkG0nbDeHcJ1vnxJmYvBO38NKjweCCAHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLOfa5yT3WQdracViGaJQ0r/GJRYQdGohfTDsRMk+hx4Cmt39c
-	9RPtiklMFJIG/6EW5K1xBj4kp8z7kgFlbxndS3ZbMAssu+qXRuGV
-X-Gm-Gg: ASbGncu3s7cyDdz0ayo/9W3V2oSahM5tJWrxMXnN1CVlLVUO6oSUm0iXlyJHJgjwJ0H
-	ht3/enDGqlkWR+4x3Qc6vbvefskTXrHs1f12pVsQQLgsmDvC3FYQbETyXqWsm20LbfOLlks0Aff
-	zzwQsOdCMVOq7ZFM7rEPmZUBnAJjr6t4IHb+8d7CAFrheyZxsho12MIcRy+HwV5epGfGUljCfSQ
-	ED5ly8NwrWdSk9HmxPqImB7g8A6/M05b47s6O4vi7HZ1cRBSvTCjrCQwHLGxwDygR1CrRK7m57W
-	UTJTXyvGKLpwtlv2GeyPNB7yu88=
-X-Google-Smtp-Source: AGHT+IHUlRphW0Ca1hhAt05nEWcSc8d+QNTGkOv7KeyGs/4Z3TKCVfkbqoJTXatO3WkXA5tUI1slzA==
-X-Received: by 2002:a05:6000:154b:b0:38d:d666:5457 with SMTP id ffacd0b85a97d-390cc631b04mr9011648f8f.42.1740610208846;
-        Wed, 26 Feb 2025 14:50:08 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba52b7ecsm35242335e9.3.2025.02.26.14.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 14:50:08 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Cc: kernel-janitors@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lI1al3X5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=MkQ8uUHQ+uezvHICBEfyNTjs8v7ihKU40F0pUzTSAuA=; b=lI1al3X5MiKMt2ao5EstWg5YTb
+	fKd0BT5389tq2N7O8iD/8kGfBWC52DX/SDEOWObN/PSVuJn+jy/ysmwFj9tD/ax8cXw+v5H+c3+p3
+	S+oH2uTzJde1ele0RY2yUiqNjdf6OWqAl6yFLrIJtjGVuuso/9hgBw9xTKMaHZcQLKtI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tnQG1-000PBp-Ql; Wed, 26 Feb 2025 23:52:01 +0100
+Date: Wed, 26 Feb 2025 23:52:01 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] scripts/sorttable: Fix resource leak on file pointer fp
-Date: Wed, 26 Feb 2025 22:49:34 +0000
-Message-ID: <20250226224934.594983-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+Subject: Re: [PATCH] e1000e: Link flap workaround option for false IRP events
+Message-ID: <36ae9886-8696-4f8a-a1e4-b93a9bd47b2f@lunn.ch>
+References: <mpearson-lenovo@squebb.ca>
+ <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
 
-There is a resource leak on fp on an error return path in function
-parse_symbols that causes a resource leak. Fix this by adding in
-the missing fclose.
+On Wed, Feb 26, 2025 at 02:44:12PM -0500, Mark Pearson wrote:
+> Issue is seen on some Lenovo desktop workstations where there
+> is a false IRP event which triggers a link flap.
+> Condition is rare and only seen on networks where link speed
+> may differ along the path between nodes (e.g 10M/100M)
+> 
+> Intel are not able to determine root cause but provided a
+> workaround that does fix the issue. Tested extensively at Lenovo.
+> 
+> Adding a module option to enable this workaround for users
+> who are impacted by this issue.
 
-Fixes: ef378c3b8233 ("scripts/sorttable: Zero out weak functions in mcount_loc table")
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Why is a module option needed? Does the workaround itself introduce
+issues? Please describe those issues?
+
+In general, module options are not liked. So please include in the
+commit message why a module option is the only option.
+ 
+> Signed-off-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+> ---
+>  drivers/net/ethernet/intel/e1000e/netdev.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+> index 286155efcedf..06774fb4b2dd 100644
+> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> @@ -37,6 +37,10 @@ static int debug = -1;
+>  module_param(debug, int, 0);
+>  MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
+>  
+> +static int false_irp_workaround;
+> +module_param(false_irp_workaround, int, 0);
+> +MODULE_PARM_DESC(false_irp_workaround, "Enable workaround for rare false IRP event causing link flap");
+> +
+>  static const struct e1000_info *e1000_info_tbl[] = {
+>  	[board_82571]		= &e1000_82571_info,
+>  	[board_82572]		= &e1000_82572_info,
+> @@ -1757,6 +1761,21 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
+>  	/* read ICR disables interrupts using IAM */
+>  	if (icr & E1000_ICR_LSC) {
+>  		hw->mac.get_link_status = true;
+> +
+> +		/*
+> +		 * False IRP workaround
+> +		 * Issue seen on Lenovo P5 and P7 workstations where if there
+> +		 * are different link speeds in the network a false IRP event
+> +		 * is received, leading to a link flap.
+> +		 * Intel unable to determine root cause. This read prevents
+> +		 * the issue occurring
+> +		 */
+> +		if (false_irp_workaround) {
+> +			u16 phy_data;
+> +
+> +			e1e_rphy(hw, PHY_REG(772, 26), &phy_data);
+
+Please add some #define for these magic numbers, so we have some idea
+what PHY register you are actually reading. That in itself might help
+explain how the workaround actually works.
+
+    Andrew
+
 ---
- scripts/sorttable.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 7b4b3714b1af..e35abf28d037 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -665,8 +665,10 @@ static int parse_symbols(const char *fname)
- 
- 		addr = strtoull(addr_str, NULL, 16);
- 		size = strtoull(size_str, NULL, 16);
--		if (add_field(addr, size) < 0)
-+		if (add_field(addr, size) < 0) {
-+			fclose(fp);
- 			return -1;
-+		}
- 	}
- 	fclose(fp);
- 
--- 
-2.47.2
-
+pw-bot: cr
