@@ -1,98 +1,142 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80EF14A627;
-	Wed, 26 Feb 2025 15:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050BE21C184;
+	Wed, 26 Feb 2025 15:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584478; cv=none; b=RU069tCdAMbqzS3VcjqUhdHhoG5D0bwLy+1RY03C+CMDmGufFbLQ2N0RcmYMCVmKK6Y6NJbYo2VF9iNRecXSa1rdT7xgsI/2cq+L20eHCZH+ZEBsCvgoMmJvWIKqBfs40F4qQDudzWVEPR+XQHaGgzUys9d0MzB8E4AC7HSF+qk=
+	t=1740584529; cv=none; b=sQv4zShFM1/H/TUzwOQTGoKr7gQnM20AhXudYuDl/pMtI7humKcnsZMC3K33Vllm03zL9Adfwt6JQwVjvKowCAYqyb/GXPL4JLbW2tEiKzbvQKHbitg0GEchVlUzk4WnyuwVey4MV+5xZXbqy7inEWErPoUM/VG5gior2xzBUps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584478; c=relaxed/simple;
-	bh=g4VX+IIjpYFSia5Wf2OfNpcphkL/mbF6IOOP6hK6jk8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MBwU4Qj/nYMaEnHIXETcn3HTqVNiFMmyPGQf3zDQwhG9xXlHGoXQ4h7bOOq7EPquDatvFrM3qJujpL9w0TZRwW8WayIM7wrELb/k73T0RNoYmH/sfv4owuWLenskRyZMu8i/EcW+yFcAnLOZeAPcWjwodZDnVOZcVece6gNtAkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=ya8e/Mih; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1740584529; c=relaxed/simple;
+	bh=4lwpw1eA/OAPQ5ze01nLd6Rlmb9Y7GXtIaV2zlbGfNc=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=RZVgJ1/72ija4g6+M1rKhzkTGH4kmGzOB8AM7gvwHdiEA70oP8oc+KxiQP+o5AyjDz3oSOEGLPgaqJ5P/AZN2/RZUfP3puq5Mx+TRAAVFa/jvc4zBCdhVP0Qm753tOViquj18KV6nBFdbw0+hMQkAmcq8tKCFlIbW0uPmUCbAW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dXnhwFEw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ya8e/Mih"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=JQFHZ/kdDsS4cmacYVEXIC+sRK+7fav8gHKUqIh5pBo=; b=ya8e/MihaW9zZqW6s9mBDHFloc
-	Sm5jbxrIfXIRjDtO8huDZnrzi5pWuHJVcEart1ut2y2g1y8SE+OI1Qs3gsoWm6iJNcW+nOB5XCZ99
-	FGQ1LNq8aoLJ2cSJmqsNg9V8YJLA+9TOEQ1My3owfK18QKqSxD16YV82bHL7KXCT+MypbIm6MB75i
-	O4UMnBszWlJB5AsJ77jMv/RtDPaenNeZo7YB6hqmWjCjmv3D19S7uqFsAW/AnL8NMYJ4V56Xs1EDu
-	5aFm05oKk7nSsSeE71wde3f8TFBoaWmWI6FRuLSfE8OLignQUE5U6iEhXEMTGMLcwA4yc9AlsVYcE
-	klDf8hjw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42196)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tnJWm-0004kG-2T;
-	Wed, 26 Feb 2025 15:40:52 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tnJWk-0007DX-0U;
-	Wed, 26 Feb 2025 15:40:50 +0000
-Date: Wed, 26 Feb 2025 15:40:49 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-Cc: Simon Horman <horms@kernel.org>, Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v8 5/6] net: stmmac: configure SerDes on
- mac_finish
-Message-ID: <Z782AcW4a7SEfDUT@shell.armlinux.org.uk>
-References: <20250226074837.1679988-1-yong.liang.choong@linux.intel.com>
- <20250226074837.1679988-6-yong.liang.choong@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dXnhwFEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44595C4CED6;
+	Wed, 26 Feb 2025 15:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740584528;
+	bh=4lwpw1eA/OAPQ5ze01nLd6Rlmb9Y7GXtIaV2zlbGfNc=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=dXnhwFEwBY6VP6k7cOZwDBV1N5vsNzykK8CthuOaXQ2jeLgaF+JX4B43aMCNVf7yC
+	 PbnI7DElkJwpHJzVd337zgkQfJhuByiCe/Dm7CaafCcCIWYAUGpn48CmMtqMhV38Q7
+	 u6TOS+jhcizfpd/mVVaDet2JGXGWq00m9rpxBOKh01OFxkTjr2NxYdCo+n+Wy1aTnt
+	 Iz317hYKewS5jGMvj9oJ1fg/LjEuJGReXlrbPZotbpuVsRXSW4lzdcMsyh0IKysSI2
+	 qru9t3IE355Fk7EOKIoFotJobEsAcx7SFWeZSu8Vf5aHqBRps9n4Q0wWjf7MpJHJZZ
+	 tBmghqK3FbSyA==
+Date: Wed, 26 Feb 2025 09:42:06 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226074837.1679988-6-yong.liang.choong@linux.intel.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, 
+ linux-clk@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Georgi Djakov <djakov@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-tegra@vger.kernel.org, 
+ Michael Turquette <mturquette@baylibre.com>, devicetree@vger.kernel.org, 
+ Prashant Gaikwad <pgaikwad@nvidia.com>, 
+ Jonathan Hunter <jonathanh@nvidia.com>, Dmitry Osipenko <digetx@gmail.com>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+In-Reply-To: <20250225143501.68966-1-clamor95@gmail.com>
+References: <20250225143501.68966-1-clamor95@gmail.com>
+Message-Id: <174058435857.2478604.15934788005971294558.robh@kernel.org>
+Subject: Re: [PATCH v1 0/9] Tegra114: implement EMC support
 
-On Wed, Feb 26, 2025 at 03:48:36PM +0800, Choong Yong Liang wrote:
-> SerDes will configure according to the provided interface mode after
-> finish a major reconfiguration of the interface mode.
+
+On Tue, 25 Feb 2025 16:34:52 +0200, Svyatoslav Ryhel wrote:
+> Add support for External Memory Controller found in Tegra 4 SoC along
+> with adjustments required for it to work properly.
 > 
-> Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
+> Tested on ASUS TF701T (T40X) and Nvidia Tegratab (T40S). Both work fine.
+> 
+> Svyatoslav Ryhel (9):
+>   ARM: tegra: Add ACTMON support on Tegra114
+>   dt-bindings: memory: Document Tegra114 Memory Controller
+>   drivers: memory: tegra: implement EMEM regs and ICC ops for T114
+>   dt-bindings: memory: tegra114: Add memory client IDs
+>   clk: tegra114: remove emc to mc clock mux
+>   dt-bindings: memory: Document Tegra114 External Memory Controller
+>   memory: tegra: Add Tegra114 EMC driver
+>   ARM: tegra: Add External Memory Controller node on Tegra114
+>   ARM: tegra: Add EMC OPP and ICC properties to Tegra114 EMC and ACTMON
+>     device-tree nodes
+> 
+>  .../nvidia,tegra114-emc.yaml                  |  431 +++++
+>  .../nvidia,tegra114-mc.yaml                   |  154 ++
+>  .../dts/nvidia/tegra114-peripherals-opp.dtsi  |  151 ++
+>  arch/arm/boot/dts/nvidia/tegra114.dtsi        |   32 +
+>  drivers/clk/tegra/clk-tegra114.c              |   48 +-
+>  drivers/memory/tegra/Kconfig                  |   12 +
+>  drivers/memory/tegra/Makefile                 |    1 +
+>  drivers/memory/tegra/tegra114-emc.c           | 1487 +++++++++++++++++
+>  drivers/memory/tegra/tegra114.c               |  193 +++
+>  include/dt-bindings/memory/tegra114-mc.h      |   67 +
+>  10 files changed, 2561 insertions(+), 15 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra114-emc.yaml
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/nvidia,tegra114-mc.yaml
+>  create mode 100644 arch/arm/boot/dts/nvidia/tegra114-peripherals-opp.dtsi
+>  create mode 100644 drivers/memory/tegra/tegra114-emc.c
+> 
+> --
+> 2.43.0
+> 
+> 
+> 
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Thanks!
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/nvidia/' for 20250225143501.68966-1-clamor95@gmail.com:
+
+arch/arm/boot/dts/nvidia/tegra114-tn7.dtb: clock@60006000: 'nvidia,external-memory-controller' does not match any of the regexes: '^(sclk)|(pll-[cem])$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/clock/nvidia,tegra20-car.yaml#
+arch/arm/boot/dts/nvidia/tegra114-tn7.dtb: actmon@6000c800: compatible: ['nvidia,tegra114-actmon', 'nvidia,tegra124-actmon'] is too long
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-tn7.dtb: actmon@6000c800: '#cooling-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-roth.dtb: clock@60006000: 'nvidia,external-memory-controller' does not match any of the regexes: '^(sclk)|(pll-[cem])$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/clock/nvidia,tegra20-car.yaml#
+arch/arm/boot/dts/nvidia/tegra114-roth.dtb: actmon@6000c800: compatible: ['nvidia,tegra114-actmon', 'nvidia,tegra124-actmon'] is too long
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-roth.dtb: actmon@6000c800: '#cooling-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-dalmore.dtb: clock@60006000: 'nvidia,external-memory-controller' does not match any of the regexes: '^(sclk)|(pll-[cem])$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/clock/nvidia,tegra20-car.yaml#
+arch/arm/boot/dts/nvidia/tegra114-dalmore.dtb: actmon@6000c800: compatible: ['nvidia,tegra114-actmon', 'nvidia,tegra124-actmon'] is too long
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-dalmore.dtb: actmon@6000c800: '#cooling-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-asus-tf701t.dtb: clock@60006000: 'nvidia,external-memory-controller' does not match any of the regexes: '^(sclk)|(pll-[cem])$', 'pinctrl-[0-9]+'
+	from schema $id: http://devicetree.org/schemas/clock/nvidia,tegra20-car.yaml#
+arch/arm/boot/dts/nvidia/tegra114-asus-tf701t.dtb: actmon@6000c800: compatible: ['nvidia,tegra114-actmon', 'nvidia,tegra124-actmon'] is too long
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-asus-tf701t.dtb: actmon@6000c800: '#cooling-cells' is a required property
+	from schema $id: http://devicetree.org/schemas/devfreq/nvidia,tegra30-actmon.yaml#
+arch/arm/boot/dts/nvidia/tegra114-asus-tf701t.dtb: bluetooth: reset-gpios: False schema does not allow [[22, 134, 1]]
+	from schema $id: http://devicetree.org/schemas/net/bluetooth/brcm,bluetooth.yaml#
+
+
+
+
+
