@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D16563CF;
-	Wed, 26 Feb 2025 01:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D638155A52;
+	Wed, 26 Feb 2025 01:07:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740532056; cv=none; b=OHozBbikioVRc2h3gBZs7XAESn9YJ9RMb1qWh3hhg6cZ/wt63ivo3yjADzFdPF/cVvIxll7Qbuj5KD38MOA2UE9FlE5pn99LKs0SDxx3wpl4I2+X/1sieHweHhPC4CeLusyIrRGiL6j3jmAFveKgBQvMSyXwP61L1cTcDySJsQg=
+	t=1740532059; cv=none; b=k/EnEpiDibo1DguGx4v0D+mGGdHrqulpv+sGj4FKpB2jWcXUqcdq02A80AWlsUxOUlUKP+11F+NVJPGybct0aSBIgF7icRbmWpIPYw6lfBjEMjT7SQmwi4T+G2iDTcYPR9u8lmQoWGSiCQHoSg95SS1erJwnQSqhO55rEgi2Pv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740532056; c=relaxed/simple;
-	bh=eYDNCmtkmFlzVyVO7qge4AhwAqruXRUwlcg/pjbp2b4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XAVO2/A/pVeBLUPwLt3ZOgSuiCTmLT90eXbTA/+kXgJqYHgIA5dRreNfhYwCx0hwksM3Ggkbv3UG61stY8BPo15ItDLzftIP3+WUgmZmiXv0CSLgL0n2XB1UCJe/zNIoBoid+8rGJrWZ9wSjuzsxByuZ46v1RPzX7wIwyMYiE8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iFCiMIFa; arc=none smtp.client-ip=198.175.65.13
+	s=arc-20240116; t=1740532059; c=relaxed/simple;
+	bh=S+6m2ahVPH+LSNhzYKSi30AW7vgAqg0xXfDPaKKHiaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=evpMjFvIR8YDu6MAo0uDn/HxHYY9e87DNueWm3mG6amIJ20V/RDcAyIeQV0rOw4o9UmJaB64y+TWP9uvusKKdRfjZsj5dVQGMOWswsx99ZAypKFHzchc3OCW5s35540RGWtyfjdrlqaYaUarq73ix2PUU1nCVQRQqF/2+Bb+Ktk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h4RinY7j; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iFCiMIFa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h4RinY7j"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740532054; x=1772068054;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=eYDNCmtkmFlzVyVO7qge4AhwAqruXRUwlcg/pjbp2b4=;
-  b=iFCiMIFarUoyBXD+g4WCE0ky9fCA1JAUpzaz7VidaMfWHVr3ittB4Jkx
-   XDQh960hkHc/NvoKLa2fv+/FHisqeY8a0wcCqboJUaopqQSPt2YAnEMt4
-   0PujsQrffOTOJdmi0B+0cMGHDFuv85W7BQFmaTJgUKTnxIXVcfk4yG7wU
-   tCfrKnciI5LOpYWPfcsYgK5rGDXNDwxGL4j9S8NnM1Ner4PIXFDYUAWN6
-   cu7f4K2QvCC8LuYHDzyVVC9+0fppXPYU1fEzhiJVKegWGenpY7yvwKen1
-   Bmo4is3pDV+Mna5kh6RHN3TRNfaqBUozFN7Ik/t99jNwgrAeJ6qRlQgQt
-   Q==;
-X-CSE-ConnectionGUID: RU3XitX4TsukX3KPi21Bgw==
-X-CSE-MsgGUID: aj632BOzRtSxW4sQ6ZJifA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52362176"
+  t=1740532058; x=1772068058;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=S+6m2ahVPH+LSNhzYKSi30AW7vgAqg0xXfDPaKKHiaA=;
+  b=h4RinY7j021aoVBiVWNop3wVOC2POaPDx2jhP1IkhItsbSSI5Y0C12bh
+   TqnRv5uBUDG+uJv5oxKXmHsajqarFQfbEZ3eu3JxfEeoAMxZn6/qoxX9Q
+   mqEeAe1svjRiao/4Hv4iHP0uoZT87bddFjV+G/xqdM9IjLEj0rh8OftOe
+   2b0A7tsmSdY38wK4GPoNlhmaBaesLXo8E6UlMObxYQAbfsyqM2VcPQ/WR
+   38o8Cu6yZnq8J830Z7/uKDICpHwPtXe3i84IOfQKnaeJ3Iu7/5BQI+BQp
+   o4Xps5T6IFhlIbrKVAUIuHrN/Yiz3ddnTzX9FAaVIdtZ9r+h7dMeeP3zf
+   A==;
+X-CSE-ConnectionGUID: +r7naifvTLqcbLsEqJd03g==
+X-CSE-MsgGUID: c4qUxtfIT56ZVtqhCbBeOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52362191"
 X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="52362176"
+   d="scan'208";a="52362191"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 17:07:33 -0800
-X-CSE-ConnectionGUID: AWdVZjqZR/K77cmw8oo8yg==
-X-CSE-MsgGUID: br/EYFkMRsKS4R3Drrb/NA==
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 17:07:36 -0800
+X-CSE-ConnectionGUID: 5xFzlMoER5Gzhv9UiAsAxA==
+X-CSE-MsgGUID: XwSt+c1ETn2Da42kjVCcEw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="147467330"
+   d="scan'208";a="147467345"
 Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.124.166.169])
-  by fmviesa001.fm.intel.com with ESMTP; 25 Feb 2025 17:07:32 -0800
+  by fmviesa001.fm.intel.com with ESMTP; 25 Feb 2025 17:07:36 -0800
 From: "Chang S. Bae" <chang.seok.bae@intel.com>
 To: linux-kernel@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
@@ -52,127 +53,133 @@ Cc: x86@kernel.org,
 	dave.hansen@linux.intel.com,
 	shuah@kernel.org,
 	chang.seok.bae@intel.com
-Subject: [PATCH 0/9] selftests/x86/xstate: Introduce common code for testing extended states
-Date: Tue, 25 Feb 2025 17:07:20 -0800
-Message-ID: <20250226010731.2456-1-chang.seok.bae@intel.com>
+Subject: [PATCH 3/9] selftests/x86/xstate: Enumerate and name xstate components
+Date: Tue, 25 Feb 2025 17:07:23 -0800
+Message-ID: <20250226010731.2456-4-chang.seok.bae@intel.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250226010731.2456-1-chang.seok.bae@intel.com>
+References: <20250226010731.2456-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi all,
+After moving essential helpers from amx.c, the code remains neutral
+regarding which xstate components it handles. However, explicitly listing
+known components helps users identify which features are ready for
+testing.
 
-This series proposes a rework of xstate-related tests to improve
-maintainability and expand test coverage.
+Enumerate xstate components to facilitate identification. Extend struct
+xstate_info to include a name field, providing a human-readable
+identifier.
 
-== Motivation: Addressing Missing and New XSTATE Tests ==
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+---
+ tools/testing/selftests/x86/amx.c    |  2 -
+ tools/testing/selftests/x86/xstate.h | 60 ++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+), 2 deletions(-)
 
-With the introduction of AMX, a new test suite [1] was created to verify
-dynamic state handling by the kernel as observed from userspace. However,
-previous tests for non-dynamic states like AVX lacked ABI validation,
-leaving gaps in coverage. While these states currently function without
-major issues (following the alternate sigstack fix [2]), xstate testing
-in the x86 selftest suite has been largely overlooked.
-
-Now, with Intel introducing another extended state, Advanced Performance
-Extensions (APX) [3], a correspondent test case is need. The APX enabling
-series will follow shortly and will leverage this refactored selftest
-framework.
-
-== Selftest Code Rework ==
-
-To ensure ABI validation and core functionality across various xstates,
-refactoring the test code is necessary. Without this, existing code from
-amx.c would need to be duplicated, compromising the structural quality of
-xstate tests.
-
-This series introduces a shared test framework for extended state
-validation, applicable to both existing and new xstates. The test cases
-cover:
-* Context switching
-* ABI compatibility for signal handling
-* ABI compatibility for ptrace interactions
-
-== Patch Organization ==
-
-The patchset is structured as follows:
-
-* PATCH1: Preparatory cleanup — removing redundant signal handler
-  registration code.
-* PATCH2/3: Introduce low-level XSAVE helpers and xstate component
-  enumeration.
-* PATCH4/5: Refactor existing test code.
-* PATCH6: Introduce a new signal test case.
-* PATCH7/8: Consolidate test invocations and clarify the list of
-  supported features.
-* PATCH9: Add test coverage for AVX.
-
-== Coverage and Future Work Considerations ==
-
-Currently, these tests are aligned with 64-bit mode only. Support for
-32-bit cases will be considered when necessary, but only after this phase
-of rework is finalized.
-
-FWIW, the AMX TILECFG state is trivial, requiring almost constant values.
-Additionally, various PKRU tests are already established in
-tools/selftests/mm.
-
-This series is based on the tip/master branch. You can also find it in
-the following repository:
-    git://github.com/intel/apx.git selftest-xstate_v1
-
-Thanks,
-Chang
-
-[1] https://lore.kernel.org/all/20211026122523.AFB99C1F@davehans-spike.ostc.intel.com/
-[2] https://lore.kernel.org/lkml/20210518200320.17239-1-chang.seok.bae@intel.com/
-[3] https://www.intel.com/content/www/us/en/developer/articles/technical/advanced-performance-extensions-apx.html
-
-Chang S. Bae (9):
-  selftests/x86: Consolidate redundant signal helper functions
-  selftests/x86/xstate: Refactor XSAVE helpers for general use
-  selftests/x86/xstate: Enumerate and name xstate components
-  selftests/x86/xstate: Refactor context switching test
-  selftests/x86/xstate: Refactor ptrace ABI test
-  selftests/x86/xstate: Introduce signal ABI test
-  selftests/x86/xstate: Consolidate test invocations into a single entry
-  selftests/x86/xstate: Clarify supported xstates
-  selftests/x86/avx: Add AVX test
-
- tools/testing/selftests/x86/Makefile          |   6 +-
- tools/testing/selftests/x86/amx.c             | 442 +---------------
- tools/testing/selftests/x86/avx.c             |  12 +
- .../selftests/x86/corrupt_xstate_header.c     |  14 +-
- tools/testing/selftests/x86/entry_from_vm86.c |  24 +-
- tools/testing/selftests/x86/fsgsbase.c        |  24 +-
- tools/testing/selftests/x86/helpers.h         |  28 +
- tools/testing/selftests/x86/ioperm.c          |  25 +-
- tools/testing/selftests/x86/iopl.c            |  25 +-
- tools/testing/selftests/x86/ldt_gdt.c         |  18 +-
- tools/testing/selftests/x86/mov_ss_trap.c     |  14 +-
- tools/testing/selftests/x86/ptrace_syscall.c  |  24 +-
- tools/testing/selftests/x86/sigaltstack.c     |  26 +-
- tools/testing/selftests/x86/sigreturn.c       |  24 +-
- .../selftests/x86/single_step_syscall.c       |  22 -
- .../testing/selftests/x86/syscall_arg_fault.c |  12 -
- tools/testing/selftests/x86/syscall_nt.c      |  12 -
- tools/testing/selftests/x86/sysret_rip.c      |  24 +-
- tools/testing/selftests/x86/test_vsyscall.c   |  13 -
- tools/testing/selftests/x86/unwind_vdso.c     |  12 -
- tools/testing/selftests/x86/xstate.c          | 477 ++++++++++++++++++
- tools/testing/selftests/x86/xstate.h          | 195 +++++++
- 22 files changed, 753 insertions(+), 720 deletions(-)
- create mode 100644 tools/testing/selftests/x86/avx.c
- create mode 100644 tools/testing/selftests/x86/xstate.c
- create mode 100644 tools/testing/selftests/x86/xstate.h
-
-
-base-commit: 5bff053d066ba892464995ae4a7246f7a78fce2d
+diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
+index 366cfec221e4..cde22f303905 100644
+--- a/tools/testing/selftests/x86/amx.c
++++ b/tools/testing/selftests/x86/amx.c
+@@ -29,8 +29,6 @@
+ /* err() exits and will not return */
+ #define fatal_error(msg, ...)	err(1, "[FAIL]\t" msg, ##__VA_ARGS__)
+ 
+-#define XFEATURE_XTILECFG	17
+-#define XFEATURE_XTILEDATA	18
+ #define XFEATURE_MASK_XTILECFG	(1 << XFEATURE_XTILECFG)
+ #define XFEATURE_MASK_XTILEDATA	(1 << XFEATURE_XTILEDATA)
+ #define XFEATURE_MASK_XTILE	(XFEATURE_MASK_XTILECFG | XFEATURE_MASK_XTILEDATA)
+diff --git a/tools/testing/selftests/x86/xstate.h b/tools/testing/selftests/x86/xstate.h
+index 6729ffde6cc4..d3461c438461 100644
+--- a/tools/testing/selftests/x86/xstate.h
++++ b/tools/testing/selftests/x86/xstate.h
+@@ -9,6 +9,59 @@
+ #define XSAVE_HDR_OFFSET	512
+ #define XSAVE_HDR_SIZE		64
+ 
++/*
++ * List of XSAVE features Linux knows about. Copied from
++ * arch/x86/include/asm/fpu/types.h
++ */
++enum xfeature {
++	XFEATURE_FP,
++	XFEATURE_SSE,
++	XFEATURE_YMM,
++	XFEATURE_BNDREGS,
++	XFEATURE_BNDCSR,
++	XFEATURE_OPMASK,
++	XFEATURE_ZMM_Hi256,
++	XFEATURE_Hi16_ZMM,
++	XFEATURE_PT_UNIMPLEMENTED_SO_FAR,
++	XFEATURE_PKRU,
++	XFEATURE_PASID,
++	XFEATURE_CET_USER,
++	XFEATURE_CET_KERNEL_UNUSED,
++	XFEATURE_RSRVD_COMP_13,
++	XFEATURE_RSRVD_COMP_14,
++	XFEATURE_LBR,
++	XFEATURE_RSRVD_COMP_16,
++	XFEATURE_XTILECFG,
++	XFEATURE_XTILEDATA,
++
++	XFEATURE_MAX,
++};
++
++/* Copied from arch/x86/kernel/fpu/xstate.c */
++static const char *xfeature_names[] =
++{
++	"x87 floating point registers",
++	"SSE registers",
++	"AVX registers",
++	"MPX bounds registers",
++	"MPX CSR",
++	"AVX-512 opmask",
++	"AVX-512 Hi256",
++	"AVX-512 ZMM_Hi256",
++	"Processor Trace (unused)",
++	"Protection Keys User registers",
++	"PASID state",
++	"Control-flow User registers",
++	"Control-flow Kernel registers (unused)",
++	"unknown xstate feature",
++	"unknown xstate feature",
++	"unknown xstate feature",
++	"unknown xstate feature",
++	"AMX Tile config",
++	"AMX Tile data",
++	"unknown xstate feature",
++};
++
+ struct xsave_buffer {
+ 	union {
+ 		struct {
+@@ -58,6 +111,7 @@ static inline uint32_t get_xbuf_size(void)
+ }
+ 
+ struct xstate_info {
++	const char *name;
+ 	uint32_t num;
+ 	uint32_t mask;
+ 	uint32_t xbuf_offset;
+@@ -69,6 +123,12 @@ static inline struct xstate_info get_xstate_info(uint32_t xfeature_num)
+ 	struct xstate_info xstate = { };
+ 	uint32_t eax, ebx, ecx, edx;
+ 
++	if (xfeature_num >= XFEATURE_MAX) {
++		ksft_print_msg("unknown state\n");
++		return xstate;
++	}
++
++	xstate.name = xfeature_names[xfeature_num];
+ 	xstate.num  = xfeature_num;
+ 	xstate.mask = 1 << xfeature_num;
+ 
 -- 
 2.45.2
 
