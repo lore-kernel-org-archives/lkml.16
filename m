@@ -1,140 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3533270021
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:44:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AA2270028;
+	Wed, 26 Feb 2025 23:46:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740613482; cv=none; b=SKumEF2trcHxPRWyOhesbazDZJN4ucPeCdthKBZ8N8AAmSHxiTzwNhQ6seMlJi3yZZyxEYMGshXLBC5zp0Rf5kMgzGagd4gGOopHl/7cUuX3b622nM6Lcmpj3oJ6Wzr8BCEbgxM1eJQJT555GLRbsRkE3m+bOQrVTzJ7HiebI5A=
+	t=1740613598; cv=none; b=iY3WpxeP6YgGvS7XP0+szk1eye7Inz4qeFzn2BsAJKqO/YOJ1+RIu1HO3Aw5GZXBLlidqoHwJw5wUJK4GW+0fjlMatT7bux8Yzj35KQM6COXQzpBkQquZE5Z1d2uxOSvwiU9HArr0peYeEoW/Zzmz863otNXO6gP6KLHpJxmr2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740613482; c=relaxed/simple;
-	bh=OYOX2uiCvkUWkRn0XXSTHXXyZoWRB9OUt3GwfbVNKHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAwGHg0B38sZPdAO9BeFCjolO0GORjvgqyhC4pbzaHXv2cbIm0kDofXREzVchD88P6uS+i2j16VN2hDhB9hYmoBAyoOQXLLKIPHoH5OSTZ3i9SpdQt7xEqFCJXRl/6HdSwwSdrwd5Sm53xAUtGTV14hFGM0wLI2avZ6+blWEF1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQZcgyGn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740613598; c=relaxed/simple;
+	bh=6ftfCkEYFUthTag7/WYnVErlCC9sJd5WAdqss6rh2RM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Gy7knkF8vdNZ2niEZMvjcoWGNUTCy50FEquUCTrJ45UBkeuTmev/+5swC3Ee8/quSsMeBLbhALYSDbJ1YK6tZH0fofRDwup9EJCaVi0x6gLrp+WrEmma0igj3Yk5sgMWlhhOEN+9RP084zgdOE22D9TM1leJrU1aH8OjR5o2yxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kaz3srJy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQZcgyGn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E840BC4CED6;
-	Wed, 26 Feb 2025 23:44:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kaz3srJy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC13C4CEE8;
+	Wed, 26 Feb 2025 23:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740613482;
-	bh=OYOX2uiCvkUWkRn0XXSTHXXyZoWRB9OUt3GwfbVNKHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BQZcgyGnxvtMcqIGzvimFzamruEPabqKmvW56JvlAmQKuHAwUach5wgNBEiPaH7+M
-	 Kw4Yk9isUcpYqvY8P+Ii74OQatkvu4waCqtTcxPLMsls4hlV+VZxcWbPX34eqPqo8X
-	 9WFb4HsJaz1Eq2pPHHLDYx33xwOce3pubtCtbIQZb3r6uv4pJGdxBeO7tfw+7N1ZXd
-	 FJ8cj+mVATtnw6ytrBu4g0JovfCEA7ZpL7mJWV3NNZxh/CNS6YHHX8dDovRI9vgYnQ
-	 dyZvw3nQiZ6KoT3BGBootz+v4W2giM1cvqHzZBdGDHlc36RvUJS1lNJZ78+6+joSsz
-	 b8+y5An7Z2ufQ==
-Date: Wed, 26 Feb 2025 15:44:40 -0800
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: "Kaplan, David" <David.Kaplan@amd.com>, Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
-Message-ID: <20250226234440.4dk4t3urkzt4zll7@jpoimboe>
-References: <LV3PR12MB9265249E8D0FD3920C42A1A994FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250217233928.k3oem3bm7w63jzfr@jpoimboe>
- <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250218070501.7mwcxqgsuxl3meef@jpoimboe>
- <20250218085203.GDZ7RKM6IyPDQAkZ8A@fat_crate.local>
- <20250220220440.ma5yfebhiovkqojt@jpoimboe>
- <LV3PR12MB9265DE3082FA0A7FDF9B587594C22@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250226201453.jgg6kucaathzmcvs@desk>
- <LV3PR12MB9265F875F52317BBCDF953EC94C22@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250226221324.hq2nevnnnrpgo75n@desk>
+	s=k20201202; t=1740613598;
+	bh=6ftfCkEYFUthTag7/WYnVErlCC9sJd5WAdqss6rh2RM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Kaz3srJylFaYL/nS4MWe15aZ/hJlqNZJt9Tr1AVBW3HIFKSgn2vXCsrv6yyPr9wcU
+	 uTtk7ujLLszX/EITv9PsHUFY9tlEBW58SF1LxnteqZ1+HBPU73jYT16Tl30QzIpN3r
+	 diAQ5N49wtB5OVFlcEc8BRRRuazNP4ZNoV1vrxdNII8cukaI9ognOG/bji3PINP1Ip
+	 GMZ4DnFQnvD8ufDxk50u6n7bKEcWz6VYsq9f/9YH4N6wC3TLMq0aAKdtVcd4OgqZFZ
+	 yXv/Vo8b+rwDneQ5AY5ShUQB7/xaa5FAwqZkQYTbM6gd6pJNdmpnnmThlTOZV5mNPG
+	 tKoarA7aM1n4w==
+Date: Thu, 27 Feb 2025 08:46:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Yonghong Song <yhs@meta.com>, Breno Leitao <leitao@debian.org>, Neal
+ Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
+ "kuba@kernel.org" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
+ <linux-trace-kernel@vger.kernel.org>, Kernel Team <kernel-team@meta.com>,
+ "yonghong.song@linux.dev" <yonghong.song@linux.dev>
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+Message-Id: <20250227084631.025e02eee682c42f296fe570@kernel.org>
+In-Reply-To: <CANn89i+zxMje+wbQzLKbSq_WKYnwGdMyAdStMm4GqkdJCvWPOg@mail.gmail.com>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+	<CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
+	<SA3PR15MB5630CFBB36C212008DA8ACC7CAC02@SA3PR15MB5630.namprd15.prod.outlook.com>
+	<CANn89i+zxMje+wbQzLKbSq_WKYnwGdMyAdStMm4GqkdJCvWPOg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250226221324.hq2nevnnnrpgo75n@desk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 02:13:24PM -0800, Pawan Gupta wrote:
-> On Wed, Feb 26, 2025 at 09:03:58PM +0000, Kaplan, David wrote:
-> > > Extending =auto to take attack vectors is going to be tricky, because it already
-> > > takes ",nosmt" which would conflict with ",no_cross_thread".
+On Mon, 24 Feb 2025 20:23:00 +0100
+Eric Dumazet <edumazet@google.com> wrote:
+
+> On Mon, Feb 24, 2025 at 8:13 PM Yonghong Song <yhs@meta.com> wrote:
+> >
+> > > ________________________________________
 > > >
-> > > How about we keep =off, and =auto as is, and add:
+> > > On Mon, Feb 24, 2025 at 7:24 PM Breno Leitao <leitao@debian.org> wrote:
+> > >>
+> > >> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabling
+> > >> the tracing of TCP messages being sent.
+> > >>
+> > >> Meta has been using BPF programs to monitor this function for years,
+> > >> indicating significant interest in observing this important
+> > >> functionality. Adding a proper tracepoint provides a stable API for all
+> > >> users who need visibility into TCP message transmission.
+> > >>
+> > >> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> > >> creating unnecessary trace event infrastructure and tracefs exports,
+> > >> keeping the implementation minimal while stabilizing the API.
+> > >>
+> > >> Given that this patch creates a rawtracepoint, you could hook into it
+> > >> using regular tooling, like bpftrace, using regular rawtracepoint
+> > >> infrastructure, such as:
+> > >>
+> > >>         rawtracepoint:tcp_sendmsg_tp {
+> > >>                 ....
+> > >>         }
 > > >
-> > >   mitigations=selective,no_user_kernel,no_cross_thread,...
+> > > I would expect tcp_sendmsg() being stable enough ?
 > > >
-> > > Requiring the user to explicitly select attack vectors to disable (rather than to
-> > > enable). This would be more verbose, but it would be clear that the user is explicitly
-> > > selecting attack vectors to disable. Also, if a new attack vector gets added in future,
-> > > it would be mitigated by default, without requiring the world to change their cmdline.
-> > 
-> > I kind of like that.
-
-While it might be true that we don't necessarily need both opt-in and
-opt-out options...
-
-I'm missing the point of the "selective" thing vs just
-"auto,no_whatever"?
-
-> > Note that for the SMT stuff, my new plan had been to use a separate
-> > option 'mitigate_smt' which will be on/off/auto.
->
-> I would avoid that, because we can't drop support for
-> "mitigations=auto,nosmt"
-
-We wouldn't have to drop support for that...  If there's a conflict
-between the two options then just print a warning and pick one.
-
-> and we also have a separate cmdline parameter
-> "nosmt":
+> > > kprobe:tcp_sendmsg {
+> > > }
+> >
+> > In LTO mode, tcp_sendmsg could be inlined cross files. For example,
+> >
+> >   net/ipv4/tcp.c:
+> >        int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+> >   net/ipv4/tcp_bpf.c:
+> >        ...
+> >       return tcp_sendmsg(sk, msg, size);
+> >   net/ipv6/af_inet6.c:
+> >        ...
+> >        return INDIRECT_CALL_2(prot->sendmsg, tcp_sendmsg, udpv6_sendmsg, ...)
+> >
+> > And this does happen in our production environment.
 > 
-> 	nosmt		[KNL,MIPS,PPC,S390,EARLY] Disable symmetric multithreading (SMT).
-> 			Equivalent to smt=1.
+> And we do not have a way to make the kprobe work even if LTO decided
+> to inline a function ?
+
+There is `perf probe` command to set it up based on the debuginfo. But
+the function parameters sometimes optimized out and no more accessible.
+(You can try.)
+
+Thus if you needs this tracepoint not temporarily nor debugging,
+I would recommend to use tracepoint (or trace event).
+
+Thank you,
+
 > 
-> 			[KNL,X86,PPC] Disable symmetric multithreading (SMT).
-> 			nosmt=force: Force disable SMT, cannot be undone
-> 				     via the sysfs control file.
+> This seems like a tracing or LTO issue, this could be addressed there
+> in a generic way
+> and avoid many other patches to work around this.
 
-The separate 'nosmt' option is orthogonal to the mitigation stuff.  If
-it disables SMT then there are no cross-thread mitigations to do in the
-first place.
-
-> > But we could also combine that with mitigations=selective perhaps with
-> > tokens like 'mitigate_smt' (enable all relevant SMT mitigations including
-> > disabling SMT if needed) or 'no_mitigate_smt' (do not enable any SMT
-> > mitigation).  If no token is specified, then we'd default to the behavior
-> > today where SMT won't be disabled but other mitigations get applied.
-> > Then everything is in one option.
-> 
-> Agree.
-
-I think that's *way* too subtle.  It's completely unlike the other
-options in that it's not a binary opt-out.  And it sneakily obfuscates
-the mitigate_smt tristate (with the third state being the unspecified
-default).
-
-However, one of those three states is already represented by
-'auto,nosmt'.  Why not just piggyback on that by allowing the vectors to
-be combined with it?  Then we only need two more states, which could be
-represented with e.g., "[no_]cross_thread".
-
-For example, to disable SMT (if needed), along with disabling of
-vectors:
-  
-  mitigations=auto,nosmt,no_user_kernel,etc
-
-Or to disable all SMT mitigations (e.g., because the user is doing core
-scheduling):
-
-  mitigations=auto,no_cross_thread,etc
-
-And combining 'auto,nosmt' with 'no_cross_thread' is nonsensical, in
-which case so it could just pick the former and print a warning.
 
 -- 
-Josh
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
