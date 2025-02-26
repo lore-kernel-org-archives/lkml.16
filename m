@@ -1,143 +1,207 @@
-Received: from fout-b5-smtp.messagingengine.com (fout-b5-smtp.messagingengine.com [202.12.124.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3EE2206B3;
-	Wed, 26 Feb 2025 13:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A9D22154F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740578269; cv=none; b=r3nGw7D7OVML3YM26NHj+pOYKAwv8cbwbwlFQ7T6C5zoWFtqcD7aeMbaoHlny5R3VXn1k+sYnEMuL9/YYeQTS/H/DdZYJgLQDO6S7spBdxOmTv8dZI4J14CHU0u1PMjrCi+z9ctkiuw2puVteiC32NhczRJ4JjaJWleW9KnhaxU=
+	t=1740578270; cv=none; b=HxTlYALPk56w8DL69NNtmQsby16DPPXs1FeRFyyIkdUf3StoBdugXx8pmedCgJXhhM1LXNIerFVh0YuJ12v77qUUPBA5Vkw/KYdgAALj8K7v3K0RVShEvmKF28SPSUMBTjeDsSpAp3rkQj9pU5RAWRpqf6NyuDwD7Cmnp2S8BgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740578269; c=relaxed/simple;
-	bh=6JvcNFx82rB512YBjhx8YLiZH3NuPw+ATigJCfDcCBU=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MbymlWRgVyLv5GWcPdxdyz1zfNiyfUJFohdlg7Oo9PSfzXvNppHx3bI+O95IEfr3dMLjnoRE7wcXAQlixifLS5m2Uquev6o1NYFzTZ0Xuu8MaZbFzIVIEBre6tOqQ5ovxmrMZvf6CEpP34Ty/kIyJa5Brdw8lvTTifWjduKdX9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=bPuQKdaa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=2p6aK+cl; arc=none smtp.client-ip=202.12.124.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740578270; c=relaxed/simple;
+	bh=sOsAhVl3Pth7b6HVc96vFlxzXU6gEn4y6aryJYUr7r8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDj7k2ZYLhV6fMEtdOVRKVTEs3xvSUlRmNy1eU2JN+t50n69eAji7MRdqo1wcy59YO4bzVBk3DhSP36jBrEG/jvhvVs+P/Xvc0rsB1UX1V67df8+mOE3OMlIJJKiC5aJZXednTXf8J76ul6pMLcjqiF2EUi671cUgIK0B5jM1mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f6aC9r7h; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kWvAXcYU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f6aC9r7h; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kWvAXcYU; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="bPuQKdaa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2p6aK+cl"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 7B639114014E;
-	Wed, 26 Feb 2025 08:57:45 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Wed, 26 Feb 2025 08:57:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740578265;
-	 x=1740664665; bh=tZXytPiubmxqPIS8uOUahYJafTAcorBGJm/Sc4uY4DM=; b=
-	bPuQKdaamYG6X7c/5heRAnYVR/n2WZ7jUfo+l69evzOhlDVujNWHITYgXwsS56jd
-	9c8wjcoZUFFXkRbqFKjzCqNn1zL17DGGMfg/RClEJh/UIm6zW921ozhV3LSrvWNS
-	Fk8EYeB2URFSgX268hc24t7BHJhh6K/JylEbZvuDw4pF4uijwomW2pVmVaUSq3ve
-	V/KPZgKTg0ntp0L0NIwKqlaJDDY3rCbfQXSM6ZtELPhF5zdAI5vTq97TA+F0lzI+
-	eIkxHEVeMP80AQdMfvnj/6U9x46wFxawG4fEs2h2t9bCNetTIB/ZBcfcgA3JvlGZ
-	QbgbW4TF89dMP2t6T0hQKw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740578265; x=
-	1740664665; bh=tZXytPiubmxqPIS8uOUahYJafTAcorBGJm/Sc4uY4DM=; b=2
-	p6aK+clTQqinvRokGkoHOeAee7Ch/BcjiIgvYptz7ndme10+I7qdFx71/QpqYB+l
-	dkOjvzxZYJCrhg3PJ7+4OiqfD2YQjARnjHim9UBKXfNnHCLVwHDU4+01vy//Bqp8
-	LweavQ6jEHFaJCfKQ3Lg/fNuo/b/sdF4xwADT77nY7R5UefknIRwPHytDnqXEiDU
-	EYABC2C/u/uGN5NKiGWWm+gvQdSjugqYEhyMcoL0ix2c3S8bVZcc2y8hU5/8O4i1
-	2U5vpXZu7jOdSfCm5nh6F7Xj3McUMNpfsHAvKu+x4D7eqkbYDzWEZQ4fe2J+2FoU
-	iZ/GaS+SGDehHCOSTSnNg==
-X-ME-Sender: <xms:2B2_Z1NcLAU-ocoX2xOcC9doPyQMM3SzO-PZ0i4O0har6bE_x4wHmw>
-    <xme:2B2_Z3_9T20zc6f9v3gcS7Kty6-a1TxmrFM2q37e5uXIA_Hx9r09_Mm7BRyDhvqi_
-    _nJ-mxRoMsDEyt1_AE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeejiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeef
-    tddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghpsegrlhhivghnkedruggvpd
-    hrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphht
-    thhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheptghonhhorh
-    doughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgv
-    lhdrohhrghdprhgtphhtthhopehlphhivghrrghlihhsiheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifvghirdhl
-    ihhusehkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorh
-    hg
-X-ME-Proxy: <xmx:2B2_Z0RhQzPCtPcX6rnHEdjOg46NTqG6e_kTNaFU-IVZMBqB6pFrcA>
-    <xmx:2B2_ZxvupkTidtC7S2F9HnrLl5IlU8tGgVOtQPtM1TAcmjBJMC2VfQ>
-    <xmx:2B2_Z9dnJ1xpQw-EStIG715rto0DeXe3SvYUODF7_HQNMR3EWyhxwQ>
-    <xmx:2B2_Z938LFEianfpCf7BbxOUaqE57XrdfvncdzqRzXROWA9LXO4Ixg>
-    <xmx:2R2_ZzHMsUfh9E43ZZvmvsw-qTD_hFBFCxx1blsqPSVrLbygxzPLoM2e>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A74052220072; Wed, 26 Feb 2025 08:57:44 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f6aC9r7h";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kWvAXcYU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f6aC9r7h";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kWvAXcYU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 77A8C1F388;
+	Wed, 26 Feb 2025 13:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740578266; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4IhlMQLU7O+/3cgB5SqnTRbXuJ/IQuGdZmOILhsLwm0=;
+	b=f6aC9r7hbfE5be4MYPaoQ3QEKQLeMGfx1A8Jq0wP9B0QUYVmlSQOkyKbJV8dTM9hmO0rgp
+	JSh9+W7ZcPSOuAtnVDIsXkjLDL/KN78VsMxOs3ICguiRLRV4Bf8PPo02qQlWJQGJgiwtm9
+	5TOgz69VrOYYvfDZyQWox44rwWSoT5I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740578266;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4IhlMQLU7O+/3cgB5SqnTRbXuJ/IQuGdZmOILhsLwm0=;
+	b=kWvAXcYUdWO7rp5uJCpRO10JpeXohnZ7b05tEUtJqzgb9/jQDs1tWc3wlEIhh9NzthI/T1
+	TukaERVLfsFzvnAA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=f6aC9r7h;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kWvAXcYU
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740578266; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4IhlMQLU7O+/3cgB5SqnTRbXuJ/IQuGdZmOILhsLwm0=;
+	b=f6aC9r7hbfE5be4MYPaoQ3QEKQLeMGfx1A8Jq0wP9B0QUYVmlSQOkyKbJV8dTM9hmO0rgp
+	JSh9+W7ZcPSOuAtnVDIsXkjLDL/KN78VsMxOs3ICguiRLRV4Bf8PPo02qQlWJQGJgiwtm9
+	5TOgz69VrOYYvfDZyQWox44rwWSoT5I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740578266;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4IhlMQLU7O+/3cgB5SqnTRbXuJ/IQuGdZmOILhsLwm0=;
+	b=kWvAXcYUdWO7rp5uJCpRO10JpeXohnZ7b05tEUtJqzgb9/jQDs1tWc3wlEIhh9NzthI/T1
+	TukaERVLfsFzvnAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5BC9B13A53;
+	Wed, 26 Feb 2025 13:57:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id inElFtodv2drOQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 26 Feb 2025 13:57:46 +0000
+Message-ID: <6e9d4d95-a132-46a0-89c3-e39ace6bcb2a@suse.cz>
+Date: Wed, 26 Feb 2025 14:59:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 26 Feb 2025 14:57:24 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Roman Kisel" <romank@linux.microsoft.com>
-Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
- bhelgaas@google.com, "Borislav Petkov" <bp@alien8.de>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Dave Hansen" <dave.hansen@linux.intel.com>,
- "Dexuan Cui" <decui@microsoft.com>,
- "Haiyang Zhang" <haiyangz@microsoft.com>,
- "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- "K. Y. Srinivasan" <kys@microsoft.com>,
- "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
- "Manivannan Sadhasivam" <manivannan.sadhasivam@linaro.org>,
- "Ingo Molnar" <mingo@redhat.com>, "Rob Herring" <robh@kernel.org>,
- ssengar@linux.microsoft.com, "Thomas Gleixner" <tglx@linutronix.de>,
- "Wei Liu" <wei.liu@kernel.org>, "Will Deacon" <will@kernel.org>,
- devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
-Message-Id: <fe0221bb-b309-4e4b-a098-f6a246ac1f60@app.fastmail.com>
-In-Reply-To: <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
-References: <20250212014321.1108840-1-romank@linux.microsoft.com>
- <20250212014321.1108840-2-romank@linux.microsoft.com>
- <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
- <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
- <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
- <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
- <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
- <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
- <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
-Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect hypervisor
- presence
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/5] mm/mempolicy: export memory policy symbols
+To: Shivank Garg <shivankg@amd.com>, akpm@linux-foundation.org,
+ willy@infradead.org, pbonzini@redhat.com
+Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-coco@lists.linux.dev, chao.gao@intel.com, seanjc@google.com,
+ ackerleytng@google.com, david@redhat.com, bharata@amd.com, nikunj@amd.com,
+ michael.day@amd.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
+ michael.roth@amd.com, tabba@google.com
+References: <20250226082549.6034-1-shivankg@amd.com>
+ <20250226082549.6034-3-shivankg@amd.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+In-Reply-To: <20250226082549.6034-3-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 77A8C1F388
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Tue, Feb 25, 2025, at 23:25, Roman Kisel wrote:
-> On 2/24/2025 11:24 PM, Arnd Bergmann wrote:
->> On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
->>> Hi Arnd,
->>
->> If you want to declare a uuid here, I think you should remove the
->> ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
->> have UUID in normal UUID_INIT() notation as we do for
->> other UUIDs.
->
-> I'd gladly stick to that provided I have your support of touching
-> KVM's code! As the SMCCC document states, there shall be an UUID,
-> and in the kernel, there would be
->
-> #define ARM_SMCCC_VENDOR_KVM_UID UUID_INIT(.......)
-> #define ARM_SMCCC_VENDOR_HYP_UID UUID_INIT(.......)
->
-> Hence, the ARM_SMCCC_VENDOR_HYP_UID_*_REG_{0,1,2,3} can be removed as
-> you're suggesting.
 
-Yes, I think that's the best way forward, as it improves
-the existing KVM code and all future functions like it.
 
-    Arnd
+On 2/26/25 9:25 AM, Shivank Garg wrote:
+> KVM guest_memfd wants to implement support for NUMA policies just like
+> shmem already does using the shared policy infrastructure. As
+> guest_memfd currently resides in KVM module code, we have to export the
+> relevant symbols.
+> 
+> In the future, guest_memfd might be moved to core-mm, at which point the
+> symbols no longer would have to be exported. When/if that happens is
+> still unclear.
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+>  mm/mempolicy.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index bbaadbeeb291..d9c5dcdadcd0 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -214,6 +214,7 @@ struct mempolicy *get_task_policy(struct task_struct *p)
+>  
+>  	return &default_policy;
+>  }
+> +EXPORT_SYMBOL_GPL(get_task_policy);
+>  
+>  static const struct mempolicy_operations {
+>  	int (*create)(struct mempolicy *pol, const nodemask_t *nodes);
+> @@ -347,6 +348,7 @@ void __mpol_put(struct mempolicy *pol)
+>  		return;
+>  	kmem_cache_free(policy_cache, pol);
+>  }
+> +EXPORT_SYMBOL_GPL(__mpol_put);
+>  
+>  static void mpol_rebind_default(struct mempolicy *pol, const nodemask_t *nodes)
+>  {
+> @@ -2736,6 +2738,7 @@ struct mempolicy *mpol_shared_policy_lookup(struct shared_policy *sp,
+>  	read_unlock(&sp->lock);
+>  	return pol;
+>  }
+> +EXPORT_SYMBOL_GPL(mpol_shared_policy_lookup);
+>  
+>  static void sp_free(struct sp_node *n)
+>  {
+> @@ -3021,6 +3024,7 @@ void mpol_shared_policy_init(struct shared_policy *sp, struct mempolicy *mpol)
+>  		mpol_put(mpol);	/* drop our incoming ref on sb mpol */
+>  	}
+>  }
+> +EXPORT_SYMBOL_GPL(mpol_shared_policy_init);
+>  
+>  int mpol_set_shared_policy(struct shared_policy *sp,
+>  			struct vm_area_struct *vma, struct mempolicy *pol)
+> @@ -3039,6 +3043,7 @@ int mpol_set_shared_policy(struct shared_policy *sp,
+>  		sp_free(new);
+>  	return err;
+>  }
+> +EXPORT_SYMBOL_GPL(mpol_set_shared_policy);
+>  
+>  /* Free a backing policy store on inode delete. */
+>  void mpol_free_shared_policy(struct shared_policy *sp)
+> @@ -3057,6 +3062,7 @@ void mpol_free_shared_policy(struct shared_policy *sp)
+>  	}
+>  	write_unlock(&sp->lock);
+>  }
+> +EXPORT_SYMBOL_GPL(mpol_free_shared_policy);
+>  
+>  #ifdef CONFIG_NUMA_BALANCING
+>  static int __initdata numabalancing_override;
+
