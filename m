@@ -1,183 +1,101 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF1C26B098;
-	Wed, 26 Feb 2025 06:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6EE519CD17
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:40:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740551958; cv=none; b=FQAJdsVB3h0ZnQAudeZb+eLRgmtbZ8YZ3+pKpGb98Ep0TGcPSpYpa+bMMBgSv/4txtGFVgCWqzEMold37MaVPjOmTM8l1dlVsNF9YE0z0sbYbcV1FTLD1doeyQDBBgFWBidB5SO2QmI3DMM0stG0eQ1IvOaGZq4sLjNNwXx4+CI=
+	t=1740552018; cv=none; b=la+tBzrCu6Xa6h8J5aG8tvn5IGMJyVTTYP522vinavDVZK+9KeURAyPuVoIugf6ojfYfG2WXFYeHmtt0t/VJgWqmAP17Hs4MzsQGKBz0x19PJlUPW7+Cg+6/+kW4RAvaqdcBn9mpDg8F3HNUZHarsmGngocRRrJwLwoZbWY8GOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740551958; c=relaxed/simple;
-	bh=g5vd5KaFOaIGh4dgJu04AUD2p2OpmMkuWZMXJcPEHu8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FHr+P7GSUlL2sV1BCtAx2tQ8524/hENC2L6vAS4v9k5YEHDi01aq+FGHdQ6EYb4E/HDp7PAnc8JWi/pByeOZpV9Qi28dZok6+uX7B7qn0kbYETssSpJioxnH2OcEagnquVaUBFPYuIrkE2XSQHamkM7D4/u0cQBlxwyXK9+N3aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ADAq23Qv; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740552018; c=relaxed/simple;
+	bh=xkG4hcHiCn+64ZLfOY7cOIxp9KhkRl9K1d+epai0vjY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JVziPEVt0YYmEBknlga9F0En0Gex8ZqXt+ZtwDVFT39K9VwCpVTMVvYkRuv/YwrqUBT7pL2mgKNgBn5ow++DxwtdheS8fslLtIwBcP7XwjVaXVqd9+C9EWcq8/0AZw3He7QI9bnbTeWmbAnwVzH7pOafVlWQS0WZpq/qFOdK7BI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K3+h29xm; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADAq23Qv"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307bc125e2eso59847691fa.3;
-        Tue, 25 Feb 2025 22:39:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K3+h29xm"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30761be8fcfso59269481fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:40:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740551955; x=1741156755; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IstkuYPp0cvmrCBS1AO74kpqX9/bPmaEIwBW2fMXgJ4=;
-        b=ADAq23Qv4UOH449WSdWfy7QHQLcPAKLL2g/7uypWvvn1Bj1YjDHexc9Wf80vJNAuMM
-         +O6lKwyVEGdH99GhpEE2+71oQb5M+C5lxiTyZZtBDHCkF++NaLEwvgu7wwUZmxszqSWL
-         G6qbfEQMeNqECHnBa30ByO1NqS2y1yg6WyV7sznesLEOKMRBu1YaHDqU15Rf1UwiF1dS
-         lv54yBRVM0Ic/ifQhj4u2+91kewMaB5Q3nRTfMjDWLVdGLf0FtFSPwywwdW7lk13LNam
-         sM2wWsMvi6HkxDOHXmewww8Q1p4C3M2Z5PrV6C2nNtq7daWxfXIp8OxKaBjC+tmnXgX8
-         S9yg==
+        d=linaro.org; s=google; t=1740552014; x=1741156814; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YnlPPa2uUCO1zeFpt71gVitBbdNg+Xjk4s2scJwEBqA=;
+        b=K3+h29xmg0mUiEsZvdFvytGV0+s3t+WiSLIrLV0UTvncrpBkte9caJYSrRhKBWyDe+
+         wzALBSC3SLI2wK1fwgcbnz5ZNMB+HQnVUJLQPkT1RLUOUHeYRLSsVBQ5OlNEo2zcDY75
+         wB2vn26rf7UrUrGdoNR53nyemHC97NSdNa9DEMCGL2ug0FKb1UEph7Id7JZ+HbmYNP2d
+         D75Yy7KjmBDkBMh1Ww67OX3Syszpb7+YNs45V1D6pNgpXesQJ+XSk2q2gJ/MqK0kxYyB
+         Qf+TVX3O8Wg7MmOGdcrqBHV4bocmwST3PZzWTdEcvpWVYSqL0aRu72vN2ZMeFkxZJXn4
+         3fwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740551955; x=1741156755;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IstkuYPp0cvmrCBS1AO74kpqX9/bPmaEIwBW2fMXgJ4=;
-        b=YKzDsE1/Ps17bu76qQo3ZgbtabS/2JUNjHlxDhNMy0VO+Drmdh6KNN1hM1QOMCr7Zd
-         NqhF9IVXEY+AUe7h6j9h5tqS+vLzWQAjllEbNZRbr3fNrOTZuqz4Y4wa//DEpH5orcwf
-         7J8pDw+cUOUW6rWeDMo61bv6R4JvEMIJ4av/M9QXkmGPM1NEkTCUWpFviyqWdLXIAaqZ
-         W70/lCIVctzEWJq//qQxQVDbzv0DMAL0tUpcTlbHGXmdU0HdSDPHP9EaBDMi/joAhJ/t
-         hPLaRsI3F9pGUv7diR39B3KCw2AOfOhTufMupmdIpJpEKjjk6Lh+LCusifFQTxYWrYGY
-         zHjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+CMYhvmpE3f/vLNv7ebGrV5DWB1TUQBOi/Vkmi4Y4U/gdAtoabI2iYaPjtpWa4H5sD2z67GCmyzKyxx7Sp5yRlJU=@vger.kernel.org, AJvYcCUIWGd4HMD8ekC73PGAjhA7vQf9oCBdRjqmPiaF4NIVUBLW7PJKJytWftU2vFQAQV1wUBeRD7V1Eam05IkZ@vger.kernel.org, AJvYcCVJj+amQcLYLcFtmJ76xYAQ/vsfAWz0kYkDvyVoGwTfb17BPtarLehchtH0GIDKvtfD7k6x5PQjfmHDZw==@vger.kernel.org, AJvYcCWAW4eSzEDUs98oORuoiC60jtP/BH3RtEi6nAg3gmoh4qTJvyJslvFsVhhlqc834LWCp+KyGei+wHys@vger.kernel.org, AJvYcCWyZVql9MFLrmTX1SU1YFKboS69mxHUICGYiPpBKekydqJpe/JBjErtuVyrshMhOgpBx/Sc6F1saGHW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyR0OdIMEeP0MQ1wRm343mxY/FeFTTR+50TZo2oPCeJp6V6Yj0S
-	ql3lopaE9i0u8BC1xC7ycVrfx85Pk1uODIQDZDNOq9tISx0bdGLT
-X-Gm-Gg: ASbGncugYevPCY6EYt7ld4vXBGMvEiuSEnjauHk86V+oYmpMlRPUQIANT4TYFmsrEAW
-	SZ1zOwuts4qCdRCAuwLuuLMvmtQ6wU8gRfb9vp/EAsk8CQreAur07nW/93ZPaNZBbVdjrRrzugn
-	HBhOmetz/xU69BcQg4QdGQumMQ8vwdm0axWrp8x/yA2GFCqIcB8IWFcS9bENrSuedGgRLjSGYme
-	XHujAK4QM3zovWCzHgbOfeHnYAY+XMrew3FYOhXUOpdZf5JR4rtUwdCi7MRdeX8zaMEPBXNdO0+
-	blqTD4YEvK+B7RkVAQWsf4ZAx974z22Y5DDSgTm2tuk5wNzJbfcGG0jPRFYeRM/0LCos8FBdEyy
-	suaHEJjg=
-X-Google-Smtp-Source: AGHT+IFhddv2BVjLa64XQJMIkv5m8GKYZ1reuiVfZ9tztojl8c9MwGp7Re17nRul5qHTHrRj15T3+g==
-X-Received: by 2002:a2e:968c:0:b0:308:eb34:103a with SMTP id 38308e7fff4ca-30a80c97fdfmr38366891fa.28.1740551954311;
-        Tue, 25 Feb 2025 22:39:14 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a81ac4873sm4197931fa.79.2025.02.25.22.39.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 22:39:13 -0800 (PST)
-Message-ID: <d391b012-0a8e-40ca-af56-ca73b3fd853b@gmail.com>
-Date: Wed, 26 Feb 2025 08:39:11 +0200
+        d=1e100.net; s=20230601; t=1740552014; x=1741156814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YnlPPa2uUCO1zeFpt71gVitBbdNg+Xjk4s2scJwEBqA=;
+        b=vD9x9/l3xqVoHcQ/Z/bB8DiHhXTDVAFotL5nPmYmkPD+3NSPGjRcSZXC5m8yCMSx2W
+         Jcip/RuqBU6JskzpdeF6gs5vbJQUqvCSdIml0PrVdnR/vsyc3xzLZ/rAHnRcSHQeG63M
+         +4zHEkg6lgb6L4EmY/1QHCbNHLmW3atCyZUTRNjWQ6NdQsi4PZ5mCjBqrpiwkr8pLLaG
+         iFtK2okrrZMwsXegkKuuggyMS9XoBQ0KaDGrhhvFhwFEEPp5T8U1v8t+PNjrT5qb8V6y
+         VPUfxDkxvOX2NRvIP6NiBk8U64ki2df0jcNPpBg0gCAYeuWCrwyHrjlBti0BaKT3WzrU
+         E4pg==
+X-Forwarded-Encrypted: i=1; AJvYcCVTdYWOR6TV23YSRq0xhTiOGcR5c8y95TxEuypL7BGf7LDktFKiKKsSikHQirNC+pYFpVBR0xwwyo/02Vo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynZ9dAbm+UH1I/zsfB4elS4ZUQm97cMf5kBoPTzsZ1Hi1sNFyD
+	bFB80iCQrKghQ3ukfPvRSqi1zBI2um5CQCPX4RFrteXEVBtv/CZcHjjQbezQ23NQB0enhrSiC2b
+	REOo=
+X-Gm-Gg: ASbGncs0aE4sUPKYIkwnbcQ55PlAWi2NM9UEV5X1ECus4xJMnNRMAl+H+9aVgvjByTK
+	mT0/VGH5VvmIzKqkrXwI6ZmKh4jbYH4XkT2iHykJ/uX81qIRrd83AnPWzH135wVhfniQ2edgp7s
+	wtK2plIiucszlbiMPQiiiinHU5wszIB3URpsH34xT7Ahq9wkC1lrpUrAszmXzbBmpPWGsK1jHxC
+	cmNUk9ecIFjAgblXjDznjRs+zOhHYTVDAqrKFnzmq7ZD5vBgK8ENuAvGoQ6VPvBCRBRSZdrNgqR
+	tDfxijnEcBvp3Zd4dgt8piDlqP17rPvTPQ/H1F9mYYhnc1S+vvBTspee0cGtEwebAvnxSJmukVB
+	+lAi6iw==
+X-Google-Smtp-Source: AGHT+IE6dtc85yOD3cihprIvVpH/1esWLa6UQi+5Gc9+xFNYCSpdxtNBXemRzp8sO2ffXNDZ9U28Yw==
+X-Received: by 2002:a2e:7d0a:0:b0:308:e521:592 with SMTP id 38308e7fff4ca-30a80c984afmr34851781fa.30.1740552013753;
+        Tue, 25 Feb 2025 22:40:13 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a81ac2f52sm4211421fa.65.2025.02.25.22.40.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 22:40:12 -0800 (PST)
+Date: Wed, 26 Feb 2025 08:40:10 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Herve Codina <herve.codina@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 06/15] drm/tests: Create tests for drm_atomic
+Message-ID: <tadc6spmedblkzuuzrtg6wj4l5me4gvfdps6dmmkt7riytop4n@sbqabl3stbqv>
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+ <20250225-bridge-connector-v4-6-7ecb07b09cad@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/10] iio: adc: ti-ads7924: Respect device tree config
-To: David Lechner <dlechner@baylibre.com>,
- Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Guillaume Stols <gstols@baylibre.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- Ramona Alexandra Nechita <ramona.nechita@analog.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <cover.1740421248.git.mazziesaccount@gmail.com>
- <20dd0e4ea72fe39b90b611f9c08dbd4bc1d5217f.1740421248.git.mazziesaccount@gmail.com>
- <f0d0f114-3953-46b5-b9f6-9b35537e6f8e@baylibre.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <f0d0f114-3953-46b5-b9f6-9b35537e6f8e@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225-bridge-connector-v4-6-7ecb07b09cad@kernel.org>
 
-On 26/02/2025 02:09, David Lechner wrote:
-> On 2/24/25 12:34 PM, Matti Vaittinen wrote:
->> The ti-ads7924 driver ignores the device-tree ADC channel specification
->> and always exposes all 4 channels to users whether they are present in
->> the device-tree or not. Additionally, the "reg" values in the channel
->> nodes are ignored, although an error is printed if they are out of range.
->>
->> Register only the channels described in the device-tree, and use the reg
->> property as a channel ID.
->>
->> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>
->> ---
->> Revision history:
->> v3 => v4:
->>   - Adapt to 'drop diff-channel support' changes to ADC-helpers
->>   - select ADC helpers in the Kconfig
->> v2 => v3: New patch
->>
->> Please note that this is potentially breaking existing users if they
->> have wrong values in the device-tree. I believe the device-tree should
->> ideally be respected, and if it says device X has only one channel, then
->> we should believe it and not register 4. Well, we don't live in the
->> ideal world, so even though I believe this is TheRightThingToDo - it may
->> cause havoc because correct device-tree has not been required from the
->> day 1. So, please review and test and apply at your own risk :)
+On Tue, Feb 25, 2025 at 05:43:54PM +0100, Maxime Ripard wrote:
+> We don't have a set of kunit tests for the functions under drm_atomic.h.
+> Let's use the introduction of drm_atomic_get_connector_for_encoder() to
+> create some tests for it and thus create that set.
 > 
-> The DT bindings on this one are a little weird. Usually, if we don't
-> use any extra properties from adc.yaml, we leave out the channels. In
-> this case it does seem kind of like the original intention was to work
-> like you are suggesting, but hard to say since the driver wasn't actually
-> implemented that way. I would be more inclined to actually not make the
-> breaking change here and instead relax the bindings to make channel nodes
-> optional and just have the driver ignore the channel nodes by dropping
-> the ads7924_get_channels_config() function completely. This would make
-> the driver simpler instead of more complex like this patch does.
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/tests/Makefile          |   1 +
+>  drivers/gpu/drm/tests/drm_atomic_test.c | 153 ++++++++++++++++++++++++++++++++
+>  2 files changed, 154 insertions(+)
+> 
 
-I have no strong opinion on this. I see this driver says 'Supported' in 
-MAINTAINERS. Maybe Hugo is able to provide some insight?
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
->> As a side note, this might warrant a fixes tag but the adc-helper -stuff
->> is hardly worth to be backported... (And I've already exceeded my time
->> budget with this series - hence I'll leave crafting backportable fix to
->> TI people ;) )
->>
->> This has only been compile tested! All testing is highly appreciated.
->> ---
-> 
-> ...
-> 
->> -static int ads7924_get_channels_config(struct device *dev)
->> +static int ads7924_get_channels_config(struct iio_dev *indio_dev,
->> +				       struct device *dev)
-> 
-> Could get dev from indio_dev->dev.parent and keep only one parameter
-> to this function.
-> 
->>   {
->> -	struct fwnode_handle *node;
->> -	int num_channels = 0;
->> +	struct iio_chan_spec *chan_array;
->> +	int num_channels = 0, i;
-> 
-> Don't need initialization here.
-> 
->> +	static const char * const datasheet_names[] = {
->> +		"AIN0", "AIN1", "AIN2", "AIN3"
->> +	};
-
-Thanks for the review David! I do agree with the comments to the code.
-
-Yours,
-	-- Matti
-
-
+-- 
+With best wishes
+Dmitry
