@@ -1,319 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEE21E868
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CDB1E868
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740551459; cv=none; b=tuN3ufGfKL8HeQeACEXJmiHIiJsrbuvVOhHBrFpd2wWoErgzpelmnaq8hehlrGXxmWR6xzdRHVYv180VhpHPb4wkkbRV190WfqkHhri9H3iptERDm+zbRA5xIjn2N7AzNCP/yZWZqQJnpiYsJ0TTJSi+xZcnt+JjrHxYFFcviVw=
+	t=1740551501; cv=none; b=AIqbLAiYgvaBlwrLHIWdaM9RjPYo2YI7SQuHbZ7X82IOEddCJbLJ4oL9O5PMUhWf/0xAheBfh/sVx69FigV3Gps2Wt5Mi0PD1MV7wuuAf1FstW+hCeYohja1cLP0v2wUB0ISdRN3bXr8UlFi6VNyhl2ODl4iT9vSpW4Q8L9XV8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740551459; c=relaxed/simple;
-	bh=PNzJDRck8w9k2W5MK20RtwHYW1hgZkDx496p2FYd7RI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bgt8KryaCjzl6dXZ1IleaomN1e3z6yxvQ2afWJM9xP2vZ6u6a+lxcz7Kqo3hSRaiDC5tmzkAcrA236wBmsYFY71X51srIOe+LG5j2D0SoyLwaEz4cEus/r4/bVZ3UpgEAkyjeAKN/D1rXICR8JDTYK9rVNJ5gjkkt6RXaUdd+bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H//yTQ/U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740551501; c=relaxed/simple;
+	bh=cw5T9PwYdLU4jxcK8Pp0F604TRNUxhqOicEQjNnOlbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TpqhXmvi9qcTzG5H5q3zMvsn4pxOJXd5uCVw4KldegGR90vPdCQeg05JWWROVuLO8+8l1FQxkE+t3PbsClq2WvBIb0R9STMSlr9nyRZgY4Grp0pMXi1iAjyFCds4+M/cb+atkwi3fuDyV6L5eI6QytHuKFnTayWHn7ro6Ma1L/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmmsAKro; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H//yTQ/U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC0EBC4CED6;
-	Wed, 26 Feb 2025 06:30:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmmsAKro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 898DDC4CED6;
+	Wed, 26 Feb 2025 06:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740551458;
-	bh=PNzJDRck8w9k2W5MK20RtwHYW1hgZkDx496p2FYd7RI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=H//yTQ/UVZz1NjkvheJJZciemEiygaznll41MItPtrY3Dte0Y7xBpDtGA9QDPwsBK
-	 gLbVQZXdOv1uiXjxoMI05uPA/qMzIvNwiwjzVwPyN9MAZVhn1CS92JVifPd8eG3tFQ
-	 Zk4hvqcUEE6IRA9N4OYBIOY4UeunYVFNhkvjL0jPt3h/A3WLJ/s4ijLuC4ZWeCwS1c
-	 DHTyEVZ48kjeEiUQtuvnB6j9kmPORUfaNPtyoqRNXtVV1W1pXhq2FmQGLwYhBFCFq3
-	 8wUFC+EJquwQ7u2KR9lzeuAC82QZItmlm2DWuQorHCioHBrchsSum5zX6vzRr62S/+
-	 vz4Co8/hsetdg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	linux-nvme@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmet-tcp: switch to using the crc32c library
-Date: Tue, 25 Feb 2025 22:28:40 -0800
-Message-ID: <20250226062841.60688-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	s=k20201202; t=1740551501;
+	bh=cw5T9PwYdLU4jxcK8Pp0F604TRNUxhqOicEQjNnOlbk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YmmsAKrok1ivrIdvCgcidF71xYDmrMENAZRBQyVusDNZVfT6wjQPA5UqXxncU999F
+	 ibc9GBBhdt7teSm4u0WLCfiomLm4BEkLjKjf04ODyH2kRpgTnpU9vaO8vOSI9pKeEm
+	 Em8UHMYIR8HHS76rOyKEu8feqVnvEekPb+fqEgQF2z8cILF2Ia06nh5hmOTt/hvGLy
+	 9ILOOjaSbobdALTQmYO2oBbAhF+8ZIkNaF39Wi9t+O8q+2BHY605BvWbIXo86/mOai
+	 19mKEy3x1QxmFxROTqTIChw8NWIzaHesBrDEhzm6VBEx1veIXgbGPnjHnolDwXWZMd
+	 j44qqfX14WrUQ==
+Message-ID: <67544c34-2c6f-43d3-b429-c8752f57a7e6@kernel.org>
+Date: Wed, 26 Feb 2025 07:31:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] x86/bootflag: Change some static functions to bool
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+References: <20250129154920.6773-1-ubizjak@gmail.com>
+ <31e1c7e4-5b24-4e56-9f17-8be9553fb6f9@kernel.org>
+ <CAFULd4a4qbMiP3dYXDp0_vPapkoi-i-ApOY5pHfKG1h7=vfbbA@mail.gmail.com>
+ <43c41ab4-1771-4b01-853e-08e1689df7f3@kernel.org>
+ <CAFULd4bTYudfNap1trVyjqA0xv5cQQeWxSZ8numv_uHqxz1Afw@mail.gmail.com>
+ <ef6e2925-f005-41e9-bc24-b9adc3922706@kernel.org>
+ <Z7zBXyywUEC2ieiR@gmail.com>
+Content-Language: en-US
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <Z7zBXyywUEC2ieiR@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Eric Biggers <ebiggers@google.com>
+On 24. 02. 25, 19:58, Ingo Molnar wrote:
+> So this CodingStyle entry is a red herring, and the !! is absolutely
+> used in the kernel
 
-Now that the crc32c() library function directly takes advantage of
-architecture-specific optimizations, it is unnecessary to go through the
-crypto API.  Just use crc32c().  This is much simpler, and it improves
-performance due to eliminating the crypto API overhead.
+Sure, for intended conversion to either 0 or 1.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- drivers/nvme/target/tcp.c | 92 +++++++++++----------------------------
- 1 file changed, 26 insertions(+), 66 deletions(-)
+> as an explicit marker of intentional type conversion
+> to bool.
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 7c51c2a8c109a..b1da98481c186 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -5,10 +5,11 @@
-  */
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/slab.h>
-+#include <linux/crc32c.h>
- #include <linux/err.h>
- #include <linux/key.h>
- #include <linux/nvme-tcp.h>
- #include <linux/nvme-keyring.h>
- #include <net/sock.h>
-@@ -16,11 +17,10 @@
- #include <net/tls.h>
- #include <net/tls_prot.h>
- #include <net/handshake.h>
- #include <linux/inet.h>
- #include <linux/llist.h>
--#include <crypto/hash.h>
- #include <trace/events/sock.h>
- 
- #include "nvmet.h"
- 
- #define NVMET_TCP_DEF_INLINE_DATA_SIZE	(4 * PAGE_SIZE)
-@@ -171,12 +171,10 @@ struct nvmet_tcp_queue {
- 	union nvme_tcp_pdu	pdu;
- 
- 	/* digest state */
- 	bool			hdr_digest;
- 	bool			data_digest;
--	struct ahash_request	*snd_hash;
--	struct ahash_request	*rcv_hash;
- 
- 	/* TLS state */
- 	key_serial_t		tls_pskid;
- 	struct delayed_work	tls_handshake_tmo_work;
- 
-@@ -293,18 +291,13 @@ static inline u8 nvmet_tcp_hdgst_len(struct nvmet_tcp_queue *queue)
- static inline u8 nvmet_tcp_ddgst_len(struct nvmet_tcp_queue *queue)
- {
- 	return queue->data_digest ? NVME_TCP_DIGEST_LENGTH : 0;
- }
- 
--static inline void nvmet_tcp_hdgst(struct ahash_request *hash,
--		void *pdu, size_t len)
-+static inline void nvmet_tcp_hdgst(void *pdu, size_t len)
- {
--	struct scatterlist sg;
--
--	sg_init_one(&sg, pdu, len);
--	ahash_request_set_crypt(hash, &sg, pdu + len, len);
--	crypto_ahash_digest(hash);
-+	put_unaligned_le32(~crc32c(~0, pdu, len), pdu + len);
- }
- 
- static int nvmet_tcp_verify_hdgst(struct nvmet_tcp_queue *queue,
- 	void *pdu, size_t len)
- {
-@@ -317,11 +310,11 @@ static int nvmet_tcp_verify_hdgst(struct nvmet_tcp_queue *queue,
- 			queue->idx);
- 		return -EPROTO;
- 	}
- 
- 	recv_digest = *(__le32 *)(pdu + hdr->hlen);
--	nvmet_tcp_hdgst(queue->rcv_hash, pdu, len);
-+	nvmet_tcp_hdgst(pdu, len);
- 	exp_digest = *(__le32 *)(pdu + hdr->hlen);
- 	if (recv_digest != exp_digest) {
- 		pr_err("queue %d: header digest error: recv %#x expected %#x\n",
- 			queue->idx, le32_to_cpu(recv_digest),
- 			le32_to_cpu(exp_digest));
-@@ -440,16 +433,28 @@ static int nvmet_tcp_map_data(struct nvmet_tcp_cmd *cmd)
- err:
- 	nvmet_tcp_free_cmd_buffers(cmd);
- 	return NVME_SC_INTERNAL;
- }
- 
--static void nvmet_tcp_calc_ddgst(struct ahash_request *hash,
--		struct nvmet_tcp_cmd *cmd)
-+static void nvmet_tcp_calc_ddgst(struct nvmet_tcp_cmd *cmd)
- {
--	ahash_request_set_crypt(hash, cmd->req.sg,
--		(void *)&cmd->exp_ddgst, cmd->req.transfer_len);
--	crypto_ahash_digest(hash);
-+	size_t total_len = cmd->req.transfer_len;
-+	struct scatterlist *sg = cmd->req.sg;
-+	u32 crc = ~0;
-+
-+	while (total_len) {
-+		size_t len = min_t(size_t, total_len, sg->length);
-+
-+		/*
-+		 * Note that the scatterlist does not contain any highmem pages,
-+		 * as it was allocated by sgl_alloc() with GFP_KERNEL.
-+		 */
-+		crc = crc32c(crc, sg_virt(sg), len);
-+		total_len -= len;
-+		sg = sg_next(sg);
-+	}
-+	cmd->exp_ddgst = cpu_to_le32(~crc);
- }
- 
- static void nvmet_setup_c2h_data_pdu(struct nvmet_tcp_cmd *cmd)
- {
- 	struct nvme_tcp_data_pdu *pdu = cmd->data_pdu;
-@@ -472,23 +477,22 @@ static void nvmet_setup_c2h_data_pdu(struct nvmet_tcp_cmd *cmd)
- 	pdu->data_length = cpu_to_le32(cmd->req.transfer_len);
- 	pdu->data_offset = cpu_to_le32(cmd->wbytes_done);
- 
- 	if (queue->data_digest) {
- 		pdu->hdr.flags |= NVME_TCP_F_DDGST;
--		nvmet_tcp_calc_ddgst(queue->snd_hash, cmd);
-+		nvmet_tcp_calc_ddgst(cmd);
- 	}
- 
- 	if (cmd->queue->hdr_digest) {
- 		pdu->hdr.flags |= NVME_TCP_F_HDGST;
--		nvmet_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
-+		nvmet_tcp_hdgst(pdu, sizeof(*pdu));
- 	}
- }
- 
- static void nvmet_setup_r2t_pdu(struct nvmet_tcp_cmd *cmd)
- {
- 	struct nvme_tcp_r2t_pdu *pdu = cmd->r2t_pdu;
--	struct nvmet_tcp_queue *queue = cmd->queue;
- 	u8 hdgst = nvmet_tcp_hdgst_len(cmd->queue);
- 
- 	cmd->offset = 0;
- 	cmd->state = NVMET_TCP_SEND_R2T;
- 
-@@ -502,18 +506,17 @@ static void nvmet_setup_r2t_pdu(struct nvmet_tcp_cmd *cmd)
- 	pdu->ttag = nvmet_tcp_cmd_tag(cmd->queue, cmd);
- 	pdu->r2t_length = cpu_to_le32(cmd->req.transfer_len - cmd->rbytes_done);
- 	pdu->r2t_offset = cpu_to_le32(cmd->rbytes_done);
- 	if (cmd->queue->hdr_digest) {
- 		pdu->hdr.flags |= NVME_TCP_F_HDGST;
--		nvmet_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
-+		nvmet_tcp_hdgst(pdu, sizeof(*pdu));
- 	}
- }
- 
- static void nvmet_setup_response_pdu(struct nvmet_tcp_cmd *cmd)
- {
- 	struct nvme_tcp_rsp_pdu *pdu = cmd->rsp_pdu;
--	struct nvmet_tcp_queue *queue = cmd->queue;
- 	u8 hdgst = nvmet_tcp_hdgst_len(cmd->queue);
- 
- 	cmd->offset = 0;
- 	cmd->state = NVMET_TCP_SEND_RESPONSE;
- 
-@@ -522,11 +525,11 @@ static void nvmet_setup_response_pdu(struct nvmet_tcp_cmd *cmd)
- 	pdu->hdr.hlen = sizeof(*pdu);
- 	pdu->hdr.pdo = 0;
- 	pdu->hdr.plen = cpu_to_le32(pdu->hdr.hlen + hdgst);
- 	if (cmd->queue->hdr_digest) {
- 		pdu->hdr.flags |= NVME_TCP_F_HDGST;
--		nvmet_tcp_hdgst(queue->snd_hash, pdu, sizeof(*pdu));
-+		nvmet_tcp_hdgst(pdu, sizeof(*pdu));
- 	}
- }
- 
- static void nvmet_tcp_process_resp_list(struct nvmet_tcp_queue *queue)
- {
-@@ -849,46 +852,10 @@ static void nvmet_prepare_receive_pdu(struct nvmet_tcp_queue *queue)
- 	queue->left = sizeof(struct nvme_tcp_hdr);
- 	queue->cmd = NULL;
- 	queue->rcv_state = NVMET_TCP_RECV_PDU;
- }
- 
--static void nvmet_tcp_free_crypto(struct nvmet_tcp_queue *queue)
--{
--	struct crypto_ahash *tfm = crypto_ahash_reqtfm(queue->rcv_hash);
--
--	ahash_request_free(queue->rcv_hash);
--	ahash_request_free(queue->snd_hash);
--	crypto_free_ahash(tfm);
--}
--
--static int nvmet_tcp_alloc_crypto(struct nvmet_tcp_queue *queue)
--{
--	struct crypto_ahash *tfm;
--
--	tfm = crypto_alloc_ahash("crc32c", 0, CRYPTO_ALG_ASYNC);
--	if (IS_ERR(tfm))
--		return PTR_ERR(tfm);
--
--	queue->snd_hash = ahash_request_alloc(tfm, GFP_KERNEL);
--	if (!queue->snd_hash)
--		goto free_tfm;
--	ahash_request_set_callback(queue->snd_hash, 0, NULL, NULL);
--
--	queue->rcv_hash = ahash_request_alloc(tfm, GFP_KERNEL);
--	if (!queue->rcv_hash)
--		goto free_snd_hash;
--	ahash_request_set_callback(queue->rcv_hash, 0, NULL, NULL);
--
--	return 0;
--free_snd_hash:
--	ahash_request_free(queue->snd_hash);
--free_tfm:
--	crypto_free_ahash(tfm);
--	return -ENOMEM;
--}
--
--
- static int nvmet_tcp_handle_icreq(struct nvmet_tcp_queue *queue)
- {
- 	struct nvme_tcp_icreq_pdu *icreq = &queue->pdu.icreq;
- 	struct nvme_tcp_icresp_pdu *icresp = &queue->pdu.icresp;
- 	struct msghdr msg = {};
-@@ -913,15 +880,10 @@ static int nvmet_tcp_handle_icreq(struct nvmet_tcp_queue *queue)
- 		return -EPROTO;
- 	}
- 
- 	queue->hdr_digest = !!(icreq->digest & NVME_TCP_HDR_DIGEST_ENABLE);
- 	queue->data_digest = !!(icreq->digest & NVME_TCP_DATA_DIGEST_ENABLE);
--	if (queue->hdr_digest || queue->data_digest) {
--		ret = nvmet_tcp_alloc_crypto(queue);
--		if (ret)
--			return ret;
--	}
- 
- 	memset(icresp, 0, sizeof(*icresp));
- 	icresp->hdr.type = nvme_tcp_icresp;
- 	icresp->hdr.hlen = sizeof(*icresp);
- 	icresp->hdr.pdo = 0;
-@@ -1238,11 +1200,11 @@ static int nvmet_tcp_try_recv_pdu(struct nvmet_tcp_queue *queue)
- 
- static void nvmet_tcp_prep_recv_ddgst(struct nvmet_tcp_cmd *cmd)
- {
- 	struct nvmet_tcp_queue *queue = cmd->queue;
- 
--	nvmet_tcp_calc_ddgst(queue->rcv_hash, cmd);
-+	nvmet_tcp_calc_ddgst(cmd);
- 	queue->offset = 0;
- 	queue->left = NVME_TCP_DIGEST_LENGTH;
- 	queue->rcv_state = NVMET_TCP_RECV_DDGST;
- }
- 
-@@ -1607,12 +1569,10 @@ static void nvmet_tcp_release_queue_work(struct work_struct *w)
- 	cancel_work_sync(&queue->io_work);
- 	nvmet_tcp_free_cmd_data_in_buffers(queue);
- 	/* ->sock will be released by fput() */
- 	fput(queue->sock->file);
- 	nvmet_tcp_free_cmds(queue);
--	if (queue->hdr_digest || queue->data_digest)
--		nvmet_tcp_free_crypto(queue);
- 	ida_free(&nvmet_tcp_queue_ida, queue->idx);
- 	page_frag_cache_drain(&queue->pf_cache);
- 	kfree(queue);
- }
- 
+With this in mind, you would have to write "if (!!x)" everywhere.
 
-base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+I don't want such constructions in code I maintain. (Nor for return 
+values.) But this is not code I maintain (obviously), so your call after 
+all.
+
+thanks,
 -- 
-2.48.1
-
+js
+suse labs
