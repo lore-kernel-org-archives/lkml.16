@@ -1,60 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6CA625FA23
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33B62620C8;
+	Wed, 26 Feb 2025 23:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740612770; cv=none; b=QL55klZg3wgbZ/ZMDHNGDTnKhMd2aSk4ld6cT459af9Lh/+M+t/89RZPPvJgf9Ol66LnxWiubiHr+lLYTihLkYLVw6lJoHykF4vQUkeIL6In4kLV6JoYTXF5wcIEaDVxz2ovzutPWm98QrY0DexRwqo3wMFjFFMajVmtUp80NKY=
+	t=1740612823; cv=none; b=ToNiWlKcWU+ClqUp9ifJZDA5ELImfj4Q0LQO2H06QqR68YEPlWrHDUoLCyaV2UaigmrKegAbvBRsxuFSN9LzFT3lhQzgoR+I07MI8yAj5lB99jAjM9jwvrMIMY064fpYsyocTF/Ke8DQFPhWQZZs5QSTLws6v5h85CrZqlUzP/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740612770; c=relaxed/simple;
-	bh=Z6oczsRL4Qrk5EsGGblA1Gkj/yW1zjMf4xn/yAa7B9I=;
+	s=arc-20240116; t=1740612823; c=relaxed/simple;
+	bh=JU2kjfLvtCKvCAcKZzE2OOPkpTNFwZNgTF7Ciu+cRA4=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=clgfmmB1eHpuh8PM1/9O/fNYg8+aWiQmRsqUkvDCU8ySwPpWiy1X+rfNEzuuN2uFfTix/cN2OzlLz9MtwhidqUV3eUt2+2Oygd2FXFbogOm3QF7yCTFwqbUCi0X/MXPvtYFwyEf/TRYCnSdaYwoxX3IMze9329+ASoJhosQgbTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mwz4xeBN; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Disposition:In-Reply-To; b=ehWFxzqKcU4ucnBUvvVcycE+IU/o1tBv58OVQ6eHXbXhFliDA3StmAd1ZXkuReM6i4Z4CFAxTOPgr5c+RU4cDdyyOvpfgzasnZfFGxzs9TXqmaic/sCoRf69m5/KT/lyXP9PKe7SoBctAOG18S6ZAqsS/7aZy2SckzARYGCjnUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mph1cYH0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mwz4xeBN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740612768; x=1772148768;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Z6oczsRL4Qrk5EsGGblA1Gkj/yW1zjMf4xn/yAa7B9I=;
-  b=Mwz4xeBNL4nzowOdzZ5WHaR8OY9BskpslLKhFDwPEXVsyy6d1+3jFrYE
-   D+yqHkrOt6Y7U1tg7u2JwuxAznn8hEcON/YDiZqbVBFFTSbq99JbqTmk0
-   CZsJBiie+ec+aFEGQr+tDEgUOc7AAYE6Fo9OrRpxBZn9MXIt/lCrPizFb
-   VbLByBzeKugQvCaOtcafADQJuv9yWorxlcTtFAokm8UXRG2VGxObMDiEJ
-   ee2kDPOgCRJqakpo5LBBAKAcFTpuVi2CxvHiHi23wGpNE+570SpoMpa2E
-   z5YQ9lIro2icyzIsyTAAwRaYwoEGSUfXsOU1pLgKeE7wXntfPIOjOL4VG
-   A==;
-X-CSE-ConnectionGUID: orii6lwxTAGZ/0Lci9Ms2g==
-X-CSE-MsgGUID: 20BKOZkYQ1GTDYs8p4Qk0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41336703"
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="41336703"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 15:32:47 -0800
-X-CSE-ConnectionGUID: UtUeZGWzTd+f5l7j9Ye9cQ==
-X-CSE-MsgGUID: 5rlCpWIfREu4T+JXR89SoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120970563"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Feb 2025 15:32:45 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnQtA-000CbJ-1I;
-	Wed, 26 Feb 2025 23:32:33 +0000
-Date: Thu, 27 Feb 2025 07:30:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: drivers/video/fbdev/pxafb.c:913:24: sparse: sparse: incorrect type
- in assignment (different address spaces)
-Message-ID: <202502270742.weTnX9Oe-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mph1cYH0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FD53C4CED6;
+	Wed, 26 Feb 2025 23:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740612822;
+	bh=JU2kjfLvtCKvCAcKZzE2OOPkpTNFwZNgTF7Ciu+cRA4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=mph1cYH0/GtxEnkYNjCOOhVVx56YpsQjSOk1NStNxEAjASxrD7HdP89Eu4QiFsjQp
+	 FaY8Xks0fxxWsXbG0tGc1hVg1E8MwdMRqFTK8X7jjvATAcXjECwZqgiyPCvT3dHxUt
+	 qW1qWzKdtvNXzRAGOsnQSV66plI7HGitg8nnLwYby1irqcym0luHmdV+wN76k2JwOm
+	 iR34vJbsDmq6bIXion0gGlpstWi49EKe12WKUXlHfzk0KtCantRd19Hb9ATkeh73Qx
+	 sOq2e+gAUnuYFRHoKt4gCCqbzhMUX33KGRP89sfavZuSOlnmEtXD32v2ULnB/BGLti
+	 +yYugUjDQL0qQ==
+Date: Wed, 26 Feb 2025 17:33:39 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH v9 4/7] PCI: dwc: Use devicetree 'ranges' property to get
+ rid of cpu_addr_fixup() callback
+Message-ID: <20250226233339.GA562682@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,77 +55,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250128-pci_fixup_addr-v9-4-3c4bb506f665@nxp.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   f4ce1f3318ad4bc12463698696ebc36b145a6aa3
-commit: 07438779313caafe52ac1a1a6958d735a5938988 alloc_tag: avoid current->alloc_tag manipulations when profiling is disabled
-date:   5 weeks ago
-config: arm-randconfig-r132-20250227 (https://download.01.org/0day-ci/archive/20250227/202502270742.weTnX9Oe-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250227/202502270742.weTnX9Oe-lkp@intel.com/reproduce)
+On Tue, Jan 28, 2025 at 05:07:37PM -0500, Frank Li wrote:
+> parent_bus_offset in resource_entry can indicate address information just
+> ahead of PCIe controller. Most system's bus fabric use 1:1 map between
+> input and output address. but some hardware like i.MX8QXP doesn't use 1:1
+> map. See below diagram:
+> ...
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502270742.weTnX9Oe-lkp@intel.com/
+> @@ -448,6 +451,26 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+>  	if (IS_ERR(pp->va_cfg0_base))
+>  		return PTR_ERR(pp->va_cfg0_base);
+>  
+> +	if (pci->use_parent_dt_ranges) {
+> +		if (pci->ops->cpu_addr_fixup) {
+> +			dev_err(dev, "Use parent bus DT ranges, cpu_addr_fixup() must be removed\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		index = of_property_match_string(np, "reg-names", "config");
+> +		if (index < 0)
+> +			return -EINVAL;
+> +
+> +		 /*
+> +		  * Retrieve the parent bus address of PCI config space.
+> +		  * If the parent bus ranges in the device tree provide
+> +		  * the correct address conversion information, set
+> +		  * 'use_parent_dt_ranges' to true, The
+> +		  * 'cpu_addr_fixup()' can be eliminated.
+> +		  */
+> +		of_property_read_reg(np, index, &pp->cfg0_base, NULL);
+> +	}
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/video/fbdev/pxafb.c:913:24: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __iomem *video_mem @@     got void *[assigned] _res @@
-   drivers/video/fbdev/pxafb.c:913:24: sparse:     expected void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:913:24: sparse:     got void *[assigned] _res
-   drivers/video/fbdev/pxafb.c:918:47: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile *x @@     got void [noderef] __iomem *video_mem @@
-   drivers/video/fbdev/pxafb.c:918:47: sparse:     expected void const volatile *x
-   drivers/video/fbdev/pxafb.c:918:47: sparse:     got void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:974:53: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *virt @@     got void [noderef] __iomem *video_mem @@
-   drivers/video/fbdev/pxafb.c:974:53: sparse:     expected void *virt
-   drivers/video/fbdev/pxafb.c:974:53: sparse:     got void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:1711:24: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void [noderef] __iomem *video_mem @@     got void *[assigned] _res @@
-   drivers/video/fbdev/pxafb.c:1711:24: sparse:     expected void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:1711:24: sparse:     got void *[assigned] _res
-   drivers/video/fbdev/pxafb.c:1715:47: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const volatile *x @@     got void [noderef] __iomem *video_mem @@
-   drivers/video/fbdev/pxafb.c:1715:47: sparse:     expected void const volatile *x
-   drivers/video/fbdev/pxafb.c:1715:47: sparse:     got void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:2387:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *virt @@     got void [noderef] __iomem *video_mem @@
-   drivers/video/fbdev/pxafb.c:2387:29: sparse:     expected void *virt
-   drivers/video/fbdev/pxafb.c:2387:29: sparse:     got void [noderef] __iomem *video_mem
-   drivers/video/fbdev/pxafb.c:2414:29: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void *virt @@     got void [noderef] __iomem *video_mem @@
-   drivers/video/fbdev/pxafb.c:2414:29: sparse:     expected void *virt
-   drivers/video/fbdev/pxafb.c:2414:29: sparse:     got void [noderef] __iomem *video_mem
+I think all this code dealing with the "config" resource could go in a
+helper function.  It's kind of a lot of clutter in
+dw_pcie_host_init().
 
-vim +913 drivers/video/fbdev/pxafb.c
+It would be nice to assign pp->cfg0_base once, not assign res->start
+to it and then possibly overwrite it later.
 
-782385ae176b30 drivers/video/pxafb.c Eric Miao          2009-03-19  906  
-48c68c4f1b5424 drivers/video/pxafb.c Greg Kroah-Hartman 2012-12-21  907  static int pxafb_overlay_map_video_memory(struct pxafb_info *pxafb,
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  908  					  struct pxafb_layer *ofb)
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  909  {
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  910  	/* We assume that user will use at most video_mem_size for overlay fb,
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  911  	 * anyway, it's useless to use 16bpp main plane and 24bpp overlay
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  912  	 */
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11 @913  	ofb->video_mem = alloc_pages_exact(PAGE_ALIGN(pxafb->video_mem_size),
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  914  		GFP_KERNEL | __GFP_ZERO);
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  915  	if (ofb->video_mem == NULL)
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  916  		return -ENOMEM;
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  917  
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  918  	ofb->video_mem_phys = virt_to_phys(ofb->video_mem);
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  919  	ofb->video_mem_size = PAGE_ALIGN(pxafb->video_mem_size);
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  920  
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  921  	mutex_lock(&ofb->fb.mm_lock);
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  922  	ofb->fb.fix.smem_start	= ofb->video_mem_phys;
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  923  	ofb->fb.fix.smem_len	= pxafb->video_mem_size;
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  924  	mutex_unlock(&ofb->fb.mm_lock);
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  925  
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  926  	ofb->fb.screen_base	= ofb->video_mem;
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  927  
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  928  	return 0;
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  929  }
-1b98d7c4491e5e drivers/video/pxafb.c Vasily Khoruzhick  2011-03-11  930  
+> @@ -841,6 +841,15 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+>  	pci->region_align = 1 << fls(min);
+>  	pci->region_limit = (max << 32) | (SZ_4G - 1);
+>  
+> +	if (pci->ops && pci->ops->cpu_addr_fixup) {
+> +		/*
+> +		 * If the parent 'ranges' property in DT correctly describes
+> +		 * the address translation, cpu_addr_fixup() callback is not
+> +		 * needed.
+> +		 */
+> +		dev_warn_once(pci->dev, "cpu_addr_fixup() usage detected. Please fix DT!\n");
+> +	}
 
-:::::: The code at line 913 was first introduced by commit
-:::::: 1b98d7c4491e5eaba7c403ec1bc5997e6596e569 ARM: pxafb: rework pxafb overlay memory management
+Can you split the warnings out to a separate patch?  I think we should
+warn once in every initialization path where .cpu_addr_fixup() could
+be used, i.e.,
 
-:::::: TO: Vasily Khoruzhick <anarsoul@gmail.com>
-:::::: CC: Eric Miao <eric.y.miao@gmail.com>
+  dw_pcie_host_init()
+  dw_pcie_ep_init()
+  cdns_pcie_host_setup()
+  cdns_pcie_ep_setup()
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+IMO these should warn if .cpu_addr_fixup() is implemented, regardless
+of use_parent_dt_ranges.
+
+I'm still puzzling over some of the rest of this, so no need to post a
+revised series yet.
+
+Bjorn
