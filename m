@@ -1,74 +1,56 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD7E214803
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:41:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8D2153FD;
+	Wed, 26 Feb 2025 12:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740573712; cv=none; b=GiGUEDrBKrPM0C/UZ+Z2W6apVanuLcwcrPv7etgI53uCJjYDYWwuE4tVK8QUIRV6DVpvYMFv+BkeqolLby32p0uamZVhPZQp65sYI8y90ZoWAOyi1W5X/CRN6hSInZTv5n9TOgXoO20D8t8ygcERmjBdbmRSqUlrVBo75/XeZAE=
+	t=1740573784; cv=none; b=bOsnK+DoCT1O7p8w50VFs46B7FZzTNQ/bm2CflcWJGqpClxWA2p0fyF/FF2ipk3aQg3RyzwirFsBCTmtvbofB12V50Gqg1QPA0n6ziUcZ/ws+8Egt5hhq3VZwHFSD5lREGNKpgOx7CFLWm32Xjgvo8IadZQyff6pmnMU5bwry7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740573712; c=relaxed/simple;
-	bh=B7gqY3rzkhXXRzZYwagXJRkbPCtNmaxhkrd8b4fdijI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lVFY2JJqY/2rVA3bTWcpjlzQtJjjqFPZnHtkmMDP0OKCD7w6AhfDTa448+fSBxFKqMC3hgmCUp0LmegfsJwWTXAkF2hsDyss2gyx7/WKmRq8xWTcOIv2i/IfyxUN8J1EXiS9378DW7PEkHEfiQqW8MlpVM/ehEaPR27wGeDfdeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RQG7TpuC; arc=none smtp.client-ip=209.85.216.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740573784; c=relaxed/simple;
+	bh=xP4uAYRHIg+KETbtRfnQNNjoI1lhhYCCtKTZ8Xhh5/g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MaEGCn6DdUUK7r3T8ppiBDw2lPqPuH7LXcSeJW9RBuFJSHSeGrLuthT6LFkgniGrKF4Y/0jzuijKgoQm/j2hPG1RPKcqbTqqw6istjT103gSW6hNdT4bNalXqe7pALkt2mjkvcYIKjg167wYgHVFg4Vmps/hyHTIH3HlqsPhrj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ix60J3aH; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQG7TpuC"
-Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-2fc8482c62dso1744725a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 04:41:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740573710; x=1741178510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=blqLB6w4wQnbPbFc3bZOnIP21l1K7wwHNKfipqUAVLM=;
-        b=RQG7TpuClyzK74R6sB/HiUHffjapiqe3WpKV2UPdeMOpN6Pzs6keZvIRBEjVtJJsT3
-         3GNr9Uy74SuJknIUHRZLSlFQWeNBsSoZRiukFuxC19UZbMxhvkwA+05HRzquFzu5RR53
-         e53WWxA2o5ivoWVOG1fUBGZGDFgteabyj0rGnGzYTMzixnO/lNx/bhudWLvP3yMRC7TP
-         VWg7HpBgkrUOr1sT6aQxTR/RspenPMAgWq8mQFeWF59EKNh9FQwoZD9JhTKHDT9u60Ej
-         ytNk7HDHM9Q6LCFBkZ4K2ytJTj38E6X0GuD1GKplU7ZOtZvP+XLr624GP727M86VTt25
-         4BvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740573710; x=1741178510;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=blqLB6w4wQnbPbFc3bZOnIP21l1K7wwHNKfipqUAVLM=;
-        b=Zz3TTvbtkfYs3lS+9koM5SGvFGRMxuKEbkqUe98xVM0LcD53oUn+Oyao2xNkO+YqCj
-         ZWmtqz0ZwnkfI2xEMktF4qfBe0/+o9xfYZAkbU/SvTdaZuL2/v1nOtsJLqQzFANNbbnd
-         5lknwp3hQqKZVm4ODaWzdQoHCo4Cs9Ay0gcRjtr/D7kszI1jx/zjAr+fotcCFSFqAUtt
-         qmNmXw01S4G+E0O7JxHRs7BAMGf32xa4znv8qKpIu8VOA217yI9XFhRl+bBDtfpefDo2
-         R+42edxiDxB+Jnl5H3xcBhqVDTv6FiFUGyQhIrSuO7e1zJyfmbmAJXAeFZPEeQ+dn1dO
-         S9PA==
-X-Forwarded-Encrypted: i=1; AJvYcCXg2KcQGnVnGu1xGM0RGz8A3McZ/Q9WcIngw76n9c9us2haHK2A60KifYYHpMTiqV0PtgDj5o8xAhkxjrI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLdKLrW1Fn25RdbZt/7OHuOgiSWVGsu7wPVzHL9bNNZs/TxJSo
-	PL+XWyEl2G+QUCJMdeG6/+yD/NFeIAcBEbo78VzcoobH9b1GFCOW
-X-Gm-Gg: ASbGncvVZzNQY6THRLsyAUyyIqp4tptjDl8SW+/zOKerrlkWb/FelVLFQZgoTCkJ5HF
-	9KhPm1uc9OTzj0Am9QCoc0pKc9v1773pCKMJFpy9KkZExHH9LOxRaOHebTL/bZaB1GhpyT3oswP
-	Rpw+MNOkPDOfLQq3mZgEKvHIMb0GhkRqd6HSyTXHEwBJzkWvsYqw8yVDXIu8BUIG2cVGSc4+4J3
-	OkMdqpGC6rNmOj6PhwLTTNGx1hMCiHrykejpoWQFcD6sQwlkjU6yyPjwNK06zQUCv0e2eF1rJLS
-	p2jl/ScfQJMp8obGLMghCZMVG/A=
-X-Google-Smtp-Source: AGHT+IGi1GETef88liKi7gzcBOHTWY6cN7N2IEM20LdyEUet10Q0YfSxX+BkgfoVaIYcIbV1sNpDQA==
-X-Received: by 2002:a17:90b:3ec4:b0:2fc:2078:1726 with SMTP id 98e67ed59e1d1-2fce7b080dcmr13393659a91.6.1740573710227;
-        Wed, 26 Feb 2025 04:41:50 -0800 (PST)
-Received: from SaltyKitkat.. ([185.2.163.136])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825bb346sm1390515a91.18.2025.02.26.04.41.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 04:41:49 -0800 (PST)
-From: Sun YangKai <sunk67188@gmail.com>
-To: nphamcs@gmail.com
-Cc: Sun YangKai <sunk67188@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
-	linux-mm@kvack.org (open list:ZSWAP COMPRESSED SWAP CACHING),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] mm: zswap: use ATOMIC_LONG_INIT to initialize zswap_stored_pages
-Date: Wed, 26 Feb 2025 20:41:39 +0800
-Message-ID: <20250226124141.22218-1-sunk67188@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ix60J3aH"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QCgogd1545393
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 06:42:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740573770;
+	bh=IckXbOF2nRYQWb48QXUhy/93/4hHgPTjFS69MgYdTaQ=;
+	h=From:To:CC:Subject:Date;
+	b=ix60J3aHGe5NRwygp6sRd0V6N5MtG4wYWGUlkoVADem3cVXwAiREbxsUnoCurA5k3
+	 ahvhxy6WfdPVce7xiSE2DaxrUGiDVoTe3S1uFWNXykRDJkcwylJEF0hLIqmMLOioC6
+	 998BGxjlt/HBGXHqQj7g7cxw1uc03V/PMwQLkgtc=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QCgolN090066
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Feb 2025 06:42:50 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Feb 2025 06:42:49 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Feb 2025 06:42:49 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QCgkI0094589;
+	Wed, 26 Feb 2025 06:42:46 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>
+Subject: [PATCH v2 0/3] PCIe NTB and USB Overlays for J721E, J742S2 and J784S4
+Date: Wed, 26 Feb 2025 18:12:42 +0530
+Message-ID: <20250226124245.9856-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,34 +58,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This is currently the only atomic_long_t variable initialized by
-ATOMIC_INIT macro found in the kernel by using
-`grep -r atomic_long_t | grep ATOMIC_INIT`
+Hello,
 
-This was introduced in 6e1fa55, in which we modified
-the type of zswap_stored_pages to atomic_long_t,
-but didn't change the initialization.
+This series adds the device-tree overlays for PCIe NTB (Non-Transparent-
+Bridge) functionality on J721E, J742S2 and J784S4 SoCs which have
+at-least two instances of PCIe that are required for NTB.
 
-Fixes: 6e1fa55 ("mm: zswap: modify zswap_stored_pages to be atomic_long_t")
-Signed-off-by: Sun YangKai <sunk67188@gmail.com>
----
- mm/zswap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The device-tree overlay for switching from Type-C USB interface to Type-A
+USB interface on J742S2-EVM and J784S4-EVM is also included in this series.
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index ac9d299e7d0c..23365e76a3ce 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -43,7 +43,7 @@
- * statistics
- **********************************/
- /* The number of compressed pages currently stored in zswap */
--atomic_long_t zswap_stored_pages = ATOMIC_INIT(0);
-+atomic_long_t zswap_stored_pages = ATOMIC_LONG_INIT(0);
- 
- /*
-  * The statistics below are not protected from concurrent access for
+Series is based on linux-next tagged next-20250226.
+
+v1 of this series is at:
+https://patchwork.kernel.org/project/linux-arm-kernel/cover/20250202093636.2699064-1-s-vadapalli@ti.com/
+Changes since v1:
+- s/epf_bus/epf-bus in the first and second patch of this series since
+  node names shouldn't contain underscores.
+
+Regards,
+Siddharth.
+
+Siddharth Vadapalli (3):
+  arm64: dts: ti: k3-j721e-evm: Add overlay for PCIe NTB functionality
+  arm64: dts: ti: k3-j784s4-j742s2-evm: Add overlay for PCIe NTB
+  arm64: dts: ti: k3-j784s4-j742s2-evm: Add overlay to enable USB0
+    Type-A
+
+ arch/arm64/boot/dts/ti/Makefile               | 18 ++++
+ .../boot/dts/ti/k3-j721e-evm-pcie-ntb.dtso    | 91 ++++++++++++++++++
+ .../dts/ti/k3-j784s4-j742s2-evm-pcie-ntb.dtso | 92 +++++++++++++++++++
+ .../ti/k3-j784s4-j742s2-evm-usb0-type-a.dtso  | 29 ++++++
+ 4 files changed, 230 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-evm-pcie-ntb.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-pcie-ntb.dtso
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-usb0-type-a.dtso
+
 -- 
-2.48.1
+2.34.1
 
