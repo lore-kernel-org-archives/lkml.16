@@ -1,149 +1,304 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970D621C19B;
-	Wed, 26 Feb 2025 13:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAF321CA0D
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740575019; cv=none; b=J8oBuKO5Vb7mPGZuKNoEYZuk+/8vBy5c2aGlzjW+XVrGHuMnJRB/m3oLP4naV4J7cwm8lsxurnCL0I3JYDtbSrsiv0epnrazBQiRhGG6l8+nHQrqVnzdMDkimdB1CfjWyi0bYygO/BIyDqOxhBOm4fkcWKHLYZ6QpvHfC8VD6Yw=
+	t=1740575022; cv=none; b=Vq1BHtcLEVpisNv+9WPErUs0ADTqgisRTAJ9MbQtVeCcnho1PaXK+U2dJLgwg8dggsUgjSXUZHp0TttmCNs1ZbQW1VsFWHoyYl1o4arerfTEGe9JRdbzP4ecNZyD2XMonQN8NjwYIMcZ2ufRbD7CljJj9KDF3oX08i45+X6fjHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740575019; c=relaxed/simple;
-	bh=8T6tXmiYYvrkr4KlwtHpcA8a60dsrFrQaaLCFu7UZ70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sfh30mAQ2wJFxyb1pONCp1P8BuOpODczb5l0bsqB8xTwA8HAaGi/mPay+qqE3Pn7f7uqY8OQu2BLB5+gOS2bPBZ5gKmGccXPErblpCyelT6xKVO9eyF7eFMdvYIxX6XiLjBhqH8l42o4sxHQUR6RMFuuPMD4oArPuePw2uQg8Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=idw5Ulc0; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740575022; c=relaxed/simple;
+	bh=BV5mzWnGJqWVT6+tMv9noTMr3UiDp5q+3CjaslND8uY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kLVMJhcgvbo7vrzao/D2Kf3B4gJlPBosnpaoVJbVNS0sptGy7IbeIsUJxpTbPWbkLLEPcn/t4/6OcSwCnNnd0HP8gCRwPirc7A/G+Xdu/N4KnYmwiTR4ZkhYPXpd6TnszpaZmIAk4cqn6q4ASw+VE3sbFi6EknbByt+OfaxrfQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i1uJeit5; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="idw5Ulc0"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fcc99efe9bso10403942a91.2;
-        Wed, 26 Feb 2025 05:03:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740575017; x=1741179817; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=IPeycN86f1xgOWk4uKeGQv6tEJQSGR7VL8YmCabJzZE=;
-        b=idw5Ulc0PvMikk3g0b0NTEwHqVgOO5yA35MmIvQ7tE+rkKpnqVX51Tj7mE/knCNsTj
-         fb6V9PRcsrj3o4YqTCFw8bUCGjVwE/SN10tqejzg/x34KFQaacIv27B3Tf+xBl8YltUJ
-         41WzRzwr366LHypYtPWUcoviY3TkE014AsrowFqqRBzhKWyrPuJ0MWelB42LGDEAV9Tn
-         iUUl6VlaYczB7VPEVVKIrAC9JG+eBuJHCNVhMU35jJWXscmdLVnAjL20NtdOPVUC8bU4
-         c89Y4Nj5PIH4NPoiPizVKJFIBJh44lmc+3enaUHTofkMcAK99VSCLqQCpuSX13Zq3de2
-         FrnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740575017; x=1741179817;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IPeycN86f1xgOWk4uKeGQv6tEJQSGR7VL8YmCabJzZE=;
-        b=qCGg0R/KY1MoXqCqhKrWhP0E06/KG6+xDXKmK84lAuXxa/+Nk9+4aGLRlF82ewB6fh
-         7CPVB2gbgD3H1qo8pu+6O/du8QRRuEfXT+w58gUutc6PXBoyInB1lxvUZLF4gQX5CqlB
-         Hxdfv01Decu/NTqmJovQ6oAtpVkui4W3u3ZRJzN1PFNzm0SJkihyg0QGxYmPT4stvLDe
-         6f9N8JufNKfUoF94ZAhFHI4f90VHtS8f3R+iQZq0ZgTYIiM/sH9Ly8mf0gbP5sTgJKxU
-         EluXwUnqI4s41h9xEpd1rHWsuJwhCwurFXHwogiLvT4mtDumKELAEm4IbhQnwaWq1W1a
-         U9tg==
-X-Forwarded-Encrypted: i=1; AJvYcCVbQEQFEl7EWm9lm7YeJCWPiPenXIQbTZtODpn8Tfix6FPpmGIUlaz55u703uDqMG+HCSpg3R6NRhC4@vger.kernel.org, AJvYcCW6Rb7KUrirNEG0F+qlMzBQMPNdZrI5D443lXrO3J5IrX8Te5uHWT8B7JcVI1SY0InkLQu877107QrQPp4=@vger.kernel.org, AJvYcCWE0ziU2DN10Mve8LiMp+JO9p+GhMqnVghUxXSFgOyyBp8vBlHOtrruiZbk2MjYHTPx4WXsSY674WQ=@vger.kernel.org, AJvYcCXr9b4wObLD8TbARkYqOx4zAgwG7pKASfGDlTFN+lzQe6gDCfnfynke/HuFvyASK5OGnONADTSyBNrpVT5j@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQLcIavxR5rrAcCClIrtwjO23THope957d/JWWt4igGm9D2fiF
-	s4eBBQFXeAWo9PwRfkdel+hPuA+neW273od1RYMFWfE+twdQg/kRA61zrQ==
-X-Gm-Gg: ASbGncvLGDbguAJiQ96WtyauEesw8UvrLVvHe3r5Z1GWd9eMwkciqOFjbMHx9zMpACl
-	hZkhjtN9mVZeg5STBUESODktqVe+3itufOtkGp/EkVP1+LAcsiBhnms5YE4qtiK2koYLBgFAlvP
-	r/6gSigilwPFHWolIOiDk1oAIMjWKCweIu5F0/2dO7LWQsYvFFz42jcyQ5hmi1GVINwidEHbET8
-	Nuv+AaGQSUUr+zvQfpBOmzpwtQYmw7xC0g05U6GqWyLOBZiEOUo4vNGq18mO+hsXeC6qf+tJE86
-	veWmxZX/iligbyKgknsXn9C+spfVFrTS+mVgvSHSYluAusxuKeLh/gfxPs4yh/4DsTSNGLk0vVw
-	=
-X-Google-Smtp-Source: AGHT+IGgYhj5gsQpPyttqAS3GexKHR9IIhHogREyZHF8AOZjqXjmabp+xGynlia3rdtJXq/nZtHbKQ==
-X-Received: by 2002:a17:90a:e710:b0:2fe:8902:9ecd with SMTP id 98e67ed59e1d1-2fe8902a396mr2253619a91.1.1740575016767;
-        Wed, 26 Feb 2025 05:03:36 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825a98e7sm1414288a91.4.2025.02.26.05.03.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 05:03:36 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <7f72629e-50d1-40bc-bf7e-2c54ee62323d@roeck-us.net>
-Date: Wed, 26 Feb 2025 05:03:34 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i1uJeit5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740575021; x=1772111021;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=BV5mzWnGJqWVT6+tMv9noTMr3UiDp5q+3CjaslND8uY=;
+  b=i1uJeit5gomAYCKjxPFDUZNaQTDv9CC0Cx1RkuFxgy+LYQi1xOqFmTc1
+   fS8BXsDOYgi5G5nL/jBEalRlJfM9sS81L0LOeiGWrIMwwfJKZW3+nP03S
+   0XWiz2MMvMxlkiuDoZScG7PH9ThAprIJ2NyUGcbSqZpWuv49EpPl7qbkr
+   2mV3GxLih19Q+u461v+ZG9cj9XT47yEun2tkToDoN83PzWnRZg2zKXFXZ
+   3KpzU0dO/N/KvL396d/T2st1NKql5Zcr0Usf8m3bExj91s5SWGbEPOx7Q
+   ui8ALlpY5UoCAiKciSaLZQ7tHgoOTEOF0bETcLF2QvC7+l9V39rcyiPx7
+   w==;
+X-CSE-ConnectionGUID: YXVxDrT5Toi+tmphhm3WGA==
+X-CSE-MsgGUID: ghLL01sJR/2rqh2SJ4UAUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41341630"
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="41341630"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:41 -0800
+X-CSE-ConnectionGUID: o2wxEGl4SUSDAxBHlKbgwA==
+X-CSE-MsgGUID: Bqzc97qdQpezQ7DjerdxGw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="121690966"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:03:35 -0800
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Oren Weil <oren.jer.weil@intel.com>,
+	linux-mtd@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: [PATCH v5 08/11] drm/i915/nvm: add nvm device for discrete graphics
+Date: Wed, 26 Feb 2025 14:51:40 +0200
+Message-ID: <20250226125143.3791515-9-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250226125143.3791515-1-alexander.usyskin@intel.com>
+References: <20250226125143.3791515-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] hwmon: (pmbus/lt3074): add support for lt3074
-To: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Delphine CC Chiu <Delphine_CC_Chiu@Wiwynn.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-i2c@vger.kernel.org
-References: <20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com>
- <20250225-upstream-lt3074-v2-2-18ad10ba542e@analog.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250225-upstream-lt3074-v2-2-18ad10ba542e@analog.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/25/25 05:01, Cedric Encarnacion wrote:
-> Add hardware monitoring and regulator support for LT3074. The LT3074 is an
-> ultrafast, ultralow noise 3A, 5.5V dropout linear regulator. The PMBus
-> serial interface allows telemetry for input/output voltage, bias voltage,
-> output current, and die temperature.
-> 
-> Signed-off-by: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+Enable access to internal non-volatile memory on
+DGFX devices via a child device.
+The nvm child device is exposed via auxiliary bus.
 
-For my reference:
+CC: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Co-developed-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ drivers/gpu/drm/i915/Makefile      |  4 ++
+ drivers/gpu/drm/i915/i915_driver.c |  6 ++
+ drivers/gpu/drm/i915/i915_drv.h    |  3 +
+ drivers/gpu/drm/i915/i915_reg.h    |  1 +
+ drivers/gpu/drm/i915/intel_nvm.c   | 92 ++++++++++++++++++++++++++++++
+ drivers/gpu/drm/i915/intel_nvm.h   | 15 +++++
+ 6 files changed, 121 insertions(+)
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.c
+ create mode 100644 drivers/gpu/drm/i915/intel_nvm.h
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-The core looks good to me. I don't know what Krzysztof means with "hwmon
-code might need some changes" in the feedback to the dt patch, or what those
-changes might be. I'll wait for that to be sorted out.
-
-Guenter
+diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
+index 3dda9f0eda82..28835163a225 100644
+--- a/drivers/gpu/drm/i915/Makefile
++++ b/drivers/gpu/drm/i915/Makefile
+@@ -213,6 +213,10 @@ i915-y += \
+ i915-y += \
+ 	gt/intel_gsc.o
+ 
++# graphics nvm device (DGFX) support
++i915-y += \
++	intel_nvm.o
++
+ # graphics hardware monitoring (HWMON) support
+ i915-$(CONFIG_HWMON) += \
+ 	i915_hwmon.o
+diff --git a/drivers/gpu/drm/i915/i915_driver.c b/drivers/gpu/drm/i915/i915_driver.c
+index ce163f58fd76..c58e4ca19e1d 100644
+--- a/drivers/gpu/drm/i915/i915_driver.c
++++ b/drivers/gpu/drm/i915/i915_driver.c
+@@ -81,6 +81,8 @@
+ #include "soc/intel_dram.h"
+ #include "soc/intel_gmch.h"
+ 
++#include "intel_nvm.h"
++
+ #include "i915_debugfs.h"
+ #include "i915_driver.h"
+ #include "i915_drm_client.h"
+@@ -644,6 +646,8 @@ static void i915_driver_register(struct drm_i915_private *dev_priv)
+ 	/* Depends on sysfs having been initialized */
+ 	i915_perf_register(dev_priv);
+ 
++	intel_nvm_init(dev_priv);
++
+ 	for_each_gt(gt, dev_priv, i)
+ 		intel_gt_driver_register(gt);
+ 
+@@ -684,6 +688,8 @@ static void i915_driver_unregister(struct drm_i915_private *dev_priv)
+ 
+ 	i915_hwmon_unregister(dev_priv);
+ 
++	intel_nvm_fini(dev_priv);
++
+ 	i915_perf_unregister(dev_priv);
+ 	i915_pmu_unregister(dev_priv);
+ 
+diff --git a/drivers/gpu/drm/i915/i915_drv.h b/drivers/gpu/drm/i915/i915_drv.h
+index b96b8de12756..cdeec04a8545 100644
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -67,6 +67,7 @@
+ struct drm_i915_clock_gating_funcs;
+ struct vlv_s0ix_state;
+ struct intel_pxp;
++struct intel_dg_nvm_dev;
+ 
+ #define GEM_QUIRK_PIN_SWIZZLED_PAGES	BIT(0)
+ 
+@@ -315,6 +316,8 @@ struct drm_i915_private {
+ 
+ 	struct i915_perf perf;
+ 
++	struct intel_dg_nvm_dev *nvm;
++
+ 	struct i915_hwmon *hwmon;
+ 
+ 	struct intel_gt *gt[I915_MAX_GT];
+diff --git a/drivers/gpu/drm/i915/i915_reg.h b/drivers/gpu/drm/i915/i915_reg.h
+index 765e6c0528fb..59b87737ac0c 100644
+--- a/drivers/gpu/drm/i915/i915_reg.h
++++ b/drivers/gpu/drm/i915/i915_reg.h
+@@ -321,6 +321,7 @@
+ #define DG2_GSC_HECI2_BASE	0x00374000
+ #define MTL_GSC_HECI1_BASE	0x00116000
+ #define MTL_GSC_HECI2_BASE	0x00117000
++#define GEN12_GUNIT_NVM_BASE	0x00102040
+ 
+ #define HECI_H_CSR(base)	_MMIO((base) + 0x4)
+ #define   HECI_H_CSR_IE		REG_BIT(0)
+diff --git a/drivers/gpu/drm/i915/intel_nvm.c b/drivers/gpu/drm/i915/intel_nvm.c
+new file mode 100644
+index 000000000000..75d3ebe669ff
+--- /dev/null
++++ b/drivers/gpu/drm/i915/intel_nvm.c
+@@ -0,0 +1,92 @@
++// SPDX-License-Identifier: MIT
++/*
++ * Copyright(c) 2019-2024, Intel Corporation. All rights reserved.
++ */
++
++#include <linux/intel_dg_nvm_aux.h>
++#include <linux/irq.h>
++#include "i915_reg.h"
++#include "i915_drv.h"
++#include "intel_nvm.h"
++
++#define GEN12_GUNIT_NVM_SIZE 0x80
++
++static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
++	[0] = { .name = "DESCRIPTOR", },
++	[2] = { .name = "GSC", },
++	[11] = { .name = "OptionROM", },
++	[12] = { .name = "DAM", },
++};
++
++static void i915_nvm_release_dev(struct device *dev)
++{
++}
++
++void intel_nvm_init(struct drm_i915_private *i915)
++{
++	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
++	struct intel_dg_nvm_dev *nvm;
++	struct auxiliary_device *aux_dev;
++	int ret;
++
++	/* Only the DGFX devices have internal NVM */
++	if (!IS_DGFX(i915))
++		return;
++
++	/* Nvm pointer should be NULL here */
++	if (WARN_ON(i915->nvm))
++		return;
++
++	i915->nvm = kzalloc(sizeof(*nvm), GFP_KERNEL);
++	if (!i915->nvm)
++		return;
++
++	nvm = i915->nvm;
++
++	nvm->writeable_override = true;
++	nvm->bar.parent = &pdev->resource[0];
++	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
++	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
++	nvm->bar.flags = IORESOURCE_MEM;
++	nvm->bar.desc = IORES_DESC_NONE;
++	nvm->regions = regions;
++
++	aux_dev = &nvm->aux_dev;
++
++	aux_dev->name = "nvm";
++	aux_dev->id = (pci_domain_nr(pdev->bus) << 16) |
++		       PCI_DEVID(pdev->bus->number, pdev->devfn);
++	aux_dev->dev.parent = &pdev->dev;
++	aux_dev->dev.release = i915_nvm_release_dev;
++
++	ret = auxiliary_device_init(aux_dev);
++	if (ret) {
++		drm_err(&i915->drm, "i915-nvm aux init failed %d\n", ret);
++		return;
++	}
++
++	ret = auxiliary_device_add(aux_dev);
++	if (ret) {
++		drm_err(&i915->drm, "i915-nvm aux add failed %d\n", ret);
++		auxiliary_device_uninit(aux_dev);
++		return;
++	}
++}
++
++void intel_nvm_fini(struct drm_i915_private *i915)
++{
++	struct intel_dg_nvm_dev *nvm = i915->nvm;
++
++	/* Only the DGFX devices have internal NVM */
++	if (!IS_DGFX(i915))
++		return;
++
++	/* Nvm pointer should not be NULL here */
++	if (WARN_ON(!nvm))
++		return;
++
++	auxiliary_device_delete(&nvm->aux_dev);
++	auxiliary_device_uninit(&nvm->aux_dev);
++	kfree(nvm);
++	i915->nvm = NULL;
++}
+diff --git a/drivers/gpu/drm/i915/intel_nvm.h b/drivers/gpu/drm/i915/intel_nvm.h
+new file mode 100644
+index 000000000000..7bc3d1114a3f
+--- /dev/null
++++ b/drivers/gpu/drm/i915/intel_nvm.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: MIT */
++/*
++ * Copyright(c) 2019-2024 Intel Corporation. All rights reserved.
++ */
++
++#ifndef __INTEL_NVM_H__
++#define __INTEL_NVM_H__
++
++struct drm_i915_private;
++
++void intel_nvm_init(struct drm_i915_private *i915);
++
++void intel_nvm_fini(struct drm_i915_private *i915);
++
++#endif /* __INTEL_NVM_H__ */
+-- 
+2.43.0
 
