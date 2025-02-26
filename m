@@ -1,224 +1,67 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9A8218591
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:24:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37163223321;
+	Wed, 26 Feb 2025 21:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740605098; cv=none; b=kYdyH3H22QGkWsu/I5j4MYXg/HXS/9cwKlOt3p4pB5BnkQtYWQQG7xDE/BvTYIuIjHSxS/8+0Y4g36SHLbSh9oBQESRrNEtzOJrPOOVnQFko+uT5maiVZ2EP7jLHZgqQmMugfo2GZS6cYObn5Tu0qT0SGx3W6jjxWy0PyCL4G1E=
+	t=1740605178; cv=none; b=d1tPnyu63/a85bEAbiRAZV3J4dDO8uXVN1J2tr9FmuHfMWfrXCCogCPiEYO1rgww6EY8eghJDfSuDRE+TBd6Ck8704xkto11ITE/JjSV/3FbFTNAVaKsDUqaw8lM5RmwppKdIfdVTeKRBWz9iuiBxtsMSd2sftNyDq/HTWSAaOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740605098; c=relaxed/simple;
-	bh=GPvtEcspJU6GxP83VqwaJwmNYNNs6KoVA1yAU/7fUWY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BqkfwiDu7au8d3Qv+YDXAsUhl9Ebqq9FdjulNBmEYYtSfQUDBebRbu34RDFBY7AFu9Rk8Zl6XPWiDWgeLOFU0wuuWjFPvpGlAc/RpE6PAw6tHBGmsChx7Ff72Z15KePRcFTvEU01cEDv48EOq+g7CwYCR3FzpHRkdOB/X7LiP/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ikf0by6P; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ikf0by6P"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EAF6C4435B;
-	Wed, 26 Feb 2025 21:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740605094;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RjXIFbrycUalHpcnR/F5qePySLzaC2KIyI6Go0Y3H6o=;
-	b=ikf0by6PP6wDzBzH4f1AW/7i/C50BiqT4SRCVXjtBq8jUBcsVS9BqRMC/ofjH0KTQiqIzR
-	H0RueAaGHUHfIErOLGlCgP6uXHEhjX+2YhxbOTWqyaF2sIqaa7MXullaZFsiwz6pt8iFII
-	ICoEC6T3Cw5nxBTW9AQl6sJT4Bw9PrH+CpK3saQqljwg+K7PELliMqLIEYl/1GHOi9vCvE
-	sn0GJxmAiFfzOUwy5VCZITyTyiFCZkmPT6s6PYmyZ19qirlXaHncsHl3naVH/UfV4Jcy55
-	gNqwDwifbgXjFk9kHk2GTgHVfgoyqfgOsZYdJabdGx+Gmq7EnTirFIEY8gMAGw==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 26 Feb 2025 22:23:53 +0100
-Subject: [PATCH v8 2/2] drm/debugfs: add top-level 'bridges' file showing
- all added bridges
+	s=arc-20240116; t=1740605178; c=relaxed/simple;
+	bh=Yp/mMIwMpxDeFoFPJUGlW9naor6FAFBdrMt76B+P2rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iBGwYIL4VL2bRZnFjJBx1m05PhiXWR44O/FNBExfTm4ycxbBkaQNbhZw31kW5X3w7hfzGeCOXhb+QCb0GPztGANkD3qIbJrmel1lqda+tzJCo50Vi+5xuJPABsGh7ZLYAQmeNKjw2c5QE9s/GLZQJgD2w1PHrCB9WhSEPlHUYUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE6BC4CED6;
+	Wed, 26 Feb 2025 21:26:14 +0000 (UTC)
+Date: Wed, 26 Feb 2025 16:26:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Uecker <uecker@tugraz.at>, Ralf Jung <post@ralfj.de>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Ventura
+ Jack <venturajack85@gmail.com>, Kent Overstreet
+ <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <20250226162655.65ba4b51@gandalf.local.home>
+In-Reply-To: <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+	<20250222141521.1fe24871@eugeo>
+	<CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+	<6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+	<CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+	<CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+	<CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+	<5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+	<CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
+	<ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
+	<CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-drm-debugfs-show-all-bridges-v8-2-bb511cc49d83@bootlin.com>
-References: <20250226-drm-debugfs-show-all-bridges-v8-0-bb511cc49d83@bootlin.com>
-In-Reply-To: <20250226-drm-debugfs-show-all-bridges-v8-0-bb511cc49d83@bootlin.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekheeihecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhop
- ehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtohepjhgrnhhirdhnihhkuhhlrgeslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-The global bridges_list holding all the bridges between drm_bridge_add()
-and drm_bridge_remove() cannot be inspected via debugfs. Add a file showing
-it.
+On Wed, 26 Feb 2025 13:14:30 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-To avoid code duplication, move the code printing a bridge info to a common
-function.
+> Similarly, if the source code has a single read, the compiler had
+> better not turn that into two reads (because of some register pressure
+> issue). That would *ALSO* be a bug, because of the whole TOCTOU issue
+> (ie the source code may have had one single access, done sanity
+> testing on the value before using it, and if the compiler turned it
+> all into "read+sanity test" and "read+use", the compiler is
+> introducing behavioral differences).
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+As a bystander here, I just want to ask, do you mean basically to treat all
+reads as READ_ONCE() and all writes as WRITE_ONCE()?
 
----
-
-Changed in v8:
-- add the file in drm_bridge.c, which avois the added #if CONFIG_DEBUG_FS
-- fix incorrect (but harmless) idx increment in
-  drm_bridge_debugfs_show_bridge()
-
-Changed in v7:
-- move implementation to drm_bridge.c to avoid exporting bridge_list and
-  bridge_mutex
-
-This patch was added in v6.
----
- drivers/gpu/drm/drm_bridge.c | 72 ++++++++++++++++++++++++++++++--------------
- drivers/gpu/drm/drm_drv.c    |  2 ++
- include/drm/drm_bridge.h     |  1 +
- 3 files changed, 53 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index a6bf1a565e3c3a8d24de60448972849f6d86ba72..9c6e35d41ed54a14d5745e684a341c907ed84d6b 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -1336,6 +1336,49 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np)
- EXPORT_SYMBOL(of_drm_find_bridge);
- #endif
- 
-+static void drm_bridge_debugfs_show_bridge(struct drm_printer *p,
-+					   struct drm_bridge *bridge,
-+					   unsigned int idx)
-+{
-+	drm_printf(p, "bridge[%u]: %ps\n", idx, bridge->funcs);
-+	drm_printf(p, "\ttype: [%d] %s\n",
-+		   bridge->type,
-+		   drm_get_connector_type_name(bridge->type));
-+
-+	if (bridge->of_node)
-+		drm_printf(p, "\tOF: %pOFfc\n", bridge->of_node);
-+
-+	drm_printf(p, "\tops: [0x%x]", bridge->ops);
-+	if (bridge->ops & DRM_BRIDGE_OP_DETECT)
-+		drm_puts(p, " detect");
-+	if (bridge->ops & DRM_BRIDGE_OP_EDID)
-+		drm_puts(p, " edid");
-+	if (bridge->ops & DRM_BRIDGE_OP_HPD)
-+		drm_puts(p, " hpd");
-+	if (bridge->ops & DRM_BRIDGE_OP_MODES)
-+		drm_puts(p, " modes");
-+	if (bridge->ops & DRM_BRIDGE_OP_HDMI)
-+		drm_puts(p, " hdmi");
-+	drm_puts(p, "\n");
-+}
-+
-+static int allbridges_show(struct seq_file *m, void *data)
-+{
-+	struct drm_printer p = drm_seq_file_printer(m);
-+	struct drm_bridge *bridge;
-+	unsigned int idx = 0;
-+
-+	mutex_lock(&bridge_lock);
-+
-+	list_for_each_entry(bridge, &bridge_list, list)
-+		drm_bridge_debugfs_show_bridge(&p, bridge, idx++);
-+
-+	mutex_unlock(&bridge_lock);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(allbridges);
-+
- static int encoder_bridges_show(struct seq_file *m, void *data)
- {
- 	struct drm_encoder *encoder = m->private;
-@@ -1343,33 +1386,18 @@ static int encoder_bridges_show(struct seq_file *m, void *data)
- 	struct drm_bridge *bridge;
- 	unsigned int idx = 0;
- 
--	drm_for_each_bridge_in_chain(encoder, bridge) {
--		drm_printf(&p, "bridge[%u]: %ps\n", idx++, bridge->funcs);
--		drm_printf(&p, "\ttype: [%d] %s\n",
--			   bridge->type,
--			   drm_get_connector_type_name(bridge->type));
--
--		if (bridge->of_node)
--			drm_printf(&p, "\tOF: %pOFfc\n", bridge->of_node);
--
--		drm_printf(&p, "\tops: [0x%x]", bridge->ops);
--		if (bridge->ops & DRM_BRIDGE_OP_DETECT)
--			drm_puts(&p, " detect");
--		if (bridge->ops & DRM_BRIDGE_OP_EDID)
--			drm_puts(&p, " edid");
--		if (bridge->ops & DRM_BRIDGE_OP_HPD)
--			drm_puts(&p, " hpd");
--		if (bridge->ops & DRM_BRIDGE_OP_MODES)
--			drm_puts(&p, " modes");
--		if (bridge->ops & DRM_BRIDGE_OP_HDMI)
--			drm_puts(&p, " hdmi");
--		drm_puts(&p, "\n");
--	}
-+	drm_for_each_bridge_in_chain(encoder, bridge)
-+		drm_bridge_debugfs_show_bridge(&p, bridge, idx++);
- 
- 	return 0;
- }
- DEFINE_SHOW_ATTRIBUTE(encoder_bridges);
- 
-+void drm_bridge_debugfs_params(struct dentry *root)
-+{
-+	debugfs_create_file("bridges", 0444, root, NULL, &allbridges_fops);
-+}
-+
- void drm_bridge_debugfs_encoder_params(struct dentry *root,
- 				       struct drm_encoder *encoder)
- {
-diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-index 3cf440eee8a2ab3de134d925db8f1d2ce68062b7..22e8cd0a6a37a0ac25535e9d570da25571b0b2bc 100644
---- a/drivers/gpu/drm/drm_drv.c
-+++ b/drivers/gpu/drm/drm_drv.c
-@@ -38,6 +38,7 @@
- #include <linux/xarray.h>
- 
- #include <drm/drm_accel.h>
-+#include <drm/drm_bridge.h>
- #include <drm/drm_cache.h>
- #include <drm/drm_client_event.h>
- #include <drm/drm_color_mgmt.h>
-@@ -1120,6 +1121,7 @@ static int __init drm_core_init(void)
- 	}
- 
- 	drm_debugfs_root = debugfs_create_dir("dri", NULL);
-+	drm_bridge_debugfs_params(drm_debugfs_root);
- 
- 	ret = register_chrdev(DRM_MAJOR, "drm", &drm_stub_fops);
- 	if (ret < 0)
-diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-index 0890acfe04b99b1ccbbff10b507cb8c2b2705e06..2a99d70865571f24db0ca75c758cfd09d3a5d459 100644
---- a/include/drm/drm_bridge.h
-+++ b/include/drm/drm_bridge.h
-@@ -1108,6 +1108,7 @@ static inline struct drm_bridge *drmm_of_get_bridge(struct drm_device *drm,
- }
- #endif
- 
-+void drm_bridge_debugfs_params(struct dentry *root);
- void drm_bridge_debugfs_encoder_params(struct dentry *root, struct drm_encoder *encoder);
- 
- #endif
-
--- 
-2.48.1
-
+-- Steve
