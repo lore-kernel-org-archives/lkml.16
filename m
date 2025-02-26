@@ -1,153 +1,108 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB76219308
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF1FA258CD2;
+	Wed, 26 Feb 2025 12:23:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740572551; cv=none; b=ouTcYiYQQJxXoFuBTTD2O28NUrkaSbqJeBP/YWBYB5CP9LyWkzBU7Prav9GTNVphyy7Th055YiHG7ivfhQM8cgw8AI882ye4Fy4BbpaFUU77y40QNkgmurToBoXvcKzeR75uvznPObkyBCQdSi5CMsjYN7fX+G9g0JLyGxXiFe4=
+	t=1740572612; cv=none; b=Xb5IwxXsrGFKjUiZOwYfIjoEkNIM/uVqc6z/o4nxgJAXcJuNuPUSanh9J+AImNyO1yljtJJVOb3oM1QyXskUO8SVSg2gQUR7gKglW6+5Mc0vVKdJNW/ID7GM2RQXuq4p15a8/0+FFCZPn6ZdoFum6bb8+g12YgYZG1t0R+Fw3Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740572551; c=relaxed/simple;
-	bh=0/ySfyJv7kyqLsG5HsLti4ApDszsDW8eAqzzCdqKc8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=H+RhpMIUajHqjArTJHJNmHILr7Y4yeawruqYU5IIpiWdQMGUDNDzfVF9bsuG9VJJj5teUslXFRL+0aZOuh+jDVuWJPudH2JsudJS/LIcc3RSLg6VlyZlLbZ8r3u+jVoy+ooIHClsId/JRLlyLzZIH+JcFzzFDsl3G8ff1jhom1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=k8RTRBU1; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="k8RTRBU1"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QBsKws2071608
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Wed, 26 Feb 2025 05:54:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740570860;
-	bh=aLCG74LOhJQiX3HM0JiZUURKZFlNy9nvIZeBF7qaR40=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=k8RTRBU1v9VJO8Ld2qJAQak4jAsE52QApdA93KCknRKu349aHgduUBXs59kL48uoj
-	 YUjdVrqxgJLIcbDU17BvzC42NTyvNvahd8eT6ZtMKWdcHizpdMo/ENkknMcKE00HU3
-	 kZZq4oj6EiWLFcteIWElmof3m5zuGBIE/ytK0jP4=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QBsKW0025757;
-	Wed, 26 Feb 2025 05:54:20 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 05:54:19 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 05:54:19 -0600
-Received: from [172.24.18.117] (lt9560gk3.dhcp.ti.com [172.24.18.117])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QBsGrn129011;
-	Wed, 26 Feb 2025 05:54:17 -0600
-Message-ID: <1982291f-4a02-4ed2-b4bf-778a2fe0ad9e@ti.com>
-Date: Wed, 26 Feb 2025 17:24:16 +0530
+	s=arc-20240116; t=1740572612; c=relaxed/simple;
+	bh=fAqlBot061vHiWVkJRN64vfvgl+i6LKS5sFXrcE4rQU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=clNyuia4ZLHGSi44kDZoFlmlE/moYQaj938/o0qiTMtimyYPmlkTwgE5xeECyUnC5aD5350PIH+lFIvJXlZhk1h9I2Gi+yNCFWGULhbe0BwHIWBcs01aQXOV06adH3O5zbmANYWa/OoL5PpBgLT+lJliB9K6aCV58aK1xDiBKUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FBA813D5;
+	Wed, 26 Feb 2025 04:23:46 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83EBB3F5A1;
+	Wed, 26 Feb 2025 04:23:28 -0800 (PST)
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+To: linux-sound@vger.kernel.org
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/4] xlnx: dt-bindings: Convert to json-schema
+Date: Wed, 26 Feb 2025 12:23:21 +0000
+Message-ID: <20250226122325.2014547-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH] arm64: defconfig: Enable HSR driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Arnd Bergmann
-	<arnd@arndb.de>
-CC: <quic_bjorande@quicinc.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>,
-        "Anwar, Md Danish"
-	<danishanwar@ti.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-References: <20240419060013.14909-1-r-gunasekaran@ti.com>
- <686f583d-6bf4-4486-b9e4-20c1e268eda6@ti.com>
- <d4954e5e-e51f-41c0-bca5-6e14b4640022@linaro.org>
- <0d33dea6-c021-4f2a-bb3f-92efd6eebd18@ti.com>
- <6081917c-9c20-48fc-baaf-7ac9a9679a72@linaro.org>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <6081917c-9c20-48fc-baaf-7ac9a9679a72@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Krzysztof,
+This series converts the folling Xilinx device tree binding documentation:
+ - xlnx,i2s
+ - xlnx,audio-formatter
+ - xlnx,spdif
+to json-schema.
 
-On 2/26/2025 4:18 PM, Krzysztof Kozlowski wrote:
-> On 26/02/2025 11: 44, Malladi, Meghana wrote: > > > On 2/26/2025 1: 35 
-> PM, Krzysztof Kozlowski wrote: >> On 26/02/2025 07: 18, Malladi, Meghana 
-> wrote: > Hi all, > > Apologies in >> case you are receiving this email
-> ZjQcmQRYFpfptBannerStart
-> This message was sent from outside of Texas Instruments.
-> Do not click links or open attachments unless you recognize the source 
-> of this email and know the content is safe.
-> Report Suspicious
-> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
-> updq3RaPV007wGXFFrPD30z5a3GGYjpJweyhUcIfUTTaUs-8q0QpC4Yk9azBiFp7cBAf2Knk6fnVs4Fs-zRjTMEn8kmpiGo$>
-> ZjQcmQRYFpfptBannerEnd
-> 
-> On 26/02/2025 11:44, Malladi, Meghana wrote:
->> 
->> 
->> On 2/26/2025 1:35 PM, Krzysztof Kozlowski wrote:
->>> On 26/02/2025 07: 18, Malladi, Meghana wrote: > Hi all, > > Apologies in 
->>> case you are receiving this email for the second time. > Any reason why 
->>> this patch hasn't been merged yet. Other than re-basing > this to the 
->>> tip, anything
->>> ZjQcmQRYFpfptBannerStart
->>> This message was sent from outside of Texas Instruments.
->>> Do not click links or open attachments unless you recognize the source 
->>> of this email and know the content is safe.
->>> Report Suspicious
->>> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
->>> updgnZav1ue7gKXOnHOpH5hg8gLmw9Osqsqh- 
->>> KTLRTnBEurV_VetrG7mzU898vB_5xFrYgbRkkuuFMBobM-uhFAmUgccRSk$>
->>> ZjQcmQRYFpfptBannerEnd
->>>
->>> On 26/02/2025 07:18, Malladi, Meghana wrote:
->>>> Hi all,
->>>>
->>>> Apologies in case you are receiving this email for the second time.
-> 
-> BTW, Arnd when responded with Ack described the process.
-> 
+To simplify the testing a linux tree rebased on 6.13-rc4 is accessible
+at [1].
 
-Yes, I wanted to re-confirm before posting it again (just in case).
+[1] https://codeberg.org/vincenzo/linux/src/branch/xlnx/dt-bindings/v6
 
->>>> Any reason why this patch hasn't been merged yet. Other than re-basing 
->>>> this to the tip, anything else which needs to be addressed to get this 
->>>> merged?
->>>
->>> I don't think you sent it to your platform maintainers, so no one would
->>> apply it. Usually people ignore emails they did not receive, although I
->>> am here an exception tracking missing-DT-patchwork things... :)
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> 
->> Hello Arnd/Krzysztof,
->> 
->> Thank you for the replies :)
->> Was having ambiguity since this is not TI specific change. Wanted to 
->> confirm before re-posting. Will post v2 patch including TI platform 
->> maintainers.
-> 
-> It is not TI specific? Then which upstream boards benefit from this if
-> not TI?
-> 
+Note: These bindings are required for future work on the ARM Morello
+Platforms device tree.
 
-This change enables generic HSR protocol support in the kernel which is 
-required for HSR driver support in TI boards. When I said "not TI 
-specific" - I meant this change is not internal to TI driver. Hope this 
-clarifies the miscommunication from my earlier mail.
+Cc: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-Best Regards,
-Meghana
+Changes
+=======
+v6:
+  - Address review comments.
+  - Rebase on the latest master.
+v5:
+  - Address review comments.
+v4:
+  - Address review comments.
+v3:
+  - Address an issue with the MAINTAINERS file reported by the kernel
+    test robot. 
+v2:
+  - Address review comments.
+  - Rebase on 6.14-rc4.
 
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
+Vincenzo Frascino (4):
+  ASoC: dt-bindings: xlnx,i2s: Convert to json-schema
+  ASoC: dt-bindings: xlnx,audio-formatter: Convert to json-schema
+  ASoC: dt-bindings: xlnx,spdif: Convert to json-schema
+  MAINTAINERS: Add Vincenzo Frascino as Xilinx Sound Driver Maintainer
+
+ .../bindings/sound/xlnx,audio-formatter.txt   | 29 -------
+ .../bindings/sound/xlnx,audio-formatter.yaml  | 72 +++++++++++++++++
+ .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 -------
+ .../devicetree/bindings/sound/xlnx,i2s.yaml   | 65 ++++++++++++++++
+ .../devicetree/bindings/sound/xlnx,spdif.txt  | 28 -------
+ .../devicetree/bindings/sound/xlnx,spdif.yaml | 77 +++++++++++++++++++
+ MAINTAINERS                                   |  8 ++
+ 7 files changed, 222 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
+
+-- 
+2.43.0
 
