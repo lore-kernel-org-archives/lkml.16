@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCFD218AB7;
-	Wed, 26 Feb 2025 11:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A98421A438;
+	Wed, 26 Feb 2025 11:45:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570316; cv=none; b=rKvt1WT955fMl3ZXRbTmzqWHTCTLlUDmIick66jvoY1xZNlau9VTkeJQFiNHWdP4Ym8UrzXSD8BEH5DIv3qmh4GK6x5mbDcGJFxizGXbho+utr3s4AnGdrfoLZ7Q8RlIcH0UDfDeyfiDw7ILxSB8zR36OJhkdSgCFp25c5H57R0=
+	t=1740570318; cv=none; b=s5Gdmxl46hQ1E+KZwuTS2o/kJ3Iyjy23ikFfogiwOOWFT01Da4XWrs2sSFnSRiUBkRD9flvXtySmgsHX7oh3ZR9/tm8eIsLmYQnaZpB/UtiX8nT2hmP8Po3a/nUFH5GU8gdNfUKKQS/ETKLuuYZdeOR5nWFhbdKyyOJPTdQaa2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570316; c=relaxed/simple;
-	bh=uMbwFQSW2wbApezo9DQH/BnNIMdQZar0Ezqf7xcu58Y=;
+	s=arc-20240116; t=1740570318; c=relaxed/simple;
+	bh=2r9nJga0gN/RLQi1JecZ+vj+TP6CqTjTd0CFYa5Ukqk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tOHnOyprnXNDpEfMVs64HjCHzqg44moomc+HhS+1qn4jLtEPsMU4Nmtt2uUBPp9JbRBhTjbWB/hlU/RlrsNgFuNuADDiPJF7wvnsyOPmL5ZkYPnkVIAXDRDWsFS36bssOhqKD9wSo3DietNlarPUiE2DUPbjqZSb/Yge8ajC00s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dC7RWRst; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p2wJLYMt; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=svr0RSh5BMEGWQlyOgoPmh0oqx+ptbGEIehJqXEi0Z/R/XBqN6pXQN5CbI4FDofOaGp57hjHZRN9W18dhl1YWD372UuPXmvql9qYbaRGD4nT2agOEd5JJbiVyWbfv6aH5DMvOXWag9jedScIhCK47DFvmUoV57aeMH1L65HLE3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CGbWN4J9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bhuZL5sz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dC7RWRst";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p2wJLYMt"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CGbWN4J9";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bhuZL5sz"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740570311;
+	s=2020; t=1740570314;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k9pJvPJRoot4AT1h69bhn9vc1GanKxm+mtfLKQnaoF4=;
-	b=dC7RWRst00MR9iLmG1iI2b5cbgzkgiVwWBn0rDD4HVIfYUSuYojRsR/TmE4RQmWGHNvJ+2
-	77jKMGmT7QUb9GGXEH6BgCtKx8H2mDwpZPu9v2GWMPYLr040SgXS/LOxwnpTo5AXAvjjZY
-	0UU6ZLw7D5pTQxbFsvxUZ6RqphD15YS0/KLoZ6u6FY3NZ3pmHV5l9GfiT3txGa8oC1LpO9
-	MhPkybzWhm7Gdxj4aYuI8CpcXmYHNdOhgqXHolufvud1+ZYWcvb9jwmZLUQgm+1HQxQxJU
-	m2uujyAmHrqemW05yghgOO+PufC36Ypuvo1WUGAYMciRvy0yHbKhKp3QIVZGZA==
+	bh=+tIB/mKrbgkR1FZXRW2I7qFNU+LB59/l0MfkLrZgBDg=;
+	b=CGbWN4J9YC9gQ8VFg1RJ3j0QwS6+MDp5+Vg1d0K6/xdUSk8P/5jVl4lkjzjYeg21Ln2oPc
+	NRXcQIZIMdiVDpEafvYjyLG/0FbBTHyR1Qywp0XTlu4TgIjzJGBdWCJy+q6e2qR03dLHR2
+	qIVm5mobIHK3AuxVd0RGLCSqqxuHy9Mnu79eP5TkQ3YjiSLl7t8S/PONktXMtxRh8Sxjy4
+	utFqh7lW66yJAWy5kT/08Uq0PEAehK4rl7s+1HipYyU47H8CdJNCIxFU2HVBlzXmioHPea
+	kyNhxm7uOrHkd4OwbXT85jkwWFGGEi8MpL9R7AszlAK6DEhg3uqwUIOsRZXHqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740570311;
+	s=2020e; t=1740570314;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k9pJvPJRoot4AT1h69bhn9vc1GanKxm+mtfLKQnaoF4=;
-	b=p2wJLYMtdpFHXL/9QycDKpVmsl95tT5ehlvebqkIkYEFtNGrVIsnpJyr+1WpYjd9T61LR7
-	YjJ8/JUjJsaEohCQ==
-Date: Wed, 26 Feb 2025 12:44:44 +0100
-Subject: [PATCH v2 05/16] elf, uapi: Add type ElfXX_Versym
+	bh=+tIB/mKrbgkR1FZXRW2I7qFNU+LB59/l0MfkLrZgBDg=;
+	b=bhuZL5sznPwFLNCRTYT+wLH304bB/beR5NLTZXOoHPC1GpGXUdMA3ElesLimSaaplKYvoh
+	/8ilpqRBW8p6ieCA==
+Date: Wed, 26 Feb 2025 12:44:48 +0100
+Subject: [PATCH v2 09/16] tools/nolibc: add limits.h shim header
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250226-parse_vdso-nolibc-v2-5-28e14e031ed8@linutronix.de>
+Message-Id: <20250226-parse_vdso-nolibc-v2-9-28e14e031ed8@linutronix.de>
 References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
 In-Reply-To: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
 To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
@@ -64,46 +64,51 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=1126;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=1273;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=uMbwFQSW2wbApezo9DQH/BnNIMdQZar0Ezqf7xcu58Y=;
- b=7CvId9mvKa9//HzXCxvhR1VmXOx23JW3X291jiX1R+XcNhWx5UgmMqTiFxZ+a3AXSWFC+nXzl
- /gMgqN7haSpDrF2zUs3SczycGbg7PP7Jvfv59hjA3ElJYqWD8Q0IvHT
+ bh=2r9nJga0gN/RLQi1JecZ+vj+TP6CqTjTd0CFYa5Ukqk=;
+ b=UR2y1fGcblPNg0O5kcvnoNHTSKtyj3XWN7IytHuyCM71JEFzSt2H5e99rPFC0rsb8HCCsc+cq
+ XvTFkUQ6lAbASxWR1nevyAGKs9n+hfYs1eH3HfjincxtnoNj0Zj8bNC
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-The types are used by tools/testing/selftests/vDSO/parse_vdso.c.
-To be able to build the vDSO selftests without a libc dependency,
-add the types to the kernels own UAPI headers.
+limits.h is a widely used standard header.
+Missing it from nolibc requires adoption effort to port applications.
 
-As documented by elf(5).
+Add a shim header which includes the global nolibc.h header.
+It makes all nolibc symbols available.
 
-Reviewed-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- include/uapi/linux/elf.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/include/nolibc/Makefile | 1 +
+ tools/include/nolibc/limits.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index d040f12ff1c0ae3dde5c371c81d6089118fbe8ed..8846fe03ca5b836c96aad1be6d8fb9daf3d4b1d9 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -11,6 +11,7 @@ typedef __u16	Elf32_Half;
- typedef __u32	Elf32_Off;
- typedef __s32	Elf32_Sword;
- typedef __u32	Elf32_Word;
-+typedef __u16	Elf32_Versym;
- 
- /* 64-bit ELF base types. */
- typedef __u64	Elf64_Addr;
-@@ -21,6 +22,7 @@ typedef __s32	Elf64_Sword;
- typedef __u32	Elf64_Word;
- typedef __u64	Elf64_Xword;
- typedef __s64	Elf64_Sxword;
-+typedef __u16	Elf64_Versym;
- 
- /* These constants are for the segment types stored in the image headers */
- #define PT_NULL    0
+diff --git a/tools/include/nolibc/Makefile b/tools/include/nolibc/Makefile
+index a1f55fb24bb38c1f49c653af5825e8bcc569a56d..c1299a053145786da89001a5f95f5527ffbe2fa4 100644
+--- a/tools/include/nolibc/Makefile
++++ b/tools/include/nolibc/Makefile
+@@ -30,6 +30,7 @@ all_files := \
+ 		crt.h \
+ 		ctype.h \
+ 		errno.h \
++		limits.h \
+ 		nolibc.h \
+ 		signal.h \
+ 		stackprotector.h \
+diff --git a/tools/include/nolibc/limits.h b/tools/include/nolibc/limits.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..306d4141f4d245ca3f801f451745540b0f7294cd
+--- /dev/null
++++ b/tools/include/nolibc/limits.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
++/*
++ * Shim limits.h header for NOLIBC.
++ * Copyright (C) 2025 Thomas Weißschuh <thomas.weissschuh@linutronix.de>
++ */
++
++#include "nolibc.h"
 
 -- 
 2.48.1
