@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1443621D3F5
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A955E221720
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740571313; cv=none; b=VAUXkMdQnqMZ7X7yBGodPS8CKpyzLX+zDkU8NzHC0ru4YK3sv8j/k4aXK37tNQpynIUo3dYDq2eMHw2NGRupeuAxaI/nFqfh/GqrqRry06I1H6rS4HXGlOQf0sJdGjiyOZdtc80NsyIhS0+mHF52TiuuerKSIEDBseCm8QB1sV8=
+	t=1740571316; cv=none; b=XtWc9HhC/IzE7gLyNaphtBTwM8hTVNriFgV9+d3TbWpFWA9dl3WH1vlWMY6e5oDuhajVFyMmBcRMR3SoftPxr14/ntQjEIOo+iFW+tXSDLWangJilRUzUuy9eDgWnxCNEXod4xTul3wb0P2UYc8KT3vZX2q91akpnjKoTvJ9Tj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740571313; c=relaxed/simple;
-	bh=IebXMzVjzhtgKw9wJcCtsEokmAkJ+0QpAvKulqGNLBA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Qp8JMOPt7eV+F25B2YPo7qwrB6FrhryQFw72B9DzqnVTEL5eU9FyQv89uyDAxKUc67H676ZKPY4cCxt24yqvG9tmGgVV6CAhINGTBw9f0HES8rzcl2rfmpFW0zU208aEDJmbJshe0vJMoWCDJd8r9auvNBxD1Fwx/1AixlnU/Jg=
+	s=arc-20240116; t=1740571316; c=relaxed/simple;
+	bh=4iVb5yuPmYTLZuOVv49V7Uhnq0iVXjEoivtmvCASALI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=AU+OA9VAdmP1eXhYg2eszV/ZbJWjjabBGWkRBh+1w1ug9selaT/1PtXL+9emjB/eb2rUYgwYulbB5ngpHwZ7Hc8bSr6pgvz4gcfN/3F+p6IfAQOuxrpnkvP/qOY2y8x54fEOQjAWATWke8xClqMs+mNV1EkH9TZnZKM9h4zeqUg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-3e1ff7000001d7ae-0d-67bf02a79efb
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-21-67bf02a7b6fa
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -28,37 +28,37 @@ Cc: kernel_team@skhynix.com,
 	mingo@redhat.com,
 	bp@alien8.de,
 	rjgolo@gmail.com
-Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 15/25] fs, filemap: refactor to gather the scattered ->write_{begin,end}() calls
-Date: Wed, 26 Feb 2025 21:01:22 +0900
-Message-Id: <20250226120132.28469-15-byungchul@sk.com>
+Subject: [RFC PATCH v12 based on mm-unstable as of Feb 21, 2025 19/25] mm: skip luf tlb flush for luf'd mm that already has been done
+Date: Wed, 26 Feb 2025 21:01:26 +0900
+Message-Id: <20250226120132.28469-19-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250226120132.28469-1-byungchul@sk.com>
 References: <20250226113342.GB1935@system.software.com>
  <20250226120132.28469-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrCLMWRmVeSWpSXmKPExsXC9ZZnke5ypv3pBpN/8lrMWb+GzeLzhn9s
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKLMWRmVeSWpSXmKPExsXC9ZZnke5ypv3pBpfmyFrMWb+GzeLzhn9s
 	Fl/X/2K2ePqpj8Xi8q45bBb31vxntTi/ay2rxY6l+5gsLh1YwGRxvPcAk8X8e5/ZLDZvmsps
 	cXzKVEaL3z/msDnweXxv7WPx2DnrLrvHgk2lHptXaHlsWtXJ5rHp0yR2j3fnzrF7nJjxm8Xj
-	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV8b9Fa3sBd+yK9Y9XM/cwHgutIuR
-	k0NCwERixbYrbF2MHGD2kl+BIGE2AXWJGzd+MoPYIgJmEgdb/7B3MXJxMAssY5LYe6KBDcQR
-	FpjAKDFvVQs7SBWLgKrEsc1rwGxeoI5F1/uZIRbIS6zecADM5gSK/9v9G6xGSCBZomX9bxaQ
-	QRIC99kkdszrYoRokJQ4uOIGywRG3gWMDKsYhTLzynITM3NM9DIq8zIr9JLzczcxAsN6We2f
-	6B2Mny4EH2IU4GBU4uF9cGZvuhBrYllxZe4hRgkOZiURXs7MPelCvCmJlVWpRfnxRaU5qcWH
-	GKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGKOPTc+YkDU7+9WRvPMnXbfzrM5KL3tw
-	4+8WoY//r5n4lNhpHX8f+1H73k+ukhtJX21WlP/stznGvDDzXF1zZxPvhlv9Wo2yxQ1Jyzs9
-	DFL7Lu8VkFt6xspSQuY0Y4XL6tU+t3SmRMxuvmJcrXPEN3qxksBu/sMP3nsVyPx/MzmBtc//
-	71wdUyWW4oxEQy3mouJEAGgv1UtnAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNLMWRmVeSWpSXmKPExsXC5WfdrLucaX+6wc2DLBZz1q9hs/i84R+b
+	/b6rbB5bf9l5NE69xubxeZNcAE8Ul01Kak5mWWqRvl0CV0bP9XlMBS12Fe/mb2JqYNxl1MXI
+	ySEhYCKx+vBDVhh77pmLLCA2m4C6xI0bP5lBbBEBM4mDrX/Yuxi5OJgFljFJ7D3RwAbiCAu0
+	Mkr8v7SUCaSKRUBVYvujF2AdvEAdVy78ZYaYKi+xesMBMJsTKP5v9292EFtIIFmiZf1vFpBB
+	EgL32ST2tR9hhGiQlDi44gbLBEbeBYwMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECA3tZ7Z/o
+	HYyfLgQfYhTgYFTi4X1wZm+6EGtiWXFl7iFGCQ5mJRFezsw96UK8KYmVValF+fFFpTmpxYcY
+	pTlYlMR5jb6VpwgJpCeWpGanphakFsFkmTg4pRoYkwR8lrRb/Zmp+9V1D0vUPqPYSZ6m4Yz5
+	rSqrVp89wheqMdH1xtFtG6Ojfijt/XFoR2ULS8Y61Yu81qr3p1388Mm0+/D0eieDb7e7hAxO
+	dl9ovWuZrmI4Y8mZEjuHZiPp1v9Z3FYH1rdYdQkbMv53cXPSWfKc7ycX19tzBXdk34unnnN+
+	ZrRIiaU4I9FQi7moOBEA2Y0ne2gCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsXC5WfdrLucaX+6wdNNIhZz1q9hs/i84R+b
 	xdf1v5gtnn7qY7E4PPckq8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/f8xhc+D3+N7ax+Kxc9Zddo8Fm0o9Nq/Q8ti0qpPNY9OnSewe786dY/c4
-	MeM3i8f7fVfZPBa/+MDksfWXnUfj1GtsHp83yQXwRnHZpKTmZJalFunbJXBl3F/Ryl7wLbti
-	3cP1zA2M50K7GDk4JARMJJb8Cuxi5ORgE1CXuHHjJzOILSJgJnGw9Q97FyMXB7PAMiaJvSca
-	2EAcYYEJjBLzVrWwg1SxCKhKHNu8BszmBepYdL0frFtCQF5i9YYDYDYnUPzf7t9gNUICyRIt
-	63+zTGDkWsDIsIpRJDOvLDcxM8dUrzg7ozIvs0IvOT93EyMwSJfV/pm4g/HLZfdDjAIcjEo8
-	vA/O7E0XYk0sK67MPcQowcGsJMLLmbknXYg3JbGyKrUoP76oNCe1+BCjNAeLkjivV3hqgpBA
-	emJJanZqakFqEUyWiYNTqoFxYdWJv10t/g9y7OTsmX2VvDr1i5WZDluEcK8PPsOtZGoo+HN/
-	e8gN4d2/ZusGvzHdtC+zedW8m8df3RA8aiG970lQi2rBGbndr8x3rlV33vWzxiE52nvNRJvg
-	KbP5nnZwO1XM+2fp6v4zv9Ro65WjiX7BWtr3gx+1nUz6+cwuknnNtKqitBglluKMREMt5qLi
-	RACLtfHSTgIAAA==
+	MeM3i8f7fVfZPBa/+MDksfWXnUfj1GtsHp83yQXwRnHZpKTmZJalFunbJXBl9Fyfx1TQYlfx
+	bv4mpgbGXUZdjJwcEgImEnPPXGQBsdkE1CVu3PjJDGKLCJhJHGz9w97FyMXBLLCMSWLviQY2
+	EEdYoJVR4v+lpUwgVSwCqhLbH70A6+AF6rhy4S8zxFR5idUbDoDZnEDxf7t/s4PYQgLJEi3r
+	f7NMYORawMiwilEkM68sNzEzx1SvODujMi+zQi85P3cTIzBMl9X+mbiD8ctl90OMAhyMSjy8
+	D87sTRdiTSwrrsw9xCjBwawkwsuZuSddiDclsbIqtSg/vqg0J7X4EKM0B4uSOK9XeGqCkEB6
+	YklqdmpqQWoRTJaJg1OqgdGwWU7/2eG3U0+aWc06mVXAruR6rNdi46rfTyOMlvY5uuxY+Yr5
+	a8zBWQxGR+ZsvX/EV8xPcOvK5Y8zf6/9fO2a9RVmnzemdlNf+GfuupbZ9ldviU2TaGnxEU6/
+	BY5/jnQwsbQErQp2mTx/i+SOkL+rlDM7tiYqSmsuVNOPU3sQ9G55w4x9kg+UWIozEg21mIuK
+	EwHu8XZ8TwIAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -66,370 +66,269 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Functionally, no change.  This is a preparation for luf mechanism that
-requires to hook when updating page cache that might have pages that
-have been mapped on any tasks so that tlb flush needed can be performed.
+Fault hander performs tlb flush pended by luf when a new pte becomes
+to have write permission, no matter whether tlb flush required has been
+performed or not.
+
+By storing luf generation number, luf_ugen, in struct mm_struct, we can
+skip unnecessary tlb flush.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c | 11 ++++-------
- fs/affs/file.c                            |  4 ++--
- fs/buffer.c                               | 14 ++++++--------
- fs/exfat/file.c                           |  5 ++---
- fs/ext4/verity.c                          |  5 ++---
- fs/f2fs/super.c                           |  5 ++---
- fs/f2fs/verity.c                          |  5 ++---
- fs/namei.c                                |  5 ++---
- include/linux/fs.h                        | 18 ++++++++++++++++++
- mm/filemap.c                              |  5 ++---
- 10 files changed, 42 insertions(+), 35 deletions(-)
+ include/asm-generic/tlb.h |  2 +-
+ include/linux/mm_types.h  |  9 +++++
+ kernel/fork.c             |  1 +
+ kernel/sched/core.c       |  2 +-
+ mm/memory.c               | 22 ++++++++++--
+ mm/pgtable-generic.c      |  2 +-
+ mm/rmap.c                 | 74 +++++++++++++++++++++++++++++++++++++--
+ 7 files changed, 104 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-index ae3343c81a645..22ce009d13689 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-@@ -418,7 +418,6 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
- 	     const struct drm_i915_gem_pwrite *arg)
+diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+index 4b7d29d8ea794..5be3487bd9192 100644
+--- a/include/asm-generic/tlb.h
++++ b/include/asm-generic/tlb.h
+@@ -570,7 +570,7 @@ static inline void tlb_end_vma(struct mmu_gather *tlb, struct vm_area_struct *vm
+ 	/*
+ 	 * Don't leave stale tlb entries for this vma.
+ 	 */
+-	luf_flush(0);
++	luf_flush_vma(vma);
+ 
+ 	if (tlb->fullmm || IS_ENABLED(CONFIG_MMU_GATHER_MERGE_VMAS))
+ 		return;
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 117f8e822e969..c32ef19a25056 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -39,8 +39,10 @@ struct luf_batch {
+ 	unsigned long ugen;
+ 	rwlock_t lock;
+ };
++void luf_batch_init(struct luf_batch *lb);
+ #else
+ struct luf_batch {};
++static inline void luf_batch_init(struct luf_batch *lb) {}
+ #endif
+ 
+ /*
+@@ -1073,6 +1075,9 @@ struct mm_struct {
+ 		 * moving a PROT_NONE mapped page.
+ 		 */
+ 		atomic_t tlb_flush_pending;
++
++		/* luf batch for this mm */
++		struct luf_batch luf_batch;
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
+ 		/* See flush_tlb_batched_pending() */
+ 		atomic_t tlb_flush_batched;
+@@ -1355,8 +1360,12 @@ extern void tlb_finish_mmu(struct mmu_gather *tlb);
+ 
+ #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
+ void luf_flush(unsigned short luf_key);
++void luf_flush_mm(struct mm_struct *mm);
++void luf_flush_vma(struct vm_area_struct *vma);
+ #else
+ static inline void luf_flush(unsigned short luf_key) {}
++static inline void luf_flush_mm(struct mm_struct *mm) {}
++static inline void luf_flush_vma(struct vm_area_struct *vma) {}
+ #endif
+ 
+ struct vm_fault;
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 364b2d4fd3efa..15274eabc727d 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1265,6 +1265,7 @@ static struct mm_struct *mm_init(struct mm_struct *mm, struct task_struct *p,
+ 	memset(&mm->rss_stat, 0, sizeof(mm->rss_stat));
+ 	spin_lock_init(&mm->page_table_lock);
+ 	spin_lock_init(&mm->arg_lock);
++	luf_batch_init(&mm->luf_batch);
+ 	mm_init_cpumask(mm);
+ 	mm_init_aio(mm);
+ 	mm_init_owner(mm, p);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 1f4c5da800365..ec132abbbce6e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5275,7 +5275,7 @@ static struct rq *finish_task_switch(struct task_struct *prev)
+ 	if (mm) {
+ 		membarrier_mm_sync_core_before_usermode(mm);
+ 		mmdrop_lazy_tlb_sched(mm);
+-		luf_flush(0);
++		luf_flush_mm(mm);
+ 	}
+ 
+ 	if (unlikely(prev_state == TASK_DEAD)) {
+diff --git a/mm/memory.c b/mm/memory.c
+index e496d8deb887f..93e5879583b07 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6216,6 +6216,7 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	vm_fault_t ret;
+ 	bool is_droppable;
++	struct address_space *mapping = NULL;
+ 	bool flush = false;
+ 
+ 	__set_current_state(TASK_RUNNING);
+@@ -6247,9 +6248,17 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	 * should be considered.
+ 	 */
+ 	if (vma->vm_flags & (VM_WRITE | VM_MAYWRITE) ||
+-			flags & FAULT_FLAG_WRITE)
++			flags & FAULT_FLAG_WRITE) {
+ 		flush = true;
+ 
++		/*
++		 * Doesn't care the !VM_SHARED cases because it won't
++		 * update the pages that might be shared with others.
++		 */
++		if (vma->vm_flags & VM_SHARED && vma->vm_file)
++			mapping = vma->vm_file->f_mapping;
++	}
++
+ 	if (unlikely(is_vm_hugetlb_page(vma)))
+ 		ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
+ 	else
+@@ -6284,8 +6293,15 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+ 	/*
+ 	 * Ensure to clean stale tlb entries for this vma.
+ 	 */
+-	if (flush)
+-		luf_flush(0);
++	if (flush) {
++		/*
++		 * If it has a VM_SHARED mapping, all the mms involved
++		 * should be luf_flush'ed.
++		 */
++		if (mapping)
++			luf_flush(0);
++		luf_flush_mm(mm);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+index d6678d6bac746..545d401db82c1 100644
+--- a/mm/pgtable-generic.c
++++ b/mm/pgtable-generic.c
+@@ -100,7 +100,7 @@ pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+ 	if (pte_accessible(mm, pte))
+ 		flush_tlb_page(vma, address);
+ 	else
+-		luf_flush(0);
++		luf_flush_vma(vma);
+ 	return pte;
+ }
+ #endif
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 579c75f46c170..fe9c4606ae542 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -695,7 +695,7 @@ void fold_batch(struct tlbflush_unmap_batch *dst,
+  */
+ struct luf_batch luf_batch[NR_LUF_BATCH];
+ 
+-static void luf_batch_init(struct luf_batch *lb)
++void luf_batch_init(struct luf_batch *lb)
  {
- 	struct address_space *mapping = obj->base.filp->f_mapping;
--	const struct address_space_operations *aops = mapping->a_ops;
- 	char __user *user_data = u64_to_user_ptr(arg->data_ptr);
- 	u64 remain;
- 	loff_t pos;
-@@ -477,7 +476,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
- 		if (err)
- 			return err;
+ 	rwlock_init(&lb->lock);
+ 	reset_batch(&lb->batch);
+@@ -778,6 +778,31 @@ void fold_luf_batch(struct luf_batch *dst, struct luf_batch *src)
+ 	read_unlock_irqrestore(&src->lock, flags);
+ }
  
--		err = aops->write_begin(obj->base.filp, mapping, pos, len,
-+		err = mapping_write_begin(obj->base.filp, mapping, pos, len,
- 					&folio, &data);
- 		if (err < 0)
- 			return err;
-@@ -488,7 +487,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
- 		pagefault_enable();
- 		kunmap_local(vaddr);
- 
--		err = aops->write_end(obj->base.filp, mapping, pos, len,
-+		err = mapping_write_end(obj->base.filp, mapping, pos, len,
- 				      len - unwritten, folio, data);
- 		if (err < 0)
- 			return err;
-@@ -654,7 +653,6 @@ i915_gem_object_create_shmem_from_data(struct drm_i915_private *i915,
- {
- 	struct drm_i915_gem_object *obj;
- 	struct file *file;
--	const struct address_space_operations *aops;
- 	loff_t pos;
- 	int err;
- 
-@@ -666,21 +664,20 @@ i915_gem_object_create_shmem_from_data(struct drm_i915_private *i915,
- 	GEM_BUG_ON(obj->write_domain != I915_GEM_DOMAIN_CPU);
- 
- 	file = obj->base.filp;
--	aops = file->f_mapping->a_ops;
- 	pos = 0;
- 	do {
- 		unsigned int len = min_t(typeof(size), size, PAGE_SIZE);
- 		struct folio *folio;
- 		void *fsdata;
- 
--		err = aops->write_begin(file, file->f_mapping, pos, len,
-+		err = mapping_write_begin(file, file->f_mapping, pos, len,
- 					&folio, &fsdata);
- 		if (err < 0)
- 			goto fail;
- 
- 		memcpy_to_folio(folio, offset_in_folio(folio, pos), data, len);
- 
--		err = aops->write_end(file, file->f_mapping, pos, len, len,
-+		err = mapping_write_end(file, file->f_mapping, pos, len, len,
- 				      folio, fsdata);
- 		if (err < 0)
- 			goto fail;
-diff --git a/fs/affs/file.c b/fs/affs/file.c
-index a5a861dd52230..10e7f53828e93 100644
---- a/fs/affs/file.c
-+++ b/fs/affs/file.c
-@@ -885,9 +885,9 @@ affs_truncate(struct inode *inode)
- 		loff_t isize = inode->i_size;
- 		int res;
- 
--		res = mapping->a_ops->write_begin(NULL, mapping, isize, 0, &folio, &fsdata);
-+		res = mapping_write_begin(NULL, mapping, isize, 0, &folio, &fsdata);
- 		if (!res)
--			res = mapping->a_ops->write_end(NULL, mapping, isize, 0, 0, folio, fsdata);
-+			res = mapping_write_end(NULL, mapping, isize, 0, 0, folio, fsdata);
- 		else
- 			inode->i_size = AFFS_I(inode)->mmu_private;
- 		mark_inode_dirty(inode);
-diff --git a/fs/buffer.c b/fs/buffer.c
-index c66a59bb068b9..6655912f12c46 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2457,7 +2457,6 @@ EXPORT_SYMBOL(block_read_full_folio);
- int generic_cont_expand_simple(struct inode *inode, loff_t size)
- {
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *aops = mapping->a_ops;
- 	struct folio *folio;
- 	void *fsdata = NULL;
- 	int err;
-@@ -2466,11 +2465,11 @@ int generic_cont_expand_simple(struct inode *inode, loff_t size)
- 	if (err)
- 		goto out;
- 
--	err = aops->write_begin(NULL, mapping, size, 0, &folio, &fsdata);
-+	err = mapping_write_begin(NULL, mapping, size, 0, &folio, &fsdata);
- 	if (err)
- 		goto out;
- 
--	err = aops->write_end(NULL, mapping, size, 0, 0, folio, fsdata);
-+	err = mapping_write_end(NULL, mapping, size, 0, 0, folio, fsdata);
- 	BUG_ON(err > 0);
- 
- out:
-@@ -2482,7 +2481,6 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
- 			    loff_t pos, loff_t *bytes)
- {
- 	struct inode *inode = mapping->host;
--	const struct address_space_operations *aops = mapping->a_ops;
- 	unsigned int blocksize = i_blocksize(inode);
- 	struct folio *folio;
- 	void *fsdata = NULL;
-@@ -2502,12 +2500,12 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
- 		}
- 		len = PAGE_SIZE - zerofrom;
- 
--		err = aops->write_begin(file, mapping, curpos, len,
-+		err = mapping_write_begin(file, mapping, curpos, len,
- 					    &folio, &fsdata);
- 		if (err)
- 			goto out;
- 		folio_zero_range(folio, offset_in_folio(folio, curpos), len);
--		err = aops->write_end(file, mapping, curpos, len, len,
-+		err = mapping_write_end(file, mapping, curpos, len, len,
- 						folio, fsdata);
- 		if (err < 0)
- 			goto out;
-@@ -2535,12 +2533,12 @@ static int cont_expand_zero(struct file *file, struct address_space *mapping,
- 		}
- 		len = offset - zerofrom;
- 
--		err = aops->write_begin(file, mapping, curpos, len,
-+		err = mapping_write_begin(file, mapping, curpos, len,
- 					    &folio, &fsdata);
- 		if (err)
- 			goto out;
- 		folio_zero_range(folio, offset_in_folio(folio, curpos), len);
--		err = aops->write_end(file, mapping, curpos, len, len,
-+		err = mapping_write_end(file, mapping, curpos, len, len,
- 						folio, fsdata);
- 		if (err < 0)
- 			goto out;
-diff --git a/fs/exfat/file.c b/fs/exfat/file.c
-index 05b51e7217838..9a1002761f79f 100644
---- a/fs/exfat/file.c
-+++ b/fs/exfat/file.c
-@@ -539,7 +539,6 @@ static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
- 	struct inode *inode = file_inode(file);
- 	struct exfat_inode_info *ei = EXFAT_I(inode);
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *ops = mapping->a_ops;
- 
- 	pos = ei->valid_size;
- 	while (pos < new_valid_size) {
-@@ -551,14 +550,14 @@ static int exfat_extend_valid_size(struct file *file, loff_t new_valid_size)
- 		if (pos + len > new_valid_size)
- 			len = new_valid_size - pos;
- 
--		err = ops->write_begin(file, mapping, pos, len, &folio, NULL);
-+		err = mapping_write_begin(file, mapping, pos, len, &folio, NULL);
- 		if (err)
- 			goto out;
- 
- 		off = offset_in_folio(folio, pos);
- 		folio_zero_new_buffers(folio, off, off + len);
- 
--		err = ops->write_end(file, mapping, pos, len, len, folio, NULL);
-+		err = mapping_write_end(file, mapping, pos, len, len, folio, NULL);
- 		if (err < 0)
- 			goto out;
- 		pos += len;
-diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
-index d9203228ce979..64fa43f80c73e 100644
---- a/fs/ext4/verity.c
-+++ b/fs/ext4/verity.c
-@@ -68,7 +68,6 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
- 			   loff_t pos)
- {
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *aops = mapping->a_ops;
- 
- 	if (pos + count > inode->i_sb->s_maxbytes)
- 		return -EFBIG;
-@@ -80,13 +79,13 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
- 		void *fsdata = NULL;
- 		int res;
- 
--		res = aops->write_begin(NULL, mapping, pos, n, &folio, &fsdata);
-+		res = mapping_write_begin(NULL, mapping, pos, n, &folio, &fsdata);
- 		if (res)
- 			return res;
- 
- 		memcpy_to_folio(folio, offset_in_folio(folio, pos), buf, n);
- 
--		res = aops->write_end(NULL, mapping, pos, n, n, folio, fsdata);
-+		res = mapping_write_end(NULL, mapping, pos, n, n, folio, fsdata);
- 		if (res < 0)
- 			return res;
- 		if (res != n)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 19b67828ae325..87c26f0571dab 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2710,7 +2710,6 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- {
- 	struct inode *inode = sb_dqopt(sb)->files[type];
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *a_ops = mapping->a_ops;
- 	int offset = off & (sb->s_blocksize - 1);
- 	size_t towrite = len;
- 	struct folio *folio;
-@@ -2722,7 +2721,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 		tocopy = min_t(unsigned long, sb->s_blocksize - offset,
- 								towrite);
- retry:
--		err = a_ops->write_begin(NULL, mapping, off, tocopy,
-+		err = mapping_write_begin(NULL, mapping, off, tocopy,
- 							&folio, &fsdata);
- 		if (unlikely(err)) {
- 			if (err == -ENOMEM) {
-@@ -2735,7 +2734,7 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
- 
- 		memcpy_to_folio(folio, offset_in_folio(folio, off), data, tocopy);
- 
--		a_ops->write_end(NULL, mapping, off, tocopy, tocopy,
-+		mapping_write_end(NULL, mapping, off, tocopy, tocopy,
- 						folio, fsdata);
- 		offset = 0;
- 		towrite -= tocopy;
-diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
-index 2287f238ae09e..b232589546d39 100644
---- a/fs/f2fs/verity.c
-+++ b/fs/f2fs/verity.c
-@@ -72,7 +72,6 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
- 			   loff_t pos)
- {
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *aops = mapping->a_ops;
- 
- 	if (pos + count > F2FS_BLK_TO_BYTES(max_file_blocks(inode)))
- 		return -EFBIG;
-@@ -84,13 +83,13 @@ static int pagecache_write(struct inode *inode, const void *buf, size_t count,
- 		void *fsdata = NULL;
- 		int res;
- 
--		res = aops->write_begin(NULL, mapping, pos, n, &folio, &fsdata);
-+		res = mapping_write_begin(NULL, mapping, pos, n, &folio, &fsdata);
- 		if (res)
- 			return res;
- 
- 		memcpy_to_folio(folio, offset_in_folio(folio, pos), buf, n);
- 
--		res = aops->write_end(NULL, mapping, pos, n, n, folio, fsdata);
-+		res = mapping_write_end(NULL, mapping, pos, n, n, folio, fsdata);
- 		if (res < 0)
- 			return res;
- 		if (res != n)
-diff --git a/fs/namei.c b/fs/namei.c
-index 3ab9440c5b931..e1c6d28c560da 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -5409,7 +5409,6 @@ EXPORT_SYMBOL(page_readlink);
- int page_symlink(struct inode *inode, const char *symname, int len)
- {
- 	struct address_space *mapping = inode->i_mapping;
--	const struct address_space_operations *aops = mapping->a_ops;
- 	bool nofs = !mapping_gfp_constraint(mapping, __GFP_FS);
- 	struct folio *folio;
- 	void *fsdata = NULL;
-@@ -5419,7 +5418,7 @@ int page_symlink(struct inode *inode, const char *symname, int len)
- retry:
- 	if (nofs)
- 		flags = memalloc_nofs_save();
--	err = aops->write_begin(NULL, mapping, 0, len-1, &folio, &fsdata);
-+	err = mapping_write_begin(NULL, mapping, 0, len-1, &folio, &fsdata);
- 	if (nofs)
- 		memalloc_nofs_restore(flags);
- 	if (err)
-@@ -5427,7 +5426,7 @@ int page_symlink(struct inode *inode, const char *symname, int len)
- 
- 	memcpy(folio_address(folio), symname, len - 1);
- 
--	err = aops->write_end(NULL, mapping, 0, len - 1, len - 1,
-+	err = mapping_write_end(NULL, mapping, 0, len - 1, len - 1,
- 						folio, fsdata);
- 	if (err < 0)
- 		goto fail;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2c3b2f8a621f7..820ff4752249e 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -531,6 +531,24 @@ struct address_space {
- #define PAGECACHE_TAG_WRITEBACK	XA_MARK_1
- #define PAGECACHE_TAG_TOWRITE	XA_MARK_2
- 
-+static inline int mapping_write_begin(struct file *file,
-+				struct address_space *mapping,
-+				loff_t pos, unsigned len,
-+				struct folio **foliop, void **fsdata)
++static void fold_luf_batch_mm(struct luf_batch *dst,
++		struct mm_struct *mm)
 +{
-+	return mapping->a_ops->write_begin(file, mapping, pos, len, foliop,
-+			fsdata);
++	unsigned long flags;
++	bool need_fold = false;
++
++	read_lock_irqsave(&dst->lock, flags);
++	if (arch_tlbbatch_need_fold(&dst->batch.arch, mm))
++		need_fold = true;
++	read_unlock(&dst->lock);
++
++	write_lock(&dst->lock);
++	if (unlikely(need_fold))
++		arch_tlbbatch_add_pending(&dst->batch.arch, mm, 0, -1UL);
++
++	/*
++	 * dst->ugen represents sort of request for tlb shootdown.  The
++	 * newer it is, the more tlb shootdown might be needed to
++	 * fulfill the newer request.  Keep the newest one not to miss
++	 * necessary tlb shootdown.
++	 */
++	dst->ugen = new_luf_ugen();
++	write_unlock_irqrestore(&dst->lock, flags);
 +}
 +
-+static inline int mapping_write_end(struct file *file,
-+				struct address_space *mapping,
-+				loff_t pos, unsigned len, unsigned copied,
-+				struct folio *folio, void *fsdata)
+ static unsigned long tlb_flush_start(void)
+ {
+ 	/*
+@@ -894,6 +919,49 @@ void luf_flush(unsigned short luf_key)
+ }
+ EXPORT_SYMBOL(luf_flush);
+ 
++void luf_flush_vma(struct vm_area_struct *vma)
 +{
-+	return mapping->a_ops->write_end(file, mapping, pos, len, copied,
-+			folio, fsdata);
++	struct mm_struct *mm;
++	struct address_space *mapping = NULL;
++
++	if (!vma)
++		return;
++
++	mm = vma->vm_mm;
++	/*
++	 * Doesn't care the !VM_SHARED cases because it won't
++	 * update the pages that might be shared with others.
++	 */
++	if (vma->vm_flags & VM_SHARED && vma->vm_file)
++		mapping = vma->vm_file->f_mapping;
++
++	if (mapping)
++		luf_flush(0);
++	luf_flush_mm(mm);
++}
++
++void luf_flush_mm(struct mm_struct *mm)
++{
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct luf_batch *lb;
++	unsigned long flags;
++	unsigned long lb_ugen;
++
++	if (!mm)
++		return;
++
++	lb = &mm->luf_batch;
++	read_lock_irqsave(&lb->lock, flags);
++	fold_batch(tlb_ubc, &lb->batch, false);
++	lb_ugen = lb->ugen;
++	read_unlock_irqrestore(&lb->lock, flags);
++
++	if (arch_tlbbatch_diet(&tlb_ubc->arch, lb_ugen))
++		return;
++
++	try_to_unmap_flush();
 +}
 +
  /*
-  * Returns true if any of the pages in the mapping are marked with the tag.
-  */
-diff --git a/mm/filemap.c b/mm/filemap.c
-index c6650de837d06..1c6fda5a43020 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -4141,7 +4141,6 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
- 	struct file *file = iocb->ki_filp;
- 	loff_t pos = iocb->ki_pos;
- 	struct address_space *mapping = file->f_mapping;
--	const struct address_space_operations *a_ops = mapping->a_ops;
- 	size_t chunk = mapping_max_folio_size(mapping);
- 	long status = 0;
- 	ssize_t written = 0;
-@@ -4175,7 +4174,7 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
- 			break;
- 		}
+  * Flush TLB entries for recently unmapped pages from remote CPUs. It is
+  * important if a PTE was dirty when it was unmapped that it's flushed
+@@ -962,8 +1030,10 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
  
--		status = a_ops->write_begin(file, mapping, pos, bytes,
-+		status = mapping_write_begin(file, mapping, pos, bytes,
- 						&folio, &fsdata);
- 		if (unlikely(status < 0))
- 			break;
-@@ -4190,7 +4189,7 @@ ssize_t generic_perform_write(struct kiocb *iocb, struct iov_iter *i)
- 		copied = copy_folio_from_iter_atomic(folio, offset, bytes, i);
- 		flush_dcache_folio(folio);
+ 	if (!can_luf_test())
+ 		tlb_ubc = &current->tlb_ubc;
+-	else
++	else {
+ 		tlb_ubc = &current->tlb_ubc_ro;
++		fold_luf_batch_mm(&mm->luf_batch, mm);
++	}
  
--		status = a_ops->write_end(file, mapping, pos, bytes, copied,
-+		status = mapping_write_end(file, mapping, pos, bytes, copied,
- 						folio, fsdata);
- 		if (unlikely(status != copied)) {
- 			iov_iter_revert(i, copied - max(status, 0L));
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, start, end);
+ 	tlb_ubc->flush_required = true;
 -- 
 2.17.1
 
