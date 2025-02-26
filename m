@@ -1,158 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB29322332B;
-	Wed, 26 Feb 2025 15:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BC0219E86;
+	Wed, 26 Feb 2025 15:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582704; cv=none; b=IpZLdqNOFYsl9FXT5DpkzHOQaEpDno82cHuM6wXZMbGvxsTgwkdYJruaQNarEHvNa2ZJ1q/Khw9VFZW9A7xeUgzKF7UYeh6D6RsCPqSQUInzBnCy1Tw5Q7V37gZ3YnXC6tNLeR6kTNdcyMAdA6wgMEaMMzcxzbPWxD0q0efImYY=
+	t=1740582813; cv=none; b=LQzpi8tahjGIIwt1cGEy4Bh1CwrtHoKXrAdmzFQqSlhctsuJI9DYod+pPrWT/Mwx3WUPXy/Ew06CKH1m0Z/NOQAQYyRGArjNvIMuZ0HQwnhWi1JQH2gOdw27KNFevWJYZpzQJQAwd7ww5I2iLusa408JyhOuxWE68Y9eS1iYCGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582704; c=relaxed/simple;
-	bh=/u4DKCat2dLVmFp67gK3V+KUJxfHFKrs7LU9WBm325s=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=usduFHvqPyBKV8NyU1XvjS9S8AkgZOu6qTEuJWWfs4FcThXTL1qtGDbq2ZsejnWeHEF4Nk1xLxW+QwhAuJxCzMEcKPZgf4c4WAGhnV0hS5/gLUrMvIhzTXnL9PyqDIJdc88U7tQo8hJ+mQq35aqmxxHGsc9qoBPRsGltXtzSXPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dxA89ZgS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eCQZzKBM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740582813; c=relaxed/simple;
+	bh=1m7fg74yHgTUFeFQ2a0WBgrsssqDzQ5QCWbP+rsGTgM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N3InJk+s+0s7jnjXsOQwjg6CimTbvuc8rt0kD8AKhCc1LlDv0H+ZUjIzx0GqYZKyb3fhd8Dz/1oQnAlWiGfKeGTeUZ7Er8urzTnEKeAqKVA07gA3dqygvgkpS5wkMFYYUplgkJAxeerbWBMvuP6RZj4beDYjv6RwOTBhLWO0IEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MjDR60tq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dxA89ZgS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eCQZzKBM"
-Date: Wed, 26 Feb 2025 15:11:36 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740582701;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfdIXM0mhUb+fQCq7c5gpf/bCIi5DfvQKwCiZpX7Zgo=;
-	b=dxA89ZgS8jB7n8Z/SYh+AzSRzzEZ+pZpuRMyfR4KNMFRpa/ulcmvDpcoZN5tRCDOAQ8ToS
-	Tb+txAD+LXyHCja3a2BXs64Y8MZs2hCKWQTemz7buyp0QUYIkwK3oecTUBsy6UWY4c+fQW
-	DG1bBMBPNePJT6+ilj55fzn+jtksVE7uVzdkapJHLIh8B3pZcfFzTkgSvQ54+lEcP+7xA4
-	SC+m6XKf8MqluRuqle+X+R8n5W2IdWEejfu6gja/yEdHmRnv1Q6/57MFAMORU1/aAzjWQR
-	i8iou16Bh7dxqYuBEcPZ6Kw+ofeekh4sM+QU9ijdprxIclyO9aNXzhlSRVDobw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740582701;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CfdIXM0mhUb+fQCq7c5gpf/bCIi5DfvQKwCiZpX7Zgo=;
-	b=eCQZzKBMJzJNKpP6GxqzCrq2woskstb6wD0TAI2dR4i07BD5p6emQjk3TuqsdXaouux7c6
-	MwWq91+aTMjj3gDQ==
-From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/futex] futex: Use a hashmask instead of hashsize
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Thomas Gleixner <tglx@linutronix.de>, Waiman Long <longman@redhat.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226091057.bX8vObR4@linutronix.de>
-References: <20250226091057.bX8vObR4@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MjDR60tq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C7FC4CED6;
+	Wed, 26 Feb 2025 15:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740582813;
+	bh=1m7fg74yHgTUFeFQ2a0WBgrsssqDzQ5QCWbP+rsGTgM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MjDR60tqYReDxVsla2hsE74gvGjzQ7Wz9y4jgIyE4MKcZvDXBsIsWHtCnsvgObhjp
+	 xrZf+wGmqEMaazgPYctZHKNENgj/vJRKeZEr/ZcSD7gfRn/wpGnjMppqvX3bd3usBo
+	 yPqVQrVyyVNy2yAuLpZKe5yhi6F1rvmCUjMiNFfjaJGHkkaFn95yS1RplVB6+f4Udk
+	 pKvEoYa2Do+gO3Ma35DyPBWuPUNaZ0f/t+7syJmYVZGr18CrCkFMsocdbe9CCOrXXw
+	 +qcPoYcYTc7jR1omscpQH7EvD9vK2jXV8NFOvbQb+uOgYZKILUaaykCiuq9ltW4n6I
+	 +TN0irlVAqtew==
+Message-ID: <ac45cb5e-d991-4962-9c0a-02496be1af75@kernel.org>
+Date: Wed, 26 Feb 2025 16:13:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174058269688.10177.7713971723069325603.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/13] arm64: dts: renesas: Add initial support for
+ renesas RZ/T2H eval board
+To: Paul Barker <paul.barker.ct@bp.renesas.com>,
+ Thierry Bultel <thierry.bultel.yh@bp.renesas.com>, thierry.bultel@linatsea.fr
+Cc: linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250226130935.3029927-1-thierry.bultel.yh@bp.renesas.com>
+ <20250226130935.3029927-13-thierry.bultel.yh@bp.renesas.com>
+ <9e973021-8f10-4870-8534-29c7669c7c74@kernel.org>
+ <5beab0aa-ef61-4a9e-882a-99b6d9220879@bp.renesas.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <5beab0aa-ef61-4a9e-882a-99b6d9220879@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the locking/futex branch of tip:
+On 26/02/2025 15:46, Paul Barker wrote:
+> On 26/02/2025 14:23, Krzysztof Kozlowski wrote:
+>> On 26/02/2025 14:09, Thierry Bultel wrote:
+>>> Add the initial device tree for the RZ/T2H evaluation board.
+>>>
+>>> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+>>> Reviewed-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+>>
+>> Where did this happen? I see tags only to few patches, not all of them.
+>>
+>> Same questions for all other places.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Hi Krzysztof,
+> 
+> We've recently switched to a patchwork instance and internal mailing
+> list for review within our team before sending things to the mailing
+> list. We did a round of internal review and the Reviewed-by tags from
+> this have accidentally been included here. It can easily be fixed.
+> 
+> Thierry, could you re-send a v4 series keeping my Reviewed-by tag only
+> on patch 7/13, as that was added on the public mailing list.
 
-Commit-ID:     e3924279e5164d821fa2cbcf0c15e7345cb3508e
-Gitweb:        https://git.kernel.org/tip/e3924279e5164d821fa2cbcf0c15e7345cb3508e
-Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Wed, 26 Feb 2025 10:10:57 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 26 Feb 2025 16:07:59 +01:00
 
-futex: Use a hashmask instead of hashsize
+Thanks for clarification. It is unusual to see internal review resulting
+in tags between already publicly discussed versions. Why it cannot be
+done in public where everything is both archived and visible to entire
+community?
 
-The global hash uses futex_hashsize to save the amount of the hash
-buckets that have been allocated during system boot. On each
-futex_hash() invocation this number is substracted by one to get the
-mask. This can be optimized by saving directly the mask avoiding the
-substraction on each futex_hash() invocation.
+BTW, sometimes b4 makes mistakes and we already have at least two cases
+tag from one patch was applied for entire set, so your case is
+indistinguishable from such b4 issue.
 
-Rename futex_hashsize to futex_hashmask and save the mask of the
-allocated hash map.
-
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Link: https://lore.kernel.org/all/20250226091057.bX8vObR4@linutronix.de
-
----
- kernel/futex/core.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index 3db8567..cca1585 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -50,10 +50,10 @@
-  */
- static struct {
- 	struct futex_hash_bucket *queues;
--	unsigned long            hashsize;
-+	unsigned long            hashmask;
- } __futex_data __read_mostly __aligned(2*sizeof(long));
- #define futex_queues   (__futex_data.queues)
--#define futex_hashsize (__futex_data.hashsize)
-+#define futex_hashmask (__futex_data.hashmask)
- 
- 
- /*
-@@ -119,7 +119,7 @@ struct futex_hash_bucket *futex_hash(union futex_key *key)
- 	u32 hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
- 			  key->both.offset);
- 
--	return &futex_queues[hash & (futex_hashsize - 1)];
-+	return &futex_queues[hash & futex_hashmask];
- }
- 
- 
-@@ -1127,27 +1127,28 @@ void futex_exit_release(struct task_struct *tsk)
- 
- static int __init futex_init(void)
- {
-+	unsigned long hashsize, i;
- 	unsigned int futex_shift;
--	unsigned long i;
- 
- #ifdef CONFIG_BASE_SMALL
--	futex_hashsize = 16;
-+	hashsize = 16;
- #else
--	futex_hashsize = roundup_pow_of_two(256 * num_possible_cpus());
-+	hashsize = roundup_pow_of_two(256 * num_possible_cpus());
- #endif
- 
- 	futex_queues = alloc_large_system_hash("futex", sizeof(*futex_queues),
--					       futex_hashsize, 0, 0,
-+					       hashsize, 0, 0,
- 					       &futex_shift, NULL,
--					       futex_hashsize, futex_hashsize);
--	futex_hashsize = 1UL << futex_shift;
-+					       hashsize, hashsize);
-+	hashsize = 1UL << futex_shift;
- 
--	for (i = 0; i < futex_hashsize; i++) {
-+	for (i = 0; i < hashsize; i++) {
- 		atomic_set(&futex_queues[i].waiters, 0);
- 		plist_head_init(&futex_queues[i].chain);
- 		spin_lock_init(&futex_queues[i].lock);
- 	}
- 
-+	futex_hashmask = hashsize - 1;
- 	return 0;
- }
- core_initcall(futex_init);
+Best regards,
+Krzysztof
