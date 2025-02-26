@@ -1,221 +1,175 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88060222591
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CB8223321
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740582858; cv=none; b=MHZ+NfN3V7nsEluJqf5+ssPpbHr+qw7BvGTfihWpB9s73Wjb36MM6U7YmhqRCUFi3wl2CBzTaejoKVyAlWEDWvYJZl7ES9FR8+R5AAAx42OlJnbeK/Y4R6Qtpitm588+WECMiMaVyQD7nB1u69jlxKAkdOM4sceODgOCI6FeuPo=
+	t=1740582868; cv=none; b=W9EBWpYYMZIhbJGqg/rp3FaGiRnn22+B0d2sbsddVG/1MIdl81YqiClkLmYyTHBO02/YmFfV4hQ5hilZl6dBOUGRSA2rErAIZL5OUdZ1P77iyj64SnTvvlhooESCgdijffNEefJF98+v1+l4nZGtxg0OaFz9Nt376CPb9na8TFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740582858; c=relaxed/simple;
-	bh=cqvBrG3ie58oNevi03YHgjZaOlLV0ON165ZblqwNnOg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=MApG5KAW1egmcrDb3Bwth/INowy6Js89tlzvxrbR3GdCxC7PE0/uZgKFwnBYlIR/PPmXHlGzUeqq4Yyh/S9iS2qeATzmjJoE9nlXZuCvGTsLuQ/eIFXNKZCLi47Bk/GY93X1K9PkAvnpnXNuLmYFicFSTM3QVJdlZacHpGPM6c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=YXfOOeOh; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="YXfOOeOh"
+	s=arc-20240116; t=1740582868; c=relaxed/simple;
+	bh=ZSjf+72l4ULpS9+WjRMnaULwTrJ3p4O6jvlFCqeY2GA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=QSjNEPn/P8uwszxWVs1izs8Q10budc/msWkbs4rkJIs/lLDLAd5QP8dFL0o6VYFdkXDi/QeSLtt4cobZTOGEzWFj34syOnKrZwU4R7q4zxT6NA4jBkHS0ZoUjKJV90kzYtTK06ydJPtflgl2wcXULHm1AUXnUtEgh/cnz0z7jYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3cf64584097so65623195ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:14:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740582866; x=1741187666;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JjGZhgtmajH8ksi81iyDChdKn7BYRAvuR2AIZl1oWx0=;
+        b=lE/AoAlzE+CZpICD7+fxojMhtHVMfhYXj4OdDlTEeVXL6MQQLjU1TBDghtHfUnvOOc
+         M1EueXxxkab7AxMezRAQbio8xOCAEhOZLIOxEvywai2ZT/yy8Td/VpabGACJHwHwDMpM
+         aDusP3OhemOPYe4XJcJJTAHD/JEe5PJqFcXInLH1us8F4dnSKK2Z8bp+guF3P63un7b9
+         ZEVzZIZNjaVszR3UMMvhD0zhsDIQgFXHKGcK1a04RRKgNqlHga94AkOH/Dqq1lbFuktu
+         U/itnTMQcspk9GrfZCB+nwhP8BtUPBpodl3l58EqwiZOJSFWCG8lxbeHs0lKl4rvawtL
+         eQ4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUqqCMhAnNRX5vMiu9QN7XX+lQWvw+kb5vU5z6EGyVTz/Fye3q+3H1OwvbsOWMgje//khotBkfDLSB9ls4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGzHpxyn7L3nidROSnVTDbqsF0teCuyjT3M/PuZnsQm9/CX/Ho
+	I5cPpPiqYUhxYYr2bERiYQ/2Ypjicmz7Q3ur5l1Y6l4MaSbPiQYgSrlFjCyh/XGxUW1JFb8CmC7
+	ncgdjPIZT7Byc8ahrAddoBLDOoQyhbbugj8HrrVwL5xj27di6W9mXXb8=
+X-Google-Smtp-Source: AGHT+IHduX2kYfl0g+s4hLq/1qwTItImgVCln4vA5u60yhrBAPuDUDZAay9r5Fob/ntyIr7se55x7uYvP5na6H3Ra1vrBhB+ERwJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1740582853;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6kQbb0PLOfRfxhBJWSWjWCVR9AvSTbkkHB29xifIVyM=;
-	b=YXfOOeOhPXiP8XxbTz7Vksn6vNnz/3+IGZ8Un2zM+V/NOt44UM00lgD4cYqwMKDhSSgDda
-	o6A71UbWTysV+Om+XzX5R4b3ctGUz0Z2jSx2n+Lx9TMobIDZmlYWDJjEyrSRnTWb7tL21V
-	CAe454MournGNCN3lI1U6sbqPqQab6eGDN9DPkIrsQOSjdLASSMz5s7J8zG3gizRisBToi
-	H8zk4KWkeNhClDlEN6WhP4xqLEUymcYJ/fCdhQZlTFs16hLI06/W9VNhPz66KyJY9b3UPI
-	ZcpfaBLUImADDXFiLuoi+t7HL5ZPdb4q6T5tSJ+LX4BlLE6Aj6OrwPDCSJ0Ozw==
-Content-Type: multipart/signed;
- boundary=a7f4c90e99e2aac72da4a10f52bcd4b0a05ca7264a6152fe3a9c3f70b508;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Wed, 26 Feb 2025 16:14:02 +0100
-Message-Id: <D82H4F6J4V4V.2BLHVUVD3BVX9@cknow.org>
-Cc: <kernel@collabora.com>, <linux-media@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-rockchip@lists.infradead.org>, "Tim Surber" <me@timsurber.de>,
- "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>, "Diederik de Haas"
- <didi.debian@cknow.org>
-Subject: Re: [PATCH v10 3/6] media: platform: synopsys: Add support for HDMI
- input driver
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Dmitry Osipenko" <dmitry.osipenko@collabora.com>, "Shreeya Patel"
- <shreeya.patel@collabora.com>, "Heiko Stuebner" <heiko@sntech.de>, "Mauro
- Carvalho Chehab" <mchehab@kernel.org>, "Hans Verkuil" <hverkuil@xs4all.nl>,
- "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
- <jose.abreu@synopsys.com>, <nelson.costa@synopsys.com>,
- <shawn.wen@rock-chips.com>, <nicolas.dufresne@collabora.com>, "Sebastian
- Reichel" <sebastian.reichel@collabora.com>
-References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
- <20250225183058.607047-4-dmitry.osipenko@collabora.com>
-In-Reply-To: <20250225183058.607047-4-dmitry.osipenko@collabora.com>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:4813:b0:3d3:d994:e92e with SMTP id
+ e9e14a558f8ab-3d3d994ea94mr9224315ab.17.1740582866377; Wed, 26 Feb 2025
+ 07:14:26 -0800 (PST)
+Date: Wed, 26 Feb 2025 07:14:26 -0800
+In-Reply-To: <674c2f0c.050a0220.ad585.0034.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bf2fd2.050a0220.1ebef.0023.GAE@google.com>
+Subject: Re: [syzbot] [bcachefs?] KMSAN: uninit-value in bch2_btree_node_get
+From: syzbot <syzbot+2b2046c73fcb7e6a0e4e@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---a7f4c90e99e2aac72da4a10f52bcd4b0a05ca7264a6152fe3a9c3f70b508
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+syzbot has found a reproducer for the following issue on:
 
-Hi,
+HEAD commit:    ac9c34d1e45a Merge tag 'for-linus' of git://git.kernel.org..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=17a4f7a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d66f6f82ee090382
+dashboard link: https://syzkaller.appspot.com/bug?extid=2b2046c73fcb7e6a0e4e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11da9c98580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177a003f980000
 
-On Tue Feb 25, 2025 at 7:30 PM CET, Dmitry Osipenko wrote:
-> From: Shreeya Patel <shreeya.patel@collabora.com>
->
-> Add initial support for the Synopsys DesignWare HDMI RX
-> Controller Driver used by Rockchip RK3588. The driver
-> supports:
->  - HDMI 1.4b and 2.0 modes (HDMI 4k@60Hz)
->  - RGB888, YUV422, YUV444 and YCC420 pixel formats
->  - CEC
->  - EDID configuration
->
-> The hardware also has Audio and HDCP capabilities, but these are
-> not yet supported by the driver.
->
-> Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> ---
->  drivers/media/platform/Kconfig                |    1 +
->  drivers/media/platform/Makefile               |    1 +
->  drivers/media/platform/synopsys/Kconfig       |    3 +
->  drivers/media/platform/synopsys/Makefile      |    2 +
->  .../media/platform/synopsys/hdmirx/Kconfig    |   27 +
->  .../media/platform/synopsys/hdmirx/Makefile   |    4 +
->  .../platform/synopsys/hdmirx/snps_hdmirx.c    | 2756 +++++++++++++++++
->  .../platform/synopsys/hdmirx/snps_hdmirx.h    |  394 +++
->  .../synopsys/hdmirx/snps_hdmirx_cec.c         |  284 ++
->  .../synopsys/hdmirx/snps_hdmirx_cec.h         |   44 +
->  10 files changed, 3516 insertions(+)
->  create mode 100644 drivers/media/platform/synopsys/Kconfig
->  create mode 100644 drivers/media/platform/synopsys/Makefile
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/Kconfig
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/Makefile
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.c
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx.h
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_ce=
-c.c
->  create mode 100644 drivers/media/platform/synopsys/hdmirx/snps_hdmirx_ce=
-c.h
->
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kcon=
-fig
-> index 85d2627776b6..9287faafdce5 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -85,6 +85,7 @@ source "drivers/media/platform/rockchip/Kconfig"
->  source "drivers/media/platform/samsung/Kconfig"
->  source "drivers/media/platform/st/Kconfig"
->  source "drivers/media/platform/sunxi/Kconfig"
-> +source "drivers/media/platform/synopsys/Kconfig"
->  source "drivers/media/platform/ti/Kconfig"
->  source "drivers/media/platform/verisilicon/Kconfig"
->  source "drivers/media/platform/via/Kconfig"
-> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Mak=
-efile
-> index ace4e34483dd..6fd7db0541c7 100644
-> --- a/drivers/media/platform/Makefile
-> +++ b/drivers/media/platform/Makefile
-> @@ -28,6 +28,7 @@ obj-y +=3D rockchip/
->  obj-y +=3D samsung/
->  obj-y +=3D st/
->  obj-y +=3D sunxi/
-> +obj-y +=3D synopsys/
->  obj-y +=3D ti/
->  obj-y +=3D verisilicon/
->  obj-y +=3D via/
-> diff --git a/drivers/media/platform/synopsys/Kconfig b/drivers/media/plat=
-form/synopsys/Kconfig
-> new file mode 100644
-> index 000000000000..4fd521f78425
-> --- /dev/null
-> +++ b/drivers/media/platform/synopsys/Kconfig
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +source "drivers/media/platform/synopsys/hdmirx/Kconfig"
-> diff --git a/drivers/media/platform/synopsys/Makefile b/drivers/media/pla=
-tform/synopsys/Makefile
-> new file mode 100644
-> index 000000000000..3b12c574dd67
-> --- /dev/null
-> +++ b/drivers/media/platform/synopsys/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +obj-y +=3D hdmirx/
-> diff --git a/drivers/media/platform/synopsys/hdmirx/Kconfig b/drivers/med=
-ia/platform/synopsys/hdmirx/Kconfig
-> new file mode 100644
-> index 000000000000..3f96f6c97cf0
-> --- /dev/null
-> +++ b/drivers/media/platform/synopsys/hdmirx/Kconfig
-> @@ -0,0 +1,27 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +config VIDEO_SYNOPSYS_HDMIRX
-> +	tristate "Synopsys DesignWare HDMI Receiver driver"
-> +	depends on VIDEO_DEV
-> +	select MEDIA_CONTROLLER
-> +	select VIDEO_V4L2_SUBDEV_API
-> +	select VIDEOBUF2_DMA_CONTIG
-> +	select CEC_CORE
-> +	select CEC_NOTIFIER
-> +	select HDMI
-> +	help
-> +	  Support for Synopsys HDMI HDMI RX Controller.
-> +	  This driver supports HDMI 2.0 version.
-> +
-> +	  To compile this driver as a module, choose M here. The module
-> +	  will be called synopsys_hdmirx.
-> +
-> +config VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID
-> +	bool "Load default EDID"
-> +	depends on VIDEO_SYNOPSYS_HDMIRX
-> +	help
-> +	  Preload default EDID (Extended Display Identification Data).
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c756243ff2fa/disk-ac9c34d1.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/47bd399bb287/vmlinux-ac9c34d1.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b6c5db9fcba1/bzImage-ac9c34d1.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/039e65b899b2/mount_2.gz
 
-I see some value in making explicit what you mean by EDID ...
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+2b2046c73fcb7e6a0e4e@syzkaller.appspotmail.com
 
-> +	  EDID contains information about the capabilities of the display,
-> +	  such as supported resolutions, refresh rates, and audio formats.
+bucket 0:127 gen 0 has wrong data_type: got free, should be sb, fixing
+bucket 0:127 gen 0 data type sb has wrong dirty_sectors: got 0, should be 256, fixing
+ done
+bcachefs (loop0): going read-write
+bcachefs (loop0): journal_replay...
+=====================================================
+BUG: KMSAN: uninit-value in bch2_btree_node_get+0x5ed/0x1970 fs/bcachefs/btree_cache.c:1180
+ bch2_btree_node_get+0x5ed/0x1970 fs/bcachefs/btree_cache.c:1180
+ btree_path_down fs/bcachefs/btree_iter.c:976 [inline]
+ bch2_btree_path_traverse_one+0x283d/0x4790 fs/bcachefs/btree_iter.c:1202
+ bch2_btree_path_traverse fs/bcachefs/btree_iter.h:249 [inline]
+ bch2_btree_iter_traverse+0xbb8/0x1110 fs/bcachefs/btree_iter.c:1913
+ bch2_journal_replay_key+0x28a/0x13f0 fs/bcachefs/recovery.c:264
+ bch2_journal_replay+0x301d/0x4e20 fs/bcachefs/recovery.c:373
+ bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:226 [inline]
+ bch2_run_recovery_passes+0x5a2/0x1160 fs/bcachefs/recovery_passes.c:291
+ bch2_fs_recovery+0x489c/0x6230 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x7ca/0xc20 fs/bcachefs/super.c:1041
+ bch2_fs_get_tree+0x1564/0x24e0 fs/bcachefs/fs.c:2203
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+ path_mount+0x742/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-... I do not think a/this Kconfig needs to explain it.
+Uninit was stored to memory at:
+ memcpy_u64s_small fs/bcachefs/util.h:416 [inline]
+ bkey_reassemble fs/bcachefs/bkey.h:506 [inline]
+ bch2_bkey_buf_reassemble fs/bcachefs/bkey_buf.h:28 [inline]
+ btree_node_iter_and_journal_peek+0x889/0x2560 fs/bcachefs/btree_iter.c:918
+ btree_path_down fs/bcachefs/btree_iter.c:947 [inline]
+ bch2_btree_path_traverse_one+0x2131/0x4790 fs/bcachefs/btree_iter.c:1202
+ bch2_btree_path_traverse fs/bcachefs/btree_iter.h:249 [inline]
+ bch2_btree_iter_traverse+0xbb8/0x1110 fs/bcachefs/btree_iter.c:1913
+ bch2_journal_replay_key+0x28a/0x13f0 fs/bcachefs/recovery.c:264
+ bch2_journal_replay+0x301d/0x4e20 fs/bcachefs/recovery.c:373
+ bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:226 [inline]
+ bch2_run_recovery_passes+0x5a2/0x1160 fs/bcachefs/recovery_passes.c:291
+ bch2_fs_recovery+0x489c/0x6230 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x7ca/0xc20 fs/bcachefs/super.c:1041
+ bch2_fs_get_tree+0x1564/0x24e0 fs/bcachefs/fs.c:2203
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+ path_mount+0x742/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-> +
-> +	  Enabling this option is recommended for a non-production use-cases.
+Uninit was created at:
+ ___kmalloc_large_node+0x22c/0x370 mm/slub.c:4249
+ __kmalloc_large_node_noprof+0x3f/0x1e0 mm/slub.c:4266
+ __do_kmalloc_node mm/slub.c:4282 [inline]
+ __kmalloc_node_noprof+0xc96/0x1250 mm/slub.c:4300
+ __kvmalloc_node_noprof+0xc0/0x2d0 mm/util.c:662
+ btree_node_data_alloc fs/bcachefs/btree_cache.c:156 [inline]
+ bch2_btree_node_mem_alloc+0xa72/0x2ee0 fs/bcachefs/btree_cache.c:834
+ __bch2_btree_node_alloc fs/bcachefs/btree_update_interior.c:304 [inline]
+ bch2_btree_reserve_get+0x37f/0x2290 fs/bcachefs/btree_update_interior.c:532
+ bch2_btree_update_start+0x2b0e/0x2d60 fs/bcachefs/btree_update_interior.c:1251
+ bch2_btree_split_leaf+0x120/0xc90 fs/bcachefs/btree_update_interior.c:1853
+ bch2_trans_commit_error+0x1c0/0x1d60 fs/bcachefs/btree_trans_commit.c:908
+ __bch2_trans_commit+0x1d5f/0xd310 fs/bcachefs/btree_trans_commit.c:1089
+ bch2_trans_commit fs/bcachefs/btree_update.h:183 [inline]
+ bch2_journal_replay+0x3125/0x4e20 fs/bcachefs/recovery.c:373
+ bch2_run_recovery_pass fs/bcachefs/recovery_passes.c:226 [inline]
+ bch2_run_recovery_passes+0x5a2/0x1160 fs/bcachefs/recovery_passes.c:291
+ bch2_fs_recovery+0x489c/0x6230 fs/bcachefs/recovery.c:936
+ bch2_fs_start+0x7ca/0xc20 fs/bcachefs/super.c:1041
+ bch2_fs_get_tree+0x1564/0x24e0 fs/bcachefs/fs.c:2203
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
+ path_mount+0x742/0x1f10 fs/namespace.c:3887
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-My guess is that it could be useful for development/debugging/CI work
-which possibly do not have an actual device (monitor) which provides
-actual EDID data? Is CI work the reason why you (initially) enabled it
-in the defconfig?
-But when you have an actual monitor (=3Dproduction use-case?), you
-(really) do not want it? Would it be harmless if 'still' enabled?
-
-Thus a more extensive description what *this* Kconfig item does and why
-and when I want to enable it or not, seems more useful to me.
-
-Cheers,
-  Diederik
+CPU: 0 UID: 0 PID: 5784 Comm: syz-executor148 Not tainted 6.14.0-rc4-syzkaller-00052-gac9c34d1e45a #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+=====================================================
 
 
---a7f4c90e99e2aac72da4a10f52bcd4b0a05ca7264a6152fe3a9c3f70b508
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ78vvgAKCRDXblvOeH7b
-bgcOAQDqS73Snv/YiK3XuYu+04zVOsVyoTgZaPdwB1flqhS6PAD9HpydvFKnE7vj
-pve5Zbq372uE+I1waffsJU9B6k2p2w0=
-=lwwn
------END PGP SIGNATURE-----
-
---a7f4c90e99e2aac72da4a10f52bcd4b0a05ca7264a6152fe3a9c3f70b508--
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
