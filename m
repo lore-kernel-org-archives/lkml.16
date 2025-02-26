@@ -1,191 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AC321C9E7;
-	Wed, 26 Feb 2025 14:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9787421D3C3
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580451; cv=none; b=DcA+f/dhofgBXt15o2TEcL+cFL9j7DR7Pydl37lsL6haDlFU7zS/xMB24Y31MY0/I4WTIxIuLG3LURluIniymJpz6+sw8Vf/kKlCO8sLOeCPMOWbowf9Zt9f1Z/VADsFYxPle/TDt8cyVQITykQO0YyvonPDwIq17JzAeo1ln/8=
+	t=1740580491; cv=none; b=NA5LK6f6SmpCT+UVTHjmz7XGbUyyku12Ha9UIF+68rGxC7tp5SfBgZ6V9pC/IQeRR/5Fa+kfel5l1Zu3HRKAlP1nMuU7xOYYdfFUdBi6oayxPaSfQgMi9j42IJj5gDjsUwwzyMu3Z454QsBsj6Ewl1pYDruAAXemwQJ9fTW/Pi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580451; c=relaxed/simple;
-	bh=w+jA4BG9fehLoPXddRUPe3xu1fzIVndYV/6iAT1JVXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LOXB1B8ukxmJ7aL7+dEj35KpIbPB6mSF/bhTg+QrMsUYwj6UgISI0gJ0Gg+JdTOzlOn/dvhi9Az60BsddkFeoOoRf3tfV1YkiDOO6YFn8AJo589CWYxtYY1xVQX7fvC4DUsLvF/Cht6sJr53A797wykQout9WrjOFGL6Bntdh/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NFtU+mCb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740580491; c=relaxed/simple;
+	bh=fsVj2Aus3xQzzjk0qAqr0Apz0tN8gWLbCfqS98wb8y8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iRsW3/+Y0ex0/n/44hS5t0U3bsgJ+YRf6r9GWfPyCoGnP53p69L95fKJhALGCuHh6xmzyAESQFqtUHvozSzr0LcRcZD1xUPOsmFJo2K6WSz4vmxVcuU8DPIVqSqM20E+672VBUS3SsbAZTFj7raViZpOJFzzCVVzABSFvQEHksE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=BCIPI4pU; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NFtU+mCb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36BBC4CED6;
-	Wed, 26 Feb 2025 14:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740580451;
-	bh=w+jA4BG9fehLoPXddRUPe3xu1fzIVndYV/6iAT1JVXk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NFtU+mCb4jPbqTa/tIi5mhrF20f/j+7G9ydD/BSwzwg1X70ppLBnNlkjzj4OnBJo2
-	 ewLwB1P0odzlLzmzVp8VuKA/JtUUIl+uy5lpiv6ZVyvIoDNQA480rQ57u2Uu+s82As
-	 TlncZHzLkZ+yi8jCxS0dTo6msDLddVRGVS/9rLCY=
-Date: Wed, 26 Feb 2025 15:33:02 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>
-Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
-Message-ID: <2025022643-predict-hedge-8c77@gregkh>
-References: <20250225052001.2225-1-namjain@linux.microsoft.com>
- <2025022504-diagnosis-outsell-684c@gregkh>
- <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
- <2025022515-lasso-carrot-4e1d@gregkh>
- <541c63d6-8ae6-4a32-8a02-d86eea64827e@linux.microsoft.com>
- <2025022627-deflate-pliable-6da0@gregkh>
- <0a694947-809d-48b2-9138-d3f6175fe09d@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="BCIPI4pU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740580489; x=1772116489;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fsVj2Aus3xQzzjk0qAqr0Apz0tN8gWLbCfqS98wb8y8=;
+  b=BCIPI4pU5n78NQD0iww2X5rHeyd9lPTHvxJQpLyL1urbSAKGPBeXKm4b
+   6sJ9mCuvVYLx5t08du+ZCYJfx5BeI3jcp8Vwtc84jvWds3gXQ5etyPkId
+   i2WOwJFhF+Vm5AdaeQnbNvpCuQM5emMke+lYKJkASMn5ygbkm+Iw8p01s
+   yZvwUGhWAjs0jNO7jwfpdVms/bn+vZWXM8vlXu2Qrs46+PvlcUkVGvl2t
+   aA62p0pjdCE53BvZVqPHEeiu1wwX2oCR6nVnk8Vo40FU703rkxc9uCp91
+   3PUfft3X4EgDGXt1glBThT47dbzkahwiuOvA+QOAFnWVU51TEWbjxCPdS
+   g==;
+X-CSE-ConnectionGUID: ZF1JjHn6RqyhKjwOKIMcxA==
+X-CSE-MsgGUID: A9pe4hv+SyiQoyQRgDR0Yg==
+X-IronPort-AV: E=Sophos;i="6.13,317,1732604400"; 
+   d="scan'208";a="37753840"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 26 Feb 2025 07:34:42 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 26 Feb 2025 07:34:06 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Wed, 26 Feb 2025 07:34:05 -0700
+Date: Wed, 26 Feb 2025 15:32:12 +0100
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+CC: <Steen.Hegelund@microchip.com>, <daniel.machon@microchip.com>,
+	<UNGLinuxDriver@microchip.com>, <herve.codina@bootlin.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] reset: mchp: sparx5: Fix for lan966x
+Message-ID: <20250226143212.h2rtfxbbspdnmybq@DEN-DL-M31836.microchip.com>
+References: <20250225105329.3037853-1-horatiu.vultur@microchip.com>
+ <b31fa21c7bd352fe77d50da82c4d2c333b8566d8.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <0a694947-809d-48b2-9138-d3f6175fe09d@linux.microsoft.com>
+In-Reply-To: <b31fa21c7bd352fe77d50da82c4d2c333b8566d8.camel@pengutronix.de>
 
-On Wed, Feb 26, 2025 at 05:51:46PM +0530, Naman Jain wrote:
+The 02/26/2025 11:27, Philipp Zabel wrote:
 > 
+> On Di, 2025-02-25 at 11:53 +0100, Horatiu Vultur wrote:
+> > With the blamed commit it seems that lan966x doesn't seem to boot
+> > anymore when the internal CPU is used.
+> > The reason seems to be the usage of the devm_of_iomap, if we replace
+> > this with of_iomap, this seems to fix the issue as we use the same
+> > region also for other devices.
 > 
-> On 2/26/2025 3:33 PM, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 26, 2025 at 10:43:41AM +0530, Naman Jain wrote:
-> > > 
-> > > 
-> > > On 2/25/2025 2:09 PM, Greg Kroah-Hartman wrote:
-> > > > On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
-> > > > > 
-> > > > > 
-> > > > > On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
-> > > > > > On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
-> > > > > > > On regular bootup, devices get registered to vmbus first, so when
-> > > > > > > uio_hv_generic driver for a particular device type is probed,
-> > > > > > > the device is already initialized and added, so sysfs creation in
-> > > > > > > uio_hv_generic probe works fine. However, when device is removed
-> > > > > > > and brought back, the channel rescinds and device again gets
-> > > > > > > registered to vmbus. However this time, the uio_hv_generic driver is
-> > > > > > > already registered to probe for that device and in this case sysfs
-> > > > > > > creation is tried before the device gets initialized completely.
-> > > > > > > 
-> > > > > > > Fix this by moving the core logic of sysfs creation for ring buffer,
-> > > > > > > from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
-> > > > > > > attributes for the channels are defined. While doing that, make use
-> > > > > > > of attribute groups and macros, instead of creating sysfs directly,
-> > > > > > > to ensure better error handling and code flow.
-> 
-> <snip>
-> 
-> > > > > > > +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
-> > > > > > > +				       const struct bin_attribute *attr,
-> > > > > > > +				       struct vm_area_struct *vma)
-> > > > > > > +{
-> > > > > > > +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
-> > > > > > > +
-> > > > > > > +	if (!channel->mmap_ring_buffer)
-> > > > > > > +		return -ENODEV;
-> > > > > > > +	return channel->mmap_ring_buffer(channel, vma);
-> > > > > > 
-> > > > > > What is preventing mmap_ring_buffer from being set to NULL right after
-> > > > > > checking it and then calling it here?  I see no locks here or where you
-> > > > > > are assigning this variable at all, so what is preventing these types of
-> > > > > > races?
-> > > > > > 
-> > > > > > thanks,
-> > > > > > 
-> > > > > > greg k-h
-> > > > > 
-> > > > > Thank you so much for reviewing.
-> > > > > I spent some time to understand if this race condition can happen and it
-> > > > > seems execution flow is pretty sequential, for a particular channel of a
-> > > > > device.
-> > > > > 
-> > > > > Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) can be
-> > > > > called in parallel to hv_uio_probe (which had set
-> > > > > channel->mmap_ring_buffer to non NULL), I doubt race can happen here.
-> > > > > 
-> > > > > Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
-> > > > > 
-> > > > > vmbus_device_register
-> > > > >     device_register
-> > > > >       hv_uio_probe
-> > > > > 	  hv_create_ring_sysfs (W to non NULL)
-> > > > >           sysfs_update_group
-> > > > >             vmbus_chan_attr_is_visible (R)
-> > > > >     vmbus_add_channel_kobj
-> > > > >       sysfs_create_group
-> > > > >         vmbus_chan_attr_is_visible  (R)
-> > > > >         hv_mmap_ring_buffer_wrapper (critical section)
-> > > > > 
-> > > > > hv_uio_remove
-> > > > >     hv_remove_ring_sysfs (W to NULL)
-> > > > 
-> > > > Yes, and right in here someone mmaps the file.
-> > > > 
-> > > > I think you can race here, no locks at all feels wrong.
-> > > > 
-> > > > Messing with sysfs groups and files like this is rough, and almost never
-> > > > a good idea, why can't you just do this all at once with the default
-> > > > groups, why is this being added/removed out-of-band?
-> > > > 
-> > > > thanks,
-> > > > 
-> > > > greg k-h
-> > > 
-> > > The decision to avoid creating a "ring" sysfs attribute by default
-> > > likely stems from a specific use case where it wasn't needed for every
-> > > device. By creating it automatically, it keeps the uio_hv_generic
-> > > driver simpler and helps prevent potential race conditions. However, it
-> > > has an added cost of having ring buffer for all the channels, where it
-> > > is not required. I am trying to find if there are any more implications
-> > > of it.
-> > 
-> > You do know about the "is_visable" attribute callback, right?  Why not
-> > just use that instead of manually mucking around with the
-> > adding/removing of sysfs attributes at all?  That is what it was
-> > designed for.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hi Greg,
-> Yes, I am utilizing that in my patch. For differentiating channels of a
-> uio_hv_generic device, and for *selectively* creating sysfs, we
-> introduced this field in channel struct "channel->mmap_ring_buffer",
-> which we were setting only in uio_hv_generic. But, by the time we set
-> this in uio_hv_generic driver, the sysfs creation has already gone
-> through and sysfs doesn't get updated dynamically. That's where there
-> was a need to call sysfs_update_group. I thought the better place to
-> keep sysfs_update_group would be in vmbus driver, where we are creating
-> the original sysfs entries, hence I had to add the wrapper functions.
-> This led us to the race condition we are trying to address now.
-> 
-> 
-> @@ -1838,6 +1872,10 @@ static umode_t vmbus_chan_attr_is_visible(struct
-> kobject *kobj,
->  	     attr == &chan_attr_monitor_id.attr))
->  		return 0;
-> 
-> +	/* Hide ring attribute if channel's mmap_ring_buffer function is not yet
-> initialised */
-> +	if (attr ==  &chan_attr_ring_buffer.attr && !channel->mmap_ring_buffer)
-> +		return 0;
-> +
->  	return attr->mode;
+> So the issue is the devm_request_mem_region() called by
+> devm_ioremap_resource()?
 
-Ok, that's good.  BUT you need to change the detection of this to be
-before the device is set up in the driver.  Why can't you do it in the
-device creation logic itself instead of after-the-fact when you will
-ALWAYS race with userspace?
+That is correct.
 
-thanks,
+> 
+> Wouldn't it be easier to switch to devm_ioremap() instead?
 
-greg k-h
+That would be easier and the change set will be also smaller.
+
+> 
+> regards
+> Philipp
+
+-- 
+/Horatiu
