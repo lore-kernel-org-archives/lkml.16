@@ -1,150 +1,85 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0732725D8ED;
-	Wed, 26 Feb 2025 22:29:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9B25D8EA;
+	Wed, 26 Feb 2025 22:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740608958; cv=none; b=lWohgfoJArUcboHq0hdk0hgwxlceF/J5w0qx/O/aDagwtH5GNjOHl30IjYfbHAj9nY5SnAtx8o3Lxew+FWIld0Ok78Ml+Ml4cEuWU90GfDElQZl0GlChdvQeHKP0EdpF7fVv688Ofx0T1GY6BN/NJUd+FFYCmOtdqc02S5/BKDU=
+	t=1740609150; cv=none; b=ikvMw1qBWsfuTva49Cfsq1VM2Dnac6vAg9zQocOEON8wB+QO6egaJ9a8m0Nw0ACA5Gk4At63I2WXVjHFByGFi1r2F1N5YoOeVYG0qrGqffkZs9URvUIsU8NJMGSZDVVHiVxRuFhhGv5WBthrhvJRzoB9oHJAu9MPrvCwvSnFITw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740608958; c=relaxed/simple;
-	bh=WHPKx1WninINjpWP2dwg3Iq53rxsjrVAY5O3XcMBM0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PCEYrYsqLT8Hqns0k9L+Qq5BVoBaVSOr/DdcEtZxrdW7zVILO6NbxQ6D6ipHYpptalhi7lygcvtZ/UkSiJz98KkMic7KVf9WxT8eIGIM/AN0bL8apJeN/isctvcz6UGqO8fCTgFrjJNyMbwV9++YRzhqaeG+LotA/DyuFT20nH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mAPGceqs; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740609150; c=relaxed/simple;
+	bh=ewq2iYDIma3Eaia/CK0Ze+cDY2qH5IAhMtulKZu9f7E=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=eCZYehdiF3Dj+PrLIEH9wglqYn6xXs8T7u9AdFqUWG12AfYbzSFQxq2fVKCIFYKXOp8Prrj4y5ly/YqojsWt3Xd6CRXQhdyemLw1RPdeWrdTY9xUOp3OkpohkTuocFZfDUOcl/NQMmkXURlmp4Eh9O0wJ2MV8aPmoKevr7Eso00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gM+dCu3z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAPGceqs"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43996e95114so2115805e9.3;
-        Wed, 26 Feb 2025 14:29:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740608954; x=1741213754; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TfWwQBkEse5FRQekJZuNar17CRdvAyTkX7+fO0J+m/4=;
-        b=mAPGceqsRiBwro2u6mE4tdLIvHypC6x3rq8R2BkrIw9c08g6CT61YYdRX8LwVYl9a0
-         L23sG7MFeKtUvpU8ulTO7a2GjLEeB0lTzfP69l9shHuvZV/TCbp/GWMcOhIYVXaSusfM
-         G2wAJnjVzcq9dz3EWpJO9WmsMUPddKBc9j4zmePlsssROu+zQpIVDPW9arFQW6EM2mN4
-         Pf0vPX3HLdJIOCU7HfXAjiVbGlpQ7MJO8FJsnk7slUv1lkA+Pbv8mvQ6QeYGlmxeCQKg
-         9xRVdnBxt33dJiMvQff136CAnYsVk1Mp38soium3nTkU3dk+Z7U3eX8P0K5SCVKa7Zo/
-         VJTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740608954; x=1741213754;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TfWwQBkEse5FRQekJZuNar17CRdvAyTkX7+fO0J+m/4=;
-        b=Ab864Cp894avTWcJ0fEIv6snhEK2B0xsnhvBcmSS74hmdUOEKL3QOhX0oopbeneKpD
-         0opR5ELUr9xQjNOboSDcMqxZrO/0/MxLxT9pUDqN0g6hMVw3uCwCwCFzDOf5g3vt43Zo
-         ZLRWQqNDB3VRh36+Y4Cf4vUCToEm0/7fhh0dy9BpLnB0k0y3IfqRpio+Yz2glKNwOZDx
-         jvFNXwBlezZE/ykkTJZ2VTnrPG/DvA/KCMio6g3VPFQt1ZSxyJLqej2B2tCEWXjgt5ZY
-         gxMR72dPtJvKlG9nCjoBTdwEvB1XEOA5Kzblg9vxvqmxYG8HL1vfapCYaLlBU6lKH2mJ
-         BEVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUcNfx1uaYKScnWlN3fUKjtfkSh6WNQ5rCAh51/NsztiySMXF3DD8Ux3BJsU5AkBl7fqj//FNFZ0QjmBnFi@vger.kernel.org, AJvYcCUg/+sayvUqWupvNgCrW9vceXG5h6dS0pnktB/+xQVDmoKfKxvpn9WBoHEumtO+qcR5fpQToQjnE31phr03uGw=@vger.kernel.org, AJvYcCUz4sAkVRKqKQnkjhzaMn+KS+V1umQkMTE79pq0f1Kb3ikfYS1Td/egN3dSLaZDeXoCVpcx2XQPzYuyhwU=@vger.kernel.org, AJvYcCVXJFaF6Rs5LBKhU5QuEjAwBINQiGW35ytnwXMOaL+ETzBFAMNfb2euxP3sGNmE2grcrn1+crkTv5FwNx0=@vger.kernel.org, AJvYcCWKGrdFEboUQaLDqPjCbECF6naJuvrYV5/ayy8XI2qLcjfpzU/DG4xFHTWinEObilVH2rdPtop83WBj6hu9@vger.kernel.org, AJvYcCX52jR8VfIQrbEtx3spW+rzY/CX3RmwjvBNWepLZDB+LTKytULXOfE45EulhRI24AyuZQM=@vger.kernel.org, AJvYcCXrKKUYGU91ltUYwlvveMm0jPs8QY79pD+PPbrbGxFoEdQ6/7nogrzHz8oJFHVmg3W/SkYdS5xd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy71pFyZNLU6R36Qe4VCP9tZLuYS/idH5gV8GnmKhBOz6tAGo0Q
-	0yybyVlA4xga7vUpG339ZUvvc5Z08CWBSWt0x6EUtrKwE5/QP7Wl
-X-Gm-Gg: ASbGncu4KOpJYTW6w8+crEAMbINgJOEz0I2rgFL1dVXgXUYiErDPQnu7QWR6TpJk9rY
-	ALaCMk2eN6yUxoVpFt5+AyFSSJzCGdmPnW0jt0GEXm5YYCF7bOftpQ5CguNSU46wPIgO8RRqnh7
-	x4sUJ3/jCw+10JZC3x1wVqw8bUfPUmDV0T1nyzdllzqqIrfsSEvQA5jGu3ZkhNyqXb+K3vLsibS
-	MbDIh79NL2wN5ZfVHylaSGI4d7Ho8oMKiMZgvZg17Nmbwqh9FpqY1TXSVFCtSdULWd2mkNItCGN
-	EjE/f5P/meTo2xmAVHuK0KrD+eCYaOIYHXIgRwGfnlz5M19dTWX2zAsaxcXXgXIm
-X-Google-Smtp-Source: AGHT+IGOLpw4Ro1gZlLbKLPuJeugBpGxKDyhpAzWxjxf7AIm0WuOoMev7XCdFdyak+Spbs3OpN2AOA==
-X-Received: by 2002:a05:600c:4f47:b0:439:9828:c42c with SMTP id 5b1f17b1804b1-439aebc27cfmr188697005e9.23.1740608953906;
-        Wed, 26 Feb 2025 14:29:13 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab37403cfsm55655745e9.1.2025.02.26.14.29.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 14:29:13 -0800 (PST)
-Date: Wed, 26 Feb 2025 22:29:11 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
- andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, dmitry.torokhov@gmail.com,
- mchehab@kernel.org, awalls@md.metrocast.net, hverkuil@xs4all.nl,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- louis.peens@corigine.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com,
- parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
- johannes@sipsolutions.net, gregkh@linuxfoundation.org,
- jirislaby@kernel.org, akpm@linux-foundation.org, hpa@zytor.com,
- alistair@popple.id.au, linux@rasmusvillemoes.dk,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
- linux-fsi@lists.ozlabs.org, dri-devel@lists.freedesktop.org,
- linux-input@vger.kernel.org, linux-media@vger.kernel.org,
- linux-mtd@lists.infradead.org, oss-drivers@corigine.com,
- netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
- brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
- linux-serial@vger.kernel.org, bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
- Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
-Message-ID: <20250226222911.22cb0c18@pumpkin>
-In-Reply-To: <Z7zIBwH4aUA7G9MY@thinkpad>
-References: <20250223164217.2139331-1-visitorckw@gmail.com>
-	<20250223164217.2139331-3-visitorckw@gmail.com>
-	<Z7zIBwH4aUA7G9MY@thinkpad>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gM+dCu3z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84961C4CED6;
+	Wed, 26 Feb 2025 22:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740609150;
+	bh=ewq2iYDIma3Eaia/CK0Ze+cDY2qH5IAhMtulKZu9f7E=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=gM+dCu3zSXgP0vfv1zk0gj6h3oNPNl0PElzsk0x1f5eWDzXJHX0EoC2V2fPRrEESY
+	 VD4Z4dtx7XA2be0lAzeSsoxrlcP/ZQd/mYvrfoIDG3XkMx0f+X1/lgXO+T9a5OHaTZ
+	 Pewm8zsLi5m+VieImStVD7ghKyVVfS3BXy242hwYNuKd5kxXASWiUbJmE/NzQ8VRX5
+	 47OvCoDdb/t1kXw6TpZ/vaztlZgUrjEckmJx+TVl+fJbNjtyHFVYZi3NXzwBXb6wTg
+	 pDeXkuIJfIaQuDMUFB6YxzY4QHULpMhfnk+huq+RSdr4yNEiK/K2aGDcMG34wVa/hu
+	 gynIpQkJSNG+g==
+Message-ID: <24b641332461006bdedd5a4d682fb040.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250222223733.2990179-1-heiko@sntech.de>
+References: <20250222223733.2990179-1-heiko@sntech.de>
+Subject: Re: [PATCH v2] clk: check for disabled clock-provider in of_clk_get_hw_from_clkspec
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, liujianfeng1994@gmail.com, sebastian.reichel@collabora.com, cristian.ciocaltea@collabora.com, heiko@sntech.de
+To: Heiko Stuebner <heiko@sntech.de>, mturquette@baylibre.com
+Date: Wed, 26 Feb 2025 14:32:28 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-On Mon, 24 Feb 2025 14:27:03 -0500
-Yury Norov <yury.norov@gmail.com> wrote:
-....
-> +#define parity(val)					\
-> +({							\
-> +	u64 __v = (val);				\
-> +	int __ret;					\
-> +	switch (BITS_PER_TYPE(val)) {			\
-> +	case 64:					\
-> +		__v ^= __v >> 32;			\
-> +		fallthrough;				\
-> +	case 32:					\
-> +		__v ^= __v >> 16;			\
-> +		fallthrough;				\
-> +	case 16:					\
-> +		__v ^= __v >> 8;			\
-> +		fallthrough;				\
-> +	case 8:						\
-> +		__v ^= __v >> 4;			\
-> +		__ret =  (0x6996 >> (__v & 0xf)) & 1;	\
-> +		break;					\
-> +	default:					\
-> +		BUILD_BUG();				\
-> +	}						\
-> +	__ret;						\
-> +})
-> +
+Quoting Heiko Stuebner (2025-02-22 14:37:33)
+> of_clk_get_hw_from_clkspec checks all available clock-providers by
+> compairing their of-nodes to the one from the clkspec. If no matching
+> clock-provider is found, the function returns EPROBE_DEFER to cause a
+> re-check at a later date.
+>=20
+> If a matching clock-provider is found, an authoritative answer can be
+> retrieved from it whether the clock exists or not.
+>=20
+> This does not take into account that the clock-provider may never appear,
+> because it's node is disabled. This can happen for example when a clock
+> is optional, provided by a separate block which just never gets enabled.
+>=20
+> One example of this happening is the rk3588's VOP, which has optional
+> additional display-clock-supplies coming from PLLs inside the hdmiphy
+> blocks. These can be used for better rates, but the system will also
+> work without them.
+>=20
+> The problem around that is described in the followups to:
+> https://lore.kernel.org/dri-devel/20250215-vop2-hdmi1-disp-modes-v1-3-819=
+62a7151d6@collabora.com/
+>=20
+> As we already know the of-node of the presumed clock-provider, just add
+> a check via of_device_is_available whether this is a "valid" device node.
+> This prevents eternal defer-loops.
+>=20
+> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Tested-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
 
-You really don't want to do that!
-gcc makes a right hash of it for x86 (32bit).
-See https://www.godbolt.org/z/jG8dv3cvs
+Applied to clk-next (unless this needs to fix something urgent?)
 
-You do better using a __v32 after the 64bit xor.
-
-Even the 64bit version is probably sub-optimal (both gcc and clang).
-The whole lot ends up being a bit single register dependency chain.
-You want to do:
-	mov %eax, %edx
-	shrl $n, %eax
-	xor %edx, %eax
-so that the 'mov' and 'shrl' can happen in the same clock
-(without relying on the register-register move being optimised out).
-
-I dropped in the arm64 for an example of where the magic shift of 6996
-just adds an extra instruction.
-
-	David
-
-
+Please write a unit test (or many). I also wonder if we should use a
+different return value so that we don't try to look up the clk by name
+(see clk_core_fill_parent_index()). We could go even further and stop
+trying to find the clk over and over again too. Maybe -ENODEV can
+indicate that and we can cache that parent entry value so we stop
+trying.
