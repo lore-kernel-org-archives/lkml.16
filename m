@@ -1,47 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D765D21CA12;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DA21C18D;
 	Wed, 26 Feb 2025 11:45:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740570320; cv=none; b=qz3wOZ/mdHyfK6/GIVYMQx7+f7pt3EsSDSG1cy8B4jL6PZqlsKKibty36HhJebTeThfq0Ioa+Ky4C1saWT4HACBMNfK2bpWTA0BOBP0xku9e7GGJ7mTZdczVXYiI3wVZEEtvi0NTyk8GTIy0USe4sNtsotLTr3KdbhxeyUGQq6M=
+	t=1740570321; cv=none; b=JjsQQVga16kb95RMAVClgBZ+PyUfH3U8MVeC8Jl+u76OA0gVg1KT8LYyzM+VLDeP3vWgDtGv7MYchNBxLU5jMeg31IaJd+MrFL0/5vnx7iu8K8m439Yx8d+DZsxtJ3FegK6YUORdRdM7MTGmKOIZjyYalrcSoK/PBHmLzj8Ucug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740570320; c=relaxed/simple;
-	bh=tbmVgPy5yB8VdfdnJ4tJow8kzco/2Q3QjZOCjC6QEJI=;
+	s=arc-20240116; t=1740570321; c=relaxed/simple;
+	bh=WWyAjd0lBF4CXtwQtc/ysMPL9nKJJ2TfKtJWs4lpBX4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mjyO2qyA64NlrsZvdBbSKxDsHARiVoci2nMMQ1PBwohWfq63epLLOyB5ZE8ati3cmxAoEXRkv+gsh39X7B9KTzdZYzc8b1iesygvVWVjdpNdmM0CRx5DvTxJpmRuMyznNQH5zeGZwPEa5HFyrJsx7euFge+iCBDRr0DD4cxVwDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i07d6hLp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aZ0cAhZ3; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=VABNOFry8B+1879UlQRKhyzZ0PtGxYDeMHeKbeYiPgARru5nHdU2zlybEfgulUNKmLxnq861DPDY9obuZEP8CdiijvSzciQFS53aR4Ugki5bsx/NlFHTBHPuczR5nwpx43CGwpzloe+1XuLaMGhTsAZV/o30NZVNW+849jEo29s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cz89Id9c; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J3vBFrZE; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i07d6hLp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aZ0cAhZ3"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cz89Id9c";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J3vBFrZE"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740570317;
+	s=2020; t=1740570316;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7Frurs6AseTy7r99TUsr5RPDF9RZSrY1kmlW1JOY/EA=;
-	b=i07d6hLpd8GRg/0WO5Jpo1GY+NkHlsL1doz1LXrPNrHTjVuF3KVkhCjK0VrhySrSxv4HSB
-	qefSAed7+5iLZndx789yLs2chd71BICnRokDw51tpySQvtOQGSOX3Zozp/ngVM7uDeZ2o4
-	WaH59GBm/Som63p3aIfI9IsPiJfn03k37LbhZKPnNKycT6ftsHPyZZuuP0T5QoA26b/inI
-	m0EOk6g19wrq/nmG5yn1T9ZZtcohpUsWiRo3wF/oqsKR4ChAygYS3PGha/Fz5kD76gANjw
-	yKl1PPjmGXei2aSFksZQsyCI8Z0jgHq+Pad4HGy2Vosa5yzRudA3yRSSY1pT9A==
+	bh=KmfOckZ/ezvQbsI8oO+Ny3Ym1fUd+U8v8PjgJTjlhxI=;
+	b=Cz89Id9c4ksgUOgosrPPNmwyzc5OKRgE9qa1PugTJjc1cFpW9PuK8csLf7OB3IAY/+atTy
+	hI/yr4MQ+kKIXKXRiQ9AXIENDMON68EnXvSPnTwm5lA67ZNS4fuGaWhEHisG4puxEmWpw6
+	LYUJzBPLthSFjGItdaAbEG+l8Q1kVSLGzofdX0MT9B7MLBVKiFFNZrCLmMWN+vyZwGJuOe
+	1MjWYMlTR6L67MoeHJySswLdQGCnAix3nrNitijKTktwZ0TXNUmrd9tYwvM7FqUdYEET62
+	4dJp098YriaYtQbVR5ZexqGvMNUXybnnuHIOZeqMhJXt442czFbaSrEJEX+3/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740570317;
+	s=2020e; t=1740570316;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7Frurs6AseTy7r99TUsr5RPDF9RZSrY1kmlW1JOY/EA=;
-	b=aZ0cAhZ3vtmBKcWcSDLdrI5iL4bR3GxRXgPx2FX5cDJbHZNPpQjmNDpY4nIdUEQEOb02+u
-	J6umpPJpSs00G0Cg==
-Date: Wed, 26 Feb 2025 12:44:54 +0100
-Subject: [PATCH v2 15/16] selftests: vDSO: vdso_test_gettimeofday: Make
- compatible with nolibc
+	bh=KmfOckZ/ezvQbsI8oO+Ny3Ym1fUd+U8v8PjgJTjlhxI=;
+	b=J3vBFrZE7Gqbw7nLy2FHLopfTbyhb8kHRu8GOflxPHt+K1mwDynfrmzJHe3nRahi4IoVcJ
+	KzHPP2kN6U0BEbAQ==
+Date: Wed, 26 Feb 2025 12:44:53 +0100
+Subject: [PATCH v2 14/16] selftests: vDSO: vdso_test_gettimeofday: Clean up
+ includes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250226-parse_vdso-nolibc-v2-15-28e14e031ed8@linutronix.de>
+Message-Id: <20250226-parse_vdso-nolibc-v2-14-28e14e031ed8@linutronix.de>
 References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
 In-Reply-To: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
 To: Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
@@ -65,39 +65,34 @@ Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
  linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  llvm@lists.linux.dev, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=882;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740570307; l=803;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=tbmVgPy5yB8VdfdnJ4tJow8kzco/2Q3QjZOCjC6QEJI=;
- b=i7Uxstabjdg7j+J9zoPP0U58OGXCZjkCegWTxPjKC3TGUAF7tp+8mShrhr+dffxZi3sMXHudr
- +5QpKEY+MERBDeZT4FYzTLcqudiLXqH5aJAYMfkHsNZZ3oltA+l4BMP
+ bh=WWyAjd0lBF4CXtwQtc/ysMPL9nKJJ2TfKtJWs4lpBX4=;
+ b=+fuDixwMNSldXS0xZq4UG3e35Jkdqz3L8iCNemrw4+F22qokhU7Kj+KsVf+lfrLCvsyk+iW2X
+ qeJLhMVLb+GDidiqgXjdZQ56hlRiXdMtCfRrci9t2Lx+m5fYoikviHj
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-nolibc does not provide sys/time.h and sys/auxv.h,
-instead their definitions are available unconditionally.
-
-Guard the includes so they are not attempted on nolibc.
+Some unnecessary headers are included, remove them.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/testing/selftests/vDSO/vdso_test_gettimeofday.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/vDSO/vdso_test_gettimeofday.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
-index 636a56ccf8e4e7943ca446fe3fad6897598ca77f..9ce795b806f0992b83cef78c7e16fac0e54750da 100644
+index e31b18ffae338c1576449b54ca7f84d9816d2ecb..636a56ccf8e4e7943ca446fe3fad6897598ca77f 100644
 --- a/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
 +++ b/tools/testing/selftests/vDSO/vdso_test_gettimeofday.c
-@@ -11,8 +11,10 @@
+@@ -10,8 +10,6 @@
+  * Tested on x86, 32-bit and 64-bit.  It may work on other architectures, too.
   */
  
+-#include <stdint.h>
+-#include <elf.h>
  #include <stdio.h>
-+#ifndef NOLIBC
  #include <sys/auxv.h>
  #include <sys/time.h>
-+#endif
- 
- #include "../kselftest.h"
- #include "parse_vdso.h"
 
 -- 
 2.48.1
