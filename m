@@ -1,206 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DEE155C83;
-	Wed, 26 Feb 2025 03:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740539454; cv=fail; b=Bp4HZFzwZDcyeIILXpICO2aBV0wJ8bAlHkh6wbnjg8E/+90BNSbCAnQSRg+iWj6kAOn0D1cLTxl09RW2Vsb5t/Zdu4jU0dA4jg/45S5I+LdGCDtr9t3JCWUhMzgOcnnOHlO7s6pV4NmjhqsoJrdj9zWKCDXGvBlAcfXei3Mg3pw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740539454; c=relaxed/simple;
-	bh=fkabHcydRnhK6T+8u88Y2CuceUd1c+UhbnONnO4natA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VJhHgG1+4nWWQULJ0oAot/kFr4WE5mJohq28WHXgoBy0++Ly/IuSRch5Qqat10eGNSU+Ya3gzWVZJvgwL87beAMuSf07lW31DMVOkBrEbFwlgCbRGyLJhm8mnJSt9snH1wB4lZYR4U0mSC/jlwI5QTyefa6ei56+GChRn4aaqKY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KqnW7RoL; arc=fail smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EAC18D626;
+	Wed, 26 Feb 2025 03:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740539556; cv=none; b=YdeewpRR/f9NILIi2o7WjEaRMkDySe8I/8DhBki8DOj4yzmm7jGdwTJKvp3GwKY3/duDNtCeXUvrDrfUDju9x5XbGTIROKQzo0zOvQ4pU1/9HbboWAWGjGVfQu4sIgXlmX7feC7Savtink7FYiKCfzwQpGrbCKwRQekF3LjzgSI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740539556; c=relaxed/simple;
+	bh=SKtM2MG3KETATLlqcoKJRNLbIZzBAj4Jgle7llgpepU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LCeie5DWjx8Un/XZhxFdbm+EPkHP9qjPw84t1ISkupZiekWIBqZoX8wgYHiEbg2wHqt3028z3ty/Rr2M3HohUVyDgM6M0/lRyO8kkI15VlUmkz7PjQAW4UscCLEZ7/+yOsMGA8KtnAcFt5Lqvknl0ogcmoGf4EP7SQSNPCgaQWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pEPN86dz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KqnW7RoL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740539453; x=1772075453;
-  h=date:from:to:cc:subject:message-id:reply-to:references:
-   in-reply-to:mime-version;
-  bh=fkabHcydRnhK6T+8u88Y2CuceUd1c+UhbnONnO4natA=;
-  b=KqnW7RoLsNeNSTG/oPb1+g1h7JKnknahV9im9cClwVd9TYTvUG8LXzGR
-   /E3vFz2l6EdDQiwe4GuKRjUfycv7cwoUuvW7EtvVZBaUA/9lXJ+X7dbKy
-   sPbPy9/uIVHQJw2IQ7X/DJ/FTANXZnTwdLOySExdZMKX76yVysuSQWH4a
-   grlKeucRXfiaw1Q9iUYzJ1398lh2rqjSNS8HIA9sFP8DASEj1B4gvE+pu
-   WTsWUp8s2a7GZgrW+ax4OrcwQE1IlSfpRz1ytGH54GKHKdRCWx0t7Tk3X
-   ZzEMLJ5uGsuAfxzKFoKTLyfrpXXWw3oIeKsxqAB7tJnrk8iIZIKG12clV
-   g==;
-X-CSE-ConnectionGUID: dcxbi27XRq+tMo/6CFRD+g==
-X-CSE-MsgGUID: cenBZ2STReWO/X4Q4nfPOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52370463"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="52370463"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 19:10:52 -0800
-X-CSE-ConnectionGUID: J3277kq5QFC/lhTdBDsBWA==
-X-CSE-MsgGUID: lwcZbuvATw2l9riMNTBYiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="121573621"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 19:10:52 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 25 Feb 2025 19:10:51 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 19:10:51 -0800
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 25 Feb 2025 19:10:51 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KRzVTtsqotwA/qniN42nNW0TEGxdq+QQIs7wAt9lCM075U0VhlRfVejCCgHkLlhizLnDbr/mPAQN9Wl/+ILq1Bjcjw2cGnkctI8J/HdQB0HJeLRCLAQCj1lSrGY94K8Y8PsibHxq/RAZQJbr0TsuYoGNzEAbPBupUPpYEwfdB5M+vEB298z7KVkGCBQycX9T+ToyhR4qWXeBvfMlEO2HhlrvZlyPBsoFanz0yBc6Fv0j4b5UBYdtOnqcqczATrjkdOLFfpCEt8uXl/8n3xz5qhwzwayUlfIhF2xygbdLw1uZzfeWzEnVikGKyTENU5HgKhW+ibf4Gzu9oXBvaGzbGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iBqjACxBhHMGI95U/v0MjHilm40cs8cWWPzEyvoxxM0=;
- b=v3vv12DBsWE1biomRXqzWaS8YF/wQYDdCDZ4XN9DXoCviSL1yiMe1zv9vpVqnyfksP2aCRgYksJLLacciix1AQ3gQg+cHsTFzxwPLqgYKGKwrGJGZ9gkxYkRzlYoCi+dtxEIupqynFBN9uk23tv5MucHx0cjs8025JcJaomvERvh0mqDoBDYnZWL4eJ/swIUWeN7ijPmBwcW7et45zO1z/FoISAU/+Se/ZyRM5/LnZdySehFhwbziaYHrl7sfk/cFESzRYabd1nxu+Hx3Pd1oTFfONUOlVdhNG0LGwjqPyZoLdSpDkOIQrBDh+5xZAxvmaCDPKYENn1eoPGFUFYx1Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com (2603:10b6:8:71::6) by
- DM3PR11MB8758.namprd11.prod.outlook.com (2603:10b6:0:47::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.18; Wed, 26 Feb 2025 03:10:49 +0000
-Received: from DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca]) by DS7PR11MB5966.namprd11.prod.outlook.com
- ([fe80::e971:d8f4:66c4:12ca%4]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
- 03:10:49 +0000
-Date: Wed, 26 Feb 2025 11:09:32 +0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Rick P Edgecombe <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: selftests: Wait mprotect_ro_done before write to RO
- in mmu_stress_test
-Message-ID: <Z76F7M7o3mVrQyX/@yzhao56-desk.sh.intel.com>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20250208105318.16861-1-yan.y.zhao@intel.com>
- <23ea46d54e423b30fa71503a823c97213a864a98.camel@intel.com>
- <Z6qrEHDviKB2Hf6o@yzhao56-desk.sh.intel.com>
- <69a1443e73dc1c10a23cf0632a507c01eece9760.camel@intel.com>
- <Z750LaPTDS6z6DAK@google.com>
- <Z753eenv5NKkw2j/@yzhao56-desk.sh.intel.com>
- <Z756Usy6JNkf43PP@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Z756Usy6JNkf43PP@google.com>
-X-ClientProxiedBy: SI2PR04CA0015.apcprd04.prod.outlook.com
- (2603:1096:4:197::21) To DS7PR11MB5966.namprd11.prod.outlook.com
- (2603:10b6:8:71::6)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pEPN86dz"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PMclDT000855;
+	Wed, 26 Feb 2025 03:12:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	SKtM2MG3KETATLlqcoKJRNLbIZzBAj4Jgle7llgpepU=; b=pEPN86dzQb8UKyAM
+	RHimu1AWThWE/hRyrXEQQzl0mE6p2QnacLr/X4osSs8vVLJIJDvCVErlLYgQWhyD
+	P4TyOXknb3Rsb5gttEF8gA5EmoCGIwgCJ4sdc0ZnzbahyQbBjItjmtXVLIcEmetx
+	ylKj8T82p++40XQURj0RgvmfUiUhL3y1iVCel5pMkz46MsI2KjaWR2p6vmzzYWkE
+	s917Qe7Q6Qm1fwHQ0fmQh+MRKz0S4mGqMC+kfWeMTgJ5+YCKffLb1sDNlL6kRUWb
+	Tl4+V588Q09rnCejFbyuobUhu2wGEda6O73DigC+rN2cipwNHxKsXCzmk05C+CW7
+	VV9Rdw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451pu98hag-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 03:12:24 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51Q3COxS006447
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 03:12:24 GMT
+Received: from [10.239.29.178] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Feb
+ 2025 19:12:20 -0800
+Message-ID: <47f5ab83-d25f-4132-83a6-38236575510c@quicinc.com>
+Date: Wed, 26 Feb 2025 11:12:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR11MB5966:EE_|DM3PR11MB8758:EE_
-X-MS-Office365-Filtering-Correlation-Id: e6c2b7fc-a5b7-4375-ba97-08dd56132b71
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?3WNFbXb1vId0CCJ53xF7XLgStiPFX0A2PiPcqYu7/TUR6hMpr50o3lx4K7Ri?=
- =?us-ascii?Q?IGNSMQm6pVi9ZuDMxuOBLt5k9lDxQ2PN1tZH+oc+lt99pqmKT9H8dAMH1I/W?=
- =?us-ascii?Q?SKuD8rmv5ddJbmxFySOCyUpi4D5MTsKLDvh2OM5a4iL7UsGx4nG67KRWruwO?=
- =?us-ascii?Q?7gxquzCMKZ4TMD+hkheewDQxdpHvtPIKX3SutcOemu+gEL6upV5jZgcCC808?=
- =?us-ascii?Q?b5ZMcPrO5rPoPpyyNq7IOWJUbuXerbWBA53NZHCtHca+le93KFb618s96zIo?=
- =?us-ascii?Q?uDQCqVTUqHMk6u865j75P+sOK82heanCfRqWCiaG6J/KmoRANIFNmxbXosa1?=
- =?us-ascii?Q?9knc4WdFofcjOjbXlTKsqo82Asa9y+UHh+dRi/RZ0DH7krBwuFurxaSXu7Ni?=
- =?us-ascii?Q?GK250mnvKBBamTk+naDdqc+975ShMF14xrFvGgryfwT2NsvQOn6bYKNJ4oxi?=
- =?us-ascii?Q?bNXCksnfGsSpH3yDZ0HV0S4d2OOTkepwmvpA6gYC6uI5Kv0QeAj6/La6gL6l?=
- =?us-ascii?Q?32hrQaoWpDyz+F6qmShPP9THH6+1ysMbBS981QZRCd3REsTwLZPXOkG2u6SH?=
- =?us-ascii?Q?REp48ASemlqcHU9n9pCKo/XIxss/y2FIAwVcCpv6M6//sdfVxi4Xo/e8ddhM?=
- =?us-ascii?Q?jsJo74A9NhnI9dSXpKpiIjls5Y5ups5BbLKoBNo2SoMeaAMl1GANMWhsk4PP?=
- =?us-ascii?Q?KR3RS1+qvTbOlKlcrWYB4Q5QX4HDlcA2ptfvWuPpWu1fgGviVjKUijNgci39?=
- =?us-ascii?Q?VwmF/PD/AEhL0HGnVrIbNtwF0Dpywwo016onzxV8jqLw5l7bgpOK4fOrcOni?=
- =?us-ascii?Q?34FMnam1B3BC2VJxkd80/oj1IqaXetCHqJWqgvYJ8p/n3+GbMGPLvunZ2QuL?=
- =?us-ascii?Q?gDqC/4H5QqgvfNWoLF8oLf5f3zXzGrJyB/Rz/RppVzmLSua1oQugsMoytcN6?=
- =?us-ascii?Q?oDssidAsJyxg83bE5Y2ndEDiutu9kjwXksTf5m5rufQIf+Tw9MMG9u5mqyNr?=
- =?us-ascii?Q?/btGTYis0ssFaOTHcVGW2wg4S/6mhA2snJowySQD98uuI/MkxEj4TfWUFLaC?=
- =?us-ascii?Q?e/9yeJepXk5wjkXYRyojF33HyOwGJtbPBQtD6BgEqtG4ROeWnKzzSXSkia4V?=
- =?us-ascii?Q?Gde4PnPqBZGQsWtQnyRkp6T7iMzHk89TKldAm3RHP3oXSR/e73Z2/R8lY8di?=
- =?us-ascii?Q?8NQCdD1Wcij1ADuaJ+FAbjiag59SF/5vWbq58KuSgydg3bOizZNWvAa2rRm6?=
- =?us-ascii?Q?sdUm63y0iaNHLlq/TPE0yFxZqm5cSEY6Ghzd16Zxvc8rFgt6DsjVQC6L6yeo?=
- =?us-ascii?Q?5s1CNfdPLi4e+YcKVnBLCVaFVK5htBY2f0hLHmG4kcDT8x17w2Fy4nyWfy4t?=
- =?us-ascii?Q?scq6emoK5K+n97ImxlTz4BfppWyu?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR11MB5966.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?aKfRkeW6zORKPYJXao8Kjj9vWTlErvsT5lGZaGmOO6XwDRrhOWwsJsie/Vb3?=
- =?us-ascii?Q?BaDxGeUvlGICAlrLipXm9CeA/Xvq5MRl9f0UzqQKSSywvAKurl+WreUlnG10?=
- =?us-ascii?Q?E0FdmBT7815s7VpB+m5WIJDCNq82TnspMhpu8oiJDolIhJqhbS6xbkMUhZRX?=
- =?us-ascii?Q?RM9fC/DKDpv7iNs3FrrSDT0Zz22XTF0Sz/G45pxH8Tz9/p+hxJWVPpyDcz4z?=
- =?us-ascii?Q?1KcGsGBOwocDgOAm6RDb56XOuUy8Om/E6c+/OnVlSF3PQbT3vkwKySE6NbF3?=
- =?us-ascii?Q?dM+22a2JN4oUwfjz2FUd+8JV3fTqnOKfoZ/Cqn0//y66dlHyaiv1GIdgMZN3?=
- =?us-ascii?Q?kr/YiuyLepeaBYKrnqHFqWFEh40tufN+bhSP7+UErki8O1/FeF6mDArl8wwX?=
- =?us-ascii?Q?6msoHrbTbxuktD3pJCZ1A5ZZb3pD/TtzDVcK9+IBEROCNgOzn31+ia3UYvA4?=
- =?us-ascii?Q?mPBcNS5XKjhR4bp5WFevmdvbr6egIL4Y07ZUEKGyJ4vmv1doDHY1QrtAmbud?=
- =?us-ascii?Q?3J3AcVt8Qu2xo3gITLAUJIRMynyBrqCNT2Ad7PpCOxeuTLJ+4BnQG5B0WqtU?=
- =?us-ascii?Q?I8xaW/VaOaO8cnoDtQ6Bz7MfFeK2yOIaZlf4UNrOysyc6t0NckcUON4iuRi4?=
- =?us-ascii?Q?GZYO6tQIRbb0gpJzI5FpVhgSEInz9XjpD61iX89m+hjjyfr4uEM7nzhT/dos?=
- =?us-ascii?Q?Ueb3MHi9bRo1yjs6pcHl6mQEgrLbXnEMpnGYmPFCpWJn8yiHv4EePqO/qOrs?=
- =?us-ascii?Q?o2aUd6UikMc6YP2DxeSFEYZk4pCIjP1XiGgYXJAPYdhttFLs9Cp34EcEQN1p?=
- =?us-ascii?Q?bybIYsGNvynPWqrdwG15n9KIJ6i4oLeLOVqrvl3l9h15hgcpSPcIJO1jZW2c?=
- =?us-ascii?Q?xdPIKjII+8gZv0ZvkocUsbCc+oNorQUDJW7ATc/+9IbfIUTdsy3+B/2vsdAq?=
- =?us-ascii?Q?BYD7Ijz0LENpO72Kzl8SPO6JLffnpKGL8URBMNuNxzhEfWqBefBS2exTzo23?=
- =?us-ascii?Q?qTuF1KDMlVTGtNm9YGlMuuOr6m3Wq4b/e5hu83TX+5u312PdC6VZc9uubeqI?=
- =?us-ascii?Q?ReO50vQNUi70BQcV1kNLv2pQz/5WrCmQzO97GeQ5Ks/kXaxVR5/2OuD1J5Tp?=
- =?us-ascii?Q?u78uQS9FUcNkxSEEJqzGEoX+S03n0wihFI+DIpRH2SW3jSCLUlfDCzX0rwJF?=
- =?us-ascii?Q?zSYBi/UdpiHC5IaeYJ/KkC3VlTuvuL72BD6CjBcz9jaSh+agZTTPBj4IKqHE?=
- =?us-ascii?Q?nuefX37vQN++GZ9kOFsT/4vcYEY8zToW4niBKYAVUXjmZvgeB6soMfihNiOV?=
- =?us-ascii?Q?2p879Z1wiu8eJa6V0qpOb2B2SKJPZRRboWbLpUUKRW45fiTO/Ow6aC6IfrxW?=
- =?us-ascii?Q?6MhBNFfYgFgYBVqTkwokmNhMQwnHweikBJhOGxUAEp6ATXGRUnQsCvbPowV6?=
- =?us-ascii?Q?Rabw+GKjm21XU34Wel5ibXM3y7wn6McKI/DkxD/6YKPIBtm7DiY4r4uLkG8A?=
- =?us-ascii?Q?7Xpiu6fNgqrSnI5AKvom42AKPV1H3Y0RzJ/fq0IgIcCy98iewd6QUAq6pj/B?=
- =?us-ascii?Q?4jMwEOMoo4WzITIjC9ysP2h1Qzm0vrVl5yARHaj1?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6c2b7fc-a5b7-4375-ba97-08dd56132b71
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR11MB5966.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 03:10:49.0569
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8FVRCx9Oh5QyFcyBpiUMCuwR7r5sDAzYTLem94I9yp8QV+VmGnS0hOtFN3xRUP9fMoC8GL4WOBK0AbVTHliPcw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR11MB8758
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
+ support
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        "Wenbin Yao
+ (Consultant)" <quic_wenbyao@quicinc.com>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <p.zabel@pengutronix.de>, <abel.vesa@linaro.org>,
+        <neil.armstrong@linaro.org>, <quic_devipriy@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
+ <20250220102253.755116-3-quic_wenbyao@quicinc.com>
+ <20250224073301.aqbw3gxjnupbejfy@thinkpad>
+ <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
+ <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
+ <20250224122439.njrcoyrfsisddoer@thinkpad>
+ <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
+ <20250225081744.3aprpztylrdgs2cl@thinkpad>
+ <4a672888-a90e-434c-b494-bb58b91c99a2@quicinc.com>
+ <zppwzqdi5xbggurbqho6ivuorvlubldpjw3pyw2fdgrap4nrhp@5otsko6o5cv3>
+Content-Language: en-US
+From: Qiang Yu <quic_qianyu@quicinc.com>
+In-Reply-To: <zppwzqdi5xbggurbqho6ivuorvlubldpjw3pyw2fdgrap4nrhp@5otsko6o5cv3>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: JxTPftwjFwrazOXSMYzFrhgIQ1L4FHpx
+X-Proofpoint-ORIG-GUID: JxTPftwjFwrazOXSMYzFrhgIQ1L4FHpx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_08,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0 clxscore=1015
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260023
 
-On Tue, Feb 25, 2025 at 06:20:02PM -0800, Sean Christopherson wrote:
-> On Wed, Feb 26, 2025, Yan Zhao wrote:
-> > On Tue, Feb 25, 2025 at 05:53:49PM -0800, Sean Christopherson wrote:
-> > > On Tue, Feb 11, 2025, Rick P Edgecombe wrote:
-> > > > On Tue, 2025-02-11 at 09:42 +0800, Yan Zhao wrote:
-> > > > > > On the fix though, doesn't this remove the coverage of writing to a
-> > > > > > region that is in the process of being made RO? I'm thinking about
-> > > > > > warnings, etc that may trigger intermittently based on bugs with a race
-> > > > > > component. I don't know if we could fix the test and still leave the
-> > > > > > write while the "mprotect(PROT_READ) is underway". It seems to be
-> > > > > > deliberate.
-> > > > > Write before "mprotect(PROT_READ)" has been tested in stage 0.
-> > > > > Not sure it's deliberate to test write in the process of being made RO.
-> > > 
-> > > Writing while VMAs are being made RO is 100% intended.  The goal is to stress
-> > > KVM's interactions with the mmu_notifier, and to verify KVM delivers -EFAULT to
-> > > userspace.
-> > > 
-> > > Something isn't quite right in the original analysis.  We need to drill down on
-> > > that before change anything.
-> > > 
-> > > FWIW, I run this test frequently on large systems and have never observed failures.
-> > Could you try adding CONFIG_LOCK_STAT=y?
-> 
-> Will do, though it'll probably be a few days before I can take a look.
-No problem.
 
-> > With this config, the failure rate is more than 90% in my SPR non-TDX machine,
-> > and 20%~80% in my TDX machine.
+On 2/25/2025 7:46 PM, Dmitry Baryshkov wrote:
+> On Tue, Feb 25, 2025 at 06:08:03PM +0800, Qiang Yu wrote:
+>> On 2/25/2025 4:17 PM, Manivannan Sadhasivam wrote:
+>>> On Tue, Feb 25, 2025 at 04:06:16PM +0800, Wenbin Yao (Consultant) wrote:
+>>>> On 2/24/2025 8:24 PM, Manivannan Sadhasivam wrote:
+>>>>> On Mon, Feb 24, 2025 at 12:46:44PM +0100, Konrad Dybcio wrote:
+>>>>>> On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
+>>>>>>> On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
+>>>>>>>> On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
+>>>>>>>>> From: Qiang Yu <quic_qianyu@quicinc.com>
+>>>>>>>>>
+>>>>>>>>> Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
+>>>>>>>>> whole PHY (hardware and register), no_csr reset only resets PHY hardware
+>>>>>>>>> but retains register values, which means PHY setting can be skipped during
+>>>>>>>>> PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
+>>>>>>>>> after that.
+>>>>>>>>>
+>>>>>>>>> Hence, determine whether the PHY has been enabled in bootloader by
+>>>>>>>>> verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
+>>>>>>>>> available, skip BCR reset and PHY register setting to establish the PCIe
+>>>>>>>>> link with bootloader - programmed PHY settings.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>>>>>>>>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+>>>>>>>> Some nitpicks below.
+>>>>>>>>
+>>>>>>>>> ---
+>>>>>> [...]
+>>>>>>
+>>>>>>>>> +     * In this way, no matter whether the PHY settings were initially
+>>>>>>>>> +     * programmed by bootloader or PHY driver itself, we can reuse them
+>>>>>>>> It is really possible to have bootloader not programming the init sequence for
+>>>>>>>> no_csr reset platforms? The comment sounds like it is possible. But I heard the
+>>>>>>>> opposite.
+>>>>>>> PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
+>>>>>>> manually in UEFI shell if we want.
+>>>>>> IIUC this will not be a concern going forward, and this is a special case
+>>>>>>
+>>>>> I'm wondering how many *special* cases we may have to deal with going forward.
+>>>>> Anyhow, I would propose to atleast throw an error and fail probe() if:
+>>>>>
+>>>>> * the platform has no_csr reset AND
+>>>>> * bootloader has not initialized the PHY AND
+>>>>> * there are no init sequences in the kernel
+>>>>>
+>>>>> - Mani
+>>>> Hmmm, regardless of whether it's a special case, we can't assume that UEFI
+>>>> will enable the PHY supporting no_csr reset on all platforms. It's a bit
+>>>> risky. If we make such an assumption, we also won't need to check whether
+>>>> the PHY is enabled by UEFI during powering on. We just need to check
+>>>> whether no_csr reset is available.
+>>>>
+>>> I am not supportive of this assumption to be clear. While I am OK with relying
+>>> on no_csr reset and bootloader programming the PHY, we should also make sure to
+>>> catch if the PHY doesn't initialize it. Otherwise, the driver would assume that
+>>> the PHY is working, but the users won't see any PCIe devices.
+>>>
+>>>> But it makes sense to check the exsitence of PHY senquence. How about
+>>>> adding the check in qmp_pcie_init, if a PHY supports no_csr reset and isn't
+>>>> initialized in UEFI and there is no cfg->tbls, return error and print some
+>>>> error log so that the PCIe controller will fail to probe.
+>>>>
+>>> Sounds good to me.
+>> I'm wondering is it necessary to add this check? In current PHY driver,
+>> for PHY that doesn't suppot no_csr reset there is also no such check.
+>> If a PHY supports no_csr reset and isn't init in UEFI and there is no
+>> cfg->tbls, the worst issue is link training fail and PCIe controller will
+>> also fail to probe. Adding sucj check seems not change the result.
+> Failing the training is a random error which can mean a lot, e.g. the
+> missing voltage rail. An explicit check is beneficial, it helps
+> developers (and users) to better understand the reason of the failure.
+In the struct qmp_phy_cfg, tbls is not a pointer, we can't directly check
+if tbls == NULL to determine if the PHY init sequence is available. Can we
+add a separate patch to change the definition from
+"const struct qmp_phy_cfg_tbls tbls" to
+"const struct qmp_phy_cfg_tbls *tbls" like tlbs_rc and tbls_ep, even though
+this will affect all platforms?
