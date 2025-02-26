@@ -1,105 +1,89 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA57204F9B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 04:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB6F23C9;
+	Wed, 26 Feb 2025 04:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740545233; cv=none; b=CI6xFEkgjaRghaHbwDGmRlwMF3CuicdakktwPpHoYMR+J81WHgzvgc2tUvvM2U30P5iur6yEHi4T7yZ3i9xianf0JQvG9TD9LTgA3bib0vXehksU8/ugnYZ+DbvYoOoYLWg2L2AYZfNZD3Dy0y7URax5helf9iOZD4wEQCAoBbY=
+	t=1740545370; cv=none; b=r+JV3judIVqb8vCOmEdkk395obiHulThjgvrfS5TRGkpqnxNVTLYVYHGndF2607dcBG7vxoHRFwfG/8bbwvVXSC4vnogxaodhd13B3G1RdEiESZxg6kM8B0HhcOpqvaMZkEEam2j1s7JtTpolvVVR+nMV8uasvIG6BQvBklp3dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740545233; c=relaxed/simple;
-	bh=NvsS+j0xfeWtv+MhpdI2UR2te1rZc8FYODIxpvOA3b8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XNfbkGDiZ8Saiamcs1d8FcCzL+6a0adpId1oGklgA2oOl+evGwDlZION5YhnP0EedU+wlGmDXeml4iLa5yd3e6ebPzYMRlIfREMjFpqYZ9bOBmlSVSorKr9WCBi8rRvlTuq2zikTcqT2JuOffClfWo/NpFJCzOgcnrxn2MqnUvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FYNkmJoJ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740545370; c=relaxed/simple;
+	bh=6olGzjnBeWPGeuFhbXKTjNtOhLdMNRERI8gSrfoDzCQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=A+QcILlnwz2VZJfVoAyCPZ/G3Q3t/zmDriMTPDAjnl5x0W+c/kPuoFRUfsejpm4LLTTKI9BaMNxb8JDqb1KQjNDO8LHwXK2QlwQsAnrk93lD0q3MCuhTktrcUe3TZ0DARzmQxeS2gK7SSD9RfjC18CeiBUZ1DRJsRoqE38jtqvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=A1QezSnW; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FYNkmJoJ"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q1kxD8012268;
-	Wed, 26 Feb 2025 04:47:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wPFcge
-	7BmJqcQZTf9xO13j7qyDoL2Cb3Ljh6aPOkv6k=; b=FYNkmJoJZ07RavuUcrx04k
-	wfrcKelogoipabBbQrUtja5M2Zk0hfSn2eDRgQQ2QnIYBEQnT7/QcsPTGB9+kO6o
-	jKcZBPYKl7Wu9sA9+r55HcV/Mebab/Re7oti55f8qdFrW9D2RCsy651pwHKjwcGj
-	ahMqLr28ip8Q31phAhfy+9bK6QIX6l3b2bIMtHNDlFGJdvd7AbqrgaP83TEqkWcJ
-	fz/n36oM3Xw493gilwaMFC4ZXXteoFkIhFmpXBRScoifva3tGEoHW3nDFuT3R+fX
-	S9xpfFJVkNMRiqBBRbeEh47Wrpr37KtYNN9eDVoANO0hpxOHfc2YbZRY41UHzzdA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451s198qsf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 04:47:00 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51Q4iWAq000711;
-	Wed, 26 Feb 2025 04:47:00 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451s198qsb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 04:47:00 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q2LQwp027372;
-	Wed, 26 Feb 2025 04:46:59 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yum20d0q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 04:46:59 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51Q4kvEO30605778
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 04:46:57 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5EAFE2004D;
-	Wed, 26 Feb 2025 04:46:57 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7B80820040;
-	Wed, 26 Feb 2025 04:46:53 +0000 (GMT)
-Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.65.188])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Feb 2025 04:46:53 +0000 (GMT)
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen@kernel.org, Gautam Menghani <gautam@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arch/powerpc: Remove unused function icp_native_cause_ipi_rm()
-Date: Wed, 26 Feb 2025 10:16:51 +0530
-Message-ID: <174054508253.1386382.13670617186309588402.b4-ty@linux.ibm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250101134251.436679-1-gautam@linux.ibm.com>
-References: <20250101134251.436679-1-gautam@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A1QezSnW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740545365;
+	bh=l+smM60R6iQq9p+ZZTLD7EftOyGRcpR1LyFuCh94ndk=;
+	h=Date:From:To:Cc:Subject:From;
+	b=A1QezSnWNneAL0ntWqdVfltQPTIBiLvViGHBnz52b2W9l6HoMg6LJpPC5eA/rKzeP
+	 FNKT8FK4l7CuXdoMiSpuBRSt+yOheYuR/VAvd17eByNt/ArRpHfyO5P8ASKeS7kRxl
+	 IAfHDKv0kUP46j3kwq8CiWfzsOgC8EcouWl69aCaNolW8R6HLhQJtauFdHb3IKKBDk
+	 rUakJ0GoI2bJ+ZxmHv03CaMKIhpxgYa7MyZsSUusmE6L7m38XgqDkyePrVIAtiClg3
+	 Aycd3fHzxI2yMGjtFIK9CC2FERKdUpcD5rXi1DTy/G9ABIx1AoPZpm3KnRJLF+gZoo
+	 mgYajcHxm/+WA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z2hpF1zcQz4wcj;
+	Wed, 26 Feb 2025 15:49:25 +1100 (AEDT)
+Date: Wed, 26 Feb 2025 15:49:24 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the cxl tree
+Message-ID: <20250226154924.6446eec8@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: A992Do0naUMn0S2L8IEPJbmpPsvQZMDx
-X-Proofpoint-ORIG-GUID: MxAFWEvv6GWAgqCCVLu1uT0w6hF9NLJM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_08,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- phishscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=479 mlxscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502260033
+Content-Type: multipart/signed; boundary="Sig_/oEwC6fCG6nq7dUTOUjoHS7F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Wed, 01 Jan 2025 19:12:49 +0530, Gautam Menghani wrote:
-> Remove icp_native_cause_ipi_rm() as it has no callers since
-> commit 53af3ba2e819("KVM: PPC: Book3S HV: Allow guest exit path to have
-> MMU on")
-> 
-> 
+--Sig_/oEwC6fCG6nq7dUTOUjoHS7F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied to powerpc/next.
+Hi all,
 
-[1/1] arch/powerpc: Remove unused function icp_native_cause_ipi_rm()
-      https://git.kernel.org/powerpc/c/65acbd1285f7fe8c8b82cb90e4db923db5b9fe03
+After merging the cxl tree, today's linux-next build (htmldocs) produced
+this warning:
 
-Thanks
+drivers/cxl/cxlmem.h:439: warning: Function parameter or struct member 'cxl=
+fs' not described in 'cxl_dev_state'
+drivers/cxl/cxlmem.h:439: warning: Excess struct member 'cxl_features' desc=
+ription in 'cxl_dev_state'
+
+Introduced by commit
+
+  7d2bffbd7fb6 ("cxl: Add Get Supported Features command for kernel usage")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oEwC6fCG6nq7dUTOUjoHS7F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme+nVQACgkQAVBC80lX
+0GwuaAgAg9pEwNAeh/sYN8ASFdt0hZxF5SozzNowgJnIr6nArmWSqloDbpYLfzpt
+CjPWAxPR1eMcNzpU75b3c+Iv5DK/Rsv41ILvHf/vEkEEIxDCxWFXmQnQD/m3BXRx
+30JJtXoBc/66LjkZ+PVSWAuLHq5ztWJQmSDx9XfE0Qe4CXQ3/cymgRI5y9Yq71Ld
+aSEORNJ/xdhfTI9a9Mz07wtmKG2FkuGzOg6gPXLMggyDdoYRArSiOzfO9hyS/AgL
+F6SUs3BaF+S/DsQKMFPi9cBjh9Kyx5nRUj5e3j+xRnMBMLx6e5ecyJoUdaKJUsMd
+bNxep/EZKMRtcANMjYsyEHqwwdpWRA==
+=Y1vz
+-----END PGP SIGNATURE-----
+
+--Sig_/oEwC6fCG6nq7dUTOUjoHS7F--
