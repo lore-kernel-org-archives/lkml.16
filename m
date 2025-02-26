@@ -1,124 +1,196 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2061.outbound.protection.outlook.com [40.107.92.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B527B23535B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593455; cv=none; b=WLqyHQbX+g5BIctPUexeUFnwk8M4IQac/d7YETmApT8XYSER4ss6mU//qzbe2VKr+ZNYRkuwY8v751oe7cLC10820qvI99XtPiMvG9fkaPbENicejakOWfOfc9/tPO+4qoaIk30f16SbBoZbLWrvfBM7ayrPmMnB0qyaGZo8Rnk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593455; c=relaxed/simple;
-	bh=EbaACQr0vW701BtG20JwXpLEEwmHg6MVq+JFkWjYS7w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVdryFpUd3fY0XR1sU91C674L1zm1Wkbmt+clYIj59CHRPUE8XvOEXz0Yd71CV8CrmYVanrK9gCKmiSqVxveCln+qFB8IBeTN5Z2xNbPf4/TvxUbjPFuNFdZ/TzVJEWHJG8nBJX4pJtl4uTQ1go15yKV5g58SVQ5Vi2MpIcPFNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r/1CKV8q; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C7C22D4F6
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:12:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740593551; cv=fail; b=KTalHYfQrYvNRglBTVJkpta7H2GpqMazfib0IeGGfBSkOkBbLEI5KVZFf6s47WeopYK8B2ucXy7yAKdzmpUQyKKQ2qA/iYaOpalWgM/x6AWqMG32Rq8/aK2sx+FJqsHSvQVN6IHohog2oMt3eCO2XSSt247fXArcffmZwT6ju14=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740593551; c=relaxed/simple;
+	bh=TQOmg6Fa9TWZYZ/BHtPNuZiypx45MCkPAz8TKlgZZiA=;
+	h=Message-ID:Date:To:Cc:References:From:Subject:In-Reply-To:
+	 Content-Type:MIME-Version; b=Dw+aowonheJW4lf6sz3+d91Z9RBQckPk8g8KEXlvYws1V9nK0oSAL5K4+Ti5FJYntqt0Cj4njk+vQxRw6ijV/E6EHYN74KyD1RdiJZwW8kBWvSg08oQG/qTXZP2FbIwRqghQ2ynEhjiIFsL5dqiIctqJK3QU/PazKxh8XXrOu7M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=g88JFDSk; arc=fail smtp.client-ip=40.107.92.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r/1CKV8q"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so11421138a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:10:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740593452; x=1741198252; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V/V8Jj9rYZChtFzsP4NciMXPlW80o7eEp6Sp5AawXIs=;
-        b=r/1CKV8qvh0NZI4pB8cYtEz8RKReCDQlnten3tS5b3ak6xfdjFuuVPVYLyucOgOFmk
-         0R9f7YWx1CAkqaFb4QBFl3DgP1W6c8rbLrzt3CHSzWFiCiV2PLJ0+lnNaOu2AJZWEREF
-         DPFJL9zTFraPR4MSF61OCheX0rpD+QHb7mNfi8U2CWBDQMKjlmsVgnW5H50qeEhEU3fo
-         x8qcCBGM/U+P0hACkairgz4EYX35ds3I4LE+ahprNS5OpWK8Q7ecn5vYZySiqUHpCnzY
-         T6TvW3W/TYGc5j+Gv1RPG9G1nO0e5/JxoZ7oA6OOnNJJeWcyfQPzC2rKBOaeczTFf07z
-         UALQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740593452; x=1741198252;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/V8Jj9rYZChtFzsP4NciMXPlW80o7eEp6Sp5AawXIs=;
-        b=Co/+g1cQw/p3lFYnzVrrBjLm4Zv1H/F1zZRti9ypyoMjJZ35mqqJZxh6j57Eme+5MQ
-         PCdAu0E3MBoAo1O4+wCjzPUoeRZhdMhkAVI5mOG4EXTiWNYKsfJEvagCWcPS3TfFfcT4
-         TcWO4P2K8/VKyuGyxDmuxah/yXEOBmvKhQ1W2JVcgzp/SRpY2lKzP+c++yOwrLkcyEcM
-         exo0+CSgcM5z0L8B3hSKBPCqYb+9jakUrU1q9p5sOp9qfLrHT5HKbZ07sOomOP2DRMm9
-         +Dp2gjBPm8j+4+ribL2nmC5Ykvvn+Znx3vk9QMMgnSDbwKsTORl3f9XMO2d5YDsrQrZd
-         04Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCW5CJ8e0YcuHRw/xfi+w6F09Iw5Mn8rdDVy8oRJ9z8ekeG1o6TcoG8d6nGEIUDiE6Gwchb5Xky9VBAu3Kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySzeBiqKybMvlmEPcH7HJj5CHUyZ1HDl42JppU66Sd0eSODo+x
-	DFyWURuqJERMqJ4Ixn5oi1tUTh11Mb5w31Eu5AuyLIkYfElwDnxo1K/Fw8xE7w==
-X-Gm-Gg: ASbGncsjMLjdPNpLz72gNXsurzQwzyLZKhGRpi8LQ0WaPgrp2/e1n0IPg6uft7OsAUl
-	kng23gdA96drftOoJ4d8dD1QEu/gGd0LkCAkyuAJhFdii29a1dfRjzc1dAEaX9nRJtVkSPTMuQH
-	o9j0Aj2+5fcWgRN32qnAiXkmLqmgFGd6YAS9iRytouVpkPXTBNrsvp95sLz7ZTN0dPmteEzLWW6
-	sw/OBA7Trp3FihODUVVEjMTuub6BNGXuCMKy/q9/GNy6+saGz23DwnF87HEhsb4NE1SskEXVSik
-	zFYqWuq2eeoJFgVFeL7VPqzV+HLO05YikdjKIxD6JSIyg2bPQZcG+8OtaC5s02U=
-X-Google-Smtp-Source: AGHT+IFSemQuFVxhcR1OJIBHEWyJQf2Hjrc2hP3J/LbxvQX6+WX1I3uywZ6yJMAv4hfkJ2aaAYgxNQ==
-X-Received: by 2002:a05:6402:501a:b0:5de:a6a8:5ecc with SMTP id 4fb4d7f45d1cf-5e4a0d490aamr5970613a12.5.1740593451852;
-        Wed, 26 Feb 2025 10:10:51 -0800 (PST)
-Received: from google.com (229.112.91.34.bc.googleusercontent.com. [34.91.112.229])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e45a8b8c4esm3155601a12.26.2025.02.26.10.10.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 10:10:50 -0800 (PST)
-Date: Wed, 26 Feb 2025 18:10:45 +0000
-From: Quentin Perret <qperret@google.com>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] KVM: arm64: Selftest for pKVM transitions
-Message-ID: <Z79ZJVOHtNu6YsVt@google.com>
-References: <20250225015327.3708420-1-qperret@google.com>
- <20250225015327.3708420-4-qperret@google.com>
- <867c5crd2j.wl-maz@kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="g88JFDSk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GBQzSREKWGTlyghUg9XAxhlGbbqKmTRy97wqP3i7U11JSVxIm+smeXjIgxwz/S9rH5AcJ2E5Z6WN3DwF8dNjMBgMi0jXOyShP6b1DeEb/K9muVwRJmES0hlw0TeTLRFRW0Uk+YZWYKqog4QguoYE8U1nDxmWvnBfyqHAVXMdRWlJCe0uIG/ZSZID++gqQbwYocnWopUCG98+MKKDf1RwECXv12E8UzEuj4QQzFgrTmfIVlZOHgvSju8wAZxLhYpQPNG9OFBcF8LRcbDlwnxtRbYbFM3ecDLPZR1AFJMcSMBO7Rhjx1dVQeMAxptJnbikdtgdRVuz0cBgFtj3tis02w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i3dIkGYLTBMfLkbwonyK1x2f/h+Jr3f47mVxSwIpKko=;
+ b=YX/aznFpiygGtibwhbHsuYJrvlTbXLvaaxzq28bWTfAAt67aZN9Ge9w64UsljAS49jQdISPvITF7Vjsi/8I577kWzuM8rlWrrI27EtWD0WOZTUXwJMc6XyVtmgd2H0ICzDR4d2sEu1IcZsJQLmU041DVss8skkXE5Pt5j0iTlEhjRuJxXQhoJXkU9sJbFfFXSmmCzrDExovgnBMO5kwS5iln4rfXk3hMjjNqWer9zNsOyuXcDKobsv9pzx30ZTeuRE63GkVYfWbyvdGcpudzjzaH1Ym0NbUkWSly4j/Gijv4off1WH70az7WbqxNIDGWcEkQ40Y4hGzd3Dnh+mldyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i3dIkGYLTBMfLkbwonyK1x2f/h+Jr3f47mVxSwIpKko=;
+ b=g88JFDSkbQ3bgaMj3w4X7n2ghq0R80kb9c86fgvFxhx7b9KDxrBpDTNUJl0+TEwnC2PRrNTg1W6WfBcCiJBq3OAdiMKIpvl23HA0olqLjQwiQszImOaQrYMdm58JBYxcWGGDMF/IwSgfN4+YI57OXYjZC9LA9jzPX5wcWl/mT64=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com (2603:10b6:5:389::22)
+ by CH2PR12MB4261.namprd12.prod.outlook.com (2603:10b6:610:a9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.21; Wed, 26 Feb
+ 2025 18:12:26 +0000
+Received: from DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e]) by DM4PR12MB5070.namprd12.prod.outlook.com
+ ([fe80::20a9:919e:fd6b:5a6e%7]) with mapi id 15.20.8466.020; Wed, 26 Feb 2025
+ 18:12:26 +0000
+Message-ID: <2731f073-d529-7870-6d25-ebd2e44cd10c@amd.com>
+Date: Wed, 26 Feb 2025 12:12:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Content-Language: en-US
+To: Rik van Riel <riel@surriel.com>, Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, kernel-team@meta.com, linux-mm@kvack.org,
+ akpm@linux-foundation.org, jackmanb@google.com, jannh@google.com,
+ mhklinux@outlook.com, andrew.cooper3@citrix.com, Manali.Shukla@amd.com,
+ mingo@kernel.org
+References: <20250223194943.3518952-1-riel@surriel.com>
+ <20250223194943.3518952-7-riel@surriel.com>
+ <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
+ <7c2baf33265444089ab780848de29a1336a9a4cc.camel@surriel.com>
+ <20250225203803.GGZ74qK1oZWk8u69O4@fat_crate.local>
+ <20250225210300.GHZ74wBP2ogmM5P5lP@fat_crate.local>
+ <680053d3-4cf9-534a-1c52-c6e259b85452@amd.com>
+ <297b28e9ef9f4cd983ae2e3dd4cf1fce8b74d0f1.camel@surriel.com>
+ <059ba03a-a892-6a68-6000-c7db3dd6cf9c@amd.com>
+ <9086371cfe69760780d67ec279f69e91f65086a7.camel@surriel.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page
+ reclaim TLB flushing
+In-Reply-To: <9086371cfe69760780d67ec279f69e91f65086a7.camel@surriel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0151.namprd13.prod.outlook.com
+ (2603:10b6:806:28::6) To DM4PR12MB5070.namprd12.prod.outlook.com
+ (2603:10b6:5:389::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <867c5crd2j.wl-maz@kernel.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5070:EE_|CH2PR12MB4261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 25157e4d-77d0-4c94-5332-08dd56911fac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WDVmcDlnRUF4bFloM3g5cmNQR0tONzVrc0d1WG5zL0VZRTlpa0FzVjB1UVpY?=
+ =?utf-8?B?MEJyWWRqSHJtbDUwd0tERHpwcWhzOFFDaFZycFFDY3ZBZXQwMTZsWkxOVFoz?=
+ =?utf-8?B?ZTNackxRK2c1Q2llUTYvNlcrdWVIaXpHUXMrVHludFgwVXJ5OHJxZFV6YTR3?=
+ =?utf-8?B?NlFTb3lJUXZ2R1RqYjEvdEVNT2Rkb2pxbGNSbEJRbXJiTHJ0TFFmdGYvd0dR?=
+ =?utf-8?B?YjJ4RC9EMFAvc280SE1TUmc2ZTk3T2grQ2VTbkZFemJHamlkU3RmQWNVa0JY?=
+ =?utf-8?B?VEczcm1SaVJTR1I3UGt5bjlJenpXaVJLTGtSSlI3T0wzZndRN3BxZTZwbXpQ?=
+ =?utf-8?B?MFBSQnpSVUZGb1VhakdvckJpeEswVkpmcmV2TVBZYlNGR2hRM05yckNQYUov?=
+ =?utf-8?B?bE1KNC9IaFd3SFNweUdFaythNjF2K1QrMSsyZGZtZWFNa292bVlZNnVzMHhU?=
+ =?utf-8?B?VkNldDlFOUZVU2xvQm8xOXliTlBGSlFIOVIreEtRaEF0V2RyVUptaEZHY2po?=
+ =?utf-8?B?NVhuWEtlbm84eHdsU0VrSDdJNEdwcEV3ejZTaWkxZkpUWThveGY3TnRDNFQ1?=
+ =?utf-8?B?UCtUQW81YXY0OWQ2LzVSUnRBTHVIMm9iamFxd0txMlVvL3FoQUdYWDMzQUll?=
+ =?utf-8?B?Y3JvaG80N20vNU5QcHpMVzJCbXJSRTFGYVNOam9KenllcERVNmttWG9Cc2Ju?=
+ =?utf-8?B?UEFEM3MyNytPRXpReHdxQ3NQRlZBSjJ0dkpZV3dnU0xtWjVYbGpqczA4N1V5?=
+ =?utf-8?B?a2tvcmkrT2VlZjBxd2x1bnkzL1RPLzJpN2lrNzZvTkpYRTJiN0hTQ0xUZnFk?=
+ =?utf-8?B?OUlvS0I4T09LZUVkTHRZTzliYjdQOEUvOWNnNFREY1V5OEtPUUFPY1YwWStC?=
+ =?utf-8?B?UDhWQkU1cXJyZlJ3QldiaFI3djhMZXVKamMzQVZxN0pWWXhKcXk1ZWZOaWw1?=
+ =?utf-8?B?N1dOREd0ZllIN2d3NjRaV0ZLZSt4dnlyNmZjN2d6RzB2bUpWUHlLcmlMUFdh?=
+ =?utf-8?B?d3ZZVWRNNWdhK1ZldzRDNkduMlU4MU5rWCswSFFKQzl2UmNZZTFjaDdtNFZp?=
+ =?utf-8?B?QldzbFlkSkVBdkQ1L1p3ODIrUlpndEZ2aTdGR0daS0c0RkM4WG1PYzIzNDdS?=
+ =?utf-8?B?MGVnSFhYNkxuWEZyQlIyTk9JOVhPM3hWSFExRUY3eUhJcmVPRXBrYjNZcFRT?=
+ =?utf-8?B?ekh1c2loWGl1eXBwd3BycjFpRjFKeWtBZ1pSdm5mNG53dlphcHFCbGo2OUVL?=
+ =?utf-8?B?d0VwOFJ4VGl4cFNVUFVIY3BMeXhabFZ6d1I1c3VCclZNQVRwK202eHNBcWVE?=
+ =?utf-8?B?dk1rbkU2bVZKdVpYQ0cySGZYUVNOYVlmWGhRNEp1YnpJdHRtd1BscHpyU3Jp?=
+ =?utf-8?B?N09PdTdFeVEyVGlNL2ttNGlwVEpMb2RHQmJ6czdsdGRZSTQ3OWRwRnFrOS9j?=
+ =?utf-8?B?VDhUT2VOK0E3L3hPczR6VHozTlJqb2ZCNzlnWk8wT2ZmTGVJeEdqL2c0dU5q?=
+ =?utf-8?B?Z2RDQVl6Q0JWWm1ZS2VqSm96Y2tYVXNKRUxERjNPQUJGZlpKUVQ3WjZOczg2?=
+ =?utf-8?B?UXBIeExaYlRxaXIvYlozUU4wRWpLTS8rZEVib1VBWnRxc1RJOTlBR1I1MVp1?=
+ =?utf-8?B?Y0RWbmVNK2hyMzlZUFd5NWxtTU1KSjMxU3M4TDU0bVJydm9MQ21xVFFZRk5y?=
+ =?utf-8?B?SkpxL0trb05vWTZ0SlExbXNjdEdLcEFaMUdKaUFhS0VCT3lxajBmRGg5MHYy?=
+ =?utf-8?B?dlpUbm9pbkhQcEJMTys0c2hRREFOTHcvZ3BaSEVlTlN3MkdQQmphcUxXdkov?=
+ =?utf-8?B?WS9tZDNkTThhUWJQY1lLYk1LZ3RVUEVaaUNLdEU1a1dXQXgzN1BYSmZkR3J6?=
+ =?utf-8?Q?89ck2tY8UgMcx?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5070.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MDU2OEhKQUVNTXNFaE52N0xpVDZrQWhSVllwcDRZZ3dLYkFwRk82TFl4blUx?=
+ =?utf-8?B?dm55V2xJMk5oM3NtVVl6eGxLT3lJbUtOZGVOOXlBemNwTUR5bE0ybmxaVnJS?=
+ =?utf-8?B?VXF2aGRDSVgxcHY4blpyczBYZk9vVXhpV2Q5enhrYkxVRlZEZ1FtRGo4aE5w?=
+ =?utf-8?B?cU1vVDI3d0VMWkxGU0NsektuK0tWc3B6dy94d0xNTmxxcWJ5LzUwNFk1YnBS?=
+ =?utf-8?B?bjJ4TFhnU0hzcS85V3RhWnhleVYvbjloTUsxZFBTeFgrU0d1T0xRbitNNDBE?=
+ =?utf-8?B?MjRIUTFJOWwycjNhbE4yL2xySWtaZkl1ZTFpR2NFUlZ5UDJKNTFnM0Nya2JZ?=
+ =?utf-8?B?QlVMLzI1aStqbklZZFhUNDRZQWprTTl5eXBFczkrZVRxbnZuOTNiem1vTzNZ?=
+ =?utf-8?B?Ry96ZlZwM2VwODNheHlhakd3TkdYSzBVeGFJSitzTVdLZHVWcDQ5QUI2UE9Z?=
+ =?utf-8?B?ekcrSHZDSlRsdTFYWGd2cjVkQnY4d2wwYWhkdFFhMXZyVzZ3OXpRNHExN0Fk?=
+ =?utf-8?B?ZXZGT2FUZUs0U1VqZ3BySHBvUmZlam5OOXRqZHppSXh3Y1grNnBHYktISm1C?=
+ =?utf-8?B?NXNZTDhhRnNsVUc3STgvMGxWd0Y5VkdjWC9uclUwbmFXMkVnTkNMUjN4ZlN0?=
+ =?utf-8?B?WENpTkFLdzhNakg5Nnp0SlZlZnJnSitjNkVFL0Q5QlJOUW1QbzJiTDlKRFg0?=
+ =?utf-8?B?Y2xCWGgxZFN2QTR4V1lEdnRjUUgvVFA3ZldFS2xVb2ZRR3NVZXZzU3BMZUVu?=
+ =?utf-8?B?STFkNmZtTUxCYi9vMFdwczMrKzJPWGMzei9YWjJRRkZNNFhFYkRSaTFRc2VW?=
+ =?utf-8?B?eG9xWGdDUTNuT1VQUFZBd3VENHRobTl4WkFaYlZBbEZXN2w2ZHRDei9FMWp5?=
+ =?utf-8?B?QW42djgyYjM0VTVWYWZ0WlZjK2F3ZWNYdWpUTklCS1hjSHVhZUZ1MTZPRldw?=
+ =?utf-8?B?NnZxUDRnTDlKVS9Cek51RVZTTEFvTHpESWswdXJPckx6cVBzc1R2bTB5UUtT?=
+ =?utf-8?B?aGNCTkVJYXNCM2xJS1p3a1FhK002d0FGL0hPcnJiU1RYNmpHSEFXSXdJR3kv?=
+ =?utf-8?B?eURHY29seUxIRjNwWERpLyt3NUx1dmtyQllWQ0U4cTV1blp2K1ZhTytQY1dR?=
+ =?utf-8?B?N0dVT0cxU1o2U1V0RW9oeDhPZUFSbkEyNWMxZS9xb0g1aHlPRGpMc01Ldldl?=
+ =?utf-8?B?RktSTWNMTFg4N0pZbUJaU1QvZ2VjNW5zQkZuNGVXQ3FSeWlVU2FCRTBPdHVR?=
+ =?utf-8?B?d1BhUlo2YVBpeUx5bVppOWdPZTVGUzc1bklBNk91QjUwMXpSdzRXazJlTmwx?=
+ =?utf-8?B?Wm9EVTQyTmwxeTkwd3NkM0c1bkJiRGdwZ0h5cjBlaUdVdnZYVWk1L2JDRHN5?=
+ =?utf-8?B?QjI0WnRiamUxLzR5YnVFS3k2R0tFM1lLMG1iWSswQmtNWHJSRllUZk5leVZr?=
+ =?utf-8?B?RXlhVkY3MWFLYTc3M29DUHBXM3Y5WnQxc0xiQ3ZQaXlHYzM4S3lYMHZmc2NV?=
+ =?utf-8?B?SWFCTW1VL1NqcGpqSGZpOFpqVml4cG1HeEVHZFRxMzNFRzJGUkp2c0dsUFl3?=
+ =?utf-8?B?NVVPbDhVSWh0bk1OS3BZMzlQRWpZWG85RmZ2eWs0Kzk0aE9VTmZDMkVFaE50?=
+ =?utf-8?B?cTFjWnJhN1hQY2U5bnpOVDJicEdKMWVsQ2tXbjVwWXhnQTBaM01zZUdnN2VT?=
+ =?utf-8?B?dTVjMXFiNlRHN1lBaWxlaUQ5UkNwUVBUdVFLNDhlajBDay92c3UwRUtCRGpM?=
+ =?utf-8?B?MnlQakpIK0VkSjFrRTF2YmZNM2JCSmc0cVdiVW9yUW1xMHBadVhUaG9XUGE4?=
+ =?utf-8?B?S2tsRjF5L3ZpQVM4UVNqN1ZVZ1UxVFlGaENUTzRvTGV2dzNQbnczVjBQZTFX?=
+ =?utf-8?B?SkVvU0cyUXN3cTNibXI3U3IyZERhZjFJNnRFM2IyYVl6K1lEbE15K2Y1TXMz?=
+ =?utf-8?B?SHBucHhEbFdCU011K1pKYUc1T01TTEtjZFhLZzFUcmh1cHRJeUtoREE2bE1k?=
+ =?utf-8?B?aGRYVk5YdVhxUzR0NFVqeHp6d3Z4L09VUndxUy93cU1OR1lENjdwVXpPaUtx?=
+ =?utf-8?B?YVl6dHJVZEJkcXJ3RnNpNWo2alRSMW5RbWxvQkFhcCtLdnppTE9ONStheGc4?=
+ =?utf-8?Q?aTgliYxMst2Nywzme/0iGznJk?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25157e4d-77d0-4c94-5332-08dd56911fac
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5070.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 18:12:25.9264
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qdh2OxYunm9RDix3TYU2/cJ4NRbAUlswGufzpKMw9KC8BEDmZupDhMeGapHi2DWkS+D6bIMBEsUyE6n79yP08g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4261
 
-On Wednesday 26 Feb 2025 at 14:32:52 (+0000), Marc Zyngier wrote:
-> On Tue, 25 Feb 2025 01:53:26 +0000,
-> Quentin Perret <qperret@google.com> wrote:
-> > 
-> > We have recently found a bug [1] in the pKVM memory ownership
-> > transitions by code inspection, but it could have been caught with a
-> > test.
-> > 
-> > Introduce a boot-time selftest exercising all the known pKVM memory
-> > transitions and importantly checks the rejection of illegal transitions.
-> > 
-> > The new test is hidden behind a new Kconfig option separate from
-> > CONFIG_EL2_NVHE_DEBUG on purpose as that has side effects on the
-> > transition checks ([1] doesn't reproduce with EL2 debug enabled).
+On 2/26/25 11:46, Rik van Riel wrote:
+> On Wed, 2025-02-26 at 11:36 -0600, Tom Lendacky wrote:
+>>
+>> Right, but the ASID valid bit is not set, so the flushing may match
+>> more
+>> than just host/hypervisor TLB entries.
+>>
+> Good point, when using SVM these flushes could result
+> in flushing more TLB entries than we really want.
 > 
-> That's a bit annoying, isn't it? Without EL2_DEBUG selected, you won't
-> get any stacktrace, and the WARN_ON()s are a guaranteed panic. Yes,
-> this is better than nothing, but I'm a bit worried this is going to be
-> hard to use.
+> On the flip side, when SVM is not initialized, the
+> invlpgb instruction will fail with a general protection
+> fault if we have anything at all in the ASID field.
+> 
+> I don't know whether setting the ASID valid bit in
+> rAX will cause a system to crash when SVM is not
+> enabled or initialized.
 
-Right, so you _can_ enable EL2_DEBUG on top of the selftest stuff, and
-if you're not hitting one of those hard-to-find bugs described in the
-commit message above, then you're golden. In practice I suspect that if
-enabling the selftest alone leads to a panic, the next logical step is
-to enable EL2_DEBUG and see what you get. If enabling EL2_DEBUG makes
-the issue go away, then that'll require digging a bit deeper, but that
-should be pretty rare I presume.
-
-> Is there a way to reduce the impact the EL2 debug has on the rest of
-> the code? It feels like it is more invasive than it should be...
-
-Turns out I have a WiP series that moves the hypervisor ownership state
-to the hyp_vmemmap, similar to what we did for the host ownership. A
-nice property of that is that hyp state lookups become really cheap, no
-page-table walks required. So we could probably afford to drop the
-EL2_DEBUG ifdefery in host_share_hyp() and friends, and just
-unconditionally cross-check the hyp state on all transitions where it is
-involved. And with that we should probably just fold the pkvm selftest
-under EL2_DEBUG and call it a day. Would that work?
+As long as you keep the ASID value in EDX[15:0] as 0, then you won't
+#GP. ASID 0 is the host/hypervisor. An ASID > 0 belongs to a guest.
 
 Thanks,
-Quentin
+Tom
+
+> 
