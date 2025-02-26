@@ -1,128 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450BB258CDD;
-	Wed, 26 Feb 2025 10:31:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D75B2459C4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:31:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740565868; cv=none; b=ZQTPZTIE8OaEUYOd8r1JVqoBcQ3YIlPoe1g+XojQ4B3cH7two3YwqZZYMmje7ZvOFiu5NjewBmnTt4I69ufciNcAimBM2Rb9O65rMH2xtv30ljIYID4StnrbsPhXnImDKNS9kHDg6nbPMG0McqyldBBTVJloYihCudYTLBQUaSY=
+	t=1740565900; cv=none; b=pk1xH1M3iOTRS7Egm+K6gHzFpQm2fIPApKujAXQqP42MMJl0n3p1vySo/HDLMWM2a8Ti2utVcaIg04gqlbqM06TYk7g2TRmVgiWXWeAhfPJh3AuIfY5hrd1+1DFGs4s1J99LQm85ZUt48oY+H/yCyHlTNpiwJCmgbwYmyqDI/GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740565868; c=relaxed/simple;
-	bh=OWlJ6XxA7vZJtc6jcef0BbL4NgMbslF6C1xe+Kb14+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PYVSxbasvYRer/Q6na9fAm1q620Vrh1IZRDJ6iUS1E4KSlExvpM+JTjA255C03wn/k0Yc+v9gYLmgv4ofUJ+0rA6C63EhsEGRgbILxC8IdL9DjcC96iJUl5Od21KJP6bUeZ13tFFkyDhq13lGjnJE1BhmJCEybqzqFJprbnR4Fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4m0hVRA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740565900; c=relaxed/simple;
+	bh=eE6TEDJjEUVFfIcxM8iKB9praMK7xTPiqSf/9sV1pC4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AShvuJ2Vwvu6cV/N3m3jrv3/kpgKtWG5Xj4JJsd+6KeTTMMYzPGreB7yo1Vx+nZu5sq7Gekxnmm4g8tb/SWAhB8MK7ldR2reIbRD+4PBQ8CDwOLfjy5nKcxHe9cTjVtoMQ9DKMwuGd2xyGI59biZdsWxrL0tOZwbqx7xIOkPvrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=acRHnWda; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4m0hVRA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6040C4CED6;
-	Wed, 26 Feb 2025 10:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740565868;
-	bh=OWlJ6XxA7vZJtc6jcef0BbL4NgMbslF6C1xe+Kb14+E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q4m0hVRAaKVWumri5vt7HKpmcJWQ0NaRJVwKeRyIEWKFEo/jHerp7wFhNVbzVdmkV
-	 GeUh/w7PbdHsFtFbKyDBJWcm0QwPvhWpAvql34y4qdK9Ik3y3RQQZI+RiqRHGZQKhQ
-	 P6jp4z7bss4vLy0/edqIFEro/lqj2vOAoLeVqzElg4oVaL/+gUToPaAcs8sHxkX5L4
-	 1NE8oYqTGKxoNhWj+p/dAzAgJVGoPv1AZ87vLiIurr+HXXYunKyaevYt/r+CDoRblw
-	 fCfO3ZeW3TKwvEbsu4sXxf0Xlb0p2I0lGg4L6vj3TJkkxcQBdattrY0bf8h2a5eCQ4
-	 w761jzp+iNi8w==
-Message-ID: <df24ac09-1717-4a91-a710-cf1e46341ca8@kernel.org>
-Date: Wed, 26 Feb 2025 11:31:03 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="acRHnWda"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abb81285d33so154198066b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 02:31:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740565896; x=1741170696; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8YuDC37Jw+Zolzu5V30KigWgIEI9SejHaSTwT5Rkex4=;
+        b=acRHnWda/Z+QO80DeZpxs2wq9NcRC9nQF845v45rzVYX5WKaM7mxKypjh5wsKPz/F1
+         fXluH1LfTciao71Gcez7vuoNGBbL8I00Qmp8CouPqJFKpLNlAQXPr3ze0ec0TveCcBNu
+         jstDLj6/E3+J1IXRwYutyGcxj79fYh4TGEnvKxxoZn/oJ/dRVHDWOeYkviMyYwTERfN/
+         AOJ04Mu6f9egCoeEkm0qoPjpb3G22hWYhNlAA8kpP9ri99UyUHeUhGJw1RzlJU8To875
+         y2NuD7Lj1bQ/ZLN0/VPrbZ61b+V3XqV75w2Tv8qhFM8Qcw9pZ2Uybc53LODVuYHN1YZ0
+         SNzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740565896; x=1741170696;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8YuDC37Jw+Zolzu5V30KigWgIEI9SejHaSTwT5Rkex4=;
+        b=I0ZXDIvPJGObRVO4HhictKqxt1FZu1fmRCrYAfaHkGzPr5ZPhGRL2rdGwaoboQ7LCj
+         vRGUq4CRJxKyokrNntByLNejiFAvjES83WNs/i+uyASOSXh8JVnBEGX4I7orw5CDXnJR
+         sJ+gGctf98xHXQnKz+caknOSd+pnO+aNk2CXaOze9RXRLtJNtFGGlmgFuaCvmy6frSeI
+         Z+MbR7CQy4gMjA5MixJ3lkMJY4xC69CJ29drCR7Zv/nMS51Tz6598SlinbN8+rQEwyTZ
+         HZ0KB+y/YpP/g7trWpD3Gwunlo9XDkRRTiLJWeMZDjrRSRjuZKh8dJAIaMXJ4+UMpv6p
+         APDw==
+X-Gm-Message-State: AOJu0Yz002WuVq+So0CwZdvXVZAn7HmKg3xKurWIbxfJtrRKwPcTzytp
+	gUPo0BM2MtFL2xcl5Bv87XNmnhaz2A/M6MuwbtNJpa6tXIxwTUwkDAmUOiy6z8BoIP8JWc+LBzF
+	cImY0NY8mJt5oFPiZFUx6pCyoM+6JzWAcINbZ
+X-Gm-Gg: ASbGncv/WzulDbzZCbz8J2DtK0n8IEeFNEkRcD/ygztcJuTecVKrYyStxNZiTQJeqyx
+	68ylygdqlS1gk1dNdsn8hZw7qPERVl1zU5pzDR5FP4M+LAkNC/oDsh0YT6+ziiRzSGcdWEqEQXv
+	kiYy9SAzU=
+X-Google-Smtp-Source: AGHT+IFAtFSzX90h2Iaz5b1UCMdYq9wwFG9cA0Om7iVgOoxBp3Dkrx+53LsEBr0LX2IvgijhMM8CQeoEfn63itsLTZU=
+X-Received: by 2002:a17:907:6ea2:b0:ab7:b072:8481 with SMTP id
+ a640c23a62f3a-abc09c1a63dmr2056837866b.45.1740565895517; Wed, 26 Feb 2025
+ 02:31:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] dt-bindings: vendor-prefixes: Add CIX Technology
- Group Co., Ltd.
-To: Peter Chen <peter.chen@cixtech.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- marcin@juszkiewicz.com.pl, Fugang Duan <fugang.duan@cixtech.com>
-References: <20250226012136.854614-1-peter.chen@cixtech.com>
- <20250226012136.854614-2-peter.chen@cixtech.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250226012136.854614-2-peter.chen@cixtech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250223221708.27130-1-frederic@kernel.org>
+In-Reply-To: <20250223221708.27130-1-frederic@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 26 Feb 2025 11:31:24 +0100
+X-Gm-Features: AQ5f1Jrx9yGutHY5PqKi7Fh2IVQ9c2aE4kyGGSpHRcRgB13e9kVMxTBIFM7KXuw
+Message-ID: <CANn89iLgyPFY_u_CHozzk69dF3RQLrUVdLrf0NHj5+peXo2Yuw@mail.gmail.com>
+Subject: Re: [PATCH net v2] net: Handle napi_schedule() calls from non-interrupt
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, 
+	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
+	Francois Romieu <romieu@fr.zoreil.com>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Joe Damato <jdamato@fastly.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 26/02/2025 02:21, Peter Chen wrote:
-> CIX Technology Group Co., Ltd. is a high performance Arm SoC design
-> company. Link: https://www.cixtech.com/.
-> 
-> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
-> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+On Sun, Feb 23, 2025 at 11:17=E2=80=AFPM Frederic Weisbecker
+<frederic@kernel.org> wrote:
+>
+> napi_schedule() is expected to be called either:
+>
+> * From an interrupt, where raised softirqs are handled on IRQ exit
+>
+> * From a softirq disabled section, where raised softirqs are handled on
+>   the next call to local_bh_enable().
+>
+> * From a softirq handler, where raised softirqs are handled on the next
+>   round in do_softirq(), or further deferred to a dedicated kthread.
+>
+> Other bare tasks context may end up ignoring the raised NET_RX vector
+> until the next random softirq handling opportunity, which may not
+> happen before a while if the CPU goes idle afterwards with the tick
+> stopped.
+>
+> Such "misuses" have been detected on several places thanks to messages
+> of the kind:
+>
+>         "NOHZ tick-stop error: local softirq work is pending, handler #08=
+!!!"
+>
+> For example:
+>
+>        __raise_softirq_irqoff
+>         __napi_schedule
+>         rtl8152_runtime_resume.isra.0
+>         rtl8152_resume
+>         usb_resume_interface.isra.0
+>         usb_resume_both
+>         __rpm_callback
+>         rpm_callback
+>         rpm_resume
+>         __pm_runtime_resume
+>         usb_autoresume_device
+>         usb_remote_wakeup
+>         hub_event
+>         process_one_work
+>         worker_thread
+>         kthread
+>         ret_from_fork
+>         ret_from_fork_asm
+>
+> And also:
+>
+> * drivers/net/usb/r8152.c::rtl_work_func_t
+> * drivers/net/netdevsim/netdev.c::nsim_start_xmit
+>
+> There is a long history of issues of this kind:
+>
+>         019edd01d174 ("ath10k: sdio: Add missing BH locking around napi_s=
+chdule()")
+>         330068589389 ("idpf: disable local BH when scheduling napi for ma=
+rker packets")
+>         e3d5d70cb483 ("net: lan78xx: fix "softirq work is pending" error"=
+)
+>         e55c27ed9ccf ("mt76: mt7615: add missing bh-disable around rx nap=
+i schedule")
+>         c0182aa98570 ("mt76: mt7915: add missing bh-disable around tx nap=
+i enable/schedule")
+>         970be1dff26d ("mt76: disable BH around napi_schedule() calls")
+>         019edd01d174 ("ath10k: sdio: Add missing BH locking around napi_s=
+chdule()")
+>         30bfec4fec59 ("can: rx-offload: can_rx_offload_threaded_irq_finis=
+h(): add new  function to be called from threaded interrupt")
+>         e63052a5dd3c ("mlx5e: add add missing BH locking around napi_schd=
+ule()")
+>         83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule")
+>         bd4ce941c8d5 ("mlx4: Invoke softirqs after napi_reschedule")
+>         8cf699ec849f ("mlx4: do not call napi_schedule() without care")
+>         ec13ee80145c ("virtio_net: invoke softirqs after __napi_schedule"=
+)
+>
+> This shows that relying on the caller to arrange a proper context for
+> the softirqs to be handled while calling napi_schedule() is very fragile
+> and error prone. Also fixing them can also prove challenging if the
+> caller may be called from different kinds of contexts.
+>
+> Therefore fix this from napi_schedule() itself with waking up ksoftirqd
+> when softirqs are raised from task contexts.
+>
+> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> Reported-by: Jakub Kicinski <kuba@kernel.org>
+> Reported-by: Francois Romieu <romieu@fr.zoreil.com>
+> Closes: https://lore.kernel.org/lkml/354a2690-9bbf-4ccb-8769-fa94707a9340=
+@molgen.mpg.de/
+> Cc: Breno Leitao <leitao@debian.org>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Francois Romieu <romieu@fr.zoreil.com>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> ---
+>  net/core/dev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index 80e415ccf2c8..5c1b93a3f50a 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -4693,7 +4693,7 @@ static inline void ____napi_schedule(struct softnet=
+_data *sd,
+>          * we have to raise NET_RX_SOFTIRQ.
+>          */
+>         if (!sd->in_net_rx_action)
+> -               __raise_softirq_irqoff(NET_RX_SOFTIRQ);
+> +               raise_softirq_irqoff(NET_RX_SOFTIRQ);
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Your patch is fine, but would silence performance bugs.
+
+I would probably add something to let network developers be aware of them.
+
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 1b252e9459fdbde42f6fb71dc146692c7f7ec17a..ae8882a622943a81ddd8e2d141d=
+f685637e334b6
+100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -4762,8 +4762,10 @@ static inline void ____napi_schedule(struct
+softnet_data *sd,
+        /* If not called from net_rx_action()
+         * we have to raise NET_RX_SOFTIRQ.
+         */
+-       if (!sd->in_net_rx_action)
+-               __raise_softirq_irqoff(NET_RX_SOFTIRQ);
++       if (!sd->in_net_rx_action) {
++               raise_softirq_irqoff(NET_RX_SOFTIRQ);
++               DEBUG_NET_WARN_ON_ONCE(!in_interrupt());
++       }
+ }
+
+ #ifdef CONFIG_RPS
 
 
-
----
-
-<form letter>
-This is an automated instruction, just in case, because many review tags
-are being ignored. If you know the process, you can skip it (please do
-not feel offended by me posting it here - no bad intentions intended).
-If you do not know the process, here is a short explanation:
-
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new versions
-of patchset, under or above your Signed-off-by tag, unless patch changed
-significantly (e.g. new properties added to the DT bindings). Tag is
-"received", when provided in a message replied to you on the mailing
-list. Tools like b4 can help here. However, there's no need to repost
-patches *only* to add the tags. The upstream maintainer will do that for
-tags received on the version they apply.
-
-Full context and explanation:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-</form letter>
-
-Best regards,
-Krzysztof
+Looking at the list of patches, I can see idpf fix was not very good,
+I will submit another patch.
