@@ -1,35 +1,49 @@
-Received: from pv50p00im-ztdg10011201.me.com (pv50p00im-ztdg10011201.me.com [17.58.6.39])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AC720CCEB
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17CC20E020
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566982; cv=none; b=PyzYqRP9W8uxPNGppIKfyIoydaS2BBuC9cFDyl+hOxSBVZfxzUv13bIiVX8jzLNleG+XQ7WHAwapeDPFFTzycKT6xeTo8aaw4SecX8FKOGxi3FUns+9PVDmwCm8HZRzTAhNNHwfvJ3DEdfxgajOVuY4NtC/MJVIyJzgUkerc1Ic=
+	t=1740567018; cv=none; b=MejgmXZTJOvP2ySxsjLNpObTh4MXNW8Grw1J8MsahRebUIwLNZJ21YkwKPdiTvNuekOxKDh8xjlRrhv+aXVbrOykMfX0zejkQ0ypOXGy93O8CDH+EDqTkAxCcMEdEmvV+2UIXt02adO2EJHbDSMw170ycqw7Fyuq+yrbZsXS3sQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566982; c=relaxed/simple;
-	bh=/ksErclY+a2HfY+n6eyQP1xvxnb1/u05wmeZJj/ugy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ITKbE3IHzyrulVMy0mTozMu0UBIuR3k6l2lrxaCPVlUDKTHR51CZxhlcpHbkjgiLu1QmEu3T7yyPkgbn1asd3YU8XgEhQBzOHDcgBB3EfOSkXzkxuF95wkX5SWklnu9zefC6bYQM9pWJy9t4WyH12vjExnmYtmpry9osBNGx/7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=u8jNnmbp; arc=none smtp.client-ip=17.58.6.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1740567018; c=relaxed/simple;
+	bh=uoDYynkwYtA/Oca3dwmaRmhdpYbBmATAd+rl5/doFAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TbN6YgtABgHorTK6I1rfhxD20d5kTlS4uhXF6JLQQ7Y0n5DQDfM6fibG9f2vLzQuASEeKZJMX3aXYVa2Bmkir7Vaidl5PkeeBavfvKU1zYmhEh6rDJvEHo30N50xacRrVRw9jMzhAqNmzMEHY2Dz8ffR2Q6Bqz3zItVIRCENvyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=DgwmjuI0; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="u8jNnmbp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=rZ/JKLqvgcs6sxz9YBuHcFMLh6kDf+x72Yif1lbgen4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=u8jNnmbpJbeehjrSua28dZ0/xMaBJoS73delakyASdo1yTPjiYiMhTZHl5m6a6D/Y
-	 uCkpbNxVjfvP09X8stV6LlLFTwwVJa8Ygzr2SdyFIZT2gzSr2Iq7cScxglsLfz+T8F
-	 RQt/ZThY+PMDeI48gg6gWlAOc3iR7Hj/4duOAzfxJz9xfFIhwz5ZUXU5YusMcBvFDV
-	 mN2zsXCGGiHn80xrDB6nHQ5JYm0V0D9TPFeL3k9FBsL0gmJhVaFyDERWQUzkfCqSZN
-	 kqvITJUr2BS1RYcNJUP9LTZ5/bv0FgMlIsH2a8c77mo9uTSojeII0oo3eNz7vJXkSR
-	 Ac0H71kX+3eCA==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011201.me.com (Postfix) with ESMTPSA id 2A81168011A;
-	Wed, 26 Feb 2025 10:49:34 +0000 (UTC)
-Message-ID: <aa24e5cf-3a32-4792-be0f-9b8d190730d2@icloud.com>
-Date: Wed, 26 Feb 2025 18:49:31 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DgwmjuI0"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51QAisqA1525409
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 04:44:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740566694;
+	bh=jo/UvzfaVefTj5QmF17mHt05v9bWd2UKSSqwvyDmE90=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=DgwmjuI0Ej3hhm2PlZOGXrSLhaq4K4zanEVbUbgWhElgK0fZyzqlbyTC49ySsE9rY
+	 ptWs86AY+0SQkS+yLYrVgRm378slc6VceFMXyhO29CqH2xyifLSIdCIt07uwFcvQju
+	 k4YxXZ/8NUnJJfzgJKe+wQSRiU+LC0Lae4xWNCKs=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51QAishd024132
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 26 Feb 2025 04:44:54 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
+ Feb 2025 04:44:54 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 26 Feb 2025 04:44:54 -0600
+Received: from [172.24.18.117] (lt9560gk3.dhcp.ti.com [172.24.18.117])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51QAipZ4106894;
+	Wed, 26 Feb 2025 04:44:51 -0600
+Message-ID: <0d33dea6-c021-4f2a-bb3f-92efd6eebd18@ti.com>
+Date: Wed, 26 Feb 2025 16:14:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,59 +51,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] of: Align macro MAX_PHANDLE_ARGS with
- NR_FWNODE_REFERENCE_ARGS
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Daniel Scally <djrscally@gmail.com>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>,
- Saravana Kannan <saravanak@google.com>, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20250225-fix_arg_count-v4-0-13cdc519eb31@quicinc.com>
- <20250225-fix_arg_count-v4-2-13cdc519eb31@quicinc.com>
- <Z73RssDaLZ1NLpSZ@smile.fi.intel.com>
+Subject: Re: [EXTERNAL] Re: [PATCH] arm64: defconfig: Enable HSR driver
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Arnd Bergmann
+	<arnd@arndb.de>
+CC: <quic_bjorande@quicinc.com>, <arnd@arndb.de>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <srk@ti.com>, "Anwar, Md Danish" <danishanwar@ti.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>
+References: <20240419060013.14909-1-r-gunasekaran@ti.com>
+ <686f583d-6bf4-4486-b9e4-20c1e268eda6@ti.com>
+ <d4954e5e-e51f-41c0-bca5-6e14b4640022@linaro.org>
 Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <Z73RssDaLZ1NLpSZ@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 05sHnAVq0PQ3X_GllbBMIWh8EHQfvioA
-X-Proofpoint-ORIG-GUID: 05sHnAVq0PQ3X_GllbBMIWh8EHQfvioA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
- mlxlogscore=760 phishscore=0 mlxscore=0 adultscore=0 bulkscore=0
- malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2502260086
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <d4954e5e-e51f-41c0-bca5-6e14b4640022@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 2025/2/25 22:20, Andy Shevchenko wrote:
-> I would add here that the of.h includes fwnode.h already, so it doesn't
-> add any new compile time dependency.
+
+
+On 2/26/2025 1:35 PM, Krzysztof Kozlowski wrote:
+> On 26/02/2025 07: 18, Malladi, Meghana wrote: > Hi all, > > Apologies in 
+> case you are receiving this email for the second time. > Any reason why 
+> this patch hasn't been merged yet. Other than re-basing > this to the 
+> tip, anything
+> ZjQcmQRYFpfptBannerStart
+> This message was sent from outside of Texas Instruments.
+> Do not click links or open attachments unless you recognize the source 
+> of this email and know the content is safe.
+> Report Suspicious
+> <https://us-phishalarm-ewt.proofpoint.com/EWT/v1/G3vK! 
+> updgnZav1ue7gKXOnHOpH5hg8gLmw9Osqsqh- 
+> KTLRTnBEurV_VetrG7mzU898vB_5xFrYgbRkkuuFMBobM-uhFAmUgccRSk$>
+> ZjQcmQRYFpfptBannerEnd
+> 
+> On 26/02/2025 07:18, Malladi, Meghana wrote:
+>> Hi all,
+>> 
+>> Apologies in case you are receiving this email for the second time.
+>> Any reason why this patch hasn't been merged yet. Other than re-basing 
+>> this to the tip, anything else which needs to be addressed to get this 
+>> merged?
+> 
+> I don't think you sent it to your platform maintainers, so no one would
+> apply it. Usually people ignore emails they did not receive, although I
+> am here an exception tracking missing-DT-patchwork things... :)
+> 
+> Best regards,
+> Krzysztof
 > 
 
-thank you Andy for comments.
+Hello Arnd/Krzysztof,
 
-include/linux/of.h:
-struct device_node {
-...
-	struct fwnode_handle fwnode; // this type is defined by fwnode.h
-...
-}
+Thank you for the replies :)
+Was having ambiguity since this is not TI specific change. Wanted to 
+confirm before re-posting. Will post v2 patch including TI platform 
+maintainers.
 
-include/linux/fwnode.h:
-struct fwnode_handle {...}
-
-So of.h must include fwnode.h
-
-
-Perhaps, of.h needs to include fwnode.h *explicitly* even if this is
-another topic.
-
-> Both patches LGTM,
-> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
+Regards,
+Meghana
