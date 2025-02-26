@@ -1,127 +1,95 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B98224896;
-	Wed, 26 Feb 2025 17:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740590369; cv=pass; b=e+/XoC5JCpr2Vp2F7E34HvFNTrmLjqM6zp+1eihItwhQyrm4yqpAYfXsBHA0NHqdoxQMu6UfGl3+xJxmSxPIbTV5XeYW7QA/i41e88Ke180uCxnIWu15BskPbRlrKohvlXqGvMrD03sD7R1pi3+Y7ZMJcfYTy7fxNR3ird85amg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740590369; c=relaxed/simple;
-	bh=aTe8bIBDw9cNT4V5VGDu63y5GXCtXugACmEJ+LcwWoA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dLWV98g2rAlBovzM4yDwfr/B+PPz8H7y1Lt67fcQtIVPxghJ9Hdl8aQ+SPQjS0QErocj94YuOeOvjl1tfv9rGUHqOUCSSozxPPH8AyTZx2a/cBncYINTKjAWNLIyTwukEpSozle4oKwX9so+XuTuO4OEX1MJY1phdALPcgfVmWM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=FqX8vr+2; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=8ISGMUX+; arc=pass smtp.client-ip=85.215.255.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4E913A88A
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740590386; cv=none; b=fmmUNcesWZG/VLFmMf88UyWxcKs/5EPnMXpEsyx5yD4/GFON1IdQ+hBRB75zN9LKHLDxqhL/3fq0xjnnd5pguSj8eaNEqok4nwmga2gHXfMdWIY47iDhzjBp8Fp+Z68buWUVTegq+UXpktiUfFD4jCqdGekTJSnoJhmXw+TGnFM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740590386; c=relaxed/simple;
+	bh=jfreow4x4peu5cltRiRpdgIJnVcxQOyP3FAB1RGICvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMe4Qs8m1fsBO+nGOW4kLLrRfxChjkSryN2eQYKoxIYzPybm35YzRkVTuWzUeZOdvxk0PvsOFoSm+d8XBiURH7XAG5xnDiXXHzjj+IvlrOkIrBT3NMxod2C6v8n3IgNDu22OwW0uy1ZW4y+VYYEyiB4YmqwIWgI9SH5InH1OoD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=T1MzDpO2; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="FqX8vr+2";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="8ISGMUX+"
-ARC-Seal: i=1; a=rsa-sha256; t=1740590184; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=rZD1eBj48lT2kBGBtbS0fSK9xISjR1Ih2LIgsMlWURi6FoXmXlIOUuYBuG2gx6K+5h
-    oomWFSkokJIwBDzO/8NjFZ78KlVP9bGZ73M4pinOYM4yQUxm/m02tYNfJpfoYxyCsNg+
-    p3J3K9gCMCipbMkFxGYzMDbCkLT+Ik+ICP+NGI9D6z8P0KCYSnN8oGfMfVGOiC773phs
-    w0yllm7xbkCSG38xar6S+kgH+vAIeBChp6yGQeTC7IAC3eCC8PxpvvkhluBlFnqlOmt+
-    TiDmj8p9Jg9z8KrQ/2pWo3UMlR0Kus3JP5SI0X7ZVws9BO5nP6Ht1L7BQPU964SEGBpf
-    5Dag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
-    b=tg/caXYQ8b6ViZ+7YFGhj0BppCMHY7JJxwlElkLteTDv4VU6WAls1d1mua5kZbgh8g
-    5m8Z2okV130cbTBDPCMrWVtBuLz1thNkCVgGoVl51pfeV5ZHDOzJIIiTYG/JHNAXAW0a
-    5zJihPbo1ptRobYkTx8asS3sEqibu1AEWkh7cvW3lsIofY33FpYpw6JNfCGKjC1/S781
-    U4Fb7rxAdPidX2WFg3vGUfkglZxpuY+HkFt4ukq8bHlDBcDpZia9g2NvMWkmQHh2N4xE
-    MrnOIeruK721s0GDLBgF5yslo97V/iQeHAOmQ6spZUeeVf4aWn4CYE3j668BzzfHVTZ0
-    aCEw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
-    b=FqX8vr+2A6JIldkC58obS549PwHkZzHqKj+35pEN/MxQpOCr2/D3VpOaGkBCOvq/vQ
-    5Nq36Xrt6gae9jpRgA3tW9dztIQCReNsiv0DSid/4ob9QWGlnpitp/PBm6Bp9hubkcSf
-    Ye/+wlSZPm6zCxaoVLnZ0riZkLEmrqRo3FJ1FvGMI1zqIMDTMPcNQvRE53I/FYgU9Kd5
-    XhWIXi3aeZz/NKVEwL04RAGrU/UNs5LPXGzA7QJ9WjZEiZH7Y/QPOiQ6tgOqQJsVebdS
-    heyQvfZsGGF3MAUJSdKeO+fXU5CXXZJlwbsKzkbCMmGueU01SOapfrPAivCM64pmHTPF
-    zh5A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=QScjihLacGR1ZAHaGZyRgXvYewbSE/QRZuL+MAqnw2o=;
-    b=8ISGMUX+cjHbDdsVM6DpAom13p1mfC0EaFFMwyruaabUMS00qPCSliQXjJUoNeVPt3
-    ztQyAvaNjqusS8dt1bAQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
-Received: from localhost.localdomain
-    by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
-    with ESMTPSA id Qe5b2211QHGNfpx
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 26 Feb 2025 18:16:23 +0100 (CET)
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>
-Cc: Andreas Kemnade <andreas@kemnade.info>,
-	Paul Boddie <paul@boddie.org.uk>,
-	Tim Bysun <tim.bysun@ingenic.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	letux-kernel@openphoenux.org,
-	"H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 1/4] bindings: ingenic,pinctrl: add x1600
-Date: Wed, 26 Feb 2025 18:16:04 +0100
-Message-ID: <c42f0ad1aeedbfc90b9a5f10a36b2f5f2da528e2.1740590093.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1740590093.git.hns@goldelico.com>
-References: <cover.1740590093.git.hns@goldelico.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="T1MzDpO2"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CC1D140E0224;
+	Wed, 26 Feb 2025 17:19:40 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id AKe35hxtWvpx; Wed, 26 Feb 2025 17:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740590375; bh=NEE8Kn/mXStByvmlnAYapclr15vFcQm13cLONep5OQ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T1MzDpO2/me2DtJ+WAGYeVDieFu9IJDNYqPUknQyNop+x04uIsH2QwguRh8jxtJ7H
+	 lDt8b2eHSOhMSTdUlAnFdtdY1T3o25PtLQQ8yy5SByCgXrEwccp8e51caCLlKDIPHD
+	 3TyDxdOpar7c9ZxjNM9c4hbjK1CCfaG+ov26fiPurQ6WMZlu9GNqKsE/vTVic3nGlq
+	 pwBBG8RrmGysDBHI0mU5mOLv+GkLqTJe0TJc7GwTxQfGXKvmpD4RItLQDa9Ob3w0AV
+	 EAHJV3y4+eQ4ACcgRRGHCj0/N87olN9Ft5RqpgKJ6svKlL4X77SA1Hlqua7c0ahbaO
+	 wCUekQW9UHIDwYEpvh5YoMPT0ECfUJpbkTWeewSm45YFw23rGE6T1D4q/KWZILhFBw
+	 WLbOg4D9PSQXNxfUePJgIAA/WLO6n5sOPmrpQD80UpCnqfwg0TEcs4mLhCksZ9RKYG
+	 hO4JARhH4zptniy0StlX1YhOaCmvpQrUAcTCyuwmsrjuejqMsQNC3DfhufeVKcYXVt
+	 lzw8zswNHlax1DtMpHoR6QsEFKoSS93EB2nCsXLpVY5tNc9lsbzsRYnKBH/PKUhIME
+	 Hv9mQv337NSFw3/9Cb6CsoO7FOV73TWeSmEH5mGIJX5M0inpMdycsVMLD6hn5GcCGd
+	 vafWt+Pllb+52zdt+SIrLu6o=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AD02440E0212;
+	Wed, 26 Feb 2025 17:19:29 +0000 (UTC)
+Date: Wed, 26 Feb 2025 18:19:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, dave.hansen@linux.intel.com
+Subject: Re: [PATCH 2/6] x86/msr-index: Define MSR index and bit for the
+ microcode staging feature
+Message-ID: <20250226171923.GMZ79NG_8wDtZ8vyWH@fat_crate.local>
+References: <20241001161042.465584-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-3-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20241211014213.3671-3-chang.seok.bae@intel.com>
 
-Add bindings for the Lumissil/Ingenic X1600 SoC.
+On Tue, Dec 10, 2024 at 05:42:08PM -0800, Chang S. Bae wrote:
+> The microcode staging feature involves two key MSR entities, the
+> presence of which is indicated by bit 16 of IA32_ARCH_CAPABILITIES:
+> 
+> * Bit 4 in IA32_MCU_ENUMERATION shows the availability of the microcode
+>   staging feature.
+> 
+> * Staging is managed through MMIO registers, with
+>   IA32_MCU_STAGING_MBOX_ADDR MSR specifying the physical address of the
+>   first MMIO register.
+> 
+> Define the MSR index and bit assignments, helping the upcoming staging
+> code to make use of the hardware feature.
+> 
+> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+> ---
+>  arch/x86/include/asm/msr-index.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Merge this patch with the patch where those MSR bits are used - no need for
+a separate one.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-index 890961826c6f0..84e960255a36d 100644
---- a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.yaml
-@@ -42,6 +42,7 @@ properties:
-           - ingenic,jz4780-pinctrl
-           - ingenic,x1000-pinctrl
-           - ingenic,x1500-pinctrl
-+          - ingenic,x1600-pinctrl
-           - ingenic,x1830-pinctrl
-           - ingenic,x2000-pinctrl
-           - ingenic,x2100-pinctrl
-@@ -81,6 +82,7 @@ patternProperties:
-           - ingenic,jz4780-gpio
-           - ingenic,x1000-gpio
-           - ingenic,x1500-gpio
-+          - ingenic,x1600-gpio
-           - ingenic,x1830-gpio
-           - ingenic,x2000-gpio
-           - ingenic,x2100-gpio
 -- 
-2.47.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
