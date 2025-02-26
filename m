@@ -1,257 +1,113 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E9D1A00D1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:34:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754A985931
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740573247; cv=none; b=hYTC9cP3uX4SNovnyNcAsz0jU9EzG/1zVbUX08MiQ2aFUgi3RNIHO/LWCKGwMSMJhg9JuXEqLm8/cGb3YyQQqYM3W3DJc7tnRV2Ei9oZ9NTeuhdaJQvJhZS3pVyyKnXW+au1Dj4VmMXc60ZUIKVxBKPYBSQNhtvSRs7bI97ggZE=
+	t=1740573293; cv=none; b=ZaMs//KCja86zFOGS5bewP1msFvzCLAnO+ZD9jIW4tiTb1mb5g4s0fd51ZfIcuWzPL4i+5yc7kDZ3KP2gwB7ynk/aQUgwQS2OYwg4NfoT4H9u+2cRLX2+D3GrSKc/GyQm587mBhXGvPbqzX818A6xnpkNfjLl+ms7uq7HCVnDyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740573247; c=relaxed/simple;
-	bh=QGCcgrerBtCitrFyUHoak79bGfEvyYUxi46inAzFuQ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OsM77r80bjVSVOmjycl23NlWoO+ecng1QCmaNDiD0iYn1Pbhwz7zdO5EzLCz3wHZI80JprATQAp6HJ0nW7lHTIBovVdR8/vzpD4JGOcpwG2BI+LxoxfTGQQ/vmyGmE6878dLuGXsqppyU/Opsl4VWZntJPaIOOV7xXz6jsFwN3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SCgT3FL2; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740573293; c=relaxed/simple;
+	bh=PQOqhMTAND0WfUVL/15Gcri8L3CHX0g9HC1V7Q7Zqjk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=G3xm49Xu0d5aB8ua+UjWuhylvHRkdpAVh7+yEQKqWLK/tvXkbEhXutLwtTkcQn3I4ZUS8ZkgziXSa9RZ2tXHgKZsYCd6RUVP2uL93BbZNRX+0DKg/SLRiMm5+sj7axRHQa5btDqBKkBF9ZZBOTC8lvVyuvYtcniMQXeeVQeST/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RLq943lP; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SCgT3FL2"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc3027c7aeso13211172a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 04:34:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740573245; x=1741178045; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=thORHaa0nHO42oQf0yI+R4Ole7z2L1zPAr3s/1qHHtI=;
-        b=SCgT3FL2JHbXiv5boYKNTlwJvKw2av2fjyE7aFRDxa4y0NasUMZ/y27YOgEZq+lzT2
-         BU9mKTH2CeJkXzT8UokqyuWqxtKSDDoX3hgEmtd3ijsKoRO4uiCR8fDwHf/fjBXINCdE
-         2tkAhrLJpYkLPM5zqyV13lw++JBevvz/Gu12HUBXF86Cc9HNWpJXr8Tzos80l5OcWMi7
-         wBsWGnlTxntsy9arnjMs/+UvorePHwZaOlsozqWRi//4spNcx5us0yontgUsI0eQpfDJ
-         4R53tPtfqt4Kmo3IupVRd20tnmSsGlU195XYFH2Xm5HjWg8lqvNCzkVnGW+Y5rtfuAEN
-         c4Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740573245; x=1741178045;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=thORHaa0nHO42oQf0yI+R4Ole7z2L1zPAr3s/1qHHtI=;
-        b=HaprjH+ggvgr/vDIJ1ll3kvq8V4VWv9Y/NfRFF/+n79knB0Bnyg5FdmJfcGkV0E7qe
-         x7mf7mRN3q9wwrRO3O+ZI4cHKpJGeV2acrJpx4FOT9VaNKf8dRkBMSLdCtZGRFvIH19B
-         8x+QKz+RJiOvi3zjlKj8u3cZmi2qNz8kJhjWu6CWqPvzX6WuMX6f6u5ZC6V4Q2HHDdVt
-         JAhop3lqpJBKG3ziBXK2IBofzaPrq8RZawg/Iq5fPO2flWUmh2IKOEg5BLJr5fkAT2b4
-         EkeCBVRHDhueOw76u6DjlYbgiMX+J65mxIV2s234GG/hTj9fyPb1Zgo4S7zjSLpkS5Zk
-         328Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVIrG9bPJbLL+gDDVVR5MzpZhMLHoPTb9650QtLsZAWUjtAEybY0VP+Icud1Jh3+gGmGymYQOl1Lc2vAN8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkTpjrMVA+uv4y43FaPAdqqhnvdRifcfVl/9qga4mlGUWIs+Bv
-	PUFNtYIbUQNSPg3JCPRz50piZvcNhtn6EU8LiRR05XIx2/eNElGr9ZHuCFqNRmo=
-X-Gm-Gg: ASbGncuRbTBGktJ3i53UAT43CQJE1Dmq+OXNeKyFu1MfKKUix1yRAaBMmGHl1nNg610
-	rtBCyl9tkFaw5Eae3/qD89T+oZiY9u+sTp1xqWXBEHJJfSuQ8URaCR+9H7ZhZiqe1haM4T0OY/o
-	Zj2xkVVd3BGuPOvBi/bAhGCiI6L6PUxFrjFih31EAuwmyV/RUXlA1fmlm+b5TJp/bJUU00xYqBX
-	cMP89vvaZlkW2cH7Iks1QscmbB2Jm+neH8b93dBxBiBLtQpaux/8A2OfD7gXBFsv7iAdn8QY6aU
-	8eAqbdLwb+rVtihALenzn78=
-X-Google-Smtp-Source: AGHT+IFXVKub4Te8Y+5zo1pivgTmLAxms5yC3rfs7Iy2+cnhuxz7ONibXZPnzKSA6ohsSyQFBFtM/A==
-X-Received: by 2002:a17:90b:3c84:b0:2fc:c262:ef4b with SMTP id 98e67ed59e1d1-2fce86cf0e0mr38933575a91.18.1740573245059;
-        Wed, 26 Feb 2025 04:34:05 -0800 (PST)
-Received: from [127.0.1.1] ([112.64.61.158])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825d2ed3sm1352479a91.29.2025.02.26.04.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 04:34:04 -0800 (PST)
-From: Jun Nie <jun.nie@linaro.org>
-Date: Wed, 26 Feb 2025 20:31:04 +0800
-Subject: [PATCH v7 15/15] drm/msm/dpu: Enable quad-pipe for DSC and
- dual-DSI case
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RLq943lP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740573292; x=1772109292;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=PQOqhMTAND0WfUVL/15Gcri8L3CHX0g9HC1V7Q7Zqjk=;
+  b=RLq943lPXqyeu3LdaW1oOdcOwDH8yknj9tI+fqhQvrNQukFumyjBvr+n
+   2WeKFLb0QusF/Re76JDsyKKp9v0fSHV98RhhQq/6RRzbd36U6Y620lfm5
+   moHTuA7NtuPk5r04fqGSAbGyi7/d3dTPYkbrP2kxjoirc1UpUJtQG02Hl
+   SChksU4Sh24mbBJqPrv5+04E9gGmnwxmR2ahiHlNkNFKYo+HpyfzAeuKx
+   oEICnqs3Ibmz6y866W36tOahu0Eig3SzzeA20bJc4S0KipVJX4Mfercj3
+   JdpRk35Qz8LefxWNFekl8Ze/NQGj/x+97lvaXg9CS5SKQvLImMRSpZShV
+   w==;
+X-CSE-ConnectionGUID: 8SDEedfgSEmD/vZvXVftLQ==
+X-CSE-MsgGUID: 5dXmcKA7TguK5a6nNsi6Gg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41611108"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="41611108"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 04:34:51 -0800
+X-CSE-ConnectionGUID: L5qt3kwJTrWwShSWsgB/rA==
+X-CSE-MsgGUID: Yjt9/YOXTz+UVXk2BQpSYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
+   d="scan'208";a="116476092"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 26 Feb 2025 04:34:50 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnGch-000Bh9-0c;
+	Wed, 26 Feb 2025 12:34:47 +0000
+Date: Wed, 26 Feb 2025 20:33:19 +0800
+From: kernel test robot <lkp@intel.com>
+To: Filipe Manana <fdmanana@suse.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	David Sterba <dsterba@suse.com>, Josef Bacik <josef@toxicpanda.com>
+Subject: WARNING: modpost: "cmpxchg8b_emu" [fs/btrfs/btrfs.ko] has no CRC!
+Message-ID: <202502262004.CMcvv66T-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-15-8d5f5f426eb2@linaro.org>
-References: <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-0-8d5f5f426eb2@linaro.org>
-In-Reply-To: <20250226-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v7-0-8d5f5f426eb2@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Jun Nie <jun.nie@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740573128; l=6430;
- i=jun.nie@linaro.org; s=20240403; h=from:subject:message-id;
- bh=QGCcgrerBtCitrFyUHoak79bGfEvyYUxi46inAzFuQ0=;
- b=Dxnr+cuGjBLFYOjYttwaBWRQa/F4no/cLNx5YXYk/r01UpvfnftYFotv/Z932e7GxuhVv0vva
- lufHxM0P5aYCUCnCnLJqfIXJ3LzMBW6jj+kHRBdL9f46Awyt0fSPnwT
-X-Developer-Key: i=jun.nie@linaro.org; a=ed25519;
- pk=MNiBt/faLPvo+iJoP1hodyY2x6ozVXL8QMptmsKg3cc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-To support high-resolution cases that exceed the width limitation of
-a pair of SSPPs, or scenarios that surpass the maximum MDP clock rate,
-additional pipes are necessary to enable parallel data processing
-within the SSPP width constraints and MDP clock rate.
+Hi Filipe,
 
-Request 4 mixers and 4 DSCs for high-resolution cases where both DSC
-and dual interfaces are enabled. More use cases can be incorporated
-later if quad-pipe capabilities are required.
+FYI, the error/warning still remains.
 
-Signed-off-by: Jun Nie <jun.nie@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |  6 ++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 28 ++++++++++++++++++------
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |  2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |  2 +-
- 6 files changed, 28 insertions(+), 14 deletions(-)
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ac9c34d1e45a4c25174ced4fc0cfc33ff3ed08c7
+commit: 1020443840569535f6025a855958f07ea3eebf71 btrfs: make the extent map shrinker run asynchronously as a work queue job
+date:   4 months ago
+config: um-randconfig-r054-20230701 (https://download.01.org/0day-ci/archive/20250226/202502262004.CMcvv66T-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250226/202502262004.CMcvv66T-lkp@intel.com/reproduce)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index 9405453cbf5d852e72a5f954cd8c6aed3a222723..c6e8a6cbb5c3f480b30594e0c33f601e4d6fb594 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -200,7 +200,7 @@ static int dpu_crtc_get_lm_crc(struct drm_crtc *crtc,
- 		struct dpu_crtc_state *crtc_state)
- {
- 	struct dpu_crtc_mixer *m;
--	u32 crcs[CRTC_DUAL_MIXERS];
-+	u32 crcs[CRTC_QUAD_MIXERS];
- 
- 	int rc = 0;
- 	int i;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-index b14bab2754635953da402d09e11a43b9b4cf4153..38820d05edb8b3003971dc6dc675ba8ede847be8 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h
-@@ -210,7 +210,7 @@ struct dpu_crtc_state {
- 
- 	bool bw_control;
- 	bool bw_split_vote;
--	struct drm_rect lm_bounds[CRTC_DUAL_MIXERS];
-+	struct drm_rect lm_bounds[CRTC_QUAD_MIXERS];
- 
- 	uint64_t input_fence_timeout_ns;
- 
-@@ -218,10 +218,10 @@ struct dpu_crtc_state {
- 
- 	/* HW Resources reserved for the crtc */
- 	u32 num_mixers;
--	struct dpu_crtc_mixer mixers[CRTC_DUAL_MIXERS];
-+	struct dpu_crtc_mixer mixers[CRTC_QUAD_MIXERS];
- 
- 	u32 num_ctls;
--	struct dpu_hw_ctl *hw_ctls[CRTC_DUAL_MIXERS];
-+	struct dpu_hw_ctl *hw_ctls[CRTC_QUAD_MIXERS];
- 
- 	enum dpu_crtc_crc_source crc_source;
- 	int crc_frame_skip_count;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index c89a5da0fa8321e9082d5aee304fa16402bb4ad9..d4719b45f4cdd5d1f0bd585283c0c16f1df2f1f2 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -54,7 +54,7 @@
- #define MAX_PHYS_ENCODERS_PER_VIRTUAL \
- 	(MAX_H_TILES_PER_DISPLAY * NUM_PHYS_ENCODER_TYPES)
- 
--#define MAX_CHANNELS_PER_ENC 2
-+#define MAX_CHANNELS_PER_ENC 4
- 
- #define IDLE_SHORT_TIMEOUT	1
- 
-@@ -664,9 +664,13 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 
- 	/* Datapath topology selection
- 	 *
--	 * Dual display
-+	 * Dual display without DSC
- 	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
- 	 *
-+	 * Dual display with DSC
-+	 * 2 LM, 2 INTF ( Split display using 2 interfaces)
-+	 * 4 LM, 2 INTF ( Split display using 2 interfaces)
-+	 *
- 	 * Single display
- 	 * 1 LM, 1 INTF
- 	 * 2 LM, 1 INTF (stream merge to support high resolution interfaces)
-@@ -691,10 +695,20 @@ static struct msm_display_topology dpu_encoder_get_topology(
- 		 * 2 DSC encoders, 2 layer mixers and 1 interface
- 		 * this is power optimal and can drive up to (including) 4k
- 		 * screens
-+		 * But for dual display case, we prefer 4 layer mixers. Because
-+		 * the resolution is always high in the case and 4 DSCs are more
-+		 * power optimal.
- 		 */
--		topology.num_dsc = 2;
--		topology.num_lm = 2;
--		topology.num_intf = 1;
-+
-+		if (intf_count == 2 && dpu_kms->catalog->dsc_count >= 4) {
-+			topology.num_dsc = 4;
-+			topology.num_lm = 4;
-+			topology.num_intf = 2;
-+		} else {
-+			topology.num_dsc = 2;
-+			topology.num_lm = 2;
-+			topology.num_intf = 1;
-+		}
- 	}
- 
- 	return topology;
-@@ -2189,8 +2203,8 @@ static void dpu_encoder_helper_reset_mixers(struct dpu_encoder_phys *phys_enc)
- 	struct dpu_hw_mixer_cfg mixer;
- 	int i, num_lm;
- 	struct dpu_global_state *global_state;
--	struct dpu_hw_blk *hw_lm[2];
--	struct dpu_hw_mixer *hw_mixer[2];
-+	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
-+	struct dpu_hw_mixer *hw_mixer[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_ctl *ctl = phys_enc->hw_ctl;
- 
- 	memset(&mixer, 0, sizeof(mixer));
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-index 63f09857025c2004dcb56bd33e9c51f8e0f80e48..a9e122243dce9006aaa582a1537980c86b6203a4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h
-@@ -302,7 +302,7 @@ static inline enum dpu_3d_blend_mode dpu_encoder_helper_get_3d_blend_mode(
- 
- 	/* Use merge_3d unless DSC MERGE topology is used */
- 	if (phys_enc->split_role == ENC_ROLE_SOLO &&
--	    dpu_cstate->num_mixers == CRTC_DUAL_MIXERS &&
-+	    (dpu_cstate->num_mixers != 1) &&
- 	    !dpu_encoder_use_dsc_merge(phys_enc->parent))
- 		return BLEND_3D_H_ROW_INT;
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 4cea19e1a20380c56ae014f2d33a6884a72e0ca0..77a7a5375d545483edb316e8428df12212191362 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -24,7 +24,7 @@
- #define DPU_MAX_IMG_WIDTH 0x3fff
- #define DPU_MAX_IMG_HEIGHT 0x3fff
- 
--#define CRTC_DUAL_MIXERS	2
-+#define CRTC_QUAD_MIXERS	4
- 
- #define MAX_XIN_COUNT 16
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-index 74bf3ab9d6cfb8152b32d89a6c66e4d92d5cee1d..804858e69e7da1c8c67c725aa462c1a558d1b402 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-@@ -34,7 +34,7 @@
- #define DPU_MAX_PLANES			4
- #endif
- 
--#define STAGES_PER_PLANE		1
-+#define STAGES_PER_PLANE		2
- #define PIPES_PER_STAGE			2
- #define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
- #ifndef DPU_MAX_DE_CURVES
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502262004.CMcvv66T-lkp@intel.com/
+
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
+
+WARNING: modpost: EXPORT symbol "cmpxchg8b_emu" [vmlinux] version generation failed, symbol will not be versioned.
+Is "cmpxchg8b_emu" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: EXPORT symbol "csum_partial" [vmlinux] version generation failed, symbol will not be versioned.
+Is "csum_partial" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: EXPORT symbol "csum_partial_copy_generic" [vmlinux] version generation failed, symbol will not be versioned.
+Is "csum_partial_copy_generic" prototyped in <asm/asm-prototypes.h>?
+WARNING: modpost: "csum_partial" [fs/nfsd/nfsd.ko] has no CRC!
+>> WARNING: modpost: "cmpxchg8b_emu" [fs/btrfs/btrfs.ko] has no CRC!
+WARNING: modpost: "cmpxchg8b_emu" [fs/ceph/ceph.ko] has no CRC!
+WARNING: modpost: "cmpxchg8b_emu" [lib/test_lockup.ko] has no CRC!
+WARNING: modpost: "csum_partial" [drivers/net/vxlan/vxlan.ko] has no CRC!
+WARNING: modpost: "csum_partial" [drivers/net/geneve.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/sched/act_csum.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/sched/act_mpls.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/ipv4/fou.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/ipv6/ip6_tunnel.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/dsa/dsa_core.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/dsa/tag_dsa.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/dsa/tag_lan9303.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/dsa/tag_ocelot.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/wireless/cfg80211.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/sunrpc/sunrpc.ko] has no CRC!
+WARNING: modpost: "cmpxchg8b_emu" [net/sunrpc/auth_gss/rpcsec_gss_krb5.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/mac80211/mac80211.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/batman-adv/batman-adv.ko] has no CRC!
+WARNING: modpost: "csum_partial" [net/openvswitch/openvswitch.ko] has no CRC!
 
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
