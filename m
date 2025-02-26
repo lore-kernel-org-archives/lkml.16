@@ -1,107 +1,135 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AB1B3FB0E;
-	Wed, 26 Feb 2025 16:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5919C553;
+	Wed, 26 Feb 2025 16:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740586764; cv=none; b=YgfNbd6r1cGUsWW/TpoQbF+ffsUcMIvlJ+D9Vj56LygUU6M60vrUOydeSvNAMfDDh5vf8KNOFHkDNudwlOKe9PdRKjPx0uvCfp6QoLiJ1mwoniOVvYXvxWA3hF72DeX8oV/hxO9r9w0sm7iPA7RmGligLDICWuyp7ip8+rGxMTo=
+	t=1740586787; cv=none; b=cMQyp86G6mHZmpSqYG7XDEyJCtBvxYDuUKB5u1ZnEoY4R1xEJevFLxZsiix7i4klqUvKvu1rfd/yy2U6h1yCXf12RNHVx5vEBlrTqOSLntaHZOdPC4fxherzyEtWSMByJjoOKEh8rbFNEaKpVYXmZI1uexPBsYBXJx13SzYOwFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740586764; c=relaxed/simple;
-	bh=kVAJWJ1n9B5HqAXvAOf2QCSR41y110AB9N77022F3hA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rgLEiSGDDtpIfNLfMIfpBaHCUTqHenpNGNzxTzluMr+YeZp5QOz0MEstk5SV2znY3ZsCRHKfeJDpexv+5uDNIuIOh4kQz/9/xedRGr2R9h2vBbYgXaS4T/v9m7GXD1Y9mCvvdrEua9WZ65SGyVxijUnUwf4MtXhGKvcKUcRhHz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBGKO0eO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740586787; c=relaxed/simple;
+	bh=lRn0AHOsMFoqWupx1FVSc1w9l9wR7DHwkuByfl239KA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLVptS1Z8xGcXhoFs/0ybiskQ2QIJxt/VwBi7/mAsprvQLNCiRJpJXL0hdfMdirhMUfztjhL0INYQTYevtFkiHLmfuF7+wG05NKuXbZw2G88B5ETsHvJSfEy3W19Vhc71vNSQzdKMSHG0RErsqIEnhz2vEFbXLyJWY46TaNIWW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Yuy4eTAO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBGKO0eO"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-439a4dec9d5so267355e9.0;
-        Wed, 26 Feb 2025 08:19:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740586761; x=1741191561; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t7oIbL6Oq4nSHg07LEL+0/DEW8r33JxAc53XxQi3IME=;
-        b=NBGKO0eOuTOSDlD8sla8qt2JXaeuCOPy60ZrVKFXgq/OAzwxNkIxmUY0fNnVMJpWKX
-         /3O4K0UhzDnGc9ccKfVHQ76S/DYlm7jPQMWfK+tYRdYeLoz6F/DcvgcnTZSxKKSnlTWn
-         lywLDeFsWeX+rjpymlPP7RVsjm5w61D8RcV47g4n4Vfp0LyElgoOBzdvSVKMt/htvA9i
-         tOUFlB4UNQekGbEDkup5BLZpJ1kdqEau7u+Mhf6y6+Qqg6hVriOekyNmKaFBzCXaKWtF
-         XIj62gKEECLN+qqI04ka4SjMh5VSvPhMNtGLxGKjNY74kzllp2I3swu4EnFZpULtejjy
-         illw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740586761; x=1741191561;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t7oIbL6Oq4nSHg07LEL+0/DEW8r33JxAc53XxQi3IME=;
-        b=VFjLeUwynXK0s9QuDmYSbt0Cg7KhqBwJeRTTRnIwwIXtbE3WSA5sfvkR+K2Z8QoWoV
-         dZFWYOh+k3LDmm64+IwM7DOZJzepKBPiZ86EMszBK6MoVqXehIheno99TfJRJ9/pH6Y3
-         Lk5FuD9HPBTw7b2Tv6o8VBsimDscG3FCRCTFGcfMWJtrNc6QlM1f9zQTiFggoUfcBYW+
-         OiJoQOHnTZwANhEaHOl3xzy9okJGs1GM8HPQLGDhTyMGKCFZDFSGlBlbsViEjzAjVF9F
-         gbI5JVkssPwa4h4/I1UYdzcr130c25to7+RtYlyKFglrDAwYqbX2BtyHsqtxtQExeBNO
-         OC2A==
-X-Forwarded-Encrypted: i=1; AJvYcCXZyFo40EGUT6njLCk18OdKFsXHz5Ltrzwa1Ni8rxW6gH0Mp4s6D4dziDeCCMUEpMNlwXrA8Si1tmSoTNU=@vger.kernel.org, AJvYcCXfrjgepbWw6UfUc18LpcrXjdj7yZyjlD1noOseYjwxs3XkUQbLUmHH8HxfdisL22pEOBJyM1TujeVyh50=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz81AnIDTlClZwjoIIq5gAAAIAnheO9LXJDax2nzm2LeWbbu1uV
-	tJipGrmVPO9qsRuLbHUmxfyEF69wXpEj6MwYfmMz5/qM0HVgk3TV
-X-Gm-Gg: ASbGncvvU3oL5oW4WQBGHno7H70QL7vlaN6yt44cTJOWZDW2i8dgzr3EAVUKeVjBdLl
-	Ngd4ziTAZBgqzW2h2g1Z3KToGsWnx4SRyw/l3KiLUTWfS2WZO3L/hveMyCeB13yp29vZ6hqgNxZ
-	tfsrI+Z9rAgyAp8/nNQ3RbCetNfjVgwzdLm5dlpawavfDxgarfu1tyo3B57GD5oHLjj1IKflcZe
-	QvPFFnrUbrujPg6H26Exg6qxXBfnVDfdlPu6s/r+iqENMcLm+GBPn/zfZYPupQjq3BOZynYDW/i
-	SWVUqVby372SYs32skJ9rSwZPDU=
-X-Google-Smtp-Source: AGHT+IFCHrP0DmNTDiQaKF5lTigPtiLat3d0zHJOGbPCRd6J2ldYAIFvsJPwNG1s+zkxJZVh4LfRHg==
-X-Received: by 2002:a05:600c:154e:b0:439:a0a3:a15 with SMTP id 5b1f17b1804b1-43ab0f3c907mr103513685e9.14.1740586761203;
-        Wed, 26 Feb 2025 08:19:21 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba5397d2sm27064705e9.22.2025.02.26.08.19.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 08:19:20 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Yuy4eTAO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F091EC4CED6;
+	Wed, 26 Feb 2025 16:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740586787;
+	bh=lRn0AHOsMFoqWupx1FVSc1w9l9wR7DHwkuByfl239KA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yuy4eTAOVMDqVHDGvlovhGK7FUE4cbUvGC5oNLtD61UuT14HkROBt6g3qlszvLdoW
+	 7LbTvI19XBCfKDa+iZ0Vbyc8PvYU9dVx9y+o5j6R+9E6DyztAz/X848sXZkhsAvAWr
+	 VMol5F2Sb92kQmbFIV1C5XRnMdq7m0zfvqr5l+UI=
+Date: Wed, 26 Feb 2025 08:18:37 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, stable@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ASoC: mediatek: mt8188: Fix uninitialized variable msk
-Date: Wed, 26 Feb 2025 16:18:47 +0000
-Message-ID: <20250226161847.567160-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+Subject: Re: [REGRESSION] Chrome and VSCode breakage with the commit
+ b9b588f22a0c
+Message-ID: <2025022627-portable-malt-41c1@gregkh>
+References: <874j0lvy89.wl-tiwai@suse.de>
+ <dede396a-4424-4e0f-a223-c1008d87a6a8@oracle.com>
+ <87jz9d5cdp.wl-tiwai@suse.de>
+ <263acb8f-2864-4165-90f7-6166e68180be@oracle.com>
+ <87h64g4wr1.wl-tiwai@suse.de>
+ <7a4072d6-3e66-4896-8f66-5871e817d285@oracle.com>
+ <2025022657-credit-undrilled-81f1@gregkh>
+ <ed3bb539-df59-40a2-bbd9-0d2efd36ba07@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed3bb539-df59-40a2-bbd9-0d2efd36ba07@oracle.com>
 
-The variable msk not initialized and is being bit-wise or'd with values
-in a for-loop, leading to an undefined result. Fix this by initializing
-msk to zero before the for-loop.
+On Wed, Feb 26, 2025 at 10:56:46AM -0500, Chuck Lever wrote:
+> On 2/26/25 9:26 AM, Greg KH wrote:
+> > On Wed, Feb 26, 2025 at 09:20:20AM -0500, Chuck Lever wrote:
+> >> On 2/26/25 9:16 AM, Takashi Iwai wrote:
+> >>> On Wed, 26 Feb 2025 15:11:04 +0100,
+> >>> Chuck Lever wrote:
+> >>>>
+> >>>> On 2/26/25 3:38 AM, Takashi Iwai wrote:
+> >>>>> On Sun, 23 Feb 2025 16:18:41 +0100,
+> >>>>> Chuck Lever wrote:
+> >>>>>>
+> >>>>>> On 2/23/25 3:53 AM, Takashi Iwai wrote:
+> >>>>>>> [ resent due to a wrong address for regression reporting, sorry! ]
+> >>>>>>>
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> we received a bug report showing the regression on 6.13.1 kernel
+> >>>>>>> against 6.13.0.  The symptom is that Chrome and VSCode stopped working
+> >>>>>>> with Gnome Scaling, as reported on openSUSE Tumbleweed bug tracker
+> >>>>>>>   https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>>>
+> >>>>>>> Quoting from there:
+> >>>>>>> """
+> >>>>>>> I use the latest TW on Gnome with a 4K display and 150%
+> >>>>>>> scaling. Everything has been working fine, but recently both Chrome
+> >>>>>>> and VSCode (installed from official non-openSUSE channels) stopped
+> >>>>>>> working with Scaling.
+> >>>>>>> ....
+> >>>>>>> I am using VSCode with:
+> >>>>>>> `--enable-features=UseOzonePlatform --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto` and for Chrome, I select `Preferred Ozone platform` == `Wayland`.
+> >>>>>>> """
+> >>>>>>>
+> >>>>>>> Surprisingly, the bisection pointed to the backport of the commit
+> >>>>>>> b9b588f22a0c049a14885399e27625635ae6ef91 ("libfs: Use d_children list
+> >>>>>>> to iterate simple_offset directories").
+> >>>>>>>
+> >>>>>>> Indeed, the revert of this patch on the latest 6.13.4 was confirmed to
+> >>>>>>> fix the issue.  Also, the reporter verified that the latest 6.14-rc
+> >>>>>>> release is still affected, too.
+> >>>>>>>
+> >>>>>>> For now I have no concrete idea how the patch could break the behavior
+> >>>>>>> of a graphical application like the above.  Let us know if you need
+> >>>>>>> something for debugging.  (Or at easiest, join to the bugzilla entry
+> >>>>>>> and ask there; or open another bug report at whatever you like.)
+> >>>>>>>
+> >>>>>>> BTW, I'll be traveling tomorrow, so my reply will be delayed.
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> thanks,
+> >>>>>>>
+> >>>>>>> Takashi
+> >>>>>>>
+> >>>>>>> #regzbot introduced: b9b588f22a0c049a14885399e27625635ae6ef91
+> >>>>>>> #regzbot monitor: https://bugzilla.suse.com/show_bug.cgi?id=1236943
+> >>>>>>
+> >>>>>> We received a similar report a few days ago, and are likewise puzzled at
+> >>>>>> the commit result. Please report this issue to the Chrome development
+> >>>>>> team and have them come up with a simple reproducer that I can try in my
+> >>>>>> own lab. I'm sure they can quickly get to the bottom of the application
+> >>>>>> stack to identify the misbehaving interaction between OS and app.
+> >>>>>
+> >>>>> Do you know where to report to?
+> >>>>
+> >>>> You'll need to drive this, since you currently have a working
+> >>>> reproducer.
+> >>>
+> >>> No, I don't have, I'm merely a messenger.
+> >>
+> >> Whoever was the original reporter has the ability to reproduce this and
+> >> answer any questions the Chrome team might have. Please have them drive
+> >> this. I'm already two steps removed, so it doesn't make sense for me to
+> >> report a problem for which I have no standing.
+> > 
+> > Ugh, no.  The bug was explictly bisected to the offending commit.  We
+> > should just revert that commit for now and it can come back in the
+> > future if the root-cause is found.
+> > 
+> > As the revert seems to be simple, and builds here for me, I guess I'll
+> > have to send it in. {sigh}
+> 
+> Note that reverting also reintroduces a CVE.
 
-Fixes: c1e42ec04197 ("ASoC: mediatek: mt8188: Add support for DMIC")
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- sound/soc/mediatek/mt8188/mt8188-dai-dmic.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/mediatek/mt8188/mt8188-dai-dmic.c b/sound/soc/mediatek/mt8188/mt8188-dai-dmic.c
-index 4cfbcb71d2d9..adcea7818be2 100644
---- a/sound/soc/mediatek/mt8188/mt8188-dai-dmic.c
-+++ b/sound/soc/mediatek/mt8188/mt8188-dai-dmic.c
-@@ -307,6 +307,7 @@ static int mtk_dmic_event(struct snd_soc_dapm_widget *w,
- 	switch (event) {
- 	case SND_SOC_DAPM_PRE_PMU:
- 		/* request fifo soft rst */
-+		msk = 0;
- 		for (i = dmic_num; i >= DMIC0; i--)
- 			msk |= PWR2_TOP_CON1_DMIC_FIFO_SOFT_RST_EN(i);
- 
--- 
-2.47.2
-
+That's fine, regressions are more important :)
