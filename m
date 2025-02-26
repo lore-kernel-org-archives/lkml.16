@@ -1,102 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51DB258CD1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 12:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD32258CD1;
+	Wed, 26 Feb 2025 12:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740574291; cv=none; b=sQ4w6TwfJgIxEufQu2FYXOyQ7mVoh+eyGrIdZ0Ng5ztCYGWKt8S6Yxpb+U8l8VPD+vSzTtZ82lWTaR2oGP/d6Ca7kLlQLXrYJVGyeE5/07hXNcqy4p/ykW17OHmh/1szHqLsa897MIwMaHFORBl0TdRmOaNMyo1vQGvmVQZ0jV8=
+	t=1740574332; cv=none; b=AnfQGaDCj5L5jytRJS1R6FVRx3sFcVHLoyq11NKlUvjIa6dRYqYjvuug3YKt5nQ1nFoolGvMEOpDZYXB1o6p44STr3KcuGvsEjmm2++qXzrKlRFUHS3IYZdvEAox6MMCZoXHOQJOdhke4W94dwaeI1dR2FHejI/2lKdmdTNgWBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740574291; c=relaxed/simple;
-	bh=gLgtRdYXRFEO9G9Ax4yxK0U6zVjbthiZ9FuqZisBCIE=;
+	s=arc-20240116; t=1740574332; c=relaxed/simple;
+	bh=JGlk4/4dQ34bJu4CjCMr5WRqinwgziK4sNHqtXrh+ds=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ph2SnuPgoKaFTL934znFg5/MO3M6D2XyoKiZjZeh8lT+JHThc0iXTRXYSaa7DKkg5DxjG/Ig/EIDnb3gPrZp/PnGBtrFSlhUTLD6DMlNr52MijwkMcufO9GJ18J/JB0vmzyCMAus6KjeBCii54TKcXlna/QjuOKJ4ZA0B8+YEi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TDf2yUN1; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sLEtMjdPsMuTYOUx26ln+g1UJ2BwCh04MzakT6nEMKAAosDt8Md4CjCIZk35iYxd3ZDVlujixUBYU28ws3zo9Ka3U8/AQIx5M4K7VaGOPjhbANPr4CplewP6CekhqyhniUnWRfR2HOoMM2xuNE5UrVIkDkcseFxHAadXbmlVC/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPLq2lv7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TDf2yUN1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740574288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LF/R7p8PMiEr0VAjoxkpXagHEzypvyA54y3GVLAB1Tw=;
-	b=TDf2yUN1O7hHI04JEd3gAXYpPsYmUkWTuqUvKZICvjDmDi2TnLEQk2Bn+oKbx3XZIuRH8S
-	o2wiqPXTlo60ERIX3U8tuXhY0W3ZpeesNLcpY51k7TTjKeI6bri70RW0TNZnKCCw8LVLDt
-	5jE4fpBfOEy8okaUbta+t0Q5P2iyxtU=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-321-PL7Uh6A9Nkqz9ZoiQYkNaA-1; Wed,
- 26 Feb 2025 07:51:24 -0500
-X-MC-Unique: PL7Uh6A9Nkqz9ZoiQYkNaA-1
-X-Mimecast-MFC-AGG-ID: PL7Uh6A9Nkqz9ZoiQYkNaA_1740574283
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25C3919783B6;
-	Wed, 26 Feb 2025 12:51:23 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.247])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id E5B421800945;
-	Wed, 26 Feb 2025 12:51:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 26 Feb 2025 13:50:52 +0100 (CET)
-Date: Wed, 26 Feb 2025 13:50:48 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] task_work: Consume only item at a time while invoking
- the callbacks.
-Message-ID: <20250226125048.GC8995@redhat.com>
-References: <20250221170530.L3yMvO0i@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPLq2lv7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F043C4CED6;
+	Wed, 26 Feb 2025 12:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740574332;
+	bh=JGlk4/4dQ34bJu4CjCMr5WRqinwgziK4sNHqtXrh+ds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OPLq2lv79TwtWjDM21fe2SkmG1VW6txtJvF8LgdsDJswnignJcKUGfM14yYJYOKNA
+	 KQ0Dff+RcE4fENAOaS71Olw64vgN0hhgQPuuFNj2BAHHSHOqg6Q5/vdtt2Jp05lj4S
+	 BAITyDsgNNdvYcypfZ6jBdNleJllNpe5IfovuiSv6PQfHo8HxMrbht2wJJCsW2gV5S
+	 dBuzvDllkg0dhpR+dyvm5kf+5WhhGJVd1Xn1Ns3BF4TTl1GoXnJykmAzVeTuVq1fVv
+	 w4BV45y2TbGsPDiXiszS+77loffjHqkp69U4Aly8bH2lRlWbxkytC/jQn4O8d4KKpp
+	 PPAn1h9YuWg8A==
+Date: Wed, 26 Feb 2025 13:52:09 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 2/3] rcu/exp: Remove confusing needless full barrier on
+ task unblock
+Message-ID: <Z78OeeyarjDB63Dj@localhost.localdomain>
+References: <20250213232559.34163-1-frederic@kernel.org>
+ <20250213232559.34163-3-frederic@kernel.org>
+ <20250225215908.GA1812344@joelnvbox>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250221170530.L3yMvO0i@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250225215908.GA1812344@joelnvbox>
 
-On 02/21, Sebastian Andrzej Siewior wrote:
->
-> Yi and syzbot managed to hang the task within task_run().
->
-> The problem is
->  task_work_run() -> __fput() -> perf_release() ->
->  perf_event_release_kernel() -> _free_event() ->
->  perf_pending_task_sync() -> task_work_cancel() failed ->
->  rcuwait_wait_event().
->
-> Once task_work_run() is running, the list of callbacks removed from the
-> task_struct and from this point on task_work_cancel() can't remove any
-> pending and not yet started work items.
+Le Tue, Feb 25, 2025 at 04:59:08PM -0500, Joel Fernandes a écrit :
+> On Fri, Feb 14, 2025 at 12:25:58AM +0100, Frederic Weisbecker wrote:
+> > A full memory barrier in the RCU-PREEMPT task unblock path advertizes
+> > to order the context switch (or rather the accesses prior to
+> > rcu_read_unlock()) with the expedited grace period fastpath.
+> > 
+> > However the grace period can not complete without the rnp calling into
+> > rcu_report_exp_rnp() with the node locked. This reports the quiescent
+> > state in a fully ordered fashion against updater's accesses thanks to:
+> > 
+> > 1) The READ-SIDE smp_mb__after_unlock_lock() barrier accross nodes
+> >    locking while propagating QS up to the root.
+> > 
+> > 2) The UPDATE-SIDE smp_mb__after_unlock_lock() barrier while holding the
+> >    the root rnp to wait/check for the GP completion.
+> > 
+> > 3) The (perhaps redundant given step 1) and 2)) smp_mb() in rcu_seq_end()
+> >    before the grace period completes.
+> > 
+> > This makes the explicit barrier in this place superflous. Therefore
+> > remove it as it is confusing.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > ---
+> >  kernel/rcu/tree_plugin.h | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > index 3c0bbbbb686f..d51cc7a5dfc7 100644
+> > --- a/kernel/rcu/tree_plugin.h
+> > +++ b/kernel/rcu/tree_plugin.h
+> > @@ -534,7 +534,6 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+> >  		WARN_ON_ONCE(rnp->completedqs == rnp->gp_seq &&
+> >  			     (!empty_norm || rnp->qsmask));
+> >  		empty_exp = sync_rcu_exp_done(rnp);
+> > -		smp_mb(); /* ensure expedited fastpath sees end of RCU c-s. */
+> 
+> I was wondering though, this is a slow path and the smp_mb() has been there
+> since 2009 or so. Not sure if it is super valuable to remove it at this
+> point. But we/I should definitely understand it.
 
-But can this patch really solve the problem?
+The point is indeed not to improve performance because this is a slowpath
+(although...). The main goal is to maintain a clear picture of the ordering
+without needless barriers that leave a taste of doubt to reviewers.
 
-Suppose we have two tasks, T1 and T2.
+> I was wondering if you could also point to the fastpath that this is racing
+> with, it is not immediately clear (to me) what this smp_mb() is pairing with
+> :(
 
-T1 does fd = perf_event_open(pid => T2->pid);
-T2 does fd = perf_event_open(pid => T1->pid);
+It is supposed to pair with the barrier in sync_exp_work_done() but then again
+this is already enforced by the smp_mb__after_unlock_lock() chained through
+rnp locking.
 
-Now, both T1 and T2 do close(fd), call task_work_run(), dequeue the
-____fput work, and finally call __fput(). Now suppose that both perf
-events fire before T1/T2 call perf_event_release_kernel/_free_event.
+Thanks.
 
-Now, T1 and T2 will hang forever in perf_pending_task_sync() waiting
-for each other. task_work_cancel(current) can't succeed with or without
-this patch.
-
-No?
-
-Oleg.
-
+> 
+> thanks,
+> 
+>  - Joel
+> 
+> 
+> 
+> 
+> 
+> >  		np = rcu_next_node_entry(t, rnp);
+> >  		list_del_init(&t->rcu_node_entry);
+> >  		t->rcu_blocked_node = NULL;
+> > -- 
+> > 2.46.0
+> > 
