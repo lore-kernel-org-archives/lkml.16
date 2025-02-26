@@ -1,121 +1,177 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E1B221711;
-	Wed, 26 Feb 2025 14:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBF321D3FE;
+	Wed, 26 Feb 2025 14:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580954; cv=none; b=B5fooeSAp+JnB/vx6yDuY1nCK2LAvsSjyCyT1Y6eOpHg/Kwbl4y/w8Ns3KuL12aVXo3UXBVfVOP0nF/vLA9BI9Q06Ay0MIaeF6CxWwRlahbQGSaN3DVz0IS8Q8r5dAubrlT/XAkWaS+NthWwinukZYmzlDLKKOphilOaSoNGtwY=
+	t=1740580972; cv=none; b=kwHM3vWvW4A3NPsH2r5Lo6jR7+SZafK7nnnNqlOCPGRRPTuYJHPFlK7vWMo9ZVNYHpppoUb0eC+TVTjKIbk6rEy1Gm2SiQpmhmobJMI/xAZnjM8Tjbvxr6qGDP64LL+UVktCkZzTiRsqG5VphLLJyR+R2Dg38g9HCH1FWzLhO7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580954; c=relaxed/simple;
-	bh=9o4ynd5OU7q/sdk9GOnxCe8bihN6fpobRfCz8WqH8+0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=L9I25WjzYT7dnajBcN4GzzhH6KQteR+Cisn0y36Ffgv1EfgsvAG9mMRP5KJCYXdWMA4d3hX4dlUNnj1vM25sHI7cxzCVETKz0xVwggtBPPekxpmp5zf14sTstXkNFbM13gGHWEYOgp5MmO6vjxnZZkggoXTe55bN8xxihrTSslI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2BcEhDu2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CVhnw3LD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740580972; c=relaxed/simple;
+	bh=L80fYVFGV8j/KWuiRZ66wUrLJVUXLJ2i31oOoMautDk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pyEgVsIK7rb8JpqwXT4p/DzgOX6y0nMOQ6B5Yt4F5dFVeN1k7zfh8TIIwPCR+h4L45ZqJdraXhtXE5nGqZhN20AqEcgWPYGLk3zreW8NnSKKMwhVj8v1ZdixQLsKieV/xjNb3b6rZxxu19Py2n0vxh24nnEz/WSmNNavL8PYJY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YVmqFcjk; arc=none smtp.client-ip=217.70.178.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2BcEhDu2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CVhnw3LD"
-Date: Wed, 26 Feb 2025 14:42:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740580950;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YVmqFcjk"
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	by mslow3.mail.gandi.net (Postfix) with ESMTP id B39B558146B;
+	Wed, 26 Feb 2025 14:28:27 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 85F5844279;
+	Wed, 26 Feb 2025 14:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740580100;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aIcwSUstoeqhAjCOmQ/dZW90SDtcJdVVqcLA8en+5Lg=;
-	b=2BcEhDu2XkRwjj3Oeky84fKvygjUH8C9PYrv+dD6ofEh1ga5jRc17GKdzKi2vRhD4zqfru
-	BOHVMSrnkDMj79IlW1hhxhiYnx845SMZ0Phs6F6IMx5G+iAzH1jr738432eyB4mbO1D5gr
-	1vSvEIe+234oTliWK9ON8/wD9pJ8Rkh2TY+Xs/sV+l6yr0A6v8KaXSJeONmGuW0dxUdl8Y
-	/whUNAFtHs7fD7SphxjD9VOaEgGk5cnzhEfJIAf3wLO7AfaY+OkYcgESH0o3XCgmYhe4ZB
-	h9ERjAZ16vc/GbC+B0+y4z1AuwkE3blrQILLNACMcVwS+3P/mkRTK6uLfcbbKQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740580950;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aIcwSUstoeqhAjCOmQ/dZW90SDtcJdVVqcLA8en+5Lg=;
-	b=CVhnw3LDBfSWeh7Wur5LLVHdaJAvmKJq3tFqgFUDpFmyTFTVkJaI93gkXg8dX5I8Bcda2A
-	Rg9If0VTJDyiKvDA==
-From: "tip-bot2 for Benjamin Berg" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu: Avoid copying dynamic FP state from init_task
- in arch_dup_task_struct()
-Cc: Benjamin Berg <benjamin.berg@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226133136.816901-1-benjamin@sipsolutions.net>
-References: <20250226133136.816901-1-benjamin@sipsolutions.net>
+	bh=srlQpvYJmp4WGJbQ2gOhstlghcIxLLDbBOH3Hms1G1E=;
+	b=YVmqFcjk0U4E+e7zKuj6Rpt4rxnNlmQ/mknWE7cS2QlmyRYYG1pX0skomC3EzGSFK0+D0F
+	LofQCcAcczK0rToLqkgTL6IcBlrchx6Td+Em78I4vSLNbZiWK81HGy3XvZ4r9UK2BY2m+s
+	t4y9WnK03LesL2wCljRBBavDBr7cQcUGTVz+SqalkLwcf72W6+PuUyj9YfmeNtygDQ7AL2
+	mQM1gdT5t/e1zEh2tTHsacPJtCQUZfENXAk/U235HEbS8uFItYZ5vSwAM2o94jAhPbDzwS
+	EC5ezudhpnVxZ2B1Yw5qFD9iXvELunSAI9SqyWyf+7aI5kLws9yeteiVn2k+6w==
+Date: Wed, 26 Feb 2025 15:28:13 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Simona Vetter <simona@ffwll.ch>, Inki Dae <inki.dae@samsung.com>, Jagan
+ Teki <jagan@amarulasolutions.com>, Marek Szyprowski
+ <m.szyprowski@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Daniel Thompson <danielt@kernel.org>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sam Ravnborg <sam@ravnborg.org>, Boris Brezillon <bbrezillon@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>, Paul Kocialkowski
+ <contact@paulk.fr>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, =?UTF-8?B?SGVy?=
+ =?UTF-8?B?dsOp?= Codina <herve.codina@bootlin.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Paul Kocialkowski
+ <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v6 14/26] drm/bridge: add support for refcounted DRM
+ bridges
+Message-ID: <20250226152813.4a1ad218@booty>
+In-Reply-To: <20250211-merciful-nyala-of-justice-a4fabb@houat>
+References: <20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com>
+	<20250206-hotplug-drm-bridge-v6-14-9d6f2c9c3058@bootlin.com>
+	<20250207-ingenious-daffodil-dugong-51be57@houat>
+	<20250210181252.5ee028d4@booty>
+	<20250211-merciful-nyala-of-justice-a4fabb@houat>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174058095002.10177.7516126754738337823.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeekvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefjedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsihhmohhnrgesfhhffihllhdrtghhpdhrtghpthhtohepihhnkhhirdgurggvsehsrghmshhunhhgrdgtohhmpdhrtghpthhtohepj
+ hgrghgrnhesrghmrghruhhlrghsohhluhhtihhonhhsrdgtohhmpdhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhhrgifnhhguhhosehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-The following commit has been merged into the x86/fpu branch of tip:
+Hi Maxime,
 
-Commit-ID:     5d3b81d4d8520efe888536b6906dc10fd1a228a8
-Gitweb:        https://git.kernel.org/tip/5d3b81d4d8520efe888536b6906dc10fd1a228a8
-Author:        Benjamin Berg <benjamin.berg@intel.com>
-AuthorDate:    Wed, 26 Feb 2025 14:31:36 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 26 Feb 2025 15:32:34 +01:00
+On Tue, 11 Feb 2025 14:10:50 +0100
+Maxime Ripard <mripard@kernel.org> wrote:
 
-x86/fpu: Avoid copying dynamic FP state from init_task in arch_dup_task_struct()
+> On Mon, Feb 10, 2025 at 06:12:52PM +0100, Luca Ceresoli wrote:
+> > Hello Maxime,
+> > 
+> > On Fri, 7 Feb 2025 12:47:51 +0100
+> > Maxime Ripard <mripard@kernel.org> wrote:
+> >   
+> > > > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > > > index ad7ba444a13e5ecf16f996de3742e4ac67dc21f1..43cef0f6ccd36034f64ad2babfebea62db1d9e43 100644
+> > > > --- a/include/drm/drm_bridge.h
+> > > > +++ b/include/drm/drm_bridge.h
+> > > > @@ -31,6 +31,7 @@
+> > > >  #include <drm/drm_encoder.h>
+> > > >  #include <drm/drm_mode_object.h>
+> > > >  #include <drm/drm_modes.h>
+> > > > +#include <drm/drm_print.h>
+> > > >  
+> > > >  struct device_node;
+> > > >  
+> > > > @@ -863,6 +864,22 @@ struct drm_bridge {
+> > > >  	const struct drm_bridge_timings *timings;
+> > > >  	/** @funcs: control functions */
+> > > >  	const struct drm_bridge_funcs *funcs;
+> > > > +
+> > > > +	/**
+> > > > +	 * @container_offset: Offset of this struct within the container
+> > > > +	 * struct embedding it. Used for refcounted bridges to free the
+> > > > +	 * embeddeing struct when the refcount drops to zero. Unused on
+> > > > +	 * legacy bridges.
+> > > > +	 */
+> > > > +	size_t container_offset;    
+> > > 
+> > > This shouldn't be in there. You can create an intermediate structure and
+> > > store both pointers for the action to consume.  
+> > 
+> > You mean to store container_offset + refcount + is_refcounted?  
+> 
+> No, I meant for the private structure pointer and the drm_bridge
+> pointer. refcount should be in drm_bridge, and I think is_refcounted
+> should be dropped.
 
-The init_task instance of struct task_struct is statically allocated and
-may not contain the full FP state for userspace. As such, limit the copy
-to the valid area of both init_task and 'dst' and ensure all memory is
-initialized.
+Storing the container pointer instead of the offset is a good idea, it
+will allow to get rid of is_refcounted: drm_bridge_is_refcounted() can
+just return "container != NULL" instead of "bridge->is_refcounted". So
+far so good.
 
-Note that the FP state is only needed for userspace, and as such it is
-entirely reasonable for init_task to not contain parts of it.
+I'm not sure about the intermediate struct you have in mind though.
 
-Fixes: 5aaeb5c01c5b ("x86/fpu, sched: Introduce CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT and use it on x86")
-Signed-off-by: Benjamin Berg <benjamin.berg@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/r/20250226133136.816901-1-benjamin@sipsolutions.net
-----
+Do you mean:
 
-v2:
-- Fix code if arch_task_struct_size < sizeof(init_task) by using
-  memcpy_and_pad.
----
- arch/x86/kernel/process.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+struct drm_bridge_pointers {
+    struct drm_bridge *bridge;
+    void              *container;
+}
 
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 6da6769..7cb52f8 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -93,7 +93,12 @@ EXPORT_PER_CPU_SYMBOL_GPL(__tss_limit_invalid);
-  */
- int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
- {
--	memcpy(dst, src, arch_task_struct_size);
-+	/* init_task is not dynamically sized (incomplete FPU state) */
-+	if (unlikely(src == &init_task))
-+		memcpy_and_pad(dst, arch_task_struct_size, src, sizeof(init_task), 0);
-+	else
-+		memcpy(dst, src, arch_task_struct_size);
-+
- #ifdef CONFIG_VM86
- 	dst->thread.vm86 = NULL;
- #endif
+?
+
+If that's what you mean, should it be embedded in drm_struct or
+allocated separately?
+
+If you mean to embed that struct in drm_bridge, then I the drm_bridge
+pointer inside the intermediate struct would be useless.
+
+If instead you mean to embed it in drm_struct: I'm not sure I see much
+benefit except maybe not exposing the container pointer to drm_bridge
+users, but I see a drawbacks: at the last put we need to find the
+container pointer to free from a struct kref pointer, which can work
+only if the container pointer is in the same struct as struct kref.
+
+Additionally, the consuming action for that struct just needs a
+drm_bridge pointer:
+
+     static void drm_bridge_put_void(void *data)
+     {
+	struct drm_bridge *bridge = (struct drm_bridge *)data;
+
+	drm_bridge_put(bridge);
+     }
+
+Can you clarify this? I'd love to have this cleanup in the next
+iteration.
+
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
