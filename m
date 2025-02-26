@@ -1,430 +1,252 @@
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [81.169.146.171])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943C018BC3F;
-	Wed, 26 Feb 2025 17:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740590548; cv=pass; b=W+O2wDjaROGpoDPqBcMe/FT52mUb9OVmQEqTxJARonnGUQrbYcgKFVD3WevsvkjkGTCm0we8BOCvKZaqdNt3CoLRAqOWc3sBaIJi1OFz+8XAt+vLWTHQOZBzxZmU5P5Ruw6kD7HeY7uTl8k7qPHK+PNfU3aKybtG5u43jfa6htQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740590548; c=relaxed/simple;
-	bh=Z9Hfm+K+FyGeBDvkxVyT2jNql2DeA3wYrpX34ASqRkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TsqtOzuUU0kqFk2rgU0t/lljlwv7WsoU6GIAZTZdFsLNjol6elBBPITtmH4s6pEOtkdcGiM89uzOtuqqQw1euKyoWY5Ia2ufGTPeMw2R17D/vYUy1EeasHGYNBHRv0tqiQ+OMNc2D4cbBmxsq2ao6XpooIatnSRuc8e/styJ++g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=Y8G+gimK; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=wnNPM06g; arc=pass smtp.client-ip=81.169.146.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425DE21CA1B;
+	Wed, 26 Feb 2025 17:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740590627; cv=none; b=HJHGN34Ye0rWE6ME2G12twJHXxQLBpdT6l7S233ZMWlzDjZ9Cd00X28Fm5vO8dMd5XWeAAgu4a2DsBuVlDvRzmaZ8Dq8s2BxWfaija0YVv9Nxz2zBanai06rui5tH3vVM5Ke+9lkNcN+TzzrGwjnLUKLS40w89VG50+BvaIGeSM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740590627; c=relaxed/simple;
+	bh=HGwnlz6pv/Fb7lL2quyyqZ4JE/enMKnRrNzyVvBqoiU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=a7dM7O+jlLsiJqaqIrs6pYM+J3FOSnCM11txlVy8I8/JKyI3CZ5TVFRPZta26s9wn+cItM+ODW6rBGjItQD2my6ttiIN9pDdZZQFuIZfCyOUHi86iqPfYKkt66KM943a9PvDsgwLxCSxj2+WMNfSzlbBZVnv8ryiNy/wMY/SAj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ldwW9sbJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="Y8G+gimK";
-	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="wnNPM06g"
-ARC-Seal: i=1; a=rsa-sha256; t=1740590184; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Z7piE03izeU4J66COYaOW0yVmv6GVgLG1JwmATkLQpkV79uhxVrBknytYAx+MtYAPa
-    8C7hn28ak7OPIu8kMxnbrq+xshXYKkEeBO0aC2SPa85+9wfEzF2LbiByUKJtfehDm1og
-    mcrtEB+MQxl9t3gNjLsBQoMIN6nWMYYDHKhbzFuKnSVYx4NZy2Vkrc5omAnZTnbPFDKr
-    4FC79PO5zWgNsgFF8ci6W/3AU6wKiRIIGhKY677y1K5ZxwbEhRx/ZWm2xcVuAe73LJYV
-    zruP1TW6qhk0h8ssUvPjNSvwokFcuNyJIETwI394tUzb9BbuoHTFluJu0awT1buM3IX/
-    ++4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0002; d=strato.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=mzJicuxq0bsDoSs0nOJMdT++dH4St9t3Mw/42pJpC4I=;
-    b=SRuKi2j7mDo6gritv+gceG7r7Dj/CbZRGtOzzvml02AQWo5/JULinrngyeHi+quYl+
-    DRlwR4MZPVIpz5tj3cBWXgEBPQrK/10R9YVL2KgFDE25T1T+Bi2T+ul28Mae2+3kabVM
-    6C7SNeJR4yf5pE3gCXYO6I6Rsz3ik9XM5eeVByKhd/5Yqw62fRu/jegnYYhPzRNpoOOY
-    F18sFN6VIJPkcEqXBSTtRn5j7tXru8ghVRN8QZpWZnE0NIpLG+5aP4OSZIaUXnbtQB1C
-    C431hkXuFaBiBA5I6l72tlunnOZajncFOjOacGUJIuqWFtP5aN6lddA+EmXZ85rx+sPy
-    6KEg==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=mzJicuxq0bsDoSs0nOJMdT++dH4St9t3Mw/42pJpC4I=;
-    b=Y8G+gimKDuzvQB1TqPG6Qx/bSyNyWD6cDl71yZfe6omXKo1WcRAJfo744QZI5iIQ3I
-    hkqBD6IKL7UNaO4SC7Fy9d5fNO/ESJvT+0m4xhT66ADIm5Z1V+igRoIVa+LDOf+4MUni
-    Mq5vBFfVG1flJSNWxgxPkJ2ymnk+hFJ1lTtT5BSlfhv5TUSGOOxKiyFbp/JNi0xlgNxE
-    LOtJpMcrvoWIzmQQKvmMPMqvUhkN1i2kyTIHGTvQeP1DFWSE+/1ikpLGPCBd6cDezDm6
-    iE6G8m9UIt78nbTMwa2P6Htx69FiFtJUIZvsvoz9sJJ1vpW9oWOsdSsZn8FkL6ZdRpXO
-    jqEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740590184;
-    s=strato-dkim-0003; d=goldelico.com;
-    h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Cc:Date:
-    From:Subject:Sender;
-    bh=mzJicuxq0bsDoSs0nOJMdT++dH4St9t3Mw/42pJpC4I=;
-    b=wnNPM06gTjW6+Y6/z8fPsVaGHXG7Bcm5CIw8BF51KW4DmOJ7pZaudN8LZ9d4qGgBjn
-    laR5OM70OKcdGftCVRAg==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeD0Z"
-Received: from localhost.localdomain
-    by smtp.strato.de (RZmta 51.2.23 DYNA|AUTH)
-    with ESMTPSA id Qe5b2211QHGOfpy
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Wed, 26 Feb 2025 18:16:24 +0100 (CET)
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>
-Cc: Andreas Kemnade <andreas@kemnade.info>,
-	Paul Boddie <paul@boddie.org.uk>,
-	Tim Bysun <tim.bysun@ingenic.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	letux-kernel@openphoenux.org,
-	"H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH 2/4] pinctrl: ingenic: add x1600 support
-Date: Wed, 26 Feb 2025 18:16:05 +0100
-Message-ID: <f633a14ccafc596e4611a1fae3e1c958ddfac2dc.1740590093.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <cover.1740590093.git.hns@goldelico.com>
-References: <cover.1740590093.git.hns@goldelico.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ldwW9sbJ"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q9o1M0015555;
+	Wed, 26 Feb 2025 17:23:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nEdct1oFohxhIryKjdAIwPhbqyjIFSucHG1dtgoTYW8=; b=ldwW9sbJdK8eVdTb
+	Y1qjMT6hmMa6r1EwpjOQBILpl9C5irTB9Ue30CgjgG2JbNu6SHXULSok6QLY7jcd
+	rPyeaJvWl03/hu8OLA2CpV+kW5F2E8B3bx8+UCtiDS4kBLGqSmt388QKqZas+7GN
+	a6kKLUxF3ApoGDLtKeDtfuQwhNNR6CSSQSPS1PRXZFophbIN07NUn9+6GTCWAtWF
+	1LBerOpzNi/bmab2A/oMAOM29YbYB++tfkK5TZn4oNk65t0ActhOYCuD8vH1pv//
+	88gHL6rQO45TQyWyUAd8tsphqu2FAhgesi9pwBFTAya4WNX7t5D6tCxbuNUGxXw2
+	3e0bTw==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prnjser-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 17:23:37 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51QHNaDp019195
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 17:23:36 GMT
+Received: from [10.216.2.27] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 26 Feb
+ 2025 09:23:32 -0800
+Message-ID: <cedf59c5-dd2a-4d1e-960e-d76e45d9c215@quicinc.com>
+Date: Wed, 26 Feb 2025 22:53:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 5/5] wifi: ath12k: Enable IPQ5424 WiFi device support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: <ath12k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        Kalle Valo
+	<kvalo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Jeff Johnson
+	<jjohnson@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Sowmiya Sree Elavalagan
+	<quic_ssreeela@quicinc.com>,
+        Saravanakumar Duraisamy
+	<quic_saradura@quicinc.com>
+References: <20250130051838.1924079-1-quic_rajkbhag@quicinc.com>
+ <20250130051838.1924079-6-quic_rajkbhag@quicinc.com>
+ <20250130-offbeat-sparkling-nyala-042b72@krzk-bin>
+Content-Language: en-US
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+In-Reply-To: <20250130-offbeat-sparkling-nyala-042b72@krzk-bin>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: lkeT0pJan9TQ6_etFbuLf8TCvP01r3Iy
+X-Proofpoint-ORIG-GUID: lkeT0pJan9TQ6_etFbuLf8TCvP01r3Iy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 bulkscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260137
 
-From: Paul Boddie <paul@boddie.org.uk>
+On 1/30/2025 2:09 PM, Krzysztof Kozlowski wrote:
+> On Thu, Jan 30, 2025 at 10:48:38AM +0530, Raj Kumar Bhagat wrote:
+>> From: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
+>>
+>> Currently, ath12k AHB (in IPQ5332) uses SCM calls to authenticate the
+>> firmware image to bring up userpd. From IPQ5424 onwards, Q6 firmware can
+>> directly communicate with the Trusted Management Engine - Lite (TME-L),
+>> eliminating the need for SCM calls for userpd bring-up.
+>>
+>> Hence, to enable IPQ5424 device support, use qcom_mdt_load_no_init() and
+>> skip the SCM call as Q6 will directly authenticate the userpd firmware.
+>>
+>> Tested-on: IPQ5424 hw1.0 AHB WLAN.WBE.1.5-01053-QCAHKSWPL_SILICONZ-1
+>> Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
+>>
+>> Signed-off-by: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
+>> Co-developed-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
+>> Signed-off-by: Saravanakumar Duraisamy <quic_saradura@quicinc.com>
+>> Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+>> ---
+>>  drivers/net/wireless/ath/ath12k/ahb.c | 80 +++++++++++++++++----------
+>>  drivers/net/wireless/ath/ath12k/ahb.h |  9 +++
+>>  2 files changed, 61 insertions(+), 28 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
+>> index d502b59a78d8..75767915dec3 100644
+>> --- a/drivers/net/wireless/ath/ath12k/ahb.c
+>> +++ b/drivers/net/wireless/ath/ath12k/ahb.c
+>> @@ -21,6 +21,9 @@ static const struct of_device_id ath12k_ahb_of_match[] = {
+>>  	{ .compatible = "qcom,ipq5332-wifi",
+>>  	  .data = (void *)ATH12K_HW_IPQ5332_HW10,
+>>  	},
+>> +	{ .compatible = "qcom,ipq5424-wifi",
+>> +	  .data = (void *)ATH12K_HW_IPQ5424_HW10,
+>> +	},
+>>  	{ }
+>>  };
+>>  
+>> @@ -398,8 +401,8 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
+>>  		ATH12K_AHB_UPD_SWID;
+>>  
+>>  	/* Load FW image to a reserved memory location */
+>> -	ret = qcom_mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys, mem_size,
+>> -			    &mem_phys);
+>> +	ret = ab_ahb->ahb_ops->mdt_load(dev, fw, fw_name, pasid, mem_region, mem_phys,
+>> +					mem_size, &mem_phys);
+>>  	if (ret) {
+>>  		ath12k_err(ab, "Failed to load MDT segments: %d\n", ret);
+>>  		goto err_fw;
+>> @@ -430,11 +433,13 @@ static int ath12k_ahb_power_up(struct ath12k_base *ab)
+>>  		goto err_fw2;
+>>  	}
+>>  
+>> -	/* Authenticate FW image using peripheral ID */
+>> -	ret = qcom_scm_pas_auth_and_reset(pasid);
+>> -	if (ret) {
+>> -		ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
+>> -		goto err_fw2;
+>> +	if (ab_ahb->scm_auth_enabled) {
+>> +		/* Authenticate FW image using peripheral ID */
+>> +		ret = qcom_scm_pas_auth_and_reset(pasid);
+>> +		if (ret) {
+>> +			ath12k_err(ab, "failed to boot the remote processor %d\n", ret);
+>> +			goto err_fw2;
+>> +		}
+>>  	}
+>>  
+>>  	/* Instruct Q6 to spawn userPD thread */
+>> @@ -491,13 +496,15 @@ static void ath12k_ahb_power_down(struct ath12k_base *ab, bool is_suspend)
+>>  
+>>  	qcom_smem_state_update_bits(ab_ahb->stop_state, BIT(ab_ahb->stop_bit), 0);
+>>  
+>> -	pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
+>> -		ATH12K_AHB_UPD_SWID;
+>> -	/* Release the firmware */
+>> -	ret = qcom_scm_pas_shutdown(pasid);
+>> -	if (ret)
+>> -		ath12k_err(ab, "scm pas shutdown failed for userPD%d: %d\n",
+>> -			   ab_ahb->userpd_id, ret);
+>> +	if (ab_ahb->scm_auth_enabled) {
+>> +		pasid = (u32_encode_bits(ab_ahb->userpd_id, ATH12K_USERPD_ID_MASK)) |
+>> +			 ATH12K_AHB_UPD_SWID;
+>> +		/* Release the firmware */
+>> +		ret = qcom_scm_pas_shutdown(pasid);
+>> +		if (ret)
+>> +			ath12k_err(ab, "scm pas shutdown failed for userPD%d\n",
+>> +				   ab_ahb->userpd_id);
+>> +	}
+>>  }
+>>  
+>>  static void ath12k_ahb_init_qmi_ce_config(struct ath12k_base *ab)
+>> @@ -707,6 +714,14 @@ static int ath12k_ahb_map_service_to_pipe(struct ath12k_base *ab, u16 service_id
+>>  	return 0;
+>>  }
+>>  
+>> +static const struct ath12k_ahb_ops ahb_ops_ipq5332 = {
+>> +	.mdt_load = qcom_mdt_load,
+>> +};
+>> +
+>> +static const struct ath12k_ahb_ops ahb_ops_ipq5424 = {
+>> +	.mdt_load = qcom_mdt_load_no_init,
+>> +};
+>> +
+>>  static const struct ath12k_hif_ops ath12k_ahb_hif_ops_ipq5332 = {
+>>  	.start = ath12k_ahb_start,
+>>  	.stop = ath12k_ahb_stop,
+>> @@ -1041,19 +1056,9 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
+>>  	struct device_node *mem_node;
+>>  	struct ath12k_ahb *ab_ahb;
+>>  	enum ath12k_hw_rev hw_rev;
+>> -	u32 addr, userpd_id;
+>> +	u32 addr;
+>>  	int ret;
+>>  
+>> -	hw_rev = ath12k_ahb_get_hw_rev(pdev);
+>> -	switch (hw_rev) {
+>> -	case ATH12K_HW_IPQ5332_HW10:
+>> -		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
+>> -		userpd_id = ATH12K_IPQ5332_USERPD_ID;
+>> -		break;
+>> -	default:
+>> -		return -EOPNOTSUPP;
+>> -	}
+> 
+> You just added this code in previous patchset, why are you moving it?
+> 
 
-Add support for the Lumissil/Ingenic X1600 SoC.
+In the v6 of dependent series ([PATCH v6 00/13] wifi: ath12k: add Ath12k AHB driver
+support for IPQ5332), we have moved this part of the code in the required position.
+In the next version the above hunk will not be required.
 
-It uses shadow registers to commit changes to multiple pinctrl
-registers in parallel.
+>> -
+>>  	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+>>  	if (ret) {
+>>  		dev_err(&pdev->dev, "Failed to set 32-bit coherent dma\n");
+>> @@ -1067,13 +1072,32 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
+>>  		return -ENOMEM;
+>>  	}
+>>  
+>> +	ab_ahb = ath12k_ab_to_ahb(ab);
+>> +	ab_ahb->ab = ab;
+>> +
+>> +	hw_rev = ath12k_ahb_get_hw_rev(pdev);
+>> +	switch (hw_rev) {
+>> +	case ATH12K_HW_IPQ5332_HW10:
+>> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
+>> +		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
+>> +		ab_ahb->scm_auth_enabled = true;
+>> +		ab_ahb->ahb_ops = &ahb_ops_ipq5332;
+>> +		break;
+>> +	case ATH12K_HW_IPQ5424_HW10:
+>> +		hif_ops = &ath12k_ahb_hif_ops_ipq5332;
+>> +		ab_ahb->userpd_id = ATH12K_IPQ5332_USERPD_ID;
+>> +		ab_ahb->scm_auth_enabled = false;
+>> +		ab_ahb->ahb_ops = &ahb_ops_ipq5424;
+> 
+> Why you cannot store just proper driver data structure in match data?
+> This entire switch is redundant.
+> 
 
-Define specific Chip ID, register offsets, pin tables etc.
-
-Handling the unique X1600_GPIO_PU only for the x1600 but
-not for x1830 and above must be carefully taken into account.
-
-Co-authored-by: Andreas Kemnade <andreas@kemnade.info>
-Co-authored-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/pinctrl/pinctrl-ingenic.c | 242 +++++++++++++++++++++++++++++-
- 1 file changed, 240 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index bc7ee54e062b5..dfdc89ece9b8a 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -3,7 +3,7 @@
-  * Ingenic SoCs pinctrl driver
-  *
-  * Copyright (c) 2017 Paul Cercueil <paul@crapouillou.net>
-- * Copyright (c) 2017, 2019 Paul Boddie <paul@boddie.org.uk>
-+ * Copyright (c) 2017, 2019, 2020, 2023 Paul Boddie <paul@boddie.org.uk>
-  * Copyright (c) 2019, 2020 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-  */
- 
-@@ -58,6 +58,8 @@
- #define JZ4770_GPIO_FLAG			0x50
- #define JZ4770_GPIO_PEN				0x70
- 
-+#define X1600_GPIO_PU				 0x80
-+
- #define X1830_GPIO_PEL				0x110
- #define X1830_GPIO_PEH				0x120
- #define X1830_GPIO_SR				0x150
-@@ -112,6 +114,7 @@ enum jz_version {
- 	ID_JZ4780,
- 	ID_X1000,
- 	ID_X1500,
-+	ID_X1600,
- 	ID_X1830,
- 	ID_X2000,
- 	ID_X2100,
-@@ -162,6 +165,7 @@ static const unsigned long enabled_socs =
- 	IS_ENABLED(CONFIG_MACH_JZ4780) << ID_JZ4780 |
- 	IS_ENABLED(CONFIG_MACH_X1000) << ID_X1000 |
- 	IS_ENABLED(CONFIG_MACH_X1500) << ID_X1500 |
-+	IS_ENABLED(CONFIG_MACH_X1600) << ID_X1600 |
- 	IS_ENABLED(CONFIG_MACH_X1830) << ID_X1830 |
- 	IS_ENABLED(CONFIG_MACH_X2000) << ID_X2000 |
- 	IS_ENABLED(CONFIG_MACH_X2100) << ID_X2100;
-@@ -2351,6 +2355,231 @@ static const struct ingenic_chip_info x1500_chip_info = {
- 	.access_table = &x1000_access_table,
- };
- 
-+static const u32 x1600_pull_ups[4] = {
-+	0xffffffff, 0xdffbf7bf, 0x987e0000, 0x0000003f,
-+};
-+
-+static const u32 x1600_pull_downs[4] = {
-+	0x00000000, 0x00000000, 0x07000007, 0x00000000,
-+};
-+
-+static int x1600_uart0_data_pins[] = { 0x27, 0x28, };
-+static int x1600_uart0_hwflow_pins[] = { 0x29, 0x2a, };
-+static int x1600_uart1_data_pins[] = { 0x23, 0x22, };
-+static int x1600_uart1_hwflow_pins[] = { 0x25, 0x24, };
-+static int x1600_uart2_data_a_pins[] = { 0x1f, 0x1e, };
-+static int x1600_uart2_data_b_pins[] = { 0x21, 0x20, };
-+static int x1600_uart3_data_b_pins[] = { 0x25, 0x24, };
-+static int x1600_uart3_data_d_pins[] = { 0x65, 0x64, };
-+static int x1600_sfc_pins[] = { 0x53, 0x54, 0x55, 0x56, 0x51, 0x52, 0x24, };
-+static int x1600_ssi_dt_a_pins[] = { 0x1e, };
-+static int x1600_ssi_dt_b_pins[] = { 0x2d, };
-+static int x1600_ssi_dr_a_pins[] = { 0x1d, };
-+static int x1600_ssi_dr_b_pins[] = { 0x2e, };
-+static int x1600_ssi_clk_a_pins[] = { 0x1f, };
-+static int x1600_ssi_clk_b_pins[] = { 0x2c, };
-+static int x1600_ssi_ce0_a_pins[] = { 0x1c, };
-+static int x1600_ssi_ce0_b_pins[] = { 0x31, };
-+static int x1600_ssi_ce1_a_pins[] = { 0x22, };
-+static int x1600_ssi_ce1_b_pins[] = { 0x30, };
-+static int x1600_mmc0_1bit_b_pins[] = { 0x2c, 0x2d, 0x2e, };
-+static int x1600_mmc0_4bit_b_pins[] = { 0x2f, 0x30, 0x31, };
-+static int x1600_mmc0_1bit_c_pins[] = { 0x51, 0x53, 0x54, };
-+static int x1600_mmc0_4bit_c_pins[] = { 0x56, 0x55, 0x52, };
-+static int x1600_mmc1_1bit_pins[] = { 0x60, 0x61, 0x62, };
-+static int x1600_mmc1_4bit_pins[] = { 0x63, 0x64, 0x65, };
-+static int x1600_i2c0_a_pins[] = { 0x1d, 0x1c, };
-+static int x1600_i2c0_b_pins[] = { 0x3f, 0x3e, };
-+static int x1600_i2c1_b_15_pins[] = { 0x30, 0x2f, };
-+static int x1600_i2c1_b_19_pins[] = { 0x34, 0x33, };
-+static int x1600_i2s_data_tx_pins[] = { 0x39, };
-+static int x1600_i2s_data_rx_pins[] = { 0x35, };
-+static int x1600_i2s_clk_rx_pins[] = { 0x37, 0x38, };
-+static int x1600_i2s_clk_tx_pins[] = { 0x3b, 0x3c, };
-+static int x1600_i2s_sysclk_pins[] = { 0x36, 0x3a, };
-+
-+static int x1600_cim_pins[] = {
-+	0x14, 0x16, 0x15, 0x18, 0x13,
-+	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-+};
-+
-+static int x1600_slcd_8bit_pins[] = {
-+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+	0x17, 0x19, 0x1a, 0x1b,
-+};
-+
-+static int x1600_slcd_16bit_pins[] = {
-+	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-+};
-+
-+static int x1600_lcd_16bit_pins[] = {
-+	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-+	0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-+	0x18, 0x19, 0x1a, 0x1b,
-+};
-+
-+static int x1600_lcd_18bit_pins[] = {
-+	0x10, 0x11,
-+};
-+
-+static int x1600_lcd_24bit_pins[] = {
-+	0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-+};
-+
-+static int x1600_pwm_pwm0_pins[] = { 0x40, };
-+static int x1600_pwm_pwm1_pins[] = { 0x41, };
-+static int x1600_pwm_pwm2_pins[] = { 0x42, };
-+static int x1600_pwm_pwm3_pins[] = { 0x58, };
-+static int x1600_pwm_pwm4_pins[] = { 0x59, };
-+static int x1600_pwm_pwm5_pins[] = { 0x33, 0x5a, };
-+static int x1600_pwm_pwm6_pins[] = { 0x29, 0x34, };
-+static int x1600_pwm_pwm7_pins[] = { 0x2a, 0x35, };
-+
-+static int x1600_mac_pins[] = {
-+	0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x3b, 0x3c,
-+};
-+
-+static int x1600_sfc_funcs[] = { 0, 0, 0, 0, 0, 0, 2, };
-+
-+static int x1600_pwm_pwm5_funcs[] = { 2, 1, };
-+static int x1600_pwm_pwm6_funcs[] = { 1, 2, };
-+static int x1600_pwm_pwm7_funcs[] = { 1, 2, };
-+
-+static const struct group_desc x1600_groups[] = {
-+	INGENIC_PIN_GROUP("uart0-data", x1600_uart0_data, 0),
-+	INGENIC_PIN_GROUP("uart0-hwflow", x1600_uart0_hwflow, 0),
-+	INGENIC_PIN_GROUP("uart1-data", x1600_uart1_data, 1),
-+	INGENIC_PIN_GROUP("uart1-hwflow", x1600_uart1_hwflow, 1),
-+	INGENIC_PIN_GROUP("uart2-data-a", x1600_uart2_data_a, 2),
-+	INGENIC_PIN_GROUP("uart2-data-b", x1600_uart2_data_b, 1),
-+	INGENIC_PIN_GROUP("uart3-data-b", x1600_uart3_data_b, 0),
-+	INGENIC_PIN_GROUP("uart3-data-d", x1600_uart3_data_d, 2),
-+	INGENIC_PIN_GROUP_FUNCS("sfc", x1600_sfc, x1600_sfc_funcs),
-+	INGENIC_PIN_GROUP("ssi-dt-a", x1600_ssi_dt_a, 0),
-+	INGENIC_PIN_GROUP("ssi-dt-b", x1600_ssi_dt_b, 1),
-+	INGENIC_PIN_GROUP("ssi-dr-a", x1600_ssi_dr_a, 0),
-+	INGENIC_PIN_GROUP("ssi-dr-b", x1600_ssi_dr_b, 1),
-+	INGENIC_PIN_GROUP("ssi-clk-a", x1600_ssi_clk_a, 0),
-+	INGENIC_PIN_GROUP("ssi-clk-b", x1600_ssi_clk_b, 1),
-+	INGENIC_PIN_GROUP("ssi-ce0-a", x1600_ssi_ce0_a, 0),
-+	INGENIC_PIN_GROUP("ssi-ce0-b", x1600_ssi_ce0_b, 1),
-+	INGENIC_PIN_GROUP("ssi-ce1-a", x1600_ssi_ce1_a, 2),
-+	INGENIC_PIN_GROUP("ssi-ce1-b", x1600_ssi_ce1_b, 1),
-+	INGENIC_PIN_GROUP("mmc0-1bit-b", x1600_mmc0_1bit_b, 0),
-+	INGENIC_PIN_GROUP("mmc0-4bit-b", x1600_mmc0_4bit_b, 0),
-+	INGENIC_PIN_GROUP("mmc0-1bit-c", x1600_mmc0_1bit_c, 1),
-+	INGENIC_PIN_GROUP("mmc0-4bit-c", x1600_mmc0_4bit_c, 1),
-+	INGENIC_PIN_GROUP("mmc1-1bit", x1600_mmc1_1bit, 0),
-+	INGENIC_PIN_GROUP("mmc1-4bit", x1600_mmc1_4bit, 0),
-+	INGENIC_PIN_GROUP("i2c0-data-a", x1600_i2c0_a, 2),
-+	INGENIC_PIN_GROUP("i2c0-data-b", x1600_i2c0_b, 0),
-+	INGENIC_PIN_GROUP("i2c1-data-b-15", x1600_i2c1_b_15, 2),
-+	INGENIC_PIN_GROUP("i2c1-data-b-19", x1600_i2c1_b_19, 0),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1600_i2s_data_tx, 0),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1600_i2s_data_rx, 0),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", x1600_i2s_clk_rx, 0),
-+	INGENIC_PIN_GROUP("i2s-clk-tx", x1600_i2s_clk_tx, 0),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1600_i2s_sysclk, 0),
-+	INGENIC_PIN_GROUP("cim-data", x1600_cim, 2),
-+	INGENIC_PIN_GROUP("slcd-8bit", x1600_slcd_8bit, 1),
-+	INGENIC_PIN_GROUP("slcd-16bit", x1600_slcd_16bit, 1),
-+	INGENIC_PIN_GROUP("lcd-16bit", x1600_lcd_16bit, 0),
-+	INGENIC_PIN_GROUP("lcd-18bit", x1600_lcd_18bit, 0),
-+	INGENIC_PIN_GROUP("lcd-24bit", x1600_lcd_24bit, 0),
-+	INGENIC_PIN_GROUP("pwm0", x1600_pwm_pwm0, 0),
-+	INGENIC_PIN_GROUP("pwm1", x1600_pwm_pwm1, 0),
-+	INGENIC_PIN_GROUP("pwm2", x1600_pwm_pwm2, 0),
-+	INGENIC_PIN_GROUP("pwm3", x1600_pwm_pwm3, 1),
-+	INGENIC_PIN_GROUP("pwm4", x1600_pwm_pwm4, 1),
-+	INGENIC_PIN_GROUP_FUNCS("pwm5", x1600_pwm_pwm5, x1600_pwm_pwm5_funcs),
-+	INGENIC_PIN_GROUP_FUNCS("pwm6", x1600_pwm_pwm6, x1600_pwm_pwm6_funcs),
-+	INGENIC_PIN_GROUP_FUNCS("pwm7", x1600_pwm_pwm7, x1600_pwm_pwm7_funcs),
-+	INGENIC_PIN_GROUP("mac", x1600_mac, 1),
-+};
-+
-+static const char * const x1600_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
-+static const char * const x1600_uart1_groups[] = { "uart1-data", "uart1-hwflow", };
-+static const char * const x1600_uart2_groups[] = { "uart2-data-a", "uart2-data-b", };
-+static const char * const x1600_uart3_groups[] = { "uart3-data-b", "uart3-data-d", };
-+
-+static const char * const x1600_sfc_groups[] = { "sfc", };
-+
-+static const char * const x1600_ssi_groups[] = {
-+	"ssi-dt-a", "ssi-dt-b",
-+	"ssi-dr-a", "ssi-dr-b",
-+	"ssi-clk-a", "ssi-clk-b",
-+	"ssi-ce0-a", "ssi-ce0-b",
-+	"ssi-ce1-a", "ssi-ce1-b",
-+};
-+
-+static const char * const x1600_mmc0_groups[] = { "mmc0-1bit-b", "mmc0-4bit-b",
-+	"mmc0-1bit-c", "mmc0-4bit-c",
-+};
-+
-+static const char * const x1600_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
-+
-+static const char * const x1600_i2c0_groups[] = { "i2c0-data-a", "i2c0-data-b", };
-+static const char * const x1600_i2c1_groups[] = { "i2c1-data-b-15", "i2c1-data-b-19", };
-+
-+static const char * const x1600_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-rx", "i2s-clk-tx", "i2s-sysclk",
-+};
-+
-+static const char * const x1600_cim_groups[] = { "cim-data", };
-+
-+static const char * const x1600_lcd_groups[] = { "slcd-8bit", "slcd-16bit",
-+	"lcd-16bit", "lcd-18bit", "lcd-24bit", "lcd-no-pins",
-+};
-+
-+static const char * const x1600_pwm0_groups[] = { "pwm0", };
-+static const char * const x1600_pwm1_groups[] = { "pwm1", };
-+static const char * const x1600_pwm2_groups[] = { "pwm2", };
-+static const char * const x1600_pwm3_groups[] = { "pwm3", };
-+static const char * const x1600_pwm4_groups[] = { "pwm4", };
-+static const char * const x1600_pwm5_groups[] = { "pwm5", };
-+static const char * const x1600_pwm6_groups[] = { "pwm6", };
-+static const char * const x1600_pwm7_groups[] = { "pwm7", };
-+
-+static const char * const x1600_mac_groups[] = { "mac", };
-+
-+static const struct function_desc x1600_functions[] = {
-+	INGENIC_PIN_FUNCTION("uart0", x1600_uart0),
-+	INGENIC_PIN_FUNCTION("uart1", x1600_uart1),
-+	INGENIC_PIN_FUNCTION("uart2", x1600_uart2),
-+	INGENIC_PIN_FUNCTION("uart3", x1600_uart3),
-+	INGENIC_PIN_FUNCTION("sfc", x1600_sfc),
-+	INGENIC_PIN_FUNCTION("ssi", x1600_ssi),
-+	INGENIC_PIN_FUNCTION("mmc0", x1600_mmc0),
-+	INGENIC_PIN_FUNCTION("mmc1", x1600_mmc1),
-+	INGENIC_PIN_FUNCTION("i2c0", x1600_i2c0),
-+	INGENIC_PIN_FUNCTION("i2c1", x1600_i2c1),
-+	INGENIC_PIN_FUNCTION("i2s", x1600_i2s),
-+	INGENIC_PIN_FUNCTION("cim", x1600_cim),
-+	INGENIC_PIN_FUNCTION("lcd", x1600_lcd),
-+	INGENIC_PIN_FUNCTION("pwm0", x1600_pwm0),
-+	INGENIC_PIN_FUNCTION("pwm1", x1600_pwm1),
-+	INGENIC_PIN_FUNCTION("pwm2", x1600_pwm2),
-+	INGENIC_PIN_FUNCTION("pwm3", x1600_pwm3),
-+	INGENIC_PIN_FUNCTION("pwm4", x1600_pwm4),
-+	INGENIC_PIN_FUNCTION("pwm5", x1600_pwm5),
-+	INGENIC_PIN_FUNCTION("pwm6", x1600_pwm6),
-+	INGENIC_PIN_FUNCTION("pwm7", x1600_pwm7),
-+	INGENIC_PIN_FUNCTION("mac", x1600_mac),
-+};
-+
-+static const struct ingenic_chip_info x1600_chip_info = {
-+	.num_chips = 4,
-+	.reg_offset = 0x100,
-+	.version = ID_X1600,
-+	.groups = x1600_groups,
-+	.num_groups = ARRAY_SIZE(x1600_groups),
-+	.functions = x1600_functions,
-+	.num_functions = ARRAY_SIZE(x1600_functions),
-+	.pull_ups = x1600_pull_ups,
-+	.pull_downs = x1600_pull_downs,
-+	.access_table = &x1000_access_table,
-+};
-+
- static const u32 x1830_pull_ups[4] = {
- 	0x5fdfffc0, 0xffffefff, 0x1ffffbff, 0x0fcff3fc,
- };
-@@ -3860,7 +4089,9 @@ static int ingenic_pinconf_get(struct pinctrl_dev *pctldev,
- 		pulldown = (bias == GPIO_PULL_DOWN) && (jzpc->info->pull_downs[offt] & BIT(idx));
- 
- 	} else {
--		if (is_soc_or_above(jzpc, ID_JZ4770))
-+		if (is_soc_or_above(jzpc, ID_X1600))
-+			pull = ingenic_get_pin_config(jzpc, pin, X1600_GPIO_PU);
-+		else if (is_soc_or_above(jzpc, ID_JZ4770))
- 			pull = !ingenic_get_pin_config(jzpc, pin, JZ4770_GPIO_PEN);
- 		else if (is_soc_or_above(jzpc, ID_JZ4740))
- 			pull = !ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_PULL_DIS);
-@@ -3959,6 +4190,8 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- 					REG_SET(X1830_GPIO_PEH), bias << idxh);
- 		}
- 
-+	} else if (is_soc_or_above(jzpc, ID_X1600)) {
-+		ingenic_config_pin(jzpc, pin, X1600_GPIO_PU, bias);
- 	} else if (is_soc_or_above(jzpc, ID_JZ4770)) {
- 		ingenic_config_pin(jzpc, pin, JZ4770_GPIO_PEN, !bias);
- 	} else if (is_soc_or_above(jzpc, ID_JZ4740)) {
-@@ -4150,6 +4383,7 @@ static const struct of_device_id ingenic_gpio_of_matches[] __initconst = {
- 	{ .compatible = "ingenic,jz4775-gpio" },
- 	{ .compatible = "ingenic,jz4780-gpio" },
- 	{ .compatible = "ingenic,x1000-gpio" },
-+	{ .compatible = "ingenic,x1600-gpio" },
- 	{ .compatible = "ingenic,x1830-gpio" },
- 	{ .compatible = "ingenic,x2000-gpio" },
- 	{ .compatible = "ingenic,x2100-gpio" },
-@@ -4397,6 +4631,10 @@ static const struct of_device_id ingenic_pinctrl_of_matches[] = {
- 		.compatible = "ingenic,x1500-pinctrl",
- 		.data = IF_ENABLED(CONFIG_MACH_X1500, &x1500_chip_info)
- 	},
-+	{
-+		.compatible = "ingenic,x1600-pinctrl",
-+		.data = IF_ENABLED(CONFIG_MACH_X1600, &x1600_chip_info)
-+	},
- 	{
- 		.compatible = "ingenic,x1830-pinctrl",
- 		.data = IF_ENABLED(CONFIG_MACH_X1830, &x1830_chip_info)
--- 
-2.47.0
+Thanks for this optimization suggestion. Will implement this in the next version.
 
