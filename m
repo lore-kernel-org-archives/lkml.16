@@ -1,138 +1,125 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9800516F288
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0AD22540A;
+	Wed, 26 Feb 2025 19:26:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740597862; cv=none; b=Kx5KbdILUYgxdCNb4ioCNYqnkXQLOwk+S+Fg7w44Dh1WHiMkWZgkCEXq46g+IbRbDEZpBYi01uRdDV/T7wXjqdyQRmEDg9FYFWtmvDC6O0IIVRZipRjYgLFYWnPFsAabllEl48JVrl8pI0f8jDNuSFNZoA/EJYfuVxRrBsJT5vo=
+	t=1740597996; cv=none; b=jwlW74lgWeLilHgOs75vnjVyvSADRaJ9KBGjhTbL5STzQD8Yqgl/04VoVdahPWQhe+giMnCPV+7QhjuV/3BdUTFTfybG/Q5/8WTDHk3kr5eGLbb3NORTEgrK9Gq8fmCBgmnH1NAYO7ad2XhkTj4t3EvmH9nQXmOWpRcdSfZqG2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740597862; c=relaxed/simple;
-	bh=+MPxJiszOeCmFsn8+9MqxMgk4It36YrHrcETxZymxZo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jHDYw6J25SD9CIjsSxXQ0or2CdZBfK48lzRFDSHYYfWVyREd+GTr8pzLmJPm2FtIpiQ2ZOFoks/RzP+lrpWJL9f/r0D+C86//DuVVREVpg1qAmPdcTJDkXfUBhUKhjbV7EI3KzpT0AlyvkTtBsDsD7UEv7XscvYgfSqYYw/bZXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=IsHfiaQS; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1740597996; c=relaxed/simple;
+	bh=h6RdmGr8OqqidZERSf7wvyOPx+OpsshAqusRKR5DhoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QjbstjhtwYjXG+GRSGrYfcstUNpsdXpWxPVMkjiI7v8KT9uzTCytM4KCi5L2M55IDu7KWisyzGS7Gwp2EmsPpXQK95+IGZ5y/n5UhKsVIO90Se1NwI6EszGko7sOTNVyS//v4ZxWPJPAvI9TBKdZ/Xw0FGP6pHjiYxhN14phW0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=MT5TiMPQ; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="IsHfiaQS"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220c8f38febso1910375ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:24:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1740597861; x=1741202661; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/sflnpIC6yKwseTfHm3vT9z2UOLJa7dEKR1pgDETj+Y=;
-        b=IsHfiaQS04ZUz/3DCH5S0DOwiRC7GjFG/TLqvpLRYM6MtZgPsmMMchJo7hM34E9dzp
-         GYY1nVx32t9BWNt4Cge9fW7lnvbsmNg9JvUk8UJRdnw7+4pC9Q8OxIY5zhd73G/T9t3f
-         1FUy8KyIGv1r6p/3lonrpTJ0I969LTDxq3By3DoslF0xmJ1kD983XlJBMA+Q7o3ipqjF
-         TGAEobrE1aJwwIaomr8zPADA8ZUSOULcM+nfxR8dpkynLZfUxNP6j1+AWcyyTjqbg4lu
-         cj1LCALJNC7GvavlWfD4SwW0ScnPMoT66gRBPpyhgiOUJKsFMoDBWJvRp2A5PRzkjtLZ
-         3+HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740597861; x=1741202661;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/sflnpIC6yKwseTfHm3vT9z2UOLJa7dEKR1pgDETj+Y=;
-        b=jTRXTxxRPQ6wxFxr8C/TTCjXcp4fcHige9PbdiSjRUG/sEuCpoPkOr5gbPcqWIpOZj
-         95YSAwXluQSPwImBXoAu/P9odz8niRqZnJuGlkewcPEOfayCFtl3ZD5hQj1SAEXFgqtw
-         LSMdZjWZPQAIUMuKQKKQ0Jd/HpVFSizrc0FqlsXYclPFm3S7QPXdmUmAW4fCp78nzcPH
-         bAjUhGKK9GBeNAKiCUFcyf4j1ynaVm+frU6mdXGEK2uU1X/DkBS1SuONKdvx4WNUSxqa
-         zp3OiIY5JfBLXW6oC4oidVRfDdWFWFEZtOZzorBBkCQ1OUVn9W2OT9ESkzRqiPjFbfVU
-         Bz1w==
-X-Forwarded-Encrypted: i=1; AJvYcCX83TLas7VvmpTASBVIsZGP6V1p442rMW88Udw5rf6RvJyK/gCsgjEkDCSpQWzkXKgmYuuz0wWaBm20FR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwA47f5BYxRv3wB3qS8tYTXYCERmBUi33SkCwj3LHc6eN9QmJ/
-	fhRlSKn0RZUWzh8o89YfOh29QJ42QdPw3h82GnpryiiSlMgADrSoZMug/DunQJg=
-X-Gm-Gg: ASbGncuc27hGzzWNtBOIknB8tln+wFGt2OoG4SlojDJIjvdTX+JWI3BeXv13BoXitcE
-	j9eWgDOLYcfuseQcoHQEqR1tw5ZMXh7HyxcnQmTxVY3XTdrSneuPLF2cqIqDtnIcbhts6hIMBxn
-	LSpSQYw+Dgqnig8WciH5qTc4MWkxKOBhS5ItbviGw8Vxqx/LeNyGhj9LywAvL2TjhuyILPAeFbY
-	PWllk0i2OncFMfsIR0FAZ86naY32EHBUA1Y1C1+MqxfHdTCQego4EkXRKVYs0iKekY5+UCxHeBi
-	2wzta0zDjPLQ/tmXe644t9r5RM9gJT5GpvaEt63EK6zeqPE9y+mZ00EX4WWNq1RkRx6p1A==
-X-Google-Smtp-Source: AGHT+IG0kO7k4eegwSBS0bGAJzlZ+5QciSS8EYAlWnYhxBYs9Vs7ZY1jsyhgzaQSgGTs4piCQxxvzw==
-X-Received: by 2002:a17:902:f60b:b0:216:725c:a137 with SMTP id d9443c01a7336-2219ffb8b58mr407759205ad.28.1740597859464;
-        Wed, 26 Feb 2025 11:24:19 -0800 (PST)
-Received: from ?IPV6:2a03:83e0:1156:1:18cb:90d0:372a:99ae? ([2620:10d:c090:500::4:af20])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0908eesm36470885ad.124.2025.02.26.11.24.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 11:24:19 -0800 (PST)
-Message-ID: <35c55f5b-7c1c-46cf-8d6c-50ee2479bbda@davidwei.uk>
-Date: Wed, 26 Feb 2025 11:24:16 -0800
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="MT5TiMPQ"
+From: Dragan Simic <dsimic@manjaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1740597987;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=aHk9olOfjsR8vzOGK98b4cllDXRPWUHO6CLaRKmRifU=;
+	b=MT5TiMPQXu7d9mD8cmV+LaoQS3009Vy8G7mhKxycsFZWP2crYQU1ULGCtpiWvXbWQcxeGo
+	0H9M5c7Idh0Zotj/BtdSvQjrysbmBbBc7bxxrot83NBxqRhpbGP62P9hbCCoL3wUVyCzak
+	DAv8wP2N29FJGvwHD5X9XcLY5qIQa4Kac4rQJUNEySIhThIVP5DfBbEBtlk1j0vZrbaieM
+	huhaQ4yCJe9I0AclF8fObyCI22iVO6v1ryFe+7CJY7oxPcaLrECPnYRPLk6vhUnOkugilu
+	M4j+7IOp1nbZWdxSACRRDzyhaNLULFDXfxRX9oNGOyrLtkLv8y4hEmJlDDt6FQ==
+To: linux-mmc@vger.kernel.org
+Cc: ulf.hansson@linaro.org,
+	git@hrdl.eu,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: core: Trim trailing whitespace from card product names
+Date: Wed, 26 Feb 2025 20:26:18 +0100
+Message-Id: <fb7fcecae737f3e8b279854d7c853000527cba9a.1740597891.git.dsimic@manjaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] selftests: drv-net: Check if combined-count exists
-Content-Language: en-GB
-To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org
-Cc: gerhard@engleder-embedded.com, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Shuah Khan <shuah@kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250226181957.212189-1-jdamato@fastly.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20250226181957.212189-1-jdamato@fastly.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 2025-02-26 10:19, Joe Damato wrote:
-> Some drivers, like tg3, do not set combined-count:
-> 
-> $ ethtool -l enp4s0f1
-> Channel parameters for enp4s0f1:
-> Pre-set maximums:
-> RX:		4
-> TX:		4
-> Other:		n/a
-> Combined:	n/a
-> Current hardware settings:
-> RX:		4
-> TX:		1
-> Other:		n/a
-> Combined:	n/a
-> 
-> In the case where combined-count is not set, the ethtool netlink code
-> in the kernel elides the value and the code in the test:
-> 
->   netnl.channels_get(...)
-> 
-> With a tg3 device, the returned dictionary looks like:
-> 
-> {'header': {'dev-index': 3, 'dev-name': 'enp4s0f1'},
->  'rx-max': 4,
->  'rx-count': 4,
->  'tx-max': 4,
->  'tx-count': 1}
-> 
-> Note that the key 'combined-count' is missing. As a result of this
-> missing key the test raises an exception:
-> 
->  # Exception|     if channels['combined-count'] == 0:
->  # Exception|        ~~~~~~~~^^^^^^^^^^^^^^^^^^
->  # Exception| KeyError: 'combined-count'
-> 
-> Change the test to check if 'combined-count' is a key in the dictionary
-> first and if not assume that this means the driver has separate RX and
-> TX queues.
-> 
-> With this change, the test now passes successfully on tg3 and mlx5
-> (which does have a 'combined-count').
-> 
-> Fixes: 1cf270424218 ("net: selftest: add test for netdev netlink queue-get API")
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> ---
->  v2:
->    - Simplify logic and reduce indentation as suggested by David Wei.
->      Retested on both tg3 and mlx5 and test passes as expected.
-> 
->  v1: https://lore.kernel.org/lkml/20250225181455.224309-1-jdamato@fastly.com/
+Product names for some eMMC chips can include trailing whitespace, which
+seems to be rather uncommon, but makes emitted messages and /sys properties
+somewhat unsightly.  Here's such an example from a Pine64 PineNote, in which
+"Biwin ", as the eMMC product name, contains trailing whitespace:
 
-Thanks Joe.
+  mmc0: new HS200 MMC card at address 0001
+  mmcblk0: mmc0:0001 Biwin  115 GiB
+  mmcblk0: p1 p2 p3 p4 p5 p6 p7
+  mmcblk0boot0: mmc0:0001 Biwin  4.00 MiB
+  mmcblk0boot1: mmc0:0001 Biwin  4.00 MiB
+  mmcblk0rpmb: mmc0:0001 Biwin  4.00 MiB, chardev (249:0)
 
-Reviewed-by: David Wei <dw@davidwei.uk>
+Trailing whitespace in /sys properties may even cause some unforeseen issues
+with some scripts, so let's have the trailing whitespace trimmed in product
+names for eMMC chips.  Although not observed yet by the author of these
+changes, the same trailing whitespace may appear in SD card product names,
+so let's trim them as well, which can't hurt.
+
+Touch-up one commit as well, by using proper capitalization.
+
+Signed-off-by: Dragan Simic <dsimic@manjaro.org>
+---
+ drivers/mmc/core/mmc.c | 6 +++++-
+ drivers/mmc/core/sd.c  | 4 ++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 6a23be214543..1522fd2b517d 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -11,6 +11,7 @@
+ #include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/stat.h>
++#include <linux/string.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/random.h>
+ #include <linux/sysfs.h>
+@@ -66,7 +67,7 @@ static int mmc_decode_cid(struct mmc_card *card)
+ 
+ 	/*
+ 	 * The selection of the format here is based upon published
+-	 * specs from sandisk and from what people have reported.
++	 * specs from SanDisk and from what people have reported.
+ 	 */
+ 	switch (card->csd.mmca_vsn) {
+ 	case 0: /* MMC v1.0 - v1.2 */
+@@ -109,6 +110,9 @@ static int mmc_decode_cid(struct mmc_card *card)
+ 		return -EINVAL;
+ 	}
+ 
++	/* some product names include trailing whitespace */
++	strim(card->cid.prod_name);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index cc757b850e79..8eba697d3d86 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -11,6 +11,7 @@
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/stat.h>
++#include <linux/string.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/random.h>
+ #include <linux/scatterlist.h>
+@@ -95,6 +96,9 @@ void mmc_decode_cid(struct mmc_card *card)
+ 	card->cid.month			= unstuff_bits(resp, 8, 4);
+ 
+ 	card->cid.year += 2000; /* SD cards year offset */
++
++	/* some product names may include trailing whitespace */
++	strim(card->cid.prod_name);
+ }
+ 
+ /*
