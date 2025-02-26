@@ -1,80 +1,23 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764E51E1DEA
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADF9220CCF1;
+	Wed, 26 Feb 2025 08:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740559795; cv=none; b=Q6N4Kp8axZ6uEnbrKSwdt2N7G7nHh2yllKU9kvTZP3iOCScEY/zMt7h7zXMcuh+FdPuTp+5Wkimvkm2n1FVgGAKA/hNWjPMsWz0IF2YvvnJ3upXoNDpQQ92kvMd5nsiOX2geqQEOMFkj6+wWHM8fyy0kgqJV1N1hZkdy2iVydb4=
+	t=1740559819; cv=none; b=iwbxmKW1OsGsVtrrwkuiCYFrseY06JN5j/qaFNGVhncOvaxiJI0Ml44Ze35moXglpiUAdVu/jQum1lnYsDE0vL1GNAjo7x2+CEdLtz8DDmQ9hb4MEbX82VPYcUyb8xWS5jONVLZkch1WizyrX/jwuoa8GrtodAUhO2po3ukbhDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740559795; c=relaxed/simple;
-	bh=Oy3A1jiV57G49nbTlvzYkdMU0xorWZZ7LJcXKR+Gs8k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=PH9ePJ+BvsRgW0LxkXZCuAFJvpO7EU08SYW+5bG7usxrhqFim/y9LUICL7sSQlVGt9LrjD7DgP4v1B0oH9FzHmW0TuefKHD0+Lfv1c+3vNVdUtuTxxXNbbSNvRQunvvTpYkUxUtQgQiuN+P3P4fwnOeprWkIQYyvL2UrkNaxl/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f2LfHC0g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=67J56Lmy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=f2LfHC0g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=67J56Lmy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f2LfHC0g";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="67J56Lmy";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="f2LfHC0g";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="67J56Lmy"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 946881F387;
-	Wed, 26 Feb 2025 08:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740559790; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7HOm8FZkDzDs8UwSLwsHkts4ETafNqMowoqvHKC3w7k=;
-	b=f2LfHC0g+4p4HoZOzDvLFeK+PFqkgn7XbFwr096DPY2M6Wzpwl+QJT9m1PGrgbi/E8B1ET
-	8VmnNqJqwvl06W4dxXS/jZW9KLuoyazLhk2xAbccSPtdgnkcNQJzXwZCZsyASwTUNCWLQc
-	tZWEfIHWcoHgg2uVZBMSA6Bp+d686Tk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740559790;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7HOm8FZkDzDs8UwSLwsHkts4ETafNqMowoqvHKC3w7k=;
-	b=67J56LmyuyX48ZnIxubo6rt5HwTClaKdwkXGvRP19tka77Ai9da12/p5RBgvqFxTkMUWHK
-	jxO70BWuDbsCdnAQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740559790; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7HOm8FZkDzDs8UwSLwsHkts4ETafNqMowoqvHKC3w7k=;
-	b=f2LfHC0g+4p4HoZOzDvLFeK+PFqkgn7XbFwr096DPY2M6Wzpwl+QJT9m1PGrgbi/E8B1ET
-	8VmnNqJqwvl06W4dxXS/jZW9KLuoyazLhk2xAbccSPtdgnkcNQJzXwZCZsyASwTUNCWLQc
-	tZWEfIHWcoHgg2uVZBMSA6Bp+d686Tk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740559790;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7HOm8FZkDzDs8UwSLwsHkts4ETafNqMowoqvHKC3w7k=;
-	b=67J56LmyuyX48ZnIxubo6rt5HwTClaKdwkXGvRP19tka77Ai9da12/p5RBgvqFxTkMUWHK
-	jxO70BWuDbsCdnAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 848C01377F;
-	Wed, 26 Feb 2025 08:49:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MtDZH67Vvmf3TQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 26 Feb 2025 08:49:50 +0000
-Message-ID: <9b21789c-86a5-428e-baee-004e22b40b65@suse.cz>
-Date: Wed, 26 Feb 2025 09:51:34 +0100
+	s=arc-20240116; t=1740559819; c=relaxed/simple;
+	bh=BivH3tFszd2zVodppEZRuCAzcKz2LvnM2DIJgfFZE88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kTdIZ0L0zq7xUltpKqSghrXpIMB+BDwpy3uRfsjkDW/wC0HXHq8Gi2C+vNhqpCMrCHeot0WTArjyE1nMM46BD3ZaNOmvmzKNjRCkf2AKxt3iZAQHJ8bdd8aN3mDveKSHCuY5c0sjroRO2OzMCajDDOG1bxkDKUKbaovVzf9YrMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C632A441D9;
+	Wed, 26 Feb 2025 08:50:10 +0000 (UTC)
+Message-ID: <78e15b54-af08-4d41-bc39-71b4b7828497@ghiti.fr>
+Date: Wed, 26 Feb 2025 09:50:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,55 +25,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] mm: page_alloc: group fallback functions together
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Johannes Weiner <hannes@cmpxchg.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Brendan Jackman <jackmanb@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250225001023.1494422-1-hannes@cmpxchg.org>
- <20250225001023.1494422-4-hannes@cmpxchg.org>
- <e6b42857-6be5-48c3-a25e-f44fef2225d4@suse.cz>
+Subject: Re: [PATCH] riscv: tracing: Fix __write_overflow_field in
+ ftrace_partial_regs()
 Content-Language: en-US
-In-Reply-To: <e6b42857-6be5-48c3-a25e-f44fef2225d4@suse.cz>
-Content-Type: text/plain; charset=UTF-8
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Oleg Nesterov <oleg@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+References: <20250224-fix_ftrace_partial_regs-v1-1-54b906417e86@rivosinc.com>
+ <b449aacb-f981-4907-af37-1ca5aea83bb4@ghiti.fr> <Z74DlyiSS75MrkqS@ghost>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <Z74DlyiSS75MrkqS@ghost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.998];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeduhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepteeiieetgffhuedvvdejieduheehieffffegveeitdelheegfffgtdevkeethedunecuffhomhgrihhnpehinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddupdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopehmh
+ hhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopeholhgvghesrhgvughhrghtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
+Hi Charlie,
 
-
-On 2/25/25 12:02 PM, Vlastimil Babka wrote:
-> On 2/25/25 01:08, Johannes Weiner wrote:
->> The way the fallback rules are spread out makes them hard to
->> follow. Move the functions next to each other at least.
+On 25/02/2025 18:53, Charlie Jenkins wrote:
+> On Tue, Feb 25, 2025 at 09:36:04AM +0100, Alexandre Ghiti wrote:
+>> Hi Charlie,
 >>
->> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> Vlastimil Babka <vbabka@suse.cz>
+>> On 25/02/2025 03:42, Charlie Jenkins wrote:
+>>> The size of &regs->a0 is unknown, causing the error:
+>>>
+>>> ../include/linux/fortify-string.h:571:25: warning: call to
+>>> '__write_overflow_field' declared with attribute warning: detected write
+>>> beyond size of field (1st parameter); maybe use struct_group()?
+>>> [-Wattribute-warning]
+>>
+>> I can't reproduce this warning with gcc and llvm, even when setting by hand
+>> -Wattribute-warning when compiling bpf_trace.c (which is the user of
+>> ftrace_partial_regs()).
+>>
+>> Which toolchain did you use?
+> You need to have the configs:
+> CONFIG_BPF_SYSCALL=y
+> CONFIG_FORTIFY_SOURCE=y
+> CONFIG_FUNCTION_TRACER=y
+> CONFIG_FPROBE=y
+> CONFIG_DYNAMIC_FTRACE=y
+>
+> I used gcc 14.2.0
 
-Sorry, meant:
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+I was missing FPROBE!
+
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
 
 
+>
+> - Charlie
+>
+>> Thanks,
+>>
+>> Alex
+>>
+>>
+>>> Fix this by wrapping the required registers in pt_regs with
+>>> struct_group() and reference the group when doing the offending
+>>> memcpy().
+>>>
+>>> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+>>> ---
+>>>    arch/riscv/include/asm/ftrace.h |  2 +-
+>>>    arch/riscv/include/asm/ptrace.h | 18 ++++++++++--------
+>>>    2 files changed, 11 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+>>> index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..ec6db1162021fbf4fa48fc87e7984266040aa7d9 100644
+>>> --- a/arch/riscv/include/asm/ftrace.h
+>>> +++ b/arch/riscv/include/asm/ftrace.h
+>>> @@ -207,7 +207,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+>>>    {
+>>>    	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+>>> -	memcpy(&regs->a0, afregs->args, sizeof(afregs->args));
+>>> +	memcpy(&regs->a_regs, afregs->args, sizeof(afregs->args));
+>>>    	regs->epc = afregs->epc;
+>>>    	regs->ra = afregs->ra;
+>>>    	regs->sp = afregs->sp;
+>>> diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+>>> index b5b0adcc85c18e15c156de11172a5d7f03ada037..2910231977cb71dac3cc42f2dc32590284204057 100644
+>>> --- a/arch/riscv/include/asm/ptrace.h
+>>> +++ b/arch/riscv/include/asm/ptrace.h
+>>> @@ -23,14 +23,16 @@ struct pt_regs {
+>>>    	unsigned long t2;
+>>>    	unsigned long s0;
+>>>    	unsigned long s1;
+>>> -	unsigned long a0;
+>>> -	unsigned long a1;
+>>> -	unsigned long a2;
+>>> -	unsigned long a3;
+>>> -	unsigned long a4;
+>>> -	unsigned long a5;
+>>> -	unsigned long a6;
+>>> -	unsigned long a7;
+>>> +	struct_group(a_regs,
+>>> +		unsigned long a0;
+>>> +		unsigned long a1;
+>>> +		unsigned long a2;
+>>> +		unsigned long a3;
+>>> +		unsigned long a4;
+>>> +		unsigned long a5;
+>>> +		unsigned long a6;
+>>> +		unsigned long a7;
+>>> +	);
+>>>    	unsigned long s2;
+>>>    	unsigned long s3;
+>>>    	unsigned long s4;
+>>>
+>>> ---
+>>> base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+>>> change-id: 20250224-fix_ftrace_partial_regs-eddaf4a7e5ed
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
