@@ -1,236 +1,189 @@
-Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazolkn19010013.outbound.protection.outlook.com [52.103.38.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0697E223716;
-	Wed, 26 Feb 2025 17:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589679; cv=none; b=Yml/XPT2drIyUZvaC7h70FB/I/RTAXukznAmdGpiBNexbLYnGO8T2hHF+tD7SGsFYJ/OSHc+pst/kM4jcO8+OVML3cBb7kYglZeKX1unBZwkf4VXE19N0QpV32wrC33U0CKIYhl8Awu3QhUhig7nzLTAfpj5j9bjKr16TDFL+9M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589679; c=relaxed/simple;
-	bh=cBaG+oS7JYdfqzVyKfbb8rgJ131fRZ/Hoj95YqdcdI8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YX60Egk4dH2+Sy1PzIB3VWwshdZqZxmz6UHHEU6isriOx/0z/UjpA5u4oVyxN2kyUIgu368x/+YCkW+hCHOP9X9RI6IGeONvAckEKKI3S8rt8zSzlxnNIGFX5l0EScFv3GUqYrU0uWUBCeR1Og/g9i6mIK/fmt5yHm9wVSNsmOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=dvHIUUlO; arc=none smtp.client-ip=99.78.197.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4906421E0AA;
+	Wed, 26 Feb 2025 17:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.38.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740589743; cv=fail; b=CGJvXzGvIs/PLy7Bb2bY5PEW3Lt8pOjqBly4uoNUXVl5OnQVGTplrIjJk3tIvu6KgjAYHWGHiW1FbEX8mc0SY3HC2oIj1+fIC+vMv+93aunmze40BFvP8yDPcDmXhKqRsPErDDB7qLZMfafHZ2ztX7NyAT1Y7yAkcp5gUu+r9ls=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740589743; c=relaxed/simple;
+	bh=ompSN1MlXYWnABZTzxgc0VrCwjewZXLzoHrJJU/hzZA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u9IyvLNA2CntwKbTs7PihqyZApaDdmFNTuusi7e6+tVg/uwVXAz/fne8HajND25RQ9rZ8AYvxgmUtzso/N0YS3NhNzEqXDdOq2pbqdhyeM3mH61AuZ8K7u5e8HrLAzdITzDrAzG8n4ktfu98W1zwIJ/fcfbBoMYrHH6cJDN7I4I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=dmVkhnym; arc=fail smtp.client-ip=52.103.38.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="dvHIUUlO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1740589675; x=1772125675;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=BPwWo87sDuI7usZUdxHnOOz0ofoKPOJ/UoJEVKcIEVA=;
-  b=dvHIUUlOBNo4GgWcl7FyIGPqQDJrgfqHS3tZxYLwuk4fcLq71PdgqETE
-   lprAPuIWnTeZnAwfccI4Dcmb3v87Fq5LU1ueJ8cicRVsF2ru9GlRu5Psg
-   d4WfppAtjGrKsDERCkm+07q3FNvPAqx1hjSoCxOt4+A3lJ3AYjl55Aa4h
-   k=;
-X-IronPort-AV: E=Sophos;i="6.13,317,1732579200"; 
-   d="scan'208";a="176232161"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 17:07:44 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:25271]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.36.78:2525] with esmtp (Farcaster)
- id 9ef91057-2ea6-4f6a-bc79-4520280e04df; Wed, 26 Feb 2025 17:07:43 +0000 (UTC)
-X-Farcaster-Flow-ID: 9ef91057-2ea6-4f6a-bc79-4520280e04df
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 26 Feb 2025 17:07:39 +0000
-Received: from [192.168.22.24] (10.106.83.21) by EX19D022EUC002.ant.amazon.com
- (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Wed, 26 Feb 2025
- 17:07:38 +0000
-Message-ID: <946fc0f5-4306-4aa9-9b63-f7ccbaff8003@amazon.com>
-Date: Wed, 26 Feb 2025 17:07:36 +0000
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="dmVkhnym"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EaGWCFD5qqNuvf4KuI7hFkcjk9SvF5P3RdvnhjwsbE2jqzPtmApaFWlNzpAlbe33BBffFo/zs+J0W+leU/HG8KmACDkT5WpvEzsRJe4wWBkMvHLhLDNDUiDQ2NWFe3OcWkpZFxDudmDtiMyVEXNyegVp74LOvZ1h1pgs7YBeGU1pxROXKBqv44GMv6IQ3MGqgel35GgpnZGkGYmkQSghUwmrkxs39yOrSRhOhL89kWn4k6QNdA2u+aF42X+1Px0f1OR1wIvb07muPLyx89jvXpCktOreRZJXzTdq/htuo4kVxalNq790A+v8edvEFUshoihv95N/thwU0AysjBa9og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qAjPT8/wnQdTNOkqQToaCVdskFCgj4mtqFEYhvCkUUM=;
+ b=r9IqqKmAyyDNOFklp41+h/1mwKZcCnX7BFRK+KmS0n4BG/gEJNGQwX73FGHqeBqV09f+etRh1k4Th2OP1JK5+hugzC1UDx5dJTD9HBNJj0w/nDub+cTiCY1yOtfiLgJkm+el8Lff+WR6iaxUrPJdRPB74fplA9BgsUdCGQEevwMhkAdVQiDyRKw4DPIxdyYHzjir+o7MGo5GaOJ8L1nAoGVpJ1c/HJ1aqc+eMr2QTf/hDLvTbOfbQ7kfVXj5XRccN3Ee4sXADtRQMdGu7T6Iw8ZtyPw8Mxog0ZNQ4wIzfdY1IZjkwEkNJNEa57E/QYBwhCr/+arYfP08T67vnxAzEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qAjPT8/wnQdTNOkqQToaCVdskFCgj4mtqFEYhvCkUUM=;
+ b=dmVkhnymzY1tQjkbiH3whTagSChvRphQLHQOJPD08Wh3aJGRvrEHMepezlqUkRlPoXxXPmhYk7Y5g/bVBiK0nrCz2AMglRH5uNyplwuAKgUwU8udGPDj0wQ9Izvk8kCbgYIhw8s8GkuSWvx+JW4EKgN5xOb7dCZVto5CfGPDI0NSThUXA4jam5Apq+mY8fFfdGO2T01NNt8H8hwHzuYweHXwHM5QQoe1R7l1yyfPzTnTIjTSfGzRjpToEjcV8nz6CbbYczwq0n1jrM1opkz37eTZYID8VezhWZlPcIzyhQKg0JoTt5A84AwtY2MOQ6hlGTyvAkV6yT/T7GGUAvfBXw==
+Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:160::13)
+ by CWLP123MB2803.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:5b::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Wed, 26 Feb
+ 2025 17:08:59 +0000
+Received: from CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::c0fe:9ff5:51fd:3fdb]) by CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::c0fe:9ff5:51fd:3fdb%5]) with mapi id 15.20.8489.019; Wed, 26 Feb 2025
+ 17:08:58 +0000
+From: Manuel Fombuena <fombuena@outlook.com>
+To: pavel@ucw.cz,
+	lee@kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] leds: leds-st1202: spacing and proofreading editing
+Date: Wed, 26 Feb 2025 17:08:44 +0000
+Message-ID:
+ <CWLP123MB547333EFFFBFFA840225BC02C5C22@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <CWLP123MB54739F38EF9CFA057021BC2DC5C22@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+References: <CWLP123MB54739F38EF9CFA057021BC2DC5C22@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: LO4P265CA0156.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c7::18) To CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:160::13)
+X-Microsoft-Original-Message-ID:
+ <20250226170847.2349486-1-fombuena@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
-To: Sean Christopherson <seanjc@google.com>
-CC: <pbonzini@redhat.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <jthoughton@google.com>,
-	<david@redhat.com>, <peterx@redhat.com>, <oleg@redhat.com>,
-	<vkuznets@redhat.com>, <gshan@redhat.com>, <graf@amazon.de>,
-	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
-	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
-References: <20241118123948.4796-1-kalyazin@amazon.com>
- <Z6u-WdbiW3n7iTjp@google.com>
- <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com>
- <Z7X2EKzgp_iN190P@google.com>
- <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
- <Z7d5HT7FpE-ZsHQ9@google.com>
- <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
- <Z75nRwSBxpeMwbsR@google.com>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <Z75nRwSBxpeMwbsR@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D006EUC001.ant.amazon.com (10.252.51.203) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB5473:EE_|CWLP123MB2803:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59c5feac-7892-4704-4afb-08dd56884267
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|6090799003|19110799003|5072599009|461199028|15080799006|8060799006|7092599003|41001999003|3412199025|440099028;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OXB4cndrSG9XdjEvQ2I3Z2xRSmVUODVaZnZkSXByaU10RWpvS2o5SnZLR3pj?=
+ =?utf-8?B?c3R3RG9LY0JrNEttNjJ6SWEzOHFBMVF6cFBQOTlqcUVDZlRlY2k0V2IxcnBV?=
+ =?utf-8?B?aFUwOGpxKzFWcEFMSmFNZEJ3OTJJRWU3bU1Va1VyRS9PR2xxd2l3QUVnRi84?=
+ =?utf-8?B?RGtubHB1UjZHRnM4NkxEdE9yUUU4NkZnL3RBeGtDUUtPcTB3N28wcFpTb2R2?=
+ =?utf-8?B?eXZvTWZRL2dBNG8yWC9MZWFFSmhLY2lmQlpxamY2ZWVlZnBseForWmJuanNx?=
+ =?utf-8?B?eEdGL2d5UmJ2Nm5MSzFtSi9ueXBvdXEyQmErMzdjUUZqNDhvbWs5U21TZnll?=
+ =?utf-8?B?OGxaYVc5ZkZwUHhmYXBDN1p2UGpuand4TW90cG1meCticktqWWdwQnRUcGNS?=
+ =?utf-8?B?ZEcyVFZlMFlQWEJLOS92eC9OWEljQkNNeE1XSys0UkluWVpNY1EvM091cW55?=
+ =?utf-8?B?VzNOTE5RenI4OHlsMmxZTjlFd1gvVFBXNWhPMnB5TVNGWVl1WXF1bHF6NjYz?=
+ =?utf-8?B?dit2Y0ZUY2hqaGVwMEtPd3QwUS9PT0lKeE1SUHp5Z0dMeVhrMVllK2o1TUg0?=
+ =?utf-8?B?YitaRHNyMmsva3I3dzRCWnRSWmNPMXN0RXF5ZzdkR0ltZHFpbnA4MExVUEFU?=
+ =?utf-8?B?UTFpMW1FWGhzR2w5KzF3TFp5anlCanFENCttZ3NzdWN0WGxJbWo0dGJSOGo1?=
+ =?utf-8?B?SWkrWjJQUC9Nc3c1SlpEdnhnbHNQTnpOVC8zT3Uxb3J2QmcwYlZTU3dIVXJo?=
+ =?utf-8?B?VUxvRkhHTDlUQVJYU1FKU3BrblpOZ3lhQWd5Y2NDamowUWE1SkpLQk0zeTNw?=
+ =?utf-8?B?dXJUaTYwVmttWUYrWUJ1OXJLZzVCTVB0RUVSUm1mNzQ0MlhpNmgwVUs5TkZh?=
+ =?utf-8?B?R0k0WXUwdXlTakpYYVlucVpLam4xeVoyQ3BPT0d5cTd4Znk2N2k2cHRnSnpL?=
+ =?utf-8?B?UFRjaU8vdWFKYTVtWlpDRHZxV09VMXRuMEk1Rzh2UnhBc3JaaGdGczBKbWhL?=
+ =?utf-8?B?RERSN3RsMkdVa1ZDOUdrOGt4UHJBTjhlQWloTHZIRnFsajErdHI4b2FTaGsx?=
+ =?utf-8?B?RmN2MzE5amhRRlo5dldRd3BlemN2UUt1TFo3NDZacHNZSlNuMTRmcTN6d0dk?=
+ =?utf-8?B?d1p0bmlsS1VFc2pXbTlqVFNtVVBueEdnUStxUU9aaTZrMmJSazZuVVJtWWlB?=
+ =?utf-8?B?Ti9xSzcyNzVMWXNBV0dkdXBZRHAxRVNSRkZwVHlBeWl3ZlBqOHZBTzRSaGh5?=
+ =?utf-8?B?cldrR1BYakpzb2xSdlF3QjZ0Smkva2FMR0RYYWVsazVhR3J1OTdpVk9nZTFL?=
+ =?utf-8?B?K3k4akp5bE9CUnBQUWRQL0NFQlBSckNod1dnMXFTNkpNdlY2cUxYR0pid2Fo?=
+ =?utf-8?B?UWN2UW9NNG0rY2FuK3prY253ZUw3dUo5MkV0OVBzRFAvMGszK09paXBmempT?=
+ =?utf-8?B?Rmx0bmpCUDlpbUdqMkwzenBQNHRyRytmWW92TVNWQ1kxbHZHS2tKczJnSXo1?=
+ =?utf-8?B?aUhLSkp4Zk0xcE90VGROWVRuTS9kUTZyUXBxdS9tWjAvQmVvQitGbzBSbmpG?=
+ =?utf-8?B?T080Zz09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VWRpcDNEZkxZYjV1TTMrS0lLWUZzVVFTY3BKSy9uVWZYMU9hNmdvUExaK0Ft?=
+ =?utf-8?B?TWtGZE8yYnZJeTRYQkFVWGlEQitGOUtsLy9IVjMwMFhVVDJ0cDE5bS8xcktN?=
+ =?utf-8?B?Sy94MGRwTUVKR0I4LytkVGlRQmtWSDd1UW9GSXVyMjUwTzBMdUxNRXZ6OHlI?=
+ =?utf-8?B?K2NuYWZLM0pqdnNTNnZaZThnc0xyUWhNWk1ISFdoWEluSndCWThXSVJsaTNl?=
+ =?utf-8?B?L1Y4NlZabU0vdjNDUmZiMTlBaTBJTHFQUnl1bTRubkh6Z2pUV1JLSkU4NnBO?=
+ =?utf-8?B?RS9sM0QyQWUya1c2MldTY3c0ek01L25TU2tSd1ZEUGtORitJRk8yRWJ2d1ZY?=
+ =?utf-8?B?c01Sa1JUeEZuSDBHSlhWRTY0NGFvL3FJbWpiWWU3THVIdWRKK2h3Q0pHRWFV?=
+ =?utf-8?B?VWgra3hMZXVqSHdUeFV1QzVXZ3VrREdHQXRwSkwvVnB2SG5hOXA5TnFIcmtM?=
+ =?utf-8?B?VDk5a3hVSXZTWTh6QnBXenJSRFZpalgzUlBQaTJjM29DelVXWGdENjVDeVZo?=
+ =?utf-8?B?OHNycXZLaHdSalloZ0I4eXhHa3VXUWtRU1ZnVGx0R0R6L3pzd0VMWkFza2Yz?=
+ =?utf-8?B?dGwybFgybDhEcCtSb2YvOWs3TWowR2UvTW9ER2szS0dENVlESVRlS3hEVFA0?=
+ =?utf-8?B?L25YZkU3eUVGempnL3pGd0E4T280OUpRZ2JHdHh2cSsyTmduU1NpOUJqaW4x?=
+ =?utf-8?B?VDhTNFQzVFV3SXNkZitsNDJhU2UyTGhQUmpQMEVjZlFMNUJTQ1BrZUNrZTha?=
+ =?utf-8?B?cTQxS3ltK3NnRFFpamxlenRZRlE3bVBWZ2FyUWxESWhXS0pLaTZkYVhkQjJV?=
+ =?utf-8?B?UTNBTWEyaVZjZ21PWk9HL1owek1ZOWxnZTVkK29VSmtvR3JqMkg1MkhBVFdm?=
+ =?utf-8?B?Qi8xNCt3by81VC95eGk0ckdjdGJZUHVlNzJZUlZyS2dJQ0tVa1RocmV2c1h2?=
+ =?utf-8?B?OHB2VUIzSy9uZVA1Q2IzRUxKREF3VEdGMjRpYWJ4WmhSTEJEMzM1dU55YWYv?=
+ =?utf-8?B?UXRXY1ZHN2VoaEFRdEx5RFZVNTJ3b2h5cGg2UVBiQWUzSkJ5RHFIREVtMVBG?=
+ =?utf-8?B?dzk2cE4rdzJTQklZNCtRdXp6MGgzcFhoSU9iazB2TGkxcDltVGNuUzhGcFhZ?=
+ =?utf-8?B?alRXWFNBaFpVNmZvUjhpT0VHWkU0NHpiVUk4YkdBTW9PUmEyL2VIVU5Vbmpo?=
+ =?utf-8?B?dVhPNFQwYyt6Y2tOYXNjTlN6V2o4a1E5SFd5blQzaTJxQWZMQlVsUVZBMmlD?=
+ =?utf-8?B?SnBFWm9IbVlwbWVRVEVrQXRIV1FwNGZVU0tTdFdIcG5oejRIZmVHRm1VaGxz?=
+ =?utf-8?B?SUJ0M1kwclRkZnBTdWtYNkdoWHBnWDh5OEptcWx6TWtFaGpxdFFKdXlRSDVG?=
+ =?utf-8?B?NStEdG1Rb2R1bnhaK1l0eUdRN0hDMStSVGVGMmFQa2Qxc1c1SlA4QTZtMFVI?=
+ =?utf-8?B?SGY3cGVhZGttSkVhU3VuZ3pGeXdpdzdGbG1COUZ1TnMxdlAzYUV1SlZoY3Qr?=
+ =?utf-8?B?UjRjVDE3UlR6enlTQk5VaGdYY3NZZ3dadjBOZ1BTamxvZFh6R3h1S05lZ2Ry?=
+ =?utf-8?B?anlvbnMxNFM3QjF3TEJIZk52Q1g2NUxiQkFzQy9aV25ldGdzWTlrRTZoWjBB?=
+ =?utf-8?B?aVRFdUQxVXpZM0JNYndpYjEycWdYY29YdGZhRStvTlVpTVBvdUZvVVBHRWNO?=
+ =?utf-8?B?MVhYenVtb2J4MlJJd3JkZlBoWWFvb3lyTzR2aUhMY2JHL2JOSlhsVjZ0Mm5K?=
+ =?utf-8?Q?4+fpubi9JWaKZTOArU=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59c5feac-7892-4704-4afb-08dd56884267
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 17:08:58.9457
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB2803
 
-On 26/02/2025 00:58, Sean Christopherson wrote:
-> On Fri, Feb 21, 2025, Nikita Kalyazin wrote:
->> On 20/02/2025 18:49, Sean Christopherson wrote:
->>> On Thu, Feb 20, 2025, Nikita Kalyazin wrote:
->>>> On 19/02/2025 15:17, Sean Christopherson wrote:
->>>>> On Wed, Feb 12, 2025, Nikita Kalyazin wrote:
->>>>> The conundrum with userspace async #PF is that if userspace is given only a single
->>>>> bit per gfn to force an exit, then KVM won't be able to differentiate between
->>>>> "faults" that will be handled synchronously by the vCPU task, and faults that
->>>>> usersepace will hand off to an I/O task.  If the fault is handled synchronously,
->>>>> KVM will needlessly inject a not-present #PF and a present IRQ.
->>>>
->>>> Right, but from the guest's point of view, async PF means "it will probably
->>>> take a while for the host to get the page, so I may consider doing something
->>>> else in the meantime (ie schedule another process if available)".
->>>
->>> Except in this case, the guest never gets a chance to run, i.e. it can't do
->>> something else.  From the guest point of view, if KVM doesn't inject what is
->>> effectively a spurious async #PF, the VM-Exiting instruction simply took a (really)
->>> long time to execute.
->>
->> Sorry, I didn't get that.  If userspace learns from the
->> kvm_run::memory_fault::flags that the exit is due to an async PF, it should
->> call kvm run immediately, inject the not-present PF and allow the guest to
->> reschedule.  What do you mean by "the guest never gets a chance to run"?
-> 
-> What I'm saying is that, as proposed, the API doesn't precisely tell userspace
-> an exit happened due to an "async #PF".  KVM has absolutely zero clue as to
-> whether or not userspace is going to do an async #PF, or if userspace wants to
-> intercept the fault for some entirely different purpose.
+Minor edits regarding use of spacing and proofreading.
 
-Userspace is supposed to know whether the PF is async from the dedicated 
-flag added in the memory_fault structure: 
-KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER.  It will be set when KVM managed to 
-inject page-not-present.  Are you saying it isn't sufficient?
+There is a minor inconsistency in the use of spacing as margin in
+one of the comments providing details about the datasheet.
 
-@@ -4396,6 +4412,35 @@ static int __kvm_faultin_pfn(struct kvm_vcpu 
-*vcpu, struct kvm_page_fault *fault
-  {
-  	bool async;
+There is also a typo that comes from the datasheet itself.
 
-+	/* Pre-check for userfault and bail out early. */
-+	if (gfn_has_userfault(fault->slot->kvm, fault->gfn)) {
-+		bool report_async = false;
-+		u32 token = 0;
-+
-+		if (vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
-+			!fault->prefetch && kvm_can_do_async_pf(vcpu)) {
-+			trace_kvm_try_async_get_page(fault->addr, fault->gfn, 1);
-+			if (kvm_find_async_pf_gfn(vcpu, fault->gfn)) {
-+				trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn, 1);
-+				kvm_make_request(KVM_REQ_APF_HALT, vcpu);
-+				return RET_PF_RETRY;
-+			} else if (kvm_can_deliver_async_pf(vcpu) &&
-+				kvm_arch_setup_async_pf_user(vcpu, fault, &token)) {
-+				report_async = true;
-+			}
-+		}
-+
-+		fault->pfn = KVM_PFN_ERR_USERFAULT;
-+		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-+
-+		if (report_async) {
-+			vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER;
-+			vcpu->run->memory_fault.async_pf_user_token = token;
-+		}
-+
-+		return -EFAULT;
-+	}
-+
+Change spacing on comment and correct typo.
 
->>>> If we are exiting to userspace, it isn't going to be quick anyway, so we can
->>>> consider all such faults "long" and warranting the execution of the async PF
->>>> protocol.  So always injecting a not-present #PF and page ready IRQ doesn't
->>>> look too wrong in that case.
->>>
->>> There is no "wrong", it's simply wasteful.  The fact that the userspace exit is
->>> "long" is completely irrelevant.  Decompressing zswap is also slow, but it is
->>> done on the current CPU, i.e. is not background I/O, and so doesn't trigger async
->>> #PFs.
->>>
->>> In the guest, if host userspace resolves the fault before redoing KVM_RUN, the
->>> vCPU will get two events back-to-back: an async #PF, and an IRQ signalling completion
->>> of that #PF.
->>
->> Is this practically likely?
-> 
-> Yes, I think's it's quite possible.
-> 
->> At least in our scenario (Firecracker snapshot restore) and probably in live
->> migration postcopy, if a vCPU hits a fault, it's probably because the content
->> of the page is somewhere remote (eg on the source machine or wherever the
->> snapshot data is stored) and isn't going to be available quickly.
-> 
-> Unless the remote page was already requested, e.g. by a different vCPU, or by a
-> prefetching algorithim.
-> 
->> Conversely, if the page content is available, it must have already been
->> prepopulated into guest memory pagecache, the bit in the bitmap is cleared
->> and no exit to userspace occurs.
-> 
-> But that doesn't happen instantaneously.  Even if the VMM somehow atomically
-> receives the page and marks it present, it's still possible for marking the page
-> present to race with KVM checking the bitmap.
+Signed-off-by: Manuel Fombuena <fombuena@outlook.com>
+---
+ drivers/leds/leds-st1202.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-That looks like a generic problem of the VM-exit fault handling.  Eg 
-when one vCPU exits, userspace handles the fault and races setting the 
-bitmap with another vCPU that is about to fault the same page, which may 
-cause a spurious exit.
-
-On the other hand, is it malignant?  The only downside is additional 
-overhead of the async PF protocol, but if the race occurs infrequently, 
-it shouldn't be a problem.
-
->>>>>> What advantage can you see in it over exiting to userspace (which already exists
->>>>>> in James's series)?
->>>>>
->>>>> It doesn't exit to userspace :-)
->>>>>
->>>>> If userspace simply wakes a different task in response to the exit, then KVM
->>>>> should be able to wake said task, e.g. by signalling an eventfd, and resume the
->>>>> guest much faster than if the vCPU task needs to roundtrip to userspace.  Whether
->>>>> or not such an optimization is worth the complexity is an entirely different
->>>>> question though.
->>>>
->>>> This reminds me of the discussion about VMA-less UFFD that was coming up
->>>> several times, such as [1], but AFAIK hasn't materialised into something
->>>> actionable.  I may be wrong, but James was looking into that and couldn't
->>>> figure out a way to scale it sufficiently for his use case and had to stick
->>>> with the VM-exit-based approach.  Can you see a world where VM-exit
->>>> userfaults coexist with no-VM-exit way of handling async PFs?
->>>
->>> The issue with UFFD is that it's difficult to provide a generic "point of contact",
->>> whereas with KVM userfault, signalling can be tied to the vCPU, and KVM can provide
->>> per-vCPU buffers/structures to aid communication.
->>>
->>> That said, supporting "exitless" KVM userfault would most definitely be premature
->>> optimization without strong evidence it would benefit a real world use case.
->>
->> Does that mean that the "exitless" solution for async PF is a long-term one
->> (if required), while the short-term would still be "exitful" (if we find a
->> way to do it sensibly)?
-> 
-> My question on exitless support was purely exploratory, just ignore it for now.
+diff --git a/drivers/leds/leds-st1202.c b/drivers/leds/leds-st1202.c
+index e7dce8c26bde..4e5dd76d714d 100644
+--- a/drivers/leds/leds-st1202.c
++++ b/drivers/leds/leds-st1202.c
+@@ -99,9 +99,9 @@ static int st1202_pwm_pattern_write(struct st1202_chip *chip, int led_num,
+ 	value_h = (u8)(value >> 8);
+ 
+ 	/*
+-	 *  Datasheet: Register address low = 1Eh + 2*(xh) + 18h*(yh),
+-	 *  where x is the channel number (led number) in hexadecimal (x = 00h .. 0Bh)
+-	 *  and y is the pattern number in hexadecimal (y = 00h .. 07h)
++	 * Datasheet: Register address low = 1Eh + 2*(xh) + 18h*(yh),
++	 * where x is the channel number (led number) in hexadecimal (x = 00h .. 0Bh)
++	 * and y is the pattern number in hexadecimal (y = 00h .. 07h)
+ 	 */
+ 	ret = st1202_write_reg(chip, (ST1202_PATTERN_PWM + (led_num * 2) + 0x18 * pattern),
+ 				value_l);
+@@ -287,8 +287,8 @@ static int st1202_setup(struct st1202_chip *chip)
+ 	guard(mutex)(&chip->lock);
+ 
+ 	/*
+-	 * Once the supply voltage is applied, the LED1202 executes some internal checks,
+-	 * afterwords it stops the oscillator and puts the internal LDO in quiescent mode.
++	 * Once the supply voltage is applied, the LED1202 executes some internal checks.
++	 * Afterwards, it stops the oscillator and puts the internal LDO in quiescent mode.
+ 	 * To start the device, EN bit must be set inside the “Device Enable” register at
+ 	 * address 01h. As soon as EN is set, the LED1202 loads the adjustment parameters
+ 	 * from the internal non-volatile memory and performs an auto-calibration procedure
+-- 
+2.48.1
 
