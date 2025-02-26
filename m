@@ -1,67 +1,81 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DE7237A3C;
-	Wed, 26 Feb 2025 18:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259C2238D38
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593172; cv=none; b=JuHeJWPaXsVFvwudIPeQRzXtyO0vYlum/mLpXeSJsiZHB0UlkOPm61tak73KFUxl/YmRWp7bqLggbkKxRN2Xu1/IFCY6ad6p+m/Lg6kwj61JxgP2nH/XtTEmdGnvq4PMXD3KM+EgQ6Zqlh5GFwzZFuslqMgTQPROhRcIxKtR18I=
+	t=1740593172; cv=none; b=HHMw09vqMqA1T/3Q3NslB+lI2M+eS+0rPsWcIAiBVETCLsUlWYWcs/yYJ9zd6GmaAtFZXSm90ezK+y9IqDeeE5LlOSo3zPDQvMl+kPpwSV5Xbvwa2EtAcvLDTGpP41KL8t8LVG52GbGfuwQH/e/1pFMuZArChWQbNNqmchjJUO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740593172; c=relaxed/simple;
-	bh=M2GCDMYXKPzt4/PvhKj/HcIFWZLwVtUlCbkxo1QG6DM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=inwmi9Jk4PV+ruYVez06KdpzcRXy+NW7AtrCW0+JaDZKSD68bJbhrnPH0Ea58N/PIMjNq1+LvTeCJICT5CQGJ0sK0RBtJtxItmi6kPKgmUNW74DilorKTIFw/Bt2okqvTcdDOf1ppbjTldF1/1KHMHn4NfqAWN8YBUOUTJzKIv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C9gUKM+M; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=+NITKJToEUXuaXK8zS47p3zttszR09n9fFSVaLvRHdk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u9UYnRBPjSMmbcUoqpi8xYM0IlPoxVmt9VaV9a2AaRrOCe0S3wLSEOzJEMxGMtjELMDyguysQ3VX/qx6zNfAuo1sdkDci6PLUoT9Wd8v1gmy9yIR/PNr0+QXDsSPzEi/D2RZr8ISIQKTcrZ8Rd3LrZ0tmXOf0m/ymYJ67vdXtXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yn9mxMVo; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C9gUKM+M"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QFLekO006009;
-	Wed, 26 Feb 2025 18:06:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=45xki2fgtNR5LipFcaj+LgyMGswOAgaJe1VLNBDG1
-	YY=; b=C9gUKM+MlmZgHhOhgRf21EQkGKo7gncmaVukLipGJ+OptbgjuRkEMmn+O
-	w/HRDaRqPynS+wtc/6RkysGqlmOwfrjCoea73egGgzEJMSVWgcfxEziVInkQi57v
-	D68Zkel6sKUwbgjHlsRybNV6K1Gi6SOX22G7mkIMszGNbEKi9BC0deUpakBnQIhM
-	gTwng99pkQpAb6RJxmB2jw7Ekp+LnT1BAXLKRyoWh921S+fGDEqU/8zTUSQphkHZ
-	2jLB3Tu9peY3x3AV3kc0wCK9x6r0KfhhkPiiMhX04bL7REFqFCoRTCulGAKCiWJ0
-	t85KHYvgQCamlNEgkeaymdSoYLhxA==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451xnp32dc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:06:08 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51QG0E2X027390;
-	Wed, 26 Feb 2025 18:06:08 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ytdkm21y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 18:06:07 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51QI66Pe23790292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 18:06:07 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DDAF85803F;
-	Wed, 26 Feb 2025 18:06:06 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2872C58061;
-	Wed, 26 Feb 2025 18:06:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.61.248.9])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Feb 2025 18:06:06 +0000 (GMT)
-From: Rorie Reyes <rreyes@linux.ibm.com>
-To: linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc: hca@linux.ibm.com, borntraeger@de.ibm.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com,
-        alex.williamson@redhat.com, akrowiak@linux.ibm.com,
-        rreyes@linux.ibm.com
-Subject: [RFC PATCH v3 0/2] Eventfd signal on guest AP configuration change
-Date: Wed, 26 Feb 2025 13:06:03 -0500
-Message-ID: <20250226180605.15810-1-rreyes@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yn9mxMVo"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5fe944a4243so17833eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:06:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740593170; x=1741197970; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AzASOhbn/TdUnUq2BoNH4zzSfvXYoXG0ehJxyB+XGAg=;
+        b=Yn9mxMVoVEencS7lXzRJU1YL+j7md8nXLHoMXxlzKghYcO1Taf6Zg9S8ujTo7a6aJj
+         yEsFeBhR6HbfiOT6kvUtnpgCRSPR6LdC1On6m9+ulWoeAqtPChdF7Sfa9LdB+sWE9665
+         MYx7/pa4sPQu+98BD7qfnfZOiQ/Gu68g96I8lyYzScqN/1HXEmXz855Nqr+uVEeWpyNN
+         VjVUUlmlMFfZI4XX3WzG8optFFLm4y+UsPFz1luD0iL58wgz9UhZy71JSDaCEx50yBP7
+         RC/o5bYOiKtIKT1nEDLvXHXOD1S/1Uro/cxDrcdhOjky+Cjt7F3N3Dpnc7t/5KsOmhP0
+         q1RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740593170; x=1741197970;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AzASOhbn/TdUnUq2BoNH4zzSfvXYoXG0ehJxyB+XGAg=;
+        b=QL41eUK493Rm6ZquMEprrDSI0G46kVigdGLpPNFgPO8ANGHlZL/XI0hulQSCxr0KJ3
+         ujJG4/E9oanLcfCuIpykOjkGkyZ/7JQGdM65f6HRxyQJDHZZundbHlD61tC35ttU95uA
+         bRiHA8RYrsQpjiclPxJmTMRtiIR55haZd0/MtBmW1YiOmZOEMgKdE7m3hDH0ezBrNpLa
+         7E721KvdHdtlzjeig7eq+GdLPBE2BtNu9CtnjS5514jRfIohgt2kNOWPmNH/doZo4pU6
+         OAM+1eyzyscG6wXUFhb0XRidGOs3M964dWbx9BP3K4ZbP1Fvxxl/z/HA/r74DQUq4qRP
+         arsA==
+X-Gm-Message-State: AOJu0YxoS2AUZHbPcS5HrdgYwQ4KvIcD4kanNR2vXPQJzmMYa0wcT7rV
+	a5YZmsQFOX5AIYhs3YSeNpNf3o7ftcUnAHgCGrKS8sVttGSq5Zm6pGZL
+X-Gm-Gg: ASbGnctmSAhsIlcE6t92uygGkICKUSubWKCWwRtQbAtY+r3dBTiOCWyfEh4g46h+SxW
+	TccbA5gbkP+RcRmebLtOe30i5dd6vJwTiR5uitxOoDJuW4zI7t36P7OImw92ERCQNtuVaNnu2TH
+	13wVpKlcs6Tb38wqND0RNMlxr/9PuBZDNNlF7V9G12jGLxGCERO6+tqmK3xLTe3hOL7bkbgly4B
+	LNzKgUJbbQ4+36oXN3jOp2rFjR5XWirldiFszMoeEfC4x7Bek6K3l9fubw1aOpDNN4/pAu0yavp
+	Ht0vI9Q=
+X-Google-Smtp-Source: AGHT+IFii8Y/uCMqIDFr/IoOM4XP5abwoUhsViZfg/Vzn8cm5Kj85HSMWVmn3VxiKZKd22QeLpQM+A==
+X-Received: by 2002:a05:6820:506:b0:5fd:b85:9b47 with SMTP id 006d021491bc7-5fe937185camr3833158eaf.1.1740593169862;
+        Wed, 26 Feb 2025 10:06:09 -0800 (PST)
+Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fe9428c8b3sm755069eaf.39.2025.02.26.10.06.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 10:06:09 -0800 (PST)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v2 10/11] x86/stackprotector: Move __stack_chk_guard to percpu hot section
+Date: Wed, 26 Feb 2025 13:05:29 -0500
+Message-ID: <20250226180531.1242429-11-brgerst@gmail.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226180531.1242429-1-brgerst@gmail.com>
+References: <20250226180531.1242429-1-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,50 +83,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eavvfycujSBJpvXB4jnygOtEBBJ0BrYY
-X-Proofpoint-GUID: eavvfycujSBJpvXB4jnygOtEBBJ0BrYY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=865 spamscore=0 phishscore=0
- mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502260142
 
-Changelog:
+No functional change.
 
-v2:
-- Fixing remove notification for AP configuration
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/stackprotector.h | 2 +-
+ arch/x86/kernel/cpu/common.c          | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-v3:
-- rebased the first commit b26ed71f9647 ("s390/vfio-ap: Signal eventfd when
-guest AP configuration is changed") since I moved 
-signal_guest_ap_cfg_changed(matrix_mdev); to function vfio_ap_mdev_request
-- Fixed commit message to give details regarding my changes for commit
-76cd7c4edebf ("s390/vfio-ap: Adding mdev remove notification")
-
---------------------------------------------------------------------------
-
-The purpose of this patch is to provide immediate notification of changes
-made to a guest's AP configuration by the vfio_ap driver. This will enable
-the guest to take immediate action rather than relying on polling or some
-other inefficient mechanism to detect changes to its AP configuration.
-
-Note that there are corresponding QEMU patches that will be shipped along
-with this patch (see vfio-ap: Report vfio-ap configuration changes) that
-will pick up the eventfd signal.
-
-Rorie Reyes (2):
-  s390/vfio-ap: Signal eventfd when guest AP configuration is changed
-  s390/vfio-ap: Adding mdev remove notification
-
- drivers/s390/crypto/vfio_ap_ops.c     | 65 ++++++++++++++++++++++++++-
- drivers/s390/crypto/vfio_ap_private.h |  2 +
- include/uapi/linux/vfio.h             |  1 +
- 3 files changed, 67 insertions(+), 1 deletion(-)
-
+diff --git a/arch/x86/include/asm/stackprotector.h b/arch/x86/include/asm/stackprotector.h
+index d43fb589fcf6..cd761b14eb02 100644
+--- a/arch/x86/include/asm/stackprotector.h
++++ b/arch/x86/include/asm/stackprotector.h
+@@ -20,7 +20,7 @@
+ 
+ #include <linux/sched.h>
+ 
+-DECLARE_PER_CPU(unsigned long, __stack_chk_guard);
++DECLARE_PER_CPU_CACHE_HOT(unsigned long, __stack_chk_guard);
+ 
+ /*
+  * Initialize the stackprotector canary value.
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index ac8721a0eb3a..62472b8f798a 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2097,7 +2097,7 @@ void syscall_init(void)
+ #endif /* CONFIG_X86_64 */
+ 
+ #ifdef CONFIG_STACKPROTECTOR
+-DEFINE_PER_CPU(unsigned long, __stack_chk_guard);
++DEFINE_PER_CPU_CACHE_HOT(unsigned long, __stack_chk_guard);
+ #ifndef CONFIG_SMP
+ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+ #endif
 -- 
 2.48.1
 
