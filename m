@@ -1,218 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2B61607A4
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740547057; cv=fail; b=lW0Cl54hLBkomI4lSu4u5dfNti8zHeSutVmTQdfoSlfQIxjxAdBmrEeho4U4K+Zr8U08fdcRR3bUwSX6xlvUMucaGfmbPWQq2tKwu1JNkboaKzZPwRjklAxMZZVJg8KrTmiM1X9fHk9W+E3hZDhhHEP0Z+H1Jxh8bI0Bt2S61BQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740547057; c=relaxed/simple;
-	bh=N9aauW39sp0nahKpht99+/4km1dPZoRqrxJeAe5PZ8c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=P6rHqr/RX+/OZ85prOJ481dZlNuVBONAP+/HZH3m83x1sSbP9KFd/qh8ZLiy4uXkJKTz6WeVxGzX1Q+PcbMBqe5nW7LyEHRiTjRNIgWde5Vdk45QBVcm4cma3cvYU+t7qKsS2Oe6mf3+XlYjmr1D+Klhm17TYHutsAcKYQdznok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BlF8Lx9j; arc=fail smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858B11607A4
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:19:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740547159; cv=none; b=k24pxx2uC9CuNXqeHMZleURb49GlEmeb6F25ySM3yvb6SocieFBMZ8HKwQGQOrYVhDphNW10kPz4HiIxxK4lCk4aobDqv0xJsG+pk34NvS9jrHCtl8QrpQI0TyRKrxRtRG44Zrh4yBW7zYGaFIifFQL2r83nugzueA+yNVcAUTU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740547159; c=relaxed/simple;
+	bh=PU4rgz4UqbomnvL0C0GUKnj/4S461kaQTOJVw1OcS1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y5sSKLt46sga1JjZZzlQ8sQj6sQFll0EWQxW172goDRCNOiashD15NvsWINBUrwyB/NQasdLKHIkheoPzstzoZN07/whuQztVmbglPSH4va/HfBShrmpAJ0nQ35lN781wRnz8tVzvbqrN+ha3YcStGLV4t5/Gv/gBRFrL9OAlA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i1JCnNMx; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BlF8Lx9j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740547056; x=1772083056;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=N9aauW39sp0nahKpht99+/4km1dPZoRqrxJeAe5PZ8c=;
-  b=BlF8Lx9jgMm+jJt7ipwKSgsxevtosLwEjaChP3Rz9au+J1Qo2jxpUXkv
-   dSeICtvZ2w+jiTiFacftT3s/uyi7CZTIVe+eqvuGWa4ekHXulsvmQN1VR
-   2Vrz1hu4XlCaWSSSQR7JEQAqqY8sZJz+106l6kelZ5/mxIKzXwEZSjGrZ
-   tc+3HXUpIWG4sFf8V4fu0wXll1zDqXnsIcvy7vZwRqu1hmmfoHCR4RQGK
-   i0AzvBeW1UoYrL5cPyb5yVHdmEPDe3brt2C2w9NiOsfy+1LlYmGp4HRmY
-   FzZxJO7UtejR2jZq0s8rbYsgWcBQScxhjXwPvJsY5qo4JO2eFWcN63Ply
-   w==;
-X-CSE-ConnectionGUID: zwXgQFtiTe6zlvqOKwQV5A==
-X-CSE-MsgGUID: FaXooFLtRr6vLMEoBIve3A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41398260"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="41398260"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:17:35 -0800
-X-CSE-ConnectionGUID: 6ITDL+YOTzOxEitgWTwgbw==
-X-CSE-MsgGUID: p51jWlcjR36VXLlJR2DCjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="116389029"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:17:35 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 25 Feb 2025 21:17:34 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 21:17:34 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.44) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 25 Feb 2025 21:17:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gx95ENbRk212QtK3jwC+eqL8HqFzcmFwQw9YCecJhej0hjyAO/FhGLbIKy8wY9lYL/dqQoSIOvvL2ulv03KJCV1rmRcb8BlhovIzzHNUlH0bM6p5KocEsNWqvvQbAgZ+0Gug2hj2DTA2RZ0IhvsAZqfilG8o1Hmf3lJS0LKOjyrzl2qlWPK4dWjS4bu7RfWMOY2FRShL+vTEvTq/7JnRe3HPyuYZQsB447fQQV91ZPd7/S1e629pjTgTGRvMkk50CuZMeyeSUUcY7LxL2SHvCgrSGqTcX7vpwNXzgDJe34y92O97leDY630tcLiosjgtN+8zud4sbvLChbFiLGmIWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N9aauW39sp0nahKpht99+/4km1dPZoRqrxJeAe5PZ8c=;
- b=nWWwNHctUz52TSWsFTONxF58wFgnqk209C9umNe558J3vggt8Kf/o69/Q6PqqB6GQUKLoNn+M3ocn7VPL3J6R0d4MIvpGgxemllaha2+HG80FN+Rq1kvrfclL/YJlnFVWN7tAUs9E07vCrYtApR/KgU5A17Ab9Cs204JT+SpjO8gAOen9W9MG4jQ3pAXR8uq8D9FWna+citG11ryombwMjas8aSOsc+pmL+ITc+KgmrL+gzUcPkreBN9OcF0cz3w2OZcPCSSbjSc77A9OAuYJWDNEtZwdr4PO3Hjl77KxTupREmWcX3JxgYdU5GW6rl5zRM+P1wGc7PbcN77DneyRg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by SN7PR11MB7993.namprd11.prod.outlook.com (2603:10b6:806:2e5::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
- 2025 05:17:27 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8466.020; Wed, 26 Feb 2025
- 05:17:27 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
- Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
- Gunthorpe" <jgg@ziepe.ca>
-CC: "Jiang, Dave" <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-	Fenghua Yu <fenghuay@nvidia.com>, Zhangfei Gao <zhangfei.gao@linaro.org>,
-	Zhou Wang <wangzhou1@hisilicon.com>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 06/12] iommu/vt-d: Cleanup
- intel_context_flush_present()
-Thread-Topic: [PATCH v2 06/12] iommu/vt-d: Cleanup
- intel_context_flush_present()
-Thread-Index: AQHbhntMC6a5A/3El0281ujJDWut9LNXpELAgAFT5YCAABZK4A==
-Date: Wed, 26 Feb 2025 05:17:27 +0000
-Message-ID: <BN9PR11MB527652E646F7437CA7E4AFE58CC22@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20250224051627.2956304-1-baolu.lu@linux.intel.com>
- <20250224051627.2956304-7-baolu.lu@linux.intel.com>
- <BN9PR11MB52763EE4B5976621A7797DBD8CC32@BN9PR11MB5276.namprd11.prod.outlook.com>
- <421bb6af-4b7b-4987-8db2-037a39d43078@linux.intel.com>
-In-Reply-To: <421bb6af-4b7b-4987-8db2-037a39d43078@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|SN7PR11MB7993:EE_
-x-ms-office365-filtering-correlation-id: 06e13819-96e1-4a46-8312-08dd5624dc4b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?OFdqQ2pGSGFZZjNKSVgzSEJoTWY0em9SVkFVUFlidzdyWG13RHJBRnhZaDRm?=
- =?utf-8?B?ek9FT0pKTVZrS2xsTVBtQWZUQzZRNUZSVmRmbitWT1E5QkRyV3hFblVidUx4?=
- =?utf-8?B?TzE5Qis0czJsZThsbnUxNlJBc3JTSWo3NnhqN1piR00zR016a3V2bzcvRmsz?=
- =?utf-8?B?RmRDS1laWGRIbS9JckhtT0cxL1FpRzRROGU4Wk9ZZ3llQmRkRktoU21uUzBB?=
- =?utf-8?B?YnRmcDZZRm91dW5paWlqVk9sdzY0blBpdGxqTWxsOWZyR3J2V1R2L0ZMMDhY?=
- =?utf-8?B?TCtkL0lKZzZld0ZDdWF6dnJBRHdqdjRvQzVKbnZEdnUzMUJ1WUhmMmdVdGJa?=
- =?utf-8?B?ZUNxVGljTHR1QkxncVlha1dIWC9teTZDcmZkbWtpL2FlWnB0STlaQTU5K3Vi?=
- =?utf-8?B?a3JuUDU4azNnREZFZU5ickUybUxhNWFSNVFoblBKZHFQRWVyb25hU3U5ZHBk?=
- =?utf-8?B?bU9wWm9VSFg3eDhkMEh4VUpHdklrbEtVaVZCYVNhK0wwU3JYT0dSUWh1Yld0?=
- =?utf-8?B?WWJzVFJYbWFvaXRlSnpRWFR6K1FEMGxSQ1dTSkpLUVpvY2NycHJ1STVmaUt3?=
- =?utf-8?B?VVdoUTFwNjdsQnZqZk0wcFVTUDcxUC8rOEtWcWZZa3ZQbWMyVlpWRTRHM2VQ?=
- =?utf-8?B?czB0Tnp2NS93VEhCMU93dW5Yc2RNSXozcm1jaXU5RjltOHErZU5XWjFZQjZj?=
- =?utf-8?B?SjRPcVpmdjgrM0pXTGZzMUxoelRhS1JCQitqZzhZVDJ4aTFuTnFDTEk2dkFn?=
- =?utf-8?B?a1FVY1JEVDMxbFlmNjBSSXVXN04zaTVTZEV5V3E4T2diNnBoOWUxdmJvMnor?=
- =?utf-8?B?V1JTVFJqb1krV04yVjBZdGlFYk9TK1pLTEV1bzNJQTJhWUY2WGFOSGorMm55?=
- =?utf-8?B?cVIySHRLVkxLeE9IZERFMkQ0TnFISW03Q3libUJFZnd0Q3pSM2x2ZGZQYWhq?=
- =?utf-8?B?NzJPenJjMmFpZHdmWHIrdGszdHN1Mms2aUZPaGpGZmMvRGFSNDZnOUMreXI0?=
- =?utf-8?B?SHV0eW9UR3NlV1h3RzkrM25ucmZaMkFRWTJJb2ZzNTg3c0hjNnRLaFJ2MXhk?=
- =?utf-8?B?ZmpGcmRaZVRDdmdwUzd5b2NiQVNPOE1oeXJRem5YV0hUMDk4eTdRMGlpWHVX?=
- =?utf-8?B?SGxZb2t5TTVtb3A5aHB6RWo4bXY0Ni92MnZxUThQK0ozK25TSTQvZGZSUmpW?=
- =?utf-8?B?T1B5cldTK2E4eTMzb0hxZkhEZE5oN1o1QmpPTnVLQUludEI2bXNOVW9BN1dN?=
- =?utf-8?B?SjlPV210alpXRjBXMVB3bDBOdGVlSjJKb2tTSVN1YmdMTW1sR09DWU5DYTBK?=
- =?utf-8?B?TEFKNmFtZ0RkMnlzOTEwaVFsZHFyQU1ORFJtcHNlVDMyUjRJOGV6Y0t4aXZ4?=
- =?utf-8?B?UjlrY2tkSWN6ZTVpaGY5bzJtY1NPVXZQRk9TOVFrdHpUUXJNK3NONkFBb1Bm?=
- =?utf-8?B?QkgrcmxHZlZncUpqMGdFZjdva0ZnYmorUTNXOTMweVhQMlJhS3NsbEZZSHcv?=
- =?utf-8?B?OWMrWDRvOXYrc2daZXloc3FMMmFhMVhnTVByK3ZuclEvSGg1eC91RStxN3RK?=
- =?utf-8?B?VXdFaldHUFQ0VHNOb3BqOU5XOHlPUlhmUEtTa0xPdUVIeTZBa3NhUitGcGR1?=
- =?utf-8?B?VE5QdFdXbEJrSlpQbjJoNjdYSzZzNmtHMjlUOUxya2Ixa3gwT3dSLytRZXdh?=
- =?utf-8?B?a1lWY2FYcWcyeWFtcUQ1SkRnVjltZDAybkU5S2E3RFl1MDRuY3RHSEJ6U0JZ?=
- =?utf-8?B?aDdCckJHNEZWTncwZCswMGd6OEZhbWgxMnRYb2Z4YXdNRUxQR3M5VXNyQSsv?=
- =?utf-8?B?Z3VmYUxWNkpNM2dyTkVNbEwvUmdjVmVmS2ZiV0VnN1REQ2dWc1QrYjZTOWcz?=
- =?utf-8?B?Sm1pT2svZWxxUVBsY1V1MXFoZnhUdlh1OE01TUxlUHVnS05QZnBEOUdCc3l1?=
- =?utf-8?Q?M6E0xXDcUTnEQGy8fIPNm8NnPelBYPTW?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SnI1b2dsNEd2UXVjZHBlRUp6OW5GZi9YMHlGcW9naUltQlpkaU5rdVhJQVA5?=
- =?utf-8?B?R2IzN043RG5yNXFndHlvdmlGTEVGdk9PMkhJL252TE5UNUt1dkMySUJTeFRk?=
- =?utf-8?B?YThjWGhTc1JKdC9GcWxvMkdLSXRsVmxETDR5NXJwUE5JeEg3SkpQbUczcW9q?=
- =?utf-8?B?MlRLRTBCRW1kRTA2RG50ZVJZTXBDczBSMmJLVlBvWlk5NHdhTXROZUhVZ3Rs?=
- =?utf-8?B?eEdFUWdTeENMeXNJMFNxRGdBVFh0Q1dUK1doMDFEek5MNVZuRzlRRkhxSjFL?=
- =?utf-8?B?OU9TWUdHcERoUlh0WldpYTBhRVJuSHdmZ0VZcklJOFQ2Vk16QzRMcGYzaDNF?=
- =?utf-8?B?MkdkWFdHaDhOQTJjNVh5Nlh4TDlsT2V1aVdJYjRUSnVKVVB1RGQydXRqUnFs?=
- =?utf-8?B?SlNxTzJxdjcrYUhCRXorMEF6ZjQ3Sy82V0lrMVRrY2pLbUR6ak1lb2czWVRZ?=
- =?utf-8?B?SmxPek1ieWtKa3drbmJIUTgwZDlxMCs1bmFvR0JxM0wrN3dYZ2JGT0s5ZVp0?=
- =?utf-8?B?cTM2RU9HTkJEVHYzbW1jVkowaEdTV21lTTBwVHhReWpGb292T1VZbWY2M2Vv?=
- =?utf-8?B?MjBxTHZhNmw4MDBJSmR3V0J2MzUxT0JsU3gwN3g1NWJQYzVmK2o3ZWxYR2pq?=
- =?utf-8?B?UVJ6dFpGZVNWMUI4UEh4K1ZxcmFVK2QxV1lTRUVLNVB5NkR3T3FXUWh5dG9O?=
- =?utf-8?B?OTJxY0Z2ODk3bXZ3TldMRjRXL3JJWjh5NW02VUl1VGRDL2pESG5NVG41RDhk?=
- =?utf-8?B?b3JJaVJDWE5rcGYxekRmLzFLNERvYWpGNGRSOUN0VTQwVkFieXFsYy9ibSsz?=
- =?utf-8?B?SS8vYngvNzNCRlgzQzVnTkIxUkgwZmFYcFZBWUJVQzRLMDRwR0F5TDFOcC9x?=
- =?utf-8?B?RklmZFVTeXYyN1htL2FHV3JQbGRtUU9VT1c4Y3ZxSGZDTzBObFpsaC9WcVlM?=
- =?utf-8?B?MzhVWWJabndqdnhFRHJWVlJURTFrZUcxNlpDdGp6TEtjTVJwWHlFd0ZEbHpD?=
- =?utf-8?B?bi9vbUZVcHlZVEluR2QvYmRGSS9DMlFLRDVrMXBsaHJGR3d4dCtWZmh6ZkpR?=
- =?utf-8?B?eEVwa2g2Vlg3ZUJxSGFOaDNFaW1vZzd1by9telJDaGxNK2poajVWRkN2bEk1?=
- =?utf-8?B?YWYzVG5DNmlKaU9WaDdRMGFwTmFqbVY1Vmp5NWdSemk4d3ZPQUVTMDNpbWZK?=
- =?utf-8?B?cm85UVlCKzdjQi9zM3JGQVcrWGxDcDJQdFBURFBiOTc2TFFsNXZ3NnBBZ2g1?=
- =?utf-8?B?UEJEM0VoOTkyNytzWXk4b2pDZTYyUkIxUGE5dFI1T2U0eXdsQkVBY09TOXha?=
- =?utf-8?B?UURQWjVSZWRLSVJuVzJZUjB1KzRTY3FrZENRSHVSS3E2dWhJbXpUdStYejZG?=
- =?utf-8?B?VHlaOW1KYS9sSU5UamtHYTNja0REWE5CZFVyV09wM2x6WU1vaHlhTGFIKzRM?=
- =?utf-8?B?S3FRUlNtQmJocG9vN1JMQmV2OTFQanZrQjBsVnMxUjhrNDAxOStyWXhpa2xz?=
- =?utf-8?B?UFdWWVN4NHZWNlYxc0d1SW1QSDd2WURHWlZZRE03OWlCbllYVDVQaXdpNjJx?=
- =?utf-8?B?RERXTHpxZ3o3T2VXVHNLZWhCdXFoaUhmRlVFY3VQbEJUKzVMTHlCZnZXUnhU?=
- =?utf-8?B?aTIrVXJibEErY0MxZGNPV2hYVHIyRG1XZ3hIeG5kc3RmUG1lWXlrZSsxOWZa?=
- =?utf-8?B?YWFlWUhtZm80SHNyOGRweVlScHVqc0FzbG5NUktzWlpQUHVNM3hVZEhGaGV5?=
- =?utf-8?B?OU9xdFJGc1hUSGErRnZaZUxtRTZTTms3dE9oTDgwSGNmT2VsNVduUGZla1VF?=
- =?utf-8?B?dC81dEZjQ3dwZlNhMjROSjAzakdLcUY5NzJ4YzZlck9XRGRBZmdRbG1DNXNU?=
- =?utf-8?B?SnpieGcwWnlqMGw1dG1KbDQ4RDVzTHdyNTJlNzRySHR3MndCd29nWlNTNGtm?=
- =?utf-8?B?SnNzN04zS1Q3bk1vd3BzUVhlRVIrRkFvM3JSU3lIQjZqM1dCQURPdDQzZkp4?=
- =?utf-8?B?VjRFeTREV0duSlFZVVRjNDBOcWtpMTZYWEt1cUFxc1VLU3lxTWVaNkdCS3h5?=
- =?utf-8?B?eDJmMW9zcXp2cE5nVDRrODBWckxVMlgwSmFzUTFlc2pYdU5CMHJhNXN4cVFn?=
- =?utf-8?Q?ngRzpg65jlI9UntFud44CAb7A?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i1JCnNMx"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-545fed4642aso6075445e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:19:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740547155; x=1741151955; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zF9gFcyKZ4Btfiq3+cszj8NUyBbRLBvZ0lzqaTVmau8=;
+        b=i1JCnNMx9xvwKnYBW4Px5mcZtIIpxNCzF0bm2s8PTsobK5HnWs0WOskdLuijF7IQ2/
+         L1OztCZ9hnrOcP2fzwS3cEmhHHSpG76pw21U+Qt80GXJaKMNuwKQ759B1MjvF/xjQteK
+         nTSQSlDNpNNO5UFlLNqxBS0YxasSc6SBwhHnA/ugDbMD9B7C8GHzTG3c6nWyyT3OJy+x
+         fP1rnENIkvH5j49K4q7dn+sgqMDbsXBubB7B7I2Js3pBv2+S/JFj+mrGDUeAP/kGvvyh
+         pikDsEs6s+AsPLaYYFuE9osAr8a5zkw9r0JOiZt1VSv7CQK69tlBFWmiMNKt2obTidaR
+         W16Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740547155; x=1741151955;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zF9gFcyKZ4Btfiq3+cszj8NUyBbRLBvZ0lzqaTVmau8=;
+        b=NY9oqaz6IDXwfBEeVtJLreAA6TACt+5XFFNz2aQOj1+kRI7GGu+J6sWMc5NRT7p8Cq
+         TaGVIgCJMzovBB1Rja5WQM95RcyNxF95VxFnyek2Gv0ZxVPkx4TycDh+b1UUnzepbHdq
+         d+IvbPjDCmDnmT886EZ+amqtOCOVsJ3NSljeiJAadkq5YZWdHt+EeH3fPxEp71B2yo4p
+         CGKI+3b99cxq/VRA2AJ7hm8vP30UdeZ+HHcc8BdulGt61U4ztFKgVvv5OWfgf4z9c3Zi
+         vFowj52DVtjfU6CBu+a1kZ5DvqfHd065nxHHDSlNxRjLfctTDurC3IlsOQikbRNDjKFk
+         a6BA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgDseI5mUVgtywI+ORF2ataCSks5gvyiKdsv9XqvmeI0+rIX6IJouWMzLjZC7snOmTp/NGg4yPBIIexcc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypqyL98DW/v3SMkXyYv8VKmWAU+GLyHLTLDCX8OYuNLEEv2lJa
+	qGbcSXfMVf33n6iz5AfXKdBQwKbSJ5sAtbBGZWwBE676hEBa0dbZ3/5n8rTazMg=
+X-Gm-Gg: ASbGncsg7q4DG+v8bIqNOusI2rCm6YMJ246Tm5NJEu4jEtrgSZMU5s23GMubkbJDN48
+	ndSrEHdfVVp9Q2Tpa8npN5HHLYXDfPTXvs5w5PYvyh3ml2Lutd2ALnJPYlJ8MvhuIe66cmx35lo
+	vZ3Z2ZX7C599PuOLMpDOu5D0Vw95bfdqM/MIow2gW21BxeLBTF5rFc3Te+wjU8RQDljfLQ9EdrA
+	y6GyqxJPYlj2buJa7BUaYpPzpwbOvCL4ympKNFbnJumKOzxWEJ61V3IYaRxUp9cK4D1cvN5cgtD
+	U/NywOVv2cN2NmKrPMiJYG9KBu9T5B7l87A2Vnk7PQoeA6bDB0uVVFdm8WKhy6uqRMI/f6k8b0x
+	htjuwLA==
+X-Google-Smtp-Source: AGHT+IHxPX3HbPicsOXhvRZbaE9MW4TbT5RH1tcAURZxDzAmkFlXwfGCZD0yRzM+p1X+SJrXmqCkLQ==
+X-Received: by 2002:a05:6512:3049:b0:545:3031:b4d7 with SMTP id 2adb3069b0e04-54838edda6fmr8881336e87.6.1740547155397;
+        Tue, 25 Feb 2025 21:19:15 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efdf7sm341633e87.108.2025.02.25.21.19.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 21:19:13 -0800 (PST)
+Date: Wed, 26 Feb 2025 07:19:11 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Qiang Yu <quic_qianyu@quicinc.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	"Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, vkoul@kernel.org, 
+	kishon@kernel.org, p.zabel@pengutronix.de, abel.vesa@linaro.org, 
+	neil.armstrong@linaro.org, quic_devipriy@quicinc.com, linux-arm-msm@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
+ support
+Message-ID: <ophii26vvcogjtvktsexi6ffnug2wi5hjsppyb44uhypk43o5b@t4bbghgatd73>
+References: <20250220102253.755116-3-quic_wenbyao@quicinc.com>
+ <20250224073301.aqbw3gxjnupbejfy@thinkpad>
+ <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
+ <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
+ <20250224122439.njrcoyrfsisddoer@thinkpad>
+ <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
+ <20250225081744.3aprpztylrdgs2cl@thinkpad>
+ <4a672888-a90e-434c-b494-bb58b91c99a2@quicinc.com>
+ <zppwzqdi5xbggurbqho6ivuorvlubldpjw3pyw2fdgrap4nrhp@5otsko6o5cv3>
+ <47f5ab83-d25f-4132-83a6-38236575510c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06e13819-96e1-4a46-8312-08dd5624dc4b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2025 05:17:27.1039
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /uktuIvOPVrIYR1GyidCE7VL2u5ZXAtJgj3BDIU+i2icTQpm++dmUnkx7usdarEBveLvbEqHOV6Z5SmpgpSU1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7993
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <47f5ab83-d25f-4132-83a6-38236575510c@quicinc.com>
 
-PiBGcm9tOiBCYW9sdSBMdSA8YmFvbHUubHVAbGludXguaW50ZWwuY29tPg0KPiBTZW50OiBXZWRu
-ZXNkYXksIEZlYnJ1YXJ5IDI2LCAyMDI1IDExOjU4IEFNDQo+IA0KPiBPbiAyLzI1LzI1IDE1OjQz
-LCBUaWFuLCBLZXZpbiB3cm90ZToNCj4gPj4gRnJvbTogTHUgQmFvbHU8YmFvbHUubHVAbGludXgu
-aW50ZWwuY29tPg0KPiA+PiBTZW50OiBNb25kYXksIEZlYnJ1YXJ5IDI0LCAyMDI1IDE6MTYgUE0N
-Cj4gPj4NCj4gPj4gVGhlIGludGVsX2NvbnRleHRfZmx1c2hfcHJlc2VudCgpIGlzIGNhbGxlZCBp
-biBwbGFjZXMgd2hlcmUgZWl0aGVyIHRoZQ0KPiA+PiBzY2FsYWJsZSBtb2RlIGlzIGRpc2FibGVk
-LCBvciBzY2FsYWJsZSBtb2RlIGlzIGVuYWJsZWQgYnV0IGFsbCBQQVNJRA0KPiA+PiBlbnRyaWVz
-IGFyZSBrbm93biB0byBiZSBub24tcHJlc2VudC4gSW4gdGhlc2UgY2FzZXMsIHRoZSBmbHVzaF9k
-b21haW5zDQo+ID4+IHBhdGggd2l0aGluIGludGVsX2NvbnRleHRfZmx1c2hfcHJlc2VudCgpIHdp
-bGwgbmV2ZXIgZXhlY3V0ZS4gVGhpcyBkZWFkDQo+ID4+IGNvZGUgaXMgdGhlcmVmb3JlIHJlbW92
-ZWQuDQo+ID4+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IEx1IEJhb2x1PGJhb2x1Lmx1QGxpbnV4Lmlu
-dGVsLmNvbT4NCj4gPiB1c3VhbGx5IGEgc3VmZml4ICJfcHJlc2VudCgpIiBpbmRpY2F0ZXMgdGhh
-dCB0aGUgaGVscGVyIGNhbiBiZSBjYWxsZWQNCj4gPiBvbiBhbiBvYmplY3Qgd2hpY2ggaXMgY3Vy
-cmVudGx5IGluLXVzZSwgd2hpY2ggaXMgb2J2aW91c2x5IG5vdCB0aGUNCj4gPiBjYXNlIGhlcmUu
-DQo+ID4NCj4gPiBUbyBhdm9pZCBjb25mdXNpb24gcHJvYmFibHkganVzdCBjYWxsIGl0IGludGVs
-X2NvbnRleHRfZmx1c2goKSBvcg0KPiA+IGludGVsX2NvbnRleHRfZmx1c2hfbm9fdXNlcigpIGlz
-IGNsZWFyZXIuDQo+IA0KPiBIb3cgYWJvdXQgaW50ZWxfY29udGV4dF9mbHVzaF9ub19wYXNpZCgp
-Pw0KDQp5ZXMNCg==
+On Wed, Feb 26, 2025 at 11:12:18AM +0800, Qiang Yu wrote:
+> 
+> On 2/25/2025 7:46 PM, Dmitry Baryshkov wrote:
+> > On Tue, Feb 25, 2025 at 06:08:03PM +0800, Qiang Yu wrote:
+> > > On 2/25/2025 4:17 PM, Manivannan Sadhasivam wrote:
+> > > > On Tue, Feb 25, 2025 at 04:06:16PM +0800, Wenbin Yao (Consultant) wrote:
+> > > > > On 2/24/2025 8:24 PM, Manivannan Sadhasivam wrote:
+> > > > > > On Mon, Feb 24, 2025 at 12:46:44PM +0100, Konrad Dybcio wrote:
+> > > > > > > On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
+> > > > > > > > On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
+> > > > > > > > > On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
+> > > > > > > > > > From: Qiang Yu <quic_qianyu@quicinc.com>
+> > > > > > > > > > 
+> > > > > > > > > > Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
+> > > > > > > > > > whole PHY (hardware and register), no_csr reset only resets PHY hardware
+> > > > > > > > > > but retains register values, which means PHY setting can be skipped during
+> > > > > > > > > > PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
+> > > > > > > > > > after that.
+> > > > > > > > > > 
+> > > > > > > > > > Hence, determine whether the PHY has been enabled in bootloader by
+> > > > > > > > > > verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
+> > > > > > > > > > available, skip BCR reset and PHY register setting to establish the PCIe
+> > > > > > > > > > link with bootloader - programmed PHY settings.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+> > > > > > > > > > Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+> > > > > > > > > Some nitpicks below.
+> > > > > > > > > 
+> > > > > > > > > > ---
+> > > > > > > [...]
+> > > > > > > 
+> > > > > > > > > > +     * In this way, no matter whether the PHY settings were initially
+> > > > > > > > > > +     * programmed by bootloader or PHY driver itself, we can reuse them
+> > > > > > > > > It is really possible to have bootloader not programming the init sequence for
+> > > > > > > > > no_csr reset platforms? The comment sounds like it is possible. But I heard the
+> > > > > > > > > opposite.
+> > > > > > > > PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
+> > > > > > > > manually in UEFI shell if we want.
+> > > > > > > IIUC this will not be a concern going forward, and this is a special case
+> > > > > > > 
+> > > > > > I'm wondering how many *special* cases we may have to deal with going forward.
+> > > > > > Anyhow, I would propose to atleast throw an error and fail probe() if:
+> > > > > > 
+> > > > > > * the platform has no_csr reset AND
+> > > > > > * bootloader has not initialized the PHY AND
+> > > > > > * there are no init sequences in the kernel
+> > > > > > 
+> > > > > > - Mani
+> > > > > Hmmm, regardless of whether it's a special case, we can't assume that UEFI
+> > > > > will enable the PHY supporting no_csr reset on all platforms. It's a bit
+> > > > > risky. If we make such an assumption, we also won't need to check whether
+> > > > > the PHY is enabled by UEFI during powering on. We just need to check
+> > > > > whether no_csr reset is available.
+> > > > > 
+> > > > I am not supportive of this assumption to be clear. While I am OK with relying
+> > > > on no_csr reset and bootloader programming the PHY, we should also make sure to
+> > > > catch if the PHY doesn't initialize it. Otherwise, the driver would assume that
+> > > > the PHY is working, but the users won't see any PCIe devices.
+> > > > 
+> > > > > But it makes sense to check the exsitence of PHY senquence. How about
+> > > > > adding the check in qmp_pcie_init, if a PHY supports no_csr reset and isn't
+> > > > > initialized in UEFI and there is no cfg->tbls, return error and print some
+> > > > > error log so that the PCIe controller will fail to probe.
+> > > > > 
+> > > > Sounds good to me.
+> > > I'm wondering is it necessary to add this check? In current PHY driver,
+> > > for PHY that doesn't suppot no_csr reset there is also no such check.
+> > > If a PHY supports no_csr reset and isn't init in UEFI and there is no
+> > > cfg->tbls, the worst issue is link training fail and PCIe controller will
+> > > also fail to probe. Adding sucj check seems not change the result.
+> > Failing the training is a random error which can mean a lot, e.g. the
+> > missing voltage rail. An explicit check is beneficial, it helps
+> > developers (and users) to better understand the reason of the failure.
+> In the struct qmp_phy_cfg, tbls is not a pointer, we can't directly check
+> if tbls == NULL to determine if the PHY init sequence is available. Can we
+> add a separate patch to change the definition from
+> "const struct qmp_phy_cfg_tbls tbls" to
+> "const struct qmp_phy_cfg_tbls *tbls" like tlbs_rc and tbls_ep, even though
+> this will affect all platforms?
+
+Of course no. There is no need to introduce extra indirection. Checking
+for qmp_phy_cfg.tbls.serdes_num should be more than enough. No matter
+what, the PHY with a proper configuration tables will have non-empty
+SERDES table.
+
+-- 
+With best wishes
+Dmitry
