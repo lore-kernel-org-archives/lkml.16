@@ -1,146 +1,113 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C766320B1E1;
-	Wed, 26 Feb 2025 14:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198152206B8
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740579003; cv=none; b=MkvbcVla0mF8M47olYPnuuMH/2+tYwbxpgzJ+F5e9XQ3VIACo8MydYtrz/hG3f74UmAwmMshYpDw0oYjgYEQWWrOwqmfq78Gw2TxnNViD9tTJCmXvWC743HDLY6M8c72sImpPuIaeLoOnsCFZIfdE1/jNachCoI8fw9ka0dyMK4=
+	t=1740579037; cv=none; b=bR1EvFZ8fuHxqaagYQxFmlnvyNYrDErZgeJRBvwCHwbO5alenuPPARzAAsKtZtzEHBQ7B5xQs4/4QZy1R+VYcXAKyglpXvuWVGPXnXA7rPtKNwtzCWtLhw1l73shWTKrTZ9H4QrDSeqnovHslmFtjj0y/CWzJac9d3cwuBWHkbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740579003; c=relaxed/simple;
-	bh=hkCaO0ILM7FIJSBf8qXhaMsVFgInRf1qQPlakdkEDZY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o8jIo3azfT2XgkG8N4hCoqH/dc3TpkC4DWmHgdDuSbFd2h7jLjm8anp/TAVu+I4cz9JDCJx6NDMZDQMkD4dJp3Q0sDKkz/HTA68ObzUxOykZh06oPJJVK9X7TJ9532ReMkoE/9jyY9srweX3gWjZU6nm6BsXdqK5669l+6sY1NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=flrSuKaA; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740579037; c=relaxed/simple;
+	bh=hUdgjR/RHMYEJ230+g45ik66o3c8rPTSefQWcBqffE0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fAeojED61UnajYFiIJdhp2SIX6S/Rh8Vs0n1k9kVqdL/2W1k8rgG/wz7QmiXw2M06F//s4y3mZAq0Hm9K6mPd/5Uj3l9Vd7cvP4rr0+DRWmJ3aD0u1z0EPSlxy+4Vtn8/yV0nJ1JtZtACDNTfmX4gffB5CWK+is/gE+HocWDb6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=DeOZhNdX; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="flrSuKaA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5adloVzHwi79uY2dXSZYO3t6+ZhCtMojJZzwEopgbso=; b=flrSuKaAKkFeZq+ohPNluB1Y1z
-	Ry6xTumrh9UED8H8MtEfDf7fA6X6kvP96dljk411PwSAnewNn4n/+ZyC0IOh2oKJ02kvGtzoLDIcy
-	SvxVa97TqF3qE3yasU73G3aSjZL1AXTg1Fg4vobMFjQPi4nixx1D2K90HYTq3569kT5dhGqQKguFP
-	U3VYyEj5qquydYnzPMHeaeYBiaN8p1cLV3mGxwXFkZT++oQuOIP0irzovaym/p0hLJUATeHbNNKbI
-	qC5wl4ob5ifCjZpMd34AhrPTqE0Da3HLa+4olUmf1sjIxoUVYBgcKVOlfatrJduoaOy/qBYqYQ2Yl
-	89wnxyjw==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tnI6o-0000V2-VF; Wed, 26 Feb 2025 15:09:59 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: quentin.schulz@cherry.de,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	dse@thaumatec.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH v3 2/3] arm64: dts: rockchip: add dsi controller nodes on rk3588
-Date: Wed, 26 Feb 2025 15:09:41 +0100
-Message-ID: <20250226140942.3825223-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250226140942.3825223-1-heiko@sntech.de>
-References: <20250226140942.3825223-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="DeOZhNdX"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-390df942558so213992f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:10:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1740579034; x=1741183834; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6v2COQag385USHXDZetedSCoQTFZUjvQNehs7tzBwHk=;
+        b=DeOZhNdXYJ0BLCNchdC3zPuh5engZ5KAccRSZuU5HlEK/qFmVJOdM1mk+KZJrlQHye
+         GLMR/ar2Tp/V6LipuO/A5DhRC5r0O3S8fZcwh2Rc/aog7/7VZbrlPOI4uLRvsPjK0p2C
+         jSFwizIu0ydRsfsBRdouuuycQLHvAOvsI41TEefFhp/7rUleRhzCSb/GP9JxJ00r+7uT
+         nEA0ssVvwLz+Mgt+XY10elpypie2YDmu4iM0QW1IUhuhWZH0e5xjlZnanl82k/y4D6I/
+         jEPbBe0RuUcb7jwPxD1xqo3GupikXR3p47ZlH9DEKb3K5kIS+M7oDtB0rwM+cFmHZdJj
+         x0Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740579034; x=1741183834;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6v2COQag385USHXDZetedSCoQTFZUjvQNehs7tzBwHk=;
+        b=LqqVGIKazuB3oxEjYNKj/qdnRvfajegydoqXs37/j2+DdzxgQz5Jchice+DpsuceKD
+         w6bPU8uuuxsaRWjiujX9JKGRsZOvK5iXwBA6ihVGQjDQL1aksIv7dw/N4BydChAiml2E
+         iVKge2D6cXdClCZ+zZEjRvkUtuLP4v3HgECribNWeOUWMyQvjoqISL1Bh5R8RGK3xMFH
+         JSN4QC4YuYzZEvRQqUXbwsu2eFY3I2IzIBcmGsEWlKAugar+EWuPUfkkAtwffEbKVgiK
+         UjwuieAAQYFb/sWsNweyDhtHkzYJC7BuyuOWjPoxUxSkWfEJIGPlJXPv+BgHnUL6IgLz
+         MhZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoP7jmPyT5WfAW4J72dQVkxUmBrvBbR+OMzMRThNM2BLtOZvVqk0QQa8PmBpcrBAgDsI89P0BhU9LUNqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZ+6tDvD12xOnFfHWwbcZNJWVEacCdGpsi4nXyGnA49njf7FKs
+	0fO8CPK3IXMKu3/lQT5TnKbLu32NMzG1koQOafGpVCAx29Xpll4gMMZRgXGGoN4=
+X-Gm-Gg: ASbGncvQjfbi9tKXkWlQ7U3FcESXDXDpnMyiwFPZzsEB1dLAYnk4RVFClHoTBdajPLT
+	1tLXlgwkvqB/9NzVFFkZk6r3bD9rHGCN47qHKp53LCF+eTXC13cJP/fNUt0ShSukA8YLi5nH9Jb
+	Fg6e0c/fsM84Zue/FGYEE4+9ZR0nJTxRdYaycciqLOu5q5HmreJKs9qXBM3Os04bQqT0AFgG85q
+	nkmNdAK2e0TNEy+Uc32C41VpRMkgONrJfuEl/QHn6tD/3BbCBrY3yWvqrAhTgHIbAVM3tgTaDFi
+	eDNmn340lSU4JuEhBU1odcndOr/nVdx8izn3Ekr4cHoiIA29m5ZndS6OYB4xMzz+lR/jf2J/dIY
+	=
+X-Google-Smtp-Source: AGHT+IE4o+OfE2YSudEnTjsH/f3XjsEpd8AL7T6UbGEbbpXVQOECvonikWzyjtQETBsUiLsBsFmVjA==
+X-Received: by 2002:a05:6000:1ac8:b0:38f:39e5:6b5d with SMTP id ffacd0b85a97d-390d4f8b64bmr2958570f8f.44.1740579034331;
+        Wed, 26 Feb 2025 06:10:34 -0800 (PST)
+Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd70be4csm5755889f8f.0.2025.02.26.06.10.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 06:10:33 -0800 (PST)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH 0/3] Fairphone 5 DisplayPort over USB-C support
+Date: Wed, 26 Feb 2025 15:10:17 +0100
+Message-Id: <20250226-fp5-pmic-glink-dp-v1-0-e6661d38652c@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMkgv2cC/x3MTQqAIBBA4avIrBtQ+6WrRIu0qYbKRCGC8O5Jy
+ 2/x3guRAlOEXrwQ6ObIl8tQhQC7TW4l5DkbtNSl0rLDxdfoT7a4Hux2nD1q1Zi2kV1liCB3PtD
+ Cz/8cxpQ+CQWT1WMAAAA=
+X-Change-ID: 20231208-fp5-pmic-glink-dp-216b76084bee
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+This series adds all the necessary bits to enable DisplayPort-out over
+USB-C on Fairphone 5.
 
-The RK3588 comes with two DSI2 controllers based on a new Synopsis IP.
-Add the necessary nodes for them.
+There's currently a dt validation error with this, not quite sure how to
+resolve this:
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dtb: typec-mux@42: port:endpoint: Unevaluated properties are not allowed ('data-lanes' was unexpected)
+          from schema $id: http://devicetree.org/schemas/usb/fcs,fsa4480.yaml#
+
+See also this mail plus replies:
+* https://lore.kernel.org/linux-arm-msm/D0H3VE6RLM2I.MK2NT1P9N02O@fairphone.com/
+
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Luca Weiss (3):
+      arm64: dts: qcom: qcm6490-fairphone-fp5: Add PTN36502 redriver
+      arm64: dts: qcom: qcm6490-fairphone-fp5: Add OCP96011 audio switch
+      arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up DisplayPort over USB-C
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-index 5535d5d905f6..9f9e0d3c7722 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-@@ -6,6 +6,7 @@
- #include <dt-bindings/clock/rockchip,rk3588-cru.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/phy/phy.h>
- #include <dt-bindings/power/rk3588-power.h>
- #include <dt-bindings/reset/rockchip,rk3588-cru.h>
- #include <dt-bindings/phy/phy.h>
-@@ -1406,6 +1407,62 @@ i2s9_8ch: i2s@fddfc000 {
- 		status = "disabled";
- 	};
- 
-+	dsi0: dsi@fde20000 {
-+		compatible = "rockchip,rk3588-mipi-dsi2";
-+		reg = <0x0 0xfde20000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru PCLK_DSIHOST0>, <&cru CLK_DSIHOST0>;
-+		clock-names = "pclk", "sys";
-+		resets = <&cru SRST_P_DSIHOST0>;
-+		reset-names = "apb";
-+		power-domains = <&power RK3588_PD_VOP>;
-+		phys = <&mipidcphy0 PHY_TYPE_DPHY>;
-+		phy-names = "dcphy";
-+		rockchip,grf = <&vop_grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsi0_in: port@0 {
-+				reg = <0>;
-+			};
-+
-+			dsi0_out: port@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
-+
-+	dsi1: dsi@fde30000 {
-+		compatible = "rockchip,rk3588-mipi-dsi2";
-+		reg = <0x0 0xfde30000 0x0 0x10000>;
-+		interrupts = <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH 0>;
-+		clocks = <&cru PCLK_DSIHOST1>, <&cru CLK_DSIHOST1>;
-+		clock-names = "pclk", "sys";
-+		resets = <&cru SRST_P_DSIHOST1>;
-+		reset-names = "apb";
-+		power-domains = <&power RK3588_PD_VOP>;
-+		phys = <&mipidcphy1 PHY_TYPE_DPHY>;
-+		phy-names = "dcphy";
-+		rockchip,grf = <&vop_grf>;
-+		status = "disabled";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			dsi1_in: port@0 {
-+				reg = <0>;
-+			};
-+
-+			dsi1_out: port@1 {
-+				reg = <1>;
-+			};
-+		};
-+	};
-+
- 	hdmi0: hdmi@fde80000 {
- 		compatible = "rockchip,rk3588-dw-hdmi-qp";
- 		reg = <0x0 0xfde80000 0x0 0x20000>;
+ arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 110 ++++++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sc7280.dtsi               |   2 +
+ 2 files changed, 108 insertions(+), 4 deletions(-)
+---
+base-commit: 417c2d4ed67b729abea7dc73d7fb2153b7154d31
+change-id: 20231208-fp5-pmic-glink-dp-216b76084bee
+
+Best regards,
 -- 
-2.47.2
+Luca Weiss <luca.weiss@fairphone.com>
 
