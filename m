@@ -1,212 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2466D238D49;
-	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C1916F288;
+	Wed, 26 Feb 2025 19:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596417; cv=none; b=QQ4TIRm0cMYfKzMJkAwxGTNPiY+PoVOTc4Wgfgt2u8DzsfstwULfiv0YysXS1AU/q9LwakjjkmZEf34HC4gsbdpC6lQqqlgYsHdEAWBTzX2bBUlUuZIECVCkgNUmxjMp3um+ZPTpWXXOlLE/5OpZ4VZjcSNh6nnvTFuuF6d1HaE=
+	t=1740596440; cv=none; b=j8qkpMYM75vbafzhyzYufV1XpqGehhAzfmx+eA7mUJbqytEIyyX8phdYbSzaDA5Uba24hh2LBe197so75qZyoeZ7j3AjPC+D7RXFPcPIWucCvCilnyXUXhG6lCNIw20W5IB5gPBnT0tOkZoe4ULDcoQgZBq2xQJUyNEUbS9Omu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596417; c=relaxed/simple;
-	bh=nINU/3SDwU0JVZBUj6U8Wd+8VzL9zMHFjz+4QIcof6s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=oS7f2tqMJS1Tpnm9hQpDKgh4lvZWYoCB3UvH5NZuXK3StDHRnJqLAlYBt3WRByGKUkj0/LH9ljEiEK/pBvuSaV5E1rDKp11iIf7LDe8FpZ+Xy4Ak1lfrFllIb+wnxJ4alVrT0a7LWXbTnIcAEP6/AXYuOnfbVzy4fJpEcW7vZe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRpAsykh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740596440; c=relaxed/simple;
+	bh=ilnvCzetpSwt81QzijU6ZPwvYZCY439qILLVWdJZsMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=URtiZWEKTD/cqON43XjZgCMnbXZ91Go8wPj9tkPfPJwsQFIryJJg+rjeMyyrmxduGh9k6g3KMl7TQ8vAk+ZN+Q8tjI3NlQMpgSECrWMdsiyWnQA7FI7GAQjq8PhQSD7tt3TL8FkhM1qBn8p5sRPOOmNZCQk+WxGhg0+bcds1IjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PQ0TftWJ; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRpAsykh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C125FC4CEE7;
-	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740596416;
-	bh=nINU/3SDwU0JVZBUj6U8Wd+8VzL9zMHFjz+4QIcof6s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gRpAsykhD6sEODBRbeSnqmkit/o/zOVkOfnp/skKRLyOfoTeyCQLJ+njJtBtg3c00
-	 ooZH/g1kOnJcda97bwyNdbV87Q8tJdmHgTfss4yi7epqxNrrM+0teOAiUKPEFRE6+n
-	 sYAhMpBE3vfW2GcXmBRrRWfWy8YaJozj4b7u1clEDEb4iQWspjCD9fXuPY+OPbGHMq
-	 A6hLyxSc3jPOw10/us6AhgRInsTh5rREFZ1b93jZQ6Ub4HDZb2Ym6jm3sX4/vTBVRa
-	 Mk0tPJWpYnKA1hffSCqGwv84vVTaIhKoHt06l8rxHtzxrE5rzLxx+WMOIMQHUW/7aQ
-	 cWr4MTIhQUgYA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E21C19F32;
-	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
-From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Date: Wed, 26 Feb 2025 19:00:04 +0000
-Subject: [PATCH v2 2/4] soc: apple: rtkit: Implement OSLog buffers properly
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQ0TftWJ"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22349bb8605so2039595ad.0;
+        Wed, 26 Feb 2025 11:00:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740596438; x=1741201238; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=um3PjvaV3xemkSrnVeoxOKPhFWkje/02DmmZTZ1Ij9w=;
+        b=PQ0TftWJZmmrneq5j4aC/U7kDi/qc+iPH+01jFLexMX8+SpwmG5wcvNwDPRC5amn/y
+         ErY9ZUxqyy9u8nb66adfwl0xtjVRg7Ef7xPG+VO9ZcoFXmDFheZEtN6lELPFC26apwBe
+         Ltk51wgVFPGOZJJSBlUZlCVelCKhDcd9KI/oVfbH0pxtxTT2B3LvnbFTJbMmmSGKDagr
+         BW/Hdk0DVjDwPQj6H4VO+aBSpxJJS/0LxPSa1APzZDiKUU0rJR27RhdAliwtG5J2zgB3
+         YpPqkG/enk17ZC3cmDv84bHNDWVe5NKVFSRuuvSHWsA6HASpoJiQPsSocJ7TFjyWe3yD
+         MHLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740596438; x=1741201238;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=um3PjvaV3xemkSrnVeoxOKPhFWkje/02DmmZTZ1Ij9w=;
+        b=WIZxjLmwCuBWnugpBLtZw6yd6ZnLB62Tbagr8ZE2d2+nXJISlsLFn/EqKNCZKNinB4
+         tAK1A2yuwZKX9d/l4/q4afgMNhRu3K7xAsgTDb1FBf5c1yzsUiiDYEnUq9c502TtCLsY
+         8klm4Sbwa26c1EKOqsHDhtPHNFdaF7q3dhugAWI4L+K0lI/Htihq4H07jdCPKAUD2LPa
+         IvsSGHieFpREfGA1wdrlD9xijs398iUT6+L8DWYu01uNEVBAGKLLP1pUYJednQrvshe4
+         m2+gyRRVhn/S6uERWuRK2/ckNbSc70q6u0J2nDauON2E5PjoZG0T/jonvtTNgbKKRKrc
+         Fe0A==
+X-Forwarded-Encrypted: i=1; AJvYcCUs3sQyyHsIPdwaKMhMeXQtgcUw7LDW/BCZMnHXI+d/EipUlqLfJC3iUsMUyfhuuiCyXkZagVoMYcvNndn/A0WO@vger.kernel.org, AJvYcCVvUOPZIDdWQ+c54wBj0cCyujb1K6pyLuNeuVExXkLsdtNmgcwaJNf9gac1y4pN2PfQdb3vHtlsFk25YjSR@vger.kernel.org, AJvYcCXbJPhowuz+J7BL8rfKdxBPhsV9cQWcrFE8B9FiivGFbJOQN+axK+5cUB62cBSCtz7ZTbw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGKxZGzQm9kZ4G62bleFKlHIa3p0H+4prxHjCjUuhQplG0kCge
+	wp5hUB7PeBXgSp9yi0qreM+kCFwyIsx2iLC0dC2cTnj6JvNTg0g=
+X-Gm-Gg: ASbGnctZIJ1hmYBeWn5ygNWfH+FPjOkILpJYuyTEq0fLv8v6e2rk4Z+FMtLhKAdnSbM
+	g+c6d21wsODLvQPfeIZzQM39f8j41QoqOUQXNeQ4SxmyrZiskAkn+oF2fqMR+MSisFiUTEdyd8Q
+	An5dSQno6rmoPtIuDp9W4BuHu6fC72nZTgRElz8IvVKsRc3TKYuNkhHyuiRPP1Ibfldb3mfikDC
+	7lWK2F/gkAuRNl5IyH1pnLRTduaqThkSeWjXQafTWUxItzAS6rk6aTZrqHsaTfAAjsINdXsBO1x
+	ShU/Hpk9GviFhzjn1G5HhBmMvQ==
+X-Google-Smtp-Source: AGHT+IEXTCiiX7hd+vmSbpzizYEK0rijev1ZKtdKEhTs2LivmWOC4sXPFuIrmEnAwtEyjJANS3y/rg==
+X-Received: by 2002:a05:6a00:99c:b0:730:949d:2d3f with SMTP id d2e1a72fcca58-734790c8cadmr13431917b3a.7.1740596436989;
+        Wed, 26 Feb 2025 11:00:36 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7347a81c57esm3969843b3a.136.2025.02.26.11.00.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 11:00:36 -0800 (PST)
+Date: Wed, 26 Feb 2025 11:00:34 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, andrii@kernel.org,
+	eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org, shuah@kernel.org, hawk@kernel.org
+Subject: Re: [PATCH bpf-next v3 5/6] selftests/bpf: add test for XDP metadata
+ support in tun driver
+Message-ID: <Z79k0vKn39XsZ-j7@mini-arch>
+References: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
+ <20250224152909.3911544-6-marcus.wichelmann@hetzner-cloud.de>
+ <Z7yo3VfHofK-W7EY@mini-arch>
+ <165bbf6e-ca06-4eac-a9a2-2033314aa027@hetzner-cloud.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-apple-soc-misc-v2-2-c3ec37f9021b@svenpeter.dev>
-References: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
-In-Reply-To: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
- Sven Peter <sven@svenpeter.dev>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5366; i=sven@svenpeter.dev;
- h=from:subject:message-id;
- bh=VGT73aDgrExisPNdjISnJVkIIHnoelD5MGuM7V0a2R8=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lL1NSmyPFNZOUy2Z/1n4gcCDPeVftTqey/rEvjr8j
- GmetrZGRykLgxgHg6yYIsv2/famTx6+EVy66dJ7mDmsTCBDGLg4BWAinVIMf2U/JbFu2vK/4zjr
- x/u/fu9frGzcM3/D0193Ld7IZ1c6PZ3M8IfbRcrjPNOc23syLkQ8O5ls0r48fmbkkvtnfu00KFc
- SbmcAAA==
-X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
- fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
-X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
- auth_id=167
-X-Original-From: Sven Peter <sven@svenpeter.dev>
-Reply-To: sven@svenpeter.dev
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <165bbf6e-ca06-4eac-a9a2-2033314aa027@hetzner-cloud.de>
 
-From: Hector Martin <marcan@marcan.st>
+On 02/26, Marcus Wichelmann wrote:
+> Am 24.02.25 um 18:14 schrieb Stanislav Fomichev:
+> > On 02/24, Marcus Wichelmann wrote:
+> > > Add a selftest that creates a tap device, attaches XDP and TC programs,
+> > > writes a packet with a test payload into the tap device and checks the
+> > > test result. This test ensures that the XDP metadata support in the tun
+> > > driver is enabled and that the metadata size is correctly passed to the
+> > > skb.
+> > > 
+> > > See the previous commit ("selftests/bpf: refactor xdp_context_functional
+> > > test and bpf program") for details about the test design.
+> > > 
+> > > Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
+> > > ---
+> > >   .../bpf/prog_tests/xdp_context_test_run.c     | 64 +++++++++++++++++++
+> > >   1 file changed, 64 insertions(+)
+> > > 
+> > > diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
+> > > index 4043f220d7c0..60aad6bd8882 100644
+> > > --- a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
+> > > +++ b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
+> > > @@ -8,6 +8,7 @@
+> > >   #define TX_NAME "veth1"
+> > >   #define TX_NETNS "xdp_context_tx"
+> > >   #define RX_NETNS "xdp_context_rx"
+> > > +#define TAP_NAME "tap0"
+> > >   #define TEST_PAYLOAD_LEN 32
+> > >   static const __u8 test_payload[TEST_PAYLOAD_LEN] = {
+> > > @@ -251,3 +252,66 @@ void test_xdp_context_veth(void)
+> > >   	netns_free(tx_ns);
+> > >   }
+> > > +void test_xdp_context_tuntap(void)
+> > 
+> > tap0 is already used by lwt tests, so there is a chance this new test
+> > will clash with it? Should we run your new test in a net namespace
+> > to be safe? Bastien recently added a change where you can make
+> > your test run in a net ns by naming the function test_ns_xxx.
+> > 
+> 
+> Ah, cool, I didn't know of that feature.
+> 
+> For reference, you probably mean this one?
+> commit c047e0e0e435 ("selftests/bpf: Optionally open a dedicated namespace to run test in it")
 
-Apparently nobody can figure out where the old logic came from, but it
-seems like it has never been actually used on any supported firmware to
-this day. OSLog buffers were apparently never requested.
+Yes.
+ 
+> As long as the tests are not run in parallel, the test function SHOULD
+> clean up well enough behind itself that no conflicts should occur.
+> But having that bit of extra safety won't hurt.
 
-But starting with 13.3, we actually need this implemented properly for
-MTP (and later AOP) to work, so let's actually do that.
-
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Signed-off-by: Sven Peter <sven@svenpeter.dev>
----
- drivers/soc/apple/rtkit-internal.h |  1 +
- drivers/soc/apple/rtkit.c          | 56 +++++++++++++++++++++++---------------
- 2 files changed, 35 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/soc/apple/rtkit-internal.h b/drivers/soc/apple/rtkit-internal.h
-index 27c9fa745fd5..b8d5244678f0 100644
---- a/drivers/soc/apple/rtkit-internal.h
-+++ b/drivers/soc/apple/rtkit-internal.h
-@@ -44,6 +44,7 @@ struct apple_rtkit {
- 
- 	struct apple_rtkit_shmem ioreport_buffer;
- 	struct apple_rtkit_shmem crashlog_buffer;
-+	struct apple_rtkit_shmem oslog_buffer;
- 
- 	struct apple_rtkit_shmem syslog_buffer;
- 	char *syslog_msg_buffer;
-diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
-index be0d08861168..7e7b4f64ab17 100644
---- a/drivers/soc/apple/rtkit.c
-+++ b/drivers/soc/apple/rtkit.c
-@@ -67,8 +67,9 @@ enum {
- #define APPLE_RTKIT_SYSLOG_MSG_SIZE  GENMASK_ULL(31, 24)
- 
- #define APPLE_RTKIT_OSLOG_TYPE GENMASK_ULL(63, 56)
--#define APPLE_RTKIT_OSLOG_INIT	1
--#define APPLE_RTKIT_OSLOG_ACK	3
-+#define APPLE_RTKIT_OSLOG_BUFFER_REQUEST 1
-+#define APPLE_RTKIT_OSLOG_SIZE GENMASK_ULL(55, 36)
-+#define APPLE_RTKIT_OSLOG_IOVA GENMASK_ULL(35, 0)
- 
- #define APPLE_RTKIT_MIN_SUPPORTED_VERSION 11
- #define APPLE_RTKIT_MAX_SUPPORTED_VERSION 12
-@@ -259,15 +260,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
- 					    struct apple_rtkit_shmem *buffer,
- 					    u8 ep, u64 msg)
- {
--	size_t n_4kpages = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg);
- 	u64 reply;
- 	int err;
- 
-+	/* The different size vs. IOVA shifts look odd but are indeed correct this way */
-+	if (ep == APPLE_RTKIT_EP_OSLOG) {
-+		buffer->size = FIELD_GET(APPLE_RTKIT_OSLOG_SIZE, msg);
-+		buffer->iova = FIELD_GET(APPLE_RTKIT_OSLOG_IOVA, msg) << 12;
-+	} else {
-+		buffer->size = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg) << 12;
-+		buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
-+	}
-+
- 	buffer->buffer = NULL;
- 	buffer->iomem = NULL;
- 	buffer->is_mapped = false;
--	buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
--	buffer->size = n_4kpages << 12;
- 
- 	dev_dbg(rtk->dev, "RTKit: buffer request for 0x%zx bytes at %pad\n",
- 		buffer->size, &buffer->iova);
-@@ -292,11 +299,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
- 	}
- 
- 	if (!buffer->is_mapped) {
--		reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
--				   APPLE_RTKIT_BUFFER_REQUEST);
--		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE, n_4kpages);
--		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
--				    buffer->iova);
-+		/* oslog uses different fields and needs a shifted IOVA instead of size */
-+		if (ep == APPLE_RTKIT_EP_OSLOG) {
-+			reply = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE,
-+					   APPLE_RTKIT_OSLOG_BUFFER_REQUEST);
-+			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_SIZE, buffer->size);
-+			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_IOVA,
-+					    buffer->iova >> 12);
-+		} else {
-+			reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
-+					   APPLE_RTKIT_BUFFER_REQUEST);
-+			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE,
-+					    buffer->size >> 12);
-+			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
-+					    buffer->iova);
-+		}
- 		apple_rtkit_send_message(rtk, ep, reply, NULL, false);
- 	}
- 
-@@ -494,25 +511,18 @@ static void apple_rtkit_syslog_rx(struct apple_rtkit *rtk, u64 msg)
- 	}
- }
- 
--static void apple_rtkit_oslog_rx_init(struct apple_rtkit *rtk, u64 msg)
--{
--	u64 ack;
--
--	dev_dbg(rtk->dev, "RTKit: oslog init: msg: 0x%llx\n", msg);
--	ack = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE, APPLE_RTKIT_OSLOG_ACK);
--	apple_rtkit_send_message(rtk, APPLE_RTKIT_EP_OSLOG, ack, NULL, false);
--}
--
- static void apple_rtkit_oslog_rx(struct apple_rtkit *rtk, u64 msg)
- {
- 	u8 type = FIELD_GET(APPLE_RTKIT_OSLOG_TYPE, msg);
- 
- 	switch (type) {
--	case APPLE_RTKIT_OSLOG_INIT:
--		apple_rtkit_oslog_rx_init(rtk, msg);
-+	case APPLE_RTKIT_OSLOG_BUFFER_REQUEST:
-+		apple_rtkit_common_rx_get_buffer(rtk, &rtk->oslog_buffer,
-+						 APPLE_RTKIT_EP_OSLOG, msg);
- 		break;
- 	default:
--		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n", msg);
-+		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n",
-+			 msg);
- 	}
- }
- 
-@@ -729,6 +739,7 @@ int apple_rtkit_reinit(struct apple_rtkit *rtk)
- 
- 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
-+	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
- 
- 	kfree(rtk->syslog_msg_buffer);
-@@ -916,6 +927,7 @@ void apple_rtkit_free(struct apple_rtkit *rtk)
- 
- 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
-+	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
- 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
- 
- 	kfree(rtk->syslog_msg_buffer);
-
--- 
-2.34.1
-
-
+The test you're adding is gonna be running in parallel with most of the
+other test cases. If you want it to be executed in a serial fashion
+(which I don't think you do, running in parallel in a ns is a better
+option), the function as to be called serial_test_xxx.
