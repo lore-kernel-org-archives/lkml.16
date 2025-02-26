@@ -1,224 +1,124 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA112223710
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5212248AA;
+	Wed, 26 Feb 2025 15:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585499; cv=none; b=mts2okthoXR4VglHIjbD+HZrvBXr7ByZpwPPs3LW2Pio77v/5FG31yuzgMYw4iM4Zq32gqEL7c3aSv+YgzLpOlIY6tmGreJaJ7ub1dewKtEIrg5F/akwFAoCFqsNaAN4dxPjA6BJ5PSrpvd3owQOMhhnKwjlYLFMxApvhw6HDws=
+	t=1740585501; cv=none; b=EYSQjtpfIFV0yB052ZybxLlvaeC1e/jQGUM7aK7Zv45/3tdjxpNKxVRZd6vWCsqx0fcxh1y3OchNIKqpRUFqi0HpGARu9P8xZzh3asATb/qjZbtIFD7R/9soDaWx5jsFNUfM1QolSO7oheYkWdb9a+FvXf3KHXLepW8l6e49qXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585499; c=relaxed/simple;
-	bh=OtugWWQzMjdwcwUwi4iepN+RQ9Ua5QYPbJTzCwyyM2w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zfxejsup6u2ksLxTsi9xBUquPKDGRk09NG9AYI3Gma/9TMAv7x5IcJRjB8/PU2BxXHNp6lf7tjYm+IXGTYhhFr69P8u7F5bz/ZBtOdBAlocpnz4czrCMSj2yJUtYxObtFzgy/3iHDaPwHUKjVzSqdWKFOII7/t6Y7FcK699kZBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=anCipXxD; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740585501; c=relaxed/simple;
+	bh=bi7dxO8VrMjY04k/8cRy3LMKbXlmdupQE/VilQ+toKk=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbDc7BDqBOIKRPTOpqGzMJvjE8SRPmMmYSUtfiJ7ESd8ctyyQhyJCmOAqlPQiU25dNJc9UH3SJ4TavEMywwmXq79O74WzpvD/4378curCWITfSddLJ5e06JJEGdDhnZ4Pd5+asO3XOr+lE5EhR52VjILIkhoAdC9bmB4omRCx04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiAS+TvU; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="anCipXxD"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740585496;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DrOs+120AaXHC8g0SSMl9H0q+D4Ixr4ftyBebCIpxVE=;
-	b=anCipXxDllhKIE7Z70OwyOfihlsBD6qRuwWBK6ttD0OP4QwcY/hpPeNb9ZdOuzr9ESKLCp
-	oab4PSCcmUyKscBYkUA1lsz7/gnLBvbqGAMxfZVp5vJxJnAuZW/jmIUqjDoZvHay5oNHpe
-	IyYPGe834l8ggmOSrnv1/hACbU4jZd8=
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Udit Kumar <u-kumar1@ti.com>,
-	Jayesh Choudhary <j-choudhary@ti.com>,
-	DRI Development List <dri-devel@lists.freedesktop.org>,
-	Linux Kernel List <linux-kernel@vger.kernel.org>,
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Subject: [PATCH v10 13/13] drm/bridge: cdns-dsi: Use pre_enable/post_disable to enable/disable
-Date: Wed, 26 Feb 2025 21:27:37 +0530
-Message-Id: <20250226155737.565931-6-aradhya.bhatia@linux.dev>
-In-Reply-To: <20250226155737.565931-1-aradhya.bhatia@linux.dev>
-References: <20250226155228.564289-1-aradhya.bhatia@linux.dev>
- <20250226155737.565931-1-aradhya.bhatia@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiAS+TvU"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-307d1ab59c6so78422931fa.1;
+        Wed, 26 Feb 2025 07:58:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740585498; x=1741190298; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RITIVTCCbPTEmlznoBvDtT81aFPY1TF+qiJ3KGGJkqY=;
+        b=RiAS+TvUjGRHK3ZdsGFNDAP6u/k1ZzN99qqOJwk981O/J67ybcZFujp+zoHlv6A3Fg
+         92+cytPKIhoocD0IjzYqhFIQ1I3uTW2rNydvXsgFormLC+IkJKZFq3DjWG1c1Cr6vAiA
+         BHYZScxCa4FnG4zacP7luooAS6d8OjWh5ctYKbUk+qsaPi4V09TeetjhJN5sVLglSV/A
+         puTLc3jZVwDpWiubxxLp6hgQmlJnHhYi/RfPOQQLCx5CFpEGrDssmpzx8Vvq0+ODrjwU
+         2WF3RpXysmSY5MWSBZI/01bZYIvC3ILHyQ0Zx9os5I1Ijtb9CgmPfOW967tG9mvFbNks
+         VgSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740585498; x=1741190298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RITIVTCCbPTEmlznoBvDtT81aFPY1TF+qiJ3KGGJkqY=;
+        b=TsplrwYvF2OQ0yCVlzJb2EKRZ9f4wk6L1lTi5syubbdg8mW+1chpHN/q6tSqr9VriY
+         s7rOx3qDL+dyBZd8y1hyjjnKZMDGtXugU+wDyjBVa7N0ECDM7J3STn2muJAVl1HO3MLm
+         I6wiomBAIQldZ3F9+HDUEj6Ryr5kajoLwNyvnlzOsaqAlqePfKpMz2StTr1M8RB7dwf3
+         ojCezOSRBaF+MaKQq8YH64emPYuNZ0a4PzNtrBTdcPYkU4bvsqE7gHAQtU4VsWZIaKT7
+         HRPzJyXQIRnnZoH91UYu+p9OMfkxnVzMNTlUTy8rqd5wTF9CLqmdqrvKWB2JnKIeAGUQ
+         tihA==
+X-Forwarded-Encrypted: i=1; AJvYcCUl+gMhcbYWbsmBtcWzo0TLk1EcU7PGJ45zaeDYFNUL7O29duGI45au9YlaVhVV2aXfIdc2@vger.kernel.org, AJvYcCXmkHbY1SSzgdozc5dk3S5zN0Lrqy8PfdVlLKBjXmjc831owSaZUC0gqdY/0SsFiHhTNE+pvYj8rdG/owk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqm2DGenrcXGHH0C+sAUTb7V4PbfLrqiXcmGOZcBTvFHPF648g
+	5QomElH5XEqmRfw4sSHcpJQ8ek/ld7ehiCFa1T7ZtruLU90cmBxO
+X-Gm-Gg: ASbGnctpPfttYPc568x/3A7FLuoirJF+hHg/kF7nm+hC6lFZ/SyYt3UDmK14w9Z+cY5
+	Mm5u5ez50hhDzEsR8n7/DYmCrLxeVbzHbmGDnUabylCWezbr3xPTtcc+XUwuR7lnqP2rINGnO10
+	WH2Z9NoPdhKeFMeCyl5QYbomSuECfsxcpC8Z1Lgrw5kgkwOMPCrL4tIK+9XdYf3QkQ+4CXcGng7
+	4Lx9KpItYCOS75vorQlrG1JPQ0Hkq8+12ppbAjgI6ahyF3Iw/88YvvOHSY360kBMFd+z7rQ0buH
+	SbMqNCzrx2gGcpyb6tRb1zR0qCsinaCKAo5I2VXzhRsW0lAf
+X-Google-Smtp-Source: AGHT+IEKepRkgCxNHEffmBxHyGo3LSSp/FaDq2MJoUWianme6+1VXGIKpH8gZ7BIYRCP1hqyTay2dg==
+X-Received: by 2002:a05:6512:3e17:b0:545:5d:a5cd with SMTP id 2adb3069b0e04-5493c570908mr2649719e87.6.1740585497794;
+        Wed, 26 Feb 2025 07:58:17 -0800 (PST)
+Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514efaccsm491496e87.155.2025.02.26.07.58.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 07:58:17 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 26 Feb 2025 16:58:13 +0100
+To: Keith Busch <kbusch@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Keith Busch <keith.busch@gmail.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Christoph Lameter <cl@linux.com>,
+	David Rientjes <rientjes@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-nvme@lists.infradead.org,
+	leitao@debian.org
+Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from
+ kmem_cache_destroy()
+Message-ID: <Z786FcgpcjVZw4WI@pc636>
+References: <20240807-b4-slab-kfree_rcu-destroy-v2-6-ea79102f428c@suse.cz>
+ <Z7iqJtCjHKfo8Kho@kbusch-mbp>
+ <2811463a-751f-4443-9125-02628dc315d9@suse.cz>
+ <Z7xbrnP8kTQKYO6T@pc636>
+ <ef97428b-f6e7-481e-b47e-375cc76653ad@suse.cz>
+ <Z73p2lRwKagaoUnP@kbusch-mbp>
+ <CAOSXXT6-oWjKPV1hzXa5Ra4SPQg0L_FvxCPM0Sh0Yk6X90h0Sw@mail.gmail.com>
+ <Z74Av6tlSOqcfb-q@pc636>
+ <Z74KHyGGMzkhx5f-@pc636>
+ <Z784iRR13v6SkJv5@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z784iRR13v6SkJv5@kbusch-mbp>
 
-From: Aradhya Bhatia <a-bhatia1@ti.com>
+On Wed, Feb 26, 2025 at 08:51:37AM -0700, Keith Busch wrote:
+> On Tue, Feb 25, 2025 at 07:21:19PM +0100, Uladzislau Rezki wrote:
+> > WQ_MEM_RECLAIM-patch fixes this for me:
+> 
+> This is successful with the new kuint test for me as well. I can't
+> readily test this in production where I first learned of this issue (at
+> least not in the near term), but for what it's worth, this looks like a
+> good change to me.
+> 
+> Reviewed-by: Keith Busch <kbusch@kernel.org>
+>  
+Thank you for checking. I will apply this.
 
-The cdns-dsi controller requires that it be turned on completely before
-the input DPI's source has begun streaming[0]. Not having that, allows
-for a small window before cdns-dsi enable and after cdns-dsi disable
-where the previous entity (in this case tidss's videoport) to continue
-streaming DPI video signals. This small window where cdns-dsi is
-disabled but is still receiving signals causes the input FIFO of
-cdns-dsi to get corrupted. This causes the colors to shift on the output
-display. The colors can either shift by one color component (R->G, G->B,
-B->R), or by two color components (R->B, G->R, B->G).
-
-Since tidss's videoport starts streaming via crtc enable hooks, we need
-cdns-dsi to be up and running before that. Now that the bridges are
-pre_enabled before crtc is enabled, and post_disabled after crtc is
-disabled, use the pre_enable and post_disable hooks to get cdns-dsi
-ready and running before the tidss videoport to get pass the color shift
-issues.
-
-[0]: See section 12.6.5.7.3 "Start-up Procedure" in J721E SoC TRM
-     TRM Link: http://www.ti.com/lit/pdf/spruil1
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
----
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 64 ++++++++++---------
- 1 file changed, 35 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 93a238205169..8a320bd4d34d 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -669,13 +669,28 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
- 	return MODE_OK;
- }
- 
--static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
--					   struct drm_atomic_state *state)
-+static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
-+						struct drm_atomic_state *state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
- 	u32 val;
- 
-+	/*
-+	 * The cdns-dsi controller needs to be disabled after it's DPI source
-+	 * has stopped streaming. If this is not followed, there is a brief
-+	 * window before DPI source is disabled and after cdns-dsi controller
-+	 * has been disabled where the DPI stream is still on, but the cdns-dsi
-+	 * controller is not ready anymore to accept the incoming signals. This
-+	 * is one of the reasons why a shift in pixel colors is observed on
-+	 * displays that have cdns-dsi as one of the bridges.
-+	 *
-+	 * To mitigate this, disable this bridge from the bridge post_disable()
-+	 * hook, instead of the bridge _disable() hook. The bridge post_disable()
-+	 * hook gets called after the CRTC disable, where often many DPI sources
-+	 * disable their streams.
-+	 */
-+
- 	val = readl(dsi->regs + MCTL_MAIN_DATA_CTL);
- 	val &= ~(IF_VID_SELECT_MASK | IF_VID_MODE | VID_EN | HOST_EOT_GEN |
- 		 DISP_EOT_GEN);
-@@ -687,15 +702,6 @@ static void cdns_dsi_bridge_atomic_disable(struct drm_bridge *bridge,
- 	if (dsi->platform_ops && dsi->platform_ops->disable)
- 		dsi->platform_ops->disable(dsi);
- 
--	pm_runtime_put(dsi->base.dev);
--}
--
--static void cdns_dsi_bridge_atomic_post_disable(struct drm_bridge *bridge,
--						struct drm_atomic_state *state)
--{
--	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
--	struct cdns_dsi *dsi = input_to_dsi(input);
--
- 	dsi->phy_initialized = false;
- 	dsi->link_initialized = false;
- 	phy_power_off(dsi->dphy);
-@@ -773,8 +779,8 @@ static void cdns_dsi_init_link(struct cdns_dsi *dsi)
- 	dsi->link_initialized = true;
- }
- 
--static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
--					  struct drm_atomic_state *state)
-+static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
-+					      struct drm_atomic_state *state)
- {
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
-@@ -788,6 +794,21 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	u32 tmp, reg_wakeup, div, status;
- 	int nlanes;
- 
-+	/*
-+	 * The cdns-dsi controller needs to be enabled before it's DPI source
-+	 * has begun streaming. If this is not followed, there is a brief window
-+	 * after DPI source enable and before cdns-dsi controller enable where
-+	 * the DPI stream is on, but the cdns-dsi controller is not ready to
-+	 * accept the incoming signals. This is one of the reasons why a shift
-+	 * in pixel colors is observed on displays that have cdns-dsi as one of
-+	 * the bridges.
-+	 *
-+	 * To mitigate this, enable this bridge from the bridge pre_enable()
-+	 * hook, instead of the bridge _enable() hook. The bridge pre_enable()
-+	 * hook gets called before the CRTC enable, where often many DPI sources
-+	 * enable their streams.
-+	 */
-+
- 	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
- 		return;
- 
-@@ -804,8 +825,8 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	mode = &bridge->encoder->crtc->state->adjusted_mode;
- 	nlanes = output->dev->lanes;
- 
--	cdns_dsi_hs_init(dsi);
- 	cdns_dsi_init_link(dsi);
-+	cdns_dsi_hs_init(dsi);
- 
- 	/*
- 	 * Now that the DSI Link and DSI Phy are initialized,
-@@ -934,19 +955,6 @@ static void cdns_dsi_bridge_atomic_enable(struct drm_bridge *bridge,
- 	writel(tmp, dsi->regs + MCTL_MAIN_EN);
- }
- 
--static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
--					      struct drm_atomic_state *state)
--{
--	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
--	struct cdns_dsi *dsi = input_to_dsi(input);
--
--	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
--		return;
--
--	cdns_dsi_init_link(dsi);
--	cdns_dsi_hs_init(dsi);
--}
--
- static u32 *cdns_dsi_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
- 					       struct drm_bridge_state *bridge_state,
- 					       struct drm_crtc_state *crtc_state,
-@@ -1041,9 +1049,7 @@ cdns_dsi_bridge_atomic_reset(struct drm_bridge *bridge)
- static const struct drm_bridge_funcs cdns_dsi_bridge_funcs = {
- 	.attach = cdns_dsi_bridge_attach,
- 	.mode_valid = cdns_dsi_bridge_mode_valid,
--	.atomic_disable = cdns_dsi_bridge_atomic_disable,
- 	.atomic_pre_enable = cdns_dsi_bridge_atomic_pre_enable,
--	.atomic_enable = cdns_dsi_bridge_atomic_enable,
- 	.atomic_post_disable = cdns_dsi_bridge_atomic_post_disable,
- 	.atomic_check = cdns_dsi_bridge_atomic_check,
- 	.atomic_duplicate_state = cdns_dsi_bridge_atomic_duplicate_state,
--- 
-2.34.1
-
+--
+Uladzislau Rezki
