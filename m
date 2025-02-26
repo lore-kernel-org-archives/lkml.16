@@ -1,29 +1,29 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BF925BAC2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C661B25DAF8;
 	Wed, 26 Feb 2025 23:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740611342; cv=none; b=SMU5WpIDme21eIz9ZMmGploOW6eAEisxLtEBTbnKq9t6Q3fTwC3ui+USOfaNmer2qRw07gVxsyKwckrZ3bfDHvguib1rxed4DxDHw1HhlD0Rkro+KnvY/up2c6yLeBLApRwspI4Af5BlOhxrhIU/s8YVqQYwyFENxleecI3xQCU=
+	t=1740611342; cv=none; b=Za/KHkGQOEhNhx4nPDuH+1qJ69Y6EiigrebNQj2LqHdhf9+IF2uU2QxSLMO36WvZCntJlXDLJJc08I8p2ogBOYfAQeSK1+BHVV9LWLjMvjXQ4EcBg+d4HdD6PJBuPaFwmqllu23qNNZHwM+Ppc6eq3sjyCUjRIRpAZfmd4D/HwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740611342; c=relaxed/simple;
-	bh=Tjiwlomon09lvMY1LOgu+AFKsitGDCDqrTT8GCnHQ5Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Jmi5SLhkXwpSTssjc9BA6h7klsQ1FoMBHzd1oep9fJtEBExHvl3OVa3d0XrhoFdDicwRasC0yvmLuCDVNzJHuui6wVFEUHMlhSHnfpulyShhrWrEzCYO1hh4qMnt9JZAKLnnXi2jk7lkJ527Ps25ZWB5oI6oE/4/CepMdEsBbyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hVsQQQTQ; arc=none smtp.client-ip=13.77.154.182
+	bh=tHNf3o07yocQ/o/3naYbkpavNlBEbnRHWB84s/Ouaec=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=VIMXOj/M12AQQaj9EGzbpwRUeunT3cViznz1Qxg0dPzkU0FqNQluXLlsZqoKlAjjRZjcglegIzMVaHkHt6EoOQVluVO8vzOm0L/68rORAH3mri2YPZwDXfpZxjHnvUU0VuHnb+qA6wkSIwj44CZcYwRtym+Q7XYkWmvw/H4yGAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=jnIwE4+i; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hVsQQQTQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="jnIwE4+i"
 Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 134C7210EACB;
+	by linux.microsoft.com (Postfix) with ESMTPSA id 68385210EAD0;
 	Wed, 26 Feb 2025 15:08:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 134C7210EACB
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 68385210EAD0
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
 	s=default; t=1740611339;
-	bh=yjD84+39ofH8LlqfBUgCcc45h/R6E9HXWRzoiTskxns=;
+	bh=D8zKP2hcDp7gg5TGoAjEuRkXHEuh7Rq/cw2eQj8sL+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hVsQQQTQShvLTt+iFCAH3+/5ieAFs0xpdePBg5Q6XGjSVNMJ9N5p/SEJdcPGstlzL
-	 K4n5E+5TClLzMxltTzwjOCz7XkEE4lvlUzkEqtaE/N4HxV0Y4cjHE8GcZPScM1jZiE
-	 aMFrMKJeC63snJEoptkg9QrXB9pto0JG5J4byyY4=
+	b=jnIwE4+ikDrarKkipwcw+0csfp/M/FetsQIzxMPtogFCK1p1AF0Hm2zvT/3br57k6
+	 A2XLT4j7ii/XpT6MGPkeXLJOkzp61rOGODm0R/hkkhAsRkOv6CuhTqij8ZFgj8R9fy
+	 /GpaJGzjiw4xEyM/CH+Ld7sJxdgPz6AlI4q8zPZg=
 From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
 To: linux-hyperv@vger.kernel.org,
 	x86@kernel.org,
@@ -63,9 +63,9 @@ Cc: kys@microsoft.com,
 	rafael@kernel.org,
 	lenb@kernel.org,
 	corbet@lwn.net
-Subject: [PATCH v5 05/10] acpi: numa: Export node_to_pxm()
-Date: Wed, 26 Feb 2025 15:07:59 -0800
-Message-Id: <1740611284-27506-6-git-send-email-nunodasneves@linux.microsoft.com>
+Subject: [PATCH v5 08/10] x86: hyperv: Add mshv_handler irq handler and setup function
+Date: Wed, 26 Feb 2025 15:08:02 -0800
+Message-Id: <1740611284-27506-9-git-send-email-nunodasneves@linux.microsoft.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
 References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
@@ -75,27 +75,80 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-node_to_pxm() is used by hv_numa_node_to_pxm_info().
-That helper will be used by Hyper-V root partition module code
-when CONFIG_MSHV_ROOT=m.
+This will handle SYNIC interrupts such as intercepts, doorbells, and
+scheduling messages intended for the mshv driver.
 
 Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Reviewed-by: Wei Liu <wei.liu@kernel.org>
+Reviewed-by: Tianyu Lan <tiala@microsoft.com>
 ---
- drivers/acpi/numa/srat.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/cpu/mshyperv.c | 9 +++++++++
+ drivers/hv/hv_common.c         | 5 +++++
+ include/asm-generic/mshyperv.h | 1 +
+ 3 files changed, 15 insertions(+)
 
-diff --git a/drivers/acpi/numa/srat.c b/drivers/acpi/numa/srat.c
-index 00ac0d7bb8c9..ce815d7cb8f6 100644
---- a/drivers/acpi/numa/srat.c
-+++ b/drivers/acpi/numa/srat.c
-@@ -51,6 +51,7 @@ int node_to_pxm(int node)
- 		return PXM_INVAL;
- 	return node_to_pxm_map[node];
+diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
+index 0116d0e96ef9..616e9a5d77b4 100644
+--- a/arch/x86/kernel/cpu/mshyperv.c
++++ b/arch/x86/kernel/cpu/mshyperv.c
+@@ -107,6 +107,7 @@ void hv_set_msr(unsigned int reg, u64 value)
  }
-+EXPORT_SYMBOL_GPL(node_to_pxm);
+ EXPORT_SYMBOL_GPL(hv_set_msr);
  
- static void __acpi_map_pxm_to_node(int pxm, int node)
++static void (*mshv_handler)(void);
+ static void (*vmbus_handler)(void);
+ static void (*hv_stimer0_handler)(void);
+ static void (*hv_kexec_handler)(void);
+@@ -117,6 +118,9 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 
+ 	inc_irq_stat(irq_hv_callback_count);
++	if (mshv_handler)
++		mshv_handler();
++
+ 	if (vmbus_handler)
+ 		vmbus_handler();
+ 
+@@ -126,6 +130,11 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_hyperv_callback)
+ 	set_irq_regs(old_regs);
+ }
+ 
++void hv_setup_mshv_handler(void (*handler)(void))
++{
++	mshv_handler = handler;
++}
++
+ void hv_setup_vmbus_handler(void (*handler)(void))
  {
+ 	vmbus_handler = handler;
+diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
+index 2763cb6d3678..f5a07fd9a03b 100644
+--- a/drivers/hv/hv_common.c
++++ b/drivers/hv/hv_common.c
+@@ -677,6 +677,11 @@ void __weak hv_remove_vmbus_handler(void)
+ }
+ EXPORT_SYMBOL_GPL(hv_remove_vmbus_handler);
+ 
++void __weak hv_setup_mshv_handler(void (*handler)(void))
++{
++}
++EXPORT_SYMBOL_GPL(hv_setup_mshv_handler);
++
+ void __weak hv_setup_kexec_handler(void (*handler)(void))
+ {
+ }
+diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
+index 1f46d19a16aa..a05f12e63ccd 100644
+--- a/include/asm-generic/mshyperv.h
++++ b/include/asm-generic/mshyperv.h
+@@ -208,6 +208,7 @@ void hv_setup_kexec_handler(void (*handler)(void));
+ void hv_remove_kexec_handler(void);
+ void hv_setup_crash_handler(void (*handler)(struct pt_regs *regs));
+ void hv_remove_crash_handler(void);
++void hv_setup_mshv_handler(void (*handler)(void));
+ 
+ extern int vmbus_interrupt;
+ extern int vmbus_irq;
 -- 
 2.34.1
 
