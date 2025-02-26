@@ -1,113 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E974027702
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 05:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FCA27702;
+	Wed, 26 Feb 2025 05:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740547327; cv=none; b=o4ag43P4YOAN1UMc+JX5zh6aWDp5nFFt9WEQloO9KRUCJQNX1i/WvzE+c0jWg9X6Q3pF63zgXfoUaaBI4fKw2pdM/G3oYg8jRrG8nbARfnw8tWY/dOq2/r39bqlSzaFddjX45uo9YTg6EJJnoy6CIegFlcUgeeeXFHqeDw0lHSY=
+	t=1740547482; cv=none; b=u5rFYhXpN4Ksy4+lAVP/kt38ymkm0fMJQ4T0sors18sWRQmhUNCMxH0bD9d8dLZF2Q+oIxPQb15QaK9iW1T7YpCLQQHvTNC/QkhghZT1Tff7QRaZiG/SU/uFOneLP3lDv8Q2vTkS4kbF6wtxo/pexg+pOziCaJWgLnDZJtj0kXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740547327; c=relaxed/simple;
-	bh=iJStU4rLkR6zEaP5AH/aQL1uRUaH0G/Hw3uBBoYwypk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V1Ccna8DdSyyJ65UJPGKadWwwGxr3ughKdC1otiOKUU93kTO4ysfY5SsH2PcIEdTY85fi+B2CexcxwN11c4HuR6XweO4HCCxAxrSDOsQd8Il5cnkL6Siu40kJ0K3vmopeb/mC3c7jq83eQGI2mthJrqjG8LHYqzMmxIgmI5FmNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RiLORtKS; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740547482; c=relaxed/simple;
+	bh=G90pOcWX1Z+SzDLPl0A42IQphLvwAP2qZb1GAd5q7v4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rlHtILmEelA8ckViIuWDktTJ3eXoLqII3pqQ11xTL5tBng2jcRM/3DDANBV5JGQmwb1pLhSE8ciodhvbMMvUuY0sVITOs4QZuDzmopZosUvqxnw2qwYp1w0SpmBkPzHc44mWEij3nmvUUjRWlvuiTO6Fci7Ctjk+A6noJIqh1UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PHUKbaGX; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RiLORtKS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740547326; x=1772083326;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iJStU4rLkR6zEaP5AH/aQL1uRUaH0G/Hw3uBBoYwypk=;
-  b=RiLORtKSFjwcRUTmiferd3WVOgZBkkU+FGWMHfDKAPk+7x2nga4xUEbH
-   PTCucaFlJhfsA9vYRXf6574gOP9Ee/4hsD1CFB6vk+c++zhAWop4+bnhC
-   ZSenVs6oNCTuJTbZUvzvOFNA8BTg/G++RagJYllXmv67y/m0QL5kd5Gzr
-   R8S2j/cgwtevQHQs90ac3XCPN+TS+i1BnxUXK4zVAGJKwTjavSm7o5gQv
-   fwA31bt8sdzYFJypRCUTydZeMDBY5W/8WFnZzgyEBZ/WLFWtPUOgJJo/J
-   SeFOPHBwFyWouXEngfoI7cmyRYfhWxJGLILaev+es+1CHKjmaAxK6HTGx
-   w==;
-X-CSE-ConnectionGUID: PodstmClSEqEuidYUgEe8A==
-X-CSE-MsgGUID: Zs1puEIFTmq+Bz3hFM85Nw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41632632"
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="41632632"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:22:05 -0800
-X-CSE-ConnectionGUID: S5C9QX9jRemvsEfdyiZBAQ==
-X-CSE-MsgGUID: CaH8f0PJQUqTHEDsSUdlvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,316,1732608000"; 
-   d="scan'208";a="117089295"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 21:21:59 -0800
-Message-ID: <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
-Date: Wed, 26 Feb 2025 13:18:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PHUKbaGX"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-438a39e659cso42010015e9.2;
+        Tue, 25 Feb 2025 21:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740547478; x=1741152278; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Fi1ogS3Az0I6GJStO1RYp2yegcWsiDecxnayl6kiJM8=;
+        b=PHUKbaGXF6KuEYjSMmbo0kwwOkOJ2EgBjpZYreoPZy1/+tsKgjJYMo/Y3gGkEcYcWK
+         uLwDlTiIzpTkzBqi23PH02liHDYNjQ4QrAwYtxqqjHaBKlK4eeSsj4Hdp6g+XpOcto9j
+         Z0nup7BiNvozus0G9BhwZgjkxNfbny3hFqXUP76xU2FyzYnPt8F0a7XgvVl7XtlCzvNm
+         Xs26pcMvCYg7rF+whNcuEjl3ojPLOytGUb9d9P2I0WFvj3JkgdXVm9YCN6br7f8uV4E3
+         mhvauxeA1nBRL3HyH46k8EhEmMzLOqzoR+MzLvYdSN18nTC0SkYUwPFgU8cSdyZJuAu3
+         34Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740547478; x=1741152278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fi1ogS3Az0I6GJStO1RYp2yegcWsiDecxnayl6kiJM8=;
+        b=mmub+RHzWO03wpE908nwJZPNFsNPzFvxhDO3ZYRpicT+2rKoyRQy3G8tK/fKas5mlu
+         TE8UB4ezZB0rWkpp63dRk8t1sa9WqAcrgsvK6vzuvUfGnnp6osARMNKF8jvjgRptgyLv
+         42eWI8Sl7qBGL5oeeSytQuQ45aQE3dqrPIKldZztXmprlkY1nWx0NP/gt2VLGlgo2NXk
+         PKaBCQ/8duFdv6rao+OhTUWQWvePSwdBZKss5Bmnti/mtMv+yw8IXHPZkcDbZKExov4S
+         z1UBYcLju9Ourhqu8l35pUOHgyHsBtdaTVVBidU8vlutOaJAri22EpQeyLI/byGnxUZw
+         qaAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU44qhZ+V+pRlXmV3/VH0OHQao7fw/EeDPV+QRsWyzcB9O2zmpL7xQLrn+KsAe7Zniyn+A=@vger.kernel.org, AJvYcCWh3cPpfmAUHhj273WznDFV+rtmFEscWdbJPhLLKtWmg4R55TNaxl3wgWUHb7gGW2VMaLwEkWbjYESorEDO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl/o09pAgLos6IbUBlWHPj7UETFHVpl0vTYQN9vlBIL6ZXkcUG
+	9T5BWN/tPu2ZXBHORMedD0fPzStOxVsLlSOaPMTZ7zDsexURoktr+9ymBnuI7qdEyABPHxR73c3
+	fgWOiFfJuUUWMb6yriKcvefRltGs=
+X-Gm-Gg: ASbGnctK00lNWFHXzKhoSc6IpF01E563CDM1ORJE3tCIBXjjdxmYyWOcCErjUriqUIp
+	CFYM5NAq2spAzfpStzVJxfc5cArge+TMfn52cgmGEmURkS3t9NPqZrDRI8GyQzyyAEUhHrF/ucb
+	XQHAm+OSql0zau5Xp41goPP9I=
+X-Google-Smtp-Source: AGHT+IH/wvoBjrtKyvFZospHbq6cBCwFLwpGP8TtU9MZ512+kxHDitWtBKTVcRhrgza9XtFLNJNwnKv1O5Z1gysZJ3A=
+X-Received: by 2002:a05:6000:381:b0:390:d82d:6d51 with SMTP id
+ ffacd0b85a97d-390d82d7242mr320054f8f.29.1740547478410; Tue, 25 Feb 2025
+ 21:24:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
- joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
- <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
- <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
- <20250225142610.GB545008@ziepe.ca>
- <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <AM6PR03MB5080855B90C3FE9B6C4243B099FE2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+ <AM6PR03MB5080D59AD7DD5B59E1FB14E599FE2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+In-Reply-To: <AM6PR03MB5080D59AD7DD5B59E1FB14E599FE2@AM6PR03MB5080.eurprd03.prod.outlook.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 25 Feb 2025 21:24:27 -0800
+X-Gm-Features: AQ5f1Jr2UIURRp1Lti-ppy57RX2Us7w0EeeDal7_mR6RAGvM0IXB54MGpg9AtXM
+Message-ID: <CAADnVQKnJCdW5OCs338W4ts_mn6JVw7fD5U6w5o6dtc4DSJQrA@mail.gmail.com>
+Subject: Re: [RFC PATCH bpf-next v2 3/5] sched_ext: Add scx_kfunc_ids_ops_context
+ for unified filtering of context-sensitive SCX kfuncs
+To: Juntong Deng <juntong.deng@outlook.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+	Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/26/25 11:50, Ethan Zhao wrote:
->>>>>
->> If the schedular doesn't run how did we get from 4 -> 5?
->>
->> Maybe the issue is the shutdown handler here is running in the wrong
->> time and it should not be running after the scheduler has been shut
->> down.
->>
->> I don't think removing the lock is a great idea without more
->> explanation.
-> 
-> Seems it is not so simple job to explain why there is no race window 
-> between
-> this iommu_shutdown() and following dmar_global_lock holders.
-> 
-> 1. PCIe hotplug dmar_pci_bus_notifier()
-> 
-> 2. mm_core_init detect_intel_iommu()
-> 
-> 3. late_initcall dmar_free_unused_resources()
-> 
-> 4. acpi attach dmar_device_hotplug()
-> 
-> 5. pci_iommu_init intel_iommu_init() init_dmars()
-> 
-> 6. rootfs_initcall ir_dev_scope_init()
-> 
-> though here is the last stage of reboot. then how about we turn back to v1
-> 
-> Just repalce with own_write() with down_write_trylock().
+On Fri, Feb 14, 2025 at 12:13=E2=80=AFPM Juntong Deng <juntong.deng@outlook=
+.com> wrote:
+> +static int scx_kfunc_ids_ops_context_filter(const struct bpf_prog *prog,=
+ u32 kfunc_id)
+> +{
+> +       u32 moff, flags;
+> +
+> +       if (!btf_id_set8_contains(&scx_kfunc_ids_ops_context, kfunc_id))
+> +               return 0;
+> +
+> +       if (prog->type =3D=3D BPF_PROG_TYPE_SYSCALL &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id))
+> +               return 0;
+> +
+> +       if (prog->type =3D=3D BPF_PROG_TYPE_STRUCT_OPS &&
+> +           prog->aux->st_ops !=3D &bpf_sched_ext_ops)
+> +               return 0;
+> +
+> +       /* prog->type =3D=3D BPF_PROG_TYPE_STRUCT_OPS && prog->aux->st_op=
+s =3D=3D &bpf_sched_ext_ops*/
+> +
+> +       moff =3D prog->aux->attach_st_ops_member_off;
+> +       flags =3D scx_ops_context_flags[SCX_MOFF_IDX(moff)];
+> +
+> +       if ((flags & SCX_OPS_KF_UNLOCKED) &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id))
+> +               return 0;
+> +
+> +       if ((flags & SCX_OPS_KF_CPU_RELEASE) &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_cpu_release, kfunc_id))
+> +               return 0;
+> +
+> +       if ((flags & SCX_OPS_KF_DISPATCH) &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_dispatch, kfunc_id))
+> +               return 0;
+> +
+> +       if ((flags & SCX_OPS_KF_ENQUEUE) &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_enqueue_dispatch, kfunc_i=
+d))
+> +               return 0;
+> +
+> +       if ((flags & SCX_OPS_KF_SELECT_CPU) &&
+> +           btf_id_set8_contains(&scx_kfunc_ids_select_cpu, kfunc_id))
+> +               return 0;
+> +
+> +       return -EACCES;
+> +}
 
-I don't think trylock is a reasonable solution. intel_iommu_shutdown()
-should not become a no-op simply because it cannot acquire a lock
-immediately.
+This looks great.
+Very good cleanup and run-time speed up.
+Please resend without RFC tag, so sched-ext folks can review.
 
-The lock here is to protect the drhd (representation of iommu hardware)
-list. It needs protection because this driver supports iommu hot-add and
-remove, which is triggered by an ACPI event for I/O board hotplug.
-Provided the system does not respond to those events when this function
-is called, it's fine to remove the lock.
-
-Thanks,
-baolu
+From bpf pov, pls add my Ack to patch 1 when you respin.
+The set can probably target sched-ext tree too.
