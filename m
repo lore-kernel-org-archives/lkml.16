@@ -1,102 +1,169 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9CE15B99E
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:43:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3E12686A5
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740552203; cv=none; b=Q9mNGlATIoYbi1Jsm5uITbcQQGvTTNiffBXZ3OOm8mquvxo+GUO//hq33dLf/8LIXBPfquj2v+sKQdiOy+Wsgg3/x0yeZzx6oP9XGJb7MANwKkmVGmDCD84fj25oDIjKJSLVFRiWvoVfT5GNfYZNfMyq8N/fLgSTpbX6k7oaXJY=
+	t=1740552204; cv=none; b=kIvVt1b5rKSbfcOmF/z7+KPbL8/UjSDR4d1XhFv6AU9/Orvo5HDZ2lZMVzsK51oRY8rxrDGswAd0xAIAtPAkXtZSXyUNHAxxvHKV9h5bbdcp3Z2Q/P27GtrXL6a0L6/Gbu4YMnyRkCBNMkG60OsKe0dbX+vpf5KbWLDwOpXxJgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740552203; c=relaxed/simple;
-	bh=qnlMfGzvX2xlMSjWfM7AQuU6kYZPDfXz1wZRUrYXbew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QLwyA8f+RQ+gFUCxI48cLzzbEtTRBiHrE1TzukgVI5MsVicbUPt4yUYPAZ9iJs3PGCYJpTGrbF+1wjomO0eKKw4pPyfcPTcheg9tfZ7F9a2f4r5Hwwiwb2wEDMUR2tjX1EvR25Rk9LlSbkESAc5v/U7qHnVqRSTXwZ7oc6QmMKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oxUBhg5j; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740552204; c=relaxed/simple;
+	bh=4uRG5vmsgKg9xItI1Lusgx48V+zeZ1F4H87+zMFXElA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZAZ2zKdoZJBjYUrCtlprblA5zipxwlHgGklVbZncabqgHvLEki5NLv1YQ0vF/Vk32MaT4C7iMJN0UWp25TLMnfUDIazhmBw+w1LqlBmDblQXy+pln+Dhj+h95IqcEki41+9FmAQbA2Ef9c/RczQwg2guaaVIGCf+KqFFr/QSVrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ClIVWk5/; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oxUBhg5j"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6EbMA1988892
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Feb 2025 00:14:37 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740550477;
-	bh=4GvDwBZD4roAF/SEeFoR3akJsASSfyq/Z0vYBe+bC/I=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=oxUBhg5jlOUavE2PfQvYffDco9krGEJnYdAr8LdVoxqjbTpitIryBF473WMgGQVdZ
-	 izS7JiPwER2NDErhH/mFzE1x/jVwMkfcsFbASWj2Qz3xUTzjXEl5VHabaXV5YRrkpt
-	 J4AufRIpCdpPRVgYKi6Y0X7BfbNC5HwSucW5yXKo=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51Q6Eb11056311
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 26 Feb 2025 00:14:37 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 26
- Feb 2025 00:14:37 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 26 Feb 2025 00:14:37 -0600
-Received: from [172.24.18.117] (lt9560gk3.dhcp.ti.com [172.24.18.117])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51Q6EYfG062836;
-	Wed, 26 Feb 2025 00:14:34 -0600
-Message-ID: <503fcc32-8062-4b17-bb5d-1a2254afcf58@ti.com>
-Date: Wed, 26 Feb 2025 11:44:33 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ClIVWk5/"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so7395096e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740552200; x=1741157000; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=03hf7cikfkdqLENH/7Oyyab0bBLIcuddQc5/XdxjUHo=;
+        b=ClIVWk5/GZA14ApFsufsZ2fw2Rl15Xn1ken6QbN8mTKexdtuF2T/bdyH0pnBx/duOF
+         wbRZwwWA1lVXp/qPlenjA+6bDQckox+bECgggLlwQTfPyON4+GNZnHi9Hp7mU1HKeiBa
+         VJWioZuOianaH0MdjsCUlOUtDX+PfwzzGPayj+4RplQYYoY5jEsmRTt/VfVq6jdQLE0i
+         MGDl3ffEfzfrgHrIJpqtGR59dGsq6pnygtNS7Ynw5uBMdVdDFVBthGjBumVllhWkcARc
+         KFa3RWkwoEuFfcRN9yDbeY95Pqm0ki2XZtfo65tRF6Zl6tRD/WKOWlORgK+UAnUPMyAS
+         TqvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740552200; x=1741157000;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=03hf7cikfkdqLENH/7Oyyab0bBLIcuddQc5/XdxjUHo=;
+        b=fEqbqzHVnh/LZoVlT1lZqHN9m7fr5jEl1fz0+RWju2FIOqJI/QFy4/FtFmpuHryKI8
+         WQm73lkEZnR6fWH9+yLnAK1c4Jtk/rnJN7Iz0dNsxIQzvLKclPiY4/0tTLdZx7fczTZq
+         m9Z5MLqJf5ctpVlO5fLe9PMNoVtrkBUWMeZwe0z+tKwFulFF2bXKRVpOOj2maW4q4J47
+         wRtmOdxKaT8ZThrJeaHNsLYBFpO7Dqx+8n7zkyN0OdUL4EFThOEvNE5/fZed+nSTDKGO
+         GTqAfzUMQxNmJNTxcz3c/jqSVlwu33hz/YGoqvouDEo4rs7l7tKbEuPPkIFl+ESGbfbP
+         Ri5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWyihsXtjOYDUv7yAWhVIMCl63M7yXrfeKYHXrOypZy0ZEb+/D2ETFbBpx1t/FxFi2lkleDaL2sunkVq9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx87wq844tGzFtjjNTvsSDLPYKHVG4lP8dF2eO/PkV6KRlPNcS+
+	6txhLmveBtIqzyTXTZ8fMo4g6pVwToWiciwmEYuOKgZeZF3oLleRbvgJaiKf1eo=
+X-Gm-Gg: ASbGnct2mS7wfRs6EJROSUV87PxzmhPaPVuwmDqRAZWy770pU/cO0kSIKzfOciwLu83
+	34J340Q4bKLAOyyPsjJTuAF+knwtKDCV6aE4J8AkI5mIqOwL1uVvrRsQcLxVyT3yhNBelmazDE2
+	0YKk1adryXISbPBHk9e7Gd6RgDd5bjWQSQW5ji4paEPh3X7cqdF8zwRBtd5NQIVfLEPcd6R9+e0
+	DQyPle/PVTgmDFZWA5aRjcToRTgq7W9zL+V6dMJeJqVu3V/TaN3k57ldDCyDDz7MGyxygSSWp5F
+	cKZilsPt3L1NzJHBR4CtvwY5mMCGRsBjAqPFWi/X3hfO7sJIV/Rhsi16Jm9P7CRMrOLFQYK2XJH
+	tDQfLvQ==
+X-Google-Smtp-Source: AGHT+IFEQVjB/Rb0FAYpcYL2VJZKpn7jnf0itAzWlDQxr8WDDIYbvg6zpyGA3H8ls+OgOMlkXjdtfg==
+X-Received: by 2002:a05:6512:1194:b0:545:3031:40aa with SMTP id 2adb3069b0e04-5493c570f6dmr2016310e87.9.1740552200410;
+        Tue, 25 Feb 2025 22:43:20 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514f9e3fsm362600e87.217.2025.02.25.22.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 22:43:19 -0800 (PST)
+Date: Wed, 26 Feb 2025 08:43:16 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Douglas Anderson <dianders@chromium.org>, 
+	Herve Codina <herve.codina@bootlin.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 08/15] drm/tests: bridge: Provide tests for
+ drm_bridge_reset_crtc
+Message-ID: <gf36bwz5kpoetdnmwu4xfupxrxciojw3yebfylbwwwu4dhdxkf@6hh5sc5ts3pa>
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+ <20250225-bridge-connector-v4-8-7ecb07b09cad@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: defconfig: Enable HSR driver
-To: Ravi Gunasekaran <r-gunasekaran@ti.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>
-CC: <quic_bjorande@quicinc.com>, <krzysztof.kozlowski@linaro.org>,
-        <arnd@arndb.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <srk@ti.com>
-References: <20240419060013.14909-1-r-gunasekaran@ti.com>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <20240419060013.14909-1-r-gunasekaran@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225-bridge-connector-v4-8-7ecb07b09cad@kernel.org>
 
-Hi all,
-
-Any reason why this patch hasn't been merged yet. Other than re-basing 
-this to the tip, anything else which needs to be addressed to get this 
-merged?
-
-Thanks & Regards,
-Meghana Malladi.
-
-On 4/19/2024 11:30 AM, Ravi Gunasekaran wrote:
-> HSR is a redundancy protocol that can be realized with any
-> two port ethernet controller.
+On Tue, Feb 25, 2025 at 05:43:56PM +0100, Maxime Ripard wrote:
+> Let's provide a bunch of kunit tests to make sure
+> drm_bridge_reset_crtc() works as expected.
 > 
-> Many of TI's K3 SoCs support multi port ethernet controller.
-> So enable HSR driver inorder to support this protocol on
-> such SoCs.
-> 
-> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
 > ---
->   arch/arm64/configs/defconfig | 1 +
->   1 file changed, 1 insertion(+)
+>  drivers/gpu/drm/tests/drm_bridge_test.c | 168 +++++++++++++++++++++++++++++++-
+>  1 file changed, 167 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 11fa4aa40094..750343564f41 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -176,6 +176,7 @@ CONFIG_NET_CLS_FLOWER=m
->   CONFIG_NET_CLS_ACT=y
->   CONFIG_NET_ACT_GACT=m
->   CONFIG_NET_ACT_MIRRED=m
-> +CONFIG_HSR=m
->   CONFIG_NET_ACT_GATE=m
->   CONFIG_QRTR_SMD=m
->   CONFIG_QRTR_TUN=m
+> diff --git a/drivers/gpu/drm/tests/drm_bridge_test.c b/drivers/gpu/drm/tests/drm_bridge_test.c
+> index c0a05c459d957c3f9d281957f002f6bd36cce367..4bcc761b3ba70bfa0ccc56b0685e35f86bde63fd 100644
+> --- a/drivers/gpu/drm/tests/drm_bridge_test.c
+> +++ b/drivers/gpu/drm/tests/drm_bridge_test.c
+> @@ -14,17 +14,57 @@ struct drm_bridge_init_priv {
+>  	struct drm_plane *plane;
+>  	struct drm_crtc *crtc;
+>  	struct drm_encoder encoder;
+>  	struct drm_bridge bridge;
+>  	struct drm_connector *connector;
+> +	unsigned int enable_count;
+> +	unsigned int disable_count;
+>  };
+>  
+> +static void drm_test_bridge_enable(struct drm_bridge *bridge)
+> +{
+> +	struct drm_bridge_init_priv *priv =
+> +		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +
+> +	priv->enable_count++;
+> +}
+> +
+> +static void drm_test_bridge_disable(struct drm_bridge *bridge)
+> +{
+> +	struct drm_bridge_init_priv *priv =
+> +		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +
+> +	priv->disable_count++;
+> +}
+> +
+>  static const struct drm_bridge_funcs drm_test_bridge_legacy_funcs = {
+> +	.enable			= drm_test_bridge_enable,
+> +	.disable		= drm_test_bridge_disable,
+>  };
+>  
+> +static void drm_test_bridge_atomic_enable(struct drm_bridge *bridge,
+> +					  struct drm_atomic_state *state)
+> +{
+> +	struct drm_bridge_init_priv *priv =
+> +		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +
+> +	priv->enable_count++;
+> +}
+> +
+> +static void drm_test_bridge_atomic_disable(struct drm_bridge *bridge,
+> +					   struct drm_atomic_state *state)
+> +{
+> +	struct drm_bridge_init_priv *priv =
+> +		container_of(bridge, struct drm_bridge_init_priv, bridge);
+> +
+> +	priv->disable_count++;
+> +}
+> +
+>  static const struct drm_bridge_funcs drm_test_bridge_atomic_funcs = {
+> +	.atomic_enable		= drm_test_bridge_atomic_enable,
+>  	.atomic_destroy_state	= drm_atomic_helper_bridge_destroy_state,
+> +	.atomic_disable		= drm_test_bridge_atomic_disable,
 
+I think we usually use paired order rather than just ordering those
+alphabetically. It makese sense to group .atomic_enable with
+.atomic_disable.
+
+Other than that:
+
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+
+>  	.atomic_duplicate_state	= drm_atomic_helper_bridge_duplicate_state,
+>  	.atomic_reset		= drm_atomic_helper_bridge_reset,
+>  };
+>  
+>  KUNIT_DEFINE_ACTION_WRAPPER(drm_bridge_remove_wrapper,
+
+-- 
+With best wishes
+Dmitry
