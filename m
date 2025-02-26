@@ -1,156 +1,82 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from valentin-vidic.from.hr (valentin-vidic.from.hr [116.203.65.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00A723BCED;
-	Wed, 26 Feb 2025 20:44:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA0C275614;
+	Wed, 26 Feb 2025 20:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.65.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740602700; cv=none; b=Pei1bfWekxo4Kj15XeG8aTAbXE0NSvszImMUMAEg1D/IPfs763CWNXD9y/1BprVSY1i3fSDzAajLDftIKKN2ETi6Rj9wJju3BtPo+2/9gNT3dnjLGDCUyZiMaBSbb8Ay1A0b8THhVdPRdyH52PRcMkHVsVGmzrQw7UnZcYL6+Y0=
+	t=1740602850; cv=none; b=aRjIj4loMIOublDEnfc40mZxb01toqeLNibMg2RNOryxevkTBz1keueMk1ksEG9wENbzItAgTyaSGHTYIn+HTWo8KjkN4l3OdJrJqV8+8CBv49hCW+Ss2wy1eMlhYFODs+Rih2dBC5pS3nAiypTTngFQ4vneSgloAHBqj0rROYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740602700; c=relaxed/simple;
-	bh=/5JXGHRq+/oMmdCbsCZ+alNq8hGcm3qjMnYrPCN8pK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cNCt9e5Tm2lQdRl8erk2P6dxA7pHhb/I/F+fO3TR9MO20w2DwBVSkFIOLnq+ZQBM6SujG7NKoqocdtAQRJMm/4ArKxP3319DksJuwiLOKe9dpI1J3gJZUGVLI4SgAzxTDmGstcGG3/X5/oil0Mc2jHQhiHfUz38+4Yux1skMi1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HvzUZHc+; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740602850; c=relaxed/simple;
+	bh=K9bqffrO2e2aLZ4y4VAa6+K26EGBBsGBkT9p9s2QLaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QMhP5Ihoh17zL4/7PuDf+8In66j5N0dTc/DstaPBgRHGxWx15YbB7gewCV/GokxMgI+2h96PodC1URtOs8X/XuHzhuosWhtEi5Aj0INOcCKGeVSPwFxvZd4FlDgmrKIwIx9ExpoYa4jqb2QIWwkAbaooUDv0QkBVgfKcb19OP5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=valentin-vidic.from.hr; spf=pass smtp.mailfrom=valentin-vidic.from.hr; dkim=pass (4096-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b=Eh7NE8Fl; arc=none smtp.client-ip=116.203.65.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=valentin-vidic.from.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentin-vidic.from.hr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HvzUZHc+"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QJoKW6012382;
-	Wed, 26 Feb 2025 21:44:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	2GOBEorWmIgUcdOOD80gRp7n39T+YL9MZl8LKJghq44=; b=HvzUZHc+jDn1+88j
-	dTdruYUDZMwl95iRYAKyZNOEDVvPQ9LNZ2fIQBN3OpBJGp4aOLb6OEpH1iUwwl0m
-	dwY+bHpFNtFE6KfXsUJGydmJZ/Kjk3hpXfFQiNS4VSthFtAshWJDsLW+nJm7jksf
-	pCDe/Mf1YR9jmnxJLJF/ZRttsHDzBlbmaD2ceN2ejEJUv2dVDkiwQtjy+22RMcMM
-	64hn0eTZVTcG85hu87F44bXN/N1Xxe9s20pGB8Z6JKlJe+O1JpwJp5Ya6yVV0/L1
-	MIYQfow3CtLSgRelnJTyL3dq+XS9QTMSX3h3h8aRJPo8o96aooGAi4TrkOP/YjTB
-	rWOaTQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psv6usm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 21:44:46 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 14F404007D;
-	Wed, 26 Feb 2025 21:43:33 +0100 (CET)
-Received: by euls16034.sgp.st.com (STMicroelectronics, from userid 89)
-	id 6DE2F4EFC7A; Wed, 26 Feb 2025 19:16:19 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF75A4F3E66;
-	Wed, 26 Feb 2025 19:16:19 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 19:16:19 +0100
-Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Feb
- 2025 19:16:18 +0100
-Message-ID: <4876e1a4-93b7-4bd8-be03-4a2895567f2b@foss.st.com>
-Date: Wed, 26 Feb 2025 19:16:17 +0100
+	dkim=pass (4096-bit key) header.d=valentin-vidic.from.hr header.i=@valentin-vidic.from.hr header.b="Eh7NE8Fl"
+X-Virus-Scanned: Debian amavis at valentin-vidic.from.hr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=valentin-vidic.from.hr; s=2024; t=1740602842;
+	bh=K9bqffrO2e2aLZ4y4VAa6+K26EGBBsGBkT9p9s2QLaw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Eh7NE8FlcajrTcJWPdjXtb9PuAaBRyJZ9pX+Z0y6F1kKwNxv7/0D4n5A2ouqAFTXt
+	 DncHI7OZCtlmFRwdUxRD+urQrv+qrDy9AnWBN+2S4Ws6zsj80q2yiua6r1P9c1G42n
+	 9LIuGeQqeMWw0h7KciJhATHLbtZqdh0eAEakkgDyougNDzWRfVf9y1SISwgHQjmGeh
+	 Ldwon1qQK41g5EQY9+juOi5Wwj9g7MXQKXzBYaA6vQtP0TjkbGYQNhV3nMt4Hy7co2
+	 T1iV1oFVSBPPiwB9dLO/CTmsaUGERaVZ8MQ0Bu3aUQI65lsXx1GgBP2QuPx4efvNs6
+	 JRN839VU1nTM4vp4XsJLays77tDi83xAd+RydySA5wvOeVwR7mk6inCHrst4OmAgg6
+	 w+6hgfXO7nGDLJeTJ+Qce3f+REmobDX1Lgcvf+Z4AaWoBbRC3EJhtNf8QPhqFziJcN
+	 xCPZFelrwJh46m/GuTr56K0sbuG46sIP4JGZnSnfd315wdC2sSEVXlcXwfm7W2Czsk
+	 yBkBt+Ugxu4qGrjQSHkyqkjSGtxuXr69aHnfeyocnUMGhklv4WcAi+uBTowO7yabnN
+	 OGN4v3azMmEQqWUUcszfSsexBZyqTnr8Q6EFuXzEcA1bYiywAU9hCO6+CF5uOPYM3s
+	 OgeB1OiPIhFiiY5I8ome3W/4=
+Received: by valentin-vidic.from.hr (Postfix, from userid 1000)
+	id B627230A01; Wed, 26 Feb 2025 21:47:22 +0100 (CET)
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Subject: [PATCH] tty: pty: remove redundant local variable
+Date: Wed, 26 Feb 2025 21:47:07 +0100
+Message-Id: <20250226204707.1941274-1-vvidic@valentin-vidic.from.hr>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/8] counter: stm32-lptimer-cnt: add support for stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-7-fabrice.gasnier@foss.st.com>
- <20250225-pelican-of-pleasurable-might-e9a7e8@krzk-bin>
- <4ffc3fe3-78ab-43b2-b0d5-8f9cb545f9c5@foss.st.com>
- <b9b3844e-bdd5-4f50-aa10-8bf97751c566@kernel.org>
-Content-Language: en-US
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-In-Reply-To: <b9b3844e-bdd5-4f50-aa10-8bf97751c566@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-26_06,2025-02-26_01,2024-11-22_01
+Content-Transfer-Encoding: 8bit
 
-On 2/26/25 08:49, Krzysztof Kozlowski wrote:
-> On 25/02/2025 15:58, Fabrice Gasnier wrote:
->> On 2/25/25 13:02, Krzysztof Kozlowski wrote:
->>> On Mon, Feb 24, 2025 at 07:01:48PM +0100, Fabrice Gasnier wrote:
->>>> Add support for STM32MP25 SoC. Use newly introduced compatible to handle
->>>> this new HW variant, even if no major change is expected on the counter
->>>> driver.
->>>>
->>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
->>>> ---
->>>>  drivers/counter/stm32-lptimer-cnt.c | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
->>>> index b249c8647639..a5dce017c37b 100644
->>>> --- a/drivers/counter/stm32-lptimer-cnt.c
->>>> +++ b/drivers/counter/stm32-lptimer-cnt.c
->>>> @@ -508,6 +508,7 @@ static SIMPLE_DEV_PM_OPS(stm32_lptim_cnt_pm_ops, stm32_lptim_cnt_suspend,
->>>>  
->>>>  static const struct of_device_id stm32_lptim_cnt_of_match[] = {
->>>>  	{ .compatible = "st,stm32-lptimer-counter", },
->>>> +	{ .compatible = "st,stm32mp25-lptimer-counter", },
->>>
->>> So fully compatible? Why this change then?
->>
->> Hi Krzysztof,
->>
->> I should have mentioned it in the commit message:
->>
->> Currently, same feature list as on STM32MP1x is supported.
->> New capture input stage is now available in the hardware. It's not added
->> yet to the driver.
-> 
-> Which is the exact meaning of compatible. Express it properly in
-> bindings and driver.
+The value of to is only used once, so no need to store it in a
+variable.
 
-Could you please just clarify here, do you suggest to better explain it
-in the commit message, both in bindings and driver ?
-Or do you mean something else ?
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+---
+ drivers/tty/pty.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-There's one more thing here, I haven't mentioned earlier, which is
-specific to the STM32MP25 SoC family (not only to the LPTimer revision).
+diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
+index df08f13052ff..c6eb711500b6 100644
+--- a/drivers/tty/pty.c
++++ b/drivers/tty/pty.c
+@@ -110,12 +110,10 @@ static void pty_unthrottle(struct tty_struct *tty)
+ 
+ static ssize_t pty_write(struct tty_struct *tty, const u8 *buf, size_t c)
+ {
+-	struct tty_struct *to = tty->link;
+-
+ 	if (tty->flow.stopped || !c)
+ 		return 0;
+ 
+-	return tty_insert_flip_string_and_push_buffer(to->port, buf, c);
++	return tty_insert_flip_string_and_push_buffer(tty->link->port, buf, c);
+ }
+ 
+ /**
+-- 
+2.39.5
 
-The LPTimer has interconnect signals throughout all the SoC. It's listed
-in the "Peripheral interconnects" section of the Reference Manual (RM0457).
-Here, simply reading the LPTimer revision/identification register
-wouldn't be enough, as it specific to the SoC. Upcoming STM32MP21 SoC
-family will have a different list of inputs/outpus internally in the SoC
-(but same controller revision).
-
-So here I intend to keep the specific compatible
-"st,stm32mp25-lptimer-counter", to be used even if not yet implemented
-by the driver.
-
-I'll try to explain it better in next revision.
-
-Thanks for reviewing,
-Best Regards,
-Fabrice
-
-> 
->>
->> The Low Power Timer (LPTIM) hardware isn't fully backward compatible,
-> 
-> How so? How can it work then with above ID table?
-> 
-> 
-> Best regards,
-> Krzysztof
