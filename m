@@ -1,162 +1,86 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA0E238160;
-	Wed, 26 Feb 2025 09:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740563186; cv=pass; b=tsN3qyGzi2qTtxZJMZlkirxRxqFeP+Ga3alIavyUA0wbna7lX0bdxJFll2w/mUzHDTMEFiVqO4YLzPDaxrmsWtv0M4dbzh7XXs0r5X0s5VB+p52xK8WHnln7t9xRc6/yG18VwZ5cukSCi/B8y8aZccAv7H2F0YfOgkDgtRUk9Ew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740563186; c=relaxed/simple;
-	bh=jMhCi2lGoBNhfWScI0gNVaijzNEe6KlHiTA4K78enB4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C65E19EED7;
+	Wed, 26 Feb 2025 09:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740563223; cv=none; b=F0oBCeTtUVMGtFcVtUbTlBnk4NqOm0+vQNqXXOnQHWpFdGOIHlEoSrF9dEFDeftNSCK7ElGIteu55wFiz/kpZJfA0gMlKHegYapPoYiCcthq5qqDXOB9Mmkc65abyRMNVlzm8V1ik4yF/oJz3/GGLpxzFP0wfS/Rt5eCX3lcspo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740563223; c=relaxed/simple;
+	bh=65mCvrCgQ8vUabuuLrrDfQqdfH8PfOiynZ1+gS5LqcY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+bB789Ift3WMoxxTfkZkeilC0F9QLUkAfe4vyB7jndUoQmKdri4hFyIORvNgmsXb80Zpk0ECmKlwtWEJiC+AOXGz1w9cC4Toltpx75Y808Ionj9SHvaiT1qsTsAskn66OaNI3HzDMQ61BpNLnlTYGqpOZRJyJWbxstJ1xsiPaI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=I8IyydGQ; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=J3GpXJ5reIUcl9X5akXHv6VjGZJPW9W/3KIWDzIZ85ScnWEXgUInO+3uEcxEQduya8xAs1Zb1yu1C0sJdVEyoDGS8vMX0rUp+FSW6hvvGSF2PJTbkWElr32aFRbp1WQElawgmrUngrtgxq85PXo/HSfTzehSDdamAo8tQZF5zIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GR8ZTEI2; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="I8IyydGQ"
-ARC-Seal: i=1; a=rsa-sha256; t=1740563155; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=m31gMZ7PHeDL/F4qCXEU4O3yLVCHcOVX/5y1QMYRaSweufzdT1jXwNp1dMeRmvKshBycs8FeSuzrYIv2uUQ9MVw2ubaAWczoK7ZhMBFrsgtUgkXYAKFAVsYeRXFXt69HgzrdADDKyBG/sd+18VK+VvWaVAuFap3SVHjb3koAp+c=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740563155; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=r/92kSJvY1+rN7R1Wa41yTcFlIjE+7u8+6SYiP5XVx4=; 
-	b=POFs53U5pyE0qysaazZesJqL2f+JCSyzetbBgz3V4E/Q27aLKJvW+vZqCco8CNCW1ImJt2ns0PEO5IFdLrftN0IdQR3mIAsTdtB9Mpf3NMcAzj7iy6Dl4RK14ZRrtatTtATXl6WvI3lzqKsM6rM1F1JbNiDCTvaSJqUkJgivTRU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740563155;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=r/92kSJvY1+rN7R1Wa41yTcFlIjE+7u8+6SYiP5XVx4=;
-	b=I8IyydGQEZwn7/WYgA/DfF4oMMeiC2EYo5lrBwXlRSS0/MlQq8IhONdNXcGKl+fQ
-	pl53yxiw7eWzMe4n25/m5E+ic5ghVSAylF3uFIKq4Rj9ATlGXx62JZI6jKeu0B/B8B8
-	pYCvZ1e+WdVC5PvHkjdsIImyy5EsPHAc2wIN2ang=
-Received: by mx.zohomail.com with SMTPS id 1740563153661642.0756053378082;
-	Wed, 26 Feb 2025 01:45:53 -0800 (PST)
-Date: Wed, 26 Feb 2025 10:45:45 +0100
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-To: Ming Qian <ming.qian@oss.nxp.com>
-Cc: mchehab@kernel.org, hverkuil-cisco@xs4all.nl, nicolas@ndufresne.ca,
-	shawnguo@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-	xiahong.bao@nxp.com, eagle.zhou@nxp.com, tao.jiang_2@nxp.com,
-	imx@lists.linux.dev, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] media: amphion: Reduce decoding latency for HEVC
- decoder
-Message-ID: <20250226094545.byr2b3p26w5vit63@basti-XPS-13-9310>
-References: <20250117075720.4018076-1-ming.qian@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GR8ZTEI2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YtowJyTfySe91smR0qJ/muHbcExkBlLYkwOcrWOMYg0=; b=GR8ZTEI2cDfxbbLGLTUqMau5x8
+	QU3gurHsTGFVIe1eAvVAGwAY/J75XF8XyeaaAurSkh+fufJHMbOokeO6+4vENMZ5oVhxBWZNRLfIm
+	5Pr592CUB/oZsCmKVj0wwvv/UNx17MqjkjazitGIeaiWOi6nBrtbquf+H5dTlI6kvzduZYUctgCNg
+	EpEP71ClhZ9Z0QFbV/kRLznf26IH6lgnU+3IjQCV1+6v7RLEQaF25A8WCFtyXZ/ao6kwyUISCaJUl
+	QvhrV42Uft2Vb8mb9oETo0p1Beox4u3KSyx26qi+iOuFhuFnDzOgxZtInOK9e+icO8dlV1HU12h2E
+	q498Gy3Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tnE0G-00000003ZNY-3ZXz;
+	Wed, 26 Feb 2025 09:46:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6C9CD300677; Wed, 26 Feb 2025 10:46:56 +0100 (CET)
+Date: Wed, 26 Feb 2025 10:46:56 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v2 12/24] perf/x86/intel: Allocate arch-PEBS buffer and
+ initialize PEBS_BASE MSR
+Message-ID: <20250226094656.GS11590@noisy.programming.kicks-ass.net>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-13-dapeng1.mi@linux.intel.com>
+ <20250225111805.GL11590@noisy.programming.kicks-ass.net>
+ <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250117075720.4018076-1-ming.qian@oss.nxp.com>
-X-ZohoMailClient: External
+In-Reply-To: <2e1b48d7-1528-4de0-affa-e6c13e0ce1b1@linux.intel.com>
 
-Hey Ming,
+On Wed, Feb 26, 2025 at 01:48:52PM +0800, Mi, Dapeng wrote:
+> 
+> On 2/25/2025 7:18 PM, Peter Zijlstra wrote:
+> > On Tue, Feb 18, 2025 at 03:28:06PM +0000, Dapeng Mi wrote:
+> >> Arch-PEBS introduces a new MSR IA32_PEBS_BASE to store the arch-PEBS
+> >> buffer physical address. This patch allocates arch-PEBS buffer and then
+> >> initialize IA32_PEBS_BASE MSR with the buffer physical address.
+> > Not loving how this patch obscures the whole DS area thing and naming.
+> 
+> arch-PEBS uses a totally independent buffer to save the PEBS records and
+> don't use the debug store area anymore. To reuse the original function as
+> much as possible and don't mislead users to think arch-PEBS has some
+> relationship with debug store, the original key word "ds" in the function
+> names are changed to "BTS_PEBS". I know the name maybe not perfect, do you
+> have any suggestion? Thanks.
 
-thank you for the patch!
+Right, so I realize it has a new buffer, but why do you need to make it
+all complicated like this?
 
-On 17.01.2025 16:57, Ming Qian wrote:
->The amphion decoder firmware supports low latency flush mode for
->HEVC format since v1.9.0, it can help reduce the decoding latency by
->appending some padding data after every frame, then driver can enable
->this feature when the display delay 0 is enabled.
+Just leave the existing stuff and stick the new arch pebs buffer
+somewhere new. All that reserve nonsense shouldn't be needed anymore.
 
-I see that you already changed the commit message for this version, but
-I still have a few recommendations for the description:
-
-     The amphion decoder firmware supports a low latency flush mode for
-     the HEVC format since v1.9.0. This feature, which is enabled when
-     the display delay is set to 0, can help to reduce the decoding
-     latency by appending some padding data to every frame.
-
-The rest looks good to me.
-
-Regards,
-Sebastian
-
->
->Signed-off-by: Ming Qian <ming.qian@oss.nxp.com>
->---
->v2
->- Improve commit message
->- Add firmware version check
->
-> drivers/media/platform/amphion/vpu_malone.c | 22 ++++++++++++++++++---
-> 1 file changed, 19 insertions(+), 3 deletions(-)
->
->diff --git a/drivers/media/platform/amphion/vpu_malone.c b/drivers/media/platform/amphion/vpu_malone.c
->index 5c6b2a841b6f..1d9e10d9bec1 100644
->--- a/drivers/media/platform/amphion/vpu_malone.c
->+++ b/drivers/media/platform/amphion/vpu_malone.c
->@@ -68,6 +68,9 @@
->
-> #define MALONE_DEC_FMT_RV_MASK			BIT(21)
->
->+#define MALONE_VERSION_MASK			0xFFFFF
->+#define MALONE_MIN_VERSION_HEVC_BUFFLUSH	(((1 << 16) | (9 << 8) | 0) & MALONE_VERSION_MASK)
->+
-> enum vpu_malone_stream_input_mode {
-> 	INVALID_MODE = 0,
-> 	FRAME_LVL,
->@@ -332,6 +335,8 @@ struct vpu_dec_ctrl {
-> 	u32 buf_addr[VID_API_NUM_STREAMS];
-> };
->
->+static const struct malone_padding_scode *get_padding_scode(u32 type, u32 fmt);
->+
-> u32 vpu_malone_get_data_size(void)
-> {
-> 	return sizeof(struct vpu_dec_ctrl);
->@@ -654,9 +659,16 @@ static int vpu_malone_set_params(struct vpu_shared_addr *shared,
-> 		hc->jpg[instance].jpg_mjpeg_interlaced = 0;
-> 	}
->
->-	hc->codec_param[instance].disp_imm = params->display_delay_enable ? 1 : 0;
->-	if (malone_format != MALONE_FMT_AVC)
->+	if (params->display_delay_enable &&
->+	    get_padding_scode(SCODE_PADDING_BUFFLUSH, params->codec_format))
->+		hc->codec_param[instance].disp_imm = 1;
->+	else
-> 		hc->codec_param[instance].disp_imm = 0;
->+
->+	if (params->codec_format == V4L2_PIX_FMT_HEVC &&
->+	    (iface->fw_version & MALONE_VERSION_MASK) < MALONE_MIN_VERSION_HEVC_BUFFLUSH)
->+		hc->codec_param[instance].disp_imm = 0;
->+
-> 	hc->codec_param[instance].dbglog_enable = 0;
-> 	iface->dbglog_desc.level = 0;
->
->@@ -1024,6 +1036,7 @@ static const struct malone_padding_scode padding_scodes[] = {
-> 	{SCODE_PADDING_EOS,      V4L2_PIX_FMT_JPEG,        {0x0, 0x0}},
-> 	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_H264,        {0x15010000, 0x0}},
-> 	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_H264_MVC,    {0x15010000, 0x0}},
->+	{SCODE_PADDING_BUFFLUSH, V4L2_PIX_FMT_HEVC,        {0x3e010000, 0x20}},
-> };
->
-> static const struct malone_padding_scode padding_scode_dft = {0x0, 0x0};
->@@ -1058,8 +1071,11 @@ static int vpu_malone_add_padding_scode(struct vpu_buffer *stream_buffer,
-> 	int ret;
->
-> 	ps = get_padding_scode(scode_type, pixelformat);
->-	if (!ps)
->+	if (!ps) {
->+		if (scode_type == SCODE_PADDING_BUFFLUSH)
->+			return 0;
-> 		return -EINVAL;
->+	}
->
-> 	wptr = readl(&str_buf->wptr);
-> 	if (wptr < stream_buffer->phys || wptr > stream_buffer->phys + stream_buffer->length)
->-- 
->2.43.0-rc1
->
->
+Just add it to the intel_pmu_cpu_{prepare,starting,dying,dead} things.
