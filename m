@@ -1,191 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2089.outbound.protection.outlook.com [40.107.21.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19CD521D585
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584374; cv=none; b=QEzZPkqeBHRgfBxiztJdwn6Qv5K+QSr63yU95jL/m3RiGeRksPtJsaAKUbm9PBC/qy19WSRkthZLJ9YbAypI62CRAsIHal+3y9xWTkNKsCEUcj1K6gLzXT6GCmNt+far8ZoFkU4XseS+HjIf9Q6ZS2Pu4torikrTmfAlF/6OteQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584374; c=relaxed/simple;
-	bh=kqO8ICVCs/g0H5zTi0fDdYONbsaDC6OQ13FHNmLQVDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tlu6UcpTd3nArP5NtcW0XcEpnV0qo8IAqLAp/qA2W1gJONgfkVScrpkswZOFKmxduu1yFNyBH9iER4fhMRDrYqX0dFt7shjIjWPMEWmT+wK2WDd3KoND/o4pWPErTh8R3y2Gt/DNZVtuEa8I8b74AoEnv5Pl/l+fhutKbKTaK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=in2ltHiy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15D021C184;
+	Wed, 26 Feb 2025 15:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740584401; cv=fail; b=ogXxeU4iaNxOTLH14QrJc5nxItJQOm57UPGRdFwidKt+ox1FtgmBT8aOJ8uY3gS+7lN24533SYvUNxk4l1swDVdND9IhC0IjflecdC2295yJUqJpR08oRp8B4o2P7msC9OYgU4EM1Wpf6um3NyBidao7ePgJ35/vekwsEOQ8Wxk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740584401; c=relaxed/simple;
+	bh=/Kzyw/MP6jsF1Ix+c4Am3oJvq1w4IKJw/7JZnObmkak=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=fCVP1h2XtHd2d6JmUpX9jdLwJ6YsNHLR9tIMsXWpgmvRuQcojIfdqH6AT39NFw0JtyKoBh5Qp7Z1AeRkePobAgl9iqy72oKlMO0a63Kstnd8lDWCKh3bHj0T62jHILAc+cKtvBL5tYSS4tcigH1ExSuunFHzTYBQ0urf83Ify8Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=pass smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=AONxXoHQ; arc=fail smtp.client-ip=40.107.21.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="in2ltHiy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740584372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IbCPFo4ukPMUk4ZCGzV7Llomohq6p/OUxLx79C9nwNc=;
-	b=in2ltHiyzZL3lknaOztBjFHQybVoBtz5uXfP/aoS1cK9b6PE9PAhHijYE97AhwwtggqCwm
-	41JVrLqu3nAQw2p7a5mQw1HOe9a4cwqaIxuU7kU9elStNwueGQ185BPTJPQ+UfJ4OLsMPh
-	exLiwGC+l4eW5zxWelimDwuwDy0Znb0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-3nRJo7S8P8exVuhwk9o2oQ-1; Wed, 26 Feb 2025 10:39:30 -0500
-X-MC-Unique: 3nRJo7S8P8exVuhwk9o2oQ-1
-X-Mimecast-MFC-AGG-ID: 3nRJo7S8P8exVuhwk9o2oQ_1740584369
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so35274555e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:39:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740584369; x=1741189169;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IbCPFo4ukPMUk4ZCGzV7Llomohq6p/OUxLx79C9nwNc=;
-        b=bUHjGViAds+qvBKMTv1/t+hlzm+//lDLi/EO8FTcG2ShPnkFzDrAwlR6K7Xut6NU5s
-         rw9csj+RoowbBDpJuWLEO4iBPisaFeGfKNdPRzQKB4+s/tEvTVatQuzpdVorH0MXoSn/
-         RZlX73fTaqEY+/GLlsF8CvzZV6obibWX1ehDrP3v2/Pu0pK+w7tX+fpFfULQtWP2mfsv
-         kHOZPhtylnYxOr5tcmJISXjHBSzTh7lbhxFVlSfTicfi2jkTN+r1PPuNrrK20T5nmwGu
-         Ch8ot8Jk672MelXz9QgSQmsSobZ7AGn89KZERkgEGi9rr38XIsmsjCqkaxvMoKMMyyb8
-         0voQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHXv4DBjJVbM+/dwEQ54CEA6wWfT2YSoDrEgldL+kijgXnSIX9vSUAT7ZrgY3i9S6GA/b0MRre1VBst/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw44xJ7Ybg5fDpoI7IdzN7N6KMqHnXvDJQ0iQ3UDSrUXgukYD38
-	94oJegvC4sjcJWbsxtUQg6IQK1C7aQ46Z9PsJpMX0gitrjAy7iFZScBybSCMfRdRCjM8pO5mzst
-	ckRSbWNzXl/Jla0e6ECHMp1Q+2TNbWmQgR3z7SEsOYgaO24A1AeMCB6sGpgY7Cw==
-X-Gm-Gg: ASbGnct1BsnTq3bbpRiECcnrwmFgMN9gDhc9ViapPtXks89+cEt/mAlRwqV+2FautC9
-	oQfUhY/Fj7YrapubH35IIhow81xMkqUa10k60HehXegY56QAnDZb3SeLSjeypc4SuzGyEvniJNT
-	MNy+bm9mdB+OeHY3Ye8ITgMUMu0nrkS8XQO4G6DEbHIDVxKnsg4nWw40iN6xxJdT//rXNT8DsFe
-	39koACaX6Zw6Y8zmbWA0MxLRvoOenNdky2JS8yMMFAcCfeUpZ5IP6Q5FLyCHfn3tuMWkYY8Ss4m
-	h0pYhQtGxCHYciFTtr8ydvs3D9XBKSMA9Y9KEwXl/WwHZPwnjPwLDMX0G/lWQNTGrfJLANCC33+
-	5asOkXgTljcY/Sd06qVzzf+9YCwyyTzho1V57vT/OFjY=
-X-Received: by 2002:a05:600c:1c1d:b0:439:9496:181c with SMTP id 5b1f17b1804b1-439aebdc9e1mr174249645e9.29.1740584369356;
-        Wed, 26 Feb 2025 07:39:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFQ9rr83hpuWF3pq1XFAqgfUctJX1UIekAvCRlt8R0Q7Qa23qZ/5oV/Uf5f10GLP/kQVS86tg==
-X-Received: by 2002:a05:600c:1c1d:b0:439:9496:181c with SMTP id 5b1f17b1804b1-439aebdc9e1mr174249455e9.29.1740584368988;
-        Wed, 26 Feb 2025 07:39:28 -0800 (PST)
-Received: from ?IPV6:2003:cb:c747:ff00:9d85:4afb:a7df:6c45? (p200300cbc747ff009d854afba7df6c45.dip0.t-ipconnect.de. [2003:cb:c747:ff00:9d85:4afb:a7df:6c45])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba52b7ecsm25549415e9.3.2025.02.26.07.39.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 07:39:28 -0800 (PST)
-Message-ID: <2a4d6ef6-d7e5-46b9-a4ed-b7aad7a1c20d@redhat.com>
-Date: Wed, 26 Feb 2025 16:39:27 +0100
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="AONxXoHQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=loEir5RsQPqL0hb2IQK6rEit7GOtP7K6kDjDX3+7ZelXte60T5dFTguQlAAANppf2xkyNnP1LAsjXEzXUlBSbuJUypEwq75kpglmQDpG6LaCQslvJU0Dx8puH9umKXiEgQPHx1spmEYOPmeRPw08pNbPYtW9lgKFk6PrW1A7p2dlMf7GoJbZFVlAmkXDxocufTgyVSz+P+Cb/8GlPrtDe6D3vXrz6Wwztod89LxpRHyqViFlvF4FPcFL9GGXIhSKBvpSp+/Chl5yjM8UHKuWCInjC+vMPnzYkDID+ADbexmyV4yqDrGRgLr6CwVMM6CZ9fkODj/8gbg78yYWnXyb2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QAZbOQfrVQMEaCKUC/F/pwLUbAMMTXyHbvzNDxXmQTM=;
+ b=MDUX7/UheONl6tLmaeO+cZoI44beEBiNCIA/fMz/Kw5ds2upoq+EaxflefE8q14XYIT/dRb5WGVd7QLSVzpx3xh/KFlSOjxAY6bQscsRixNmBvdXIhN4YBa4idVjBaoZbsaURwm1Gb5B6KNpwz/GbRIvDbt4RU/WHyKVoIQPyL5dp0InyjfsTd/9RhKPrbKcBth+bALhXilMYsEueknM1Wb8gRTi71KpnMAz7gnQyYrHRAkV28dU9yqwFu30pmaTyjcRh+nToQtJSXwsW162AHPKX1qHE2Z7xiZPuYSDTfIJ7zovzDJGfkOukrIN297ScdddvzmmVaBo/80c1PQxBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QAZbOQfrVQMEaCKUC/F/pwLUbAMMTXyHbvzNDxXmQTM=;
+ b=AONxXoHQkB4Va7C4tym5ECzgdsH48J0bfOvpVNY0WFSzghclNxtB9I/iXRV3VrBQZLfN+uAc6FtUhUXVrM61B6wGHmW4CTZnvRGweIvbEpP/4uh2d65L/bVP6YNQdVjRYS7Gr8uM/W6X3afZdpsXq5ms8oxnhnVfFpVs0ziF6Hj05S0Z9tv3oEH9I6tqGuHNEtvjLpUC+U/JepmK/EiWa4NTM31bmljuMP+VtoIF8lQyz7w1N1/TcggBmy3j/1GuQ5jjyvtY2d9lBm2nsLq0CbDnMtHIl+jz9QHCBSB+BfNh38xpbU39430yN5LeRDvYA59DEk5XGgiJ/e13h/YgWg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com (2603:10a6:10:53a::11)
+ by GV2PR03MB8559.eurprd03.prod.outlook.com (2603:10a6:150:af::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Wed, 26 Feb
+ 2025 15:39:56 +0000
+Received: from DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf]) by DBBPR03MB10396.eurprd03.prod.outlook.com
+ ([fe80::ee3c:c9be:681:c0bf%7]) with mapi id 15.20.8466.016; Wed, 26 Feb 2025
+ 15:39:56 +0000
+From: Mathis Foerst <mathis.foerst@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Mathis Foerst <mathis.foerst@mt.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	manuel.traut@mt.com
+Subject: [PATCH v1 0/8] MT9M114 driver bugfix and improvements
+Date: Wed, 26 Feb 2025 16:39:21 +0100
+Message-Id: <20250226153929.274562-1-mathis.foerst@mt.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1P293CA0015.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:2::14) To DBBPR03MB10396.eurprd03.prod.outlook.com
+ (2603:10a6:10:53a::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: zswap: use ATOMIC_LONG_INIT to initialize
- zswap_stored_pages
-To: Sun YangKai <sunk67188@gmail.com>, yosry.ahmed@linux.dev
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- Chengming Zhou <chengming.zhou@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Kanchana P Sridhar <kanchana.p.sridhar@intel.com>,
- "open list:ZSWAP COMPRESSED SWAP CACHING" <linux-mm@kvack.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250226124141.22218-1-sunk67188@gmail.com>
- <20250226153253.19179-1-sunk67188@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250226153253.19179-1-sunk67188@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DBBPR03MB10396:EE_|GV2PR03MB8559:EE_
+X-MS-Office365-Filtering-Correlation-Id: 578cc0c8-fa03-4788-6d80-08dd567bd24f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?/uVjleaUpxx9ivTOVC1Kz2bNk94BcQ3phLj3f9GvB2Qie/JEaE8kf3rDV3QT?=
+ =?us-ascii?Q?lQzVVx0huF0TQACvENzoQ5Y1Sp1jXWAk45jtj4GJEPnotoqpz4B0yTMvBV0x?=
+ =?us-ascii?Q?MgcR/hYdb04St3MhaFeCa72cXAVtfXTVcMF4R/gSKaMmHLJS4COx2Ir8sdiL?=
+ =?us-ascii?Q?HtMo/nNmYRtC7/bsYDG2ABPeiervp+FAcSB7ztI34UuOFCorSCTCSYlmNqoU?=
+ =?us-ascii?Q?yEqaoq011858ZKXySdcZdhA2kTODL1YucuckQEKyApOyY6ERpGCjjz9HEc0o?=
+ =?us-ascii?Q?fcCpVBx35NJP5HVOBS63Q8vyFVBABViwXou4oqdSPDWcScoiv7RYbyJCmERy?=
+ =?us-ascii?Q?/FK6GiNgDuJN25Yyyx08UY59kCB5oc5gjMGTNPVsUiXZQm7TAmR7vmsTVSMH?=
+ =?us-ascii?Q?XScu5Y9oeWK6BaWtaF0CxokkTfe6QXijwl7omnJMB1EiQ5Ise+J5OVy9A0FV?=
+ =?us-ascii?Q?Ri9HF/h0oOl54RY/zA1lK3AukLSEq/Vl8FCFm1IHDShAcujSYDFQ1ptuaHmi?=
+ =?us-ascii?Q?6f+KL0m7p7Jfb4zUV26ZcU8ZyQcMHIWQiOJzieaAWZ1ddgrSqFMYqsPSUCiH?=
+ =?us-ascii?Q?JYtzll3iVsYnJCNdJLdnaMSioshY7a3Hf9ARImvpLmpTVYp3rWccWESDC1g+?=
+ =?us-ascii?Q?Vwcq+Mfpk0s6g2EWO/5EPXbMAwjfVxRE846acUmDqG9N44vvw6nphwwv5Xo7?=
+ =?us-ascii?Q?m0tcXQtmW35+M9zG74SBUmNzQg+Fj8CxFLevyuZwqhUjJyXS6pKwvj8vbHKg?=
+ =?us-ascii?Q?o4ncrKPq01QGrs+hnwS8YRLMs7G2UPr6GKM/ZhkmTWDlAwoXJi0GsOwuKIpb?=
+ =?us-ascii?Q?wfKMq0qy8Qk3ata8KLbdn5e9RH+ZRfnxHtmJkeU2QqrgL5jTtp7x9OGQQbXt?=
+ =?us-ascii?Q?b1N+MITLvlSR00/iZNJzYn6g4URrjV332yZM0S+6W5Fd3C+gOE46gKo6IjV6?=
+ =?us-ascii?Q?9iNycBvuhljAoHo7J6f+8pZt+bkk6iZ2v+MuvhYQvF0EjztqAnI4j99mKkvx?=
+ =?us-ascii?Q?COfa1WWYd0ndxT0ZNlgU5mVha98TNjzuuAvrdvbUnBuR11wSBBZtj3BwXnZe?=
+ =?us-ascii?Q?6EWK4dycUvx6MACh76LmdQQcASoTrsY9XP7h0UMfTCvHhOFL5ZxGMCsp/tsF?=
+ =?us-ascii?Q?zMxNZAlUk4NC8cjezn92xrZKU5nFaKz4hrocBFgMVDMpe/ChldpxahmVNQ5C?=
+ =?us-ascii?Q?xHI0BxKQJgGl7Ac7Bjy0ka6hRx7PQCNcBUf6JJ+EfcPBeyIjqldCOktO0yBo?=
+ =?us-ascii?Q?nI1mZX+Fw57SS5mQiZvCjTdV3+Rdi05q64FnG0bKslLSo3cGzrfOk+AL6/lp?=
+ =?us-ascii?Q?4AJ6Krx4flewLvMvK0VWHK2qrbDoUWz8Xj5RF+Dy/trLB4/ZvTXUFmdTuj91?=
+ =?us-ascii?Q?iOvYw7gONmXQ45TpPSvqvxoLSoFSFceTSfLW7704bH8Jn+b1GkNkShUsxaGW?=
+ =?us-ascii?Q?8FIDAbh9Fyda2D1UEXPzWsot+QZfB2UH?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR03MB10396.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?LQ7YaamyVr593rghX6yXi2xkqh8xHQNMjsYl+Z/QZlcuk83v1IMa0CsQEVNr?=
+ =?us-ascii?Q?KLwkcU1dBIwaNr2GvvkS9Kvy8U413g2DhV1+ZKdvzGV+5lSZEgaI2WQCNCeg?=
+ =?us-ascii?Q?g34Li1EI7D92NzJSLGcdqP7g80/ekqbNBcrZ8GSqMh2dCvY1M1TBUHzEAzEL?=
+ =?us-ascii?Q?kMKMgKE7y4IqfrXxx5L/VLtrByC/nxb+fYLgmEYNUt+lYbQfCy5B9BDXmcja?=
+ =?us-ascii?Q?rRdeF6jTkZG7i2yhVkrMoHyLP/DaISUbxQnGcwadJFpz4ItVJvf5rB+zqhIR?=
+ =?us-ascii?Q?jGviZfmbQSkQrZEH0cZnzouHLngii4M87Lj/1bKz1mRIBLWdOglc+hOU2Hku?=
+ =?us-ascii?Q?Vs5Qr5+0qVUqBLlvKRyhnp9k5//9ZKVmj5X2zVkCsrdGSuU+oeS8h+pNVLnX?=
+ =?us-ascii?Q?V2yRIWC9m8mqGF71vTtl5uxe6iomKr1Kxua8wfhxAYUujc6BE25KttFLisCW?=
+ =?us-ascii?Q?bPl6As5/FNWLoxuHQIqVMhCHSoraStJt+myc+qTlTRjHDyIxKSW7LPa8ivxN?=
+ =?us-ascii?Q?1e58m6N+utwKkjC3EtyDU6AqrSzWv4e2WY23q4AkaNSC4AXi4dYIwqTDKcpN?=
+ =?us-ascii?Q?YOQOmFSrv+JNQ+QLQ+eRz9OnGjABVcgEoQgRGRbyYFrsyIYwb1XNC382ArpE?=
+ =?us-ascii?Q?r9+0QF2M9k+ceQV/CU9CID+YaJTU3UExevtpY4y8pDbJ6coJ4XBXYAXxRfCc?=
+ =?us-ascii?Q?EYDoot9MiiMgRl12rx8yUPESDlItAe7YJwQCqeSm4ZU9Yj0SQjf1TBarIAi7?=
+ =?us-ascii?Q?voTwb9/CSh6vNpktHuCOEKXk6pkzoF/lRVCgNpbIL1du/KcrXTOFL3qB6lev?=
+ =?us-ascii?Q?Cmrr71CUw4S+BXTUl7rMyJ0xKl5imdroUXmGmgQhMOr1u7wvvqDSFsVDEQsu?=
+ =?us-ascii?Q?lHX8gDeAlQwK5f/9Djsropz7Kg05BHVQKEv5QKj3kxaodRM1ah2cCnS/KuDX?=
+ =?us-ascii?Q?fB4g1mL4UZqgG494THsys7A7V+Nc2ZdDt/5qKm/0RnOL2JhEWjGjspTD75gG?=
+ =?us-ascii?Q?C9kRDyT/H8yn7VZMAyfrEL55Ywy7DHDIrWxqdT2RgnnzT9WOCCf0h9TQepLh?=
+ =?us-ascii?Q?1akp02RZDpmskY4soL91ssthEfHv7rr9wRUubCaMnf0MyllV36F0KKn4G+0f?=
+ =?us-ascii?Q?ZnOZNJ/xI9mxzcVgOWMjmggrK/kwYT/Iuoin4sBZJIiXZWv8RxVuS3nHcGcL?=
+ =?us-ascii?Q?IgSvhSwpxe2katnzcZdgTtc3aNnnECgRS4MW2PCmFXnXCI4SYJ+zxm0bSyUv?=
+ =?us-ascii?Q?bzcg+ijUvma2mZ6BsePGEq6NssNVFZHexM9lFbfc1qUbKsBY5FgnWGZyxFqg?=
+ =?us-ascii?Q?85ZumSnQC4u2w/VL9HwUR+fl7n22TpdOKwRnD0nL8SKwxHqr/i7DPzq25KjW?=
+ =?us-ascii?Q?bF5ahuWhDumd0B9aJMdTcjgLdi41LyklZyTTf1FIPrxKZlku3EPzqdFRuWdF?=
+ =?us-ascii?Q?+0t9OjoDCBD5qh4vFElxMtTOw8f9NuiGG1jozzqMiv73j1Dansa6LaBND71i?=
+ =?us-ascii?Q?lAfjSTl2K85AXZt2mIla8KdCS2FHwDL1zoMKWcg4hr7F0aBesbE0cGUg1Vh4?=
+ =?us-ascii?Q?3v+rw6lzpu+BFx+nG7pzZoooWvmrdcY3Vr9FrQps?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 578cc0c8-fa03-4788-6d80-08dd567bd24f
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR03MB10396.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Feb 2025 15:39:56.7452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2D+NDCze5sSaG89ceuWWF5e59surI/xqtQW/xpIk1+p6luyJROJBHAxFVw2DcfIu9UBLkBZ3yPYiyP6XfhkkeQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV2PR03MB8559
 
-On 26.02.25 16:32, Sun YangKai wrote:
+Hi,
 
-Something for the future: if you send a v2, indicate that in the patch 
-subject ("[PATCH v2]") and ideally, describe the change since v1 under 
-the "---", and don't send it as reply to the original patch.
+this patch series contains the following bugfix and improvements
+for the MT9M114 camera driver:
 
+Bugfixes:
+- Fix a deadlock when using the V4L2 pad-ops get/set_frame_interval
 
-> This is currently the only atomic_long_t variable initialized by
-> ATOMIC_INIT macro found in the kernel by using
-> `grep -r atomic_long_t | grep ATOMIC_INIT`
-> 
-> This was introduced in 6e1fa555ec77, in which we modified
+Compatibility:
+- Implement the missing get_mbus_config() function to be compatible
+  with the i.MX6 camera framework
 
-the correct way to reference to commits ids even in text is the format 
-you use below.
+New Features:
+- Allow to bypass the internal PLL (configurable via DT)
+- Make the slew-rate of the output pads configurable via DT
+- Allow to change the cropping configuration and the horizontal/vertical
+  flipping while the sensor is in streaming state
 
-But here it's sufficient to not be repetitive and simply say
-
-"We changed the type of zswap_stored_pages to be an atomic_long_t, but 
-didn't change the initialization."
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
-> the type of zswap_stored_pages to atomic_long_t,
-> but didn't change the initialization.
-> 
-> Fixes: 6e1fa555ec77 ("mm: zswap: modify zswap_stored_pages to be atomic_long_t")
-> Signed-off-by: Sun YangKai <sunk67188@gmail.com>
-> ---
->   mm/zswap.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index ac9d299e7d0c..23365e76a3ce 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -43,7 +43,7 @@
->   * statistics
->   **********************************/
->   /* The number of compressed pages currently stored in zswap */
-> -atomic_long_t zswap_stored_pages = ATOMIC_INIT(0);
-> +atomic_long_t zswap_stored_pages = ATOMIC_LONG_INIT(0);
->   
->   /*
->    * The statistics below are not protected from concurrent access for
+Thanks,
+Mathis
 
 
+Mathis Foerst (8):
+  MT9M114: Add bypass-pll DT-binding
+  MT9M114: Add pad-slew-rate DT-binding
+  MT9M114: Add get_mbus_config
+  MT9M114: Add option to bypass PLL
+  MT9M114: Factor out mt9m114_configure_pa
+  MT9M114: Allow set_selection while streaming
+  MT9M114: Fix deadlock in get_frame_interval/set_frame_interval
+  MT9M114: Set pad-slew-rate
+
+ .../bindings/media/i2c/onnn,mt9m114.yaml      |  10 ++
+ drivers/media/i2c/mt9m114.c                   | 161 +++++++++++++-----
+ 2 files changed, 129 insertions(+), 42 deletions(-)
+
+
+base-commit: ac9c34d1e45a4c25174ced4fc0cfc33ff3ed08c7
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
