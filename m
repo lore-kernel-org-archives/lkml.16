@@ -1,147 +1,105 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152041EEE6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA274C2FA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617393; cv=none; b=RIAAAWaz7sEd+js4tSMtB6me5HIhfPZZBH/Scd31N3ICWd338NTvPo1Bp2wr0i/rwH3hM0SQ5wDlAT3WvWBrB9w4vXt+Fi9rtI+RCugoCW/37J1BwBi0aqs6W++weVQECo/3FwWRMc9aMVYltQd8M99ZBSw3t0hu9xvhIecqWTU=
+	t=1740617448; cv=none; b=pIpSVM/ypAsdrVHJFe8QPUs2W/HvM+DLC4ni49jHDIQTng75TobRYmc6b7jZ+xxNp/iqb8l/BtggR82oQ3M2jKUYM5rfXs4f5HImDQLhL2YuG/zQrMZaKu9TeUEgttrYdoSCLHEOC6837k8+pgxLCw1Nne1ErpXz6evdkwZGwno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617393; c=relaxed/simple;
-	bh=VKfKBSoKsWgdO+5+inyMfZQxtAALsjTA1Rz1kTOzju4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CssYSKEYR/nlnTXllFvDA+mKLNzQIK5lMm9nm8V7ll4rCSSroRNXIbuubTiz5vzPIcVGp7VoQtnu3rI05WN33u7qkK07E0tR9GNc4+RRwLpReXueORaAdF0y64yHTZpj/UeGtNwf9Gcflu1OUczo6foLwSqHoRbxhlVPSUXrpCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=pCF6FuEn; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="pCF6FuEn"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-439a1e8ba83so3878055e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:49:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1740617390; x=1741222190; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y8IoVJnLvqM0mjAqtWpyGMN4QIA5NLPCn75z9KjHyIg=;
-        b=pCF6FuEnf9xwVWq5tUXKxmVikqRtTU4ntxC5RPqeOYEFZcOizRfX8/EHBdrUB080/R
-         EV4xlSfLg09u9IfgFEJZHKvbib1y8R2ZdadABrcvUIyII5MfZGLpgioxLXNFlvYFIUtT
-         JxAAg7q1Uxtm3hoP0FWeK+AJYjFihX1Crve+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740617390; x=1741222190;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y8IoVJnLvqM0mjAqtWpyGMN4QIA5NLPCn75z9KjHyIg=;
-        b=D+wJpaj0HhdmTe2Q2spQj0cIttB93YQL8DUrN+x7Hel1eWqijqPVzN8TZAWe7zddGg
-         AB/Yb9HcohPAEAfg1Zbr55YfICBEco2Do02IeayDN3DHWQ0tvcHo0Q78wp/dI26B1Mz0
-         iFTZRU2OWX0r4sL2WXbxdU+jV/FG6Zx2MAos9HnNa/FHprxYsOI91UsX3NRljTVed6zJ
-         LhN9naK82L2jfXxZMkuNGe5hwi+DXF4xrCLczHeLjcQP8WeEH8gpOXfDWw3qUtVyDwLb
-         rDa7fSsAhk5hxZgFIrQUf4NaLEizhV/4LAFH+SzTPHGa9ryi5cajDijQKyLURqRtJPph
-         OooA==
-X-Gm-Message-State: AOJu0YylxZRDPcmH4ZM+D/NiNaYMX40jioY0m7IdgqRFRv0N80bauRRy
-	RAlt42apvEEyQcOS28fhTnvngym5tbvktHPKtS8kOUYS96iVluRV3zN4PynlhB7gCJMejcS2hGA
-	Y
-X-Gm-Gg: ASbGncsqiNXUMPsQWH5gk5vs1p9tbULi971t7Ga+M90+hxLldAoo32QErTSNLHd5zMr
-	KQqzn+7X3+mHnapgiUPNlUXHiUaKUUiXzfRYk8gQ6FyDjsLUJs/C/jvknNJxII5Zq6ktS1rYBMJ
-	OLWlNLEZ0L0bYP0sUOZ5t9m85lzsG35e48W2ewGRcJ0OaiJ+MkcFfIK2mywCRMti+KBb8nWl2Jf
-	jr/kZzXSyX709JMDO+THfOYktcah4WgwxDB+0iG2tqB2mlNngga97E4yjZ1Mb7amNHOfMRIL+CW
-	j66griQP1xw0d2zgnUW1jcDgi9oHPY0uLOmOKpwncg8wh6hmxmoK3uhqEqfDs2PVXw==
-X-Google-Smtp-Source: AGHT+IGpsPywBJAzXALDQ0K7XrDZ7T0bbJAVmRf7sfiVbZ5/xXkC0xIWYXubPm/rFRohJ/Ap0ZlT2g==
-X-Received: by 2002:a05:600c:3506:b0:439:9f97:7d6c with SMTP id 5b1f17b1804b1-439aebcfc40mr188435305e9.29.1740617390403;
-        Wed, 26 Feb 2025 16:49:50 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b73718de4sm5642915e9.23.2025.02.26.16.49.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 16:49:49 -0800 (PST)
-Message-ID: <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
-Date: Thu, 27 Feb 2025 00:49:48 +0000
+	s=arc-20240116; t=1740617448; c=relaxed/simple;
+	bh=VNYGYJK2seFGVd1KiZeuCd8DMJxYxkvPtam/PB9klKQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TKVxzgNsnXPUxJ/HfdMKcM5jEGc4ASwmg+vGd/JSx0ZpIpHtBadcAQBxRr6nBDYfK/fRZrN1KHQDfLr/zhk99jL3sWMsnxRTgBJjLTu31raavJsmZK5Be5Z8ahmYrHEYAQMGlrYFXb7MbfKjjlP17RNKB7G4djVloGKATV5P2D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1740616659-086e23601815e2e0002-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id IjfANJBAOSPLeToM (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 08:37:40 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
+ 2025 08:37:40 +0800
+Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
+ ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
+ 15.01.2507.044; Thu, 27 Feb 2025 08:37:40 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 26 Feb
+ 2025 20:19:02 +0800
+From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
+To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
+	<robert.moore@intel.com>, <yazen.ghannam@amd.com>, <avadhut.naik@amd.com>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
+CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
+	<leoliu@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Subject: [PATCH v5 3/4] PCI: Add AER bits #defines for PCIe to PCI/PCI-X Bridge
+Date: Wed, 26 Feb 2025 20:18:37 +0800
+X-ASG-Orig-Subj: [PATCH v5 3/4] PCI: Add AER bits #defines for PCIe to PCI/PCI-X Bridge
+Message-ID: <20250226121838.364533-4-LeoLiu-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
+References: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
- Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Moderation-Data: 2/27/2025 8:37:38 AM
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1740616660
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 1179
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137757
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On 26/02/2025 9:03 pm, Pawan Gupta wrote:
-> @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
->  
->  #ifdef CONFIG_X86_64
->  
-> +/*
-> + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
-> + * to the retpoline thunk with a CS prefix when the register requires
-> + * a REX prefix byte to encode. Also see apply_retpolines().
-> + */
+From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
 
-Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
-conditional CS prefix in a manner compatible with
--mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
+Define secondary uncorrectable error mask register, secondary
+uncorrectable error severity register and secondary error capabilities and
+control register bits in AER capability for PCIe to PCI/PCI-X Bridge.
+Please refer to PCIe to PCI/PCI-X Bridge Specification r1.0, sec 5.2.3.2,
+5.2.3.3 and 5.2.3.4.
 
-> +#define __CS_PREFIX(reg)				\
-> +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
-> +	.ifc \\rs, \reg;				\
+Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+---
+ include/uapi/linux/pci_regs.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Why are these escaped differently?  Given they're all \r of some form or
-another, I guess something is going wonky with __stringify(), but its
-still weird for them to be different.
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index 3445c4970e4d..0566c663beb7 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -812,6 +812,10 @@
+ #define PCI_ERR_ROOT_ERR_SRC	0x34	/* Error Source Identification */
+ #define PCI_ERR_PREFIX_LOG	0x38	/* TLP Prefix LOG Register (up to 16 bytes=
+) */
+=20
++#define PCI_ERR_UNCOR_MASK2	0x30	/* PCIe to PCI/PCI-X Bridge */
++#define PCI_ERR_UNCOR_SEVER2	0x34	/* PCIe to PCI/PCI-X Bridge */
++#define PCI_ERR_CAP2		0x38	/* PCIe to PCI/PCI-X Bridge */
++
+ /* Virtual Channel */
+ #define PCI_VC_PORT_CAP1	0x04
+ #define  PCI_VC_CAP1_EVCC	0x00000007	/* extended VC count */
+--=20
+2.34.1
 
-Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
-ends up?
-
-~Andrew
