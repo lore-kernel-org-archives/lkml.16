@@ -1,106 +1,102 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B17621D5AE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221AE238D43;
+	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596357; cv=none; b=q86VsINKcybzTntfZQ/E5FwOiXgUgj59EnibS9CnhJvtDWpu2/U81H35+iBa899+cQXbgDGwBqNbqd9jrtw4HNhbZPrBcyoAUWSZaVfOEZEHRUgHt45HdsAUNkqrj0Arkno/qrDVrw0cXMPvZvuYusyvtY0gPgem6hU8q7yOcZU=
+	t=1740596417; cv=none; b=YqxZGgfwNSNeNISzRcaIpPTDKnpzshxYSVKp9W8DdcbVt7xmEcTDLyQhM2Qiz3LbcQC3BuR3r/9dgmyaR5yE1Y+SRa3cUZuhjfB0RSLs3h9kpqAzGrUR2D3c1tYob85q0X3MazBLb9Eed2MUHPdPbUWW6ZWzS4X4DI9vMMoH+Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740596357; c=relaxed/simple;
-	bh=Vq6ju6Efvuog+pt/BMbADghexLEpZui3HIkAPqULHIE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y0RLrSz8zPdiaQs/G4rQQ70k4V6/DAMAPxWDvXcWeTsKBCyfakNjvDrzCCkce9Nl/yvCalqmZsAynLHES+gCe+NFhTcU2Osr9zbIZXx46WH6lhh66oL3Ge3QJ6i7RF2G92efHbGFtjTmIHSFwgPMmitu39/CFwQqxgIiXqEVr2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=awfWdQSD; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740596417; c=relaxed/simple;
+	bh=VHk6+dPKZF78pRrNidDKIzcA8Vd8WnrEysNDQjAv7p4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=StKSHC3nYayP+4mFju9RKPwqwHsFnsn4QPho+9D7IOm8QTMPR+0Wpk4ccxF8MDLv71H58pbJ6IPmqHMWAFa3YiahXiUmhGPSk7gcq6H2PQ/XJRNptx4fTheCTrwVXXGsBahdGnmiIuS5gXhFErEBRZiL94D/rcu2ec18Z42ve2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmI9ua6C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="awfWdQSD"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-471f1dd5b80so16191cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:59:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740596354; x=1741201154; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rV9IkadFWsLArlHr8bxQUoPfxAbRVfmTh+DzYDsIeo8=;
-        b=awfWdQSDlx+5M/fUBI0G5biFoPy5EJKBjxBp6lXHNdQHRpnGhibc7oOL6pDqU6o/CY
-         x3FUROfmLqTg2prnDKVLrGEHPdvh0BTlNbjckggbMasRWCS3QIb62TRHVpKxooMlTz/O
-         tqGi/F64Z7ZzeHMCAyRqGmcMRrUhx5ufmHpnXz0vuFumfIssrm5v79lGXVM9jLr/Z2LH
-         hMkEQ1/1VYi8Y1h2XcicCV4bAVFyf2NUX21ac1rs9HbFHJRr3zNdaMsHuO9luFmISc8x
-         Eiy5w/57ynedve++FK68BfSD8wv930qa3xR0AUMmPvUPEM/zcrXLVa5mXfRr5gT4eGRz
-         Ha5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740596354; x=1741201154;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rV9IkadFWsLArlHr8bxQUoPfxAbRVfmTh+DzYDsIeo8=;
-        b=pCjFyFTi/T+/MFd3sG3bYzn88+sZOPVTOMVRTWNjQHtAzqizizbVD6ci4GfSymMqxI
-         rfoXUlxISBcPDhE6d2Gz+Yk5t2DKBlR9yj20wBNCnhtsxjJI/tgewFiIId35CRAZdak9
-         ONalF8yQ6tJIbAOxHUirR1qAoDOazNZbSHxEh9bR9k1c05ODmBTpVzjaSaAFMfANtnR8
-         Lyl7CVi8smtQMo89h+XmK7v6Xer7KGOBl3ylIeSVlWkjJic0yItOTdsiDXQ0I4UpMkuV
-         iiAVtnUVaGNqpjae/e//g2qYF1TuT6b2/hdAkn7OEueBgLnBfgYOUjZ6Ock+ztRB02f5
-         3gNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8jKpC8LFPsOX6g8PXu8pn1Yljc/Ynw7sNdD+ls2ZkA0MSwaw5oSF9M7I7/PLXntjxk/T61iS4RbTN65c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIP6ICkf/CkMq3tiXX+M5Ba5jvfDXHHc1BjUNaPLJo/PE2m4Xb
-	8iQ7Ugxu/e0FPdXMAcaREV3FMbKbuA/z3kWgqC7TaxPCbsb/z9qUyp3Rr0NzkYsRB0DwjiYmvwR
-	cpq6FwGeDsyhGrFyq5e68+rHuaPbz+N+eTa+W
-X-Gm-Gg: ASbGncvXeHSD/XNbcXKH2DsYOJDI9JUgYcE0iXV57jJZBozvgI040RCxKfa3TuLdA7H
-	s6tuVZSCCVaPeLtjmCqMNSEpcqzN+f3K198JfrIRNro5cTRnJ6iXlg537fPUOC+XC8dOHnAuJ/e
-	2L060IhvMxlRZq3ZYlrrxo+xWLkOCe2FMKhR8A
-X-Google-Smtp-Source: AGHT+IHsOzrgXCSNO/JOiX20wPAZj8bs/dEsCWNe2+L5a3wJa/se8gmIkkOfUuA5nOJlL+S191/tRroz4+19Vle9/f0=
-X-Received: by 2002:a05:622a:60b:b0:472:7e8:a788 with SMTP id
- d75a77b69052e-4742e0f1629mr159311cf.12.1740596352320; Wed, 26 Feb 2025
- 10:59:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmI9ua6C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B9121C4CEE8;
+	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740596416;
+	bh=VHk6+dPKZF78pRrNidDKIzcA8Vd8WnrEysNDQjAv7p4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=lmI9ua6Ci+qh1KVirQDshLct2N6hauoIY8BAPYgX4hXNgKUiUAE0ZZcFt8yta7sj7
+	 nZLIhACUs7o9JPplNDjdhxxAOUmYM488AHK70BDi6/bfH5Ma4SDxU0NPsamQHU2FN5
+	 o6SQ20c6Nz0s8HpZ8WgeXDkPyrRqT8+AhnoN8ixAaf7+EmP8oUSH0WZj53H+1rVDU+
+	 5feQBxYGwkGRtgsF/j+fmcp3Aw8pZlI3k0/52cQpNRrUDzr3by+ive0FZD1sGhYU7W
+	 q0eAqBAK3RuohHoc3U61r26G4izkkjvxVuazNrkmcC1yFQzv0voPeht9yRQbaIE/Nv
+	 T9geiyNzFauYA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80F4C19776;
+	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Date: Wed, 26 Feb 2025 19:00:03 +0000
+Subject: [PATCH v2 1/4] soc: apple: rtkit: Add and use PWR_STATE_INIT
+ instead of _ON
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225204613.2316092-1-surenb@google.com> <hdcrjkqb4cevovpw5xprkh7ohykqay5ew27sbtpzg2k7vrm7mx@6ircmivkmkgv>
- <CAJuCfpGu3Gx-kCChgQjZMQNOxU=CqzkHuoghfNmbv+Q1UKYPxA@mail.gmail.com>
- <Z78-YdCGtbV61x_Z@casper.infradead.org> <CAJuCfpFykPaU0XBPBdfnVzvYGK8k_KW7KAEeh2ROyibkuquJFg@mail.gmail.com>
-In-Reply-To: <CAJuCfpFykPaU0XBPBdfnVzvYGK8k_KW7KAEeh2ROyibkuquJFg@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 26 Feb 2025 10:59:01 -0800
-X-Gm-Features: AWEUYZnMlDxNde9kN15MMA6yX02fUGcPfWxSIB1NIXSIYDSCauDYwoderXQdXBk
-Message-ID: <CAJuCfpFSYG3cTxP+B4XrWY2=jGd3fdEG6h-kb0G4R8n9DGtwcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: do not block on locking a large folio
- with raised refcount
-To: Matthew Wilcox <willy@infradead.org>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, akpm@linux-foundation.org, 
-	lokeshgidra@google.com, aarcange@redhat.com, 21cnbao@gmail.com, 
-	v-songbaohua@oppo.com, david@redhat.com, peterx@redhat.com, 
-	lorenzo.stoakes@oracle.com, hughd@google.com, jannh@google.com, 
-	kaleshsingh@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250226-apple-soc-misc-v2-1-c3ec37f9021b@svenpeter.dev>
+References: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
+In-Reply-To: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
+ Sven Peter <sven@svenpeter.dev>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1269; i=sven@svenpeter.dev;
+ h=from:subject:message-id;
+ bh=7cIMb5W1B1VA4bj9uxkLGyPS9AbrGxHzx345cZFtAjE=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lD1Bh8qjJmd9L3nt8Wfjzf+VE6cxljdMYp51V4h1z
+ vIHkkldHaUsDGIcDLJiiizb99ubPnn4RnDppkvvYeawMoEMYeDiFICJ2P5kZLgmfEC234zvaQHL
+ m+Umc17u7+aRLZvYOX3X/zuc2WEseraMDC8UpRU3M5w+m8wbFMrmMJk5MVT9T/cVw9a5b4/G77j
+ qwgkA
+X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
+ auth_id=167
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-On Wed, Feb 26, 2025 at 8:22=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Wed, Feb 26, 2025 at 8:16=E2=80=AFAM Matthew Wilcox <willy@infradead.o=
-rg> wrote:
-> >
-> > On Wed, Feb 26, 2025 at 08:11:25AM -0800, Suren Baghdasaryan wrote:
-> > > On Wed, Feb 26, 2025 at 6:59=E2=80=AFAM Liam R. Howlett <Liam.Howlett=
-@oracle.com> wrote:
-> > > > Reversing the locking/folio_get() is okay because of the src_ptl sp=
-in
-> > > > lock, right?  It might be worth saying something about it in the
-> > > > comment?
-> > >
-> > > That is correct. We take both folio lock and refcount before we drop
-> > > PTL. I'll add a comment. Thanks!
-> >
-> > In the commit message, not in the code, please.
->
-> Ack.
+From: Janne Grunau <j@jannau.net>
 
-I posted v2 at https://lore.kernel.org/all/20250226185510.2732648-2-surenb@=
-google.com/
-as part of a pachset which includes the fix for PTE unmapping that
-Peter reported. Patchset is rebased over mm-hotfixes-unstable which
-includes Barry's fix to the nearby code. This avoids merge conflicts.
+This state is needed to wake the dcp IOP after m1n1 shut it down
+and works for all other co-processors as well.
+
+Signed-off-by: Janne Grunau <j@jannau.net>
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/soc/apple/rtkit.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
+index 2f5f878bf899..be0d08861168 100644
+--- a/drivers/soc/apple/rtkit.c
++++ b/drivers/soc/apple/rtkit.c
+@@ -12,6 +12,7 @@ enum {
+ 	APPLE_RTKIT_PWR_STATE_IDLE = 0x201, /* sleeping, retain state */
+ 	APPLE_RTKIT_PWR_STATE_QUIESCED = 0x10, /* running but no communication */
+ 	APPLE_RTKIT_PWR_STATE_ON = 0x20, /* normal operating state */
++	APPLE_RTKIT_PWR_STATE_INIT = 0x220, /* init after starting the coproc */
+ };
+ 
+ enum {
+@@ -898,7 +899,7 @@ int apple_rtkit_wake(struct apple_rtkit *rtk)
+ 	 * Use open-coded apple_rtkit_set_iop_power_state since apple_rtkit_boot
+ 	 * will wait for the completion anyway.
+ 	 */
+-	msg = FIELD_PREP(APPLE_RTKIT_MGMT_PWR_STATE, APPLE_RTKIT_PWR_STATE_ON);
++	msg = FIELD_PREP(APPLE_RTKIT_MGMT_PWR_STATE, APPLE_RTKIT_PWR_STATE_INIT);
+ 	ret = apple_rtkit_management_send(rtk, APPLE_RTKIT_MGMT_SET_IOP_PWR_STATE,
+ 					  msg);
+ 	if (ret)
+
+-- 
+2.34.1
+
+
