@@ -1,130 +1,73 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7A43209
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA5221D5A8;
+	Wed, 26 Feb 2025 15:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740584661; cv=none; b=nG+RN9fKalz1jDDPsxnBzzDXaWzHRaW1NuqaAPZU8RA4rIPA1TEWIHRkvW/7uIFtNjBr+uKNxHpDLdUigJba9PCHuD4Tzo9aUDt+FLDVVFKsBZ4QXy//8chWE5IaKhKLaiqgW3HvGefWK3Yi0X/DKgMIREacRh+s7l7K9+o6c/w=
+	t=1740584684; cv=none; b=KPCQj4BVDcgUxH9fHIpsVMV9j2rnjHngrEFsuqR1rw/W916J2tRcWDHmlRnHr6KCECK5poxktgFE+1oD/HZOBptqOpqbVIfROXItt/kYdnR4SDSBqU169efH/QFVnzOhqdSd1X+tuOc3xRdd6USfeYvO2JZvfrt8BNDbqT2Zq7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740584661; c=relaxed/simple;
-	bh=jQWGtiwUMbK9EpvVC6A07sD50bV3LE9jiqhidCemgEM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=pqCTyFCtNNzpVyvtYZU9ifC5SE6UmcKfOZnoGgq0Es+Ld7UBWizTwlGpRvgJ77Cp94UHjbW+H/m1+d868lE2cjSYwAQkrGVH/leTH+sCcz/FZiORWiNzUpBzf9Q4zoj5QpwqGv6ejZUMweO/5mXQMPHbGackVod6Zw0ikXBwDRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d05b1ae6e3so57566665ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:44:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740584659; x=1741189459;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gW3c0T4SQd+xntB/X6MFD4fJslBbj6oN4QbWpGD4aAk=;
-        b=hXmeJB60qpY+gnGszqn7+uJHAweotJhvMT8UV95x9iwoyQ133ZUsgBaba4KOlq8RiF
-         tmMi7+4YmwJMf6qKuQzjf2C8JqqR/yxNRKmTzVDfrkts5DVk845T/qlbvJhdFRJ+upYp
-         QZ3QBBWo6qYPR8GSOdWVIbyLZ9IMMk8Lkxpd4Ch5cMzwlRuwN77zgkbTFlS8KjRGshgp
-         Yu7POE+auAH+uqq02ZTT0tOWR3dncA2ZKa+BrRlAjopKUaltWgQASQbCIphTGTszZ9y+
-         3ecS9v9tmOl/MQGMdN09WyHQtO+Wn+p8nyX85zWUd2K5zDPRBcY2uKx7an7H6wexiOIB
-         w56w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdcSJCOgJK+x4Bu8B2RQQaJviNkwW4k+NoXLqTxYMMIln7WuRhJXxot5SPWHlygTNgVGcJUAEjztFP10Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi7N10/qnyenxqu4llSeG7T3D8KgbUnDpfl17RmGZg773QZ78+
-	4faD+0NOn/zvfJV8GBKLYBTiEdVTMSeL1f5DHotmkZPovTHKYJzwXD8eDGxNRzv33mmQe5pWDeo
-	i8BLcq4XLx3zOQQCWN0SvVqU3jQkwyNssbKspOZBlXUGEsrgZzFa2qnc=
-X-Google-Smtp-Source: AGHT+IFHAPreiTBW/x4aw1EHkJ+xwFEwTp7VKuG/mVJow7Yr8RLePATwqXZ4fsrz1nfOajC8ztz3lRiQ+gIc4ySw3aLXDkSDqeA7
+	s=arc-20240116; t=1740584684; c=relaxed/simple;
+	bh=VDSomwl6LzEXsr4LwgRvd++OnseNgFtQFF9SkT6kNt0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MxUPf8eZP5KEbqyR3Vy+5fldwXwnoKNlXESOTqrIm6oQuji8utZYcqEziod9k9l4A+o6lM2qdEmFc64aCWjmV35BiNifVlDjVqMzKZqdCMV61N4E6uJJZvBnykXkOujWRnGdT1jqDlGc9c5alyuiHTup1f8nN94luG33RQpv1eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qwf2gzju; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qwf2gzju"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77086C4CEE4;
+	Wed, 26 Feb 2025 15:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740584683;
+	bh=VDSomwl6LzEXsr4LwgRvd++OnseNgFtQFF9SkT6kNt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qwf2gzjuhyX5kLyfs/3nK1bGOejn526NdZSpQSKHGdVdeSXCusUHJmcR/f1rXWosT
+	 qxa9ekOZgGBgeGx+GzZ4t6eS2QvN3kKX2dseUf8vNZiQ01PJzF7AHxBj6XMj8VMy4o
+	 kzOyfGhALTnNCCpfI6bYgaHWXHU78CY3nHpPHT4uPuDUqmuLc2Vok2TeAZNC6cC358
+	 bcXBRrphtqMUbEOrphyUSfdf+efbooC+KConbTAtK3N9CV6AEHp2c6OB/yNJ5zZPLX
+	 5I4AFe2CTIl5CcHfjmtJv2z1vXBgdHxH0EN05zMBE5J/EtafHgl6vMksVSVEhHpLnh
+	 /71lJSbYWsDww==
+Date: Wed, 26 Feb 2025 09:44:41 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	soc@lists.linux.dev, workflows@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/2] docs: dt: submitting-patches: Document sending DTS
+ patches
+Message-ID: <20250226154441.GA2485697-robh@kernel.org>
+References: <20250225184822.213296-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c545:0:b0:3d1:78f8:7490 with SMTP id
- e9e14a558f8ab-3d30487a027mr64643795ab.14.1740584659314; Wed, 26 Feb 2025
- 07:44:19 -0800 (PST)
-Date: Wed, 26 Feb 2025 07:44:19 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67bf36d3.050a0220.38b081.01ff.GAE@google.com>
-Subject: [syzbot] [wireless?] KMSAN: uninit-value in cfg80211_tx_mlme_mgmt
-From: syzbot <syzbot+5a7b40bcb34dea5ca959@syzkaller.appspotmail.com>
-To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225184822.213296-1-krzysztof.kozlowski@linaro.org>
 
-Hello,
+On Tue, Feb 25, 2025 at 07:48:21PM +0100, Krzysztof Kozlowski wrote:
+> Document two rules already widely used and enforced by DT maintainers
+> and SoC platform maintainers:
+> 
+> 1. DTS patches should be placed at the end of driver patchset to
+>    indicate no dependencies of driver code on DTS.
+> 
+> 2. DTS patches should be applied via SoC platform maintainers, because
+>    it is a driver-independent hardware description.  However some
+>    driver maintainers are reluctant to pick up portions of patchsets and
+>    prefer to take entire set at once.  For such cases, the DTS portion
+>    should be split into separate patchset, so it will not end up in the
+>    driver subsystem integration tree.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/submitting-patches.rst           | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
 
-syzbot found the following issue on:
+I've applied both patches.
 
-HEAD commit:    ff202c5028a1 Merge tag 'soc-fixes-6.14' of git://git.kerne..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12d447a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=aca5947365998f67
-dashboard link: https://syzkaller.appspot.com/bug?extid=5a7b40bcb34dea5ca959
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/788b15dfbf95/disk-ff202c50.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/48f236cd3e71/vmlinux-ff202c50.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b92116dbc946/bzImage-ff202c50.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5a7b40bcb34dea5ca959@syzkaller.appspotmail.com
-
- cfg80211_wiphy_work+0x396/0x860 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xc1a/0x1e80 kernel/workqueue.c:3317
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3398
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
----[ end trace 0000000000000000 ]---
-=====================================================
-BUG: KMSAN: uninit-value in cfg80211_tx_mlme_mgmt+0x155/0x300 net/wireless/mlme.c:226
- cfg80211_tx_mlme_mgmt+0x155/0x300 net/wireless/mlme.c:226
- ieee80211_report_disconnect net/mac80211/mlme.c:4238 [inline]
- ieee80211_sta_connection_lost+0xfa/0x150 net/mac80211/mlme.c:7811
- ieee80211_sta_work+0x1dea/0x4ef0
- ieee80211_iface_work+0x1900/0x1970 net/mac80211/iface.c:1684
- cfg80211_wiphy_work+0x396/0x860 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xc1a/0x1e80 kernel/workqueue.c:3317
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3398
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Local variable frame_buf created at:
- ieee80211_sta_connection_lost+0x43/0x150 net/mac80211/mlme.c:7806
- ieee80211_sta_work+0x1dea/0x4ef0
-
-CPU: 1 UID: 0 PID: 4086 Comm: kworker/u8:16 Tainted: G        W          6.14.0-rc3-syzkaller-00267-gff202c5028a1 #0
-Tainted: [W]=WARN
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: events_unbound cfg80211_wiphy_work
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Rob
