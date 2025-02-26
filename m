@@ -1,37 +1,38 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D614C42A9D
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:38:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FC891ACEA6
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:38:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566308; cv=none; b=eScWozIxXv4mTEmRLS04lEqrBaiES8aZwyBdbsFXS4OgQR8P3kJO6RCtHT5qtl/LXN052Po/HEYwct2574OLEMScOLYA7MSe39wIyYBBEr37q11ytJ62iFZC+ZUvVIsCpDh4ebiSSEuuHTZDSTVgZdOU63HfwF4cfdGcxT0D2R8=
+	t=1740566310; cv=none; b=KbHXG0Fg375czGvquav5cgAu7BcpWtJ5vlJxMyrwh/QMRgECVQlC7vGoLE67Jhh6c5PP1x6ytnKvTtA7FiPOXD/NOWQYtrl7gHsgzzEtdPQ5jpTDOVcOG3SN3EgHEOMslNN59YIxo5+rdP1dU6PFLBZxaA2WQlN9f8LNGSx0d74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566308; c=relaxed/simple;
-	bh=tNpEOIvOjXOOQR5E74DVxKlmjYF1Bu7KF+vF2eWUnFI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S4sUA3FgwcMZ2du5F3CteERtlZ7ZjL101bk2gk85fY/eb/vrtDkLuhi4B7F/cewt4JXj9r3RS/TcZS09jx6hicsm18jff107TMMEUEvbpTFEerspiGbeAkkRP5x7twnnUfx+WQRdt2CJ/eRgrd5fHK2ffWEwkImRYkN9y2EUEr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=IrpValUl; arc=none smtp.client-ip=185.11.138.130
+	s=arc-20240116; t=1740566310; c=relaxed/simple;
+	bh=bX0Dhp/77Twr0Hq83smdM+lYe1IN/WVSkMiowXkfuvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=L/jG+IM94hEehF/CcX1MyPlDltR0LR8FlJLk9QG0TYybHPAijZkOGB2mwuIHYhSopaOtj0lX+vKGg1RU0swiTytQ3lEDh7Olsln9qz+GyWtkMydA0QkEjZmdHEwzaav36bHI+pH4xZADnJUIdczMylz1PaTYjuVo0ylujoG8pI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=jQC9vgkx; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="IrpValUl"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="jQC9vgkx"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+UGCoWBioAMtXtHm8CAvoMnBqRSxIPHa7kTP4Y78/Mo=; b=IrpValUloRiJKw2SB7N7epThrt
-	NFi6BJUBdQ3Hz94ktQ/QHyU68jQGRFTdFYwxj+2PYDd/yk0OAqlAdi9LIZuXI8qxgCUlLnUv4CHWL
-	MDxra/vNufGVI3auC0oWJL1B0s+XyEqkVtZAXW6araCSdRkI3OCmHg0ryH6a5Bpo45XIQpDmiXFOR
-	60UTsCGPRb5lBUd3uDM9U4kas0T2a+00RZjpFxC7QeT5FGaGCH6nnl8OBWbwpU1n9Cotaw9oUHc5v
-	h85IiB31Q4A/aKXm23WdlS8yanUqPg0dxJhf4Y//fNbdi46/WKWKVwhEZHs/PdZXetjhOLMyXo39/
-	b51fq44g==;
+	bh=mRmd87Bt4r/gRs/8A2tyjVoJarc357y7FoApmSgOrbg=; b=jQC9vgkx1+0En9VesSDoKW11QF
+	BmNxkXGLOF8S0n62Y3KY7U7t3vdTq+yN6cRLw61ZoG/U6DLQiSBxemp0n+xUBkAEBFNhYqZ3ADFMh
+	ChXOQe9ujdrerGH8jiLvisoMfcR+rYYx/2gHsSvAnTulNvyJlQo2vUvpwolh6GIsn0gBEOMb3udSz
+	D+VmoOwmU9EMnDDXRYC22pJAm6u2WaSjq84Aucra6/hHtJrviNhxT5UFz/1CAzW8GjCzoBxnVB3uK
+	Q8f2p5lKQURAgUJZe7gbGqafZRNG4yTGclhAwSy0zoL8wullQu4u42sE3utdawakSmkMFEVCLP8cs
+	uUwjyURQ==;
 Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tnEo2-0006aJ-GC; Wed, 26 Feb 2025 11:38:22 +0100
+	id 1tnEo3-0006aJ-Fw; Wed, 26 Feb 2025 11:38:23 +0100
 From: Heiko Stuebner <heiko@sntech.de>
 To: vkoul@kernel.org,
 	kishon@kernel.org
@@ -42,11 +43,14 @@ Cc: heiko@sntech.de,
 	linux-kernel@vger.kernel.org,
 	quentin.schulz@cherry.de,
 	sebastian.reichel@collabora.com,
-	christophe.jaillet@wanadoo.fr
-Subject: [PATCH v2 0/2] phy: rockchip: usbdp: improve typec orientation handling
-Date: Wed, 26 Feb 2025 11:38:08 +0100
-Message-ID: <20250226103810.3746018-1-heiko@sntech.de>
+	christophe.jaillet@wanadoo.fr,
+	Heiko Stuebner <heiko.stuebner@cherry.de>
+Subject: [PATCH v2 2/2] phy: rockchip: usbdp: re-init the phy on orientation-change
+Date: Wed, 26 Feb 2025 11:38:10 +0100
+Message-ID: <20250226103810.3746018-3-heiko@sntech.de>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250226103810.3746018-1-heiko@sntech.de>
+References: <20250226103810.3746018-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,22 +59,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reinit the phy if it's already running when a type-orientation
-event happens.
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-changes in v2:
-- fix an error I made when splitting into code-move + re-init
-  function should still return 0 after first patch
-- use rk_udphy_init() instead of disable + setup combo
-  We don't need to disable + reenable clocks
+Until now the usbdp in the orientation-handler set the new lane setup in
+its internal state variables and adapted the sbu gpios as needed.
+It never actually updated the phy itself though, but relied on the
+controlling usb-controller to disable and re-enable the phy.
 
-Heiko Stuebner (2):
-  phy: rockchip: usbdp: move type-orientation-switch further down
-  phy: rockchip: usbdp: re-init the phy on orientation-change
+And while on the vendor-kernel, I could see that on every unplug the dwc3
+did go to its suspend and woke up on the next device plug-in event,
+thus toggling the phy as needed, this does not happen in all cases and we
+should not rely on that behaviour.
 
- drivers/phy/rockchip/phy-rockchip-usbdp.c | 171 +++++++++++-----------
- 1 file changed, 88 insertions(+), 83 deletions(-)
+This results in the usb2 always working, as it's not affected by the
+orientation, but usb3 only working in one direction right now.
 
+So similar to how the update works in the power-on callback, just re-init
+the phy if it's already running when the orientation-event happens.
+
+Both the power-on/-off functions as well as the orientation-set callback
+work with the usbdp-mutex held, so can't conflict.
+
+The behaviour is similar to how the qcom qmp phys handle the orientaton
+re-init - by re-initting the phy.
+
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+---
+ drivers/phy/rockchip/phy-rockchip-usbdp.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+index 960cad5b01a9..c07b79da5b6b 100644
+--- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
++++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
+@@ -1277,6 +1277,7 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+ 				 enum typec_orientation orien)
+ {
+ 	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
++	int ret = 0;
+ 
+ 	mutex_lock(&udphy->mutex);
+ 
+@@ -1292,9 +1293,13 @@ static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
+ 	rk_udphy_set_typec_default_mapping(udphy);
+ 	rk_udphy_usb_bvalid_enable(udphy, true);
+ 
++	/* re-init the phy if already on */
++	if (udphy->status != UDPHY_MODE_NONE)
++		ret = rk_udphy_init(udphy);
++
+ unlock_ret:
+ 	mutex_unlock(&udphy->mutex);
+-	return 0;
++	return ret;
+ }
+ 
+ static void rk_udphy_orien_switch_unregister(void *data)
 -- 
 2.47.2
 
