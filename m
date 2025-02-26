@@ -1,116 +1,140 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D40B2221711
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9C222173E;
+	Wed, 26 Feb 2025 14:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581082; cv=none; b=E52pfCbEacYPtTdiFQLPj0apofqceO67t31WdNL6m5qDBKvLN9b0r++HHigLKt1dYhTm557L9bWqaDu1K07Dv58iqRVmC+g3MjDob1929lptJ8XNJaSSGygfrafVoRZxkcTYE1ALYxAx65TXTA+iKdmu4qpolVUOwMOWg3RvOfA=
+	t=1740581103; cv=none; b=UyBg8FyU7p4TvWowdQVbTKICtuH0xmKsbDst8xsW3nzAoaQxl3T1y5CPax8gI5OvxAPlT+XmwI1gFPpeNBooVGOxdKBjsofrhujMYTY3lPL18SUQLzoRRp487cLehZPS+pKNo1gUwwsfjPmEhIX9w/zK4GZm4cyq7zbJqVcP7mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581082; c=relaxed/simple;
-	bh=kU/v7wqnqnL/CUwnJwMJlEh59FgkJ8snU821pG4Y7vI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hhs/wy5MYC086kPMmfC7aWNsDnGWAWlvLZz1on7xbv7ZSj+z6Na3nuJnApiTKbCeblbFjMc5TRYsrOCQdKyMzPJZ0ohQecm31GRSq6vkML5vdHCN46rXQH7rGWsj++WrRKPxdeVV3xn72X9nTaTCuRtV4ks6L4TL/dpLIR/ngwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=HKTP/rEo; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1740581103; c=relaxed/simple;
+	bh=RTe1hi9sZtyjsIJ/eh+swsfyLFcndx/luRTFTjbvSOE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m7rade6vYSHwhkpC9VDY9yYfZhq1K3rWPnrivfHSSbHxNG8Tn5K+wlkYgiJXSOXYS2G4A0HjY+h8TtPt1V/NgAoQ2D3IAZeK1Sqo0ij9FmkJlg1j1/kqwJKrQw/hNIgQX2F0HXNDgRHF1tgy4Y1FPxyk2Y55XXvMaYxr+d5lyZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFrM1f+k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="HKTP/rEo"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abbd96bef64so1132696966b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 06:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1740581079; x=1741185879; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=t3lgX5xVuREpMskRYofLOpLEr+lAUcsjQpUjCM0xtcE=;
-        b=HKTP/rEol4MUDaKRuNqYBS4LAinMV1RbRDy5AIFnFpP37rJ+cHLPKFoxE4Ke7fga3d
-         luty92mDw39JL/6RPiQBQPc3Bvs1SuICsdL5bpjQ9fcnTtpH2eZoNrRE+ltjdz/hWdlj
-         UPUDUSwMsajcdFOH8jap2vAQWwZnok1dzcB8N5U7sZcCKLzlarGMd5czaF49V2e9XyKx
-         4pGkGTY1YctwNcH7/IOFozPvwB61T57iRHASXEcLxRU87haPmok09+FmGT0oN5MOF50T
-         3BRlq7tmgeeQVEDMHBkeSDe6R2UeaSfYrQ1NBP6aJGe35I37yZUnZZjEbCXhm8CLgqEM
-         /yRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740581079; x=1741185879;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t3lgX5xVuREpMskRYofLOpLEr+lAUcsjQpUjCM0xtcE=;
-        b=YOUJ3zoVCPX9rR+MNQmz28uAZ4uet58m3BRb18W81Jm9qj66J6qd+9SN1viXvyEsxo
-         9zcbDuco7igH51NG7ttJwnxPTCuEax8P8vK3IVPQjJV7fB9QbE3FgGyRLsPbiXZNR1P0
-         71Uc5P+DU2alANZH1I+C/4/jEe9PmNCz+2XiyIN7StcITGsRtyD+FrOuaMSo7BxjPC5x
-         jQcI4M5+eqlyWTtnu7OKLD+SCmIOSDDOEfl3JGsXm4YEtXYMLv9ohlqfh6O3EAdkgJnZ
-         bmWVxZSYa4KORaYxJtZ4H1Ks98t/vZc/aZycyaa/OTuJCKSudl+v7IdUJpadt+Hl7YKO
-         dXlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBNtKrNAcqR04fZ254a51QiuIdPGiCCyCBONH0VCPx+0VGiCGFTy7yuQneWzJO1OaWCLrZI0q3WIzWWso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVTgFmZML6N6aUSg+DTwviKiFUdVb6b8z01T7BWbpEwoF/sk8D
-	954TmkthYsZ9Qvu9Qf+f6sqINro7AC5FaNmAg/VEmah70dHR9c0QTum1flNeGgo=
-X-Gm-Gg: ASbGncu9V74/tgTfRDii7CxEtBJji/5gDozyCPsPjFcOlQ4UjK2d3tNLUplbMu5KB5E
-	GYfLVC8xLFOC9pwM8044PFCtgqByKkbLyWim3/ZucG3Mp+HwgDNL7I1ZDu1O0dkK+Y5TLAZUOiT
-	2PA/6ZDC4qhxqtcwxIfNwby8JgHrC7gUX6RrO1R3aFjNwfdEOa26iaxoWmEixiqZ4mjTdQn0f3u
-	drwYEtZ4AqQCMMgP07mxFqSJVbjOmFq7pELSfeWGoiA1VRS68BV0Bg+B+T86ITwPpmgeki2mli7
-	wSTlm3zBFpM4Be0Mi7oQR0JgsfatZzI83E+z2VfFurrZ81DdwgF+fA==
-X-Google-Smtp-Source: AGHT+IHIRtlrHZVjf/hDRjPSID8OLFIzIelRBHIadTGYyg2MUE07spOk+sYZauxSRswyF+7Ev7Qp5w==
-X-Received: by 2002:a17:906:c147:b0:ab6:d575:3c4c with SMTP id a640c23a62f3a-abed0cc511bmr827247366b.17.1740581078919;
-        Wed, 26 Feb 2025 06:44:38 -0800 (PST)
-Received: from jiri-mlt.client.nvidia.com ([140.209.217.212])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed205c7efsm340987766b.149.2025.02.26.06.44.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 06:44:38 -0800 (PST)
-Date: Wed, 26 Feb 2025 15:44:35 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Tariq Toukan <tariqt@nvidia.com>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jiri Pirko <jiri@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>, 
-	Carolina Jubran <cjubran@nvidia.com>, Gal Pressman <gal@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH net-next 03/10] devlink: Serialize access to rate domains
-Message-ID: <wgbtvsogtf4wgxyz7q4i6etcvlvk6oi3xyckie2f7mwb3gyrl4@m7ybivypoojl>
-References: <20250213180134.323929-1-tariqt@nvidia.com>
- <20250213180134.323929-4-tariqt@nvidia.com>
- <ieeem2dc5mifpj2t45wnruzxmo4cp35mbvrnsgkebsqpmxj5ib@hn7gphf6io7x>
- <20250218182130.757cc582@kernel.org>
- <qaznnl77zg24zh72axtv7vhbfdbxnzmr73bqr7qir5wu2r6n52@ob25uqzyxytm>
- <20250225174005.189f048d@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFrM1f+k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0A74C4CEEA;
+	Wed, 26 Feb 2025 14:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740581102;
+	bh=RTe1hi9sZtyjsIJ/eh+swsfyLFcndx/luRTFTjbvSOE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=mFrM1f+k4Ryw9/hca6RmY8s1EczbyQAEbv08b0iv0aQ1LjH91v/7pYBy8Bt4ckOYE
+	 4+6VlXgrn+VpOd1yDuUOOcB3XNLlgz1j5EnxUSC1vMSwTyqbpNcQ06DM5WhcMsc7LO
+	 u4GZFsVbdJTo8DSkH0i5HmlWg6E2WIQSSWvf6aMh1Fs37axyUsbl3d32jUWGc/BSsx
+	 CYmTQdy+SFBEhazDvVLRaPMrp/jAyducZZ6n+6kklm4vf83qw1BdGNjPUEVJXGF8UB
+	 PhbjSAL5UIf9wcvO2DjQ33Mchu+uBvcj2sj2W0RSjJ0wFd8cVuAOs1SGEThbyhiE13
+	 XUsdih/fEjhlQ==
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5fe944a4243so537972eaf.0;
+        Wed, 26 Feb 2025 06:45:02 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXT0LR3/t3n3t48G4Y+NMWm1SZhTVCEcnWZUzEG2SMcQGALF0jRgNBmfspH8uj9Dgq7Cou0Y3aJOFE=@vger.kernel.org, AJvYcCXY2htfPldA7pk+xgg6g2m14sVGUEQElIKnb8oKlMzlB6M1ym6IcEA7EndX0oSBKJH1PVcMl695JnFXd3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw05kps7jIGTXQrBBCtlmuIqsnDWAcl4KhqdNpKaSvTaxtCHtZ5
+	+/qMxjZpLeRjp6V2zG1h0xmLeUj8jkgCMJQbWmCRkBTpMBboya+gYlsc4ObHRmcSDDESyERY1mU
+	GmUwv+nJwPjQgmw1tMv/ipJ7bVeE=
+X-Google-Smtp-Source: AGHT+IFDwFhho2gHF381k0q51unIEu5nVg0XaN8q8w7FXXIdvxfU5Fs0Ire5SNN90GjJPlA17LgF12CU1gM23vx/Uvw=
+X-Received: by 2002:a05:6808:3a0e:b0:3f3:ffc5:7ba7 with SMTP id
+ 5614622812f47-3f540fbf8d8mr4309832b6e.24.1740581102067; Wed, 26 Feb 2025
+ 06:45:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225174005.189f048d@kernel.org>
+References: <20250224010610.187503-1-linux@treblig.org>
+In-Reply-To: <20250224010610.187503-1-linux@treblig.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 26 Feb 2025 15:44:51 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0j_dX2a1_cz1SDdSqWHFsGX2mcFx1rE52hVHRnPUFgbmw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoyX5cU0PwLw63HPMohRvlIDUpPpZx6RHNliw-kLiQ9B0-X0rpSleyA9H8
+Message-ID: <CAJZ5v0j_dX2a1_cz1SDdSqWHFsGX2mcFx1rE52hVHRnPUFgbmw@mail.gmail.com>
+Subject: Re: [PATCH] PM: clk: remove unused of_pm_clk_add_clk
+To: linux@treblig.org
+Cc: rafael@kernel.org, len.brown@intel.com, pavel@kernel.org, 
+	linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wed, Feb 26, 2025 at 02:40:05AM +0100, kuba@kernel.org wrote:
->On Tue, 25 Feb 2025 14:36:07 +0100 Jiri Pirko wrote:
->> >The problem comes from having a devlink instance per function /
->> >port rather than for the ASIC. Spawn a single instance and the
->> >problem will go away 🤷️  
->> 
->> Yeah, we currently have VF devlink ports created under PF devlink instance.
->> That is aligned with PCI geometry. If we have a single per-ASIC parent
->> devlink, this does not change and we still need to configure cross
->> PF devlink instances.
+On Mon, Feb 24, 2025 at 2:06=E2=80=AFAM <linux@treblig.org> wrote:
 >
->Why would there still be PF instances? I'm not suggesting that you
->create a hierarchy of instances.
-
-I'm not sure how you imagine getting rid of them. One PCI PF
-instantiates one devlink now. There are lots of configuration (e.g. params)
-that is per-PF. You need this instance for that, how else would you do
-per-PF things on shared ASIC instance?
-Creating SFs is per-PF operation for example. I didn't to thorough
-analysis, but I'm sure there are couple of per-PF things like these.
-Also not breaking the existing users may be an argument to keep per-PF
-instances.
-
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 >
->> The only benefit I see is that we don't need rate domain, but
->> we can use parent devlink instance lock instead. The locking ordering
->> might be a bit tricky to fix though.
+> The last use of of_pm_clk_add_clk() was removed by 2019's
+> commit fe00f8900ca7 ("irqchip/gic-pm: Update driver to use clk_bulk APIs"=
+)
+>
+> Remove it.
+>
+> Note that the plural version of_pm_clk_add_clks() is still being
+> used and is left.
+>
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+> ---
+>  drivers/base/power/clock_ops.c | 33 ---------------------------------
+>  include/linux/pm_clock.h       |  1 -
+>  2 files changed, 34 deletions(-)
+>
+> diff --git a/drivers/base/power/clock_ops.c b/drivers/base/power/clock_op=
+s.c
+> index e18ba676cdf6..97a53215a274 100644
+> --- a/drivers/base/power/clock_ops.c
+> +++ b/drivers/base/power/clock_ops.c
+> @@ -259,39 +259,6 @@ int pm_clk_add_clk(struct device *dev, struct clk *c=
+lk)
+>  }
+>  EXPORT_SYMBOL_GPL(pm_clk_add_clk);
+>
+> -
+> -/**
+> - * of_pm_clk_add_clk - Start using a device clock for power management.
+> - * @dev: Device whose clock is going to be used for power management.
+> - * @name: Name of clock that is going to be used for power management.
+> - *
+> - * Add the clock described in the 'clocks' device-tree node that matches
+> - * with the 'name' provided, to the list of clocks used for the power
+> - * management of @dev. On success, returns 0. Returns a negative error
+> - * code if the clock is not found or cannot be added.
+> - */
+> -int of_pm_clk_add_clk(struct device *dev, const char *name)
+> -{
+> -       struct clk *clk;
+> -       int ret;
+> -
+> -       if (!dev || !dev->of_node || !name)
+> -               return -EINVAL;
+> -
+> -       clk =3D of_clk_get_by_name(dev->of_node, name);
+> -       if (IS_ERR(clk))
+> -               return PTR_ERR(clk);
+> -
+> -       ret =3D pm_clk_add_clk(dev, clk);
+> -       if (ret) {
+> -               clk_put(clk);
+> -               return ret;
+> -       }
+> -
+> -       return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(of_pm_clk_add_clk);
+> -
+>  /**
+>   * of_pm_clk_add_clks - Start using device clock(s) for power management=
+.
+>   * @dev: Device whose clock(s) is going to be used for power management.
+> diff --git a/include/linux/pm_clock.h b/include/linux/pm_clock.h
+> index 68669ce18720..45c3f3ccbaf8 100644
+> --- a/include/linux/pm_clock.h
+> +++ b/include/linux/pm_clock.h
+> @@ -41,7 +41,6 @@ extern int pm_clk_create(struct device *dev);
+>  extern void pm_clk_destroy(struct device *dev);
+>  extern int pm_clk_add(struct device *dev, const char *con_id);
+>  extern int pm_clk_add_clk(struct device *dev, struct clk *clk);
+> -extern int of_pm_clk_add_clk(struct device *dev, const char *name);
+>  extern int of_pm_clk_add_clks(struct device *dev);
+>  extern void pm_clk_remove(struct device *dev, const char *con_id);
+>  extern void pm_clk_remove_clk(struct device *dev, struct clk *clk);
+> --
+
+Applied as 6.15 material, thanks!
