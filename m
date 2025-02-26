@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6DA57C9F
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF594383
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 03:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740538908; cv=none; b=RJOkg+wqQFq4AZBkZMrayUQT/Z9kCCcRvs2qwXVFQo3NUML82oXLCPjIaF8kWeuK9PWObhDCsGN9ECDLGXqsnUEOUhDyWQnVXmBm+/pnGaf3OyqiLfxPqIlb5RBDH69F909M1kKzECzI36jN40pfAIge33Z6cVEutUoCuNf07WI=
+	t=1740538908; cv=none; b=pJUosFmSJs8dpNtRji3p/DR+5cTMx7UXDwE9fAO7MzPeuSOpffwryeehC8nA7mbuuHS4ecwmuCom8jGku7jEylleSgpRcc82ILoeds92S3tWbNVR8kT9u+2Pt/flDd1497QGtT2BCRL8QoiLgktITs9o1C4qEJ2NFTaHTEf7/9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740538908; c=relaxed/simple;
-	bh=9VsIggUcet/BTN7xhv3DNtZlFpYTn9tatMxGSPQKgcM=;
+	bh=vv2yc3xS3j1KYZ0Dh7ly7vBxVn3c1CiltbqqzFemO+A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JKRcWE6DUfwzztRcD/ayd9Dgeoo4rTXdaGgR619ExAz9AZHfjOcn9y+PffGmJ9lisYPU0zJ8c1uv7EVfI8rMYPtcxC1tyV9kxDzGeg4cGkWJb8afoUH8qJpMosbe9YHvZ0lMjS5ibM4qNB7hI4yqNjW5n0scJkD5rERKSxHwM/o=
+	 MIME-Version; b=uHXB3pdXQ0jbD7Fko62atUR2N5//dNWbVDp2h0Zp+xF9JKoUQi7I3MkeEa5pyxdZHKmD4OD90JnW2rxw5F0MAhyiW4E+7Syff73lbiaAVwOvJy2qIfgswrIBBJglVAN7pSskwqMSBYPjiIy4KA5485fNsUyiHIvPKW2P+Lf4rTc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tn7fw-000000001Y5-1O36;
+	id 1tn7fw-000000001Y5-0aUg;
 	Tue, 25 Feb 2025 22:01:32 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -38,10 +38,11 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
 	mingo@kernel.org,
-	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v14 12/13] x86/mm: enable AMD translation cache extensions
-Date: Tue, 25 Feb 2025 22:00:47 -0500
-Message-ID: <20250226030129.530345-13-riel@surriel.com>
+	Rik van Riel <riel@surriel.com>,
+	Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v14 03/13] x86/mm: add INVLPGB support code
+Date: Tue, 25 Feb 2025 22:00:38 -0500
+Message-ID: <20250226030129.530345-4-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250226030129.530345-1-riel@surriel.com>
 References: <20250226030129.530345-1-riel@surriel.com>
@@ -54,89 +55,164 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-With AMD TCE (translation cache extensions) only the intermediate mappings
-that cover the address range zapped by INVLPG / INVLPGB get invalidated,
-rather than all intermediate mappings getting zapped at every TLB invalidation.
+Add helper functions and definitions needed to use broadcast TLB
+invalidation on AMD EPYC 3 and newer CPUs.
 
-This can help reduce the TLB miss rate, by keeping more intermediate
-mappings in the cache.
+All the functions defined in invlpgb.h are used later in the series.
 
-From the AMD manual:
-
-Translation Cache Extension (TCE) Bit. Bit 15, read/write. Setting this bit
-to 1 changes how the INVLPG, INVLPGB, and INVPCID instructions operate on
-TLB entries. When this bit is 0, these instructions remove the target PTE
-from the TLB as well as all upper-level table entries that are cached
-in the TLB, whether or not they are associated with the target PTE.
-When this bit is set, these instructions will remove the target PTE and
-only those upper-level entries that lead to the target PTE in
-the page table hierarchy, leaving unrelated upper-level entries intact.
+Compile time disabling X86_FEATURE_INVLPGB when the config
+option is not set allows the compiler to omit unnecessary code.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
 ---
- arch/x86/include/asm/msr-index.h       | 2 ++
- arch/x86/kernel/cpu/amd.c              | 4 ++++
- tools/arch/x86/include/asm/msr-index.h | 2 ++
- 3 files changed, 8 insertions(+)
+ arch/x86/include/asm/disabled-features.h |  8 +-
+ arch/x86/include/asm/tlb.h               | 98 ++++++++++++++++++++++++
+ 2 files changed, 105 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 9a71880eec07..a7ea9720ba3c 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..625a89259968 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -129,6 +129,12 @@
+ #define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
+ #endif
  
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
- 
- /*
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 3c75c174a274..2bd512a1b4d0 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1075,6 +1075,10 @@ static void init_amd(struct cpuinfo_x86 *c)
- 
- 	/* AMD CPUs don't need fencing after x2APIC/TSC_DEADLINE MSR writes. */
- 	clear_cpu_cap(c, X86_FEATURE_APIC_MSRS_FENCE);
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++#define DISABLE_INVLPGB		0
++#else
++#define DISABLE_INVLPGB		(1 << (X86_FEATURE_INVLPGB & 31))
++#endif
 +
-+	/* Enable Translation Cache Extension */
-+	if (cpu_feature_enabled(X86_FEATURE_TCE))
-+		msr_set_bit(MSR_EFER, _EFER_TCE);
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -146,7 +152,7 @@
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+ #define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
+-#define DISABLED_MASK13	0
++#define DISABLED_MASK13	(DISABLE_INVLPGB)
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+ #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index 77f52bc1578a..91c9a4da3ace 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -6,6 +6,9 @@
+ static inline void tlb_flush(struct mmu_gather *tlb);
+ 
+ #include <asm-generic/tlb.h>
++#include <linux/kernel.h>
++#include <vdso/bits.h>
++#include <vdso/page.h>
+ 
+ static inline void tlb_flush(struct mmu_gather *tlb)
+ {
+@@ -25,4 +28,99 @@ static inline void invlpg(unsigned long addr)
+ 	asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
  }
  
- #ifdef CONFIG_X86_32
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 3ae84c3b8e6d..dc1c1057f26e 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -25,6 +25,7 @@
- #define _EFER_SVME		12 /* Enable virtualization */
- #define _EFER_LMSLE		13 /* Long Mode Segment Limit Enable */
- #define _EFER_FFXSR		14 /* Enable Fast FXSAVE/FXRSTOR */
-+#define _EFER_TCE		15 /* Enable Translation Cache Extensions */
- #define _EFER_AUTOIBRS		21 /* Enable Automatic IBRS */
- 
- #define EFER_SCE		(1<<_EFER_SCE)
-@@ -34,6 +35,7 @@
- #define EFER_SVME		(1<<_EFER_SVME)
- #define EFER_LMSLE		(1<<_EFER_LMSLE)
- #define EFER_FFXSR		(1<<_EFER_FFXSR)
-+#define EFER_TCE		(1<<_EFER_TCE)
- #define EFER_AUTOIBRS		(1<<_EFER_AUTOIBRS)
- 
- /*
++
++/*
++ * INVLPGB does broadcast TLB invalidation across all the CPUs in the system.
++ *
++ * The INVLPGB instruction is weakly ordered, and a batch of invalidations can
++ * be done in a parallel fashion.
++ *
++ * The instruction takes the number of extra pages to invalidate, beyond
++ * the first page, while __invlpgb gets the more human readable number of
++ * pages to invalidate.
++ *
++ * TLBSYNC is used to ensure that pending INVLPGB invalidations initiated from
++ * this CPU have completed.
++ */
++static inline void __invlpgb(unsigned long asid, unsigned long pcid,
++			     unsigned long addr, u16 nr_pages,
++			     bool pmd_stride, u8 flags)
++{
++	u32 edx = (pcid << 16) | asid;
++	u32 ecx = (pmd_stride << 31) | (nr_pages - 1);
++	u64 rax = addr | flags;
++
++	/* The low bits in rax are for flags. Verify addr is clean. */
++	VM_WARN_ON_ONCE(addr & ~PAGE_MASK);
++
++	/* INVLPGB; supported in binutils >= 2.36. */
++	asm volatile(".byte 0x0f, 0x01, 0xfe" : : "a" (rax), "c" (ecx), "d" (edx));
++}
++
++static inline void __tlbsync(void)
++{
++	/*
++	 * tlbsync waits for invlpgb instructions originating on the
++	 * same CPU to have completed. Print a warning if we could have
++	 * migrated, and might not be waiting on all the invlpgbs issued
++	 * during this TLB invalidation sequence.
++	 */
++	cant_migrate();
++
++	/* TLBSYNC: supported in binutils >= 0.36. */
++	asm volatile(".byte 0x0f, 0x01, 0xff" ::: "memory");
++}
++
++/*
++ * INVLPGB can be targeted by virtual address, PCID, ASID, or any combination
++ * of the three. For example:
++ * - INVLPGB_VA | INVLPGB_INCLUDE_GLOBAL: invalidate all TLB entries at the address
++ * - INVLPGB_PCID:			  invalidate all TLB entries matching the PCID
++ *
++ * The first can be used to invalidate (kernel) mappings at a particular
++ * address across all processes.
++ *
++ * The latter invalidates all TLB entries matching a PCID.
++ */
++#define INVLPGB_VA			BIT(0)
++#define INVLPGB_PCID			BIT(1)
++#define INVLPGB_ASID			BIT(2)
++#define INVLPGB_INCLUDE_GLOBAL		BIT(3)
++#define INVLPGB_FINAL_ONLY		BIT(4)
++#define INVLPGB_INCLUDE_NESTED		BIT(5)
++
++static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
++						unsigned long addr,
++						u16 nr,
++						bool pmd_stride)
++{
++	__invlpgb(0, pcid, addr, nr, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
++}
++
++/* Flush all mappings for a given PCID, not including globals. */
++static inline void invlpgb_flush_single_pcid_nosync(unsigned long pcid)
++{
++	__invlpgb(0, pcid, 0, 1, 0, INVLPGB_PCID);
++}
++
++/* Flush all mappings, including globals, for all PCIDs. */
++static inline void invlpgb_flush_all(void)
++{
++	__invlpgb(0, 0, 0, 1, 0, INVLPGB_INCLUDE_GLOBAL);
++	__tlbsync();
++}
++
++/* Flush addr, including globals, for all PCIDs. */
++static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
++{
++	__invlpgb(0, 0, addr, nr, 0, INVLPGB_INCLUDE_GLOBAL);
++}
++
++/* Flush all mappings for all PCIDs except globals. */
++static inline void invlpgb_flush_all_nonglobals(void)
++{
++	__invlpgb(0, 0, 0, 1, 0, 0);
++	__tlbsync();
++}
++
+ #endif /* _ASM_X86_TLB_H */
 -- 
 2.47.1
 
