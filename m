@@ -1,166 +1,277 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68F2236E3
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589272; cv=none; b=S4cp/YQpK8V5NT+BoUfp4PphsPXK9sP47vRPozuIVSsdyUuA7NJ16tbcgJSK+YEvcPkUeL7BQjoJujK+DLWSFO1HVN1lVeMLGXdbDzOP8X0428BUasDkZxcH8UKHF/lLqIC6i5gAmrvm/9bReUm2uc/2ln5sBDgO2iuPSuBH0fM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589272; c=relaxed/simple;
-	bh=ymp2sTDtOywRud1r42LEpIz5/xVLZbwnL8m4bwvq204=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gUwxriVo0RMQb4FnMkh0epEhxwEJ7ji3FgA4LsJ3n/A6P+jkJBULBxn64rX+C1DoQkviYZmQUBj1hLOnbEcvfa5maDsZ/wI8s98EcC4ouJ4SlqoRGhn7jV5+vzV8V6WuBSfkHDP+cqRssmfssP2NigZ31N9wicl3t6No3pHUgiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bZsrg/Iv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE71F21C9E9;
+	Wed, 26 Feb 2025 17:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740589291; cv=fail; b=Ufw0znAiBwrVwaC0xVCdpB2potBPC6kyoHTAIiPXB7XUnn1GQ/oMUggxbNlVhWMRvJ1hWCbj6PMxgfcOla+YP0VQHhfyg5ef+7cYsg5mJn4lDn2VSoxRwjrDeGjGTQvqli+J+owgP25DM+PzmbVIiFzkF31aerVgRdyPyfV3AWs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740589291; c=relaxed/simple;
+	bh=nz4rxr0ZjoFVxV2NSU3gyK+HfRpfBpNmhbaXQHiO53o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=HxfWky8EG4p3kCD0ShQVRDUtYh8ExaeGyc+gFk4aeBCsncTKjcjlmVwLn884GI78ECM3hXpPGjmo2GX9mlse2oplBmJ7Xcnv6+NNK/jboI7PHIjKdsfMr+fevfRyOiCHqjAzxEgUI7TjYvnLI3HgohL+L4Eqyeg3YSftJHV09yk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=kTaN4nFU; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=J/CMPfUm; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bZsrg/Iv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740589269;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=OAYKjSFBIO1FDoSMDm73LcP7EYOw8j6BdDDF1ZgHN6I=;
-	b=bZsrg/IvPjCGNioToKYjO34LPDpkzTP26EG5Zz188CqGW6F1DPlDXGWqBELO6IMUAs4Pck
-	6sOg7q58pl6zTGdkW+7lVcbnx6wr63JtssRiJSQBAFq9vtxhbNGYWlq7SiMScuGx9gPwph
-	tv2v3vNF22WKbaSA9o2vmWIyT5j3JVs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-jEs8tXgZMCyZaH0KMw7RYQ-1; Wed, 26 Feb 2025 12:01:08 -0500
-X-MC-Unique: jEs8tXgZMCyZaH0KMw7RYQ-1
-X-Mimecast-MFC-AGG-ID: jEs8tXgZMCyZaH0KMw7RYQ_1740589267
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4393e89e910so275185e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 09:01:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740589267; x=1741194067;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OAYKjSFBIO1FDoSMDm73LcP7EYOw8j6BdDDF1ZgHN6I=;
-        b=BzgkjtPC0CwvGOzr/1apRmVsgBlrgGqGSpvqgxwsfVVpmhbPC38WwbtQu7exij2e+M
-         H2w87AGt0mbJNL4+hq5FHCptcecfMAJ3FZkQFes9IrmijkKVf0q5plPZn6ouup7dMCzC
-         BVfttsSvCXgIb/alxbTJs/NThxOTUfZiCHIR4aJrWmSYNMNDEN/MAkqEiO5KXyIjMIk6
-         6U10RosTjF2DMiCe6xdM3Zpjp9MCSjgOB/NDRRCQ2MWrJSkZIyc51rAsj0+0L9vRoqT7
-         26INGUkykXEugzLbLXMOHygaDdJEhqdhM7SmFeEJ4evKWpzB7HPkzCgxK7p/UqqlXkyO
-         qB9w==
-X-Forwarded-Encrypted: i=1; AJvYcCVn7wt0dA3THdso2+LMSvh5CLjqzteN7gSG4+vOP2OuwnQltvD/TZi2KcZhBziOEd2aY2u45FpuLQxsHhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcAgHO3lZoAPyQ83dzaD+mb8KJr1t8cBCIUIIdU8z68Q+wdKEA
-	GH/BNvY3X4aOIP11Xm05RygAONIn1IaTcnhFybaas5dbZVzUehBRj6OfacBFHx3tYv1voT+T0p6
-	cFJPa7aDkD938ZlWJ8K/P/jdaxIW8TFCdG7oQwOj8ed8CtCaPp3aJpUnN2gJskw==
-X-Gm-Gg: ASbGncszoa/qVy8skLrDzgieWoSL1aGenhEvsJpCmNExF5cG9Tc91V3OANn8iUk2BDN
-	VNb8Y/ngWYEumxxr3fhXbqn8d/gZDskEt4daMELtd/NlfNE9TrQcs5099UTrhpzqEZ36CWw21fP
-	YWnWiWuE4JSEfzgA4Bw8ym03K6YaZI7c0oYrku5jU38pTs5KrAjVr+gZw6o7K+At5Qtc7OKuYjJ
-	B22Tt0nKDVCtNLcQ19D6LFWUqdbolc0Y/O/73y8a3Pw7yWXlCJ96DIGg8ruvtxApf3zWFbok+gS
-	IJI5/aCwJ3Dqoz/Jjz6yM5wWjd8pO7XKnbcXYsMaxOcKdwW2oPqU2/3u0XUir3Vlru69U3jdgzo
-	y9mUTdAHA+abKWaVYIdZ5zX1wsAamDrJ5k3g7CwSGmT0=
-X-Received: by 2002:a05:600c:35cb:b0:439:942c:c1cd with SMTP id 5b1f17b1804b1-43ab0f41698mr76827595e9.15.1740589266843;
-        Wed, 26 Feb 2025 09:01:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFiO2q8A3dUQEgmlrjeCPMR8emhxvzHqcb9TXxKF1sqeUAwSJJ5Q0qd3IdPW2c/7LYLlKc+nQ==
-X-Received: by 2002:a05:600c:35cb:b0:439:942c:c1cd with SMTP id 5b1f17b1804b1-43ab0f41698mr76826655e9.15.1740589266235;
-        Wed, 26 Feb 2025 09:01:06 -0800 (PST)
-Received: from ?IPV6:2003:cb:c747:ff00:9d85:4afb:a7df:6c45? (p200300cbc747ff009d854afba7df6c45.dip0.t-ipconnect.de. [2003:cb:c747:ff00:9d85:4afb:a7df:6c45])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba549da9sm27914395e9.38.2025.02.26.09.01.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 09:01:05 -0800 (PST)
-Message-ID: <bab79dbd-64cc-4a58-aba9-bc5fd4d6beca@redhat.com>
-Date: Wed, 26 Feb 2025 18:01:04 +0100
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kTaN4nFU";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="J/CMPfUm"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QEtaaw002641;
+	Wed, 26 Feb 2025 17:01:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=WAj35AtMNxdX390RFuEwDVLOr7BLvGtaxopxdiq0ti4=; b=
+	kTaN4nFUdIdMeqdLXM2HKs5AX4GlXEXIxAChAxTEP516VCNpSttTde6u1EyXSNN/
+	XKmAzOMi5g9kuP0i7soWuKaA2ur+QwLktglDdsKRH8J7nbkr3EVD+zc6GJlTpo0M
+	lNfZgXTACUxc+npVLCUu1HEjXlqYLM3sHrC7LvE+3w0XkstmWTr0hcQ7T9FJB2cz
+	ATe1k+8wxMJLonmfVTRIRtO3XC+FteUaCDXLD/R+l+bViHTqeF7OwbQnHwQen3yc
+	oebfLe8yU/IxfroB54/l2AE2B+PzPJevpD5XqQBrgI5QZSaaUTxjwCFQdl0tVZSi
+	VSCy9z3/E9kN7dBsztGN6Q==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 451psfsk41-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 17:01:25 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51QGVwjv007528;
+	Wed, 26 Feb 2025 17:01:23 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51h04bk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 17:01:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cP9QpM2xiXevORTxChe59VKvn3Ahm0s1l6P5A3kC0BJ6mCF3UbXZMWbFbJlVhNbOFdplklBzyP0uzybtOXs8/rhIcNSDZHFJKgdYa5miKWM+IoweUzNCDUsSgKHCl9ZfjcpyQ0UrMncP2rn+dOyD1GeaKBGD7PUVRcIqD/jaJXpdwryaRIrER6TqJ4l6nQuHsmdj/faUU1B9vHDo1vmdURUg03EbellPdS6TbasxLiLuCurMxPbuCp2dUtfJMl/bGUMizNuf5TskohCMvnjSU4Q3mAZjo93burSyTsbai9AiaV3CSAr2MriMUnTdm6fFmDkr+9wXWuCUCTpsuNkvHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WAj35AtMNxdX390RFuEwDVLOr7BLvGtaxopxdiq0ti4=;
+ b=T7tkRXqc5bfUxVuZXUdpADk32fkEj6xRrlDoV/LKoDpta+zn7nj9Zd5qCukGG5gIS4pbbnfPG/7/fJ6wVRF8f7SBaKFcQY43DptQpV12lqRrWfRUf0bFk/iagA4LzdQLtE/2MdBoGTrsfHO+ZWEiekpmrzXS6DLpoH6AiVW6N+4Ufw+DqvjH1LMnwIFxXS2AKF0hWx2dOiuNuJ0dqmX1FgWe91ozkLg4AGqBig2d2YglZSoV6SHvCk90UZlg49Ph137aujpjeoxT27rcV5f6gTnroXsnDymfxhV6j/NKRy4G6Pa+HsYIpilVLFSFm/DG/GdwIXdFN/TZ9zBrAxE73Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WAj35AtMNxdX390RFuEwDVLOr7BLvGtaxopxdiq0ti4=;
+ b=J/CMPfUmDNcboywvfgC01zpVytlrEe7Jssw0nKtArZqWzBEG65e2NvO5zqQmzq9MgmuHKUsXruaUkWajRy/Hwku3HxL7J5UjPAlgtkUkOuO0YUeuN6WIYP5HG594oclEBssfY6jqaZUk1stAh3AbXHR0VCZhQSDb4dKk3s4sTW0=
+Received: from CO1PR10MB4705.namprd10.prod.outlook.com (2603:10b6:303:96::11)
+ by SA2PR10MB4489.namprd10.prod.outlook.com (2603:10b6:806:11a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Wed, 26 Feb
+ 2025 17:01:21 +0000
+Received: from CO1PR10MB4705.namprd10.prod.outlook.com
+ ([fe80::10db:799:49cf:f735]) by CO1PR10MB4705.namprd10.prod.outlook.com
+ ([fe80::10db:799:49cf:f735%3]) with mapi id 15.20.8466.020; Wed, 26 Feb 2025
+ 17:01:21 +0000
+From: Chris Hyser <chris.hyser@oracle.com>
+To: Shrikanth Hegde <sshegde@linux.ibm.com>,
+        Sinadin Shan
+	<sinadin.shan@oracle.com>,
+        "shuah@kernel.org" <shuah@kernel.org>
+CC: "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/2] selftests: sched: skip cs_prctl_test for systems
+ with core scheduling disabled
+Thread-Topic: [PATCH v3 2/2] selftests: sched: skip cs_prctl_test for systems
+ with core scheduling disabled
+Thread-Index: AQHbh8ExG7kgt587w0eH3dEZdarMmrNZjtAAgAA91e0=
+Date: Wed, 26 Feb 2025 17:01:21 +0000
+Message-ID:
+ <CO1PR10MB47054DBFCB3BCF4D43AC19AA9BC22@CO1PR10MB4705.namprd10.prod.outlook.com>
+References: <20250225200910.260569-1-sinadin.shan@oracle.com>
+ <20250225200910.260569-3-sinadin.shan@oracle.com>
+ <93e10bcf-3537-45f0-b282-ae4fd4573c6e@linux.ibm.com>
+In-Reply-To: <93e10bcf-3537-45f0-b282-ae4fd4573c6e@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO1PR10MB4705:EE_|SA2PR10MB4489:EE_
+x-ms-office365-filtering-correlation-id: 78a8b75c-d6d6-461b-abb9-08dd568731bf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?veTg38oklvtr9oCceFS0rAOuke21Z7zhnGDTcGR3cgyx8cTneNVF2Ee+i1?=
+ =?iso-8859-1?Q?wOpfIt0kY1Op2e8/5Lciqv2p55ukeueUZJSHRzg7ZsE92L68UmVrKWDMl9?=
+ =?iso-8859-1?Q?0+PdFSi18YadW9vP9VGZUKPmWwNCMBC17txyFNC3DnpI8XiTye6Ep+FH62?=
+ =?iso-8859-1?Q?aIq1WDCyRKVesV1Xd23gtB0K9TifpHvK+KS17hip9hQ5X3deg8cqlz+4Wt?=
+ =?iso-8859-1?Q?LzaWQUFlzJ8RZ9ffl8xeS5t304Y4hlGVWHix4WKrl/N0qdOMRkhkVpOtAD?=
+ =?iso-8859-1?Q?GoThKVSLJpHRl2QsUW4c7ttof3yFaHFgH9BB5oRL/iLF4bM9P4XUfUxBLm?=
+ =?iso-8859-1?Q?OyWcfDJjfmO87NWCu4yuPpOOpN5RJPZ4zNoI8V71fwICuHLd5ow+wmGzoM?=
+ =?iso-8859-1?Q?1JYErt5SRvc6kJMoGE8F2VGGr8R8qgK+zTqA6xOdZ0Oc5A2lm7LOuSI7tT?=
+ =?iso-8859-1?Q?KIQCNSh4QR/lvNLU8taDjqZjMmXSnNpy7a3XNxalAXTpxsrYQXlIx6IOvX?=
+ =?iso-8859-1?Q?9fHGCEJ4ksDlNhR4BCjQLV6gv+KH4KwNNGud3gw1aCMAqjyfKSPwNc3WM7?=
+ =?iso-8859-1?Q?J5KZUXzc7GAW6R/x/DinmJXXfXUkLtOqojFl0UpnAY/t+Wh9WnKzIyhZaZ?=
+ =?iso-8859-1?Q?M41OHWUjHr9LU2lYSd29JZZroC7cZylGYmc4B6l7TmyXU4PGAyy4nYzXob?=
+ =?iso-8859-1?Q?NoZameIrJoDRenM0lmH2cIKmughJBMm0XxvpapflD06SDHwIwezrUkAkSh?=
+ =?iso-8859-1?Q?PeekEjpVk3jZ1Hse6AmDD304gjT8CYUrBfIToWV0LDf+31id8fIGwCRlTZ?=
+ =?iso-8859-1?Q?W21f2Y5BrY2Qbss10QtsHPxEgWOaUKkVFg0y6x4V3EQswjUe9COUK7Vivv?=
+ =?iso-8859-1?Q?FSo/3eydjlYhsMS+NBoEHC3rM64OOs4ZCH+kg6dcfVwREuRP9x5YesjX0I?=
+ =?iso-8859-1?Q?dBe6Qqhf0625H6NUGTxwRRLGLmr9+cZOrbhl13fY8K9fVmv7PZIkktJQX7?=
+ =?iso-8859-1?Q?uAwdZjDsdd5hmEX+ZFLyhLwc1VcUqLL50swkiaRZRPSxyvExqw+EQAg4Rx?=
+ =?iso-8859-1?Q?dHkyeWowjdk5j+wZdCPBi+RI02S1nVTihFGRHDMNwscLgInhb4bkL188+5?=
+ =?iso-8859-1?Q?9xHSo4rcXCWKbtGuH/W8ow0Tt8cIVBdBJo7Y7ZMlONhAVV7iE7vU+DMCPx?=
+ =?iso-8859-1?Q?tev3xNWY9q0573qVf/x6F8icbZjiaTkm+GKA4wGfElFmYz87VI56npgRU8?=
+ =?iso-8859-1?Q?ai+zYfAAhPfTdTJP4FEEY6bTheGd47DVWBDnQHoeVQKHuhbFu5omFWYVqf?=
+ =?iso-8859-1?Q?k7oT6VBvQrcTQyW30BDvUqp6DRmKraW1YXdP1ctj1OVOiujesAKLfZLJXR?=
+ =?iso-8859-1?Q?yHIIBFkNp9Q/0qCaz/IULc0Ea8GXrQFTJ8iC532dtYU/nYjrOBzaHxZRCt?=
+ =?iso-8859-1?Q?/Y1BalCOiOIiJC7qjb1NuKRk7mpPqJkENKLahQ3u8UiC7fXRocZs4D4xDC?=
+ =?iso-8859-1?Q?+gkW/BNcibA0uxSng8lU+h?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR10MB4705.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?SycouYawSa2g2R8buxoj/UQE+84RbdD+r1KM/embkJ4mKMtcap4A3eauCs?=
+ =?iso-8859-1?Q?IznVVb1YJYaiFS7D+XfbBdINligR3Nwc9YNhG85yGHjh4TIEFggm13utRU?=
+ =?iso-8859-1?Q?TEC6Li8DHEWHhEqS15TW50Y9M7kmtBsBZJLubobzEuf13CgHVR/WTytURp?=
+ =?iso-8859-1?Q?6whUMYGH3+PBCSblwvs9BMfhvGI+2t4hkZ7CDVSuC3vcdbpoxumOAXt3k9?=
+ =?iso-8859-1?Q?ZyAcglKih0A5uzH5w792bI5zmeczwl0GFYTTZcpHKdNznLiavsLLPT0d3h?=
+ =?iso-8859-1?Q?br0mkLe1Eg6LSdDw7u2arXAYLc2ti/8HwNiyRL8CJ54YHlzzGzRuR7cEmO?=
+ =?iso-8859-1?Q?py53cKrwfLlxwk1ZVt7sENTJgMr1MrGN+VtkXlXPH52tV4qbyvKmXvonSS?=
+ =?iso-8859-1?Q?Qa7RIpMIyOi8HXBucRBI+BFhff3v5Q+YI8DAu9ZlkcAusqNtvkN/dCD2eu?=
+ =?iso-8859-1?Q?w9A/Ow7uF5+Ddl7YqZxcFhrOuQhJ1LYHs0BM0C9cUi7T2F9vzrF1mKvBQs?=
+ =?iso-8859-1?Q?e3lBFhI7QIdMtYG7d4VbY4jNEIybafhNUfK568Jx6Sw2LkL+WZ2nmKui3H?=
+ =?iso-8859-1?Q?vb/iAFZptq0NM/hCPVXAQ2Kb/vBcwTTR3WpM5MkbZoebrV6IQm7nc2Cfu+?=
+ =?iso-8859-1?Q?OiFHq6XysXM+R6EMb/LYDMsCCXHaLpDD6H6vZJ4hRUlJgI6W8FfNdVcHDw?=
+ =?iso-8859-1?Q?klZQRHAPaEH4rjjtsm9XD3oqDw5cyXCOTLTTDoUsBAJ/ATF+CmoOlLEBrh?=
+ =?iso-8859-1?Q?744CDaQXSkB17+BQ8rrJ6+iayISs3E4oR+raEZeaoJjQisDnwwBT/qHShw?=
+ =?iso-8859-1?Q?K5ZFwJgQnJE+vdTUFwqx+QulBLHTM310Y/eQvGgDRfFLvffUJuk3+b2TRA?=
+ =?iso-8859-1?Q?oLEziriT8m1ThewkWYz9lzHpXwUJ/g1lydlr5ZaZFLQFOqDux1sheFknWa?=
+ =?iso-8859-1?Q?5ez3xzFxuwjXVQKh6TAtbn8eZKUu7h/CRKUbr7R5V280TobQgkK9vKnijI?=
+ =?iso-8859-1?Q?uZf0lfm0jEaSF4b4YjPH+7HNlMLF14CmY58Pt1GF8Lrv6pInErAL9Ga124?=
+ =?iso-8859-1?Q?RnL7SN+Jn8ROOOcud7XR0BctuYSny4B5vERz7+B4NsbxJDrSzRE9WVrkHX?=
+ =?iso-8859-1?Q?okuSE/Q/5bI9S0Behjtw6VpuwI3xApomSEb7hQ66++SmaRnTzS/HTsM5B/?=
+ =?iso-8859-1?Q?6TW1fqawSoyjWj03rX9DGkSYHShvIA2ryunjBeLFAFGpuLNjjKQc9GWtCq?=
+ =?iso-8859-1?Q?ahAxuChvkKw9++jLn2dbA5hNOCuqQoi5j/076sVif7365HWKKCbFWHUCRO?=
+ =?iso-8859-1?Q?0Irem8I6YZg1FhWEOKZF+U3ojFgLIrdcjpqlsHfWUi9LBczocRVoBqZabB?=
+ =?iso-8859-1?Q?MOdWBQFt6A1p7/7yUO4w9+yW8gGzyIcG/wB9F8rKbabiJh/kywaLHfNjkj?=
+ =?iso-8859-1?Q?6kjlLkh9gZc1Ubhuv5iV3PHyoQ7s7wvX2L9CvQE323RuAVHnaRuTohNkGI?=
+ =?iso-8859-1?Q?2bJcvRDNvendyj+m+HcRay5mKqkhIc9Eh7wtf0RummWLBcTFieUVtc7O1a?=
+ =?iso-8859-1?Q?Vf3OQ8O/dc9m+DavidacgF2G3sITsjnHEXcZ1ZrjdzutUG/qKFWlnay0vb?=
+ =?iso-8859-1?Q?B53FEGT/LOBlNsjHsyp53Gk7QcmCgwVHDc?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] KVM: s390: pv: fix race when making a page secure
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-s390@vger.kernel.org, frankja@linux.ibm.com, borntraeger@de.ibm.com,
- nrb@linux.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
- schlameuss@linux.ibm.com, hca@linux.ibm.com
-References: <20250226123725.247578-1-imbrenda@linux.ibm.com>
- <20250226123725.247578-2-imbrenda@linux.ibm.com>
- <0dfeabca-5c41-4555-a43b-341a54096036@redhat.com>
- <20250226175833.16a7a970@p-imbrenda>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250226175833.16a7a970@p-imbrenda>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	qyUv7SW9bknCwfCs1HFUBU5jsbB/Yf1JmISeVOzdkSHojwB7uJ5FuJ3XwEv0V4vU2xhXQqOQOggW6mkTxqLdOlxUVd9Pz0iZ9hWasAJK0MobfnTUMt8P8IQt0otCneGyd7MIufTMthaLllb/zfpxoo+VF8jfH5PyQUWrpysyS1e57/t4y77NpIZE4hA657xgrqli5/KS/9rEaSdQrd8AUKOTI3fjj0jVtCIENwEDEyyr2a3nNX60d4xS8bgwSAVXp6dgud/6jvs1F4uxwclwty1PhejnfzwI1AONbHTwei+ITsfue1Um90F6qGRHOpvKqdEmYFSL7njxqujfkqwQHja56tgq6qO1Kn7LbLWj3UxG/EJDQRD12GF7pv9mpvnhids9Swp0qwzLBGz51H67D7gsPbViy/NncZNrYU5hnQgVTNtqmHgw9xF/xqIcICQNd+dlqOQKV3pLJfd0G+Pi97yRMBwlJXbH8wxE2caHaA2maSnNrI9i226Pc64PO37iFv05MABE5gj/qZcr6FDUa34klmUnyDWTJcSRm8KssXy1Kwv9tdAl4GpCm+6+rEGs7+H39eHfZTHmTvU56iUM8aEnIR6svhgMELXP8GzCbZs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR10MB4705.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78a8b75c-d6d6-461b-abb9-08dd568731bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2025 17:01:21.1118
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rKUiKqa56D87QUN8qFZxUuhDbDMx2YGvgiYbqit9FZGzw/vo2qXm3ypC1jfHFluWObMLiv+t0nPh36xhCgYWqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4489
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_04,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2502100000 definitions=main-2502260134
+X-Proofpoint-ORIG-GUID: kJzqdk_qyaKOseE0QyMtnMYKDMyEKC2A
+X-Proofpoint-GUID: kJzqdk_qyaKOseE0QyMtnMYKDMyEKC2A
 
-On 26.02.25 17:58, Claudio Imbrenda wrote:
-> On Wed, 26 Feb 2025 16:05:11 +0100
-> David Hildenbrand <david@redhat.com> wrote:
-> 
->>> +int make_hva_secure(struct mm_struct *mm, unsigned long hva, struct uv_cb_header *uvcb)
->>> +{
->>> +	struct folio *folio;
->>> +	spinlock_t *ptelock;
->>> +	pte_t *ptep;
->>> +	int rc;
->>> +
->>> +	ptep = get_locked_valid_pte(mm, hva, &ptelock);
->>> +	if (!ptep)
->>> +		return -ENXIO;
->>
->> You very likely need a pte_write() check we had there before, as you
->> might effectively modify page content by clearing the page.
-> 
-> it's not really needed, but it doesn't hurt either, I'll add a check
-
-Can you elaborate why it is not needed? Would the HW enforce that 
-writability check already?
-
--- 
-Cheers,
-
-David / dhildenb
-
+On 2/26/25 01:39, Sinadin Shan wrote:=0A=
+> For kernels with CONFIG_SCHED_CORE=3Dn, the sched selftest cs_prctl_test=
+=0A=
+> fails with "Not a core sched system" error. Change this to gracefully=0A=
+> skip the test for systems with core scheduling disabled. Exiting early=0A=
+> would also ensure failures reported in obtaining cookie are valid=0A=
+> failures and not because core scheduling isn't supported.=0A=
+> =0A=
+> Skip cs_prctl_test for systems with CONFIG_SCHED_CORE=3Dn=0A=
+> =0A=
+> Signed-off-by: Sinadin Shan <sinadin.shan@oracle.com>=0A=
+> ---=0A=
+>  tools/testing/selftests/sched/cs_prctl_test.c | 34 ++++++++++++++++++-=
+=0A=
+>  1 file changed, 33 insertions(+), 1 deletion(-)=0A=
+> =0A=
+> diff --git a/tools/testing/selftests/sched/cs_prctl_test.c b/tools/testin=
+g/selftests/sched/cs_prctl_test.c=0A=
+> index 52d97fae4dbd8..5b0047b50e640 100644=0A=
+> --- a/tools/testing/selftests/sched/cs_prctl_test.c=0A=
+> +++ b/tools/testing/selftests/sched/cs_prctl_test.c=0A=
+> @@ -109,6 +109,36 @@ static void handle_usage(int rc, char *msg)=0A=
+>          exit(rc);=0A=
+>  }=0A=
+>  =0A=
+> +static void check_core_sched(void)=0A=
+> +{=0A=
+> +       unsigned long long cookie;=0A=
+> +       int ret, num_max_process;=0A=
+> +       char buffer[32];=0A=
+> +=0A=
+> +       FILE *fp =3D fopen("/proc/sys/kernel/pid_max", "r");=0A=
+> +=0A=
+> +       if (fp =3D=3D NULL) {=0A=
+> +               perror("Failed to obtain max process number");=0A=
+> +               exit(EXIT_FAILURE);=0A=
+> +       }=0A=
+> +=0A=
+> +       if (fgets(buffer, sizeof(buffer), fp) =3D=3D NULL) {=0A=
+> +               fclose(fp);=0A=
+> +               exit(EXIT_FAILURE);=0A=
+> +       }=0A=
+> +=0A=
+> +       num_max_process =3D atoi(buffer);=0A=
+> +       fclose(fp);=0A=
+> +=0A=
+> +       ret =3D prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, num_max_process+1=
+, PIDTYPE_PID,=0A=
+> +                       (unsigned long)&cookie);=0A=
+> +       if (ret =3D=3D -1 && errno !=3D ESRCH) {=0A=
+> +               perror("prctl failed");=0A=
+> +               printf("Core sched not supported, hence skipping tests\n"=
+);=0A=
+> +               exit(4);=0A=
+> +       }=0A=
+> +}=0A=
+> +=0A=
+>  static unsigned long get_cs_cookie(int pid)=0A=
+>  {=0A=
+>          unsigned long long cookie;=0A=
+> @@ -117,7 +147,7 @@ static unsigned long get_cs_cookie(int pid)=0A=
+>          ret =3D prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, pid, PIDTYPE_PID=
+,=0A=
+>                      (unsigned long)&cookie);=0A=
+>          if (ret) {=0A=
+> -               printf("Not a core sched system\n");=0A=
+> +               printf("Failed to get cookie\n");=0A=
+>                  return -1UL;=0A=
+>          }=0A=
+>  =0A=
+> @@ -270,6 +300,8 @@ int main(int argc, char *argv[])=0A=
+>          if (keypress)=0A=
+>                  delay =3D -1;=0A=
+>  =0A=
+> +       check_core_sched();=0A=
+> +=0A=
+>          srand(time(NULL));=0A=
+>  =0A=
+>          /* put into separate process group */=0A=
+> --=0A=
+> 2.43.5=0A=
+=0A=
+So assuming a return code of 4 means skip (and I believe you stated that af=
+firmatively before), then this=0A=
+should solve the problem. Thanks for fixing this.=0A=
+=0A=
+Reviewed-by: Chris Hyser <chris.hyser@oracle.com>=0A=
+=0A=
+-chrish=
