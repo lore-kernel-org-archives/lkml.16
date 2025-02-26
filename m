@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38786238D33;
-	Wed, 26 Feb 2025 19:00:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2466D238D49;
+	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740596417; cv=none; b=NdKJhmOieKBXrwjiMVUaffCogPbi7aVwZ98ot3nMDn+oeU8MQVJismuU+avz9sUsxDWcsQ7fIMQYoKB12U9YjVCj3v7Eqt/5KkqBr2iXL6dzTHOfVHxqfrttdx8m5+kBW1VEgJZqD4LaY+mrjlOjwPodRIfCpgbbVTOMJwR2aF4=
+	t=1740596417; cv=none; b=QQ4TIRm0cMYfKzMJkAwxGTNPiY+PoVOTc4Wgfgt2u8DzsfstwULfiv0YysXS1AU/q9LwakjjkmZEf34HC4gsbdpC6lQqqlgYsHdEAWBTzX2bBUlUuZIECVCkgNUmxjMp3um+ZPTpWXXOlLE/5OpZ4VZjcSNh6nnvTFuuF6d1HaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740596417; c=relaxed/simple;
-	bh=+42kuksOlhzcBQPYk3PSr8n66m0DZ2Ays+BbNMN38cY=;
+	bh=nINU/3SDwU0JVZBUj6U8Wd+8VzL9zMHFjz+4QIcof6s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tS7Z9JKphhirkxVtjkiUbUtQKinOAddABrntz50/u1Q85Of7Zmupt5O3r/79VL86ZtyJjROQgzIbXGQVb8bTCYEO/utd/ByiwE013q7GIzNLGnYptKuozTakeWbwZAAUoKJihZooUCAGTsk2UIpbPKHsCg9039GBIo8DiuHzsno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0Xm6pVm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=oS7f2tqMJS1Tpnm9hQpDKgh4lvZWYoCB3UvH5NZuXK3StDHRnJqLAlYBt3WRByGKUkj0/LH9ljEiEK/pBvuSaV5E1rDKp11iIf7LDe8FpZ+Xy4Ak1lfrFllIb+wnxJ4alVrT0a7LWXbTnIcAEP6/AXYuOnfbVzy4fJpEcW7vZe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRpAsykh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0Xm6pVm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DAA9BC4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRpAsykh"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C125FC4CEE7;
 	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740596416;
-	bh=+42kuksOlhzcBQPYk3PSr8n66m0DZ2Ays+BbNMN38cY=;
+	bh=nINU/3SDwU0JVZBUj6U8Wd+8VzL9zMHFjz+4QIcof6s=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=U0Xm6pVmkP2OlUb3J4Cv/yIEuucen0nc8VsYSW5vwJonhMr68Uiwqjo7mB+7ZHvQ9
-	 JrI8zTh8Spu3oNow/c9bIlP51XGoUHzmFv8d47gjq0+QR0U2tf90GmZOP7qFRFA5ch
-	 L7bPUaCYHr/6V5NV/pyMcP3cauMbIzwvzsaMOkBjlEqui0/pMHdd1A5QaUF83tgg9C
-	 iXGIW+fqc9ifLkGpHQ12yKobijT/oAxatH4sB9gEvJuuSgmKRKendZN6kB5JTKLIwo
-	 xo4WVnoNRKl64Uk85ALl9wWkoPjFW9HoeV+oPybyUyCEtLlV1ZOAxGkHD5a+rtQfla
-	 77CH70JYioL+g==
+	b=gRpAsykhD6sEODBRbeSnqmkit/o/zOVkOfnp/skKRLyOfoTeyCQLJ+njJtBtg3c00
+	 ooZH/g1kOnJcda97bwyNdbV87Q8tJdmHgTfss4yi7epqxNrrM+0teOAiUKPEFRE6+n
+	 sYAhMpBE3vfW2GcXmBRrRWfWy8YaJozj4b7u1clEDEb4iQWspjCD9fXuPY+OPbGHMq
+	 A6hLyxSc3jPOw10/us6AhgRInsTh5rREFZ1b93jZQ6Ub4HDZb2Ym6jm3sX4/vTBVRa
+	 Mk0tPJWpYnKA1hffSCqGwv84vVTaIhKoHt06l8rxHtzxrE5rzLxx+WMOIMQHUW/7aQ
+	 cWr4MTIhQUgYA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D329BC021B8;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E21C19F32;
 	Wed, 26 Feb 2025 19:00:16 +0000 (UTC)
 From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Date: Wed, 26 Feb 2025 19:00:06 +0000
-Subject: [PATCH v2 4/4] soc: apple: rtkit: Cut syslog messages after the
- first '\0'
+Date: Wed, 26 Feb 2025 19:00:04 +0000
+Subject: [PATCH v2 2/4] soc: apple: rtkit: Implement OSLog buffers properly
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,21 +40,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-apple-soc-misc-v2-4-c3ec37f9021b@svenpeter.dev>
+Message-Id: <20250226-apple-soc-misc-v2-2-c3ec37f9021b@svenpeter.dev>
 References: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
 In-Reply-To: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
 To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
  Sven Peter <sven@svenpeter.dev>
 Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org
+ linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1047; i=sven@svenpeter.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5366; i=sven@svenpeter.dev;
  h=from:subject:message-id;
- bh=J8uNhQd4K8sLsyiwKJwYYfLSFRN53J4ELGphw4z4HHQ=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lH1uAVs+eKaVxVdt0rz+94SbXkKDzbIZyQ1mUcv+a
- JxaF+DVUcrCIMbBICumyLJ9v73pk4dvBJduuvQeZg4rE8gQBi5OAZiIcR7D//TfGe0xl/Wt21bf
- Zdi9Lv2qgW5tVm7mim5lq2Lvki4PTkaG6W3nfsh4rJnOdmP2FS2WiU2Ha5LXhUpPLNM+Ntuoy1O
- FGwA=
+ bh=VGT73aDgrExisPNdjISnJVkIIHnoelD5MGuM7V0a2R8=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ/r+lL1NSmyPFNZOUy2Z/1n4gcCDPeVftTqey/rEvjr8j
+ GmetrZGRykLgxgHg6yYIsv2/famTx6+EVy66dJ7mDmsTCBDGLg4BWAinVIMf2U/JbFu2vK/4zjr
+ x/u/fu9frGzcM3/D0193Ld7IZ1c6PZ3M8IfbRcrjPNOc23syLkQ8O5ls0r48fmbkkvtnfu00KFc
+ SbmcAAA==
 X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
  fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
 X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
@@ -63,33 +62,149 @@ X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
 X-Original-From: Sven Peter <sven@svenpeter.dev>
 Reply-To: sven@svenpeter.dev
 
-From: Janne Grunau <j@jannau.net>
+From: Hector Martin <marcan@marcan.st>
 
-Certain messages from DCP contain NUL bytes in the random data after the
-NUL terminated syslog message. Since the syslog message ends with '\n'
-this results in a dev_info() message terminated with two newlines and an
-empty printed line in the kernel log.
+Apparently nobody can figure out where the old logic came from, but it
+seems like it has never been actually used on any supported firmware to
+this day. OSLog buffers were apparently never requested.
 
-Signed-off-by: Janne Grunau <j@jannau.net>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+But starting with 13.3, we actually need this implemented properly for
+MTP (and later AOP) to work, so let's actually do that.
+
+Signed-off-by: Hector Martin <marcan@marcan.st>
 Signed-off-by: Sven Peter <sven@svenpeter.dev>
 ---
- drivers/soc/apple/rtkit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/apple/rtkit-internal.h |  1 +
+ drivers/soc/apple/rtkit.c          | 56 +++++++++++++++++++++++---------------
+ 2 files changed, 35 insertions(+), 22 deletions(-)
 
+diff --git a/drivers/soc/apple/rtkit-internal.h b/drivers/soc/apple/rtkit-internal.h
+index 27c9fa745fd5..b8d5244678f0 100644
+--- a/drivers/soc/apple/rtkit-internal.h
++++ b/drivers/soc/apple/rtkit-internal.h
+@@ -44,6 +44,7 @@ struct apple_rtkit {
+ 
+ 	struct apple_rtkit_shmem ioreport_buffer;
+ 	struct apple_rtkit_shmem crashlog_buffer;
++	struct apple_rtkit_shmem oslog_buffer;
+ 
+ 	struct apple_rtkit_shmem syslog_buffer;
+ 	char *syslog_msg_buffer;
 diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
-index 4b78463dd5a1..5fffd0f003dc 100644
+index be0d08861168..7e7b4f64ab17 100644
 --- a/drivers/soc/apple/rtkit.c
 +++ b/drivers/soc/apple/rtkit.c
-@@ -477,7 +477,7 @@ static void apple_rtkit_syslog_rx_log(struct apple_rtkit *rtk, u64 msg)
+@@ -67,8 +67,9 @@ enum {
+ #define APPLE_RTKIT_SYSLOG_MSG_SIZE  GENMASK_ULL(31, 24)
  
- 	log_context[sizeof(log_context) - 1] = 0;
+ #define APPLE_RTKIT_OSLOG_TYPE GENMASK_ULL(63, 56)
+-#define APPLE_RTKIT_OSLOG_INIT	1
+-#define APPLE_RTKIT_OSLOG_ACK	3
++#define APPLE_RTKIT_OSLOG_BUFFER_REQUEST 1
++#define APPLE_RTKIT_OSLOG_SIZE GENMASK_ULL(55, 36)
++#define APPLE_RTKIT_OSLOG_IOVA GENMASK_ULL(35, 0)
  
--	msglen = rtk->syslog_msg_size - 1;
-+	msglen = strnlen(rtk->syslog_msg_buffer, rtk->syslog_msg_size - 1);
- 	while (msglen > 0 &&
- 		   should_crop_syslog_char(rtk->syslog_msg_buffer[msglen - 1]))
- 		msglen--;
+ #define APPLE_RTKIT_MIN_SUPPORTED_VERSION 11
+ #define APPLE_RTKIT_MAX_SUPPORTED_VERSION 12
+@@ -259,15 +260,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
+ 					    struct apple_rtkit_shmem *buffer,
+ 					    u8 ep, u64 msg)
+ {
+-	size_t n_4kpages = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg);
+ 	u64 reply;
+ 	int err;
+ 
++	/* The different size vs. IOVA shifts look odd but are indeed correct this way */
++	if (ep == APPLE_RTKIT_EP_OSLOG) {
++		buffer->size = FIELD_GET(APPLE_RTKIT_OSLOG_SIZE, msg);
++		buffer->iova = FIELD_GET(APPLE_RTKIT_OSLOG_IOVA, msg) << 12;
++	} else {
++		buffer->size = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_SIZE, msg) << 12;
++		buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
++	}
++
+ 	buffer->buffer = NULL;
+ 	buffer->iomem = NULL;
+ 	buffer->is_mapped = false;
+-	buffer->iova = FIELD_GET(APPLE_RTKIT_BUFFER_REQUEST_IOVA, msg);
+-	buffer->size = n_4kpages << 12;
+ 
+ 	dev_dbg(rtk->dev, "RTKit: buffer request for 0x%zx bytes at %pad\n",
+ 		buffer->size, &buffer->iova);
+@@ -292,11 +299,21 @@ static int apple_rtkit_common_rx_get_buffer(struct apple_rtkit *rtk,
+ 	}
+ 
+ 	if (!buffer->is_mapped) {
+-		reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
+-				   APPLE_RTKIT_BUFFER_REQUEST);
+-		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE, n_4kpages);
+-		reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
+-				    buffer->iova);
++		/* oslog uses different fields and needs a shifted IOVA instead of size */
++		if (ep == APPLE_RTKIT_EP_OSLOG) {
++			reply = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE,
++					   APPLE_RTKIT_OSLOG_BUFFER_REQUEST);
++			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_SIZE, buffer->size);
++			reply |= FIELD_PREP(APPLE_RTKIT_OSLOG_IOVA,
++					    buffer->iova >> 12);
++		} else {
++			reply = FIELD_PREP(APPLE_RTKIT_SYSLOG_TYPE,
++					   APPLE_RTKIT_BUFFER_REQUEST);
++			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_SIZE,
++					    buffer->size >> 12);
++			reply |= FIELD_PREP(APPLE_RTKIT_BUFFER_REQUEST_IOVA,
++					    buffer->iova);
++		}
+ 		apple_rtkit_send_message(rtk, ep, reply, NULL, false);
+ 	}
+ 
+@@ -494,25 +511,18 @@ static void apple_rtkit_syslog_rx(struct apple_rtkit *rtk, u64 msg)
+ 	}
+ }
+ 
+-static void apple_rtkit_oslog_rx_init(struct apple_rtkit *rtk, u64 msg)
+-{
+-	u64 ack;
+-
+-	dev_dbg(rtk->dev, "RTKit: oslog init: msg: 0x%llx\n", msg);
+-	ack = FIELD_PREP(APPLE_RTKIT_OSLOG_TYPE, APPLE_RTKIT_OSLOG_ACK);
+-	apple_rtkit_send_message(rtk, APPLE_RTKIT_EP_OSLOG, ack, NULL, false);
+-}
+-
+ static void apple_rtkit_oslog_rx(struct apple_rtkit *rtk, u64 msg)
+ {
+ 	u8 type = FIELD_GET(APPLE_RTKIT_OSLOG_TYPE, msg);
+ 
+ 	switch (type) {
+-	case APPLE_RTKIT_OSLOG_INIT:
+-		apple_rtkit_oslog_rx_init(rtk, msg);
++	case APPLE_RTKIT_OSLOG_BUFFER_REQUEST:
++		apple_rtkit_common_rx_get_buffer(rtk, &rtk->oslog_buffer,
++						 APPLE_RTKIT_EP_OSLOG, msg);
+ 		break;
+ 	default:
+-		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n", msg);
++		dev_warn(rtk->dev, "RTKit: Unknown oslog message: %llx\n",
++			 msg);
+ 	}
+ }
+ 
+@@ -729,6 +739,7 @@ int apple_rtkit_reinit(struct apple_rtkit *rtk)
+ 
+ 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
+ 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
++	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
+ 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
+ 
+ 	kfree(rtk->syslog_msg_buffer);
+@@ -916,6 +927,7 @@ void apple_rtkit_free(struct apple_rtkit *rtk)
+ 
+ 	apple_rtkit_free_buffer(rtk, &rtk->ioreport_buffer);
+ 	apple_rtkit_free_buffer(rtk, &rtk->crashlog_buffer);
++	apple_rtkit_free_buffer(rtk, &rtk->oslog_buffer);
+ 	apple_rtkit_free_buffer(rtk, &rtk->syslog_buffer);
+ 
+ 	kfree(rtk->syslog_msg_buffer);
 
 -- 
 2.34.1
