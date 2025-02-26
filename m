@@ -1,31 +1,33 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250B51993B1
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E0B1E502;
+	Wed, 26 Feb 2025 07:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740554587; cv=none; b=XzaCqC3C+tf17S2nb639WaF439WSIFZ2Py/7sMinQwQqdF22q1DtDLueVAn6uOHPuaBAPtyIijR/ovzAuJC/uHNeLUEYeiEXkU0hNhGQ7pCXQ8KwicAiT/0zJ7y+sN+dsqRhEbwg0Ry0yxxWt77d1U3VmiFRqrxP3y0/hkTFjek=
+	t=1740554623; cv=none; b=GacTSih2ttQ6EP+Plqbmn7TkejLxRNJTJ2OhwvOXfw2ObdhtYvzruds7dUkacC0m8WnvSEz8a1FqggFy9juTmgXjiC4u847zOEaCW3YkhKp80xb6Mde9jZB+IFtZ/W/6dtMMWoiYWncDmmCnFQwAoo9HURAG2cgWSLRjKC6CeqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740554587; c=relaxed/simple;
-	bh=eHGaW29Cr2Hlr/1eF6CZ4olB+Jsv5yiB7eZxMMiiz0U=;
+	s=arc-20240116; t=1740554623; c=relaxed/simple;
+	bh=Q64DmIbjnhSAJoyXLUs8wPCadWvD3Btqmi/ZGNhV9EU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A7JwXF95OF9SR57hOTSdQLWawXdYLKWvPIph8XAtBLb2VmGDF5WNZBMzGbf+VsM+DX+SaxECYdEfzZvbd283pVSWBTc+Z/AfXJQhrtir214szo02ZP0hQxg63XFhE31u76mri4wolZfvTpeGQ1SJTXLOZbQqNNwZoSVEPhsaKzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=t8LDdl1j; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=aR0dTQvCs3ZbDNFNXk41UF3r3pgHjhKrAf0s8mUlTqXAaHoh+JCkZ+ZYcPKhPmt5HW97oNQiNyJtCpofrGaPNvpXjjeaHX9TL382JrV3S9GXishv2TivENkiSA2Ttlp6mjFDackFzptcH/LUxYS5GunVF34RTn+PMjmX2/hLi78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BLua4mmO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="t8LDdl1j"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740554581; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Qsij7OF84wNUFWpZiJMKkhiePiHWb5NpTxQGGeVUXXg=;
-	b=t8LDdl1jCUX0VOh+Myjv3sLKHxG3/sinFkFAWDsHtZf5tzx+xTJv6rB9lHdD0dl61Gbh50UyZimkQQMDTpoibI/aJJIBZwMwYA10226iSubwZyhD3ktihgNG5sGrPo0NwwE5mq0URF54cFHH5woT8dulHINeQ0Pso/uKQUiFIIw=
-Received: from 30.74.144.124(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQHJRGw_1740554579 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 26 Feb 2025 15:23:00 +0800
-Message-ID: <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
-Date: Wed, 26 Feb 2025 15:22:58 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BLua4mmO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E0CC4CED6;
+	Wed, 26 Feb 2025 07:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740554622;
+	bh=Q64DmIbjnhSAJoyXLUs8wPCadWvD3Btqmi/ZGNhV9EU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BLua4mmOguzXo7StKiFtMbPs7fffOFcemIKuolz8jNQQkZybna8A73uDvbgeUh0bk
+	 zVAtRHACQxnDHR2UfGU8KH3Xra1X6aF6nhPhTzfT1SNYoBNKFy5FEjs/MUI7uPCwoC
+	 IzduqHbH0zWiHAVbG4v7oWi7B2TjthIM2gUWIh3OJxuWihk5rY0IK1577yrUlC7jIS
+	 2d3czeVxIlhBPxqtM0uExFMxxXP/EgZj5VRuHAPjcY2P69OL+b7jpzU6CFW1zH69yH
+	 uO/ftH00J0Wv9c/hjLn8HqBQBhQhHN7bSpKa7xx02TyOkjSzP9zDzV+eFni5GeRnmz
+	 ZWEL4r1CjKKbg==
+Message-ID: <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
+Date: Wed, 26 Feb 2025 08:23:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,95 +35,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Softlockup when test shmem swapout-swapin and compaction
-To: Liu Shixin <liushixin2@huawei.com>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
- Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
- Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Ryan Roberts <ryan.roberts@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Zi Yan <ziy@nvidia.com>
-References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
+ stm32mp25
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
+ <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
+ <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Add Zi.
+On 25/02/2025 17:09, Clement LE GOFFIC wrote:
+> On 2/25/25 14:05, Krzysztof Kozlowski wrote:
+>> On 25/02/2025 09:48, Clément Le Goffic wrote:
+>>> Add the hdp devicetree node for stm32mp25 SoC family
+>>>
+>>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+>>> ---
+>>>   arch/arm64/boot/dts/st/stm32mp251.dtsi | 7 +++++++
+>>>   1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> index f3c6cdfd7008..43aaed4fcf10 100644
+>>> --- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> +++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+>>> @@ -918,6 +918,13 @@ package_otp@1e8 {
+>>>   			};
+>>>   		};
+>>>   
+>>> +		hdp: pinctrl@44090000 {
+>>> +			compatible = "st,stm32mp-hdp";
+>>
+>> So here again - you have stm32mp251 SoC, but use entirely different
+>> compatible.
+> 
+> Ok so I will use "st,stm32mp15-hdp"
 
-On 2025/2/26 15:03, Liu Shixin wrote:
-> Hi all,
-> 
-> I found a softlockup when testing shmem large folio swapout-swapin and compaction:
-> 
->   watchdog: BUG: soft lockup - CPU#30 stuck for 179s! [folio_swap:4714]
->   Modules linked in: zram xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat xt_addrtype iptable_filter ip_tantel_rapl_msr intel_rapl_common intel_uncore_frequency_common skx_edac_common nfit libnvdimm kvm_intel kvm rapl cixt4 mbcache jbd2 sr_mod cdrom ata_generic ata_piix virtio_net net_failover ghash_clmulni_intel libata sha512_ssse3
->   CPU: 30 UID: 0 PID: 4714 Comm: folio_swap Kdump: loaded Tainted: G             L     6.14.0-rc4-next-20250225+ #2
->   Tainted: [L]=SOFTLOCKUP
->   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
->   RIP: 0010:xas_load+0x5d/0xc0
->   Code: 08 48 d3 ea 83 e2 3f 89 d0 48 83 c0 04 48 8b 44 c6 08 48 89 73 18 48 89 c1 83 e1 03 48 83 f9 02 75 08 48 3d
->   RSP: 0000:ffffadf142f1ba60 EFLAGS: 00000293
->   RAX: ffffe524cc4f6700 RBX: ffffadf142f1ba90 RCX: 0000000000000000
->   RDX: 0000000000000011 RSI: ffff9a3e058acb68 RDI: ffffadf142f1ba90
->   RBP: fffffffffffffffe R08: ffffadf142f1bb50 R09: 0000000000000392
->   R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000011
->   R13: ffffadf142f1bb48 R14: ffff9a3e04e9c588 R15: 0000000000000000
->   FS:  00007fd957666740(0000) GS:ffff9a41ac0e5000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 00007fd922860000 CR3: 000000025c360001 CR4: 0000000000772ef0
->   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->   PKRU: 55555554
->   Call Trace:
->    <IRQ>
->    ? watchdog_timer_fn+0x1c9/0x250
->    ? __pfx_watchdog_timer_fn+0x10/0x10
->    ? __hrtimer_run_queues+0x10e/0x250
->    ? hrtimer_interrupt+0xfb/0x240
->    ? __sysvec_apic_timer_interrupt+0x4e/0xe0
->    ? sysvec_apic_timer_interrupt+0x68/0x90
->    </IRQ>
->    <TASK>
->    ? asm_sysvec_apic_timer_interrupt+0x16/0x20
->    ? xas_load+0x5d/0xc0
->    xas_find+0x153/0x1a0
->    find_get_entries+0x73/0x280
->    shmem_undo_range+0x1fc/0x640
->    shmem_evict_inode+0x109/0x270
->    evict+0x107/0x240
->    ? fsnotify_destroy_marks+0x25/0x180
->    ? _atomic_dec_and_lock+0x35/0x50
->    __dentry_kill+0x71/0x190
->    dput+0xd1/0x190
->    __fput+0x128/0x2a0
->    task_work_run+0x57/0x90
->    syscall_exit_to_user_mode+0x1cb/0x1e0
->    do_syscall_64+0x67/0x170
->    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->   RIP: 0033:0x7fd95776eb8b
-> 
-> If CONFIG_DEBUG_VM is enabled, we will meet VM_BUG_ON_FOLIO(!folio_test_locked(folio)) in
-> shmem_add_to_page_cache() too.  It seems that the problem is related to memory migration or
-> compaction which is necessary for reproduction,  although without a clear why.
-> 
-> To reproduce the problem, we need firstly a zram device as swap backend, and then run the
-> reproduction program. The reproduction program consists of three parts:
->   1. A process constantly changes the status of shmem large folio by these interfaces:
->          /sys/kernel/mm/transparent_hugepage/hugepages-<size>/shmem_enabled
->   2. A process constantly echo 1 > /proc/sys/vm/compact_memory
->   3. A process constantly alloc/free/swapout/swapin shmem large folios.
-> 
-> I'm not sure whether the first process is necessary but the second and third are. In addition,
-> I tried hacking to modify compaction_alloc to return NULL, and the problem disappeared,
-> so I guess the problem is in migration.
-> 
-> The problem is different with https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
-> since I have confirmed this porblem still existed after merge the fixed patch.
 
-Could you check if your version includes Zi's fix[1]? Not sure if it's 
-related to the shmem large folio split.
+This means this is stm32mp15 SoC. I do not see such SoC on list of your
+SoCs in bindings. What's more, there are no bindings for other SoC
+components for stm32mp15!
 
-[1] 
-https://lore.kernel.org/all/AF487A7A-F685-485D-8D74-756C843D6F0A@nvidia.com/
+Something is here not matching - this change, this DTSI, top level
+bindings or all of your SoC device/blocks bindings.
+
+
+
+Best regards,
+Krzysztof
