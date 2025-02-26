@@ -1,40 +1,59 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD19C223339;
-	Wed, 26 Feb 2025 14:45:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8C5225397;
+	Wed, 26 Feb 2025 14:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581157; cv=none; b=A9hUQGGJ+d5HQbAkYtqcN1WRCjRdd/W4G/6mY4jQBmRKZM49BLv9NCMzKGyqKeo44GEtieCwmvul36FWlC4g2GgFhdwYu4tPlQ3rebmCcpgpEkhrdi0jLj/47Iguf0ujMycmAaweGpD6i1xXp7o8MkdSFlij0w6Y5PExLq8WlZw=
+	t=1740581158; cv=none; b=jAoDLfkYbA2P2kc3UYxPAHdcdeuRpZhTMANdUEyms18KrTWWN7rgA+yL1nNb+vAoAD/QiQbWfE1lK4Kp5hdl1yuv+fYkKF9ZGsFx+sSmfQsx67cIFXNLJOenFn2TQ+k5SLNqshbMHnIopRJj78Wh6ZJp38IjqkrfFQOFgZYVbYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581157; c=relaxed/simple;
-	bh=qiVvL42PCmepH3f1eJLwGJCpM3lLrECexjmjUX/S4ic=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GJ/mMkhnMhzCep4q8T4Er/TaK73dAyzix17zmCZkhx8N7BwAEesHLm8ySccPuCbON3QDljK5y5HtEEHwd+LBtTkvVMJt4+wyP5bB6qfpNwdd5s0LUSPtEqKUosA7uz7Crf4uHO+bIkN2JJ57pnQkmp6FqYqrMPt7bPKJraC1HvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: i9/Yv2jBTNK3CvbiUPA/sQ==
-X-CSE-MsgGUID: 9RdJu3W3T5eYQABmZwFrXg==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 26 Feb 2025 23:45:54 +0900
-Received: from localhost.localdomain (unknown [10.226.92.96])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 570464043714;
-	Wed, 26 Feb 2025 23:45:51 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	linux-pwm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v24 4/4] pwm: rzg2l-gpt: Add support for gpt linking with poeg
-Date: Wed, 26 Feb 2025 14:45:23 +0000
-Message-ID: <20250226144531.176819-5-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250226144531.176819-1-biju.das.jz@bp.renesas.com>
-References: <20250226144531.176819-1-biju.das.jz@bp.renesas.com>
+	s=arc-20240116; t=1740581158; c=relaxed/simple;
+	bh=yYTySIEW2vyb9fQfSiWDrhePMMoxgZdjZmmJCBzHfiY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=l1U6WW/+vGmGarr9Y7c0o9/JfxKsYHjgm4CxAtw6X8/DQE7MHH7O13NFF5azsooLQf4prHvAf2wFo6lcU7DhTWKpVQ3Lu7tDkzyU6AZDTS7piEPr4TM0G9YYYvKoqkyXHVUASvS//6S3BFtuwqkw/QNAITX09Ki5OJtoNsTPXBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=w9uE/21M; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="w9uE/21M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1740581155;
+	bh=yYTySIEW2vyb9fQfSiWDrhePMMoxgZdjZmmJCBzHfiY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=w9uE/21MKYo/CoH4yc5VHQq6YGVeHHWbTNNKbhNNdrX9KqyIy/wXk0Uyklhy75xJ/
+	 iB4lyacb/CYp0iZkOFcg/HD/X3vWJ/fRK68u/yagIywyDmIYKdkM/LvKouBw+AYcgO
+	 7Q8t1o6+jr69ac9BOgdqOVJ8T/veh8YMlNsjcd6A=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id 838361C0993;
+	Wed, 26 Feb 2025 09:45:54 -0500 (EST)
+Message-ID: <16127450a24e9df8112a347fe5f6df9c9cca2926.camel@HansenPartnership.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Ventura Jack
+ <venturajack85@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, "H.
+ Peter Anvin" <hpa@zytor.com>, Alice Ryhl <aliceryhl@google.com>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com,  boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ ej@inai.de, hch@infradead.org,  ksummit@lists.linux.dev,
+ linux-kernel@vger.kernel.org,  rust-for-linux@vger.kernel.org, Ralf Jung
+ <post@ralfj.de>
+Date: Wed, 26 Feb 2025 09:45:53 -0500
+In-Reply-To: <2025022611-work-sandal-2759@gregkh>
+References: 
+	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+	 <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+	 <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+	 <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com>
+	 <CAH5fLghEMtT663SNogAGad-qk7umefGeBKbm+QjKKzoskjOubw@mail.gmail.com>
+	 <5E3FEDC4-DBE3-45C7-A331-DAADD3E7EB42@zytor.com>
+	 <2rrp3fmznibxyg3ocvsfasfnpwfp2skhf4x7ihrnvm72lemykf@lwp2jkdbwqgm>
+	 <CAFJgqgS-SMMEE2FktuCUimdGkPWMV3HB2Eg38SiUDQK1U8=rNg@mail.gmail.com>
+	 <CANiq72mOp0q1xgAHod1Y_mX86OESzdDsgSghtQCwe6iksNt-sA@mail.gmail.com>
+	 <f2bf76553c666178505cb9197659303a39faf7aa.camel@HansenPartnership.com>
+	 <2025022611-work-sandal-2759@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,197 +62,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The General PWM Timer (GPT) is capable of detecting "dead time error
-and short-circuits between output pins" and send Output disable
-request to poeg(Port Output Enable for GPT).
+On Wed, 2025-02-26 at 15:39 +0100, Greg KH wrote:
+> On Wed, Feb 26, 2025 at 09:26:50AM -0500, James Bottomley wrote:
+> > On Wed, 2025-02-26 at 14:53 +0100, Miguel Ojeda wrote:
+> > > On Wed, Feb 26, 2025 at 2:03 PM Ventura Jack
+> > > <venturajack85@gmail.com> wrote:
+> > [...]
+> > > > Exception/unwind safety may be another subject that increases
+> > > > the difficulty of writing unsafe Rust.
+> > > 
+> > > Note that Rust panics in the kernel do not unwind.
+> > 
+> > I presume someone is working on this, right?  While rust isn't
+> > pervasive enough yet for this to cause a problem, dumping a
+> > backtrace is one of the key things we need to diagnose how
+> > something went wrong, particularly for user bug reports where they
+> > can't seem to bisect.
+> 
+> The backtrace is there, just like any other call to BUG() provides,
+> which is what the rust framework calls for this.
 
-Add support for linking poeg group with gpt, so that
-gpt can control the output disable function.
+From some other rust boot system work, I know that the quality of a
+simple backtrace in rust where you just pick out addresses you think
+you know in the stack and print them as symbols can sometimes be rather
+misleading, which is why you need an unwinder to tell you exactly what
+happened.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v23->v24:
- * No change.
-v22>v23:
- * No change
-v21>v22:
- * No change
-v20->21:
- * Dropped local variable offs for calculating RZG2L_GTINTAD channel register
-   and instead using the macro RZG2L_GTINTAD(ch).
-v19->v20:
- * No change
-v18->v19:
- * No change
-v17->v18:
- * Moved bitpos near to the user.
-v16->v17:
- * No change
-v15->v16:
- * No change.
-v14->v15:
- * Updated commit description by replacing "This patch add"-> "Add".
-v3->v14:
- * Removed the parenthesis for RZG2L_MAX_POEG_GROUPS.
- * Renamed rzg2l_gpt_parse_properties()->rzg2l_gpt_poeg_init() as it not only parse
-   the properties but also implements the needed register writes.
- * Added acomment here about the purpose of the function rzg2l_gpt_poeg_init()
- * Removed magic numbers from rzg2l_gpt_poeg_init()
- * Fixed resource leak in rzg2l_gpt_poeg_init().
- * Moved the patch from series[1] to here
- [1] https://lore.kernel.org/linux-renesas-soc/20221215205843.4074504-1-biju.das.jz@bp.renesas.com/T/#t
-v2->v3:
- * Updated commit header and description
- * Added check for poeg group in rzg2l_gpt_parse_properties().
-v1->v2:
- * Replaced id->poeg-id as per poeg bindings.
-This patch depend upon [1]
-[1] https://patchwork.kernel.org/project/linux-renesas-soc/patch/20221214132232.2835828-3-biju.das.jz@bp.renesas.com/
----
- drivers/pwm/pwm-rzg2l-gpt.c | 83 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+Regards,
 
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index 2ddbb13f50aa..a551554aec77 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -39,6 +39,7 @@
- #define RZG2L_GTCR(ch)		(0x2c + RZG2L_GET_CH_OFFS(ch))
- #define RZG2L_GTUDDTYC(ch)	(0x30 + RZG2L_GET_CH_OFFS(ch))
- #define RZG2L_GTIOR(ch)		(0x34 + RZG2L_GET_CH_OFFS(ch))
-+#define RZG2L_GTINTAD(ch)	(0x38 + RZG2L_GET_CH_OFFS(ch))
- #define RZG2L_GTBER(ch)		(0x40 + RZG2L_GET_CH_OFFS(ch))
- #define RZG2L_GTCNT(ch)		(0x48 + RZG2L_GET_CH_OFFS(ch))
- #define RZG2L_GTCCR(ch, sub_ch)	(0x4c + RZG2L_GET_CH_OFFS(ch) + 4 * (sub_ch))
-@@ -55,12 +56,21 @@
- #define RZG2L_GTUDDTYC_UP_COUNTING	(RZG2L_GTUDDTYC_UP | RZG2L_GTUDDTYC_UDF)
- 
- #define RZG2L_GTIOR_GTIOA	GENMASK(4, 0)
-+#define RZG2L_GTIOR_OADF	GENMASK(10, 9)
- #define RZG2L_GTIOR_GTIOB	GENMASK(20, 16)
-+#define RZG2L_GTIOR_OBDF	GENMASK(26, 25)
-+
- #define RZG2L_GTIOR_GTIOx(sub_ch)	((sub_ch) ? RZG2L_GTIOR_GTIOB : RZG2L_GTIOR_GTIOA)
-+
- #define RZG2L_GTIOR_OAE		BIT(8)
- #define RZG2L_GTIOR_OBE		BIT(24)
- #define RZG2L_GTIOR_OxE(sub_ch)		((sub_ch) ? RZG2L_GTIOR_OBE : RZG2L_GTIOR_OAE)
- 
-+#define RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE	BIT(9)
-+#define RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE	BIT(25)
-+#define RZG2L_GTIOR_PIN_DISABLE_SETTING \
-+	(RZG2L_GTIOR_OADF_HIGH_IMP_ON_OUT_DISABLE | RZG2L_GTIOR_OBDF_HIGH_IMP_ON_OUT_DISABLE)
-+
- #define RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE	0x1b
- #define RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH \
- 	(RZG2L_INIT_OUT_HI_OUT_HI_END_TOGGLE | RZG2L_GTIOR_OAE)
-@@ -71,12 +81,17 @@
- 	((sub_ch) ? RZG2L_GTIOR_GTIOB_OUT_HI_END_TOGGLE_CMP_MATCH : \
- 	 RZG2L_GTIOR_GTIOA_OUT_HI_END_TOGGLE_CMP_MATCH)
- 
-+#define RZG2L_GTINTAD_GRP_MASK	GENMASK(25, 24)
-+
- #define RZG2L_MAX_HW_CHANNELS	8
- #define RZG2L_CHANNELS_PER_IO	2
- #define RZG2L_MAX_PWM_CHANNELS	(RZG2L_MAX_HW_CHANNELS * RZG2L_CHANNELS_PER_IO)
- #define RZG2L_MAX_SCALE_FACTOR	1024
- #define RZG2L_MAX_TICKS		((u64)U32_MAX * RZG2L_MAX_SCALE_FACTOR)
- 
-+#define RZG2L_MAX_POEG_GROUPS	4
-+#define RZG2L_LAST_POEG_GROUP	3
-+
- struct rzg2l_gpt_chip {
- 	void __iomem *mmio;
- 	struct mutex lock; /* lock to protect shared channel resources */
-@@ -84,6 +99,7 @@ struct rzg2l_gpt_chip {
- 	u32 period_ticks[RZG2L_MAX_HW_CHANNELS];
- 	u32 channel_request_count[RZG2L_MAX_HW_CHANNELS];
- 	u32 channel_enable_count[RZG2L_MAX_HW_CHANNELS];
-+	DECLARE_BITMAP(poeg_gpt_link, RZG2L_MAX_POEG_GROUPS * RZG2L_MAX_HW_CHANNELS);
- };
- 
- static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *chip)
-@@ -362,6 +378,72 @@ static const struct pwm_ops rzg2l_gpt_ops = {
- 	.apply = rzg2l_gpt_apply,
- };
- 
-+/*
-+ * This function links a poeg group{A,B,C,D} with a gpt channel{0..7} and
-+ * configure the pin for output disable.
-+ */
-+static void rzg2l_gpt_poeg_init(struct platform_device *pdev,
-+				struct rzg2l_gpt_chip *rzg2l_gpt)
-+{
-+	struct of_phandle_args of_args;
-+	unsigned int i;
-+	u32 poeg_grp;
-+	u32 bitpos;
-+	int cells;
-+	int ret;
-+
-+	cells = of_property_count_u32_elems(pdev->dev.of_node, "renesas,poegs");
-+	if (cells == -EINVAL)
-+		return;
-+
-+	cells >>= 1;
-+	for (i = 0; i < cells; i++) {
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						       "renesas,poegs", 1, i,
-+						       &of_args);
-+		if (ret) {
-+			dev_err(&pdev->dev,
-+				"Failed to parse 'renesas,poegs' property\n");
-+			return;
-+		}
-+
-+		if (of_args.args[0] >= RZG2L_MAX_HW_CHANNELS) {
-+			dev_err(&pdev->dev, "Invalid channel %d >= %d\n",
-+				of_args.args[0], RZG2L_MAX_HW_CHANNELS);
-+			of_node_put(of_args.np);
-+			return;
-+		}
-+
-+		if (!of_device_is_available(of_args.np)) {
-+			/* It's fine to have a phandle to a non-enabled poeg. */
-+			of_node_put(of_args.np);
-+			continue;
-+		}
-+
-+		if (!of_property_read_u32(of_args.np, "renesas,poeg-id", &poeg_grp)) {
-+			if (poeg_grp > RZG2L_LAST_POEG_GROUP) {
-+				dev_err(&pdev->dev, "Invalid poeg group %d > %d\n",
-+					poeg_grp, RZG2L_LAST_POEG_GROUP);
-+				of_node_put(of_args.np);
-+				return;
-+			}
-+
-+			bitpos = of_args.args[0] + poeg_grp * RZG2L_MAX_HW_CHANNELS;
-+			set_bit(bitpos, rzg2l_gpt->poeg_gpt_link);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTINTAD(of_args.args[0]),
-+					 RZG2L_GTINTAD_GRP_MASK,
-+					 poeg_grp << 24);
-+
-+			rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTIOR(of_args.args[0]),
-+					 RZG2L_GTIOR_OBDF | RZG2L_GTIOR_OADF,
-+					 RZG2L_GTIOR_PIN_DISABLE_SETTING);
-+		}
-+
-+		of_node_put(of_args.np);
-+	}
-+}
-+
- static int rzg2l_gpt_probe(struct platform_device *pdev)
- {
- 	struct rzg2l_gpt_chip *rzg2l_gpt;
-@@ -413,6 +495,7 @@ static int rzg2l_gpt_probe(struct platform_device *pdev)
- 	if (rzg2l_gpt->rate_khz * KILO != rate)
- 		return dev_err_probe(dev, -EINVAL, "Rate is not multiple of 1000");
- 
-+	rzg2l_gpt_poeg_init(pdev, rzg2l_gpt);
- 	mutex_init(&rzg2l_gpt->lock);
- 
- 	chip->ops = &rzg2l_gpt_ops;
--- 
-2.43.0
+James
 
