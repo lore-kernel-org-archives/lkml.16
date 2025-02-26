@@ -1,155 +1,125 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7BA2222BE
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 14:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A9D2222A5;
+	Wed, 26 Feb 2025 14:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740581958; cv=none; b=RFF/T57Fjzm5b9kECU3UufjoaVmfnMtzxlMQY3PVvkk50rMfAyrz7AJsATFZM60O3dl8gejapfTH8IucnVBF/eoi7VfyBrF8Ov2ZpFH5t0Crb21iscgF7HaQ/3w+12l71eb2q4YDdrcD4Q2GjzpTVchI+sHcOdBv9OBxha8Fdl4=
+	t=1740581975; cv=none; b=FerRNsvwv6bb8fpA5keIoyIJl/4N9W3N4JcT2f8FP/zazUr8OgHS8H4VgKLmn8gaEIi3avBUIEau//HGSlvmEw7ibdDT3gRddGpkaTDVDvAspuvcyP95/FDlfP1mYqxOWxww94Wwpp43DFeFmnnMrAwpN52syhPLeyESd3QITRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740581958; c=relaxed/simple;
-	bh=5x1DDc9NUBR+BdN8UiBGQj4+McQqIlB8v1wgzKpz2JA=;
+	s=arc-20240116; t=1740581975; c=relaxed/simple;
+	bh=fSYcTa92gedbLZbsaWA/digY3oZKW/7+btr68YyooGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ct25BegOeaKoodpziS/X3Z5Dcw4HUYpDnBtX3U/9BytEVve6wx4GQf/+HSls0mAOy0PeRh/6F95/brQckpncdQSB5dvMwmsU0sIKzBz/QbkCJQiF6oQ7yyYqPjNsdjA13vJ2mCRwtTe8mtCceTb5V78S8Px5wXpd17NW2I7rMhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=YLHiFxEY; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tev0DJpoB6LcgndKSKjHvEQh5KFcMaAdr60XG10v6uks2Z33kwVBgdMvjj94p7M6rNOtrS7+LlX9Q7FdooDFbQNvJ8eViKy2NygW5UnJefkno6O4A50T+VT236T0zOGNiFzihVWdJOfrqK5D8VIRLH7c5Q3rHyx44HFZcpLWcqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLXaNz+9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="YLHiFxEY"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 290DA240029
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:59:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1740581949; bh=5x1DDc9NUBR+BdN8UiBGQj4+McQqIlB8v1wgzKpz2JA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=YLHiFxEYZbag4dM3K2ONaPGuIBKNDCvZTFQ+W8ub9DaBN2Rbd0y5jC3rUBsbZywpD
-	 qFAqlk7OAWo1FJTxY+z6x368dyBHQoxm1EYVtLuJnx/XDXtphv36WMVLAXw89VHb2Q
-	 zSiV/GPfe7dl8DucQZVtHm2n94VvSf7YJD8qH2MzkcZ+0w8Cpd3IvjMzq7NpD/caTy
-	 mrUcLlVpmTa4k2EtIDBCohnYoiBo5gFQDSnGv2kStkgRscnSY/EJrVnv+tMl47hQiF
-	 yBTG4OgZ9yZkgXeQmJZ6gIK2C/jgMiy6kD1/3u7uvLKxKW2nrYXzaZx2Oivy+2qtH4
-	 OSP6ERw06afvg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Z2yKk4KNTz9rxK;
-	Wed, 26 Feb 2025 15:59:06 +0100 (CET)
-Date: Wed, 26 Feb 2025 14:59:06 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: Rob Herring <robh@kernel.org>
-Cc: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLXaNz+9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72363C4CED6;
+	Wed, 26 Feb 2025 14:59:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740581973;
+	bh=fSYcTa92gedbLZbsaWA/digY3oZKW/7+btr68YyooGA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CLXaNz+9fiGhVU/Os3/4wVX9iVEd0qlx8laIAWKvboTDdkQ+FlZxUOorv7344CVQz
+	 hBxBMN5GCKfdDFTRQxFE/b3VTQblG0fHnQX9dPHAOvq3ucnSdOFkh9ITuh+1Zo4FSP
+	 eAYOhUyqTNWGTzNJ3I5bKtDpUpW/p7aHCDRiNgyoOXkLLPUA/bB9KKtNgEULWNq65S
+	 hVCkbg8ArGA4TEqIX/qOLr7fKAo00W9IErursQtj75YezqnlR2uOkKRdUxndxhSLJC
+	 3enBX1Bb0h509rgLd8IgPkvSY3TOx9q8Cjo2ou2hNSiqDFVMdlLITOl8NRd5SZrHos
+	 kCdL56lE2P0rA==
+Date: Wed, 26 Feb 2025 08:59:31 -0600
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: net: Convert fsl,gianfar-{mdio,tbi} to
- YAML
-Message-ID: <Z78sOtFfNC8i2amq@probook>
-References: <20250220-gianfar-yaml-v1-0-0ba97fd1ef92@posteo.net>
- <20250220-gianfar-yaml-v1-1-0ba97fd1ef92@posteo.net>
- <20250221163651.GA4130188-robh@kernel.org>
- <Z7zdawaVsQbBML95@probook>
- <Z72lqrhs50NtoK8m@probook>
- <20250226133114.GA1771231-robh@kernel.org>
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: pmbus: add lt3074
+Message-ID: <20250226145931.GA2314060-robh@kernel.org>
+References: <20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com>
+ <20250225-upstream-lt3074-v2-1-18ad10ba542e@analog.com>
+ <20250226-gentle-spicy-jacamar-2dd36a@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250226133114.GA1771231-robh@kernel.org>
+In-Reply-To: <20250226-gentle-spicy-jacamar-2dd36a@krzk-bin>
 
-On Wed, Feb 26, 2025 at 07:31:14AM -0600, Rob Herring wrote:
-> On Tue, Feb 25, 2025 at 11:12:42AM +0000, J. Neuschäfer wrote:
-> > On Mon, Feb 24, 2025 at 08:58:19PM +0000, J. Neuschäfer wrote:
-> > > On Fri, Feb 21, 2025 at 10:36:51AM -0600, Rob Herring wrote:
-> > > > On Thu, Feb 20, 2025 at 06:29:21PM +0100, J. Neuschäfer wrote:
-> > > > > Move the information related to the Freescale Gianfar (TSEC) MDIO bus
-> > > > > and the Ten-Bit Interface (TBI) from fsl-tsec-phy.txt to a new binding
-> > > > > file in YAML format, fsl,gianfar-mdio.yaml.
-> > > > > 
-> > > > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > > > > ---
-> > > [...]
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    enum:
-> > > > > +      - fsl,gianfar-tbi
-> > > > > +      - fsl,gianfar-mdio
-> > > > > +      - fsl,etsec2-tbi
-> > > > > +      - fsl,etsec2-mdio
-> > > > > +      - fsl,ucc-mdio
-> > > > > +      - gianfar
-> > > > 
-> > > > Can you just comment out this to avoid the duplicate issue.
-> > > > 
-> > > > Though I think if you write a custom 'select' which looks for 
-> > > > 'device_type = "mdio"' with gianfar compatible and similar in the other 
-> > > > binding, then the warning will go away. 
-> > > 
-> > > I'm not sure how the 'select' syntax works, is there a reference
-> > > document I could read?
+On Wed, Feb 26, 2025 at 09:20:40AM +0100, Krzysztof Kozlowski wrote:
+> On Tue, Feb 25, 2025 at 09:01:13PM +0800, Cedric Encarnacion wrote:
+> > Add Analog Devices LT3074 Ultralow Noise, High PSRR Dropout Linear
+> > Regulator.
 > > 
-> > Ok, I think I figured it out, this seems to work as intended:
+> > Signed-off-by: Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+> > ---
+> >  .../bindings/hwmon/pmbus/adi,lt3074.yaml           | 64 ++++++++++++++++++++++
+> >  MAINTAINERS                                        |  7 +++
+> >  2 files changed, 71 insertions(+)
 > > 
+> > diff --git a/Documentation/devicetree/bindings/hwmon/pmbus/adi,lt3074.yaml b/Documentation/devicetree/bindings/hwmon/pmbus/adi,lt3074.yaml
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..714426fd655a8daa96e15e1f789743f36001ac7a
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hwmon/pmbus/adi,lt3074.yaml
+> > @@ -0,0 +1,64 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/hwmon/pmbus/adi,lt3074.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Analog Devices LT3074 voltage regulator
+> > +
+> > +maintainers:
+> > +  - Cedric Encarnacion <cedricjustine.encarnacion@analog.com>
+> > +
+> > +description: |
+> > +  The LT3074 is a low voltage, ultra-low noise and ultra-fast transient
+> > +  response linear regulator. It allows telemetry for input/output voltage,
+> > +  output current and temperature through the PMBus serial interface.
+> > +
+> > +  Datasheet:
+> > +    https://www.analog.com/en/products/lt3074.html
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - adi,lt3074
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  regulators:
+> > +    type: object
+> > +    description: |
+> > +      list of regulators provided by this controller.
 > 
-> Looks pretty good.
+> You have only one regulator, so drop the "regulators". vout could be
+> here, but since you do not have any other resources, I doubt it stands
+> on its own either. This is even visible in your DTS - you named the
+> device as regulator, so logically this is the regulator. Regulator does
+> not have regulators (otherwise they could also have regulators... so
+> triple regulator).
 > 
-> > 
-> > select:
-> >   oneOf:
-> >     - properties:
-> >         compatible:
-> 
-> Add "contains" here. That way if someone puts another string in with 
-> these we still match and then throw a warning.
+> hwmon code might need some changes, but that's not really relevant for
+> proper hardware description.
 
-Good idea.
+Normally, I would agree, but it seems generic pmbus code expects this 
+structure. This just came up with changing another binding maintained by 
+'Not Me' to follow this structure. We're stuck with the existing way, so 
+I don't know that it is worth supporting 2 ways forever. OTOH, is it 
+guaranteed that these devices will only ever be pmbus devices or that 
+other regulator devices which are not handled as pmbus devices currently 
+will be in the future. If so, more flexibility in the bindings will be 
+needed.
 
-> 
-> >           enum:
-> >             - fsl,gianfar-tbi
-> >             - fsl,gianfar-mdio
-> >             - fsl,etsec2-tbi
-> >             - fsl,etsec2-mdio
-> >             - fsl,ucc-mdio
-> > 
-> >       required:
-> >         - compatible
-> > 
-> >     - properties:
-> >         compatible:
-> >           enum:
-> >             - gianfar
-> >             - ucc_geth_phy
-> 
-> You could move ucc_geth_phy because there's not a collision with it.
-
-ucc_geth_phy also requires device_type = "mdio". It is more compact
-to write it like this, but perhaps clarity wins out here, and this
-requirement should be expressed with an "if:"?
-
-> Add a comment somewhere that this is all because of a reuse of gianfar.
-
-Will do.
-
-> 
-> >         device_type:
-> >           const: mdio
-> > 
-> >       required:
-> >         - compatible
-> >         - device_type
-> 
-> You can move 'required: [compatible]' out of the oneOf.
-
-Will do.
-
-
-Thanks,
-J. Neuschäfer
+Rob
