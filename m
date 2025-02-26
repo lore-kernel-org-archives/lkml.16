@@ -1,95 +1,97 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020E621CC66
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:46:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8C1254B0D;
+	Wed, 26 Feb 2025 19:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740599217; cv=none; b=dlmT6FWMrHwjxUeTbipYnAUQLZ/PkIms2kjVFQ4JphwMiuvow1aa3aV7ylbSym53lj5qgs/LQHl76aUhB3ioCcTgMc0ifLuHx0PTQlfotYuDYm0DSPcRaU3HLeS+UAg/uzeDoA3gHtL0Vdj4yyEIZ5OPOW2dSvxFz5vtfReyX+k=
+	t=1740599261; cv=none; b=pZWD5WAf07lf2eo6XzvRqhTTd9jDzcqchBlNLGpH7LuqmUdTf7IbvnfBK3VfnNgJEytvqLDgplr5c2uWZzXMDh9WRtpRY7nTawlH1yJF8wUBQ3uOcU2hLf75x5WGPDOWN7G3TjGu0TTjvYvE57KPjJYFmucw0GAshsPLZJjoJps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740599217; c=relaxed/simple;
-	bh=kmXsm0tu1kCQ1GFE0RiAQ4Mdk6NvP8QTIiy8MYMTOJ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eztVJOjtsPwFuw65udLeJyo6cpZkqheMOt8aQTRikSiTWqEYriNVfb2KCtCKvpGJVEsc4u0qD3pDilQr8jmkkikCyr00MCvuCSv0dqBrBTjCtV0Ke4NwqhHxWp/7/uWMjglGS3+bvz7N9Anw71sqCTTbX9e3ggrzZHP5bADIlRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JbJ9Wjw7; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740599261; c=relaxed/simple;
+	bh=kSTQh4ZFrGmP0eQD82eB6qaqkRhJbOfdSRo8DWtPJXY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Oi+WZWrugsAjhVnNkwAlhHXjdiHBDeMxmLMFf1beJbZLBZfHhMhTxGNP9w9kUJS72Btg8k5XqjXCpnGMFFY0cn4UIfN5Wm18ZtO2Cuz+rt6NKRnLCp9dhZ4knz0Vcgp3twDxUl5m4lLd+ule8NlW/rj/Eqwbr/xrXAoTlH+HYdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ARv1ZI1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JbJ9Wjw7"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abb86beea8cso23940266b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:46:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740599213; x=1741204013; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aDq2bqWbHjLfc7ZX5wzS8caIXUgF6MrSjsLg41kQmUQ=;
-        b=JbJ9Wjw7nZz9GkiBVUTvNWjiGIaAZot1Wb97jWoS31zp14taon+k28j3Z4hVbAIMW1
-         1Aw+yren7/eUSko9AyT7QMjzN05XQkr8ZkXfCdE2mvt93fpWQna1Vk8waO1XVgJEAEHJ
-         ML+R3zSIfrpavRWwzxYRz42e7L58ChP3LipCE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740599213; x=1741204013;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aDq2bqWbHjLfc7ZX5wzS8caIXUgF6MrSjsLg41kQmUQ=;
-        b=Phi74LB9FjTi/zygcBI8/suLk80m867tKc7qDfJboixTcpLkYBAJHs0av3bdBTWSFg
-         CqBq5Kr2ByUXBc9ReO12TYnCzmJwLknkJXJYVrOc0RRnOIgRm9C72nf59vmX7/oDFzK8
-         Lg+IgE3ztzWLybLGwW2DZDE7xh6X6EBUbhIvr6LDKKEUpcOKjWJB7P8YAjZTMyTyOggN
-         x5gpa5tRiD343xWfJYngNRmbUcDuMrtbrBf6mCwfdHz0JmG9s8xTYwfl1MB6jjgJV0za
-         eujfnlX/ceRwVf4hRsZgX/mhFFwyshPbPzGwXkGnQRBN4VKR2yOQq9DX6mKbmPvMonaX
-         toVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaXR0SVWpggEUbWKTpK4u2vDb5J1YYcVn/95XeyqVBA2N4BfoRxC9REiNokDRClVJforNwU9f4L+YUP5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA7AQec/cwE3sK/N7DW8/Bax4dmTm7ElY7yB/wu0FlUTeLMNvz
-	30FCKVDOWU+o/4JjPAkXYT2rcIWe0tCAoS9U9A+CNuiFNm7x3/P2eZ4yE259UvA65JnX9XqG59h
-	Bgk8nng==
-X-Gm-Gg: ASbGncvrwe4VoWF2F20x7k8a+lhpDMPR3IKWQlz6CWz7VZKbb9KYF9McCk/beYABcLn
-	U8QG0jZ0TpPdjiETCyvmYTBZmZjz+otgZt7B/Ws7eV/wam3Xq7sfQt5SFgmUarCarV33BBokR/U
-	88ddPV7c6SJTk594wMGfvFyd7DTMdTICHnuva4Byux/iulX7Jf0gr7ra1FcRiUKiyHJitaIVY9i
-	dH53DE2sZkWwNOBO6X6iTWcqz84SmUtHi0PReX6goeypMFPx9z8sxJuTJMtZYTpzcH+B6jcR2Xq
-	UsGLU5ykjLekO1fWeNq3skfeCOuYNCz0mk89lU+4FqbyZLiZzrEyqMFX5D59Ze4qJQFcrSdsqsU
-	5
-X-Google-Smtp-Source: AGHT+IEo/d0sT2+GuVfJTjb22M3EebSa2FujU4u19dUKVQ6MbBEieg/d2PMPjQP3E4wE3WVizUIQfQ==
-X-Received: by 2002:a17:907:9712:b0:ab7:ea47:dee1 with SMTP id a640c23a62f3a-abeeef7508amr565657266b.48.1740599212904;
-        Wed, 26 Feb 2025 11:46:52 -0800 (PST)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2054d58sm384117866b.148.2025.02.26.11.46.52
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 11:46:52 -0800 (PST)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abec925a135so22809866b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 11:46:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWLPll5HMHDhJBRtvamu6ikjEl6h+ckVp2QAKdMMkarb2MLFSNimSFVwurgDTYn38UjOUC8UqwkwEuQYsU=@vger.kernel.org
-X-Received: by 2002:a17:907:c407:b0:ab7:c893:fc80 with SMTP id
- a640c23a62f3a-abeeedd7806mr626760566b.24.1740599211884; Wed, 26 Feb 2025
- 11:46:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ARv1ZI1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D51C4CED6;
+	Wed, 26 Feb 2025 19:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740599260;
+	bh=kSTQh4ZFrGmP0eQD82eB6qaqkRhJbOfdSRo8DWtPJXY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=ARv1ZI1iWU+FJN4wd1NHMNnWSE2HLfdqhs2UhZvvlAhE7ok3kR9USW8KWuKX9Y9jW
+	 QW0ISZG7qV7vcsiapztWdMz2XTz5tP4M7gWKHV/l0UB8BUoYuzDDKxk7vUs9nLlurV
+	 Q5o0tCJDn6b9TxMmqleEqrPxPfXF2kOjaON7tu+jhkkMbxxnohoJvPZRjx8wxJpA1G
+	 dYMJgCYDbNSivxfHWFZF77p+NJY7OXeIHnio7KeWgu2x/HrXzBFdl8F0ZOLNyyBmb7
+	 cuc8aCsAswYU0+vB5A8+Z3thcNBcMgX0IYpuHyE8uLRdSKeThpk+rIaJoGgb/8GYvD
+	 Q6VI7ehdWy+Qg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Frederic Weisbecker" <frederic@kernel.org>
+Cc: "Boqun Feng" <boqun.feng@gmail.com>,  "Miguel Ojeda"
+ <miguel.ojeda.sandonis@gmail.com>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Thomas Gleixner" <tglx@linutronix.de>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Lyude Paul" <lyude@redhat.com>,  "Guangbo Cui" <2407018371@qq.com>,
+  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel Almeida"
+ <daniel.almeida@collabora.com>,  "Tamir Duberstein" <tamird@gmail.com>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  "Miguel Ojeda" <ojeda@kernel.org>
+Subject: Re: [PATCH v9 01/13] rust: hrtimer: introduce hrtimer support
+In-Reply-To: <Z79B4brrB_-SBstl@localhost.localdomain> (Frederic Weisbecker's
+	message of "Wed, 26 Feb 2025 17:31:29 +0100")
+References: <Z7yUTNEg6gMW0G7b@Mac.home>
+	<CANiq72kx31exTFohb3+9_=PGUq_JtqpCvG8=oQUc_gZB+De5og@mail.gmail.com>
+	<Z7ye0MsACNWe7Mbr@Mac.home>
+	<CANiq72=qayfPk+W4BRiXe9xBGcgP2zPf-Q3K6GXTg8MKy-Kg=Q@mail.gmail.com>
+	<WlwmQ3r8VXTu77m77jclUgLjPh65ztwxUu_mXaElarFHBBiG2kWi0ZLYWNxKAUF9LK2QYrOWhtlFYhwaaNjYRA==@protonmail.internalid>
+	<Z7yl-LsSkVIDAfMF@Mac.home> <87msebyxtv.fsf@kernel.org>
+	<4UoaifxB7JgBVKsNQyFR_T8yc3Vtn5TLAEdxdXrojNmOzJSEncopauEyjDpnbqzr8Z74ZWjd_N-bB-BwBS-7aQ==@protonmail.internalid>
+	<Z7zF8KF9qTCr_n4l@boqun-archlinux> <87bjuryvb0.fsf@kernel.org>
+	<YHV6PAwDnW48w8pF0E79C4QpO8sH_MSXF7-b9H_kxDetoAA3tlCUC7Udr_u0UUoBrelCaFusL4F8HyiOHr9qgw==@protonmail.internalid>
+	<Z79B4brrB_-SBstl@localhost.localdomain>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Wed, 26 Feb 2025 20:41:27 +0100
+Message-ID: <87wmdctrx4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <174051422675.10177.13226545170101706336.tip-bot2@tip-bot2>
- <CAHk-=whfkWMkQOVMCxqcJ6+GWdSZTLcyDUmSRCVHV4BtbwDrHA@mail.gmail.com>
- <Z76APkysrjgHjgR2@casper.infradead.org> <CAHk-=wj+VBV5kBMfXYNOb+aLt3WJqMKFT0wU=KaV3R12NvN5TA@mail.gmail.com>
- <Z76R6ESSwiYipQVn@casper.infradead.org> <CAHk-=whS1uq_4hEgkZJogv_HMhe_PJ-RyMs6E303_Pa+W0zx0A@mail.gmail.com>
- <Z77zNK7mRdjwILL7@gmail.com>
-In-Reply-To: <Z77zNK7mRdjwILL7@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 26 Feb 2025 11:46:35 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wj9D2AK01nqOTkgOmHX16RmJBAwixuauaG7vKfhEH7HKA@mail.gmail.com>
-X-Gm-Features: AQ5f1Jrk6XsYr3MaK4Awbj7yu4VkLzSx6BA6s2x3ZGWN9f_Hpcj1UKc3WhiiBro
-Message-ID: <CAHk-=wj9D2AK01nqOTkgOmHX16RmJBAwixuauaG7vKfhEH7HKA@mail.gmail.com>
-Subject: Re: [tip: x86/mm] x86/mm: Clear _PAGE_DIRTY when we clear _PAGE_RW
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-tip-commits@vger.kernel.org, kernel test robot <oliver.sang@intel.com>, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 26 Feb 2025 at 02:56, Ingo Molnar <mingo@kernel.org> wrote:
+"Frederic Weisbecker" <frederic@kernel.org> writes:
+
+> Le Mon, Feb 24, 2025 at 08:52:35PM +0100, Andreas Hindborg a =C3=A9crit :
+>> > It's of course up to hrtimer maintainers. But I personally nack this
+>> > kconfig, because it's not necessary, and hrtimer API has been stable f=
+or
+>> > a while.
+>>
+>> Having the switch is fine for me, removing it is fine as well. It's just
+>> an added convenience that might come in handy. But having this kconfig
+>> very close to zero overhead, so I do not really understand your
+>> objection. I would like to better understand your reasoning.
 >
-> Is this explanation better?
+> If you choose to make a such a Kconfig switch, it would only make sense
+> in order to spare some bytes when no drivers use it for example. But if
+> you're afraid that the Rust binding is on the way while the core is
+> changing some API then I guess simply disabling Rust would be enough for
+> testing.
+>
+> I don't think it's necessary (unless it's strictly selected by drivers).
+> But it's your call.
 
-Ack. Just making it clear that it's always kernel pages, never a user
-address range makes it fine in my book,
+I that case, I will drop it. Thanks for chiming in.
 
-       Linus
+
+Best regards,
+Andreas Hindborg
+
+
