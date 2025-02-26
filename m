@@ -1,71 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4090021B9D2;
-	Wed, 26 Feb 2025 13:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F184121A421
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 13:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740576460; cv=none; b=r4hn11LD4rSgrnMmtxYeW9n0i0VWDlJ/kUOmPkmaQkfoTTivp3j7p1QDN89yPvuIFzb6IPoSw/hTBDPPYZiojJ1j//L9B7aK6DhYf48UtdQiTEEOa3W48ECZDaJPn9svTR59K8ZGj7Qnjee555AKU5kewmxGsC9LtYzcuNpsips=
+	t=1740576470; cv=none; b=Pvoc6zEjdnc40jP4Qn6NVkJt7lNQEwmq/DxwN+abGaaMRu1e78fSnoJiK+h2nk3rUD7raviW2A5agqJ5gVEqBNJy6SsxUVM5GTt0hxO7d4nxGAGt5FqE7Jjkk+RrfgMX1iCtXn2qCvlwkhqM7iCwvclndpnWb8fcFS11zVazPtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740576460; c=relaxed/simple;
-	bh=ZUwPDeojIM8ZR4NgP45zcqpCKyZ98Qjn+9vfobavu2I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pMY+mMBujOO880Yu7eZVMEmTKYngRFEZk97PFWMd39cVD4dwTjYkJXGxhZ+KHDf64KUJeJdGsYGaT6Kg8c6qcnA19F4GnNW9o6EppF7zKTHzCuRxHMCgLIgIyzGdU9FVHG1dJx52u+nzb0nx9f+sbX1jvZdYVeeoBkHs//bT2hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: yegpXBg+SRS+TSD/v7PD7w==
-X-CSE-MsgGUID: ojROo2MVTW+qkYDKU4N3ug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="45332309"
-X-IronPort-AV: E=Sophos;i="6.13,317,1732608000"; 
-   d="scan'208";a="45332309"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:27:38 -0800
-X-CSE-ConnectionGUID: 864gnXZ8S86Vm4AYh7hhGg==
-X-CSE-MsgGUID: DTuR2PDQSxSv0zs4Wq/Iow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117624304"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 05:27:36 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andy@kernel.org>)
-	id 1tnHRl-0000000FKmU-0LKu;
-	Wed, 26 Feb 2025 15:27:33 +0200
-Date: Wed, 26 Feb 2025 15:27:32 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Haoxiang Li <haoxiang_li2024@163.com>
-Cc: geert@linux-m68k.org, u.kleine-koenig@pengutronix.de,
-	erick.archer@outlook.com, ojeda@kernel.org, w@1wt.eu,
-	poeschel@lemonage.de, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v3] auxdisplay: hd44780: Fix a potential memory leak in
- hd44780.c
-Message-ID: <Z78WxDiEIaYSaQfz@smile.fi.intel.com>
-References: <20250226101213.3593835-1-haoxiang_li2024@163.com>
+	s=arc-20240116; t=1740576470; c=relaxed/simple;
+	bh=U4JXAdHq1oPHV5jfSimQVO3olPzSss/NVG5Q/o0L3a0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M+dRDmZW9L4EjKz9OYyLAF/PL4d2fi05VnuyzACfa8KzzbAl46vitw8HIZJo1EhstO0h9HVbQTdh3Dte/lC0LYc4l9GWHz22kEwVnm62cQQMSaEmxWCwQyOg0ZRITYfDTAu1sutFl99lHUDqP7IEsPlbEjfuY44nqTGxjB3yKfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=iI5vuBVo; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="iI5vuBVo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=2H+4Lee7WxfCIUmBwi0YGZZHinb7DCHLwsRbSAu6RYM=; b=iI5vuBVonypsJ6z4rILCSdMyYC
+	vHo9O5UBplc9fUv/kZQhIeooLmljai1dcNRZh+ld4T1n4Lp0PvYmY5SZIdesthnVgYKTfU+ehaDhh
+	ML2flSeninZRKJDMtVk2R9Rxu3ujqj2gIZbGW20R2kUbhEY12Zme6JR0Ga89xjN8x6XB4isfK6AxI
+	/DXtDfd9Un1TUFNfk4fuXntjJkzLIQ9xu0sxXFeuNCV3W0iNhFfWut93MH/24h786kYSSbhkOakoC
+	7CRDFJwI7tNw0Pte764dfW5S/sOY7prDJQ+qMg2tg/chLWwR1xaiAzrQ3Y2c8wVLckh1tAEseF2zq
+	9dEPUEUA==;
+Received: from [177.83.214.207] (helo=localhost)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tnHRo-000yjA-LF; Wed, 26 Feb 2025 14:27:43 +0100
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	kernel@gpiccoli.net,
+	kernel-dev@igalia.com,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH] x86/tsc: Add debugfs entry to mark TSC as unstable after boot
+Date: Wed, 26 Feb 2025 10:27:13 -0300
+Message-ID: <20250226132733.58327-1-gpiccoli@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226101213.3593835-1-haoxiang_li2024@163.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 06:12:13PM +0800, Haoxiang Li wrote:
-> At the 'fail2' label in hd44780_probe(), the 'lcd' variable is
-> freed via kfree(), but this does not actually release the memory
-> allocated by charlcd_alloc(), as that memory is a container for lcd.
-> As a result, a memory leak occurs. Replace kfree() with charlcd_free()
-> to fix a potential memory leak.
-> Same replacement is done in hd44780_remove().
+Right now, we can force the TSC to be marked as unstable through
+boot parameter. There are debug / test cases though in which would
+be preferable to simulate the clocksource watchdog behavior, i.e.,
+marking TSC as unstable during the system run. Some paths might
+change, for example: the tracing clock is auto switched to global
+if TSC is marked as unstable on boot, but it could remain local if
+TSC gets marked as unstable after tracing initialization.
 
-The v2 was already applied.
+Hence, the proposal here is to have a simple debugfs file that
+gets TSC marked as unstable when written.
 
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+ arch/x86/kernel/tsc.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 88e5a4ed9db3..6bce5f3a2848 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -9,6 +9,7 @@
+ #include <linux/timer.h>
+ #include <linux/acpi_pmtmr.h>
+ #include <linux/cpufreq.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/clocksource.h>
+ #include <linux/percpu.h>
+@@ -1602,3 +1603,24 @@ unsigned long calibrate_delay_is_known(void)
+ 	return 0;
+ }
+ #endif
++
++#ifdef CONFIG_DEBUG_FS
++static ssize_t tsc_debugfs_write(struct file *f, const char __user *ubuf,
++				 size_t count, loff_t *ppos)
++{
++	mark_tsc_unstable("debugfs write");
++	return count;
++}
++
++static const struct file_operations tsc_debugfs_fops = {
++	.write	= tsc_debugfs_write,
++};
++
++static __init int tsc_debugfs_init(void)
++{
++	debugfs_create_file("mark_tsc_unstable", 0200, /* write only */
++			    arch_debugfs_dir, NULL, &tsc_debugfs_fops);
++	return 0;
++}
++late_initcall(tsc_debugfs_init);
++#endif /* CONFIG_DEBUG_FS */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1
 
