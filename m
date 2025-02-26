@@ -1,46 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B05254AED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E333625B675;
 	Wed, 26 Feb 2025 04:14:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740543283; cv=none; b=F84d6VQU8b/ZDwHd0gmA3RWKgfok/5n+DDQjpx11GjDFg5X8vHbIKXTIGnjkYPXM66JJr0Y8ml/b4HTbql3pbSDeJRYB6K1fLiHGPePdd/v04Vg778hCpZiA5/M80JMh1+UdoJ+raajBO9m/HlYnBX0TzMieJ9M/13ZQZpOmHd8=
+	t=1740543285; cv=none; b=Dq9pAPu9YNCCJIw26wxGmd+7hZjrVC2XLan2EqXy0P87bqAoB2jTiT3DFU3ZrLjIDVgFGDYhtHtLqVhcQ5Qbd3tHZG6Vxt5r6w7R/DdD6RcYl92UG39wi7MR+O66P+6wyAyanGheeMdDV5G+8vXYdaUQkh7oGZLZeIQMWcxX05k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740543283; c=relaxed/simple;
-	bh=avuDxrX+bDgNvLafMJuvmb3oYf4uTe94mdHy6Nw7USo=;
+	s=arc-20240116; t=1740543285; c=relaxed/simple;
+	bh=SgfwcNAGtGysz8w5ImfVW71Vm+58S1DAXlJz7MZp4Vc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ix+IJeU5JLNZEv0zsLDlArmhTtQ4xAuj6qqunaAHMcNcTN4bxHpdAEc+G/1R05e5breWHGH3uBMUAwe4I4ElNjs9sZBLDlQD+h/LnAp3wHz0Z05lg4yu+gjPyiFgz/0onHfsPzzdmgZHwg9E3HQPx6y+WZ9/Q5E0l10NYp96JSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZhA4fQo2; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=mqRKI3R4OVmn8r40XUx0iOsOtmVsX9LhyM0bR4ZZC7BrtDb/Xwuw7t8GwqHJWgTiEAAl92MEcnZY7XZRh/tjrMiIkftNZCL6J+Td+81OAlngXELYkwwoFiGQ2U9Yjd1t9v+wpWpI+OBzKeL/AP+AHhCZzjp3rENyhlsyFjrOQfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Fg8/A2UC; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZhA4fQo2"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PMXJYD015804;
-	Wed, 26 Feb 2025 04:14:11 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Fg8/A2UC"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PMWxxa012328;
+	Wed, 26 Feb 2025 04:14:22 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qQMOQZffzsMfKn3CfdTJ9UbXMyLWAPH3pYBo3aDkzCI=; b=ZhA4fQo2KOF+T+uo
-	/qsqalIzYaqqt0CuFnyPl9TDFzeIWZCic0e5e94EuC5M1WRU7Od6K1aJAvL2O1pH
-	qyE4R4P0+4e90tWz9ErHmiWo+tl40iCJ71EXmEynFvDqyF2jGhPHcj4VizQJVLrZ
-	vaUtVIndR3eQIdE0oqXxMBjsUOvG8Vu1u8QqkDROQN5VPH+2qTCXljWjv+EL3Ufg
-	VjH/JgXZatA/mPETj0wocujr6gNcou7D1d4st1gDfOzHkwiX8Ks0tOaStyp/FKIr
-	vPBP11MsBmIH19CuimFj15fteZXrC0wD5BVlUMG7bH2A7w8pkQGnS1UBGGdG4LhE
-	bhoMmQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prngp3v-1
+	9cyWBbkGS49vwWOjICuYMJBNYDFOfeu+z9/asngCMic=; b=Fg8/A2UC6VFoO/e/
+	mHhyZ3EjwHAtl3yeEkkZ8wgZ0hlnJaI0GJkJBE9e4xmDFUA2AhOvk4/CygahQGUn
+	DqTdml8Il8eOeoBChHQMPLRWMkTB0nCw+xIf4DdgmpZFODTJ9Fb9OzwtSMEyDulP
+	smpAr9c+2cBH015gPv4Bzw79hs14ITFe6VzVCCeSVraFnrdxT2dYIY2nY1a1Ntjy
+	qbL4KDzOQnoXdcMTksNmC1+9yqQ/Md/dhDqLxa+WfBFAOgyVKBFhRBpBiHgJ6MbT
+	3Ouser7Pcee2aDe5XMLHgOFg6e6tv5KPf/4Bt/pA0MD2pvBpHrZ7l9t/vm6xCerQ
+	gzrQbg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prk0p0n-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 04:14:11 +0000 (GMT)
+	Wed, 26 Feb 2025 04:14:22 +0000 (GMT)
 Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51Q4EA9a004978
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51Q4ELfh001970
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Feb 2025 04:14:10 GMT
+	Wed, 26 Feb 2025 04:14:21 GMT
 Received: from jiegan-gv.qualcomm.com (10.80.80.8) by
  nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 25 Feb 2025 20:14:04 -0800
+ 15.2.1544.9; Tue, 25 Feb 2025 20:14:15 -0800
 From: Jie Gan <quic_jiegan@quicinc.com>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach
@@ -62,9 +62,9 @@ CC: Tingwei Zhang <quic_tingweiz@quicinc.com>,
         <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v14 01/10] Coresight: Add support for new APB clock name
-Date: Wed, 26 Feb 2025 12:13:33 +0800
-Message-ID: <20250226041342.53933-2-quic_jiegan@quicinc.com>
+Subject: [PATCH v14 03/10] Coresight: Use coresight_etm_get_trace_id() in traceid_show()
+Date: Wed, 26 Feb 2025 12:13:35 +0800
+Message-ID: <20250226041342.53933-4-quic_jiegan@quicinc.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250226041342.53933-1-quic_jiegan@quicinc.com>
 References: <20250226041342.53933-1-quic_jiegan@quicinc.com>
@@ -80,45 +80,70 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01c.na.qualcomm.com (10.47.97.35)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: axoU75cAB6q7tFnV5R5IkvgkwnuGIpQb
-X-Proofpoint-ORIG-GUID: axoU75cAB6q7tFnV5R5IkvgkwnuGIpQb
+X-Proofpoint-GUID: 65VUx2CLG7DSOFUQaIHQKTTx0SYc_38J
+X-Proofpoint-ORIG-GUID: 65VUx2CLG7DSOFUQaIHQKTTx0SYc_38J
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-25_08,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 mlxlogscore=899 bulkscore=0 adultscore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 suspectscore=0 impostorscore=0
+ phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=783 malwarescore=0
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502100000 definitions=main-2502260031
 
-Add support for new APB clock-name. If the function fails
-to obtain the clock with the name "apb_pclk", it will
-attempt to acquire the clock with the name "apb".
+From: James Clark <james.clark@linaro.org>
 
+Use the new API, coresight_etm_get_trace_id, to read the traceid of the ETM
+device when call traceid_show via sysfs node.
+
+Signed-off-by: James Clark <james.clark@linaro.org>
 Reviewed-by: James Clark <james.clark@linaro.org>
 Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
 ---
- include/linux/coresight.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm3x-sysfs.c | 3 +--
+ drivers/hwtracing/coresight/coresight-etm4x-sysfs.c | 4 ++--
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 17276965ff1d..157c4bd009a1 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -459,8 +459,11 @@ static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
- 	int ret;
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+index 68c644be9813..b9006451f515 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x-sysfs.c
+@@ -1190,10 +1190,9 @@ static DEVICE_ATTR_RO(cpu);
+ static ssize_t traceid_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buf)
+ {
+-	int trace_id;
+ 	struct etm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
  
- 	pclk = clk_get(dev, "apb_pclk");
--	if (IS_ERR(pclk))
--		return NULL;
-+	if (IS_ERR(pclk)) {
-+		pclk = clk_get(dev, "apb");
-+		if (IS_ERR(pclk))
-+			return NULL;
-+	}
+-	trace_id = etm_read_alloc_trace_id(drvdata);
+ 	if (trace_id < 0)
+ 		return trace_id;
  
- 	ret = clk_prepare_enable(pclk);
- 	if (ret) {
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+index c767f8ae4cf1..e5216c0f60da 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+@@ -4,6 +4,7 @@
+  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+  */
+ 
++#include <linux/coresight.h>
+ #include <linux/pid_namespace.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/sysfs.h>
+@@ -2402,10 +2403,9 @@ static ssize_t trctraceid_show(struct device *dev,
+ 			       struct device_attribute *attr,
+ 			       char *buf)
+ {
+-	int trace_id;
+ 	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	int trace_id = coresight_etm_get_trace_id(drvdata->csdev, CS_MODE_SYSFS, NULL);
+ 
+-	trace_id = etm4_read_alloc_trace_id(drvdata);
+ 	if (trace_id < 0)
+ 		return trace_id;
+ 
 -- 
 2.34.1
 
