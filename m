@@ -1,122 +1,96 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB671E1E15
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 08:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6839D1A83FB;
+	Wed, 26 Feb 2025 08:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740558953; cv=none; b=CPtHFVpbRJAzxA6+Og0IoP0j9zGw/bIgJDRDNDWjjVYQENgm+fHfU0maqoqoZrHWjqm1Pj4MXG+yBl/+Iqm4Ir7teVkFTdCDcSIK57+zz2sPfNodDbjqtGqWYiL82uT/8iMOwDEUvavhptse1J/6O3uzeqUraxAwWWYUZhihrdY=
+	t=1740559079; cv=none; b=GNjq1gd5/LvB8y54o5wsnlrSYS+wpvaT9O1M21a/Xvv1Qv2dSunGUBTKHOZdxPScn+Ioay7lXClrQC4JgWHzsyAwUeThg43cqtyS9cPQVNYkkX/PSMpotMPg7KgcvulQrQFOO6w+lQWzOnCV/e9isfulf/mtlsnXh1WMWThwz/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740558953; c=relaxed/simple;
-	bh=8jC8GE4iiOuzSa2Zvx7LLBQ5XuHRNjDZasqAxsEZL7o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Il0nTgtbG8FZfORdAq//40kWXwS60NFpYpjVBfPMYGz/tlvc2irihLZ3+f4VlMwkaEFojLFEfo6ySZ/ZTPYyuxRgidUdwTRIxYxHu5nTM138Ohl4InPu5Q9Bomfnd4sCS3Psxvu5WqXDnpM8h2SAoRhOeugjNrEDi0kfqAFi99s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kBh6ZhOF; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kBh6ZhOF"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-3091fecb637so52570981fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740558949; x=1741163749; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bW1fZDIVdFn95WDQdT8nnBozEwJn/hwsIeBOhLkuZbM=;
-        b=kBh6ZhOFSiXipuX2+h53jGMkjbzsovYXSQj5PD/Gjd+BEtyPCTBZLjfIZ2AAJHd8Xs
-         cEdC5BhdSRZA9AwvFaJW/1j1SAiJGXHJSjX4fOmvAzjAjcKEcc2RCKiadgMLS005dcl3
-         Eh7+YP5VHcoQQi2oC0GtqaZJ1kPur9TwitPfZE9DXG3PWq1Ynq9a92gbcKH9uAelKhps
-         SgLNs31cl9olpWdbuTxadzzK7nXcBbIm1po3vSvvPBPfsmCrcogDbC5UFXlRpKHak32t
-         c3UIC/SaDOrWS4ZKzXpMqes5YiFMdQ2WT0ZwbpYvhqryIhv6OcWnvCwQoCP0LMZ173xt
-         nfeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740558949; x=1741163749;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bW1fZDIVdFn95WDQdT8nnBozEwJn/hwsIeBOhLkuZbM=;
-        b=OlqmnjDma2uLuJ7VMkZiQiMqsIRTNnovPn25MUttKBbPbn31ljxAYMDTZavjw7sq3i
-         nU+nFPVgP8r8Aq1k4iLfzoTR6HuxCYU7AGrzW6q6tBGF/yY5alm72+aqn6brtIuTR+mg
-         IaxoMb0PufBq1vE+nZfq3FLAtPWtxAn6n3mfKhgqDepYDf9kwTYuX470xPm+E8NQ8OkJ
-         M/lOSHIRCO8LKcH/OamNkSvEGsjfxq9/nHwkW77jIm3dlfZu9ilMiUkCAsW8/iN2ku0w
-         sbByX+LM2GRw56g5jRPSFnVrWsB0oluR/wrWuPBXEwln/m2VBlZDPPV2nuQrxN1jl45X
-         T0Mg==
-X-Forwarded-Encrypted: i=1; AJvYcCW7dp8ML80PoR1sbtwYHRLKZD+l74EsQ5XcSHc2qK9HUaNLllHAyZR1WQlE70o+4BFV51YrTtg1UsUV3fY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMubmjV/VIx3Y+driIajqzwdooe0wvEGCf6ScZQILT6GC7smwj
-	Dss21LT3hkpJnoNpOB2o8IVIKzYJ6q9ClKiGjrZj73N9fHzodLqOiLcMdVMCJQI=
-X-Gm-Gg: ASbGncuc5Vlul/+y1DROlO36zPMn6SfFCqXf0CBzPBEMHcYu4mwGadPdzZvdyzFsp1f
-	W44OVQ+27TfbZoQ+hci/pmWMF/6FT+U/kqPJy95XCNpfsDQbe06IpmTvyaEVG+8fpwiJea/dCni
-	xqN+YnCOyhCiwkZOpJw+xRlI5/1Gekn2sbkQbr7VN+iFtglDRSuKvw5u+9Qz98DfXw3NDqDW7bb
-	TIrsSmi8t4gAxGKoogew3PSudwJs2g7UQftc9Pz1bgFArVy8M/zcjymD/T2ilsKUR3ACDaPKeGN
-	elVS8BHG6PlOlwaz1tRKmKcF4L0zyKqX5Q==
-X-Google-Smtp-Source: AGHT+IFilW2vYILEBAZQ6VX4V6rTlc6qIxQwn+zrj7FCNmekcqLsTBXZ0G5XrZfa+NCP0HoIcj/A7A==
-X-Received: by 2002:a2e:9013:0:b0:308:e54d:6196 with SMTP id 38308e7fff4ca-30a80c7c5bfmr35663041fa.31.1740558949099;
-        Wed, 26 Feb 2025 00:35:49 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819ebe44sm4532701fa.30.2025.02.26.00.35.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 00:35:47 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Wed, 26 Feb 2025 10:35:45 +0200
-Subject: [PATCH] drm/ci: extend python-artifacts timeout
+	s=arc-20240116; t=1740559079; c=relaxed/simple;
+	bh=ZuhjPQ8IQ6b0dwP/OGt6yuaQL12SDYZvrO/wo8V1HiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C++pNKHH05TWwNUGr6wPFy8KU9S+ZfFU94y/ShJxMlrZlF9TGpaxST9+AM4dMilSZdTWQKbDzdbJgq8sQtfepGHdqy59ftR7wkzgxKqRnnka3Kfd59QFCcdL9j4ZkuztFQFgRhlFd6kFPZ1M5p1tbUax4BrEG2KOxFExTIxLF98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [183.174.60.14])
+	by APP-05 (Coremail) with SMTP id zQCowABHr8jM0r5ndgtBEA--.16274S2;
+	Wed, 26 Feb 2025 16:37:44 +0800 (CST)
+From: Ma Ke <make24@iscas.ac.cn>
+To: alex.hung@amd.com,
+	dillon.varone@amd.com,
+	Samson.Tam@amd.com,
+	chris.park@amd.com,
+	aurabindo.pillai@amd.com,
+	george.shen@amd.com,
+	gabe.teeger@amd.com,
+	Yihan.Zhu@amd.com,
+	Tony.Cheng@amd.com
+Cc: amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Ma Ke <make24@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] drm/amd/display: Fix null check for pipe_ctx->plane_state in resource_build_scaling_params
+Date: Wed, 26 Feb 2025 16:37:31 +0800
+Message-Id: <20250226083731.3584509-1-make24@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-ci-python-timeout-v1-1-0a9092a3d6fb@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAGDSvmcC/x3MPQqAMAxA4atIZgMasP5cRRxKjZrBVtoqSvHuF
- sdveC9BYC8cYCgSeL4kiLMZdVmA2bRdGWXOBqqoqYgUGsHjiZuzGGVnd0Zsa9XOZKjvGg25Ozw
- vcv/PcXrfD2ZEfV1jAAAA
-X-Change-ID: 20250226-ci-python-timeout-7167d2c2985a
-To: Helen Koike <helen.koike@collabora.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vignesh Raman <vignesh.raman@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=878;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=8jC8GE4iiOuzSa2Zvx7LLBQ5XuHRNjDZasqAxsEZL7o=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnvtJidks9NJNkSDHsJ3unFLdRLFWtCnNUFyzS5
- OBgONf2hFuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ77SYgAKCRCLPIo+Aiko
- 1dvrB/97AeYZX9Nm5BzkOiwf17Vo06dYUYXJx23U8aDBkskFD+/haGrGlvV0p/skwktkD/XlA2B
- vapgCO4I7Ch9KxBHLNFGO6p5sZJEaWjE9k+rHzlkGJMVV+SlB1n/eANuEZ55MQ9SjWQFf6gGWQG
- 4tOgzOPxbi6br5HQbSKIw8uuBJ3Jnrvm7/lAPr3zydjzjZ1xTUpySKO7m27Kwvrjk/bJITL43hT
- 0/jRarKxpWKsaO610qwBdo75oSscNgwR/WKUjspURYnQp/jN0e7iL3yIupkwqCo5c/UVz2qwDkA
- eb57SZeHwk/gZ+eFwEW4AhlQctWtKMB7eArR8cRRT3oH/3Zi
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowABHr8jM0r5ndgtBEA--.16274S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFW5ZrW7XFW5Zry3ur4Durg_yoW8JF47pw
+	s7GFWY9r1UCFn2ya9rJ3WkWFZxWayrWF4F9rW7J3WfX3W5Ary5KF98Cry7Wa15GFyvyw4a
+	q3ZrGw4qqFyqy3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBI14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
+	1j6rxdM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
+	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
+	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
+	0VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28Icx
+	kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
+X-CM-SenderInfo: ppdnvj2u6l2u1dvotugofq/
 
-The job has a timeout of 10 minutes, which causes a build failures as it
-is even unable to clone the repo within the specified limits. Extend
-the job's timeout to 1 hour.
+Null pointer dereference issue could occur when pipe_ctx->plane_state
+is null. The fix adds a check to ensure 'pipe_ctx->plane_state' is not
+null before accessing. This prevents a null pointer dereference.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Found by code review.
+
+Cc: stable@vger.kernel.org
+Fixes: 3be5262e353b ("drm/amd/display: Rename more dc_surface stuff to plane_state")
+Signed-off-by: Ma Ke <make24@iscas.ac.cn>
 ---
- drivers/gpu/drm/ci/build.yml | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/gpu/drm/ci/build.yml b/drivers/gpu/drm/ci/build.yml
-index 274f118533a7a1a0a4b8a768298fec624bfe67c2..e8d466c319275724687b8581c086b5ab352c3cd1 100644
---- a/drivers/gpu/drm/ci/build.yml
-+++ b/drivers/gpu/drm/ci/build.yml
-@@ -210,3 +210,6 @@ windows-msvc:
- yaml-toml-shell-py-test:
-   rules:
-     - when: never
-+
-+python-artifacts:
-+  timeout: 1h
-
+Changes in v2:
+- modified the patch as suggestions.
 ---
-base-commit: 130377304ed09e54ff35a8974372498aad7059f3
-change-id: 20250226-ci-python-timeout-7167d2c2985a
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index 520a34a42827..a45037cb4cc0 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -1455,7 +1455,8 @@ bool resource_build_scaling_params(struct pipe_ctx *pipe_ctx)
+ 	DC_LOGGER_INIT(pipe_ctx->stream->ctx->logger);
+ 
+ 	/* Invalid input */
+-	if (!plane_state->dst_rect.width ||
++	if (!plane_state ||
++			!plane_state->dst_rect.width ||
+ 			!plane_state->dst_rect.height ||
+ 			!plane_state->src_rect.width ||
+ 			!plane_state->src_rect.height) {
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.25.1
 
