@@ -1,345 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D827233723;
-	Wed, 26 Feb 2025 18:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA38023815F
+	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:06:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740593166; cv=none; b=E1S++he4OiYGLfcpmCbk+vNcR/5j9w/XaX35cjq9xuFDydJETa1IKAz3NdhyIcOfFI5kJ2+jLyj8z5qPOW2WuiuRRsUMgUS+7p6IDE17UB62D4q7x3cUBV+Z5EqOOf7xo8/2J57PxGyOLLY6sT41+OJN1UgpBw2u8SWT9La4MN0=
+	t=1740593170; cv=none; b=Nife9aYUWdeyF2nANDcnS5FMSJbMfBXhTFcR1EGn4LF+CERF4/NXKJ746km/314QqVHGNjcR0kxwrvwoX/a/KqY1+i3gkLJW5VGDk+2jSzBB9LRZAgTnDGGLGWDsJAWnSQ+jIWZ7dLOH1j7LGmiBkTMEoy7c3szt/OweZ7qlhIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740593166; c=relaxed/simple;
-	bh=boaa1rKuGkNF7eS2wMk8VzWuW0fhOvb8sYxWDEMTkvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oBNWvFoRATQPdu5zTuNqX9E7MVCihqkBk29ZZvDbTSfdtPx0BeTxGyWR5Mqb/yHY+HHt8TgPpk4qwOiw/9qajnhQxtK3DTLGt3OvUSupEreGCedKh8+UQWB43dVAhu/pMbCAGVfjAtKi56Z58I0malr/4Qyyo8ewW1vwdxw0dBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ejtr0WiV; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740593170; c=relaxed/simple;
+	bh=ZFzEnDq8KgjuURenm9ik6dY5TfGXOxRURJTNWlmo0+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nk7icyx/GMceamFT542xnwaj/UXMCBhh2mrsjP4JRBTCOAejuWykf4RpWsTpcdYaExvI4nyrXAkKG6ndCWSpHd/a6JDsI9lapcd6ifMFcwGfg9sLmaJvOmjEK46uHA3u4NNNDrwdjTEHUv/tlxSxD+WeJ/W702d1ufZLarMiiSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLY2O273; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ejtr0WiV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740593164; x=1772129164;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=boaa1rKuGkNF7eS2wMk8VzWuW0fhOvb8sYxWDEMTkvw=;
-  b=ejtr0WiVyhnPoQpFF8JHPoiMasIr6OkD96tHeQw2Ct85381+45K96LO3
-   ZUkXIkbO0/hNZedkBVg6i4HeYAwixK2FLaG9zAramaVNweuBa8v9QI0hM
-   vNe6+bVz/c6noiw/7ImDPopD89XWPiFMZ0el/EZylikViFEJ8HQ4Gqvu5
-   /rGQ9mLTYPUvubgrRoFB30TztGfPJnXC34/2AwJ4ZPxaitB2He/qOTC76
-   KAH/TJy3CH211LF1QlBmpz8/VrGEfkLTrcmlnB+QmFRXwM9EVb7jBJ6jF
-   +GRikMhTVg4GoqoyQVURJ7VmkT+ypCDuSEiswKZK428SL8v8K8g2br+m8
-   Q==;
-X-CSE-ConnectionGUID: +AYIuAijQaqluvqi8kneQw==
-X-CSE-MsgGUID: KMOPhjv5SduZxzjnlsXpkg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41653946"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41653946"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 10:06:04 -0800
-X-CSE-ConnectionGUID: 5peu6zjNR4eePUvGme2ghw==
-X-CSE-MsgGUID: QqTddDsIRJy4z9CjhFwz9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="116641759"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO [10.245.245.27]) ([10.245.245.27])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 10:05:58 -0800
-Message-ID: <cc402132-2e82-41d2-8981-f1b9a795c1a1@intel.com>
-Date: Wed, 26 Feb 2025 18:05:55 +0000
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLY2O273"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-5fce03395d4so36606eaf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 10:06:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740593167; x=1741197967; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vy1ju9SebX5v1mWl0+k0224cFXdsKGZNI8ymJ4KND2o=;
+        b=LLY2O273i/+mYTUrp+zKj//tPOJZQYIg7K6atdN41odO+W7mkOgyFCM28Lz9/q9jWS
+         zLE7oiHBwtCI3an06y+5iNz2rxMohcH58mh3e90ubxHX4SDAUDsFmfbZcEYr+5VJCVk+
+         WK7zhbwC73H/UtHbymQ6fNM6d0fQDp0rUNmRCptIzM2+S/7ZRqIaD/XaR0s5rfxRm3U3
+         AryLuhcwm49L71wlY25W2AGIe6MIy41tMZHqXJ7nYIlfzqY8kc7BO+GX4Cl74v6hBLH4
+         imQADLEQj9CzM3K6qbnQOyEziWkBWq9uQmqG5Etxh8VslBzH0/+goU+GXefx0CEUxz2B
+         WocQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740593167; x=1741197967;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vy1ju9SebX5v1mWl0+k0224cFXdsKGZNI8ymJ4KND2o=;
+        b=Uzv9nfzvMZ9qZksfEpvzY3y7u8TNytnRRMaiCJ+uQIdJiJn8vbzwjU+oTjEYjJcxLt
+         gTvI6jVDUKBpU1pwB8T1XBYvJddh7K869+gX4g1GngNvW+TEyaFjaps0vRq1fzBg2TPJ
+         eydwD3+N9z1NCYg/S1qxIYKlgwkGFoFfhMJMP9OtiJfjhNJj9+gBX3kVJzYpmkWk1JJA
+         N5smcaKv5CXIVDGtQTUtP3N88I6KWf+BNlm+wHOY/QO/ndAeZDsx9lRwdiAegBJPSFTf
+         MdK5SG63O/e3taSe+30Q4RUa9mFJI2inYgvKUPCf2ARn+LXvSfPr8dBzN+GgSkoQUZjG
+         ao1g==
+X-Gm-Message-State: AOJu0YwbOlM/8mXSY1GQKaZScP4kWKjtq1/726oPRsPgKD3W2+Iaesuy
+	0JDp9FJyScTFV0w/5WAL+J0rjA2TPf8zTphSJ5IuX1tZJpSfD3cGk2+1
+X-Gm-Gg: ASbGncvxYohAr83IVmQEk8OJbO0v49aL9uJd/UjrfpXwUYJ9E65Z2RNdhbiLaBINxnE
+	VhTWf6bSAdXR9Q7F029svp+iDEmx4y+Au+lv4ewFEe0SmzSH3SohZ3fFdCyqDlUQQDd6poUtBrg
+	LrlDtwWu/luUj9agCqL2t+D5bgftTaYIC6C3DPCaV5UD1UhrG7LSM+td7sbmfUF2baC/+E1Baeo
+	Eqxa+rkysVH9X7ACU/rGQSFXBksQ8+AC4RHUc66qFfMYm0w4a+yj59mrSygbjJmoUPyOpjaL9nD
+	T2Tjz5g=
+X-Google-Smtp-Source: AGHT+IFUnBI5a7MiiktlMTCWimF3hQEAHEbEDDvLuwmkHUGlozp+ySgd/sKZIK34KglEqEaii0rq9g==
+X-Received: by 2002:a05:6820:1611:b0:5fc:e3b3:3c10 with SMTP id 006d021491bc7-5fe9d5d390cmr2129145eaf.2.1740593167435;
+        Wed, 26 Feb 2025 10:06:07 -0800 (PST)
+Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5fe9428c8b3sm755069eaf.39.2025.02.26.10.06.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 10:06:05 -0800 (PST)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH v2 09/11] x86/percpu: Move current_task to percpu hot section
+Date: Wed, 26 Feb 2025 13:05:28 -0500
+Message-ID: <20250226180531.1242429-10-brgerst@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250226180531.1242429-1-brgerst@gmail.com>
+References: <20250226180531.1242429-1-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] drm/xe/bo: fix alignment with non-4K kernel page
- sizes
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>, jeffbai@aosc.io,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
- Francois Dugast <francois.dugast@intel.com>,
- Alan Previn <alan.previn.teres.alexis@intel.com>,
- Zhanjun Dong <zhanjun.dong@intel.com>, Matt Roper
- <matthew.d.roper@intel.com>, Mateusz Naklicki <mateusz.naklicki@intel.com>,
- Mauro Carvalho Chehab <mauro.chehab@linux.intel.com>,
- =?UTF-8?Q?Zbigniew_Kempczy=C5=84ski?= <zbigniew.kempczynski@intel.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Kexy Biscuit <kexybiscuit@aosc.io>,
- Shang Yatsen <429839446@qq.com>, stable@vger.kernel.org,
- Haien Liang <27873200@qq.com>, Shirong Liu <lsr1024@qq.com>,
- Haofeng Wu <s2600cw2@126.com>
-References: <20250226-xe-non-4k-fix-v1-0-80f23b5ee40e@aosc.io>
- <20250226-xe-non-4k-fix-v1-1-80f23b5ee40e@aosc.io>
- <wcfp3i6jbsmvpokvbvs5n2yxffhrgu6jyoan3e3m6tb7wbjaq6@tbsit7ignlef>
- <Z76WIgGvvhlbYl/j@lstrano-desk.jf.intel.com>
- <af689d4b-204d-495b-a7e8-0f7632b43153@intel.com>
- <Z78vTt8Ph9opzJmf@lstrano-desk.jf.intel.com>
-Content-Language: en-GB
-From: Matthew Auld <matthew.auld@intel.com>
-In-Reply-To: <Z78vTt8Ph9opzJmf@lstrano-desk.jf.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 26/02/2025 15:12, Matthew Brost wrote:
-> On Wed, Feb 26, 2025 at 10:38:40AM +0000, Matthew Auld wrote:
->> On 26/02/2025 04:18, Matthew Brost wrote:
->>> On Tue, Feb 25, 2025 at 09:13:09PM -0600, Lucas De Marchi wrote:
->>>> On Wed, Feb 26, 2025 at 10:00:18AM +0800, Mingcong Bai via B4 Relay wrote:
->>>>> From: Mingcong Bai <jeffbai@aosc.io>
->>>>>
->>>>> The bo/ttm interfaces with kernel memory mapping from dedicated GPU
->>>>> memory. It is not correct to assume that SZ_4K would suffice for page
->>>>> alignment as there are a few hardware platforms that commonly uses non-4K
->>>>> pages - for instance, currently, Loongson 3A5000/6000 devices (of the
->>>>> LoongArch architecture) commonly uses 16K kernel pages.
->>>>>
->>>>> Per my testing Intel Xe/Arc families of GPUs works on at least
->>>>> Loongson 3A6000 platforms so long as "Above 4G Decoding" and "Resizable
->>>>> BAR" were enabled in the EFI firmware settings. I tested this patch series
->>>>> on my Loongson XA61200 (3A6000) motherboard with an Intel Arc A750 GPU.
->>>>>
->>>>> Without this fix, the kernel will hang at a kernel BUG():
->>>>>
->>>>> [    7.425445] ------------[ cut here ]------------
->>>>> [    7.430032] kernel BUG at drivers/gpu/drm/drm_gem.c:181!
->>>>> [    7.435330] Oops - BUG[#1]:
->>>>> [    7.438099] CPU: 0 UID: 0 PID: 102 Comm: kworker/0:4 Tainted: G            E      6.13.3-aosc-main-00336-g60829239b300-dirty #3
->>>>> [    7.449511] Tainted: [E]=UNSIGNED_MODULE
->>>>> [    7.453402] Hardware name: Loongson Loongson-3A6000-HV-7A2000-1w-V0.1-EVB/Loongson-3A6000-HV-7A2000-1w-EVB-V1.21, BIOS Loongson-UDK2018-V4.0.05756-prestab
->>>>> [    7.467144] Workqueue: events work_for_cpu_fn
->>>>> [    7.471472] pc 9000000001045fa4 ra ffff8000025331dc tp 90000001010c8000 sp 90000001010cb960
->>>>> [    7.479770] a0 900000012a3e8000 a1 900000010028c000 a2 000000000005d000 a3 0000000000000000
->>>>> [    7.488069] a4 0000000000000000 a5 0000000000000000 a6 0000000000000000 a7 0000000000000001
->>>>> [    7.496367] t0 0000000000001000 t1 9000000001045000 t2 0000000000000000 t3 0000000000000000
->>>>> [    7.504665] t4 0000000000000000 t5 0000000000000000 t6 0000000000000000 t7 0000000000000000
->>>>> [    7.504667] t8 0000000000000000 u0 90000000029ea7d8 s9 900000012a3e9360 s0 900000010028c000
->>>>> [    7.504668] s1 ffff800002744000 s2 0000000000000000 s3 0000000000000000 s4 0000000000000001
->>>>> [    7.504669] s5 900000012a3e8000 s6 0000000000000001 s7 0000000000022022 s8 0000000000000000
->>>>> [    7.537855]    ra: ffff8000025331dc ___xe_bo_create_locked+0x158/0x3b0 [xe]
->>>>> [    7.544893]   ERA: 9000000001045fa4 drm_gem_private_object_init+0xcc/0xd0
->>>>> [    7.551639]  CRMD: 000000b0 (PLV0 -IE -DA +PG DACF=CC DACM=CC -WE)
->>>>> [    7.557785]  PRMD: 00000004 (PPLV0 +PIE -PWE)
->>>>> [    7.562111]  EUEN: 00000000 (-FPE -SXE -ASXE -BTE)
->>>>> [    7.566870]  ECFG: 00071c1d (LIE=0,2-4,10-12 VS=7)
->>>>> [    7.571628] ESTAT: 000c0000 [BRK] (IS= ECode=12 EsubCode=0)
->>>>> [    7.577163]  PRID: 0014d000 (Loongson-64bit, Loongson-3A6000-HV)
->>>>> [    7.583128] Modules linked in: xe(E+) drm_gpuvm(E) drm_exec(E) drm_buddy(E) gpu_sched(E) drm_suballoc_helper(E) drm_display_helper(E) loongson(E) r8169(E) cec(E) rc_core(E) realtek(E) i2c_algo_bit(E) tpm_tis_spi(E) led_class(E) hid_generic(E) drm_ttm_helper(E) ttm(E) drm_client_lib(E) drm_kms_helper(E) sunrpc(E) la_ow_syscall(E) i2c_dev(E)
->>>>> [    7.613049] Process kworker/0:4 (pid: 102, threadinfo=00000000bc26ebd1, task=0000000055480707)
->>>>> [    7.621606] Stack : 0000000000000000 3030303a6963702b 000000000005d000 0000000000000000
->>>>> [    7.629563]         0000000000000001 0000000000000000 0000000000000000 8e1bfae42b2f7877
->>>>> [    7.637519]         000000000005d000 900000012a3e8000 900000012a3e9360 0000000000000000
->>>>> [    7.645475]         ffffffffffffffff 0000000000000000 0000000000022022 0000000000000000
->>>>> [    7.653431]         0000000000000001 ffff800002533660 0000000000022022 9000000000234470
->>>>> [    7.661386]         90000001010cba28 0000000000001000 0000000000000000 000000000005c300
->>>>> [    7.669342]         900000012a3e8000 0000000000000000 0000000000000001 900000012a3e8000
->>>>> [    7.677298]         ffffffffffffffff 0000000000022022 900000012a3e9498 ffff800002533a14
->>>>> [    7.685254]         0000000000022022 0000000000000000 900000000209c000 90000000010589e0
->>>>> [    7.693209]         90000001010cbab8 ffff8000027c78c0 fffffffffffff000 900000012a3e8000
->>>>> [    7.701165]         ...
->>>>> [    7.703588] Call Trace:
->>>>> [    7.703590] [<9000000001045fa4>] drm_gem_private_object_init+0xcc/0xd0
->>>>> [    7.712496] [<ffff8000025331d8>] ___xe_bo_create_locked+0x154/0x3b0 [xe]
->>>>> [    7.719268] [<ffff80000253365c>] __xe_bo_create_locked+0x228/0x304 [xe]
->>>>> [    7.725951] [<ffff800002533a10>] xe_bo_create_pin_map_at_aligned+0x70/0x1b0 [xe]
->>>>> [    7.733410] [<ffff800002533c7c>] xe_managed_bo_create_pin_map+0x34/0xcc [xe]
->>>>> [    7.740522] [<ffff800002533d58>] xe_managed_bo_create_from_data+0x44/0xb0 [xe]
->>>>> [    7.747807] [<ffff80000258d19c>] xe_uc_fw_init+0x3ec/0x904 [xe]
->>>>> [    7.753814] [<ffff80000254a478>] xe_guc_init+0x30/0x3dc [xe]
->>>>> [    7.759553] [<ffff80000258bc04>] xe_uc_init+0x20/0xf0 [xe]
->>>>> [    7.765121] [<ffff800002542abc>] xe_gt_init_hwconfig+0x5c/0xd0 [xe]
->>>>> [    7.771461] [<ffff800002537204>] xe_device_probe+0x240/0x588 [xe]
->>>>> [    7.777627] [<ffff800002575448>] xe_pci_probe+0x6c0/0xa6c [xe]
->>>>> [    7.783540] [<9000000000e9828c>] local_pci_probe+0x4c/0xb4
->>>>> [    7.788989] [<90000000002aa578>] work_for_cpu_fn+0x20/0x40
->>>>> [    7.794436] [<90000000002aeb50>] process_one_work+0x1a4/0x458
->>>>> [    7.800143] [<90000000002af5a0>] worker_thread+0x304/0x3fc
->>>>> [    7.805591] [<90000000002bacac>] kthread+0x114/0x138
->>>>> [    7.810520] [<9000000000241f64>] ret_from_kernel_thread+0x8/0xa4
->>>>> [    7.816489]
->>>>> [    7.817961] Code: 4c000020  29c3e2f9  53ff93ff <002a0001> 0015002c  03400000  02ff8063  29c04077  001500f7
->>>>> [    7.827651]
->>>>> [    7.829140] ---[ end trace 0000000000000000 ]---
->>>>>
->>>>> Revise all instances of `SZ_4K' with `PAGE_SIZE' and revise the call to
->>>>> `drm_gem_private_object_init()' in `*___xe_bo_create_locked()' (last call
->>>>> before BUG()) to use `size_t aligned_size' calculated from `PAGE_SIZE' to
->>>>> fix the above error.
->>>>>
->>>>> Cc: <stable@vger.kernel.org>
->>>>> Fixes: 4e03b584143e ("drm/xe/uapi: Reject bo creation of unaligned size")
->>>>> Fixes: dd08ebf6c352 ("drm/xe: Introduce a new DRM driver for Intel GPUs")
->>>>> Tested-by: Mingcong Bai <jeffbai@aosc.io>
->>>>> Tested-by: Haien Liang <27873200@qq.com>
->>>>> Tested-by: Shirong Liu <lsr1024@qq.com>
->>>>> Tested-by: Haofeng Wu <s2600cw2@126.com>
->>>>> Link: https://github.com/FanFansfan/loongson-linux/commit/22c55ab3931c32410a077b3ddb6dca3f28223360
->>>>> Co-developed-by: Shang Yatsen <429839446@qq.com>
->>>>> Signed-off-by: Shang Yatsen <429839446@qq.com>
->>>>> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
->>>>> ---
->>>>> drivers/gpu/drm/xe/xe_bo.c | 8 ++++----
->>>>> 1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/xe/xe_bo.c b/drivers/gpu/drm/xe/xe_bo.c
->>>>> index 3f5391d416d469c636d951dd6f0a2b3b5ae95dab..dd03c581441f352eff51d0eafe1298fca7d9653d 100644
->>>>> --- a/drivers/gpu/drm/xe/xe_bo.c
->>>>> +++ b/drivers/gpu/drm/xe/xe_bo.c
->>>>> @@ -1441,9 +1441,9 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>> 		flags |= XE_BO_FLAG_INTERNAL_64K;
->>>>> 		alignment = align >> PAGE_SHIFT;
->>>>> 	} else {
->>>
->>> } else if (type == ttm_bo_type_device) {
->>> 	new code /w PAGE_SIZE
->>> } else {
->>> 	old code /w SZ_4K (or maybe XE_PAGE_SIZE now)?
->>> }
->>>
->>> See below for further explaination.
->>>
->>>>> -		aligned_size = ALIGN(size, SZ_4K);
->>>>> +		aligned_size = ALIGN(size, PAGE_SIZE);
->>>>
->>>> in the very beginning of the driver we were set to use XE_PAGE_SIZE
->>>> for things like this. It seems thing went side ways though.
->>>>
->>>> Thanks for fixing these. XE_PAGE_SIZE is always 4k, but I think we should
->>>> uxe XE_PAGE_SIZE for clarity.  For others in Cc...  any thoughts?
->>>>
->>>
->>> It looks like you have a typo here, Lucas. Could you please clarify?
->>>
->>> However, XE_PAGE_SIZE should always be 4k, as it refers to the GPU page
->>> size, which is fixed.
->>>
->>> I think using PAGE_SIZE makes sense in some cases. See my other
->>> comments.
->>>
->>>>> 		flags &= ~XE_BO_FLAG_INTERNAL_64K;
->>>>> -		alignment = SZ_4K >> PAGE_SHIFT;
->>>>> +		alignment = PAGE_SIZE >> PAGE_SHIFT;
->>>>> 	}
->>>>>
->>>>> 	if (type == ttm_bo_type_device && aligned_size != size)
->>>>> @@ -1457,7 +1457,7 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>>
->>>>> 	bo->ccs_cleared = false;
->>>>> 	bo->tile = tile;
->>>>> -	bo->size = size;
->>>>> +	bo->size = aligned_size;
->>>>
->>>> the interface of this function is that the caller needs to pass the
->>>> correct size, it's not really expected the function will adjust it and
->>>> the check is there to gurantee to return the appropriate error. There
->>>
->>> Let me expand further on Lucas's comment. We reject user BOs that are
->>> unaligned here in ___xe_bo_create_locked.
->>>
->>> 1490         if (type == ttm_bo_type_device && aligned_size != size)
->>> 1491                 return ERR_PTR(-EINVAL);
->>>
->>> What we allow are kernel BOs (!= ttm_bo_type_device), which are never
->>> mapped to the CPU or the PPGTT (user GPU mappings), to be a smaller
->>> size. Examples of this include memory for GPU page tables, LRC state,
->>> etc. Memory for GPU page tables is always allocated in 4k blocks, so
->>> changing the allocation to the CPU page size of 16k or 64k would be
->>> wasteful.
->>>
->>> AFAIK, kernel memory is always a VRAM allocation, so we don't have any
->>> CPU page size requirements. If this is not true (I haven't checked), or
->>> perhaps just to future-proof, change the snippet in my first comment to:
->>>
->>> } else if (type == ttm_bo_type_device || flags & XE_BO_FLAG_SYSTEM)) {
->>> 	new code /w PAGE_SIZE
->>> } else {
->>> 	old code /w SZ_4K
->>> }
->>>
->>> Then change BO assignment size too:
->>>
->>> bo->size = flags & XE_BO_FLAG_SYSTEM ? aligned_size : size;
->>>
->>> This should enable kernel VRAM allocations to be smaller than the CPU
->>> page size (I think). Can you try out this suggestion and see if the Xe
->>> boots with non-4k pages?
->>
->> The vram allocator chunk size is PAGE_SIZE so that would also need some
->> attention, I think.
->>
-> 
-> Agree. So I think __xe_ttm_vram_mgr_init should be called with
-> s/PAGE_SIZE/SZ_4K?
+No functional change.
 
-Should be fine from allocator pov. But also need to update the upper 
-layers in the VRAM manager itself, I think.
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/current.h | 17 ++++++-----------
+ arch/x86/include/asm/percpu.h  |  2 +-
+ arch/x86/kernel/asm-offsets.c  |  1 -
+ arch/x86/kernel/cpu/common.c   |  8 +++-----
+ arch/x86/kernel/head_64.S      |  4 ++--
+ arch/x86/kernel/process_32.c   |  2 +-
+ arch/x86/kernel/process_64.c   |  2 +-
+ arch/x86/kernel/smpboot.c      |  2 +-
+ arch/x86/kernel/vmlinux.lds.S  |  2 +-
+ scripts/gdb/linux/cpus.py      |  2 +-
+ 10 files changed, 17 insertions(+), 25 deletions(-)
 
-> 
->> But I think we also then need to deal with the assert in: https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/gpu/drm/drm_gem.c#L181.
->>
-> 
-> Yep. I think that would need to be adjusted as well to be bypassed if we
-> are never going to CPU map the BO—specifically, CPU map it to user space
-> or if the BO is not in VRAM. For kernel VRAM mapping, this resolves to
-> an offset within an existing large PCIe BAR mapping, so allocations
-> unaligned to PAGE_SIZE should work.
-
-Yeah, agree. I thinks it's possible.
-
-> 
-> Maybe export __drm_gem_private_object_init, which skips the BUG_ON, and
-> call this in Xe to avoid interfering with other drivers' expectations?
-
-Some other places I spotted are the VRAM manager, and stuff like 
-xe_bo_vmap() and then into TTM itself. So it might be quite widespread.
-
-> 
-> Matt
-> 
->>>
->>> Also others in Cc... thoughts / double check my input?
->>>
->>>> are other places that would need some additional fixes leading to this
->>>> function. Example:
->>>>
->>>> xe_gem_create_ioctl()
->>>> {
->>>> 	...
->>>> 	if (XE_IOCTL_DBG(xe, args->size & ~PAGE_MASK))
->>>> 		return -EINVAL;
->>>
->>> This actually looks right, the minimum allocation size for user BOs
->>> should be PAGE_SIZE aligned. The last patch in the series fixes the
->>> query for this.
->>>
->>> Matt
->>>
->>>> 	...
->>>> }
->>>> 	
->>>>
->>>> Lucas De Marchi
->>>>
->>>>> 	bo->flags = flags;
->>>>> 	bo->cpu_caching = cpu_caching;
->>>>> 	bo->ttm.base.funcs = &xe_gem_object_funcs;
->>>>> @@ -1468,7 +1468,7 @@ struct xe_bo *___xe_bo_create_locked(struct xe_device *xe, struct xe_bo *bo,
->>>>> #endif
->>>>> 	INIT_LIST_HEAD(&bo->vram_userfault_link);
->>>>>
->>>>> -	drm_gem_private_object_init(&xe->drm, &bo->ttm.base, size);
->>>>> +	drm_gem_private_object_init(&xe->drm, &bo->ttm.base, aligned_size);
->>>>>
->>>>> 	if (resv) {
->>>>> 		ctx.allow_res_evict = !(flags & XE_BO_FLAG_NO_RESV_EVICT);
->>>>>
->>>>> -- 
->>>>> 2.48.1
->>>>>
->>>>>
->>
+diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/current.h
+index 3d1b123c2ee3..dea7d8b854f0 100644
+--- a/arch/x86/include/asm/current.h
++++ b/arch/x86/include/asm/current.h
+@@ -12,22 +12,17 @@
+ 
+ struct task_struct;
+ 
+-struct pcpu_hot {
+-	struct task_struct	*current_task;
+-};
+-
+-DECLARE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot);
+-
+-/* const-qualified alias to pcpu_hot, aliased by linker. */
+-DECLARE_PER_CPU_CACHE_HOT(const struct pcpu_hot __percpu_seg_override,
+-			const_pcpu_hot);
++DECLARE_PER_CPU_CACHE_HOT(struct task_struct *, current_task);
++/* const-qualified alias provided by the linker. */
++DECLARE_PER_CPU_CACHE_HOT(struct task_struct * const __percpu_seg_override,
++			  const_current_task);
+ 
+ static __always_inline struct task_struct *get_current(void)
+ {
+ 	if (IS_ENABLED(CONFIG_USE_X86_SEG_SUPPORT))
+-		return this_cpu_read_const(const_pcpu_hot.current_task);
++		return this_cpu_read_const(const_current_task);
+ 
+-	return this_cpu_read_stable(pcpu_hot.current_task);
++	return this_cpu_read_stable(current_task);
+ }
+ 
+ #define current get_current()
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index 044410462d36..e347c6656ce8 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -554,7 +554,7 @@ do {									\
+  * it is accessed while this_cpu_read_stable() allows the value to be cached.
+  * this_cpu_read_stable() is more efficient and can be used if its value
+  * is guaranteed to be valid across CPUs.  The current users include
+- * pcpu_hot.current_task and cpu_current_top_of_stack, both of which are
++ * current_task and cpu_current_top_of_stack, both of which are
+  * actually per-thread variables implemented as per-CPU variables and
+  * thus stable for the duration of the respective task.
+  */
+diff --git a/arch/x86/kernel/asm-offsets.c b/arch/x86/kernel/asm-offsets.c
+index 54ace808defd..ad4ea6fb3b6c 100644
+--- a/arch/x86/kernel/asm-offsets.c
++++ b/arch/x86/kernel/asm-offsets.c
+@@ -107,7 +107,6 @@ static void __used common(void)
+ 	OFFSET(TSS_sp0, tss_struct, x86_tss.sp0);
+ 	OFFSET(TSS_sp1, tss_struct, x86_tss.sp1);
+ 	OFFSET(TSS_sp2, tss_struct, x86_tss.sp2);
+-	OFFSET(X86_current_task, pcpu_hot, current_task);
+ #if IS_ENABLED(CONFIG_CRYPTO_ARIA_AESNI_AVX_X86_64)
+ 	/* Offset for fields in aria_ctx */
+ 	BLANK();
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index fc059e9c8867..ac8721a0eb3a 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2014,11 +2014,9 @@ static __init int setup_clearcpuid(char *arg)
+ }
+ __setup("clearcpuid=", setup_clearcpuid);
+ 
+-DEFINE_PER_CPU_CACHE_HOT(struct pcpu_hot, pcpu_hot) = {
+-	.current_task	= &init_task,
+-};
+-EXPORT_PER_CPU_SYMBOL(pcpu_hot);
+-EXPORT_PER_CPU_SYMBOL(const_pcpu_hot);
++DEFINE_PER_CPU_CACHE_HOT(struct task_struct *, current_task) = &init_task;
++EXPORT_PER_CPU_SYMBOL(current_task);
++EXPORT_PER_CPU_SYMBOL(const_current_task);
+ 
+ DEFINE_PER_CPU_CACHE_HOT(int, __preempt_count) = INIT_PREEMPT_COUNT;
+ EXPORT_PER_CPU_SYMBOL(__preempt_count);
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 2843b0a56198..fefe2a25cf02 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -322,7 +322,7 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
+ 	 *
+ 	 * RDX contains the per-cpu offset
+ 	 */
+-	movq	pcpu_hot + X86_current_task(%rdx), %rax
++	movq	current_task(%rdx), %rax
+ 	movq	TASK_threadsp(%rax), %rsp
+ 
+ 	/*
+@@ -433,7 +433,7 @@ SYM_CODE_START(soft_restart_cpu)
+ 	UNWIND_HINT_END_OF_STACK
+ 
+ 	/* Find the idle task stack */
+-	movq	PER_CPU_VAR(pcpu_hot + X86_current_task), %rcx
++	movq	PER_CPU_VAR(current_task), %rcx
+ 	movq	TASK_threadsp(%rcx), %rsp
+ 
+ 	jmp	.Ljump_to_C_code
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index 3afb2428bedb..c276dfda387f 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -206,7 +206,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	if (prev->gs | next->gs)
+ 		loadsegment(gs, next->gs);
+ 
+-	raw_cpu_write(pcpu_hot.current_task, next_p);
++	raw_cpu_write(current_task, next_p);
+ 
+ 	switch_fpu_finish(next_p);
+ 
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index f68da7b7e50c..13893ec03d85 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -668,7 +668,7 @@ __switch_to(struct task_struct *prev_p, struct task_struct *next_p)
+ 	/*
+ 	 * Switch the PDA and FPU contexts.
+ 	 */
+-	raw_cpu_write(pcpu_hot.current_task, next_p);
++	raw_cpu_write(current_task, next_p);
+ 	raw_cpu_write(cpu_current_top_of_stack, task_top_of_stack(next_p));
+ 
+ 	switch_fpu_finish(next_p);
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 15e054f4cbf6..c89545a61d08 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -841,7 +841,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	/* Just in case we booted with a single CPU. */
+ 	alternatives_enable_smp();
+ 
+-	per_cpu(pcpu_hot.current_task, cpu) = idle;
++	per_cpu(current_task, cpu) = idle;
+ 	cpu_init_stack_canary(cpu, idle);
+ 
+ 	/* Initialize the interrupt stack(s) */
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 85032c085af2..9ac6b42701fa 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -43,7 +43,7 @@ ENTRY(phys_startup_64)
+ #endif
+ 
+ jiffies = jiffies_64;
+-const_pcpu_hot = pcpu_hot;
++const_current_task = current_task;
+ const_cpu_current_top_of_stack = cpu_current_top_of_stack;
+ 
+ #if defined(CONFIG_X86_64)
+diff --git a/scripts/gdb/linux/cpus.py b/scripts/gdb/linux/cpus.py
+index 13eb8b3901b8..8f7c4fb78c2c 100644
+--- a/scripts/gdb/linux/cpus.py
++++ b/scripts/gdb/linux/cpus.py
+@@ -164,7 +164,7 @@ def get_current_task(cpu):
+             var_ptr = gdb.parse_and_eval("(struct task_struct *)cpu_tasks[0].task")
+             return var_ptr.dereference()
+         else:
+-            var_ptr = gdb.parse_and_eval("&pcpu_hot.current_task")
++            var_ptr = gdb.parse_and_eval("&current_task")
+             return per_cpu(var_ptr, cpu).dereference()
+     elif utils.is_target_arch("aarch64"):
+         current_task_addr = gdb.parse_and_eval("(unsigned long)$SP_EL0")
+-- 
+2.48.1
 
