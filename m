@@ -1,101 +1,117 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71A623E33B;
-	Thu, 27 Feb 2025 22:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A6F23E343;
+	Thu, 27 Feb 2025 22:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740696046; cv=none; b=dnRb6yYGNuMufJFM6c7ieF79nhVSfjjV/gRL71rCKV7c9UN6Q1vDdDp5L/xRNj7+lnMo+xbamTsM3JiQhaLHJVPdtwSoPzSJpu3Al1zY+s4BpQ6DCq5w1pPOYFXOjXQN1fxIxxLV9Ba4MHhmtyvrdiEdbailrDxKLVqo/7Agj1s=
+	t=1740696059; cv=none; b=FtTHz3xYhqzQuhen62b0afsfnSE7lx1S3/XgUwTMRBDz5W2YRtwFtLWAFw4dcmN9UUK7unvR/i/MMAeAfUJLoBsmH54XbSexAqtOIgTg+tq/d+zexdJwGjNcnKfYSHmxgysCNvZTc6oWeRQAQCKyp+3l6uQ6RCNeP+8v0hi8kJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740696046; c=relaxed/simple;
-	bh=4FpztWJBkYzLbgpzrZ8kFBwYl/EaKs00lCTCkSKF1yQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=c2V7rmJ5gNk1Q2M06eLw2M1e7/5LZ8GEbgKqUFPHW6hNK48lB8EdaKZvEozIe6XQiCSxMiVRPZYtCyHZwZzIqaKRTl79jpPKjSduoDwVCISMtM9FSiuSWbwDKnLZMfGhzuxWWxSm8Mg70IGAwnOl1uK+HGtE5rZvcMDEvcZPvw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXWwAvvQ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740696059; c=relaxed/simple;
+	bh=LaGdAUd/RllEkxWfeRFsyYdY2vwu+WCIEmuoB0PLBOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S60Qc6TLWcTad3QSdCz5iy7rNngKzywGf+FXicMISKbgemK7/Fdro6yrLr3A+N3v3lQls/Yhp5foxIRCyyRJYKlpKRX3ByRELuTWuYMPfCCnitP4iOCzG4UaewMpZd7y0ykzpnDiR5g1pItbh6X3a7cUqQocOqMGFcT3WchXQWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmfKIOC7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXWwAvvQ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43989226283so10125625e9.1;
-        Thu, 27 Feb 2025 14:40:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740696042; x=1741300842; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=NUl8XE7+Pcoi1nYpApiKySL0TeiutYm0CffFrTI9E/A=;
-        b=BXWwAvvQrGvMIef/3qMddsNW150v0BgZDKGR3V58PnlwZ8qGXKKq5y4AykkoDUaiGb
-         mxMysUJ1IxsBBeXVHnyhsFzV8sE0c7xZVRicB0HFWYCfLmr84qzXL3O+sULnzoXDvMh5
-         0HX1C+8uDzDEMRIairmeY9mzWU/BVnUXp74o0A6XrpItd5nsGjcbOry0/pdja+uwNTCu
-         aadFOuZaa6ot99SCEXjq2oqa/eNmkvq2LYXyh9ViV8cvUZ5HO7Q2VnoPUeOJh2aL177n
-         +n5rQHHaJmKT4813y6Ypah0mt2WSB2s9jIrp6XnhZ6VbLTo4vvqmrJQbanDI77rppFWY
-         pO8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740696042; x=1741300842;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NUl8XE7+Pcoi1nYpApiKySL0TeiutYm0CffFrTI9E/A=;
-        b=JVf7y4Tsdeesj/gvHacFJUxv6VET7woB+t8iN/nZFYhPqAcQEcRYC190H1clfKi7gE
-         JYLNW6Z7c3Ay0o4nY+LhP/1crynjSasotCyCVThgrVzK2gQwaBBm+jFuLfDLMJDZN+vc
-         PzH/1ntLp68T826rxA11joRsSZabmChFGifjzV++yZL2j4fKy35n81vAqvM5nQUs+4S0
-         pwDGT9et7i/zBy/heskDHoapN5pknY4RQhLCs6857WNGteSuhwv61iFu8tPPydBx1KnZ
-         GFat0zes+KN38hvZRXSY1gTosWKvqujflSUJDOTkkB6+BMtbOE062RrYSdqsfEX9soQn
-         QRXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV0OPGAQnJthISaNo79g0ovTOo5IyqmEbualGJK+A/dQKfBbq0J3Zu3ZhvGuTMGcAtCPPfSa6Au3uikVV0=@vger.kernel.org, AJvYcCWSoZk/X9OtmPbK/ksnwk65plNTq4WWlJ0eqYbi9Jb+ajlcMg0E1QXwSLkuq0HGQPP4/StPkrsPSF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyRALnDWBT19Gk1vibt6mgsDXA9eIInAAzjSX/Y1t2fnF/WL1m
-	Pai45HWy4ewGV9pTOZ4m+CaCK8aou1WzZBvWjnlpiBwMtxoGc8/S
-X-Gm-Gg: ASbGncs54W1HRNL4GSZSR+JMSIYKmBUHs792IKxQv4tdsX6HmJLKkJRJ+Qhp5ZW/zPN
-	IV0sapIVdD34GVaP+YgA8fDepbCW6FIwLKsCxl0EeYpadxnqsAT0+da3ZGPi+NoYd8RDjnUtNTs
-	GLoC+ON+Xn784p3jQqPlFO9iWamVv6NgkRp5Pu/c5535vfpOqMk7Caerq+gIB7xh0tjztnljz6v
-	GgWa5zsO4JdZb+kTIqhXPbA0LOJhVsEPqf73Jkmbsb7GOwikUJwnoCDfHVnxPOG4DKf8bthbent
-	35sSQ9pveBXPk9xQm0Xh/BiUnQo=
-X-Google-Smtp-Source: AGHT+IHM6HEvjXh4zM4c1gmC8eykfelcPVykYPxPWzXLli1VTTBj6qkEd/hrQ+pc2XQ0Fu0UniZbLg==
-X-Received: by 2002:a05:6000:18a7:b0:38f:31fe:6d23 with SMTP id ffacd0b85a97d-390ec7d25edmr844668f8f.23.1740696041892;
-        Thu, 27 Feb 2025 14:40:41 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e484451fsm3340895f8f.63.2025.02.27.14.40.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 14:40:41 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] thermal: core: Fix spelling mistake "Occurences" -> "Occurrences"
-Date: Thu, 27 Feb 2025 22:40:06 +0000
-Message-ID: <20250227224006.660164-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmfKIOC7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA23C4CEDD;
+	Thu, 27 Feb 2025 22:40:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740696059;
+	bh=LaGdAUd/RllEkxWfeRFsyYdY2vwu+WCIEmuoB0PLBOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DmfKIOC7yMzI1djFJKofbZgE/fmbeUKNGGsDEVl3q6ViaHXGl30u2+2oXYoyhO5vJ
+	 ON9Fq8ghpAyrhI/ebpTLV5PSFWqmYGKnRULuR2Ns6FC4UUN4bIIbOJqyagQbol0PUT
+	 VFWKQlVR+wZ6e8oswZQS0lVa64ckn5FouAMJp4e4WJOmLcYbbRxgYQWVQNvhSWA0Vs
+	 O42DCyNMyy0sL0AyIsAwgTk7cBgz2H17ifAWz3hThWIpVc1oDbza12ZBlhhYpUfWtL
+	 lzDcqUvwz88KbhJO3WDl7Pggoga3AmaiSYOHBKj//I9L6kxma9UzuQDxQurEvoBUtD
+	 rCZSdQLbsru7Q==
+Date: Thu, 27 Feb 2025 23:40:53 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <Z8Dp9dM1MxhzuvmR@pollux>
+References: <20250226234730.GC39591@nvidia.com>
+ <Z7-0pOmWO6r_KeQI@boqun-archlinux>
+ <20250227144618.GE39591@nvidia.com>
+ <Z8CCKl_yA74WjpQ1@Mac.home>
+ <20250227161733.GH39591@nvidia.com>
+ <Z8CY7fqbtbO4v1jv@Mac.home>
+ <Z8ChnwPC0UwM8xBe@cassiopeiae>
+ <20250227192321.GA67615@nvidia.com>
+ <Z8DYNszfONdsKZsl@boqun-archlinux>
+ <20250227220013.GQ39591@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227220013.GQ39591@nvidia.com>
 
-There is a spelling mistake in a seq_puts string. Fix it.
+On Thu, Feb 27, 2025 at 06:00:13PM -0400, Jason Gunthorpe wrote:
+> On Thu, Feb 27, 2025 at 01:25:10PM -0800, Boqun Feng wrote:
+> > 
+> > Most of the cases, it should be naturally achieved, because you already
+> > bind the objects into your module or driver, otherwise they would be
+> > already cancelled and freed. 
+> 
+> I'm getting the feeling you can probably naturally achieve the
+> required destructors, but I think Danillo is concerned that since it
+> isn't *mandatory* it isn't safe/sound.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/thermal/thermal_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Of course you can "naturally" achieve the required destructors, I even explained
+that in [1]. :-)
 
-diff --git a/drivers/thermal/thermal_debugfs.c b/drivers/thermal/thermal_debugfs.c
-index c800504c3cfe..0cf26ea63370 100644
---- a/drivers/thermal/thermal_debugfs.c
-+++ b/drivers/thermal/thermal_debugfs.c
-@@ -319,7 +319,7 @@ static int cdev_tt_seq_show(struct seq_file *s, void *v)
- 	int i = *(loff_t *)v;
- 
- 	if (!i)
--		seq_puts(s, "Transition\tOccurences\n");
-+		seq_puts(s, "Transition\tOccurrences\n");
- 
- 	list_for_each_entry(entry, &transitions[i], node) {
- 		/*
--- 
-2.47.2
+And yes, for *device resources* it is unsound if we do not ensure that the
+device resource is actually dropped at device unbind.
 
+Maybe some example code does help. Look at this example where we assume that
+pci::Device::iomap_region() does return a pci::Bar instead of a
+Devres<pci::Bar>, which it actually does. (The example won't compile, since,
+for readability, it's heavily simplified.)
+
+    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
+        let bar: pci::Bar = pdev.iomap_region()?;
+
+        let drvdata = Arc::new(bar, GFP_KERNEL)?;
+
+        let drm = drm::device::Device::new(pdev.as_ref(), drvdata)?;
+        let reg = drm::drv::Registration::new(drm)?;
+
+        // Everything in `Self` is dropped on remove(), hence the DRM driver is
+        // unregistered on remove().
+        Ok(KBox::new(Self(reg), GFP_KERNEL)?)
+    }
+
+This is already broken, because now the lifetime of the pci::Bar is bound to the
+DRM device and the DRM device is allowed to outlive remove().
+
+Subsequently, pci_iounmap() and pci_release_region() are not called in remove(),
+but whenever the DRM device is dropped.
+
+The fact that this is possible with safe code, makes this API unsound.
+
+Now let's assume iomap_region() would return a Devres<pci::Device>. That fixes
+the problem, because even if the DRM device keeps the Devres<pci::Device> object
+alive, it is still dropped when the driver is unbound, and subsequently
+pci_iounmap() and pci_release_region() are called when they're supposed to be
+called.
+
+Note that this would not be a problem if pci::Device would not be a device
+resource. Other stuff may be perfectly fine to bind to the lifetime of the DRM
+device.
+
+[1] https://lore.kernel.org/rust-for-linux/Z8CX__mIlFUFEkIh@cassiopeiae/
