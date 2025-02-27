@@ -1,124 +1,78 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618B3270EC8;
-	Thu, 27 Feb 2025 21:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738331EFF91;
+	Thu, 27 Feb 2025 21:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740691781; cv=none; b=mtQ8H7lkfYdjnnbOIB+buDUK8CDqkBonzMdNjdv6ULg99e6P+d6eT49OSnoS7faC9U0QwjxHTYtmyO5duDC/oJHPMjBc3bVH/gDWUgQn7WHHc1F/r6KVsZnjBsk5EXP73AyQLVB0vspGNHOesFu7iJVdW+LHUajWTtcC+dHbd7k=
+	t=1740691812; cv=none; b=g8qw2i126SmVfOVYsk6vpqMkDJtZLacQ/tAZjxq9bmef6NnQlcPJNXk/RjRK8MFbetqt/uNzJbZCD+GGNPnH88JN82T3jsj7Ex5QwvW2wE7Xvs1w+WBwk/WCoTZ6z1ttoF8b3wXyr+whvOEUMgOe5YOxggGRzC57AOFuoQae/i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740691781; c=relaxed/simple;
-	bh=pSxN5YSC2hWg3OMawMEMq+6m+7hxSAqh4xNdg0VOJrA=;
+	s=arc-20240116; t=1740691812; c=relaxed/simple;
+	bh=aBIsue5zuSFDdPtGkH1BrG+z8sCiyZ4OfesmbqTq3z0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jCsWnL2OJGG7ZIAEjXtf4zSSkhOQBjj0Ht1pE2YcdW589q5t/jt46MrQgG2Jx92KEPVY8Tpa2DLiMb27FtaNBYhO1xDSMv3iGbxu3mTJ5gW25NDIdNBNAN71ohBXUBCMQZooxbNYlgTfBzG/8Ja5fPE9Hs/5UlKL7HRSG5JkZqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yh1/dnsX; arc=none smtp.client-ip=209.85.160.176
+	 Content-Type:Content-Disposition:In-Reply-To; b=Od3KzC0/7gql0zOqAEJ0PgIoc47YQ4xIEGLSP5poz+jnnGMW8E9vdVebUqnXMC+bojLPihI0JSpfSbPYAYKDlY5yynA0ikAeOy3x0oVxOPnl2aoYWqNXR08PK6kpMGKUoCr15oj8LdoaONVPIM+OgHZ/e7AqrI2V+NNif1lziVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lreVmJ5F; arc=none smtp.client-ip=209.85.222.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yh1/dnsX"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-47210ab1283so20265631cf.1;
-        Thu, 27 Feb 2025 13:29:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lreVmJ5F"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c0e3688f92so28115185a.1;
+        Thu, 27 Feb 2025 13:30:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740691778; x=1741296578; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740691809; x=1741296609; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pMYme35BZpGxUGeEP8cC12QstjvajEPEqF5JaQ/Y5a4=;
-        b=Yh1/dnsXWTTjJsXr2mTaDDPlLGfHbdJuZFShuA1eayPcJV3oYjlZSkMdHLbwVB+Y6H
-         HHSGyI9bf+cZJg4qfHTxVDn7vKYV3twPZiiq6pjQDBNSQ99zMgi0aZCxGqXX73eWc3i9
-         /4j8CLS9bspCfKb989X0rsT8Sm/L/bEVGzzfuWl5b23+TQjiOVBcNJdf1M1HJXKXz1Ly
-         dGlcRif8iQaz3UoE0GkmygNxMrVi1s+/Pf9A6Xi6IX5ZwdQl3bXoMF4rTVSYKyVtvdsm
-         cJUCX4cKF4q3/kc/N0TIgyNQEXI89nz+A6+sIkjW7YQF4eezoMpS8y1Kt6QvbQhT5wj2
-         B4BQ==
+        bh=VlS3JSHpI5pHJwFBGOh2HyZd1Zh+M5HnpWiAkan9ed8=;
+        b=lreVmJ5FfjoGodbAkgQ/InUcUij6bs6p2ytJTuP+jibqdRqVRSosbmX1WhtGkPKcWX
+         6P/1tN8rxZMQ0iqqxHFVQxbumg0bVvdgZYMaXuf7116fZKhlrlkZebo3/vxgaadYzK9G
+         w8t+7A12vuA5VYHWY21Ud9Ao9LBDaWJJuDPrl0yBYFGaQOMpgYuRrGVv1UBM4jq0rWST
+         lV8CAgHdESISVD2GeI5lu/UikSUSvVUD/TmPcW29dIP00IWfrbGCknRBNJRpCPOCDqqk
+         zpxCcP4cC2Ee3qBxB804tLE6HSGnYlRZhi3exPWTsCmPPW21B7+2BaF1EJQ/b98yTKav
+         0+UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740691778; x=1741296578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740691809; x=1741296609;
+        h=in-reply-to:content-disposition:mime-version:references:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pMYme35BZpGxUGeEP8cC12QstjvajEPEqF5JaQ/Y5a4=;
-        b=n8qiUlOIhynkPh0oUJPRlhBCUzUH0y8N9cQHMEAe0RJIPHzaoPkOySVwQi3FssiPcv
-         4A9Qf1F97lf5x22Y+k5/K6PtYKDxf8ntHRDciFJVgqs9k4LxpMgvq4xpzd/xoRRov0MK
-         /20Fa3B0495ZePsZb1uXapLA/aY8tT6Qo13uDeVZ9dqkrzGxl3XGacRISM6v5IxaJAFR
-         1m2JpLWuN/Zuq64GmYlKfj943ebwQ9PbN9eskfbkXYXKyk2brNHeNvCzyznqk9mxJVdd
-         IcWKIXWqEw4apevGbijgsnuhL3vi24IwdTimnQufxkw0mR06scbe+qOBMH2s8l00iimd
-         egqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXLveOhy8+xU3dTLDgz0bQX/HHYYZY10Gen925KTH1Hwn8hlqHZ/ayBcPqXx1/xVBuieyzxmxDVNHeCaDc=@vger.kernel.org, AJvYcCXaQyXh5+zaNfzLh8BJSp6avAWL2HirRJQpv8lOe5Nq7L5DYC1yb0Sk+YTf2nd6mgU2z5SwMEDpejhbXVFjYn8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOvcMt+Q3LTKvO67fg3EVskru0OTWywZK28bj/0VUblMAjPP4o
-	GUib3Xk9uQGaSs244cWAe1SvD3Gj/faTXfXKDWJDkaz5oXMZ1AbE
-X-Gm-Gg: ASbGncuF5fP4tmy0WnAWT5LIDu4UxrWePTwp4hLRQZtPsglPANHim8RIw2pxBJ/BcQN
-	NVSDuZoIFyT/N84G3GdcinMCLdbDNI+5xZShKQT2wqOSMcvZBnshq4v/SJbIZX1BZ1h/HPTYt6u
-	B3+c3yGkmspDx6RY/fiuc+9zzz79cx/GiM9xaVleKRgREA5STaczHzoOlsKPkek1YtMSe7CIeXj
-	llte3F7fSpryxCGig3XnWL7YLdQCDQ/GButU6zYiYnMsoiSsWqEUnNP/8no8pcHdFIcS6qDvfYK
-	doRU0RonLzKFp0QZsfyPdXV/soAMQWr10BchUtGVS1llC1BjTLcfgEV0bacEqrSF9rVdrwyiPzI
-	sT5noqnUr0QftvnhQ
-X-Google-Smtp-Source: AGHT+IHfFJ7Ib1C6jomDvlIhsy3en4tcKkX8nxtsA8sgaw7b5HqMRqGLntupkHR5FMA88h7oDdN8Zg==
-X-Received: by 2002:ac8:5f0e:0:b0:472:fcd:a61f with SMTP id d75a77b69052e-474bc08f1b8mr10092431cf.27.1740691778166;
-        Thu, 27 Feb 2025 13:29:38 -0800 (PST)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4746b5edf1asm15866181cf.28.2025.02.27.13.29.36
+        bh=VlS3JSHpI5pHJwFBGOh2HyZd1Zh+M5HnpWiAkan9ed8=;
+        b=bTE+4yyzxFRNAEyvejHLAmFL5mc+R2yz8FttE0syn2+XEE52lqfrkNGp/4hn0UTvec
+         ui4dvWeWKwoxb/YjpuOmCpU3VHzdcoXcMxNwVGOVD/R0fi+LUYRUm3siLX2bDn63IzJp
+         cEyutAhxyTIetHNivcwNAoClm/xBoNVipTbE/te3cMoa49mtB0OWGPc52ZsGhXn7dIU+
+         KgCoqCE1NLgvGD8/0QWbZcXxS524AwO1wP1Gn9NlZQd3CbrJBaB5xbyfvGOrSWZ0c1NG
+         wttXCWVDD2yDWsIqBqCHpi0IRbs1VzxhSt2K9mq61h6Gx/dj8B0PS63CKkMFvqDLe8fz
+         A4Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdPC06Ax9eV03s77m0UogBnu8wC3z5EO+kZZprjP5JiRtabHGSsS7/IJTfq2zW0rs1McIPb+eOQpf0RqIj@vger.kernel.org, AJvYcCVemVvQlk0Y3JLvk6BCKWNjZOYE7hVcLlrZj3/V8q/+R2RyUdpdsGuWzZKwFPiWY9C34kMptPS3NcsM@vger.kernel.org, AJvYcCXkxnWO27moPujX2s+SRRD0KoUn+sOFj5FTTjMugBF5KrgX0TyF9RDqFejlGFXLBmW8LLv4zCth2dyb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXCkPJeueXzc7rrqmLdKMAkgkHOASbmJBgud/TIqVSqMroIsfY
+	OWO32l8k5FCzcocWNmSXHjXoNgrfm7/SmwRhCBoI4+1R+mpDWUfj
+X-Gm-Gg: ASbGncvb74DOQuDsS9VpN2O3FB4jyRYjJC1GcqL55dhlmWSA2YfU6yHTbAE8FXmbTGL
+	9dX6mNSz/pr7SfBUxMpRMiBqixTVZa8VF+5rzNpMKQxHqX1Z5PSazN1NcMxF9z7SJG6xYNfwjKM
+	TDVK4YowPoQa4nxrHPqKwu3wv0ElThyICIdkJR5l46L1AWUdhn9Xe5R28vEBJMlPl+CHe79m7S8
+	HDLyqRGkZDGpfOd6TNsu3Mjn7gWiaJrjS3f22x85bEsMZOLokVCwkFq64trs2WE/GggB/fmhBvW
+	QJgVH+OtJ++lPtv8jrjfCqgFM95jF0JjSeetNjxJQ/BPxN0=
+X-Google-Smtp-Source: AGHT+IE2zW29zbUhd4JanqPdsbSePwmtscfZpisxuK2vZRZJO2vqLJws6sLgRJpbvC8HDMqDMtzTSA==
+X-Received: by 2002:a05:620a:4e6:b0:7c3:9ce6:3fa6 with SMTP id af79cd13be357-7c39ce65a8fmr29777885a.10.1740691809108;
+        Thu, 27 Feb 2025 13:30:09 -0800 (PST)
+Received: from JSANTO12-L01.ad.analog.com ([191.255.131.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e897634904sm14179316d6.19.2025.02.27.13.30.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 13:29:37 -0800 (PST)
-Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A3A7C120006A;
-	Thu, 27 Feb 2025 16:29:36 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-13.internal (MEProxy); Thu, 27 Feb 2025 16:29:36 -0500
-X-ME-Sender: <xms:QNnAZ9VDMfSX4H9yzd9cmoZDiRmU64ESZHdDL1Qfhx--FGITIMDS2g>
-    <xme:QNnAZ9lbPcKut3JmUE1SvGqQa3LsMblyhmBsVaVtX39LAmTrbuFaB8vU4FiN1L97h
-    Zpfl8ClWaxBIGGfLA>
-X-ME-Received: <xmr:QNnAZ5ZpEabJF8bE8kuuKU9AM05F6p15bAYfoph_8mFls2dTvjzag2zY3Wo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkeehhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhepffdtiefhieegtddvueeuffeiteevtdegjeeu
-    hffhgfdugfefgefgfedtieeghedvnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
-    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
-    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
-    rghmvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdprhgtphhtth
-    hopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehgrhgvghhk
-    hheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehojhgvuggrse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehpmhhlrgguvghksehsuhhsvgdrtghomhdp
-    rhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtoheprg
-    hnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgt
-    phhtthhopehlihhnuhigsehrrghsmhhushhvihhllhgvmhhovghsrdgukhdprhgtphhtth
-    hopehsvghnohiihhgrthhskhihsegthhhrohhmihhumhdrohhrghdprhgtphhtthhopegr
-    khhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhg
-X-ME-Proxy: <xmx:QNnAZwUlcgnShkha5Gj8VRv6NnfGnzJsrN1hlhSgk0DddvIskAEZ8A>
-    <xmx:QNnAZ3kFvEV6WM63UIEYoK47MRQvaaRbnw0eT8cJallcFPumoLiWrw>
-    <xmx:QNnAZ9emaxjGE1CQi1pGJ6_hkG4Xs7o-la0IiGi-Aq0UbdjOLpi37A>
-    <xmx:QNnAZxHFjNDUL61VLcmBiNAUxuKlMcBrVubU8O7xqS0k-VPs0iJ1vA>
-    <xmx:QNnAZxn7WbeJU7Vfl2HPa2PQmTaV-_k_kkvEEu_vW_Tlh9DhEU6pZoUi>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 27 Feb 2025 16:29:36 -0500 (EST)
-Date: Thu, 27 Feb 2025 13:28:48 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 4/4] panic_qr: use new #[export] macro
-Message-ID: <Z8DZEPoTJRwYj0p3@boqun-archlinux>
-References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
- <20250227-export-macro-v1-4-948775fc37aa@google.com>
+        Thu, 27 Feb 2025 13:30:08 -0800 (PST)
+Date: Thu, 27 Feb 2025 18:30:04 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	dlechner@baylibre.com
+Subject: Re: [PATCH RESEND v3 03/17] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <Z8DZXAivPexoPJkN@JSANTO12-L01.ad.analog.com>
+Reply-To: 20250213-sympathy-suspend-2c414b383195@spud
+References: <cover.1739368121.git.Jonathan.Santos@analog.com>
+ <4136b5259df75221fc314bcd4a57ecaeeab41a45.1739368121.git.Jonathan.Santos@analog.com>
+ <20250213-sympathy-suspend-2c414b383195@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -127,129 +81,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227-export-macro-v1-4-948775fc37aa@google.com>
+In-Reply-To: <20250213-sympathy-suspend-2c414b383195@spud>
 
-On Thu, Feb 27, 2025 at 05:02:02PM +0000, Alice Ryhl wrote:
-> This validates at compile time that the signatures match what is in the
-> header file. It highlights one annoyance with the compile-time check,
-> which is that it can only be used with functions marked unsafe.
+On 02/13, Conor Dooley wrote:
+> On Wed, Feb 12, 2025 at 03:16:16PM -0300, Jonathan Santos wrote:
+> > In addition to GPIO synchronization, The AD7768-1 also supports
+> > synchronization over SPI, which use is recommended when the GPIO
+> > cannot provide a pulse synchronous with the base MCLK signal. It
+> > consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> > a command via SPI to trigger the synchronization.
+> > 
+> > Add a new trigger-sources property to enable synchronization over SPI
+> > and future multiple devices support. This property references the
+> > main device (or trigger provider) responsible for generating the
+> > SYNC_OUT pulse to drive the SYNC_IN of device.
+> > 
+> > While at it, add description to the interrupts property.
+> > 
+> > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > ---
+> > v3 Changes:
+> > * Fixed dt-bindings errors.
+> > * Trigger-source is set as an alternative to sync-in-gpios, so we
+> >   don't break the previous ABI.
+> > * increased maxItems from trigger-sources to 2.
+> > 
+> > v2 Changes:
+> > * Patch added as replacement for adi,sync-in-spi patch.
+> > * addressed the request for a description to interrupts property.
+> > ---
+> >  .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
+> >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > index 3ce59d4d065f..4bcc9e20fab9 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > @@ -26,7 +26,19 @@ properties:
+> >    clock-names:
+> >      const: mclk
+> >  
+> > +  trigger-sources:
+> > +    description:
+> > +      Specifies the device responsible for driving the synchronization pin,
+> > +      as an alternative to adi,sync-in-gpios. If the own device node is
+> > +      referenced, The synchronization over SPI is enabled and the SYNC_OUT
+> > +      output will drive the SYNC_IN pin.
 > 
-> If the function is not unsafe, then this error is emitted:
+> Maybe a silly question, but why is self-reference needed here?
+> sync-in-gpios is a required property at present, so why can't you
+> operate under the assumption that neither the trigger-sources when
+> neither are present? Is it because only one of the sources could be
+> external and one internal, or there could be either one or two internal
+> sources? Self-referencing properties always feel like a bit of a
+> mistake.
 > 
-> error[E0308]: `if` and `else` have incompatible types
+We have one internal synchronization source and two external ones.
+The internal is when /SYNC_OUT drives /SYNC_IN (in this case with self
+referencing). The external sources include using a GPIO to drive the 
+/SYNC_IN (sync-in-gpio case) or using an external /SYNC_OUT, the last one
+is described in the datasheet for multi-devices setup.
 
-Is there a way to improve this error message? I vaguely remember there
-are ways to do customized error message.
+The trigger-sources property is inteded to indicate wheter the /SYNC_OUT
+signal originates from within the device or from another source. currently
+we are only handling the internal case. We are not sure yet how to handle
+the external sources.
 
-Regards,
-Boqun
+> > +    maxItems: 2
+> > +
+> >    interrupts:
+> > +    description:
+> > +      Specifies the interrupt line associated with the ADC. This refers
+> > +      to the DRDY (Data Ready) pin, which signals when conversion results are
+> > +      available.
+> >      maxItems: 1
+> >  
+> >    '#address-cells':
+> > @@ -57,6 +69,9 @@ properties:
+> >    "#io-channel-cells":
+> >      const: 1
+> >  
+> > +  "#trigger-source-cells":
+> > +    const: 0
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -65,7 +80,6 @@ required:
+> >    - vref-supply
+> >    - spi-cpol
+> >    - spi-cpha
+> > -  - adi,sync-in-gpios
+> >  
+> >  patternProperties:
+> >    "^channel@([0-9]|1[0-5])$":
+> > @@ -89,6 +103,13 @@ patternProperties:
+> >  allOf:
+> >    - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> >  
+> > +  - oneOf:
+> > +      - required:
+> > +          - trigger-sources
+> > +          - "#trigger-source-cells"
+> > +      - required:
+> > +          - adi,sync-in-gpios
+> > +
+> >  unevaluatedProperties: false
+> >  
+> >  examples:
+> > @@ -99,7 +120,7 @@ examples:
+> >          #address-cells = <1>;
+> >          #size-cells = <0>;
+> >  
+> > -        adc@0 {
+> > +        adc0: adc@0 {
+> >              compatible = "adi,ad7768-1";
+> >              reg = <0>;
+> >              spi-max-frequency = <2000000>;
+> > @@ -108,7 +129,8 @@ examples:
+> >              vref-supply = <&adc_vref>;
+> >              interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> >              interrupt-parent = <&gpio>;
+> > -            adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
+> > +            trigger-sources = <&adc0 0>;
+> > +            #trigger-source-cells = <0>;
+> >              reset-gpios = <&gpio 27 GPIO_ACTIVE_LOW>;
+> >              clocks = <&ad7768_mclk>;
+> >              clock-names = "mclk";
+> > -- 
+> > 2.34.1
+> > 
 
->    --> <linux>/drivers/gpu/drm/drm_panic_qr.rs:987:19
->     |
-> 986 | #[export]
->     | --------- expected because of this
-> 987 | pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
->     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected unsafe fn, found safe fn
->     |
->     = note: expected fn item `unsafe extern "C" fn(_, _) -> _ {kernel::bindings::drm_panic_qr_max_data_size}`
->                found fn item `extern "C" fn(_, _) -> _ {drm_panic_qr_max_data_size}`
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  drivers/gpu/drm/drm_panic.c     |  5 -----
->  drivers/gpu/drm/drm_panic_qr.rs | 15 +++++++++++----
->  include/drm/drm_panic.h         |  7 +++++++
->  rust/bindings/bindings_helper.h |  4 ++++
->  4 files changed, 22 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-> index f128d345b16d..dee5301dd729 100644
-> --- a/drivers/gpu/drm/drm_panic.c
-> +++ b/drivers/gpu/drm/drm_panic.c
-> @@ -486,11 +486,6 @@ static void drm_panic_qr_exit(void)
->  	stream.workspace = NULL;
->  }
->  
-> -extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> -
-> -extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_len, size_t data_size,
-> -				u8 *tmp, size_t tmp_size);
-> -
->  static int drm_panic_get_qr_code_url(u8 **qr_image)
->  {
->  	struct kmsg_dump_iter iter;
-> diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_qr.rs
-> index bcf248f69252..d055655aa0cd 100644
-> --- a/drivers/gpu/drm/drm_panic_qr.rs
-> +++ b/drivers/gpu/drm/drm_panic_qr.rs
-> @@ -27,7 +27,10 @@
->  //! * <https://github.com/bjguillot/qr>
->  
->  use core::cmp;
-> -use kernel::str::CStr;
-> +use kernel::{
-> +    prelude::*,
-> +    str::CStr,
-> +};
->  
->  #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
->  struct Version(usize);
-> @@ -929,7 +932,7 @@ fn draw_all(&mut self, data: impl Iterator<Item = u8>) {
->  /// * `tmp` must be valid for reading and writing for `tmp_size` bytes.
->  ///
->  /// They must remain valid for the duration of the function call.
-> -#[no_mangle]
-> +#[export]
->  pub unsafe extern "C" fn drm_panic_qr_generate(
->      url: *const kernel::ffi::c_char,
->      data: *mut u8,
-> @@ -980,8 +983,12 @@ fn draw_all(&mut self, data: impl Iterator<Item = u8>) {
->  /// * If `url_len` > 0, remove the 2 segments header/length and also count the
->  ///   conversion to numeric segments.
->  /// * If `url_len` = 0, only removes 3 bytes for 1 binary segment.
-> -#[no_mangle]
-> -pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
-> +///
-> +/// # Safety
-> +///
-> +/// Always safe to call.
-> +#[export]
-> +pub unsafe extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
->      #[expect(clippy::manual_range_contains)]
->      if version < 1 || version > 40 {
->          return 0;
-> diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-> index f4e1fa9ae607..2a1536e0229a 100644
-> --- a/include/drm/drm_panic.h
-> +++ b/include/drm/drm_panic.h
-> @@ -163,4 +163,11 @@ static inline void drm_panic_unlock(struct drm_device *dev, unsigned long flags)
->  
->  #endif
->  
-> +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> +extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> +
-> +extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_len, size_t data_size,
-> +				u8 *tmp, size_t tmp_size);
-> +#endif
-> +
->  #endif /* __DRM_PANIC_H__ */
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-> index 55354e4dec14..5345aa93fb8a 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -36,6 +36,10 @@
->  #include <linux/workqueue.h>
->  #include <trace/events/rust_sample.h>
->  
-> +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> +#include <drm/drm_panic.h>
-> +#endif
-> +
->  /* `bindgen` gets confused at certain things. */
->  const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
->  const size_t RUST_CONST_HELPER_PAGE_SIZE = PAGE_SIZE;
-> 
-> -- 
-> 2.48.1.658.g4767266eb4-goog
-> 
+
