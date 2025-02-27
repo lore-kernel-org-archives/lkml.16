@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CB623A99E;
-	Thu, 27 Feb 2025 14:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA6B23C8AA;
+	Thu, 27 Feb 2025 14:07:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665226; cv=none; b=mAuYKuMLcsw84+TU1jV4tEkyCtFKDmuqfG/W82qwxsDBSAcv4QEYZFwWAwlDsuapPdbVI+Yy5oNBUaioSrpD2eW/sTq4RxM9N0pE1eH8LSub3C2t+XMBNi4O0YpO7MHaLZTdOji9mnONBJaYBg89MHpAovLdOaDzcNW1rZc7UeM=
+	t=1740665227; cv=none; b=cWM1fNsT5gfMJHbdVviDcUcKfMQf5fqdDvd3ZTxqqcEl7jIw+eXO+iPrgU3j/IxWJUPy4E+piRTnwqMOmq24/sLTTZBNAUdHOyqNQRJL1eN/jM2U0V6XhoUcbpWLkNLGeIwI0Nxhk+my/LN1MFr3Kwcq3NYdCp1NAYM8bSEWZRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665226; c=relaxed/simple;
-	bh=ZFQV1njpo/0Y7MZd6/sSFiNtToxZ4fmeFKOm9o1GgoQ=;
+	s=arc-20240116; t=1740665227; c=relaxed/simple;
+	bh=2vXDq7+SgVA2KCvb2xNhw8okvp63e4r2OZttvitqe08=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=epBWkgDjBQ44Tq+xvIW1394eouDUBM04CEKV69HEP+K6LILS2fN/EMzl089oggpXd/02ds86e1upmaWDWnElwgzv2/BWgXJtVy0JKNTu1u8lai4NJNmDFdho5PHDsoxHFFsnnEkP6jvb7KQxKZr3vJNmYffvEzGIwNc9FytUEOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QJj/HMey; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=WoHYjbzhgRfl/5VzYRL3Rs0uCpsnZYe10disqUcaDYNqUppXJJMFtcv8FxPXBGaX6m+N88o1wu4xVNzHM+lQj1C5dY4nl5tTHP6uTHo5ug1MX/c88YbqkhN/AiwjCecBWkxbfcfbQ2b1z6rthoL9NX9gBEUjKjrvY23onPdLHas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DbcnPFsB; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QJj/HMey"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DbcnPFsB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740665225; x=1772201225;
+  t=1740665226; x=1772201226;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ZFQV1njpo/0Y7MZd6/sSFiNtToxZ4fmeFKOm9o1GgoQ=;
-  b=QJj/HMey+JIW+B8wLF2A08UY2Z02atpdYA1sCYF+JwqxxaTlKeMWlObX
-   XasgMksijdrvbTqX7n+M3l1hOCxmwxvg9iibyVoXFS6anjYSA41iy8JGe
-   /UnYD8qfgzTvTj9u+/ZVugi+E2ssyWgiBXrrsPRrerc4761XVcs6zcNaS
-   BTYUgs/npUjz+OBus6JDajzGRa6twjO+DjVH5oujxamsDi2vyafD8o0y5
-   6EQcHRRLJGwb1zbuDj6iAa+XGSpH+8Y9diXljux7W7kRXAf/9CXNoGJ70
-   vuzlpSm+L3uKL/JP0GsODAKqj6QfQHfgpH90o/GHWuG2pJDVGmrxKLtqC
-   w==;
-X-CSE-ConnectionGUID: uluLCe/RSm2TLLrzg+uc8g==
-X-CSE-MsgGUID: zwT/8dcWTuiEJHOuesYoKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41438078"
+  bh=2vXDq7+SgVA2KCvb2xNhw8okvp63e4r2OZttvitqe08=;
+  b=DbcnPFsB14xhO2utA57GaTg/0+qoFEX7iIh2H/YkT4oIh9Xsuol5mD4s
+   7bHpbl5ORuR5vpqb/tttRSF+2U5QQEa5099UrUCeg+BcMGlNAwK8dAPtQ
+   VD63b6E5qzLAWn5IWadjeCDYMRmeUE7zRwnU9TJHqlsuUVHm6rU55GQS0
+   Q/18qPWkO5fwsSoqqPd5JeIK6WUGvn9/uziK581jF8/ZfsZfaPx5fyvYi
+   /i9vyTeQTOeh7uUiEJZXiMJRSC5MZRPHdSfVht4LbA1yM/ZTZUIHxX4jx
+   50N4N8f6SpsMRonT62oap9l8Ny0W9cMzRIMSdd8DSYgAFltp7+30NX2Df
+   Q==;
+X-CSE-ConnectionGUID: YVJTEtlhSF+PF42tmxUV1A==
+X-CSE-MsgGUID: zOY6KnU6QyqG7//42ieiJg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41438095"
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="41438078"
+   d="scan'208";a="41438095"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:49 -0800
-X-CSE-ConnectionGUID: scBcuk+6RIqOFey7r0pbdQ==
-X-CSE-MsgGUID: vjBpi3aaRq2T89tlzyIAHQ==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:52 -0800
+X-CSE-ConnectionGUID: Lpntc/5PREytDo21JnwR0g==
+X-CSE-MsgGUID: KS5kKneoQg+0v5GTqMNU/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="116831667"
+   d="scan'208";a="116831716"
 Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.220.154])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:46 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:50 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	broonie@kernel.org,
@@ -52,9 +52,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH v4 10/16] soundwire: intel_auxdevice: add indirection for BPT send_async/wait
-Date: Thu, 27 Feb 2025 22:06:09 +0800
-Message-ID: <20250227140615.8147-11-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH v4 12/16] soundwire: intel: add BPT context definition
+Date: Thu, 27 Feb 2025 22:06:11 +0800
+Message-ID: <20250227140615.8147-13-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250227140615.8147-1-yung-chuan.liao@linux.intel.com>
 References: <20250227140615.8147-1-yung-chuan.liao@linux.intel.com>
@@ -69,7 +69,7 @@ Content-Transfer-Encoding: 8bit
 
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-Mirror abstraction added for master ops.
+This is needed to be shared between open/send_async/close.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -77,67 +77,48 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- drivers/soundwire/intel_auxdevice.c | 24 ++++++++++++++++++++++++
- include/linux/soundwire/sdw_intel.h |  4 ++++
- 2 files changed, 28 insertions(+)
+ drivers/soundwire/intel.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel_auxdevice.c
-index dee126f6d9d5..5ea6399e6c9b 100644
---- a/drivers/soundwire/intel_auxdevice.c
-+++ b/drivers/soundwire/intel_auxdevice.c
-@@ -79,6 +79,27 @@ static bool is_wake_capable(struct sdw_slave *slave)
- 	return false;
- }
- 
-+static int generic_bpt_send_async(struct sdw_bus *bus, struct sdw_slave *slave,
-+				  struct sdw_bpt_msg *msg)
-+{
-+	struct sdw_cdns *cdns = bus_to_cdns(bus);
-+	struct sdw_intel *sdw = cdns_to_intel(cdns);
-+
-+	if (sdw->link_res->hw_ops->bpt_send_async)
-+		return sdw->link_res->hw_ops->bpt_send_async(sdw, slave, msg);
-+	return -EOPNOTSUPP;
-+}
-+
-+static int generic_bpt_wait(struct sdw_bus *bus, struct sdw_slave *slave, struct sdw_bpt_msg *msg)
-+{
-+	struct sdw_cdns *cdns = bus_to_cdns(bus);
-+	struct sdw_intel *sdw = cdns_to_intel(cdns);
-+
-+	if (sdw->link_res->hw_ops->bpt_wait)
-+		return sdw->link_res->hw_ops->bpt_wait(sdw, slave, msg);
-+	return -EOPNOTSUPP;
-+}
-+
- static int generic_pre_bank_switch(struct sdw_bus *bus)
- {
- 	struct sdw_cdns *cdns = bus_to_cdns(bus);
-@@ -267,6 +288,9 @@ static struct sdw_master_ops sdw_intel_ops = {
- 	.get_device_num =  intel_get_device_num_ida,
- 	.put_device_num = intel_put_device_num_ida,
- 	.new_peripheral_assigned = generic_new_peripheral_assigned,
-+
-+	.bpt_send_async = generic_bpt_send_async,
-+	.bpt_wait = generic_bpt_wait,
+diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+index dddd29381441..d44e70d3c4e3 100644
+--- a/drivers/soundwire/intel.h
++++ b/drivers/soundwire/intel.h
+@@ -48,11 +48,34 @@ struct sdw_intel_link_res {
+ 	struct hdac_bus *hbus;
  };
  
- /*
-diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
-index 580086417e4b..493d9de4e472 100644
---- a/include/linux/soundwire/sdw_intel.h
-+++ b/include/linux/soundwire/sdw_intel.h
-@@ -436,6 +436,10 @@ struct sdw_intel_hw_ops {
- 	bool (*sync_check_cmdsync_unlocked)(struct sdw_intel *sdw);
- 
- 	void (*program_sdi)(struct sdw_intel *sdw, int dev_num);
++/**
++ * struct sdw_intel_bpt - SoundWire Intel BPT context
++ * @bpt_tx_stream: BPT TX stream
++ * @dmab_tx_bdl: BPT TX buffer descriptor list
++ * @bpt_rx_stream: BPT RX stream
++ * @dmab_rx_bdl: BPT RX buffer descriptor list
++ * @pdi0_buffer_size: PDI0 buffer size
++ * @pdi1_buffer_size: PDI1 buffer size
++ * @num_frames: number of frames
++ * @data_per_frame: data per frame
++ */
++struct sdw_intel_bpt {
++	struct hdac_ext_stream *bpt_tx_stream;
++	struct snd_dma_buffer dmab_tx_bdl;
++	struct hdac_ext_stream *bpt_rx_stream;
++	struct snd_dma_buffer dmab_rx_bdl;
++	unsigned int pdi0_buffer_size;
++	unsigned int pdi1_buffer_size;
++	unsigned int num_frames;
++	unsigned int data_per_frame;
++};
 +
-+	int (*bpt_send_async)(struct sdw_intel *sdw, struct sdw_slave *slave,
-+			      struct sdw_bpt_msg *msg);
-+	int (*bpt_wait)(struct sdw_intel *sdw, struct sdw_slave *slave, struct sdw_bpt_msg *msg);
- };
- 
- extern const struct sdw_intel_hw_ops sdw_intel_cnl_hw_ops;
+ struct sdw_intel {
+ 	struct sdw_cdns cdns;
+ 	int instance;
+ 	struct sdw_intel_link_res *link_res;
+ 	bool startup_done;
++	struct sdw_intel_bpt bpt_ctx;
+ #ifdef CONFIG_DEBUG_FS
+ 	struct dentry *debugfs;
+ #endif
 -- 
 2.43.0
 
