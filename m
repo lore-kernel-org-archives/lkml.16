@@ -1,83 +1,79 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E63226E648;
-	Thu, 27 Feb 2025 19:20:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45842270054;
+	Thu, 27 Feb 2025 19:22:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684062; cv=none; b=bzmFNItQxuN8PUXx7ts6Gf3jjHaJ8GJhlNdC/eVM5JqQbNaevk6B229viJsIcrb72BVA7RkrXdqGsYr48EpCQNGCMFtUR11mdIE1Izy4cErGnvx5llbkTrL2/4g1dr4n+8cJVap28DnIwtzxFRv2W6ofs7lOg8yCvSy6x3/zac8=
+	t=1740684139; cv=none; b=uHQhWGlnKGvy3XcLfcp+JnHyBd/g56kNvoFFA7MNj7GPEYtIwI2671hlA5nAFAmlNJ05a2z8xVZY9i098Z4BQitw48Eoc2Tp7WYtgjyXIl+10e6hz9xvNotRywIr1mUGh12XV/+tSadhoW7eXTP6y3E9kzLWtUg3O2fASdKy04o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684062; c=relaxed/simple;
-	bh=LAHYGW6aEdOPky0rkEil/TkK8FvlUee/5AdEvTj1Z8g=;
+	s=arc-20240116; t=1740684139; c=relaxed/simple;
+	bh=2UHfEMBCWfxVZv7xXzvOUQzTvEVZ2+VcIsiwp9V9EGU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W12eL5DtcYfCy8U+5beXwHPHnZ4QMtmHDv5ju00+s1iKVGmz275Ao9T8Xb6ezhi+f7LU2jFprO0y/oQcHJTVWvB6tuupOxewO1rxUXRCY1tA4O5w35Ra2ohx0GEZ3S5vaTOIaacrrjsgXtYMFQhADT6s8TiM5fkWBziJRB/Z4H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=nVizH7JB; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=dOe6kflP4+33zPUWSJYP2NwZGZlXE4615T2vC9chx/xru3d537S+ZFec8Bq9W8dbNWn9953NJ22f18LOB0wJqsDr99u1ZMhmX2s2phnenGmeNrMWHWh7Wv8WkssD17RqDxNx8yamrChgYIreNVEmWKg18Sc1aAoj2E0XBSHseIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=tOzOhZUc; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="nVizH7JB"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="tOzOhZUc"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=2nIp4OdR2z6qhnWaz8PyWS7YQAJ1zv2iXHLQMFhsuG0=; b=nVizH7JBdfpOazpQiOrbNj8tAP
-	j9rufvbQMJimYcjaEfKd77ViNwf0qSPWJOVH/yUqtMt+OxFUXhRZdXrJFbvIce5YlwPsZvKu2zjO8
-	99uDyEjVdQo8q22Fz6W8v53xISBjS7lLqlMMkCpt1fR2r6o1imVUbzETr0FvZbIShSwGIyLc5elOq
-	taaaNJuET4c7R95LkGIsad9vPH8/FP69c5jd6+kcYfsLiGSrgqvvMcLV8lwt5GiiSUwEs4CDM9zMY
-	Rw13ZGBkkl57hbmB3fYm4LoT616yaZRZcmW+RIGdc2fpaahZHFxpCVQ9FJnAPmZswk9NdYxSeLihd
-	OwLQF5DA==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
+	bh=V4lez11SJeGvJGWTRQrriGcYKPO/Eo25CyAOjTjCEWY=; b=tOzOhZUc6AWzL93bODAJ/5ilCB
+	5MN8XqQdKRZqlvhRDDGgpxmM8jB2qLXfSjugOgFV89/afCAbBNaJe4weASEfHh5eI/7d5h7NAwGIf
+	9rIQAZqCYGvYKjgYt0JUyd+5TudCqs7Tk6Fzy/K8OKo3DNuUO+QMDyLzfPyJ/9NoJ84YD5aF0irg9
+	Rw2KLFXJ0CskQBnsWC4ZWfp/TKY8xYVlXlUasGidIytokO27flsOeTJWXvHs1MywegwSYrbp7JbG5
+	7xHs0+M8NbDRhtTnWftmY9EdHw6FB6jjDDzYwfq5yMMSv3B3nQjujFJ6fAC9559ymltRbEF1hqk53
+	kYOr/A7Q==;
+Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tnjRF-0003cw-He; Thu, 27 Feb 2025 20:20:53 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Jonas Karlman <jonas@kwiboo.se>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Yao Zi <ziyao@disroot.org>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+	id 1tnjSX-0003dX-8j; Thu, 27 Feb 2025 20:22:13 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Yao Zi <ziyao@disroot.org>,
+	Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
 Subject: Re: [PATCH] clk: rockchip: Add reset lookup table for RK3528
-Date: Thu, 27 Feb 2025 20:20:52 +0100
-Message-ID: <3022099.BaHzMo0RvP@diego>
-In-Reply-To: <Z8CzMNI_1CjUgSrl@pie.lan>
-References:
- <20250227175302.2950788-1-jonas@kwiboo.se> <Z8CzMNI_1CjUgSrl@pie.lan>
+Date: Thu, 27 Feb 2025 20:22:03 +0100
+Message-ID: <174068411735.106118.14972067490193651658.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250227175302.2950788-1-jonas@kwiboo.se>
+References: <20250227175302.2950788-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, 27. Februar 2025, 19:47:12 MEZ schrieb Yao Zi:
-> On Thu, Feb 27, 2025 at 05:52:57PM +0000, Jonas Karlman wrote:
-> > In the commit 5d0eb375e685 ("clk: rockchip: Add clock controller driver
-> > for RK3528 SoC") only the dt-binding header was added for the reset
-> > controller for the RK3528 SoC.
-> > 
-> > Add a reset lookup table generated from the SRST symbols used by vendor
-> > linux-6.1-stan-rkr5 kernel to complete support for the reset controller.
-> > 
+
+On Thu, 27 Feb 2025 17:52:57 +0000, Jonas Karlman wrote:
+> In the commit 5d0eb375e685 ("clk: rockchip: Add clock controller driver
+> for RK3528 SoC") only the dt-binding header was added for the reset
+> controller for the RK3528 SoC.
 > 
-> Thanks for completing the reset part! The patch looks good to me, but
+> Add a reset lookup table generated from the SRST symbols used by vendor
+> linux-6.1-stan-rkr5 kernel to complete support for the reset controller.
 > 
-> > Fixes: 5d0eb375e685 ("clk: rockchip: Add clock controller driver for RK3528 SoC")
-> 
-> I wonder whether it deserves a Fix tag: to me it's more like a new
-> feature. Please correct me if I'm wrong.
+> [...]
 
-while one can see both sides, I agree that the Fixes is unnecessary in
-this case. I've applied the clock controller mere hours ago and it was
-not broken, just missing functionality ;-)
+Applied, thanks!
 
-I've applied the patch now, and removed the Fixes line.
+[1/1] clk: rockchip: Add reset lookup table for RK3528
+      commit: 5738362a5ee7e3417312e7fc03bcb0ffb12ba4f3
 
-
-Heiko
-
-
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
