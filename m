@@ -1,456 +1,242 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DCF4A1A;
-	Thu, 27 Feb 2025 07:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95F91E521D;
+	Thu, 27 Feb 2025 07:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740642566; cv=none; b=iKzBNly6cGfKUDQzEutYuFOsLjYzQuOSLhp90B0I4W1tFPzvQQLBg/2iLgH43Y+oZonvmBIf0U94uNOkP4JkkCC24wXTtzyNtyKvbIRjYsEiZZLk4sw4X7NRbCbGiKa2aTVJ+3mE6r5m7X0QHtKwVeW5SJ3lKIvB3/22Odcdf9I=
+	t=1740642621; cv=none; b=fxe+Rk5I/tadHUQThhXOIAL/Og61Tpr15IE3XC/2vwUHsij1H3aCiqXT1YgKgOPg94RXPOxXqCIaOg081JnSzhST8wvEB+qPiEWpqPPyuIFaib0LMGvmGGwwE3UQHu40mlvoRk4gxeIppqyqxPKgl9ocGO7wd+hTfudbeRop49I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740642566; c=relaxed/simple;
-	bh=iw9ewAwQfe6X0zwWewfhIfLO8U0GhdEVVGspC39knVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pJsjdZkk48MEBaUKKHNF3/l9l0qkKOu9msdnZeeC69Reuo7p4FGSn9fFU5IRP3G0iZfNq8jo1YhA/ppCNcOzqcMhZtCxTCnXNWsscywk+ssmKyMmOJpkpfY7N043D8I71oVXuJRT3XSo8p9jubtmNjsP9/Bel4iB8Or+/qaXEVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IMHVVGHm; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1740642621; c=relaxed/simple;
+	bh=S9F2e7lRkRHtdgYVDmpNIrj//smsh+2ow+191iLu8q4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XqUbHT37mUJZ+SGbzbLZOHuuP9Rvff/U0jXBQO6/TD/ChCh8490oY/jz691M7BY+0Y1Ewinn8VUTKg/gtT186kE5dRKB0sg5ww46j7Z7yP6oDVF3P/iBnzCVuinrb56fW4jQQ9C/1Xqm1OWEjuMk11k3VGewDi07hcjNgjxeLtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B/NvBEXn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IMHVVGHm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=OFD5N9rOm82B332djyvozYo8ts0guMAt9X1fIIFKfy4=; b=IMHVVGHmALj2K9AbcjxWeI+sv0
-	ReL/t1iKX5KsPoXd9Uxn8orXIt6kRAh04DQhmTwB4JyBnqoi95FLIaaQnxjf5kvvl9lZNeNELriB7
-	jiCa4KUNe83jKyPcOU58GfY4jTWKwKv0seV4D25eERJLq5tZa9hR3PAHQ8tpMb27t2t59adKWW/fK
-	773grZuXFC08WWIhkI7+TG8gbZVKW14tdaXiheyq29FTbBrXWFkZvDRygeClklh85Mxhsx/tEd8jl
-	qWMZdi1W7GeaZsIKr4xIVhbhKRldl0NETYzjzeSBa+jCYVy5dscEAo3m1EF3HSIZMhlg5YJC3ypg7
-	MAmE3WWA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tnYdL-002Bw7-2x;
-	Thu, 27 Feb 2025 15:48:40 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 27 Feb 2025 15:48:39 +0800
-Date: Thu, 27 Feb 2025 15:48:39 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Will Deacon <will@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Harald Freudenberger <freude@linux.ibm.com>,
-	Holger Dengler <dengler@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [v3 PATCH] crypto: lib/Kconfig - Hide arch options from user
-Message-ID: <Z8AY16EIqAYpfmRI@gondor.apana.org.au>
-References: <20250225164216.4807-1-arnd@kernel.org>
- <20250225213344.GA23792@willie-the-truck>
- <f7c298b8-7989-49e7-90a2-5356029a6283@app.fastmail.com>
- <c4896a12-8abe-4fe6-b381-86b23d32b332@app.fastmail.com>
- <Z75xKexTUNm_FnSK@gondor.apana.org.au>
- <Z76aUfPIbhPAsHbv@gondor.apana.org.au>
- <Z77aFJCVuXeDXRrs@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B/NvBEXn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE188C4CEDD;
+	Thu, 27 Feb 2025 07:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740642621;
+	bh=S9F2e7lRkRHtdgYVDmpNIrj//smsh+2ow+191iLu8q4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B/NvBEXn9z9ZunU9RAfNjOW8+Nq5YR/vfOkOe1VJ4pmmXBHUjWCaXAKvCrhNsygYw
+	 NUulPAwVlCYGpXawY88uFu3QJf5fUgU5VCTYUUX4setaP/QOBuwiLrdhp249cPWhH/
+	 Ks9J9EkmNz0ntJ4Y7AE3bOMYISkN0pDrSL12Pbg773bk4Y4/8RxW87wOMqELVXn25M
+	 InCFlJ3sZSMNU7O7OUbrDu9aJs664HLwtyyedZ9KXSwuto192lrpuA2AbOpzEslP0j
+	 7CWpfoBzp+m0oq7a5+SZTozPobse3D9wzNkILUCL4l3maJA8z0c1qsZ8S4SvxrJ/QB
+	 t2+scGfZrGjvw==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-543d8badc30so672604e87.0;
+        Wed, 26 Feb 2025 23:50:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXoRM2M6E7qSlEZm6kmd6z9CiSXaz6rceWtQzHPlvzcHQ1lF2kJZVxkOsxA3CuOxCH7/nl+OdsE6+g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyut12W2jrhyfDIqcnvvOSgd/bU+fAwNxGxZW+qMskfFDXFuTZo
+	SwbYVDeF8dHwqAzILfEqvxx8apFf4YNFCGGU2oPlOSUYwjM7STKZY3i3AMmjGUfM/uTZFQ0I/ZZ
+	2ZTIhGiC4crzmZox9aAkksYwOQmw=
+X-Google-Smtp-Source: AGHT+IHWEL1CdAYVLlEtN6d4NWSiBrd1AluWIZPywKB1C2n2QQO7LcEEEv/DooBX39mSH3Bib2QjhA8X0mcjDkiIkNI=
+X-Received: by 2002:a05:6512:3b84:b0:545:4d1:64c0 with SMTP id
+ 2adb3069b0e04-548510dc454mr7011683e87.27.1740642620001; Wed, 26 Feb 2025
+ 23:50:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z77aFJCVuXeDXRrs@gondor.apana.org.au>
+References: <20250226201839.2374631-1-pjones@redhat.com>
+In-Reply-To: <20250226201839.2374631-1-pjones@redhat.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 27 Feb 2025 08:50:08 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXGoZ5RB4GWs_YTG7g+vGZokwe3yF-ri5BV4vOBinhqfLQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JqPg0a_qnsvgproOVYZdvPH5EHWsCax5Bh00K5KLJQaqgl9mR85caZgAkk
+Message-ID: <CAMj1kXGoZ5RB4GWs_YTG7g+vGZokwe3yF-ri5BV4vOBinhqfLQ@mail.gmail.com>
+Subject: Re: [PATCH] efi: don't map the entire mokvar table to determine its size
+To: Peter Jones <pjones@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Lenny Szubowicz <lszubowi@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The ARCH_MAY_HAVE patch missed arm64, mips and s390.  But it may
-also lead to arch options being enabled but ineffective because
-of modular/built-in conflicts.
+On Wed, 26 Feb 2025 at 21:18, Peter Jones <pjones@redhat.com> wrote:
+>
+> Currently when validating the mokvar table, we (re)map the entire table
+> on each iteration of the loop, adding space as we discover new entries.
+> If the table grows over a certain size, this fails due to limitations of
+> early_memmap(), and we get a failure and traceback:
+>
+>   ------------[ cut here ]------------
+>   WARNING: CPU: 0 PID: 0 at mm/early_ioremap.c:139 __early_ioremap+0xef/0x220
+>   Modules linked in:
+>   CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.12.15-200.fc41.x86_64 #1
+>   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20250221-6.copr8698600 02/21/2025
+>   RIP: 0010:__early_ioremap+0xef/0x220
+>   Code: e5 00 f0 ff ff 48 81 e5 00 f0 ff ff 4c 89 6c 24 08 41 81 e4 ff 0f 00 00 4c 29 ed 48 89 e8 48 c1 e8 0c 41 89 c7 83 f8 40 76 04 <0f> 0b eb 82 45 6b ee c0 41 81 c5 ff 05 00 00 45 85 ff 74 36 83 3d
+>   RSP: 0000:ffffffff96803dd8 EFLAGS: 00010002 ORIG_RAX: 0000000000000000
+>   RAX: 0000000000000041 RBX: 0000000000000001 RCX: ffffffff97768250
+>   RDX: 8000000000000163 RSI: 0000000000000001 RDI: 000000007c4c3000
+>   RBP: 0000000000041000 R08: ffffffffff201630 R09: 0000000000000030
+>   R10: 000000007c4c3000 R11: ffffffff96803e20 R12: 0000000000000000
+>   R13: 000000007c4c3000 R14: 0000000000000001 R15: 0000000000000041
+>   FS:  0000000000000000(0000) GS:ffffffff97291000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: ffff9f1d8000040e CR3: 00000000653a4000 CR4: 00000000000000f0
+>   Call Trace:
+>    <TASK>
+>    ? __early_ioremap+0xef/0x220
+>    ? __warn.cold+0x93/0xfa
+>    ? __early_ioremap+0xef/0x220
+>    ? report_bug+0xff/0x140
+>    ? early_fixup_exception+0x5d/0xb0
+>    ? early_idt_handler_common+0x2f/0x3a
+>    ? __early_ioremap+0xef/0x220
+>    ? efi_mokvar_table_init+0xce/0x1d0
+>    ? setup_arch+0x864/0xc10
+>    ? start_kernel+0x6b/0xa10
+>    ? x86_64_start_reservations+0x24/0x30
+>    ? x86_64_start_kernel+0xed/0xf0
+>    ? common_startup_64+0x13e/0x141
+>    </TASK>
+>   ---[ end trace 0000000000000000 ]---
+>   mokvar: Failed to map EFI MOKvar config table pa=0x7c4c3000, size=265187.
+>
+> Mapping the entire structure isn't actually necessary, as we don't ever
+> need more than one entry header mapped at once.
+>
+> This patch changes efi_mokvar_table_init() to only map each entry
+> header, not the entire table, when determining the table size.  Since
+> we're not mapping any data past the variable name, it also changes the
+> code to enforce that each variable name is NUL terminated, rather than
+> attempting to verify it in place.
+>
+> Signed-off-by: Peter Jones <pjones@redhat.com>
+> ---
+>  drivers/firmware/efi/mokvar-table.c | 41 +++++++++--------------------
+>  1 file changed, 13 insertions(+), 28 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/mokvar-table.c b/drivers/firmware/efi/mokvar-table.c
+> index 5ed0602c2f7..66eb83a0f12 100644
+> --- a/drivers/firmware/efi/mokvar-table.c
+> +++ b/drivers/firmware/efi/mokvar-table.c
+> @@ -103,7 +103,6 @@ void __init efi_mokvar_table_init(void)
+>         void *va = NULL;
+>         unsigned long cur_offset = 0;
+>         unsigned long offset_limit;
+> -       unsigned long map_size = 0;
+>         unsigned long map_size_needed = 0;
+>         unsigned long size;
+>         struct efi_mokvar_table_entry *mokvar_entry;
+> @@ -134,48 +133,34 @@ void __init efi_mokvar_table_init(void)
+>          */
+>         err = -EINVAL;
+>         while (cur_offset + sizeof(*mokvar_entry) <= offset_limit) {
+> -               mokvar_entry = va + cur_offset;
+> -               map_size_needed = cur_offset + sizeof(*mokvar_entry);
+> -               if (map_size_needed > map_size) {
+> -                       if (va)
+> -                               early_memunmap(va, map_size);
+> -                       /*
+> -                        * Map a little more than the fixed size entry
+> -                        * header, anticipating some data. It's safe to
+> -                        * do so as long as we stay within current memory
+> -                        * descriptor.
+> -                        */
+> -                       map_size = min(map_size_needed + 2*EFI_PAGE_SIZE,
+> -                                      offset_limit);
+> -                       va = early_memremap(efi.mokvar_table, map_size);
+> -                       if (!va) {
+> -                               pr_err("Failed to map EFI MOKvar config table pa=0x%lx, size=%lu.\n",
+> -                                      efi.mokvar_table, map_size);
+> -                               return;
+> -                       }
+> -                       mokvar_entry = va + cur_offset;
+> +               if (va)
+> +                       early_memunmap(va, sizeof(*mokvar_entry));
+> +               va = early_memremap(efi.mokvar_table + cur_offset, sizeof(*mokvar_entry));
+> +               if (!va) {
+> +                       pr_err("Failed to map EFI MOKvar config table pa=0x%lx, size=%zu.\n",
+> +                              efi.mokvar_table + cur_offset, sizeof(*mokvar_entry));
+> +                       return;
+>                 }
+> +               mokvar_entry = va;
+>
+>                 /* Check for last sentinel entry */
+>                 if (mokvar_entry->name[0] == '\0') {
+>                         if (mokvar_entry->data_size != 0)
+>                                 break;
+>                         err = 0;
+> +                       map_size_needed = cur_offset + sizeof(*mokvar_entry);
+>                         break;
+>                 }
+>
+> -               /* Sanity check that the name is null terminated */
+> -               size = strnlen(mokvar_entry->name,
+> -                              sizeof(mokvar_entry->name));
+> -               if (size >= sizeof(mokvar_entry->name))
+> -                       break;
+> +               /* Enforce that the name is null terminated */
+> +               mokvar_entry->name[sizeof(mokvar_entry->name)-1] = '\0';
+>
+>                 /* Advance to the next entry */
+> -               cur_offset = map_size_needed + mokvar_entry->data_size;
+> +               cur_offset += sizeof(*mokvar_entry) + mokvar_entry->data_size;
+>         }
+>
+>         if (va)
+> -               early_memunmap(va, map_size);
+> +               early_memunmap(va, sizeof(*mokvar_entry));
+>         if (err) {
+>                 pr_err("EFI MOKvar config table is not valid\n");
+>                 return;
 
-As the primary user of all these options wireguard is selecting
-the arch options anyway, make the same selections at the lib/crypto
-option level and hide the arch options from the user.
+Thanks for the fix.
 
-Instead of selecting them centrally from lib/crypto, simply set
-the default of each arch option as suggested by Eric Biggers.
+Should we add something like the below to avoid mapping the same page
+over and over again? Or is this premature optimization?
 
-Change the Crypto API generic algorithms to select the top-level
-lib/crypto options instead of the generic one as otherwise there
-is no way to enable the arch options (Eric Biggers).  Introduce a
-set of INTERNAL options to work around dependency cycles on the
-CONFIG_CRYPTO symbol.
 
-Fixes: 1047e21aecdf ("crypto: lib/Kconfig - Fix lib built-in failure when arch is modular")
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Arnd Bergmann <arnd@kernel.org>
-Closes: https://lore.kernel.org/oe-kbuild-all/202502232152.JC84YDLp-lkp@intel.com/
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+--- a/drivers/firmware/efi/mokvar-table.c
++++ b/drivers/firmware/efi/mokvar-table.c
+@@ -99,13 +99,13 @@
+  */
+ void __init efi_mokvar_table_init(void)
+ {
++       struct efi_mokvar_table_entry __aligned(1) *mokvar_entry, *next_entry;
+        efi_memory_desc_t md;
+        void *va = NULL;
+        unsigned long cur_offset = 0;
+        unsigned long offset_limit;
+        unsigned long map_size_needed = 0;
+        unsigned long size;
+-       struct efi_mokvar_table_entry *mokvar_entry;
+        int err;
 
-diff --git a/arch/arm/crypto/Kconfig b/arch/arm/crypto/Kconfig
-index 47d9cc59f254..23e4ea067ddb 100644
---- a/arch/arm/crypto/Kconfig
-+++ b/arch/arm/crypto/Kconfig
-@@ -3,10 +3,12 @@
- menu "Accelerated Cryptographic Algorithms for CPU (arm)"
- 
- config CRYPTO_CURVE25519_NEON
--	tristate "Public key crypto: Curve25519 (NEON)"
-+	tristate
- 	depends on KERNEL_MODE_NEON
-+	select CRYPTO_KPP
- 	select CRYPTO_LIB_CURVE25519_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
-+	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
-+	default CRYPTO_LIB_CURVE25519_INTERNAL
- 	help
- 	  Curve25519 algorithm
- 
-@@ -45,9 +47,10 @@ config CRYPTO_NHPOLY1305_NEON
- 	  - NEON (Advanced SIMD) extensions
- 
- config CRYPTO_POLY1305_ARM
--	tristate "Hash functions: Poly1305 (NEON)"
-+	tristate
- 	select CRYPTO_HASH
--	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
-+	select CRYPTO_ARCH_HAVE_LIB_POLY1305
-+	default CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Poly1305 authenticator algorithm (RFC7539)
- 
-@@ -212,9 +215,10 @@ config CRYPTO_AES_ARM_CE
- 	  - ARMv8 Crypto Extensions
- 
- config CRYPTO_CHACHA20_NEON
--	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (NEON)"
-+	tristate
- 	select CRYPTO_SKCIPHER
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
-+	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
- 	  stream cipher algorithms
-diff --git a/arch/arm64/crypto/Kconfig b/arch/arm64/crypto/Kconfig
-index 5636ab83f22a..3418c8d3c78d 100644
---- a/arch/arm64/crypto/Kconfig
-+++ b/arch/arm64/crypto/Kconfig
-@@ -26,10 +26,11 @@ config CRYPTO_NHPOLY1305_NEON
- 	  - NEON (Advanced SIMD) extensions
- 
- config CRYPTO_POLY1305_NEON
--	tristate "Hash functions: Poly1305 (NEON)"
-+	tristate
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_HASH
- 	select CRYPTO_ARCH_HAVE_LIB_POLY1305
-+	default CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Poly1305 authenticator algorithm (RFC7539)
- 
-@@ -186,11 +187,12 @@ config CRYPTO_AES_ARM64_NEON_BLK
- 	  - NEON (Advanced SIMD) extensions
- 
- config CRYPTO_CHACHA20_NEON
--	tristate "Ciphers: ChaCha (NEON)"
-+	tristate
- 	depends on KERNEL_MODE_NEON
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
- 	  stream cipher algorithms
-diff --git a/arch/mips/crypto/Kconfig b/arch/mips/crypto/Kconfig
-index 7decd40c4e20..545fc0e12422 100644
---- a/arch/mips/crypto/Kconfig
-+++ b/arch/mips/crypto/Kconfig
-@@ -3,9 +3,11 @@
- menu "Accelerated Cryptographic Algorithms for CPU (mips)"
- 
- config CRYPTO_POLY1305_MIPS
--	tristate "Hash functions: Poly1305"
-+	tristate
- 	depends on MIPS
-+	select CRYPTO_HASH
- 	select CRYPTO_ARCH_HAVE_LIB_POLY1305
-+	default CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Poly1305 authenticator algorithm (RFC7539)
- 
-@@ -52,10 +54,11 @@ config CRYPTO_SHA512_OCTEON
- 	  Architecture: mips OCTEON using crypto instructions, when available
- 
- config CRYPTO_CHACHA_MIPS
--	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (MIPS32r2)"
-+	tristate
- 	depends on CPU_MIPS32_R2
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
- 	  stream cipher algorithms
-diff --git a/arch/powerpc/crypto/Kconfig b/arch/powerpc/crypto/Kconfig
-index e453cb0c82d2..370db8192ce6 100644
---- a/arch/powerpc/crypto/Kconfig
-+++ b/arch/powerpc/crypto/Kconfig
-@@ -3,10 +3,12 @@
- menu "Accelerated Cryptographic Algorithms for CPU (powerpc)"
- 
- config CRYPTO_CURVE25519_PPC64
--	tristate "Public key crypto: Curve25519 (PowerPC64)"
-+	tristate
- 	depends on PPC64 && CPU_LITTLE_ENDIAN
-+	select CRYPTO_KPP
- 	select CRYPTO_LIB_CURVE25519_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
-+	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
-+	default CRYPTO_LIB_CURVE25519_INTERNAL
- 	help
- 	  Curve25519 algorithm
- 
-@@ -91,11 +93,12 @@ config CRYPTO_AES_GCM_P10
- 	  later CPU. This module supports stitched acceleration for AES/GCM.
- 
- config CRYPTO_CHACHA20_P10
--	tristate "Ciphers: ChaCha20, XChacha20, XChacha12 (P10 or later)"
-+	tristate
- 	depends on PPC64 && CPU_LITTLE_ENDIAN && VSX
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_CHACHA_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
-+	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
- 	  stream cipher algorithms
-diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
-index ad58dad9a580..c67095a3d669 100644
---- a/arch/riscv/crypto/Kconfig
-+++ b/arch/riscv/crypto/Kconfig
-@@ -22,7 +22,6 @@ config CRYPTO_CHACHA_RISCV64
- 	tristate "Ciphers: ChaCha"
- 	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
- 	select CRYPTO_SKCIPHER
--	select CRYPTO_LIB_CHACHA_GENERIC
- 	help
- 	  Length-preserving ciphers: ChaCha20 stream cipher algorithm
- 
-diff --git a/arch/s390/crypto/Kconfig b/arch/s390/crypto/Kconfig
-index b760232537f1..8c4db8b64fa2 100644
---- a/arch/s390/crypto/Kconfig
-+++ b/arch/s390/crypto/Kconfig
-@@ -108,11 +108,12 @@ config CRYPTO_DES_S390
- 	  As of z196 the CTR mode is hardware accelerated.
- 
- config CRYPTO_CHACHA_S390
--	tristate "Ciphers: ChaCha20"
-+	tristate
- 	depends on S390
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_CHACHA_GENERIC
- 	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving cipher: ChaCha20 stream cipher (RFC 7539)
- 
-diff --git a/arch/x86/crypto/Kconfig b/arch/x86/crypto/Kconfig
-index c189dad0969b..3d948f10c94c 100644
---- a/arch/x86/crypto/Kconfig
-+++ b/arch/x86/crypto/Kconfig
-@@ -3,10 +3,12 @@
- menu "Accelerated Cryptographic Algorithms for CPU (x86)"
- 
- config CRYPTO_CURVE25519_X86
--	tristate "Public key crypto: Curve25519 (ADX)"
-+	tristate
- 	depends on X86 && 64BIT
-+	select CRYPTO_KPP
- 	select CRYPTO_LIB_CURVE25519_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
-+	select CRYPTO_ARCH_HAVE_LIB_CURVE25519
-+	default CRYPTO_LIB_CURVE25519_INTERNAL
- 	help
- 	  Curve25519 algorithm
- 
-@@ -348,11 +350,12 @@ config CRYPTO_ARIA_GFNI_AVX512_X86_64
- 	  Processes 64 blocks in parallel.
- 
- config CRYPTO_CHACHA20_X86_64
--	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (SSSE3/AVX2/AVX-512VL)"
-+	tristate
- 	depends on X86 && 64BIT
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_CHACHA_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
-+	select CRYPTO_ARCH_HAVE_LIB_CHACHA
-+	default CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
- 	  stream cipher algorithms
-@@ -417,10 +420,12 @@ config CRYPTO_POLYVAL_CLMUL_NI
- 	  - CLMUL-NI (carry-less multiplication new instructions)
- 
- config CRYPTO_POLY1305_X86_64
--	tristate "Hash functions: Poly1305 (SSE2/AVX2)"
-+	tristate
- 	depends on X86 && 64BIT
-+	select CRYPTO_HASH
- 	select CRYPTO_LIB_POLY1305_GENERIC
--	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
-+	select CRYPTO_ARCH_HAVE_LIB_POLY1305
-+	default CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Poly1305 authenticator algorithm (RFC7539)
- 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 74ae5f52b784..b7771d7bd3b3 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -317,7 +317,7 @@ config CRYPTO_ECRDSA
- config CRYPTO_CURVE25519
- 	tristate "Curve25519"
- 	select CRYPTO_KPP
--	select CRYPTO_LIB_CURVE25519_GENERIC
-+	select CRYPTO_LIB_CURVE25519_INTERNAL
- 	help
- 	  Curve25519 elliptic curve (RFC7748)
- 
-@@ -615,7 +615,7 @@ config CRYPTO_ARC4
- 
- config CRYPTO_CHACHA20
- 	tristate "ChaCha"
--	select CRYPTO_LIB_CHACHA_GENERIC
-+	select CRYPTO_LIB_CHACHA_INTERNAL
- 	select CRYPTO_SKCIPHER
- 	help
- 	  The ChaCha20, XChaCha20, and XChaCha12 stream cipher algorithms
-@@ -936,7 +936,7 @@ config CRYPTO_POLYVAL
- config CRYPTO_POLY1305
- 	tristate "Poly1305"
- 	select CRYPTO_HASH
--	select CRYPTO_LIB_POLY1305_GENERIC
-+	select CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Poly1305 authenticator algorithm (RFC7539)
- 
-diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
-index c542ef1d64d0..b09e78da959a 100644
---- a/lib/crypto/Kconfig
-+++ b/lib/crypto/Kconfig
-@@ -48,11 +48,6 @@ config CRYPTO_ARCH_HAVE_LIB_CHACHA
- 	  accelerated implementation of the ChaCha library interface,
- 	  either builtin or as a module.
- 
--config CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
--	tristate
--	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_LIB_CHACHA=m
--	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA=y
+        if (!efi_enabled(EFI_MEMMAP))
+@@ -142,7 +142,7 @@
+                        return;
+                }
+                mokvar_entry = va;
 -
- config CRYPTO_LIB_CHACHA_GENERIC
- 	tristate
- 	select CRYPTO_LIB_UTILS
-@@ -63,9 +58,14 @@ config CRYPTO_LIB_CHACHA_GENERIC
- 	  implementation is enabled, this implementation serves the users
- 	  of CRYPTO_LIB_CHACHA.
- 
-+config CRYPTO_LIB_CHACHA_INTERNAL
-+	tristate
-+	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
++next:
+                /* Check for last sentinel entry */
+                if (mokvar_entry->name[0] == '\0') {
+                        if (mokvar_entry->data_size != 0)
+@@ -156,7 +156,19 @@ void __init efi_mokvar_table_init(void)
+                mokvar_entry->name[sizeof(mokvar_entry->name) - 1] = '\0';
+
+                /* Advance to the next entry */
+-               cur_offset += sizeof(*mokvar_entry) + mokvar_entry->data_size;
++               size = sizeof(*mokvar_entry) + mokvar_entry->data_size;
++               cur_offset += size;
 +
- config CRYPTO_LIB_CHACHA
- 	tristate "ChaCha library interface"
--	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
-+	select CRYPTO
-+	select CRYPTO_LIB_CHACHA_INTERNAL
- 	help
- 	  Enable the ChaCha library interface. This interface may be fulfilled
- 	  by either the generic implementation or an arch-specific one, if one
-@@ -78,13 +78,9 @@ config CRYPTO_ARCH_HAVE_LIB_CURVE25519
- 	  accelerated implementation of the Curve25519 library interface,
- 	  either builtin or as a module.
- 
--config CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
--	tristate
--	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_LIB_CURVE25519=m
--	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519=y
--
- config CRYPTO_LIB_CURVE25519_GENERIC
- 	tristate
-+	select CRYPTO_LIB_UTILS
- 	help
- 	  This symbol can be depended upon by arch implementations of the
- 	  Curve25519 library interface that require the generic code as a
-@@ -92,10 +88,14 @@ config CRYPTO_LIB_CURVE25519_GENERIC
- 	  implementation is enabled, this implementation serves the users
- 	  of CRYPTO_LIB_CURVE25519.
- 
-+config CRYPTO_LIB_CURVE25519_INTERNAL
-+	tristate
-+	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
-+
- config CRYPTO_LIB_CURVE25519
- 	tristate "Curve25519 scalar multiplication library"
--	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
--	select CRYPTO_LIB_UTILS
-+	select CRYPTO
-+	select CRYPTO_LIB_CURVE25519_INTERNAL
- 	help
- 	  Enable the Curve25519 library interface. This interface may be
- 	  fulfilled by either the generic implementation or an arch-specific
-@@ -118,11 +118,6 @@ config CRYPTO_ARCH_HAVE_LIB_POLY1305
- 	  accelerated implementation of the Poly1305 library interface,
- 	  either builtin or as a module.
- 
--config CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
--	tristate
--	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_LIB_POLY1305=m
--	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305=y
--
- config CRYPTO_LIB_POLY1305_GENERIC
- 	tristate
- 	help
-@@ -132,9 +127,14 @@ config CRYPTO_LIB_POLY1305_GENERIC
- 	  implementation is enabled, this implementation serves the users
- 	  of CRYPTO_LIB_POLY1305.
- 
-+config CRYPTO_LIB_POLY1305_INTERNAL
-+	tristate
-+	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
-+
- config CRYPTO_LIB_POLY1305
- 	tristate "Poly1305 library interface"
--	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
-+	select CRYPTO
-+	select CRYPTO_LIB_POLY1305_INTERNAL
- 	help
- 	  Enable the Poly1305 library interface. This interface may be fulfilled
- 	  by either the generic implementation or an arch-specific one, if one
-@@ -142,9 +142,10 @@ config CRYPTO_LIB_POLY1305
- 
- config CRYPTO_LIB_CHACHA20POLY1305
- 	tristate "ChaCha20-Poly1305 AEAD support (8-byte nonce library version)"
--	depends on CRYPTO
-+	select CRYPTO
- 	select CRYPTO_LIB_CHACHA
- 	select CRYPTO_LIB_POLY1305
-+	select CRYPTO_LIB_UTILS
- 	select CRYPTO_ALGAPI
- 
- config CRYPTO_LIB_SHA1
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
++               /*
++                * Don't bother remapping if the current entry header and the
++                * next one end on the same page.
++                */
++               next_entry = (void *)((unsigned long)mokvar_entry + size);
++               if (((((unsigned long)(mokvar_entry + 1) - 1) ^
++                     ((unsigned long)(next_entry + 1) - 1)) &
+PAGE_MASK) == 0) {
++                       mokvar_entry = next_entry;
++                       goto next;
++               }
+        }
+
+        if (va)
