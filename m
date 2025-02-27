@@ -1,114 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D758236435;
-	Thu, 27 Feb 2025 14:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20826237717
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667181; cv=none; b=NDI1HvmnR0GgpQb2aqls/zvH3fWq4kwTg0AfdqJhTP4+PPV9hIo2kGw5YTkLn4Fxo/dBrwaSA9lkQxK+2fXfq1oWmyns85gFDh602OMO0PaASPd/dx70AkijpapQpKs+J0eu1M6JGOZv5ZOHc9wQlFAgUlaWEwCSXqLvym/Tx2g=
+	t=1740667187; cv=none; b=XtmZItmYJnudqav3VLsNQMtTyTgMz2XISTn1y9H+6MBf7OSI06py8lOJyVnB+GEMAVGTm5sPWcg9DUL+6BLTGxMsxOcXNd9V/Nix8+b4X9mL+ASceu1B6vgD8F0t98xbARNcbknPW20efEBSsYQYgbXa3Ib6U8/UdKT4GbOFGFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667181; c=relaxed/simple;
-	bh=M5A9CbtSctHEgOcj2zrV2KphF+Jjyb2nnPlybeaE3OM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fluFVVb6cVT4rd32BScaCuSympPwTNIkaC+SKXbhHpd3PwdjtLAm6wrEQkVEPvx6m8XJHAjmc6SH0tGcvyxyU9FWc6MKlk5+i4tRld/d7hDiN9PiQyZu6ul+drvOGfWq4Slnw+n6eKs7FaHlgzWtUYJVRBRjsVPjjRfWJNJSQXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IWlRcwVO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740667187; c=relaxed/simple;
+	bh=C42kb8jZYl09xjQISSvxQc2ob3/FWGQuxy1rlAyDRgo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iHec+10IagdcPG8ua84qvVxXUsWJP3/MGlkqGJ+C/PKujHJdmCmpVRl6lG3e+ELtBmRmJXv17rxCOOQnX+C8Srh5cFWg2Ihg5PF18HtctudFNJtO/ri4XU4ehax5gaRE1U+aFNEWJ05bCtc+hIkW8iWDLrt5SAWo2i2kIsJ+L+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35xqrGF4; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IWlRcwVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A02C3C4CEDD;
-	Thu, 27 Feb 2025 14:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740667181;
-	bh=M5A9CbtSctHEgOcj2zrV2KphF+Jjyb2nnPlybeaE3OM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IWlRcwVOc+TAmjwEZ/ByAfglNpcGDzR0g5rAtA87u3IMoWG9uwJnT0jBzMes/E+XC
-	 0ilVNKkc6d7FPF9jmweEqogNpMgX6mpK2smUdu6MrJtM7BcE7s7oed994K4Idmulb2
-	 2VB2FxZnGDI+8DXpelhu5znImKhqdd7SO8zlaBGmp3JsNovA1Z6mNd9vYqdK96x/2j
-	 VSmsEH/gc0Y7RwWQGdEVVGcOxZaizoDcymE1u99dR+FFE8GqoLw9vWJJZiAtGtCrCL
-	 X9jmHPXhSPVAIevxab/7EtgIwushl4SRR75PBrgBWjE2HRroqLq2FeWqviU8N68CnX
-	 6zkUI2GaXuoBQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Thu, 27 Feb 2025 15:38:08 +0100
-Subject: [PATCH v8 2/7] rust: str: implement `Index` for `BStr`
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35xqrGF4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe8fa38f6eso2266887a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:39:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740667185; x=1741271985; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BxH+On3rOFzz2SdFAE8SEry5Nrx+QsPGCIQtGhiP8po=;
+        b=35xqrGF4JmSollVj8v6VmwqKWC2sC13040OWTzu9qYwqilPSaXQskv8CH9KBEps29X
+         Mp/SYRuA7KwzesRDzAE8J8WQTU3BzFQMsYYcB7P8mc05fNZ/VN4W0iRBhW7FUuAm8QLi
+         QKyPXqEGpZ8PaMWJ9jDraoHndvKrMmsYyIjrNqbaUmI7hLjNrv178C8obyq2P7D25U/3
+         /5C9x8BIWWpuDUgV5LzJ/bQ0bV5EafJQ9SMg2ku0hNF6Isdttq2Buc9xL67glaeBtf3Q
+         39uR8m59WdglqMr2AIlUPJWk/O/U1DRM0estyqLyuH7LRjARQnoB6Yh1q1XHN1Md27DU
+         6Vcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740667185; x=1741271985;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BxH+On3rOFzz2SdFAE8SEry5Nrx+QsPGCIQtGhiP8po=;
+        b=w6AroUAH6ei6VwPOdSr1YDuf6HgkFbXld2Q8ADqhm29DlQ4Emi/OhO8WiG23Pkcp8y
+         5j5/xcsG3Z04NtWgaWd/5R8BKT4x++6mqILu/o98yRJ8Ds3GMhEqK38lCt0kYnZVl9Es
+         c4TYqVz9c4DFaOv5wivHFl7Fclav1Zxun+6Cr+TZyLnzrxiu46kuDGlPibisZ687ElA7
+         mhXtJqRdYYD/uE/nmGs7417M1pC/pGTG1Zr6v3WbaIgiaJ+reJrLWhKZb+Apa4S1xXQ+
+         fwBGgghZz8fNd0G+aLAqbFPB4cZDFuuhyiVyATNn8xdz96ZMt3fVrTHDKbdWp7Myeqs2
+         Ukuw==
+X-Gm-Message-State: AOJu0YzO1YCCCY0+k0J1uR4G0w4X40H4a5TY/3tqf0UTwewMWTyZPUq7
+	YpPIy8Yzwc+JYg3xLyoRYnM1vZIEDW7OjlmzaFpllYMV/sZsS1RpUbgH8/L+/pXQ1YbUqLe/ti+
+	83g==
+X-Google-Smtp-Source: AGHT+IFJ3wN5DANqSer5hQVwE1SxZTBD0Lvfi1B1zqpxom5zbstWSZgZeTQEsaQZtulu7UPNR3qjkDRor8w=
+X-Received: from pjbsh16.prod.google.com ([2002:a17:90b:5250:b0:2fb:fa62:d40])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5407:b0:2ee:c91a:ad05
+ with SMTP id 98e67ed59e1d1-2fe68ac9087mr16599772a91.3.1740667185442; Thu, 27
+ Feb 2025 06:39:45 -0800 (PST)
+Date: Thu, 27 Feb 2025 06:39:44 -0800
+In-Reply-To: <f114eb3a8a21e1cd1a120db32258340504464458.camel@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-module-params-v3-v8-2-ceeee85d9347@kernel.org>
-References: <20250227-module-params-v3-v8-0-ceeee85d9347@kernel.org>
-In-Reply-To: <20250227-module-params-v3-v8-0-ceeee85d9347@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, 
- Luis Chamberlain <mcgrof@kernel.org>
-Cc: Trevor Gross <tmgross@umich.edu>, 
- Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
- Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
- Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- linux-modules@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=M5A9CbtSctHEgOcj2zrV2KphF+Jjyb2nnPlybeaE3OM=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnwHjRKeyyfaKxrJbA8R7hdevR5EtBatPUaJ8f8
- TQQ2HJ746OJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8B40QAKCRDhuBo+eShj
- d33KD/wOboHDofwhau5kg5su/fiNGZfBgeG0XU9/kRdFP3NwMTcuPJbbVAodbO87uTyklTIpYxy
- 0GsTHOGYiwkpe0IeXljHKblDXE3Hv9ThWS/qafNOIHFsqUkqKIjS5CaBi3Wna6quc7uNIS/mEmf
- WL1d9RvG/07doamWa3DZF08FztimRJiDe/lKLNX7NdDr2D2iE08JfIb7HHZctjXz1LXj/b7G4J7
- KIZONs4P80Mw5R9zivGIYuJwRIUaV9x+C9iSRXHDuM/8V8FN6WHK7oK1Fe2ZhfE4dPEgyUANR/6
- BMgtIFY4QmYFzM+7XUQou2r8rt3FOc4aq841pb2YtClTvezDqUj2q2fd1KdGda0LdaeX4HjeX/Q
- PeffS3ZO9L5BjUJhahlcL3al9wutq9TxFPPLI8CDjzmb14VMijDXbdm2ud2sd+xeHjNXqD1qAm0
- n2cqjSr4gJ/limNoZUAyScZJAKyR9lfWZ2DeS+rmZiiYFMNW+afG/WKwK80QHDnhNKVxkdRzYvv
- mHVfPHYEFIYlCr2SaVZ82OU/lRldacD52DJrpqftoUGC8Dg57zSv+eTTUSJdfFPBGSKTgJlehQ1
- 5VhI7kzKjwSe2U/TOU/X+mdPKmyYs/PIwxwyypHCOfFfLcDLEqtQ07eDGU6yha3J0EKspgYE882
- ywZqbSnKXInVbaQ==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Mime-Version: 1.0
+References: <20250218202618.567363-1-sieberf@amazon.com> <Z755r4S_7BLbHlWa@google.com>
+ <e8cd99b4c4f93a581203449db9caee29b9751373.camel@amazon.com>
+ <Z7-A76KjcYB8HAP8@google.com> <f114eb3a8a21e1cd1a120db32258340504464458.camel@amazon.com>
+Message-ID: <Z8B5MMCzBGwkTT0X@google.com>
+Subject: Re: [RFC PATCH 0/3] kvm,sched: Add gtime halted
+From: Sean Christopherson <seanjc@google.com>
+To: Fernand Sieber <sieberf@amazon.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"nh-open-source@amazon.com" <nh-open-source@amazon.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
-The `Index` implementation on `BStr` was lost when we switched `BStr` from
-a type alias of `[u8]` to a newtype. Add back `Index` by implementing
-`Index` for `BStr` when `Index` would be implemented for `[u8]`.
+On Thu, Feb 27, 2025, Fernand Sieber wrote:
+> On Wed, 2025-02-26 at 13:00 -0800, Sean Christopherson wrote:
+> > On Wed, Feb 26, 2025, Fernand Sieber wrote:
+> > > On Tue, 2025-02-25 at 18:17 -0800, Sean Christopherson wrote:
+> > > > And if you're running vCPUs on tickless CPUs, and you're doing
+> > > > HLT/MWAIT passthrough, *and* you want to schedule other tasks on those
+> > > > CPUs, then IMO you're abusing all of those things and it's not KVM's
+> > > > problem to solve, especially now that sched_ext is a thing.
+> > > 
+> > > We are running vCPUs with ticks, the rest of your observations are
+> > > correct.
+> > 
+> > If there's a host tick, why do you need KVM's help to make scheduling
+> > decisions?  It sounds like what you want is a scheduler that is primarily
+> > driven by MPERF (and APERF?), and sched_tick() => arch_scale_freq_tick()
+> > already knows about MPERF.
+> 
+> Having the measure around VM enter/exit makes it easy to attribute the
+> unhalted cycles to a specific task (vCPU), which solves both our use
+> cases of VM metrics and scheduling. That said we may be able to avoid
+> it and achieve the same results.
+> 
+> i.e
+> * the VM metrics use case can be solved by using /proc/cpuinfo from
+> userspace.
+> * for the scheduling use case, the tick based sampling of MPERF means
+> we could potentially introduce a correcting factor on PELT accounting
+> of pinned vCPU tasks based on its value (similar to what I do in the
+> last patch of the series).
+> 
+> The combination of these would remove the requirement of adding any
+> logic around VM entrer/exit to support our use cases.
+> 
+> I'm happy to prototype that if we think it's going in the right
+> direction?
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/str.rs | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 002dcddf7c76..ba6b1a5c4f99 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -114,6 +114,17 @@ fn eq(&self, other: &Self) -> bool {
-     }
- }
- 
-+impl<Idx> Index<Idx> for BStr
-+where
-+    [u8]: Index<Idx, Output = [u8]>,
-+{
-+    type Output = Self;
-+
-+    fn index(&self, index: Idx) -> &Self::Output {
-+        BStr::from_bytes(&self.0[index])
-+    }
-+}
-+
- /// Creates a new [`BStr`] from a string literal.
- ///
- /// `b_str!` converts the supplied string literal to byte string, so non-ASCII
-
--- 
-2.47.0
-
-
+That's mostly a question for the scheduler folks.  That said, from a KVM perspective,
+sampling MPERF around entry/exit for scheduling purposes is a non-starter.
