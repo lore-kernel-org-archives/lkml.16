@@ -1,150 +1,105 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7C26E650;
-	Thu, 27 Feb 2025 15:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D272B234984
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670933; cv=none; b=WsCg6cVl7nnV3UNz4cFD3Nz059KD6OL3+oO/N2Dn6YeeWQ4yxvpTblfVEFJryCWT3fjGHbrp3REqb4zM8VkLIZ/w38wohLWfdsXff+rIYrVK+RMmDMIneBoznq9GIh5gS2UR1ow7bxPPQiG1hCV27VpLwoInief8GYD2M/EAXAk=
+	t=1740670959; cv=none; b=e7PlOmzje/HE07sR2d2fvDbyJpQWizjdHyk2Eq2OV/4QO/1Knue1CIoXpi7YMCtcSgIlF7EqLdmUI5Fn/52DggOfeNIUeBLjrLtF0O+QRZWXVazpwHiEhrruFlpPPIOy+eQ0om30aoZrjxnuvy/OSYam4bpDUCG1FctYEjzvkmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670933; c=relaxed/simple;
-	bh=3jpunIAT4e3NlXpAl9K6jRlP/gp2ZIZ0EvV0Gf6zwGc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hMzWf/07V4HxPFHHMHQth5/Xw6PcdLD0Ez/goSb6vmhCxnAp9ElwOiXrVx8SE+2Ns13m2Ep9XSI9xiG81doE+6v+ZoFhqfmS9vUtDwtnFxFeYFIPo07u+6hMCmE6aX5D3I+8f6RR507Y80FmscGVQQclBXA6Ix1ml42XMhz5dtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BW+CAklg; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740670959; c=relaxed/simple;
+	bh=UuoWkiqtC0aOxbaIb+t32Rqp0zelh31Ws+VURGNU74U=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a1G/F42Yoa67kQ8vQYlHL3xh0WylW9gazagho1oiv55HExXszNQW09bZWRUdeRF+L2wO1wiG4XrHjCnCLMZ54vN12Q/mLnerh9DvoQdmKrNNnuV/Aha1YfCDr2JLtyo+gRyVWuj4yE2cJaNEXexeVO68/JwssRSHLv1R/RBxFIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lFtNwmpS; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BW+CAklg"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R7X61p018108;
-	Thu, 27 Feb 2025 15:41:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=b+Bxbc
-	Zny328vBDeBNuKHl0X5uSvYbJu041HX++8d1c=; b=BW+CAklgFMbwmvwJ90u4Cz
-	mGP1D83BRyX61YNQHEY8kV+H6JQ4YacQTXeG1c78yGqs8Q3t8c4FQxCgveayhtBh
-	9ZJZ8RZEEiva0HfPWBq4mzbjMOf48a9btMSLgtbkPEoi5y/krwOYVAXlGseySA9z
-	pwc4FBoJyKXqcYFAxvQn6gEL7ZK2r2znBEHlNi2NXE9oiyfOo8Bylf1Ow39QxrQ3
-	NgzCQFh5Dg3TsF7aUbQbKt00lieJXTHChOzoOyRJhifPbGl9mDMq98ZcIo2oIsmc
-	S8RoG4cXl+NA0GQqti70Z7ySNzmWTR7a7hqMsbTuPBVUyLLXLGiE6ccvzHXL/IaA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452krpab3d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 15:41:42 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51RFZC10020841;
-	Thu, 27 Feb 2025 15:41:41 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452krpab3b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 15:41:41 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51RFOYFd012131;
-	Thu, 27 Feb 2025 15:41:41 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44ys9ysjqn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 15:41:41 +0000
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51RFfeVx8782300
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 15:41:40 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AC38858045;
-	Thu, 27 Feb 2025 15:41:40 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E248458054;
-	Thu, 27 Feb 2025 15:41:38 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.182.161])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Feb 2025 15:41:38 +0000 (GMT)
-Message-ID: <55acf768b52b47dd9d33fa0486772d8c7ae38779.camel@linux.ibm.com>
-Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Baoquan He <bhe@redhat.com>, steven chen <chenste@linux.microsoft.com>
-Cc: stefanb@linux.ibm.com, roberto.sassu@huaweicloud.com,
-        roberto.sassu@huawei.com, eric.snowberg@oracle.com,
-        ebiederm@xmission.com, paul@paul-moore.com, code@tyhicks.com,
-        bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
-        kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
-        nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
-        vgoyal@redhat.com, dyoung@redhat.com,
-        Mike Rapoport <mike.rapoport@gmail.com>
-Date: Thu, 27 Feb 2025 10:41:38 -0500
-In-Reply-To: <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
-	 <20250218225502.747963-3-chenste@linux.microsoft.com>
-	 <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lFtNwmpS"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe862ea448so3529622a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:42:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740670957; x=1741275757; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CTxXQgz7Yxbc/eAAimpjcsGV9z/4hM21fqn8fXkikhY=;
+        b=lFtNwmpSjBIDmPYLbnaBZAeaS7Bdol/QV6/Di1ZbYw9aPjQKJCDI4082rKNFm3AF08
+         utqNacWRoVYbNPGHRzXlTQR5a7DAvmAxEDSyMZyF7aMj5DnkdrKQiw/9ost/Lt6XUEJe
+         GwVUD0lnuLBhDWEaJMk2mEH53QhNaXAG+WUa9PpsJHAUGU4ja8WtEs05rAOYsJocXAVN
+         aSytUk67DMoP1k7Un+DHG8bHmZ6tGOAYnN5LTWtbHIra662hgpeyFk/h6+A/ao8EmGLW
+         J/KrNWcmtpvV3+P/sQXJIeeMQCihgNSuuVQRD5fhdt3Q6GQDMHtzp/Bd0+pr2xO5owUP
+         Kuwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740670957; x=1741275757;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CTxXQgz7Yxbc/eAAimpjcsGV9z/4hM21fqn8fXkikhY=;
+        b=Wabwuyl6x3r2WJM0vlYbrO2w/6RJxgu0EWGzRN8rVkJkE04xjereM+fAMK+C5YFF3Z
+         ugLwqClIvhmcZvBJl9Q3T+LERXofzchkBUnwP+7rephrrxxD1rfR/RttWS0UdGMcjoT7
+         cdzS7oDKYo2GSec+KLLtIb8AQRfzE+PFKwqA3j5NCeT0w1WzqUVACiVMr/yfqGbq+gzG
+         N6KxhznZc2F4Tr4hstpu/jtu/MHKQhKmWgxuceMeeeDyz/LGncMmC4klc1TO3c1fSKRN
+         q758EUODsanKcqZa1GNCTAtfVNLpAZ1RnwHdypy8wPeaJf9cKUxej+T9omb7U8ZRbC7m
+         aPvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWepuPY72Zgk5jmAer2UJYxAA5E/McI0P+VFWyrTuGzvb+2nYlzWR84Il+HAybaUYBOJy0h03KD7Q1XMus=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+ncffPo8tAfpWd7gx5eIdyaIoRJGHJY/d6A2jG6EZQESI807b
+	+qA+BDfTAtHR2K2+637SJEZqlGke3gBcSHUGcaR4bztjs/Z6AbnkqcHySUjvPJJPN4WpwggyaQF
+	UZw==
+X-Google-Smtp-Source: AGHT+IGO+W9sfErnn/5UJ2Mtcl1Knk5QkM6rEM8nO1qZYe/AqOfxoeKMz4uPwgmxxOQVDkvbyEA4XinzfOo=
+X-Received: from pjz4.prod.google.com ([2002:a17:90b:56c4:b0:2fc:1158:9fe5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d445:b0:2fe:a742:51a7
+ with SMTP id 98e67ed59e1d1-2fea7425341mr3837296a91.23.1740670957036; Thu, 27
+ Feb 2025 07:42:37 -0800 (PST)
+Date: Thu, 27 Feb 2025 07:42:35 -0800
+In-Reply-To: <f59991ed-e24d-4bf4-8739-b314327ca1d3@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Ch4kdlH88UqRX1-HCo1ZOA_UlxSUa3fp
-X-Proofpoint-GUID: 91rmgt_eP3x3zo_lmBXUAyyK5DSmDO87
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_06,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- lowpriorityscore=0 spamscore=0 impostorscore=0 priorityscore=1501
- mlxscore=0 bulkscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270117
+Mime-Version: 1.0
+References: <20250227012541.3234589-1-seanjc@google.com> <20250227012541.3234589-6-seanjc@google.com>
+ <4443bdf2-c8ea-4245-a23f-bb561c7e734e@amd.com> <Z8B3x7EPYY8j8o7F@google.com> <f59991ed-e24d-4bf4-8739-b314327ca1d3@amd.com>
+Message-ID: <Z8CH6_hYMKYk0doi@google.com>
+Subject: Re: [PATCH v2 05/10] KVM: SVM: Require AP's "requested" SEV_FEATURES
+ to match KVM's view
+From: Sean Christopherson <seanjc@google.com>
+To: Pankaj Gupta <pankaj.gupta@amd.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Naveen N Rao <naveen@kernel.org>, Kim Phillips <kim.phillips@amd.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Alexey Kardashevskiy <aik@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-[Cc'ing Mike Rapoport]
+On Thu, Feb 27, 2025, Pankaj Gupta wrote:
+> 
+> > > > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> > > > index 9aad0dae3a80..bad5834ec143 100644
+> > > > --- a/arch/x86/kvm/svm/sev.c
+> > > > +++ b/arch/x86/kvm/svm/sev.c
+> > > > @@ -3932,6 +3932,7 @@ void sev_snp_init_protected_guest_state(struct kvm_vcpu *vcpu)
+> > > >    static int sev_snp_ap_creation(struct vcpu_svm *svm)
+> > > >    {
+> > > > +	struct kvm_sev_info *sev = to_kvm_sev_info(svm->vcpu.kvm);
+> > > >    	struct kvm_vcpu *vcpu = &svm->vcpu;
+> > > >    	struct kvm_vcpu *target_vcpu;
+> > > >    	struct vcpu_svm *target_svm;
+> > > > @@ -3963,26 +3964,18 @@ static int sev_snp_ap_creation(struct vcpu_svm *svm)
+> > > >    	mutex_lock(&target_svm->sev_es.snp_vmsa_mutex);
+> > > > -	/* Interrupt injection mode shouldn't change for AP creation */
+> > > > -	if (request < SVM_VMGEXIT_AP_DESTROY) {
+> > > > -		u64 sev_features;
+> > > > -
+> > > > -		sev_features = vcpu->arch.regs[VCPU_REGS_RAX];
+> > > > -		sev_features ^= to_kvm_sev_info(svm->vcpu.kvm)->vmsa_features;
+> > > > -
+> > > > -		if (sev_features & SVM_SEV_FEAT_INT_INJ_MODES) {
+> > > 
+> > > 'SVM_SEV_FEAT_INT_INJ_MODES' would even be required in any future use-case,
+> > > maybe?
+> > 
+> > Can you elaborate?  I don't quite follow what you're suggesting.
+> 
+> SVM_SEV_FEAT_INT_INJ_MODES macro is not used anymore? If there is no plan to
+> use it, maybe we can remove that as well?
 
-On Mon, 2025-02-24 at 14:14 +0800, Baoquan He wrote:
-> Hi Steve, Mimi,
->=20
-> On 02/18/25 at 02:54pm, steven chen wrote:
-> > Currently, the mechanism to map and unmap segments to the kimage
-> > structure is not available to the subsystems outside of kexec.  This
-> > functionality is needed when IMA is allocating the memory segments
-> > during kexec 'load' operation.  Implement functions to map and unmap
-> > segments to kimage.
->=20
-> I am done with the whole patchset understanding. My concern is if this
-> TPM PCRs content can be carried over through newly introduced KHO. I can
-> see that these patchset doesn't introduce too much new code changes,
-> while if many conponents need do this, kexec reboot will be patched all
-> over its body and become ugly and hard to maintain.
->=20
-> Please check Mike Rapoport's v4 patchset to see if IMA can register
-> itself to KHO and do somthing during 2nd kernel init to restore those
-> TPM PCRs content to make sure all measurement logs are read correctly.
-> [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-
-Hi Baoquan,
-
-I was hoping to look at Mike's patch set before responding, but perhaps it =
-is
-better to respond earlier rather than later with my initial thoughts.
-
-The IMA measurement list isn't stored in contiguous memory, but has to be
-marshalled before being carried across kexec, and then unmarshalled to rest=
-ore
-it after the kexec.  Roberto Sassu has been thinking about changing how the=
- IMA
-measurement list is stored so marshalling/unmarshalling wouldn't be necessa=
-ry.=20
-Making both this change and using KHO going forward would be a good idea.
-
-However, that sort of change wouldn't be appropriate to backport.  So the
-question comes down to whether being unable to attest the measurement list,
-because the measurements are copied too early at kexec load, but the TPM is
-being extended through kexec exec, is considered a bug.  If that is the cas=
-e,
-then I suggest finish cleaning up and upstreaming this patch set so that it
-could be backported.
-
-thanks,
-
-Mimi
+Ah, gotcha.  I didn't realize it was a compound macro.  Yeah, unless someone
+objects, I'll remove it when applying.
