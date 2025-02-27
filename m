@@ -1,83 +1,108 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9392270047
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 548A476034
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740618076; cv=none; b=Xac80PaqW96L1FtgSJjj8HdmjUtttVsJUBX6UzvTQzHFlVpCiSi7vrN1O9uFVaU0xU4F4S7GZMZcvbcMVNhNvNM1NvGkDnlUnQ9nNfkfDOz9x3skTblBJX4LW1PpJnS0we74Khec8u6FhtxHgwVl5wRIoR4zCRk+XtP0N3wjWM4=
+	t=1740618079; cv=none; b=GTtt/gm9jzMTFMluLQKJvGAltCkUJudvbnXxto/ZQn9PaViWR7uuGe9x2XffW57+OvsIRg/a9PdrOOV/pinMf/vL78UpqC83AytjGQ6k9qM/BOtQP6UkjPN8ihp3nhEpHAPw7iDoFl6qjmG10Gb6BCyhCrF17KJ8sKvzIOYcjbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740618076; c=relaxed/simple;
-	bh=MJkxaDKjp4xLw2qAO/PVE8kYrbfA1Tvd5U0UZQv8DxU=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=H+mnVSEyWaL9/gTJJ/GNunT1W8/SJ7RMNA9mNoWmKEKhUIzpXowkVy4faQGkmWoliEsglrmiugTk89dR1JoSObWVEArBgH5k6jMy0yCh51C4c36/Ev5IaD25SF7WfbCZMKuMdgyeS4+jTMwAEUYqWcnhNpWtKtttCsoNG+JNGL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EYZ06Edg; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1740618079; c=relaxed/simple;
+	bh=WlG71nbfhMG+iZLSreFus8KOoSWVnI0WTDVJb/q9jyI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=XrObacmnDrHoNQGVyhsf/nZ4nmAoGPT+s9JHmlf0U35VWwY7IUVmGt8iqpciHP05l1yNzBzNH6fGOSJ1bImUlDgH5M/yVS878xS3isMnqlk4WBYze5jYTcFeNekNzx8u5ZRFUKNxfjnaYVCJPayTnIHe4OIKbrqCHJTU5R7Z7EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h5bwLIWn; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYZ06Edg"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc45101191so929793a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:01:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h5bwLIWn"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-21f6cb3097bso7795635ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:01:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740618074; x=1741222874; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7FGSvZnsTup4FbvQYUEbSwqPM6j8STYAb7LEU04cNgQ=;
-        b=EYZ06EdgXIZASadq/PZA19WE3+T01lDv1qivriUD4MBsZ4l9DvPWnNXc/3L/UHttt0
-         oVMygi4imIdNjDIzJaId9+InIj86Xw5fS1tmUlhCTNmk/a052WYxLRWnUk61h89EiKnD
-         i2fGlXk8XBSaQCHRayqrnBd3Qta+KxaprpU8T0r2a/ISaKOhBcJUodjba8RmCKm59LPj
-         ajxvjo7I3WTCoxIGmZSWBNnxXHRKo+t+FafqnCIBXfYbxadFKazxxmHZb92jyhQzPwsS
-         gSL4efRxBUcxNxccm5Xlx5rDH0rf1Dm2L7g9Obq8IhRF5zfxInNPSuG7wkULJotm8wD+
-         p5bg==
+        d=google.com; s=20230601; t=1740618077; x=1741222877; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=vBrLV0hVNi1a5D0W6BOn6trR5W1NotqikKgQ5Tv/tAA=;
+        b=h5bwLIWnwuwrVytdM2CbIkyHDKiwxHsBucwH/HVkYoAGvzRRf2ExPXlMyntnUdjoas
+         QobhzuDj107Ca/zGaDS+w8BQFr4aSwDVqMKP3XztP9CbtwtNVGlmpelAT2ovNx+GajMm
+         MW2gB//r/0CeMbPWGRG9avSqFq6QfKj/zmv+4MgIL9RTU8bo18I1u6ZRNezMD64Pd+AZ
+         N/m+tHyM9GIw+bIwKehFhe/KSUdgemEDxI44vQrKaHbMakUVB9awcY8nIHSsZKgi5LWS
+         pogQZ+xysPF02k+tial2LdtKDUuLvHQJ/awgaLnsIvwGX+oUiAzO6f50wXg4+AtF/DPw
+         orjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740618074; x=1741222874;
-        h=cc:to:from:subject:message-id:mime-version:date:reply-to
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7FGSvZnsTup4FbvQYUEbSwqPM6j8STYAb7LEU04cNgQ=;
-        b=lfiKITyMl38qxlimCHh6P0UQSXLIqoVXBJtiSmZF5PXJntLZ0mYLsO2AKbUho/DSx4
-         KZmH8dRL6ll9+dPGb+IXmo6nlPyQwj7hwS94QI3BHHfILJa3OPSwoEETsFvlh+Ciy7YU
-         N1yXMKaS/uqGz2IzY70lNoZZQF4ZwIHgYo7ODPrQ4uW1YEhfQNY2GOuz+3E3ip4EWbCQ
-         auG/LLV0wyfnwrq3zl7qwrUgf+Bw7teAnDk8Jgdrupy6+EWiKsfgSjmCrHzJC5NVzRSp
-         /YSOtaWIM0QAnM/V9XtUKgU8QmPnF/3ci9nVwyua5d1ARzgowKclovNj01Mh3hHUXdUx
-         +twQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWj0LZw59vu5NZSvBfe2uxGkPOpNhBp5Fu5KZmYLI3fyxSR8iYIDC4PhNv1llK1fiaCUr3vsq6JfR7EMGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVLgU8XoomEr3dpAMONuuQOu4nuCdTZgwO0IyyxIfAZFyfSTEz
-	+PlovoZ1Rs5snDsSg+hu7DqEW8MN0Umvc5uMBZ70oAay8QPNQbXKp/VR24QOAgxtpK69jDpLzwU
-	2Cg==
-X-Google-Smtp-Source: AGHT+IEpwphmkDcWYyRaf/JaCL+77vUw2LSwzN385jLypriLNDJlK7izhiOdGrcQMdreqPyQe3yEl56oAEc=
-X-Received: from pjbpa16.prod.google.com ([2002:a17:90b:2650:b0:2fa:1b0c:4150])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4fcf:b0:2f8:34df:5652
- with SMTP id 98e67ed59e1d1-2fce78beb41mr33084170a91.21.1740618074186; Wed, 26
- Feb 2025 17:01:14 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740618077; x=1741222877;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vBrLV0hVNi1a5D0W6BOn6trR5W1NotqikKgQ5Tv/tAA=;
+        b=iVOCKEtBrb5ZkrrKrHSupT+ALVwKV769i3ughln+B8y1ruF4IfCmTJc5CIa9OE0/KP
+         QQL9OTWmct5sUevsOaWNQD+1RQQXwoIYKeTkaBzOkMSG1jbVOIvTaLmi/BrSuIhT4dqg
+         mrcYcdM9zAasK7lN65hZMGOsdejhogArzOd68EtbFTJhAg3RPCRI8H8CTgZP6pS4zc/+
+         adqf4JPPcno1ghP1jg4j2LWuLRf1WAuZkTECtpnZdij5de+V7DE99sDVHg9zu7CP+K8z
+         B38+7M47gs1pQn3arNRphOwlii5dJwGD+KwTg2qjmCoHo4NsdrMvDwk0CpItDlvOBaF2
+         h4eA==
+X-Forwarded-Encrypted: i=1; AJvYcCXbEnXuCaHTBuw6cddEa2VB1jsLbHmDGVrxBLz+yh5AQljsWYzESnOTvBhgKfR54fSeSLFAWvjmdQxvtmM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhNF+/opLk7TFnYd5dTu9kJpUImAJw0EdLzAzB0iLTdj6vnOjm
+	2habi62rxd/tHaMO433y7EzB/026wgSVx6Q8wegGMTrkAjhRbZLnvqquApG1aiEMPs70MSn/mql
+	kIA==
+X-Google-Smtp-Source: AGHT+IHs7OvM6rkyJG6uPTB8OuiiFrOfEIijhU66O7j1sKQRSBCikrQVvi/YgsIilD/6fEgCFLkFRZL+ErE=
+X-Received: from pfbfb26.prod.google.com ([2002:a05:6a00:2d9a:b0:734:4341:5d97])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:eccb:b0:220:ea90:1925
+ with SMTP id d9443c01a7336-221a1148e99mr409270715ad.35.1740618077666; Wed, 26
+ Feb 2025 17:01:17 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Feb 2025 17:01:09 -0800
+Date: Wed, 26 Feb 2025 17:01:11 -0800
+In-Reply-To: <20250227010111.3222742-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250227010111.3222742-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250227010111.3222742-1-seanjc@google.com>
-Subject: [PATCH 0/2] KVM: x86: Advertise support for WRMSRNS
+Message-ID: <20250227010111.3222742-3-seanjc@google.com>
+Subject: [PATCH 2/2] KVM: x86: Advertise support for WRMSRNS
 From: Sean Christopherson <seanjc@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Advertise support for WRMSRNS, which should be trivial, but is mildly
-annoying due to a token pasting collision between the instruction macro
-and KVM's CPUID feature bit shenanigans.
+Advertise support for WRMSRNS (WRMSR non-serializing) to userspace if the
+instruction is supported by the underlying CPU.  From a virtualization
+perspective, the only difference between WRMSRNS and WRMSR is that VM-Exits
+due to WRMSRNS set EXIT_QUALIFICATION to '1'.  WRMSRNS doesn't require a
+new enabling control, shares the same basic exit reason, and behaves the
+same as WRMSR with respect to MSR interception.
 
-Sean Christopherson (2):
-  x86/msr: Rename the WRMSRNS opcode macro to ASM_WRMSRNS (for KVM)
-  KVM: x86: Advertise support for WRMSRNS
+  WRMSR and WRMSRNS use the same basic exit reason (see Appendix C). For
+  WRMSR, the exit qualification is 0, while for WRMSRNS it is 1.
 
- arch/x86/include/asm/msr.h | 4 ++--
- arch/x86/kvm/cpuid.c       | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Don't do anything different when emulating WRMSRNS vs. WRMSR, as KVM can't
+do anything less, i.e. can't make emulation non-serializing.  The
+motivation for the guest to use WRMSRNS instead of WRMSR is to avoid
+immediately serializing the CPU when the necessary serialization is
+guaranteed by some other mechanism, i.e. WRMSRNS being fully serializing
+isn't guest-visible, just less performant.
 
+Suggested-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/cpuid.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-base-commit: fed48e2967f402f561d80075a20c5c9e16866e53
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 97a90689a9dc..ebecfe4bea1e 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -992,6 +992,7 @@ void kvm_set_cpu_caps(void)
+ 		F(FZRM),
+ 		F(FSRS),
+ 		F(FSRC),
++		F(WRMSRNS),
+ 		F(AMX_FP16),
+ 		F(AVX_IFMA),
+ 		F(LAM),
 -- 
 2.48.1.711.g2feabab25a-goog
 
