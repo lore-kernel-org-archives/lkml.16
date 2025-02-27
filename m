@@ -1,109 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1B71D6182;
-	Thu, 27 Feb 2025 20:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84141D6182
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687707; cv=none; b=fRmdOzSz19kx0mO5iA6DVQKhnOCxdgc8GN0j/KHWkdGWF93wWQP1ffaU5KSyRXIeqDUxUOzB+iKZUe2V26pfG2bqqWE5eFbXEnGfwxDSt0+TqBMlKVogUYsqYvJxkxo9hYvzyizS0lMRm2kYTJnw7Na+yRGC97gXHyfmHfR2EJA=
+	t=1740687743; cv=none; b=d8vZhnyCXT65TMxDr72yOX0ns3ZEe6wW+vwmS2lUxXgYV9shZj0GaUXUO3zdRMt94hDQWgk9/hVFwCfcGcNxhWS8dy8L0uLo0l2dl5jHGzJctewuOqoKwJDBUi2CeBLqMk6wPJmkMzGAgLv8i8I2tjCRF4GRkdgfZAXC208klrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687707; c=relaxed/simple;
-	bh=yJLvp2oI0sbx31hYDIXLNAAq0hg/gtAY3C68UTWPF8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HBCpu4gmKEoAR8/g1CAH2WRHFlaKJ0J8L5n2HrQN47GrlzEO0iosB89Tw73hm0SwKRJha2OmYnVX0BzSR3Wa15O3Ur1WSGF+ofYuphxFYLslqCNhtOmiA26X0Sbw4PZhshp4RS+Z4ZjUaK3V3M0vRKtMvJDWbSoCKiDGwgsIujI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CvlEYPyq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740687743; c=relaxed/simple;
+	bh=4JO84e2/jyvgpbFbferhNXNJSfOzWDotZb4WwEXenb8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MHYMU7yA8fLJ859a9Fqfu0S0ZRlSYvFMp9eAbVJAM6mhItLp2EQGjw2awPV8NOlmI+FzmLkkcz2nmLbxU0rLqT+L7QEeFzHD9MjoJmgpzmaW0kuCceX+FX9TkOkVnkHs+KmKS0bOxdaTmDTcAYk6oKWjZR4jB3KkMhmcNwon9Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=f9b2XkW5; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CvlEYPyq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94CCFC4CEDD;
-	Thu, 27 Feb 2025 20:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740687706;
-	bh=yJLvp2oI0sbx31hYDIXLNAAq0hg/gtAY3C68UTWPF8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CvlEYPyqID3xG6JZnddwKCBj86r3Ccp80AYP8Ur+fzaXY/aU9kwpIhJiV7j0AEFfC
-	 ikcFpnhFkTSSMgHP+SXGqfjt9zHxjNb7cz9GA8d1V9by1Vo7X4ytcXHk0q7Rxzzs97
-	 f0YbwqkoW1aVPUHeNo9CPAAGczlcJVUYyF5h0YEk=
-Date: Thu, 27 Feb 2025 12:20:36 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Mathias Nyman <mathias.nyman@linux.intel.com>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] xhci: Restrict USB4 tunnel detection for USB3 devices to
- Intel hosts
-Message-ID: <2025022709-unread-mystified-ddf1@gregkh>
-References: <20250227194529.2288718-1-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="f9b2XkW5"
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 075E33F278
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1740687739;
+	bh=SiQZ4Rq+0GqJoxx2KQxyIG0Xut74ShpYg+ijgenLnUA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=f9b2XkW5a3CXE4JkI7KICaqXcWzB40jn/BB0ClCLQXgCMA0v+gjJw5Sl9hJgD4P2B
+	 Cjxxm/jXFXz+A583hPIfYSwnuSSReZEzIeAd13S4bVJ+kv7DgR8MhqjdYQOZzAwAAk
+	 cEY17Kee4sAsJko7/g49qfcKt+xkkhm/F65YvD71R6JDnRDWcB5mkl4gM/ZL1ECCqO
+	 JaTDirOZBpbYLRJhDk9EqPrKqAV95tDrnPdOn0UI2aMfBVabcFU1a3FycPJZm6MW6S
+	 utcbZJUrpqkRQPjANSqlh4RhjmUCTikrjwXd1d1apr8FJ/uHEMGNafqd2m+JXYRPkC
+	 Z9gWL1eWOPJmQ==
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e4cf414a68so1296123a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:22:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740687738; x=1741292538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SiQZ4Rq+0GqJoxx2KQxyIG0Xut74ShpYg+ijgenLnUA=;
+        b=j8zu1wh0w8SOf4/CNcdjvWTAhfBN3VrROSZf54qDsOqhrBbudSDna5wwC8Y/jyGtgG
+         Ixc79Fw/Oti1Wjrx3FHSW11C6njC9eiDuKZX0ufMAaRvYptezrjd5JmXTGhXe12cO2ME
+         g7bRpaMwh4b0D9rZTo5BeojIEFio++fuzYumFExp076G4NFefA7KR8RBZR9ostZ9aq22
+         yRwfikNpgJ8ZDQLRtvkdgLfXZvjCtYtF17NhcaZLOLzjEolQUVWHPHBQoRa2ApVZmMLs
+         /eBdSA/aGSob7/Hhak/xSffj7gF3dl9YcTqY5+QWhVxYmExI74XBsqK+QRau8bILG+CR
+         w7xQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUj6kbnT1Mul5Tust0ayd7YobS33uGzFOYm4sOZa9EQ2gOu4gCdeo2Dk59XyOnFEHN4AELBLx2B2XJ3ufA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfWmA5jBs5H0N0kA4a8hSIe7JCI9G5gAVDD2l6OZxACnJA2Y+t
+	XwJ7uueFtbgydbyz9eVHCeWs2csgBUbPC70+5NzMV8fkumR02wit11u4+1kUCS7NMrSey+wpLy7
+	BUdZNv+OmmMTnrsksuuY4URfC5DIhn59YtuQCs4sbZpq4/2eiGmusi7UmlTgKNrpv3+68GAMu3A
+	PDXcJTUXfB/p9H/0RDyrgW8HhCWZy0X9396Yh4py7Kr+ZIGUab0XlN
+X-Gm-Gg: ASbGncuFfPIEmpYWaM5iW4geHs2i8rhAZT5o7OXffBGFBKIUY42hH4DR+pNa3M1NYRg
+	wBrJPZ9jRoVHQGL1+ZgV5Ty321KwBaMbNA0dI+9ZfyHeeOdXRhhG4qypAXHdqEJ26N6yNUZE=
+X-Received: by 2002:a05:6402:350f:b0:5e4:9348:72b4 with SMTP id 4fb4d7f45d1cf-5e4d6921bd4mr402494a12.0.1740687738517;
+        Thu, 27 Feb 2025 12:22:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHjN7GoLizYN8AYUswkeK50Pl1lF2BJudLqy3J78FpZbhUAfHe4ulxGizo03P2ZzrkYYxtjIXX1SIy4cdHOVZg=
+X-Received: by 2002:a05:6402:350f:b0:5e4:9348:72b4 with SMTP id
+ 4fb4d7f45d1cf-5e4d6921bd4mr402477a12.0.1740687738203; Thu, 27 Feb 2025
+ 12:22:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227194529.2288718-1-maz@kernel.org>
+References: <20250218222209.1382449-1-alex.williamson@redhat.com>
+ <20250218222209.1382449-7-alex.williamson@redhat.com> <Z7UOEpgH5pdTBcJP@x1.local>
+ <20250218161407.6ae2b082.alex.williamson@redhat.com> <CAHTA-ua8mTgNkDs0g=_8gMyT1NkgZqCE0J7QjOU=+cmZ2xqd7Q@mail.gmail.com>
+ <20250219080808.0e22215c.alex.williamson@redhat.com> <CAHTA-ubiguHnrQQH7uML30LsVc+wk-b=zTCioVTs3368eWkmeg@mail.gmail.com>
+ <20250226105540.696a4b80.alex.williamson@redhat.com>
+In-Reply-To: <20250226105540.696a4b80.alex.williamson@redhat.com>
+From: Mitchell Augustin <mitchell.augustin@canonical.com>
+Date: Thu, 27 Feb 2025 14:22:07 -0600
+X-Gm-Features: AQ5f1JrZ1oPBmSEga4Ppqksx7nR2-OUM5LtfazwlWAiz0Eh4H51tt0_skrEMiXg
+Message-ID: <CAHTA-ubjxqs7Rh8ERXqFXCRAm7WoMMRQftSPLmrK61jra7+gYg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] vfio/type1: Use mapping page mask for pfnmaps
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	clg@redhat.com, jgg@nvidia.com, willy@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 07:45:29PM +0000, Marc Zyngier wrote:
-> When adding support for USB3-over-USB4 tunnelling detection, a check
-> for an Intel-specific capability was added. This capability, which
-> goes by ID 206, is used without any check that we are actually
-> dealing with an Intel host.
-> 
-> As it turns out, the Cadence XHCI controller *also* exposes an
-> extended capability numbered 206 (for unknown purposes), but of
-> course doesn't have the Intel-specific registers that the tunnelling
-> code is trying to access. Fun follows.
-> 
-> The core of the problems is that the tunnelling code blindly uses
-> vendor-specific capabilities without any check (the Intel-provided
-> documentation I have at hand indicates that 192-255 are indeed
-> vendor-specific).
-> 
-> Restrict the detection code to Intel HW for real, preventing any
-> further explosion on my (non-Intel) HW.
-> 
-> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: stable@vger.kernel.org
-> Fixes: 948ce83fbb7df ("xhci: Add USB4 tunnel detection for USB3 devices on Intel hosts")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/usb/host/xhci-hub.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index 9693464c05204..69c278b64084b 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -12,6 +12,7 @@
->  #include <linux/slab.h>
->  #include <linux/unaligned.h>
->  #include <linux/bitfield.h>
-> +#include <linux/pci.h>
->  
->  #include "xhci.h"
->  #include "xhci-trace.h"
-> @@ -770,9 +771,16 @@ static int xhci_exit_test_mode(struct xhci_hcd *xhci)
->  enum usb_link_tunnel_mode xhci_port_is_tunneled(struct xhci_hcd *xhci,
->  						struct xhci_port *port)
->  {
-> +	struct usb_hcd *hcd;
->  	void __iomem *base;
->  	u32 offset;
->  
-> +	/* Don't try and probe this capability for non-Intel hosts */
-> +	hcd = xhci_to_hcd(xhci);
-> +	if (!dev_is_pci(hcd->self.controller) ||
-> +	    to_pci_dev(hcd->self.controller)->vendor != PCI_VENDOR_ID_INTEL)
-> +		return USB_LINK_UNKNOWN;
+Thanks Alex, that's super helpful and makes sense to me now!
 
-Ugh, nice catch.
+-Mitchell
 
-Mathias, want me to just take this directly for now and not wait for you
-to resend it?
+On Wed, Feb 26, 2025 at 11:55=E2=80=AFAM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Wed, 19 Feb 2025 14:32:35 -0600
+> Mitchell Augustin <mitchell.augustin@canonical.com> wrote:
+>
+> > > Thanks for the review and testing!
+> >
+> > Sure thing, thanks for the patch set!
+> >
+> > If you happen to have a few minutes, I'm struggling to understand the
+> > epfn computation and would appreciate some insight.
+>
+> Sorry, this slipped off my todo list for a few days.
+>
+> > My current understanding (very possibly incorrect):
+> > - epfn is intended to be the last page frame number that can be
+> > represented at the mapping level corresponding to addr_mask. (so, if
+> > addr_mask =3D=3D PUD_MASK, epfn would be the highest pfn still in PUD
+> > level).
+>
+> Actually epfn is the first pfn of the next addr_mask level page.  The
+> value in the parens (*pfn | (~addr_mask >> PAGE_SHIFT)) is the last pfn
+> within the same level page.  We could do it either way, it's just a
+> matter of where the +1 gets added.
+>
+> > - ret should be =3D=3D npages if all pfns in the requested vma are with=
+in
+> > the memory hierarchy level denoted by addr_mask. If npages is more
+> > than can be represented at that level, ret =3D=3D the max number of pag=
+e
+> > frames representable at addr_mask level.
+>
+> Yes.
+>
+> > - - (if the second case is true, that means we were not able to obtain
+> > all requested pages due to running out of PFNs at the current mapping
+> > level)
+>
+> vaddr_get_pfns() is called again if we haven't reached npage.
+> Specifically, from vfio_pin_pages_remote() we hit the added continue
+> under the !batch->size branch.  If the pfnmaps are fully PUD aligned,
+> we'll call vaddr_get_pfns() once per PUD_SIZE, vfio_pin_pages_remote()
+> will only return with the full requested npage value, and we'll only
+> call vfio_iommu_map() once.  The latter has always been true, the
+> difference is the number of times we iterate calling vaddr_get_pfns().
+>
+> > If the above is all correct, what is confusing me is where the "(*pfn)
+> > | " comes into this equation. If epfn is meant to be the last pfn
+> > representable at addr_mask level of the hierarchy, wouldn't that be
+> > represented by (~pgmask >> PAGE_SHIFT) alone?
+>
+> (~addr_mask >> PAGE_SHIFT) gives us the last pfn relative to zero.  We
+> want the last pfn relative to *pfn, therefore we OR in *pfn.  The OR
+> handles any offset that *pfn might have within the addr_mask page, so
+> this operation always provides the last pfn of the addr_mask page
+> relative to *pfn.  +1 because we want to calculate the number of pfns
+> until the next page.  Thanks,
+>
+> Alex
+>
 
-thanks,
 
-greg k-h
+--=20
+Mitchell Augustin
+Software Engineer - Ubuntu Partner Engineering
