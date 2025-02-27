@@ -1,118 +1,150 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DFE22A1E4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0148021C18F;
+	Thu, 27 Feb 2025 10:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740652436; cv=none; b=LyeL2MtbIo/HC4KlZyH4qOVnCrCaqe79M7XPqb8u13LTDc97Uce/0DvUsHubn5v37RzQKgbe8hv7xCDyrj1TNkSqgCFw8nLhPNn5vqAVYjH/xyH5NvALQSZO8ikdhSLm/SZLFm1okrsbxdPpuYBUWQBo/ek/NdDzQXHpN0LyTpA=
+	t=1740652489; cv=none; b=r6fWML+xDfvUlM2cBqp5Nb40J0brW6WaIZ5VgINz9rsBbQRGlOsMIB7GyrEC1Tw7EY4xUEgOya1/FhhCs9qMwgYjZ6IeUwMzjA1R4JyRHHCt2BvLbjtqwh6gc0T6wZFOTNZUnOf0z801/8Of5FiQi18foNl4TdFWICVD0lo2ILY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740652436; c=relaxed/simple;
-	bh=Xaj4oMjuSjNjpSa3ETbZtATmjQ7K0I0WckpYcuhf1ko=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tb8tqheN8P9JREoNatG8haMJGz+og5qLcyrR7bMa90gfYKjwGyjoYsrFrUfNBM61YPob6kuGnKFPYhjlChypJrBGu05AtWsPmkv/T7sq//+MQ2EWYjZuSuAf2pQe/zA0Y+CZrZ7Z5PGvYbKUtnZBu0CXko/kx5Pf4iZ43216+es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=SubI7WfL; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1740652489; c=relaxed/simple;
+	bh=YJKmHFUcVEtxuOOaxd/RpiuUqI9ez1eSLQC9p5kpvjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ovz0R2/8QQ5WQ8mv681hitG0rHDgfACc36WSFeJoHZEGHf7tpdP+tRFhdwAz6tLJA59Vy/qjhIGimf/fqxUePqioX2P3Uf4DFxWetW1XanW2LlQpExmx+8YhICn17kGKdrW2DPYqyzu4S222jMk4Z8ewOk670Fj7YX6GOnDp5AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ijhtaovO; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="SubI7WfL"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-438a39e659cso5014675e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:33:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ijhtaovO"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ded6c31344so966558a12.1;
+        Thu, 27 Feb 2025 02:34:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1740652433; x=1741257233; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3kV/+mEBoYkvFSCaizpCuqTX8PtS4kw7sxZJGfAJUIw=;
-        b=SubI7WfLLOXCfqidbCuBBJEE58WiPBSloJKxTO+BU+QWzxpXlQ3zWMBVRf5rQatEU7
-         RymSShOIb7YGMaHaqg3zGfX6SaaScK1KmrksAVSxI009Su6+AWLcmbK5BNBqg7TcRYAg
-         /3qO38WSDyEn1fLsNgq3JHLLEVcPiSrPK7saiFkMS/9DRTNnnCZChOZSVJIfYEdLjqK1
-         WEsbKDx3BzbGSOvH6k+k281M+zFDdxofOKpFDOQ1+yCHZY+ovCCeZRdB2xq02Znd9Qrr
-         N2yuBje4zAEkrxNBDUbCkg3Bn797hKpA8rD1+5FzjQ10pjuhBBaqnlDAO2XHtXx+47Co
-         LG7w==
+        d=gmail.com; s=20230601; t=1740652486; x=1741257286; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8F+iHOkiCbQfBJ8Gfn9W0Ck6s4OTNsybtRyz6gEBB30=;
+        b=ijhtaovOUqX4y8Jq0PL+uBHv6gUur6ai1CH4FMTtmd8ktoqeEh2/MhNUDb0mdEsJZr
+         ogZaJum8IiRyOWgZn8TtZgkF6qama5xIaSaGECAuAEJWY3VyzWLgbaOziSzGnGt1EJaE
+         uoQ2+r1w1jyI1wY1Z3mzPtcXW0rzeA6/BjPkuxaB4DfjoV7yg2yrjJ/GBUHmtQhkyonG
+         nN3/bQgNnOTBQgIyViYrongx6UXqWosET8ADY9tN2mvEKv4WpY6VJOrxEEuf38BXR7HO
+         mbW9ihJErb9O7LrDIMEj4h3lPs3u1iqPF4psYFd2W3SZK5smUTCwjsmR75/y9nfaNs91
+         LYfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740652433; x=1741257233;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3kV/+mEBoYkvFSCaizpCuqTX8PtS4kw7sxZJGfAJUIw=;
-        b=dZNfIZfME/bUKMY5zDuXIU25pbTfc97iR5fAzQhChFqS1quAowuKRnVPhIATVREcSJ
-         rh0RPJ5ekgzrelHzxSDMqTO7GidMG5Ii4gF/C/PAnNApUNMrKBMWLrGWGB4eGCsu9OY5
-         7ch+EcYNCIaSISW1LzbKeGUSKHYtTz7/8KN9N2DfhAM/sm4iZ6a97cOBSQ8s42pvlxjS
-         9jRxYlIlve+Qe+9D7apmPiDMcjTsP4glWryPfmhdEK1uN1m7U8gJp2Pg0zd0GV9LgoTW
-         7w+Kz5N+B/f9Nc4TYjxdH7ZRA1cNP7Ovg/tCPo8wnvxGYjB6cLjWgoLtHvLlTBq4dqIX
-         s97A==
-X-Forwarded-Encrypted: i=1; AJvYcCULfVfxTYDKXaWmRRkWb02gLOAFZtkSvezlOCFflRe6Q4aUk6R9BaMYKskumkbBys006zFaTp1LWc1ANh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWaqhQQzJpBwh7FY53xafoVqmY6IollGAC9eKIEpVzcwtLBy3V
-	nopf34YhhI2BVs05fqxPUZc+mX3E381CIM5Ub1ks7VCKzXm9XS5NdvAEnzGgnxgloPnsauS8Bz6
-	P
-X-Gm-Gg: ASbGncvzDlxk01VyMp55A+Cu8xyMCbNkYhZR+Q6AeJBZsBEp4qKXkDFsHukrqKmcFMG
-	ShLyg0PPACQNMmd3xh0QRiY/U8q+wcdrGN6Jrg4YWWnyBY/oVcCaZl64Vag2GBo9aepkZ6Qkad8
-	pGSTK2wMOTGs0OrG5MGWFobf2yrVZ2kno2yrpq9wTKZ2SPsnGUx8/fO5SsMGkfysujHssCN5yFl
-	tV4oyInngwXQXmhgCXscUMmlyjb4cSqE7QCjofxSNNPFImycTp6bnR7HEg+eUTv2iEif0oWcFNc
-	BA7VCQkD4h0ob0H3Wxx2Zq4QkIg7jLlcxdoXwpc4x9LeSq0soZ32IMlqJz9uvTdbQ7ME795IitU
-	=
-X-Google-Smtp-Source: AGHT+IGUfMm+wQqSIMbXYaeRiTXSjbtLUzOin3rGEggSO6N1QUyFM5nBpMlk0cSmhBIeKP8kb1PaJA==
-X-Received: by 2002:a05:600c:4507:b0:439:8e95:795b with SMTP id 5b1f17b1804b1-439aebf38b2mr220117645e9.31.1740652432678;
-        Thu, 27 Feb 2025 02:33:52 -0800 (PST)
-Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a27ab2asm17854305e9.32.2025.02.27.02.33.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 02:33:52 -0800 (PST)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Thu, 27 Feb 2025 11:33:42 +0100
-Subject: [PATCH 3/3] net: ipa: Enable checksum for
- IPA_ENDPOINT_AP_MODEM_{RX,TX} for v4.7
+        d=1e100.net; s=20230601; t=1740652486; x=1741257286;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8F+iHOkiCbQfBJ8Gfn9W0Ck6s4OTNsybtRyz6gEBB30=;
+        b=L1nTY3nytVlL51IOA7Ae85T4jBlrbzeMJ7bO0dKh+eO8U2LPXO4n75g5I4edhh9cHd
+         YSWCfYVaig//2ZW9+EL2X4u7G0dny8g40m/dRZ+w8FtlfCJIaumV743ryxWLjJajBZoE
+         1gIgKhSwINhl7cn0bGObgghXqu9B5IlcvXJ8mXkpneJoOyJC4JYqJfyG85Whm6hDXBeT
+         XASNKwi4ILVVotmw1KV4I+lawa8vT/WYiMugaRXQrUSziUy7MBg3vgOBwlzMKyy28qum
+         F8QdybuM0xb7m54v7nx4iq8v3AN9b9R/p8FF36LDAde/NqZO8gXigmsPyAZfFAyEP7KN
+         y+1A==
+X-Forwarded-Encrypted: i=1; AJvYcCULlBD0JK25b23IufI+1YQ1atuPj7IogEW9N+liBl30F6KnavM42Wc1rMqHnjTHOHI68sGKTF+Kq/EY9Xo=@vger.kernel.org, AJvYcCWYDLltmP8T8GA5JRKEihd2wADL4lDxVQHrzDTQR8VB4HbtTMjHBXvpTsl29jmLyw5tQnT6UHGC0+Pnvw==@vger.kernel.org, AJvYcCWmwdWuK4xhCRNyQ71kxiAKOO0Vee8ye4j3Lv2FFSMzQOnM+mpOLOPn6pdullBiUSJh/x2w2Dru@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPKva88GCKQhc2zfiy3gS95UGn/ZjXlYMlmhp/4afPWSwudZob
+	Jvr5qF61hOYbzXjVIWB0AVNpvghT91NTIH5LD9Mov/Y7dDOsDtoz
+X-Gm-Gg: ASbGnctfJFRj+sAcTYQFZaeDndrSOh/JuGY8fMY3ALV5440EmtjWIOaGO3FND+OaO+U
+	S06lDPMqhhFHrzZYsnLAePN1DuPxiSRuHvPFz8KF9M7JQWhNCIi0AkPUzI+XV9Vt4deGjhAV9cK
+	Oxhd5t/vOlm7Xu2e+muUVrJl2DQqhhr3qbs51m0X+iepyysnBfw+KCPdbnyfEXFRv2JdQCrCdRY
+	+NKOPLCi5VsMSWVtVuFadTVvNmS65egIKuXSWsxBpcYwIpc0ZWLMYfJq2NLKezQErf8Z6X/c305
+	9U60I9ngE/y2Rky2kJccjlv8s7p8mRBjDq69Nt+BVNOTrfM=
+X-Google-Smtp-Source: AGHT+IHXv8U7mkW1xq4Vnant0P7iLY68e80NUqnP+Id7Fkl+D0OacWn2R65BtGAAnIPruizAgHDIWA==
+X-Received: by 2002:a05:6402:2690:b0:5de:a6a8:5ec6 with SMTP id 4fb4d7f45d1cf-5e4455c2f52mr28423477a12.10.1740652485728;
+        Thu, 27 Feb 2025 02:34:45 -0800 (PST)
+Received: from [172.27.50.139] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a6f2bsm878709a12.75.2025.02.27.02.34.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 02:34:44 -0800 (PST)
+Message-ID: <3c8badc3-2f1e-4877-a770-ad133f69f14a@gmail.com>
+Date: Thu, 27 Feb 2025 12:34:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 3/4] net/mlx5: Expose crr in health buffer
+To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
+ Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
+ Leon Romanovsky <leonro@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Shahar Shitrit <shshitrit@nvidia.com>,
+ Moshe Shemesh <moshe@nvidia.com>
+References: <20250226122543.147594-1-tariqt@nvidia.com>
+ <20250226122543.147594-4-tariqt@nvidia.com>
+ <Z7/+lxTndCRC6OtE@mev-dev.igk.intel.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <Z7/+lxTndCRC6OtE@mev-dev.igk.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-ipa-v4-7-fixes-v1-3-a88dd8249d8a@fairphone.com>
-References: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
-In-Reply-To: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
-To: Alex Elder <elder@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
 
-Enable the checksum option for these two endpoints in order to allow
-mobile data to actually work. Without this, no packets seem to make it
-through the IPA.
 
-Fixes: b310de784bac ("net: ipa: add IPA v4.7 support")
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/net/ipa/data/ipa_data-v4.7.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ipa/data/ipa_data-v4.7.c b/drivers/net/ipa/data/ipa_data-v4.7.c
-index e63dcf8d45567b0851393c2cea7a0d630afa20cd..41f212209993f10fee338e28027739a7402d5089 100644
---- a/drivers/net/ipa/data/ipa_data-v4.7.c
-+++ b/drivers/net/ipa/data/ipa_data-v4.7.c
-@@ -104,6 +104,7 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
- 			.filter_support	= true,
- 			.config = {
- 				.resource_group	= IPA_RSRC_GROUP_SRC_UL_DL,
-+				.checksum       = true,
- 				.qmap		= true,
- 				.status_enable	= true,
- 				.tx = {
-@@ -127,6 +128,7 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
- 		.endpoint = {
- 			.config = {
- 				.resource_group	= IPA_RSRC_GROUP_DST_UL_DL,
-+				.checksum       = true,
- 				.qmap		= true,
- 				.aggregation	= true,
- 				.rx = {
+On 27/02/2025 7:56, Michal Swiatkowski wrote:
+> On Wed, Feb 26, 2025 at 02:25:42PM +0200, Tariq Toukan wrote:
+>> From: Shahar Shitrit <shshitrit@nvidia.com>
+>>
+>> Expose crr bit in struct health buffer. When set, it indicates that
+>> the error cannot be recovered without flow involving a cold reset.
+>> Add its value to the health buffer info log.
+>>
+>> Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
+>> Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
+>> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
+>> ---
+>>   drivers/net/ethernet/mellanox/mlx5/core/health.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/health.c b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+>> index 665cbce89175..c7ff646e0865 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
+>> @@ -96,6 +96,11 @@ static int mlx5_health_get_rfr(u8 rfr_severity)
+>>   	return rfr_severity >> MLX5_RFR_BIT_OFFSET;
+>>   }
+>>   
+>> +static int mlx5_health_get_crr(u8 rfr_severity)
+>> +{
+>> +	return (rfr_severity >> MLX5_CRR_BIT_OFFSET) & 0x01;
+>> +}
+>> +
+>>   static bool sensor_fw_synd_rfr(struct mlx5_core_dev *dev)
+>>   {
+>>   	struct mlx5_core_health *health = &dev->priv.health;
+>> @@ -442,12 +447,15 @@ static void print_health_info(struct mlx5_core_dev *dev)
+>>   	mlx5_log(dev, severity, "time %u\n", ioread32be(&h->time));
+>>   	mlx5_log(dev, severity, "hw_id 0x%08x\n", ioread32be(&h->hw_id));
+>>   	mlx5_log(dev, severity, "rfr %d\n", mlx5_health_get_rfr(rfr_severity));
+>> +	mlx5_log(dev, severity, "crr %d\n", mlx5_health_get_crr(rfr_severity));
+>>   	mlx5_log(dev, severity, "severity %d (%s)\n", severity, mlx5_loglevel_str(severity));
+>>   	mlx5_log(dev, severity, "irisc_index %d\n", ioread8(&h->irisc_index));
+>>   	mlx5_log(dev, severity, "synd 0x%x: %s\n", ioread8(&h->synd),
+>>   		 hsynd_str(ioread8(&h->synd)));
+>>   	mlx5_log(dev, severity, "ext_synd 0x%04x\n", ioread16be(&h->ext_synd));
+>>   	mlx5_log(dev, severity, "raw fw_ver 0x%08x\n", ioread32be(&h->fw_ver));
+>> +	if (mlx5_health_get_crr(rfr_severity))
+>> +		mlx5_core_warn(dev, "Cold reset is required\n");
+> I wonder if it shouldn't be right after the print about crr value to
+> tell the user that cold reset is required because of that value.
+> 
 
--- 
-2.48.1
+I think it's fine here, to not interfere the mlx5_log sequence.
+Also, in the future we might have multiple cold reset reasons, 
+generating the same single print.
+
+I'll keep it as-is.
+
+> Patch looks fine, thanks.
+> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+> 
+
+Thanks for your review.
 
