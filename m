@@ -1,125 +1,88 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163B92343AB;
-	Thu, 27 Feb 2025 14:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70E72309A8;
+	Thu, 27 Feb 2025 14:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740666453; cv=none; b=HBnJIxuYtHFm/UzC1FxwtRZNBNJm/M0XiWFNF+nCAuZf+svoX7hVmQF/RhQ0QeOIFDRs+Ln6iCM65vk19gJOKKEXFt6Y5pXyqt5VTuLl/ahQJxrASYfg8OPvI1tuua7KCtbW9HZ2CKr+r+eTlchOBuQhYjVKKcPBE32Ln1iESVc=
+	t=1740666479; cv=none; b=HEQFVYd8p2SN3diXOywE8idK4Sh2wlEk1j3frgn3AonHAtEj3MVBA+wrFVe7ZAcDzPbkSospjRPLaV5+Yrozm+k+dzS1s6Nege7yxOivsWxUHS2s15buCI7UMMMcosHLaWwEcWmW2OJl2anrR6g8I7L1hpNoZ5XtrrvGcoT9qyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740666453; c=relaxed/simple;
-	bh=n4EvS2tujlITFMmhI1w8JTOm/HL+ES1yhv6hk/Wk0Hs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KeXK9r/TYNpqqVAjMQLkOM+gc0+D+HgahVekLh9gX0WrOREoxlxwSkf//uedqTsGJsxVYb6VodVLDxO1cZw88yNE68igIbEvIJB65HPM4qay/yj0hZL+A+QkG1B1lO2fnbXOzFbWg/EK6rbovE87DUnD3Bj2Tff9MoKEJG/Csmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fvJIXCW5; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740666479; c=relaxed/simple;
+	bh=d2kniXghzkVepyvN0Jxk7Th/uso/TF6hJ3QrHIX+78Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CRdxXER6rRk8qKUvE2w/o6vCrL0L4IuS5PgMLUKEXL6MvkHQHVm3v2amHvwj+CaHHRlNA6U9uMhlIWDcB0jcB3KjRZiDxf/ClTNFgK+Q5Tu0fz99AoGd1ou/7WF7gfzHUaGcmLbpPaU48CNHOqYFW10dzudr+9kr3hkfTmGaIbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=H8T8ZpXT; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fvJIXCW5"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740666450;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7aagjyEaL1HJrTcuwbXuuxWhha8H/1pOmC7GbTqPHhw=;
-	b=fvJIXCW5O3SFzdRVlqNHIXFvxueNSmtKxq4Uu1qC8YagvVdnuIQ/TqRUcKyaVIhnw1ldCB
-	q3k9GzOa44xYHh3wle8san33RyvGO/v+gs47VgID+CVz7WJC/hVEY4eeI1+Xx/FfGjXmhy
-	yEl9Gsqn2NJeBdP6GN0ekdQSgFTn0ro=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: john.fastabend@gmail.com,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	mykolal@fb.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	shuah@kernel.org,
-	hawk@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>
-Subject: [PATCH bpf-next v1 3/3] selftests/bpf: Fixes for test_maps test
-Date: Thu, 27 Feb 2025 22:26:46 +0800
-Message-ID: <20250227142646.59711-4-jiayuan.chen@linux.dev>
-In-Reply-To: <20250227142646.59711-1-jiayuan.chen@linux.dev>
-References: <20250227142646.59711-1-jiayuan.chen@linux.dev>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="H8T8ZpXT"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id 9755DA0C24;
+	Thu, 27 Feb 2025 15:27:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=WF9LzLHCkRSu0ysovFG2P0lkkTg7dv5c/Mx/XIoFkfI=; b=
+	H8T8ZpXTQFc2B2M7Ed0MP3NeBv3NqCye2OrVN1y+7RKuZaNJQXvItUo5/QlVapii
+	GweFKa4NhJ9ugM/Je3UVC10CkD0U3NNgAg8zJp4kvQotxExJm3ZsRA8RKOTRG7cF
+	PE3dgaCOI7PWAwETWC1ERBowo+fPK4KnPcr7OQDsA08hyEaH6/j/uifCspD4KaHl
+	XX0NW2P+XJH/btV6wnHbcfKyuYKSQUe1B7nWxIuY66Pc0Z5NZ3bcpUGS/50KfIRB
+	YC1UG8QAh+SRV1KZETDZyQYywUmkZauYVk0+QRTBNbDo4c6ltNt5sf4pZHSLzkNp
+	zxDvEgK7MnVlOfBPe8psG/367NS62hNbNY/1hsPr0r0KRL/0qKJHyeAWvfuXcBYU
+	uVtIf/Z2MNChv1JRly7Ps7WUtvx5N4xchZjBKPIAxmtRUhqyOicFX57WycqRhg/y
+	9snzjKnZAY2aMNs3DHcMcI4Lc9OjAdMKIB1t2ZfGYrPp5AAf3GsCSWUeq1E/Io0R
+	NEBumqGycbcS/Pp5nn1vIATnYlX1N67gz5PGBsy+dLB91ayrPHFTk6lkZ0XnDqYV
+	AHrMyY907PB7sxcOLGXVUmheuT5KU60Pko+NXwGaw2DgoZrhqWYaXBZZDTrU3/mu
+	+Jm0sP7YDHBXfLNRRfWsDMVsOZVRWINVv0dlaGf4Vn0=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
+ Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray
+	<wbg@kernel.org>, <Dharma.B@microchip.com>
+Subject: [PATCH v5 0/3] microchip-tcb-capture: Add Capture, Compare, Overflow etc. events
+Date: Thu, 27 Feb 2025 15:27:45 +0100
+Message-ID: <20250227142751.61496-1-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1740666474;VERSION=7985;MC=20500670;ID=1457592;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852637760
 
-BPF CI has failed 3 times in the last 24 hours. Add retry for ENOMEM.
-It's similar to the optimization plan:
-commit 2f553b032cad ("selftsets/bpf: Retry map update for non-preallocated per-cpu map")
+The TCB has three R/W-able "general purpose" hardware registers:
+RA, RB and RC. The hardware is capable of:
+* sampling Counter Value Register (CV) to RA/RB on a trigger edge
+* sending an interrupt of this change
+* sending an interrupt on CV change due to trigger
+* triggering an interrupt on CV compare to RC
+* stop counting after sampling to RB
 
-Failed CI:
-https://github.com/kernel-patches/bpf/actions/runs/13549227497/job/37868926343
-https://github.com/kernel-patches/bpf/actions/runs/13548089029/job/37865812030
-https://github.com/kernel-patches/bpf/actions/runs/13553536268/job/37883329296
+To enable using these features in user-space, an interrupt handler
+was added, generating the necessary counter events. On top, RA/RB
+registers are added as Count Extensions. To aid interoperation, a
+uapi header was also added, containing the various numeral IDs of
+the Extensions, Event channels etc.
 
-selftests/bpf: Fixes for test_maps test
-Fork 100 tasks to 'test_update_delete'
-Fork 100 tasks to 'test_update_delete'
-Fork 100 tasks to 'test_update_delete'
-Fork 100 tasks to 'test_update_delete'
-......
-test_task_storage_map_stress_lookup:PASS
-test_maps: OK, 0 SKIPPED
+Bence Csókás (3):
+  include: uapi: counter: Add microchip-tcb-capture.h
+  counter: microchip-tcb-capture: Add IRQ handling
+  counter: microchip-tcb-capture: Add capture extensions for registers
+    RA-RC
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- tools/testing/selftests/bpf/test_maps.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ MAINTAINERS                                   |   1 +
+ drivers/counter/microchip-tcb-capture.c       | 137 ++++++++++++++++++
+ .../linux/counter/microchip-tcb-capture.h     |  49 +++++++
+ 3 files changed, 187 insertions(+)
+ create mode 100644 include/uapi/linux/counter/microchip-tcb-capture.h
 
-diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
-index 8b40e9496af1..986ce32b113a 100644
---- a/tools/testing/selftests/bpf/test_maps.c
-+++ b/tools/testing/selftests/bpf/test_maps.c
-@@ -1396,9 +1396,10 @@ static void test_map_stress(void)
- #define MAX_DELAY_US 50000
- #define MIN_DELAY_RANGE_US 5000
- 
--static bool retry_for_again_or_busy(int err)
-+static bool can_retry(int err)
- {
--	return (err == EAGAIN || err == EBUSY);
-+	return (err == EAGAIN || err == EBUSY ||
-+		(err == ENOMEM && map_opts.map_flags == BPF_F_NO_PREALLOC));
- }
- 
- int map_update_retriable(int map_fd, const void *key, const void *value, int flags, int attempts,
-@@ -1451,12 +1452,12 @@ static void test_update_delete(unsigned int fn, void *data)
- 
- 		if (do_update) {
- 			err = map_update_retriable(fd, &key, &value, BPF_NOEXIST, MAP_RETRIES,
--						   retry_for_again_or_busy);
-+						   can_retry);
- 			if (err)
- 				printf("error %d %d\n", err, errno);
- 			assert(err == 0);
- 			err = map_update_retriable(fd, &key, &value, BPF_EXIST, MAP_RETRIES,
--						   retry_for_again_or_busy);
-+						   can_retry);
- 			if (err)
- 				printf("error %d %d\n", err, errno);
- 			assert(err == 0);
 -- 
-2.47.1
+2.48.1
+
 
