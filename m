@@ -1,142 +1,131 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52601DE3DC;
-	Thu, 27 Feb 2025 16:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B0F26D5AD
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740672272; cv=none; b=B4MWKIo15PozDnTvFjcb3ybMVYitIZofzcZzeP6UGNtE1fUkaMN7hUkAPQ8UvgJge32jYrOk5MRGRgJJP9IokB4ZHH5/7sdGD7SE07xGrBqyZg0nqchZpulX9n+PjZX8U7tI1u5RwdSiUfYVwYB3XbSc/+LhWZQMH2Zr1i/q61k=
+	t=1740672276; cv=none; b=Bii8Z9hCmWgklD1XvsFZsYzbfos5WdIf2fQVTgwMtNL01BtPgl9oV4DQwSmcndNs9Jvh6X5aXFG2mo1V1AqCaMavO7NN/X8IWkHCYFLEjY/6i911JnCemTP0MbQKj6qx7m2XSsZ9A/ja2ENLHmbT7L3PeHjaM20gFwNdcfrAAII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740672272; c=relaxed/simple;
-	bh=TOGtalCsJZB6AvdPJ6FXApmEN79Uyv0/s10P1lRmEwk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V9qt4l3hKSjSmOojh8dZkAsAmnfcswFd9/JDaAPuAq6XZBq8avrUO2PV9E+43RYLHPRX/NlqACjrUU9CKEs9F/Oys7x+RDihK5qUYzO4J/nZwl8S18e73kGIr0z49n834bWSYWIU2gm4ioHsSxrH4N30X9OAa8xLGGfIqbesKlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ha7zQ8fa; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740672276; c=relaxed/simple;
+	bh=avp5U2ArcxVFxLs1woTW98jIWChVR3WUm7VeH/MWMhg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kZ0+Ql43BZ3JAwzg31S+LyNvFKHhXPu+5uJrupOdVmKNlURGyc9v6S4nxaGiuYhVgoaZ9d49/K6gS7bK5TNZgpkJNKIfM5J2BKBaYovNjtJq6+yO+0Ak6WeF6Inho20hreS0l9vugPl0QklO/A+2mEu6krTRfrtk59kYzKSlSmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OqchTtQS; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ha7zQ8fa"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RDU83F004444;
-	Thu, 27 Feb 2025 16:04:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TOGtal
-	CsJZB6AvdPJ6FXApmEN79Uyv0/s10P1lRmEwk=; b=Ha7zQ8favGSAhxAxfKy+4m
-	fZGfxBc6diUM+7D1ZFszSTACpjCGQ3rg020XbCKN701r5zMAPXih0FSdOlgGQAJe
-	qwOd9Wwc5C0FmcykQODUn3tJAv4iq+ra6cPFxKG+Ri/zZbMMoLmRybXFPLFBaBTJ
-	XlP1OQyVGKdoomCppcVpig6qa0+k7tmSGZJbXJef06wdhl3+Jo2Jpa/SEkjm56j6
-	Ww1ihiGVI/Ck9ovk8ikOO39EOhSY2FaSiy2l14rDx9up4zD6yssM/QS07OfOzSl7
-	dsQnXKU152hAwdNTR94pRHVTfg2Yy8FIaOJR9TP5d5oBV2yRSRN0By33yKJQ0/Ng
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452ew0kmfw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 16:04:24 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51RDL5EE026404;
-	Thu, 27 Feb 2025 16:04:24 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44yswnsf1g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 16:04:24 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51RG4K9523200070
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 16:04:20 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4763320040;
-	Thu, 27 Feb 2025 16:04:20 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C42A82004B;
-	Thu, 27 Feb 2025 16:04:19 +0000 (GMT)
-Received: from [9.171.45.20] (unknown [9.171.45.20])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 27 Feb 2025 16:04:19 +0000 (GMT)
-Message-ID: <1de30a2f-96c0-4e1b-8fe3-d66a2ef0b5c1@linux.ibm.com>
-Date: Thu, 27 Feb 2025 17:04:19 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OqchTtQS"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-439950a45daso7633185e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:04:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740672273; x=1741277073; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+LpVcR+tgBc8Za0a/AHb+X7CyJqNO2eqvlf4iMe7ONs=;
+        b=OqchTtQSP7Z0igSzK4XYl0k2CqBLm4xe6PqsD17AJ89PLCGp+/q7PuaGOwwk+v6ZPi
+         tIsEQBwAU9WbAOZaE22RsZxVkEMw7hkNKAvTjbS7DWQyD5JdZZScarn7e/cMGj0t1B1G
+         dSJudeRhPNf7e/FbW80Oll7dZvHzXu5MX81RDUKMnjEQaZtal5SB7G3Km0q7R9Of1occ
+         jqwvjlJRHdbzjc7LlbI2SdJYvXaHjjgob4f6ZfSUxad5uyGFZzdE+C3SVNLZzTmmngFq
+         ZneK8YlQiWOErpZghdwXfZ2xjZQy8JnXigNQEtBXdJcH6Rw5cm2mlpdPVkyIfTBHPOe6
+         feng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740672273; x=1741277073;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+LpVcR+tgBc8Za0a/AHb+X7CyJqNO2eqvlf4iMe7ONs=;
+        b=cPdx66cvZOJV1qWqueC68nHoBbP1a3r3UINM8vF5QRbOHF0JR6hclEJBvMQ6t7Nem0
+         xInBXdRCwqi7fbdXYRWLhKGB+JXgwNjtJesebEGHeDSe7j/szSXOmZhwSEeFIUl5geiQ
+         EpYyFrFGXu4kPlWouvfb6x8oR0V8aP5hOGKcQ4j4KsPUfE7AemTIxBGRpgnWA5toYi6T
+         WViAV9aelKZgwIYvmPoA0ENQUzhlmABnLVHsL60skyT2GkHrX8jcZdorWu2XAFjSaH6P
+         S/705jEmrxeEdRRB5pWeKOaMuLLjKaT4WXgM5DpzzLrO0jYeEazClESkpIlfhf1+0ChG
+         KlSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWt/eZ2EfCJOQGLVnnwRL67krKbNJCdm1u6qWzs6/XnQG5wZetw0Fhw9tJRPo9h78TazAxnsmOdJY9XXPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzziGoI/V4BYMXnTkgWcpcYwa66w3PYHs61N2LO/2tknS5QLkM8
+	CfO+U2NUtPXbXe3MRefIumFtoy46Q9dYlTw5MT51Mu7dSTAkDloqZS9Q8Z7S3efGxJXGf7p450V
+	m
+X-Gm-Gg: ASbGncs4s+njp2sdcTv1LLxIhB3zn7frRgwBllaud4ZPN6GXwu/Tf/HPkh9QeulTq/j
+	AcIsux7nYioCEr5qJW+L/NRk98FX3nTwXBFC+g7l9sTYfpbJh81uabrozEO1AoyneC+7I7KfMO8
+	GpLw9gWkAmXVSz/e9aKEQ82lTdFVuCwuZ+r1eRpaoLhAz584RB6rG6i+UeuL3w5IXGRGObZ8kpO
+	jzX/b5kkiFAfe9KGVQ0De6IHSut6SQyzmUsuPE1xqDbToMWpJtZTP7Q5WZWfwKni5HuYDSeTLvV
+	qIAy5shXpfsTrmu3IjWAGOkQNzC9pKIC8mrjBp3PX5UW+P4=
+X-Google-Smtp-Source: AGHT+IFw1iZ8PHqDP50lbvHr/QN+q8AeRJQLFUhigT++dJwaFcXnDe88Uju6JnhPV1oUTANomVeNFQ==
+X-Received: by 2002:a05:600c:1ca7:b0:439:9898:f18c with SMTP id 5b1f17b1804b1-43ab0f72a40mr91982225e9.26.1740672271515;
+        Thu, 27 Feb 2025 08:04:31 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5393e5sm58811225e9.20.2025.02.27.08.04.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 08:04:31 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: [PATCH v3 0/3] arm64: dts: qcom: sm8650: switch to 4 interrupt
+ cells to add PPI partitions for PMUs
+Date: Thu, 27 Feb 2025 17:04:27 +0100
+Message-Id: <20250227-topic-sm8650-pmu-ppi-partition-v3-0-0f6feeefe50f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] KVM: s390: Don't use %pK through debug printing or
- tracepoints
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev
- <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250217-restricted-pointers-s390-v1-0-0e4ace75d8aa@linutronix.de>
-Content-Language: en-US
-From: Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; keydata=
- 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
-In-Reply-To: <20250217-restricted-pointers-s390-v1-0-0e4ace75d8aa@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3pX9xfns-Oji3l2c8WvW3NKOhw-7qMz6
-X-Proofpoint-ORIG-GUID: 3pX9xfns-Oji3l2c8WvW3NKOhw-7qMz6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_06,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 priorityscore=1501 clxscore=1011 suspectscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=522 lowpriorityscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270121
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAuNwGcC/43NTQ7CIBAF4KsY1o7hJy2tK+9hXECh7SS2EECia
+ Xp3aVe60uWbzPveQqINaCM5HxYSbMaIbi5BHA+kG9U8WEBTMuGUV5RTCcl57CBOTV1R8NMDvEf
+ wKiRMpQrMtqZvdCOlUaQgPtgen/vA9VbyiDG58Nr3Mtuuf9OZAQVjhFZMamGtutxxVsGdXBjIZ
+ mf+4fHfHi+ebgWltSofQn5567q+AbEiOecdAQAA
+X-Change-ID: 20250207-topic-sm8650-pmu-ppi-partition-1e9df8b877da
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1127;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=avp5U2ArcxVFxLs1woTW98jIWChVR3WUm7VeH/MWMhg=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnwI0NA5W/VcDmKSxOz9vnKm/SSP9tv8R1FwL4IZZJ
+ HLp3aaeJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ8CNDQAKCRB33NvayMhJ0QPiD/
+ 0cvnPMwbuPi5yEHrPD5jTZRteEMOu2YmxkdU9RWbWBGI/f3AKnL+GErxiYvD0GWWjxOJS7EuNIW/7P
+ 60m+Ghbjgy4RvNGLsqTL+v1oD82V3740SdQoXYNzeiDASpgnJASU09slk9T6hEJsB0g6bjI0wXUIAd
+ gi+dGEfhsZSY5ieHKbP+8DcPzS09W5A566y4wmCz65aWMGEoUs+/HNci9TW3VCJHoEsrhDGenIMBKx
+ b0uAt88ra0fNeujNYMM1bvLnGhHLTjd+v6uzlCKAKo0Yp7un7VeXqLkuLLtAi2peLqdZ6KOUB4sWjQ
+ vgyWhOkf6tnpunCOBCDseQSSsVJDnM8Ru77iS9r6KlM3z44BlEO+y80s0CJ3CxQYb+y5dqRy193PmX
+ gwsMka3WYeQkRQoYMf/NjfpcCqLuJRf/poVqKn5FJNjslKvlxMsD81l1gPwiIKqXcWiyAhFFHbQsJd
+ cKPc5vRPot5fmHVuoe1RlDGoh0shx7qijOULwc8lRRktNWI96/j6OhSSu/c7qOLTIhtG6/Swl5CAXc
+ pNw22ULeV3pCUA/AlwRNjbW8EP54yfdQrrtU6xSYczbzJq9bt/gHUoiXI2Bx8jqnQzDjgzVfdRpYPG
+ VBkFm8gHpDb4FBKPWvOiWdFUVH32GGJ4DQUnwjUWTtVfNTIf369Chq3wgTRw==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-T24gMi8xNy8yNSAyOjEzIFBNLCBUaG9tYXMgV2Vpw59zY2h1aCB3cm90ZToNCj4gUmVzdHJp
-Y3RlZCBwb2ludGVycyAoIiVwSyIpIGFyZSBvbmx5IG1lYW50IHRvIGJlIHVzZWQgd2hlbiBk
-aXJlY3RseQ0KPiBwcmludGluZyB0byBhIGZpbGUgZnJvbSB0YXNrIGNvbnRleHQuDQo+IE90
-aGVyd2lzZSBpdCBjYW4gdW5pbnRlbnRpb25hbGx5IGV4cG9zZSBzZWN1cml0eSBzZW5zaXRp
-dmUsIHJhdyBwb2ludGVyIHZhbHVlcy4NCj4gDQo+IFVzZSByZWd1bGFyIHBvaW50ZXIgZm9y
-bWF0dGluZyBpbnN0ZWFkLg0KDQoNClRoYW5rcywgcGlja2VkIQ0KDQoNCg==
+Swich to 4 interrupt cells on the GIC node to allow us passing
+the proper PPI interrupt partitions for the ARM PMUs.
+
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v3:
+- Add a patch changing the interrupt polarity, thx for dmitry
+- Link to v2: https://lore.kernel.org/r/20250227-topic-sm8650-pmu-ppi-partition-v2-0-b93006a65037@linaro.org
+
+Changes in v2:
+- Added Konrad's reviews
+- Rebased on linux-next
+- Link to v1: https://lore.kernel.org/r/20250207-topic-sm8650-pmu-ppi-partition-v1-0-dd3ba17b3eea@linaro.org
+
+---
+Neil Armstrong (3):
+      arm64: dts: qcom: sm8650: fix PMU interrupt flag
+      arm64: dts: qcom: sm8650: switch to interrupt-cells 4 to add PPI partitions
+      arm64: dts: qcom: sm8650: add PPI interrupt partitions for the ARM PMUs
+
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 556 ++++++++++++++++++-----------------
+ 1 file changed, 285 insertions(+), 271 deletions(-)
+---
+base-commit: 0e2a500eff87c710f3947926e274fd83d0cabb02
+change-id: 20250207-topic-sm8650-pmu-ppi-partition-1e9df8b877da
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
+
