@@ -1,98 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D4AE26B2C3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1F22376E1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670055; cv=none; b=B6bL41+2h+WI8CxKuhvQxfZBnprPmpopZ7XO2SoZ6O3uvPRtF9FRKaNa2E1ir76xCJDgy+S2vgcJuVkyxtMt8/AB1FM08LADm9budGMLwCemkOlQ4Ii9lx4+sQia4Bzw2LA3Tp9M0z65UMpkH2rsE1nvwfeq9FJYDCXPYsLVCvU=
+	t=1740670119; cv=none; b=n2fTQv1Fc+G23apP6FXldOzsD4j4c+qf/D7hCZ3nfKUHh40+g3Ey80F3bho1SyqTmXtwg+NzSaU/b061AlRY8CasFIi9+ffoHsuMiNOwksyxn1djzUYwtT4pRzUhTWjnDNV4tS7t23PrFXpEq1ORV5P5Z5Jf0K3ZR4We2uN3EEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670055; c=relaxed/simple;
-	bh=gum4d8B8kIo09pq7rNh7RAZp5aA8pmQJmAwMW1ddnTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vEh220k1MG9hUHzePwxsgHyLxjQZoNUF8sWhFnddHcHRWu1oKCflYHlMQgEzhQEpYd+7dXtOp8p1wtaNBDQJLBhscs55OlWQCv9k0AlMOj/I2tTMT6J4C+Nww4grXMidMhyQWPbcUHBD6JUrsOMJPeE8LeUdfRnHdreg7yj+VBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0278C2BCC
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:27:49 -0800 (PST)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3C34A3F5A1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:27:33 -0800 (PST)
-Date: Thu, 27 Feb 2025 15:27:30 +0000
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jessica Clarke <jrtc27@jrtc27.com>
-Subject: Re: [PATCH v7 01/10] arm64: Kconfig: Update description for
- CONFIG_ARCH_VEXPRESS
-Message-ID: <Z8CEYheKAr3VJ8k5@e110455-lin.cambridge.arm.com>
-References: <20250221180349.1413089-1-vincenzo.frascino@arm.com>
- <20250221180349.1413089-2-vincenzo.frascino@arm.com>
+	s=arc-20240116; t=1740670119; c=relaxed/simple;
+	bh=BStIM3Q7aMRwq331CSOFWaO4WkNTxhb2jNd4nMSki1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=abGgb1J77diB0vVBBT9ntecirlohQIrtSWmaczn/ARxmsts4dhPW9bzghrEPn70//BQ1W/FCip0J42sMzR29jqG3cLGi/9yPQG38qJ9cX7wiOrsTQ32nwUI6XzTf+oFZOplz5WyN5OMdcucfkYfG3bfwLLzqfRuf85GP1TC1lfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tkEcuOSk; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tkEcuOSk"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43994ef3872so7794315e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:28:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740670115; x=1741274915; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q7624OFG3qUFRR8VK+5r19R1qPbs5o2C0+F6XuFtMrc=;
+        b=tkEcuOSkhHGDdv//67ud61P8dBDyAHjDRfsqECkXBxx0b9bBKJ+zHQYNX/Yl2CcgzD
+         YQqkQ1NGpuAAiZJisv1PQurQum+U5zm3q8uTDHr6bl57X0mZD8ZM+KBEdj1XWf2ElLZT
+         N8bbtOrIA9Bw+qF14yoEOWCbCRksE6VNkbv171PNam/om4ZgtZfG0fiLosd9jPl357KC
+         olC4D1CShktQ7EyN5mEckX+cdaNPsNGGsnSHO2V6ERAPmNuaAQlGIC5ledpXcZmtuGpN
+         JvWQLBFbp+hv0ZFa15cbPybBxDRlimLszMTWdbetniPJ+GUqUHGBtQeUqMB+fiPRHXwD
+         2QjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740670115; x=1741274915;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q7624OFG3qUFRR8VK+5r19R1qPbs5o2C0+F6XuFtMrc=;
+        b=UM4l0ykduRhWNPnkfTTKVZCQgj/L7RrRqRkkzp4CyIgpy7CEUMl33F4vRrqR/4AoM4
+         HCT9EEA1RuOz4GVMzh6q7LyLTyKLT/dUEWCN15pItCjIcjVbU/AzwDti1MPm20lDXZpA
+         1dGjvALYvl82Hi7gFvHLZIiR5mINA3h+66m38l8d5xwKrw6XwkmGzyuCRVnNz3eG2VHp
+         XFHcD9snn5piF6IBDf2FHFNDuda6R6XzqyXKpvSsE4m1qa+O8CQdGrzyumoleOZNgyar
+         MwjqBQHqnNJMADyIzRSguK63uuk0EXY6Bco912hT5Wrw7tYZm+gGsdVgP6/xgWzaenxI
+         Bi1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV0RoxmKRojYC0hjpFCOIRQQUnXC+KU2yF6AaxTZb1PfIu+JX+lCrHbmGcgBOs9rE1JVdxyOEwZ8DeEBRY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ4l0N4vmDAumiar0dWMpC43pCanM2UPtix/Xs/cXR3PfoYM3s
+	4/ZmuZ1IkrclDvJVhlAcoHfvpctQEK5uhylQW+zXGDZPomd01g4SPLxue+fBOHk=
+X-Gm-Gg: ASbGncs3fHYMdYGD5SYm7wbY41gwVtLtPNOvRmlZCc9fYZ8OQtCCo1MKp6113df1sWH
+	pDwRlHliWDpJmzBJ5iVrUHGb4d4cX9hdtij23jnXaJWRspJbLP86EMjAEc8ncPxM+e9k/Y5jgbD
+	mrqNZ0k9s3OYm0umc5S1JLy4bfOE682cY+3PXQ2sJVR921p2YQZbRlLQOGKUUXEtfTpNvm1MDjh
+	OucbqQVQJJNLDN2WCoh1WsejB6YYOci+9sWbLNxVBy7msn1OYJVvpuouj74vCSeY6q8j8x6cg2i
+	naMrlly3+5cMWmuNaQEqt4rztA==
+X-Google-Smtp-Source: AGHT+IHcKD1/SdfUB9xzo7Is4+i7lHq2eb7AMjlPIjV3WON0VG0sd7gLXvwwR7Rnwswx9QdNhmKzww==
+X-Received: by 2002:a05:600c:1387:b0:439:9f12:1809 with SMTP id 5b1f17b1804b1-43ba3b47d85mr16911445e9.20.1740670114206;
+        Thu, 27 Feb 2025 07:28:34 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:b50f:c403:bf52:2dbb])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b73717171sm26179345e9.18.2025.02.27.07.28.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 07:28:33 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] gpiolib: remove unneeded WARN_ON() from gpiochip_set_multiple()
+Date: Thu, 27 Feb 2025 16:28:31 +0100
+Message-ID: <20250227152831.59784-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250221180349.1413089-2-vincenzo.frascino@arm.com>
 
-On Fri, Feb 21, 2025 at 06:03:40PM +0000, Vincenzo Frascino wrote:
-> Update the description and contextually the help text of
-> CONFIG_ARCH_VEXPRESS to reflect the inclusion of all ARM Ltd Platforms.
-> 
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+GPIO drivers are not required to support set_multiple() - the core will
+fallback to calling set() for each line if it's missing. Remove the
+offending check from gpiochip_set_multiple().
 
-Best regards,
-Liviu
+Fixes: 98ce1eb1fd87 ("gpiolib: introduce gpio_chip setters that return values")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Closes: https://lore.kernel.org/all/ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com/
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> ---
->  arch/arm64/Kconfig.platforms | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 02f9248f7c84..c468c23b2bba 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -374,13 +374,12 @@ config ARCH_UNIPHIER
->  	  This enables support for Socionext UniPhier SoC family.
->  
->  config ARCH_VEXPRESS
-> -	bool "ARMv8 software model (Versatile Express)"
-> +	bool "ARM Ltd Platforms"
->  	select GPIOLIB
->  	select PM
->  	select PM_GENERIC_DOMAINS
->  	help
-> -	  This enables support for the ARMv8 software model (Versatile
-> -	  Express).
-> +	  This enables support for the ARM Ltd Platforms.
->  
->  config ARCH_VISCONTI
->  	bool "Toshiba Visconti SoC Family"
-> -- 
-> 2.43.0
-> 
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1b4af0f97e5a..6cfbc8869cf8 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3608,9 +3608,6 @@ static int gpiochip_set_multiple(struct gpio_chip *gc,
+ 
+ 	lockdep_assert_held(&gc->gpiodev->srcu);
+ 
+-	if (WARN_ON(unlikely(!gc->set_multiple && !gc->set_multiple_rv)))
+-		return -EOPNOTSUPP;
+-
+ 	if (gc->set_multiple_rv) {
+ 		ret = gc->set_multiple_rv(gc, mask, bits);
+ 		if (ret > 0)
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.45.2
+
