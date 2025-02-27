@@ -1,63 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37446229B00;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540B3227EAE;
 	Thu, 27 Feb 2025 07:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740643165; cv=none; b=SVC6Fyj6KfrVhVJBZlqACHbXKXSkCo5th2dcVN+Z1ap2hW3Uzy1XJdhEX0EO+ZKdFiuilX4ezX6X3TpvV94TRSwq37pUC4A1NwsTh+mbW77h1aP4Ibaq0rIZl+LayfpCrHpMACKfVZawsgd4Mfq26Ez9OMyRCiskA4yM5T5Cff8=
+	t=1740643166; cv=none; b=lv2bXgp22QaXVT1W4X6MPIqJH5PNez1MENOp9+aWIETWofRLM6o4RSVVFCNV5xWM1CRDE3PI52BwLpbagkA5hCDX7pkFRPhivw5nUti3/kpBBaDqBR3953O6qgnP238CXCu35/goOvmEo14pVp2UpF3WPrDMxYil8vFf1s8sHUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740643165; c=relaxed/simple;
-	bh=ua7JLATqNQHKU1/RkPTa0NEpNyB79kXYZEIWW0ChIhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U8TkHUHOl49Rns0bnu/b/KgsGg9hDwyO32+EMHEz8WzPW7KA+kwUrJXzAX2YuPkzPK+eY1kDUPSL+Ti9sLdpTeUT9eYLassiPjXkJE0blRV1/XKCvuMz1aeO5Asgy7CIRkli6ZVzZYq/v5icFhXPTcq/Yry2o1xkblWbh8QTikw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CW/o5pab; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CW/o5pab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF110C4CEDD;
-	Thu, 27 Feb 2025 07:59:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740643164;
-	bh=ua7JLATqNQHKU1/RkPTa0NEpNyB79kXYZEIWW0ChIhg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CW/o5pab5Co3B60sYb72R1/4ESR3CfYf72+RhC5rnKqh+JcUz6eJxGv0QiYbOaRAt
-	 UMSn0D4rjBadK5e0vplu/iSCHxtXcGqJe2utNtxn2hpid2dusgtFo+QMU7e3urdLE+
-	 9qbeWOK2F51rabxzlnY+xcb24mnOMvNLlIFg6/j3LFIzOabbILWqnnnbNX2r8Ugwnj
-	 AvgBZf7cg8fbSrp29MOw79FXOPyaW8LONDsEXmualNRhQONLwSN+3ccez70kXYDVJ6
-	 c63dOjWRecjsSQbTvjPrt7JDkfuf+3mGuqUjo8z+UYuV6UbWXk/SYjczyXxU45px5T
-	 Gr1I9zWYc2UoQ==
-Date: Thu, 27 Feb 2025 08:59:21 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wctrl@proton.me
-Subject: Re: [PATCH v3 1/2] dt-bindings: nvmem: Add compatible for MSM8960
-Message-ID: <20250227-dazzling-mule-of-domination-0b8fdd@krzk-bin>
-References: <20250226-expressatt-tsens-v3-0-bbf898dbec52@gmail.com>
- <20250226-expressatt-tsens-v3-1-bbf898dbec52@gmail.com>
+	s=arc-20240116; t=1740643166; c=relaxed/simple;
+	bh=ajxDfF7hGLvReGe4TiaPqA2yfXu4wF45eBtFiFux/6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=IiRHIb0DG7qiOyszzZTjNGtGyqNcmvgLcUNjoPVUjZGZu+Ps0CmVV4XEKvOHZooTPx2lyk/LQVcmPiWz8KkxkOAJ3M0Sqb1ugXNTmH90yGIp03DVqQfer/ghegct2Swopv06IpA2fO4OpDE7gSlnXYQUsZn/u3by4+Ao4PrP+mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z3Nyc4lkYz4f3jtN;
+	Thu, 27 Feb 2025 15:59:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 331A01A058E;
+	Thu, 27 Feb 2025 15:59:21 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S13;
+	Thu, 27 Feb 2025 15:59:20 +0800 (CST)
+From: Zheng Qixing <zhengqixing@huaweicloud.com>
+To: axboe@kernel.dk,
+	song@kernel.org,
+	yukuai3@huawei.com,
+	dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com,
+	ira.weiny@intel.com,
+	dlemoal@kernel.org,
+	kch@nvidia.com,
+	yanjun.zhu@linux.dev,
+	hare@suse.de,
+	zhengqixing@huawei.com,
+	colyli@kernel.org,
+	geliang@kernel.org,
+	xni@redhat.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-raid@vger.kernel.org,
+	nvdimm@lists.linux.dev,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH V2 09/12] badblocks: fix missing bad blocks on retry in _badblocks_check()
+Date: Thu, 27 Feb 2025 15:55:04 +0800
+Message-Id: <20250227075507.151331-10-zhengqixing@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
+References: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250226-expressatt-tsens-v3-1-bbf898dbec52@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S13
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFyfKw4DKFyfWw1DKrWxZwb_yoW5Xw1rpF
+	nxG343Jryjgr18Wa1Yva1qgr1Fk34fJF47J3y7Ga48Cry8Kwn7tFykWr1rZFyY9FW3Jrn0
+	qa1rury3uryDG3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
+	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
+	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
+	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
+	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2
+	AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
+	v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuY
+	vjxUI-eODUUUU
+X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
-On Wed, Feb 26, 2025 at 07:50:41PM -0800, Rudraksha Gupta wrote:
-> Document the QFPROM on MSM8960.
-> 
-> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/qcom,qfprom.yaml | 1 +
->  1 file changed, 1 insertion(+)
+From: Zheng Qixing <zhengqixing@huawei.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The bad blocks check would miss bad blocks when retrying under contention,
+as checking parameters are not reset. These stale values from the previous
+attempt could lead to incorrect scanning in the subsequent retry.
 
-Best regards,
-Krzysztof
+Move seqlock to outer function and reinitialize checking state for each
+retry. This ensures a clean state for each check attempt, preventing any
+missed bad blocks.
+
+Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
+Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+Acked-by: Coly Li <colyli@kernel.org>
+---
+ block/badblocks.c | 50 +++++++++++++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 26 deletions(-)
+
+diff --git a/block/badblocks.c b/block/badblocks.c
+index 92bd43f7fff1..b66d5f12a766 100644
+--- a/block/badblocks.c
++++ b/block/badblocks.c
+@@ -1191,31 +1191,12 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 			    sector_t *first_bad, int *bad_sectors)
+ {
+-	int unacked_badblocks, acked_badblocks;
+ 	int prev = -1, hint = -1, set = 0;
+ 	struct badblocks_context bad;
+-	unsigned int seq;
++	int unacked_badblocks = 0;
++	int acked_badblocks = 0;
++	u64 *p = bb->page;
+ 	int len, rv;
+-	u64 *p;
+-
+-	WARN_ON(bb->shift < 0 || sectors == 0);
+-
+-	if (bb->shift > 0) {
+-		sector_t target;
+-
+-		/* round the start down, and the end up */
+-		target = s + sectors;
+-		rounddown(s, 1 << bb->shift);
+-		roundup(target, 1 << bb->shift);
+-		sectors = target - s;
+-	}
+-
+-retry:
+-	seq = read_seqbegin(&bb->lock);
+-
+-	p = bb->page;
+-	unacked_badblocks = 0;
+-	acked_badblocks = 0;
+ 
+ re_check:
+ 	bad.start = s;
+@@ -1281,9 +1262,6 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 	else
+ 		rv = 0;
+ 
+-	if (read_seqretry(&bb->lock, seq))
+-		goto retry;
+-
+ 	return rv;
+ }
+ 
+@@ -1324,7 +1302,27 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+ 			sector_t *first_bad, int *bad_sectors)
+ {
+-	return _badblocks_check(bb, s, sectors, first_bad, bad_sectors);
++	unsigned int seq;
++	int rv;
++
++	WARN_ON(bb->shift < 0 || sectors == 0);
++
++	if (bb->shift > 0) {
++		/* round the start down, and the end up */
++		sector_t target = s + sectors;
++
++		rounddown(s, 1 << bb->shift);
++		roundup(target, 1 << bb->shift);
++		sectors = target - s;
++	}
++
++retry:
++	seq = read_seqbegin(&bb->lock);
++	rv = _badblocks_check(bb, s, sectors, first_bad, bad_sectors);
++	if (read_seqretry(&bb->lock, seq))
++		goto retry;
++
++	return rv;
+ }
+ EXPORT_SYMBOL_GPL(badblocks_check);
+ 
+-- 
+2.39.2
 
