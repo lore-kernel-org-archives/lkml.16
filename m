@@ -1,106 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27E0270040;
-	Thu, 27 Feb 2025 12:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CC822D7BD
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658707; cv=none; b=MCRx6zAa96KCaeh21QNGDIx3ERdfDsVSH2dYYagDc0+bVpiWFdtSiM740snGF/VA7fwlyTe5wIChNWLxHEgYICjmlY13PbPR05kg/Zt1Q/rSQn5hgs8G9NAO8E8Emmo655y3CLM6TdDSUtH2jU0KAk7gB9B+/+J0XPibtqWZkCo=
+	t=1740658732; cv=none; b=JkOrFrIqJbRbcFwsn7L9tdh2AhcK2vs96b8qKGHhfXFeC2fuJO0vwaOSkask/uGglpC5Gv7RDKzrJB+Sa/oUhBIRIGVhvCEsDZ6u902SOUfkYK9xI/tvQCFNG2QdLpbCHngjaA/bNVWmphUJz18spK8B2CdTb8m/VuQMstQ2a7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658707; c=relaxed/simple;
-	bh=Y/2H0VwlBRrkxH+JvTo6LrgmHk1fi1vhR22rgXq1cmg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y+3a9qpJM9neOcMeW9/yvtzTnAvQDaOmpGAphU7b0n+KK+bZIix4X2a3ohwR4xY+1YJ5TLdtBn0z2cT/vPuR5VCSYyp308wwWgR+ED/xysDQGGIHKLoZT9k9NsPVMhPhXALeYyLw3HvCcFzWmfktIsT+k/jN5cAHRptlCnlkeqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GP2codip; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740658732; c=relaxed/simple;
+	bh=ZZjeJBG/Bzh+5m95eZg1qhnnDWmekuEjAAFkFlDYJ5E=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=XY3K/+VTQX5xSeyZ0sXCsLH0Me2fzibazHHIvF6Rng7D/lqUdBj6a1X6MogVaiERr0ej4fobtK4UVOA8n8RQi7CS4doJcx9wr++40Lg9bf14i9fi1hTwQAulBTnh2N7VkuKWi/SfIbSpBr0dlHMmeI9COkUyFqIlUkhdV1qxkxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUTagwtn; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GP2codip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EB38C4CEDD;
-	Thu, 27 Feb 2025 12:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740658707;
-	bh=Y/2H0VwlBRrkxH+JvTo6LrgmHk1fi1vhR22rgXq1cmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GP2codipxrHYBkhNHC1/K/xNkUFRxPiKB9xFfqguhzRiQko+9FFUxls3xjTDm/7Rr
-	 blonfpL1d4l/yKhYcJdllZsvs6WFZ/worPwKbXgM6AmNG+IroyZF5ml2UfN08d/gs5
-	 rT14F/fWKR1G+ouKjTjOdxQRH7lIuMqNIvc0Ov78bPy1SOl63fXKqZHM2AMdYJJp9t
-	 w1CRlHQ+wbAsqzjAV+hDKU4DOorXG/Yfz3RlO5xG5NqOK/MT6l/tvVIQEuDN2MFyTU
-	 n1Wx+4os1QBdE55Qnr0cOavFfnJQMYNSLS7tLlqoVEqZYrynJOatA5JgmHItU1uh0l
-	 1ZwqeKdXSL0Ow==
-Date: Thu, 27 Feb 2025 13:18:18 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Kaixiong Yu <yukaixiong@huawei.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the sysctl tree with the tip tree
-Message-ID: <skkjdjse5q7wgwwfqzkgcfb7ewcrlsn7hbqmdf333bcwbbpgak@j4hwc7iidkqh>
-References: <20250224170310.41c8611d@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUTagwtn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740658730; x=1772194730;
+  h=date:from:to:cc:subject:message-id;
+  bh=ZZjeJBG/Bzh+5m95eZg1qhnnDWmekuEjAAFkFlDYJ5E=;
+  b=JUTagwtnMTJd7VArlgYzC5ZK4247ZgrA5jtsLzuhLrwcKCaQmf9da4av
+   zEzG1BP4lPKNy1pKRvLxKhDlhfsdY/qNFI4bQenEmO5GG/H7Ml6pmMO/p
+   /QyKTRb+cHFlNjz4FjbskhHqD/rUYVO50IAUIenAO0FPn1xvwIj8hzC+8
+   ZuP0rI93M6LtMaKDo9zodFP7xrjgeknIL3n+TOtkgZlC7kaR02QBH07Ay
+   cVeQWjGkdRsAEs4683ZBk+0gJ6YlBdAr8LNMFz+n7xpJG6aC2uOn8WPpA
+   NAJBeXIiDBxCBl5eR5O4S7AAxN/HtO9dC29GSe1B2Tt6gGVS7GC21Af/E
+   w==;
+X-CSE-ConnectionGUID: A1nwjzVbTVek8mxrr3MyAA==
+X-CSE-MsgGUID: +CsXR+MBS9Gs3Ui2vKsWBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52184253"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="52184253"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 04:18:49 -0800
+X-CSE-ConnectionGUID: bbuKLQ2zQQ+L6azsR1CgDQ==
+X-CSE-MsgGUID: phCij7ZKT2ucBLJze6a2tA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="117017129"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 27 Feb 2025 04:18:48 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tncqk-000DKe-0G;
+	Thu, 27 Feb 2025 12:18:46 +0000
+Date: Thu, 27 Feb 2025 20:17:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:ras/core] BUILD SUCCESS
+ 6447828875b7d768e4ef0f58765b4bd4e16bcf18
+Message-ID: <202502272048.3ATCbkZS-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224170310.41c8611d@canb.auug.org.au>
 
-On Mon, Feb 24, 2025 at 05:03:10PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the sysctl tree got a conflict in:
-> 
->   kernel/sysctl.c
-Yep, 8aeacf257070 got picked up by the tip robot. I was expecting a bit
-more review before this went in, so I did not bother rebasing it on top
-of next.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras/core
+branch HEAD: 6447828875b7d768e4ef0f58765b4bd4e16bcf18  x86/mce/inject: Remove call to mce_notify_irq()
 
-> 
-> between commit:
-> 
->   8aeacf257070 ("perf/core: Move perf_event sysctls into kernel/events")
-> 
-> from the tip tree and commit:
-> 
->   dccf3c99febf ("sysctl: remove unneeded include")
-> 
-> from the sysctl tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-Thx for this.
+elapsed time: 1458m
 
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
-> 
-> diff --cc kernel/sysctl.c
-> index 635f5e829fe8,eeb4cba12190..000000000000
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@@ -54,7 -47,7 +47,6 @@@
->   #include <linux/acpi.h>
->   #include <linux/reboot.h>
->   #include <linux/ftrace.h>
-> - #include <linux/oom.h>
->  -#include <linux/perf_event.h>
->   #include <linux/kmod.h>
->   #include <linux/capability.h>
->   #include <linux/binfmts.h>
-I see that linux/oom.h was removed from kernel/sysctl.h. This was not
-part of any of the patches but it is the right thing to do. I'll make a
-note of it and make sure to remove it if it comes back
+configs tested: 37
+configs skipped: 133
 
-Thx again.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best
+tested configs:
+i386      buildonly-randconfig-001-20250226    gcc-12
+i386      buildonly-randconfig-001-20250227    gcc-12
+i386      buildonly-randconfig-002-20250226    gcc-12
+i386      buildonly-randconfig-002-20250227    gcc-12
+i386      buildonly-randconfig-003-20250226    gcc-12
+i386      buildonly-randconfig-003-20250227    gcc-12
+i386      buildonly-randconfig-004-20250226    clang-19
+i386      buildonly-randconfig-004-20250227    gcc-12
+i386      buildonly-randconfig-005-20250226    gcc-12
+i386      buildonly-randconfig-005-20250227    gcc-12
+i386      buildonly-randconfig-006-20250226    gcc-12
+i386      buildonly-randconfig-006-20250227    gcc-12
+i386                randconfig-011-20250227    gcc-12
+i386                randconfig-012-20250227    gcc-12
+i386                randconfig-013-20250227    gcc-12
+i386                randconfig-014-20250227    gcc-12
+i386                randconfig-015-20250227    gcc-12
+i386                randconfig-016-20250227    gcc-12
+i386                randconfig-017-20250227    gcc-12
+openrisc                        allnoconfig    clang-15
+parisc                          allnoconfig    clang-15
+powerpc                         allnoconfig    clang-15
+riscv                           allnoconfig    clang-15
+s390                            allnoconfig    clang-15
+um                              allnoconfig    clang-15
+x86_64    buildonly-randconfig-001-20250226    clang-19
+x86_64    buildonly-randconfig-001-20250227    clang-19
+x86_64    buildonly-randconfig-002-20250226    clang-19
+x86_64    buildonly-randconfig-002-20250227    clang-19
+x86_64    buildonly-randconfig-003-20250226    gcc-12
+x86_64    buildonly-randconfig-003-20250227    clang-19
+x86_64    buildonly-randconfig-004-20250226    clang-19
+x86_64    buildonly-randconfig-004-20250227    clang-19
+x86_64    buildonly-randconfig-005-20250226    gcc-12
+x86_64    buildonly-randconfig-005-20250227    clang-19
+x86_64    buildonly-randconfig-006-20250226    gcc-12
+x86_64    buildonly-randconfig-006-20250227    clang-19
 
--- 
-
-Joel Granados
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
