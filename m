@@ -1,112 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 973146FB0;
-	Thu, 27 Feb 2025 11:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663DA227B9C;
+	Thu, 27 Feb 2025 11:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740656945; cv=none; b=LaPOkO8bE3JpGSjJWk2VH+Rgk1dlQSVE2NNMTfWzJHAKwGu2+fHWY0KJJ+syCGDwQlehwtn/pW4SzIf9dqIFN0THq54huOvaAySWy7yw9NdV0+FOKhoTVRNc39vvDEV7pnJEx1gm3CnTf5ngejYLKBSh5cAMlw2G2Z+X1V+IPbE=
+	t=1740656964; cv=none; b=ji9fPmcRT5qMPmT8/yjZY7T6W/H/JL6Z2dY/9SNtNPs+uRJAYKF1YakEwIGHJDs1I68iGG8HPyPhPTsrSZ2yImEi1Yz1zUON8+StB175W7lgHgEhIuY0u4y0vNAw9oFnpbEiI0utIMJDNXSLImLxhIKbmMjH3warsbRPU7qhqIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740656945; c=relaxed/simple;
-	bh=4JDTmRQCr6VhgsN3fSabBjy3RyKaEaYTDKQFgq/ii64=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJ4wgZcG/uj+dbB7LrRjfFLHoMREvS7q1jCPUtedwZ2AXaKPXpCTdtDjKwT8RJvYDHkozqKaxEmxnGCZJF7YKc02p2mwnIfVPUskCp3tmIllDWsecKCEciaf2F1q1v5Pk2/QSvz2zjVDF2h2T7zdo46XKRbf8hLZKodjKDuVobY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82B831688;
-	Thu, 27 Feb 2025 03:49:18 -0800 (PST)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 015903F6A8;
-	Thu, 27 Feb 2025 03:49:00 -0800 (PST)
-Date: Thu, 27 Feb 2025 11:48:51 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: sudeep.holla@arm.com, cristian.marussi@arm.com, saravanak@google.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [RFC] dt-bindings: firmware: scmi: Introduce compatible string
-Message-ID: <Z8BRFezgiWDtmdd4@pluto>
-References: <20250226094456.2351571-1-peng.fan@oss.nxp.com>
+	s=arc-20240116; t=1740656964; c=relaxed/simple;
+	bh=66uWDs0dEvE/f0XOsqKgWaU0Dwb0vWSA//uid9NL0T8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Co9E/fy1v99yN3mi0TCiLnGANypzrueGhDkjG160zA0Ge2ycRwo4C8yAMvIIMa97k8vSYtguB+4Mh5yrnu+z+b3LGO5esNVaM3P78bwIC5pj2iTXwd2zQgmkVZtuSEMoAUy7kVcB0NhXrIMsfUURyuiDdYgqV3TBDyuw13f/vqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ws/JioKh; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ws/JioKh"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id 1d2a6c11e063f019; Thu, 27 Feb 2025 11:49:20 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 6EC92D517DE;
+	Thu, 27 Feb 2025 11:49:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1740653359;
+	bh=66uWDs0dEvE/f0XOsqKgWaU0Dwb0vWSA//uid9NL0T8=;
+	h=From:Subject:Date;
+	b=Ws/JioKhvM/s2MTwIi8v2nBdhIcZhE4wfDV5awt3ruF1DlkCOiFb1DzZSAqsAjp5m
+	 Lw8cpjfvKwwTO8amL4YArsdzbnqpKHRLnl1/XbhTycLV8WEKXDn48uX/LfVADAs4tQ
+	 pfKhell5sJKxSpkjz9vZyJYJ1ufX0kpZA9TOiZ7b9y78LO88A0uHaQJ6aYzHfmkeA0
+	 Akob6goWMy299Hg70mEi67i3bGNV8qnsfGAYpb19zUvP8yN9HAHUeLPJRsHQKfLb77
+	 KTwmHlBAiaYSove/FDb6cM6Yu3aade78INgtJwSdluTmqOLTvnmMU+tNpB/C19v9qr
+	 SaXvmZVXVdqTA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Johan Hovold <johan@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Jon Hunter <jonathanh@nvidia.com>
+Subject:
+ [PATCH v1 3/3] PM: core: Tweak pm_runtime_block_if_disabled() return value
+Date: Thu, 27 Feb 2025 11:49:12 +0100
+Message-ID: <13718674.uLZWGnKmhe@rjwysocki.net>
+In-Reply-To: <5000287.31r3eYUQgx@rjwysocki.net>
+References: <5000287.31r3eYUQgx@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226094456.2351571-1-peng.fan@oss.nxp.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjedviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvffeuiedtgfdvtddugeeujedtffetteegfeekffdvfedttddtuefhgeefvdejhfenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeejpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehjohhhrghnsehkvghrnhgvlhdrohhrghdprhgtphh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
 
-On Wed, Feb 26, 2025 at 05:44:56PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Add compatible string for the protocols by adding new nodes
-> The current nodename pattern is "protocol@[0-9a-f]+$", the new node
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Hi Peng,
+Modify pm_runtime_block_if_disabled() to return true when runtime PM
+is disabled for the device, regardless of the power.last_status value.
 
-> name will be "scmi-[a-z\-]+$".
-> With compatible string and new nodename, cpufreq and devfreq could be
-> separated into two nodes. And fwdevlink could correctly link suppliers
-> and consumers.
+This effectively prevents "smart suspend" from being enabled for
+devices with runtime PM disabled in device_prepare(), even transiently,
+so update the related comment in that function accordingly.
 
-beside the backward compatibility issues that Rob mentioned, the thing
-that worries me most is that, while the current bindings describe the
-SCMI protocols because the protocols are WHAT the platform FW exposes
-(and that is all that is needed by drivers to refer to a protocol and
-its resources)...here you are getting rid of all of this, and moving to
-describe basically the various devices that will use a protocol,
-potentially the same protocol, just to have a distinct fw_node ...
-(...I mean my understanding is that there wont be any protocol nodes
-left when the scmi- variant are present and, once, somehow, we will
-have transitioned into this...right ?)
+If a device has runtime PM disabled in device_prepare(), it is not
+actually known whether or not runtime PM will be enabled for that
+device going forward, so it is more appropriate to postpone the
+"smart suspend" optimization for the device in the given system
+suspend-resume cycle than to enable it and get confused going
+forward.
 
-I haven't really had the time to go through properly your proposed
-solution to understand fully all its possible side-effects and how
-many SCMI features could be destroyed by removing protocol nodes
-descriptor as a whole...but...off the top of my head, as a quick
-example, how you will define a per-protocol dedicated transport
-channel in this new scenario ?
-...because You wont have anymore a protocol descriptor where to fit
-this AND you could have multiple DT nodes describing drivers that use
-that SAME protocol, so using this new nodes to fit the same
-transport-chan descriptors wont be possible either....
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/base/power/main.c    |    2 +-
+ drivers/base/power/runtime.c |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-IOW, sincerely, I understand you want to resolve the problem with
-fw_devlink (me too), but nuking down everything, while loosing, possibly,
-a number of the existing functionalities of the SCMI stack just to make
-it work with fw_devlink at all cost it does not seem to me an acceptable
-trade-off...
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1891,7 +1891,7 @@
+ 		pm_runtime_put(dev);
+ 		return ret;
+ 	}
+-	/* Do not enable "smart suspend" for devices without runtime PM. */
++	/* Do not enable "smart suspend" for devices with disabled runtime PM. */
+ 	if (smart_suspend)
+ 		smart_suspend = device_prepare_smart_suspend(dev);
+ 
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -1466,8 +1466,8 @@
+ 
+ 	spin_lock_irq(&dev->power.lock);
+ 
+-	ret = dev->power.disable_depth && dev->power.last_status == RPM_INVALID;
+-	if (ret)
++	ret = !pm_runtime_enabled(dev);
++	if (ret && dev->power.last_status == RPM_INVALID)
+ 		dev->power.last_status = RPM_BLOCKED;
+ 
+ 	spin_unlock_irq(&dev->power.lock);
 
-...killing the whole existing protocols descriptors structure seems to
-me a recipe for disaster, also because, it just goes against the very
-essence of the objects that the FW exposes and the bindings can describe:
-as an example, the SCMI platform server manage and exposes PERF_PROTOCOL
-and its related DOMAINS (all fully discoverable without any bindings),
-so, THAT is what is described in the bindings and referred by SCMI driver
-users: SCMI FW does NOT handle/expose TWO distinct perf devices, like the
-cpufreq/devfreq-device that you are trying to describe...
 
-As Sudeep mentioned, IMHO this seems mostly an *unsolved* implementation
-problem more than an actual issue with the bindings and how we describe
-SCMI resources that we need to refer to..
 
-> With compatible string, and driver updated.
-> - Differnet vendor drivers with same SCMI protocol ID could be built in
->   without concerning vendor A's driver got probed when using vendor B's
->   SoC
-
-as said, this is a corner case that is easily solvable with the current
-layout (and I will post a patch soon-ish to addess this...)
-
-> - NXP scmi pinctrl and ARM scmi pinctrl could be both built in, without
->   concerning arm scmi platform takes nxp scmi pinctrl node as supplier.
-> 
-
-..the only real issue is the general fw_devlink issue as in cpufreq vs
-devfreq...
-
-Thanks,
-Cristian
