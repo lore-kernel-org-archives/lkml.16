@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEB921324D;
-	Thu, 27 Feb 2025 11:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEAB722B588
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654238; cv=none; b=pnXbZlbrJiDZ4Djc8Jl5+CA4hcF6594y0TDg8+jYvonRek+UOKx7flcLTNFlgscx9viFU+1urT+ziTXD8JKIN4Y1v5YCkqHAgd+pCFNO5XdXO2621HgdswynF90LADFPPwIrhoLRpCK/u4ewDzoV4gz0hHoRnFODbP5t1ZlADJw=
+	t=1740654238; cv=none; b=Km00/QrSCTJ/fgOqWlAcsz9VbbfxYaJAYcyQEHnZeZQ6jHA/e3ByZfrAoBvu7bIPGN7BI6Mc+RhhPj0zyvX98FuXhvDtwEpniEeVVGDSpW+ja5PB96ef6hUzbzxo+eEg1SK6fdYze8EhVUdl5A/gTPJ7djjwAUWpldyR6x2wpvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740654238; c=relaxed/simple;
-	bh=oN+y/NJZCBdygHU7yu4YFzn7ilHK4n88/7YjliN/sbU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RdMwpZjoz6ti6YkkFY7CNZcZDOq0ZyHr8bIJRjMKnZU/qsIaik0R1X5zwDaL7E1zjWxA+88K+Vn239IIfU/ZvTffJYWaqW1Ytw5VxE4sl7rVqpruZCMc/RXHcZZkrHKj7OGFbeQQI6a2HlOr8M2wIzjID5KqJTpFcwQppOt8Em8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsxd4Mpu; arc=none smtp.client-ip=10.30.226.201
+	bh=nzYRD9xeun1YSCOk3Qpncr9BpB+PmBiGuH09Z28VaDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K2Eb6UtvRsfK+TcOmjscjYAGkSVVcQaBXmHUPAJMbqRLUNysi7eKC6a/C6g5uLiEWs9bVtOe0XsLDnU6vgolOrekfZP8sr6N0scBl009jiLz2MFKNg3aU8rWKlvUck1dpZbJ+Cw7Y77INNJ1cCXtxK/edDoPWmbpcJDx8frYFPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCqKMLor; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsxd4Mpu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED5E3C4CEEE;
-	Thu, 27 Feb 2025 11:03:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCqKMLor"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338E6C4CEF5;
+	Thu, 27 Feb 2025 11:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740654238;
-	bh=oN+y/NJZCBdygHU7yu4YFzn7ilHK4n88/7YjliN/sbU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bsxd4MpugxXY5vMy+dbiIOpauoY928bGuF/0UYgTNg9V3b/cv9y2elOfZcYMVG/5a
-	 GP2mvQqI0BgKeaDSa+/jbedcwfReBQO+0QadhyMBVnMa06zCSWCFQvXtOK4Rc70vpl
-	 6HGxHpAP3JmfNJC3g8woWsXmDPv2pYm/dDOAi5UO4od3RioHARhgEx1Nn1j5sY3NnR
-	 Yxt7BS1alBvoDwd2naLzzLBuU7BQ2C3lfGtuA6jHQgUNXA/96s551zm4Gau5igfVRz
-	 3ofC3/clBGM6AcyCo/DOuhsHCzjP1Xf+KaB5LvM6CSZstqrN+W7rEDaN/CRiCj/m2t
-	 BUnl9nhUbE30g==
+	bh=nzYRD9xeun1YSCOk3Qpncr9BpB+PmBiGuH09Z28VaDg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YCqKMLor7uluviJlS6UrCnayL8aEDW/j1Vt+P/qing7XY91/Qyju/I3IHNmLqvaHu
+	 vBGgPOPB5oHWVMV0Tah/tP0MEYMPM4hVGIlhycfuHPlXYICRxgANhooSDhI+3Kj7zd
+	 wmjxWXCXOoCQDAwKRrkNQR+VBvdzA0hdIpNL1wvEtyft0uVEZVRr7PBu/Ea7UqOTvt
+	 ai6iodrOiMDN4nSVdD4zfciwTGvh8uyc3Fj7bx3ijT31kBakWcCMU5ZqzXakHDIgJg
+	 9PgDS+N6+W2YHOVnl3EVv7WTf4sivgTLwJdbCicZd6Au/mImgo0c/9kDOJMtrbbp+v
+	 DpBPcWONCPoQQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tnbgK-00000001mQX-00jM;
+	id 1tnbgK-00000001mR6-116I;
 	Thu, 27 Feb 2025 12:03:56 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -37,27 +38,15 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-arm@nongnu.org,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>,
 	Ani Sinha <anisinha@redhat.com>,
-	Cleber Rosa <crosa@redhat.com>,
 	Dongjiu Geng <gengdongjiu1@gmail.com>,
-	Eduardo Habkost <eduardo@habkost.net>,
-	Eric Blake <eblake@redhat.com>,
-	John Snow <jsnow@redhat.com>,
-	Marcel Apfelbaum <marcel.apfelbaum@gmail.com>,
-	Markus Armbruster <armbru@redhat.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Shannon Zhao <shannon.zhaosl@gmail.com>,
-	Yanan Wang <wangyanan55@huawei.com>,
-	Zhao Liu <zhao1.liu@intel.com>,
-	kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 00/21]Change ghes to use HEST-based offsets and add support for error inject
-Date: Thu, 27 Feb 2025 12:03:30 +0100
-Message-ID: <cover.1740653898.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v5 09/21] acpi/ghes: add a notifier to notify when error data is ready
+Date: Thu, 27 Feb 2025 12:03:39 +0100
+Message-ID: <d37709f96acee4122055ee4ae44943756b087eef.1740653898.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1740653898.git.mchehab+huawei@kernel.org>
+References: <cover.1740653898.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,110 +56,54 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that the ghes preparation patches were merged, let's add support
-for error injection.
+Some error injection notify methods are async, like GPIO
+notify. Add a notifier to be used when the error record is
+ready to be sent to the guest OS.
 
-On this version, HEST table got added to ACPI tables testing for aarch64 virt.
-
-There are also some patch reorder to help reviewers to check the changes.
-
-The code itself is almost identical to v4, with just a few minor nits addressed.
-
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
-v5:
-- make checkpatch happier;
-- HEST table is now tested;
-- some changes at HEST spec documentation to align with code changes;
-- extra care was taken with regards to git bisectability.
+ hw/acpi/ghes.c         | 5 ++++-
+ include/hw/acpi/ghes.h | 3 +++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-v4:
-- added an extra comment for AcpiGhesState structure;
-- patches reordered;
-- no functional changes, just code shift between the patches in this series.
-
-v3:
-- addressed more nits;
-- hest_add_le now points to the beginning of HEST table;
-- removed HEST from tests/data/acpi;
-- added an extra patch to not use fw_cfg with virt-10.0 for hw_error_le
-
-v2: 
-- address some nits;
-- improved ags cleanup patch and removed ags.present field;
-- added some missing le*_to_cpu() calls;
-- update date at copyright for new files to 2024-2025;
-- qmp command changed to: inject-ghes-v2-error ans since updated to 10.0;
-- added HEST and DSDT tables after the changes to make check target happy.
-  (two patches: first one whitelisting such tables; second one removing from
-   whitelist and updating/adding such tables to tests/data/acpi)
-
-
-Mauro Carvalho Chehab (21):
-  tests/acpi: virt: add an empty HEST file
-  tests/qtest/bios-tables-test: extend to also check HEST table
-  tests/acpi: virt: update HEST file with its current data
-  acpi/ghes: Cleanup the code which gets ghes ged state
-  acpi/ghes: prepare to change the way HEST offsets are calculated
-  acpi/ghes: add a firmware file with HEST address
-  acpi/ghes: Use HEST table offsets when preparing GHES records
-  acpi/ghes: don't hard-code the number of sources for HEST table
-  acpi/ghes: add a notifier to notify when error data is ready
-  acpi/ghes: create an ancillary acpi_ghes_get_state() function
-  acpi/generic_event_device: Update GHES migration to cover hest addr
-  acpi/generic_event_device: add logic to detect if HEST addr is
-    available
-  acpi/generic_event_device: add an APEI error device
-  tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
-  arm/virt: Wire up a GED error device for ACPI / GHES
-  qapi/acpi-hest: add an interface to do generic CPER error injection
-  tests/acpi: virt: update HEST table to accept two sources
-  tests/acpi: virt: and update DSDT table to add the new GED device
-  docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
-  acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
-  scripts/ghes_inject: add a script to generate GHES error inject
-
- MAINTAINERS                                   |  10 +
- docs/specs/acpi_hest_ghes.rst                 |  28 +-
- hw/acpi/Kconfig                               |   5 +
- hw/acpi/aml-build.c                           |  10 +
- hw/acpi/generic_event_device.c                |  43 ++
- hw/acpi/ghes-stub.c                           |   7 +-
- hw/acpi/ghes.c                                | 231 ++++--
- hw/acpi/ghes_cper.c                           |  38 +
- hw/acpi/ghes_cper_stub.c                      |  19 +
- hw/acpi/meson.build                           |   2 +
- hw/arm/virt-acpi-build.c                      |  36 +-
- hw/arm/virt.c                                 |  19 +-
- hw/core/machine.c                             |   2 +
- include/hw/acpi/acpi_dev_interface.h          |   1 +
- include/hw/acpi/aml-build.h                   |   2 +
- include/hw/acpi/generic_event_device.h        |   1 +
- include/hw/acpi/ghes.h                        |  52 +-
- include/hw/arm/virt.h                         |   2 +
- qapi/acpi-hest.json                           |  35 +
- qapi/meson.build                              |   1 +
- qapi/qapi-schema.json                         |   1 +
- scripts/arm_processor_error.py                | 476 ++++++++++++
- scripts/ghes_inject.py                        |  51 ++
- scripts/qmp_helper.py                         | 702 ++++++++++++++++++
- target/arm/kvm.c                              |   7 +-
- tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
- .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
- tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
- tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
- tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
- tests/data/acpi/aarch64/virt/HEST             | Bin 0 -> 224 bytes
- tests/qtest/bios-tables-test.c                |   2 +-
- 32 files changed, 1692 insertions(+), 91 deletions(-)
- create mode 100644 hw/acpi/ghes_cper.c
- create mode 100644 hw/acpi/ghes_cper_stub.c
- create mode 100644 qapi/acpi-hest.json
- create mode 100644 scripts/arm_processor_error.py
- create mode 100755 scripts/ghes_inject.py
- create mode 100755 scripts/qmp_helper.py
- create mode 100644 tests/data/acpi/aarch64/virt/HEST
-
+diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
+index d1da16b3da2b..c3a64adfe5ed 100644
+--- a/hw/acpi/ghes.c
++++ b/hw/acpi/ghes.c
+@@ -510,6 +510,9 @@ static void get_ghes_source_offsets(uint16_t source_id,
+     *read_ack_start_addr = le64_to_cpu(*read_ack_start_addr);
+ }
+ 
++NotifierList acpi_generic_error_notifiers =
++    NOTIFIER_LIST_INITIALIZER(error_device_notifiers);
++
+ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+                              uint16_t source_id, Error **errp)
+ {
+@@ -550,7 +553,7 @@ void ghes_record_cper_errors(AcpiGhesState *ags, const void *cper, size_t len,
+     /* Write the generic error data entry into guest memory */
+     cpu_physical_memory_write(cper_addr, cper, len);
+ 
+-    return;
++    notifier_list_notify(&acpi_generic_error_notifiers, NULL);
+ }
+ 
+ int acpi_ghes_memory_errors(AcpiGhesState *ags, uint16_t source_id,
+diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
+index 2f0c3288a860..bf9f3de27122 100644
+--- a/include/hw/acpi/ghes.h
++++ b/include/hw/acpi/ghes.h
+@@ -24,6 +24,9 @@
+ 
+ #include "hw/acpi/bios-linker-loader.h"
+ #include "qapi/error.h"
++#include "qemu/notify.h"
++
++extern NotifierList acpi_generic_error_notifiers;
+ 
+ /*
+  * Values for Hardware Error Notification Type field
 -- 
 2.48.1
-
 
