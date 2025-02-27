@@ -1,100 +1,258 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85E327293D;
-	Thu, 27 Feb 2025 22:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8252827293E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 22:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694919; cv=none; b=kzKvoS7WgyPdXPp8FNPR5MQcrkbpSjadVP8gN2UllOAPuKmzgadu81WHxim7Q/gCdVk0jNq9eWPhCFaT6PUyRgB8gxvEtomBlbRg5t/QGv1hqrRCnWAGJvuHIpf55woV/Yy/ImqMYIR91GSQHBT6VM85iASNaGeuMaZXU7Ov0ug=
+	t=1740694920; cv=none; b=ICHPOdq+k6D0oHuy9csYXGz3pNrzdOHGZY44wnTvcyb5oS0G66FlmPrpDOHdIH79YnkWPw2PMAsv4upfvXq8xnpxbpcsVf4RSfjve1fZeFphsWSsbrNRcIJzMbpa+gUrV28v6HhbHtHFAuKZa+1bMkuFAabRSVTfadjHJpK1J3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694919; c=relaxed/simple;
-	bh=S5+ogH025mo7D32RvO75nmwl4Ffkhe7ZHnPHH0WJv0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XBfMbE1qHoT+HmwzJjBINUnYt37WEM6WmB/I2sm4/KwN6WkaLpBK8S/biZBr3Xf3Bdxwwy+zx2xn2eMteOt4Hpkknifo82xTa7Rd3xcQu5QU5KRCe6jMd7fIOYarlQENBjDYgKQYhIgJDohP0Rj0BHqbz2GiYwb/jD67iOYNb+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTfVVsli; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740694920; c=relaxed/simple;
+	bh=ND5S6wGMSfNT1qvWcfAMGpPAEVYEokGaSp2aWt3EvdQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Tcx7sDdfDKKvzuvzUXUXWq0SPG772zSq+cVTgSAgSYffoWCKFT+4L+fLdVUlIJ2i+9Xh1rgBKYVdldbyJqfx93Vh+YDXiHtQ3lTVPqcRnwXHSp3ugVQxqM+KODNhsQgnAgYIca4TVWsgzjCgTLS0FGT5TDamEaBL5kTHX5G1cTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CW99M7Rt; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTfVVsli"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22328dca22fso24143485ad.1;
-        Thu, 27 Feb 2025 14:21:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740694916; x=1741299716; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AGROt8SwJjPlhwT8ydym9pYHbVe2F/Hnh7fdrYWjI+k=;
-        b=bTfVVsligIhJXvn1Ysfj7ikz2o7qh24s0aWHhKtK/RtZRj5nBdVfB7JXV2l/wu+HTt
-         rAIoY6DNsLqoqUbGsiq7llsVViU9FXLIpI8exHCBJv6HmC4iBrQOqG/BrnWQflvTqBsS
-         eKX+YVSQHyUK/1TcRVvRiyesBk1tIlVZfuDS2KzCUF4pEzGfKJqrtNRkfeScgUkQxpTU
-         WmO05+YDKgiAmSAdjHDnQ2iQqK4zp8Z1KmIMocEczSmKYaP/yzo0PxfCaC9XIYlqIsm+
-         ylJTNPoDXGQr/vMs8RyHV0FkdaNglcrxezgovJHoh3O25DNmhDMrjq91GvY4kzWAKYxu
-         z/Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740694916; x=1741299716;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGROt8SwJjPlhwT8ydym9pYHbVe2F/Hnh7fdrYWjI+k=;
-        b=lWv1nGiCP90nSIkfaMdbHpVFh1ijP7G47pWFQ2Wj9DGbiuk01nN2x7hXEdyEul5Eh8
-         DjGx23cioBNiRHmVZ8Y7YgLtX0LVJrgWzRQ/lFcBO1XWMTVQODklRBnDrzUBw+Od3+AG
-         +Z6aV+4TA+BKlw/0tXuOEBBOHhG602WyoAxVAHkybZVle6h8H6ZNWMJuZ0vuOCtiAKvJ
-         uUVDIV3CY3ToWpw6WQfUM1ASzfgVOLUWEVLgdPrGIooe0SN9KL0oXmgVsz+9YOxEG2ZC
-         QNzztu3OmD8lg6F+88YMi4HtqT794bcXAd0deHFU8IVRRoz45AeftR1Z6kxH6FlcBREX
-         79EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQbKbmv9l+xG8eL8mXWY0+nHPI+42vJxgyrx+TQuFbac1CpSoNmRdT3FUjEDzcbH+rsnbEA5JNjf11OS+6@vger.kernel.org, AJvYcCXjqQVN65MGkRBw1eXNf+SjiVAaohanNSrgPa93rdXgMcHYSEVkoHnajJ7pRw1G/B2gUe0=@vger.kernel.org, AJvYcCXq0gvaU+6BrDm+ir4HavqYh1UAKvcrNcfT9uCh5Dv3DlKjo4nz9XemekUlZej6ubGwdElmOMcZ6bc4pASG4ulD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz84rvZsb3gLka+wArYg0H/gjzqo6ehcOsZWjhpcIFg0c/C0/ru
-	sXit/tdMh3apo+i6uY6PB42WBkV5fJ4yZQrMvipMC7jbaS6GErI=
-X-Gm-Gg: ASbGnctJgRjKfZUl1HMyPq3KeybFEDZVSsWTGcELDQbj0BlehjCNgLCrA39FK+CFD6w
-	Tjvu4Pr2K6x3PLIyHU2nEpfCnw+XS4P7dD5CWcqUoFqAN23527lC5OYlRLyrARSrv83tU0lgs9p
-	TuFFvLMqk+cCv6jgVGoIifs/N7l+Qs0WK7atSBcNvucHzPx84v4BdVjZo4ex5LUPQok2t3FpYM4
-	sN/K0xmwW5KYHCYkkbYB4PdzTiV1tOKn1V4B02GN9SLP3SGz119QsqyXoPNhmMfCKoag15/tMlR
-	Fm7zN0CwCD3zsJZx3fKGeVVpAw==
-X-Google-Smtp-Source: AGHT+IGXco4uXMHtHXt7KMJNiHK1jygsRgqWvoJRYUrUimfGnZzf//Gu45O7incVoX3lI43/MEYKpg==
-X-Received: by 2002:a17:902:d4d0:b0:21f:6546:9af0 with SMTP id d9443c01a7336-2236925f2e8mr11651555ad.44.1740694916117;
-        Thu, 27 Feb 2025 14:21:56 -0800 (PST)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223504db1b6sm20615405ad.161.2025.02.27.14.21.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 14:21:55 -0800 (PST)
-Date: Thu, 27 Feb 2025 14:21:55 -0800
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 08/10] selftests/bpf: test_tunnel: Move
- ip6geneve tunnel test to test_progs
-Message-ID: <Z8Dlg3RNglzb2bTN@mini-arch>
-References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
- <20250227-tunnels-v1-8-33df5c30aa04@bootlin.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CW99M7Rt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740694917;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4sQthDH4qQkV46b2m1wjGzV8BsA/0Fq5VvPcWCxI/HA=;
+	b=CW99M7RtpmTlfA41Wsef6MZma5RHAbQf0CKkqbx6/3zitqTYzUkLF96g/kOegHVm7p+Vdb
+	WKHi3XF2r9B9YNSM7BBqJ3VfIHNwXxuCc/6K7uVuMR/nzX1dOO/3EEj9t4Em8kYiHVJ2Mw
+	SzQ5K0XLzpRI7EypXih7NKJQ3/P4OAE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-621-1uwPcSWRPVq8jlavufDNHg-1; Thu,
+ 27 Feb 2025 17:21:55 -0500
+X-MC-Unique: 1uwPcSWRPVq8jlavufDNHg-1
+X-Mimecast-MFC-AGG-ID: 1uwPcSWRPVq8jlavufDNHg_1740694908
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 652171801A1F;
+	Thu, 27 Feb 2025 22:21:48 +0000 (UTC)
+Received: from chopper.lyude.net (unknown [10.22.89.128])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DD28F1944D02;
+	Thu, 27 Feb 2025 22:21:44 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v9 6/9] rust: sync: Add SpinLockIrq
+Date: Thu, 27 Feb 2025 17:10:17 -0500
+Message-ID: <20250227221924.265259-7-lyude@redhat.com>
+In-Reply-To: <20250227221924.265259-1-lyude@redhat.com>
+References: <20250227221924.265259-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250227-tunnels-v1-8-33df5c30aa04@bootlin.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
-> ip6geneve tunnels are tested in the test_tunnel.sh but not in the
-> test_progs framework.
-> 
-> Add a new test in test_progs to test ip6geneve tunnels. It uses the same
-> network topology and the same BPF programs than the script.
-> Remove test_ip6geneve() from the script.
-> 
-> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+A variant of SpinLock that is expected to be used in noirq contexts, so
+lock() will disable interrupts and unlock() (i.e. `Guard::drop()` will
+undo the interrupt disable.
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+[Boqun: Port to use spin_lock_irq_disable() and
+spin_unlock_irq_enable()]
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Co-Developed-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ rust/kernel/sync.rs               |   4 +-
+ rust/kernel/sync/lock/spinlock.rs | 141 ++++++++++++++++++++++++++++++
+ 2 files changed, 144 insertions(+), 1 deletion(-)
+
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 3498fb344dc93..fcd2ea5f7f287 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -18,7 +18,9 @@
+ pub use condvar::{new_condvar, CondVar, CondVarTimeoutResult};
+ pub use lock::global::{global_lock, GlobalGuard, GlobalLock, GlobalLockBackend, GlobalLockedBy};
+ pub use lock::mutex::{new_mutex, Mutex, MutexGuard};
+-pub use lock::spinlock::{new_spinlock, SpinLock, SpinLockGuard};
++pub use lock::spinlock::{
++    new_spinlock, new_spinlock_irq, SpinLock, SpinLockGuard, SpinLockIrq, SpinLockIrqGuard,
++};
+ pub use locked_by::LockedBy;
+ 
+ /// Represents a lockdep class. It's a wrapper around C's `lock_class_key`.
+diff --git a/rust/kernel/sync/lock/spinlock.rs b/rust/kernel/sync/lock/spinlock.rs
+index ab2f8d0753116..ac66493f681ce 100644
+--- a/rust/kernel/sync/lock/spinlock.rs
++++ b/rust/kernel/sync/lock/spinlock.rs
+@@ -139,3 +139,144 @@ unsafe fn assert_is_held(ptr: *mut Self::State) {
+         unsafe { bindings::spin_assert_is_held(ptr) }
+     }
+ }
++
++/// Creates a [`SpinLockIrq`] initialiser with the given name and a newly-created lock class.
++///
++/// It uses the name if one is given, otherwise it generates one based on the file name and line
++/// number.
++#[macro_export]
++macro_rules! new_spinlock_irq {
++    ($inner:expr $(, $name:literal)? $(,)?) => {
++        $crate::sync::SpinLockIrq::new(
++            $inner, $crate::optional_name!($($name)?), $crate::static_lock_class!())
++    };
++}
++pub use new_spinlock_irq;
++
++/// A spinlock that may be acquired when local processor interrupts are disabled.
++///
++/// This is a version of [`SpinLock`] that can only be used in contexts where interrupts for the
++/// local CPU are disabled. It can be acquired in two ways:
++///
++/// - Using [`lock()`] like any other type of lock, in which case the bindings will ensure that
++///   interrupts remain disabled for at least as long as the [`SpinLockIrqGuard`] exists.
++/// - Using [`lock_with()`] in contexts where a [`LocalInterruptDisabled`] token is present and
++///   local processor interrupts are already known to be disabled, in which case the local interrupt
++///   state will not be touched. This method should be preferred if a [`LocalInterruptDisabled`]
++///   token is present in the scope.
++///
++/// For more info on spinlocks, see [`SpinLock`]. For more information on interrupts,
++/// [see the interrupt module](kernel::interrupt).
++///
++/// # Examples
++///
++/// The following example shows how to declare, allocate initialise and access a struct (`Example`)
++/// that contains an inner struct (`Inner`) that is protected by a spinlock that requires local
++/// processor interrupts to be disabled.
++///
++/// ```
++/// use kernel::sync::{new_spinlock_irq, SpinLockIrq};
++///
++/// struct Inner {
++///     a: u32,
++///     b: u32,
++/// }
++///
++/// #[pin_data]
++/// struct Example {
++///     #[pin]
++///     c: SpinLockIrq<Inner>,
++///     #[pin]
++///     d: SpinLockIrq<Inner>,
++/// }
++///
++/// impl Example {
++///     fn new() -> impl PinInit<Self> {
++///         pin_init!(Self {
++///             c <- new_spinlock_irq!(Inner { a: 0, b: 10 }),
++///             d <- new_spinlock_irq!(Inner { a: 20, b: 30 }),
++///         })
++///     }
++/// }
++///
++/// // Allocate a boxed `Example`
++/// let e = KBox::pin_init(Example::new(), GFP_KERNEL)?;
++///
++/// // Accessing an `Example` from a context where interrupts may not be disabled already.
++/// let c_guard = e.c.lock(); // interrupts are disabled now, +1 interrupt disable refcount
++/// let d_guard = e.d.lock(); // no interrupt state change, +1 interrupt disable refcount
++///
++/// assert_eq!(c_guard.a, 0);
++/// assert_eq!(c_guard.b, 10);
++/// assert_eq!(d_guard.a, 20);
++/// assert_eq!(d_guard.b, 30);
++///
++/// drop(c_guard); // Dropping c_guard will not re-enable interrupts just yet, since d_guard is
++///                // still in scope.
++/// drop(d_guard); // Last interrupt disable reference dropped here, so interrupts are re-enabled
++///                // now
++/// # Ok::<(), Error>(())
++/// ```
++///
++/// [`lock()`]: SpinLockIrq::lock
++/// [`lock_with()`]: SpinLockIrq::lock_with
++pub type SpinLockIrq<T> = super::Lock<T, SpinLockIrqBackend>;
++
++/// A kernel `spinlock_t` lock backend that is acquired in interrupt disabled contexts.
++pub struct SpinLockIrqBackend;
++
++/// A [`Guard`] acquired from locking a [`SpinLockIrq`] using [`lock()`].
++///
++/// This is simply a type alias for a [`Guard`] returned from locking a [`SpinLockIrq`] using
++/// [`lock_with()`]. It will unlock the [`SpinLockIrq`] and decrement the local processor's
++/// interrupt disablement refcount upon being dropped.
++///
++/// [`Guard`]: super::Guard
++/// [`lock()`]: SpinLockIrq::lock
++/// [`lock_with()`]: SpinLockIrq::lock_with
++pub type SpinLockIrqGuard<'a, T> = super::Guard<'a, T, SpinLockIrqBackend>;
++
++// SAFETY: The underlying kernel `spinlock_t` object ensures mutual exclusion. `relock` uses the
++// default implementation that always calls the same locking method.
++unsafe impl super::Backend for SpinLockIrqBackend {
++    type State = bindings::spinlock_t;
++    type GuardState = ();
++
++    unsafe fn init(
++        ptr: *mut Self::State,
++        name: *const crate::ffi::c_char,
++        key: *mut bindings::lock_class_key,
++    ) {
++        // SAFETY: The safety requirements ensure that `ptr` is valid for writes, and `name` and
++        // `key` are valid for read indefinitely.
++        unsafe { bindings::__spin_lock_init(ptr, name, key) }
++    }
++
++    unsafe fn lock(ptr: *mut Self::State) -> Self::GuardState {
++        // SAFETY: The safety requirements of this function ensure that `ptr` points to valid
++        // memory, and that it has been initialised before.
++        unsafe { bindings::spin_lock_irq_disable(ptr) }
++    }
++
++    unsafe fn unlock(ptr: *mut Self::State, _guard_state: &Self::GuardState) {
++        // SAFETY: The safety requirements of this function ensure that `ptr` is valid and that the
++        // caller is the owner of the spinlock.
++        unsafe { bindings::spin_unlock_irq_enable(ptr) }
++    }
++
++    unsafe fn try_lock(ptr: *mut Self::State) -> Option<Self::GuardState> {
++        // SAFETY: The `ptr` pointer is guaranteed to be valid and initialized before use.
++        let result = unsafe { bindings::spin_trylock_irq_disable(ptr) };
++
++        if result != 0 {
++            Some(())
++        } else {
++            None
++        }
++    }
++
++    unsafe fn assert_is_held(ptr: *mut Self::State) {
++        // SAFETY: The `ptr` pointer is guaranteed to be valid and initialized before use.
++        unsafe { bindings::spin_assert_is_held(ptr) }
++    }
++}
+-- 
+2.48.1
+
