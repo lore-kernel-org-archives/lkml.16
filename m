@@ -1,102 +1,117 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D528233158
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C591F234984
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631090; cv=none; b=RTG9hV9HpJP8ojMsFlJs7al8b3LkH94qY7TgfcyfJU7k9yf4j/YTLc92x2MgKIl0lcqk0qWXBvI5mrubi6gQAK5elmgWmBzY7+pNWNqyxI6fd6/03pvaz/vsghEx6QM1giijOawVeY8QVHKRSvD2fryPh6FRMGN2TUcwmieQj/w=
+	t=1740631093; cv=none; b=D1ARMUz7FwlSO9PK1Tmg3Jz+G/vthTKRb1FpKqHuLfvwFOGRjkIY93mJApYRMkW33ltw9Npm8h5uuFHSh421f0Q1NqqLOi3TvM4kpJaXZOSepiQj757i1X6n+prCChedCIV8dg15KeagPxw+OjyhM3GohIw2w3fIdNE/fQXIvjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631090; c=relaxed/simple;
-	bh=c2QD9K5Zy9Do8z3+8XGb/TPkiis4aha7f1t+39wV7M8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JUungwODyj63N9JL6iPztYP3+e9j29QdAduNulllwwSGxD8qawtLplYOiN6SpJwV4/eFAamgIwc8Bs0L4+GmBe/PxKXK3d5Bqb2xwqd+TpuqK0wXF1Io0Fj/bJWNnT73y6xZj3AM2TAV0EaWf8lUdmjNZQUARpTTRtr9ep7hNeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ti+F44t0; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740631093; c=relaxed/simple;
+	bh=ZQwvICLouPvkcjgqyDAqTmLuJUwzgqhQEbOcyyDCppE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KviBmMPm2nrSVVTmdhSsJ0r4OJ2L8xP0WrP8tl6LGwk7BoK7F0NwXnM206MGmICynOrlunrcjVX8nuqyCUj0ygl2/r3iMrUDaV2YPmhmahPOzSTc4PyhtBJ6rSqM6kbNVo8hSP2RNPvVF22rFqhtdrwELjvuFmI2hgCiNx8Qqlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IeFwPito; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ti+F44t0"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54843052bcdso419437e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IeFwPito"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fe82414cf7so1076274a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740631087; x=1741235887; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740631090; x=1741235890; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7NuhwZJbo550PrQsjB4y/he3bzDbUt6ahCDwi8PkPv8=;
-        b=Ti+F44t0pCHPI/c/NbbnH9mV/ZEbuS9NHl5DkZcjtb9K6OXX5WoM3yfATALPxIoGXu
-         79YR/gv1EVX9XXuQePUXqN12duv6e0oln+rfoqsBU371ZUzxIQ04YAenLb4MqONq+/zB
-         y9cTCMnn1g8iIGLLIUBkkejPC0gQf2lBH+3UDE9KhJ5jpGsvLOAVUlxxy+MogbP9O1rf
-         vNMtXFWxCqrPtlAVB+weE/QEiheAdYt/m1Fu0s7o1xYtfUXnNuVZ4lTQNpe9AA1s4KrU
-         EVvR9PZq98tYnQ6oSsj2vRwxRdcwlfGw+sEY45Ij2yeCPsUadwt8uG2DDRJBtqCn6EAd
-         9egA==
+        bh=hD0ulf0FeWPvWMK0YywecJZZj4meHTFhM9R2+0rTTi4=;
+        b=IeFwPitoMeudJxGC7I5dBwI0XTf4DQ6qjd0hrBz04p70fClLMyoLv2T9YKxGCiKrjP
+         BQs+dE4ngbMDV/FtL4lxyjw9ajDv8S00XEOaaUdkxuqL94RnTwgZ9Wfdl9AhS4A7pBxL
+         kcnk2YnfZ9fOcA1n72R93FOankYyryU+yQTLQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740631087; x=1741235887;
+        d=1e100.net; s=20230601; t=1740631090; x=1741235890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7NuhwZJbo550PrQsjB4y/he3bzDbUt6ahCDwi8PkPv8=;
-        b=O+MIpWyfcyQIKDmhfZVKnb1ayydB2xJMaPorQq3ykL9uyfIZspu+AxO6h2Kq1iFCz/
-         0YsJ2Z/QzGerUti/UycEZJyC6ejGHOGQomPuVGhL2q+e/RlFtrnI9JyRza5XKl7ezL7r
-         O6LNDLkp10YLv4t6Wf9KArMkcumwbxWkROPJV1eorYaMAPitADfnJXrCcksGUDEif7lv
-         LwVOwo4qAHJ1PXy+pqyBTwIRiA9XJcsmiAY8flnwYIjkECvyLxA5oEP7IYyZxmSGsA3K
-         rbDniWRdL7QIa8KFdyGvSA7bZUaJ6fNaVmVUKAGGfun0TuuDvu05w6jHEqbp/Wdr2SQp
-         mBhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBOOdjCjs3XBoebfGVj0bBXpMl5dGLqBFCdG96XZk7Iiyl/w7UCz9A1cVT7wwe0Gv2tYIXX57zuJ8xcc0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQV9vJyLbXED5V+5Ag31dERFneJ9D5qoT4wzYwzYEB1tGnRtvM
-	MAPSIuD2DS5IeOUbhKc5C55lDPtINxeFRQ1Fb9Ep857GxFrZpPgL4fgIe+VdHpQ=
-X-Gm-Gg: ASbGncucE3q0FbJzZ+sEwndjyD6O4fOusPYvTzniH2c/tJDxatH/zPudNxpK+rfjdCi
-	VUO0XIZY7ELrzI1cj2wmfGx/QhlU+zJGaFKT+7MSrzb5WHTuxSQ7YEtA1HUp8963r3bCXcxqzdz
-	90KNHL0SBl7qvnmF7gvNf6ZvcpXBVks0jCiNwwOwxxAcy2uQRg0M2igxl7fdSXyhO9oyhcM3/p5
-	q/onZG/Gqmk+23/o5cfMDdpDXkviar56no9O1s89dLsyZTYdsu/b/WDV/u4lKz+Lon6ZSAfdOMX
-	iGKG93qaVajWT7eLK37a99qLXQRiKcUMO41AjBbNKg==
-X-Google-Smtp-Source: AGHT+IGRIdnpgZp6aVSnIAMxXRNTRhCc98UJKotB+jjdDT229PrZTyGg2gjdq/20fQUotbRi1XPCKQ==
-X-Received: by 2002:a05:6512:3f19:b0:545:81b:1510 with SMTP id 2adb3069b0e04-548510ce665mr5171090e87.2.1740631087427;
-        Wed, 26 Feb 2025 20:38:07 -0800 (PST)
-Received: from umbar.unikie.fi ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 20:38:06 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Fange Zhang <quic_fangez@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
+        bh=hD0ulf0FeWPvWMK0YywecJZZj4meHTFhM9R2+0rTTi4=;
+        b=ekeqh5bwoLBCx45y+C7lQV1Y6WSlAnIl7lOOgI6uG/M3DkMmHKrJ0BjaonEuCVsAuK
+         WkVYRQLfNmDYBUdVKsAgg0Th5AFww9CIq5fYaQEil9LoiLkYUJfqtL/Fc8+Aaka7ipkF
+         6ZuAy7nMT1mhtfGyKkxqe/W8ImtOwiBjqPXEBJsdKuwi3RWGBREh+XK66o1/JkY8P89A
+         y5WjdrylTQS5SgLm4DUC+s8LWGOB2x/7TVZEL8lsl7H6FvIltzqGXMcTtDHeVuOJb+Km
+         8sgmTqZMUwQIzkL11ex1bkpyzxbXVSRnG2ifybZumNtr3zitErmTr9QRpyRxU5SaFyk/
+         Vj6A==
+X-Forwarded-Encrypted: i=1; AJvYcCWWEePN42w2eB8cdyB2IMmoKsiMW8igFggBxWnQNIPDY4TQpPZSr4Mal3qpR8tQ02kmmQ4Cl/yYpwA66Ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEzcH1MZCJLeeAhAPbhV3soCVjL+2505QGZ0h+dpBVQdUkuJRt
+	Z8ZalREaqS0mheuuVJGLSMc8WR3PPrAdt7jNxzM1VBlv/PK2awKLIIbIFve1Mw==
+X-Gm-Gg: ASbGncsgampXe68+1+wjzE744xx6QqJ5GS9VVFa6ZWmb8BjnzrYdhqM+aa/sAtudafz
+	zZ0Ysrug1MK9IH4F/trHfAHzNHaca3huyDd0XJWb360+RIcl2YerA1KlhRDYc32ktdWVcJVxEKN
+	A34n7y7SrNmv+8exHw04qp2zcnp7mEY5o7ZYNNnfWZRtPBzwKPnVY2OXa5Jwo88BMLsOmGOxq8c
+	83+pO5wMpxtyXBRypJVfzAmFkp/4KMHsfMrYGf3pZBqAfzmJgS40q9RQiGbZ6nxA94s63v6VedE
+	E3UN9aCriPeevi26PZXms5LJpa3l
+X-Google-Smtp-Source: AGHT+IFidzq43r+0NRTs951DcUKcskfAO05VG8wu01wBEQtR1k0fOqC/zriCBDU47fEYDjlBVHYkmQ==
+X-Received: by 2002:a17:90b:4c8a:b0:2ee:3cc1:793e with SMTP id 98e67ed59e1d1-2fe692c7f83mr13786908a91.32.1740631090068;
+        Wed, 26 Feb 2025 20:38:10 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501f97cesm5057285ad.60.2025.02.26.20.38.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 20:38:09 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Li Liu <quic_lliu6@quicinc.com>,
-	Xiangxu Yin <quic_xiangxuy@quicinc.com>
-Subject: Re: [PATCH v2] drm/msm/dpu: Add writeback support for SM6150
-Date: Thu, 27 Feb 2025 06:37:34 +0200
-Message-Id: <174063096236.3733075.3181882897632312941.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250114-add-writeback-support-for-sm6150-v2-1-d707b31aad5c@quicinc.com>
-References: <20250114-add-writeback-support-for-sm6150-v2-1-d707b31aad5c@quicinc.com>
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v9 18/19] zram: do not leak page on writeback_store error path
+Date: Thu, 27 Feb 2025 13:35:36 +0900
+Message-ID: <20250227043618.88380-19-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
+References: <20250227043618.88380-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+Ensure the page used for local object data is freed
+on error out path.
 
-On Tue, 14 Jan 2025 16:55:24 +0800, Fange Zhang wrote:
-> On the SM6150 platform there is WB_2 block. Add it to the SM6150 catalog.
-> 
-> 
+Fixes: 330edc2bc059 (zram: rework writeback target selection strategy)
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/block/zram/zram_drv.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Applied, thanks!
-
-[1/1] drm/msm/dpu: Add writeback support for SM6150
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/23c0a9d36f78
-
-Best regards,
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index e8375fcdb36e..5dac525f4cd3 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -787,7 +787,7 @@ static ssize_t writeback_store(struct device *dev,
+ 	unsigned long index = 0;
+ 	struct bio bio;
+ 	struct bio_vec bio_vec;
+-	struct page *page;
++	struct page *page = NULL;
+ 	ssize_t ret = len;
+ 	int mode, err;
+ 	unsigned long blk_idx = 0;
+@@ -929,8 +929,10 @@ static ssize_t writeback_store(struct device *dev,
+ 
+ 	if (blk_idx)
+ 		free_block_bdev(zram, blk_idx);
+-	__free_page(page);
++
+ release_init_lock:
++	if (page)
++		__free_page(page);
+ 	release_pp_ctl(zram, ctl);
+ 	atomic_set(&zram->pp_in_progress, 0);
+ 	up_read(&zram->init_lock);
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.48.1.658.g4767266eb4-goog
+
