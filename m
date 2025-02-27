@@ -1,93 +1,73 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0805224BBE5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE2326B95D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682337; cv=none; b=j1a/YtlWRvVYEbtnA8SPsEa4BRdDRvLpO8CqYldeDySYaFZk7spmRbbhRlvOWqNc+lapKbdiqXIa0dte2OYkjJPno4KBt/n4elvMrxHMSg+wc1j7WsoQV+Qa5MwBDM9e+3uhibY0m79NbiuDEMbFGNSWbuWjTawyRSx3WUtrLgk=
+	t=1740682338; cv=none; b=Q5YTGor9eLoGZeZPLmmq5cCGc1CUpf5egvZWXrUL51doCRSASzDNGgHf1iPe5IgL4In1WO5uah1YsRPDHIzHbbUdKDAqPCjYRNpacC0JwTbJUZlGE6zxzpdk86ZscMtdFFxHQDOi9l2sxDtMW6RqclRYcsk+mN3/2+JO/AgNdFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740682337; c=relaxed/simple;
-	bh=9YT1d9GISltSTtz8dTBbWKTn8OXvk3sE1Jl32PtK2vw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ht4VE8D6dUUenXHpiXYx3PhjEGz4JIhOSzXlJtmLq4kn/1qwR9XZ3pfvmpsyWWQRSxd75c7q/OuaqL9sDXMCrF8p6mPRmN86HoGj6xqSjITXxzWW3mcJkLNrj0zonzYfzVYimsTF0JkYLFAhDMcEd5A31JrKrP4jBLkqlYiqELA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=ywpjxjll; arc=none smtp.client-ip=121.127.44.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1740682338; c=relaxed/simple;
+	bh=iZEYr3WPS7WmwFveTUVtD47soCK/VR0eQDCz8IwU/P0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hRfkyZK2N3DCqXjVTs6InKx7ndQ4jY/mb1N0Zse9n6CBP2XcPtdRkvFHlVqJtSEjulR4NxXvjjGgCJElVhOQ/PpcjGwuF0PNI/JvhWiGXPDNJ/XQD4ZRViPWobFM+3FKIIqoL5vkooYP2KtBlhVyEQli/VQXH6FqKglcpeJO5pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOIzM+7p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="ywpjxjll"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1740682334; bh=eS8EdvGPaOo7zCDoFD9uMhkn/FUO+ddnyL9qkYr6zIE=;
- b=ywpjxjll8cj4DqhTNj3MVwVR21+QmMNoC5xMyhMQWf9KvgkiXO10IycgR/TQW4pBxRo2oCdoz
- OSLABiASwnMhsmK+Kg3f071TzTBtOp1jwO0V/6+tY1Jdp2gfrA/UUsS+lev5BuaVF1St2cydIrg
- WlTXkQDzfgAuJVQyLku6n0jAfuhWXfXGG1Xap4JIU6tgsmKlfUar17jpyumi6ePrRLjNOyxfxCt
- 5Ql86TylB5DHH2h95RrD2k9onaOJaKj6Gzd8NAq7SpSwTcSjbFTCtblOOBlVOhONgfEeHDxiqaX
- UEdf258HBILV4s4xbo5L/gf4E+oZLX/Ms0u+Pb01MmQw==
-X-Forward-Email-ID: 67c0b1cebf572996e8621467
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.59
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Yao Zi <ziyao@disroot.org>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 1/4] dt-bindings: iio: adc: Add rockchip,rk3528-saradc variant
-Date: Thu, 27 Feb 2025 18:40:50 +0000
-Message-ID: <20250227184058.2964204-2-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250227184058.2964204-1-jonas@kwiboo.se>
-References: <20250227184058.2964204-1-jonas@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOIzM+7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B89C4CEDD;
+	Thu, 27 Feb 2025 18:52:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740682335;
+	bh=iZEYr3WPS7WmwFveTUVtD47soCK/VR0eQDCz8IwU/P0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GOIzM+7pHGqcS/i2OhQnYq3impNLgJFTK5RwACFBXaZwsPewOTRKdx8sBWEGSCPBH
+	 b3dzvUzIUBoXMhy/wOJi80g3gweexvoFXW9OsY7SJ0qaDdflTU+GEhGjNo0gQoqq+t
+	 mZzgTIo1glZT7yIuOa8ZxOg8+gyFM0TmqW8v7DqGRRhfsHrl7tNH72LHx21lkeJKjC
+	 A1OfOher3ROIX7CmxUuHWZ7r7Zk1pq6UWnBdOvz/9Dd6eOK+CLRMvlBFvOUWktvm3L
+	 iDZbV1qKSRYgfHqA6wifXz9qNC+FmJg3pLhAYyWCULQB2g6G3vygugChVTH9h3+y4l
+	 4vGKPTod3Ff/w==
+Date: Thu, 27 Feb 2025 19:52:01 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
+Subject: Re: [PATCH RFC v1 01/11] x86/fpu/xstate: Simplify
+ print_xstate_features()
+Message-ID: <Z8C0UYHV9q10bKoF@gmail.com>
+References: <20250227184502.10288-1-chang.seok.bae@intel.com>
+ <20250227184502.10288-2-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227184502.10288-2-chang.seok.bae@intel.com>
 
-The Successive Approximation ADC (SARADC) in RK3528 uses the v2
-controller and support:
-- 10-bit resolution
-- Up to 1MS/s sampling rate
-- 4 single-ended input channels
-- Current consumption: 0.5mA @ 1MS/s
 
-Add a rockchip,rk3562-saradc compatible string for the 4 channels of
-10-bit resolution supported by SARADC in RK3528.
+* Chang S. Bae <chang.seok.bae@intel.com> wrote:
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> print_xstate_features() currently invokes print_xstate_feature() multiple
+> times on separate lines, which can be simplified in a loop.
+> 
+> print_xstate_feature() already checks the feature's enabled status and is
+> only called within print_xstate_features(). Inline print_xstate_feature()
+> and iterate over features in a loop to streamline the enabling message.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+> ---
+> I find it difficult to justify using separate lines for printing when
+> they can be efficiently grouped under a simple for-loop. While this
+> cleanup isn't directly related to APX, it felt like a necessary
+> improvement, especially when new xstates are introduced.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-index fd93ed3991e0..86eae9672c04 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-@@ -15,6 +15,7 @@ properties:
-       - const: rockchip,saradc
-       - const: rockchip,rk3066-tsadc
-       - const: rockchip,rk3399-saradc
-+      - const: rockchip,rk3528-saradc
-       - const: rockchip,rk3588-saradc
-       - items:
-           - const: rockchip,rk3576-saradc
--- 
-2.48.1
+Agreed, and I've picked up this simplification independently in 
+tip:x86/fpu.
 
+Thanks,
+
+	Ingo
