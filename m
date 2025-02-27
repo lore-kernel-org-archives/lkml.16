@@ -1,165 +1,163 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B0A22DF9A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C162376E1;
 	Thu, 27 Feb 2025 12:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658259; cv=none; b=ShTXwz9RDo5BegenSdS10R241G6PdK42gdJATnjoMs8HIjA3jmWDQQMwn4N6N0EJctj3gkVuvjKQpCduYQLw/K1JXqMYRUBXgsOVQ/r00sY38QoCxlGsBWbT7WYu0Gvoy4KNfCM8UxQc8o9Pa5y6BkchGIC6A4YgmesBkZL1lA0=
+	t=1740658259; cv=none; b=XkfHd4Q3PDOwXi6MlhQLNwPhklNYsB6sS9bsGXpuudUsZOrNC6c//pe+b4zqV9tEunsShME9B0EYbx7hgn4vKkkl6+a44uhxfYxPbs+fEEQ1YjZ8CUf8bSYapmPD67VGaJ8ydWfFyqYd8cgY0emq2HfhAiUNhmVOLfaIUH7FTfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740658259; c=relaxed/simple;
-	bh=DL5WQ/m06BulIBUSol3oaMpPWqLdB+Y4lNopS+hQ/F8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iSi5w8BUDWXoEqIwWtKZRI8QaUzGRg9g6cpBnIZHy2I7xgZu5SsXkAiLtTgnCgbQoBO8DBAbo6MKCMmJkyTHH7qN8yWqgSjfEm+KsHsc47WFBx3vp/mY8ILy34yEP4MaSMFZ4rAGe+6XGhCNpfHplvSjBO8P7ksBl+SHYtnmbso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z3VXm140tz4f3js9;
-	Thu, 27 Feb 2025 20:10:32 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 07D981A06DC;
-	Thu, 27 Feb 2025 20:10:54 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgB3219KVsBnUNAxFA--.41103S4;
-	Thu, 27 Feb 2025 20:10:51 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: ming.lei@redhat.com,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk,
-	vgoyal@redhat.com
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v2] blk-throttle: fix lower bps rate by throtl_trim_slice()
-Date: Thu, 27 Feb 2025 20:06:45 +0800
-Message-Id: <20250227120645.812815-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	bh=3lO7ERCwM2D7uu+YtrYmtRReUBaTmMpcEzl+3rC+jio=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pww5wwBtW9QOAr1RKoBrMl5mpejdxeyApE4zMPNksrhwwW5c/wtHrUdKAqZr7Qrt6hSQYttB74jrj9D2Ydhwewv1zjNG4TyKSypGS4DIM2VLfMBbFBuvE2xx/gCemuEqekE2Y9hmMmdagSkzMphAi24Wxhl1m0TjR3gdhdPySw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZtDuAlC; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZtDuAlC"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-221206dbd7eso14592515ad.2;
+        Thu, 27 Feb 2025 04:10:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740658257; x=1741263057; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KJTm6Cfm1kOySDY4DzJRdMnhEPIVa8nplOZzWQzwX04=;
+        b=AZtDuAlChtrgaFM1dekz5OgPiLtod96KIM5FMJ6cFGKWuAg5DVxkgLQ+B8sWmDfnia
+         FFhLnhkeM5yLdWaD55ocXYanGb1d3c6LHlcMiDrA1ZNOgLs2S6+bvIGMISWIvWmlEY8e
+         EF/2WlUY58aSZezGqhYhIuP8k5zHcQjPrsLqPqm0WUubeWMCCmOrXN+qNQtzpUC6U2Td
+         U/+1Da5RLEs8GKBPuKuuWIu2eq/w1//4I8asDKLjtu6ZdAZGd3y7i1dOdD+dRrZzIYxL
+         G7c94zzJmsFXG6gJdZ6vNTDS9BIwc9beHsJNv7ZD/WO17+vnoG5vQGka9FbpYIE0vkFX
+         gSqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740658257; x=1741263057;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KJTm6Cfm1kOySDY4DzJRdMnhEPIVa8nplOZzWQzwX04=;
+        b=foHS4IT7FJ/f0u86RYpKdsAyznvKbtHRU3BUW4ZbobkTGiZNLU5SvUoOO3KwTyBMHO
+         3vUXc5PzP2Ma7pW7ESoWLlIj54JTiFu9OGxR+Xf2in4LB9W0tA2tgfVzvORqNPvr2RHz
+         VKuQPqjWUhKX/yeEz6AyYya0kplekCXrbhBQmNkgCH0Eju1bIVr7+xAEILuHg3Nq5cAQ
+         /fZiMcipJqClyD5WRUrlDYAFAYI+w2ZojvDPeyyDf2Bofkiy6P82OWF5yeYFsARcAqkE
+         owgNynM+KG1K4FBfiT5JJGihUtmKFHTbWS11BdNWCKA8AmFcDxI5zNGd77OU+gWtts3X
+         WYAw==
+X-Forwarded-Encrypted: i=1; AJvYcCULjCQhgEscnl2KsIZmLamDkHLM3pveP0q9qPDf1Jmz1DeRZVmKlYmIIIfXwhPpLXTExLHHJHaWasuk@vger.kernel.org, AJvYcCUnYySXKO0zCCQtgny+xywJ9DqoDiGe04ZF+9iohd/ua1HrRXx5dyZNoBytcfKmDbf0ZmYdLz7dBGIakDc=@vger.kernel.org, AJvYcCVLaukmiNi1zZwwe5W5gbeA28D0pbssZt45SwbuoyYNIHydvob4J80QMTWKj1rtA79FF7KSUqswoQK+rZeQ@vger.kernel.org, AJvYcCX3BxQGyW2Ao6T05U+DPEY3mememOQVeqryfrS6mPT5U4qgC8jtiPU87sJitTYJp2dN3pXey1A6krxdSI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIXwFfgpbwf4EfK3C6pgxor99gGCKh53P8sVE2CkIMvTR0PRiy
+	d3Eun1bq3n8kMQgKKR+aZKamxSP3CbeIsoyUvxuH46V1FuAfN3hP
+X-Gm-Gg: ASbGncvlWx8YodrrROQgen265qy0DRl5Xal1hv8/Kvq3vA9wsL8TgXKCmO/i3nARb4X
+	xq0WmMjtVvTE9Utanqoi5/dg2vWk7BXiAHD1PE877iYmee1VNzLwoerUI5Q+xe2vgwc5+kLYBk+
+	Ts9LBk4jfHbiO4RyZPRTL2AFF04Hv+szSMH0WZOWJ5x96ZfsFjk8gLF3kRis+KtHXWq+LWoicJz
+	naI0PBRm6VmfwpapJ6Bicc+Ktqp3HIJ0te5iRKzzOaCtkY+KSPcbzwQbhrHiw5yMLNW1RuqqVI/
+	1bOD3tR+Mts7QJFjxrnQrqeQmsivMIdUtCNAw4GR+p3BREJPwMHNAAUM8sPJh4q6vk3nEyEY9BF
+	lskjdqg/LmIDlcpS+2JxZ
+X-Google-Smtp-Source: AGHT+IFoh/t7q9w0OOWI5lPWhEYDWQjOP6fwyanC4umHXD3Z3ogI4emvms7MREgszU4VmoxeyK67ew==
+X-Received: by 2002:a05:6a00:3d0c:b0:730:9242:e68 with SMTP id d2e1a72fcca58-7348be7ee95mr10144318b3a.23.1740658256980;
+        Thu, 27 Feb 2025 04:10:56 -0800 (PST)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de19cdasm1074217a12.24.2025.02.27.04.10.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 04:10:56 -0800 (PST)
+From: James Calligeros <jcalligeros99@gmail.com>
+Date: Thu, 27 Feb 2025 22:07:43 +1000
+Subject: [PATCH v3 16/20] ASoC: tas2770: Power cycle amp on ISENSE/VSENSE
+ change
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgB3219KVsBnUNAxFA--.41103S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF4DCr1fZFyDXw1kXry3XFb_yoW5tF43pF
-	W3Ar43WFW7XFy2kF43X3Z3Cay8C3yrGFy5Gwn5Cr4rA345Cr1xKFnxAr4Yya47A3s3uw4F
-	v3ZFvryxCr12yrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjfUFg4SDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250227-apple-codec-changes-v3-16-cbb130030acf@gmail.com>
+References: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+In-Reply-To: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2687;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=er/NvEhNNS1LjFLGs7pKaGt0I/0LUg0k5iDGaFhFgS0=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkHQk+X57cw6iW/6NlTlV684+CiqxUKnPEOv1/P+vBX5
+ v9shxflHaUsDGJcDLJiiiwbmoQ8Zhux3ewXqdwLM4eVCWQIAxenAEwkLp2R4c3pVSt/XItr794V
+ zx6vtNQ4KPXTzLz1V6a+i1ebl68s+J+RYfX2XxU6h3IWZcqq1hU/UJ4e72fDdnpdeGzv1MB/trI
+ svAA=
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Hector Martin <marcan@marcan.st>
 
-The bio submission time may be a few jiffies more than the expected
-waiting time, due to 'extra_bytes' can't be divided in
-tg_within_bps_limit(), and also due to timer wakeup delay.
-In this case, adjust slice_start to jiffies will discard the extra wait time,
-causing lower rate than expected.
+The ISENSE/VSENSE blocks are only powered up when the amplifier
+transitions from shutdown to active. This means that if those controls
+are flipped on while the amplifier is already playing back audio, they
+will have no effect.
 
-Current in-tree code already covers deviation by rounddown(), but turns
-out it is not enough, because jiffies - slice_start can be a multiple of
-throtl_slice.
+Fix this by forcing a power cycle around transitions in those controls.
 
-For example, assume bps_limit is 1000bytes, 1 jiffes is 10ms, and
-slice is 20ms(2 jiffies), expected rate is 1000 / 1000 * 20 = 20 bytes
-per slice.
-
-If user issues two 21 bytes IO, then wait time will be 30ms for the
-first IO:
-
-bytes_allowed = 20, extra_bytes = 1;
-jiffy_wait = 1 + 2 = 3 jiffies
-
-and consider
-extra 1 jiffies by timer, throtl_trim_slice() will be called at:
-
-jiffies = 40ms
-slice_start = 0ms, slice_end= 40ms
-bytes_disp = 21
-
-In this case, before the patch, real rate in the first two slices is
-10.5 bytes per slice, and slice will be updated to:
-
-jiffies = 40ms
-slice_start = 40ms, slice_end = 60ms,
-bytes_disp = 0;
-
-Hence the second IO will have to wait another 30ms;
-
-With the patch, the real rate in the first slice is 20 bytes per slice,
-which is the same as expected, and slice will be updated:
-
-jiffies=40ms,
-slice_start = 20ms, slice_end = 60ms,
-bytes_disp = 1;
-
-And now, there is still 19 bytes allowed in the second slice, and the
-second IO will only have to wait 10ms;
-
-This problem will cause blktests throtl/001 failure in case of
-CONFIG_HZ_100=y, fix it by preserving one extra finished slice in
-throtl_trim_slice().
-
-Fixes: e43473b7f223 ("blkio: Core implementation of throttle policy")
-Reported-by: Ming Lei <ming.lei@redhat.com>
-Closes: https://lore.kernel.org/linux-block/20250222092823.210318-3-yukuai1@huaweicloud.com/
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
 ---
-Changes from v1:
- - update commit message and comment, to mention rounddown().
- - add review tag by Ming, and ack tag by Tejun.
- block/blk-throttle.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ sound/soc/codecs/tas2770.c | 30 +++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 8d149aff9fd0..a52f0d6b40ad 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -599,14 +599,23 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- 	 * sooner, then we need to reduce slice_end. A high bogus slice_end
- 	 * is bad because it does not allow new slice to start.
- 	 */
--
- 	throtl_set_slice_end(tg, rw, jiffies + tg->td->throtl_slice);
+diff --git a/sound/soc/codecs/tas2770.c b/sound/soc/codecs/tas2770.c
+index 9cdd3470e9a04d5a5f801c3690d40f8fd131cd94..787356a4f4256627a55e35c851a9e78a1cf29771 100644
+--- a/sound/soc/codecs/tas2770.c
++++ b/sound/soc/codecs/tas2770.c
+@@ -157,11 +157,37 @@ static const struct snd_kcontrol_new isense_switch =
+ static const struct snd_kcontrol_new vsense_switch =
+ 	SOC_DAPM_SINGLE("Switch", TAS2770_PWR_CTRL, 2, 1, 1);
  
- 	time_elapsed = rounddown(jiffies - tg->slice_start[rw],
- 				 tg->td->throtl_slice);
--	if (!time_elapsed)
-+	/* Don't trim slice until at least 2 slices are used */
-+	if (time_elapsed < tg->td->throtl_slice * 2)
- 		return;
- 
++static int sense_event(struct snd_soc_dapm_widget *w,
++			struct snd_kcontrol *kcontrol, int event)
++{
++	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
++	struct tas2770_priv *tas2770 = snd_soc_component_get_drvdata(component);
++
 +	/*
-+	 * The bio submission time may be a few jiffies more than the expected
-+	 * waiting time, due to 'extra_bytes' can't be divided in
-+	 * tg_within_bps_limit(), and also due to timer wakeup delay. In this
-+	 * case, adjust slice_start will discard the extra wait time, causing
-+	 * lower rate than expected. Therefore, other than the above rounddown,
-+	 * one extra slice is preserved for deviation.
++	 * Powering up ISENSE/VSENSE requires a trip through the shutdown state.
++	 * Do that here to ensure that our changes are applied properly, otherwise
++	 * we might end up with non-functional IVSENSE if playback started earlier,
++	 * which would break software speaker protection.
 +	 */
-+	time_elapsed -= tg->td->throtl_slice;
- 	bytes_trim = calculate_bytes_allowed(tg_bps_limit(tg, rw),
- 					     time_elapsed) +
- 		     tg->carryover_bytes[rw];
++	switch (event) {
++	case SND_SOC_DAPM_PRE_REG:
++		return snd_soc_component_update_bits(component, TAS2770_PWR_CTRL,
++						    TAS2770_PWR_CTRL_MASK,
++						    TAS2770_PWR_CTRL_SHUTDOWN);
++	case SND_SOC_DAPM_POST_REG:
++		return tas2770_update_pwr_ctrl(tas2770);
++	default:
++		return 0;
++	}
++}
++
+ static const struct snd_soc_dapm_widget tas2770_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2770_asi1_mux),
+-	SND_SOC_DAPM_SWITCH("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch),
+-	SND_SOC_DAPM_SWITCH("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch),
++	SND_SOC_DAPM_SWITCH_E("ISENSE", TAS2770_PWR_CTRL, 3, 1, &isense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
++	SND_SOC_DAPM_SWITCH_E("VSENSE", TAS2770_PWR_CTRL, 2, 1, &vsense_switch,
++		sense_event, SND_SOC_DAPM_PRE_REG | SND_SOC_DAPM_POST_REG),
+ 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2770_dac_event,
+ 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_OUTPUT("OUT"),
+
 -- 
-2.39.2
+2.48.1
 
