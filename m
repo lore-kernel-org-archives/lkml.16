@@ -1,43 +1,45 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291C627004B
-	for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41AB1FC8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740614329; cv=none; b=K2iItEmwjtRiFvF5rgNYympg3B/2YHVvu1nR2tQuVfOl816KzCBEIIdVe2U7DisjHZQ9QUWnDD4L99Vmu5ozdiMq9RMdc0Rq4966LmGLDmUymQ1ycSeu0GJIHu3yf3l6P4C6RKxt90xEVFxL2DqdfNQcmnY9IHV12hg/yi9Zg0U=
+	t=1740614437; cv=none; b=MYldOIEe9BU97CQwe6sR+G/F+16blHqwVEuZr9u7lOGeHoVJGBUBuGIc6OaWCBKsWnTHOfa62uXCuBsu+sn9aHRfkrzLi/cuWM6hnsOghO5ayQFtIN6nhSXZbT7aYcYKCXJm+/IMAIHcMjCYe3SqfhCAtmV0Zow43oJHenTLaBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740614329; c=relaxed/simple;
-	bh=4Pj9kjyz6137WG7himdJP85mNE+Wj/4ku1bjTMb3HhY=;
+	s=arc-20240116; t=1740614437; c=relaxed/simple;
+	bh=nfHEX4wecSpOYGYuoY+3dKBNs1jUcg8WeLZ83fxlWT0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KSRL2wNYHaC5UuvLgOiwitu5q9zLbbCtKXkI9MtL3Jfh/Gb4Jho/csqX6NKTaRWVJdSKQcmv7DTjnGF+XSsBxpUfZG4i8VPLppBTAf3390he1op6bOAqRSdesWGh+/kw27eHi29yxCyUfiwitP1dSZwl8LI27VawRIOgw7Ndwno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=T8Kqo0MO; arc=none smtp.client-ip=95.215.58.184
+	 Content-Type:Content-Disposition:In-Reply-To; b=IZzJmzjFYrW5sqku759DeY3Hxdp11OGwFJYwy7/s8Pvn1B/GGKlDK2i9xjluANa+FXHKkYfBIoUcYm3Ua2Kqxl2NgRgsdhhZO+bGLEUdlKjj/XM9iSBFljhT6Dq7Cb9TH9ycaOavWAe5sou7AvGhCI684UIrYrInOQCmbBuBWak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bEIOLwsm; arc=none smtp.client-ip=91.218.175.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="T8Kqo0MO"
-Date: Wed, 26 Feb 2025 23:58:39 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bEIOLwsm"
+Date: Thu, 27 Feb 2025 00:00:27 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740614323;
+	t=1740614432;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yswrmCRrVsnZeMvvRyeXCzhvfViLwt8KDXKusOpWbOI=;
-	b=T8Kqo0MO1ZeLalmsNe+Zfiw1jmoaYYsLmXnleDI/1ggc4o2kqX/wPyqiKkf9qKsWl/J+oU
-	XGRzol7hoMsGyrYhK2ngvUz2dUntRBxYHJ8uz4awS2l8vSCPVGNnPUoiHQwbnURFOpJeb7
-	SB9KuG8Pyt7nI95EOdH1Y9ScQgj2VuU=
+	bh=lZF8l/6nKdJOw4wJVKCersbjISsxoghQ1nANtX1CqBI=;
+	b=bEIOLwsm3ncqczp/Vdewq3DRMAeuJM57tPvyoFbWb8dSKpn+c5XrKn5D5RO7ftTn/K2nTI
+	JdVSGtPOFX4iEBUFZBrZn99vHjobZGDh1xOWebsjao2oLpsPLT4PfO6ERhJ78HhQFJ8v95
+	7bkKrpxsDU6QlK8pYG+Wh+zu/DQc0v4=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Yosry Ahmed <yosry.ahmed@linux.dev>
 To: Nhat Pham <nphamcs@gmail.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, chengming.zhou@linux.dev,
-	linux-mm@kvack.org, kernel-team@meta.com,
+Cc: Johannes Weiner <hannes@cmpxchg.org>, akpm@linux-foundation.org,
+	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com,
 	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] zswap: do not crash the kernel on decompression failure
-Message-ID: <Z7-qr6ar0HPyiYOv@google.com>
+Message-ID: <Z7-rG7Y3DK33MyCl@google.com>
 References: <20250225213200.729056-1-nphamcs@gmail.com>
  <Z76Go1VGw272joly@google.com>
- <CAKEwX=O+27wN5p_j5REfnEsfVi4zsgvyowdhGUKQseo9g1GtLg@mail.gmail.com>
+ <20250226045727.GB1775487@cmpxchg.org>
+ <Z780VzBOE3LKY0yi@google.com>
+ <CAKEwX=PR3tJM4X00hSua-w-FNR_ZwQ1oRqdT2Cgj_FV9cCUing@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,62 +49,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKEwX=O+27wN5p_j5REfnEsfVi4zsgvyowdhGUKQseo9g1GtLg@mail.gmail.com>
+In-Reply-To: <CAKEwX=PR3tJM4X00hSua-w-FNR_ZwQ1oRqdT2Cgj_FV9cCUing@mail.gmail.com>
 X-Migadu-Flow: FLOW_OUT
 
-On Wed, Feb 26, 2025 at 03:29:06PM -0800, Nhat Pham wrote:
-> On Tue, Feb 25, 2025 at 7:12 PM Yosry Ahmed <yosry.ahmed@linux.dev> wrote:
+On Wed, Feb 26, 2025 at 03:20:13PM -0800, Nhat Pham wrote:
+> On Wed, Feb 26, 2025 at 7:33 AM Yosry Ahmed <yosry.ahmed@linux.dev> wrote:
 > >
-> > On Tue, Feb 25, 2025 at 01:32:00PM -0800, Nhat Pham wrote:
-> > > Currently, we crash the kernel when a decompression failure occurs in
-> > > zswap (either because of memory corruption, or a bug in the compression
-> > > algorithm). This is overkill. We should only SIGBUS the unfortunate
-> > > process asking for the zswap entry on zswap load, and skip the corrupted
-> > > entry in zswap writeback.
+> > On Tue, Feb 25, 2025 at 11:57:27PM -0500, Johannes Weiner wrote:
+> > > On Wed, Feb 26, 2025 at 03:12:35AM +0000, Yosry Ahmed wrote:
+> > > > On Tue, Feb 25, 2025 at 01:32:00PM -0800, Nhat Pham wrote:
+> > > > > Currently, we crash the kernel when a decompression failure occurs in
+> > > > > zswap (either because of memory corruption, or a bug in the compression
+> > > > > algorithm). This is overkill. We should only SIGBUS the unfortunate
+> > > > > process asking for the zswap entry on zswap load, and skip the corrupted
+> > > > > entry in zswap writeback.
+> > > >
+> > > > Some relevant observations/questions, but not really actionable for this
+> > > > patch, perhaps some future work, or more likely some incoherent
+> > > > illogical thoughts :
+> > > >
+> > > > (1) It seems like not making the folio uptodate will cause shmem faults
+> > > > to mark the swap entry as hwpoisoned, but I don't see similar handling
+> > > > for do_swap_page(). So it seems like even if we SIGBUS the process,
+> > > > other processes mapping the same page could follow in the same
+> > > > footsteps.
+> > >
+> > > It's analogous to what __end_swap_bio_read() does for block backends,
+> > > so it's hitchhiking on the standard swap protocol for read failures.
 > >
-> > Some relevant observations/questions, but not really actionable for this
-> > patch, perhaps some future work, or more likely some incoherent
-> > illogical thoughts :
-> >
-> > (1) It seems like not making the folio uptodate will cause shmem faults
-> > to mark the swap entry as hwpoisoned, but I don't see similar handling
-> > for do_swap_page(). So it seems like even if we SIGBUS the process,
-> > other processes mapping the same page could follow in the same
-> > footsteps.
+> > Right, that's also how I got the idea when I did the same for large
+> > folios handling.
 > 
-> poisoned, I think? It's the weird SWP_PTE_MARKER thing.
+> And your handling of the large folio (along with the comment in the
+> other thread) was how I got the idea for this patch :)
+> 
+> >
+> > >
+> > > The page sticks around if there are other users. It can get reclaimed,
+> > > but since it's not marked dirty, it won't get overwritten. Another
+> > > access will either find it in the swapcache and die on !uptodate; if
+> > > it was reclaimed, it will attempt another decompression. If all
+> > > references have been killed, zswap_invalidate() will finally drop it.
+> > >
+> > > Swapoff actually poisons the page table as well (unuse_pte).
+> >
+> > Right. My question was basically why don't we also poison the page table
+> > in do_swap_page() in this case. It's like that we never swapoff.
+> 
+> That would require a rmap walk right? To also poison the other PTEs
+> that point to the faulty (z)swap entry?
+> 
+> Or am I misunderstanding your point :)
 
-Not sure what you mean here, I am referring to the inconsistency between
-shmem_swapin_folio() and do_swap_page().
-
-> 
-> [...]
-> 
-> >
-> >
-> > (3) If we run into a decompression failure, should we free the
-> > underlying memory from zsmalloc? I don't know. On one hand if we free it
-> > zsmalloc may start using it for more compressed objects. OTOH, I don't
-> > think proper hwpoison handling will kick in until the page is freed.
-> > Maybe we should tell zsmalloc to drop this page entirely and mark
-> > objects within it as invalid? Probably not worth the hassle but
-> > something to think about.
-> 
-> This might be a fun follow up :) I guess my question is - is there a
-> chance that we might recover in the future?
-> 
-> For example, can memory (hardware) failure somehow recover, or the
-> decompression algorithm somehow fix itself? I suppose not?
-> 
-> If that is the case, one thing we can do is just free the zsmalloc
-> slot, then mark the zswap entry as corrupted somehow. We can even
-> invalidate the zswap entry altogether, and install a (shared)
-> ZSWAP_CORRUPT_ENTRY. Future readers can check for this and exit if
-> they encounter a corrupted entry?
-> 
-> It's not common enough (lol hopefully) for me to optimize right away,
-> but I can get on with it if there are actual data of this happening
-> IRL/in product :)ion
-
-I am not aware of this being a common problem, but something to keep in
-mind, perhaps.
+Oh I meant why not just mark the entry where the fault happened as
+poisoned at least. Finding other PTEs that point to the swap entry is a
+different story. I don't think we can even use the rmap here.
