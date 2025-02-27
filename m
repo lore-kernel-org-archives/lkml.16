@@ -1,82 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D7270042;
-	Thu, 27 Feb 2025 00:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AEA38F91
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617454; cv=none; b=SzHgXAx/1VyqffoWOupHQ8Pyru9E7Rdl/su6gH5v3WzkYqncG31aOx9FFJCJENCgLY3Nl+3x/MLa5iQ43VBIQ41W2sb35hHegxZVJ8zMRSmF+IU7nF58ltdLTlimZmg3RNFw58dy9irovsieRWd/+BDkExxCxcyXnMxAwdS7aiU=
+	t=1740617519; cv=none; b=CwPoB1iCFbcvtfaeEEUvNsRXZKxh4Y2l5RDmzIyjxpBy9Z9eOJTqjhwPzZxSRruQNu/ZcfhMOTqGGB+sFBvg/p//o1wZbuDq7Q4wK9tloWuPiKo7uMv/IELDGatQVvpa1hbclBML+X/rydZ3NdBea44T1eYLmLaPnwuM5KPatBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617454; c=relaxed/simple;
-	bh=wvfRR8PjV+qegkfR0ZtNP9Xy3R7GdHmzfT0wtK2n0LI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G8GtaAn2ueZfC+3DaSamoXSPGSR76ev+QbvLwlccpcvEGSZLf33I7sl4WQox49XwdIkBj9lrgl7P4NVimSQJfS1oTOblO0RWFRuD5DXsN5P6gLebn6nzm0f5iptZ5HCh/ohxABPC51+u1qoPpOhP/Or4cPNvRUCnp8qhZvt6JKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BxQfiApQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740617519; c=relaxed/simple;
+	bh=Q7mNOkHjkgMmZIP6NY5cOonhJIgXhPCJV3iNp/QtlhY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kMlMYXfrYs+JsSuyfnvDEMMLOAhc8esotFYTX8gxW1CQSmWx4HNhvkC/XPYNTgKMEd1vBkN+vlIZuGMtJj4Z8Iy5urq++ruvzeACEhnnHwBPTYmHuvNBuRUkwFEmOPHimlGdYAQ3hiODkqgv3j4W29CX3hI4gj+gmsG45e2DiVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wNILA9DJ; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BxQfiApQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C43C4CED6;
-	Thu, 27 Feb 2025 00:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740617454;
-	bh=wvfRR8PjV+qegkfR0ZtNP9Xy3R7GdHmzfT0wtK2n0LI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BxQfiApQecs90DsGHqplK4jUHSWc+4vW32Z8Sujco8sC4U4f5f/Kd9/Y4+LYkLSUh
-	 V6Z17lHiyYRGfZymymSBR4WwqFiidBrTMsrrygFrgPAokH0H1RiZpzdFqXfVM4mW28
-	 dYgwix0iMiriTxLYtu8JhG1miClt0dS7DlUgVJLk=
-Date: Wed, 26 Feb 2025 16:49:45 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: Re: [PATCH] tty: pty: remove redundant local variable
-Message-ID: <2025022632-syrup-regretful-79df@gregkh>
-References: <20250226204707.1941274-1-vvidic@valentin-vidic.from.hr>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wNILA9DJ"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-220ff7d7b67so5948725ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:51:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740617517; x=1741222317; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EJotyZiERuL6yZQBDvDnm5IddJUBCXFIUhbBusTXxps=;
+        b=wNILA9DJwSfaz+/FgVDFsta5xGuj+gnGpK6sHsfci7ZXNns9WBL6UM+2o6J+Kqu61g
+         WxZZzY8vPV51whMMcnPQhK6dqbafOlE5cbqOsIEBWvJ3xhy4K0wRAcgr8RqsDNIZVTzx
+         2VBGJlqcaDa3q7aQmlKahTx5jvvtSeR2mHP61nbsKnucGHwH78hPFppZf31AlQndSVIR
+         tMF5GruKGgNthtNdrL2EEUzK/2/WxDPoV/f76xi98vKHzr2MQM3uW3C+NQzTweiHhYq8
+         PoJYYnLVBk6CiEtZR/d7InKoSjo8FcFNWr0X62Nc21GIEZg1/SZYuEaY++bqpnF5+Tpb
+         WM3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740617517; x=1741222317;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EJotyZiERuL6yZQBDvDnm5IddJUBCXFIUhbBusTXxps=;
+        b=h+EQV/mptoC2er0tJCTyO3xPVmjsERd9pj7IOfT8ytG9R8nyWMl5BwQjq8xTMNJXOz
+         BEQe9mshmFvHlqF1wwREKYKbARzfV5Dzhi8HBHQJPv4nYNxX7zUjvWuw9p5z8Dv5KM+v
+         YdPqYplpqE6zJZtFHX3uT3yoRHPeyw7AlLJKaFwRn5v6vAdatRiboK4SM1XCMNqpRNHp
+         mgpIbmvzJpcGssBAGGiooqI6+Zha9EQPHpczEq0J/gowHNWDZgKtS8+t6bgJdZjVtiru
+         YhKKouIMvoFG/+pLEc3CfG3a3IMCDEW3oB0wPuIAqzSYK+57j6RldK2H82haNPtLJxKg
+         BInA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVh3nLP7BLQgEwP4BRKCOG1XwVDJTJ7poXJT7XMDYZrwnT16TLGWotWAWvDRpPpe6AE3UBqi86oFb3iio=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4j4pNFquyJp3iJVrIk1Rrfon1ZHie7fvtK81ximAZSnbCH8CT
+	8+VV0laWlSqXpxEPvqg8T20BuYDAFK6AUXMm7h/vwqE6f6x7JRZLJ904IBmqaxqRrYKD5x/JC/H
+	Zug==
+X-Google-Smtp-Source: AGHT+IEL51u+VHZPqDrfRj4ysQhapPxjeZQ1gDCkR3XNIivE5W3G5YIUboDt4EBORJQZsRkmkIxq982vmL4=
+X-Received: from pjbeu5.prod.google.com ([2002:a17:90a:f945:b0:2ef:82c0:cb8d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d502:b0:21a:8300:b9ce
+ with SMTP id d9443c01a7336-221a002afb5mr402718905ad.49.1740617517337; Wed, 26
+ Feb 2025 16:51:57 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:51:55 -0800
+In-Reply-To: <4c605b4e395a3538d9a2790918b78f4834912d72.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226204707.1941274-1-vvidic@valentin-vidic.from.hr>
+Mime-Version: 1.0
+References: <20250204004038.1680123-1-jthoughton@google.com>
+ <025b409c5ca44055a5f90d2c67e76af86617e222.camel@redhat.com>
+ <Z7UwI-9zqnhpmg30@google.com> <07788b85473e24627131ffe1a8d1d01856dd9cb5.camel@redhat.com>
+ <Z75lcJOEFfBMATAf@google.com> <4c605b4e395a3538d9a2790918b78f4834912d72.camel@redhat.com>
+Message-ID: <Z7-3K-CXnoqHhmgC@google.com>
+Subject: Re: [PATCH v9 00/11] KVM: x86/mmu: Age sptes locklessly
+From: Sean Christopherson <seanjc@google.com>
+To: Maxim Levitsky <mlevitsk@redhat.com>
+Cc: James Houghton <jthoughton@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	David Matlack <dmatlack@google.com>, David Rientjes <rientjes@google.com>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Wei Xu <weixugc@google.com>, Yu Zhao <yuzhao@google.com>, 
+	Axel Rasmussen <axelrasmussen@google.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, Feb 26, 2025 at 09:47:07PM +0100, Valentin Vidic wrote:
-> The value of to is only used once, so no need to store it in a
-> variable.
+On Wed, Feb 26, 2025, Maxim Levitsky wrote:
+> On Tue, 2025-02-25 at 16:50 -0800, Sean Christopherson wrote:
+> > On Tue, Feb 25, 2025, Maxim Levitsky wrote:
+> > What if we make the assertion user controllable?  I.e. let the user opt-out (or
+> > off-by-default and opt-in) via command line?  We did something similar for the
+> > rseq test, because the test would run far fewer iterations than expected if the
+> > vCPU task was migrated to CPU(s) in deep sleep states.
+> > 
+> > 	TEST_ASSERT(skip_sanity_check || i > (NR_TASK_MIGRATIONS / 2),
+> > 		    "Only performed %d KVM_RUNs, task stalled too much?\n\n"
+> > 		    "  Try disabling deep sleep states to reduce CPU wakeup latency,\n"
+> > 		    "  e.g. via cpuidle.off=1 or setting /dev/cpu_dma_latency to '0',\n"
+> > 		    "  or run with -u to disable this sanity check.", i);
+> > 
+> > This is quite similar, because as you say, it's impractical for the test to account
+> > for every possible environmental quirk.
 > 
-> Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-> ---
->  drivers/tty/pty.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
-> index df08f13052ff..c6eb711500b6 100644
-> --- a/drivers/tty/pty.c
-> +++ b/drivers/tty/pty.c
-> @@ -110,12 +110,10 @@ static void pty_unthrottle(struct tty_struct *tty)
->  
->  static ssize_t pty_write(struct tty_struct *tty, const u8 *buf, size_t c)
->  {
-> -	struct tty_struct *to = tty->link;
-> -
->  	if (tty->flow.stopped || !c)
->  		return 0;
->  
-> -	return tty_insert_flip_string_and_push_buffer(to->port, buf, c);
-> +	return tty_insert_flip_string_and_push_buffer(tty->link->port, buf, c);
+> No objections in principle, especially if sanity check is skipped by default, 
+> although this does sort of defeats the purpose of the check. 
+> I guess that the check might still be used for developers.
 
-does this actually change the resulting code any?
+A middle ground would be to enable the check by default if NUMA balancing is off.
+We can always revisit the default setting if it turns out there are other problematic
+"features".
 
-"to" actually means something here, the tty is the "from" and the link
-is the "to" where the data is going, so having it be "to" makes the code
-easier to understand by humans, which is the first goal of code.
-Maintaining it for long periods of time is key.
+> > > > Aha!  I wonder if in the failing case, the vCPU gets migrated to a pCPU on a
+> > > > different node, and that causes NUMA balancing to go crazy and zap pretty much
+> > > > all of guest memory.  If that's what's happening, then a better solution for the
+> > > > NUMA balancing issue would be to affine the vCPU to a single NUMA node (or hard
+> > > > pin it to a single pCPU?).
+> > > 
+> > > Nope. I pinned main thread to  CPU 0 and VM thread to  CPU 1 and the problem
+> > > persists.  On 6.13, the only way to make the test consistently work is to
+> > > disable NUMA balancing.
+> > 
+> > Well that's odd.  While I'm quite curious as to what's happening,
 
-Otherwise your change "tty->link->port" doesn't make it all that obvious
-that the this is being written not to the tty device itself, but to
-somewhere else, right?
+Gah, chatting about this offline jogged my memory.  NUMA balancing doesn't zap
+(mark PROT_NONE/PROT_NUMA) PTEs for paging the kernel thinks are being accessed
+remotely, it zaps PTEs to see if they're are being accessed remotely.  So yeah,
+whenever NUMA balancing kicks in, the guest will see a large amount of its memory
+get re-faulted.
 
-thanks,
-
-greg k-h
+Which is why it's such a terribly feature to pair with KVM, at least as-is.  NUMA
+balancing is predicated on inducing and resolving the #PF being relatively cheap,
+but that doesn't hold true for secondary MMUs due to the coarse nature of mmu_notifiers.
