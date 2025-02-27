@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86926129A78;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869F52192FF;
 	Thu, 27 Feb 2025 08:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740644100; cv=none; b=aZrSbfgKRZRxTImVmak2VYvNfEY554gDVAUTY0SvXsyUhTiN7lWlgZjwp16uMWwTtVuAO2Wy9j4AdrlWYWXjcLQcC+TEPO/sxWsMSKKpAcv19f56Izb/FmT3RA2Q9q194hju/MzkxFCy2KnmYVvVlh6ZWmV5ySXhEtugXY0lYxE=
+	t=1740644100; cv=none; b=q03qKx+dTrs0hBjIQqR2Vxm+5dWgWFP0CuXzxDNpTwCfeJ8FdMI0SpyfvcDxFuTVggMzHyh6Oze+aslvSa3U24wDXZhZEmUZu5XBmLxTDmdHdwhAXx66IKGhe9lG3Hxc75hIuwTuXFGby3Gnyes/dh2h5chtf0ijKPW/1vcuYq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740644100; c=relaxed/simple;
-	bh=wtnDsqfDUGeJRz9e2i+KwSMwRkO9DXPROU32bECc/zs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WE6AnkZ3CZU4sf49VYAnGLburWL5pZCzFkbQFnlseUNrbrAJz3mnrhLg04rGwpglFqNKxZHYjX9Ls/i2eSYPJAK2wUH4Z9ZSk0OIaUdABN5mGCzcjuNSzk2dstPDexC5t5M96BzXRcPM9s8//mBLtkw5aLZiu8cSaDUnWO87BmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tSqbUyVN; arc=none smtp.client-ip=10.30.226.201
+	bh=pBVRxF2VJ5YXgEpjEPm363C4OgCa10v6990p5e5dlOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TEsdodM1xifC4uxl0EQ7kGBdxgkSTBrKj1TLKHCzyo3klIf37cpE+hperB1dmwgRmnucfSNJmq2MKPLp6alp27QbS+2ovzwwrfMkeGHLASabd4wWySQ0P9DwnIaPHgDgnX/Z2UN0CYRE4i20v9fPi03fUMdBvZW8M6hWysgn+Po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HTpUi6IG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tSqbUyVN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2EAC4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HTpUi6IG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1218EC4AF09;
 	Thu, 27 Feb 2025 08:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740644100;
-	bh=wtnDsqfDUGeJRz9e2i+KwSMwRkO9DXPROU32bECc/zs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tSqbUyVNxN0KewbxGA79ZJewaQOu9iX/JHXHaqh+VqbNdFetd4nxTjk+eeA8VGrgN
-	 bZYPOxVIpDSH5Rcj9+d9AvxgoJlaBOqSBgQIvG8/vyqckBmySK8WEJgC3/uM7ed+fl
-	 +jAIlPXui/Yh1eSIIvDwcRhpxzl0brTRe9zy0C71AZxMEp+WkVsEYKONUwuz4PjECn
-	 nWQGLQq5Vb2Nk0j3D7bUl96EWlw6kX2pg2EAqdYQSOZgOnlRwtN/2Hl0aXoulLAsYi
-	 AqlBF87k9MVa/JbFsZP/Ba9fbLA9BcpM1no6K5PgdL1o87b0vZGa0V7TgJ3ayh+xh/
-	 Vb6bdao6PdD6g==
+	bh=pBVRxF2VJ5YXgEpjEPm363C4OgCa10v6990p5e5dlOg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HTpUi6IGu++OnLt11tmjVRDhhKQraYBjUqi55reBDtkq2ka123RZa4A+Ux0NenwZh
+	 g033pQZlJlp/Gy1eslvGQ9OczHM6wOrrjFLX3+8ju3Kt92rC1zPYWNzS+UPdK9HcI+
+	 VmjwZALJpEfQj6g+OyKwuzi0uI4zJqvNoWvsRSO+0V9031qThq4crXzjj4sYeJEsw5
+	 UApJEzyCNUMiXZHshH7gI6s+6VS1fhy7DKw8YYMq02pwKpvbQS3OoHwEEzTX56ghzF
+	 OUWDjRar69SL1cPiJBLDwxgiS4Fyqm9vAZiY9SkxJsSyBZ7jEQ2ZNxEXGnNusMh+1f
+	 FmBG7bfW6jIUw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tnZ33-000000006mU-2NUo;
+	id 1tnZ32-000000006mQ-2utG;
 	Thu, 27 Feb 2025 09:15:13 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
@@ -38,14 +37,11 @@ Cc: Rob Herring <robh@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/8] arm64: dts: qcom: x1e78100-t14s: mark l12b and l15b always-on
-Date: Thu, 27 Feb 2025 09:13:51 +0100
-Message-ID: <20250227081357.25971-3-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 0/8] arm64: dts: qcom: x1e: mark l12b and l15b always-on
+Date: Thu, 27 Feb 2025 09:13:49 +0100
+Message-ID: <20250227081357.25971-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250227081357.25971-1-johan+linaro@kernel.org>
-References: <20250227081357.25971-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,34 +56,38 @@ described (and some never will be) and must never be disabled.
 Mark the regulators as always-on to prevent them from being disabled,
 for example, when consumers probe defer or suspend.
 
-Fixes: 7d1cbe2f4985 ("arm64: dts: qcom: Add X1E78100 ThinkPad T14s Gen 6")
-Cc: stable@vger.kernel.org	# 6.12
-Cc: Konrad Dybcio <konradybcio@kernel.org>
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 2 ++
- 1 file changed, 2 insertions(+)
+Note that there are likely votes from other processors for these rpmh
+regulators (at least for l15b) but the OS should not rely on that in any
+case.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-index b2c2347f54fa..7f756ce48d2f 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-@@ -344,6 +344,7 @@ vreg_l12b_1p2: ldo12 {
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1200000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
- 
- 		vreg_l13b_3p0: ldo13 {
-@@ -365,6 +366,7 @@ vreg_l15b_1p8: ldo15 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
- 
- 		vreg_l17b_2p5: ldo17 {
+Included is also a patch that adds the missing HID supplies for the
+T14s. It was a corresponding change for the CRD that made me look into
+this to make sure these supplies were not disabled during suspend or on
+probe deferrals.
+
+Johan
+
+
+Johan Hovold (8):
+  arm64: dts: qcom: x1e80100-crd: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e78100-t14s: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e001de-devkit: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e80100-dell-xps13-9345: mark l12b and l15b
+    always-on
+  arm64: dts: qcom: x1e80100-hp-x14: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e80100-qcp: mark l12b and l15b always-on
+  arm64: dts: qcom: x1e78100-t14s: fix missing HID supplies
+
+ arch/arm64/boot/dts/qcom/x1e001de-devkit.dts  |  2 +
+ .../qcom/x1e78100-lenovo-thinkpad-t14s.dts    | 45 +++++++++++++++++++
+ arch/arm64/boot/dts/qcom/x1e80100-crd.dts     |  2 +
+ .../dts/qcom/x1e80100-dell-xps13-9345.dts     |  2 +
+ .../dts/qcom/x1e80100-hp-omnibook-x14.dts     |  2 +
+ .../dts/qcom/x1e80100-lenovo-yoga-slim7x.dts  |  3 +-
+ arch/arm64/boot/dts/qcom/x1e80100-qcp.dts     |  2 +
+ 7 files changed, 57 insertions(+), 1 deletion(-)
+
 -- 
 2.45.3
 
