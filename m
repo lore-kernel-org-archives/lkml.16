@@ -1,343 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F2E1662EF;
-	Thu, 27 Feb 2025 14:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E3822C35C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:19:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665954; cv=none; b=DpKTGOjEwPWvqEPTnl7WKexJh8zCzwSeZSSd28xYPjtNYs+CUofnEhEurlZFCief+q19zvhV+huxZ7cAMzHhrznXgQuhHNdnsPygELS6hSfjx5VrcANdXEKY4XECjNhRzi+iHwC6+C/za2jMqewGJRi8nwcs+k8gN+PMv0glsak=
+	t=1740665964; cv=none; b=AeeB3riYazFo4gXQGU7AsKAwohDh/6hsyIlnwS+zgPB7yNSlM9sDVH3gQa1BN3MOAYx6r4PAyFRJqM6qThaygNtIV870KVdZbkBqryT4dGiDYSzhDRbc2koz1sFIgzYwd18pT5TN1w+dp9KPB0GcVQafctAdog/fS5eU0jG+aOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665954; c=relaxed/simple;
-	bh=RLgVlnTpy9CI9sjxADDXsi5z9lnhfW8JBanO63WvXjs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UkhvMSMHhD7/pUcOrQq1nIO2AKh4MRg/IavG84+lk0RsOSKcAuLKVy8jr10rTeuKOGJzH894QoFviuZDxORTvNhGXaNyWFsy9fIrk9B0VAbeVLiAxVpCVlx01T0H8x2oPb+MCwTAYnbVIrqA7y25go6gjpxLtCQRMvNcRb+4Sxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RM9lzni/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740665964; c=relaxed/simple;
+	bh=TYgMdkpmXdiunpeA5m4Ocp06XU1GCSE6nejOB63Id88=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DIyGH9WEcm38uM3d3BDpC53hWh47me3DypDflMC+fEpLGtz+UsLdTSYFZ6CvKTL+hoehvVVUAyAQjoE5fs8Kfi0mRgioDCnvQERel7vQUUQAYH+1HBTqSHYkoNu3emTVNOnfpAfJ7dJ/D2qPleosXFy1YTmrcm7vwh59Gr1YJ3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IbZznSNC; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RM9lzni/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BFEC4CEE6;
-	Thu, 27 Feb 2025 14:19:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740665954;
-	bh=RLgVlnTpy9CI9sjxADDXsi5z9lnhfW8JBanO63WvXjs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RM9lzni/OUsu2Lf9dbRHYmCRw7TXPSAfzhY+CH7uUuaEJh57vecuOmRg3n3YwBK4x
-	 F5OvaS6i26loyLEAvOQIxJZKhgYBBhu/OhPIU2/R/arhxSzbOPqjxAX4U/TITYSISE
-	 OOovpKScaNqbEUNECNhHZoTFebOrTAvefRqj6PA3w3ChH7W0VJI2cwl9Q8WX8Bpd9v
-	 j4c6WOwR4YlBC+yMdDSskewdx9WixeQ/8p3xV8YXXRBmofF9W0WmWMhUjlZtKJ/l4/
-	 KRC7lbO8s2sUl97aCAo+h12+OQe3kEJjGq3RhNfoRCGOD4N5qYqvu7uwp6LBJym3CV
-	 rgX5munMmx6Fg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] asm-generic/io.h: rework split ioread64/iowrite64 helpers
-Date: Thu, 27 Feb 2025 15:19:01 +0100
-Message-Id: <20250227141910.3819351-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IbZznSNC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740665963; x=1772201963;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=TYgMdkpmXdiunpeA5m4Ocp06XU1GCSE6nejOB63Id88=;
+  b=IbZznSNCFneNHVpmH36DCtLJ+o4U9lXl1tFDBkBCz9pVokygDXR1GnH2
+   FcYdsMQ5fN7b05lNgLfY+Issrdb26cZeDaUCwLX7/6d7b0eKM9h+7wbIi
+   lDxCl48mHjOhVc+iCTcjrqGkdBChF9BKGHg5VZ2gaqfu5/8ygmyDHudbv
+   qPeuy7xMBR2CUfprhTm50aYZCr5nXkQZiYq5rRR4oOp8YRIBqJHsmFTLU
+   aExs9f2QY+rk5L93EFGoFfv6XvAhHjN5S5ZovvXRIkGFmvck4+2vP79UB
+   g9+vc+sIhSrC9pOYEUf+PAZRNplVLTR9wmcgHMAdEWdR8/uTcY2If4Ax7
+   A==;
+X-CSE-ConnectionGUID: 2GzRGUwkR+yqx7hjkPDonw==
+X-CSE-MsgGUID: Ahyg2GtRTdeKz6zHLbX4vQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52196532"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="52196532"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:19:22 -0800
+X-CSE-ConnectionGUID: 4vgTw4j/SWaNL+Hl82QupQ==
+X-CSE-MsgGUID: p/QvSjdQQnSDENyGf2crAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="122158475"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 27 Feb 2025 06:19:21 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnejN-000DTg-2f;
+	Thu, 27 Feb 2025 14:19:18 +0000
+Date: Thu, 27 Feb 2025 22:18:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Lukasz Luba <l.luba@partner.samsung.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>
+Subject: drivers/devfreq/event/exynos-ppmu.c:529:21: warning: cast to smaller
+ integer type 'enum exynos_ppmu_type' from 'const void *'
+Message-ID: <202502272210.guXvXlHo-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Arnd Bergmann <arnd@arndb.de>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   dd83757f6e686a2188997cb58b5975f744bb7786
+commit: 0ae9c3213c2ca34f7e7ebad1436267778d37ba9f PM / devfreq: exynos-events: change matching code during probe
+date:   6 years ago
+config: x86_64-buildonly-randconfig-006-20250127 (https://download.01.org/0day-ci/archive/20250227/202502272210.guXvXlHo-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250227/202502272210.guXvXlHo-lkp@intel.com/reproduce)
 
-There are two incompatible sets of definitions of these eight functions:
-On 64-bit architectures setting CONFIG_HAS_IOPORT, they turn into
-either pair of 32-bit PIO (inl/outl) accesses or a single 64-bit MMIO
-(readq/writeq). On other 64-bit architectures, they are always split
-into 32-bit accesses.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502272210.guXvXlHo-lkp@intel.com/
 
-Depending on which header gets included in a driver, there are
-additionally definitions for ioread64()/iowrite64() that are
-expected to produce a 64-bit register MMIO access on all 64-bit
-architectures.
+All warnings (new ones prefixed by >>):
 
-To separate the conflicting definitions, make the version in
-include/linux/io-64-nonatomic-*.h visible on all architectures
-but pick the one from lib/iomap.c on architectures that set
-CONFIG_GENERIC_IOMAP in place of the default fallback.
+   In file included from drivers/devfreq/event/exynos-ppmu.c:19:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:20:
+   include/linux/mm.h:162:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+     162 |         case 72:
+         |         ^
+   include/linux/mm.h:162:2: note: insert '__attribute__((fallthrough));' to silence this warning
+     162 |         case 72:
+         |         ^
+         |         __attribute__((fallthrough)); 
+   include/linux/mm.h:162:2: note: insert 'break;' to avoid fall-through
+     162 |         case 72:
+         |         ^
+         |         break; 
+   include/linux/mm.h:164:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+     164 |         case 64:
+         |         ^
+   include/linux/mm.h:164:2: note: insert '__attribute__((fallthrough));' to silence this warning
+     164 |         case 64:
+         |         ^
+         |         __attribute__((fallthrough)); 
+   include/linux/mm.h:164:2: note: insert 'break;' to avoid fall-through
+     164 |         case 64:
+         |         ^
+         |         break; 
+   include/linux/mm.h:166:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
+     166 |         case 56:
+         |         ^
+   include/linux/mm.h:166:2: note: insert '__attribute__((fallthrough));' to silence this warning
+     166 |         case 56:
+         |         ^
+         |         __attribute__((fallthrough)); 
+   include/linux/mm.h:166:2: note: insert 'break;' to avoid fall-through
+     166 |         case 56:
+         |         ^
+         |         break; 
+>> drivers/devfreq/event/exynos-ppmu.c:529:21: warning: cast to smaller integer type 'enum exynos_ppmu_type' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+     529 |                 info->ppmu_type = (enum exynos_ppmu_type)of_id->data;
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   4 warnings generated.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/asm-generic/iomap.h           | 36 ++++++------------------
- include/linux/io-64-nonatomic-hi-lo.h | 16 +++++++++++
- include/linux/io-64-nonatomic-lo-hi.h | 16 +++++++++++
- lib/iomap.c                           | 40 +++++++++++++--------------
- 4 files changed, 60 insertions(+), 48 deletions(-)
 
-diff --git a/include/asm-generic/iomap.h b/include/asm-generic/iomap.h
-index 196087a8126e..9f3f25d7fc58 100644
---- a/include/asm-generic/iomap.h
-+++ b/include/asm-generic/iomap.h
-@@ -31,42 +31,22 @@ extern unsigned int ioread16(const void __iomem *);
- extern unsigned int ioread16be(const void __iomem *);
- extern unsigned int ioread32(const void __iomem *);
- extern unsigned int ioread32be(const void __iomem *);
--#ifdef CONFIG_64BIT
--extern u64 ioread64(const void __iomem *);
--extern u64 ioread64be(const void __iomem *);
--#endif
- 
--#ifdef readq
--#define ioread64_lo_hi ioread64_lo_hi
--#define ioread64_hi_lo ioread64_hi_lo
--#define ioread64be_lo_hi ioread64be_lo_hi
--#define ioread64be_hi_lo ioread64be_hi_lo
--extern u64 ioread64_lo_hi(const void __iomem *addr);
--extern u64 ioread64_hi_lo(const void __iomem *addr);
--extern u64 ioread64be_lo_hi(const void __iomem *addr);
--extern u64 ioread64be_hi_lo(const void __iomem *addr);
--#endif
-+extern u64 __ioread64_lo_hi(const void __iomem *addr);
-+extern u64 __ioread64_hi_lo(const void __iomem *addr);
-+extern u64 __ioread64be_lo_hi(const void __iomem *addr);
-+extern u64 __ioread64be_hi_lo(const void __iomem *addr);
- 
- extern void iowrite8(u8, void __iomem *);
- extern void iowrite16(u16, void __iomem *);
- extern void iowrite16be(u16, void __iomem *);
- extern void iowrite32(u32, void __iomem *);
- extern void iowrite32be(u32, void __iomem *);
--#ifdef CONFIG_64BIT
--extern void iowrite64(u64, void __iomem *);
--extern void iowrite64be(u64, void __iomem *);
--#endif
- 
--#ifdef writeq
--#define iowrite64_lo_hi iowrite64_lo_hi
--#define iowrite64_hi_lo iowrite64_hi_lo
--#define iowrite64be_lo_hi iowrite64be_lo_hi
--#define iowrite64be_hi_lo iowrite64be_hi_lo
--extern void iowrite64_lo_hi(u64 val, void __iomem *addr);
--extern void iowrite64_hi_lo(u64 val, void __iomem *addr);
--extern void iowrite64be_lo_hi(u64 val, void __iomem *addr);
--extern void iowrite64be_hi_lo(u64 val, void __iomem *addr);
--#endif
-+extern void __iowrite64_lo_hi(u64 val, void __iomem *addr);
-+extern void __iowrite64_hi_lo(u64 val, void __iomem *addr);
-+extern void __iowrite64be_lo_hi(u64 val, void __iomem *addr);
-+extern void __iowrite64be_hi_lo(u64 val, void __iomem *addr);
- 
- /*
-  * "string" versions of the above. Note that they
-diff --git a/include/linux/io-64-nonatomic-hi-lo.h b/include/linux/io-64-nonatomic-hi-lo.h
-index f32522bb3aa5..cdb86c8f514c 100644
---- a/include/linux/io-64-nonatomic-hi-lo.h
-+++ b/include/linux/io-64-nonatomic-hi-lo.h
-@@ -101,22 +101,38 @@ static inline void iowrite64be_hi_lo(u64 val, void __iomem *addr)
- 
- #ifndef ioread64
- #define ioread64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __ioread64_hi_lo
-+#else
- #define ioread64 ioread64_hi_lo
- #endif
-+#endif
- 
- #ifndef iowrite64
- #define iowrite64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define iowrite64 __iowrite64_hi_lo
-+#else
- #define iowrite64 iowrite64_hi_lo
- #endif
-+#endif
- 
- #ifndef ioread64be
- #define ioread64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64be __ioread64be_hi_lo
-+#else
- #define ioread64be ioread64be_hi_lo
- #endif
-+#endif
- 
- #ifndef iowrite64be
- #define iowrite64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define iowrite64be __iowrite64be_hi_lo
-+#else
- #define iowrite64be iowrite64be_hi_lo
- #endif
-+#endif
- 
- #endif	/* _LINUX_IO_64_NONATOMIC_HI_LO_H_ */
-diff --git a/include/linux/io-64-nonatomic-lo-hi.h b/include/linux/io-64-nonatomic-lo-hi.h
-index 448a21435dba..c4575e6a44d9 100644
---- a/include/linux/io-64-nonatomic-lo-hi.h
-+++ b/include/linux/io-64-nonatomic-lo-hi.h
-@@ -101,22 +101,38 @@ static inline void iowrite64be_lo_hi(u64 val, void __iomem *addr)
- 
- #ifndef ioread64
- #define ioread64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64 __ioread64_lo_hi
-+#else
- #define ioread64 ioread64_lo_hi
- #endif
-+#endif
- 
- #ifndef iowrite64
- #define iowrite64_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define iowrite64 __iowrite64_lo_hi
-+#else
- #define iowrite64 iowrite64_lo_hi
- #endif
-+#endif
- 
- #ifndef ioread64be
- #define ioread64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define ioread64be __ioread64be_lo_hi
-+#else
- #define ioread64be ioread64be_lo_hi
- #endif
-+#endif
- 
- #ifndef iowrite64be
- #define iowrite64be_is_nonatomic
-+#ifdef CONFIG_GENERIC_IOREMAP
-+#define iowrite64be __iowrite64be_lo_hi
-+#else
- #define iowrite64be iowrite64be_lo_hi
- #endif
-+#endif
- 
- #endif	/* _LINUX_IO_64_NONATOMIC_LO_HI_H_ */
-diff --git a/lib/iomap.c b/lib/iomap.c
-index 4f8b31baa575..a65717cd86f7 100644
---- a/lib/iomap.c
-+++ b/lib/iomap.c
-@@ -111,7 +111,7 @@ EXPORT_SYMBOL(ioread16be);
- EXPORT_SYMBOL(ioread32);
- EXPORT_SYMBOL(ioread32be);
- 
--#ifdef readq
-+#ifdef CONFIG_64BIT
- static u64 pio_read64_lo_hi(unsigned long port)
- {
- 	u64 lo, hi;
-@@ -153,21 +153,21 @@ static u64 pio_read64be_hi_lo(unsigned long port)
- }
- 
- __no_kmsan_checks
--u64 ioread64_lo_hi(const void __iomem *addr)
-+u64 __ioread64_lo_hi(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64_lo_hi(port), return readq(addr));
- 	return 0xffffffffffffffffULL;
- }
- 
- __no_kmsan_checks
--u64 ioread64_hi_lo(const void __iomem *addr)
-+u64 __ioread64_hi_lo(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64_hi_lo(port), return readq(addr));
- 	return 0xffffffffffffffffULL;
- }
- 
- __no_kmsan_checks
--u64 ioread64be_lo_hi(const void __iomem *addr)
-+u64 __ioread64be_lo_hi(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64be_lo_hi(port),
- 		return mmio_read64be(addr));
-@@ -175,19 +175,19 @@ u64 ioread64be_lo_hi(const void __iomem *addr)
- }
- 
- __no_kmsan_checks
--u64 ioread64be_hi_lo(const void __iomem *addr)
-+u64 __ioread64be_hi_lo(const void __iomem *addr)
- {
- 	IO_COND(addr, return pio_read64be_hi_lo(port),
- 		return mmio_read64be(addr));
- 	return 0xffffffffffffffffULL;
- }
- 
--EXPORT_SYMBOL(ioread64_lo_hi);
--EXPORT_SYMBOL(ioread64_hi_lo);
--EXPORT_SYMBOL(ioread64be_lo_hi);
--EXPORT_SYMBOL(ioread64be_hi_lo);
-+EXPORT_SYMBOL(__ioread64_lo_hi);
-+EXPORT_SYMBOL(__ioread64_hi_lo);
-+EXPORT_SYMBOL(__ioread64be_lo_hi);
-+EXPORT_SYMBOL(__ioread64be_hi_lo);
- 
--#endif /* readq */
-+#endif /* CONFIG_64BIT */
- 
- #ifndef pio_write16be
- #define pio_write16be(val,port) outw(swab16(val),port)
-@@ -236,7 +236,7 @@ EXPORT_SYMBOL(iowrite16be);
- EXPORT_SYMBOL(iowrite32);
- EXPORT_SYMBOL(iowrite32be);
- 
--#ifdef writeq
-+#ifdef CONFIG_64BIT
- static void pio_write64_lo_hi(u64 val, unsigned long port)
- {
- 	outl(val, port);
-@@ -261,7 +261,7 @@ static void pio_write64be_hi_lo(u64 val, unsigned long port)
- 	pio_write32be(val, port + sizeof(u32));
- }
- 
--void iowrite64_lo_hi(u64 val, void __iomem *addr)
-+void __iowrite64_lo_hi(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -269,7 +269,7 @@ void iowrite64_lo_hi(u64 val, void __iomem *addr)
- 		writeq(val, addr));
- }
- 
--void iowrite64_hi_lo(u64 val, void __iomem *addr)
-+void __iowrite64_hi_lo(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -277,7 +277,7 @@ void iowrite64_hi_lo(u64 val, void __iomem *addr)
- 		writeq(val, addr));
- }
- 
--void iowrite64be_lo_hi(u64 val, void __iomem *addr)
-+void __iowrite64be_lo_hi(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -285,7 +285,7 @@ void iowrite64be_lo_hi(u64 val, void __iomem *addr)
- 		mmio_write64be(val, addr));
- }
- 
--void iowrite64be_hi_lo(u64 val, void __iomem *addr)
-+void __iowrite64be_hi_lo(u64 val, void __iomem *addr)
- {
- 	/* Make sure uninitialized memory isn't copied to devices. */
- 	kmsan_check_memory(&val, sizeof(val));
-@@ -293,12 +293,12 @@ void iowrite64be_hi_lo(u64 val, void __iomem *addr)
- 		mmio_write64be(val, addr));
- }
- 
--EXPORT_SYMBOL(iowrite64_lo_hi);
--EXPORT_SYMBOL(iowrite64_hi_lo);
--EXPORT_SYMBOL(iowrite64be_lo_hi);
--EXPORT_SYMBOL(iowrite64be_hi_lo);
-+EXPORT_SYMBOL(__iowrite64_lo_hi);
-+EXPORT_SYMBOL(__iowrite64_hi_lo);
-+EXPORT_SYMBOL(__iowrite64be_lo_hi);
-+EXPORT_SYMBOL(__iowrite64be_hi_lo);
- 
--#endif /* readq */
-+#endif /* CONFIG_64BIT */
- 
- /*
-  * These are the "repeat MMIO read/write" functions.
+vim +529 drivers/devfreq/event/exynos-ppmu.c
+
+   504	
+   505	static int of_get_devfreq_events(struct device_node *np,
+   506					 struct exynos_ppmu *info)
+   507	{
+   508		struct devfreq_event_desc *desc;
+   509		struct device *dev = info->dev;
+   510		struct device_node *events_np, *node;
+   511		int i, j, count;
+   512		const struct of_device_id *of_id;
+   513	
+   514		events_np = of_get_child_by_name(np, "events");
+   515		if (!events_np) {
+   516			dev_err(dev,
+   517				"failed to get child node of devfreq-event devices\n");
+   518			return -EINVAL;
+   519		}
+   520	
+   521		count = of_get_child_count(events_np);
+   522		desc = devm_kcalloc(dev, count, sizeof(*desc), GFP_KERNEL);
+   523		if (!desc)
+   524			return -ENOMEM;
+   525		info->num_events = count;
+   526	
+   527		of_id = of_match_device(exynos_ppmu_id_match, dev);
+   528		if (of_id)
+ > 529			info->ppmu_type = (enum exynos_ppmu_type)of_id->data;
+   530		else
+   531			return -EINVAL;
+   532	
+   533		j = 0;
+   534		for_each_child_of_node(events_np, node) {
+   535			for (i = 0; i < ARRAY_SIZE(ppmu_events); i++) {
+   536				if (!ppmu_events[i].name)
+   537					continue;
+   538	
+   539				if (of_node_name_eq(node, ppmu_events[i].name))
+   540					break;
+   541			}
+   542	
+   543			if (i == ARRAY_SIZE(ppmu_events)) {
+   544				dev_warn(dev,
+   545					"don't know how to configure events : %pOFn\n",
+   546					node);
+   547				continue;
+   548			}
+   549	
+   550			switch (info->ppmu_type) {
+   551			case EXYNOS_TYPE_PPMU:
+   552				desc[j].ops = &exynos_ppmu_ops;
+   553				break;
+   554			case EXYNOS_TYPE_PPMU_V2:
+   555				desc[j].ops = &exynos_ppmu_v2_ops;
+   556				break;
+   557			}
+   558	
+   559			desc[j].driver_data = info;
+   560	
+   561			of_property_read_string(node, "event-name", &desc[j].name);
+   562	
+   563			j++;
+   564		}
+   565		info->desc = desc;
+   566	
+   567		of_node_put(events_np);
+   568	
+   569		return 0;
+   570	}
+   571	
+
 -- 
-2.39.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
