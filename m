@@ -1,181 +1,156 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2135.outbound.protection.outlook.com [40.107.255.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DCC270020;
-	Thu, 27 Feb 2025 12:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740657976; cv=none; b=SKa8nf5NcnTvhSBNjAfdYIOQZEH17MKToSDzNgyEn4BYB465lg+BA/0gxuZ2NoOLXw9iZM0OAr1a+Z0uBjSq9KQ34oZbUJ5o5gcgok6yPNktWJU25RPHi+ZqJU3RgoZus4bas8MrAdDafNoqta8tdjcAzB2L6dTbX1t1yhMIfRc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740657976; c=relaxed/simple;
-	bh=yh47DNgtQhdOmNtGDPy86EpFxwG7MVtBVrmhbdaFIA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Q80XGo130Bn2oHF6fX1oTXsSQ14+Oqdy9tY5JQzDlQg3sXfpgOIHYVoqZezKu743mzuysV0X74QuT+HI4r0MoHN3wVPggnnzgmqw17bLQ8VB5qExKYL5lzMrLLD6r8ixI2p6z7+xpLrmT9aVGzZAHeXTZwyMAFYimynoOPVp7d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iMZgK+qe; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iMZgK+qe"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51RC60uN2376020
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 27 Feb 2025 06:06:00 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740657960;
-	bh=DqtULTJ3Y4hCI2h9nDLIXnOxlASzWujyEiERiEscbIw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=iMZgK+qesglf/3URui1x5tDDxi2ftEc3Iw0NzwpOw1zz69RMcuobhuCpBPtjCIU+8
-	 Bw/IkjEl65nmU19todzqPy+RBWETWMKg4q5iNWX5Y5TwsYdPAUj4yQhpo8rBuWipir
-	 n4qDTv0mZI6nGSTaipvbl8bCzkdVKjVhDFh3PBxs=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51RC60Ai091670;
-	Thu, 27 Feb 2025 06:06:00 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Feb 2025 06:06:00 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Feb 2025 06:06:00 -0600
-Received: from [172.24.227.193] (devarsht.dhcp.ti.com [172.24.227.193] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51RC5uUr082332;
-	Thu, 27 Feb 2025 06:05:56 -0600
-Message-ID: <64fa3794-e36b-2f77-ff8e-3c2ede3c3927@ti.com>
-Date: Thu, 27 Feb 2025 17:35:55 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE69B1FF1B4;
+	Thu, 27 Feb 2025 12:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740657986; cv=fail; b=DCPJmAM/BF4eEH8lEWmKD5O/QYUtYnveY0eWK4bVYV9loP388FglPn9TW5hPoJkTfalQDFrdNt6sqKR3jGmIO7DswIHbfPG1yr1yp+jkGjHtmJZA3AYaKcq/EJR6Azru6vsQQzS4B9O8FSbDvuh8SgFACY3imoihDzB++ujMyiI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740657986; c=relaxed/simple;
+	bh=e7hPk0jLH5yvjXhyQItDLsu2jj8s008PyXT1KCsFnwk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VzP0PjpFYZfDzynlolWAAMdBbiBlwZ+Fv5fYl0o1c7OHOxC/Z5HxNVjVZMLYEyzWV0qHu2jpFKvkx+K40R8IHGxPZIufrvkA1bXQjmY6FBX/d6LwJQpWY2oUuK2ZPTxl7IB4OeVPi1rzsg8GN4+aVuW31m7BHKC4hKwMO+buyOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=40.107.255.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MoCIlZdI4KOTpR+lhUVWe1eTEqqa7yGGJHdFU7bN8Qf7Jv8K7dBk5FfynUACsNr9akbXnEN5QlNtvGZPXvvV7fR4j+LWenINyWlOBnXRr5ZIK+e7RjufHJLdqef0jRKwYeUazaOJD5eUC//0N0+58wrfdioFhOyLXwcBJ5XwvSTyNxRBFqMn97kogxlFSTVB8WEWNKGXVDEHdeD1PFqxRIHhALjx6RrqzukDgGWxg3AvIC6UFTNDST2Dz7b5vIpUE5i8fOjaIkWxwWX0qcMW7Mncks7i/ChUO7jOcV68oDRNtKxZ7gqaDjNGJpCLtlTM/V/a9K681sBsWAoAM9nhfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=haR5tbnvIj2P2bamJeswnPFGYF5HC2vavkyiI1t+w3o=;
+ b=WfEtN2IJRCXwe0a2xFEGeFlf6Bi2ZygQXhbFU2JJBP5XZey1AIKPnwzam3SwwSLPtCDkUXjIJVy57VxxTv4v4kaxctdyuo4TYQsyysn3Bg4dP6E2KdYRro5tct3E9n+DxIEegRD899OHCUfjdT8mCBcmU155V9XZOe87W9tenYgmwxnzIi1p8VY6Pvo/Q7JiByUUupzVUUayTTV4NQa5cvP9tkyWd23XDhwNATcX60A3r1XJxIaYAozviMe7huYfKGMf5Hut7irGO+NNjXuWZE0LaPuIzyx8YQYjKSK/s3AVIg3fVBBXK9Rva7JuQ9Z5KRxKMoeYuo+k5v/BqMyFnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from SI2PR06CA0006.apcprd06.prod.outlook.com (2603:1096:4:186::19)
+ by SEYPR06MB6009.apcprd06.prod.outlook.com (2603:1096:101:db::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Thu, 27 Feb
+ 2025 12:06:21 +0000
+Received: from SG1PEPF000082E6.apcprd02.prod.outlook.com
+ (2603:1096:4:186:cafe::42) by SI2PR06CA0006.outlook.office365.com
+ (2603:1096:4:186::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Thu,
+ 27 Feb 2025 12:06:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG1PEPF000082E6.mail.protection.outlook.com (10.167.240.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 12:06:20 +0000
+Received: from localhost.localdomain (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id C3A9C41604F8;
+	Thu, 27 Feb 2025 20:06:19 +0800 (CST)
+From: Peter Chen <peter.chen@cixtech.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	marcin@juszkiewicz.com.pl,
+	Peter Chen <peter.chen@cixtech.com>,
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: [PATCH v3 3/6] MAINTAINERS: Add CIX SoC maintainer entry
+Date: Thu, 27 Feb 2025 20:06:16 +0800
+Message-Id: <20250227120619.1741431-4-peter.chen@cixtech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250227120619.1741431-1-peter.chen@cixtech.com>
+References: <20250227120619.1741431-1-peter.chen@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v5 06/10] arm64: dts: ti: k3-am62p5-sk: Enable IPC with
- remote processors
-To: Judith Mendez <jm@ti.com>, Andrew Davis <afd@ti.com>,
-        Nishanth Menon
-	<nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla
-	<hnagalla@ti.com>,
-        Soumya <s-tripathy@ti.com>,
-        "'Krishnamoorthy, Venkatesan'"
-	<v-krishnamoorthy@ti.com>,
-        "Khasim, Syed Mohammed" <khasim@ti.com>,
-        "Bajjuri,
- Praneeth" <praneeth@ti.com>
-References: <20250210221530.1234009-1-jm@ti.com>
- <20250210221530.1234009-7-jm@ti.com>
- <04e77daf-e775-44fa-82bf-8b6ebf73bcef@ti.com>
- <787f9d24-25bc-4171-bd8a-88fe9cef694d@ti.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <787f9d24-25bc-4171-bd8a-88fe9cef694d@ti.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG1PEPF000082E6:EE_|SEYPR06MB6009:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 00f2b4d8-7546-44e2-f431-08dd572725f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qITiwnQHseTN31gaN74XQgr8Mrob3Args4WzG1gjNgj6JnHhtIu0wC3aup0T?=
+ =?us-ascii?Q?eZ8oEq6N6oUFVblBwGuBI1V5U+xyPx4FjADIBTIS1TidEEkqYBUXb6PrCC/R?=
+ =?us-ascii?Q?jvWmAgtHxNX6mexO+FXhm22DbRkWN33ysSFSzTd3sMTB3YP6MKQpsO3McH2n?=
+ =?us-ascii?Q?2ADTf1x7oKnpMNBDFP27W+G/5KVybFz8Ci3czwpVgAJ88XLU0hnh+p8G5VAA?=
+ =?us-ascii?Q?LlJpsB3KvwgKsCOOwBbtH6WwssNtVlg+2gZONOt3qnq4lb6GAN4Ahp8IiWhf?=
+ =?us-ascii?Q?bWZE/D6+cDL2iiS8UMzbINgYfOhogYKEiD9ab3HM6RssPU/sq2ZPxYN2oKjS?=
+ =?us-ascii?Q?Hcf8D+XRTVMt9Qxm4AbDz2OKGKtVp6leihnJ6K40FpNd+prxRvuQcHTuFctF?=
+ =?us-ascii?Q?HTwhslOHTGuyyXb0vlVkaY2thjIDpFoO0suZQJvvsHkShQSwp7tysM4r9RDU?=
+ =?us-ascii?Q?pE+Yp3kKRJnTtX+CCKPH/di26OzfRf80rqJDZkU+vz0pqNF/c5OyKCKTYopo?=
+ =?us-ascii?Q?jv/4Ak7Jr1uQr2IKxwXviaCcuks3KJTZZMglNcWlxTW+511DeRGOZqk18t4A?=
+ =?us-ascii?Q?9P/Ol91kTqod3t54JkqXt3AdwlW6KZt2D80uUA8WOjYtn7aTqfLDnqI+lQa5?=
+ =?us-ascii?Q?CY3yqDdSuHvMj84kyq6zqJdOHvirtU8b4XWqzMe1WHVvxuE5QR4Pd4TUqQM+?=
+ =?us-ascii?Q?bTBFtxTL0FVp2TIHP2aWZGELX+OvnJYySu07LtbSekmFvYBj4QqbpXkYQiFm?=
+ =?us-ascii?Q?fBmJkumT5OyY8QaZzjUteiVyu+HV3cBYBZJLQxpKNHH2xlw6eRL9DN98r/pu?=
+ =?us-ascii?Q?EMjCyxPMhHH3pUNQpxNYa+a/iTgZhr5IxGHtLuIZvDEmvx0e1ud5NFd0xj4D?=
+ =?us-ascii?Q?RT3JtEKEYbtvIB68m2SAtxaYnjRLoTnJIOQMsdNDgx/wpTNgYaUPhHTNdkJg?=
+ =?us-ascii?Q?oAnIWDJDv1FUuzC3K2TJCaPr3O0AzQgAaA1HLSTZp74I6GID9Y08I/JOvpTk?=
+ =?us-ascii?Q?hVSxnWa6n1XC6mOc49oYjlSo5i0JG+1/5uqtVZtqjKOAzercHH3wndX+pcLs?=
+ =?us-ascii?Q?GN5y4wGM+QqvxMmDJLr7XuEAgxj4BB6zIkDsIR68GdWKo8kEVEmrFlx6AiPH?=
+ =?us-ascii?Q?R6FrWvpMi65BjPgnksSsh0Y+CNumZkXqUC08+tEryMIJ0VCDk6PNdRod5zEz?=
+ =?us-ascii?Q?IOzF0ZrdcppqgmYw0oi22ng+Gi6VOK+khlD5D0iIgkdi5hpt9fHXLZHW+7us?=
+ =?us-ascii?Q?YBIxAA4JP3U71VpUI8ReiQEelzt34OB5Hl2SGNftsk7yeL8fKX1MreiINqwK?=
+ =?us-ascii?Q?9no6J9pWpinLzJMXXCdXFwoq579rQXMoIvFERVr/sDa0ipkvlMPvqm64CW9H?=
+ =?us-ascii?Q?toOcN2XgZ5vVbbUcKksUN/wnhlHgkuIxErMyG2+m3ub3K3/yLvO2MJqG9m53?=
+ =?us-ascii?Q?mKrtXAkS3dmmZatNmdVu81OV0zvLhJA/GY3suD54+4GV9boJDVCicHh7xAvq?=
+ =?us-ascii?Q?LihYp/yCr4AyF98=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 12:06:20.6532
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00f2b4d8-7546-44e2-f431-08dd572725f3
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG1PEPF000082E6.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6009
 
-Hi Judith,
+Using this entry as the maintainers information for CIX SKY series SoCs.
 
-Thanks for the patch.
+Acked-by: Fugang Duan <fugang.duan@cixtech.com>
+Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On 18/02/25 23:21, Judith Mendez wrote:
-> Hi Andrew,
-> 
-> 
-> On 2/18/25 10:38 AM, Andrew Davis wrote:
->> On 2/10/25 4:15 PM, Judith Mendez wrote:
->>> From: Devarsh Thakkar <devarsht@ti.com>
->>>
->>> For each remote proc, reserve memory for IPC and bind the mailbox
->>> assignments. Two memory regions are reserved for each remote processor.
->>> The first region of 1MB of memory is used for Vring shared buffers
->>> and the second region is used as external memory to the remote processor
->>> for the resource table and for tracebuffer allocations.
->>>
->>> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
->>> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->>> Signed-off-by: Judith Mendez <jm@ti.com>
->>> ---
->>> Changes since v4:
->>> - Drop SRAM node for am62px MCU R5fSS0 core0
->>> ---
->>>   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 50 ++++++++++++++++++++++---
->>>   1 file changed, 44 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->>> b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->>> index ad71d2f27f538..9609727d042d3 100644
->>> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->>> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->>> @@ -48,6 +48,30 @@ reserved-memory {
->>>           #size-cells = <2>;
->>>           ranges;
->>> +        mcu_r5fss0_core0_dma_memory_region:
->>> mcu-r5fss-dma-memory-region@9b800000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9b800000 0x00 0x100000>;
->>> +            no-map;
->>> +        };
->>> +
+diff --git a/MAINTAINERS b/MAINTAINERS
+index efee40ea589f..200d2529c8e5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2354,6 +2354,14 @@ F:	arch/arm/boot/compressed/misc-ep93xx.h
+ F:	arch/arm/mach-ep93xx/
+ F:	drivers/iio/adc/ep93xx_adc.c
+ 
++ARM/CIX SKY ARM ARCHITECTURE
++M:	Peter Chen <peter.chen@cixtech.com>
++M:	Fugang Duan <fugang.duan@cixtech.com>
++R:	CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/arm/cix.yaml
++
+ ARM/CLKDEV SUPPORT
+ M:	Russell King <linux@armlinux.org.uk>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+-- 
+2.25.1
 
-I believe you are testing these carveouts against the default firmwares
-shipped with AM62P SDK (compiled from meta-arago), With the same firmwares,
-each remote core also does inter-processor communication with each other
-(RTOS<->RTOS) on bootup, so you need to reserve the regions for the same too
-as done here [1].
-
->>> +        mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@9b900000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9b900000 0x00 0xf00000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9c800000 0x00 0x100000>;
->>> +            no-map;
->>> +        };
->>> +
->>> +        wkup_r5fss0_core0_memory_region: r5f-memory@9c900000 {
->>> +            compatible = "shared-dma-pool";
->>> +            reg = <0x00 0x9c900000 0x00 0x1e00000>;
->>
->> 0x1e00000?
->>
->> Yes I know you didn't add this and are just coping it from below, but it
->> is still an issue. I see the same problem for the next patch, the R5F memory
->> size is 0xc00000??
->>
->> Every remote core gets 15MB (0xf00000), this has been true for all K3, and
->> all cores, DSP, R5F, M4, etc.. You even do it correct for the MCU R5F above,
->> but the WKUP R5F on AM62P and AM62 are just randomly given 30M and 12MB?
-> 
-> Not sure why FW requires 30MB here, I have reached out to FW team to
-> investigate this, will respond back here soon.
-> 
-
-You will need an alignment with the firmware team to make sure that it doesn't
-break with the default firmwares shipped with the AM62Px SDK. Also just FYI,
-this will leave a gap of 14 MiB between the wakeup R5 and the next component
-i.e. ATF, ideally we should have avoided this gap but seems like ATF nodes are
-already upstream [2], so probably can't do much, nevertheless I hope that 14
-MiB will be claimed/used by Linux in some manner.
-
-Soumya,
-Please provide an ACK for this, if the DM R5 firmware is exceeding 15 MiB,
-then you will need to update your linker scripts and regenerate the ipc echo
-test firmwares to make sure the wakeup R5 code/data does not exceed to what is
-being proposed here (15 MiB).
-
-[1]:
-https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/tree/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts?h=11.00.05#n72
-
-[2]:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts?h=next-20250227#n51
-
-Regards
-Devarsh
