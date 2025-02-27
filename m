@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E971922F17B;
-	Thu, 27 Feb 2025 13:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0044422171A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662423; cv=none; b=LbNc3uyOStCpzx/snNz9+nLZy9/TzJ/8BvXtY1j2ovmA4j+SuCqqRpSZzxu5/w1SUEHvhuNN0xDvoCx71CyFkXBW6cxnNg/rRXQUQfbXFri+bCec/NWN7xUsLy5hxAcQCEVYU6T+3svlS7eAXHvVtFNn2wtR1g/YgLUtWwQg8W4=
+	t=1740662442; cv=none; b=IFyQQCpuWdAnuAIFOSYExuSA8Lde0CyX98xlTvuZ51n3qQY52hpXJbxZJXrzChs9V/DCcQil8Ralo8qMXPdr4KuQ/pfaPf7Hz/QVzKQHKm8DQvOs/d3Sy7aBXZAk1B1H/NnNf33bQud6ezwE/HK5sTxGdsrbedDIe1A6Fch12tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662423; c=relaxed/simple;
-	bh=M8PrRnoT4Q0uXpJb8PUVUTxCaP3avGrxW6lnhAqNHLo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r1t4zhbUKms8CXrqLAue3aaSh8L27/lYAhd8pO4uzhfR00j++6N/qM4woFVfSJ3gRNwvLCjEiXro3ZtFF1OmXSs/tNwOT9Kw47IfexP+Q8Tie/Rb7QOGfRebtSvrgwuMh82wQjngqJ0xfD3n8mXSpxTBdmPBOrdvl3azbqRIUWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjyEevJE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740662442; c=relaxed/simple;
+	bh=FLYX4MtQxNdE09SlMrP22m+WXbicdAzLZnnz94YMMU8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gdnsJhy1nrTEw25gfHWsg6kMsYZMoLrn1EDxO920CP9oKBPr3/NAiyWENR/khDEjVcbGxSuNnGmOMXAC1XaTtFSS/7CHloBLzje3AfrZ+I/QsiCfbfKoxU73ZC8OnxMPk/LNswq9QyzF7gz/HY8qCAUyB2qKuSF0wzzzaGtL968=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpjlQW8z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjyEevJE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39B9C4CEDD;
-	Thu, 27 Feb 2025 13:20:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpjlQW8z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DAE0C4CEDD;
+	Thu, 27 Feb 2025 13:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740662422;
-	bh=M8PrRnoT4Q0uXpJb8PUVUTxCaP3avGrxW6lnhAqNHLo=;
+	s=k20201202; t=1740662441;
+	bh=FLYX4MtQxNdE09SlMrP22m+WXbicdAzLZnnz94YMMU8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=RjyEevJENsJbXa2vmHV9jQSyrjmk10sk4G40IfuoStOTEE/NWJwbNYNxTn2yqPLlp
-	 2QEMetqWuYXBDgydyMKaM8u1LM00KjuXhQYiU9KP5i1kNY07l708ookrb1/iPXL+z3
-	 aYrRv4LmQR3RacQvrEwbia43a+1fGep+MgGNXEpsFp7vsn1mYUnlnbWT46abVqTgq+
-	 QEw6YfrA0X+UzZHo28xlH6JAtv9knRZ9h1TD2oxAJaeLxKFAPqHdxRaDRQmBEUOjl7
-	 twruJrPXGMDFg/2D2+PsnbMHJpTjIMqKxZrfhGxaXhonMldpZqf8e69xLCNp1ZU+VQ
-	 RZkDUExpep++g==
+	b=QpjlQW8zNpmJ08WB9JTBJqlF36PognoNnSxjJT4tKa/l4ZaFM4w5dpNn+VhYJjU5s
+	 OEotBr056p3g1inqlXhP9bDQpWQ9686G5QktZbrtWl/m0Fi2c3OGLt1gHEUmuqqzyW
+	 7M2nS6lvIxRpR6Kus5NMH92N8IDOYpiX+fF00t3gvEn7Bx+0k83cm5qeRokiID3461
+	 3EBuBvfN/aEO8C3a/C10HFjRnfka4BhCcUdtH1r4OnDqVeLg1nXJ9Go8txXaqCZS5B
+	 MMuls9Q5smhRdLfS+6lbTeGPVAiA9jHTeu/9uFKMMmDSVqQqNxUmTuG6PHSVYO70or
+	 rE82cHC1EXnPQ==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Vishal Sagar <vishal.sagar@amd.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Gabriel Krisman Bertazi <krisman@suse.de>,
-	David Wei <dw@davidwei.uk>,
-	io-uring@vger.kernel.org,
+	Jani Nikula <jani.nikula@intel.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring/net: fix build warning for !CONFIG_COMPAT
-Date: Thu, 27 Feb 2025 14:20:09 +0100
-Message-Id: <20250227132018.1111094-1-arnd@kernel.org>
+Subject: [PATCH] drm: xlnx: zynqmp_dpsub: fix Kconfig dependencies for ASoC
+Date: Thu, 27 Feb 2025 14:20:32 +0100
+Message-Id: <20250227132036.1136600-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,77 +54,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-A code rework resulted in an uninitialized return code when COMPAT
-mode is disabled:
+The new audio code fails to build when sounds support is in a loadable
+module but the GPU driver is built-in:
 
-io_uring/net.c:722:6: error: variable 'ret' is used uninitialized whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
-  722 |         if (io_is_compat(req->ctx)) {
-      |             ^~~~~~~~~~~~~~~~~~~~~~
-io_uring/net.c:736:15: note: uninitialized use occurs here
-  736 |         if (unlikely(ret))
-      |                      ^~~
+x86_64-linux-ld: zynqmp_dp_audio.c:(.text+0x6a8): undefined reference to `devm_snd_soc_register_card'
+x86_64-linux-ld: drivers/gpu/drm/xlnx/zynqmp_dp_audio.o:(.rodata+0x1bc): undefined reference to `snd_soc_info_volsw'
+x86_64-linux-ld: drivers/gpu/drm/xlnx/zynqmp_dp_audio.o:(.rodata+0x1f0): undefined reference to `snd_soc_get_volsw'
+x86_64-linux-ld: drivers/gpu/drm/xlnx/zynqmp_dp_audio.o:(.rodata+0x1f4): undefined reference to `snd_soc_put_volsw'
 
-Since io_is_compat() turns into a compile-time 'false', the #ifdef
-here is completely unnecessary, and removing it avoids the warning.
+Change the Kconfig dependency to disallow the sound support in this
+configuration.
 
-Fixes: 685252678757 ("io_uring/net: unify *mshot_prep calls with compat")
+Fixes: 3ec5c1579305 ("drm: xlnx: zynqmp_dpsub: Add DP audio support")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- io_uring/net.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/gpu/drm/xlnx/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/io_uring/net.c b/io_uring/net.c
-index bb454b9f6a4c..33e9be094131 100644
---- a/io_uring/net.c
-+++ b/io_uring/net.c
-@@ -224,7 +224,6 @@ static int io_net_import_vec(struct io_kiocb *req, struct io_async_msghdr *iomsg
- 	return 0;
- }
- 
--#ifdef CONFIG_COMPAT
- static int io_compat_msg_copy_hdr(struct io_kiocb *req,
- 				  struct io_async_msghdr *iomsg,
- 				  struct compat_msghdr *msg, int ddir,
-@@ -263,7 +262,6 @@ static int io_compat_msg_copy_hdr(struct io_kiocb *req,
- 	return io_net_import_vec(req, iomsg, (struct iovec __user *)uiov,
- 				 msg->msg_iovlen, ddir);
- }
--#endif
- 
- static int io_copy_msghdr_from_user(struct user_msghdr *msg,
- 				    struct user_msghdr __user *umsg)
-@@ -330,7 +328,6 @@ static int io_sendmsg_copy_hdr(struct io_kiocb *req,
- 	iomsg->msg.msg_name = &iomsg->addr;
- 	iomsg->msg.msg_iter.nr_segs = 0;
- 
--#ifdef CONFIG_COMPAT
- 	if (io_is_compat(req->ctx)) {
- 		struct compat_msghdr cmsg;
- 
-@@ -339,7 +336,6 @@ static int io_sendmsg_copy_hdr(struct io_kiocb *req,
- 		sr->msg_control = iomsg->msg.msg_control_user;
- 		return ret;
- 	}
--#endif
- 
- 	ret = io_msg_copy_hdr(req, iomsg, &msg, ITER_SOURCE, NULL);
- 	/* save msg_control as sys_sendmsg() overwrites it */
-@@ -720,7 +716,6 @@ static int io_recvmsg_copy_hdr(struct io_kiocb *req,
- 	iomsg->msg.msg_iter.nr_segs = 0;
- 
- 	if (io_is_compat(req->ctx)) {
--#ifdef CONFIG_COMPAT
- 		struct compat_msghdr cmsg;
- 
- 		ret = io_compat_msg_copy_hdr(req, iomsg, &cmsg, ITER_DEST,
-@@ -728,7 +723,6 @@ static int io_recvmsg_copy_hdr(struct io_kiocb *req,
- 		memset(&msg, 0, sizeof(msg));
- 		msg.msg_namelen = cmsg.msg_namelen;
- 		msg.msg_controllen = cmsg.msg_controllen;
--#endif
- 	} else {
- 		ret = io_msg_copy_hdr(req, iomsg, &msg, ITER_DEST, &iomsg->uaddr);
- 	}
+diff --git a/drivers/gpu/drm/xlnx/Kconfig b/drivers/gpu/drm/xlnx/Kconfig
+index dbecca9bdd54..cfabf5e2a0bb 100644
+--- a/drivers/gpu/drm/xlnx/Kconfig
++++ b/drivers/gpu/drm/xlnx/Kconfig
+@@ -22,6 +22,7 @@ config DRM_ZYNQMP_DPSUB_AUDIO
+ 	bool "ZynqMP DisplayPort Audio Support"
+ 	depends on DRM_ZYNQMP_DPSUB
+ 	depends on SND && SND_SOC
++	depends on SND_SOC=y || DRM_ZYNQMP_DPSUB=m
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
+ 	help
+ 	  Choose this option to enable DisplayPort audio support in the ZynqMP
 -- 
 2.39.5
 
