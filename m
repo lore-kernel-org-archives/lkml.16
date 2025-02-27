@@ -1,107 +1,93 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB00E22DF8E;
-	Thu, 27 Feb 2025 13:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E1022FDE6
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:39:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663531; cv=none; b=GygjOQmoOW/JdwYHEkyZfiJfBxL3ECQrw5KK90fSoCpW9qwnq8Jhpt8xt8/DbXKQ3mUUkBv1SSxenCtJUHFBubgAyS+OONtxfVL9MrPg2GQw17t7Q1VkaJlvex3+3YoY5cv3O9/ZX+YAVQavjSfGuhtnP4rt/fboEk2uw/bnvC0=
+	t=1740663587; cv=none; b=ptMm9gyWbpsa+jTL4PGHlqD5V/zgW44bvOT6Vlyme6Oxbrn6bm09qMmSGi69mqOtMpcSBvVwJq0MqzqGjGI2XXmFEE2Xod4BuQ4Xysj81pbJaDFflUsKok5EIHNFweG6hxnmDUCwHJWMKmSu9uSWh7J0yHs1zrsIg1VHhcfhpj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740663531; c=relaxed/simple;
-	bh=5wt0a/hmprmYH5u3/+HAePZ7R9lrMyhYIViWGXAjDRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=At4vLtf63+UYSw5mQEmM9/fCMk0ZbI/qFxGMDKziPmEyYEkgMU0u13FA0St0uWIqccOC7a0RXZNQ8/fEPYcOox2mWCaMRqHHIYLCBH5ySGRU9APOtK/x7TghuxGOxam+0FYRFzEexdOW0h6Ta6AaVCNTWOAg2rVKj/A9xFaE9t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=GFEjVF6Z; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740663587; c=relaxed/simple;
+	bh=RCZ/znCiLgPDJlD8DO9J07JeZbOzuydbrz7wYkKnkmo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=txUTI1lzg1kW6oBa2faqmEVyKmVf8RG5rOG5Hrxx+OHUp3hOb/Nr2o4ev+RFbDopA/hjvWdg7ZpgEd3qNroap1cRKtkrwvFW6hx71VWPi/czTy1YDgvPT1I3V+saFBGNB2pjX678RUplldi9+l228B1aTWcLVFzbKAn4WAtj1zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OXr4V6H7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="GFEjVF6Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=meVcx23r/r7Dytz72YqeRZuHInvAetvSfHOgo60wpy0=; b=GFEjVF6ZyupV+W2QCWTF/Utl7O
-	OgQTRNZSJUwppxQptsnxIyzoPnuntHdT7WgyzUD4CkcAl6USJGFTmLpdZ/tz74XVbyfjBeK5PVB8y
-	0hNKQaRQzJYxypYzSM1xgSOFhfX6CZ+UuUetDCtXpKz8ueb+DuvP2mWQfsRLeJ4cLM0HJAwZ4PiJ4
-	vUooOewyVgpD4ivZJyI6I3cOiMjwSKjWewiRIcb7U5FZAVqdfbNMsOtwjayDkOg4dkM0TcJ3g9tSv
-	pEc7yNRYplHFBKsFXE5hpDqZLN08+/MRsbFu1tFadAfS91BTShdk8v1jVlLuE76cWtgaWbmdgPtBB
-	2JN7VILA==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tne5Y-00018T-RH; Thu, 27 Feb 2025 14:38:08 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: linux-kernel@vger.kernel.org,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Alexey Charkov <alchark@gmail.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Niklas Cassel <cassel@kernel.org>,
-	Dragan Simic <dsimic@manjaro.org>,
-	FUKAUMI Naoki <naoki@radxa.com>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Algea Cao <algea.cao@rock-chips.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Sugar Zhang <sugar.zhang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	dri-devel@lists.freedesktop.org,
-	kernel@collabora.com
-Subject: Re: (subset) [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
-Date: Thu, 27 Feb 2025 14:37:52 +0100
-Message-ID: <174066344874.4164500.18360075305644085277.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250217215641.372723-1-detlev.casanova@collabora.com>
-References: <20250217215641.372723-1-detlev.casanova@collabora.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OXr4V6H7"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3116740E0202;
+	Thu, 27 Feb 2025 13:39:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rIH1zlLNrMQy; Thu, 27 Feb 2025 13:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740663578; bh=18WFGl9s+05bN0lVPybpQk0Euk09X2qT0aMw4pcwvPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OXr4V6H7GonxyNFVgf/KaBm8Pqfc2RtbX0xDR4pYa3srCkn8FfE3h5G53N0v71Xxb
+	 d7Iz+Be2AAVzHclVd3UoAUZ59I/UuNbczgACEYtknpU4dsrIcKqppaqMa3USvxuRfe
+	 h8OoXdOzho9oxIcVZv+SR51iA4ymQONIciomVKR4AYpCWngv56biEmfuoDxgDPznfS
+	 yZ235X599K/cUYfytUU8twWFvfXkyvMzgcJG2YDo8JDTaQqF0kayWaB5DCZNrXS8N5
+	 oXhbp1XhyyWqIfwFZsYl5zg3A20t6afRpghwiIf5pGxJLAfDeKUf6jeMMjwb80Dt7T
+	 ri0A7g6iY52QEFsXjOhov5G8IisHLeHI3ukw13xflxsVnn4yk2V2z5bDGWaerB/DV0
+	 r9qzkYBaHt1TUJJLxca8ag4wTxqhvlr431KVrrCW2H+KxQLbC40OVRBRTw0HlADzcY
+	 li+vM16FXJnrP9FvmYI75R0S+gdWqz2JGz2u9xjnOIbVjBOLTkVxOj0vvCY3hm0dJ2
+	 2b8FfIfnGzMoh3aZdm0dW/lqOoJrs265TmRfdHET2JowdmuhykYiHHSYjsjrOQz43H
+	 ecJ6Ryz/55e7P1j2Wc6/r46WzafsSPYH0TVghw9+Qr7iHnWSQs0m7yxuO2NWTro8oT
+	 TRYcmUlEH1feM8xwD9cUyM/o=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E5DB40E01A3;
+	Thu, 27 Feb 2025 13:39:28 +0000 (UTC)
+Date: Thu, 27 Feb 2025 14:39:22 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: "Kaplan, David" <David.Kaplan@amd.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
+Message-ID: <20250227133922.GDZ8BrCjnPlQBOLB0y@fat_crate.local>
+References: <LV3PR12MB9265249E8D0FD3920C42A1A994FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250217233928.k3oem3bm7w63jzfr@jpoimboe>
+ <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250218070501.7mwcxqgsuxl3meef@jpoimboe>
+ <20250218085203.GDZ7RKM6IyPDQAkZ8A@fat_crate.local>
+ <20250220220440.ma5yfebhiovkqojt@jpoimboe>
+ <LV3PR12MB9265DE3082FA0A7FDF9B587594C22@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250226201453.jgg6kucaathzmcvs@desk>
+ <20250226210129.GHZ7-BKYvxN_I3f_B2@fat_crate.local>
+ <20250226215147.233kxx2z7v7rnu5k@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250226215147.233kxx2z7v7rnu5k@desk>
 
+On Wed, Feb 26, 2025 at 01:51:47PM -0800, Pawan Gupta wrote:
+> I got that part, what I meant was allowing to use =off,<enabled vectors>
+> seems unnecessary when the same can be achieved by =on,<disabled vectors>.
 
-On Mon, 17 Feb 2025 16:47:39 -0500, Detlev Casanova wrote:
-> To support HDMI audio on the rk3588 based devices, the generic HDMI
-> Codec framework is used in the dw-hdmi-qp DRM bridge driver.
-> 
-> The implementation is mainly based on the downstream driver, ported to the
-> generic HDMI Codec framework [1] recently merged in the master branch.
-> The parameters computation has been kept as is and the data stored in the
-> dw_hdmi_qp struct as been cleaned up.
-> 
-> [...]
+I think Josh was the one on that thread who suggested that we should have
+negative options. You can go read upthread.
 
-Applied, thanks!
-
-[2/3] arm64: dts: rockchip: Add HDMI audio outputs for rk3588 SoC
-      commit: b8c6c136971c0e9750eec89f367529b2854d3a3c
-[3/3] arm64: dts: rockchip: Enable HDMI audio outputs for Rock 5B
-      commit: 97aa62ed1e970bf8aa9f57e87c946a95fa3d5bef
-
-Best regards,
 -- 
-Heiko Stuebner <heiko@sntech.de>
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
