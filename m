@@ -1,133 +1,95 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7652C276D13;
-	Thu, 27 Feb 2025 23:46:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0792C6A3
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740699982; cv=none; b=gHtRY5Zo2dQH4s46k0UnA6MBW5vbMW8SPUWAWvF1ltzdRTH1Es4eMp7CVCPG23nbX6Xo+hfjfQeRERfw4iwxZUF+IMFD6A+fRaTmM7MC4eKzKP+89SYoFM4iRAwQBUYhDFPuCtCRLrOntMSGywcSsjlzfSx73yo9XR8KXElAhkU=
+	t=1740700027; cv=none; b=uvErtDnrPRfl24QjRbxfrjwT0XAXo4Bvec3t4iLBp80g4A6OXQLjYaRiVa0AXUBlYaGOZ6I/8VgllKCeBWwxcrzyV0bsLyA9RezhK0D7xArADn1XC6K3U52Lw+mnySQmGwCdpS9I9hWHGiiUFKwLrynVKeJ9E7FrF8+0vs0PjIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740699982; c=relaxed/simple;
-	bh=A8aWzERgkK6+/SbpZ6efpPO2wc+31A/h9JgJ5cKgDJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=nKCI72Emv0B7LiwoGBlsFPn3EAZzFyuTeqVgSTd9sX4AkIP9M2GIMIxMp76qCy6+2kpnWgb8iyocRYl4Y3q41kAmchzMSVaynVWWIXBMX64CulDZX4GD4eLVTuYNbBRzuHeDvYDGCxZGmaHb+j6zBubDeA3E9QjynDwTX1cvUGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=bFIMfB1p; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1740700027; c=relaxed/simple;
+	bh=riHV1seuhU1QdFaRL1G/6dr2DRR6gYV8e9VC0evPPeE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=rD09kwyfwTLI38ruy9DENiN+bMbY0UCJ998HqMpxJBRpYuDyDRQoth7WUgrtgMgYq+tAptgkRuc3/m1uiJvi/wUzi1M3j7q1XcFk/HoIEoDn7CpbUFuWJvR6ie9qVhImU+868NLB/TXeTTDtzMsxdDtQCKjldl9KBShRGKBupM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LNNo4/4S; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bFIMfB1p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1740699977;
-	bh=uN8ood9dhi8H+zbHYOG8ZZKn5COnzm0CCTBwHngguqc=;
-	h=Date:From:To:Cc:Subject:From;
-	b=bFIMfB1pkph0q/GIWfIny6lG7psjvp96KHxMPFrY7xszwVi0daHAQQO4iHJxt4TE9
-	 /Jjj+ia6qZEP2jza2XdUJX+CuSec2hD0ZJupOVXZFsKWGU4yheUBBLKtxZfsqlIjnL
-	 x6WbdDjfXmzkkXdgH922WGDrRo5HAmHxRoxb+MY5wypIK57VDEgca5LDlgfNKTXFbQ
-	 qX1mvPg6Bfcz9xdsc5OfJJEHH7FbdvZkqL4KgZJTjCxLHZrp9RRX/vKpWlaOyYczJG
-	 /FBoQC55V4gYZIVDzCIPkVx9cHTmziuoZpWCfMHmCMTJn3A/22ajaAvm1V9Hmp4/A1
-	 zsyv+nqx4veaw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z3nzW3gYyz4wbx;
-	Fri, 28 Feb 2025 10:46:15 +1100 (AEDT)
-Date: Fri, 28 Feb 2025 10:46:14 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>, Miklos Szeredi
- <miklos@szeredi.hu>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>, Matt Johnston
- <matt@codeconstruct.com.au>, Miklos Szeredi <mszeredi@redhat.com>,
- NeilBrown <neilb@suse.de>
-Subject: linux-next: manual merge of the vfs-brauner tree with the fuse tree
-Message-ID: <20250228104614.7e115517@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LNNo4/4S"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe916ba298so3236653a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:47:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740700025; x=1741304825; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nCWfQ233PSWAs37mz2wPN/QFa/6k1QMX79a/XCJWF9g=;
+        b=LNNo4/4SxGoo4rspUheqP7rIDlwmrzx4g3SnThgVCwAqZEmcBCD5+CAwghpShTwSGr
+         BwWIz82zkCX53x2WE/kUtW+v2rMzFXynW2+VVEjidyuZjwd/c5YpI6V23LFO1zKo+Hsp
+         Qsdg0TNHv+RXQ8Ksvi1vu0cURqT83bqS2qtR+T8avINIrDBgSVykLN1sN437TBSt0Ftq
+         L39bsEh5guRboe8zQIkUBGB2z2ezCE7lUMEqcipVa/0AgDuLMadfwCxSJF/tDahUzXpJ
+         nEViEZkgtCLOKn6mfbSfi38Y1/0N1avTSnaaEZwkbzEzczxH8etvb4d/rZjzQpixsYfH
+         UKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740700025; x=1741304825;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nCWfQ233PSWAs37mz2wPN/QFa/6k1QMX79a/XCJWF9g=;
+        b=txfmKDxr7fzZpBJJQJxKILQzKb0hIbaZjFQ0f+8bsyVJU0sOtqMWjF6P6Qtszbrgp6
+         qqRGSdMqpDs3jODSqE8PJYlNWGF/ffkYEJrPSMzMiZJR5GwK6SwM7HcPhkbkPlU9x86t
+         1alWkG2fa72k11zcFmsTi2gT8EReghi7lrkxory0Uid8yx36/lUsSQyiIxYj/EPcyU52
+         uLqtvB1EOQOhqtIVdGuMBqUnTU7fnPwE3uJg7oGpQ9gvV2Eyf8PmRT+3qf85lQOcw+oF
+         Mq58ZCgn0jL8J6XjaViBmJ+Iu9JH1BDaxxSBN9TBRInnEnIjt1MfjW0qQFnoUR9uHbzU
+         cF3w==
+X-Forwarded-Encrypted: i=1; AJvYcCXcFdj7CCOYIPpnFzoKM4Cf/KgzlesweTvtJZlom3igIyrUIFA5nV3HxL0l76H9baOVNV0qJ/kK1VnBUv8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxISVT4bEw9Tij/C2NJ7Ct/s+xw60BywFlErSLa8nZhFD7vBcIe
+	LUtjg4v43p2DuzVmn1Xdk6ofNOwBUvLpZaDRLbkAN8Mk1vqbOTrb/oR5Pmj6Jp9nMPB+9gKfrGc
+	9Iw==
+X-Google-Smtp-Source: AGHT+IHuJhugLoOALKL+bBHU8dYmihquWXJgCeAnlxsMLGlSruW3vsfZyq9aR+pdE7QTJi2WhpCLVWh7qaw=
+X-Received: from pjbpd10.prod.google.com ([2002:a17:90b:1dca:b0:2fa:15aa:4d1e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1d46:b0:2f5:88bb:118
+ with SMTP id 98e67ed59e1d1-2febabf19bemr1619311a91.22.1740700025364; Thu, 27
+ Feb 2025 15:47:05 -0800 (PST)
+Date: Thu, 27 Feb 2025 15:47:03 -0800
+In-Reply-To: <7f2b25c9-c92b-4b0a-bfd9-dda8b0b7a244@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/PD2Q6+U.=Gmlu3FsiA.ljcy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+References: <Z6u-WdbiW3n7iTjp@google.com> <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com>
+ <Z7X2EKzgp_iN190P@google.com> <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
+ <Z7d5HT7FpE-ZsHQ9@google.com> <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
+ <Z75nRwSBxpeMwbsR@google.com> <946fc0f5-4306-4aa9-9b63-f7ccbaff8003@amazon.com>
+ <Z8CWUiAYVvNKqzfK@google.com> <7f2b25c9-c92b-4b0a-bfd9-dda8b0b7a244@amazon.com>
+Message-ID: <Z8D5d85N3LJBJ2LD@google.com>
+Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
+From: Sean Christopherson <seanjc@google.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, jthoughton@google.com, david@redhat.com, 
+	peterx@redhat.com, oleg@redhat.com, vkuznets@redhat.com, gshan@redhat.com, 
+	graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk, derekmn@amazon.com, 
+	nsaenz@amazon.es, xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
---Sig_/PD2Q6+U.=Gmlu3FsiA.ljcy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 27, 2025, Nikita Kalyazin wrote:
+> On 27/02/2025 16:44, Sean Christopherson wrote:
+> > When it comes to uAPI, I want to try and avoid statements along the lines of
+> > "IF 'x' holds true, then 'y' SHOULDN'T be a problem".  If this didn't impact uAPI,
+> > I wouldn't care as much, i.e. I'd be much more willing iterate as needed.
+> > 
+> > I'm not saying we should go straight for a complex implementation.  Quite the
+> > opposite.  But I do want us to consider the possible ramifications of using a
+> > single bit for all userfaults, so that we can at least try to design something
+> > that is extensible and won't be a pain to maintain.
+> 
+> So you would've liked more the "two-bit per gfn" approach as in: provide 2
+> interception points, for sync and async exits, with the former chosen by
+> userspace when it "knows" that the content is already in memory? 
 
-Hi all,
-
-Today's linux-next merge of the vfs-brauner tree got a conflict in:
-
-  fs/fuse/dir.c
-
-between commits:
-
-  712c587442f3 ("fuse: Return EPERM rather than ENOSYS from link()")
-  150b838b03e8 ("fuse: optmize missing FUSE_LINK support")
-
-from the fuse tree and commit:
-
-  bac12649d4e5 ("fuse: return correct dentry for ->mkdir")
-
-from the vfs-brauner tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/fuse/dir.c
-index 83c56ce6ad20,516de1ae24dd..000000000000
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@@ -1134,19 -1137,13 +1140,19 @@@ static int fuse_link(struct dentry *ent
-  	args.in_args[0].value =3D &inarg;
-  	args.in_args[1].size =3D newent->d_name.len + 1;
-  	args.in_args[1].value =3D newent->d_name.name;
-- 	err =3D create_new_entry(&invalid_mnt_idmap, fm, &args, newdir, newent, =
-inode->i_mode);
-- 	if (!err)
-+ 	de =3D create_new_entry(&invalid_mnt_idmap, fm, &args, newdir, newent, i=
-node->i_mode);
-+ 	if (!IS_ERR(de))
-  		fuse_update_ctime_in_cache(inode);
-- 	else if (err =3D=3D -EINTR)
-+ 	else if (PTR_ERR(de) =3D=3D -EINTR)
-  		fuse_invalidate_attr(inode);
- =20
-- 	if (err =3D=3D -ENOSYS)
-++	if (PTR_ERR(de) =3D=3D -ENOSYS)
- +		fm->fc->no_link =3D 1;
- +out:
- +	if (fm->fc->no_link)
- +		return -EPERM;
- +
-- 	return err;
-+ 	return PTR_ERR(de);
-  }
- =20
-  static void fuse_fillattr(struct mnt_idmap *idmap, struct inode *inode,
-
---Sig_/PD2Q6+U.=Gmlu3FsiA.ljcy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfA+UYACgkQAVBC80lX
-0GwMzAf+P9VbYpIu5lAaD7E0Ut25WulvhhU6L80TScMEjOLLgAa5adH1oO0n4G0/
-Lh1z49MR2q292VxUu/9jpRWraKXx1hu5f5dOCaQCVGxKmXyxWR+DU+8cAs3Gh69/
-I8dpstS/H1ft2i9PiitcLzvgjsy+yK3ZUqdjKxJNXunZIUlOmu0LehBbZE4FSrF2
-qYcvaGT+0CuNKN6bn2qBfRrdPcfLL6ugmzTBnvM2Msi1KzyoM5O1CIRIb0GqQrTD
-EHeE1bAogT2hEYnlOoDzz3tAYxG34FyxsQs8id0gMzVToZSWM01NCZcLcUSi+wQV
-pwSHPta+e9G3TS+2HseXMQrz9mHeSg==
-=j2Ij
------END PGP SIGNATURE-----
-
---Sig_/PD2Q6+U.=Gmlu3FsiA.ljcy--
+No, all I'm saying is I want people think about what the future will look like,
+to minimize the chances of ending up with a mess.
