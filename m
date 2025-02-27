@@ -1,112 +1,113 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79C119DF52
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0831619DF52
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740688493; cv=none; b=Tyn8XdFHyJUbaqIoFPJVbK0972pdrrEqurc5GUa6U6YV/DyC4qmV5RmsbTkP58exzgfQSGJulXFOOvnxy/MnP5m58KbJrzFAO3Yp5fwZAkJwT/+TqwEC+I3aoCml9ovfhGNNeeC/JaNTvrACoxafW/jfzKVgvRAYZmclaHUsQSE=
+	t=1740688740; cv=none; b=PoP41D9Ve5FkIxECfFwLpp5wOIeDArCrs7j7QTmfuOdrN1KYq/jf+371WgoVwT2R/kFl47fK+NXKEo7HxKMV0wgZu5SB9Ob8Ki81QDRCikLNns1rjNWy1y9cJrazhdg0eCRGhyyiEI9JMI1mgiHs9T4wLCqMabUhS00ODj2JBzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740688493; c=relaxed/simple;
-	bh=H3HVkz+A6rXVuiDniuy3LDGPxjutY3NbEPqK++G8ir8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tbPw9D6uIeg3U3Btmn93vKoGxDiGTgej1EOZ7KWfUm6oHG+EYnRv1SWJIF1iKmGdj6uVGHy1PBYlC8YjT12yiHh+vAb9czyPh/INY46A3d285r6O52s5um07Y7o99hqmHj4YcwmiVqdOH6SK84O0TAAtPmsMA21zafAHM/xye3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IDRYMa2i; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740688740; c=relaxed/simple;
+	bh=tMLyfjj+PLIq74mmCTMG+2Qq5ezLhFjkwAJEJM30sx0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oKKXETLalegS7KlmoUnCl4ZY9CmJ0Tku8zo35PTAbjp9sv64Y1FxAXS21V2epl8HGTojyf6FGPan10C4PdphKvKAilUcPDIH+3tAprQksYPAuiXXzLz7Y0G9uuLlNp6i5ThYgfrRJC7uOq5wCFqDtdyobr2ajKAikidsPpMcyUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=P64ttOiu; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IDRYMa2i"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so254735966b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:34:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="P64ttOiu"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471eb0e3536so24726641cf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:38:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740688489; x=1741293289; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3iaC90NRH1e1Syvsd/il6x0lQMXHnv8BIHQEgKW5Yhc=;
-        b=IDRYMa2i4QMquuHZ4neZOv433QaCVfCrz1P8OxQy4wrL7LBYWMXNgJ3LwekbY/Ogdf
-         dqDEOJsbPPme40H+ptRNRDEPvyYnYsOSX575XqORRS/H9QSb8Xd46zGUbnbrhHofwvA/
-         nDijBMywWyz3MbYg5xywT+MzOGRbgWsQV6/No=
+        d=ziepe.ca; s=google; t=1740688738; x=1741293538; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A8/Qt7Vv2+DDRlyzFkpTUnydrm+Dq5juNVKCyJPPEsk=;
+        b=P64ttOiufROrXgA1UwKfgdKzgMWcFYHqr4q3Eqp+H49vJqRvGSN/B8avmYScFINYpA
+         +45hsbvCSISnXogl4eKj3sgU0WXQiE8X+gih9FTZ+nNa2umPzNJPeYUF6y1w7CPCHegs
+         GdabA15ZOR1mzx5hhs0kx51JpiSLhPbEOC2P5SsDsjnmOk6Ufh3kJtxM8Qd6IqDvdn+r
+         /8uNF6iEZNz9U23IxmhbJy9Q/+rRs9J5H7oV6qhioDWNQd70BSWVF753tkMmt/yrQfN6
+         O/+lIpaklUDd83++IL0TlJ1QQGtl4JdDj1jg11TP9dtLU+SdnYngYO+mDS9ANEV1LNfV
+         2WXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740688489; x=1741293289;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3iaC90NRH1e1Syvsd/il6x0lQMXHnv8BIHQEgKW5Yhc=;
-        b=Vt0ucZYaN/dDZRb6U69PezXBSkLh3wbpUim3krLGUIrNNyh8GqpkKalHuYoV9TCrd/
-         EBuM5dpBiyBCPWcmD6Ec4htUe7dlkQdMEjHvmvLUVAr/BNwrxz3VXWepA16UVKuwGEHF
-         5+SiOts/MPl4Xe6FhrdPslpv62dYWE0Yk+n2DdLCFJyS0l2rtM6WZgAto7b6Ei+vozin
-         bL7TVqwgr21rcXAcvtVsvcGwrJ8BDwel8YuwXSmAvEu1ZDc88ZysrrLgBUSO02ptdaih
-         VmIKOusI27h7lkoXuL1YK29UR3V3CN06TpzQNgt0G90p/vD83XtNRfI5YjsRtd4T++Jm
-         cKiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcWhn6vyxUTASYj3QsxWIRVZ3xXfrkH1hB8HEbAG608LbCmNql/yGqjSMVFlePvhyd19BOA441EP4/WOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMRKi6IyoBWB6cWVXgkeHG9yf8UBL+vNxGSDLAHYRE+N3AhOTx
-	VLFcWStbaywUvJiDu9S7vpgH7p0sO1CJDWXtoErsAAq1BrDyrRFo5sYazh8NSM4ZMCIYlpMy6Fv
-	+8sTkaQ==
-X-Gm-Gg: ASbGnculmgqzuTZUPTDqXsj+ySLvpecjT586FFwmpWiyLqACRTnIGtFAEVogS48F+Hw
-	jM5AaN2OAvAfX+Q4cJhxnpB6fcTFBwE9WOwYJ3GxHOrlGiaRgryoIJtdAc2EC/ZT76+wDY495En
-	JX4/rCgC5RZRsQzDzvjYWCdMO9wmSQToMw61aMwNwQdipHZeOuZNfEbQkftuHlK08fnAFyKcxRB
-	m1jODn74skxVNCXDkWweWO7H8sKG82eeUCEh4V1KRjTISuqNPIRd7By5PQkGAZkfirzsG9KLxWU
-	uEy3X2Vz+9DWKL35+j2T1AUh64Rhv8u5HbCKu4EP7b7KZAVvoMkQld0VtzDNJ7nRa0ZaOuR3Wwu
-	L
-X-Google-Smtp-Source: AGHT+IHz3sL+t9y18znVnfAvijOczV+APZPZaEchPymb/h7YF6hCVWhWj9bjUBXFAraswPjslIh8lw==
-X-Received: by 2002:a17:907:988:b0:abe:f613:bd0b with SMTP id a640c23a62f3a-abf261d3bcamr93333966b.32.1740688488780;
-        Thu, 27 Feb 2025 12:34:48 -0800 (PST)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com. [209.85.208.44])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6ee491sm176639666b.103.2025.02.27.12.34.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 12:34:48 -0800 (PST)
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dec996069aso2220763a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:34:48 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVXFggjdmnbk+RMRmsT1VcJ8LKKEqKJlJAV6MxjqK9wXcjrYspdvjVX5psRc3UEapn318Rd8+Og4hT8KAM=@vger.kernel.org
-X-Received: by 2002:a17:907:c50a:b0:abe:ea93:2ca3 with SMTP id
- a640c23a62f3a-abf261d3cd5mr91983066b.29.1740688108692; Thu, 27 Feb 2025
- 12:28:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740688738; x=1741293538;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A8/Qt7Vv2+DDRlyzFkpTUnydrm+Dq5juNVKCyJPPEsk=;
+        b=OFtrXJgZQX5qUIJ90wbqdbFijo9/oxn3GDcqc5foejBGsrEGiXFBoLA/Mmmu8LJAhT
+         IbrfjqGhEO0cRUCHDFi8IEXPjZxXVEWQawoduvtx+hMbDxmRT8oUoP9EJ1nZb6XYLvzc
+         FdLFYpM8nx8Dafh5tfeILrI8AX8GcRZsYtrPh66kgT0ltKx1U+dCZrQ/vEqWn5JM2b/y
+         xIWLZW1FfL0w+oRNVaOXTCOerjFJbT1zzLlqLGLMVPLxYfzc06eAn299ooIkUrRmtAN0
+         D5awFhjLd3dOKTBmFMTcuM45SLYJNJuj6NIFVnGD54P7uSa23mGihSxFK1ug9ngpqkxG
+         Hj4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXqDaD1PfBr8aKiz0CPmM/6uqrQHigm+H1YNjNdBpW80kqtogs0Dw6C34ijWCI4gdd4ighYPNr6PpgP/tQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCqdJ+GwUY1/tk1FS9ZhuD6lqTSnfjfaYT7+1cWCj3CerbcSsA
+	3TbNQ743iMTwedUHhGwOzze9wDPCTP0qcudvf1ffsmmU/Us3JllTs/h+ExF1Srk=
+X-Gm-Gg: ASbGncu77RzpKtgHjMgbnfXXLy1XHCRO/QNVHeX45U6HSkzobon4n5vrPDKSeaKjQFc
+	qD+huPR9UdIAXr/10ja6QJ9woAGAyJWKL86v4StntVmD28cYgXIFLGQZ6OWnbOOPHhYYtTEItcj
+	yKmNXKDBihny+/c/pJkIBVx3GP/B01iALjME5n3DYtFx18JZVwGUr5Cnhr4QlS72R+yPAJdmmxF
+	d65q7F8NgGtziw/bgrR+l4PVYow857TcWHKZ7FrrjLr4mAbuEFSbKjLMSJ+kKfuyo3HRgB0ucUg
+	WsjLgCSG60r9IHO1564+5QD+ntZ6wtMqUTBLfXHQJAEMXQs2hYKneLlqa0eU9AzFiW/8tSlm8WY
+	=
+X-Google-Smtp-Source: AGHT+IH9h5nIeqRBN4A62EgPqAGrwp4q9RWIx3Ok1zBoIEmHHWXkJ71RN3O4VBV+synHi7sJ/BjH/Q==
+X-Received: by 2002:ac8:5e11:0:b0:472:165e:91d4 with SMTP id d75a77b69052e-474bc0848aemr8752981cf.13.1740688737797;
+        Thu, 27 Feb 2025 12:38:57 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-128-5.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.128.5])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4746b5eed4fsm15111101cf.31.2025.02.27.12.38.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 12:38:56 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tnkel-00000000K3V-3Gtf;
+	Thu, 27 Feb 2025 16:38:55 -0400
+Date: Thu, 27 Feb 2025 16:38:55 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ethan Zhao <etzhao1900@gmail.com>
+Cc: Ethan Zhao <haifeng.zhao@linux.intel.com>,
+	Baolu Lu <baolu.lu@linux.intel.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
+Message-ID: <20250227203855.GI5011@ziepe.ca>
+References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
+ <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
+ <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+ <20250225142610.GB545008@ziepe.ca>
+ <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
+ <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
+ <83039906-77f7-4318-94bf-4c98bb3f0e32@linux.intel.com>
+ <20250226130423.GF5011@ziepe.ca>
+ <f29818dc-a0a7-46c4-b541-1b469a6b3304@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
- <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
- <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de> <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
- <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
- <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
- <m4cbniqfsr5xpb2m7k53e7plc6he5ioyl2efiiftdmzod56usd@htwdppje6re5>
- <CAHk-=whEkEsGHWBMZ17v5=sq1uRe6g-BRHy5xNZK-2JBKRs=_A@mail.gmail.com>
- <0f3bc0e8-5111-4e2f-83b5-36b3aec0cbbd@ralfj.de> <CAHk-=wj37zT4Fy+mBFVRKPy=NMKcB6xBzqOuFrW0jOTv8LKozg@mail.gmail.com>
- <jei2vzllt5z6hufn3orqqupq3ufajcxv4zx3yfpkd2j54yr72e@vmhu4r3klvvh>
-In-Reply-To: <jei2vzllt5z6hufn3orqqupq3ufajcxv4zx3yfpkd2j54yr72e@vmhu4r3klvvh>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 27 Feb 2025 12:28:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgYCS6=TFfRHz_aG1HNFBDyLMnHgkvi_=B03-tX-OBtOg@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr2HELUmBJIPyKcHVA4YKc0nNSI_EcgaYvP2EtpcHUej5s4s67UyCptmgE
-Message-ID: <CAHk-=wgYCS6=TFfRHz_aG1HNFBDyLMnHgkvi_=B03-tX-OBtOg@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Ralf Jung <post@ralfj.de>, Martin Uecker <uecker@tugraz.at>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Ventura Jack <venturajack85@gmail.com>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
-	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
-	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
-	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f29818dc-a0a7-46c4-b541-1b469a6b3304@gmail.com>
 
-On Thu, 27 Feb 2025 at 11:55, Kent Overstreet <kent.overstreet@linux.dev> wrote:
->
-> It's more explicit, and that's probably not a bad thing - compare it to
-> our smp_mb__after_atomic(), it's not uncommon to find code where the
-> barriers are missing because the person who wrote the code was assuming
-> x86.
+On Thu, Feb 27, 2025 at 08:40:31AM +0800, Ethan Zhao wrote:
+> 
+> On 2/26/2025 9:04 PM, Jason Gunthorpe wrote:
+> > On Wed, Feb 26, 2025 at 01:55:28PM +0800, Ethan Zhao wrote:
+> > > > Provided the system does not respond to those events when this function
+> > > > is called, it's fine to remove the lock.
+> > > I agree.
+> > I think it is running the destruction of the iommu far too late in the
+> > process. IMHO it should be done after all the drivers have been
+> > shutdown, before the CPUs go single threaded.
+> 
+> Hmm... so far it is fine, the iommu_shutdown only has a little work to
+> do, disable the translation, the PMR disabling is just backward compatible,
+> was deprecated already. if we move it to one position where all CPUs are
+> cycling, we don't know what kind of user-land tasks left there (i.e. reboot -f
+> case), it would be hard to full-fill the requirement of Intel VT-d, no ongoing
+> transaction there on hardware when issue the translation disabling command.
 
-Sadly, judging by the memory ordering discussions I saw, I will almost
-guarantee you that the compiler support for memory ordering will be
-buggy.
+There is no guarentee device dma is halted anyhow at this point either.
 
-When we miss details in our wrappers or our users, we can fix them.
-
-And when the compilers mess up, we'll use the wrappers anyway.
-
-              Linus
+Jason
