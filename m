@@ -1,116 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2567D270037;
-	Thu, 27 Feb 2025 00:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14203A1B6
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617154; cv=none; b=TCOhT50Y/jg7pycFuQUl0bo7VTackpsd83ViEhXbc8Xb9cr5FSZgY9M/1u2Vetoq1/u/IsUNb6I48JuUm7ZeT/IDi9XJ8LoU4o2nd3Q/HwBsuFxBOUM1J5Pw1K9BciW3QeOnqazfG1dz6QrxQNHyaKe6mxi5yQhpaCLStCvkxsg=
+	t=1740617170; cv=none; b=bPoEhXoaIAS3K0W+utrTq6o4NKZI72eaCT67h2LHJH+OY3ijGLz0wpPT7ssBNZWXIkeM6lREQUHjG/jJZHESExzZc9FV3VKn63KszdM4RNyX0/TTbVE7DjEinNXfYQWRlJ1+qUMAyzIE3jSibCrG9SOKdOJJY+clPJPOTuXDvAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617154; c=relaxed/simple;
-	bh=bmjGIsxoJW9MtYDnAf/zAnbbN3cgJxABDX6H5mj1kNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A3p2KsnsrthfmqiqsPuP1MrriFINgzo/DnZ/CBRmiaRthlz6q0L2N73kzcRuD590BucdwUnEXPtK428x7/MFf1xJz/0GzYx7osQdTjYFU7Mjuue3kgyhdxM995zqrDUKXI5BSBygQyqPJXliIHU9af+H1dn+dQk4ixYsadSiAbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KTSjhBkp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740617170; c=relaxed/simple;
+	bh=GsbplUyiPzK2RcL3j5EFMOXrQypLBGL/7X0N4yL3uTU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VPQ7j0er/FeM7pwu0UX3cnEtTLVChuclQ7Iu30GlXMFFPnCL60qS/gkpMr9zvcAoUFK163tf1IUWbZYAR2Rf/0fwOmUzPPgDUXFaUOAqE2nZjCjhQdxOM2wVtClAgEJM46Q3izwOlKVtWdsdOoy8p7csh7LtcPaQq3wM1kuYxf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PzZt9R+f; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KTSjhBkp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68025C4CED6;
-	Thu, 27 Feb 2025 00:45:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740617153;
-	bh=bmjGIsxoJW9MtYDnAf/zAnbbN3cgJxABDX6H5mj1kNs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KTSjhBkp4dI4PahCStErGNnjoU/xFYZCNllz6mP8fV4FVhqcaqUW+BtjIaUrX16cd
-	 DMOkJwL6SodjbQ7JQa+CAX8P47lTukwDXcp3Spu3XLQ9GR1hzausWcxPBeIFJO3I2/
-	 K5T8zkhK6rOe817iT06gWyHrzii8h+F1kwH9FoBUagOw+RWcPxS5Tp1RFxN42YTANV
-	 /zc45XYyjckj+JSRUEQyYLKtGGt4Zjaue8x1eYRAqgwFzS+lJvEV+jgHfnLjARpDmO
-	 mMmpi2AqUwiP4txi650pqNEDJVYSyIv2foVYrb3cvplf92oEOx9w81/ajp0O4jBaxN
-	 M9hTikH4y5H8Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: probe-events: Add comments about entry data storing code
-Date: Thu, 27 Feb 2025 09:45:50 +0900
-Message-ID: <174061715004.501424.333819546601401102.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PzZt9R+f"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22112e86501so6003615ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:46:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740617168; x=1741221968; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hn0Pk7DdXD560KhFHLztox3NbezGKbjUTRJg0LOXoPE=;
+        b=PzZt9R+f6xxBf/dMwTjShxK5wSWpB1JgMRIs7Pg0nRFDx26CVNwrs2P+8Ght4SjjHj
+         GYIwjZ5uWCC3v/0qtMWvrdAz3X3GTrrhC4OSfXyLuK5d/RZn5Gh4qxpFJwkW59gXhk3D
+         5MQiCL0EAYfKGRADs2QTsBBGPnOOlGB3cYOiv6hY9TYrDKq6+ygTqWulCvsUjtOeXAkT
+         KqBEkcRLdgcV2bs7Xinm18k4qZ+1BbuxAad7nCZtjgZMX3nWh14tqXDp2v1a/rTvnudN
+         EYWyKVmZE7Ov41rG+mb+M26OHgWMJWmV8lGCacZ3Kuj6YBxSrBOmnacLLncBMnH1kiGH
+         0hyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740617168; x=1741221968;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hn0Pk7DdXD560KhFHLztox3NbezGKbjUTRJg0LOXoPE=;
+        b=NHGTsPKaaX8l9SzIGX16kXCqGkihoc7vGuqctAlaPNZU+pKibG2mv0chyIsjoHawfc
+         g0NvrN6G6+u2IZjnMXkdhq+DTRtZSnHM5eBKGg3bjExacplUlZ0tFIRdgOWqsz/iplf7
+         +HeH/tMxDI2eVAuv3zOmnyoo3dvoSciOHn7Z6v/VGhq9pzawSMG9TIYHWKCZfUfYAkmo
+         WakkInSOn4kGs6KIyy97wSSwoLgHIZNXeE4s9fr669I1XXjVX9R9LhYpKT1dSsOL5xy1
+         T4TJgDp+5V7iqMMMNa96g8QdTF7b6iJXq51CO4Szt2kmT8sJ0yFuaG9fmDkdGC0EsQ4N
+         WRWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVoIEQ9xefH6OAFGzOzsJFGFMQXM6xegnCFr+rUOdeXaYla8QOlaFvco+bBCs+JRnjRREMdqCHFqrjsg2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNkiOca2LVQQVa38muf14wNRum4nl6/zR2V4Vu8wYuz+MA16bv
+	lJk4kxmH7HVKosySa4YAijguW3dgxCdI5Q9Nx87yNVzs0kWCkz3JRMONxseCER3BIL24x0j/xgr
+	Jiw==
+X-Google-Smtp-Source: AGHT+IH2WM4xX/I/9Cf4I8pfwJJDfsSS1+XA6ioOiO3B1DczWxFPo2dPJfXNJSjcedJwObmWHzjhXzfgUGI=
+X-Received: from pjbnc5.prod.google.com ([2002:a17:90b:37c5:b0:2fc:11a0:c54d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:983:b0:21f:14c1:d58e
+ with SMTP id d9443c01a7336-2219ff8279dmr394871355ad.1.1740617168076; Wed, 26
+ Feb 2025 16:46:08 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:46:06 -0800
+In-Reply-To: <Z76BTqmAJPV7lBbA@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250219220826.2453186-1-yosry.ahmed@linux.dev>
+ <20250219220826.2453186-5-yosry.ahmed@linux.dev> <Z74exImxJpQI9iyA@google.com>
+ <59ea1984b2893be8a3a72855b022d16c67b857e9@linux.dev> <Z75G2L6N1vR3DslT@google.com>
+ <Z76BTqmAJPV7lBbA@google.com>
+Message-ID: <Z7-1zv3Pb659rTj6@google.com>
+Subject: Re: [PATCH 4/6] x86/bugs: Use a static branch to guard IBPB on vCPU load
+From: Sean Christopherson <seanjc@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Andy Lutomirski <luto@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Feb 26, 2025, Yosry Ahmed wrote:
+> On Tue, Feb 25, 2025 at 02:40:24PM -0800, Sean Christopherson wrote:
+> > On Tue, Feb 25, 2025, Yosry Ahmed wrote:
+> > > February 25, 2025 at 11:49 AM, "Sean Christopherson" <seanjc@google.com> wrote:
+> > > >
+> > > > On Wed, Feb 19, 2025, Yosry Ahmed wrote:
+> > > > > 
+> > > > > Instead of using X86_FEATURE_USE_IBPB to guard the IBPB execution in the
+> > > > >  vCPU load path, introduce a static branch, similar to switch_mm_*_ibpb. 
+> > > > > 
+> > > > >  This makes it obvious in spectre_v2_user_select_mitigation() what
+> > > > >  exactly is being toggled, instead of the unclear X86_FEATURE_USE_IBPB
+> > > > >  (which will be shortly removed). It also provides more fine-grained
+> > > > >  control, making it simpler to change/add paths that control the IBPB in
+> > > > >  the vCPU load path without affecting other IBPBs.
+> > > > > 
+> > > > >  Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
+> > > > > 
+> > > > >  ---
+> > > > > 
+> > > > >  arch/x86/include/asm/nospec-branch.h | 2 ++
+> > > > >  arch/x86/kernel/cpu/bugs.c | 5 +++++
+> > > > >  arch/x86/kvm/svm/svm.c | 2 +-
+> > > > >  arch/x86/kvm/vmx/vmx.c | 2 +-
+> > > > >  4 files changed, 9 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > >  diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+> > > > >  index 7cbb76a2434b9..a22836c5fb338 100644
+> > > > >  --- a/arch/x86/include/asm/nospec-branch.h
+> > > > >  +++ b/arch/x86/include/asm/nospec-branch.h
+> > > > >  @@ -552,6 +552,8 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_stibp);
+> > > > >  DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+> > > > > 
+> > > DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+> > > > >  
+> > > +DECLARE_STATIC_KEY_FALSE(vcpu_load_ibpb);
+> > > > > 
+> > > > 
+> > > > How about ibpb_on_vcpu_load? To make it easy for readers to understand exactly
+> > > > what the knob controls.
+> > > 
+> > > I was trying to remain consistent with the existing static branches' names,
+> > > but I am fine with ibpb_on_vcpu_load if others don't object.
+> > 
+> > I assumed as much :-)  I'm ok with vcpu_load_ibpb if that's what others prefer.
+> 
+> To be honest looking at this again I think I prefer consistency, so if
+> you don't mind and others don't chime in I'd rather keep it as-is.
 
-Add comments about entry data storing code to __store_entry_arg() and
-traceprobe_get_entry_data_size(). These are a bit complicated because of
-building the entry data storing code and scanning it.
+Works for me.
 
-This just add comments, no behavior change.
+Actually, looking at the names again, wouldn't "switch_vcpu_ibpb" be better?
+KVM doesn't do IBPB on every vCPU load or even every VMCS load, only when a
+different vCPU is being loaded.
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/all/20250226102223.586d7119@gandalf.local.home/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_probe.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+> Alternatively I can rename all the static branches (e.g.
+> ibpb_always_on_switch_mm) :P
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8f58ee1e8858..2eeecb6c95ee 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -770,6 +770,10 @@ static int check_prepare_btf_string_fetch(char *typename,
- 
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 
-+/*
-+ * Add the entry code to store the 'argnum'th parameter and return the offset
-+ * in the entry data buffer where the data will be stored.
-+ */
- static int __store_entry_arg(struct trace_probe *tp, int argnum)
- {
- 	struct probe_entry_arg *earg = tp->entry_arg;
-@@ -793,6 +797,20 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
- 		tp->entry_arg = earg;
- 	}
- 
-+	/*
-+	 * The entry code array is repeating the pair of
-+	 * [FETCH_OP_ARG(argnum)][FETCH_OP_ST_EDATA(offset of entry data buffer)]
-+	 * and the rest of entries are filled with [FETCH_OP_END].
-+	 *
-+	 * To reduce the redundant function parameter fetching, we scan the entry
-+	 * code array to find the FETCH_OP_ARG which already fetches the 'argnum'
-+	 * parameter. If it doesn't match, update 'offset' to find the last
-+	 * offset.
-+	 * If we find the FETCH_OP_END without matching FETCH_OP_ARG entry, we
-+	 * will save the entry with FETCH_OP_ARG and FETCH_OP_ST_EDATA, and
-+	 * return data offset so that caller can find the data offset in the entry
-+	 * data buffer.
-+	 */
- 	offset = 0;
- 	for (i = 0; i < earg->size - 1; i++) {
- 		switch (earg->code[i].op) {
-@@ -826,6 +844,16 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
- 	if (!earg)
- 		return 0;
- 
-+	/*
-+	 * earg->code[] array has an operation sequence which is run in
-+	 * the entry handler.
-+	 * The sequence stopped by FETCH_OP_END and each data stored in
-+	 * the entry data buffer by FETCH_OP_ST_EDATA. The FETCH_OP_ST_EDATA
-+	 * stores the data at the data buffer + its offset, and all data are
-+	 * "unsigned long" size. The offset must be increased when a data is
-+	 * stored. Thus we need to find the last FETCH_OP_ST_EDATA in the
-+	 * code array.
-+	 */
- 	for (i = 0; i < earg->size; i++) {
- 		switch (earg->code[i].op) {
- 		case FETCH_OP_END:
-
+LOL, also works for me.
