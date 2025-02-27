@@ -1,110 +1,135 @@
-Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214A118CC15;
-	Thu, 27 Feb 2025 18:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C153B1DB951;
+	Thu, 27 Feb 2025 18:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682156; cv=none; b=oGWR+lhgChp27wfREFqf4/kJHICpj64Sguq3w2spl+BpjXwZE3dQYgmgVXIVlsCnsP+vzuPcraAB82LzPBwzBK6O/FnyTQyFPWW2lKrT5e43HzLHn+Nm30UTzsW40KIqRGQQjLCBxmom+zexWEy5rUG6W0v6GrzJ+5lz37RTmEs=
+	t=1740682188; cv=none; b=QIzscs8JswKp+CNKXIe98ZrsZ5nd+gxwaulRp4JYGBY0nF+yDEenKl5u2yLMxYKmFAtT5ErBTqszul2AorKiHQ0jcUbZgIfwY3qaYJavBBoWWLJZ/pDUSIovxqxPqZnNdd+s+L1aJMU9Uv+p3n2MNeJ6/B54QFGJilEPO0ce5aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740682156; c=relaxed/simple;
-	bh=GP7F5y7w+kGu/rqgKexPi6wRjgXckuCo4h5O/xVjMwI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=VS/pbzpcKBPjuIAS0nhjRoUmTTJlB4NLN29qIOPJ3ZMXVTPqh6nTJ2h6hJwK7+0itUKM0pnB9WXSovjO01C5IhMqUOcsKxpjvI2ye453Zx9IovEC8RSN+PgeQJ7vpRwXXqGcE1ZSleTPXz4cy0rY7vqJo230deSEP7LFBd24kH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=b5RLBkla; arc=none smtp.client-ip=81.200.124.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1740682188; c=relaxed/simple;
+	bh=nRPcCuG7ltJwPvQWPAaxr25ZDw/xZ1kAGQIdh4qvjR4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=UB1ey8Y4u/KRy/iy39BnPXueiHnbuCg2QbGIZQ7VznjkqKo58qg7gaMGHUSPaI6AeGR8DRdbteCXflDyYmusUEdjMIne4Boj/bM7uHuqskmISxhDWR8w0NnL7UOELkPK3CDjKhUlgAIaMnJZJ1aaZlhe1afNJ1M1v5BpYLc7WJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BfHXDsRW; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="b5RLBkla"
-Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
-	by ksmg01.maxima.ru (Postfix) with ESMTP id CF7E5C0015;
-	Thu, 27 Feb 2025 21:49:02 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru CF7E5C0015
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1740682142; bh=PzAwn6aI8D4wUfpWcy4C4+Z60jtIAMMhJRHTKaUDOI4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=b5RLBklaQwEc6E3j5nmFJKJUbWwEaxQ3NghzfadpkPqmHKMTSb7O+4zlQFcmWeprY
-	 iUOB1uLkbgs3FxWDUQ6sg+sAlW6/KD65OE6O+phagxH2NBmwdVmuj2reVDSgNqBDsR
-	 Q1GhBn3CK/YJPNmNDoxzhwWCUaCK2DiL3q4Ko4gmwAuUXl+phGrfLJB9jJQ91TCDCl
-	 fC7rRciXpKvU/Z0/cqHaZ7Se3BSMevKVOBSNWe4nCqQX4ExROxXPMzC20oXohTMBWV
-	 xCEPup+Rd+JZ57MXuzfBrNrL1AjDGwLSYRloFtjxmy6MNidS1hw9Q6brXYK3tt9ARY
-	 HgxVdDGZMgLMQ==
-Received: from ksmg01.maxima.ru (autodiscover.maxima.ru [81.200.124.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg01.maxima.ru (Postfix) with ESMTPS;
-	Thu, 27 Feb 2025 21:49:02 +0300 (MSK)
-Received: from localhost.maximatelecom.ru (178.236.220.144) by
- mmail-p-exch01.mt.ru (81.200.124.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.4; Thu, 27 Feb 2025 21:49:00 +0300
-From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
-To: Andrew Lunn <andrew+netdev@lunn.ch>
-CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin"
-	<mst@redhat.com>, Jiri Pirko <jiri@resnulli.us>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>, Rusty Russell <rusty@rustcorp.com.au>,
-	Erwan Yvin <erwan.yvin@stericsson.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
-Subject: [PATCH] caif_virtio: fix wrong pointer check in cfv_probe()
-Date: Thu, 27 Feb 2025 23:46:27 +0500
-Message-ID: <20250227184716.4715-1-v.shevtsov@mt-integration.ru>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BfHXDsRW"
+Received: from thinkpad-p16sg1.corp.microsoft.com (unknown [20.236.10.206])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 090DC203CDDF;
+	Thu, 27 Feb 2025 10:49:45 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 090DC203CDDF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740682186;
+	bh=dTN8Ol6iBK0tQ64gzb1rJT/sbrX9dk1R/Yx1SnBZ6cY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BfHXDsRWLlvwk1XSADoVHUjay7LWLsjOvbYqzImDBWsDubk60E1GNc6MjYPZHua2k
+	 W9axx9nHXKOpSJ7oayK1BDcbvflhbwzWDac52AlOvJx9tHSnklKJyRjPfGbkVXjyCw
+	 WQKznxqeNwt1y20lRjwsmOCWFxNmZkcs0uxPu4Vo=
+From: Shyam Saini <shyamsaini@linux.microsoft.com>
+To: linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org
+Cc: petr.pavlu@suse.com,
+	code@tyhicks.com,
+	linux@rasmusvillemoes.dk,
+	christophe.leroy@csgroup.eu,
+	hch@infradead.org,
+	mcgrof@kernel.org,
+	frkaya@linux.microsoft.com,
+	vijayb@linux.microsoft.com,
+	linux@weissschuh.net,
+	samitolvanen@google.com,
+	da.gomez@samsung.com,
+	gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org
+Subject: [PATCH v4 0/4] Properly handle module_kobject creation
+Date: Thu, 27 Feb 2025 10:49:26 -0800
+Message-Id: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
- (81.200.124.61)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, mt-integration.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;ksmg01.maxima.ru:7.1.1;127.0.0.199:7.1.2;81.200.124.61:7.1.2, FromAlignment: s, ApMailHostAddress: 81.200.124.61
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191358 [Feb 27 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/02/27 14:12:00 #27481496
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
 
-del_vqs() frees virtqueues, therefore cfv->vq_tx pointer should be checked
-for NULL before calling it, not cfv->vdev. Also the current implementation
-is redundant because the pointer cfv->vdev is dereferenced before it is
-checked for NULL.
+Hi Everyone,
 
-Fix this by checking cfv->vq_tx for NULL instead of cfv->vdev before
-calling del_vqs().
+This patch series fixes handling of module_kobject creation.
+A driver expect module_kset list populated with its corresponding
+module_kobject to create its /sys/module/<built-in-module>/drivers
+directory.
 
-Found by Linux Verification Center (linuxtesting.org) with Svace.
+Since,
+[1] commit 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
+Call to populate module_kset list is deferred to save init time so that
+external watchdog doesn't fireup on some boards and Linux can take
+responsibility of feeding watchdog before it spuriously resets the
+system. However, [1] this fix caused another issue i.e, consumers
+of module_kset can't get related module_kobject during driver
+initialisation and hence can't create their
+/sys/module/<built-in-module>/drivers directory.
 
-Fixes: 0d2e1a2926b1 ("caif_virtio: Introduce caif over virtio")
-Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+Consequently, [1] breaks user-space applications for eg: DPDK, which
+expects /sys/module/vfio_pci/drivers/pci:vfio-pci/new_id to be present.
+
+The second issue was reported and the [2] revert of [1] was
+proposed. However, [2] the Revert doesn't address the original issue
+reported in [1].
+
+This patch series addresses both issues reported in [1] and [2].
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=96a1a2412acb
+[2] https://lore.kernel.org/lkml/20250130225803.321004-1-shyamsaini@linux.microsoft.com/
+
+Thanks,
+Shyam
+
 ---
- drivers/net/caif/caif_virtio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Changes in v4;
+  - Restore accidentally removed empty line in kernel_add_sysfs_param()
+  - Prepare this patch series for stable tree inclusion
 
-diff --git a/drivers/net/caif/caif_virtio.c b/drivers/net/caif/caif_virtio.c
-index 7fea00c7ca8a..c60386bf2d1a 100644
---- a/drivers/net/caif/caif_virtio.c
-+++ b/drivers/net/caif/caif_virtio.c
-@@ -745,7 +745,7 @@ static int cfv_probe(struct virtio_device *vdev)
- 
- 	if (cfv->vr_rx)
- 		vdev->vringh_config->del_vrhs(cfv->vdev);
--	if (cfv->vdev)
-+	if (cfv->vq_tx)
- 		vdev->config->del_vqs(cfv->vdev);
- 	free_netdev(netdev);
- 	return err;
+- Changes in v3:
+  - Split refactoring and globalisation of lookup_or_create_module_kobject() into two patches
+  - Fix commit message to better describe the change.
+  - Use IS_ENABLED instead of #ifdef macro construct
+  - Undo the moving of __modinit macro construct into module.h
+  - drop __modinit from lookup_or_create_module_kobject() declaration
+  - Link: https://lore.kernel.org/lkml/20250211214842.1806521-1-shyamsaini@linux.microsoft.com/
+
+Changes in v2:
+- Undo the moving of to_module* and lookup_or_create_module_kobject() into module.h
+- Refactor and globalize lookup_or_create_module_kobject()
+- move __modinit macro construct to module.h
+- Fix commit message typos
+- Link: https://lore.kernel.org/lkml/20250207054538.1110340-1-shyamsaini@linux.microsoft.com/
+
+
+Changes in v1: 
+- Rename locate_module_kobject() to lookup_or_create_module_kobject() to accurately
+  describe its operations.
+- Moves lookup_or_create_module_kobject() and to_module* macros to module.h, so
+  that driver code can use these.
+- Handle module_kobject creation and population of module_kset list to fix [1]
+  and [2] issues.
+- Link: https://lore.kernel.org/lkml/20250204052222.1611510-1-shyamsaini@linux.microsoft.com/
+
+Changes in RFC:
+         Reverts commit 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
+
+Shyam Saini (4):
+  kernel: param: rename locate_module_kobject
+  kernel: refactor lookup_or_create_module_kobject()
+  kernel: globalize lookup_or_create_module_kobject()
+  drivers: base: handle module_kobject creation
+
+ drivers/base/module.c  | 13 +++++-------
+ include/linux/module.h |  2 ++
+ kernel/params.c        | 47 ++++++++++++++++++++----------------------
+ 3 files changed, 29 insertions(+), 33 deletions(-)
+
 -- 
-2.48.1
+2.34.1
 
