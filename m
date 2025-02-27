@@ -1,187 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA4927781E;
-	Thu, 27 Feb 2025 22:45:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E826E1AA1E4;
+	Thu, 27 Feb 2025 22:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740696312; cv=none; b=nTpNfdKbbmtaF0rHe/yh73wd9F8QbOxZKJ2ctiQW++1Ozg2FCb+j5vJshSp8FfHttwFcrgenNl+o4AU/jmNosnkebsQKbdoIsaqfvZ7f1vozviFUVg1ZifDBJZriNy9DLDYjeyUsFEgo66G+8xW2dFb/OrzJd4UaucBP87U76A8=
+	t=1740696350; cv=none; b=GPgCF1yZUEI0AFzbMBU6NB9gOvEpwLqbIi/UEHsjTCrCFflLkJ4VKvO123wc1RUvQM47O9eHvgVm2vDgAjdQMWZeUwZH0jID4JMWFO3eyKkWHSEGjfMoDY0BQOVlOj+ocJ5zlnu+2UPPld9A49tOWigmik5puUrenceGWJ8DB78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740696312; c=relaxed/simple;
-	bh=grcGQ/+arIlEAKZaRyhVKHEzoTjlNo07p6Orhu/Q7Hc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fbTscX5nIvuRKx3jYyfg9o6TUabHKy716OOOZe3aRXLZt9Dszq0ldPhVIOw+0OUlxoOe1Bvj/hRBYh2WxqhJMIjoKXOjM2MbpnhCMROIGWt5YyQ42b1F0IFFmNGsqMiQmB1uLKXQ5r1QSblGTRcP0XfffhqB37UBCDqV0eY0oWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yu/GEZ61; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740696350; c=relaxed/simple;
+	bh=izkk5knDaziivpFQd+Hbzf8lExHq+UqhozbkipxAkoY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=T7oGlQO4E4GEcD3q36ZNYGCFuGLALo8A6JlJBWc7Hgdmart/SJIIA4/92yaBirFQC7K6iwLUiR4JJK5koovR7ZPwLKSf7ncTIsarWmQGr01DNxLKYIMMgWdWP5QmZXIsEhOSFRgjNiXypWLaZcGw09uR9SrtB+rGa0ff60Ok958=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAevKaEv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yu/GEZ61"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 54A56C4CEE4;
-	Thu, 27 Feb 2025 22:45:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAevKaEv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42179C4CEDD;
+	Thu, 27 Feb 2025 22:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740696312;
-	bh=grcGQ/+arIlEAKZaRyhVKHEzoTjlNo07p6Orhu/Q7Hc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Yu/GEZ618qIdVI9fNOp4LWX9V7t/yjYm1X/HvO72knF+KqiNnVdNVrMtnLprDzrQb
-	 QqeFYBPHiDFFcAc24JUyd7VyEKnL+IheGZZ/Tcb3Mcic05lmFC4y/tY5bOxyvhzGy7
-	 PSGzcDLhgNMUYtQhv9xqxOwYXBvOJ2o4yXOXL0zUlnEUJhFwM5IQD3PgsmAPc6ECfA
-	 UxkIJSfGxcrsF3JW2mRmqwlSDB3MeUXMpIaWEdSEY+IQgfwF9aE+uswx7ANJHTpSs2
-	 odFzmHlR+YwQI/UU3cQRWzVnay86gl+aYULTzIOaWFwsZNsNhKKRzVzM094RBHEcGU
-	 rkxhxqlmKbBYg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4923CC197BF;
-	Thu, 27 Feb 2025 22:45:12 +0000 (UTC)
-From: Thomas Prescher via B4 Relay <devnull+thomas.prescher.cyberus-technology.de@kernel.org>
-Date: Thu, 27 Feb 2025 23:45:06 +0100
-Subject: [PATCH v2 2/3] mm: hugetlb: add hugetlb_alloc_threads cmdline
- option
+	s=k20201202; t=1740696349;
+	bh=izkk5knDaziivpFQd+Hbzf8lExHq+UqhozbkipxAkoY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=AAevKaEv4QlnBKEzjhX26YUP7oaL6uEnCCjWTQzrna2PMbuUcAC+LNFosWu0NkHOZ
+	 ADNlUiW/CHnbDFUgO7y0NpVwKonW8xbJsxAQEbyhw3Xuxo6VqnA2EPjoKfBYeSyh07
+	 KpSQfCHibGoYIeuFjzjQ4wQDza2p8YFS4996/wO6ZvKRGYh3aH5A2h8lAZtOw2kpoK
+	 ojd4yzQveqWasVWySmW4ayo6hQDTVP6I1yKg1z8CAqVguNjFrfGXfMbcn7tOmuVrT5
+	 l6Chqnr+TJ+gtR/0QvTB/wvNRYFDMvIi+SgBuLZPZRsdQPzjGudAVbt6eXS1r67aBy
+	 8aCEgyUoqzzpg==
+Date: Thu, 27 Feb 2025 16:45:47 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Shay Drory <shayd@nvidia.com>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: [PATCH] PCI: Fix NULL dereference in SR-IOV VF creation error
+ path
+Message-ID: <20250227224547.GA22604@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-hugepage-parameter-v2-2-7db8c6dc0453@cyberus-technology.de>
-References: <20250227-hugepage-parameter-v2-0-7db8c6dc0453@cyberus-technology.de>
-In-Reply-To: <20250227-hugepage-parameter-v2-0-7db8c6dc0453@cyberus-technology.de>
-To: Jonathan Corbet <corbet@lwn.net>, Muchun Song <muchun.song@linux.dev>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mm@kvack.org, Thomas Prescher <thomas.prescher@cyberus-technology.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740696310; l=4838;
- i=thomas.prescher@cyberus-technology.de; s=20250221;
- h=from:subject:message-id;
- bh=/OuX4vllZ9DrhNgACxdiUGULgJjK6Nnwd9N61kSfqhA=;
- b=phN1XnqYkdqDin5Z8AuIutKHz9rkc22/78FuumN1xbawpdcPxzrzUFrB3Ztmu9nN7DoTG9aKM
- lNG0g3p9CpAAFn2gED78eQwXk7spRaq5UfjPCafLAHZmvdmRglb2Clf
-X-Developer-Key: i=thomas.prescher@cyberus-technology.de; a=ed25519;
- pk=T5MVdLVCc/0UUyv5IcSqGVvGcVkgWW/KtuEo2RRJwM8=
-X-Endpoint-Received: by B4 Relay for
- thomas.prescher@cyberus-technology.de/20250221 with auth_id=345
-X-Original-From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
-Reply-To: thomas.prescher@cyberus-technology.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250216083254.38501-1-shayd@nvidia.com>
 
-From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+On Sun, Feb 16, 2025 at 10:32:54AM +0200, Shay Drory wrote:
+> Add proper cleanup when virtfn setup fails to prevent NULL pointer
+> dereference during device removal. The kernel oops[1] occurred due to
+> Incorrect error handling flow when pci_setup_device() fails.
+> 
+> Fix it by properly cleaning up virtfn resources when pci_setup_device()
+> fails, instead of invoking pci_stop_and_remove_bus_device().
+> This prevents accessing partially initialized virtfn devices during
+> removal.
 
-Add a command line option that enables control of how many
-threads should be used to allocate huge pages.
+> Fixes: e3f30d563a38 ("PCI: Make pci_destroy_dev() concurrent safe")
 
-Signed-off-by: Thomas Prescher <thomas.prescher@cyberus-technology.de>
----
- Documentation/admin-guide/kernel-parameters.txt |  9 +++++++
- Documentation/admin-guide/mm/hugetlbpage.rst    | 10 ++++++++
- mm/hugetlb.c                                    | 31 +++++++++++++++++++++----
- 3 files changed, 46 insertions(+), 4 deletions(-)
+It's not obvious to me how e3f30d563a38 is related.  Can you elucidate
+the connection?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec8582b8750d7e014c4d76166fa2fc1..1937ee02c1f883ecd910bab33cdb9194bddbd9b1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1882,6 +1882,15 @@
- 			Documentation/admin-guide/mm/hugetlbpage.rst.
- 			Format: size[KMG]
- 
-+	hugepage_alloc_threads=
-+			[HW] The number of threads that should be used to
-+			allocate hugepages during boot. This option can be
-+			used to improve system bootup time when allocating
-+			a large amount of huge pages.
-+			The default value is 25% of the available hardware threads.
-+
-+			Note that this parameter only applies to non-gigantic huge pages.
-+
- 	hugetlb_cma=	[HW,CMA,EARLY] The size of a CMA area used for allocation
- 			of gigantic hugepages. Or using node format, the size
- 			of a CMA area per node can be specified.
-diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
-index f34a0d798d5b533f30add99a34f66ba4e1c496a3..67a941903fd2231e6c082cffb4c9179ee094b208 100644
---- a/Documentation/admin-guide/mm/hugetlbpage.rst
-+++ b/Documentation/admin-guide/mm/hugetlbpage.rst
-@@ -145,7 +145,17 @@ hugepages
- 
- 	It will allocate 1 2M hugepage on node0 and 2 2M hugepages on node1.
- 	If the node number is invalid,  the parameter will be ignored.
-+hugepage_alloc_threads
-+	Specify the number of threads that should be used to allocate hugepages
-+	during boot. This parameter can be used to improve system bootup time
-+	when allocating a large amount of huge pages.
- 
-+	The default value is 25% of the available hardware threads.
-+	Example to use 8 allocation threads::
-+
-+		hugepage_alloc_threads=8
-+
-+	Note that this parameter only applies to non-gigantic huge pages.
- default_hugepagesz
- 	Specify the default huge page size.  This parameter can
- 	only be specified once on the command line.  default_hugepagesz can
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index e9b1b3e2b9d467f067d54359e1401a03f9926108..98dbfa18bee01d01b40cc7c650cd3eca5eae2457 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -70,6 +70,7 @@ static unsigned long __initdata default_hstate_max_huge_pages;
- static bool __initdata parsed_valid_hugepagesz = true;
- static bool __initdata parsed_default_hugepagesz;
- static unsigned int default_hugepages_in_node[MAX_NUMNODES] __initdata;
-+static unsigned long hugepage_allocation_threads __initdata;
- 
- /*
-  * Protects updates to hugepage_freelists, hugepage_activelist, nr_huge_pages,
-@@ -3429,8 +3430,6 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 		.numa_aware	= true
- 	};
- 
--	unsigned int num_allocation_threads = max(num_online_cpus() / 4, 1);
--
- 	job.thread_fn	= hugetlb_pages_alloc_boot_node;
- 	job.start	= 0;
- 	job.size	= h->max_huge_pages;
-@@ -3451,9 +3450,13 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 	 * | cascade lake 192 cpus |   39s |   20s |   11s |   10s |    9s |
- 	 * +-----------------------+-------+-------+-------+-------+-------+
- 	 */
-+	if (hugepage_allocation_threads == 0) {
-+		hugepage_allocation_threads = num_online_cpus() / 4;
-+		hugepage_allocation_threads = max(hugepage_allocation_threads, 1);
-+	}
- 
--	job.max_threads	= num_allocation_threads;
--	job.min_chunk	= h->max_huge_pages / num_allocation_threads;
-+	job.max_threads	= hugepage_allocation_threads;
-+	job.min_chunk	= h->max_huge_pages / hugepage_allocation_threads;
- 	padata_do_multithreaded(&job);
- 
- 	return h->nr_huge_pages;
-@@ -4766,6 +4769,26 @@ static int __init default_hugepagesz_setup(char *s)
- }
- __setup("default_hugepagesz=", default_hugepagesz_setup);
- 
-+/* hugepage_alloc_threads command line parsing
-+ * When set, use this specific number of threads for the boot
-+ * allocation of hugepages.
-+ */
-+static int __init hugepage_alloc_threads_setup(char *s)
-+{
-+	unsigned long allocation_threads;
-+
-+	if (kstrtoul(s, 0, &allocation_threads) != 0)
-+		return 1;
-+
-+	if (allocation_threads == 0)
-+		return 1;
-+
-+	hugepage_allocation_threads = allocation_threads;
-+
-+	return 1;
-+}
-+__setup("hugepage_alloc_threads=", hugepage_alloc_threads_setup);
-+
- static unsigned int allowed_mems_nr(struct hstate *h)
- {
- 	int node;
+> CC: Keith Busch <kbusch@kernel.org>
+> Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+> Signed-off-by: Shay Drory <shayd@nvidia.com>
+> ---
+>  drivers/pci/iov.c | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index 9e4770cdd4d5..3dfcbf10e127 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -314,8 +314,11 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  		pci_read_vf_config_common(virtfn);
+>  
+>  	rc = pci_setup_device(virtfn);
+> -	if (rc)
+> +	if (rc) {
+> +		pci_bus_put(virtfn->bus);
+> +		kfree(virtfn);
+>  		goto failed1;
+> +	}
 
--- 
-2.48.1
+Thanks for the fix.  The mix of error recovery styles (cleanup here at
+the point of falure vs. goto different cleanup steps at the end) makes
+this kind of hard to understand.
 
+I see that this cleanup is similar to what's done in
+pci_scan_device(), which does help.  Did you consider making a helper
+here with structure similar to pci_scan_device(), e.g., a
+pci_iov_scan_device()?  I wonder if that could make the error handling
+here simpler?
 
+>  	virtfn->dev.parent = dev->dev.parent;
+>  	virtfn->multifunction = 0;
+> @@ -336,14 +339,15 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
+>  	pci_device_add(virtfn, virtfn->bus);
+>  	rc = pci_iov_sysfs_link(dev, virtfn, id);
+>  	if (rc)
+> -		goto failed1;
+> +		goto failed2;
+>  
+>  	pci_bus_add_device(virtfn);
+>  
+>  	return 0;
+>  
+> -failed1:
+> +failed2:
+>  	pci_stop_and_remove_bus_device(virtfn);
+> +failed1:
+>  	pci_dev_put(dev);
+>  failed0:
+>  	virtfn_remove_bus(dev->bus, bus);
+> -- 
+> 2.38.1
+> 
