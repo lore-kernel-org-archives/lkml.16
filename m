@@ -1,117 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8693973477
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47878C11;
+	Thu, 27 Feb 2025 01:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740618080; cv=none; b=dg0VNi8iNB50ntf/2BnTQ2nXRuxjH2tE3eANWHLl97KuGZzbEpgwmwfJSSxYLCdueSVmg0Ot3yQO+I7eZ6OkHABHntux0riFGs461JBo36aYEmdLsSYG1z+LziVYlmMklHCQ1uaJ2ZSryRU7cVVNQPfbdiHKWB0CUmHbnoZTgCk=
+	t=1740618203; cv=none; b=Pgsxt/IGjQyP6Oq40ljO18t4Qg5Fis60L0aHUwvvQaSeI0t650qXvUUk/fdoSHU3fviGqdOYVKEupheZnDONMSvSFUfrExal5lijb63vbgZX43Nyg0/eoJK4sKhhOLirX68I1l3tCQMLFBlphEkWj3GU16gaUrjz+OwzGgkTSe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740618080; c=relaxed/simple;
-	bh=GZ6qMOoOVuiq1MAFI9FkQ+kQcduE2jvLA2wNIUu2RL4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hQknJDVnG8UW6R2hs9HaqvX5pLSGv1ZTMl/pbdc+uyZV6gwJjzNemtqMkh87dZwdccc0x7Pfs5r/Jafz0auN729weReVBiuh13Z5CpHiJ6GriikmkfcurNKJ90veRk7knSb+FJSB+6nmSQconUEyskot+nYio3FvEYMyIccf5Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jGTj5zd7; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740618203; c=relaxed/simple;
+	bh=UmvSJoA4V9widGtTEXST3uDxkbKiOKmRYCx2G+QD7wc=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=OLl/hETOjsfqDLhGfda9BhDqoqKhnAus6xeFItySAL8ix756fMJ/PppgXgUiNqz3D/8IOhfhUE7q9sIAqTby+BVGEHEM43iN8Lw3tFEHh8EAqwpsVxujRFM3HeeULhc2J/vNCvczY0TmyJFlg4aTfwwgpIHmJyKSl9RkWOreYL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSUlTSt1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jGTj5zd7"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc2fee4425so1391969a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:01:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740618076; x=1741222876; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=RDoWSiiBmUA4Cvc4ko+cuVneWh/qlxcsIoQ/Ggi5MbQ=;
-        b=jGTj5zd7Pl7Sjfe3lxYdK3cPRnlbeKCHyeOl4JzzQRM5+RX/cqOMH98XLyVndS9JN1
-         Q8VSThw7CWrJVAwb/xpCZYkKk22v6PMk94gTJj7RAoVnaO0uWoL9uSKbORHF/VQohTE3
-         jnMBpTxB5cfwzMJGs/7/VVQj70B4AGaUCofjb+TzOV9YTUbCXXXG9zDoROIynInqFc4D
-         Knet/4v7FlJwDrEvHnz+jC93UFaRQWgYR8nKvgeXwq9v/uF9iBoqb2aNvRZeXgdcQtlY
-         oc6Dt5i5IlrZ7ZwO7kf/jZBbYKSsZs2AZB9MkQpTdFVf2z6NTxip0gJ7xyFE+8hLl1se
-         tHXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740618076; x=1741222876;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RDoWSiiBmUA4Cvc4ko+cuVneWh/qlxcsIoQ/Ggi5MbQ=;
-        b=s+NEUO7DVCzakA+xgAjKKhXroJJX4ie3buMyA44xXC3A5o0fQLJoQ8VSBpaSdMHEU1
-         hsLErAmlUoObIhX97vbQqeMRBIdQyI81ETAJHnCCl9oG3CL2pB+aY6Xdn06TuLUAVlyc
-         P66pWahyF8zqpZhkyiuigco8IVDu1/3O2D2i5GXddXlYUfnnzOCjcpxgPfUzvCtHSV0l
-         bWmOHTsbmL1wo1SnCB66hl+T8XuefSG3FcgEzboq5oWnZtZfGBqvIA9kXnKWD0AiCXHO
-         Z3C7AYitum1qHdYWUO/cmMoQ3h6qkGBolYaUjcrPA3y/kLMNmg4zPlH0xZr8zHMOr8F3
-         Z1Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlvKjEofJXQnAlEGmUWj6o39y2h1jbjgJbs4zBt7mLnes+RwMUZRXvaapD4A8NRaGBNY886HzcWGe/tq8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxScNtBSXvdyb/EoVSA8XVKajTSYk71uQ2BAaibYjp+sUblj2zC
-	keugxoWtafNZ8FloaaAGQVIti1D4nO8vMk6+Bicxt8SSsB05AMQyyncLTHZISxDc4yiistKCrGB
-	voQ==
-X-Google-Smtp-Source: AGHT+IH1hWe5Okz6/gdiRccw2sOEjxHYPXs3ilAyiVOoy2RH4ZzxsE7mftj9onRF83A6Ybwzulh3XobBvzI=
-X-Received: from pjbtb8.prod.google.com ([2002:a17:90b:53c8:b0:2fc:ccfe:368])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5686:b0:2ee:aed6:9ec2
- with SMTP id 98e67ed59e1d1-2fe7e30045emr10064662a91.14.1740618075925; Wed, 26
- Feb 2025 17:01:15 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Feb 2025 17:01:10 -0800
-In-Reply-To: <20250227010111.3222742-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSUlTSt1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6D4C4CED6;
+	Thu, 27 Feb 2025 01:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740618203;
+	bh=UmvSJoA4V9widGtTEXST3uDxkbKiOKmRYCx2G+QD7wc=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=sSUlTSt1fdw9WDJk1UX25ffpH2sRCJeklA71dTRCMs7h07iGQ8N/dSx5B42GmA5Kr
+	 orkaTDL3g8nJWkp8W5eaCBKh1vrDWfv6I9o3ODk88d2gCrEaKQUYRxoI6hRxXM5NdG
+	 zBMP6U7mU+C4Kd0nnlky6+HJu6J+mU/NsLfx7vfQOBFgnbHL2BrXKgbl7SGWJ1GKOh
+	 SyvzT1zLSiQzR9Kl2KMA1dfCV/3HkiscWmy2Q/lwETVD8tc6xkxQakfFGI0C8w+qEc
+	 TRk7+mr3NWbm+xD/gA28rgZ8fcHVoNCGFNmlEcbIQbZeS54ltjSvjgP/PPTar+EE0g
+	 0IZl2YcueDiwQ==
+Message-ID: <714808f633d097b96082e1e418ad2205.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227010111.3222742-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250227010111.3222742-2-seanjc@google.com>
-Subject: [PATCH 1/2] x86/msr: Rename the WRMSRNS opcode macro to ASM_WRMSRNS
- (for KVM)
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250212100342.33618-1-angelogioacchino.delregno@collabora.com>
+References: <20250212100342.33618-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek,mt8188: Add VDO1_DPI1_HDMI clock
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: mturquette@baylibre.com, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be, u.kleine-koenig@baylibre.com, amergnat@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, kernel@collabora.com, macpaul.lin@mediatek.com, pablo.sun@mediatek.com
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Date: Wed, 26 Feb 2025 17:03:21 -0800
+User-Agent: alot/0.12.dev1+gaa8c22fdeedb
 
-Rename the WRMSRNS instruction opcode macro so that it doesn't collide
-with X86_FEATURE_WRMSRNS when using token pasting to generate references
-to X86_FEATURE_WRMSRNS.  KVM heavily uses token pasting to generate KVM's
-set of support feature bits, and adding WRMSRNS support in KVM will run
-will run afoul of the opcode macro.
+Quoting AngeloGioacchino Del Regno (2025-02-12 02:03:41)
+> Add binding for the HDMI TX clock found in the VDO1 controller.
+> While at it, also remove the unused CLK_VDO1_NR_CLK.
+>=20
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
 
-  arch/x86/kvm/cpuid.c:719:37: error: pasting "X86_FEATURE_" and "" "" does not
-                                      give a valid preprocessing token
-  719 |         u32 __leaf = __feature_leaf(X86_FEATURE_##name);                \
-      |                                     ^~~~~~~~~~~~
-
-KVM has worked around one such collision in the past by #undef'ing the
-problematic macro in order to avoid blocking a KVM rework, but such games
-are generally undesirable, e.g. requires bleeding macro details into KVM,
-risks weird behavior if what KVM is #undef'ing changes, etc.
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/msr.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/msr.h b/arch/x86/include/asm/msr.h
-index 001853541f1e..60b80a36d045 100644
---- a/arch/x86/include/asm/msr.h
-+++ b/arch/x86/include/asm/msr.h
-@@ -300,7 +300,7 @@ do {							\
- #endif	/* !CONFIG_PARAVIRT_XXL */
- 
- /* Instruction opcode for WRMSRNS supported in binutils >= 2.40 */
--#define WRMSRNS _ASM_BYTES(0x0f,0x01,0xc6)
-+#define ASM_WRMSRNS _ASM_BYTES(0x0f,0x01,0xc6)
- 
- /* Non-serializing WRMSR, when available.  Falls back to a serializing WRMSR. */
- static __always_inline void wrmsrns(u32 msr, u64 val)
-@@ -309,7 +309,7 @@ static __always_inline void wrmsrns(u32 msr, u64 val)
- 	 * WRMSR is 2 bytes.  WRMSRNS is 3 bytes.  Pad WRMSR with a redundant
- 	 * DS prefix to avoid a trailing NOP.
- 	 */
--	asm volatile("1: " ALTERNATIVE("ds wrmsr", WRMSRNS, X86_FEATURE_WRMSRNS)
-+	asm volatile("1: " ALTERNATIVE("ds wrmsr", ASM_WRMSRNS, X86_FEATURE_WRMSRNS)
- 		     "2: " _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
- 		     : : "c" (msr), "a" ((u32)val), "d" ((u32)(val >> 32)));
- }
--- 
-2.48.1.711.g2feabab25a-goog
-
+Applied to clk-next
