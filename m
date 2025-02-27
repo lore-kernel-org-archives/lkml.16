@@ -1,111 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BCF1ACECF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF6C1C8FB4;
+	Thu, 27 Feb 2025 16:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675289; cv=none; b=YLdUe1F4QG/eEABxirikr6FUjTOJSk7qyKnq3v7VrNgIqK1x3cxTq1872UFwjJngOXOf46CCf94cIqj/FQ5nV/2TXew5YUYOy/Kx9Z62UQCowZVBb2iqbdMZAb4u5hqhryKXlPZbw6MCeylVHblUrQAY4uiPEuWuHbdbLJ51fY4=
+	t=1740675293; cv=none; b=XXqASIuDzWUIIJK/4uQWtYu7QU7C5LWV769GlmzaiV9GSbkfG/PedPRo8E/qVUSI/jT3iFxqNQkUmkFJjM3ZDzJxNxNi3wV32HFgjnNmtrk05kTaVfRP+lfOCdGGXYUW4urQvHNJBJ4v0/cXRjXF8xuWT8hI2RIsfLxDIXd0bTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675289; c=relaxed/simple;
-	bh=wmPZL0hTajLmHouhNoG+H8g4d9k2lliIa/FDsUAPuXM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=koOlUFAIA7etE/10k4xHzFEmCaHxU6kbaMYUNVu4LdK2J6Ko+tItgHnKKsjaCaQtH8r4AwfGr1zlYows5Blg+MSnbH1ekMwdn27VY3dpMz2LuAlEbczqLyL9wuEhEet4O4l2vHrjONaZiXFD8UN3Vs05Zl0+m9Gw+MRvOprZ1tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fR+BMNmA; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740675293; c=relaxed/simple;
+	bh=TmWvFUQLCnd+pivm8ZY7bZuz0W7aCNeXWJ0RoTa2c+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gI3vPmAhFvGOyyihLv8vbNp3gMXb5JwI8BJbtS7cMhqiwNWyvZYoRXAQHAjEkUhKfQqGQZA020pWv87PPnNav5CrUUSGovPpQ8ZCLsFj0FqHxIG7hT1eBayl3RbkUVB3fCB9uDG+sobIbHG9OuVaX+XK8gfk1FzElP1Ll0xf2Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQqwMY1Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fR+BMNmA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740675286; x=1772211286;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wmPZL0hTajLmHouhNoG+H8g4d9k2lliIa/FDsUAPuXM=;
-  b=fR+BMNmAYIzkn1JDa9x0MkXGSGPjrQh2DojUua44lvIboDFqUlUS0fb0
-   OhsWwiI7/wEFmQVjgXO4c5kVDuQhpYVKrLWBQY4kwSWKpNM1gS7GaL/Hr
-   jtdG5pO+aAfAoR2aMbrISKsUjMWaipO/9CeVgdbRVKq9COVt57wwbDNSn
-   ZAxSSLgFm0JJqgorM2KPMsNJUAdKs8u64J56JCR+Ld1v+sxMi0bInsn/6
-   CeJAuXTlU+hf64AWtnGCI9kpzSRgkDQ2EjxPmRNqRrqDsxWkc6DR3Xs2E
-   V3wWqH087rp5qfvOvyICWwvQwJukNI51aaoeRBHZNV9n2ck8g8EJI3rvA
-   g==;
-X-CSE-ConnectionGUID: cn4fbmlqQWy0d3xlySu+OA==
-X-CSE-MsgGUID: r1qFtOauTCmgi/HAgVyYqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41495722"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41495722"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 08:54:46 -0800
-X-CSE-ConnectionGUID: ZDe6c26fRMyo6x8RxzXcLQ==
-X-CSE-MsgGUID: cBPTHcmiQ0mGjDKfAROMAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117580453"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Feb 2025 08:54:43 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnh9j-000Djc-3D;
-	Thu, 27 Feb 2025 16:54:39 +0000
-Date: Fri, 28 Feb 2025 00:54:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Aditya Garg <gargaditya08@live.com>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Kerem Karabay <kekrby@gmail.com>,
-	Atharva Tiwari <evepolonium@gmail.com>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
- Macs
-Message-ID: <202502280028.1Y9QMcR0-lkp@intel.com>
-References: <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQqwMY1Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E23C4CEDD;
+	Thu, 27 Feb 2025 16:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740675292;
+	bh=TmWvFUQLCnd+pivm8ZY7bZuz0W7aCNeXWJ0RoTa2c+M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=NQqwMY1YlWROF/jhKfz7/qNDrFSjp2Zct7v1rFRjQyt2iXHOVqs62fwENRsOclyjj
+	 oPwWoziE1f5DPbCwDPnbvVOLCmxG7vdiOVoqnbikss32WVtj0yqa1/pMR03vtTgIFQ
+	 Zx4OkE3OXA625aSftS4YrglHEZhBuSYL8yYIPkfyoAgRxuUJLBV8g0/hs/w0TEvRDJ
+	 XvIWSJ6KVfe5kkvk4VOdQLm9P/gLTYbiNi+D9MbWIdy9ZsN5SNJIHapRWOCHUhn6US
+	 dVUPUx9zqNJ/lHrw0dbSLpadJybDzGtMdA8o3MNWheQzke/LI2wCHi9ibRTeKlyfxc
+	 U8/6ykatlbG6w==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org, pavel@kernel.org, andersson@kernel.org, 
+ krzysztof.kozlowski@linaro.org, 
+ Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: morf3089@gmail.com, u.kleine-koenig@pengutronix.de, 
+ marijn.suijten@somainline.org, linux-leds@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Zejiong Huang <zejiongh@qti.qualcomm.com>
+In-Reply-To: <20250213003533.1684131-1-anjelique.melendez@oss.qualcomm.com>
+References: <20250213003533.1684131-1-anjelique.melendez@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH] leds: rgb: leds-qcom-lpg: Add support for
+ 6-bit PWM resolution
+Message-Id: <174067529045.3584478.9992009485506424464.b4-ty@kernel.org>
+Date: Thu, 27 Feb 2025 16:54:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-Hi Aditya,
+On Wed, 12 Feb 2025 16:35:33 -0800, Anjelique Melendez wrote:
+> Currently, driver only allows for PWM modules to use 9-bit resolution.
+> However, PWM modules can support 6-bit and 9-bit resolution. Add support
+> for 6-bit resolution.
+> 
+> 
 
-kernel test robot noticed the following build warnings:
+Applied, thanks!
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14-rc4 next-20250227]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+[1/1] leds: rgb: leds-qcom-lpg: Add support for 6-bit PWM resolution
+      commit: 7a3350495d9ae8ae5b178d603449d18fa7150560
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Aditya-Garg/drm-format-helper-Add-conversion-from-XRGB8888-to-BGR888/20250224-214352
-base:   linus/master
-patch link:    https://lore.kernel.org/r/844C1D39-4891-4DC2-8458-F46FA1B59FA0%40live.com
-patch subject: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86 Macs
-config: alpha-kismet-CONFIG_HID_MULTITOUCH-CONFIG_DRM_APPLETBDRM-0-0 (https://download.01.org/0day-ci/archive/20250228/202502280028.1Y9QMcR0-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250228/202502280028.1Y9QMcR0-lkp@intel.com/reproduce)
+--
+Lee Jones [李琼斯]
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502280028.1Y9QMcR0-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for HID_MULTITOUCH when selected by DRM_APPLETBDRM
-   WARNING: unmet direct dependencies detected for HID_MULTITOUCH
-     Depends on [n]: HID_SUPPORT [=n] && HID [=n]
-     Selected by [y]:
-     - DRM_APPLETBDRM [=y] && HAS_IOMEM [=y] && DRM [=y] && USB [=y] && MMU [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
