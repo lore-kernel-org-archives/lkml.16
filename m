@@ -1,90 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FA11E833D;
-	Thu, 27 Feb 2025 17:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1741DE3B7;
+	Thu, 27 Feb 2025 17:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740678720; cv=none; b=NLqpGFtK1H1v5Z1ngmIrZ5rBX8IKPkTNetTXbrxwyTFhF9V23QtQsBqtFobQKZlJP0c6d40InKGY+91nugNZxMb+qonx+pLVlgb8OMTbWz54JKvTatSr8S8NVVuooKrqayqxMRzrrmuwfhkIHCOjUJD7K+2yy1bXl7bdgYMmFRQ=
+	t=1740678866; cv=none; b=mAIBWjoIk0oNe0jY65SCu94Tan7S3fATs83+8k1LuxAJvQe31qWDuJOM0M+53lGc9E1CEU+y5zK0J08CMSxV/iRvUZ+Xi69eTlcbixpD4HFYKOLn4F/U/Qvcgu4AZwf1180ygAkuqf+W04tsbMlokQfQQNfrptHKJZGVlGmxkSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740678720; c=relaxed/simple;
-	bh=/4rYifw7cWKNiMrck66uwKDbuVPIV6lSNQPd5n/hwLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K4dktWF6eLyEZkhTAzyBIB/nv6ipvGut0KBcqPdnj4RAxxDnN3rC9KB6cpSWh9/bbLj3BbiRlMNO5x2gQa23vI3D/bNEmZCZ1vXL7VgExvZaegTIpPzLUM+N/c/xGNXlTmGnIJZAJl2UIHNAWacATrkSsHDTrS9kaMqRotOuhsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcSQsCMj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740678866; c=relaxed/simple;
+	bh=sjiruddTM+0KHHDeHF/Zcxixh1+e9jsEzQqvgV39YAA=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VyiqvCRhDpFj3BFE+/62gNc5EvbPKm9zyH6LL1VHo+tpUvziL1A6SsIjUVGs1a1HzWMNjq30e2/eyvIYIN6kfAMZbjBBWQ9qltRL1c8vHRNCBn1S8d7rqKm/gFVQIDZ4hL9n9Vg+iz6Z56+3zjg1kUhohQCpEPfhPpd4mA8Mu04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+utVVHB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcSQsCMj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3234C4CEDD;
-	Thu, 27 Feb 2025 17:51:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+utVVHB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD0BC4CEDD;
+	Thu, 27 Feb 2025 17:54:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740678719;
-	bh=/4rYifw7cWKNiMrck66uwKDbuVPIV6lSNQPd5n/hwLY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rcSQsCMjbO0ubBQ3WSvGC4PNqlRcBFX3iGlgDq49pGLnwuxMnVpQ2KmSZMfZgCUaj
-	 KoCw7qEuipvBy8gLW0wz1iFDW7809jpaO/XlBoBxiQrhFfd77ETYS8EzM6WeaVYswM
-	 g2wezDvYo/kjisPePUDtOsmiVnL1zjVfD5sZ9xspd63Hlxod5pZ4aI0IyL+KlDsflw
-	 Ljh+1q0mm/Sss7tkgQ7eLgjcS9NDpI2dW4bRc4IFi2MALHeK4Aa64YnGZmpF8ub/a3
-	 RWFSVlf4453NyT2Uwn2vEuvlFfAKy4XpHIOaMjOUTkUDv+pBoiWhO3HF0WLUU2JkYS
-	 arGldqg//CkHQ==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
-	Andrew Lunn <andrew@lunn.ch>
-Cc: linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: mvebu: Add missing 'gpio-ranges' property and hog nodes
-Date: Thu, 27 Feb 2025 11:51:32 -0600
-Message-ID: <20250227175132.3734524-1-robh@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=k20201202; t=1740678866;
+	bh=sjiruddTM+0KHHDeHF/Zcxixh1+e9jsEzQqvgV39YAA=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=L+utVVHBQ+q5kvAf33Q3vXRTMbBbdLPjvvSP5aLP7LEN4gD1WreYqgG8B3t/N3Vql
+	 022tFNqjmEFDSGC08eUynzeYW5bljhn1IhSeTHgVRLa0mdPFYrx7ZO6Po6in6c3Q3Z
+	 l3Tp5Ha82zPQx1aRlmS1YIsNxq1R2yEIH666/kn606+zg7g85OH56Hm7OheRjHsLcO
+	 NdxUOQE8XXaqqh8MvIwBbeyPAJjBJQd2ExnGW9kAV4Cva96+pJILW5aZ2QTsyE5FPS
+	 AdnCnaJBvrYrmwG3eE1paBZkfBW+ijn4TnicCQtejl9GWOjcnSqK/EhV7lkqPpMag8
+	 rCEPKcthFHbtw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7121F380AACB;
+	Thu, 27 Feb 2025 17:54:59 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.14-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250227164103.3599252-1-kuba@kernel.org>
+References: <20250227164103.3599252-1-kuba@kernel.org>
+X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250227164103.3599252-1-kuba@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.14-rc5
+X-PR-Tracked-Commit-Id: 54e1b4becf5e220be03db4e1be773c1310e8cbbd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 1e15510b71c99c6e49134d756df91069f7d18141
+Message-Id: <174067889796.1513849.9683426548092311035.pr-tracker-bot@kernel.org>
+Date: Thu, 27 Feb 2025 17:54:57 +0000
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, pabeni@redhat.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The Marvell mvebu binding users already use 'gpio-ranges' and have hog
-nodes, so add them to the binding.
+The pull request you sent on Thu, 27 Feb 2025 08:41:03 -0800:
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.14-rc5
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-index 33d4e4716516..7ed5f9c4dde9 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-@@ -72,6 +72,9 @@ properties:
-   "#gpio-cells":
-     const: 2
- 
-+  gpio-ranges:
-+    maxItems: 1
-+
-   marvell,pwm-offset:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: Offset in the register map for the pwm registers (in bytes)
-@@ -96,6 +99,13 @@ properties:
-       - const: axi
-     minItems: 1
- 
-+patternProperties:
-+  "^(.+-hog(-[0-9]+)?)$":
-+    type: object
-+
-+    required:
-+      - gpio-hog
-+
- required:
-   - compatible
-   - gpio-controller
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/1e15510b71c99c6e49134d756df91069f7d18141
+
+Thank you!
+
 -- 
-2.47.2
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
