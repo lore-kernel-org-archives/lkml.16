@@ -1,59 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C3D2309A3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69F83C1F;
+	Thu, 27 Feb 2025 23:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698031; cv=none; b=dzhCiwj0w0EaL6hHKtI1rIcJMfq0wIV3bPKBEit1FYBuTejRMKqsJBVYB8SVKUAKcvyuBlbkAjrutlXImuUBkeUMRR9+QM9anyi2PrZJE+GAyr7VstiaGRA1WFyW9LLTtFCQFoQ4Q2Vyb47xcaYQqeUhunQPFTZlz8faDY+J/PU=
+	t=1740698121; cv=none; b=ouoTOBR2DqEwtIvqGQOJ5IAOZagE/IOyyltd7QrqHcsXOf4XglPlcetgJiJQI1JfFdljL9mJE9a6fL6kOT3dbp6C72zWN8gOqPJH4OyVIC2/FeNX9IN4XzfpTaMSxo90T3eQzX3SwjRmEkQ21mMiyALYwW8+bmn8aVVdLIY/Y4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698031; c=relaxed/simple;
-	bh=YxE5PbthybxzU4+96qEkLJpOorLgZO9Gyydc3c1Dw4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pF70kBzNpF9XhYVlzwQ0cWl1CvlB4c4sAxVAuo75RWQPpppEs/M2LOO6t+z5hymb97id3D7HGQXK3CSSmr3S9rDLtym5Pd9WvMM1/rBaTy0HxnUamtql+fEaF7mxf8BPQOUKYRdKqnMVNLjMLqGpVsWkH98YKdd6iyQQTYdcm/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e60UYRhq; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740698121; c=relaxed/simple;
+	bh=GZ0IxKXhs5l6xoXe9cqSWDPLEe5+lFTovORNZ21/kXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TMDSc729N5ooDVZPcoJCeAGwv+7fKAneUem574YDv/whURKFRgURqlS/7gLp/r/nBLFqMh5ErykVw7K3yWfwFdDoLSzVUfGNxoLeWqh3KKZex7LFtXI0AEaR8nlX23a9zpfoiTOjJ988uNg5mtvxZmnECF8YwfFudQvk+V+aaHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HClOBCHP; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e60UYRhq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740698029; x=1772234029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=YxE5PbthybxzU4+96qEkLJpOorLgZO9Gyydc3c1Dw4k=;
-  b=e60UYRhq+XeNC/z4ni4Ipp/8HtqYjA7JoAs6YloCIMGyDE/13IeqE9RI
-   8WilKkQrmEOGuM6HiRofDv6r1GvMkRc27lbYrKNRaVsb2FKb05rsdEFZF
-   DE/NYmt6GctqXNs/I6HsDCXhNUoha58KPaDCo17eV94HvJvogPqtoOBkI
-   6EajSpFss0YCK0ed78udnncGnaNn3sMdZs/dDJ5Gi3NZfTpltig0WENAY
-   ZI7/yt/7+WXpei9pjzmHX8/EaiXmzahOq6C/aAJ9gUO6n5TnCdsCj8uTW
-   w7RBpvW1/kbSixXpoHYYQJl0dqiUcWqoCw9fFXKxfIG69aMJrszJrjd5v
-   A==;
-X-CSE-ConnectionGUID: m3/s/QsGS8e2C95QOWS4SA==
-X-CSE-MsgGUID: CIcQ31wGRruv22UcHsAO8g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52246811"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="52246811"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:13:49 -0800
-X-CSE-ConnectionGUID: TtVG0Xe0TKO6gnDOVb1pKQ==
-X-CSE-MsgGUID: nGRSvO7vTByIbJgRhtJWQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="140391404"
-Received: from jgarnacx-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.170])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:13:49 -0800
-Date: Thu, 27 Feb 2025 15:13:42 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: x86@kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
-Message-ID: <20250227231342.jh67quujcd3tgmft@desk>
-References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
- <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
- <20250227184133.lxm43awa2jgdpl4q@desk>
- <15253834-fb89-408f-8269-65413ad29f7a@citrix.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HClOBCHP"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4398e839cd4so16710525e9.0;
+        Thu, 27 Feb 2025 15:15:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740698118; x=1741302918; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version:reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=upHKPxofYs7grxb7NMPS91d4+y/mUbTVdMGymIHFZrw=;
+        b=HClOBCHPZrVy1F9VRFFf5mifS82Cl8/fXkl89eYlDZPaxDyEIfyCo2Fk5TL78aI/tS
+         z+pBa9iEyac9c71LH424V8jLDcytdGIlt/rU/gwijAYsAvx6IMdY+05l+zc9hCA+0SME
+         7N+46kwMaycMG2x+J3T4B6ng7cdT9x7iUCkgIyW3DVaE4vhWu+ven0GCGM4p8+HlPF2G
+         KvYn81MtJyBG12KksB3Xt7Bkd1VoSUK3WfGQ9rNlxz3Ib3wkwqP2qkBzynW8uTnOf+md
+         S5f/CyUO5V08hyZU/jVZocaWLiRLWDx6/Fna+kTN8w+Xnt5WQzIXeKxja9Pm1gfFTzfA
+         Z3Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740698118; x=1741302918;
+        h=content-transfer-encoding:content-disposition:mime-version:reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=upHKPxofYs7grxb7NMPS91d4+y/mUbTVdMGymIHFZrw=;
+        b=XBrxuCpItEbv8UKgglfPGk1FuoA5tq8eVeM4/O2w2TLUh0ZYJCEUM9TaktstEpnvG/
+         64y0CZN84Vsmmk24sjBxt0fKxVIx5FouKGCJFuYt0uzEnsbKmdLhJ0ho4s3CTkshovd2
+         pY+ZxKxz216RHLZMcNxLqb/Mc/zUahgO1cNlMT0KLvJZyiKllVxCbejf0Sv49ocbSj90
+         AsmC5p0iVn4oRolGd+4hgVQk+JyBn9DG15Iso75vV+4BXdW0pQwAISQAyCW8UOqu/OpS
+         Fl8qRHOfUTssHqWd9+k+cJ/EClvaYwqeqE5qOrRQ68jM9fPrhuqJQf++s5g227Jev844
+         gC4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEmRpou+RtUkApBY5Hflj91yEed+p6rN3CPG8iaJxyoRgpW3gE0cxew/mZEJesxMod3PXiqxBwNmWS@vger.kernel.org, AJvYcCWarEp9TLgVbFEIkFafBYumfY/zXloysnK3R18o1d92kRO+6/P1VdGMEHK+iaQx6BLUf8phizl9@vger.kernel.org, AJvYcCX9mYAIQa7DPOxTEcoOHY+GSdhhlF21W172eyMPh8i8Y2+wYWVQt8PqAfVSdH0fjrnWvYjumX6y@vger.kernel.org, AJvYcCXVauBBhgwrHuA33dgV5C7t3KJj1ihJ5qpxuSSwfMtWcCPB17tQ9zDMk2klKFsIMjPKjVBO4w5xVCs5MWk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBrrkoE+CyW0EhkHDYiyqjMdEDOhAcScvVKIv5iJAL6xI6SgxL
+	4oaiRf3pEZ72blHQKcdsETV5yUMYxIKe90WJb5tTeN3RNBa9CHh+
+X-Gm-Gg: ASbGncuq3gbaOBAGtE+t+pzGnmXYdIZyHOZkzdUO3lqRYWL7jAi961XFKWp1pzCgDeQ
+	vl1YtnpByVGdIL20udmRnMIhpL6f5K694o/hkQRWnl7oerBmS+3HF2AWrma5rsNu57AqABP7Y3Y
+	vV6RPydZudL27IHUhDJsZF3JmgrG2t63KKVE2MdZg0LzHq3uChls4OsGqvJkJnbwUcJeg3l/U5H
+	TvsyGhLpyPc4OL1nuKVd/t4FEwkpZIoVSRzsMF/cbFklhVAdps3c6Pd8VCMVQrmBehSC2I7SKXS
+	wFOhYZhtyU5/w6p7r100Wu3KzBNqYA==
+X-Google-Smtp-Source: AGHT+IGUAfAPDhOU2ooDtM65n6XBa2TpX2XimIfiqy6zMSSrRmSGwbZEuWMWPQDFdM+s5D7sbB27iQ==
+X-Received: by 2002:a05:600c:3546:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-43afdda633bmr43534885e9.4.1740698117724;
+        Thu, 27 Feb 2025 15:15:17 -0800 (PST)
+Received: from qasdev.system ([2a02:c7c:6696:8300:79cb:51f4:38ef:97dc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a27aa85sm36558415e9.28.2025.02.27.15.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 15:15:17 -0800 (PST)
+Date: Thu, 27 Feb 2025 23:15:04 +0000
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart()
+Message-ID: <Z8Dx-Jh71VIc4fzm@qasdev.system>
+Reply-To: 418ddcf6-e7c9-4a8e-ba1a-38a83cb2b5f8@lunn.ch
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,90 +77,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <15253834-fb89-408f-8269-65413ad29f7a@citrix.com>
 
-On Thu, Feb 27, 2025 at 06:57:37PM +0000, Andrew Cooper wrote:
-> On 27/02/2025 6:41 pm, Pawan Gupta wrote:
-> > On Thu, Feb 27, 2025 at 12:49:48AM +0000, Andrew Cooper wrote:
-> >> On 26/02/2025 9:03 pm, Pawan Gupta wrote:
-> >>> @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
-> >>>  
-> >>>  #ifdef CONFIG_X86_64
-> >>>  
-> >>> +/*
-> >>> + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
-> >>> + * to the retpoline thunk with a CS prefix when the register requires
-> >>> + * a REX prefix byte to encode. Also see apply_retpolines().
-> >>> + */
-> >> Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
-> >> conditional CS prefix in a manner compatible with
-> >> -mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
-> > You are right, I will update the comment, and also the ASSEMBLY version
-> > where this comment came from:
-> >
-> >   /*
-> >    * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
-> >    * to the retpoline thunk with a CS prefix when the register requires
-> >    * a REX prefix byte to encode. Also see apply_retpolines().
-> >    */
-> >   .macro __CS_PREFIX reg:req
-> >           .irp rs,r8,r9,r10,r11,r12,r13,r14,r15
-> >           .ifc \reg,\rs
-> >           .byte 0x2e
-> >           .endif
-> >           .endr
-> >   .endm
-> >
-> >>> +#define __CS_PREFIX(reg)				\
-> >>> +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
-> >>> +	.ifc \\rs, \reg;				\
-> >> Why are these escaped differently?  Given they're all \r of some form or
-> >> another, I guess something is going wonky with __stringify(), but its
-> >> still weird for them to be different.
-> >>
-> >> Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
-> >> ends up?
-> > Below is the pre-processed source for test_cc() generated with "make arch/x86/kvm/emulate.i".
-> >
-> > - This is with double backslash in ".ifc \\rs, \reg":
-> >
-> > 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \\rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "call __x86_indirect_thunk_%V[thunk_target]\n"
-> >                                                                                   ^
-> > 	This ends up emitting the CS prefix byte correctly:
-> >
-> > 	2e e8 51 c9 32 01       cs call ffffffff824289e0
-> >
-> > - This is with single backslash in ".ifc \\rs, \reg":
-> >
-> > 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "c      all __x86_indirect_thunk_%V[thunk_target]\n"
-> >                                                                                   ^
-> > 	This version does not emit the CS prefix byte:
-> >
-> > 	e8 52 c9 32 01          call   ffffffff824289e0
-> >
-> > I tried looking in gcc inline assembly documentation but could not find
-> > anything that would explain this. :(
+On Wed, Feb 26, 2025 at 02:43:31PM +0100, Andrew Lunn wrote:
+> On Tue, Feb 18, 2025 at 12:19:57PM +0000, Qasim Ijaz wrote:
+> > On Tue, Feb 18, 2025 at 02:10:08AM +0100, Andrew Lunn wrote:
+> > > On Tue, Feb 18, 2025 at 12:24:43AM +0000, Qasim Ijaz wrote:
+> > > > In mii_nway_restart() during the line:
+> > > > 
+> > > > 	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> > > > 
+> > > > The code attempts to call mii->mdio_read which is ch9200_mdio_read().
+> > > > 
+> > > > ch9200_mdio_read() utilises a local buffer, which is initialised 
+> > > > with control_read():
+> > > > 
+> > > > 	unsigned char buff[2];
+> > > > 	
+> > > > However buff is conditionally initialised inside control_read():
+> > > > 
+> > > > 	if (err == size) {
+> > > > 		memcpy(data, buf, size);
+> > > > 	}
+> > > > 
+> > > > If the condition of "err == size" is not met, then buff remains 
+> > > > uninitialised. Once this happens the uninitialised buff is accessed 
+> > > > and returned during ch9200_mdio_read():
+> > > > 
+> > > > 	return (buff[0] | buff[1] << 8);
+> > > > 	
+> > > > The problem stems from the fact that ch9200_mdio_read() ignores the
+> > > > return value of control_read(), leading to uinit-access of buff.
+> > > > 
+> > > > To fix this we should check the return value of control_read()
+> > > > and return early on error.
+> > > 
+> > > What about get_mac_address()?
+> > > 
+> > > If you find a bug, it is a good idea to look around and see if there
+> > > are any more instances of the same bug. I could be wrong, but it seems
+> > > like get_mac_address() suffers from the same problem?
+> > 
+> > Thank you for the feedback Andrew. I checked get_mac_address() before
+> > sending this patch and to me it looks like it does check the return value of
+> > control_read(). It accumulates the return value of each control_read() call into 
+> > rd_mac_len and then checks if it not equal to what is expected (ETH_ALEN which is 6),
+> > I believe each call should return 2.
 > 
-> It's because it's about plain C strings.
+> It is unlikely a real device could trigger an issue, but a USB Rubber
+> Ducky might be able to. So the question is, are you interested in
+> protecting against malicious devices, or just making a static analyser
+> happy? Feel free to submit the patch as is.
 > 
-> \r (from \rs) is Carriage Return (ASCII 0x0d).
+Hi Andrew,
 
-Ah, right.
+How about an approach similar to the patch for ch9200_mdio_read(), where we immediately check the return value of 
+each control_read() call in get_mac_address(), and if one fails we stop and return an error right away? 
+That would ensure we don’t continue if an earlier call fails.
 
-> After AS's macro expansion, \reg becomes \% which is not a valid escape
-> character, so the \ gets left intact.
+Let me know if you’d like me to submit a patch v2 if this sounds good.
+
+Thanks, 
+Qasim
+
+> 	Andrew
 > 
-> \reg should become \\reg or you'll probably get a compiler complaining
-> eventually.
-
-Using \\ for reg like this:
-
- .ifc \\rs, \\reg
-
-is not emitting the CS prefix. I am trying to wrap my head around the
-magic.
-
-Below is the pre-processor output:
-
-	asm("push %[flags]; popf; " ".irp rs,r8,rax,r9,r10,r11,r12,r13,r14,r15; .ifc \\rs, \\%V[thunk_target]; .byte 0x2e; .endif; .end      r;" "call __x86_indirect_thunk_%V[thunk_target]\n"
-	: "=a"(rc), "+r" (current_stack_pointer) : [thunk_target]"r"(fop), [flags]"r"(flags));
