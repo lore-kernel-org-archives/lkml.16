@@ -1,108 +1,89 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AA18F40
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442FF198823;
+	Thu, 27 Feb 2025 16:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673180; cv=none; b=KMl4bghorchrKCBTcRVLyQC9+1IHHy6SPGDkX5Ns2E88a0yCVjTHRbbYRN/Tm3l95LF3dfwVzhvjYKm+lLkmZGEgGwYqa4LQ0Bl9rGKddG7AovT3XDj0PfNvaS8Dg0eKkY18XjB2cqSiimOz2ePAHR3LcTPQJdRozt5I1fSwHig=
+	t=1740673200; cv=none; b=Fc7La2vdDInJ1yxx42zbBF/mMyS90P+uq+JVUbU+mJ254wmEt5UW3N9EKCPa+GYAIXoMxcRLBMF9pHTvrRcE7CWJYcA9QIVksIl5x2DiYUtLoxzrQe1nVHoso7AlOEAss2C50OuWueWkhxXJuvT2AqdFoCK7WXh3PK7Q6BE4dEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673180; c=relaxed/simple;
-	bh=tgV1Wb75cir2EFzuzyM5Ol3nH8g2ES/QqY7HVqZ8SDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BzzOHYQV6WlnV/phIEefnvTVHNTEQ7AMHilcH4g9pzFM5CSJhhlHRm5R0fFQEPE4vsFnZTHiszF7vDreVmzC2/gucfUeTed2pe8KLyUtFUjSusafa77IWrKlSOo6cRX1BWpCDOoKM+1petwSw0Q08QIblA80rs7v3fByQk/DLwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=UfpU/5r7; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1740673200; c=relaxed/simple;
+	bh=y/2Nr36NXLKaDCoN5EX8Qk/6K0dQTdt6rNcVkgwm6DI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=mogavSuZky0wVMMD0zmk88A8OXsTOIeoGWprEQkiTOoOJuTap6pFzT08HjwlkLaEQuO7pjV6+ijhXTcrGRm7o+yS9KpiALwoQe6ZKFUFsGg7AzzyjQaGFaQXEb7qTwdrXQkVq3EY7PeqlqlMJo0X3MmuYdGcndnr9s9xc46mv8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CMtq2638; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="UfpU/5r7"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-471f257f763so11023601cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:19:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1740673176; x=1741277976; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hmwhSsv/XWooEXVhNDscUh2O/fwxCYTE2ewAwwf/PEg=;
-        b=UfpU/5r7s6eOrpxTc3aU4juhWwIK7vi3VdF6vafxELbrPKsI3+YrYEVmwh7++Cok5j
-         9naU+U5hedVqns9ObVPvYY2N43V4kpaRgJSXjrAHBU14SVWU9/XcmNyCylQYp1WYsUv4
-         0vaBthft+6QsGfvNTWkm3yXDod9ibxU6JXK6qhZcVk6xq5yvDM/wqoLK2oyvD+IYjaQZ
-         VPCISNdryKW4cMY5mX8IQVmHWi2Kv5yRsxY1VaPp21yqXogzlebvhSGU6kwYvCC3lKgw
-         a8jW9CFyR5glskhZdtdOf/zuUawHke6IJS2SkIobgypK9r9E5sEuPJvbITqU6yuEkHao
-         Yjeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740673176; x=1741277976;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hmwhSsv/XWooEXVhNDscUh2O/fwxCYTE2ewAwwf/PEg=;
-        b=bWV4IecS6v1DclSySbnUK5Vo1Yqqfj6ePbl8SAvrKETgoZvdmDMqL5lychMLfzYfAy
-         FbVxglnxarwr2Q9PGPTagqyix1yroPr7kYYUEDr4Ig5REtE5vnH4MquNNZ4umO0yxZe5
-         e3dACyjf1GcOPIMQ0kjErD6cQ8u/ib9aFaoB4ldVp/vAjE0+S4qvGEdO26R1h6JroDjp
-         X1zhVTiVUR8my6StW8LLbBMk3vVA5JmYtf121VTJWROX79VWtNLC5pZRBDRXphmTKNfY
-         Deig/4B0OoZv/ruSlSnfwLRso1HMaDVd5yQ4wQl5HNMcPoQfTuMyqrBYAXWbjm1rONZt
-         UEuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVWXpb3rdwFllYO93M5JJXtuAlRtRyLc6T+JmUuzRFbxo1G/6knW3GB/WjjRVq64n4GPgiXuMu5cm4w4sQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWcEIwZPJ7v0wmIyRFajUZTFaTA+k45Q2v65X6+ff9JkdrudpT
-	2Us0oN/Zb63f6eh6fyTTPcQCnHn7UDI2b4i/6zKbkVy2ryzawnDu5WpTgQUuvrU=
-X-Gm-Gg: ASbGncvAFfF6dVRcPKr4pKzZbYRz1EvvtIE//TcsxvzvwItpvS0GcdgheIq8WhnK7JC
-	ylFnMzcIKnjkwD5smIoZdmFVeOo3IjA+RZFRNJfGwcRlebNyh6spFA0V7VPCnvt4I8HcrXGf1kW
-	iIp+0zFSiTHdmbLB5wx2Xm+EKowQwZ2WVuNah59/UW+7lRD68XclJckf9S/zuesGP/QpYvZJDMn
-	kWTzIEjZPzGHuIWiYElrTk++ZgeVrSL8G4RetkiVMshgyuTijKuYG/DBKud1umwgBe4ZXZDWd6h
-	ZHU00lNCrI2oT1QzyLq1VUig
-X-Google-Smtp-Source: AGHT+IHRaHuaosZEAeqgzup+sWlmY+z9YMwzc1/l26fkJ6+wOi0mYWekRfZhL6Q95PpZgS+aTZEHFg==
-X-Received: by 2002:a05:6214:1c4e:b0:6e8:9bcd:bba6 with SMTP id 6a1803df08f44-6e8a0c84efcmr652896d6.7.1740673176094;
-        Thu, 27 Feb 2025 08:19:36 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e897634a77sm11386876d6.16.2025.02.27.08.19.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 08:19:35 -0800 (PST)
-Date: Thu, 27 Feb 2025 11:19:34 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: ying chen <yc1082463@gmail.com>, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/vmscan: when the swappiness is set to 0, memory
- swapping should be prohibited during the global reclaim process
-Message-ID: <20250227161934.GA115948@cmpxchg.org>
-References: <CAN2Y7hxDdATNfb=R5J1as3pqA1RsP8c8LubC4QxojK5cJS9Q9w@mail.gmail.com>
- <20250227155431.2534325-1-joshua.hahnjy@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CMtq2638"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B89D2C4CEDD;
+	Thu, 27 Feb 2025 16:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740673199;
+	bh=y/2Nr36NXLKaDCoN5EX8Qk/6K0dQTdt6rNcVkgwm6DI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=CMtq2638oo+hngEcmTw3lpKtE1Ao9udiTyUaYD9Fk5U1zOMK5CPffOxsoWZomLbN6
+	 MIGAVVskGyLKqBo0tlL+PFtDfie2igvMcG6T/n+tflYep44X8yx4EAQc9gXHmkAq8Q
+	 muFLchyyZzpgQ9CFlfGwsv5Ls5xC6rywQk6DGTT4qDBPczWu3stHax7JUH0svMuHQV
+	 am+raCymkOcyWstED+Aoa2XGsZuUyjvH6xhtJ+iUWMrDdRsHHTLwUAIGg5kdyS/F4t
+	 utQ1WTHBeN5Ev7tFujrhHS0fKDvTgwEezxL6klihaZx7r8hsP2aJjXa9DKiPYoz7kP
+	 +zEqm9zUpo6Ng==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB3FA380AACB;
+	Thu, 27 Feb 2025 16:20:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227155431.2534325-1-joshua.hahnjy@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v1 0/3] Optimize bpf selftest to increase CI success
+ rate
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174067323175.1484560.1369764651554494631.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Feb 2025 16:20:31 +0000
+References: <20250227142646.59711-1-jiayuan.chen@linux.dev>
+In-Reply-To: <20250227142646.59711-1-jiayuan.chen@linux.dev>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, john.fastabend@gmail.com, davem@davemloft.net,
+ kuba@kernel.org, andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com,
+ ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+ haoluo@google.com, jolsa@kernel.org, shuah@kernel.org, hawk@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mrpre@163.com
 
-Hello,
+Hello:
 
-On Thu, Feb 27, 2025 at 07:54:27AM -0800, Joshua Hahn wrote:
-> On Thu, 27 Feb 2025 22:34:51 +0800 ying chen <yc1082463@gmail.com> wrote:
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-> Previously, when the system is under a lot of memory pressure and is
-> facing OOMs, global reclaim can create space for the system and prevent
-> going out of memory by swapping, even when swappiness is 0. If this patch
-> removes that check, it would mean that global reclaim can no longer
-> "bypass" the swappiness == 0 condition.
+On Thu, 27 Feb 2025 22:26:43 +0800 you wrote:
+> 1. Optimized some static bound port selftests to avoid port occupation
+> when running test_progs -j.
+> 2. Optimized the retry logic for test_maps.
 > 
-> I am also CCing Johannes, who is the original author of this section [1],
-> who clarified in the patch that swappiness == 0 has different meanings for
-> global reclaim and memory cgroup reclaim.
+> Some Failed CI:
+> https://github.com/kernel-patches/bpf/actions/runs/13275542359/job/37064974076
+> https://github.com/kernel-patches/bpf/actions/runs/13549227497/job/37868926343
+> https://github.com/kernel-patches/bpf/actions/runs/13548089029/job/37865812030
+> https://github.com/kernel-patches/bpf/actions/runs/13553536268/job/37883329296
+> (Perhaps it's due to the large number of pull requests requiring CI runs?)
+> 
+> [...]
 
-Yes. It's been the behavior for decades that swappiness is merely a
-preference, and that the VM *will* swap to avert OOM. You would break
-users making this change.
+Here is the summary with links:
+  - [bpf-next,v1,1/3] selftests/bpf: Allow auto port binding for cgroup connect
+    https://git.kernel.org/bpf/bpf-next/c/27e3162a0364
+  - [bpf-next,v1,2/3] selftests/bpf: Allow auto port binding for bpf nf
+    https://git.kernel.org/bpf/bpf-next/c/dbe7d46ed109
+  - [bpf-next,v1,3/3] selftests/bpf: Fixes for test_maps test
+    https://git.kernel.org/bpf/bpf-next/c/09de329523c8
 
-If you want to hard-exempt cgroups, set memory.swap.max=0.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-[ Yes, it's inconsistent. But it's really cgroup_reclaim() that is the
-  oddball in this. Also for historical reasons... ]
 
-> > when the vm.swappiness is set to 0, global reclaim should also refrain
-> > from memory swapping, just like these cgroups.
-> > 
-> > Signed-off-by: yc1082463 <yc1082463@gmail.com>
-
-Nacked-by: Johannes Weiner <hannes@cmpxchg.org>
