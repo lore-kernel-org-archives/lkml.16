@@ -1,33 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E20F1B424D;
-	Thu, 27 Feb 2025 18:24:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACB91F417F;
+	Thu, 27 Feb 2025 18:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740680702; cv=none; b=ZtEYoVWwcBLuauXD1wtV9eogV4Kde25rBQqX9nyn8PD3uJrIhFew4L0LSEBl5Ve2T4pOxO/mn1N7oODy3PiD2uMOmg3VVhQ166GkhjJLlXcsec/VF32ON8fDj4FtX1OZaNvznGfj1Ed1lhhff7KqFd/LMCRtX2FFHrVMmNw9TeY=
+	t=1740680703; cv=none; b=LoBfkI3JMRj1/PBfyB7O0IKXeSlM3COCXLVxYXp/c71/0A/4FfHIkKmUdz/QybHHVyOlH7ahEZ+qWwcnJfTHDmbHBpzn3hY+6k7bg1VJe3qrCGAKolvagcmTvyXdGvwGpYd5n8U0WFt/MO1E7Xl+3qN53p9ATG60vorHj25Povk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740680702; c=relaxed/simple;
-	bh=Lvek3m5sSarVBt1mZvYo0h0/03pAyz6Vhrw0tSenfog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oAruJIxoo7W6c8Fbvoof27WkOK74P4HcJ2CHklkB+MOWCmxd3W8mB6amH1oXZugLd2ZZSyrwCvV/qoTYTLZhbHvFW6nUtA915Br55V7oSjOhIJaW1ty3zqCJFCQHbySGzWazjMwJIiwMtbDvYr3zxhJLfNJbRwlsSML+ehJmSmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cguhkLkE; arc=none smtp.client-ip=217.70.183.199
+	s=arc-20240116; t=1740680703; c=relaxed/simple;
+	bh=FjyNU5ExoYwhPm51YPLvhUn8V+V872FiVbCAE/nMjVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X8uBa0Bz7IQrlRzI6nCYZ4euqZIrRGn390hXHdDChbV/FgYeDxYSCESPKiyIWLklz4U7LVN7zN4gucnsxn9yG7faZhh/Dm/v30C/GYcd4Bq4zrVR38yL1xelExxQiFKgQmpsxCDuNDfoEBCShTbMxgw5f3igiHBuNAb2yjxKIFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VlQWuXsI; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cguhkLkE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2139C44264;
-	Thu, 27 Feb 2025 18:24:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VlQWuXsI"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E3349443B9;
+	Thu, 27 Feb 2025 18:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740680697;
+	t=1740680700;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mvmJs37OPUgPlZajW2Yxe5MxDWODiGxLsnHmAoScS7E=;
-	b=cguhkLkEpqUFw+CYfIqWVqxKb8bqrtFmGcsGFUHkWFPZXroBBJ6BOEJTnmfx+rpusXkH08
-	ExOB4W0ztXqw/YLSqBANb3g3BTu1PYZz1W3ilR/XyqLT6rmOmbsAD7KiAp07kxyZkzuxqG
-	m8q9PX9kKYyB0k/CY0UXU1SgNZsNhm2yKhTc2glzCUqqkGrpa9dA5OP5f/MbWgKpz5FYw8
-	URsPFrxrU8JleSQz73V08igUul72wBaz8c6ZmZDV6+wf+oncsAPPRQoNZznfmgWTRT5o9L
-	cXs/yi397mPLOFcJbINaNJSfaBpSIrEfnWdwOg9KlCOriPCqy33kchVXpaJ/dw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rbCH8LuhMXgUlCeD9Wl9UKbqWQuv1zcU/Fe3CugVy0k=;
+	b=VlQWuXsIWTisQisKY3jiDM8hLEsOTkzTJgiNbC7wy+kc+iMnH7uIZOzBXL/ELc1IlBSjSx
+	lpCR8aYeHu2vwf2ceCnMVUHxFEZWhg3CG9OpHIqbcQjgqg+MLnaKEnJTV/PWt+cymW7Je2
+	20XBlIECw5G2tqU5TmTR7wJ5OrRRi37D8DESSiGJfLblut3Z3Wjid+27boMfBmIOoTBLya
+	GNoIqB4suq/tTkurVuYHffc01R3sO1NtpNzse4YX/zEzyXbDq1/B/6dizJFM/nQfoon+mG
+	ZliDdf/kSlYFSgU8SsW0rT1clgPX03bd0fYxPmOYTtt6Hg3daFcnjcn2f6Km0A==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -50,10 +52,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>,
 	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>
-Subject: [PATCH net 0/2] net: ethtool: netlink: Fix notifications for
-Date: Thu, 27 Feb 2025 19:24:50 +0100
-Message-ID: <20250227182454.1998236-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net 2/2] net: ethtool: netlink: Pass a context for default ethnl notifications
+Date: Thu, 27 Feb 2025 19:24:52 +0100
+Message-ID: <20250227182454.1998236-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250227182454.1998236-1-maxime.chevallier@bootlin.com>
+References: <20250227182454.1998236-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,54 +67,100 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkedujecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehtdehueefuedtkeduleefvdefgfeiudevteevuefhgfffkeekheeuffeuhefhueenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvt
- hesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehprghrthhhihgsrghnrdhvvggvrhgrshhoohhrrghnsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkedujecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehprghrthhhihgsrghnrdhvvggvrhgrshhoohhrrghnsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-It has been found (thanks to Parthiban) that the PLCA ethtool commands
-were failing since 6.12, due to the phy_link_topology work. This was
-traced back to the ethnl notifications mechanism, in which calls to
-ethnl_req_get_phydev() crashed in the notification path following a
+In some situations, it's useful to get some context passed to ethnl
+notifications, especially when we perform a ->set followed by
+ethtool_notify().
+
+One such case is when the ->set targets a specific PHY device. The
+phy_index of the PHY may be coming from the request header, and we want
+the followup notification to be specific to the phydev we just
+accessed.
+
+This commit leverages the const void *data pointer that's passed to
+ethtool netlink notifications.
+
+In our case, and only for default ethnl ops, lets use that void* pointer
+to pass a context. The context is filled in the ->set request path, and
+used in ethnl_default_notify() to populate the req_info with context
+information.
+
+For now, the only thing we pass in the context is the phy_index of the
 ->set request.
 
-The typical callsite for ethnl_req_get_phydev() looks like :
+The only relevant user for now is PLCA, and it very likely that we never
+ended-up in a situation where the follow-up notif wasn't targeting the
+correct PHY as :
 
-    phydev = ethnl_req_get_phydev(req_base, tb[ETHTOOL_A_XXX_HEADER],
-				  info->extack);
+ - This was broken due to the tb[] array being NULL for notifs
+ - There's no upstream-supported scenario (as of today) where we have 2
+   PHYs that can do PLCA (a BaseT1 feature) on the same netdev.
 
-as 'tb' is NULL in the notification path for the ->prepare_data ethnl
-ops, this causes crashes. The solution for that is to change the
-prototype of ethnl_req_get_phydev() to perform checks inside the helper
-(patch 1).
+Fixes: c15e065b46dc ("net: ethtool: Allow passing a phy index for some commands")
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ net/ethtool/netlink.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-While investigating that, I realised that the notification path for PHYs
-is not correct anyways. As we don't have a netlink request to parse, we
-can't know for sure which PHY the notification event targets in the case
-of a notification following a ->set request.
-
-Patch 2 introduces a context structure that is used between ->set
-requests and the followup notification, to keep track of the PHY that
-the original request targeted for the notification.
-
-Thanks Parthiban for the report (not on netdev@ though).
-
-Maxime
-
-Maxime Chevallier (2):
-  net: ethtool: netlink: Allow NULL nlattrs when getting a phy_device
-  net: ethtool: netlink: Pass a context for default ethnl notifications
-
- net/ethtool/cabletest.c |  8 ++++----
- net/ethtool/linkstate.c |  2 +-
- net/ethtool/netlink.c   | 21 +++++++++++++++++----
- net/ethtool/netlink.h   |  5 +++--
- net/ethtool/phy.c       |  2 +-
- net/ethtool/plca.c      |  6 +++---
- net/ethtool/pse-pd.c    |  4 ++--
- net/ethtool/stats.c     |  2 +-
- net/ethtool/strset.c    |  2 +-
- 9 files changed, 33 insertions(+), 19 deletions(-)
-
+diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+index 734849a57369..6691a8f73bfd 100644
+--- a/net/ethtool/netlink.c
++++ b/net/ethtool/netlink.c
+@@ -663,8 +663,17 @@ static int ethnl_default_done(struct netlink_callback *cb)
+ 	return 0;
+ }
+ 
++/* Structure to store context information between a ->set request and the
++ * follow-up notification. Used only for the ethnl_default ops.
++ * @phy_index: If the original ->set request had a PHY index, store it in ctx.
++ */
++struct ethnl_default_notify_ctx {
++	u32 phy_index;
++};
++
+ static int ethnl_default_set_doit(struct sk_buff *skb, struct genl_info *info)
+ {
++	struct ethnl_default_notify_ctx ctx = {0};
+ 	const struct ethnl_request_ops *ops;
+ 	struct ethnl_req_info req_info = {};
+ 	const u8 cmd = info->genlhdr->cmd;
+@@ -691,6 +700,7 @@ static int ethnl_default_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	dev = req_info.dev;
++	ctx.phy_index = req_info.phy_index;
+ 
+ 	rtnl_lock();
+ 	dev->cfg_pending = kmemdup(dev->cfg, sizeof(*dev->cfg),
+@@ -711,7 +721,7 @@ static int ethnl_default_set_doit(struct sk_buff *skb, struct genl_info *info)
+ 	swap(dev->cfg, dev->cfg_pending);
+ 	if (!ret)
+ 		goto out_ops;
+-	ethtool_notify(dev, ops->set_ntf_cmd, NULL);
++	ethtool_notify(dev, ops->set_ntf_cmd, &ctx);
+ 
+ 	ret = 0;
+ out_ops:
+@@ -749,6 +759,7 @@ ethnl_default_notify_ops[ETHTOOL_MSG_KERNEL_MAX + 1] = {
+ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
+ 				 const void *data)
+ {
++	const struct ethnl_default_notify_ctx *ctx = data;
+ 	struct ethnl_reply_data *reply_data;
+ 	const struct ethnl_request_ops *ops;
+ 	struct ethnl_req_info *req_info;
+@@ -776,6 +787,8 @@ static void ethnl_default_notify(struct net_device *dev, unsigned int cmd,
+ 
+ 	req_info->dev = dev;
+ 	req_info->flags |= ETHTOOL_FLAG_COMPACT_BITSETS;
++	if (ctx)
++		req_info->phy_index = ctx->phy_index;
+ 
+ 	ethnl_init_reply_data(reply_data, ops, dev);
+ 	ret = ops->prepare_data(req_info, reply_data, &info);
 -- 
 2.48.1
 
