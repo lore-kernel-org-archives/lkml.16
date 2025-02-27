@@ -1,78 +1,94 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A522171A;
-	Thu, 27 Feb 2025 13:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9AC22171A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662319; cv=none; b=KxqkVxsh5g7KEajy6xJxebRO8dnLLI3xR4cEYeoNgjBswaDvJCN6th4bMUSk/kl3p8BIpN77O6KGKXXvYxyEJjVQxj9czHaDqJ6EJ0zVuU+uCUoWKnd4kqult4ZmbSja7jb9quftUdGVDRF7b9dyRAxiNxw8uO3WY5rb2von3sc=
+	t=1740662386; cv=none; b=EBC6C388eL//dG8GCrREfviZb0fqVXxgm/v0zAkNcgwc/Xz06dFKjxJ004RQsBvKYmpGtfTdLbqszGzOj+84arT0qzKim0J6ybjimvRhv3GkaPYyV/3dmiMJhJxBGsvaBRZkWz4sUWIpT4nlNVm0UvGcSmI4aEpM7lQQro36gnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662319; c=relaxed/simple;
-	bh=mNzyP2i8s5xxojWRGpta1D3Ukh8tpM3eSID4p4vReCc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qZh1BLAAks4RIzQhdvncuolk5OI5Nd5ewCzKQ4c2ecFKb09xLhqRHiEBK3khMbUNtrw3YRGAJ6VHkvKfk/uFwnc2SoMdctMSwvRaI+RgXtvs/OqEwVlZZt+sE80XylAie7vCmDP5Be8f6BEO3wglBco7/dCIsrJ9Uzt60piNFLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=I/ckulVE; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740662386; c=relaxed/simple;
+	bh=6FHmEO5ROtitiqwvaGMNwbr+tjLVFIR2Yo8O643eJFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IjF73ej2/rXzEVOAUmwl54M5mank3ZK7s+3/PJP3HoZxZI9pWzaBaxZlHSLJk0SzakoJHeMt1hQ1qth7p+zbAAfuHC7yF9cVjd8Q9U6cU8awAtUa7MSUvuYuJaWvC4SThyxnrfv2tiy5St6SbHy9WDf5g/naP2CKyiYGenFoNFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4RWwypsh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=63ZblLAF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="I/ckulVE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=odRe86wbBsQkcjq+MlDDcHZ1ydHEZEkP/u4cZxHpKl8=; b=I/ckulVENplgJLCSPkpinMhiHF
-	cya+hcSVQSocal22jUocKva6Y3YPPggHj7N8rUMd6sxpwPiQysYVQV4QX9YftUu9UwxqVX/+7yCNZ
-	h9Ey4lCbqJOfcVi1d/L6Pz4jKJBTnQ3j7pGN7HDT5e3kB8wsPqwtK9JJdCGkNYuUr1xY2MUBAPW6A
-	zmsr6Qh1i6iT1iog0K00WDYJmA8LtkJdEEG4a25Mt0yFwo0Z/F+GnNl/7AmJK6pv0ZpQR9xKNHOPn
-	Hd8DfmcCmhPB7AXbHCsRyIy1gyD5m/K2nFDz9iR9mIHev3WHc/CBz9/jxvbpPvAu6h1EkEvFCI9Jj
-	v1KAeXGg==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tndmV-00012t-UU; Thu, 27 Feb 2025 14:18:27 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: linux-rockchip@lists.infradead.org,
- Kever Yang <kever.yang@rock-chips.com>,
- Finley Xiao <finley.xiao@rock-chips.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-pm@vger.kernel.org, Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Ulf Hansson <ulf.hansson@linaro.org>
-Subject:
- Re: [PATCH v3 2/2] soc: rockchip: power-domain: add power domain support for
- rk3562
-Date: Thu, 27 Feb 2025 14:18:27 +0100
-Message-ID: <3210955.TQGk6oTFT5@diego>
-In-Reply-To: <20250227105957.2341107-3-kever.yang@rock-chips.com>
-References:
- <20250227105957.2341107-1-kever.yang@rock-chips.com>
- <20250227105957.2341107-3-kever.yang@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4RWwypsh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="63ZblLAF"
+Date: Thu, 27 Feb 2025 14:19:40 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740662381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=632v7CpS3QPt9HhoeHrpEHCN5Oo6OBT/aBsHaC13wJY=;
+	b=4RWwypsh/b1DxIEgQSwJa7inry57ujp0PresSVkMyspBaFU1HX4PromBZGoY9YKqR7TVwD
+	H37uGAU5gQMHgDv3T9gb132AhFZ5dEW+I+r9Tm9zQ5WUhCK6qn7zGiA0Ba94xqyOIaMLB0
+	0od4tH93Zi6Agm7bGSoscoq2yx4A5KMdc2O7nNuNHkVK62RERbDb8jbatYYn6I5v0E6UjJ
+	l8fgMsKn0PP0fSSzUj6rApDjBqkAlNvmG2sQmZ16MnwIliklQyl8DJPRfMj6qR9zPNiK+J
+	7vQWH/jPkxGKQlY7dluCf3BocQcXJhKNmTBq9ROA+69L7nUISTrtM3I67geuAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740662381;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=632v7CpS3QPt9HhoeHrpEHCN5Oo6OBT/aBsHaC13wJY=;
+	b=63ZblLAFx8Q9BJMFP8YmpzPUbtp3qT/fznqsvToR8Xgeiv5Ra2TQxxIHHfuAaNuNSqCwuf
+	AIblV8hsvxwf44Bw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>, Kairui Song <ryncsn@gmail.com>,
+	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 14/17] zram: permit reclaim in zstd custom allocator
+Message-ID: <20250227131940.6yzjRQmL@linutronix.de>
+References: <20250221222958.2225035-1-senozhatsky@chromium.org>
+ <20250221222958.2225035-15-senozhatsky@chromium.org>
+ <20250224091036.Y9fHrKr-@linutronix.de>
+ <vh3uzody42dfcfduwrhnha3wrjm6wi7awwferzed35zuodn4zu@txo4zpftf2uq>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <vh3uzody42dfcfduwrhnha3wrjm6wi7awwferzed35zuodn4zu@txo4zpftf2uq>
 
-Am Donnerstag, 27. Februar 2025, 11:59:57 MEZ schrieb Kever Yang:
-> This driver is modified to support RK3562 SoC.
-> Add support to ungate clk.
-> Add support to shut down memory for rk3562.
+On 2025-02-25 13:42:55 [+0900], Sergey Senozhatsky wrote:
+> On (25/02/24 10:10), Sebastian Andrzej Siewior wrote:
+> > On 2025-02-22 07:25:45 [+0900], Sergey Senozhatsky wrote:
+> > >  static void *zstd_custom_alloc(void *opaque, size_t size)
+> > >  {
+> > > -	if (!preemptible())
+> > > +	/* Technically this should not happen */
+> > > +	if (WARN_ON_ONCE(!preemptible()))
+> > >  		return kvzalloc(size, GFP_ATOMIC);
+> > 
+> > This check works only on preemptible kernels.
 > 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> I'm not sure this is true.
+> 
+> > If you run this on !PREEMPTIBLE kernels, preemptible() reports always 0
+> > so that WARNING will always trigger there.
+> 
+> I thought that preemptible() depends on PREEMPT_COUNT, not on
+> PREEMPTIBLE, because even on !PREEMPTIBLE preempt-count still
+> holds hard/soft irq counts, etc.
 
-After the move to the pmdomains subsystem patch subject should be
-	pmdomain: rockchip: add power domain support for rk3562
+Yes. The preempt count is always there to hold NMI/ HARDIRQ/ SOFTIRQ.
+However only on a preemptible (that is with PREEMPT_COUNT) kernel
+preempt_disable() does something. So on !PREEMPTIBLE kernel you don't
+see spin_lock() or preempt_disable() reflect in preempt_count. Unless
+you enable debugging which force this option into a non-preemptible
+kernel.
 
-with that change
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> I ran CONFIG_PREEMPT_NONE=y zram-zstd tests and didn't see any
+> warnings.
 
-
+Sebastian
