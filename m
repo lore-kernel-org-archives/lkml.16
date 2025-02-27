@@ -1,128 +1,81 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA5922FE02;
-	Thu, 27 Feb 2025 12:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5FD22F38B;
+	Thu, 27 Feb 2025 12:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658196; cv=none; b=gN+805SE2ok65kHlshFngtYFgEk3sSxbQ1oocJLRoEbI/4/je2YC+LgNnBuBtdfoDtbJQKs4uCzoge6ouUOWvOSzvGUxJC9nALunX5NsKNg0eLTVb3XORYvK9RMVJISmehzl32P/aNc26w21cUeM/Wh+uwbL/b7vX1uzlkEBFEQ=
+	t=1740658198; cv=none; b=TrqtDh4OTKlPTLw8mRjl7KDK7aMStvXlf19JpbV4hTryXzoqyBTQqmBmtg5gBeKw+Az4dVGyGtFSt7bheJD4WPFy1fMooizDBq9LICJ6YCT43chOibLEKaoF8LRi+mko1pcnyE44zVodT7+E3RK2vGRZ//prJ7csnzUnAeV3a5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658196; c=relaxed/simple;
-	bh=HT+SDIfQlIRms8FxF8pg1Dd1jnfWIMjWKWXnYtBy3qs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ICHhVqrdhP5+nhtDsCvO9srq+4s4eLV8oBB5e+2zYxb8UCqJw8+upoxk2Zij3WYfl2+RHgxup8JdaJ5IDVMwjOY0jTvJDXS4HE8mTe3PzvDuCxVs/huTEvd1VnZWF/5uh7IiIRP0a9ybJqFNFuMm9UNaLR/2IAAQrEzdU3qNeB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CagpZrqH; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740658198; c=relaxed/simple;
+	bh=yqRB5lzPN6YFf0epR/fplLg16wEnwUaEt6MfRnoCkG0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b8reY4NJMQ2vuFF5vuEMxxAUR+yF3atuKN1qHTZSBzL0pY4cJ8NLjdHmRPEhkEo0KX1EvfhRMvFK1gWPOk/q5HSvG54HW2nExXxV49HfmQPYn7tHEzODaqVNE+STs6Q2HY8lb3va5Nq3cn+IWcK9Sbt/Jvy7FN8PUKAxHQkbxw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BvHmvkBD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CagpZrqH"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22185cddbffso33991755ad.1;
-        Thu, 27 Feb 2025 04:09:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740658194; x=1741262994; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0GY7dlVupIydN6arxqzciNDGAGAOkBdBUMtuBEAPCp4=;
-        b=CagpZrqHA4XYYzAho2K/Bpwuw+bNhGjaSlobOTdgCZbknB+cT/f0FZd/Rz5OZPBMxA
-         +jBODvaAeSm5TE9sYjwOcpV8SgU3xJHNwT/lSeSHUb1g41XmiC8r5f5A+wrmvULzaE84
-         xxLZR9lTkVsj59zF0ToYZTzJFm/igk294VeXPGAcpzr+qkDUxLYCFz/sGgblhJyFMZ7H
-         IR1ywuWWdXFt8TcXe3AI3YWAQ1YWhOLOSUhUpn97fU2qf5LitlRuU7w44XANUqdN9SPU
-         C+99Es4A19IVOL1dhEPMK6brsm+miKAQEynO89dWNP6POkxjGfh7OxuczczAXqHW5n3U
-         /seA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740658194; x=1741262994;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0GY7dlVupIydN6arxqzciNDGAGAOkBdBUMtuBEAPCp4=;
-        b=aqNfKgGos5zujCtUDWM9zXMAp+jsYOskMd0i/h7J/sTBscDxKxQEAfCcadTRAUFr9H
-         /D7l7PuN6QLMIVDH1KLaDHI8PIF5aP5OVoLRV5J4TEFqVZYN9vPUYu7ieWz4FuOHstow
-         LXwkoTgudh92g9gTeg15DHYnUYQmeNDyKM4uc1mY6BA+b7MNDzFvtIOZYz5yQuiTqV4n
-         N6tH8OA4eO7uKWkgHdN6/pR5SrGuk631xj6O+n0qMw/wVsIYskDSJK4JJhULZLqNRYJf
-         xkZV0JQEC0XQR7YedocprDE5Puqm54FmQbC38mw/U6XxqCyf2rKpEl9JmU9L2JiRiEBn
-         USZA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0qYQLyjO0WIZVlVAsJkj2qRvl52N+fz/ZSClbbf4SraC9t/geFJKxEP9VjgJH55wdzNeeFuBAD2Xn@vger.kernel.org, AJvYcCWvO/dsNK4iVQ3nyCOJXAOtfVxNta9CCx4rMDGe0EHbrRZpEnmxgpueYNjctrkuRxodoJW8NAAgorY3RKVu@vger.kernel.org, AJvYcCXDVrKoYcDbaPPCi4XkSp/KaC5crYkd9fHoSGdDSZSaKAkFxpZPuCGdN3lqxQrEwDhnjFV7aeOv7Xk4r4Y=@vger.kernel.org, AJvYcCXTIBRBUDPnwQR/Tai5ENLGS+VLQTXBg8+d9TJ7Ur+ng//S1GUfO5+V53jWIVERMSpkZA+TKhw/PMXmM+M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH31Jyfva8YIreKoZMQlTah8aslhFlQ9DcljVmwnjUozNDtfLb
-	xK0vLKrSNfSDjuHOTT71oB2G+RbdK6LcZ1qzzJIseOwaz+t/EFQ5LDTtRjtJ
-X-Gm-Gg: ASbGncut+msn0/KV7qin7PkDeCWuhdYFc/8XkQQHmA/aV02SB3gh+cB1TrcPguVVR9+
-	lVoKMIN5FOJ7ABRCojQMPcobg5MBr7Tdtde0Lfr+r7A01K2I99u1FmKlYxisRXlL/Ka4YQxtiIj
-	eItyN3yAaYouoV1mXpwLMCqwC8f93iYe7pxrmTWKkoTz/WPZaFX7tz6/Uw8HaECzI4wM0xQAOPj
-	ay9Yau/XBy2CGxrrEna+Cv125B2G5CMPj2pRldbKMMp9wrjMWhSqQCXyP2u15DAKmSoKdWhkGvV
-	nJeggp5NTXIUXhAJwkrKRcAxMyBW7JnH0xb3EDZy45mCBYbnbAaNosVdaB2hKJ8GSAj2lINFtk9
-	ea3OUMWNOsJ9ckL3Nc5nY
-X-Google-Smtp-Source: AGHT+IEFQRcfJpHWiQLgG25ggWIxdqRMPSAyoARJI+dYR0aKvDD/rhtwtZPwoj9aqVqXC7GAjuuXuw==
-X-Received: by 2002:a05:6a21:7899:b0:1ee:d664:17a4 with SMTP id adf61e73a8af0-1f2e389ceddmr4438228637.10.1740658194534;
-        Thu, 27 Feb 2025 04:09:54 -0800 (PST)
-Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de19cdasm1074217a12.24.2025.02.27.04.09.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 04:09:54 -0800 (PST)
-From: James Calligeros <jcalligeros99@gmail.com>
-Date: Thu, 27 Feb 2025 22:07:35 +1000
-Subject: [PATCH v3 08/20] ASoC: dt-bindings: tas27xx: document
- ti,sdout-force-zero-mask property
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BvHmvkBD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBDDAC4CEDD;
+	Thu, 27 Feb 2025 12:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740658197;
+	bh=yqRB5lzPN6YFf0epR/fplLg16wEnwUaEt6MfRnoCkG0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BvHmvkBDxKI81m8GYkC48N4ySh3HjxU/wMO/QOWxsXxRBQM7yvSQ7KwsaO+ukxM5l
+	 6NflidsF3RlQOPTyL0WzQrB8ZkBpiPTC3otpou6w7NYEoCf34s8NhtzyP437jSLBsQ
+	 uzUzXXMkNj47VP+lkgX5e0zcwNTivGzK9335PlxsUxM76h49r5Jtv7H4S/vvbXw156
+	 gxzkxbrazRaz76/5tp2Ug5j2E0I37BLWOHLeeuK58392O1U27gcVBfnddrre2I0JwC
+	 ICTVZRjbNdfNF38m+yEJhqtm9XtQIqX37VgG9/JWwNz7Q/j3OKH+lSx5bCXtVAictC
+	 co8bKMPuJqtxQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB19C380AA7F;
+	Thu, 27 Feb 2025 12:10:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-apple-codec-changes-v3-8-cbb130030acf@gmail.com>
-References: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
-In-Reply-To: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
- Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
- James Calligeros <jcalligeros99@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1199;
- i=jcalligeros99@gmail.com; h=from:subject:message-id;
- bh=HT+SDIfQlIRms8FxF8pg1Dd1jnfWIMjWKWXnYtBy3qs=;
- b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkHQk9ZPbvoOmHlxuaJDZfX8Trd8DLc4Bz8IH46h9P5+
- vvrY5/qdZSyMIhxMciKKbJsaBLymG3EdrNfpHIvzBxWJpAhDFycAjCR+k6G/zUTQotfiQo+yQvm
- 5Hi5Y1p4ILN396dUp9dLj5aWKDDfCWD4HzZhlsL1snrfNYtM+x++1dF5LymzNXnbw7QF6Wrrpjz
- axwQA
-X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
- fpr=B08212489B3206D98F1479BDD43632D151F77960
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] pktgen: avoid unused-const-variable warning
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174065822975.1403860.8629807772029389054.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Feb 2025 12:10:29 +0000
+References: <20250225085722.469868-1-arnd@kernel.org>
+In-Reply-To: <20250225085722.469868-1-arnd@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, arnd@arndb.de, horms@kernel.org, ps.report@gmx.net,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-TAS2764 can be programmed to zero-fill/ignore certain TDM slots on a
-shared I2S bus. Since this is a per-chip setting that is a consequence
-of how it is implemented on a specific board, express this as a Devicetree
-property.
+Hello:
 
-Signed-off-by: James Calligeros <jcalligeros99@gmail.com>
----
- .../bindings/sound/ti,tas27xx.yaml       | 4 ++++
- 1 file changed, 4 insertions(+)
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml b/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
-index fcaae848e78a1137e4d44f98258207bba68772b9..d65a278c92873b00bf357fb26b430386e7860e54 100644
---- a/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
-+++ b/Documentation/devicetree/bindings/sound/ti,tas27xx.yaml
-@@ -50,6 +50,10 @@ properties:
-     $ref: /schemas/types.yaml#/definitions/uint32
-     description: TDM TX voltage sense time slot.
- 
-+  ti,sdout-force-zero-mask:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Mask of TDM slots to zero-fill on a shared I2S bus.
-+
-   '#sound-dai-cells':
-     # The codec has a single DAI, the #sound-dai-cells=<1>; case is left in for backward
-     # compatibility but is deprecated.
+On Tue, 25 Feb 2025 09:57:14 +0100 you wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> When extra warnings are enable, there are configurations that build
+> pktgen without CONFIG_XFRM, which leaves a static const variable unused:
+> 
+> net/core/pktgen.c:213:1: error: unused variable 'F_IPSEC' [-Werror,-Wunused-const-variable]
+>   213 | PKT_FLAGS
+>       | ^~~~~~~~~
+> net/core/pktgen.c:197:2: note: expanded from macro 'PKT_FLAGS'
+>   197 |         pf(IPSEC)               /* ipsec on for flows */                \
+>       |         ^~~~~~~~~
+> 
+> [...]
 
+Here is the summary with links:
+  - pktgen: avoid unused-const-variable warning
+    https://git.kernel.org/netdev/net-next/c/af4a5da8ed54
+
+You are awesome, thank you!
 -- 
-2.48.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
