@@ -1,108 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A16270054;
-	Thu, 27 Feb 2025 19:20:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272E926F44E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684026; cv=none; b=ZFPQ748aSKrZStag8W70UW46p8EPsOhP85gauW+6sFfCVBNa54G7tx2gmqGDHjVKG3YFd7mXngBcTMb0h85rRx6RSzR4Pz/NxZN9vfVQYqDcxqdZksk1ZU0uaGiy/XJD4tHYL8aV/5n0d8e1f7Itzz2oatscnfIpjWnaum0+Kd0=
+	t=1740684034; cv=none; b=BUHNk0R9Vpu3yWMR2XvlJlw+ThRZ4eOdhZjfOSnerBbAl6/W+hwYxix+41FWozRe9/do5hluFqdGfnZlrHX+HCGaieklWP4CLo94PVdAVNWXUuTR3BTI7TDyKd7Veg58gG/1toWO1QTGteDfQR5GPH05Do7g6ByIYu7tCRalKKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684026; c=relaxed/simple;
-	bh=xtfpr7hHwam7QkTVY8/dfHG6gdnWBz3qmp5PmCCeyqI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=h7v+BHRsMU0hL5GrNiV0eRPUmYO3ncHF3u0JGVkzw7ppvA5uNacm4HjCv5tDAZTL4cTO1tAkJPEr2SGDUWrH+7kQ3DzGt0rVKTnTXYU1cmRD3zJaJy4N4J0tZrapXJlT6IlkmXNYYhcpGJC2DTR0v1eFPsK2fKfbtC63eYzd4Q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JEEBmo0O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740684034; c=relaxed/simple;
+	bh=muK8R3PeeACTdWi+w57NbgOslHk1vi9AUhjFPQAv4zc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hy53VlZxmFrTLB0nFeH83tr3ja+pVTF5DjnBXdgquMGsAWd/KQ5sz6IZ7jrnzCjnE1Xr82iukUiQ2yuhOv9qf1Af4ZWBDolYYJORtPgqbpvz9iwqeVxDzluP3UwrENwU96K9ByBPf7yIZV163xTsx0l0ntY3fTovUo9c3vySurc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4phlsC9p; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JEEBmo0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AECFBC4CEDD;
-	Thu, 27 Feb 2025 19:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740684025;
-	bh=xtfpr7hHwam7QkTVY8/dfHG6gdnWBz3qmp5PmCCeyqI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JEEBmo0OJyq4tnv7HxVytge08ygjACWegFDvH/0Z76VYA3+wdt+KYF0HTXWJYeduA
-	 lHaOmZtcPf10yU0dg4Px7QwiM+K4Qwid7qkzC9LKXrDSDPpXFNjFXQDH4QKcqk3M82
-	 aPpdOG6UMMpSPoBJdM30jDsMGVfVwyNHMbpsgrtlYBna8GvzrCa90ORgrmEW/oDPqH
-	 HdIcDg0/tf1bnyujbbPermj1gIm+9x+gsJHl182cv+cFq9HNALPBN5tlNCe00A5qGH
-	 AxywRT/o4IyPybiT5lD04RW3qGbXGDG97ujivGRuMK8Wxu3BcLu0DmzJCP9LYDeY5+
-	 zAHIhsf85xBig==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF31380AACB;
-	Thu, 27 Feb 2025 19:20:58 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4phlsC9p"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abbdf897503so425969466b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:20:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740684030; x=1741288830; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OI22PJCjE69u15jcF6DMx11ran9huIwFOHAPNY3ci2c=;
+        b=4phlsC9pVgM98GF5mIqwNtcI6haaDGJDKfizpwwlXoN9o737UEiMH229exg4pqNNnB
+         FtdCFObtPQIPHErw3O69ZlIYBxWS0kps2c+3UKqBRc+WEdGWB4NyCfG75u1DiVBi5XBg
+         D0Ge78gHES9684cTEPxfSvD+3xNDd5mWjhGk0F2PvkNCgQL7JMj9otBSZTSXbdbeQcAr
+         M7U5JOmQxPs9/nMmGKQ8yHqUw2USo3R8gddJwu8+rwDC6K01yvtPIBD78aVToOyqawVA
+         uqf5pON2CF9R7iEK/YwtY+tbRy1mSVunm3jJWmf6Wl7P97DzjUrMb7LCwpAucS8xhHiv
+         gEuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740684030; x=1741288830;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OI22PJCjE69u15jcF6DMx11ran9huIwFOHAPNY3ci2c=;
+        b=e/VYT/RVtp0r4jP+MjI/WU5a3z5+7fDwMt3BFT++9GKn2kgL6LGaa1V14ktb0gL8L0
+         /ih4LY4SX2aLJU5uoPFswiItCOeqeP0qhd8J4z50WK1CQhN5i3Mmd9fkDrvMGpiszzOI
+         UCbQzOwUdWRNxB688MVx9UVJQWCjY/mKMTyeAJLWQWTAxaSXUj2skx2ofFYpGxDyppTr
+         TpED+Q0rTJ04eRH/rQiCarz/7ZB5rKcgoqVcnSnhbbce2JQR8ENuXwU0Mk7qMlpkEMmV
+         7TY1whbFIg1TLsa0OJdh6XCTA7Ieujq20qezpYt9VYSKmtc6Hzc3p4E9783NM7LQQfzq
+         PhUg==
+X-Gm-Message-State: AOJu0YyMZUTeE+t+CCEYAiw0XoCRKbtLbqzqiW3HuOO/I7gFulleU/S/
+	re/CDXI43LSBPgCF86X9Dc2PIaTgtQebt8mQFdo8RjOi3E9e+fLMmGAW93oz8NUooylaR1k73pL
+	glhgOqBYsJqy3FExur8bGJzEmJE0jV2pzKpuy
+X-Gm-Gg: ASbGncvXyhmVyHGL6iGQ8vClukYTrcr2vaEWu7uXBtMhPKYP8liJm/2odf1tpeXs0iT
+	8FqXxFfYfmiE9HKrcpXVXQP/pQoVBtwNw5LySIZfMBYvocoPQZijJowyyxKzwk/jklK0un7AQMV
+	tS/cj/rSXRlRFOO9NruqXkqsLVRVDU1X/1qauGU0A=
+X-Google-Smtp-Source: AGHT+IGAaEwnUOTxtjRJRgNU0Z7h1s0Z2DCfs0P6hAUc2eXS3R+/ssd58Ppp0FCTMZtMZ97KafEUW2W/8pRABGN1kAA=
+X-Received: by 2002:a17:907:9723:b0:ab7:ca6d:171e with SMTP id
+ a640c23a62f3a-abf2642f5d4mr62483366b.7.1740684030160; Thu, 27 Feb 2025
+ 11:20:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/15] afs,
- rxrpc: Clean up refcounting on afs_cell and afs_server records
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174068405775.1535916.5681071064674695791.git-patchwork-notify@kernel.org>
-Date: Thu, 27 Feb 2025 19:20:57 +0000
-References: <20250224234154.2014840-1-dhowells@redhat.com>
-In-Reply-To: <20250224234154.2014840-1-dhowells@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: netdev@vger.kernel.org, marc.dionne@auristor.com, kuba@kernel.org,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- brauner@kernel.org, linux-afs@lists.infradead.org,
- linux-kernel@vger.kernel.org
+References: <20250227003359.732948-1-ctshao@google.com> <EB79B75A-896E-42B6-B206-314BA137E257@linux.ibm.com>
+In-Reply-To: <EB79B75A-896E-42B6-B206-314BA137E257@linux.ibm.com>
+From: Chun-Tse Shao <ctshao@google.com>
+Date: Thu, 27 Feb 2025 11:20:18 -0800
+X-Gm-Features: AQ5f1JqstDaQClrlkYVyUTD4KjucpdQq68IUyRhBPNfGp0EuxpQ4ZtKJXQSNAj0
+Message-ID: <CAJpZYjUvaXfmvMH5FjpAUSj4EiEgbMd4CyOobPXKoDhpzknvJQ@mail.gmail.com>
+Subject: Re: [PATCH v8 0/4] Tracing contention lock owner call stack
+To: Athira Rajeev <atrajeev@linux.ibm.com>
+Cc: "open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, nick.forrington@arm.com, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Thank you Athira!
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 24 Feb 2025 23:41:37 +0000 you wrote:
-> Here are some patches that fix an occasional hang that's only really
-> encountered when rmmod'ing the kafs module.  Arguably, this could also go
-> through the vfs tree, but I have a bunch more primarily crypto and rxrpc
-> patches that need to go through net-next on top of this[1].
-> 
-> Now, at the beginning of this set, I've included five fix patches that are
-> already committed to the net/main branch but that need to be applied first,
-> but haven't made their way into net-next/main or upstream as yet:
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,01/15] rxrpc: rxperf: Fix missing decoding of terminal magic cookie
-    https://git.kernel.org/netdev/net-next/c/c34d999ca314
-  - [net-next,02/15] rxrpc: peer->mtu_lock is redundant
-    https://git.kernel.org/netdev/net-next/c/833fefa07444
-  - [net-next,03/15] rxrpc: Fix locking issues with the peer record hash
-    https://git.kernel.org/netdev/net-next/c/71f5409176f4
-  - [net-next,04/15] afs: Fix the server_list to unuse a displaced server rather than putting it
-    https://git.kernel.org/netdev/net-next/c/add117e48df4
-  - [net-next,05/15] afs: Give an afs_server object a ref on the afs_cell object it points to
-    https://git.kernel.org/netdev/net-next/c/1f0fc3374f33
-  - [net-next,06/15] afs: Remove the "autocell" mount option
-    (no matching commit)
-  - [net-next,07/15] afs: Change dynroot to create contents on demand
-    (no matching commit)
-  - [net-next,08/15] afs: Improve afs_volume tracing to display a debug ID
-    (no matching commit)
-  - [net-next,09/15] afs: Improve server refcount/active count tracing
-    (no matching commit)
-  - [net-next,10/15] afs: Make afs_lookup_cell() take a trace note
-    (no matching commit)
-  - [net-next,11/15] afs: Drop the net parameter from afs_unuse_cell()
-    (no matching commit)
-  - [net-next,12/15] rxrpc: Allow the app to store private data on peer structs
-    (no matching commit)
-  - [net-next,13/15] afs: Use the per-peer app data provided by rxrpc
-    (no matching commit)
-  - [net-next,14/15] afs: Fix afs_server ref accounting
-    (no matching commit)
-  - [net-next,15/15] afs: Simplify cell record handling
-    (no matching commit)
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+On Thu, Feb 27, 2025 at 3:11=E2=80=AFAM Athira Rajeev <atrajeev@linux.ibm.c=
+om> wrote:
+>
+>
+>
+> > On 27 Feb 2025, at 5:58=E2=80=AFAM, Chun-Tse Shao <ctshao@google.com> w=
+rote:
+> >
+> > For perf lock contention, the current owner tracking (-o option) only
+> > works with per-thread mode (-t option). Enabling call stack mode for
+> > owner can be useful for diagnosing why a system running slow in
+> > lock contention.
+> >
+> > Example output:
+> >  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex -E16 perf bench=
+ sched pipe
+> >   ...
+> >   contended   total wait     max wait     avg wait         type   calle=
+r
+> >
+> >         171      1.55 ms     20.26 us      9.06 us        mutex   pipe_=
+read+0x57
+> >                          0xffffffffac6318e7  pipe_read+0x57
+> >                          0xffffffffac623862  vfs_read+0x332
+> >                          0xffffffffac62434b  ksys_read+0xbb
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >          36    193.71 us     15.27 us      5.38 us        mutex   pipe_=
+write+0x50
+> >                          0xffffffffac631ee0  pipe_write+0x50
+> >                          0xffffffffac6241db  vfs_write+0x3bb
+> >                          0xffffffffac6244ab  ksys_write+0xbb
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >           4     51.22 us     16.47 us     12.80 us        mutex   do_ep=
+oll_wait+0x24d
+> >                          0xffffffffac691f0d  do_epoll_wait+0x24d
+> >                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
+> >                          0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >           2     20.88 us     11.95 us     10.44 us        mutex   do_ep=
+oll_wait+0x24d
+> >                          0xffffffffac691f0d  do_epoll_wait+0x24d
+> >                          0xffffffffac693943  __x64_sys_epoll_wait+0x73
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >           1      7.33 us      7.33 us      7.33 us        mutex   do_ep=
+oll_ctl+0x6c1
+> >                          0xffffffffac692e01  do_epoll_ctl+0x6c1
+> >                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >           1      6.64 us      6.64 us      6.64 us        mutex   do_ep=
+oll_ctl+0x3d4
+> >                          0xffffffffac692b14  do_epoll_ctl+0x3d4
+> >                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >
+> >  =3D=3D=3D owner stack trace =3D=3D=3D
+> >
+> >           3     31.24 us     15.27 us     10.41 us        mutex   pipe_=
+read+0x348
+> >                          0xffffffffac631bd8  pipe_read+0x348
+> >                          0xffffffffac623862  vfs_read+0x332
+> >                          0xffffffffac62434b  ksys_read+0xbb
+> >                          0xfffffffface604b2  do_syscall_64+0x82
+> >                          0xffffffffad00012f  entry_SYSCALL_64_after_hwf=
+rame+0x76
+> >  ...
+> >
+> > v8:
+> >  Fix compilation error found by Athira Rajeev and Namhyung Kim.
+>
+> Tested with v8 and compiles fine, thanks for addressing the issue.
+>
+> Tested-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>
+> >
+> > v7: lore.kernel.org/20250224184742.4144931-1-ctshao@google.com
+> >  Remove duplicate contention records.
+> >
+> > v6: lore.kernel.org/20250219214400.3317548-1-ctshao@google.com
+> >  Free allocated memory in error patch.
+> >  Add description in man page.
+> >
+> > v5: lore.kernel.org/20250212222859.2086080-1-ctshao@google.com
+> >  Move duplicated code into function.
+> >  Remove code to retrieve undesired callstack at the end of `contention_=
+end()`.
+> >  Other minor fix based on Namhyung's review.
+> >
+> > v4: lore.kernel.org/20250130052510.860318-1-ctshao@google.com
+> >  Use `__sync_fetch_and_add()` to generate owner stackid automatically.
+> >  Use `__sync_fetch_and_add(..., -1)` to workaround compiler error from
+> >    `__sync_fetch_and_sub()`
+> >  Remove unnecessary include headers.
+> >  Dedicate on C-style comment.
+> >  Other minor fix based on Namhyung's review.
+> >
+> > v3: lore.kernel.org/20250129001905.619859-1-ctshao@google.com
+> >  Rename/shorten multiple variables.
+> >  Implement owner stackid.
+> >  Add description for lock function return code in `contention_end()`.
+> >  Other minor fix based on Namhyung's review.
+> >
+> > v2: lore.kernel.org/20250113052220.2105645-1-ctshao@google.com
+> >  Fix logic deficit in v1 patch 2/4.
+> >
+> > v1: lore.kernel.org/20250110051346.1507178-1-ctshao@google.com
+> >
+> > Chun-Tse Shao (4):
+> >  perf lock: Add bpf maps for owner stack tracing
+> >  perf lock: Retrieve owner callstack in bpf program
+> >  perf lock: Make rb_tree helper functions generic
+> >  perf lock: Report owner stack in usermode
+> >
+> > tools/perf/Documentation/perf-lock.txt        |   5 +-
+> > tools/perf/builtin-lock.c                     |  56 +++-
+> > tools/perf/util/bpf_lock_contention.c         |  85 +++++-
+> > .../perf/util/bpf_skel/lock_contention.bpf.c  | 245 +++++++++++++++++-
+> > tools/perf/util/bpf_skel/lock_data.h          |   7 +
+> > tools/perf/util/lock-contention.h             |   7 +
+> > 6 files changed, 372 insertions(+), 33 deletions(-)
+> >
+> > --
+> > 2.48.1.658.g4767266eb4-goog
+> >
+> >
+>
