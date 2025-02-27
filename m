@@ -1,251 +1,301 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8335D1B4151
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675566; cv=none; b=O2QfRPV5H74eYgGIJfbVqh5M85aAHkDANQimPkPnI7VykvOor2UurCEe4AU5IFNWvDauWl5moJln1o+Qfx8m6mWJVZ8a9P55oRgahhSHJ6hVAyDOd38FnSksZugzxDSNDNY7HgEHoAhGt2nc4FWaCIfpK1wa9haEJN21bvOkD4k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675566; c=relaxed/simple;
-	bh=DBrCCfmbbgOYEaHaOkBZdTP2NcHYf6u/yYmTSzwGcPw=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fZ7bBcw7NHyPNRMlp02kPk6zCglxhfHX7Fja6RwBUsL8iOSbgoreXaLBtYN21dnbqgP6qzVov2ZJee9iVJRUZQgVlJpjxiNxuhuTfljKWxgsY+Owq/PWwcf8nq/yZpcQb401V4z7ETpTCy2IOYjVwb8FiXOurRr/0/5RFUIG4DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2a40e470fso9858995ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:59:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740675563; x=1741280363;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BpJtKMbB0T7y5gCWnMdvQODk6uraPTxV8/on6Hpe2hs=;
-        b=aoi4mE2XAIt8j9WpL8NAoqEZTR73wY0Vn/0bVnoBG8LyYXf2mIqiRgC1UDn6bF5Puv
-         ov+yySMm/JRXlGclOoQjCUUXQCS3unG1JVJYD9RMDQ/1r8+4ZegCbq6SBxe9uT3bkLZw
-         OqNOSDRmURmRLJ8KqSDqqR+7NN4W4So7upkbThaORXrWVey1DA9Jdo0VfK2aMhFYOYAd
-         0RQnQZOhwn288tWXr2619Fvn73YtadJWQJdV5QrGVWGYmnnAG7rcRyBRxUpiVIfYCege
-         z+ScTT2BIEHy0/Mx4zHduwQ0NqxUmHbEdiW56dnJ1uteTs4bu6P4WviU8ptnVhTnfvNP
-         VbnA==
-X-Gm-Message-State: AOJu0Yx9ubHNSbcB3vlRKPFGfC3ysoRT6n2sLkXF/gYW4yGDkqDtY85X
-	EbPbX995N/U8l9sgmTLoRrPaycgGXZeraM9y40nlUNQlWbg/GxOvO7UisIkviVRFJlTf+et8fTb
-	r4A1J5IvFsaXfHIvZgU4EvOky5Slqag/3gMw6lCxplg5tp34PstQwM9AYXQ==
-X-Google-Smtp-Source: AGHT+IEHrpXbbqqqHe68AmD6V4I/G+zPsckNGkICOcFty187OMcieLTFwJH1asRqFQs8f91Xudgwv5sQH4Evnf8EQEAghHZvj/jr
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E4E1D4335
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740675605; cv=fail; b=Mu3JcvWkt3GxIykDytKNSZ7tMTonx3p+BqioB43KDsKCd9GXWfLXAyUg1+kOjMR80+H7+lJQ6R71lbp8D4RdShyc+3joCwjY7Q4850OlhSYVIMOQdnxh0Vl3eSj0AyaExzZ+FQePwZWdj8ouSP2N7BWD50wG48tBzZqqhpIoDyM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740675605; c=relaxed/simple;
+	bh=THgF6aSerq9RbQcoZkdnQPeTh26YiwRJTAFhoNNHkBw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=VuN/yhj8dGDbNhqTP31KEI2b0JV8W2ZqF5bEl/mXZSZ2qUqLdQATBWSHljFSN7f61GecIUCnB7axe20P622QBIMiaZPTv1ZAUm/jrAdqWW9HKMsWt0uUrRJohzIvFLeFsxg9spUO2h9L4h4IWm9wKJ+IXfy25y4Jc/VnGkdegaI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BoXfII57; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BoXfII57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740675603; x=1772211603;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=THgF6aSerq9RbQcoZkdnQPeTh26YiwRJTAFhoNNHkBw=;
+  b=BoXfII57EzddgT+ARf/uIt6kkjH8RjAvsMiV7HMo22yNDYGbv6wJz/tg
+   aBYJ9/u8CtA6sRmBye+gEYxJBU+F4/9VzrWqzCouR9l05LyWQDoCpNVR1
+   47NhpbsSAfL3/ylTXEoJISO198AIRfSfbvYSVI5KCRx/ZIO+XDRXzv0F6
+   Ysp5kaSGKgJkXMYGH2lN+wcgAdaK/XyR70/GXSy3R8NyzsAVtRyHuQ3D+
+   Znhua7fO7MaK1wA0ca4Wu0Wv8hhgnsBQXoPajJyglgb3s6RTeasM3BbzH
+   EkV8BgfRe+9LRjJFYX76KjUkAOUVQD84QGePCiNapyxi0cv0uUGgpV4M+
+   w==;
+X-CSE-ConnectionGUID: B14X6gMrRKaGmBsMZ3gtYA==
+X-CSE-MsgGUID: HaYt4LifQlSqWmbtqD9szQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52214230"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="52214230"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 09:00:02 -0800
+X-CSE-ConnectionGUID: LA/5fqS3TQa/GlrC1I2KeA==
+X-CSE-MsgGUID: FKOOmWCXSESpxRp4DET5Fg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="154272817"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 09:00:03 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 27 Feb 2025 09:00:01 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 27 Feb 2025 09:00:01 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 27 Feb 2025 08:59:59 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tWNTTnwJUkrvEqP8GfLT5nTCUvlku12khzvxlBSpCyDJxaaTrGtJOiuW0d9ZqY/egbDSCkewRa/vDoOJ4AD0+32xvKCWrIAxoVpWC7ZaDtxsBB+lNxhlIY+tjCleRjPoxwhMZp+RV8dijoKTdGVjZWSM3pM4nbNK6LFMnZ1axHI1D5HNuQ7s7fqQS7gNCctPrkzSx5ZWWjSOfaVIefvczZ8d9W7qhDxwjgU6YsNWIK8gS4DgOA6WxEwxTjPgZKHERtr6sufz4/f5gwzm/5HFg+K9lRta9pZUORKaZS+dq5AiQtY9t4JMGDotRZqIU2HeJb+ZdNUoS7pLAN/WQN8YZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MpZS93JrtxwCt93JdZ56RmH1fBxBN00PfHPaC8yings=;
+ b=F1BUFrClATa9376JyuHLZrngnni267jXAKWC82/qqqV+FG2yssHtco3zpDygnLVCbR63Y5ph3836afPhrVg9ZxOAy7YW+lX+KdkoBoWfUsF2SyWzMsuxVInwANy0MewhQ32NtNcSq3f85wfmzMT5sMxFz9jFFd8hqfnYJhrSPVsu3lntZKSrdflLkrvTDKoXW4gN/7ryd0Tickan1NFTvwOH6hmwMEH+CWr+pras3GTB9VSAJhSKWAMkk8mEmEYfQ+o73o+68Biokz2hntE6W9qUp5+3Xr94ubzdVFYd16XWmHPn2Rvm2yBL49c2zPdHij978DpS8jooms949frKOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com (2603:10b6:930:29::17)
+ by DS7PR11MB8853.namprd11.prod.outlook.com (2603:10b6:8:255::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Thu, 27 Feb
+ 2025 16:59:16 +0000
+Received: from CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44]) by CY5PR11MB6139.namprd11.prod.outlook.com
+ ([fe80::7141:316f:77a0:9c44%3]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 16:59:16 +0000
+Date: Thu, 27 Feb 2025 10:59:12 -0600
+From: Lucas De Marchi <lucas.demarchi@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: <mingo@kernel.org>, <ravi.bangoria@amd.com>,
+	<linux-kernel@vger.kernel.org>, <willy@infradead.org>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<intel-xe@lists.freedesktop.org>
+Subject: Re: [PATCH v2 06/24] perf: Fix pmus_lock vs pmus_srcu ordering
+Message-ID: <qvgmqkytn44ysjbox6b2db75ri6yc3lmncpb7etiajnueeuab2@6mrdmoqqnebn>
+References: <20250205102120.531585416@infradead.org>
+ <20250205102448.898435571@infradead.org>
+Content-Type: text/plain; charset="us-ascii"; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250205102448.898435571@infradead.org>
+X-ClientProxiedBy: MW4PR03CA0296.namprd03.prod.outlook.com
+ (2603:10b6:303:b5::31) To CY5PR11MB6139.namprd11.prod.outlook.com
+ (2603:10b6:930:29::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cda6:0:b0:3d3:e34b:daa0 with SMTP id
- e9e14a558f8ab-3d3e6e21079mr481485ab.1.1740675563657; Thu, 27 Feb 2025
- 08:59:23 -0800 (PST)
-Date: Thu, 27 Feb 2025 08:59:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c099eb.050a0220.222324.026a.GAE@google.com>
-Subject: [syzbot] [kernel?] KASAN: slab-use-after-free Read in task_work_run
-From: syzbot <syzbot+aef8e425f1a85ee5ef1c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, luto@kernel.org, netdev@vger.kernel.org, 
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6139:EE_|DS7PR11MB8853:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6fff09ee-7ebe-4c97-07c5-08dd57501196
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?kbZMXi5Icv15r4QNp7zGbr2yljCo0KzjL1f/8VS2t1Bdxp7oJhi9h1dmw8j8?=
+ =?us-ascii?Q?cxwIPRYPqIjd/EYeZZj+2FmpsdwkHgMct5qzlpVwccSftbn2OfsysL/p2Ael?=
+ =?us-ascii?Q?oiJuyYDXA7AMX8uoVl/MdhwD3n3kYAD6v8vRegIA+SY1EMZKuguQitRxUqNb?=
+ =?us-ascii?Q?nJCoH6CoOpxdggvMq4QS3b86R9d5OJNmfl974AxGLmsXtzIBtAISFX7GQavV?=
+ =?us-ascii?Q?KqddaweMGijLnre/gO/nt30lO9lP1BxntLW5syYWlguu4JRpHoLWCMlJS1rA?=
+ =?us-ascii?Q?82CxoY9tqL+b1hyt+grUSt7sx5pLPULLkZ9DzquITFx4KyUJ+2ZoGhgKbBcr?=
+ =?us-ascii?Q?WrjuzaR25NrxIbxKvOwie9orcPcWH/ytOgIHc6t7eMjthmA8kSQPNHm8rrVw?=
+ =?us-ascii?Q?peUgyC30U7+Q9WWJN6up+76C3ZdA7bxQ/ChVaAND/AdCVZnjEiKIFlbLK74Z?=
+ =?us-ascii?Q?LUEqB+m+ZItNqh+SJxG8UwmlFJhZMPEdej+n7bAUaoqA/JXhNS/twJ1C/T8W?=
+ =?us-ascii?Q?KvABAg46DIUyuTvYh+d9L2aCVxxK4wD+fkxJhvtRoQs8qQawSc02YmR3kkAA?=
+ =?us-ascii?Q?tpyRJK3eh3BlFGPGonx9HqS4nOS2PxhXN/KSTAiS8SnLmYtKM78PFoQiF5dn?=
+ =?us-ascii?Q?rSi7Ae1T4BXVMKiEfNHsCFMIo+hUROHqZdZ98vJM1TbEb5PtR/EJJtxw3l9t?=
+ =?us-ascii?Q?i2O/bQk43B+FvpS+iGB1NVBIoOdbFaSkYEQgUzZum/r/RTTPVNo7ZwEovIti?=
+ =?us-ascii?Q?PNa3qcaf5HaGDbQBW3UYRug1YiXrQI3Som/dWITHPEkBWZAYxSbh8kH+58O1?=
+ =?us-ascii?Q?hBI8XoV8SRe1Xl0ah1FCh77duEBrKZ5BM7pdG2iFgVhZrDuIR4b+XFfaFWqh?=
+ =?us-ascii?Q?LuIuc9ZH7Ck7pvZXMk5aZChNnAHGMiquU6rVVtytkxdZN+jaLoaCUfKgQdtb?=
+ =?us-ascii?Q?qERW3kuyL3pXvamYPaS4A1xWel0PXEVQy2Pa8AX7R82zyKgOZj7BAnUToG9E?=
+ =?us-ascii?Q?VX3uLNCYlYyCRTTUOoQWPMLhqJ84Bla2HGu7FZYre2EdYlRNQeLidgcI8zjs?=
+ =?us-ascii?Q?sOtvyi7GxWTwTt3Pi4cmLfOsFV7HshSOT3m31hBw4Cu6ijZAZYs7aWD62dMd?=
+ =?us-ascii?Q?9FbfUrLqZb3crSCh9XYreqi1XwRGj7PdJhA/y3ewOPDi8LbrWez5irv6WPrg?=
+ =?us-ascii?Q?lWshhrc416ZvdeL33JXRIIke+7xD9/rnCWRKgT43EZ3kiX6ywa6pxbz+nb5N?=
+ =?us-ascii?Q?cvfn1Xdu0NQELgq4NI4WUG+UcLFNx+6szc94OEK1ZQdI/mcNk3UrGoIlNEcb?=
+ =?us-ascii?Q?j7nF2x4DMifh9ZXFLx/Xp/CUIGcozvupkb5V41TinpVEZQoU8haW/b7L7i0v?=
+ =?us-ascii?Q?RFdEeTFrXJgpmDnF170You1+eSec?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6139.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?ESZGwQZm5Okui7LYs8rJEpt057q0uaiNtU3CTBz56D+0Y0n9R0Ypn4wcaO0M?=
+ =?us-ascii?Q?K5KiRVHnnxutNoHVllLq+pQv8FP76kvOgG+I97skhs/0SqJGBR+NQ5m09O0o?=
+ =?us-ascii?Q?9rSBfOkWy88l73xJUojaTfo61+mLk+kZ0vfRmHWDapv8b8/eLsekmgrHcW4Y?=
+ =?us-ascii?Q?vcbj6a47ilZcN2Wy9ko+LggxOUHPmWTTbZ0XSeGbQg/jxN2xsNGxVuToawg5?=
+ =?us-ascii?Q?t4I93k15x+OFE3Ld1VVz4Yxkjko7v44LduQVeWB+XXswWBPGlHhwo3hMggGy?=
+ =?us-ascii?Q?VE/qzT7zJKhA1Fn0QeHUkwXRluIe/WRH8GQewB3/v1qLZ4KoBxjXDBwzYzIy?=
+ =?us-ascii?Q?nuHoWFTLxkRNSapScbT2PgsWxt1AMz2mq3BezDI2Lf9fKbZmjssrFqCiEkfL?=
+ =?us-ascii?Q?z+x0aCX6An4wwYhm+NQfKv8lIATCNr4Av1vJ04zdrafHgZHhX46SIdUZloCv?=
+ =?us-ascii?Q?W2ci489oQFWW04Gx9NujHlrFAkfWI16P5lJJhJbP1f2PcZU+bAN6Yp6TEZQP?=
+ =?us-ascii?Q?DhKm+rp73YZuR/gboCXojVpFR6JyVC7A9OcXS8PX56H/oNwpKg1wP8C5WhE8?=
+ =?us-ascii?Q?fO35NUsSZQoKU9Z4SgOW1OxAeAf9ldxEqEKd52jZgJLC9KqKl9dwOM4rUU/f?=
+ =?us-ascii?Q?HCILKrR5ZhTLxkn2MnLcZszqa2EeabzZo5CK5a461Lkh6VQNbPRTV9kuslH/?=
+ =?us-ascii?Q?sV/V9xxIjY9yG8Toffbuh1+3R4l3RMmVhRXHsEmemXeKXnQtRUDed5WNsNwZ?=
+ =?us-ascii?Q?Uu+81mA/DNNKlSeaLAc2806UMVODrfyOCeH3Cf9VGUipogLK7TtfFYYQDUQ/?=
+ =?us-ascii?Q?Jri3lNMthuSvOr02NCU37xh3DLcnQKFmj8oXckqFIkjd39dBwDltz1ucz3JU?=
+ =?us-ascii?Q?TSwRO9gvoARaDFdM3UTNk5kP02InbV9JcZYN9hotkIi7b+G6B5mcZl3BZ6Hx?=
+ =?us-ascii?Q?R6HhExlmDi+eiqO9J53wHuE9phZethQlGDHcDtpSid+IN6Wpr5fBGZw00nhd?=
+ =?us-ascii?Q?RlyUZL23VNkX8OnsdpG2sWT/xrpWIxVFUZNCxvbfm4T0xnWZ1qOUEp1euAYh?=
+ =?us-ascii?Q?53rH+J+ZZ8mO4EkgFRga02OECa0d3H7XD2yFqwKxzKvtO8v6tKRIb99ARN26?=
+ =?us-ascii?Q?gsBc6z7Yp7b0u/K4e2sBqEuhXFsaMcbJsDJCQfcm0j8Dyaca/vO3j3pAWV9q?=
+ =?us-ascii?Q?UBYSo2VL++TtMAFLermH7mTzLGv9Z06KPh3D5Cy7KAWzj/bY6iZHX1wU26lZ?=
+ =?us-ascii?Q?3JTN0t4b3azqtmw/i7lX00SC9BaEDcNDDkWj4AUdfQoMzt6gneZNYckG5tqf?=
+ =?us-ascii?Q?1f2oWUI3K+Eot9fJqZ76AUwkgapIHwp1cKSWYs1ysNOj8tJ3FhIdMSrH7h0/?=
+ =?us-ascii?Q?O3S4zk4/sZnmjWA1hoI8x/viY/IfzWKD7cUDNJ7noIi6u/ESzYJ1jitaTKLk?=
+ =?us-ascii?Q?MGxfM0wrEVkrOebhhbOCHObI84WjFybHUj5DGIB1wmRrHvapnr9ZH3AnwVYZ?=
+ =?us-ascii?Q?oHK1uSxG9afr8i1nn3ZxwrBwmWDaRtmmpbLzOFfzhAuFpj2aRu15+D/y/OXF?=
+ =?us-ascii?Q?if/KA9m+TppR5LFa6LhUesg4WOrogghFo226u8KVyM66saRAfctKWu2WEzDm?=
+ =?us-ascii?Q?wA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6fff09ee-7ebe-4c97-07c5-08dd57501196
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6139.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 16:59:16.2859
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fSohnOQF6hFKVXK9BdK7MgYzVMgfhd3cAmQic4Fo/VzuxSz6tKCL39DLqeM1vOmqMoiNAA9b+FMwdGQ25+uMF8CYH1DsguCdmwphmu/c940=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB8853
+X-OriginatorOrg: intel.com
 
-Hello,
+On Wed, Feb 05, 2025 at 11:21:26AM +0100, Peter Zijlstra wrote:
+>Commit a63fbed776c7 ("perf/tracing/cpuhotplug: Fix locking order")
+>placed pmus_lock inside pmus_srcu, this makes perf_pmu_unregister()
+>trip lockdep.
+>
+>Move the locking about such that only pmu_idr and pmus (list) are
 
-syzbot found the following issue on:
+s/about/around/ ?
 
-HEAD commit:    63817c771194 selftests/bpf: Test struct_ops program with _..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ccf498580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
-dashboard link: https://syzkaller.appspot.com/bug?extid=aef8e425f1a85ee5ef1c
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d306e4580000
+>modified while holding pmus_lock. This avoids doing synchronize_srcu()
+>while holding pmus_lock and all is well again.
+>
+>Fixes: a63fbed776c7 ("perf/tracing/cpuhotplug: Fix locking order")
+>Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b31ec77253e7/disk-63817c77.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/07bea500bd9d/vmlinux-63817c77.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7a0b65578ed5/bzImage-63817c77.xz
+Without this patch, I occasionally see the locking issue below, but it
+doesn't always happen. I'm running with this patch and haven't seen the
+issue since.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+aef8e425f1a85ee5ef1c@syzkaller.appspotmail.com
+[  268.195731] ======================================================
+[  268.201945] WARNING: possible circular locking dependency detected
+[  268.208165] 6.14.0-rc4-xe+ #59 Tainted: G     U
+[  268.213777] ------------------------------------------------------
+[  268.219988] kmod-unbind/2509 is trying to acquire lock:
+[  268.225238] ffffffff8b40b310 (&pmus_srcu){.+.+}-{0:0}, at: __synchronize_srcu+0x21/0x270
+[  268.233374]
+                but task is already holding lock:
+[  268.239241] ffffffff86381de8 (pmus_lock){+.+.}-{3:3}, at: perf_pmu_unregister+0x25/0x2f0
+[  268.247372]
+                which lock already depends on the new lock.
 
-==================================================================
-BUG: KASAN: slab-use-after-free in task_work_run+0x22b/0x310 kernel/task_work.c:226
-Read of size 8 at addr ffff888028b97a18 by task syz.4.416/7301
+[  268.255577]
+                the existing dependency chain (in reverse order) is:
+[  268.263101]
+                -> #1 (pmus_lock){+.+.}-{3:3}:
+[  268.268717]        __mutex_lock+0x1a4/0x1300
+[  268.273019]        mutex_lock_nested+0x1b/0x30
+[  268.277489]        perf_swevent_init+0x15d/0x610
+[  268.282142]        perf_try_init_event+0x111/0xba0
+[  268.286971]        perf_event_alloc+0x1024/0x3eb0
+[  268.291703]        __do_sys_perf_event_open+0x3b0/0x2460
+[  268.297046]        __x64_sys_perf_event_open+0xbe/0x160
+[  268.302305]        x64_sys_call+0x1eb0/0x2650
+[  268.306689]        do_syscall_64+0x91/0x180
+[  268.310918]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  268.316524]
+                -> #0 (&pmus_srcu){.+.+}-{0:0}:
+[  268.322215]        __lock_acquire+0x3339/0x6980
+[  268.326777]        lock_sync+0xec/0x180
+[  268.330645]        __synchronize_srcu+0xaf/0x270
+[  268.335291]        synchronize_srcu+0x64/0x2b0
+[  268.339776]        perf_pmu_unregister+0xed/0x2f0
+[  268.344523]        xe_pmu_unregister+0x94/0xf0 [xe]
+[  268.349604]        devm_action_release+0x49/0x80
+[  268.354257]        devres_release_all+0x180/0x240
+[  268.358996]        device_unbind_cleanup+0x1b/0x1b0
+[  268.363910]        device_release_driver_internal+0x44a/0x5b0
+[  268.369693]        device_driver_detach+0x36/0x50
+[  268.374435]        unbind_store+0xe0/0x100
+[  268.378571]        drv_attr_store+0x6a/0xc0
+[  268.382782]        sysfs_kf_write+0x106/0x160
+[  268.387176]        kernfs_fop_write_iter+0x359/0x550
+[  268.392180]        vfs_write+0x64c/0x1030
+[  268.396234]        ksys_write+0x11a/0x240
+[  268.400284]        __x64_sys_write+0x72/0xc0
+[  268.404587]        x64_sys_call+0x2c4/0x2650
+[  268.408885]        do_syscall_64+0x91/0x180
+[  268.413102]        entry_SYSCALL_64_after_hwframe+0x76/0x7e
+[  268.418708]
+                other info that might help us debug this:
 
-CPU: 1 UID: 0 PID: 7301 Comm: syz.4.416 Not tainted 6.14.0-rc3-syzkaller-g63817c771194 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x16e/0x5b0 mm/kasan/report.c:521
- kasan_report+0x143/0x180 mm/kasan/report.c:634
- task_work_run+0x22b/0x310 kernel/task_work.c:226
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x13f/0x340 kernel/entry/common.c:218
- do_syscall_64+0x100/0x230 arch/x86/entry/common.c:89
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f489a58d169
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f489b4cf038 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: fffffffffffffff2 RBX: 00007f489a7a5fa0 RCX: 00007f489a58d169
-RDX: 000000110e22fff6 RSI: 00000000c004743e RDI: 0000000000000003
-RBP: 00007f489a60e2a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f489a7a5fa0 R15: 00007ffe5af01388
- </TASK>
+[  268.426746]  Possible unsafe locking scenario:
 
-Allocated by task 7301:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x66/0x80 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4115 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- kmem_cache_alloc_node_noprof+0x1d9/0x380 mm/slub.c:4216
- perf_event_alloc+0x157/0x1e40 kernel/events/core.c:12240
- __do_sys_perf_event_open kernel/events/core.c:12875 [inline]
- __se_sys_perf_event_open+0xa5d/0x34b0 kernel/events/core.c:12765
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
+[  268.432715]        CPU0                    CPU1
+[  268.437277]        ----                    ----
+[  268.441842]   lock(pmus_lock);
+[  268.444932]                                lock(&pmus_srcu);
+[  268.450633]                                lock(pmus_lock);
+[  268.456243]   sync(&pmus_srcu);
+[  268.459419]
+                 *** DEADLOCK ***
 
-Freed by task 24:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2353 [inline]
- slab_free mm/slub.c:4609 [inline]
- kmem_cache_free+0x195/0x410 mm/slub.c:4711
- rcu_do_batch kernel/rcu/tree.c:2546 [inline]
- rcu_core+0xaaa/0x17a0 kernel/rcu/tree.c:2802
- handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
- run_ksoftirqd+0xca/0x130 kernel/softirq.c:950
- smpboot_thread_fn+0x544/0xa30 kernel/smpboot.c:164
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Last potentially related work creation:
- kasan_save_stack+0x3f/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xaa/0xc0 mm/kasan/generic.c:548
- task_work_add+0xb8/0x450 kernel/task_work.c:65
- __perf_event_overflow+0x78d/0xdc0 kernel/events/core.c:9945
- perf_swevent_event+0x317/0x680
- do_perf_sw_event kernel/events/core.c:10185 [inline]
- ___perf_sw_event+0x4f3/0x730 kernel/events/core.c:10212
- __perf_sw_event+0xff/0x1b0 kernel/events/core.c:10224
- perf_sw_event include/linux/perf_event.h:1503 [inline]
- do_user_addr_fault arch/x86/mm/fault.c:1284 [inline]
- handle_page_fault arch/x86/mm/fault.c:1480 [inline]
- exc_page_fault+0x710/0x8b0 arch/x86/mm/fault.c:1538
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
-The buggy address belongs to the object at ffff888028b97590
- which belongs to the cache perf_event of size 1456
-The buggy address is located 1160 bytes inside of
- freed 1456-byte region [ffff888028b97590, ffff888028b97b40)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x28b90
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801b091500 ffffea0001f63400 dead000000000002
-raw: 0000000000000000 0000000080140014 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801b091500 ffffea0001f63400 dead000000000002
-head: 0000000000000000 0000000080140014 00000000f5000000 0000000000000000
-head: 00fff00000000003 ffffea0000a2e401 ffffffffffffffff 0000000000000000
-head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 6118, tgid 6115 (syz.1.31), ts 147556510632, free_ts 147513456959
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x1f4/0x240 mm/page_alloc.c:1551
- prep_new_page mm/page_alloc.c:1559 [inline]
- get_page_from_freelist+0x365c/0x37a0 mm/page_alloc.c:3477
- __alloc_frozen_pages_noprof+0x292/0x710 mm/page_alloc.c:4739
- alloc_pages_mpol+0x311/0x660 mm/mempolicy.c:2270
- alloc_slab_page mm/slub.c:2423 [inline]
- allocate_slab+0x8f/0x3a0 mm/slub.c:2587
- new_slab mm/slub.c:2640 [inline]
- ___slab_alloc+0xc27/0x14a0 mm/slub.c:3826
- __slab_alloc+0x58/0xa0 mm/slub.c:3916
- __slab_alloc_node mm/slub.c:3991 [inline]
- slab_alloc_node mm/slub.c:4152 [inline]
- kmem_cache_alloc_node_noprof+0x269/0x380 mm/slub.c:4216
- perf_event_alloc+0x157/0x1e40 kernel/events/core.c:12240
- __do_sys_perf_event_open kernel/events/core.c:12875 [inline]
- __se_sys_perf_event_open+0xa5d/0x34b0 kernel/events/core.c:12765
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5968 tgid 5968 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1127 [inline]
- free_frozen_pages+0xe0d/0x10e0 mm/page_alloc.c:2660
- discard_slab mm/slub.c:2684 [inline]
- __put_partials+0x160/0x1c0 mm/slub.c:3153
- put_cpu_partial+0x17c/0x250 mm/slub.c:3228
- __slab_free+0x290/0x380 mm/slub.c:4479
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x9a/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4115 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- kmem_cache_alloc_noprof+0x1d9/0x380 mm/slub.c:4171
- getname_kernel+0x59/0x2f0 fs/namei.c:250
- kern_path+0x1d/0x50 fs/namei.c:2772
- do_loopback+0xc9/0x4f0 fs/namespace.c:2817
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff888028b97900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888028b97980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff888028b97a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff888028b97a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888028b97b00: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-==================================================================
+[  268.465375] 4 locks held by kmod-unbind/2509:
+[  268.469779]  #0: ffff888135689420 (sb_writers#6){.+.+}-{0:0}, at: ksys_write+0x11a/0x240
+[  268.477911]  #1: ffff8881107aee88 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x221/0x550
+[  268.486829]  #2: ffff888111cc41b0 (&dev->mutex){....}-{3:3}, at: device_release_driver_internal+0xa2/0x5b0
+[  268.496547]  #3: ffffffff86381de8 (pmus_lock){+.+.}-{3:3}, at: perf_pmu_unregister+0x25/0x2f0
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Tested-by: Lucas De Marchi <lucas.demarchi@intel.com>
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Lucas De Marchi
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+>---
+> kernel/events/core.c |    4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>
+>--- a/kernel/events/core.c
+>+++ b/kernel/events/core.c
+>@@ -11836,6 +11836,8 @@ void perf_pmu_unregister(struct pmu *pmu
+> {
+> 	mutex_lock(&pmus_lock);
+> 	list_del_rcu(&pmu->entry);
+>+	idr_remove(&pmu_idr, pmu->type);
+>+	mutex_unlock(&pmus_lock);
+>
+> 	/*
+> 	 * We dereference the pmu list under both SRCU and regular RCU, so
+>@@ -11845,7 +11847,6 @@ void perf_pmu_unregister(struct pmu *pmu
+> 	synchronize_rcu();
+>
+> 	free_percpu(pmu->pmu_disable_count);
+>-	idr_remove(&pmu_idr, pmu->type);
+> 	if (pmu_bus_running && pmu->dev && pmu->dev != PMU_NULL_DEV) {
+> 		if (pmu->nr_addr_filters)
+> 			device_remove_file(pmu->dev, &dev_attr_nr_addr_filters);
+>@@ -11853,7 +11854,6 @@ void perf_pmu_unregister(struct pmu *pmu
+> 		put_device(pmu->dev);
+> 	}
+> 	free_pmu_context(pmu);
+>-	mutex_unlock(&pmus_lock);
+> }
+> EXPORT_SYMBOL_GPL(perf_pmu_unregister);
+>
+>
+>
