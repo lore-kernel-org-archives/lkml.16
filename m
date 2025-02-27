@@ -1,248 +1,292 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55E2C286288;
-	Thu, 27 Feb 2025 23:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698247; cv=none; b=DSVWg6cEnONOpfAtmy5zdQ1mocZmlRw+/S5CpUxNjIlVMhRFSp3ujbM2X+/VtbWDaz3yFDRwUfJDHfrvp20FaQ/glzaCONOMZY5NbITI+Fa274uSpvlAtoUGXpT3191va2wO+ycvOHXySShqoi9YPpoG1P//cNGPq3fxS/wimz0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698247; c=relaxed/simple;
-	bh=0dHmG6Yt7yiLRbrqNKQyXb8To3YSX3xrNFLjD+7JOQU=;
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30105281345
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740698245; cv=pass; b=j1HeO9XgZCGdhqkqUaAi5otXAEuQaFhGspxnLf1yDAtArjL6nCncDfGTzR9/2j3vzM+YJA6mcOGXi4rp+/Wm5lA7daBE/SC16XHFjew3kVBdgkMC8AgvTO83obaAxDDHhiTSa+AxjwuhMbe5eyndG3NwPKu/R7TuwaD4Ka5D9Vw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740698245; c=relaxed/simple;
+	bh=RlzqU1eBxrT26v3uCAAMG5KHZW8xG3gl+FifrelflkA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XbRTXjeALkMROWQRoFOEqwS6kfWm+4FtGhJjG56HLZrRF7pOBzkB/3tTQefamRvbclFtf7nD+ALoKyB/c34ckwXL3wUl3vdO2H3dV2GCC4TW5qY7IpdwX8soQrK3eX076XmJrMOxUUPom9SQYHcNaUTOxshEwYB96lcxKgiD6+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BCA41516;
-	Thu, 27 Feb 2025 15:17:40 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 101EF3F673;
-	Thu, 27 Feb 2025 15:17:22 -0800 (PST)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+	 MIME-Version:Content-Type; b=aNxtpn4OlEwTh+b36ssRE7EoXE5RlE1j+LnetLRdC3RxMhZU9awIFVQ4cEtA2Vi+59omU6vKgRuS9UuolTqqyJ7nLV3n0zcxqP4KCyxblLgZGszYy39rlI98eAjgLLOPSos/OqCjdt5MMwcEGbcgJEF2Ya1qLlF+hi+CpETDsQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=Ew+TIdnu; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="Ew+TIdnu"
+ARC-Seal: i=1; a=rsa-sha256; t=1740698219; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ioBZq3jbAoqsguym/bwzSzik0xhNvyJNq2Pt992uO+a3PSTWUqYvdjxI7tacENIwHc6YCWZwfK5RGL7o6wTYKIfveYbGzjapAmEaMW40GO31VRhwSpMen2XPnbmP2suQaFUQFa+gSZy28hF2RsSKSFagHLKCeqB76gEo68tR8jA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740698219; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=QRQVgJS0so4nbb5y9BoPGcUNnQOVHCEah4x6IhDnP4M=; 
+	b=AZrUDjKtQYy/R7RDkgRIHVUuCV2Gl0UdnFctCtAdLWspI0wxZ+t1dteYFKY8zUVMWZ3F1zHfn+OW5pDMRYWfCqYa/HbLFD6mrBYP7+kdW1gRxtrZgPxaDvIovegbAVUP5Pbs9uH/gz8P40Uw2tjmiSFypxdVX45ixrE8JzV4u6Y=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740698219;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=QRQVgJS0so4nbb5y9BoPGcUNnQOVHCEah4x6IhDnP4M=;
+	b=Ew+TIdnufE/8V4/KCgAaK8LL5N9A2zqi+ujF7XhCPheLd7WAts0duSePZT1hUt7x
+	j3M/yzrSjdD1fkGBV0La0jsmHKL78/OSsMM1uOVVuqFXQs2AjTI1TCvlwUzZAJ5QJRr
+	ipuHptL/N9nsZQ2iYatRbOT7CdjX0ZchX/G7io6E=
+Received: by mx.zohomail.com with SMTPS id 174069821829569.04967908481058;
+	Thu, 27 Feb 2025 15:16:58 -0800 (PST)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Mihail Atanassov <mihail.atanassov@arm.com>,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Cc: kernel@collabora.com,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/8] dt-bindings: pinctrl: add compatible for Allwinner A523/T527
-Date: Thu, 27 Feb 2025 23:14:45 +0000
-Message-ID: <20250227231447.20161-7-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <20250227231447.20161-1-andre.przywara@arm.com>
-References: <20250227231447.20161-1-andre.przywara@arm.com>
+Subject: [PATCH v3 2/2] drm/panthor: Avoid sleep locking in the internal BO size path
+Date: Thu, 27 Feb 2025 23:16:26 +0000
+Message-ID: <20250227231628.4048738-2-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
+References: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The A523 contains a pin controller similar to previous SoCs, although
-using 10 GPIO banks (PortB-PortK), all of them being IRQ capable.
-With this SoC we introduce a new style of binding, where the pinmux values
-for each pin group are stored in the new "allwinner,pinmux" property in
-the DT node, instead of requiring every driver to store a mapping between
-the function names and the required pinmux.
+Commit 434e5ca5b5d7 ("drm/panthor: Expose size of driver internal BO's over
+fdinfo") locks the VMS xarray, to avoid UAF errors when the same VM is
+being concurrently destroyed by another thread. However, that puts the
+current thread in atomic context, which means taking the VMS' heap locks
+will trigger a warning as the thread is no longer allowed to sleep.
 
-Add a new binding file, since all the different variants of the old
-binding are making the file a bit unwieldy to handle already, and the new
-property would make the situation worse.
+Because in this case replacing the heap mutex with a spinlock isn't
+feasible, the fdinfo handler no longer traverses the list of heaps for
+every single VM associated with an open DRM file. Instead, when a new heap
+chunk is allocated, its size is accumulated into a pool-wide tally, which
+also makes the atomic context code path somewhat faster.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+Fixes: 3e2c8c718567 ("drm/panthor: Expose size of driver internal BO's over fdinfo")
 ---
- .../allwinner,sun55i-a523-pinctrl.yaml        | 175 ++++++++++++++++++
- 1 file changed, 175 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
+ drivers/gpu/drm/panthor/panthor_heap.c | 59 +++++++++++++-------------
+ drivers/gpu/drm/panthor/panthor_mmu.c  |  8 +---
+ 2 files changed, 31 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
-new file mode 100644
-index 0000000000000..154e03da8ce98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
-@@ -0,0 +1,175 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/allwinner,sun55i-a523-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/drivers/gpu/drm/panthor/panthor_heap.c b/drivers/gpu/drm/panthor/panthor_heap.c
+index db0285ce5812..7cd05c7ee342 100644
+--- a/drivers/gpu/drm/panthor/panthor_heap.c
++++ b/drivers/gpu/drm/panthor/panthor_heap.c
+@@ -97,6 +97,9 @@ struct panthor_heap_pool {
+ 
+ 	/** @gpu_contexts: Buffer object containing the GPU heap contexts. */
+ 	struct panthor_kernel_bo *gpu_contexts;
 +
-+title: Allwinner A523 Pin Controller
++	/** @size: Size of all chunks across all heaps in the pool. */
++	atomic_t size;
+ };
+ 
+ static int panthor_heap_ctx_stride(struct panthor_device *ptdev)
+@@ -118,7 +121,7 @@ static void *panthor_get_heap_ctx(struct panthor_heap_pool *pool, int id)
+ 	       panthor_get_heap_ctx_offset(pool, id);
+ }
+ 
+-static void panthor_free_heap_chunk(struct panthor_vm *vm,
++static void panthor_free_heap_chunk(struct panthor_heap_pool *pool,
+ 				    struct panthor_heap *heap,
+ 				    struct panthor_heap_chunk *chunk)
+ {
+@@ -127,11 +130,13 @@ static void panthor_free_heap_chunk(struct panthor_vm *vm,
+ 	heap->chunk_count--;
+ 	mutex_unlock(&heap->lock);
+ 
++	atomic_sub(heap->chunk_size, &pool->size);
 +
-+maintainers:
-+  - Andre Przywara <andre.przywara@arm.com>
+ 	panthor_kernel_bo_destroy(chunk->bo);
+ 	kfree(chunk);
+ }
+ 
+-static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
++static int panthor_alloc_heap_chunk(struct panthor_heap_pool *pool,
+ 				    struct panthor_vm *vm,
+ 				    struct panthor_heap *heap,
+ 				    bool initial_chunk)
+@@ -144,7 +149,7 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+ 	if (!chunk)
+ 		return -ENOMEM;
+ 
+-	chunk->bo = panthor_kernel_bo_create(ptdev, vm, heap->chunk_size,
++	chunk->bo = panthor_kernel_bo_create(pool->ptdev, vm, heap->chunk_size,
+ 					     DRM_PANTHOR_BO_NO_MMAP,
+ 					     DRM_PANTHOR_VM_BIND_OP_MAP_NOEXEC,
+ 					     PANTHOR_VM_KERNEL_AUTO_VA);
+@@ -180,6 +185,8 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+ 	heap->chunk_count++;
+ 	mutex_unlock(&heap->lock);
+ 
++	atomic_add(heap->chunk_size, &pool->size);
 +
-+properties:
-+  "#gpio-cells":
-+    const: 3
-+    description:
-+      GPIO consumers must use three arguments, first the number of the
-+      bank, then the pin number inside that bank, and finally the GPIO
-+      flags.
+ 	return 0;
+ 
+ err_destroy_bo:
+@@ -191,16 +198,16 @@ static int panthor_alloc_heap_chunk(struct panthor_device *ptdev,
+ 	return ret;
+ }
+ 
+-static void panthor_free_heap_chunks(struct panthor_vm *vm,
++static void panthor_free_heap_chunks(struct panthor_heap_pool *pool,
+ 				     struct panthor_heap *heap)
+ {
+ 	struct panthor_heap_chunk *chunk, *tmp;
+ 
+ 	list_for_each_entry_safe(chunk, tmp, &heap->chunks, node)
+-		panthor_free_heap_chunk(vm, heap, chunk);
++		panthor_free_heap_chunk(pool, heap, chunk);
+ }
+ 
+-static int panthor_alloc_heap_chunks(struct panthor_device *ptdev,
++static int panthor_alloc_heap_chunks(struct panthor_heap_pool *pool,
+ 				     struct panthor_vm *vm,
+ 				     struct panthor_heap *heap,
+ 				     u32 chunk_count)
+@@ -209,7 +216,7 @@ static int panthor_alloc_heap_chunks(struct panthor_device *ptdev,
+ 	u32 i;
+ 
+ 	for (i = 0; i < chunk_count; i++) {
+-		ret = panthor_alloc_heap_chunk(ptdev, vm, heap, true);
++		ret = panthor_alloc_heap_chunk(pool, vm, heap, true);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -226,7 +233,7 @@ panthor_heap_destroy_locked(struct panthor_heap_pool *pool, u32 handle)
+ 	if (!heap)
+ 		return -EINVAL;
+ 
+-	panthor_free_heap_chunks(pool->vm, heap);
++	panthor_free_heap_chunks(pool, heap);
+ 	mutex_destroy(&heap->lock);
+ 	kfree(heap);
+ 	return 0;
+@@ -308,7 +315,7 @@ int panthor_heap_create(struct panthor_heap_pool *pool,
+ 	heap->max_chunks = max_chunks;
+ 	heap->target_in_flight = target_in_flight;
+ 
+-	ret = panthor_alloc_heap_chunks(pool->ptdev, vm, heap,
++	ret = panthor_alloc_heap_chunks(pool, vm, heap,
+ 					initial_chunk_count);
+ 	if (ret)
+ 		goto err_free_heap;
+@@ -342,7 +349,7 @@ int panthor_heap_create(struct panthor_heap_pool *pool,
+ 	return id;
+ 
+ err_free_heap:
+-	panthor_free_heap_chunks(pool->vm, heap);
++	panthor_free_heap_chunks(pool, heap);
+ 	mutex_destroy(&heap->lock);
+ 	kfree(heap);
+ 
+@@ -389,6 +396,7 @@ int panthor_heap_return_chunk(struct panthor_heap_pool *pool,
+ 			removed = chunk;
+ 			list_del(&chunk->node);
+ 			heap->chunk_count--;
++			atomic_sub(heap->chunk_size, &pool->size);
+ 			break;
+ 		}
+ 	}
+@@ -466,7 +474,7 @@ int panthor_heap_grow(struct panthor_heap_pool *pool,
+ 	 * further jobs in this queue fail immediately instead of having to
+ 	 * wait for the job timeout.
+ 	 */
+-	ret = panthor_alloc_heap_chunk(pool->ptdev, pool->vm, heap, false);
++	ret = panthor_alloc_heap_chunk(pool, pool->vm, heap, false);
+ 	if (ret)
+ 		goto out_unlock;
+ 
+@@ -560,6 +568,8 @@ panthor_heap_pool_create(struct panthor_device *ptdev, struct panthor_vm *vm)
+ 	if (ret)
+ 		goto err_destroy_pool;
+ 
++	atomic_add(pool->gpu_contexts->obj->size, &pool->size);
 +
-+  "#interrupt-cells":
-+    const: 3
-+    description:
-+      Interrupts consumers must use three arguments, first the number
-+      of the bank, then the pin number inside that bank, and finally
-+      the interrupts flags.
-+
-+  compatible:
-+    enum:
-+      - allwinner,sun55i-a523-pinctrl
-+      - allwinner,sun55i-a523-r-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 2
-+    maxItems: 10
-+    description:
-+      One interrupt per external interrupt bank supported on the
-+      controller, sorted by bank number ascending order.
-+
-+  clocks:
-+    items:
-+      - description: Bus Clock
-+      - description: High Frequency Oscillator
-+      - description: Low Frequency Oscillator
-+
-+  clock-names:
-+    items:
-+      - const: apb
-+      - const: hosc
-+      - const: losc
-+
-+  gpio-controller: true
-+  interrupt-controller: true
-+  gpio-line-names: true
-+
-+  input-debounce:
-+    description:
-+      Debouncing periods in microseconds, one period per interrupt
-+      bank found in the controller
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 2
-+    maxItems: 10
-+
-+patternProperties:
-+  # It's pretty scary, but the basic idea is that:
-+  #   - One node name can start with either s- or r- for PRCM nodes,
-+  #   - Then, the name itself can be any repetition of <string>- (to
-+  #     accommodate with nodes like uart4-rts-cts-pins), where each
-+  #     string can be either starting with 'p' but in a string longer
-+  #     than 3, or something that doesn't start with 'p',
-+  #   - Then, the bank name is optional and will be between pa and pm.
-+  #     Some pins groups that have several options will have the pin
-+  #     numbers then,
-+  #   - Finally, the name will end with either -pin or pins.
-+
-+  "^([rs]-)?(([a-z0-9]{3,}|[a-oq-z][a-z0-9]*?)?-)+?(p[a-m][0-9]*?-)??pins?$":
-+    type: object
-+
-+    properties:
-+      pins: true
-+      function: true
-+      bias-disable: true
-+      bias-pull-up: true
-+      bias-pull-down: true
-+
-+      drive-strength:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        enum: [10, 20, 30, 40]
-+
-+      allwinner,pinmux:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        description:
-+          Pinmux selector value, for each pin. Almost every time this value
-+          is the same for all pins, so any array shorter than the number of
-+          pins will repeat the last value, to allow just specifying a single
-+          cell, for all cells.
-+
-+    required:
-+      - pins
-+      - allwinner,pinmux
-+      - function
-+
-+    additionalProperties: false
-+
-+  "^vcc-p[a-m]-supply$":
-+    description:
-+      Power supplies for pin banks.
-+
-+required:
-+  - "#gpio-cells"
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - gpio-controller
-+  - "#interrupt-cells"
-+  - interrupts
-+  - interrupt-controller
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - allwinner,sun55i-a523-pinctrl
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 10
-+          maxItems: 10
-+
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - allwinner,sun55i-a523-r-pinctrl
-+
-+    then:
-+      properties:
-+        interrupts:
-+          minItems: 2
-+          maxItems: 2
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    r_pio: pinctrl@7022000 {
-+        compatible = "allwinner,sun55i-a523-r-pinctrl";
-+        reg = <0x7022000 0x800>;
-+        interrupts = <0 159 4>, <0 161 4>;
-+        clocks = <&r_ccu 1>, <&osc24M>, <&osc32k>;
-+        clock-names = "apb", "hosc", "losc";
-+        gpio-controller;
-+        #gpio-cells = <3>;
-+        interrupt-controller;
-+        #interrupt-cells = <3>;
-+
-+        r_i2c_pins: r-i2c-pins {
-+            pins = "PL0", "PL1";
-+            allwinner,pinmux = <2>;
-+            function = "r_i2c0";
-+            bias-pull-up;
-+        };
-+
-+        r_spi_pins: r-spi-pins {
-+            pins = "PL11" ,"PL12", "PL13";
-+            allwinner,pinmux = <6>;
-+            function = "r_spi";
-+        };
-+    };
+ 	return pool;
+ 
+ err_destroy_pool:
+@@ -594,8 +604,10 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+ 	xa_for_each(&pool->xa, i, heap)
+ 		drm_WARN_ON(&pool->ptdev->base, panthor_heap_destroy_locked(pool, i));
+ 
+-	if (!IS_ERR_OR_NULL(pool->gpu_contexts))
++	if (!IS_ERR_OR_NULL(pool->gpu_contexts)) {
++		atomic_sub(pool->gpu_contexts->obj->size, &pool->size);
+ 		panthor_kernel_bo_destroy(pool->gpu_contexts);
++	}
+ 
+ 	/* Reflects the fact the pool has been destroyed. */
+ 	pool->vm = NULL;
+@@ -605,27 +617,16 @@ void panthor_heap_pool_destroy(struct panthor_heap_pool *pool)
+ }
+ 
+ /**
+- * panthor_heap_pool_size() - Calculate size of all chunks across all heaps in a pool
+- * @pool: Pool whose total chunk size to calculate.
++ * panthor_heap_pool_size() - Get a heap pool's total size
++ * @pool: Pool whose total chunks size to return
+  *
+- * This function adds the size of all heap chunks across all heaps in the
+- * argument pool. It also adds the size of the gpu contexts kernel bo.
+- * It is meant to be used by fdinfo for displaying the size of internal
+- * driver BO's that aren't exposed to userspace through a GEM handle.
++ * Returns the aggregated size of all chunks for all heaps in the pool
+  *
+  */
+ size_t panthor_heap_pool_size(struct panthor_heap_pool *pool)
+ {
+-	struct panthor_heap *heap;
+-	unsigned long i;
+-	size_t size = 0;
+-
+-	down_read(&pool->lock);
+-	xa_for_each(&pool->xa, i, heap)
+-		size += heap->chunk_size * heap->chunk_count;
+-	up_read(&pool->lock);
+-
+-	size += pool->gpu_contexts->obj->size;
++	if (!pool)
++		return 0;
+ 
+-	return size;
++	return atomic_read(&pool->size);
+ }
+diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
+index 8c6fc587ddc3..12a02e28f50f 100644
+--- a/drivers/gpu/drm/panthor/panthor_mmu.c
++++ b/drivers/gpu/drm/panthor/panthor_mmu.c
+@@ -1963,13 +1963,7 @@ void panthor_vm_heaps_sizes(struct panthor_file *pfile, struct drm_memory_stats
+ 
+ 	xa_lock(&pfile->vms->xa);
+ 	xa_for_each(&pfile->vms->xa, i, vm) {
+-		size_t size = 0;
+-
+-		mutex_lock(&vm->heaps.lock);
+-		if (vm->heaps.pool)
+-			size = panthor_heap_pool_size(vm->heaps.pool);
+-		mutex_unlock(&vm->heaps.lock);
+-
++		size_t size = panthor_heap_pool_size(vm->heaps.pool);
+ 		stats->resident += size;
+ 		if (vm->as.id >= 0)
+ 			stats->active += size;
 -- 
-2.46.3
+2.47.1
 
