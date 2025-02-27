@@ -1,71 +1,60 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA5E1AC435;
-	Thu, 27 Feb 2025 15:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F6C1ADFE0;
+	Thu, 27 Feb 2025 15:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740671603; cv=none; b=a4qTizyuKbyMkypMIVSqqnXRt/lhFzGaFuY3fmWPZCVjsVWSBgd0XAja11HOUjbAYx088w9waZoJlXSO9JokJ/Dnad+s1Vv1mz5ctqvZpaTuPS8agFwyvC7eVYmFgZubI1VbI2Y0923V30Tc3iOs0iMfP163+s93YnvSKIev2tU=
+	t=1740671609; cv=none; b=KhwhXKIpM6p44pQDv+0Qxs2Bh0vAiF5x+vSJ1iff4rrXEJA6kvpLoHIBdSD5Uap43GjcyUB0lSHmoUdGjE+R5jXTOo8ju+036HHVZpC/EfqJ0Ma+Z7t2TWtBQNYHmqBbfeGCqk+RKdEdqg9jDcF3IDDhoXkaBGze4i9K9jUyYBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740671603; c=relaxed/simple;
-	bh=htf/+MeFQoqYlPYCePKHszLnbJy1d35GcY3askHeR3g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ttHoBMMDgMYQ38Jr/8XNTQqT9cfDw+cRCyeLzQQLvVnW9BZb1C9pkPG8mr7pW/03+X7Aqq8QmrGnsg7baHjxUJnWHHN2ceZIzhmzcYjJ6cPPotwR0ntF3Ch+edumSFbRRqYqH7eC+EiOppiDS+tOdw8fjnqEOKE0U/yPIS/nRbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cTodszGs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740671609; c=relaxed/simple;
+	bh=XiAlfy2hIb0teFrPDSk5k50YHK4Av/9RD2s1zu1v4Yw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M2pTYl5GVwda34MIIN11h/AD9dR/d8lYmgCkoPyQb9XUjbHHYNuCgY5Ir63rRfTWS7fVCQjF4Abr0t6ezD/YO8KJPEKvEMwfFI8/4Eu9qFg4gXDX10nUPpv4s6npL25YvDU5mfUf6/abwlRG3DgQhSXS9z6l0l6PYW7r5KlTBvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=iQUIWICY; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cTodszGs"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R8Z8Ss011860;
-	Thu, 27 Feb 2025 15:53:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	j2sR96LpMJHsZjO78F10G40p0fT55C9dkwLvJPHtpGw=; b=cTodszGsBaG0OYr+
-	CMRdFyyNiNnwzohdy8lW87dBFT09cd0AIDefK639/FJ6WUcFJHk5LpskrNmp1lCp
-	vnrWRi2OCLjfVc3yzPb8qLxRgh7aI+8QmwP5LHu7o3Qx9DJYIOv+oJBGW+XVRwT2
-	34bOCmYNkl4qHZiDzYuwsGAQhp1duUH2jVJrmFRaZ+BD4zQdEpL5Uo4jjWm51GQ4
-	rDmAJSMEBDP68lINoPcgFiLoSH61BRbpiHWPXTHWRXJ3e3u8pqiuhXvWTzR97rhJ
-	rnQ5dyOI+bkT+L9R1EwlA3iu+7PmK1Sh1KqF45/9v6bm3PEPHnKub/LOICNrJlyM
-	r2co1g==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prke8a9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 15:53:18 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51RFrHfX012405
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 15:53:17 GMT
-Received: from 0d558f49c4ed.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 27 Feb 2025 07:53:12 -0800
-From: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
-To: Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: Odelu Kukatla <quic_okukatla@quicinc.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>,
-        Mike Tipton <mdtipton@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        Sibi Sankar
-	<quic_sibis@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Raviteja Laggyshetty
-	<quic_rlaggysh@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH V9 6/7] arm64: dts: qcom: sa8775p: add EPSS l3 interconnect provider
-Date: Thu, 27 Feb 2025 15:52:12 +0000
-Message-ID: <20250227155213.404-7-quic_rlaggysh@quicinc.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="iQUIWICY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740671607; x=1772207607;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XiAlfy2hIb0teFrPDSk5k50YHK4Av/9RD2s1zu1v4Yw=;
+  b=iQUIWICYg6/H51DsojS5FIleoWmCEGd7MZcdC4h9/GXoZR8kZ7qtr8lD
+   wpt1k9A2VdxPHPLf/ogH2U8uE6S8ZBayT28issKXufyzsyOQoumZFr94I
+   YgSo3bzYqrRBjpJA3PZulVa7jTpOuXZPNwCF0Sva6RfXpshNeTE19M5Kh
+   1cSuHpOdD5Q90b5Ec4z4ytJoGUwf5uQSYt9PCzJM7NFtzkIQ8HBaZevhH
+   Z3W0P15wy/9TCb/p/PnHCV3eFu5CBkPjCDdWXHAuHwjQXWT6Je3FB2VNc
+   xtRM6feOSpy6WpBw8EatQN3zzZmb8ORpuEblYvI9dcqLROPY2zQv0s9GS
+   Q==;
+X-CSE-ConnectionGUID: uJ81GKH9TgaiFMahOXtqRw==
+X-CSE-MsgGUID: HqLtVomjSKCcqL7dRAzydg==
+X-IronPort-AV: E=Sophos;i="6.13,320,1732604400"; 
+   d="scan'208";a="42360406"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2025 08:53:20 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 27 Feb 2025 08:52:44 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 27 Feb 2025 08:52:44 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <claudiu.beznea@tuxon.dev>, <sre@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<p.zabel@pengutronix.de>
+CC: <linux@armlinux.org.uk>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>, "Ryan
+ Wanner" <Ryan.Wanner@microchip.com>
+Subject: [PATCH v3 00/21] Enable Power Modes Support for SAMA7D65 SoC
+Date: Thu, 27 Feb 2025 08:51:47 -0700
+Message-ID: <cover.1740671156.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250227155213.404-1-quic_rlaggysh@quicinc.com>
-References: <20250227155213.404-1-quic_rlaggysh@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,78 +63,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BlRp82LiH2aXbakKqbpBhytqDojj0onv
-X-Proofpoint-ORIG-GUID: BlRp82LiH2aXbakKqbpBhytqDojj0onv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_06,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 malwarescore=0
- impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270120
 
-Add Epoch Subsystem (EPSS) L3 interconnect provider node on SA8775P
-SoCs. L3 instances on this SoC are same as SM8250 and SC7280 SoCs.
-These SoCs use EPSS_L3_PERF register instead of REG_L3_VOTE register for
-programming the perf level. This is taken care in the data associated
-with the target specific compatible. Since, the HW is same in the all
-SoCs with EPSS support, using the same generic compatible for all.
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+This patch set adds support for low power modes for the SAMA7D65 SoC and
+the required components and changes for low power modes.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 3394ae2d1300..d02b4abe9e8d 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/clock/qcom,sa8775p-gcc.h>
- #include <dt-bindings/clock/qcom,sa8775p-gpucc.h>
- #include <dt-bindings/dma/qcom-gpi.h>
-+#include <dt-bindings/interconnect/qcom,osm-l3.h>
- #include <dt-bindings/interconnect/qcom,sa8775p-rpmh.h>
- #include <dt-bindings/mailbox/qcom-ipcc.h>
- #include <dt-bindings/firmware/qcom,scm.h>
-@@ -4653,6 +4654,15 @@ rpmhpd_opp_turbo_l1: opp-9 {
- 			};
- 		};
- 
-+		epss_l3_cl0: interconnect@18590000 {
-+			compatible = "qcom,sa8775p-epss-l3",
-+				     "qcom,epss-l3";
-+			reg = <0x0 0x18590000 0x0 0x1000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
-+			clock-names = "xo", "alternate";
-+			#interconnect-cells = <1>;
-+		};
-+
- 		cpufreq_hw: cpufreq@18591000 {
- 			compatible = "qcom,sa8775p-cpufreq-epss",
- 				     "qcom,cpufreq-epss";
-@@ -4666,6 +4676,15 @@ cpufreq_hw: cpufreq@18591000 {
- 			#freq-domain-cells = <1>;
- 		};
- 
-+		epss_l3_cl1: interconnect@18592000 {
-+			compatible = "qcom,sa8775p-epss-l3",
-+				     "qcom,epss-l3";
-+			reg = <0x0 0x18592000 0x0 0x1000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
-+			clock-names = "xo", "alternate";
-+			#interconnect-cells = <1>;
-+		};
-+
- 		remoteproc_gpdsp0: remoteproc@20c00000 {
- 			compatible = "qcom,sa8775p-gpdsp0-pas";
- 			reg = <0x0 0x20c00000 0x0 0x10000>;
+The series includes changes in the asm code to account for the addtional
+clocks that are in this SoC.
+
+The Device tree additions are to enable all the components needed to
+keep the SoC in low power mode.
+
+There are some DTB check warnings but that is due to the dt-binding not
+in the correct .yaml file format.
+
+Changes v1 -> v2:
+- Add missing compatible for ddr3phy, it is now in both syscon sets.
+- Fix alphabetical ordering for sama7d65.
+- Remove the incorrect reorganizing patch.
+- Remove sama7g5-rtt as a compatible for sama7d65-rtt and add
+  sama7d65-rtt as a compatible wake up source in the pm driver.
+
+Changes from v2 -> v3:
+- Correct mistake in v2 sfrbu dt-binding patch.
+- Correct incorrect dt-binding addition and formatting for rtc and rtt bindings.
+- Add missing SoB tag.
+- Cleaned up commit message for Backup mode to describe SHDWC is status
+  register is cleared for this SoC.
+- Cleaned up variable naming and usage for mcks. Changed the mcks number
+  to the correct number of clocks needed to be saved and corrected the
+  ASM code accordingly.
+- Removed the SHDWC from ULP0 wake-up source as it is not configured as
+  a valid wake-up source for ULP0.
+- Separated all the DTSI and DTS changes into individual patches.
+
+
+Li Bin (1):
+  ARM: at91: pm: fix at91_suspend_finish for ZQ calibration
+
+Ryan Wanner (20):
+  dt-bindings: mfd: syscon: add microchip,sama7d65-ddr3phy
+  dt-bindings: mfd: syscon: add microchip,sama7d65-sfrbu
+  dt-bindings: sram: Add microchip,sama7d65-sram
+  dt-bindings: power: reset: atmel,sama5d2-shdwc: Add
+    microchip,sama7d65-shdwc
+  dt-bindings: reset: atmel,at91sam9260-reset: add
+    microchip,sama7d65-rstc
+  dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
+  dt-bindings: at91rm9260-rtt: add microchip,sama7d65-rtt
+  ARM: at91: Add PM support to sama7d65
+  ARM: at91: pm: add DT compatible support for sama7d65
+  ARM: at91: PM: Add Backup mode for SAMA7D65
+  ARM: at91: pm: Enable ULP0/ULP1 for SAMA7D65
+  power: reset: at91-sama5d2_shdwc: Add sama7d65 PMC
+  ARM: dts: microchip: sama7d65: Add SRAM and DRAM components support
+  ARM: dts: microchip: sama7d65: Add Reset Controller to sama7d65 SoC
+  ARM: dts: microchip: sama7d65: Add Shutdown controller support
+  ARM: dts: microchip: sama7d65: Add RTT and GPBR Support for sama7d65
+    SoC
+  ARM: dts: microchip: sama7d65: Add RTC support for sama7d65
+  ARM: dts: microchip: sama7d65: Add SFRBU support to sama7d65
+  ARM: dts: microchip: sama7d65: Enable shutdown controller
+  ARM: dts: microchip: sama7d65: Add RTT timer to curiosity board
+
+ .../devicetree/bindings/mfd/syscon.yaml       |   4 +
+ .../power/reset/atmel,sama5d2-shdwc.yaml      |   5 +
+ .../reset/atmel,at91sam9260-reset.yaml        |   3 +
+ .../bindings/rtc/atmel,at91rm9200-rtc.yaml    |   4 +-
+ .../bindings/rtc/atmel,at91sam9260-rtt.yaml   |   1 +
+ .../devicetree/bindings/sram/sram.yaml        |   1 +
+ .../dts/microchip/at91-sama7d65_curiosity.dts |  13 +++
+ arch/arm/boot/dts/microchip/sama7d65.dtsi     |  77 +++++++++++++
+ arch/arm/mach-at91/Kconfig                    |   1 +
+ arch/arm/mach-at91/pm.c                       |  47 +++++---
+ arch/arm/mach-at91/pm.h                       |   1 +
+ arch/arm/mach-at91/pm_data-offsets.c          |   2 +
+ arch/arm/mach-at91/pm_suspend.S               | 101 ++++++++++++++++--
+ drivers/power/reset/at91-sama5d2_shdwc.c      |   1 +
+ 14 files changed, 238 insertions(+), 23 deletions(-)
+
 -- 
 2.43.0
 
