@@ -1,135 +1,136 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF0221542
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF321D599;
+	Thu, 27 Feb 2025 07:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740639880; cv=none; b=GNugUKbOSY4MJjYSNA7ILxPpK3IzPMhLtpz6OmOAEdbPAQ26pHDkGFnucPC8iTdpBqsKPSZdhH4dzH2PnzB89/ppX6YWQwTO+n8Zd7tkgxO42SLkIDcR3KyN1aGoMsrGuNlEAG6E9P2y0lzdeaqGwdmBf63oexO33GZwxxbIQ+o=
+	t=1740639910; cv=none; b=Z3NDmNUUOvrhe9nQl8iOMZPWvjiaPyhC+IjA83t7nRnJWTvcWH8vtZG4+S0O331Yo84Sw4sao+o8Q785GmeP67bkbHTCJ68kEePxN7XeJujNXWtfCxKiUgHag7HiqC5IGcjhzrvz4mbIuweYnY7by1lwWhWD9PbIfP3SgPi43+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740639880; c=relaxed/simple;
-	bh=E1P3SIAYAWhybl/UsUeGA/UsCtA/rwx7cWZPws1FXU8=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FRbve2+rZYumHZExR7WWc+ODWobmtu1dClSAsAj7gPjwtXJ11iPfBg03Tt/Xsb+SDEdp8wRyXOQgTWOsDEKEDkTt5IA5GO5ywyjzGRoeLSeixkzOzX/uJnmiriXZUfpp7JaZS3imjKK2OBXzHDupouyW5sNf7onEGXFQp0o6n3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Z3Mg13vpHz1dyn1;
-	Thu, 27 Feb 2025 15:00:29 +0800 (CST)
-Received: from kwepemg200013.china.huawei.com (unknown [7.202.181.64])
-	by mail.maildlp.com (Postfix) with ESMTPS id D8AA7140154;
-	Thu, 27 Feb 2025 15:04:34 +0800 (CST)
-Received: from [10.174.179.24] (10.174.179.24) by
- kwepemg200013.china.huawei.com (7.202.181.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 27 Feb 2025 15:04:33 +0800
-Subject: Re: Softlockup when test shmem swapout-swapin and compaction
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>
-References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
- <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
-CC: Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>, Hugh
- Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Lance
- Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>, Ryan
- Roberts <ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Zi
- Yan <ziy@nvidia.com>
-From: Liu Shixin <liushixin2@huawei.com>
-Message-ID: <acbfc1da-f743-b11b-191c-ce6e476f1709@huawei.com>
-Date: Thu, 27 Feb 2025 15:04:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	s=arc-20240116; t=1740639910; c=relaxed/simple;
+	bh=x/fvxQXO3R9Lw7VjrELLy8bNhalAiL/Wcmz0kXpRovk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4Q9E9LBwL3cnq3vG+LorzJgzmU+yW13G6VYzpuQr9eb8r3Mc9rAZtdzKmOVa0Ep3zkfDp1Yx20U9WupW8Nu/oTSctVyohB88DEeWhnERVsNOkLRsHpOCWsNPFJQ3kmw7xDJGTl8UbqRiGbHp2238QoiN2Hqr76R0JiYJZeeBVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2PzNv+d; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2PzNv+d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F85C4CEDD;
+	Thu, 27 Feb 2025 07:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740639910;
+	bh=x/fvxQXO3R9Lw7VjrELLy8bNhalAiL/Wcmz0kXpRovk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e2PzNv+dc6QwbxX8E6WheaomB4CsP0CeHFi4lakvzTeBNCR/P+kXc3Cem3UbuKLre
+	 UH7wLyRQXSUdHtVFcsMhTfoh+yGj2dzVQTFjxiNtXlnsFYhHwYriqTGUZU64+7yFHz
+	 6bDAjOBkCOohHApVotttaw7RDGOqw1voJ2vcC3Yw5HuqYQRhfp95nUlEYInBNxkcrQ
+	 hmMjejl1ddEiXrKARMGSmylunvW62NTE09VE6sXfot003UXxI+beJCPgA85Mv9q5Pk
+	 GIL0VbE5KZatmtCrrfPdeA/xS6mPeXXloWVBM/rZRM2fcsm6DhKW+BAJ1WRorbIj9z
+	 F+AWRGr7klqlQ==
+Date: Wed, 26 Feb 2025 23:05:08 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf arm-spe: Report error if set frequency
+Message-ID: <Z8AOpLW6RSUU09Ns@google.com>
+References: <20250205183009.224182-1-leo.yan@arm.com>
+ <20250217082008.GA8144@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemg200013.china.huawei.com (7.202.181.64)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250217082008.GA8144@e132581.arm.com>
 
+Hello,
 
+On Mon, Feb 17, 2025 at 08:20:08AM +0000, Leo Yan wrote:
+> On Wed, Feb 05, 2025 at 06:30:09PM +0000, Leo Yan wrote:
+> > When users set the parameter '-F' to specify frequency for Arm SPE, the
+> > tool reports error:
+> > 
+> >   perf record -F 1000 -e arm_spe_0// -- sleep 1
+> >   Error:
+> >   Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
+> > 
+> > The output logs are confused and it does not give the correct reminding.
+> > Arm SPE does not support frequency setting given it adopts a statistical
+> > based approach.
+> > 
+> > Alternatively, Arm SPE supports setting period.  This commit adds a
+> > for frequency setting.  It reports error and reminds users to set period
+> > instead.
+> > 
+> > After:
+> > 
+> >   perf record -F 100 -e arm_spe_0// -- sleep 1
+> >   Arm SPE: Frequency is not supported. Check manual 'man perf-record' on how to set period.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> 
+> Gentle ping.
 
-On 2025/2/26 15:22, Baolin Wang wrote:
-> Add Zi.
->
-> On 2025/2/26 15:03, Liu Shixin wrote:
->> Hi all,
->>
->> I found a softlockup when testing shmem large folio swapout-swapin and compaction:
->>
->>   watchdog: BUG: soft lockup - CPU#30 stuck for 179s! [folio_swap:4714]
->>   Modules linked in: zram xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat xt_addrtype iptable_filter ip_tantel_rapl_msr intel_rapl_common intel_uncore_frequency_common skx_edac_common nfit libnvdimm kvm_intel kvm rapl cixt4 mbcache jbd2 sr_mod cdrom ata_generic ata_piix virtio_net net_failover ghash_clmulni_intel libata sha512_ssse3
->>   CPU: 30 UID: 0 PID: 4714 Comm: folio_swap Kdump: loaded Tainted: G             L     6.14.0-rc4-next-20250225+ #2
->>   Tainted: [L]=SOFTLOCKUP
->>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
->>   RIP: 0010:xas_load+0x5d/0xc0
->>   Code: 08 48 d3 ea 83 e2 3f 89 d0 48 83 c0 04 48 8b 44 c6 08 48 89 73 18 48 89 c1 83 e1 03 48 83 f9 02 75 08 48 3d
->>   RSP: 0000:ffffadf142f1ba60 EFLAGS: 00000293
->>   RAX: ffffe524cc4f6700 RBX: ffffadf142f1ba90 RCX: 0000000000000000
->>   RDX: 0000000000000011 RSI: ffff9a3e058acb68 RDI: ffffadf142f1ba90
->>   RBP: fffffffffffffffe R08: ffffadf142f1bb50 R09: 0000000000000392
->>   R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000011
->>   R13: ffffadf142f1bb48 R14: ffff9a3e04e9c588 R15: 0000000000000000
->>   FS:  00007fd957666740(0000) GS:ffff9a41ac0e5000(0000) knlGS:0000000000000000
->>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>   CR2: 00007fd922860000 CR3: 000000025c360001 CR4: 0000000000772ef0
->>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>   PKRU: 55555554
->>   Call Trace:
->>    <IRQ>
->>    ? watchdog_timer_fn+0x1c9/0x250
->>    ? __pfx_watchdog_timer_fn+0x10/0x10
->>    ? __hrtimer_run_queues+0x10e/0x250
->>    ? hrtimer_interrupt+0xfb/0x240
->>    ? __sysvec_apic_timer_interrupt+0x4e/0xe0
->>    ? sysvec_apic_timer_interrupt+0x68/0x90
->>    </IRQ>
->>    <TASK>
->>    ? asm_sysvec_apic_timer_interrupt+0x16/0x20
->>    ? xas_load+0x5d/0xc0
->>    xas_find+0x153/0x1a0
->>    find_get_entries+0x73/0x280
->>    shmem_undo_range+0x1fc/0x640
->>    shmem_evict_inode+0x109/0x270
->>    evict+0x107/0x240
->>    ? fsnotify_destroy_marks+0x25/0x180
->>    ? _atomic_dec_and_lock+0x35/0x50
->>    __dentry_kill+0x71/0x190
->>    dput+0xd1/0x190
->>    __fput+0x128/0x2a0
->>    task_work_run+0x57/0x90
->>    syscall_exit_to_user_mode+0x1cb/0x1e0
->>    do_syscall_64+0x67/0x170
->>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>   RIP: 0033:0x7fd95776eb8b
->>
->> If CONFIG_DEBUG_VM is enabled, we will meet VM_BUG_ON_FOLIO(!folio_test_locked(folio)) in
->> shmem_add_to_page_cache() too.  It seems that the problem is related to memory migration or
->> compaction which is necessary for reproduction,  although without a clear why.
->>
->> To reproduce the problem, we need firstly a zram device as swap backend, and then run the
->> reproduction program. The reproduction program consists of three parts:
->>   1. A process constantly changes the status of shmem large folio by these interfaces:
->>          /sys/kernel/mm/transparent_hugepage/hugepages-<size>/shmem_enabled
->>   2. A process constantly echo 1 > /proc/sys/vm/compact_memory
->>   3. A process constantly alloc/free/swapout/swapin shmem large folios.
->>
->> I'm not sure whether the first process is necessary but the second and third are. In addition,
->> I tried hacking to modify compaction_alloc to return NULL, and the problem disappeared,
->> so I guess the problem is in migration.
->>
->> The problem is different with https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
->> since I have confirmed this porblem still existed after merge the fixed patch.
->
-> Could you check if your version includes Zi's fix[1]? Not sure if it's related to the shmem large folio split.
->
-> [1] https://lore.kernel.org/all/AF487A7A-F685-485D-8D74-756C843D6F0A@nvidia.com/
-> .
->
-Already include this patch when test.
+Sorry for the late reply.
+
+Isn't it just -c <period> to set period for Arm SPE?  If so, it'd be
+better to say that explicitly.
+
+Thanks,
+Namhyung
+
+> 
+> > ---
+> >  tools/perf/arch/arm64/util/arm-spe.c | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> > index 4301181b8e45..baef0812dc19 100644
+> > --- a/tools/perf/arch/arm64/util/arm-spe.c
+> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> > @@ -40,6 +40,19 @@ struct arm_spe_recording {
+> >  	bool			*wrapped;
+> >  };
+> >  
+> > +/* Iterate config list to detect if the "freq" parameter is set */
+> > +static bool arm_spe_is_set_freq(struct evsel *evsel)
+> > +{
+> > +	struct evsel_config_term *term;
+> > +
+> > +	list_for_each_entry(term, &evsel->config_terms, list) {
+> > +		if (term->type == EVSEL__CONFIG_TERM_FREQ)
+> > +			return true;
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  /*
+> >   * arm_spe_find_cpus() returns a new cpu map, and the caller should invoke
+> >   * perf_cpu_map__put() to release the map after use.
+> > @@ -389,6 +402,13 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+> >  				return -EINVAL;
+> >  			}
+> >  			opts->full_auxtrace = true;
+> > +
+> > +			if (opts->user_freq != UINT_MAX ||
+> > +			    arm_spe_is_set_freq(evsel)) {
+> > +				pr_err("Arm SPE: Frequency is not supported. "
+> > +				       "Check manual 'man perf-record' on how to set period.\n");
+> > +				return -EINVAL;
+> > +			}
+> >  		}
+> >  	}
+> >  
+> > -- 
+> > 2.34.1
+> > 
