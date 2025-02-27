@@ -1,103 +1,105 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941A122A4E1;
-	Thu, 27 Feb 2025 10:56:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CEE22A7FE;
+	Thu, 27 Feb 2025 10:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740653777; cv=none; b=MNKYMzPu5+Cd1CqwcjdxFFsA9di/lCLP/F7uUEstoO0YW5sdIjrPSNbUZclO3VUQ+y/FzGURVlAkhppSWuBYEzH4fL6zCzjjom5zfHsyF9+QA+4wlEJZKe1nJCq9x1J3chjEAWw7PZ8mKfsFomD6XBc7YCk2YmdoVi41+xUwroo=
+	t=1740653779; cv=none; b=CefmEAD3HaxxFFEWnfDLtzzrYT15MNOQbpT8uvgUJrI3x2Jtc7XYv4hohoJAp5wbWRor3iZuref1pMINHfopox+waAU5Jy+K1VmhjRcXOY+2PeyIXdKAZ5rl/vp6Rx8goLRbGhl+2BZXSYfTNbMNp9MPfyZRX5wKqiZ9XM1Tmi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740653777; c=relaxed/simple;
-	bh=oghgkns9Qch9f+79sYUw3v6hcv1uz7UfDQR5O+S6GPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O8kFk+KHIMo68j/C2cbL5aff0P7bqxDJYoG/oQnCII//dZ7MZg3J1oVjrMY++FkuE2u7+xH/ib4LuZTHmGXC2P2s8Noe6u0sIDTtuR703O1YFSZAG9/3Zqq0OsiG+mvDagCFJ35yvyC7rG4Lip6+1im15A+emoz4T+ADw7ZN/ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=YQJQHGRD; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1740653779; c=relaxed/simple;
+	bh=Xg/cpLBrcpLSuwdr1Ma9m8NyWsXH9NX2/lvTtG7LWjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bxqASyv/DMOuEr8aH86l1ZcBejcCdyCRLOVSvFwjB/kshISvsJn2qrbCM6HcwxEPDqqNn6t2QbjuKcwnPtX24ILSg/hUUGXqatQE6tp4gbA8LbingRGxoDx+ODLMQSKXfn2ibrsk/g+v1MTDzpt/EYD9U/bsWhWSAFUvx2dif1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=HUfv/1kr; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="YQJQHGRD"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id 4f8d2c02f9e3d6cd; Thu, 27 Feb 2025 11:56:13 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id E956FD50215;
-	Thu, 27 Feb 2025 11:56:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1740653773;
-	bh=oghgkns9Qch9f+79sYUw3v6hcv1uz7UfDQR5O+S6GPo=;
-	h=From:Subject:Date;
-	b=YQJQHGRDRxhL+McsHC9XRpPBc0wMqrRxirkShJ6MjDe8nD194SvXrGqsSnZL48SWv
-	 0rSjrenUr/1KEE/Uuylwb2QsevZOYZ6As1sblKwn/Io9B2quF7vW04+Fkf3MGroOz8
-	 RdgQkT6nDRZtDZVXlR+FQJWrbsbC6EBlpEqb2qT34+ktxdLMwkSERpsrKzx32TV2TJ
-	 cvbHtRzPDKro+836GNiiQyi2rfQHyB7vRlkGXTDrWC0VtHzpW9BZD+NG/XDYW82qZ+
-	 7G7bKqDAfoSIFV/h1gKIbrQEbALK/D9oSLp5ZrcrM0lyc6eOI1JikEymmPclJ5Z2UG
-	 ULGFKnGtVEyAQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Jon Hunter <jonathanh@nvidia.com>
-Subject:
- [PATCH v2] PM: runtime: Drop status check from pm_runtime_force_resume()
-Date: Thu, 27 Feb 2025 11:56:12 +0100
-Message-ID: <2309120.iZASKD2KPV@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="HUfv/1kr"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PiGv4eKvzFP8GKMacfTTM7wI8HoQk+tFnB/wXXe8oC8=; b=HUfv/1krv0CyQhz1z4QDZFRZsv
+	Ew44NpgikJfUrQxB7Vc9O1guk+n0kGcoRVa3acgN5p4v7hrCMY4/+ExEqYKbjsInQnS2MEgy9SbDN
+	vvtcJZ/t9l9TeDcTFOdoMLxj+G4kfePEb4mjrm5yjzhTCPGVo3aqHLqj05FzGtZZKxITpaA+RcdzU
+	Ja7FlvKQV5aYI1OgyS9nYWgYNp3ligoqMqnKyX0VtRehMtrO5VBaMxJUEcIquKyDIy1qs5ndZRvsA
+	Itcz9Rl9q0cJAwZ5CIQU7c0F+8DFBBZq3VDzB+cksbXm3HPO4WTxQfWzvKW5Nql2qg2UzdCwHOLhr
+	+ckAx6zQ==;
+Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1tnbY9-00008f-Av; Thu, 27 Feb 2025 11:55:29 +0100
+From: Heiko Stuebner <heiko@sntech.de>
+To: linux-kernel@vger.kernel.org,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Niklas Cassel <cassel@kernel.org>,
+	Dragan Simic <dsimic@manjaro.org>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Johan Jonker <jbx6244@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Algea Cao <algea.cao@rock-chips.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Sugar Zhang <sugar.zhang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	dri-devel@lists.freedesktop.org,
+	kernel@collabora.com
+Subject: Re: (subset) [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
+Date: Thu, 27 Feb 2025 11:55:16 +0100
+Message-ID: <174065370894.4124124.10616312809882779303.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250217215641.372723-1-detlev.casanova@collabora.com>
+References: <20250217215641.372723-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjedvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtohepjhhohhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
-
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Since pm_runtime_force_resume() requires pm_runtime_force_suspend() to
-be called before it on the same device, the runtime PM status of the
-device is RPM_SUSPENDED when it is called unless the device's runtime
-PM status is changed somewhere else in the meantime.
-
-However, even if that happens, the power.needs_force_resume
-check is still required to pass and that flag is only set by
-pm_runtime_force_suspend() once and it is cleared at the end of
-pm_runtime_force_resume(), so it cannot be taken into account
-twice in a row.
-
-According to the above, the pm_runtime_status_suspended(dev) check in
-pm_runtime_force_resume() is redundant, so drop it.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-The previous version of this patch is here:
-
-https://lore.kernel.org/linux-pm/6038511.MhkbZ0Pkbq@rjwysocki.net/
-
-v1 -> v2: Minor changelog edits.
-
----
- drivers/base/power/runtime.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/base/power/runtime.c
-+++ b/drivers/base/power/runtime.c
-@@ -1982,7 +1982,7 @@
- 	int (*callback)(struct device *);
- 	int ret = 0;
- 
--	if (!pm_runtime_status_suspended(dev) || !dev->power.needs_force_resume)
-+	if (!dev->power.needs_force_resume)
- 		goto out;
- 
- 	/*
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 
+On Mon, 17 Feb 2025 16:47:39 -0500, Detlev Casanova wrote:
+> To support HDMI audio on the rk3588 based devices, the generic HDMI
+> Codec framework is used in the dw-hdmi-qp DRM bridge driver.
+> 
+> The implementation is mainly based on the downstream driver, ported to the
+> generic HDMI Codec framework [1] recently merged in the master branch.
+> The parameters computation has been kept as is and the data stored in the
+> dw_hdmi_qp struct as been cleaned up.
+> 
+> [...]
 
+Applied, thanks!
+
+[1/3] drm/bridge: synopsys: Add audio support for dw-hdmi-qp
+      commit: fd0141d1a8a2a26675ee88df75615c05a55044de
+
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
