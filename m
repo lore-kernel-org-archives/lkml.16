@@ -1,93 +1,84 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FB32222A5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626331F16B;
+	Thu, 27 Feb 2025 08:46:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740645885; cv=none; b=FNOC3WSZ9pA1zsUdCOU6Pc/c58qRTP1voibGmJGQH6BR+aOAvZThtH0njbBdGthY+owjzfoBn2LLjDB/stkjQMTupRQUfruSVykBvoYNIs66qvn0JpVvme6GCqnQc0tjA7cIvvYm7jDJGB2CMQtZyuvmzStl9DT+j5iX7ON8hpE=
+	t=1740645970; cv=none; b=A5qlNksmxahTZQPRqvMToI02/A7G7A0HLAXuNiQMxLcZI2INo6fDCQIJsleA1bNaYwYaxUYyNUv/2SpFTbnK3AukCJjB2Ukb+GJD5ssZZ4d5QKbcF3b78mYeDQB56wE+gD56ZRTjrgD3WUGWrkPCoQDnK8ANnUtQEK3Pte+JJeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740645885; c=relaxed/simple;
-	bh=JGW9cxzzsY5VN/raILkwjSf7H9fvm109h9NaTvo8lac=;
+	s=arc-20240116; t=1740645970; c=relaxed/simple;
+	bh=+mw4AmEs2khSPV0cFLSRNs7O9EUXGmmGWpPp7c+s66E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qjs1Xfwnz2Gd4I6ekPwdl37BKsy6f8ToZo/vX355ncY5ArvjUEJpyR6aug1nu9qSR43EwQjvrkiS1NM1ZEhOyIDAoNUVxnDCPILQ7RXXr3wdjaWCTwe+Q3K+N8g1cbjJJ2zf3jb3dXO+S1gjAiFccqfJVBzoYGCOtr9xtZABntU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=RVbL21y6; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	 MIME-Version:Content-Type; b=OlbWbO8foDdL7r/A7ECvKxv1DbvCpZR38CSkrWlEJEYNRJhlKf+JJwhGaIB31OVTa817sfHAfyWigV0Ck7u89EkVqOyJw0ILHwLiIsXXt4m8EwRLnU0QhzvBFFvTCTclfYRjIQ6csFSqKhXOqtZ6S/jcaGdZacYFp0NArDjCYyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dm/GF3nS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="RVbL21y6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5MZDY9LEAwQLaGy/5t3sedQ+InC4HHqCTBWMRr1Rdmk=; b=RVbL21y6Trpv8FYuCJuwa0q4YZ
-	j6HQ7xFe55AuYT7lmC4Gf/GF3zjg+r5aQKTMTGLeNnFQJYre3w3w3Ux794RbN9DfuaX2UQtpDjiuM
-	rHTvDuY/Qq6BX0S7zNx68eBQWt7IotR24gJ1OQHNawYd4PeQW5OLCJG9NLdLVJJDiH0GmZo9o4o06
-	FTod+l+W0JiOW5Zn1u2MuNumi6eGa79l86OqXBZwChbF0luXJm49t/JSp6qRU3KPwnO7lOs9CsLcP
-	/+7xIDnXjuSkMJ2F+BcUF/uD1LZLOIpV9Of5VOF/lAAE4kPUiKQBkWh9BVCgUAK5ccCiLTZgte0Sc
-	d/zLl4nA==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tnZVI-0007pV-G7; Thu, 27 Feb 2025 09:44:24 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: rafael@kernel.org, dakr@kernel.org, hjc@rock-chips.com,
- andy.yan@rock-chips.com, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, quentin.schulz@cherry.de
-Subject:
- Re: [PATCH 1/2] drivers: base: component: add function to query the bound
- status
-Date: Thu, 27 Feb 2025 09:44:23 +0100
-Message-ID: <12995210.iMDcRRXYNz@diego>
-In-Reply-To: <2025022153-outdoors-snugly-3967@gregkh>
-References:
- <20250220234141.2788785-1-heiko@sntech.de>
- <20250220234141.2788785-2-heiko@sntech.de>
- <2025022153-outdoors-snugly-3967@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dm/GF3nS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B060C4CEDD;
+	Thu, 27 Feb 2025 08:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740645969;
+	bh=+mw4AmEs2khSPV0cFLSRNs7O9EUXGmmGWpPp7c+s66E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Dm/GF3nS9KvQUat4GXtaWiuyz6SFevpZZ5c+v8Ock75BU0OcXG8TWTG6IdiZg5MN2
+	 O2ZeGwILyuTrch5oX0JDQnbLk/TDV6A37uY101O6Auk0POqayNGtr7QkNXY5u/Fmk4
+	 a/jIYw5cJ3sebyNzMgg7S6ForZvyogs/O4bgf8HCV9FmMbXWLUoI+BIkyR/X5q25Yb
+	 BMa0Te3VaFbimaPCQx/ceTBTBwmSxvAJfrHRvKvrc4FuSjyUQhPxqup48ebqj+3taw
+	 njwW811I08fZjoMAw4V7U+QMdnNC72RCJUXfMSsxupbfiV4hkOosq0Xs/4e2sygojC
+	 Y7zAkH8mJ+bTQ==
+From: Christian Brauner <brauner@kernel.org>
+To: Lin Feng <linf@wangsu.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	soheil@google.com,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz
+Subject: Re: [PATCH] epoll: simplify ep_busy_loop by removing always 0 argument
+Date: Thu, 27 Feb 2025 09:45:58 +0100
+Message-ID: <20250227-kanon-unrentabel-e3cf5eea0ded@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250227033412.5873-1-linf@wangsu.com>
+References: <20250227033412.5873-1-linf@wangsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1237; i=brauner@kernel.org; h=from:subject:message-id; bh=+mw4AmEs2khSPV0cFLSRNs7O9EUXGmmGWpPp7c+s66E=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQfUPO5GtxjfUdY5mbTHUP+jfoTHl3genTpT+ysWb+v+ SgKGPRIdJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzEKYWRYZL23RUt/VoiBsHl z7IUBJyCJ+/nENt1SEOPOdWzI5rtMsN/F8lDZr5MOfeXTZwq++rlrD1ynCw6gvdPFPJUTXT99fA AEwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
-
-Am Freitag, 21. Februar 2025, 07:14:07 MEZ schrieb Greg KH:
-> On Fri, Feb 21, 2025 at 12:41:40AM +0100, Heiko Stuebner wrote:
-> > The component helpers already expose the bound status in debugfs, but at
-> > times it might be necessary to also check that state in the kernel and
-> > act differently depending on the result.
-> > 
-> > For example the shutdown handler of a drm-driver might need to stop
-> > a whole output pipeline if the drm device is up and running, but may
-> > run into problems if that drm-device has never been set up before,
-> > for example because the binding deferred.
-> > 
-> > So add a little helper that returns the bound status for a componet
-> > device.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> >  drivers/base/component.c  | 14 ++++++++++++++
-> >  include/linux/component.h |  4 +++-
-> >  2 files changed, 17 insertions(+), 1 deletion(-)
+On Thu, 27 Feb 2025 11:34:12 +0800, Lin Feng wrote:
+> Commit 00b27634bc471("epoll: replace gotos with a proper loop") refactored
+> ep_poll and always feeds ep_busy_loop with a time_out value of 0, nonblock
+> mode for ep_busy_loop has sunk since, IOW nonblock mode checking has been
+> taken over by ep_poll itself, codes snipped:
 > 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> static int ep_poll(struct eventpoll *ep...
+> {
+> ...
+>     if (timed_out)
+>         return 0;
+> 
+> [...]
 
-just for safety and not stepping on people's toes, does the Acked-by mean
-that this patch can go together with its user through the drm-misc tree?
+Applied to the vfs-6.15.misc branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.misc branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Thanks a lot
-Heiko
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.misc
+
+[1/1] epoll: simplify ep_busy_loop by removing always 0 argument
+      https://git.kernel.org/vfs/vfs/c/d3a194d95fc8
