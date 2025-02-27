@@ -1,152 +1,87 @@
-Received: from secgw2.intern.tuwien.ac.at (secgw2.intern.tuwien.ac.at [128.130.30.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C58A1662EF;
-	Thu, 27 Feb 2025 11:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.130.30.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FBB270020;
+	Thu, 27 Feb 2025 12:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740657559; cv=none; b=h7q9AmVnTlR14VRLFBXNUaRU1c3J23L4LPgiaPrrczPkFXaGCX2/xE9+EDBWvSpsKVvObeGnBTsoCdVl/dtAqvOTvswE8IRqTSzXYuiOrc3UgBKCdZwwRB258qmCDj5uMEctEFNAUFSlMh1xl5flyKvKvo3XbtZnvDx8W5E6Fi4=
+	t=1740657698; cv=none; b=G/7vLY5dSmRf6iaXaC3vkYkdRh14MjZkBsFxqdMYyu/gAVGrpKKGQd9rbuGHjrtyeNuwehSkXlN+0YLK0DNbg6qscd5mkr3D+Y2GHSeegy2mWMY8caB+COOrfoc41RasoS+gGH4XBkIpdzzkB8fNwLIdkxOVPaPK+oEqHUlZaBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740657559; c=relaxed/simple;
-	bh=rQ7Ss53NQhp6xE+NKnBfX0JGooA10Y0BSgs1MEpceyg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gZ0lcqy3TNcWHduJ8YBW++GYib+LossxCmvmGRGVkBtt34opZiUFm0GsyxNiiLU4q0tUkh72jCtUs5EBo/+6bmWpEMoe68KWz+zjaud+5eP2HcFiHPpN992Unu4j7CRnNqPqZ0dL5+r9HOHxRdycUQnkS172I3yXe+WIFeQk5J0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuwien.ac.at; spf=pass smtp.mailfrom=tuwien.ac.at; arc=none smtp.client-ip=128.130.30.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tuwien.ac.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuwien.ac.at
-Received: from Kiteworks (kwmta2.intern.tuwien.ac.at [128.130.30.92])
-	by secgw2.intern.tuwien.ac.at (8.14.7/8.14.7) with ESMTP id 51RBqln4002249;
-	Thu, 27 Feb 2025 12:52:47 +0100
-Received: from secgw2.intern.tuwien.ac.at ([128.130.30.72])
-          by totemomail.intern.tuwien.ac.at (Totemo SMTP Server) with SMTP ID 339;
-          Thu, 27 Feb 2025 11:52:47 +0000 (GMT)
-Received: from edge19a.intern.tuwien.ac.at (edge19a.intern.tuwien.ac.at [IPv6:2001:629:1005:30::45])
-	by secgw2.intern.tuwien.ac.at (8.14.7/8.14.7) with ESMTP id 51RBqjCr002221
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Feb 2025 12:52:46 +0100
-Received: from mbx19b.intern.tuwien.ac.at (2001:629:1005:30::82) by
- edge19a.intern.tuwien.ac.at (2001:629:1005:30::45) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 27 Feb 2025 12:52:45 +0100
-Received: from [2001:629:3800:12:60df:cde0:d4ed:3659]
- (2001:629:3800:12:60df:cde0:d4ed:3659) by mbx19b.intern.tuwien.ac.at
- (2001:629:1005:30::82) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 27 Feb
- 2025 12:52:45 +0100
-Date: Thu, 27 Feb 2025 12:52:57 +0100
-From: Thomas Haschka <thomas.haschka@tuwien.ac.at>
-To: Ricky WU <ricky_wu@realtek.com>
-CC: Ulf Hansson <ulf.hansson@linaro.org>,
-        Thomas Haschka
-	<thomas.haschka@tuwien.ac.at>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org"
-	<linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "James.Bottomley@hansenpartnership.com"
-	<James.Bottomley@hansenpartnership.com>,
-        "martin.peterson@oracle.com"
-	<martin.peterson@oracle.com>
-Subject: RE: mmc0: error -95 doing runtime resume
-In-Reply-To: <4e7162dfccbe44468f6a452896110cc8@realtek.com>
-Message-ID: <aebf263c-570a-ed4b-bb37-22ab6596fbb3@tuwien.ac.at>
-References: <c2f50eac-3270-8dfa-2440-4c737c366b17@tuwien.ac.at> <8fd7f1d9-fc0d-4fa7-81be-378a3fc47d2a@acm.org> <CAPDyKFpwZt9rezBhBbe9FeUX1BycD2br6RRTttvAVS_C99=TiQ@mail.gmail.com> <4e7162dfccbe44468f6a452896110cc8@realtek.com>
+	s=arc-20240116; t=1740657698; c=relaxed/simple;
+	bh=xUzfOdsfoPAyrGZzqH6LEvJu9U1fppCstf/mr9hCqu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u/CqDRqTzkS4zq8LuKnELLXPEeCYTL7ct0RCZizqWyTXahGdV3/LwbzBgMCmKjByytulblYoFhR3hkqUJxVL+IM5c6uDsTQyjlxt8Ygb4tICU4sbi5lRmA2Bmseoyu6ehrTd9IqL0JyvADQZ1VkynkTUIfFGxkTlwz+Rwk8uTg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kH8h9nZw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kH8h9nZw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B45C4CEDD;
+	Thu, 27 Feb 2025 12:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740657697;
+	bh=xUzfOdsfoPAyrGZzqH6LEvJu9U1fppCstf/mr9hCqu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kH8h9nZwxBi4UyXu/WcZZ6dBk+0qND3m2wYpURUHFBpa62tFtQd4kAwxxj2KYm03r
+	 EtiJ9WU+D67wYwY1dS3tsI3VuNUfZ0rPe3IwxNeJYXGJp4BuNeQTKbgnKW3CKl8f/x
+	 eRdZhfJsa6jx5Z0pTtMVMKzRwXuZ686FW2gwAAgQ=
+Date: Thu, 27 Feb 2025 04:00:28 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Alistair Francis <alistair@alistair23.me>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lukas@wunner.de,
+	linux-pci@vger.kernel.org, bhelgaas@google.com,
+	Jonathan.Cameron@huawei.com, rust-for-linux@vger.kernel.org,
+	akpm@linux-foundation.org, boqun.feng@gmail.com,
+	bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, ojeda@kernel.org,
+	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
+	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
+	Alistair Francis <alistair.francis@wdc.com>
+Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
+ authenticated
+Message-ID: <2025022752-pureblood-renovator-84a8@gregkh>
+References: <20250227030952.2319050-1-alistair@alistair23.me>
+ <20250227030952.2319050-10-alistair@alistair23.me>
+ <2025022717-dictate-cortex-5c05@gregkh>
+ <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"; format=flowed
-X-ClientProxiedBy: mbx19a.intern.tuwien.ac.at (2001:629:1005:30::81) To
- mbx19b.intern.tuwien.ac.at (2001:629:1005:30::82)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
 
-Hello Ricky,
+On Thu, Feb 27, 2025 at 12:52:02PM +0100, Alice Ryhl wrote:
+> On Thu, Feb 27, 2025 at 12:17 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Thu, Feb 27, 2025 at 01:09:41PM +1000, Alistair Francis wrote:
+> > > +     return rust_authenticated_show(spdm_state, buf);
+> >
+> > Here you have C code calling into Rust code.  I'm not complaining about
+> > it, but I think it will be the first use of this, and I didn't think
+> > that the rust maintainers were willing to do that just yet.
+> >
+> > Has that policy changed?
+> >
+> > The issue here is that the C signature for this is not being
+> > auto-generated, you have to manually keep it in sync (as you did above),
+> > with the Rust side.  That's not going to scale over time at all, you
+> > MUST have a .h file somewhere for C to know how to call into this and
+> > for the compiler to check that all is sane on both sides.
+> >
+> > And you are passing a random void * into the Rust side, what could go
+> > wrong?  I think this needs more thought as this is fragile-as-f***.
+> 
+> I don't think we have a policy against it? I'm pretty sure the QR code
+> thing does it.
 
-yes [1] and this issue are the same. As I only have a Surface GO 2
-at hand I can not speak for other effected systems, though I guess it is
-reasonable that others are effected.
-It probably works for some use cases, as it only fails if I read a
-lot of files, like opening emacs or firefox ( from the SD Card ). Which then
-causes symptoms as outlined
-here: https://bugzilla.kernel.org/show_bug.cgi?id=218821
+Sorry, you are right, it does, and of course it happens (otherwise how
+would bindings work), but for small functions like this, how is the C
+code kept in sync with the rust side?  Where is the .h file that C
+should include?
 
-Hello Uffe,
-I will try to see what I can do with MMC_CAP_AGGRESSIVE_PM.
+thanks,
 
-All the best,
-- Thomas
-
-
-On Thu, 27 Feb 2025, Ricky WU wrote:
-
->> + Ricky
->>
->> On Fri, 21 Feb 2025 at 18:20, Bart Van Assche <bvanassche@acm.org> wrote:
->>>
->>>
->>> On 2/21/25 7:41 AM, Thomas Haschka wrote:
->>>> Bug Fix: block: Improve stability of SD cards in Microsoft Surface GO 2 and
->>>>               possibly other devices.
->>>>
->>>>
->>>> The commit 65a558f66c308
->>>>      block: Improve performance for BLK_MQ_F_BLOCKING drivers
->>>>
->>>> basically made the use of SD cards in my Microsoft Surface GO 2
->> impossible.
->>>> The cards do stop functioning after about 15 minutes. Mostly at io
->>>> intensive tasks.
->>>>
->>>> As outlined in https://bugzilla.kernel.org/show_bug.cgi?id=218821
->>>> i bisected the problem that yielded an unstable operation of the
->>>> cardreader on my Surface GO 2.
->>>> I successfully reversed the commit 65a558f66c308 in 6.12.16 using
->>>> the attached patch. As I suppose the bug introduced with this commit
->>>> might hit other users of sd-cards in similar hardware I suggest this
->>>> commit shall be reversed, even if the improved performance might be
->> gone.
->>>
->>> Thank you for having bisected this issue and for having shared the
->>> result of the bisection process. This is very useful information.
->>>
->>> Since the commit mentioned above is about 1.5 years old and has not
->>> caused any issues for anyone who is not using an SD card reader, that
->>> commit is probably not the root cause of the reported behavior. Are SD
->>> cards controlled by the MMC driver? If so, I think the next step is to
->>> take a close look at the MMC driver. I have Cc-ed the MMC driver
->> maintainer.
->>
->> There was another thread [1] where I tried to loop in Ricky Wu, but there was
->> no response. I have added him to this tread too.
->>
-> Hi Ulf,
-> Because I was waiting for the result that revert 101bd907b424 ("misc: rtsx: judge ASPM Mode to set PETXCFG Reg")
-> Can fix this issue or not, but I did not see any response...
->
-> Hi Thomas,
-> This issue(this mail thread) and [1] are the same issue?
-> And this issue only can reproduce on surface go 2?
-> If so, I need to find correct platform to reproduce this issue on my hand
->
->
->> For the record, I agree, even if reverting 65a558f66c308 solves the issue, it's
->> not the correct fix.
->>
->> Unless we can get some help from Ricky, we can try to drop assigning
->> "MMC_CAP_AGGRESSIVE_PM" in realtek_init_host() to see if that solves the
->> problem. Or if debugfs is enabled, we can disable
->> MMC_CAP_AGGRESSIVE_PM for the mmc host via the "caps" debugfs-node.
->>
->> Thomas can you try to drop MMC_CAP_AGGRESSIVE_PM and see if that solves
->> the problem?
->>
->> Kind regards
->> Uffe
->>
->> [1]
->> https://lore.kernel.org/all/CAPDyKFq4-fL3oHeT9phThWQJqzicKeA447WBJUbtc
->> KPhdZ2d1A@mail.gmail.com/
->
+greg "I need more coffee" k-h
