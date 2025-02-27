@@ -1,105 +1,184 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D696F25EFB7
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AAA25F792
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:57:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668259; cv=none; b=lEoGkMeU5ZGLxj4HQha+JgB4lgD8oXzS9kKZlxrSdaD+3E92lC1wZuKAL6w7GWnPKBmKaYnSAZfaYN+msC+WYPwZIB3VKcDCQBv/tvN3+X0c3DglIZf39NtzKHY7ffzUrOznXN6on3p816+52zKc4S0fk7Y+r/q+emzJYKFP1hc=
+	t=1740668272; cv=none; b=eQfSaGkAJ1bGp0vvGSn2nfHfiDEquvYbyNsUlknuJnN9KRMdJTe1GasH2dNM2BXZDXzuc9QM9+Pfg6ba+Jcl+GBjkuU8UBtXlwRqGQY81rPfDSaubNfXgnXRU/CXFa6PrnFI4bu328kBfEIjYnbdpnVQ4MzfQ8MgPTsYGo+6iow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668259; c=relaxed/simple;
-	bh=tZaT0Zj5QAhJbLmAkDnK4TyAUYj8HZf2s6d5FLh1JMI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=h2/yUn9F28ybwwGnSL5RUW/7XYhuD4djIEzJD+Nc6FvYushYx/7b+ug9hYxFiT4rM11zEEReYOZiGuZm0PDSSh3/9DxopA5ySPwsDvIbdITB/ijtqIgJqz6w2TZpHEzmpqQXa6TEK6ecH64WloLtfx8UOiEDTwvI5vGVUq5Ua0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=xjkB67m1; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740668272; c=relaxed/simple;
+	bh=DDXrrba6/WpzP8bI9c/CPfIOz9zI6g2hO9iOlccn1Sg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=um/4SIfLCS467V/pguCs8rwaj9whIXoQCcOZwrfNIXZKJyzI+5lQrcN7CVCyx20jX5ytXO4VeZQs9TtfJ6xV9AZiUe+I8HVnG/zRg05qjmncM2+/quM0Hmfx30W5RzeZrNnK3jRFouz9KZZpCEoGn38L5FTO19zaGi+dmLCdfvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sIfbzkkg; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="xjkB67m1"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-855a5aa9360so74772439f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:57:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIfbzkkg"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30795988ebeso11459261fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:57:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740668256; x=1741273056; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvehVzeKkIphPFqeGIU7tN9oKpOYBtTWjoy4djcKaCY=;
-        b=xjkB67m1WeQ72ZSGaD8hCufBunuvaYg0AvXX9R6mVDAxnRmViYK5lADDpEQzf41jdr
-         x/3lnnkQTrG9kOckXWkRyfdCXBqOeCCdeK/s7y56Y0q4eaSdvaGLXBPvbSIhT+Y24tVG
-         8yCYOk5k2dFeSGccGuq/u/+8cYBbB8OOZ1RXXUkdkeqkYCBPD6eANBxmkL4FdpHOtnc+
-         xlT+rA5dYsgAa7v4UVo3v0yz1UQ2ya8Wf48/4PgcykmUx94UpnQi8dQ04NzPesQcw1YS
-         CEZQH7+gyglCAmY+BXiit9LOswmFnjfcf4rt2wZcEHt5SSmalXq3HM8gfw3yyyZLI4Iz
-         DvSQ==
+        d=linaro.org; s=google; t=1740668269; x=1741273069; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=o6kWm1WxAljHizi3xT8gP5C7gJ5IPTi+Bx7Iv+hmWHQ=;
+        b=sIfbzkkgLHNyfgVCSp/oKxGS4T31vpSW5HhBsYfo2BlJAGMAWeEBHHsUDXXLHlOE2h
+         1nKlNadr/jmZV40UZ6LTelZT2yM39izHFMNWtU7EzoUxYqKqQx0g6oGXQU+VCOpbCgrg
+         uiI5379Z0oapoaD2+XXz9rcmuw4v+gmGmxLjuEvcnzEUqF86EAbMc82NqtjeA+UlKPGF
+         /Rc/an+QIbCRZkTgMNxG+EoUGwmaPbgP6tncvyiZx8V+ozsm9wu1oPNusX0Tc3eZCcWi
+         +toXS4hF3NECMf76qHBiVUAQdn37nJmR9PXhZD7bAvIeQjd3GPxiH6CaZq+J4aGo6sBm
+         EglA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740668256; x=1741273056;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pvehVzeKkIphPFqeGIU7tN9oKpOYBtTWjoy4djcKaCY=;
-        b=n4UFvNE8MsHhE40JKcgB6kzoanEjOeeBv4/bEfI+w9VX/SUgun00xFKG3hksmIoQpf
-         kMJiqJnTIDpQaJGvgNioCa4bdViL0WptXk7yIKWyLMX5zw2RX7T5ZL720losjJqbj7sM
-         ici/Iuk0s6h+ZW2JytK0Si3mYKBumq/tnikYRVCsKWKTNrZjfwoLAaU6Fe01kI5efpru
-         iMJutw0x2+KzSFJHkE2eAQsX62QHzcB2a5S0rXEEYfDitfSSPGwNUOdgbey8ZKpSwtVq
-         VlgDw65vvQegyeIlrTmK06CAPDkghPUQv7Xs3rYfqjqB8Mr6sCI3xNfcMiBFUCwkfKsL
-         R+hg==
-X-Forwarded-Encrypted: i=1; AJvYcCU19OlTt1QoqVD4KvIPq5JlGC5Qv1tCT973ZjYINtwKMphn0/X9Iksq530RTm9RkDg0O89ukMgYGAGhgF8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+synOhrlOIDtZkh3mzq0cseE4zvGzaqAJkKs9CEGlCyOCRuJS
-	HRgaLRQy7qJBnbhUz1XvTemkrVqTuVwud33KjDVEEpZvcaatssGMIebgCr96sps=
-X-Gm-Gg: ASbGncs9eZPUfisE3YhLudKQ+QWerl1QsMxU+KHhygAVnvNJwPQjjI8bsKi8g96ZmPA
-	H4bbjX/j2+GaoLZLlMrmmiLIOCz3uyifuAVMUyVNi+ENJ95bX60QK229Si58Vm+d+IBaLPOCul/
-	k0jWa7zHloO2Woj1u/W7lYxUThgBM4PAjk16eLkkPAPyM4lKgb4padOmdBbhFnyFYHe9xnR2lqb
-	ljlJPjihhbtUMo6uggIZZEqIWD4QiQk2g1oIUEBXSZFLnsajwGo3mCzK3SPeuzLyNeM6FJIDN4W
-	2l2DO/I+PBgKhaC4
-X-Google-Smtp-Source: AGHT+IG5JkAqegx0ZeMLyNqVGpCwsaoLZ+LfxM2FEBqUJ0YGRH/m4CUfZaxxbTUZb0rM5nn1Gv82HQ==
-X-Received: by 2002:a05:6602:154c:b0:855:c7a0:1e33 with SMTP id ca18e2360f4ac-8562014a579mr1351845039f.2.1740668255864;
-        Thu, 27 Feb 2025 06:57:35 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f061f7c580sm378883173.130.2025.02.27.06.57.34
+        d=1e100.net; s=20230601; t=1740668269; x=1741273069;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o6kWm1WxAljHizi3xT8gP5C7gJ5IPTi+Bx7Iv+hmWHQ=;
+        b=WKM9/I7sZCo3e8rTdv/1FcFlpHMtxLZSJ2oOZCQg+C8XvhjPW4nEJheRXBsAMj/yfR
+         WDSq7XvTAvjEP2gIPSlzpOIvJsX825aJPQx1q8IEj1D0LUF+RWoBls6o6blgBOKYXtlj
+         +72mOtyfNClw9ZUJ/0CeawsJXuSD/glX6Lyz2gM2IeEUllQDygtFvrEDdqzfWzBZ1Yyj
+         9IkajEWRwewJG7w5ujCOdOgNml03oPH6BNfiWARt0pPweSdVswLLdnpQ8EdmyIRD/XYM
+         WfiZLRK0xkiI/90awtLzTX34RkDt6iuU685PEr/U4r+AEUyiOYUDdUasKGWTdfYlhrl+
+         t7Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiozV/YbL0gpaIPT9V7X5ldHg1uotRhpdhO61icQXWIyhFKB5GIHtP646HblyjidcoyvbulGK7/tOA1T8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZ1LL3NcEj2Z72x0SKM51JZbjbXBkXW8Q1mou7Ch7OXK10y/mU
+	EYo46fG9rIro2Itk4xsn+4gyK1WJ9q4E543cEamabOi3GRXncyZtK0k8ongRktY=
+X-Gm-Gg: ASbGnctF7zGM4tw5pSVrfpg9nLqnidm20E3SCgdI7TyEIT25cPqfAl8HgMKArehPtYm
+	lSotVUbg8jg6vv/0I6g5tL0YkLlgKHp1jqikUz5bKZ6AV9Z5Ta/YNyCaFiX9a/7lIgK+YdVbtHh
+	jbdRV4AjXHnUqJ5aKhK6262YZOox1Q5SnT087zjLA3Qxowb4kQAmUMo4wxyAUpMPjh4QKTpaA6y
+	cJ2G8tME6zvojmM+L3E+Zc31r1Jp6JE311VYoxTJQEFzMh/M447o3GPTY3mmjF4nnOZRrORuOTI
+	Lm6T4YF2/m9mwFB6fQvZypF80MrWvjGIbmKpc/Kod5isSxK09XtrjkYGKqUyzsNy6D2c5qfk0qn
+	FKcuEkw==
+X-Google-Smtp-Source: AGHT+IFle+ByWFKvSAisfuqZrntUlT1vHp52/oS2NVYwgUxcznsQotmllj3S/yU1ebMvTGen2ti2HA==
+X-Received: by 2002:a2e:81d2:0:b0:2fb:cc0:2a05 with SMTP id 38308e7fff4ca-30a80cba36dmr62735011fa.37.1740668268815;
+        Thu, 27 Feb 2025 06:57:48 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b8688a587sm1920371fa.111.2025.02.27.06.57.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 06:57:34 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Pavel Begunkov <asml.silence@gmail.com>, 
- Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
- Gabriel Krisman Bertazi <krisman@suse.de>, David Wei <dw@davidwei.uk>, 
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250227132018.1111094-1-arnd@kernel.org>
-References: <20250227132018.1111094-1-arnd@kernel.org>
-Subject: Re: [PATCH] io_uring/net: fix build warning for !CONFIG_COMPAT
-Message-Id: <174066825461.2448424.2288181673828962428.b4-ty@kernel.dk>
-Date: Thu, 27 Feb 2025 07:57:34 -0700
+        Thu, 27 Feb 2025 06:57:48 -0800 (PST)
+Date: Thu, 27 Feb 2025 16:57:46 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Nikita Travkin <nikita@trvn.ru>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] {vision/navigation}-mezzanine: Fix overlay root node
+Message-ID: <axorlloo25pdox6kjl23l4kzosofxhqkygxbtcbtx3sbgj54m7@hn3jyf4oaeno>
+References: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
+ <vq5dcsi55aqn56h6ihysqk4lainhmjbyvot3jiqkxm3i7igsak@da5u6ro7rkvg>
+ <62a53d3222dfc516accd8dcd5e1adca0@trvn.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <62a53d3222dfc516accd8dcd5e1adca0@trvn.ru>
 
-
-On Thu, 27 Feb 2025 14:20:09 +0100, Arnd Bergmann wrote:
-> A code rework resulted in an uninitialized return code when COMPAT
-> mode is disabled:
-> 
-> io_uring/net.c:722:6: error: variable 'ret' is used uninitialized whenever 'if' condition is true [-Werror,-Wsometimes-uninitialized]
->   722 |         if (io_is_compat(req->ctx)) {
->       |             ^~~~~~~~~~~~~~~~~~~~~~
-> io_uring/net.c:736:15: note: uninitialized use occurs here
->   736 |         if (unlikely(ret))
->       |                      ^~~
-> 
+On Thu, Feb 27, 2025 at 02:01:41PM +0500, Nikita Travkin wrote:
+> Dmitry Baryshkov писал(а) 27.02.2025 09:16:
+> > On Wed, Feb 26, 2025 at 07:29:54PM +0500, Nikita Travkin wrote:
+> >> While considering to propose WoA EL2 dt overlays upstream I was looking
+> >> at existing overlays and noticed that some of them are broken: they put
+> >> seemingly meaningful fixups into the overlay's "/" node, which places
+> >> them into the overlay "metadata" itself, not into a fixup fragment to be
+> >> applied to the actual dtb. This series fixes those two by changing to
+> >> full path "&{/}" which should work as it was initially intended.
+> >> 
+> >> See demonstration of the problem below:
+> >> 
 > [...]
+> >> $ dtc extra.dtbo
+> >> /dts-v1/;
+> >> 
+> >> / {
+> >> 	foo;
+> >> 
+> >> 	bar {
+> >> 		baz;
+> >> 	};
+> > 
+> > Is this behaviour documented somewhere? I'd say, it would be a surprise
+> > to me.
+> > 
+> 
+> According to dtc docs [1],
+> 
+>    3.b) The Device Tree fragments must be compiled with the same option but they
+>    must also have a tag (/plugin/) that allows undefined references to nodes
+>    that are not present at compilation time to be recorded so that the runtime
+>    loader can fix them.
+> 
+> so per my understanding "plugin" directive only changes the meaning of
+> references (i.e. stuff with "&"), to generate fragments/fixups, which
+> are the only way libfdt combines overlays into the base dtb.
+> 
+> I suppose the old way of "manually" writing fragments (and thus writing
+> to / as raw nodes) was kept because phandle/path based updates were
+> added later to dtc and many overlays were still defining raw fragments...
+> 
+> "/" also allows one to write "raw" nodes into the overlay, which is
+> sometimes used by downstreams. (i.e. they put custom extensions to the
+> overlay format [2] or add metadata into / of the dtbo like "compatible"
+> values to reject incompatible overlays from applying. [3]) This is
+> actually why I started looking here in the first place as for woa el2
+> overlays I was asked to add compatible metadata as, apparently, NixOS
+> tooling requires it to validate the overlays [4].
 
-Applied, thanks!
+I see. Thanks a lot for the explanation and for the pointers!
 
-[1/1] io_uring/net: fix build warning for !CONFIG_COMPAT
-      commit: 4afc332bc86c34b74f1211650f748feb6942a9cc
+> 
+> [1] https://web.git.kernel.org/pub/scm/utils/dtc/dtc.git/tree/Documentation/dt-object-internal.txt#n120
+> [2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm/boot/dts/overlays/adafruit-st7735r-overlay.dts#L73
+> [3] https://github.com/radxa-pkg/radxa-overlays/blob/main/arch/arm64/boot/dts/rockchip/overlays/rk3588-i2c0-m1.dts#L5
+> [4] https://github.com/TravMurav/slbounce/blob/main/dtbo/x1e-el2.dtso#L12
+> 
+> >> 
+> >> 	fragment@0 {
+> >> 		target-path = "/";
+> >> 
+> >> 		__overlay__ {
+> >> 			whatever-comes-next-after-baz;
+> >> 		};
+> >> 	};
+> >> };
+> >> 
+> >> $ dtc combine.dtb
+> >> /dts-v1/;
+> >> 
+> >> / {
+> >> 	whatever-comes-next-after-baz;
+> >> 	compatible = "fake,board";
+> >> 	fake,value = <0x2a>;
+> >> };
+> >> 
+> >> In the resulting dtb foo bar and baz are missing.
+> >> 
+> >> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> >> ---
+> >> Nikita Travkin (2):
+> >>       arm64: dts: qcom: qrb5165-rb5-vision-mezzanine: Fix broken overlay root
+> >>       arm64: dts: qcom: sdm845-db845c-navigation-mezzanine: Fix the overlay root
+> >> 
+> >>  arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso       | 2 +-
+> >>  arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso | 2 +-
+> >>  2 files changed, 2 insertions(+), 2 deletions(-)
+> >> ---
+> >> base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
+> >> change-id: 20250226-qcom-nonroot-overlays-bfe21d33be8c
+> >> 
+> >> Best regards,
+> >> -- 
+> >> Nikita Travkin <nikita@trvn.ru>
+> >>
 
-Best regards,
 -- 
-Jens Axboe
-
-
-
+With best wishes
+Dmitry
