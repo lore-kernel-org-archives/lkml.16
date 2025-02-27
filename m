@@ -1,442 +1,125 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681FD1D5AC3;
-	Thu, 27 Feb 2025 17:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596DC1C701B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675976; cv=none; b=mUoAswXhVXdiIQbLHVhWgOkgDsFWHdUQgmd2TZUCwElGz7CCxnym2Lk630/TWzQ0qptFu+4rYhDUEZi7uJdhAoT6tKSuIKbdFEqA7muhUCrsMLGgA4/65Yt+UgDMO5FcfMA+OO1lMU6pXFiOC/kAfOPb/pDoc/xi4sXi3PQ8fRs=
+	t=1740676066; cv=none; b=LZLZOIXRvPE1XeE8lh3zC12mDc94YcME9S3t/JaptifefzWWrlhnS40r+0fJrsWroEojqQy75w1cIppsueRMyURvNEgeu47F55HVcwcJoUsYDiEPBjjBloXL8uh9qDgjWYfE+wTBWkJZIZjPyras1jI/DQQR+yBgZyVyjNIeR0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675976; c=relaxed/simple;
-	bh=TAnqKm978WmKQiBBOY5vk3Al1dmAZdwFyuzuE1ROnQ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q/w5oPI2M8rdFecYLazo/0wRxcD2NgwPO4FVRuyX6ymYzw3n/Ck9KMrK97MZMVm0LQguRYYT/R0tG/lN/Y0LAcWdCAZtDbY5rw9zGAAoeLGTDpOxJUcyAsYlsFAixcR5HHs+z0uE6m5ftBBVSiDOr7NUXyib0oeY/weatcGwtmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMHh7vQN; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740676066; c=relaxed/simple;
+	bh=2O/u1bFf9Heyfj2EoNbG6PzfaNpoLsFDvDSjeQaIG4U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SAz9UVJU98z+S5XMfZ+qG+cYWUMHb6t24P+75cSs+9YM1kTBu/3ECqCNggZPnMnK2TxyvZvr4vCTS6zJDzCSPvfp4dtv+7M1fpOyJHjEzWxO30ZLRvDbRK93xo8EbRh748xXFuxhuH9eo9tHfKNnCaDWcRsErLHIu98FJKJeW+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FSqc/RyO reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMHh7vQN"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f24fc466aso730686f8f.2;
-        Thu, 27 Feb 2025 09:06:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740675973; x=1741280773; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZDITHZykvJgRGx/AG29j6F4v8cMHufXuXntyHw4dwLA=;
-        b=LMHh7vQNTM8MbYZKdfpX4KFmzxgsHq2FJmxDFUzEpc1xVLq6mF6+37f9MhuPjLnnmJ
-         nxgyZKGqJCXR4eBCAado336H6KKTliypLdT3AncbmZEU1KybZHj2TwOyqXzGh/WT3KMP
-         5zFvrPl3fMK+PNtdTE7Hr2/RStpg70wkLzM+tzisxsy6kmZxARMe5jMdoIA2O2QlLjfA
-         SzpMcZh0Ejx88XrGX8Sfyj5gqWxnZyGbO1cwguKtXJur6iXPPLsSG79+BoEmDBevTzNw
-         RvDyQrFz1BmPYX5l98qZLRbinVhySQ1AZuDAxEoZEcXft5TlwTHxO4ArhGeM3iuF54Jh
-         ZxoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740675973; x=1741280773;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZDITHZykvJgRGx/AG29j6F4v8cMHufXuXntyHw4dwLA=;
-        b=plPbovfwTWwEyovLD3m2Gn1b6munTtLI5BLNAxSnHCuVaoP8foGpk4y7jlSOnNuNu3
-         2eSCMeXPuzPdHykg/S9VGEsQsS5sdNB0BhTfQg5KanEMJF1rNQk7THSjsMDQ+o9OwZbq
-         H/au0J+G/dU354YKQG/VV0LEdC7z8EgvEbYo3yvrRUjikaCppLPFUrrRgRRDqKZS95cC
-         qwlainSGd4d0wX5j8hOLgLT4jxJ1SvfnQ00CMKgCg75EG8sQi2jH6vtUrBjkGk0pS05T
-         BZdVBfsycyqDjdjHZsP8T+U6q1PQqkN6bmoIbYIxguKBiYF1gX9piQKOwoQmeNXJSr2a
-         lrXw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEZFveSAx0jtAuA2OWQ/g2sogR2VZHf6V6Yh1eBgzOkmVBnv69Lvzo37Wjr+2NGo0drXKJllSHXdiW@vger.kernel.org, AJvYcCUTdH17vmGRYpcMUjlGMYf3JBRVZtkzkxlGYeaPt/G7xYj9vM1XUXmrqF8glesmFoBlRG6RWlhdLOOUBI9e@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe6oS4CkR4PsQob6udUhemBUrl65Wd9RgbtdZIAdqls4SHPAW7
-	J6ylTJ+DZ1AcgsYz1F1dfSZhAK0fkpVpu0kxDqIIi9bEDKM6phyh
-X-Gm-Gg: ASbGncuOtCCW7U0uKsm7UIF8eDG4esFBFC9v02pASOY2CAhhvIGJBdiYIpHQN39AUM5
-	wrSJ3Uo2z/0g8ThZsEdsWXn2IcrTQ8p77U1ghF0cscfD8+9vuZcYrD27CPwkn7Fyw1jPV2+QhBv
-	umNBf+qzQ7gaseIB9kmTrfH2OcP3JzslyhMD+tK+ZlXoI8O0LkAgwnp4I5FvG7gYj5sXDs6TxDq
-	k3FxewWfWqML2HjydJHpUJ92KDwSUK3zz1zn+tAPMyOHXCcP/l/CQVCZ88nWo8wRpX8wMa5VrxH
-	XkHhljmR53UmsRmxzI7Lbd8iTZTE9FUF+HT7ZSoMcgsFCJJiyh8h2+WpYtjbfWFawdcfEe4Njci
-	ZPHeG
-X-Google-Smtp-Source: AGHT+IHP18MKChfeAp7UDygXb3/Zzoe0rSxaWJhwSK8PncRr8rL+G2mA/AWIG8esd4/iEPPoh//NZQ==
-X-Received: by 2002:a5d:64e8:0:b0:390:ea4b:ea9 with SMTP id ffacd0b85a97d-390ea4b18afmr1317093f8f.39.1740675972395;
-        Thu, 27 Feb 2025 09:06:12 -0800 (PST)
-Received: from ernest.corp.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485dbe7sm2613138f8f.93.2025.02.27.09.06.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 09:06:12 -0800 (PST)
-From: Ernest Van Hoecke <ernestvanhoecke@gmail.com>
-X-Google-Original-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: apalis/colibri-imx6: Add support for v1.2
-Date: Thu, 27 Feb 2025 18:04:53 +0100
-Message-ID: <20250227170556.589668-3-ernest.vanhoecke@toradex.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250227170556.589668-1-ernest.vanhoecke@toradex.com>
-References: <20250227170556.589668-1-ernest.vanhoecke@toradex.com>
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FSqc/RyO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 408C640E0202;
+	Thu, 27 Feb 2025 17:07:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id K4NvPX3oZn3e; Thu, 27 Feb 2025 17:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740676056; bh=dUnYz/T1Sxb6t0WLMN3+kAlC/8p5FxhjazdgMVb/Pjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FSqc/RyOIlQLzklu1KIJSjVSJkpUAkJ+ooTeFh8rZ+TgT7gCFtFpvvxDYjmRQ6Qdu
+	 9olySFuMBbEIE9RQG0JexwTVVEIc+R/0TzEXzscQZWc01BOM6Mw1rnXqrVesQ/hMKy
+	 Jo03u1gmp95BFtuhUdwdKe7R/WuX9gDNks7QUKMPpkRte58OW6Nd2udMt7S9X2MAfE
+	 wxX5UatpiNTLEeiYMd4Q4WtoonVq5jMAhi9jEtfIJ/AZ45V86cofbiEJfr7zAmpgQq
+	 7AviuxOOGN78qw8IDLIb7qTOcAD4d888eUZKMQqcsxu0EMClI/Avv3vpvuzFqNbClD
+	 HxUPx+Cy5y47zNpmiXfUu8jIRQtjzFqufs7T6G9ctrngd/IgcKVoyl9IKosNt+V3Ek
+	 Scaa+pT4EbBZTcHxDY7aR1HgkPjeIEDphzXGLNLAMHwels2Db716//ibbWNZY6ywud
+	 zu5VlQvZdDFeeB873dVf6x66uhJJszVZAX/gvXrC8z1LmzVchdyGgwqHB293oGDQog
+	 2N36NveN0KWGxjld3pL6QyJm5xcpZAWQHjVFmXtHIl0DzCNPhaL86Y29kyEJJk9ouS
+	 cNVBGtkFaua7vMYBRCArsp1wHJ4WjYdMjkRZZ6umXqY7IC/LIJfHOGkwzPmmfqGvKS
+	 vYQcSl/jrZXGIpjAGuurCvoU=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 073AE40E01A3;
+	Thu, 27 Feb 2025 17:07:25 +0000 (UTC)
+Date: Thu, 27 Feb 2025 18:07:19 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: "Kaplan, David" <David.Kaplan@amd.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
+Message-ID: <20250227170719.GIZ8CbxzfGBD02B1Y4@fat_crate.local>
+References: <20250226234440.4dk4t3urkzt4zll7@jpoimboe>
+ <20250227003528.hnviwrtzs7jc3juj@desk>
+ <20250227012329.vbwdmihjlqu6h5da@jpoimboe>
+ <20250227034813.booxbhxnff66dnqx@desk>
+ <20250227140858.GEZ8Bx-tTaQF8D5WBj@fat_crate.local>
+ <LV3PR12MB9265B1854AB766EBB7F098D294CD2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250227150143.GFZ8B-V8nIdSlV7ng7@fat_crate.local>
+ <LV3PR12MB92651F3CE777A3723B61835594CD2@LV3PR12MB9265.namprd12.prod.outlook.com>
+ <20250227153707.GGZ8CGoyaSgX6FkVWY@fat_crate.local>
+ <LV3PR12MB9265078444D6B1B4258849FB94CD2@LV3PR12MB9265.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <LV3PR12MB9265078444D6B1B4258849FB94CD2@LV3PR12MB9265.namprd12.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-Apalis/Colibri iMX6 V1.2 replaced the STMPE811 ADC/touch controller,
-which is EOL, with the TLA2024 ADC and AD7879 touch controller.
+On Thu, Feb 27, 2025 at 04:05:08PM +0000, Kaplan, David wrote:
+> No.  It should be 'mitigations=3Dauto;no_user_kernel,no_user_user'
+>=20
+> (And maybe add 'no_guest_guest' if they don=E2=80=99t care about the ma=
+licious VMs attacking each other)
 
-Accurately describe the new hardware.
+Doh, ofc, I meant that. :-P
 
-v1.1 of these SoMs is still described by the following DTSI files:
-imx6qdl-apalis.dtsi
-imx6qdl-colibri.dtsi
+mitigations=3Doff;no_guest_guest
 
-v1.2 is now supported by a DTSI that modifies v1.1:
-imx6qdl-apalis-v1.2.dtsi
-imx6qdl-colibri-v1.2.dtsi
+is a non-sensical config: "disable all and then disable guest_guest
+additionally". Doh.
 
-For each carrier board using these modules, a new DTS file was added
-that includes the v1.1 DTS and modifies it with this v1.2 DTSI.
+> Right, the question is do we support both opt-in and opt-out forms.  We=
+ can.
+> We could also start by only supporting opt-out form.
 
-The original DTS can be used for modules up to and including v1.1.
+We probably should put this to a vote. I think supporting both will cause
+a lot of confusion but starting with one set and then maybe adding the ot=
+her
+one later, if really needed, is what we could start with.
 
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
----
- arch/arm/boot/dts/nxp/imx/Makefile            |  9 +++
- .../dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts | 11 ++++
- .../nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts   | 11 ++++
- .../nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts   | 11 ++++
- .../dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts  | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts   | 11 ++++
- .../dts/nxp/imx/imx6q-apalis-v1.2-eval.dts    | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts  | 11 ++++
- .../nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts  | 11 ++++
- .../dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts   | 11 ++++
- .../boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi | 57 +++++++++++++++++++
- .../dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi     | 57 +++++++++++++++++++
- 12 files changed, 222 insertions(+)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
+> As mentioned earlier in the thread, SMT really needs a tristate of:
+> 1. All SMT mitigations including potentially disabling SMT
+> 2. All SMT mitigations but excluding the possibility of disabling SMT (=
+current default)
+> 3. No SMT mitigations (not even things like STIBP)
+>=20
+> There are various ways to encode that in the command line options.  'au=
+to,nosmt' is already #1.  And just 'auto' is currently #2.
+>=20
+> We could then add 'no_cross_thread' to support #3.  I think that was th=
+e latest proposal.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index 39a153536d2a..81b6a96e28da 100644
---- a/arch/arm/boot/dts/nxp/imx/Makefile
-+++ b/arch/arm/boot/dts/nxp/imx/Makefile
-@@ -69,6 +69,10 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-colibri-eval-v3.dtb \
- 	imx6dl-colibri-iris.dtb \
- 	imx6dl-colibri-iris-v2.dtb \
-+	imx6dl-colibri-v1.2-aster.dtb \
-+	imx6dl-colibri-v1.2-eval-v3.dtb \
-+	imx6dl-colibri-v1.2-iris.dtb \
-+	imx6dl-colibri-v1.2-iris-v2.dtb \
- 	imx6dl-cubox-i.dtb \
- 	imx6dl-cubox-i-emmc-som-v15.dtb \
- 	imx6dl-cubox-i-som-v15.dtb \
-@@ -158,6 +162,11 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-apalis-ixora.dtb \
- 	imx6q-apalis-ixora-v1.1.dtb \
- 	imx6q-apalis-ixora-v1.2.dtb \
-+	imx6q-apalis-v1.2-eval.dtb \
-+	imx6q-apalis-v1.2-eval-v1.2.dtb \
-+	imx6q-apalis-v1.2-ixora.dtb \
-+	imx6q-apalis-v1.2-ixora-v1.1.dtb \
-+	imx6q-apalis-v1.2-ixora-v1.2.dtb \
- 	imx6q-apf6dev.dtb \
- 	imx6q-arm2.dtb \
- 	imx6q-b450v3.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
-new file mode 100644
-index 000000000000..44c78c07f431
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-aster.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6dl-colibri-aster.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Aster Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
-new file mode 100644
-index 000000000000..93fd0af53a3c
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-eval-v3.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6dl-colibri-eval-v3.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Evaluation Board V3";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
-new file mode 100644
-index 000000000000..92d41fc9a13f
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris-v2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6dl-colibri-iris-v2.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Iris V2 Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
-new file mode 100644
-index 000000000000..c8957948c887
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6dl-colibri-v1.2-iris.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6dl-colibri-iris.dts"
-+#include "imx6qdl-colibri-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri iMX6DL/S V1.2+ on Colibri Iris Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
-new file mode 100644
-index 000000000000..908dab57fd87
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval-v1.2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-eval-v1.2.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Apalis Evaluation Board v1.2";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
-new file mode 100644
-index 000000000000..5463d4127382
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-eval.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-eval.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Apalis Evaluation Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
-new file mode 100644
-index 000000000000..84eabf81ba84
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.1.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora-v1.1.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board V1.1";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
-new file mode 100644
-index 000000000000..d7cfab4de457
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora-v1.2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora-v1.2.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board V1.2";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
-new file mode 100644
-index 000000000000..189b074e31ce
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-v1.2-ixora.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-ixora.dts"
-+#include "imx6qdl-apalis-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module V1.2+ on Ixora Carrier Board";
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
-new file mode 100644
-index 000000000000..83fa04fc9f18
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis-v1.2.dtsi
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+&i2c2 {
-+	/delete-node/ stmpe811@41;
-+
-+	ad7879_ts: touchscreen@2c {
-+		compatible = "adi,ad7879-1";
-+		reg = <0x2c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touch_int>;
-+		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio4>;
-+		touchscreen-max-pressure = <4096>;
-+		adi,resistance-plate-x = <120>;
-+		adi,first-conversion-delay = /bits/ 8 <3>;
-+		adi,acquisition-time = /bits/ 8 <1>;
-+		adi,median-filter-size = /bits/ 8 <2>;
-+		adi,averaging = /bits/ 8 <1>;
-+		adi,conversion-interval = /bits/ 8 <255>;
-+	};
-+
-+	tla2024_adc: adc@49 {
-+		compatible = "ti,tla2024";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Apalis AN1_ADC0 */
-+		channel@4 {
-+			reg = <4>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_ADC1 */
-+		channel@5 {
-+			reg = <5>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_ADC2 */
-+		channel@6 {
-+			reg = <6>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Apalis AN1_TSWIP_ADC3 */
-+		channel@7 {
-+			reg = <7>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
-new file mode 100644
-index 000000000000..d11bf911b728
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri-v1.2.dtsi
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/* Copyright (c) 2025 Toradex */
-+
-+&i2c2 {
-+	/delete-node/ stmpe811@41;
-+
-+	ad7879_ts: touchscreen@2c {
-+		compatible = "adi,ad7879-1";
-+		reg = <0x2c>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touch_int>;
-+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio6>;
-+		touchscreen-max-pressure = <4096>;
-+		adi,resistance-plate-x = <120>;
-+		adi,first-conversion-delay = /bits/ 8 <3>;
-+		adi,acquisition-time = /bits/ 8 <1>;
-+		adi,median-filter-size = /bits/ 8 <2>;
-+		adi,averaging = /bits/ 8 <1>;
-+		adi,conversion-interval = /bits/ 8 <255>;
-+	};
-+
-+	tla2024_adc: adc@49 {
-+		compatible = "ti,tla2024";
-+		reg = <0x49>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* Colibri AIN0 */
-+		channel@4 {
-+			reg = <4>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN1 */
-+		channel@5 {
-+			reg = <5>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN2 */
-+		channel@6 {
-+			reg = <6>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+
-+		/* Colibri AIN3 */
-+		channel@7 {
-+			reg = <7>;
-+			ti,datarate = <4>;
-+			ti,gain = <1>;
-+		};
-+	};
-+};
--- 
-2.43.0
+No objections here.
 
+Thx.
+
+--=20
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
