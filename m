@@ -1,195 +1,242 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3AD26E152
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8E424BBE5;
+	Thu, 27 Feb 2025 18:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682663; cv=none; b=HfOAxJF8F4tlla4NxBnTX6k3jE795jb4HdA0T/QhGwM+VwddDwdmrQHzhPX9usmNIWwh0vR2eokpTb6w5s+apBZanzIWIqtfII32vnDzaBK9YjttJFGzvFPMmi9HJvGyEWSTmKUjIj0ZIFO70pkhrveyGF6MaEqiiUW4ffaLEN4=
+	t=1740682684; cv=none; b=INW358sdLw1jZNbmoIJPRiPA1qbk9Y8jqbt/8GgxXH7BBFp/WbAV2WVrROXg7aP3SbAs+9U7SQh2wC4rd1m2mRNjXEdOJW0OsOQsPhP2/7sDGjxdCUUok5tuA4LUGC5TIDKPgTRdazKdLfVgBWgeyPOX7ZmTSf70z15vEqGJ0ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740682663; c=relaxed/simple;
-	bh=aqlUYqQFO0WiVM+HE9BfnxX9AV+PYDtS/WqY3R6HL4g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Bhz8CRodRoPrbMwh0HLVsKxd2o0huOvB5sxosLnc1NOvti+vedWf0pICOtWP09Lg+aA7bGBs6OwmPfrbtuETbZn3t2f3+lv04nnbrYx8kFmL/IwEX0Fg4C59DcavMbxYh3BaleoEZR14UCCZwJk1vqUXmpGLk/4WaeaRhff5TtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=PtjhLhrO; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1740682684; c=relaxed/simple;
+	bh=/PkVj0ceTKDTROCPvPV7DORzicIvexQCwDB8iAsixKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QjbbQAsX2BhTUGDowbYLqX2M8JBbgnv0H7DVgBYPD7Ud5SZueL9VzQKw6OzJ6NgR9tT4sQMc8UR8agcUhwjVFanRAW+fcpFWNS5sm+UEc/ijBdQ++/1bE1kL7WXPc66z8mfvG2TRWB4BOmmkEFvs6Beu3rhdjG7lKMhMzQHKWnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IZCn1dGK; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="PtjhLhrO"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so9647355e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:57:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1740682659; x=1741287459; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=GdS04PpKeU7zg1t4iBTxl5qGH5rRifO/DD2Xb6F4WkI=;
-        b=PtjhLhrOZFNVLPI5P+vnNP69wOCGdfVQ1wDmTeplJU3Ni7ZtjtZWqzhlsUlky0gXLH
-         OqcRdQXSvW5WWx5FGfQjHzI6sq2XP3AcgFYTIdPK8PT6tgHMCuH7GDFMR+StjbbnwLay
-         cZ0QoqX8iqc73D+CQwMFF82Otan+/3RmkQaec=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740682659; x=1741287459;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GdS04PpKeU7zg1t4iBTxl5qGH5rRifO/DD2Xb6F4WkI=;
-        b=H4cjqM0vKG3UNgTvBngE1JKbyf2IIT4miyX0KFXxVZaS30EZGv+CgsP6pm79Sq1gaZ
-         nUSNEM/jHMQAPzk0hOfHKZ3ZQKTMDnISJ4TYboU2Du3SyoEIqKi2SBApt7k/QtHCwJQl
-         7HLXJ4eH9So9gxGnO4BT7WGpBIwd+keKBx1Dfj/lylbQcAM+bExnGFTULkZ97s9seYTd
-         xAFN8rXxfz1XTxknVermyX1m3ktlBllAxshZWqp8SfZt/FalOeUN1rVarVPud0YIlyMD
-         VSn6KzaWNF3rqqBHkiS2tECnl0PhW+A1/DP4n2Un9yvVWG1ppb86qawICxoxbF35d+Cg
-         hMsw==
-X-Forwarded-Encrypted: i=1; AJvYcCViOzJtGafbiE4kq7Wd8z0GiZAN4xT3Fg1pDoIyYmtD9J987tRd+wvQ00jQLwmLF0p0Eyv0pbNxEWLqHO8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYkvIz80Qorn1LE9CyDDbxgFnW6q7+1rA/zcdv185SONhevG28
-	1UZBM2xSOJWXLAEL0EoM+1XC6LFacJRz6VRMe19DO83lTHrsVh8uYChaBOiU6N91ygdmJqZDdQw
-	A
-X-Gm-Gg: ASbGncuPMiL8TJImjqG3vvHCWVQAJtddg48cAAVVLAOnnGb6l51aZm9lotJQR4mC/bt
-	6XdaLZuac73UMy22z4Ylvx25VE6/lD/E4wOKebYZkcYj1FilzysJ3eeXYAikvwOkHWO93JFvCU6
-	eEG9QZLpFk3oTUNcQ4xdcsRRUNy9020SMYCFH+IoFs9sSzNU76HZH1wahmV94gJHmLigM2MK4dz
-	0PCE6KSXuiPuPpGHqh8NkzWm0fDw86JzimsmRsiD2PXuQz8uZPWIdtbFC+uZR0NT5+Vl9/t2SZx
-	norMSRFdeHdWUhBeTQtdCNjdrWVmUdaEz2LC7KYvIwFccax5YU/u62/an+cK6ZQijQ==
-X-Google-Smtp-Source: AGHT+IFojfssGhwDq8JmP73bUocxfgQKUG/b5kGk48FXHSDhUgTYsUlnXpixmg7n1vLb87lthp6jWQ==
-X-Received: by 2002:a5d:59a5:0:b0:38f:4f07:fabf with SMTP id ffacd0b85a97d-390eca26c17mr236298f8f.53.1740682659265;
-        Thu, 27 Feb 2025 10:57:39 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba532ba6sm63487185e9.12.2025.02.27.10.57.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 10:57:38 -0800 (PST)
-Message-ID: <15253834-fb89-408f-8269-65413ad29f7a@citrix.com>
-Date: Thu, 27 Feb 2025 18:57:37 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IZCn1dGK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740682682; x=1772218682;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/PkVj0ceTKDTROCPvPV7DORzicIvexQCwDB8iAsixKY=;
+  b=IZCn1dGKSPE8tJ83084QoSZ59LTEA2JpJfIHuc+9C+WFnGN57kk9L7EP
+   6kiqzTb99jBw5U81B43QsrVI+yLeqOyDttxUrT+Lb0ncRJ10jmTfRpXZZ
+   8HHuSHVMbxM+5xlwKAAtttjDA2SRqBKiSj5ZI6AaTfMc8UN34plxorHBC
+   HIBgihUDNXIPrFMjr3fewA+lw129g/9iMcgxv8/evt/B1jfup9yAgH5jG
+   DxDCqzpSQ3TfNBhc3oF+4DAt4EzW//xKJmDxpjLiOf/bWasR2uA0Xexpk
+   K727gF73d2fsY7WnwnZyw6xXT1thMWjyqxL5dJ4gR3XdxQwwe3gW+FiOA
+   w==;
+X-CSE-ConnectionGUID: nO76mtunSn+LVr8Uh5hGSw==
+X-CSE-MsgGUID: r2MTpi9rSJeHoUd7cC49/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52987595"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="52987595"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 10:58:01 -0800
+X-CSE-ConnectionGUID: TsdJW2h6T/6mdefeT5gX8g==
+X-CSE-MsgGUID: sAGAas69QI+7PkmlN3cBvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="121706706"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 27 Feb 2025 10:57:56 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnj50-000Du2-0s;
+	Thu, 27 Feb 2025 18:57:54 +0000
+Date: Fri, 28 Feb 2025 02:57:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ashish Kalra <Ashish.Kalra@amd.com>, seanjc@google.com,
+	pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com,
+	herbert@gondor.apana.org.au
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	michael.roth@amd.com, dionnaglaze@google.com, nikunj@amd.com,
+	ardb@kernel.org, kevinloughlin@google.com, Neeraj.Upadhyay@amd.com,
+	aik@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+Subject: Re: [PATCH v5 2/7] crypto: ccp: Ensure implicit SEV/SNP init and
+ shutdown in ioctls
+Message-ID: <202502280243.uLlWONet-lkp@intel.com>
+References: <1d7b31af0eb36d860907c1e89e553e642f3882e0.1740512583.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: x86@kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
- <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
- <20250227184133.lxm43awa2jgdpl4q@desk>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20250227184133.lxm43awa2jgdpl4q@desk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d7b31af0eb36d860907c1e89e553e642f3882e0.1740512583.git.ashish.kalra@amd.com>
 
-On 27/02/2025 6:41 pm, Pawan Gupta wrote:
-> On Thu, Feb 27, 2025 at 12:49:48AM +0000, Andrew Cooper wrote:
->> On 26/02/2025 9:03 pm, Pawan Gupta wrote:
->>> @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
->>>  
->>>  #ifdef CONFIG_X86_64
->>>  
->>> +/*
->>> + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
->>> + * to the retpoline thunk with a CS prefix when the register requires
->>> + * a REX prefix byte to encode. Also see apply_retpolines().
->>> + */
->> Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
->> conditional CS prefix in a manner compatible with
->> -mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
-> You are right, I will update the comment, and also the ASSEMBLY version
-> where this comment came from:
->
->   /*
->    * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
->    * to the retpoline thunk with a CS prefix when the register requires
->    * a REX prefix byte to encode. Also see apply_retpolines().
->    */
->   .macro __CS_PREFIX reg:req
->           .irp rs,r8,r9,r10,r11,r12,r13,r14,r15
->           .ifc \reg,\rs
->           .byte 0x2e
->           .endif
->           .endr
->   .endm
->
->>> +#define __CS_PREFIX(reg)				\
->>> +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
->>> +	.ifc \\rs, \reg;				\
->> Why are these escaped differently?  Given they're all \r of some form or
->> another, I guess something is going wonky with __stringify(), but its
->> still weird for them to be different.
->>
->> Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
->> ends up?
-> Below is the pre-processed source for test_cc() generated with "make arch/x86/kvm/emulate.i".
->
-> - This is with double backslash in ".ifc \\rs, \reg":
->
-> 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \\rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "call __x86_indirect_thunk_%V[thunk_target]\n"
->                                                                                   ^
-> 	This ends up emitting the CS prefix byte correctly:
->
-> 	2e e8 51 c9 32 01       cs call ffffffff824289e0
->
-> - This is with single backslash in ".ifc \\rs, \reg":
->
-> 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "c      all __x86_indirect_thunk_%V[thunk_target]\n"
->                                                                                   ^
-> 	This version does not emit the CS prefix byte:
->
-> 	e8 52 c9 32 01          call   ffffffff824289e0
->
-> I tried looking in gcc inline assembly documentation but could not find
-> anything that would explain this. :(
+Hi Ashish,
 
-It's because it's about plain C strings.
+kernel test robot noticed the following build warnings:
 
-\r (from \rs) is Carriage Return (ASCII 0x0d).
+[auto build test WARNING on herbert-cryptodev-2.6/master]
+[also build test WARNING on kvm/queue kvm/next linus/master v6.14-rc4 next-20250227]
+[cannot apply to kvm/linux-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-After AS's macro expansion, \reg becomes \% which is not a valid escape
-character, so the \ gets left intact.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ashish-Kalra/crypto-ccp-Move-dev_info-err-messages-for-SEV-SNP-init-and-shutdown/20250226-050640
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+patch link:    https://lore.kernel.org/r/1d7b31af0eb36d860907c1e89e553e642f3882e0.1740512583.git.ashish.kalra%40amd.com
+patch subject: [PATCH v5 2/7] crypto: ccp: Ensure implicit SEV/SNP init and shutdown in ioctls
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250228/202502280243.uLlWONet-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280243.uLlWONet-lkp@intel.com/reproduce)
 
-\reg should become \\reg or you'll probably get a compiler complaining
-eventually.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502280243.uLlWONet-lkp@intel.com/
 
-~Andrew
+All warnings (new ones prefixed by >>):
+
+   In file included from drivers/crypto/ccp/sev-dev.c:22:
+   In file included from include/linux/ccp.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/crypto/ccp/sev-dev.c:1970:7: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
+    1970 |                 if (!writable)
+         |                     ^~~~~~~~~
+   drivers/crypto/ccp/sev-dev.c:2012:9: note: uninitialized use occurs here
+    2012 |         return ret;
+         |                ^~~
+   drivers/crypto/ccp/sev-dev.c:1970:3: note: remove the 'if' if its condition is always false
+    1970 |                 if (!writable)
+         |                 ^~~~~~~~~~~~~~
+    1971 |                         goto e_free_cert;
+         |                         ~~~~~~~~~~~~~~~~
+   drivers/crypto/ccp/sev-dev.c:1927:9: note: initialize the variable 'ret' to silence this warning
+    1927 |         int ret, error;
+         |                ^
+         |                 = 0
+   4 warnings generated.
+
+
+vim +1970 drivers/crypto/ccp/sev-dev.c
+
+  1917	
+  1918	static int sev_ioctl_do_pdh_export(struct sev_issue_cmd *argp, bool writable)
+  1919	{
+  1920		struct sev_device *sev = psp_master->sev_data;
+  1921		struct sev_user_data_pdh_cert_export input;
+  1922		void *pdh_blob = NULL, *cert_blob = NULL;
+  1923		struct sev_data_pdh_cert_export data;
+  1924		void __user *input_cert_chain_address;
+  1925		void __user *input_pdh_cert_address;
+  1926		bool shutdown_required = false;
+  1927		int ret, error;
+  1928	
+  1929		if (copy_from_user(&input, (void __user *)argp->data, sizeof(input)))
+  1930			return -EFAULT;
+  1931	
+  1932		memset(&data, 0, sizeof(data));
+  1933	
+  1934		/* Userspace wants to query the certificate length. */
+  1935		if (!input.pdh_cert_address ||
+  1936		    !input.pdh_cert_len ||
+  1937		    !input.cert_chain_address)
+  1938			goto cmd;
+  1939	
+  1940		input_pdh_cert_address = (void __user *)input.pdh_cert_address;
+  1941		input_cert_chain_address = (void __user *)input.cert_chain_address;
+  1942	
+  1943		/* Allocate a physically contiguous buffer to store the PDH blob. */
+  1944		if (input.pdh_cert_len > SEV_FW_BLOB_MAX_SIZE)
+  1945			return -EFAULT;
+  1946	
+  1947		/* Allocate a physically contiguous buffer to store the cert chain blob. */
+  1948		if (input.cert_chain_len > SEV_FW_BLOB_MAX_SIZE)
+  1949			return -EFAULT;
+  1950	
+  1951		pdh_blob = kzalloc(input.pdh_cert_len, GFP_KERNEL);
+  1952		if (!pdh_blob)
+  1953			return -ENOMEM;
+  1954	
+  1955		data.pdh_cert_address = __psp_pa(pdh_blob);
+  1956		data.pdh_cert_len = input.pdh_cert_len;
+  1957	
+  1958		cert_blob = kzalloc(input.cert_chain_len, GFP_KERNEL);
+  1959		if (!cert_blob) {
+  1960			ret = -ENOMEM;
+  1961			goto e_free_pdh;
+  1962		}
+  1963	
+  1964		data.cert_chain_address = __psp_pa(cert_blob);
+  1965		data.cert_chain_len = input.cert_chain_len;
+  1966	
+  1967	cmd:
+  1968		/* If platform is not in INIT state then transition it to INIT. */
+  1969		if (sev->state != SEV_STATE_INIT) {
+> 1970			if (!writable)
+  1971				goto e_free_cert;
+  1972			ret = __sev_platform_init_locked(&error);
+  1973			if (ret) {
+  1974				argp->error = SEV_RET_INVALID_PLATFORM_STATE;
+  1975				goto e_free_cert;
+  1976			}
+  1977			shutdown_required = true;
+  1978		}
+  1979	
+  1980		ret = __sev_do_cmd_locked(SEV_CMD_PDH_CERT_EXPORT, &data, &argp->error);
+  1981	
+  1982		/* If we query the length, FW responded with expected data. */
+  1983		input.cert_chain_len = data.cert_chain_len;
+  1984		input.pdh_cert_len = data.pdh_cert_len;
+  1985	
+  1986		if (copy_to_user((void __user *)argp->data, &input, sizeof(input))) {
+  1987			ret = -EFAULT;
+  1988			goto e_free_cert;
+  1989		}
+  1990	
+  1991		if (pdh_blob) {
+  1992			if (copy_to_user(input_pdh_cert_address,
+  1993					 pdh_blob, input.pdh_cert_len)) {
+  1994				ret = -EFAULT;
+  1995				goto e_free_cert;
+  1996			}
+  1997		}
+  1998	
+  1999		if (cert_blob) {
+  2000			if (copy_to_user(input_cert_chain_address,
+  2001					 cert_blob, input.cert_chain_len))
+  2002				ret = -EFAULT;
+  2003		}
+  2004	
+  2005	e_free_cert:
+  2006		if (shutdown_required)
+  2007			__sev_platform_shutdown_locked(&error);
+  2008	
+  2009		kfree(cert_blob);
+  2010	e_free_pdh:
+  2011		kfree(pdh_blob);
+  2012		return ret;
+  2013	}
+  2014	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
