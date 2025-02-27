@@ -1,162 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F291DDC1E;
-	Thu, 27 Feb 2025 16:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE011DE884
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675078; cv=none; b=Zoah5JEMz3UFOfRvUrbxstDDDdUKsPz+BLDCmCPSxYxiMcglArcvErQmtPA/GcsFdp2fLlBVbnsPif8t0q9n8Q5NKLpYJ69e6kp8DV8lKS5zer5vdUxj8Z2Hc5+WUHj4vgYiSUa6r5NEpHyAjcjigWaa5ymxLuOvWauz/6x8Oo8=
+	t=1740675088; cv=none; b=MPx1rVExbx+mART2QlzIUd4HybGXFNifiVi17XU/jxBLJLVo9/tMvbUcnjRBj7ml0IatuqfIonGmMHohKjjzKIhGjlE84+VvKlROsE+zqmdCbFWmbSUSmWfX5bU0A7ezUYu6GDsZ32Nrwl+A3sKPLXcFMm/eiAP4Z1Tnho5NUUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675078; c=relaxed/simple;
-	bh=Foef4ShNKzgr3xKniRsUqqlY2IEQP/gz/C1x5JBaGnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n4eBvwVmHFNgR2cg5yZ5vIEVlmE+2Ta6iUMZJ3/AQVfBKy/cpsDlOcD/UihePbQB+VoX/kbqGusPUTPD6PVzQdZkWCSyeeAPBrGcnu6U4eAGodFuYq0ovsbtXGhfnDG/Yd2TCvv3MB/yiS2jzKEF+gh3QtOghGnWlD7clZ3Rpi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eyymJuuT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740675088; c=relaxed/simple;
+	bh=4gouhfhaxGfgdJQT2qIfnmuu//pDsJmSVA/PYTeND9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BzPKC5UTn511phuJ+AQ45JcUI5nnwlXfTWphNhw/Ue/MXpmKwRS91ExMb4G/YGtZCtVP2hynARhD6VT55zashHveA2GDprefVdkA+ACoo8zP3bLPFFFu0AniUNa8tOcP5+2dZ4zdgbtuYSoE+T4VfcNH3FSRyKjd7wFekrUd6fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fI4QZOX5; arc=none smtp.client-ip=209.85.166.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eyymJuuT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D42C4CEDD;
-	Thu, 27 Feb 2025 16:51:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740675077;
-	bh=Foef4ShNKzgr3xKniRsUqqlY2IEQP/gz/C1x5JBaGnk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eyymJuuTy0iFkxn57bvwlpAliGYLaP0EojiVKVw/ipss2QKxRcdEXY9LcMtx8F/zD
-	 osvHC/0tzn7ptCtsFp7WvVDFVJtTPxS9Pq56o61nmSTQ9wZx3SfrzafQV8Lr5oWYDW
-	 sTS5YHcjjcP5S42xF8IIn9qIIZrF2CWgNU7UPBOJoppaKKGPuA2D1tHxUvRPmwsy82
-	 5gjjU8tZUlsHImpVhpLI9t8LAc6OGZJGrz8DavlU2gV5EOXmOYWc7MfRQ2pd6HU/mS
-	 bJDHFmu7r2CPmHMqwakbc8zF8gTJW2J1GKV/Kdmkv/fAJNkEtblbcROqqrmUoz4ECE
-	 8L2IQ75hAPTiA==
-Date: Thu, 27 Feb 2025 17:51:11 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	paulmck@kernel.org
-Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
- implementation
-Message-ID: <Z8CX__mIlFUFEkIh@cassiopeiae>
-References: <20250225210228.GA1801922@joelnvbox>
- <20250225225756.GA4959@nvidia.com>
- <Z75WKSRlUVEqpysJ@cassiopeiae>
- <20250226004916.GB4959@nvidia.com>
- <Z75riltJo0WvOsS5@cassiopeiae>
- <20250226172120.GD28425@nvidia.com>
- <Z7-IHgcVVS8XBurW@cassiopeiae>
- <20250226234730.GC39591@nvidia.com>
- <Z8BNXdf3CgqGYjPV@pollux>
- <20250227150709.GF39591@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fI4QZOX5"
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-856295d1f6cso86587139f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1740675084; x=1741279884; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ic5EBkS7+JFP3KMIJYtrI+hREWqtDoF6xlcqoBHvEdI=;
+        b=fI4QZOX5h031J1FhYTfKdSftuW3lwo3bPIjsE6Ert7Y2PJA96rab9OVfRSdYzYPPwL
+         C+5SyaoFV+1+cj5sitAMk6OK5qEVn3d9iRlpFt99VVJcPCSnVJlDl8A1lrvrUMz4hpPs
+         M41/8ZUCWXucaeBVjBsfYaYzXVy2PeCx8OlJU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740675084; x=1741279884;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ic5EBkS7+JFP3KMIJYtrI+hREWqtDoF6xlcqoBHvEdI=;
+        b=sNqrtxkbdnBvngoEtauWhVOk5BjzeNNASEvidmow/Mj9nSXgkyhCVCxVKq12zKTgx5
+         YJv4Lj5EMFZdzyLqcFQz0V8//x+dW2ODnYQGuQw5dzbTmA5uEMT1Y36KrC52UvycRW/E
+         48/9aT7B2+FooYhsbqiUfdn3ATgyXkTJX26RXyuPXecnuxPzI9eNR5Eiu3/N4exm6anG
+         xWgvg+yqrW3+wXVXLjuzASsrqduYDJSqVc4jfgIiFXEGSNXS4al/lqJIWYs5iTfvL5ic
+         ubxuNaKdIDZhI8mXMWjAU4EUh/DOQ11GHvFDv2hYFTRDS8pWtb4/aMAakFu8cedpzCS8
+         yK/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUkXgj/L7MOgOplDFdRoOc4jZ5imvIlk006M+zOxwuHTqdXzneX8z5sfD0seU7OpihHtrz5qw58PYI71P4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZAOChJrBXpu9gKaeOJ+Yp8UvPp6lWx7KsGEfmV2nd2+uYMlN6
+	bE8QSiizQ5ExlhtG6J9OnswFrsb82S3v6vURGQ0fz3SoouYqbpnondQfw+zryFLqgLKTL8Q6UDf
+	y
+X-Gm-Gg: ASbGncvTQ8Ulac1gLrGYzGfANoqZow1kVLGsS8bJBWcJgJGm++hYwnhMYcUlX/K2E0H
+	EKMXsI+VPbIFH67j6/y78lY3tPWwtMamjd1HowiGeF6Mm3YEDSja9VsUWsHxxtdWl2F8YpMr/2L
+	I3ICECaYHNI1tjNTpYQt5ts9sk6Hcr4p45FkulOJHelDgBBpvZ0BtoymTRCbzGgBlti+zL1mCUT
+	3+52+GopeCAlPumN2u2BIf6k0LlPUOrpcBC8qTZTST7nYB20XkWE6jPJGRiSjELfd8qRFS7A1Zo
+	v++Bc3/oPMIK9Eto+Li4FDx7KuJoajzl6keH
+X-Google-Smtp-Source: AGHT+IEKP5jXvQi+gty0oL9paLtd6bEvnw21y9vRTtZa86aBrZwrysNK0Dih3A+SeI1kAgbG7udiYQ==
+X-Received: by 2002:a05:6602:154c:b0:855:c7a0:1e33 with SMTP id ca18e2360f4ac-8562014a579mr1407018139f.2.1740675084458;
+        Thu, 27 Feb 2025 08:51:24 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-85875115643sm38408539f.14.2025.02.27.08.51.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 08:51:23 -0800 (PST)
+Message-ID: <083e94e0-dc37-4cdd-94a3-db258635a684@linuxfoundation.org>
+Date: Thu, 27 Feb 2025 09:51:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227150709.GF39591@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/2 RESEND] update kselftest framework to check for
+ required configs
+To: Siddharth Menon <simeddon@gmail.com>, linux-kselftest@vger.kernel.org,
+ shuah@kernel.org
+Cc: pmladek@suse.com, mbenes@suse.cz, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250227053322.114215-1-simeddon@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250227053322.114215-1-simeddon@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 27, 2025 at 11:07:09AM -0400, Jason Gunthorpe wrote:
-> On Thu, Feb 27, 2025 at 12:32:45PM +0100, Danilo Krummrich wrote:
-> > On Wed, Feb 26, 2025 at 07:47:30PM -0400, Jason Gunthorpe wrote:
-> > > On Wed, Feb 26, 2025 at 10:31:10PM +0100, Danilo Krummrich wrote:
-> > > > Let's take a step back and look again why we have Devres (and Revocable) for
-> > > > e.g. pci::Bar.
-> > > > 
-> > > > The device / driver model requires that device resources are only held by a
-> > > > driver, as long as the driver is bound to the device.
-> > > > 
-> > > > For instance, in C we achieve this by calling
-> > > > 
-> > > > 	pci_iounmap()
-> > > > 	pci_release_region()
-> > > > 
-> > > > from remove().
-> > > > 
-> > > > We rely on this, we trust drivers to actually do this.
-> > > 
-> > > Right, exactly
-> > > 
-> > > But it is not just PCI bar. There are a *huge* number of kernel APIs
-> > > that have built in to them the same sort of requirement - teardown
-> > > MUST run with remove, and once done the resource cannot be used by
-> > > another thread.
-> > > 
-> > > Basically most things involving function pointers has this sort of
-> > > lifecycle requirement because it is a common process that prevents a
-> > > EAF of module unload.
-> > 
-> > You're still mixing topics, the whole Devres<pci::Bar> thing as about limiting
-> > object lifetime to the point where the driver is unbound.
-> > 
-> > Shutting down asynchronous execution of things, i.e. workqueues, timers, IOCTLs
-> > to prevent unexpected access to the module .text section is a whole different
-> > topic.
-> 
-> Again, the standard kernel design pattern is to put these things
-> together so that shutdown isolates concurrency which permits free
-> without UAF.
-> 
-> > In other words, assuming that we properly enforce that there are no async
-> > execution paths after remove() or module_exit() (not necessarily the same),
-> > we still need to ensure that a pci::Bar object does not outlive remove().
-> 
-> Yes, you just have to somehow use rust to ensure a call pci_iounmap()
-> happens during remove, after the isolation.
-> 
-> You are already doing it with devm.  It seems to me the only problem
-> you have is nobody has invented a way in rust to contract that the devm
-> won't run until the threads are isolated.
+On 2/26/25 22:29, Siddharth Menon wrote:
+> Currently, kselftests does not have a generalised mechanism to skip
+> compilation and run tests when required kernel configuration options
+> are disabled.
 
-You can do that, pci::Driver::probe() returns a Pin<KBox<Self>>. This object is
-dropped when the device is unbound and it runs before the devres callbacks.
+Skipping compile by default is not what we want to do. Tests are
+supposed to compile and run even when config options are not enabled.
 
-Using miscdevice as example, your MiscDeviceRegistration would be a member of
-this object and hence dropped on remove() before the devres callbacks revoke
-device resources.
+There is something wrong if the test doesn't compile when a config
+option isn't enabled in the kernel.
 
 > 
-> I don't see this as insolvable, you can have some input argument to
-> any API that creates concurrency that also pushes an ordered
-> destructor to the struct device lifecycle that ensures it cancels that
-> concurrency.
+> This patch series adresses this issue by checking whether all required
+> configs from selftest/<test>/config are enabled in the current kernel
 > 
-> > Device resources are a bit special, since their lifetime must be cap'd at device
-> > unbind, *independent* of the object lifetime they reside in. Hence the Devres
-> > container.
+> Siddharth Menon (2):
+>    selftests: Introduce script to validate required dependencies
+>    selftests/lib.mk: Introduce check to validate required dependencies
 > 
-> I'd argue many resources should be limited to device unbind. Memory is
-> perhaps the only exception.
-
-There is a difference between should and must. A driver is fully free to bind
-the lifetime of a miscdevice to either to the driver lifetime (object returned
-by probe) or the module lifetime, both can be valid. That's a question of
-semantics.
-
-A device resource though is only allowed to be held by a driver as long as the
-corresponding device is bound to the driver. Hence an API that does not ensure
-that the pci::Bar is actually, forcefully dropped on device unbind is unsound.
-
-So, let me ask you again, how do you ensure that a pci::Bar is dropped on device
-unbind if we hand it out without the Devres container?
-
-> 
-> > > My fear, that is intensifying as we go through this discussion, is
-> > > that rust binding authors have not fully comprehended what the kernel
-> > > life cycle model and common design pattern actually is, and have not
-> > > fully thought through issues like module unload creating a lifetime
-> > > cycle for *function pointers*.
-> > 
-> > I do *not* see where you take the evidence from to make such a generic
-> > statement.
-> 
-> Well, I take the basic insistance that is OK to leak stuff from driver
-> scope to module scope is not well designed.
+>   .../testing/selftests/check_kselftest_deps.pl | 170 ++++++++++++++++++
+>   tools/testing/selftests/lib.mk                |  15 +-
+>   2 files changed, 183 insertions(+), 2 deletions(-)
+>   create mode 100755 tools/testing/selftests/check_kselftest_deps.pl
 > 
 
-Who insists on leaking stuff from driver scope to module scope is OK?
+thanks,
+-- Shuah
