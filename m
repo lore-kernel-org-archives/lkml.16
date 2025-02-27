@@ -1,53 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7D2270054;
-	Thu, 27 Feb 2025 19:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4EC270054;
+	Thu, 27 Feb 2025 19:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740685054; cv=none; b=cwh25bVny7EcoxofixkS+dFOa0+TBWtxDHHV5lWGg84POPvjC5VKxxOFOMExGoBsauB3/9dvVVfze2+b0f9c9RRwXsHVSMqsFQ/yFfH0KDWgJG/yafnSNsgSvQXnUxbDq57sSXs0EkElmhK5MGFbbSLipCD3rHxiQ5t23Few0Hw=
+	t=1740685216; cv=none; b=a2bvQgmNamssDxPDc6CM2RgbGYwa4Z+112lbCSNqXZWH3B/PWEQnd4KWR2HDJk/FE5pi1ZaP5BqhsDfLMvrtOMCa03Q81c+882PXyIOL7WWnQnsQKFiYQo4fS1CDnIw7LFDZnUdW2zHL0T//p6HuWvEALN7iudb559Lghw/KNOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740685054; c=relaxed/simple;
-	bh=HDLtpU1TPbI5yoMup4GgYTXLrpRHTG6ySjQZ0s9QRyo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9BUtKgR2X83aembtmq5SRx8Y2Vm/93JHdp2lqTJ6RrNksYeQWe83Pz7IM/LaRSTwFA5ZNUt7TXoahokwH9va/dVrJIH3Be5e7O4YxuwqltKf0PP57r08bqBoDHk9VT4d29WGlxD8Bex19fLajZLW8HfO9qwPFP/7R2CesuFF7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZlvXgr6m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740685216; c=relaxed/simple;
+	bh=NkAwTqksSU4AEzN7KRQ2MeSnIOrOPp2KKDZRrChKYu4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gSJgHlM/iHsGR2rmvReAj68oYZg+BKWYKYvVIPfXAakaOpGwA3MZoM9Ru/bSi70ReMmTElirfxh+aAEmTmNqr1BUrzf3ifAIqYJwqRQLzB71ewV4t9gzkybWFH1HL+F0Pd3bL7WUHR501xjR3KnEfoTxnwohnDoAMNwUcZWoIiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L1YFfwMD; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZlvXgr6m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2352BC4CEE7;
-	Thu, 27 Feb 2025 19:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740685054;
-	bh=HDLtpU1TPbI5yoMup4GgYTXLrpRHTG6ySjQZ0s9QRyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZlvXgr6m3ApOMAHK4JL0V4buvdr8IIxOllI+867tbjBdHC8Zjxu5pVZfh1i8XW6kI
-	 jnY28xT2yA2Wg+XJexamYe8tN4VyiSjJcBYG6QAjkoURvqBTmt2dn2nhGE+4kD9M16
-	 IuSybqqFFyuHjJ9CXHXm6h7t3oydK3cqGmEDs4pI=
-Date: Thu, 27 Feb 2025 11:36:24 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Abhishek Tamboli <abhishektamboli9@gmail.com>
-Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dan.carpenter@linaro.org
-Subject: Re: [PATCH] xhci: Fix bcdUSB initialization
-Message-ID: <2025022757-extrude-carpenter-5bec@gregkh>
-References: <20250227193400.109593-1-abhishektamboli9@gmail.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L1YFfwMD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740685212;
+	bh=NkAwTqksSU4AEzN7KRQ2MeSnIOrOPp2KKDZRrChKYu4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=L1YFfwMDat/2mPLCqAj3/mY1YakblrZsc/IW/+gaVrJ4FF7e4hybBdd50L4HTgQKI
+	 +wwGqt3OvggdFOFARvtz1oB/tIporOks6DYCLhOZmefbhPfKCcN4TlApRK/UsIkJCC
+	 yBXJ08NyE0Jhe0OkyNzehXOgyfp0fQlxZLNepiQPbzUEmLJIz4XmjIJ8vh7hQwfGQs
+	 uHlmbOl+KtAxrshZYbABjLBZ+Atw6voYxV6dhp6jBhH7gWDwix64tmdRhaL3ZNQw+B
+	 nk+sZd3aBCE0ABPVl1wo5camBn7rWm14xKhsKUShzC32284Oni3GvlNqK2o3Qeqicw
+	 YeY15ZSc0cjBA==
+Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4C54C17E068B;
+	Thu, 27 Feb 2025 20:40:08 +0100 (CET)
+Message-ID: <3872267b32d1386827635f15eda99d2709b44a96.camel@collabora.com>
+Subject: Re: [PATCH v10 3/6] media: platform: synopsys: Add support for HDMI
+ input driver
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Dmitry Osipenko <dmitry.osipenko@collabora.com>, Diederik de Haas	
+ <didi.debian@cknow.org>, Shreeya Patel <shreeya.patel@collabora.com>, Heiko
+ Stuebner <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Hans Verkuil	 <hverkuil@xs4all.nl>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, 	jose.abreu@synopsys.com, nelson.costa@synopsys.com,
+ shawn.wen@rock-chips.com,  Sebastian Reichel
+ <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Thu, 27 Feb 2025 14:40:06 -0500
+In-Reply-To: <f0c3a16e-c4a2-4cd9-9afa-a21a975a45c9@collabora.com>
+References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
+	 <20250225183058.607047-4-dmitry.osipenko@collabora.com>
+	 <D82H4F6J4V4V.2BLHVUVD3BVX9@cknow.org>
+	 <f0c3a16e-c4a2-4cd9-9afa-a21a975a45c9@collabora.com>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227193400.109593-1-abhishektamboli9@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 01:04:00AM +0530, Abhishek Tamboli wrote:
-> Initialize bcdUSB to 0 to prevent undefined behaviour
-> if accessed without being explicitly set.
+Le jeudi 27 février 2025 à 08:28 +0300, Dmitry Osipenko a écrit :
+> On 2/26/25 18:14, Diederik de Haas wrote:
+> > > +config VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID
+> > > +	bool "Load default EDID"
+> > > +	depends on VIDEO_SYNOPSYS_HDMIRX
+> > > +	help
+> > > +	  Preload default EDID (Extended Display Identification Data).
+> > I see some value in making explicit what you mean by EDID ...
+> > 
+> > > +	  EDID contains information about the capabilities of the display,
+> > > +	  such as supported resolutions, refresh rates, and audio formats.
+> > ... I do not think a/this Kconfig needs to explain it.
+> > 
+> > > +
+> > > +	  Enabling this option is recommended for a non-production use-cases.
+> > My guess is that it could be useful for development/debugging/CI work
+> > which possibly do not have an actual device (monitor) which provides
+> > actual EDID data? Is CI work the reason why you (initially) enabled it
+> > in the defconfig?
+> > But when you have an actual monitor (=production use-case?), you
+> > (really) do not want it? Would it be harmless if 'still' enabled?
+> 
+> Disabling this option is only relevant if you're making a commercial
+> product using this driver. It's a quite widespread issue that HDMI
+> projectors utilize default EDID that comes from BSP driver they use,
+> while a rebrand EDID should be used. Keeping this option enabled is
+> harmless, but you don't want to do it in a product.
+> 
+> For all other use-cases you would want to enable this option, otherwise
+> driver won't be usable until you will load EDID from userspace.
+> 
+> Hans has strong opinion RE this option and wants to have it disabled by
+> default.
 
-Is it actually accessed without being set?  If so, please explain it and
-also how the compiler is somehow missing this already?
+Hans, can you detail your reasons ? We personally make default config
+toward generic Linux distributions. If you don't turn this on, the
+driver won't work with any existing userspace (OBS, GStreamer, Web
+browsers, etc). While having it disabled, to avoid not having your
+brand or specific choices on the first go is clearly the "specialized"
+usage and configuration.
 
-thanks,
+> 
+> > Thus a more extensive description what this Kconfig item does and why
+> > and when I want to enable it or not, seems more useful to me.
+> 
+> Will update and expand the description with more clarification. Thanks
+> for suggestion.
+> 
 
-greg k-h
+regards,
+
+-- 
+Nicolas Dufresne
+Principal Engineer at Collabora
