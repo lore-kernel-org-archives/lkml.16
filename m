@@ -1,347 +1,162 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A552226A1CF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A627B26AA88
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:41:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670888; cv=none; b=YzEsn0Jqjh5IamHO1toHndVPpN9GCtHXkw4U2nuxGEuSSnWAwnlCp7VIjCJ39pZ8ql+hi7OWaH2lnkTR97dXUDH8rAkGD8Nc7VHESDtsuu8HnrazVccPwitodHG4A/uRja3cTPEBuB1iliF0KEA0LVH4mZGVdSnBwqtcy2wx2SM=
+	t=1740670919; cv=none; b=HnI24y6TVQetvyETi/Uq3BGHzimJHRTotPHQqbfEkWuxlGC5cJ7WpNDjLBBgNtYTQFwp9j5QVck2k0VgfhRCE92y0eUObf+hIj+/kqYGNODICMS4nrm1rme+cWGMxiElqOa9/uIRi0jhsElBWyNY/+mLre821B+43qVg77E7K/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670888; c=relaxed/simple;
-	bh=Da5AnvMmGpZ4+PRGJTdejXKPe0Mw/BATivoU7g5Y1W4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kFmiM4mO/oSh5HIH+ByWXwXHVV/j1atjq+60q5OLVvQAmYJahy4ZdpQnS3r6+bzUcgLPBZKXeXLiT0ph6+3NfHMr9atd8LKBfIMdvZm2it48rMgBN83o64t1Qq7P1+GbWAk4WzB8QmlHyYAgr2fZJf+Q50NZdrnkq2oqGssfzYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kNKBtjjU; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740670919; c=relaxed/simple;
+	bh=EsIoeL+Tp9eZjv9IjlFq7L6k4Aq9mEVxPN8U3C6mnUM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=orbB9EWuYYCiBxDBT1v5t+3YoJlAFzbehF6wjz8rX5aQk5TauhE5yN/AmLEt780rLo7PioYeqetduaVMu9oVdSaNwcOWJVp1AmMqjrRgVvbyx477+eKh/RAbmnvhQVhxuWJE7ZQySNaSYt6Z6Jo6odAz+wg+ACrd0UuTI+A3FVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=ZL8PgwrU; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kNKBtjjU"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1a4c14d4so2442693a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:41:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ZL8PgwrU"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4399a1eada3so10540405e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:41:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740670886; x=1741275686; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RpWebaG6ta7C4r+/QTI9Hpf7yd202gY2ilwfhDkC51w=;
-        b=kNKBtjjU13WpJoaIoPawp0ckzfYmLmHUODsrBzdw3sAWug+nXB0W+shDByC+MmXNuN
-         Z9uKB1HJIGDLoqX6EbpZ58TD/MJWvq858B8f3N4fSPpq4exUjzmuZfxuxxp6XXu++Zhu
-         4KbLDMYgj6tdri1AmAE58l17q0ZDWFbAvg4ER1po5W3tn2ImHlMpMjMycbsTxMTNcPgG
-         X5hieD3BT4cf632JuiPRP9J/HMKIc1icRAMsPHiTJXBdEbtbMawsO8vjLrub+tO1qIZB
-         41M4289/6PxItFiYSCtXdPVCjkIrqS0fo3AP4rYeDGqIIgY5xT1KlId9EdY1SES8Rk2D
-         2Abw==
+        d=citrix.com; s=google; t=1740670916; x=1741275716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMQZlKirdFQ93tCHKH2Zyfc9AsOqnh62+vTF47YL1ww=;
+        b=ZL8PgwrUVpCUZc0MZWEzlO99E+AT0WcsFbkKbwJOit5kwq5D3uHnWSbDZsRgtCzezi
+         drU6SZPnGujvdNvjAGKcdmWiVk8f2VXj1pA79eaggCsw6JiLzAhA9ug0XHWS1zqOZ/aA
+         gtQ5UBcrCxEOxK/pzzZ5cfZDt+/ov48KWHH2o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740670886; x=1741275686;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RpWebaG6ta7C4r+/QTI9Hpf7yd202gY2ilwfhDkC51w=;
-        b=Xq/sYqUn2vSK7/mLJzFGV/pGkUdgGdmGKsVbn77AI8Sh5G1kJFSgS3HB2yekbsEjc3
-         QjOUMAhJWMr9PSjU5HzngMM2rdRI++PAQXdP10nf+ss4arxx215SJ9iaSoa1edhdbTNB
-         tJQ2Yk2YoMRHMY3/HKlEI88xkw99WY1AC03ecPFnleDUdL2F/r3Lx5TwUcs4ituBpuSA
-         wobUnjAKTdcKS0rx9Lo1nUaVF6kfvoA8ionWIHuXOlY5tAwz5SsKH6x1OlfPU9kji8in
-         rtM4MfDkQVhTARZXhbLHwNl7xsPL7UP2qXwISrHdTOkoyRdMoYm7lAVuaNcuTWaNjPva
-         PJkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTeTZGG9TywyCykskSF4UTF2oG5oZyUqlY+fSCKDzF9JmyOszGYlNdNzDK9b084a/5hWW2X1t1m+qGGhA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBpfh5Xo1D6IaHfUJG49eM0Qw1SJsM+xUlYJSqbry7IWhk6UgR
-	ZUURVM27rb87yyCEEq2gmn168/Q5+bOd/T8frOdQf+ubj/lmL54Alog2rRXcg718sA/dId7seTz
-	WVQ==
-X-Google-Smtp-Source: AGHT+IFr2Hi5hWjqDrFkQXi/BpmSscvvgpC48vIgUsBffnpafInukRPQsN67WY8M/RuByhyUtG6LR6vx2wo=
-X-Received: from pjbov6.prod.google.com ([2002:a17:90b:2586:b0:2fa:a30a:3382])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:fc44:b0:2f6:f107:fae6
- with SMTP id 98e67ed59e1d1-2fe68cf3f5fmr15885811a91.23.1740670885945; Thu, 27
- Feb 2025 07:41:25 -0800 (PST)
-Date: Thu, 27 Feb 2025 07:41:24 -0800
-In-Reply-To: <20250227041522.1734260-1-mlevitsk@redhat.com>
+        d=1e100.net; s=20230601; t=1740670916; x=1741275716;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OMQZlKirdFQ93tCHKH2Zyfc9AsOqnh62+vTF47YL1ww=;
+        b=eHkQMPqE5UZ+pvZCQXqv9EfG4Zs32CICtVuGvln95GfiB865CkEVmC+1I8vTiciHcI
+         HCGG91o7PbOoV9iSroI8s2kErIvDCEvh2FvPIKVa0QsudBr0VKBTpl/B2kWvD0yzcC5/
+         F7KzOJeQiczTX/Dz7hn4XEv9974RH/mLLv1QdcPQkuas7xCcCFvyitf78LvdJn5sI53P
+         XEBX4iSdvVEgStd2MEBScaCYHIWCjcHgGR81Nc8oWTSURx3homNq4i/0EhQKbxZbngRx
+         qrkqHhm1gd0z8bjoddv8glNHB62xlAsNRuAfn2+AcuWiDQ9NsHVAQmrSBwLT/nUSsokx
+         PWPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV6WQvaZPYXlj3MarGxslZToNfEuq2yHns4nSaxf+pxAH/SpqPw75Yp2FUqrAl5TlXh77XEnzHPUqRhD90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFKOZzmp2ZVoofipHHGui97nydNJ1ORn7RJwq9pzVbsw2Udtz4
+	KjgwDqq2OAsuKcBvGU/Cj8eo6S5PG9GJyzDt+ILfTGj3NAQc7owQRX/lfGPbB1I=
+X-Gm-Gg: ASbGncuRo4AK3Ma0PFWlGDc2Cq9hxDP0PP0IrcljNwcCMikPkTmSd8tyq83QF+cErMy
+	h9K23P7kRnYiWkOQKYT7W34moNXJzWAnPY1sZzoqhQOpLE6aU7eUrpfpKh5R9kN93XdykO8Mvid
+	V0a+2PpMM2pZ959OCVi59F2WhbilMWHkB0XL2ifl31uj2nRm/ZRnjia7P66jVCgih+HrVxm4j48
+	rCSJOJq8JnwSPeyN740bM0RMUuYhYi+lRwQCGxf5MlkKzHigkRcRcc131/5sRs3jX6mgObNhLpk
+	03I7nCMQffysfFwv3t6C50Y814aJpMVv7AyMFcP6H+wfuOsdHlbj2A3oi+BIXgdbOQ==
+X-Google-Smtp-Source: AGHT+IEJtqX9D/EnATB3q8S7eg05lIwQjKQrkt4DszCUkwtBWX6WO6DqHDmYAHrCmh4AyuEGwQfYcw==
+X-Received: by 2002:a05:600c:4ec8:b0:439:7c0b:13f6 with SMTP id 5b1f17b1804b1-43ab9048304mr70380465e9.31.1740670915890;
+        Thu, 27 Feb 2025 07:41:55 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485db6csm2411745f8f.91.2025.02.27.07.41.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 07:41:55 -0800 (PST)
+Message-ID: <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
+Date: Thu, 27 Feb 2025 15:41:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227041522.1734260-1-mlevitsk@redhat.com>
-Message-ID: <Z8CHpJMdhWNDBr0E@google.com>
-Subject: Re: [PATCH] KVM: selftests: access_tracking_perf_test: add option to
- skip the sanity check
-From: Sean Christopherson <seanjc@google.com>
-To: Maxim Levitsky <mlevitsk@redhat.com>
-Cc: kvm@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
-	James Houghton <jthoughton@google.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>, 
-	Anup Patel <anup@brainfault.org>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
+To: Frediano Ziglio <frediano.ziglio@cloud.com>,
+ xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org
+Cc: Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
+ <20250227145016.25350-1-frediano.ziglio@cloud.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20250227145016.25350-1-frediano.ziglio@cloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025, Maxim Levitsky wrote:
-> Add an option to skip sanity check of number of still idle pages,
-> and force it on, in case hypervisor or NUMA balancing
-> is detected.
-> 
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  .../selftests/kvm/access_tracking_perf_test.c | 23 +++++++++++++++++--
->  .../testing/selftests/kvm/include/test_util.h |  1 +
->  tools/testing/selftests/kvm/lib/test_util.c   | 22 ++++++++++++++++++
->  3 files changed, 44 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/kvm/access_tracking_perf_test.c b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> index 3c7defd34f56..eafaecf086c4 100644
-> --- a/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> +++ b/tools/testing/selftests/kvm/access_tracking_perf_test.c
-> @@ -65,6 +65,8 @@ static int vcpu_last_completed_iteration[KVM_MAX_VCPUS];
->  /* Whether to overlap the regions of memory vCPUs access. */
->  static bool overlap_memory_access;
->  
-> +static bool skip_sanity_check;
+On 27/02/2025 2:50 pm, Frediano Ziglio wrote:
+> On XenServer on Windows machine a platform device with ID 2 instead of
+> 1 is used.
+>
+> This device is mainly identical to device 1 but due to some Windows
+> update behaviour it was decided to use a device with a different ID.
+>
+> This causes compatibility issues with Linux which expects, if Xen
+> is detected, to find a Xen platform device (5853:0001) otherwise code
+> will crash due to some missing initialization (specifically grant
+> tables). Specifically from dmesg
+>
+>     RIP: 0010:gnttab_expand+0x29/0x210
+>     Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
+>           41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
+>           <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
+>           44 39
+>     RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
+>     ...
+>
+> The device 2 is presented by Xapi adding device specification to
+> Qemu command line.
+>
+> Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
 
-I think it makes sense to keep the sanity check, but to warn instead of asserting,
-which is already the proposed behavior.  I.e. the sanity check is still there,
-it's only the assert that's being "skipped".  So maybe something like this?
+I'm split about this.  It's just papering over the bugs that exist
+elsewhere in the Xen initialisation code.
 
-static bool warn_on_too_many_idle_pages;
+But, if we're going to take this approach, then 0xc000 needs adding too,
+which is the other device ID you might find when trying to boot Linux in
+a VM configured using a Windows template.
 
-> +
->  struct test_params {
->  	/* The backing source for the region of memory. */
->  	enum vm_mem_backing_src_type backing_src;
-> @@ -185,7 +187,7 @@ static void mark_vcpu_memory_idle(struct kvm_vm *vm,
->  	 */
->  	if (still_idle >= pages / 10) {
->  #ifdef __x86_64__
+Bjorn: to answer a prior question of yours, all 3 of these devices are
+identical, and exist in production for political reasons (bindings in
+Windows Updates) rather than technical reasons.
 
-Gah, the assert needs to be applied to all architectures.  Commit 6336a810db5c
-("KVM: selftests: replace assertion with warning in access_tracking_perf_test")
-dropped it entirely.  It got restored by 8fcee0421386 ("KVM: selftests: Restore
-assert for non-nested VMs in access tracking test"), but only for x86.
-
-Maybe do that in a follow-up patch?  Or alternatively, introduce the boolean in a
-prep patch, then enable the assert for !x86, and then finally add the command
-line option to make it controllable.
-
-I'd probably vote for the second option?
-
-> -		TEST_ASSERT(this_cpu_has(X86_FEATURE_HYPERVISOR),
-> +		TEST_ASSERT(skip_sanity_check,
->  			    "vCPU%d: Too many pages still idle (%lu out of %lu)",
->  			    vcpu_idx, still_idle, pages);
->  #endif
-> @@ -342,6 +344,8 @@ static void help(char *name)
->  	printf(" -v: specify the number of vCPUs to run.\n");
->  	printf(" -o: Overlap guest memory accesses instead of partitioning\n"
->  	       "     them into a separate region of memory for each vCPU.\n");
-> +	printf(" -u: Skip check that after dirtying the guest memory, most (90%%) of\n"
-
-Maybe '-w' if we go with something along the lines of "warn_on..."
-
-> +	       "it is reported as dirty again");
->  	backing_src_help("-s");
->  	puts("");
->  	exit(0);
-> @@ -359,7 +363,7 @@ int main(int argc, char *argv[])
->  
->  	guest_modes_append_default();
->  
-> -	while ((opt = getopt(argc, argv, "hm:b:v:os:")) != -1) {
-> +	while ((opt = getopt(argc, argv, "hm:b:v:os:u")) != -1) {
->  		switch (opt) {
->  		case 'm':
->  			guest_modes_cmdline(optarg);
-> @@ -376,6 +380,9 @@ int main(int argc, char *argv[])
->  		case 's':
->  			params.backing_src = parse_backing_src_type(optarg);
->  			break;
-> +		case 'u':
-> +			skip_sanity_check = true;
-
-Do we want to allow the user to force the assert?  E.g. move the logic that sets
-the default value to before the parsing of the command line, and then make this
-something like:
-
-			warn_on_too_many_idle_pages = atoi_positive(optarg);
-			break;
-
-> +			break;
->  		case 'h':
->  		default:
->  			help(argv[0]);
-> @@ -386,6 +393,18 @@ int main(int argc, char *argv[])
->  	page_idle_fd = open("/sys/kernel/mm/page_idle/bitmap", O_RDWR);
->  	__TEST_REQUIRE(page_idle_fd >= 0,
->  		       "CONFIG_IDLE_PAGE_TRACKING is not enabled");
-> +
-
-Extra newline.
-
-> +
-> +	if (skip_sanity_check == false) {
-
-	if (!skip_sanity_check) {
-
-> +		if (this_cpu_has(X86_FEATURE_HYPERVISOR)) {
-
-This needs to be guarded with __x86_64__.
-
-> +			printf("Skipping idle page count sanity check, because the test is run nested\n");
-> +			skip_sanity_check = true;
-> +		} else if (is_numa_balancing_enabled()) {
-> +			printf("Skipping idle page count sanity check, because NUMA balance is enabled\n");
-> +			skip_sanity_check = true;
-> +		}
-> +	}
-> +
->  	close(page_idle_fd);
->  
->  	for_each_guest_mode(run_test, &params);
-> diff --git a/tools/testing/selftests/kvm/include/test_util.h b/tools/testing/selftests/kvm/include/test_util.h
-> index 3e473058849f..1bc9b0a92427 100644
-> --- a/tools/testing/selftests/kvm/include/test_util.h
-> +++ b/tools/testing/selftests/kvm/include/test_util.h
-> @@ -153,6 +153,7 @@ bool is_backing_src_hugetlb(uint32_t i);
->  void backing_src_help(const char *flag);
->  enum vm_mem_backing_src_type parse_backing_src_type(const char *type_name);
->  long get_run_delay(void);
-> +bool is_numa_balancing_enabled(void);
->  
->  /*
->   * Whether or not the given source type is shared memory (as opposed to
-> diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-> index 8ed0b74ae837..1271863613fa 100644
-> --- a/tools/testing/selftests/kvm/lib/test_util.c
-> +++ b/tools/testing/selftests/kvm/lib/test_util.c
-> @@ -163,6 +163,28 @@ size_t get_trans_hugepagesz(void)
->  	return size;
->  }
->  
-> +
-
-Extra newline.
-
-> +bool is_numa_balancing_enabled(void)
-> +{
-> +	int ret;
-> +	int val;
-> +	struct stat statbuf;
-> +	FILE *f;
-> +
-> +	ret = stat("/proc/sys/kernel/numa_balancing", &statbuf);
-> +	TEST_ASSERT(ret == 0 || (ret == -1 && errno == ENOENT),
-> +			"Error in stating /proc/sys/kernel/numa_balancing");
-
-Align indentation.
-
-> +	if (ret != 0)
-
-	if (ret)
-
-> +		return false;
-> +
-> +	f = fopen("/proc/sys/kernel/numa_balancing", "r");
-
-Pretty sure this needs to assert on f being valid.
-
-> +	ret = fscanf(f, "%d", &val);
-
-file needs to be closed.
-
-Actually, rather than fix these things, extract the mechanical aspects of the THP
-code to helpers (patch at the bottom), and then this can be:
-
-bool is_numa_balancing_enabled(void)
-{
-	const char *numa_balancing = "/proc/sys/kernel/numa_balancing";
-
-	return test_sysfs_path(numa_balancing) && get_sysfs_val(numa_balancing);
-}
-
-> +	TEST_ASSERT(val == 0 || val == 1, "Unexpected value in /proc/sys/kernel/numa_balancing");
-
-I vote to omit this sanity check.  The odds of numa_balancing having a different
-value *and* the bad value going unnoticed are quite low, so I'd prefer to make
-the helper short and simple.
-
----
-From: Sean Christopherson <seanjc@google.com>
-Date: Thu, 27 Feb 2025 07:31:09 -0800
-Subject: [PATCH] KVM: selftests: Extract guts of THP accessor to standalone
- sysfs helpers
-
-Extract the guts of thp_configured() and get_trans_hugepagesz() to
-standalone helpers so that the core logic can be reused for other sysfs
-files, e.g. to query numa_balancing.
-
-Opportunistically assert that the initial fscanf() read at least one byte,
-and add a comment explaining the second call to fscanf().
-
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- tools/testing/selftests/kvm/lib/test_util.c | 35 ++++++++++++++-------
- 1 file changed, 24 insertions(+), 11 deletions(-)
-
-diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
-index 8ed0b74ae837..3dc8538f5d69 100644
---- a/tools/testing/selftests/kvm/lib/test_util.c
-+++ b/tools/testing/selftests/kvm/lib/test_util.c
-@@ -132,37 +132,50 @@ void print_skip(const char *fmt, ...)
- 	puts(", skipping test");
- }
- 
--bool thp_configured(void)
-+static bool test_sysfs_path(const char *path)
- {
--	int ret;
- 	struct stat statbuf;
-+	int ret;
- 
--	ret = stat("/sys/kernel/mm/transparent_hugepage", &statbuf);
-+	ret = stat(path, &statbuf);
- 	TEST_ASSERT(ret == 0 || (ret == -1 && errno == ENOENT),
--		    "Error in stating /sys/kernel/mm/transparent_hugepage");
-+		    "Error in stat()ing '%s'", path);
- 
- 	return ret == 0;
- }
- 
--size_t get_trans_hugepagesz(void)
-+bool thp_configured(void)
-+{
-+	return test_sysfs_path("/sys/kernel/mm/transparent_hugepage");
-+}
-+
-+static size_t get_sysfs_val(const char *path)
- {
- 	size_t size;
- 	FILE *f;
- 	int ret;
- 
--	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
--
--	f = fopen("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size", "r");
--	TEST_ASSERT(f != NULL, "Error in opening transparent_hugepage/hpage_pmd_size");
-+	f = fopen(path, "r");
-+	TEST_ASSERT(f, "Error opening '%s'", path);
- 
- 	ret = fscanf(f, "%ld", &size);
-+	TEST_ASSERT(ret > 0, "Error reading '%s'", path);
-+
-+	/* Re-scan the input stream to verify the entire file was read. */
- 	ret = fscanf(f, "%ld", &size);
--	TEST_ASSERT(ret < 1, "Error reading transparent_hugepage/hpage_pmd_size");
-+	TEST_ASSERT(ret < 1, "Error reading '%s'", path);
-+
- 	fclose(f);
--
- 	return size;
- }
- 
-+size_t get_trans_hugepagesz(void)
-+{
-+	TEST_ASSERT(thp_configured(), "THP is not configured in host kernel");
-+
-+	return get_sysfs_val("/sys/kernel/mm/transparent_hugepage/hpage_pmd_size");
-+}
-+
- size_t get_def_hugetlb_pagesz(void)
- {
- 	char buf[64];
-
-base-commit: c2b800261f01eda7e811b588eaa6324cfcfdecc6
--- 
-
+~Andrew
