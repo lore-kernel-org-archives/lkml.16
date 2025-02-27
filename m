@@ -1,112 +1,89 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFE52356AF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF4C17A5A4;
+	Thu, 27 Feb 2025 04:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631097; cv=none; b=Y6eyddfEPSH+A1ln5wpyptU/7GAOq6uhioM/uQ2k9zDNXrf/NSWFNuQxhtu4zO5w0z7BudN7qgP3fgX0+l/yQJL36+gPTol+2VKpTOAwKEUwCheN8uQdjJP0UachssABlUZ6XFiHuMY/8Hev6crOEa6j+NlbJnGJhkZ6QZxL6Uw=
+	t=1740631250; cv=none; b=YJe9aMldsli0lhnb6qPKYtgjo01vWZqJpmjto72AgH3P5WnjIljth0ZNaUhR80Beq3daTmSMhEuBOd9YCrg7aPUd7vI8d21sqzSlnnuGLmk/HbPC0f6lWNsSLhNfGrbGdPPwhJMxkL2nVm02vNiFmu7p4vkF3KmxUUJFhCjwQiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631097; c=relaxed/simple;
-	bh=MhFopNXFcyHEqtXEyxX8y89MHsiQeb/nSeCVI2a+aiM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qn6zHPIy/8RbE/Yg+HR9LTBnmSUgcHXo0HjWn4Stx8CSMc3YtacWKJUgHAOTsYVHs5FKgIMw+RPmeFFPaRLo/827kLwJ2Y0dl3XnIViIlY+PN92ePOC3kF1bggW5XMFPsDc65Xv95I0ZNicn7qG7txcJ84CBuOHwjHesxLC11D8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AdF/hgyR; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740631250; c=relaxed/simple;
+	bh=XfwYYQX+8G+pGI538mDmjEX/Fuhmo2/QgXw/zHLlLWA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=sTU5L5TvjloBHw/NF5KYe2o9LwHy0kiA6GTmpYmFyhIPIQjRuaywp9v7HDHfUTjbEqBYLsXxFiunmxj30RRHY6r+MnRoZzJbxsys7eOnfnFAC4zScLhBtxaYRhCN7p7gW5BCQUyXSUaeqPGOl+9NXdjG9N6y3rLHOfiWC0pHBMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=zXPtsdVB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AdF/hgyR"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-221206dbd7eso8474985ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740631095; x=1741235895; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C/ge7B6UGXcSd47ZURwKYcUmpuFGdMGIsEsj1cDYmyw=;
-        b=AdF/hgyRgXkv7QfS5GJFAIkqnG0/U71bbtXoXiT6iMHiQe+cjRr5VYPHIh+NufIe+F
-         CSTvtgZuQvaRnv5qVGQT0TR0/9Ud48P1V8ph5kpcFtU/bA+3CYuteKUpdCeNbHIzjOrF
-         Pm+AgH8XSj0g6Am10C/nzyCBJq7LSUeIkyfDs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740631095; x=1741235895;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C/ge7B6UGXcSd47ZURwKYcUmpuFGdMGIsEsj1cDYmyw=;
-        b=eWO0pKAmccYg8DYuiuXliqMIhpLo3Ih5uLlOQKqHdO+X4jAhXloeDz1+qU12Vg9L2m
-         b/bJ7xRyO08YklGh2LkzPh1Xr99iMICIHG+ayzamRMOjf2L0yrzhtpldCnTqB4+qxZ4g
-         H+NB7fdxxEGRqJtZ9CaaIpsm1Ivee45pXppL/K9Z03L9NVYOQ5p2j2T8CYbkGDnMZu/a
-         BRImhfXqj0CdSLrf+e7J72yDfzIdt7OMaOlBu5/mIUw80Al3u7ly1wBig6MA4m60yXP2
-         93SsZlmOYSKQ9qLACVlEPB57MkWW30W0n/H5XpReCWxTRlEWK0NojdVaVQ893KgAvkGD
-         LEwg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8bZeBfmB6tZPS0FcHOQjSCSF1yAhAo3oXrs5je2fS6BbuTZ0fMahpEA6pmXnxCcF8LfdN36IFVGsZlFg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2oxCXD3/dnnZwiN0o1SBqnxT6SmUGPRsIkIOKL7fgvXw3LHDv
-	jPkiOwDUqE+qbm/y33EZEVlwCn5niNcIRuqDF2ExXk/MNF1AIRkpmzU9PpNNx9JgLmChOSR0QAw
-	=
-X-Gm-Gg: ASbGncseV0XZPysjU0ZPyfiT+zOva1lKIsvU9VbfMhheiHiAPyTdB6O1BT4UCbc2z7N
-	d2kIcFBZMMNEOcpXSE0Ymdfr7dTFe6UtE3zGASjpx+Laz2l8iR/KSWW1H5uX9PQ+hfnUoO0qxOX
-	srL9YmRWGdRw1ULnBJTf5CS39Khw564H3lGW8AD3isdrAtQ3ea1I6dwCr4Qokk8f9VgkI0x5rwq
-	Cu+32wFH0HTbGU1NWzhsIxDsBi/VCe+LorQe+z74yDpFmjGn3pcn3YHuM8oElIlfDW4EtVqHhAS
-	JBa6YxiTtalrkJ6jo5JNKQ9F1Xt4
-X-Google-Smtp-Source: AGHT+IEpXBKk19SHbSOiApwPW0gT/JlWHme806+0gknSxKLl1xCL+FuacjL88fnx4daEmXHOHQZArA==
-X-Received: by 2002:a17:903:41c8:b0:223:47b4:aaf8 with SMTP id d9443c01a7336-22347b4ac28mr36091275ad.52.1740631095639;
-        Wed, 26 Feb 2025 20:38:15 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223504e2291sm4941155ad.187.2025.02.26.20.38.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 20:38:15 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 19/19] zram: add might_sleep to zcomp API
-Date: Thu, 27 Feb 2025 13:35:37 +0900
-Message-ID: <20250227043618.88380-20-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
-References: <20250227043618.88380-1-senozhatsky@chromium.org>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="zXPtsdVB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C87C4CEDD;
+	Thu, 27 Feb 2025 04:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1740631249;
+	bh=XfwYYQX+8G+pGI538mDmjEX/Fuhmo2/QgXw/zHLlLWA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=zXPtsdVBC+YTwcup7GPGH+hlrIuyBx5LLXHiBHJH3FEDcgpA2JWMTA6bpDre3+yrC
+	 iIn0fjhi5+/5AyJfS5cij8wFg4okax7xxhdz2DHd5f0r7EPa7z40+eBuZM1q4p7NbR
+	 cLnLKrNlgDhv4bF4IN8jIzqqiiA4kzE2yj1Ifr9c=
+Date: Wed, 26 Feb 2025 20:40:48 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Rik van Riel <riel@surriel.com>,
+ Qi Zheng <zhengqi.arch@bytedance.com>
+Subject: Re: linux-next: duplicate patch in the tip tree
+Message-Id: <20250226204048.9fd955ed7f965bf0df03adb6@linux-foundation.org>
+In-Reply-To: <20250227144817.50618ab7@canb.auug.org.au>
+References: <20250227144410.275469fc@canb.auug.org.au>
+	<20250227144817.50618ab7@canb.auug.org.au>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Explicitly state that zcomp compress/decompress must be
-called from non-atomic context.
+On Thu, 27 Feb 2025 14:48:17 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zcomp.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Hi all,
+> 
+> On Thu, 27 Feb 2025 14:44:10 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > The following commit is also in the mm tree as a different commit (but
+> > the same patch):
+> > 
+> >   a37259732a7d ("x86/mm: Make MMU_GATHER_RCU_TABLE_FREE unconditional")
+> > 
+> > This is commit
+> > 
+> >   a30104ede395 ("x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional")
+> > 
+> > in the mm-unstable branch of the mm tree.
+> > 
+> > This is already causing a conflct in arch/x86/kernel/paravirt.c due commit
+> > 
+> >   f2c5c2105827 ("x86/mm: Remove pv_ops.mmu.tlb_remove_table call")
+> > 
+> > in the tip tree (where I just used the tip tree version).
 
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index a1d627054bb1..d26a58c67e95 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -146,6 +146,7 @@ int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 	};
- 	int ret;
- 
-+	might_sleep();
- 	ret = comp->ops->compress(comp->params, &zstrm->ctx, &req);
- 	if (!ret)
- 		*dst_len = req.dst_len;
-@@ -162,6 +163,7 @@ int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 		.dst_len = PAGE_SIZE,
- 	};
- 
-+	might_sleep();
- 	return comp->ops->decompress(comp->params, &zstrm->ctx, &req);
- }
- 
--- 
-2.48.1.658.g4767266eb4-goog
+yes, I duplicated that match in mm.git so it can carry the series
+"remove tlb_remove_page_ptdesc()".
+
+> And another in arch/x86/mm/pgtable.c due to commit
+> 
+>   530c12f84d2c ("x86: pgtable: convert to use tlb_remove_ptdesc()")
+> 
+> in the tip tree (where I again just used the tip tree version).
+
+Really, I'd mildly prefer that subsystem maintainers not cherrypick
+patches from the middle of a series.  An acked-by would be preferred.
+
+I can understand the desire to test a patch within the subsystem's
+tree, but that can (should?) be done by testing linux-next overall.
+
+Whatever.  I'll retain "x86: pgtable: convert to use
+tlb_remove_ptdesc()" and shall figure it out within the merge window.
 
