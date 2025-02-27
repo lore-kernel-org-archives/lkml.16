@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776D91D4335;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0920215769;
 	Thu, 27 Feb 2025 18:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682659; cv=none; b=T1T3LOvp/qCM6bVRG9DuxJwwucosp0Vw4rxx2NecUdsJwUxlh18NE6/hb9bZ7Wkl5dJvoI1XJz7PCnPXMGOVJJ+GjgjVu4KAhge9vRrRcJkYI4na2KfbUo0yr3/XidTHoFA2d1OF3W99HzHhfCk0xnRHG/X0LO1kbzNItriVWlQ=
+	t=1740682659; cv=none; b=ZyTsvGAKv4VxSf1LF65JQexLNanbdbvoUGfgMjbRzvDNsjFXki0QL+fftO/yPLHddxUiLvjPvTyz4EJY+9YECcGTEIE0UC2b7vtxAgAmYHqTW9dDg+axU0yRwEzI7sXgi2/p61FL6OZ9CSzlywwFnsNROAPdZX0ChfLAsjHoqbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740682659; c=relaxed/simple;
-	bh=m+2s+O4tHRelC89taiEqdahnzEKvH/ygc+ZUyR8XqpI=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=PWrqG5B7LqmJpnlIv31uKzi1MNLJwLYLXXFT8pajYZVZGUEbMgGr6npiyzE2Nv2VnbVl1NocrhtLCOKB17j/MW1S9f0AfwId8yuxHiDNx9VEGo1jaQbBo2DzocatkWizE5tQVTZwj51eCmu9YxmAn1JHSmD+buOudxYCMQihBO0=
+	bh=75NhAFRF+JLlYAINhq+WwIi22Lhv7jwxXtxpD0YdsMY=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=rZ5nwDUGRkK0g2bCO9PXiluNYa4H7jlm6froCp5Qz9FhyVA3hR4gCQk0r8lO5PmlvCktYbk4KT5dwUM1ZQKZigHeHuw1WGw/GXta5jXN+09Lpw4F8u4nJdd/uhnPsvVPt3JbdmQWQmeOM1pMCn9PY9PCbmzav9I/X2UwN2GGNi8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3597C4CEDD;
-	Thu, 27 Feb 2025 18:57:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF77C4CEE4;
+	Thu, 27 Feb 2025 18:57:39 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tnj5S-00000009nQY-2Z1Q;
-	Thu, 27 Feb 2025 13:58:22 -0500
-Message-ID: <20250227185804.639525399@goodmis.org>
+	id 1tnj5T-00000009nSX-1GYc;
+	Thu, 27 Feb 2025 13:58:23 -0500
+Message-ID: <20250227185823.154996172@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 27 Feb 2025 13:58:04 -0500
+Date: Thu, 27 Feb 2025 13:58:08 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -35,99 +36,77 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Guo Ren <guoren@kernel.org>,
  Donglin Peng <dolinux.peng@gmail.com>,
  Zheng Yejian <zhengyejian@huaweicloud.com>
-Subject: [PATCH v4 0/4] ftrace: Add function arguments to function tracers
+Subject: [PATCH v4 4/4] ftrace: Add arguments to function tracer
+References: <20250227185804.639525399@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
+From: Sven Schnelle <svens@linux.ibm.com>
 
-These patches add support for printing function arguments in ftrace.
+Wire up the code to print function arguments in the function tracer.
+This functionality can be enabled/disabled during runtime with
+options/func-args.
 
-Example usage:
+        ping-689     [004] b....    77.170220: dummy_xmit(skb = 0x82904800, dev = 0x882d0000) <-dev_hard_start_xmit
 
-function tracer:
-
- ~# cd /sys/kernel/tracing/
- ~# echo icmp_rcv >set_ftrace_filter
- ~# echo function >current_tracer
- ~# echo 1 >options/func-args
- ~# ping -c 10 127.0.0.1
-[..]
- ~# cat trace
-[..]
-            ping-1277    [030] ..s1.    39.120939: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    39.120946: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    40.179724: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    40.179730: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    41.219700: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    41.219706: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    42.259717: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    42.259725: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    43.299735: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
-            ping-1277    [030] ..s1.    43.299742: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
-
-function graph:
-
- ~# cd /sys/kernel/tracing
- ~# echo icmp_rcv >set_graph_function
- ~# echo function_graph >current_tracer
- ~# echo 1 >options/funcgraph-args
-
- ~# ping -c 1 127.0.0.1
-
- ~# cat trace
-
- 30)               |  icmp_rcv(skb=0xa0ecab00) {
- 30)               |    __skb_checksum_complete(skb=0xa0ecab00) {
- 30)               |      skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0) {
- 30)               |        __skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0, ops=0x232e0327a88) {
- 30)   0.418 us    |          csum_partial(buff=0xa0d20924, len=64, sum=0)
- 30)   0.985 us    |        }
- 30)   1.463 us    |      }
- 30)   2.039 us    |    }
-[..]
-
-This was last posted by Sven Schnelle here:
-
-  https://lore.kernel.org/all/20240904065908.1009086-1-svens@linux.ibm.com/
-
-As Sven hasn't worked on it since, I decided to continue to push it
-through. I'm keeping Sven as original author and added myself as
-"Co-developed-by".
-
-Changes since v3: https://lore.kernel.org/linux-trace-kernel/20250225222601.423129938@goodmis.org/
-
-- kernel test robot flagged that this broke builds of archictecuters
-  that do not support function args access.
-  This was due to missing #ifdefs around calls of functions those archs
-  do not implement.
-
-- For archs that do not support function graph tracer, the irqsoff trace
-  uses trace_function, but that now has a new parameter.
-
-- Here's the diff between v3 and this series:
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c              | 14 ++++++++--
+ kernel/trace/trace.h              |  4 ++-
+ kernel/trace/trace_entries.h      |  5 ++--
+ kernel/trace/trace_functions.c    | 46 +++++++++++++++++++++++++++----
+ kernel/trace/trace_irqsoff.c      | 12 ++++++--
+ kernel/trace/trace_output.c       | 18 ++++++++++--
+ kernel/trace/trace_sched_wakeup.c |  4 +--
+ 7 files changed, 85 insertions(+), 18 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 86d828b9dc7c..cb13c88abfd6 100644
+index 0e6d517e74e0..cb13c88abfd6 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -2895,10 +2895,12 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
+@@ -2878,13 +2878,16 @@ trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
+ 
+ void
+ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
+-	       parent_ip, unsigned int trace_ctx)
++	       parent_ip, unsigned int trace_ctx, struct ftrace_regs *fregs)
+ {
+ 	struct trace_buffer *buffer = tr->array_buffer.buffer;
+ 	struct ring_buffer_event *event;
+ 	struct ftrace_entry *entry;
++	int size = sizeof(*entry);
+ 
+-	event = __trace_buffer_lock_reserve(buffer, TRACE_FN, sizeof(*entry),
++	size += FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long);
++
++	event = __trace_buffer_lock_reserve(buffer, TRACE_FN, size,
+ 					    trace_ctx);
+ 	if (!event)
+ 		return;
+@@ -2892,6 +2895,13 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
  	entry->ip			= ip;
  	entry->parent_ip		= parent_ip;
  
 +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 	if (fregs) {
- 		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
- 			entry->args[i] = ftrace_regs_get_argument(fregs, i);
- 	}
++	if (fregs) {
++		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
++			entry->args[i] = ftrace_regs_get_argument(fregs, i);
++	}
 +#endif
- 
++
  	if (static_branch_unlikely(&trace_function_exports_enabled))
  		ftrace_exports(event, TRACE_EXPORT_FUNCTION);
+ 	__buffer_unlock_commit(buffer, event);
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 472ec5d623db..32da87f45010 100644
+index 6963cd83b6da..32da87f45010 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
 @@ -21,6 +21,7 @@
@@ -138,28 +117,159 @@ index 472ec5d623db..32da87f45010 100644
  
  #include "pid_list.h"
  
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 49fcf665cb58..71b2fb068b6b 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -132,10 +132,12 @@ static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
- 	entry = ring_buffer_event_data(event);
- 	entry->graph_ent = *trace;
+@@ -697,7 +698,8 @@ unsigned long trace_total_entries(struct trace_array *tr);
+ void trace_function(struct trace_array *tr,
+ 		    unsigned long ip,
+ 		    unsigned long parent_ip,
+-		    unsigned int trace_ctx);
++		    unsigned int trace_ctx,
++		    struct ftrace_regs *regs);
+ void trace_graph_function(struct trace_array *tr,
+ 		    unsigned long ip,
+ 		    unsigned long parent_ip,
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 77a8ba3bc1e3..ee40d4e6ad1c 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -61,8 +61,9 @@ FTRACE_ENTRY_REG(function, ftrace_entry,
+ 	TRACE_FN,
  
-+#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 	if (fregs) {
- 		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
- 			entry->args[i] = ftrace_regs_get_argument(fregs, i);
+ 	F_STRUCT(
+-		__field_fn(	unsigned long,	ip		)
+-		__field_fn(	unsigned long,	parent_ip	)
++		__field_fn(	unsigned long,		ip		)
++		__field_fn(	unsigned long,		parent_ip	)
++		__dynamic_array( unsigned long,		args		)
+ 	),
+ 
+ 	F_printk(" %ps <-- %ps",
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index df56f9b76010..98ccf3f00c51 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -25,6 +25,9 @@ static void
+ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		    struct ftrace_ops *op, struct ftrace_regs *fregs);
+ static void
++function_args_trace_call(unsigned long ip, unsigned long parent_ip,
++			 struct ftrace_ops *op, struct ftrace_regs *fregs);
++static void
+ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 			  struct ftrace_ops *op, struct ftrace_regs *fregs);
+ static void
+@@ -42,9 +45,10 @@ enum {
+ 	TRACE_FUNC_NO_OPTS		= 0x0, /* No flags set. */
+ 	TRACE_FUNC_OPT_STACK		= 0x1,
+ 	TRACE_FUNC_OPT_NO_REPEATS	= 0x2,
++	TRACE_FUNC_OPT_ARGS		= 0x4,
+ 
+ 	/* Update this to next highest bit. */
+-	TRACE_FUNC_OPT_HIGHEST_BIT	= 0x4
++	TRACE_FUNC_OPT_HIGHEST_BIT	= 0x8
+ };
+ 
+ #define TRACE_FUNC_OPT_MASK	(TRACE_FUNC_OPT_HIGHEST_BIT - 1)
+@@ -114,6 +118,8 @@ static ftrace_func_t select_trace_function(u32 flags_val)
+ 	switch (flags_val & TRACE_FUNC_OPT_MASK) {
+ 	case TRACE_FUNC_NO_OPTS:
+ 		return function_trace_call;
++	case TRACE_FUNC_OPT_ARGS:
++		return function_args_trace_call;
+ 	case TRACE_FUNC_OPT_STACK:
+ 		return function_stack_trace_call;
+ 	case TRACE_FUNC_OPT_NO_REPEATS:
+@@ -220,7 +226,34 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	data = this_cpu_ptr(tr->array_buffer.data);
+ 	if (!atomic_read(&data->disabled))
+-		trace_function(tr, ip, parent_ip, trace_ctx);
++		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
++
++	ftrace_test_recursion_unlock(bit);
++}
++
++static void
++function_args_trace_call(unsigned long ip, unsigned long parent_ip,
++			 struct ftrace_ops *op, struct ftrace_regs *fregs)
++{
++	struct trace_array *tr = op->private;
++	struct trace_array_cpu *data;
++	unsigned int trace_ctx;
++	int bit;
++	int cpu;
++
++	if (unlikely(!tr->function_enabled))
++		return;
++
++	bit = ftrace_test_recursion_trylock(ip, parent_ip);
++	if (bit < 0)
++		return;
++
++	trace_ctx = tracing_gen_ctx();
++
++	cpu = smp_processor_id();
++	data = per_cpu_ptr(tr->array_buffer.data, cpu);
++	if (!atomic_read(&data->disabled))
++		trace_function(tr, ip, parent_ip, trace_ctx, fregs);
+ 
+ 	ftrace_test_recursion_unlock(bit);
+ }
+@@ -270,7 +303,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	if (likely(disabled == 1)) {
+ 		trace_ctx = tracing_gen_ctx_flags(flags);
+-		trace_function(tr, ip, parent_ip, trace_ctx);
++		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
+ #ifdef CONFIG_UNWINDER_FRAME_POINTER
+ 		if (ftrace_pids_enabled(op))
+ 			skip++;
+@@ -349,7 +382,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	trace_ctx = tracing_gen_ctx_dec();
+ 	process_repeats(tr, ip, parent_ip, last_info, trace_ctx);
+ 
+-	trace_function(tr, ip, parent_ip, trace_ctx);
++	trace_function(tr, ip, parent_ip, trace_ctx, NULL);
+ 
+ out:
+ 	ftrace_test_recursion_unlock(bit);
+@@ -389,7 +422,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		trace_ctx = tracing_gen_ctx_flags(flags);
+ 		process_repeats(tr, ip, parent_ip, last_info, trace_ctx);
+ 
+-		trace_function(tr, ip, parent_ip, trace_ctx);
++		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
+ 		__trace_stack(tr, trace_ctx, STACK_SKIP);
  	}
-+#endif
  
- 	trace_buffer_unlock_commit_nostack(buffer, event);
+@@ -403,6 +436,9 @@ static struct tracer_opt func_opts[] = {
+ 	{ TRACER_OPT(func_stack_trace, TRACE_FUNC_OPT_STACK) },
+ #endif
+ 	{ TRACER_OPT(func-no-repeats, TRACE_FUNC_OPT_NO_REPEATS) },
++#ifdef CONFIG_FUNCTION_TRACE_ARGS
++	{ TRACER_OPT(func-args, TRACE_FUNC_OPT_ARGS) },
++#endif
+ 	{ } /* Always set a last empty entry */
+ };
  
 diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 0ce00fe66d0c..c8bfa7310a91 100644
+index 7294ad676379..c8bfa7310a91 100644
 --- a/kernel/trace/trace_irqsoff.c
 +++ b/kernel/trace/trace_irqsoff.c
-@@ -299,7 +299,13 @@ __trace_function(struct trace_array *tr,
+@@ -150,7 +150,7 @@ irqsoff_tracer_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	trace_ctx = tracing_gen_ctx_flags(flags);
+ 
+-	trace_function(tr, ip, parent_ip, trace_ctx);
++	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
+ 
+ 	atomic_dec(&data->disabled);
+ }
+@@ -295,11 +295,17 @@ __trace_function(struct trace_array *tr,
+ 	if (is_graph(tr))
+ 		trace_graph_function(tr, ip, parent_ip, trace_ctx);
+ 	else
+-		trace_function(tr, ip, parent_ip, trace_ctx);
++		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
  }
  
  #else
@@ -174,70 +284,80 @@ index 0ce00fe66d0c..c8bfa7310a91 100644
  
  static enum print_line_t irqsoff_print_line(struct trace_iterator *iter)
  {
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 4b721cd4f21d..b51ee9373773 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1090,12 +1090,15 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
+ }
+ 
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, long delta, int flags)
++			   unsigned long parent_ip, long delta,
++			   unsigned long *args, int flags)
+ {
+ 	ip += delta;
+ 	parent_ip += delta;
+ 
+ 	seq_print_ip_sym(s, ip, flags);
++	if (args)
++		print_function_args(s, args, ip);
+ 
+ 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
+ 		trace_seq_puts(s, " <-");
+@@ -1109,10 +1112,19 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
+ {
+ 	struct ftrace_entry *field;
+ 	struct trace_seq *s = &iter->seq;
++	unsigned long *args;
++	int args_size;
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
++	args_size = iter->ent_size - offsetof(struct ftrace_entry, args);
++	if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long))
++		args = field->args;
++	else
++		args = NULL;
++
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta,
++		       args, flags);
+ 	trace_seq_putc(s, '\n');
+ 
+ 	return trace_handle_return(s);
+@@ -1785,7 +1797,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, NULL, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
+diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
+index af30586f1aea..c9ba4259e03e 100644
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -242,7 +242,7 @@ wakeup_tracer_call(unsigned long ip, unsigned long parent_ip,
+ 		return;
+ 
+ 	local_irq_save(flags);
+-	trace_function(tr, ip, parent_ip, trace_ctx);
++	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
+ 	local_irq_restore(flags);
+ 
+ 	atomic_dec(&data->disabled);
+@@ -327,7 +327,7 @@ __trace_function(struct trace_array *tr,
+ 	if (is_graph(tr))
+ 		trace_graph_function(tr, ip, parent_ip, trace_ctx);
+ 	else
+-		trace_function(tr, ip, parent_ip, trace_ctx);
++		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
+ }
+ 
+ static int wakeup_flag_changed(struct trace_array *tr, u32 mask, int set)
+-- 
+2.47.2
 
-Changes since v2: https://lore.kernel.org/linux-trace-kernel/20241223201347.609298489@goodmis.org/
 
-- Removed unneeded headers
-
-- Put back removed '\n' that was accidentally erased.
-
-- Do not use bpf_get_btf_vmlinux() to get btf element as
-  btf_find_func_proto() will handle that.
-
-- Fixed how structures are printed
-
-Changes since Sven's work:
-
-- Made the kconfig option unconditional if all the dependencies are set.
-
-- Not save ftrace_regs in the ring buffer, as that is an abstract
-  descriptor defined by the architectures and should remain opaque from
-  generic code. Instead, the args are read at the time they are recorded
-  (with the ftrace_regs passed to the callback function), and saved into
-  the ring buffer. Then the print function only takes an array of elements.
-
-  This could allow archs to retrieve arguments that are on the stack where
-  as, post processing ftrace_regs could cause undesirable results.
-
-- Made the function and function graph entry events dynamically sized
-  to allow the arguments to be appended to the event in the ring buffer.
-  The print function only looks to see if the event saved in the ring
-  buffer is big enough to hold all the arguments defined by the new
-  FTRACE_REGS_MAX_ARGS macro and if so, it will assume there are arguments
-  there and print them. This also means user space will not break on
-  reading these events as arguments will simply be ignored.
-
-- The printing of the arguments has some more data when things are not
-  processed by BPF. Any unsupported argument will have the type printed
-  out in the ring buffer. 
-
-- Also removed the spaces around the '=' as that's more in line to how
-  trace events show their fields.
-
-- One new patch I added to convert function graph tracing over to using
-  args as soon as the user sets the option even if function graph tracing
-  is enabled. Function tracer did this already by default.
-
-
-
-Steven Rostedt (1):
-      ftrace: Have funcgraph-args take affect during tracing
-
-Sven Schnelle (3):
-      ftrace: Add print_function_args()
-      ftrace: Add support for function argument to graph tracer
-      ftrace: Add arguments to function tracer
-
-----
- include/linux/ftrace_regs.h          |   5 +
- kernel/trace/Kconfig                 |  12 +++
- kernel/trace/trace.c                 |  14 ++-
- kernel/trace/trace.h                 |   5 +-
- kernel/trace/trace_entries.h         |  12 ++-
- kernel/trace/trace_functions.c       |  46 +++++++++-
- kernel/trace/trace_functions_graph.c | 172 ++++++++++++++++++++++++++++-------
- kernel/trace/trace_irqsoff.c         |  12 ++-
- kernel/trace/trace_output.c          | 103 ++++++++++++++++++++-
- kernel/trace/trace_output.h          |   9 ++
- kernel/trace/trace_sched_wakeup.c    |   4 +-
- 11 files changed, 340 insertions(+), 54 deletions(-)
