@@ -1,113 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D945F27FE73
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 22:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85E327293D;
+	Thu, 27 Feb 2025 22:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694913; cv=none; b=H7Tkka5zm4O6pD/bvHPzkIiMVoXsGoxYzC+VZ6XiwJTFuP8W9F41/q0Qpf3QCJtyjXPH0fVUyTi6yAiJb4QXJTFnPT0qWkINhKcfjPlSNxvnTg8lXSxQJJzudLLqz/9XkE9y+v0Ho5NyDnGzVxYL4iAajsJhvwj7VDHaGups+0w=
+	t=1740694919; cv=none; b=kzKvoS7WgyPdXPp8FNPR5MQcrkbpSjadVP8gN2UllOAPuKmzgadu81WHxim7Q/gCdVk0jNq9eWPhCFaT6PUyRgB8gxvEtomBlbRg5t/QGv1hqrRCnWAGJvuHIpf55woV/Yy/ImqMYIR91GSQHBT6VM85iASNaGeuMaZXU7Ov0ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694913; c=relaxed/simple;
-	bh=jF/Rhzpzm/dHCcOSMAyGvRp49x3ckxeqe/+xym+bBPA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WuuUnXwoTftPh0rc5gyI1ZVJRpHdluPmXeT+h9/2HEoewuIKI60tkmcSbjYFT6Dsq9JjO0nQpVW01PWyOKlOfSzGrPonsPoxQgqr994Vagv62GPguuoooHBjEypK296t/+1wyyn6Z9CXYi9kQBZD9dDqQAXseY55QsIrOwGItjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LnNXYaer; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740694919; c=relaxed/simple;
+	bh=S5+ogH025mo7D32RvO75nmwl4Ffkhe7ZHnPHH0WJv0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XBfMbE1qHoT+HmwzJjBINUnYt37WEM6WmB/I2sm4/KwN6WkaLpBK8S/biZBr3Xf3Bdxwwy+zx2xn2eMteOt4Hpkknifo82xTa7Rd3xcQu5QU5KRCe6jMd7fIOYarlQENBjDYgKQYhIgJDohP0Rj0BHqbz2GiYwb/jD67iOYNb+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bTfVVsli; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnNXYaer"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740694910;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nMPVRvmOY4K4fNwOzdANhVMl0k0pQryl0H5Q7HLHGko=;
-	b=LnNXYaersPXK9mHIeaJnzwjnj6MPqSiXMxL1c8hazK8wMdVo93tr978Q4USqOFKll5Lrf6
-	TZ44mmAF0XnDd/A0X4GyKLnWdEegfU9eL7Q4GgC+oynDvXNUic3UjKPECKxMU4YxEnKhnU
-	QnhsFV7jLkPnAD2BSng5F20qmtfLNS8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-154-0CdOvRe4M6efnGidCvpoMg-1; Thu,
- 27 Feb 2025 17:21:46 -0500
-X-MC-Unique: 0CdOvRe4M6efnGidCvpoMg-1
-X-Mimecast-MFC-AGG-ID: 0CdOvRe4M6efnGidCvpoMg_1740694904
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1921A1800988;
-	Thu, 27 Feb 2025 22:21:44 +0000 (UTC)
-Received: from chopper.lyude.net (unknown [10.22.89.128])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1E5AD1944D02;
-	Thu, 27 Feb 2025 22:21:40 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org (open list:LOCKING PRIMITIVES)
-Subject: [PATCH v9 5/9] rust: helper: Add spin_{un,}lock_irq_{enable,disable}() helpers
-Date: Thu, 27 Feb 2025 17:10:16 -0500
-Message-ID: <20250227221924.265259-6-lyude@redhat.com>
-In-Reply-To: <20250227221924.265259-1-lyude@redhat.com>
-References: <20250227221924.265259-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bTfVVsli"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22328dca22fso24143485ad.1;
+        Thu, 27 Feb 2025 14:21:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740694916; x=1741299716; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGROt8SwJjPlhwT8ydym9pYHbVe2F/Hnh7fdrYWjI+k=;
+        b=bTfVVsligIhJXvn1Ysfj7ikz2o7qh24s0aWHhKtK/RtZRj5nBdVfB7JXV2l/wu+HTt
+         rAIoY6DNsLqoqUbGsiq7llsVViU9FXLIpI8exHCBJv6HmC4iBrQOqG/BrnWQflvTqBsS
+         eKX+YVSQHyUK/1TcRVvRiyesBk1tIlVZfuDS2KzCUF4pEzGfKJqrtNRkfeScgUkQxpTU
+         WmO05+YDKgiAmSAdjHDnQ2iQqK4zp8Z1KmIMocEczSmKYaP/yzo0PxfCaC9XIYlqIsm+
+         ylJTNPoDXGQr/vMs8RyHV0FkdaNglcrxezgovJHoh3O25DNmhDMrjq91GvY4kzWAKYxu
+         z/Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740694916; x=1741299716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AGROt8SwJjPlhwT8ydym9pYHbVe2F/Hnh7fdrYWjI+k=;
+        b=lWv1nGiCP90nSIkfaMdbHpVFh1ijP7G47pWFQ2Wj9DGbiuk01nN2x7hXEdyEul5Eh8
+         DjGx23cioBNiRHmVZ8Y7YgLtX0LVJrgWzRQ/lFcBO1XWMTVQODklRBnDrzUBw+Od3+AG
+         +Z6aV+4TA+BKlw/0tXuOEBBOHhG602WyoAxVAHkybZVle6h8H6ZNWMJuZ0vuOCtiAKvJ
+         uUVDIV3CY3ToWpw6WQfUM1ASzfgVOLUWEVLgdPrGIooe0SN9KL0oXmgVsz+9YOxEG2ZC
+         QNzztu3OmD8lg6F+88YMi4HtqT794bcXAd0deHFU8IVRRoz45AeftR1Z6kxH6FlcBREX
+         79EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVQbKbmv9l+xG8eL8mXWY0+nHPI+42vJxgyrx+TQuFbac1CpSoNmRdT3FUjEDzcbH+rsnbEA5JNjf11OS+6@vger.kernel.org, AJvYcCXjqQVN65MGkRBw1eXNf+SjiVAaohanNSrgPa93rdXgMcHYSEVkoHnajJ7pRw1G/B2gUe0=@vger.kernel.org, AJvYcCXq0gvaU+6BrDm+ir4HavqYh1UAKvcrNcfT9uCh5Dv3DlKjo4nz9XemekUlZej6ubGwdElmOMcZ6bc4pASG4ulD@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz84rvZsb3gLka+wArYg0H/gjzqo6ehcOsZWjhpcIFg0c/C0/ru
+	sXit/tdMh3apo+i6uY6PB42WBkV5fJ4yZQrMvipMC7jbaS6GErI=
+X-Gm-Gg: ASbGnctJgRjKfZUl1HMyPq3KeybFEDZVSsWTGcELDQbj0BlehjCNgLCrA39FK+CFD6w
+	Tjvu4Pr2K6x3PLIyHU2nEpfCnw+XS4P7dD5CWcqUoFqAN23527lC5OYlRLyrARSrv83tU0lgs9p
+	TuFFvLMqk+cCv6jgVGoIifs/N7l+Qs0WK7atSBcNvucHzPx84v4BdVjZo4ex5LUPQok2t3FpYM4
+	sN/K0xmwW5KYHCYkkbYB4PdzTiV1tOKn1V4B02GN9SLP3SGz119QsqyXoPNhmMfCKoag15/tMlR
+	Fm7zN0CwCD3zsJZx3fKGeVVpAw==
+X-Google-Smtp-Source: AGHT+IGXco4uXMHtHXt7KMJNiHK1jygsRgqWvoJRYUrUimfGnZzf//Gu45O7incVoX3lI43/MEYKpg==
+X-Received: by 2002:a17:902:d4d0:b0:21f:6546:9af0 with SMTP id d9443c01a7336-2236925f2e8mr11651555ad.44.1740694916117;
+        Thu, 27 Feb 2025 14:21:56 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223504db1b6sm20615405ad.161.2025.02.27.14.21.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 14:21:55 -0800 (PST)
+Date: Thu, 27 Feb 2025 14:21:55 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 08/10] selftests/bpf: test_tunnel: Move
+ ip6geneve tunnel test to test_progs
+Message-ID: <Z8Dlg3RNglzb2bTN@mini-arch>
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+ <20250227-tunnels-v1-8-33df5c30aa04@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250227-tunnels-v1-8-33df5c30aa04@bootlin.com>
 
-From: Boqun Feng <boqun.feng@gmail.com>
+On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
+> ip6geneve tunnels are tested in the test_tunnel.sh but not in the
+> test_progs framework.
+> 
+> Add a new test in test_progs to test ip6geneve tunnels. It uses the same
+> network topology and the same BPF programs than the script.
+> Remove test_ip6geneve() from the script.
+> 
+> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 
-spin_lock_irq_disable() and spin_unlock_irq_enable() are inline
-functions, to use them in Rust, helpers are introduced. This is for
-interrupt disabling lock abstraction in Rust.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- rust/helpers/spinlock.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/rust/helpers/spinlock.c b/rust/helpers/spinlock.c
-index 42c4bf01a23e4..d4e61057c2a7a 100644
---- a/rust/helpers/spinlock.c
-+++ b/rust/helpers/spinlock.c
-@@ -35,3 +35,18 @@ void rust_helper_spin_assert_is_held(spinlock_t *lock)
- {
- 	lockdep_assert_held(lock);
- }
-+
-+void rust_helper_spin_lock_irq_disable(spinlock_t *lock)
-+{
-+	spin_lock_irq_disable(lock);
-+}
-+
-+void rust_helper_spin_unlock_irq_enable(spinlock_t *lock)
-+{
-+	spin_unlock_irq_enable(lock);
-+}
-+
-+int rust_helper_spin_trylock_irq_disable(spinlock_t *lock)
-+{
-+	return spin_trylock_irq_disable(lock);
-+}
--- 
-2.48.1
-
+Acked-by: Stanislav Fomichev <sdf@fomichev.me>
