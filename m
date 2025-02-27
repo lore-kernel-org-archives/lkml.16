@@ -1,121 +1,117 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA7222E3E1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0860922E419
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631082; cv=none; b=uweDJveRSS/OgFk8xOnwN2XHuZmqmyN+sypUQ7EbMz6Ayujm2CRK7M2XuV6QjemZMvdZNFOVOHfwiMA6EFGJvQZ8TEyup9p59TYVlw4qeHSXAPfHOmDlmfwBLdH8s2tk9WrQufguT/LWc8/SXo8nHyMleN7m9IbpGxBWjIi9UyQ=
+	t=1740631083; cv=none; b=SDD3UHZyBxKQhFiv/3oYK3ipvgtm17IyftOIC1t12DB70dSNR4HIOUaD3T1YAPLgLuutoL3uM8RAaSwOWdnTnUtjrURu/pcYinYGR7c4ozu2HCZPU9WbjXinumUheAMwmIOyhkPhdFtQnI0LBuBezn6M4LQgjvl398ehPa/hU24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631082; c=relaxed/simple;
-	bh=K0rPiG252rZQIexLl37iIDHUBgLaUhjfUVSvoH/f+bI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oG/Cfaj/bMdQ6zQHNB1u6CG1HHONbBK1taQnr5LHfsa/wC2jJyMVhQkW2Z0lWL4028EBuYzLpU4PotYZaNtCBhZe2XTrJoHG3UmM2hHGmFASCyEf6BvwS2Z3D1hl5vlt8QCQYeu9JTiU1d5avGiVpuRGuHfACCHhtcJqkNg+Rv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HQ5csPYx; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740631083; c=relaxed/simple;
+	bh=dWNxMncDzzJUrRXPZy3Dx27/tlTILtsYWC8EwQlImeM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I6ZtdO3BByuTQsyvfSXHM3YrcYsgZoK7sqHmnMaW7oBr0DRRYEehcgOeWgoUBnqGapqDMZepJWk0hHMtSPhBm2wKEfo7fRTgkk7zF8Qh21Qwv1YTnr8SNEcg8gUF4DY7lnkQbV72ScKg2J5rmgnxbsS7wYHfLJq16lkhF1WnagM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Wif+XbA/; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HQ5csPYx"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-222e8d07dc6so9974155ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wif+XbA/"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-548878c6a5aso499154e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740631080; x=1741235880; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740631080; x=1741235880; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8vuEfNhU6ZAruk6qIF6JGw0mo2a915MB6BnSqH9CQes=;
-        b=HQ5csPYxIFt5J/1Sappl8cXhjYWhL98FF4Ss2VhRYerYnsoQmofZgsMF5nznRHwjzU
-         +gUljwZKhY/BD/ijv6Hd4ZHNqdnM1o5tEvxIS4WhDhhCFMY1Z2dHrU/0yMmb6t66ugUG
-         wH56S5umOseji++o8rPuasPOIzsRRyRV3Ko3A=
+        bh=HzmKzyqYbo3hawEWPEGsqia1eprcAJ4Ylg+Lj6WDtUQ=;
+        b=Wif+XbA/SyCXOpBjX29yKxXCNFC/So+C9YmYbtUXaZyMKyvzdXo6J5z4kJamgbu9Tn
+         MgzTK24HJ6C3u2VrNNc4nzy1cLgHWC+G8yHcD5mal3nuLVqO6LQhrVKC27OuhliOoRO9
+         axhoRizPpW15zt0PllBmKfuKo19DgR9r55q66H2pWqfinfToP+24QGVJp4NOsuG6rbcF
+         GQRIDERUxNnbmV4tZx2v7E9GE3bEgBPaEFN92tiWb/TRd18NDOu/dgUiqsz7NQpObGSZ
+         kaWeXxSyAWHsxNqJLNZ2QOab+/lfkM246wHH03vfrwjromtRG81I5LDtitzaWjuFArmC
+         BTjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740631080; x=1741235880;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8vuEfNhU6ZAruk6qIF6JGw0mo2a915MB6BnSqH9CQes=;
-        b=iZxbn+ojrwt7ya5tB9G0alYitqGOkZ51tOk/4aOVKnP9kZh6yQJdimW1d+q6y0hghW
-         4XZONxjzBJt5ESKZQSF09+A5xMHK4x8OK2xIFHPjeHyahH1pVekwiCq30ByU9t3p3scG
-         5pku4XQPl7F7Uac7YVWXSetb5ShUnZJ6HUJ3MMOxOEBtz8bnrWwKkM485v2niSb6B28J
-         H0r4EFAn0UXSSMWPFNGGFTR/hJ0iTJiWkULVpHXIKV2TrTEeZ8PQhlj2bfGqKIWVfYak
-         uNceytsPahlAycLf1jTo325Q/yqnlURB3GlrKnHM3v5L4hqPiyg+zQx5Zgtlxnzbnapg
-         UZ/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUs6xeBTnJ0LoBwmzQT4UknYw1LRp/64j5AqbMs3j9He8kc/k5k4HAcbstCnGfN3+hk+DwTHYix40nRSCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJCzJrK0JR1iLex2RfwV59okJMklWAmuCETxsb0doskKkO9Cw+
-	wUFfjpHIg33lDF9J0+P2Gdeo8IF0PKEyL1jMcAmDFiEzkxlfxv1+de2XCiqLGQ==
-X-Gm-Gg: ASbGnctGl5vVTQ9t8uheo7ihdofYCRDG70/iucPAaqD2oIWZ8KaTWWq85+W4vIb21F8
-	/+Y/3QApuzHilspotBgMIBdvvdYgu0Kud4+9sYPZQjXJ7mL9iK6W/dr0rJ6KANpZzyuRPsUGvz+
-	UG/Bjmv/vrwq54HM/C/4bG0iV2u6MjUYp/DZSv9yiJbRGLTgCr2rlmUfAiV/vnEfWzLZwiX5u3x
-	i7uN8mmk1xC6qAql0WSTDAybhVBv5C8wlfQR8LqGMR+wvL3xS1FFbJxEtpL4hMTnJ5ASx8Lyp2f
-	LYMFK1rRknYkACH9u+CHxCoOuMlO
-X-Google-Smtp-Source: AGHT+IEe2V/zeMcvZORXlCVMsgDJF6cKsc0Tcc+m2RnLoDmlcE2u9VnCp5uqjB7GRbUjo0EoaqQNIQ==
-X-Received: by 2002:a17:902:e752:b0:215:a303:24e9 with SMTP id d9443c01a7336-2234a1649d0mr25953335ad.3.1740631079813;
-        Wed, 26 Feb 2025 20:37:59 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22350533a10sm4886515ad.247.2025.02.26.20.37.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 20:37:59 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
+        bh=HzmKzyqYbo3hawEWPEGsqia1eprcAJ4Ylg+Lj6WDtUQ=;
+        b=DxSs0OzOUxup3Gqnu7yvKzo2vIY/VIcO3lvPB774Ob1XQotyNZ/LEnmJWZ41xg3dYF
+         o00msNrdaYauyb/whMRRnXR5QiFb9AlXArFQM1Ux95CFXcJUypjsqkEZpuL8IM5+1jS5
+         ZujtJutVyOTGnIL70gR5N6pRbH9iIV/eJpShU1NRpb5aLTurQC+qfGaJWIi6TsRD2B2J
+         /zcVYRtwLNd2pNBitahL0eEKojvzKFFSFoHH020eIMORUfXQ30BBPE41ux2VDGdkOMj+
+         W57KxMAfBQn2AX9+/sBBS8RLOPbXH/SzzGpLJbGOVCtsmT9WG+zaaSB4Q1NG8w/4VFkv
+         y3Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7ZFRGui4CdyrJG9kPcFwyiLoAH6J2DaUz2Do3mJcMtU5lWpwFQFcpaOP98v9XSSdUQraiuF7XJS1n5c4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxblu9lHUKq00awEEsQrN5srAU3QNL7TDMXR0NoUVkWg1X6akma
+	SUZ2YaNydncdM7CzQLF1i60Cy8Jlk0MYOl4pswxrJEIRphhx4QFlHnrfEd5vI8k=
+X-Gm-Gg: ASbGncsOCL7Xl8tw6MUrR8az8yUL69eO/gI/Dxv0765N5uv81e1gC2Vm5/MUFUaVY0A
+	IjEXB+McA7V0x+yEukr6K9SKKT9oWmJRH7Hs0T4eL+o7toR/V0tjApQV4htTbc/ovyRdn3sdVs2
+	MZOSqgonyxUDlyGtpbRBLvwYE9c6FjnGb5npuwpudXkrMa6YoD+aUnLDI/CjOzJ6AM6g5g2BXZG
+	xUFNbcG9NGdJuSnd1b0VBYK8pDcLWxJii+pd1q1PsK9B+ivntk2ZEcIL5a+V2Q7wrok8kFnw+J9
+	7LOBkl1KJYraf8nL68HjBAmsBe8QHiKuNz3bCedLEA==
+X-Google-Smtp-Source: AGHT+IGJyfv5tGen846vyQRMebF2qwsXcYi2q7UIL/kDESpfQBWqyP/hiC9cUT0/ZbRg3Tu8CrhGDg==
+X-Received: by 2002:a05:6512:10c4:b0:545:93b:30bf with SMTP id 2adb3069b0e04-54839259932mr11279171e87.41.1740631080047;
+        Wed, 26 Feb 2025 20:38:00 -0800 (PST)
+Received: from umbar.unikie.fi ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 20:37:58 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Marijn Suijten <marijn.suijten@somainline.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Martin Botka <martin.botka@somainline.org>,
+	Jami Kettunen <jami.kettunen@somainline.org>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 16/19] zram: permit reclaim in zstd custom allocator
-Date: Thu, 27 Feb 2025 13:35:34 +0900
-Message-ID: <20250227043618.88380-17-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
-References: <20250227043618.88380-1-senozhatsky@chromium.org>
+	Luca Weiss <luca.weiss@fairphone.com>
+Subject: Re: [PATCH v2] drm/msm/dpu: Fall back to a single DSC encoder (1:1:1) on small SoCs
+Date: Thu, 27 Feb 2025 06:37:31 +0200
+Message-Id: <174063096235.3733075.3774428548713459070.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org>
+References: <20250122-dpu-111-topology-v2-1-505e95964af9@somainline.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-When configured with pre-trained compression/decompression
-dictionary support, zstd requires custom memory allocator,
-which it calls internally from compression()/decompression()
-routines.  That means allocation from atomic context (either
-under entry spin-lock, or per-CPU local-lock or both).  Now,
-with non-atomic zram read()/write(), those limitations are
-relaxed and we can allow direct and indirect reclaim.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/backend_zstd.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+On Wed, 22 Jan 2025 17:23:44 +0100, Marijn Suijten wrote:
+> Some SoCs such as SC7280 (used in the Fairphone 5) have only a single
+> DSC "hard slice" encoder.  The current hardcoded use of 2:2:1 topology
+> (2 LM and 2 DSC for a single interface) make it impossible to use
+> Display Stream Compression panels with mainline, which is exactly what's
+> installed on the Fairphone 5.
+> 
+> By loosening the hardcoded `num_dsc = 2` to fall back to `num_dsc =
+> 1` when the catalog only contains one entry, we can trivially support
+> this phone and unblock further panel enablement on mainline.  A few
+> more supporting changes in this patch ensure hardcoded constants of 2
+> DSC encoders are replaced to count or read back the actual number of
+> DSC hardware blocks that are enabled for the given virtual encoder.
+> Likewise DSC_MODE_SPLIT_PANEL can no longer be unconditionally enabled.
+> 
+> [...]
 
-diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
-index 1184c0036f44..22c8067536f3 100644
---- a/drivers/block/zram/backend_zstd.c
-+++ b/drivers/block/zram/backend_zstd.c
-@@ -24,19 +24,10 @@ struct zstd_params {
- /*
-  * For C/D dictionaries we need to provide zstd with zstd_custom_mem,
-  * which zstd uses internally to allocate/free memory when needed.
-- *
-- * This means that allocator.customAlloc() can be called from zcomp_compress()
-- * under local-lock (per-CPU compression stream), in which case we must use
-- * GFP_ATOMIC.
-- *
-- * Another complication here is that we can be configured as a swap device.
-  */
- static void *zstd_custom_alloc(void *opaque, size_t size)
- {
--	if (!preemptible())
--		return kvzalloc(size, GFP_ATOMIC);
--
--	return kvzalloc(size, __GFP_KSWAPD_RECLAIM | __GFP_NOWARN);
-+	return kvzalloc(size, GFP_NOIO | __GFP_NOWARN);
- }
- 
- static void zstd_custom_free(void *opaque, void *address)
+Applied, thanks!
+
+[1/1] drm/msm/dpu: Fall back to a single DSC encoder (1:1:1) on small SoCs
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/b6090ffb30f3
+
+Best regards,
 -- 
-2.48.1.658.g4767266eb4-goog
-
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
