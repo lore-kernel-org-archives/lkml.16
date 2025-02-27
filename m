@@ -1,310 +1,191 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD3022E3F0;
-	Thu, 27 Feb 2025 12:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B73A101FF;
+	Thu, 27 Feb 2025 12:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658087; cv=none; b=lSuHMcKubXcdhajbNoOBuUuBmkTd8GDw8C3UuNDi4fgvXL1SsITRtc5aIozNhGH4tnaKrFJfVoU2mveJwNwOfzBgt5rXG6QRYGumfWM9R9S00i0RLAH3T93HJKDA6YIRGxn89QCoYPxMwisxvYrHp6UWpBU5EFB7p8kFs2EVVDI=
+	t=1740658134; cv=none; b=TeKCiQbWZgacXOiAXVoFxTM10PsK9ByFTyJ4bPAntJ6AhDCOOL919QiuWvwam30Nsz9xTS4h8vUAAuACe5DYEcbSVglAlDOw+7IGJHC6bE+QzCLEOs+0KFQlQ5D530kAIuK2hU9kSIOMTxv1A22mPA7drvx5d3UHuU39fssskLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658087; c=relaxed/simple;
-	bh=T0a5obLc4j2fbIOEajzfIFERecp2iIvOq4FtVxjBxXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nMnNr9qLX8MXl5Y5fGXNOv55tsXlwAhZQ6Yg3Iz39sl6IPKGRFnNBSheAf6OhkR8cDSSoXM7686EFSS0Mgz+dElGkXirYVHNI5Rkv6J0+IrE+gg8aqn2+gE/qWX/jefJqUlmkYAiHGnss7U+wV1capU11mET9MCV0xYE43IFMFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=BMe+FVpY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1740658134; c=relaxed/simple;
+	bh=tql2RO8GL3XbRYzLyF10LrmaUQUmVqAYtQm0jp7XazI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rhKg1jC6v061UMcWYH1X9X6nsT99xPYUOZrTB45OciNypcOj9zciSqcKTUgw5DbFSItArGqSI/39ZTKMQCnx0dpIZaa/T9Jrtp20xLnUm3pSW4yloSaefRfuLuTUBYuuI72j6psizVtUr4t67tGlKSbjSnKXxOObNeL6H9qn2uM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpQRU2F0; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="BMe+FVpY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1CEF740E0202;
-	Thu, 27 Feb 2025 12:08:01 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id iN0oCAlGWdj8; Thu, 27 Feb 2025 12:07:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740658078; bh=klXDwLNu+GdgxiSQ4cKCu+o7Hgj9jWo4+xGGDdoiKyM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BMe+FVpYcnybJXXM2DdS37JwfSoPjAjvLDkEei7ZnqXysLs4iK+doGH7m/kT0gYh7
-	 ++DAAp3QJBrwYKZDWMkcrgrTUol6djyrM3PAJLTG5gwHcjuWEVB8zNoukan/C/PQ11
-	 VBeOyvhKkj6uHDj32a7Vl0dKvIogDTdExZn6ec3gXiNFsTi+RwX2Vi4pQDzZVNTgHZ
-	 ZxQKdTlmVprEPa0V7BJX6GypLd04/lkwSOyDPqwnLOi4ISZjn0WbRawbQ+HbKLji+v
-	 2nr/ZmneryOruZtGuC9hKOSlT8Qmj0ks+9xX+oUwgVHadfc6UNYe9EDSWRKyFsmqcQ
-	 fH5+662Bb9j7+crgFmGFms2EFfEwKBW416LJ3uC/q8CeBjMKIWr+A4nt6CzMP9lOXn
-	 Z02/yORitAPE040Sg3gv+PjB2rD2WmrOLlcsTWfgfRltYkWm3z7o52Hn5LPPVQ4JVo
-	 in/A7jJlP3/Z1XOb8F5WC/dnYg1y0mm5oNrg7k3EtHqcOn4Yfs2XAscnEr0T+ky2O1
-	 Nap2xfrlYXyJvYDw5LNMmUSVqYjSMSWbxCSUtNERR+0ekVMQKOKCsJ6Q+8F8HrrIqr
-	 7ubOOnDQNwweaU76vvfKs8TK4hKox8lItZKO9Nh3aofHkBlHoJzNjbCoK3ke/kT4xj
-	 A0pA8X13r5RWpUZJZYjU738s=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3CE2240E01AE;
-	Thu, 27 Feb 2025 12:06:13 +0000 (UTC)
-Date: Thu, 27 Feb 2025 13:06:07 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>, Vineet Gupta <vgupta@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>,
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-	Stafford Horne <shorne@gmail.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Christoph Lameter <cl@linux.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Ofir Weisse <oweisse@google.com>,
-	Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
-Message-ID: <20250227120607.GPZ8BVL2762we1j3uE@fat_crate.local>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-3-8419288bc805@google.com>
- <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
- <CA+i-1C2xK8hzMQ8Y-=-7iYy+27nnouQZu1NdWG0qa35t+OQLqw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpQRU2F0"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22185cddbffso33975675ad.1;
+        Thu, 27 Feb 2025 04:08:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740658132; x=1741262932; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jgXAyWJlzyUT7W8oT86LCqJbT092n3CAES1oCH+us9Q=;
+        b=bpQRU2F02KYDVnGeSXRBP1K9d0T+jI8c2B7ZvDbGsjHfhiTPh254HLopUzbBdQQmtg
+         oOiYpik6txxfpJx+uwC9BqYSH9DWRHq0fIDjWKGFd8TklUbCYiBkuSXi0LbWeN2Ut2Dp
+         NCNYfAX6LuvydRsgOlPh9r/s8Vjukw4BNkev//ivNLZClXNgjHclr3hC5M27PH3xwPJk
+         TOeASV6R5BWZ1JR7QAOFk5Iqsx69zRrUKfA09z64SO6/7g841ituEsmtsuCs5MP0gyJv
+         gnka00WaAgZBozK/UR/XHK+V7Nsq5iD6OudjaL1aOKHgvQT5HA8q6vKo9pM0sVKS1czr
+         ti0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740658132; x=1741262932;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jgXAyWJlzyUT7W8oT86LCqJbT092n3CAES1oCH+us9Q=;
+        b=GUwg1MMWfFtWtQINB3t0j7afqPOyjzY4g065DwImJdwUQXPM2W9x7ffM2DMJupa3lJ
+         nvlhOtzcLCWDIyQoDpLpd872Z90Tztjq1N2HkRjvZqdMsJOHPG5+MXrnm13WPEF/2HB/
+         5W2owHeOzp/T3jmhz4NIzX5tZurHg9fqgZ4Zz+I+7GBqjXBoMml5HJrp7jI/5g4SEzKr
+         aqJNnbERIAfwrMm+zluSe7dv0qcKd9P3yY3HXIa/MnebA2ohXnA0Mksu09UEhIBW0orW
+         Rq+gFfmG0HqzuVv47wJK8vhNXp98LyVnvq2rI4FCrObWNgbBAjZ5haJN4yaLwFWT5yQY
+         A8Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5EdCD4WZ2+akNLuP5MD7XcCoz1iq6vyJ2DX2PyrkauCbXGsq6UaZ0RGpaNXPSC9yoG3iem9P9vFUqhn0=@vger.kernel.org, AJvYcCWjxAai77jDy2ukAyV225vsC+9dD33DqjuL92gGJ4te+dmC34Q2/O96GMpx2rLbR9SQxMoKIOJGdjLLDe+Q@vger.kernel.org, AJvYcCXBZuTiutEC3ngL+Y19gi8vW+poWvwukcStge+iWBpwk02eZNAeTj/Efs0YOQRyIdsg3Oqvh3u/8eGY@vger.kernel.org, AJvYcCXUyp3RWDhUwdgP00KXtU4SZB9htcC2d9wwqgU/DxU4VGlbB6T/XZ4Ydm/4k9O2f2VTsOr2dk7XExxzRRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhBqknXz1MECn9duYd4KBISr/VnfKerK75puZp/r69nKZvegle
+	A1e03wT1OnHIUCbcQjGkg8IPbGrj12oUIvtQqPQlVj0uLqAcnPIr
+X-Gm-Gg: ASbGncsCDK9KeqOiOHUev1VX7C+mgckzDEFP6NK+aMl1thRfhj/jg+FQEA2vxEpLCd/
+	yz476kxQ/cHAoJ6TT13io2K1L44k7+/+FHWQnBX1PvCWO7L+MfF/AoWkmbA/Y+Jxdvxjca0U3sF
+	3oDsQxvrc10IxrCBUrdsqXLl2t8IM0o0MAjdKCheWjt/+0S11l+tTbP39tyhydB7IqBUDEn5PkI
+	0zEnJf2nz8j90p1V4qqWY88Ae0FL+NZALW/CG+Wkzylla8/dxsPrzRlnYYsu23OgPPtf0DAQ8Jb
+	one/eZBUb2eFPd2mSBjPX7gpLJJw7nchcqpR3BbPToBWz2mb29HtRcrg4oG2KjTj61A7JLKSxzO
+	DkHPsoJDcW/ouGRmNSXBi
+X-Google-Smtp-Source: AGHT+IGpG3aYl9HWsQOldqhSuN29J84k9WJc0IYy7wzLeHC+7iHr1iy3v7s+wPTT3I+3pe465wAJnA==
+X-Received: by 2002:a05:6a21:6f0c:b0:1ee:d19c:45f9 with SMTP id adf61e73a8af0-1f2e39188d3mr5135935637.19.1740658131652;
+        Thu, 27 Feb 2025 04:08:51 -0800 (PST)
+Received: from [192.168.2.3] (2403-580a-80ed-0-4835-5a07-49e7-f115.ip6.aussiebb.net. [2403:580a:80ed:0:4835:5a07:49e7:f115])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aee7de19cdasm1074217a12.24.2025.02.27.04.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 04:08:51 -0800 (PST)
+From: James Calligeros <jcalligeros99@gmail.com>
+Subject: [PATCH v3 00/20] ASoC: tas27{64,70}: improve support for Apple
+ codec variants
+Date: Thu, 27 Feb 2025 22:07:27 +1000
+Message-Id: <20250227-apple-codec-changes-v3-0-cbb130030acf@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+i-1C2xK8hzMQ8Y-=-7iYy+27nnouQZu1NdWG0qa35t+OQLqw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAH9VwGcC/23NwQ6DIAyA4VcxnMcCVWB62nssOyhUJVExsJAtx
+ ncfuizx4PFv2q8LCegtBlJlC/EYbbBuSpFfMqL7euqQWpOaAAPBgBe0nucBqXYGNf1tBCpRCmk
+ 0RygMSZezx9a+d/XxTN3b8HL+sz+JfJv+PXHqRU4ZVZALWTbAG17eu7G2w1W7kWxehKNxOzcgG
+ WUOSrLWKGTqaKzr+gVhtMHr+gAAAA==
+X-Change-ID: 20250214-apple-codec-changes-6e656dc1e24d
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Shenghao Ding <shenghao-ding@ti.com>, Kevin Lu <kevin-lu@ti.com>, 
+ Baojun Xu <baojun.xu@ti.com>, Dan Murphy <dmurphy@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shi Fu <shifu0704@thundersoft.com>, 
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Hector Martin <marcan@marcan.st>, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ asahi@lists.linux.dev, linux-hwmon@vger.kernel.org, 
+ Neal Gompa <neal@gompa.dev>, James Calligeros <jcalligeros99@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3916;
+ i=jcalligeros99@gmail.com; h=from:subject:message-id;
+ bh=tql2RO8GL3XbRYzLyF10LrmaUQUmVqAYtQm0jp7XazI=;
+ b=owGbwMvMwCV2xczoYuD3ygTG02pJDOkHQk84PxRvSj/f26TnMf3zq6hn/pu8Jhf+/um1Z1Pnv
+ JNnmAVmdJSyMIhxMciKKbJsaBLymG3EdrNfpHIvzBxWJpAhDFycAjCRrAxGhs6n81dO2fhCyOrF
+ IYNyV3fWPwpLSmKXdHeuXqIZqX7m0iqGf1o8rpKShxfdM+A5V2x3RICdK+qU5izu3+ymgTl/L2p
+ fYAIA
+X-Developer-Key: i=jcalligeros99@gmail.com; a=openpgp;
+ fpr=B08212489B3206D98F1479BDD43632D151F77960
 
-On Wed, Feb 19, 2025 at 02:53:03PM +0100, Brendan Jackman wrote:
-> Argh, sorry, GMail switched back to HTML mode somehow. Maybe I have to
-> get a proper mail client after all.
+Hi all,
 
-Yap, wouldn't be such a bad idea. And yes, it ain't easy - we have a whole doc
-about it:
+This series introduces a number of changes to the drivers for
+the Texas Instruments TAS2764 and TAS2770 amplifiers in order to
+introduce (and improve in the case of TAS2770) support for the
+variants of these amps found in Apple Silicon Macs.
 
-Documentation/process/email-clients.rst
+Apple's variant of TAS2764 is known as SN012776, and as always with
+Apple is a subtly incompatible variant with a number of quirks. It
+is not publicly available. The TAS2770 variant is known as TAS5770L,
+and does not require incompatible handling.
 
-> OK, sounds like I need to rewrite this explanation! It's only been
-> read before by people who already knew how this thing worked so this
-> might take a few attempts to make it clear.
-> 
-> Maybe the best way to make it clear is to explain this with reference
-> to KVM. At a super high level, That looks like:
-> 
-> ioctl(KVM_RUN) {
->     enter_from_user_mode()
->     while !need_userspace_handling() {
->         asi_enter();  // part 1
->         vmenter();  // part 2
->         asi_relax(); // part 3
->     }
->     asi _exit(); // part 4b
->     exit_to_user_mode()
-> }
-> 
-> So part 4a is just referring to continuation of the loop.
-> 
-> This explanation was written when that was the only user of this API
-> so it was probably clearer, now we have userspace it seems a bit odd.
-> 
-> With my pseudocode above, does it make more sense? If so I'll try to
-> think of a better way to explain it.
+Much as with the Cirrus codec patches, I do not
+expect that we will get any official acknowledgement that these parts
+exist from TI, however I would be delighted to be proven wrong.
 
-Well, it is still confusing. I would expect to see:
+This series has been living in the downstream Asahi kernel tree[1]
+for over two years, and has been tested by many thousands of users
+by this point[2].
 
-ioctl(KVM_RUN) {
-    enter_from_user_mode()
-    while !need_userspace_handling() {
-        asi_enter();  // part 1
-        vmenter();  // part 2
-        asi_exit(); // part 3
-    }
-    asi_switch(); // part 4b
-    exit_to_user_mode()
-}
+[1] https://github.com/AsahiLinux/linux/tree/asahi-wip
+[2] https://stats.asahilinux.org/
 
-Because then it is ballanced: you enter the restricted address space, do stuff
-and then you exit it without switching address space. But then you need to
-switch address space so you have to do asi_exit or asi_switch or wnatnot. And
-that's still unbalanced.
+---
+Changes in v3:
+- Add Rob's Acked-by to Devicetree compatible additions
+- Dropped cherry-picked patches
+- Droped abuse of regulator API
+- Droped bespoke sysfs interface
+- Rationalised temperature reading for hwmon interface
+- Set SN012776 device ID with OF match data
+- Changed probe ops reliant on device ID to case/switch statement
+- Added documentation for new Devicetree properties
+- Improved a number of poor quality commit messages
+- Documented behaviour of die temperature ADC
+- Link to v2: https://lore.kernel.org/r/20250218-apple-codec-changes-v2-0-932760fd7e07@gmail.com
 
-So from *only* looking at the usage, it'd be a lot more balanced if all calls
-were paired:
+Changes in v2:
+- Changed author field of patch to match Martin's Signed-off-by
+- Added Neal's Reviewed-by to reviewed patches
+- Moved fixes to existing code to the top of the series
+- Removed tas2764's explicit dependency on OF
+- Removed complicated single-use tas2764 quirks macro and replaced with
+  if block
+- Added hwmon interface for codec die temp
+- Fixed a malformed commit message
+- Link to v1: https://lore.kernel.org/r/20250215-apple-codec-changes-v1-0-723569b21b19@gmail.com
 
-ioctl(KVM_RUN) {
-    enter_from_user_mode()
-    asi_switch_to();			<-------+
-    while !need_userspace_handling() {		|
-        asi_enter();  // part 1		<---+	|
-        vmenter();  // part 2		    |	|
-        asi_exit(); // part 3		<---+	|
-    }						|
-    asi_switch_back(); // part 4b	<-------+
-    exit_to_user_mode()
-}
+---
+Hector Martin (5):
+      ASoC: tas2764: Enable main IRQs
+      ASoC: tas2770: Power cycle amp on ISENSE/VSENSE change
+      ASoC: tas2770: Add zero-fill and pull-down controls
+      ASoC: tas2770: Support setting the PDM TX slot
+      ASoC: tas2770: Set the SDOUT polarity correctly
 
-(look at me doing ascii paintint :-P)
+James Calligeros (6):
+      ASoC: dt-bindings: tas27xx: add compatible for SN012776
+      ASoC: dt-bindings: tas2770: add compatible for TAS5770L
+      ASoC: dt-bindings: tas27xx: document ti,sdout-force-zero-mask property
+      ASoC: tas2770: expose die temp to hwmon
+      ASoC: tas2764: expose die temp to hwmon
+      ASoC: dt-bindings: tas2770: add flags for SDOUT pulldown and zero-fill
 
-Naming is awful but it should illustrate what I mean:
+Martin Povišer (9):
+      ASoC: tas2764: Extend driver to SN012776
+      ASoC: tas2764: Add control concerning overcurrent events
+      ASoC: tas2770: Factor out set_ivsense_slots
+      ASoC: tas2770: Fix and redo I/V sense TDM slot setting logic
+      ASoC: tas2764: Reinit cache on part reset
+      ASoC: tas2764: Configure zeroing of SDOUT slots
+      ASoC: tas2764: Apply Apple quirks
+      ASoC: tas2764: Raise regmap range maximum
+      ASoC: tas2764: Crop SDOUT zero-out mask based on BCLK ratio
 
-	asi_switch_to
-	  asi_enter
-	  asi_exit
-	asi_switch_back
+ .../bindings/sound/ti,tas2770.yaml       |  13 ++
+ .../bindings/sound/ti,tas27xx.yaml       |   5 +
+ sound/soc/codecs/tas2764-quirks.h        | 180 +++++++++++++++++
+ sound/soc/codecs/tas2764.c               | 258 ++++++++++++++++++++++++-
+ sound/soc/codecs/tas2764.h               |  21 ++
+ sound/soc/codecs/tas2770.c               | 240 ++++++++++++++++++++---
+ sound/soc/codecs/tas2770.h               |  19 ++
+ 7 files changed, 706 insertions(+), 30 deletions(-)
+---
+base-commit: 32adeb9806ac5bf928514b62e6145bba12dfd71a
+change-id: 20250214-apple-codec-changes-6e656dc1e24d
 
-Does that make more sense?
-
-> asi_enter() is actually balanced with asi_relax(). The comment says
-> "if we are in it" because technically if you call this asi_relax()
-> outside of the critical section, it's a nop. But, there's no reason to
-> do that, so we could definitely change the comment and WARN if that
-> happens.
-
-See above.
-
-> 
-> >
-> > > +#define ASI_TAINT_OTHER_MM_CONTROL   ((asi_taints_t)BIT(6))
-> > > +#define ASI_NUM_TAINTS                       6
-> > > +static_assert(BITS_PER_BYTE * sizeof(asi_taints_t) >= ASI_NUM_TAINTS);
-> >
-> > Why is this a typedef at all to make the code more unreadable than it needs to
-> > be? Why not a simple unsigned int or char or whatever you need?
-> 
-> 
-> My thinking was just that it's nicer to see asi_taints_t and know that
-> it means "it holds taint flags and it's big enough" instead of having
-> to remember the space needed for these flags. But yeah I'm fine with
-> making it a raw integer type.
-
-You're thinking of some of those rules here perhaps?
-
-https://kernel.org/doc/html/latest/process/coding-style.html#typedefs
-
-Probably but then you're using casts (asi_taints_t) to put in integers in it.
-Does it matter then?
-
-Might as well use a plain int and avoid the casts, no? Unless there's a real
-good reason to have a special type and it is really really good this way...?
-
-> Well it needs to be disambiguated from the field below (currently
-> protect_data) but it could be control_to_flush (and data_to_flush).
-> 
-> The downside of that is that having one say "prevent" and one say
-> "protect" is quite meaningful. prevent_control is describing things we
-> need to do to protect the system from this domain, protect_data is
-> about protecting the domain from the system. However, while that
-> difference is meaningful it might not actually be helpful for the
-> reader of the code so I'm not wed to it.
-> 
-> Also worth noting that we could just combine these fields. At present
-> they should have disjoint bits set. But, they're used in separate
-> contexts and have separate (although conceptually very similar)
-> meanings, so I think that would reduce clarity.
-
-Ok, I guess it'll tell us what is better once we stare at that code more. :)
-
-> Ack, I've set up a local thingy to spellcheck all my commits so
-> hopefully you should encounter less of that noise in future.
-
-Yeah, I use the default vim spellchecker and it simply works.
- 
-> For the pronouns stuff I will do my best but you might still spot
-> violations in older text, sorry about that.
-
-No worries.
-
-> What this field is describing is: when we run the untrusted code, what
-> happens? I don't mean "what does the kernel do" but what physically
-> happens on the CPU from an exploit point of view.
-> 
-> For example setting ASI_TAINT_USER_DATA in this field means "when we
-> run the untrusted code (i.e. userspace), userspace data gets left
-> behind in sidechannels".
-> 
-> "Should be set" in the comment means "this field should be set to
-> record that a thing has happened" not "this field being set is a
-> requirement for some API" or something. So I don't think "required" is
-> right but this is hard to name.
-> 
-> That commentary should also be expanded I think, since "should be set"
-> is pretty ambiguous. And maybe if we called it "to_set" it would be
-> more obvious that "set" is a verb? I'm very open to suggestions.
-
-I think the explanations you give here should be condensed into comments over
-those things. They're really helpful.
-
-Thx.
-
+Best regards,
 -- 
-Regards/Gruss,
-    Boris.
+James Calligeros <jcalligeros99@gmail.com>
 
-https://people.kernel.org/tglx/notes-about-netiquette
