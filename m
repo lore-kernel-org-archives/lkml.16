@@ -1,63 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E466024DFF8;
-	Thu, 27 Feb 2025 15:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AB724E004;
+	Thu, 27 Feb 2025 15:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740669621; cv=none; b=muQkLVjHls69FDtvkRdSgsQ8IrrS9ewBzmENk/jocjoIClKSebG2y6vab5/Gk7+VFn3Cwg+TXV6eyRbA0GUwQQkuhlZWRRR3rgbS2MP/MO+GbB7gxblCmKBCWWw7BVFMY6ZUaOMDVxiZ1ymVWkyj/hOl4TY/f7DjKL1Yb7fwUJg=
+	t=1740669633; cv=none; b=jb8Oxn53nDYaejo7hrnKJVBW5ClqmtjUEm+ztHVxz8VprJQ6Njt1v7b7a5tdC80h8REsZjMppGZb9X7tx70upt/Hqr+Jh9sUhXW3ww4YVwNtNryF6tf9zpC73q/xKsWBm0iNp+Pa8gS9ESEQeKFWSaa6n8e1AR1wgs9MMfzprZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740669621; c=relaxed/simple;
-	bh=xbybQy58/b9cxOIPGCsqR+WM6Yqy4lCzOUwQ/Rvr3Ww=;
+	s=arc-20240116; t=1740669633; c=relaxed/simple;
+	bh=O2RSGihEUeZucdzzlTWlLZ5f5Ojwj25KIj+Cw9BroWs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qRltDQ0+Q32EDuAs1jvOcKXpLjRLg3GjlVm48UtVoNCpO8D83aQHYcBHSXzt1avCR7EG/G8hbL1cmee3gsVbdgxeH5KxUIuzN9QMPVdd9Hgz0gsdussTiX1apy4EVPr9StZuj5LDu9MwJqmfcd1NQbGAi7JFsFPwVoXazemPJ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kBrcjuJV; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=o4MucIfRhXq1Owm3jBW0t8CBIXM/zbTpRf57TuT4EOOYYsUieEYskb+FPLnMGfZYxXFTJ8l4sts0/hlHn4nOThWXysHDH4HuXaKpIk4o/m5N2iFxYuqDUJA2QH6RKs2XoUdgpCxKQ9BJwS0R2tf99ibwKLIQu+dkVVuFbxSfPZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FKLV04MR; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kBrcjuJV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FKLV04MR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740669620; x=1772205620;
+  t=1740669632; x=1772205632;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=xbybQy58/b9cxOIPGCsqR+WM6Yqy4lCzOUwQ/Rvr3Ww=;
-  b=kBrcjuJVtBtM0u615xSA3pwdbvfizjoLw/jTt1CaEVbo34FwUW5YN4Jx
-   spDheWQGv8r/bViKO5Fvd3Kap1CnNBYiWXZERNl2CCwcnED3uUxTguOX4
-   y+j8uWKUS/ZcdElU24Dm7EkpXT8K1Q7PnJeS1z7AxEwQRbmQXU43quhAk
-   pb5c+7n8EeKFyxIpLqfk6/2AutqfSBS7aym268PNm8Hsrasehk2U0fVnN
-   VIZU97z1v/WPwJYXtPfhWuriPTQQD9mvPy6wrUkppB1zEDBvdrYEnSouM
-   ITj/tbdT++E7qysv0kIQ9oB3SjJDgW1n4SIN6sqyu/5MLxiDj+qBONYas
+  bh=O2RSGihEUeZucdzzlTWlLZ5f5Ojwj25KIj+Cw9BroWs=;
+  b=FKLV04MRYYb7b6aXwpHrfElsZjmra+KifLCD9npobdPcD6XJ+PTnz8f8
+   BRO0ec2GprKE4W+RlWeca1D1GXHrG+Mb1pwyqk8LQr694wRmx+VPzISLD
+   A/CHUEwzfLQWIx7jZH59NOq3+pEME+lINtvK9p6WV3mvkSaFDt2UedETM
+   iNL9zLs3oJ8AO2e4NHxSuAnozxtNelGgeqATD9UOcg87aqtrTGZWOui+0
+   t1C1+zxPB2j5gqAEnywl962TNVD+upBjEuAr3d2KAoDiMcIfc7j63A9zw
+   HGYQxK3OQ5gr2IG5noLmRg9N61wc4V9WrBfeUvzRGocDyx6ZWz+mpNW+9
    g==;
-X-CSE-ConnectionGUID: 8qP6V1+vQkOfTCAvo+bX0Q==
-X-CSE-MsgGUID: fOgMdmsbT+CTa57ssuqtpw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52205832"
+X-CSE-ConnectionGUID: moKvmkB4RRKSyEy+frWgGA==
+X-CSE-MsgGUID: VcAKaJoeRYqyEZSB5xZIqg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="59100823"
 X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="52205832"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:20:19 -0800
-X-CSE-ConnectionGUID: //sydfZnSqWjo0BZQbncpw==
-X-CSE-MsgGUID: VE+oI+AfQS2qiv7pLBNW3g==
+   d="scan'208";a="59100823"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:20:31 -0800
+X-CSE-ConnectionGUID: tghChrLAT3uZcFB1OG6MDw==
+X-CSE-MsgGUID: fJ23NbXIRqK8v79NrO9hEw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="121999934"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:20:18 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnfgM-0000000FdBP-2W3l;
-	Thu, 27 Feb 2025 17:20:14 +0200
-Date: Thu, 27 Feb 2025 17:20:14 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Linux-Arch <linux-arch@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic/io.h: rework split ioread64/iowrite64 helpers
-Message-ID: <Z8CCrqzCfwzIpJ-3@smile.fi.intel.com>
-References: <20250227141910.3819351-1-arnd@kernel.org>
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121177193"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa003.fm.intel.com with ESMTP; 27 Feb 2025 07:20:25 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnfgR-000DYs-2D;
+	Thu, 27 Feb 2025 15:20:23 +0000
+Date: Thu, 27 Feb 2025 23:18:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
+	mark.rutland@arm.com, alexei.starovoitov@gmail.com
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com,
+	will@kernel.org, mhiramat@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, mathieu.desnoyers@efficios.com,
+	nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
+	justinstitt@google.com, dongml2@chinatelecom.cn,
+	akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com,
+	dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH bpf-next v2] add function metadata support
+Message-ID: <202502272339.DtueAali-lkp@intel.com>
+References: <20250226121537.752241-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,33 +74,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227141910.3819351-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250226121537.752241-1-dongml2@chinatelecom.cn>
 
-On Thu, Feb 27, 2025 at 03:19:01PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> There are two incompatible sets of definitions of these eight functions:
-> On 64-bit architectures setting CONFIG_HAS_IOPORT, they turn into
-> either pair of 32-bit PIO (inl/outl) accesses or a single 64-bit MMIO
-> (readq/writeq). On other 64-bit architectures, they are always split
-> into 32-bit accesses.
-> 
-> Depending on which header gets included in a driver, there are
-> additionally definitions for ioread64()/iowrite64() that are
-> expected to produce a 64-bit register MMIO access on all 64-bit
-> architectures.
-> 
-> To separate the conflicting definitions, make the version in
-> include/linux/io-64-nonatomic-*.h visible on all architectures
-> but pick the one from lib/iomap.c on architectures that set
-> CONFIG_GENERIC_IOMAP in place of the default fallback.
+Hi Menglong,
 
-Thanks, this is good to go in my opinion,
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on bpf-next/master]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-function-metadata-support/20250226-202312
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250226121537.752241-1-dongml2%40chinatelecom.cn
+patch subject: [PATCH bpf-next v2] add function metadata support
+config: i386-kismet-CONFIG_CALL_PADDING-CONFIG_FUNCTION_METADATA-0-0 (https://download.01.org/0day-ci/archive/20250227/202502272339.DtueAali-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250227/202502272339.DtueAali-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502272339.DtueAali-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for CALL_PADDING when selected by FUNCTION_METADATA
+   WARNING: unmet direct dependencies detected for CALL_PADDING
+     Depends on [n]: CC_HAS_ENTRY_PADDING [=y] && OBJTOOL [=n]
+     Selected by [y]:
+     - FUNCTION_METADATA [=y]
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
