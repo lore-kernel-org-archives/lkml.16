@@ -1,378 +1,143 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86F023537B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD99342AA1;
+	Thu, 27 Feb 2025 14:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740666006; cv=none; b=C9nPJlkUsycCF/wOJZtkw+WgooEJYsXwLT9TisHTjFZ4jufDeMQeALMuShuBP42vFyG93iCqlkE4s7cgYJT7GK1Mdctz5IB2+MK55e9qXWcCj5NgJRcZJJXsJNE3/0aTL2GNRsVSYyqK/lJkYhZoaESyVrnJB7XwsbVjQEThRh8=
+	t=1740666087; cv=none; b=GHD+5y0ozGI3fDmWg1QdThZsBczw+QIuQv5FJXz482SnmkGcIFRzanDF1vMkr0nBKHP2RoFYl3KpZX08KDFpH7kzX0lEEfxxwlvmQyfty9NEmm36uwrM3vj92JhocveABzbzdtrtwqCawACkRZZKQxh+/c28jrpf03IvxJh4wG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740666006; c=relaxed/simple;
-	bh=VJ9a2I2tdri2oG7eNa0CP97r/I72geitmY2RwREjDNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gqHXqUpL8FzVHvgay0d9iF7uodyzZ3pxBTzSVVgKWjkKG33biDZ2wZYq5UjY/0oJJTLhc+LMMmyj5VrfAah4LvWGRaVqBoqoMamlVqjvEJSK5QxeHmS34mP6ciP2bEmpwbC9TdRs/JKMm0gaQn4RazahHt6/ilnphjKZTEsRbpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Z3Y843xhSz9sSN;
-	Thu, 27 Feb 2025 15:07:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FP5Z442qQhRv; Thu, 27 Feb 2025 15:07:48 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z3Y842nk2z9sSC;
-	Thu, 27 Feb 2025 15:07:48 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C49D8B78B;
-	Thu, 27 Feb 2025 15:07:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id cZKqapAsXdTe; Thu, 27 Feb 2025 15:07:48 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id AE4CE8B77C;
-	Thu, 27 Feb 2025 15:07:47 +0100 (CET)
-Message-ID: <be7782a1-5e92-46c1-a315-c1edbd0746d9@csgroup.eu>
-Date: Thu, 27 Feb 2025 15:07:47 +0100
+	s=arc-20240116; t=1740666087; c=relaxed/simple;
+	bh=gFa6GpKVLPwlHcDdDMyMTXz8bG022aq5QSyPy10QOa0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k5fX5+Y6FYX9vDG3eGapSC+y12eGd7EzyzrzjO6WyYcnmCWc24N90U7D74EUYzs2Q/x8vyxv7bvUwMjcqfeL/lYIyEZWkI86u+zGciwJ4xDFQDgFiz2Ax1Yp2vu0RJhEp6uNpkLP6y2mSWzScC+lZ7Z4IyN/ZiIGwUJd6jpoFEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QSFYMRQo; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QSFYMRQo"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51REKtYe1783638
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Feb 2025 08:20:55 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740666055;
+	bh=lM/T3w7yUieqaJocZ0BLAs84QNCXgUrCL8lVLG4NWTs=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=QSFYMRQocjgVFaCGWkMEyWi0F5TSes/NQaMaXjEAgo41xQLwoSAL/izLY3/DtIs/4
+	 HQkLhm44q6rSarjxpah6TdlvZxplsTPSnYPGHnh6MYHDQsms4GSovJvcQVP/MgO8e1
+	 YiG/ieHZ54+KkgQxOAAILN5QEVrgpZGRENbZjTSM=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51REKt4m009869
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Feb 2025 08:20:55 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Feb 2025 08:20:55 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Feb 2025 08:20:55 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51REKtcs097316;
+	Thu, 27 Feb 2025 08:20:55 -0600
+Date: Thu, 27 Feb 2025 08:20:55 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+CC: Andi Shyti <andi.shyti@kernel.org>, <vigneshr@ti.com>,
+        <aaro.koskinen@iki.fi>, <khilman@baylibre.com>, <rogerq@kernel.org>,
+        <tony@atomide.com>, <jmkrzyszt@gmail.com>, <reidt@ti.com>,
+        <wsa@kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <stable@kernel.org>
+Subject: Re: [PATCH] i2c: omap: fix IRQ storms
+Message-ID: <20250227142055.ndzavzysaenoducj@murky>
+References: <20250207185435.751878-1-andreas@kemnade.info>
+ <c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
+ <20250220100745.05c0eff8@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [next-20250226]Build Failure
-To: Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>,
- Stephen Rothwell <sfr@canb.auug.org.au>, Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <adbe8dd1-a725-4811-ae7e-76fe770cf096@linux.vnet.ibm.com>
- <20250227123804.5dd71cef@canb.auug.org.au>
- <14193c98-fb30-4ee8-a19a-fe85d1230d74@csgroup.eu>
- <cdd5dc55-4674-40fa-80d3-f6a6688c0d97@linux.vnet.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <cdd5dc55-4674-40fa-80d3-f6a6688c0d97@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250220100745.05c0eff8@akair>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-Le 27/02/2025 à 14:47, Venkat Rao Bagalkote a écrit :
-> Hello,
+On 10:08-20250220, Andreas Kemnade wrote:
+> Am Wed, 19 Feb 2025 20:22:13 +0100
+> schrieb Andi Shyti <andi.shyti@kernel.org>:
 > 
+> > Hi,
+> > 
+> > On Fri, Feb 07, 2025 at 07:54:35PM +0100, Andreas Kemnade wrote:
+> > > On the GTA04A5 writing a reset command to the gyroscope causes IRQ
+> > > storms because NACK IRQs are enabled and therefore triggered but not
+> > > acked.
+> > > 
+> > > Sending a reset command to the gyroscope by
+> > > i2cset 1 0x69 0x14 0xb6
+> > > with an additional debug print in the ISR (not the thread) itself
+> > > causes
+> > > 
+> > > [ 363.353515] i2c i2c-1: ioctl, cmd=0x720, arg=0xbe801b00
+> > > [ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0x0, stop: 1
+> > > [ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x1110)
+> > > [ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR = 0x0010)
+> > > [ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+> > > [ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+> > > [ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
+> > > repeating till infinity
+> > > [...]
+> > > (0x2 = NACK, 0x100 = Bus free, which is not enabled)
+> > > Apparently no other IRQ bit gets set, so this stalls.
+> > > 
+> > > Do not ignore enabled interrupts and make sure they are acked.
+> > > If the NACK IRQ is not needed, it should simply not enabled, but
+> > > according to the above log, caring about it is necessary unless
+> > > the Bus free IRQ is enabled and handled. The assumption that is
+> > > will always come with a ARDY IRQ, which was the idea behind
+> > > ignoring it, proves wrong.
+> > > It is true for simple reads from an unused address.
+> > > 
+> > > So revert
+> > > commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
+> > > 
+> > > The offending commit was used to reduce the false detections in
+> > > i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
+> > > rare false detections (I have never seen such on my systems) is the
+> > > lesser devil than having basically the system hanging completely.
+> > > 
+> > > No more details came to light in the corresponding email thread since
+> > > several months:
+> > > https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti.com/
+> > > so no better fix to solve both problems can be developed right now.  
+> > 
+> > I need someone from TI or someone who can test to ack here.
+> > 
+> > Can someone help?
+> >
+> The original (IMHO minor) problem which should be fixed by c770657bd261
+> is hard to test, I have never seen that on any system (and as a
+> platform maintainer have a bunch of them) I have access to.
+> There is not much description anywhere about the system in which the
+> original system occured, and no reaction since several months from the
+> author, so I do not see anything which can be done.
+> Maybe it was just faulty hardware.
 > 
-> Attached is the .config file.
-> 
-> This is being run on IBM Power8 system in PowerVM mode, as a full system 
-> LPAR.
+> As said in the commit message, reverting it should be the lesser devil.
+> And that state was tested for many years.
 
-Ah ok so you are using a quite old version of GCC, that is GCC 8.5
+Can we not handle this slightly differently? leave the fix based on
+compatible? we know that the i2c controller changed over time. the
+i2cdetect bug fixed by c770657bd261 esp hard to find and fix.
 
-I get the same problem when building ppc64_defconfig with GCC 8.5
 
-Kees, can you have a look ?
 
-Regards
-Christophe
-
-> 
-> Regards,
-> 
-> Venkat.
-> 
-> On 27/02/25 4:13 pm, Christophe Leroy wrote:
->>
->>
->> Le 27/02/2025 à 02:38, Stephen Rothwell a écrit :
->>> Hi Venkat,
->>>
->>> CC Kees Cook for advice.  This is a result of the tests added in commit
->>>
->>>    bbeb38b8487a ("string.h: Validate memtostr*()/strtomem*() 
->>> arguments more carefully")
->>>
->>> from the kspp tree.
->>>
->>> I note that the comment about memtostr() says "Copy a possibly
->>> non-NUL-term string".
->>
->> Can you tell more about your config and your environment ?
->>
->> I just tested with ppc64_defconfig and ppc64le_defconfig, with gcc 
->> 12.4, gcc 13.2 and gcc 14.2 and didn't get that build error.
->>
->> Christophe
->>
->>>
->>> On Thu, 27 Feb 2025 06:30:12 +0530 Venkat Rao Bagalkote 
->>> <venkat88@linux.vnet.ibm.com> wrote:
->>>>
->>>> I am seeing build failures with kernel next-20250226, on IBM Power8 
->>>> systems.
->>>>
->>>> Failures:
->>>>
->>>> In file included from ./include/asm-generic/div64.h:27,
->>>>                    from ./arch/powerpc/include/generated/asm/div64.h:1,
->>>>                    from ./include/linux/math.h:6,
->>>>                    from ./include/linux/math64.h:6,
->>>>                    from ./include/linux/time.h:6,
->>>>                    from fs/ext4/file.c:22:
->>>> fs/ext4/file.c: In function 'ext4_sample_last_mounted':
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:418:6: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>         __must_be_noncstr(dest) +  \
->>>>         ^~~~~~~~~~~~~~~~~
->>>> fs/ext4/file.c:869:2: note: in expansion of macro 'strtomem_pad'
->>>>     strtomem_pad(sbi->s_es->s_last_mounted, cp, 0);
->>>>     ^~~~~~~~~~~~
->>>> In file included from ./include/linux/build_bug.h:5,
->>>>                    from ./include/linux/container_of.h:5,
->>>>                    from ./include/linux/list.h:5,
->>>>                    from ./include/linux/module.h:12,
->>>>                    from drivers/message/fusion/mptsas.c:46:
->>>> drivers/message/fusion/mptsas.c: In function 
->>>> 'mptsas_exp_repmanufacture_info':
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/message/fusion/mptsas.c:2968:3: note: in expansion of macro 
->>>> 'memtostr'
->>>>      memtostr(edev->vendor_id, manufacture_reply->vendor_id);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/message/fusion/mptsas.c:2969:3: note: in expansion of macro 
->>>> 'memtostr'
->>>>      memtostr(edev->product_id, manufacture_reply->product_id);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/message/fusion/mptsas.c:2970:3: note: in expansion of macro 
->>>> 'memtostr'
->>>>      memtostr(edev->product_rev, manufacture_reply->product_rev);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/message/fusion/mptsas.c:2973:4: note: in expansion of macro 
->>>> 'memtostr'
->>>>       memtostr(edev->component_vendor_id,
->>>>       ^~~~~~~~
->>>> make[4]: *** [scripts/Makefile.build:203: fs/ext4/file.o] Error 1
->>>> make[3]: *** [scripts/Makefile.build:461: fs/ext4] Error 2
->>>> make[3]: *** Waiting for unfinished jobs....
->>>> In file included from ./include/linux/array_size.h:5,
->>>>                    from ./include/linux/kernel.h:16,
->>>>                    from drivers/scsi/mpt3sas/mpt3sas_base.c:46:
->>>> drivers/scsi/mpt3sas/mpt3sas_base.c: In function 
->>>> '_base_display_ioc_capabilities':
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/mpt3sas/mpt3sas_base.c:4798:2: note: in expansion of 
->>>> macro 'memtostr'
->>>>     memtostr(desc, ioc->manu_pg0.ChipName);
->>>>     ^~~~~~~~
->>>> In file included from ./include/linux/build_bug.h:5,
->>>>                    from ./include/linux/container_of.h:5,
->>>>                    from ./include/linux/list.h:5,
->>>>                    from ./include/linux/module.h:12,
->>>>                    from drivers/scsi/mpt3sas/mpt3sas_transport.c:45:
->>>> drivers/scsi/mpt3sas/mpt3sas_transport.c: In function 
->>>> '_transport_expander_report_manufacture':
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/mpt3sas/mpt3sas_transport.c:461:3: note: in expansion 
->>>> of macro 'memtostr'
->>>>      memtostr(edev->vendor_id, manufacture_reply->vendor_id);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/mpt3sas/mpt3sas_transport.c:462:3: note: in expansion 
->>>> of macro 'memtostr'
->>>>      memtostr(edev->product_id, manufacture_reply->product_id);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/mpt3sas/mpt3sas_transport.c:463:3: note: in expansion 
->>>> of macro 'memtostr'
->>>>      memtostr(edev->product_rev, manufacture_reply->product_rev);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/mpt3sas/mpt3sas_transport.c:466:4: note: in expansion 
->>>> of macro 'memtostr'
->>>>       memtostr(edev->component_vendor_id,
->>>>       ^~~~~~~~
->>>> make[5]: *** [scripts/Makefile.build:203: drivers/scsi/mpt3sas/ 
->>>> mpt3sas_transport.o] Error 1
->>>> make[5]: *** Waiting for unfinished jobs....
->>>> make[5]: *** [scripts/Makefile.build:203: drivers/message/fusion/ 
->>>> mptsas.o] Error 1
->>>> make[4]: *** [scripts/Makefile.build:461: drivers/message/fusion] 
->>>> Error 2
->>>> make[3]: *** [scripts/Makefile.build:461: drivers/message] Error 2
->>>> make[3]: *** Waiting for unfinished jobs....
->>>> make[5]: *** [scripts/Makefile.build:203: drivers/scsi/mpt3sas/ 
->>>> mpt3sas_base.o] Error 1
->>>> In file included from ./include/linux/array_size.h:5,
->>>>                    from ./include/linux/kernel.h:16,
->>>>                    from drivers/scsi/qla2xxx/qla_def.h:9,
->>>>                    from drivers/scsi/qla2xxx/qla_mr.c:6:
->>>> drivers/scsi/qla2xxx/qla_mr.c: In function 'qlafx00_fx_disc':
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/qla2xxx/qla_mr.c:1912:3: note: in expansion of macro 
->>>> 'memtostr'
->>>>      memtostr(vha->hw->model_number, pinfo->model_num);
->>>>      ^~~~~~~~
->>>> ./include/linux/compiler.h:197:62: error: static assertion failed: 
->>>> "must be non-C-string (not NUL-terminated)"
->>>>    #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct 
->>>> {_Static_assert(!(e), msg);}))
->>>> ^~~~~~~~~~~~~~
->>>> ./include/linux/compiler.h:226:2: note: in expansion of macro 
->>>> '__BUILD_BUG_ON_ZERO_MSG'
->>>>     __BUILD_BUG_ON_ZERO_MSG(!__is_noncstr(p), \
->>>>     ^~~~~~~~~~~~~~~~~~~~~~~
->>>> ./include/linux/string.h:468:26: note: in expansion of macro 
->>>> '__must_be_noncstr'
->>>>     const size_t _src_len = __must_be_noncstr(src) +  \
->>>>                             ^~~~~~~~~~~~~~~~~
->>>> drivers/scsi/qla2xxx/qla_mr.c:1913:3: note: in expansion of macro 
->>>> 'memtostr'
->>>>      memtostr(vha->hw->model_desc, pinfo->model_description);
->>>>      ^~~~~~~~
->>>> make[5]: *** [scripts/Makefile.build:203: drivers/scsi/qla2xxx/ 
->>>> qla_mr.o] Error 1
->>>> make[5]: *** Waiting for unfinished jobs....
->>>> make[2]: *** [scripts/Makefile.build:461: fs] Error 2
->>>> make[2]: *** Waiting for unfinished jobs....
->>>> make[4]: *** [scripts/Makefile.build:461: drivers/scsi/mpt3sas] Error 2
->>>> make[4]: *** Waiting for unfinished jobs....
->>>> make[4]: *** [scripts/Makefile.build:461: drivers/scsi/qla2xxx] Error 2
->>>> make[3]: *** [scripts/Makefile.build:461: drivers/scsi] Error 2
->>>> make[2]: *** [scripts/Makefile.build:461: drivers] Error 2
->>>> make[1]: *** [/root/linux-next/Makefile:1989: .] Error 2
->>>> make: *** [Makefile:251: __sub-make] Error 2
->>>
->>
->>
-
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
