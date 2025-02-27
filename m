@@ -1,69 +1,82 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CD56224231;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC7B1E833A;
 	Thu, 27 Feb 2025 10:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740650683; cv=none; b=r3tL8lSwCpQzJIQdqxjk/FAs0R5TnW2cPlbWh50snKJWqFerM6P8kEfwnI2G7QDmtJTMp465DX1JNg6BloWYqaUvrA3f4iC1H7c7xbCCUo/I72uK/Oj+TXfE8RyfZHy9FboWTrG0hyJjovdEk4OCNoQAYDncfm2MuLXXQP5GWsg=
+	t=1740650683; cv=none; b=eQFIkPplvCLpjexFgkVo6aaiKCm1Lj5GQS+vtyj1kb42OvZrzJe0oeQfUup3fLhjRHtQUBNgj1Mr+wJ4AAnpI01CELMyV+1aJwJNsXKwxXWufSQAxIMPv5In0sqialHHooRG5SuAJDBvGsqtw/w8FR4SYLQY0KLNPA5ieM892Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740650683; c=relaxed/simple;
-	bh=4mzm6RixguZVPFOXrj/XJ75po2vAmeyvFNlxEUw77PY=;
+	bh=n4mzGGv6ShHRiKG5Zre6il63W6cqZ6MEAUjy2p0IxrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PG9hoi89/b4m7skQTy+xqNSMVKQbqW1d1DMhednqCOIWxYsZp9OcF55zYhQOX6dEM3y40Xc8XX25a7TGq/b0g3c9blbLwez2j9pbE5fkGaxmWSotVodkDcxCbKNb0okHV9hSAEI9Vq38rw2QMSRlu4zb9K+8eNlxuLSKvJ017KM=
+	 Content-Type:Content-Disposition:In-Reply-To; b=nNFeG5bW8XAeJsicAfzbtcKwZX4Utzused+ikzeL+4StGlsg1vJ6eh0RRCQ42BaukfLUzmbF4pc0XdW68YL6fEuYkHvQqOBycYPb58MIiR8yAtmsXbgNKBBFf/e9VRxjvmdUrZlxjQatxyh3jytJt7KOQU3wrRjB+BgFP4jv6z8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tnakv-0007xi-00; Thu, 27 Feb 2025 11:04:37 +0100
+	id 1tnakv-0007xa-00; Thu, 27 Feb 2025 11:04:37 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 97ECCC04B4; Thu, 27 Feb 2025 11:04:01 +0100 (CET)
-Date: Thu, 27 Feb 2025 11:04:01 +0100
+	id 38EEEC0423; Thu, 27 Feb 2025 11:00:33 +0100 (CET)
+Date: Thu, 27 Feb 2025 11:00:33 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, linux-hardening@vger.kernel.org,
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH]  MIPS: Loongson2ef: Replace deprecated strncpy() with
- strscpy()
-Message-ID: <Z8A4kVKXXgy5KskY@alpha.franken.de>
-References: <20250224215451.195727-2-thorsten.blum@linux.dev>
+To: WangYuli <wangyuli@uniontech.com>
+Cc: chenlinxuan@uniontech.com, guanwentao@uniontech.com,
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+	macro@orcam.me.uk, niecheng1@uniontech.com, zhanjun@uniontech.com
+Subject: Re: [PATCH 3/7] MIPS: cevt-ds1287: Add missing ds1287.h include
+Message-ID: <Z8A3wdxvNU0aw9ys@alpha.franken.de>
+References: <487CE8AA937621E2+20250218125101.663980-1-wangyuli@uniontech.com>
+ <6A027EE413E09E1F+20250218125723.666989-1-wangyuli@uniontech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250224215451.195727-2-thorsten.blum@linux.dev>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6A027EE413E09E1F+20250218125723.666989-1-wangyuli@uniontech.com>
 
-On Mon, Feb 24, 2025 at 10:54:50PM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy() instead and remove the manual NUL-termination.
+On Tue, Feb 18, 2025 at 08:57:23PM +0800, WangYuli wrote:
+> Address the issue of cevt-ds1287.c not including the ds1287.h header
+> file.
 > 
-> Compile-tested only.
+> Fix follow errors with gcc-14 when -Werror:
 > 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> arch/mips/kernel/cevt-ds1287.c:15:5: error: no previous prototype for ‘ds1287_timer_state’ [-Werror=missing-prototypes]
+>    15 | int ds1287_timer_state(void)
+>       |     ^~~~~~~~~~~~~~~~~~
+> arch/mips/kernel/cevt-ds1287.c:20:5: error: no previous prototype for ‘ds1287_set_base_clock’ [-Werror=missing-prototypes]
+>    20 | int ds1287_set_base_clock(unsigned int hz)
+>       |     ^~~~~~~~~~~~~~~~~~~~~
+> arch/mips/kernel/cevt-ds1287.c:103:12: error: no previous prototype for ‘ds1287_clockevent_init’ [-Werror=missing-prototypes]
+>   103 | int __init ds1287_clockevent_init(int irq)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
+> make[7]: *** [scripts/Makefile.build:207: arch/mips/kernel/cevt-ds1287.o] Error 1
+> make[7]: *** Waiting for unfinished jobs....
+> make[6]: *** [scripts/Makefile.build:465: arch/mips/kernel] Error 2
+> make[6]: *** Waiting for unfinished jobs....
+> 
+> Signed-off-by: WangYuli <wangyuli@uniontech.com>
 > ---
->  arch/mips/loongson2ef/common/machtype.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/mips/kernel/cevt-ds1287.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/mips/loongson2ef/common/machtype.c b/arch/mips/loongson2ef/common/machtype.c
-> index 82f6de49f20f..e635e66d2e6c 100644
-> --- a/arch/mips/loongson2ef/common/machtype.c
-> +++ b/arch/mips/loongson2ef/common/machtype.c
-> @@ -48,8 +48,7 @@ void __init prom_init_machtype(void)
->  		return;
->  	}
->  	p += strlen("machtype=");
-> -	strncpy(str, p, MACHTYPE_LEN);
-> -	str[MACHTYPE_LEN] = '\0';
-> +	strscpy(str, p);
->  	p = strstr(str, " ");
->  	if (p)
->  		*p = '\0';
+> diff --git a/arch/mips/kernel/cevt-ds1287.c b/arch/mips/kernel/cevt-ds1287.c
+> index 9a47fbcd4638..de64d6bb7ba3 100644
+> --- a/arch/mips/kernel/cevt-ds1287.c
+> +++ b/arch/mips/kernel/cevt-ds1287.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/mc146818rtc.h>
+>  #include <linux/irq.h>
+>  
+> +#include <asm/ds1287.h>
+>  #include <asm/time.h>
+>  
+>  int ds1287_timer_state(void)
 > -- 
-> 2.48.1
+> 2.47.2
 
 applied to mips-next.
 
