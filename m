@@ -1,117 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D681E51D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19651277803;
+	Thu, 27 Feb 2025 23:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698196; cv=none; b=BUzj607pc9ehsnvMfpAxLRpeKeV24ci6PYKObS3gVIXVykcyS/NxrfiaFdiEr3mhYmAezSlwbyrIbbjZFeECqJmeWtWy/FRgNPDJeYQ3HcP9SlbGMqVpuHqBvSe++dbKHiJkNIGG8yB2izL5OZxCrVcOZcFEwBvJmzWsJbOnYgw=
+	t=1740698213; cv=none; b=NUtjoBQfaR1QgzQJS5IIhrs1BXegwrDEageNYVVOYXHKsme7j55pT2yEFBlfkpaL6y+1Bn3XiKOg3ilBTme7Sm+cObTQI4fEtm/t1hNYkf6fxm+o72u+C8BQdZnizzrAnmYZYWa9kBe9iCZQgrzp53A8c8XmicryneXSz5ht/MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698196; c=relaxed/simple;
-	bh=Zt7fx6TD9AADKoS3EVijGjwSik33b3Tzpk5cDq9QGSw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZujbDCGKEhdgWgZn6Q1yDa78ZUbE2kMc7ugkGaP2s3xw2pqkeOgoTsIjzjqtytnF/4NonKZ0wCrO1WeGcRkZklDrKTW6aEGovf3XgFKNsnnsBUqgLvAF7JAdsZT9Lqz191uEn5VWkT/XhcmJ9FLkc5L2ifuVHdJ2CmuoFgZJvP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lVreNSS7; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740698213; c=relaxed/simple;
+	bh=qryNsb6eKMy0Wo+mVn5eYMTnjQFI42YtE83+U+++mzs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L02nS06qUX40bU1F3XVwIMfsaLw9guwj0K/k4JcTE3m+gLwBZ4DsWnm7Vxl0u4sPE3KOapXsRqZz4LPv1s2mbGzlQArt5tFi7aUfBrfriAww4tZCgc94AF++t+cAc1jqObSYqfRs35zgqPQr0Um6rxut3ytjG94V6UjldN1Pudk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=S2Bymyau; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lVreNSS7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740698196; x=1772234196;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Zt7fx6TD9AADKoS3EVijGjwSik33b3Tzpk5cDq9QGSw=;
-  b=lVreNSS7HQh0xUF4+3h0Wq66q9Tc4dmhCtZ1EgW6k9h4KMmykPlYyoYU
-   3RXsHvvUq9xAqKpa0ed/alcN40OoPR6+ra9w4GW+sD8wIBC5xTooi+3hM
-   bXTbzUoY/9U4nscg16rYyFmP896vTs4kByBxPIXN6APGlPvlPv8DerO8K
-   7ESPnJzjngRoVu3ZL2d2vElVgpGqYib5Yct+bwvi6rrlt5ZwS17uXUCL5
-   YdiPLBti10XGKQKuVRCKQ4Ju5vOS1/oM3BY/OwRryYdltvg3hBklywkXv
-   Kzk5b5al/w+BA+zRkJjWCHUZiQ9CHxMs3fHOeJnJZYi/jIM+1QtQwdkxm
-   w==;
-X-CSE-ConnectionGUID: Tm6eCALHQQWVe2oO74DfnQ==
-X-CSE-MsgGUID: pg/3+MfRR3GIfLCOi1HLjQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="64079663"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="64079663"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:16:35 -0800
-X-CSE-ConnectionGUID: sgjUWHT6QzO/kAqAq5BTww==
-X-CSE-MsgGUID: pgMQvTRPRqu0l3jFmWyZdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117193776"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.72]) ([10.125.108.72])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:16:35 -0800
-Message-ID: <213480cd-898b-43c3-8e0d-601299526523@intel.com>
-Date: Thu, 27 Feb 2025 15:16:46 -0800
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="S2Bymyau"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Z3nKM5dhRz9sqL;
+	Fri, 28 Feb 2025 00:16:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740698200;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ELa5D/D34VuKPMdQJYbPumskuGUUaVxi92U53xY248I=;
+	b=S2BymyauBHssgWZ987eQDTAWbxsFchlBOYzi9MHvItPAKaITPnSTrmBUqTeC2yh4gKHVGk
+	weGNfcdLf0wqWjOY35k985v/3kP0v7XrpEVcOdRG+KfOPpTNeqJcthZvVhMnQZ7h7t2lcA
+	WChu78pgAe6yzzhbqPl1gzNUw6DM+couU2iKCltLtz7Ea+SGJeIQ4A4cUBisO5A6mdNepr
+	NgEfIGyPmbyaVb8dZuxyvDegJrnrDWxTTzJFSlQ/Qn10dCZAu2bUnBh5NtboMVHURWkGjy
+	CCc4tD+k6YkPNf2UdNVo9OcFeb1eWpSbkvxj9kRAC1CCGKd0tfEnGHgWlplB2g==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Subject: [PATCH 0/4] drm/amd/display: move from kzalloc(size * nr, ...) to
+ kcalloc(nr, size, ...)
+Date: Thu, 27 Feb 2025 18:16:20 -0500
+Message-Id: <20250227-amd-display-v1-0-52a060a78d08@ethancedwards.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v1 09/11] x86/fpu/apx: Disallow conflicting MPX
- presence
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250227184502.10288-10-chang.seok.bae@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250227184502.10288-10-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAETywGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyNz3cTcFN2UzOKCnMRK3UQLYxOjZFPTRMtEAyWgjoKi1LTMCrBp0bG
+ 1tQDfWN/RXQAAAA==
+X-Change-ID: 20250227-amd-display-a8342c55a9a0
+To: Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>, 
+ Rodrigo Siqueira <siqueira@igalia.com>, 
+ Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1476;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=qryNsb6eKMy0Wo+mVn5eYMTnjQFI42YtE83+U+++mzs=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBCLzRGTFJEM1h0L3h0SVhuTGZMV3MrdFgxUjlXOUk0CmltSDNoSDlmM3Npd0IxN1RD
+ azNxS0dWaEVPTmlrQlZUWlBtZm81ejJVSE9Hd3M2L0xrMHdjMWlaUUlZd2NIRUsKd0VUMnhERXl
+ yRFE2dDMxTFhQYmtoL2ZTcGpNdlVSVjQ0cmwxcXJuMm9vdTFvaHZ2dlhzYitvZmhmMHlwNGU5YQ
+ oxUXJPTlpOTVVqZmR1RnczZWFyZ01zbnRPbExxNTQ2bWx4N0pZQUVBWEVkUGdBPT0KPS91Ni8KL
+ S0tLS1FTkQgUEdQIE1FU1NBR0UtLS0tLQo=
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-On 2/27/25 10:44, Chang S. Bae wrote:
->  
-> +	if (fpu_kernel_cfg.max_features & XFEATURE_MASK_APX &&
-> +	    fpu_kernel_cfg.max_features & XFEATURE_MASK_BNDREGS) {
-> +		/*
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows. Here the multiplications are
+probably safe, but using kcalloc() is more appropriate and improves
+readability. It is also safer. This series contains a few patches
+with these fixes.
 
-Does this also need to check XFEATURE_MASK_BNDCSR for completeness?
+Part of the Kernel Self Protection Project efforts. Links below have
+more details.
+
+Link: https://github.com/KSPP/linux/issues/162
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
+
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+Ethan Carter Edwards (4):
+      drm/amd/display: change kzalloc to kcalloc in dcn30_validate_bandwidth()
+      drm/amd/display: change kzalloc to kcalloc in dcn31_validate_bandwidth()
+      drm/amd/display: change kzalloc to kcalloc in dcn314_validate_bandwidth()
+      drm/amd/display: change kzalloc to kcalloc in dml1_validate()
+
+ drivers/gpu/drm/amd/display/dc/resource/dcn30/dcn30_resource.c   | 3 ++-
+ drivers/gpu/drm/amd/display/dc/resource/dcn31/dcn31_resource.c   | 3 ++-
+ drivers/gpu/drm/amd/display/dc/resource/dcn314/dcn314_resource.c | 3 ++-
+ drivers/gpu/drm/amd/display/dc/resource/dcn32/dcn32_resource.c   | 3 ++-
+ 4 files changed, 8 insertions(+), 4 deletions(-)
+---
+base-commit: be5c7bbb3a64baf884481a1ba0c2f8fb2f93f7c3
+change-id: 20250227-amd-display-a8342c55a9a0
+
+Best regards,
+-- 
+Ethan Carter Edwards <ethan@ethancedwards.com>
+
