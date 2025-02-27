@@ -1,129 +1,146 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB7C21D3E7;
-	Thu, 27 Feb 2025 10:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47263229B15
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740652415; cv=none; b=ERXTJ+jqIqj0xyKFZ5/cg4AAmIKRA2HVcvPQdDto7ls5PrTIVVf6x2SErQl5dyQzKuhrFUsu/krw1Tq1HnE/D9SvYwVnA5PqNQ9tKHtIh/KnvcHF/QlVifPFgytrM1gK+NT50ZnV5qySyZ8AIbt+/thbB1GWVPJqOZQZo2k3q+Y=
+	t=1740652435; cv=none; b=CTdOnuVnmYNql3GoO0HnUBDeMgWkjSC+6nHHc9QMoKrZLymLXeLE5VyuFvAqEF4Aked5XiJRUtgO2fjym4HaeOE9OBcOr4i9oyEYNxs+KZPcJBisfWvRrBtvdNdtUl8wB/m1ffoEOwunEEXuKJTnYqvQcFUMVLQQxEnUeIZf6ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740652415; c=relaxed/simple;
-	bh=sdRYJf5KqEhXm7M/os0m46/SzH35rQZIDcFmEL2GFkc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tft7f8a39Lhobh/dnaBwZxjVOvMeFDRlB/w2XMrEjK7lS8YuQyHBtV1LKJh6ti9YmRF/bDQ52EK/cmPtJw5kgxxkVhMShoONRs/6Eu0hMFh7YuOv8Vbpmig96Op8aoBGtDLulhSMyKXLxJmE8CvGD5jd9/61RMcFu+upDf9Fom8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b3ed5fde5so395734241.0;
-        Thu, 27 Feb 2025 02:33:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740652411; x=1741257211;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+	s=arc-20240116; t=1740652435; c=relaxed/simple;
+	bh=ARqIPR+p2tpe5EaKR1df/smz8PWDinQX9DhGTpM5U7s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uOI9lHk1EFDlOTDOw6vnFEZXVi7A4+hD+1pk2QETo/iDIBKyYIFoP0aWJJuRLCtOq35mYgFjXvv6ocNAFdfPtntXqeJ/WLwv/SdPnEUK/eXUkiYHAoeFVadQrp4mOwOhNsgV8PyBwkIt6kSLfLwrU3JJj6EHBa/Bzo7sPpc5zPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=i1ps2cCh; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="i1ps2cCh"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4398ec2abc2so7012255e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:33:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1740652431; x=1741257231; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ubSE84NjFTjsY5U2xLJxwBeHimqGUMTmF43TX7I58to=;
-        b=oBBvKr9XVDbFmwKhembhCuagm7yyyDaZXId+H9hUTcc0ek7mObLqOTTQiKR7EJ0yAE
-         /c6cxYKcqxiZP7Kp0mw9NpxjGS3TWIgTKzf9RhSjzqNexm5UF49utu0gt4/HWbnsNZ55
-         51d4AY5nRBe7/ZJjch7LnmAfJhusMtUJM/1zCEfF3EJJlBetVytPX5v/m6ZKQPGhtxCC
-         J8LrWDJ5zImhZ/5vQlRleLUDutmaXj76uEn6QbmL+bU3sVvmg2vYiV3Zhun6YxHnEKqI
-         hJ0Xhif7xDJkELroxVPffwW5Lqgy70A5YVodD3MUpEWoG+EKURquswOGUVmSKiZJTJ/P
-         7aLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUomP/c2MA4IuVz4uJuwQlLsNnwV/4iQh/q6ancGS0kkpn1oDIgKOu4rXv9Cm5aojtJurX5BT5ImToC@vger.kernel.org, AJvYcCVVFf6gLqzZ6rfqNpKBs0Hfq8jaMqshSIaXsAec0tIR8iFAxknBMR/lml904FQ0nhkJumEUHUa2E1LGislH3oyo7UU=@vger.kernel.org, AJvYcCWv1EL2utwHo2YlgV06/I+5+4v3RctOQkj8LYqrcqtTJ6sPilLCtdWQ1TTApEaZHCP2jImE15ehbJPyanM=@vger.kernel.org, AJvYcCX+bG+R3V9yUB1r1vMxLRAI0VDcRrUr0xOw5OejQtVeC1Itt9gWszGPcu6HnK2msiLFXMG/cwPSWzvqcvAb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgXcmp1HywGQr289Pv1mTavtkWj3rgodthv67FELNB17hfMq0Q
-	u8MfmghAm0nHsTvs9OThR06wB9tl2+CBE37WfXAMpswyijlsyiBIj8YKirCi
-X-Gm-Gg: ASbGncvPVqsLJ5xKOFCuhkTFXah47xt/5Gj1FjoI8bMaUXZkXNGqUFhy3NOnEhAd6sA
-	Sv+s7/kIeumblNCRRIdtwwSO7dzdsiTINhc/6i+hN6Pw+zC5ciImMqcoyOnlE5cbdNV8Q6BK+7E
-	Yk4VC9AAntpUnwzRoIyN7+WqKY7qvW+17PJfBbqAWHVttbP/OewvKCI+f7esmlsXdmd9FPEaC7g
-	Yw++89z1H0K19cQEO24sWRki561ShUGEGescUKcOKcIRH2cv6+sLRJTQhDz0U3LFGGi6X1iHr2b
-	uE0AjxMYqQP/+puqe3vIlIjIibC2h7vCl5zUMprsG5eavegBysuKlWKmHoXOv7d6KhQn
-X-Google-Smtp-Source: AGHT+IG8QZ60apdnKBlKPn/BDfdi4vaLf8ZdXAbLymQpP6LqjEnW5zIiyBSSnWGaGcVdIDzEj1v4Kw==
-X-Received: by 2002:a05:6102:26cd:b0:4bb:dd1c:dcff with SMTP id ada2fe7eead31-4c030fd5013mr1118836137.2.1740652410866;
-        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c0345fc82fsm199790137.1.2025.02.27.02.33.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52099627b5aso791000e0c.1;
-        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUlmQKq94RL7ibpCyZpDX1dC7g/X4RL/KonRvKEPk9jNGGscoOY/JdknYtP3UyuX9XDuVCVHrIpXqACbEgV@vger.kernel.org, AJvYcCVANtr7PKnLKea5/vusQL7DasrUQAJkSpPxMkAQYLNKMTYmW/ME7/VhhBLVaS9Q1bBCP4K26mWku332ToLXpcozYD8=@vger.kernel.org, AJvYcCVWa8NCXGo8A50Dmi74X3HmQCn4oT9Q23/QHd5Be6gEYWHBvBBdqBcfp37yP/nQ1PsjIxko6cBaIypbfqE=@vger.kernel.org, AJvYcCWiz20+v6jRU1HWRooyPE/xlM/TyFivpTC8tbhlugsiQmKoZn3WJ+tuqqGOJhvIwI3/Vq9Z2zTx89Mt@vger.kernel.org
-X-Received: by 2002:a05:6122:2708:b0:521:bb4e:c68d with SMTP id
- 71dfb90a1353d-523493c558amr1710120e0c.0.1740652409909; Thu, 27 Feb 2025
- 02:33:29 -0800 (PST)
+        bh=uZWB2hgX1A7RofWkTIOTroK4Gv7om7GgUCL4jMU0GpM=;
+        b=i1ps2cCh2Y5wzu+0KcCR1y3U62S5qnHyT0tySW3HsK80vQeaZ7nkJkcHes4KOW9T3n
+         +F9YAsgmwrm+38u+eodmkCa2UEw3EoEPva2ehxyUZsNt+2aP3RZEjbu8kkeVZABVvmUI
+         BCbGC1gbsPMazcnTY2hhcgPC8YyLMCNkAFrXXgkZ9VqZIKVBXs0/oe5098FWSXFkI/DB
+         LvnL2pwO7HfXB3TYWQ3bemAHPdmMzMkMWkAVCeT+rHOi0lJpiDHm6t2X9aDHF7orygYt
+         Rkq3aVhvEg+OJOkJ9Xi8rPc8KANvtavM15lEsw7ZJAzTDGDdCrCcS5QpCiPiLpABnV33
+         Ay7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740652431; x=1741257231;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uZWB2hgX1A7RofWkTIOTroK4Gv7om7GgUCL4jMU0GpM=;
+        b=DUO3ABmDOEI/o3z8EcyXMiO4BWnFt/wZMY9Lnu0OanxHgvyG91YeQ9Veqn7etgGa1k
+         nKT/aZN8iEvMzETfSEZuWOBb/zVSCH6a0xRP2kDLCwkfMK1XyQTEvRbYyg0N7bekXbbh
+         UCH8XhAni8pt0lxfJIrbfDhhw2WYUx58V6YGcyIvBl0DlOhUcV/1puOs3NHiqNe37BwO
+         fvtHoIXie+Leqq8B2V1AtM2a47AMb6C4lMSWJILBEstc3R2mkAX7mroz8+Qx9lU+Lj2R
+         GpIbWP7jfvqn3HgUvGny5OxHNn5s5m6suVx6fsBvVTo8maXtVh2F1auhILsdwSDt3x8E
+         WWTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtY+FDxJA3uNRjR2Ed8czEjv8rDBt/8PCVEcskneuqFfsXIhFw53RuDv4Lmw3tlGMHaqL+diEgNXCXXIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVWfhZr1uZa7YqpydNu91CI/8rk+jQWA4+LLRNe6z+cAksaBPS
+	pb7qgDRAVdK3ila+HW0s2K2U+oUmPHrJxdq73NPHuTurSAxVNmwCbLU4iq6p04M=
+X-Gm-Gg: ASbGncvF0qIADZjCS8PJ5rd3jboj3oCi6ZIoap6w8ZHR5UwcLHxASsox1zQkhzXVzbo
+	i4KEd6jJs7ah3OgdRrtgt8uzbwPuts9gbSOKwQ9qghdRFiwjfoetlEavR1uZAJurMhHwi7SFgFX
+	e3Lrk2U1XSZD+bS83qS38Jjl9wFx6nz8dwG+xgnTF42nRKCJrfNMrcIioGTdMBIl6RScMoR+sxL
+	VgIVvKPQdxF/r4Xz26SbiVnrr1c7ivUrMNMKpwlMfUYImOh93v/N9A1sG496OLXXzc76UaQJkgL
+	vFZ5NjmEs3efTXSdVOm9DLs5opwseixs6EcIB2EPNmmQmaM3lUdpvFsRXoCGZRSpLOrxutSpCOM
+	=
+X-Google-Smtp-Source: AGHT+IHWaUYc9t6tW0emQRrLnAiI/h4VX2LetyBut2pWf/Sr4AARB4vXq14BdTbHgSxE6htiNBuHmA==
+X-Received: by 2002:a05:600c:4ed4:b0:439:4700:9eb3 with SMTP id 5b1f17b1804b1-43ab8fd1e98mr55737585e9.3.1740652431477;
+        Thu, 27 Feb 2025 02:33:51 -0800 (PST)
+Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a27ab2asm17854305e9.32.2025.02.27.02.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 02:33:51 -0800 (PST)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Thu, 27 Feb 2025 11:33:40 +0100
+Subject: [PATCH 1/3] net: ipa: Fix v4.7 resource group names
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com> <20250226152418.1132337-2-tommaso.merciai.xr@bp.renesas.com>
-In-Reply-To: <20250226152418.1132337-2-tommaso.merciai.xr@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 27 Feb 2025 11:33:16 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUfZSP3BDmKYTBDbKFe=KVR6TtscMQZov4+UDoMXgZwGQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrvdZJIWK8_MeL2zxoRDqPgCpV_45kQFeRZFTYprQXVZ0-CAVTqL8i0vNI
-Message-ID: <CAMuHMdUfZSP3BDmKYTBDbKFe=KVR6TtscMQZov4+UDoMXgZwGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/17] media: dt-bindings: renesas,rzg2l-csi2: Document
- Renesas RZ/V2H(P) SoC
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, Rob Herring <robh@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250227-ipa-v4-7-fixes-v1-1-a88dd8249d8a@fairphone.com>
+References: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
+In-Reply-To: <20250227-ipa-v4-7-fixes-v1-0-a88dd8249d8a@fairphone.com>
+To: Alex Elder <elder@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
-Hi Tommaso,
+In the downstream IPA driver there's only one group defined for source
+and destination, and the destination group doesn't have a _DPL suffix.
 
-On Wed, 26 Feb 2025 at 16:25, Tommaso Merciai
-<tommaso.merciai.xr@bp.renesas.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The MIPI CSI-2 block on the Renesas RZ/V2H(P) SoC is similar to the one
-> found on the Renesas RZ/G2L SoC, with the following differences:
-> - A different D-PHY
-> - Additional registers for the MIPI CSI-2 link
-> - Only two clocks
->
-> Add a new compatible string, `renesas,r9a09g057-csi2`, for the RZ/V2H(P)
-> SoC.
->
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Fixes: b310de784bac ("net: ipa: add IPA v4.7 support")
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ drivers/net/ipa/data/ipa_data-v4.7.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-Thanks for your patch!
-
-> --- a/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
-> +++ b/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
-
-> @@ -48,7 +58,8 @@ properties:
->    resets:
->      items:
->        - description: CRU_PRESETN reset terminal
-> -      - description: CRU_CMN_RSTB reset terminal
-> +      - description:
-> +          CRU_CMN_RSTB reset terminal (all but RZ/V2H(P)) or D-PHY reset (RZ/V2H(P))
-
-According to the flowcharts[1] in the RZ/G2L, RZ/V2L, and RZ/G2UL
-documentation, CPG_RST_CRU.CRU_CMN_RSTB is the D-PHY reset on all of
-them, so I think you can just write "D-PHY reset".
-Or "D-PHY reset (CRU_CMN_RSTB or CRU_n_S_RESETN)"?
-
-[1] Section 35. Camera Data Receiving Unit (CRU)
-    35.3.1 Starting Reception for the MIPI CSI-2 Input
-    35.3.2.2Stopping the D-PHY (MIPI CSI-2 Input)
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/drivers/net/ipa/data/ipa_data-v4.7.c b/drivers/net/ipa/data/ipa_data-v4.7.c
+index c8c23d9be961b1b818e8a1592a7f7dd76cdd5468..7e315779e66480c2a3f2473a068278ab5e513a3d 100644
+--- a/drivers/net/ipa/data/ipa_data-v4.7.c
++++ b/drivers/net/ipa/data/ipa_data-v4.7.c
+@@ -28,12 +28,10 @@ enum ipa_resource_type {
+ enum ipa_rsrc_group_id {
+ 	/* Source resource group identifiers */
+ 	IPA_RSRC_GROUP_SRC_UL_DL			= 0,
+-	IPA_RSRC_GROUP_SRC_UC_RX_Q,
+ 	IPA_RSRC_GROUP_SRC_COUNT,	/* Last in set; not a source group */
+ 
+ 	/* Destination resource group identifiers */
+-	IPA_RSRC_GROUP_DST_UL_DL_DPL			= 0,
+-	IPA_RSRC_GROUP_DST_UNUSED_1,
++	IPA_RSRC_GROUP_DST_UL_DL			= 0,
+ 	IPA_RSRC_GROUP_DST_COUNT,	/* Last; not a destination group */
+ };
+ 
+@@ -81,7 +79,7 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
+ 		},
+ 		.endpoint = {
+ 			.config = {
+-				.resource_group	= IPA_RSRC_GROUP_DST_UL_DL_DPL,
++				.resource_group	= IPA_RSRC_GROUP_DST_UL_DL,
+ 				.aggregation	= true,
+ 				.status_enable	= true,
+ 				.rx = {
+@@ -128,7 +126,7 @@ static const struct ipa_gsi_endpoint_data ipa_gsi_endpoint_data[] = {
+ 		},
+ 		.endpoint = {
+ 			.config = {
+-				.resource_group	= IPA_RSRC_GROUP_DST_UL_DL_DPL,
++				.resource_group	= IPA_RSRC_GROUP_DST_UL_DL,
+ 				.qmap		= true,
+ 				.aggregation	= true,
+ 				.rx = {
+@@ -197,12 +195,12 @@ static const struct ipa_resource ipa_resource_src[] = {
+ /* Destination resource configuration data for an SoC having IPA v4.7 */
+ static const struct ipa_resource ipa_resource_dst[] = {
+ 	[IPA_RESOURCE_TYPE_DST_DATA_SECTORS] = {
+-		.limits[IPA_RSRC_GROUP_DST_UL_DL_DPL] = {
++		.limits[IPA_RSRC_GROUP_DST_UL_DL] = {
+ 			.min = 7,	.max = 7,
+ 		},
+ 	},
+ 	[IPA_RESOURCE_TYPE_DST_DPS_DMARS] = {
+-		.limits[IPA_RSRC_GROUP_DST_UL_DL_DPL] = {
++		.limits[IPA_RSRC_GROUP_DST_UL_DL] = {
+ 			.min = 2,	.max = 2,
+ 		},
+ 	},
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.48.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
