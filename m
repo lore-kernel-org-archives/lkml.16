@@ -1,155 +1,91 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914671E8355
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ADA21B9E6
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740636983; cv=none; b=PdEdFfTrlUgnfjYb89lbohLfHNsq9s1ejr7CWgJ/vNbpCazKMq0PNOfVHzPmpxzJkSfkh0MLBS4nG+V2CuONnghCLODjKSqSrcjdkMExNZRhusgcNsGRN+MUL9W8eNbKB2nfc4y2FoKi+7ruvoLoV9ioaVFK9lDCMIhj4uHrvno=
+	t=1740636992; cv=none; b=jf9PO2wZ2eZ++IXI8C78dTQuTq3WfsqMdg0FDYUd4D2o8jeFJIaa56YZRJu8AlG3d9EI+LAoKIbCO/A4wlwqXpe/Ai7NcgueJRN8wqhqgBKDgE3z1zT+kXuPf1//qVsvMT63LY5rXebqLbpV3X98Evr1p7Q92/Zpijydskf8KJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740636983; c=relaxed/simple;
-	bh=bfBkBfye9mY2ueKjnar04CizjWdmU4hGbDcn2c/8ADs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cI64ggZ084NM/fI+gIK5/rmwnTYTp0CuKXtcCG5UruWdWji1WqSq89Hq20gzLiBnByU/DAcV75fDWoDe1P9hU8MzQFcRGElRDKq8lGg49u0s/MVYtdD0y5A9jJ1YEtIt8PDvPGes6yip1xOL19ED4ZaDoxxx0dlkRz37f+qzuso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=ArRFhGmF; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1740636992; c=relaxed/simple;
+	bh=FprXlwf5FNOqNXB7rLjZwqKM4fIG4idwE/s0iLleCoM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=K51QbY/Dtl77bjSlW8zeY2O6N6NBikxn9gXDXw4koYEWb/1+KMmqpiqcedTODwpdw85Fx4u+J3pnrHvmb5o87AcBU6zlnBSoxFGLuhSMsFU+7LUUMoQZGOd7uJ0TYA7yjUslV127ioSU+YxvPu0QtM1nA0MsptZl8oRlDw2r03c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=VIjxa5kf; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="ArRFhGmF"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c0ac2f439eso71065485a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 22:16:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1740636978; x=1741241778; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hIRNfZw7sAL9nU9Dv2qbYVT7pWVShOhPHJeE1WYpjeI=;
-        b=ArRFhGmFEaF7BzsUaXNrljsiQQfT1QNccY2Z7cx/xUGUH5Xf2FlaOwlAy/jvjLgALP
-         HdJ2AZVJL9ZGZz6A5VFZHhL7LX+Hevo3cB0Y4p00H+AgysIlZzqL9lFeibLz2pi8UkBH
-         Yr9/PojLEswQp+PwD4IP8Dca9kFqovfU+tWiIKNpAud91RU3JI48osqCOR/2coupQGhn
-         d4mqsAexmOSpGPRSePQfU4MxE57KC6IPMD3E/7CWNG6cWa7EHo13XXCPhKwvfNFofNol
-         BHs6UEMIJ0Mf5kPWMSSkF5L0wcm+8wAS0ugJVFDptFPIoW9t0yTRZMk0QCTRGaWJjgLK
-         bLvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740636978; x=1741241778;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hIRNfZw7sAL9nU9Dv2qbYVT7pWVShOhPHJeE1WYpjeI=;
-        b=L67UqUCvvoGTQF/KHQACBtL6Hz1HvfI6SoNizoM91yuM5r3Zj+3rD6Y24/2vGjgCYO
-         zPcbWE2NsFR/92btemvlJYtZW1qn2uR1begk4dl4PDeu5eWcMJAIkQCUpsl//zzS1WzG
-         5X5F+D5gWfPdgCIsBR3LHFpjMPbYrSKBbHgNqwwHXhn2y2womZElZlxtt5s1J/4MF0V4
-         0sM1+wg/QZ8xseTGxs008oHCe6G9kNRUebb9UACuGYDkXiba8JRXCDcy4GC3SIcq98J8
-         Lp4qr34tbzxgzcgStgcdN6O6TTAf5i/bqVrrMCe+K1ckalWfNOO5tZnpHx1ckJuRgkvc
-         WpIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXF5OO22+dVC7G9e/fGTdNngYPhJwnSo8KC2MHfigv7pL3hP/dBg1ooK36z+Ncw/Egb8NzkXIbGNnigShU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytU0rIDF+Qjbm6cWla6DbddssO753mB7Dvhwt2Ubov1beGW9cU
-	FVNSpuB0XwZCD334QEK65afOCW+OiWkzYd/pz0M9lFthgNRJwxWLCbhARC5akXg=
-X-Gm-Gg: ASbGncuOlBmskTKE6kaAYiddgFFJStSQCTS/DqvoU9EPdpTKjm8mjmTQ5SQy06eUB5i
-	9pikGeULIG3iZF2zTiJqHq+8J5Og2yCoVZZKwHy+K2BHC4h8rkHMGpz0/TUIuv70QkP8dDvBduw
-	CQCrbXHEsSuvP25nSYmwV7ab3dmkMPauTxyLJmCYQcBqo5bpmKVT+6izg7+WaWDdATcxPxhi0OZ
-	A4OvbreNmFm/3DkiCuvZiJgSVYl9zx3OZkyS5NLplQrKSIVNfwLevbfgerX1xcjC+MO4xS/Ju8q
-	Fxjl+1nyGAAUTNVRQAHg6GnV
-X-Google-Smtp-Source: AGHT+IGpheiFaPQV+vHiSGfdo4uJer00Fm7VGOok0pckB2A3V+XmwGYe7G6QUkbygmdGPwoLEH9X6w==
-X-Received: by 2002:a05:620a:6002:b0:7c0:b0a8:52e6 with SMTP id af79cd13be357-7c0cef4953emr3752564485a.46.1740636978196;
-        Wed, 26 Feb 2025 22:16:18 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c36fee9844sm72875785a.19.2025.02.26.22.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 22:16:17 -0800 (PST)
-Date: Thu, 27 Feb 2025 01:16:16 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Nhat Pham <nphamcs@gmail.com>, akpm@linux-foundation.org,
-	chengming.zhou@linux.dev, linux-mm@kvack.org, kernel-team@meta.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] zswap: do not crash the kernel on decompression
- failure
-Message-ID: <20250227061616.GD110982@cmpxchg.org>
-References: <20250227001445.1099203-1-nphamcs@gmail.com>
- <Z7-9o81kBfw4tFSz@google.com>
- <20250227043141.GB110982@cmpxchg.org>
- <Z7_7vah_U1JzmpCX@google.com>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="VIjxa5kf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1740636979;
+	bh=F3ApL+JeDj3lZFD/DdaVFfxrPRTF2KrKK9eGSSim+FM=;
+	h=From:To:Cc:Subject:Date;
+	b=VIjxa5kfcIu0r42/PiK6V26jLGe+aa0+k9QaEnW+6i0FmXSjbisdiYmaRMC2j2bhm
+	 clg/VURVpZHKqmYn2Fxo5/f8EFG2oJnxce39xE6R421ERsmyOtrxLyc/113kQb4S8Z
+	 bVi4YJcQXhkOAcSO98Bgm5hLTnIpGkpc8N/v6ql0=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
+	id 283BCA36; Thu, 27 Feb 2025 14:10:03 +0800
+X-QQ-mid: xmsmtpt1740636603trv9hp5qc
+Message-ID: <tencent_0B119ADC0E546990F05E3727AB7364AEAB08@qq.com>
+X-QQ-XMAILINFO: MIOa0ndEC0BblRG9mBKOGjwVz6dYFOm/8zfpux30lV2XceDC4J3biozxfv8LsC
+	 8ADOslqitConxJltL5mq5EOjZA6iDqLZ/UHQZZ+Q1FajJeVbVmcvVO2IFO8uRqa7pkJwFSewtU+e
+	 Gqa8TP08EwZwR6iquaZg8jzUFP4CMzwPquxlXQpQZccaPFz6LmN5nHaCh3PPHoJo0kTC15bvAvr6
+	 en1Zba+EFK+AoTwFTpD+3xv3njDIUz0nl6/f0l8wU8NFmeKck9gKDav1l7reUKaaLUTHbPn+AYbK
+	 dFImohiIMbD05QAufhzRSMcvq6e3flBWbJzvghKUQxeG6ysYeZTu000MEXr24VyNW3a7iWfLwDe/
+	 529bj/oDmye5RA0xnNVBIkzOMcm+sZlP7iagcDrKAKRcfBDFn0fzRWjZ+gt2Bew1rTQJgR76etcC
+	 iksofHXZzBvFOWPljJsvv3Q/HzOYfhJUuvfpPbQTVpEaxvHOEJD0dsd7vOzWusS9V3MjJt8vbvUc
+	 3uju1X6U43rJS3Yvt95+RIH2o66ugE6KCa4kDysH3aFZNMD+2/LtxZHRMJ4O9uoko14B6+319ywP
+	 BmIeLF+U2dSfJ3Nhp0jWPu+hcjfyGhdXswxjUNn5eUaKBQdsn1b9jr3igEouQdcO95CAR3og71mb
+	 o8q/bCUVa0S9sZmkkQ29zYQIsMreH04x8DX+MXuXn85P3ewdG9T/3Dp4pUhg1I9UZt5QE98le153
+	 TVAzXLDQ4XogC1fc5pPq5liT94UBlUhJgHHhZtj+CVCZ0YfFcJoz6nw5WUMrt2Vwk4Ei5qz4fwTz
+	 o+j0sY8PhlHIOKvfa6veFjzMLO+s946NZSoyLqUh4SjrzOvR3rOF/sitG3i4c8ezqSIvogH7QD8b
+	 2XeMP+iIOlShNUFfVBONfvrwO7G1sbZProP0hMuHeyq+fcr8l3wPBC+shIFwUDxLz3puk8T2xf//
+	 q5fGrSz4Y=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: xiaopeitux@foxmail.com
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH] mm/list_lru: Remove unnecessary NULL check before kfree()
+Date: Thu, 27 Feb 2025 14:10:02 +0800
+X-OQ-MSGID: <ccf2e7de4caba7b16dee2aef2608f72e1ab974e7.1740636544.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7_7vah_U1JzmpCX@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 05:44:29AM +0000, Yosry Ahmed wrote:
-> On Wed, Feb 26, 2025 at 11:31:41PM -0500, Johannes Weiner wrote:
-> > On Thu, Feb 27, 2025 at 01:19:31AM +0000, Yosry Ahmed wrote:
-> > > On Wed, Feb 26, 2025 at 04:14:45PM -0800, Nhat Pham wrote:
-> > > >  	if (WARN_ON_ONCE(folio_test_large(folio)))
-> > > >  		return true;
-> > > >  
-> > > > +	entry = xa_load(tree, offset);
-> > > > +	if (!entry)
-> > > > +		return false;
-> > > > +
-> > > 
-> > > A small comment here pointing out that we are deliberatly not setting
-> > > uptodate because of the failure may make things more obvious, or do you
-> > > think that's not needed?
-> > >
-> > > > +	if (!zswap_decompress(entry, folio))
-> > > > +		return true;
-> > 
-> > How about an actual -ev and have this in swap_read_folio():
-> 
-> Good idea, I was going to suggest an enum but this is simpler.
-> 
-> > 
-> >         ret = zswap_load(folio);
-> >         if (ret != -ENOENT) {
-> >                 folio_unlock(folio);
-> >                 goto finish;
-> >         }
-> > 
-> > 	read from swapfile...
-> > 
-> > Then in zswap_load(), move uptodate further up like this (I had
-> > previously suggested this):
-> > 
-> > 	if (!zswap_decompress(entry, folio))
-> > 		return -EIO;
-> > 
-> > 	folio_mark_uptodate(folio);
-> > 
-> > and I think it would be clear, even without or just minimal comments.
-> 
-> Another possibility is moving folio_mark_uptodate() back to
-> swap_read_folio(), which should make things even clearer imo as the
-> success/failure logic is all in one place:
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-That works. bdev, swapfile and zeromap set the flag in that file.
+Since kfree() already checks if its argument is NULL, an additional
+check before calling kfree() is unnecessary and can be removed.
 
-> 	ret = zswap_load(folio);
-> 	if (ret != -ENOENT) {
-> 		folio_unlock(folio);
-> 		/* Comment about not marking uptodate */
-> 		if (!ret)
-> 			folio_mark_uptodate();
-> 		goto finish;
-> 	}
+Remove it and thus also the following cocci warning:
+	WARNING: NULL check before some freeing functions is not needed.
 
-Personally, I like this one ^. The comment isn't needed IMO, as now
-zswap really isn't doing anything special compared to the others.
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+---
+ mm/list_lru.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> or we can make it crystal clear we have 3 distinct cases:
-> 
-> 	ret = zswap_load(folio);
-> 	if (!ret) {
-> 		folio_unlock(folio);
-> 		folio_mark_uptodate();
-> 		goto finish;
-> 	} else if (ret != -ENOENT) {
-> 		/* Comment about not marking uptodate */
-> 		folio_unlock(folio);
-> 		goto finish;
-> 	}
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 7d69434c70e0..7c8fb17d9027 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -548,8 +548,7 @@ int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
+ 			}
+ 			xas_unlock_irqrestore(&xas, flags);
+ 		} while (xas_nomem(&xas, gfp));
+-		if (mlru)
+-			kfree(mlru);
++		kfree(mlru);
+ 	} while (pos != memcg && !css_is_dying(&pos->css));
+ 
+ 	return xas_error(&xas);
+-- 
+2.25.1
 
-This seems unnecessarily repetetive.
