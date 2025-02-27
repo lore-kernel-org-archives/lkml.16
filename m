@@ -1,143 +1,117 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69F83C1F;
-	Thu, 27 Feb 2025 23:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D681E51D
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698121; cv=none; b=ouoTOBR2DqEwtIvqGQOJ5IAOZagE/IOyyltd7QrqHcsXOf4XglPlcetgJiJQI1JfFdljL9mJE9a6fL6kOT3dbp6C72zWN8gOqPJH4OyVIC2/FeNX9IN4XzfpTaMSxo90T3eQzX3SwjRmEkQ21mMiyALYwW8+bmn8aVVdLIY/Y4g=
+	t=1740698196; cv=none; b=BUzj607pc9ehsnvMfpAxLRpeKeV24ci6PYKObS3gVIXVykcyS/NxrfiaFdiEr3mhYmAezSlwbyrIbbjZFeECqJmeWtWy/FRgNPDJeYQ3HcP9SlbGMqVpuHqBvSe++dbKHiJkNIGG8yB2izL5OZxCrVcOZcFEwBvJmzWsJbOnYgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698121; c=relaxed/simple;
-	bh=GZ0IxKXhs5l6xoXe9cqSWDPLEe5+lFTovORNZ21/kXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=TMDSc729N5ooDVZPcoJCeAGwv+7fKAneUem574YDv/whURKFRgURqlS/7gLp/r/nBLFqMh5ErykVw7K3yWfwFdDoLSzVUfGNxoLeWqh3KKZex7LFtXI0AEaR8nlX23a9zpfoiTOjJ988uNg5mtvxZmnECF8YwfFudQvk+V+aaHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HClOBCHP; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740698196; c=relaxed/simple;
+	bh=Zt7fx6TD9AADKoS3EVijGjwSik33b3Tzpk5cDq9QGSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZujbDCGKEhdgWgZn6Q1yDa78ZUbE2kMc7ugkGaP2s3xw2pqkeOgoTsIjzjqtytnF/4NonKZ0wCrO1WeGcRkZklDrKTW6aEGovf3XgFKNsnnsBUqgLvAF7JAdsZT9Lqz191uEn5VWkT/XhcmJ9FLkc5L2ifuVHdJ2CmuoFgZJvP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lVreNSS7; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HClOBCHP"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4398e839cd4so16710525e9.0;
-        Thu, 27 Feb 2025 15:15:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740698118; x=1741302918; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=upHKPxofYs7grxb7NMPS91d4+y/mUbTVdMGymIHFZrw=;
-        b=HClOBCHPZrVy1F9VRFFf5mifS82Cl8/fXkl89eYlDZPaxDyEIfyCo2Fk5TL78aI/tS
-         z+pBa9iEyac9c71LH424V8jLDcytdGIlt/rU/gwijAYsAvx6IMdY+05l+zc9hCA+0SME
-         7N+46kwMaycMG2x+J3T4B6ng7cdT9x7iUCkgIyW3DVaE4vhWu+ven0GCGM4p8+HlPF2G
-         KvYn81MtJyBG12KksB3Xt7Bkd1VoSUK3WfGQ9rNlxz3Ib3wkwqP2qkBzynW8uTnOf+md
-         S5f/CyUO5V08hyZU/jVZocaWLiRLWDx6/Fna+kTN8w+Xnt5WQzIXeKxja9Pm1gfFTzfA
-         Z3Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740698118; x=1741302918;
-        h=content-transfer-encoding:content-disposition:mime-version:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=upHKPxofYs7grxb7NMPS91d4+y/mUbTVdMGymIHFZrw=;
-        b=XBrxuCpItEbv8UKgglfPGk1FuoA5tq8eVeM4/O2w2TLUh0ZYJCEUM9TaktstEpnvG/
-         64y0CZN84Vsmmk24sjBxt0fKxVIx5FouKGCJFuYt0uzEnsbKmdLhJ0ho4s3CTkshovd2
-         pY+ZxKxz216RHLZMcNxLqb/Mc/zUahgO1cNlMT0KLvJZyiKllVxCbejf0Sv49ocbSj90
-         AsmC5p0iVn4oRolGd+4hgVQk+JyBn9DG15Iso75vV+4BXdW0pQwAISQAyCW8UOqu/OpS
-         Fl8qRHOfUTssHqWd9+k+cJ/EClvaYwqeqE5qOrRQ68jM9fPrhuqJQf++s5g227Jev844
-         gC4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWEmRpou+RtUkApBY5Hflj91yEed+p6rN3CPG8iaJxyoRgpW3gE0cxew/mZEJesxMod3PXiqxBwNmWS@vger.kernel.org, AJvYcCWarEp9TLgVbFEIkFafBYumfY/zXloysnK3R18o1d92kRO+6/P1VdGMEHK+iaQx6BLUf8phizl9@vger.kernel.org, AJvYcCX9mYAIQa7DPOxTEcoOHY+GSdhhlF21W172eyMPh8i8Y2+wYWVQt8PqAfVSdH0fjrnWvYjumX6y@vger.kernel.org, AJvYcCXVauBBhgwrHuA33dgV5C7t3KJj1ihJ5qpxuSSwfMtWcCPB17tQ9zDMk2klKFsIMjPKjVBO4w5xVCs5MWk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBrrkoE+CyW0EhkHDYiyqjMdEDOhAcScvVKIv5iJAL6xI6SgxL
-	4oaiRf3pEZ72blHQKcdsETV5yUMYxIKe90WJb5tTeN3RNBa9CHh+
-X-Gm-Gg: ASbGncuq3gbaOBAGtE+t+pzGnmXYdIZyHOZkzdUO3lqRYWL7jAi961XFKWp1pzCgDeQ
-	vl1YtnpByVGdIL20udmRnMIhpL6f5K694o/hkQRWnl7oerBmS+3HF2AWrma5rsNu57AqABP7Y3Y
-	vV6RPydZudL27IHUhDJsZF3JmgrG2t63KKVE2MdZg0LzHq3uChls4OsGqvJkJnbwUcJeg3l/U5H
-	TvsyGhLpyPc4OL1nuKVd/t4FEwkpZIoVSRzsMF/cbFklhVAdps3c6Pd8VCMVQrmBehSC2I7SKXS
-	wFOhYZhtyU5/w6p7r100Wu3KzBNqYA==
-X-Google-Smtp-Source: AGHT+IGUAfAPDhOU2ooDtM65n6XBa2TpX2XimIfiqy6zMSSrRmSGwbZEuWMWPQDFdM+s5D7sbB27iQ==
-X-Received: by 2002:a05:600c:3546:b0:439:8490:d1e5 with SMTP id 5b1f17b1804b1-43afdda633bmr43534885e9.4.1740698117724;
-        Thu, 27 Feb 2025 15:15:17 -0800 (PST)
-Received: from qasdev.system ([2a02:c7c:6696:8300:79cb:51f4:38ef:97dc])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a27aa85sm36558415e9.28.2025.02.27.15.15.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 15:15:17 -0800 (PST)
-Date: Thu, 27 Feb 2025 23:15:04 +0000
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart()
-Message-ID: <Z8Dx-Jh71VIc4fzm@qasdev.system>
-Reply-To: 418ddcf6-e7c9-4a8e-ba1a-38a83cb2b5f8@lunn.ch
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lVreNSS7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740698196; x=1772234196;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Zt7fx6TD9AADKoS3EVijGjwSik33b3Tzpk5cDq9QGSw=;
+  b=lVreNSS7HQh0xUF4+3h0Wq66q9Tc4dmhCtZ1EgW6k9h4KMmykPlYyoYU
+   3RXsHvvUq9xAqKpa0ed/alcN40OoPR6+ra9w4GW+sD8wIBC5xTooi+3hM
+   bXTbzUoY/9U4nscg16rYyFmP896vTs4kByBxPIXN6APGlPvlPv8DerO8K
+   7ESPnJzjngRoVu3ZL2d2vElVgpGqYib5Yct+bwvi6rrlt5ZwS17uXUCL5
+   YdiPLBti10XGKQKuVRCKQ4Ju5vOS1/oM3BY/OwRryYdltvg3hBklywkXv
+   Kzk5b5al/w+BA+zRkJjWCHUZiQ9CHxMs3fHOeJnJZYi/jIM+1QtQwdkxm
+   w==;
+X-CSE-ConnectionGUID: Tm6eCALHQQWVe2oO74DfnQ==
+X-CSE-MsgGUID: pg/3+MfRR3GIfLCOi1HLjQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="64079663"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="64079663"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:16:35 -0800
+X-CSE-ConnectionGUID: sgjUWHT6QzO/kAqAq5BTww==
+X-CSE-MsgGUID: pgMQvTRPRqu0l3jFmWyZdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="117193776"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.72]) ([10.125.108.72])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 15:16:35 -0800
+Message-ID: <213480cd-898b-43c3-8e0d-601299526523@intel.com>
+Date: Thu, 27 Feb 2025 15:16:46 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v1 09/11] x86/fpu/apx: Disallow conflicting MPX
+ presence
+To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+References: <20250227184502.10288-1-chang.seok.bae@intel.com>
+ <20250227184502.10288-10-chang.seok.bae@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250227184502.10288-10-chang.seok.bae@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 02:43:31PM +0100, Andrew Lunn wrote:
-> On Tue, Feb 18, 2025 at 12:19:57PM +0000, Qasim Ijaz wrote:
-> > On Tue, Feb 18, 2025 at 02:10:08AM +0100, Andrew Lunn wrote:
-> > > On Tue, Feb 18, 2025 at 12:24:43AM +0000, Qasim Ijaz wrote:
-> > > > In mii_nway_restart() during the line:
-> > > > 
-> > > > 	bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
-> > > > 
-> > > > The code attempts to call mii->mdio_read which is ch9200_mdio_read().
-> > > > 
-> > > > ch9200_mdio_read() utilises a local buffer, which is initialised 
-> > > > with control_read():
-> > > > 
-> > > > 	unsigned char buff[2];
-> > > > 	
-> > > > However buff is conditionally initialised inside control_read():
-> > > > 
-> > > > 	if (err == size) {
-> > > > 		memcpy(data, buf, size);
-> > > > 	}
-> > > > 
-> > > > If the condition of "err == size" is not met, then buff remains 
-> > > > uninitialised. Once this happens the uninitialised buff is accessed 
-> > > > and returned during ch9200_mdio_read():
-> > > > 
-> > > > 	return (buff[0] | buff[1] << 8);
-> > > > 	
-> > > > The problem stems from the fact that ch9200_mdio_read() ignores the
-> > > > return value of control_read(), leading to uinit-access of buff.
-> > > > 
-> > > > To fix this we should check the return value of control_read()
-> > > > and return early on error.
-> > > 
-> > > What about get_mac_address()?
-> > > 
-> > > If you find a bug, it is a good idea to look around and see if there
-> > > are any more instances of the same bug. I could be wrong, but it seems
-> > > like get_mac_address() suffers from the same problem?
-> > 
-> > Thank you for the feedback Andrew. I checked get_mac_address() before
-> > sending this patch and to me it looks like it does check the return value of
-> > control_read(). It accumulates the return value of each control_read() call into 
-> > rd_mac_len and then checks if it not equal to what is expected (ETH_ALEN which is 6),
-> > I believe each call should return 2.
-> 
-> It is unlikely a real device could trigger an issue, but a USB Rubber
-> Ducky might be able to. So the question is, are you interested in
-> protecting against malicious devices, or just making a static analyser
-> happy? Feel free to submit the patch as is.
-> 
-Hi Andrew,
+On 2/27/25 10:44, Chang S. Bae wrote:
+>  
+> +	if (fpu_kernel_cfg.max_features & XFEATURE_MASK_APX &&
+> +	    fpu_kernel_cfg.max_features & XFEATURE_MASK_BNDREGS) {
+> +		/*
 
-How about an approach similar to the patch for ch9200_mdio_read(), where we immediately check the return value of 
-each control_read() call in get_mac_address(), and if one fails we stop and return an error right away? 
-That would ensure we don’t continue if an earlier call fails.
-
-Let me know if you’d like me to submit a patch v2 if this sounds good.
-
-Thanks, 
-Qasim
-
-> 	Andrew
-> 
+Does this also need to check XFEATURE_MASK_BNDCSR for completeness?
