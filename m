@@ -1,141 +1,242 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB5225403
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD80225A47
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740646737; cv=none; b=qocrYBer5r3OFBdIwwGN+rwuQtlxdUz5/zds3Zo3nIvIEBkrwF35f8oRkXR3ULYT2ngmXMJP9W7URUfbAczwo32tKzV8WUhQch9n6oDAich2CZBNgTz0f0QfPs46892Ps+vRNj1ZXiAVUde9fe3hcvNmbnM3qr+kKJ9hR1myatY=
+	t=1740646793; cv=none; b=Z27Wv1DV305hG8X0lvogOxtSnCgD4g+tb2ayd5y0jD9sf1SessXQ9+bg5yAw4I8YFYNpNc5cq16cL6oQ1GPxHDbc7V+UK7UUDFp7wTJXMqBZdIomoD2z2rlPBIjcifkrPj4W0v+M6m18Q2X3aZf2mnbOgCHZUZLAvGuLMzvf/G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740646737; c=relaxed/simple;
-	bh=7o5Cvqqhjmk+oLZQceup0DA2T5jY1vIBIK+cMeNyBSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g9kbyBRcVNdAEWS98+JbE7/iAfMk1MKvtVwEqyHq0aJdrF/pl87HH7qwmyQ/ZUE1QITKSnYNIPfwBiOTJWSG+J5Kg1+iUtHV0yhRZJQjEPd8YuANG05kX5fB85EtEieyO6ehx1pYd/d9FbnT3mNKqwY4wFLoFKXwiO3tAe2QkIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eCe9eUMy; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740646793; c=relaxed/simple;
+	bh=+0w5pxZl6eu5LUe9m4QPfCY8rfPht4lXtsBkbK6WTpY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Ex1/9zBA0tpbURSrNDgr8Nnid/NR64tTT6mtCH9ZfhpnpFfBulZzdOeBu7QoPergADFTHBE5CBJXAGhzESQLs0RpQegh2ihHxv55kqGWT3roeTTbcUqVy+doWe+ATI+tX8JPCn9Z0cOjmK5JozlCnRyG0wdJPo2JvJHkp96C478=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R50s8NUv; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eCe9eUMy"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fe5d75ff8cso177133a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:58:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740646735; x=1741251535; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n4StnT4jNIOgnd6tCzVc5gf8fgMnAw9nw7Dhm88E1Z8=;
-        b=eCe9eUMyZAls/ddAYZ3s4ZChySkCpwzrZA7/YP/LswUhWoehBN7xVxrHGL/OjW/hUi
-         OV8/yVgd7M9GeFeNdGjKG6tBiZXmUjRoptUizhqDV1OKtTXelYkwJ7HXHaMMhrVkHQ+p
-         FI2s+Gg9xuQOKY3hloOG7De7jdKeliJBmwuvQHABDCYc8cCCFazB53wKRvT43HY4+BkS
-         qpT1kmov0JgKzLulWZ7DbSexySZb7BVZo5PxeSNIj7KkNuTYsC1iG0NinAQySe0N6McG
-         +GpZkd8VjjTkzy+JNMG8XLm7ef/kmedzP6u15znpNUtBcJZVDlVATImmpBY3gJCj6EYY
-         96Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740646735; x=1741251535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=n4StnT4jNIOgnd6tCzVc5gf8fgMnAw9nw7Dhm88E1Z8=;
-        b=S0t6DJaDmeR6tyAMHk0Y60vvqPBbqrcQwpXASIPJND98R2/Lit3yT+hed0Zn8IQTD1
-         r+R5ZJ3g2lZPHlK7L4wHfYg5vhkt+H3k4nk1HATOlPYkOhURU6Q26phwi62SirgcH/jQ
-         6ZRnQch4iM0UiyfzIj0fkNTqpsvudEAIa8gfb/xFURe4/edDJRzUbOZBbtuMwCkUQXRI
-         5t53mFqodJ8HE2qXUdpm4LOO1kyxLcjDt8h80fysxssViBo/VH7cMOaOBDpUwHg10tYd
-         RGQcQgev+5DmLTMQBXt6WM9BdYKxaeHOP/UAPMxd4O6N9BIFwLb4GlNwkOCj8DLABufO
-         OXOA==
-X-Forwarded-Encrypted: i=1; AJvYcCW//wxAMfGxRohK7JDChsYu0jjZeyhLUt/htkL0brWOLB7mGcYdk1XrEhd5lP8KC+VcHjV7iTHDltpH4lI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcHz2G6MgBIhb4O1HJ6vBUzXpw5UIYwhatvhojQRgTtJzkufyV
-	XE5BqzYgjeuQ/TOmceEFVN4V3IT1fDkgBC6y2bQZovex57nG79IAQiLEFsD0GPc=
-X-Gm-Gg: ASbGncvov+Pkmib86p9Hd3kYVYKlgd+vZbJI91ppF7nO9xNBRcJT8vZ5BKLNWFGF/VJ
-	8wbEKxuhmDgxXJAvOd4TA22R005k5mDMxfwpnhLdew3fbyMwWedPYwva7z+Z40ZZM/VIn6q5Vw5
-	sqy8kcxEeOuIn76dHxwMs6HNOiwfHn6v5Yqfpmsxujbvf1XVeOEOZeA5AdRd4vamp7ecGVv22aR
-	EPEK2siLPqcinH9mAeCfGU7WRNrUzU91V9RRAR2TeCyoc4jOytMr7LRKaLrABq7tMUcZo7s461Z
-	TnPqjmDFvxAiFk8ps3nLzNXE+1fXmspZR5stCFPSDAgJ3GLckMkWIfzVhXMlAjxF
-X-Google-Smtp-Source: AGHT+IFMsg90Nckj5hLpUrhCyxsin8lWZGoOvUFa/yPsAAd/h6ZXVdNyOkwE9HP5KwwzGinOMNZLnQ==
-X-Received: by 2002:a17:90a:db49:b0:2fe:8fa0:e7a1 with SMTP id 98e67ed59e1d1-2fe8fa0e7e0mr2490117a91.2.1740646734818;
-        Thu, 27 Feb 2025 00:58:54 -0800 (PST)
-Received: from C02DV8HUMD6R.bytedance.net ([139.177.225.243])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825ba9b4sm3112759a91.12.2025.02.27.00.58.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 00:58:54 -0800 (PST)
-From: Abel Wu <wuyun.abel@bytedance.com>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
-	Phil Auld <pauld@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Josh Don <joshdon@google.com>,
-	Tianchen Ding <dtcccc@linux.alibaba.com>
-Cc: Abel Wu <wuyun.abel@bytedance.com>,
-	linux-kernel@vger.kernel.org (open list:SCHEDULER)
-Subject: [PATCH v2 2/2] sched/fair: Fix premature check of WAKEUP_PREEMPTION
-Date: Thu, 27 Feb 2025 16:58:13 +0800
-Message-Id: <20250227085815.18131-3-wuyun.abel@bytedance.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20250227085815.18131-1-wuyun.abel@bytedance.com>
-References: <20250227085815.18131-1-wuyun.abel@bytedance.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R50s8NUv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740646792; x=1772182792;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=+0w5pxZl6eu5LUe9m4QPfCY8rfPht4lXtsBkbK6WTpY=;
+  b=R50s8NUvXCfc21J3gRbGZMuNrfICb6akin8lrJvKkkKCe2iNhaAC3o+W
+   zUoq6o+CZ2PG8b8w5IoQmMKRmaoVzwVErGXDRwKerYlM53NUoSnC0pVen
+   dxyMuiNrt/KrCcL2QgkECPVWuCkqUJl+doy910IQWsTvHiEg5e5AIhYVD
+   6pcPyAiyiruDI3TJU0vgQs4oG69GTn1Xc2P3qYlUMqRAvc0/JlOvq1FWI
+   F5YHnm2be8Yu5pLQdTG0pzkSDmpTc4339V3RWFhfjmx8f5J0MyKJA7CLl
+   tV/Vzqbw1ZHWIh3ysQMKNX791P1pIrMOGHou4u1c154jCSDrjThSI/DyI
+   w==;
+X-CSE-ConnectionGUID: td1LJgfBT4yTovVAKwormA==
+X-CSE-MsgGUID: tW7kr0ITTQebnDioD9cJ3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52939409"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="52939409"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 00:59:51 -0800
+X-CSE-ConnectionGUID: lue+0kPXQ+2uMDYapBVZqg==
+X-CSE-MsgGUID: 7WfixO/GRYiG4T6NyakPHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="147786129"
+Received: from lfiedoro-mobl.ger.corp.intel.com (HELO localhost) ([10.245.246.181])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 00:59:45 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v8 2/2] drm/debugfs: add top-level 'bridges' file
+ showing all added bridges
+In-Reply-To: <20250226-drm-debugfs-show-all-bridges-v8-2-bb511cc49d83@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250226-drm-debugfs-show-all-bridges-v8-0-bb511cc49d83@bootlin.com>
+ <20250226-drm-debugfs-show-all-bridges-v8-2-bb511cc49d83@bootlin.com>
+Date: Thu, 27 Feb 2025 10:59:41 +0200
+Message-ID: <877c5b4vb6.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-The commit 6bc912b71b6f ("sched: SCHED_OTHER vs SCHED_IDLE isolation")
-defines the behavior of SCHED_IDLE as following:
+On Wed, 26 Feb 2025, Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
+> The global bridges_list holding all the bridges between drm_bridge_add()
+> and drm_bridge_remove() cannot be inspected via debugfs. Add a file showing
+> it.
+>
+> To avoid code duplication, move the code printing a bridge info to a common
+> function.
 
- - no SCHED_IDLE buddies
- - never let SCHED_IDLE preempt on wakeup
- - always preempt SCHED_IDLE on wakeup
- - limit SLEEPER fairness for SCHED_IDLE
+Going forward, please separate refactoring (extracting the function)
+from the functional changes (adding the new debugfs) to independent
+patches. It's just easier to review.
 
-and the 3rd rule is broken if !WAKEUP_PREEMPTION due to recently merged
-commit faa42d29419d ("sched/fair: Make SCHED_IDLE entity be preempted in strict hierarchy")
+Anyway, I reviewed this one, so no need to roll another version.
 
-Although WAKEUP_PREEMPTION is mainly there for debug purpose to provide
-a way to check whether a performance degrade of certain workload is due
-to overscheduling or not, it is still kind of weird that we treat sched-
-idle cpus as idle but don't let the non-idle tasks preempt the sched-idle
-cpus in debug mode (!WAKEUP_PREEMPTION).
+And thanks for doing this; I believe the end result is better.
 
-Fix it by strictly following the aforementioned rules.
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-Fixes: faa42d29419d ("sched/fair: Make SCHED_IDLE entity be preempted in strict hierarchy")
-Signed-off-by: Abel Wu <wuyun.abel@bytedance.com>
----
- kernel/sched/fair.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+>
+> ---
+>
+> Changed in v8:
+> - add the file in drm_bridge.c, which avois the added #if CONFIG_DEBUG_FS
+> - fix incorrect (but harmless) idx increment in
+>   drm_bridge_debugfs_show_bridge()
+>
+> Changed in v7:
+> - move implementation to drm_bridge.c to avoid exporting bridge_list and
+>   bridge_mutex
+>
+> This patch was added in v6.
+> ---
+>  drivers/gpu/drm/drm_bridge.c | 72 ++++++++++++++++++++++++++++++--------------
+>  drivers/gpu/drm/drm_drv.c    |  2 ++
+>  include/drm/drm_bridge.h     |  1 +
+>  3 files changed, 53 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> index a6bf1a565e3c3a8d24de60448972849f6d86ba72..9c6e35d41ed54a14d5745e684a341c907ed84d6b 100644
+> --- a/drivers/gpu/drm/drm_bridge.c
+> +++ b/drivers/gpu/drm/drm_bridge.c
+> @@ -1336,6 +1336,49 @@ struct drm_bridge *of_drm_find_bridge(struct device_node *np)
+>  EXPORT_SYMBOL(of_drm_find_bridge);
+>  #endif
+>  
+> +static void drm_bridge_debugfs_show_bridge(struct drm_printer *p,
+> +					   struct drm_bridge *bridge,
+> +					   unsigned int idx)
+> +{
+> +	drm_printf(p, "bridge[%u]: %ps\n", idx, bridge->funcs);
+> +	drm_printf(p, "\ttype: [%d] %s\n",
+> +		   bridge->type,
+> +		   drm_get_connector_type_name(bridge->type));
+> +
+> +	if (bridge->of_node)
+> +		drm_printf(p, "\tOF: %pOFfc\n", bridge->of_node);
+> +
+> +	drm_printf(p, "\tops: [0x%x]", bridge->ops);
+> +	if (bridge->ops & DRM_BRIDGE_OP_DETECT)
+> +		drm_puts(p, " detect");
+> +	if (bridge->ops & DRM_BRIDGE_OP_EDID)
+> +		drm_puts(p, " edid");
+> +	if (bridge->ops & DRM_BRIDGE_OP_HPD)
+> +		drm_puts(p, " hpd");
+> +	if (bridge->ops & DRM_BRIDGE_OP_MODES)
+> +		drm_puts(p, " modes");
+> +	if (bridge->ops & DRM_BRIDGE_OP_HDMI)
+> +		drm_puts(p, " hdmi");
+> +	drm_puts(p, "\n");
+> +}
+> +
+> +static int allbridges_show(struct seq_file *m, void *data)
+> +{
+> +	struct drm_printer p = drm_seq_file_printer(m);
+> +	struct drm_bridge *bridge;
+> +	unsigned int idx = 0;
+> +
+> +	mutex_lock(&bridge_lock);
+> +
+> +	list_for_each_entry(bridge, &bridge_list, list)
+> +		drm_bridge_debugfs_show_bridge(&p, bridge, idx++);
+> +
+> +	mutex_unlock(&bridge_lock);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(allbridges);
+> +
+>  static int encoder_bridges_show(struct seq_file *m, void *data)
+>  {
+>  	struct drm_encoder *encoder = m->private;
+> @@ -1343,33 +1386,18 @@ static int encoder_bridges_show(struct seq_file *m, void *data)
+>  	struct drm_bridge *bridge;
+>  	unsigned int idx = 0;
+>  
+> -	drm_for_each_bridge_in_chain(encoder, bridge) {
+> -		drm_printf(&p, "bridge[%u]: %ps\n", idx++, bridge->funcs);
+> -		drm_printf(&p, "\ttype: [%d] %s\n",
+> -			   bridge->type,
+> -			   drm_get_connector_type_name(bridge->type));
+> -
+> -		if (bridge->of_node)
+> -			drm_printf(&p, "\tOF: %pOFfc\n", bridge->of_node);
+> -
+> -		drm_printf(&p, "\tops: [0x%x]", bridge->ops);
+> -		if (bridge->ops & DRM_BRIDGE_OP_DETECT)
+> -			drm_puts(&p, " detect");
+> -		if (bridge->ops & DRM_BRIDGE_OP_EDID)
+> -			drm_puts(&p, " edid");
+> -		if (bridge->ops & DRM_BRIDGE_OP_HPD)
+> -			drm_puts(&p, " hpd");
+> -		if (bridge->ops & DRM_BRIDGE_OP_MODES)
+> -			drm_puts(&p, " modes");
+> -		if (bridge->ops & DRM_BRIDGE_OP_HDMI)
+> -			drm_puts(&p, " hdmi");
+> -		drm_puts(&p, "\n");
+> -	}
+> +	drm_for_each_bridge_in_chain(encoder, bridge)
+> +		drm_bridge_debugfs_show_bridge(&p, bridge, idx++);
+>  
+>  	return 0;
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(encoder_bridges);
+>  
+> +void drm_bridge_debugfs_params(struct dentry *root)
+> +{
+> +	debugfs_create_file("bridges", 0444, root, NULL, &allbridges_fops);
+> +}
+> +
+>  void drm_bridge_debugfs_encoder_params(struct dentry *root,
+>  				       struct drm_encoder *encoder)
+>  {
+> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+> index 3cf440eee8a2ab3de134d925db8f1d2ce68062b7..22e8cd0a6a37a0ac25535e9d570da25571b0b2bc 100644
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/xarray.h>
+>  
+>  #include <drm/drm_accel.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_cache.h>
+>  #include <drm/drm_client_event.h>
+>  #include <drm/drm_color_mgmt.h>
+> @@ -1120,6 +1121,7 @@ static int __init drm_core_init(void)
+>  	}
+>  
+>  	drm_debugfs_root = debugfs_create_dir("dri", NULL);
+> +	drm_bridge_debugfs_params(drm_debugfs_root);
+>  
+>  	ret = register_chrdev(DRM_MAJOR, "drm", &drm_stub_fops);
+>  	if (ret < 0)
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index 0890acfe04b99b1ccbbff10b507cb8c2b2705e06..2a99d70865571f24db0ca75c758cfd09d3a5d459 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -1108,6 +1108,7 @@ static inline struct drm_bridge *drmm_of_get_bridge(struct drm_device *drm,
+>  }
+>  #endif
+>  
+> +void drm_bridge_debugfs_params(struct dentry *root);
+>  void drm_bridge_debugfs_encoder_params(struct dentry *root, struct drm_encoder *encoder);
+>  
+>  #endif
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index aaa9822e9562..a7eeb72d57aa 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -8785,9 +8785,6 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
- 	if (test_tsk_need_resched(rq->curr))
- 		return;
- 
--	if (!sched_feat(WAKEUP_PREEMPTION))
--		return;
--
- 	find_matching_se(&se, &pse);
- 	WARN_ON_ONCE(!pse);
- 
-@@ -8806,6 +8803,9 @@ static void check_preempt_wakeup_fair(struct rq *rq, struct task_struct *p, int
- 		goto preempt;
- 	}
- 
-+	if (!sched_feat(WAKEUP_PREEMPTION))
-+		return;
-+
- 	/*
- 	 * IDLE entities do not preempt others.
- 	 */
 -- 
-2.37.3
-
+Jani Nikula, Intel
