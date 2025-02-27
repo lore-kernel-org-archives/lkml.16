@@ -1,103 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD4626FA73;
-	Thu, 27 Feb 2025 20:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A56126A0BF;
+	Thu, 27 Feb 2025 20:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740686880; cv=none; b=i4tGBxo7/ohlF98HlOLH0ORHogG6cCfkfIlj4KKHkDFZ1I5HlptrSQwfXAeeIm/H3gH50Tv47V9GCkD9g1vyZT0VG8nVrKhcV1dKpDggOyi1Mj6eB8zqTWMC7Wsq+m8tsCGqFRyEmKkdOgzYTaf2LzGX7QiX9L8+bgKe9Nwu7/Q=
+	t=1740686925; cv=none; b=EE0ZfkvH7K5XQp13lKb9Cx2Za9Z0di12r8IDAhlcaHino+wnHRRBeMfLL0QeO61XP0+3kI6NrcZlLs03l4/4eLxtY6dRoEJPND5/Na10qnvG7ApNJNfcBXGttMQoGkhbYSiaJUVmshMpTJDSfqvSnTgGL+l2vD4nCpK2Zuo9EsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740686880; c=relaxed/simple;
-	bh=qzrV7ojG37Gb87LwnmyFT03tAi+5cM0gi1gFMUwOnSg=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=UMbT4zEnixADfjnAwiUrNbeEgkmrZlmMB2FgHJoqAuEWgZhukkR/9XWf0N3OgpzBx6z9pWF8G8BuNoXchQtoXzoipDleb2gI68THgs+NPQRgmhE9tL+UvX0cYZ8EnLrLctpqO43N1bqe15XB3nPsqo6m0R60ThCMO3xK80kC55Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wm+jiQVE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740686925; c=relaxed/simple;
+	bh=Gp7Np1uNLWQTHyBaGS7MHACrSioXyt4C5ZJwKQMSxZ4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Mq0MFHcXSksUgH9RKyYCY+iJUiXqaU49oX6DrDn9WedKqFBIUoEo6IBJ+9GlskYi15fvSopSbMrV2VDTEwO1uxchJEGigP5YTfwK9dNh/4hRdooxnS5svvOctqcpz95V7zCi9rdMV/7WDodXHKyCHxDRh9IGK7Rjf1ETK//BSgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BrqK2Axz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wm+jiQVE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6027BC4CEE4;
-	Thu, 27 Feb 2025 20:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740686880;
-	bh=qzrV7ojG37Gb87LwnmyFT03tAi+5cM0gi1gFMUwOnSg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=Wm+jiQVETdhzpdKjuXSx8EyQpLWsIwCCInB8UTvsDaXula4vn5SYpUL5wwmhljKYr
-	 C0rHLXmqRLLjwjKbOREYhyU5K9Fz9lXhwAa7/LrK3OwAqH+j8xfOCpWfqRzehfqBc1
-	 sVpKg2zTHC/fLVyF074bYCUrKyFhvvqYV/aTn3JDEz/Ihj5+LpVSfkRzPxphdgKQyh
-	 nbUTymGW+3kWJBqEkg5qhIBxenfGpCrI4E5JjQ+R6tSh3bM8XoXfc4se4uqdPU1sEJ
-	 KnS93UaP8pCdIeJKQYXl5pGBLEHVTc/dVA+Kq2YOw7DrsnQesOyaEiUf1JeG6NAX3s
-	 tgNrI/NMjC+tQ==
-Message-ID: <250d7040fac61c408d648996e275aedc.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BrqK2Axz"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RAmHB0003268;
+	Thu, 27 Feb 2025 20:08:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=lBWq1nIHs8SVaVeGZfZPKB
+	ueNQ/iSxF0sZnlSAfBKPA=; b=BrqK2AxzFtZchbQhvtjsH2bmL0o8bWBvX9xGOG
+	3njGpIT6uGBFzfyUiuOIMw5H8LxJX8uyxBcoVK/AB6lmfKxwZFq0KSl3jk9qmbJ2
+	v1q5yJ6p4G6OYPQYrMZGMFD+4mR5MiKfUU08URT+QMVW4B25Ey0H4vZR5+r6qW2M
+	htNqW0CGICSOidSIci6lJOaVY8MiZY1GPZ1ttBwgpfrjGxJ5DAZGsh9Kuw30HgBp
+	GuiUJ63sVGoRO4q8/S+jZTw0hOB/pF3BKipnR519PkzFhuEOy52YH3zoTbBCvgb0
+	stmiLabJjtEQtp23+HLM1VAIdnS3TT8EQQuXzprWED3dbZLw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 452pm7hm2x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 20:08:30 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51RK8TPc002253
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 20:08:29 GMT
+Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Feb
+ 2025 12:08:22 -0800
+From: Akhil P Oommen <quic_akhilpo@quicinc.com>
+Subject: [PATCH v2 0/6] Support for Adreno 623 GPU
+Date: Fri, 28 Feb 2025 01:37:48 +0530
+Message-ID: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1jjz9bg0pg.fsf@starbuckisacylon.baylibre.com>
-References: <20250120-amlogic-clk-drop-clk-regmap-tables-v3-0-126244146947@baylibre.com> <20250120-amlogic-clk-drop-clk-regmap-tables-v3-1-126244146947@baylibre.com> <508a5ee6c6b365e8d9cdefd5a9eec769.sboyd@kernel.org> <1jjz9bg0pg.fsf@starbuckisacylon.baylibre.com>
-Subject: Re: [PATCH v3 1/4] clk: add a clk_hw helpers to get the clock device or device_node
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 27 Feb 2025 12:07:57 -0800
-User-Agent: alot/0.12.dev1+gaa8c22fdeedb
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABTGwGcC/3WPyw6CMBBFf4XM2jF9QGNZ+R/GBa0tdNGCbSEYw
+ 79bcOPG5b3J3HPmDclEZxK01RuiWVxyYyiBnSrQQxd6g+5RMjDCGsIox04wjv00Y5qnaYwZrRD
+ yIgi36tJAOZuisW49Jm/3b47mOZfl/C1BdcmgHr13ua188hjMmuGXWAR2HuUUVY0qdkEP2NsVk
+ /czKsKZoFJwIup2aWCnDC7lMb6OPxZ6YP4rLxQJSsm1aDSX9sGuxU+7oM/FCu7btn0ANeQauRg
+ BAAA=
+X-Change-ID: 20250213-a623-gpu-support-f6698603fb85
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Konrad
+ Dybcio" <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, "Simona
+ Vetter" <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>,
+        "Akhil P
+ Oommen" <quic_akhilpo@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740686902; l=1755;
+ i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
+ bh=Gp7Np1uNLWQTHyBaGS7MHACrSioXyt4C5ZJwKQMSxZ4=;
+ b=hhHGrGZy4IvBXKHhvIjLe+a63IRatsLxEd9TR8otJs5AbIWWuMRwYl0XIrOwKEJ8ZjMLvslO6
+ bkBqUPcWqzjBpATcCb/fj9uWIciEQX5OxkVAjf22DiVUWNdW8bZPbTG
+X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
+ pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: fuGlA0-yGs2WUh-QN3WEchl9CweF7H-T
+X-Proofpoint-GUID: fuGlA0-yGs2WUh-QN3WEchl9CweF7H-T
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 spamscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 adultscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+ mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270149
 
-Quoting Jerome Brunet (2025-02-27 02:07:39)
-> On Wed 26 Feb 2025 at 17:01, Stephen Boyd <sboyd@kernel.org> wrote:
->=20
-> > Quoting Jerome Brunet (2025-01-20 09:15:30)
-> >> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> >> index 9b45fa005030f56e1478b9742715ebcde898133f..9818f87c1c56ab9a3782c2=
-fd55d3f602041769c3 100644
-> >> --- a/drivers/clk/clk.c
-> >> +++ b/drivers/clk/clk.c
-> >> @@ -365,6 +365,39 @@ const char *clk_hw_get_name(const struct clk_hw *=
-hw)
-[...]
-> >> + * Return: the struct device associated with the clock, or NULL if th=
-ere
-> >> + * is none.
-> >> + */
-> >> +struct device *clk_hw_get_dev(const struct clk_hw *hw)
-> >> +{
-> >> +       return hw->core->dev;
-> >
-> > Maybe we should increment the device refcount and require callers to
-> > put_device(). Now's our chance to make the change!
->=20
-> I'm afraid this would lead to a lot of boilerplate code and mis-managemen=
-t,
-> especially in the clock ops.
+This series adds support for A623 GPU found in QCS8300 chipsets. This
+GPU IP is very similar to A621 GPU, except for the UBWC configuration
+and the GMU firmware.
 
-Don't we have __release() helpers? Not sure what boilerplate you're
-talking about.
+Both DT patches are for Bjorn and rest of the patches for Rob Clark to
+pick up.
 
->=20
-> Would it be better if clock core took care of that, at least for the ops
-> part ? I mean incrementing and decrementing the ref count based on the
-> clk_hw registration. That would make things a lot easier for clock
-> users.
+---
+Changes in v2:
+- Fix hwcg config (Konrad)
+- Split gpucc reg list patch (Rob)
+- Rebase on msm-next tip
+- Link to v1: https://lore.kernel.org/r/20250213-a623-gpu-support-v1-0-993c65c39fd2@quicinc.com
 
-Meh, I don't know. We've been assuming that the device is present
-because the driver will be unbound and the clks unregistered before the
-device can disappear. Nothing enforces that though so things could go
-wrong if we have a bug somewhere vs. knowing for sure that the refcount
-is incremented here. What you're suggesting is a bigger change, pushing
-down the reference counting so that as long as the clk is registered the
-device is known to be valid.
+---
+Jie Zhang (6):
+      drm/msm/a6xx: Split out gpucc register block
+      drm/msm/a6xx: Fix gpucc register block for A621
+      drm/msm/a6xx: Add support for Adreno 623
+      dt-bindings: display/msm/gmu: Add Adreno 623 GMU
+      arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+      arm64: dts: qcom: qcs8300-ride: Enable Adreno 623 GPU
 
-Looking into the crystal ball of the future shows me that this will get
-wrapped in rust and at that point we'll be sharing the reference (likely
-not mutable) with the caller. If we do proper reference counting at the
-start that will make it easier to convert code, but it probably doesn't
-matter much because any rust clk provider would use the rust wrapper
-where we could handle the refcount logic.
+ .../devicetree/bindings/display/msm/gmu.yaml       |  1 +
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |  8 ++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              | 93 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_catalog.c          | 29 +++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |  8 ++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c        | 13 ++-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h        | 17 ++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h            |  5 ++
+ 8 files changed, 171 insertions(+), 3 deletions(-)
+---
+base-commit: 89839e69f6154feecd79bd01171375225b0296e9
+change-id: 20250213-a623-gpu-support-f6698603fb85
+prerequisite-change-id: 20250131-b4-branch-gfx-smmu-b03261963064:v5
+prerequisite-patch-id: f8fd1a2020c940e595e58a8bd3c55d00d3d87271
+prerequisite-patch-id: 08a0540f75b0f95fd2018b38c9ed5c6f96433b4d
 
->=20
-> If the consumer of the API uses it for something that may outlive the
-> clk_hw, then it is up to it to properly increment the ref count since it
-> is clearly not clock stuff.
+Best regards,
+-- 
+Akhil P Oommen <quic_akhilpo@quicinc.com>
 
-Sure. I'm fine to not change anything. Mostly thinking out loud.
