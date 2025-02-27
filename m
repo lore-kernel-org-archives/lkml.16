@@ -1,38 +1,39 @@
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D6922FAFD;
-	Thu, 27 Feb 2025 13:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AFE22F38C;
+	Thu, 27 Feb 2025 13:24:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662670; cv=none; b=ZVT2TBWTJt5qIrs4aU+B1pbRA9CR01ExvMXIPRFnuZJlAoHchHH6kvNNIIadpnyqmtosABCEC6RBzEOU9plqLcZHNdGrp6uRwQu1moV0wn6zzh/G+kaMYLIUs8wXQtUMM7Wlp/uMZwRwhJPgduMnoreTdJGASRQvZ/qzo978X4Y=
+	t=1740662671; cv=none; b=gKRRXyLyHsl2fV4IH8crhsek+HIQQiHKnMrUB6/I5o6JM3ah0zASTIvcLR44ysO47pREcSXPk0vfTRZprlqD50uh/vTTr8BaqxnjCl8/zvfcZN6PICkvGACK9d1RdpUYP46CaQYrHuLLCDwxMpUejZhEcdp+2fimSM8b8iq64EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662670; c=relaxed/simple;
-	bh=q78T31r8ZzsIZ6l2LVv9q89HNLhFvW4dCxCXOTAfIlg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Yekp5CQCdbsm6rI2BDwLVIhxsb20mqx5G2uZe9RXMQCs/m6qxivKjmAss/455eyzzRB3eVMXeq5K4JMsLdU+4w3jyWp+ozUYQTX7bDbRRVpjgc0Ht4sJ6+g1I2/vAQwfF+XGGdZlIZKWPD0V7a5B/drSZxq8yYsxBx3GJs/3LVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=VQMF8q3H; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1740662671; c=relaxed/simple;
+	bh=2W9dOZXoRNx12SpUli2mtNwnqrwi/At1QplqzLluR7g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=d0OolKbFD+s8xtSXeUtQ8I7ZuJ09bTy11kIKKvs+qcy+ihxP1u20WTXufdSgdS20Cyt/5333fqkAOnbqA3OeSJlonMPC1Q3oV5Pf3tWiK0sIQe3b9dDE5dWfQsOcda+z8C0ReibUEFmbvKucYOwh0AIT3rHzNGtrQTltaPtQbgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ae9uZzAx; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="VQMF8q3H"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 29EA8441D1;
-	Thu, 27 Feb 2025 13:24:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ae9uZzAx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7778D4424F;
+	Thu, 27 Feb 2025 13:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740662665;
+	t=1740662667;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ev6fUAp7eyoqQUZCt0Ye0W7Edj16g7jXZKrOMsCZZGg=;
-	b=VQMF8q3HE+DIsj1Zg1fXthpCf00GO5tNsure50nQNxcZjft8eRwKR/YwLIWS2GRr2XsUq4
-	SsmvOGdmsL2fHE9YbE+Cs1dxgSQx89mzJaKMpACDAnD2jB8zSynSqlgaVdC5uJDTkl8rX0
-	aKUnYDsmHvQbS9YJ3NvX4L2mltEtaFqSCOEkYTOoF49/cXs9/aTd3+TrsT4he3ugFvDQ2Y
-	657tIWMNIEuW2VcXg0oZaGOVH2+nbzwUIuL1W3a7T0LJjXy1EVp1RDVxvaRePMUVmYeSMy
-	fuIH8mD0vFfiokG+f0ufImxjhRwzIEV4DoGbNSlmI/9spDPuEC4562AVF/NLVQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JSz/xp+n1gsVES6H6jYJKoOnaPDePyKeyb/ARCNFeTY=;
+	b=ae9uZzAx5aISzlFUavBOIP3MC3NsCGCnvjxy8kq1yR5QQVKtbaQJy9DzQSZ+wSWNhayx5A
+	J+s4DepPew0DtIcpyj/UaHLf73/pyFXbhvnL1bO1dZ+8Shq/uIEDJ6HjGH4zj1lgsptmpk
+	yusfI1xxP1/tD3vP/ltRoWBL+FHPBnfcSxs7t1hLSjYzVUzoAh+NJXEzUe2SH4REkToKf/
+	bYi4dcaA/DHjCQvrhgFPwnPCoaTUaSCOacsaAYRXsy0MWLiu1ZTyve1t8uk3AYHxzpAYlp
+	2cpOIviAhR/eIKmsH6b9xJStd6jAzIEKVxUw3Zm86I4PoYApMYICZaRt8h6/IA==
 From: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Subject: [PATCH bpf-next 00/10] selftests/bpf: Migrate test_tunnel.sh to
- test_progs
-Date: Thu, 27 Feb 2025 14:24:15 +0100
-Message-Id: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+Date: Thu, 27 Feb 2025 14:24:17 +0100
+Subject: [PATCH bpf-next 02/10] selftests/bpf: test_tunnel: Add ping
+ helpers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH9nwGcC/x3MSwqAMAwA0atI1hYaf6BXERetphqQKI2KIN7d4
- vLBMA8oRSaFLnsg0sXKmyRgnsG4OJnJ8JQMhS1qiyWa4xShVU3d+qZCcmVAC6neIwW+/1MPfg9
- G6D5geN8PNauVM2MAAAA=
-X-Change-ID: 20250131-tunnels-59b641ea3f10
+Message-Id: <20250227-tunnels-v1-2-33df5c30aa04@bootlin.com>
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+In-Reply-To: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
 To: Alexei Starovoitov <ast@kernel.org>, 
  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
  Martin KaFai Lau <martin.lau@linux.dev>, 
@@ -61,47 +61,130 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjeehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpedfuegrshhtihgvnhcuvehurhhuthgthhgvthculdgvuefrhfcuhfhouhhnuggrthhiohhnmddfuceosggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkedtkefgtedtgeekhfdujeevfefhvdetgfduudeifedvhfdvgfefteehhfdvvefhnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehkphhsihhnghhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqk
- hgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhg
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjeehkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpedfuegrshhtihgvnhcuvehurhhuthgthhgvthculdgvuefrhfcuhfhouhhnuggrthhiohhnmddfuceosggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeefudfhuedttdeiffetffeljeffkeevveeiuddtgeejleeftdejgedtjedttdfhnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehkphhsihhnghhhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrohhluhhosehgohhoghhlvgdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhug
+ idqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhohhhnrdhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: bastien.curutchet@bootlin.com
 
-Hi all,
+All tests use more or less the same ping commands as final validation.
+Also test_ping()'s return value is checked with ASSERT_OK() while this
+check is already done by the SYS() macro inside test_ping().
 
-This patch series continues the work to migrate the *.sh tests into
-prog_tests framework.
-
-The test_tunnel.sh script has already been partly migrated to
-test_progs in prog_tests/test_tunnel.c so I add my work to it.
-
-PATCH 1 & 2 create some helpers to avoid code duplication and ease the
-migration in the following patches.
-PATCH 3 to 9 migrate the tests of gre, ip6gre, erspan, ip6erspan,
-geneve, ip6geneve and ip6tnl tunnels.
-PATCH 10 removes test_tunnel.sh
+Create helpers around test_ping() and use them in the tests to avoid code
+duplication.
+Remove the unnecessary ASSERT_OK() from the tests.
 
 Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 ---
-Bastien Curutchet (eBPF Foundation) (10):
-      selftests/bpf: test_tunnel: Add generic_attach* helpers
-      selftests/bpf: test_tunnel: Add ping helpers
-      selftests/bpf: test_tunnel: Move gre tunnel test to test_progs
-      selftests/bpf: test_tunnel: Move ip6gre tunnel test to test_progs
-      selftests/bpf: test_tunnel: Move erspan tunnel tests to test_progs
-      selftests/bpf: test_tunnel: Move ip6erspan tunnel test to test_progs
-      selftests/bpf: test_tunnel: Move geneve tunnel test to test_progs
-      selftests/bpf: test_tunnel: Move ip6geneve tunnel test to test_progs
-      selftests/bpf: test_tunnel: Move ip6tnl tunnel tests to test_progs
-      selftests/bpf: test_tunnel: Remove test_tunnel.sh
+ .../testing/selftests/bpf/prog_tests/test_tunnel.c | 53 ++++++++++------------
+ 1 file changed, 24 insertions(+), 29 deletions(-)
 
- tools/testing/selftests/bpf/Makefile               |   1 -
- .../testing/selftests/bpf/prog_tests/test_tunnel.c | 627 +++++++++++++++++---
- tools/testing/selftests/bpf/test_tunnel.sh         | 645 ---------------------
- 3 files changed, 532 insertions(+), 741 deletions(-)
----
-base-commit: 16566afa71143757b49fc4b2a331639f487d105a
-change-id: 20250131-tunnels-59b641ea3f10
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+index 27a8c8caa87e4c6b39b2b26c2aa9860b131a70a9..498822064218d4676a5adf1cdb2a33ab56688746 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+@@ -364,6 +364,25 @@ static int test_ping(int family, const char *addr)
+ 	return -1;
+ }
+ 
++static void ping_dev0(void)
++{
++	/* ping from root namespace test */
++	test_ping(AF_INET, IP4_ADDR_TUNL_DEV0);
++}
++
++static void ping_dev1(void)
++{
++	struct nstoken *nstoken;
++
++	/* ping from at_ns0 namespace test */
++	nstoken = open_netns("at_ns0");
++	if (!ASSERT_OK_PTR(nstoken, "setns"))
++		return;
++
++	test_ping(AF_INET, IP4_ADDR_TUNL_DEV1);
++	close_netns(nstoken);
++}
++
+ static int attach_tc_prog(struct bpf_tc_hook *hook, int igr_fd, int egr_fd)
+ {
+ 	DECLARE_LIBBPF_OPTS(bpf_tc_opts, opts1, .handle = 1,
+@@ -496,9 +515,7 @@ static void test_vxlan_tunnel(void)
+ 		goto done;
+ 
+ 	/* ping test */
+-	err = test_ping(AF_INET, IP4_ADDR_TUNL_DEV0);
+-	if (!ASSERT_OK(err, "test_ping"))
+-		goto done;
++	ping_dev0();
+ 
+ done:
+ 	/* delete vxlan tunnel */
+@@ -553,9 +570,7 @@ static void test_ip6vxlan_tunnel(void)
+ 		goto done;
+ 
+ 	/* ping test */
+-	err = test_ping(AF_INET, IP4_ADDR_TUNL_DEV0);
+-	if (!ASSERT_OK(err, "test_ping"))
+-		goto done;
++	ping_dev0();
+ 
+ done:
+ 	/* delete ipv6 vxlan tunnel */
+@@ -569,7 +584,6 @@ static void test_ip6vxlan_tunnel(void)
+ static void test_ipip_tunnel(enum ipip_encap encap)
+ {
+ 	struct test_tunnel_kern *skel = NULL;
+-	struct nstoken *nstoken;
+ 	int set_src_prog_fd, get_src_prog_fd;
+ 	int err;
+ 
+@@ -606,19 +620,8 @@ static void test_ipip_tunnel(enum ipip_encap encap)
+ 	if (generic_attach(IPIP_TUNL_DEV1, get_src_prog_fd, set_src_prog_fd))
+ 		goto done;
+ 
+-	/* ping from root namespace test */
+-	err = test_ping(AF_INET, IP4_ADDR_TUNL_DEV0);
+-	if (!ASSERT_OK(err, "test_ping"))
+-		goto done;
+-
+-	/* ping from at_ns0 namespace test */
+-	nstoken = open_netns("at_ns0");
+-	if (!ASSERT_OK_PTR(nstoken, "setns"))
+-		goto done;
+-	err = test_ping(AF_INET, IP4_ADDR_TUNL_DEV1);
+-	if (!ASSERT_OK(err, "test_ping"))
+-		goto done;
+-	close_netns(nstoken);
++	ping_dev0();
++	ping_dev1();
+ 
+ done:
+ 	/* delete ipip tunnel */
+@@ -631,7 +634,6 @@ static void test_xfrm_tunnel(void)
+ {
+ 	LIBBPF_OPTS(bpf_xdp_attach_opts, opts);
+ 	struct test_tunnel_kern *skel = NULL;
+-	struct nstoken *nstoken;
+ 	int xdp_prog_fd;
+ 	int tc_prog_fd;
+ 	int ifindex;
+@@ -662,14 +664,7 @@ static void test_xfrm_tunnel(void)
+ 	if (!ASSERT_OK(err, "bpf_xdp_attach"))
+ 		goto done;
+ 
+-	/* ping from at_ns0 namespace test */
+-	nstoken = open_netns("at_ns0");
+-	if (!ASSERT_OK_PTR(nstoken, "setns"))
+-		goto done;
+-	err = test_ping(AF_INET, IP4_ADDR_TUNL_DEV1);
+-	close_netns(nstoken);
+-	if (!ASSERT_OK(err, "test_ping"))
+-		goto done;
++	ping_dev1();
+ 
+ 	if (!ASSERT_EQ(skel->bss->xfrm_reqid, 1, "req_id"))
+ 		goto done;
 
-Best regards,
 -- 
-Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+2.48.1
 
