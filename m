@@ -1,101 +1,101 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBE426E968;
-	Thu, 27 Feb 2025 22:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63899225775;
+	Thu, 27 Feb 2025 22:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694137; cv=none; b=RHs6Pj0X8Z8z6Z6el/E/2LyRuK6enZr7z0uHEMvhJ1yzLnndajQgyPs2bSLZIoHAa7+fXT+a+IxlLvvwCj40eTfDI2+1qKmaGDjjDsLMH7rnMyVXozZsvGoMZNKzqFRn5bkvL76HTkvOLQejqzO6XtZpqSYAfZmZStsqIJ10HGI=
+	t=1740694255; cv=none; b=CDBv/QW2ywVOfQwz495I6C85jsCNjC/MEaQ2LN+9RkoFYH20Z2RJpkRjHyNIeE2a/QW1z1WZPZK89JO0LnjAQqFHkPkXYk8UoltIA+ufRy9MexusXOyPYViCAB1E6djEK4d5OW7GaLUFp6lazAYSmL98zUuzID9psfm/t2RsZX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694137; c=relaxed/simple;
-	bh=RtonItbxRqN5tUy3koSsiE+b6epQ5IsKPLHg4/gwsj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X++lrABkfb4GvCnNB2GVjPSFkDPPY01cqQoMDFSEuiXseVgC1mzANunwevneaREMbS6DImLW3G1t4RB6+hDEmX+b4V2feYGYql1Az3syoDBAzJeJJ+M9h5lPXwhH51v3YaQejowsICPb7LJ7OagnjnXZG3xwn2WvVxu5e/bvidU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BKlnf1fr; arc=none smtp.client-ip=209.85.221.54
+	s=arc-20240116; t=1740694255; c=relaxed/simple;
+	bh=b2DbF3ltZd0nN7es/iT+JtNHxJ9qBCXLl9BbNr5+jPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tYFaQ6Eu1Igb5snahrx+F/M9TFiLrvP7P5dXrposzxrhahAhsjJUaNJDbDq0BgbUs4s0tXdMQTJvH20Gs2ikdW2awxMR7hn3L6vechfJZNbn2sajUaF08s0sXuFcyEPHImkTxrMZ9d47KfIbc/lN04kcfTG/FgA+B+BHmkGMHHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjyrvD2S; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BKlnf1fr"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-390df942558so1083023f8f.2;
-        Thu, 27 Feb 2025 14:08:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjyrvD2S"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2212a930001so37930015ad.0;
+        Thu, 27 Feb 2025 14:10:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740694134; x=1741298934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lEaZnjEGW+dXEB2fycgaBpMAJRVwO79ROy1KwTNDGTA=;
-        b=BKlnf1fr6zZ8QkTAgpp49+W9W9rNb06+YH/jv/9KZQM21g/BEZC9/tTR8Ys7WB7U80
-         K0MuvDOhImc7jxv8fL6ChRiDBFxBAIy5hoHSecC6ln8ptAFkBQFjml+1Itov0EUVOjNt
-         Wi3tgMqzKwFXpsTG9/fYUXO8lhUGPIZdc5173FLJTA7quuo8626xAr7IgrY5S/VV3z6P
-         DHivF5Fm5zll9wlizqy21U/Ds+4iiaXqKzfeHx6Be5nZ6jiKzTXApC1dbogiXZCB13Uo
-         q7AmnWZxeEqSehAnjNogp4uwRHseHXUrk1rRqxub/QSm7qmzez8BsHU8wn1XnpC7jE9P
-         d74A==
+        d=gmail.com; s=20230601; t=1740694253; x=1741299053; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rn75LKwtmaH31i7iljvrf4k1hEdFxHBp+jzGhRWzFcQ=;
+        b=XjyrvD2SugZCRFhvBmvGJAWvv7KjNK/qacuCeZlIzprVmoBemCs7qLkN+hR5usMBG6
+         uHhDCfYYpaATCvObASYCCXTW47xrZ9n5xREx7HipsfmgQ9g+hZp8i4cFeYsm2R+6SPmh
+         7zOnz/GqQ+k9oea1C79sQKDO36pih0zUuvKs3C9tUFSuk6t2MOoPNULHenaYO/wFfAu8
+         9HDBLnU15a7/d334jBEG6VlFE+OhMVv9qBT90XQUblT7hAECDBoW+TnnWE6OcFKz1zEb
+         CJb3aDZ3nr0TbOTfDr5fF9FzpRpX1EnAd/K8JotHIpxVTSHvo0OvXuMnUo4PAPz1kNhO
+         atWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740694134; x=1741298934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lEaZnjEGW+dXEB2fycgaBpMAJRVwO79ROy1KwTNDGTA=;
-        b=rm6VATS5T5MVYfE7iA4/KMCn5Rhz9fzPlpvT8WkXtpSei81PsnSoqmropnrUGnkILp
-         edo7x3PjYhTFzqCLqJgG91vgo7DOqR330wThCs/GLbE7xjJixBYMPd53FuOlbv/mXrFk
-         LdYHeU/etdPyXAlkFO1a05Li+HhXECOLpl5cdZ9iZVAjAxPjj0wubkd/HXgywF+5RdN8
-         nPf1BKiSHBvI/aOPLgcMTJwFZA8MYG/6aiUJuvY0mNGzB4iGL6rLvLuo3xHGPciscVq9
-         trGcIjrJGFqr1bk5R3LDHTanJ3IKvf9Cow2iJ6IYNSxcy/5Wv6aqh6UKKIXMHnmlv7Et
-         MgBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVJoHJ2Gl7xpKubD7wXqN6h9sjzJOeoDGM+X1lioJQx9eqUS2//9WxzSp8ksURCm2XtSU=@vger.kernel.org, AJvYcCVfGaBivkrLgOTAnuUXszVZSuUSJ7IsKNuwqIMLmX2+wDzx3HauZID9lrswxbrgVU/0hKy3xuqaIMNZmG8C/BTa@vger.kernel.org, AJvYcCVvTIkZn2ks5kHm7JK+FLG2hgU1pPwsyLADzOGZWLTBawfHCXxKg+qEJH3BcC2IBYFMmzEmr4XaEQM3+a+j@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd3XFzCu/lSlycZGOTelTBWkPYvzFf3LVm44FL5kBOLvZXp6uw
-	ZO5iKDpyc50vuTZp8btwhRxR4jO2TW75ZbHz+J9VnqyVMzcYAp1c
-X-Gm-Gg: ASbGncuB3nm8yX2dECj1Ak6ZGbBV2hHstJNe02egBxJJCM9T8w0HChNMUofCJTKlwDd
-	fbNthStO0DK1B4yXhSXFBan3RwGlN7Yv+Hm5clZwpTe1+r3xYYrwdAGxbmk09dJPQVf/5Yr1d0T
-	79KhncGg+uH1qf53qI7HCaUN8cdt7hOLDmnVRsGTPZ5GmR7zBqoJ3thWISX9N17xzs/lhxkdTIr
-	aXziKcN+YYTJ4hCwCPIxeK1HrUPBRyadYRN9W+F7VYRiKfEmS50rE0JeOJiBlR/2LmUkO8woy30
-	tYJ/QOPpuInvtHYovKkrs0MLnDs=
-X-Google-Smtp-Source: AGHT+IFZa9dboOaE6stYPiILmPTLGm8NPOEro5l2YZ8uwZslwXyNX9MgmlcGxKnCIReGCaskMePG2w==
-X-Received: by 2002:a5d:5f91:0:b0:38f:3c8a:4bf4 with SMTP id ffacd0b85a97d-390ec7cd27fmr661579f8f.6.1740694134109;
-        Thu, 27 Feb 2025 14:08:54 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e4796084sm3303760f8f.19.2025.02.27.14.08.53
+        d=1e100.net; s=20230601; t=1740694253; x=1741299053;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rn75LKwtmaH31i7iljvrf4k1hEdFxHBp+jzGhRWzFcQ=;
+        b=PnULdmPVhgrpDfOSceKot3YPufxYEh6nVARlVX7BGa6PKLMBItnahIV+8fLVn1fPt8
+         NFlNWp7O0SmCNW2cQdcZskoUVEq253fEmpRrg62SsPYh7cgbHna6U4mShJgWeWzVXWsl
+         XxW2nIL8Pdn9/8C+TJUfM5npxM0C/o7LDZUChbUqij4Jtts5n4zDFyHKloL5/EFFI7cZ
+         0ld0jQfVSRfeFYkL6bj1NvJZ0FVL6j0pc/6z99cburB6c1o8oT3SofGkelcE4yHO1tlw
+         yKRNOhBwlxwWXvKsnrqhBAHQK7IqjvE5VF9O8jQdqBSwBx6ANID3tL7Nedwd3s1W4TAo
+         hGIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzhOHZPH8IyLTWQdGMcVT1w4iKxs9elcePSgniQ5NMCiYVgMHt/Sa8zkVltxaiQaRysSGb+V5qBYULtrcK@vger.kernel.org, AJvYcCVUTS4NvyLcvYvXxTDE4LQ02Sp6XRvnYeXM291W9tg7RPF/ehhrA8eLf/eAMlAdidWN/Xr+ubDrE3eR6w56VOaC@vger.kernel.org, AJvYcCVXcqP1L7oXiqqN21bz6w/Y+V8knitotQnzEeN70bxrHgs5XAu05KbZRMDJ0Lo//iJ0Soc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj6gGmwq2TDOYkZK2HYDt0JjNZ82CM++cYw0eiVEsDIaUCh+Pr
+	z5JIfejUvM3EysYFJyi2ZYNMD9E0BLuznkI1SR1pb+zS4/SruDg=
+X-Gm-Gg: ASbGncsdTQLVt60GphGAkASMQkM8LHM1rqrrb8I/NGP4SNdHViRTbg6rjTMtZJvgcE2
+	j9YJBgHGM8shB+cJln8K9wq9uRH7R/5gNu+oqcH5R2DIP+XUhefC5KVxTMUauQDjNyDHjlGfEvE
+	YQ58ju3Mh1m9dZuUjWMdGFAxqdV4WlC2SwTx6liVqv4u/ncCNdVY3uDMEhqpQlXAwhP/FqCPGuX
+	PC/dRECFDeT6A2n07RGSJ9bZ5eZoWegL8pB6RfmV5jB77uuD8ojRXz4SIlZJQiKkKPbB6MrEVX7
+	lI9bmCzleMHLocDPq7lJNOlyXw==
+X-Google-Smtp-Source: AGHT+IFOdJt9fg/q+E9anyq2+KmyHCqG18NxNGhDQrrrbDAjF50JPW9jOcWFireSwb3MB344jcTswA==
+X-Received: by 2002:a05:6a00:228d:b0:72d:9b11:1ebb with SMTP id d2e1a72fcca58-734ac34ca79mr1999976b3a.8.1740694253567;
+        Thu, 27 Feb 2025 14:10:53 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7349fe6f066sm2233065b3a.83.2025.02.27.14.10.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 14:08:53 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sean Christopherson <seanjc@google.com>,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH]][next] KVM: selftests: Fix spelling mistake "UFFDIO_CONINUE" -> "UFFDIO_CONTINUE"
-Date: Thu, 27 Feb 2025 22:08:19 +0000
-Message-ID: <20250227220819.656780-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        Thu, 27 Feb 2025 14:10:52 -0800 (PST)
+Date: Thu, 27 Feb 2025 14:10:52 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 02/10] selftests/bpf: test_tunnel: Add ping
+ helpers
+Message-ID: <Z8Di7CSo-KH1Gt0x@mini-arch>
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+ <20250227-tunnels-v1-2-33df5c30aa04@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250227-tunnels-v1-2-33df5c30aa04@bootlin.com>
 
-There is a spelling mistake in a PER_PAGE_DEBUG debug message. Fix it.
+On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
+> All tests use more or less the same ping commands as final validation.
+> Also test_ping()'s return value is checked with ASSERT_OK() while this
+> check is already done by the SYS() macro inside test_ping().
+> 
+> Create helpers around test_ping() and use them in the tests to avoid code
+> duplication.
+> Remove the unnecessary ASSERT_OK() from the tests.
+> 
+> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/kvm/lib/userfaultfd_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/kvm/lib/userfaultfd_util.c b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-index 7c9de8414462..5bde176cedd5 100644
---- a/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-+++ b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-@@ -114,7 +114,7 @@ struct uffd_desc *uffd_setup_demand_paging(int uffd_mode, useconds_t delay,
- 
- 	PER_PAGE_DEBUG("Userfaultfd %s mode, faults resolved with %s\n",
- 		       is_minor ? "MINOR" : "MISSING",
--		       is_minor ? "UFFDIO_CONINUE" : "UFFDIO_COPY");
-+		       is_minor ? "UFFDIO_CONTINUE" : "UFFDIO_COPY");
- 
- 	uffd_desc = malloc(sizeof(struct uffd_desc));
- 	TEST_ASSERT(uffd_desc, "Failed to malloc uffd descriptor");
--- 
-2.47.2
-
+Acked-by: Stanislav Fomichev <sdf@fomichev.me>
