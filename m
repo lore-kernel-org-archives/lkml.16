@@ -1,175 +1,87 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m49196.qiye.163.com (mail-m49196.qiye.163.com [45.254.49.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0CA1A3144;
-	Thu, 27 Feb 2025 11:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294051A3144;
+	Thu, 27 Feb 2025 11:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654230; cv=none; b=SYt6CJ11Efk+CxogWKferaIqOlHV4h9XCIPQo+3u2r3iRhOIkru+PkLNuI8zp97PMTuRKCG2/psAsDnNx4UHsSpvvXCD7U4eQNWI+jcdFWTOAf5S7sOescELtypGYD0VKaTVZ4v+U4eQeUkss5ErHfUzcRVnvmMSmLBx7bbfaM8=
+	t=1740654236; cv=none; b=jreRE/YgmCadEOLmxvWuQpBhwJhgUv/2ZogzwwHqEYdcNusaRup8+j6si/6/6CBp9pBJIHoPImCyL6rws7F0BTs8rdyMb547D6iak023ZtiHdExPXXrIZN96weF16JtQ2sCWSS9ILr43Xa3xqw2+EKz4dIi0xosa94UnlI+npQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654230; c=relaxed/simple;
-	bh=fOx1fZDmWCp1Ci9WatOi+x02LNpZCXXhd2brVay/wW4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=emdqyRg2lyb+UETj/8ViHYeoCm11kjWsw3orvh73iOOLZsuVhLZljXC2U55jiRhj0pr6A1p4ZOYuz+XBnENXylNbjlNhAN95Y7O7lkPJKUuXOxDsWFL+SuCP9aod5WS1g/ozv1KBW/I7uI6QQNVTciNF6gwD166w8/yr2JP4nKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KnlIKAPm; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740654236; c=relaxed/simple;
+	bh=dhYd6F2dqDNDj2qQvvN2Q/ppd9sgGBv29AqvBxoescM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lxERSVyaX8OCr719WlOD6hxkjvSWy56x1aZ7YW386Fn1jUBQBh9CF0H3VUYtGa7kXBS2itMy8Xfwm3BHyHqQIcSTtJ/8VAfDyytEDDz43oB7LN0qAEdp6oc7jEg9vOx9xTOdKNdMfhl48m4TJGeoNC3gzTW1q7QVJegh8N+Kc/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=e0bcPEHK; arc=none smtp.client-ip=45.254.49.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnlIKAPm"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so397384f8f.0;
-        Thu, 27 Feb 2025 03:03:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740654227; x=1741259027; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7hadUX4u1GfKPIphHcn1Ek4Hr3PvIl5P+IUNn+8yOy8=;
-        b=KnlIKAPmwD3vvaO3JU1AVjajh1nVZOfH+c8TDwJ+ijTP4OnyCEdOiVuCeFMs3IcZ8W
-         VSpFgSSY26QbfeE3sCJfSC7k3QU4weWUJN00imB+2MeMcpYk8IWhpN5ea45M7g8sGq87
-         3S9xrHX+F8sCE8pQeMZJAIkyBJjs/cYSa30yaxUMtlqzy4IS1awzw9bPrcrYbfQv/zAq
-         c1nxou1w5kzEhMRAYyH5mtxsc0BQzv/sQ0/y0lFCusp2hSh7LpZSc1X2py88De5z19Wz
-         yqoo3wefFiKuQ2sW1YJBQI/pzJ1QUxFepfAD6uEVwTLf/ryNmBYweIpzDll/IonuUOwk
-         iF8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740654227; x=1741259027;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7hadUX4u1GfKPIphHcn1Ek4Hr3PvIl5P+IUNn+8yOy8=;
-        b=hVSFhvlPZtkKLIRQdhxffznPMhTzv6I+0whYZV1WJ5oxvMZ6TQJXeYlVflr1W8cWHp
-         gYRFV1gt1RjFw4GMkIaLSTtSYA5FuaGyvUfEBoohJjuZOWoQVsvD5w2BWdLgQhYMACYo
-         OiRknkr47/Ln8yZQCenda2I9URAVq/cfpNtKK3j8D6DQpOrfSHxrBPYe8S4X0JyZyGdf
-         BcLWNW3aA5iA0OZModa7xndktYyMrOHz6iA4rcJFIih9VPJgCPSei+O66qQEw3fSaG6b
-         lC9hWLgius1tazCBFqOHUURybiJTfehiTz+VUNFLJ9/eQ/7z+wptjXaY2bmGM4PXEXRl
-         rGhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUYHTyRoYlCYydz7y7AVxl/YlbtCiC3LGioZ4ed4bTu6ryc+53B01rlyRs9lJosmUb2akuuLfcaVcF@vger.kernel.org, AJvYcCWuCIZUBj6+IyLqm8mhAhXE6z9IJZxf37D9FB94eunhTTL4GSnZALdPRirSJlz/GHWCtyO/7oEV0Hczb0cd@vger.kernel.org, AJvYcCXICg/yLdJYOjPXL2HtcL77nSaO6HxyDcqROJqtWfPBQ09DtImj92PRWboyNPfgvWAknfNGhbKVNSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywb/QQQfaZ/ul1vI5QfzOQ98SHayf3mZRXFw+k9gbjPyFvYgRUI
-	bKE+DXWDYeia7uIPyRHbA/udWW9S3W72VnzlL5U4xDsxb4gCf2tTShzbnpvYEoGHqCHcl15YCaa
-	yMtglOyy/lYwiiL5bdkkzuloQ2yI=
-X-Gm-Gg: ASbGncsXfW6zETt8hbv1UHyjciiWwsX2SVYzK2mECYovJVzGjTjJwerqCG63PuZ8iGC
-	ts89g8FihBlVxIvrT37TLeJg6dyNJr+k1/fDadpzNTRaZO1lQfETBKmjaPHWLSkd+W2RadNb/zo
-	r8tC/6WHBv
-X-Google-Smtp-Source: AGHT+IEEj51ZFF7H+ooOf776nU/dJ5DP50cQZhn9gIcpUHIVdKCAo09sypcuCvEs89ahCT8lxT6lgDEZJMVz7+RRv6o=
-X-Received: by 2002:a05:6000:2183:b0:390:dfe0:1320 with SMTP id
- ffacd0b85a97d-390dfe014b3mr2847546f8f.33.1740654227006; Thu, 27 Feb 2025
- 03:03:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="e0bcPEHK"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c65b3592;
+	Thu, 27 Feb 2025 19:03:44 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	linux-iio@vger.kernel.org,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 1/2] dt-bindings: iio: adc: Add rockchip,rk3562-saradc string
+Date: Thu, 27 Feb 2025 19:03:42 +0800
+Message-Id: <20250227110343.2342017-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226093700.44726-1-clamor95@gmail.com> <20250226093700.44726-2-clamor95@gmail.com>
- <20250227-cherubic-mantis-from-betelgeuse-86f5ff@krzk-bin>
-In-Reply-To: <20250227-cherubic-mantis-from-betelgeuse-86f5ff@krzk-bin>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Thu, 27 Feb 2025 13:03:34 +0200
-X-Gm-Features: AQ5f1JppDCYqF1QXS5_vIgWet2sbqWFV8cK5PQx5sC6AY4BBWfoZ9BSho_RZCb0
-Message-ID: <CAPVz0n2kfxTJUkqrtLia6xBJ8t+fwjujjsc9k=mOk-P06bJH7A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: Document Maxim MAX8971 charger
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0NCSlZOSE1DS0MYGR4ZHR5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a954713a34f03afkunmc65b3592
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6GBw5MjIVSg0dAh46Mk4I
+	HxQwCxVVSlVKTE9LTU5PSUlOTkNNVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFCTEs3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=e0bcPEHKIbX6nYq+RNt83avtIJgzmJ0dBYHMbMFlfWxmOU7MwtvYPHem9TLTQHP8vcL+nmr1v6UTsDU5e6UMsAnWbql9qNH2oD7NUepG9B3Cm0hQ0xVpT4YYwHl2miCq3chD2S4IxG4D9CubqplSP8MLV7AvVn2yFquwWMzj0DE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=LKKAdsY3PqR35tOPthDUBhzW0huewFm3x2G+1m9O1mQ=;
+	h=date:mime-version:subject:message-id:from;
 
-=D1=87=D1=82, 27 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 12:45 Krzy=
-sztof Kozlowski <krzk@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Wed, Feb 26, 2025 at 11:36:59AM +0200, Svyatoslav Ryhel wrote:
-> > +  maxim,fcharge-current-limit-microamp:
-> > +    description:
-> > +      Fast-Charge current limit
-> > +    minimum: 250000
-> > +    default: 500000
-> > +    maximum: 1550000
-> > +
-> > +  maxim,fcharge-timer-hours:
-> > +    description:
-> > +      Fast-Charge timer in hours. Setting this value 3 and lower or 11=
- and higher
-> > +      will disable Fast-Charge timer.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    default: 5
->
-> You still did not answer why this is board specific. This was rejected
-> in the past because of that reason and nothing here changed. Nothing
-> will change without detailed explanation, so use other interfaces if you
-> need user-space to configure it (see other drivers, e.g. maxim)
->
+Add rockchip,rk3562-saradc compatible string.
+The saradc on rk3562 is v2 controller, with 10bit width which is different
+with rk3588.
 
-Btw, I have used this awesome example you have provided. Take a look
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+---
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/devicetree/bindings/power/supply/maxim,max77693.yaml?h=3Dv6.=
-14-rc4
+Changes in v2:
+- fix dtb check error
 
-Oh, I wonder why it uses so much values which duplicate battery? I
-know, it lacks battery, I assume that is why?
+ Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > +
-> > +  maxim,fcharge-rst-threshold-high:
-> > +    description:
-> > +      Set Fast-Charge reset threshold to -100 mV
-> > +    type: boolean
-> > +
-> > +  maxim,in-current-limit-microamp:
-> > +    description:
-> > +      Input current limit
-> > +    minimum: 100000
-> > +    default: 500000
-> > +    maximum: 1500000
-> > +
-> > +  maxim,topoff-timer-minutes:
-> > +    description:
-> > +      Top-Off timer minutes
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    enum: [0, 10, 20, 30, 40, 50, 60, 70]
-> > +    default: 30
->
-> Same.
->
-> > +
-> > +  maxim,topoff-current-threshold-microamp:
-> > +    description:
-> > +      Top-Off current threshold
-> > +    enum: [50000, 100000, 150000, 200000]
-> > +    default: 50000
-> > +
-> > +  maxim,fcharge-usb-current-limit-microamp:
-> > +    description:
-> > +      Fast-Charge USB current limit
-> > +    minimum: 100000
-> > +    default: 500000
-> > +    maximum: 1500000
-> > +
-> > +  maxim,fcharge-ac-current-limit-microamp:
-> > +    description:
-> > +      Fast-Charge AC current limit
-> > +    minimum: 100000
-> > +    default: 500000
-> > +    maximum: 1500000
-> > +
-> > +  maxim,usb-in-current-limit-microamp:
-> > +    description:
-> > +      USB Input current limit
-> > +    minimum: 100000
-> > +    default: 500000
-> > +    maximum: 1500000
-> > +
-> > +  maxim,ac-in-current-limit-microamp:
-> > +    description:
-> > +      AC Input current limit
-> > +    minimum: 100000
-> > +    default: 500000
-> > +    maximum: 1500000
->
-> Half of these properties as well are not suitable and duplicate existing
-> sysfs interface.
->
-> And for remaining, still no battery.
->
-> Best regards,
-> Krzysztof
->
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+index fd93ed3991e0..d129b66a6207 100644
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
+@@ -15,6 +15,7 @@ properties:
+       - const: rockchip,saradc
+       - const: rockchip,rk3066-tsadc
+       - const: rockchip,rk3399-saradc
++      - const: rockchip,rk3562-saradc
+       - const: rockchip,rk3588-saradc
+       - items:
+           - const: rockchip,rk3576-saradc
+-- 
+2.25.1
+
