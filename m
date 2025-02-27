@@ -1,149 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0808C1A3178
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AD01ADFE4
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673755; cv=none; b=PYoLJQZgDjvCIMMS8L6se9D40iuPiBSw9w+Hpk38GmYcb1PV0C0FSzBq2h6zLRRaYrkXesPPqhB2fo10BLljxr/OV1r9TFgU4OlUiqkBesVBXkqNFWiff991+P/fjmPhtqD5D1vSsHXWZjtPtgRCWy9CeXGuJWG//duvh/G8buw=
+	t=1740673791; cv=none; b=IUA3/DRqprsMNBIQyMTKwMz/x9wHdfXT6nXwVibbnOV7cBixHsiw/MbcstpICxRCroOPFK1yUH3bQ2pFD0Q3dSTsSdKO2I0XG8QrzeY4v6MPnglv2LAIMyJfsBiDTKKT2MZFE0ttRORIQdsFFND8b4b+ZctVzfE5O1Nz8I7pXu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673755; c=relaxed/simple;
-	bh=yrMuOSjm/jqiKg0lhnawuMT9c85TQRcYVvXqCxieIUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pI+yLZlAyjcI3OXahtmA4OMBrvZ7Dy2edtcjwDSaTOsUvWKitGXbadqZNKiPYx81sjz+lYImbC+M6QbwOv5zz80pPTr2FiODh2VqlmkzVSPVASKojl/KToJKYkS7UivAo2mJH9Lu5Gws/6kGA1nTUTODYXYULyXpepKtL5/4ICY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cd7hWh9R; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740673791; c=relaxed/simple;
+	bh=PgRYUUeTT1JBmil9ECVJeO3haSqsaiggs8Yz5Nhgtw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KbjPeAZJ5UF1E+IDrLdXkNGbXMKeRT+PF4v29bt12wJVaSL4foqrTtV7F+TxBasAlBLqduy3ERrg1wltxETrHNCVV6ByIQ68vlMljxCBnJsStpwWarjwT8/BcE1laqoP1BFseuJVqba2bVfXk0n9ZvEQDt98vFKJfVveRIlLBGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=aKHt2hRN; arc=none smtp.client-ip=94.124.121.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cd7hWh9R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740673752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TmLTV3AzY05mWRUecIUfKc1ZwM7Hko7ZFa2ydUcdbps=;
-	b=cd7hWh9R+Jq3cehhBQs5VTYxYdOITKBzso0Tsd2aGQDAM6W30Hny8g30tgopF2jGG2BrYs
-	Cp9NysfpiPzWivBzhD3zVo6r0Xguwpj0lbOHbEUKmTKZ7JCDhc5eu8wC6scBeJl3vebYCH
-	twSpE80IXNmgnkeSsXX5Wk6untEreeg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-179-2jbdCydEN-CDxZIecaeR2g-1; Thu,
- 27 Feb 2025 11:29:10 -0500
-X-MC-Unique: 2jbdCydEN-CDxZIecaeR2g-1
-X-Mimecast-MFC-AGG-ID: 2jbdCydEN-CDxZIecaeR2g_1740673749
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 83C4A1800878;
-	Thu, 27 Feb 2025 16:29:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.102])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 020461944D02;
-	Thu, 27 Feb 2025 16:29:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Feb 2025 17:28:38 +0100 (CET)
-Date: Thu, 27 Feb 2025 17:28:32 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250227162831.GC25639@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250227125040.GA25639@redhat.com>
- <CAGudoHHKf_FXrrNJQCqvC50QSV87u+8sRaPQwm6rWvPeirO2_A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="aKHt2hRN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=protonic.nl; s=202111;
+	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
+	 from;
+	bh=uyV67zBxhxQ45yLPsz+CN/F+f5ojkxID4+JV1MJhHxc=;
+	b=aKHt2hRNqQgkGbX+Y0tqd5xrl5PNcuC6dvFM+lszxu3eoFiMxmtoT8JruHbdnwYf4AHQUdrKjRm23
+	 ixMiwngJ+F8ASW6i1nWbftovrMwIIpFd2h3uIEDX+lwVCVLdOSIO9oHs0Kt5Gt7Kt8OPJKmbdcNJAw
+	 QNkTVg0y1oOodskw61ZoOGmefMYn9emWguSXLLJi1GvJe/cu/wRDVXNZTbr4GFlGTlLFHth9GkX0nq
+	 ybfhZdqG9Wf6N0pbKgYMPKfvGN9dZtvSjjPMT6d1a4J+AkU+4MsykZML2Z2KgSGkHglFDnyxop6Nip
+	 lb6lXQoZEW3lE5XlG9bth9iv0bEIZVw==
+X-MSG-ID: e6781c98-f527-11ef-a399-00505681446f
+From: David Jander <david@protonic.nl>
+To: linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Nuno Sa <nuno.sa@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	David Jander <david@protonic.nl>
+Subject: [RFC PATCH 0/7] Add Linux Motion Control subsystem
+Date: Thu, 27 Feb 2025 17:28:16 +0100
+Message-ID: <20250227162823.3585810-1-david@protonic.nl>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGudoHHKf_FXrrNJQCqvC50QSV87u+8sRaPQwm6rWvPeirO2_A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 02/27, Mateusz Guzik wrote:
->
-> On Thu, Feb 27, 2025 at 1:51 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Sapkal, I don't think this can explain the hang, receiver()->read()
-> > should wake this writer later anyway. But could you please retest
-> > with the patch below?
-> >
-> > Thanks,
-> >
-> > Oleg.
-> > ---
-> >
-> > diff --git a/fs/pipe.c b/fs/pipe.c
-> > index b0641f75b1ba..222881559c30 100644
-> > --- a/fs/pipe.c
-> > +++ b/fs/pipe.c
-> > @@ -455,6 +455,7 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
-> >          * page-aligns the rest of the writes for large writes
-> >          * spanning multiple pages.
-> >          */
-> > +again:
-> >         head = pipe->head;
-> >         was_empty = pipe_empty(head, pipe->tail);
-> >         chars = total_len & (PAGE_SIZE-1);
-> > @@ -559,8 +560,8 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
-> >                 kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
-> >                 wait_event_interruptible_exclusive(pipe->wr_wait, pipe_writable(pipe));
-> >                 mutex_lock(&pipe->mutex);
-> > -               was_empty = pipe_empty(pipe->head, pipe->tail);
-> >                 wake_next_writer = true;
-> > +               goto again;
-> >         }
-> >  out:
-> >         if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
-> >
->
-> I think this is buggy.
->
-> You get wakeups also when the last reader goes away. The for loop you
-> are jumping out of makes sure to check for the condition, same for the
-> first mutex acquire. With this goto you can get a successful write
-> instead of getting SIGPIPE. iow this should goto few lines higher.
+Request for comments on: adding the Linux Motion Control subsystem to the
+kernel.
 
-Yes, yes, and then we need to remove another pipe->readers check
-in the main loop.
+The Linux Motion Control subsystem (LMC) is a new kernel subsystem and
+associated device drivers for hardware devices that control mechanical
+motion. Most often these are different types of motors, but can also be
+linear actuators for example.
 
-> I am not sure about the return value. The for loop bumps ret with each
-> write, but the section you are jumping to overwrites it.
+This subsystem defines a new UAPI for motion devices on the user-space
+side, as well as common functionality for hardware device drivers on the
+driver side.
 
-Ah, yes, thanks, I missed that.
+The UAPI is based on a ioctl() interface on character devices representing
+a specific hardware device. The hardware device can control one or more
+actuators (motors), which are identified as channels in the UAPI. It is
+possible to execute motions on individual channels, or combined
+affecting several selected (or all) channels simutaneously. Examples of
+coordinated movements of several channels could be the individual axes
+of a 3D printer or CNC machine for example.
 
-OK, I'll make another one tomorrow, I need to run away.
+On the hardware side, this initial set of patches also includes two drivers
+for two different kinds of motors. One is a stepper motor controller
+device that containes a ramp generator capable of autonomously executing
+controlled motions following a multi-point acceleration profile
+(TMC5240), as well as a simple DC motor controller driver that can control
+DC motors via a half-bridge or full H-bridge driver such as the TI DRV8873
+for example.
 
-Until then, it would be nice to test this patch with hackbench anyway.
+Towards the IIO subsystem, LMC supports generating iio trigger events that
+fire at certain motion events, such as passing a pre-programmed position or
+when reaching the motion target position, depending on the capabilities of
+the hardware device. This enables for example triggering an ADC measurement
+at a certain position during a movement.
 
-> However, I do think something may be going on with the "split" ops,
-> which is why I suggested going from 100 bytes where the bug was
-> encountered to 128 for testing purposes. If that cleared it, that
-> would be nice for sure. :>
+In the future, making use of PREEMPT_RT, even dumb STEP/DIR type stepper
+motor controller drivers may be implemented entirely in the kernel,
+depending on some characteristics of the hardware (latency jittter,
+interrupt latency and CPU speed mainly).
 
-Yes, but note that the same scenario can happen with 128 bytes as well.
-It doesn't really matter how many bytes < PAGE_SIZE the sleeping writer
-needs to write, another writer can steal the buffer released by the
-last reader in any case.
+The existence of this subsystem may affect other projects, such as
+Linux-CNC and Klipper for example.
 
-Thanks!
+This code is already in use controlling machines with up to 16 stepper
+motors and up to 4 DC motors simutaneously. Up to this point the UAPI
+has shown to be adequate and sufficient. Careful thought has gone into
+the UAPI design to make sure it coveres as many use-cases as possible,
+while being versioned and extensible in the future, with backwards
+compatibility in mind.
 
-Oleg.
+David Jander (7):
+  drivers: Add motion control subsystem
+  motion: Add ADI/Trinamic TMC5240 stepper motor controller
+  motion: Add simple-pwm.c PWM based DC motor controller driver
+  Documentation: Add Linux Motion Control documentation
+  dt-bindings: motion: Add common motion device properties
+  dt-bindings: motion: Add adi,tmc5240 bindings
+  dt-bindings: motion: Add motion-simple-pwm bindings
+
+ .../bindings/motion/adi,tmc5240.yaml          |   60 +
+ .../devicetree/bindings/motion/common.yaml    |   52 +
+ .../bindings/motion/motion-simple-pwm.yaml    |   55 +
+ Documentation/motion/index.rst                |   18 +
+ Documentation/motion/motion-uapi.rst          |  555 ++++++++
+ Documentation/subsystem-apis.rst              |    1 +
+ MAINTAINERS                                   |   13 +
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    2 +
+ drivers/motion/Kconfig                        |   42 +
+ drivers/motion/Makefile                       |    5 +
+ drivers/motion/motion-core.c                  |  823 ++++++++++++
+ drivers/motion/motion-core.h                  |  172 +++
+ drivers/motion/motion-helpers.c               |  590 +++++++++
+ drivers/motion/motion-helpers.h               |   23 +
+ drivers/motion/simple-pwm.c                   |  199 +++
+ drivers/motion/tmc5240.c                      | 1157 +++++++++++++++++
+ include/uapi/linux/motion.h                   |  229 ++++
+ 18 files changed, 3998 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
+ create mode 100644 Documentation/devicetree/bindings/motion/common.yaml
+ create mode 100644 Documentation/devicetree/bindings/motion/motion-simple-pwm.yaml
+ create mode 100644 Documentation/motion/index.rst
+ create mode 100644 Documentation/motion/motion-uapi.rst
+ create mode 100644 drivers/motion/Kconfig
+ create mode 100644 drivers/motion/Makefile
+ create mode 100644 drivers/motion/motion-core.c
+ create mode 100644 drivers/motion/motion-core.h
+ create mode 100644 drivers/motion/motion-helpers.c
+ create mode 100644 drivers/motion/motion-helpers.h
+ create mode 100644 drivers/motion/simple-pwm.c
+ create mode 100644 drivers/motion/tmc5240.c
+ create mode 100644 include/uapi/linux/motion.h
+
+-- 
+2.47.2
 
