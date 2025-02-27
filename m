@@ -1,290 +1,273 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E04F26F447;
-	Thu, 27 Feb 2025 18:09:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740679744; cv=fail; b=uGmtsdkt6En9Q9t0zSArsT1aS4qDK0VW4DYqvTIdGSYeCiFxUVTrBimx6fnus1gkyzG+5fvnC7s88B6kJdKfKF2VRmE6Ws0mGI27WtBHBHGfdMAjTDaSqj+H5/AsXQSZ4rotj9QMCiDx0Evp9w+uKqBqke+SHYK7oxDPubzJXbs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740679744; c=relaxed/simple;
-	bh=HXZAfDdtHJOSIQMzZzhfmlgrqnh4AceN9fI4VR9x21k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RvgyyB8kV13qHC6M3sEKvKb+2gMqxkbdB90F63Oxs++FqyvmP+AJ8ovqDNljaGuqBXLCaikMyJViDsAvJ3Tiz3C3j8+Ih1RqvlFOp/lAwIy8jyd9PPdR0n2J//QyP9TVhdYvhtRWFHS8el2Ff/csUK9EfRtwHnb8Z5yv8q4HqVw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Xij1VGzi; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=QiQ8gtib; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF571EB5DA
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740679787; cv=none; b=aYwmWcc1RuHA248PC6Okei95IMkXRlNAeCYX4K33Y7M7hEh8vQSzHhoDCCWv5SH9A6SYcB6ZUmxo8lNjwNvd8z0mOwn9BlqYuurPwP+/qQI46OBbEu43aGFKihsj6WBoYkl8bxq4rV9dWWDeOfNZ2ppDUnWFfUrDrT/9fls4Yqw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740679787; c=relaxed/simple;
+	bh=xdChzCxZLgxBax8Z0/iBsu5xox6O3W/RGdDinFxDb9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUnaUjTiCpHTta/YVtRj8fLYpVKpa3VRpapacDO6KlILi7CWDzDNuTvLL29ueEwtNwRyIE606gi/tFP6tuKlK2XaIWJXwEPjUfwfcuK2BHqtH6fqfTEAx0KyKI14z/epgHzhcURJtIGUmvVqbyojN42EGAm8VG08nfbeuA7KLDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=U59ib/nN; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xij1VGzi";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="QiQ8gtib"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RGfkgF018396;
-	Thu, 27 Feb 2025 18:08:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=ExND6N0l3au/RHo/27D07/dBkt3h9j8UuoJMQoYZ0v8=; b=
-	Xij1VGzih3O8zpIHPJArgtks+Cb8zVvHDaK2JRA4jsRZ83PIfpUT/AVU05VTCDnK
-	4rcxcZhHUqxcGroNdu9/4/3LCTnM4Wic/tMz8gTA+CIScrMptYgLiaYHLE5u77Kq
-	XSBHfP+I5lfU+bhHnSX8i8XCopIzC2hpn4TsPH8h+aoZ5NjA8iPMR1yQ/Y51sE2G
-	XMQEOP1vKHY94WZI+4NPDv5VwzhrxFLemnuLbcI1iS8vzwbQkGmWj3hoHCI5nUwM
-	5h6z993Euej/dahIlDJh0tvrGnZr/8I2/nJ9oiO7MKMi4SVOFxUxsysmMXIbW2Hv
-	Nemvz0jgLBWCWpPxTyG02w==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 451pse40m1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 18:08:52 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51RHVKR3012522;
-	Thu, 27 Feb 2025 18:08:51 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y51dqknq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 18:08:51 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K095Ofq3hJ4pgLOIAk8OHJ3YcTKPb6Jk+S5QcnQsRRpyj05paXFi1ym0vlpvuSS7E/PKZeVwshqlDE0W9qOn0chsnpiiyLTvasCp5ACzSVAZwt0G89rlBIBaBh0JgjxtpR7xVfiBOECRF1UbBD3lEgiHWCA9F3bAMc6Gp+RsMv+YHqI2bIoYLIkAcOsJ65W9nbgHSRU1so4VQTdaHGd0iU1q0TFPbXR2F3zcE+f+WmIYu5BC4GRM2zdT50/0AEihC4CH7fN7wy/6xy6Vex7ncAO0qmGJVnnut3OC/paRVWPeX3HOk8Cuo4gzqGOOYaWpL0YtXze0lEtY2wiY31jIwg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ExND6N0l3au/RHo/27D07/dBkt3h9j8UuoJMQoYZ0v8=;
- b=ULD/9tDFdYW/bA1Udnci8/SWth5pY3MCsrWo1NJ968quKGD7u0kP0h8i1MJ7Fukw1OSd097Q1D44UbOIKZS8170P/HOiVGhTzE/zAyySbtrVESZhgGffli+uyuITmQoZeviPYk/rI5IPJ9RjpGCgjY5+Zf+RRzEDdoQIbrf0C2bkYrLXyB39QrKAIr+ju897pb4cfMMCnNsYvbFHx3kokrEmEXGMeeW/xIEZGQJogdJlmG5myxk2vJG0r/SztnS1sDes3ukur+VCkbqzZj+N8ZgqrdNhivkrzJBum93ydW2fU+QAm6NAzJBrp8hx7WBxIpsb6wjRfJaUzYCQJwNJfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="U59ib/nN"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abb7a6ee2deso191933166b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:09:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ExND6N0l3au/RHo/27D07/dBkt3h9j8UuoJMQoYZ0v8=;
- b=QiQ8gtibuNZyViyK0Agx+4cpt7LD3Tx4V8jUmr4PYQMG1iiopWBkZCPU/bu9N2mNwDD6s1qXURMPSusxdjlWOkWsDUZ7Lb1aDZzCRe7pGY3HPH+g0yf1nG2A/YRP/R6RpQWb5agQozm5MG6ofyAvcNoeAatc2MIelOUoPPZFpqU=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by BN0PR10MB5031.namprd10.prod.outlook.com (2603:10b6:408:117::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Thu, 27 Feb
- 2025 18:08:47 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.8489.021; Thu, 27 Feb 2025
- 18:08:47 +0000
-From: John Garry <john.g.garry@oracle.com>
-To: brauner@kernel.org, djwong@kernel.org, cem@kernel.org
-Cc: linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-        ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
-        linux-ext4@vger.kernel.org, John Garry <john.g.garry@oracle.com>
-Subject: [PATCH v3 11/12] xfs: Update atomic write max size
-Date: Thu, 27 Feb 2025 18:08:12 +0000
-Message-Id: <20250227180813.1553404-12-john.g.garry@oracle.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20250227180813.1553404-1-john.g.garry@oracle.com>
-References: <20250227180813.1553404-1-john.g.garry@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0358.namprd03.prod.outlook.com
- (2603:10b6:408:f6::33) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740679783; x=1741284583; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VfjpGp1L26OhdaNqt/gYg8OwWNQRpw6uVt+zy1eXaNU=;
+        b=U59ib/nNARlrKFR8mHOnfDsq/hWYqQri9rMx4rJlDZLJhdTvv68qQQu6+By17g8eUx
+         5MrNsm2krTGjM/10dLbBCdeXEl59o0PplSPigAIOpq2zpyzchVopxIO0XIz4NmT5UVDM
+         IBXXpIEybBkMuOG5mT34UsCo8wSC71UdJgcdmMUF8CMpvdRzTTyazrbdWfbu8BGBmoA9
+         WheLGhN9rbxsEt8GDKsYkezjJKt/UhIB1MkkVn2zq9ZkhHOu7dpnLpcNc4+ttY+rjoLa
+         jiiH/JymZ7n006IChsJMobyNasIVSGpdiZkiCMaKpoU3bfjMRLfX0n5v3Azg57+QRmFu
+         epPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740679783; x=1741284583;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VfjpGp1L26OhdaNqt/gYg8OwWNQRpw6uVt+zy1eXaNU=;
+        b=wNmC84W9v/ml3nbpOSZ3BBRUiKRd9rDWdvOiUi+rWwKsdGkD80993p+rJ5zjiIW43q
+         oPMEFeBaP47ZKCrqfwKRS66+6OyMNONsxmLbUkb7mtinh1DMaqeEB7VsUMg2yKTgctly
+         c9ABl6QfmgZD5XLFGqW6oy0J0P0JJuX2UKk3X0YtBST1VpK2aIIuZqYSenY2pF3s6P96
+         hub9mscSdURSEyG9iAQDSJyuhQVyCOCeQq0nGaMQ8pfsMlqvEyHtnn7uQISx0MXobIg6
+         PEhhj+jqwyjPHjkKfDB+0QTRNL/ByQovCqtHOvsAf/WAjXYzMJk27qAC0qL51JJDZYqU
+         dnrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVyTxWCeWQzMgoJ5R5Sqpzpkc4Xj1v8fOtU7djzA2cuV429mXH9FoSPcTOpL5irvCEaEYZVFesB/DZWGAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8vhEvbPF4w7LzWmS+PI484wPa8DZWoTQy5H9tjBbUQSCKZdS/
+	VBvStSS9CfjEkUgK5NCXmQzKD4O9doASTjMolxxOs/wXw5WCtTN6gcd91qZsaCI=
+X-Gm-Gg: ASbGncuMqz5JQe2ua378RZyguqtdl+J3rPyjsX+z4P7xiALOcQSuV+D+iB5yb2g9Xj2
+	YcZGAVHp1/69Xb4De0PC2GPm5eVc2mfYYP+yQUDOtBbBO8TVfjqVH+Z9y1XxiUn5V2tVpiPdDym
+	taltn5HGN7qLkWV3XzkkLK2auDg6AfMG1X1UqdSpuHnwZ0IJRTJ7JhPyJUrIyKgG3PNwPvCApsY
+	OBmgUPzsGYNc+0q+PlsP4ihL7Vf6kdInqIbWLxG1PsDANw8R6UkvKLm1/h/YH4l1dV3robD9kJC
+	Vq98dkHzIcGO+34D2XadaU8mMNXhflkBWF2oB3senhUC16NuSBDLkMAkYy0yZzcu
+X-Google-Smtp-Source: AGHT+IG5jhPAhA4gLbl+6jNfxZsQy6dhnuwfbakZ2ECzbDoT+qIk3FvugKFPtllN44+P1qWPzxitZQ==
+X-Received: by 2002:a17:907:988:b0:abe:ff13:d0c4 with SMTP id a640c23a62f3a-abf261cd53cmr53791366b.32.1740679783111;
+        Thu, 27 Feb 2025 10:09:43 -0800 (PST)
+Received: from localhost (p200300f65f2c000400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f2c:4::1b9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0b9a90sm159028166b.34.2025.02.27.10.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 10:09:41 -0800 (PST)
+Date: Thu, 27 Feb 2025 19:09:39 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Pavel Machek <pavel@kernel.org>, Anjelique Melendez <quic_amelende@quicinc.com>, 
+	Kamal Wadhwa <quic_kamalw@quicinc.com>, Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] leds: rgb: leds-qcom-lpg: Fix pwm resolution for Hi-Res
+ PWMs
+Message-ID: <ioater5m23lhkmyik3hurozol6vtyx6ovac3phmvcphrmmprwb@igggmox3jz5m>
+References: <dfthocttum7dscotngi6l2hz6bpdwfgrdxpvkcv6bdux3lt66d@iqfvmntvzyut>
+ <Z7zVgeM+7P7SLWIu@linaro.org>
+ <vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67pd2@cz2dcracta6w>
+ <Z7161SzdxhLITsW3@linaro.org>
+ <5euqboshlfwweie7tlaffajzg3siiy6bm3j4evr572ko54gtbv@7lan3vizskt3>
+ <Z8B2Bl/9uD3jPvQi@linaro.org>
+ <j55de6bbipoavqx25w2s6qr7n6fv6w7bj3lrgyag4dlvvddbqv@shn22aqcqeci>
+ <Z8CIY2OJUMqIOHGU@linaro.org>
+ <Z8CTqdFafLY17C25@linaro.org>
+ <Z8CbSvlG856oxQRw@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BN0PR10MB5031:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11d96dd0-7faa-4006-67a8-08dd5759c7ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EFXr8qCMcnKfSiMR/Uv97gnN+m4MKhv6K5l1aE4FNP0C2vTKVutHa+2sv7/I?=
- =?us-ascii?Q?zUJM2Alu030RoZyjyIqUA3tpZdEI9+77NPu9/JA72TLuJhOcmSMqRQOwokJl?=
- =?us-ascii?Q?Vs5XtfTSZOJBKEEfVy8WvZaJcNt+kNmWx4VM9kxkVxJacxCs/gDSwvui1kaf?=
- =?us-ascii?Q?Na1mJVgTponufg7QLv3ufvLlVpGHG4F9dxF/snVglQLzGkh001zIW4OIt6vG?=
- =?us-ascii?Q?Q+8k0ObjWneyaNLQBlOyE0F8w8sqP/9jZqgpcNGqME3H5oOs2WIoNnlDXIMN?=
- =?us-ascii?Q?Qf+8zbjH8uaueDqUI6mY/oT6DmNa0/+/islJPvWGG/PkeUpYc4bUiom6rysZ?=
- =?us-ascii?Q?Dz808dqu/Be5Dp+ulKrodFiSvtRFGicy/pW/8l/F2NE3L1Q5UzBzKRSGOgS+?=
- =?us-ascii?Q?YeonK/lVnfH2q1Dh0uhO4cgBDo8KtccWRuPQUTrCYBgq462LiGOa9lKOg/Bo?=
- =?us-ascii?Q?9Mflx3q7NQ1tFzF1Zysfg0aVF2w1JWeabzwavbw6Ze8kMQqr0RQDICjTX0m7?=
- =?us-ascii?Q?zFTL5FHvo++yRU+J44UQQ0eXQxtdmV/R9jPCHXY36hLqMZ0NRXl+FFDNVtdZ?=
- =?us-ascii?Q?aGEHDzXVD4/91QYX7fy3UysXlvnOBxjv4czI6IGdkCAvP5a04ljmpLhpKusW?=
- =?us-ascii?Q?27PIDOYF0E9gWHub9D+yxZe9BHk25h5+khBmULCTLG5Xu2wQLJVetxkznLSY?=
- =?us-ascii?Q?RAOMxYSKiIm3gdluFarysE4Bm7xl/n2j9cHZUhf4dcPWCeG22wiJv8f54UU7?=
- =?us-ascii?Q?5HyLeK7snABvQUNJqHLcqEIp9B6cBLYTKCoxPcXvdVRaRlUkiWTgRfycjvKS?=
- =?us-ascii?Q?ZAjmET8kE/jYWrjUOuUBHcz6Y82XyRgqKVuosaekWFvodVYdZJPofsgZL0n7?=
- =?us-ascii?Q?hRHsHRB24LGwmfT5UvHowGaOSLTrn/5Q0BUDaPIpSl4BpdB2T/Tvg7XOvJyr?=
- =?us-ascii?Q?GxOBRY/+HzCEJr7+TIrnNnT2IP0W9fzuu8hAfKaS80qVN82kMI7Lsxm8m9QP?=
- =?us-ascii?Q?QKK1bk9IsdithAX3bCbG3CAFJt2JYnSSEyCQ8Obr1d9ppzwQWZKci/OZBTn0?=
- =?us-ascii?Q?ejL0jMK0PU3SKe+udA2LCKtvL9t/KF7UxV6/sw6YLNsSd5SC5oI3mpCtPu8m?=
- =?us-ascii?Q?8wc+rZoa1JN2RVqI8+yWYNzz7MnGvwgZvktUdwnDXLIjclSIh+rpuMCLkR1l?=
- =?us-ascii?Q?PiPNjSIPw//KIO0zEdv1s0pNL/bxEUCTkLhRX44k26bCgM/mLPhDtF6uMeth?=
- =?us-ascii?Q?2fji6aaq9AVP5Je54upooY214B6H1KGk8IiIySx+eNESKJjiGUfMp78/Xq1F?=
- =?us-ascii?Q?kM9xVnLzOyH8wB6iuFP9Ykq63BurMameQitq/d13oeWvHscD3547MCr5eE2+?=
- =?us-ascii?Q?4mN54M3ixW6Zlrv6uuT1gvyl5Frc?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LdloIaNrZE0+ekpyPC49m3MgLGjO7JriniylLJ4hJrfFnPdpfQSmDW8FFLWZ?=
- =?us-ascii?Q?C8qJxtndM+bpQ1ynaGXfJE+wqjN8SmtBP0NbJ86MHi2rmbPvhZPhGVXzCOrB?=
- =?us-ascii?Q?RdasVdnbxxsAIrokZpmsriUy8wM66PhEzl2M9XnMFqA9HkjS5mPQcZgniVs5?=
- =?us-ascii?Q?nIIcCDc5o6bB2SDekh/bo/tyZ8ZbzgjKc3kl5Bqhb1maACKYaelw3fHjDs7q?=
- =?us-ascii?Q?G5TaU/vYatqJ6GtFwTEcJn597lyzU7LdCo4pW3WtwhEuZr4gELKK+XUIFJZa?=
- =?us-ascii?Q?/InEckAZ9S43PIzIcgth1CtMbul1byYylpJKTHzmKAsfm4jvp3IuEzImHZV4?=
- =?us-ascii?Q?cfMFdRkLrZ6g4ZbNbOog0wL0MeJaN4gwkGtw7/bn9WtPdSFdLX6cGdhvqnzC?=
- =?us-ascii?Q?rPqZT1Fhgqe6CEZZFy3iJ+MISySKvY/s1mKKtSDZOibYZDFsamtr2U/oEoQp?=
- =?us-ascii?Q?viB22yqo6IHp/Q1iWxxCRUakrNwnp6c1gaywmMYapfwZoXyPnbRpmq99RIfB?=
- =?us-ascii?Q?UpTMqxt68+6zE4qFk/o/g+hBVwpLqVJBmPjfOzwLAuwUrOCcMKOjeQBYv71z?=
- =?us-ascii?Q?pNM1rmilSGb0LMTkP7u6wXMYkKdEslWLNR65exDJHtbZ+oATT5baaqLi7SGL?=
- =?us-ascii?Q?HkEnLV/1mssN9g2IrCgwQZ6p1feASTju4jBPn9CboE5c3GEOh9BqdKRVwa5X?=
- =?us-ascii?Q?1xIwS5pybCXo7IQRPeB1PRNE8QxMTFM2tyROo+tT7xyc6ptImlzqgW7IT3sQ?=
- =?us-ascii?Q?6Sl8Qo3N/yDuhBM0Cz5Cs0p+4cQl96UGOWrydNaYW55rC26eDsQWFo1L8r9O?=
- =?us-ascii?Q?umPYgjDMNeIFPa1AdbrlSQCxDxEPEZ18zdTfk84b0QULBSPO574Bw1ub1K8U?=
- =?us-ascii?Q?x+T3tFHUb9CFzBq1xY1pXrCxnneBhPbNnWwwmlWhRdTviDmbLY6lVKOhlSJo?=
- =?us-ascii?Q?mQSr3pF5U60gCg/JvoHbwpRMNhIbti8AcB1l/AmhqjXpNVL+jn7C20Mfsxfr?=
- =?us-ascii?Q?quq5tGi8A3P0KoDN7c9bdw4Sn+CLBglBgdNVVAP+59G5RGtccDWM6vOxnH75?=
- =?us-ascii?Q?asCX/hExgoUGo8AjyBmdZxCkStZqzRHeqbVawukjOYrOjH7tBKN00LDfbZXd?=
- =?us-ascii?Q?TE+16sDq+gxbeiitccYpL7rFUIKFuFJM6Im/PdSxJoi8i5otEEJk9gxlVb2T?=
- =?us-ascii?Q?8ieE/gO0uXLmnYJSyKrqvsaQ94BBMHoGvk7i5uFfKQ7xqIOQ8ikus049aWkr?=
- =?us-ascii?Q?K2CkHCMv8FjtQnWhPthjh8IF8BqmYpmRbO0mLon2sGtEz7ybo/4GX9GDsiZN?=
- =?us-ascii?Q?VzwoksHtBghccTEv7PZzPT3CtXUb6kk1RjmWdfIjIYNwbYa/w2hPNa5SJz0h?=
- =?us-ascii?Q?o0UiAasyfRdKS/O4e6VAv8xIK5qNNeo181w8pJrdeM1qjdufbQ8+wgl1fyTh?=
- =?us-ascii?Q?F5W+bkZFQNNFfL3tQ+XxcNCuSvl3g1L9BoKQDUGnHtfYFtgVnm7/Mwfm0LTl?=
- =?us-ascii?Q?Tpy/0qyEGfIg12xOvEOWczYeO5kzVaYhPzPPowi+rMCcR8JojGThfY/3yqX+?=
- =?us-ascii?Q?W7rFSTSiUYVTyl/hGWyHux5leRQaz6t3ClFL674xEDQOXyGA9XhHVsy+2Qp2?=
- =?us-ascii?Q?gg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	5R2ObpNXdV7dgCwlCdloj4x6Pcg2yVJ7xTpYGiP/fz035DU6vqZcXXIpas3v5aAZ0T0rYsV07WVr2wYD47UHV8tYgYavf2n+GEW6cxsBvmufKd58veCBUplwJ1P2siYuy/P/X+D0ztlWVqx1M6x9LPZK393MkBT4eMnIUNpgtx2OhT7sbkP/BcY3XnP0jInYHxbOB3ZjHk3i9zPsRKDH/wO3tWOZ/RnyIZENGU9O5v4q3tmlMm8zU+AWitDRV7EKPaXURRgUxf0EkrNKSUCtQuYK7AE9Fw9mduBAOJYjTa7ocizcBVWr7u9a/9I4d6/9enD4MX0/c/OK9eMzKDH0pz2QpLFOEzB+BxGCzrlhtl0t5O7MRaLSYzb/y6VBv/tiAK+N4POIN/kzDll3usG3XbBg26sbiVQ9W2Ca2XrPJ/AIqRkP5N1JdZrtuI/831wL70C/f1jyGYQaR2aHT1iAIg29HvinjraMJaiHHA1Uo2XqxeApjcEoENOY3PJjRqm122CyzUmzZQT/nOq9cOge3gtIO9hn8MSeCKLkWz8q7jJHTSh2NN7m3ugNIlmrjv+hdQV76vOMAQeVyY7OQark9vQGomZebQvZ48b6ZPfGd0k=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11d96dd0-7faa-4006-67a8-08dd5759c7ca
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 18:08:47.3491
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qq4yBX60xuolXe8v20xxhuF8xMc+DFEoJ47/dJOGLEysfyRLX1QHKLn9Y1Uo7dgGXasEqxHSmZE/zkslhAqQgg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5031
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_06,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 mlxscore=0
- adultscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502270134
-X-Proofpoint-ORIG-GUID: aFD8hGaSHO4MLaBACxkTTg3laik4s69u
-X-Proofpoint-GUID: aFD8hGaSHO4MLaBACxkTTg3laik4s69u
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="coiu4r2gfvk33wam"
+Content-Disposition: inline
+In-Reply-To: <Z8CbSvlG856oxQRw@linaro.org>
 
-Now that CoW-based atomic writes are supported, update the max size of an
-atomic write.
 
-For simplicity, limit at the max of what the mounted bdev can support in
-terms of atomic write limits. Maybe in future we will have a better way
-to advertise this optimised limit.
+--coiu4r2gfvk33wam
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] leds: rgb: leds-qcom-lpg: Fix pwm resolution for Hi-Res
+ PWMs
+MIME-Version: 1.0
 
-In addition, the max atomic write size needs to be aligned to the agsize.
-Limit the size of atomic writes to the greatest power-of-two factor of the
-agsize so that allocations for an atomic write will always be aligned
-compatibly with the alignment requirements of the storage.
+Hello,
 
-For RT inode, just limit to 1x block, even though larger can be supported
-in future.
+On Thu, Feb 27, 2025 at 07:05:14PM +0200, Abel Vesa wrote:
+> On 25-02-27 18:32:41, Abel Vesa wrote:
+> > On 25-02-27 17:44:35, Abel Vesa wrote:
+> > > On 25-02-27 16:25:06, Uwe Kleine-K=F6nig wrote:
+> > > > Hello Abel,
+> > > >=20
+> > > > On Thu, Feb 27, 2025 at 04:26:14PM +0200, Abel Vesa wrote:
+> > > > > On 25-02-27 10:58:47, Uwe Kleine-K=F6nig wrote:
+> > > > > > Can you please enable CONFIG_PWM_DEBUG, enable pwm tracing (
+> > > > > >=20
+> > > > > > 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+> > > > > >=20
+> > > > > > ) then reproduce the problem and provide the output of
+> > > > > >=20
+> > > > > > 	cat /sys/kernel/debug/tracing/trace
+> > > > > >=20
+> > > > > > .
+> > > > >=20
+> > > > > $ cat trace
+> > > > > # tracer: nop
+> > > > > #
+> > > > > # entries-in-buffer/entries-written: 13/13   #P:12
+> > > > > #
+> > > > > #                                _-----=3D> irqs-off/BH-disabled
+> > > > > #                               / _----=3D> need-resched
+> > > > > #                              | / _---=3D> hardirq/softirq
+> > > > > #                              || / _--=3D> preempt-depth
+> > > > > #                              ||| / _-=3D> migrate-disable
+> > > > > #                              |||| /     delay
+> > > > > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > > > > #              | |         |   |||||     |         |
+> > > > >         modprobe-203     [000] .....     0.938668: pwm_get: pwmch=
+ip0.0: period=3D1066407 duty_cycle=3D533334 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.938775: pwm_apply: pwm=
+chip0.0: period=3D5000000 duty_cycle=3D0 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.938821: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D0 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.938936: pwm_apply: pwm=
+chip0.0: period=3D4266537 duty_cycle=3D0 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.938982: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D0 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.939274: pwm_apply: pwm=
+chip0.0: period=3D5000000 duty_cycle=3D921458 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > >         modprobe-203     [000] .....     0.939320: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D921355 polarity=3D0 enabled=3D1 err=3D0
+> > > > >         modprobe-203     [000] .....     0.939434: pwm_apply: pwm=
+chip0.0: period=3D4266537 duty_cycle=3D921355 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > >         modprobe-203     [000] .....     0.939480: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D921355 polarity=3D0 enabled=3D1 err=3D0
+> > > > >  systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwm=
+chip0.0: period=3D5000000 duty_cycle=3D5000000 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > >  systemd-backlig-724     [006] .....     9.079585: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D4266537 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > >  systemd-backlig-724     [006] .....     9.079698: pwm_apply: pwm=
+chip0.0: period=3D4266537 duty_cycle=3D4266537 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > >  systemd-backlig-724     [006] .....     9.079750: pwm_get: pwmch=
+ip0.0: period=3D4266537 duty_cycle=3D4266537 polarity=3D0 enabled=3D1 err=
+=3D0
+> > > > > $
+> > > > >=20
+> > > > > >=20
+> > > > > > I didn't take a deeper dive in this driver combination, but her=
+e is a
+> > > > > > description about what *should* happen:
+> > > > > >=20
+> > > > > > You're talking about period in MHz, the PWM abstraction uses
+> > > > > > nanoseconds. So your summary translated to the PWM wording is (=
+to the
+> > > > > > best of my understanding):
+> > > > > >=20
+> > > > > >   1. PWM backlight driver requests PWM with .period =3D 200 ns =
+and
+> > > > > >      .duty_cycle =3D 200 ns.
+> > > > > >=20
+> > > > > >   2. leds-qcom-lpg cannot pick 200 ns exactly and then chooses =
+=2Eperiod =3D
+> > > > > >      1000000000 / 4.26666 MHz =3D 234.375 ns
+> > > > > >     =20
+> > > > > >   3. leds-qcom-lpg then determines setting for requested .duty_=
+cycle
+> > > > > >      based on .period =3D 200 ns which then ends up with someth=
+ing bogus.
+> > > >=20
+> > > > The trace looks better than what I expected. 2. is fine here becaus=
+e it
+> > > > seems when Sebastian wrote "driver requests PWM with 5 MHz period" =
+that
+> > > > meant period =3D 5000000 ns. That was then rounded down to 4266537 =
+ns. And
+> > > > the request for period =3D 5000000 ns + duty_cycle =3D 5000000 ns w=
+as
+> > > > serviced by configuring period =3D 4266537 ns + duty_cycle =3D 4266=
+537 ns.
+> > > > So that's a 100 % relative duty configuration as intended.
+> > > >=20
+> > > > So just from the traces I don't spot a problem. Do these logs not m=
+atch
+> > > > what actually happens on the signal?
+> > >=20
+> > > What I do not get is why do we expect 2 pwm_get() and 2 pwm_apply()
+> > > calls each time ?
+> >=20
+> > OK, so the second pwm_apply() is due to CONFIG_PWM_DEBUG.
 
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
- fs/xfs/xfs_iops.c  | 13 ++++++++++++-
- fs/xfs/xfs_mount.c | 28 ++++++++++++++++++++++++++++
- fs/xfs/xfs_mount.h |  1 +
- 3 files changed, 41 insertions(+), 1 deletion(-)
+ack. This is done just for the tests implemented in CONFIG_PWM_DEBUG, as
+are the two pwm_get()s.
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index ea79fb246e33..d0a537696514 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -606,12 +606,23 @@ xfs_get_atomic_write_attr(
- 	unsigned int		*unit_min,
- 	unsigned int		*unit_max)
- {
-+	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
-+	struct xfs_mount	*mp = ip->i_mount;
-+
- 	if (!xfs_inode_can_atomicwrite(ip)) {
- 		*unit_min = *unit_max = 0;
- 		return;
- 	}
- 
--	*unit_min = *unit_max = ip->i_mount->m_sb.sb_blocksize;
-+	*unit_min = ip->i_mount->m_sb.sb_blocksize;
-+
-+	if (XFS_IS_REALTIME_INODE(ip)) {
-+		/* For now, set limit at 1x block */
-+		*unit_max = ip->i_mount->m_sb.sb_blocksize;
-+	} else {
-+		*unit_max =  min_t(unsigned int, XFS_FSB_TO_B(mp, mp->awu_max),
-+					target->bt_bdev_awu_max);
-+	}
- }
- 
- static void
-diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
-index 477c5262cf91..af3ed135be4d 100644
---- a/fs/xfs/xfs_mount.c
-+++ b/fs/xfs/xfs_mount.c
-@@ -651,6 +651,32 @@ xfs_agbtree_compute_maxlevels(
- 	levels = max(levels, mp->m_rmap_maxlevels);
- 	mp->m_agbtree_maxlevels = max(levels, mp->m_refc_maxlevels);
- }
-+static inline void
-+xfs_compute_awu_max(
-+	struct xfs_mount	*mp)
-+{
-+	xfs_agblock_t		agsize = mp->m_sb.sb_agblocks;
-+	xfs_agblock_t		awu_max;
-+
-+	if (!xfs_has_reflink(mp)) {
-+		mp->awu_max = 1;
-+		return;
-+	}
-+
-+	/*
-+	 * Find highest power-of-2 evenly divisible into agsize and which
-+	 * also fits into an unsigned int field.
-+	 */
-+	awu_max = 1;
-+	while (1) {
-+		if (agsize % (awu_max * 2))
-+			break;
-+		if (XFS_FSB_TO_B(mp, awu_max * 2) > UINT_MAX)
-+			break;
-+		awu_max *= 2;
-+	}
-+	mp->awu_max = awu_max;
-+}
- 
- /* Compute maximum possible height for realtime btree types for this fs. */
- static inline void
-@@ -736,6 +762,8 @@ xfs_mountfs(
- 	xfs_agbtree_compute_maxlevels(mp);
- 	xfs_rtbtree_compute_maxlevels(mp);
- 
-+	xfs_compute_awu_max(mp);
-+
- 	/*
- 	 * Check if sb_agblocks is aligned at stripe boundary.  If sb_agblocks
- 	 * is NOT aligned turn off m_dalign since allocator alignment is within
-diff --git a/fs/xfs/xfs_mount.h b/fs/xfs/xfs_mount.h
-index fbed172d6770..bc96b8214173 100644
---- a/fs/xfs/xfs_mount.h
-+++ b/fs/xfs/xfs_mount.h
-@@ -198,6 +198,7 @@ typedef struct xfs_mount {
- 	bool			m_fail_unmount;
- 	bool			m_finobt_nores; /* no per-AG finobt resv. */
- 	bool			m_update_sb;	/* sb needs update in mount */
-+	xfs_extlen_t		awu_max;	/* data device max atomic write */
- 
- 	/*
- 	 * Bitsets of per-fs metadata that have been checked and/or are sick.
--- 
-2.31.1
+> > But still, the first pwm_apply() requests duty cycle of 5MHz:
 
+5 ms, yes. But it cannot give you 5 ms and so you get 4.266 ns.
+
+> > systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0=
+: period=3D5000000 duty_cycle=3D5000000 polarity=3D0 enabled=3D1 err=3D0
+> >=20
+> > So since the period is 4.26MHz, due to the knobs selected by the
+> > provider, this duty cycle will result in a PWM value that is above the
+> > selected resolution, as I already mentioned.
+
+"above the selected resolution"? Do you mean you don't get the exact
+value that you requested?
+
+> On top of that, the duty cycle in debugfs is also reported as 5000000ns
+> when in fact it is 4266666ns, as the trace shows.
+
+Yes. Consider that a relict from the times when there was no
+pwm_get_state_hw(). Both values are interesting in different situations.
+So just telling the real parameters isn't the optimal way forward
+either.
+
+Something like the patch I showed in
+https://lore.kernel.org/all/7bcnckef23w6g47ll5l3bktygedrcfvr7fk3qjuq2swtoff=
+hec@zs4w4tuh6qvm/
+would make you a bit luckier I guess. Feel free to polish that one a bit
+(e.g.  by checking the return value of pwm_get_state_hw() and acting
+sensible in reply to it) and send a proper patch. (A Suggested-by for me
+is enough for such a patch, grab authorship yourself.)
+
+> > > Need to dig a bit further.
+> > >=20
+> > > But meanwhile, if the first pwm_apply() call goes all the way to the
+> > > provider, then the duty cycle value, when translated to the actual PWM
+> > > value that gets written to reg, will overflow.
+
+No it will not. The .duty_cycle value (also 5000000 ns) will reach the
+lowlevel PWM driver together with .period =3D 5000000 ns. Both are rounded
+down to 4266666ns. I see no overflow.=20
+
+Best regards
+Uwe
+
+--coiu4r2gfvk33wam
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfAqmEACgkQj4D7WH0S
+/k59Lwf/c53g1pFJpL0c/xEQriO8AL4IHT0MyM5FXUa7J9I1fDnHwffLa/y4ul2C
+XbhoexOvuSO4NCktkZ8qWHGofl0MFX5NeNkgI4z972nPSpoQwXb1qyrhX9igA9nS
+OlUyWmqG0kBTOUgnm8rb14NHtHl50p5PR2kxs2pqNnm5m4QYsvc/HWkQCjKWx6WO
+Z6TiBcVTByGFdJ3EFIhE0kydakv0cKthMTFbgUGRlR3k3u35DUoWyOicT3uvaUMB
+zyhZTK9kFV7HbXW+XceARMrE3+19oMa65csNYv9X6Ta+MXOzrwV86U8wPmfIi+E0
+UaCwkC2Gd7Es8lxpkY/unI0K++ytTQ==
+=IqCH
+-----END PGP SIGNATURE-----
+
+--coiu4r2gfvk33wam--
