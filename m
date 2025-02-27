@@ -1,111 +1,112 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4756234979
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFE52356AF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631093; cv=none; b=nE+t8+YptS6rhAaxQihJNL6AUXW/Uk6Cu2n7zeAuK567dVVW7eDSijJbFgcPkO16TnVy1/xiHzj10XylxQ5PBgI97WY4/oCyCJzDpR0zAwQNk1THRaN0pZ3j00SBwT8cy9rXRJL+/FJb6pu/BsxcYV7wmJqSte8Qg3qn/c4qjsI=
+	t=1740631097; cv=none; b=Y6eyddfEPSH+A1ln5wpyptU/7GAOq6uhioM/uQ2k9zDNXrf/NSWFNuQxhtu4zO5w0z7BudN7qgP3fgX0+l/yQJL36+gPTol+2VKpTOAwKEUwCheN8uQdjJP0UachssABlUZ6XFiHuMY/8Hev6crOEa6j+NlbJnGJhkZ6QZxL6Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631093; c=relaxed/simple;
-	bh=Ib6ZO2EH/a8o5tLg5RHSx5Zf6q2a30HCMjUDr/LDIww=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HJYN2oqFWPkGedzFt7OVeWWwzLX394NLJ6HIDFFg6DX8lSZU0M4IvY9bbZuAHHOOun9GwTVCqIWp3XAuSy6ed2np6yxJTMF4YBrrMCf9yvKoifGjRf/vAN5qouyNGQOhb4Wlr+O6lYP2BeQtHIGqjqgpZu9DWkrn6yG9JsnEpCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j7jIgTty; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740631097; c=relaxed/simple;
+	bh=MhFopNXFcyHEqtXEyxX8y89MHsiQeb/nSeCVI2a+aiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Qn6zHPIy/8RbE/Yg+HR9LTBnmSUgcHXo0HjWn4Stx8CSMc3YtacWKJUgHAOTsYVHs5FKgIMw+RPmeFFPaRLo/827kLwJ2Y0dl3XnIViIlY+PN92ePOC3kF1bggW5XMFPsDc65Xv95I0ZNicn7qG7txcJ84CBuOHwjHesxLC11D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=AdF/hgyR; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7jIgTty"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5439a6179a7so648348e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AdF/hgyR"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-221206dbd7eso8474985ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740631090; x=1741235890; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740631095; x=1741235895; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n+xNvurO8U1WVGtMu3d7j2YgOZ/XCG9UaC+fiCOcukg=;
-        b=j7jIgTty4Ge8fc6Y27G+qumfhEJ4L4gCov1cvPgHnFSv6xfh1oqodqNoBEBH4NzUh3
-         Ojt247UR43MCnEaM613INiLXEsUcrGYSFY65JaocbLMKcDuFh1o9Wh2YwT9/sOnCgaYo
-         SG1K4AZJ76bgjo5Jnf9nyFKu3zP3VJedcBR5+mMQUEjmQtcnJ1QeYwJ+y1rnA4n6z7pW
-         NSdtiDoBc+8xethd3DVdvAlFxn7/rkL03K3xXoJQ0XzdBEuEPzdSIVmRHvzinH3jW9+J
-         zR7d4WzHr/PaqBloK9BWv1+KYyTFZ1ge+9GlwK88cV4LbwcBKQEzCX0BYhcMNlZVCSI2
-         BZhQ==
+        bh=C/ge7B6UGXcSd47ZURwKYcUmpuFGdMGIsEsj1cDYmyw=;
+        b=AdF/hgyRgXkv7QfS5GJFAIkqnG0/U71bbtXoXiT6iMHiQe+cjRr5VYPHIh+NufIe+F
+         CSTvtgZuQvaRnv5qVGQT0TR0/9Ud48P1V8ph5kpcFtU/bA+3CYuteKUpdCeNbHIzjOrF
+         Pm+AgH8XSj0g6Am10C/nzyCBJq7LSUeIkyfDs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740631090; x=1741235890;
+        d=1e100.net; s=20230601; t=1740631095; x=1741235895;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n+xNvurO8U1WVGtMu3d7j2YgOZ/XCG9UaC+fiCOcukg=;
-        b=oZa0geP7l4EO1AZV0CmnBZj6JSRXmRnAOoZebZ8PDSIFDAtOTb54IDpNMCNBU3LCl+
-         Dwvw8x1hEcUW9ttqTIdvAHWQqA9GFuyOG1n3FyQALgSkY2J7dUpJaOT0XpIRutWCD6Qn
-         EvtKSXUB4UrC4Pi6gUwkHGl1IMcE2UnhHPpne14y/3HrvNjauH1spduQ1njUOxBu1ZzL
-         DRiWjNUkWRpbe2GKJBzLyqvxt9t2EFW2DFoyJV3B7X9jtndTl1Q5ty9T1caW+86FH917
-         YsgqDRHXNis5Flp7yFM6uP71Xzra7KujqYJqHdpgIM7vJFwWkkde/gtNGALgk++mtUyT
-         CGZw==
-X-Forwarded-Encrypted: i=1; AJvYcCU616aloyF2IM7TY8JNs1dYnpUT6YdywbcPOL9MCLJsBm5Im41pJ3eB/cJWW1FHYPniGwXAhmM5Hho6Hjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywik1LP3mx/gbboW046R0/ihvwOEQ3YhEnTsgW/kC64zKQnyamv
-	NHLljDfYpebcANWLhd/ZV06qN+BOAsBX88X+XBouuTPFf41MMqnReFn13IQuXJo=
-X-Gm-Gg: ASbGncv8+LOry4DbqCrpqSLcuaHlpUXg4EhlYFnp3rSotgs45sWlH0Pr+LVG1Oe+8Qm
-	BZwLULaNi6ufOfcxLOwNFuUOEhiyCsUxVyN7IWtbpTTGcqtJL5fMbG0SBsshcBSODOuzHCopMOo
-	I4zSH9Un/uk5dy5cMPYhSQtgOLk41y0TBuoPYBkhXt6WfDPWl+R3sr8StYprJD5SxNzrz0Uhw2V
-	pWMJ1wgw4aQrGuQBU47XvWe8EhS+6OGTJtjGxwxJ/eea5/9IsWTeiYX/6/tQAz+a7FVIVI84vsy
-	QgjFm7YtiTEp6eYotF0McZNi4TheWHXQPA0eIiHrVA==
-X-Google-Smtp-Source: AGHT+IG4FmEa2E6Vnd3n6pmL4LIRNjCw5Yr6bPCVueD2ge1UqqUmi9/g9dZciGxkaPkoSh2/W32iag==
-X-Received: by 2002:a05:6512:31d0:b0:545:240:55ba with SMTP id 2adb3069b0e04-549433167b7mr678503e87.26.1740631089878;
-        Wed, 26 Feb 2025 20:38:09 -0800 (PST)
-Received: from umbar.unikie.fi ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.38.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 20:38:08 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Rob Clark <robdclark@gmail.com>,
-	Sean Paul <sean@poorly.run>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] drm/msm: add a display mmu fault handler
-Date: Thu, 27 Feb 2025 06:37:35 +0200
-Message-Id: <174063096226.3733075.7759942352504243411.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
-References: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
+        bh=C/ge7B6UGXcSd47ZURwKYcUmpuFGdMGIsEsj1cDYmyw=;
+        b=eWO0pKAmccYg8DYuiuXliqMIhpLo3Ih5uLlOQKqHdO+X4jAhXloeDz1+qU12Vg9L2m
+         b/bJ7xRyO08YklGh2LkzPh1Xr99iMICIHG+ayzamRMOjf2L0yrzhtpldCnTqB4+qxZ4g
+         H+NB7fdxxEGRqJtZ9CaaIpsm1Ivee45pXppL/K9Z03L9NVYOQ5p2j2T8CYbkGDnMZu/a
+         BRImhfXqj0CdSLrf+e7J72yDfzIdt7OMaOlBu5/mIUw80Al3u7ly1wBig6MA4m60yXP2
+         93SsZlmOYSKQ9qLACVlEPB57MkWW30W0n/H5XpReCWxTRlEWK0NojdVaVQ893KgAvkGD
+         LEwg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8bZeBfmB6tZPS0FcHOQjSCSF1yAhAo3oXrs5je2fS6BbuTZ0fMahpEA6pmXnxCcF8LfdN36IFVGsZlFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2oxCXD3/dnnZwiN0o1SBqnxT6SmUGPRsIkIOKL7fgvXw3LHDv
+	jPkiOwDUqE+qbm/y33EZEVlwCn5niNcIRuqDF2ExXk/MNF1AIRkpmzU9PpNNx9JgLmChOSR0QAw
+	=
+X-Gm-Gg: ASbGncseV0XZPysjU0ZPyfiT+zOva1lKIsvU9VbfMhheiHiAPyTdB6O1BT4UCbc2z7N
+	d2kIcFBZMMNEOcpXSE0Ymdfr7dTFe6UtE3zGASjpx+Laz2l8iR/KSWW1H5uX9PQ+hfnUoO0qxOX
+	srL9YmRWGdRw1ULnBJTf5CS39Khw564H3lGW8AD3isdrAtQ3ea1I6dwCr4Qokk8f9VgkI0x5rwq
+	Cu+32wFH0HTbGU1NWzhsIxDsBi/VCe+LorQe+z74yDpFmjGn3pcn3YHuM8oElIlfDW4EtVqHhAS
+	JBa6YxiTtalrkJ6jo5JNKQ9F1Xt4
+X-Google-Smtp-Source: AGHT+IEpXBKk19SHbSOiApwPW0gT/JlWHme806+0gknSxKLl1xCL+FuacjL88fnx4daEmXHOHQZArA==
+X-Received: by 2002:a17:903:41c8:b0:223:47b4:aaf8 with SMTP id d9443c01a7336-22347b4ac28mr36091275ad.52.1740631095639;
+        Wed, 26 Feb 2025 20:38:15 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223504e2291sm4941155ad.187.2025.02.26.20.38.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 20:38:15 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v9 19/19] zram: add might_sleep to zcomp API
+Date: Thu, 27 Feb 2025 13:35:37 +0900
+Message-ID: <20250227043618.88380-20-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
+References: <20250227043618.88380-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+Explicitly state that zcomp compress/decompress must be
+called from non-atomic context.
 
-On Wed, 19 Feb 2025 11:49:16 -0800, Jessica Zhang wrote:
-> To debug display mmu faults, this series introduces a display fault
-> handler similar to the gpu one.
-> 
-> This series has been tested on sc7280 chromebook by using triggering
-> a smmu fault by forcing an incorrect stride on the planes.
-> 
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/block/zram/zcomp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Applied, thanks!
-
-[1/5] drm/msm: register a fault handler for display mmu faults
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/eabba31a839a
-[2/5] drm/msm/iommu: rename msm_fault_handler to msm_gpu_fault_handler
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/f66f3cf6bc42
-[3/5] drm/msm/iommu: introduce msm_iommu_disp_new() for msm_kms
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/c37d9f0b1a18
-[4/5] drm/msm: switch msm_kms to use msm_iommu_disp_new()
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/85bdbd8306d8
-[5/5] drm/msm/dpu: rate limit snapshot capture for mmu faults
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/89839e69f615
-
-Best regards,
+diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
+index a1d627054bb1..d26a58c67e95 100644
+--- a/drivers/block/zram/zcomp.c
++++ b/drivers/block/zram/zcomp.c
+@@ -146,6 +146,7 @@ int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
+ 	};
+ 	int ret;
+ 
++	might_sleep();
+ 	ret = comp->ops->compress(comp->params, &zstrm->ctx, &req);
+ 	if (!ret)
+ 		*dst_len = req.dst_len;
+@@ -162,6 +163,7 @@ int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
+ 		.dst_len = PAGE_SIZE,
+ 	};
+ 
++	might_sleep();
+ 	return comp->ops->decompress(comp->params, &zstrm->ctx, &req);
+ }
+ 
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.48.1.658.g4767266eb4-goog
+
