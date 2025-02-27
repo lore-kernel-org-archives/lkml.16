@@ -1,63 +1,66 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EAC239094
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D96F23A566
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665004; cv=none; b=W8qIac/HyyexnrLwOTTLPxr0pVUv1zDxD0Mxokxh22MFvEspeH5klEVguuDZ1w8+Fi6qhWwPjN8pxyYkfIlZFKoAfiwlyQvBH6Sc0A3CxCUBtKzKlZJ6tpaWs414XggZsGnTu4YAYiTdIA5bYpmFjQVkXsJsV1IMil8q71hTvtk=
+	t=1740665007; cv=none; b=shDpNq3G0Cq9bV5KO/LwhcvvAFYrLqXpE80en7wSmlYHiT2MJNmarLbCGSLEu/dtj/TVPJyPHIPp3wXDfKAfNdVSdMdNWfi3lRgjPZ3uzqIaH6TQj0X9Bado155kPeDoy/SBYWcBVt/bN5O8rVTch4KJCLTD3Dp4tILiab6OmB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665004; c=relaxed/simple;
-	bh=3NnxLM9evLC5dZoexGpaMUPJqUxrZ9lwjMscmx27tjo=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=P58BvDITGSAIFLOHhJNtvNkR7l3G2MDoYWO0fUy1CseTUl1G4RgABzBAhufADD9O6J79H7djPS2Viana3vOds8lIQP/4Knlzz7JJa2JJZQclOFJeC3DdYUckZNHlUct9yz+XVpj99G9V18zU3xt6jD7Z0P0vERF5iUiwGTcQgKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CIDF0hya; arc=none smtp.client-ip=209.85.221.74
+	s=arc-20240116; t=1740665007; c=relaxed/simple;
+	bh=g+n3TAVbRYeopfv2thFyRpDHZ0uzmD8PYIu8wMyexJA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HfWsaCNxvCwZEfdWqk+q6bHs9x//NU/y7DRbrYXsawRf+aw4SrBsDEm0FiJfhce1IhpQeUii1f3cmLbkr4bW2ufPzWMFfjeqwugrjw98Tsq0TAAKxo16cIWU8Sjyad+Og/EcwgXTJNAjE7BmWFsl33/UNro4J5zuN2hlvH3RmtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cS21NNHT; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CIDF0hya"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-390eb06d920so81480f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:03:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cS21NNHT"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4399c5baac3so7699945e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:03:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740665001; x=1741269801; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=saWev/BLtPHQI+zr3xOwDwS1bzfDXQxRvDaSiKo3ZN4=;
-        b=CIDF0hyaafsyrb9W24ayhuVhiXQ54R6nsLM7Z5u+nne7zr3RgA2uUaZwvRwlBI/4Co
-         9RK0rNXVh7Ffxu5MQ9e6CIe6GuQCGLEpSJfYhJPv8PaOOaWqJjxiN2oC+ZmtDWmQVouL
-         6UTXzO7gbytvM66uxakubQ9xJSuWoZdhdtFZvoeHdAUxp1zvmMl5cbPuBOKlGrJ4cXtD
-         uOvIZbrElPzuKwhRVsbwmkQow11DvqvN84Z6TscSOgVbai++03bNNli6Dghjve2ca1C7
-         1y09crIyVg+7Lv77LCTmfVbjytKqqJ2X2DIRjeYYEx8wRnhnreOSVW+8CiVr+dYm93bJ
-         Qv6A==
+        d=google.com; s=20230601; t=1740665003; x=1741269803; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdyNR/l9tUX5mWYlAxYoBmtPUMPfXZLm9s3JeHQDuDg=;
+        b=cS21NNHTlT6lHaw5Wh314sITmhOcyyvtOrswP/CVG817WDfULelF0oAsOZtiuAZDkG
+         Di0cRtBcvZm1l5UqTvCp6FXiEZ6lcXsRAUUu2PFMC0mHepJbSHqOGD3OHCLD0hlLpFIe
+         nNUxg23qbYTCbQ7ZGlNkJUtOLgS1Ka8Yp6cIps0L7+5i13eZSEP+zkCzL9V0Zp71CFfV
+         ZsVmBZDb23iY1Nsxd2sRXhPqcoQA5OBOceloHZUtQYcpvtXcRz4SVwHeZ+YyR9muVhtO
+         h5s7SmjIFl6/VHTAdMjGn04wreUoXL1ja5+UhpgCO+5AoohuvLKpBVI0E77afCviBMEu
+         K4fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740665001; x=1741269801;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=saWev/BLtPHQI+zr3xOwDwS1bzfDXQxRvDaSiKo3ZN4=;
-        b=OVhLjagDQBZATA95tyIOKookC7EFHDi13ySplzS3LH6sC1aj6PWJZ7MdaksxtVI721
-         VWVD35TXocj6b2lJ40Zas/3k4c7R24h9Na/7bDVod0u4k38mhjhmCNw/Uaa3w2qlTiDo
-         XyPKQQ0YztSmAIXyVZDtRKrQat28ouTB3m0TfVjb7MzApZht9hMfOID03lJWIUJLYUN7
-         CrMgj3tNsNxMmZGVz5P33z+8zZ9KkyI7F9eTrrT4BC6Zln9/78Br1El6TXMOv1LZuKep
-         mKPM8isOdPdh7SWZLcDQOPftsm5glJ9bKIVa4yH5eFonOV6nwfZts5NzmJS2B8qDlHIR
-         12Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCURiM4UMEjsWDZUedBl4Jbx5ffaIEw/+DtGk5QM/7f6vNS/Ln421sAj0YUHx9V+Qz1z1IOAYoKrPtFP2GQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo4SOpf/2kJ06wmIFcGvOeANbOV5LccyN/8T7AjLtTmFJFX0A0
-	U5NLaRN3Q1J4FEyChU/lTOqosZD5ISIsmIjOuMHDh4vQEJGyHzhlwwdESKArj53fXZE3M5x7W1I
-	gz8YAkA==
-X-Google-Smtp-Source: AGHT+IFmqZomhoMqAYZ8T+5JMApUMHdVzCXF2alNphLj59R1cMvvM9y4wMaLrZO53sJ8XqE4aAhk5Ho1jVlP
-X-Received: from wrd5.prod.google.com ([2002:a05:6000:4a05:b0:390:df7c:ab82])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1a87:b0:390:e005:65b9
- with SMTP id ffacd0b85a97d-390e005680amr5677012f8f.23.1740665000917; Thu, 27
- Feb 2025 06:03:20 -0800 (PST)
-Date: Thu, 27 Feb 2025 15:03:11 +0100
+        d=1e100.net; s=20230601; t=1740665003; x=1741269803;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qdyNR/l9tUX5mWYlAxYoBmtPUMPfXZLm9s3JeHQDuDg=;
+        b=slJX6IC5RMvyIL/4tdyRf5iMiUJPpwr/aWUrP7x233OIML7FFxu1nQLcLPaGjpfTP4
+         0moCoyaGJu3q5l5+RcHjHzcZRbei+JemW9ohygD5Fgq9sph6LM6SrNursZjBa9LcOi48
+         iQaBy2HQ92s26xlCuLT2GcsezJDklm0aKDurL5WaNZiKgsPwQ3z9nLn4ymWal1K1fVKc
+         9acGgd4reCG2ryqarS4s+gL7gDFJ2n0K0+1+LarVOZwkOHJURQTcPipjeFbfMZVBY0ia
+         d6xnVU8PhHvCTJ9K2cS38jtip2wmxBy0O3OdVRFsJVYwdZUW20OUTff0LuGmgsi8076n
+         9bEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYW52R0fTama+vf82Xi1yppiUlp07rJhdIrpC4cy0EZS63siOMc0zqhMRSPGVUBT94uOPyUbIrPuOmSiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhxzpOEBAM9QjShwG88lJHW3OC4WsgNkRfuplmZCL43Gc+FjgJ
+	Kv7kNrD9FSIYLXbNWRicRSpEK5pis4X50V2OdYT0pmeuLisJcxKvg+/+Z5DY9N4Dj0VaPeUhsRi
+	1QWpMjw==
+X-Google-Smtp-Source: AGHT+IGzvaJpoX4KLT7TQbb8SqIGurpls2L2bzHwZkcN5jr6r8UyFgg+P+X6U8CeEmO0M1lNmukGM2gQma4s
+X-Received: from wmbjb4.prod.google.com ([2002:a05:600c:54e4:b0:439:98ca:e39d])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3b13:b0:439:8bc3:a697
+ with SMTP id 5b1f17b1804b1-43ab8fd1f46mr68084445e9.4.1740665003383; Thu, 27
+ Feb 2025 06:03:23 -0800 (PST)
+Date: Thu, 27 Feb 2025 15:03:12 +0100
+In-Reply-To: <cover.1740664852.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <cover.1740664852.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <cover.1740664852.git.dvyukov@google.com>
-Subject: [PATCH v6 0/4] rseq: Make rseq work with protection keys
+Message-ID: <f4434eb97c0aa550af8ef6882c623e019a28dbe3.1740664852.git.dvyukov@google.com>
+Subject: [PATCH v6 1/4] pkeys: add API to switch to permissive/zero pkey register
 From: Dmitry Vyukov <dvyukov@google.com>
 To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
 	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
@@ -67,18 +70,13 @@ Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-If an application registers rseq, and ever switches to another pkey
-protection (such that the rseq becomes inaccessible), then any
-context switch will cause failure in __rseq_handle_notify_resume()
-attempting to read/write struct rseq and/or rseq_cs. Since context
-switches are asynchronous and are outside of the application control
-(not part of the restricted code scope), temporarily enable access
-to 0 (default) PKEY to read/write rseq/rseq_cs.
-0 is the only PKEY supported for rseq for now.
-Theoretically other PKEYs can be supported, but it's unclear
-how/if that can work. So for now we don't support that to simplify
-code.
+The API allows to switch to permissive pkey register that allows accesses
+to all PKEYs, and to a value that allows access to the 0 (default) PKEY.
+x86 signal delivery already uses switching to permissive PKEY register
+value, and rseq needs to allow access to PKEY 0 while accessing
+struct rseq/rseq_cs.
 
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: "Paul E. McKenney" <paulmck@kernel.org>
@@ -91,29 +89,171 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
 
-Dmitry Vyukov (4):
-  pkeys: add API to switch to permissive/zero pkey register
-  x86/signal: Use write_permissive_pkey_val() helper
-  rseq: Make rseq work with protection keys
-  selftests/rseq: Add test for rseq+pkeys
+---
+Changes in v5:
+ - Removed leftover dead code in enable_zero_pkey_val
+ - Clarified commit message
 
- arch/x86/Kconfig                         |  1 +
- arch/x86/include/asm/pkeys.h             | 30 ++++++++
- arch/x86/include/asm/pkru.h              | 10 ++-
- arch/x86/kernel/signal.c                 |  6 +-
- include/linux/pkeys.h                    | 31 ++++++++
- include/uapi/linux/rseq.h                |  4 +
- kernel/rseq.c                            | 11 +++
- mm/Kconfig                               |  2 +
- tools/testing/selftests/rseq/Makefile    |  2 +-
- tools/testing/selftests/rseq/pkey_test.c | 98 ++++++++++++++++++++++++
- tools/testing/selftests/rseq/rseq.h      |  1 +
- 11 files changed, 188 insertions(+), 8 deletions(-)
- create mode 100644 tools/testing/selftests/rseq/pkey_test.c
+Changes in v4:
+ - Added Fixes tag
 
+Changes in v3:
+ - Renamed API functions to write_permissive_pkey_val/write_pkey_val
+ - Added enable_zero_pkey_val for rseq
+ - Added Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-base-commit: dd83757f6e686a2188997cb58b5975f744bb7786
+Changes in v2:
+ - Fixed typo in commit description
+---
+ arch/x86/Kconfig             |  1 +
+ arch/x86/include/asm/pkeys.h | 30 ++++++++++++++++++++++++++++++
+ arch/x86/include/asm/pkru.h  | 10 +++++++---
+ include/linux/pkeys.h        | 31 +++++++++++++++++++++++++++++++
+ mm/Kconfig                   |  2 ++
+ 5 files changed, 71 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index be2c311f5118d..43af2840d098f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1881,6 +1881,7 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select ARCH_HAS_PKEYS
++	select ARCH_HAS_PERMISSIVE_PKEY
+ 	help
+ 	  Memory Protection Keys provides a mechanism for enforcing
+ 	  page-based protections, but without requiring modification of the
+diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
+index 2e6c04d8a45b4..614099766d5f2 100644
+--- a/arch/x86/include/asm/pkeys.h
++++ b/arch/x86/include/asm/pkeys.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_PKEYS_H
+ #define _ASM_X86_PKEYS_H
+ 
++#include "pkru.h"
++
+ /*
+  * If more than 16 keys are ever supported, a thorough audit
+  * will be necessary to ensure that the types that store key
+@@ -123,4 +125,32 @@ static inline int vma_pkey(struct vm_area_struct *vma)
+ 	return (vma->vm_flags & vma_pkey_mask) >> VM_PKEY_SHIFT;
+ }
+ 
++typedef u32 pkey_reg_t;
++
++static inline pkey_reg_t write_permissive_pkey_val(void)
++{
++	return write_pkru(0);
++}
++
++static inline pkey_reg_t enable_zero_pkey_val(void)
++{
++	u32 pkru;
++
++	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
++		return 0;
++	/*
++	 * WRPKRU is relatively expensive compared to RDPKRU,
++	 * avoid it if possible.
++	 */
++	pkru = rdpkru();
++	if ((pkru & (PKRU_AD_BIT|PKRU_WD_BIT)) != 0)
++		wrpkru(pkru & ~(PKRU_AD_BIT|PKRU_WD_BIT));
++	return pkru;
++}
++
++static inline void write_pkey_val(pkey_reg_t val)
++{
++	write_pkru(val);
++}
++
+ #endif /*_ASM_X86_PKEYS_H */
+diff --git a/arch/x86/include/asm/pkru.h b/arch/x86/include/asm/pkru.h
+index 74f0a2d34ffdd..b9bf9b7f2753b 100644
+--- a/arch/x86/include/asm/pkru.h
++++ b/arch/x86/include/asm/pkru.h
+@@ -39,16 +39,20 @@ static inline u32 read_pkru(void)
+ 	return 0;
+ }
+ 
+-static inline void write_pkru(u32 pkru)
++static inline u32 write_pkru(u32 pkru)
+ {
++	u32 old_pkru;
++
+ 	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
+-		return;
++		return 0;
+ 	/*
+ 	 * WRPKRU is relatively expensive compared to RDPKRU.
+ 	 * Avoid WRPKRU when it would not change the value.
+ 	 */
+-	if (pkru != rdpkru())
++	old_pkru = rdpkru();
++	if (pkru != old_pkru)
+ 		wrpkru(pkru);
++	return old_pkru;
+ }
+ 
+ static inline void pkru_write_default(void)
+diff --git a/include/linux/pkeys.h b/include/linux/pkeys.h
+index 86be8bf27b41b..262d60f6a15f8 100644
+--- a/include/linux/pkeys.h
++++ b/include/linux/pkeys.h
+@@ -48,4 +48,35 @@ static inline bool arch_pkeys_enabled(void)
+ 
+ #endif /* ! CONFIG_ARCH_HAS_PKEYS */
+ 
++#ifndef CONFIG_ARCH_HAS_PERMISSIVE_PKEY
++
++/*
++ * Common name for value of the register that controls access to PKEYs
++ * (called differently on different arches: PKRU, POR, AMR).
++ */
++typedef char pkey_reg_t;
++
++/*
++ * Sets PKEY access register to the most permissive value that allows
++ * accesses to all PKEYs. Returns the current value of PKEY register.
++ * Code should generally arrange switching back to the old value
++ * using write_pkey_val(old_value).
++ */
++static inline pkey_reg_t write_permissive_pkey_val(void)
++{
++	return 0;
++}
++
++/*
++ * Sets PKEY access register to a value that allows access to the 0 (default)
++ * PKEY. Returns the current value of PKEY register.
++ */
++static inline pkey_reg_t enable_zero_pkey_val(void)
++{
++	return 0;
++}
++
++static inline void write_pkey_val(pkey_reg_t val) {}
++#endif /* ! CONFIG_ARCH_HAS_PERMISSIVE_PKEY */
++
+ #endif /* _LINUX_PKEYS_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 1b501db064172..9e874f7713a2b 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1147,6 +1147,8 @@ config ARCH_USES_HIGH_VMA_FLAGS
+ 	bool
+ config ARCH_HAS_PKEYS
+ 	bool
++config ARCH_HAS_PERMISSIVE_PKEY
++	bool
+ 
+ config ARCH_USES_PG_ARCH_2
+ 	bool
 -- 
 2.48.1.658.g4767266eb4-goog
 
