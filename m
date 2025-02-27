@@ -1,406 +1,298 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ADD17BA6;
-	Thu, 27 Feb 2025 14:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740666251; cv=fail; b=Y2rmb+yOwmdyMR6QS4JbcUntEg6Wj7ra0lPZ97xrYJOCgB/a9QU/NCyJ2y0gn72Y2mVAuyjKQ05Ix6XsTfRfy+8w+q8Pnj+ONR1nc1UiWxkFdaZRZa8T28SY2uYquThteH7pONR40UvEsPoG5o3eCjhmaIgkFV3niJJ9yi/Df/8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740666251; c=relaxed/simple;
-	bh=cqUbUuX2YmwTYpgIQyE83nkp1mhzKNm+Gu5L62GErRI=;
-	h=References:From:To:CC:Subject:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=L3kAwZvqUyIpO4uhNCvanlV9GGz3RUMK3y17f/LF7+DaGtpQ4Tau+ImrrKQWpF17wDKwom1f9duolfQpXnWRNRmA2qiLriXwEq4hM4DP/gb0I01xzNab6mirkBGKMfBGemgoanv2r4wkvfR5jzd1msWJ26HoOTNxARUdJ3u2Gv4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Lb+LpyiI; arc=fail smtp.client-ip=40.107.93.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAEB22DFB3
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740666382; cv=none; b=Mm28Z6qZUMBYFf1rF5EOzpX1bDE7RmMOERvjghVLVRm/MXYcPEuEZZtPlhpWDu7riVVO2m4XjyFlXWEhlVeFw8jCynLpnDga7slR/QwKkWBQ3UmIpNTT8RynGZ7FWjAQkcK8+HLJhnN1SiJJWMjAp6kLPewM/il9QGfBuPyjcw8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740666382; c=relaxed/simple;
+	bh=vNASoWN4bLXkRimV+HPXtdcacrBTx6VB1OuhbBdPWVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vC388JhjxlQDGfzJjzMBnYVFf1NvMyejH9a4jFPQwY6E9Ra4TTxtAppOMVZrOskdmFLj8C2HLpZoEeMr9OxUQ6Ph2+l2H8KtFGVsqY/HMQzBG36DFRiRzpJYyRd+OMppa4zh1PlT+KxhjUVBprIaU2z+Dw1Ap/MZV02+zM1FEXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LjaWN3nN; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Lb+LpyiI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FrHxd9hFdF5zF+YmAzO5dVYy8A7tM5ETGZazLE72I9/aXGIx0lD6hjsWot268+Nfk2FOokbdZ+iw436yoaW1b5ZjO5faxH2V37PdfYYwpbAbiMA9EYFCnEuYLijgNGvyO59ZvZ3HEeCyR0cm/fdxUV46qZz+lGUaNmPrhllxsueCyht7yzDzWncGVAEta+BzwkydFyOD2mO7hmGP0D1iwLs/M1pUFaNZGb2FpC9K6O0eKICVdaxESSulwzeJmOpAyNDnYQS6ryFDZCB5cooF+qRF+R9GmITHOhhhVC16Q90wPnMjG+VZflk24NRf1ZU0T365My/sS9V65zUMaA0kow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8NQvUbSznOKs3+qnYuPFrUC9QeP9r0DQ3YoDuhVtN+Y=;
- b=ul8rlA5wgW68Lg+GxO1yb4YUa+L5U4A35CzLHR7msUiSfHrnHrFIlydJ1bsiXOzLzwxnSZ6XW9kgmNIsOM+LM64JaZpeujt3qXW42MSa+LZpLPTDBthi3I83MWr6vx4zHVKJG3kAuIuUAOoM02BP/nKeIPpZmIzVDTNgoiNORFf60w1iPdYnueVoMZpmPKK3AUwpPajU07RCcLbBL6/6UPE7sm9sWVnroYox94t/RxAUKB3I1xX++CuB3dPMFTsQTTGMJFdj4Yg/2w9p/iIr0Wly8cDgKPMeaw6ubqKRIrV+ALqDSt63rbrjFAsBgdl4f6HJIZpRRygLdK/cmULp4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8NQvUbSznOKs3+qnYuPFrUC9QeP9r0DQ3YoDuhVtN+Y=;
- b=Lb+LpyiI70yrtCsTFhAvV24LD44og+O+Ap8ow1hKA/zTUxO9DXjAkAOtd0alcI4pUutC4BZYKQQWUgx7HpGA0P1FmfTFbY/vG8uOE6xnvlzZeFv5aIGTv/dFVE/BOqff9fOi6Z0EIyDSj33szY8hWT8dFUo4+5c4/wxf2m+UwL/Ir7IcBamk1hxbv+GYYWMHsYb6qyWl/9MhQTYG5YPjdwsdhuub6BpyCKtH5QXNZM6qO1L/79XVaZGJZCYhMtfenDGmsy37LqXLAxzyFnI8BBcq5H8iNa07VL/RMvlyh1Fg5f7f1gDPKLx4YK//64BkHI85VjRlBU5QXtq+62UYuQ==
-Received: from SJ0PR03CA0181.namprd03.prod.outlook.com (2603:10b6:a03:2ef::6)
- by PH0PR12MB7472.namprd12.prod.outlook.com (2603:10b6:510:1e9::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Thu, 27 Feb
- 2025 14:24:00 +0000
-Received: from SJ1PEPF00002314.namprd03.prod.outlook.com
- (2603:10b6:a03:2ef:cafe::c6) by SJ0PR03CA0181.outlook.office365.com
- (2603:10b6:a03:2ef::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Thu,
- 27 Feb 2025 14:24:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- SJ1PEPF00002314.mail.protection.outlook.com (10.167.242.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 14:24:00 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 27 Feb
- 2025 06:23:41 -0800
-Received: from fedora (10.126.230.35) by rnnvmail201.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 27 Feb
- 2025 06:23:33 -0800
-References: <20250227083717.4307-1-liuhangbin@gmail.com>
- <20250227083717.4307-4-liuhangbin@gmail.com>
-User-agent: mu4e 1.8.14; emacs 29.4
-From: Petr Machata <petrm@nvidia.com>
-To: Hangbin Liu <liuhangbin@gmail.com>
-CC: <netdev@vger.kernel.org>, Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn
-	<andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Nikolay Aleksandrov <razor@blackwall.org>, "Simon
- Horman" <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Tariq Toukan
-	<tariqt@nvidia.com>, Jianbo Liu <jianbol@nvidia.com>, Jarod Wilson
-	<jarod@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, "Cosmin
- Ratiu" <cratiu@nvidia.com>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3 net 3/3] selftests: bonding: add ipsec offload test
-Date: Thu, 27 Feb 2025 14:59:08 +0100
-In-Reply-To: <20250227083717.4307-4-liuhangbin@gmail.com>
-Message-ID: <87a5a7fov2.fsf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LjaWN3nN"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ab7430e27b2so160628666b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:26:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740666376; x=1741271176; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6k0dzLt8wTithUz8xgT6rJeUcNWe78clQV/pCJMqU0g=;
+        b=LjaWN3nNdLyHhQnDPc1RqFnkqos402r3umtidAK/0ww0dDy7jIQJfzIFTdobriUS86
+         zSKTcIAEGjiuWviOg84Lm5bCJtjgv3FOAazt7EIlGXj8UOFAGSfVhjsm0/e0iEDHfOn3
+         fEzBnqzkn5PMG9L3Y4U4M/NKwK5bS/BcY51TlyisXkEwjFi1JZua06FckIG0OFDMcRCK
+         DMuD1gtTrdNMeqR6qZjvEvyzXn0wUymlsChl0B0/+LISC/ppuEVAa57u9+FCQzpvDqbo
+         Qb3muE6TFGV12NxWPe4qqPQBgCyFVrlPqo9uebKQUkA3wFza7IBvhqN1jkrGHgeogvcs
+         VXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740666376; x=1741271176;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6k0dzLt8wTithUz8xgT6rJeUcNWe78clQV/pCJMqU0g=;
+        b=BgPsCIDmL2T2AEN3T29kUYBeXmcB1Bo9XHcmYBdrf1tD79wj/rl6YA1xj0h7fMhvWJ
+         kZEJQ311e4D4kqoeYRDVMbmq4Tk7RXD0RSNdKrmtBfjpTLtxoGmhz+96CMzq39DQTmWB
+         qnCG28xo6lpx1so9tc0xXPjQ3hQm4T5Q4jja6ILnuoXMJMcHWCJ3fRp8k4nM6TUUkxwt
+         323rkXeIVp3GvF+qH256WvJHUTUte93FVUCxCQuHEfc8mS68nJqGQTHDMmv8P9bErTLl
+         6+XosQtQDdt80PsL987b3RYAzxeS88JyAM2vQwYIwWWMxFr3UK7nJ8Lb5WpD8jQcZru9
+         MbTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT34NMc7CKwhYdjMyRA6XuvAwJxlX3y0q8HbS3EEMKsfWM9OwQdeFj3fHDIKHiMNYaCv0AnSNXfYt3gJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkKIGlQLUNop3TavDZZYab/AVXLl/Zdepuk+EUIyGMn3Q/DFPZ
+	cVCHZCnINQbL/Bn58rQJPp86e8ZbiAUxq2jM6yD8aMYUx1GgJAgctp6DazxO4Pk=
+X-Gm-Gg: ASbGncvIx1WNaHbwVOWREDunTCVRjAOKY8tWA1Ga/CDcEVi2ROdVm/4ZVfA3JN8L7Nl
+	Niv26N1cMeSLuXpTuDxGzzn3qP63M9+T4wZInV2vaLvVZa1N3QIc78Kj9PH615JAN1qrISKrrqO
+	jghfnfNtsyMd1UT8QwoDNlUSdu8jmj4AOsPXqDjLxsE9eSQww6PfhcrQ175rSF1FsxQsTwsE8hm
+	Tt7fj0VLPWbjZ/3ClyNPqUMBNaRVnsMXyAHLYyvN3qnrngiHZ2E4EWVQG3I4gIQHIAaPFws1TXC
+	S/TXPXcyzSCachywTtLaA+s=
+X-Google-Smtp-Source: AGHT+IFY8g17YE8yWo3qq9wpjlIeW2NB44AYZq4zWQm8vlXxbhYi8ED78332w7Z5H66WCxQgHaCySw==
+X-Received: by 2002:a17:907:724f:b0:ab7:bf87:d9de with SMTP id a640c23a62f3a-abc0de146b4mr2739502966b.37.1740666376508;
+        Thu, 27 Feb 2025 06:26:16 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6ee486sm131152666b.90.2025.02.27.06.26.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 06:26:16 -0800 (PST)
+Date: Thu, 27 Feb 2025 16:26:14 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Kamal Wadhwa <quic_kamalw@quicinc.com>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] leds: rgb: leds-qcom-lpg: Fix pwm resolution for Hi-Res
+ PWMs
+Message-ID: <Z8B2Bl/9uD3jPvQi@linaro.org>
+References: <20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-v1-1-a161ec670ea5@linaro.org>
+ <dfthocttum7dscotngi6l2hz6bpdwfgrdxpvkcv6bdux3lt66d@iqfvmntvzyut>
+ <Z7zVgeM+7P7SLWIu@linaro.org>
+ <vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67pd2@cz2dcracta6w>
+ <Z7161SzdxhLITsW3@linaro.org>
+ <5euqboshlfwweie7tlaffajzg3siiy6bm3j4evr572ko54gtbv@7lan3vizskt3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002314:EE_|PH0PR12MB7472:EE_
-X-MS-Office365-Filtering-Correlation-Id: 30f7d167-e30c-4e12-2d85-08dd573a6132
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?afK7Buw4ZmQeyTk1qxfxNV3oqbqbYUkZaJ/rjh7IC8aZwlqnLbpOc2zgXjzL?=
- =?us-ascii?Q?aAiadFM8HfJcJEhLjJLE2Wi7HZTLg0AfXlg/3SQOyj2adcpNzVzXo6+F78/i?=
- =?us-ascii?Q?pRfYWRojSlkdSKZM2SWYOY8joVAOnSX3LuLgBOCX1gJX6ED8bQxQQbgouXmm?=
- =?us-ascii?Q?v0P8WdtM6Wp1RuzxLLuD0z9uHA8Z4GUee7+39aDNP7DgQ6kQuHUlB130aOjO?=
- =?us-ascii?Q?0njCvwR1FUqVX1rbaR+7g/dil8fAE5ZLVFPmrnAWM8P9jQRr6yyl78L+Bhlp?=
- =?us-ascii?Q?F+e1r1XAWk9t4iJWVEIwM0MDzgRw0aH+DygmEdqNO7u16q250gTvGrmjdFUc?=
- =?us-ascii?Q?01JNYu4PfucYTCnSIrAlPdQVIA+EQ21Vp9apOIic2Lem68YT8MqZOfcf1fpg?=
- =?us-ascii?Q?yvREtwqTm8mvyix+jSf61+sMgYv5n2z0zZMQs9m/NKbFPcxYeIm12mNdO33/?=
- =?us-ascii?Q?rvCqiGJZ7UfFlzL8dy70+WaLD7H7BXGFPRyv3MOR7lPhtAF9h6LAC+d+vhbZ?=
- =?us-ascii?Q?sk93W9RaB7p7upbTIuFaMXKAxjJ+PU5Zn1chxqIPb0LOK8byrrTKthT5nauz?=
- =?us-ascii?Q?9Ejw7VBmKYSFxROZn9hTAN/6sWL1dfxMZ16fRTl197sEuOJ8+D3y6N1Z5BTF?=
- =?us-ascii?Q?mM/p3fHpeJcA9qTxNk1tAn/3MdG0uE3Q5xmrHYtNWFJmSwNvhW9fOqbIhauL?=
- =?us-ascii?Q?x1FMjCU793YAi4e2s+SwNv+8QB6oH5iFzWuXUqbGgmKMynOoujKw4OmP3xUq?=
- =?us-ascii?Q?J06wluL+jWNG8uuw7fajwTY6Jom7h5+oRvKY1qvUuWNeU4botdJ5KgBSL4G/?=
- =?us-ascii?Q?MalwVgdrJGptnhkevdb8P40UojPyuu6iJ0qltk70z+qpfhabaBLEDiCRK+B0?=
- =?us-ascii?Q?eUoadTWGOAQFgy6sLYdRmLCdVHYw0yiMO+2jRsAb2wYXhk72qQzjEmG8l+e4?=
- =?us-ascii?Q?pWh6MQqf90Ny9yxgslklcaCxYv/sEBu3wRcOREQwDoih7bfunpxc/3QtJXDH?=
- =?us-ascii?Q?gT7iOKfeHaYgiUqumuVp5kIYN7BCrHO3fOkwpAMD5hzwy3YJ9bi02EwcML2V?=
- =?us-ascii?Q?KanwnTjQZMnX/JhJVxWDVOnNcx0FYV5oGxjMCl0yFOj/bsT/3vnPNRPZNfUO?=
- =?us-ascii?Q?GiMCVx1JPLWJy5q5EwCUhfcgcMgQcW1ON9qDpasaEF3tcyh4t8oDgh/79UI6?=
- =?us-ascii?Q?dp2aumlnjhEP4tBHVwht4REfGtGa8L+dG8QLnECICaSlQ2LUltOiXo1Dcgey?=
- =?us-ascii?Q?EYSp7JsXTRTEk7Ce5XPiZLEEf6CxHpyfBDJbHkGn4+6EF84XZ0PvK4svBYeu?=
- =?us-ascii?Q?BFuDJZcuJmCxf/ozBl1b1d6J4FXbiLK4gbl8buQk7CWnb6Mfg7FddFVY5clR?=
- =?us-ascii?Q?oyNYToqJaUh4++yFI/d14BH0pC5cDgDCZl7wTJEz+0++4GMjTe1ugunYQcox?=
- =?us-ascii?Q?oQjZrqI0XVnpqpq8XI0WKFKetZeBkN7h3tzBG319d8fW1EHurEtxij37jnf6?=
- =?us-ascii?Q?gI2jntzoRIBHcfc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 14:24:00.5626
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30f7d167-e30c-4e12-2d85-08dd573a6132
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002314.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7472
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5euqboshlfwweie7tlaffajzg3siiy6bm3j4evr572ko54gtbv@7lan3vizskt3>
 
+On 25-02-27 10:58:47, Uwe Kleine-König wrote:
+> Hello,
+> 
+> I was dragged into the discussion by the patch that Abel Vesa created in
+> reply to this mail, i.e.
+> https://lore.kernel.org/linux-pwm/20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org/
+> 
+> On Tue, Feb 25, 2025 at 10:09:57AM +0200, Abel Vesa wrote:
+> > On 25-02-25 01:09:00, Sebastian Reichel wrote:
+> > > On Mon, Feb 24, 2025 at 10:24:33PM +0200, Abel Vesa wrote:
+> > > > On 25-02-21 00:35:08, Sebastian Reichel wrote:
+> > > > > On Thu, Feb 20, 2025 at 12:31:00PM +0200, Abel Vesa wrote:
+> > > > > > Currently, for the high resolution PWMs, the resolution, clock,
+> > > > > > pre-divider and exponent are being selected based on period. Basically,
+> > > > > > the implementation loops over each one of these and tries to find the
+> > > > > > closest (higher) period based on the following formula:
+> > > > > > 
+> > > > > >                           period * refclk
+> > > > > > prediv_exp = log2 -------------------------------------
+> > > > > >                     NSEC_PER_SEC * pre_div * resolution
+> > > > > > 
+> > > > > > Since the resolution is power of 2, the actual period resulting is
+> > > > > > usually higher than what the resolution allows. That's why the duty
+> > > > > > cycle requested needs to be capped to the maximum value allowed by the
+> > > > > > resolution (known as PWM size).
+> > > > > > 
+> > > > > > Here is an example of how this can happen:
+> > > > > > 
+> > > > > > For a requested period of 5000000, the best clock is 19.2MHz, the best
+> > > > > > prediv is 5, the best exponent is 6 and the best resolution is 256.
+> > > > > > 
+> > > > > > Then, the pwm value is determined based on requested period and duty
+> > > > > > cycle, best prediv, best exponent and best clock, using the following
+> > > > > > formula:
+> > > > > > 
+> > > > > >                             duty * refclk
+> > > > > > pwm_value = ----------------------------------------------
+> > > > > >                 NSEC_PER_SEC * prediv * (1 << prediv_exp)
+> > > > > > 
+> > > > > > So in this specific scenario:
+> > > > > > 
+> > > > > > (5000000 * 19200000) / (1000000000 * 5 * (1 << 64)) = 300
+> > > > > > 
+> > > > > > With a resolution of 8 bits, this pwm value obviously goes over.
+> > > > > > 
+> > > > > > Therefore, the max pwm value allowed needs to be 255.
+> > > > > > 
+> > > > > > If not, the PMIC internal logic will only value that is under the set PWM
+> > > > > > size, resulting in a wrapped around PWM value.
+> > > > > > 
+> > > > > > This has been observed on Lenovo Thinkpad T14s Gen6 (LCD panel version)
+> > > > > > which uses one of the PMK8550 to control the LCD backlight.
+> > > > > > 
+> > > > > > Fix the value of the PWM by capping to a max based on the chosen
+> > > > > > resolution (PWM size).
+> > > > > > 
+> > > > > > Cc: stable@vger.kernel.org    # 6.4
+> > > > > > Fixes: b00d2ed37617 ("leds: rgb: leds-qcom-lpg: Add support for high resolution PWM")
+> > > > > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > > > > > ---
+> > > > > > Note: This fix is blocking backlight support on Lenovo Thinkpad T14s
+> > > > > > Gen6 (LCD version), for which I have patches ready to send once this
+> > > > > > patch is agreed on (review) and merged.
+> > > > > > ---
+> > > > > 
+> > > > > Do you know if the pwm duty cycle to pwm value calculation is
+> > > > > correct otherwise?
+> > > > 
+> > > > Sorry for the late reply.
+> > > 
+> > > No worries, I understand this takes time.
+> > > 
+> > > > Here is my understanding of the calculation of the pwm value currently
+> > > > implemented.
+> > > > 
+> > > > First, find the best pre_div, refclk, resolution and prediv_exp by looping
+> > > > through all refclk, resolution and prediv possible values, for the
+> > > > following formula:
+> > > > 
+> > > >                          period * refclk
+> > > > prediv_exp = log2 -------------------------------------
+> > > >                     NSEC_PER_SEC * pre_div * (1 << resolution)
+> > > > 
+> > > > 
+> > > > So in DT we set the period to 50000000. For this, as I mentioned in the
+> > > > commit message the best refclk is 19.2MHz, the best prediv is 5, the best
+> > > > exponent is 6 and the best resolution is 255.
+> > > > 
+> > > > So if you use these to compute the period following this formula:
+> > > > 
+> > > > 
+> > > >                 NSEC_PER_SEC * prediv * (1 << resolution)
+> > > > best_period = -------------------------------------------
+> > > >                              refclk
+> > > > 
+> > > > So in our case:
+> > > > 
+> > > > (1000000000 * 5 * (1 << 8) * (1 << 6)) / 19200000 = 4266666.6666...
+> > > > 
+> > > > So here is where the things go wrong. Bjorn helped me figure this out today
+> > > > (off-list). Basically, the pwm framework will allow values up to 5000000,
+> > > > as specified in the DT, but for then pwm value will go over 255
+> > > > when computing the actual pwm value by the following formula:
+> > > > 
+> > > >                             duty * refclk
+> > > > pwm_value = ----------------------------------------------
+> > > >                 NSEC_PER_SEC * prediv * (1 << prediv_exp)
+> > > > 
+> > > > 
+> > > > So here is how the value 300 is reached (I messed up this next formula in
+> > > > the commit message):
+> > > > 
+> > > > (5000000 * 19200000) / (1000000000 * 5 * (1 << 8)) = 300
+> > > > 
+> > > > But if we were to use the best_period determined:
+> > > > 
+> > > > (4266666 * 19200000) / (1000000000 * 5 * (1 << 8)) = 255
+> > > > 
+> > > > So I guess the process of determining the best parameters is correct.
+> > > > What I think is missing is we need to divide the requested period (5000000)
+> > > > to the resolution (255) and make sure the duty cycle is a multiple of the
+> > > > result.
+> > > 
+> > > Let me try to summarize that:
+> > > 
+> > > 1. PWM backlight driver requests PWM with 5 MHz period
+> > > 2. leds-qcom-lpg uses 4.2666 MHz period instead due to HW limits
+> > > 3. PWM backlight driver is unaware and requests a duty cycle
+> > >    expecting the period to be 5 MHz, so the duty cycle can
+> > >    exceed 100%
+> 
+> Can you please enable CONFIG_PWM_DEBUG, enable pwm tracing (
+> 
+> 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+> 
+> ) then reproduce the problem and provide the output of
+> 
+> 	cat /sys/kernel/debug/tracing/trace
+> 
+> .
 
-Hangbin Liu <liuhangbin@gmail.com> writes:
+$ cat trace
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 13/13   #P:12
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+        modprobe-203     [000] .....     0.938668: pwm_get: pwmchip0.0: period=1066407 duty_cycle=533334 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.938775: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=0 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.938821: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.938936: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.938982: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.939274: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=921458 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.939320: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.939434: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+        modprobe-203     [000] .....     0.939480: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+ systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=5000000 polarity=0 enabled=1 err=0
+ systemd-backlig-724     [006] .....     9.079585: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+ systemd-backlig-724     [006] .....     9.079698: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+ systemd-backlig-724     [006] .....     9.079750: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+$
 
-> This introduces a test for IPSec offload over bonding, utilizing netdevsim
-> for the testing process, as veth interfaces do not support IPSec offload.
-> The test will ensure that the IPSec offload functionality remains operational
-> even after a failover event occurs in the bonding configuration.
->
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> ---
->  .../selftests/drivers/net/bonding/Makefile    |   3 +-
->  .../drivers/net/bonding/bond_ipsec_offload.sh | 155 ++++++++++++++++++
->  .../selftests/drivers/net/bonding/config      |   4 +
->  3 files changed, 161 insertions(+), 1 deletion(-)
->  create mode 100755 tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
->
-> diff --git a/tools/testing/selftests/drivers/net/bonding/Makefile b/tools/testing/selftests/drivers/net/bonding/Makefile
-> index 2b10854e4b1e..d5a7de16d33a 100644
-> --- a/tools/testing/selftests/drivers/net/bonding/Makefile
-> +++ b/tools/testing/selftests/drivers/net/bonding/Makefile
-> @@ -10,7 +10,8 @@ TEST_PROGS := \
->  	mode-2-recovery-updelay.sh \
->  	bond_options.sh \
->  	bond-eth-type-change.sh \
-> -	bond_macvlan_ipvlan.sh
-> +	bond_macvlan_ipvlan.sh \
-> +	bond_ipsec_offload.sh
->  
->  TEST_FILES := \
->  	lag_lib.sh \
-> diff --git a/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
-> new file mode 100755
-> index 000000000000..169866b47a67
-> --- /dev/null
-> +++ b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
-> @@ -0,0 +1,155 @@
-> +#!/bin/bash
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +# IPsec over bonding offload test:
-> +#
-> +#  +----------------+
-> +#  |     bond0      |
-> +#  |       |        |
-> +#  |  eth0    eth1  |
-> +#  +---+-------+----+
-> +#
-> +# We use netdevsim instead of physical interfaces
-> +#-------------------------------------------------------------------
-> +# Example commands
-> +#   ip x s add proto esp src 192.0.2.1 dst 192.0.2.2 \
-> +#            spi 0x07 mode transport reqid 0x07 replay-window 32 \
-> +#            aead 'rfc4106(gcm(aes))' 1234567890123456dcba 128 \
-> +#            sel src 192.0.2.1/24 dst 192.0.2.2/24
-> +#            offload dev bond0 dir out
-> +#   ip x p add dir out src 192.0.2.1/24 dst 192.0.2.2/24 \
-> +#            tmpl proto esp src 192.0.2.1 dst 192.0.2.2 \
-> +#            spi 0x07 mode transport reqid 0x07
-> +#
-> +#-------------------------------------------------------------------
-> +
-> +lib_dir=$(dirname "$0")
-> +source "$lib_dir"/../../../net/lib.sh
-> +algo="aead rfc4106(gcm(aes)) 0x3132333435363738393031323334353664636261 128"
-> +srcip=192.0.2.1
-> +dstip=192.0.2.2
-> +ipsec0=/sys/kernel/debug/netdevsim/netdevsim0/ports/0/ipsec
-> +ipsec1=/sys/kernel/debug/netdevsim/netdevsim0/ports/1/ipsec
-> +ret=0
-> +
-> +cleanup()
-> +{
-> +	modprobe -r netdevsim
-> +	cleanup_ns $ns
-> +}
-> +
-> +active_slave_changed()
-> +{
-> +        local old_active_slave=$1
-> +        local new_active_slave=$(ip -n ${ns} -d -j link show bond0 | \
-> +				 jq -r ".[].linkinfo.info_data.active_slave")
-> +        [ "$new_active_slave" != "$old_active_slave" -a "$new_active_slave" != "null" ]
-> +}
-> +
-> +test_offload()
-> +{
-> +	# use ping to exercise the Tx path
-> +	ip netns exec $ns ping -I bond0 -c 3 -W 1 -i 0 $dstip >/dev/null
-> +
-> +	active_slave=$(ip -n ${ns} -d -j link show bond0 | \
-> +		       jq -r ".[].linkinfo.info_data.active_slave")
-> +
-> +	if [ $active_slave = $nic0 ]; then
-> +		sysfs=$ipsec0
-> +	elif [ $active_slave = $nic1 ]; then
-> +		sysfs=$ipsec1
-> +	else
-> +		echo "FAIL: bond_ipsec_offload invalid active_slave $active_slave"
-> +		ret=1
-> +	fi
-> +
-> +	# The tx/rx order in sysfs may changed after failover
-> +	if grep -q "SA count=2 tx=3" $sysfs && grep -q "tx ipaddr=$dstip" $sysfs; then
-> +		echo "PASS: bond_ipsec_offload has correct tx count with link ${active_slave}"
-> +	else
-> +		echo "FAIL: bond_ipsec_offload incorrect tx count with link ${active_slave}"
-> +		ret=1
-> +	fi
+> 
+> I didn't take a deeper dive in this driver combination, but here is a
+> description about what *should* happen:
+> 
+> You're talking about period in MHz, the PWM abstraction uses
+> nanoseconds. So your summary translated to the PWM wording is (to the
+> best of my understanding):
+> 
+>   1. PWM backlight driver requests PWM with .period = 200 ns and
+>      .duty_cycle = 200 ns.
+> 
+>   2. leds-qcom-lpg cannot pick 200 ns exactly and then chooses .period =
+>      1000000000 / 4.26666 MHz = 234.375 ns
+>      
+>   3. leds-qcom-lpg then determines setting for requested .duty_cycle
+>      based on .period = 200 ns which then ends up with something bogus.
+> 
+> Right?
+> 
+> There is a problem in 2. already: The PWM hardware driver is supposed to
+> pick the highest period (in ns) not bigger than the requested value. So
+> it must not pick 234.375 ns. (Enabling CONFIG_PWM_DEBUG on that is
+> supposed to wail about that.) It should instead pick (say) 187 ns. In
+> the next step the hw driver should pick the highest duty_cycle (again in
+> ns) not exceeding the requested value (and physics). That will be (I
+> guess) also 187 ns in the constructed example. So you should get your
+> requested 100 % relative duty cycle at least.
+> 
+> So the problem about now knowing the resulting PWM waveform is somewhat
+> real. I think if leds-qcom-lpg behaved as expected from a PWM driver, it
+> would be a tad better than your report suggests. I might miss something
+> though.
+> 
+> Best regards
+> Uwe
 
-lib.sh got all sorts of logging and checking helpers that were
-previously in forwarding/, I think it makes sense to use them. Would the
-following make sense to you?
-
-test_offload()
-{
-	# use ping to exercise the Tx path
-	ip netns exec $ns ping -I bond0 -c 3 -W 1 -i 0 $dstip >/dev/null
-
-	active_slave=$(ip -n ${ns} -d -j link show bond0 | \
-		       jq -r ".[].linkinfo.info_data.active_slave")
-
-	RET=0
-
-	if [ $active_slave = $nic0 ]; then
-		sysfs=$ipsec0
-	elif [ $active_slave = $nic1 ]; then
-		sysfs=$ipsec1
-	else
-		check_err 1 "bond_ipsec_offload invalid active_slave $active_slave"
-	fi
-
-	# The tx/rx order in sysfs may changed after failover
-	grep -q "SA count=2 tx=3" $sysfs && grep -q "tx ipaddr=$dstip" $sysfs
- 	check_err $? "incorrect tx count with link ${active_slave}"
-
-	log_test bond_ipsec_offload
-}
-
-... etc. below.
-
-> +}
-> +
-> +if ! mount | grep -q debugfs; then
-> +	mount -t debugfs none /sys/kernel/debug/ &> /dev/null
-
-Clean this up at exit?
-
-	defer umount /sys/kernel/debug/
-
-(But then the cleanup trap needs to be registered sooner, and cleanup()
-needs to invoke defer_scopes_cleanup.)
-
-> +fi
-> +
-> +# setup netdevsim since dummy/veth dev doesn't have offload support
-> +if [ ! -w /sys/bus/netdevsim/new_device ] ; then
-> +	modprobe -q netdevsim
-> +	if [ $? -ne 0 ]; then
-> +		echo "SKIP: can't load netdevsim for ipsec offload"
-> +		exit $ksft_skip
-> +	fi
-
-And here you can just schedule a cleanup, as above.
-
-	defer modprobe -r netdevsim
-
-> +fi
-> +
-> +trap cleanup EXIT
-> +
-> +setup_ns ns
-
-defer cleanup_ns $ns
-
-And at that point you can drop cleanup altogether, and just have:
-
-trap defer_scopes_cleanup EXIT
-
-> +ip -n $ns link add bond0 type bond mode active-backup miimon 100
-> +ip -n $ns addr add $srcip/24 dev bond0
-> +ip -n $ns link set bond0 up
-> +
-> +ifaces=$(ip netns exec $ns bash -c '
-> +	sysfsnet=/sys/bus/netdevsim/devices/netdevsim0/net/
-> +	echo "0 2" > /sys/bus/netdevsim/new_device
-> +	while [ ! -d $sysfsnet ] ; do :; done
-> +	udevadm settle
-> +	ls $sysfsnet
-> +')
-> +nic0=$(echo $ifaces | cut -f1 -d ' ')
-> +nic1=$(echo $ifaces | cut -f2 -d ' ')
-> +ip -n $ns link set $nic0 master bond0
-> +ip -n $ns link set $nic1 master bond0
-> +
-> +# create offloaded SAs, both in and out
-> +ip -n $ns x p add dir out src $srcip/24 dst $dstip/24 \
-> +    tmpl proto esp src $srcip dst $dstip spi 9 \
-> +    mode transport reqid 42
-> +
-> +ip -n $ns x p add dir in src $dstip/24 dst $srcip/24 \
-> +    tmpl proto esp src $dstip dst $srcip spi 9 \
-> +    mode transport reqid 42
-> +
-> +ip -n $ns x s add proto esp src $srcip dst $dstip spi 9 \
-> +    mode transport reqid 42 $algo sel src $srcip/24 dst $dstip/24 \
-> +    offload dev bond0 dir out
-> +
-> +ip -n $ns x s add proto esp src $dstip dst $srcip spi 9 \
-> +    mode transport reqid 42 $algo sel src $dstip/24 dst $srcip/24 \
-> +    offload dev bond0 dir in
-> +
-> +# does offload show up in ip output
-> +lines=`ip -n $ns x s list | grep -c "crypto offload parameters: dev bond0 dir"`
-> +if [ $lines -ne 2 ] ; then
-> +	echo "FAIL: bond_ipsec_offload SA offload missing from list output"
-> +	ret=1
-> +fi
-> +
-> +# we didn't create a peer, make sure we can Tx by adding a permanent neighbour
-> +# this need to be added after enslave
-> +ip -n $ns neigh add $dstip dev bond0 lladdr 00:11:22:33:44:55
-> +
-> +# start Offload testing
-> +test_offload
-> +
-> +# do failover
-> +ip -n $ns link set $active_slave down
-> +slowwait 5 active_slave_changed $active_slave
-> +test_offload
-
-Hm, active_slave being overriden in the function is a bit sneaky. But
-shifting the assignment out of the function is not great, because then
-it would just needs to be done twice. Ho hum. This might just be the
-least annoying way to write it after all.
-
-> +
-> +# make sure offload get removed from driver
-> +ip -n $ns x s flush
-> +ip -n $ns x p flush
-> +line0=$(grep -c "SA count=0" $ipsec0)
-> +line1=$(grep -c "SA count=0" $ipsec1)
-> +if [ $line0 -ne 1 -o $line1 -ne 1 ]  ; then
-> +	echo "FAIL: bond_ipsec_offload SA not removed from driver"
-> +	ret=1
-> +else
-> +	echo "PASS: bond_ipsec_offload SA removed from driver"
-> +fi
-> +
-> +exit $ret
-
-With log_test this would be. It merges results from individual tests to
-get the right exit status.
-
-exit $EXIT_STATUS
-
-> diff --git a/tools/testing/selftests/drivers/net/bonding/config b/tools/testing/selftests/drivers/net/bonding/config
-> index dad4e5fda4db..054fb772846f 100644
-> --- a/tools/testing/selftests/drivers/net/bonding/config
-> +++ b/tools/testing/selftests/drivers/net/bonding/config
-> @@ -9,3 +9,7 @@ CONFIG_NET_CLS_FLOWER=y
->  CONFIG_NET_SCH_INGRESS=y
->  CONFIG_NLMON=y
->  CONFIG_VETH=y
-> +CONFIG_INET_ESP=y
-> +CONFIG_INET_ESP_OFFLOAD=y
-> +CONFIG_XFRM_USER=m
-> +CONFIG_NETDEVSIM=m
 
