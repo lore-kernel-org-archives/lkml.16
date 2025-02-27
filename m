@@ -1,204 +1,163 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEC0270039;
-	Thu, 27 Feb 2025 03:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01E7F433C8;
+	Thu, 27 Feb 2025 03:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740626242; cv=none; b=C/tKl99F9rXZ37dBsrkQVaN+muEn7OLPu1sjo5n5Nat3wLA2eyVlVOEDxxyss3K0XCW6yxd/GLV+BcnedA+1RUlcHpWRZY1jQveRwTB1p79Bu3xQ5cMKEGrYkZmaTV4JFkS9mBmr0tCosQijSMJpP7YzB1lJ1GyTRkXwX7xaCd0=
+	t=1740626414; cv=none; b=ClMav7odxlCnFIrvYfMyHWD+wj8rylx4w5xQbJ+Y1Z1QMDBi2N2LonWyWQ+tuLFMyUAieZV8eDAiKGRG4ew/xY/+q5ShfrcJpJXeyTE1uyn9bJZ+xTThkh786SlCFCcJPvSeLZh0SyA0C3HjGFnMYlb0juqJjPVMPqLIo1rcG0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740626242; c=relaxed/simple;
-	bh=9AS3Hc9v2DOGdZTMZqp5nK9ONH+qjbjZwNPhNyqpfS0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cZLEhYbn+fs3RLv20C6ymEGBwRh82sTyJ8E13k8ktkbiNB4+XdpANo9i3DNtVtGWZqmBz7AOCv7QWK/o892h0E59vNZK4PJEoeiE+kOi8YmK1PsmDwQlSmnTwiS1TUVlP6LxxSQAPf+DCFCcgWl7vLpLfzsyH4Y+sYSFkGnnX3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bpIa8aii; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bpIa8aii"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f378498c9so412460f8f.1;
-        Wed, 26 Feb 2025 19:17:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740626239; x=1741231039; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=186RQJEPxOQii793CYJkBqMJYUwTqOLmAOv049AKC2A=;
-        b=bpIa8aiiLXUn9ySxpKSWk0XC/MHapqfscsCyTWdBCG7VcyKUv+vn62+BBw+2cTX/E/
-         0sAkya3DN/VP7NrOqUDc87jQUlV3BWqaACLyJKmAuxGBIlkLZHaQXq8T8WpTzF6p6gAw
-         9kCl1vujes0APdHHJmapnIgy0wyRJYWq4W6KyaKFtetcVzeoLSAso1gq8yuASYASMtop
-         uBGN1fVbQihsKEXvRAtQ4csAMmJ0msgSjxXiUfakX9UX8+S/iFIEkeGC+/34eueIU1eC
-         nOw/Y1+OLDajfih+PdoSPfwMrNa/Lu7hoRqltpZ6IhxMlhBV0W5jL9niEvtR51RZJU0S
-         tXyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740626239; x=1741231039;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=186RQJEPxOQii793CYJkBqMJYUwTqOLmAOv049AKC2A=;
-        b=p2XHd8Qp3fPUW9dLv/rcuApSEwJuHLV+NdyO3sJsf8ACoPqQYM28OJ18oXiFkFhX1M
-         JI1ASx943C/99RtTNGxvUs/+cWWJEIZXPn8mrZ6avEw/B/cqL9zUs8+up2H/LXGfiyI7
-         PsTtFBf8b9sAas6JEjm3cnvX/oSSPDxaC4r3ZxU7k6zgyQwTTtkLhgVWxjcvxxB5ZLi4
-         cY8O0wOgJGQfuRXG04nARgOzZsBfnsoGO8aM8HWQ3USyE3IAMa925f646S90qQHTXmbj
-         mLW/QhE0eRJT7OaDA9OPQWuH+R2sBxcBh24AWo4dqohGncVvyhsRa8hfHWy9xeH9d4Wk
-         bpbg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2vJ6HFyiuPTqBlO1VpNv9JyRWIsSI2T290ZgAlnQrwzBv0I585aF8lAbARJ/Hng8u4Hs=@vger.kernel.org, AJvYcCWkXKtlCQcJQZ+g6TX0eSZUaHFsJ3PcEHoKs1XZvw2Pw1T5OxbvGdN3fPn1HY8uQvbY4fBsU2LBCpH6Y+mc@vger.kernel.org, AJvYcCX3llmC1axla/kZ+c9GGU6/gMdNMkXjUwwFGLLy9y+fd4tztKcF5XkjiXKj+OR3fXSGWAOM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrJO41106RYLNZ4zROhoAIYkTmEmoRuJ4+/6z04WjtU8aHXgeh
-	3k8Uqe2f4JtITMKdXPcSoJchs8CyFeF8nqWWSUIP7XARhCJRISQs9lhfuz9QD9u5/uI4DyihMi2
-	TLSa9pH0mNrx36PiRXrOL0nUYb+s=
-X-Gm-Gg: ASbGncv919uGpsAKkf7fV/TGZE4WQnozDwbbOuOmRaQNGw7O3W8xNDni9f3mRfpZfuB
-	6iISCHpAcXz4xNOnc2+dZtB+W5Y3buddnKUjSznTvNYaFrgPknNQ4D5j7/kzOtx+YU8hXNjgw+N
-	7GaIsxjn+DSEGsUKP+iaEwZlg=
-X-Google-Smtp-Source: AGHT+IF1DGhFf9YwvPe6WrEE56EGDwZi4/BZ2x4+eFfkz5avtcJPkCN3jzsZ2Bh5Ry6Iyq4lQWFdUc5ZRSQ2wOdXM0Y=
-X-Received: by 2002:a05:6000:4027:b0:38f:4e30:6bbb with SMTP id
- ffacd0b85a97d-390cc60a437mr11956487f8f.25.1740626239009; Wed, 26 Feb 2025
- 19:17:19 -0800 (PST)
+	s=arc-20240116; t=1740626414; c=relaxed/simple;
+	bh=R1oUGUJ3OqUHv0YN/Ju4WgkqxoyLksUqGo2pit4ydF4=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=M80bLhKAsDUe+TnuiAK9GawNn2ObWG/y4ochw/gKm8mPjhzS5Rlk2X2+TLqf25wD4lEn0x3xnBs779gif/W8uzMzCU6CRrphjBSU8sHZ8U4rvoTLjaitwDjLmetvL+3xtu0IlSoAwAR4rQxqPBgN2xxYa+q8CTpaFkIXooGxzAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-83-67bfd9e6a2cf
+Message-ID: <c43c64f4-e697-468e-80af-87bd02a95ba2@sk.com>
+Date: Thu, 27 Feb 2025 12:20:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250204082848.13471-1-hotforest@gmail.com> <20250204082848.13471-3-hotforest@gmail.com>
- <cca6daf2-48f4-57b9-59a9-75578bb755b9@huaweicloud.com> <8734gr3yht.fsf@toke.dk>
- <d191084a-4ab4-8269-640f-1ecf269418a6@huaweicloud.com> <CAADnVQKD94q-G4N=w9PJU+k6gPhM8GmUYcyfj=33B_mKX6Qbjw@mail.gmail.com>
- <6a84a878-0728-0a19-73d2-b5871e10e120@huaweicloud.com> <CAADnVQLrJBOSXP41iO+-FtH+XC9AmuOne7xHzvgXop3DUC5KjQ@mail.gmail.com>
- <CAC1LvL0ntdrWh_1y0EcVR6C1_WyqOQ15EhihfQRs=ai7pcE-Sw@mail.gmail.com>
- <7e614d80-b45b-e2f9-5a39-39086c2392dc@huaweicloud.com> <CAADnVQJU9OWAWFk89P6i1RK6vXkuee5s76suHjF+uP+V4iepqQ@mail.gmail.com>
- <e1b65f13-a426-d707-0319-f57e8b15575a@huaweicloud.com>
-In-Reply-To: <e1b65f13-a426-d707-0319-f57e8b15575a@huaweicloud.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 26 Feb 2025 19:17:07 -0800
-X-Gm-Features: AQ5f1Jq1fcbJkFAdT5yUh773lJn5P-P9VjdWujeJsDT-CJu9e1AyvAlVcd4f_AU
-Message-ID: <CAADnVQLev2V-ARjPc9EPYaSssCev_87Lc0NWkLvL-5tuy=3Veg@mail.gmail.com>
-Subject: Re: [RESEND] [PATCH bpf-next 2/3] bpf: Overwrite the element in hash
- map atomically
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: Zvi Effron <zeffron@riotgames.com>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, rcu@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, "Paul E . McKenney" <paulmck@kernel.org>, Cody Haas <chaas@riotgames.com>, 
-	Hou Tao <hotforest@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: kernel_team@skhynix.com, gregkh@linuxfoundation.org, rakie.kim@sk.com,
+ akpm@linux-foundation.org, rafael@kernel.org, lenb@kernel.org,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+ horen.chuang@linux.dev, hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com,
+ yunjeong.mun@sk.com
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
+ memoryless nodes
+Content-Language: ko
+From: Honggyu Kim <honggyu.kim@sk.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>, gourry@gourry.net,
+ harry.yoo@oracle.com, ying.huang@linux.alibaba.com
+References: <20250226213518.767670-1-joshua.hahnjy@gmail.com>
+ <20250226213518.767670-2-joshua.hahnjy@gmail.com>
+ <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
+In-Reply-To: <b8ac8654-92bd-4c08-a3fc-e28a7be5e0e6@sk.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFIsWRmVeSWpSXmKPExsXC9ZZnoe6zm/vTDX6d4LeYs34Nm8X0qRcY
+	LU7cbGSz+Hn3OLtF8+L1bBarN/la3F/2jMXidv85VotVC6+xWRzfOo/dYt9FoIadD9+yWSzf
+	189ocXnXHDaLe2v+s1rM/TKV2WL1mgwHQY/Db94ze+ycdZfdo7vtMrtHy5G3rB6L97xk8ti0
+	qpPNY9OnSeweJ2b8ZvHY+dDSY2HDVGaP/XPXsHucu1jh8fHpLRaPz5vkAviiuGxSUnMyy1KL
+	9O0SuDI27MoouC9VMbWtha2B8aZoFyMnh4SAicTH3q9sXYwcYPa0AwIgYV4BS4nnXU/ZQWwW
+	AVWJ/193sEHEBSVOznzCAmKLCshL3L81A6iGi4NZoIVZYtKpVcwgCWGBKImdr/4ygdjMAiIS
+	szvbwOJsAmoSV15OAouLCBRJHJ/xmRGkWUhgIaPErJ4HLCBHcApYSZw6zAHRaybRtbWLEcKW
+	l2jeOpsZpF5C4Bq7xOynU9khHpCUOLjiBssERsFZSA6chWT3LCSzZiGZtYCRZRWjUGZeWW5i
+	Zo6JXkZlXmaFXnJ+7iZGYAwvq/0TvYPx04XgQ4wCHIxKPLwR4vvThVgTy4orcw8xSnAwK4nw
+	cmbuSRfiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAuEJD
+	47rW7e49RrxxOU83GGr8cDjVv+gc92oZ3gnBDEZ3O/Pkv82XPFTwaGvWyu3c0nIlq8W1H6w8
+	98E0xrtCr3+K0uuVuXuaom1Pqfc73NeLDrBk2ChouOv5rHdum/Ut9l+6u2oBT0Abs8jR3UK7
+	MiWztj7gv3J1/7SdZ2K8Zz9bYcH5V8VzvhJLcUaioRZzUXEiAOhEgyvdAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsXCNUNLT/fpzf3pBoeWmVvMWb+GzWL61AuM
+	FiduNrJZ/Lx7nN2iefF6NovVm3wt7i97xmJxu/8cq8WqhdfYLI5vncduse8iUMPhuSdZLXY+
+	fMtmsXxfP6PF5V1z2CzurfnPajH3y1Rmi0PXnrNarF6TYfF72wo2BxGPw2/eM3vsnHWX3aO7
+	7TK7R8uRt6wei/e8ZPLYtKqTzWPTp0nsHidm/Gbx2PnQ0mNhw1Rmj/1z17B7nLtY4fHx6S0W
+	j2+3PTwWv/jA5PF5k1yAQBSXTUpqTmZZapG+XQJXxoZdGQX3pSqmtrWwNTDeFO1i5OCQEDCR
+	mHZAoIuRk4NXwFLieddTdhCbRUBV4v/XHWwQcUGJkzOfsIDYogLyEvdvzQCq4eJgFmhhlph0
+	ahUzSEJYIEpi56u/TCA2s4CIxOzONrA4m4CaxJWXk8DiIgJFEsdnfGYEaRYSWMgoMavnAQvI
+	EZwCVhKnDnNA9JpJdG3tYoSw5SWat85mnsDINwvJHbOQrJiFpGUWkpYFjCyrGEUy88pyEzNz
+	TPWKszMq8zIr9JLzczcxAqN1We2fiTsYv1x2P8QowMGoxMMbIb4/XYg1say4MvcQowQHs5II
+	L2fmnnQh3pTEyqrUovz4otKc1OJDjNIcLErivF7hqQlCAumJJanZqakFqUUwWSYOTqkGRse6
+	tvgfko7WarMv1GxP7ri0gSHjxrrrG5QDPP8qxaUr1/CG/67/c8pyo/UWAaEvn9IFxbLuBZVe
+	fryNZcfG4Li5jyQO67o3TFyeWPFy735Ha/ZFriVVSuo26aHNH08lL/ryJtCj8f2zYFkebq22
+	pdNurJjk89+w4o/Y74y+BPk+hyX87ifUlViKMxINtZiLihMBTgQItdICAAA=
+X-CFilter-Loop: Reflected
 
-On Wed, Feb 26, 2025 at 6:43=E2=80=AFPM Hou Tao <houtao@huaweicloud.com> wr=
-ote:
->
-> >>
-> >> lookup procedure A
-> >> A: find the old element (instead of the new old)
-> >>
-> >>               update procedure B
-> >>               B: delete the old element
-> >>               update procedure C on the same CPU:
-> >>               C: reuse the old element (overwrite its key and insert i=
-n
-> >> the same bucket)
-> >>
-> >> A: the key is mismatched and return -ENOENT.
-> > This is fine. It's just normal reuse.
-> > Orthogonal to 'update as insert+delete' issue.
->
-> OK. However, it will break the lookup procedure because it expects it
-> will return an valid result instead of -ENOENT.
 
-What do you mean 'breaks the lookup' ?
-lookup_elem_raw() matches hash, and then it memcmp(key),
-if the element is reused anything can happen.
-Either it succeeds in memcmp() and returns an elem,
-or miscompares in memcmp().
-Both are expected, because elems are reused in place.
 
-And this behavior is expected and not-broken,
-because bpf prog that does lookup on one cpu and deletes
-the same element on the other cpu is asking for trouble.
-bpf infra guarantees the safety of the kernel.
-It doesn't guarantee that bpf progs are sane.
+On 2/27/2025 11:32 AM, Honggyu Kim wrote:
+> Hi Joshua,
+> 
+> On 2/27/2025 6:35 AM, Joshua Hahn wrote:
+>> We should never try to allocate memory from a memoryless node. Creating a
+>> sysfs knob to control its weighted interleave weight does not make sense,
+>> and can be unsafe.
+>>
+>> Only create weighted interleave weight knobs for nodes with memory.
+>>
+>> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+>> ---
+>>   mm/mempolicy.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 4cc04ff8f12c..50cbb7c047fa 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -3721,7 +3721,7 @@ static int add_weighted_interleave_group(struct 
+>> kobject *root_kobj)
+>>           return err;
+>>       }
+>> -    for_each_node_state(nid, N_POSSIBLE) {
+> 
+> Actually, we're aware of this issue and currently trying to fix this.
+> In our system, we've attached 4ch of CXL memory for each socket as
+> follows.
+> 
+>          node0             node1
+>        +-------+   UPI   +-------+
+>        | CPU 0 |-+-----+-| CPU 1 |
+>        +-------+         +-------+
+>        | DRAM0 |         | DRAM1 |
+>        +---+---+         +---+---+
+>            |                 |
+>        +---+---+         +---+---+
+>        | CXL 0 |         | CXL 4 |
+>        +---+---+         +---+---+
+>        | CXL 1 |         | CXL 5 |
+>        +---+---+         +---+---+
+>        | CXL 2 |         | CXL 6 |
+>        +---+---+         +---+---+
+>        | CXL 3 |         | CXL 7 |
+>        +---+---+         +---+---+
+>          node2             node3
+> 
+> The 4ch of CXL memory are detected as a single NUMA node in each socket,
+> but it shows as follows with the current N_POSSIBLE loop.
+> 
+> $ ls /sys/kernel/mm/mempolicy/weighted_interleave/
+> node0 node1 node2 node3 node4 node5
+> node6 node7 node8 node9 node10 node11
+> 
+>> +    for_each_node_state(nid, N_MEMORY) {
 
-> > It's been a long time since I looked into rcu_nulls details.
-> > Pls help me understand that this new replace_rcu_nulls()
-> > is correct from nulls pov,
-> > If it is then this patch set may be the right answer to non-atomic upda=
-te.
->
-> If I understand correctly, only the manipulations of ->first pointer and
-> ->next pointer need to take care of nulls pointer.
+Thinking it again, we can leave it as a separate patch but add our patch 
+on top of it.
 
-hmm. I feel we're still talking past each other.
-See if (get_nulls_value() =3D=3D ...) in lookup_nulls_elem_raw().
-It's there because of reuse. The lookup can start in one bucket
-and finish in another.
+The only concern I have is having only N_MEMORY patch hides weight
+setting knobs for CXL memory and it makes there is no way to set weight 
+values to CXL memory in my system.
 
-> >
-> > And for the future, please please focus on "why" part in
-> > the cover letter and commit logs instead of "what".
-> >
-> > Since the only thing I got from the log was:
-> > "Currently, the update is not atomic
-> > because the overwrite of existing element happens in a two-steps way,
-> > but the support of atomic update is feasible".
-> >
-> > "is feasible" doesn't explain "why".
-> >
-> > Link to xdp-newbie question is nice for additional context,
-> > but reviewers should not need to go and read some thread somewhere
-> > to understand "why" part.
-> > All of it should be in the commit log.
->
-> OK. My original thought is that is a reported problem, so an extra link
-> will be enough. Will try to add more context next time.
-> >
-> >> map may still be incorrect (as shown long time ago [1]), so I think
-> >> maybe for other types of map, the atomic update doesn't matter too muc=
-h.
-> >>
-> >> [1]:
-> >> https://lore.kernel.org/bpf/20221230041151.1231169-1-houtao@huaweiclou=
-d.com/
-> > A thread from 3 years ago ?! Sorry, it's not helpful to ask
-> > people to page-in such an old context with lots of follow ups
-> > that may or may not be relevant today.
-> Let me reuse part of the diagram above to explain how does the lookup
-> procedure may return a incorrect value:
->
-> lookup procedure A
-> A: find the old element (instead of the new element)
->
->
->               update procedure B
->               B: delete the old element
->               update procedure C on the same CPU:
->
->
-> A: the key is matched and return the value in the element
->
->               C: reuse the old element (overwrite its key and value)
->
-> A: read the value (it is incorrect, because it has been reused and
-> overwritten)
+IMHO, this and our patch is better to be submitted together.
 
-... and it's fine. It's by design. It's an element reuse behavior.
+Thanks,
+Honggyu
 
-Long ago hashmap had two modes: prealloc (default) and
-NO_PREALLOC (call_rcu + kfree)
+> 
+> But using N_MEMORY doesn't fix this problem and it hides the entire CXL
+> memory nodes in our system because the CXL memory isn't detected at this
+> point of creating node*.  Maybe there is some difference when multiple
+> CXL memory is detected as a single node.
+> 
+> We have to create more nodes when CXL memory is detected later.  In 
+> addition, this part can be changed to "for_each_online_node(nid)"
+> although N_MEMORY is also fine here.
+> 
+> We've internally fixed it using a memory hotpluging callback so we can
+> upload another working version later.
+> 
+> Do you mind if we continue fixing this work?
+> 
+> Thanks,
+> Honggyu
+> 
+>>           err = add_weight_node(nid, wi_kobj);
+>>           if (err) {
+>>               pr_err("failed to add sysfs [node%d]\n", nid);
+> 
 
-The call_rcu part was there to make things safe.
-The memory cannot be kfree-ed to the kernel until RCU GP.
-With bpf_mem_alloc hashmap elements are freed back to bpf_ma
-right away. Hashmap is doing bpf_mem_cache_free()
-(instead of bpf_mem_cache_free_rcu()) because users need speed.
-So since 2022 both prealloc and no_prealloc reuse elements.
-We can consider a new flag for the hash map like F_REUSE_AFTER_RCU_GP
-that will use _rcu() flavor of freeing into bpf_ma,
-but it has to have a strong reason.
-And soon as we add it the default with prealloc would need
-to use call_rcu() too, right?
-and that becomes nightmare, since bpf prog can easily DoS the system.
-Even if we use bpf_mem_cache_free_rcu() only, the DoS is a concern.
-Unlike new things like bpf_obj_new/obj_drop the hashmap
-is unpriv, so concerns are drastically different.
