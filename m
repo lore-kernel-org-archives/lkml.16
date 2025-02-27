@@ -1,95 +1,115 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7329442C0B;
-	Thu, 27 Feb 2025 13:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15C342C0B;
+	Thu, 27 Feb 2025 13:56:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740664545; cv=none; b=ou3P/zujlo0co6wVlGDhViVmZfaf3QJwp12ENoePD6Ct8X24cVDnDX4sNVRJdYfwT+j56LUzeWm531/1GJ/Tvb2IEy5hYVNVaK472ruN+EUnut9ZuolzfmFRwRaZlFYre502WZ6Huy7gVuceoUyU26AHHbN3M6ONaRwkwnLG5N4=
+	t=1740664580; cv=none; b=l+XRr9zDeqDfLE1im4ZBWTj3Prm+D+zuOxvleheiPODFXlbCJTW7EY+anJjb/UgxqQnoASBonoN+gX9Rbi8Iwuz4gUzCY2YJ/GB0BF1uOZJsmyfLEzENgvm9Skp0vHh8+/CR86OvEHEZyjbc3avo9B4oIOGaqNrTI/5WjXv+/eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740664545; c=relaxed/simple;
-	bh=w5PrfAMbovUyS2QcIh8YSYSUSXSpcWOiTR0ekujNaVI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XNOJLieU1+FP+/L4Jnx8zSFlNzjrIr873x7YgYAbapduYsAARmnU8NJ3ITydQSfAdPjgRatEXDkr/Z+OLJNojv5fUHVeqg5xlUIy2OdSpQcmjW0myBc28FpheOXWRlGfQd8IT4PGAG/1foYIdR4ARpW0cFlXbrh3x8ZkVjMLleM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0hX1kzl; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740664580; c=relaxed/simple;
+	bh=6YhuMD+fZp15NlYpzOupLk0ws9PYq1Voacu06J0Qh2E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZJ7XB+kbbUJgS/1hKR3nT31ppXc9gJe72U40Obio5zGWusCLbqU58c0CW+u8V1yoZm7prb1cYhPZ/gKpVQB3FBFbq//UxgqH5U1ya2o6MV3UKqM7RygCAUI9qUrQK7Kpf+e8l0Lg8O1s1CokX53Rzy7GuEKix1+06WdaKdxFZso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b=lvjC/kcM; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0hX1kzl"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3f3ffe06107so544144b6e.2;
-        Thu, 27 Feb 2025 05:55:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740664543; x=1741269343; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OT7lACv6pRY581pDMHaH4afYtbO0tkAIV0SUe++9Fbc=;
-        b=e0hX1kzlFnwJTsoBHVuOdsuVwHG5wc14P9gRc+uTMk09kuoGpojTf59X/2GbwzSrhO
-         HGGpcgjC/zQZdThBqkYh6hFFA6NDGQWW4mGTS63kNkfv8/OHMqZypY2rmRnLDyeRTkqt
-         l1gR3u0/7edY9HyjTockrv7faGZLaiHql73aZWK5votnIPluqXh4pHSWxHb2Dcy0fJd8
-         QgPepMOouom5g0QsbQungTS6zfGwhBeiKs0VV4QbTsfx4cL0BMPb4IwQa7vlcpm7V2l8
-         NC8/0BOVvq/QzTLj3UcibqxmXrt8qKXvNDvFEA+wQ/KgFuJHuBrHOw0xjG7o4VsHFM8L
-         95zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740664543; x=1741269343;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OT7lACv6pRY581pDMHaH4afYtbO0tkAIV0SUe++9Fbc=;
-        b=DAy7g95veKmUKgu7kwx8Ku2LE4cPA7ADnYXOJ5ZirUEFHTDTK3FQKT94MDkAQh1Woy
-         v7z/K3CD1auP1+7fVSzKTS/v3+8MToyB/g8nNbfc84JJtM0s7jRsZtsMLBCIKPWP9uZH
-         x1nUcVpWQuzZBcZIRQnGmlBZRD38BPN0d2W25C4st4pxNKIBgEcMmp1ACVwm2ZiKexUj
-         JJXpgVRj+my6qeTEjJiUYm3fQFy4sGpluqyb+dzpUEyBwFvdz7pPENlKU/u6i1wL9O1A
-         syF8KBgZ5CiBV/VTsyzxDiN3b5UUqnKm8+368feVMrlUw+fERMt1IlVJHvwwblFCvOXU
-         BjRw==
-X-Forwarded-Encrypted: i=1; AJvYcCW17C3oV2fX9nQd8ma0JJ5saZLVwIgkuwpanbXY9Nh5Y8QWM818E0l9ZeKvpndnnHTofVRtD4Zn+h1n@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzceyjogx8tKMmvMdisGXRu9hjgIpz+IaaR1yMA8/cvRAyzq+6Z
-	5G0HbXx97wP3Cj4h7fVGQiHbFr8sUy2jAFPrCVQcSZ93y/IYT0T+5zRCQ29woF/iOPjY7XHnYxl
-	YE8W7IQXorbg5DI+foNT7zVUXAsEHBDJR
-X-Gm-Gg: ASbGnctV6cDJcc88Ubw8UGpvoyKauAmWNZPN/h1lsqagRca1renOlYyhLC/xX5KnHXq
-	VpdD+RKMXpCX9cU3p55z3SnVqrns/0i5GWtUCqvWzM+DtvWoX6Nrc1XWgNts1z5tmDcElTSTb5N
-	FkRgun1yGapw==
-X-Google-Smtp-Source: AGHT+IGAF+jqOIA63oG2XffgQF4AapKinr+0usIKi6jAeHtmbHO8o+QwlaLBANygf/4aAxP+v7gE5qpfJajcUdBYq+I=
-X-Received: by 2002:a05:6808:3c95:b0:3f3:b4f9:88df with SMTP id
- 5614622812f47-3f4246a0d5cmr15595459b6e.3.1740664543203; Thu, 27 Feb 2025
- 05:55:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=ps.report@gmx.net header.b="lvjC/kcM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1740664574; x=1741269374; i=ps.report@gmx.net;
+	bh=6YhuMD+fZp15NlYpzOupLk0ws9PYq1Voacu06J0Qh2E=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:
+	 References:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=lvjC/kcMwpbAjEwFKs6zxoDbniNDyzxr2fMTAjgACe4M2sLwLpeIZqz+Vh1i0Kd3
+	 QZDkSN2v02WgKemDU+fzjokJsAq/gqaNk1TN9fVJ1gwuost+JH1miiLvdLyj0bzJg
+	 4+FGYYHGWvl8Loxhj5zOkNHIEdHus3F2oxsPFvQHJJlKBcxdIfqzyx24rYeSdR31H
+	 i1O6VRBjr4T0yEmkaPrT4CO1RcuCy3X06kMqVzoEyGE94405DzhscKOiACiDf5g0V
+	 P+VA5YXdg45852VJH2R8iEl6ff8ftj316uYQmycqTpbMuby47KqNh6VQmNM8O9iGW
+	 hv11P2bqUEMMRZ2kuQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.fritz.box ([82.135.81.151]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M4b1y-1tpIGO2kkw-00F2NT; Thu, 27
+ Feb 2025 14:56:14 +0100
+From: Peter Seiderer <ps.report@gmx.net>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Peter Seiderer <ps.report@gmx.net>,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH net-next v8 3/8] net: pktgen: remove some superfluous variable initializing
+Date: Thu, 27 Feb 2025 14:55:59 +0100
+Message-ID: <20250227135604.40024-4-ps.report@gmx.net>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250227135604.40024-1-ps.report@gmx.net>
+References: <20250227135604.40024-1-ps.report@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Muni Sekhar <munisekharrms@gmail.com>
-Date: Thu, 27 Feb 2025 19:25:32 +0530
-X-Gm-Features: AQ5f1JqZqEz44uEHmPt8PWANB9y187aZ1esA5hLZJhdx60rNPy2ku4Lq6_zYjKQ
-Message-ID: <CAHhAz+gUOK4Bn5ijO0H1b5=EtvD5W4GpOTtjP0--yVToNpkEDA@mail.gmail.com>
-Subject: pci: acpi: Query on ACPI Device Tree Representation and Enumeration
- for Xilinx FPGA PCIe Endpoint functions
-To: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:EUIXcxlKZnX2/p/4jMa01w1aUMFkC6XFDOrlNn91juwz9cofZ1D
+ gdl+8BnZhZSL7RY7CLN+Nd0YMid9W2/nCUqQVplpJLb5OrGd+8dtXL5epnohYroihgkaKg1
+ t3rTbfGAsFQ9lhcpoXdAg0kEmTN2UuF6jzigv8r4XElyHQPDVuUnB0a0cafoQ8WuY3c6uAA
+ LrZG087Ui2F3evhbo51cg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:BkUoI9KaCRo=;zxEJzEjODqPk70w6cvO33JrWQcy
+ +uwZeqZcivYV+bv/UsbgHHAA8uoiQ591PDaNJDMoNCwgTJcKaHsBPfte+5qjeosZVtmLVOqiG
+ B1nc53mQiT+K3nOOnbhrv0pBpHBVnadmshZCUdzI/xVafImlc2KnqmDqHSGN6OvcZiO8Fsnvd
+ 5RnQRxJh8Nnx2KV1rKymbd53tzxvmjvZCiDGHf9FLtAeL1tf3GeG2OlJJy4bZQjL69jqPe6KX
+ cvhxdm52OJvmVRStSLVaZ1rcXQvVfmtaXoOD3O2ETLw2pqFgF+tf21mwmcMOW9z0HJUqogY29
+ Uw0Oi8cC7IpybW5c727OgeJOnqH/Euh7RZnr9Mqyefyj2QGJl8oisfohUpHm7A9n/ctmHT8D8
+ DkV19xvdFP/BSASFBm9Ai9P551C7F3uZH/PLS1P2APjLNB5O11ITAOrRoJcGM8WwHD064rCeh
+ F64l9PuNa/ZlrETMtoN6qhn3aDKokefL3PI1VbcCHtWBQ1X3S4YQmSmGxHYv9YOj3hFeERv4+
+ 5cbEaPi5VSF/CqOXZWT4/k6MxDNbssr7kTW/YiLq+g2Zlb5kFBj0h4m8ZM4lC2/Y94PC+cMiG
+ dLC9YcsylsGj8yhtjsfOQQ26jsxV4qGBXyYqU9z/PBlkZRxh3tOrBUyB4+f3Epxq3FnHIbCAx
+ YmtGIs4BlHKncKmf8OsQARFC0oyvQH9y6gmhM49jGbExWq9TGlvaRvVkACi6XqHqIFg8w260r
+ MOEsGoA0dIBkKt7zYDdrWcETP6BdkkIUrtoivvlegBkku0/JVGIE7aR/Hs2D3oPIA60FBj2hV
+ broGDqpORyIq5WI9LKQyxD3qxuhVma77nKEMm8bLo+LIGCKdtCat7r6JGwNRVlI/Dzh89Fc9o
+ 6/aWvBfmbP2M5YjxEkaFVZtHIUK9STMNHySjwDKSpS4BnpY88SkcHUFOIcLMVEmfbmgAeVUKC
+ q3Iq8DGMmlMSI3sAaT0HrqL9jo2RIQ4Hnk28AWgg0RqvX6+Ypr6QPw+rL1prw7owqLFfW01kR
+ zoPs+oJJm7SeQPeBdMbSlwrZ5MFAh/lCcJg2cbpaIC4NeXFx0im6wS8ySd8agZPLzlorNyC6Y
+ pk6xsZ6yVhBBOrVamQYz64c8NqOukajFYUhpulbulpq1TTeSXDiA9J9BIJSk6QRor5Wc2eymA
+ sGVuZJ5WqbS+2j/ys5u2ViKTcfbESrnHf7KT8i051UjsJEdBXSN8s8U3i61ocBTaUvJibjRjs
+ R23p/UAmjdGtWVdsrzNkVHJNNVBxchgLS21Mg5/KLchdf8RCFOlw0zVFYyiz5SpvcTMIjs6A/
+ Ikkkn0yfjhDUbaRVV5nV3faMwzx7fXFiR7jFWUPe2TShJFxRmoFUHMsdT5Ch8L83NR6dsvObg
+ JhDP7Xc015Ag5F7OIRohnwtf4dYMXw/aVBDStBNkzNi3jjDdGFkj090ChZ
 
-Hi all,
-
-I am currently working on a project involving a Xilinx FPGA connected
-to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
-PCIe endpoint with single function capability and is programmed to
-emulate the Soundwire Master controller. It can be dynamically
-reprogrammed to emulate other interfaces as needed. Essentially, the
-FPGA emulates an interface and connects to the CPU via the PCIe bus.
-
-Given this setup, the BIOS does not have prior knowledge of the
-function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
-of questions regarding this configuration:
-
-Is it possible to define an ACPI Device Tree representation for this
-type of hardware setup?
-Can we achieve ACPI-based device enumeration with this configuration?
-
-I would greatly appreciate any guidance or references to documentation
-that could help us achieve this.
-
-Thank you for your time and assistance.
-
-
--- 
-Thanks,
-Sekhar
+UmVtb3ZlIHNvbWUgc3VwZXJmbHVvdXMgdmFyaWFibGUgaW5pdGlhbGl6aW5nIGJlZm9yZSBoZXgz
+Ml9hcmcgY2FsbCAoYXMgdGhlCnNhbWUgaW5pdCBpcyBkb25lIGhlcmUgYWxyZWFkeSkuCgpTaWdu
+ZWQtb2ZmLWJ5OiBQZXRlciBTZWlkZXJlciA8cHMucmVwb3J0QGdteC5uZXQ+ClJldmlld2VkLWJ5
+OiBTaW1vbiBIb3JtYW4gPGhvcm1zQGtlcm5lbC5vcmc+Ci0tLQpDaGFuZ2VzIHY3IC0+IHY4CiAg
+LSByZWJhc2VkIG9uIGFjdHVhbCBuZXQtbmV4dC9tYWluCiAgLSBubyBjaGFuZ2VzCgpDaGFuZ2Vz
+IHY2IC0+IHY3CiAgLSByZWJhc2VkIG9uIGFjdHVhbCBuZXQtbmV4dC9tYWluCiAgLSBubyBjaGFu
+Z2VzCgpDaGFuZ2VzIHY1IC0+IHY2CiAgLSBhZGp1c3QgdG8gZHJvcHBlZCBwYXRjaCAnbmV0OiBw
+a3RnZW46IHVzZSBkZWZpbmVzIGZvciB0aGUgdmFyaW91cwogICAgZGVjL2hleCBudW1iZXIgcGFy
+c2luZyBkaWdpdHMgbGVuZ3RocycKCkNoYW5nZXMgdjQgLT4gdjUKICAtIHNwbGl0IHVwIHBhdGNo
+c2V0IGludG8gcGFydCBpL2lpIChzdWdnZXN0ZWQgYnkgU2ltb24gSG9ybWFuKQogIC0gYWRkIHJl
+di1ieSBTaW1vbiBIb3JtYW4KCkNoYW5nZXMgdjMgLT4gdjQKICAtIG5ldyBwYXRjaCAoZmFjdG9y
+ZWQgb3V0IG9mIHBhdGNoICduZXQ6IHBrdGdlbjogZml4IGFjY2VzcyBvdXRzaWRlIG9mIHVzZXIK
+ICAgIGdpdmVuIGJ1ZmZlciBpbiBwa3RnZW5faWZfd3JpdGUoKScpCi0tLQogbmV0L2NvcmUvcGt0
+Z2VuLmMgfCA0ICsrLS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvbmV0L2NvcmUvcGt0Z2VuLmMgYi9uZXQvY29yZS9wa3RnZW4u
+YwppbmRleCA5YTVmYzEyOThiZDMuLmI2NzhiMjhkZWRhZSAxMDA2NDQKLS0tIGEvbmV0L2NvcmUv
+cGt0Z2VuLmMKKysrIGIvbmV0L2NvcmUvcGt0Z2VuLmMKQEAgLTE3ODUsNyArMTc4NSw3IEBAIHN0
+YXRpYyBzc2l6ZV90IHBrdGdlbl9pZl93cml0ZShzdHJ1Y3QgZmlsZSAqZmlsZSwKIAl9CiAKIAlp
+ZiAoIXN0cmNtcChuYW1lLCAidG9zIikpIHsKLQkJX191MzIgdG1wX3ZhbHVlID0gMDsKKwkJX191
+MzIgdG1wX3ZhbHVlOwogCQlsZW4gPSBoZXgzMl9hcmcoJnVzZXJfYnVmZmVyW2ldLCAyLCAmdG1w
+X3ZhbHVlKTsKIAkJaWYgKGxlbiA8IDApCiAJCQlyZXR1cm4gbGVuOwpAQCAtMTgwMSw3ICsxODAx
+LDcgQEAgc3RhdGljIHNzaXplX3QgcGt0Z2VuX2lmX3dyaXRlKHN0cnVjdCBmaWxlICpmaWxlLAog
+CX0KIAogCWlmICghc3RyY21wKG5hbWUsICJ0cmFmZmljX2NsYXNzIikpIHsKLQkJX191MzIgdG1w
+X3ZhbHVlID0gMDsKKwkJX191MzIgdG1wX3ZhbHVlOwogCQlsZW4gPSBoZXgzMl9hcmcoJnVzZXJf
+YnVmZmVyW2ldLCAyLCAmdG1wX3ZhbHVlKTsKIAkJaWYgKGxlbiA8IDApCiAJCQlyZXR1cm4gbGVu
+OwotLSAKMi40OC4xCgo=
