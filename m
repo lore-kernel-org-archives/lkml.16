@@ -1,29 +1,30 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103902222BA;
-	Thu, 27 Feb 2025 15:36:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E62260C;
+	Thu, 27 Feb 2025 15:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670572; cv=none; b=CJ3JdPMBf/6eDUokwOoNQ4KuiZtzCV/BH4jvxsKmj1gs3OOYfOrxalGLOkGuVDlvfd6ThbiuilHqP1Ll1nM7V2ep7mm1IaKA1k/isG18Zi9x9Afx/nhIUUnJ42K1WxG3Z4Seb4ddtqb4V+oYckhQsNGUnoeNZrjpWYsk9P4f6G8=
+	t=1740670573; cv=none; b=FjWpm+L0mn/RHbQTLXC6OAFwhiWw9HGvH2ZbfOZDN8pOxURTDR+/B/dsErvw00w5DiXVNHg5H016HcZWIXwsHWbThiCTlAt7D2hAj01z0T41gkb6TiBN/7/UJXHOAABCkwad+XXOz/OVM+biOQF8LPEPFBViX46GZc3Ay8+IhMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670572; c=relaxed/simple;
-	bh=T7wvOszu/unZkBQdoGyUu95ygsw6g2gM1ljmXZ2ze90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iMWXAPLySaFBYahtvkU6DfvdPh3RrZ6haF21NDCRde3BnwqKAHRL3z+aWzJnAb0/DJZjCyVbuGe6tiaY0p681FKP7wIE3dZN3+rwqrY43QhZ60uc9EZcehPEV2mLhqU6dGQyvopi8++8Cd6Un1EimTBkneFjNGWdvRqvLEguCaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=2n352TG0; arc=none smtp.client-ip=185.138.42.100
+	s=arc-20240116; t=1740670573; c=relaxed/simple;
+	bh=LXfWGMImBVNNBL2/aFJcmVKGpxXpL5lEwqNmPymHTdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=W51KK0XlmgiGMFLd0F7XXTWclA057POZ8GuySc9YIsm+h3yVhN//MbjEptQtf9eXwkFghGjP17sSXCBGanRnlw/KfSVKwmD9erB3bUNSW5g0OH9ytNyzT2SRUTQk46cq7P1T7AVflHCEH9kLi3LBaHy9aXHFts2k0bR+S1Cq7yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=1pZtdF94; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="2n352TG0"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="1pZtdF94"
 Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 86A332E08EB1;
-	Thu, 27 Feb 2025 17:36:04 +0200 (EET)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 309772E08EB6;
+	Thu, 27 Feb 2025 17:36:08 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740670566;
-	bh=eWpEwZhNxv2521cAw63u3P9hTVlN8O5YjZboZLx1fXw=; h=From:To:Subject;
-	b=2n352TG0UQI3JVZLkNIQYHWY0Ja8beT2nDRuRq1F8aZaSQ5SRjBRdx/iYqJxs+ACq
-	 sXmWlzCgSELCOJUnvqhWYktLyCvoZrrEANZh2TMx7c+e+LsvKsAk9r+qqUBaZ+T3EW
-	 fQNDNLviWf9sA+BhX96kQYyOhzAioellQwqbwpds=
+	s=default; t=1740670569;
+	bh=3atOOL6HRdSCGQf8dbOyq0sehckQcDD/Uoq82e0iXWo=; h=From:To:Subject;
+	b=1pZtdF94V7v97BouunzcjbSEwR4RSC6BjH1lfElJLdtzK+bvP2/vyQVt2AJMcGUyZ
+	 a3iY2MEctQ/2yyjJWEgrafVcSjiAg8xz1BFsYGXmMuxyHQmkCnVBaLqkw7wYVRq1NZ
+	 XQVyVuF/Zwi06b/QMgn8T0uZMo/lDpcnwQdY1I04=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
@@ -40,11 +41,13 @@ Cc: ilpo.jarvinen@linux.intel.com,
 	me@kylegospodneti.ch,
 	luke@ljones.dev,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v2 0/2] ACPI: platform_profile: fix legacy sysfs with multiple
- handlers
-Date: Thu, 27 Feb 2025 16:36:01 +0100
-Message-ID: <20250227153603.131046-1-lkml@antheas.dev>
+Subject: [PATCH v2 2/2] ACPI: platform_profile: make amd-pmf a secondary
+ handler
+Date: Thu, 27 Feb 2025 16:36:03 +0100
+Message-ID: <20250227153603.131046-3-lkml@antheas.dev>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250227153603.131046-1-lkml@antheas.dev>
+References: <20250227153603.131046-1-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,78 +56,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174067056588.31591.3695283512802745173@linux1587.grserver.gr>
+ <174067056939.31705.3234110058223723097@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-On the Asus Z13 (2025), a device that would need the amd-pmf quirk that
-was removed on the platform_profile refactor, we see the following output
-from the sysfs platform profile:
+Since amd-pmf is expected to run alongside other platform handlers, it
+should be able to accept all platform profiles. Therefore, mark it as
+secondary and in the case of a custom profile, make it NOOP without an
+error to allow primary handlers to receive a custom profile.
+The sysfs endpoint will still report custom, after all.
 
-$ cat /sys/firmware/acpi/platform_profile_choices
-balanced performance
+Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+---
+ drivers/platform/x86/amd/pmf/spc.c | 3 +++
+ drivers/platform/x86/amd/pmf/sps.c | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-I.e., the quiet profile is missing. Which is a major regression in terms of
-power efficiency and affects both tuned, and ppd (it also affected my
-software but I fixed that on Saturday). This would affect any laptop that
-loads both amd-pmf and asus-wmi (around 15 models give or take?) and only
-get worse in 2025, as more laptops start to integrate amd-pmf.
-
-The problem stems from the fact that wmi handlers use different
-profiles than amd-pmf, which can load alongside them, and block their
-choices. This patch series is a mitigation of this issue, by making pmf
-accept all profiles through the legacy sysfs, and by making it a secondary
-handler.
-
-While we can argue about whether the secondary handler concept is
-necessary, alternatives such as renaming profiles in current drivers will
-break existing scripts that are tested for a particular manufacturer, and
-allowing amd-pmf override options may cause unforseen regressions in
-other wmi drivers.
-
-+CC Luke
-
-Changelog since V1:
-    - merge patches 1 and 3 as per Rafael
-    - simplify secondary comment about secondary and make it last
-
-Behavior with this patch applied and asus-wmi, amd-pmf
-(maintains interop with 6.13):
-
-$ cat /sys/firmware/acpi/platform_profile_choices
-quiet balanced performance
-
-And writing quiet to it results in the profile being applied to both
-platform profile handlers.
-
-$ echo low-power > /sys/firmware/acpi/platform_profile
-bash: echo: write error: Operation not supported
-$ echo quiet > /sys/firmware/acpi/platform_profile
-$ cat /sys/class/platform-profile/platform-profile-*/{name,profile}
-asus-wmi
-amd-pmf
-quiet
-quiet
-
-Agreed ABI still works:
-$ echo quiet > /sys/class/platform-profile/platform-profile-0/profile
-$ echo quiet > /sys/class/platform-profile/platform-profile-1/profile
-bash: echo: write error: Operation not supported
-$ echo low-power > /sys/class/platform-profile/platform-profile-0/profile
-bash: echo: write error: Operation not supported
-$ echo low-power > /sys/class/platform-profile/platform-profile-1/profile
-
-Antheas Kapenekakis (2):
-  ACPI: platform_profile: Add handlers that do not occlude power options
-  ACPI: platform_profile: make amd-pmf a secondary handler
-
- drivers/acpi/platform_profile.c    | 57 +++++++++++++++++++++++++-----
- drivers/platform/x86/amd/pmf/spc.c |  3 ++
- drivers/platform/x86/amd/pmf/sps.c |  8 +++++
- include/linux/platform_profile.h   |  5 +++
- 4 files changed, 65 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
+index f34f3130c330..99c48378f943 100644
+--- a/drivers/platform/x86/amd/pmf/spc.c
++++ b/drivers/platform/x86/amd/pmf/spc.c
+@@ -219,12 +219,15 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
+ 
+ 	switch (dev->current_profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+ 		val = TA_BEST_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		val = TA_BETTER_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_LOW_POWER:
++	case PLATFORM_PROFILE_COOL:
++	case PLATFORM_PROFILE_QUIET:
+ 		val = TA_BEST_BATTERY;
+ 		break;
+ 	default:
+diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
+index e6cf0b22dac3..a2a8511768ce 100644
+--- a/drivers/platform/x86/amd/pmf/sps.c
++++ b/drivers/platform/x86/amd/pmf/sps.c
+@@ -297,12 +297,15 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
+ 
+ 	switch (pmf->current_profile) {
+ 	case PLATFORM_PROFILE_PERFORMANCE:
++	case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
+ 		mode = POWER_MODE_PERFORMANCE;
+ 		break;
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		mode = POWER_MODE_BALANCED_POWER;
+ 		break;
+ 	case PLATFORM_PROFILE_LOW_POWER:
++	case PLATFORM_PROFILE_COOL:
++	case PLATFORM_PROFILE_QUIET:
+ 		mode = POWER_MODE_POWER_SAVER;
+ 		break;
+ 	default:
+@@ -369,6 +372,10 @@ static int amd_pmf_profile_set(struct device *dev,
+ 	struct amd_pmf_dev *pmf = dev_get_drvdata(dev);
+ 	int ret = 0;
+ 
++	/* If the profile is custom, bail without an error. */
++	if (profile == PLATFORM_PROFILE_CUSTOM)
++		return 0;
++
+ 	pmf->current_profile = profile;
+ 
+ 	/* Notify EC about the slider position change */
+@@ -400,6 +407,7 @@ static const struct platform_profile_ops amd_pmf_profile_ops = {
+ 	.probe = amd_pmf_profile_probe,
+ 	.profile_get = amd_pmf_profile_get,
+ 	.profile_set = amd_pmf_profile_set,
++	.secondary = true,
+ };
+ 
+ int amd_pmf_init_sps(struct amd_pmf_dev *dev)
 -- 
 2.48.1
 
