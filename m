@@ -1,102 +1,98 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9868F22A4C5;
-	Thu, 27 Feb 2025 11:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1527F225761
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654899; cv=none; b=YQJaLRGvQfQjvG9oHPizd6b7BUjMNFGQb5utV1vFyoejv79asMn+nCji+WcuyRgtj5O/yaHZTWwfBgM95cyRavwwkO8vUqAHCOSfXB27lOpWUe/HX93dfyNg1MxTtQOdE/b7F/7JvrU3m59XFTPUFle8xRm/0U6iOjdUKhjlzfs=
+	t=1740655047; cv=none; b=f5rh77APOQi0Hb2oQmdJIRh8ycW6Rx5RxROACk90d53Hp69/LSHo+b9RqyKJ7fQ+vOOgTvm7sxlyisWc7jpcDzWQPYdc4BS/pDTTacBeanDhhPT39XPFx6BieeLIngiWIUfCYPJ7Od/FL52OXvTGg4Hq4X5OuaLbh3XFh3LnTDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654899; c=relaxed/simple;
-	bh=b8B0EikosVZ437a/eglgDC8USmkxAH6JQNTKeLA7SjU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pE3qZ+de/S81a/JTAY+z2aHrY824TVhuU7zkgD6kpiM7Jw1e8ru7Ai5NhgMasvBG8TDuumyI1/r83ObiBr6lYaz7JD5uM8WnWgA61yWxM2xoM7muJdMO99hlSlrt+An9zWavwZJBRUj/OZ2VJiCTFdkppcRuFKJoGUiDMzyVTWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ukm+VJdB; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740655047; c=relaxed/simple;
+	bh=+1vOICpmGanv7zQa80aQVgtEQmu7zQwBg27CvOEYAFc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=tZAcMW3MgmApD8MkXxIN02lmaXdwAi/0btLcYSNOPnhc+BB/dEjEK0lVe8+FqotWTUima6BczpmLr23KhMD/VVJloPKkWnlMf4MwQZdlDhA0ifkWaYROJnAezQlFxVHwks5rKopjqMlGA6A3NJv2QlbPS+vc7DCMBuQZb3KTDko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=tvD1Ncvy; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ukm+VJdB"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51RBEhbp1752657
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 05:14:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740654883;
-	bh=CdJSw/chnCmKUnyDanFAYQUq+B+4rxHEynYliRPKg9I=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=Ukm+VJdBwN/9eAgRk7lq3nqBF/tGAqpn1gTRDCCvMPxi9jboA1H0AJUl5SHHOZ4aX
-	 LcFt+EnyG9amVrasX75wI52J6+izGlm2DMzw5H4+BYJo8/pe7d5hP7FUdCcMP+s6pK
-	 yaJymDkDgiqk1bez8J67a1Gl+Ld61F7zTP5rUNjo=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51RBEhYN009041
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 27 Feb 2025 05:14:43 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Feb 2025 05:14:42 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Feb 2025 05:14:42 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51RBEfqT031097;
-	Thu, 27 Feb 2025 05:14:42 -0600
-Date: Thu, 27 Feb 2025 16:44:41 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: "A. Sverdlin" <alexander.sverdlin@siemens.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <netdev@vger.kernel.org>,
-        Andrew Lunn
-	<andrew+netdev@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: ethernet: ti: cpsw_new: populate netdev
- of_node
-Message-ID: <20250227111441.athqur6dcesdk5gb@uda0492258>
-References: <20250227074704.4067481-1-alexander.sverdlin@siemens.com>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="tvD1Ncvy"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250227074704.4067481-1-alexander.sverdlin@siemens.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1740655031;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/2lDeXkEJ2zFt3hYo39omMRDWvJAm1z3XFejqJuo+b0=;
+	b=tvD1NcvyUC8jq0+m+Gozq4Z/bqVih/lG3hS2DPcNco84ZZ+SIoD6aFT0++hk7tK8U1ydpo
+	wOWJDxjJx40r969JOwHrkoMmkxw/wi+uWnuKVQZshU/nAZ+ID6zmBGuNvKSzeQeBqdz7Vk
+	9e252TkSszIkCBs36i6+ikF3yTS8amvKU2bJjg/4JStDRSCdSmYNiQOWByKLbhCyMws326
+	CrvzMK09mhDAQKXD0ecC1j+JoPwbTag4IzK13WSlT482w+m+n34pGHtCkgPSLmHUk3WuRk
+	+mNqIdiKQ9tlgObwUfGL5KBjc25GL/YD3LXCnxnzY9khQeVnVfpFgi8mmJR6RA==
+Content-Type: multipart/signed;
+ boundary=6ea8b17535b5903c5a542c2da7dcd7cc3e5f0f3ad9204e7183c8eccf5172;
+ micalg=pgp-sha256; protocol="application/pgp-signature"
+Date: Thu, 27 Feb 2025 12:16:58 +0100
+Message-Id: <D836PGFSE49W.SVV3JJRM1WQE@cknow.org>
+Cc: <kernel@collabora.com>, <linux-media@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-rockchip@lists.infradead.org>, "Tim Surber" <me@timsurber.de>,
+ "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH v10 3/6] media: platform: synopsys: Add support for HDMI
+ input driver
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: "Dmitry Osipenko" <dmitry.osipenko@collabora.com>, "Shreeya Patel"
+ <shreeya.patel@collabora.com>, "Heiko Stuebner" <heiko@sntech.de>, "Mauro
+ Carvalho Chehab" <mchehab@kernel.org>, "Hans Verkuil" <hverkuil@xs4all.nl>,
+ "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ <jose.abreu@synopsys.com>, <nelson.costa@synopsys.com>,
+ <shawn.wen@rock-chips.com>, <nicolas.dufresne@collabora.com>, "Sebastian
+ Reichel" <sebastian.reichel@collabora.com>
+References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
+ <20250225183058.607047-4-dmitry.osipenko@collabora.com>
+ <D82H4F6J4V4V.2BLHVUVD3BVX9@cknow.org>
+ <f0c3a16e-c4a2-4cd9-9afa-a21a975a45c9@collabora.com>
+In-Reply-To: <f0c3a16e-c4a2-4cd9-9afa-a21a975a45c9@collabora.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 27, 2025 at 08:46:46AM +0100, A. Sverdlin wrote:
-> From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> 
-> So that of_find_net_device_by_node() can find cpsw-nuss ports and other DSA
-> switches can be stacked downstream. Tested in conjunction with KSZ8873.
-> 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+--6ea8b17535b5903c5a542c2da7dcd7cc3e5f0f3ad9204e7183c8eccf5172
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+On Thu Feb 27, 2025 at 6:28 AM CET, Dmitry Osipenko wrote:
+> On 2/26/25 18:14, Diederik de Haas wrote:
+>>> +config VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID
+>>> +	bool "Load default EDID"
+>>> +	depends on VIDEO_SYNOPSYS_HDMIRX
+>>> +	help
+>>> +	  Preload default EDID (Extended Display Identification Data).
+>
+>> Thus a more extensive description what this Kconfig item does and why
+>> and when I want to enable it or not, seems more useful to me.
+>
+> Will update and expand the description with more clarification. Thanks
+> for suggestion.
 
-> ---
->  drivers/net/ethernet/ti/cpsw_new.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-> index cec0a90659d94..66713bc931741 100644
-> --- a/drivers/net/ethernet/ti/cpsw_new.c
-> +++ b/drivers/net/ethernet/ti/cpsw_new.c
-> @@ -1418,6 +1418,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
->  		ndev->netdev_ops = &cpsw_netdev_ops;
->  		ndev->ethtool_ops = &cpsw_ethtool_ops;
->  		SET_NETDEV_DEV(ndev, dev);
-> +		ndev->dev.of_node = slave_data->slave_node;
->  
->  		if (!napi_ndev) {
->  			/* CPSW Host port CPDMA interface is shared between
+Thanks for the explanation. The new description looks *much* better :-)
 
-Regards,
-Siddharth.
+Cheers,
+  Diederik
+
+--6ea8b17535b5903c5a542c2da7dcd7cc3e5f0f3ad9204e7183c8eccf5172
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ8BJsAAKCRDXblvOeH7b
+bqZ7AQCBEQEhBUK1iOz9+T8B3Y+OdjGIfIJ6kEU6H7gHbHEHqAEAnKGZTMkUf6+D
+c2Kroh+hbwGpguLij0MrCgQAOd7oKQs=
+=B/cr
+-----END PGP SIGNATURE-----
+
+--6ea8b17535b5903c5a542c2da7dcd7cc3e5f0f3ad9204e7183c8eccf5172--
