@@ -1,115 +1,82 @@
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AE4C8EB
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30D7270042;
+	Thu, 27 Feb 2025 00:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617449; cv=none; b=CBNlPD6exaa0gIa26fOmRrjRd3fgMP5Sh0HLCqCtc+ceEAWMzPGL1vA/lS1dIcOUOimZIQxEx7nFb/oU4FkejpOdw9aOowKdVT1cMgscFUHzNB7oopMhYeVGB3xjfbh/p33+yOfNdzvNis9XhaIcGQSpyoZIL+ekayBDEs2eFh0=
+	t=1740617454; cv=none; b=SzHgXAx/1VyqffoWOupHQ8Pyru9E7Rdl/su6gH5v3WzkYqncG31aOx9FFJCJENCgLY3Nl+3x/MLa5iQ43VBIQ41W2sb35hHegxZVJ8zMRSmF+IU7nF58ltdLTlimZmg3RNFw58dy9irovsieRWd/+BDkExxCxcyXnMxAwdS7aiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617449; c=relaxed/simple;
-	bh=j5VlhD8OttG1TFi5AuCSDRzNMFwzhmW3UW7rDA921z8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QEiL2svBxo1ma891HgAD5xdILc2JS9QJ3iJmulX+h3K/rsJ1pHh6UYB9rM9D7uiAcxj3UJHlh3I7Rir5QmZfKo//+l0woQwDYzTgSf55RFCCNtSpWZGukBI0imYAPuuR4WBke4omMMufhb5qp6QmP3GBjduJ4ib5/oUevfQbk4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1740616659-086e23601815e2e0001-xx1T2L
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id lLmKaKwFdinfIM7V (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 08:37:40 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
- 2025 08:37:39 +0800
-Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
- ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
- 15.01.2507.044; Thu, 27 Feb 2025 08:37:39 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 26 Feb
- 2025 20:18:46 +0800
-From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
-	<robert.moore@intel.com>, <yazen.ghannam@amd.com>, <avadhut.naik@amd.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
-	<leoliu@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-Subject: [PATCH v5 1/4] ACPI: APEI: Move apei_hest_parse() to apei.h
-Date: Wed, 26 Feb 2025 20:18:35 +0800
-X-ASG-Orig-Subj: [PATCH v5 1/4] ACPI: APEI: Move apei_hest_parse() to apei.h
-Message-ID: <20250226121838.364533-2-LeoLiu-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
-References: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
+	s=arc-20240116; t=1740617454; c=relaxed/simple;
+	bh=wvfRR8PjV+qegkfR0ZtNP9Xy3R7GdHmzfT0wtK2n0LI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G8GtaAn2ueZfC+3DaSamoXSPGSR76ev+QbvLwlccpcvEGSZLf33I7sl4WQox49XwdIkBj9lrgl7P4NVimSQJfS1oTOblO0RWFRuD5DXsN5P6gLebn6nzm0f5iptZ5HCh/ohxABPC51+u1qoPpOhP/Or4cPNvRUCnp8qhZvt6JKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BxQfiApQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BxQfiApQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C43C4CED6;
+	Thu, 27 Feb 2025 00:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740617454;
+	bh=wvfRR8PjV+qegkfR0ZtNP9Xy3R7GdHmzfT0wtK2n0LI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BxQfiApQecs90DsGHqplK4jUHSWc+4vW32Z8Sujco8sC4U4f5f/Kd9/Y4+LYkLSUh
+	 V6Z17lHiyYRGfZymymSBR4WwqFiidBrTMsrrygFrgPAokH0H1RiZpzdFqXfVM4mW28
+	 dYgwix0iMiriTxLYtu8JhG1miClt0dS7DlUgVJLk=
+Date: Wed, 26 Feb 2025 16:49:45 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+Cc: Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH] tty: pty: remove redundant local variable
+Message-ID: <2025022632-syrup-regretful-79df@gregkh>
+References: <20250226204707.1941274-1-vvidic@valentin-vidic.from.hr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Moderation-Data: 2/27/2025 8:37:38 AM
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1740616659
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1238
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137757
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226204707.1941274-1-vvidic@valentin-vidic.from.hr>
 
-From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+On Wed, Feb 26, 2025 at 09:47:07PM +0100, Valentin Vidic wrote:
+> The value of to is only used once, so no need to store it in a
+> variable.
+> 
+> Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+> ---
+>  drivers/tty/pty.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/pty.c b/drivers/tty/pty.c
+> index df08f13052ff..c6eb711500b6 100644
+> --- a/drivers/tty/pty.c
+> +++ b/drivers/tty/pty.c
+> @@ -110,12 +110,10 @@ static void pty_unthrottle(struct tty_struct *tty)
+>  
+>  static ssize_t pty_write(struct tty_struct *tty, const u8 *buf, size_t c)
+>  {
+> -	struct tty_struct *to = tty->link;
+> -
+>  	if (tty->flow.stopped || !c)
+>  		return 0;
+>  
+> -	return tty_insert_flip_string_and_push_buffer(to->port, buf, c);
+> +	return tty_insert_flip_string_and_push_buffer(tty->link->port, buf, c);
 
-Remove static from apei_hest_parse() so that it can be called in another
-file.
+does this actually change the resulting code any?
 
-Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
----
- drivers/acpi/apei/hest.c | 2 +-
- include/acpi/apei.h      | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+"to" actually means something here, the tty is the "from" and the link
+is the "to" where the data is going, so having it be "to" makes the code
+easier to understand by humans, which is the first goal of code.
+Maintaining it for long periods of time is key.
 
-diff --git a/drivers/acpi/apei/hest.c b/drivers/acpi/apei/hest.c
-index 20d757687e3d..35d08f4e50e6 100644
---- a/drivers/acpi/apei/hest.c
-+++ b/drivers/acpi/apei/hest.c
-@@ -134,7 +134,7 @@ static bool is_ghes_assist_struct(struct acpi_hest_head=
-er *hest_hdr)
-=20
- typedef int (*apei_hest_func_t)(struct acpi_hest_header *hest_hdr, void *d=
-ata);
-=20
--static int apei_hest_parse(apei_hest_func_t func, void *data)
-+int apei_hest_parse(apei_hest_func_t func, void *data)
- {
- 	struct acpi_hest_header *hest_hdr;
- 	int i, rc, len;
-diff --git a/include/acpi/apei.h b/include/acpi/apei.h
-index dc60f7db5524..b79976daa4bb 100644
---- a/include/acpi/apei.h
-+++ b/include/acpi/apei.h
-@@ -33,6 +33,8 @@ void __init acpi_ghes_init(void);
- static inline void acpi_ghes_init(void) { }
- #endif
-=20
-+int apei_hest_parse(apei_hest_func_t func, void *data);
-+
- #ifdef CONFIG_ACPI_APEI
- void __init acpi_hest_init(void);
- #else
---=20
-2.34.1
+Otherwise your change "tty->link->port" doesn't make it all that obvious
+that the this is being written not to the tty device itself, but to
+somewhere else, right?
 
+thanks,
+
+greg k-h
