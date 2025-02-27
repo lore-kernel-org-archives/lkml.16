@@ -1,176 +1,176 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FE925E452
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E85425E80F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668092; cv=none; b=lBG8NjKVFfGvrwb/zzihtuPPpMXbbFFZWUxDysYqH3omCYgytSdvTxKDPAjNHhYR8rcNkV7AEUOBkIIo6vdwU3hilOPvesZ+1Wk8m/XsXmHwROfhEmTpILzM5KS6qjTpayeB0DPvCAGnyoe9GkHS6keojBfpa2E2CQnSk2YAdGE=
+	t=1740668148; cv=none; b=C2MxN6boRJ3JSuSZuJWGuExljzICHWGVmdv8nBViSlB33TnsPSfftb1xWijbJUQrdkhZJph60NG3Vh1ZoLdf/E00dexGVKSTW+fNow+RUjuVD46GyYhpn+0gO8HNizF5gqUZ6xMclv5feMNClB+puFwGN5P3WnhQFen1yh22t94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668092; c=relaxed/simple;
-	bh=KboGCxx7OgmWNnz4unI5atpIG8j1s+NhJgz2Wlu5UaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EXN2Pfpi2nwauQx5jhnX3IKJ2tSy2PyB0fwQYMksVsx3q3qnHe6Iun/0VbOzKvP5D4cJe8uC6JwxOreRCDdeAqZ9FcJE4daaEf673Os3KPzWPDoa666YA+sGOA7HUucDHJV2E2zSgZD/k3GxevNhcmBMdvSr5QyzEnPMv3ROQBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rJKktULN; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740668148; c=relaxed/simple;
+	bh=04lXeR5WeBp3P02ZTmd2NJbVMZs6V5xG2AeeQAtEf/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hg8MgzBoAh2ZKkjhSSdhWehhF/PD962Dy5Ea5DGmHA1E/Lhzw/I5nQ9uHqXTs/mTf0zJKrmlP/8IdA1LTcfxX8EhbC9LfiGSvA2TyaF+hf7ZOoISfzCuRBMBYPRDMNBUaOHnpIP30ewYcpmCTmiu5xnXRu1XcUAOkWsQto83ZhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fqg/ltkd; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rJKktULN"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5439a6179a7so1226107e87.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:54:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fqg/ltkd"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab771575040so382674266b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:55:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740668088; x=1741272888; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sCMeltnZVSG7sz0LhzAVQweBa8yRnjaqRK41n2Tk0AM=;
-        b=rJKktULNRwmz5XhYh7Ao7P2IEkXIaqACQ8BjfV+6U2+0ipde90bPpyfp2DHYol3aEw
-         W/TcIzf9uZm4a9eW2uNIjX5BkP6/jvWigBzk/UIbEp5VKhoPH6tvgTdR7qXtPoDwbmaJ
-         L86Uml4QaHSqiT7mAp5nXR2PkzLt1lvEOseWmTQ0UyfATE3LZPgGmTZPLq8c84JesUZL
-         geqA4k3TdvE7EL7w2hZD78722+idldzwyqQRlPF9RsccMc+oFFFTFkE74S0MMHJ0HR0U
-         N4dcM1I1aPha080jaZAOsZtziHr7uGY4sDk521TnuVR01IkKTl27dxbrg217v9+XEt5T
-         SDRQ==
+        d=suse.com; s=google; t=1740668144; x=1741272944; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=psgfZ9yFHMKvZ3U/C+2q+GvpOcP5tp1ObOW+btX8RAI=;
+        b=Fqg/ltkd6PSJeUE7abpVtA6aBiszv2SBSCT+RX4iPpwiH011okRBd0f0DG22WIZuR7
+         WXbcDl6A50tpf+avl672ZdjX/se7KDnwigleDSQWlfFoca3/QluNSz9rykKO9NBb2G00
+         3F/0LJd4HzFtIsr3hqOLk0zzY9Hfv9W8EZlJjcfrtKDeN58OBT1ChtobkBdbeTAUKSmp
+         u9dNMzGX5FMgym3wBAcW6p8LukuYT92O7LiawtTWr6n3medIrXvyPQuvlunCm6uo4tCu
+         bZgR6M22Xkq+YOstbsrVcmdEE8xGDwTMKvNWnIvA+v06PhFey3ljycdPN8syN5ivhwjo
+         f5dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740668088; x=1741272888;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCMeltnZVSG7sz0LhzAVQweBa8yRnjaqRK41n2Tk0AM=;
-        b=bFrOOaFguzwLQC5fxEbMW0T6AmQJri/c0tgrTKhFrmZyFjM1HJnWv+Q+PxvqXycau1
-         G0PyLHOb5IPDgR1bPJMPIdzK1YqQfuTx3AnTdalmii0kF9ORlXF94nQGyCVN5zQB0urr
-         58UD8xSrooek7wI1eckD7gZkCA/9sQ1y+RcgDFwGvHiZnVtxCoA9pYLzVBqs15zSQfEV
-         KY5LlV7Tz/ohmvBBtmNzNIVz/eeN3DqSZdlF4Zn7B0370JviUeQvQ0jTjGdBNWA++br+
-         v6yXCwIKqHW+ZFgc6JPBWthvSsdLZaRaDBwkT5Jy+uR6TFX8Ng1rtIea/zIhBfwrvYII
-         QCcA==
-X-Forwarded-Encrypted: i=1; AJvYcCXc+NrNUUXBNzSlOK/fglrtzE5RBUUkfDJG5Yf59hsoVr7/+DrhkN6lrexhWxb4rfoATkasXo9tY8xD/ew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiRr7/gvRW0SBCeY77E9JH7hSyDdwqMha/nB5cac54QqH1oq21
-	wsiA1KRzuMCnRiwhiQYoyPL/iYIuRTbFnAqupT5Hl/25S29v6NdyCiePJbxmLEHSsvgDdy0EOqT
-	XA34=
-X-Gm-Gg: ASbGncsddXMYibzPdcDSZjivNcJ2FkGRo7SF+t2V4B/rYS1ED95SCvFPCpIR0mA4mVv
-	6UPIK7Q6qRCT4y1AALjhYJjNMhe7DTDo3HN3yGBK8bYgeameO7QlpKJ1XtZsEvdCNlNfFCN/yKi
-	kIlBPiJFBpdksBTYOUhTQVM8WWjtUslZAIFAykASridWt7jSDm7J9RQ6H4Rx7z3OIuYYBAt6juY
-	3Y9Eqp1orH6CWr3fvdkcMWr21ez3BA2aB3DadFnWfSQyo5DfjBfOP6mx+TKyTPyLmYVo1hYbD5G
-	bkrpURG4mNqyK/tYXFnvkZupXDFPTV+qzRiZlvmsza03apbHlTWZzBVhUXq7OcXhkFKXC46ycKN
-	jV/du8w==
-X-Google-Smtp-Source: AGHT+IF94UxahrgvKnqbDIyQP2SoOHuqTWRLMtDqEw4LEuHBKdFhk7jgfYz2acmAzH6fUFJ672CotA==
-X-Received: by 2002:a05:6512:308c:b0:545:4f00:f92a with SMTP id 2adb3069b0e04-5494332104amr1421507e87.20.1740668088335;
-        Thu, 27 Feb 2025 06:54:48 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549441741d4sm184217e87.33.2025.02.27.06.54.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 06:54:47 -0800 (PST)
-Date: Thu, 27 Feb 2025 16:54:45 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: manivannan.sadhasivam@linaro.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Rob Herring <robh@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/23] arm64: dts: qcom: Add 'global' IRQ to supported
- SoCs
-Message-ID: <26ohpisuitzaghsxbbyjgb2rbhrubu4ipt7zopyuakxbgyqi7i@xa3tjwlwwjoq>
-References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+        d=1e100.net; s=20230601; t=1740668144; x=1741272944;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=psgfZ9yFHMKvZ3U/C+2q+GvpOcP5tp1ObOW+btX8RAI=;
+        b=RGTh7ufjnzgexB7mGRHqZ0pYqM/UP0on50JQCNtYmLMpsKcIdXD20iM9wNEU9DTQW4
+         YmMxd7J+rdgNG5J+9pQr2vHazkEXp/SXrh2E0SHk3198dfuqeEDMH1PpVN8j6CJCnoGQ
+         XQx8gnkIrDSuCIalrNl6Qngc0pcsdEYUAVdLbKdnBrqMv66vF9B6kJgPFyRxVCirPTMj
+         4g/Dia/2Nf4xvMbeOYIqYIsYXQjRedczBlcb/H0b0P83SOCaaq1VdSFb9XkM1z4p0nW7
+         czvzz2IJpDmfs35+G4QzGSxDd4SBsDYU8RNuCxsqp1N1w484s0jy+ZyhUYcCfxtAOecN
+         RTKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWikeeUbtthOebTU8Hnbd5ENd2F9oGq3wLKV7vy7xxAdnNMKRAghuQqBmagfJgmOiwRfopUBBJCrPSVKtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8da815L2daB5e0hYZl81pU8OBPuQ30JScAy8wjXpmuKiaCjVJ
+	4SOFHa+XXLMjwNnAuSRIctamlfHZLE/SVv6iXUtMsx74vKtiaLM97vwNlngfJM8=
+X-Gm-Gg: ASbGncsR0nIkZMCOVtFlAzFL0jvF1zMFIao5vAP0Dwu6RiH86JxhEMoOy8yiK1OBlFU
+	1WX02rZvYWqUOc3W/YG1D01Gr22twlUPgqzVxDNCW9ZmHxi5S6UCkN8HcUStBu7+QCbY9P+OmBW
+	3RZJ0i/2OvY3VhRv+gPDtey+PWIPIaNiiTESKpAhaiVE+XaDB0F978tG6rbuxR2wWAKmE3N4R7S
+	+GepCZVAK3lZyYRsygB2nD/CAC3zsKSD4SFE9O0Ts32RYxaHSrN4GeYBxsNWf2dcLAsqXGqp95O
+	ZmTB1nWAaXXVQvwIQGntjWR20bTlEg==
+X-Google-Smtp-Source: AGHT+IHM3y5ddErBEWtI/Hb72dFlr7ja17jLO2hZ3jK+9ep11ghJNXBhohGfhuKxIG5xOI9T5kAR0A==
+X-Received: by 2002:a17:906:6185:b0:abb:aa8f:c9cd with SMTP id a640c23a62f3a-abf062db58cmr468878666b.28.1740668144321;
+        Thu, 27 Feb 2025 06:55:44 -0800 (PST)
+Received: from [10.100.51.161] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0ba3dbsm134343466b.22.2025.02.27.06.55.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 06:55:43 -0800 (PST)
+Message-ID: <aa7c1589-7c36-4721-b815-0ab065130b83@suse.com>
+Date: Thu, 27 Feb 2025 15:55:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 0/6] rust: extend `module!` macro with integer
+ parameter support
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Daniel Gomez <da.gomez@samsung.com>,
+ Sami Tolvanen <samitolvanen@google.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Adam Bratschi-Kaye <ark.email@gmail.com>, linux-kbuild@vger.kernel.org,
+ Simona Vetter <simona.vetter@ffwll.ch>, Greg KH
+ <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>
+References: <JKqjFnoTeEbURcTQ5PpmUZWDS2VMEt0eZl68dWkgk3e8ROFpb2eTWH2mStKkkXJw__Ql5DdYvIR9I7qYks-lag==@protonmail.internalid>
+ <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+ <87ldtv1t1c.fsf@kernel.org> <0d9e596a-5316-4e00-862b-fd77552ae4b5@suse.com>
+ <CANiq72nBK=HZ=ZL9bYhB8Z+U5QK3xmsQesO9axf_Fz0_1mWREA@mail.gmail.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <CANiq72nBK=HZ=ZL9bYhB8Z+U5QK3xmsQesO9axf_Fz0_1mWREA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 07:10:42PM +0530, Manivannan Sadhasivam via B4 Relay wrote:
-> Hi,
+On 2/25/25 12:54, Miguel Ojeda wrote:
+> On Tue, Feb 25, 2025 at 11:22 AM Petr Pavlu <petr.pavlu@suse.com> wrote:
+>>
+>> I'd say the easiest is for the entire series to go through the Rust
+>> tree. I'd also propose that any updates go primarily through that tree
+>> as well.
+>>
+>> Makes sense, I think it is useful for all changes to this code to be
+>> looked at by both Rust and modules people. To that effect, we could add
+>> the following under the MODULES SUPPORT entry:
+>> F:      rust/kernel/module_param.rs
+>> F:      rust/macros/module.rs
+>>
+>> My slight worry is that this might suggest the entirety of maintenance
+>> is on the modules folks. Fortunately, adding the above and running
+>> get_maintainer.pl on rust/kernel/module_param.rs gives me a list of
+>> people for both Rust and modules, so this could be ok?
 > 
-> This series adds the Qualcomm specific 'global' IRQ to the supported SoCs.
-> This IRQ is used to receive the PCIe controller and link specific events
-> such as Link Up/Down, MSI, PTM etc... in the driver. Support for this IRQ
-> was already added to the pcie-qcom driver. So enabling this IRQ would allow
-> the driver to enumerate the endpoint device and also retrain the link when
-> the device is removed [1] without user intervention.
+> Up to you, of course -- a couple days ago (in the context of the
+> hrtimer thread) I wrote a summary of the usual discussion we have
+> around this (copy-pasting here for convenience):
 > 
-> This series also adds missing MSI SPI IRQ to some of the SoCs.
+>     So far, what we have been doing is ask maintainers, first, if they
+>     would be willing take the patches themselves -- they are the experts
+>     of the subsystem, know what changes are incoming, etc. Some subsystems
+>     have done this (e.g. KUnit). That is ideal, because the goal is to
+>     scale and allows maintainers to be in full control.
 > 
-> Testing
-> =======
+>     Of course, sometimes maintainers are not fully comfortable doing that,
+>     since they may not have the bandwidth, or the setup, or the Rust
+>     knowledge. In those cases, we typically ask if they would be willing
+>     to have a co-maintainer (i.e. in their entry, e.g. like locking did),
+>     or a sub-maintainer (i.e. in a new entry, e.g. like block did), that
+>     would take care of the bulk of the work from them.
 > 
-> This series was tested on Qualcomm RB5 board based on SM8250 SoC and
-> Qualcomm Ride MX board based on SA8775p SoC.
+>     I think that is a nice middle-ground -- the advantage of doing it like
+>     that is that you get the benefits of knowing best what is going on
+>     without too much work (hopefully), and it may allow you to get more
+>     and more involved over time and confident on what is going on with the
+>     Rust callers, typical issues that appear, etc. Plus the sub-maintainer
+>     gets to learn more about the subsystem, its timelines, procedures,
+>     etc., which you may welcome (if you are looking for new people to get
+>     involved).
 > 
-> NOTE
-> ====
+>     I think that would be a nice middle-ground. As far as I understand,
+>     Andreas would be happy to commit to maintain the Rust side as a
+>     sub-maintainer (for instance). He would also need to make sure the
+>     tree builds properly with Rust enabled and so on. He already does
+>     something similar for Jens. Would that work for you?
 > 
-> I've left a few SoCs in the tree like QCS404, SC8280XP due to lack of
-> documentation. Those will be added later.
+>     You could take the patches directly with his RoBs or Acked-bys, for
+>     instance. Or perhaps it makes more sense to take PRs from him (on the
+>     Rust code only, of course), to save you more work. Andreas does not
+>     send PRs to anyone yet, but I think it would be a good time for him to
+>     start learning how to apply patches himself etc.
+> 
+>     If not, then the last fallback would be putting it in the Rust tree as
+>     a sub-entry or similar.
+> 
+>     I hope that clarifies (and thanks whatever you decide!).
+> 
+>     https://lore.kernel.org/rust-for-linux/CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com/
+> 
+> Would any of those other options work for you?
 
-Also IPQ9574. For the series:
+From what I can see in this series, the bindings required adding
+a number of generic functions to the Rust support code and also most
+discussion revolved around that. I'm worried this might be the case also
+for foreseeable future updates, until more building blocks are in place.
+It then makes me think most changes to this code will need to go through
+the Rust tree for now.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On the other hand, if the changes are reasonably limited to mostly
+rust/kernel/module_param.rs and rust/macros/module.rs, then yes, I'd say
+it should be ok to take the patches through the modules tree.
 
-> 
-> [1] https://lore.kernel.org/linux-pci/20250221172309.120009-1-manivannan.sadhasivam@linaro.org/
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-> Manivannan Sadhasivam (23):
->       dt-bindings: PCI: qcom,pcie-sm8150: Add 'global' interrupt
->       arm64: dts: qcom: sm8150: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sm8250: Add 'global' interrupt
->       arm64: dts: qcom: sm8250: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sm8350: Add 'global' interrupt
->       arm64: dts: qcom: sm8350: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sa8775p: Add 'global' interrupt
->       arm64: dts: qcom: sa8775p: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom,pcie-sc7280: Add 'global' interrupt
->       arm64: dts: qcom: sc7280: Add 'global' PCIe interrupt
->       dt-bindings: PCI: qcom: Add 'global' interrupt for SDM845 SoC
->       arm64: dts: qcom: sdm845: Add missing MSI and 'global' IRQs
->       arm64: dts: qcom: msm8996: Add missing MSI SPI interrupts
->       dt-bindings: PCI: qcom: Allow MSM8998 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: msm8998: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom: Allow IPQ8074 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: ipq8074: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom: Allow IPQ6018 to use 8 MSI and one 'global' interrupt
->       arm64: dts: qcom: ipq6018: Add missing MSI and 'global' IRQs
->       dt-bindings: PCI: qcom,pcie-sc8180x: Add 'global' interrupt
->       arm64: dts: qcom: sc8180x: Add 'global' PCIe interrupt
->       arm64: dts: qcom: sar2130p: Add 'global' PCIe interrupt
->       arm64: dts: qcom: x1e80100: Add missing 'global' PCIe interrupt
-> 
->  .../devicetree/bindings/pci/qcom,pcie-sa8775p.yaml | 10 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sc8180x.yaml | 10 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8150.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8250.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie-sm8350.yaml  |  9 ++--
->  .../devicetree/bindings/pci/qcom,pcie.yaml         | 14 ++++--
->  arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 20 +++++++-
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 40 ++++++++++++++--
->  arch/arm64/boot/dts/qcom/msm8996.dtsi              | 54 +++++++++++++++++++---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi              | 20 +++++++-
->  arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 28 ++++++++---
->  arch/arm64/boot/dts/qcom/sar2130p.dtsi             | 12 +++--
->  arch/arm64/boot/dts/qcom/sc7280.dtsi               | 14 ++++--
->  arch/arm64/boot/dts/qcom/sc8180x.dtsi              | 24 ++++++----
->  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 40 ++++++++++++++--
->  arch/arm64/boot/dts/qcom/sm8150.dtsi               | 12 +++--
->  arch/arm64/boot/dts/qcom/sm8250.dtsi               | 18 +++++---
->  arch/arm64/boot/dts/qcom/sm8350.dtsi               | 12 +++--
->  arch/arm64/boot/dts/qcom/x1e80100.dtsi             | 18 +++++---
->  20 files changed, 300 insertions(+), 82 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250227-pcie-global-irq-dd1cd5688d71
-> 
-> Best regards,
-> -- 
-> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> 
+@Luis, Sami, Daniel, please shout if you see any problem with this.
 
 -- 
-With best wishes
-Dmitry
+Thanks,
+Petr
