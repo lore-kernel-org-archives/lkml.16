@@ -1,78 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412456FB0;
-	Thu, 27 Feb 2025 11:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6686FB0;
+	Thu, 27 Feb 2025 11:53:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740657170; cv=none; b=POdkzBYwCdJeWx94dMebyfNN85SqDZkn5kBY9mkNEBgGqCYor1LVEI7uoezem1fc88KXQ+tlRGyjGIHV0L047rwSwQdiPgrmxKG2yWj7BvVbMQQ8rSvQb4JRT/iCp8obnmfDCUHyWFw+Qe8aoqWkxhzJrvovWEDvdkqRPqh/6Wg=
+	t=1740657209; cv=none; b=lqnYCtZ2qphA3c3pOLhoUgW8PkLAZmeUDayV30LXBKn9xK0thUfCwH27bKVyenmqRbZ8q4UOXhkIEpDzoIfKXRfNXL0nFwa1DP2F6A0ZGeRSkiIBLfZcWwymwnpEZQFKbXeQkIKmYTKEntr+0anMZ1/DELVRzen4205ZfKbWqAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740657170; c=relaxed/simple;
-	bh=ujqkVTJfbifJmvnrFsGRUAMFLN6TjuZ9+ugO69VY00s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iZzAlGofnKR2DCmpEmkYknOiYmsAZHX3xuWd+X4aUpPkprqeY6+jHfjLDG6waB/kGGbjp9sKaOSyFi+JHezx4iFeYZB08qha8cSXA453etdna7eB2x3X6FpSbmBoByyMsUbtaJjGNPWuhNlROhoVnpZ3xQMfnpKLFvkFz69vRcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVXP5hFn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVXP5hFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B2AC4CEE5;
-	Thu, 27 Feb 2025 11:52:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740657170;
-	bh=ujqkVTJfbifJmvnrFsGRUAMFLN6TjuZ9+ugO69VY00s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NVXP5hFn1FbbXEVNIk7OD8xPwcZz8tduUnX2xahO+0D23LlUYkRFgKWlGZiSf+4p8
-	 UgvW44SPQE987OFztZQ+Tv1TgazJxJ85hh4G1UgxVXCxkef7II7DQpQS7HjHqIuFlM
-	 KG2+iI0Gq4QUvZuYrK9EJ2iv2M9X5WoTpz3VZPsCXw9r99xulgarpWAVaQlgKRhhOj
-	 wHQJxL23Jknw+IRpspvK9C5IxZWSiGigLYEZHgof8IJIjTpFHsjieMO7VAStgoWfQc
-	 tGUD5lEc0El5EmgL1ByZ6VTeVgTurxFt4sEiUHi6RHMyrvEfSEbOwnwsXwVZB9DTyL
-	 /NmzgjqReeDMQ==
-Date: Thu, 27 Feb 2025 12:51:57 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [tip: perf/core] perf/core: Move perf_event sysctls into
- kernel/events
-Message-ID: <b67ze5mr5f4xosuu7dhewsbleb57utgfktt5nzpovwszbhljoo@2hvlava7w2hx>
-References: <20250218-jag-mv_ctltables-v1-5-cd3698ab8d29@kernel.org>
- <174014677034.10177.14884250079507564395.tip-bot2@tip-bot2>
+	s=arc-20240116; t=1740657209; c=relaxed/simple;
+	bh=BLKdMETV/SInTthomDJ1NH2Qh7Bpvfh6khpGKs35JvM=;
+	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=mGyX4m3FXJjrp2mq4jTUkLGREfw8/YYmeHr3psRR+CRWXrovaCA4rQg3lbnm5QkoWWRc6OtQTMeSf52rCQ9HJlQqufz9DKZup99D+5R615X0urPo8g2P4WP1UXqw6RMnfWOfI65UznHHd6GWKD33g+24UTC9BBvRPIaK1Ofbues=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Z3V5Q5vf7z9w7y;
+	Thu, 27 Feb 2025 19:50:18 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 264A1180113;
+	Thu, 27 Feb 2025 19:53:24 +0800 (CST)
+Received: from [10.67.120.192] (10.67.120.192) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 27 Feb 2025 19:53:23 +0800
+Message-ID: <3e477135-981f-49bd-8e54-0c3ecdcc8a19@huawei.com>
+Date: Thu, 27 Feb 2025 19:53:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174014677034.10177.14884250079507564395.tip-bot2@tip-bot2>
+User-Agent: Mozilla Thunderbird
+CC: <shaojijie@huawei.com>, Simon Horman <horms@kernel.org>,
+	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>, Netdev <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] net: hisilicon: hns_mdio: remove incorrect ACPI_PTR
+ annotation
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>, Jian Shen
+	<shenjian15@huawei.com>, Salil Mehta <salil.mehta@huawei.com>, Andrew Lunn
+	<andrew+netdev@lunn.ch>, "David S . Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>
+References: <20250225163341.4168238-1-arnd@kernel.org>
+ <da799a9f-f0c7-4ee0-994b-4f5a6992e93b@huawei.com>
+ <c0a3d083-d6ae-491e-804d-28e4c37949d7@app.fastmail.com>
+From: Jijie Shao <shaojijie@huawei.com>
+In-Reply-To: <c0a3d083-d6ae-491e-804d-28e4c37949d7@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-On Fri, Feb 21, 2025 at 02:06:10PM -0000, tip-bot2 for Joel Granados wrote:
-> The following commit has been merged into the perf/core branch of tip:
-Does this mean that it will make its way to upstream throught the tip
-tree? Should I drop it from my series? Will someone pick this up?
+
+on 2025/2/26 14:49, Arnd Bergmann wrote:
+> On Wed, Feb 26, 2025, at 04:21, Jijie Shao wrote:
+>> on 2025/2/26 0:33, Arnd Bergmann wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> Building with W=1 shows a warning about hns_mdio_acpi_match being unused when
+>>> CONFIG_ACPI is disabled:
+>>>
+>>> drivers/net/ethernet/hisilicon/hns_mdio.c:631:36: error: unused variable 'hns_mdio_acpi_match' [-Werror,-Wunused-const-variable]
+>>>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>>    drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+>>> index a1aa6c1f966e..6812be8dc64f 100644
+>>> --- a/drivers/net/ethernet/hisilicon/hns_mdio.c
+>>> +++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+>>> @@ -640,7 +640,7 @@ static struct platform_driver hns_mdio_driver = {
+>>>    	.driver = {
+>>>    		   .name = MDIO_DRV_NAME,
+>>>    		   .of_match_table = hns_mdio_match,
+>>> -		   .acpi_match_table = ACPI_PTR(hns_mdio_acpi_match),
+>>> +		   .acpi_match_table = hns_mdio_acpi_match,
+>>>    		   },
+>>>    };
+>>
+>> But I think it can be changed to:
+>>
+>> + #ifdef CONFIG_ACPI
+>> static const struct acpi_device_id hns_mdio_acpi_match[] = {
+>> 	{ "HISI0141", 0 },
+>> 	{ },
+>> };
+>> MODULE_DEVICE_TABLE(acpi, hns_mdio_acpi_match);
+>> + #endif
+>>
+> That would of course avoid the build warning, but otherwise
+> would be worse: the only reason ACPI_PTR()/of_match_ptr() exist
+> is to work around drivers that have to put their device ID
+> table inside of an #ifdef for some other reason. Adding the
+> #ifdef to work around an incorrect ACPI_PTR() makes no sense.
+>
+>       Arnd
+
+if CONFIG_ACPI is disabled, ACPI_PTR() will return NULL, so
+hns_mdio_acpi_match is unused variable.
 
 
-> 
-> Commit-ID:     8aeacf257070469ff78a998a968a61d0cadc0de3
-> Gitweb:        https://git.kernel.org/tip/8aeacf257070469ff78a998a968a61d0cadc0de3
-> Author:        Joel Granados <joel.granados@kernel.org>
-> AuthorDate:    Tue, 18 Feb 2025 10:56:21 +01:00
-> Committer:     Ingo Molnar <mingo@kernel.org>
-> CommitterDate: Fri, 21 Feb 2025 14:53:02 +01:00
-> 
-> perf/core: Move perf_event sysctls into kernel/events
-...
-> -		.maxlen		= sizeof(sysctl_perf_event_max_contexts_per_stack),
-> -		.mode		= 0644,
-> -		.proc_handler	= perf_event_max_stack_handler,
-> -		.extra1		= SYSCTL_ZERO,
-> -		.extra2		= SYSCTL_ONE_THOUSAND,
-> -	},
-> -#endif
->  	{
->  		.procname	= "panic_on_warn",
->  		.data		= &panic_on_warn,
+So use #ifdef is possible and has no side effects, and many drivers do so.
 
--- 
 
-Joel Granados
+
+Of course, it also seems possible to remove ACPI_PTR(),
+But I'm not sure if it's okay to set a value to acpi_match_table if CONFIG_ACPI is disabled.
+It need maintainer to look at this.
+
+Thanks,
+Jijie Shao
+
+
