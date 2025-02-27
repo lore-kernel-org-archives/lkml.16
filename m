@@ -1,156 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0D622C32D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEBA227005C;
+	Thu, 27 Feb 2025 12:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658422; cv=none; b=Qgrrmmws3sa8+khHIzQSpaPAU0v9dQi/TKOasmd9PUK9ne+bGYptqc54CXuwpxBC613HTHktJTRxxHTHtLNeIPx3SbpsCcTAR8PUerPvzJRQGcqeY7arbD9sB8bT3AXe/QuaoVsMfCD3WDNzoOl/kyNCXeSY8WjbiuVPr7xUxhs=
+	t=1740658488; cv=none; b=dmMMMEMzZmt1SiVVCR19kr0O+/9xkUAgEZK3dwhj1DyE5fdm6S9YIIuI4o/c4GuJbQzQImoJ+tJFl9xuzbojzboqsylShmTqZcWqgfAMNiy0h/XjH5hC1bg9FsQCzB4Vhzx18wGjxFDvzU2x+frjjtyKl1ia5iBQp1ttWOQMPPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658422; c=relaxed/simple;
-	bh=zu5zZyBnN3ry9IQ+Jn6HYG0wRqc9j641WfB32TvRN88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PI0Mbfk+CK1OgqJSzI0zCCDyPl6KF7C/IIRf54HO/fQn5OtWIqiGxhiyg03JsOzyHkpWQyd/OYwvOr382HaIKj2CXwlB1bAUx+LWlQpggH5jyGMhal+/4h+45Xxx1W+Ujx6xFFcEFa3jQl1PwxbNikYqW7P4b4wZS9iP54xZxjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I3eS6c5X; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I3eS6c5X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740658419;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+MXJ/yo/wY9z4Kh8ojEu/aUMRrlN5xvGKyO57GV+hi4=;
-	b=I3eS6c5Xm0QFqAdAQDHsHtH/te8I8jrEctjXIl1sSWTIqmtWsHn+mmp+ZJ8bEXuYbKCVAP
-	2Z8/HnRKZByYbZBoFmvY8+bdkRU9hqLA3ctWmDm1bCe4b8IQah6erOZDkMlRjZjsPg/Q0+
-	y+EMgXX+8aDIAlZrgx88j6d8xAGi6Sg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-154-UKJymi2oN7egH7kiwnq5WQ-1; Thu, 27 Feb 2025 07:13:38 -0500
-X-MC-Unique: UKJymi2oN7egH7kiwnq5WQ-1
-X-Mimecast-MFC-AGG-ID: UKJymi2oN7egH7kiwnq5WQ_1740658417
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-390ddebcbd1so497504f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:13:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740658417; x=1741263217;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+MXJ/yo/wY9z4Kh8ojEu/aUMRrlN5xvGKyO57GV+hi4=;
-        b=f/jlOksddryUuVQTXq0TRFFwU9K2sioNaa8gzoExXKjWq2xO0vmdq6QF1ztb7hRPBA
-         vubMhtYmEC9JLRq9gdxf6YG43/trPUZmdDk/6QIG4IQnZ4FlpanIFYOPD6yMDFSw5JLV
-         hhRZCYqJ3C0BUvD/BIE3x3HR9Hs8JOm3cVkcwSb8xth67F9pXSwdLPhuVy3NAtFC+2gE
-         HGbfZk8CStrXjY/jttF7saXaHL2JEMZO5Q0ueK0JaIWdXYNdfYvYpOjHrraiBiDJ3EaJ
-         qT+lyWpvftUKQ9lsxbPllHIlccArQsEsw88q08AMUBpdcKzLPX+wTgPfzHFBXJGgUc8I
-         a56A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAWe0vyev1Deo5UD9WOApdGvS6NTyT9XIlQN7Lqaro3J9xtzgaePXh9lo5lk4vpFaWAmmZVgaQ1XztmbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwefV6HIDZMk4fqaXOaA9tfLx5op+QIup8/siVW8+TLdK8Yjt0y
-	9RCcdtB8hoQzHGg+XH2fCJg4iRVbt4hr9ZVMPkURROlkw+YVCn4A+SGqOCsEqWmES+BV1/FAFUN
-	COiMUPnPThABv166Jp5QKE+SgBWgqPuaJUbzvZ1IYoiAyzOZaeJl31iHb+3/Mvw==
-X-Gm-Gg: ASbGncuIV9IuOo3F5i1Ctx7BtshC4oT1ONEFqX93Ggl9rnoLNUAhucBdssKIWFWOFge
-	luybU1Pcsh4UJ+tWfxxyCAnHd6UYEkFdQ2aTjq5cqkjSsfEmsAEINzw8ACzg176lqi8kckFjqNg
-	9cjsUKL6N+Hk6Xg8KSZ8Mqpmwu88t8dsvnfyhO5aYXFgTOqvRm4qgUo6H4h1st0a9ek2v4jlVd9
-	fR4hXxw5FMTFGKlBr50SpKCWBg6ZwQzo5aC7xx/h94i49WDxqtOY1lLUn/YaJal7IHOA+3gyTDs
-	jBVW0NtjuTx7C2P0TzPBUzETrcTHdbrrngv23UyIt7XDFA==
-X-Received: by 2002:a05:6000:1a88:b0:390:e7d7:9669 with SMTP id ffacd0b85a97d-390e7d7991emr1408591f8f.21.1740658416782;
-        Thu, 27 Feb 2025 04:13:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEGl4hPeu0HygbnTFHg+/9ohJ4IMxJNzWuCdzZ5zOQx0HggSdzuuB4mlslYm75dEMyalE9ssA==
-X-Received: by 2002:a05:6000:1a88:b0:390:e7d7:9669 with SMTP id ffacd0b85a97d-390e7d7991emr1408572f8f.21.1740658416421;
-        Thu, 27 Feb 2025 04:13:36 -0800 (PST)
-Received: from [192.168.88.253] (146-241-81-153.dyn.eolo.it. [146.241.81.153])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7d1dsm1865163f8f.56.2025.02.27.04.13.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 04:13:35 -0800 (PST)
-Message-ID: <d33b1587-f401-4400-9205-01e45d0f41a8@redhat.com>
-Date: Thu, 27 Feb 2025 13:13:34 +0100
+	s=arc-20240116; t=1740658488; c=relaxed/simple;
+	bh=Gh7xmGWSgO6eYc0d7vBNoai2bHYo22KqAYJc7A1uFgM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fzGJNnWZOt7doblvj03V/jpqeb0bmSVmJZiF2k8qnDbWL4OsDvItf0UDhzgkLuHP9kqO+PJFieJWecx369Ysy2EVfGwP/5DqKKUlFDfQQvmOvkARTMpBZqQ1yXT424maAhVnjsXq4Furvlca51fo4C/vTWwwBr4KFf6lT5Qm514=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tncmn-00016H-00; Thu, 27 Feb 2025 13:14:41 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 50FDAC0135; Thu, 27 Feb 2025 11:12:36 +0100 (CET)
+Date: Thu, 27 Feb 2025 11:12:36 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Matt Redfearn <matt.redfearn@blaize.com>,
+	linux-mips@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Ignore relocs against __ex_table for relocatable
+ kernel
+Message-ID: <Z8A6lBXX8LZPyEDS@alpha.franken.de>
+References: <20250226132841.381063-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2] net: 802: enforce underlying device type for GARP
- and MRP
-To: Oscar Maes <oscmaes92@gmail.com>, netdev@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- horms@kernel.org, viro@zeniv.linux.org.uk, jiri@resnulli.us,
- linux-kernel@vger.kernel.org, security@kernel.org, stable@kernel.org,
- idosch@idosch.org,
- syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
-References: <20250225141709.5961-1-oscmaes92@gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250225141709.5961-1-oscmaes92@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226132841.381063-1-xry111@xry111.site>
 
-On 2/25/25 3:17 PM, Oscar Maes wrote:
-> When creating a VLAN device, we initialize GARP (garp_init_applicant)
-> and MRP (mrp_init_applicant) for the underlying device.
+On Wed, Feb 26, 2025 at 09:28:41PM +0800, Xi Ruoyao wrote:
+> Since commit 6f2c2f93a190 ("scripts/sorttable: Remove unneeded
+> Elf_Rel"), sorttable no longer clears relocs against __ex_table,
+> claiming "it was never used."  But in fact MIPS relocatable kernel had
+> been implicitly depending on this behavior, so after this commit the
+> MIPS relocatable kernel has started to spit oops like:
 > 
-> As part of the initialization process, we add the multicast address of
-> each applicant to the underlying device, by calling dev_mc_add.
+> 	CPU 1 Unable to handle kernel paging request at virtual address 000000fffbbdbff8, epc == ffffffff818f9a6c, ra == ffffffff813ad7d0
+> 	... ...
+> 	Call Trace:
+> 	[<ffffffff818f9a6c>] __raw_copy_from_user+0x48/0x2fc
+> 	[<ffffffff813ad7d0>] cp_statx+0x1a0/0x1e0
+> 	[<ffffffff813ae528>] do_statx_fd+0xa8/0x118
+> 	[<ffffffff813ae670>] sys_statx+0xd8/0xf8
+> 	[<ffffffff81156cc8>] syscall_common+0x34/0x58
 > 
-> __dev_mc_add uses dev->addr_len to determine the length of the new
-> multicast address.
+> So ignore those relocs on our own to fix the issue.
 > 
-> This causes an out-of-bounds read if dev->addr_len is greater than 6,
-> since the multicast addresses provided by GARP and MRP are only 6 bytes
-> long.
-> 
-> This behaviour can be reproduced using the following commands:
-> 
-> ip tunnel add gretest mode ip6gre local ::1 remote ::2 dev lo
-> ip l set up dev gretest
-> ip link add link gretest name vlantest type vlan id 100
-> 
-> Then, the following command will display the address of garp_pdu_rcv:
-> 
-> ip maddr show | grep 01:80:c2:00:00:21
-> 
-> Fix this by enforcing the type of the underlying device during GARP
-> and MRP initialization.
-> 
-> Fixes: 22bedad3ce11 ("net: convert multicast list to list_head")
-> Reported-by: syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
-> Closes: https://lore.kernel.org/netdev/000000000000ca9a81061a01ec20@google.com/
-> Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
+> Fixes: 6f2c2f93a190 ("scripts/sorttable: Remove unneeded Elf_Rel")
+> Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 > ---
->  net/802/garp.c | 5 +++++
->  net/802/mrp.c  | 5 +++++
->  2 files changed, 10 insertions(+)
+>  arch/mips/boot/tools/relocs.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/net/802/garp.c b/net/802/garp.c
-> index 27f0ab146..32ab7df0e 100644
-> --- a/net/802/garp.c
-> +++ b/net/802/garp.c
-> @@ -9,6 +9,7 @@
->  #include <linux/skbuff.h>
->  #include <linux/netdevice.h>
->  #include <linux/etherdevice.h>
-> +#include <linux/if_arp.h>
->  #include <linux/rtnetlink.h>
->  #include <linux/llc.h>
->  #include <linux/slab.h>
-> @@ -574,6 +575,10 @@ int garp_init_applicant(struct net_device *dev, struct garp_application *appl)
+> diff --git a/arch/mips/boot/tools/relocs.c b/arch/mips/boot/tools/relocs.c
+> index a88d66c46d7f..9863e1d5c62e 100644
+> --- a/arch/mips/boot/tools/relocs.c
+> +++ b/arch/mips/boot/tools/relocs.c
+> @@ -468,6 +468,8 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
+>  			Elf_Sym *sym, const char *symname))
+>  {
+>  	int i;
+> +	struct section *extab_sec = sec_lookup("__ex_table");
+> +	int extab_index = extab_sec ? extab_sec - secs : -1;
 >  
->  	ASSERT_RTNL();
+>  	/* Walk through the relocations */
+>  	for (i = 0; i < ehdr.e_shnum; i++) {
+> @@ -480,6 +482,9 @@ static void walk_relocs(int (*process)(struct section *sec, Elf_Rel *rel,
+>  		if (sec->shdr.sh_type != SHT_REL_TYPE)
+>  			continue;
 >  
-> +	err = -EINVAL;
-> +	if (dev->type != ARPHRD_ETHER)
-> +		goto err1;
+> +		if (sec->shdr.sh_info == extab_index)
+> +			continue;
+> +
+>  		sec_symtab  = sec->link;
+>  		sec_applies = &secs[sec->shdr.sh_info];
+>  		if (!(sec_applies->shdr.sh_flags & SHF_ALLOC))
+> -- 
+> 2.48.1
 
-I agree with Ido's comment on v1, I think this belongs to
-vlan_check_real_dev(). The fact that you have to write the same check
-multiple times is a IMHO good argument against placing the check here.
+applied to mips-fixes.
 
-Please move the check in vlan_check_real_dev().
+Thomas.
 
-Thanks,
-
-Paolo
-
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
