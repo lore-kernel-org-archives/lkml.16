@@ -1,173 +1,125 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28AB221578F
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740635555; cv=none; b=jVpsi7g1AaWreKeAkvaSfbKsbyDEVdR9hf/Og19LrPQU2gqBZ5Idl3Qy7kKHMxePdvULpBaHHOwjPt0IhwFV/dfFD7qc/RQjha/ol/fzhYwrPgkKeAAYmu8Ef6GTpLtvlJGq0pZGCGqBntv/XIlQxpzHKT17MY1xauDPQgX+q+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740635555; c=relaxed/simple;
-	bh=9BL4zTaSs8TFLGt8qDCuYMxE7mnal2Tr/3pr4sM0MIo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XwnH2HhQOGI4fdOu5LR81VSCBWNf2REhnIsFvzI4o/E4LwIuHvAAQnNaoOZojOfldgYDOg6qmzpW76lz+D1ffad815CYIgjivAWB5ludf95lnLocu2OJKfcFdhPav+mzZDTrM0OM0R8p6xfYjOakrH432CK8ItQ93XRyS8RfLpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Xiuwq82l; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2638621773E;
+	Thu, 27 Feb 2025 05:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740635557; cv=pass; b=FMBNBhtukuu7s6p6s1Ki4scxglh8SC058VQ0znJ6LPIJzJCPNy+mHS08Lwbsre1EVtIb8xQwOky80DEv7n+1uxEVHlw2IVla2Yhx+Jf/dePRrSBDVW9mgATRZ1s4PGuT4tiGYHTsPP6rOWC5JUk0VPtFskpt2YodHXvUHH1RA+k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740635557; c=relaxed/simple;
+	bh=Tzln5mfY2+RK5itMGZHBVwz8YCtbE9sO6UpTnDQrDdY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KLuW32GRt2CSbBZwsG0bXrK63yatN0jmirUdYOUooOxjnuiW2zc3K8iFXcIHpbWCeCwGTHHKw9O6LgHmwy0dsay6uoc3X5mnPgHeaLbm+H6AIElQwxtvAblnkQB39wnyU6AxpYwc9oEyXgzw09xY7WVjXcN6To8A2otiCVwp+PU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=f7Szzhbs; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Xiuwq82l"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abee50621ecso69525066b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:52:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740635551; x=1741240351; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yz1jEtAoGS03tODgTdGrnTdX9a769lSb4ISg5vXSoA0=;
-        b=Xiuwq82lpd8d/2T8nVrNW2O+m+KXpXBTm8/8zX2ezwKjzpD1vDppPEBJ4uOpx6OyHQ
-         NZyJNi4oNpQr74WSaQzHrML9OQYCWrWDrSn3cPccLlv7mWHFncQDuJHlBE8gvV4aagcJ
-         PkLT0KbeixTX4gwe9V7o9OIzml03sJ9sNb9fM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740635551; x=1741240351;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yz1jEtAoGS03tODgTdGrnTdX9a769lSb4ISg5vXSoA0=;
-        b=a7LewEeoGcmUVJKdnJuPbStxXAfWHXgb+5HQDT1bF7Iu8cp6y0Aw+AzOQQ9ZKNm1f4
-         41aeXKy89M6RP/N3W2HnhEQU43NthrPRJ6ui3lCcNrXsGptz7bzDZ/C/2c0oEBWBoXvX
-         o4N8SPU0bGf/l3q5tok6+kFRSxCnMypIS2aqYrWVwLJMEaljSTiLTr9JsOxDIruFsAXZ
-         j1jZWaprt86oUSgh5KIfjPtEWHM8rs2jgZTKBrXJ1hj4e6JylaWU+b68OeQ/Fgv1Em3I
-         SLZIUQNF3vQssmNeRnBf7tj8pjFHu5BRbn3jsHlmIBT2AfZEfAJ58xm028GiS24mBKr/
-         PY7g==
-X-Forwarded-Encrypted: i=1; AJvYcCV1ozKum4xu38+k/3Ay9xDdTcm2xHGz0Y8pQQ/dXfexes4zb2Tn1y3wJpopaZUPtzAskkGBxptUz8TyTNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx0XfWvJD94Maj4cTvm2D886iDgE+povQo2Qj9q7ttbfT8e2rf
-	eRAGJ/rvSSRn6TCIMW65NcXVZQbSQ6ocrL+/t/veIAH6BPGqT8DUPwXLVEPIeNgddH+CmujFxPx
-	ZecA6ag==
-X-Gm-Gg: ASbGncu3G4tbtvY2PuYqvavMLZf8NQkZgeFE7A6i+cDYtjy2ZNAHm1Smxv3axhvaiWC
-	Jko2PZx4YZr6F5EQL11kaux0Dn/9oBs0jt/hICUY8kFEq69aXGZ65NTpo/nu/NBgeXYjPlOLdSM
-	/7XTgMq0iSNUZjCEgsEqcuBWWgAtZA/LylLrKWpxcpdas0C/Rxw5gsnxTBGQfWSg1AiYvbeDOGo
-	gmVeo1m3q3AdGqEw/YQ5VbTnBKEKWKaNWfzWa0tC/Gu9EUX1YlV61L8KznG72TqxUB78YzWA4cd
-	6mT9Mp8fOtYiFWdnr2FVmKa+06XVoWk57hKkJ7iaR+81uR5U8qkE1+i7eMUsb5JL1CbYyJzk+TP
-	l
-X-Google-Smtp-Source: AGHT+IG70ubOhG8/9CNcbbcVr2tLWvqIRm3WWveE2pYwYJtVtq07ooULVuWrmhPbMOmdglwu4svPVQ==
-X-Received: by 2002:a17:907:72d6:b0:abe:c45a:a1b3 with SMTP id a640c23a62f3a-abeeef65af7mr814220066b.37.1740635551104;
-        Wed, 26 Feb 2025 21:52:31 -0800 (PST)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c7c07d3sm63790666b.180.2025.02.26.21.52.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 21:52:30 -0800 (PST)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abee54ae370so74033466b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:52:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWuUQtaZ7Add+w3nIgBPMuBb4nDIUkRK038z5ek7eZ/rwTpWERy5EtfQlttOKZdWjIxtCd9p/D+FipNQcE=@vger.kernel.org
-X-Received: by 2002:a17:907:a42:b0:abe:cecc:727 with SMTP id
- a640c23a62f3a-abeeefc9108mr925171166b.53.1740635549770; Wed, 26 Feb 2025
- 21:52:29 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="f7Szzhbs"
+ARC-Seal: i=1; a=rsa-sha256; t=1740635513; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GQWzhaFuicO/CNHIk8L8J8Va37HRMPJ3Y80OiHYxLyc5JQJUbJyxTguaFD6yI3mks0yB0kDTFLZasTYv7w6YyOBpBQZATzML+NIYdqbNM2m+ZrAld/Wft+U27aI3AxEpai3SzMcNmkXb7EGQawyWyhmmmQNC1hpahXh/LxxK9q4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740635513; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/JMA7VJYsngtKi9ltZZXsV2uv0aQI0PgrBwadMgnHyg=; 
+	b=cEI+EeM8vyHyFmFnXxOaKm2tkdno3OoE7P92qr5lHFCVpS+KvrtHCz1QSyhPmE+X5A3W55WiVGxct8I8S57JY8qFZiaXqIQC3N2J5M30tQ/pQMnnzzd724xtPK1lCaeG+kP0uUWxhiNdHY/WVhHO49KbbJL7zfijZsdQDNfXM/w=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740635512;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=/JMA7VJYsngtKi9ltZZXsV2uv0aQI0PgrBwadMgnHyg=;
+	b=f7SzzhbssilGiao8hdUKiyo4gL1IjZz9A9XgvnhwanbQeh7iAgp+7CNOdeBCiHBd
+	dU7miwYU0LpEQbvz03ZTHgol4p72rNUeYYdxB1OsT52TIBQXGmvxFu9/IMFcUMzbrgA
+	7uyF/+z2zKI0VRNlTmAtXin0YG4df8Z5lqdxhL4E=
+Received: by mx.zohomail.com with SMTPS id 174063551011683.33689119099517;
+	Wed, 26 Feb 2025 21:51:50 -0800 (PST)
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: Shreeya Patel <shreeya.patel@collabora.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	jose.abreu@synopsys.com,
+	nelson.costa@synopsys.com,
+	shawn.wen@rock-chips.com,
+	nicolas.dufresne@collabora.com,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Tim Surber <me@timsurber.de>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Diederik de Haas <didi.debian@cknow.org>
+Subject: [PATCH v12 5/6] arm64: dts: rockchip: Enable HDMI receiver on rock-5b
+Date: Thu, 27 Feb 2025 08:50:24 +0300
+Message-ID: <20250227055025.766018-6-dmitry.osipenko@collabora.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250227055025.766018-1-dmitry.osipenko@collabora.com>
+References: <20250227055025.766018-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
- <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
- <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
- <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de> <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
- <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
- <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com> <09e282a9c02fb07ba4fc248f14c0173d9b19179a.camel@tugraz.at>
-In-Reply-To: <09e282a9c02fb07ba4fc248f14c0173d9b19179a.camel@tugraz.at>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 26 Feb 2025 21:52:13 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjqmHD-3QQ_9o4hrkhH57pTs3c1zuU0EdXYW23Vo0KTmQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jp_NrFySgQyMF9RUCoV9O6uCZpLaodGvsiFnQE8IzSzYGK1vSJBzFxb9cE
-Message-ID: <CAHk-=wjqmHD-3QQ_9o4hrkhH57pTs3c1zuU0EdXYW23Vo0KTmQ@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Martin Uecker <uecker@tugraz.at>
-Cc: Ralf Jung <post@ralfj.de>, "Paul E. McKenney" <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Ventura Jack <venturajack85@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Wed, 26 Feb 2025 at 20:18, Martin Uecker <uecker@tugraz.at> wrote:
->
-> This is not really related to "observable" but to visibility
-> of stores to other threads.
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Yes? What's the difference?
+The Rock 5B has a Micro HDMI port, which can be used for receiving
+HDMI data. This enables support for it.
 
-Threading is a fundamental thing. It didn't *use* to be fundamental,
-and yes, languages and CPU architectures were designed without taking
-it into account.
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+---
+ .../arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-But a language that was designed this century, wouldn't you agree that
-threading is not something unusual or odd or should be an
-after-thought, and something as basic as "observable" should take it
-into account?
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+index d597112f1d5b..377824e69e20 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -220,6 +220,18 @@ hdmi0_out_con: endpoint {
+ 	};
+ };
+ 
++&hdmi_receiver_cma {
++	status = "okay";
++};
++
++&hdmi_receiver {
++	status = "okay";
++	hpd-gpios = <&gpio1 RK_PC6 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&hdmim1_rx_cec &hdmim1_rx_hpdin &hdmim1_rx_scl &hdmim1_rx_sda &hdmirx_hpd>;
++	pinctrl-names = "default";
++	memory-region = <&hdmi_receiver_cma>;
++};
++
+ &hdptxphy_hdmi0 {
+ 	status = "okay";
+ };
+@@ -377,6 +389,12 @@ &pcie3x4 {
+ };
+ 
+ &pinctrl {
++	hdmirx {
++		hdmirx_hpd: hdmirx-5v-detection {
++			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	hym8563 {
+ 		hym8563_int: hym8563-int {
+ 			rockchip,pins = <0 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.48.1
 
-Also note that "visibility of stores to other threads" also does mean
-that the loads in those other threads matter.
-
-That's why rematerializing loads is wrong - the value in memory may
-simply not be the same value any more, so a load that is
-rematerialized is a bug.
-
-> It sounds you want to see the semantics strengthened in case
-> of a data race from there being UB to having either the old
-> or new value being visible to another thread, where at some
-> point this could change but needs to be consistent for a
-> single access as expressed in the source code.
-
-Absolutely.
-
-And notice that in the non-UB case - ie when you can rely on locking
-or other uniqueness guarantees - you can generate better code.
-
-So "safe rust" should generally not be impacted, and you can make the
-very true argument that safe rust can be optimized more aggressively
-and migth be faster than unsafe rust.
-
-And I think that should be seen as a feature, and as a basic tenet of
-safe vs unsafe. A compiler *should* be able to do better when it
-understands the code fully.
-
-> There would certainly be opposition if this fundamentally
-> diverges from C++ because no compiler framework will seriously
-> consider implementing a completely different memory model
-> for C (or for Rust) than for C++.
-
-Well, if the C++ peoiple end up working on some "safe C" model, I bet
-they'll face the same issues.
-
-> I could also imagine that the problem here is that it is
-> actually very difficult for compilers to give the guarantess
-> you want, because they evolved from compilers
-> doing optimization for single threads and and one would
-> have to fix a lot of issues in the optimizers.  So the
-> actually problem here might be that nobody wants to pay
-> for fixing the compilers.
-
-I actually suspect that most of the work has already been done in practice.
-
-As mentioned, some time ago I checked the whole issue of
-rematerializing loads, and at least gcc doesn't rematerialize loads
-(and I just double-checked: bad_for_rematerialization_p() returns true
-for mem-ops)
-
-I have this memory that people told me that clang similarly
-
-And the C standards committee already made widening stores invalid due
-to threading issues.
-
-Are there other issues? Sure. But remat of memory loads is at least
-one issue, and it's one that has been painful for the kernel - not
-because compilers do it, but because we *fear* compilers doing it so
-much.
-
-           Linus
