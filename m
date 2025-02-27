@@ -1,136 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DF321D599;
-	Thu, 27 Feb 2025 07:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD1121B9CB
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740639910; cv=none; b=Z3NDmNUUOvrhe9nQl8iOMZPWvjiaPyhC+IjA83t7nRnJWTvcWH8vtZG4+S0O331Yo84Sw4sao+o8Q785GmeP67bkbHTCJ68kEePxN7XeJujNXWtfCxKiUgHag7HiqC5IGcjhzrvz4mbIuweYnY7by1lwWhWD9PbIfP3SgPi43+0=
+	t=1740639925; cv=none; b=Qm78FBp/CvX31dqzlUJWtfL3NT16pkZOG0qtJ3I9BpFGLJfODaFg94XOtW1DlpJki0JNcevaq0sWddFuorV/EWuEPYmT/f2OvDTjfzSbs3uBbfMEy10BPAglmcrR2U2Y6Eb1wJOhtJJKQjonQx+5x/GDjMZ5hI36D2zgFwMWXjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740639910; c=relaxed/simple;
-	bh=x/fvxQXO3R9Lw7VjrELLy8bNhalAiL/Wcmz0kXpRovk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T4Q9E9LBwL3cnq3vG+LorzJgzmU+yW13G6VYzpuQr9eb8r3Mc9rAZtdzKmOVa0Ep3zkfDp1Yx20U9WupW8Nu/oTSctVyohB88DEeWhnERVsNOkLRsHpOCWsNPFJQ3kmw7xDJGTl8UbqRiGbHp2238QoiN2Hqr76R0JiYJZeeBVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2PzNv+d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740639925; c=relaxed/simple;
+	bh=L+iJkJIkmYjSM4Y6ZIIPrVBO0d8d5G3GzcyimiGIB4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O/Rte+5cLTpG4No4WFthpwwOEY0xmoAnSqhzk8albpHfELEXS8+kwGwFRdQ3XH8M739qfwMs7dmg55MgMcEUafwB8/Eg4eaa0dxU2lI83FnChU+TEfh2Nwmf02UY55h+HAQqkXws+pH5gqsPJG9hhM1FYPO3C5BWd4UfsqF7KwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zF+wVd2F; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2PzNv+d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F85C4CEDD;
-	Thu, 27 Feb 2025 07:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740639910;
-	bh=x/fvxQXO3R9Lw7VjrELLy8bNhalAiL/Wcmz0kXpRovk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e2PzNv+dc6QwbxX8E6WheaomB4CsP0CeHFi4lakvzTeBNCR/P+kXc3Cem3UbuKLre
-	 UH7wLyRQXSUdHtVFcsMhTfoh+yGj2dzVQTFjxiNtXlnsFYhHwYriqTGUZU64+7yFHz
-	 6bDAjOBkCOohHApVotttaw7RDGOqw1voJ2vcC3Yw5HuqYQRhfp95nUlEYInBNxkcrQ
-	 hmMjejl1ddEiXrKARMGSmylunvW62NTE09VE6sXfot003UXxI+beJCPgA85Mv9q5Pk
-	 GIL0VbE5KZatmtCrrfPdeA/xS6mPeXXloWVBM/rZRM2fcsm6DhKW+BAJ1WRorbIj9z
-	 F+AWRGr7klqlQ==
-Date: Wed, 26 Feb 2025 23:05:08 -0800
-From: Namhyung Kim <namhyung@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf arm-spe: Report error if set frequency
-Message-ID: <Z8AOpLW6RSUU09Ns@google.com>
-References: <20250205183009.224182-1-leo.yan@arm.com>
- <20250217082008.GA8144@e132581.arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zF+wVd2F"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ab7f9f57192so8499366b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 23:05:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740639922; x=1741244722; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0apQcE6PfzPMLUzCFy/8QBbVfjes8kdxgXVKnN/YLIM=;
+        b=zF+wVd2FPIcn3zLRu3X3qSKRHSzFMzRbKTrpsjQ0dFnoiUQ5NtOmEMn6M2yJYqJ6Az
+         fbOOgjJMp40SnxQy6XR1lj/DQG08TDL4vfSIEnw4Ic4CTaz4Bajlx4vvZ99PeeD1lAJx
+         jIW7V//AKGJCT9Z9ikOVoXscvPub1t3L7Mowv9K44IG5+FIyA4a0aYGTtdO1f3T0vcod
+         jCS8rH+K1xLH3aTsTlip20fjZsMgPQeXcY47+/76z+w73TBvPl2NIg/S1OOgMhmG11uA
+         JZNbDf7VvOUN8XxS+3G0HGyf71JYiqucdC2POG8KTRCpLvnqu8V2UdGOCfC+js7zbA9J
+         ke2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740639922; x=1741244722;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0apQcE6PfzPMLUzCFy/8QBbVfjes8kdxgXVKnN/YLIM=;
+        b=DIAufSswCV1gaN7TzwXdLm+suC6nNrsCYa5m5KZhD0kPP373+G31CiCK0C9KzLW1B1
+         pcAeD5ldm5of73GRtjhqp6koQKaRpHvVjFe6hNHknE7LqVpaU6hC23jOdWa6fq92pgmF
+         HGiDa5hkrJkodBUn1ODCpnu8ICwvyAecHw1nhv5b8AHP3PLaP2Hvsd4amitlUsO+4ntx
+         F/lfi0bxZYOH2yEvNUR0q05qkOJKv7XXnfwYw6ms+SaLrColW0yQ/mDRnhJuqSRBAm2K
+         thv34YjhKeOM3TCqdQLQ668B4pHP8CcnodldjGqSwkcx/kWJwflFbAxRN5sQZ3smdoQt
+         Pz2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXxTtXRQM+9sWLO7LoeX0bEbPgjkQmTrOhjHabtNhUKwad1a6eGHC5XnJsktpk0Cry1oe5eoaf3aljHEi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7fDviYSVpvPT/gkAua3+kh/uSDPqe9CG5TeC2gI47AHuMK3Qh
+	RGKvQSPk62fMv6dUjcadyRW/nJGwSfdOpwJw+9FYHSUrM5mRWOCoJYC7+TnPKWs=
+X-Gm-Gg: ASbGnct6ITp22x/HbhXm80r4aLWGbO/TevHmt8jkb5GBLNkPqTszf4UUMWbsns7IC94
+	ddpFeQ1aD2o9YPY1ncgbYi6apqbnajanPtj8B134Jfm94NJalE+o7cDSy0NsFsFpMIPsptfmJFF
+	ykXq/Xv8nswNiS48jBvGzwfsi746DOivNUz6I1JFm3q/q6EjHGVTu41/fWz0ECrMMYMjTagRqpH
+	k6+teXfA8kO3myvbJU6yXXRLOA7bQ84ibm9XFLzNxSg8Csf+qpVInSxhZ4zjIvhX0cd+3Sx74yT
+	EqQzAqHBhDdFq+TcatXMXY0N/AsixDc36qjQvcPj
+X-Google-Smtp-Source: AGHT+IHXy5tCZaZz6X3dSvzvQm4bdYcI3qekmMWxV+GvUxiLx80Fzbswu9wY9k8MAxpjFX7Ux9LlHA==
+X-Received: by 2002:a17:907:74a:b0:abb:e5ac:28b2 with SMTP id a640c23a62f3a-abc09c24732mr949678066b.13.1740639921638;
+        Wed, 26 Feb 2025 23:05:21 -0800 (PST)
+Received: from krzk-bin.. ([178.197.206.225])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c6e9c25sm74556466b.108.2025.02.26.23.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 23:05:21 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	=?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v4] phy: exynos5-usbdrd: Do not depend on Type-C
+Date: Thu, 27 Feb 2025 08:05:18 +0100
+Message-ID: <20250227070518.5468-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250217082008.GA8144@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Older Exynos designs, like Exynos5422, do not have USB Type-C and the
+USB DRD PHY does not really need CONFIG_TYPEC for these devices at all.
+Incorrectly added optional dependency on CONFIG_TYPEC caused this driver
+to be missing for exynos_defconfig and as result Exynos5422-based boards
+like Hardkernel Odroid HC1 failed to probe USB.
 
-On Mon, Feb 17, 2025 at 08:20:08AM +0000, Leo Yan wrote:
-> On Wed, Feb 05, 2025 at 06:30:09PM +0000, Leo Yan wrote:
-> > When users set the parameter '-F' to specify frequency for Arm SPE, the
-> > tool reports error:
-> > 
-> >   perf record -F 1000 -e arm_spe_0// -- sleep 1
-> >   Error:
-> >   Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
-> > 
-> > The output logs are confused and it does not give the correct reminding.
-> > Arm SPE does not support frequency setting given it adopts a statistical
-> > based approach.
-> > 
-> > Alternatively, Arm SPE supports setting period.  This commit adds a
-> > for frequency setting.  It reports error and reminds users to set period
-> > instead.
-> > 
-> > After:
-> > 
-> >   perf record -F 100 -e arm_spe_0// -- sleep 1
-> >   Arm SPE: Frequency is not supported. Check manual 'man perf-record' on how to set period.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
-> 
-> Gentle ping.
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Closes: https://krzk.eu/#/builders/21/builds/6139
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Closes: https://lore.kernel.org/all/3c0b77e6-357d-453e-8b63-4757c3231bde@samsung.com/
+Fixes: 09dc674295a3 ("phy: exynos5-usbdrd: subscribe to orientation notifier if required")
+Reviewed-by: André Draszik <andre.draszik@linaro.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Sorry for the late reply.
+---
 
-Isn't it just -c <period> to set period for Arm SPE?  If so, it'd be
-better to say that explicitly.
+Patch for issue in linux-next
 
-Thanks,
-Namhyung
+Changes in v4:
+1. Change subject (Vinod)
+2. Add Marek's and Andre's tags.
 
-> 
-> > ---
-> >  tools/perf/arch/arm64/util/arm-spe.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> > index 4301181b8e45..baef0812dc19 100644
-> > --- a/tools/perf/arch/arm64/util/arm-spe.c
-> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> > @@ -40,6 +40,19 @@ struct arm_spe_recording {
-> >  	bool			*wrapped;
-> >  };
-> >  
-> > +/* Iterate config list to detect if the "freq" parameter is set */
-> > +static bool arm_spe_is_set_freq(struct evsel *evsel)
-> > +{
-> > +	struct evsel_config_term *term;
-> > +
-> > +	list_for_each_entry(term, &evsel->config_terms, list) {
-> > +		if (term->type == EVSEL__CONFIG_TERM_FREQ)
-> > +			return true;
-> > +	}
-> > +
-> > +	return false;
-> > +}
-> > +
-> >  /*
-> >   * arm_spe_find_cpus() returns a new cpu map, and the caller should invoke
-> >   * perf_cpu_map__put() to release the map after use.
-> > @@ -389,6 +402,13 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
-> >  				return -EINVAL;
-> >  			}
-> >  			opts->full_auxtrace = true;
-> > +
-> > +			if (opts->user_freq != UINT_MAX ||
-> > +			    arm_spe_is_set_freq(evsel)) {
-> > +				pr_err("Arm SPE: Frequency is not supported. "
-> > +				       "Check manual 'man perf-record' on how to set period.\n");
-> > +				return -EINVAL;
-> > +			}
-> >  		}
-> >  	}
-> >  
-> > -- 
-> > 2.34.1
-> > 
+Changes in v3:
+1. Simplify and go back to standard optional dependency without
+   intermediate symbol
+
+Changes in v2:
+1. Add PHY_EXYNOS5_USBDRD_TYPEC, so arm64 defconfig will have both
+   symbols in-sync
+---
+ drivers/phy/samsung/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/phy/samsung/Kconfig b/drivers/phy/samsung/Kconfig
+index 7fba571c0e2b..6566100441d6 100644
+--- a/drivers/phy/samsung/Kconfig
++++ b/drivers/phy/samsung/Kconfig
+@@ -81,7 +81,7 @@ config PHY_EXYNOS5_USBDRD
+ 	tristate "Exynos5 SoC series USB DRD PHY driver"
+ 	depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
+ 	depends on HAS_IOMEM
+-	depends on TYPEC || (TYPEC=n && COMPILE_TEST)
++	depends on TYPEC || !TYPEC
+ 	depends on USB_DWC3_EXYNOS
+ 	select GENERIC_PHY
+ 	select MFD_SYSCON
+-- 
+2.43.0
+
