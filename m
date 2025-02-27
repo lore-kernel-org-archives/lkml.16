@@ -1,53 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965DC18CC15
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13411F5820;
+	Thu, 27 Feb 2025 18:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740681989; cv=none; b=rQLjw4sFoGvDEm5N9pJJBiAJb/3tEe308HWAol8OXGfSQg1HOMiGZOa3dJ0CUG2E1Hep8fu8gHyEpVV07Fh2Q1bwtJMAnNRJCtiZwVfSoO99I8VeJTTeTpw/aDLjz8N1OvNO8l05i7+7yBMnRVsfFVD+gz9VoqEqRgd9hXLbQVk=
+	t=1740682061; cv=none; b=tGaRAuMgyImlr309p2c8LmTnGEKkIeLBSr8FlRWVMSIhxyyYi5k9uDeNIF4TSuEOIYBlCCfyIzAAyBBpSmXEF4QNS6Ofy1wwjnFGRKYr+190DpHDpaulkteoSi/5/GYcWQ6E08mFj4PbyspTAKufPlPr96lcr8JSQXLV7UCqjqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740681989; c=relaxed/simple;
-	bh=BjZdXViAG8ZGsrjysMXmH9bmFLZCSMf57ftylZQhXLo=;
+	s=arc-20240116; t=1740682061; c=relaxed/simple;
+	bh=tNxufyEmqvelo58l5TdexlWiSdxOsHppCDLg7M4W79s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z32hBQYcRd9VHoxZPktYPR/jD8YAgPqN69fUaUAClWENtTf9FpjbaighGvgjnptI0P2NIRiOPsikpwIpxCrJMd0r9gInEcIK1PnoQIh4/G/3OoyWrPHB+S5pTuTVJhEjd+QeEMl+QMOLUK2s2MLepqVyf9ielLPQgTymLqrNRYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWZTdLK1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KayweUAsFNRUtFmIvBldUz3cj20VslHdKaJ/vzUvxY5dj8o+NTPz/0sqjo7E1uRyhlT8W4htLUYTNu7RHGpPDGKRz+OoJBvaFlWp5FfweDEyb1RF5mFToSEykmuqXpz2wI5G8HJXNK+BrcoxzXZgMrm/q41rP9QcYfullN5MTMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=R06d9cIO; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWZTdLK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F305C4CEDD;
-	Thu, 27 Feb 2025 18:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740681989;
-	bh=BjZdXViAG8ZGsrjysMXmH9bmFLZCSMf57ftylZQhXLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CWZTdLK1ks3LWoFUL5XgfldOguqz+9Jl4/26OvK8cc1tSHt6oWYk8aMjDsGJ/xyvW
-	 UPtIchLAqsTEUTTO91PrHcLggKLC/i2Oq/BVgRUPAMabK+lv9nY0hG6LHsefeWFugL
-	 xwqgLX6oAW45rgpsGjF6IUWdEv9Widz+MTTqU9b06DxCa/Q/57LYJ6d5qz+FmhToRm
-	 bq4rhlcJW06cuy7ykPLi0bWcCnUsV3eH7/twn8x+dQ2A711l0D0EylCq7o/+OAR5CN
-	 0Mu653gXdFH2cZEI/fqcdayAIk95yI+LxnnsKmbuCR0mOTsYdG/rmbLTVzr906iy2E
-	 18EOgKwFJvKOw==
-Date: Thu, 27 Feb 2025 19:46:16 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"H . Peter Anvin" <hpa@zytor.com>, Uros Bizjak <ubizjak@gmail.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	Eric Biggers <ebiggers@google.com>, Xin Li <xin3.li@intel.com>,
-	Alexander Shishkin <alexander.shishkin@intel.com>,
-	Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] x86/cpufeature: Add feature dependency checks
-Message-ID: <Z8Cy-IonwmCGNkkQ@gmail.com>
-References: <20241210224037.3052555-1-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="R06d9cIO"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id DFBD225A3E;
+	Thu, 27 Feb 2025 19:47:30 +0100 (CET)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id NeJMdeaV9PgI; Thu, 27 Feb 2025 19:47:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1740682050; bh=tNxufyEmqvelo58l5TdexlWiSdxOsHppCDLg7M4W79s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=R06d9cIO2xlwenccd6afG9XhP6C1IMj8IPLlXGO2KvKAHnpKzXfum2DQz+NcuTWN0
+	 eKaJSBCJKrnbfQQgvtFqZPEN+i7v3DGl8C684Z8qWwcqPcbW3DfBXne0RuN0Zye6c7
+	 vNBvlgZfE8Cgz5bOGrDF0Ymao6CA+y1aPGAVom1Jc2wJNEOrukHwqR+wEmNT9sEYKp
+	 GovGi0gZqWlwIc/+oF4wO6g3RJLP7UgCqg2RYctlfK6ddTayjeqBPi8cZfGb4Mo3Lz
+	 pG3qtSfHwL78PCjTxzK/CfA7qWPDwVcwPtyZXS4sGKx/B43qXN/LIPPzUATLbb4GyF
+	 hSMehDccy9T1A==
+Date: Thu, 27 Feb 2025 18:47:12 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Jonas Karlman <jonas@kwiboo.se>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] clk: rockchip: Add reset lookup table for RK3528
+Message-ID: <Z8CzMNI_1CjUgSrl@pie.lan>
+References: <20250227175302.2950788-1-jonas@kwiboo.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,48 +51,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241210224037.3052555-1-sohil.mehta@intel.com>
+In-Reply-To: <20250227175302.2950788-1-jonas@kwiboo.se>
 
+On Thu, Feb 27, 2025 at 05:52:57PM +0000, Jonas Karlman wrote:
+> In the commit 5d0eb375e685 ("clk: rockchip: Add clock controller driver
+> for RK3528 SoC") only the dt-binding header was added for the reset
+> controller for the RK3528 SoC.
+> 
+> Add a reset lookup table generated from the SRST symbols used by vendor
+> linux-6.1-stan-rkr5 kernel to complete support for the reset controller.
+> 
 
-* Sohil Mehta <sohil.mehta@intel.com> wrote:
+Thanks for completing the reset part! The patch looks good to me, but
 
-> +
-> +/*
-> + * Return the feature "name" if available otherwise return
-> + * the X86_FEATURE_* numerals to make it easier to identify
-> + * the feature.
-> + */
-> +static const char *x86_feature_name(unsigned int feature, char *buf)
-> +{
-> +	if (x86_cap_flags[feature])
-> +		return x86_cap_flags[feature];
-> +
-> +	snprintf(buf, 16, "%d*32+%2d", feature / 32, feature % 32);
-> +
-> +	return buf;
-> +}
-> +
-> +void filter_feature_dependencies(struct cpuinfo_x86 *c)
-> +{
-> +	char feature_buf[16], depends_buf[16];
-> +	const struct cpuid_dep *d;
-> +
-> +	for (d = cpuid_deps; d->feature; d++) {
-> +		if (cpu_has(c, d->feature) && !cpu_has(c, d->depends)) {
-> +			pr_info("CPU%d: Disabling feature %s due to missing feature %s\n",
-> +				smp_processor_id(),
-> +				x86_feature_name(d->feature, feature_buf),
-> +				x86_feature_name(d->depends, depends_buf));
-> +			do_clear_cpu_cap(c, d->feature);
-> +		}
-> +	}
+> Fixes: 5d0eb375e685 ("clk: rockchip: Add clock controller driver for RK3528 SoC")
 
-So let's not disable any CPU features actively for the time being, how 
-about issuing a pr_warn() only about the dependency violation?
+I wonder whether it deserves a Fix tag: to me it's more like a new
+feature. Please correct me if I'm wrong.
 
-I think the main problem is when these problems slip through 100% 
-unnoticed.
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+> ---
+>  drivers/clk/rockchip/Makefile     |   2 +-
+>  drivers/clk/rockchip/clk-rk3528.c |   2 +
+>  drivers/clk/rockchip/clk.h        |   1 +
+>  drivers/clk/rockchip/rst-rk3528.c | 306 ++++++++++++++++++++++++++++++
+>  4 files changed, 310 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clk/rockchip/rst-rk3528.c
+> 
 
 Thanks,
-
-	Ingo
+Yao Zi
