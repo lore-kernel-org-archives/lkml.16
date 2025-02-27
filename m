@@ -1,134 +1,81 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EEE2236F7
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D162563;
+	Thu, 27 Feb 2025 07:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740641555; cv=none; b=X4vIl1tebcy+4Bx9VUZEEAiVrA57KGzCCOE5w3Km5GFC0uTdKA5IiBSnvM8s8CO+2Gr+sMCGdcyAxdVA/BQFgLuGJ06QMReTcQdzacLlGKc/49tEn+urOeaslFm+0vU2Q7R0xV79dG0RyUWT752YVTwenRnRRM8QZvpIe9YMgGM=
+	t=1740641677; cv=none; b=RaRifcIHdeBO6aNFlewEFQjzg6KEhk4abdu8l3RSUwRvMKw0amjQsxH/H/k4dSTzR2IJduINcPveiWmL71ouTXwV6A/XxG3Euf1eSkggUog34rVhbtXvfUa+BR1/+JMVBgHc3k+8eC7WKpPN2MqSvMpF1VDwYVU8MXResN+M3zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740641555; c=relaxed/simple;
-	bh=ASN1znztbRK8NCZUFX9zSG6MlxkLhTSaM/1RHFKcZJ8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=J6UJA1EK5k9hvJJvzK03j88DckxVnZPsRws9DSsZzS2hbgjMqWJe6g1OM2iIueMvw8NCKMEaSAEhzu0fu15vylr7FAEW8W2lcpGe7MDHmzB+c02cBM52OmGUOYsoM6M5pEUxTcBkGkuz7TdcsTlE6OiNgVTmikzntITqe6jJrw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=XRkCGA0Q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Z/TAEnrn; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740641677; c=relaxed/simple;
+	bh=1XtWTTDwdqru/LxpCSfu/zYkg/F9BKXSllDXArlX4YM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f656Kirh6G0Gnw/5KQSEPnMZzoNvaL9IR1VLDErSH0DmTXa4GZedjRNWoWudGBcV/0kf6MiaoPYxf3El8xZXqrET0WwrU2rBteY3OSZOMvPK2eg3lval8tl/XOyHbtqKCQ3QTL5WofbT3Jo69vXUKwZdr9ijne8d5slBfbEr5ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=j4Cmhru9; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="XRkCGA0Q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z/TAEnrn"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3B9F21382F1B;
-	Thu, 27 Feb 2025 02:32:32 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Thu, 27 Feb 2025 02:32:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740641552;
-	 x=1740727952; bh=tYps54CSP4q1mdFjIcSj14UTUcUsKc9OKtYE+7qXw10=; b=
-	XRkCGA0QxqmXOxmFUzvyte20POOFw3l2KWZi56I5lymlKwVwTnqHIlLjNn4QIiRH
-	qBgJ/ZIJzWdgqwkcC2DO5ZHYxSShwj6cTbhTkNN5EF2YOZlzzlSvImcbFIq2sxgj
-	T+P2ksWTeV9WwV4Cs3cKNMtpTp0Gv6wFrQFi1Y+tJkfxOOtVGPq2ley+glgm+Zil
-	oIMuJSvS6RV3+MIFOvYLjFvu/CZvbtJVN7fgBPdyCMVvXYKLNootAGttPnHiA1NQ
-	/bZPrYcdxfa7Ic2CtJTIdyOP9fylQqxJ1zY5nyh3ZcvsIk9e9i6JnuyuTDqD5yLd
-	YoHcGlzKRGAzKBS3ucI/xQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740641552; x=
-	1740727952; bh=tYps54CSP4q1mdFjIcSj14UTUcUsKc9OKtYE+7qXw10=; b=Z
-	/TAEnrnTy9agTqBRmR13xWuPBI9TkI9IJE9eRVmab9s5iUZFIAOAiuwJTCsIsjyU
-	gZhAVUt2BK9CkZvnpZiaYwG3Ut0F8+fOA7CuduZ2A/XgX86QvW2znQBakVpkVkk2
-	wpDGCVMJKcYwje44sTgExjNR4/0VRg76QbmVO+huRslcOWzPzD/03kT11YbFKmKZ
-	N9Df4UnKXQqvGQLasjqCNHolql3h0ygkuxXn9C4dV80NwoNJZcIhUwhiHGMDZQOE
-	8UoeLRBJBmyLKFYSIDXH1uG0up91Z/LAX4v2WK4er16JVb8Y0BguzeqFqyGh1ToR
-	3e4S8h+wFSz5AIFUDlNFA==
-X-ME-Sender: <xms:DxXAZ8JsBQ_RZ1LYX6RA02K50EUzF9JdMGcX_ZQ5b8HgMPD6bDsAfQ>
-    <xme:DxXAZ8K20wsDhbG3qXZFfhsXRvp8KZIt61TY3CudNLMe7C5v7XGv5ZnwsXntxtRqf
-    2-Xijyp9S1CTXuHPpY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieekjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeel
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrihhnrg
-    hssegrrhhmrdgtohhmpdhrtghpthhtohepfihilhhlsehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhisehlihhnrghrohdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdgrrhhmqdhkvghrnhgvlheslhhishhtshdrihhnfhhr
-    rgguvggrugdrohhrghdprhgtphhtthhopehquhhitggpsghjohhrrghnuggvsehquhhitg
-    hinhgtrdgtohhmpdhrtghpthhtohepuggrnhhishhhrghnfigrrhesthhirdgtohhmpdhr
-    tghpthhtohepmhdqmhgrlhhlrgguihesthhirdgtohhmpdhrtghpthhtohepshhrkhesth
-    hirdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:DxXAZ8t0j-2FDkHU77hj7T54-yfPV4CRYy03eQS0VYtKy9rByJDD_g>
-    <xmx:DxXAZ5aICgPTX8N9tIUDxWKLE6xDSI9tsiyXmhIVQ-45Zo3HGUIMPg>
-    <xmx:DxXAZzawvvwTXfnkcOsCzNcQkTt_Wdcz5aslfGQ8vSKSd18xMhgOLA>
-    <xmx:DxXAZ1AnMLbbvxp-eeTcvnYhpkllMEKMCHOns-eRFHZ5G_YsGONCKA>
-    <xmx:EBXAZxMmAbTJSCNli44SU1q7sn_Uj7PvsLN_6FRUoofemWD6nScV4gvl>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id A96982220073; Thu, 27 Feb 2025 02:32:31 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="j4Cmhru9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=wIfO5
+	6z05F/fTzzXfikezxZ/hLJ2OSnyqGxAmSDvH4M=; b=j4Cmhru9VjqhsM3mNkIqh
+	MvA+dSmh16/ToVQuO8FVkbkX+iy0XoB/cW2z/hkfW9ufFOQ3VysuJLAIahgGhzJC
+	qGEawq2QcLm6ME5yhY+jp/mT9j3yZDT32Y7zKddkohbyuCsyDJghKgndwiuUh48o
+	iaBqjuSFeWeVlJijIJEVHk=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wD3b+t1FcBnBEGUOw--.21925S4;
+	Thu, 27 Feb 2025 15:34:14 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: mporter@kernel.crashing.org,
+	alex.bou9@gmail.com,
+	haoxiang_li2024@163.com,
+	akpm@linux-foundation.org,
+	error27@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2] rapidio: fix an API misues when rio_add_net() fails
+Date: Thu, 27 Feb 2025 15:34:09 +0800
+Message-Id: <20250227073409.3696854-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 27 Feb 2025 08:32:00 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Meghana Malladi" <m-malladi@ti.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-Cc: "Bjorn Andersson" <quic_bjorande@quicinc.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- srk@ti.com, "MD Danish Anwar" <danishanwar@ti.com>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>
-Message-Id: <d0303f33-3cde-45ca-8f25-313629bce863@app.fastmail.com>
-In-Reply-To: <f1d61696-a5c0-4727-ab52-526294a2a5f9@ti.com>
-References: <20240419060013.14909-1-r-gunasekaran@ti.com>
- <686f583d-6bf4-4486-b9e4-20c1e268eda6@ti.com>
- <d4954e5e-e51f-41c0-bca5-6e14b4640022@linaro.org>
- <0d33dea6-c021-4f2a-bb3f-92efd6eebd18@ti.com>
- <6081917c-9c20-48fc-baaf-7ac9a9679a72@linaro.org>
- <1982291f-4a02-4ed2-b4bf-778a2fe0ad9e@ti.com>
- <a3fc706c-3825-49fc-beea-3fea7d9c0038@linaro.org>
- <f1d61696-a5c0-4727-ab52-526294a2a5f9@ti.com>
-Subject: Re: [EXTERNAL] Re: [PATCH] arm64: defconfig: Enable HSR driver
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3b+t1FcBnBEGUOw--.21925S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7XF1ktr15GF1rXr45Kr4UJwb_yoWkJrgE9w
+	1v9rn7Xws5AF48Kry5Gwn5Zw4F93WxJrs3Ar4jgFZ3GrZ3XrnFgr1UZrs5tw15uF1rZF97
+	Za48Kr1rCw47WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sREsXoUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkAwBbmfAEhRbwwAAsK
 
-On Thu, Feb 27, 2025, at 06:43, Malladi, Meghana wrote:
-> On 2/26/2025 5:36 PM, Krzysztof Kozlowski wrote:
->> On 26/02/2025 12:=E2=80=8A54, Malladi, Meghana wrote: > Hi Krzysztof,=
- > > On=20
->> 2/26/2025 4:=E2=80=8A18 PM, Krzysztof Kozlowski wrote: >> On 26/02/20=
-25 11: 44,=20
->>=20
->> Yes, sure, but this defconfig change benefits and is sent for certain=
- TI
->> upstream boards, so it is TI upstream maintainers field. It still fits
->> the "Submitting Patches for Given SoC" in SoC maintainer profile.
->>=20
->
-> Okay, I got your point now. So as long as this defconfig benefits TI=20
-> SoCs, it should be sent with maintainer profile. I will keep that in=20
-> mind for future patches as well. Thanks for clarifying this.
+rio_add_net() calls device_register() and fails when device_register()
+fails. Thus, put_device() should be used rather than kfree().
+Add "mport->net = NULL;" to avoid a use after free issue.
 
-It's mainly for practical reasons: the patches I put into the soc
-tree usually come from platform maintainers that I'm already working
-with. They understand the process and I generally trust their
-judgement of what should go into the kernel or not.
+Fixes: e8de370188d0 ("rapidio: add mport char device driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
+---
+Changes in v2:
+- Add "mport->net = NULL;" to avoid a use after free issue. Thanks, Dan!
+---
+ drivers/rapidio/devices/rio_mport_cdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Individual contributors can still send patches to soc@lists.linux.dev
-(formerly soc@kernel.org) and I will usually end up merging them, but
-that means that the patch itself needs a more elaborate justification
-for why it should be merged, and I end up spending a bit more time on
-figuring out if I should take it.
+diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
+index 27afbb9d544b..cbf531d0ba68 100644
+--- a/drivers/rapidio/devices/rio_mport_cdev.c
++++ b/drivers/rapidio/devices/rio_mport_cdev.c
+@@ -1742,7 +1742,8 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
+ 		err = rio_add_net(net);
+ 		if (err) {
+ 			rmcd_debug(RDEV, "failed to register net, err=%d", err);
+-			kfree(net);
++			put_device(&net->dev);
++			mport->net = NULL;
+ 			goto cleanup;
+ 		}
+ 	}
+-- 
+2.25.1
 
-      Arnd
