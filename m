@@ -1,56 +1,75 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1577717A5A4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30161F5855
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:37:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631024; cv=none; b=qM5j3IkEP6pU/Eg43wou3h7HiN3dj0/sYPVVV1WPZ8HfdQvFyt8gVov6svm8QsIeNv1N/QXMSusazhv6PJ2uK+Z3RO501F6X4XL496o7Dt5yu7Gk3scAZ4DVEaSbB2eM8ztlIYYjORwwSe8oGV/BylWeyYuJdUrYFe0Sg+umqBU=
+	t=1740631026; cv=none; b=LrPhoa44CrC8jcRN1BrRCXFeE1OmAJEgLRzHKcHOvQHKphSXHBOEzlvP7iTEeDoLwdaPdxCIjUjsNtq4mobmGmS4QONtLaQxm20NBmGsXnwFo/LPDRNDkY16LPgmPblpjpoAuUltjtd34k9do+vR4pzz5T6bsXp3bwDiLKKaqqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631024; c=relaxed/simple;
-	bh=dTLiIcGg+7VcR4Jututcykw9L0J9eF3fh+IAUJFRshM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eFfYJtxcNrPTTT/aE+DODQgqzCwt7/O3U3aDDSqYuihZ5uGMEIdjTTeR13lCFG8LoO3L6fuI1lBRUxTx2XNCruq+w8fWXcvgLxytCerRqgnIPxAhsqLRmyuOtgssQfuq1UN0XdtmHDzcbk0eoPcvZ0uEwMudnvuEGSMtwNS0xog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=h+bvhONl; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740631026; c=relaxed/simple;
+	bh=kDJSeyU5s05UEQ7rAR19C1RuUhlLEkX2VbKYXWUOEF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EJjf8x4Jj34Shem68XNq/x4jTrxh6r2ZsR+SRTvfgpQrZpp8w38sgbMcbibd+loD3N2KTMUNPRqcDQUYC/pTzwW1F/iPHArSRehJcnAIKVVuwb8Xk9/62a4SThSPS50tyOCEE+o5gqYYmcFcT90xHEKkxec8qKuiAwySDOg2rk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cWch1WXE; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="h+bvhONl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740631020;
-	bh=dTLiIcGg+7VcR4Jututcykw9L0J9eF3fh+IAUJFRshM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=h+bvhONlg44ykMXqLn8yZyAIVVSkPrQt17gJjPJmzwSNanNZFJctyA3acfNgBZs6I
-	 ZWD5OFhI/IrHedTsnjbApva0AMUIG8G9LNjyPV+jsLy8B7w411fAtRpfbry33AzK1l
-	 63jexskqMMhRYoWKORpnIlIRC/suVay+RKlBxPVncrqn/AE3M2fvkhZC+mLrD6s70O
-	 KwRLWiWiU10R9He+vpgWNX0lYTD6MnUssS8hwjMDiEIuTmA0ounve/ISeVG0kJURpQ
-	 WWMHHJDGYqHj8LDn7nkcSN4QU5BiYLDzuhGMF6p4mCB4Brqxmu6k5pD8My6KZJMKQF
-	 m7vIpWzGtfvzA==
-Received: from localhost.localdomain (unknown [171.76.83.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6A4BE17E068B;
-	Thu, 27 Feb 2025 05:36:55 +0100 (CET)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] drm/ci: remove CI_PRE_CLONE_SCRIPT
-Date: Thu, 27 Feb 2025 10:06:24 +0530
-Message-ID: <20250227043640.411696-1-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cWch1WXE"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22104c4de96so7258245ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:37:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740631024; x=1741235824; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vr9FTPnbuS7T/s7kIrPcS+bzGN5VDCIRcXkQbYpH7iY=;
+        b=cWch1WXEJTG8y94tPPgMdJKuUWCo87jiQ1VLePijCjURyMelSk0b/LU6jEahUiLp16
+         l+wBcw+wCUl9L8Fi4zOMqXTBcii89BuQUox3pdpLrz/VTcOnNOBxNcArwVb6067BRV2C
+         OmUCTWcMVCihAC0R82a+g/FFRFT/T9ojC/5Mk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740631024; x=1741235824;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vr9FTPnbuS7T/s7kIrPcS+bzGN5VDCIRcXkQbYpH7iY=;
+        b=k7TSB7VxjOmNZk9XaXzAifZZAmcEq7FYWlEVm6zWrYqe532cdh7Xewda4QTZB/6zVc
+         RvmmUhW+JScCLiQnRQXSLhCpzT5KOwt7mirSRRMxqxgGdbBsRG2aUFU1CBhyfwYIwdqf
+         u9dzJXRuBfuBvdhnXCwKq8oHgLC1dRbT/QS9fJBTdfisAWBkG+vi+vNicEJX6z5SLJ0y
+         JwEkFF+zDWSYWWqsChU9YkoPwgwmjvKCMAbnYxO04ruCMF1NXy3Bv/i36PKlvEeHAh8i
+         ELTnYyBNadSGbFLA7wnyvCsCahHaxb0ni9zPyjeYHdxyhVHsU4HhWMFCpgnZdFRbjXR2
+         CaeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMZ3SF51rndBBhmNAjOd4u55eMFXRVotEAjmzWpJXEt+oX46cNT6LOm5oI8YPNTuVR+fLj6lMHwlSa04c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVR8fp7BnTU1EMzvNdfw6DKyijOfBx8oepnLoeFcMzNfQKYm0s
+	tZ4whBt7P5f2dhP62FAwb7esrB/0i0SaIpTwMXDuFwsoJ1zbqVn5mZI1PgRXyg==
+X-Gm-Gg: ASbGncsOopTK+PMuwQHVqo6WdgjLsjNGHAYngVD/TVdjJwMr0F5cQ7UEI+L1xvqVwN9
+	qLGCGSO2nXVUT+bfWczSRQBIF884RdQUJsYQv2c1Fq5tQzcYTknpoXJenVshCP3bUiZ6TKTPj4E
+	BwMduQpco83rgY7P1MLEWthNOX/kzPpxEpeOGZMd+kxK02wGCgDgwYeAf3io79FBsGSnm2eyY1/
+	8KMsBkWphDZM+VjPvUa4mwyewBEA9IPqGz+DFfYoEpqKw3A3reOpcJc41gf3obxeRWc6rq3axJ6
+	RUiJ6AvTeVgISdCN46ly6BSEX813
+X-Google-Smtp-Source: AGHT+IG7lkAWlRB5fX++3hFsx9jC6B8UxClPPlZOhyWNT72+u/H7C4m/UOugG8H83NzmmgRIdsxc9g==
+X-Received: by 2002:a17:903:22c7:b0:220:cd7f:cde8 with SMTP id d9443c01a7336-22307b5b218mr158250195ad.29.1740631024159;
+        Wed, 26 Feb 2025 20:37:04 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223504e4d16sm4908435ad.189.2025.02.26.20.37.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 20:37:03 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v9 06/19] zram: no-warn about zsmalloc handle allocation
+Date: Thu, 27 Feb 2025 13:35:24 +0900
+Message-ID: <20250227043618.88380-7-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
+References: <20250227043618.88380-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,34 +78,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If we are not caching the git archive, do not
-set CI_PRE_CLONE_SCRIPT. Setting it makes CI
-try to download the cache first, and if it is
-missing, it tries to clone the repo within a
-time limit, which can cause build failures.
+We normally use __GFP_NOWARN for zsmalloc handle allocations,
+add it to write_incompressible_page() allocation too.
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- drivers/gpu/drm/ci/gitlab-ci.yml | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/block/zram/zram_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index f4e324e156db..0bc4ac344757 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -13,12 +13,6 @@ variables:
-   FDO_UPSTREAM_REPO: helen.fornazier/linux   # The repo where the git-archive daily runs
-   MESA_TEMPLATES_COMMIT: &ci-templates-commit d5aa3941aa03c2f716595116354fb81eb8012acb
-   DRM_CI_PROJECT_URL: https://gitlab.freedesktop.org/${DRM_CI_PROJECT_PATH}
--  CI_PRE_CLONE_SCRIPT: |-
--          set -o xtrace
--          curl -L --retry 4 -f --retry-all-errors --retry-delay 60 -s ${DRM_CI_PROJECT_URL}/-/raw/${DRM_CI_COMMIT_SHA}/.gitlab-ci/download-git-cache.sh -o download-git-cache.sh
--          bash download-git-cache.sh
--          rm download-git-cache.sh
--          set +o xtrace
-   S3_JWT_FILE: /s3_jwt
-   S3_JWT_FILE_SCRIPT: |-
-       echo -n '${S3_JWT}' > '${S3_JWT_FILE}' &&
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 28aa1c437d83..08fc9821d71c 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1691,7 +1691,8 @@ static int write_incompressible_page(struct zram *zram, struct page *page,
+ 	 * like we do for compressible pages.
+ 	 */
+ 	handle = zs_malloc(zram->mem_pool, PAGE_SIZE,
+-			   GFP_NOIO | __GFP_HIGHMEM | __GFP_MOVABLE);
++			   GFP_NOIO | __GFP_NOWARN |
++			   __GFP_HIGHMEM | __GFP_MOVABLE);
+ 	if (IS_ERR_VALUE(handle))
+ 		return PTR_ERR((void *)handle);
+ 
 -- 
-2.47.2
+2.48.1.658.g4767266eb4-goog
 
