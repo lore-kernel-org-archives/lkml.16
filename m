@@ -1,163 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8644D2777EB;
-	Thu, 27 Feb 2025 22:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11B32777F6;
+	Thu, 27 Feb 2025 22:30:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740695363; cv=none; b=qWv29CBZ7LydYP5MoVeifH/Aj3jgaA82QJlKB35G36xGo62QkJVYXGKLFbPnVUUfqcA0OfMDh0j8pghvedyYOpZ04mZ9UFyUp5/N0UeIJ2o87g9p88QBtLghC6926KiZayFT05QyfKNOlpSwELHRtR2RO13QcnnB2UxaYwVE1IY=
+	t=1740695453; cv=none; b=tSPOa41r4cGarwi0Oq8P6Qq591SVAlOABctCI0AtzLmyWIzn1yCuT9BuGEIPNFrlQ23QsRITcSNIVOSGgfdkR2CZrOI8YKlZgHURZ2X7LzdhHWpCd8GkNcKeRCA5CsL+0dJ/fo5aNyv79YfIhnkea9cTfJIw4H7GqWqae+pDO7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740695363; c=relaxed/simple;
-	bh=f85n7tc+0wiWu3oJu/ES9vHS7UtP8IVdMUZqaI8+ROI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s6Rvrz5xKVjufBu+zZpf4Ve1dN/RRl+HDIQ5XdFgClxrpZQFdniFEooXikZUFywkWgCWlxqdMAEiNwi7IX2P1iBuO/XCCqpf9tEOnWqaLoE/dzMT/XnxN8p8EM+bhSuXyYgidYLZY5yvHB38o30rCmvkXQXu+bc3bfgzjUHyAOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MfjTynVC; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740695453; c=relaxed/simple;
+	bh=uE9/49ldtLVWgOIkRTyh7MU6b9DNqHVRykrBZis63qc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JG7XOBdR0CMtPHO/49r5UUtCxQ2ygcK6zM5H1srz6m3vW0NwrpTn0QXrws02xSQ5R7LAuciKbwh2nyNtn0PaauHZj7bf5Vl8JXn3dUSnNf2nIhKbXrYTC/XIz9dea+FHwhNLPJFiOId3m09ATyPTk7yGdTtj7ORAjOoWKDEDBMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YvZZ10uq; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MfjTynVC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740695358; x=1772231358;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=f85n7tc+0wiWu3oJu/ES9vHS7UtP8IVdMUZqaI8+ROI=;
-  b=MfjTynVC7i36pBiQmf2zzVYWy/T9mfEMdrmTg6j0wdb7MuVjEj5cJ6wF
-   s4b8nr3sZuLRfDCG/QpAHRTyp5PbvRzI4s74/kyyCb1LmnZOPq4LFRM4t
-   LalBEXxU42j3pDNL3ZfT9Q3b7Q17iuIZwY2wo6U+joL/0DMsxMlypG+38
-   xZ7E5pd/UN3QCeCum4F+TJUBMv/JhUUKbhIk2NyGLM59pJBZwfHGYw0rc
-   zVwm+SsOStQS7fmnUd8kKE5ofIcwyyvOFiahuvYxCW3HYnT1fLsRU9gfP
-   dDDwRAx2HQRaJyUURec0DnPpu0WM6dHavZG8jUTXmkFBZ5+xb2zUAA6yS
-   Q==;
-X-CSE-ConnectionGUID: g997Rv0pRqezkhOQeTZnoA==
-X-CSE-MsgGUID: 3gwR3sQRQhaAnBV3lrY3pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41864931"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41864931"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 14:29:17 -0800
-X-CSE-ConnectionGUID: +N3OgpXOSFCJZp0mQYC0mQ==
-X-CSE-MsgGUID: 35+uvpQmRF+NuNMZNKwxzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117654814"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 27 Feb 2025 14:29:14 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnmNT-000E6g-2Y;
-	Thu, 27 Feb 2025 22:29:11 +0000
-Date: Fri, 28 Feb 2025 06:28:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	tomm.merciai@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
-	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 17/17] media: rzg2l-cru: Add support for RZ/G3E SoC
-Message-ID: <202502280652.KV7uk1gP-lkp@intel.com>
-References: <20250226152418.1132337-18-tommaso.merciai.xr@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YvZZ10uq"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-390dd362848so1145785f8f.3;
+        Thu, 27 Feb 2025 14:30:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740695450; x=1741300250; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qcRKzSB/2yPSFLC/yuaVKN3wLU16fzkLrF80SzPyqk0=;
+        b=YvZZ10uqfi31txCKA5c6BNE1xAxeQ8RIhnXha1L7Pp9mCGoQ0C9ffxshfCb+5h6vhO
+         e34fgdTRrJ+y5My8mss01L5MpXEexA0z8tBHiOWnAfhOQVhfrszjJs1JlxyJfHMvWAKS
+         2FawrBV9CKFjJIaBJbmiIagAV4fgpBuHQR5Zvr7D51i90CJrMrPydhn1g0tuYrijEDpS
+         u/lprMg8UbKI5NrEip8Bjd8fGNrksHtro9U8G3ygWEOxIjq94AwxTaX0eWHBfMhrmE97
+         JNz4hYTz+7xV/LPA9xGPufXaNCm085bCCNIC7v6st3aB/oFUx+EPxMG/wR3BG7wmw5fX
+         a49A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740695450; x=1741300250;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qcRKzSB/2yPSFLC/yuaVKN3wLU16fzkLrF80SzPyqk0=;
+        b=hMcr+diAq6MapXikFQg7/CCFPFuAVVQtbaebRAciwHnNbSxAjHo1fOhP2J9qUrzAnc
+         cT2yEH9E5kPltbVh9rGRpQiT18Uu/oS424ieF55BtUm4Co6UobSLXEdIYTN9l5Ne6hnj
+         5d3KSYmWmk7lgmoRIxq2ddTJ3ACUNE/duT1WTTZMipQPGXpRyDX98b0Lm39Pr4FRHxvl
+         GbJeJYH4LkEWt2d7wGCAEZBOp/9glX+6s7w1Heh3K+3HWeoAcPi6a674pthihLxXIo+N
+         B0fAnRb8JMSnyxgQEhB9C9NLUijZtpWWowLYTYisM/9F+f5anqRZf9mTOjI8VaqmVgZu
+         n2+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWEDyn/pw+gmZ86+he1bJSkz/+ANJJRLKWfhnqq19GSpWO4om44mBPL+f9V0HkqWVrURiIIISst3EIoC+M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8ffDySaDFXKCFe8sSRBM42glXyANMPaaB07NVZs6J1ltAImqI
+	DomEYocRgtZXJJOM/NVjJ6bHOFt5WJOIPsfqwP4Fenrl3UDMFh8T
+X-Gm-Gg: ASbGncvfLgxFjEhq6aoZBlBw4jnQmADOMWbEkt98Gc4bUzoA2apT2ASmCmI6ZIiQkEt
+	dEiO+BldmXptW430rgc/DNnt/WyO14KCstlHsRs3I/712FhlfGL3XocLWmbGyuB4QkkSMjpBqNn
+	WwH3r9YqeVDdpkcN9iDHCJ1qBz3Rgdp1bcWzH/wlZjgU8LLJcnjMVIte36zDrKBOrbN3Q1UKBhj
+	u0mper2Fmt7sGap3UdLnc03ibWzkDpY2FAOZG+S71Yd5cdLXwzJtZkTdqYZ1HS4JYhrSYRo33+F
+	ZRrusZATVCfktnVJSToxNaIGZSw=
+X-Google-Smtp-Source: AGHT+IHZnNJjB6n1FrIv7bNTeIztKawFuFtQFZge5h5pQvXVo9m0pWHpuIzB0frMiVy6qLOpUKhORw==
+X-Received: by 2002:a5d:5885:0:b0:390:ec1d:7e4e with SMTP id ffacd0b85a97d-390eca63baemr664341f8f.49.1740695449747;
+        Thu, 27 Feb 2025 14:30:49 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43b7a27ab2asm35806225e9.32.2025.02.27.14.30.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 14:30:49 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "David E . Box" <david.e.box@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org
+Subject: [PATCH][next] tools/arch/x86/intel_sdsi: Fix spelling mistake "Licencse" -> "License"
+Date: Thu, 27 Feb 2025 22:30:14 +0000
+Message-ID: <20250227223014.659189-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226152418.1132337-18-tommaso.merciai.xr@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Tommaso,
+There is a spelling mistake in a literal string. Fix it.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/arch/x86/intel_sdsi/intel_sdsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on linus/master v6.14-rc4 next-20250227]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Tommaso-Merciai/media-dt-bindings-renesas-rzg2l-csi2-Document-Renesas-RZ-V2H-P-SoC/20250226-233919
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250226152418.1132337-18-tommaso.merciai.xr%40bp.renesas.com
-patch subject: [PATCH v3 17/17] media: rzg2l-cru: Add support for RZ/G3E SoC
-config: arm-randconfig-001-20250227 (https://download.01.org/0day-ci/archive/20250228/202502280652.KV7uk1gP-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280652.KV7uk1gP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502280652.KV7uk1gP-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c: In function 'rzg3e_cru_get_current_slot':
->> drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c:677:65: warning: left shift count >= width of type [-Wshift-count-overflow]
-     677 |         amnmadrs |= ((dma_addr_t)rzg2l_cru_read(cru, AMnMADRSH) << 32);
-         |                                                                 ^~
-   In file included from include/linux/device.h:15,
-                    from include/linux/pm_runtime.h:11,
-                    from drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c:16:
->> drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c:685:27: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 3 has type 'dma_addr_t' {aka 'unsigned int'} [-Wformat=]
-     685 |         dev_err(cru->dev, "Invalid MB address 0x%llx (out of range)\n", amnmadrs);
-         |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/dev_printk.h:110:30: note: in definition of macro 'dev_printk_index_wrap'
-     110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                       \
-         |                              ^~~
-   include/linux/dev_printk.h:154:56: note: in expansion of macro 'dev_fmt'
-     154 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-         |                                                        ^~~~~~~
-   drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c:685:9: note: in expansion of macro 'dev_err'
-     685 |         dev_err(cru->dev, "Invalid MB address 0x%llx (out of range)\n", amnmadrs);
-         |         ^~~~~~~
-   drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c:685:52: note: format string is defined here
-     685 |         dev_err(cru->dev, "Invalid MB address 0x%llx (out of range)\n", amnmadrs);
-         |                                                 ~~~^
-         |                                                    |
-         |                                                    long long unsigned int
-         |                                                 %x
-
-
-vim +677 drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-
-   664	
-   665	static int rzg3e_cru_get_current_slot(struct rzg2l_cru_dev *cru)
-   666	{
-   667		dma_addr_t amnmadrs;
-   668		unsigned int slot;
-   669	
-   670		/*
-   671		 * When AMnMADRSL is read, AMnMADRSH of the higher-order
-   672		 * address also latches the address.
-   673		 *
-   674		 * AMnMADRSH must be read after AMnMADRSL has been read.
-   675		 */
-   676		amnmadrs = rzg2l_cru_read(cru, AMnMADRSL);
- > 677		amnmadrs |= ((dma_addr_t)rzg2l_cru_read(cru, AMnMADRSH) << 32);
-   678	
-   679		/* Ensure amnmadrs is within this buffer range */
-   680		for (slot = 0; slot < cru->num_buf; slot++)
-   681			if (amnmadrs >= cru->buf_addr[slot] &&
-   682			    amnmadrs < cru->buf_addr[slot] + cru->format.sizeimage)
-   683				return slot;
-   684	
- > 685		dev_err(cru->dev, "Invalid MB address 0x%llx (out of range)\n", amnmadrs);
-   686		return -EINVAL;
-   687	}
-   688	
-
+diff --git a/tools/arch/x86/intel_sdsi/intel_sdsi.c b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+index 766a5d26f534..0e12b59976de 100644
+--- a/tools/arch/x86/intel_sdsi/intel_sdsi.c
++++ b/tools/arch/x86/intel_sdsi/intel_sdsi.c
+@@ -315,7 +315,7 @@ static char *content_type(uint32_t type)
+ {
+ 	switch (type) {
+ 	case  CONTENT_TYPE_LK_ENC:
+-		return "Licencse key encoding";
++		return "License key encoding";
+ 	case CONTENT_TYPE_LK_BLOB_ENC:
+ 		return "License key + Blob encoding";
+ 	default:
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.47.2
+
