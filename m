@@ -1,132 +1,128 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976E526E957
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AE325D911;
+	Thu, 27 Feb 2025 19:28:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684429; cv=none; b=Rsf0TMz4afM1UjhwcxaRL52COAqu/fFRe0k1eyBSVTw5ZsvtZWtIbX6PDRsKyb/gq6I02PdvRPWISn7ZpRAY35dEeW3bYbj0XB3HjiN45gUMQ+lRBfpzXBA8lAr6z9Uwhh47bbFUCEXOlTPkGZJJ1hCPEcbTmaCMsoPWVtqNBrg=
+	t=1740684500; cv=none; b=kjL+eQ3Mm1VOmvY5N1eBJYzTdITu4yeWB6WgOZjoKB/E5zdz7ifYv21cKYxwTxgBBJwGfYLN67aIHGLi2I6GqWFtwSrZM4EC/kLuqn2+hcphZau6AQmyUOJDhUWZWXjRI2jVMrRUtEbHQgXJrHUFuClMlDpWe7/r+45jYU3JsRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684429; c=relaxed/simple;
-	bh=d1Qxg472CkVrkJspIto61QqE2XsIjtKw5J3xPkJikcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o+6IeuJSUqAKHo8Vq1yYrQLHS+m09rxzSC6+U1ESKjn/IkdcuuByaIAajedWjbPdqy4r2NtdkCcs3XLyY7bUHwC2Q0rsTdK88pq/UbvvI2uuirr7Pt6aswxYqdZSgNypaQSpehR/cFH+ETDlJP5md0lXbllVhXlCeqFsbmrLxMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2TxopmCH; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740684500; c=relaxed/simple;
+	bh=MkFWz9GAf3oox55gTVAIQaaz6t4udTfaAcoiCLU/aeA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=i/drWJSk6tSWEp33prAu02eoxB+4d7olhLicc+4qx7O0Yw2MbAfu0qd9uSO6HbbIkBryX2LMtcoRILDTbzjMPXERzWsR066EJrgMDy2pESj9G7ZGrAdX8sBZKZ8O3aBbbCFvfePYG44yGYREE+H6Q5pybebrYAXsdq+kPHLChso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YoZzQPsL; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2TxopmCH"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54843052b67so1286e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740684426; x=1741289226; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UtLSNJVT+92AMNNdy2v/ceT4EU9CKE0f6wRbNLrZ7oU=;
-        b=2TxopmCHJ9v8GWtr7FbdgnCMwGCilGeXlaG2avMM5+IrJNSNvvm8qp3GPFvmuxHPgO
-         3/5I9UwOcaZdAj3dk0Uf3zb/+Ic8uWgzcNlgFhC1VOSP3VIrAUg1iKv/FJCoGwu9EcNY
-         Mx/4Rrho733WrpUPTjlyv1Quuiz5VnLvLDxH12MEWOmbP6+qVRmKU6X2ejaqm1ipsQ1c
-         3FXOQAUB0Each3LKu+MIxxicGkug6g4D98UQsVowTq9LzUXuGzw/0SxwC+AQVRtGM9oH
-         4lnA0Q5SbXQc8OF/fFq+PJSOemiixhP8UbbrlD5WpHQA4BQM31ZErsHW2HCdmpXWxnjm
-         xFDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740684426; x=1741289226;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UtLSNJVT+92AMNNdy2v/ceT4EU9CKE0f6wRbNLrZ7oU=;
-        b=E4zHdb0eoFkY+euEc3Vy3Lf+zq1HuujKVZ7magUHdgMpVDaNTJq8tye0QCpt1K3Izo
-         lNAkqM2aQmluzAKcj6IuXbaC9uXXnjvTtj9NTrHTu42c4bORspVIUGEKa5LuLFSzZyiC
-         5DumjOt7mb3wav/DIU/2xEtUyCu+szH1xQfKDpEgWIKFcHaUa+x+ERHX78MQvN8Q1XqO
-         kEcBwbql8E4KeqPN0EczbYChqtZRGEnDrFyqVNo1/+nSN81HDOp4AW7PtGZjca+uJjQq
-         Flz4d5qiujCB4sA5kefSb80fxsQ4xFvlLosdQCGNCf3S5ZLgc/B7OAqsKiO/O+42LWiP
-         0TGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXyTmMrOMJZnmvAp5p3lfcrJK0lpc0mNWpPVRtnYP1f+weF0+CPW29tv2Ag/zvhykaRMy+6EAtXBDGTjJM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxotKy6B7xlw4mMfXxDSTbQOMgprOcVwEvXddyasC08PBrw4kc3
-	kSj47SqJWSoTlFkbCpblVlbQbeO9tn3TR3tkMS6cuTOu9sT8S0Uqmpc+i0qLNfEuxUJoADOXP+7
-	hVGMZdLlJGyF9nTAmBiGaqbU5RRRDO0HTuxTz
-X-Gm-Gg: ASbGncugFCX3nea4Rje1RKaIEGuvCfYUa4qFD/8FPLzbSXMk/n1PF44w9ld1esnsuK6
-	pHcE0L31DcjVB2wbAH4zZ4ArFCxi2HjSkxNHlY9WQz2I7o4gDwnQTBCAx/3MNgS8rVEz6rVUlr9
-	sPe2nen+f283KLeBU2ryq8SDK+ApqThDboSMT36N2V
-X-Google-Smtp-Source: AGHT+IEdSIwybUjSkkV5vNkBMcDTqOmFlDjP0ogUFLrcyG7hy/eEgdi+TbKAXYt1FUTQRVem2blej27QUoMzQ6ig7ik=
-X-Received: by 2002:a05:6512:3a84:b0:543:cf0c:ed14 with SMTP id
- 2adb3069b0e04-5494debd8fdmr16005e87.5.1740684425486; Thu, 27 Feb 2025
- 11:27:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YoZzQPsL"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RJ0vQk012055;
+	Thu, 27 Feb 2025 19:28:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	RdjIqGF+ISOqLN7KsR39TGSa+NABYH6lIW0NjEcfAZM=; b=YoZzQPsL3wSi3TlV
+	qrUtJwdv02vxq692FjQ4amIOteyIhE0na11FI78TnAj0TCn5r/DIiT+g5Jeb+mM7
+	Sqn1a7wd7IsICn0jzOUZk8+dvoIsof6iQLuOQk3xd2iFkxlG1muzkcNVjsdrOKty
+	nko9oSJ610LROyQg46LwsDqPbaveWPF7uqF3HE+TaGDQCSj/TMNpNZtHNFTdBKFM
+	aYGeUeGzvElth+cYEuyPCK0QA+/noYZwQqiN1D7RTFQEuWOkALiHkhYVXaXRnUfn
+	7euaVlD5ue0XMCEBjTRgiULoKqJGvqnCpjEqsgiaxTTcHeyLbeesCLWETsVRp9FH
+	yk4CRw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prketqf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 19:28:06 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51RJS5Yk016619
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 19:28:05 GMT
+Received: from [10.71.114.206] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Feb
+ 2025 11:28:04 -0800
+Message-ID: <bdf2034d-4c96-4b99-b472-520227ff930d@quicinc.com>
+Date: Thu, 27 Feb 2025 11:28:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225004704.603652-1-vannapurve@google.com>
- <20250225004704.603652-3-vannapurve@google.com> <pvbwlmkknw7cwln4onmi5mujpykyaxisb73khlriq7pzqhgno2@nvu3cbchp4am>
-In-Reply-To: <pvbwlmkknw7cwln4onmi5mujpykyaxisb73khlriq7pzqhgno2@nvu3cbchp4am>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Thu, 27 Feb 2025 11:26:53 -0800
-X-Gm-Features: AQ5f1JpNkvOxWDJlk_d64tma-tOWc1scSvqjWSXHu6nUjd70ID7CCmOSArfFMN8
-Message-ID: <CAGtprH8mxENaH-Y0=b0kKJio=EG0OKt_qeguRBJECagXL4poPA@mail.gmail.com>
-Subject: Re: [PATCH v6 2/3] x86/tdx: Fix arch_safe_halt() execution for TDX VMs
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: dave.hansen@linux.intel.com, kirill.shutemov@linux.intel.com, 
-	jgross@suse.com, ajay.kaher@broadcom.com, ak@linux.intel.com, 
-	tony.luck@intel.com, thomas.lendacky@amd.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com, 
-	seanjc@google.com, kai.huang@intel.com, chao.p.peng@linux.intel.com, 
-	isaku.yamahata@gmail.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
-	erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com, 
-	sagis@google.com, afranji@google.com, kees@kernel.org, jikos@kernel.org, 
-	peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-coco@lists.linux.dev, virtualization@lists.linux.dev, 
-	bcm-kernel-feedback-list@broadcom.com, stable@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8750: Add USB support to SM8750
+ platforms
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Melody Olvera
+	<quic_molvera@quicinc.com>
+CC: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Satya Durga Srinivasu Prabhala
+	<quic_satyap@quicinc.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250113-sm8750_usb_master-v1-0-09afe1dc2524@quicinc.com>
+ <20250113-sm8750_usb_master-v1-7-09afe1dc2524@quicinc.com>
+ <g47ac6bzxqyqbkuqsvuwm5vdc7x5wjfppv6fj4mftwyjlyuz7t@jzmw2kfa2jnp>
+Content-Language: en-US
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <g47ac6bzxqyqbkuqsvuwm5vdc7x5wjfppv6fj4mftwyjlyuz7t@jzmw2kfa2jnp>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6SmfXuZus25YPP3QZn62hCs8W0rJgGSe
+X-Proofpoint-ORIG-GUID: 6SmfXuZus25YPP3QZn62hCs8W0rJgGSe
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 spamscore=0
+ mlxlogscore=797 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270144
 
-On Wed, Feb 26, 2025 at 3:49=E2=80=AFAM Kirill A. Shutemov <kirill@shutemov=
-.name> wrote:
->
-> On Tue, Feb 25, 2025 at 12:47:03AM +0000, Vishal Annapurve wrote:
-> > Direct HLT instruction execution causes #VEs for TDX VMs which is route=
-d
-> > to hypervisor via TDCALL. If HLT is executed in STI-shadow, resulting #=
-VE
-> > handler will enable interrupts before TDCALL is routed to hypervisor
-> > leading to missed wakeup events.
-> >
-> > Current TDX spec doesn't expose interruptibility state information to
-> > allow #VE handler to selectively enable interrupts. To bypass this
-> > issue, TDX VMs need to replace "sti;hlt" execution with direct TDCALL
-> > followed by explicit interrupt flag update.
-> >
-> > Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
-> > prevented the idle routines from executing HLT instruction in STI-shado=
-w.
-> > But it missed the paravirt routine which can be reached like this as an
-> > example:
-> >         acpi_safe_halt() =3D>
-> >         raw_safe_halt()  =3D>
-> >         arch_safe_halt() =3D>
-> >         irq.safe_halt()  =3D>
-> >         pv_native_safe_halt()
->
-> I would rather use paravirt spinlock example. It is less controversial.
-> I still see no point in ACPI cpuidle be a thing in TDX guests.
->
+Hi Dmitry,
 
-I will modify the description to include a paravirt spinlock example.
+On 2/27/2025 10:29 AM, Dmitry Baryshkov wrote:
+> On Mon, Jan 13, 2025 at 01:52:13PM -0800, Melody Olvera wrote:
+>> From: Wesley Cheng <quic_wcheng@quicinc.com>
+>>
+>> Enable USB support on SM8750 MTP and QRD variants. SM8750 has a QMP combo
+>> PHY for the SSUSB path, and a M31 eUSB2 PHY for the HSUSB path.
+>>
+>> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm8750-mtp.dts |  24 ++++++
+>>  arch/arm64/boot/dts/qcom/sm8750-qrd.dts |  24 ++++++
+>>  arch/arm64/boot/dts/qcom/sm8750.dtsi    | 134 ++++++++++++++++++++++++++++++++
+>>  3 files changed, 182 insertions(+)
+>>
+> 
+>> +
+>> +		usb_dp_qmpphy: phy@88e8000 {
+>> +			compatible = "qcom,sm8750-qmp-usb3-dp-phy";
+>> +			reg = <0x0 0x088e8000 0x0 0x3000>;
+> 
+> If I understand anything correctly, this should be 0x4000, not 0x3000.
+> You have missed the DP part of it.
 
-> >
-> > To reliably handle arch_safe_halt() for TDX VMs, introduce explicit
-> > dependency on CONFIG_PARAVIRT and override paravirt halt()/safe_halt()
-> > routines with TDX-safe versions that execute direct TDCALL and needed
-> > interrupt flag updates. Executing direct TDCALL brings in additional
-> > benefit of avoiding HLT related #VEs altogether.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
-> > Signed-off-by: Vishal Annapurve <vannapurve@google.com>
->
-> Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->
-> --
->   Kiryl Shutsemau / Kirill A. Shutemov
+ACK, will fix that. Thanks.
+
+Thanks
+Wesley Cheng
