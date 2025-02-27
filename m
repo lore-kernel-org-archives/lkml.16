@@ -1,41 +1,51 @@
-Received: from mail-m49196.qiye.163.com (mail-m49196.qiye.163.com [45.254.49.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 294051A3144;
-	Thu, 27 Feb 2025 11:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795E522AE42
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654236; cv=none; b=jreRE/YgmCadEOLmxvWuQpBhwJhgUv/2ZogzwwHqEYdcNusaRup8+j6si/6/6CBp9pBJIHoPImCyL6rws7F0BTs8rdyMb547D6iak023ZtiHdExPXXrIZN96weF16JtQ2sCWSS9ILr43Xa3xqw2+EKz4dIi0xosa94UnlI+npQI=
+	t=1740654238; cv=none; b=g4COQDwd8mcvfyF0SaD89BvGS6WLasLpShcKdsJrkCOTNu0sSVHycdGu09nLn+sIAmhvXMGgcknrayBYpLjkkx69Du69LxPrwEy8Qf3Kmaq3GvpN1IIsxBfcb1Za7+tB/ky4l/hwmENFHKEL1rmyLZlqpgJGsRKPl/BICmYTRQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654236; c=relaxed/simple;
-	bh=dhYd6F2dqDNDj2qQvvN2Q/ppd9sgGBv29AqvBxoescM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lxERSVyaX8OCr719WlOD6hxkjvSWy56x1aZ7YW386Fn1jUBQBh9CF0H3VUYtGa7kXBS2itMy8Xfwm3BHyHqQIcSTtJ/8VAfDyytEDDz43oB7LN0qAEdp6oc7jEg9vOx9xTOdKNdMfhl48m4TJGeoNC3gzTW1q7QVJegh8N+Kc/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=e0bcPEHK; arc=none smtp.client-ip=45.254.49.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740654238; c=relaxed/simple;
+	bh=WFSs/B3Y34immM1a4OhkanKgJ7jJZGY58fcV+6YM6P4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K5cIpNF3o37ugMHib3zZMFRfjWk2KrkvQbuEmOU2LXBVDpFQYbBS+sO8RwX7XbpBtlCWlf+Ft02XXkxOwb8CLgcEFw4pAwevm+ClOf95CJXISLIl1PeAo9nXVq+WkhLEWtCwHW2JWSD17BYRCT85nX/I8EdANRA5PvZRQ7rNV2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEg0GYNr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="e0bcPEHK"
-Received: from localhost.localdomain (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c65b3592;
-	Thu, 27 Feb 2025 19:03:44 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	linux-iio@vger.kernel.org,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/2] dt-bindings: iio: adc: Add rockchip,rk3562-saradc string
-Date: Thu, 27 Feb 2025 19:03:42 +0800
-Message-Id: <20250227110343.2342017-1-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEg0GYNr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8D4CC4CEEA;
+	Thu, 27 Feb 2025 11:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740654238;
+	bh=WFSs/B3Y34immM1a4OhkanKgJ7jJZGY58fcV+6YM6P4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iEg0GYNrvGcLEdkYD3sIqziy/IPNKk8xMz9vEDSXYibyAXRX6mnL1hO4hT/QkXcMX
+	 tiwTsroWWil5RobhnMO5dXKnEUghjC/UrH43z5SGmMuY3nN7W0oyWbuFClOsUzgDsK
+	 ZEY6CsWXr0mlUV6rcgZf/ooNykBBL8Dih0DrZZpcFigfzinlpltlkFIELrxTQWQ3q/
+	 zEVgm+slR3VF7AnbmrlQhz8PzdFKt6DE6lB6G+v5LMdiLkP0L1A2JuGTUAA+1ApUPg
+	 tJj37K1ierPwX5R+7239UhwqZyQAxY1HfndMldXXz7xdyt3emqM37rv1+pYAd9/DXW
+	 u5q5Z/Y2gL9Xw==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1tnbgK-00000001mQa-07zQ;
+	Thu, 27 Feb 2025 12:03:56 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	qemu-arm@nongnu.org,
+	qemu-devel@nongnu.org,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Ani Sinha <anisinha@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 01/21] tests/acpi: virt: add an empty HEST file
+Date: Thu, 27 Feb 2025 12:03:31 +0100
+Message-ID: <3da2d197610ada25dacaee54d113fb87c5448b04.1740653898.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1740653898.git.mchehab+huawei@kernel.org>
+References: <cover.1740653898.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,45 +53,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0NCSlZOSE1DS0MYGR4ZHR5WFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a954713a34f03afkunmc65b3592
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBw6GBw5MjIVSg0dAh46Mk4I
-	HxQwCxVVSlVKTE9LTU5PSUlOTkNNVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFCTEs3Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=e0bcPEHKIbX6nYq+RNt83avtIJgzmJ0dBYHMbMFlfWxmOU7MwtvYPHem9TLTQHP8vcL+nmr1v6UTsDU5e6UMsAnWbql9qNH2oD7NUepG9B3Cm0hQ0xVpT4YYwHl2miCq3chD2S4IxG4D9CubqplSP8MLV7AvVn2yFquwWMzj0DE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=LKKAdsY3PqR35tOPthDUBhzW0huewFm3x2G+1m9O1mQ=;
-	h=date:mime-version:subject:message-id:from;
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Add rockchip,rk3562-saradc compatible string.
-The saradc on rk3562 is v2 controller, with 10bit width which is different
-with rk3588.
+Such file will be used to track HEST table changes.
 
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+For now, disallow HEST table check until we update it to the
+current data.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
+ tests/data/acpi/aarch64/virt/HEST           | 0
+ tests/qtest/bios-tables-test-allowed-diff.h | 1 +
+ 2 files changed, 1 insertion(+)
+ create mode 100644 tests/data/acpi/aarch64/virt/HEST
 
-Changes in v2:
-- fix dtb check error
-
- Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-index fd93ed3991e0..d129b66a6207 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.yaml
-@@ -15,6 +15,7 @@ properties:
-       - const: rockchip,saradc
-       - const: rockchip,rk3066-tsadc
-       - const: rockchip,rk3399-saradc
-+      - const: rockchip,rk3562-saradc
-       - const: rockchip,rk3588-saradc
-       - items:
-           - const: rockchip,rk3576-saradc
+diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
+new file mode 100644
+index 000000000000..e69de29bb2d1
+diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+index dfb8523c8bf4..39901c58d647 100644
+--- a/tests/qtest/bios-tables-test-allowed-diff.h
++++ b/tests/qtest/bios-tables-test-allowed-diff.h
+@@ -1 +1,2 @@
+ /* List of comma-separated changed AML files to ignore */
++"tests/data/acpi/aarch64/virt/HEST",
 -- 
-2.25.1
+2.48.1
 
