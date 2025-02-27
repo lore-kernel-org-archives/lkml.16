@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B0A1AF0C9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BB71AA1E4
 	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:01:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740672063; cv=none; b=j8lFOG4eOmiOTlOH4ry0kS71ElC0JKwyeBS+kmxWpXTJ7oihtj7aN1RPObMoZc8AT9orsF5iE+PTbBY9XunlwnkcA02wyE7YLrVrl4vN0byQypI/XOXQZL1lRqaWyro1D+S//WP9TqhwVHEoNueD3T+s0Y4N3Q0q2xyTrEtzQy0=
+	t=1740672063; cv=none; b=lwliCaYMBqzwx40rp1fP7ndct6FAcji4EnSjL6CFiMgzG1EitXrfiK35JR8m/MSJcEJjRzPhDagapY0owzfB/hvbnLZsyNVqHmyv5QQnTXwue6RNxDZawZoqehYnPE05EDCzZ7fY5IfQvwBV1bBfjPf1/2yLbM1T0Xh72ZLbjgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740672063; c=relaxed/simple;
-	bh=bxK9Et1UjLido8TcaM0YtPM1EGz6KNWSFKPtGUAIaGc=;
+	bh=qzKO9Ht4URhGw0bTLxngjN7XfmL3ZPZGPSViPyPm/yo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DRyNvvGMhVMe+x+njmPXtMBj3xECQ+NbhAn9160OtHCbpp0IaI4Gc9zq2hNMQU+P0y18xsNFBIzvxt6Cq1ROmIOAdOr5CjwLHVct8fpVL/eyjsaKgh59yBHIbaXgmqrLMLH/AdtPeWzc88Kob5i5zxQZF7SkJ5kFITe7CddfSIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ey7RwX5u; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uHa0DUkmG+1xChWwcOVBUsp84eZUb8xZ1Fyngz7chtCxYtUmzhtTkYPb1ZevjGzr+vNBFaG5VIooAUTflvbKIUGp+zDO+Xlsa4cZf4vPdcYg51hh+hUEKPdyld56n0ulumEQsrtYPrHSEKYaL3hwixJsQB/vdN9NRLD8DBqKmeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TUDFQaHW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ey7RwX5u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149A3C113D0;
-	Thu, 27 Feb 2025 16:01:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TUDFQaHW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01364C4CEFC;
+	Thu, 27 Feb 2025 16:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740672063;
-	bh=bxK9Et1UjLido8TcaM0YtPM1EGz6KNWSFKPtGUAIaGc=;
+	bh=qzKO9Ht4URhGw0bTLxngjN7XfmL3ZPZGPSViPyPm/yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ey7RwX5uYigzJuDdeBDBXHhjx2+oD7DhU0XnlvLVuXcnICl2v+ztVZqLXR0B9s3Mr
-	 NF9yngAHJ4OdGd8+YuC/OeU/3O8uuZxMNlDwvOUJdmSbiKeQbgMsry2iyZwMxKOUnJ
-	 yQGdeoQ/FYCbQvC3A8LdNHpkBWaohJw2d87ZBgmQi7Rywx47jWqekQHVI3KYJHZ9Zc
-	 W1Hbrr+lbJR9G1AKOS8r4NSHoc89q0+Y7LcApvdfHAC0uVhDGMxqYuW33cJ9SxVyqU
-	 Daox1uiMXivZBZXgRkaqzV63xALQPHyMs6yksUKyAIYgbH+fu3pq13GAGJdWymCITP
-	 4RBeR2DfVs1Qw==
+	b=TUDFQaHWsMrPx5UrkP70MSDB0yKxZTANx0OdO//VBbPe5yzSsLhzdoPi00lnuYn3G
+	 KvToaqOJBB2kRkCgG9iPJpczrUTAbzhBSW/dyMDwO5ctFRe0UmBe01Yd8Y9hwUq6UX
+	 74jykQj79zRwpq3DsCpzXSE3wmO2O9/9qSlmAym8/oCtv8X74M+1vS4tm1QbIJLZ39
+	 UZzW7C1COXXK4uWFfvTAh+nm64l5iXEpTq+U306tFoAvAG/8z74xdb4ftET0kK7mco
+	 akrMkl0XOe7DRikk8J9bD2YOuagM6tQQ0ufNFttCQ7IdxwmRlObFml0LR2IOsXnUOU
+	 eSZ2yv+9GVbNg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tngJp-000000023bt-0vId;
+	id 1tngJp-000000023bb-0SCO;
 	Thu, 27 Feb 2025 17:01:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -38,11 +38,13 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	qemu-arm@nongnu.org,
 	qemu-devel@nongnu.org,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Dongjiu Geng <gengdongjiu1@gmail.com>,
+	Ani Sinha <anisinha@redhat.com>,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Shannon Zhao <shannon.zhaosl@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 18/19] docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
-Date: Thu, 27 Feb 2025 17:00:56 +0100
-Message-ID: <445f7d41b01ffc5bd79d6fd83bc7c4c621bcbc85.1740671863.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v6 14/19] arm/virt: Wire up a GED error device for ACPI / GHES
+Date: Thu, 27 Feb 2025 17:00:52 +0100
+Message-ID: <42c066d580dc0c6414053c7b95446f003d7999ef.1740671863.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740671863.git.mchehab+huawei@kernel.org>
 References: <cover.1740671863.git.mchehab+huawei@kernel.org>
@@ -55,60 +57,84 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-While the HEST layout didn't change, there are some internal
-changes related to how offsets are calculated and how memory error
-events are triggered.
+Adds support to ARM virtualization to allow handling
+generic error ACPI Event via GED & error source device.
 
-Update specs to reflect such changes.
+It is aligned with Linux Kernel patch:
+https://lore.kernel.org/lkml/1272350481-27951-8-git-send-email-ying.huang@intel.com/
 
+Co-authored-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Co-authored-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Acked-by: Igor Mammedov <imammedo@redhat.com>
 ---
- docs/specs/acpi_hest_ghes.rst | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
+ hw/arm/virt-acpi-build.c |  1 +
+ hw/arm/virt.c            | 12 +++++++++++-
+ include/hw/arm/virt.h    |  1 +
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/docs/specs/acpi_hest_ghes.rst b/docs/specs/acpi_hest_ghes.rst
-index c3e9f8d9a702..4311a9536b21 100644
---- a/docs/specs/acpi_hest_ghes.rst
-+++ b/docs/specs/acpi_hest_ghes.rst
-@@ -89,12 +89,21 @@ Design Details
-     addresses in the "error_block_address" fields with a pointer to the
-     respective "Error Status Data Block" in the "etc/hardware_errors" blob.
+diff --git a/hw/arm/virt-acpi-build.c b/hw/arm/virt-acpi-build.c
+index 5443615d976d..2bf9118fda55 100644
+--- a/hw/arm/virt-acpi-build.c
++++ b/hw/arm/virt-acpi-build.c
+@@ -861,6 +861,7 @@ build_dsdt(GArray *table_data, BIOSLinker *linker, VirtMachineState *vms)
+     }
  
--(8) QEMU defines a third and write-only fw_cfg blob which is called
--    "etc/hardware_errors_addr". Through that blob, the firmware can send back
--    the guest-side allocation addresses to QEMU. The "etc/hardware_errors_addr"
--    blob contains a 8-byte entry. QEMU generates a single WRITE_POINTER command
--    for the firmware. The firmware will write back the start address of
--    "etc/hardware_errors" blob to the fw_cfg file "etc/hardware_errors_addr".
-+(8) QEMU defines a third and write-only fw_cfg blob to store the location
-+    where the error block offsets, read ack registers and CPER records are
-+    stored.
-+
-+    Up to QEMU 9.2, the location was at "etc/hardware_errors_addr", and
-+    contains a GPA for the beginning of "etc/hardware_errors".
-+
-+    Newer versions place the location at "etc/acpi_table_hest_addr",
-+    pointing to the GPA of the HEST table.
-+
-+    Through that such GPA values, the firmware can send back the guest-side
-+    allocation addresses to QEMU. They contain a 8-byte entry. QEMU generates
-+    a single WRITE_POINTER command for the firmware. The firmware will write
-+    back the start address of either "etc/hardware_errors" or HEST table at
-+    the corresponding fw_cfg file.
+     acpi_dsdt_add_power_button(scope);
++    aml_append(scope, aml_error_device());
+ #ifdef CONFIG_TPM
+     acpi_dsdt_add_tpm(scope, vms);
+ #endif
+diff --git a/hw/arm/virt.c b/hw/arm/virt.c
+index 4a5a9666e916..3faf32f900b5 100644
+--- a/hw/arm/virt.c
++++ b/hw/arm/virt.c
+@@ -678,7 +678,7 @@ static inline DeviceState *create_acpi_ged(VirtMachineState *vms)
+     DeviceState *dev;
+     MachineState *ms = MACHINE(vms);
+     int irq = vms->irqmap[VIRT_ACPI_GED];
+-    uint32_t event = ACPI_GED_PWR_DOWN_EVT;
++    uint32_t event = ACPI_GED_PWR_DOWN_EVT | ACPI_GED_ERROR_EVT;
  
- (9) When QEMU gets a SIGBUS from the kernel, QEMU writes CPER into corresponding
-     "Error Status Data Block", guest memory, and then injects platform specific
-@@ -105,8 +114,5 @@ Design Details
-      kernel, on receiving notification, guest APEI driver could read the CPER error
-      and take appropriate action.
+     if (ms->ram_slots) {
+         event |= ACPI_GED_MEM_HOTPLUG_EVT;
+@@ -1010,6 +1010,13 @@ static void virt_powerdown_req(Notifier *n, void *opaque)
+     }
+ }
  
--(11) kvm_arch_on_sigbus_vcpu() uses source_id as index in "etc/hardware_errors" to
--     find out "Error Status Data Block" entry corresponding to error source. So supported
--     source_id values should be assigned here and not be changed afterwards to make sure
--     that guest will write error into expected "Error Status Data Block" even if guest was
--     migrated to a newer QEMU.
-+(11) kvm_arch_on_sigbus_vcpu() report RAS errors via a SEA notifications,
-+     when a SIGBUS event is triggered.
++static void virt_generic_error_req(Notifier *n, void *opaque)
++{
++    VirtMachineState *s = container_of(n, VirtMachineState, generic_error_notifier);
++
++    acpi_send_event(s->acpi_dev, ACPI_GENERIC_ERROR);
++}
++
+ static void create_gpio_keys(char *fdt, DeviceState *pl061_dev,
+                              uint32_t phandle)
+ {
+@@ -2404,6 +2411,9 @@ static void machvirt_init(MachineState *machine)
+ 
+     if (has_ged && aarch64 && firmware_loaded && virt_is_acpi_enabled(vms)) {
+         vms->acpi_dev = create_acpi_ged(vms);
++        vms->generic_error_notifier.notify = virt_generic_error_req;
++        notifier_list_add(&acpi_generic_error_notifiers,
++                          &vms->generic_error_notifier);
+     } else {
+         create_gpio_devices(vms, VIRT_GPIO, sysmem);
+     }
+diff --git a/include/hw/arm/virt.h b/include/hw/arm/virt.h
+index c8e94e6aedc9..f3cf28436770 100644
+--- a/include/hw/arm/virt.h
++++ b/include/hw/arm/virt.h
+@@ -176,6 +176,7 @@ struct VirtMachineState {
+     DeviceState *gic;
+     DeviceState *acpi_dev;
+     Notifier powerdown_notifier;
++    Notifier generic_error_notifier;
+     PCIBus *bus;
+     char *oem_id;
+     char *oem_table_id;
 -- 
 2.48.1
 
