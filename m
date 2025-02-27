@@ -1,61 +1,141 @@
-Received: from secure.elehost.com (secure.elehost.com [185.209.179.11])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000CD21858D;
-	Thu, 27 Feb 2025 19:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.209.179.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BCF21858D;
+	Thu, 27 Feb 2025 19:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740683079; cv=none; b=jx1SYyL2WirvHwmwjroOGyof/BvNIxlP/AaFnkXTsQoCjUn+XmKKgdMwtESBedCMoIkgir9vu2HAj99JUdJ04vhyo0utKpoDlJYPTGwa40Uok1JDwZFgNd8k4LKoHasHiC6v8mrxEil+wMO1HPoIZfetGpTKL6KuVtC+k3hCSPA=
+	t=1740683082; cv=none; b=TIz8XXnMR9Hdrt3IPXRKQFANjV7Pve66VXeAFtNOID7Pmc8AtmQRnv0dpPt2kKAu2X7+1U8Yi3jFRuncOOJC3euEwVLc38BzLccJjear/0kzR6wVA0fKum7573DimDGdKOnmCYZgeAwsnQvVpyvqL7FF4UGAC4tKh37k4qceqVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740683079; c=relaxed/simple;
-	bh=ebyszgBRpnFkGiV5rNnQfDL1xFflqvN9WXvQMomRTMg=;
-	h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:
-	 MIME-Version:Content-Type; b=evUL90jqnKku/nLTCKcm1JhIQkElumXlmLEWvISe2YgfkrOhv43cpVomo4O4MChUXEVcwjSVWZx648sOYNPbOOZF7Gz6J541IDcFOjH0Jls4P1vyv0ak/jXsLCcfpvuqL2lLWABf3MKGcC63ATIk6X9eMY0YQ/HpgqjDueMZjD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexbridge.com; spf=pass smtp.mailfrom=nexbridge.com; arc=none smtp.client-ip=185.209.179.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexbridge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nexbridge.com
-X-Virus-Scanned: Debian amavisd-new at secure.elehost.com
-Received: from Mazikeen (pool-99-228-67-183.cpe.net.cable.rogers.com [99.228.67.183])
-	(authenticated bits=0)
-	by secure.elehost.com (8.15.2/8.15.2/Debian-22ubuntu3) with ESMTPSA id 51RJ011I3797100
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 19:00:01 GMT
-Reply-To: <rsbecker@nexbridge.com>
-From: <rsbecker@nexbridge.com>
-To: "'Junio C Hamano'" <gitster@pobox.com>, <git@vger.kernel.org>
-Cc: "'Linux Kernel'" <linux-kernel@vger.kernel.org>,
-        <git-packagers@googlegroups.com>
-References: <xmqqzfi8bljk.fsf@gitster.g>
-In-Reply-To: <xmqqzfi8bljk.fsf@gitster.g>
-Subject: RE: [ANNOUNCE] Git v2.49.0-rc0
-Date: Thu, 27 Feb 2025 13:59:56 -0500
-Organization: Nexbridge Inc.
-Message-ID: <028c01db8949$ce664b70$6b32e250$@nexbridge.com>
+	s=arc-20240116; t=1740683082; c=relaxed/simple;
+	bh=M1BO0EK+5h0CV0zOAebi3D/RM921eo6aP5NxkmQrLe0=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=HhqyOYOrxBUe2Ls18DP4lJ+Iv7lL2JpgtU4K1VJmKH9NOklaAegD32p5Xiy+TNid0Ov3yyDbwb/KHByYrUs9TpgC0obJWW6jQTCE11AgZcFjnbaC0RfYAUpzVtYgJnEqnccf8fboljfeYS/pyWkpNDTyxJiKWns7ZxDL//NigRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xyQQXQkT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hmmGfZkG; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xyQQXQkT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hmmGfZkG"
+Date: Thu, 27 Feb 2025 19:04:37 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740683079;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t8u47tp5FLSY4NEXzdoQdbIe/BTejFAXpRcfhsP73Kc=;
+	b=xyQQXQkTtr1bWc+gDAg5VarQ03SM5r50cIe4lHZjD9CPkv5MJR66wmOmIUkAYbJ0qrk5RT
+	7v/H4m5pktBJ7Vm/w/mA5GQKHAdE+7RoD13dXahREvMJkxRlM6FYPF/Ztv6/fICF8Ez4EQ
+	D1aG/6aQOZT2+mo2nbxLAZOFQBL9ALETjtBejLnd3Q1cWdamK0ykDjU6Q9D8Jwhc8M2vaz
+	wyj7Ek3zeEvQnSkMeiw3LS8O1PqJbDy0hwBZyawozotH3Rf5Ky7f1vw5aKaHg1UZfXmMNG
+	W9ghwuRLICm7QTJHajfsmj8VD/X995c2LJR6e6O+c2TVUdv66JN4ofgjR9TyOg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740683079;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t8u47tp5FLSY4NEXzdoQdbIe/BTejFAXpRcfhsP73Kc=;
+	b=hmmGfZkGoq4PT6+s7+sWbHLXVRBV7kQyjBYqUWgEcgHOvK0bXM7+vHEw5METIPlsf84eMZ
+	vjSGYqI6ysEX8oDg==
+From: "tip-bot2 for Chang S. Bae" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/fpu] x86/fpu/xstate: Simplify print_xstate_features()
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250227184502.10288-2-chang.seok.bae@intel.com>
+References: <20250227184502.10288-2-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH3n4sZ6iMu0cE0lBPLVR1uSUVLC7MjVDTQ
-Content-Language: en-ca
-X-Antivirus: Norton (VPS 250227-10, 2/27/2025), Outbound message
-X-Antivirus-Status: Clean
+Message-ID: <174068307835.10177.5760172564992178850.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On February 26, 2025 1:37 PM, Junio C Hamano wrote:
->An early preview release Git v2.49.0-rc0 is now available for testing =
-at the usual
->places.  It is comprised of 326 non-merge commits since v2.48.0, =
-contributed by 65
->people, 15 of which are new faces [*].
+The following commit has been merged into the x86/fpu branch of tip:
 
-Looks good on NonStop x86. Built/tested with OpenSSL 3.4 and 3.0. We =
-might build with 3.5 if it comes out in the 2.49.0 cycle.
+Commit-ID:     69a2fdf446049ae31be4a14a0cf16f2f18f09b6c
+Gitweb:        https://git.kernel.org/tip/69a2fdf446049ae31be4a14a0cf16f2f18f09b6c
+Author:        Chang S. Bae <chang.seok.bae@intel.com>
+AuthorDate:    Thu, 27 Feb 2025 10:44:46 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 27 Feb 2025 19:54:41 +01:00
 
-Thanks,
-Randall
+x86/fpu/xstate: Simplify print_xstate_features()
 
+print_xstate_features() currently invokes print_xstate_feature() multiple
+times on separate lines, which can be simplified in a loop.
+
+print_xstate_feature() already checks the feature's enabled status and is
+only called within print_xstate_features(). Inline print_xstate_feature()
+and iterate over features in a loop to streamline the enabling message.
+
+No functional changes.
+
+Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/r/20250227184502.10288-2-chang.seok.bae@intel.com
+---
+ arch/x86/kernel/fpu/xstate.c | 30 +++++++++---------------------
+ 1 file changed, 9 insertions(+), 21 deletions(-)
+
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 27417b6..6a41d16 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -259,32 +259,20 @@ static void __init setup_xstate_cache(void)
+ 	}
+ }
+ 
+-static void __init print_xstate_feature(u64 xstate_mask)
+-{
+-	const char *feature_name;
+-
+-	if (cpu_has_xfeatures(xstate_mask, &feature_name))
+-		pr_info("x86/fpu: Supporting XSAVE feature 0x%03Lx: '%s'\n", xstate_mask, feature_name);
+-}
+-
+ /*
+  * Print out all the supported xstate features:
+  */
+ static void __init print_xstate_features(void)
+ {
+-	print_xstate_feature(XFEATURE_MASK_FP);
+-	print_xstate_feature(XFEATURE_MASK_SSE);
+-	print_xstate_feature(XFEATURE_MASK_YMM);
+-	print_xstate_feature(XFEATURE_MASK_BNDREGS);
+-	print_xstate_feature(XFEATURE_MASK_BNDCSR);
+-	print_xstate_feature(XFEATURE_MASK_OPMASK);
+-	print_xstate_feature(XFEATURE_MASK_ZMM_Hi256);
+-	print_xstate_feature(XFEATURE_MASK_Hi16_ZMM);
+-	print_xstate_feature(XFEATURE_MASK_PKRU);
+-	print_xstate_feature(XFEATURE_MASK_PASID);
+-	print_xstate_feature(XFEATURE_MASK_CET_USER);
+-	print_xstate_feature(XFEATURE_MASK_XTILE_CFG);
+-	print_xstate_feature(XFEATURE_MASK_XTILE_DATA);
++	int i;
++
++	for (i = 0; i < XFEATURE_MAX; i++) {
++		u64 mask = BIT_ULL(i);
++		const char *name;
++
++		if (cpu_has_xfeatures(mask, &name))
++			pr_info("x86/fpu: Supporting XSAVE feature 0x%03Lx: '%s'\n", mask, name);
++	}
+ }
+ 
+ /*
