@@ -1,93 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9A91C7003;
-	Thu, 27 Feb 2025 15:53:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB1C1B424D;
+	Thu, 27 Feb 2025 15:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740671585; cv=none; b=NYRRExUft2LZABMBsDDvxNXwlQi64XJiNLOvft39ZQ2ssZzkwBQ/TPxNFEbK7FI+JBfO4gF8NaQxciR3gzAa0ra/jMwDa5wRR0q43iARxX7FUCgcnuJskdIMEytmA1TKX1ZVnmZMQVNf3aRzu1B/6VOupS+qaiOTuERZdpAUFjM=
+	t=1740671586; cv=none; b=RKiw683ShUfuOJqB4Z+zWg5bw4ZPOm5Z2MaUBXEfUcMJLDrDI0TOfVN/rSUJCBZn8WPaXnSByBnvDHeqWc4coSUqKQOVFwClw4sJa0hkNTLXeIuTzVJjep9jyx1/0PVA9dQpc/oswxh3FtaEnfD9qbnh7h1wEluW4+yL9kReunE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740671585; c=relaxed/simple;
-	bh=TBF7wUkwR5l5SAlFOkV5L7qayuPJGqlI2MqDmi1e2Qg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Mpqu83FDfl0FknhY+itfSq5Sd+81/s5p7DoBa6r2mYpbRh5vCeAsxFO1Kj1kmi2BUtrvVlcER3kTHiOULoCUTEgNCw/HIgc1DQc2B2IVIIa7rL63EaJi9ebqbAYdibl3ygnj283cuYonjALVAjQx25pFJsP/40LLpWpByzEcIvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cy8dsJl5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740671586; c=relaxed/simple;
+	bh=hRdyyYzhcP4NUii0TNQFW8OotTcsthHzkmqSXvcB7NY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IW60we9dyoG59Y1CCzVcQoloqeItrWuD4L9kt4WWh3Tzdn1giLS1R7wtoFxx/o5QZ9UXWse69V5ObP/M2136dUVaj49izre936HAgYwu6Wysn0vOXW399D6B5dfQDx4Q6grJgiCq9hpZo6067aJenhWhOvuwo4biWs7YEOl7Tn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=p4t9CrBj; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cy8dsJl5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 908FEC4CEED;
-	Thu, 27 Feb 2025 15:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740671585;
-	bh=TBF7wUkwR5l5SAlFOkV5L7qayuPJGqlI2MqDmi1e2Qg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cy8dsJl5R0GGYabMm31a4uFGRKRsFfxDV0JxeTwy/T+jLa4Rls9aVmvo9ZR/WQ+5D
-	 L5UAIUySR+ivTBBEiktecSu+8ja+NV9S+XuODphYxQIzh06YTnKgaDwdrHlwhTCpCo
-	 kc0sfT4pcosTadJqQpxMk0qSVpQLocvBZZTiTLGnBXENfvcfHs4bMoQAuyETw4q/2I
-	 w+0hY4OrS7uikMUTjszPLDLiOf0lz7+kjX9+lptK3DayTJ4A8OchnIT3HMmNQn5bOO
-	 owKGVkvrHForNoID6Yn2elgqZ/H3GiRQZnO3F6Ua7CR0B/eThfOVp5QuSxpudr4rrQ
-	 dc75GWBzG50NA==
-From: Mark Brown <broonie@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- parkeryang <Parker.Yang@mediatek.com>, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20250227131939.1040168-1-arnd@kernel.org>
-References: <20250227131939.1040168-1-arnd@kernel.org>
-Subject: Re: [PATCH] ASoC: mediatek: mt8188: avoid uninitialized variable
- use
-Message-Id: <174067158231.70060.14955037927245786834.b4-ty@kernel.org>
-Date: Thu, 27 Feb 2025 15:53:02 +0000
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="p4t9CrBj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740671584; x=1772207584;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=hRdyyYzhcP4NUii0TNQFW8OotTcsthHzkmqSXvcB7NY=;
+  b=p4t9CrBjQMCTtc3rBgbKcIFCOibXNoACsOwmR2Jm6mbBABX8esKq+qN4
+   E64NogRwT+0cODS7gqFqISVKFEwpuUkF8JjMRZNoRQeKZfiuFEwqcPnIk
+   gnJsxzFzBn1JcMlwys8GPx1I0TXLZNuBfl/6ddMKF74NBkIVZoqCbeaCC
+   cekY00f0NdEDtlCWxpsDqhMCIgI2R8fKgE0ppmb0U5zkrAciiuglH6gyD
+   gaaD2eoZWSSBjf4yzyR1sg90qEcOyL1xoh+2JkDQhGmMWMo6hrKFoWhsF
+   UzQFuUweCl2S3wxi8vuLYuLtbqL+ZPI1ShnpFIeDDKCqDWu3+T336zdSo
+   A==;
+X-CSE-ConnectionGUID: xBkIAngZQVSwQhIMCQbtUA==
+X-CSE-MsgGUID: TJdTlsGTRqqYfLqHWjYU1Q==
+X-IronPort-AV: E=Sophos;i="6.13,320,1732604400"; 
+   d="scan'208";a="38638166"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2025 08:52:55 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 27 Feb 2025 08:52:45 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 27 Feb 2025 08:52:45 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <lee@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <claudiu.beznea@tuxon.dev>, <sre@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<p.zabel@pengutronix.de>
+CC: <linux@armlinux.org.uk>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>, "Ryan
+ Wanner" <Ryan.Wanner@microchip.com>
+Subject: [PATCH v3 06/21] dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
+Date: Thu, 27 Feb 2025 08:51:53 -0700
+Message-ID: <27c5b177a41b89c5c983e7e292eb4b321a258991.1740671156.git.Ryan.Wanner@microchip.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1740671156.git.Ryan.Wanner@microchip.com>
+References: <cover.1740671156.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, 27 Feb 2025 14:19:01 +0100, Arnd Bergmann wrote:
-> The 'msk' variable has no initialization:
-> 
-> sound/soc/mediatek/mt8188/mt8188-dai-dmic.c:311:4: error: variable 'msk' is uninitialized when used here [-Werror,-Wuninitialized]
->   311 |                         msk |= PWR2_TOP_CON1_DMIC_FIFO_SOFT_RST_EN(i);
->       |                         ^~~
-> 
-> Set it to zero before the loop.
-> 
-> [...]
+From: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Applied to
+Add SAMA7D65 RTC compatible to DT bindings documentation.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+---
+ .../devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml         | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks!
-
-[1/1] ASoC: mediatek: mt8188: avoid uninitialized variable use
-      commit: 79ed408b2402e8113aa5a298f3bb9088ede58f6c
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+index c8bb2eef442d..7c5b13caa40b 100644
+--- a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.yaml
+@@ -23,7 +23,9 @@ properties:
+           - microchip,sam9x60-rtc
+           - microchip,sama7g5-rtc
+       - items:
+-          - const: microchip,sam9x7-rtc
++          - enum:
++              - microchip,sam9x7-rtc
++              - microchip,sama7d65-rtc
+           - const: microchip,sam9x60-rtc
+ 
+   reg:
+-- 
+2.43.0
 
