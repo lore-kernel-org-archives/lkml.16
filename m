@@ -1,229 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D374E28134C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 22:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DACF272903;
+	Thu, 27 Feb 2025 22:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694925; cv=none; b=I0BD1L6R8c0wW4Ulw6MzDIpbi3EkPnpuoBY8sDKg+4AzjA3cgeFca8kxsB8GI6ZIuzzPFMqCRxDHa3vNe5hLbJdkdXMeddE1oKne23Efn3rtmZN6gU99KTMvY6rPZJb/vLkg8YHua+pzr4fIH4Zz+AFTQOlnQaWewGyCtXFurCE=
+	t=1740694935; cv=none; b=lRNTc9m0Y/3Z/JDRj8+0hBSz+9uvU85pGmDmalDom8JYYmebswnG7c2PaUl2tTKdxoWNJBmFRtsOl/pg2tPPKBoYaqNARbee69n1sJQ8c2vvhWU9kxDDJ55Kungf8bf0wL2edZ7tP3VUxQDyfqirj9owsyeBXR4eYAHHeK85zNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694925; c=relaxed/simple;
-	bh=Bjlh6f2h0agBH/X5+BSZSaxb5OWC0yikWYM7fvxP5A0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=vCDW2pH+VZ1h8aEfgTEqrB9w9+1gP+HD7Qzq8qNn/Uh/IdytmzrA+2DYVWIOltuyX0dIBH0xHDaWf65e7WzntIhXlOwE6IMn1nZ2AG70FddMDg96VArm/SjMWUi/FGHLfEkhAu48J310QFWZD5wDXk8TtSIMXrchmL/4pyJN5fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vr85M3Vz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740694935; c=relaxed/simple;
+	bh=IGK/iXqK3IHYN8V9O5CsUAmKE0u/8x6GISZSDFKsQVo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s8v7HWoXBXqzmW1S+1iyan07O0041rS2PPnKMx270Odxd/B52WPDRt6JNOgqkdlrlGMR8g2uM2l0Qvpgi3wipk5QWvP/amWXucBDzunoXHyXDP9SZKMEQN87sqjLSH1qfi3J0WhQjTvE7RJH9ZIwccLqIxwm8hmTWU2gUyTm8lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MVNGUWN2; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vr85M3Vz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740694922;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DBmwa/9zDxm/5fPjgaaosFv6cMSWcpF0vesBiqkaxE8=;
-	b=Vr85M3VzWEnf3phij0cxHz6iFVtFv6EZJBTICdwr4rpaJ9lcSRbmuUE5P7mjYmBZggs5PC
-	nAMXVn7yttXreQujQhICmmDoxENcse23z40NqVjCJilrCpbonuQmJZxn9jdnOCN3tGWtqg
-	5N1eZmItKIo/9DYTe8rA/mYvr7r79Pw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-272-E4-AZAfVPRyalTKtIx5CFA-1; Thu,
- 27 Feb 2025 17:21:57 -0500
-X-MC-Unique: E4-AZAfVPRyalTKtIx5CFA-1
-X-Mimecast-MFC-AGG-ID: E4-AZAfVPRyalTKtIx5CFA_1740694915
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 07DEB1954B23;
-	Thu, 27 Feb 2025 22:21:55 +0000 (UTC)
-Received: from chopper.lyude.net (unknown [10.22.89.128])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A5321944D02;
-	Thu, 27 Feb 2025 22:21:52 +0000 (UTC)
-From: Lyude Paul <lyude@redhat.com>
-To: rust-for-linux@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org (open list:LOCKING PRIMITIVES)
-Subject: [PATCH v9 8/9] rust: sync: lock: Add `Backend::BackendInContext`
-Date: Thu, 27 Feb 2025 17:10:19 -0500
-Message-ID: <20250227221924.265259-9-lyude@redhat.com>
-In-Reply-To: <20250227221924.265259-1-lyude@redhat.com>
-References: <20250227221924.265259-1-lyude@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MVNGUWN2"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2235189adaeso21573965ad.0;
+        Thu, 27 Feb 2025 14:22:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740694932; x=1741299732; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3A/YDU9wrynchhvD7yFxdTu0UQIFwqV0VZoVEq/GoqM=;
+        b=MVNGUWN2G9JxQNALmZqUEbiO8qbW7uharw4bgta1zLvtqtOicztgfYV+umEdzPbSeH
+         YXG8YeAoaa93PAAfEWrfAfBonXYBcVugGCfVxQPtCdzl+5bbgJtkulztSrgi0i7zp5mw
+         ewi+146IcO5+MuI8zvXMYWAPBK4CP3GwQa+oHNvrH5P62Q8X+RhJEPBNl1zIWNC+C1y7
+         k/HKn6itcU7NJ84OOrUeAm0EWlEEg7H5ro9ps9IN/C8e0pISIVXEYlGsNf8sH6GlFz+c
+         ZkLFWg4hMp5wlhDubqkr5MruxYJ5xP5dCJxACQGjfK4eeK1bIq2KGWieXQcRs2B1cwDJ
+         DAMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740694932; x=1741299732;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3A/YDU9wrynchhvD7yFxdTu0UQIFwqV0VZoVEq/GoqM=;
+        b=g6m0V5/CZllV6qHFUEqAssQPUeHyxm25yr2OcKK68VkLGB7Ohw/EXcm5L95kI7WRHK
+         E0cdJkFRwvj3Z5Q6o5ZxTREnbeCfhyh6yoT7P/giZoFDrDe9bcgkb+dSoTRBfORpXN74
+         vTO8ABxkjQgr/Ev+fKWKkom18HHkb6DcOBll5y57NyZuzeGyv3NCG/EfQOm4QO2gu8wO
+         4AtT59ThXJWVUVFK8B0OmGLvDMu7pJVD5kjMoRYwS9gm5lfsbzW4WuJ+auKQQ8Jv5+Wm
+         HGzhyAU9WCE67SsgsPTqhBai9Aar93wLIjx0Ep3tMczKfeJ9ABSVXKGCsrkMRxb+X+01
+         Ucmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVH0qcngbk6Uig7JAcr8JKFX8k5JNoqJzOfpHJ8OXYvgX7qfWGu7Tv8bMWTI2RpmUmxancLAI+POT8jKk9Q1TIx@vger.kernel.org, AJvYcCVnBxnKwiJGELUWhFITh3MhGKv12zxTpPibvsvTsOG6Hilr1Q/iY8uzbebnXw0yDY6o3s86VKnsUe8uE7NY@vger.kernel.org, AJvYcCW4cJqigF/TgwUhCgQrMuXVmA3T/03gLSqvpCt6TDxHWeCizMFMZ+/4xavd+8PQM3xavDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKJYEJvg4x7gCmAtUL/7dOaVeFLJkw76NRtoYYlSeL/jWUriqv
+	Lbmvvl/AjJQnhrHaIMxDuIVvTrPVDgzdC8YJxyZqdIOIgaEf0Kc=
+X-Gm-Gg: ASbGnctfxS81If1ctaguarSOCpOmz8IDv8/uKa745j6GbGHSLq6xvpj0I+OSoHg7yA+
+	FKAKx32Tzqce5rzAscgQOX0sdNVe8RCjNLw5HfZoHfNFTL/XX5VSOB0z1LTJvEpVUX9k0wzw76G
+	r/GKcmMieZpVPbVnDcpVMJ9lM6/NTWTvSoFtZmvyLRbXLQMwUz9eiZqJsMAyeED1CehRxhwbiJV
+	bKz28/bDgg52Ea4v7/pbgfOreg/cyLfBDhVP8Tr/2dvTVhw8dtSpAb+Lx4r704pWu/yDYUqn1vj
+	bqRhPiVO0uWDu/YDThf8aUrkew==
+X-Google-Smtp-Source: AGHT+IEpwV1ijof39CKBS0WmuWX5WdeZn4tgXBhdNnhYZANNQxoe3Xs2zw1eCMp/3m5XHqaUyaVitw==
+X-Received: by 2002:a17:902:d507:b0:21f:6ce8:29df with SMTP id d9443c01a7336-2234a1603efmr82879825ad.3.1740694932421;
+        Thu, 27 Feb 2025 14:22:12 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22350533186sm20520565ad.243.2025.02.27.14.22.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 14:22:11 -0800 (PST)
+Date: Thu, 27 Feb 2025 14:22:11 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 09/10] selftests/bpf: test_tunnel: Move ip6tnl
+ tunnel tests to test_progs
+Message-ID: <Z8Dlk0-hOmZ9Aigb@mini-arch>
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+ <20250227-tunnels-v1-9-33df5c30aa04@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250227-tunnels-v1-9-33df5c30aa04@bootlin.com>
 
-From: Boqun Feng <boqun.feng@gmail.com>
+On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
+> ip6tnl tunnels are tested in the test_tunnel.sh but not in the test_progs
+> framework.
+> 
+> Add a new test in test_progs to test ip6tnl tunnels. It uses the same
+> network topology and the same BPF programs than the script.
+> Remove test_ipip6() and test_ip6ip6() from the script.
+> 
+> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
 
-`SpinLock`'s backend can be used for `SpinLockIrq`, if the interrupts
-are disabled. And it actually provides performance gains since
-interrupts are not needed to be disabled anymore. So add
-`Backend::BackendInContext` to describe the case where one backend can
-be used for another. Use the it to implement the `lock_with()` so that
-`SpinLockIrq` can avoid disabling interrupts by using `SpinLock`'s
-backend.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Signed-off-by: Lyude Paul <lyude@redhat.com>
----
- rust/kernel/sync/lock.rs          | 26 ++++++++++++++++++--
- rust/kernel/sync/lock/mutex.rs    |  1 +
- rust/kernel/sync/lock/spinlock.rs | 41 +++++++++++++++++++++++++++++++
- 3 files changed, 66 insertions(+), 2 deletions(-)
-
-diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
-index e7c1fd028435e..54c77972c83f8 100644
---- a/rust/kernel/sync/lock.rs
-+++ b/rust/kernel/sync/lock.rs
-@@ -32,10 +32,15 @@
- ///   is owned, that is, between calls to [`lock`] and [`unlock`].
- /// - Implementers must also ensure that [`relock`] uses the same locking method as the original
- ///   lock operation.
-+/// - Implementers must ensure if [`BackendInContext`] is a [`Backend`], it's safe to acquire lock
-+///   under the [`Context`], the [`State`] of two backends must be the same.
- ///
- /// [`lock`]: Backend::lock
- /// [`unlock`]: Backend::unlock
- /// [`relock`]: Backend::relock
-+/// [`BackendInContext`]: Backend::BackendInContext
-+/// [`Context`]: Backend::Context
-+/// [`State`]: Backend::State
- pub unsafe trait Backend {
-     /// The state required by the lock.
-     type State;
-@@ -49,6 +54,9 @@ pub unsafe trait Backend {
-     /// The context which can be provided to acquire the lock with a different backend.
-     type Context<'a>;
- 
-+    /// The alternative backend we can use if a [`Context`](Backend::Context) is provided.
-+    type BackendInContext: Sized;
-+
-     /// Initialises the lock.
-     ///
-     /// # Safety
-@@ -170,8 +178,22 @@ pub unsafe fn from_raw<'a>(ptr: *mut B::State) -> &'a Self {
- impl<T: ?Sized, B: Backend> Lock<T, B> {
-     /// Acquires the lock with the given context and gives the caller access to the data protected
-     /// by it.
--    pub fn lock_with<'a>(&'a self, _context: B::Context<'a>) -> Guard<'a, T, B> {
--        todo!()
-+    pub fn lock_with<'a>(&'a self, _context: B::Context<'a>) -> Guard<'a, T, B::BackendInContext>
-+    where
-+        B::BackendInContext: Backend,
-+    {
-+        // SAFETY: Per the safety guarantee of `Backend`, if `B::BackendIncontext` and `B` should
-+        // have the same state, therefore the layout of the lock is the same so it's safe the
-+        // convert one to another.
-+        let lock = unsafe { &*(self as *const _ as *const Lock<T, B::BackendInContext>) };
-+        // SAFETY: The constructor of the type calls `init`, so the existence of the object proves
-+        // that `init` was called. Plus the safety guarantee of `Backend` guarantees that `B::state`
-+        // is the same as `B::BackendInContext::state`, also it's safe to call another backend
-+        // because there is `B::Context<'a>`.
-+        let state = unsafe { B::BackendInContext::lock(lock.state.get()) };
-+
-+        // SAFETY: The lock was just acquired.
-+        unsafe { Guard::new(lock, state) }
-     }
- 
-     /// Acquires the lock and gives the caller access to the data protected by it.
-diff --git a/rust/kernel/sync/lock/mutex.rs b/rust/kernel/sync/lock/mutex.rs
-index 53c8e8b90b85c..f15406ce82e51 100644
---- a/rust/kernel/sync/lock/mutex.rs
-+++ b/rust/kernel/sync/lock/mutex.rs
-@@ -102,6 +102,7 @@ unsafe impl super::Backend for MutexBackend {
-     type State = bindings::mutex;
-     type GuardState = ();
-     type Context<'a> = ();
-+    type BackendInContext = ();
- 
-     unsafe fn init(
-         ptr: *mut Self::State,
-diff --git a/rust/kernel/sync/lock/spinlock.rs b/rust/kernel/sync/lock/spinlock.rs
-index 6b355887bd3ea..6c76f5c25036f 100644
---- a/rust/kernel/sync/lock/spinlock.rs
-+++ b/rust/kernel/sync/lock/spinlock.rs
-@@ -102,6 +102,7 @@ unsafe impl super::Backend for SpinLockBackend {
-     type State = bindings::spinlock_t;
-     type GuardState = ();
-     type Context<'a> = ();
-+    type BackendInContext = ();
- 
-     unsafe fn init(
-         ptr: *mut Self::State,
-@@ -220,6 +221,45 @@ macro_rules! new_spinlock_irq {
- /// # Ok::<(), Error>(())
- /// ```
- ///
-+/// The next example demonstrates locking a [`SpinLockIrq`] using [`lock_with()`] in a function
-+/// which can only be called when local processor interrupts are already disabled.
-+///
-+/// ```
-+/// use kernel::sync::{new_spinlock_irq, SpinLockIrq};
-+/// use kernel::interrupt::*;
-+///
-+/// struct Inner {
-+///     a: u32,
-+/// }
-+///
-+/// #[pin_data]
-+/// struct Example {
-+///     #[pin]
-+///     inner: SpinLockIrq<Inner>,
-+/// }
-+///
-+/// impl Example {
-+///     fn new() -> impl PinInit<Self> {
-+///         pin_init!(Self {
-+///             inner <- new_spinlock_irq!(Inner { a: 20 }),
-+///         })
-+///     }
-+/// }
-+///
-+/// // Accessing an `Example` from a function that can only be called in no-interrupt contexts.
-+/// fn noirq_work(e: &Example, interrupt_disabled: &LocalInterruptDisabled) {
-+///     // Because we know interrupts are disabled from interrupt_disable, we can skip toggling
-+///     // interrupt state using lock_with() and the provided token
-+///     assert_eq!(e.inner.lock_with(interrupt_disabled).a, 20);
-+/// }
-+///
-+/// # let e = KBox::pin_init(Example::new(), GFP_KERNEL)?;
-+/// # let interrupt_guard = local_interrupt_disable();
-+/// # noirq_work(&e, &interrupt_guard);
-+/// #
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
- /// [`lock()`]: SpinLockIrq::lock
- /// [`lock_with()`]: SpinLockIrq::lock_with
- pub type SpinLockIrq<T> = super::Lock<T, SpinLockIrqBackend>;
-@@ -244,6 +284,7 @@ unsafe impl super::Backend for SpinLockIrqBackend {
-     type State = bindings::spinlock_t;
-     type GuardState = ();
-     type Context<'a> = &'a LocalInterruptDisabled;
-+    type BackendInContext = SpinLockBackend;
- 
-     unsafe fn init(
-         ptr: *mut Self::State,
--- 
-2.48.1
-
+Acked-by: Stanislav Fomichev <sdf@fomichev.me>
