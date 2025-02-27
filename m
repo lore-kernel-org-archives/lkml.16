@@ -1,60 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B952F36
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:04:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641861FF2
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740618262; cv=none; b=FVxQQBvxYYcDKHfWJzfrEzBd36gvSaRNBmdTGoUyqOolh4K09qG1CzkysGlG4DRFldTn1syQ5HKdfuLr5iY3tL0UqpPZ46PtNyj8aGrugLPYsYmNHkFgqGa9UFZFIHZcmH0r3Atc2ouyxre+xV9usKT7X25zEY2P3D0GA1BwbAI=
+	t=1740618312; cv=none; b=Jo6UKrSetAEK7tCp59rbE81N2+mYbQsKygZ/xPJMnlSAcw9zwXI7ZYfsdHhYiZaqEH41scdXh1VFIODtD6+VWSWtvuxtV4IeONfiXGDCMb6LAu+l80wKcBsJo/scvAA8tUjzoINBUeqmyzGGKCKmySJ/8x+zx3WbWoVzAwtcWKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740618262; c=relaxed/simple;
-	bh=GVLya1KRbaZlDYEQbloHz/I5Zrz6IR2bESbtDWMxjn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LPF2nP/l+65X5dibvQkgu0E2ojhbM7c0Jlp0zbmyZ18ksiciCKV4olgxcq3sX2SJo20ZAnzTWGnwA+/AlCnWPjBQjFD+XPpjltyqnWN3W/FIP3wdXX5jyruyhc/6SaMVBFE7VlPXYczwX37r0tD9PlXd9QOA2sWEJ4eay6y9l04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GRDBJWO5; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740618312; c=relaxed/simple;
+	bh=izJ/pwzPoAJ6iulm3+QddXFdSaGF6rlWdcXBgxPZiLI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KVpzZmYNxUusJd1rqE7WBwoKsAQO73vDX62g93dFyocsfqfZ8oMD25E2k1S/KC7KXs0jyVkBvND8gn6umiE3mpprAtld2WhHMcXQucPV0ZdXpkSOYE+xpiKQhlH0qrQpOaqjb+h1mIPmOsXB+WOmAC9VYOvrj1IU3D1SV+B2gxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=a/XVr0aL; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GRDBJWO5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740618261; x=1772154261;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=GVLya1KRbaZlDYEQbloHz/I5Zrz6IR2bESbtDWMxjn0=;
-  b=GRDBJWO5JFBjvUK+mMJs70MAJnA/w5WrRU5ubLu3dggeTPom1fOJvxYp
-   tTLNhwdU6lkWDmB5AzZgKpJVXRhOcLZbQEApVMdMFNXuVn9PGhqxdA2E3
-   sAB8aZBDmqDX9DONg2Dx0+LwZFX00EwwNhK5x0tdMydcVj874MJzU5f/V
-   yzMRu3ZBSUAdROo2yZ1GrWPHc5QzvqfnBZNnQ4m+5VKYgUGdtUGnCcUqW
-   Dq/gd6GsieGyEWJL18F8SyLPohnchKFRenHNH6GRv1VhF25/mDdC5XGYH
-   7d4+nU1YQX0LsH5em/dr9xWECSpnO+uBMF6As70cgHck6Iq7azCgB42NG
-   A==;
-X-CSE-ConnectionGUID: Mg8FTtlnT5+YWPj3ob8VWQ==
-X-CSE-MsgGUID: EpbuTashS1yCMUf8xkAITg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="41623534"
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="41623534"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 17:04:20 -0800
-X-CSE-ConnectionGUID: Bg2xI4FrRPGCpSyTRIf4IQ==
-X-CSE-MsgGUID: 8lzcF1azSVSDSzSioLbhQQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117788882"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa008.jf.intel.com with ESMTP; 26 Feb 2025 17:04:18 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnSJz-000Cfs-2h;
-	Thu, 27 Feb 2025 01:04:15 +0000
-Date: Thu, 27 Feb 2025 09:03:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>
-Subject: [tip:x86/core 16/17] vmlinux.o: warning: objtool: do_jit+0x597:
- relocation to !ENDBR: memcpy_orig+0x0
-Message-ID: <202502270859.WfFkfHBC-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="a/XVr0aL"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2235189adaeso2164745ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 17:05:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1740618310; x=1741223110; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=HCVNzEhlbjN/GYtjl24E53XliTJERCpf4lp1dGDkOtU=;
+        b=a/XVr0aLTJdvZ4eIg1F7pC+9/ydq6AVsHnMg6Cj13j6chrtGQAT1C7WbdB366iLTjz
+         e1BFDOKrcY3SAUgBVPmpaarDGqpaWfa3wFEqWwKNOLdJjWl2hXYvUeTDbVIbcH1tJXPy
+         UUTFJnchS3sW+mqwBkVzo+w8Qsm5B/U6tkxNukQjklI8+a2/sgydVbwBccqhz5ixBByF
+         NkwQqC0gBr1Xgji8XMPu2ydqfoIZ1wpQ/4B0CMdizBQBN7f3RWVR4cI0pcCbAIp7tmUP
+         f/qyH/vjQZ6mpb3PlIe2v9FTUiQPyFCU22wJElFqru8LhhvNug0B4CYTsU9AurtVZlPA
+         w7Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740618310; x=1741223110;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HCVNzEhlbjN/GYtjl24E53XliTJERCpf4lp1dGDkOtU=;
+        b=HD05/O9J7BTJrcKK/sSXifJQWzG/F0nt4IFyPyt4UlF6eEBbh4BDcjTd9CSagHkzt4
+         oy1FnxXivQmRH51gR+nZzcQ9XqDN+HJjpTHJcFlPXeJ1ykM2Ow19VA5U+u5Jy61DxIwg
+         u2tURO2lHDHvk5XWgHvZ3VQkAT3/kPFQpmL9uyDzSjn72UmzQov0sE76CrnlDMtjBJCs
+         xO+UAMFvwOhB8M01iSGiyfFM+nLBDflVWb7LPx52IQLpi/ut6yFtBT6kKlj2qTcGUqFJ
+         5F5yTLN2GKMNK5l1EbZjjinFGbtRI0AjTPu+T7RH+8nzgV/sxVAiadCZixpXQotQRDdQ
+         kgDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXeCAHKgiIKiab7bu2GIxjJZqeTjej7WH9YzJGLW7ArI+4kF5p30/IA38sozKoeGA2bNLi3Js0B/QlCaqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3yYHSzHPwu9I578IicHnFzZaYNtrx358fiFQkzY/FWoBYX6OS
+	lx6Mi0sem04cWxiozmBAF2uTUYYFhAfHN7cVF1Vg27cOyxmYq8M7M56lHrrvkaE=
+X-Gm-Gg: ASbGnctcdd4HPEZD+1/RLmhbJlml3R5p0ahq6GT7Tl2uIKEhQhQCQsnHS02AYbV4j7v
+	RemFbM19vP+9iV0bgtVsPpr3oy59ubNI/SlWbIS237OuiFWZ6avuYA4UduQV7H7GI88ROTpgJkb
+	yBhZksga7Wm8WKyi9tnVMxk/TNP2H7cLkNOeh+WyfPa1qCs08ve6Lwkw9mlJrVq2peMcHDcu3Zz
+	cmmWA/xq5hjEofxC1h2HXaKWNBJvjB0vjOt/+4KbV6KRQmKcfjqYPH2fymAlV/jS65ul1pNRiez
+	aaq1BcMf+WaQvOOjtIUabG8Gdt3vNNxVSh5d+SiWwDiVKHw=
+X-Google-Smtp-Source: AGHT+IF8iinyZ5bzcXrBop0+HPVufAsd+EqurIZLA35oY3Ww+r9E+VVyBAqJdXtpIgjPZ5uydA0Png==
+X-Received: by 2002:a17:903:3b86:b0:223:517a:d4ed with SMTP id d9443c01a7336-223517ad6e1mr7535625ad.15.1740618310279;
+        Wed, 26 Feb 2025 17:05:10 -0800 (PST)
+Received: from medusa.lab.kspace.sh ([208.88.152.253])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-223501f9db7sm2847905ad.88.2025.02.26.17.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 17:05:09 -0800 (PST)
+Date: Wed, 26 Feb 2025 17:05:08 -0800
+From: Mohamed Khalfella <mkhalfella@purestorage.com>
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Etienne Buira <etienne.buira@free.fr>,
+	Andrew Ballance <andrewjballance@gmail.com>,
+	linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Subject: Re: [PATCH] scripts/gdb/symbols: follow up on refactoring for const
+ struct bin_attribute
+Message-ID: <20250227010508.GA392458-mkhalfella@purestorage.com>
+References: <20250112122149.9939-1-koichiro.den@canonical.com>
+ <20250213043806.GA2552411-mkhalfella@purestorage.com>
+ <20250227001759.GA351718-mkhalfella@purestorage.com>
+ <5vhttz23b4v4fs57fv5o7e74bn2uewrmy6jdgeenwztwufjo5b@o72abjlumepw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,24 +81,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <5vhttz23b4v4fs57fv5o7e74bn2uewrmy6jdgeenwztwufjo5b@o72abjlumepw>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/core
-head:   dfebe7362f6f461d771cdb9ac2c5172a4721f064
-commit: 0c92385dc05ee9637c04372ea95a11bbf6e010ff [16/17] x86/ibt: Implement FineIBT-BHI mitigation
-config: x86_64-buildonly-randconfig-002-20250227 (https://download.01.org/0day-ci/archive/20250227/202502270859.WfFkfHBC-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250227/202502270859.WfFkfHBC-lkp@intel.com/reproduce)
+On 2025-02-27 09:59:23 +0900, Koichiro Den wrote:
+> 
+> Sorry for the delayed response.
+> I have no objections. Please go ahead and submit your patch. There is no
+> need to mention this original submission, nor CC me.
+> 
+> Thanks!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502270859.WfFkfHBC-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   vmlinux.o: warning: objtool: ___bpf_prog_run+0xcb: sibling call from callable instruction with modified stack frame
->> vmlinux.o: warning: objtool: do_jit+0x597: relocation to !ENDBR: memcpy_orig+0x0
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Koichiro - You reported this issue first and came up with a fix for it.
+Unless you do not want to, I think you should the one who fixes this
+bug. How about you re-submit a patch with combination of your original
+patch and the diff I posted?
