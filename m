@@ -1,119 +1,147 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915AA266190
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C7C26A0B9
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668598; cv=none; b=Br1CmIa1Ok3us6Zt4xlfBK96PAJHOTStx/ppuVp6dd24agrCv1nGbc4QDR+VS6YUsjRjnKM4LPQIQdaFv1bYj4nsRseEoYq+rxVSeol9QOQPscMyybw5YoeEAIKZ7xtBVovSTmzD9LWxxUB7wMdFwOYD3shU93atQmLMZlwP5WU=
+	t=1740668615; cv=none; b=HaYpOTrVxirTDyBNdEzZ+Bn+yhn7Ft2WWYAVflFCe8dx5YOgOC5OpJ6GFsTJ1+qxFhawvNMTqAPXjQDq+HsMvUyj8j8ab/F4fhK99Mooq6h0juIA3bsoQdevQbxZwsH9dyT6jbLwxlX/zTMhuiIIvd65OuWeoFu6WK022V3suo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668598; c=relaxed/simple;
-	bh=Tl40Fm+loygXp9JTJZ0Z7May9tG5QQ1he6NwlUmTUjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GbwamZjxrhv4RmvDvnC4BnIku9+LDlTRrYYLrwt/W+XeJGBAyX3i50r/DDCyhwO2sUXpx8AaQgqs6JL+EhbCqeoJgXR4cWbPMS4ypPMOB8/dER1VfNNvMxHUKxsL7TOdubhWMSknDii5llU1fq6CaAzSVwVs9iDjYaOG6LLppv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aMSXQCEc; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740668615; c=relaxed/simple;
+	bh=1FMpYSSNrm5jFXSaO7kwUtTWhd7AhGZ1E1RuRjpIB5Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FQbY+6jHTcXxKl75coRlOsJLep8nvGUEljvPsJkcbXhXFKxbgpPyr7QkIoLTSYaWmYZZg/UAO6KWssS08PlB2WgZ8wa3XuQV3dCAy5Pc3ok60l0WroAIPSabYK0My75ZzlgLrJY1gONkpdcnJGKm7jYieVGn0aNpEYgeKhaCcTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=fQcHyLnM; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DxhGKqdK; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aMSXQCEc"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30761be8fa8so12494081fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:03:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740668595; x=1741273395; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jct5/sWNcnHp4YAXGTjpriX8VME8tdrztTmpTBFh3WQ=;
-        b=aMSXQCEcg8RqG+qJqVpEHWj9PPcUP9pfHJoA95HV4UjkVPTIxTlO9xGCMCDfaGEDLs
-         xL9NW4Hq/fGFgr4+sBdXSI7G9YcS4jViE6+/ufbI73tEC/jME4UsEzngv8WqVKOKpD73
-         IEKXy2jBQa9JNpoSdEe08jKb2NJyhQy1jjqaEHwS4WjTxDoMh4qP2lPSeAnS5raSjrTc
-         F3eastvt5F5PRTi7rzlBzAYEnb0BQYll7AE8s0eHCgSQOR0hVBWW8yEEBo2LlAM1Qdgn
-         odFjAf1lOCJixT3O40yz+ktjBwyPSs5QMQOCxFPKeacDK17EdFNw9UeQLKdSy/wIlI4T
-         I5nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740668595; x=1741273395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jct5/sWNcnHp4YAXGTjpriX8VME8tdrztTmpTBFh3WQ=;
-        b=t2ciTc5x5CVtarjQw18huPpq2zJyIHMpSdp9d64xv2lEsSY+K1qyqIRY6gQ3rtcWad
-         PcWdVlcMN+8cmdN8st8EQCzifmhRBAoFopTbXOlWMcSY2nGp0KkfVfoREpFWTj3zmU7y
-         qKv9/7sSl8SdKGS4KbRT0CVHj+H5gISbsZZUelTHdlrN/XOXjXfz1/HMvYAdqrVoQ+gt
-         ZLUiZPCcegEJyp547uwnw1pHfQ7oE38QXOrveFKzE8T6IM7i5ElUm/iypgUuyU7B/Xze
-         iUqtcBIWcdwCn8HkbXSvMeCNNS1928TqvSw2+gLG6Nn9G7GH5pugK3fWBmFJwCIW1pqx
-         BQoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWWD0oVyQaGtKp37539bdIoqL6k+JykV7EoJRksm2An/bTb4yLjIqAPKyffXrERNumNbwE9GcU554dyTM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcucTwBAy/4HLFsSIfGX0+XDjwFXECjIsPihMh5SXwFlVO9Ky7
-	6+N2v4zRRKfakjZH9WoS5KgvXdirgfE25sOJJHomIrRllpA/XXj6ZYY5p+8rZQcv24GK2/Qhe0u
-	9Ars=
-X-Gm-Gg: ASbGnct98AS6mdYyXSpEEPwDVFnrugcIAr2N9Z9CCse4zU9ZbvJT8zOJbxHQuDPW5l8
-	ges5gM4OoSyf/xRE5qO4DGnNMyjD3xdf7PAPC2baq62a7gC1hGURbGVNzZ3H1QySpdudkYz96Zs
-	Dps2sgOpWgwTG+nRC1R9c+wjPD5jYUhRwlUG/KMKjSHbWs5/AryrUrvVcTaumHuTNfhdlsreKaQ
-	634yPZ+7WxvC84ILlTn/D8lb7pU1EKnzNAYrngHcPyhsqx+0HpbxMhQNUchX28U4BIVqVWXi0kf
-	WByoe33/7zAIlXw2poQnugJNsOWKgXceSB7kSynOhdJoeV0TPOoLxqWESNCuT0FGCzSEraIK0of
-	mcQ3nCQ==
-X-Google-Smtp-Source: AGHT+IGu6e9SzMnhpr5EnGH9g23xD2bFOtEakcdfl/ZUCRRGs5xA3LtI3CvuzfMuKxAB74Z8ujrfbg==
-X-Received: by 2002:a05:6512:3d16:b0:545:62c:4b29 with SMTP id 2adb3069b0e04-548510d2891mr6258092e87.22.1740668594423;
-        Thu, 27 Feb 2025 07:03:14 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443b11f0sm180701e87.114.2025.02.27.07.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 07:03:13 -0800 (PST)
-Date: Thu, 27 Feb 2025 17:03:10 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arm64: dts: qcom: ipq5424: Enable MMC
-Message-ID: <ryfawl6uykry5ds5kovujvepkwffdwitbqltx75wnnrqrbl4b2@i2pjwegs3u4n>
-References: <20250227094226.2380930-1-quic_varada@quicinc.com>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="fQcHyLnM";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DxhGKqdK"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id DF46A1F457;
+	Thu, 27 Feb 2025 15:03:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1740668612; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZgFUlmr6WcP558S1jjl25yNZ/UxRgb8t4jQCSQY55N8=;
+	b=fQcHyLnMj97VC2bhtz5W1GXdRl18vm5PEvAm2CqE61R5ia7w2Bj7TUkxtmMeIsejY2UX9L
+	OtRICJ8jeO+frGA004UH7ms0V5o3Wfh3lqzFOuoUkFlCZQvUK9Wvr0OZKZq7qT80p3vaMr
+	lAU95L3AdqD3s26EbsfIha7T08iI2JQ=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=DxhGKqdK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1740668611; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=ZgFUlmr6WcP558S1jjl25yNZ/UxRgb8t4jQCSQY55N8=;
+	b=DxhGKqdKwxTIqFQatcVqgpPEsImckyG7W7LlInKdXhyhoD32n+yGHoh4oE401kLDFDyvaJ
+	um3DSA8aTEhD1WvyAi/LCS4JsFTEOM17F6UTXknzRcVoIuknqnoHWfhb7BuKKxkXoXJv46
+	9YeN9nMUvE1gIGalqJ3dwbYJf5Oa1wc=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 97BDF13888;
+	Thu, 27 Feb 2025 15:03:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1MGPI8N+wGfiAgAAD6G6ig
+	(envelope-from <vincenzo.mezzela@suse.com>); Thu, 27 Feb 2025 15:03:31 +0000
+From: Vincenzo MEZZELA <vincenzo.mezzela@suse.com>
+To: live-patching@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	corbet@lwn.net,
+	Vincenzo MEZZELA <vincenzo.mezzela@suse.com>
+Subject: [PATCH] docs: livepatch: move text out of code block
+Date: Thu, 27 Feb 2025 16:03:28 +0100
+Message-ID: <20250227150328.124438-1-vincenzo.mezzela@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227094226.2380930-1-quic_varada@quicinc.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: DF46A1F457
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:dkim,suse.com:mid,suse.com:email];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Feb 27, 2025 at 03:12:26PM +0530, Varadarajan Narayanan wrote:
-> Enable MMC and relevant pinctrl entries.
-> 
-> Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-> index b6e4bb3328b3..252687be9dc3 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-> +++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-> @@ -69,6 +69,14 @@ &qusb_phy_1 {
->  	status = "okay";
->  };
->  
-> +&sdhc {
-> +	pinctrl-0 = <&sdc_default_state>;
+Part of the documentation text is included in the readelf output code
+block. Hence, split the code block and move the affected text outside.
 
-Where is it defined?
+Signed-off-by: Vincenzo MEZZELA <vincenzo.mezzela@suse.com>
+---
+ Documentation/livepatch/module-elf-format.rst | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-> +	pinctrl-names = "default";
-> +	supports-cqe;
-
-This property should be a part of the SoC dtsi.
-
-> +
-> +	status = "okay";
-> +};
-> +
->  &sleep_clk {
->  	clock-frequency = <32000>;
->  };
-> -- 
-> 2.34.1
-> 
-
+diff --git a/Documentation/livepatch/module-elf-format.rst b/Documentation/livepatch/module-elf-format.rst
+index a03ed02ec57e..eadcff224335 100644
+--- a/Documentation/livepatch/module-elf-format.rst
++++ b/Documentation/livepatch/module-elf-format.rst
+@@ -217,16 +217,23 @@ livepatch relocation section refer to their respective symbols with their symbol
+ indices, and the original symbol indices (and thus the symtab ordering) must be
+ preserved in order for apply_relocate_add() to find the right symbol.
+ 
+-For example, take this particular rela from a livepatch module:::
++For example, take this particular rela from a livepatch module:
++
++::
+ 
+   Relocation section '.klp.rela.btrfs.text.btrfs_feature_attr_show' at offset 0x2ba0 contains 4 entries:
+       Offset             Info             Type               Symbol's Value  Symbol's Name + Addend
+   000000000000001f  0000005e00000002 R_X86_64_PC32          0000000000000000 .klp.sym.vmlinux.printk,0 - 4
+ 
+-  This rela refers to the symbol '.klp.sym.vmlinux.printk,0', and the symbol index is encoded
+-  in 'Info'. Here its symbol index is 0x5e, which is 94 in decimal, which refers to the
+-  symbol index 94.
+-  And in this patch module's corresponding symbol table, symbol index 94 refers to that very symbol:
++This rela refers to the symbol '.klp.sym.vmlinux.printk,0', and the symbol
++index is encoded in 'Info'. Here its symbol index is 0x5e, which is 94 in
++decimal, which refers to the symbol index 94.
++
++And in this patch module's corresponding symbol table, symbol index 94 refers
++to that very symbol:
++
++::
++
+   [ snip ]
+   94: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT OS [0xff20] .klp.sym.vmlinux.printk,0
+   [ snip ]
 -- 
-With best wishes
-Dmitry
+2.48.1
+
