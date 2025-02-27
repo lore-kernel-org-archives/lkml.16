@@ -1,56 +1,56 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25DBD1B4251
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:19:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDB81C7003
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:19:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740622753; cv=none; b=SxR2wJQ1mAonTlpSu8/Uz3y16tQxRfD6nBTcLdW9KTGnV5xhn1K3K1GwEBJf/6nTjvh6Xdd3zj2pi0fhcyjLk4quo4ayCoHaBxFAdFz0gJMZDtVORoBx+FFWOB1GKzZFqiXJ21sqxk7AxYk8b9CxdA5EX+rsZbFsgw64JdqcAWE=
+	t=1740622757; cv=none; b=JtdkObTdWn5J1KwKwvSsXesyLmIMQkuUZcbV/SFM3FsLlE6lzWTznJIZPSWBcL6qzBH4+HD3Z7lzpuBla4PczEzw33MfIpVWPGbRsvC5q8itpTkgu36+uUgiMdaYGr9nfnLmP+BZfjCkF0akcLA/eqAsDDTGA+bi6lRfTFH06gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740622753; c=relaxed/simple;
-	bh=zouDyKCvgpfKjJTRdNmQrbmUt1upitIlri45/tL/V2s=;
+	s=arc-20240116; t=1740622757; c=relaxed/simple;
+	bh=X5UL+eTktXYoDPfW4LhmVxWuD5wQW055Sxbi/QZyZe8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ioxh+ViSPf4ecHgUbHbS7Me1nE4QWZULa+8T6wRdD99AYxWcd4FslBji3GJZHbK8/IYqQHU/ZnsNd2VzRqldohtfbuAFIywIdLRQq/3t88p6qZJ6PUtLXEvGeDqUmxERBt2N9iAs03HQWBxu8Y7mkvmffmol7i6+DS5kJFMGTrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NYBCZS58; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=pj+a6FDK8XCidRGNwhaYhhkM1pu3IzMBVq/cy3qQjND08gcaRqraSiSXFNeDPQMvFepc95KwabBdsMwdPLg3HW8+bkn59H8jNxobXputB3QXYoU9EPU+mU0zfYaJtdS7yC3ivL9z3U4uHMcIGZTonPj7hPQUZbs+xBkH+HQA/7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fef7FjLd; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NYBCZS58"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe8c5dbdb0so1061060a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:19:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fef7FjLd"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc0bc05c00so1507792a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:19:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740622752; x=1741227552; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740622755; x=1741227555; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=JV0vL5ay0SjXSCwSvRRqMw5uYQ06F8yr+AS2fSIuB98=;
-        b=NYBCZS58L0f/9PeWx7lqjHczttpcvhByhEy6/htzrG7ZDmbRs4hbvRKAcpiViwVFkp
-         z/ACXB4U3NN5K5CSAcZTmLbUQETJVhXMbu6mKpoBpDewcv9usu16GoOTYsAiaBEUzNOk
-         bW8f5iTVnyfNMEHPxcrkJ24qAJfi9rIocHPwjjklffa3yD7/2WExma/gQ/mT50f/Y4Jk
-         XyZWkX3qHgOMVIYeOay1xgirs2AyZJUmScRp6r+AG+/UpKpXxKGi6VjNKGE3Q/t2OMhC
-         JKXwadCWKCDJ2QXP7DkiIHl0BGP9c4W3B/+pVyY2qBPHf1oYQ9aoieGyGgLdZ8KvT72E
-         ldXg==
+        bh=YtBqucRQyVVjFtgUlGbh/U8C9xbSv2L/3t5kwpG/0fs=;
+        b=fef7FjLdAGAJFHAV25KQWsC9t24sfQtyoidwN5PhExU2XZXQEHcBpReguAaITHeA2q
+         euVkzCaUxnh9LnEd/DeVHueiSFgC48U8XOFiALyEo16At6ambnX0VOJMkcDU15wV4hF3
+         zk8x9Mv5sfkkIB69g9s0MCeaXB9p2k9Fa1M+dFW1pasT5Dy0RIciAUEmWfkcpicm/oY6
+         F3OJI5txJcOBanKjOnda7GPAL+1dGGB+UxbFzdFJ8pI9PhJ+2zZfIsCmEdqWbr3IPyQ/
+         zPMgJfwb6fabO18/j/NRfzi/j3VtftBgDU9aJ7Sds2DYxf9xs5dUqTcKuGe1gJOPiBEY
+         XuYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740622752; x=1741227552;
+        d=1e100.net; s=20230601; t=1740622755; x=1741227555;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JV0vL5ay0SjXSCwSvRRqMw5uYQ06F8yr+AS2fSIuB98=;
-        b=maXyLrXUq17BysfIdXQldSovPjgt9vD9sQ9W5x2Hsm/ngoP08XxouYZarlhFnCsC8/
-         IA3q6TXMdCLNgCqedP8g1ovG4fv5crNQII0wy021E6N1YdcsqZMB7iroST2l7FzKRO+W
-         uq90HYsRBcT8X6+1Y9MkpKTnivudwHEZsDWDbwl+4/6b0dz/NK1SVtqhD/990TGk7TJy
-         JP0+c1HzvfX7Hv2t77xeBMhZT16O/0okhTe414vcbB4WFQoIWhwHrkSdpFnt/rESUTBq
-         uOd5A6O/naGt8pI4xJ92KTVnov3kUPKURynKTaGMzd+qngLTqv5CprW92k7imEzUnT1P
-         5fPQ==
-X-Gm-Message-State: AOJu0YzHHe+6LPy4DXScHPfkApg6LQNjfaJjgCM7uYB3NuTXxz07b1Aq
-	/ABTI0uRs8XIS42I7iSgYWW3UQSDKIppQKfRuQ4PbPbS0Lpq6ICftAv3KtQtpQ2tGlaspOAq8Xr
-	kFg==
-X-Google-Smtp-Source: AGHT+IEvNph7CiMpObG1u+jVz8JxqMtO0a8+Wef5S19XtPgcpuEdHq4SZt8ZBvsmjyd64opTzInKcYcJX7E=
-X-Received: from pjbsw14.prod.google.com ([2002:a17:90b:2c8e:b0:2fc:11a0:c546])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b48:b0:2fc:9967:acd8
- with SMTP id 98e67ed59e1d1-2fe7e3b327fmr9422757a91.33.1740622751672; Wed, 26
- Feb 2025 18:19:11 -0800 (PST)
+        bh=YtBqucRQyVVjFtgUlGbh/U8C9xbSv2L/3t5kwpG/0fs=;
+        b=WgAGh0oboHWvVTOFMOrJm474MquoLhQFP2ck8WE8H/vmK90paJ2H9gV1MR1QT1ezT4
+         Ff5PTXfWl+RU79jI4K5k/FzcN7zlO/RfmWOsdov8MQ1+TkVFPV8DMlx2d21dEM9PtWTy
+         XMsl59XvcHuhquN09i0u3vG8lTR+klFb++55PWD+j52mf+P2vyXd/n7sLrGC0aOYBtaD
+         sWZcBRee/pm+aHK0rPPPlEdugDqOf+GwmxqchByDToWqUxdlk/lJ5b/I556aZ56NEOwC
+         VkHmJKmpXr9bYJH42RQ7f1g7GUT0YqQBmCB7DWad2OdsX7F4VnaDKLvkxH2JlVLw09r3
+         uofA==
+X-Gm-Message-State: AOJu0YyBZIEF3hMs+xNzyYyHfQBsAjsuano5FyBSpsFHcoCXZzgckQxv
+	4s3dvJyGC2fCx9peSNKp1qnigUo+JCatRlJjEv+tXTct1PaiOsvM3UPQmHitaSMchnPqOAKL6ht
+	MJg==
+X-Google-Smtp-Source: AGHT+IH9Y0SwBcAS02xHNq+a4IakpnWSLKqVw4P68iCQM2m6waYT1AwLAOPZPnrjzYdSpJiao+kBYkSTr34=
+X-Received: from pjb4.prod.google.com ([2002:a17:90b:2f04:b0:2ef:78ff:bc3b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2dc8:b0:2fa:ba3:5457
+ with SMTP id 98e67ed59e1d1-2fe68ae6c4fmr17520974a91.17.1740622755379; Wed, 26
+ Feb 2025 18:19:15 -0800 (PST)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Wed, 26 Feb 2025 18:18:21 -0800
+Date: Wed, 26 Feb 2025 18:18:23 -0800
 In-Reply-To: <20250227021855.3257188-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250227021855.3257188-1-seanjc@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250227021855.3257188-6-seanjc@google.com>
-Subject: [PATCH v2 05/38] x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
+Message-ID: <20250227021855.3257188-8-seanjc@google.com>
+Subject: [PATCH v2 07/38] x86/acrn: Mark TSC frequency as known when using
+ ACRN for calibration
 From: Sean Christopherson <seanjc@google.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
@@ -78,49 +79,27 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
 	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Move the check on having a Secure TSC to the common tsc_early_init() so
-that it's obvious that having a Secure TSC is conditional, and to prepare
-for adding TDX to the mix (blindly initializing *both* SNP and TDX TSC
-logic looks especially weird).
+Mark the TSC frequency as known when using ACRN's PV CPUID information.
+Per commit 81a71f51b89e ("x86/acrn: Set up timekeeping") and common sense,
+the TSC freq is explicitly provided by the hypervisor.
 
-No functional change intended.
-
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Reviewed-by: Nikunj A Dadhania <nikunj@amd.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/coco/sev/core.c | 3 ---
- arch/x86/kernel/tsc.c    | 3 ++-
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kernel/cpu/acrn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index e6ce4ca72465..dab386f782ce 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -3284,9 +3284,6 @@ void __init snp_secure_tsc_init(void)
- {
- 	unsigned long long tsc_freq_mhz;
+diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
+index c1506cb87d8c..2da3de4d470e 100644
+--- a/arch/x86/kernel/cpu/acrn.c
++++ b/arch/x86/kernel/cpu/acrn.c
+@@ -29,6 +29,7 @@ static void __init acrn_init_platform(void)
+ 	/* Install system interrupt handler for ACRN hypervisor callback */
+ 	sysvec_install(HYPERVISOR_CALLBACK_VECTOR, sysvec_acrn_hv_callback);
  
--	if (!cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
--		return;
--
- 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
- 	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index d65e85929d3e..6a011cd1ff94 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1563,7 +1563,8 @@ void __init tsc_early_init(void)
- 	if (is_early_uv_system())
- 		return;
- 
--	snp_secure_tsc_init();
-+	if (cc_platform_has(CC_ATTR_GUEST_SNP_SECURE_TSC))
-+		snp_secure_tsc_init();
- 
- 	if (!determine_cpu_tsc_frequencies(true))
- 		return;
++	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+ 	tsc_register_calibration_routines(acrn_get_tsc_khz,
+ 					  acrn_get_tsc_khz);
+ }
 -- 
 2.48.1.711.g2feabab25a-goog
 
