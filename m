@@ -1,177 +1,217 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94D32702D7;
-	Thu, 27 Feb 2025 21:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740693606; cv=none; b=A/uoztrbNP0bUdvTnTq85bE3TNKcFuVkYIriHyKWbGXWrad9fJKHQQrSSfBjl4buhZJrgrR33bJoJscLH5fDL//JOuX0zSeqEmqBHACNMBL4rnkHoxGPIvbfcrRJ0F2y4VCwMCLPtevZqGm/EeveRULP3IWIpBYTKiBiZrz8i6g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740693606; c=relaxed/simple;
-	bh=CgxQyljhqVTXpgSL0JHUD5jTBBLWxifnrh+FlSuppPo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pfZ8eSp7Vt9YW6zy80ieyYiVhWN6lWQX7dhWbMRCev48h+mKZjt9WyAP/ytGF/hOfLFsdpayhDII7ZWhm3GDov/m+qW2h29dMyPR6EjirKsEi3okuCYVU+eSE5/qBO39XFhTATpojR5KMdRedAidnI4jeRAkq26cFv7uo7lh0Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD021516;
-	Thu, 27 Feb 2025 14:00:14 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6013F5A1;
-	Thu, 27 Feb 2025 13:59:55 -0800 (PST)
-Date: Thu, 27 Feb 2025 21:57:32 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Andras Szemzo <szemzo.andras@gmail.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp
- Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
- Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
- Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
- Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 02/10] pinctrl: sunxi: add driver for Allwinner V853
-Message-ID: <20250227215732.5f5753d9@minigeek.lan>
-In-Reply-To: <20250205125225.1152849-3-szemzo.andras@gmail.com>
-References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
-	<20250205125225.1152849-3-szemzo.andras@gmail.com>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2043.outbound.protection.outlook.com [40.107.236.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E69618FC84;
+	Thu, 27 Feb 2025 22:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740693621; cv=fail; b=ZQRNt1m7WAGS65RLloDPjE9KTv8C2CC948dIwlzUVBxCnz8g0iAym6W2ILa3PWCKD/6ebyFDK7g8OSXFKJvbcKkSO0XxxKbwu/w7hmrk8HvMHFyrd2ta6FwbwN8Hhv58wwbudtvEQALSmDb6KF69Sx5HKfSBhMvN0u/XBcIOOVY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740693621; c=relaxed/simple;
+	bh=Mrx//iY5PcExO7721lki4qmfKsYBvgGOYZYyuubYzAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=qAd10tRo1//eqRjdAyLSee0d1+62wwFB5tbhBh0+F6/aR1hqBniBO/7bzV8qYTu9ZAVE2ewkL7qqTOGu8nXZtWY8tbOuk+sunFG3BO3tGK2y9Bmw3JCnyF71Hkbyu+gsyMbmFwaygHjPkvvNzVZ9TWK0z0ruIoOs6mXR1N50M/g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mjOtz/Bh; arc=fail smtp.client-ip=40.107.236.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mjOtz/Bh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZOxNqnF9w7hsNUfxA0n4KX9Bciq87dg47N9hoXMUwhnes4OwXMeF7L/6wiEJu0L4gBfgAKOuqDm3+2jzI+Si0WpL0OATwDZ6ZtmYQD5bR2YWIl6NgcJUq5C9fKQdcaz+2I2p45cGM+L9rcKpF/j6cKGgEi+RNh7H9CmxpUEC9EGsB7dL+YryUi3QGFsCujQ22bX6nmxyRPupVA2dT6OtixgZEE476mFBddhlIR2bxGZEsjSRIPGxmD14uODIhy9/PNLyiChNvHJqzRYNobz4AeYATzR9Kt6YWZE0voJ014tLjz92mecUygdd+Mvm3VKUtIDLo/jaWS5C3MGYtXgWdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=owgkmLZotW/mkb0oBXTI5xKcJ6KEWmqBQGIV7p+IHF0=;
+ b=NoiFEVFK5Z4B3A4/tPY+cdBHvRvWDs4+/eN46Z0JrDniIHcEupxosyOTWA97hlMrZYcEFrF3gka671KeD9Kx9zwNKRktMkaaY6HzNavxM3ZRHbiWmVyQJ1uTYc+R1pUG5OOoU5UCUYY6Z7wcK979BHi0VvvphK+Hdb3BGos61+CpFKTdusHdHqTWOzxeNorNyUsaP75LnfXTDA8f1TwIjaGiUqVkhRici63PZZfH/LZyVcBR7frCajcGucKy6flZ0jmDe3Mg3Kzt4Ft85OHm682EdSZqya5ijnSfxoP3K4u0bOi/Yt9ciPOy+O7SgMuWYhM8lkehse3nPOZGN4DGeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=owgkmLZotW/mkb0oBXTI5xKcJ6KEWmqBQGIV7p+IHF0=;
+ b=mjOtz/BhCQzceu8yaS6V4VpNZ/T8juzLvOF8l75n3eImGYRkI7X472dey0/4qw/+UdIe1szCHPjDJLAeIlbL7keo6eaQXI2F/NvMOeAF7vw0oKIWRBlB+/MFsR1Ja8Fn8/pH3Qghbb+QXnV0Y3hcPXgFiDnbWEYGqKz4RXuXCN1yTzBe8bwNN0xAkyw964VYW2t1RQ0PI77BdqlZ49qgRZEC7GkWTWxuea2Gt0hnhi2yRPSvoS4DkUicwJzLG5doleqOw7etlOXfQRFiCaghle+vQY5NZ0QRMWIP4tfC1QowJcyifoeZ2FUeTqThwWC8gi3+FtHxceRedNAVFjvEIg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
+ by DM4PR12MB6638.namprd12.prod.outlook.com (2603:10b6:8:b5::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.22; Thu, 27 Feb 2025 22:00:16 +0000
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 22:00:16 +0000
+Date: Thu, 27 Feb 2025 18:00:13 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <20250227220013.GQ39591@nvidia.com>
+References: <Z7-IHgcVVS8XBurW@cassiopeiae>
+ <20250226234730.GC39591@nvidia.com>
+ <Z7-0pOmWO6r_KeQI@boqun-archlinux>
+ <20250227144618.GE39591@nvidia.com>
+ <Z8CCKl_yA74WjpQ1@Mac.home>
+ <20250227161733.GH39591@nvidia.com>
+ <Z8CY7fqbtbO4v1jv@Mac.home>
+ <Z8ChnwPC0UwM8xBe@cassiopeiae>
+ <20250227192321.GA67615@nvidia.com>
+ <Z8DYNszfONdsKZsl@boqun-archlinux>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8DYNszfONdsKZsl@boqun-archlinux>
+X-ClientProxiedBy: BN9PR03CA0660.namprd03.prod.outlook.com
+ (2603:10b6:408:13b::35) To MW6PR12MB8663.namprd12.prod.outlook.com
+ (2603:10b6:303:240::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|DM4PR12MB6638:EE_
+X-MS-Office365-Filtering-Correlation-Id: 081d4146-ff11-4ff2-6b88-08dd577a1e09
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4FPIEh17SLbvctkgpXOU6xD4BhpFU6AciO/MCCbV8uoNyEn5iRhzU8Q0gXyW?=
+ =?us-ascii?Q?iqIfomZEnv1M+q2X9h1MxINXPdseRtkHbFRscxs4F+p1gddu80Qv/q3JpvsO?=
+ =?us-ascii?Q?g9I1hQS2LrmYo3BDqEAS6GK2TWyGFrOOQU5NTohjRPh1MM+4KSZY/440RXni?=
+ =?us-ascii?Q?gJwwB2lywV1k8jy6g6l68+1wRCCcRabrjOwAy9WPeg1zJ+Mufft+87vIb0w3?=
+ =?us-ascii?Q?ysUJuHvusjUJaH9WN+o8Wi/fgq06NljqZKzceLaFsUM4pVnKhaQIT4WUou1w?=
+ =?us-ascii?Q?+ERRRWtwPgVtw+PH+fS9Ykj8troITm1mFugguz8UtK6mDSP5tKSwn74Co50x?=
+ =?us-ascii?Q?VbQX035rPhAUxP5+VqRQC+xFqU26YQtfpHwyB1kYwt75zxnnWBxGZgcoayRs?=
+ =?us-ascii?Q?L7IEih24JttBdmHIb5ewEYjRs3UlNgNAe32Pr9FyhmXK0aCcJwqp3rgrVMGq?=
+ =?us-ascii?Q?hBAUtBY+W0m+8aQG1s/X/jQk3pTsRsajsOT7HAnwumlY3BS8kTW0ibMZ9oX/?=
+ =?us-ascii?Q?TZCICRerT/WrEsfcyh4TbWPjiBjuUiG+IavURTTHkSyh0/9tkYpRNuKoWmxL?=
+ =?us-ascii?Q?ZDnNvhglMIdPXzMuSuBVGmPGjbuKEE800qNHO3VVLiRMHhckvIXdnk/CZfxh?=
+ =?us-ascii?Q?UOt2eN+HGxM21K9Lx6O8eX5+AVeg99qJOZFy28VPMQWy4t4BPS54SCrG3kx9?=
+ =?us-ascii?Q?X+2Wq45ujgwAXmnt1ED6YPgIBQzNXtqyMfDDZMXiTvRO1NemSGvpJjmu5+KI?=
+ =?us-ascii?Q?9gzVqGADsKoxS8EWVHvd5RE8qboPGez0JFHm8JdkVjqSXt3cD63SK/8rM22q?=
+ =?us-ascii?Q?aginLSqZlA1sYk/4kGz+tdU1gP0+i5kcLynqLuS5GRNkv4ErRzdI4yXOVPxW?=
+ =?us-ascii?Q?bthj8aWVlzofFbpzh+Z60GCaYYjLhJ1YQqQYIdHR9x5lQaC26C5wohh8y6pV?=
+ =?us-ascii?Q?9FVANGqCf1MWtZgksowfDsb0CYeIt5TWQluURD7j5yCt4pA0d55owOQpsFmB?=
+ =?us-ascii?Q?KfTG/G43aLfqse65POI51/4dcSaPVPn2UsWjqnJ4FoDaYI0cSjWTP/2cNrn6?=
+ =?us-ascii?Q?HxorhCfrZx17wKyFip4t/FfLqjjgu1VsLcaQAXMFuAZk1U26ZE8C33rzuxNQ?=
+ =?us-ascii?Q?088Eg07/jOTAM2/+kXkM7rR55OMAV4Hj2ODKPRbrBDfSTHelDk6OvjQK6FsJ?=
+ =?us-ascii?Q?HesfFj1MqSqPmtJ+Rnvjpq0yaDq2zi/UBtjnE/uJuskdcMHG+ppDevatjvvY?=
+ =?us-ascii?Q?3wFSzqcT/YkdyB4qhx5/wgOwqiM55BLOoOQYoQizR64EvNUMmBCvVvJwCJ8o?=
+ =?us-ascii?Q?yRAmL5FR6U3vZ0a0DByzIn9ipuwQbm8+rHZn1sm8iu2D76nPUb4JqlMXNd1z?=
+ =?us-ascii?Q?TzntnCAQYic1JfmWbpSRYsDUV1XY?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jpO65VMjpuIwlqG+PRv2c6OUHE4WKjRINetGojbFFBKOG6/cRYo8J+Cu2Q6V?=
+ =?us-ascii?Q?zS4UzwiDoMk49oQ2gAYOXxWY/E4KsW4WzyTDpkFsWxzl4btDW03IkmGY3pZa?=
+ =?us-ascii?Q?4qJ/lKDw1eHOcqQ+IiWFlK8MOIaLbPDkHJKhd6fbcGn4+hJilDMpEOhvKj77?=
+ =?us-ascii?Q?T56zNG3LpttJb0xFgFFHNJX51XHO/of6Is6BDndnSRTD+nf2e2YIm480+S/C?=
+ =?us-ascii?Q?ZhslYksZMWYx0C7BpCkOUmzlhwcln9ZAGQEZ3PBZGMnIhj2tA+9Pl5mHjN/9?=
+ =?us-ascii?Q?fch4Im2MAKXSXUJk93DM+uCw7i04Ax9Tlf/1tdhkOOXvKyJIqbMUFLYdxu9r?=
+ =?us-ascii?Q?fYioftrlLFOa3DGHv1CSZpQGtj4xlV8Vp2py08IPI9f3S5pv/qJGnfx+sfMf?=
+ =?us-ascii?Q?Rpb8r090Ea1h4+YWWLeVIf+VV0xTuS7sPfJ3kUR+wpP3ENRx6MZBsFYhfFHG?=
+ =?us-ascii?Q?klYuGbhfgAKXBzuRVvDUwpcRzBUFruBXFm1+CGqh6/O0GyTHpxUue7H4qmYT?=
+ =?us-ascii?Q?8hy1+r77U1uuV4vjLmSzP46JvZSyvBrX6csmPeQSl7LgidhrbBBr6Ld7ngo/?=
+ =?us-ascii?Q?vkvfsjo3XJU7jmon08t04AAxD0VHSSgQG1OlyPrLbGt4CFuH5uPTLTOpVJLR?=
+ =?us-ascii?Q?PyxiH00J0VutcMjY7gsU65d1ewPR3L69SJqmTxOoc9a9G+29liTJfvcbTL8g?=
+ =?us-ascii?Q?x19WkgdunYDZ0ra9Ex0Fr/NATqDhH9+bU+v2iwUBZcrSgINXXu0BAehYyDyg?=
+ =?us-ascii?Q?Pz5UfUiShXj7W978kN1Sud3SbAYMBOBjRZYk1Rm9WCj2ovYlZbFTwGFP05oB?=
+ =?us-ascii?Q?Q59g+1LYblRqLMB4NX2dbkBdI/lMzNECDyHwTLyDSg0qX+8x1AuXcOu6YVze?=
+ =?us-ascii?Q?mf/UV+USsZIvIYHLL+pSjcebVGoqdb9RzCB3lDw8bRWAlOEZ383kLfrVjtMa?=
+ =?us-ascii?Q?ndJ/zHA0/Bf5fpUCUajqYAOhapvVPKf4Q3zbgkizDbyQaf2n1pNOu6a9O2RK?=
+ =?us-ascii?Q?K2idl3ri3qLNcV22fRtkdcZp2FxF+L4RFhyu2eg7KwTks1MX7mImO2pFAGf0?=
+ =?us-ascii?Q?lv3Gm8qnVpFg48hdHn7bCRR3yJ0dAUKZDeX96XmUzNutE9uL58fPLHdntYxE?=
+ =?us-ascii?Q?YKtVm4LcmfcijiJyi8MyW9UHZhgt7uH1aVfejEcKeAaL20+If1tC4xPw/SX/?=
+ =?us-ascii?Q?LKMX/QGh3no6HRGxFRGrCISEpA04RxQp7NgEPzT0YBPYTC3flF9A2ipjoFTB?=
+ =?us-ascii?Q?0wvZ/t2Zy6yGPttSpL5e7y0C4wa+21Amr7Kes/Hdu6teGmjkMFAQU4SYjR2Z?=
+ =?us-ascii?Q?lRWNviVdp4LIxWjUC9iLk39XMJrEPDfhhSEYXgN3bg4rj7zT+92J/98AJCOV?=
+ =?us-ascii?Q?9hoFzwxsnIAuWCyTZqFja3Eup0Ylkey0735YVp3T0nbuqsDKloOtUMfaQFQH?=
+ =?us-ascii?Q?mQZJKsUD8wgOPxX/BzoxqLiVlfA9IP3L3A97HknQ6ZfZZCX7oQ4KJ+PMGYbU?=
+ =?us-ascii?Q?ugj0skvTUerSeCmfSZ9dJHoPMNE5LVcMWXVedHnoYtZPQiQg5V1I6B4gvFga?=
+ =?us-ascii?Q?vKZP3Q/gHzq3q8Fkt1o=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 081d4146-ff11-4ff2-6b88-08dd577a1e09
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 22:00:16.2081
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O2y2gJxn/77NAMkS3AS+mHY/Ku+HKsN/lamOuVvkz7Q0rHDYVUblnX34nlDomuw1
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6638
 
-On Wed,  5 Feb 2025 13:52:17 +0100
-Andras Szemzo <szemzo.andras@gmail.com> wrote:
-
-Hi,
-
-> The V853 family has multiple package variants, from BGA to QFN88.
-> The latter has co-packaged DRAM and fewer pins, and less features (pin muxes).
-> All family members can be supported by a single driver, as the available pins
-> with allowed muxes is the same across the devices.
+On Thu, Feb 27, 2025 at 01:25:10PM -0800, Boqun Feng wrote:
+> > The design pattern says that 'share it with the rest of the world' is
+> > a bug. A driver following the pattern cannot do that, it must contain
+> > the driver objects within the driver scope and free them. In C we
 > 
-> This new pinctrl driver depends on the new sunxi device-tree based mux support
-> patch series [1].
+> I cannot speak for Danilo, but IIUC, the 'share it with the rest of the
+> world' things are the ones that drivers can share, for example, I
+> suppose (not a network expert) a NIC driver can share the packet object
+> with the upper layer of netowrk.
+
+I'm having a bit of trouble parsing this sentence..
+
+In your example a NIC driver passing a packet into the network stack
+would still be within the world of the driver.
+
+Outside the world would be assigning the packet to a global
+variable.
+
+It is a very similar idea to what you explained about the module
+lifetime, just instead of module __exit being the terminal point, it
+is driver remove().
+
+> > It appears to me that the main issue here is that nobody has figured
+> > out how to make rust have rules that can enforce that design pattern.
 > 
-> [1]: https://lore.kernel.org/linux-sunxi/20241111005750.13071-1-andre.przywara@arm.com/T/
-> 
-> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
-> ---
->  drivers/pinctrl/sunxi/Kconfig              |  5 ++
->  drivers/pinctrl/sunxi/Makefile             |  1 +
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c | 53 ++++++++++++++++++++++
->  3 files changed, 59 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> 
-> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-> index a78fdbbdfc0c..fac9c61039e2 100644
-> --- a/drivers/pinctrl/sunxi/Kconfig
-> +++ b/drivers/pinctrl/sunxi/Kconfig
-> @@ -81,6 +81,11 @@ config PINCTRL_SUN9I_A80_R
->  	default MACH_SUN9I
->  	select PINCTRL_SUNXI
->  
-> +config PINCTRL_SUN8I_V853
-> +	bool "Support for the Allwinner V853/V851S/V851SE PIO"
-> +	default MACH_SUN8I
-> +	select PINCTRL_SUNXI
-> +
->  config PINCTRL_SUN20I_D1
->  	bool "Support for the Allwinner D1 PIO"
->  	default MACH_SUN8I || (RISCV && ARCH_SUNXI)
-> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-> index 2ff5a55927ad..8937b56b2ef4 100644
-> --- a/drivers/pinctrl/sunxi/Makefile
-> +++ b/drivers/pinctrl/sunxi/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
-> +obj-$(CONFIG_PINCTRL_SUN8I_V853)	+= pinctrl-sun8i-v853.o
->  obj-$(CONFIG_PINCTRL_SUN20I_D1)		+= pinctrl-sun20i-d1.o
->  obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
->  obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> new file mode 100644
-> index 000000000000..fb2112ee12d0
-> --- /dev/null
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Allwinner V853 SoC pinctrl driver.
-> + *
-> + * Copyright (c) 2025 Andras Szemzo <szemzo.andras@gmail.com>
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-sunxi.h"
-> +
-> +static const u8 v853_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
-> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI  */
-> +	{ 22,  0, 12, 23, 18,  7,  8, 16,  5 };
-> +
-> +static const unsigned int v853_irq_bank_map[] = { 0, 2, 3, 4, 5, 6, 7, 8 };
-> +
-> +static const u8 v853_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
-> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI */
-> +	{ 14,  0, 14, 14, 14, 14, 14, 14, 14 };
-> +
-> +static struct sunxi_pinctrl_desc v853_pinctrl_data = {
-> +	.irq_banks = ARRAY_SIZE(v853_irq_bank_map),
-> +	.irq_bank_map = v853_irq_bank_map,
-> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
-> +};
-> +
-> +static int v853_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	return sunxi_pinctrl_dt_table_init(pdev, v853_nr_bank_pins,
-> +					   v853_irq_bank_muxes,
-> +					   &v853_pinctrl_data,
-> +					   SUNXI_PINCTRL_NEW_REG_LAYOUT |
-> +					   SUNXI_PINCTRL_ELEVEN_BANKS);
+> Most of the cases, it should be naturally achieved, because you already
+> bind the objects into your module or driver, otherwise they would be
+> already cancelled and freed. 
 
-This last flag doesn't apply: it would put the offset for the
-POW_MOD_SEL registers at 0x380, but the manual says it's 0x340, as with
-the previous SoCs.
-I compared the rest against the A523 driver, and the V853 specific bits
-against the manual: they match, so with that line removed:
+I'm getting the feeling you can probably naturally achieve the
+required destructors, but I think Danillo is concerned that since it
+isn't *mandatory* it isn't safe/sound.
 
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+> So I think in Rust you can have the "design pattern", the difference is
+> instead of putting cancel/free functions carefully in some remove()
+> function, you will need to (still!) carefully arrange the fields in your
+> driver/module data structure, and you can have more fine grained control
+> by writting the drop() function for the driver/module data structure.
 
-Cheers,
-Andre
+That all makes sense, but again, the challenge seems to be making that
+mandatory so it is all safe.
 
-> +}
-> +
-> +static const struct of_device_id v853_pinctrl_match[] = {
-> +	{ .compatible = "allwinner,sun8i-v853-pinctrl", },
-> +	{}
-> +};
-> +
-> +static struct platform_driver v853_pinctrl_driver = {
-> +	.probe	= v853_pinctrl_probe,
-> +	.driver	= {
-> +		.name		= "sun8i-v853-pinctrl",
-> +		.of_match_table	= v853_pinctrl_match,
-> +	},
-> +};
-> +builtin_platform_driver(v853_pinctrl_driver);
+If you can show people a sketch how you think that could work it would
+probably help.
 
+> I feel I'm still missing some contexts why Devres<T> is related to the
+> "design pattern", so I will just skip this part for now... Hope we are
+> on the same page of the "design pattern" in Rust?
+
+There is a requirement that a certain C destructor function be
+*guaranteed* to be called during remove().
+
+Ie if I told you that the C functions *required* hrtimer_cancel() be
+called in the device_driver remove for correctness, how could you
+accomplish this? And avoid an UAF of the hrtimer from other threads?
+And do it without adding new locks. And prevent the driver author from
+escaping these requirements.
+
+Then you have the design pattern I'm talking about.
+
+Is it clearer?
+
+Jason
