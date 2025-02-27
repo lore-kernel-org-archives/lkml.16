@@ -1,115 +1,88 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6A7239082
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BD514A4E7;
+	Thu, 27 Feb 2025 14:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667199; cv=none; b=TiJ8ot73rx/kCpc8njG0tPeChdaNLuZDT9fxyET5GFNoMMX2AutJVxsOnizsojYA63BN4iIhhHzWQ8zVvcjXpFo1pdh/ehyCT56jnyV4nxlvng3b80ijXsZsqPYvkd8npCiSHyzrVZgQAQCxCw9h2u8N9Q64PYdXcRyTM/phja4=
+	t=1740667262; cv=none; b=XmkTZ6xd6d/Zc+AKaZ//X8DIwQIOoF2AKZLjS3IKDoDV0oifpLo0i7q06JTIN8e87MCxegGvyVOizfCV26cqKPTCu40oXjxNoNGrCJpTd8Cq/mdWI7GQ4mRa4ddwSJybTFC4hvfZwrBx/5Q6jj8MG9bdZzpR26kLMpC5TAtiFEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667199; c=relaxed/simple;
-	bh=3HNj2lcv7MZvcwGA/FLxym27Q2rgYaCGFXQoXk1HxUI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WyxQ1CMNIYnjz5Vu0mFi3beN7PGp8lYRpg0yEK4z+ZRYw0WsPhg9//+J9zNt8kvxxZlb99EIy/x8/sXSXYuhgQtIsbfVLcUBTs+Zz0KkCpOl5nBNOn4box85kQwsBM9gCPtpyQD5l0AHGFjKdPRFzYwDOT/tgUy+cowGTVU1UuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AYdYQIzI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740667262; c=relaxed/simple;
+	bh=1stVJSuKNARUeQl+YthaR6WjZHwGdG/7Y5SuiNFvvUM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QnWszJZxAuw1nNXDxavzQ2SYhoSjFi8zkQV+3OUuKBOOjvGuh+HNWmcY3LJTnLegM1NvMr/OKExi8LYPUnDC6CD/Jd7dEKKUBcnUwVsNylcKhWDVAzP0Cae8bW89d5HDdaAKvxL7CtPQvpn02i/7LmMuML4Tnvi185LoZnnY0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=gI7Ssqlz; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYdYQIzI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740667197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jyqUBZB6nKc/r+VKm621tlxSSaBd845l3542H86vZ7E=;
-	b=AYdYQIzIu6gczQSz3f1wWqhXMQv1Fq6U8Fp+yVJfWtcw4JELv53h2bgYDGseVUydbbbT36
-	ClUvy5y/CtYf6X2gA2J1zSsMtmmea4HiY+FwyOL6tdt92l+ZF9aggxViAgB+BN/vxNppDa
-	Uxg4DjT7Hi2SkNpPxdvwIoETHzPxwgU=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-313-uLiyrFC3OWyFmuO2vyFGKg-1; Thu, 27 Feb 2025 09:39:55 -0500
-X-MC-Unique: uLiyrFC3OWyFmuO2vyFGKg-1
-X-Mimecast-MFC-AGG-ID: uLiyrFC3OWyFmuO2vyFGKg_1740667194
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-390d5f1e05cso393389f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:39:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740667194; x=1741271994;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jyqUBZB6nKc/r+VKm621tlxSSaBd845l3542H86vZ7E=;
-        b=oIhHMTAZnGgFkyiY7gcR5o0s3ytbJJJbPBnBlKP4zkEqqKGGfMFglu59rrIvjKnKBX
-         OWu+Fw3E3VGy1V044OH8cDmDLAW6FtUlgeUs37pUlAiygLJijb6YcwVr3PtCfESB2tSg
-         uva5HdHTub/P3ozpXVxcA2A3utAHP8MVjrNlrOyynPL0lHOoZE6RWBjmH1byM2kNS5K+
-         Acsr8Y7frNi8o0KUMnp7/6KtVMKA0+sHuQE7aIiRrXVsaOHa4ciya4ZrcaEJT/+5oaRn
-         Y4lYFtgXuN/3TaUquVoT1nNAMx4/7vpfVBgsJWSERkFBeQODBjurs+vTVObCRDf7uJZ0
-         4lLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUQar/H85712X0sdaOML35hYl94CWP0qfMBt5RRDMmnzPU2FXPewBWULVJb8MdN8jVlFxX+3JS2uE22Crg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXXCNqiGoxP7+edacS1FYRNWf3CPmcIFAKIe9x1y5L3tQfVM9E
-	Sg0FIzEe9yvLg/+TOy0HrOxIa4SCGAYDt5FIaMAoAUClD4vzcq+aDJkyBtjXOkXwxb2GNsIUco7
-	1EJV6gPqS+I/oIbVcf8zsrkprnWylvFzW+FcUlSWQ564A65dJ8ONVcR9bueMsm8GW0WT6qQ==
-X-Gm-Gg: ASbGncvH+HXvWXb8aLAkjwyX0tfiP2Vii7jwS61xdbOOvfsUf7WHQaT/VP/5BEo4Ab8
-	GDnUv6XIRl3tMNGc7uOdLFQBfzxITEhruq6EYwI8FWM3cthTR+Jg9mOeNUmO1G9JhBFxak4aXim
-	q92Ysu/9ro76R3x+b9rA4AtbEiYHlSA3zIxTkvTBfb6hi2M7XDxhpaa2vI21cQ9lN+ZFwQ3QCxq
-	1S3L2ry3LEGp0A/aRzeyTp501lHl/xKAA2EQyMQoCV09+G9fDkv4wOSXZ3jiDvvthZJRIOUa2O8
-	i9q1B5EEKSQnuEXEnQoAAlnkj9s17ZHFKx4ajRM9kdhM/Q==
-X-Received: by 2002:a5d:5886:0:b0:390:d6b2:c74d with SMTP id ffacd0b85a97d-390d6b2c8e2mr5688443f8f.35.1740667194116;
-        Thu, 27 Feb 2025 06:39:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGcWa/eBKcaZPmm9VXX7NkW/71dFoXSJxP3YfdCAmJI+JSIQx4UhJs1j3Idz3PrIeHcoy0Y2g==
-X-Received: by 2002:a5d:5886:0:b0:390:d6b2:c74d with SMTP id ffacd0b85a97d-390d6b2c8e2mr5688418f8f.35.1740667193800;
-        Thu, 27 Feb 2025 06:39:53 -0800 (PST)
-Received: from [192.168.88.253] (146-241-81-153.dyn.eolo.it. [146.241.81.153])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7b6asm2336666f8f.51.2025.02.27.06.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 06:39:53 -0800 (PST)
-Message-ID: <5913bf70-de74-4915-9ba1-9cd92dde6945@redhat.com>
-Date: Thu, 27 Feb 2025 15:39:52 +0100
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="gI7Ssqlz"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id A4C2AA0622;
+	Thu, 27 Feb 2025 15:40:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=7+U/H48sVhDKT4EC1mYrNr5/JRrYqDkzYSFlQnG2vr8=; b=
+	gI7SsqlzWMgZVk7fqNN+kHmCrqYnQ7hn4k77RkEs2V7qldFQ+Gi2IMt9DVyAsSuX
+	WcrTk/nQ/pecNCkQjTWyRbG8LPz3nL2Y2R8t3831tJ6JYKqVMh2vc1sOdpNVG8jn
+	pUZIGbBjxltXbfg+qNZw5PVUqLpkDhdaJq/DCXH/IRoA5lakR5ENUi70eS7G0XGL
+	ADyDBf8tnB/0+SIJrlA7i2o6RuZ20nwU0anEOYmcIZjqtK6x/uuxF7EeQObNKpRL
+	75CIizcobZAr6JObcz+Mn4yAB7hi/F35wykYh3DJbjQ0wY0hjR/Q0mgg1hzMpTQc
+	UyoVT/fLSRdTxMBqMamAQ02kOueGmtC1Xzw0zQruZvqJkvHbWF73/5blSY32/Ram
+	Dbktb/psWk0XdZrUR2Q21pSGlnh1Nqn8F7pcp7yDKizmQ71FHKMx3ABZr3qlEOll
+	ZEnsmo5huqkTTOSqsjSkcGCdZ4TJ9+3WJfK4UgINDiG8eUzj5rWgR0uchtyYciNg
+	MCJygyYLG+D0CHK2kMghIY8OqU73eNBvK673++NnUHEBwMvwRN/f+YkI8Ar2iovl
+	PHAdmEKSA8UyRibZiM2crAQKLivRZTVp8Oc6hxl0Pam3hRef87H25+Q0IcQ0QK15
+	Qr2e4TCAT7AuZiBw+o90ewmxA7w0i+2pmDv1+oU5Fe8=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <linux-arm-kernel@lists.infradead.org>, <linux-iio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Kamel
+ Bouhara" <kamel.bouhara@bootlin.com>, William Breathitt Gray
+	<wbg@kernel.org>, <Dharma.B@microchip.com>
+Subject: [PATCH v6 0/3] microchip-tcb-capture: Add Capture, Compare, Overflow etc. events
+Date: Thu, 27 Feb 2025 15:40:17 +0100
+Message-ID: <20250227144023.64530-1-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pktgen: avoid unused-const-variable warning
-To: Peter Seiderer <ps.report@gmx.net>
-Cc: Arnd Bergmann <arnd@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250225085722.469868-1-arnd@kernel.org>
- <20250226191723.7891b393@gmx.net>
- <4c260b13-3b08-409d-a88a-e5bbb3c18e03@redhat.com>
- <20250227152154.4da61f2f@gmx.net>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250227152154.4da61f2f@gmx.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1740667258;VERSION=7985;MC=1480940311;ID=1459460;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A2980D94852637760
 
-On 2/27/25 3:21 PM, Peter Seiderer wrote:
-> On Thu, 27 Feb 2025 12:35:45 +0100, Paolo Abeni <pabeni@redhat.com> wrote:
->> I think the unused define is preferable; I think pre-processor defines
->> are cheaper than static const.
-> 
-> In which regards cheaper (out of interest)?
-> 
-> Both (with and without static) produce the same code see e.g.
-> 
-> 	https://godbolt.org/z/Tsr1jM45r
-> 	https://godbolt.org/z/6sr1o8da3
+The TCB has three R/W-able "general purpose" hardware registers:
+RA, RB and RC. The hardware is capable of:
+* sampling Counter Value Register (CV) to RA/RB on a trigger edge
+* sending an interrupt of this change
+* sending an interrupt on CV change due to trigger
+* triggering an interrupt on CV compare to RC
+* stop counting after sampling to RB
 
-I must admit I was unsure the compiler would always optimize out the
-constant.
+To enable using these features in user-space, an interrupt handler
+was added, generating the necessary counter events. On top, RA/RB
+registers are added as Count Extensions. To aid interoperation, a
+uapi header was also added, containing the various numeral IDs of
+the Extensions, Event channels etc.
 
-I guess the macro could still produce shorter build time (by a few clock
-cycles, nothing measurable ;), so in the end it boils down again to a
-personal preference.
+Bence Csókás (3):
+  include: uapi: counter: Add microchip-tcb-capture.h
+  counter: microchip-tcb-capture: Add IRQ handling
+  counter: microchip-tcb-capture: Add capture extensions for registers
+    RA/RB
 
-Cheers,
+ MAINTAINERS                                   |   1 +
+ drivers/counter/microchip-tcb-capture.c       | 131 ++++++++++++++++++
+ .../linux/counter/microchip-tcb-capture.h     |  49 +++++++
+ 3 files changed, 181 insertions(+)
+ create mode 100644 include/uapi/linux/counter/microchip-tcb-capture.h
 
-Paolo
+-- 
+2.48.1
 
 
