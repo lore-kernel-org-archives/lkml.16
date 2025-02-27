@@ -1,97 +1,165 @@
-Received: from mail-m3273.qiye.163.com (mail-m3273.qiye.163.com [220.197.32.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2B121324D;
-	Thu, 27 Feb 2025 11:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B6F22B8BE;
+	Thu, 27 Feb 2025 11:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654284; cv=none; b=mUOM99Se/mmrnCZZ6v9dMsZP7S4JakqoVyIg1346bOIHHBYRhrwvw38QbLUItcBPB+mjZiQ9+0Z4qsIlPVTwB1oeKF/RGl4bJcxBWetK6l9NfqjfGP3kW5IKsIJPKrViLmfPpeKPKqPyvYWEpt3I75ReKvLxg6ahVGKa/pKUoLs=
+	t=1740654332; cv=none; b=lgRKdFsxxJsLxw6E+LgH/UiJekVIulHV2k4DN+oiXe6hlaWQ3/HNFRE5g7kamA6o7ly5NrnGAUHTlVZ3EwIpE5uIBLz/ameu5AA75Z3SwD/78Vp0CfiI8zLd4ee98l5toUVhzNIIj2RhL7s5SCLucMwFtmxh8N4PpxPdusoPass=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654284; c=relaxed/simple;
-	bh=dfH6GSnNHaqbYIEQaNaTLyZpVSbGojCv77PSGmE0IOo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rlW6BxUL6nKvzADBVijd2WULAmEqfMtitdqb8sjiiACMxhVMGCLWNmQAvYfWlxvXPKx9Euh+RG2c3eaINarsrPtCyrYwqHDTxNPGIKYuaH8RxNk3CrVx0/YauuoXOMwsdhJKh2X7Ogh4aLnYvP06LW8XfzM50SnRNJXQL8dioNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=R8kC9d33; arc=none smtp.client-ip=220.197.32.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740654332; c=relaxed/simple;
+	bh=30VEPafuYaXUOzx4ugW+Q9XaK63O/Un27g6xe0Hutbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S8v3szjo6BXqqwsdRipra1Fn7qmwl0BxawV6N8flzaM4cDB/hNbxvgyApbwzM8fHsjKNwpNxEISp7PYkFO8H5C3v6LORM110Dt0vTZgWRO8EtnvwEbCUMyG6wZe04lJPKxUS0KPrz6Hn5AICTdlyogqE2UZitXObWjSLk9FbztM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pq91ovwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="R8kC9d33"
-Received: from localhost.localdomain (unknown [103.29.142.67])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c6596a3c;
-	Thu, 27 Feb 2025 18:59:24 +0800 (GMT+08:00)
-From: Kever Yang <kever.yang@rock-chips.com>
-To: heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org,
-	Kever Yang <kever.yang@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Rob Herring <robh@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Elaine Zhang <zhangqing@rock-chips.com>,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 0/2] rockchip: Add rk3562 clock support
-Date: Thu, 27 Feb 2025 18:59:13 +0800
-Message-Id: <20250227105916.2340856-1-kever.yang@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pq91ovwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8F1C4CEDD;
+	Thu, 27 Feb 2025 11:05:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740654332;
+	bh=30VEPafuYaXUOzx4ugW+Q9XaK63O/Un27g6xe0Hutbk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Pq91ovwNVBny9JMf8+HSNMd53hixAs09BNZdZs5+XZvukQo19RDYmaAYsKuKnRqbO
+	 6qo83flXm7EcwbmofLf+K/qhsk3B2bAqdNTMyY/WKXRgvC0HaoCsudv+HdBkrxGgIy
+	 W4UCV9K8pWXY1D6xpT48SrVORm8c4TjrcMZJLrS0G06NvYq+PWtK/eobNmfWXSBSh/
+	 CVsZJQvI+myXNB+tNggscbw4QICP4mKpEB9mI3ofP3VY4nQvRUr5s9XHr7OZbBwiCw
+	 Ng8h4v4zAUUE26KyhVo+9/xOxpgQphhwKFZmhAOYf68HoY/Kn1nPA1H87h4vqpLuKN
+	 BwGFkzU7lAAHg==
+Date: Thu, 27 Feb 2025 12:05:25 +0100
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Igor Mammedov <imammedo@redhat.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
+ <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
+ <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
+ <marcel.apfelbaum@gmail.com>, Markus Armbruster <armbru@redhat.com>,
+ Michael Roth <michael.roth@amd.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
+ <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
+ <zhao1.liu@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/14] Change ghes to use HEST-based offsets and add
+ support for error inject
+Message-ID: <20250227120525.66c348a0@foz.lan>
+In-Reply-To: <20250227105454.69e3d459@imammedo.users.ipa.redhat.com>
+References: <cover.1740148260.git.mchehab+huawei@kernel.org>
+	<20250227105454.69e3d459@imammedo.users.ipa.redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTxoeVkxCHR4YTEtCSEtNH1YVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lPT09IVUpLS1
-	VKQktLWQY+
-X-HM-Tid: 0a95470fab6903afkunmc6596a3c
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NVE6Pio6KzIOQg0uAhpOOhc5
-	LzcKCTpVSlVKTE9LTU5IQk1OQk1DVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUpITk83Bg++
-DKIM-Signature:a=rsa-sha256;
-	b=R8kC9d33Z9g4FYnESeaM5DTtFcaYpcAcra30dOEJFu4VTNO5NqvT0oPGH/4dvNmMoT0B9GLdB8Rhrvu6Op6MEU+5stY0nOLVGHwGM+lg9oYCoWTFmuD4JbdXBa/Fes+0PSlRoCTeQ2uUu4Br9H6H+q9hUNwvmKW2acI+s9gMnEk=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=VFwR9bSonAWb+2pGDDc10fYLnCw/mDANOeUPNgJEuBE=;
-	h=date:mime-version:subject:message-id:from;
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+Em Thu, 27 Feb 2025 10:54:54 +0100
+Igor Mammedov <imammedo@redhat.com> escreveu:
 
-This patch set add cru driver for a new SoC rk3562, the SoC DT will be sent as
-a separate patch set and the new compatible will be used in the DT.
+> On Fri, 21 Feb 2025 15:35:09 +0100
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> 
+> > Now that the ghes preparation patches were merged, let's add support
+> > for error injection.
+> > 
+> > On this series, the first 6 patches chang to the math used to calculate offsets at HEST
+> > table and hardware_error firmware file, together with its migration code. Migration tested
+> > with both latest QEMU released kernel and upstream, on both directions.
+> > 
+> > The next patches add a new QAPI to allow injecting GHESv2 errors, and a script using such QAPI
+> >    to inject ARM Processor Error records.
+> > 
+> > ---
+> > v4:
+> > - added an extra comment for AcpiGhesState structure;
+> > - patches reordered;
+> > - no functional changes, just code shift between the patches in this series.
+> > 
+> > v3:
+> > - addressed more nits;
+> > - hest_add_le now points to the beginning of HEST table;
+> > - removed HEST from tests/data/acpi;
+> > - added an extra patch to not use fw_cfg with virt-10.0 for hw_error_le
+> > 
+> > v2: 
+> > - address some nits;
+> > - improved ags cleanup patch and removed ags.present field;
+> > - added some missing le*_to_cpu() calls;
+> > - update date at copyright for new files to 2024-2025;
+> > - qmp command changed to: inject-ghes-v2-error ans since updated to 10.0;
+> > - added HEST and DSDT tables after the changes to make check target happy.
+> >   (two patches: first one whitelisting such tables; second one removing from
+> >    whitelist and updating/adding such tables to tests/data/acpi)
+> > 
+> > 
+> > 
+> > Mauro Carvalho Chehab (14):
+> >   acpi/ghes: prepare to change the way HEST offsets are calculated
+> >   acpi/ghes: add a firmware file with HEST address
+> >   acpi/ghes: Use HEST table offsets when preparing GHES records
+> >   acpi/ghes: don't hard-code the number of sources for HEST table
+> >   acpi/ghes: add a notifier to notify when error data is ready
+> >   acpi/ghes: create an ancillary acpi_ghes_get_state() function
+> >   acpi/generic_event_device: Update GHES migration to cover hest addr
+> >   acpi/generic_event_device: add logic to detect if HEST addr is
+> >     available
+> >   acpi/generic_event_device: add an APEI error device
+> >   tests/acpi: virt: allow acpi table changes for a new table: HEST
+> >   arm/virt: Wire up a GED error device for ACPI / GHES
+> >   tests/acpi: virt: add a HEST table to aarch64 virt and update DSDT
+> >   qapi/acpi-hest: add an interface to do generic CPER error injection
+> >   scripts/ghes_inject: add a script to generate GHES error inject
+> > 
+> >  MAINTAINERS                                   |  10 +
+> >  hw/acpi/Kconfig                               |   5 +
+> >  hw/acpi/aml-build.c                           |  10 +
+> >  hw/acpi/generic_event_device.c                |  43 ++
+> >  hw/acpi/ghes-stub.c                           |   7 +-
+> >  hw/acpi/ghes.c                                | 231 ++++--
+> >  hw/acpi/ghes_cper.c                           |  38 +
+> >  hw/acpi/ghes_cper_stub.c                      |  19 +
+> >  hw/acpi/meson.build                           |   2 +
+> >  hw/arm/virt-acpi-build.c                      |  37 +-
+> >  hw/arm/virt.c                                 |  19 +-
+> >  hw/core/machine.c                             |   2 +
+> >  include/hw/acpi/acpi_dev_interface.h          |   1 +
+> >  include/hw/acpi/aml-build.h                   |   2 +
+> >  include/hw/acpi/generic_event_device.h        |   1 +
+> >  include/hw/acpi/ghes.h                        |  54 +-
+> >  include/hw/arm/virt.h                         |   2 +
+> >  qapi/acpi-hest.json                           |  35 +
+> >  qapi/meson.build                              |   1 +
+> >  qapi/qapi-schema.json                         |   1 +
+> >  scripts/arm_processor_error.py                | 476 ++++++++++++
+> >  scripts/ghes_inject.py                        |  51 ++
+> >  scripts/qmp_helper.py                         | 702 ++++++++++++++++++
+> >  target/arm/kvm.c                              |   7 +-
+> >  tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
+> >  .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
+> >  tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
+> >  tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
+> >  tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
+> >  29 files changed, 1677 insertions(+), 79 deletions(-)
+> >  create mode 100644 hw/acpi/ghes_cper.c
+> >  create mode 100644 hw/acpi/ghes_cper_stub.c
+> >  create mode 100644 qapi/acpi-hest.json
+> >  create mode 100644 scripts/arm_processor_error.py
+> >  create mode 100755 scripts/ghes_inject.py
+> >  create mode 100755 scripts/qmp_helper.py
+> >   
+> 
+> once you enable, ras in tests as 1st patches and fixup minor issues
+> please try to do patch by patch compile/bios-tables-test testing, to avoid
+> unnecessary respin in case at table change crept in somewhere unnoticed. 
 
-Changes in v3:
-- remove rk3562_cru_base and MODULE_ALIAS
+Just submitted v5.
 
-Changes in v2:
-- remove rockchip,grf info
-- Update file license
-- Update the reset ID with rst-rk3562.c
-- remove CLK_NR_CLKS
+I took some extra care to avoid bisect issues. Still checkpatch 
+had some warnings, but they seemed false positives.
 
-Finley Xiao (1):
-  clk: rockchip: Add clock controller for the RK3562
-
-Kever Yang (1):
-  dt-bindings: clock: Add RK3562 cru
-
- .../bindings/clock/rockchip,rk3562-cru.yaml   |   55 +
- drivers/clk/rockchip/Kconfig                  |    7 +
- drivers/clk/rockchip/Makefile                 |    1 +
- drivers/clk/rockchip/clk-rk3562.c             | 1108 +++++++++++++++++
- drivers/clk/rockchip/clk.h                    |   40 +
- drivers/clk/rockchip/rst-rk3562.c             |  429 +++++++
- .../dt-bindings/clock/rockchip,rk3562-cru.h   |  379 ++++++
- .../dt-bindings/reset/rockchip,rk3562-cru.h   |  358 ++++++
- 8 files changed, 2377 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3562-cru.yaml
- create mode 100644 drivers/clk/rockchip/clk-rk3562.c
- create mode 100644 drivers/clk/rockchip/rst-rk3562.c
- create mode 100644 include/dt-bindings/clock/rockchip,rk3562-cru.h
- create mode 100644 include/dt-bindings/reset/rockchip,rk3562-cru.h
-
--- 
-2.25.1
-
+Thanks,
+Mauro
