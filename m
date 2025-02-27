@@ -1,92 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF3026FA73;
-	Thu, 27 Feb 2025 20:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6282026F443;
+	Thu, 27 Feb 2025 20:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687667; cv=none; b=UtCZQGtVi+xLN/gIErDLb/ufDhmlylG4oCguZOPM4bPRc+Uidp1oj3Uf7wWykeRTqCTZHjmWZIcupYQ3uWYtGQ81eJRng9tuQq3crz4owIeID8QGMfYCbrJu9oX5PgqG/M3pntjZRuT/TlV3S+eynWlFpM68QwLiRGd1/RO0OEk=
+	t=1740687687; cv=none; b=HOMKmfI43vKT980F9/ukmRB7mJOJxHezrrXovqbTf7P/pJohB45sIYzKxmgzzXY7RGJhKB04mmL4JCXeNMJ593pO1kZhccJVMn+xYarpwVAyCgDGJL2STGgL5BHj4dtNVrtzgSo1otL1qXlLVTnHHAX8XRvPqnBwSE74dCdqSJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687667; c=relaxed/simple;
-	bh=zhgA8lTVYegivj3+EBhgdMTn2Pg98qesetiRioNRoMo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yo11p94UiS1s9gl3sfxoL2jINKKWeowEF1Yjsb3Uf229bbvm1gVYESnsbgkP7jpm3CWmaI/TXR8Yf/DY7jgMhq4v11m8kGfyRTW5eYquWQkk9TLXyXOoJVljxaa1N+IU86bfqsdpX058zcToJKMkADYyR+kXpKp9bifkyaWcI4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBHfbYVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740687687; c=relaxed/simple;
+	bh=rATGIb8eOkGdpsr3UNt1z5AYAvAdTYeozpp0Xkop/ls=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=af9r35x0lejhIGHri8pppoNQFqOGEHKSFxAigaO/OrRsEEFosXxPVKcbNROX187xwbYPAXsVqsyDijMhlz+Qti3pgBYqu203+l5+x3YDqTFrxsdp6qI1xJwB5bJFUxUxlNfNYyKVFAc0LQ4KdHgElAoSzb/xZXqEcbtCtjk4WnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GRd0QJLr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7qetVH1Z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBHfbYVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07C91C4CEE4;
-	Thu, 27 Feb 2025 20:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740687665;
-	bh=zhgA8lTVYegivj3+EBhgdMTn2Pg98qesetiRioNRoMo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=FBHfbYVe2+Y9RRSmqefAlel/As32WxZhKbbPD3xR7XlI1ZpP03vvcbXDT47FbLzJK
-	 OOVkoxZn/4XSTDwy8lFv9RSdCOuOGqpGPbl+Jvv7FN02GTbGPBLuasboS7lilMipHX
-	 pnLJOxSPlD86U+3Nk4XilKgRG5w/dyxdcuo1hsWWC9G80wrblb0u4CXIMycaepKUzL
-	 s2plX5hvsMFI+dI5iLC4RwOcJs55yej/FVge1GVkgmmq+heiCIwpCzkGeMDBBw2lCk
-	 I+MOajgKy829ndtFsVDcK1YEiv1H+bz6V//+GhmtArln1+kQWr81qSDssHCqfy//H2
-	 Pjs//4GtZgsCg==
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2c13ec72605so505011fac.0;
-        Thu, 27 Feb 2025 12:21:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUTiJwa7s3a7atAjcf8EAPAhdjbxMD4pQd4amBeSu8rr/zZzeViQwqd9zb69Uy8r+k1BF/UejXh375g5QG7@vger.kernel.org, AJvYcCV+yyGFoF0+3RLE4UgVoSdfqwSbCeuDCgDoAQqPN3384nCdTPxAassEzaCq8mpUJfk53s8qL2oWgY0=@vger.kernel.org, AJvYcCXO1n6WldVSRp3WYk1QBzqYFJjNSRrhyhQ+PnNRzyi5l8rnvLG1qfPEu13zIIXuRcqsXabZo/ivsrfKpBOpxHk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqvKh1GqutQHzD3PfWnu1tCZ+izY3qroNXyLXYonONOSvH8R1F
-	qfinOT9w+cOQoLpX/VkUyxcXvC+cb7vkp73V4wbjRl/V3rkDiFO20qdXUmRTHmtKI2YksHG9JtN
-	7otFGLDWPvAvVneCi+rJiaSWoeCQ=
-X-Google-Smtp-Source: AGHT+IF96SqJIW4mVo1lyssliOdrmZiV4MWUl27EC9mWKW/Y+yznOetIfl7XasPSTISTnP3CvLcKZOXTKrbfxjeNK5M=
-X-Received: by 2002:a05:6870:9a1c:b0:29e:671b:6003 with SMTP id
- 586e51a60fabf-2c17874d20amr387145fac.32.1740687664295; Thu, 27 Feb 2025
- 12:21:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GRd0QJLr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7qetVH1Z"
+Date: Thu, 27 Feb 2025 20:21:23 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740687683;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ONSa22HSm7xGBZSnEu6JEbkICzapN8ExCxJSd8trR4A=;
+	b=GRd0QJLrmdhz7MK42dppt/wJgCKIkIYA0Q9JlmD87I8rTSdEjWR7l4DyaZIKRUBTf/IeOA
+	zyZ8Z6zTPtiL6V5/cP+im96W/TNGGAkVvcbVxRT755XWhpinAc/mSo7ZG81G5zWJK7XtRq
+	7mxq/D/X0MtneUCFxdoNkzsLJ4PQ8SkGRKNmd3lAgmJHnelZ7WJtpmbxOsxNPr9FwrTVKd
+	O/uTUfjFaUUyMnyOEEqeIOATefBXKAZ0wMrxaUJUQI2ccRuSGphAO6RWBEtgK4aSKx4qUZ
+	VwIo9f5FKqq+IuZIg7VcHwXo/++6MiGsljVcYOsIieLXAL/VSWtxo1fB1R4QoA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740687683;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ONSa22HSm7xGBZSnEu6JEbkICzapN8ExCxJSd8trR4A=;
+	b=7qetVH1Z48HD4Z8nn0pW8nuDC3bj5PiXyV7Y5ndi06qOBYg3mvV6GthkkALiHX6fo1sUYP
+	p6jCgthWCXlMGTBA==
+From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/asm] x86/bpf: Fix BPF percpu accesses
+Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Uros Bizjak <ubizjak@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250227195302.1667654-1-brgerst@gmail.com>
+References: <20250227195302.1667654-1-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cceb7f8864c43f046cf1c19c3bbcc38a7a57adc5.1740426540.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <cceb7f8864c43f046cf1c19c3bbcc38a7a57adc5.1740426540.git.christophe.jaillet@wanadoo.fr>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 27 Feb 2025 21:20:53 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0heBqYxm4GKN+qRD4Av0FBXQ_HvAhxqd7F+1Zeg9_YG8g@mail.gmail.com>
-X-Gm-Features: AQ5f1JqvOKeZYSCbqVhP6TK4aZ30CmAT7tomqX60PmVO52rKxjibULcDTdD4GQI
-Message-ID: <CAJZ5v0heBqYxm4GKN+qRD4Av0FBXQ_HvAhxqd7F+1Zeg9_YG8g@mail.gmail.com>
-Subject: Re: [PATCH] thermal: intel: Remove a useless operation in int340x_thermal_zone_add()
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174068768313.10177.13465442167535423659.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 8:50=E2=80=AFPM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
->
-> 'zone_trips' has just been allocated with kzalloc(), so .flags is known t=
-o
-> be 0. Remove the useless | when assigning THERMAL_TRIP_FLAG_RW_TEMP.
->
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> This was added in commit cca52f696952 ("thermal: intel: Set
-> THERMAL_TRIP_FLAG_RW_TEMP directly")
-> ---
->  drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c=
- b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> index 8dca6a6aceca..b43d848e66b8 100644
-> --- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> +++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-> @@ -143,7 +143,7 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(=
-struct acpi_device *adev,
->         for (i =3D 0; i < trip_cnt; i++) {
->                 zone_trips[i].type =3D THERMAL_TRIP_PASSIVE;
->                 zone_trips[i].temperature =3D THERMAL_TEMP_INVALID;
-> -               zone_trips[i].flags |=3D THERMAL_TRIP_FLAG_RW_TEMP;
-> +               zone_trips[i].flags =3D THERMAL_TRIP_FLAG_RW_TEMP;
->                 zone_trips[i].priv =3D THERMAL_INT_TO_TRIP_PRIV(i);
->         }
->
-> --
+The following commit has been merged into the x86/asm branch of tip:
 
-Applied as 6.15 material with edits in the subject and changelog, thanks!
+Commit-ID:     18cdd90aba794333f4c6dce39f5c3fe642af5575
+Gitweb:        https://git.kernel.org/tip/18cdd90aba794333f4c6dce39f5c3fe642af5575
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Thu, 27 Feb 2025 14:53:02 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 27 Feb 2025 21:10:03 +01:00
+
+x86/bpf: Fix BPF percpu accesses
+
+Due to this recent commit in the x86 tree:
+
+  9d7de2aa8b41 ("Use relative percpu offsets")
+
+percpu addresses went from positive offsets from the GSBASE to negative
+kernel virtual addresses.  The BPF verifier has an optimization for
+x86-64 that loads the address of cpu_number into a register, but was only
+doing a 32-bit load which truncates negative addresses.
+
+Change it to a 64-bit load so that the address is properly sign-extended.
+
+Fixes: 9d7de2aa8b41 ("Use relative percpu offsets")
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250227195302.1667654-1-brgerst@gmail.com
+---
+ kernel/bpf/verifier.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 9971c03..f74263b 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -21692,7 +21692,7 @@ patch_map_ops_generic:
+ 			 * way, it's fine to back out this inlining logic
+ 			 */
+ #ifdef CONFIG_SMP
+-			insn_buf[0] = BPF_MOV32_IMM(BPF_REG_0, (u32)(unsigned long)&pcpu_hot.cpu_number);
++			insn_buf[0] = BPF_MOV64_IMM(BPF_REG_0, (u32)(unsigned long)&pcpu_hot.cpu_number);
+ 			insn_buf[1] = BPF_MOV64_PERCPU_REG(BPF_REG_0, BPF_REG_0);
+ 			insn_buf[2] = BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF_REG_0, 0);
+ 			cnt = 3;
