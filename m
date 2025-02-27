@@ -1,213 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E069223A9BA;
-	Thu, 27 Feb 2025 14:43:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29F16239594
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667423; cv=none; b=hYr1ccT62A2GFLshX5zpaz6WUALFnUQknDihkgxi2WlGWXwDMuGsiBJWwkcc76NCSTugiKuEtWp7w1u5sDtQg644f3Kf52DLjq+6yPRaeAi2HG0tVanY+U0FklcWwz05fyJgxtv/kgbqPi0IyXlIvi2E71Rjqcsvgtu48YWpVPI=
+	t=1740667470; cv=none; b=nmRQ2obYSRNdwRkSJkIt0RLEf+rlhwtJ1x+DaOuqWZfFdxmGBM7YnzYkTEu2OjuTtyve2Sg2o+UF6Apgk9nUQQ8WoFA/fIqHBo47nqrnR/DaScDglNE1U+K0H/mclQhIFAfwtyii/P7psqjiypeQyIr1xEujtxhW8ESsQHzI3Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667423; c=relaxed/simple;
-	bh=PKuqM641cYDMmskSgB/xhgz4dLSt0mry+F0+ufVbEKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MSFppLP9/ntOFApbqrGIF2goqfruz3P8+9+WQL0/ZtPgERQWE1cgOr/rRSvlr7ECgGu7UIv3teW3kzMuf4+q0s85yRqMmR6Su/ogwHU95+1vNvlKmBvkIjImDcJLKQXAl9sZd2oBqyTIjbAIGSW3Kyv6Phl6mjKFa2K8zBNQ1tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHRuQi8y; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHRuQi8y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740667422; x=1772203422;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PKuqM641cYDMmskSgB/xhgz4dLSt0mry+F0+ufVbEKM=;
-  b=IHRuQi8yjDU5/HnMMB7WMUKabPu68IbOzH7f5m/qL96v2egKIphZfWQD
-   gn8Ng8c0+SMoRLPuGBEWCCS701et9K5tUy30GPxcsm6tfHonJGgmjXZTo
-   tGeAufYPub1ROJ/MuT6SmrQZ+lxew2laAAWGj9yy2T9nPXKSNpDRmw8X0
-   PW+pVRkxUl6GILSfHcIlC+YX92DxsR0WlH9WJgmeV9SbmB+af1XUV5E5w
-   oXbMZH9W0qecGC8FUwqzpNnXmo2Me4J0SmCxMyJO7f3U4AOxz4SMRiaJ6
-   Ryg2U33UOoS+GCuxY26rIgsJf24oTEhGLiNT/5nDdHXb48qJim5Pky1kl
-   Q==;
-X-CSE-ConnectionGUID: UkQq+PJSSJ+8Z4gbpkHh3w==
-X-CSE-MsgGUID: Z0lYpalQQkWiTwfVIFYcMQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="44384154"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="44384154"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:43:38 -0800
-X-CSE-ConnectionGUID: kzNVvKU3RTmfNsZxGFknug==
-X-CSE-MsgGUID: ImErlco9RJ6Ujqi/CBDfqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117558281"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:43:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnf6l-0000000FcjH-3wGS;
-	Thu, 27 Feb 2025 16:43:27 +0200
-Date: Thu, 27 Feb 2025 16:43:27 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"apw@canonical.com" <apw@canonical.com>,
-	"joe@perches.com" <joe@perches.com>,
-	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
-	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	"sven@svenpeter.dev" <sven@svenpeter.dev>,
-	Janne Grunau <j@jannau.net>,
-	"alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
-	Asahi Linux Mailing List <asahi@lists.linux.dev>
-Subject: Re: [PATCH v4] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Z8B6DwcRbV-8D8GB@smile.fi.intel.com>
-References: <DB7F502D-1477-49C9-A36D-1DEE408ED23C@live.com>
+	s=arc-20240116; t=1740667470; c=relaxed/simple;
+	bh=zAINs7GPCk8/jWoubUq2mFznEb7e0XOW/hlE5X8vq2A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ouxj0m9RKBdFAj/k7Yfj0Yx0nwflfuHI1H+8ZyGspp63mEQOa0VNgsC9HSurWQPBrFij3Zb5JZLMb9YlQDchbPZwyW2fdU2G5TZbsJbAMNMPm7/rj+AYiT4yxsx8O/iLHH727rUCOOqen2WkCEV1wDZ95s6qvqYbmaWUyCTE4eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C9032BCA;
+	Thu, 27 Feb 2025 06:44:44 -0800 (PST)
+Received: from [10.1.30.50] (e122027.cambridge.arm.com [10.1.30.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BFEC3F673;
+	Thu, 27 Feb 2025 06:44:25 -0800 (PST)
+Message-ID: <2876ee3a-8725-43fc-aee3-3c4b10a62f67@arm.com>
+Date: Thu, 27 Feb 2025 14:44:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB7F502D-1477-49C9-A36D-1DEE408ED23C@live.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/4] drm/panfrost: Use
+ GPU_MMU_FEATURES_VA_BITS/PA_BITS macros
+To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc: boris.brezillon@collabora.com, robh@kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, simona@ffwll.ch
+References: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
+ <20250226183043.140773-2-ariel.dalessandro@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250226183043.140773-2-ariel.dalessandro@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 27, 2025 at 06:30:48AM +0000, Aditya Garg wrote:
-> From: Hector Martin <marcan@marcan.st>
+On 26/02/2025 18:30, Ariel D'Alessandro wrote:
+> As done in panthor, define and use these GPU_MMU_FEATURES_* macros,
+> which makes code easier to read and reuse.
 > 
-> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
+> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
 
-FourCC (as Four is not an acronym itself).
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-> it's useful to be able to print generic 4-character codes formatted as
-> an integer. Extend it to add format specifiers for printing generic
-> 32-bit FOURCCs with various endian semantics:
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c  | 6 ++++--
+>  drivers/gpu/drm/panfrost/panfrost_regs.h | 2 ++
+>  2 files changed, 6 insertions(+), 2 deletions(-)
 > 
-> %p4ch   Host-endian
-
-Too many spaces :-)
-
-> %p4cl	Little-endian
-> %p4cb	Big-endian
-> %p4cr	Reverse-endian
-
-> The endianness determines how bytes are interpreted as a u32, and the
-> FOURCC is then always printed MSByte-first (this is the opposite of
-> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> allow printing LSByte-first FOURCCs stored in host endian order
-> (other than the hex form being in character order, not the integer
-> value).
-
-...
-
-> +Generic FourCC code
-> +-------------------
-> +
-> +::
-> +	%p4c[hrbl]	gP00 (0x67503030)
-> +
-> +Print a generic FourCC code, as both ASCII characters and its numerical
-> +value as hexadecimal.
-> +
-> +The additional ``h``, ``r``, ``b``, and ``l`` specifiers are used to specify
-> +host, reversed, big or little endian order data respectively. Host endian
-> +order means the data is interpreted as a 32-bit integer and the most
-> +significant byte is printed first; that is, the character code as printed
-> +matches the byte order stored in memory on big-endian systems, and is reversed
-> +on little-endian systems.
-
-Btw, this sounds to me that 'h' should be accompanied with 'n', otherwise it's
-confusing why BE is the host order out of the blue.
-so, it needs more information that this mimics htonl() / ntohl() for networking.
-
-Does 'r' actually should be 'n'?
-
-> +Passed by reference.
-> +
-> +Examples for a little-endian machine, given &(u32)0x67503030::
-> +
-> +	%p4ch	gP00 (0x67503030)
-> +	%p4cr	00Pg (0x30305067)
-> +	%p4cb	00Pg (0x30305067)
-> +	%p4cl	gP00 (0x67503030)
-> +
-> +Examples for a big-endian machine, given &(u32)0x67503030::
-> +
-> +	%p4ch	gP00 (0x67503030)
-> +	%p4cr	00Pg (0x30305067)
-> +	%p4cb	gP00 (0x67503030)
-> +	%p4cl	00Pg (0x30305067)
-> +
-
-...
-
-> +	switch (fmt[2]) {
-> +	case 'h':
-> +		val = orig;
-> +		break;
-> +	case 'r':
-> +		orig = swab32(orig);
-> +		val = orig;
-> +		break;
-> +	case 'l':
-> +		orig = (__force u32)cpu_to_le32(orig);
-> +		val = orig;
-> +		break;
-> +	case 'b':
-> +		orig = (__force u32)cpu_to_be32(orig);
-> +		val = orig;
-> +		break;
-> +	case 'c':
-> +		/* Pixel formats are printed LSB-first */
-> +		val = swab32(orig & ~BIT(31));
-> +		pixel_fmt = true;
-> +		break;
-> +	default:
-> +		return error_string(buf, end, "(%p4?)", spec);
-> +	}
-
-Actually you can replace all these orig copies by introducing a new boolean, pixel_be.
-
-Will become
-
-	switch (fmt[2]) {
-	case 'h':
-		val = orig;
-		break;
-	case 'r': // or 'n' ?
-		val = swab32(orig);
-		break;
-	case 'l':
-		val = (__force u32)cpu_to_le32(orig);
-		break;
-	case 'b':
-		val = (__force u32)cpu_to_be32(orig);
-		break;
-	case 'c':
-		pixel_fmt = true;
-		pixel_be = orig & BIT(31);
-		/* Pixel formats are printed LSB-first */
-		val = swab32(orig & ~BIT(31));
-		break;
-	default:
-		return error_string(buf, end, "(%p4?)", spec);
-	}
-
-And with this the existence of 'val' now becomes doubtful, we may reuse 'orig',
-just name it 'val' everywhere, no?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> index b91019cd5acb..7df2c8d5b0ae 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+> @@ -615,6 +615,8 @@ static void panfrost_drm_mm_color_adjust(const struct drm_mm_node *node,
+>  
+>  struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
+>  {
+> +	u32 va_bits = GPU_MMU_FEATURES_VA_BITS(pfdev->features.mmu_features);
+> +	u32 pa_bits = GPU_MMU_FEATURES_PA_BITS(pfdev->features.mmu_features);
+>  	struct panfrost_mmu *mmu;
+>  
+>  	mmu = kzalloc(sizeof(*mmu), GFP_KERNEL);
+> @@ -633,8 +635,8 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
+>  
+>  	mmu->pgtbl_cfg = (struct io_pgtable_cfg) {
+>  		.pgsize_bitmap	= SZ_4K | SZ_2M,
+> -		.ias		= FIELD_GET(0xff, pfdev->features.mmu_features),
+> -		.oas		= FIELD_GET(0xff00, pfdev->features.mmu_features),
+> +		.ias		= va_bits,
+> +		.oas		= pa_bits,
+>  		.coherent_walk	= pfdev->coherent,
+>  		.tlb		= &mmu_tlb_ops,
+>  		.iommu_dev	= pfdev->dev,
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_regs.h b/drivers/gpu/drm/panfrost/panfrost_regs.h
+> index c7bba476ab3f..b5f279a19a08 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_regs.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_regs.h
+> @@ -16,6 +16,8 @@
+>  #define   GROUPS_L2_COHERENT		BIT(0)	/* Cores groups are l2 coherent */
+>  
+>  #define GPU_MMU_FEATURES		0x014	/* (RO) MMU features */
+> +#define  GPU_MMU_FEATURES_VA_BITS(x)	((x) & GENMASK(7, 0))
+> +#define  GPU_MMU_FEATURES_PA_BITS(x)	(((x) >> 8) & GENMASK(7, 0))
+>  #define GPU_AS_PRESENT			0x018	/* (RO) Address space slots present */
+>  #define GPU_JS_PRESENT			0x01C	/* (RO) Job slots present */
+>  
 
