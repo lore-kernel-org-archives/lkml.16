@@ -1,96 +1,174 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5715674E
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E688A38F91
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740616452; cv=none; b=b/36zSzn7MJPTwG5M5R+SPBHQYKV0OZGl5VxgL4JKjJqK7DT+A7IqwkjveOo5sr079dUkOpdpTLD0EP8c67tGHb3PP3FFbZ9hA98/d6/62EuuUJpxEVFChhuRbikYVsUA4t7leBVAgiKQzRwxgf2pvBb7FcB1056qXmRxThg+M8=
+	t=1740616454; cv=none; b=GETwCJR1AiWFPFXcNZJmd5vU2slUNOgbAQd56vzb7fFSIB4FH1LGgPmozYMBFVJCr6jEOHZwXDRGRTwmOr+OX6HeGj8Cdh2NQsLIk4mNk32756te8hr7x5CSqFx7MegDuiSIEAnN12lR+q629kW8alnUKxxtlgbdb7drBmyw7ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740616452; c=relaxed/simple;
-	bh=e0m85e3y2dJr+vnbmMvuCtrUbcNjlRo6dsWIZjIM6OY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dJ+738DdEoTOfPOdLK+D6kkzlD6q/IXGSvd26i21ibBIfEbQIHsU+j+biq9shpfrqm5sxn80DyGvGK2IkqG6H7cZqLl0VxPywO7bZHzQ6Z1WMcMOww0h3kFJtzjuMvO+1SZFLdfvpwi1TeGy+cJWjOdwWcKE5Lw4xl5Ub15iI+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pteHu9T6; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740616454; c=relaxed/simple;
+	bh=nU3y6YFsyIHN1dmjBlB/Wl3ngK6IdRrA1IoHzKQzagI=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Zy3VcOgkfNNI8F+Qca1sXyO1T5O3J3iz3KQBl17gYthITSBRSX/dOYDtZTBvtoEt1MMXrFI3KP0ngMuZOpRm0KKus0SOUuYAxzuC1/MwvIFJN8VqC6NCxWtz4u9TVkDMwe5o8EYTsBZRE5SuL4YKSeMK/hZ6qreXmLX2FL8Mgds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tJGNsDd4; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pteHu9T6"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5462ea9691cso343207e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:34:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tJGNsDd4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fbff6426f5so831161a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:34:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740616449; x=1741221249; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e0m85e3y2dJr+vnbmMvuCtrUbcNjlRo6dsWIZjIM6OY=;
-        b=pteHu9T6W2F7U+uLiMliilAnz6MddKVP31ABsypnOxNc/eaMJyRwMP0xTf6E0juMdw
-         Kwin3Hg0Pk56Z5s7OBhk21xvT43B/MCbCV3owZQk/fgvCtIkOQ5Itz3rIcu3fdCqs/qZ
-         hnS/y0BhmZqL0oo23m3IYT9GDzbYm59jQ6xoed+PIGHt7xAM6AZdBUhx00thfcsjP4BJ
-         Adkcmt4LXu6sU3z293EO+XEQjKVCshBJUfTqCzv/zm1fT4irObEasWVeXXfJdm0YXqMM
-         CvhA3pXQFAuRaCF63WaKWUziG/0gaPGsTbRB9deh+Q8HP4B4kx1LnbJ6YZGk9KIQMDLY
-         wE1A==
+        d=google.com; s=20230601; t=1740616452; x=1741221252; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jUI6/1gyibvrTbWNNqX1qF+Ovy2PNmTRwmWu1BHDQsE=;
+        b=tJGNsDd4UQqaOUBjs7F3CpZelhQDaj3fW7BWfmUdKXHADURkk3RVKFwl+KUqmmovty
+         JdOjuHilYkHbff82Tbc7F+gRuL4cVBh/D7pc7yhutFqsp42LsLT3rDEyUhDxwimKBMYy
+         KtvqNMRup+Ycmqot92kIKlr5u9Bp932y9ox3jZ4K9GnXjX+EG0JZHPtf47ZK2EruTy6G
+         E/9KSgECtY6ZLih+mypFMSb2ckt5Z1XgQbbNIY2iLTezvUvhI2UBhr7H2lgWsdjLG+XF
+         MyrMQctISgrDGebABO1FopAdPgtNRAXDswi/gcXIg8Sh9Oz/XYahPFu31LqIDF6rA72L
+         8nRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740616449; x=1741221249;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e0m85e3y2dJr+vnbmMvuCtrUbcNjlRo6dsWIZjIM6OY=;
-        b=v7FKS8vbCoGr+G2XgxhWcYMVggLq8o9n0pnZyx4cv67Qweo8isEfg08qL/XlbFLura
-         VeCOCXatJjMFRRBdlYwU6J4j1wQ55OMXwpiDRuhVqoGlIjMTkV0qiVMTFn/hOuwoNRDh
-         qd4bMIamkqGmSo/bKaesqkympdJCHLOFS+7UDQlqa5zR1bfdDMQbpCmS3ljDPv9Drodh
-         FAVQccLPwQq7PJhztxxPJZtcNSqazn6wJXWzAlcbZ26AOjiMRMUVqP+FqjgPQysfdPLt
-         wY7l+gCLV7LMhEEBd9Ng0akRq7gBZnT1m35zCKgXY6XzGRBeihWcVlJE43HbAhfR5Pac
-         9P9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVY5J4WEWzWQLBGM3gmND8DoTEPpYkQ2HVo587yg3AoPbZ2TfRJX7CcZE0PazUp5584n9tlhWrPgaCHm9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ1Bw14X5pfXc65cdLicLPHA1Lgt9ySR8Rqmw0En7x3sCP5kKJ
-	gBo5QeszYum/H30xJ2mqw+bJTRCZ0bE5tG0NP5kbLflxg3LuGj3zHSXPYCHzhBcIHrGJBUXlf5w
-	gG2Ll/E4+nWcYi85m8AAUBQ2Tb1+fMxEonHaNCw==
-X-Gm-Gg: ASbGncs+8AsluxfgSRmME8I7ACh93rSdoWI6EBC/MVAKKLdNCJOX5uYMDXoyOYHOQ0j
-	9kiceEaYqb1x4lW6WvuJKltLv0b6zTDdOV43cXPMiw8of7qjb4l+JUUY92OZmfMsjeb+6XXbHAD
-	/ItapvaDU=
-X-Google-Smtp-Source: AGHT+IGk0bwizeRVbg8pZ8WmjGM8S00+LUG1kQZiLI2mX2EgJo48gbUR5HjgaprWg2ADtOmxLRe5adqlJ0n1Ufx5jUU=
-X-Received: by 2002:a05:6512:39c9:b0:545:e2e:843a with SMTP id
- 2adb3069b0e04-5493c5b85e0mr3233639e87.38.1740616448603; Wed, 26 Feb 2025
- 16:34:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740616452; x=1741221252;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jUI6/1gyibvrTbWNNqX1qF+Ovy2PNmTRwmWu1BHDQsE=;
+        b=eXt/vvsmT5C4Mb2r7joFsKEXj0BPUkroxG7r2/sxXJihxS9uxiC/2iETkADeaMtRPZ
+         h03sML9Wczd/Y9ooVYePDnBLOp61NHlI5l6NFRwPRncgsG9E1keh8pPg9OMweFEM3R0y
+         TlYRG0g2fLdqwOC9eRjWS/STUF7b46//uisjpvMBdJ0Il1f2IUJur4wKfcdjb2I/t6nd
+         54GgWTDTSTRx1PtcxT1tJ1c9N9B5k7Tf+Mkneec8WXC7R2AXMzGVnZKu4A/AyvoW29I5
+         fpz71Sl4S+bn2+hWF7ONIt2xAusDrfFvkAyJqyAHPy13k2d/o0lbEYKRXNIrZFwyNptI
+         Q+fA==
+X-Gm-Message-State: AOJu0YybYHdtupGc3zaxxeKKuH9u6XAzxqjZxYbtUA7HCEka9ZVWQ0pY
+	H+uMJuVdtUN+X0S2D5DoF9S29TjBWq0T3bcEd2pEgJpLUyXAJDmsS5rUKOmQGlippDK0yvHad78
+	YCKIIrK7J4lMZhpSTGsFb+z84l/C/5B3ICvfH6he5RBRU/ZC39RC4Bd19dP1Kp9QGlNH6lKJI6e
+	umsSaRAf6F0FuEnLv9prACO+F1dcQOLDF/yunbZIMD
+X-Google-Smtp-Source: AGHT+IHDAQK/BsvI6mzuilkbqC4HRSy4qcc5tMuIfa3jBRAGH5Fcp4vFyNJuSfyPfVtwa/ebYbFuN9eV1F4=
+X-Received: from pfbf4.prod.google.com ([2002:a05:6a00:ad84:b0:730:94db:d304])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a103:b0:1ee:de1d:5abc
+ with SMTP id adf61e73a8af0-1f0fc78bfe1mr13706786637.33.1740616451981; Wed, 26
+ Feb 2025 16:34:11 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:28:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250213-for_upstream-v2-0-ec4eff3b3cd5@analog.com>
- <20250213-for_upstream-v2-2-ec4eff3b3cd5@analog.com> <CACRpkdZR8X17Bn-i2anqjxf0Gk60V175F7Xfwytkhy7_K+LsSA@mail.gmail.com>
- <880631da17a6d8ed4afe5a8c453fd4f7d0e4fca5.camel@gmail.com>
- <CACRpkda+CDRMYKmjw7kewenkteLhPYb040E4B=ZG6pgdy=65pg@mail.gmail.com> <PH0PR03MB71419BE3FCE2DAE8AB72B79EF9FB2@PH0PR03MB7141.namprd03.prod.outlook.com>
-In-Reply-To: <PH0PR03MB71419BE3FCE2DAE8AB72B79EF9FB2@PH0PR03MB7141.namprd03.prod.outlook.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 27 Feb 2025 01:33:57 +0100
-X-Gm-Features: AQ5f1JpLuJfZaZl_9L9BlB0RNZAYLUnV2bfevXjy2bS7H0GjQDbQCA5UMhow8GI
-Message-ID: <CACRpkdaMBpUNHQu4kW0s0pDJSZ3M2GvNB7mY7DbnYuboebtgbg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: gpio-adg1414: New driver
-To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-Cc: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-iio <linux-iio@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250227003359.732948-1-ctshao@google.com>
+Subject: [PATCH v8 0/4] Tracing contention lock owner call stack
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 17, 2025 at 8:02=E2=80=AFAM Paller, Kim Seer
-<KimSeer.Paller@analog.com> wrote:
+For perf lock contention, the current owner tracking (-o option) only
+works with per-thread mode (-t option). Enabling call stack mode for
+owner can be useful for diagnosing why a system running slow in
+lock contention.
 
-> In my opinion, using the GPIO subsystem for the ADG1414 may be a better o=
-ption
-> given the intended use case. However, what do you suggest on how to proce=
-ed?
+Example output:
+  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex -E16 perf bench sched pipe
+   ...
+   contended   total wait     max wait     avg wait         type   caller
 
-I think it's best to proceed with a GPIO driver unless someone has
-better ideas.
+         171      1.55 ms     20.26 us      9.06 us        mutex   pipe_read+0x57
+                          0xffffffffac6318e7  pipe_read+0x57
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+          36    193.71 us     15.27 us      5.38 us        mutex   pipe_write+0x50
+                          0xffffffffac631ee0  pipe_write+0x50
+                          0xffffffffac6241db  vfs_write+0x3bb
+                          0xffffffffac6244ab  ksys_write+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           4     51.22 us     16.47 us     12.80 us        mutex   do_epoll_wait+0x24d
+                          0xffffffffac691f0d  do_epoll_wait+0x24d
+                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
+                          0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           2     20.88 us     11.95 us     10.44 us        mutex   do_epoll_wait+0x24d
+                          0xffffffffac691f0d  do_epoll_wait+0x24d
+                          0xffffffffac693943  __x64_sys_epoll_wait+0x73
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           1      7.33 us      7.33 us      7.33 us        mutex   do_epoll_ctl+0x6c1
+                          0xffffffffac692e01  do_epoll_ctl+0x6c1
+                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           1      6.64 us      6.64 us      6.64 us        mutex   do_epoll_ctl+0x3d4
+                          0xffffffffac692b14  do_epoll_ctl+0x3d4
+                          0xffffffffac6937e0  __x64_sys_epoll_ctl+0x70
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
 
-Address my comments on the regmap use please!
+  === owner stack trace ===
 
-Yours,
-Linus Walleij
+           3     31.24 us     15.27 us     10.41 us        mutex   pipe_read+0x348
+                          0xffffffffac631bd8  pipe_read+0x348
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+  ...
+
+v8:
+  Fix compilation error found by Athira Rajeev and Namhyung Kim.
+
+v7: lore.kernel.org/20250224184742.4144931-1-ctshao@google.com
+  Remove duplicate contention records.
+
+v6: lore.kernel.org/20250219214400.3317548-1-ctshao@google.com
+  Free allocated memory in error patch.
+  Add description in man page.
+
+v5: lore.kernel.org/20250212222859.2086080-1-ctshao@google.com
+  Move duplicated code into function.
+  Remove code to retrieve undesired callstack at the end of `contention_end()`.
+  Other minor fix based on Namhyung's review.
+
+v4: lore.kernel.org/20250130052510.860318-1-ctshao@google.com
+  Use `__sync_fetch_and_add()` to generate owner stackid automatically.
+  Use `__sync_fetch_and_add(..., -1)` to workaround compiler error from
+    `__sync_fetch_and_sub()`
+  Remove unnecessary include headers.
+  Dedicate on C-style comment.
+  Other minor fix based on Namhyung's review.
+
+v3: lore.kernel.org/20250129001905.619859-1-ctshao@google.com
+  Rename/shorten multiple variables.
+  Implement owner stackid.
+  Add description for lock function return code in `contention_end()`.
+  Other minor fix based on Namhyung's review.
+
+v2: lore.kernel.org/20250113052220.2105645-1-ctshao@google.com
+  Fix logic deficit in v1 patch 2/4.
+
+v1: lore.kernel.org/20250110051346.1507178-1-ctshao@google.com
+
+Chun-Tse Shao (4):
+  perf lock: Add bpf maps for owner stack tracing
+  perf lock: Retrieve owner callstack in bpf program
+  perf lock: Make rb_tree helper functions generic
+  perf lock: Report owner stack in usermode
+
+ tools/perf/Documentation/perf-lock.txt        |   5 +-
+ tools/perf/builtin-lock.c                     |  56 +++-
+ tools/perf/util/bpf_lock_contention.c         |  85 +++++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 245 +++++++++++++++++-
+ tools/perf/util/bpf_skel/lock_data.h          |   7 +
+ tools/perf/util/lock-contention.h             |   7 +
+ 6 files changed, 372 insertions(+), 33 deletions(-)
+
+--
+2.48.1.658.g4767266eb4-goog
+
