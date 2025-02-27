@@ -1,131 +1,203 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D790B187858;
-	Thu, 27 Feb 2025 02:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1381A5B8E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740622742; cv=none; b=jZR0cegQ+JM3RzG+siut0f1YkM80IA8DIrE80jodp9YfYO2hPMY5+GUT464bxPWP9ZsE6+6iPHMyyqLl4t9ApmjlVQTeOK/yOq7wMUkhdhoLXglN1CB0AZIx+NoecLgNX7MlS20KSfIyuKvKjy+CKgxuiFJBwf7oCVQkevc9P3A=
+	t=1740622745; cv=none; b=oLiKvSus/EYAGXtjMNejdbWJLO5xan5J0WI6pa6+eRXmtCMDAEsGxLAYtLoVfZWJbmkfTVs+mQLuyPOsj2Mcn+qI7VzchaZwszteR20Rm2zGfJlulyGFFevorDbcMZirplsDGFD9xWn5/wqxtXgigsgCbvxLvVtM01X0gEhAYR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740622742; c=relaxed/simple;
-	bh=E5oKEM4c3dUDoG1C3Apf7XUAQ1dqHQWFDZ7U0uJWOW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7FJsqsdTqfccdtHapdWuB0N2OBYuw4CxXZ4ZdMLSjc9XDyZzLaQLMn5vPbC7l8lujjFd0sB1NQ4UHeYmMD4LSR5rGZP55grWUAO7UxUu6eH1KO2Wdflq5MyWJMW5DJU8Vyrecp+7D1izI+ny4HCRxe4iYIQHGxxzxcm/mmoJBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kbOXVG2d; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740622745; c=relaxed/simple;
+	bh=6vzm1ly57iavrGyYCwy8YTCbhY8JsEYqKT94TS5Hqqk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=J7hLFez7WAaumj59oNhgKWfLI5tBoySUrMpO63Ljnl+OvXpY9AfFaaTQyG6rDu0IOmATfkttQkE5RssLtznM4PqIz9aEEluyQsa+Kx+2eotWI0w7Pz7fMcmQ/V6kkEvr4Uxyh/8wudtB7Qqh0bthYpMtMbL0fvEfuLRjGJFeIUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sVdrYkSc; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kbOXVG2d"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-390df0138beso199348f8f.0;
-        Wed, 26 Feb 2025 18:19:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sVdrYkSc"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fe98fad333so1065118a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 18:19:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740622739; x=1741227539; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RKgnaqO1THtjCOxWh4A+wQIkk3mMpJl1DZhYW099CWc=;
-        b=kbOXVG2d6ndBV6HXs5bmrK1b5jKSA5fwunkv/cmQDS/Xpe1G4yq2dTnV8wJPv1/oy8
-         gPnrPZfAuOsNaCbwYwXTTK41wo+MYHlkd+cubq6L8DevX7RKH6jTOWnAzjlMMDpPkY6v
-         Qgrpy7MnuNpz+Wfeh/g3PpUJUbvP5zmyBRpHevv+kJ6YgXxRAK2gcA0W4BgyISdTSfsh
-         ZnTylQqKsPQmcoeTh5Vxiy6zMw0G/msacur8Z1t3HAVeVNw+YofU6p5lL6LBTwwWgLMf
-         Hxr/G6AiA7JRjSSVvQ8XADFJlwqkjqYL37zCaHketiGOj/gM4/0W0bqm1sGBZbaZZ2fE
-         OrFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740622739; x=1741227539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=google.com; s=20230601; t=1740622743; x=1741227543; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RKgnaqO1THtjCOxWh4A+wQIkk3mMpJl1DZhYW099CWc=;
-        b=Se8SriPn1igJp2wFwOqx1rfOaynZme/eCTy5VYXFzisbhflvfK9teUsxK0uK2qjUqz
-         wxe7ccoEJq+OLNKASixw0qE0WPNACNBy/wWTy5HDYUme0upFcxua58g3Ko8SIoXHRQ0x
-         aC4MC+TLYMkGJt6UgR41XUe6Aa9XrHsYNQLdSghs1YrfsdUGY5nn96ymSe6eJxc2bnTR
-         7wFhtZZrs6JWOW/OEZfJysUpLwKrhSV/GZ1dHrgJPKwkA0IjbGXSgR/H+30+a0bAreFO
-         pGLEkoG3VQp7B2vckJtB5mCzDYY+hFohxHE0a3880YhkeiXcmxf3HK6ZEsKrPQYFGL8b
-         xCcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXANHPaM8IyJvrAM2oh3uRhUjGYMGJasq0woUOhhiOFYwj1nIAtDnxjT4IbQ5gPhUjk0zFC1sUJzdaKIJ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeCj3ZIg98zCG/vhuVLHZvewLl3B3n7vMd+w9P/mNjOVx63RIn
-	hPPr+/mQgf1jn8SC3zadFhP5BO/CB7iKZigtKrDI6AtdNihzVzjDMSwh9sNy1BA4YrtVPZ086pU
-	BLyAKiYmxwvyxLkjTf7t/6d92aJc=
-X-Gm-Gg: ASbGncv63+GyMfASUaIr9mgQT1xY/zvTne87AgW5onqQvKtibMn3jj956GytKJTRsvz
-	Omg7oBWkgqSX78uluUeZC4FVthwT2P+xdB7JSqrS1d25sxqcipMmre9+Q20/PbTNjS/7xq5i6pP
-	uNUNSFrPthrlMwcgqsdWGEods=
-X-Google-Smtp-Source: AGHT+IFj9lP3GWA+vKa3jAcVVxBcG8NT2uVfgsPyo0nWKDEklwxzkOv8eMk1aaXCnVCJDi5nTjn07mT717GUMuR0kVg=
-X-Received: by 2002:a5d:47ac:0:b0:38f:516b:5429 with SMTP id
- ffacd0b85a97d-38f6e96738amr24102168f8f.25.1740622739040; Wed, 26 Feb 2025
- 18:18:59 -0800 (PST)
+        bh=st/MNJiEmtSZ09xGK+8+BbgbXd3TSC2HpMD5MWqL4Rs=;
+        b=sVdrYkSci4HVmlUTo1W9WrFUdNNlNCBkbdq4grOsM0g+75OJJsta0WdjChwP80OOfq
+         SANifiHZvtGZ8LuCDW18/zW0cDy9jGfyfWgtALPY0i7dfCUbAvIxE4waZgLOLUR7wPl2
+         lB7gWBuyoC+I5J+FOjl8IPtxAjsEI6Qlx02tjvjJy0Wj7iOXZWuplePtmZMyaTc43tgT
+         i3OJbbU8wu4UZVvMOHAtfudSUcwqAPdi3mbbzGMgLDhwF9on1fe2FFsz855PgBDL7m2v
+         esMJ3YvIdXmZ8tadTksj/1CGnldcvC/wG/QYv4BGr0kfuSVTDZGNOXWtU7/17S0WOR+8
+         tjZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740622743; x=1741227543;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=st/MNJiEmtSZ09xGK+8+BbgbXd3TSC2HpMD5MWqL4Rs=;
+        b=gP1J+b/UWqTf64uEWRD10WYTk2fxwzHhc6/5D6E6nnycvKnv9q6J+qrGfyGwWDBn3R
+         tDV8vaK+5n4ON6t/1oBqZAAwqGj990xyBfQ+nWiNWKv7Uc4T+oug49kw2LEazl6bRVuy
+         bHAf19a30lCSnPMWHed2FlP/Q0oC1FhawOVLLIVGCeVqJ+tznKFyQ10eGwb1ZTYjM3bO
+         UW7OMIxELNGlPEWVjXsrpv5MxxyOZHJpq+kzMSPAAfGfs38Ppgbmv+Q8Gs1afedRr16F
+         ZgKRI24ne6K45wzQi3Fmu4pIIguuSJuX6BVMs1gY0hwPVCKxD74V3ySDIN9SZM68LYqX
+         QF6Q==
+X-Gm-Message-State: AOJu0Yya6J0l9FAQ/KiYezqd0+3qStaAa4UwzlocFqEsYEIV0F6IK3He
+	YIfAo6+kMML2/J6zlgIfocq48ukFy5JUaa4xY4xirB4jkFTZ3t6q/GBsMlo8jYrSjYN4w9kJJ3+
+	TQg==
+X-Google-Smtp-Source: AGHT+IH0Z5GBXLArvAZe/lakaosQcAMuaUE8ywgN1crYyvWwIhA/1v2sV6rL/y5U8JWXjzB9EKIe2Lk1Tz0=
+X-Received: from pjbqn6.prod.google.com ([2002:a17:90b:3d46:b0:2fc:201d:6026])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17cd:b0:2f9:c139:b61f
+ with SMTP id 98e67ed59e1d1-2fce78a3812mr44219981a91.14.1740622742780; Wed, 26
+ Feb 2025 18:19:02 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed, 26 Feb 2025 18:18:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1740009184.git.yepeilin@google.com> <e2d7bfc155a26305a3024aaa102a3acfa693e565.1740009184.git.yepeilin@google.com>
-In-Reply-To: <e2d7bfc155a26305a3024aaa102a3acfa693e565.1740009184.git.yepeilin@google.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 26 Feb 2025 18:18:47 -0800
-X-Gm-Features: AQ5f1Jq1Bqzfu5XLxkx0XrckAoOp2Oka7xkENl-fqAWdeylPPR2SlLu-E196h-E
-Message-ID: <CAADnVQKEcof-WBBj_W=GpsP0Tjm8hyxeWc06243ZBR7_Ua0Gfg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 4/9] bpf: Introduce load-acquire and
- store-release instructions
-To: Peilin Ye <yepeilin@google.com>
-Cc: bpf <bpf@vger.kernel.org>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, bpf@ietf.org, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Eduard Zingerman <eddyz87@gmail.com>, 
-	David Vernet <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
-	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
-	Benjamin Segall <bsegall@google.com>, LKML <linux-kernel@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+Message-ID: <20250227021855.3257188-1-seanjc@google.com>
+Subject: [PATCH v2 00/38] x86: Try to wrangle PV clocks vs. TSC
+From: Sean Christopherson <seanjc@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>, 
+	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	Dexuan Cui <decui@microsoft.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Jan Kiszka <jan.kiszka@siemens.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	John Stultz <jstultz@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Nikunj A Dadhania <nikunj@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 5:21=E2=80=AFPM Peilin Ye <yepeilin@google.com> wro=
-te:
->
->
-> In arch/{arm64,s390,x86}/net/bpf_jit_comp.c, have
-> bpf_jit_supports_insn(..., /*in_arena=3D*/true) return false for the new
-> instructions, until the corresponding JIT compiler supports them.
+This... snowballed a bit.
 
-...
+The bulk of the changes are in kvmclock and TSC, but pretty much every
+hypervisor's guest-side code gets touched at some point.  I am reaonsably
+confident in the correctness of the KVM changes.  For all other hypervisors,
+assume it's completely broken until proven otherwise.
 
-> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> index a43fc5af973d..f0c31c940fb8 100644
-> --- a/arch/x86/net/bpf_jit_comp.c
-> +++ b/arch/x86/net/bpf_jit_comp.c
-> @@ -3771,8 +3771,12 @@ bool bpf_jit_supports_insn(struct bpf_insn *insn, =
-bool in_arena)
->         if (!in_arena)
->                 return true;
->         switch (insn->code) {
-> +       case BPF_STX | BPF_ATOMIC | BPF_B:
-> +       case BPF_STX | BPF_ATOMIC | BPF_H:
->         case BPF_STX | BPF_ATOMIC | BPF_W:
->         case BPF_STX | BPF_ATOMIC | BPF_DW:
-> +               if (bpf_atomic_is_load_store(insn))
-> +                       return false;
->                 if (insn->imm =3D=3D (BPF_AND | BPF_FETCH) ||
->                     insn->imm =3D=3D (BPF_OR | BPF_FETCH) ||
->                     insn->imm =3D=3D (BPF_XOR | BPF_FETCH))
+Note, I deliberately omitted:
 
-It's border line ok-ish to delay arena ld_acq/st_rel on x86 for a follow up=
-,
-but non-arena on x86 should be done in this patch.
-It's trivial to add support on x86-64 and
-limiting the selftest to:
-.. defined(__TARGET_ARCH_arm64)
-is just not right.
+  Alexey Makhalov <alexey.amakhalov@broadcom.com>
+  jailhouse-dev@googlegroups.com
 
-Even arena ld_acq/st_rel can be done in this patch too.
-It is such a minor addition compared to the rest, so I don't see
-a reason not to do it right away.
+from the To/Cc, as those emails bounced on the last version, and I have zero
+desire to get 38*2 emails telling me an email couldn't be delivered.
 
-pw-bot: cr
+The primary goal of this series is (or at least was, when I started) to
+fix flaws with SNP and TDX guests where a PV clock provided by the untrusted
+hypervisor is used instead of the secure/trusted TSC that is controlled by
+trusted firmware.
+
+The secondary goal is to draft off of the SNP and TDX changes to slightly
+modernize running under KVM.  Currently, KVM guests will use TSC for
+clocksource, but not sched_clock.  And they ignore Intel's CPUID-based TSC
+and CPU frequency enumeration, even when using the TSC instead of kvmclock.
+And if the host provides the core crystal frequency in CPUID.0x15, then KVM
+guests can use that for the APIC timer period instead of manually calibrating
+the frequency.
+
+Lots more background on the SNP/TDX motiviation:
+https://lore.kernel.org/all/20250106124633.1418972-13-nikunj@amd.com
+
+v2:
+ - Add struct to hold the TSC CPUID output. [Boris]
+ - Don't pointlessly inline the TSC CPUID helpers. [Boris]
+ - Fix a variable goof in a helper, hopefully for real this time. [Dan]
+ - Collect reviews. [Nikunj]
+ - Override the sched_clock save/restore hooks if and only if a PV clock
+   is successfully registered.
+ - During resome, restore clocksources before reading persistent time.
+ - Clean up more warts created by kvmclock.
+ - Fix more bugs in kvmclock's suspend/resume handling.
+ - Try to harden kvmclock against future bugs.
+
+v1: https://lore.kernel.org/all/20250201021718.699411-1-seanjc@google.com
+
+Sean Christopherson (38):
+  x86/tsc: Add a standalone helpers for getting TSC info from CPUID.0x15
+  x86/tsc: Add standalone helper for getting CPU frequency from CPUID
+  x86/tsc: Add helper to register CPU and TSC freq calibration routines
+  x86/sev: Mark TSC as reliable when configuring Secure TSC
+  x86/sev: Move check for SNP Secure TSC support to tsc_early_init()
+  x86/tdx: Override PV calibration routines with CPUID-based calibration
+  x86/acrn: Mark TSC frequency as known when using ACRN for calibration
+  clocksource: hyper-v: Register sched_clock save/restore iff it's
+    necessary
+  clocksource: hyper-v: Drop wrappers to sched_clock save/restore
+    helpers
+  clocksource: hyper-v: Don't save/restore TSC offset when using HV
+    sched_clock
+  x86/kvmclock: Setup kvmclock for secondary CPUs iff CONFIG_SMP=y
+  x86/kvm: Don't disable kvmclock on BSP in syscore_suspend()
+  x86/paravirt: Move handling of unstable PV clocks into
+    paravirt_set_sched_clock()
+  x86/kvmclock: Move sched_clock save/restore helpers up in kvmclock.c
+  x86/xen/time: Nullify x86_platform's sched_clock save/restore hooks
+  x86/vmware: Nullify save/restore hooks when using VMware's sched_clock
+  x86/tsc: WARN if TSC sched_clock save/restore used with PV sched_clock
+  x86/paravirt: Pass sched_clock save/restore helpers during
+    registration
+  x86/kvmclock: Move kvm_sched_clock_init() down in kvmclock.c
+  x86/xen/time: Mark xen_setup_vsyscall_time_info() as __init
+  x86/pvclock: Mark setup helpers and related various as
+    __init/__ro_after_init
+  x86/pvclock: WARN if pvclock's valid_flags are overwritten
+  x86/kvmclock: Refactor handling of PVCLOCK_TSC_STABLE_BIT during
+    kvmclock_init()
+  timekeeping: Resume clocksources before reading persistent clock
+  x86/kvmclock: Hook clocksource.suspend/resume when kvmclock isn't
+    sched_clock
+  x86/kvmclock: WARN if wall clock is read while kvmclock is suspended
+  x86/kvmclock: Enable kvmclock on APs during onlining if kvmclock isn't
+    sched_clock
+  x86/paravirt: Mark __paravirt_set_sched_clock() as __init
+  x86/paravirt: Plumb a return code into __paravirt_set_sched_clock()
+  x86/paravirt: Don't use a PV sched_clock in CoCo guests with trusted
+    TSC
+  x86/tsc: Pass KNOWN_FREQ and RELIABLE as params to registration
+  x86/tsc: Rejects attempts to override TSC calibration with lesser
+    routine
+  x86/kvmclock: Mark TSC as reliable when it's constant and nonstop
+  x86/kvmclock: Get CPU base frequency from CPUID when it's available
+  x86/kvmclock: Get TSC frequency from CPUID when its available
+  x86/kvmclock: Stuff local APIC bus period when core crystal freq comes
+    from CPUID
+  x86/kvmclock: Use TSC for sched_clock if it's constant and non-stop
+  x86/paravirt: kvmclock: Setup kvmclock early iff it's sched_clock
+
+ arch/x86/coco/sev/core.c           |   9 +-
+ arch/x86/coco/tdx/tdx.c            |  27 ++-
+ arch/x86/include/asm/kvm_para.h    |  10 +-
+ arch/x86/include/asm/paravirt.h    |  16 +-
+ arch/x86/include/asm/tdx.h         |   2 +
+ arch/x86/include/asm/tsc.h         |  20 +++
+ arch/x86/include/asm/x86_init.h    |   2 -
+ arch/x86/kernel/cpu/acrn.c         |   5 +-
+ arch/x86/kernel/cpu/mshyperv.c     |  69 +-------
+ arch/x86/kernel/cpu/vmware.c       |  11 +-
+ arch/x86/kernel/jailhouse.c        |   6 +-
+ arch/x86/kernel/kvm.c              |  39 +++--
+ arch/x86/kernel/kvmclock.c         | 260 +++++++++++++++++++++--------
+ arch/x86/kernel/paravirt.c         |  35 +++-
+ arch/x86/kernel/pvclock.c          |   9 +-
+ arch/x86/kernel/smpboot.c          |   2 +-
+ arch/x86/kernel/tsc.c              | 141 ++++++++++++----
+ arch/x86/kernel/x86_init.c         |   1 -
+ arch/x86/mm/mem_encrypt_amd.c      |   3 -
+ arch/x86/xen/time.c                |  13 +-
+ drivers/clocksource/hyperv_timer.c |  38 +++--
+ include/clocksource/hyperv_timer.h |   2 -
+ kernel/time/timekeeping.c          |   9 +-
+ 23 files changed, 487 insertions(+), 242 deletions(-)
+
+
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+-- 
+2.48.1.711.g2feabab25a-goog
+
