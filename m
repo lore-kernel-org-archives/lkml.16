@@ -1,127 +1,167 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEDC15278E;
-	Thu, 27 Feb 2025 03:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBC6433C8;
+	Thu, 27 Feb 2025 03:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740626462; cv=none; b=CCAzb/SeJN0LTyZVNINkUp16nnqj7UPVXnZxeRnh4B1SoxH1g5T+1DkZGt7sq+9lmgEfh0OBqe8n2X+Wc1veUrJPvPtgW08iUX5Bc6GCYD0IAFb4mv5Uj+FJtneactkYNNFP7Enw4LFFO3I8Wj1MYmEe9tE49n7cAe/rmEpN/rE=
+	t=1740626813; cv=none; b=JOOziXww+4gSJ0/dX4wuu6a5ICv/IIqd7gp1xdE8gkaiMRN+UQZe22sixZC5OJkMXadah75eh9zjw7FsZi8sWlJphH25utdF0Aj0wVrL/nnV7ALL48TK5iyN99Z7nGofNMGVZGEIlWdv76p/9eS3cIlvJRRbi3TATMQ/zBDVbpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740626462; c=relaxed/simple;
-	bh=7ekryrg0JkQnPhfhXHgplTQCEGv6EXtERN+54e6F2GA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=vAvwrc/dxcrRKjpYK0pUsZU0YiLC6umKHM3GKvLK4nDwHAkRab2z9DkZ4vh9SEiuKk47lb9f+jsEJxS9tztNi1afGEN0lXo6SjpRauLv+cRwtu85jWLBB0Uf5j0EvSxrTm2jnU+3eMC+Zka3ZTOuFGDx/HcuOgyOTfZZ+Mi+Wmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=Je6MaUdS; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="Je6MaUdS"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 51R3JpyhE1075058, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1740626392; bh=7ekryrg0JkQnPhfhXHgplTQCEGv6EXtERN+54e6F2GA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=Je6MaUdS08TqYxJa4Zapl7TGgIexaDOxCNee76uq4biGzSUtX/1S5GuW6wUJ93y37
-	 Mhsc39PEQlzYWP+BV/VQgQ21E9LrTvhhmVI+6MyTIBkiAaSJKI6U6v/rPTu6roxLkB
-	 IyhLzmjNm38wUkv/BV7uuiIdXCxJMN7wRw7XitYjhKuuXozz+AEguYc2sNN1G+1Xg6
-	 3TlZsLBGSJHgmRX/NRD1ruSFwqVZFvR+oGL/pOQN6dDLn85axexwTPBNsQbHr8de8b
-	 UsWqupskcB7LuDn1n1VwzlCJ0AwIDZDzqhWQByZ7J94iHkQ7yP6hZrYVC/dkXYD6Z0
-	 hJRJ/HwQovp9Q==
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 51R3JpyhE1075058
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 27 Feb 2025 11:19:52 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 27 Feb 2025 11:19:52 +0800
-Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 27 Feb 2025 11:19:51 +0800
-Received: from RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547]) by
- RTEXMBS01.realtek.com.tw ([fe80::f5bd:6ac9:46d:9547%5]) with mapi id
- 15.01.2507.035; Thu, 27 Feb 2025 11:19:51 +0800
-From: Ricky WU <ricky_wu@realtek.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>,
-        Thomas Haschka
-	<thomas.haschka@tuwien.ac.at>,
-        Bart Van Assche <bvanassche@acm.org>
-CC: "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-block@vger.kernel.org"
-	<linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "James.Bottomley@hansenpartnership.com"
-	<James.Bottomley@hansenpartnership.com>,
-        "martin.peterson@oracle.com"
-	<martin.peterson@oracle.com>
-Subject: RE: mmc0: error -95 doing runtime resume
-Thread-Topic: mmc0: error -95 doing runtime resume
-Thread-Index: AQHbiEvKs6LTi7Jk9ku8Dmbfc5C+U7NaeMRw
-Date: Thu, 27 Feb 2025 03:19:51 +0000
-Message-ID: <4e7162dfccbe44468f6a452896110cc8@realtek.com>
-References: <c2f50eac-3270-8dfa-2440-4c737c366b17@tuwien.ac.at>
- <8fd7f1d9-fc0d-4fa7-81be-378a3fc47d2a@acm.org>
- <CAPDyKFpwZt9rezBhBbe9FeUX1BycD2br6RRTttvAVS_C99=TiQ@mail.gmail.com>
-In-Reply-To: <CAPDyKFpwZt9rezBhBbe9FeUX1BycD2br6RRTttvAVS_C99=TiQ@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1740626813; c=relaxed/simple;
+	bh=kHrgT+eGXWxskQXGY/v3bbTVYXzRBd8UcfF4UWA/gng=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZUXzgBD++iehnNRsy17KA+77zWw1d3yXQXgrQhuyK+r4GdgdK4Xo9WC3AjvjH8NTa28aZYORkdan/hq1A44N0M6DeezJGSwoKQviGhF5Hm+WsXlYLsyZKyvtHytpbGGTZ+tCh6ZSCBRwHNqU3IxrRL6nVa6IlgBtBp8R6ldrp8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R3L8oi015977;
+	Wed, 26 Feb 2025 19:26:40 -0800
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 451ptmhmej-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 26 Feb 2025 19:26:40 -0800 (PST)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Wed, 26 Feb 2025 19:26:39 -0800
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Wed, 26 Feb 2025 19:26:34 -0800
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <alexander.deucher@amd.com>,
+        <daniel.wheeler@amd.com>, <mario.limonciello@amd.com>,
+        <josip.pavic@amd.com>, <aurabindo.pillai@amd.com>,
+        <sohaib.nadeem@amd.com>, <gregkh@linuxfoundation.org>,
+        <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <Rodrigo.Siqueira@amd.com>, <christian.koenig@amd.com>,
+        <Xinhui.Pan@amd.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+        <wayne.lin@amd.com>, <sashal@kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <charlene.liu@amd.com>, <gabe.teeger@amd.com>,
+        <amd-gfx@lists.freedesktop.org>, <Nicholas.Kazlauskas@amd.com>
+Subject: [PATCH 6.1.y] drm/amd/display: fixed integer types and null check locations
+Date: Thu, 27 Feb 2025 11:26:33 +0800
+Message-ID: <20250227032633.4176866-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: aMIR4xxGOCX5NeqdwxXpYEWFVpqL_Trx
+X-Authority-Analysis: v=2.4 cv=TuEchCXh c=1 sm=1 tr=0 ts=67bfdb70 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=T2h4t0Lz3GQA:10 a=zd2uoN0lAAAA:8 a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8 a=fmNT8XcYnNex_eyvA98A:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: aMIR4xxGOCX5NeqdwxXpYEWFVpqL_Trx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_01,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 phishscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
+ clxscore=1011 impostorscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.21.0-2502100000
+ definitions=main-2502270025
 
-PiArIFJpY2t5DQo+IA0KPiBPbiBGcmksIDIxIEZlYiAyMDI1IGF0IDE4OjIwLCBCYXJ0IFZhbiBB
-c3NjaGUgPGJ2YW5hc3NjaGVAYWNtLm9yZz4gd3JvdGU6DQo+ID4NCj4gPg0KPiA+IE9uIDIvMjEv
-MjUgNzo0MSBBTSwgVGhvbWFzIEhhc2Noa2Egd3JvdGU6DQo+ID4gPiBCdWcgRml4OiBibG9jazog
-SW1wcm92ZSBzdGFiaWxpdHkgb2YgU0QgY2FyZHMgaW4gTWljcm9zb2Z0IFN1cmZhY2UgR08gMiBh
-bmQNCj4gPiA+ICAgICAgICAgICAgICAgcG9zc2libHkgb3RoZXIgZGV2aWNlcy4NCj4gPiA+DQo+
-ID4gPg0KPiA+ID4gVGhlIGNvbW1pdCA2NWE1NThmNjZjMzA4DQo+ID4gPiAgICAgIGJsb2NrOiBJ
-bXByb3ZlIHBlcmZvcm1hbmNlIGZvciBCTEtfTVFfRl9CTE9DS0lORyBkcml2ZXJzDQo+ID4gPg0K
-PiA+ID4gYmFzaWNhbGx5IG1hZGUgdGhlIHVzZSBvZiBTRCBjYXJkcyBpbiBteSBNaWNyb3NvZnQg
-U3VyZmFjZSBHTyAyDQo+IGltcG9zc2libGUuDQo+ID4gPiBUaGUgY2FyZHMgZG8gc3RvcCBmdW5j
-dGlvbmluZyBhZnRlciBhYm91dCAxNSBtaW51dGVzLiBNb3N0bHkgYXQgaW8NCj4gPiA+IGludGVu
-c2l2ZSB0YXNrcy4NCj4gPiA+DQo+ID4gPiBBcyBvdXRsaW5lZCBpbiBodHRwczovL2J1Z3ppbGxh
-Lmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTIxODgyMQ0KPiA+ID4gaSBiaXNlY3RlZCB0aGUg
-cHJvYmxlbSB0aGF0IHlpZWxkZWQgYW4gdW5zdGFibGUgb3BlcmF0aW9uIG9mIHRoZQ0KPiA+ID4g
-Y2FyZHJlYWRlciBvbiBteSBTdXJmYWNlIEdPIDIuDQo+ID4gPiBJIHN1Y2Nlc3NmdWxseSByZXZl
-cnNlZCB0aGUgY29tbWl0IDY1YTU1OGY2NmMzMDggaW4gNi4xMi4xNiB1c2luZw0KPiA+ID4gdGhl
-IGF0dGFjaGVkIHBhdGNoLiBBcyBJIHN1cHBvc2UgdGhlIGJ1ZyBpbnRyb2R1Y2VkIHdpdGggdGhp
-cyBjb21taXQNCj4gPiA+IG1pZ2h0IGhpdCBvdGhlciB1c2VycyBvZiBzZC1jYXJkcyBpbiBzaW1p
-bGFyIGhhcmR3YXJlIEkgc3VnZ2VzdCB0aGlzDQo+ID4gPiBjb21taXQgc2hhbGwgYmUgcmV2ZXJz
-ZWQsIGV2ZW4gaWYgdGhlIGltcHJvdmVkIHBlcmZvcm1hbmNlIG1pZ2h0IGJlDQo+IGdvbmUuDQo+
-ID4NCj4gPiBUaGFuayB5b3UgZm9yIGhhdmluZyBiaXNlY3RlZCB0aGlzIGlzc3VlIGFuZCBmb3Ig
-aGF2aW5nIHNoYXJlZCB0aGUNCj4gPiByZXN1bHQgb2YgdGhlIGJpc2VjdGlvbiBwcm9jZXNzLiBU
-aGlzIGlzIHZlcnkgdXNlZnVsIGluZm9ybWF0aW9uLg0KPiA+DQo+ID4gU2luY2UgdGhlIGNvbW1p
-dCBtZW50aW9uZWQgYWJvdmUgaXMgYWJvdXQgMS41IHllYXJzIG9sZCBhbmQgaGFzIG5vdA0KPiA+
-IGNhdXNlZCBhbnkgaXNzdWVzIGZvciBhbnlvbmUgd2hvIGlzIG5vdCB1c2luZyBhbiBTRCBjYXJk
-IHJlYWRlciwgdGhhdA0KPiA+IGNvbW1pdCBpcyBwcm9iYWJseSBub3QgdGhlIHJvb3QgY2F1c2Ug
-b2YgdGhlIHJlcG9ydGVkIGJlaGF2aW9yLiBBcmUgU0QNCj4gPiBjYXJkcyBjb250cm9sbGVkIGJ5
-IHRoZSBNTUMgZHJpdmVyPyBJZiBzbywgSSB0aGluayB0aGUgbmV4dCBzdGVwIGlzIHRvDQo+ID4g
-dGFrZSBhIGNsb3NlIGxvb2sgYXQgdGhlIE1NQyBkcml2ZXIuIEkgaGF2ZSBDYy1lZCB0aGUgTU1D
-IGRyaXZlcg0KPiBtYWludGFpbmVyLg0KPiANCj4gVGhlcmUgd2FzIGFub3RoZXIgdGhyZWFkIFsx
-XSB3aGVyZSBJIHRyaWVkIHRvIGxvb3AgaW4gUmlja3kgV3UsIGJ1dCB0aGVyZSB3YXMNCj4gbm8g
-cmVzcG9uc2UuIEkgaGF2ZSBhZGRlZCBoaW0gdG8gdGhpcyB0cmVhZCB0b28uDQo+IA0KSGkgVWxm
-LA0KQmVjYXVzZSBJIHdhcyB3YWl0aW5nIGZvciB0aGUgcmVzdWx0IHRoYXQgcmV2ZXJ0IDEwMWJk
-OTA3YjQyNCAoIm1pc2M6IHJ0c3g6IGp1ZGdlIEFTUE0gTW9kZSB0byBzZXQgUEVUWENGRyBSZWci
-KQ0KQ2FuIGZpeCB0aGlzIGlzc3VlIG9yIG5vdCwgYnV0IEkgZGlkIG5vdCBzZWUgYW55IHJlc3Bv
-bnNlLi4uDQoNCkhpIFRob21hcywNClRoaXMgaXNzdWUodGhpcyBtYWlsIHRocmVhZCkgYW5kIFsx
-XSBhcmUgdGhlIHNhbWUgaXNzdWU/DQpBbmQgdGhpcyBpc3N1ZSBvbmx5IGNhbiByZXByb2R1Y2Ug
-b24gc3VyZmFjZSBnbyAyPw0KSWYgc28sIEkgbmVlZCB0byBmaW5kIGNvcnJlY3QgcGxhdGZvcm0g
-dG8gcmVwcm9kdWNlIHRoaXMgaXNzdWUgb24gbXkgaGFuZA0KDQoNCj4gRm9yIHRoZSByZWNvcmQs
-IEkgYWdyZWUsIGV2ZW4gaWYgcmV2ZXJ0aW5nIDY1YTU1OGY2NmMzMDggc29sdmVzIHRoZSBpc3N1
-ZSwgaXQncw0KPiBub3QgdGhlIGNvcnJlY3QgZml4Lg0KPiANCj4gVW5sZXNzIHdlIGNhbiBnZXQg
-c29tZSBoZWxwIGZyb20gUmlja3ksIHdlIGNhbiB0cnkgdG8gZHJvcCBhc3NpZ25pbmcNCj4gIk1N
-Q19DQVBfQUdHUkVTU0lWRV9QTSIgaW4gcmVhbHRla19pbml0X2hvc3QoKSB0byBzZWUgaWYgdGhh
-dCBzb2x2ZXMgdGhlDQo+IHByb2JsZW0uIE9yIGlmIGRlYnVnZnMgaXMgZW5hYmxlZCwgd2UgY2Fu
-IGRpc2FibGUNCj4gTU1DX0NBUF9BR0dSRVNTSVZFX1BNIGZvciB0aGUgbW1jIGhvc3QgdmlhIHRo
-ZSAiY2FwcyIgZGVidWdmcy1ub2RlLg0KPiANCj4gVGhvbWFzIGNhbiB5b3UgdHJ5IHRvIGRyb3Ag
-TU1DX0NBUF9BR0dSRVNTSVZFX1BNIGFuZCBzZWUgaWYgdGhhdCBzb2x2ZXMNCj4gdGhlIHByb2Js
-ZW0/DQo+IA0KPiBLaW5kIHJlZ2FyZHMNCj4gVWZmZQ0KPiANCj4gWzFdDQo+IGh0dHBzOi8vbG9y
-ZS5rZXJuZWwub3JnL2FsbC9DQVBEeUtGcTQtZkwzb0hlVDlwaFRoV1FKcXppY0tlQTQ0N1dCSlVi
-dGMNCj4gS1BoZFoyZDFBQG1haWwuZ21haWwuY29tLw0K
+From: Sohaib Nadeem <sohaib.nadeem@amd.com>
+
+[ Upstream commit 0484e05d048b66d01d1f3c1d2306010bb57d8738 ]
+
+[why]:
+issues fixed:
+- comparison with wider integer type in loop condition which can cause
+infinite loops
+- pointer dereference before null check
+
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Josip Pavic <josip.pavic@amd.com>
+Acked-by: Aurabindo Pillai <aurabindo.pillai@amd.com>
+Signed-off-by: Sohaib Nadeem <sohaib.nadeem@amd.com>
+Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[ To fix CVE-2024-26767, delete changes made in drivers/gpu/drm/amd/display/dc/link/link_validation.c
+ for this file is deleted in linux-6.1 ]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test.
+---
+ .../gpu/drm/amd/display/dc/bios/bios_parser2.c   | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+index 4d2590964a20..75e44d8a7b40 100644
+--- a/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
++++ b/drivers/gpu/drm/amd/display/dc/bios/bios_parser2.c
+@@ -1862,19 +1862,21 @@ static enum bp_result get_firmware_info_v3_2(
+ 		/* Vega12 */
+ 		smu_info_v3_2 = GET_IMAGE(struct atom_smu_info_v3_2,
+ 							DATA_TABLES(smu_info));
+-		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_2->gpuclk_ss_percentage);
+ 		if (!smu_info_v3_2)
+ 			return BP_RESULT_BADBIOSTABLE;
+ 
++		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_2->gpuclk_ss_percentage);
++
+ 		info->default_engine_clk = smu_info_v3_2->bootup_dcefclk_10khz * 10;
+ 	} else if (revision.minor == 3) {
+ 		/* Vega20 */
+ 		smu_info_v3_3 = GET_IMAGE(struct atom_smu_info_v3_3,
+ 							DATA_TABLES(smu_info));
+-		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_3->gpuclk_ss_percentage);
+ 		if (!smu_info_v3_3)
+ 			return BP_RESULT_BADBIOSTABLE;
+ 
++		DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", smu_info_v3_3->gpuclk_ss_percentage);
++
+ 		info->default_engine_clk = smu_info_v3_3->bootup_dcefclk_10khz * 10;
+ 	}
+ 
+@@ -2439,10 +2441,11 @@ static enum bp_result get_integrated_info_v11(
+ 	info_v11 = GET_IMAGE(struct atom_integrated_system_info_v1_11,
+ 					DATA_TABLES(integratedsysteminfo));
+ 
+-	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v11->gpuclk_ss_percentage);
+ 	if (info_v11 == NULL)
+ 		return BP_RESULT_BADBIOSTABLE;
+ 
++	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v11->gpuclk_ss_percentage);
++
+ 	info->gpu_cap_info =
+ 	le32_to_cpu(info_v11->gpucapinfo);
+ 	/*
+@@ -2654,11 +2657,12 @@ static enum bp_result get_integrated_info_v2_1(
+ 
+ 	info_v2_1 = GET_IMAGE(struct atom_integrated_system_info_v2_1,
+ 					DATA_TABLES(integratedsysteminfo));
+-	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_1->gpuclk_ss_percentage);
+ 
+ 	if (info_v2_1 == NULL)
+ 		return BP_RESULT_BADBIOSTABLE;
+ 
++	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_1->gpuclk_ss_percentage);
++
+ 	info->gpu_cap_info =
+ 	le32_to_cpu(info_v2_1->gpucapinfo);
+ 	/*
+@@ -2816,11 +2820,11 @@ static enum bp_result get_integrated_info_v2_2(
+ 	info_v2_2 = GET_IMAGE(struct atom_integrated_system_info_v2_2,
+ 					DATA_TABLES(integratedsysteminfo));
+ 
+-	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_2->gpuclk_ss_percentage);
+-
+ 	if (info_v2_2 == NULL)
+ 		return BP_RESULT_BADBIOSTABLE;
+ 
++	DC_LOG_BIOS("gpuclk_ss_percentage (unit of 0.001 percent): %d\n", info_v2_2->gpuclk_ss_percentage);
++
+ 	info->gpu_cap_info =
+ 	le32_to_cpu(info_v2_2->gpucapinfo);
+ 	/*
+-- 
+2.25.1
+
