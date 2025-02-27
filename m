@@ -1,100 +1,135 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64048270EC8;
-	Thu, 27 Feb 2025 22:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B26D7271827
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 22:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694850; cv=none; b=fGcbuVEJKvlfEVpY6jPu4ybEFbtTHQWBOWm1RFtxy11NqAiqT0bVPBjdT6o49ixOE4ek+XP+uklvbNQlUrubJvarEP02HzJTRhcsphn8RATj4pcPJflRClB35yWYPfbtRzBafl7uTq5oUnPyqBqkfijt6jwFm/YghBWEEaDH+iY=
+	t=1740694889; cv=none; b=I5ne5qmEQKczlomMYKWHHPvRwgATfDJwBOmnD26ze1MUOXAw9F0DGbx1fTIlNHI3YbbNvp7xsp+p2Jre0wIKKjQVe1x3DrRb9pZYkA5DN59GN4D/JJBiKQ/Dzr3CwNQUDAWxCkK3+X3SfcdvtLwUAU0qC0zrqMDrLGfq58Pkvpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694850; c=relaxed/simple;
-	bh=nJ9cqAY06b1H9psIDaBzzxiDay85pRwp+Iqvomz8JPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k1i9XgdeTj3fZGwWFFJfE5oRjL0pXMxtEO7xJbRKWKjbFOkHiyn1g8D+Wk5SLbd4TxMO8H1G8o8NPULfMCM8cVkt64uKdm/jsMau+ylLOUhiSo9WKPf0sJJU/4XkLN8LjcnfIovLfUlfhVZzhVccVC352N/GbonqYFX3Ve4kavE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnJGnhEV; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740694889; c=relaxed/simple;
+	bh=a9aB4tFvmvvjzRYElqYLjb/HuFrQ/4PLy6tW5X6PpMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iD5WAAsEktJOy35sQgKvtbU7VGbu82jUgP8HEGq2rzkMGL1RQNxNdHJ03K2YnferrFJtS6I/Goizfhh+gmj4MIWqi2nBK09UYplFv7S82ARLR73mCXe+pVbKwt4qXcmFtoMzBSRnc9cOWHM4WhLx7Hg8IAskHH89LCVjmmnVTv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RmKqG1oe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnJGnhEV"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2232b12cd36so21806455ad.0;
-        Thu, 27 Feb 2025 14:20:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740694849; x=1741299649; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BH1l8/FwzoGHwFyDrtYRAirS4jCvclfhfe4Iqx+a17A=;
-        b=bnJGnhEVP7OtqzfoX/PYUpiox0kRTRSH6y7liVXyXaSwRrwSeIMuySVlsTcDl2COtE
-         1NnXFa4QLNX1nefax2WmZu4KOnIM+ios8SGInzmnjssgX99n11VIDVqNdO18cvSGeHMz
-         bl8KEJjRBBvDuc+hdgqYLuKJcupaDW0+sODc6imBq4Vhh7/NVZLEj6xh8BZ29H3LsjkK
-         zllK/v1xvAmqT3sHX2eKkilGC00xhY+ksjFgLeKWUcYIaPkzWWuoKZee7Gn2IlCB0agu
-         MB5LnbtdqVKWeUt22H/VI9rDXIeWSkg1RdhxquqkK0Vdrmcz2oceV6dXWhpC9nhmPCn7
-         oSzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740694849; x=1741299649;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BH1l8/FwzoGHwFyDrtYRAirS4jCvclfhfe4Iqx+a17A=;
-        b=jw/ahdK0/RImX0SyNHQPe2dYs2WApyIabreJsNhsQGFbGJnrvnZePWdUIuUxoxbbMV
-         +do7ysJCGmnIiHybuNy8PZ0ABfyz/NK9KrRAsANjTB5e1ACcCAoiSq/4p+mF7lP7f6ha
-         i8U/nmJFq1iMlfuvtb9DUa5t6iba1tSPHOwCdzGa/u3APohQuv2sfF54LxkUGXz/J3bF
-         Sk8OarnmOXKp29zVi5j8JuQ0WkWpZ5GsIpghnLLy7xLUpSTRMGnjGQLrmTF15RdxbLov
-         tXNBmC0ICFG6zMe1ti9YCeaSa0P3hkfTCYhTxav+3BFUUmU2gAjPyFNAZ8xEc2p4Gngx
-         K0lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkZoNHwf2NOFdPJspocf9IGGswPIpm1t3hqNzMyQPbm54kG1cDfmSguSkhaLSM6zS7I+Y=@vger.kernel.org, AJvYcCWYHxNJam5eTAcIwlP2k2fhWjNZMupqdM9bu4eP64TIn0UWN7T1rO5OiHsIh1axa9VEuONPHBevrnu8zU/b@vger.kernel.org, AJvYcCXV6gMI7HglRkf/Oo3NFFWdCaXsq1v//XDCo3Pp8mKgIKsCtWm0tfUradGwZ5f7cyIz/O/E55U2sPXqVyGRj49X@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFCppvpNJMPM/kPpCQoSyvqxRwZ/OfLRg+ZTKJ1heVyg17YtAr
-	WL0fJ5cBcFO/eY+VO9XUJKeQMctDrevJipvpRpf3SCXEr+V0ukm6mGh/
-X-Gm-Gg: ASbGncv8cRAH73S2GnKx9zm0n0utkg8Vs3SV218rBT/jg57z5or/g73CrqmwUVLtwdE
-	Qk/I7k/JdUBdzdQbAjXmqj3iNErHyw2vVtjSIKWNky6VrhPJ4zYcKM5UAIcmNGMGO1GNeTL9IVs
-	dnvTBY3juEwioLsz/bUzGH8bQsvAkehXLoxterflLSpW8a2WN90yrMrsPW1QrT05fmfjsxQXhLv
-	Ox154jXr/Cri1SC+lFArvVstOuHVou7HAM9gM+teD2YnSKRpvk+ngkLC6rvDO324OU/qrW1o5iV
-	jTHRRbuVbExKcTy1Tyl+dHDNMg==
-X-Google-Smtp-Source: AGHT+IHsjHcYBON52tFFIBp0YpqJ89N+H1PvM9CttmTtsV91giTbLDVEmLUdonpeJppCcN/kqCEKfQ==
-X-Received: by 2002:a17:902:c948:b0:220:d79f:60f1 with SMTP id d9443c01a7336-2236920765bmr11883685ad.42.1740694848688;
-        Thu, 27 Feb 2025 14:20:48 -0800 (PST)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-734a0024e59sm2300605b3a.92.2025.02.27.14.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 14:20:48 -0800 (PST)
-Date: Thu, 27 Feb 2025 14:20:47 -0800
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next 06/10] selftests/bpf: test_tunnel: Move
- ip6erspan tunnel test to test_progs
-Message-ID: <Z8DlP7XHOALzzyRu@mini-arch>
-References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
- <20250227-tunnels-v1-6-33df5c30aa04@bootlin.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RmKqG1oe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740694886;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7diF62tmQq8yX0tBktjjEFflut5iUsSe4oG5osm2K4g=;
+	b=RmKqG1oeHFv49X+MqzbAUuxVQCRGTWyjQtZeVQsIX3NWur3H3rQ7dxtn3eIBEstVpoQf1k
+	LM8K4gdjYNHyEXuMNJceNzdRp/Yt0H/JH/PigR6DsFe1SL3lpivNAzGGKUuQ+xtKIvq+J8
+	UJiOZlCsCX80dAffZ5E6NnVztZbdHOQ=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-339-xU-PrNj8Oryaqxd9wvDG9g-1; Thu,
+ 27 Feb 2025 17:21:21 -0500
+X-MC-Unique: xU-PrNj8Oryaqxd9wvDG9g-1
+X-Mimecast-MFC-AGG-ID: xU-PrNj8Oryaqxd9wvDG9g_1740694877
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EFAB1180087E;
+	Thu, 27 Feb 2025 22:21:15 +0000 (UTC)
+Received: from chopper.lyude.net (unknown [10.22.89.128])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0242618FFCC0;
+	Thu, 27 Feb 2025 22:19:56 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org (open list:SCHEDULER)
+Subject: [PATCH v9 1/9] preempt: Introduce HARDIRQ_DISABLE_BITS
+Date: Thu, 27 Feb 2025 17:10:12 -0500
+Message-ID: <20250227221924.265259-2-lyude@redhat.com>
+In-Reply-To: <20250227221924.265259-1-lyude@redhat.com>
+References: <20250227221924.265259-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250227-tunnels-v1-6-33df5c30aa04@bootlin.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
-> ip6erspan tunnels are tested in the test_tunnel.sh but not in the
-> test_progs framework.
-> 
-> Add a new test in test_progs to test ip6erspan tunnels. It uses the same
-> network topology and the same BPF programs than the script.
-> Remove test_ip6erspan() from the script.
-> 
-> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+From: Boqun Feng <boqun.feng@gmail.com>
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ include/linux/preempt.h | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index ca86235ac15c0..e74ab9cf02af0 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -17,6 +17,7 @@
+  *
+  * - bits 0-7 are the preemption count (max preemption depth: 256)
+  * - bits 8-15 are the softirq count (max # of softirqs: 256)
++ * - bits 16-23 are the hardirq disable count (max # of hardirq disable: 256)
+  *
+  * The hardirq count could in theory be the same as the number of
+  * interrupts in the system, but we run all interrupt handlers with
+@@ -26,29 +27,34 @@
+  *
+  *         PREEMPT_MASK:	0x000000ff
+  *         SOFTIRQ_MASK:	0x0000ff00
+- *         HARDIRQ_MASK:	0x000f0000
+- *             NMI_MASK:	0x00f00000
++ * HARDIRQ_DISABLE_MASK:	0x00ff0000
++ *         HARDIRQ_MASK:	0x07000000
++ *             NMI_MASK:	0x38000000
+  * PREEMPT_NEED_RESCHED:	0x80000000
+  */
+ #define PREEMPT_BITS	8
+ #define SOFTIRQ_BITS	8
+-#define HARDIRQ_BITS	4
+-#define NMI_BITS	4
++#define HARDIRQ_DISABLE_BITS	8
++#define HARDIRQ_BITS	3
++#define NMI_BITS	3
+ 
+ #define PREEMPT_SHIFT	0
+ #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
+-#define HARDIRQ_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_DISABLE_SHIFT	(SOFTIRQ_SHIFT + SOFTIRQ_BITS)
++#define HARDIRQ_SHIFT	(HARDIRQ_DISABLE_SHIFT + HARDIRQ_DISABLE_BITS)
+ #define NMI_SHIFT	(HARDIRQ_SHIFT + HARDIRQ_BITS)
+ 
+ #define __IRQ_MASK(x)	((1UL << (x))-1)
+ 
+ #define PREEMPT_MASK	(__IRQ_MASK(PREEMPT_BITS) << PREEMPT_SHIFT)
+ #define SOFTIRQ_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_MASK	(__IRQ_MASK(SOFTIRQ_BITS) << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_MASK	(__IRQ_MASK(HARDIRQ_BITS) << HARDIRQ_SHIFT)
+ #define NMI_MASK	(__IRQ_MASK(NMI_BITS)     << NMI_SHIFT)
+ 
+ #define PREEMPT_OFFSET	(1UL << PREEMPT_SHIFT)
+ #define SOFTIRQ_OFFSET	(1UL << SOFTIRQ_SHIFT)
++#define HARDIRQ_DISABLE_OFFSET	(1UL << HARDIRQ_DISABLE_SHIFT)
+ #define HARDIRQ_OFFSET	(1UL << HARDIRQ_SHIFT)
+ #define NMI_OFFSET	(1UL << NMI_SHIFT)
+ 
+-- 
+2.48.1
+
