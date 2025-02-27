@@ -1,93 +1,134 @@
-Received: from mx24lb.world4you.com (mx24lb.world4you.com [81.19.149.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446931A9B2A;
-	Thu, 27 Feb 2025 21:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F93271281;
+	Thu, 27 Feb 2025 21:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692539; cv=none; b=LOiOrOT6ystA5/6w/T0ci98CJzIVq+h10/LKo5Gd/1Bfali1dF4rMp6AZ6bFGU/s0NISQpe66mSVOA0IBJIOJiIdspCxZQ+OFytJ0lTjGrs+m35g+zTxAzRXOJgwsbzmFA2vSygwzrNN/pR5QIM8t4LBkDYPjcgWCeUngh3H2EA=
+	t=1740692551; cv=none; b=AmQk+mtVFzffw/6ELD1E9dI0twYDg4BqTDZ/HclSR93uZvUN5ArpeZmQPkgR1r8fSAX5fOjSqtHIzGzqqXWwy60ZVfBL805Eqz49SPgaw3vIF1cDxkcSpqBP2WPuwwisChKkaRH8sRNL1+bUb2VoWCPkWV/+yVizfnAR44lahFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692539; c=relaxed/simple;
-	bh=ZgLkTQpi46zVF4g45Rb7vFFSn7wnrwrrKVkZSld/DCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SvKeU+qKK1MspKeWjzG2EJMQxaYvzSfi+sZujMjrnan6S/jEG1Mrq9ku3HHRrmYUXX+L1eFyUFlbPKjdb5wOp+CdyXP0UyaV2C0CuFbxHkax3rSa7IL1zLbGTxUx4ZU+0QpXiRejBQNWC69Z1NCsAhGeXi0m0lM3VylQ0mma+Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=nxNnjZ6h; arc=none smtp.client-ip=81.19.149.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
+	s=arc-20240116; t=1740692551; c=relaxed/simple;
+	bh=gyoSbEUnAQzOkgkY3fwsl8u7r90ywTfp/qUn5ERW7D4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rwbd5X7MB09S2QNLf0hNVQzCISz5To8A4solMC+dCzMHDsSi6ZJp4XA1tMaazUgWNvGRjfxedsy34PTsp0dDoh/fge9+ZOXxeta2wMB6BsoguPUcLQ9jHMV66i7L0yzm4sk+YqKb8QR2FLHPM9TE2PtBfsmIGDQwrUvfEuRwrQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O/9Xk2Xl; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="nxNnjZ6h"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=NXcp1FiqxMKRjKgh60iR4pFXneo9a1uhMTjZAaxEfm0=; b=nxNnjZ6hbxsWBoU0izOH/n1fJp
-	rrQKHMkTDk+5mX1fxI07czCN/4RiRq6VFfn2yKEO2DBulYz8p1Rt3AFy7m+LjosjIJ3JKs0380Cb6
-	KoLeAtDOuokIhOk1J5A5e6UiEL3xj0VjLCSrAsKpyr+pkVVa2ob528VKxxIePcxD6ADM=;
-Received: from [88.117.55.1] (helo=[10.0.0.160])
-	by mx24lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <gerhard@engleder-embedded.com>)
-	id 1tnkrC-000000000l3-2Rs8;
-	Thu, 27 Feb 2025 21:51:46 +0100
-Message-ID: <1ea6a1df-357d-4d00-828b-98345254b4b2@engleder-embedded.com>
-Date: Thu, 27 Feb 2025 21:51:43 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/9Xk2Xl"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ded69e6134so2363092a12.0;
+        Thu, 27 Feb 2025 13:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740692548; x=1741297348; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=F7A7Tz7g2FCUPie3WKQ6N05ixy8h/zaSxwfvjnOeJGU=;
+        b=O/9Xk2XlpIFayF+B6axBQFfmb/gC028gd44q05cu8Kh0JN+O0MFCe2CfSzRwW7PHXp
+         QLOcwySiNSltUbHYdobLbRlymr2oEgcF1hcvKF+mdsZL+pk6i3BCjEGCeNf084hVCveh
+         z3axRmnrseIpWq/iRb5oClUGB0RdMfJ90HmRwBuEhL4FjrZmcczLWY/U/O+OE9H9rJER
+         3Le+wCevxKHa3MACmA9ei0bDhCkCERI258eP6YKhPlwk5Aoeh/xeKhxGfcQ7pD9hyDES
+         XNAinsGvA0GjQQJbHH8ivUkxLXYY58m8ABm3LcXjsafCAWYlW7KxGTf8gZc6jNuyvwVV
+         DkHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740692548; x=1741297348;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F7A7Tz7g2FCUPie3WKQ6N05ixy8h/zaSxwfvjnOeJGU=;
+        b=QxS9Vj2J1GmkjKSSLlThvCEhgPWWs6L9w3zKMoYGIyGMVBr6Nr/u3qMN8Ivsimosa0
+         AQ79dT6ucEf0zOY1vgAjQu6gZ6HjmBGSNf5jN7czhDlxieBWQ2meyRmGHf2Iwh9D1ewT
+         jqj+Hk8GM3MIzPnV0TxqFwlPTGd9ijo/Eo1sZh75a5rKG5rEqjchTSzEAOog7OPyj4lc
+         fd0ijIv4HxEd1Xzuk2GmPTC12nAfr9/nJ8iH38mOvdEuyM4KywHhiUnBjTPsugNcSgOh
+         AsOqlJIwIhp5wtBBXaK5zAGnTfw/KsM390lG4Ms9WzuSZ9ddjlebTfKleGXbke4j4C+T
+         MW1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUJd2adtwTTetz294ssLup7NkTKjhpVp/KFv4uqhgHk8u5uRq2O0LcNTg5yZk7rWpFHPvtv4Bhx/+svEDioTTY=@vger.kernel.org, AJvYcCVACf1waU8+/ASXxhDuXhWpESorTilGZcv5l0dyoQrQsFBkJP31g2snsUKNC45CGuNFHqIU1T6rZ2GRMrw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxCq7Im2Uq4O/oGAvB5lBT5AOiQTz/3AlcpQhisxeU5/BDhtoV
+	6aT3W3Y1Dy38hc3NpUXDBtdKPK6RrxCP5AHarXDB/4+TWFsd4gdFwoq6oz0eblu8S3oVUxkZYDe
+	NYEeug5S3z2SbhJaIrutohG4mc3M=
+X-Gm-Gg: ASbGnct5zKwqza8t/VXaSO9uisXWmiNRRYPqipcnJu97SVeoLePw9fljAI7QZGPYquL
+	OydDnhvBhHMohyOTbNYIT/pd+fIkoK4w2tbAc7jpmj+BAAH9hbURYKyNBw5RbqXnLbMOwM/3A9y
+	exylVeDw==
+X-Google-Smtp-Source: AGHT+IEyUR259zBhUCHDJy65pOw87s0pkKQrEtcK41k9OYzWAulpVoau3ShqRLX/t8YhweziRQmpCp+v5WFZxhtaqsM=
+X-Received: by 2002:a17:906:f59f:b0:aae:fb7c:50df with SMTP id
+ a640c23a62f3a-abf265e903emr103365066b.36.1740692547826; Thu, 27 Feb 2025
+ 13:42:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] caif_virtio: fix wrong pointer check in cfv_probe()
-To: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jiri Pirko <jiri@resnulli.us>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Rusty Russell <rusty@rustcorp.com.au>, Erwan Yvin
- <erwan.yvin@stericsson.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
- Andrew Lunn <andrew+netdev@lunn.ch>
-References: <20250227184716.4715-1-v.shevtsov@mt-integration.ru>
-Content-Language: en-US
-From: Gerhard Engleder <gerhard@engleder-embedded.com>
-In-Reply-To: <20250227184716.4715-1-v.shevtsov@mt-integration.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AV-Do-Run: Yes
+References: <2f062199-8d69-48a2-baa6-abb755479a16@nvidia.com>
+ <Z73rP4secPlUMIoS@cassiopeiae> <20250225210228.GA1801922@joelnvbox>
+ <20250225225756.GA4959@nvidia.com> <Z75WKSRlUVEqpysJ@cassiopeiae>
+ <20250226004916.GB4959@nvidia.com> <Z75riltJo0WvOsS5@cassiopeiae>
+ <20250226172120.GD28425@nvidia.com> <Z7-IHgcVVS8XBurW@cassiopeiae>
+ <20250226234730.GC39591@nvidia.com> <2025022644-fleshed-petite-a944@gregkh> <D82UB3V6NZ55.3OEPPW2W8MFZV@nvidia.com>
+In-Reply-To: <D82UB3V6NZ55.3OEPPW2W8MFZV@nvidia.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 28 Feb 2025 07:42:15 +1000
+X-Gm-Features: AQ5f1JrLTmtHkCd1E06gAqOr7bQnTtzsccZk8EDXt2lxV9P7KCyAhTQQP23iQ0Q
+Message-ID: <CAPM=9txrRFOb6Uzm=e0S6Tfxmskm4zwAZgsWnkvCzxN=XCZ6Vw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice implementation
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Gary Guo <gary@garyguo.net>, 
+	Joel Fernandes <joel@joelfernandes.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Ben Skeggs <bskeggs@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 27.02.25 19:46, Vitaliy Shevtsov wrote:
-> del_vqs() frees virtqueues, therefore cfv->vq_tx pointer should be checked
-> for NULL before calling it, not cfv->vdev. Also the current implementation
-> is redundant because the pointer cfv->vdev is dereferenced before it is
-> checked for NULL.
-> 
-> Fix this by checking cfv->vq_tx for NULL instead of cfv->vdev before
-> calling del_vqs().
-> 
-> Found by Linux Verification Center (linuxtesting.org) with Svace.
-> 
-> Fixes: 0d2e1a2926b1 ("caif_virtio: Introduce caif over virtio")
-> Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
-> ---
->   drivers/net/caif/caif_virtio.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/caif/caif_virtio.c b/drivers/net/caif/caif_virtio.c
-> index 7fea00c7ca8a..c60386bf2d1a 100644
-> --- a/drivers/net/caif/caif_virtio.c
-> +++ b/drivers/net/caif/caif_virtio.c
-> @@ -745,7 +745,7 @@ static int cfv_probe(struct virtio_device *vdev)
->   
->   	if (cfv->vr_rx)
->   		vdev->vringh_config->del_vrhs(cfv->vdev);
-> -	if (cfv->vdev)
-> +	if (cfv->vq_tx)
->   		vdev->config->del_vqs(cfv->vdev);
->   	free_netdev(netdev);
->   	return err;
+On Thu, 27 Feb 2025 at 11:34, John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On Wed Feb 26, 2025 at 5:02 PM PST, Greg KH wrote:
+> > On Wed, Feb 26, 2025 at 07:47:30PM -0400, Jason Gunthorpe wrote:
+> >> The way misc device works you can't unload the module until all the
+> >> FDs are closed and the misc code directly handles races with opening
+> >> new FDs while modules are unloading. It is quite a different scheme
+> >> than discussed in this thread.
+> >
+> > And I would argue that is it the _right_ scheme to be following overall
+> > here.  Removing modules with in-flight devices/drivers is to me is odd,
+> > and only good for developers doing work, not for real systems, right?
+>
+> Right...I think. I'm not experienced with misc, but I do know that the
+> "run driver code after driver release" is very, very concerning.
+>
+> I'm quite new to drivers/gpu/drm, so this is the first time I've learned
+> about this DRM behavior...
 
-Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
+> >
+> > Yes, networking did add that functionality to allow modules to be
+> > unloaded with network connections open, and I'm guessing RDMA followed
+> > that, but really, why?
+> >
+> > What is the requirement that means that you have to do this for function
+> > pointers?  I can understand the disconnect issue between devices and
+> > drivers and open file handles (or sockets), as that is a normal thing,
+> > but not removing code from the system, that is not normal.
+> >
+>
+> I really hope that this "run after release" is something that Rust for
+> Linux drivers, and in particular, the gpu/nova*, gpu/drm/nova* drivers,
+> can *leave behind*.
+>
+> DRM may have had ${reasons} for this approach, but this nova effort is
+> rebuilding from the ground up. So we should avoid just blindly following
+> this aspect of the original DRM design.
+>
+
+nova is just a drm driver, it's not a rewrite of the drm subsystem,
+that sort of effort would entail a much larger commitment.
+
+DRM has reasons for doing what drm does, that is a separate discussion
+of how a rust driver fits into the DRM. The rust code has to conform
+to the C expectations for the subsystems they are fitting into.
+
+The drm has spent years moving things to devm/drmm type constructs,
+adding hotplug with the unplug mechanisms, but it's a long journey and
+certainly not something nova would want to wait to reconstruct from
+scratch.
+
+Dave.
