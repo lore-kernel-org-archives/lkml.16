@@ -1,228 +1,134 @@
-Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011027.outbound.protection.outlook.com [52.103.68.27])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725D61D63CF;
-	Thu, 27 Feb 2025 17:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740677778; cv=fail; b=DW8K2ngihYUlnC0CAr3LWHCb4HhSOfpBH6RsLMDKyTeDzLn0kiI0Uqj/tmpVUZ9FEKfgce/vmxr4bzQQ/Iayms698xr5ZfoosZHgKPuVD1Ix2M2kLkiV2pUK3DVhsCIVOXLkEXPdqFAcd5WwaTGWuxSjo41JSpmQvXKNwwRijdw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740677778; c=relaxed/simple;
-	bh=A+RnlCnxqk/FXWtfGywQ0faeL9vDUtsw3aN3Cd9Mh8w=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MvSLRSnoXxfHri3O9MSmuX1QuqSkBpDszgKOYkkHKLAg0U8ESyjRKYAQ0XtL90aWaYzu80IqJeDcouo0QTr/0VH8DsLr2AX+qWEGQVVEnG5LQA+X4/jX0MymUwRPuPN4KgHMdKxyCfpLo/HKPd8hmO2hiuVTpur0DkfalGMqAqc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=Xl94Qrpq; arc=fail smtp.client-ip=52.103.68.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE521DDC29;
+	Thu, 27 Feb 2025 17:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740677817; cv=none; b=mH32EgEN1yvxA3YASSkD6c02upIoD9lnqaBbqNFdZKgeHtIglLxJwoivnFv7AhKD6VcEVBKJX0myYXSq1LTge4hhv2/rFaYjE0IthGfoXsU9PaaEFLkcB8OHMIWFzsoF3IEFpyJxKeWkvHerqezw8Tj9ggYL8wGYEQv5lozmhYQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740677817; c=relaxed/simple;
+	bh=HU/ZgWB55HHOxXUiyhhiiBr4JziGCTmAXOKdugCeFFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VcSvXarCklOy0RNbE0MUD2TLleWC46ndmrzZxhcXi4jUpX4o34EiDS7NZeygAcFtYjW/lwGBDJjTe19DrG2O/ygly1mF+hfIDUXVatPsQS8Vj6e75hJ74L4rO/OqqGkI88TZwA6CbAxVS5+ezRUBJQWDndlV1R4Ciey47MaOcuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DIvKo15a; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="Xl94Qrpq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jwIQcLqJSt9TsNB80ZoSKS6HyNaCIcLQ6qd7K8GL6IdNBVkwOslCDQoa81ZaXv7Oh7JkW3ehdd8Pw1x25vTbnG6h06pMDl34JfS6ClKjXuLbQlNsaOyqCI4L+CleN5lSBxLTwh2RvaYhf4GTFjCw9bmiZ0RS/Ks7PtB5vEJP5qSyo3GLnoDued7ZEEjf/iPnS6opFuil+7TWQ4TFlK1iIi67wsfhufDjQ3UmLdBolBeWk9SeJpJBDZ3fnERZzibXWIDVV/gMbmoEyRpxEyVm1eF0IRYp/7F7ncLD1/Vw++bGufr925Ey+J9IFjLjGVapo00I5M5MtHArjxxzfpq5dA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2ReDvTgeIRITbPf0iSR2vMf/gEIGRR9UeRdo6xkH+DY=;
- b=NYodZgQbNyqBNWBcM/GUsGlWz0ZzWhqYaGE5Hi5alo8QP3YAQ+wmQ4xA4gDOnTUtFVGuSV/QKU9NV8Lxl/WVAcdC5sllQ+GbKtulUpttxS52+PlzcyG8lRFfNFa+DPqIRm/AfnvjvGsncN3lRjYQ+SnVkW4Bm3jkayrdNuzmGazIPEEUPW8Ugq4sYdrmMQ5ipj7uQ5N2mlxS/5TU0Os70pmBTARoFGeP1OtjDv0jLvW5KBuRwTvUdm654qmvBhRS6p1Tazi0I7h/TK6qpayvrFP6Dbcxi4Mya9oVSYb6nDgKGcbGohhkdYPgUP31eHMpzQ4NSNJJG5EJu16FVVEx3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2ReDvTgeIRITbPf0iSR2vMf/gEIGRR9UeRdo6xkH+DY=;
- b=Xl94QrpqfaE+craF82KCsjrJAh3K2N7pYr+WitPI6p+4JdWJPsDsPcFmGh84iW0Ry3na1k9wGnkZkhAqRVY4DgWhSxHfZzXxbPa9Hbe272bqPxiAhjxsdbWR1DZlIiSXIt6NqEOFF8sVvOFKJtcdC9YyFryeFZ5vPHFWdRnuf3X/r2BsWs5Hvqao2TlCluR2KENNkd/cHtwGf7BVRumG39NLlrLF6eyHdBAtxPUwt9Oo5zq9KyfQ2QPYG/oFvFyo8XZQ6HXGvNbLO4tJTX5Sek2W9YEJjdG68l1M19nx9gvn1jTL+jZIS3oS9WyyP0sC/C8ioo790uvCL4V/0NLL0g==
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
- by MAXPR01MB4422.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Thu, 27 Feb
- 2025 17:36:11 +0000
-Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8489.021; Thu, 27 Feb 2025
- 17:36:11 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Jiri Kosina <jikos@kernel.org>, "jkosina@suse.com" <jkosina@suse.com>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>, "bentiss@kernel.org"
-	<bentiss@kernel.org>
-CC: Kerem Karabay <kekrby@gmail.com>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org"
-	<linux-input@vger.kernel.org>
-Subject: [PATCH 5/5] HID: multitouch: add device ID for Apple Touch Bar
-Thread-Topic: [PATCH 5/5] HID: multitouch: add device ID for Apple Touch Bar
-Thread-Index: AQHbiT4XygWhKwXARUOQeR1AGw0jQA==
-Date: Thu, 27 Feb 2025 17:36:11 +0000
-Message-ID: <CEEAE215-C209-4FE0-8629-834AD5C48EE1@live.com>
-References: <4C367CCA-2994-46EA-A139-7B4E23E33ADF@live.com>
-In-Reply-To: <4C367CCA-2994-46EA-A139-7B4E23E33ADF@live.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|MAXPR01MB4422:EE_
-x-ms-office365-filtering-correlation-id: f1daa8d1-98bb-4b15-f3ce-08dd575539d4
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|19110799003|8062599003|15080799006|7092599003|8060799006|440099028|3412199025|41001999003|102099032;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?MW7VoupqOnRQLzPPtE+9vycGfABRRsxWDnvSFGNHoS6bAfXq2j/D5Tg/QzVg?=
- =?us-ascii?Q?ahUP0cytgBdqOgMJe3hReZcvLOI1rgc/TIlhmScANdamEOzUOX6IwVG0G4bm?=
- =?us-ascii?Q?c8gcVzP+sEBROXalQ1trppyUohLWPKCl2IdqNKmrIwiwce/xJSP60OOt0z01?=
- =?us-ascii?Q?vkEA5avNeh6DbUxrpHUQNHQ4JNltsA1MRCpT7JeAulcaq3NbVtsFo6c3mtpc?=
- =?us-ascii?Q?GqNj7/8vloM3pNS1zhx9gVvNr2hpBjbhfvw36KhnISzHSv8ovrX9sPgqFD0W?=
- =?us-ascii?Q?dUUQ+lf7jZgcnq3qhiPYSAcFtRxLowRUG96kZyoWzz5WAcccnfZ4TiYESzfe?=
- =?us-ascii?Q?oPYLKsE8S19+48sxLRUHZI6996HD5cTJ3kBVanPwnwDNoVljMaOQRPApcksy?=
- =?us-ascii?Q?LgqfRD3D0OmEDqQTd41i61fIkttJK+BVU3MOJA4KdpxM/Q+dvlUFGhd9W10P?=
- =?us-ascii?Q?Wy6jenzLg1CKWkNU56Yrr0X+0fiaHw9+tqCrkv0uCBztwqGRsHrPaohvLPdJ?=
- =?us-ascii?Q?wAYlJihld8yh7EzMbKPBMWGzmB7HxDXORvbdMcBl1AYLtxHbuivKp8jzKRzW?=
- =?us-ascii?Q?toSD9hFcYuK2SIdu52+VRnBgNxR30FZ0Z8jLFkwAnmXW4BPAxH4cQxQ7JuRg?=
- =?us-ascii?Q?JvigjKP23syeMMB7GKbIKfpDbsCYu+aBY7EQREk4pXu98COp2lI/skLRjyG1?=
- =?us-ascii?Q?NMGzLYLQQKTNI6QQ/BIpTDU3yocZ0z+F4RqKd6zswRR9UedVR96XJUEyltd3?=
- =?us-ascii?Q?kvUW72Scl3Vg5xc5lOV5AfhZO2Ml6yRkKR1bIjA1Z1nFq6uy784M0uNNkRwm?=
- =?us-ascii?Q?zYvvq4uoYdV+TdsiBfqluQklIdudA8FQa3End+fcYVpNtmoiPg885zyeN7nl?=
- =?us-ascii?Q?skfkLWJHMaZdOZGAii+klaa39K7FNSJpLpQe4bOntyV6tJcIVMp6930m2cD1?=
- =?us-ascii?Q?iefYXM8BX8V3XhGCZL0zhjvkSNvV4FNHGpwoDMAYywhSuPIWm8HinO/M7RV4?=
- =?us-ascii?Q?bBPrQZq/Xp0QS+XvIyXpUYv0pwYEoZ2LjdMkaV3LGZIKyDAIxf2gidy01zyn?=
- =?us-ascii?Q?Qzych/bl6M0LbFHqtkCG8et/St9Zb0g/Ichqk285xmVAuuNB/Jw=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?2A4ndslnJcXrCWlaL/v5hmiifl5l2JNJ/MIYx31gFWGmY181Bz1+IHs7DkFZ?=
- =?us-ascii?Q?e5CRlleqOjso4sPnwyXc+Qe1oa0BaR3hZ+MUd18I3LCWJRjwxL7Filz1toy2?=
- =?us-ascii?Q?8volRZe36VnkedHa1+pSnntcrfopk8ehTZpLaBp0vX/iTYDo4D4Kwz3G5+ht?=
- =?us-ascii?Q?S2j5Q08vkx9umbWcMIrz4hNntblfCSWAxpfQRnGvRO/wWAhaWH/xynWp8nG3?=
- =?us-ascii?Q?DN3kVjsrszr5D3guaVgCtSDBdUxiASBhxswAW1ZlDvDJzV6L6vl+7tqyCu+m?=
- =?us-ascii?Q?50oNAtp1qDSuABdce8B4KK3GgVmtcpDuQ/GiYXekFSOFAs27eG4/oit8IjLa?=
- =?us-ascii?Q?pNVcKYlRJkSDhWvzUu4VfrQo2amnjqU9i/XSZDT9fV26qGcL62OQkZpChZrg?=
- =?us-ascii?Q?bc+NhMqsMWKxEz5JK46IEL8Qts/hxdAgs3zb+kmCxDVdJUQHRUOCeoIBQKtR?=
- =?us-ascii?Q?vLV9C83LXWNbKVOJn83nkYyNdo9USv2UGOADIuQS0XnBWtH17o/KF04ZUOi1?=
- =?us-ascii?Q?nmQwqjB4WMQhb1dOXyuAm5MNuke793RHJsTBromhb0/0Sh5+NUCizEtD1nl6?=
- =?us-ascii?Q?umdGSPm9BCVGA2FuuUvmO/3di7NhpiHK3nwpe41T9CilGzWSldiNPJEXKq56?=
- =?us-ascii?Q?JlJF2XdiUlMUu6vt1ry5L7thF/mOJG4HshwDxzdJ+GEmKuOEAfoMCPyLHgUX?=
- =?us-ascii?Q?tMVwhU4Clj5miGSjeafXVLMaHef3rCL51ha9NGeiGefhu2J6BC0jrwup3KIn?=
- =?us-ascii?Q?t3Ew0cretrGuxyx1zYc9X2ZckgaDoTNxFmB6YsXN5pTCVBLqUcDFxowrCzee?=
- =?us-ascii?Q?tsb1i4ETuv3BiPXuoiUUQwqQenV4Ot7bj4fzQ7sVbA9nsXo9mKKWljdvkm8f?=
- =?us-ascii?Q?yWkv3RyvyLSBI5dvJiWi3jRX6fzKTt19pQ9yZyP6kwW7BAYFHJJ9Ac/fBVEj?=
- =?us-ascii?Q?otgEaTn3oUwnooZ+mG2GOnDmzXy3t0UyvfDMuLbr2gFWGa8pFXO9hn9xydge?=
- =?us-ascii?Q?Gic1wBm9Ud2DBEF4dP4VrRBeH0cLOft5TPeUhsqGevLLkhpmidRCbMxcrrxa?=
- =?us-ascii?Q?etpg3HO0a8dMNmVpSvsAjAisUherOoObIRBrAk/zge9AEmkWI9OUObnrrK/0?=
- =?us-ascii?Q?h8QFDeE5PdweyDygxYrJ2OjpCPfSHPN3bebqWSTQFpO6iVSclTv8xUj2GrDB?=
- =?us-ascii?Q?hclAezy5SST1Xn7qR1ApIBLza4Y6MCjTLBUCPg6gkRwNmKuEA5dkeMjdJJy1?=
- =?us-ascii?Q?uPzGqnKLSoN79uk/KuIZ0IkXyM509NF9fnLxZPp4dd+TTNMFG3O9+VWf/Skr?=
- =?us-ascii?Q?o0uRcHSNxQETybqoSiW7/bL6?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <75AC845104370942820B4F516E02302F@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DIvKo15a"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D57C144517;
+	Thu, 27 Feb 2025 17:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740677812;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pSkiEkBXDYScEZ5ofMG9zWS4tKdrzFrmkGZ34AMFarA=;
+	b=DIvKo15afjSNGSOcvCupB0MV/J3WwoCrlldJWszOmh/qtQDfA/7dL5t8NYBJeTk7Dd7vQN
+	vQs+JEPAWAg5ux9R8tmZ0xGdcsrPOmqMT9GoqFHIOnOaDaEMvlfLFufaKH0kQahQiCCS30
+	mZWUhQkuAdu6cPTv2PCEL1A2NUe9Ux7+Ued0hAFNm+mMsvX786rZPfMFuNkIVTN3YAkCk6
+	Z3eze4n9SwXeuv8pUIK2hXAtECFqjLpdW9wRv+Li0ecCaT2K/GkPAVW1CAgIZF4413DC3x
+	hfvt3FGGI1ms4pxOirPcPIZZWMPD46L7Oqrm6oSW2OJa1A2Wr277sHHwJCC0Vg==
+Date: Thu, 27 Feb 2025 18:36:51 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	=?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>,
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dharma.B@microchip.com,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 0/2] microchip-tcb-capture: Add Capture, Compare,
+ Overflow etc. events
+Message-ID: <202502271736515748ffda@mail.local>
+References: <Z7h0AXV1zlgp9Nw-@ishi>
+ <8fb9f188-3065-4fdc-a9f1-152cc5959186@prolan.hu>
+ <Z7vihBqOgP3fBUVq@ishi>
+ <bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu>
+ <Z7_xTQeTzD-RH3nH@ishi>
+ <20250227135330.GC182392@tpx1.home>
+ <Z8B1LDT-n2XTTp8q@ishi>
+ <202502271437280a6701d8@mail.local>
+ <Z8CA9RTZWChh9cJW@ishi>
+ <Z8CKQvRjqH9lwzgO@ishi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1daa8d1-98bb-4b15-f3ce-08dd575539d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2025 17:36:11.0130
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAXPR01MB4422
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8CKQvRjqH9lwzgO@ishi>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekkedtkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegieduueethefhkeegjeevfefhiedujeeuhffgleejgfejgeekueejuefgheeggfenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegukeejvgemudgsudgsmeeltdekgeemtggtfhgtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegukeejvgemudgsudgsmeeltdekgeemtggtfhgtpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopeifsghgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrghmvghlrdgsohhuhhgrrhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheptghsohhkrghsr
+ dgsvghntggvsehprhholhgrnhdrhhhupdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqihhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeffhhgrrhhmrgdrueesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehluhguohhvihgtrdguvghsrhhotghhvghssehmihgtrhhotghhihhprdgtohhm
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-From: Kerem Karabay <kekrby@gmail.com>
+On 28/02/2025 00:52:34+0900, William Breathitt Gray wrote:
+> On Fri, Feb 28, 2025 at 12:13:00AM +0900, William Breathitt Gray wrote:
+> > On Thu, Feb 27, 2025 at 03:37:28PM +0100, Alexandre Belloni wrote:
+> > > On 27/02/2025 23:22:36+0900, William Breathitt Gray wrote:
+> > > > Skimming through the driver, it looks like what we'll need is for
+> > > > mchp_tc_counts[] to have all three TCCs defined, then have
+> > > > mchp_tc_probe() match on a TCB node and configure each TCC. Once that's
+> > > > setup, then whenever we need to identify which TCC a callback is
+> > > > exposing, we can get it from count->id.
+> > > > 
+> > > > So for example, the TC_CV register offset is calculated as 0x00 +
+> > > > channel * 0x40 + 0x10. In the count_read() callback we can leverage
+> > > > count->id to identify the TCC and thus get the respective TC_CV register
+> > > > at offset + count->id * 0x40 + 0x10.
+> > > > 
+> > > 
+> > > We can't do that because the TCC of a single TCB can have a mix of
+> > > different features. I struggled with the breakage to move away from the
+> > > one TCB, one feature state we had.
+> > > Be fore this, it was not possible to mix features on a single TCB, now,
+> > > we can have e.g. the clocksource on TCC 0 and 1 of TCB0 and a PWM on
+> > > TCC 2. mchp_tc_probe must not match on a TCB node...
+> > 
+> > Okay I see what you mean, if we match on a TCB mode then we wouldn't be
+> > able to define the cases where one TCC is different from the next in the
+> > same TCB.
+> > 
+> > The goal however isn't to support all functionality (i.e. PWM-related
+> > settings, etc.) in the counter driver, but just expose the TCB
+> > configuration options that affect the TCCs when configured for counter
+> > mode. For example, the sysfs attributes can be created, but they don't
+> > have to be available until the TCC is in the appropriate mode (e.g.
+> > return -EBUSY until they are in a counter mode).
+> > 
+> > Is there a way to achieve that? Maybe there's a way we can populate the
+> > sysfs tree on the first encountered TCC, and then somehow indicate when
+> > additional TCCs match. Attributes can become available then dynamically
+> > based on the TCCs that match.
+> > 
+> > William Breathitt Gray
+> 
+> Sorry, let me step back for a moment because maybe I'm trying to solve
+> a problem that might not actually be a problem.
+> 
+> I see functionality settings available in the TC Block Mode Register
+> (BMR) that can affect multiple TCCs at a time. Are these BMR settings
+> exposed already to users in someway? If not, do we have a way to
+> introduce these settings if someone wants them; e.g. would the
+> AutoCorrection function enable bit be exposed as a sysfs attribute, or
+> configured in the devicetree?
 
-This patch adds the device ID of Apple Touch Bar found on x86 MacBook Pros
-to the hid-multitouch driver.
+BMR is already available and used by the individual drivers. The current
+microchip-tcb-capture already uses it to enable qdec mode.
+timer-atmel-tcb uses it to chain timers.
 
-Note that this is device ID is for T2 Macs. Testing on T1 Macs would be
-appreciated.
+Note that we already have a driver for the pwm function too in
+drivers/pwm/pwm-atmel-tcb.c. In fact all the other TCB drivers predate
+the microchip-tcb-capture driver.
 
-Signed-off-by: Kerem Karabay <kekrby@gmail.com>
-Co-developed-by: Aditya Garg <gargaditya08@live.com>
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
----
- drivers/hid/Kconfig          |  1 +
- drivers/hid/hid-multitouch.c | 25 +++++++++++++++++++++----
- 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
-index dfc245867..727a2ed0d 100644
---- a/drivers/hid/Kconfig
-+++ b/drivers/hid/Kconfig
-@@ -743,6 +743,7 @@ config HID_MULTITOUCH
- 	  Say Y here if you have one of the following devices:
- 	  - 3M PCT touch screens
- 	  - ActionStar dual touch panels
-+	  - Apple Touch Bar on x86 MacBook Pros
- 	  - Atmel panels
- 	  - Cando dual touch panels
- 	  - Chunghwa panels
-diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 66e33a482..078ceef62 100644
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -221,6 +221,7 @@ static void mt_post_parse(struct mt_device *td, struct =
-mt_application *app);
- #define MT_CLS_GOOGLE				0x0111
- #define MT_CLS_RAZER_BLADE_STEALTH		0x0112
- #define MT_CLS_SMART_TECH			0x0113
-+#define MT_CLS_APPLE_TOUCHBAR			0x0114
- #define MT_CLS_SIS				0x0457
-=20
- #define MT_DEFAULT_MAXCONTACT	10
-@@ -406,6 +407,12 @@ static const struct mt_class mt_classes[] =3D {
- 			MT_QUIRK_CONTACT_CNT_ACCURATE |
- 			MT_QUIRK_SEPARATE_APP_REPORT,
- 	},
-+	{ .name =3D MT_CLS_APPLE_TOUCHBAR,
-+		.quirks =3D MT_QUIRK_HOVERING |
-+			MT_QUIRK_SLOT_IS_CONTACTID_MINUS_ONE |
-+			MT_QUIRK_APPLE_TOUCHBAR,
-+		.maxcontacts =3D 11,
-+	},
- 	{ .name =3D MT_CLS_SIS,
- 		.quirks =3D MT_QUIRK_NOT_SEEN_MEANS_UP |
- 			MT_QUIRK_ALWAYS_VALID |
-@@ -1807,6 +1814,15 @@ static int mt_probe(struct hid_device *hdev, const s=
-truct hid_device_id *id)
- 		}
- 	}
-=20
-+	ret =3D hid_parse(hdev);
-+	if (ret !=3D 0)
-+		return ret;
-+
-+	if (mtclass->name =3D=3D MT_CLS_APPLE_TOUCHBAR &&
-+	    !hid_find_field(hdev, HID_INPUT_REPORT,
-+			    HID_DG_TOUCHPAD, HID_DG_TRANSDUCER_INDEX))
-+		return -ENODEV;
-+
- 	td =3D devm_kzalloc(&hdev->dev, sizeof(struct mt_device), GFP_KERNEL);
- 	if (!td) {
- 		dev_err(&hdev->dev, "cannot allocate multitouch data\n");
-@@ -1854,10 +1870,6 @@ static int mt_probe(struct hid_device *hdev, const s=
-truct hid_device_id *id)
-=20
- 	timer_setup(&td->release_timer, mt_expired_timeout, 0);
-=20
--	ret =3D hid_parse(hdev);
--	if (ret !=3D 0)
--		return ret;
--
- 	if (mtclass->quirks & MT_QUIRK_FIX_CONST_CONTACT_ID)
- 		mt_fix_const_fields(hdev, HID_DG_CONTACTID);
-=20
-@@ -2339,6 +2351,11 @@ static const struct hid_device_id mt_devices[] =3D {
- 		MT_USB_DEVICE(USB_VENDOR_ID_XIROKU,
- 			USB_DEVICE_ID_XIROKU_CSR2) },
-=20
-+	/* Apple Touch Bar */
-+	{ .driver_data =3D MT_CLS_APPLE_TOUCHBAR,
-+		HID_USB_DEVICE(USB_VENDOR_ID_APPLE,
-+			USB_DEVICE_ID_APPLE_TOUCHBAR_DISPLAY) },
-+
- 	/* Google MT devices */
- 	{ .driver_data =3D MT_CLS_GOOGLE,
- 		HID_DEVICE(HID_BUS_ANY, HID_GROUP_ANY, USB_VENDOR_ID_GOOGLE,
---=20
-2.43.0
-
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
