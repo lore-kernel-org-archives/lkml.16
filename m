@@ -1,86 +1,120 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F601CAA96
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74DE1AE003
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675740; cv=none; b=lR1nZeSmo6GxDz8lMUPpEVKiBLaMcSwagBU3FrBEIi0zHJ80VsOhhhMoMoXXb68RbV4A/ytyDz4IMZezvSzLWx/HBrR4VF/sfaCIwbj0dxcEOtOhxnRMvcumnaRvuNn72MmAWqRx5VVFTAWfEMIydthGlX2RYhf94qUWD8hJFuI=
+	t=1740675761; cv=none; b=uklM3huiw4glv3ZpcFo1/XJ419YqVrK0JoqwUytiNr7Hta123tDnsLrXyk3oEkn7E2FJA9WhuBcADsgVcTkDrL8q/DGybnMntPPscLAhKKuObDZ4bs9z3j9Zv8dkZpoerT75sL3CpGMclbhV5N8iK2DFjVsCiNdySpxY/HWwB2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675740; c=relaxed/simple;
-	bh=MUFbVFjIYZLhtsooeA7GWuQyzlkwwMGqWPqMOQNcnSc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FuapvmzBb7Ljn85+ZT0hcgDQVprHEZEO1pT5Hu9TQTEYloRosEb0iqjBVEfOWjc/yffZXuN8+PVLGyUzwIFEnDLzQny1UVdBJ1NJgWr1Icusifb0n7mC/YhAo6Y6qPdaFj3HcErZLHLlfZ0Un/dd7ikFkkYI76KazT5NdVgy9mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=jYgTgyQa; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1740675761; c=relaxed/simple;
+	bh=SLkqtCbTV4WGngOIGeQdA6Ma/ik2r38oGZ+ix63LEAs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=s05NhwzX4ThYnC0i0lbD5Sez617Zq1zi4Zlhqwt96BH0+TeMYInkzem5cLmuYicXV0HZvkdkEefXY70FUXCeOAOzSZ1YqwMJ0XCFNNvItrb34vjvFBst9J2KNIKJjmfbSn+Ks6ZW24/i/QGstRaQuiIy4ktMGnJ6oLJL1QLpUOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sDhka04P; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="jYgTgyQa"
-Date: Thu, 27 Feb 2025 12:02:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1740675736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=buScLni0fJpq/olYSYs/TP5v5AMqPIGM9l8uVS6GTbk=;
-	b=jYgTgyQatW2/J5YgV8UCLIUrdXMporvBsRM4196W2rfF289Fk2/Fo4JOKsXSBEwxsHD4Sf
-	Mi0suq3ARv+pa1DunsrhOHKtSWRaKeBTK+UgaRt3cgCDDk/HhsWQTkI1OVWM+CDgh5mKYN
-	HOlYj17+N+3DA6LbkE8AmChqAivD9n73e4EY23o4GoSzEU9mLNbvqv2fk1PVTh3q10oaTd
-	mWilusDemTDcY1gqTUHcmmcPS2ePcoYQAdzXYG3QrJkJ0RYqZOj5/rp/Hfr3kLMm/4o8bq
-	6ctgtfJJHAQ1CHalr99fAEPA+kFirTjIlrx4PsnMJ+/2Cy8DEVuDlLkWEV0fig==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: fnkl.kernel@gmail.com
-Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 1/2] iommu: apple-dart: Increase MAX_DARTS_PER_DEVICE to 3
-Message-ID: <Z8Cak9VdyUIedOsV@blossom>
-References: <20250227-isp-dart-v1-0-161e91ef4f46@gmail.com>
- <20250227-isp-dart-v1-1-161e91ef4f46@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sDhka04P"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4394c0a58e7so8288945e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 09:02:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740675758; x=1741280558; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7N2niC0tm9GYpL4kTpAci69B17RX2iCWEhPKu3yRgtc=;
+        b=sDhka04PQzum/t7pcZb/gGXmj5dCEvu/ic+KF2YyjzHxibTn/ib5rsiQVSS3lpRcbo
+         VGLYoyC7xYdzAlj9uTW6L6H9149T6l/IiHaU0C+kl+2pkIVSQMWkyVy7EUCgDaWMNWp7
+         kpw5Q3QULkdVMJlR3Toii6dy1qUiPdSq8qE+CsfkASRuN99xITe99B4iDDg5+NF2i01g
+         T9vvvzndibE9hSYoWWHFJcqTTtLp4bB5Mf77JxbOorpIFrYufR+2CKo8MrhbjYc10rc3
+         akfezYv+dNljtuwcT81FZHoF8mHbDpmZSA28CJU0SmX40Dg9nfJ2l4rnoqo3PdOrLUHL
+         2MwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740675758; x=1741280558;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7N2niC0tm9GYpL4kTpAci69B17RX2iCWEhPKu3yRgtc=;
+        b=Ob873y+TGLQHHwBxDXOpk/1MlGMc7AeLmwMzZNy/UVQ+T4YZYUD7QuhufUH7+s5e7z
+         rwwibHE7c873CgEiBKWmC8SMLzP10CJUtk4uIA0dC+7/wag+ylv+Q1sYOwk6Hbo4VqB/
+         TBIldTBf6Lr+eaGz/fgMgqYD8onCZ3GVK96bzTlbEvPOh8K15/s4kpjE27Ri2nHw80CF
+         pCBhMHf2HQ25YYDViPo4uGI8tc+BQs83HlfQEEOfhO3dogrTirUyWzTJlBWg5IZkmRSP
+         D21V//xwJ8ocpWNPLNTU/w2b8ezIVBnqQSUv2pW3jJn5yVECk5U0wqZ+nDB/Q1njGFvT
+         JX0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVkLHsoM6Bl+FY9v5L05pCDE16KccqMojNLI+SVW4zfNqVpCjaYT/K5msDd7D10XYBOKc2K1t6tpfb05OA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXOVjwjQtLXG6U+Fuqe2vNuCd45H6ztiJ8iyVvmhzt+kMv9e27
+	PSL6wD1AKy57O/mmeJt/UGp0W3Bcu3kUYXmua2dZrOscUop00XqLNfZzqroUdEf/G3d/XSks9XA
+	ahUU27HG3I67yxg==
+X-Google-Smtp-Source: AGHT+IGiRBy2T4pZuKAoxObAEh9uitxTWZj5IZVMfO1S6oM96yytdRmD9YMHqkMLgp0r3G0WIE6HBshMhjxRYv8=
+X-Received: from wmbjh14.prod.google.com ([2002:a05:600c:a08e:b0:439:8ee3:e17b])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1e15:b0:439:9cbc:7753 with SMTP id 5b1f17b1804b1-439b03246d2mr237339895e9.10.1740675758273;
+ Thu, 27 Feb 2025 09:02:38 -0800 (PST)
+Date: Thu, 27 Feb 2025 17:01:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227-isp-dart-v1-1-161e91ef4f46@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAIaawGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyNz3dSKgvyiEt3cxOSifF3LxETLNEMDQ7MUi2QloJaCotS0zAqwcdG xtbUAw8oUeV4AAAA=
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1088; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=SLkqtCbTV4WGngOIGeQdA6Ma/ik2r38oGZ+ix63LEAs=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnwJqObbplB6yaeANqTFz7BvG+CSsY/WddYZzOF
+ Ug+T+3+duSJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8CajgAKCRAEWL7uWMY5
+ RpFKD/9sJCzRyJGIyiSqnki5NeoIaiQUIr0r3kFUeBkycOLKP6NN7QmR1K7Sl6FCblSl8mcdcd5
+ SMoTkfP7ETUcT/aDp8hNnqguI5bGB3kX65A06YmHds5KVEMEoDOflnh+SNZ2J4QAeBa59hyujnk
+ 8EyY0GBFoOxp0Qbf+NSamLl1BAECCBS7ycDJesX/ceneS+/TVJCtftniQOSmaDe5i6fs8XbpvRF
+ Z9AYyINAQYYOLnZWngIoX8+S/h+gZgQPVbhHWSwwcC7hGXJnIQGjzBFyDi+JjfzQ48pYk8VIW+6
+ WDRuuizvplZPnA3/Th2Q2UwY3VXn7IYHodwxNluX0gLIoJFe0sXF2Cd3wlkD0Fm346lyuQZUveJ
+ DFrVjvse0OcwYk35esL2Il11UU0K1CB86qBqPW3SFmWunjk+q/WAGztVxyN0feyDDghNgIM6czW
+ cKlXb2I/AzihXQwgoNqkJ77cGWAUF2Q5OGfbFtQ7CrgVqz3XHKpaoSunEDxsvIkCkovA41p5ZkO
+ E9Ka0h7XG+BvNr9oflcrsYNyuxubjRtE1tOvtGx/L1ndT/hjEhCLi7ZpwnjyQ4cFS7QqG2cNQpn
+ r+zHiLtV9TX7yvawCgcc0XEHv7rgMkuOB0A+6OHPixX3vp52M3H6PCpSRJkqGoV/l/pD+ULqBXX 1Tc+b3pKRo/rczw==
+X-Mailer: b4 0.14.1
+Message-ID: <20250227-export-macro-v1-0-948775fc37aa@google.com>
+Subject: [PATCH 0/4] Check Rust signatures at compile time
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Alice Ryhl (4):
+      rust: fix signature of rust_fmt_argument
+      rust: add #[export] macro
+      print: use new #[export] macro for rust_fmt_argument
+      panic_qr: use new #[export] macro
 
-Le Thu , Feb 27, 2025 at 05:56:03PM +0100, Sasha Finkelstein via B4 Relay a écrit :
-> From: Hector Martin <marcan@marcan.st>
-> 
-> ISP needs this.
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-> ---
->  drivers/iommu/apple-dart.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/apple-dart.c b/drivers/iommu/apple-dart.c
-> index 95ba3caeb40177901086076416874b9905a1f40a..edb2fb22333506d7c64ad1b6321df00ebfd07747 100644
-> --- a/drivers/iommu/apple-dart.c
-> +++ b/drivers/iommu/apple-dart.c
-> @@ -36,7 +36,7 @@
->  
->  #define DART_MAX_STREAMS 256
->  #define DART_MAX_TTBR 4
-> -#define MAX_DARTS_PER_DEVICE 2
-> +#define MAX_DARTS_PER_DEVICE 3
->  
->  /* Common registers */
->  
-> 
-> -- 
-> 2.48.1
-> 
-> 
+ drivers/gpu/drm/drm_panic.c     |  5 -----
+ drivers/gpu/drm/drm_panic_qr.rs | 15 +++++++++++----
+ include/drm/drm_panic.h         |  7 +++++++
+ include/linux/sprintf.h         |  3 +++
+ lib/vsprintf.c                  |  3 ---
+ rust/bindings/bindings_helper.h |  4 ++++
+ rust/kernel/prelude.rs          |  2 +-
+ rust/kernel/print.rs            | 11 ++++++-----
+ rust/macros/export.rs           | 25 +++++++++++++++++++++++++
+ rust/macros/helpers.rs          | 19 ++++++++++++++++++-
+ rust/macros/lib.rs              | 18 ++++++++++++++++++
+ rust/macros/quote.rs            | 21 +++++++++++++++++++--
+ 12 files changed, 112 insertions(+), 21 deletions(-)
+---
+base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
+change-id: 20250227-export-macro-9aa9f1016d8c
+
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
