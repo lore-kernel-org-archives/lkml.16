@@ -1,131 +1,146 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420A81F16B;
-	Thu, 27 Feb 2025 08:53:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D38225412
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:54:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740646434; cv=none; b=rkWLYeJ2dFKrYeojaShqFsWHAPOacgVI+rUsavw4CGj33gO3LkAWE4wRWaB/9u7C7DQjXtYPZ0uDlRO+FYqIDAdSY2xl+MPWVxl2Zzl/J7tFS38e40ZstbsM9wDq4cLPM0IPGhA/FywteVZFjj0BAT+ebvubP6lGaTvtMxI4r20=
+	t=1740646448; cv=none; b=f5kGjKyCe8KNziWOzQsMe9gwIYU+DXZsFoPJSbLqx2P+QbpzzryefpSVJNcYRHa8nh25sOahk8gYbszbenxQCeaARm1nMjdqp9tgdd3hYc3IxFRyBdHIug+WMcCE7OGkTbdP0bA1LXvLXUhMZ4CrK9woudTboLVgoMhmD/CRzFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740646434; c=relaxed/simple;
-	bh=AOLBVio6vzVYJf2bqp+9IX9u7u/JDXUY5gdgspj9cPI=;
+	s=arc-20240116; t=1740646448; c=relaxed/simple;
+	bh=XAbrctXtesSLToALyuGAt+44obnQxRaAX9V/KR/oWfI=;
 	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n9v5fLG9DemmNjeCBrvJfX/aQwgNImkuCxROuXBk2sVbJog67DnftiG9mryWORKaQ/pE8KvVFnviJFWT/NujSaQOmsPu6RE0qbvagewwFFYahD2HZatFiAPplSjC/SJxIcPVD0yiC9tokorEvbRfmfZlcALgMw7DKXdL2RfP91s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gWkRrh+3; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mf2qtImT5oevFa3q7JBAZhMm5zdG6Wd0YRvWlR9P4MuXKzXm0+8hV64EFtSJImIPZJkDiTPuyWjnvV1Wkzl8GFFumcheiVBvhy9g8I1S6a9/+w7whTWuL8WZ79rBostwmV/35D9jSIEZKEQzcCrHxjdgR7D0MIAMXdr00hjJ7WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=er7EmWRK; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gWkRrh+3"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R8DrQP018544;
-	Thu, 27 Feb 2025 08:53:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=bw1PYuSEp4O5hdX7H6E/TvKB
-	rfllT/ojMop2tlSvOag=; b=gWkRrh+39rQpt3y8l/nF4063PVNAtosrny9DO5qx
-	N3Hw8DHc4j2mDS0Az7q8RafcRVAwLhI6xfDejc5ujyUUw/V54+tYpclweX5iMzh/
-	cmMX4djzMyDh/ubB7RF/wKgbnIX5NQoyRP1X6ML4/q4/yMY39ea/I+hAtKxUy+B1
-	0kZCXBLjMUcZiDF6yeVFhoaKhr6XDReLUcyFZyCM5bnWiJ9zE/bFmaW43w8glDiz
-	RUWrU44tjGJFHPXCBLNX+IhWZhroLHe6K/ac1lwQG/QBjXtsHbPtOp6cusraYEH8
-	88K5ZLxrvavp4W42tlk9vWeYNHunbUirpyc+vBkQIKApeA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prn4ys4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 08:53:38 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51R8rbrO023753
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 08:53:37 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 27 Feb 2025 00:53:32 -0800
-Date: Thu, 27 Feb 2025 14:23:28 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Vinod Koul <vkoul@kernel.org>
-CC: <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <kishon@kernel.org>, <andersson@kernel.org>, <konradybcio@kernel.org>,
-        <p.zabel@pengutronix.de>, <quic_nsekar@quicinc.com>,
-        <dmitry.baryshkov@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>
-Subject: Re: [PATCH v10 2/7] phy: qcom: Introduce PCIe UNIPHY 28LP driver
-Message-ID: <Z8AoCHxD4IlFeXv9@hu-varada-blr.qualcomm.com>
-References: <20250206121803.1128216-1-quic_varada@quicinc.com>
- <20250206121803.1128216-3-quic_varada@quicinc.com>
- <Z64xQcgHIgAEzKFb@vaman>
- <Z7MChDND+iClDNES@hu-varada-blr.qualcomm.com>
- <Z7//eDJZw2SNNc5Z@vaman>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="er7EmWRK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740646446; x=1772182446;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XAbrctXtesSLToALyuGAt+44obnQxRaAX9V/KR/oWfI=;
+  b=er7EmWRKSMcqcJs61n73FPqjn8vZQ+CccAk9bHyi7tEuSWYnVl23jdH0
+   6IW6cC+Y+7N3ZWQdDjQ4+TZFfm64Fv2K+hKC5t59sE3hyafLJL8FPE6CF
+   hkIP7RldXnpPhO1vkFCgABn32FiL7k9xxm2aBfkKrG63SUKqFpV6ElrlU
+   NFHM/mA6VRVPQQUkRKTs/C+8BhEpJHo43B/xCd1yqBN+iQrofNTuDwsIj
+   VY4klRsVrF9JLtiqKY8Mwb2znggnqxSFqUNhOfoXkkh0q3VjZM7+wgDw3
+   7aHAygbFGcO22BFTHdKUxoVu+ZjYxdEeeQz3jr3eI5e0oo/6Oj1xnfoUt
+   g==;
+X-CSE-ConnectionGUID: qCYUNJyrRXGyNKYkLUQ6tQ==
+X-CSE-MsgGUID: Iq7AC7y9TEiNnIH5R9rQJQ==
+X-IronPort-AV: E=Sophos;i="6.13,319,1732604400"; 
+   d="scan'208";a="38620683"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 27 Feb 2025 01:54:05 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 27 Feb 2025 01:53:42 -0700
+Received: from localhost (10.10.85.11) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Thu, 27 Feb 2025 01:53:42 -0700
+Date: Thu, 27 Feb 2025 09:51:48 +0100
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+CC: <Steen.Hegelund@microchip.com>, <daniel.machon@microchip.com>,
+	<UNGLinuxDriver@microchip.com>, <herve.codina@bootlin.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] reset: mchp: sparx5: Fix for lan966x
+Message-ID: <20250227085148.ulqc2n7xvc2fa745@DEN-DL-M31836.microchip.com>
+References: <20250226144645.1950451-1-horatiu.vultur@microchip.com>
+ <5cc5cd05e0a481773212fff0bce574dcfea3f74d.camel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <Z7//eDJZw2SNNc5Z@vaman>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: fqSDG55IYoeVkzP-dc-sUFjEk3UC6RD7
-X-Proofpoint-GUID: fqSDG55IYoeVkzP-dc-sUFjEk3UC6RD7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_04,2025-02-26_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 mlxscore=0 adultscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270067
+In-Reply-To: <5cc5cd05e0a481773212fff0bce574dcfea3f74d.camel@pengutronix.de>
 
-On Thu, Feb 27, 2025 at 11:30:24AM +0530, Vinod Koul wrote:
+The 02/26/2025 17:32, Philipp Zabel wrote:
 
-[ . . .]
+Hi,
 
-> > > should we not unroll the pipe clk registration here?
-> >
-> > Since it is a 'devm_' clk_hw_register_fixed_rate, wouldn't the devm
-> > framework do the unregister?
-> >
-> > 	$ git diff
-> > 	diff --git a/drivers/clk/clk-fixed-rate.c b/drivers/clk/clk-fixed-rate.c
-> > 	index 6b4f76b9c4da..3fd1a12cc163 100644
-> > 	--- a/drivers/clk/clk-fixed-rate.c
-> > 	+++ b/drivers/clk/clk-fixed-rate.c
-> > 	@@ -58,6 +58,7 @@ static void
-> > 	devm_clk_hw_register_fixed_rate_release(struct device *dev, void *re
-> > 		 * the hw, resulting in double free. Just unregister the hw and
-> > 		 * let
-> > 		 * devres code kfree() it.
-> > 		 */
-> > 	+	printk("--> %s: %s\n", __func__, __clk_get_name(fix->hw.clk));
-> > 		clk_hw_unregister(&fix->hw);
-> > 	 }
-> >
-> > 	diff --git a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-> > 	b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-> > 	index 311f98181177..9a8d8d9a7c2b 100644
-> > 	--- a/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-> > 	+++ b/drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c
-> > 	@@ -267,6 +268,7 @@ static int qcom_uniphy_pcie_probe(struct
-> > 	platform_device *pdev)
-> >
-> > 		phy_provider = devm_of_phy_provider_register(phy->dev,
-> > 							     of_phy_simple_xlate);
-> > 	+	phy_provider = ERR_PTR(-EINVAL);
-> > 		if (IS_ERR(phy_provider))
-> > 			return PTR_ERR(phy_provider);
-> >
-> > I forced an error here and saw that devm_clk_hw_register_fixed_rate_release
-> > is getting called, which in turn calls clk_hw_unregister. Is that sufficient?
-> > Or am i missing something.
->
-> I missed that internally this is devm_, this is fine
+> 
+> On Mi, 2025-02-26 at 15:46 +0100, Horatiu Vultur wrote:
+> > With the blamed commit it seems that lan966x doesn't seem to boot
+> > anymore when the internal CPU is used.
+> > The reason seems to be the usage of the devm_of_iomap, if we replace
+> > this with of_iomap, this seems to fix the issue as we use the same
+>             ^^^^^^^^
+> The is not accurate anymore.
 
-Thanks for the clarification. Have posted V11, please review.
+Good catch. I will update in the next version.
 
--Varada
+> 
+> > region also for other devices.
+> >
+> > Fixes: 0426a920d6269c ("reset: mchp: sparx5: Map cpu-syscon locally in case of LAN966x")
+> > Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+> > Tested-by: Herve Codina <herve.codina@bootlin.com>
+> 
+> Is this still correct?
+> 
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> > v2->v3:
+> > - forward error from of_address_to_resource
+> > - use devm_ioremap instead of_iomap
+> > v1->v2:
+> > - make sure to use iounmap when driver is removed
+> > ---
+> >  drivers/reset/reset-microchip-sparx5.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
+> > index aa5464be7053b..176b3f46e9243 100644
+> > --- a/drivers/reset/reset-microchip-sparx5.c
+> > +++ b/drivers/reset/reset-microchip-sparx5.c
+> > @@ -8,6 +8,7 @@
+> >   */
+> >  #include <linux/mfd/syscon.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  #include <linux/module.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/property.h>
+> > @@ -72,14 +73,19 @@ static struct regmap *mchp_lan966x_syscon_to_regmap(struct device *dev,
+> >                                                   struct device_node *syscon_np)
+> >  {
+> >       struct regmap_config regmap_config = mchp_lan966x_syscon_regmap_config;
+> > -     resource_size_t size;
+> > +     struct resource res;
+> >       void __iomem *base;
+> > +     int err;
+> > +
+> > +     err = of_address_to_resource(syscon_np, 0, &res);
+> > +     if (err)
+> > +             return ERR_PTR(err);
+> >
+> > -     base = devm_of_iomap(dev, syscon_np, 0, &size);
+> > -     if (IS_ERR(base))
+> > -             return ERR_CAST(base);
+> 
+> It would be nice to add a comment here that devm_of_iomap() can't be
+> used because the resource is shared with other devices. Do you know
+> which ones?
+
+Yes, I will add a comment in the next version.
+Looking at the device trees (lan966x.dtsi), it looks like it is shared
+with the clock driver (clks).
+
+> 
+> Otherwise, this looks good to me.
+> 
+> 
+> regards
+> Philipp
+
+-- 
+/Horatiu
