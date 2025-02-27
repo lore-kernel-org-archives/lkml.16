@@ -1,105 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx24lb.world4you.com (mx24lb.world4you.com [81.19.149.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EB1271272;
-	Thu, 27 Feb 2025 21:41:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446931A9B2A;
+	Thu, 27 Feb 2025 21:42:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692479; cv=none; b=nueK10OVaS7L2j3svwpOPVngublwEckbRKo+WCI6Tm6E17B8i/+JiBCQrGPKDqZmYPWZNiJY2SUTJ7guBAnIqKKSTToY6OhQg5spU/ZG3h+xAa/+um75vRj298kjsj34V152OtT56VRKSWFQ1hRkx4Iopud74vKOEZjlnsxZo/E=
+	t=1740692539; cv=none; b=LOiOrOT6ystA5/6w/T0ci98CJzIVq+h10/LKo5Gd/1Bfali1dF4rMp6AZ6bFGU/s0NISQpe66mSVOA0IBJIOJiIdspCxZQ+OFytJ0lTjGrs+m35g+zTxAzRXOJgwsbzmFA2vSygwzrNN/pR5QIM8t4LBkDYPjcgWCeUngh3H2EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692479; c=relaxed/simple;
-	bh=s6/Sys11FQCail6u5a/RCgjidg0h3LHn6wI4Lyxz6Ho=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ajgBnVJQdmA40KWiGg9xPYVRtn98nxUxsjAwY5BB4aLwP6I2eIFMbAeWplqGeznGZNCLrXn6CBP+w20Ybts5B7qxbrnbGsVv3BfHrcpOKUHe1c9xj5oA+Cd3dOg4GJlOxNG3N6hNwDJMPk39Cj7TXbs1lZ4MWbe0XHpp9HlUQeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qiniMhKa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740692539; c=relaxed/simple;
+	bh=ZgLkTQpi46zVF4g45Rb7vFFSn7wnrwrrKVkZSld/DCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SvKeU+qKK1MspKeWjzG2EJMQxaYvzSfi+sZujMjrnan6S/jEG1Mrq9ku3HHRrmYUXX+L1eFyUFlbPKjdb5wOp+CdyXP0UyaV2C0CuFbxHkax3rSa7IL1zLbGTxUx4ZU+0QpXiRejBQNWC69Z1NCsAhGeXi0m0lM3VylQ0mma+Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=nxNnjZ6h; arc=none smtp.client-ip=81.19.149.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qiniMhKa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5A3C4CEDD;
-	Thu, 27 Feb 2025 21:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740692476;
-	bh=s6/Sys11FQCail6u5a/RCgjidg0h3LHn6wI4Lyxz6Ho=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=qiniMhKaH9OM1vebqKi2trSfKHKXoBMfx7Rsc+qUHWodxA22cTOttzf7JDOK4zV5o
-	 XZaVy7dgq4fBSVHzaG1a5blARaC/MEuUrzul4lKfJjyegmGRRBLY1kp9LR/OOiEfMx
-	 bU8dYARfyMeWW3SltpUebou+2WUH6GgzBEP+Ohnr28r9THC99I6hxmM1FMdHnAwe7R
-	 QXRZemDXrXI0+SuqmazVlQFla2QCcYubbgYVvFiani3ij4m2m1uJRf3Jn3wTPAInw/
-	 0Ok56p4Wbc2gy59lXlc3ek7lqiYEz9LUG9FmiYJ4n8HU08uh1k/e6688Ca6dLu34v8
-	 pvH470FDEEl9Q==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D0E74CE04CA; Thu, 27 Feb 2025 13:41:15 -0800 (PST)
-Date: Thu, 27 Feb 2025 13:41:15 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Martin Uecker <uecker@tugraz.at>, Ralf Jung <post@ralfj.de>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Ventura Jack <venturajack85@gmail.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Gary Guo <gary@garyguo.net>, airlied@gmail.com,
-	boqun.feng@gmail.com, ej@inai.de, gregkh@linuxfoundation.org,
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev,
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
-	rust-for-linux@vger.kernel.org
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <72bd8dc3-8a46-47b1-ac60-6b9b18b54f69@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
- <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
- <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
- <20250226162655.65ba4b51@gandalf.local.home>
- <CAHk-=wjAcA4KrZ-47WiPd3haQU7rh+i315ApH82d=oZmgBUT_A@mail.gmail.com>
- <20250226165619.64998576@gandalf.local.home>
- <20250226171321.714f3b75@gandalf.local.home>
- <CAHk-=wj8Btsn0zN5jT1nBsUskF8DJoZbMiK81i_wPBk82Z0MGw@mail.gmail.com>
- <20250226173534.44b42190@gandalf.local.home>
- <20250227204722.653ce86b@pumpkin>
+	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="nxNnjZ6h"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=NXcp1FiqxMKRjKgh60iR4pFXneo9a1uhMTjZAaxEfm0=; b=nxNnjZ6hbxsWBoU0izOH/n1fJp
+	rrQKHMkTDk+5mX1fxI07czCN/4RiRq6VFfn2yKEO2DBulYz8p1Rt3AFy7m+LjosjIJ3JKs0380Cb6
+	KoLeAtDOuokIhOk1J5A5e6UiEL3xj0VjLCSrAsKpyr+pkVVa2ob528VKxxIePcxD6ADM=;
+Received: from [88.117.55.1] (helo=[10.0.0.160])
+	by mx24lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1tnkrC-000000000l3-2Rs8;
+	Thu, 27 Feb 2025 21:51:46 +0100
+Message-ID: <1ea6a1df-357d-4d00-828b-98345254b4b2@engleder-embedded.com>
+Date: Thu, 27 Feb 2025 21:51:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227204722.653ce86b@pumpkin>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] caif_virtio: fix wrong pointer check in cfv_probe()
+To: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jiri Pirko <jiri@resnulli.us>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rusty Russell <rusty@rustcorp.com.au>, Erwan Yvin
+ <erwan.yvin@stericsson.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+ Andrew Lunn <andrew+netdev@lunn.ch>
+References: <20250227184716.4715-1-v.shevtsov@mt-integration.ru>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20250227184716.4715-1-v.shevtsov@mt-integration.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-On Thu, Feb 27, 2025 at 08:47:22PM +0000, David Laight wrote:
-> On Wed, 26 Feb 2025 17:35:34 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On 27.02.25 19:46, Vitaliy Shevtsov wrote:
+> del_vqs() frees virtqueues, therefore cfv->vq_tx pointer should be checked
+> for NULL before calling it, not cfv->vdev. Also the current implementation
+> is redundant because the pointer cfv->vdev is dereferenced before it is
+> checked for NULL.
 > 
-> > On Wed, 26 Feb 2025 14:22:26 -0800
-> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > 
-> > > > But if I used:
-> > > >
-> > > >         if (global > 1000)
-> > > >                 goto out;
-> > > >         x = global;    
-> > > 
-> > > which can have the TUCTOU issue because 'global' is read twice.  
-> > 
-> > Correct, but if the variable had some other protection, like a lock held
-> > when this function was called, it is fine to do and the compiler may
-> > optimize it or not and still have the same result.
-> > 
-> > I guess you can sum this up to:
-> > 
-> >   The compiler should never assume it's safe to read a global more than the
-> >   code specifies, but if the code reads a global more than once, it's fine
-> >   to cache the multiple reads.
-> > 
-> > Same for writes, but I find WRITE_ONCE() used less often than READ_ONCE().
-> > And when I do use it, it is more to prevent write tearing as you mentioned.
+> Fix this by checking cfv->vq_tx for NULL instead of cfv->vdev before
+> calling del_vqs().
 > 
-> Except that (IIRC) it is actually valid for the compiler to write something
-> entirely unrelated to a memory location before writing the expected value.
-> (eg use it instead of stack for a register spill+reload.)
-> Not gcc doesn't do that - but the standard lets it do it.
+> Found by Linux Verification Center (linuxtesting.org) with Svace.
+> 
+> Fixes: 0d2e1a2926b1 ("caif_virtio: Introduce caif over virtio")
+> Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+> ---
+>   drivers/net/caif/caif_virtio.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/caif/caif_virtio.c b/drivers/net/caif/caif_virtio.c
+> index 7fea00c7ca8a..c60386bf2d1a 100644
+> --- a/drivers/net/caif/caif_virtio.c
+> +++ b/drivers/net/caif/caif_virtio.c
+> @@ -745,7 +745,7 @@ static int cfv_probe(struct virtio_device *vdev)
+>   
+>   	if (cfv->vr_rx)
+>   		vdev->vringh_config->del_vrhs(cfv->vdev);
+> -	if (cfv->vdev)
+> +	if (cfv->vq_tx)
+>   		vdev->config->del_vqs(cfv->vdev);
+>   	free_netdev(netdev);
+>   	return err;
 
-Or replace a write with a read, a check, and a write only if the read
-returns some other value than the one to be written.  Also not something
-I have seen, but something that the standard permits.
-
-							Thanx, Paul
+Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
