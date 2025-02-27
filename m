@@ -1,214 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C617B25C6E2;
-	Thu, 27 Feb 2025 14:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D6F5232379
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667798; cv=none; b=SmX+s5p7U5nB7hoI2A2VGUr4OHAiHRugUroInpUnyLl944Oibgh+DnVgp6LcdQIo1LF1XHQPaZoNwopoWKOzvDtsk0aSSF2NQ8expuqQ8flpA0/c592Gso2A7aX1X+mawLcVdlwTZu4RxA0MzHXKayJNwnMBTVBioU6oknlDOao=
+	t=1740667804; cv=none; b=eAQU3Va+vELAfUkb8FanAe2ofZcY6ul4l9PCNAWXPcJUhL7EUa7kuFR+7xPP0XcxmIorET9Ycgau4xtVHxSE8y0WS4EjCAAQfUGah2SbKAb/k10zJw55blW6KXK8SkZW+wovtkndHLXKO8uTXiBjcxN8LtYYqmm5bPTq5CtaNi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667798; c=relaxed/simple;
-	bh=/+J4TVv0pmFUhasUbdo9cIKQLHkTdGgPrNJ8G6n+C/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0ZBRo7jjCuBP2rL4tPD6C/0ALl0F16SwiCT6gyzn2W/TO/lJxG6IgS50IhvyP6DYZGabkj7QuF+SuBfiKrNp6vcIOHWM8i182+p/QuUm8AmXBUH40X1pXcSB7jDTXC2feajW2pp6eAn0oxHltwd4bhH5GnUuT/G+sBRUlCkWWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lTZ6W9Ky; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lTZ6W9Ky"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740667797; x=1772203797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/+J4TVv0pmFUhasUbdo9cIKQLHkTdGgPrNJ8G6n+C/8=;
-  b=lTZ6W9KywG0wSXdYZhOi/jxRFvoFdM4ARzxioaKlfdFhoR35Vi++DeUs
-   xG5wtxALBfkJ9AjoXVijH0itE02xcwCLeq5dw1rbhvWdN70R4IpweUREZ
-   pbaWt+0l0vSYMjWaRpFMX9fMcuzvbNQeZ/Y+g5ZwXUKEx5U/xgVWBNMQq
-   xR9CJH6/kwZOGVtgd5r3WbszOOWS4ysfLT8NDcDT0okyNyQkEU6wNCvG3
-   elxamHR9gB139wpYmfo1cHlkwNvWrotMPbAFqjbc/gCCWK+O+Aba428GS
-   MZy8Wv4zksorXu9rZoDgdyvqJAGRcibcgi7U3pUCnPA6NW+vJjLhCv8mp
-   A==;
-X-CSE-ConnectionGUID: gw6J9OrAThCIqhqi9P6piw==
-X-CSE-MsgGUID: bQP4Vv1EQQ6BBHharh//IA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40735926"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="40735926"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:49:55 -0800
-X-CSE-ConnectionGUID: QY9xDufQQdmIzsMP9JwSew==
-X-CSE-MsgGUID: mjWrqQyOSxGjmaB+28Ev5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117070355"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:49:47 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnfCp-0000000Fcnn-1wW6;
-	Thu, 27 Feb 2025 16:49:43 +0200
-Date: Thu, 27 Feb 2025 16:49:43 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v4 02/10] property: Add
- device_get_child_node_count_named()
-Message-ID: <Z8B7h4_IWz43gFhO@smile.fi.intel.com>
-References: <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
- <Z72QAOA9xXbP16K-@kuha.fi.intel.com>
- <Z72Zp8tpnvlFGdQ_@smile.fi.intel.com>
- <ad39b453-7e5b-49bd-a4fd-6a4988636130@gmail.com>
- <Z72d7TzZ21WITW3f@smile.fi.intel.com>
- <893a3c45-537e-47ad-afbd-1e5d3b9abe2c@gmail.com>
- <Z73M3Ua6u1FpgBEK@smile.fi.intel.com>
- <720f9c69-ca1f-45cb-9f6e-c8e4703c9aad@gmail.com>
- <Z78g_uiXumn4mvET@smile.fi.intel.com>
- <d7982b76-3da7-47ff-b2b2-f964610af1f7@gmail.com>
+	s=arc-20240116; t=1740667804; c=relaxed/simple;
+	bh=neRENxf1Lo7oNnqEmZF/Bu+fkuNcBaQkyltD/4I912w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gU9k5lFlPGkgqFylZzR7WWNXMVoWrywkVzYK5AbwwrMNjldBIjFWh+iTBSWqT00CO1rxAOfYRvxrKUt4rmuqcQO8ICdBxBB603Ej39mSlNX4stCPfl3Hvy0o0/Se98bTZe8FMD2+dvgWNP2MG5g52fH2+lhYYdXje5AASojCRwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z3YK96mwzz9sTK;
+	Thu, 27 Feb 2025 15:15:41 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id PdWIFlqYCtlL; Thu, 27 Feb 2025 15:15:41 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z3YK36WdMz9sSr;
+	Thu, 27 Feb 2025 15:15:35 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CC23B8B78B;
+	Thu, 27 Feb 2025 15:15:35 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id MJ5KskemWaxm; Thu, 27 Feb 2025 15:15:35 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 72F768B77C;
+	Thu, 27 Feb 2025 15:15:35 +0100 (CET)
+Message-ID: <c68287f7-ad00-46fc-a92e-06e0c9074139@csgroup.eu>
+Date: Thu, 27 Feb 2025 15:15:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7982b76-3da7-47ff-b2b2-f964610af1f7@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [next-20250226]Build Failure
+To: Michael Kelley <mhklinux@outlook.com>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Venkat Rao Bagalkote <venkat88@linux.vnet.ibm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ Kees Cook <kees@kernel.org>
+References: <adbe8dd1-a725-4811-ae7e-76fe770cf096@linux.vnet.ibm.com>
+ <20250227123804.5dd71cef@canb.auug.org.au>
+ <14193c98-fb30-4ee8-a19a-fe85d1230d74@csgroup.eu>
+ <SN6PR02MB4157A0C1B4F85D8A289E5CE9D4CD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <SN6PR02MB4157A0C1B4F85D8A289E5CE9D4CD2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 10:01:49AM +0200, Matti Vaittinen wrote:
-> On 26/02/2025 16:11, Andy Shevchenko wrote:
-> > On Wed, Feb 26, 2025 at 04:04:02PM +0200, Matti Vaittinen wrote:
-> > > On 25/02/2025 15:59, Andy Shevchenko wrote:
-> > > > On Tue, Feb 25, 2025 at 03:29:17PM +0200, Matti Vaittinen wrote:
-> > > > > On 25/02/2025 12:39, Andy Shevchenko wrote:
-> > > > > > On Tue, Feb 25, 2025 at 12:29:31PM +0200, Matti Vaittinen wrote:
-> > > > > > > On 25/02/2025 12:21, Andy Shevchenko wrote:
-> > > > > > > > On Tue, Feb 25, 2025 at 11:40:16AM +0200, Heikki Krogerus wrote:
 
-...
 
-> > > > > > > > > 
-> > > > > > > > > I did not check how many users are you proposing for this, but if
-> > > > > > > > > there's only one, then IMO this should not be a global function yet.
-> > > > > > > > > It just feels to special case to me. But let's see what the others
-> > > > > > > > > think.
-> > > > > > > > 
-> > > > > > > > The problem is that if somebody hides it, we might potentially see
-> > > > > > > > a duplication in the future. So I _slightly_ prefer to publish and
-> > > > > > > > then drop that after a few cycles if no users appear.
-> > > > > > > 
-> > > > > > > After taking a very quick grep I spotted one other existing place where we
-> > > > > > > might be able to do direct conversion to use this function.
-> > > > > > > 
-> > > > > > > drivers/net/ethernet/freescale/gianfar.c
-> > > > > > > 
-> > > > > > > That'd be 2 users.
-> > > > > > 
-> > > > > > I haven't checked myself, I believe your judgement,
-> > > > > 
-> > > > > I took a better look and you obviously shouldn't believe :) The gianfar used
-> > > > > of_node instead of the fwnode. So, it'd be a single caller at starters.
-> > > > 
-> > > > ...which is the same as dev_of_node(), which means that you can use your
-> > > > function there.
-> > > 
-> > > I'm unsure what you mean. The proposed function
-> > > device_get_child_node_count_named() takes device pointer. I don't see how
-> > > dev_of_node() helps converting node to device?
-> > 
-> > dev_of_node() takes the device pointer and dev_fwnode() takes that as well,
-> > it means that there is no difference which one to use OF-centric or fwnode
+Le 27/02/2025 à 15:05, Michael Kelley a écrit :
+> From: Christophe Leroy <christophe.leroy@csgroup.eu> Sent: Thursday, February 27, 2025 2:43 AM
+>>
+>> Le 27/02/2025 à 02:38, Stephen Rothwell a écrit :
+>>> Hi Venkat,
+>>>
+>>> CC Kees Cook for advice.  This is a result of the tests added in commit
+>>>
+>>>     bbeb38b8487a ("string.h: Validate memtostr*()/strtomem*() arguments more carefully")
+>>>
+>>> from the kspp tree.
+>>>
+>>> I note that the comment about memtostr() says "Copy a possibly
+>>> non-NUL-term string".
+>>
+>> Can you tell more about your config and your environment ?
+>>
+>> I just tested with ppc64_defconfig and ppc64le_defconfig, with gcc 12.4,
+>> gcc 13.2 and gcc 14.2 and didn't get that build error.
+>>
+>> Christophe
 > 
-> The proposed device_get_child_node_count_named() takes a device pointer. I
-> don't see how dev_of_node() helps if there is just of_node and no device
-> pointer available in the calling code.
-
-???
-
-The loops are working on
-
-	struct device_node *np = pdev->dev.np;
-
-which is the equivalent to
-
-	struct device_node *np = dev_of_node(&pdev->dev);
-
-which takes device pointer.
-
-> (Well, as I wrote below, I could
-> alter the gianfar code by dropping the gfar_of_group_count(), so that I have
-> the device pointer in caller). Anyways, I don't see how dev_of_node() should
-> help unless you're proposing I add a of_get_child_node_count_named() or
-> somesuch - which I don't think makes sense.
-
-Are you forbidding yourself to change the function prototype to take a device
-pointer instead of device_node one? :-)
-
-> > API in this particular case. Just make sure that the function (and there
-> > is also a second loop AFAICS) takes struct device *dev instead of struct
-> > device_node *np as a parameter.
+> FWIW, I see the same build failures related to __must_be_noncstr()
+> when building natively on x86 and on arm64. In both cases, it's an
+> Ubuntu 20.04 installation with gcc 9.4.0 and binutils 2.34.
 > 
-> I think I lost the track here :)
 
-Make gfar_of_group_count() to take device pointer. As simple as that.
+Looks like I get that problem only with GCC 8.5 and GCC 9.5.
 
-> > > I think I could actually kill the whole gfar_of_group_count() function and
-> > > replace it with a direct call to the device_get_child_node_count_named() -
-> > > but I am not at all convinced that'd be worth including the property.h to a
-> > > file which is currently using only of_* -stuff. Well, I suppose it can be
-> > > asked from netdev peeps but I am not convinced they see it as a great idea.
-> > > 
-> > > If I misunderstood your meaning - please elaborate.
-> > 
-> > The driver is quite old
-> 
-> I remember having to modify this driver somewhere around 2010 or so. :) Time
-> flies.
-> 
-> > and has a lot of room to improve. Briefly looking it
-> > may be almost fully converted to fwnode, but it's not your call (only if you
-> > wish). Nevertheless, using agnostic APIs if they reduce code base is fine.
-> > We have drivers that do OF and fwnode mixed approach (for various reasons,
-> > one of which is the new API that is absent in OF realm.
-> 
-> Well, we can propose this to netdev people but I wouldn't be surprized if
-> they requested full of_node => fwnode rewrite instead of removing simple
-> looking loop and bringing mixture of fwnode and of_node in driver.
+I don't get it with gcc 10.3 nor 11.3 nor 12.4 nor 13.2 nor 14.2
+I don't get it either with gcc 5.5 or 7.5
 
-Without doing the proposal we will never know what they will think of all
-this...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Christophe
 
