@@ -1,377 +1,314 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493F41B2EF2
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:40:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4EB1C36;
+	Thu, 27 Feb 2025 16:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740674422; cv=none; b=jRpJE1GyZgbXWIF0XBmGZyfMFWKb716q4hBiXfVlyNtyIl1H8WJrnIylvIwHarCiHDkqAZKZcfTrJZ1hCjGIjaM3sVXnGMLmrOxG6ANM2W8zBTnKh7/r2xFCZ185B6e0FFxOjd1sfYcUL2g3acr789L5zp4IsKuvgCHC6Mz/ef0=
+	t=1740674465; cv=none; b=T8eWMcQKlkD+2airPHmR0dC8K9DWXjqjb66IomtWRnK+GnwHx80OokVv9pNOcmb7t0lpru7oodk5301GQP+lHrFrA5IIogFbT51wZxfvIeAZQ6viRJpMSN28eu9mic4bK8zpotrQef8d7xr1KPDhbpPV1GFJYdo4n5b5w1t+N+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740674422; c=relaxed/simple;
-	bh=ArQ8vb7OdrqsADkRLXtAAh8PoPP/d0F8mlmhR6c/KkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6IUpbrscSnqJb67OyKiN2KnZGC6HO7Zd9psYh2EnY9xrQXkh3Sqz60Eg8yxGuQHXWVi3Kq/Wd0dCpWmbpSI+CLhfDLRmU29pya2iJZFzU9EXkxN/PBjDGtwZxtXhVAErM7YWDGBha6uCaMzRt/LVYREQYd54n9NmCsYqMxblCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBukHBoZ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740674465; c=relaxed/simple;
+	bh=rckz/q7pIYlvVhINqFR0AJWmC2bxmbeg/qRYzgjj9dE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KQtjMAPGEPesvbOD3/eblqoMEL0A/f8bEPdZ/6IUjzALpWNpUPYLeTl1vU/YUM4AIhCaql3/xBlcx7ztui8jF75qhTug6vgxaj9PUin9Dl204QIvH0w+NlAptmJnhxydd1n2nWwXqjYuK5vVwoEmXO8RShw2waTzsyx4XgArnlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kexlJpzn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBukHBoZ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-390dd3403fdso973089f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:40:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740674418; x=1741279218; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tlqa3xJHdsKH2Fvg1chISi5Lg7orvZo0XWjFT2khQYo=;
-        b=NBukHBoZza6gtXUwE8g0OJl6b9fHqfU+dOpeg9f17Bf61IFsoy9HTb2c+6CvXrwg5S
-         NIBChc6QsToM00wLYtR0Lxg26pOp8AnfQlxxC86LKnqsyQDfvn0mxXrEW1qujqh9yBSC
-         MqQvF/gKbXcY8Q+S8U7DusC4lJgdq67JLFEgBUE8bI6Q8YaMr840ThrAESjfaNL4oAjK
-         /+6a46mSuQm0/uvPXwo5DebOYh5bOVMgBkefXskuJIr3fMao7BKBJM4oFfFSrxmkaQ/p
-         K414PNts6HkU+pkFDg6TpkifwCfGibIujwoKoumFXqKnJN126RTrxJ8q6RzwlgSN8UP6
-         Xetg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740674418; x=1741279218;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tlqa3xJHdsKH2Fvg1chISi5Lg7orvZo0XWjFT2khQYo=;
-        b=QzaGToQUQnjNutEZqJqEHF6sH8GiC1nmp5D2a8HbeAGOyOsGwVn9KLZ9CkLfjK84XL
-         FVP6CUzVVwMdoalUG2khWe8cP/AHs/rsa3MI5RZn/uz2klnPffvRc1j6L7w1PwSn4hdV
-         hRld71xoVxJ6DSX8BiEFovjRyL47l2gV+a6fcMTs6eJd3BgkSmGUVxsJq/qxeSlLuDFb
-         KKvATGzQuDCfawGJzd6K56uC1el2HzpqzyWHOl39+M6qTCnaH1DxVcT7kZjI+uHg0rZf
-         Y25V4IZ6U8B48aLWNjh/sIV5sJfcVZB5gTxAxl082PKrf8kS0glYRi3lOIp3s3jfYuPr
-         rtQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVErk0a8yTKpM0ssSyyzllM/BLE0137wejohsDfZkaoDVOPwaKTrhWbvT7kQaUwmvt56xNpbHSmiWy88KQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUzkKrnM7wl8FnEoWVj+stSfHAeHT/tUXGRyZuXnlIIx5Qvx+o
-	o0WHu7RDMS958/GCfEuaiTHlUqtxTCskhlW2+NuAU2PTx3nHSqRV
-X-Gm-Gg: ASbGncsvuVDVzwuU9hp7bHgx6copyvlLEEIcabWB6SHvn8roPsjqFKOawFCq/153KqR
-	qI1d2UFEA7798Xu0orfp6+PfYZ92+pHw3jD8CZrPKBQeiqoO0wRuXWH76KO7iogbJe4W9nR3ZJB
-	W5wsx683Ny5qN5l6ABW86P88SbDGXm8VaX4O4XwUeD6a7IcpqYwBYkuZ7V0ukDS3agBSVj9YO81
-	g8deuREJEMFA004vdhA6lo3naJV/nrBIEFpxCmilGcCLJFOb3ZkaKl5PgA1+aTT/+IkGvu0ldlD
-	ZblSVxrEdOq5WfY0cnFBg2YFk86UrQ==
-X-Google-Smtp-Source: AGHT+IEFsNMCjcv2uWdCqrUOWTTQaKN1QqTUQaSQl389HYTLOqtSHSlCTFqIUxo4mgOaPaYLGrXOiQ==
-X-Received: by 2002:a5d:47a3:0:b0:385:fc70:7f6 with SMTP id ffacd0b85a97d-390d4f377eemr6710738f8f.7.1740674418042;
-        Thu, 27 Feb 2025 08:40:18 -0800 (PST)
-Received: from localhost ([2a02:587:860d:d0f9:2a79:b9e6:e503:40e9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba539466sm63521195e9.18.2025.02.27.08.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 08:40:17 -0800 (PST)
-Date: Thu, 27 Feb 2025 18:40:16 +0200
-From: Lilith Gkini <lilithpgkini@gmail.com>
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
-	David Rientjes <rientjes@google.com>,
-	Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] slub: Fix Off-By-One in the While condition in
- on_freelist()
-Message-ID: <Z8CVcNMGa7pTZvGB@Arch>
-References: <Z7DHXVNJ5aVBM2WA@Arch>
- <Z7blsPJiOPTFWEL2@harry>
- <Z7b0CvTvcS47o7ie@harry>
- <Z7iUVJA-luvNaIac@Arch>
- <Z7lLXCZB2IXth7l8@harry>
- <Z7mX6PFxUptwX0mW@Arch>
- <Z7u2jgDadOwceYeN@harry>
- <Z7xiHTN0Q5yI-UmP@Arch>
- <Z72WiUlhxOGnrXFb@harry>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kexlJpzn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21799C4CEE6;
+	Thu, 27 Feb 2025 16:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740674464;
+	bh=rckz/q7pIYlvVhINqFR0AJWmC2bxmbeg/qRYzgjj9dE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kexlJpzn0ctUGzeGuqsLm0k592G2drmX/Im+JqjqA5hOQb/4zK9yUR7+QRp4CV7az
+	 AumjowILGk6fPJmM2qaVu7Gu4mmw3N+U8HjSjVisC5yWucqXtu7ombbfzL/7wHOC6i
+	 KqXQv763g2Z5Z72iIwEpiGBNpBH2Af648zS9O3w2RUHmhdmtOzdEGzlGlwaISLEmp7
+	 8WGLplU/K61o0/29kvkzGKmeb2UD3wROzmnAMn0M9b2oAghH8jL/qzmGIJ5olH3cRc
+	 d3H2tyJgW1Lfc3rUZAUqkcydox2XD3JRa6G53CKsqWvLOqxCfnqXhG/Xk+9WURhdBo
+	 Kv3Y3WDslCVQQ==
+From: Jakub Kicinski <kuba@kernel.org>
+To: torvalds@linux-foundation.org
+Cc: kuba@kernel.org,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pabeni@redhat.com
+Subject: [GIT PULL] Networking for v6.14-rc5
+Date: Thu, 27 Feb 2025 08:41:03 -0800
+Message-ID: <20250227164103.3599252-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z72WiUlhxOGnrXFb@harry>
 
-On Tue, Feb 25, 2025 at 07:08:09PM +0900, Harry Yoo wrote:
-> On Mon, Feb 24, 2025 at 02:12:13PM +0200, Lilith Gkini wrote:
-> > On Mon, Feb 24, 2025 at 09:00:14AM +0900, Harry Yoo wrote:
-> > > On second thought (after reading your email),
-> > > I think it should be (fp == NULL) && (search == NULL)?
-> > > 
-> > > When fp is NULL after the loop, it means (the end of the freelist
-> > > is NULL) AND (there were equal to or less than (slab->objects - nr) objects
-> > > on the freelist).
-> > > 
-> > > If the loop has ended after observing fp == NULL,
-> > > on_freelist() should return true only when search == NULL.
-> > > 
-> > > If fp != NULL, it means there were more objects than it should have on          
-> > > the free list. In that case, we can't take risk of iterating the loop
-> > > forever and it's reasonable to assume that the freelist does not               
-> > > end with NULL.
-> > > 
-> > > > The reason I m saying this is cause the While loop is looking through
-> > > > every non-NULL freelist pointer for the "search" pattern. If someone
-> > > > wants to search for NULL in the freelist that return 1 will never
-> > > > trigger, even for normal freelists. If "fp" was ever null it wouldn't re
-> > > > enter the loop. Thus the result of the function would be search == NULL
-> > > > because the original writers assumed the freelist will always end with
-> > > > NULL.
-> > > 
-> > > Agreed.
-> > > 
-> > > > As you correctly pointed out there might be a case where the freelist
-> > > > is corrupted and it doesnt end in NULL. In that case two things could happen:
-> > > > 
-> > > > 1) The check_valid_pointer() catches it and fixes it, restoring the
-> > > > corrupted freelist.
-> > > > 
-> > > > 2) The check_valid_pointer() fails to catch it and there isn't any NULL.
-> > > > 
-> > > > 
-> > > > In the first case the problem fixes itself and thats probably why
-> > > > validate_slab() worked fine all this time.
-> > > > 
-> > > > The second case is pretty rare, but thats the case that validate_slab()
-> > > > wants to rout out when it checks the `!on_freelist(s, slab, NULL)`,
-> > > > right?
-> > > 
-> > > Yes.
-> > > 
-> > > > Also to make my added suggestion of `return fp == NULL` work in the first
-> > > > case (since it does corrrect the freelist we want it to now return TRUE)
-> > > > we could also add a line that nulls out the fp right after the 
-> > > > `set_freepointer(s, object, NULL);`.
-> > > 
-> > > Why?
-> > > fp = get_freepionter() will observe NULL anyway.
-> > > 
-> > > > But words are cheap, I should test it out dynamically rather than just
-> > > > reading the code to see how it behaves. Feel free to also test it
-> > > > yourself.
-> > > 
-> > > Yes, testing is important, and you should test
-> > > to some extent before submitting a patch.
-> > > 
-> > > > I know I am supposed to send a proper Patch with the multiple added
-> > > > lines, but for now we are mostly brainstorming solutions. It will be
-> > > > better to see its behavior first in a debugger I think.
-> > > 
-> > > I think it's generally considered good practice to discuss before
-> > > writing any code.
-> > > 
-> > > > I hope I am making sense with the thought process I outlined for the
-> > > > return thing. I probably shouldn't be writing emails ealry Saturday
-> > > > morning, haha.
-> > > > 
-> > > > Also I really appreciate the kind feedback! The Linux Kernel is infamously
-> > > > known for how rude and unhinged people can be, which can make it a bit
-> > > > stressful and intimidating sending any emails, especially for someone
-> > > > starting out such as myself.
-> > > 
-> > > You're welcome ;-)
-> > > 
-> > > -- 
-> > > Cheers,
-> > > Harry
-> 
-> Hi, Lilith.
-> 
-> If you don't mind, could you please avoid bottom posting and
-> reply with inline comments like how I reply to you?
-> It makes it easier to follow the conversation.
-> 
-> > Alright, I managed to run some tests through a debugger.
-> > 
-> > You are right, my code isn't correct, `return fp == search` should be
-> > more appropriate.
-> >
-> > So I think the right way would be to do these changes:
-> > - 	while (fp && nr < slab->objects) {
-> > 
-> > -				fp = NULL;
-> > 
-> > -	return fp == search;
-> >
-> > The first line removes the "=" so it doesnt iterate more times than
-> > slab->objects.
-> 
-> Yes.
-> 
-> > The second line sets fp to NULL for the case where the code caught a
-> > corrupted freelist (check_valid_pointer) and fixes it by setting 
-> > the freepointer to NULL (set_freepointer). Now NULL will be in the
-> > freelist.
-> 
-> Yes. but do we care about the return value of on_freelist()
-> when the freelist is corrupted? (we don't know if it was null-terminated
-> or not because it's corrupted.)
-> 
-> > The third line is the return value:
-> > TRUE if the final fp we got happens to be the search value the caller
-> > was looking for in the freelist.
-> > FALSE if the final fp we got was not the same as the search value.
-> > 
-> > This should make the validate_slab() work right and if anyone ever uses
-> > the on_freelist() again with some other search value other than NULL it
-> > should also work as intended.
-> 
-> Yes! that makes sense to me.
-> 
-> > For my tests I wrote a kernel module that creates an isolated cache with
-> > 8 objects per slab, allocated all 8 of them and freed them. Then called
-> > validate_slab_cache() with my cache and set a breakpoint at on_freelist().
-> > From there I could set any value I wanted and observe its behavior
-> > through GDB (I used QEMU and GDB-ed remotely from my host).
-> > This way I didn't have to set a bunch of EXPORT_SYMBOL() and change
-> > stuff to not static; It made testing a lot easier.
-> >
-> > Here are the tests I did with this new change I just mentioned.
-> > 
-> > Note: By "full slab" I mean that I allocated every object in the slab
-> > and freed them.
-> 
-> FYI in slab terms (slab->inuse == slab->objects) means full slab,
-> You probably meant empty slab?
-> 
-> > By "partial" I mean that I only allocated and freed some
-> > objects, but not every object in the slab, ie if the total objects can
-> > be 8 I only alloc-ed and freed 7.
-> >
-> > search == NULL
-> > - full slab
-> > 	- correct tail				true
-> 
-> > 	- corrupted tail with garbage		false
-> > 	- corrupted tail with valid address	false
-> 
-> Two falses because when the freepointer of the tail object
-> is corrupted, the loop stops when nr equals slab->objects?
-> 
-> > - partial slab
-> > 	- correct tail			        true
-> 
-> > 	- corrupted tail with garbage	        true
-> 
-> This is true because for partial slabs, the number of objects
-> plus 1 for the garbage, does not exceed slab->objects?
-> 
-> > 	- corrupted tail with valid address	false
-> >
-> > search == some fake address
-> > - full slab
-> > 	- correct tail			        false
-> > 	- corrupted tail with garbage	        false
-> > 	- corrupted tail with valid address	false
-> > 
-> > - partial slab
-> > 	- correct tail			        false
-> > 	- corrupted tail with garbage	        false
-> > 	- corrupted tail with valid address	false
-> > 
-> > 
-> > search == some address in the freelist
-> > - full slab
-> > 	- correct tail			        true
-> > 	- corrupted tail with garbage	        true
-> > 	- corrupted tail with valid address	true
-> > 
-> > - partial slab
-> > 	- correct tail			        true
-> > 	- corrupted tail with garbage	        true
-> > 	- corrupted tail with valid address	true
-> 
-> The result seems valid to me. At least, this is the best SLUB can do
-> while avoiding the risk of infinite loop iteration.
-> 
-> > I apologize if am going into too many details with my testing, I just
-> > wanna make sure I didn't miss anything.
-> 
-> No, it's ok ;-)
-> 
-> > If my proposed changes look confusing I can send a proper patch.
-> > Should I send it in this chain as a reply, or send a new email
-> > and add you as well to the cc?
-> 
-> You can either send a new email or reply to this email with
-> In-Reply-To header. And please cc SLAB ALLOCATOR folks in MAINTAINERS file
-> including me—I recently changed my name and email (previously Hyeonggon Yoo).
-> 
-> -- 
-> Cheers,
-> Harry
+Hi Linus!
 
-Hey, Harry.
+You'll see a prompt for NET_DSA_REALTEK_RTL8366RB_LEDS.
+We should probably hide it from the user, and just use the default.
+I'm following up with Linus W, but I don't supposed this is a big deal.
 
-> Yes. but do we care about the return value of on_freelist()
-> when the freelist is corrupted? (we don't know if it was null-terminated
-> or not because it's corrupted.)
+The following changes since commit 27eddbf3449026a73d6ed52d55b192bfcf526a03:
 
-Oh! So we shouldn't care about the return value of on_freelist() if the
-freelist is corrupted? My thinking was that if the check_valid_pointer()
-detects a corrupted freelist and fixes it by setting the freepointer to
-NULL it fixes it, so we would care about the result. But maybe if the
-whole object_err() triggers, I think that causes an OOPs if I recall, we
-should consider this as corrupted and we shouldn't care about what it
-returns, cause something went terribly wrong?
+  Merge tag 'net-6.14-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-02-20 10:19:54 -0800)
 
-I guess that sounds like a sound logic.
+are available in the Git repository at:
 
-If that is how we should do this then yeah, my second suggested line is
-moot and in my later patch I shouldn't include it.
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.14-rc5
 
-> FYI in slab terms (slab->inuse == slab->objects) means full slab,
-> You probably meant empty slab?
+for you to fetch changes up to 54e1b4becf5e220be03db4e1be773c1310e8cbbd:
 
-Thats fair. I was thinking more like "I allocated everything and then
-freed everything in the slab, therefore the freelist will be full".
-But hopefully since I specified what I meant it wasn't too confusing.
+  net: ti: icss-iep: Reject perout generation request (2025-02-27 08:09:02 -0800)
 
-> Two falses because when the freepointer of the tail object
-> is corrupted, the loop stops when nr equals slab->objects?
+----------------------------------------------------------------
+Including fixes from bluetooth. We didn't get netfilter or wireless PRs
+this week, so next week's PR is probably going to be bigger. A healthy
+dose of fixes for bugs introduced in the current release nonetheless.
 
-Yeah! Since the freelist pointer is corrupted and doesn't end in NULL
-on_freelist() won't find a NULL, and in the case of the tail having
-garbage that the check_valid_pointer() would normally catch, the code
-won't catch it, because it's at the tail which would exceed the
-slab->objects and the While loop will exit before that, since the
-freelist* (not slab, as you pointed out) is full.
+Current release - regressions:
 
-> This is true because for partial slabs, the number of objects
-> plus 1 for the garbage, does not exceed slab->objects?
+ - Bluetooth: always allow SCO packets for user channel
 
-Yeah. That goes back to that second line I suggested in the previous
-email. If the number of objects in the freelist is less than the
-slab->objects and the corrupted freelist has some garbage address that
-the check_valid_pointer() will catch, it will set it to NULL instead, and
-as I said since the freelist now includes a NULL, my thinking was that
-on_freelist() should return true if we were searching for NULL.
+ - af_unix: fix memory leak in unix_dgram_sendmsg()
 
-But if thats not how on_freelist() should work in a case of a corrupted
-freelist and we don't add my second line that nulls the "fp" then this
-will return false instead.
+ - rxrpc:
+   - remove redundant peer->mtu_lock causing lockdep splats
+   - fix spinlock flavor issues with the peer record hash
 
-> The result seems valid to me. At least, this is the best SLUB can do
-> while avoiding the risk of infinite loop iteration.
+ - eth: iavf: fix circular lock dependency with netdev_lock
 
-Yeah! There were no infinite loop iterations in my tests inside
-on_freelist(). There were in some cases in other functions, but not in
-on_freelist().
+ - net: use rtnl_net_dev_lock() in register_netdevice_notifier_dev_net()
+   RDMA driver register notifier after the device
 
-Fortunately the While condition prevents any infinite loopings, even
-without my patch.
+Current release - new code bugs:
 
-> If you don't mind, could you please avoid bottom posting and
-> reply with inline comments like how I reply to you?
-> It makes it easier to follow the conversation.
+ - ethtool: fix ioctl confusing drivers about desired HDS user config
 
-Hopefully I did that correctly this time. Should I always include all
-the previous messages in the reply chain? It was getting rather long and
-I thought it would look messy.
+ - eth: ixgbe: fix media cage present detection for E610 device
 
-> You can either send a new email or reply to this email with
-> In-Reply-To header. And please cc SLAB ALLOCATOR folks in MAINTAINERS file
-> including me—I recently changed my name and email (previously Hyeonggon Yoo).
+Previous releases - regressions:
 
-Oh! You are one of the maintainers? That explains a lot, haha. I just
-assumed you were someone from the mailing list who happened to be really
-passionate about SLUB.
+ - loopback: avoid sending IP packets without an Ethernet header
+
+ - mptcp: reset connection when MPTCP opts are dropped after join
+
+Previous releases - always broken:
+
+ - net: better track kernel sockets lifetime
+
+ - ipv6: fix dst ref loop on input in seg6 and rpl lw tunnels
+
+ - phy: qca807x: use right value from DTS for DAC_DSP_BIAS_CURRENT
+
+ - eth: enetc: number of error handling fixes
+
+ - dsa: rtl8366rb: reshuffle the code to fix config / build issue
+   with LED support
+
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+
+----------------------------------------------------------------
+Adrian Huang (1):
+      af_unix: Fix memory leak in unix_dgram_sendmsg()
+
+Carolina Jubran (2):
+      net/mlx5: Fix vport QoS cleanup on error
+      net/mlx5: Restore missing trace event when enabling vport QoS
+
+David Howells (5):
+      rxrpc: rxperf: Fix missing decoding of terminal magic cookie
+      rxrpc: peer->mtu_lock is redundant
+      rxrpc: Fix locking issues with the peer record hash
+      afs: Fix the server_list to unuse a displaced server rather than putting it
+      afs: Give an afs_server object a ref on the afs_cell object it points to
+
+Eric Dumazet (3):
+      net: better track kernel sockets lifetime
+      ipvlan: ensure network headers are in skb linear part
+      idpf: fix checksums set in idpf_rx_rsc()
+
+Frederic Weisbecker (1):
+      net: Handle napi_schedule() calls from non-interrupt
+
+George Moussalem (1):
+      net: phy: qcom: qca807x fix condition for DAC_DSP_BIAS_CURRENT
+
+Harshal Chaudhari (1):
+      net: mvpp2: cls: Fixed Non IP flow, with vlan tag flow defination.
+
+Harshitha Ramamurthy (1):
+      gve: unlink old napi when stopping a queue using queue API
+
+Hsin-chen Chuang (1):
+      Bluetooth: Always allow SCO packets for user channel
+
+Ido Schimmel (1):
+      net: loopback: Avoid sending IP packets without an Ethernet header
+
+Jacob Keller (1):
+      iavf: fix circular lock dependency with netdev_lock
+
+Jakub Kicinski (9):
+      Merge branch 'rxrpc-afs-miscellaneous-fixes'
+      Merge tag 'for-net-2025-02-21' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
+      MAINTAINERS: fix DWMAC S32 entry
+      net: ethtool: fix ioctl confusing drivers about desired HDS user config
+      selftests: drv-net: test XDP, HDS auto and the ioctl path
+      Merge branch 'mptcp-misc-fixes'
+      Merge branch 'intel-wired-lan-driver-updates-2025-02-24-ice-idpf-iavf-ixgbe'
+      Merge branch 'net-enetc-fix-some-known-issues'
+      Merge branch 'mlx5-misc-fixes-2025-02-25'
+
+Jiri Slaby (SUSE) (1):
+      net: set the minimum for net_hotdata.netdev_budget_usecs
+
+Joe Damato (1):
+      selftests: drv-net: Check if combined-count exists
+
+Justin Iurman (2):
+      net: ipv6: fix dst ref loop on input in seg6 lwt
+      net: ipv6: fix dst ref loop on input in rpl lwt
+
+Kuniyuki Iwashima (1):
+      net: Use rtnl_net_dev_lock() in register_netdevice_notifier_dev_net().
+
+Linus Walleij (1):
+      net: dsa: rtl8366rb: Fix compilation problem
+
+Luiz Augusto von Dentz (1):
+      Bluetooth: L2CAP: Fix L2CAP_ECRED_CONN_RSP response
+
+Marcin Szycik (2):
+      ice: Fix deinitializing VF in error path
+      ice: Avoid setting default Rx VSI twice in switchdev setup
+
+Matthieu Baerts (NGI0) (2):
+      mptcp: reset when MPTCP opts are dropped after join
+      mptcp: safety check before fallback
+
+Meghana Malladi (1):
+      net: ti: icss-iep: Reject perout generation request
+
+Mohammad Heib (1):
+      net: Clear old fragment checksum value in napi_reuse_skb
+
+Nikita Zhandarovich (1):
+      usbnet: gl620a: fix endpoint checking in genelink_bind()
+
+Paolo Abeni (2):
+      mptcp: always handle address removal under msk socket lock
+      Merge branch 'fixes-for-seg6-and-rpl-lwtunnels-on-input'
+
+Philo Lu (1):
+      ipvs: Always clear ipvs_property flag in skb_scrub_packet()
+
+Piotr Kwapulinski (1):
+      ixgbe: fix media cage present detection for E610 device
+
+Qunqin Zhao (1):
+      net: stmmac: dwmac-loongson: Add fix_soc_reset() callback
+
+Sascha Hauer (1):
+      net: ethernet: ti: am65-cpsw: select PAGE_POOL
+
+Sean Anderson (1):
+      net: cadence: macb: Synchronize stats calculations
+
+Shay Drory (1):
+      net/mlx5: IRQ, Fix null string in debug print
+
+Stanislav Fomichev (1):
+      tcp: devmem: don't write truncated dmabuf CMSGs to userspace
+
+Wang Hai (1):
+      tcp: Defer ts_recent changes until req is owned
+
+Wei Fang (8):
+      net: enetc: fix the off-by-one issue in enetc_map_tx_buffs()
+      net: enetc: keep track of correct Tx BD count in enetc_map_tx_tso_buffs()
+      net: enetc: correct the xdp_tx statistics
+      net: enetc: VFs do not support HWTSTAMP_TX_ONESTEP_SYNC
+      net: enetc: update UDP checksum when updating originTimestamp field
+      net: enetc: add missing enetc4_link_deinit()
+      net: enetc: remove the mm_lock from the ENETC v4 driver
+      net: enetc: fix the off-by-one issue in enetc_map_tx_tso_buffs()
+
+Willem de Bruijn (1):
+      MAINTAINERS: socket timestamping: add Jason Xing as reviewer
+
+ MAINTAINERS                                        |   5 +-
+ drivers/bluetooth/btusb.c                          |   6 +-
+ drivers/net/dsa/realtek/Kconfig                    |   6 +
+ drivers/net/dsa/realtek/Makefile                   |   3 +
+ drivers/net/dsa/realtek/rtl8366rb-leds.c           | 177 ++++++++++++++
+ drivers/net/dsa/realtek/rtl8366rb.c                | 258 +--------------------
+ drivers/net/dsa/realtek/rtl8366rb.h                | 107 +++++++++
+ drivers/net/ethernet/cadence/macb.h                |   2 +
+ drivers/net/ethernet/cadence/macb_main.c           |  12 +-
+ drivers/net/ethernet/freescale/enetc/enetc.c       | 103 +++++---
+ drivers/net/ethernet/freescale/enetc/enetc4_pf.c   |   2 +-
+ .../net/ethernet/freescale/enetc/enetc_ethtool.c   |   7 +-
+ drivers/net/ethernet/google/gve/gve_rx_dqo.c       |   2 +
+ drivers/net/ethernet/intel/iavf/iavf_main.c        |  12 +-
+ drivers/net/ethernet/intel/ice/ice_eswitch.c       |   3 +-
+ drivers/net/ethernet/intel/ice/ice_sriov.c         |   5 +-
+ drivers/net/ethernet/intel/ice/ice_vf_lib.c        |   8 +
+ .../net/ethernet/intel/ice/ice_vf_lib_private.h    |   1 +
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c        |   3 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_e610.c      |   2 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c     |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/esw/qos.c  |   8 +-
+ drivers/net/ethernet/mellanox/mlx5/core/pci_irq.c  |   2 +-
+ .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   |  14 ++
+ drivers/net/ethernet/ti/Kconfig                    |   1 +
+ drivers/net/ethernet/ti/icssg/icss_iep.c           |  21 +-
+ drivers/net/ipvlan/ipvlan_core.c                   |  21 +-
+ drivers/net/loopback.c                             |  14 ++
+ drivers/net/netdevsim/ethtool.c                    |   2 +
+ drivers/net/phy/qcom/qca807x.c                     |   2 +-
+ drivers/net/usb/gl620a.c                           |   4 +-
+ fs/afs/server.c                                    |   3 +
+ fs/afs/server_list.c                               |   4 +-
+ include/linux/socket.h                             |   2 +
+ include/net/sock.h                                 |   1 +
+ include/trace/events/afs.h                         |   2 +
+ net/bluetooth/l2cap_core.c                         |   9 +-
+ net/core/dev.c                                     |  14 +-
+ net/core/gro.c                                     |   1 +
+ net/core/scm.c                                     |  10 +
+ net/core/skbuff.c                                  |   2 +-
+ net/core/sock.c                                    |  27 ++-
+ net/core/sysctl_net_core.c                         |   3 +-
+ net/ethtool/common.c                               |  16 ++
+ net/ethtool/common.h                               |   6 +
+ net/ethtool/ioctl.c                                |   4 +-
+ net/ethtool/rings.c                                |   9 +-
+ net/ipv4/tcp.c                                     |  26 +--
+ net/ipv4/tcp_minisocks.c                           |  10 +-
+ net/ipv6/rpl_iptunnel.c                            |  14 +-
+ net/ipv6/seg6_iptunnel.c                           |  14 +-
+ net/mptcp/pm_netlink.c                             |   5 -
+ net/mptcp/protocol.h                               |   2 +
+ net/mptcp/subflow.c                                |  20 +-
+ net/netlink/af_netlink.c                           |  10 -
+ net/rds/tcp.c                                      |   8 +-
+ net/rxrpc/ar-internal.h                            |   1 -
+ net/rxrpc/input.c                                  |   2 -
+ net/rxrpc/peer_event.c                             |   9 +-
+ net/rxrpc/peer_object.c                            |   5 +-
+ net/rxrpc/rxperf.c                                 |  12 +
+ net/smc/af_smc.c                                   |   5 +-
+ net/sunrpc/svcsock.c                               |   5 +-
+ net/sunrpc/xprtsock.c                              |   8 +-
+ net/unix/af_unix.c                                 |   1 +
+ tools/testing/selftests/drivers/net/hds.py         | 145 +++++++++++-
+ tools/testing/selftests/drivers/net/queues.py      |   7 +-
+ tools/testing/selftests/net/lib/Makefile           |   3 +
+ tools/testing/selftests/net/lib/xdp_dummy.bpf.c    |  13 ++
+ 69 files changed, 792 insertions(+), 461 deletions(-)
+ create mode 100644 drivers/net/dsa/realtek/rtl8366rb-leds.c
+ create mode 100644 drivers/net/dsa/realtek/rtl8366rb.h
+ create mode 100644 tools/testing/selftests/net/lib/xdp_dummy.bpf.c
