@@ -1,342 +1,240 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B14E545;
-	Thu, 27 Feb 2025 14:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD883231C87
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667067; cv=none; b=buR6/BwJcE4Lm3xzmMAAQuXyIUG+ftW1o5WRBs3scOfgQdsPDGoL4hLxKByvkAhlZ79Ch7Bt6Vhvhq4x/w4WSkmQsELg8STsX4DneF2AVmt6aNTPI/l0h938msxg1Ygso2m1UohEcwa2K+x12ndlH+hFIvWaqh4p0vcsaIfu2x8=
+	t=1740667132; cv=none; b=MWFpvxNGkWsAdJZZfXOCeEviohbcpaIJa2eOETt6V112rKLiRttPceYyUbZR4QKJopzAwkqKGRb/znmDQ1oyNQY73dqQz7rmBztELZsmHRoNXRfQkuHjfkcw+EyROYcqqRBthWTyw1nZgpGAewMaCXLCmKZWjnCTP8lG1qd+ReY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667067; c=relaxed/simple;
-	bh=vn5C2r+aZ+xpvJI6yJuTpRgPVaBIjP3Oy1M6JW6YsKQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bw9WzNWpiWbdfbHGci5vPi9FqZdZObaORj1i8gctylqk4MjA91pTe5KRZJHST4NSKUsX4LIeAA6wLO/NPjTQUMqK6aklewHZMoa6AxCf/juZELoW3619lNONnA22OmbESeqXPN+3wjrcTX4xEYJMHOe/ol7lC/oIKmDa7AwH8QU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuFJKCu6; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740667132; c=relaxed/simple;
+	bh=ugGlZWJEMUS3tEPTcLeHFPxbYGU002BhkX+XwcJCDmE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qBsH0TEp1Wyo+dI90oUwhQxtXt4MCaE1/wuBox8l0NSqaWTPaoBFzkJ7RSYg+tOk6r43qLJ1MgqNgeEXY3GpBKtZutIR25dowKEXBGULgmH5fUCcQ93kD5j3xQMtYhjZYGHSQNEKLgYDc1nsbDaMa6OdyFDvlomHxmIUn/6Ibi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u523WwmH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bjOhYbh9; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=u523WwmH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=bjOhYbh9; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuFJKCu6"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30a440effcfso23046971fa.0;
-        Thu, 27 Feb 2025 06:37:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740667062; x=1741271862; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ImxLy1MOg3k3Qztfs1yXlUdMX6UMvSo4Arah4/7gd7c=;
-        b=MuFJKCu6bspb+bm0FaKWf8V5+OosjTnCmhnrCFdtN2ED76T6k/mA520x245RPTqETZ
-         T1sIl2Tc3nKGAkgO5WfFQ6iRrf3KZS5we1etTLHJmFiSuf3IUQ5ZmIdTvnDi0AvwUoeR
-         gAahTlGwOZ/2mnLkr5ib6ov0kKvKVRFIn4zyxel2lpYyL+BGp/kw2ADIesFVtinj3o0w
-         HQeII9VkOQ9BuOVMcf+wNB/vWpEvfb2GNG7fO9MlsrcSYOL99L/prrSI9IPW52MEnFrm
-         dK0SE/iGyWPW+75x4/EX06LaAKuYC8koy607zGqiPlj/kON/8UiQiiQdytKUnF0MJEPf
-         y/hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740667062; x=1741271862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ImxLy1MOg3k3Qztfs1yXlUdMX6UMvSo4Arah4/7gd7c=;
-        b=F3COcDbqMsN0Lb1ECdsi551S1G6wU2o99/XfyOL+Z6qEwJ6GXjAR4poXcAql6Nxr2D
-         H2X/0gWvdGXzzr0eurdwt9imK61f2UamWjRgstyCw3DwwZ9xoV/lFQXsS3YxMDZdP1M9
-         VoNYNwjtWGxkWwl8CUQ4nXZl7cz7Gu9xtokkp/kZY1eMaUT/p4DO3rFE7IFI6pWJyhjB
-         LKGQSDVrvgV9JF9JyvTL86eYnDS8YbnrnIoE3RXXo1zV0kcrdzcM+hPYE8emEqYC9Q/4
-         XscY3FzkAkKhVntfKr68vsd7lz2xyu3AxjPOp5TrOW1n75ytS1syb+W/BMitFWax/GNv
-         iuRg==
-X-Forwarded-Encrypted: i=1; AJvYcCVX0feyAlo4hOoc6l6EiN6n/LM+gUvhJQoSbTH0sQHI+DXkFIyd8j4iYqI3cew3kNXdNmt+O53Omut/C9qi@vger.kernel.org, AJvYcCWBTlVkNjDOFKEkZgirrm9MYMvn+YU5tQ6W4+H55ZxTdTQpc+IykD1TvDRMZDQJyekFC9NSMyetz8uwb/6popw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWBsw8Y/5BIrmCRI86khojw785wSRQcj95259JawBPFJQj9poH
-	mZk3lhVGr3znhIAHy3LnD9+aVxG043o21MhP/JoJ0uR1FxpKrA2qRhWgzJgaDqH6L2XkOLas2QV
-	STO1wL3r7bRogPrSe4Zk73e7XEDg=
-X-Gm-Gg: ASbGnctpI2lYR3QNG0Pqnk1z8NH9OWpsQj5dgNquavWHp1R+Nzfzvj5kdsJJtH+ocN0
-	A9MEq9vO8kB9sWqe2dkTI72YhQW/rS30mQmBaw8/mJb+id7UAMJCC+MRhsn8sx5zKBY6bEcg2yA
-	Du5jzvHQ==
-X-Google-Smtp-Source: AGHT+IHuPmDhkLaIVHYupCg69sbvN+YVg1RHKBoI33YR9lNZpCgSi714NbLho8KVivwRVUs7aCn2uPtKEt09zoVcf+Q=
-X-Received: by 2002:a05:651c:e13:b0:308:e956:66e with SMTP id
- 38308e7fff4ca-30b84585759mr10530491fa.0.1740667061418; Thu, 27 Feb 2025
- 06:37:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u523WwmH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bjOhYbh9";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="u523WwmH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="bjOhYbh9"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 681022118B;
+	Thu, 27 Feb 2025 14:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740667128; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5x4jy6t17hcLvzjI8SgZJDgjCK5nQB09GOUL3aUeAjI=;
+	b=u523WwmHMZ6kKdnsm1VUSMMNF8qmHp9oQH+/uDjRpSPqvL36Q0NZxfwQTfGyTXI6Ey4qMW
+	RGux5NivHT3wq0Rr5kLJRpCRn6ayW6Jbb22sJauKK72iuZl5lD7lqUj7oIXnD+3SpwEUTi
+	8TaUKR24w0Ji59Ven+4OjK2UKANX3uc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740667128;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5x4jy6t17hcLvzjI8SgZJDgjCK5nQB09GOUL3aUeAjI=;
+	b=bjOhYbh92IKRXZ4V38mC90ymS7JIdiu8CkZut6SOtxLWksL3G4SC7VE7cDaQrVDykgZMlN
+	jfezwuEj+YtQZOBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=u523WwmH;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=bjOhYbh9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740667128; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5x4jy6t17hcLvzjI8SgZJDgjCK5nQB09GOUL3aUeAjI=;
+	b=u523WwmHMZ6kKdnsm1VUSMMNF8qmHp9oQH+/uDjRpSPqvL36Q0NZxfwQTfGyTXI6Ey4qMW
+	RGux5NivHT3wq0Rr5kLJRpCRn6ayW6Jbb22sJauKK72iuZl5lD7lqUj7oIXnD+3SpwEUTi
+	8TaUKR24w0Ji59Ven+4OjK2UKANX3uc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740667128;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5x4jy6t17hcLvzjI8SgZJDgjCK5nQB09GOUL3aUeAjI=;
+	b=bjOhYbh92IKRXZ4V38mC90ymS7JIdiu8CkZut6SOtxLWksL3G4SC7VE7cDaQrVDykgZMlN
+	jfezwuEj+YtQZOBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4C15A13888;
+	Thu, 27 Feb 2025 14:38:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id UMeQEfh4wGcleQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Thu, 27 Feb 2025 14:38:48 +0000
+Message-ID: <50cb2f6c-f1cd-4aac-9336-e2c88f6314bf@suse.cz>
+Date: Thu, 27 Feb 2025 15:38:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224045237.1290971-1-chharry@google.com> <2025022431-ditto-shy-c62f@gregkh>
- <CADg1FFeW5EXOJTqTS+jwBphGnDSCreNwM8hcFOhB1Tatdti6QA@mail.gmail.com>
- <2025022407-polo-disgrace-9655@gregkh> <CADg1FFehoZr3DmDhV_ri69+XBHLQcpKjoxLMaVhQUdzRuhST9A@mail.gmail.com>
- <CABBYNZLhR+OJQnYZ5vN5HjgiWwKrXvOse-pXhCcTdFpJrrzsNg@mail.gmail.com> <CADg1FFdtr2gnKy5VfFoCm4+0cGRJkvsOBRXtrcLSaMJwGjhBUQ@mail.gmail.com>
-In-Reply-To: <CADg1FFdtr2gnKy5VfFoCm4+0cGRJkvsOBRXtrcLSaMJwGjhBUQ@mail.gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 27 Feb 2025 19:37:28 +0500
-X-Gm-Features: AQ5f1JptFhTylsgNLZrs7QfSJ8srxVJ3Zrmms9a3mGRGvspmeIvbXZGayg0n610
-Message-ID: <CABBYNZJX2hA8D++hb9d3nvCz4M1rfFrzpMPMQ8p0Bq8FTHZhig@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: btusb: Configure altsetting for USER_CHANNEL
-To: Hsin-chen Chuang <chharry@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] mm: slub: call WARN() when the slab detect an
+ error
+Content-Language: en-US
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: janghyuck.kim@samsung.com, harry.yoo@oracle.com,
+ Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+ David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250226081206.680495-1-hyesoo.yu@samsung.com>
+ <CGME20250226081359epcas2p2a6a1f3f92540660129164734fa6eaa64@epcas2p2.samsung.com>
+ <20250226081206.680495-3-hyesoo.yu@samsung.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250226081206.680495-3-hyesoo.yu@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 681022118B
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[samsung.com,oracle.com,linux.com,kernel.org,google.com,lge.com,linux-foundation.org,linux.dev,gmail.com,kvack.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[samsung.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi Hsin-chen,
+On 2/26/25 09:12, Hyesoo Yu wrote:
+> If a slab object is corrupted or an error occurs in its internal
+> value, continuing after restoration may cause other side effects.
+> At this point, it is difficult to debug because the problem occurred
+> in the past. It is useful to use WARN() to catch errors at the point
+> of issue because WARN() could trigger panic for system debugging when
+> panic_on_warn is enabled. WARN() is added where to detect the error
+> on slab_err and object_err.
+> 
+> It makes sense to only do the WARN() after printing the logs. slab_err
+> is splited to __slab_err that calls the WARN() and it is called after
+> printing logs.
+> 
+> Changes in v4:
+> - Remove WARN() in kmem_cache_destroy to remove redundant warning.
+> 
+> Changes in v3:
+> - move the WARN from slab_fix to slab_err, object_err and check_obj to
+> use WARN on all error reporting paths.
+> 
+> Changes in v2:
+> - Replace direct calling with BUG_ON with the use of WARN in slab_fix.
+> 
+> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
 
-On Wed, Feb 26, 2025 at 9:22=E2=80=AFPM Hsin-chen Chuang <chharry@google.co=
-m> wrote:
->
-> Hi Luiz,
->
-> On Thu, Feb 27, 2025 at 4:55=E2=80=AFAM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
-> >
-> > Hi Hsin-chen,
-> >
-> > On Mon, Feb 24, 2025 at 2:13=E2=80=AFAM Hsin-chen Chuang <chharry@googl=
-e.com> wrote:
-> > >
-> > > On Mon, Feb 24, 2025 at 2:44=E2=80=AFPM Greg KH <gregkh@linuxfoundati=
-on.org> wrote:
-> > > >
-> > > > On Mon, Feb 24, 2025 at 02:25:52PM +0800, Hsin-chen Chuang wrote:
-> > > > > Hi Greg,
-> > > > >
-> > > > > On Mon, Feb 24, 2025 at 2:10=E2=80=AFPM Greg KH <gregkh@linuxfoun=
-dation.org> wrote:
-> > > > > >
-> > > > > > On Mon, Feb 24, 2025 at 12:52:32PM +0800, Hsin-chen Chuang wrot=
-e:
-> > > > > > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > > > > > >
-> > > > > > > Automatically configure the altsetting for USER_CHANNEL when =
-a SCO is
-> > > > > > > connected. This adds support for the USER_CHANNEL to transfer=
- SCO data
-> > > > > > > over USB transport.
-> > > > > > >
-> > > > > > > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute t=
-o control USB alt setting")
-> > > > > > > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > > > > > > ---
-> > > > > > >
-> > > > > > > Changes in v2:
-> > > > > > > - Give up tracking the SCO handles. Only configure the altset=
-ting when
-> > > > > > >   SCO connected.
-> > > > > > > - Put the change behind Kconfig/module parameter
-> > > > > > >
-> > > > > > >  drivers/bluetooth/Kconfig | 11 ++++++++++
-> > > > > > >  drivers/bluetooth/btusb.c | 46 +++++++++++++++++++++++++++++=
-++++++++++
-> > > > > > >  2 files changed, 57 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kc=
-onfig
-> > > > > > > index 4ab32abf0f48..7c497f878732 100644
-> > > > > > > --- a/drivers/bluetooth/Kconfig
-> > > > > > > +++ b/drivers/bluetooth/Kconfig
-> > > > > > > @@ -56,6 +56,17 @@ config BT_HCIBTUSB_POLL_SYNC
-> > > > > > >         Say Y here to enable USB poll_sync for Bluetooth USB =
-devices by
-> > > > > > >         default.
-> > > > > > >
-> > > > > > > +config BT_HCIBTUSB_AUTO_SET_ISOC_ALT
-> > > > > > > +     bool "Auto set isoc_altsetting for USER_CHANNEL when SC=
-O connected"
-> > > > > > > +     depends on BT_HCIBTUSB
-> > > > > > > +     default n
-> >
-> > Maybe we can do just:
-> >
-> >  default y if CHROME_PLATFORMS
-> >
-> > > > > > > +     help
-> > > > > > > +       Say Y here to enable auto set isoc_altsetting for USE=
-R_CHANNEL
-> > > > > > > +       when SCO connected
-> > > > > > > +
-> > > > > > > +       This can be overridden by passing btusb.auto_set_isoc=
-_alt=3D[y|n]
-> > > > > > > +       on the kernel commandline.
-> > > > > > > +
-> > > > > > >  config BT_HCIBTUSB_BCM
-> > > > > > >       bool "Broadcom protocol support"
-> > > > > > >       depends on BT_HCIBTUSB
-> > > > > > > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/bt=
-usb.c
-> > > > > > > index de3fa725d210..af93d757911b 100644
-> > > > > > > --- a/drivers/bluetooth/btusb.c
-> > > > > > > +++ b/drivers/bluetooth/btusb.c
-> > > > > > > @@ -34,6 +34,8 @@ static bool force_scofix;
-> > > > > > >  static bool enable_autosuspend =3D IS_ENABLED(CONFIG_BT_HCIB=
-TUSB_AUTOSUSPEND);
-> > > > > > >  static bool enable_poll_sync =3D IS_ENABLED(CONFIG_BT_HCIBTU=
-SB_POLL_SYNC);
-> > > > > > >  static bool reset =3D true;
-> > > > > > > +static bool auto_set_isoc_alt =3D
-> > > > > > > +     IS_ENABLED(CONFIG_BT_HCIBTUSB_AUTO_SET_ISOC_ALT);
-> > > > > > >
-> > > > > > >  static struct usb_driver btusb_driver;
-> > > > > > >
-> > > > > > > @@ -1113,6 +1115,42 @@ static inline void btusb_free_frags(st=
-ruct btusb_data *data)
-> > > > > > >       spin_unlock_irqrestore(&data->rxlock, flags);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +static void btusb_sco_connected(struct btusb_data *data, str=
-uct sk_buff *skb)
-> > > > > > > +{
-> > > > > > > +     struct hci_event_hdr *hdr =3D (void *) skb->data;
-> > > > > > > +     struct hci_ev_sync_conn_complete *ev =3D
-> > > > > > > +             (void *) skb->data + sizeof(*hdr);
-> > > > > > > +     struct hci_dev *hdev =3D data->hdev;
-> > > > > > > +     unsigned int notify_air_mode;
-> > > > > > > +
-> > > > > > > +     if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT)
-> > > > > > > +             return;
-> > > > > > > +
-> > > > > > > +     if (skb->len < sizeof(*hdr) || hdr->evt !=3D HCI_EV_SYN=
-C_CONN_COMPLETE)
-> > > > > > > +             return;
-> > > > > > > +
-> > > > > > > +     if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->sta=
-tus)
-> > > > > > > +             return;
-> > > > > > > +
-> > > > > > > +     switch (ev->air_mode) {
-> > > > > > > +     case BT_CODEC_CVSD:
-> > > > > > > +             notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_CVSD;
-> > > > > > > +             break;
-> > > > > > > +
-> > > > > > > +     case BT_CODEC_TRANSPARENT:
-> > > > > > > +             notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_TRANS=
-P;
-> > > > > > > +             break;
-> > > > > > > +
-> > > > > > > +     default:
-> > > > > > > +             return;
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     bt_dev_info(hdev, "enabling SCO with air mode %u", ev->=
-air_mode);
-> > > > > > > +     data->sco_num =3D 1;
-> > > > > > > +     data->air_mode =3D notify_air_mode;
-> > > > > > > +     schedule_work(&data->work);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  static int btusb_recv_event(struct btusb_data *data, struct =
-sk_buff *skb)
-> > > > > > >  {
-> > > > > > >       if (data->intr_interval) {
-> > > > > > > @@ -1120,6 +1158,11 @@ static int btusb_recv_event(struct btu=
-sb_data *data, struct sk_buff *skb)
-> > > > > > >               schedule_delayed_work(&data->rx_work, 0);
-> > > > > > >       }
-> > > > > > >
-> > > > > > > +     /* Configure altsetting for HCI_USER_CHANNEL on SCO con=
-nected */
-> > > > > > > +     if (auto_set_isoc_alt &&
-> > > > > > > +         hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
-> > > > > > > +             btusb_sco_connected(data, skb);
-> > > > > > > +
-> > > > > > >       return data->recv_event(data->hdev, skb);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > @@ -4354,6 +4397,9 @@ MODULE_PARM_DESC(enable_autosuspend, "E=
-nable USB autosuspend by default");
-> > > > > > >  module_param(reset, bool, 0644);
-> > > > > > >  MODULE_PARM_DESC(reset, "Send HCI reset command on initializ=
-ation");
-> > > > > > >
-> > > > > > > +module_param(auto_set_isoc_alt, bool, 0644);
-> > > > > > > +MODULE_PARM_DESC(auto_set_isoc_alt, "Auto set isoc_altsettin=
-g for USER_CHANNEL when SCO connected");
-> > > > > >
-> > > > > > This is not the 1990's, why are you adding new module parameter=
-s when we
-> > > > > > have so many other more proper ways to do this?  And really, th=
-is would
-> > > > >
-> > > > > Sorry but could you please provide an example to guard a feature =
-like this.
-> > > >
-> > > > Depends on what you want to do with this configuration.  Why is it =
-an
-> > > > option at all?  Why can't it "just work"?  Module parameters are a =
-pain
-> > >
-> > > I would like to hand this question to Luiz. I believe this patch just
-> > > works because this configuration is defined in the spec.
-> > > I think Luiz's point is to project the potential existing user, but
-> > > there's probably no User channel user sending SCO data with the lates=
-t
-> > > btusb driver because:
-> > > a) There's no way to configure alt setting from userspace
-> > > b) Before eafcfcfca97d, SCO data would be rejected since User channel
-> > > shouldn't be able to modify hci_conn_num
-> >
-> > Perhaps you can just use CHROME_PLATFORMS (suggested above) in Kconfig
-> > to enable intercepting of the events, etc, so we don't need any
-> > runtime parameters.
->
-> I'm afraid that this doesn't resolve Greg's comment below because the
-> multiple controllers are still bonded to the same config.
+As Harry said. I'll remove that locally.
 
-Well that would be enabled for every controller plugged into the system.
+> ---
+>  mm/slab_common.c |  3 ---
+>  mm/slub.c        | 31 +++++++++++++++++++------------
+>  2 files changed, 19 insertions(+), 15 deletions(-)
+> 
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 477fa471da18..d13f4ffe252b 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -517,9 +517,6 @@ void kmem_cache_destroy(struct kmem_cache *s)
+>  	kasan_cache_shutdown(s);
+>  
+>  	err = __kmem_cache_shutdown(s);
+> -	if (!slab_in_kunit_test())
+> -		WARN(err, "%s %s: Slab cache still has objects when called from %pS",
+> -		     __func__, s->name, (void *)_RET_IP_);
 
-> Also I would hesitate to put this Chrome devices specific because
-> project Floss shall be able to run on a general Linux environment.
+I think I'll keep this one, because the more detailed warning via
+list_slab_objects() is only enabled with CONFIG_SLUB_DEBUG.
+If it's not enabled, the kmem_cache_destroy() failure rather should not be
+silent.
+So slab_in_kunit_test() would also stay.
 
-It can be enabled for Linux in general, it just not enabled by default
-which can be changed later if someone decides to use Floss outside of
-Chrome OS, that said I very much doubt Google would be supporting
-anything other then Chrome based platforms or Floss don't depend on
-Android vendor HCI commands? At least the Android documentation seems
-to suggest a bunch of vendor commands are required:
+>  		} else {
+> -			list_slab_objects(s, slab,
+> -			  "Objects remaining in %s on __kmem_cache_shutdown()");
+> +			list_slab_objects(s, slab);
 
-https://source.android.com/docs/core/connect/bluetooth/hci_requirements
+I tried to extract slab_bug() and __slab_err() from list_slab_objects() but
+they were also only available with CONFIG_SLUB_DEBUG.
 
-> If you have a strong opinion to guard this behind a flag, perhaps we
-> could try other options suggested by Greg (configfs or maybe back to
-> sysfs).
+Perhaps we can improve that, but as a follow-up cleanup so we don't hold
+this up further.
 
-I think those would be more complicated then handling this via
-Kconfig, besides I think this works best since there is no new API
-introduced, just a new Kconfig option which can be enabled in any
-platform/distro.
+>  		}
+>  	}
+>  	spin_unlock_irq(&n->list_lock);
 
-> >
-> > > > to configure, we have loads of other ways to do this now (configfs,
-> > > > debugfs for debugging stuff, sysfs for device-specific things, etc.=
-)
-> > > >
-> > > > > > not work at all for multiple controllers in teh same system, ri=
-ght?
-> > > > >
-> > > > > Do you mean we can't have separate parameters for different
-> > > > > controllers? Yes that's true, but why would a user want the diffe=
-rent
-> > > > > behavior on the same machine?
-> > > >
-> > > > Why would you prevent them from allowing this to happen for a
-> > > > device-specific option?
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > >
-> > > --
-> > > Best Regards,
-> > > Hsin-chen
-> >
-> >
-> >
-> > --
-> > Luiz Augusto von Dentz
->
->
-> Best Regards,
->
-> Hsin-chen
-
-
-
---=20
-Luiz Augusto von Dentz
