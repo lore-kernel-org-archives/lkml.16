@@ -1,67 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C589218823;
-	Thu, 27 Feb 2025 21:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9D0270ED1;
+	Thu, 27 Feb 2025 21:32:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740691959; cv=none; b=flARFKv/pDk0WBi6iUlsIIZ2y3RSeBjI0/QDPXdU+55WqCL6GeFVPlxbXtMhVHMT+2N5X1SspNvejYcItTWuWZeffvNdmHIxZaLPW1Xa9+SC2KDZLoNPllbbMp6eEI0mXgPkc2y+shhXakQy6Rf6JRdsoaxUJQhnOWKg2rNMsIQ=
+	t=1740691959; cv=none; b=gvdYXKbizTuoOScGjiiqxFPBqygIRWjB6tGjGCVrcFxTVbBTgH87P9fiXDqQBN+31TQfJtNfTFOUUgGodePeYzygvXmh61no4avb4mNQUAEtETxtIp4M5LdLEMXbZvFEWLb8X64WHhYEEWw0NzOsT8R8p5NL69bz0uMLATwauJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740691959; c=relaxed/simple;
-	bh=E3atdKrHAqEQcNejYjymMr9w/+VUCvBazKROwVdpSPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jTZSOGedDvQvz7pE3EkosHFn/m02k2+weRlrpOEsHLtgCcnarDiCG1e0njm0U+0c3XiIfVXOQT6QqBzePc0fx3qlayVb9Z44lpHHmoigYJbLbrcYm0nS9Z4jw9VP4eC9aGQ/yl/bqHEccTIeiVZ0ernOegrSMSGuOQ+dVS94Dt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA2C2C4CEDD;
-	Thu, 27 Feb 2025 21:32:36 +0000 (UTC)
-Date: Thu, 27 Feb 2025 16:33:19 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Martin Uecker
- <uecker@tugraz.at>, Ralf Jung <post@ralfj.de>, "Paul E. McKenney"
- <paulmck@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Ventura Jack
- <venturajack85@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>,
- Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com,
- ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
- ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
- miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <20250227163319.5b19a68a@gandalf.local.home>
-In-Reply-To: <20250227204722.653ce86b@pumpkin>
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
-	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
-	<CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
-	<CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-	<CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-	<5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
-	<CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
-	<ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
-	<CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
-	<20250226162655.65ba4b51@gandalf.local.home>
-	<CAHk-=wjAcA4KrZ-47WiPd3haQU7rh+i315ApH82d=oZmgBUT_A@mail.gmail.com>
-	<20250226165619.64998576@gandalf.local.home>
-	<20250226171321.714f3b75@gandalf.local.home>
-	<CAHk-=wj8Btsn0zN5jT1nBsUskF8DJoZbMiK81i_wPBk82Z0MGw@mail.gmail.com>
-	<20250226173534.44b42190@gandalf.local.home>
-	<20250227204722.653ce86b@pumpkin>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	bh=24dA6Z2ZK6UhZS4DruOECgGiZ8UxuXiS2+MwHPNxGB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CPpTqtVElOQPjDoQIfISi8sVY55YwehCX5r4XMHPAMjUNVpzzu+K6o4wyr/WgwuzWkbbUXVjZNt0dsXSDmO39CDousDXLOOHxKHR3oBFFfoHvKRZMvzCng4r+AymNI2OW8m6c5TTmCYfit7hicVhqgdM4tSGsYL78L0cQCpl6Eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MS1E0vi3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MS1E0vi3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DC7C4CEE5;
+	Thu, 27 Feb 2025 21:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740691959;
+	bh=24dA6Z2ZK6UhZS4DruOECgGiZ8UxuXiS2+MwHPNxGB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MS1E0vi3vYTLU2IYnbwqG44LtcXSoG2QJorBuZ54riv33Z5s7glAEoZdcbL3FNZux
+	 mMQpvvgBZiSuCekNQA0wOwL5FQdFezjSykm71ILSblU1rWgljD1W6qEvpI1YLAtAmN
+	 j7XnayG3ZTLVTpPbWmko9T2OWJ2awoBHhuNBws6Fe81pLyh4NqBZey2fsfW4i15u3P
+	 oXHMIyrun4sJKPoYL3vwPRAx72F0jXvG0HlW0in1gOG2kd042P/nxswSrPU7P/sv7d
+	 DFCLyyXauMrV0z0JLAecMw03SZyKk0Qmf/VLCFXiwbWPP0fLDOBQvVPVbgcAwUw8lR
+	 mt9AD0e7qsZDQ==
+Date: Thu, 27 Feb 2025 11:32:38 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Juntong Deng <juntong.deng@outlook.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+	song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+	memxor@gmail.com, void@manifault.com, arighi@nvidia.com,
+	changwoo@igalia.com, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH sched_ext/for-6.15 v3 3/5] sched_ext: Add
+ scx_kfunc_ids_ops_context_sensitive for unified filtering of
+ context-sensitive SCX kfuncs
+Message-ID: <Z8DZ9pqlWim8EIwk@slm.duckdns.org>
+References: <AM6PR03MB50806070E3D56208DDB8131699C22@AM6PR03MB5080.eurprd03.prod.outlook.com>
+ <AM6PR03MB5080648369E8A4508220133E99C22@AM6PR03MB5080.eurprd03.prod.outlook.com>
+ <Z8DKSgzZB5HZgYN8@slm.duckdns.org>
+ <AM6PR03MB5080C1F0E0F10BCE67101F6F99CD2@AM6PR03MB5080.eurprd03.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR03MB5080C1F0E0F10BCE67101F6F99CD2@AM6PR03MB5080.eurprd03.prod.outlook.com>
 
-On Thu, 27 Feb 2025 20:47:22 +0000
-David Laight <david.laight.linux@gmail.com> wrote:
+Hello,
 
-> Except that (IIRC) it is actually valid for the compiler to write something
-> entirely unrelated to a memory location before writing the expected value.
-> (eg use it instead of stack for a register spill+reload.)
-> Not gcc doesn't do that - but the standard lets it do it.
+On Thu, Feb 27, 2025 at 09:23:20PM +0000, Juntong Deng wrote:
+> > > +	if (prog->type == BPF_PROG_TYPE_STRUCT_OPS &&
+> > > +	    prog->aux->st_ops != &bpf_sched_ext_ops)
+> > > +		return 0;
+> > 
+> > Why can't other struct_ops progs call scx_kfunc_ids_unlocked kfuncs?
+> > 
+> 
+> Return 0 means allowed. So kfuncs in scx_kfunc_ids_unlocked can be
+> called by other struct_ops programs.
 
-I call that a bug in the specification ;-)
+Hmm... would that mean a non-sched_ext bpf prog would be able to call e.g.
+scx_bpf_dsq_insert()?
 
--- Steve
+> > > +	/* prog->type == BPF_PROG_TYPE_STRUCT_OPS && prog->aux->st_ops == &bpf_sched_ext_ops*/
+> > > +
+> > > +	moff = prog->aux->attach_st_ops_member_off;
+> > > +	flags = scx_ops_context_flags[SCX_MOFF_IDX(moff)];
+> > > +
+> > > +	if ((flags & SCX_OPS_KF_UNLOCKED) &&
+> > > +	    btf_id_set8_contains(&scx_kfunc_ids_unlocked, kfunc_id))
+> > > +		return 0;
+> > 
+> > Wouldn't this disallow e.g. ops.dispatch() from calling scx_dsq_move()?
+> > 
+> 
+> No, because
+> 
+> > > [SCX_OP_IDX(dispatch)] = SCX_OPS_KF_DISPATCH | SCX_OPS_KF_ENQUEUE,
+> 
+> Therefore, kfuncs (scx_bpf_dsq_move_*) in scx_kfunc_ids_dispatch can be
+> called in the dispatch context.
+
+I see, scx_dsq_move_*() are in both groups, so it should be fine. I'm not
+fully sure the groupings are the actually implemented filtering are in sync.
+They are intended to be but the grouping didn't really matter in the
+previous implementation. So, they need to be carefully audited.
+
+> > Have you tested that the before and after behaviors match?
+> 
+> I tested the programs in tools/testing/selftests/sched_ext and
+> tools/sched_ext and all worked fine.
+> 
+> If there are other cases that are not covered, we may need to add new
+> test cases.
+
+Right, the coverage there isn't perfect. Testing all conditions would be too
+much but it'd be nice to have a test case which at least confirms that all
+allowed cases verify successfully.
+
+Thanks.
+
+-- 
+tejun
