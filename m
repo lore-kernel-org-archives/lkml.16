@@ -1,159 +1,174 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED7322F38B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6489F21B9EE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740651738; cv=none; b=jG6BFJz0B+wKY9bpWhKcYCV0onINCy1yz5eclDSvAB6LimQ8JqhofoOKgoWc3u4OnhahMUiZ6W5KTZX5BCJeCQ3QmqIzmzl3KWo//G512UWpKMPi/W0gxSWfFYP1iYVShulSZhW1OguDBVbLAq+VwSabuRHhjTui2wYgxR5/eMg=
+	t=1740651823; cv=none; b=POr6GUTh6aDtjSWIDHYUqACeo4uLn1nhOxZOde48letCUcPZXAD4ph3W33ZbcvFhHSoDRS2zyo3vW0PPITNly4CUS7OuKEmRUZCNOWcLG1lS3IEEWdQHupLX4GNbMTV1vhAemQZ9aiaTYQ+lKfSWm7hzOTbo1FF/4aAVWJlSdpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740651738; c=relaxed/simple;
-	bh=T9BHAcLO2Fi8F/is/hh9AfEDFJvEd2NLh8ELZM2jcp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E1mxh4TujMXUnQ1dRfPnmyR0TS414jErOr0AwCDGDU2r9C9mWvjjiQbSCtdXCVduMT8ZqW9MIDSBrzwbjHJwiAiAr1xcBzSGWdjlz/KSpqRKd7M6f+sETbfitEhcfMAHoCAUpOR24OF4NU02bwnW7bJKCV2ZnKEKkiS1uHzI+E4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O+KWkRT+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740651823; c=relaxed/simple;
+	bh=rct5r5jCK0QPiVBzwS9sVOA59D2X5evPGMfau27KuDg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AP1o1UQZ+ODcutcVBHKYwExfSNybVHx8QkUVYJC2ouRkc0O015QfQakiK9sEuuqbHyBtkSelzU9o7CdCkNRXWJ2uyQ0bwfdFpZ1IJVuWgYrMzKleaDZ4nb88KyhX5cptpfUZQ6sh6STpz7bJE1g1sb4amWCnbs0vu5i1WmstUz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=OJ9OXth8; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O+KWkRT+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740651735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UlN7ERFRgkJUG+zgZJ963Qv4eKnSMi6hs0/GkrW6sYs=;
-	b=O+KWkRT+ar2JWhikvSCxrnFX9R+IsdSdLpOL4WNrt6gVvIb2IetlnvJmB7s9KYHAvaIQLv
-	5I0/st+bsAE3dUsqNAyPvkfgaZxke4wQqEkQVU3OMi+PMo7ACaS0UpWPsFC76wyRKbz6zH
-	r/dQVUdyZv9shUgzjpyjVe9SYnJAbgc=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-LnXgCcr_MmO5A9JTRWGLhQ-1; Thu, 27 Feb 2025 05:22:13 -0500
-X-MC-Unique: LnXgCcr_MmO5A9JTRWGLhQ-1
-X-Mimecast-MFC-AGG-ID: LnXgCcr_MmO5A9JTRWGLhQ_1740651732
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5d9e4d33f04so737244a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:22:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740651731; x=1741256531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UlN7ERFRgkJUG+zgZJ963Qv4eKnSMi6hs0/GkrW6sYs=;
-        b=MpgZaIo9eNlVCoUmZeSofxCLuYe3ugzx1zsmV/bykDvplTV7x52SLTMNulAJJQZu+P
-         oH4EcAuFSQAgaw9HOl2qCMjIhS3Rsp7QrfDFfmhAMfHuc5EV7Eim7j61pyACEXQ8etDZ
-         LAPdH9ebi1rQF5D/dHELnQQKHbxocNKkuKOrPouiJwQ/n9YQh0baHaqVaPXZAI7gz9MJ
-         vDvPUi/WarLTqok77mmRHuI40aAdsrkAeygUMMCIfWnws+rvMgX9MV22jFbEu5s+OnbK
-         5e3Qf8Ea49wO8DEAUaJOBjYQaPNZeXvXN5tUzDQH6pzaoGZTvU4zSwye3ZTS+2vRxr2U
-         uEMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcBxPX3lvO91ibkXxGVtLHWEcwuD1LxaZhUEdB+VIJdTMuhKKM9IGW9qcQymZ4bI8VyeP57O7JrumtNHw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsKHqAhLJ+y1rYfAg453x6kDWDQVtYA6pRzTWYYotxJ6lAmMsr
-	0Rspw1QPCdb0GFgSjgjK/fKloyNulrqNC+N2usWesy0kcW1xFJ8CbSU4ghKWEHfdLh9JuGJ48eY
-	LLj+AdocLCzcEH3fY1cvcVBywnMvHXHvWiW7s8jqCxHB13DCcRA1iLv7tKALvVG4eCZzT6xyy3p
-	X/PGaOK0jEdgS923nyqrMwuEWoVL+7lqvNqx0MKe6d+ez7
-X-Gm-Gg: ASbGncv4+fccFIcihLIdVjGCyLfC1ZwHOdOEaa1CDZt8IxNaewODWzPHFtja5WbYqye
-	sM8pF3HDBy/TAttBC7D2Pa5+Mt+qBcZW29aT1TkhoxhQpZcryNstG23V42FNE6jfTVJJcoKVqXQ
-	==
-X-Received: by 2002:a05:6402:238f:b0:5e4:9348:72c3 with SMTP id 4fb4d7f45d1cf-5e493487986mr7779706a12.10.1740651730973;
-        Thu, 27 Feb 2025 02:22:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF3pM8WlV3oQBfytyyeOaQOimRV0KwS4EKHWJ5i0zUzAv1yCmDn5hX3VcUGzB4vcvxPmQuMR1bS9CT94wGST18=
-X-Received: by 2002:a05:6402:238f:b0:5e4:9348:72c3 with SMTP id
- 4fb4d7f45d1cf-5e493487986mr7779686a12.10.1740651730586; Thu, 27 Feb 2025
- 02:22:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="OJ9OXth8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=UlEdyx+jV4RZDQn5CVsOoRdLVvb3NYfTLquQ7a0Q2hE=; b=OJ9OXth8oNu5OYiBrtlOhJpZOA
+	efN7jizyvOKj0HiaNTOFXfTjOMYiSCuBIosjYEMSKLvsCYF9MvrvXvjqrWCTLoafgEXYTRcb5FnoJ
+	1P37oayNzjrCCcd7JWp7q/dKF4v+4eqpxRlbCCl00HHbqw06PgDUEbYbtEsqeKtnr0mZfvkytKJq+
+	uQCot6UnG7agCGXWZ36QDqU8Au4TDyfhSNL+ciHD59yTSAnG9KVVQWVwSKrzXmXsEla4uuqP5zXXv
+	rDVrnEd/YEw9WKDvvSvZ5XgXqJSPaUVXNlFiZKY/Q1P0AXqB83hft4VkJ95srw/v76/Ug1KqVa9po
+	WIUg5DlA==;
+Received: from [106.101.137.194] (helo=[192.168.11.21])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tnb37-001Xu6-Os; Thu, 27 Feb 2025 11:23:32 +0100
+Message-ID: <ea71a8d7-ba0f-4d43-9304-6544060a1bb6@igalia.com>
+Date: Thu, 27 Feb 2025 19:23:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226213844.3826821-1-kbusch@meta.com>
-In-Reply-To: <20250226213844.3826821-1-kbusch@meta.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Thu, 27 Feb 2025 18:21:34 +0800
-X-Gm-Features: AQ5f1JpeYWXlUn8jsieYhOpf1esALXljPtGnrofbGi8hLpfdoH4ms9lz0ZIIMxk
-Message-ID: <CAPpAL=yffyhUrdEJHtAw4BDpV-=Z5mZq0r1ZFcoj1v1OBLnp_g@mail.gmail.com>
-Subject: Re: [PATCHv2 0/2] kvm/x86: vhost task creation failure handling
-To: Keith Busch <kbusch@meta.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, kvm@vger.kernel.org, 
-	x86@kernel.org, virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Keith Busch <kbusch@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched_ext: Add trace point to track sched_ext core events
+To: Andrea Righi <arighi@nvidia.com>, tj@kernel.org
+Cc: void@manifault.com, kernel-dev@igalia.com, linux-kernel@vger.kernel.org
+References: <20250226143327.231685-1-changwoo@igalia.com>
+ <Z8AWZBtrGN8h76AK@gpd3> <6a23642f-b3bf-4501-8464-f66bb9f1f57f@igalia.com>
+ <Z8Af9PRa7LrxHpfp@gpd3>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z8Af9PRa7LrxHpfp@gpd3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Keith
+On 25. 2. 27. 17:19, Andrea Righi wrote:
+> On Thu, Feb 27, 2025 at 05:05:54PM +0900, Changwoo Min wrote:
+>> Hi Andrea,
+>>
+>> Thank you for the review!
+>>
+>> On 25. 2. 27. 16:38, Andrea Righi wrote:
+>>> Hi Changwoo,
+>>>
+>>> On Wed, Feb 26, 2025 at 11:33:27PM +0900, Changwoo Min wrote:
+>>>> Add tracing support, which may be useful for debugging sched_ext schedulers
+>>>> that trigger a certain event.
+>>>>
+>>>> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+>>>> ---
+>>>>    include/trace/events/sched_ext.h | 21 +++++++++++++++++++++
+>>>>    kernel/sched/ext.c               |  4 ++++
+>>>>    2 files changed, 25 insertions(+)
+>>>>
+>>>> diff --git a/include/trace/events/sched_ext.h b/include/trace/events/sched_ext.h
+>>>> index fe19da7315a9..88527b9316de 100644
+>>>> --- a/include/trace/events/sched_ext.h
+>>>> +++ b/include/trace/events/sched_ext.h
+>>>> @@ -26,6 +26,27 @@ TRACE_EVENT(sched_ext_dump,
+>>>>    	)
+>>>>    );
+>>>> +TRACE_EVENT(sched_ext_add_event,
+>>>> +	    TP_PROTO(const char *name, int offset, __u64 added),
+>>>> +	    TP_ARGS(name, offset, added),
+>>>> +
+>>>> +	TP_STRUCT__entry(
+>>>> +		__string(name, name)
+>>>> +		__field(	int,		offset		)
+>>>> +		__field(	__u64,		added		)
+>>>> +	),
+>>>> +
+>>>> +	TP_fast_assign(
+>>>> +		__assign_str(name);
+>>>> +		__entry->offset		= offset;
+>>>> +		__entry->added		= added;
+>>>> +	),
+>>>> +
+>>>> +	TP_printk("name %s offset %d added %llu",
+>>>> +		  __get_str(name), __entry->offset, __entry->added
+>>>> +	)
+>>>> +);
+>>>
+>>> Isn't the name enough to determine which event has been triggered? What are
+>>> the benefits of reporting also the offset within struct scx_event_stats?
+>>>
+>>
+>> @name and @offset are duplicated information. However, I thought
+>> having two is more convenient from the users' point of view
+>> because they have different pros and cons.
+>>
+>> @offset is quick to compare and can be used easily in the BPF
+>> code, but the offset of an event can change across kernel
+>> versions when new events are added. @offset would be good to
+>> write a quick trace hook for debugging.
+>>
+>> On the other hand, @name won't change across kernel versions,
+>> which is good. However, it requires more code to acutally read
+>> the string in the BPF code (__data_loc for string is a 32-bit
+>> integer encoding string length and location).
+>>
+>> Does it make sense to you?
 
-There are some error messages from qemu output when I tested this
-series of patches with the virtio-net regression test. It can
-reproduced by boot up a guest with vhost device after applied your
-patches.
-Error messages:
-Qemu output:
-qemu-kvm: -netdev {"id": "idoejzv8", "type": "tap", "vhost": true,
-"vhostfd": "16", "fd": "10"}: vhost_set_owner failed: Cannot allocate
-memory
-qemu-kvm: -netdev {"id": "idoejzv8", "type": "tap", "vhost": true,
-"vhostfd": "16", "fd": "10"}: vhost-net requested but could not be
-initialized
 
-My tests based on this commit:
-# git log -1
-commit dd83757f6e686a2188997cb58b5975f744bb7786 (HEAD -> master,
-origin/master, origin/HEAD)
-Merge: 102c16a1f9a9 eb54d2695b57
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed Feb 26 16:55:30 2025 -0800
+> So, IMHO @offset to me would make sense if we guarantee that it won't
+> change across kernel versions, and that's probably doable, we just need to
+> make sure that we always add new events at the bottom of scx_event_stats.
 
-    Merge tag 'bcachefs-2025-02-26' of git://evilpiepirate.org/bcachefs
+Keeping the offset across versions is possible if we add new
+events to the bottom. However, I am not sure if that is what we
+want because we lose the nice logical grouping of the events in
+the scx_event_stats struct.
 
-Thanks
-Lei
+> Otherwise there's the risk to break potential users of this tracepoint that
+> may consider the offset like a portable ID.
 
+Hmm... I agree. The @offset would be too low level and could the
+potential source of confusion.
 
+> Maybe we can call it @id or @event_id or similar and guarantee its
+> portability? What do you think?
 
-On Thu, Feb 27, 2025 at 5:40=E2=80=AFAM Keith Busch <kbusch@meta.com> wrote=
-:
->
-> From: Keith Busch <kbusch@kernel.org>
->
-> The suggestion from Sean appears to be successful, so sending out a new
-> version for consideration.
->
-> Background:
->
-> The crosvm VMM might send signals to its threads that have entered
-> KVM_RUN. The signal specifically is SIGRTRMIN from here:
->
->   https://github.com/google/crosvm/blob/main/src/crosvm/sys/linux/vcpu.rs=
-#L651
->
-> If this happens to occur when the huge page recovery is trying to create
-> its vhost task, that will fail with ERESTARTNOINTR. Once this happens,
-> all KVM_RUN calls will fail with ENOMEM despite memory not being the
-> problem.
->
-> This series propogates the error up so we can distinguish that from the
-> current defaulting to ENOMEM and replaces the call_once since we need to
-> be able to call it repeatedly due to this condition.
->
-> Changes from the v1 (prefixed as an "RFC", really) patch:
->
->   Instead of using a VM-wide mutex, update the call_once pattern to
->   complete only if what it calls is successful (from Sean).
->
-> Keith Busch (1):
->   vhost: return task creation error instead of NULL
->
-> Sean Christopherson (1):
->   kvm: retry nx_huge_page_recovery_thread creation
->
->  arch/x86/kvm/mmu/mmu.c    | 12 +++++-------
->  drivers/vhost/vhost.c     |  2 +-
->  include/linux/call_once.h | 16 +++++++++++-----
->  kernel/vhost_task.c       |  4 ++--
->  4 files changed, 19 insertions(+), 15 deletions(-)
->
-> --
-> 2.43.5
->
->
+Now I think dropping @offset would be better in the long run
+because we can maintain scx_event_stats clean and do not create
+a source of confusion. Regarding the ease of using @name, adding
+an code example in the commit message will suffice, something
+like this:
 
+struct tp_add_event {
+	struct trace_entry ent;
+	u32 __data_loc_name;
+	u64 delta;
+};
+
+SEC("tracepoint/sched_ext/sched_ext_add_event")
+int tp_add_event(struct tp_add_event *ctx)
+{
+	char event_name[128];
+	unsigned short offset = ctx->__data_loc_name & 0xFFFF;
+         bpf_probe_read_str((void *)event_name, 128, (char *)ctx + offset);
+
+	bpf_printk("name %s   delta %llu", event_name, ctx->delta);
+	return 0;
+}
+
+The downside of not having a numerical ID (@offset or @event_id)
+is the cost of string comparison to distinguish an event type. If
+we assume the probing the event is rare, it will be okay.
+
+@Tejun, @Andrea -- What do you think? Should we provide
+a portability-guaranteed @event_id after dropping @offset? Or
+would it be more than sufficient to have a string-type event name?
+
+Regards,
+Changwoo Min
