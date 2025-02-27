@@ -1,115 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F394D26E968
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 21:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94D32702D7;
+	Thu, 27 Feb 2025 21:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740693559; cv=none; b=dKnUSvQ3VBtObaHddFnMJuxNKPNxUU6dK4zZRoOPs58TvFfM9rsla9UIlisE2Lxz2VyLvBpTfedHOIS0DWaCQaI/ROxh6oGw6z6WG/XUGX0rAhGOe6Fp847ITxHl7p7nMUT3Ev58tcvEVHAp8v8UuT38hOP0f2KD9tjjUEk38UA=
+	t=1740693606; cv=none; b=A/uoztrbNP0bUdvTnTq85bE3TNKcFuVkYIriHyKWbGXWrad9fJKHQQrSSfBjl4buhZJrgrR33bJoJscLH5fDL//JOuX0zSeqEmqBHACNMBL4rnkHoxGPIvbfcrRJ0F2y4VCwMCLPtevZqGm/EeveRULP3IWIpBYTKiBiZrz8i6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740693559; c=relaxed/simple;
-	bh=QCZYkUvlE3UzfZWsSc3yNZXvJUA9mEjps0buAFf2xDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QTobwnEWw2niS1RAIoUIOqYiNpz0oXnPxu2gVpTUYu/tu2qlqFNAmHlwX5ccGNm0ov7GgrKC0hmVAGl/oZr3qAzQn62AKt+6/g3gY383oBwPqZ4s5oA/6NWd+gc14SWSvWcxRAkJ/z14AAFYFjM/T97CObcNmfT8z3HhLSVPYTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RBeWHILd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RBeWHILd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740693555;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FuUccHO+G4qMZYQP5ieKHnhtOwv7wuzDWMMfQ5p9rW0=;
-	b=RBeWHILd5ECST4Mrr/Rig0VKVLiqasJmIv7jtBnLJFqW7M2L8ZXKQGt57F+UBYoAY2VaCs
-	pJv4QvhEOXYSDmKArf1l4taShKBpedjtv36wCEIpLVMX9dDnyPNNr7U6Z6BVvwO7PJuAC0
-	GYlUdIPTv/R5JLTRX/DxrJ1wa4lB+Tw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-154-H9Xwu2UYPx6-_qK20sIWsw-1; Thu,
- 27 Feb 2025 16:59:10 -0500
-X-MC-Unique: H9Xwu2UYPx6-_qK20sIWsw-1
-X-Mimecast-MFC-AGG-ID: H9Xwu2UYPx6-_qK20sIWsw_1740693549
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D214B180036F;
-	Thu, 27 Feb 2025 21:59:08 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.102])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 448A61800357;
-	Thu, 27 Feb 2025 21:59:05 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 27 Feb 2025 22:58:38 +0100 (CET)
-Date: Thu, 27 Feb 2025 22:58:34 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] pipe: cache 2 pages instead of 1
-Message-ID: <20250227215834.GE25639@redhat.com>
-References: <20250227180407.111787-1-mjguzik@gmail.com>
+	s=arc-20240116; t=1740693606; c=relaxed/simple;
+	bh=CgxQyljhqVTXpgSL0JHUD5jTBBLWxifnrh+FlSuppPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pfZ8eSp7Vt9YW6zy80ieyYiVhWN6lWQX7dhWbMRCev48h+mKZjt9WyAP/ytGF/hOfLFsdpayhDII7ZWhm3GDov/m+qW2h29dMyPR6EjirKsEi3okuCYVU+eSE5/qBO39XFhTATpojR5KMdRedAidnI4jeRAkq26cFv7uo7lh0Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD021516;
+	Thu, 27 Feb 2025 14:00:14 -0800 (PST)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6013F5A1;
+	Thu, 27 Feb 2025 13:59:55 -0800 (PST)
+Date: Thu, 27 Feb 2025 21:57:32 +0000
+From: Andre Przywara <andre.przywara@arm.com>
+To: Andras Szemzo <szemzo.andras@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai
+ <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Linus Walleij <linus.walleij@linaro.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Maxime Ripard <mripard@kernel.org>, Vinod
+ Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Ulf
+ Hansson <ulf.hansson@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>, Florian
+ Fainelli <florian.fainelli@broadcom.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 02/10] pinctrl: sunxi: add driver for Allwinner V853
+Message-ID: <20250227215732.5f5753d9@minigeek.lan>
+In-Reply-To: <20250205125225.1152849-3-szemzo.andras@gmail.com>
+References: <20250205125225.1152849-1-szemzo.andras@gmail.com>
+	<20250205125225.1152849-3-szemzo.andras@gmail.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227180407.111787-1-mjguzik@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-I already had a lot of beer, can't read this patch, just one nit...
+On Wed,  5 Feb 2025 13:52:17 +0100
+Andras Szemzo <szemzo.andras@gmail.com> wrote:
 
-On 02/27, Mateusz Guzik wrote:
->
-> User data is kept in a circular buffer backed by pages allocated as
-> needed. Only having space for one spare is still prone to having to
-> resort to allocation / freeing.
->
-> In my testing this decreases page allocs by 60% during a -j 20 kernel
-> build.
+Hi,
 
-So this is performance improvement?
-
-> +static struct page *anon_pipe_get_page(struct pipe_inode_info *pipe)
+> The V853 family has multiple package variants, from BGA to QFN88.
+> The latter has co-packaged DRAM and fewer pins, and less features (pin muxes).
+> All family members can be supported by a single driver, as the available pins
+> with allowed muxes is the same across the devices.
+> 
+> This new pinctrl driver depends on the new sunxi device-tree based mux support
+> patch series [1].
+> 
+> [1]: https://lore.kernel.org/linux-sunxi/20241111005750.13071-1-andre.przywara@arm.com/T/
+> 
+> Signed-off-by: Andras Szemzo <szemzo.andras@gmail.com>
+> ---
+>  drivers/pinctrl/sunxi/Kconfig              |  5 ++
+>  drivers/pinctrl/sunxi/Makefile             |  1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c | 53 ++++++++++++++++++++++
+>  3 files changed, 59 insertions(+)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
+> 
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index a78fdbbdfc0c..fac9c61039e2 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -81,6 +81,11 @@ config PINCTRL_SUN9I_A80_R
+>  	default MACH_SUN9I
+>  	select PINCTRL_SUNXI
+>  
+> +config PINCTRL_SUN8I_V853
+> +	bool "Support for the Allwinner V853/V851S/V851SE PIO"
+> +	default MACH_SUN8I
+> +	select PINCTRL_SUNXI
+> +
+>  config PINCTRL_SUN20I_D1
+>  	bool "Support for the Allwinner D1 PIO"
+>  	default MACH_SUN8I || (RISCV && ARCH_SUNXI)
+> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
+> index 2ff5a55927ad..8937b56b2ef4 100644
+> --- a/drivers/pinctrl/sunxi/Makefile
+> +++ b/drivers/pinctrl/sunxi/Makefile
+> @@ -20,6 +20,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
+>  obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
+> +obj-$(CONFIG_PINCTRL_SUN8I_V853)	+= pinctrl-sun8i-v853.o
+>  obj-$(CONFIG_PINCTRL_SUN20I_D1)		+= pinctrl-sun20i-d1.o
+>  obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
+>  obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
+> new file mode 100644
+> index 000000000000..fb2112ee12d0
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v853.c
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Allwinner V853 SoC pinctrl driver.
+> + *
+> + * Copyright (c) 2025 Andras Szemzo <szemzo.andras@gmail.com>
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +
+> +#include "pinctrl-sunxi.h"
+> +
+> +static const u8 v853_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
+> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI  */
+> +	{ 22,  0, 12, 23, 18,  7,  8, 16,  5 };
+> +
+> +static const unsigned int v853_irq_bank_map[] = { 0, 2, 3, 4, 5, 6, 7, 8 };
+> +
+> +static const u8 v853_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
+> +/*	  PA  PB  PC  PD  PE  PF  PG  PH  PI */
+> +	{ 14,  0, 14, 14, 14, 14, 14, 14, 14 };
+> +
+> +static struct sunxi_pinctrl_desc v853_pinctrl_data = {
+> +	.irq_banks = ARRAY_SIZE(v853_irq_bank_map),
+> +	.irq_bank_map = v853_irq_bank_map,
+> +	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
+> +};
+> +
+> +static int v853_pinctrl_probe(struct platform_device *pdev)
 > +{
-> +	struct page *page;
-> +
-> +	if (pipe->tmp_page[0]) {
-> +		page = pipe->tmp_page[0];
-> +		pipe->tmp_page[0] = NULL;
-> +	} else if (pipe->tmp_page[1]) {
-> +		page = pipe->tmp_page[1];
-> +		pipe->tmp_page[1] = NULL;
-> +	} else {
-> +		page = alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
-> +	}
-> +
-> +	return page;
+> +	return sunxi_pinctrl_dt_table_init(pdev, v853_nr_bank_pins,
+> +					   v853_irq_bank_muxes,
+> +					   &v853_pinctrl_data,
+> +					   SUNXI_PINCTRL_NEW_REG_LAYOUT |
+> +					   SUNXI_PINCTRL_ELEVEN_BANKS);
+
+This last flag doesn't apply: it would put the offset for the
+POW_MOD_SEL registers at 0x380, but the manual says it's 0x340, as with
+the previous SoCs.
+I compared the rest against the A523 driver, and the V853 specific bits
+against the manual: they match, so with that line removed:
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
 > +}
-
-Perhaps something like
-
-	for (i = 0; i < ARRAY_SIZE(pipe->tmp_page); i++) {
-		if (pipe->tmp_page[i]) {
-			struct page *page = pipe->tmp_page[i];
-			pipe->tmp_page[i] = NULL;
-			return page;
-		}
-	}
-
-	return alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
-?
-
-Same for anon_pipe_put_page() and free_pipe_info().
-
-This avoids the code duplication and allows to change the size of
-pipe->tmp_page[] array without other changes.
-
-Oleg.
+> +
+> +static const struct of_device_id v853_pinctrl_match[] = {
+> +	{ .compatible = "allwinner,sun8i-v853-pinctrl", },
+> +	{}
+> +};
+> +
+> +static struct platform_driver v853_pinctrl_driver = {
+> +	.probe	= v853_pinctrl_probe,
+> +	.driver	= {
+> +		.name		= "sun8i-v853-pinctrl",
+> +		.of_match_table	= v853_pinctrl_match,
+> +	},
+> +};
+> +builtin_platform_driver(v853_pinctrl_driver);
 
