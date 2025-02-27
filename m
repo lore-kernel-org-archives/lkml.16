@@ -1,154 +1,149 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F32553E23
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:08:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F188C1A238B
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740636510; cv=none; b=JV9cQsOYPLGWTgMEsx5nzf2wTm6AbvXA5mVG5YcRMqT2gSd1wSyZP647FX3av5FlmrfYviDjnhGRwELiuTRhAotyAQmjpYOwkMjhPC9E+AOvCGQ7Y8Wiq83y9mhdWfu/6MU3SFnRcONvt7/sfaSWxmAcj65y0JlW0XOt9vFcFSg=
+	t=1740636787; cv=none; b=WbqKIpuFlbSLHfK8rSy/aAJ2eVZDkvP9TnPWN552MPevw+IQ1m3yXf4+wZFsB4vs0b8j5MuIOweGPqG1l/REobHL3mjt88fbWnOHzEHm4WF2xihkJyDl6bRNo7v98Z/l/HL/MdOQxZ5PZ84IrXi5vvbYW0ET/m/UhpbXTh+D8d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740636510; c=relaxed/simple;
-	bh=9qHQwG/jH4v2hSOB5u9qYkiVsAp/QLoX8s57aRwldGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IajY2ZDjVt6wDhNbNMrurgjvfyxdGIWAVJsE/q5Gp1HSFySoMCbkMF1Cl90lWPSUxOgEwlWyXbPWvGbwmCduz+0auK2oIRBlWU0jqqyj1nqzz6oh4YSP0/65aY69CUG+q/3COMrLhCggfMN3RlIhxfKt9KL3KPNArmiyjZv9TcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=aFoFfPFj; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1740636787; c=relaxed/simple;
+	bh=9J81SQoYHsfHuQNlO6dXXiKaclPkwFctCUcS7bQFdZ4=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=MRppBZceqk4OcsCDYoM+9oCyJlkv37ZQX5J9mJOyNyvmbEkqJmqsLr88FgZ81h9sFuNFyntbghst0/ZiGDOsfjzCyjAI9qQmi/iENNGNdMGylV2ShRNFylHBw/YyAFSTuhTPZqvqkumVIGbW0XCKj6kUMjSLSYBArFN17alY5RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I9b/HtHc; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="aFoFfPFj"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-471ede4b8e5so2776501cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 22:08:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9b/HtHc"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abb7520028bso63716566b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 22:13:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1740636506; x=1741241306; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VPz1Jtb3iDmlzLw3YyOfEPl0dmoA/8jm1qHrEBiYBV8=;
-        b=aFoFfPFjK08FhidN+/lzzH5pohCdgCpU7FAegOQmrWdJoORIAm0Y0LIdtjrlJHzguA
-         nyNcVjxsBYlFThLjL9sZIS8X2lQlGOFcqEpUB+LLHhJEsroE5sYKQLlXDtGKgFRog8eL
-         BJeyc+6IlMp3X04WbsNX+DWYWvZTGMosLN2R3pnc0odK0i0CDVF3PTC3JzWDLq1x+512
-         7N2/vsfwkQrJs4DZelIemVU6158HQ4Awa7yAxXgaeBXxi+di3hZRF5XIxWizg5886zdr
-         VNB40Rp7dBc9rTJusv4kPDUt5aGZ4H1CgTXN6Uu3guhERr2m5VM3ikFV10BFtTCtUfw+
-         pfeg==
+        d=google.com; s=20230601; t=1740636784; x=1741241584; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CuxSuk4eRgxWynJJEawNIcvcHNqZ5bgfZDjnTmQkJOo=;
+        b=I9b/HtHccFKhDUROzvR4MmfLvyk6dOb6hLRofbQnE0BpV5xzTdA0CfddD0JWGno+Cb
+         7FIyDJQU3E4rRGHX9Su80Aq0+BkWzagdwg/RJcjtZ2IrAIbRC+idfnToaihYH4J76XNT
+         hlTmNKYhDPd4vezH7TwD7NL4WubQIy2ZtyqoIExgXOeVG+tYvb4F9TK+bHbtwfAgu2jd
+         SE/ZAG8luW+nLCpBgE9+Y9lPQdw+uF6TWLErPALnF3ZehELshVDiJ4gerO9vf1zhvdUr
+         3RwnbVMVbfBcU2bLkcyxemcXZlKST9FUMTlSP9ZYzksuJaUxDSpkOns6ij9Ner3xNP+1
+         y8DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740636506; x=1741241306;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VPz1Jtb3iDmlzLw3YyOfEPl0dmoA/8jm1qHrEBiYBV8=;
-        b=ARUYqFZyZQ+FtaGc3yWG+hB5+SW5eYVvwfTXMbD1XJk2+HfXKwe0OyS1HRkPnfSYTo
-         IkU9y6SpQmqu5X4KTZHtFRO9VVIVWCzzGqvlc36KYGfuL3iYe0RZQ6Gt/1Bbnt4ePlvq
-         /5zDrjw4Pvp+6lWvFh8fp8k30pmkhx3jntPrG+6X6vx2IM6aFpc8V70/mpgkU5i2fbn2
-         GND6ttKz7etdlcBkGaXpOJSSHb6ln5ILbc5WIsWJmYkqpfypVIsqsUaePLQXXErdnDbj
-         LmSv9d6wJpHkwJeFGdIBRkyAbc61unhLXx7xO++04QMXdkWDtsC0odNTU43ox6i1fRio
-         z5ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpGhZ4lkp4ssQEc/YJhjViHCi4jFxSSlVaYJ7pnFIpkk2EnSvxjEfjoP8+8pKaixjdpckWAGiU2uYk6Q8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIY8fn/6OIKoNXROA6EJ80obASC9nrR8gpa97WnT8sZ9OH3CxZ
-	t14N28DOYGwBCTPyFqPl+QAw1sJNeFfVrmV0ZkEAIhudmtPLNZR0qa0MM+KuTxLJbJuolddYFgs
-	U
-X-Gm-Gg: ASbGncveAEjL30nByM+wJIf4iRHVb/BRUQn/eb11tQDiJLyQcxdMs3KNhQ2yycMpETv
-	DOh13ZbbQsjUqCVU+EGxdsuijNeZG05sLkU1sEJaAyZvGOqvPs1edgXR6rDLSNUconwfxyq667M
-	DPGnSGvf2+XEaRp3qqU/WcQyYyxxase50fIjJU8/jTUqwz4M8/f1VwmWfckTVJtdjX0WMAi1Jck
-	3YlxRIWljIsjp1NoLW/IYzulyiFS/9z9ePaS3TDlrMOQ2i7cfletXwGz+pIsQyBd8W+CbfvMccS
-	qVrpeRa9TI7BTxNPn6162Zst
-X-Google-Smtp-Source: AGHT+IHh3l/pbd4U+HZO31M9X7egjzLQA2am+j8f66WkAfpl/b+8JFLXkEalx8BJVXBHXv/+SxiZdQ==
-X-Received: by 2002:a05:622a:24c:b0:471:ef27:a30d with SMTP id d75a77b69052e-47381365f87mr79384461cf.40.1740636505919;
-        Wed, 26 Feb 2025 22:08:25 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-474691a1f2csm7429221cf.13.2025.02.26.22.08.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 22:08:24 -0800 (PST)
-Date: Thu, 27 Feb 2025 01:08:20 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Qi Zheng <zhengqi.arch@bytedance.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: CONFIG_PT_RECLAIM
-Message-ID: <20250227060820.GC110982@cmpxchg.org>
-References: <20250226183013.GB1042@cmpxchg.org>
- <a77923d3-ce26-4e29-bb98-b908ce2355c2@bytedance.com>
+        d=1e100.net; s=20230601; t=1740636784; x=1741241584;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CuxSuk4eRgxWynJJEawNIcvcHNqZ5bgfZDjnTmQkJOo=;
+        b=JB78wSy1Vh2IXOXYKVdlvmP1IDNkdY9r4GIi30vjzt3diGTrxcLj38RxjDxMUHiLPh
+         HhBsiM50Nq2pzP1agVbHyC86XdQrULkdRY8a1LE7EE4UpelEzAhrjxEocCLfJoW/VSo9
+         zSogSFV1hNgOSxMXTDvsTV1Z6aCglWwvJvhxsAI/oeWS1oCTPcgRCv/nGft6CCvHnOnP
+         4qSxPBSZg8o17RacUNq9WmC9eGqzfhWvw2tAjtb3EaGfiE3q2XOlPicO9ZrVs1eHvLnN
+         QVP1WFgGIUlIAqiw1L2eimSlKLkO349zgWL2CQIfcbM2EYk9WwM81ilO8mJ3cxkLFsZ3
+         Ojjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXIb5+lcJt+LbI2jQ59K2flXcl6qYiW4R3UrH1duU0Hl1z3CNSThrTzHOP7ujp6S0rs7U8lmMCoydPWrl0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD3v512Q/Ss5onD5gGze+D4h8l3roacw6675FoDSwR65VPWq0E
+	TlNTAvBd1P5UHUQgAoH8AxHaqPeL5m2nuI1AEZfdbAqlOv8fbnW1OO52+sk/sWtDUWsablRJSue
+	QiIDzKfWWWUyidi6AMOdTbZC1RTE+8YaeTcw=
+X-Gm-Gg: ASbGncu0XiSJ1Mjb83YqUCGMWGrt9LwtYte6/7YU4AZftw4O2yAIYFw44UC8HugYxRb
+	L8QJSu2qaE4NE2Ca9hLhRciYx2hrIH545PyOyB0BqMfFFNkg1oWYOvZYq86oSu1UShiVJ+RPuAc
+	YjUmvl
+X-Google-Smtp-Source: AGHT+IEgJXsQWOrOPhuyDiqYa5ObWU7mCLEWr74aJZ2+hsjWBPxMvycAsBVKLy9JZ2u4XFnZXPgBLyMLQe3dM8dy6ys=
+X-Received: by 2002:a17:906:3105:b0:ab7:f2da:8122 with SMTP id
+ a640c23a62f3a-abeeecfd662mr707407366b.3.1740636784177; Wed, 26 Feb 2025
+ 22:13:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a77923d3-ce26-4e29-bb98-b908ce2355c2@bytedance.com>
+From: Bill Wendling <morbo@google.com>
+Date: Wed, 26 Feb 2025 22:12:47 -0800
+X-Gm-Features: AQ5f1Jovhh9LtaEfZAB9uuTkphZJ0I-qXJT238fUHcidB3rX9MNwIcr8OFeNbcQ
+Message-ID: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
+Subject: [PATCH] x86/crc32: use builtins to improve code generation
+To: Bill Wendling <morbo@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biggers <ebiggers@kernel.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, 
+	clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 27, 2025 at 11:04:51AM +0800, Qi Zheng wrote:
-> Hi Johannes,
-> 
-> On 2/27/25 2:30 AM, Johannes Weiner wrote:
-> > Does PT_RECLAIM need to be configurable by the user?
-> 
-> The PT_RECLAIM will select MMU_GATHER_RCU_TABLE_FREE, but not all archs
-> support MMU_GATHER_RCU_TABLE_FREE, and even before Rik's a37259732a7dc 
-> ("x86/mm: Make MMU_GATHER_RCU_TABLE_FREE unconditional"), x86 only
-> supports MMU_GATHER_RCU_TABLE_FREE in the case of PARAVIRT.
-> 
-> Therefore, PT_RECLAIM also implies the meaning of enabling
-> MMU_GATHER_RCU_TABLE_FREE, so I made it user-configurable. And I just
-> thought that as a new feature, it would be better to give users the
-> ability to turn it on and off.
+For both gcc and clang, crc32 builtins generate better code than the
+inline asm. GCC improves, removing unneeded "mov" instructions. Clang
+does the same and unrolls the loops. GCC has no changes on i386, but
+Clang's code generation is vastly improved, due to Clang's "rm"
+constraint issue.
 
-New *features*, yes - something that has a significant enough cost
-that clearly not all users want to pay for the benefits.
+The number of cycles improved by ~0.1% for GCC and ~1% for Clang, which
+is expected because of the "rm" issue. However, Clang's performance is
+better than GCC's by ~1.5%, most likely due to loop unrolling.
 
-But it's hard to imagine anybody would WANT to keep the page tables
-around if they madvised away all the pages inside of them. It's a
-great optimization, what would be a reason to opt out?
+Link: https://github.com/llvm/llvm-project/issues/20571#issuecomment-2649330009
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-crypto@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Bill Wendling <morbo@google.com>
+---
+ arch/x86/Makefile         | 3 +++
+ arch/x86/lib/crc32-glue.c | 8 ++++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index 2761098dbc1a..99383c93db33 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -1309,16 +1309,9 @@ config ARCH_SUPPORTS_PT_RECLAIM
-> >   	def_bool n
-> >   
-> >   config PT_RECLAIM
-> > -	bool "reclaim empty user page table pages"
-> > -	default y
-> > +	def_bool y
-> >   	depends on ARCH_SUPPORTS_PT_RECLAIM && MMU && SMP
-> >   	select MMU_GATHER_RCU_TABLE_FREE
-> > -	help
-> > -	  Try to reclaim empty user page table pages in paths other than munmap
-> > -	  and exit_mmap path.
-> > -
-> > -	  Note: now only empty user PTE page table pages will be reclaimed.
-> > -
-> 
-> Maybe keep the help information?
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 5b773b34768d..241436da1473 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -114,6 +114,9 @@ else
+ KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
+ endif
 
-I don't find it very helpful :( Which "other paths?" It doesn't
-explain any pros and cons, and why anybody might choose to enable or
-disable it. The Note repeats what's in the sentence before it.
++# Enables the use of CRC32 builtins.
++KBUILD_CFLAGS += -mcrc32
++
+ ifeq ($(CONFIG_X86_32),y)
+         BITS := 32
+         UTS_MACHINE := i386
+diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
+index 2dd18a886ded..fdb94bff25f4 100644
+--- a/arch/x86/lib/crc32-glue.c
++++ b/arch/x86/lib/crc32-glue.c
+@@ -48,9 +48,9 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+ EXPORT_SYMBOL(crc32_le_arch);
 
-Maybe I'm missing something. Could this not just be an #ifdef block
-inside mm/madvise.c, instead of living inside a new file with two new
-config symbols?
+ #ifdef CONFIG_X86_64
+-#define CRC32_INST "crc32q %1, %q0"
++#define CRC32_INST __builtin_ia32_crc32di
+ #else
+-#define CRC32_INST "crc32l %1, %0"
++#define CRC32_INST __builtin_ia32_crc32si
+ #endif
 
-#ifdef CONFIG_MMU_GATHER_RCU_TABLE_FREE
-...
-#endif
+ /*
+@@ -78,10 +78,10 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
 
-Is there an arch-specific feature that it requires besides
-MMU_GATHER_RCU_TABLE_FREE such that only x86 supports it now?
+        for (num_longs = len / sizeof(unsigned long);
+             num_longs != 0; num_longs--, p += sizeof(unsigned long))
+-               asm(CRC32_INST : "+r" (crc) : "rm" (*(unsigned long *)p));
++               crc = CRC32_INST(crc,  *(unsigned long *)p);
 
-And why *does* it require MMU_GATHER_RCU_TABLE_FREE?
+        for (len %= sizeof(unsigned long); len; len--, p++)
+-               asm("crc32b %1, %0" : "+r" (crc) : "rm" (*p));
++               crc = __builtin_ia32_crc32qi(crc, *p);
 
-Documentation/mm/process_addrs.rst explains why you need rcu, but
-there is free_pte_defer() that THP was using long before x86 needed
-MMU_GATHER_RCU_TABLE_FREE. It seems to me if you could use that, this
-feature would also work fine on architectures that do not generally
-need RCU for flush & frees otherwise. So is the main issue that there
-just isn't an explicitly deferred variant of pte_free_tlb()?
-
-If so, this is a fairly non-obvious dependency that should be
-documented. It would help somebody trying to port this to a !RCU
-mmu_gather arch.
-
-And I apologize if all this was discussed before. But if it was, the
-conclusions should be in the changelog or in code comments. This is a
-very delicate synchronization scheme that I think deserves explicit
-documentation somewhere.
+        return crc;
+ }
+-- 
+2.48.1.711.g2feabab25a-goog
