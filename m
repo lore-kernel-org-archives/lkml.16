@@ -1,373 +1,88 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3791EB5E4;
-	Thu, 27 Feb 2025 05:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB6E1E833A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740632978; cv=none; b=RnJBY+kxrRHFDiUzyuOf/tKAxQ/xOZM5cJb7zGAnYtMTwADLDColdW7TZwBKKW4PGEFFA2C4Ei1BT90tPF9i6Q/mWk0YJKUmGqKnAo3SF4CEPibiT0li6QEhA5cxp2ZbtV/DKoaO7J/Mz8jjLj0KcbO4Ggytn26X3moNI3HQ4fY=
+	t=1740633223; cv=none; b=AH4Bv5RSXjtfZk16wJq+e1HO5jopRw3lchoLyNH9mBQM+tnJfPE7kot86A+O1ey0AjzhRFlTh2g6lqjT7yFokB62Mm3jT8JPjHJv+102kcIPHzavsO9AvorBhHPy/bGK+lRpJUBzmgRwL5Lpmx+Oc9GR1cAouuyqRxCSf+0c9L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740632978; c=relaxed/simple;
-	bh=3P77Ed2u6ebFpkQXjWAygr9kLCn79mmOWfLm3Bb7DDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IVNIPKnStXYTLJ25sDLB9qZF6nxS9wcgwhP7ykG2fffD0qPK7EdACM9lu82a78NBQeVP49RklINV7325m5nNuA831al3JDNvO91rXI/3aG4HNjYDB68FAF066qlUOa6yYbohTzffWnbXek7hwRHNNo2qOM66pS4U2+fmpBQ851I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iTauy4o0; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740633223; c=relaxed/simple;
+	bh=vvCV22so1Msx3O2wDekgW5ZeubkEpJeKdX6RQLEw3ls=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRfuK4V8vNJaBJZch9fUjE+JlnSe1v2ZAR9E4CRaOyWr9V6kNsE0fI7wHMoUazJK8OLvwy2GGyarq1y/HUj7hWCA+L4sWtWJDT7B5J6llikPYaSdkyToy55JZ6NecWK+jrcrEbKiDJWFhAyCpyLRHxYrBJ4LVaVcATVxQPCxxTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OholmMlP; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTauy4o0"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5485646441cso517609e87.2;
-        Wed, 26 Feb 2025 21:09:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740632974; x=1741237774; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ghfn4+Xg7hgsshvbiQ/zs+VWb3CYl/DNEJ7fYjzlr94=;
-        b=iTauy4o077DOOyQQXzfJe9DUDhtxED5adadP9vY7Qs60QnQA78ULAVnpbcbLMeTv1b
-         lRGSM83js+PEkYI0+pmmFxLTqVudngPyBIzxgLwL7dVw0a/lwoJlrpMtvj3cSH1YGd85
-         7mC1QsnD4vtfBqdE4F9AKVQ99EC74eo9Q7UKaezuQKppfWoEIkXZJssZZzSp8UEmuT4O
-         lpWHHL/up/dgrTFmxXSQBrOZGTISHctEUXLBdpbbDiNvmVOUnBGehnQK0Zia9bC281xs
-         A3KaZ0negPbyY3zauHddY8DEz2SggKwvgwwuIxdpM8iAA244kOPf7fhC2kPvcRqafhIe
-         0yCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740632974; x=1741237774;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ghfn4+Xg7hgsshvbiQ/zs+VWb3CYl/DNEJ7fYjzlr94=;
-        b=Yzsq0hPqZ8I1AcMo0f/FLGl3caKiLyNNNN4zDe4rR4rlo9iXz+/f4kwweUrQ/abB8H
-         jYjBbBZfB7zctfZ5KjwPAvWSGJmboFln4jRBqTyDu57Ytq1IwW98ZMImUuBzBMHeHt1o
-         VPPGNKfUHHPGoE0Nn1oUVrosMkt4oHcJL6hIFu+xLbLhwGvBcHi0myFBsANgSuU3GpV8
-         m8d1p7vEQC27nBiF8LD1b0uuYa/W02x7WRff+bo96ZBBeqqaDXTDyyG+cSridrmvfC+n
-         nuB2Mk2DPhRIDyKkAuLSVwbk8L8jpo/GJVuk3Vzmg3LO4rL6bt4X7lDuvlRqF2S//1u3
-         Nnfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWa7hac6zMgnIbVLhLL9ZjxXLsfJCFJknaX50AHa84lxcTkZmNhqsxIcyfqSLOTrKhTpne2zDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj1G3DiF20eZJhE+yx7oZf9N4QCIeCQ7f59urwM5AOjpUPuddO
-	eITlAbjfdGFdaLAD4CtWYzKIMPf1Amf81gqb5+MJdJizRX7nk+h1
-X-Gm-Gg: ASbGncvXnzneF4ZbSAbgUJBBLoPgAX8dKWlwyWxo6tO36o4xwdFIY2Cb1HQ26Tn/xbp
-	PUm0HlGQ4+sDZelaIDlaIqzpzaGximsd9jDGMd1OR5GvyceR6Dq8DqwxoGF1gJ7jshsoXfcLKh0
-	YpV598NK8d+pusLNwOKb7gOccz3etT7YZFCJjacsslc76Bi3kRFbzZud74i/O58LNSCufbmgMwg
-	xVYCRkwkcx3HbES0DM7y41iOlsDY6GqEOsDypWJhwryK7vXu9kH/P6S5a8NCbEXOQFx3AAY6T22
-	zHgwj10nJPqZxsgVmIOLLudu/yxq8780cmBQQRcu8gTDvSyW
-X-Google-Smtp-Source: AGHT+IFgruQ0c5Yle6UgviWuKeKKrCUmKU6I4FHTT0v9WkwOjPJYRPPOuPZMXnQDz2shZ/BsyW09MA==
-X-Received: by 2002:a05:6512:3ca9:b0:546:2ff9:1539 with SMTP id 2adb3069b0e04-54851109cfcmr5746238e87.52.1740632973727;
-        Wed, 26 Feb 2025 21:09:33 -0800 (PST)
-Received: from FI-L-7486715.nmea.abb.com ([147.161.186.106])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443cc9desm68509e87.221.2025.02.26.21.09.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 21:09:33 -0800 (PST)
-From: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>,
-	MD Danish Anwar <danishanwar@ti.com>
-Cc: linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Jaakko Karrenpalo <jaakko.karrenpalo@fi.abb.com>,
-	Jaakko Karrenpalo <jkarrenpalo@gmail.com>
-Subject: [PATCH net-next v3 2/2] net: hsr: Add KUnit test for PRP
-Date: Thu, 27 Feb 2025 07:09:23 +0200
-Message-ID: <20250227050923.10241-2-jkarrenpalo@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250227050923.10241-1-jkarrenpalo@gmail.com>
-References: <20250227050923.10241-1-jkarrenpalo@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OholmMlP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740633223; x=1772169223;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vvCV22so1Msx3O2wDekgW5ZeubkEpJeKdX6RQLEw3ls=;
+  b=OholmMlPH9GTuq9iusNS2+kOJLKvfBcUzc6+moKkJKNN+/E6qOCW7Nto
+   Mpp/xacsEEY24hC/mT8JVkb0tSdnELfG7II2DvtyGGn1L7Lui9ErYxAHF
+   MLS85wEeg3cfidvk4jXBWDufNrUGKVAjtqa+YUt3U/LL43Z/C+D6vi00G
+   dzwtDkuF4krwN4r8+Ew17hiVqYaxJVc0Wx0cHFvICXxbvKssAm3DRR0jL
+   DBWHL2ZAQNjPXwx9QcpCT0xu6xinuvdx2enL0ZCR6gm99XVwJNYyoE8bF
+   luQcMVUQ9Ls6NAba8cWjT1H+Ctikyo8sKVEX6mX213/LSVybCky34xx1U
+   g==;
+X-CSE-ConnectionGUID: H40WHVsuSSeVo6VKXgU29A==
+X-CSE-MsgGUID: IGS1ud9AQxitjqUI5o5tgg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="51717152"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="51717152"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 21:13:42 -0800
+X-CSE-ConnectionGUID: Sf1gvKgHTPWja6E9c3QZvw==
+X-CSE-MsgGUID: r36inP5ISUuS8RMFxi4iig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="121928449"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 21:13:40 -0800
+Date: Thu, 27 Feb 2025 07:13:36 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: lee@kernel.org, giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] mfd: intel-ehl: Introduce Intel Elkhart Lake PSE
+ GPIO and TIO
+Message-ID: <Z7_0gJJL_h6lq4cz@black.fi.intel.com>
+References: <20250226061527.3031250-1-raag.jadav@intel.com>
+ <20250226061527.3031250-5-raag.jadav@intel.com>
+ <Z78VIjgkzf_GlauU@smile.fi.intel.com>
+ <Z78VkEnJh8l9MWF7@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z78VkEnJh8l9MWF7@smile.fi.intel.com>
 
-Add unit tests for the PRP duplicate detection
+On Wed, Feb 26, 2025 at 03:22:24PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 26, 2025 at 03:20:35PM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 26, 2025 at 11:45:27AM +0530, Raag Jadav wrote:
+> 
+> ...
+> 
+> > > +++ b/drivers/mfd/intel-ehl-gpio.c
+> > 
+> > We are usually align the file name and Kconfig option, and I like Kconfig
+> > choice, so intel_ehl_pse_gpio.c (also note the style with other intel_$SOC_*
+> > files in the folder.
 
-Signed-off-by: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
----
-Changes in v2:
-- Changed KUnit tests to compile as built-in only
-Changes in v3:
-- Changed the KUnit tests to compile as a module
+More than 3 words is a bit of an overstretch, no?
 
- net/hsr/Kconfig                |  18 +++
- net/hsr/Makefile               |   2 +
- net/hsr/hsr_framereg.c         |   4 +
- net/hsr/prp_dup_discard_test.c | 212 +++++++++++++++++++++++++++++++++
- 4 files changed, 236 insertions(+)
- create mode 100644 net/hsr/prp_dup_discard_test.c
+> And also Subject, you have currently 3 different names for the same:
+> Kconfig, Subject, filename.
 
-diff --git a/net/hsr/Kconfig b/net/hsr/Kconfig
-index 1b048c17b6c8..fcacdf4f0ffc 100644
---- a/net/hsr/Kconfig
-+++ b/net/hsr/Kconfig
-@@ -38,3 +38,21 @@ config HSR
- 	  relying on this code in a safety critical system!
- 
- 	  If unsure, say N.
-+
-+if HSR
-+
-+config PRP_DUP_DISCARD_KUNIT_TEST
-+	tristate "PRP duplicate discard KUnit tests" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Covers the PRP duplicate discard algorithm.
-+	  Only useful for kernel devs running KUnit test harness and are not
-+	  for inclusion into a production build.
-+
-+	  For more information on KUnit and unit tests in general please refer
-+	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-+
-+	  If unsure, say N.
-+
-+endif
-diff --git a/net/hsr/Makefile b/net/hsr/Makefile
-index 75df90d3b416..34e581db5c41 100644
---- a/net/hsr/Makefile
-+++ b/net/hsr/Makefile
-@@ -8,3 +8,5 @@ obj-$(CONFIG_HSR)	+= hsr.o
- hsr-y			:= hsr_main.o hsr_framereg.o hsr_device.o \
- 			   hsr_netlink.o hsr_slave.o hsr_forward.o
- hsr-$(CONFIG_DEBUG_FS) += hsr_debugfs.o
-+
-+obj-$(CONFIG_PRP_DUP_DISCARD_KUNIT_TEST) += prp_dup_discard_test.o
-diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
-index 79e066422044..3192e1253715 100644
---- a/net/hsr/hsr_framereg.c
-+++ b/net/hsr/hsr_framereg.c
-@@ -588,6 +588,10 @@ int prp_register_frame_out(struct hsr_port *port, struct hsr_frame_info *frame)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PRP_DUP_DISCARD_KUNIT_TEST_MODULE
-+EXPORT_SYMBOL(prp_register_frame_out);
-+#endif
-+
- static struct hsr_port *get_late_port(struct hsr_priv *hsr,
- 				      struct hsr_node *node)
- {
-diff --git a/net/hsr/prp_dup_discard_test.c b/net/hsr/prp_dup_discard_test.c
-new file mode 100644
-index 000000000000..e86b7b633ae8
---- /dev/null
-+++ b/net/hsr/prp_dup_discard_test.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <kunit/test.h>
-+
-+#include "hsr_main.h"
-+#include "hsr_framereg.h"
-+
-+struct prp_test_data {
-+	struct hsr_port port;
-+	struct hsr_port port_rcv;
-+	struct hsr_frame_info frame;
-+	struct hsr_node node;
-+};
-+
-+static struct prp_test_data *build_prp_test_data(struct kunit *test)
-+{
-+	struct prp_test_data *data = kunit_kzalloc(test,
-+		sizeof(struct prp_test_data), GFP_USER);
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test, data);
-+
-+	data->frame.node_src = &data->node;
-+	data->frame.port_rcv = &data->port_rcv;
-+	data->port_rcv.type = HSR_PT_SLAVE_A;
-+	data->node.seq_start[HSR_PT_SLAVE_A] = 1;
-+	data->node.seq_expected[HSR_PT_SLAVE_A] = 1;
-+	data->node.seq_start[HSR_PT_SLAVE_B] = 1;
-+	data->node.seq_expected[HSR_PT_SLAVE_B] = 1;
-+	data->node.seq_out[HSR_PT_MASTER] = 0;
-+	data->node.time_out[HSR_PT_MASTER] = jiffies;
-+	data->port.type = HSR_PT_MASTER;
-+
-+	return data;
-+}
-+
-+static void check_prp_counters(struct kunit *test,
-+			       struct prp_test_data *data,
-+			       u16 seq_start_a, u16 seq_expected_a,
-+			       u16 seq_start_b, u16 seq_expected_b)
-+{
-+	KUNIT_EXPECT_EQ(test, data->node.seq_start[HSR_PT_SLAVE_A],
-+			seq_start_a);
-+	KUNIT_EXPECT_EQ(test, data->node.seq_start[HSR_PT_SLAVE_B],
-+			seq_start_b);
-+	KUNIT_EXPECT_EQ(test, data->node.seq_expected[HSR_PT_SLAVE_A],
-+			seq_expected_a);
-+	KUNIT_EXPECT_EQ(test, data->node.seq_expected[HSR_PT_SLAVE_B],
-+			seq_expected_b);
-+}
-+
-+static void prp_dup_discard_forward(struct kunit *test)
-+{
-+	/* Normal situation, both LANs in sync. Next frame is forwarded */
-+	struct prp_test_data *data = build_prp_test_data(test);
-+
-+	data->frame.sequence_nr = 2;
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	KUNIT_EXPECT_EQ(test, jiffies, data->node.time_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, data->frame.sequence_nr,
-+			   data->frame.sequence_nr + 1, 1, 1);
-+}
-+
-+static void prp_dup_discard_inside_dropwindow(struct kunit *test)
-+{
-+	/* Normal situation, other LAN ahead by one. Frame is dropped */
-+	struct prp_test_data *data = build_prp_test_data(test);
-+	unsigned long time = jiffies - 10;
-+
-+	data->frame.sequence_nr = 1;
-+	data->node.seq_expected[HSR_PT_SLAVE_B] = 3;
-+	data->node.seq_out[HSR_PT_MASTER] = 2;
-+	data->node.time_out[HSR_PT_MASTER] = time;
-+
-+	KUNIT_EXPECT_EQ(test, 1,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, 2, data->node.seq_out[HSR_PT_MASTER]);
-+	KUNIT_EXPECT_EQ(test, time, data->node.time_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, 2, 2, 2, 3);
-+}
-+
-+static void prp_dup_discard_node_timeout(struct kunit *test)
-+{
-+	/* Timeout situation, node hasn't sent anything for a while */
-+	struct prp_test_data *data = build_prp_test_data(test);
-+
-+	data->frame.sequence_nr = 7;
-+	data->node.seq_start[HSR_PT_SLAVE_A] = 1234;
-+	data->node.seq_expected[HSR_PT_SLAVE_A] = 1235;
-+	data->node.seq_start[HSR_PT_SLAVE_B] = 1234;
-+	data->node.seq_expected[HSR_PT_SLAVE_B] = 1234;
-+	data->node.seq_out[HSR_PT_MASTER] = 1234;
-+	data->node.time_out[HSR_PT_MASTER] =
-+		jiffies - msecs_to_jiffies(HSR_ENTRY_FORGET_TIME) - 1;
-+
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	KUNIT_EXPECT_EQ(test, jiffies, data->node.time_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, data->frame.sequence_nr,
-+			   data->frame.sequence_nr + 1, 1234, 1234);
-+}
-+
-+static void prp_dup_discard_out_of_sequence(struct kunit *test)
-+{
-+	/* One frame is received out of sequence on both LANs */
-+	struct prp_test_data *data = build_prp_test_data(test);
-+
-+	data->node.seq_start[HSR_PT_SLAVE_A] = 10;
-+	data->node.seq_expected[HSR_PT_SLAVE_A] = 10;
-+	data->node.seq_start[HSR_PT_SLAVE_B] = 10;
-+	data->node.seq_expected[HSR_PT_SLAVE_B] = 10;
-+	data->node.seq_out[HSR_PT_MASTER] = 9;
-+
-+	/* 1st old frame, should be accepted */
-+	data->frame.sequence_nr = 8;
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, data->frame.sequence_nr,
-+			   data->frame.sequence_nr + 1, 10, 10);
-+
-+	/* 2nd frame should be dropped */
-+	data->frame.sequence_nr = 8;
-+	data->port_rcv.type = HSR_PT_SLAVE_B;
-+	KUNIT_EXPECT_EQ(test, 1,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	check_prp_counters(test, data, data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1);
-+
-+	/* Next frame, this is forwarded */
-+	data->frame.sequence_nr = 10;
-+	data->port_rcv.type = HSR_PT_SLAVE_A;
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, data->frame.sequence_nr,
-+			   data->frame.sequence_nr + 1, 9, 9);
-+
-+	/* and next one is dropped */
-+	data->frame.sequence_nr = 10;
-+	data->port_rcv.type = HSR_PT_SLAVE_B;
-+	KUNIT_EXPECT_EQ(test, 1,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	check_prp_counters(test, data, data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1,
-+			   data->frame.sequence_nr + 1);
-+}
-+
-+static void prp_dup_discard_lan_b_late(struct kunit *test)
-+{
-+	/* LAN B is behind */
-+	struct prp_test_data *data = build_prp_test_data(test);
-+
-+	data->node.seq_start[HSR_PT_SLAVE_A] = 9;
-+	data->node.seq_expected[HSR_PT_SLAVE_A] = 9;
-+	data->node.seq_start[HSR_PT_SLAVE_B] = 9;
-+	data->node.seq_expected[HSR_PT_SLAVE_B] = 9;
-+	data->node.seq_out[HSR_PT_MASTER] = 8;
-+
-+	data->frame.sequence_nr = 9;
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, 9, 10, 9, 9);
-+
-+	data->frame.sequence_nr = 10;
-+	KUNIT_EXPECT_EQ(test, 0,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	KUNIT_EXPECT_EQ(test, data->frame.sequence_nr,
-+			data->node.seq_out[HSR_PT_MASTER]);
-+	check_prp_counters(test, data, 9, 11, 9, 9);
-+
-+	data->frame.sequence_nr = 9;
-+	data->port_rcv.type = HSR_PT_SLAVE_B;
-+	KUNIT_EXPECT_EQ(test, 1,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	check_prp_counters(test, data, 10, 11, 10, 10);
-+
-+	data->frame.sequence_nr = 10;
-+	data->port_rcv.type = HSR_PT_SLAVE_B;
-+	KUNIT_EXPECT_EQ(test, 1,
-+			prp_register_frame_out(&data->port, &data->frame));
-+	check_prp_counters(test, data,  11, 11, 11, 11);
-+}
-+
-+static struct kunit_case prp_dup_discard_test_cases[] = {
-+	KUNIT_CASE(prp_dup_discard_forward),
-+	KUNIT_CASE(prp_dup_discard_inside_dropwindow),
-+	KUNIT_CASE(prp_dup_discard_node_timeout),
-+	KUNIT_CASE(prp_dup_discard_out_of_sequence),
-+	KUNIT_CASE(prp_dup_discard_lan_b_late),
-+	{}
-+};
-+
-+static struct kunit_suite prp_dup_discard_suite = {
-+	.name = "prp_duplicate_discard",
-+	.test_cases = prp_dup_discard_test_cases,
-+};
-+
-+kunit_test_suite(prp_dup_discard_suite);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("KUnit tests for PRP duplicate discard");
-+MODULE_AUTHOR("Jaakko Karrenpalo <jkarrenpalo@gmail.com>");
--- 
-2.43.0
+Yeah just trying to dial down the acronym syndrome, you know how it has
+plagued our minds.
 
+Raag
