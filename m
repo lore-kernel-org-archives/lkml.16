@@ -1,224 +1,213 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E80230993;
-	Thu, 27 Feb 2025 12:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7234F23099F;
+	Thu, 27 Feb 2025 12:17:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658629; cv=none; b=jtFhLtow8tL/gctUtunB6cDagaLhfBJHptnHfrKP12mg7Mt7jG1NIRDulM4Az2EaUX3OiNn9+5J+WpqDnl5OT1mo/YHSbaZWKbr50iK/MXZXPBoSLjCU4PXPKBtqtdHJDXCr5CPDnVs7x7qkh3Skg7lToADp7I5dRcxKaGhxRbk=
+	t=1740658633; cv=none; b=QRU9Q1OosGdsqnFbuw/TgrLkkPsiv8hotzutXAB/rAdsu741IqdPFzgsnKgh8ICNDaXpvTGb4pLwFXLiPs4Eqpo5PzKKdWKR67YTGe7ebVbPu44ztOuezkPeYdmQp2yw2FvnZgTEGY8SNIq4K4aJ3uvHJ/njz4X21ZAJAgmnCRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658629; c=relaxed/simple;
-	bh=J2WrRdXsHM4g/4BW0LGzBua9ax0dXvOez2jZneAIugs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WFWgS8p8xWJ4o6U9/BJTaNLlSrpkHL19rztfPDMuki7hQVeNV504wuyu6X3Dn42A7VNwtvtdd03Uci3audPncKiBC2CXUtd4Gqhs2d82Vm+0JvJuVulcV5FVl7MNESY4/gZVZZRN99NMUYj9Zz+P9J89hBPx+KcOU/c4zaYbhRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8zF1MPz; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740658633; c=relaxed/simple;
+	bh=PiF4w06dcmStGdKpjz/UNXxJfVdxs5NQYHvmL6NN2Ic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=ih/3d5Uxu383Dc4/hIBALum4VSz9bwx+AXovjZM0XXu5fozUJIyE5zBPnXbgXUVVC90+dtX9HZXx7LPKI85DY+yKo37jTubb1pB0vEafDXNkvsg7JHkI3DeTitN/rjIvB0RT3SuViqrH+DfSf6J4eEPX8GrsmX+bB9tWgnDrtMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=wpHW840s; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8zF1MPz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740658628; x=1772194628;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=J2WrRdXsHM4g/4BW0LGzBua9ax0dXvOez2jZneAIugs=;
-  b=Y8zF1MPzn3nYGMR4IbT5/xaO5JfMxGb6XrfPEKhGqDqINRv//uz//Yjv
-   lSEFM+NeiSQzpjANXY9Ju20gwyUYITjpl3p0RO3oUCSoPCJpV+Ii9WfW7
-   N9BNwRWtmNdcp3EBLtm3JmJDhkLOO3Q8aTbKflYKK01/A0cnYXcCBFGAL
-   F0U5Ve403PbKxC2I9wb+iO+xTB6yR6PGNNfV+3xq7lWUUrqzbPufZAOS3
-   MjIYjCcIpOyPE7KefQYX4OzYRT4Tj18S/1sR/RbbvWlwwMz2R77Jiusqn
-   WC3tZ5lJ99gGm5fkr8zS8m6KhSaZLySCCZRqLuxJLagq5L1++5Zizj6zs
-   Q==;
-X-CSE-ConnectionGUID: vBmJyAzGS/ybK3vlbS/rvg==
-X-CSE-MsgGUID: mLnGj+56RBmDCiP+f0raMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41464336"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="41464336"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 04:17:07 -0800
-X-CSE-ConnectionGUID: jO11jZUEQ5GkIZy6Ekm6yg==
-X-CSE-MsgGUID: cIZQCiqeTeqVaHk+ui2vJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117519221"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa007.jf.intel.com with ESMTP; 27 Feb 2025 04:17:01 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v9 3/6] arch: x86: add IPC mailbox accessor function and add SoC register access
-Date: Thu, 27 Feb 2025 20:15:19 +0800
-Message-Id: <20250227121522.1802832-4-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="wpHW840s"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740658619; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=eMJBS2PZbCvnQKDjS6NEBU5SffzxB8MSKZeLWb/7V9U=;
+	b=wpHW840snQFNn75Roo2ZuOOfADCMM99GGyvjuzYmihgiNUv6vmB5m+5paA9cvjIWqP7r6FhLwHrdXN5FnowpLTOLw4YHCunWcjAAB+8c2oI736sqBiKkl7gRolZxO0QHwIhrIY6sDdInspPFc6T0Qy915YEKbpBefszq928kF5g=
+Received: from 192.168.117.78(mailfrom:zijie.wei@linux.alibaba.com fp:SMTPD_---0WQMD2JL_1740658618 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 27 Feb 2025 20:16:59 +0800
+Message-ID: <166ac755-52c1-4dd2-8a7c-cd5feff11dd7@linux.alibaba.com>
+Date: Thu, 27 Feb 2025 20:16:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH Resend] KVM: x86: ioapic: Optimize EOI handling to reduce
+ unnecessary VM exits
+To: kai.huang@intel.com
+References: <Z6uo24Wf3LoetUMc@google.com>
+ <20250225064253.309334-1-zijie.wei@linux.alibaba.com>
+ <63886376-07d3-45f2-90b3-89e1b63501f3@intel.com>
+From: wzj <zijie.wei@linux.alibaba.com>
+Reply-To: 63886376-07d3-45f2-90b3-89e1b63501f3@intel.com
+Cc: bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
+ pbonzini@redhat.com, seanjc@google.com, tglx@linutronix.de, x86@kernel.org,
+ xuyun_xy.xy@linux.alibaba.com, zijie.wei@linux.alibaba.com
+In-Reply-To: <63886376-07d3-45f2-90b3-89e1b63501f3@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: "David E. Box" <david.e.box@linux.intel.com>
 
-- Exports intel_pmc_ipc() for host access to the PMC IPC mailbox
-- Enables the host to access specific SoC registers through the PMC
-firmware using IPC commands. This access method is necessary for
-registers that are not available through direct Memory-Mapped I/O (MMIO),
-which is used for other accessible parts of the PMC.
 
-Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Signed-off-by: Chao Qin <chao.qin@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- MAINTAINERS                                   |  1 +
- .../linux/platform_data/x86/intel_pmc_ipc.h   | 94 +++++++++++++++++++
- 2 files changed, 95 insertions(+)
- create mode 100644 include/linux/platform_data/x86/intel_pmc_ipc.h
+On 2025/2/26 22:44, Huang, Kai wrote:
+> 
+> 
+> On 25/02/2025 7:42 pm, weizijie wrote:
+>> Address performance issues caused by a vector being reused by a
+>> non-IOAPIC source.
+>>
+>> Commit 0fc5a36dd6b3
+>> ("KVM: x86: ioapic: Fix level-triggered EOI and IOAPIC reconfigure race")
+>> addressed the issues related to EOI and IOAPIC reconfiguration races.
+>> However, it has introduced some performance concerns:
+>>
+>> Configuring IOAPIC interrupts while an interrupt request (IRQ) is
+>> already in service can unintentionally trigger a VM exit for other
+>> interrupts that normally do not require one, due to the settings of
+>> `ioapic_handled_vectors`. If the IOAPIC is not reconfigured during
+>> runtime, this issue persists, continuing to adversely affect
+>> performance.
+> 
+> Could you elaborate why the guest would configure the IOAPIC entry to 
+> use the same vector of an IRQ which is already in service?  Is it some 
+> kinda temporary configuration (which means the guest will either the 
+> reconfigure the vector of the conflicting IRQ or the IOAPIC entry soon)?
+> 
+> I.e., why would this issue persist?
+> 
+> If such "persist" is due to guest bug or bad behaviour I am not sure we 
+> need to tackle that in KVM.
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8019d5a97546..aff084824b89 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11864,6 +11864,7 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-platform-intel-pmc
- F:	drivers/platform/x86/intel/pmc/
-+F:	linux/platform_data/x86/intel_pmc_ipc.h
- 
- INTEL PMIC GPIO DRIVERS
- M:	Andy Shevchenko <andy@kernel.org>
-diff --git a/include/linux/platform_data/x86/intel_pmc_ipc.h b/include/linux/platform_data/x86/intel_pmc_ipc.h
-new file mode 100644
-index 000000000000..6e603a8c075f
---- /dev/null
-+++ b/include/linux/platform_data/x86/intel_pmc_ipc.h
-@@ -0,0 +1,94 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel Core SoC Power Management Controller Header File
-+ *
-+ * Copyright (c) 2025, Intel Corporation.
-+ * All Rights Reserved.
-+ *
-+ */
-+#ifndef INTEL_PMC_IPC_H
-+#define INTEL_PMC_IPC_H
-+#include <linux/acpi.h>
-+
-+#define IPC_SOC_REGISTER_ACCESS			0xAA
-+#define IPC_SOC_SUB_CMD_READ			0x00
-+#define IPC_SOC_SUB_CMD_WRITE			0x01
-+#define PMC_IPCS_PARAM_COUNT			7
-+#define VALID_IPC_RESPONSE			5
-+
-+struct pmc_ipc_cmd {
-+	u32 cmd;
-+	u32 sub_cmd;
-+	u32 size;
-+	u32 wbuf[4];
-+};
-+
-+struct pmc_ipc_rbuf {
-+	u32 buf[4];
-+};
-+
-+/**
-+ * intel_pmc_ipc() - PMC IPC Mailbox accessor
-+ * @ipc_cmd:  Prepared input command to send
-+ * @rbuf:     Allocated array for returned IPC data
-+ *
-+ * Return: 0 on success. Non-zero on mailbox error
-+ */
-+static inline int intel_pmc_ipc(struct pmc_ipc_cmd *ipc_cmd, struct pmc_ipc_rbuf *rbuf)
-+{
-+	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-+	union acpi_object params[PMC_IPCS_PARAM_COUNT] = {
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+		{.type = ACPI_TYPE_INTEGER,},
-+	};
-+	struct acpi_object_list arg_list = { PMC_IPCS_PARAM_COUNT, params };
-+	union acpi_object *obj;
-+	int status;
-+
-+	if (!ipc_cmd || !rbuf)
-+		return -EINVAL;
-+
-+	/*
-+	 * 0: IPC Command
-+	 * 1: IPC Sub Command
-+	 * 2: Size
-+	 * 3-6: Write Buffer for offset
-+	 */
-+	params[0].integer.value = ipc_cmd->cmd;
-+	params[1].integer.value = ipc_cmd->sub_cmd;
-+	params[2].integer.value = ipc_cmd->size;
-+	params[3].integer.value = ipc_cmd->wbuf[0];
-+	params[4].integer.value = ipc_cmd->wbuf[1];
-+	params[5].integer.value = ipc_cmd->wbuf[2];
-+	params[6].integer.value = ipc_cmd->wbuf[3];
-+
-+	status = acpi_evaluate_object(NULL, "\\IPCS", &arg_list, &buffer);
-+	if (ACPI_FAILURE(status))
-+		return -ENODEV;
-+
-+	obj = buffer.pointer;
-+
-+	if (obj && obj->type == ACPI_TYPE_PACKAGE &&
-+	    obj->package.count == VALID_IPC_RESPONSE) {
-+		const union acpi_object *objs = obj->package.elements;
-+
-+		if ((u8)objs[0].integer.value != 0)
-+			return -EINVAL;
-+
-+		rbuf->buf[0] = objs[1].integer.value;
-+		rbuf->buf[1] = objs[2].integer.value;
-+		rbuf->buf[2] = objs[3].integer.value;
-+		rbuf->buf[3] = objs[4].integer.value;
-+	} else {
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+#endif /* INTEL_PMC_IPC_H */
--- 
-2.34.1
+The previous patches:
+db2bdcbbbd32 (KVM: x86: fix edge EOI and IOAPIC reconfig race)
+0fc5a36dd6b3 (KVM: x86: ioapic: Fix level-triggered EOI and IOAPIC 
+reconfigure race)
+both mentioned this issue.
+
+For example, when there is an interrupt being processed on CPU0 with 
+vector 33, and an IOAPIC interrupt reconfiguration occurs at that 
+moment, an interrupt is assigned to CPU1, and this interrupt’s vector
+is also 33 (it could also be another value). At this point, the 
+interrupt being processed, which originally did not need to cause a VM 
+exit, will now need to continuously cause a VM exit afterward.
+You are absolutely correct; if the guest triggers an IOAPIC interrupt 
+reconfiguration again afterward and does not encounter the 
+aforementioned situation, then vector 33 on CPU0 will no longer need to 
+cause a VM exit.
+
+>>
+>> Simple Fix Proposal:
+>> A straightforward solution is to record highest in-service IRQ that
+>> is pending at the time of the last scan. Then, upon the next guest
+>> exit, do a full KVM_REQ_SCAN_IOAPIC. This ensures that a re-scan of
+>> the ioapic occurs only when the recorded vector is EOI'd, and
+>> subsequently, the extra bit in the eoi_exit_bitmap are cleared,
+>> avoiding unnecessary VM exits.
+>>
+>> Co-developed-by: xuyun <xuyun_xy.xy@linux.alibaba.com>
+>> Signed-off-by: xuyun <xuyun_xy.xy@linux.alibaba.com>
+>> Signed-off-by: weizijie <zijie.wei@linux.alibaba.com>
+>> ---
+>>   arch/x86/include/asm/kvm_host.h |  1 +
+>>   arch/x86/kvm/ioapic.c           | 10 ++++++++--
+>>   arch/x86/kvm/irq_comm.c         |  9 +++++++--
+>>   arch/x86/kvm/vmx/vmx.c          |  9 +++++++++
+>>   4 files changed, 25 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/ 
+>> kvm_host.h
+>> index 0b7af5902ff7..8c50e7b4a96f 100644
+>> --- a/arch/x86/include/asm/kvm_host.h
+>> +++ b/arch/x86/include/asm/kvm_host.h
+>> @@ -1062,6 +1062,7 @@ struct kvm_vcpu_arch {
+>>   #if IS_ENABLED(CONFIG_HYPERV)
+>>       hpa_t hv_root_tdp;
+>>   #endif
+>> +    u8 last_pending_vector;
+>>   };
+>>   struct kvm_lpage_info {
+>> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
+>> index 995eb5054360..40252a800897 100644
+>> --- a/arch/x86/kvm/ioapic.c
+>> +++ b/arch/x86/kvm/ioapic.c
+>> @@ -297,10 +297,16 @@ void kvm_ioapic_scan_entry(struct kvm_vcpu 
+>> *vcpu, ulong *ioapic_handled_vectors)
+>>               u16 dm = kvm_lapic_irq_dest_mode(!!e->fields.dest_mode);
+>>               if (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>> -                        e->fields.dest_id, dm) ||
+>> -                kvm_apic_pending_eoi(vcpu, e->fields.vector))
+>> +                        e->fields.dest_id, dm))
+>>                   __set_bit(e->fields.vector,
+>>                         ioapic_handled_vectors);
+>> +            else if (kvm_apic_pending_eoi(vcpu, e->fields.vector)) {
+>> +                __set_bit(e->fields.vector,
+>> +                      ioapic_handled_vectors);
+>> +                vcpu->arch.last_pending_vector = e->fields.vector >
+>> +                    vcpu->arch.last_pending_vector ? e->fields.vector :
+>> +                    vcpu->arch.last_pending_vector;
+>> +            }
+>>           }
+>>       }
+>>       spin_unlock(&ioapic->lock);
+>> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+>> index 8136695f7b96..1d23c52576e1 100644
+>> --- a/arch/x86/kvm/irq_comm.c
+>> +++ b/arch/x86/kvm/irq_comm.c
+>> @@ -426,9 +426,14 @@ void kvm_scan_ioapic_routes(struct kvm_vcpu *vcpu,
+>>               if (irq.trig_mode &&
+>>                   (kvm_apic_match_dest(vcpu, NULL, APIC_DEST_NOSHORT,
+>> -                         irq.dest_id, irq.dest_mode) ||
+>> -                 kvm_apic_pending_eoi(vcpu, irq.vector)))
+>> +                         irq.dest_id, irq.dest_mode)))
+>>                   __set_bit(irq.vector, ioapic_handled_vectors);
+>> +            else if (kvm_apic_pending_eoi(vcpu, irq.vector)) {
+>> +                __set_bit(irq.vector, ioapic_handled_vectors);
+>> +                vcpu->arch.last_pending_vector = irq.vector >
+>> +                    vcpu->arch.last_pending_vector ? irq.vector :
+>> +                    vcpu->arch.last_pending_vector;
+>> +            }
+>>           }
+>>       }
+>>       srcu_read_unlock(&kvm->irq_srcu, idx);
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index 6c56d5235f0f..047cdd5964e5 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -5712,6 +5712,15 @@ static int handle_apic_eoi_induced(struct 
+>> kvm_vcpu *vcpu)
+>>       /* EOI-induced VM exit is trap-like and thus no need to adjust 
+>> IP */
+>>       kvm_apic_set_eoi_accelerated(vcpu, vector);
+>> +
+>> +    /* When there are instances where ioapic_handled_vectors is
+>> +     * set due to pending interrupts, clean up the record and do
+>> +     * a full KVM_REQ_SCAN_IOAPIC.
+>> +     */
+> 
+> Comment style:
+> 
+>      /*
+>       * When ...
+>       */
+> 
+
+Thank you very much for your suggestion.
+
+>> +    if (vcpu->arch.last_pending_vector == vector) {
+>> +        vcpu->arch.last_pending_vector = 0;
+>> +        kvm_make_request(KVM_REQ_SCAN_IOAPIC, vcpu);
+>> +    }
+> 
+> As Sean commented before, this should be in a common code probably in 
+> kvm_ioapic_send_eoi().
+> 
+
+I will move the modifications here and send a new patch.
+
+> https://lore.kernel.org/all/Z2IDkWPz2rhDLD0P@google.com/
+
+Best regards!
 
