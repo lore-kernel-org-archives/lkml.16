@@ -1,169 +1,265 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02F622DF85
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA7F215F45;
+	Thu, 27 Feb 2025 11:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740655200; cv=none; b=Ygv7ad1RGclc8BRxOSPseUKYWWmJ4XH5AYFUmk2YlDZ8mZ5MckzZu8C43I0RT5wclzN7ICk4EQTUy/ZYeufSB57UXVVuoDH2HpJlTpojI7yjYuyoBNdVEiPqyAyznpwgEv+Y0uv5EXTtuymuW2Are4Hkb+EWdGVxKjjBv69KAWY=
+	t=1740655237; cv=none; b=u53h+hCobAnRhOQVe9WwtVUNgp9uPOq80UDXRZY4oU4i97Sg1i8/0bo0weRu9K1j5vilVsHgz1+QmTcDTo70XVOI5J3va3a3vjpLCgt8a2xcHnwpG9SJ4ZWOlWYKNzJKEUQA82hSxnKYgBNEqMHFV+s32py1HwfXYWg4m4fQo7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740655200; c=relaxed/simple;
-	bh=mFk2iRlhqswVknidb/hzvERvekGfFTJg0dMalWU77y4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CJ4XxvXtOoceIgE9HdeVn96rd8kqF7QBy0VxaO2w9SfL4SGUdc/2AW069xfloW0C7s4J2G7acbXAtB1TYAkKiBN1JwekDL4RGXjhoAVI5zkjaST7/Y8Ym8RKI/ROQceu5atc9asWVe+zPgDh2h3ewBKo6y9WeGRKqvzerkvfztk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TCAFzTcc; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740655237; c=relaxed/simple;
+	bh=YTbKKgx2qtEsp6s2dyw+w3HJD/wJnlXlVpGlV/Aqt6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKTUQA5jpJfvYyFKGH0jFYe8u8rDYpNEwx+5oHKLW5m1mLX5B6SAGV2a+E7M2jSXeujny97Jqk+RvTPs4c7F9fJPw8SxyLi4ZCr+Q5mlKPuky7CsaSipwnrYR/pFeZeKyS5zcIiNIDEhqCluy2SP1SR1Pw3OgR0/7ZkLkcw4TzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=UAJOc2uf; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCAFzTcc"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38a8b17d7a7so482362f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:19:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740655197; x=1741259997; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nrBhEllEopBWP9HcbxGglPZEUP0T/ozOsx35CY7uHqE=;
-        b=TCAFzTccKDEqN/cG7jdNOUx5oNnLP5XP7cdWrI16NZICBnJ5N6/BHeTAgKV/Nf7LBE
-         UecM/jLQUfB0tTS5FsxtdxVxvKfbzeLaid7qJlACP0tIVsI7DueQw60igCvKHuvpDt8e
-         AL9hDaXrOrE6fzG0zkEC2Yoha1kzA9O4PrCHfg05B82iwQlF2aNbsgnnWC/AyMVO8fJ6
-         VmL/IyoWRKw5cllvTsuNuXaNTr4cpk8koN/GJEmDKg3CL79fvyRZqv/pHZMXI0MhK/MW
-         +Ig5KEJOTvNnp0yi6lUV6WuqVPwWx2jltdrOZuULM/VvMfLVwl4tsDKOiJwkroK519y0
-         FBsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740655197; x=1741259997;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nrBhEllEopBWP9HcbxGglPZEUP0T/ozOsx35CY7uHqE=;
-        b=lu5XwiYrnPvcynr6+bZLdgO5e43cDQ8TeevHlp78zy+TaJJwcpKby0SoAOU5qOxfZi
-         7rbc1DHAMbGy7FapS60TbXmUbiAgF7gZmcvisF9d7YK1FKjYB1zzlnnP2ciwcbL3HoLB
-         G5tAjJGGc6MbwLP4iHefinOQWSvRrsv6Rh6YT/6psengAJjzYtUrGWwH9LeGWiyOT7C1
-         Lslci2QKzjU6bOlV4hQ3KFw2QJBOeRNmv2CIY2BPGoL3NUXy5DItKBXsqycIS38Xj+J1
-         NYqtiwUNSrlk3nUKtfMjxiv3yp56+6hVqwNW50qz0Xz21WswWFGPQxLR4NE15fH/Gr8z
-         6SXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8MLMRiCQjAjdRaRT4hcndyXOSVt9T1ze4+mE3xd1KYDSbn52YELvbOa3VNRiqODc0sRgoiknSIc+ABhM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf2PHiZPo80pCVjKvFneMAJMTWXv2PVpdmSnKFyrDd1Sjd2LAF
-	r+HNvH7wLTiIMshcbvHvXmDmmv1bnKPHN8Jm/mnlbVGevrtuWYlCkV8WxB1AlOw=
-X-Gm-Gg: ASbGncuRGJ8/PFy9P6vFqrj5GANOTAiJ3MuSdvRrDQ4JoOxzvfivZsACM76lpqKn3Gi
-	hdWQ1CN+XyWaGvjj72WwC2cY4hZ3otE0ODMiEqNwVWjZDklkroWzkvcjjPbPx/CMYYTfvYEGM1/
-	9AmlOY9h9XNIELHePBRAlgV/e+fMc3ir3+963TPxKN0BYtWKKcsNdbHc2676H5pquDcieXP7uoN
-	0dpMnjtppjzoWuM7fh77r7Uq8luilGdNlYuT2vbqNwylbgqw97yO1J8wO8M1poySnLiT8gssO9p
-	4/294qlRScG07TbcImiW9n5UiPqRDQ==
-X-Google-Smtp-Source: AGHT+IFNsHD/pjhFobiNqCnZP2X8gKHsds8DdBj5VgmPHcb5ULaRf/oWFT2BO7FN/J4etiEnEeAlQw==
-X-Received: by 2002:adf:ed49:0:b0:38f:483f:8319 with SMTP id ffacd0b85a97d-390d4f9cfb7mr5139769f8f.51.1740655197122;
-        Thu, 27 Feb 2025 03:19:57 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a72d5sm1742403f8f.31.2025.02.27.03.19.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 03:19:56 -0800 (PST)
-Message-ID: <f3db83179b405ca056fd55abdd6c38adaedbaea0.camel@linaro.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: gpio: add max77759 binding
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- devicetree@vger.kernel.org,  Kees Cook <kees@kernel.org>,
- linux-gpio@vger.kernel.org, Srinivas Kandagatla	
- <srinivas.kandagatla@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>,
-  Will McVicker <willmcvicker@google.com>, Conor Dooley
- <conor+dt@kernel.org>, kernel-team@android.com,  Bartosz Golaszewski	
- <brgl@bgdev.pl>, linux-hardening@vger.kernel.org,
- linux-kernel@vger.kernel.org,  Lee Jones <lee@kernel.org>, Peter Griffin
- <peter.griffin@linaro.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 27 Feb 2025 11:19:55 +0000
-In-Reply-To: <174060184807.3654907.17826939583833772128.robh@kernel.org>
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
-	 <20250226-max77759-mfd-v2-1-a65ebe2bc0a9@linaro.org>
-	 <174060184807.3654907.17826939583833772128.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="UAJOc2uf"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RAFb4u015605;
+	Thu, 27 Feb 2025 11:20:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=VYmZZFz1AkweCu4oC1qu6AXgmc/DD3
+	6JP+A3S/z2ZmE=; b=UAJOc2uf6hWVXSPPFkenlBAVbdbnVYK+wc2770N75nUusH
+	pfxK7Oa7zi4tz5VNTj/YkaQxi30M14/oK2WpwI0UC07v5mC09ybJANiwHXMxhm6+
+	T5bTRYQbymzEeyqjBjN+9HPaOBg+tOrvpVc0ingUHDUFyqaYrfes1k5R2aRFbC2A
+	qgve7ZhAxg2HX0jT2p2MdVTy9oZxWZbfpQaaVxiPpbO/1yJwhhilXYlFrcjAl7w0
+	LM3wuwJRt7IAlj93AYtyYyoyPyk+BXxQUe//IjqD2bRJQAJbIoRTB8NvAUmgn1d4
+	F0GD7xXb1/J3EaZBVIoRWBpznknxgrC/PE0JEYJg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a2y7e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:20:30 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51RBKTbH003925;
+	Thu, 27 Feb 2025 11:20:29 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 452c3a2y76-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:20:29 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51RAoZUU027344;
+	Thu, 27 Feb 2025 11:20:28 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yum27v34-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:20:28 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51RBKRuK56361424
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Feb 2025 11:20:27 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 028432004D;
+	Thu, 27 Feb 2025 11:20:27 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A386A20040;
+	Thu, 27 Feb 2025 11:20:25 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.16.238])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 27 Feb 2025 11:20:25 +0000 (GMT)
+Date: Thu, 27 Feb 2025 16:50:22 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        linux-kernel@vger.kernel.org, Mahesh Kumar <maheshkumar657g@gmail.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>
+Subject: Re: [PATCH 1/2] ext4: only defer sb update on error if SB_ACTIVE
+Message-ID: <Z8BKdo5IAHJRdMkp@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1740212945.git.ojaswin@linux.ibm.com>
+ <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com>
+ <jnxpphuradrsf73cxfmohfu7wwwckihtulw6ovsitddgt5pqkg@2uoejkr66qnl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <jnxpphuradrsf73cxfmohfu7wwwckihtulw6ovsitddgt5pqkg@2uoejkr66qnl>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sCpyCIhjzkf57j3f7pol1wfVgW4_Xt4B
+X-Proofpoint-ORIG-GUID: OMgXp0qPUO22zlL9zfiI_lsjfBW7311q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_05,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 adultscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270083
 
-On Wed, 2025-02-26 at 14:30 -0600, Rob Herring (Arm) wrote:
->=20
-> On Wed, 26 Feb 2025 17:51:20 +0000, Andr=C3=A9 Draszik wrote:
-> > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > Port Controller (TCPC), NVMEM, and a GPIO expander.
-> >=20
-> > This describes its GPIO module.
-> >=20
-> > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> >=20
+On Mon, Feb 24, 2025 at 03:52:00PM +0100, Jan Kara wrote:
+> On Sat 22-02-25 14:10:22, Ojaswin Mujoo wrote:
+> > Presently we always BUG_ON if trying to start a transaction on a journal
+> > marked with JBD2_UNMOUNT, since this should never happen. However while
+> > running stress tests it was observed that in case of some error handling
+> > paths, it is possible for update_super_work to start a transaction after
+> > the journal is destroyed eg:
+> > 
+> > (umount)
+> > ext4_kill_sb
+> >   kill_block_super
+> >     generic_shutdown_super
+> >       sync_filesystem /* commits all txns */
+> >       evict_inodes
+> >         /* might start a new txn */
+> >       ext4_put_super
+> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+> >         jbd2_journal_destroy
+> >           journal_kill_thread
+> >             journal->j_flags |= JBD2_UNMOUNT;
+> >           jbd2_journal_commit_transaction
+> >             jbd2_journal_get_descriptor_buffer
+> >               jbd2_journal_bmap
+> >                 ext4_journal_bmap
+> >                   ext4_map_blocks
+> >                     ...
+> >                     ext4_inode_error
+> >                       ext4_handle_error
+> >                         schedule_work(&sbi->s_sb_upd_work)
+> > 
+> >                                                /* work queue kicks in */
+> >                                                update_super_work
+> >                                                  jbd2_journal_start
+> >                                                    start_this_handle
+> >                                                      BUG_ON(journal->j_flags &
+> >                                                             JBD2_UNMOUNT)
+> > 
+> > Hence, make sure we only defer the update of ext4 sb if the sb is still
+> > active.  Otherwise, just fallback to an un-journaled commit.
+> > 
+> > The important thing to note here is that we must only defer sb update if
+> > we have not yet flushed the s_sb_update_work queue in umount path else
+> > this race can be hit (point 1 below). Since we don't have a direct way
+> > to check for that we use SB_ACTIVE instead. The SB_ACTIVE check is a bit
+> > subtle so adding some notes below for future reference:
+> > 
+> > 1. Ideally we would want to have a something like (flags & JBD2_UNMOUNT
+> > == 0) however this is not correct since we could end up scheduling work
+> > after it has been flushed:
+> > 
+> >  ext4_put_super
+> >   flush_work(&sbi->s_sb_upd_work)
+> > 
+> >                            **kjournald2**
+> >                            jbd2_journal_commit_transaction
+> >                            ...
+> >                            ext4_inode_error
+> >                              /* JBD2_UNMOUNT not set */
+> >                              schedule_work(s_sb_upd_work)
+> > 
+> >    jbd2_journal_destroy
+> >     journal->j_flags |= JBD2_UNMOUNT;
+> > 
+> >                                       **workqueue**
+> >                                       update_super_work
+> >                                        jbd2_journal_start
+> >                                         start_this_handle
+> >                                           BUG_ON(JBD2_UNMOUNT)
+> > 
+> > Something like the above doesn't happen with SB_ACTIVE check because we
+> > are sure that the workqueue would be flushed at a later point if we are
+> > in the umount path.
+> > 
+> > 2. We don't need a similar check in ext4_grp_locked_error since it is
+> > only called from mballoc and AFAICT it would be always valid to schedule
+> > work here.
+> > 
+> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> > Suggested-by: Ritesh Harjani <ritesh.list@gmail.com>
+> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> 
+> Good catch! But I think the solution will have to be slightly different.
+> Basing the check on SB_ACTIVE has the problem that you can have racing
+> updates of the sb in the still running transaction and in your direct
+> update leading to inconsistencies after a crash (that was the reason why
+> we've created the s_sb_upd_work in the first place).
+> 
+> I would solve this by implementing something like
+> ext4_update_sb_destroy_journal() which will set a flag in sbi, flush the
+> workqueue, and then destroy the journal. And ext4_handle_error() will check
+> for the sbi flag.
+> 
+> 								Honza
+
+Hey Jan,
+
+Thanks for the review. So earlier I did go through different code paths to see
+if we will have a direct sb write clash with a journalled one it wouldn't but,
+relooking at it, seems like we might have a scenario as follows:
+
+generic_super_shutdown
+ sync_filesytems
+  /* running txns committed. executing ext4_journal_commit_callback */
+  ext4_maybe_update_superblock
+   /* schedules work */
+   schedule_work(&sbi->s_sb_upd_work)
+                                          update_super_work
+                                          /* start a txn and add sb to it */
+ sb->s_flags &= ~SB_ACTIVE;
+ evict_inode
+   ext4_evict_inode
+    ext4_std_error
+     ext4_handle_error
+      /* direct commit of sb (Not good!) */
+
+
+Now with the 'setting the flag in sbi' approach, I'm not sure if that will be
+enough to handle this as well. For example, if we add a flag like
+sbi->s_journal_destroying, then:
+
+ext4_put_super
+ sbi->s_journal_destroying = true
+ flush_workqueue()
+  /* sb is now journalled */
+ jbd2_journal_destory
+  jbd2_journal_commit_transaction
+   /* add tag for sb in descriptor and add buffer to wbufs[] */
+   /* Later from some other buffer in the txn: */
+   jbd2_journal_next_log_block
+    /* hits error in ext4_journal_bmap */
+    ext4_handle_error
+      sbi->s_journal_destroying == true
+      /* update and commit sb directly causing a checksum mismatch b/w entry in descriptor */
+   jbd2_journal_abort
+   /* after abort everything in wbufs[] is written to journal */
+
+In the above we will have a checksum mismatch but then maybe its not really
+an issue. Maybe since we never commit the txn it is understood that the contents
+can't be trusted and it should be fine to have a mismatch b/w the decriptor tag
+and the actual super block contents? In which case the sbi flag approach should
+be fine.
+
+Does my understanding sound correct?
+
+
+Regards,
+ojaswin
+> 
 > > ---
-> > v2:
-> > * drop 'interrupts' property and sort properties alphabetically
-> > ---
-> > =C2=A0.../bindings/gpio/maxim,max77759-gpio.yaml=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 44 ++++++++++++++++++++++
-> > =C2=A0MAINTAINERS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 6 +++
-> > =C2=A02 files changed, 50 insertions(+)
-> >=20
->=20
-> My bot found errors running 'make dt_binding_check' on your patch:
->=20
-> yamllint warnings/errors:
->=20
-> dtschema/dtc warnings/errors:
->=20
->=20
-> doc reference errors (make refcheckdocs):
-> Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml =
-references a file that doesn't exist:
-> Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Document=
-ation/devicetree/bindings/mfd/maxim,max77759.yaml
->=20
-> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202502=
-26-max77759-mfd-v2-1-a65ebe2bc0a9@linaro.org
->=20
-> The base for the series is generally the latest rc1. A different dependen=
-cy
-> should be noted in *this* patch.
->=20
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> date:
-
-'make dt_binding_check' doesn't invoke 'make refcheckdocs', unless
-I'm doing something wrong - and therefore 'make dt_binding_check'
-doesn't print any warning, contrary to what seems to be implied by
-the paragraph above, If I run 'make refcheckdocs', I do get the
-error, too, sure enough.
-
-I've never come across refcheckdocs, and it wasn't on my radar.
-
-The error is because the binding's 'description:' references the
-mfd binding using the complete path and the mfd binding is added
-in a later patch only in this version of the series:
-
-  >=C2=A0... For additional information, see
-  > Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
-
-the error goes away if a relative path is used instead:
-
-  > ... For additional information, see
-  > ../mfd/maxim,max77759.yaml.
-
-I'd like to keep the reference to the mfd binding, and keep
-refcheckdocs working as intended (i.e. keep using the full
-path), so I'll split the gpio binding patch into two, the first
-one without the path and a 2nd one to add the full mfd binding
-path, to be applied after the mfd binding. Same for the similar
-nvmem binding.
-
-Unless there is a different preference?
-
-
-Cheers,
-Andre'
+> >  fs/ext4/super.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index a963ffda692a..b7341e9acf62 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+> >  		 * constraints, it may not be safe to do it right here so we
+> >  		 * defer superblock flushing to a workqueue.
+> >  		 */
+> > -		if (continue_fs && journal)
+> > +		if (continue_fs && journal && (sb->s_flags & SB_ACTIVE))
+> >  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+> >  		else
+> >  			ext4_commit_super(sb);
+> > -- 
+> > 2.48.1
+> > 
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
