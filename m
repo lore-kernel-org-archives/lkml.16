@@ -1,25 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E223239095;
-	Thu, 27 Feb 2025 14:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724EC239086
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667367; cv=none; b=JxhZ0oZegQyD0GuyEl/pJQ3YR2lL+7EhjkuPe67kWKmmjuLX4isWBJmalygDTUUbY1J6V0dxwAgVmW6xMYCR9jKGNfeIxVqIkmOlo+8nY/waHMckkEZxuAqv8XVhc1Tqml1eWYKkRi/o6BB1AP9qp/FHL4N/t+E3SmqPSnYJ96w=
+	t=1740667420; cv=none; b=RujL4um6cTvvSsxdgi2m0U+LRTmdDQva8wYD4FQKzalvyFIjLLwMkpeiZfn09+MVNQEgQub6qSNfn1W5CYRO8+6eNmNBG0Cpo8xtbcJHlgD+ju8F6/YVlcIvrbU7nei19KbWNSp/1TZdFyLfQ6HN0r9pe3MCGW/2PYdJBR1we94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667367; c=relaxed/simple;
-	bh=4bCEWjUpANniqInLJ6xunO0frs/gu1vAUozAUMry0mo=;
+	s=arc-20240116; t=1740667420; c=relaxed/simple;
+	bh=SFThVowJlqQktHJLgxbc5ykucEGjsXXMh/7UDNM/BO4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ANKwv/PfVoDDvWaPh4vcJeMdZWgwfuVfEjXD1xMJN3Fx21kWEe/66IiB4Z9zKOz/yitnRJzbZq9WG+kXh99rFgBMP7nSI0J3hFpUPge/6fuVWrX6VW2WgJGt8gqg21CNYtrhTtxSxE7RVJFnYmJ33RYUfcegCJm3pQ3xJQN+rbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED50A2BCA;
-	Thu, 27 Feb 2025 06:43:00 -0800 (PST)
-Received: from [10.57.78.204] (unknown [10.57.78.204])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5E423F673;
-	Thu, 27 Feb 2025 06:42:43 -0800 (PST)
-Message-ID: <8fcb202f-d1b3-4989-9777-5bafd6fed59e@arm.com>
-Date: Thu, 27 Feb 2025 14:42:46 +0000
+	 In-Reply-To:Content-Type; b=NdWopGRbbGV3GZlqUgxjhjrjuUNy3yORAeCnAwFIgw3hLcFuBL4BXi7FXdz0ZiUq8R/8PsU/qaVMomZmQvCgK2qLhJVqFvDBdlT5TWVd7Oxv6K4mYvB6H7sz5NfutrbpHvYiN51FDoLSGbOVf/EmLbsIurnVpM+z9CBVu2Bst8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XBPu+ydk; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XBPu+ydk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740667418;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LGiCMh885+JkNd7xet7ImHZf0tupK1uK6dAAvNVNafo=;
+	b=XBPu+ydkkXmEtOA6vShfQ1RaStdhVRRjFABamTWb6JbOYy5m02EJaNMGa4+vmsInWV1KeQ
+	ZdbbVR0J2fx9gFt/LCXxsXgoRhZJLKo/j2Krn8MEEwMxwiH5XNOEuueDm5zL2NDWjIEGPr
+	K3Wtgwqe6CMUxE2+KAXby8uxXJAqf2Q=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-134-KLpYVj2yMBOWew8NWfeTxw-1; Thu, 27 Feb 2025 09:43:36 -0500
+X-MC-Unique: KLpYVj2yMBOWew8NWfeTxw-1
+X-Mimecast-MFC-AGG-ID: KLpYVj2yMBOWew8NWfeTxw_1740667415
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f455a8fcaso639167f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:43:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740667415; x=1741272215;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGiCMh885+JkNd7xet7ImHZf0tupK1uK6dAAvNVNafo=;
+        b=Gofgw2IhBGb6qP4QOnjC5pFMaoPLCkYq4MkWTw8OmpIsbAnDBB6kweFI0AfWu9I9nE
+         pQstJOR7p4DR/0FwW+G1e/JMVaQbQHSDbikGSKcKJZYc66McPkTkANQncwxc7Jd2cnFO
+         DsCU9+DgMv/LkeLs5+jfAP7gqsX8KQg+Tm9qYA2xtFRvwqNzJoCyTbCOVEYKbIBdW4h7
+         A0dZ85qrwayopH7RGV8X75oMuxKPFhl4MTGZMs/JcbJDF6AvQokS6AqnR6FT30aGH+Zg
+         VE5gqZbdheDktwjjIAsb4hgV4McNALQhCE/Y3tEwYkh4pCyDKx4Lkym5hzvJK0g8iK7t
+         XCxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvT8HLwGLc9Q9sFUn+jkpu3NLzMvrFxnMddOPbYX/NZV/yNkYgjGeTYiBB4eKtJu78LYa60gTbm1BwQWo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz915WHUkyrFnXozufPwfIJ7+zD5y0FCKbqzivOrTdUZS/EkdDf
+	YKcAlXb43nb1dtx4NjmyFV2XLDsk/Nin6tS+spAHaLkwcshfMlnNzaXLXeicIx0GnkLKbFsFAv5
+	swoFdzQkywCkrOVpoJeU9QZK9QLa2gO2abDgSvw11kmbrKBV3bXsdHYptx3zaXw==
+X-Gm-Gg: ASbGncuzwHx2m/+Lm3T6TYlI344kLduSQCoZjGbICZLLW+cj6DHQsYfuIg6IZG2Db2q
+	zBxK980rPgZ2J/b7truq+R5KhM/HfvQXXI+QqF6jOSGIKf4Hg7cjYZ5kql2LYo5f66ZDtfzAjPI
+	PW+RnqQlbhuMj5MHnZlT/HoQE/6fOVAsYrJbXEX9MtOAOwhAGpxCPwvv5qZb7CrJAfnpjQz8bqp
+	X0ArqxmfmxxPzuabP5RH194GIXYN70pMY4TlcL3m7LlbvYPDVdFinYM2ZpxgYKu02D/+UPjUCR8
+	t7NFatqfyRcGmtii63s/bs6t8e93T+cysfRHrNHgJOdp0Q==
+X-Received: by 2002:a05:6000:4014:b0:38f:2a49:f6a5 with SMTP id ffacd0b85a97d-390d4f3cab3mr7399934f8f.15.1740667415231;
+        Thu, 27 Feb 2025 06:43:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IENhybFuiGZlHBwyKhH7QHjSknwxNyGmC2Lpy8aCMSt3PxeScxP2D5rAbtFR0j3oDHU3vaSsw==
+X-Received: by 2002:a05:6000:4014:b0:38f:2a49:f6a5 with SMTP id ffacd0b85a97d-390d4f3cab3mr7399917f8f.15.1740667414916;
+        Thu, 27 Feb 2025 06:43:34 -0800 (PST)
+Received: from [192.168.88.253] (146-241-81-153.dyn.eolo.it. [146.241.81.153])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a7850sm2304944f8f.39.2025.02.27.06.43.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 06:43:34 -0800 (PST)
+Message-ID: <da1d5d1a-b0ae-4a40-907d-386bd035954c@redhat.com>
+Date: Thu, 27 Feb 2025 15:43:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,59 +73,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] thermal: rockchip: Extract TSADC conversion tables into a
- header file
-To: Dragan Simic <dsimic@manjaro.org>
-Cc: rafael@kernel.org, daniel.lezcano@linaro.org,
- linux-rockchip@lists.infradead.org, rui.zhang@intel.com, heiko@sntech.de,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Kever Yang <kever.yang@rock-chips.com>,
- Diederik de Haas <didi.debian@cknow.org>, linux-pm@vger.kernel.org
-References: <08d2fc6e1972f1f90c900542bf66945d6dc6db63.1740577122.git.dsimic@manjaro.org>
+Subject: Re: [PATCH net-next 00/15] afs, rxrpc: Clean up refcounting on
+ afs_cell and afs_server records
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+ Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Christian Brauner <brauner@kernel.org>,
+ linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <899dfc34-bff8-4f41-8c8c-b9aa457880df@redhat.com>
+ <20250224234154.2014840-1-dhowells@redhat.com>
+ <3151401.1740661831@warthog.procyon.org.uk>
 Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <08d2fc6e1972f1f90c900542bf66945d6dc6db63.1740577122.git.dsimic@manjaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <3151401.1740661831@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Dragan,
-
-On 2/26/25 13:42, Dragan Simic wrote:
-> Move the TSADC code-to-temperature mapping tables from the Rockchip thermal
-> driver to a separate header file, to no longer have the somewhat cluttering
-> mapping data as part of the driver itself. [1]
+On 2/27/25 2:10 PM, David Howells wrote:
+> Paolo Abeni <pabeni@redhat.com> wrote:
+>> The remaining patches in this series touch only AFS, I'm unsure if net-next
+>> if the best target here???
 > 
-> These mapping tables come verbatim from the SoC technical reference manuals
-> (TRMs) and the downstream kernel code, [2] and may be updated at some point
-> in the future, according to the manufacturer test results, [3] so extracting
-> the tables into a separate header file not just improves the readability of
-> the driver code, but introduces a clear separation.
-> 
-> Improve the wording of the moved comment block, sprinkle a few short comments
-> over the newly introduced header file, and move the already existing single
-> stray #include directive in the driver code to its beginning.
-> 
-> [1] https://lore.kernel.org/linux-rockchip/7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org/T/#u
-> [2] https://raw.githubusercontent.com/rockchip-linux/kernel/f8b9431ee38ed561650be7092ab93f564598daa9/drivers/thermal/rockchip_thermal.c
-> [3] https://lore.kernel.org/linux-rockchip/b4ab86b56177a234f3738c477693e858@manjaro.org/T/#u
-> 
+> Yeah.  It's tricky as the complete set of patches I would like to post spans
+> three subsystems.
 
-I think Daniel was more thinking something about saving the
-memory in the kernel. I see how this patch can help the readability
-of the driver code, but that doesn't help much to not occupy the kernel
-data. The driver will be built with that memory and the distro would
-run on some platform with particular chip. The other chips data won't
-be needed.
+Possibly sharing a stable tree somewhere, and let the relevant subsystem
+pull the tree specific deps/bits could help?
 
-Why not to have that information in the DT?
-That would save the memory and be configurable for only needed platform.
-Please have a look into the generic thermal ADC driver and related
-DT entry, which is used e.g. here [1].
-That table looks similar to your info.
+/P
 
-Regards,
-Lukasz
-
-
-[1] 
-https://elixir.bootlin.com/linux/v6.13.4/source/arch/arm64/boot/dts/mediatek/mt8195-cherry.dtsi#L136
