@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D0322ACCA;
-	Thu, 27 Feb 2025 11:12:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750F822FDFA;
+	Thu, 27 Feb 2025 11:12:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654733; cv=none; b=OM/SpePsR6f6bAH6LVkZ1+ksytTqptxhZlgf1IFU7BrvJXVN2h7+chM4Q/oJsX2hRyT3SqJ0GerldxU02YIvm4HUK9m0xeQEkgT7Yby4B+Kdt4TxyLpmiuQZFtsjapORLi+l3XJolZJ1VV9o9aNBM4L8vVshaP2dA9LQz5UsnVI=
+	t=1740654735; cv=none; b=LYariyQN3jgFhXZm6nE1T5/3UzPMJDhOo00J8fcRv969eVYNVTQK+wKE/cQ6d5XoMPgE2+UE9ypwW5zMUcfZIcu5Zhm9290IkecRqdyBvR3smnPyA9au0H/9aHv0CzLcqLFJFV6h/vvw/PIvk2ZYN600ESvpm1zz8J2UVsUrt1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654733; c=relaxed/simple;
-	bh=4FYYRgHH3VUyDZMaOWWCBzUBFsl/UaAcSjSpcX99lYk=;
+	s=arc-20240116; t=1740654735; c=relaxed/simple;
+	bh=dIHzKvs/CLNsdZuAwNYXUG9aLPMbUkYW5XbTPXy1O0E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eO0Gqli+Rl/yfFSyudojTCJgJTd3ZiMJfUyaktf+5QV9iIxtpgw3q6oNMrAmts9JxZoxCLvG6Ac3MgRRrD/4/YSb4YfDAhA8qMmpnPEWJgB8VyYJUgaIOM1xbjsVtO+aHY91KaLFSpfPxfJhU23gAH2YZNLxL4HOdp0mMGMpdnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T51glt1O; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version:Content-Type; b=bbstXO7+BFp+kUcympdsI8IOyygS8LhHXeRcSNCnHhqyZ5emYbd6D3MAl0j8W7XP0afWJUxHWjJMdh1kTNIFqJTsyJKCY/0BzD1A8SwvCBX+tU3TUaCqOJ+mPPlJYSHsZiWufoFjVfFraCV5bHmoU4yKQtBXhTt+V7eCgY+0cDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hCK+BRbj; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T51glt1O"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hCK+BRbj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740654731; x=1772190731;
+  t=1740654733; x=1772190733;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4FYYRgHH3VUyDZMaOWWCBzUBFsl/UaAcSjSpcX99lYk=;
-  b=T51glt1O1Pvv4b8Q0FeOpqyXVMO7QGD4PMhmOtMO5u/wUmJtxelGvTYh
-   rlMIMULZllZReJzCx4wB3w7/uHqTtm26/McCmHDM/okjrzXT5yr2bUHX1
-   2ysrd3VzRYhlmOCsuYDZp9cWJaD4DUidfHXwv/pD4QFvj2TXTkE42hL27
-   yLYqzI3MisqW+Mvjm5JzarwL59bNeAhQBjuPXa7CNqxVWPlgb/nu3OAsB
-   IS094/H9tmdL8oc91oO0F3n4+5pyu42OOi1hxXi26bcmDOD2pLoDFTQGs
-   o2FQbXBGTWQ1s+ZVgdG2rgKh+9lDz37Iv+oHsSu6SiWVeJGGiP6/Nig1Z
+  bh=dIHzKvs/CLNsdZuAwNYXUG9aLPMbUkYW5XbTPXy1O0E=;
+  b=hCK+BRbjauu4ZHFnj/3xp4uZg3TAGVdT/4LZEb3Vt4kRBb9P3N+BimCP
+   kMXej31yJN+87MasCGS7dgaov7SgYRyUKXUBItOPuL8ZxpiljQNP41nLX
+   Q3sdhrObrjzUpPRBBF8xFgJOS2v4jyhKSfhzqi+QqXh9N2rKbYoztQ766
+   zyH8k0MEMtlxBd0hcHLJ/lUphcPVxk7I4UTJs3AjPRyscutUvAarIb6jc
+   T8L0GjxkD/FKBuNdUCr/PUDsIXTaAQjWnkysatCo2qQ/9Ok3akE6lQwVa
+   mlYAMc1QfrOBLTs/WeeqW5vYR0T8ORKS0IaYDu4Ui1tPpbQWYXZ7chWNo
    Q==;
-X-CSE-ConnectionGUID: AjgqPHkxRgSmV2ybSFVCVQ==
-X-CSE-MsgGUID: EHLmytdzQ8SFfkKMM4AcYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="45189902"
+X-CSE-ConnectionGUID: qhZaDQVaTGi4gqwEKNu58g==
+X-CSE-MsgGUID: XPgZsD1MQYyYkE+kIl7IgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="45189910"
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="45189902"
+   d="scan'208";a="45189910"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:12:11 -0800
-X-CSE-ConnectionGUID: 6lDc0jMBQ1WvWu+6rOXqhA==
-X-CSE-MsgGUID: Vs51CVOQS0qcxtws6/nReQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:12:13 -0800
+X-CSE-ConnectionGUID: DvvnP/QRSh+sCKXRZ1dYvA==
+X-CSE-MsgGUID: fPBUmL7WSq+SiESzEUf5cw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="154179043"
+   d="scan'208";a="154179048"
 Received: from johunt-mobl9.ger.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.220.110])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:12:09 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 03:12:11 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	broonie@kernel.org,
@@ -52,9 +52,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH v3 14/16] ASoC: SOF: Intel: hda-sdw-bpt: add CHAIN_DMA support
-Date: Thu, 27 Feb 2025 19:11:27 +0800
-Message-ID: <20250227111130.272698-15-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH v3 15/16] soundwire: debugfs: add interface for BPT/BRA transfers
+Date: Thu, 27 Feb 2025 19:11:28 +0800
+Message-ID: <20250227111130.272698-16-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250227111130.272698-1-yung-chuan.liao@linux.intel.com>
 References: <20250227111130.272698-1-yung-chuan.liao@linux.intel.com>
@@ -67,26 +67,11 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When the firmware is involved, the data can be transferred with a
-CHAIN_DMA on LNL+.
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 
-The CHAIN_DMA needs to be programmed before the DMAs per the
-documentation. The states are not exactly symmetrical, on stop we must
-do a PAUSE and RESET.
-
-The FIFO size of 10ms was determined experimentally. With the minimum
-of 2ms, errors were reported by the codec, likely because of xruns.
-
-The code flow deals with the two TX and RX CHAIN_DMAs in symmetrical
-ways, i.e.
-alloc TX
-alloc RX
-enable TX
-enable RX
-disable RX
-disable TX
-free RX
-free TX
+Add code to show what codec drivers will need to do to enable BPT/BRA
+transfers. The only difference is to set the 'command_type' file to
+'1'. A zero-value will rely on regular read/write commands in Column0.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -94,187 +79,156 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- sound/soc/sof/intel/hda-sdw-bpt.c | 126 ++++++++++++++++++++++++++++++
- 1 file changed, 126 insertions(+)
+ drivers/soundwire/debugfs.c | 84 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 68 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/sof/intel/hda-sdw-bpt.c b/sound/soc/sof/intel/hda-sdw-bpt.c
-index bc7a3172656f..1327f1cad0bc 100644
---- a/sound/soc/sof/intel/hda-sdw-bpt.c
-+++ b/sound/soc/sof/intel/hda-sdw-bpt.c
-@@ -14,12 +14,80 @@
- #include <sound/hda-mlink.h>
- #include <sound/hda-sdw-bpt.h>
- #include <sound/sof.h>
-+#include <sound/sof/ipc4/header.h>
- #include "../ops.h"
- #include "../sof-priv.h"
-+#include "../ipc4-priv.h"
- #include "hda.h"
+diff --git a/drivers/soundwire/debugfs.c b/drivers/soundwire/debugfs.c
+index 5bf0d9552433..3099ea074f10 100644
+--- a/drivers/soundwire/debugfs.c
++++ b/drivers/soundwire/debugfs.c
+@@ -136,9 +136,10 @@ static int sdw_slave_reg_show(struct seq_file *s_file, void *data)
+ }
+ DEFINE_SHOW_ATTRIBUTE(sdw_slave_reg);
  
- #define BPT_FREQUENCY		192000 /* The max rate defined in rate_bits[] hdac_device.c */
- #define BPT_MULTIPLIER		((BPT_FREQUENCY / 48000) - 1)
-+#define BPT_CHAIN_DMA_FIFO_MS	10
-+/*
-+ * This routine is directly inspired by sof_ipc4_chain_dma_trigger(),
-+ * with major simplifications since there are no pipelines defined
-+ * and no dependency on ALSA hw_params
-+ */
-+static int chain_dma_trigger(struct snd_sof_dev *sdev, unsigned int stream_tag,
-+			     int direction, int state)
+-#define MAX_CMD_BYTES 256
++#define MAX_CMD_BYTES (1024 * 1024)
+ 
+ static int cmd;
++static int cmd_type;
+ static u32 start_addr;
+ static size_t num_bytes;
+ static u8 read_buffer[MAX_CMD_BYTES];
+@@ -162,6 +163,25 @@ static int set_command(void *data, u64 value)
+ DEFINE_DEBUGFS_ATTRIBUTE(set_command_fops, NULL,
+ 			 set_command, "%llu\n");
+ 
++static int set_command_type(void *data, u64 value)
 +{
-+	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
-+	bool allocate, enable, set_fifo_size;
-+	struct sof_ipc4_msg msg = {{ 0 }};
-+	int dma_id;
++	struct sdw_slave *slave = data;
 +
-+	if (sdev->pdata->ipc_type != SOF_IPC_TYPE_4)
-+		return -EOPNOTSUPP;
-+
-+	switch (state) {
-+	case SOF_IPC4_PIPE_RUNNING: /* Allocate and start the chain */
-+		allocate = true;
-+		enable = true;
-+		set_fifo_size = true;
-+		break;
-+	case SOF_IPC4_PIPE_PAUSED: /* Stop the chain */
-+		allocate = true;
-+		enable = false;
-+		set_fifo_size = false;
-+		break;
-+	case SOF_IPC4_PIPE_RESET: /* Deallocate chain resources and remove the chain */
-+		allocate = false;
-+		enable = false;
-+		set_fifo_size = false;
-+		break;
-+	default:
-+		dev_err(sdev->dev, "Unexpected state %d", state);
++	if (value > 1)
 +		return -EINVAL;
-+	}
 +
-+	msg.primary = SOF_IPC4_MSG_TYPE_SET(SOF_IPC4_GLB_CHAIN_DMA);
-+	msg.primary |= SOF_IPC4_MSG_DIR(SOF_IPC4_MSG_REQUEST);
-+	msg.primary |= SOF_IPC4_MSG_TARGET(SOF_IPC4_FW_GEN_MSG);
++	/* Userspace changed the hardware state behind the kernel's back */
++	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
 +
-+	/* for BPT/BRA we can use the same stream tag for host and link */
-+	dma_id = stream_tag - 1;
-+	if (direction == SNDRV_PCM_STREAM_CAPTURE)
-+		dma_id += ipc4_data->num_playback_streams;
++	dev_dbg(&slave->dev, "command type: %s\n", value ? "BRA" : "Column0");
 +
-+	msg.primary |=  SOF_IPC4_GLB_CHAIN_DMA_HOST_ID(dma_id);
-+	msg.primary |=  SOF_IPC4_GLB_CHAIN_DMA_LINK_ID(dma_id);
++	cmd_type = (int)value;
 +
-+	/* For BPT/BRA we use 32 bits so SCS is not set */
-+
-+	/* CHAIN DMA needs at least 2ms */
-+	if (set_fifo_size)
-+		msg.extension |=  SOF_IPC4_GLB_EXT_CHAIN_DMA_FIFO_SIZE(BPT_FREQUENCY / 1000 *
-+								       BPT_CHAIN_DMA_FIFO_MS *
-+								       sizeof(u32));
-+
-+	if (allocate)
-+		msg.primary |= SOF_IPC4_GLB_CHAIN_DMA_ALLOCATE_MASK;
-+
-+	if (enable)
-+		msg.primary |= SOF_IPC4_GLB_CHAIN_DMA_ENABLE_MASK;
-+
-+	return sof_ipc_tx_message_no_reply(sdev->ipc, &msg, 0);
++	return 0;
 +}
- 
- static int hda_sdw_bpt_dma_prepare(struct device *dev, struct hdac_ext_stream **sdw_bpt_stream,
- 				   struct snd_dma_buffer *dmab_bdl, u32 bpt_num_bytes,
-@@ -46,6 +114,21 @@ static int hda_sdw_bpt_dma_prepare(struct device *dev, struct hdac_ext_stream **
- 	}
- 	*sdw_bpt_stream = bpt_stream;
- 
-+	if (!sdev->dspless_mode_selected) {
-+		struct hdac_stream *hstream;
-+		u32 mask;
++DEFINE_DEBUGFS_ATTRIBUTE(set_command_type_fops, NULL,
++			 set_command_type, "%llu\n");
 +
-+		/* decouple host and link DMA if the DSP is used */
-+		hstream = &bpt_stream->hstream;
-+		mask = BIT(hstream->index);
-+
-+		snd_sof_dsp_update_bits(sdev, HDA_DSP_PP_BAR, SOF_HDA_REG_PP_PPCTL, mask, mask);
-+
-+		snd_hdac_ext_stream_reset(bpt_stream);
-+
-+		snd_hdac_ext_stream_setup(bpt_stream, format);
-+	}
-+
- 	if (hdac_stream(bpt_stream)->direction == SNDRV_PCM_STREAM_PLAYBACK) {
- 		struct hdac_bus *bus = sof_to_bus(sdev);
- 		struct hdac_ext_link *hlink;
-@@ -63,6 +146,8 @@ static int hda_sdw_bpt_dma_deprepare(struct device *dev, struct hdac_ext_stream
- 				     struct snd_dma_buffer *dmab_bdl)
+ static int set_start_address(void *data, u64 value)
  {
- 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
-+	struct hdac_stream *hstream;
-+	u32 mask;
+ 	struct sdw_slave *slave = data;
+@@ -197,9 +217,28 @@ static int set_num_bytes(void *data, u64 value)
+ DEFINE_DEBUGFS_ATTRIBUTE(set_num_bytes_fops, NULL,
+ 			 set_num_bytes, "%llu\n");
+ 
++static int do_bpt_sequence(struct sdw_slave *slave, bool write, u8 *buffer)
++{
++	struct sdw_bpt_msg msg = {0};
++
++	msg.addr = start_addr;
++	msg.len = num_bytes;
++	msg.dev_num = slave->dev_num;
++	if (write)
++		msg.flags = SDW_MSG_FLAG_WRITE;
++	else
++		msg.flags = SDW_MSG_FLAG_READ;
++	msg.buf = buffer;
++
++	return sdw_bpt_send_sync(slave->bus, slave, &msg);
++}
++
+ static int cmd_go(void *data, u64 value)
+ {
++	const struct firmware *fw = NULL;
+ 	struct sdw_slave *slave = data;
++	ktime_t start_t;
++	ktime_t finish_t;
  	int ret;
  
- 	ret = hda_cl_cleanup(sdev->dev, dmab_bdl, true, sdw_bpt_stream);
-@@ -83,6 +168,22 @@ static int hda_sdw_bpt_dma_deprepare(struct device *dev, struct hdac_ext_stream
- 		snd_hdac_ext_bus_link_clear_stream_id(hlink, stream_tag);
+ 	if (value != 1)
+@@ -216,40 +255,52 @@ static int cmd_go(void *data, u64 value)
+ 		return ret;
  	}
  
-+	if (!sdev->dspless_mode_selected) {
-+		/* Release CHAIN_DMA resources */
-+		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
-+					hdac_stream(sdw_bpt_stream)->direction,
-+					SOF_IPC4_PIPE_RESET);
-+		if (ret < 0)
-+			dev_err(sdev->dev, "%s: chain_dma_trigger PIPE_RESET failed: %d\n",
-+				__func__, ret);
-+
-+		/* couple host and link DMA */
-+		hstream = &sdw_bpt_stream->hstream;
-+		mask = BIT(hstream->index);
-+
-+		snd_sof_dsp_update_bits(sdev, HDA_DSP_PP_BAR, SOF_HDA_REG_PP_PPCTL, mask, 0);
+-	/* Userspace changed the hardware state behind the kernel's back */
+-	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+-
+-	dev_dbg(&slave->dev, "starting command\n");
+-
+ 	if (cmd == 0) {
+-		const struct firmware *fw;
+-
+ 		ret = request_firmware(&fw, firmware_file, &slave->dev);
+ 		if (ret < 0) {
+ 			dev_err(&slave->dev, "firmware %s not found\n", firmware_file);
+ 			goto out;
+ 		}
+-
+-		if (fw->size != num_bytes) {
++		if (fw->size < num_bytes) {
+ 			dev_err(&slave->dev,
+-				"firmware %s: unexpected size %zd, desired %zd\n",
++				"firmware %s: firmware size %zd, desired %zd\n",
+ 				firmware_file, fw->size, num_bytes);
+-			release_firmware(fw);
+ 			goto out;
+ 		}
 +	}
+ 
+-		ret = sdw_nwrite_no_pm(slave, start_addr, num_bytes, fw->data);
+-		release_firmware(fw);
++	/* Userspace changed the hardware state behind the kernel's back */
++	add_taint(TAINT_USER, LOCKDEP_STILL_OK);
 +
- 	return 0;
- }
++	dev_dbg(&slave->dev, "starting command\n");
++	start_t = ktime_get();
++
++	if (cmd == 0) {
++		if (cmd_type)
++			ret = do_bpt_sequence(slave, true, (u8 *)fw->data);
++		else
++			ret = sdw_nwrite_no_pm(slave, start_addr, num_bytes, fw->data);
+ 	} else {
+-		ret = sdw_nread_no_pm(slave, start_addr, num_bytes, read_buffer);
++		memset(read_buffer, 0, sizeof(read_buffer));
++
++		if (cmd_type)
++			ret = do_bpt_sequence(slave, false, read_buffer);
++		else
++			ret = sdw_nread_no_pm(slave, start_addr, num_bytes, read_buffer);
+ 	}
  
-@@ -95,6 +196,20 @@ static int hda_sdw_bpt_dma_enable(struct device *dev, struct hdac_ext_stream *sd
- 	if (ret < 0)
- 		dev_err(sdev->dev, "%s: SDW BPT DMA trigger start failed\n", __func__);
+-	dev_dbg(&slave->dev, "command completed %d\n", ret);
++	finish_t = ktime_get();
  
-+	if (!sdev->dspless_mode_selected) {
-+		/* the chain DMA needs to be programmed before the DMAs */
-+		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
-+					hdac_stream(sdw_bpt_stream)->direction,
-+					SOF_IPC4_PIPE_RUNNING);
-+		if (ret < 0) {
-+			dev_err(sdev->dev, "%s: chain_dma_trigger failed: %d\n",
-+				__func__, ret);
-+			hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_STOP);
-+			return ret;
-+		}
-+		snd_hdac_ext_stream_start(sdw_bpt_stream);
-+	}
+ out:
++	if (fw)
++		release_firmware(fw);
++
+ 	pm_runtime_mark_last_busy(&slave->dev);
+ 	pm_runtime_put(&slave->dev);
+ 
++	dev_dbg(&slave->dev, "command completed, num_byte %zu status %d, time %lld ms\n",
++		num_bytes, ret, div_u64(finish_t - start_t, NSEC_PER_MSEC));
 +
  	return ret;
  }
+ DEFINE_DEBUGFS_ATTRIBUTE(cmd_go_fops, NULL,
+@@ -291,6 +342,7 @@ void sdw_slave_debugfs_init(struct sdw_slave *slave)
  
-@@ -103,6 +218,17 @@ static int hda_sdw_bpt_dma_disable(struct device *dev, struct hdac_ext_stream *s
- 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
- 	int ret;
- 
-+	if (!sdev->dspless_mode_selected) {
-+		snd_hdac_ext_stream_clear(sdw_bpt_stream);
-+
-+		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
-+					hdac_stream(sdw_bpt_stream)->direction,
-+					SOF_IPC4_PIPE_PAUSED);
-+		if (ret < 0)
-+			dev_err(sdev->dev, "%s: chain_dma_trigger PIPE_PAUSED failed: %d\n",
-+				__func__, ret);
-+	}
-+
- 	ret = hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_STOP);
- 	if (ret < 0)
- 		dev_err(sdev->dev, "%s: SDW BPT DMA trigger stop failed\n", __func__);
+ 	/* interface to send arbitrary commands */
+ 	debugfs_create_file("command", 0200, d, slave, &set_command_fops);
++	debugfs_create_file("command_type", 0200, d, slave, &set_command_type_fops);
+ 	debugfs_create_file("start_address", 0200, d, slave, &set_start_address_fops);
+ 	debugfs_create_file("num_bytes", 0200, d, slave, &set_num_bytes_fops);
+ 	debugfs_create_file("go", 0200, d, slave, &cmd_go_fops);
 -- 
 2.43.0
 
