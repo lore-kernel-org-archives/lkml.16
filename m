@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E228C2356AD;
-	Thu, 27 Feb 2025 13:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2074230D2B;
+	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663656; cv=none; b=Bxbxxa1a7XPMKdoWIPfeAX5yOPEgNmttFg98UM0mZgE+/VoqcQ66TOgicV7hUt/+hvvtePuEk624OLD4iD9VgLE19bPMzoBtcOhCwM4Uk3ORjeG5M1DFokG27nW0zEZ2OGq0NFTYyyAopolJ0hnLxsUyJw5JHQe57A6z1sL9xA4=
+	t=1740663655; cv=none; b=I57GkQY/FhGUwBnS0IS6c+UKe2rponeoHFHOImYjUk1ffyL8wljWxwOxdZL4MS4k0LSJUxudGs6YSWGTIhV+JHxWy9PJSEW5URdDkLc9u6og6mS84tjp4TK1lh7IMdF/9FkH1qO/3IhAPrtjNAqJjtkfKY63FqX1U44J9WQFnCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740663656; c=relaxed/simple;
-	bh=x9n/LL/K3cPgU4HL0+L2IY3Pf8+86E6poCd+Gcg2e6k=;
+	s=arc-20240116; t=1740663655; c=relaxed/simple;
+	bh=H3WDSAOTWUvP+jjTPc6glTpBe5Z+uodGVhuG6L/ZhME=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rkTT7PDzvNaK4FFhbLWoMU4G/4biN7c3FtAOHq1X3BvEIW5DHJ+zkbEYvGI44A4qSBNm8j2hneCt/eIFFvj3s0NWCqfmq6yCaXp88zxxrLvx714N+srljChhyC4tvszqEHLxebL3STih6DaR8q5zI4CSsOp5dqH9JIgDibdppgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvE0zyml; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Mb6KNxAExO8sM5pmGNx+ttOtjAj5MuoUp0oU6CPEEqfwKiKMiZHlVWFnWluIWqftUQgQBVvbOFoN+MD2dea6vUGDXLp1cTyFMZD8g+JrOds66l1bvUc2vkXO1VxI8mVPP+ZZntPDFYC/U5tiAq01tEfzJHL399spKdSqoS+r+wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcYLGN6a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvE0zyml"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D15FFC4CEEC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcYLGN6a"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0302C2BC87;
 	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740663654;
-	bh=x9n/LL/K3cPgU4HL0+L2IY3Pf8+86E6poCd+Gcg2e6k=;
+	bh=H3WDSAOTWUvP+jjTPc6glTpBe5Z+uodGVhuG6L/ZhME=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=WvE0zymlvuKS6atu2Baf+ZcoPqZtX6MF1UmwrgnFcEWHAn7DO54WWcCaS+rZDQRaS
-	 vP8ybbHmrOVTH9pRbHI3NJDwFRWVvHJz/ivmOhI85amOUXxt30M/GYccBkKKhwyUkS
-	 BCad2eruJHiy+RIAkgbiUn6wJlpSLgbf8zscQKsff6zcUVnGAFIB3qr1Q8PqDrPtbY
-	 aqGJguvCK48gk7NPMiULQAEHz9g/epD3okyW7tmQ49OA0NJb8RojFOzYfLT9NpUZQf
-	 r6tgb0BI6R/xb4Uczb3gCJ7rZitlJe+PqvTtwEEtGm/6FReD9GQCGJb8aeWLNQSdCF
-	 z9gHyLzd/ihgw==
+	b=LcYLGN6aY/ku/pFtGH+DOW6ZE+wTwCQgWF+lsofqDz1WOET36YkazjnZpes4XIz90
+	 Zv2GUQkaGdqR919GMynrhQCN3vpoYzXr6gshYLKcDcDdBJQtSIBcP0cV+2Hc0zKf6f
+	 V/4q5reQ7ahXYeycW1H8ziJrE9FXS/oD7Ctq0sDly5vlgTZCqQg4U9Nu81nt0GEytt
+	 ZvT/2ucNSJE21wj0xtfvwNl3n2ggWNXSC/TMhTib/PEcFKOSVuADpj3v4bu4I/iPGf
+	 l4AsqOxRmK7rCYqlJQ8xOvOdZeBG8owtAcrmfRYXnJbkXgd5/MMtA76sId3V7LRTIy
+	 VjoDlpwYiMXCQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9049C19F32;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DD3C021BE;
 	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Thu, 27 Feb 2025 19:10:56 +0530
-Subject: [PATCH 14/23] dt-bindings: PCI: qcom: Allow MSM8998 to use 8 MSI
- and one 'global' interrupt
+Date: Thu, 27 Feb 2025 19:10:53 +0530
+Subject: [PATCH 11/23] dt-bindings: PCI: qcom: Add 'global' interrupt for
+ SDM845 SoC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-pcie-global-irq-v1-14-2b70a7819d1e@linaro.org>
+Message-Id: <20250227-pcie-global-irq-v1-11-2b70a7819d1e@linaro.org>
 References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -54,16 +54,16 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=729;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1270;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=A3ZjegB9ymOJbKrwFnz4F34ZFvQLAhzn+iJNxtH6+DY=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnwGtgBWAF0xKBJhApgk9zItN9GnKDjS4xgEbv+
- ZNkuR4YM72JATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ8BrYAAKCRBVnxHm/pHO
- 9d6eB/9CdWyEAxsIM8eMjfdKBkUBzEeNntDzkk6MeHURlbBAtSfdTb4yi6SUTs+40eH9jMPVmHX
- IwUA270qzXi6tJ6uC9IpRrJ5sPboH5NZioSQLvF/sfdtbKkbw1f0s9Vp/FefF4bqAJld4eANZ0j
- RyWrZORIm4hjpKQBIuZG5CZwx6loxfmNRXFWgZ117TERZ/cj4jdKAbql0OGgvjmbVbIi8AtHM0R
- BUSrs2qmOW5SYPPpTDNxjZ/AwFnmg0UpbgbXft00upo4WUol7Mm9Cz8uzL8wF+AuecNIem35xT1
- ngF7sm8zsY93s1T8Nl7ZX9bXYEDf98oo4Gcgw/o9ByajQEx/
+ bh=PoEhXCfBs5e3V4TSUedTjigqATIQI/CO3FwH77CyhdM=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnwGtfXka7p4vJZjRxG0Y5keFxL2MDwu7B5DYZk
+ O7JFjyojGCJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ8BrXwAKCRBVnxHm/pHO
+ 9SqgB/oDAyCV/42b1JlqEcf8jUzXqLM20XbWPP6469FBUP3Ao4ypq2C8E/7/Eqv2ljupORkyqot
+ x0HsnORxutnE3ymL8gBRPB5xNQxAwna0nF7qlGQOfDrL269zDWEGusWEwUGUBimAgY+DNthWbla
+ 1Nt2EClFi+HeEh7eMie0Gzd3d+fMybXG6yCpIpe5ep2OF3BTGQgzWKBV+T8F9ZwuOqFp1Cb1cS6
+ MQk5ttcnZ2yqRWjuN3rex9z9tYVEIpnfRlhjclUsCiNxDiT0VsW1/PlTTJ5d2wT5Zx9ub7CY+Qc
+ bN5H35exx2KNYFc1iwFPn6b2HkyNc7+Te4VPA1ol9tnuWBSs
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -73,25 +73,50 @@ Reply-To: manivannan.sadhasivam@linaro.org
 
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-MSM8998 has 8 MSI SPI and one 'global' interrupt.
+'global' interrupt is used to receive PCIe controller and link specific
+events.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 3776dfcd2dca..44b1a6e74c9b 100644
+index 7235d6554cfb..3776dfcd2dca 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -587,6 +587,7 @@ allOf:
-           contains:
-             enum:
-               - qcom,pcie-msm8996
-+              - qcom,pcie-msm8998
-               - qcom,pcie-sdm845
-     then:
-       oneOf:
+@@ -49,11 +49,11 @@ properties:
+ 
+   interrupts:
+     minItems: 1
+-    maxItems: 8
++    maxItems: 9
+ 
+   interrupt-names:
+     minItems: 1
+-    maxItems: 8
++    maxItems: 9
+ 
+   iommu-map:
+     minItems: 1
+@@ -599,7 +599,9 @@ allOf:
+         - properties:
+             interrupts:
+               minItems: 8
++              maxItems: 9
+             interrupt-names:
++              minItems: 8
+               items:
+                 - const: msi0
+                 - const: msi1
+@@ -609,6 +611,7 @@ allOf:
+                 - const: msi5
+                 - const: msi6
+                 - const: msi7
++                - const: global
+ 
+   - if:
+       properties:
 
 -- 
 2.25.1
