@@ -1,82 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E3BE22FACE;
-	Thu, 27 Feb 2025 14:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AB923315F;
+	Thu, 27 Feb 2025 14:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740666491; cv=none; b=oKJq2zkwQBW9T4xNn4N2cPCKkkMRFdLZao0861qZlbAO5aaMVk36Id9EnrSD8Lm5FeZuSJNTbJXjxvSzEyQg1JkrYzf41FdZh6zZNzRDo0FmMOgff0RAi3LEJET7z00G1tmBUuVbCZeoI71la2avyKZHx16CNCtXE0GBUQ3h2mM=
+	t=1740666551; cv=none; b=LwI4ibp6GpNv4/RwdWXtdPUI4eNo24pc+59b6HHJbLvKbk18XYeeHNimH4ZPzedOhWkW6Yi4SX1bl8ZUxCmunfVfiJMZRySRPcdudz3RS9jzdmmH4R2Zax+sMUxOAs8zQDBGCTvq0A/rmjvUZ7EgN1pM8sBblpFd0IjcvXKuwEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740666491; c=relaxed/simple;
-	bh=ysub6CJYhJGfEwC76WIxoXPaF+SmuMoo948tl6inDJQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cPs5E02IXLrA4GuELHwgfZ5PdUSLaeuKpbxgXv/WkJH7kEhe7nJ/oz9BVRy14cNfaU2TcNUFlXHXuJE1Yz3h4OA3I/qhZP88UmxxqEEaFQXnBOM7JmIqbDiYeGikbv+S7mRbdlumD6erMgKwxZ3xfVRkGUJDGoIIL+JN3uHmO5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51F532BCA;
-	Thu, 27 Feb 2025 06:28:24 -0800 (PST)
-Received: from [10.57.78.204] (unknown [10.57.78.204])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7306C3F673;
-	Thu, 27 Feb 2025 06:28:07 -0800 (PST)
-Message-ID: <89e0f700-26a8-4d0f-a533-aba7ddac521e@arm.com>
-Date: Thu, 27 Feb 2025 14:28:10 +0000
+	s=arc-20240116; t=1740666551; c=relaxed/simple;
+	bh=SR4n4RWYTAfQnMYeY0Z6B8JFxcbPm5d7iAbrsJxtYZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=chPcg6UmWnHdhW2grI97q5vJGgKiszO+ca8LOsf8o1ej21SkvrpkUPa8ogaL2KHMg936Mz+32VMcLTAl7DQvRRw9vSR4VpRtv+zLCW7dxqteQ+ITrVIl4aeUXc3mn3T4zk8wgq749BWKzo26zxz7Hf+3NM04CZaIGIFxlcy+cpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9650DC4CEDD;
+	Thu, 27 Feb 2025 14:29:07 +0000 (UTC)
+Date: Thu, 27 Feb 2025 09:29:49 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Martin Uecker <uecker@tugraz.at>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ralf Jung
+ <post@ralfj.de>, "Paul E. McKenney" <paulmck@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, Ventura Jack <venturajack85@gmail.com>, Kent
+ Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+ ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+Message-ID: <20250227092949.137a39e9@gandalf.local.home>
+In-Reply-To: <2f5a537b895250c40676d122a08d31e23a575b81.camel@tugraz.at>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+	<20250222141521.1fe24871@eugeo>
+	<CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+	<6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+	<CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+	<CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+	<CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+	<CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+	<5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+	<CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
+	<ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
+	<CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
+	<09e282a9c02fb07ba4fc248f14c0173d9b19179a.camel@tugraz.at>
+	<CAHk-=wjqmHD-3QQ_9o4hrkhH57pTs3c1zuU0EdXYW23Vo0KTmQ@mail.gmail.com>
+	<2f5a537b895250c40676d122a08d31e23a575b81.camel@tugraz.at>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] thermal: gov_power_allocator: Update total_weight on
- bind and cdev updates
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Yu-Che Cheng <giver@chromium.org>, Zhang Rui <rui.zhang@intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>
-References: <20250222-fix-power-allocator-weight-v2-1-a94de86b685a@chromium.org>
- <CAJZ5v0jgRXoqx4g=iHSUteXs99ageQmcQDQfjp6eSqnVo9Ty8Q@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0jgRXoqx4g=iHSUteXs99ageQmcQDQfjp6eSqnVo9Ty8Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 27 Feb 2025 07:56:47 +0100
+Martin Uecker <uecker@tugraz.at> wrote:
 
+> Observable is I/O and volatile accesses.  These are things considered
+> observable from the outside of a process and the only things an
+> optimizer has to preserve. =C2=A0
+>=20
+> Visibility is related to when stores are visible to other threads of
+> the same process. But this is just an internal concept to give
+> evaluation of expressions semantics in a multi-threaded=C2=A0
+> program when objects are accessed from different threads. But=C2=A0
+> the compiler is free to change any aspect of it, as=C2=A0 long as the=C2=
+=A0
+> observable behavior stays the same.
+>=20
+> In practice the difference is not so big for a traditional
+> optimizer that only has a limited local view and where
+> "another thread" is basically part of the "outside world".
 
-On 2/25/25 11:35, Rafael J. Wysocki wrote:
-> On Sat, Feb 22, 2025 at 4:20 AM Yu-Che Cheng <giver@chromium.org> wrote:
->>
->> params->total_weight is not initialized during bind and not updated when
->> the bound cdev changes. The cooling device weight will not be used due
->> to the uninitialized total_weight, until we trigger an update via sysfs.
->>
->> The bound cdev update will be triggered during thermal zone registration,
->> where each cooling device will be bound to the thermal zone one by one.
->>
->> The power_allocator_bind can be called without additional cdev update
->> when manually changing the policy of a thermal zone via sysfs.
->>
->> Add a new function to handle weight update logic, including updating
->> total_weight, and call it when bind, weight changes, and cdev updates to
->> ensure total_weight is always correct.
->>
->> Fixes: a3cd6db4cc2e ("thermal: gov_power_allocator: Support new update callback of weights")
->> Signed-off-by: Yu-Che Cheng <giver@chromium.org>
-> 
-> Applied as 6.14-rc material with some minor edits in the changelog.
-> 
-> Lukasz, if you have any objections, please let me know.
+So basically you are saying that if the compiler has access to the entire
+program (sees the use cases for variables in all threads) that it can
+determine what is visible to other threads and what is not, and optimize
+accordingly?
 
-My apologies for the delay. Thanks Rafael for taking this into your
-tree.
+Like LTO in the kernel?
 
-No objections, thanks Yu-Che for the fix.
-
-The code looks good and if it's not too late then:
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-
-Regards,
-Lukasz
-
+-- Steve
