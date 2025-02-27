@@ -1,112 +1,138 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352332309A6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F5222FDE6;
+	Thu, 27 Feb 2025 13:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663601; cv=none; b=CZd19wh+3vvOchWgigVgaDjsCfIE7esV2MA/nEolZ1FKCC38XvvCuNAsaSO2jYCjL2S3Pt54/uXa3fhj3GY0cKjSkeCp5v33DojiciTkGJpi4/+UhviMby6qqqCEeu1vZYgzfl8ff73CcakiZgbegkfQWpoHnO7mFOw/Q+wiF3A=
+	t=1740663622; cv=none; b=Sifr6DlpBCfbC2QVtYLpHMfoTxJOl/CAtz/ymtPGTCqAnEwOAawkFaEMCrm1Qk7E6NCZdqG2bitJQkdTxgoYOGc6+oUJGu4mB7F49EVM5QC9TRQsGIv53wu4faiO5yj28TQFAy2g5sqU4IJ7zcs2l9UtzXxu/VXUe0n6c33Cwew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740663601; c=relaxed/simple;
-	bh=2cSgpAMzuRDyg/OP6JlvBhgcN9wqw2ZkQw1H+nq1MIM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WFXrWO4qmZXfFXdJmRtoPG0HfmskUasnMpTkw1ZJvqtS9oGiGzRJCTaoZFGnv37xtFSTOkWDZZpr7NamTp6QneK7U6GciCgrxx2Q3eJH/zBK2eLLTHNA3BO66MOm7CXAjYpPeiCi7FMX9dMolW6KCNYZEZ6nykRDp5wfDZXxM9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kmSEnrpb; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740663622; c=relaxed/simple;
+	bh=yu3I1sO/i0c9jmjryoQXFMF6uACIg8nN2pvKPs7EzGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DCioFoQwblTOEyn4VHFwUW/GD48OL/00in74VYGxL+UqBJCwcT2di6P9xXCtxeM0s1KS/yrm937kKp2U/S0Ai6h57BG3fLGSL8zWqQUYfkb2W2OoaNAn33LIsh8BeNJkEGE9AygGlVcOi8Gpqqy09ZGiIBMPsVMvkqWYdGG5k0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=OY+wDi8m; arc=none smtp.client-ip=217.72.192.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmSEnrpb"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30a440effcfso22380171fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:39:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740663598; x=1741268398; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X0QqIj+Xj2KKd5yOn9wT3FKv7ilH/QlR+xG09MXlqr0=;
-        b=kmSEnrpbsDstq93JrQAc11bgYRJ04qHCfsckNfDMashPvjc07h1rsxjwvRcwz6Y+Nl
-         7xgxCk8LbQDkfmWlixWr1+M+zYmAmFVWZN5Lgpwy1+VxHiq1Doah3TYVtkoqm5icetXe
-         oHSzI61j36vVwiOcmsduC3OpbMmnT+mUm3Z0SVTZhRBtajWq2zWMkaKjK0Xo64wrsl+V
-         2O3tiNADelwWso67S0KSph+e9hJDTD7UmvxssCF5/tfVRwqCqZDVh2nwdvyUu3y10rr4
-         MjdD/yno6GmPx49sTBYoYM34XO8KDUkM8jTGaNuuBiigEIwOn3Mncq9ZyTe1owTaGeKr
-         D3Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740663598; x=1741268398;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X0QqIj+Xj2KKd5yOn9wT3FKv7ilH/QlR+xG09MXlqr0=;
-        b=EUIJB2Wghn13/jafxS8ZJ8LNlKoU2XLGsdRJEWDKQur5zIcJCN9WKRoq/ACDO7dIsc
-         IKS88AdW3B5f7YjBW7y90gY52XWyf7fPkN4tpvoEOvoK3vy34V7MT2mD0SJc+L22FSz1
-         3aRDod6EvtI6dnJLvlox7ByLW+tRgEfkiSs6s0j15PateRiA/vwgg1NSYDOCCr8WwjWK
-         9Ao1BCVO3xOaqADLCYYkNs8uvGY+3N4LJ9o/YKTe57vaID+TaP1IgEqHO8vuvCEW7H0H
-         ZP//4a1hlh0w/ZjK3vESCu2dwn80nz7cTJibs2tZM5KlqYpNaxKSYsS/PPl1hWs5s1Nn
-         cIyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1kWvPPtuUcx2qLPQKn/lqv8QnEJUyeA7B4X8U+YTgjgToD6/1EGF69FEz9x/1J/uJTEwikvdG6dvY7AQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjKLMjpIkgDAmcptL1pzm6ES8Uet1N/C5cUTscqkrPfXFUr8D/
-	3JJXM45mq6cJgz5DCCbv/v+sdg3gUF+gtlhFbmEDMzGL56Mf9bBGCfdaSWrqzSc3aDMfev4lmui
-	rvVv8GngykOeLGPWge6NV5FNpdjk=
-X-Gm-Gg: ASbGnctdIq4WOp7F/8bMWzzxtDTIPb7vTOby2BjjMGSu3DndeS18eE/oNiEAKfH5J+Z
-	SlU32SHNDCURDsSb0dtqcfQ74DquoUhNSvNaEnR+FhtL7HOcRCWoy4N40oJuY7aBCn3ZRRjyY+I
-	+Y+x6YfMHyo9cQpXgP9jZAzch03wPLjvLOvDwiS6Ze
-X-Google-Smtp-Source: AGHT+IFv8UCQLBFW+HmySTIopoV3gqxaBg5wvtyqxsA9/SWPF9AXdxTyZjDvJBXPJMy/X/nEAbqTXjvKUANVm2PlmXw=
-X-Received: by 2002:a05:651c:50e:b0:308:e54d:61aa with SMTP id
- 38308e7fff4ca-30b8464a2bamr20649531fa.2.1740663598018; Thu, 27 Feb 2025
- 05:39:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="OY+wDi8m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1740663605; x=1741268405; i=christian@heusel.eu;
+	bh=yu3I1sO/i0c9jmjryoQXFMF6uACIg8nN2pvKPs7EzGs=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=OY+wDi8mQsCJM7BfpOZ6s7aaD4w2VKkx97L/4ZDf+zzfiyUhT6RPPz4yGzgZ2UA/
+	 MWE4YBx21KHIVOUNcXC9vCmlkTqhc9dwMYewxgZCN9RNuVlAhiZNyhps9g3MDfCuH
+	 Dbu0sSAziL7qAPxFM68M1k13eEir+dg4mF2moGMVWw7ZpyomKnrNPF85kxZROL8ph
+	 SjBpN+0Gb7/YKMxznZwY2kQ7S7gO9pjaxiVznJ6aFnqLcun2VxoelgAvJDNa8AkMg
+	 L+fnu1t+Nv/2QcNeAuTLWpD3GTsDh2YlaglMkaYxiOL1Hbi/yvCtZ6R/WHXW4GRFj
+	 62hZcwa9xKYEY4VLDg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue107
+ [212.227.15.183]) with ESMTPSA (Nemesis) id 1M7KKA-1tvMHh2URg-004FeR; Thu, 27
+ Feb 2025 14:40:05 +0100
+Date: Thu, 27 Feb 2025 14:40:04 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Rhodes <sean@starlabs.systems>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev, 
+	stable@vger.kernel.org, qf <quintafeira@tutanota.com>
+Subject: Re: [PATCH] Revert "drivers/card_reader/rtsx_usb: Restore interrupt
+ based detection"
+Message-ID: <0944ac33-c460-4d3b-9ec8-db70d11ee9c1@heusel.eu>
+References: <20250224-revert-sdcard-patch-v1-1-d1a457fbb796@heusel.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224-macos-build-support-xe-v3-1-d2c9ed3a27cc@samsung.com> <be5abg6u6wm62nhak7xrhtlkqxcekael6ztnkatwqxcil44x5y@p6yrbfingm4e>
-In-Reply-To: <be5abg6u6wm62nhak7xrhtlkqxcekael6ztnkatwqxcil44x5y@p6yrbfingm4e>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 27 Feb 2025 08:39:21 -0500
-X-Gm-Features: AQ5f1JrvujnQrNdPwimNUvnOfF-Py3f8kwIyufq_KgAHEzKnySZFBMMWJGb3ArY
-Message-ID: <CAJ-ks9=gaxW2191c+K0E0MgjsQWLYoKxJZLxGb6RMbPRVHc4tQ@mail.gmail.com>
-Subject: Re: [PATCH RESEND v3] drm/xe: xe_gen_wa_oob: replace program_invocation_short_name
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: da.gomez@kernel.org, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Justin Stitt <justinstitt@google.com>, 
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
-	Klaus Jensen <k.jensen@samsung.com>, "Theodore Ts'o" <tytso@mit.edu>, gost.dev@samsung.com, 
-	Barry Song <baohua@kernel.org>, Daniel Gomez <da.gomez@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fagmpuwyw6jacfay"
+Content-Disposition: inline
+In-Reply-To: <20250224-revert-sdcard-patch-v1-1-d1a457fbb796@heusel.eu>
+X-Provags-ID: V03:K1:UAoKiThL18eaMR16lOypH0tDL6v31SyTTnwORVvuURDpSv3GNWP
+ CyFsrTNUAWbByqOo7I//b5NbcH9NlkrI+NTlJg7igchBazkXrtLBzM8zb7N7aynuHMHS4O4
+ Sf8/vJ/yJh34LY8NxzZDflq3VLAx2lMVwpHuLx8gg1hsqGpNz4rp3CMxJX1sUWgXueenOMW
+ hJj4LE/nFr6Gm22AT6p0Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:sh1JRP672aE=;zh6hCt48hOPk3M/wMoIQdNLk4V4
+ p7M8SivExwrxQRYvOg3F5ENawAfgyVf4YEUTP457EnkxV1Vh49AS5uuwplqo03qvrqUui9vc/
+ S1Zs0goECjwuaj+9FBxrFhUHpc28lBi0KXIVa2j8kODfIVvTjwnjJjCDuidB+kWWmDA1ES8CR
+ mdot8h1ouK/XGciXpfJoZdviYX6nAlc1nQ5QeozgC46C1+zMktVUB5Ajh4Ac0QgqkjgSG4o2Y
+ 3QSeS0sYTj3LKZT4GV6q2aiI6Y3Jfn18eVNplccnzbnr9sLRYRGtx1cC2ZVaA39xPsa3QyFgI
+ NdBPcXC5OSURFNrjwJD+yTJw9eOGNwoIdf3MCX31snPThKmvkoK4NlLGaXt8P1gNEfJEdwT2W
+ Gi7xd6G+ZC+XcCrhAitvnHSujP10SUpkax2kNAJvXJVjYevMLwr97/b93WqYWR0KyNWxpvtyy
+ gIFNLRpVKR7i4ZZ2j73ktNJHULxLB7MlsmznevxPbi2PcxYv0iVotgSosL9o6CDEiF4wV8hC7
+ XqPijSvrmm+40ULLKhGreMeHXejktwGR9uWdVFYkFz+Ot2wp7H1Zzcxm+70c6zXW2bxwg3tUA
+ Twi14Znio7gkSG2kTDqpgMvq6vAhj4eeCrbnqJlrI/KQ3VQcQbgiwbTNgQoc34GgPJbPC+cu9
+ hcFlafSTCpYlDiec2WtOpKhdNMMipdZlQsyVUZwZmySSekEI94RoFyAMlB0JIBiht1iD683h4
+ yWV+8KAa6g/ofOGyykZywvyKEOaqKg53INpah4oUrkpH5Zoc9AwTA2ZIaKO7KiwMMUI36ixVj
+ YTEFnrCcnhclWlLwt+KS00ZgutdkjUdbNa3u3GiEzgcVdJxUEppD3aq4hp9LCZ8XoKWkssMRA
+ 8pYckXilyvImBQ09z2k7WYus+WoFOmb8HQypeMStgRxSxX7iKQVC9GSpNw47srEPZWKDpfur+
+ 9pEui2NCcLMHUD/mqy/qFnxbqxfgunbJnFii34GEVoakDOeNBsVQv4QcF52nT+u0BP1CE+0T5
+ 0+RMmieRjyIeEdnhXsCUFrZgZSVcoYAvxL7L5ggRB5DUJhMU/NGAtFCPdbgONRj/UKSfMUA0y
+ PcS687+UwlRvONfHoGA80cVr79AGZJx9vX8F42XT+DWLfZNBZMS8UMA/R8slWhvnj5Ky+GWhQ
+ MCbVydaSrHJ4/2C4EAQ1tWuwp/genq95+T5wP0IwrAEl/0DbQFpZtMa4l8uQlNV5Cwar7xVRc
+ 4wp5b7tDI+augzxNJmXvmgN0i2miEECNOtl0wwvcnxWzs8D3UrL9aJ+6gzRY59kRdcn6Qg9bO
+ HMWurPfwvwBJoPYzlM09pPFGkPCRUGkPJUmoqNaVvXytdyzY1EEFS39eI7oMCW5f1YoCPGLOk
+ XTterFyNGX1GmW3Q==
+
+
+--fagmpuwyw6jacfay
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] Revert "drivers/card_reader/rtsx_usb: Restore interrupt
+ based detection"
+MIME-Version: 1.0
 
-Hi Lucas, chiming in here since I also care about building on macOS.
+On 25/02/24 09:32AM, Christian Heusel wrote:
+> This reverts commit 235b630eda072d7e7b102ab346d6b8a2c028a772.
+>=20
+> This commit was found responsible for issues with SD card recognition,
+> as users had to re-insert their cards in the readers and wait for a
+> while. As for some people the SD card was involved in the boot process
+> it also caused boot failures.
+>=20
+> Cc: stable@vger.kernel.org
+> Link: https://bbs.archlinux.org/viewtopic.php?id=3D303321
+> Fixes: 235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt bas=
+ed detection")
+> Reported-by: qf <quintafeira@tutanota.com>
+> Closes: https://lore.kernel.org/all/1de87dfa-1e81-45b7-8dcb-ad86c21d5352@=
+heusel.eu
+> Signed-off-by: Christian Heusel <christian@heusel.eu>
 
-On Mon, Feb 24, 2025 at 10:05=E2=80=AFAM Lucas De Marchi
-<lucas.demarchi@intel.com> wrote:
->
-> Is this the approach taken for other similar issues you had? Note that
-> argv[0] and program_invocation_short_name are not the same thing. For
-> this particular binary I don't really care and if it's the approach
-> taken in other places, I'm ok using it.
+Hey Arnd, hey greg,
 
-Believe it or not, this is the only place that
-program_invocation_short_name has ever been used in the kernel. There
-have been numerous instances of:
+could one of you pick this up? Sean said in the other thread that going
+with the revert for now seems like the best option and that he'll
+revisit this once he has time...
 
-#define _GNU_SOURCE /* for program_invocation_short_name */
+Cheers,
+chris
 
-but never any actual callers (that I could find in the git history)
-other than this one.
+--fagmpuwyw6jacfay
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> I was expecting you'd take the acks and merge it all through a single
-> tree since you received push back on the need to build the kernel in
-> macOS.  Is this the only thing missing and you'd want it to go through
-> drm?
+-----BEGIN PGP SIGNATURE-----
 
-I believe the other patches have been applied or dropped. When I last
-tested building allmodconfig this was the only issue I ran into (macOS
-arm64), so I asked Daniel for this resend.
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfAazQACgkQwEfU8yi1
+JYWglg/+OCt/KmHtOczd6opE+8TuRU/+flDmltOsMsoryY6v6s0fMeawT5ShG7bm
+bLhIzQuYD/WIFvXbG9J7ss6fIez8MmvvyMA6SKKkdoSwZWcXFepoqak7yWQ08nDn
+tsDYtHLpNpZMIb81fbrZznWtIeZCqM10pegOvZ0k3Q39V4E1O/+IrMfYRtb2ipOV
+2qliIL+eAzuj6uq8W1JTOGmEmzBn81JNEocjZ1hLpv5NOd+cgQ4U18xQGzCJ/q7Y
+vZUS/RKAG4874+RJJu/ecOO2NAD3j/tUb31Un3OqJ08x0FP+XWv2ZLXR7lnVWHJX
+zWphOztxwRxl4Ay3fqFFUN2693YnJeXQwqURK2nk9k9APpKyUqq16mCEHbEjI+Eu
+i+KlJ6vUz3k7EfFoLzZJjTXOymGqaT+0W1Co4S3c6Z0rxZnlL1uo/PMtZjLvyRts
+rcVUA6msIZ4xy+oAP/9+FeI7QjhH1Au27ruUdhU8rxmLhqJq1+HxwAUFz2eUIt/r
+aCg4tfSGZ3vKJkuKWo0VORFy0r4E7JG4tyyFOYruCKi6HYduHgf95alfA9l9LV8G
+EE1D6SoYlRBwuwTMI6MtLJWxVkpvjWNPwtoedxVLgymv6LWHs7z70QoqNW+l19hG
+SI7IDY8GHkD7K0nk1g6j7LzjxN8iwUVFzBAspmPpCQhMGyCf/cM=
+=OZ9j
+-----END PGP SIGNATURE-----
 
-Cheers.
-Tamir
+--fagmpuwyw6jacfay--
