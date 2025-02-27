@@ -1,117 +1,111 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C591F234984
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4756234979
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631093; cv=none; b=D1ARMUz7FwlSO9PK1Tmg3Jz+G/vthTKRb1FpKqHuLfvwFOGRjkIY93mJApYRMkW33ltw9Npm8h5uuFHSh421f0Q1NqqLOi3TvM4kpJaXZOSepiQj757i1X6n+prCChedCIV8dg15KeagPxw+OjyhM3GohIw2w3fIdNE/fQXIvjg=
+	t=1740631093; cv=none; b=nE+t8+YptS6rhAaxQihJNL6AUXW/Uk6Cu2n7zeAuK567dVVW7eDSijJbFgcPkO16TnVy1/xiHzj10XylxQ5PBgI97WY4/oCyCJzDpR0zAwQNk1THRaN0pZ3j00SBwT8cy9rXRJL+/FJb6pu/BsxcYV7wmJqSte8Qg3qn/c4qjsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740631093; c=relaxed/simple;
-	bh=ZQwvICLouPvkcjgqyDAqTmLuJUwzgqhQEbOcyyDCppE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KviBmMPm2nrSVVTmdhSsJ0r4OJ2L8xP0WrP8tl6LGwk7BoK7F0NwXnM206MGmICynOrlunrcjVX8nuqyCUj0ygl2/r3iMrUDaV2YPmhmahPOzSTc4PyhtBJ6rSqM6kbNVo8hSP2RNPvVF22rFqhtdrwELjvuFmI2hgCiNx8Qqlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IeFwPito; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	bh=Ib6ZO2EH/a8o5tLg5RHSx5Zf6q2a30HCMjUDr/LDIww=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HJYN2oqFWPkGedzFt7OVeWWwzLX394NLJ6HIDFFg6DX8lSZU0M4IvY9bbZuAHHOOun9GwTVCqIWp3XAuSy6ed2np6yxJTMF4YBrrMCf9yvKoifGjRf/vAN5qouyNGQOhb4Wlr+O6lYP2BeQtHIGqjqgpZu9DWkrn6yG9JsnEpCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j7jIgTty; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IeFwPito"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2fe82414cf7so1076274a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7jIgTty"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-5439a6179a7so648348e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740631090; x=1741235890; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740631090; x=1741235890; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hD0ulf0FeWPvWMK0YywecJZZj4meHTFhM9R2+0rTTi4=;
-        b=IeFwPitoMeudJxGC7I5dBwI0XTf4DQ6qjd0hrBz04p70fClLMyoLv2T9YKxGCiKrjP
-         BQs+dE4ngbMDV/FtL4lxyjw9ajDv8S00XEOaaUdkxuqL94RnTwgZ9Wfdl9AhS4A7pBxL
-         kcnk2YnfZ9fOcA1n72R93FOankYyryU+yQTLQ=
+        bh=n+xNvurO8U1WVGtMu3d7j2YgOZ/XCG9UaC+fiCOcukg=;
+        b=j7jIgTty4Ge8fc6Y27G+qumfhEJ4L4gCov1cvPgHnFSv6xfh1oqodqNoBEBH4NzUh3
+         Ojt247UR43MCnEaM613INiLXEsUcrGYSFY65JaocbLMKcDuFh1o9Wh2YwT9/sOnCgaYo
+         SG1K4AZJ76bgjo5Jnf9nyFKu3zP3VJedcBR5+mMQUEjmQtcnJ1QeYwJ+y1rnA4n6z7pW
+         NSdtiDoBc+8xethd3DVdvAlFxn7/rkL03K3xXoJQ0XzdBEuEPzdSIVmRHvzinH3jW9+J
+         zR7d4WzHr/PaqBloK9BWv1+KYyTFZ1ge+9GlwK88cV4LbwcBKQEzCX0BYhcMNlZVCSI2
+         BZhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740631090; x=1741235890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hD0ulf0FeWPvWMK0YywecJZZj4meHTFhM9R2+0rTTi4=;
-        b=ekeqh5bwoLBCx45y+C7lQV1Y6WSlAnIl7lOOgI6uG/M3DkMmHKrJ0BjaonEuCVsAuK
-         WkVYRQLfNmDYBUdVKsAgg0Th5AFww9CIq5fYaQEil9LoiLkYUJfqtL/Fc8+Aaka7ipkF
-         6ZuAy7nMT1mhtfGyKkxqe/W8ImtOwiBjqPXEBJsdKuwi3RWGBREh+XK66o1/JkY8P89A
-         y5WjdrylTQS5SgLm4DUC+s8LWGOB2x/7TVZEL8lsl7H6FvIltzqGXMcTtDHeVuOJb+Km
-         8sgmTqZMUwQIzkL11ex1bkpyzxbXVSRnG2ifybZumNtr3zitErmTr9QRpyRxU5SaFyk/
-         Vj6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWWEePN42w2eB8cdyB2IMmoKsiMW8igFggBxWnQNIPDY4TQpPZSr4Mal3qpR8tQ02kmmQ4Cl/yYpwA66Ao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEzcH1MZCJLeeAhAPbhV3soCVjL+2505QGZ0h+dpBVQdUkuJRt
-	Z8ZalREaqS0mheuuVJGLSMc8WR3PPrAdt7jNxzM1VBlv/PK2awKLIIbIFve1Mw==
-X-Gm-Gg: ASbGncsgampXe68+1+wjzE744xx6QqJ5GS9VVFa6ZWmb8BjnzrYdhqM+aa/sAtudafz
-	zZ0Ysrug1MK9IH4F/trHfAHzNHaca3huyDd0XJWb360+RIcl2YerA1KlhRDYc32ktdWVcJVxEKN
-	A34n7y7SrNmv+8exHw04qp2zcnp7mEY5o7ZYNNnfWZRtPBzwKPnVY2OXa5Jwo88BMLsOmGOxq8c
-	83+pO5wMpxtyXBRypJVfzAmFkp/4KMHsfMrYGf3pZBqAfzmJgS40q9RQiGbZ6nxA94s63v6VedE
-	E3UN9aCriPeevi26PZXms5LJpa3l
-X-Google-Smtp-Source: AGHT+IFidzq43r+0NRTs951DcUKcskfAO05VG8wu01wBEQtR1k0fOqC/zriCBDU47fEYDjlBVHYkmQ==
-X-Received: by 2002:a17:90b:4c8a:b0:2ee:3cc1:793e with SMTP id 98e67ed59e1d1-2fe692c7f83mr13786908a91.32.1740631090068;
-        Wed, 26 Feb 2025 20:38:10 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501f97cesm5057285ad.60.2025.02.26.20.38.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        bh=n+xNvurO8U1WVGtMu3d7j2YgOZ/XCG9UaC+fiCOcukg=;
+        b=oZa0geP7l4EO1AZV0CmnBZj6JSRXmRnAOoZebZ8PDSIFDAtOTb54IDpNMCNBU3LCl+
+         Dwvw8x1hEcUW9ttqTIdvAHWQqA9GFuyOG1n3FyQALgSkY2J7dUpJaOT0XpIRutWCD6Qn
+         EvtKSXUB4UrC4Pi6gUwkHGl1IMcE2UnhHPpne14y/3HrvNjauH1spduQ1njUOxBu1ZzL
+         DRiWjNUkWRpbe2GKJBzLyqvxt9t2EFW2DFoyJV3B7X9jtndTl1Q5ty9T1caW+86FH917
+         YsgqDRHXNis5Flp7yFM6uP71Xzra7KujqYJqHdpgIM7vJFwWkkde/gtNGALgk++mtUyT
+         CGZw==
+X-Forwarded-Encrypted: i=1; AJvYcCU616aloyF2IM7TY8JNs1dYnpUT6YdywbcPOL9MCLJsBm5Im41pJ3eB/cJWW1FHYPniGwXAhmM5Hho6Hjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywik1LP3mx/gbboW046R0/ihvwOEQ3YhEnTsgW/kC64zKQnyamv
+	NHLljDfYpebcANWLhd/ZV06qN+BOAsBX88X+XBouuTPFf41MMqnReFn13IQuXJo=
+X-Gm-Gg: ASbGncv8+LOry4DbqCrpqSLcuaHlpUXg4EhlYFnp3rSotgs45sWlH0Pr+LVG1Oe+8Qm
+	BZwLULaNi6ufOfcxLOwNFuUOEhiyCsUxVyN7IWtbpTTGcqtJL5fMbG0SBsshcBSODOuzHCopMOo
+	I4zSH9Un/uk5dy5cMPYhSQtgOLk41y0TBuoPYBkhXt6WfDPWl+R3sr8StYprJD5SxNzrz0Uhw2V
+	pWMJ1wgw4aQrGuQBU47XvWe8EhS+6OGTJtjGxwxJ/eea5/9IsWTeiYX/6/tQAz+a7FVIVI84vsy
+	QgjFm7YtiTEp6eYotF0McZNi4TheWHXQPA0eIiHrVA==
+X-Google-Smtp-Source: AGHT+IG4FmEa2E6Vnd3n6pmL4LIRNjCw5Yr6bPCVueD2ge1UqqUmi9/g9dZciGxkaPkoSh2/W32iag==
+X-Received: by 2002:a05:6512:31d0:b0:545:240:55ba with SMTP id 2adb3069b0e04-549433167b7mr678503e87.26.1740631089878;
         Wed, 26 Feb 2025 20:38:09 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 18/19] zram: do not leak page on writeback_store error path
-Date: Thu, 27 Feb 2025 13:35:36 +0900
-Message-ID: <20250227043618.88380-19-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
-References: <20250227043618.88380-1-senozhatsky@chromium.org>
+Received: from umbar.unikie.fi ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.38.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 20:38:08 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] drm/msm: add a display mmu fault handler
+Date: Thu, 27 Feb 2025 06:37:35 +0200
+Message-Id: <174063096226.3733075.7759942352504243411.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
+References: <20250219-abhinavk-smmu-fault-handler-v3-0-aa3f0bf4434a@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Ensure the page used for local object data is freed
-on error out path.
 
-Fixes: 330edc2bc059 (zram: rework writeback target selection strategy)
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zram_drv.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Wed, 19 Feb 2025 11:49:16 -0800, Jessica Zhang wrote:
+> To debug display mmu faults, this series introduces a display fault
+> handler similar to the gpu one.
+> 
+> This series has been tested on sc7280 chromebook by using triggering
+> a smmu fault by forcing an incorrect stride on the planes.
+> 
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index e8375fcdb36e..5dac525f4cd3 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -787,7 +787,7 @@ static ssize_t writeback_store(struct device *dev,
- 	unsigned long index = 0;
- 	struct bio bio;
- 	struct bio_vec bio_vec;
--	struct page *page;
-+	struct page *page = NULL;
- 	ssize_t ret = len;
- 	int mode, err;
- 	unsigned long blk_idx = 0;
-@@ -929,8 +929,10 @@ static ssize_t writeback_store(struct device *dev,
- 
- 	if (blk_idx)
- 		free_block_bdev(zram, blk_idx);
--	__free_page(page);
-+
- release_init_lock:
-+	if (page)
-+		__free_page(page);
- 	release_pp_ctl(zram, ctl);
- 	atomic_set(&zram->pp_in_progress, 0);
- 	up_read(&zram->init_lock);
+Applied, thanks!
+
+[1/5] drm/msm: register a fault handler for display mmu faults
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/eabba31a839a
+[2/5] drm/msm/iommu: rename msm_fault_handler to msm_gpu_fault_handler
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/f66f3cf6bc42
+[3/5] drm/msm/iommu: introduce msm_iommu_disp_new() for msm_kms
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/c37d9f0b1a18
+[4/5] drm/msm: switch msm_kms to use msm_iommu_disp_new()
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/85bdbd8306d8
+[5/5] drm/msm/dpu: rate limit snapshot capture for mmu faults
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/89839e69f615
+
+Best regards,
 -- 
-2.48.1.658.g4767266eb4-goog
-
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
