@@ -1,114 +1,87 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E58221F26
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A99911EB194
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740642060; cv=none; b=sE7Lh1W7bXpEKoyELNECkJ3m9yQuYHkoacYIBLr9AvRuihNykCfsnG7kd64iyF4/TiKY/JfKjQ/PEznjx0obA0VOhS0D73/D6eciShgmiI1HtsN6egdbcchBMtPszvP2cvIt2mP6gCfNxQuTkYRkui3jMaNViYU9i9+cl5Oh5y0=
+	t=1740642125; cv=none; b=OfSpDqV/JaxoOde3qc7kDOQ4a15rZRkzgw9E+sb4wHK8R4baSSncOGi1Uh2BzfpJFHfoxTqV+2w2p9Xo4WvDwi3zD0TheW68BKRI69S+Wr/8Zd7OwC/uvWn8vpzQl9zIH3dO/LvZDbRffGlYr3jt90DC6HkhcKJc2hC9jueUu5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740642060; c=relaxed/simple;
-	bh=oCbBvYZOh7e1jwrU/q972khxUHfALgdzs43hu8+7RGw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FpxP6OhIYwqpgGpKBbUtWCQuBct/nd1juolE4knaf+4zSGU/QbSiZq359I39vr3FT2nJz/0WJ6zGyi5U9JTJIrB7FMPoMOmmD0XxrkJxqk/H5NLr1TI78qpHx+jqYtWRXud3hvM1qwzoARsm9YHnTX6eC3kIgFQNVFQQGtLQ42M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tnYVQ-0008TU-CV; Thu, 27 Feb 2025 08:40:28 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tnYVN-0035RT-22;
-	Thu, 27 Feb 2025 08:40:25 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tnYVN-003K5l-1c;
-	Thu, 27 Feb 2025 08:40:25 +0100
-Date: Thu, 27 Feb 2025 08:40:25 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 06/12] net: pse-pd: Add support for budget
- evaluation strategies
-Message-ID: <Z8AW6S2xmzGZ0y9B@pengutronix.de>
-References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
- <20250218-feature_poe_port_prio-v5-6-3da486e5fd64@bootlin.com>
- <20250220165129.6f72f51a@kernel.org>
- <20250224141037.1c79122b@kmaincent-XPS-13-7390>
- <20250224134522.1cc36aa3@kernel.org>
- <20250225102558.2cf3d8a5@kmaincent-XPS-13-7390>
- <20250225174752.5dbf65e2@kernel.org>
- <Z76t0VotFL7ji41M@pengutronix.de>
- <Z76vfyv5XoMKmyH_@pengutronix.de>
- <20250226184257.7d2187aa@kernel.org>
+	s=arc-20240116; t=1740642125; c=relaxed/simple;
+	bh=kUt1hw2OeGcF75w78SXUkJLgZ7NQEvchGPnQlK/Nwpo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Duaiq0X+A3yMG+vqDEt9Y7bSNv6CNxrU2I/KVpmwh3TSEwaBabuAxhk0M1VbD12XEqxtjrAZTrrpLm6ihDngEIzH4d5SIsSkQKelQo8XFNPjfesBOlK6kxJOT5nvsDZViep5d87urJzDGpJ9wWLsJIawZgvdq6Az/3nu1N5ZbLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DzX3XyLE; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DzX3XyLE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=wEmwrAZv2rrwivZwCQP0TGYEjyLyX3HOCE9A9/d0M3U=; b=DzX3XyLEbuSVOFEX1cMP19n5kg
+	W377LZUUSGEQrXA6e8AoUYKjfq4bAdZP4RBL5W5MT/ouRq1Uugh0LUFDkjO/5hTTqh3KrO8x7uRlV
+	pUFnqnZg+pO6gxAp1iXRqUQ9n8sMFWMFwbxX+xJneMlxMfQeiik4FhTVys61umIczLrT7T9CKbWb0
+	ryaxDu3PmHynhOIDpiHyGmZ/ckWNOmkHFAf1js+dNbJoQ9kizbyHxGvD67u18AH95ghz9czCzit8n
+	YFjS/zf1cmNWT4KPzTv+us6K86/03LkOMr3/H5hfWbNxwz83lgh/HklmneeUhWuR5pcF92fRxbySR
+	49vJgIaQ==;
+Received: from [58.29.143.236] (helo=[192.168.1.6])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tnYWf-001U5M-RF; Thu, 27 Feb 2025 08:41:52 +0100
+Message-ID: <7d985c1a-1e4a-4518-917d-4ff701d7bb9e@igalia.com>
+Date: Thu, 27 Feb 2025 16:41:46 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250226184257.7d2187aa@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sched_ext: Add trace point to track sched_ext core events
+To: Tejun Heo <tj@kernel.org>
+Cc: void@manifault.com, arighi@nvidia.com, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org
+References: <20250226143327.231685-1-changwoo@igalia.com>
+ <Z79ivCISjmFlkecF@slm.duckdns.org>
+From: Changwoo Min <changwoo@igalia.com>
+Content-Language: en-US, ko-KR, en-US-large, ko
+In-Reply-To: <Z79ivCISjmFlkecF@slm.duckdns.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 26, 2025 at 06:42:57PM -0800, Jakub Kicinski wrote:
-> On Wed, 26 Feb 2025 07:06:55 +0100 Oleksij Rempel wrote:
-> > Here is one example how it is done by HP switches:
-> > https://arubanetworking.hpe.com/techdocs/AOS-CX/10.08/HTML/monitoring_6200/Content/Chp_PoE/PoE_cmds/pow-ove-eth-all-by.htm
-> > 
-> > switch(config)# interface 1/1/1    <---- per interface
-> > switch(config-if)# power-over-ethernet allocate-by usage
-> > switch(config-if)# power-over-ethernet allocate-by class
-> > 
-> > Cisco example:
-> > https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/power-over-ethernet/configuration/configuring-power-over-ethernet/m-configuring-power-over-ethernet.html
-> > 
-> > switch(config)# interface ethernet1/1   <---- per interface
-> > switch(config-if)# power inline auto
+Hi Tejun,
+
+On 25. 2. 27. 03:51, Tejun Heo wrote:
+> Hello,
 > 
-> I don't see any mention of a domain in these docs.
-> This patchset is creating a concept of "domain" but does 
-> not expose it as an object.
+> On Wed, Feb 26, 2025 at 11:33:27PM +0900, Changwoo Min wrote:
+>> Add tracing support, which may be useful for debugging sched_ext schedulers
+>> that trigger a certain event.
+>>
+>> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+>> ---
+>>   include/trace/events/sched_ext.h | 21 +++++++++++++++++++++
+>>   kernel/sched/ext.c               |  4 ++++
+>>   2 files changed, 25 insertions(+)
+>>
+>> diff --git a/include/trace/events/sched_ext.h b/include/trace/events/sched_ext.h
+>> index fe19da7315a9..88527b9316de 100644
+>> --- a/include/trace/events/sched_ext.h
+>> +++ b/include/trace/events/sched_ext.h
+>> @@ -26,6 +26,27 @@ TRACE_EVENT(sched_ext_dump,
+>>   	)
+>>   );
+>>   
+>> +TRACE_EVENT(sched_ext_add_event,
+>> +	    TP_PROTO(const char *name, int offset, __u64 added),
+>> +	    TP_ARGS(name, offset, added),
+> 
+> Can we do sched_ext_event with @delta? Otherwise, looks fine to me.
+Sure, @delta is clearer. I will change it as suggested.
 
-Ok, I see. @Köry, can you please provide regulator_summary with some
-inlined comments to regulators related to the PSE components and PSE
-related outputs of ethtool (or what ever tool you are using).
-
-I wont to use this examples to answer.
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Regards,
+Changwoo Min
