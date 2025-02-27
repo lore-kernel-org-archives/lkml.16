@@ -1,129 +1,133 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEA821D5BD;
-	Thu, 27 Feb 2025 10:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740653186; cv=pass; b=PmHU8/oxoolCg8Zl16Zfxm0aCa5RsjKZR8FwUsoaJAl+Dz7X1Zbl7I8xB6dwhpctPcD6mH3Nc8KaSxpizT0TmkEQu6cq6gj59VcLS3YkAnsTVFN44Zb0s14T3aS71Utd9qW853hkb7RupliNHDKBtjYlsd1B/ZOWA3MMGd+AJSM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740653186; c=relaxed/simple;
-	bh=jErgEQ+TUOucGrZZAhpmYkoPvjxC4e7WR4Mn6W94J2k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3MNoecjo3JU9BYqVDpv43fS8uJ7kpkPoACMFofo9HBE8+HO3QoAJDISE1P+6CPlEFkRuZ4MF38ih/+7UZo9PGoflaZ4MZxSQHbznB6MXWKsNqsm35JjX0WyLFilQwjaPruWVYbqN180LxE4yEAJcn4JG3dNIcwaRKjwB87Joi0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=F1LekHHU; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8E3229B28
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740653201; cv=none; b=LviSWLVLMtFS1KQdvOo9pm+fHp0Q706hDjOBxLPXTI3E5Zsu3hnUPql53JK1DtxRpL1ozqBiLko/Mu4gqVuK9P0kqsDkDubLMVLbk0FgCy3+PeCZKRcLRYahOykReT6KryujujZRfU/eYueofybuTxp3XbFBFlrfdo45xa4vn7Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740653201; c=relaxed/simple;
+	bh=GXcqDaM4iJxo1UFq2CVb2sA3L38nmHx73YWAlmx+a5I=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YygoULTJGpY31PTv63yNLCtbxEG/D5eqf1nAi1iDYIU3r9BFJr2v1G4bnTjrJbdnikzZxY5rgEmxpTiK45RdZ3iQReL2nfKgFOZUTdpe+OtFjBi4VjpDv/0HXKD41UrVeF6SjQZTBhK7dbNDiZ6VdJ86m2FRlZQ3FgNQAVE4SSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A+ECPPpM; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="F1LekHHU"
-ARC-Seal: i=1; a=rsa-sha256; t=1740653169; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dg8P0nJK5JPcFugLoKt0xIYPkUVtQmKGkV5bvVaHL7tlGB4Hr65TunHF6Sdi1ndX3A44gl8lyvSF3J7wOonIBUeCbfsrkSDI+/A91WtVWWSE2jd31VUEUnUdnbdhiSAGKNb9vb0gni31QF+F5ZfMu/KNYMFY2SJB8qEF9Yk8WFI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740653169; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=P07Y9+em6TQ0YpcdOuQLsw4N5WzWQShNoV6rX/vAwp0=; 
-	b=jpDQ2nVh/ReuUm/frgAKuagA7MbowZmgAdWZLGy+/vvPRkX2KiS485MU9OyUBsNfaHl73jBDd4DJH8Jup84r2PeBXMPXU3eKLxaGYvoS7hG3yledjb/MOPHsPsmaTWXKWsg4/Zoa2cw/CoLWSZqJZDrXvGH3PYjLiJcvmwboHB8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740653169;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=P07Y9+em6TQ0YpcdOuQLsw4N5WzWQShNoV6rX/vAwp0=;
-	b=F1LekHHU+XYWrxz2ToxORCrdnh/pnLbGUsDiRy8eDuaNOBS6WX8UD2wUva8AsdXz
-	GrCWdOwTWQNSAs/tQ1b3zRBGQQmkBx6lTMHIlj0snGQlsaqw5KEpueQJ9LlUtlDqSjJ
-	rS+Yt3OjF1iQUVdKCQiPcfz1DTG5fYg4Wlf/iW4Y=
-Received: by mx.zohomail.com with SMTPS id 1740652387816361.8871097135559;
-	Thu, 27 Feb 2025 02:33:07 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>
-Subject: [PATCH v1 1/1] cxl/hdm: Verify HDM decoder capabilities after parsing
-Date: Thu, 27 Feb 2025 18:32:51 +0800
-Message-Id: <20250227103251.390147-1-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A+ECPPpM"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so867044a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:46:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740653197; x=1741257997; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NPVgA06tyH3i4HM0WlziuIUTUmSh+HZPXchXbJCW9Ic=;
+        b=A+ECPPpM8hZmiEDwIbyF6B1jM08fqsa/lwyaigz7uWhLLQAWoawEMMQXIEVY0PHwO6
+         IrHEUtdWqwzC50+hrTKUQ2+ZLfV+pfq9YCo5hB1UvMII4VboDbd3ITw7gs4zC5JRa+gS
+         OQzaRHLXoQ9tTWNLgP0EBaGjiBxnuenZUuXphdbkG39/zTSssXBy8d9qlz7R0sQwOkd6
+         3nHIcPhjOqZPtApsoAe0AmeV7ql83BCk/XY1VEinJJrXwDkQy3Y5T/67tkINZAXlTMMw
+         zIutG8o2ufYAuOGyYJpg9+P87zB52nUApHi07S9L3846J+0XmARTgnEeB9u+IPxOJ963
+         SVeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740653197; x=1741257997;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NPVgA06tyH3i4HM0WlziuIUTUmSh+HZPXchXbJCW9Ic=;
+        b=c+NR6mJ+PKGobqGR1s92pegc40fIWR1xmHlzUjPzJqXAsT+RsEQ9b2n7FZVAl/5ff3
+         SJERYwWGleT4PHkg/wyHtHK+GbidiMcr0z9Pz2dutrqEX5wP6QtAtxawtIURJjvlxTkU
+         K7qNXZhTMN3jcmzaNoGagIreFqp6mh72cTkcJRBPIE303whgyEXcAGLFH738EPWfuaho
+         lyY9N0B3z+7gQdflbjdQl2XT4Z3LGjTE2UocqwpX8Q99YoQsOTCLJAXTMosqhAM5gLTz
+         Abcmav7BnPqb/e63Lf64jUHS6d4lDHXuKtrNps/XPQbKC5A7E3t3C7y+dGalh2bArGUL
+         kiLg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcX5pKp42WQRG1QL5dfXiS8NWkZBhB90I+/+jCMndAhkQ9D/86NaqCNTu80LKPLvBlvRLAgFDg960AU3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcLuPTAsSYKye5bJWi7Fys4fpfJ73qGJ0QWH4jF04LH2FZJ71t
+	Ckqvw0LZJNpOVWbg+uwNi6YvQuCeXRShfWym8eSEgo8YjokhX+Azc82fHsM5MCYnxVop28LXVnu
+	9kjg=
+X-Gm-Gg: ASbGncsuyBJhG+pF32DgeknTeSGSBIy2iFAf/qDDsd0Y865/z1JvqppE3KaHeXxCqzK
+	VF4ewCmDP180nyDAH8Gtakvkp471iGYRyKYCnNGKKu+3vI/j8It/oBTH48b2Va098BfuXV2fQdu
+	m2nHvxlI6ZHaD57VrqcCDosCEGZkMPM6T0zJl8XhqkkdBbU4u2qIcl20Ic+QSuRasHZqi+QCV3C
+	OoRNt7zGzz0hdnGsJYsVnqVUQPakZUVmm1EOvKrqD9+qIw/4pgr58zbu30632AnQrzesrnEhkRE
+	CqouIqe7qr8g1f2SbGVs4lpNd9ImyEkAfNvsrfYbVS6WmhNm4bZ+iWvFKtRoVM3LNk6iIkS9qZC
+	u5I78i+GHiA==
+X-Google-Smtp-Source: AGHT+IGloWH6a/M1sg9S+wwEb1NJ4jTuvK9J/b5oBXRjCHdZJoqFRptrBcSe7FBusglyJvCFgwIZTw==
+X-Received: by 2002:a05:6402:4604:b0:5e0:7cc4:ec57 with SMTP id 4fb4d7f45d1cf-5e44bb37281mr23479228a12.31.1740653197543;
+        Thu, 27 Feb 2025 02:46:37 -0800 (PST)
+Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3bb5ad8sm901032a12.34.2025.02.27.02.46.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 02:46:37 -0800 (PST)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Subject: [PATCH v3 0/2] support Linux reboot modes in syscon-reboot
+Date: Thu, 27 Feb 2025 10:46:12 +0000
+Message-Id: <20250227-syscon-reboot-reset-mode-v3-0-959ac53c338a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Feedback-ID: rr08011227c0943d90364cb82e43977bd3000036146dae4918cde90a0f48e2b54b1f01c60f3825064a82e4ee:zu08011227d3f19496acc2fe87961957450000a1e5773b687733c8bf686330abbf024704b5232d2550ba6eff:rf0801122dd0313017268c95b673f66f9f00006272b51ab9fc857ccf2ea6766b3c7c171d5b8fab80748d0d6dfa19fa842c50:ZohoMail
-X-ZohoMailClient: External
+X-B4-Tracking: v=1; b=H4sIAHRCwGcC/43NwQ6CMAyA4VchPTuzFRnTk+9hPDAosERXs5FFQ
+ nh3BzdvnJq/Sb8uECk4inArFgiUXHTsc5SnAtqx8QMJ1+UGlFhJRC3iHFv2IpBlnvKINIk3dyQ
+ qrStjrLnUpCCffwL17rvTj2fu0cWJw7x/SmrbHkCTElJcVausRqV1Q/eX803gM4cBNjXhUQmz1
+ BtpjC5raW39J63r+gOQeAXtCwEAAA==
+X-Change-ID: 20250226-syscon-reboot-reset-mode-566588b847e1
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-devm_cxl_setup_hdm() only checks if decoder_count is 0 after parsing HDM
-decoder capability, But according to the implementation of
-cxl_hdm_decoder_count(), cxlhdm->decoder_count will never be 0.
+This series teaches syscon-reboot some of Linux' different reboot
+modes.
 
-Per CXL specification, the values ranges of decoder_count and
-target_count are limited. Adding a checking for the values of them
-in case hardware initialized them with wrong values.
+Linux supports a couple different reboot modes, but syscon-reboot
+doesn't distinguish between them and issues the same syscon register
+write irrespective of the reboot mode requested by the kernel.
 
-Signed-off-by: Li Ming <ming.li@zohomail.com>
+This is a problem when platforms want to do a cold reboot most of the
+time, which could e.g. wipe RAM etc, but also want to support rebooting
+while keeping RAM contents in certain cases.
+
+One example of such a platform is Google Pixel.
+
+DTs can now specify the existing properties prefixed with one of the
+Linux reboot modes. All the changes to support this are optional and
+opt-in, platforms that don't, or don't specify a register/value/mask
+pair for a specific mode will behave just as before.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-base-commit: 22eea823f69ae39dc060c4027e8d1470803d2e49 cxl/next
----
- drivers/cxl/core/hdm.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+Changes in v3:
+- support <reset-mode>-reg in driver, not just in binding, doh...
+- correctly parse <reset-mode>-offset
+- add a comment for all the BUILD_BUG_ON() checks
+- Link to v2: https://lore.kernel.org/r/20250226-syscon-reboot-reset-mode-v2-0-f80886370bb7@linaro.org
 
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..a98191867c22 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -138,6 +138,34 @@ static bool should_emulate_decoders(struct cxl_endpoint_dvsec_info *info)
- 	return true;
- }
- 
-+static int cxlhdm_decoder_caps_verify(struct cxl_hdm *cxlhdm)
-+{
-+	/*
-+	 * CXL r3.2 section 8.2.4.20.1
-+	 * CXL devices shall not advertise more than 10 decoders,
-+	 * CXL switches and HBs may advertise up to 32 decoders.
-+	 */
-+	if (is_cxl_endpoint(cxlhdm->port) && cxlhdm->decoder_count > 10)
-+		return -EINVAL;
-+	else if (cxlhdm->decoder_count > 32)
-+		return -EINVAL;
-+
-+	/*
-+	 * CXL r3.2 section 8.2.4.20.1
-+	 * target count is applicable only to CXL upstream port and HB.
-+	 * The number of target ports each decoder supports should be
-+	 * one of the numbers 1, 2, 4 or 8.
-+	 */
-+	if (!is_cxl_endpoint(cxlhdm->port) &&
-+	    cxlhdm->target_count != 1 &&
-+	    cxlhdm->target_count != 2 &&
-+	    cxlhdm->target_count != 4 &&
-+	    cxlhdm->target_count != 8)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- /**
-  * devm_cxl_setup_hdm - map HDM decoder component registers
-  * @port: cxl_port to map
-@@ -182,7 +210,8 @@ struct cxl_hdm *devm_cxl_setup_hdm(struct cxl_port *port,
- 	}
- 
- 	parse_hdm_decoder_caps(cxlhdm);
--	if (cxlhdm->decoder_count == 0) {
-+	rc = cxlhdm_decoder_caps_verify(cxlhdm);
-+	if (rc) {
- 		dev_err(dev, "Spec violation. Caps invalid\n");
- 		return ERR_PTR(-ENXIO);
- 	}
+Changes in v2:
+- fix whitespace issues in binding
+- Link to v1: https://lore.kernel.org/r/20250226-syscon-reboot-reset-mode-v1-0-91c1b62166ae@linaro.org
+
+---
+André Draszik (2):
+      dt-bindings: reset: syscon-reboot: support reset modes
+      power: reset: syscon-reboot: support different reset modes
+
+ .../bindings/power/reset/syscon-reboot.yaml        | 74 +++++++++++++++++
+ drivers/power/reset/syscon-reboot.c                | 96 +++++++++++++++++++---
+ 2 files changed, 159 insertions(+), 11 deletions(-)
+---
+base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
+change-id: 20250226-syscon-reboot-reset-mode-566588b847e1
+
+Best regards,
 -- 
-2.34.1
+André Draszik <andre.draszik@linaro.org>
 
