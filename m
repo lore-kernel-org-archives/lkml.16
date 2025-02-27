@@ -1,134 +1,100 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE932777EF;
-	Thu, 27 Feb 2025 22:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111232777E4;
+	Thu, 27 Feb 2025 22:29:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740695313; cv=none; b=sMKNzDsWkuJBjmGpCwrOAnORBW83OoffSHs3WjbGbKFZD81gjJ1lLAdAWxTJtWSBlrcS1eAArYJADSJmluFvtNlP0e9orXId+vEWqhIts1w4w6qfrxBDWE0U3tQzV+9HF2dqVHzscTtEOERsef89XL8r7oRPL/iqFtkrQPv1nw0=
+	t=1740695342; cv=none; b=TQloeigq8FJEoAJAU89P6lrmK8LcLpI9D93wUiDbdHlwjlKVE0Pqv2XkydNnA7QUn009tcP1LeoFX/YbS76e3cWXSAdXRVn32GsbpNoQqwKOCtU+dTOq6Ckdl+PDN06dOqwXPzFn3r6EsaBlWU06f3f4Bg1fmV2/V3JG4N/0oVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740695313; c=relaxed/simple;
-	bh=G+R19zA2mZY26AFFznsKsclDdalHv5+OwDlT2J+5/DI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rEN+A9MBI0zBaCpV3jM0KUcwdNje0aAp9TsGB1ZjRY+AZ+d9zOtJQvYs0OmYmU9JH70eKeH0q+wq/yQEvEJ78HHrH4YNrZqN6y9kDIe44UEty88BIlXLry/BCD8ubDfLQriddfRf6mPvVeD7vrGAbtkTp0jyNzqTAYBvCOMc4Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=b56IiBLK; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1740695342; c=relaxed/simple;
+	bh=JaD+FnEpy+s6FEH08xKKgBCiLA6od6W80/3yvoQsld4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OiPLotQMqAueLaLM9yVhjg4QtRZRytt+Q29NnAY94N2npDy6gZCPsdi+eBaD9lw/2ibR8AeWLlCD1sY/4Ve6jhr/TOq+YJdeTHKQq2Ut4iRW2x6z8x0eZsVPGKZQLpV7ftWInXSve1eGzgDni2v15aM9tpk2xOMXtZHKNDnrlyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tc4vVxHb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="b56IiBLK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1740695307;
-	bh=gcLgbk68LRVHN4P06IKc6hXQzPJSLKXWEyW0JZrnV64=;
-	h=Date:From:To:Cc:Subject:From;
-	b=b56IiBLKW3Cj031YvgaO2gzoBCMOVF6p1GRpf8v4bMjc6ueAW1j8GbtUb0p360fDS
-	 zS+DWWDNCn+4EZmY/cA6EvBMVmdR5V9S/1LdWFf1zKTpfT+9F4bj9/7rcedO/WJSra
-	 XLEr/rTOgvuYopO7R7r45tv1QweU6dLAMLB25s9f94pjVZBj5MlYdvF7EBeo5swfR+
-	 3xFHq/Ry/6tKXXcRh7m2PnX9hZvNFSRn07Tr+DGXbwFPgc1I0E+eug9gLvcSA49cax
-	 P1BuvVmaSFd5vYrhmWLOiAB7m+XHWhmwaT2BP+2zHjmSu//2JnpahAsRIE19HOYjor
-	 ty2qa+x4n3KvA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z3mFl38Trz4wy6;
-	Fri, 28 Feb 2025 09:28:27 +1100 (AEDT)
-Date: Fri, 28 Feb 2025 09:28:26 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Joshua Ashton <joshua@froggi.es>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the bcachefs tree with Linus tree
-Message-ID: <20250228092826.255fec8a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tc4vVxHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7076DC4CEDD;
+	Thu, 27 Feb 2025 22:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740695341;
+	bh=JaD+FnEpy+s6FEH08xKKgBCiLA6od6W80/3yvoQsld4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Tc4vVxHb6aqjkPkupuQqEH/Ks1+On4j8FWplK6sxLp9PICCcDfleAu9+PjycYXqEZ
+	 lp6UUWxdSdd74OPq6etsz2nsufcWA87wYhMkJ7rFcJdNtUGfJzhXLWEs4y/dywvbmG
+	 KhxxyLcRc7hd1aYN42GZPrwbXf8uRr1P+SLl4OSfX6v8bbQRl7rzQsI7MWZAdoXtdw
+	 I7SQNEmdqTzKJuQJQI5FpO6JJ79pS7lt5YPRhjajYKxMgN/FW/A75Q522Jr64KmkEq
+	 g3GbOnOzEVsuw1VnBgdEKtox1DGCNBLvOprB88rafoXmMefyoGkFX3eJqnN4kFRtxn
+	 /80crPvggY2Zw==
+Date: Thu, 27 Feb 2025 14:29:00 -0800
+From: Saeed Mahameed <saeed@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] net/mlx5e: Avoid a hundred
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <Z8DnLGnhV3WxpHyW@x130>
+References: <Z76HzPW1dFTLOSSy@kspp>
+ <Z79iP0glNCZOznu4@x130>
+ <69815658-68cd-46cf-bca1-81119bbdb49a@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/4SruOqN4_oQNzBpxT3aMzAV";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <69815658-68cd-46cf-bca1-81119bbdb49a@embeddedor.com>
 
---Sig_/4SruOqN4_oQNzBpxT3aMzAV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 27 Feb 12:06, Gustavo A. R. Silva wrote:
+>
+>>>
+>>>-struct mlx5e_umr_wqe {
+>>>+struct mlx5e_umr_wqe_hdr {
+>>>    struct mlx5_wqe_ctrl_seg       ctrl;
+>>>    struct mlx5_wqe_umr_ctrl_seg   uctrl;
+>>>    struct mlx5_mkey_seg           mkc;
+>>>+};
+>>>+
+>>>+struct mlx5e_umr_wqe {
+>>>+    struct mlx5e_umr_wqe_hdr hdr;
+>>
+>>You missed or ignored my comment on v0, anyway:
+>>
+>>Can we have struct mlx5e_umr_wq_hdr defined anonymously within
+>>mlx5e_umr_wqe? Let's avoid namespace pollution.
+>
+>I thought your comment was directed to Jabuk.
+>
+>I don't see how to avoid that and at the same time changing
+>the type of the conflicting object and fix the warnings:
+>
+>-			struct mlx5e_umr_wqe   umr_wqe;
+>+			struct mlx5e_umr_wqe_hdr umr_wqe;
+>
+>My first patch avoids the need to introduce a bunch of `hdr.`
+>changes. However, `hdr` is introduced as an identifier for
+>the members grouped in the new type `struct mlx5e_umr_wqe_hdr`.
+>
+>Of course struct_group_tagged() also creates an anonymous struct,
+>which is why we can avoid all those `hdr.` changes in v1.
+>
 
-Hi all,
+I missed the fact that it was used part of another struct that needed only
+the header.
 
-Today's linux-next merge of the bcachefs tree got conflicts in:
+This patch is alright, no need to change anything.
 
-  fs/bcachefs/dirent.h
-  fs/bcachefs/fs-common.c
-  fs/bcachefs/sb-downgrade.c
+Reviewed-by: Saeed Mahameed <saeedm@nvidia.com>
 
-between commit:
-
-  4804f3ac2649 ("bcachefs: Revert directory i_size")
-
-from Linus tree and commits:
-
-  1afdbf54cda5 ("bcachefs: bcachefs_metadata_version_cached_backpointers")
-  713d0639b9f7 ("bcachefs: bcachefs_metadata_version_stripe_backpointers")
-  3e97fc2b1bb1 ("bcachefs: Kill dirent_occupied_size()")
-  bb13a9d96daa ("bcachefs: bcachefs_metadata_version_casefolding")
-
-from the bcachefs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/bcachefs/dirent.h
-index 362b3b2f2f2e,a6e15a012936..000000000000
---- a/fs/bcachefs/dirent.h
-+++ b/fs/bcachefs/dirent.h
-diff --cc fs/bcachefs/fs-common.c
-index 2c3d46ac70c6,ca70a3de805c..000000000000
---- a/fs/bcachefs/fs-common.c
-+++ b/fs/bcachefs/fs-common.c
-diff --cc fs/bcachefs/sb-downgrade.c
-index 051214fdc735,21130eadaf32..000000000000
---- a/fs/bcachefs/sb-downgrade.c
-+++ b/fs/bcachefs/sb-downgrade.c
-@@@ -90,7 -90,16 +90,13 @@@
-  	  BIT_ULL(BCH_RECOVERY_PASS_check_allocations),		\
-  	  BCH_FSCK_ERR_accounting_mismatch,			\
-  	  BCH_FSCK_ERR_accounting_key_replicas_nr_devs_0,	\
-- 	  BCH_FSCK_ERR_accounting_key_junk_at_end)
-+ 	  BCH_FSCK_ERR_accounting_key_junk_at_end)		\
- -	x(directory_size,					\
- -	  BIT_ULL(BCH_RECOVERY_PASS_check_dirents),		\
- -	  BCH_FSCK_ERR_directory_size_mismatch)			\
-+ 	x(cached_backpointers,					\
-+ 	  BIT_ULL(BCH_RECOVERY_PASS_check_extents_to_backpointers),\
-+ 	  BCH_FSCK_ERR_ptr_to_missing_backpointer)		\
-+ 	x(stripe_backpointers,					\
-+ 	  BIT_ULL(BCH_RECOVERY_PASS_check_extents_to_backpointers),\
-+ 	  BCH_FSCK_ERR_ptr_to_missing_backpointer)
- =20
-  #define DOWNGRADE_TABLE()					\
-  	x(bucket_stripe_sectors,				\
-
---Sig_/4SruOqN4_oQNzBpxT3aMzAV
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfA5woACgkQAVBC80lX
-0Gwzfgf8DbToHSzKXL+RWgT+jDZ3R0zJqExvSpMFryMbRVZYD3XQwSDJsDyLowZ9
-DdFgBY+FJcYGxzs/3Id7I76pnCb5H++nM8l3m5BKBzgKQon9lhypOmPZToYjI3qH
-+mHjldRzsIgcuybk/sz0fQ5xm/8PFQsdHzBhLVt2A2CIV72uqhKEwA/KmWkGT3vJ
-j8WCBw6JPuep5KN3uTLAY+YfAs2e8w0YTEYzvDODwm6P2+3Acol7b0Y5N+YctiLQ
-0TPbIq7NU1vD9TpG6dBTxXFthnhMC8m9FoDGEOQk7En1CoRf6zKuaSLhvKBVW82B
-xsSH2ynK5vcWhyIgA3nQAOdjd/n9aQ==
-=t64n
------END PGP SIGNATURE-----
-
---Sig_/4SruOqN4_oQNzBpxT3aMzAV--
+>--
+>Gustavo
