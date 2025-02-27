@@ -1,95 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494251A3178
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E4B1ADFE4
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673526; cv=none; b=iqenmRSgWNjS1Kaj2b+U7o2TZ28nDAknBNC5C8KETj/emnoUnC8MF1o3hsfEXtCqF3uX1xGpGVHD0qnRrC/q7eAnGccWaOKGyHGZBVly7cTnAn5h+DKLsm6I/tfpX+3VjkBhggm3O6pgrhsosPG0tFHTgDfnAnKAe8crozSI8Cg=
+	t=1740673556; cv=none; b=oTXOJcrthu2jTpWEpepiyS9UUmcFmt9ebRd3WvQOKCCBCgUvZNRnCAtcfLqcoeKgPPxHNUOl4qEwu1Tb/2cgzKx30IhXRill7QGWMsGbSe7Br0EoxTApvDpZDgh387as+75invwj1pqi9P/thmb5zgCKLbGvChzxJ1FxfGT1EJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673526; c=relaxed/simple;
-	bh=Y3Svy5k5B+ADYKeS4CvYilWZguABB/CMFmv+WYjzgwk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AdG4iUIyvdajiU7eRvl2kjRv697MW7A80RR6J0MKL+DRJWPqRCRgTVFp7B6WfzaAC/VqjAR54Fl1Sv7R6fN0rdA0bL942DT08xZ6e1GDXdDX51fUAvhsc4dLbXA6IqKOTZLV4hjdAxTJ/8D/A6Fhe4X4mmQJVI6IymaAiF7BcMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LS+e0/dV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740673556; c=relaxed/simple;
+	bh=zhNYYeMAow0BtxLxQNwrj/TtNhqr/Fl7bOoE8dZ4AHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JbTYuxjuveyq5PyMj2Oq2MaAWbgzejLnbWK3NP1R+oRI+xY/R5YuUZrvgC2LKWRAFLnG2xyIx8E93GiBJ197o04BDNbD4rLitWzbV+D5LGQjSauEGljNKAfUAQF6rw5C0ojo3kKWt1IivI1cS3X99HsC0SZrVicgrWw0+8D/xVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RKv2jqK/; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LS+e0/dV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740673524;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y3Svy5k5B+ADYKeS4CvYilWZguABB/CMFmv+WYjzgwk=;
-	b=LS+e0/dV8dJmxwNng1hUzBu5KVJZFRM8qi049XNDOeUlYgUw6TIPxZBpk1QIxf1mhF/pAT
-	BaoXG7AvvETi44hGtwi9qcbDXtYwt+9qxgHkDYUb9kD8PJ7Ro9JUGkjZmzuUNPFYofG2np
-	//MReuzBlnHSxCNDS/mJi6MsLWiwB6A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-n7veetYsOiijxJZiELwI4Q-1; Thu, 27 Feb 2025 11:25:22 -0500
-X-MC-Unique: n7veetYsOiijxJZiELwI4Q-1
-X-Mimecast-MFC-AGG-ID: n7veetYsOiijxJZiELwI4Q_1740673522
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ab456333aso10553465e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:25:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740673521; x=1741278321;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3Svy5k5B+ADYKeS4CvYilWZguABB/CMFmv+WYjzgwk=;
-        b=wTQ4r7VHltsvcKm7M4UkpElbvPZtL6M1zGYPnMw7eSXHfNYLtRAmnBC25WHBzRz/Oi
-         xWFhsNJCFljEQL4Ere4A9D7bRp2ot4ysV2t/qQQNpm1CyvTk/LNQC7/HlJD77iRJM2lj
-         7/N2Anyv9sYt218h+g+JXYFvhWOth2VlUeCtUeu3UXEUtuma6SkhhEq2Dq9wnzsgS2T1
-         SHcAR5kn0JoL/w8CkGd7ohKKHVZG8XAWpoW6HW96Y4HYjeXeIhZei/05K1sehcN78Ixn
-         kOrwbuxtI2BiN3Oz2RAAGaX6lZNFMQ6rfJkgHgafqBa0f3va14JtkaKhJYNhyOYV0kGn
-         iaaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1aqC2W4U8QH7brafxx4o/qODu56uwPiZosYItjFpIoGBJLLIRFl4H6p2Fb0Hprp3V4KlxpOhrihJLK3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO+kd1E5dt94sgdURMXRbl7dAIoKvsFrfNUlgvduQuKYk1FjTA
-	nEUg3P2NRVuiQZ+is5e5aMSWBBE5MWPQwoGAtsP5pBrFiCS8kfTAL0Om9zHbRk4P9jlD9Gnbq2/
-	631mu2uz6sJlORRLlYaGsD6oN33eQikwyZn3OHIuGJnnTkLYTQfq7XHxy3UFuqQ==
-X-Gm-Gg: ASbGncseIgOZt3eCp3/BfAK/caSQOsVyts1ZNxEafAjlQBoyE0UO6lwktHWnQQ8wmLb
-	MqcOwL36cXbtlx0pAJllH7WETrvgUahmKYRp4nIwhM/HOLe0/NG53Iun8Plevi2SQ25eDnLpiC+
-	OaO9UeyS2a18HOEi2IQV9JSKFSQxYsw1s3zXQh65bNC9g9/HNKuVsQlE+UE75MapeWLaeSAJgEa
-	i2Be3vUJm9YX/Pk4/kFNBmcsjSYqKLDEVWs7o19i+ZFMm8/EL1b7qANJOjs3ZbYQ8eBCyiXDq/F
-	tCQkqf/2ir/E9ftdhWAcYTAukjgESQO2kMVXHt8go+feByBbRM5saULDHBs5qmfdR2HSanwYNT6
-	B
-X-Received: by 2002:a05:600c:154e:b0:439:a0a3:a15 with SMTP id 5b1f17b1804b1-43ab0f3c907mr156209955e9.14.1740673521673;
-        Thu, 27 Feb 2025 08:25:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHD2Cn5GyipbzqIO/zWJ4uoL86tZ//w/o6AfHqsI8TaVoCHQqRNsvksdhDS8k6lRaKq48oMcg==
-X-Received: by 2002:a05:600c:154e:b0:439:a0a3:a15 with SMTP id 5b1f17b1804b1-43ab0f3c907mr156209815e9.14.1740673521401;
-        Thu, 27 Feb 2025 08:25:21 -0800 (PST)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b7a27aa85sm27660515e9.28.2025.02.27.08.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 08:25:20 -0800 (PST)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Marcelo Tosatti
- <mtosatti@redhat.com>, Vlastimil Babka <vbabka@suse.cz>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Hocko <mhocko@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Oleg Nesterov <oleg@redhat.com>,
- linux-mm@kvack.org
-Subject: Re: [PATCH 2/6 v2] sched/fair: Use task_work_queued() on numa_work
-In-Reply-To: <20250209223005.11519-3-frederic@kernel.org>
-References: <20250209223005.11519-1-frederic@kernel.org>
- <20250209223005.11519-3-frederic@kernel.org>
-Date: Thu, 27 Feb 2025 17:25:20 +0100
-Message-ID: <xhsmh7c5bl5hr.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RKv2jqK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740673555; x=1772209555;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zhNYYeMAow0BtxLxQNwrj/TtNhqr/Fl7bOoE8dZ4AHU=;
+  b=RKv2jqK/w93NNCgMgNvkMuSiE9WKnN/IsEXJBDdyb5CN+plHlargJZKd
+   Jpeh9JtbtVwij1FOlzV5k/LB/vnGBBqAZ8F3NtATkochiQKCr7gJj/U2/
+   HA0oOXrxdCA6suiFjagdlMOomup2/XadgG8pPybklUjs/YJLV6hIusN/Y
+   rWIXKhdYG3DyybhqpJ9rGZTs1HI4SgZ7JQv3ZonbJCD+nFAQNrW2nmktn
+   VZI8Flhgda90JB56FXHfiHRVYWVbnndeC3CNxSa5CHswqYtSg+PD2L7Md
+   A/n2qkFsmJAyX18lcE2Hhc4kJJ5BrjqG8Jw/39ENPwACv3Nm70KSyXTz+
+   A==;
+X-CSE-ConnectionGUID: mJrLgbghTg2auvBXOTjU0w==
+X-CSE-MsgGUID: xwYJEJWgS/SZ7UDyVwQ4Jg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="66945543"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="66945543"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 08:25:54 -0800
+X-CSE-ConnectionGUID: 7IEA9UGeS66Ek9lDDETxMg==
+X-CSE-MsgGUID: B3+jANRvR3KSDN2PK8w0mA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="122313333"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 27 Feb 2025 08:25:46 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnggn-000DgL-1J;
+	Thu, 27 Feb 2025 16:25:03 +0000
+Date: Fri, 28 Feb 2025 00:19:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vishal Annapurve <vannapurve@google.com>, dave.hansen@linux.intel.com,
+	kirill.shutemov@linux.intel.com, jgross@suse.com,
+	ajay.kaher@broadcom.com, ak@linux.intel.com, tony.luck@intel.com,
+	thomas.lendacky@amd.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com,
+	seanjc@google.com, kai.huang@intel.com, chao.p.peng@linux.intel.com,
+	isaku.yamahata@gmail.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, erdemaktas@google.com,
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com,
+	afranji@google.com, kees@kernel.org, jikos@kernel.org,
+	peterz@infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev, virtualization@lists.linux.dev,
+	bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v6 2/3] x86/tdx: Fix arch_safe_halt() execution for TDX
+ VMs
+Message-ID: <202502272346.iiQ6Dptt-lkp@intel.com>
+References: <20250225004704.603652-3-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225004704.603652-3-vannapurve@google.com>
 
-On 09/02/25 23:30, Frederic Weisbecker wrote:
-> Remove the ad-hoc implementation of task_work_queued().
->
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Hi Vishal,
 
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+kernel test robot noticed the following build errors:
 
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on tip/master linus/master v6.14-rc4 next-20250227]
+[cannot apply to tip/x86/tdx tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Vishal-Annapurve/x86-paravirt-Move-halt-paravirt-calls-under-CONFIG_PARAVIRT/20250225-085043
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250225004704.603652-3-vannapurve%40google.com
+patch subject: [PATCH v6 2/3] x86/tdx: Fix arch_safe_halt() execution for TDX VMs
+config: i386-buildonly-randconfig-003-20250227 (https://download.01.org/0day-ci/archive/20250227/202502272346.iiQ6Dptt-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250227/202502272346.iiQ6Dptt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502272346.iiQ6Dptt-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/kernel/process.c:6:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> arch/x86/kernel/process.c:937:32: error: use of undeclared identifier 'tdx_halt'; did you mean 'tdx_init'?
+     937 |                 static_call_update(x86_idle, tdx_halt);
+         |                                              ^~~~~~~~
+         |                                              tdx_init
+   include/linux/static_call.h:154:42: note: expanded from macro 'static_call_update'
+     154 |         typeof(&STATIC_CALL_TRAMP(name)) __F = (func);                  \
+         |                                                 ^
+   arch/x86/include/asm/tdx.h:123:20: note: 'tdx_init' declared here
+     123 | static inline void tdx_init(void) { }
+         |                    ^
+   2 warnings and 1 error generated.
+
+
+vim +937 arch/x86/kernel/process.c
+
+   919	
+   920	void __init select_idle_routine(void)
+   921	{
+   922		if (boot_option_idle_override == IDLE_POLL) {
+   923			if (IS_ENABLED(CONFIG_SMP) && __max_threads_per_core > 1)
+   924				pr_warn_once("WARNING: polling idle and HT enabled, performance may degrade\n");
+   925			return;
+   926		}
+   927	
+   928		/* Required to guard against xen_set_default_idle() */
+   929		if (x86_idle_set())
+   930			return;
+   931	
+   932		if (prefer_mwait_c1_over_halt()) {
+   933			pr_info("using mwait in idle threads\n");
+   934			static_call_update(x86_idle, mwait_idle);
+   935		} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+   936			pr_info("using TDX aware idle routine\n");
+ > 937			static_call_update(x86_idle, tdx_halt);
+   938		} else {
+   939			static_call_update(x86_idle, default_idle);
+   940		}
+   941	}
+   942	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
