@@ -1,440 +1,180 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D767E22171A
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29D522171A
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740662595; cv=none; b=JXH5EBGMioBU/bmGG8tsM1HU3w3VkJV2G4JPP1vzzH+Cnub035FU4PsDweyh7brPkRkkSH6Ss7FNRqKhQwDLX4wdVS3ViZFd2H7NOk+bjDNRlvweiw6FvmocdOvUWjF1OlilUQXQpdSDHHJkAoga/U5oB+nM7MD/IJaWkd9Wd3g=
+	t=1740662641; cv=none; b=HTsABPrzVabbb1xUQPEzJBJ2Bap95+q5Dg9M55d5xUrW1QqelY0qmmM1imq05qKumVxGETNEZhCIlrTwa3mJKA1a23+V+2UmUT1xEmQiBjKPg4iyN2wKWJ5f8VO2iNCbVn/nP9vjiZm23UIh4NmS6UwNPYZiQ/pyqOT8WSL1duU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740662595; c=relaxed/simple;
-	bh=Efb1yhqV4zYIOKTnZF5G7JuyCcgU9v/kNVgXbrLxcDk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=N5kXAkolUE+YfTVqK6aYZXqGd1M0FeQGJZ451lLwzQzCUgV4WcSXTGdXriPHa5cr/D9BrikFwyxWvOdEHCwRZMecMz8WMuurClb5mTi1js2Pz58qX6a7JM1lqVAcTWUFl3vHJV/yMpBUIuAV87MeE+gbWBEwfjQU2zriCz6gkMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rVz2X/xm; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1740662641; c=relaxed/simple;
+	bh=MLhpjQ2lwp7rMbrwQeE6/UfsJxnmug88WDCpiImBM28=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L54u8SBrDvM48gLHVaGVj4HzlQkNNkrdY4iAlaLOa1HGa99bVm+kokxtqMOHrSaae/RIjC0GLgfIc/ZZ1dgKBZZbbD0x5sNgJMu2p8qtzpGh7mUgcetw4j0JK46fQFV9drfwJ0lTNxTSu1tWZ7ZxCNv/seLe4spghGCwnhxbGu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Sz0Z1wHs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rVz2X/xm"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43ba50406fbso1272995e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:23:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740662591; x=1741267391; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ScvIODhMioXpdAQWUjG4Ar/IdTwtbxdC6jG38Y+sxBU=;
-        b=rVz2X/xmXMeCwzvKB2aM3UKnFaEw0974xfUJA/RCWLF4seYa4IOvwHJKbaspVqgLmk
-         Xb4yoxln66tVMJrdWFyFlzj0ExXvWnjD+9u7VZ8K//f8QLh1HjGXduU6t8rOfCvPU46Z
-         0btGljSaN1RlGG7X+dlEnd75hRTZjzSyArUa11Qe8XOzu3cwDuduluUO+iXmEXaSK8Wj
-         /SfQidACewGsZGY7HxmlJIcJlqZKVk7NgJuEvY3CmBlSGDNQaOCZaEclnsRJkLmxGl6B
-         cmlQLAjNJfkekRahwYqkzjbgfYmz4EglnbG/lpiiaXYyJsjS2JnWKaOw03MFdooznpqt
-         5ohA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sz0Z1wHs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740662638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p+/sVet04sI8XRzD0vhsj+5eFIvMMczIeqA1fuUR4Rw=;
+	b=Sz0Z1wHswwyrH1aJRPAICWnDaL9+Rme8Vg6iqO4HvDccn3EIL0Ytc6JN2dQcdN/Fi0IZz1
+	xyMYcHNb/+7DVa18FQz5EMae731NNQyUIA3MSI8PYivfcC0NHcKaJPahcVoyvNiy6nj8jB
+	Xuau5bPqARCBAvNBGwzWHUrKHphNn/Q=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-fUWnFXvUN_2geeuni-wcNQ-1; Thu, 27 Feb 2025 08:23:57 -0500
+X-MC-Unique: fUWnFXvUN_2geeuni-wcNQ-1
+X-Mimecast-MFC-AGG-ID: fUWnFXvUN_2geeuni-wcNQ_1740662636
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-38f455a8e43so351825f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:23:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740662591; x=1741267391;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ScvIODhMioXpdAQWUjG4Ar/IdTwtbxdC6jG38Y+sxBU=;
-        b=cRlE/cdiS5UBh9y3ZGjh1nhKjHFmfGrVt0RBTYgnEe1UxOrSG6vhKhGqQCRWFFJ+Wp
-         pmQG892OtXJM8SVteKTuUI/yyA+/cAJic6rszmK0Au6Sjw/PShHNKscApHDfIIvbuyy4
-         ZwJLiRsJtHB5pUpFs6+lgsCwd8zCcI/6nAGFNXGfcaBLpy+RuJIR5OC1u7A+T4hqknJV
-         keH2TjkPp54NH2AO6/dwd+9Ubkth9NGljlypK1Gma4f/nBL3+6r3+O1skwp7czzE8jJ7
-         8HOrRv/LaROh53Acw8HoWo8D+TV4Eu0vHrHETKanS/evfvPHRDaRNmBUKzIfuG1th3z4
-         IoXg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0JXmb294Db7M4aX7eMIfm+nBbld9I9rpZVNdFZ6hyvH8avliBnn9bXbUwRkrQpJ3qxpGQc8VEuBprjRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK63rIXTMpyWHBNdB0wsJD6SY4Ar9ik6+MHpBwO/DZPCwMkxMH
-	no7jgqrPcp04BVKTxyYqq1vnjMlcT9rtYscpdi+m8YuGbzF0gCGN38hpRc+BTl1LONd2mMuR2zp
-	Jml6FI7CIFmjIyA==
-X-Google-Smtp-Source: AGHT+IEMEvQ8Up68R5/dRRV4pfxncO3q6iKq/BvOS0GuFO9p+zOQNflD6VgZjiakyJ7gMcGNiROsIZsR6vm74c8=
-X-Received: from wmbjh9.prod.google.com ([2002:a05:600c:a089:b0:439:94f1:365e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:458e:b0:439:8c9c:6d32 with SMTP id 5b1f17b1804b1-43ab9d4c0c3mr79224805e9.13.1740662591266;
- Thu, 27 Feb 2025 05:23:11 -0800 (PST)
-Date: Thu, 27 Feb 2025 13:22:31 +0000
+        d=1e100.net; s=20230601; t=1740662636; x=1741267436;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p+/sVet04sI8XRzD0vhsj+5eFIvMMczIeqA1fuUR4Rw=;
+        b=Gi5MIpC9hxat+M9kmQiZc00maWPNeadIehfa65Mb1gE1Q06js6eP/CHTY4S/tQt+F0
+         xSdG159ch1rS9X1IJ1vgwbHJ4yIm8uFH3OaNX/ah+rUi24V5O3CBm2AnGzGYUBWSq7AK
+         Z8K/oacqXvHWQfDU7B+1EgFch5RoOVVivgxdghmhX9otVRXTZM3V+NxbDnIFf2DST/MF
+         3PxLQ6FZ69u+7nqrGO8AM8ZhjBX9+PrMbV4T79mbcHY6UIO6F1yMVL2UIOUrqC1xp7E4
+         pSyLm7a+0wKmC1lNJukgwLAgG3a/w7IrxOhHbr5+XUSbGyjFOzdS5MAlAm0XcaNFBX74
+         QdDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWeu50Pm6X7G0/iMPmL0mM6m0bkBloxB+uKi5uIJusaxk/8cQ+8Yv4uY+Tn3nEgH2HhYaVUzYlXzEufpek=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzof6yLGIPMulbbiWhueGfhYo+0XHztQaFqWPZGKPGDHILDqWeF
+	IoBFUSos5DFmAENI8XI7YgisxoHpoPz92KAOcZKpmyXRoxzFTmT3ipVCk6pYB5LOf0Nh4DcL6ki
+	u4uW0df07RGI3NtbPXsGUnxibNulEhq3IFN4IUBL8c7iWto+qWWuTO1RPwswNbQ==
+X-Gm-Gg: ASbGnctHXzCFZAqI9BKZAwvvHdQolniEkaz6EZOPvJp66FsZ6688gQTL6fMqjxPaccU
+	ivLlc3XZtburFRTJwU3baeBm6UNJX9WVWQZzMf9mPv6Ujv8E1ZbWFnV8cEkRTxXrx29K76i6z6T
+	B5nGHdaQw2SQ8Wt8zNgSZLurEdggOUEtCPyosxVHwG53ZusVk6ZBbdzVpqK+2TRjMlWtXxOQ1ll
+	6ptYs8e3WKBb/+Bpk7RPSmBh55ukbJTFcpR5op0Gu6a9D+J9YwvYxmZEwnM6mLr2ZLbU5YEFyMP
+	VEszSoKMkUMw+utNblhp9i3or0sh62BgD3tkuUw9tbTkGaWU62tcBi266DI2CQ0=
+X-Received: by 2002:a05:6000:2b01:b0:390:e9e2:828e with SMTP id ffacd0b85a97d-390e9e28568mr585721f8f.32.1740662636382;
+        Thu, 27 Feb 2025 05:23:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFQXzOKzEDenCsFiQtIEa/8g0gcGHJegK46j5f/hefRmdAuM29CTrqDy3E7ROmmChOu9kCEsg==
+X-Received: by 2002:a05:6000:2b01:b0:390:e9e2:828e with SMTP id ffacd0b85a97d-390e9e28568mr585702f8f.32.1740662635947;
+        Thu, 27 Feb 2025 05:23:55 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47b7b6asm2108584f8f.51.2025.02.27.05.23.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 05:23:55 -0800 (PST)
+Date: Thu, 27 Feb 2025 14:23:54 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
+ <anisinha@redhat.com>, Dongjiu Geng <gengdongjiu1@gmail.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 06/21] acpi/ghes: add a firmware file with HEST
+ address
+Message-ID: <20250227142354.711204b1@imammedo.users.ipa.redhat.com>
+In-Reply-To: <ce0db0a85f31a58c44e25198f0ef3614c717cb07.1740653898.git.mchehab+huawei@kernel.org>
+References: <cover.1740653898.git.mchehab+huawei@kernel.org>
+	<ce0db0a85f31a58c44e25198f0ef3614c717cb07.1740653898.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIABZnwGcC/y2MywqAIBAAfyX2nKAbZvUr0SF0rT30wIUIpH9Po
- uPAzGQQSkwCQ5Uh0cXCx17A1BX4dd4XUhwKA2q02hinNhYfiuhJxeMU9VvY6sZiDF1vHZT4TBT 5/sbj9Dwv9/tfcWgAAAA=
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15081; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=Efb1yhqV4zYIOKTnZF5G7JuyCcgU9v/kNVgXbrLxcDk=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBnwGcdfjQ67CZ0jZaNq5LQpKCmgZxZ1Afq0HRlh
- gCE1x+7neCJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZ8BnHQAKCRAEWL7uWMY5
- RuL5D/9UZalGOS9wraC6J++bOFSrBAUvyf31eCiyV8SG0YJGirNJnFU0qOZkv4fwkbAQ82Z0ik+
- +VX3mKOjHu7UDsEpm1TAf8eycvIe4fsqttMEjOykgfU1ZGSS4kz/O9FPa2kXtJzIfaVCl3l5wK6
- gB7ievfsaDRdfPlQYCTDDU+w+lQk9yNHM8E+HGwWu6v8mM46e10S1f4SUo56m0N9rLryukdfv8z
- wyVvoL+nGDB9blQUbl7SWhR8ocZM1y/biSer0ZmFH8mr7lx7SX9uNFwVaHYKBG9TjQBuc56Y4iZ
- KXfBB8CmR3hqSPhafnwK6pqsPKUOT134QZCBx6Sd23mNodhV0tJoBXAerYd5Tdmem+2myX98voN
- RDtCwJzLQ88F1RSWOc6ByK2hTSoQpl0/9OtWRAU5ZR1ham9WOySIQeiUPSGD2f9Go60Oyj/kK7L
- xDS6/7qMPYnhauLcTTtVwiCbYyA0h/MBCBCS9u3hAgTO1esPareFIvwtvoFof9cphKV4nG83eKT
- UeaWTLlaJxHP2UlFIoAqEpjDMHJ+3QMOl1/5rf9pMfKldZKkvpTQ1DGLryPHQFEimatJTMCea61
- iQNXoV9NzDw/NG/tKHq2J42zmuCEA57IdRL1AT2cIjqlBSvbfPXk+cCpeaiF1THRi8uK0q2V7AC iq0t1L4Mwe7AWlQ==
-X-Mailer: b4 0.14.1
-Message-ID: <20250227-miscdevice-fops-change-v1-1-c9e9b75d67eb@google.com>
-Subject: [PATCH] rust: miscdevice: change how f_ops vtable is constructed
-From: Alice Ryhl <aliceryhl@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Christian Schrefl <chrisi.schrefl@gmail.com>, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-I was helping someone with writing a new Rust abstraction, and we were
-using the miscdevice abstraction as an example. While doing this, it
-became clear to me that the way I implemented the f_ops vtable is
-confusing to new Rust users, and that the approach used by the block
-abstractions is less confusing.
+On Thu, 27 Feb 2025 12:03:36 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Thus, update the miscdevice abstractions to use the same approach as
-rust/kernel/block/mq/operations.rs.
-
-Sorry about the large diff. This changes the indentation of a large
-amount of code.
-
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/miscdevice.rs | 297 ++++++++++++++++++++++------------------------
- 1 file changed, 143 insertions(+), 154 deletions(-)
-
-diff --git a/rust/kernel/miscdevice.rs b/rust/kernel/miscdevice.rs
-index e14433b2ab9d..fa9ecc42602a 100644
---- a/rust/kernel/miscdevice.rs
-+++ b/rust/kernel/miscdevice.rs
-@@ -35,7 +35,7 @@ pub const fn into_raw<T: MiscDevice>(self) -> bindings::miscdevice {
-         let mut result: bindings::miscdevice = unsafe { MaybeUninit::zeroed().assume_init() };
-         result.minor = bindings::MISC_DYNAMIC_MINOR as _;
-         result.name = self.name.as_char_ptr();
--        result.fops = create_vtable::<T>();
-+        result.fops = MiscdeviceVTable::<T>::build();
-         result
-     }
- }
-@@ -160,171 +160,160 @@ fn show_fdinfo(
-     }
- }
- 
--const fn create_vtable<T: MiscDevice>() -> &'static bindings::file_operations {
--    const fn maybe_fn<T: Copy>(check: bool, func: T) -> Option<T> {
--        if check {
--            Some(func)
--        } else {
--            None
-+/// A vtable for the file operations of a Rust miscdevice.
-+struct MiscdeviceVTable<T: MiscDevice>(PhantomData<T>);
-+
-+impl<T: MiscDevice> MiscdeviceVTable<T> {
-+    /// # Safety
-+    ///
-+    /// `file` and `inode` must be the file and inode for a file that is undergoing initialization.
-+    /// The file must be associated with a `MiscDeviceRegistration<T>`.
-+    unsafe extern "C" fn open(inode: *mut bindings::inode, raw_file: *mut bindings::file) -> c_int {
-+        // SAFETY: The pointers are valid and for a file being opened.
-+        let ret = unsafe { bindings::generic_file_open(inode, raw_file) };
-+        if ret != 0 {
-+            return ret;
-         }
--    }
- 
--    struct VtableHelper<T: MiscDevice> {
--        _t: PhantomData<T>,
--    }
--    impl<T: MiscDevice> VtableHelper<T> {
--        const VTABLE: bindings::file_operations = bindings::file_operations {
--            open: Some(fops_open::<T>),
--            release: Some(fops_release::<T>),
--            unlocked_ioctl: maybe_fn(T::HAS_IOCTL, fops_ioctl::<T>),
--            #[cfg(CONFIG_COMPAT)]
--            compat_ioctl: if T::HAS_COMPAT_IOCTL {
--                Some(fops_compat_ioctl::<T>)
--            } else if T::HAS_IOCTL {
--                Some(bindings::compat_ptr_ioctl)
--            } else {
--                None
--            },
--            show_fdinfo: maybe_fn(T::HAS_SHOW_FDINFO, fops_show_fdinfo::<T>),
--            // SAFETY: All zeros is a valid value for `bindings::file_operations`.
--            ..unsafe { MaybeUninit::zeroed().assume_init() }
--        };
--    }
-+        // SAFETY: The open call of a file can access the private data.
-+        let misc_ptr = unsafe { (*raw_file).private_data };
- 
--    &VtableHelper::<T>::VTABLE
--}
-+        // SAFETY: This is a miscdevice, so `misc_open()` set the private data to a pointer to the
-+        // associated `struct miscdevice` before calling into this method. Furthermore,
-+        // `misc_open()` ensures that the miscdevice can't be unregistered and freed during this
-+        // call to `fops_open`.
-+        let misc = unsafe { &*misc_ptr.cast::<MiscDeviceRegistration<T>>() };
- 
--/// # Safety
--///
--/// `file` and `inode` must be the file and inode for a file that is undergoing initialization.
--/// The file must be associated with a `MiscDeviceRegistration<T>`.
--unsafe extern "C" fn fops_open<T: MiscDevice>(
--    inode: *mut bindings::inode,
--    raw_file: *mut bindings::file,
--) -> c_int {
--    // SAFETY: The pointers are valid and for a file being opened.
--    let ret = unsafe { bindings::generic_file_open(inode, raw_file) };
--    if ret != 0 {
--        return ret;
--    }
-+        // SAFETY:
-+        // * This underlying file is valid for (much longer than) the duration of `T::open`.
-+        // * There is no active fdget_pos region on the file on this thread.
-+        let file = unsafe { File::from_raw_file(raw_file) };
- 
--    // SAFETY: The open call of a file can access the private data.
--    let misc_ptr = unsafe { (*raw_file).private_data };
--
--    // SAFETY: This is a miscdevice, so `misc_open()` set the private data to a pointer to the
--    // associated `struct miscdevice` before calling into this method. Furthermore, `misc_open()`
--    // ensures that the miscdevice can't be unregistered and freed during this call to `fops_open`.
--    let misc = unsafe { &*misc_ptr.cast::<MiscDeviceRegistration<T>>() };
-+        let ptr = match T::open(file, misc) {
-+            Ok(ptr) => ptr,
-+            Err(err) => return err.to_errno(),
-+        };
- 
--    // SAFETY:
--    // * This underlying file is valid for (much longer than) the duration of `T::open`.
--    // * There is no active fdget_pos region on the file on this thread.
--    let file = unsafe { File::from_raw_file(raw_file) };
-+        // This overwrites the private data with the value specified by the user, changing the type
-+        // of this file's private data. All future accesses to the private data is performed by
-+        // other fops_* methods in this file, which all correctly cast the private data to the new
-+        // type.
-+        //
-+        // SAFETY: The open call of a file can access the private data.
-+        unsafe { (*raw_file).private_data = ptr.into_foreign() };
- 
--    let ptr = match T::open(file, misc) {
--        Ok(ptr) => ptr,
--        Err(err) => return err.to_errno(),
--    };
--
--    // This overwrites the private data with the value specified by the user, changing the type of
--    // this file's private data. All future accesses to the private data is performed by other
--    // fops_* methods in this file, which all correctly cast the private data to the new type.
--    //
--    // SAFETY: The open call of a file can access the private data.
--    unsafe { (*raw_file).private_data = ptr.into_foreign() };
-+        0
-+    }
- 
--    0
--}
-+    /// # Safety
-+    ///
-+    /// `file` and `inode` must be the file and inode for a file that is being released. The file
-+    /// must be associated with a `MiscDeviceRegistration<T>`.
-+    unsafe extern "C" fn release(_inode: *mut bindings::inode, file: *mut bindings::file) -> c_int {
-+        // SAFETY: The release call of a file owns the private data.
-+        let private = unsafe { (*file).private_data };
-+        // SAFETY: The release call of a file owns the private data.
-+        let ptr = unsafe { <T::Ptr as ForeignOwnable>::from_foreign(private) };
-+
-+        // SAFETY:
-+        // * The file is valid for the duration of this call.
-+        // * There is no active fdget_pos region on the file on this thread.
-+        T::release(ptr, unsafe { File::from_raw_file(file) });
-+
-+        0
-+    }
- 
--/// # Safety
--///
--/// `file` and `inode` must be the file and inode for a file that is being released. The file must
--/// be associated with a `MiscDeviceRegistration<T>`.
--unsafe extern "C" fn fops_release<T: MiscDevice>(
--    _inode: *mut bindings::inode,
--    file: *mut bindings::file,
--) -> c_int {
--    // SAFETY: The release call of a file owns the private data.
--    let private = unsafe { (*file).private_data };
--    // SAFETY: The release call of a file owns the private data.
--    let ptr = unsafe { <T::Ptr as ForeignOwnable>::from_foreign(private) };
--
--    // SAFETY:
--    // * The file is valid for the duration of this call.
--    // * There is no active fdget_pos region on the file on this thread.
--    T::release(ptr, unsafe { File::from_raw_file(file) });
--
--    0
--}
-+    /// # Safety
-+    ///
-+    /// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
-+    unsafe extern "C" fn ioctl(file: *mut bindings::file, cmd: c_uint, arg: c_ulong) -> c_long {
-+        // SAFETY: The ioctl call of a file can access the private data.
-+        let private = unsafe { (*file).private_data };
-+        // SAFETY: Ioctl calls can borrow the private data of the file.
-+        let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
-+
-+        // SAFETY:
-+        // * The file is valid for the duration of this call.
-+        // * There is no active fdget_pos region on the file on this thread.
-+        let file = unsafe { File::from_raw_file(file) };
-+
-+        match T::ioctl(device, file, cmd, arg) {
-+            Ok(ret) => ret as c_long,
-+            Err(err) => err.to_errno() as c_long,
-+        }
-+    }
- 
--/// # Safety
--///
--/// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
--unsafe extern "C" fn fops_ioctl<T: MiscDevice>(
--    file: *mut bindings::file,
--    cmd: c_uint,
--    arg: c_ulong,
--) -> c_long {
--    // SAFETY: The ioctl call of a file can access the private data.
--    let private = unsafe { (*file).private_data };
--    // SAFETY: Ioctl calls can borrow the private data of the file.
--    let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
--
--    // SAFETY:
--    // * The file is valid for the duration of this call.
--    // * There is no active fdget_pos region on the file on this thread.
--    let file = unsafe { File::from_raw_file(file) };
--
--    match T::ioctl(device, file, cmd, arg) {
--        Ok(ret) => ret as c_long,
--        Err(err) => err.to_errno() as c_long,
-+    /// # Safety
-+    ///
-+    /// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
-+    #[cfg(CONFIG_COMPAT)]
-+    unsafe extern "C" fn compat_ioctl(
-+        file: *mut bindings::file,
-+        cmd: c_uint,
-+        arg: c_ulong,
-+    ) -> c_long {
-+        // SAFETY: The compat ioctl call of a file can access the private data.
-+        let private = unsafe { (*file).private_data };
-+        // SAFETY: Ioctl calls can borrow the private data of the file.
-+        let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
-+
-+        // SAFETY:
-+        // * The file is valid for the duration of this call.
-+        // * There is no active fdget_pos region on the file on this thread.
-+        let file = unsafe { File::from_raw_file(file) };
-+
-+        match T::compat_ioctl(device, file, cmd, arg) {
-+            Ok(ret) => ret as c_long,
-+            Err(err) => err.to_errno() as c_long,
-+        }
-     }
--}
- 
--/// # Safety
--///
--/// `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
--#[cfg(CONFIG_COMPAT)]
--unsafe extern "C" fn fops_compat_ioctl<T: MiscDevice>(
--    file: *mut bindings::file,
--    cmd: c_uint,
--    arg: c_ulong,
--) -> c_long {
--    // SAFETY: The compat ioctl call of a file can access the private data.
--    let private = unsafe { (*file).private_data };
--    // SAFETY: Ioctl calls can borrow the private data of the file.
--    let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
--
--    // SAFETY:
--    // * The file is valid for the duration of this call.
--    // * There is no active fdget_pos region on the file on this thread.
--    let file = unsafe { File::from_raw_file(file) };
--
--    match T::compat_ioctl(device, file, cmd, arg) {
--        Ok(ret) => ret as c_long,
--        Err(err) => err.to_errno() as c_long,
-+    /// # Safety
-+    ///
-+    /// - `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
-+    /// - `seq_file` must be a valid `struct seq_file` that we can write to.
-+    unsafe extern "C" fn show_fdinfo(seq_file: *mut bindings::seq_file, file: *mut bindings::file) {
-+        // SAFETY: The release call of a file owns the private data.
-+        let private = unsafe { (*file).private_data };
-+        // SAFETY: Ioctl calls can borrow the private data of the file.
-+        let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
-+        // SAFETY:
-+        // * The file is valid for the duration of this call.
-+        // * There is no active fdget_pos region on the file on this thread.
-+        let file = unsafe { File::from_raw_file(file) };
-+        // SAFETY: The caller ensures that the pointer is valid and exclusive for the duration in
-+        // which this method is called.
-+        let m = unsafe { SeqFile::from_raw(seq_file) };
-+
-+        T::show_fdinfo(device, m, file);
-     }
--}
- 
--/// # Safety
--///
--/// - `file` must be a valid file that is associated with a `MiscDeviceRegistration<T>`.
--/// - `seq_file` must be a valid `struct seq_file` that we can write to.
--unsafe extern "C" fn fops_show_fdinfo<T: MiscDevice>(
--    seq_file: *mut bindings::seq_file,
--    file: *mut bindings::file,
--) {
--    // SAFETY: The release call of a file owns the private data.
--    let private = unsafe { (*file).private_data };
--    // SAFETY: Ioctl calls can borrow the private data of the file.
--    let device = unsafe { <T::Ptr as ForeignOwnable>::borrow(private) };
--    // SAFETY:
--    // * The file is valid for the duration of this call.
--    // * There is no active fdget_pos region on the file on this thread.
--    let file = unsafe { File::from_raw_file(file) };
--    // SAFETY: The caller ensures that the pointer is valid and exclusive for the duration in which
--    // this method is called.
--    let m = unsafe { SeqFile::from_raw(seq_file) };
--
--    T::show_fdinfo(device, m, file);
-+    const VTABLE: bindings::file_operations = bindings::file_operations {
-+        open: Some(Self::open),
-+        release: Some(Self::release),
-+        unlocked_ioctl: if T::HAS_IOCTL {
-+            Some(Self::ioctl)
-+        } else {
-+            None
-+        },
-+        #[cfg(CONFIG_COMPAT)]
-+        compat_ioctl: if T::HAS_COMPAT_IOCTL {
-+            Some(Self::compat_ioctl)
-+        } else if T::HAS_IOCTL {
-+            Some(bindings::compat_ptr_ioctl)
-+        } else {
-+            None
-+        },
-+        show_fdinfo: if T::HAS_SHOW_FDINFO {
-+            Some(Self::show_fdinfo)
-+        } else {
-+            None
-+        },
-+        // SAFETY: All zeros is a valid value for `bindings::file_operations`.
-+        ..unsafe { MaybeUninit::zeroed().assume_init() }
-+    };
-+
-+    const fn build() -> &'static bindings::file_operations {
-+        &Self::VTABLE
-+    }
- }
-
----
-base-commit: a64dcfb451e254085a7daee5fe51bf22959d52d3
-change-id: 20250117-miscdevice-fops-change-260352fd8957
-
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+> Store HEST table address at GPA, placing its the start of the table at
+> hest_addr_le variable.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+> ---
+>  hw/acpi/ghes.c         | 20 +++++++++++++++++++-
+>  include/hw/acpi/ghes.h |  7 ++++++-
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/hw/acpi/ghes.c b/hw/acpi/ghes.c
+> index 9243b5ad4acb..8ec423726b3f 100644
+> --- a/hw/acpi/ghes.c
+> +++ b/hw/acpi/ghes.c
+> @@ -30,6 +30,7 @@
+>  
+>  #define ACPI_HW_ERROR_FW_CFG_FILE           "etc/hardware_errors"
+>  #define ACPI_HW_ERROR_ADDR_FW_CFG_FILE      "etc/hardware_errors_addr"
+> +#define ACPI_HEST_ADDR_FW_CFG_FILE          "etc/acpi_table_hest_addr"
+>  
+>  /* The max size in bytes for one error block */
+>  #define ACPI_GHES_MAX_RAW_DATA_LENGTH   (1 * KiB)
+> @@ -341,6 +342,9 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
+>  {
+>      AcpiTable table = { .sig = "HEST", .rev = 1,
+>                          .oem_id = oem_id, .oem_table_id = oem_table_id };
+> +    uint32_t hest_offset;
+> +
+> +    hest_offset = table_data->len;
+>  
+>      build_ghes_error_table(ags, hardware_errors, linker);
+>  
+> @@ -352,6 +356,17 @@ void acpi_build_hest(AcpiGhesState *ags, GArray *table_data,
+>                    ACPI_GHES_NOTIFY_SEA, ACPI_HEST_SRC_ID_SEA);
+>  
+>      acpi_table_end(linker, &table);
+> +
+> +    if (ags->use_hest_addr) {
+> +        /*
+> +         * Tell firmware to write into GPA the address of HEST via fw_cfg,
+> +         * once initialized.
+> +         */
+> +        bios_linker_loader_write_pointer(linker,
+> +                                         ACPI_HEST_ADDR_FW_CFG_FILE, 0,
+> +                                         sizeof(uint64_t),
+> +                                         ACPI_BUILD_TABLE_FILE, hest_offset);
+> +    }
+>  }
+>  
+>  void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
+> @@ -361,7 +376,10 @@ void acpi_ghes_add_fw_cfg(AcpiGhesState *ags, FWCfgState *s,
+>      fw_cfg_add_file(s, ACPI_HW_ERROR_FW_CFG_FILE, hardware_error->data,
+>                      hardware_error->len);
+>  
+> -    if (!ags->use_hest_addr) {
+> +    if (ags->use_hest_addr) {
+> +        fw_cfg_add_file_callback(s, ACPI_HEST_ADDR_FW_CFG_FILE, NULL, NULL,
+> +            NULL, &(ags->hest_addr_le), sizeof(ags->hest_addr_le), false);
+> +    } else {
+>          /* Create a read-write fw_cfg file for Address */
+>          fw_cfg_add_file_callback(s, ACPI_HW_ERROR_ADDR_FW_CFG_FILE, NULL, NULL,
+>              NULL, &(ags->hw_error_le), sizeof(ags->hw_error_le), false);
+> diff --git a/include/hw/acpi/ghes.h b/include/hw/acpi/ghes.h
+> index 5000891f163f..38abe6e3db52 100644
+> --- a/include/hw/acpi/ghes.h
+> +++ b/include/hw/acpi/ghes.h
+> @@ -70,9 +70,14 @@ enum {
+>   * When use_hest_addr is false, the GPA of the etc/hardware_errors firmware
+>   * is stored at hw_error_le. This is the default on QEMU 9.x.
+>   *
+> - * An GPA value equal to zero means that GHES is not present.
+> + * When use_hest_addr is true, the stored offset is placed at hest_addr_le,
+                                             ^^^^^ it's not offset, it's GPA
+please get rid of offset language in this comment.
+        
+> + * meaning an offset from the HEST table address from etc/acpi/tables firmware.
+> + * This is the default for QEMU 10.x and above.
+> + *
+> + * Whe both GPA values are equal to zero means that GHES is not present.
+>   */
+>  typedef struct AcpiGhesState {
+> +    uint64_t hest_addr_le;
+>      uint64_t hw_error_le;
+>      bool use_hest_addr;         /* Currently, always false */
+>  } AcpiGhesState;
 
