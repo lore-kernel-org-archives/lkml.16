@@ -1,125 +1,134 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DB161DC997;
-	Thu, 27 Feb 2025 10:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E38E1EB5E8;
+	Thu, 27 Feb 2025 10:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740653147; cv=none; b=SWBuLBvEJq/ioidkSbgAsQyqoKoqj72aFzZahSeBKUfbKb6AMniDNS+HWoXSlnBixK/FgV0DrhrEemnCiYxUCYMbK0hMf7kzY9dhrZIp24UTUGmGXWQWNIsOp+SOqeT/xgCgSP0NDb++o2GawYrEdo3UReC7owRvYUORWQU8owc=
+	t=1740653153; cv=none; b=tk1J0z/bmvqHCzdXYkNlUHPvhKLDVCArN7UGwiuMD8uC5odeY6nYqScxdhP++MTgrrzV2nlHXAQWSdKUSq8INhOtfTQu012Q4+9cZLpUFvwqtC7MWMn1j1cvQ9+/J5/ff0fAhr1Pq/q2tbEuLIJscCNlikNXBlwJPeNBXW0xyZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740653147; c=relaxed/simple;
-	bh=GF6MqLajYgoE1gfFr2cIFRVWnqQhcZcf8amj44FPoe8=;
+	s=arc-20240116; t=1740653153; c=relaxed/simple;
+	bh=sRc81rsNx8VOK7VP5opBGjZMA86PBpVNKgJXwBSOo24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q6DPSq8spMqjvj0KBh1d1Kfu1fUKIXHbjvIduCK/jEoGn4M9NYfvQi1ZNzxecZuCZQQ0AMgt5qzsbvCTxTrRJvzs7tpzD2JqT86sIfdO3lLhmHDWAQ9k66ctW/oq4oyJZxVvlpOoXaWmrWRBI/k1cTMBF3ntIR5GJ63mKBIwSNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fiwmyp/A; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ccpOgeQBnEbhHpk9S0gwVIvcvzuD8z7ww5FQh4htUddgVwaz/3tMZNnlYbnSL5WeumQsa0rgYqMrhS7xqEo5fcmTeEC3VhuujSr2ofQ7pfd9o2PmX/L1uZeqjy9bhH9B2aoylWX0ZkbqbGBRJVO9DIyxfT+F7vfw0vhbxVr8T8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibIJ0tGN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fiwmyp/A"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abf178f4cf1so45976866b.1;
-        Thu, 27 Feb 2025 02:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740653144; x=1741257944; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GF6MqLajYgoE1gfFr2cIFRVWnqQhcZcf8amj44FPoe8=;
-        b=Fiwmyp/A88XoIEqYU+Imo/uXBfrPlEow7RSkH9lMOz4QY4OUgZpVlc8B2Mmi7hdU27
-         LDYT2RXtu2vpwC79h0ujzyrrhB28lpDWAF+0GcQkQ6YYUPzNMxk6VBrO032ucGp4dUbd
-         jqHbabHZ+Cw0pMRax07ARfOv6CkKJGtOx8NLxKcZalyOUKrlbGw69ociyMlNGxy7d1B1
-         hBIWiYihzBmsS9KqmV0X4pufKr6aIWpiNyLsdXMlTTVrC/gJE7aCo62v4zQsRVs+icsj
-         yg/oxT1V7f1MaqHdUwNkQboHsxkNTbq8KnulZ5jeWg8K5ybwkRQNVaPKvmOiZ9BdCQs9
-         jCXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740653144; x=1741257944;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GF6MqLajYgoE1gfFr2cIFRVWnqQhcZcf8amj44FPoe8=;
-        b=KQvzL5QsZktwaqPedtp3x7TpD81Y6xqmMfSd3anoIz88N3fyVbgYSzQYPJRjg0a5iK
-         8GmeVhZej05hb8N3+wFkd8QXtVr8+4gaYxEz6pn3HVZMrkRlJ1kISaB4eTJwsFtXydH1
-         DkkO8aqavCyDeVfv+WTE+nHKsL7YAi+iPnLdatUfyTpt4sp9vobksWjw52zwnHb2H2by
-         HZfEtzKqBcosL1zrewRjDCClQdvtDMfESm3tRC4E59AhE7iEBPZznMzkGJkSVr3gTIaN
-         ZD3WpTJC+RmKEj56F1tx1nCVWXdFw5a22gjJY+YF/1IacY1H7FrSTC1wDJHX44sNjH7E
-         rMxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXsCelmC7F/fbwuTtYwuN7iB+g5uC7gI3HB6aQusPD7JeliGvKw7ZTDe8czpLjWPyYCP7c1FRcO4tt@vger.kernel.org, AJvYcCXETvVnPHC6H5zGLKySBnQiLy0RiKUxhEQYBqm0yQXNA+tCesvfssCGlSgFGRvb0DTyM5tHElcH9+3+dDo=@vger.kernel.org, AJvYcCXW8/BsEPrZ3MCqjgDzY7tAnQnqqXisB4fiDGLvTTSu3X3RJWNgDIJERgW4kEfg7ao0l2yRZ7jcwp1y6Ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGSm9/TbqzUAI+ThyN9/nxKGIpKoSFL71dv5XynsI0D3OIGb+F
-	Ky2tGH9aNRp6nVd0VwA7YsGTGRjBkuMP+BuDn0ana6gSdk+SVI9l
-X-Gm-Gg: ASbGncv2pm/KnZPFQ8YIKgdDsFPzUVfOK0ywB9Tt76ve1Tdg75uWFkKfukYknI8jRLq
-	UbybIiehuYj1/T/UdCJtKjG8O+VVv13+VLHmsdDA/NCQcf7NC9h40d/jP3sswOx+e3oa0q5/BqU
-	y9BILo3c2qnmI1mCKmMNeIF8WkWM1jEb/08J8cDi5seZr7Xqvig/IqJmw5h9xPeELMN0J18HSVV
-	illJnuR29hjuKVu/+PhAG9MpcaESXRkKcxDI5zQdhigTZFjDBWJQS3roH0XKqanM1li+iL9dCOA
-	FFJ5xVC4r+iiiakbyl0fSbABdlIwv6EpWOcjBFgF9SBQr9njnrvxE0rhTNwKy+DC4UVjlWIAifn
-	GX9Yy7If+LWvS
-X-Google-Smtp-Source: AGHT+IGo5t21gYG6fQyyoESaWcOTheCPaEWx814DqIVAIXSww6J4BbkgEZQX9XG54WIlPguWDPSyPg==
-X-Received: by 2002:a17:907:96ab:b0:ab6:db3e:2649 with SMTP id a640c23a62f3a-abc0d9ca19emr2223415866b.14.1740653143532;
-        Thu, 27 Feb 2025 02:45:43 -0800 (PST)
-Received: from orome (p200300e41f187700f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f18:7700:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c75bfd7sm102641466b.148.2025.02.27.02.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 02:45:42 -0800 (PST)
-Date: Thu, 27 Feb 2025 11:45:40 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Vishwaroop A <va@nvidia.com>
-Cc: jonathanh@nvidia.com, skomatineni@nvidia.com, ldewangan@nvidia.com, 
-	broonie@kernel.org, linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kyarlagadda@nvidia.com, smangipudi@nvidia.com
-Subject: Re: [PATCH v2 4/6] spi: tegra210-quad: remove redundant error
- handling code
-Message-ID: <jj62d2fa5kiwrcerjj7twxqkxjc5bmvc37ipsencfb3rvotwzl@drsp6dv2vm2c>
-References: <s355cib7g6e3gmsy2663pnzx46swhfudpofv2s5tcaytjq4yuj@xqtvoa5p477n>
- <20250212144651.2433086-1-va@nvidia.com>
- <20250212144651.2433086-5-va@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibIJ0tGN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0C9C4CEDD;
+	Thu, 27 Feb 2025 10:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740653152;
+	bh=sRc81rsNx8VOK7VP5opBGjZMA86PBpVNKgJXwBSOo24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ibIJ0tGNCMUjgwabSqp3/JUBa/J327EpdZ6FK+/Ygpb9pmOPvmuY8zFSFaU5wcGYT
+	 dFL1Gg4PooAuVEqg2FbyfDLjjIwWY9JCgB9r1AObMhURA8MOuZpz/ET6weJfysnr0F
+	 FqYqCCi1vfdxo6z8B2J+vWx/rDEWrWPv+ei/aN71Aimv5fyugcLnjJH5lLMNuLUqdO
+	 c0YZSdu6nKpmi8j7mC7AoXNTh3iklM0d1eXzSCeXaGEoaalkMVa+AaToAuCVDwaaFG
+	 v/1VmyblALlu87TiPEgGMuRQ97+DSA/OGL9C50Jx+ql0YE/J/hX4QtFVTHZlHc8mA4
+	 mihgwxlWWLr9A==
+Date: Thu, 27 Feb 2025 11:45:49 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: power: supply: Document Maxim
+ MAX8971 charger
+Message-ID: <20250227-cherubic-mantis-from-betelgeuse-86f5ff@krzk-bin>
+References: <20250226093700.44726-1-clamor95@gmail.com>
+ <20250226093700.44726-2-clamor95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2rxevx6zvipfhukv"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250212144651.2433086-5-va@nvidia.com>
+In-Reply-To: <20250226093700.44726-2-clamor95@gmail.com>
 
+On Wed, Feb 26, 2025 at 11:36:59AM +0200, Svyatoslav Ryhel wrote:
+> +  maxim,fcharge-current-limit-microamp:
+> +    description:
+> +      Fast-Charge current limit
+> +    minimum: 250000
+> +    default: 500000
+> +    maximum: 1550000
+> +
+> +  maxim,fcharge-timer-hours:
+> +    description:
+> +      Fast-Charge timer in hours. Setting this value 3 and lower or 11 and higher
+> +      will disable Fast-Charge timer.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    default: 5
 
---2rxevx6zvipfhukv
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 4/6] spi: tegra210-quad: remove redundant error
- handling code
-MIME-Version: 1.0
+You still did not answer why this is board specific. This was rejected
+in the past because of that reason and nothing here changed. Nothing
+will change without detailed explanation, so use other interfaces if you
+need user-space to configure it (see other drivers, e.g. maxim)
 
-On Wed, Feb 12, 2025 at 02:46:49PM +0000, Vishwaroop A wrote:
-> Remove unnecessary error handling code that terminated transfers and
-> executed delay on errors. This code was redundant as error handling is
-> already done at a higher level in the SPI core.
->=20
-> Fixes: 1b8342cc4a38 ("spi: tegra210-quad: combined sequence mode")
->=20
-> Signed-off-by: Vishwaroop A <va@nvidia.com>
+> +
+> +  maxim,fcharge-rst-threshold-high:
+> +    description:
+> +      Set Fast-Charge reset threshold to -100 mV
+> +    type: boolean
+> +
+> +  maxim,in-current-limit-microamp:
+> +    description:
+> +      Input current limit
+> +    minimum: 100000
+> +    default: 500000
+> +    maximum: 1500000
+> +
+> +  maxim,topoff-timer-minutes:
+> +    description:
+> +      Top-Off timer minutes
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 10, 20, 30, 40, 50, 60, 70]
+> +    default: 30
 
-Again, the blank line can be dropped. Otherwise:
+Same.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+> +
+> +  maxim,topoff-current-threshold-microamp:
+> +    description:
+> +      Top-Off current threshold
+> +    enum: [50000, 100000, 150000, 200000]
+> +    default: 50000
+> +
+> +  maxim,fcharge-usb-current-limit-microamp:
+> +    description:
+> +      Fast-Charge USB current limit
+> +    minimum: 100000
+> +    default: 500000
+> +    maximum: 1500000
+> +
+> +  maxim,fcharge-ac-current-limit-microamp:
+> +    description:
+> +      Fast-Charge AC current limit
+> +    minimum: 100000
+> +    default: 500000
+> +    maximum: 1500000
+> +
+> +  maxim,usb-in-current-limit-microamp:
+> +    description:
+> +      USB Input current limit
+> +    minimum: 100000
+> +    default: 500000
+> +    maximum: 1500000
+> +
+> +  maxim,ac-in-current-limit-microamp:
+> +    description:
+> +      AC Input current limit
+> +    minimum: 100000
+> +    default: 500000
+> +    maximum: 1500000
 
---2rxevx6zvipfhukv
-Content-Type: application/pgp-signature; name="signature.asc"
+Half of these properties as well are not suitable and duplicate existing
+sysfs interface.
 
------BEGIN PGP SIGNATURE-----
+And for remaining, still no battery.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfAQlQACgkQ3SOs138+
-s6ELwg//UDnviL5pzm9ky4WgsRMuYMgGYckIlppa+BPfeHtaxPl2IL3vju1Zl1Kw
-ZzLxD1oEmvBgZ9XwvRz/3J60gXPIRnwdOw0Vf/JasIuC/PdtCCZNkdcjUQkupt7R
-lQo2uDz/7WuA6fo+xyeLxBE2FOIUZfS1kC40mOe607KPTXY4nwEKazqVeBe+5BEQ
-Eyo6h0ZvZg72t7Q6y8Ik2vvM+6To/uH6RB5seNTW/PIfE2kUuIjar60jYIUsiJlQ
-Rj62HX4O3/lVz+KAjM1vrR54+FwS4tJz73Tj1vjOYIEtOlMaANpoGPU+FH3I9fDG
-FcN6xjm5jl8L6u40gF9Kg/kG00tRAHzGnVUs/1Z/hJibIL75JvobqHbQpnHUBkis
-ePI+Yzh6OUPvOrbO2GzWbSbrYhtLMDG0ndAX89Vcvu3gaXB9PzxQb6QIJfljWQKt
-l5cxu5oVc7vh0kNXARZ/VHY/FDI+zdWNW2P4dZyXBOmWCOiRDa34kjduwRADuCiP
-JTb6MkdwNaediMkbpegIRNVS70qvMPD7rDALaM8O1q0kH8yCxExfKHr2+oU7/zuw
-fQDAVOmx3gy6TgFdDPPGBYHcV8DLBjbfxt4h6dlAU26q0UJ8KMcvbR6i10cZfE+K
-Vj8s83w4jEZFddENt79AWDay8bJYTcvNiQQU1v1BZCjJiIunJsU=
-=V9KT
------END PGP SIGNATURE-----
+Best regards,
+Krzysztof
 
---2rxevx6zvipfhukv--
