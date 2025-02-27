@@ -1,107 +1,169 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4F1271260
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 21:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90E61A9B2A;
+	Thu, 27 Feb 2025 21:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692247; cv=none; b=fSynitQgvzM0O80FjNLlYOg5wGFLvuuaqy8akvLO1RPVRgzvFio5WnzCVs6fJlyQcpa5chFC3SYqQ8P8Xm5VkJRCcEpu2nP1OIXAOh5jmvvPkUDTS4KFBxh+1y2JTASsLi/1oZHMOgCdfxm1ZTkVmYyTlSqcssRkhWTGKU1xsQw=
+	t=1740692342; cv=none; b=On9AaZeKk59kTs6PSJvMNfeHJ9ExfNQQ7wIMRxQJH4gFHEeWHiIbydU3gpWcDR6J+JONkitQWCSy40MIfo0H0pXdf79NRkIvVhooCN0y5BSl7Ayws1SBpQ4Fj3/RqVKmlmMDEqPVVVNZWcBK4pRzGOkjWpcOtzvb1UAj8eJDZxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692247; c=relaxed/simple;
-	bh=5YAIDEAQIlp17X0qAKcVjQbHeWTeAeoMEC0RfqDAacI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bgPP1uF9NU7M0oRm61qQSiMK+QMTVjZcd4G08qcdv5PocJ0/GtMYlEoKla7gQY+cJ6WDq5s3+HlHVDNyYIc7aAB6OvSIfKP7uEZBtd4Jw5PmBBGkp+la4sDoN8WF7exbXiwkcfCTZgQqzHprz64wm6NqT+4JBj2srhXq8WWiK18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxATs8ob; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxATs8ob"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B88C4CEDD;
-	Thu, 27 Feb 2025 21:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740692246;
-	bh=5YAIDEAQIlp17X0qAKcVjQbHeWTeAeoMEC0RfqDAacI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jxATs8obU1IWWCZcDpSukolbrGYGGYn/EUd0R4HAK2gbF3hupgFU8xHX0IJRYq3QJ
-	 SmlBdDAqON48Ff8rUgW8Umh2OQeZ+7ur0k+gnGdGj0g3lmEmeqTEIv+XDL9NDqBbVf
-	 cBqZy9jlY80528uramNisE1Ca9MSVrUcNj/+ojOMMsf14Jj448eh5YFsSSY1Tw84gN
-	 IDde9rEFj8uyBGSPhLnZHcDNlklqR1bvO9QD/Rzr1SvFGNAqwR/DUUAxAXee0Tk3Kb
-	 avXR95SpgVmSqlJxRnFZcyl7ZO/GfU0C6LPNroJhJV3wwOPwVLDyNEl1QbjNscJW0m
-	 tDCc7+k9/Q6GA==
-Date: Thu, 27 Feb 2025 22:37:22 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC v1 02/11] x86/fpu/xstate: Introduce xstate order
- table and accessor macro
-Message-ID: <Z8DbEqXaxEB_4wmI@gmail.com>
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250227184502.10288-3-chang.seok.bae@intel.com>
- <Z8C3ZcMgHuBtIjFR@gmail.com>
- <674db309-e206-4bb4-bf99-b3c39bff7973@intel.com>
- <Z8C-xa7WB1kWoxqx@gmail.com>
- <af4ec757-22fd-4438-91fc-d8778998bf07@intel.com>
- <Z8DE0K2EEDe1dQdh@gmail.com>
- <4c71fc86-2d70-4d50-b041-d6ef8c1baf4c@intel.com>
- <Z8DLKj8qdLb7MllO@gmail.com>
- <1fb9325e-4430-4ac8-956f-c5255c9c9971@intel.com>
+	s=arc-20240116; t=1740692342; c=relaxed/simple;
+	bh=0uqM8Rb45de9VzXCu+WOiz+KSieLYf5N5HE7pAVf0ws=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qHtx/1fOlQBrQKHs7SOVu8SDIRH9bm9V20/yu7VyiVjOsjwaKPi7/81aNHTmbVG5Sht4dRHd6zKlrDprbMfmVkZDwamuwFSR0vlS/l9myXF0j4xQGpa9c5NQUa96NLMz6SWwKIwgI13gwwSKdQ9SpSEVei5MoWPLbz/8jiJ8+nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1B6C4CEDD;
+	Thu, 27 Feb 2025 21:39:01 +0000 (UTC)
+Date: Thu, 27 Feb 2025 16:39:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>, Tomas
+ Glozar <tglozar@redhat.com>
+Subject: [PATCH] tracing: Fix bad hist from corrupting named_triggers list
+Message-ID: <20250227163944.1c37f85f@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fb9325e-4430-4ac8-956f-c5255c9c9971@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
-* Dave Hansen <dave.hansen@intel.com> wrote:
+The following commands causes a crash:
 
-> On 2/27/25 12:29, Ingo Molnar wrote:
-> > My '#4' suggestion:
-> > 
-> >  - On bootup the CPU would not have the MPX/AVX bit enabled. So old 
-> >    host kernels are fine as-is.
-> 
-> Could you be specific about "the MPX bit"? Because, first of all, there
-> are a lot more than one bit in play here:
-> 	
->  * The MPX state enumeration in CPUID.0DH:EAX[3:4]
->  * The MPX state enabling in XCR0[3:4]
->  * The MPX ISA enumeration CPUID.07H:EBX[14]
-> 
-> As far as the architecture goes, those XSAVE enabling/enumeration bits
-> are rather independent from the _additional_ X86_FEATURE_MPX ISA CPUID bit.
-> 
-> Like I showed in my earlier example, the CPU enumerates which XSAVE
-> features are available. These enumeration bits in CPUID leaf 0xd *ARE*
-> set at boot independent of any other enabling or enumeration. In this
-> regard, XSAVE enumeration is quite independent of the other parts of the
-> ISA. This could, in theory, be changed to become dependent on some kind
-> of APX enabling. But that would be novel for an XSAVE feature.
+ ~# cd /sys/kernel/tracing/events/rcu/rcu_callback
+ ~# echo 'hist:name=bad:keys=common_pid:onmax(bogus).save(common_pid)' > trigger
+ bash: echo: write error: Invalid argument
+ ~# echo 'hist:name=bad:keys=common_pid' > trigger
 
-Yeah. That would be novel for an XSAVE feature - but so is the change 
-in ordering. With my proposal we'd avoid the 
-xfeature_noncompact_order[] indirection table AFAICS.
+Because the following occurs:
 
-> Right now, the entirety of CPUID.0DH:EAX/EDX is static. It does not 
-> change based on enumeration or other enabling. It can literally come 
-> out of the microcode ROM.
-> 
-> So are you proposing that CPUID.0DH:EAX[3:4] would be 0x0 or 0x3 at 
-> CPU reset? Or, that CPUID.0DH:EAX[3:4] would default to 0x0 at reset 
-> and then flip to 0x3 based on some other kind of novel APX opt-in?
+event_trigger_write() {
+  trigger_process_regex() {
+    event_hist_trigger_parse() {
 
-Yeah, I was thinking of a novel APX opt-in in the CPUID space, 
-triggered via an MSR write or so, only triggered by APX-aware
-host and guest kernels.
+      data = event_trigger_alloc(..);
 
-Old kernels would see 0 in all the legacy MPX state bits.
+      event_trigger_register(.., data) {
+        cmd_ops->reg(.., data, ..) [hist_register_trigger()] {
+          data->ops->init() [event_hist_trigger_init()] {
+            save_named_trigger(name, data) {
+              list_add(&data->named_list, &named_triggers);
+            }
+          }
+        }
+      }
 
-( Assuming this actually works for APX. )
+      ret = create_actions(); (return -EINVAL)
+      if (ret)
+        goto out_unreg;
+[..]
+      ret = hist_trigger_enable(data, ...) {
+        list_add_tail_rcu(&data->list, &file->triggers); <<<---- SKIPPED!!! (this is important!)
+[..]
+ out_unreg:
+      event_hist_unregister(.., data) {
+        cmd_ops->unreg(.., data, ..) [hist_unregister_trigger()] {
+          list_for_each_entry(iter, &file->triggers, list) {
+            if (!hist_trigger_match(data, iter, named_data, false))   <- never matches
+                continue;
+            [..]
+            test = iter;
+          }
+          if (test && test->ops->free) <<<-- test is NULL
 
-Thanks,
+            test->ops->free(test) [event_hist_trigger_free()] {
+              [..]
+              if (data->name)
+                del_named_trigger(data) {
+                  list_del(&data->named_list);  <<<<-- NEVER gets removed!
+                }
+              }
+           }
+         }
 
-	Ingo
+         [..]
+         kfree(data); <<<-- frees item but it is still on list
+
+The next time a hist with name is registered, it causes an u-a-f bug and
+the kernel can crash.
+
+Move the code around such that if event_trigger_register() succeeds, the
+next thing called is hist_trigger_enable() which adds it to the list.
+
+A bunch of actions is called if get_named_trigger_data() returns false.
+But that doesn't need to be called after event_trigger_register(), so it
+can be moved up, allowing event_trigger_register() to be called just
+before hist_trigger_enable() keeping them together and allowing the
+file->triggers to be properly populated.
+
+Cc: stable@vger.kernel.org
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Reported-by: Tomas Glozar <tglozar@redhat.com>
+Tested-by: Tomas Glozar <tglozar@redhat.com>
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Closes: https://lore.kernel.org/all/CAP4=nvTsxjckSBTz=Oe_UYh8keD9_sZC4i++4h72mJLic4_W4A@mail.gmail.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/20250225125356.29236cd1@gandalf.local.home
+
+- Remove extra blank line.
+
+ kernel/trace/trace_events_hist.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..ad7419e24055 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6724,27 +6724,27 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (existing_hist_update_only(glob, trigger_data, file))
+ 		goto out_free;
+ 
+-	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
+-	if (ret < 0)
+-		goto out_free;
++	if (!get_named_trigger_data(trigger_data)) {
+ 
+-	if (get_named_trigger_data(trigger_data))
+-		goto enable;
++		ret = create_actions(hist_data);
++		if (ret)
++			goto out_free;
+ 
+-	ret = create_actions(hist_data);
+-	if (ret)
+-		goto out_unreg;
++		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
++			ret = save_hist_vars(hist_data);
++			if (ret)
++				goto out_free;
++		}
+ 
+-	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+-		ret = save_hist_vars(hist_data);
++		ret = tracing_map_init(hist_data->map);
+ 		if (ret)
+-			goto out_unreg;
++			goto out_free;
+ 	}
+ 
+-	ret = tracing_map_init(hist_data->map);
+-	if (ret)
+-		goto out_unreg;
+-enable:
++	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
++	if (ret < 0)
++		goto out_free;
++
+ 	ret = hist_trigger_enable(trigger_data, file);
+ 	if (ret)
+ 		goto out_unreg;
+-- 
+2.47.2
+
