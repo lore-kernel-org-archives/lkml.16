@@ -1,103 +1,90 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BF526A1AD
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13BD226E97A;
+	Thu, 27 Feb 2025 20:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687843; cv=none; b=aeSpVcoZY1mNXb2T4LwOqUCA2eFCu0p9royjSkHME6/ykDgCinoU97Qy/wj1dpcrkNf9UEaOPvk5vUPYG6xL8KF5j1WydtxqmvPoGmP8igNj8rqraX2deEI/5e39sue8RHpeAA0Vy9jy+kTAch56A/k5ycBRm9LsPDGfrbu2r6I=
+	t=1740687868; cv=none; b=QEX2dTqqEkBV1gJcY+4ToxDaSMaBAldpbm1GWdUAX2Rw5qrvnzVUHdByVl6VR2aYQTvYA506f169PE/D4JTMIw4LBMISXvhc4AUrIKLUXrAIPX2cXHMU+ZkJ0ywZYbUgy2PPwGcrcjxTce0jBklvYNjPlkdAUtm4Bxr9YT9fzZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687843; c=relaxed/simple;
-	bh=xzuDAtDLsMklMIj9X/3E5DszvjVGsPUE/6ktORRqvH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJYlfoFnaH1KCWtSE5WPql0bpLEGQJR18H1zcHwji5vjl6MSOaw8KqdjfpaMNl39zbPhoygxa7LfNGkzUht+eiJ0ENTEzgx9PF4QlcV0gzWPhbrUNKhW3JrXNn55+pwVIBvAzDNeqfcUM+HizDaj5BdqrKiRY4CmrDLXOqwSRH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sXa9rgGI; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740687868; c=relaxed/simple;
+	bh=vKEFN02TyY7ZwOZN17NJzRX12EebHAeazOra1CnCquo=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=tKMpst0xUKM2ZXUYFfPzFRt3/32PPnbcTj/uWYh5fCQ+UiPYa6lF2Rw2NEYhddumliJZboIRWIq5ml84gDjmqhVOmUO88RwalzMrgwZXDEvHHFTbL50Salg6tHoGVTaG1XnvKMlGp1BgEYVD7un6K2p8daIrP8A5M6fnIPqRtQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jcY4i8zt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sXa9rgGI"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307c13298eeso17116781fa.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:24:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740687839; x=1741292639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pyq7rCZAildVjmFezfKBEpeheeeS0M9w2vanP83edP4=;
-        b=sXa9rgGIe72AnWm0kXhbz3sA5TE/JUAwI6iiCqmenS/s2pEofei0vZHc6nvjWCSyNQ
-         XDpD77aRHuidyuC+OXRs7wtDaQs1v9jELmLnKwSR8HxERM5eNJVkLvoLBGNiuKMijhFl
-         p11C2I9WVuxd6mJ1HpR+ABEBKdm/1c2w0WURWljxCJjwZrFekIXGu6NOIUXqXqw4aB+s
-         7BoP3r5y2F4KRaiohrYJfptuXZ6nlxs3cGTb/NDyB508SzRTJWMERZWL3EkesLpyAFZH
-         VGbcQuQc0/VqMCicmazGTA74QJCYlxVO78OowOVCzL8AjU5ZePoJ0ejjBLZYuLG5soxZ
-         NArQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740687839; x=1741292639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pyq7rCZAildVjmFezfKBEpeheeeS0M9w2vanP83edP4=;
-        b=QoAA0BCtiVzQIxBGVnzWPwxPAmHyn+sqO2tZqjp/WnCfrprySMsrH1FoDG/o0Q+Zwv
-         oPmshu6msLf8Q1lv+uyHMucKdrYK72p+N4+gY83vdk5JScKmhyH+3755b/h7x8loFHDJ
-         f07x5Vr48nun1VHPwK1gjCUeXnjbIUyKwZD2bpoior3BdrN39Zw8asYpZpQ/ufYb9xqr
-         By0+RebLdQ6nYsc+UEK+e8/bffKp4L+HOXTmvVcj3gF2etTkDuonUbDpFay7iLwDXKtR
-         aCh+CSp3J0ZBQ8y3dV6GslBZOb6GlAkjVPe+Nkq8NDMK21j4tRzquu55EVzJhuvsSXP7
-         n1Ig==
-X-Forwarded-Encrypted: i=1; AJvYcCWRgENXVfc/xoo9rXtd4LET19IMSvtPGRgjQZhrPyG+YfSpIbjBDasXe23ovjdBlK3v2CrDSBXM6c+w9iQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxasNXFmQedi4zA1vTpoq7paRcrnRLINMFHulaQTa0xEYEyt9jn
-	OIVwcmTVw4hs5xEH/NSafES2dNqO30X6GUnnjv5xWLgR0tmWiohH9W0G11ZOYpCeUmR1shXQ7pQ
-	DnP2WVSkxhhtsP9YJohYnVpR1oYGBdrZq7nVDxQ==
-X-Gm-Gg: ASbGnct6/WnQmgOLn8Icg3CpeOo2ujNmk02/JkKl0HmMbOzQEkal8FjRuvM8rPSUyGX
-	8FhbLB4hoGiLTB7Rv1CN8cfT71ndKxxA1M/EozOn8vQERSdMdzVG71haIp1ErF4+fg5LyJSXygq
-	6qy2pLzxE=
-X-Google-Smtp-Source: AGHT+IF8jr1RPuup3BcxHI4jeLlB8xSlyodMY3QSAvlSz4clUiZCsM6vxrH9ix6FZsUN5FoNEP8fAezlutGEF+kORI0=
-X-Received: by 2002:a2e:b8d1:0:b0:309:1f1a:276b with SMTP id
- 38308e7fff4ca-30b90a0d479mr2534371fa.10.1740687838584; Thu, 27 Feb 2025
- 12:23:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jcY4i8zt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BDFDC4CEDD;
+	Thu, 27 Feb 2025 20:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740687867;
+	bh=vKEFN02TyY7ZwOZN17NJzRX12EebHAeazOra1CnCquo=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=jcY4i8ztzsfWPDQTm5DOUGAh6zBmlu/yzbBczZEzBczuoo7YYCXt/nByGPvJMJjvQ
+	 +z2EWIvbPDUq3NZmzeKKCEbbGovcEdgAcNAxEsQDNQKBqclJXJLQpzib4xekxujQFQ
+	 yTHrVyEL3Oyr7xsBwtLWyS4rym4nVt2Zk69yg+I82GjMwYej3PX1W1DZESVjUg/3xZ
+	 LBjSgwI25CtDJVf/OKE2NcXTFlcRl5Fu0XWLI99v29DaHGS/S5Rd5+/qFQe1m96mUJ
+	 L79zzbBqgG9UZrs7Egr8iswrwZ4w/Ue0uPdfoscJwb89WWrRAhsfiCSnmEeEK1+rK7
+	 I/8m7blhsrCgw==
+Date: Thu, 27 Feb 2025 14:24:25 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220085001.860-1-vulab@iscas.ac.cn>
-In-Reply-To: <20250220085001.860-1-vulab@iscas.ac.cn>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 27 Feb 2025 21:23:47 +0100
-X-Gm-Features: AQ5f1JrSbsBZYhsgrUajyxaLegYWak-pVEINzJX3bUZh51BhE0XwC_gtDg2DUjQ
-Message-ID: <CACRpkdZShkMhO9vTvdbyEzkGLL2+mfnLmADGukNZ-Xw=NNxksQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: nomadik: Add error handling for find_nmk_gpio_from_pin
-To: Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, salee@marvell.com, 
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, 
+ gregory.clement@bootlin.com, p.zabel@pengutronix.de, gakula@marvell.com, 
+ devicetree@vger.kernel.org, andrew@lunn.ch, krzk+dt@kernel.org, 
+ sebastian.hesselbarth@gmail.com
+To: Wilson Ding <dingwei@marvell.com>
+In-Reply-To: <20250227192536.2426490-2-dingwei@marvell.com>
+References: <20250227192536.2426490-1-dingwei@marvell.com>
+ <20250227192536.2426490-2-dingwei@marvell.com>
+Message-Id: <174068786548.161165.4348563654300627455.robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: reset: Add Armada8K reset
+ controller
 
-Hi Wentao,
 
-thanks for your patch!
+On Thu, 27 Feb 2025 11:25:34 -0800, Wilson Ding wrote:
+> Add device-tree binding documentation for the Armada8K reset driver and
+> create the new head file for the reset line index definitions.
+> 
+> Signed-off-by: Wilson Ding <dingwei@marvell.com>
+> ---
+>  .../reset/marvell,armada8k-reset.yaml         | 48 +++++++++++++++++++
+>  .../reset/marvell,armada8k-reset.h            | 27 +++++++++++
+>  2 files changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/marvell,armada8k-reset.yaml
+>  create mode 100644 include/dt-bindings/reset/marvell,armada8k-reset.h
+> 
 
-On Thu, Feb 20, 2025 at 9:51=E2=80=AFAM Wentao Liang <vulab@iscas.ac.cn> wr=
-ote:
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> When find_nmk_gpio_from_pin fails to find a valid GPIO chip
-> for the given pin, the bit variable remains uninitialized. This
-> uninitialized value is then passed to __nmk_gpio_set_mode,
-> leading to undefined behavior and undesired address access.
->
-> To fix this, add error handling to check the return value of
-> find_nmk_gpio_from_pin. Log an error message indicating an
-> invalid pin offset and return -EINVAL immediately  If the function
-> fails.
->
-> Fixes: 75d270fda64d ("gpio: nomadik: request dynamic ID allocation")
-> Cc: stable@vger.kernel.org # 6.9+
+yamllint warnings/errors:
 
-Unnecessary to tag for stable. It is not causing regressions.
-Skip this and apply for nonurgent fixes.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/reset/marvell,armada8k-reset.example.dtb: system-controller@440000: compatible: ['syscon', 'simple-mfd'] is too short
+	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
 
-> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+doc reference errors (make refcheckdocs):
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250227192536.2426490-2-dingwei@marvell.com
 
-Yours,
-Linus Walleij
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
