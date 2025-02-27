@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7681A8403
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B71B1A8402
 	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:01:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740672063; cv=none; b=le9tZtFdAPtn5mtvaXEm7py4h1Nu+GC6sqVDfLH3EAmYBIZ3NMvunnGgvDWEq+oASgutxiyNcmHmGF/F42n0ucrBitXO+FJmio4erlOjMCYNYpKffypSeWkZdW4rkUTC4gvA2wRFOn79TW+y5U0zPSvxkJDCEDSHCrNqNGaaRnQ=
+	t=1740672063; cv=none; b=VINX28ahK5C41F+Ej6wuTgdVW9eirTdnGtA+PjgMqHLIn+gMVM/XbsIwrhIraTRR1njXIii09TsD+mfJ38bS6vJ7hruvME18fp0QBMsL8kEddm3gva7aQ2IeerXHZ9ngBumVT5ylTeSPaQj+nkuA5T8X8srK//zpSoincJaVk9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740672063; c=relaxed/simple;
-	bh=2V2qGBdYTM/mEFLNcLhl2H0xSYVkrwUTZ+ehxBlBqLs=;
+	bh=iDgAO7mir8XQODJDtQvfnJPGdTIDX8Gz9fG7yH7/i1s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVVdyZP4N4hrSUgPBJ191W5IpXXSoU4ePEnYxkiidaR27boWPb67EeoFJl6/y/7mZuIF5GbRJF5lNEruaDYn8QiURmF8LNhC7HniX9dNgzjcB7ui0w1gGRb3eNoQyJVjaDvCAQEATjv6ChEL79HVQEjlrirWPonoQLHIh9llLDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7ieHFW4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uBcSToMGxT+djEmYil5BK9bhLzwzONEMC0h+AZIc0HFeXKKWGzN5MjkhphuGUboIOG/RLRJ7YBBj9evxRVlPRuiYh+vdMIV8k4zsVnT5unW6Ml3sUSe3x+x9k35qv42pahrCIonDAFoJhyVsW9KpQouVbg6EMW2c3SIdJfwxLEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epiYbi+u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7ieHFW4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF96C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epiYbi+u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89229C4CEE6;
 	Thu, 27 Feb 2025 16:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740672062;
-	bh=2V2qGBdYTM/mEFLNcLhl2H0xSYVkrwUTZ+ehxBlBqLs=;
+	bh=iDgAO7mir8XQODJDtQvfnJPGdTIDX8Gz9fG7yH7/i1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L7ieHFW40eJ+G80m492ZISdav7ZnrMklLD0iiW4WnUOiKgj9okzNzmZnq2L8xFha4
-	 uKRlrZB1n31r4ByW+chYfEWZgNEPRxQrDsIZeBXKREmmQfTB8x+gF7S8uZyJudBG74
-	 iGKm5YpiIiwnmKuZ0OOxvm5tTSoo0ix1JoG65KUfgG5EbsdAVj2BIpgqddeMqxs3dx
-	 JJEiYwKFp2fdMIQUYAGo5iewf9hw14e9kGJZvdYxsH9KUgGf+CgPhJDvha63ASr+rH
-	 SspHqPeSSrgJpOC8jOAAwj1p+1wboVk9afPfY+55bv0M1eJPRNUp81jwTixKSR4aGW
-	 Iolif/t8kPxLw==
+	b=epiYbi+uY5SNkVdb+9ROk3zLKivJAVj3NKoqPn/wlfovwB/LEpjdBKFzX4e3VvczO
+	 LT3I75o/eSHOredN0+1gt9TuXzOkhHdpwBF8HGNN+R1pBKw3Pjhy6K0+YBzvRlN9E3
+	 cfMNhh6uStbCQX4f5UN3wMbgxQABJu1bmdS1uJF/tcmZ8rIOxltZ10A8DnvpMA9NnP
+	 bIreSLtkTrGTCAt5XVno4yG5ALvIUB6NQWpFbl+FQtQnwA6vtj+QJQznpGEPVhpMXK
+	 WalRn5CvSW6LnkzitYooyDApefz1EtHV3YFFohOW8ntwCft3tui6yo7A1RmyuPiY9f
+	 MunU2kcCZHqrQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tngJo-000000023at-3KcO;
+	id 1tngJo-000000023al-36Z9;
 	Thu, 27 Feb 2025 17:01:00 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
@@ -40,9 +40,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Ani Sinha <anisinha@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 03/19] tests/acpi: virt: update HEST file with its current data
-Date: Thu, 27 Feb 2025 17:00:41 +0100
-Message-ID: <342f2cbf20eee9cafbee834adc66ae81aa4df37b.1740671863.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v6 01/19] tests/acpi: virt: add an empty HEST file
+Date: Thu, 27 Feb 2025 17:00:39 +0100
+Message-ID: <4d281b9312cac07460ecf7822512031e778ef6b8.1740671863.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740671863.git.mchehab+huawei@kernel.org>
 References: <cover.1740671863.git.mchehab+huawei@kernel.org>
@@ -55,33 +55,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that HEST table is checked for aarch64, add the current
-firmware file.
+Such file will be used to track HEST table changes.
+
+For now, disallow HEST table check until we update it to the
+current data.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Acked-by: Igor Mammedov <imammedo@redhat.com>
 ---
- tests/data/acpi/aarch64/virt/HEST           | Bin 0 -> 132 bytes
- tests/qtest/bios-tables-test-allowed-diff.h |   1 -
- 2 files changed, 1 deletion(-)
+ tests/data/acpi/aarch64/virt/HEST           | 0
+ tests/qtest/bios-tables-test-allowed-diff.h | 1 +
+ 2 files changed, 1 insertion(+)
+ create mode 100644 tests/data/acpi/aarch64/virt/HEST
 
 diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..4c5d8c5b5da5b3241f93cd0839e94272bf6b1486 100644
-GIT binary patch
-literal 132
-zcmeZp4Gw8xU|?W;<mB({5v<@85#X$#prF9Wz`y`vgJ=-uVqjqS|DS;o#%Ew*U|?_n
-dk++-~7#J8hWI!Yi09DHYRr~Kh1c1x}0RY>66afGL
-
-literal 0
-HcmV?d00001
-
+new file mode 100644
+index 000000000000..e69de29bb2d1
 diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index 39901c58d647..dfb8523c8bf4 100644
+index dfb8523c8bf4..39901c58d647 100644
 --- a/tests/qtest/bios-tables-test-allowed-diff.h
 +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1,2 +1 @@
+@@ -1 +1,2 @@
  /* List of comma-separated changed AML files to ignore */
--"tests/data/acpi/aarch64/virt/HEST",
++"tests/data/acpi/aarch64/virt/HEST",
 -- 
 2.48.1
 
