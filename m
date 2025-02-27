@@ -1,113 +1,112 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70497270052
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DE6B231C9F
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665377; cv=none; b=bmrLgRgDdezX7guI8zG0Lp/olWgmk0cXi5AvwUQ0IA6qq7BjP6tvhNg4HYKRtkzOJ3OHMO+A0uLHkEuK6mUzNauKEP0VyNkO/wO3vjzazMiQT0h584T0rYd4u7zCl3FRYKlTAuwdBlSUtURsHMvElA28cU1N7fI2DPk3pX8f0VI=
+	t=1740665451; cv=none; b=B7LhVdaOA6VuIRBgZ4+u7pvqQRSWPobHTziR9+r8Hqiv91URIm9w8o72x6OwwzYJ5TxSzjMnxe139E4uFe1T/wBG0Yr5yEzyxVsag36Sz5pSokHkJYNBnXab5B3F1uSG6N9EC2jriRp3+AKAkLN2a1J2aNNAB6YDvXSr7NYCb0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665377; c=relaxed/simple;
-	bh=y9vG1iPWvDAF6zCHpOPL2jFeK1V+D/mgCVDXY8fpOwA=;
+	s=arc-20240116; t=1740665451; c=relaxed/simple;
+	bh=HvD0GdHLA3qGwMXFiIknEZVlkedmf7OUeodMIEjbRR8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k2V5Or5whcwe3sLODZRRRCZcQWdRdz3o3S0NDxgTv/NTmfC7XO55UlzSKIMiVJFdgyDDuY6GQurYYm73BI/5oHH1TJUUbQFvwPCtRbVAQlQ/WlgSqlizMlm7RLM12STKT261jFPSRhsLwKsCaJ4lPQgNQXGMKYV8EigEtvvbS9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HVBaQDNq; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=pH25ynHIwahOHIy6vdMi+1whAHL13fEbExX0p0cEWtuxHWyzRA1PvV7cH+wHG5IXxYuSPXgwdFcDoP+V4K66CTrsAaVK+zP8H+1rSThfprPRY0Vj3+12WEqFczzLFL7mIiVa6f2cFAL7NFTsJpEecZ0BXU3iwZ/03FxYG/B0OQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xdbx9PVo; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HVBaQDNq"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abb86beea8cso180030566b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:09:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xdbx9PVo"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5485646441cso1029847e87.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:10:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740665374; x=1741270174; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740665447; x=1741270247; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JcmsmIYz/UFt1MRrhtx6/mjCLzpAXjuKYfnRdAxYePk=;
-        b=HVBaQDNqtVUv59TMN+x9onoFn23OAbilh1xRj9bvbYN9SBlgjnOsLq7+/N5hXxkoo4
-         zwZQnOO3ipZpJjpo0KLJD/dw6BvkMCTvirAyxvZPPK9ip5sqOU9ajwG2PkKJ1PPJogj3
-         O+29PZVRWad+LOvY45VZOSsmJoDAuxVrpp4b/b5r0S1pfeEd6HbaT2z85WvKbVK3XlHq
-         imLF5eLUeWawszTWK/VOTd5dN7ACWh05XHGF7oZeGN5NkT4tkRlek9/3LWXBv5xM9Uex
-         OxYFD98coELs9fyzGBmVlA+HYsFMa14A9+AaoyyvNLzi2KhpXDNxPvrLBzarPmdrK5bC
-         99oA==
+        bh=juDHI0+8fEGnnjQA1BeXYd6MutVRHJOKOY+enn7+/qU=;
+        b=xdbx9PVoAZAMRWQPjJvtrKmGBAL2x5O/m4RRtAILMgOHADoiu2jKWmh4JFP2FUkWVv
+         QqpDn3/hbCIEcrptEh8PutNJ4AR2Lxrsbqcaf1vqVHZTB76KCQ+/a+6kCWOOHkT4waF2
+         w3KjjlLOeXFNtdxurGgYaoSb+M6QBcZliWhr7cwaPODtLtrq1/qb2XfPaAw4yafC9hVy
+         95pL72YLBSN/m87BCb5Wluic/UGprCotalgLUqYuJjzUD2maDTCkzhYSAxXQDaxXNOn/
+         S2SHmZNt8r5YjYwBQoqSD0ROT5DeP+DtXE6PVHfdi1val6ELy8DFu1yIF7gVCGINeZ4W
+         8bRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740665374; x=1741270174;
+        d=1e100.net; s=20230601; t=1740665447; x=1741270247;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JcmsmIYz/UFt1MRrhtx6/mjCLzpAXjuKYfnRdAxYePk=;
-        b=FF4vkv8gdDhKiN/EJ9w5UM3ZFWME6NA8Ozd5IzV+7mg7CYv8GipSFrHVr+EdPzmlOt
-         xPPL3eyN+PXsiXnxlniVM8S4VlBPuvMON1lTK1IxMRqGrALgEDVcGVbmiF7AStpmv1/N
-         Qw7ZPaWhmmri6yJbXWo6RcFCevCZKyHCL7LzkgqiMGQWgSrEGvkIRbvnIBZD0ARFxdM1
-         7XHpWUaOFp4Nzy2Tv4lrj4iQJ6Wx5lGdMcKP1vZiZjVu8QnJ836IxrxpylPwU17XMKiE
-         UyCjTjULJWxA1bYWeDzPSUEkXGSHx6ZI/8eXl+7m0Mxd+7Hx7iNhQBygGzcxPu8Uq+hj
-         Vp+A==
-X-Forwarded-Encrypted: i=1; AJvYcCW9WvqsIkNSg00XrHrDWqPNSyIFcAn6sx3zK7cwDFYTHzlURgcMS0nTzml5dEmF0pYa0GNqT3hjc8cajpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvMMc9EX5KWvnCCPsXXDcFOyyHRDT2kz1l4Xsp1QgrmHnPKowa
-	0y+bdi0mlEWNZ5s9Fp5tdj/5psBgnsXbi2f3B2Ow7qM+Ep1HFyl/Bguoh2oqRvlFpgcntGNLrvp
-	O39Vv85I/Zu4iOVMECxOMD+gGFBc=
-X-Gm-Gg: ASbGncuAsGRkFqTKp6x4JJbR50NKSQ2sUiMwMR77uqw1Mrgw0WvepUehYBF9hUjlzd/
-	Lqd6bF1q+lg/Y8DdwYGtqY0EPameIWIG2BDnNi5clSpfq0+b+IE7pKa5iayjGjQq/MAnGEHeqL9
-	XDVKg86AOUdQ==
-X-Google-Smtp-Source: AGHT+IE907VD9IHhyD6lPe//n/YbGaTUME1RK0u3EwA/uCGPb3q9y1DGFusOkBD4Fv5rnhnJo+jEfi76/BFyRVYloUg=
-X-Received: by 2002:a17:907:2cc2:b0:abc:cbf:ff1f with SMTP id
- a640c23a62f3a-abeeef42910mr1090435566b.40.1740665373408; Thu, 27 Feb 2025
- 06:09:33 -0800 (PST)
+        bh=juDHI0+8fEGnnjQA1BeXYd6MutVRHJOKOY+enn7+/qU=;
+        b=CLmPdwqs2266LlVYNFqlIaKzaG2HeVCK8e1/Xs1y/pOuQOlFF70HPb9RR84qaivTKY
+         8JMHeOicxrY7oVprHnyc4BBen2/CoYGuit6Y1pBmXkwcagAHWH0l/1bFvrrW6DRKZpMe
+         5yDBa8f3OK04HN1CrH3uXkIIEggcGOLUIwhA6Uay3mTwiTNs8DojTYxryVJwIOf2CGIh
+         xVdXDIcfPFRCacKTkT68Sz4KenHrIqFZejNPC9Bz+49sEGALFHY6XRaubsDl/H2x6tvG
+         yUCa/uoNORHBMZhfhDEHELEiildn5PbezewWmmwaDRJ33tARK6E0sciiA/0n1bFiD8MZ
+         90KQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkxQNQrMMF4Xblc07MOAwS27jjEZjmnFFkKsDC1R/Lc2RZDFvgT/brIZ2h3YYYcQiRoqJHPaLtJ4qzzM4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz7UOlNpmgjpFMsnLoIOZGtFJixpy4mF0+fbUzBCz9RscWKJB1
+	9Dw96fT3/ldui50qNsrrVQeeZ4BpN+CookQTTGRyIisqwE5F+FN/pjMXHvq1+uydx94XbOVvP0d
+	HvutzyippFsqJZ92xJ3eXPJ6CiaIElRQZbiRbOw==
+X-Gm-Gg: ASbGncuFgDCxGWClzL2FyIjjrjElZuC3u5+aU39hobe6uNpJFWOHVS7QK3oYfSjMp75
+	ZWJgr1Mc7kFA0YJdyDFEwdf2p/9aVdGrh+rY3N1hAeshrKboYWBbv9RDDGprwEtbhLBOf7J1iqA
+	wo6vgyD71U2HoH60iyXMs42HMcKdH4DnmXB4gFckg=
+X-Google-Smtp-Source: AGHT+IGtNGS5FduT7L3EZWOi1jJ+2DJDrbFGiQz7I+jgi0UOPNmby3BbFiuvhopvsKBURmlm7v0tD/b9aNnGJLrVrls=
+X-Received: by 2002:a05:6512:1389:b0:545:c9d:ef26 with SMTP id
+ 2adb3069b0e04-54851108679mr6710310e87.46.1740665446954; Thu, 27 Feb 2025
+ 06:10:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250226213714.4040853-1-arnd@kernel.org> <Z8A_wAbpavm3Ydab@gmail.com>
-In-Reply-To: <Z8A_wAbpavm3Ydab@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 27 Feb 2025 16:08:57 +0200
-X-Gm-Features: AQ5f1Jr9iaICHLVJjScnuMMtRh3FXYUrlzUYmGgdaTjD7F4tb53LiPgw-uRO4zY
-Message-ID: <CAHp75VdUU-=2vjNAjeaQ0-sNVv-Q4GBw3J-ivz9_Bqn_V=M16Q@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] x86: 32-bit cleanups
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andy Shevchenko <andy@kernel.org>, Matthew Wilcox <willy@infradead.org>
+References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
+ <CGME20250227140054eucas1p2bf6e3f2416e11e3c62a704682bf052bf@eucas1p2.samsung.com>
+ <20250220-gpio-set-retval-v2-5-bc4cfd38dae3@linaro.org> <ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com>
+In-Reply-To: <ab3e42c0-70fa-48e0-ac93-ecbffef63507@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 27 Feb 2025 15:10:35 +0100
+X-Gm-Features: AQ5f1JruPIGRSMvfqfGJCo4M_sF2CtpTvVrdot0dr0pbOujavSKKEh_CTipp8d0
+Message-ID: <CAMRc=McnzfHHLUyYczaza1ao-9iPMoQNOmV3Bm2DSMULCmYBTA@mail.gmail.com>
+Subject: Re: [PATCH v2 05/15] gpiolib: introduce gpio_chip setters that return values
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Michael Walle <mwalle@kernel.org>, 
+	Bamvor Jian Zhang <bamv2005@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 12:34=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
-te:
-> * Arnd Bergmann <arnd@kernel.org> wrote:
-
-> > While looking at 32-bit arm cleanups, I came across some related topics
-> > on x86 and ended up making a series for those as well.
+On Thu, Feb 27, 2025 at 3:00=E2=80=AFPM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> On 20.02.2025 10:57, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > Primarily this is about running 32-bit kernels on 64-bit hardware,
-> > which usually works but should probably be discouraged more clearly by
-> > only providing support for features that are used on real 32-bit hardwa=
-re:
+> > Add new variants of the set() and set_multiple() callbacks that have
+> > integer return values allowing to indicate failures to users of the GPI=
+O
+> > consumer API. Until we convert all GPIO providers treewide to using
+> > them, they will live in parallel to the existing ones.
 > >
-> > I found only a few 2003-era high-end servers (HP DL740 and DL760 G2)
-> > that were the only possible remaining uses of HIGHMEM64G and BIGSMP aft=
-er
-> > the removal of 32-bit NUMA machines in 2014. Similarly, there is only
-> > one generation of hardware with support for VT-x.  All these features
-> > can be removed without hurting users.
+> > Make sure that providers cannot define both. Prefer the new ones and
+> > only use the old ones as fallback.
 > >
-> > In the CPU selection, building a 32-bit kernel optimized for AMD K8
-> > or Intel Core2 is anachronistic, so instead only 32-bit CPU types need
-> > to be offered as optimization targets. The "generic" target on 64-bit
-> > turned out to be slightly broken, so I included a fix for that as well.
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+> >       lockdep_assert_held(&gc->gpiodev->srcu);
+> >
+> > -     if (WARN_ON(unlikely(!gc->set_multiple && !gc->set)))
+> > +     if (WARN_ON(unlikely(!gc->set_multiple && !gc->set_multiple_rv)))
+> >               return -EOPNOTSUPP;
+>
+> The above change issues a warning on gpio controllers that doesn't
+> support set_multiple() callbacks at all. I think that this wasn't intende=
+d.
+>
 
+Eek, not at all, thanks for the report, I'll fix it.
 
-> Sweet! I have applied your series to tip:x86/cpu with some minor tweaks
-> and a conflict resolution for pending work in x86/mm. Let's see if
-> anyone complains about the removal of these obsolete features.
-
-A bit of offtopic here since it seems I have not noticed any activity
-in your header dependency clean up series are you planning to rebase
-it at some point? And what is the status in general?
-
---=20
-With Best Regards,
-Andy Shevchenko
+Bartosz
