@@ -1,150 +1,180 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2072.outbound.protection.outlook.com [40.107.102.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3858A25F962;
-	Thu, 27 Feb 2025 15:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668427; cv=none; b=clR51TMU6bTkO5xP0DlAsCvKuWqer0zbYtOmlZ84XP9N5abE4EfoN4VTwBCDdKb1GT00rYpsvV49OrOxa9rdx/fam4g1ZOkQDWtpUQ4pZoCKB6EeBJOvi53689Xge5Chncp7gHrOdUhBR5Xlh5uipawEhN4SenQRGQtkRTpOvWQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668427; c=relaxed/simple;
-	bh=/wEWDdRFvDhvBDXL2VX1k4uW6fkAuxc2yL3wG/BajfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cN/GrzR6Cn4B898Bx8hnP6xBTPl9RNjYTzlOmMx0qXy19PmBGYyBuYaq8StZ4Raykw11oNlVUX+SZnOF7AKcXgnoQp+XDYsCBhkNZjIoN+dvtrtENrU8UxlMJB3Ka8sSV3u6FEI7ONOlN8cTTa5fBgYrZZRsiMZ7t8C1B9a3bEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBodfDEd; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EC7325FA39
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740668441; cv=fail; b=P062htFkpU4NVPOviXAPUS/zn2R46g1kQx4e9GRsAzvCyiTMME+YuxGimUGgVqV9KCONbXr9vL7DAygXh1ZG1aVl61TuLPXeEw+JUkYOM/IZc/uPYOAAL/LIAHbYI+GT9zO5wp7Pe+7Dumt7yUhEbky+gLnFVsW/0LYwTpsyZEk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740668441; c=relaxed/simple;
+	bh=rxs6ro8KIw5rJr7HH7cVTs9qi6aBI0jaLgvlSOAkDE8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NbWJ4Toh+xnZQc7+sDycUOUXnuQsOQhRo17PWIuPF3pXAYC1ARTCG4s6SqfdD9DgCFuXz1BZCO02rm1bmvPdG6wncdGICMcF41abRjrJGXiDPfOCiAyketW3kI2EawUVU/cTojyE8SeCa4P72ajeqj4xf2KN4vS/KWJgr9uX678=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hS6NPc/d; arc=fail smtp.client-ip=40.107.102.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBodfDEd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D07CC4CEDD;
-	Thu, 27 Feb 2025 15:00:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740668426;
-	bh=/wEWDdRFvDhvBDXL2VX1k4uW6fkAuxc2yL3wG/BajfM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FBodfDEd7ufhMdkegCEIXifhmdKJEbQBFH73iRziE7fUxcJG3pQ8uRd5Ykm1o9N2J
-	 ltD8hyx4eDfINE197ZJrIlz/4x9QVixyC/CPKEr4r3SqZw1mLzsJj/xkWqvG+8JYFn
-	 vvFAwFNOQmQHpfc98u/tIpPXdmeIv9RgPrAWziici+0L+qS1Kq0Wcvt88s0YHvC56N
-	 1+hViXT7+UXkey9Arl7pXxMk5CkdKSzNU84JM4Y9ohY4TFUjqHpy/WCXcPKGRw6o8e
-	 XT3AYZzFL096g5xUDK9HZ1VIo88y0oWQBQZs6+FORy7aO2GwDth7KX/MzsYjmUCjlN
-	 /AWimxzp8ao1g==
-Date: Fri, 28 Feb 2025 00:00:21 +0900
-From: William Breathitt Gray <wbg@kernel.org>
-To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
-Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Dharma.B@microchip.com,
-	Ludovic Desroches <ludovic.desroches@microchip.com>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 0/2] microchip-tcb-capture: Add Capture, Compare,
- Overflow etc. events
-Message-ID: <Z8B-BW1JwIrI18E4@ishi>
-References: <20250211151914.313585-3-csokas.bence@prolan.hu>
- <Z7h0AXV1zlgp9Nw-@ishi>
- <8fb9f188-3065-4fdc-a9f1-152cc5959186@prolan.hu>
- <Z7vihBqOgP3fBUVq@ishi>
- <bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu>
- <Z7_xTQeTzD-RH3nH@ishi>
- <7c9941e0-1169-46cd-95b0-785e8f72eb34@prolan.hu>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hS6NPc/d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ygsIdFwnYVDvbjQRDsAqihoaj6khN6IWBAg1fK+CRthEfjTbzXjHgfcx12r58FAdxIvCDfwZPG1rMbmn9aUB7wdsNJHMg9JNK9ClJT6RrYIpdQD1BxY6fOyQhwJz5aKETBEeo8MWpa2R21wPBjvJs+mNgYz49mGzKjiES3Hd8UL1CQ0vb77PTOKW1IqOvdhPY4PGnJetUX7PIYaC8/a9e6AHhIoDwd5EGc/hbM56Dg7GtxpmpqCSohb1P+I1cKf35s3YC3f1KUbHPRc12cvp/jW9ovQjGmKrSnQtVfuGZN1NxT9QEfgpeeWYoSSipAC0E7/f/+/ULHJhok5vh/dk/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pTTcM4s6Ji0Utjr0dht4ziVtpMpxugj+18avtr5sMyE=;
+ b=VvacmCvvT8406mB2vjJVLXE/iaYNTKF3QJCF7aC3WYLcm8tUszVb2YIDWmyzM9KF7DJpCfaOEoHN+KKXWFYamBLrUXiFkpQ2Ngjm7LFticnkKmq8l7fkIsMWapvoAQIfElc2rh01kc8zU0XfY9nE1UA4fNd4n1mbyypPi0kJiLTULjZI2o1mRuBbwG1upR1b9lJIZqOmcJwnVpCCxtweknXkuRum6iIvw1BXHOFcAi0T48HlsgrWzM5InktK5lwE9GyQwgL1d3NlqpWat8SSiPChFdWkWstB/JT4UqzIVP2nSGuetVpY9iNXfBOJg1MTk1pD4SZFyUP4zGSL9GwNAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pTTcM4s6Ji0Utjr0dht4ziVtpMpxugj+18avtr5sMyE=;
+ b=hS6NPc/dRBVO18o0ZT4UHZ9BiPNARLkTUpZ93SoUdiQ/AOoNxUBX9dVS0PDgs3Xm+KiwopmcmDKbW80jsj61+WqZnhO/31eFEkZyZdWyjHGUfWyzecIXEkmudrIZ98hKpUS1fBvyJIHTohvQRp0KT1Ms3r/rW22zDatLqI1uipM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CH0PR12MB8464.namprd12.prod.outlook.com (2603:10b6:610:184::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Thu, 27 Feb
+ 2025 15:00:34 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 15:00:34 +0000
+Message-ID: <8ce9306a-fdee-4a6a-b4da-87e00e807a37@amd.com>
+Date: Thu, 27 Feb 2025 09:00:32 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] accel/amdxdna: Check interrupt register before
+ mailbox_rx_worker exits
+To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>,
+ Lizhi Hou <lizhi.hou@amd.com>, ogabbay@kernel.org, quic_jhugo@quicinc.com,
+ dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org, min.ma@amd.com, max.zhen@amd.com,
+ sonal.santan@amd.com, king.tam@amd.com
+References: <20250226161810.4188334-1-lizhi.hou@amd.com>
+ <41667dcc-b57d-44ff-99cf-5a91dbec1e56@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <41667dcc-b57d-44ff-99cf-5a91dbec1e56@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0164.namprd04.prod.outlook.com
+ (2603:10b6:806:125::19) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JRv2vhZkORQfAtjS"
-Content-Disposition: inline
-In-Reply-To: <7c9941e0-1169-46cd-95b0-785e8f72eb34@prolan.hu>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CH0PR12MB8464:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c9a52e6-a9fa-4b71-a077-08dd573f7c6c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V0Q4UUMrRVU4OGVlNVRwZFh3SHA2VUg4WlJQSjE2ZlhWUGluTUtGdEdwbXAx?=
+ =?utf-8?B?cVI2U2dZWm02VHdrK0hibURXZ0Z3VGhRSkViRFJkRnZhZ0hvYmhHcGo3dU5x?=
+ =?utf-8?B?UnlxbC9pNUVKY3gwMmF6bnVXVWxRc1NFTTBHekE2dllnelhoTzlnYWZVdnZO?=
+ =?utf-8?B?empaY1FnRlc1MHBmQ0JUem9nZ0QrT24yekpmOWs0WjJKaHMxTTZ3MGpWT3Vy?=
+ =?utf-8?B?WURIcG5iN1VnTWZieVNpY21UWjRaWWRHd2tWOXdXL3dYODNzQ3hLTktrN0M1?=
+ =?utf-8?B?UXE3dGZ1Y0x6L3JjSkM1M0RVWVl3WWszaFAySEc4UlFzSGFBWkNqM21IYVdw?=
+ =?utf-8?B?czl5aElacElJYXRmQ0RNWDc2WEZvcGhpaU9rQ1YwdFEzRmY1T2x1SWl2c2lT?=
+ =?utf-8?B?WWNBL2dhcWx6d2ZieDZkd3R4QlVTWmxyalQ2NGwxMmV1d2syL1VSdDEzQzRi?=
+ =?utf-8?B?aGhDd0JqSHUxdW83TjExcDdZVU5LbzRzR2dRd09qNHFDVmVxNGtMQ0E5QTlO?=
+ =?utf-8?B?UXhYQjBjK3NwZ0dXcU1UV3o3bkMveThyUDlVOVJLVlR6dmxhQS8xZVY4a3J3?=
+ =?utf-8?B?VFZsQU5NR2w2emtZN3d0QWdWR2pLS2I4anhic3R6b1ZNSHR1TWl3d1dKRzMw?=
+ =?utf-8?B?dWEyMHFCTndGaFU4bXJzRENucGFvRmt1UWV3Wkt3TWQxbnFsakRyK2k1eGJZ?=
+ =?utf-8?B?SmwwT1RsWkM3cGtNNkxuMWZMM3lYNHB3aEY2a0pYbmgxZW5aM25ZMFV6aHZm?=
+ =?utf-8?B?K1NsWG1oM3dXQ3ErUU1qaFNzVm5BNnFSQkc2Si85QzBCZzMrZ3hBZEVsdEx1?=
+ =?utf-8?B?NGUwTWhFVGpiSUVZUnVHdmhKOFhqM2FsK3JiNWcyQ0pPZ0JaUWFsS3M1SUc5?=
+ =?utf-8?B?d1Z5WjVPbGRzTlFCTnFiN2RLTGtiSFBQNFNtdm1vSHlhL1cwaTkrZDNOVGVK?=
+ =?utf-8?B?QnVnUFUvQ09oMjdjRnBpblc5OEh6T2hEWkEvVktkZklyUzN3NWU4OC9PYVdM?=
+ =?utf-8?B?MCtYZURUczJwVmh3WGxydjFxbUhJM1kyT3QyMmxQN3RWaSsrc2J2WnNaTmpB?=
+ =?utf-8?B?NHF6Uy9jV1I2bzJSUHYrYlYybUVjOVFRaVFCbWZkQktlY0xQOEJ5aDZuR1Nt?=
+ =?utf-8?B?cTdGdG9zU25EVDBpWndVQ0t3T3pSYjNTYU9FcE5XMUxKOVpjYXlRcklWVFZK?=
+ =?utf-8?B?T0NJVGRSRnV2WURZT1N2Sk5mdTZIbkdLMkE5SzNxZTdRYkFkNjdKTUcycGU2?=
+ =?utf-8?B?MHEwTUdsVjJFcnE2TVJ1WHkrSHVlOXJnRmJlTWc2Ri9aaENWSkFwYzZTTVJY?=
+ =?utf-8?B?NWxRdTR0Z2tSMlcyMTFqUWZyRlp4SVMwOXNaaUx0dC9yTlFxdW1YSzJOM0o4?=
+ =?utf-8?B?Z1NYN1V4TnhIdUllZWMxV1BaR01FU1JSV2pMZE1ueHpFbkJEZ3FxV3pBbHVU?=
+ =?utf-8?B?N3Rqay84eTh4TlpHSXFKTUx2Skt5KzVObldiRDhzalJnTndjTlpuN3g3QU1i?=
+ =?utf-8?B?S3drWXp3WjQxU0hiTHo3MU9MTHArQURDNWVCdk0vYzRLTW1hc3BJSXo5ZzB4?=
+ =?utf-8?B?ZEp0NDNxUU11OG4xRUx5VWoraGg1cVRhanJRcnFLR0dxa1JHT1pmWU5LZlgz?=
+ =?utf-8?B?b2xhUG9LZFY1ZlgxT2laR3BMM3pxOWlkUGhjc3ZxSDc0RDZTSHhFcEhGcU9V?=
+ =?utf-8?B?Q2pnMlV2RkZ2OEx3enNVUjVDYkhrQy9McDBqSDRTNGlBMlNKOFVad2F2c0RU?=
+ =?utf-8?B?ajNpQWpuOUpqclppYmhqajRuQVBTclE0ZHVzb3ZJdkxBcisrV25iaUYrUEZu?=
+ =?utf-8?B?ZmZrejJvZDhWS3UxZkZlTlpXQTE2b3pac2hHTVhTTVlLZkxldW1kOW0yZ0hz?=
+ =?utf-8?Q?bVLaognUmrCbd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cEU3b0R6MFFFSXEwdFk2QzY3UEJJUTdHY1g3cFhjVFpzdndHK2FPcmpNbWdB?=
+ =?utf-8?B?ZTlFNlpDOU1xb0pBWVllYjVndCtlYUU0ckUzenRraUFSNFdybHZqL3MyVE9x?=
+ =?utf-8?B?WVFnaGxjWjJxaWdBdVowZVgzblpGSUlnZHNscnVuRjIvbkFwMWw0VUZDcThC?=
+ =?utf-8?B?ektaZnNFL2pKcFQ1Sm5yNStwempWcXUrTjFpdDBKSVNlbm9YaFJIaVBMcFN4?=
+ =?utf-8?B?enZmTXVmYk9UTGhnSkVHMFczTXRaUlFRdUczSDJFdUNFUG1UOTdVQnBlSGlR?=
+ =?utf-8?B?akpZbTVlemR5a0tKNFk2VlI1UnNBcGdYc2ZVV29DZmpoTVA2SThCSDIrWVFw?=
+ =?utf-8?B?WkJ0V09neC80QW94amorcE1rbEUxYkNrZGNhQ1NtdlYyOHU4UkJVbEpocW50?=
+ =?utf-8?B?UnBjMWRnQ2lnVnMvR3JwRTB6R2dmakd2K1hvQnVqYzhUWDlWbUJuNkRpQTlw?=
+ =?utf-8?B?c2hwT2xvcjJTVmwyclY1dUtsVklvRUNhdkxKdGZlWXBRTTdlQXpXVndyM2F1?=
+ =?utf-8?B?cU5aZDlNT3FMbzZURXBBcTlNMzhhYjRwRW9UTGZSY1NuRkdEOVJLbG5oblNM?=
+ =?utf-8?B?UTFSV0theXg1RG9DRnd4QmtvNnA4ejB0QmsrYUZPTEg5MEU4bEt5Q1FXRU5H?=
+ =?utf-8?B?Ti9PcmNQdXhrUjJpL3dtUUdhYWdBOGwzdU12MXVLbFhIU3BHTVQvcTBscTBM?=
+ =?utf-8?B?K3R5ODE5ekFpMzZXcUE2MlgzMkNLWml0YjVac3FXdGs5S3hkOVNRN3NpNWpr?=
+ =?utf-8?B?dzRVVmpOZGp2TGRRUGNkQnZSTkp5MVJ2Wnl4S0VRZzFHTXdiNDRLeGFaTlEr?=
+ =?utf-8?B?YWVIczlFaVZRUDB1K1pMRlVCZS9kWHVRWm5WdWswU1BkUkUwYmVOSW1ScGk4?=
+ =?utf-8?B?N2E4R3JhZ2tLczYyM01jMFQ3b2d6Q1l4bnlDS2YzdHR1ZUVjMzNaZk9NNmdQ?=
+ =?utf-8?B?d1VGNWxhYjYxandBeUpDbm4zZXUrMHB2dUU0ZHlxdnNvbTRMVE5id1FNREh1?=
+ =?utf-8?B?Z1JIUUtzbSswdEkxMmFBTHFjbGYzNjZPTzVYejlhZ1hGTXBubVV0Y3N2cmNV?=
+ =?utf-8?B?djczRTRoajFYV3pZSUEwUFZFWVcwVEhCMDVyUkZQUFJiaC95SW1CZXZCeDFx?=
+ =?utf-8?B?cVFtMDNtRUxaTDcxU1dseExkSi9tMzNDLzJHbzFWbTZ2UnpLRERkWFJubWw3?=
+ =?utf-8?B?OWJ6NGVtYnZWemZSWHhwKy9yc3h6VlQ2Tm94VFovcXNPOGVyNlRGaUx4Y2Ju?=
+ =?utf-8?B?WkF5NWxlQ21yQ1BWUmM1Z3pRNHVua2xSSitaZHg2b1dMSXIwWTYwaUIyc1A2?=
+ =?utf-8?B?TjJHQVBKL0FjY2xWTFVXT2doSUtqcjJHMWJjR1d2NHpRNU44SFVtME1za2Vm?=
+ =?utf-8?B?ZUd3MzhGbkpMdkFLbTVjcDNRS1l6cDc2ZnZ4UW1JMERiSTBiYjZmejgxWmdo?=
+ =?utf-8?B?YkhzR0paN1RoUjEvbCs5UTlmdDluV3VzWEk2UEdRdENyT08wV2RuOG9OZFJC?=
+ =?utf-8?B?czFxSWxoQ3VIS3VvT3dJNDB6R1FVM21ENllsVmt0NG00Uy9pNTlIamxkV3g2?=
+ =?utf-8?B?NDF4ZFI3S1VRUTc2UzRjdVAyUUFZMWIzc1NTSVJZbmVoWHlZV0VCUmpXMVk4?=
+ =?utf-8?B?N2JjMndTMGthY3U0SkFJNVo0MWVVNkFVd0N5MlZnMzNzNlc5YzNxUytUVmxr?=
+ =?utf-8?B?L2ltbjM0T1Z6L05tNkdOQXZ5YWg2eTBpQStrVTZnbFQ0SWpCalI2Tzh5azQ3?=
+ =?utf-8?B?OGhad0NnRU81d1NDTWdHdXpNTFo4dWoxYkRkTmgreWl0REkxT090QlhoKytn?=
+ =?utf-8?B?Nm80eERvZHZhWXNGS0tzcXZVa0hvbllkSm8zdU1QMVJSd0tHT3M1aVR5eVdB?=
+ =?utf-8?B?QmVMREtOQkFGQlZuKzlwVnYyMjNoUlp0YkJ3QmZtaThwaEUxcmRtaUQvR25a?=
+ =?utf-8?B?Z2wyMkVMSXFmUCtEa2ZWUUpVeDhEN21RNjRRZi9LTnM4bEhvaEh5OHgrZVor?=
+ =?utf-8?B?bmc3d3RtbE5qRHNOTmxTQkJ2YXZNMHpLSVhtWXVHSnZLS3pZQVZ2MWtZdHJh?=
+ =?utf-8?B?YVFZQVdVWk5VNDdiK0NQVTEweithQW1EcHpIK3ZEc2dGanFFRTdlaW1Ld0h4?=
+ =?utf-8?Q?Tb49WVkjD1BJ2eh5a3d7FHlkc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c9a52e6-a9fa-4b71-a077-08dd573f7c6c
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 15:00:34.0109
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zznF/rAMsts8UuH+mE0emNMz/sYl6td21FRFoBdvWQJ+PSvR495Yz25w7wa4w7mq9rmAhW8t5Knx/abs8HxM3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8464
 
+On 2/27/2025 02:36, Jacek Lawrynowicz wrote:
+> Reviewed-by: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+> 
+> On 2/26/2025 5:18 PM, Lizhi Hou wrote:
+>> There is a timeout failure been found during stress tests. If the firmware
+>> generates a mailbox response right after driver clears the mailbox channel
+>> interrupt register, the hardware will not generate an interrupt for the
+>> response. This causes the unexpected mailbox command timeout.
+>>
+>> To handle this failure, driver checks the interrupt register before
+>> exiting mailbox_rx_worker(). If there is a new response, driver goes back
+>> to process it.
+>>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+>> ---
 
---JRv2vhZkORQfAtjS
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to drm-misc-next.
 
-On Thu, Feb 27, 2025 at 03:17:55PM +0100, Cs=F3k=E1s Bence wrote:
-> On 2025. 02. 27. 5:59, William Breathitt Gray wrote:
-> > If that is true, then the correct way for this hardware to be exposed is
-> > to have each TCB be a Counter device where each TCC is exposed as a
-> > Count. So for this SoC: two Counter devices as counter0 and counter1;
-> > count0, count1, and count2 as the three TCC; i.e. counter0/count{0,1,2}
-> > and counter1/count{0,1,2}.
->=20
-> And how would the extensions fit into this? `capture{0..6}`/`compare{0..3=
-}?
-> For me, the status quo fits better.
-
-For your patchset here, treat it as if nothing is changing. So leave it
-as capture0 and capture1 exposing RA and RB respectively.
-
-> > With that setup, configurations that affect the entire TCB (e.g. Block
-> > Mode Register) can be exposed as Counter device components. Furthermore,
-> > this would allow users to set Counter watches to collect component
-> > values for the other two Counts while triggering off of the events of
-> > any particular one, which wouldn't be possible if each TCC is isolated
-> > to its own Counter device as is the case right now.
->=20
-> TCCs are pretty self-contained though. BMR only seems to be used
-
-In the Generic Counter Interface, hardware functionality exposure is
-scoped by its influence over particular components of the Generic
-Counter paradigm. That means, configurations that affect a particular
-Count are grouped under that Count (i.e. "count0/enable" enables Count0)
-while configurations that affect a particular Signal are grouped under
-that Signal (i.e. "signal2/polarity" sets Signal2's polarity).
-
-In the same way, configurations that affect the Counter device as a
-whole are exposed as device components. That's what the functionality
-BMR provides does, so it's appropriate to expose it as several Counter
-device components.
-
-Right now the microchip-tcb-capture doesn't do much with BMR, but
-looking at the datasheet I see that it does have the capable to
-configure several settings that affect the entire TCB. For example, you
-can swap PHA and PHB (via SWAP bit), you can enable autocorrection for
-missing pulses (via AUTOC bit), you can define a maximum filter threshold
-(via MAXFILT bitfield), etc. These are controls users would expect to
-find as Counter device components rather than Count components for
-example.
-
-> > Regardless, the three TCC of each TCB should be grouped together
-> > logically as they can represent related values. For example,  when using
-> > the quadrature decoder TTC0 CV can represent Speed/Position while TTC1
-> > CV represents rotation, thus giving a high level of precision on motion
-> > system position as the datasheet points out.
->=20
-> From what I gathered from looking at the code, the quadrature mode uses a
-> hardware decoder that gives us processed values already. Though I don't u=
-se
-> it, so I don't know any specifics.
->=20
-> One more thing, as Kamel pointed it out, the current implementation allows
-> channels of a TCB to perform different functions, e.g. one used for PWM, =
-one
-> for clocksource and a third for counter capture. Whether that works in
-> practice, I cannot tell either, we only use TCB0 channel 0 for clocksource
-> and TCB1 channel 1 for the counter.
-
-In theory this shouldn't be a problem because the counter driver
-shouldn't try to perform non-counter functions, just expose the
-counter-specific ones when available. We would need to check which mode
-the channel is in and return -EBUSY if that respective channel's
-components are accessed during a non-supported mode. This is how we
-handle similar situations in other counter driver such as the
-stm32-lptimer-cnt and intel-qep modules.
-
-William Breathitt Gray
-
---JRv2vhZkORQfAtjS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ8B+BQAKCRC1SFbKvhIj
-K2B7AP92Bqn5O1QmN/PsfBvrBJMxb/B6Caf8ZfWiXnKGsj0irwD+O+0ifNToacDX
-/+9P6G5lzlqM3moVhdFNPdXC6ZCMjwc=
-=sDy7
------END PGP SIGNATURE-----
-
---JRv2vhZkORQfAtjS--
+cd740b873f8f6 accel/amdxdna: Check interrupt register before 
+mailbox_rx_worker exits
