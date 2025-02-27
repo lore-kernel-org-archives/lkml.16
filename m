@@ -1,111 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237E3270EC2;
-	Thu, 27 Feb 2025 20:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488C01C07E6
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:17:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687412; cv=none; b=F91gdpX3/e788cc/I0rYghvD+eon06pEYLyaaUaZNBk13Cl5Vjt2VX2NgNur21VQa8SRQ0lhO0gSjivstStOiZSb/mZfJZBf4dBUtCxXa7XpOIHEUoWdMtqs5tTxFzKfIhf9bHCnc94IvYUXoopUStRR/fvAq2MhgM6wsfZzO3I=
+	t=1740687477; cv=none; b=nTE6M7BK10bYSebCdY4Vv1MZChFcWV02QnuZYVGK+yQLIeXyUbq2h0qvwPnQ3slwRC/PLAgRm5x95n01PDe7J4YJSB22y+RTOi4NXybIbQW7Yufbduk2lvUZtd0c/uSHhHlwXWx5xKhKtD6RvnTr6jD2c4UmU8RFvvAebh/T+N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687412; c=relaxed/simple;
-	bh=u/WBbs8Z9UKHIkogoCWdbAXz2ECojKaS6AJbiEVHGAs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=rMoTafzxRbZS9rQte2jF8/3FnPMO7MYUPCCzgmNW531Ubo0uMYF1uffEslJ4WCh1ApB7GpL4kc8B9GSaLg9gaqHL8y7zuztfrrOrTvwSL7C2pJ+NZyCDBhRgZRHUNFkKURFO5vXU8P0z4MS7fk5dsz5+7En6zgfpQPifRw3n++Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NrTe7+wk; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740687477; c=relaxed/simple;
+	bh=G/054Nv3DeDkCI6uFnnAcRJt0QJ+9qUsRTrMWf+Ayi0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MjoLmYWkMJEbVb1gh/wW6ny8lfbxf5naNBnmyLwapnAX95n/gstumNKsFl+VNTlxJoohuY4ypkqfLoULrEK0+txijAcvzPEqVb1uUl1wjYFx5rKJzJCr7iAMvCsNFE+EzwcFBAd7ITD4PogpZo/EjihwxI92MK1Krry3v6K8pQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpbRLRIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NrTe7+wk"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RIwsfw015555;
-	Thu, 27 Feb 2025 20:16:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	PmEAF+IwLh1hi2oj/d9Appoy0Pc9jL/Y6LJg3J0jdnA=; b=NrTe7+wkCpKMpvxi
-	yDXHmLdS1pkFoVUpqtH1Pohr1ELp/ClEpOuPLEhNIgGbFXxcUsPzx6rBF6ve3EUG
-	sBCaZzstSl3BZWMdmJ8Ydav2Q2EhR8Vgz4yhru/jYXEbekZQyDkMkjWuuVRYPOk/
-	bT7D/QxxtDJKC56AFCPTGJSfQ7j8alOPYUdZaof2vnDH3FfGLysnjIRMjbtn3uj2
-	IJt85ZOe5UuVPHFrF1rS0lNC01ZF/1gIHFN/jEYNKZgbhaMLCDEZt6gELEPa9aO0
-	deLRZKMjBwIP4ONbD9bMBPQOIe4Eh/ACS3MPWJ1VxwLpwkSFJ6FgbRLTzguonODb
-	s/eX2g==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prnpyqu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 20:16:43 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51RKGgGZ030127
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 20:16:42 GMT
-Received: from hu-arakshit-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 27 Feb 2025 12:16:38 -0800
-From: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-Date: Fri, 28 Feb 2025 01:45:54 +0530
-Subject: [PATCH v2 1/2] dt-bindings: crypto: qcom,prng: document QCS615
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpbRLRIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 599FDC4CEDD;
+	Thu, 27 Feb 2025 20:17:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740687475;
+	bh=G/054Nv3DeDkCI6uFnnAcRJt0QJ+9qUsRTrMWf+Ayi0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DpbRLRIF+KR68tniydOvRXbQ5JVa/T1O/frJZrvpWmV1JlDNJJwjyszjCqDHWl0nA
+	 n8jVQ2d4xc5n1UMd7KdmmRE77txsGv8Wj1w2Qt4InwklIPmLKMpTreTYDuyPcV8uUu
+	 TDW16JHaBEDmFpTO9XyX6jjjPguCZL6Zc/wqG4M1VfH8JTXn3pi7NWR2oopEJXhXqO
+	 pkyAe0AGGayIIznw2/Di1CLhKtrXGq8EkIq6Aonj5vfhuh85T2WEzGzbaEqASnIrC/
+	 3ttJVsaR2g9AR/NVqS1wt5sxbUYLOegG9LKzzSks2vNxLbfXqfv6meIAILu2sbDEEn
+	 lWjEppu87rsww==
+Date: Thu, 27 Feb 2025 21:17:48 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"H . Peter Anvin" <hpa@zytor.com>, Uros Bizjak <ubizjak@gmail.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	Eric Biggers <ebiggers@google.com>, Xin Li <xin3.li@intel.com>,
+	Alexander Shishkin <alexander.shishkin@intel.com>,
+	Kirill Shutemov <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] x86/cpufeature: Add feature dependency checks
+Message-ID: <Z8DIbMcUWEQYlL5w@gmail.com>
+References: <20241210224037.3052555-1-sohil.mehta@intel.com>
+ <Z8Cy-IonwmCGNkkQ@gmail.com>
+ <8b174f56-191b-45bd-93ec-4c6444c770a5@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250228-enable-trng-for-qcs615-v2-1-017aa858576e@quicinc.com>
-References: <20250228-enable-trng-for-qcs615-v2-0-017aa858576e@quicinc.com>
-In-Reply-To: <20250228-enable-trng-for-qcs615-v2-0-017aa858576e@quicinc.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Vinod Koul
-	<vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Abhinaba
- Rakshit" <quic_arakshit@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Xr7w0IIbNVsseAA8VeCBe_W6Iwg4-KMo
-X-Proofpoint-ORIG-GUID: Xr7w0IIbNVsseAA8VeCBe_W6Iwg4-KMo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 mlxlogscore=909 bulkscore=0 adultscore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 clxscore=1015
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502270150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b174f56-191b-45bd-93ec-4c6444c770a5@intel.com>
 
-Document QCS615 compatible for True Random Number Generator.
 
-Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
----
- Documentation/devicetree/bindings/crypto/qcom,prng.yaml | 1 +
- 1 file changed, 1 insertion(+)
+* Sohil Mehta <sohil.mehta@intel.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/crypto/qcom,prng.yaml b/Documentation/devicetree/bindings/crypto/qcom,prng.yaml
-index 5e6f8b6425454d6440a8653567235380d934cc2c..ed7e16bd11d33c16d0adf02c38419dbaee87ac48 100644
---- a/Documentation/devicetree/bindings/crypto/qcom,prng.yaml
-+++ b/Documentation/devicetree/bindings/crypto/qcom,prng.yaml
-@@ -20,6 +20,7 @@ properties:
-               - qcom,ipq5332-trng
-               - qcom,ipq5424-trng
-               - qcom,ipq9574-trng
-+              - qcom,qcs615-trng
-               - qcom,qcs8300-trng
-               - qcom,sa8255p-trng
-               - qcom,sa8775p-trng
+> On 2/27/2025 10:46 AM, Ingo Molnar wrote:
+> 
+> >> +void filter_feature_dependencies(struct cpuinfo_x86 *c)
+> >> +{
+> >> +	char feature_buf[16], depends_buf[16];
+> >> +	const struct cpuid_dep *d;
+> >> +
+> >> +	for (d = cpuid_deps; d->feature; d++) {
+> >> +		if (cpu_has(c, d->feature) && !cpu_has(c, d->depends)) {
+> >> +			pr_info("CPU%d: Disabling feature %s due to missing feature %s\n",
+> >> +				smp_processor_id(),
+> >> +				x86_feature_name(d->feature, feature_buf),
+> >> +				x86_feature_name(d->depends, depends_buf));
+> >> +			do_clear_cpu_cap(c, d->feature);
+> >> +		}
+> >> +	}
+> > 
+> > So let's not disable any CPU features actively for the time being, how 
+> > about issuing a pr_warn() only about the dependency violation?
+> > 
+> > I think the main problem is when these problems slip through 100% 
+> > unnoticed.
+> > 
+> 
+> I guess you are right. Highlighting the issue is the main part. Beyond
+> that we can leave the system behavior as-is for now.
+> 
+> Most of the listed dependencies seem to be spec-driven, though the
+> kernel might create arbitrary dependencies for security reasons such as
+> making LAM depend on LASS[1]. I think those can probably be handled on a
+> case by case basis during specific feature enabling.
+> 
+> For the new pr_warn(), I am considering printing it only once per
+> feature instead of printing it on every CPU (which could be 100s).
 
--- 
-2.34.1
+Yeah.
 
+> But that would mean tracking it in a global feature_warn bitmap.
+> 
+> 	DECLARE_BITMAP(feature_warn, MAX_FEATURE_BITS);
+> 
+> Another option would be run the scan only on the BSP. But that could
+> cause some issues to be missed[2].
+
+Just use pr_warn_once().
+
+Yes, this might cause subsequent CPU feature dependency problems to 
+stay unreported, but the hope here is that these are rare and get 
+fixed, right?
+
+Thanks,
+
+	Ingo
