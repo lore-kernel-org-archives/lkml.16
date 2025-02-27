@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCBD2417C8;
-	Thu, 27 Feb 2025 14:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A29A2405F9;
+	Thu, 27 Feb 2025 14:07:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665230; cv=none; b=sj+RjvR4LCaYSRMWCFSF/JoDJU1SZoR9O2eaIes0kDJDFMVPqoHrKtc8zOqbFi7iEJW8UJiQNJaZoRmYVi5DHAq3M8KTC3Rr6hlX4qoq3BTk2glGm9kEhWF8y4ROcssrO5DEc8lvbvtgY3vJnl2lPMBnfjTxnz/oyMvQBIrX1dI=
+	t=1740665229; cv=none; b=GAzYk6gn95INoxrpBNpG2PQx4ssFiPcqdQvnrJDKR+BXcR2iqkze6tAUR0fJCVtkbkkqBg7eqtKzVfw1aPIbES7ijqOhO6DZPA6CVRsvZ8yUd509F0VXUMXyL8wr1vV+JnLjybdjQoxcyHjoTQRy4IrTZijuO2/lyKqcmSq6cVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665230; c=relaxed/simple;
-	bh=goZDLHvWODKwCst2CM1CW/pL0JVHaP6YCWm3xiQc4VU=;
+	s=arc-20240116; t=1740665229; c=relaxed/simple;
+	bh=4FYYRgHH3VUyDZMaOWWCBzUBFsl/UaAcSjSpcX99lYk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kE8vZTwJRT3txsJ2rpegKmiOGx+F8VCDUP2qONV4PGFfs3NoJxd2NrqqDKHBTbcFyuFmbx0Q/KTtjoVdCaQ14OqK7znjtaBeiFqQ9mtcnjTVK9+FYadQhNuIJaqLjOCrgLqrKBdm7sl5P2GFA/TzaxATIvyrKm3g66Ut1Z6jigk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cKWNtwWF; arc=none smtp.client-ip=192.198.163.17
+	 MIME-Version:Content-Type; b=bpXpiD9JCCStcE4udJE3qSSzS+AfNnXiKEL7Fr4IDBC7vD6mePVykqVvD/wOT4JiMjDBH+NN70k4CwXi6S9d7UImddKeK7TZjuzBM2eMaZRuLHMYwAw1/EAQkrcZGIiyVrZSctqsmQrbem7UW6bevuJiLT5nKxoSLH/ZCroEWxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yjw0PRQL; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cKWNtwWF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yjw0PRQL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740665229; x=1772201229;
+  t=1740665227; x=1772201227;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=goZDLHvWODKwCst2CM1CW/pL0JVHaP6YCWm3xiQc4VU=;
-  b=cKWNtwWFp3uRjZvCB2JCXumnWgX/En+skFCZMb8rfrJpo3tTjGWifpWP
-   4SjwLSNzUfUlOykg6LI8v+bngRCRk7LL/8aFQPvyysm/vYgmLQBMCP82T
-   v7yH2xQ82x+Z7/gqkW0W34GpQLBB5Tonfk5XlTEMEdk//Yr8WmvIbfY4q
-   o+eFlaY6jnkDsir0xGHy37i9D6vclOyDNK3Kw0XRf9gR3nmfN/cUuTFcN
-   fQBVFHi7d4571z0Nh2QPJxpW4zuRiu6FPDoz1pcLcpXQ44Xw+jKnlocua
-   1XQQQ7hgrytCv6KHQAdtL79fpaW9BJLLbBrupirtIQtugc4lfwUv13ov4
+  bh=4FYYRgHH3VUyDZMaOWWCBzUBFsl/UaAcSjSpcX99lYk=;
+  b=Yjw0PRQL8PgNB2Vj369kUhrbDZP9P77LCminfcXhTxwo/FGSG62ihcgz
+   TVIUH2+0RqWECepVWDxnInHAAMi7dXt12IJSnRdp0Xw+qUCWzsacOHoxQ
+   gqDh4rT1q0XhnK4v9trSYN57aTQ7cKehI82jq975JUuYyT4JHIbzOkoJb
+   uE7KE1a/omNEhiT7RneF1vBkGXw0mWcqCHiq3SxmId/zdRFNDJXAW+uqR
+   uQLViWmV4beAMNygwCFNVxK7zyBQikQpz1U39RtcwKBfMDNP9EWM5MXYG
+   CxEHFSizwQ29DgHoyQ4ZAgoP1WD/3OuEQFeal8DGHo4Td4f2yOQq53eMm
    A==;
-X-CSE-ConnectionGUID: vOrBLuzJRdy8jZZbsoBlRg==
-X-CSE-MsgGUID: HSJs5alzTXKaIBA2mD5W3w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41438120"
+X-CSE-ConnectionGUID: gXeXc6LOSAS81vXeGCkI/A==
+X-CSE-MsgGUID: 67CT2ig2QwGF8Kak9aRmoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41438108"
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="41438120"
+   d="scan'208";a="41438108"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:07:00 -0800
-X-CSE-ConnectionGUID: VMW8zrYCQHKWLJsjtbC5hQ==
-X-CSE-MsgGUID: qx3XXiPBQLGBUROwW1nV9A==
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:56 -0800
+X-CSE-ConnectionGUID: 9tRrxREyTMGSSqBQxV2dxg==
+X-CSE-MsgGUID: EaZFtUPXSv2RkYtUMCg2ng==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="116831792"
+   d="scan'208";a="116831753"
 Received: from ssimmeri-mobl2.amr.corp.intel.com (HELO yungchua-desk.intel.com) ([10.124.220.154])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:58 -0800
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:06:54 -0800
 From: Bard Liao <yung-chuan.liao@linux.intel.com>
 To: linux-sound@vger.kernel.org,
 	broonie@kernel.org,
@@ -52,9 +52,9 @@ Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
 	pierre-louis.bossart@linux.dev,
 	bard.liao@intel.com
-Subject: [PATCH v4 16/16] ASoC: rt711-sdca: add DP0 support
-Date: Thu, 27 Feb 2025 22:06:15 +0800
-Message-ID: <20250227140615.8147-17-yung-chuan.liao@linux.intel.com>
+Subject: [PATCH v4 14/16] ASoC: SOF: Intel: hda-sdw-bpt: add CHAIN_DMA support
+Date: Thu, 27 Feb 2025 22:06:13 +0800
+Message-ID: <20250227140615.8147-15-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250227140615.8147-1-yung-chuan.liao@linux.intel.com>
 References: <20250227140615.8147-1-yung-chuan.liao@linux.intel.com>
@@ -67,9 +67,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
+When the firmware is involved, the data can be transferred with a
+CHAIN_DMA on LNL+.
 
-DP0 is required for BPT/BRA transport.
+The CHAIN_DMA needs to be programmed before the DMAs per the
+documentation. The states are not exactly symmetrical, on stop we must
+do a PAUSE and RESET.
+
+The FIFO size of 10ms was determined experimentally. With the minimum
+of 2ms, errors were reported by the codec, likely because of xruns.
+
+The code flow deals with the two TX and RX CHAIN_DMAs in symmetrical
+ways, i.e.
+alloc TX
+alloc RX
+enable TX
+enable RX
+disable RX
+disable TX
+free RX
+free TX
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
 Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
@@ -77,28 +94,187 @@ Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
 Reviewed-by: Liam Girdwood <liam.r.girdwood@intel.com>
 Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
 ---
- sound/soc/codecs/rt711-sdca-sdw.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/sof/intel/hda-sdw-bpt.c | 126 ++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-diff --git a/sound/soc/codecs/rt711-sdca-sdw.c b/sound/soc/codecs/rt711-sdca-sdw.c
-index f5933d2e085e..e87e2e1bfff7 100644
---- a/sound/soc/codecs/rt711-sdca-sdw.c
-+++ b/sound/soc/codecs/rt711-sdca-sdw.c
-@@ -225,6 +225,14 @@ static int rt711_sdca_read_prop(struct sdw_slave *slave)
- 		j++;
+diff --git a/sound/soc/sof/intel/hda-sdw-bpt.c b/sound/soc/sof/intel/hda-sdw-bpt.c
+index bc7a3172656f..1327f1cad0bc 100644
+--- a/sound/soc/sof/intel/hda-sdw-bpt.c
++++ b/sound/soc/sof/intel/hda-sdw-bpt.c
+@@ -14,12 +14,80 @@
+ #include <sound/hda-mlink.h>
+ #include <sound/hda-sdw-bpt.h>
+ #include <sound/sof.h>
++#include <sound/sof/ipc4/header.h>
+ #include "../ops.h"
+ #include "../sof-priv.h"
++#include "../ipc4-priv.h"
+ #include "hda.h"
+ 
+ #define BPT_FREQUENCY		192000 /* The max rate defined in rate_bits[] hdac_device.c */
+ #define BPT_MULTIPLIER		((BPT_FREQUENCY / 48000) - 1)
++#define BPT_CHAIN_DMA_FIFO_MS	10
++/*
++ * This routine is directly inspired by sof_ipc4_chain_dma_trigger(),
++ * with major simplifications since there are no pipelines defined
++ * and no dependency on ALSA hw_params
++ */
++static int chain_dma_trigger(struct snd_sof_dev *sdev, unsigned int stream_tag,
++			     int direction, int state)
++{
++	struct sof_ipc4_fw_data *ipc4_data = sdev->private;
++	bool allocate, enable, set_fifo_size;
++	struct sof_ipc4_msg msg = {{ 0 }};
++	int dma_id;
++
++	if (sdev->pdata->ipc_type != SOF_IPC_TYPE_4)
++		return -EOPNOTSUPP;
++
++	switch (state) {
++	case SOF_IPC4_PIPE_RUNNING: /* Allocate and start the chain */
++		allocate = true;
++		enable = true;
++		set_fifo_size = true;
++		break;
++	case SOF_IPC4_PIPE_PAUSED: /* Stop the chain */
++		allocate = true;
++		enable = false;
++		set_fifo_size = false;
++		break;
++	case SOF_IPC4_PIPE_RESET: /* Deallocate chain resources and remove the chain */
++		allocate = false;
++		enable = false;
++		set_fifo_size = false;
++		break;
++	default:
++		dev_err(sdev->dev, "Unexpected state %d", state);
++		return -EINVAL;
++	}
++
++	msg.primary = SOF_IPC4_MSG_TYPE_SET(SOF_IPC4_GLB_CHAIN_DMA);
++	msg.primary |= SOF_IPC4_MSG_DIR(SOF_IPC4_MSG_REQUEST);
++	msg.primary |= SOF_IPC4_MSG_TARGET(SOF_IPC4_FW_GEN_MSG);
++
++	/* for BPT/BRA we can use the same stream tag for host and link */
++	dma_id = stream_tag - 1;
++	if (direction == SNDRV_PCM_STREAM_CAPTURE)
++		dma_id += ipc4_data->num_playback_streams;
++
++	msg.primary |=  SOF_IPC4_GLB_CHAIN_DMA_HOST_ID(dma_id);
++	msg.primary |=  SOF_IPC4_GLB_CHAIN_DMA_LINK_ID(dma_id);
++
++	/* For BPT/BRA we use 32 bits so SCS is not set */
++
++	/* CHAIN DMA needs at least 2ms */
++	if (set_fifo_size)
++		msg.extension |=  SOF_IPC4_GLB_EXT_CHAIN_DMA_FIFO_SIZE(BPT_FREQUENCY / 1000 *
++								       BPT_CHAIN_DMA_FIFO_MS *
++								       sizeof(u32));
++
++	if (allocate)
++		msg.primary |= SOF_IPC4_GLB_CHAIN_DMA_ALLOCATE_MASK;
++
++	if (enable)
++		msg.primary |= SOF_IPC4_GLB_CHAIN_DMA_ENABLE_MASK;
++
++	return sof_ipc_tx_message_no_reply(sdev->ipc, &msg, 0);
++}
+ 
+ static int hda_sdw_bpt_dma_prepare(struct device *dev, struct hdac_ext_stream **sdw_bpt_stream,
+ 				   struct snd_dma_buffer *dmab_bdl, u32 bpt_num_bytes,
+@@ -46,6 +114,21 @@ static int hda_sdw_bpt_dma_prepare(struct device *dev, struct hdac_ext_stream **
+ 	}
+ 	*sdw_bpt_stream = bpt_stream;
+ 
++	if (!sdev->dspless_mode_selected) {
++		struct hdac_stream *hstream;
++		u32 mask;
++
++		/* decouple host and link DMA if the DSP is used */
++		hstream = &bpt_stream->hstream;
++		mask = BIT(hstream->index);
++
++		snd_sof_dsp_update_bits(sdev, HDA_DSP_PP_BAR, SOF_HDA_REG_PP_PPCTL, mask, mask);
++
++		snd_hdac_ext_stream_reset(bpt_stream);
++
++		snd_hdac_ext_stream_setup(bpt_stream, format);
++	}
++
+ 	if (hdac_stream(bpt_stream)->direction == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		struct hdac_bus *bus = sof_to_bus(sdev);
+ 		struct hdac_ext_link *hlink;
+@@ -63,6 +146,8 @@ static int hda_sdw_bpt_dma_deprepare(struct device *dev, struct hdac_ext_stream
+ 				     struct snd_dma_buffer *dmab_bdl)
+ {
+ 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
++	struct hdac_stream *hstream;
++	u32 mask;
+ 	int ret;
+ 
+ 	ret = hda_cl_cleanup(sdev->dev, dmab_bdl, true, sdw_bpt_stream);
+@@ -83,6 +168,22 @@ static int hda_sdw_bpt_dma_deprepare(struct device *dev, struct hdac_ext_stream
+ 		snd_hdac_ext_bus_link_clear_stream_id(hlink, stream_tag);
  	}
  
-+	prop->dp0_prop = devm_kzalloc(&slave->dev, sizeof(*prop->dp0_prop),
-+				      GFP_KERNEL);
-+	if (!prop->dp0_prop)
-+		return -ENOMEM;
++	if (!sdev->dspless_mode_selected) {
++		/* Release CHAIN_DMA resources */
++		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
++					hdac_stream(sdw_bpt_stream)->direction,
++					SOF_IPC4_PIPE_RESET);
++		if (ret < 0)
++			dev_err(sdev->dev, "%s: chain_dma_trigger PIPE_RESET failed: %d\n",
++				__func__, ret);
 +
-+	prop->dp0_prop->simple_ch_prep_sm = true;
-+	prop->dp0_prop->ch_prep_timeout = 10;
++		/* couple host and link DMA */
++		hstream = &sdw_bpt_stream->hstream;
++		mask = BIT(hstream->index);
 +
- 	/* set the timeout values */
- 	prop->clk_stop_timeout = 700;
++		snd_sof_dsp_update_bits(sdev, HDA_DSP_PP_BAR, SOF_HDA_REG_PP_PPCTL, mask, 0);
++	}
++
+ 	return 0;
+ }
  
+@@ -95,6 +196,20 @@ static int hda_sdw_bpt_dma_enable(struct device *dev, struct hdac_ext_stream *sd
+ 	if (ret < 0)
+ 		dev_err(sdev->dev, "%s: SDW BPT DMA trigger start failed\n", __func__);
+ 
++	if (!sdev->dspless_mode_selected) {
++		/* the chain DMA needs to be programmed before the DMAs */
++		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
++					hdac_stream(sdw_bpt_stream)->direction,
++					SOF_IPC4_PIPE_RUNNING);
++		if (ret < 0) {
++			dev_err(sdev->dev, "%s: chain_dma_trigger failed: %d\n",
++				__func__, ret);
++			hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_STOP);
++			return ret;
++		}
++		snd_hdac_ext_stream_start(sdw_bpt_stream);
++	}
++
+ 	return ret;
+ }
+ 
+@@ -103,6 +218,17 @@ static int hda_sdw_bpt_dma_disable(struct device *dev, struct hdac_ext_stream *s
+ 	struct snd_sof_dev *sdev = dev_get_drvdata(dev);
+ 	int ret;
+ 
++	if (!sdev->dspless_mode_selected) {
++		snd_hdac_ext_stream_clear(sdw_bpt_stream);
++
++		ret = chain_dma_trigger(sdev, hdac_stream(sdw_bpt_stream)->stream_tag,
++					hdac_stream(sdw_bpt_stream)->direction,
++					SOF_IPC4_PIPE_PAUSED);
++		if (ret < 0)
++			dev_err(sdev->dev, "%s: chain_dma_trigger PIPE_PAUSED failed: %d\n",
++				__func__, ret);
++	}
++
+ 	ret = hda_cl_trigger(sdev->dev, sdw_bpt_stream, SNDRV_PCM_TRIGGER_STOP);
+ 	if (ret < 0)
+ 		dev_err(sdev->dev, "%s: SDW BPT DMA trigger stop failed\n", __func__);
 -- 
 2.43.0
 
