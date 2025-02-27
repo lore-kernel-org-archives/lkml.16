@@ -1,80 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75AC626F448;
-	Thu, 27 Feb 2025 19:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3291C07E6;
+	Thu, 27 Feb 2025 19:34:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684827; cv=none; b=E8ySeF/HrYE0pBWFQxR84Yc3gefecY4Z7rvfQul060aLdQB83yvNuEMw8uIunG0NkKxt6a5whK7jcuXpwSSDKUkl4YQXla7eQrzpwHGC2mDEdj7KlTcXAWxTwGUZa0LHTokPmsBe6ha38dd4/TrJGfmzRNGqdEQDCpZKBy8rVDI=
+	t=1740684848; cv=none; b=ICfgSCQiFv8vV5qK9BWrqGbKwY0hloOWq6XD+NACDJyU89dqj4kuPgAJWV1LGj/6cbswCOvxNCNkjPFIuDtlEozcng+Yo794NMWmFj4126x3caWjUhZoH2ZFxlPHsSumZpEqhnEvC4KU/RVqpXDG27v5XqUlkXq+UUCDYW+7yuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684827; c=relaxed/simple;
-	bh=/ljZxjG2whEh4fT7nvdzIQVW5daPqCdHPfKg8ixwA3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MaJZe9T4Qns1XKR7RcfhxJquloJsNctIxV20fGG3iYHl+aS3pkt8dRDXgLlGymCktaqCioFYYfTmFNp1KxxRU5jF09Gby+9XeBOGoKVWW3QcrJrG067a0LKz11FHxrJlE78ivC8j72WRgia87JqERdL4NyTTUvEJ9TcERSLrKws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ldshSNwf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740684848; c=relaxed/simple;
+	bh=8Ja3G+/8biwQcQyQlcOcW5AKkLPiN5J+6s9uWWE5tqI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NfTPspl8M0VR/ZxV/riq9D5nvXHdhjawipZplhlVBWmxhNiyczYWIqDSkuOVYxP0FgG5a6AWXw9Gtuun0AbXj3R3e3LyHdD3BsSrKK0+zEhUSJQfCrjlbyaCi15uwt+HiyR6QuEuvW/AtcOV4ao+apbpR8w6JGn/DVcOx8I5yfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QnpjKxC8; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ldshSNwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC109C4CEDD;
-	Thu, 27 Feb 2025 19:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740684827;
-	bh=/ljZxjG2whEh4fT7nvdzIQVW5daPqCdHPfKg8ixwA3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ldshSNwfGfulPgB+3OfwHkhf5JN4u+pf8A2b58dLJDgRQBXutbzvePRuUXwOuO51y
-	 ZlAXfnC0xzHL6qnETlkZDqCnwidaBxXEO7nJz2rXBrg++n3rlTRnV9CBJ2G0xG5SGQ
-	 3YtbfwCk1DH/NaicUER4uPOwpT1VoS46pgagM1z8=
-Date: Thu, 27 Feb 2025 11:32:37 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>,
-	Alistair Francis <alistair@alistair23.me>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lukas@wunner.de, linux-pci@vger.kernel.org, bhelgaas@google.com,
-	Jonathan.Cameron@huawei.com, rust-for-linux@vger.kernel.org,
-	akpm@linux-foundation.org, boqun.feng@gmail.com,
-	bjorn3_gh@protonmail.com, wilfred.mallawa@wdc.com, ojeda@kernel.org,
-	alistair23@gmail.com, a.hindborg@kernel.org, tmgross@umich.edu,
-	gary@garyguo.net, alex.gaynor@gmail.com, benno.lossin@proton.me,
-	Alistair Francis <alistair.francis@wdc.com>
-Subject: Re: [RFC v2 09/20] PCI/CMA: Expose in sysfs whether devices are
- authenticated
-Message-ID: <2025022749-gummy-survivor-c03a@gregkh>
-References: <20250227030952.2319050-1-alistair@alistair23.me>
- <20250227030952.2319050-10-alistair@alistair23.me>
- <2025022717-dictate-cortex-5c05@gregkh>
- <CAH5fLgiQAdZMUEBsWS0v1M4xX+1Y5mzE3nBHduzzk+rG0ueskg@mail.gmail.com>
- <2025022752-pureblood-renovator-84a8@gregkh>
- <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnpjKxC8"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f83a8afcbbso2537555a91.1;
+        Thu, 27 Feb 2025 11:34:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740684846; x=1741289646; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V6T71r4zbRHPgqZ0EGR7Irt/x5iBPir+HkN1z6PeyLM=;
+        b=QnpjKxC8e2npeRfHm5ZHIfJ2FKJm97hxorrCBwpEHFzh6z4q4FBqdqyT13X1jPpmw5
+         XG0MS739dFIxCWHEQNtj0amYxgAexqs6exGzxWiHvEJZperHRBloivmvatpGVrHUr32z
+         EFXjfeIW/Pp8N3Y/4iu/yEfGJofAVF2lLibYxclbGhXD6JJfJwfiAbc4lcsX9iXKeXMs
+         0o7fcTHOs6Nx1MxZZAi+RD/5WEtmcCkEtREIwkMxQE68iJPQUioiOiCVfwz2EK4WoLLW
+         Sp0s6JoWBgj2TtxyliXayaulme+tHBivgtyy2LmJrMRiFdIOq7YR+ICd/fVlpDq5EVI6
+         t4+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740684846; x=1741289646;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V6T71r4zbRHPgqZ0EGR7Irt/x5iBPir+HkN1z6PeyLM=;
+        b=xLDYvn8gSt4JJ+cPAbLaYxcrcVUwESjt+gGkA6VfhehOeNtOoCz1XCJIrfGLBRIZI5
+         hk8lKMo8qkzAkVcfmZiJBoleB6Iddkr+0NBIabd+zFsyR3ypRg4HZgfSZ9zux/SyB6WF
+         ALGwY1047Qs2LgLWUaQyDKWmMes8qn9SpNEDyA9bz5HPWvHsG6hZuBMRal0JLVVCZLJ1
+         tWqI/PcnhBGUmpmiY7rQRgtUAXnMyj2SsCC1AnJQ4WRos1+GTeWM+cNnIYIVZyAcco+U
+         qAaIKEdklA+h7HtEmaOpfcBrGz8g26beax80PLUeTEvR8pbutKjR38NC8KWckgqaTRXg
+         ujlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVRuDk08jyQOdm/dx/HKHTmG1tSy0TUQAa6u9MMZOe/v47CXoZuTksACSSKda9rYxi8iExXEjQble8eUtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIgKXKusu9BcQid9AikJzxpNYQ0KXmQOXMACE1fDCRbJtF1+fc
+	/oQm/Z7/SIUFfC0Os5pB6SQamL+IPfm989fdu7nIKnFMNJ1RD5A6koYRpCIj
+X-Gm-Gg: ASbGncvp6LWynP8iG0DzOcEzNiytb9dNueU2sbjyoK0nUZEthlylHoDyPnHw9TdLMSR
+	WueTZLUZVU4yVMlQeDOQZGXg2ozkPs98rBMorge89dw05AwCfBIisyJs7vphDw9rPZCYu6Pyj1f
+	MchPA8zQnpS6ifKbZVF2ahAoTIGm6SZ71MYSa8m5ZL12eXYY8NTV28Z/lv1sKIDyqyt17ZsCohp
+	t8fOcln1ftTjqgZF3TjDCwmC+GdHqSecu/JSxUh7/13LfQt42ZNyd3Wxjt5GiNsXewMjDIA1q2D
+	gQMix6Uzoa9IgzwM1RQT8K6lypuseVTcX7gz
+X-Google-Smtp-Source: AGHT+IEtaJTwHxtP9Ru3d6ucWaSgP6i9J4IUsBMK7rftHq3rP2kpeqnN6gjCMmpitMQ1/Usfy8MGvg==
+X-Received: by 2002:a17:90a:ec86:b0:2fa:562c:c1cf with SMTP id 98e67ed59e1d1-2fea12683d9mr7377411a91.1.1740684846304;
+        Thu, 27 Feb 2025 11:34:06 -0800 (PST)
+Received: from embed-PC.. ([2401:4900:1cb5:84b:96dd:21a7:7ff3:7964])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825a990csm4224057a91.2.2025.02.27.11.34.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 11:34:05 -0800 (PST)
+From: Abhishek Tamboli <abhishektamboli9@gmail.com>
+To: mathias.nyman@intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dan.carpenter@linaro.org
+Subject: [PATCH] xhci: Fix bcdUSB initialization
+Date: Fri, 28 Feb 2025 01:04:00 +0530
+Message-Id: <20250227193400.109593-1-abhishektamboli9@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kS8=1R-0yoGP5wwNT2XKSwofjfvXMk2qLZkO9z_QQzXg@mail.gmail.com>
 
-On Thu, Feb 27, 2025 at 05:45:02PM +0100, Miguel Ojeda wrote:
-> On Thu, Feb 27, 2025 at 1:01 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > Sorry, you are right, it does, and of course it happens (otherwise how
-> > would bindings work), but for small functions like this, how is the C
-> > code kept in sync with the rust side?  Where is the .h file that C
-> > should include?
-> 
-> What you were probably remembering is that it still needs to be
-> justified, i.e. we don't want to generally/freely start replacing
-> "individual functions" and doing FFI both ways everywhere, i.e. the
-> goal is to build safe abstractions wherever possible.
+Initialize bcdUSB to 0 to prevent undefined behaviour
+if accessed without being explicitly set.
 
-Ah, ok, that's what I was remembering.
+Fix the following smatch error:
+drivers/usb/host/xhci-hub.c:71 xhci_create_usb3x_bos_desc()
+error: uninitialized symbol 'bcdUSB'
 
-Anyway, the "pass a void blob from C into rust" that this patch is doing
-feels really odd to me, and hard to verify it is "safe" at a simple
-glance.
+Signed-off-by: Abhishek Tamboli <abhishektamboli9@gmail.com>
+---
+ drivers/usb/host/xhci-hub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+index 9693464c0520..5715a8bdda7f 100644
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -39,7 +39,7 @@ static int xhci_create_usb3x_bos_desc(struct xhci_hcd *xhci, char *buf,
+ 	struct usb_ss_cap_descriptor	*ss_cap;
+ 	struct usb_ssp_cap_descriptor	*ssp_cap;
+ 	struct xhci_port_cap		*port_cap = NULL;
+-	u16				bcdUSB;
++	u16				bcdUSB = 0;
+ 	u32				reg;
+ 	u32				min_rate = 0;
+ 	u8				min_ssid;
+--
+2.34.1
 
-greg k-h
