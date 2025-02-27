@@ -1,97 +1,211 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3132C23E34E;
-	Thu, 27 Feb 2025 23:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A2C2309A3;
+	Thu, 27 Feb 2025 23:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740697727; cv=none; b=C/Etl09hNl5KI5P9ChH8hVDCKHfBi/HjGYzD+XUfJw5jezZfX0uYYQFQhS2gULdsXlAbt2fFOtDSbA+ZhcCtSoEJuhcqnv2cbSErVU+AtDUPzE0m6f57uUZK76wZTuK5FNADtmJfDljRrYrdfIue/Fie1pYYaWf/WjrSIiIu/NM=
+	t=1740697886; cv=none; b=c0qVc4NwCfVh6BkfGDmHVqHSXmQ/eWlaO5feLakgSLuXu3JU5kMnln+MpXNNl2YuAH4p4AjqBfldiM5xlZWCsFbx8vB7fVq/6nCF5grGpakCAj71xahEfHuxMqwRYl28NJPmBuUQgmCd6i/Gi+KDBNJVL8+/x9BJmFsg0npmf30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740697727; c=relaxed/simple;
-	bh=PZcXt2MzmIOD5ThvbAUvWdxsdkwQ+yVhj9303HPTuq4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZiIgcUaBiKZL9xdibbgg3u+41AeC1eu4ojFxmypJDq0o4GLvF7ZHiavqrQLc3UCoWDCqwHnUBzIbtPcTBJ0ciMZu/R4vxcJfzvSb2baX3XpvtEshAZ36imd+exMitP9kGoOM7zf+wUGu0buwcfThaA31av7W3R6/3CgvDr7OdoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GVDOlEPT; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1740697886; c=relaxed/simple;
+	bh=nf1/dckcnomNKWFNl7Mj3elVZpIUPC9x6D/lkkXmlTw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dTXP/uAv7bChhYd0jtv24+mLrL70Jz6XGn9b3IFCZKFfpqVZ/3xLeOuuNlRI40EoiRjnDIYEMGAMQs5xWghxciQKDCGM8bCPwtGCkgUK3tGrIeVi1+km0bMto/I3UdMGbmlwcUxUnZjResN4cyALFMG5oFiFWqXBGhEaOc+B+iY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HllX7fUh; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GVDOlEPT"
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 5037E210EAC0;
-	Thu, 27 Feb 2025 15:08:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5037E210EAC0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740697725;
-	bh=zYskf4Q6IOL04q9jyqtfU8Zgdvew2yriJ3Ik8GT2/Z0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GVDOlEPTyz3LD9fsfIPoqV+r6EmceZBi0lZLEjt/esvDYSWBzJjxwDfhA40k7eLd+
-	 0K0FXz2Kavl7vHD5TLQAvsxN/qTlo/ZLEwepIXxhd+v+y1mh/0ohhhVwfX9M2yKbDK
-	 HIizPi+oz4D9ih/ptnOZGFMknxlWUe66k2Iq4mt0=
-Message-ID: <49a69fe3-fca5-426d-999d-61ee0c8f60f3@linux.microsoft.com>
-Date: Thu, 27 Feb 2025 15:08:45 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HllX7fUh"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dec817f453so2133526a12.2;
+        Thu, 27 Feb 2025 15:11:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740697883; x=1741302683; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AY8ndVYJ7XgqaUiDvauHMj3rzJsfZgflXLJt38pHW0c=;
+        b=HllX7fUhB2pTRmlySPaHA66Lw5chXVGZNGaiLPOOGYx8KNtNJxH3205BmbUK3QUFYf
+         TUySLKxjIp5ZRhF8dR6Lp8/k2I2Cl3yJSMDY5aVWNxyHdSDNehXnVoTGm17jTkF/0Jbm
+         kVSK1/uDGXos1lK32M06nppeGAiYE3tAlf8sXpC99ln2nfMLBJW0vyk45ZTTdfHArNHl
+         S58rDsRkbV6+8z2zzOP5BX/wYEMgVNd0yIkhVtzk6so9F/PMgNlmWnISZFoKry1cbr/o
+         aUakx3moE6SPZXMYYNiQxkEWH7/0xzoWMFOf75YEfaIHL7lT2xduzuH9lqfWgyUJ4Suf
+         hmRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740697883; x=1741302683;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AY8ndVYJ7XgqaUiDvauHMj3rzJsfZgflXLJt38pHW0c=;
+        b=AFpPXUT2B7BhS430CyvjOk1rJW42bm3PMgK2U0M4+ZZYx7gxQUUCeGeWYUS2jUtSgE
+         pdkxRVvns8YsD+DenBsYGylCp1mEOZz9vnQbA+3Ss+pMVWh3FA1Tjn7HmomqUG9FhOKU
+         gOqnJKWiA4KL1iFqa3H/S7cLJA9VdNn2S2giT96HDjbYKbdzTS6bbtVr6sk75AO6DY0G
+         CW+NId1AKOUYQqEJVbpcMQjmJqixLXnqySvVxc3G82fOtkyAHD6qbKRQEfiB8Ge3FLPZ
+         GKI1wdatXn8htOl4KFw9Nk1JppfXsJuOhvi/TXR3weFe1M/bceXGVf3eY23Acg2fQZva
+         ngPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVolypfRDzqjLsVbpk7hPtMEoF21O8lriE8J5ua6Sfp1fhTOVCbaosY4NjTwpbJ6u320ZSEdqLKDXrhJa1u@vger.kernel.org, AJvYcCX2k70xJJ3yZqz/3EuGH3A+ZAZ9YlGiett6h+GYoTTRLsAaw7uk6cGbzfRIBwObpm3n8YeJqqHIkAXMdiGu@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa0gpd8JFJhCFSHvdS7R0lkXeAYIDibe58eD7jD8MisY1Phx/b
+	YwEnuad9yHzWWdXvwezkgDmd4WytM9IMPC2mt/ewpOBURPUeoEga
+X-Gm-Gg: ASbGncu5bSAN2qb/u1njr0CH6v1MzF3ZvaJpV4B/zAGOuNvJfBH53jgNF7e2pfhucvI
+	lTGfEK54naMC88LieEZVk/8a/PkWilULoiQw441Cs9hCZFIeQpA5RZYtuLfp30zFomjMDBIbo+K
+	TKY+8vWYQ7eu1LPGzwuSFhYkMIILtoWodKu5ZkOfp6GGNPlqPeJckqHXtDmsSU2R5gbdH1JVfEN
+	3d427E1zYibQtFXAIBRrjMMygXnTYtpvopUXgTxCg8SC904n++7ZJVOmlYXY8fWzzMgfmkqRR2L
+	o8kx+mueRWyHJ17SxT5oG80EEZizuug4zvjYQSEoIG6O
+X-Google-Smtp-Source: AGHT+IH1s6mwS8zayyWG+J0RZb18tEFC5xGqBkXi4CaMktxg/7/kRZoW/5g2fKi/89vA6+bnOCcD2Q==
+X-Received: by 2002:a17:907:6d25:b0:ab7:ec7c:89e4 with SMTP id a640c23a62f3a-abf26542879mr109995066b.21.1740697883212;
+        Thu, 27 Feb 2025 15:11:23 -0800 (PST)
+Received: from f.. (cst-prg-72-140.cust.vodafone.cz. [46.135.72.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c756f6csm194377866b.141.2025.02.27.15.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 15:11:22 -0800 (PST)
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: brauner@kernel.org
+Cc: viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	oleg@redhat.com,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Subject: [PATCH v2] pipe: cache 2 pages instead of 1
+Date: Fri, 28 Feb 2025 00:11:16 +0100
+Message-ID: <20250227231116.140640-1-mjguzik@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
-To: Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
- linux-hyperv@vger.kernel.org, x86@kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com,
- haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com,
- decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
- joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
- jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
- skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
- ssengar@linux.microsoft.com, apais@linux.microsoft.com,
- Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
- gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
- muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
- lenb@kernel.org, corbet@lwn.net
-References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
- <74af19c4-639f-4bcc-b667-b5f102bbb312@linux.microsoft.com>
- <8338dd00-3aa4-418f-a547-1c19623358cb@linux.microsoft.com>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <8338dd00-3aa4-418f-a547-1c19623358cb@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+User data is kept in a circular buffer backed by pages allocated as
+needed. Only having space for one spare is still prone to having to
+resort to allocation / freeing.
 
+In my testing this decreases page allocs by 60% during a kernel build.
 
-On 2/27/2025 2:54 PM, Easwar Hariharan wrote:
-[...]
+Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+---
 
-> 
-> Sorry, I have to disagree with this, a recent commit of mine[1] closed a WSL
-> issue that was open for over 2 years for, partly, the utter uselessness of
-> the hex return code of the hypercall.
+v2:
+- iterate over an array
 
-Thanks for your efforts, and sorry to hear you had a frustrating
-debugging experience (sounds like it).
+ fs/pipe.c                 | 60 ++++++++++++++++++++++++++-------------
+ include/linux/pipe_fs_i.h |  2 +-
+ 2 files changed, 41 insertions(+), 21 deletions(-)
 
-Would be great to learn the details to understand how this function is
-going to improve the situation:
-
-1. How come the hex error code was useless, what is not matching
-    anything in the Linux headers?
-2. How having "Unknown" in the log can possibly be better?
-3. Given that the select hv status codes and the proposed strings have
-    1:1 correspondence, and there is the 1:N catch-all case for the
-    "Unknown", how's that better?
-
-> 
-> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d2138eab8cde61e0e6f62d0713e45202e8457d6d
-> 
-> Thanks,
-> Easwar (he/him)
-
+diff --git a/fs/pipe.c b/fs/pipe.c
+index 19a7948ab234..b5b40d5e2a17 100644
+--- a/fs/pipe.c
++++ b/fs/pipe.c
+@@ -112,20 +112,40 @@ void pipe_double_lock(struct pipe_inode_info *pipe1,
+ 	pipe_lock(pipe2);
+ }
+ 
++static struct page *anon_pipe_get_page(struct pipe_inode_info *pipe)
++{
++	for (int i = 0; i < ARRAY_SIZE(pipe->tmp_page); i++) {
++		if (pipe->tmp_page[i]) {
++			struct page *page = pipe->tmp_page[i];
++			pipe->tmp_page[i] = NULL;
++			return page;
++		}
++	}
++
++	return alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
++}
++
++static void anon_pipe_put_page(struct pipe_inode_info *pipe,
++			       struct page *page)
++{
++	if (page_count(page) == 1) {
++		for (int i = 0; i < ARRAY_SIZE(pipe->tmp_page); i++) {
++			if (!pipe->tmp_page[i]) {
++				pipe->tmp_page[i] = page;
++				return;
++			}
++		}
++	}
++
++	put_page(page);
++}
++
+ static void anon_pipe_buf_release(struct pipe_inode_info *pipe,
+ 				  struct pipe_buffer *buf)
+ {
+ 	struct page *page = buf->page;
+ 
+-	/*
+-	 * If nobody else uses this page, and we don't already have a
+-	 * temporary page, let's keep track of it as a one-deep
+-	 * allocation cache. (Otherwise just release our reference to it)
+-	 */
+-	if (page_count(page) == 1 && !pipe->tmp_page)
+-		pipe->tmp_page = page;
+-	else
+-		put_page(page);
++	anon_pipe_put_page(pipe, page);
+ }
+ 
+ static bool anon_pipe_buf_try_steal(struct pipe_inode_info *pipe,
+@@ -493,27 +513,25 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
+ 		if (!pipe_full(head, pipe->tail, pipe->max_usage)) {
+ 			unsigned int mask = pipe->ring_size - 1;
+ 			struct pipe_buffer *buf;
+-			struct page *page = pipe->tmp_page;
++			struct page *page;
+ 			int copied;
+ 
+-			if (!page) {
+-				page = alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
+-				if (unlikely(!page)) {
+-					ret = ret ? : -ENOMEM;
+-					break;
+-				}
+-				pipe->tmp_page = page;
++			page = anon_pipe_get_page(pipe);
++			if (unlikely(!page)) {
++				if (!ret)
++					ret = -ENOMEM;
++				break;
+ 			}
+ 
+ 			copied = copy_page_from_iter(page, 0, PAGE_SIZE, from);
+ 			if (unlikely(copied < PAGE_SIZE && iov_iter_count(from))) {
++				anon_pipe_put_page(pipe, page);
+ 				if (!ret)
+ 					ret = -EFAULT;
+ 				break;
+ 			}
+ 
+ 			pipe->head = head + 1;
+-			pipe->tmp_page = NULL;
+ 			/* Insert it into the buffer array */
+ 			buf = &pipe->bufs[head & mask];
+ 			buf->page = page;
+@@ -847,8 +865,10 @@ void free_pipe_info(struct pipe_inode_info *pipe)
+ 	if (pipe->watch_queue)
+ 		put_watch_queue(pipe->watch_queue);
+ #endif
+-	if (pipe->tmp_page)
+-		__free_page(pipe->tmp_page);
++	for (i = 0; i < ARRAY_SIZE(pipe->tmp_page); i++) {
++		if (pipe->tmp_page[i])
++			__free_page(pipe->tmp_page[i]);
++	}
+ 	kfree(pipe->bufs);
+ 	kfree(pipe);
+ }
+diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
+index 8ff23bf5a819..eb7994a1ff93 100644
+--- a/include/linux/pipe_fs_i.h
++++ b/include/linux/pipe_fs_i.h
+@@ -72,7 +72,7 @@ struct pipe_inode_info {
+ #ifdef CONFIG_WATCH_QUEUE
+ 	bool note_loss;
+ #endif
+-	struct page *tmp_page;
++	struct page *tmp_page[2];
+ 	struct fasync_struct *fasync_readers;
+ 	struct fasync_struct *fasync_writers;
+ 	struct pipe_buffer *bufs;
 -- 
-Thank you,
-Roman
+2.43.0
 
