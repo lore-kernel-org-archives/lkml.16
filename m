@@ -1,72 +1,91 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mail-m3282.qiye.163.com (mail-m3282.qiye.163.com [220.197.32.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344571E1DEF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:00:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA8C1662EF;
+	Thu, 27 Feb 2025 11:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740654022; cv=none; b=uOFCPIgyaTpTkptw/96KQ4DTIefQ0z7kV58bmIj1w7/ar13wNmpSqUJuETQJSvIug16/CK5cBXy7EBNU9IT5SBEu5kEQLbp1l0GsyGdEuBH6lzK2LkpEqU7px/HFYm/ZBJRFyKSFu5SpOk5F8gGvMu8wehg/t5aZ5/yPLHgSuFA=
+	t=1740654036; cv=none; b=NPvyzjo39cNyPals4KtXl6ivhrbP3ujrliXtks+91XS04+WnYG1INZbU5f+lZge88D6+4+5oY52o/V/LuY1svexivrGqupusc9PbC/1sXj946V2uEBNUUH2VhOzYdq63gY8YbDE5p/qESEfQ3MqC6UHxMJut5S5Vtp4COY/6Vvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740654022; c=relaxed/simple;
-	bh=WZpBvNTiF72CoGtzoTsdS/QN/xhPzaQrjim5IiJgJWc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VvLb9eUxti2ZrDivdi8OplAhi049cYbdbRX2/IT0IBVFW5d5ayk6v2ko24GMO4nFzAq28fMxfJPSv7Ia6utHEqm4gasDML0P/lPIxOZ9wYwC3W6BtB0RkJiW1V98vpZRwuB7Res5GgQyQV+6ceiqlmqA5SpoljPRbaAehop/bOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnbck-0000FI-RT; Thu, 27 Feb 2025 12:00:14 +0100
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnbck-0036wn-1o;
-	Thu, 27 Feb 2025 12:00:14 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1tnbck-0005pz-1b;
-	Thu, 27 Feb 2025 12:00:14 +0100
-Message-ID: <4dbc990ae607404ce4288d884652b9143032023b.camel@pengutronix.de>
-Subject: Re: [PATCH v4] reset: mchp: sparx5: Fix for lan966x
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>, 
-	Steen.Hegelund@microchip.com, daniel.machon@microchip.com, 
-	UNGLinuxDriver@microchip.com, herve.codina@bootlin.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Thu, 27 Feb 2025 12:00:14 +0100
-In-Reply-To: <20250227105502.25125-1-horatiu.vultur@microchip.com>
-References: <20250227105502.25125-1-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1740654036; c=relaxed/simple;
+	bh=mdM+ePl0coPnOxwZBVwAhHsPSOaeZuqrB6HncsFy0+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=czRmcDMaL0d8z0PedyDkjYPbRTwFDz/e+MeNpvLqubu4lrXJPYKkXDQqcGffuxr0+TZEXd/5qhMx0y48NyqwUbGyoMbwzEssdshHLsuzm0Br9TIRiCYeHZY/JclBm19IPYgfHIHijzYwAmZh2q4k7SPOJrlz/a/lkg+bOKA6GDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=bodHX+nX; arc=none smtp.client-ip=220.197.32.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="bodHX+nX"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id c6596ab8;
+	Thu, 27 Feb 2025 19:00:23 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-pm@vger.kernel.org,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v3 0/2] rockchip: Add rk3562 power domain support
+Date: Thu, 27 Feb 2025 18:59:55 +0800
+Message-Id: <20250227105957.2341107-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ09OGFZPSUIfShhKQkNKGhlWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a954710934803afkunmc6596ab8
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MzI6Sxw*PTINIw08AhkKOTgw
+	Mz5PC0hVSlVKTE9LTU5PS0lPQ0xPVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFDTE83Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=bodHX+nX26+wDPL0L7R3+BcC9KfsRht18KaUDideUQmHXDFksKtU3M938qsfRLiKOsPKUrER+huHfpcwSyKKAXN0MYlhCUnHEyXIZFx/hywG7F/FYP1g0MO5py7ER51yMZCqQUd4uzHarOQf+T/F2IZQr9XydbwBpUY3NzFW2MM=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=nwHfhAaVNdbWsSpgLPAqaXSfh9N5ThHSjgQ30wKWVPA=;
+	h=date:mime-version:subject:message-id:from;
 
-On Do, 2025-02-27 at 11:55 +0100, Horatiu Vultur wrote:
-> With the blamed commit it seems that lan966x doesn't seem to boot
-> anymore when the internal CPU is used.
-> The reason seems to be the usage of the devm_of_iomap, if we replace
-> this with devm_ioremap, this seems to fix the issue as we use the same
-> region also for other devices.
->=20
-> Fixes: 0426a920d6269c ("reset: mchp: sparx5: Map cpu-syscon locally in ca=
-se of LAN966x")
-> Reviewed-by: Herve Codina <herve.codina@bootlin.com>
-> Tested-by: Herve Codina <herve.codina@bootlin.com>
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+This patch set add power domain driver for a new SoC rk3562, the SoC DT will
+be sent as a separate patch set and the new compatible will be used in the DT.
 
-regards
-Philipp
+Changes in v3:
+- squash the header file and the binding document
+- Update license
+
+Changes in v2:
+- rename to rockchip,rk3562-power.h
+- update the subject
+- use dual license
+- update the header name
+
+Finley Xiao (1):
+  dt-bindings: power: rockchip: Add support for RK3562 SoC
+
+Kever Yang (1):
+  soc: rockchip: power-domain: add power domain support for rk3562
+
+ .../power/rockchip,power-controller.yaml      |  1 +
+ drivers/pmdomain/rockchip/pm-domains.c        | 48 ++++++++++++++++++-
+ .../dt-bindings/power/rockchip,rk3562-power.h | 35 ++++++++++++++
+ 3 files changed, 83 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/power/rockchip,rk3562-power.h
+
+-- 
+2.25.1
+
