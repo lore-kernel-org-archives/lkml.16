@@ -1,154 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD16622D4EB;
-	Thu, 27 Feb 2025 12:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C335622F39C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740659799; cv=none; b=DRQdf9Te0DPcJ59TChSFY+VtUzDpnSzuzeN5Ohob1dCfEWZBd34lHhb1r0gUwpECHoSKvFSuAuc993gEUaLllIo6dNzQkJdjPVudbofcSu94Wai5gjSbGoEI5OpnJWjuM6dQwPpxkCPaM4dMCSBtVloZ8x8Ud6BeY5VEjN2AvsY=
+	t=1740659802; cv=none; b=KpEcBCVR1psYDIGAUh2I7Sm/Let3OXw5F7Y61vFZyUrfkDGROglfmnrHj1p5hdRzlvx9ZhpNZn666HqyAEwIK7DfMueqczJLw2pXNucf2DOr6w1o82nt64lC3z9TuNY9yk6c+oLOYmNJYX8Wr9wIxXOb3/TUtnngo3QCNC9z58c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740659799; c=relaxed/simple;
-	bh=iH024xRD6cyG1uXtxu6ZtfNK2dVVhqaMlYLdesMgGzs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IKHr/71dfZEm1/00afiZpaauglWFCM3brDGi7lcQcf+4xm5vsIR4Z+WRs+NnC4CXykRuTgI4TAkNev4y64i+8DGsTDXGvEJxGHA6V8tvBT7+wH3+5S1ynYL+4s49p44EgdsBfvF333zIamL5ofaViZB8dBwfvAyxEBjPKYbotiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D4bPdPBq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740659802; c=relaxed/simple;
+	bh=jVNWxl4WmX/uXUCzIy5O6n0LejX0fZ69NtkSB8CPtZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I6/h29ALcey02WykEBB5hqUb3DVoDJi6F+7xTJkMmupvQFbryuQXAYjq/5kgRpM01XWRwofvpBGOA++D4HVSU6ggFv17FG+RlV++rz4j+Bj6IvuRPw0OXn3lMSJPcUFyx0hVfKzGFSaqYlSR/Q/+B+u3eu/1/Ta1j3yYXQKPPvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=C3Lqgiey; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D4bPdPBq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA7EAC4CEE7;
-	Thu, 27 Feb 2025 12:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740659798;
-	bh=iH024xRD6cyG1uXtxu6ZtfNK2dVVhqaMlYLdesMgGzs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=D4bPdPBqUn5LzwalPZyesL3WxozFSx+lVm60/h5twQ9xSKynYeJm2FdJtGtxpAE31
-	 LQvmq2Sryqt5NNtK6pQx6Li0UTxSl5PB1JdOzCMb+ntGrQrntpi3Mo78dLz2brYA6O
-	 ZnnDvG6RsPJWzLI2a7SAlG382hA357b2dq0i5X1VRBlTo5Yg7civaLgJwk4FG86Nn1
-	 qm1ERKfA1k4jJ7C00uDIp2ZaBcLP07H63ls0cOyJ+iua/q0wLgvd9cBxq/4GHlaPkP
-	 FJ9Bs99jJlUtBGBBpZSg7NRoNxA2f0CST2FjJGbP75f2m3YMyqx+KCQ5vqQyOyFb+A
-	 MFvLXHD8gbe0g==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Thu, 27 Feb 2025 13:35:10 +0100
-Subject: [PATCH v5 1/4] rust: sync: change `<Arc<T> as
- ForeignOwnable>::PointedTo` to `T`
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="C3Lqgiey"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2233622fdffso15879505ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:36:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1740659799; x=1741264599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xtME809Eew76HgNd2VZgiOyw7ntFEPKx2r2sqfXdyNY=;
+        b=C3Lqgiey48mEaU5DICA4vxwbI9VGQrg5nYz2SNG8DLgKrYtbCRDvoBKS90epXDUwuw
+         nuw9NvKZRucYm2Fx+kU549MwKe93lABbmPQXJCg6k3WDriQcWXt2tF0AZuZ2YzA4RteZ
+         JodBnRCOQLZAYRS3I+EjhjH1RymLVnwsScIA7Po8wKBTroTqFIsxv28xLHl9LSXKET4C
+         UBNnIonWcuiPbtdy5i3whz71gViGI1D5C4GkVmfZKZnlrjvjGX9+wv8hvINt3BeDl2tX
+         cUA9weofUNYWNHjK2eWWPKfmHObNt7EPS5F5pb1QtX446M7ENkLJuzLgcu9vbTg2BDOG
+         slvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740659799; x=1741264599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xtME809Eew76HgNd2VZgiOyw7ntFEPKx2r2sqfXdyNY=;
+        b=rc9KwnBfQvfyOXSnYLZPFyPPyTIxNr3TxPqwx0AZ19Du7oCDtaXqll8c0OaWgd/Ggl
+         O8fhQqQvPLXsSPOnQlwPYXJZPyd2QKq8AnrdU9H01hNPi8S6ASYvAE7I0TLRHXsEhaTS
+         ngP7bYGQapcHCSqevPNCQLYN1MVbExWu2tgY9aQ+lvdG9pcDTEsLPbm3zXu+lpSe3FVZ
+         ycG5DkAUUAVWvddpiafJPMiqF7slk/znQBv5J48+ZUpj77towuMlDu4Y6gDUhAtIrHBF
+         I2OFqx9+kb9wUxKAVnJbLeKNx7tGY1lvg8VeIaoAldPr3iSEFIRausOeMxL0jGS3jTpl
+         op1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXTdN+QXhApdcpaXqa++8yTcgODlJ0FF/qPxWulb6mEEPvvav6nHafaAQFEtSmnmuzNWff90l1vth0sLUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypX2Lds+Jfzxte6+2hjT+jlUmdr6pO2vC9gJqnYYG2Nkar9BwI
+	RWcnA5tgU+Chz8U2E+FND7nssc+DALsfmBHvDhABDOhd2Eb/4DwyRnv7E/94irQ=
+X-Gm-Gg: ASbGncuYjUG0EiXxtSalErEV/XJ8J4hNMl0/xteUnHTHBMirBM0uURTzFtVIIZoP5C2
+	iRTAfCUlV5lsbNMo4RRJ+BHk3ReVKF8t4s6gchgiEvVIPq6KwXW64CZR1fb/FEzzmArNJ/5Q0mW
+	9SEs6uVBN/Qv41lVBpWNJy5KwbJ/5auqIcMimYMIFLEJj5ub4Vg6VHAGe/RvTY7VNenHcCXvIu4
+	A4g06v4dFqQzrJxXaVqqM0NQoJcdKQbaHd2ntrE0Ra4Rnl5aybUxZGjSs8dulzS47LtENmkOJ14
+	5M8UHk+vzWaBmhsk7ve0D4DweuxHbO74qIto
+X-Google-Smtp-Source: AGHT+IH56tY+4vK57WuCNQiVCZOgB7TNFoVCq9IHBAMlZTCbUrlVJLG7r/B7T96EdJnPgpthhW1GjA==
+X-Received: by 2002:a17:902:ecd0:b0:21f:542e:dd0a with SMTP id d9443c01a7336-22307e6586fmr197711655ad.41.1740659799030;
+        Thu, 27 Feb 2025 04:36:39 -0800 (PST)
+Received: from ventana-bhyve.. ([49.37.249.43])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504c5bddsm13219135ad.140.2025.02.27.04.36.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 04:36:38 -0800 (PST)
+From: Himanshu Chauhan <hchauhan@ventanamicro.com>
+To: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	acpica-devel@lists.linux.dev
+Cc: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	lenb@kernel.org,
+	james.morse@arm.com,
+	tony.luck@intel.com,
+	ardb@kernel.org,
+	conor@kernel.org,
+	cleger@rivosinc.com,
+	robert.moore@intel.com,
+	sunilvl@ventanamicro.com,
+	apatel@ventanamicro.com,
+	Himanshu Chauhan <hchauhan@ventanamicro.com>
+Subject: [RFC PATCH v1 00/10] Add RAS support for RISC-V architecture
+Date: Thu, 27 Feb 2025 18:06:18 +0530
+Message-ID: <20250227123628.2931490-1-hchauhan@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org>
-References: <20250227-configfs-v5-0-c40e8dc3b9cd@kernel.org>
-In-Reply-To: <20250227-configfs-v5-0-c40e8dc3b9cd@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
- Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3633; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=iH024xRD6cyG1uXtxu6ZtfNK2dVVhqaMlYLdesMgGzs=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnwFwCLx7ibrR86EZs9lxtw3xWU7qjzlrraFiUg
- aqWtCvx2j+JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ8BcAgAKCRDhuBo+eShj
- d7zCD/4kXPykk11x9sM9lc2DgfeaLln/UR8q1SJcAmmtkL/DKMGOmk/3Xu655gnCckR7WujxadZ
- gkJ18bqmT4iM1OLMxu6YgiANSD1mwE8IeK7m/VHvEJIDTfckWZNT2h6iGOxUnwWSzWPZ+SrbyKH
- W2VUPvuJL2SGBfO13ZoBAcwNgLTlINOBWmIdgv5NuYtqhraWKol4ieNUdR4G3nxHV+MUsE1ALnn
- aMc+LTKOCp/AyNhMGUim1WCCn9FlYDGo4t0DAy34bcwMre4A+e41ViEXLPqgD8uTm03Mp2D9O7Y
- TVDhQSv44L53L93xhiu7eaUL04DQGgKeERR/80bHME3zuWpb1KBPCy3salC/wRAnd9LQvHzEzHQ
- LnF5o7K2jYwHiB+zfm7YX0JpGxHZ/bb7GIVUJWJqHm/mQ38vcLAnODSLr08jg83EL37WNBVfBy2
- VfPti6ubyex7wsi+236SpG1fsmubcy6VZ3gWRQnb9REYLD6S/rSjpe8ydnVznUfuYmbFbdDTX9q
- pAMbMQfteYk4IQeQPOGdbvPHlBVc/+ykqewg0GQqet0/qoLFUvy/CFjFKHuQjrc1WXnK/SCZQ8G
- vsiNGoKQns5Vz1BV4Inyk6TF/1kT49pc5Q9eawot4dWRLSIMZuyj78/SGcsUng1qbVEk7e5VU4j
- qDB72JaC/YFS1uA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Transfer-Encoding: 8bit
 
-Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
-`Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
-functionality, but allows `ArcInner` to be private. Further, it allows
-downstream users to write code that is generic over `Box` and `Arc`, when
-downstream users need access to `T` after calling `into_foreign`.
+This series implements the RAS (Reliability, Availability and Serviceability)
+support for RISC-V architecture using RISC-V RERI specification. It is conformant
+to ACPI platform error interfaces (APEI). It uses the highest priority
+Supervisor Software Events (SSE)[2] to deliver the hardware error events to the kernel.
+The SSE implemetation has already been merged in OpenSBI. Clement has sent a patch series for
+its implemenation in Linux kernel.[5]
 
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
+The GHES driver framework is used as is with the following changes for RISC-V:
+	1. Register each ghes entry with SSE layer. Ghes notification vector is SSE event.
+	2. Add RISC-V specific entries for processor type and ISA string
+	3. Add fixmap indices GHES SSE Low and High Priority to help map and read from
+	   physical addresses present in GHES entry.
+	4. Other changes to build/configure the RAS support
 
-This patch is a dependency for Rust `configfs` abstractions. It allows both
-`Box` and `Arc` to be used as pointer types in the `configfs` hierarchy.
----
- rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+How to Use:
+----------
+This RAS stack consists of Qemu[3], OpenSBI, EDK2[4], Linux kernel and devmem utility to inject and trigger
+errors. Qemu [Ref.] has support to emulate RISC-V RERI. The RAS agent is implemented in OpenSBI which
+creates CPER records. EDK2 generates HEST table and populates it with GHES entries with the help of
+OpenSBI.
 
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index dfe4abf82c25..3d77a31e116f 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
- #[doc(hidden)]
- #[pin_data]
- #[repr(C)]
--pub struct ArcInner<T: ?Sized> {
-+struct ArcInner<T: ?Sized> {
-     refcount: Opaque<bindings::refcount_t>,
-     data: T,
- }
-@@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> Option<Pin<UniqueArc<T>>> {
- 
- // SAFETY: The `into_foreign` function returns a pointer that is well-aligned.
- unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
--    type PointedTo = ArcInner<T>;
-+    type PointedTo = T;
-     type Borrowed<'a> = ArcBorrow<'a, T>;
-     type BorrowedMut<'a> = Self::Borrowed<'a>;
- 
-     fn into_foreign(self) -> *mut Self::PointedTo {
--        ManuallyDrop::new(self).ptr.as_ptr()
-+        let this = ManuallyDrop::new(self).ptr.as_ptr();
-+        // SAFETY: `x` is a valid pointer to `Self` so the projection below is
-+        // in bounds of the allocation.
-+        unsafe { core::ptr::addr_of_mut!((*this).data) }
-     }
- 
-     unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-+        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-+        // the offset calculation below is in bounds of the allocation.
-+        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
-+
-         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
-         // call to `Self::into_foreign`.
--        let inner = unsafe { NonNull::new_unchecked(ptr) };
-+        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
- 
-         // SAFETY: By the safety requirement of this function, we know that `ptr` came from
-         // a previous call to `Arc::into_foreign`, which guarantees that `ptr` is valid and
-@@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-     }
- 
-     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, T> {
-+        // SAFETY: We did the reverse offset calculation in `into_foreign`, so
-+        // the offset calculation below is in bounds of the allocation.
-+        let inner_ptr = unsafe { kernel::container_of!(ptr, ArcInner<T>, data).cast_mut() };
-+
-         // SAFETY: The safety requirements of this function ensure that `ptr` comes from a previous
-         // call to `Self::into_foreign`.
--        let inner = unsafe { NonNull::new_unchecked(ptr) };
-+        let inner = unsafe { NonNull::new_unchecked(inner_ptr) };
- 
-         // SAFETY: The safety requirements of `from_foreign` ensure that the object remains alive
-         // for the lifetime of the returned value.
+Qemu Command:
+------------
+<qemu-dir>/build/qemu-system-riscv64 \
+    -s -accel tcg -m 4096 -smp 2 \
+    -cpu rv64,smepmp=false \
+    -serial mon:stdio \
+    -d guest_errors -D ./qemu.log \
+    -bios <opensbi-dir>/build/platform/generic/firmware/fw_dynamic.bin \
+    -monitor telnet:127.0.0.1:55555,server,nowait \
+    -device virtio-gpu-pci -full-screen \ 
+    -device qemu-xhci \
+    -device usb-kbd \
+    -blockdev node-name=pflash0,driver=file,read-only=on,filename=<edk2-build-dir>/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_CODE.fd \
+    -blockdev node-name=pflash1,driver=file,filename=<edk2-build-dir>/RiscVVirtQemu/RELEASE_GCC5/FV/RISCV_VIRT_VARS.fd \
+    -M virt,pflash0=pflash0,pflash1=pflash1,rpmi=true,reri=true,aia=aplic-imsic \
+    -kernel <kernel image> \
+    -initrd <rootfs image> \
+    -append "root=/dev/ram rw console=ttyS0 earlycon=uart8250,mmio,0x10000000"
+
+Error Injection & Triggering:
+----------------------------
+devmem 0x4010040 32 0x2a1
+devmem 0x4010048 32 0x9001404
+devmem 0x4010044 8 1
+
+The above commands injects a TLB error on CPU 0.
+
+Sample Output (CPU 0):
+---------------------
+[   34.370282] {1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 1
+[   34.371375] {1}[Hardware Error]: event severity: recoverable
+[   34.372149] {1}[Hardware Error]:  Error 0, type: recoverable
+[   34.372756] {1}[Hardware Error]:   section_type: general processor error
+[   34.373357] {1}[Hardware Error]:   processor_type: 3, RISCV
+[   34.373806] {1}[Hardware Error]:   processor_isa: 6, RISCV64
+[   34.374294] {1}[Hardware Error]:   error_type: 0x02
+[   34.374845] {1}[Hardware Error]:   TLB error
+[   34.375448] {1}[Hardware Error]:   operation: 1, data read
+[   34.376100] {1}[Hardware Error]:   target_address: 0x0000000000000000
+
+References:
+----------
+[1] RERI Specification: https://github.com/riscv-non-isa/riscv-ras-eri/releases/download/v1.0/riscv-reri.pdf
+[2] SSE Section in OpenSBI v3.0: https://github.com/riscv-non-isa/riscv-sbi-doc/releases/download/v3.0-rc3/riscv-sbi.pdf
+[3] Qemu source (with RERI emulation support): https://github.com/ventanamicro/qemu.git (branch: dev-upstream)
+[4] EDK2: https://github.com/ventanamicro/edk2.git (branch: dev-upstream)
+[5] SSE Kernel Patches: https://lore.kernel.org/linux-riscv/649fdead-09b0-4f94-a6ff-099fc970d890@rivosinc.com/T/
+
+Himanshu Chauhan (10):
+  riscv: Define ioremap_cache for RISC-V
+  riscv: Define arch_apei_get_mem_attribute for RISC-V
+  acpi: Introduce SSE in HEST notification types
+  riscv: Add fixmap indices for GHES IRQ and SSE contexts
+  riscv: conditionally compile GHES NMI spool function
+  riscv: Add functions to register ghes having SSE notification
+  riscv: Add RISC-V entries in processor type and ISA strings
+  riscv: Introduce HEST SSE notification handlers
+  riscv: Add config option to enable APEI SSE handler
+  riscv: Enable APEI and NMI safe cmpxchg options required for RAS
+
+ arch/riscv/Kconfig                 |   2 +
+ arch/riscv/include/asm/acpi.h      |  20 ++++
+ arch/riscv/include/asm/fixmap.h    |   8 ++
+ arch/riscv/include/asm/io.h        |   3 +
+ drivers/acpi/apei/Kconfig          |   5 +
+ drivers/acpi/apei/ghes.c           | 102 +++++++++++++++++---
+ drivers/firmware/efi/cper.c        |   3 +
+ drivers/firmware/riscv/riscv_sse.c | 147 +++++++++++++++++++++++++++++
+ include/acpi/actbl1.h              |   3 +-
+ include/linux/riscv_sse.h          |  15 +++
+ 10 files changed, 296 insertions(+), 12 deletions(-)
 
 -- 
-2.47.0
-
+2.43.0
 
