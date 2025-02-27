@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC99270043;
-	Thu, 27 Feb 2025 12:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F72522D4F9;
+	Thu, 27 Feb 2025 12:55:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740660922; cv=none; b=lk3kT0B4SJ5vUJsR24rWxfKESyB1RZgd5DNwwA33pk+Y/9TbSE1dmQI1b4mo+5Rv60GgXZKW8kzmyD++NsTZhnLhYviip5qql43qCct42amdiTTn89UdRdxsVl5RmaXoSvOh7SXlPvY1rayy7zYJnZ6J0Fd4DrXbOSksaltKzZI=
+	t=1740660923; cv=none; b=G4sy2Jo82glw0EaIanIXh5G9Scl4KYnEMYf2ImefySCNzT/Pdf5n54EsJG4MDKEb0ISxT39aI/xP4RDdwqgGllb8IaXM0PPxjEE8oN9PQyP536L74wcBe+z/a0hzuhimYUu9Q+RUyJN61nBM7F+DJKT0YFV6x+D/WSs/+My6kD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740660922; c=relaxed/simple;
-	bh=6WA9Y2u0JkbMjOhXCplng2cIcES7LxUMIDD5XdtYSXU=;
+	s=arc-20240116; t=1740660923; c=relaxed/simple;
+	bh=YQUi7a8cpG9iECYYLBkvIN1TJHrRJtGgc/e/IP2e+7k=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eOYBlQlvB9pOaasOxLql1plMr5Am6PF+9ZQhCa9tEpI0gGAnMlyUsanj22FgHQMw2mEE9ZzIySMY2BqGNj+sn+P7N5uu9MoouRihGXYS9S83RUZOY5xJtNQyaSpuPJx2qAm5QNaPHIRSol167Bc58I/ONrtZD+QISM3KSBrd3BM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jzzNUpz6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ouK+RFJI; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=jgHdllYXc+2MGaGwBxwYX064/Aih54gh8VLluXYyLYh3c8tEVFblCCjEOGt7YTIX9u6pRlhWgTO0+pGYW9eOzCibsfCAwhPTIEoJ/KGJ+NgUFODyCosHziFxNaG8Pmc69rQLTxMYUwI3OD801MpBmLCyMCc99xjVk5RZLa2tbAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CTpk+HRc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sFrquKpB; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jzzNUpz6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ouK+RFJI"
-Date: Thu, 27 Feb 2025 12:55:15 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CTpk+HRc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sFrquKpB"
+Date: Thu, 27 Feb 2025 12:55:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740660918;
+	s=2020; t=1740660920;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vSQsHVXWWB0RKHpg+AkwK8Wn1EuGrecV/OqBwOp2lLY=;
-	b=jzzNUpz6C1xYV1LeaKeh0ZTslx82lMp+YO4DMuGrujiY7sruQm/2HujaUdfjTeBh1kkR0Z
-	HEvIGU5ww/zNCo7EA9Z6p9BeeQSIW12i0uDIubzoj4wSQRiOgruMPn4E0n+VNerv+BFmwv
-	rMZ2JChLQlhUumgKj21k0vdSaTBMruM/NsimPvN/GOCnHm8Kt+jGlRXo6M1JGhGkSSNtip
-	Sk1DVvvYGFOFaRhBbsn+JskeyZRKS8UolHBY41K1K8p2o6QCuJXAsejlXUc1ZEhUsvO8Yx
-	5gF5jh1K5tVmwU2O3ecKCWHLIIU8xYzy0R8DWqU711OfJ3P0WhuhETQK7LgCiQ==
+	bh=fiWV96N4fiNPVPQmP5dPvRkad3s8Y4OQ9okbq4n8PWo=;
+	b=CTpk+HRcB9i++rQDii8Sdk+aydK65iZUX1nE3a4xd/wnRpuBDguPRT4seZ1ARhrzm0YJig
+	x6bNqmTItDmjoSHpcUHXh1USoZDZmadLdwZqVKA7h43PFp/x0wnF0tOIRThceO6SLI0B6C
+	1+hh1aMVM8aAgF2cbZaBUzKElIU57yTVCOgfbf0DENRBtpDKq8sR2shWcJXtZh7qNx2Ndp
+	yew1eiMT/wbKBFQ2S5rmaXDDROYijBX6Pwy0tx3N+ZnweUvReUe6ORPp5GBQQIsLEY/8Bh
+	ec6h9ZrOUgPtvnB5tNYSjpZ6yY9q83OZtdn4bVP5qNE1GgQaDm7BkrrkleVR0A==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740660918;
+	s=2020e; t=1740660920;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vSQsHVXWWB0RKHpg+AkwK8Wn1EuGrecV/OqBwOp2lLY=;
-	b=ouK+RFJICyRL4uOZr2Jmja/ccxfPYwrdaJXXIawZbel5wjQv7sM73eiLgbPSGR6mLsSGQQ
-	6krd7jwFVKFTinAA==
+	bh=fiWV96N4fiNPVPQmP5dPvRkad3s8Y4OQ9okbq4n8PWo=;
+	b=sFrquKpBP8awWqUGq3asb0cc8IBDFTCmFkLRZmrMvdBrkWWaqIsFmxEciImPsSmwd4Ypow
+	xrkjYeeFGALUnBCA==
 From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Remove get_this_hybrid_cpu_*()
+Subject:
+ [tip: x86/cpu] x86/cpu: Prefix hexadecimal values with 0x in cpu_debug_show()
 Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
  Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com>
-References: <20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com>
+In-Reply-To: <20241211-add-cpu-type-v5-1-2ae010f50370@linux.intel.com>
+References: <20241211-add-cpu-type-v5-1-2ae010f50370@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174066091677.10177.7289400408971955716.tip-bot2@tip-bot2>
+Message-ID: <174066092024.10177.4988636186525757873.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,89 +68,40 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     db5157df149709c02e6a08c0b3498553bdd2a76c
-Gitweb:        https://git.kernel.org/tip/db5157df149709c02e6a08c0b3498553bdd2a76c
+Commit-ID:     4a412c70af674198749fd16be695d53e1c41b5f9
+Gitweb:        https://git.kernel.org/tip/4a412c70af674198749fd16be695d53e1c41b5f9
 Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Wed, 11 Dec 2024 22:57:41 -08:00
+AuthorDate:    Wed, 11 Dec 2024 22:57:24 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Feb 2025 13:34:52 +01:00
+CommitterDate: Thu, 27 Feb 2025 13:26:53 +01:00
 
-x86/cpu: Remove get_this_hybrid_cpu_*()
+x86/cpu: Prefix hexadecimal values with 0x in cpu_debug_show()
 
-Because calls to get_this_hybrid_cpu_type() and
-get_this_hybrid_cpu_native_id() are not required now. cpu-type and
-native-model-id are cached at boot in per-cpu struct cpuinfo_topology.
+The hex values in CPU debug interface are not prefixed with 0x. This may
+cause misinterpretation of values. Fix it.
+
+[ mingo: Restore previous vertical alignment of the output. ]
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com
+Link: https://lore.kernel.org/r/20241211-add-cpu-type-v5-1-2ae010f50370@linux.intel.com
 ---
- arch/x86/include/asm/cpu.h  | 14 --------------
- arch/x86/kernel/cpu/intel.c | 31 -------------------------------
- 2 files changed, 45 deletions(-)
+ arch/x86/kernel/cpu/debugfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-index 98eced5..0c8ec62 100644
---- a/arch/x86/include/asm/cpu.h
-+++ b/arch/x86/include/asm/cpu.h
-@@ -50,20 +50,6 @@ static inline void split_lock_init(void) {}
- static inline void bus_lock_init(void) {}
- #endif
+diff --git a/arch/x86/kernel/cpu/debugfs.c b/arch/x86/kernel/cpu/debugfs.c
+index cacfd3f..1976fef 100644
+--- a/arch/x86/kernel/cpu/debugfs.c
++++ b/arch/x86/kernel/cpu/debugfs.c
+@@ -16,8 +16,8 @@ static int cpu_debug_show(struct seq_file *m, void *p)
+ 	if (!c->initialized)
+ 		return 0;
  
--#ifdef CONFIG_CPU_SUP_INTEL
--u8 get_this_hybrid_cpu_type(void);
--u32 get_this_hybrid_cpu_native_id(void);
--#else
--static inline u8 get_this_hybrid_cpu_type(void)
--{
--	return 0;
--}
--
--static inline u32 get_this_hybrid_cpu_native_id(void)
--{
--	return 0;
--}
--#endif
- #ifdef CONFIG_IA32_FEAT_CTL
- void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
- #else
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 3dce22f..045b439 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -873,34 +873,3 @@ static const struct cpu_dev intel_cpu_dev = {
- };
- 
- cpu_dev_register(intel_cpu_dev);
--
--#define X86_HYBRID_CPU_TYPE_ID_SHIFT	24
--
--/**
-- * get_this_hybrid_cpu_type() - Get the type of this hybrid CPU
-- *
-- * Returns the CPU type [31:24] (i.e., Atom or Core) of a CPU in
-- * a hybrid processor. If the processor is not hybrid, returns 0.
-- */
--u8 get_this_hybrid_cpu_type(void)
--{
--	if (!cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
--		return 0;
--
--	return cpuid_eax(0x0000001a) >> X86_HYBRID_CPU_TYPE_ID_SHIFT;
--}
--
--/**
-- * get_this_hybrid_cpu_native_id() - Get the native id of this hybrid CPU
-- *
-- * Returns the uarch native ID [23:0] of a CPU in a hybrid processor.
-- * If the processor is not hybrid, returns 0.
-- */
--u32 get_this_hybrid_cpu_native_id(void)
--{
--	if (!cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
--		return 0;
--
--	return cpuid_eax(0x0000001a) &
--	       (BIT_ULL(X86_HYBRID_CPU_TYPE_ID_SHIFT) - 1);
--}
+-	seq_printf(m, "initial_apicid:      %x\n", c->topo.initial_apicid);
+-	seq_printf(m, "apicid:              %x\n", c->topo.apicid);
++	seq_printf(m, "initial_apicid:	    0x%x\n", c->topo.initial_apicid);
++	seq_printf(m, "apicid:		    0x%x\n", c->topo.apicid);
+ 	seq_printf(m, "pkg_id:              %u\n", c->topo.pkg_id);
+ 	seq_printf(m, "die_id:              %u\n", c->topo.die_id);
+ 	seq_printf(m, "cu_id:               %u\n", c->topo.cu_id);
