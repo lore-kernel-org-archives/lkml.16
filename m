@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A158277803;
-	Thu, 27 Feb 2025 23:17:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54335274240;
+	Thu, 27 Feb 2025 23:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698237; cv=none; b=sWHczUQ2GHCer7l/9imNCRpkwAmVJ9OyDI7pHLUNXnWAt+j6qaPIlOTh2cctAX7/EWwuQC0WUJHNC7yZ3ONvA7yGehOKN/+r24wvoI6yu4DyteatLoBfeD637DDVz6a+/pr31AU8Ps+LYjuq22Tz6/mcIIoUJn+8QOGyS/9tK/k=
+	t=1740698238; cv=none; b=T3QXKMH3jRa5J7ZQb/KPikzTyEiYZKdhmdLrXXxe1VW7Kn9eFxxL0FLT8w1wZl2mvTFPu32jp/4IzgQMYWdzQMlyQ6OF21ZcIR7N56cGJSPpHUcDsgczDg5Szd37P2Sta5JKuGauYkYgA0bJGsVA8TsBa//m0klQcTHywu4516I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698237; c=relaxed/simple;
-	bh=AhVk55YoRVf85XaAGMEST2pp9suKqyiCIdDCxJlVfDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uvl8ZPYrP1W4fnUN4GgC2lvsnUNfZQ2WBF1vdo86Dan/fml40rn+RX9xQxhYcCerZvDzPjYzlzIGnH9YDUCrioD1GdRDOKoPa0y6BCXc5usQhnCtRd4oQcKAVDxxRdNZyYKRTo8hN6B450QrNtS4R7A5eqflYuJZ4wtvlQRYl/Y=
+	s=arc-20240116; t=1740698238; c=relaxed/simple;
+	bh=5RJmBGdQq01xTcYm+s8xV1oDkuVt2q9zI2oB4WIjmcA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uHONXmOJyRNa9oajrDmCqLMU7XA5ikQcKZB+OtgvN772vuOhUL+D80Tq2H2Pcsd0u4FWmWIZpqZ6xJjWtBlUvKFroeNOP9Df87WkleVxEqE1lY7v5yy2+gtY9JQjKnq3XoXORxYx9oI2rXFUtxTPO2t+ukcF7fx45CaTDk8YOiA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B1C31516;
-	Thu, 27 Feb 2025 15:17:28 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61C3E1688;
+	Thu, 27 Feb 2025 15:17:32 -0800 (PST)
 Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D5C13F673;
-	Thu, 27 Feb 2025 15:17:11 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54A253F673;
+	Thu, 27 Feb 2025 15:17:15 -0800 (PST)
 From: Andre Przywara <andre.przywara@arm.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
@@ -30,10 +31,12 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/8] pinctrl: sunxi: Add Allwinner A523 support
-Date: Thu, 27 Feb 2025 23:14:39 +0000
-Message-ID: <20250227231447.20161-1-andre.przywara@arm.com>
+Subject: [PATCH v3 2/8] pinctrl: sunxi: increase number of GPIO bank regulators
+Date: Thu, 27 Feb 2025 23:14:41 +0000
+Message-ID: <20250227231447.20161-3-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.46.3
+In-Reply-To: <20250227231447.20161-1-andre.przywara@arm.com>
+References: <20250227231447.20161-1-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,87 +45,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+By design, the Allwinner pinctrl IP always supported up to 11 GPIO banks,
+though no SoC ever used more than 9 banks so far.
+The Allwinner A523 has pins in all 11 banks, which exceeds the number of
+per-bank regulators that we currently support, as this was set to 9.
 
-this is the third drop of the series introducing pinctrl support for the
-Allwinner A523 family of SoCs (comprising A523, A527, T527, H728). [1]
-Only small changes this time: renaming a symbol, fixing the DT binding
-example, add adding the accrued tags. Many thanks to the reviewers, in
-particular Jernej for biting the bullet and looking at patch 5/8!
-Changelog below.
+Increase the size of the array to hold up to 11 regulator structs, to
+support pins in bank J and K as well.
 
-==============
-The first four patches extend the sunxi pinctrl core code to deal with
-some specialities of the new SoC: it uses every of the 11 possible banks
-except the first one, which required some register remapping. The first
-patch here is some cleanup, which we should take regardless, I think,
-since it fixes some hack we introduced with the D1 support.
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The main feature is actually patch 5, which introduces a new way to
-express the required pinmux values for each function/pin pair. 
-Traditionally, we dumped a rather large table of data into the (single
-image!) kernel for that, but this approach now puts that value into
-the DT, and builds the table at runtime. This patch was posted twice
-before [2][3], the last time LinusW seemed to be fine with the idea,
-just complained about the abuse of the generic pinmux property. I changed
-that to allwinner,pinmux now.
-
-The rest of the patches are the usual suspects: the two files for the
-two pinctrl instances of the new SoC (now very small), and the DT
-binding.
-
-Based on v6.14-rc1. Please have a look, review and test!
-
-Cheers,
-Andre
-
-[1] https://linux-sunxi.org/A523#Family_of_sun55iw3
-[2] https://patchwork.ozlabs.org/project/linux-gpio/cover/20171113012523.2328-1-andre.przywara@arm.com/
-[3] https://lore.kernel.org/linux-arm-kernel/20221110014255.20711-1-andre.przywara@arm.com/
-
-Changelog v2 .. v3:
-- rename POW_MOD_SEL symbol
-- drop CCU binding header inclusion in DT binding example
-- add review tags (with thanks!)
-
-Changelog v1 .. v2:
-- rebased on v6.14-rc1
-- extend regulator array to cover PortK as well
-- increase number of pins in A523 PortJ from 18 to 28
-- extend comment for new pinctrl DT code
-- move DT binding into separate yaml file
-- Add Jernej's Reviewed-by (with thanks!)
-
-
-Andre Przywara (8):
-  pinctrl: sunxi: refactor pinctrl variants into flags
-  pinctrl: sunxi: increase number of GPIO bank regulators
-  pinctrl: sunxi: move bank K register offset
-  pinctrl: sunxi: support moved power configuration registers
-  pinctrl: sunxi: allow reading mux values from DT
-  dt-bindings: pinctrl: add compatible for Allwinner A523/T527
-  pinctrl: sunxi: Add support for the Allwinner A523
-  pinctrl: sunxi: Add support for the secondary A523 GPIO ports
-
- .../allwinner,sun55i-a523-pinctrl.yaml        | 175 ++++++++
- drivers/pinctrl/sunxi/Kconfig                 |  10 +
- drivers/pinctrl/sunxi/Makefile                |   3 +
- drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c     |   6 +-
- drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c     |   8 +-
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c |  54 +++
- drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c   |  54 +++
- drivers/pinctrl/sunxi/pinctrl-sun5i.c         |   8 +-
- drivers/pinctrl/sunxi/pinctrl-sun6i-a31.c     |   8 +-
- drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c     |   7 +-
- drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c      | 374 ++++++++++++++++++
- drivers/pinctrl/sunxi/pinctrl-sunxi.c         |  54 ++-
- drivers/pinctrl/sunxi/pinctrl-sunxi.h         |  47 ++-
- 13 files changed, 758 insertions(+), 50 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523-r.c
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun55i-a523.c
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sunxi-dt.c
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index 8e2eca45b57f8..fbbf070a87542 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -155,7 +155,7 @@ struct sunxi_pinctrl {
+ 	struct gpio_chip		*chip;
+ 	const struct sunxi_pinctrl_desc	*desc;
+ 	struct device			*dev;
+-	struct sunxi_pinctrl_regulator	regulators[9];
++	struct sunxi_pinctrl_regulator	regulators[11];
+ 	struct irq_domain		*domain;
+ 	struct sunxi_pinctrl_function	*functions;
+ 	unsigned			nfunctions;
 -- 
 2.46.3
 
