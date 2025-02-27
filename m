@@ -1,405 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869A622A4DE;
-	Thu, 27 Feb 2025 10:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC168229B00;
+	Thu, 27 Feb 2025 10:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740652948; cv=none; b=aYKAe3+bPHPLjiRfKWNGPkTTWNOYz0nzOVIXlWNVV4YwwOg5g1OfXHfP0R0Ytv/ZvRIblYLKFPmuJUeud5ZtmbwxaMG8b+T4zgXCiY3SZA81izlBBpVHZQVeZMrFJQbZ8MsrfO79k4GMTapqEwDVUdXD0iT8wOnR9Ca+nOB4n6g=
+	t=1740652986; cv=none; b=LbMeMCd2k/3tf0bHG1scPdTNf9EspR5ddO89wWQM5QRaR/j5ZMR8t/x6UNuzgTkAN/0a7hTHAnxilZjc5Gc+74Lyq3Iu3zrbyxPlJvd4S65ggRo51Vb+w+IEWIOmGx8jp7wO9K7BaKuXFgl959anVMkmdTSRJA7HYpTcZbP67VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740652948; c=relaxed/simple;
-	bh=qAr+67Z+iWlJhSpI1PFT9xNk24t5BIcoHItLpja3XAA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oFyC+pk1gHF0FNQcsTURlAj9Kf+6u+/i7CKEvPoms2fLWVcXReeECRGL4VB5n95gVHV6k8fLJEWlsinGXaDyzCJqbpX0Lyhh2jkHIrdz0IJX1acULrgVg/Kps2cJMI7uMfsJXvz2O60KgLQay0rsxeRTtbpJTDkddQAe0HGElCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v3ZW0xWU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IQZRSlHD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740652986; c=relaxed/simple;
+	bh=q/kXL5Us3S1TImJ8vPmYLcGTSwjqZYa/nCqiSG53O7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2ifTuw0R2CK+sPDEivf8vNVfYgCssfSfHXCiStJLd4+/SorTtH0L3nXTI/RKAIVBXVvlJmJaqSeBn80D/oJ742G/ZV9YSuSUIpllORQ5sMxQKNsg0MpeqwoOUp+YVLZlt+sFCWmL0dXo2RCIbB0tbjjDVVEyO8N7XHqDoY44ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MA2R6RIr; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v3ZW0xWU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IQZRSlHD"
-Date: Thu, 27 Feb 2025 10:42:23 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740652944;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JppPBLhBkdP1vYSTnjvFo3uDvOfyq2MF5RqOPJMkd4c=;
-	b=v3ZW0xWUhi5idNftDEZofJn1OtXEWkZzBaUGWE+pmoiU/Qa2a4/5hBeiuLpKiu57DTxdBz
-	Fvt9iY3sr0yVsvCEiQsr5G8mfzOtDqAQPzc+wZpyPHJFwdN2nEDFsA5VExPvCVrWP4EacI
-	25OOxxt9kp9CAiom9+ud2jrlab+IZZhdeBhvlfQesuaAB4NZOB5eUsYPRG8wOooorl2lpb
-	ae1kJE/nmG2uzz7MwgKm8KN+CsEWospM6FghUuWMSmPQr/h9uyodQRWOC0S6iBMG0UqG5o
-	1XVRzO+8VfjdgiyK36mBxwVtqnAYQBL+AV+4LPUH5rr4sDbiqgoBA536svdmdg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740652944;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JppPBLhBkdP1vYSTnjvFo3uDvOfyq2MF5RqOPJMkd4c=;
-	b=IQZRSlHDyi0I8lD1oBU++lpHTJAy5vGx+vsYS7kMZkNhgTWUmRN1oJWVtt2jHiFyZMmmey
-	4p4zB08XUS2ezKAA==
-From: "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/smp: Drop 32-bit "bigsmp" machine support
-Cc: Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250226213714.4040853-3-arnd@kernel.org>
-References: <20250226213714.4040853-3-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MA2R6RIr"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43aac0390e8so4998305e9.2;
+        Thu, 27 Feb 2025 02:43:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740652983; x=1741257783; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiNB3394BHNPK8DuKnzmxQtxRBBmLgR2/ry0wUMsOLA=;
+        b=MA2R6RIrAAMNPE7sV6SDsH2Ro0GtTW5MVwrwKLzsA4xbBubJBFk4hbSHKkRf3UAC31
+         e8HSKBWGbGnN5GmslsXnVfZ19YkL86AkTq/SSgAd8eW6U7DWNbcVhp9MzsHfv4QVFF2B
+         6zGotO1zfj7X6ZIE0isiH+1/oXhhM4Uy1pGn6xYppMz4p45A3RNn2xd7oMnuJXxadzfO
+         7m0gANql8gMW2lU1QlkuBbZ5WbOS+QBg7IV050wXr36duwvUdgbmR7oQF9j+zf3yCzE5
+         hqvx2T7cyq3epU3GiCqKz9bw7l+j1YM4O1rUBAGBE59RWV0ypHp/Bf8kaXpqLBqafW5N
+         z9sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740652983; x=1741257783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BiNB3394BHNPK8DuKnzmxQtxRBBmLgR2/ry0wUMsOLA=;
+        b=r0my6A7wCXhbd/sEuujpwROUtKwsvUBnSflaDrnp6yR1fn5MTcC0uY0XveulaIRtW0
+         QunFPcaCBmKQsj8vCrXGYmZL3PRl+dnSPb8mq6pX0CrSauCxgHHVT8IlS/E+yD0QrSk4
+         9n72eRG/6cTFgKVTDUvs9KLcAl+6YoCSthte4eWfuLcEew6nePkuBU5ByUpsP+z3CbpU
+         YOqVRzcoYUrq5CiXo1gBpcGT0PMcMaiTrAKSwiyYYb97ObiYvCo7TeD6lhSW/xox8WeT
+         DcXxOLcM/gn8xpXydVqatuT+cx+O307xcDQIwCIQd9yjWNBxDWha36W8Wr/WRDvgDsh1
+         PLXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVYVGd0R5k01uqNsS1E4oyME7Rw8rHmMOujHsl9nVmIblcZcgAHB0bkjUsNelogjlBLH7F4doPm6S0S@vger.kernel.org, AJvYcCVwOFwImIBSWoa6tYFz+EAFOX38C7i7cAGQq5/0qqUwzHa3GGIJnHxv7Y9K0HtGlWAiVvs0cjjL4501jPE=@vger.kernel.org, AJvYcCX/S+ruhE8jtZS/Wr9hrTNxn/vtOMpj/W9q6UywWlQ6wl7FFzef2hOKQb1n4pO32HkEMkc4o9h8e+DSPr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJ+4TEcX4a9ckY+6v1RbJCsMcl1jSLz0yX0gI8lkf02akQxyvr
+	T4c7LsS6LeHXkWMoM2OzV73+IZU7RZ4jzaBxKXpIyW3wV9o2zy2fE7VNFQ==
+X-Gm-Gg: ASbGncuQxdcuaQ+qzrhWrq6KpjlcQMck0gJf5HoCct4U55cIIvhwwL+HajsfLA+F14B
+	PY98t1DU51kacrLZfzZ7m0LdwleufGhjE4efylpR659+rtqK2vUdCqFp1f4Q0S8tPIf24x8bSl0
+	LlhgRoVNJE3RBA9WKTPgknmYTUC7h7ohU+47M2xnX33A1MDGBuDf/+/R1BtaOB091YpYzrqvtaE
+	TMq5oDanPRNFiLoj2yEJKp/6FfFfo1k+TSa0KDhgSlUOplfUcuP+X2Z7itnSMLOjzVs7svhmoii
+	ITdfewok+u40YK+iiSBZ2a10+6mm8hPkxHODA6YmVdYyQKTzf/rhKLnexbkzcg8zg0BQ1NQQRYy
+	WHHV2s0vBX9rO
+X-Google-Smtp-Source: AGHT+IHFm0dUQ/NPjHHsDvyLGniaYHPyJmvRPPSkxTkyil6HbVz1xJ2cyk/bcrn9hLQuuLZq/+2M1Q==
+X-Received: by 2002:a05:600c:458e:b0:439:91dd:cfa3 with SMTP id 5b1f17b1804b1-439ae221d72mr208925685e9.29.1740652982970;
+        Thu, 27 Feb 2025 02:43:02 -0800 (PST)
+Received: from orome (p200300e41f187700f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f18:7700:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba52b97bsm50615215e9.8.2025.02.27.02.43.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 02:43:01 -0800 (PST)
+Date: Thu, 27 Feb 2025 11:42:59 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Vishwaroop A <va@nvidia.com>
+Cc: jonathanh@nvidia.com, skomatineni@nvidia.com, ldewangan@nvidia.com, 
+	broonie@kernel.org, linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kyarlagadda@nvidia.com, smangipudi@nvidia.com
+Subject: Re: [PATCH v2 2/6] spi: tegra210-quad: Update dummy sequence
+ configuration
+Message-ID: <accylk4mbwwaln3ruvolqouhxsxzwjengf3k4c6ypz3piolul6@ukojglmcka2x>
+References: <s355cib7g6e3gmsy2663pnzx46swhfudpofv2s5tcaytjq4yuj@xqtvoa5p477n>
+ <20250212144651.2433086-1-va@nvidia.com>
+ <20250212144651.2433086-3-va@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174065294360.10177.15471382143459800191.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="uz2pkkg3tjvjfanl"
+Content-Disposition: inline
+In-Reply-To: <20250212144651.2433086-3-va@nvidia.com>
 
-The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     0abf508675c0dbbca6a387842f90db60756c4af5
-Gitweb:        https://git.kernel.org/tip/0abf508675c0dbbca6a387842f90db60756c4af5
-Author:        Arnd Bergmann <arnd@arndb.de>
-AuthorDate:    Wed, 26 Feb 2025 22:37:06 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Feb 2025 11:19:05 +01:00
+--uz2pkkg3tjvjfanl
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/6] spi: tegra210-quad: Update dummy sequence
+ configuration
+MIME-Version: 1.0
 
-x86/smp: Drop 32-bit "bigsmp" machine support
+On Wed, Feb 12, 2025 at 02:46:47PM +0000, Vishwaroop A wrote:
+> Adding support for the dummy sequence configuration. The dummy sequence
+> introduces a delay between the command and the data phases of a
+> transfer. This delay, measured in clock cycles, allows the slave
+> device to prepare for data transmission, ensuring data integrity and
+> proper synchronization.
+>=20
+> Signed-off-by: Vishwaroop A <va@nvidia.com>
+> ---
+>  drivers/spi/spi-tegra210-quad.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
 
-The x86-32 kernel used to support multiple platforms with more than eight
-logical CPUs, from the 1999-2003 timeframe: Sequent NUMA-Q, IBM Summit,
-Unisys ES7000 and HP F8. Support for all except the latter was dropped
-back in 2014, leaving only the F8 based DL740 and DL760 G2 machines in
-this catery, with up to eight single-core Socket-603 Xeon-MP processors
-with hyperthreading.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Like the already removed machines, the HP F8 servers at the time cost
-upwards of $100k in typical configurations, but were quickly obsoleted
-by their 64-bit Socket-604 cousins and the AMD Opteron.
+--uz2pkkg3tjvjfanl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Earlier servers with up to 8 Pentium Pro or Xeon processors remain
-fully supported as they had no hyperthreading. Similarly, the more
-common 4-socket Xeon-MP machines with hyperthreading using Intel
-or ServerWorks chipsets continue to work without this, and all the
-multi-core Xeon processors also run 64-bit kernels.
+-----BEGIN PGP SIGNATURE-----
 
-While the "bigsmp" support can also be used to run on later 64-bit
-machines (including VM guests), it seems best to discourage that
-and get any remaining users to update their kernels to 64-bit builds
-on these. As a side-effect of this, there is also no more need to
-support NUMA configurations on 32-bit x86, as all true 32-bit
-NUMA platforms are already gone.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfAQbMACgkQ3SOs138+
+s6Ff6RAAlXU8Q7C2JLdGnPQeITUXBqVMr19Qc1jw7721A1+FwGZSSx/xBY0C23J/
+RM7bqUuOcGPdy8F4oL3m+ACwhiAwJOq32qxKjRVf8UGRHY2zgeK3DL8m0KvLm1zg
+ehf0z/jtQNdJbM1sEekIiFlYrGMuhELqHAYrJdsxUhC+NiEJP/Vif0JTo/StveBP
+e43GoqUyI3QqGsHshEp1aHcyeOJoXRlwHvfrtchVlDNaN3RGad5C/a2UMIH0Q2F4
+m6rNBmqvSUfDzk4e9xS+NC5zMkUr5PustygCOcyuEHdhuJ7XH8FeGwOJ65QIj526
+AJ7YFJPVLxEriaeggXLws2/Jh32mivPLTr7CuVV6AN0oA4ESsAQbAxyFHwMYVd1J
+ZrGPkk9FxMEKJSIZbOAvR70xT52Y9NoctFr7nBo0/DZlMQ56m2k5gwh+vFUfU7Ql
+0WtPzJkRK7jCJFJ1LZTcv/37haxVyhVT41hrzgrXJ0LNYw8MprVh1wq4pncGaFLt
+TR2tsuCYSFJ/YOOIRDr2TvBCH67A36WdWI99tLIGoD4WAuSyPbA5r+bhY7lysV7D
+CHKFpyl5oxv++vZ+j3weszPpxLP4ZYrepRhPVTeNlpZmGCgYNm0T3AwoB4I+VkLL
+oB9m+IQk26clam6AF9z2FEYzvGjXxQUWOKx0UdZw0ySh2Kvnb2k=
+=t2rG
+-----END PGP SIGNATURE-----
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250226213714.4040853-3-arnd@kernel.org
----
- Documentation/admin-guide/kernel-parameters.txt |   4 +-
- arch/x86/Kconfig                                |  20 +---
- arch/x86/kernel/apic/Makefile                   |   3 +-
- arch/x86/kernel/apic/apic.c                     |   3 +-
- arch/x86/kernel/apic/bigsmp_32.c                | 105 +---------------
- arch/x86/kernel/apic/local.h                    |  13 +--
- arch/x86/kernel/apic/probe_32.c                 |  29 +----
- 7 files changed, 4 insertions(+), 173 deletions(-)
- delete mode 100644 arch/x86/kernel/apic/bigsmp_32.c
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b..8f92377 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -416,10 +416,6 @@
- 			Format: { quiet (default) | verbose | debug }
- 			Change the amount of debugging information output
- 			when initialising the APIC and IO-APIC components.
--			For X86-32, this can also be used to specify an APIC
--			driver name.
--			Format: apic=driver_name
--			Examples: apic=bigsmp
- 
- 	apic_extnmi=	[APIC,X86,EARLY] External NMI delivery setting
- 			Format: { bsp (default) | all | none }
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d581634..887b77b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -531,12 +531,6 @@ config X86_FRED
- 	  ring transitions and exception/interrupt handling if the
- 	  system supports it.
- 
--config X86_BIGSMP
--	bool "Support for big SMP systems with more than 8 CPUs"
--	depends on SMP && X86_32
--	help
--	  This option is needed for the systems that have more than 8 CPUs.
--
- config X86_EXTENDED_PLATFORM
- 	bool "Support for extended (non-PC) x86 platforms"
- 	default y
-@@ -735,8 +729,8 @@ config X86_32_NON_STANDARD
- 	depends on X86_32 && SMP
- 	depends on X86_EXTENDED_PLATFORM
- 	help
--	  This option compiles in the bigsmp and STA2X11 default
--	  subarchitectures.  It is intended for a generic binary
-+	  This option compiles in the STA2X11 default
-+	  subarchitecture.  It is intended for a generic binary
- 	  kernel. If you select them all, kernel will probe it one by
- 	  one and will fallback to default.
- 
-@@ -1013,8 +1007,7 @@ config NR_CPUS_RANGE_BEGIN
- config NR_CPUS_RANGE_END
- 	int
- 	depends on X86_32
--	default   64 if  SMP &&  X86_BIGSMP
--	default    8 if  SMP && !X86_BIGSMP
-+	default    8 if  SMP
- 	default    1 if !SMP
- 
- config NR_CPUS_RANGE_END
-@@ -1027,7 +1020,6 @@ config NR_CPUS_RANGE_END
- config NR_CPUS_DEFAULT
- 	int
- 	depends on X86_32
--	default   32 if  X86_BIGSMP
- 	default    8 if  SMP
- 	default    1 if !SMP
- 
-@@ -1574,8 +1566,7 @@ config AMD_MEM_ENCRYPT
- config NUMA
- 	bool "NUMA Memory Allocation and Scheduler Support"
- 	depends on SMP
--	depends on X86_64 || (X86_32 && HIGHMEM64G && X86_BIGSMP)
--	default y if X86_BIGSMP
-+	depends on X86_64
- 	select USE_PERCPU_NUMA_NODE_ID
- 	select OF_NUMA if OF
- 	help
-@@ -1588,9 +1579,6 @@ config NUMA
- 	  For 64-bit this is recommended if the system is Intel Core i7
- 	  (or later), AMD Opteron, or EM64T NUMA.
- 
--	  For 32-bit this is only needed if you boot a 32-bit
--	  kernel on a 64-bit NUMA platform.
--
- 	  Otherwise, you should say N.
- 
- config AMD_NUMA
-diff --git a/arch/x86/kernel/apic/Makefile b/arch/x86/kernel/apic/Makefile
-index 3bf0487..52d1808 100644
---- a/arch/x86/kernel/apic/Makefile
-+++ b/arch/x86/kernel/apic/Makefile
-@@ -23,8 +23,5 @@ obj-$(CONFIG_X86_X2APIC)	+= x2apic_cluster.o
- obj-y				+= apic_flat_64.o
- endif
- 
--# APIC probe will depend on the listing order here
--obj-$(CONFIG_X86_BIGSMP)	+= bigsmp_32.o
--
- # For 32bit, probe_32 need to be listed last
- obj-$(CONFIG_X86_LOCAL_APIC)	+= probe_$(BITS).o
-diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-index e893dc6..ddca8da 100644
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1371,8 +1371,6 @@ void __init apic_intr_mode_init(void)
- 
- 	x86_64_probe_apic();
- 
--	x86_32_install_bigsmp();
--
- 	if (x86_platform.apic_post_init)
- 		x86_platform.apic_post_init();
- 
-@@ -1674,7 +1672,6 @@ static __init void apic_read_boot_cpu_id(bool x2apic)
- 		boot_cpu_apic_version = GET_APIC_VERSION(apic_read(APIC_LVR));
- 	}
- 	topology_register_boot_apic(boot_cpu_physical_apicid);
--	x86_32_probe_bigsmp_early();
- }
- 
- #ifdef CONFIG_X86_X2APIC
-diff --git a/arch/x86/kernel/apic/bigsmp_32.c b/arch/x86/kernel/apic/bigsmp_32.c
-deleted file mode 100644
-index 9285d50..0000000
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ /dev/null
-@@ -1,105 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * APIC driver for "bigsmp" xAPIC machines with more than 8 virtual CPUs.
-- *
-- * Drives the local APIC in "clustered mode".
-- */
--#include <linux/cpumask.h>
--#include <linux/dmi.h>
--#include <linux/smp.h>
--
--#include <asm/apic.h>
--#include <asm/io_apic.h>
--
--#include "local.h"
--
--static u32 bigsmp_get_apic_id(u32 x)
--{
--	return (x >> 24) & 0xFF;
--}
--
--static void bigsmp_send_IPI_allbutself(int vector)
--{
--	default_send_IPI_mask_allbutself_phys(cpu_online_mask, vector);
--}
--
--static void bigsmp_send_IPI_all(int vector)
--{
--	default_send_IPI_mask_sequence_phys(cpu_online_mask, vector);
--}
--
--static int dmi_bigsmp; /* can be set by dmi scanners */
--
--static int hp_ht_bigsmp(const struct dmi_system_id *d)
--{
--	printk(KERN_NOTICE "%s detected: force use of apic=bigsmp\n", d->ident);
--	dmi_bigsmp = 1;
--
--	return 0;
--}
--
--
--static const struct dmi_system_id bigsmp_dmi_table[] = {
--	{ hp_ht_bigsmp, "HP ProLiant DL760 G2",
--		{	DMI_MATCH(DMI_BIOS_VENDOR, "HP"),
--			DMI_MATCH(DMI_BIOS_VERSION, "P44-"),
--		}
--	},
--
--	{ hp_ht_bigsmp, "HP ProLiant DL740",
--		{	DMI_MATCH(DMI_BIOS_VENDOR, "HP"),
--			DMI_MATCH(DMI_BIOS_VERSION, "P47-"),
--		}
--	},
--	{ } /* NULL entry stops DMI scanning */
--};
--
--static int probe_bigsmp(void)
--{
--	return dmi_check_system(bigsmp_dmi_table);
--}
--
--static struct apic apic_bigsmp __ro_after_init = {
--
--	.name				= "bigsmp",
--	.probe				= probe_bigsmp,
--
--	.dest_mode_logical		= false,
--
--	.disable_esr			= 1,
--
--	.cpu_present_to_apicid		= default_cpu_present_to_apicid,
--
--	.max_apic_id			= 0xFE,
--	.get_apic_id			= bigsmp_get_apic_id,
--
--	.calc_dest_apicid		= apic_default_calc_apicid,
--
--	.send_IPI			= default_send_IPI_single_phys,
--	.send_IPI_mask			= default_send_IPI_mask_sequence_phys,
--	.send_IPI_mask_allbutself	= NULL,
--	.send_IPI_allbutself		= bigsmp_send_IPI_allbutself,
--	.send_IPI_all			= bigsmp_send_IPI_all,
--	.send_IPI_self			= default_send_IPI_self,
--
--	.read				= native_apic_mem_read,
--	.write				= native_apic_mem_write,
--	.eoi				= native_apic_mem_eoi,
--	.icr_read			= native_apic_icr_read,
--	.icr_write			= native_apic_icr_write,
--	.wait_icr_idle			= apic_mem_wait_icr_idle,
--	.safe_wait_icr_idle		= apic_mem_wait_icr_idle_timeout,
--};
--
--bool __init apic_bigsmp_possible(bool cmdline_override)
--{
--	return apic == &apic_bigsmp || !cmdline_override;
--}
--
--void __init apic_bigsmp_force(void)
--{
--	if (apic != &apic_bigsmp)
--		apic_install_driver(&apic_bigsmp);
--}
--
--apic_driver(apic_bigsmp);
-diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
-index 842fe28..bdcf609 100644
---- a/arch/x86/kernel/apic/local.h
-+++ b/arch/x86/kernel/apic/local.h
-@@ -65,17 +65,4 @@ void default_send_IPI_self(int vector);
- void default_send_IPI_mask_sequence_logical(const struct cpumask *mask, int vector);
- void default_send_IPI_mask_allbutself_logical(const struct cpumask *mask, int vector);
- void default_send_IPI_mask_logical(const struct cpumask *mask, int vector);
--void x86_32_probe_bigsmp_early(void);
--void x86_32_install_bigsmp(void);
--#else
--static inline void x86_32_probe_bigsmp_early(void) { }
--static inline void x86_32_install_bigsmp(void) { }
--#endif
--
--#ifdef CONFIG_X86_BIGSMP
--bool apic_bigsmp_possible(bool cmdline_selected);
--void apic_bigsmp_force(void);
--#else
--static inline bool apic_bigsmp_possible(bool cmdline_selected) { return false; };
--static inline void apic_bigsmp_force(void) { }
- #endif
-diff --git a/arch/x86/kernel/apic/probe_32.c b/arch/x86/kernel/apic/probe_32.c
-index f75ee34..87bc9e7 100644
---- a/arch/x86/kernel/apic/probe_32.c
-+++ b/arch/x86/kernel/apic/probe_32.c
-@@ -93,35 +93,6 @@ static int __init parse_apic(char *arg)
- }
- early_param("apic", parse_apic);
- 
--void __init x86_32_probe_bigsmp_early(void)
--{
--	if (nr_cpu_ids <= 8 || xen_pv_domain())
--		return;
--
--	if (IS_ENABLED(CONFIG_X86_BIGSMP)) {
--		switch (boot_cpu_data.x86_vendor) {
--		case X86_VENDOR_INTEL:
--			if (!APIC_XAPIC(boot_cpu_apic_version))
--				break;
--			/* P4 and above */
--			fallthrough;
--		case X86_VENDOR_HYGON:
--		case X86_VENDOR_AMD:
--			if (apic_bigsmp_possible(cmdline_apic))
--				return;
--			break;
--		}
--	}
--	pr_info("Limiting to 8 possible CPUs\n");
--	set_nr_cpu_ids(8);
--}
--
--void __init x86_32_install_bigsmp(void)
--{
--	if (nr_cpu_ids > 8 && !xen_pv_domain())
--		apic_bigsmp_force();
--}
--
- void __init x86_32_probe_apic(void)
- {
- 	if (!cmdline_apic) {
+--uz2pkkg3tjvjfanl--
