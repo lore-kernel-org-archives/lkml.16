@@ -1,136 +1,103 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ABEC22AE6D
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 11:33:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6E02253A8;
+	Thu, 27 Feb 2025 11:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740655999; cv=none; b=WcNhD9byJUU5BzcTZ01rgX7uURjsPRatEsgzyiW+ozFfLq03tzIQ4rQ70f9aNjOX2aR9nSw1a4jGwoIZhmbWj/vE2UxSmDZ5WfvOBhdiTjk1yAJPq/kXvYMU+2tbOyamYAePPzApu9SlpCqoRquZGCSyE1FrZjoUFPWLPF3w92U=
+	t=1740656106; cv=none; b=cPL9fqRqlShQxc9QQAvuyOwBXsGqNGTx3LEW9XuU0AHhh+Lb5oFa+bZ0qqjQ06QtdfbB4FIyWaL/0EGpauobE2ig4Ev9TOcIlew7LJTgI63mwaCfuu2xXKQfbYB3OBa2pA+MCc2Bd4QebO1F7XRLPpyfUF24vKr14VoMVfIySbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740655999; c=relaxed/simple;
-	bh=LO2N9vciU7HB99mtlW3h5ysZsPTzOm1mscKvDNw90XU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TwW65lLcfKRxg8+lTCbGS1zTY/OV8vca+rb2Qz4ssz38q2kBJvtyZviPTX9Xx8sRBk/TuH4MrLlVXWUK2TiX1+jYHajPfpn08ufaGkYN05jIyUReLmxdb1MnCgPVsB7i+wEEoOJNQMKuan3QKKOYYX244Sfp+B7focQKLiaCPxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D5aJlq2F; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740656106; c=relaxed/simple;
+	bh=ldwn/EiopZJQ++ZzPunfH17TEy2zzvdkMynUExTJI5M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q4gIRS1QbNMwMTZQhaeEklJGc8SgZEuIsLXu/w/0TS49AkSfV7aX0DKJk0rw4cVMK2walFiiTTFgvfiEk0KeMo71cTGxmQBUtn5gzHkfWIX1C6EongjT+ojcyWJkFuUZI/pnXExtIownqoyBCi6c+5VWCJfaIMr3RSSsprWiMew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lWByfMdK; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D5aJlq2F"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2234e5347e2so13318935ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:33:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWByfMdK"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30a303a656aso9044911fa.0;
+        Thu, 27 Feb 2025 03:35:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740655995; x=1741260795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cg8yMwZ72Jlc0r5z1N3IiuaraHv4s6b2xThN5W01Djk=;
-        b=D5aJlq2F6R3GUVFt9YVYvhZSbEIyrGG1WMu63jw39i9UyiEW8h3xQDgfWN5Pycnn8P
-         beqrTO3UYTF8846iPQOltFhA1dkAD6wN6puK4jcojLYSt2ztSzGi9i2tx3dMkFy8F7Y8
-         3P9XUvlZfrALUIckJ3n71tffqsz1+ZFWZbAMasuiVZQ3Gy7K1ceewuk3Z8DOIU6Nricn
-         HKI1frdmWR289oCt0FpSOlm4NMj0HnV1FFhyvdPGR1hYfOyyT45CDAmLcC4VQhbRhJIZ
-         jJGWvxdM7sF3f+YSy4oeDBoDeCdtPGkLeFXR2pwUJ8mafwT3f8hiUkKPJhpxeUYviKDT
-         NCdg==
+        d=gmail.com; s=20230601; t=1740656103; x=1741260903; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ldwn/EiopZJQ++ZzPunfH17TEy2zzvdkMynUExTJI5M=;
+        b=lWByfMdKj6ohae8ozHILwMpC4TPsqTuZggu/DHz7SrSY6CBSB6bKF2P/3glyNltpQ7
+         016Nqq6jIA+ICqnKfJfByYj2dGGfx1mCkFIeeQvWNEwM+GafiyNt7mXIMDQVvG2NJ7eK
+         XtKjturgpdUgNV+P82LocjFB1eKAc0+ekYLMhqpRtIlaf2qRJsHgTL7uc2FmkgKX3aW2
+         F78U468F3rsMLArFnJ6mcwsUJxUlwSwxjrXbE1/Z9Lh6q4i0QEYVDElO2eQgdm7x5B90
+         vreFr47J3y0OE3wa3zvxtaCyYRqTbp4t4DQiKHu9HpY5xmBKQaq6/G7i/6gcoA5LYsr+
+         DNJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740655995; x=1741260795;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cg8yMwZ72Jlc0r5z1N3IiuaraHv4s6b2xThN5W01Djk=;
-        b=McJsm2QNuYwkCwlPxlFn2K8NM7u5OUKG09DywBS2AgWaH2Gua8Vw46Tvii0heFAYCr
-         I//lhvNfoED/Uta+txyeUSiKiUzmVaMsSH6xjT/DU/pdeBmY2EFGq5MbIdiJdLXcMVYt
-         fkiJA+p0y2msPp2NbpTIrpf1tBNW8u2TDm4jtB7FFtumQ9PJCPxMmdoFhkvQVAPjJer7
-         HPKaNGLStOWho2O3HpD8dayznJeHefeEe8b5Q5hnG4aQJd+15oT1PNUE1Fnsj+0JY6QU
-         8J45CyrvYWqq2ZhExJ/8EdY+prU+0wH/g1w8hz/kLOPGXqdkSXjons8cReA83x0K9h0C
-         vxgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPK/byf3jDJtVS6aqglt/qSebsYJxOfiBe93hlV2L4QXVya5D4/mQXXgenZ8mZvACUZS0+lQyDRA8N5NQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6Iol4KWXU518fvMJIQkDxLFJWlQunCsDF50Fdseeyy0U4O897
-	8aNshDmgJZRgXCAsbb1DfjDI6kOKqmYO5KnpQWXWGbhbQENw2XxqOsLXJmRwjx+RrN44Hbrr0Pk
-	I
-X-Gm-Gg: ASbGncteRtFTfseNFnUcIfk/vuGE40OO46odmCA3h0Y4XDmwf2LVXmN8BZ8a2ubiOFT
-	OZndiMhwerQTka1A3YZy8bd1ptSKUXN2NoJ03HUckyRqk58M4US1klig+4VR0ECF7I0XwBXTg1h
-	/LMq9acl+NQMBwGrIJ5uJXwLFcDtMUSEtzwksafataf7HmQWc9rkh3oj32frhjeUFjAgaedfaLS
-	5kdpT7Y6/0AxgcO1tFYlvZx1sVyZQJbGC0Ha+5LmFEay+IOwkr4pMLahMHsT+GQ2p9P9skYzSAj
-	p2fxVNr4i83u6W/YAsElz1FiNqKp
-X-Google-Smtp-Source: AGHT+IG4VU2x6YDtNodsc0R4UfSHlwxikIm91sBEmZvthobIJS1xQjZsA9eqGdyUlDUdvBKd735Xuw==
-X-Received: by 2002:a05:6a00:4614:b0:732:13fd:3f1f with SMTP id d2e1a72fcca58-7348be7eeb2mr12060717b3a.24.1740655995332;
-        Thu, 27 Feb 2025 03:33:15 -0800 (PST)
-Received: from sumit-X1.. ([223.178.212.145])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe48858sm1343733b3a.51.2025.02.27.03.33.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 03:33:14 -0800 (PST)
-From: Sumit Garg <sumit.garg@linaro.org>
-To: akpm@linux-foundation.org,
-	herbert@gondor.apana.org.au,
-	jarkko@kernel.org,
-	jens.wiklander@linaro.org
-Cc: sumit.garg@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-crypto@vger.kernel.org,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH] MAINTAINERS: .mailmap: Update Sumit Garg's email address
-Date: Thu, 27 Feb 2025 17:02:28 +0530
-Message-ID: <20250227113228.1809449-1-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1740656103; x=1741260903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ldwn/EiopZJQ++ZzPunfH17TEy2zzvdkMynUExTJI5M=;
+        b=ks6cDs9n5S60PKa8sYI5U7i0etZPIexs+b8982xmCoufmNTiAWZUUl02mGdbpkibvX
+         krbGq6EdBRY5h0r5MqU1oas3PUly1V0pBVyNZ21MUXV1sRpoNEcYAejSL5WyITpzCk9D
+         T76qgHW3602c+GlVq4T6ihmD2n7dBq6GOro4h4Zu0o0m0ot7Zht8kFugnJbN+WtO/Q+c
+         rmEau7JHbAM2jOY7c1j4WMq8aYXeUwht+eFj7qvjCuYmjq3QVIKNPTHwfwVePr6q1JsC
+         elAMYN/2Cxn04Hec/GOBhXfYZb+GT6lXiAnP1MvgR4L2G7i7AqaV37izAWRV9pt0PheB
+         0gGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTKwSr2KBqNouHxff/AKclbxg/+Cc3DOR49IBJMlpN/2i5fnII2Dx+woAcUe58Ps1YkQznEsouDsutIDwuNos=@vger.kernel.org, AJvYcCWuFuh1L6oNYxVAsbjsy/1FmPlh8aZHKomTl2AD6UfHVR7Lm+ruNcofOHvj72zdTmu1vo727UylzXt/@vger.kernel.org, AJvYcCXCKxfxfiJpLiIbLSXy7azVXs7Vwi1FTsWOlChtcFgGUzOz6nVjbPDm0bZGt8gkztZXzx1lqYHbCAEKNDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3EJt4TXeYJP8934dtU1Qv+Iu4a1J8ZDa9U2dzo5QbDozw8mmi
+	R6WemHcyRMISWTnPTmn8pqro10ifQxgMJyz+q5puSDvy/X2o/wLGBPmBfTaWLT4h2Z7x9msMc2U
+	tmZHMwD0TarR7dZYw+CTNkj0B87w=
+X-Gm-Gg: ASbGncubz8dr2Jkah8EIYsx7+V4JrUpNrrV21IcD6MgXZ6EERPtr10+M7nAdyVT2iH7
+	SPLMAwRn+p9iCYWWhoHh8XuEkZrvN9NZkue9+bl1bXdBShPJkRjua4h/3feA6vlWofg3eD5k9Bb
+	WbvF72nwe2pZRiV2XMYTiMmBAZYSJDn8FOzj5h8/hg
+X-Google-Smtp-Source: AGHT+IGfOrPCkbMrZti+ZGk1EvzoYK3uaz1d4Bw2cJgZf/MCVPMPC0nhgo7sI8Z0VEVj/QUvOrKBtrvkFQZDRJz8Nv8=
+X-Received: by 2002:ac2:5b8d:0:b0:548:e44d:f3ee with SMTP id
+ 2adb3069b0e04-548e44df52cmr4665298e87.10.1740656102882; Thu, 27 Feb 2025
+ 03:35:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250213-aligned-alloc-v7-1-d2a2d0be164b@gmail.com> <20250213142441.56532c18@eugeo>
+In-Reply-To: <20250213142441.56532c18@eugeo>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 27 Feb 2025 06:34:26 -0500
+X-Gm-Features: AQ5f1JqeXJBMpn3IDeg2JUq0K25kYq7vRyB5ZH5pUnKWBl2bps6_Fn4BTe1QRgo
+Message-ID: <CAJ-ks9mxUUQvbQp+cPx-5Vvs4gZQEkS=5NC9veuQ-qU9ZJn0JA@mail.gmail.com>
+Subject: Re: [PATCH v7] rust: alloc: satisfy POSIX alignment requirement
+To: Gary Guo <gary@garyguo.net>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, DJ Delorie <dj@redhat.com>, 
+	Eric Blake <eblake@redhat.com>, Paul Eggert <eggert@cs.ucla.edu>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-man@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update Sumit Garg's email address to @kernel.org.
+On Thu, Feb 13, 2025 at 9:24=E2=80=AFAM Gary Guo <gary@garyguo.net> wrote:
+>
+> On Thu, 13 Feb 2025 06:34:18 -0500
+> Tamir Duberstein <tamird@gmail.com> wrote:
+>
+> > ISO C's `aligned_alloc` is partially implementation-defined; on some
+> > systems it inherits stricter requirements from POSIX's `posix_memalign`=
+.
+> >
+> > This causes the call added in commit dd09538fb409 ("rust: alloc:
+> > implement `Cmalloc` in module allocator_test") to fail on macOS because
+> > it doesn't meet the requirements of `posix_memalign`.
+> >
+> > Adjust the call to meet the POSIX requirement and add a comment. This
+> > fixes failures in `make rusttest` on macOS.
+> >
+> > Acked-by: Danilo Krummrich <dakr@kernel.org>
+> > Fixes: dd09538fb409 ("rust: alloc: implement `Cmalloc` in module alloca=
+tor_test")
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> Reviewed-by: Gary Guo <gary@garyguo.net>
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- .mailmap    | 1 +
- MAINTAINERS | 6 +++---
- 2 files changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/.mailmap b/.mailmap
-index a897c16d3bae..4a93909286d8 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -689,6 +689,7 @@ Subbaraman Narayanamurthy <quic_subbaram@quicinc.com> <subbaram@codeaurora.org>
- Subhash Jadavani <subhashj@codeaurora.org>
- Sudarshan Rajagopalan <quic_sudaraja@quicinc.com> <sudaraja@codeaurora.org>
- Sudeep Holla <sudeep.holla@arm.com> Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-+Sumit Garg <sumit.garg@kernel.org> <sumit.garg@linaro.org>
- Sumit Semwal <sumit.semwal@ti.com>
- Surabhi Vishnoi <quic_svishnoi@quicinc.com> <svishnoi@codeaurora.org>
- Sven Eckelmann <sven@narfation.org> <seckelmann@datto.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1b0cc181db74..616f859c5f92 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12861,7 +12861,7 @@ F:	include/keys/trusted_dcp.h
- F:	security/keys/trusted-keys/trusted_dcp.c
- 
- KEYS-TRUSTED-TEE
--M:	Sumit Garg <sumit.garg@linaro.org>
-+M:	Sumit Garg <sumit.garg@kernel.org>
- L:	linux-integrity@vger.kernel.org
- L:	keyrings@vger.kernel.org
- S:	Supported
-@@ -17661,7 +17661,7 @@ F:	Documentation/ABI/testing/sysfs-bus-optee-devices
- F:	drivers/tee/optee/
- 
- OP-TEE RANDOM NUMBER GENERATOR (RNG) DRIVER
--M:	Sumit Garg <sumit.garg@linaro.org>
-+M:	Sumit Garg <sumit.garg@kernel.org>
- L:	op-tee@lists.trustedfirmware.org
- S:	Maintained
- F:	drivers/char/hw_random/optee-rng.c
-@@ -23272,7 +23272,7 @@ F:	include/media/i2c/tw9910.h
- 
- TEE SUBSYSTEM
- M:	Jens Wiklander <jens.wiklander@linaro.org>
--R:	Sumit Garg <sumit.garg@linaro.org>
-+R:	Sumit Garg <sumit.garg@kernel.org>
- L:	op-tee@lists.trustedfirmware.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-class-tee
--- 
-2.43.0
-
+Thanks for the reviews! Gentle ping: are more reviews required?
