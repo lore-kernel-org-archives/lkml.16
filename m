@@ -1,105 +1,240 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC25E274270;
-	Thu, 27 Feb 2025 22:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74A6274275
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 22:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694908; cv=none; b=tSsw6K7GstYvjxSpWInji1Fq9ERgZxWSLomk8ytCKho5ajndgnuq9WhLn1Nl2sVZBw/y0P1YMDixd2b2zcMNOs7o0peEWHjN20G3m9biQbWTanH5/lsYI2shO10yhrO6YRwxYDOQhWgl48/iPbZSWP+9o4PNJhPpYoXrP9SCL98=
+	t=1740694909; cv=none; b=S6Du7T+6/a6qjTtoRU/hnQehDukA/rNcLo45C9sCdjyfSmoa8xenVAyqih87jUnhnTdb8rIUKJ783Zc1eeUPDPJThrdp0xN/UUuqaGeOhB4tmyOe+pr/WXeOM+q4+hkZuNbBXYe14aYS7xPXzeFcH7Juz+pGcvhHdfn940gPah8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694908; c=relaxed/simple;
-	bh=9mrpVRh9LCe6Cx7DhW4a9O8r1znb4UUGRuzbaoZAdAA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bYUg+dqwDx3JbdvI5vG7FsO2gNnqcCEmgxjgJjRipEp2e6oLH5EZIQxDUfAieEoqf2jqa6jq6rbYM/k862sHD8UWsOX2vstHxfuECt8UOIarXC4DkENIhQL/XnAVvgNBTuYCVQaJNtJm/TGTG4i7wLUc16lGE92UelpYutvYmX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eZkAJqjA; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740694909; c=relaxed/simple;
+	bh=Gn053GM2Abjd+PYYXKPIhOxoTjWxmwIsrAFVaoI8P7I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h7c4FRMoxIDdlSjeQMXObeuxts+MegQIo1/qeCCkE/lyKWgcrCIf/76iC8dPWAFbb6VovzCks4RYritBP+L0kyESTfSzOXjI8uWR+Qzg/bSU/PGlFIckkX5gGMuWiWl8qerwRso0O9qcs1QZpm97yI99Ekh4gR2ETRw+3xzjAiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hqFU+Ues; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZkAJqjA"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220d132f16dso21617135ad.0;
-        Thu, 27 Feb 2025 14:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740694906; x=1741299706; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fIcVrtq95e3d6hB6s4EQxlcOTWBSWsLA7dFATbPAJjk=;
-        b=eZkAJqjA3ajWWlkI1tV98d8KLHbYcNHFSGVkgddnBx4Jmpy3XixK85Cqi3qv0/Fq0y
-         o7/ChyeG4aXiw7sp0BXauUR5ea2JeXhhg9tv/Nrt40ftCoqZLoy8OQccOZaZJlEPy8r9
-         WsDdtTbKlnhBMKPZVIHMq/f5que8bAXXN3YrbYmUnCtSxf4oJcB7Z2hARVZPMdrd7HX7
-         uLtrlSALaYZDVZ6WGv8yAzXUmw4XJ/83k8L8d26cuiGpbrhZPDn1o7pcJX2HEx6JfIvm
-         H4HUarSUmef9H7ETKRJkgrZCwGpl8/CaZ3NxN76oJcTNvL+BPZL6JELc+pTvECCBA4xS
-         +zGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740694906; x=1741299706;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fIcVrtq95e3d6hB6s4EQxlcOTWBSWsLA7dFATbPAJjk=;
-        b=gO1ANJ02zbRik3nf/KCDmUNiMcsXxr5ml515rVLEhpcy3pL1BCMbazZluMHY9G+zM0
-         3+K+tOSrtcKgQsTxIMAInFzzGmUdFpeMrK7f/lHUCk/LmZmM5TwfbAQhWlFzhJg68GpL
-         AkMMkXHrIxiIbDwAjCbioqikIrEpqV3+g3j38fTwyDemkOOOaRyCWLmvsxvX6Dw6b2eX
-         AAviLBgQa8J+0hX4zpbyUNE0WPWuXQGFMkVbBXm5fTB4+9uRHO/d7xMKCy9drIoa5MbF
-         pqui91F/sew65RikcV7tixKL2Z8tDUHi8HuJgiQ0X7ouIbmBIWMHqqy1H1RxphbEZUmF
-         VPnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9XYrxesquhux1Iz4fTN68AqZYYR8M6jjC64no8d4KzgDT2Zu5fENqsmxg/olRwwun9csRRgrDyow7DIf/Wjgu@vger.kernel.org, AJvYcCWThfI/ThAT7IIRhF7ZtJ3yR8bVT9lLS50SxKBBo71R+xvg+Sd3BWbhLD2XBKYAp6gLDsw=@vger.kernel.org, AJvYcCWoCKg93CI1q33FEZbmKpG6192XNvLYf4YrWv+azLD8iADYECQxagpg8LHtzgvDsDUnuAC6ElNYYvrZt46A@vger.kernel.org, AJvYcCXssdBipy0rgCt9sifHLO4IWfDlWaxZXeUbUpWKbBEpf+A3YnaREJ5jrYZ2PesVnHU+9b8JhjWA@vger.kernel.org
-X-Gm-Message-State: AOJu0YyG+2EExu0VQp2iRbPAtI7X0L+/mslxux33vPEEHoc0yemwO8o8
-	p8qgPzIazcC3EY8XH2jIV2ud2RqnFp2iqetuzCqeVkW9baU2aFVW
-X-Gm-Gg: ASbGncteUU7wz7ltDXC8f4s9V/Uy05YzUhxzUaV9+vNw8O2nfl9F4Ybq3n3Ri0uCUQj
-	hSE3mytkLqT8L3qYBlXG6Vj21jYzQFASvkqhPzjVk4nf75sHec7kPcOOHn4k0HQKdYFosyQqlz3
-	wo55+iKtBhMulqVLYz4s47CS2/sJKSg1CM2dyV1norJsm6VZAUNSyHgjSXP2EOiDVQyTse9F/ez
-	96hlGzHgOJSN0k3t906KVBGVCMx7De237n0MWriK7CoTM862exRr/Qr8y86XpmfSsqyOwelxX1Y
-	82//jkB1Bze80Hm7P6ClceWb
-X-Google-Smtp-Source: AGHT+IHFDPtA7Rh1Tbm1AAknO5KNAPlcPWVIhUujcQtL3AbXorqi10ylyIaAaiPmb1x7jE/kaGHSrg==
-X-Received: by 2002:a17:902:f60a:b0:220:e9f5:4b7c with SMTP id d9443c01a7336-22368fc0c0amr13191975ad.17.1740694906007;
-        Thu, 27 Feb 2025 14:21:46 -0800 (PST)
-Received: from gmail.com ([98.97.44.1])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe8284f041sm4788667a91.41.2025.02.27.14.21.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 14:21:45 -0800 (PST)
-Date: Thu, 27 Feb 2025 14:21:41 -0800
-From: John Fastabend <john.fastabend@gmail.com>
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, cong.wang@bytedance.com,
-	jakub@cloudflare.com, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com,
-	ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev,
-	song@kernel.org, yonghong.song@linux.dev, kpsingh@kernel.org,
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
-	shuah@kernel.org, mhal@rbox.co, sgarzare@redhat.com,
-	netdev@vger.kernel.org, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	mrpre@163.com
-Subject: Re: [PATCH bpf-next v1 2/3] selftests/bpf: Add socketpair to
- create_pair to support unix socket
-Message-ID: <20250227222141.mnvpmnvafisd2pjk@gmail.com>
-References: <20250226132242.52663-1-jiayuan.chen@linux.dev>
- <20250226132242.52663-3-jiayuan.chen@linux.dev>
- <Z8DCZO8n39avsvnF@pop-os.localdomain>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hqFU+Ues"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740694906;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VNfuVRXbdV3QSs7L7dZ5xaq3013JiOtfh5vtoOmlaG0=;
+	b=hqFU+UesNWXuxaZLV6b+7vq7GdMJzg3VC2A5Fa3jtWp/NDv2DRptj3HTJ/my452Ef4g6m8
+	Ll23YMcE+XcYy+faqwmGeCDrCsQirZIJcyTw95cgB3Yee4CMIpRRJhyuB6VG8zjxUjXm0t
+	ZUBwE/BPqkaP/caOkncHYqFgAsjsazI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-527-t0s8vf8mMB6C4EQ1kvz7Hg-1; Thu,
+ 27 Feb 2025 17:21:43 -0500
+X-MC-Unique: t0s8vf8mMB6C4EQ1kvz7Hg-1
+X-Mimecast-MFC-AGG-ID: t0s8vf8mMB6C4EQ1kvz7Hg_1740694901
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D03F81800984;
+	Thu, 27 Feb 2025 22:21:40 +0000 (UTC)
+Received: from chopper.lyude.net (unknown [10.22.89.128])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 40F8D1944D02;
+	Thu, 27 Feb 2025 22:21:37 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v9 4/9] rust: Introduce interrupt module
+Date: Thu, 27 Feb 2025 17:10:15 -0500
+Message-ID: <20250227221924.265259-5-lyude@redhat.com>
+In-Reply-To: <20250227221924.265259-1-lyude@redhat.com>
+References: <20250227221924.265259-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8DCZO8n39avsvnF@pop-os.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 2025-02-27 11:52:04, Cong Wang wrote:
-> On Wed, Feb 26, 2025 at 09:22:41PM +0800, Jiayuan Chen wrote:
-> > Current wrapper function create_pair() is used to create a pair of
-> > connected links and returns two fds, but it does not support unix sockets.
-> > 
-> > Here we introduce socketpair() into create_pair(), which supports creating
-> > a pair of unix sockets, since the semantics of the two are the same.
-> 
-> Since it is only for UDS and only has effectively 1 line of code, how
-> about just calling socketpair(AF_UNIX) in your patch 3/3?
+This introduces a module for dealing with interrupt-disabled contexts,
+including the ability to enable and disable interrupts along with the
+ability to annotate functions as expecting that IRQs are already
+disabled on the local CPU.
 
-If we run that test with more than AF_UNIX it might be best as is. I
-think there might be some value testing that flow on TCP/UDP even if
-its not related to the bug.
+[Boqun: This is based on Lyude's work on interrupt disable abstraction,
+I port to the new local_interrupt_disable() mechanism to make it work
+as a guard type. I cannot even take the credit of this design, since
+Lyude also brought up the same idea in zulip. Anyway, this is only for
+POC purpose, and of course all bugs are mine]
 
-Thanks,
-John
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Co-Developed-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+---
+ rust/helpers/helpers.c   |  1 +
+ rust/helpers/interrupt.c | 18 +++++++++
+ rust/kernel/interrupt.rs | 83 ++++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs       |  1 +
+ 4 files changed, 103 insertions(+)
+ create mode 100644 rust/helpers/interrupt.c
+ create mode 100644 rust/kernel/interrupt.rs
+
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 0640b7e115be1..14e85c1a37bb2 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -15,6 +15,7 @@
+ #include "device.c"
+ #include "err.c"
+ #include "fs.c"
++#include "interrupt.c"
+ #include "io.c"
+ #include "jump_label.c"
+ #include "kunit.c"
+diff --git a/rust/helpers/interrupt.c b/rust/helpers/interrupt.c
+new file mode 100644
+index 0000000000000..f2380dd461ca5
+--- /dev/null
++++ b/rust/helpers/interrupt.c
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/spinlock.h>
++
++void rust_helper_local_interrupt_disable(void)
++{
++	local_interrupt_disable();
++}
++
++void rust_helper_local_interrupt_enable(void)
++{
++	local_interrupt_enable();
++}
++
++bool rust_helper_irqs_disabled(void)
++{
++	return irqs_disabled();
++}
+diff --git a/rust/kernel/interrupt.rs b/rust/kernel/interrupt.rs
+new file mode 100644
+index 0000000000000..c0a4b182fd9e7
+--- /dev/null
++++ b/rust/kernel/interrupt.rs
+@@ -0,0 +1,83 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Interrupt controls
++//!
++//! This module allows Rust code to annotate areas of code where local processor interrupts should
++//! be disabled, along with actually disabling local processor interrupts.
++//!
++//! # ⚠️ Warning! ⚠️
++//!
++//! The usage of this module can be more complicated then meets the eye, especially surrounding
++//! [preemptible kernels]. It's recommended to take care when using the functions and types defined
++//! here and familiarize yourself with the various documentation we have before using them, along
++//! with the various documents we link to here.
++//!
++//! # Reading material
++//!
++//! - [Software interrupts and realtime (LWN)](https://lwn.net/Articles/520076)
++//!
++//! [preemptible kernels]: https://www.kernel.org/doc/html/latest/locking/preempt-locking.html
++
++use bindings;
++use kernel::types::NotThreadSafe;
++
++/// A guard that represents local processor interrupt disablement on preemptible kernels.
++///
++/// [`LocalInterruptDisabled`] is a guard type that represents that local processor interrupts have
++/// been disabled on a preemptible kernel.
++///
++/// Certain functions take an immutable reference of [`LocalInterruptDisabled`] in order to require
++/// that they may only be run in local-interrupt-disabled contexts on preemptible kernels.
++///
++/// This is a marker type; it has no size, and is simply used as a compile-time guarantee that local
++/// processor interrupts interrupts are disabled on preemptible kernels. Note that no guarantees
++/// about the state of interrupts are made by this type on non-preemptible kernels.
++///
++/// # Invariants
++///
++/// Local processor interrupts are disabled on preemptible kernels for as long as an object of this
++/// type exists.
++pub struct LocalInterruptDisabled(NotThreadSafe);
++
++/// Disable local processor interrupts on a preemptible kernel.
++///
++/// This function disables local processor interrupts on a preemptible kernel, and returns a
++/// [`LocalInterruptDisabled`] token as proof of this. On non-preemptible kernels, this function is
++/// a no-op.
++///
++/// **Usage of this function is discouraged** unless you are absolutely sure you know what you are
++/// doing, as kernel interfaces for rust that deal with interrupt state will typically handle local
++/// processor interrupt state management on their own and managing this by hand is quite error
++/// prone.
++pub fn local_interrupt_disable() -> LocalInterruptDisabled {
++    // SAFETY: It's always safe to call `local_interrupt_disable()`.
++    unsafe { bindings::local_interrupt_disable() };
++
++    LocalInterruptDisabled(NotThreadSafe)
++}
++
++impl Drop for LocalInterruptDisabled {
++    fn drop(&mut self) {
++        // SAFETY: Per type invariants, a `local_interrupt_disable()` must be called to create this
++        // object, hence call the corresponding `local_interrupt_enable()` is safe.
++        unsafe { bindings::local_interrupt_enable() };
++    }
++}
++
++impl LocalInterruptDisabled {
++    const ASSUME_DISABLED: &'static LocalInterruptDisabled = &LocalInterruptDisabled(NotThreadSafe);
++
++    /// Assume that local processor interrupts are disabled on preemptible kernels.
++    ///
++    /// This can be used for annotating code that is known to be run in contexts where local
++    /// processor interrupts are disabled on preemptible kernels. It makes no changes to the local
++    /// interrupt state on its own.
++    ///
++    /// # Safety
++    ///
++    /// For the whole life `'a`, local interrupts must be disabled on preemptible kernels. This
++    /// could be a context like for example, an interrupt handler.
++    pub unsafe fn assume_disabled<'a>() -> &'a LocalInterruptDisabled {
++        Self::ASSUME_DISABLED
++    }
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 496ed32b0911a..2b02c1f67fdd2 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -50,6 +50,7 @@
+ pub mod firmware;
+ pub mod fs;
+ pub mod init;
++pub mod interrupt;
+ pub mod io;
+ pub mod ioctl;
+ pub mod jump_label;
+-- 
+2.48.1
+
