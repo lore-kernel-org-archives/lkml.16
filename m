@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE812376F5;
-	Thu, 27 Feb 2025 13:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6DA623718D;
+	Thu, 27 Feb 2025 13:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663657; cv=none; b=dh+9wrAmVdXhIzrIc4ATCI2uObxT7Xc5kYHHYzltmuhPfHHi3p/+ONAo6zRxRMQeLCq2RQnft/+JhtEEfSsFYYgclpn+fiYgmeZmUHuSKeKq+D9cLAcSub8gKpmZq+rvMzsxG3dQOT56jiLxZvNZsMdKiT/LCmYvJZ3rImLoY04=
+	t=1740663657; cv=none; b=mCqZkMTqpljixTeIaSnMQs23aG5hXLp8Feh0lVV7RNrx8ahM+BORy8DlWcPTeHJKB8UY6n321Ko+/8QYTOhDTQMU/ZOZiFKLMNCNwzca1Qm0ZOxk9UaWou1Rh/KTxGV5+tHYWwJv8E6LbOd/5+fQTstktZvafuw7tAK+VqjsiUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740663657; c=relaxed/simple;
-	bh=s36GOsQlI5Bxg0X5/RvjyGg6LyV0xa3Y39vcYmt7bB4=;
+	bh=cgloku63G1wQeCcfNkOeaAFkTndyWuB2is19zPZnGCU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uMOb2OjydFJPx69SbPh9H0F15AtGOrraVD2JdkYXIVqZnefGe9HDcmzkz1Rjh53/rAkv2okfno8rw0m+oF+f0mvv5Zz7D9cw4j/YWCtd0XSjEv5jBZnH2HkJooSaHyRAsNBcSY3qr2dgM3sDCEaiROov0Om+wc04hpz57tAN66U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Le5gHyEq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=MbYkYVF+zIaX5i/3IlzRtHatQZaFR1eStikOIIRiFRzwclk37QUsV5MWLjFlVQUkRFKnpJiG7D7uC9NjvmdkxVs3AW1ajtqjZ9pTwqK9U6IjOJXOnW6uM/WjF/2unIFnB9gtgPpdIh6bd9hGNSjWxZoI4kiXRBmsnpy3HI89q4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiQAwcGj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Le5gHyEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8DFB2C4DE0E;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiQAwcGj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6D103C4CEF3;
 	Thu, 27 Feb 2025 13:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740663655;
-	bh=s36GOsQlI5Bxg0X5/RvjyGg6LyV0xa3Y39vcYmt7bB4=;
+	bh=cgloku63G1wQeCcfNkOeaAFkTndyWuB2is19zPZnGCU=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Le5gHyEqExZjEKmxgLZ0UDPjVWyP7e12I4i7+3nrIycqHUJTjuoDM9TcEs17wmlUn
-	 CSpeHSlYdCkUe8HfhLli/fohKxVmeZShJJ0paXl0jc7XWez1vSkAvjsoiGUvEaMQAJ
-	 XfMTpDDG3h+Zo24yltyzzcZ+1hY5G1qGpx0Ti+dDFgQA1orrV+YYRzin4hJejVhOjU
-	 Su5YZ7Ykjv3mSGWmJmHpmXxKKLMBZ5AlhZAPI+H6qFC5Xd34f1ZCLZjMnPzDjaewcd
-	 5MyH1a9A3qBZ+dl3EEXjpOPdEXiivMV4b9uSIClh6ZfDAGfuianKLWhfEj5MCs8BmT
-	 MNVl/qD1qftVw==
+	b=JiQAwcGjKXTe3hY5RVKhdaEmikLmFF9b3oy8+Bb03QLtf1M2SP3n7qBZDCmL8t+BF
+	 8ScPiDdWyh5i5hVnQryPOPuGYYqp5WSOZ/Kua04VLB7xkgmIjpWPnngZXYHP3eKVth
+	 3Uw5uc+LvX17QmOBVEPYrcDyC9+Ir7VHuJxktb/t4vwERq+iJcfKviSobw572VJNM0
+	 rIbWJna3fBDWWIxalwOIQZWiKKaDEbno1wpBtxIriNB4hcILzhti2HCnp9iPkIHHuc
+	 0jYsQa4YqH0Te3ExBIIj60N8gEe128jvsknQuXqWdG5thqhdzGwawfc4N7YDNwEviB
+	 LzM4nJHBj8sXA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 778ABC19F32;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C454C282C1;
 	Thu, 27 Feb 2025 13:40:55 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Thu, 27 Feb 2025 19:11:05 +0530
-Subject: [PATCH 23/23] arm64: dts: qcom: x1e80100: Add missing 'global'
- PCIe interrupt
+Date: Thu, 27 Feb 2025 19:11:03 +0530
+Subject: [PATCH 21/23] arm64: dts: qcom: sc8180x: Add 'global' PCIe
+ interrupt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-pcie-global-irq-v1-23-2b70a7819d1e@linaro.org>
+Message-Id: <20250227-pcie-global-irq-v1-21-2b70a7819d1e@linaro.org>
 References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -54,16 +54,16 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2331;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3239;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=D+b9sJdvKhFSUCftBjhpfmmmILsMj4McEC3OdoOVoxc=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnwGtiqVZNe1xC6tTLX7QsrP7cApoKwQC3cixH9
- 89ms7ZhdnKJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ8BrYgAKCRBVnxHm/pHO
- 9eyVB/4pXp/Y8V0U4S2uZSPb8oYmVLDF+X1mBwCW9GwMn7YMBk8trEwDd+2zGUyf9g3akusCuEj
- TmdT0RTW59JmJKVhQSjIJFSldBp8DY7EfcADKkaOq+eQfgrMhtTLmIkQQSY78mG2/fxB1fEVtOd
- IptrKO0e/vfyHv6Y6JyIBl+fRi6v9yjAp6bRpwtPJOPRwFu1Z7sAkvaqu98rka/0YyMltPjMPRA
- 8ursC+cogA+rQFN76isBjAALM/l1AOllPsjPISkzacUvkJjrDWMsjIXYVJNOGKGt3ZE0uGfM8JG
- MQj2Is64LObltY86F+obue5kMZfTRyKtM8CJQDVRmM9QUwAG
+ bh=RVfrJS0e95Y78lJzi7GpvyagUeZjC2eKUrTcOd7OnV0=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnwGtisRiUJcz54bh59ksZgn6tSDQ+V3vqJYTA6
+ BKDbMyt0tOJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ8BrYgAKCRBVnxHm/pHO
+ 9cT5B/sHSQvAlwOhjzKudu/UbGknGhOWHsHI6j7UP19+mT2lXFHuh/oQYM5I1+Zr+UDo6nc7ktr
+ 0nIo+/pUd5ngweTyyoSGWFSwqUAWDWMo10Wd8dlWF0lmkMWOfkT7KTNMEC3YPWPl2oAF89Vm7Tm
+ Zqmz7TwhG5oeu2MPHDAOs1NP+vwRjChC7OfvV44YDjNJoyHn09HnMnnYmYHyiYhBeIYtqJ/9TKI
+ KYo+iOa1tp8VM0oTYCKoPqpGawwwKFKwCl02bkzOwqCsIDWdb0qCiyyZWEH9AEWoJcieKl36TNT
+ jGgEXlOOAO6mmQpR9mE9UKaAfHDjRUa2gGszQXHMiT8bFEIb
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -78,73 +78,93 @@ events.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/qcom/sc8180x.dtsi | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 4936fa5b98ff..cea199966d82 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -3358,7 +3358,8 @@ pcie6a: pci@1bf8000 {
- 				     <GIC_SPI 839 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 840 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 841 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 842 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 842 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi0",
- 					  "msi1",
- 					  "msi2",
-@@ -3366,7 +3367,8 @@ pcie6a: pci@1bf8000 {
- 					  "msi4",
- 					  "msi5",
- 					  "msi6",
--					  "msi7";
-+					  "msi7",
-+					  "global";
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
-@@ -3485,7 +3487,8 @@ pcie5: pci@1c00000 {
- 				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi0",
- 					  "msi1",
- 					  "msi2",
-@@ -3493,7 +3496,8 @@ pcie5: pci@1c00000 {
- 					  "msi4",
- 					  "msi5",
- 					  "msi6",
--					  "msi7";
-+					  "msi7",
-+					  "global";
- 
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
-@@ -3609,7 +3613,8 @@ pcie4: pci@1c08000 {
+diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+index 28693a3bfc7f..b4563389ad3b 100644
+--- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
+@@ -1725,7 +1725,8 @@ pcie0: pcie@1c00000 {
  				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
  				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
  				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
 -				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
 +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
  			interrupt-names = "msi0",
  					  "msi1",
  					  "msi2",
-@@ -3617,7 +3622,8 @@ pcie4: pci@1c08000 {
+@@ -1733,7 +1734,8 @@ pcie0: pcie@1c00000 {
  					  "msi4",
  					  "msi5",
  					  "msi6",
 -					  "msi7";
 +					  "msi7",
 +					  "global";
- 
  			#interrupt-cells = <1>;
  			interrupt-map-mask = <0 0 0 0x7>;
+ 			interrupt-map = <0 0 0 1 &intc 0 149 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+@@ -1846,7 +1848,8 @@ pcie3: pcie@1c08000 {
+ 				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi0",
+ 					  "msi1",
+ 					  "msi2",
+@@ -1854,7 +1857,8 @@ pcie3: pcie@1c08000 {
+ 					  "msi4",
+ 					  "msi5",
+ 					  "msi6",
+-					  "msi7";
++					  "msi7",
++					  "global";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+@@ -1968,7 +1972,8 @@ pcie1: pcie@1c10000 {
+ 				     <GIC_SPI 752 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 751 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 750 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 749 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 749 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 758 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi0",
+ 					  "msi1",
+ 					  "msi2",
+@@ -1976,7 +1981,8 @@ pcie1: pcie@1c10000 {
+ 					  "msi4",
+ 					  "msi5",
+ 					  "msi6",
+-					  "msi7";
++					  "msi7",
++					  "global";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			interrupt-map = <0 0 0 1 &intc 0 747 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+@@ -2090,7 +2096,8 @@ pcie2: pcie@1c18000 {
+ 				     <GIC_SPI 668 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 667 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 666 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 665 IRQ_TYPE_LEVEL_HIGH>;
++				     <GIC_SPI 665 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 744 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi0",
+ 					  "msi1",
+ 					  "msi2",
+@@ -2098,7 +2105,8 @@ pcie2: pcie@1c18000 {
+ 					  "msi4",
+ 					  "msi5",
+ 					  "msi6",
+-					  "msi7";
++					  "msi7",
++					  "global";
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			interrupt-map = <0 0 0 1 &intc 0 663 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
 
 -- 
 2.25.1
