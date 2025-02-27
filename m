@@ -1,75 +1,56 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700021F5830
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1577717A5A4
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631021; cv=none; b=OKZiCfH/Lq3AELe2ig+67CxbzUFuL8IZ9JH3pqOMqCUhEf8ggeKJMwMGr3EQ6j4qHL1zURUrTCR70glgaRiX/GL1QUtNdrPPku4xKob3jDQHnZK1uHv2jqaThvwlcpg8p38chyizf2psuT0JLJ2hW7wV9QEb9M1tv39OZbOkwR4=
+	t=1740631024; cv=none; b=qM5j3IkEP6pU/Eg43wou3h7HiN3dj0/sYPVVV1WPZ8HfdQvFyt8gVov6svm8QsIeNv1N/QXMSusazhv6PJ2uK+Z3RO501F6X4XL496o7Dt5yu7Gk3scAZ4DVEaSbB2eM8ztlIYYjORwwSe8oGV/BylWeyYuJdUrYFe0Sg+umqBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631021; c=relaxed/simple;
-	bh=nWo0kbrzIofdLaGq0AQCS3Ixn04Y92oVHz9liJwKC/I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MkyeuwjvgeD5OIbnbWoMC+s6Aktsagqp3KR5yt7dvWO7ZSAfVSt9PRBUL+QEM4bynDvnIRGAaSJtWhk3iB//Xko+ybYceQVPT7Zzx6lCcQPGitnz8ilJerC6hI8wiWaPYkltLuSg6EJUUBg5p74OI3f6DQD1Ef+W3HFS1412fF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=DvQdBaIo; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740631024; c=relaxed/simple;
+	bh=dTLiIcGg+7VcR4Jututcykw9L0J9eF3fh+IAUJFRshM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eFfYJtxcNrPTTT/aE+DODQgqzCwt7/O3U3aDDSqYuihZ5uGMEIdjTTeR13lCFG8LoO3L6fuI1lBRUxTx2XNCruq+w8fWXcvgLxytCerRqgnIPxAhsqLRmyuOtgssQfuq1UN0XdtmHDzcbk0eoPcvZ0uEwMudnvuEGSMtwNS0xog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=h+bvhONl; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DvQdBaIo"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220c8f38febso8027685ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:36:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740631019; x=1741235819; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Be7BmKV5Rl+tSCSL+PenBDpRFLFJDOVjENq1jnQl0Z8=;
-        b=DvQdBaIonyCPIMCOzJbQKWehdfqW7SA1KniYkpJxceOAxvLDQVZ/LM4oCLBWa3TYjT
-         y4RCRmmHhSMnqmsFZGljG5EN1f7iOQY1c2Y90rtwixElCVVpQdEKeVTJivELm9a0eXX/
-         YI2Kx/IpX1seuywD03glk/L1cCeoO/1yz+hDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740631019; x=1741235819;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Be7BmKV5Rl+tSCSL+PenBDpRFLFJDOVjENq1jnQl0Z8=;
-        b=bs+LWpRiDo2w8bcHUu+v4TtIiHdfpsxDexpwP1yIvqHwotxGu/FwxRRH95UpimfW8M
-         VUG0Jtj7NanJIoT2eqEs26Mt/qNPSbQYaAFotEm5HWEDN8mPSbjg6v6G3UhV0MzIxqdk
-         9f+NpXvPcTO9FeFiMeo8joHJqrPC0gmNO+jq0Yj3/7pBmDvqZs7pwLfa0E52fgBSfGEx
-         xe4zCdjv+0Z1BmZqCFWazmQrgFIljCFz453l7c9Hsk5afyZWuk2WYwvF9zG9uGdN2XR6
-         7p+JGi7zl8GqqfqJFsFjXUAwRgMjCj1IenyPjtESZaNTV9zvU1hHuESXco8oaEfD+j6y
-         pW0A==
-X-Forwarded-Encrypted: i=1; AJvYcCVMg6mRpakJyozA54Tah6kznC3HWS8Kh9JNVMazhGkEcqD5ViD3piZFsYL4CrUv6DVn5E1/qfdEQhCcgHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4AK47Z6Qej75VEOwhyPQ+PltSh7tBzPwMf7eLkHVcTJHCCU8Y
-	rerDcZxPqs2G5nl8qrLLz/xESwXoYA05o3xjkCMzHrf7Vi0WMBujBt5b++HFvA==
-X-Gm-Gg: ASbGncv2bK7Gsxz6xw2d3jnBHLYXuIOvXe5ZY/4+1H6pQbrVC6O29YjeMsWj8y6X0LF
-	MD4UHqT3mEhhI1oHeAPbGfUdfWR/RSTyOcTn0Oafhi8dwCxjaWxGJkaR2rtdOoKn9GNkJL94Y0k
-	Xvu2a/rsthepNXRBTzIQIcsDoKCz+Nm6naH49sHh8e9/3GXaIQ3ZXB/46jOO9Sahwzc2Y6S6izc
-	4Ur0E9dFx+KIEL2AxR79Xin7zelILCnSQ/lDV38ncyT5T4bjl3feD63A3doX2nV8cYXCKh4ZFD2
-	IejtkEPUUkaEyLlnCcD2fhI0rSTx
-X-Google-Smtp-Source: AGHT+IFJgaRFQVylaLj6I4IPqbcJ3f5L/ef1xGtQVqtC08AgMT8m0YWQWIDG6Ie7Da0oM3f1AlVfQQ==
-X-Received: by 2002:a05:6a20:72a1:b0:1e1:ca27:89f0 with SMTP id adf61e73a8af0-1eef3daad8bmr44973568637.37.1740631018819;
-        Wed, 26 Feb 2025 20:36:58 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-734a003eb70sm485399b3a.124.2025.02.26.20.36.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Feb 2025 20:36:58 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 05/19] zram: remove second stage of handle allocation
-Date: Thu, 27 Feb 2025 13:35:23 +0900
-Message-ID: <20250227043618.88380-6-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
-References: <20250227043618.88380-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="h+bvhONl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740631020;
+	bh=dTLiIcGg+7VcR4Jututcykw9L0J9eF3fh+IAUJFRshM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=h+bvhONlg44ykMXqLn8yZyAIVVSkPrQt17gJjPJmzwSNanNZFJctyA3acfNgBZs6I
+	 ZWD5OFhI/IrHedTsnjbApva0AMUIG8G9LNjyPV+jsLy8B7w411fAtRpfbry33AzK1l
+	 63jexskqMMhRYoWKORpnIlIRC/suVay+RKlBxPVncrqn/AE3M2fvkhZC+mLrD6s70O
+	 KwRLWiWiU10R9He+vpgWNX0lYTD6MnUssS8hwjMDiEIuTmA0ounve/ISeVG0kJURpQ
+	 WWMHHJDGYqHj8LDn7nkcSN4QU5BiYLDzuhGMF6p4mCB4Brqxmu6k5pD8My6KZJMKQF
+	 m7vIpWzGtfvzA==
+Received: from localhost.localdomain (unknown [171.76.83.32])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 6A4BE17E068B;
+	Thu, 27 Feb 2025 05:36:55 +0100 (CET)
+From: Vignesh Raman <vignesh.raman@collabora.com>
+To: dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com,
+	helen.fornazier@gmail.com,
+	airlied@gmail.com,
+	simona.vetter@ffwll.ch,
+	robdclark@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	guilherme.gallo@collabora.com,
+	sergi.blanch.torne@collabora.com,
+	valentine.burley@collabora.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] drm/ci: remove CI_PRE_CLONE_SCRIPT
+Date: Thu, 27 Feb 2025 10:06:24 +0530
+Message-ID: <20250227043640.411696-1-vignesh.raman@collabora.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,98 +59,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Previously zram write() was atomic which required us to pass
-__GFP_KSWAPD_RECLAIM to zsmalloc handle allocation on a fast
-path and attempt a slow path allocation (with recompression)
-if the fast path failed.
+If we are not caching the git archive, do not
+set CI_PRE_CLONE_SCRIPT. Setting it makes CI
+try to download the cache first, and if it is
+missing, it tries to clone the repo within a
+time limit, which can cause build failures.
 
-Since we are not in atomic context anymore we can permit
-direct reclaim during handle allocation, and hence can have
-a single allocation path.  There is no slow path anymore so
-we don't unlock per-CPU stream (and don't lose compressed
-data) which means that there is no need to do recompression
-now (which should reduce CPU and battery usage).
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
 ---
- drivers/block/zram/zram_drv.c | 39 +++++++----------------------------
- 1 file changed, 7 insertions(+), 32 deletions(-)
+ drivers/gpu/drm/ci/gitlab-ci.yml | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 5f2c08337ba9..28aa1c437d83 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -1723,11 +1723,11 @@ static int write_incompressible_page(struct zram *zram, struct page *page,
- static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- {
- 	int ret = 0;
--	unsigned long handle = -ENOMEM;
--	unsigned int comp_len = 0;
-+	unsigned long handle;
-+	unsigned int comp_len;
- 	void *dst, *mem;
- 	struct zcomp_strm *zstrm;
--	unsigned long element = 0;
-+	unsigned long element;
- 	bool same_filled;
- 
- 	/* First, free memory allocated to this slot (if any) */
-@@ -1741,7 +1741,6 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 	if (same_filled)
- 		return write_same_filled_page(zram, element, index);
- 
--compress_again:
- 	zstrm = zcomp_stream_get(zram->comps[ZRAM_PRIMARY_COMP]);
- 	mem = kmap_local_page(page);
- 	ret = zcomp_compress(zram->comps[ZRAM_PRIMARY_COMP], zstrm,
-@@ -1751,7 +1750,6 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 	if (unlikely(ret)) {
- 		zcomp_stream_put(zstrm);
- 		pr_err("Compression failed! err=%d\n", ret);
--		zs_free(zram->mem_pool, handle);
- 		return ret;
- 	}
- 
-@@ -1760,35 +1758,12 @@ static int zram_write_page(struct zram *zram, struct page *page, u32 index)
- 		return write_incompressible_page(zram, page, index);
- 	}
- 
--	/*
--	 * handle allocation has 2 paths:
--	 * a) fast path is executed with preemption disabled (for
--	 *  per-cpu streams) and has __GFP_DIRECT_RECLAIM bit clear,
--	 *  since we can't sleep;
--	 * b) slow path enables preemption and attempts to allocate
--	 *  the page with __GFP_DIRECT_RECLAIM bit set. we have to
--	 *  put per-cpu compression stream and, thus, to re-do
--	 *  the compression once handle is allocated.
--	 *
--	 * if we have a 'non-null' handle here then we are coming
--	 * from the slow path and handle has already been allocated.
--	 */
--	if (IS_ERR_VALUE(handle))
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				   __GFP_KSWAPD_RECLAIM |
--				   __GFP_NOWARN |
--				   __GFP_HIGHMEM |
--				   __GFP_MOVABLE);
-+	handle = zs_malloc(zram->mem_pool, comp_len,
-+			   GFP_NOIO | __GFP_NOWARN |
-+			   __GFP_HIGHMEM | __GFP_MOVABLE);
- 	if (IS_ERR_VALUE(handle)) {
- 		zcomp_stream_put(zstrm);
--		atomic64_inc(&zram->stats.writestall);
--		handle = zs_malloc(zram->mem_pool, comp_len,
--				   GFP_NOIO | __GFP_HIGHMEM |
--				   __GFP_MOVABLE);
--		if (IS_ERR_VALUE(handle))
--			return PTR_ERR((void *)handle);
--
--		goto compress_again;
-+		return PTR_ERR((void *)handle);
- 	}
- 
- 	if (!zram_can_store_page(zram)) {
+diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+index f4e324e156db..0bc4ac344757 100644
+--- a/drivers/gpu/drm/ci/gitlab-ci.yml
++++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+@@ -13,12 +13,6 @@ variables:
+   FDO_UPSTREAM_REPO: helen.fornazier/linux   # The repo where the git-archive daily runs
+   MESA_TEMPLATES_COMMIT: &ci-templates-commit d5aa3941aa03c2f716595116354fb81eb8012acb
+   DRM_CI_PROJECT_URL: https://gitlab.freedesktop.org/${DRM_CI_PROJECT_PATH}
+-  CI_PRE_CLONE_SCRIPT: |-
+-          set -o xtrace
+-          curl -L --retry 4 -f --retry-all-errors --retry-delay 60 -s ${DRM_CI_PROJECT_URL}/-/raw/${DRM_CI_COMMIT_SHA}/.gitlab-ci/download-git-cache.sh -o download-git-cache.sh
+-          bash download-git-cache.sh
+-          rm download-git-cache.sh
+-          set +o xtrace
+   S3_JWT_FILE: /s3_jwt
+   S3_JWT_FILE_SCRIPT: |-
+       echo -n '${S3_JWT}' > '${S3_JWT_FILE}' &&
 -- 
-2.48.1.658.g4767266eb4-goog
+2.47.2
 
