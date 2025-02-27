@@ -1,86 +1,93 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BCD26B0A1;
-	Thu, 27 Feb 2025 15:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D08E26B2BF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740669920; cv=none; b=sCyDeF6DonW+b3hUL3azfdQ4A9o8/7TcAjBqrHMSYqWbdYwyHUt5Rnzg5L95Q2jwN/Bp6laBFta0BL9ty93PDsuXdgDBWTwyVdeUICWCz03ITUiN0uuuF4rXwWZqskzN7DcWjoWflOEjPYhL2RlJQncExscLsDoPsdU8jlev9RQ=
+	t=1740669927; cv=none; b=dA0f0NpF+dStct0u7a4izwL2hBQ+pH1E9FjD56K59VPXoNvi18SI6z54rZ371m7sa5bSlDQ+M+zhrHiR3JWXFvl8Sz7VS2ttcIcxSosZZXQ2p/QOHsGsxfVe7fzO1csg+dDNJ9W4CJU82P+hLctiQRATlg7ZsR70xlagJTUcxw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740669920; c=relaxed/simple;
-	bh=ILhxlSPxDHvKqbkAdsFvnA5w0urddBfQcztKCtjLnNI=;
+	s=arc-20240116; t=1740669927; c=relaxed/simple;
+	bh=vpomHs3iTwgbfPEKsG61J27840RkikUOBSKgtHFsC1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fn+jEiWeC7SKk+HmXLlso7KfS7W3sAo3/xX04+WpGHBYMVOrzwO0oznohC5NtcscsfYxWXmlaJFMOWpH5O4Huk2SxM+sqwR9OcwaP8MsTW5Mt+wSpOnARLnHHGYG2Ml99Vwp7B8+qU+cuRZbb5QNbEiD6wcQLcF8h57/Ogz6cW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Py4kxBin; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=RsmXNgpdd3Tgp27ZTHfi7lTnykssCCjA7R+J05BvmEMJ+CQB8C4YKTWZ60Bj2HhRwy5tz0hKxXG5F+HlFiAYoW6MsZjwQuG/vYSzz8+QKaXHXuiDgx9xD3OAAVSETlsOrrkSndw/tDcSd31/+FT+roN+rOfg8PYcHEZIc8qialI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eDnLIeQz; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Py4kxBin"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1CE5040E01A3;
-	Thu, 27 Feb 2025 15:25:17 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Asb82YF14Yc2; Thu, 27 Feb 2025 15:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740669913; bh=Q92QBKq9jE7T7IU2lV/bRqcFLg5w8yrhy42mYugBxuY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Py4kxBinmMsuPKY2ONATv4jqviqzQnMVIQnseeGKYbjsJ3qG4AGwxwtp5QtVSqz0W
-	 iduuisOui7qJRfA8qXEAjG/4epC9st0hGJ2wBHl8OZ0knfNC6KuXqcMvZxFeh9y4QI
-	 qxuYaU2vQiRz72PUaURy6MYjUV6xzHetYv3bvmjHi4L1LmplCRFxS7BMn+Qlgl2y+h
-	 +DA609FJd6S0jGLpnVvX0nxTgV+XjJpsjagyEuuFH30X9qlAFHtXSAVAlhP8AqG4Zn
-	 9BLK1rVXsbJY3CX08eSpiW/RP2CN74p9LXgU1bv9YmyopUTO68c9blXBuvCNGYlVyP
-	 O2Z8OS1vioz7fYW3hrwZ/5oIUpmYsG5Siqp85Nk9CzRLwhXaCuRpV+ygYG+OMZsAS6
-	 ZDdThNfh9ZYng78LkQ6BMUwtHBUcqDgK0t+MW3W4WXSZKWrNVeOK6ucqPThTDRHBMn
-	 gSK6zUnMj/gx9m1SymeZt/2PTjlpLfL1WZ/asaKJTAv81WkS7tguZkSOHL+kql98xm
-	 7m0Qs+vbUGSFZvMhpptYOxTnOvpfQzUe79AEzD7m81q6HSyoa3deuu4A4MpEJ8pt5E
-	 ZnCMqzbyRJKp2pkg/tY482Y8VzfVCHs8sT7qMmeT3u8sFgeu7rMuJWeFr2xF3zUs+w
-	 xlv/mYUY2e86bPpSNvhIvSMs=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 498D840E021F;
-	Thu, 27 Feb 2025 15:25:07 +0000 (UTC)
-Date: Thu, 27 Feb 2025 16:25:00 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 06/16] x86/mce: Remove __mcheck_cpu_init_early()
-Message-ID: <20250227152500.GAZ8CDzEBRWBUukmcl@fat_crate.local>
-References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
- <20250213-wip-mca-updates-v2-6-3636547fe05f@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eDnLIeQz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740669926; x=1772205926;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vpomHs3iTwgbfPEKsG61J27840RkikUOBSKgtHFsC1g=;
+  b=eDnLIeQz5ePIcsspjHCql+sOASk+TiBK/FoETZeOtlTehcktZF1rKSXL
+   DpXRkGjJ2QaacDtLRKayORkUrOyTJgS+5Vyu5Gj0m075lUttBKA3Hz+DD
+   RqRoKvgHcHhHFPiUkjSGGWAdCPHGyDcUpwMHceO6HveKgm2gFyYVj5+To
+   yL9JGO2uKmkSHBiGekwWbruC03DC9BPLhwIP4rHUzz586uMPG9UuY7PfZ
+   q95czdYO6b+g5yD6TlWuaSWJA8Mrd53p95LCnZgvHE4opNzAkflCvQ+1H
+   LnlfWy6E+r+KPkeJnJbPQ23dehA93K7jYn38y7JWRrtW0tHx/yCZkANGJ
+   g==;
+X-CSE-ConnectionGUID: rQqyqNs+R5CAjm2jCKyvkQ==
+X-CSE-MsgGUID: jqi7yO28Qtmm/mZYIkFCmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45216484"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="45216484"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:25:25 -0800
+X-CSE-ConnectionGUID: QLQtorUDT3OwzopKlQ25BQ==
+X-CSE-MsgGUID: AcGdgfOeQD6da5wt4RwiLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="147872701"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:25:22 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tnflH-0000000FdFW-3AyL;
+	Thu, 27 Feb 2025 17:25:19 +0200
+Date: Thu, 27 Feb 2025 17:25:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, airlied@gmail.com,
+	simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Cleanup io.h
+Message-ID: <Z8CD33_OWK2LB6IZ@smile.fi.intel.com>
+References: <20250227070747.3105451-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213-wip-mca-updates-v2-6-3636547fe05f@amd.com>
+In-Reply-To: <20250227070747.3105451-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 13, 2025 at 04:45:55PM +0000, Yazen Ghannam wrote:
-> Also, move __mcheck_cpu_init_generic() after
-> __mcheck_cpu_init_prepare_banks() so that MCA is enabled after the first
-> MCA polling event.
+On Thu, Feb 27, 2025 at 12:37:45PM +0530, Raag Jadav wrote:
+> This series attempts to cleanup io.h with "include what you use" approach.
+> This depends on changes available on immutable tag[1].
+> 
+> Although this series is too trivial in the grand scheme of things, it is
+> still a tiny step towards untangling core headers. I have success results
+> from LKP for this series but there can still be corner cases. So perhaps
+> we can queue this on a temporary branch which we can use to submit fixes
+> in case of fallout.
+> 
+> Future plan is to use the excellent analysis[2][3] by Arnd to cleanup other
+> headers.
+> 
+> [1] https://lore.kernel.org/r/Z7xGpz3Q4Zj6YHx7@black.fi.intel.com
+> [2] https://lore.kernel.org/r/2342b516-2c6e-42e5-b4f4-579b280823ba@app.fastmail.com
+> [3] https://lore.kernel.org/r/f6eb011b-40fb-409a-b2b2-a09d0e770bbd@app.fastmail.com
 
-The reason being?
-
-Precaution?
-
-It was this way since forever, why are you moving it now? Any particular
-reason?
-
-Thx.
+I believe Arnd can take it through his tree for headers as DRM part is Acked already.
 
 -- 
-Regards/Gruss,
-    Boris.
+With Best Regards,
+Andy Shevchenko
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
