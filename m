@@ -1,117 +1,148 @@
-Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8862309AA;
-	Thu, 27 Feb 2025 14:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5610230D35
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740666431; cv=none; b=t51LVgSLsLrQBZIPygYjpTruV+BMPZ8A3LV6wJ5Z20bjMahZ307ySdFQSJgcipr95MROB3d2d6IC0aex7Lj32tyscDH1n24j/vqd73+XcvXfonofMEZeg0d031QN1XFK9XriB/J/cgj3WuM43D2lmFc35Uovs05Nk17lFnU0Gfc=
+	t=1740666441; cv=none; b=pZW1jAbKlAMqZQzlv6SoY47yI5R2ROz7MGjnqAEHWsay3XjFwh5G9QCkdq5iFDYtAkA57TuOliYl7SDOhci2a/q+D1hejNA3a3plJ33JDBfQJLBI1bXfpAeUAfC7PPcVQnY58qFw7UXsmxAWIOuDdfJYdqeIXRlf44JXgvgs19M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740666431; c=relaxed/simple;
-	bh=dyyzHix7FsjYghq8qoqSFkJvh7rVpVdTIin/CCYr2f0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kfSo7n1PVw0QQrn97BwAsxV1Rv31iaDXKJNjJHZDXcr675wIfZGN6dpUCRUZWewJ/6cLwhf4cA/EkvdTrfx1j1jxB0rnXteBDtLeIotBa5DGbiCAFLYd/DI3fBgyOq3yX/YigKEX7J1gom+BKrlUAStaMIkA/AVzruWFZldxj2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=43dOkDkN; arc=none smtp.client-ip=45.141.101.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	s=arc-20240116; t=1740666441; c=relaxed/simple;
+	bh=9NJh4qWBaG6Re9XAkRIRu/sfCXk4U7OusKRVt14Xt5o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QAVgkxrzXe8+DJtTKCEj++5XwUNxlpjeoYQ9YqcX3TgjHLOitAckOgpkMProekyKJ5QmUueHRgYVqGa5dyJMRWCVfRu6RvbDUz6FYEslAzLk2+sINuiSijHnDVL/bbkhaop+18Qas0SAshT+CK0CjVQ4OPDdKPD/ZBc8MohxG4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nwmWaF96; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="43dOkDkN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1740666427; bh=dyyzHix7FsjYghq8qoqSFkJvh7rVpVdTIin/CCYr2f0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=43dOkDkNeW12CX6HVHrQBWxjyOLO824YbGjbNZipf/6EbOlsoW57gGsEKGyhqMopH
-	 6BYCzQeTcFrtZwcHD+SC3cEHViLHh4dU/Hu+RjvnQP41H8cCanteRry+j0y6pPx9bQ
-	 LBrSaPdrtFQ/M1bTIt+AEL8QDHW+cOQ7yrHlsdbtekuNIK+0ZoXQa+dSFge58CNTv+
-	 ftMZ0N9HvPVdz9rpWdMtBUHTT1NEn663aGkccMCm5D5d5fT6TWLpFpKOcVEaeTMewX
-	 op2VWrOcxGKcYjaJlD/5G31/TqDJ1S2R2vecwCQ8My0Bb5gdRqB+T2JzAt562Z++9w
-	 BPFO+0lakXmRw==
-Received: from authenticated-user (box.trvn.ru [45.141.101.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 7FD5195BB;
-	Thu, 27 Feb 2025 19:27:06 +0500 (+05)
-From: Nikita Travkin <nikita@trvn.ru>
-Date: Thu, 27 Feb 2025 19:26:49 +0500
-Subject: [PATCH v2 2/2] arm64: dts: qcom:
- sdm845-db845c-navigation-mezzanine: Drop CMA heap
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nwmWaF96"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740666436;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s7AvVgItQBcIy3/yElChkvzIw9QALk+tx+dIFetvRkg=;
+	b=nwmWaF96KstZUIDUwvmXpOsGOBzSQAJeUTep86aEKE0QY40D4ZU8xwstYHcScmI/ZkCKud
+	BZ2OaoQXOqd07v0dJJA5DKbILtc0UF32ch5v9wEG1G7rObojUixm0EvtJX4vMlCUZrENFQ
+	lN8Ykv+OXzoFmEIvecUy6DvzYcOBviY=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org
+Cc: john.fastabend@gmail.com,
+	davem@davemloft.net,
+	kuba@kernel.org,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	mykolal@fb.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	shuah@kernel.org,
+	hawk@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>
+Subject: [PATCH bpf-next v1 1/3] selftests/bpf: Allow auto port binding for cgroup connect
+Date: Thu, 27 Feb 2025 22:26:44 +0800
+Message-ID: <20250227142646.59711-2-jiayuan.chen@linux.dev>
+In-Reply-To: <20250227142646.59711-1-jiayuan.chen@linux.dev>
+References: <20250227142646.59711-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-qcom-nonroot-overlays-v2-2-bde44f708cbe@trvn.ru>
-References: <20250227-qcom-nonroot-overlays-v2-0-bde44f708cbe@trvn.ru>
-In-Reply-To: <20250227-qcom-nonroot-overlays-v2-0-bde44f708cbe@trvn.ru>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1652; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=dyyzHix7FsjYghq8qoqSFkJvh7rVpVdTIin/CCYr2f0=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBnwHY31v/qUb+Ww0+Cy5RNOAZPfXCgmUlag56Av
- yalMvI73RuJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCZ8B2NwAKCRBDHOzuKBm/
- deyAD/44FkhDxt6L5t9CJ0wPuFvwCLuC18CrmMuVthy73E95n4tEhCtDrJMJOKhxfGhLwPmtuDw
- AXDbj4OnNYfwEjycNl7nYNcruWmRq726qnVpvjTgtHxnxDiJTGK8VPe9kIRgjBlOutuwWuvIh2j
- 0P6AuwTH+9gnQa7uXUOQA1l9QZrgDKG7MHIys99ZVxUsqGuTkLG2lCHRnHqLNAJvr6+5FYEW/ks
- 0UYtKjdOptdIuzEOuIU7X9Wcf+Bqn8gDWS9JUfnkM69GzH1d2a/xlLdztzboi7txzO5PT2QvO/j
- 7/8lnJDrlJoRjYC8YleqYALh3/ZiOM999PHkDZ8vPnwGQ3lrqOpPdOrjp57WukqDDlETtlW8ddD
- 9yrVU3TubCB4C5DiFrQALf51oz6MKkIyhtDxob7ts9EvGztNyx4f8zYLE7R9ZpjybWKXaxK8hh8
- Yf/Bs19lkQMs4pYk79j87EHB9XWmPa1l36yfGizMYnw0FMaH9fQZRD3jv4T0x87dR3FKvRwOE3k
- WZcNmrToXEkqOGpEp7+PCCelYxWh2qQQ09S203AfdiO8izlGeb6Pv6pNk92QNxU9CziZ+lPdbTQ
- fGd9/J9fK6oRmrbNzcFgl+fY/muavTrF6ZP+M3+GA8RjFkDx4ktvwJGi8kXADtQulqVE2mA34Ii
- VHa75qyfQaDC/ag==
-X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
- fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Initially added, the cma heap was supposed to help with libcamera swisp,
-however a mistake was made such that the node was never applied as part
-of the overlay since the change was added to the overlay root ("/") and
-not with a reference to the target dtb root ("&{/}"). Moveover libcamera
-doesn't require CMA heap on Qualcomm platforms anymore as it can now use
-UDMA buffers instead.
+Allow auto port binding for cgroup connect test to avoid binding conflict.
 
-Drop the CMA heap node. This change has no effect on the final dtb.
+Result:
+./test_progs -a cgroup_v1v2
+59      cgroup_v1v2:OK
+Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
 
-This reverts commit d40fd02c1faf8faad57a7579b573bc5be51faabe.
-
-Fixes: d40fd02c1faf ("arm64: dts: qcom: sdm845-db845c-navigation-mezzanine: Add cma heap for libcamera softisp support")
-Suggested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 ---
- .../boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso     | 11 -----------
- 1 file changed, 11 deletions(-)
+ .../testing/selftests/bpf/prog_tests/cgroup_v1v2.c  | 13 +++++++++----
+ .../testing/selftests/bpf/progs/connect4_dropper.c  |  4 +++-
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso b/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-index 59970082da45203311146cc5249298f6188bf67a..51f1a4883ab8f0ee7c66fab89c6e1a88c868d2f8 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso
-@@ -9,17 +9,6 @@
- #include <dt-bindings/clock/qcom,camcc-sdm845.h>
- #include <dt-bindings/gpio/gpio.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/cgroup_v1v2.c b/tools/testing/selftests/bpf/prog_tests/cgroup_v1v2.c
+index 64abba72ac10..37c1cc52ed98 100644
+--- a/tools/testing/selftests/bpf/prog_tests/cgroup_v1v2.c
++++ b/tools/testing/selftests/bpf/prog_tests/cgroup_v1v2.c
+@@ -10,12 +10,18 @@
+ static int run_test(int cgroup_fd, int server_fd, bool classid)
+ {
+ 	struct connect4_dropper *skel;
+-	int fd, err = 0;
++	int fd, err = 0, port;
  
--/ {
--	reserved-memory {
--		linux,cma {
--			compatible = "shared-dma-pool";
--			size = <0x0 0x8000000>;
--			reusable;
--			linux,cma-default;
--		};
--	};
--};
--
- &camss {
- 	vdda-phy-supply = <&vreg_l1a_0p875>;
- 	vdda-pll-supply = <&vreg_l26a_1p2>;
-
+ 	skel = connect4_dropper__open_and_load();
+ 	if (!ASSERT_OK_PTR(skel, "skel_open"))
+ 		return -1;
+ 
++	port = get_socket_local_port(server_fd);
++	if (!ASSERT_GE(port, 0, "get_socket_local_port"))
++		return -1;
++
++	skel->bss->port = ntohs(port);
++
+ 	skel->links.connect_v4_dropper =
+ 		bpf_program__attach_cgroup(skel->progs.connect_v4_dropper,
+ 					   cgroup_fd);
+@@ -48,10 +54,9 @@ void test_cgroup_v1v2(void)
+ {
+ 	struct network_helper_opts opts = {};
+ 	int server_fd, client_fd, cgroup_fd;
+-	static const int port = 60120;
+ 
+ 	/* Step 1: Check base connectivity works without any BPF. */
+-	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, port, 0);
++	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
+ 	if (!ASSERT_GE(server_fd, 0, "server_fd"))
+ 		return;
+ 	client_fd = connect_to_fd_opts(server_fd, &opts);
+@@ -66,7 +71,7 @@ void test_cgroup_v1v2(void)
+ 	cgroup_fd = test__join_cgroup("/connect_dropper");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "cgroup_fd"))
+ 		return;
+-	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, port, 0);
++	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
+ 	if (!ASSERT_GE(server_fd, 0, "server_fd")) {
+ 		close(cgroup_fd);
+ 		return;
+diff --git a/tools/testing/selftests/bpf/progs/connect4_dropper.c b/tools/testing/selftests/bpf/progs/connect4_dropper.c
+index d3f4c5e4fb69..a3819a5d09c8 100644
+--- a/tools/testing/selftests/bpf/progs/connect4_dropper.c
++++ b/tools/testing/selftests/bpf/progs/connect4_dropper.c
+@@ -13,12 +13,14 @@
+ #define VERDICT_REJECT	0
+ #define VERDICT_PROCEED	1
+ 
++int port;
++
+ SEC("cgroup/connect4")
+ int connect_v4_dropper(struct bpf_sock_addr *ctx)
+ {
+ 	if (ctx->type != SOCK_STREAM)
+ 		return VERDICT_PROCEED;
+-	if (ctx->user_port == bpf_htons(60120))
++	if (ctx->user_port == bpf_htons(port))
+ 		return VERDICT_REJECT;
+ 	return VERDICT_PROCEED;
+ }
 -- 
-2.48.1
+2.47.1
 
