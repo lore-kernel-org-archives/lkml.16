@@ -1,131 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420922C322;
-	Thu, 27 Feb 2025 12:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC99270043;
+	Thu, 27 Feb 2025 12:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740660706; cv=none; b=b4xfWxef+YU69z6RJ7moQUaBP7U5LVHcsbrGinBtp+5Jv1YCF2v7dSK4UBhiCE/G5GDuVnkQri9L4xon0ID9uqJkoWCTvy2yxJVFqZe/BvzvkdWDoeCOCMTPiraE39ZTbG7r3K24uMWcCPsV8TypKNEHlHVOt0tIUxv7I+Pr/jU=
+	t=1740660922; cv=none; b=lk3kT0B4SJ5vUJsR24rWxfKESyB1RZgd5DNwwA33pk+Y/9TbSE1dmQI1b4mo+5Rv60GgXZKW8kzmyD++NsTZhnLhYviip5qql43qCct42amdiTTn89UdRdxsVl5RmaXoSvOh7SXlPvY1rayy7zYJnZ6J0Fd4DrXbOSksaltKzZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740660706; c=relaxed/simple;
-	bh=qaS3Sot0jP2/TYM8y64qZBKAz9Pu1JxQ1gDYVWPX2+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uB99xMKbwTDhjMY1dWdDoym0OWQyghnqfdYUrFIBmmcHptqAtI3kb+qn324U3/OrqcnyZHqC7Q7zqiRfpChfB86ELBlXshkH4VHTF81p6BNytv7wYOjWcTjpCBglVaTcUFZBWxOV40+Xso5tTpQRHOJzWOpMrQcUYV4282ozdww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmnW+UKX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740660922; c=relaxed/simple;
+	bh=6WA9Y2u0JkbMjOhXCplng2cIcES7LxUMIDD5XdtYSXU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=eOYBlQlvB9pOaasOxLql1plMr5Am6PF+9ZQhCa9tEpI0gGAnMlyUsanj22FgHQMw2mEE9ZzIySMY2BqGNj+sn+P7N5uu9MoouRihGXYS9S83RUZOY5xJtNQyaSpuPJx2qAm5QNaPHIRSol167Bc58I/ONrtZD+QISM3KSBrd3BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jzzNUpz6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ouK+RFJI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmnW+UKX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2DA8C4CEDD;
-	Thu, 27 Feb 2025 12:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740660706;
-	bh=qaS3Sot0jP2/TYM8y64qZBKAz9Pu1JxQ1gDYVWPX2+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pmnW+UKXFZonSZhPI64oufkWiFCNHjWMwGh8iwW+Z7kKZiW7leSaxQrNk64r3iUnZ
-	 ERLrbcpYL17EzzshKEChATN3WgleKpcCbYXWNQCY0PcseWSzMCyUwy/taP5XeKo3OL
-	 xRE40CK9dLjV0ss4IjCGBDchiSIalN3t3Xh6Vx6ZYi98a3lYl27rNDRRkzPoUgrWQH
-	 5cFs56A3dsUrgtg06NInTp4hxtBC9CLX7wjdd6WO9jldZsn7m9a2ZJmN+ZPu97mwA/
-	 0DR/0hiyQd15Il6NP8MSltPKG3FdaQ795q4aUzrwl0lfFBV+vOuKbEXv5m0jB9c/BS
-	 cVOxwHyE31KLA==
-Date: Thu, 27 Feb 2025 06:51:43 -0600
-From: Rob Herring <robh@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	devicetree@vger.kernel.org, Kees Cook <kees@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>,
-	Conor Dooley <conor+dt@kernel.org>, kernel-team@android.com,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Lee Jones <lee@kernel.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: gpio: add max77759 binding
-Message-ID: <20250227125143.GA1672649-robh@kernel.org>
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
- <20250226-max77759-mfd-v2-1-a65ebe2bc0a9@linaro.org>
- <174060184807.3654907.17826939583833772128.robh@kernel.org>
- <f3db83179b405ca056fd55abdd6c38adaedbaea0.camel@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jzzNUpz6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ouK+RFJI"
+Date: Thu, 27 Feb 2025 12:55:15 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740660918;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vSQsHVXWWB0RKHpg+AkwK8Wn1EuGrecV/OqBwOp2lLY=;
+	b=jzzNUpz6C1xYV1LeaKeh0ZTslx82lMp+YO4DMuGrujiY7sruQm/2HujaUdfjTeBh1kkR0Z
+	HEvIGU5ww/zNCo7EA9Z6p9BeeQSIW12i0uDIubzoj4wSQRiOgruMPn4E0n+VNerv+BFmwv
+	rMZ2JChLQlhUumgKj21k0vdSaTBMruM/NsimPvN/GOCnHm8Kt+jGlRXo6M1JGhGkSSNtip
+	Sk1DVvvYGFOFaRhBbsn+JskeyZRKS8UolHBY41K1K8p2o6QCuJXAsejlXUc1ZEhUsvO8Yx
+	5gF5jh1K5tVmwU2O3ecKCWHLIIU8xYzy0R8DWqU711OfJ3P0WhuhETQK7LgCiQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740660918;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vSQsHVXWWB0RKHpg+AkwK8Wn1EuGrecV/OqBwOp2lLY=;
+	b=ouK+RFJICyRL4uOZr2Jmja/ccxfPYwrdaJXXIawZbel5wjQv7sM73eiLgbPSGR6mLsSGQQ
+	6krd7jwFVKFTinAA==
+From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Remove get_this_hybrid_cpu_*()
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com>
+References: <20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f3db83179b405ca056fd55abdd6c38adaedbaea0.camel@linaro.org>
+Message-ID: <174066091677.10177.7289400408971955716.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 27, 2025 at 11:19:55AM +0000, André Draszik wrote:
-> On Wed, 2025-02-26 at 14:30 -0600, Rob Herring (Arm) wrote:
-> > 
-> > On Wed, 26 Feb 2025 17:51:20 +0000, André Draszik wrote:
-> > > The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
-> > > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
-> > > Port Controller (TCPC), NVMEM, and a GPIO expander.
-> > > 
-> > > This describes its GPIO module.
-> > > 
-> > > Signed-off-by: André Draszik <andre.draszik@linaro.org>
-> > > 
-> > > ---
-> > > v2:
-> > > * drop 'interrupts' property and sort properties alphabetically
-> > > ---
-> > >  .../bindings/gpio/maxim,max77759-gpio.yaml         | 44 ++++++++++++++++++++++
-> > >  MAINTAINERS                                        |  6 +++
-> > >  2 files changed, 50 insertions(+)
-> > > 
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> > 
-> > yamllint warnings/errors:
-> > 
-> > dtschema/dtc warnings/errors:
-> > 
-> > 
-> > doc reference errors (make refcheckdocs):
-> > Warning: Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml references a file that doesn't exist:
-> > Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > Documentation/devicetree/bindings/gpio/maxim,max77759-gpio.yaml: Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
-> > 
-> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250226-max77759-mfd-v2-1-a65ebe2bc0a9@linaro.org
-> > 
-> > The base for the series is generally the latest rc1. A different dependency
-> > should be noted in *this* patch.
-> > 
-> > If you already ran 'make dt_binding_check' and didn't see the above
-> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
-> > date:
-> 
-> 'make dt_binding_check' doesn't invoke 'make refcheckdocs', unless
-> I'm doing something wrong - and therefore 'make dt_binding_check'
-> doesn't print any warning, contrary to what seems to be implied by
-> the paragraph above, If I run 'make refcheckdocs', I do get the
-> error, too, sure enough.
-> 
-> I've never come across refcheckdocs, and it wasn't on my radar.
+The following commit has been merged into the x86/cpu branch of tip:
 
-Or anyone elses until Mauro started sending out 10s of fixes every 
-cycle for it. I think he got tired of that thankless job.
+Commit-ID:     db5157df149709c02e6a08c0b3498553bdd2a76c
+Gitweb:        https://git.kernel.org/tip/db5157df149709c02e6a08c0b3498553bdd2a76c
+Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+AuthorDate:    Wed, 11 Dec 2024 22:57:41 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 27 Feb 2025 13:34:52 +01:00
 
-> 
-> The error is because the binding's 'description:' references the
-> mfd binding using the complete path and the mfd binding is added
-> in a later patch only in this version of the series:
-> 
->   > ... For additional information, see
->   > Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
-> 
-> the error goes away if a relative path is used instead:
-> 
->   > ... For additional information, see
->   > ../mfd/maxim,max77759.yaml.
+x86/cpu: Remove get_this_hybrid_cpu_*()
 
-No, just ignore the error. I believe it gets fixed with the mfd binding 
-applied. I'm not too concerned if refcheckdocs is bisectable.
+Because calls to get_this_hybrid_cpu_type() and
+get_this_hybrid_cpu_native_id() are not required now. cpu-type and
+native-model-id are cached at boot in per-cpu struct cpuinfo_topology.
 
-Rob
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/r/20241211-add-cpu-type-v5-4-2ae010f50370@linux.intel.com
+---
+ arch/x86/include/asm/cpu.h  | 14 --------------
+ arch/x86/kernel/cpu/intel.c | 31 -------------------------------
+ 2 files changed, 45 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index 98eced5..0c8ec62 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -50,20 +50,6 @@ static inline void split_lock_init(void) {}
+ static inline void bus_lock_init(void) {}
+ #endif
+ 
+-#ifdef CONFIG_CPU_SUP_INTEL
+-u8 get_this_hybrid_cpu_type(void);
+-u32 get_this_hybrid_cpu_native_id(void);
+-#else
+-static inline u8 get_this_hybrid_cpu_type(void)
+-{
+-	return 0;
+-}
+-
+-static inline u32 get_this_hybrid_cpu_native_id(void)
+-{
+-	return 0;
+-}
+-#endif
+ #ifdef CONFIG_IA32_FEAT_CTL
+ void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+ #else
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 3dce22f..045b439 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -873,34 +873,3 @@ static const struct cpu_dev intel_cpu_dev = {
+ };
+ 
+ cpu_dev_register(intel_cpu_dev);
+-
+-#define X86_HYBRID_CPU_TYPE_ID_SHIFT	24
+-
+-/**
+- * get_this_hybrid_cpu_type() - Get the type of this hybrid CPU
+- *
+- * Returns the CPU type [31:24] (i.e., Atom or Core) of a CPU in
+- * a hybrid processor. If the processor is not hybrid, returns 0.
+- */
+-u8 get_this_hybrid_cpu_type(void)
+-{
+-	if (!cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
+-		return 0;
+-
+-	return cpuid_eax(0x0000001a) >> X86_HYBRID_CPU_TYPE_ID_SHIFT;
+-}
+-
+-/**
+- * get_this_hybrid_cpu_native_id() - Get the native id of this hybrid CPU
+- *
+- * Returns the uarch native ID [23:0] of a CPU in a hybrid processor.
+- * If the processor is not hybrid, returns 0.
+- */
+-u32 get_this_hybrid_cpu_native_id(void)
+-{
+-	if (!cpu_feature_enabled(X86_FEATURE_HYBRID_CPU))
+-		return 0;
+-
+-	return cpuid_eax(0x0000001a) &
+-	       (BIT_ULL(X86_HYBRID_CPU_TYPE_ID_SHIFT) - 1);
+-}
