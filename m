@@ -1,117 +1,120 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3117230242
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D45231CAE
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631087; cv=none; b=PnTgp3uc3bzz2Kjix2mAznORV12vRxshdvxBzCp8DiwxfiiCSPM6RmCo0x5pfBv5XFFOHyYEFgHq0wFMsw9v5/tLcay5+Tsudlc2A8ceRZvIhJXeeirU6lus7y/nbpsa0edDJFQZKk7h2z1FBKupiC9ayIpV1S4lha64z0y0Brc=
+	t=1740631088; cv=none; b=QMTDmqBb1al8/pSpWl76ljWGU1T502qWsXq63KRtq/2DnQCiBtBX8sd/ZJ5PThNnHyNwyyr18juicREt+wzTUIse/BWOAW8TjB9n6k1U2ASN3yIs/qiQbzTYTEwr0gi9YbwaUPSO1zXBEQJbB024m5OlnaYwfmVt6A7i+bB29rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631087; c=relaxed/simple;
-	bh=W31aHz42Z/T5ZpbsLubBQm+2xkwzX3XN0l4V3Rn0VQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nSCUcgCeUjehoiUUnmnucum1Lkui8eTuJIehcu/BwH7J0a4JnRwJAUeVMG+w5+PLIkDrp5DSTz8F5YP4k/jSX/2PIsNsZUS4F4OotibQueK9sjYXG8vxjxxL4n6GGUuV4jxK5sLZYtgSMr6kljldxJrcpGuDNtlapDKgO2WzeqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UhkefBHV; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740631088; c=relaxed/simple;
+	bh=MSivXoBjhAmFSDzHG8U1LTjK1GNQVhU00y3QUrQPRLA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KC23Ca5NKGHNJ2vz9A6OuHwafIrBynIh+6pLseBUR5NNb7mhH/Fu7VvKJHnU7Un0Yvp1fF5YXnH7dRggSt25oYCSjkp/15wQYvjZunOQnCX8XWaijOq4DvQRZV0xzcWbTtVC7Eevld4yLIVu1LnuwnUKWsN26nTVxHO1rBBTHtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aj1Ji3vl; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UhkefBHV"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fea65dcc3cso566810a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aj1Ji3vl"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54527a7270eso473082e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740631085; x=1741235885; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740631085; x=1741235885; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Z7L+E0AxAkJHYT9s94E/nR5ku/ie8tNmkgfIKxsvlQ=;
-        b=UhkefBHVdCIsifzaBS1fW7KMPVCa1OjzaB6XI8yonREKNEV3i5hZhJ/G2HPU2e6CT6
-         q+P6Oo5UfL77T+IDVK0F2vZf7NthrEKEm9Ji8FJv1rZ9G+w8wjGixOthJn2wQmGW3x+b
-         n4l5XPFwnKVkS7AV0dvf9AOGS4tT6MllfgM/k=
+        bh=s8Qfog7C+RF4zPzBr1L919bNbTJtyOk3Zvza1VKHBAM=;
+        b=aj1Ji3vlmD0Kh79LSj1yBEI0FY5ZzjsESPFbk51hH3qDD0DtOB9e1RyCoVmBC31o+h
+         ltTthQ75kBWlQKBvZ2h0HblXB6FRtTOL/21u/NYf10ztw5nGC1ze5hQt2RUpektRtkxl
+         km5jSWB6j9x1ZI2Nh4JA7qDRzmlbtbKJcwaHQVP7Pa8Ya6dZLWi0MB0gvb1FLeugORoL
+         7RzXJg8hsHY1aGXT3TdjHR9nsMxKbfUd9trUhTP0zsA/ZXQ2oGNqTuMG2n1YY0OfpmQH
+         DyKwFIyKzucWwG/xkGxXY35RcS0alq83ITdnMVoKCuWmxv7a1V4T32MG4UiuYCThegs5
+         siLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740631085; x=1741235885;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5Z7L+E0AxAkJHYT9s94E/nR5ku/ie8tNmkgfIKxsvlQ=;
-        b=sLDgkpI+dIBECUT7864pHlUeq1QBNhfaIC3mio5DkIBc4o55OF8EpyYbMUzzr40bJV
-         jJe8VCP0lkMrNXjR+1OL/WQGl6Fdm2omv0FxobQ2Yl5s9GK17wIjz+x0PbUiqlwpgSlq
-         eMqoznfTW9I2IpUkoWhrsHC6BMceEoqEfQdQDJIgtmHct5q/Zg44JyBcitQpNOdRxUle
-         TsmmKDUpCNqVfWcGKRHfST5zjBonn13ooPSIDGnpx7g4dm9EGiIBBZkz6chEeZDTVFyL
-         q87SGYxfBCcF049JwKy/2mLspikeerUvZuo3fJ9P9Fgh7Shp7C1OS12tXi7DN82DeZtT
-         Sp6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUZfudPXu3Px6DSm/71Bfitv+FKAOoprz1oU9zI338qPc7FH6NwYCwEFS4Wda2HdLuV31lfHF9T3Cqy224=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQEN9fkF2qymywEt001tSozmHvpeYuZeCXuUfUmkjHdBAf1YNd
-	mp8Sw7Qwm6prUhPCRjmOAT6iF+fT+SgQrTEUdmnThckxbL1uRUsD4TRV7lZLNA==
-X-Gm-Gg: ASbGncuNXSEEbllHcEZkmCz+zxSvTJobh5nV3VqktdL/bUmme88Bkews3WAB+6Nka6u
-	H+Ko8HhNYZHw8TdUrl0J+UUVJ7zC/J+JWNumYxjbWqhO9/FpcgTDGXvV1NFAi81plAxwUjCVBtO
-	oAm7UUfjjjdJieLYEVIcmJ++JAM8avm5XyPx6qM5/qJ9HJjXbVC15HuTbzTUnIcS/ZtxqT7wRup
-	fFYCQFlx/Scjut5hx0ouYRKOOfA7pPCt0ZjwfFh320KRFuxCUGyTkOMjoD/K7DZ6f4fka+XJAGo
-	MFp008xr8EAi0ciF/Qi24K9vOYvh
-X-Google-Smtp-Source: AGHT+IHkiQZTH+QyI09NsnNe2+VUmytHTF3AQc8esT3P6nxO5c5MPzYujs2/5+Dmg9L+ktNJZYSfyg==
-X-Received: by 2002:a17:90b:548f:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-2fce86adf6cmr41590472a91.9.1740631085050;
-        Wed, 26 Feb 2025 20:38:05 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501d2901sm5005945ad.30.2025.02.26.20.38.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        bh=s8Qfog7C+RF4zPzBr1L919bNbTJtyOk3Zvza1VKHBAM=;
+        b=BNgwctdvXlgxziuzdinJ69NMkic7rWzu1/fGfjZb/oApzXaEgnFRd7OocO+zDNFDHU
+         ZC44+1UWNZgQk9lnvMIY+Iu5mt+AOof+bZ+0BPBrtosAi5lqlZ4dA1J+vdPhIbUZNg4b
+         MBA4X6B7xgflEOQWjRTpUyGNYhsx7YXgMU6GjfHcGu4LUWVMu8SA6iVNhsVrVTTvFJO/
+         yQ0TWAamVH2CRY7ijgC+Cenp1ZHRuvFhzH/IvA0CjE+AKsznP/PlAMfPlc63lCGeKnuG
+         NUJF9rgLjrl4tIP3uonNTTO4R1QHdsKKT1WW9LZ+UU+m8LRwEzpCA7tYEqrSJGATt2Ew
+         x5kg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAzMGKpkxw54Xqt2XAD0hu3S2gJDAzXN2bKGLk6LA+abyBK+xoXiZxIA6SYM9aiuQLpq3KU2MLX6dvVr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywrhhlfmwu5AKN1yU3kXiEPmDVoWkRNDt30R/L07/KVJOfESQHh
+	q3c5cGRM+BBwPW+LdigXbWyuQ4ny5tNx77fPgDXWPIFLjShISj+VF0/1TO0QpAc=
+X-Gm-Gg: ASbGncucntcRR5AuW/2+rcLgOlkFHhj0MxHAO57HUKwca4y6I7D17sKm2JYHE5fwLIe
+	qHlxeP8rEVpqxmrl6JrZu6F4l1NXY306t/tzFArA1bbCK9E4KtTR0nF70aOA5q4RzQt1/hTtfe1
+	pkF59Un60CroZzSkkk/S1ulkZ5jEqX8GnxUkBGxPFtpWNtQUJ2JeiMk4LyUaW2nyUL533fj9NF4
+	pQS6rBFiu7ys6JumvxGdUGwQKjQhBo3pFlGLklmve7tbHyQXYYAHExPraxXzYh4neqxYQr6mNvT
+	DxrFRGQg8JGyf9txwgLjYnyAefVXjGgLTIPYBEqt4Q==
+X-Google-Smtp-Source: AGHT+IH6ScpF7u8mldxrlNnCmDDwIVQKTOZg6njtMYsTmsyEuGMk70Dk1+pUhOrMej8BfEuwJN/Jqw==
+X-Received: by 2002:a05:6512:3ca5:b0:545:f90:2753 with SMTP id 2adb3069b0e04-54839147f34mr10569238e87.30.1740631084978;
         Wed, 26 Feb 2025 20:38:04 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
+Received: from umbar.unikie.fi ([192.130.178.90])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.38.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 20:38:03 -0800 (PST)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	freedreno@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 17/19] zram: do not leak page on recompress_store error path
-Date: Thu, 27 Feb 2025 13:35:35 +0900
-Message-ID: <20250227043618.88380-18-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
-References: <20250227043618.88380-1-senozhatsky@chromium.org>
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v4 0/4] dt-bindings: display: qcom,sm8[56]50-mdss: properly document the interconnect paths
+Date: Thu, 27 Feb 2025 06:37:33 +0200
+Message-Id: <174063096232.3733075.9096699710834268349.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250213-topic-sm8x50-mdss-interconnect-bindings-fix-v4-0-3fa0bc42dd38@linaro.org>
+References: <20250213-topic-sm8x50-mdss-interconnect-bindings-fix-v4-0-3fa0bc42dd38@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Ensure the page used for local object data is freed
-on error out path.
 
-Fixes: 3f909a60cec1 ("zram: rework recompress target selection strategy")
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zram_drv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Thu, 13 Feb 2025 17:27:55 +0100, Neil Armstrong wrote:
+> The mdp1-mem is not supported on the SM8550 & SM8650 SoCs, so properly document
+> the mdp0-mem and cpu-cfg interconnect entries.
+> 
+> This fixes the following errors:
+> display-subsystem@ae00000: interconnects: [[200, 3, 7, 32, 1, 7]] is too short
+>         from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+> display-subsystem@ae00000: interconnect-names: ['mdp0-mem'] is too short
+>         from schema $id: http://devicetree.org/schemas/display/msm/qcom,sm8650-mdss.yaml#
+> 
+> [...]
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 1e2ba3590a39..e8375fcdb36e 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -2013,7 +2013,7 @@ static ssize_t recompress_store(struct device *dev,
- 	struct zram_pp_slot *pps;
- 	u32 mode = 0, threshold = 0;
- 	u32 prio, prio_max;
--	struct page *page;
-+	struct page *page = NULL;
- 	ssize_t ret;
- 
- 	prio = ZRAM_SECONDARY_COMP;
-@@ -2157,9 +2157,9 @@ static ssize_t recompress_store(struct device *dev,
- 		cond_resched();
- 	}
- 
--	__free_page(page);
--
- release_init_lock:
-+	if (page)
-+		__free_page(page);
- 	release_pp_ctl(zram, ctl);
- 	atomic_set(&zram->pp_in_progress, 0);
- 	up_read(&zram->init_lock);
+Applied, thanks!
+
+[1/4] dt-bindings: display: qcom,sm8550-mdss: explicitly document mdp0-mem and cpu-cfg interconnect paths
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/e05b233ae13b
+[2/4] dt-bindings: display: qcom,sm8650-mdss: explicitly document mdp0-mem and cpu-cfg interconnect paths
+      https://gitlab.freedesktop.org/lumag/msm/-/commit/162c57b8e7a1
+
+Best regards,
 -- 
-2.48.1.658.g4767266eb4-goog
-
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
