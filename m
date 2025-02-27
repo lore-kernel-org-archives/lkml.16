@@ -1,161 +1,92 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D14E2C6A3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C68276D13;
+	Thu, 27 Feb 2025 23:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740700043; cv=none; b=PvHA3T5eEVEJ3hyAK+HVAFHcvnDjGxWByyDB5lHXp42HmSJqW2OlMfPCERmIhajxDrX9ceYJ/d70FUPrV1QnaPEvKlaGAu00mBBDTFHnDPkHJIaCGoSyFunwkgaYzmODgwWbydu/DkcdhF/FoaQCOzSVG4Jv8W2O4LIen3yB+58=
+	t=1740700058; cv=none; b=EqSWhDla0b30x2fBsQJQvlLCtjJ2qyhgE5f91r54M1q179HPKeD8IuPkFJadaNy4UPMgbD5lYPRMpkbIvce6ZGHhlyBw4M9PvaDMpchB5DE7/NVakn3G9ebUzKqP760Ol6Bpi2wvg9Op//FGIqfpBnfCfW8dU1Dz0OGeM6OwUms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740700043; c=relaxed/simple;
-	bh=y8bFEfkPSHsETto+lXOWDrnpTD/mU3xtm2RfzaD5RB8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=om8gAV6gtLMuvMFuv0MGgduOsBwYotXl8FoH8YOL4Tf7O4fhmZyux73lz/t+ZIIlyxYIbd8/wAlh+sgacyio8ut8GkMvCBWJ85C4befVPZG19C761EFd44F4HQi3LIZIAfs4E/KLmrCiA+VEWoqhd/Uj1pdNkx/b5FiT4o06cPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2wl9/dFl; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740700058; c=relaxed/simple;
+	bh=c0oYsmyu//bfUW48faBRQo8ItRj/gBwXXjbw7H7EfQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jew09JcQsO+0V+LLjMCGbM1yX0aU60gQUFB9ciARidG43R9GaTJGfnWr0N+nkv5bLahM00WNTEcP0T0WV963V9tWwaQj0jHGVqX/d9cUre4DqqZS5j22O4xz++R5cTmZuJ5JZreGt0hvtc/ILirZgpPwKNlJAZpu3xWzA+zsis0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgKWI+Gs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2wl9/dFl"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbac134a19so225745566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:47:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740700040; x=1741304840; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+t0diRhztFZloXArsjx7wwxhw/+bIqUM4lylOOEWlhE=;
-        b=2wl9/dFlPDjO0co4hmfpEeqqXGLZiK0eY+YiT45Re0tSNuFk1/QCRV9o1R7C5UU6jB
-         OtN2uHFd2T9hbHZ1YIXq3ONIv2UE2ptccxnD7UwLVWj9+rL4kea+o/xlt+xuMC8itnUW
-         XD14PsRy6noPAgeS/y+AS4wBhvPBUi4O1PJM1xjuN4lekunw1KMZHrATmy+g/Fr3Rkyc
-         JbbQ1+OnEUjkVLzzSQ6z711bbuQOkijVvat0hB+wNDDdJM24kPLmfjzfBkFDp9r3wvpD
-         QJL8VH2DFVK1IWBmOlRh0pvJIHM0YG4PPJ9clozZdBxevM0RumU39LI5/SoNIwvwIt6d
-         u4CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740700040; x=1741304840;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+t0diRhztFZloXArsjx7wwxhw/+bIqUM4lylOOEWlhE=;
-        b=RfxYHRfw9YZB7FbnyvoHzEab19l+zJ/kcSpySeZv1FEV2VNXJpa6Eh20FbGpBiksaF
-         YG/kuKBC6Z8wwn8ztMzGsnIMYSgeiZGapXYYnlRGMgie69696wmcGuS7ncx9eghqsb/1
-         MlrJr2ECBpdXe15UHaLHMh5ChDFblkGaFXoCXR3x4bSZjpN9FaCAVxYtzyXPHiyhM+GB
-         OjF/ewmwO6Wn42Jy3vXdFSm/GUAbGkbQl+ngkzDIb3Y7gh6mUKpIs14r1P12PHwoRE+t
-         rFWYfq9d009i7LCkN4hi9E/p7lPK3KItaRr+B39Bt554rNQLtOvOtu96mD/hOlBUomvS
-         CulA==
-X-Forwarded-Encrypted: i=1; AJvYcCVOG4TFN1aDBT2wO5e9xREgmBZqWWh6ID80vNUSHpmy1xdNVWiUupP1Ducq0I0C3QwYpNjCklxYSacXg8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqTBxspFpu2nd8EjSzi+vnEmIeVrMEsHNxo96ZJvJyC1yxHGHo
-	UoWutlUyP1EIhUX6eVgdX9maKR/AGhboeEXmBRIK+JtM62gloOw/cWYn9nUvuSpjxnRkym5/R5q
-	bVIeab+R8PobEkpzxpQ9R90RQ3r8yNdUnSKE=
-X-Gm-Gg: ASbGncsXgxVP+WuBxJQpS/seoQgPTf+hE0be7lvT/BhdDVuBFdtkc5QjlCDTIoYV4YG
-	7lvwizcn7SrU3Gl1f26JQkO8XgoQIDg0Q9sHDwE7yqYtFQTOgCkhwyCtpQH3RTrnshRf32erHUw
-	+8r30X
-X-Google-Smtp-Source: AGHT+IGuKXYtAhCotjTCT0GtqrXge6XGZ8jW26Y5V5fFuX9t84HBMBXel9WEY29yiRQ8JOtdqfCxqrlzGYWozPOxXYY=
-X-Received: by 2002:a17:907:6d16:b0:ab7:6c4a:6a74 with SMTP id
- a640c23a62f3a-abf25fb8399mr115706566b.16.1740700039593; Thu, 27 Feb 2025
- 15:47:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgKWI+Gs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57319C4CEDD;
+	Thu, 27 Feb 2025 23:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740700057;
+	bh=c0oYsmyu//bfUW48faBRQo8ItRj/gBwXXjbw7H7EfQE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=RgKWI+GspJn7hE7J9mcDJJ2vqB3NUtVCZFG4YE3vLwMRajxDv/fyEoclXVe+u/WAN
+	 jaQAFcaaqpw6/B3uIMG427FUVOVWVOjF5DPHhaBmg7GdF2gjYmRvOMzHMIa2w9PYE3
+	 nLvq8CAram0W7yR+6F9p8wT1rZ1x+ypelEc+iDD2JEdfelcUZWwOr91va0431r6Ny9
+	 b8x7N43CGE4DWZa0Qx/Fkj02WvppLE2Y6JQLNdj8CaqS3gqZ52ZkrehMjle4RTcbjt
+	 GkY6P9G3giZSYPyDdK8r0X/MqNVZva684PqoYv8UbEf7482/zYfiMaiY0AX9nlq1ke
+	 01QijDOrvvDsw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id F22ECCE04CA; Thu, 27 Feb 2025 15:47:36 -0800 (PST)
+Date: Thu, 27 Feb 2025 15:47:36 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, rcu@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH rcu 00/11] Lazy Preempt changes for v6.15
+Message-ID: <a43b531a-241e-4a0a-b373-5a111b519d0f@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250225035516.26443-1-boqun.feng@gmail.com>
+ <87mse70xqn.fsf@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
-In-Reply-To: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
-From: Bill Wendling <morbo@google.com>
-Date: Thu, 27 Feb 2025 15:47:03 -0800
-X-Gm-Features: AQ5f1JqJZ47vCyOpVPb_PrJMfpw4X_Wnn4CHu0aPxPJVyWw8-IV6me3jBQW-y8E
-Message-ID: <CAGG=3QVkd9Vb9a=pQ=KwhKzGJXaS+6Mk5K+JtBqamj15MzT9mQ@mail.gmail.com>
-Subject: [PATCH v2] x86/crc32: use builtins to improve code generation
-To: Bill Wendling <morbo@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, 
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biggers <ebiggers@kernel.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, 
-	clang-built-linux <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87mse70xqn.fsf@oracle.com>
 
-For both gcc and clang, crc32 builtins generate better code than the
-inline asm. GCC improves, removing unneeded "mov" instructions. Clang
-does the same and unrolls the loops. GCC has no changes on i386, but
-Clang's code generation is vastly improved, due to Clang's "rm"
-constraint issue.
+On Thu, Feb 27, 2025 at 03:33:04PM -0800, Ankur Arora wrote:
+> 
+> Boqun Feng <boqun.feng@gmail.com> writes:
+> 
+> > Hi,
+> >
+> > Please find the upcoming changes for CONFIG_PREEMPT_LAZY in RCU. The
+> > changes can also be found at:
+> >
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git lazypreempt.2025.02.24a
+> >
+> > Paul & Ankur, I put patch #7 and #8 (bug fixes in rcutorture) before
+> > patch #9 (which is the one that enables non-preemptible RCU in
+> > preemptible kernel), because I want to avoid introduce a bug in-between
+> > a series, appreciate it if you can double check on this. Thanks!
+> 
+> Makes sense to me.
 
-The number of cycles improved by ~0.1% for GCC and ~1% for Clang, which
-is expected because of the "rm" issue. However, Clang's performance is
-better than GCC's by ~1.5%, most likely due to loop unrolling.
+Looks good to me as well, and thank you for spotting this!
 
-Link: https://github.com/llvm/llvm-project/issues/20571#issuecomment-2649330009
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
-Cc: Justin Stitt <justinstitt@google.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Bill Wendling <morbo@google.com>
----
-v2 - Limited range of '-mcrc32' usage to single file.
-   - Use a function instead of macros.
----
- arch/x86/lib/Makefile     |  2 ++
- arch/x86/lib/crc32-glue.c | 15 ++++++++-------
- 2 files changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 8a59c61624c2..1251f611ce3d 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -14,6 +14,8 @@ ifdef CONFIG_KCSAN
- CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
- endif
-
-+CFLAGS_crc32-glue.o := -mcrc32
-+
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
- quiet_cmd_inat_tables = GEN     $@
-diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
-index 2dd18a886ded..fc70462ae2c1 100644
---- a/arch/x86/lib/crc32-glue.c
-+++ b/arch/x86/lib/crc32-glue.c
-@@ -47,11 +47,12 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
- }
- EXPORT_SYMBOL(crc32_le_arch);
-
--#ifdef CONFIG_X86_64
--#define CRC32_INST "crc32q %1, %q0"
--#else
--#define CRC32_INST "crc32l %1, %0"
--#endif
-+static unsigned long crc32_ul(u32 crc, unsigned long p)
-+{
-+       if (IS_ENABLED(CONFIG_X86_64))
-+               return __builtin_ia32_crc32di(crc, p);
-+       return __builtin_ia32_crc32si(crc, p);
-+}
-
- /*
-  * Use carryless multiply version of crc32c when buffer size is >= 512 to
-@@ -78,10 +79,10 @@ u32 crc32c_le_arch(u32 crc, const u8 *p, size_t len)
-
-        for (num_longs = len / sizeof(unsigned long);
-             num_longs != 0; num_longs--, p += sizeof(unsigned long))
--               asm(CRC32_INST : "+r" (crc) : "rm" (*(unsigned long *)p));
-+               crc = crc32_ul(crc,  *(unsigned long *)p);
-
-        for (len %= sizeof(unsigned long); len; len--, p++)
--               asm("crc32b %1, %0" : "+r" (crc) : "rm" (*p));
-+               crc = __builtin_ia32_crc32qi(crc, *p);
-
-        return crc;
- }
--- 
-2.48.1.711.g2feabab25a-goog
+							Thanx, Paul
