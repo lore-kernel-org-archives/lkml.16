@@ -1,387 +1,329 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6FF22A802;
-	Thu, 27 Feb 2025 07:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6C22222AC;
+	Thu, 27 Feb 2025 08:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740643170; cv=none; b=SMb4CAk6AGJxnSGmSekwE+7qxgw/3fLaOaiDt0gGnyjV9AYYfYZeIXBv3/snS46mAEIRvN+JKlDHFM1fgfJl6hFSGNu13zsPKPKOwyqCuwQ51ZCChrtRxQrix4FeiAcy03zPHspAtmXE5zW1MNIvm/mC5ZM4a36ypHEtQM56Qow=
+	t=1740643204; cv=none; b=kfrZg002xSQHcgW2ULddWtspiFWtNKHEaRJ7G589TlPcezVGGX0t+qMKJ8VL2XHc9K8cTcfekFWrQma89vY1VNUYC6LxhluTmpK5yjpdIcieN+rXq0tvFkF/X7Lqfbprx58C3t3wBZUPbPQH3pOBjVQ2HI3oDnMEyKczVS08pEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740643170; c=relaxed/simple;
-	bh=40oiqzmKk1vg9zUZ9wpEURW5SBHxWjRryqfDGThkd6w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E8Vz19/fx+6uHP4nQBSpnY1S/rwivWjtG2aEE/O2rPuymPH61k/t5nJOKOBI/MDfThXqc0xK1wBNbb+IKfkTOsD+Mi3yR57h/2/xoWreQDB/lRO6/5D4KsBwaNC6Dsa88NsYU7AYTlOO4QA+DWzks4t4kY1yKH9G3mCFXx8AnhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z3Nyf6hY7z4f3jt9;
-	Thu, 27 Feb 2025 15:59:06 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 75BE21A06D7;
-	Thu, 27 Feb 2025 15:59:23 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgDHKl9PG8Bn6c8gFA--.31377S16;
-	Thu, 27 Feb 2025 15:59:23 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: axboe@kernel.dk,
-	song@kernel.org,
-	yukuai3@huawei.com,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	ira.weiny@intel.com,
-	dlemoal@kernel.org,
-	kch@nvidia.com,
-	yanjun.zhu@linux.dev,
-	hare@suse.de,
-	zhengqixing@huawei.com,
-	colyli@kernel.org,
-	geliang@kernel.org,
-	xni@redhat.com
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH V2 12/12] badblocks: use sector_t instead of int to avoid truncation of badblocks length
-Date: Thu, 27 Feb 2025 15:55:07 +0800
-Message-Id: <20250227075507.151331-13-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
-References: <20250227075507.151331-1-zhengqixing@huaweicloud.com>
+	s=arc-20240116; t=1740643204; c=relaxed/simple;
+	bh=F/Q/rQMBhG8QlQ0hvZO4Vy6dvWhPpbp2iZ88VJNmuaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRXF/bS6o70Ga/A4t5QwpIBN/zeO64lW5wAPMnetXX7KneDUwZPySH2sJsNj0orLAIWenTAwixlGhXlR70dA2zo8Ocyam9Bk1n1NUv84Mbc44IP04KsIQnUIg4qc++ZpmlaaYLlTmgk3iZqfWGetdBk1IzfbjeEJNSFIJ5wF8Cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UKirZCsX; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UKirZCsX"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22337bc9ac3so10294445ad.1;
+        Thu, 27 Feb 2025 00:00:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740643202; x=1741248002; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e+VhD1FcQ4v0IAeCPGXacuvSg0+RMPQMMHyVhpvcmHA=;
+        b=UKirZCsX5tRGNE/5mAhj3FsL1I6H4QCbI7FZckmmbzJvaeZ1SqzGkHmTiUQwrO8npp
+         R4IIjNNFFop1hbea9O4NeYjtez+qwp/cLPRotG1UeRPocyriETZShMUStWl+nI6omuUT
+         Xk0t3oPlhS/nOeGWMX88byrEx+CvVe+AFvuVhoCSZ40YZJHjKTSMRPX3gW3K4IlhL0lZ
+         8z9lJnwzut331eF0BH2HVT6U7xe24+4uKRr3Nt2mP5MFb8rusuylepI1w6/+p+qnznHa
+         N3b8pgcSQFRsy+VZSgRuGqhBILWNaTxtePBSUHgPhrp1LmYh+9kSHJoa/eyXfCXTy2Er
+         pvwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740643202; x=1741248002;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+VhD1FcQ4v0IAeCPGXacuvSg0+RMPQMMHyVhpvcmHA=;
+        b=wuO76JAa62qrMx5U4+t7UMAivj2FHFgRZ+3PMpbvDkB+08vf6odnDvv4tP7zveYzRS
+         ridw18lHUUopXlIKZxzWU8rWqfHdG1FSBHRRbHSMZ65ujMDm2VMq9Y2tmuNUJ5fc+TwI
+         eKpXlCvOjm8tEKEVEx+LVS1VBUNnrq/FsW1ss29PCntpOt8DC42HsExmoSRtnh86tEL0
+         5/koIYJJ+gvVuKhfKjJk+uvPwgLbX4RK2lvWXsL/JKSCX7KuDiWyFPJ5D71On8Xzlfb6
+         9Xznu96ZEM3ouYqLL7qqjzwIg0oaqYI+enjumQDKPa3F0rywTcIceMCp7zsSwofBruI4
+         OrWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPL36GVOi+/4mDbfRMsyagvgicsi+6AUyAilcJc+JzCLR2I4E0tl4qlXDhOuEDvSA3LNHz9/iDALnK@vger.kernel.org, AJvYcCVaKzrv7czdjwUyBAqUKerBpNzHqOORW05kSVFzfWyjdd6oH+MUHnJtXRc1mwXROtQk8tc=@vger.kernel.org, AJvYcCXLlsjgBQkLaeo9ubVuTnHAvZv8PgeFLUDWJZhqdA2NPd33jLcj2miZi4mzF+t/a/juDqPI6GEc@vger.kernel.org, AJvYcCXct7HGDyN7KbTOUmZ6eCiWyGAObf+Yu0plSIOroU/woeiXfU+EWQd4tQUWqwd675ncDCNc2la8i5IBpZNM@vger.kernel.org, AJvYcCXkAGhnw/chUSLsGmiUQNDCfcpszDqkp4+w5Ip7ZAm1ESeIP/f++IdRUDTKCLAghRhiC0L/o2ZfkbMacrzmrJt+@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmMusFA6jxYwyQ5xJ+3o6YkGStT8fd3NeZT4P0FjexFqgDe4nL
+	cUl2LAtMDCCtHlm2h8yYX81szpd/qhAnWUMNcZ4NZu2Ax6TcWj66
+X-Gm-Gg: ASbGncvA6sLkV/ApCYsYsdvDLwP4GDo0iK8YDL2v1OWqA8rYkJ48j6nNNlVzZ4YRypG
+	v2Vd3uQyGHTVj2FsAXxTLdJD3EnQofFCwZZkGnlS/xvle3eOdfyp68O9WC0KAeoF2YTlBM+6EsZ
+	vkws9L6m723OGL3VJWrd12SSqtKUz8x2vQ6zTay76tFtV4B/2QlqLXD1CQfEoiuUUZXatfOFpTA
+	dbcqKFIaROoyKt+eu/KgJaG0V0tYwE+nH8tszslbr63KrewLinBp2GZ+2KOVrvSUHKkLow3Pom9
+	6BKsuct9SFqkpasohO7gIsssEw==
+X-Google-Smtp-Source: AGHT+IHbgNhJloGNS3WGI/ZiBYGWLiZc0ShwSla+EDWIC7+o+EwVg1hEUCizPi07PZDxpMZGk59OJg==
+X-Received: by 2002:a17:903:2311:b0:220:dff2:18ee with SMTP id d9443c01a7336-221a0edbf42mr392893445ad.14.1740643201794;
+        Thu, 27 Feb 2025 00:00:01 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223505336f9sm8356295ad.245.2025.02.27.00.00.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 00:00:00 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 55C6941296D8; Thu, 27 Feb 2025 14:59:58 +0700 (WIB)
+Date: Thu, 27 Feb 2025 14:59:57 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-kselftest@vger.kernel.org
+Cc: Donald Hunter <donald.hunter@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
+	asml.silence@gmail.com, dw@davidwei.uk,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Victor Nogueira <victor@mojatatu.com>,
+	Pedro Tammela <pctammela@mojatatu.com>,
+	Samiullah Khawaja <skhawaja@google.com>
+Subject: Re: [PATCH net-next v6 4/8] net: add devmem TCP TX documentation
+Message-ID: <Z8AbfZg98HS_QQjb@archie.me>
+References: <20250227041209.2031104-1-almasrymina@google.com>
+ <20250227041209.2031104-5-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDHKl9PG8Bn6c8gFA--.31377S16
-X-Coremail-Antispam: 1UD129KBjvJXoW3KrW3KrW7XF1DAFy7uw1DAwb_yoWkCr17pa
-	1DJa4fJryUWF18W3WUZayq9r1Fy34ftFWUK3yUW34jgFykK3s7tF1kXFyFqFyjgFW3Grn0
-	q3WY9rW5ua4kGrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2
-	AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
-	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxUI-eODUUUU
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="AMvatQGVE1g1y7TH"
+Content-Disposition: inline
+In-Reply-To: <20250227041209.2031104-5-almasrymina@google.com>
 
-From: Zheng Qixing <zhengqixing@huawei.com>
 
-There is a truncation of badblocks length issue when set badblocks as
-follow:
+--AMvatQGVE1g1y7TH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-echo "2055 4294967299" > bad_blocks
-cat bad_blocks
-2055 3
+On Thu, Feb 27, 2025 at 04:12:05AM +0000, Mina Almasry wrote:
+> diff --git a/Documentation/networking/devmem.rst b/Documentation/networki=
+ng/devmem.rst
+> index d95363645331..1c476522d6f5 100644
+> --- a/Documentation/networking/devmem.rst
+> +++ b/Documentation/networking/devmem.rst
+> @@ -62,15 +62,15 @@ More Info
+>      https://lore.kernel.org/netdev/20240831004313.3713467-1-almasrymina@=
+google.com/
+> =20
+> =20
+> -Interface
+> -=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +RX Interface
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+> =20
+>  Example
+>  -------
+> =20
+> -tools/testing/selftests/net/ncdevmem.c:do_server shows an example of set=
+ting up
+> -the RX path of this API.
+> +./tools/testing/selftests/drivers/net/hw/ncdevmem:do_server shows an exa=
+mple of
+> +setting up the RX path of this API.
+> =20
+> =20
+>  NIC Setup
+> @@ -235,6 +235,148 @@ can be less than the tokens provided by the user in=
+ case of:
+>  (a) an internal kernel leak bug.
+>  (b) the user passed more than 1024 frags.
+> =20
+> +TX Interface
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +
+> +Example
+> +-------
+> +
+> +./tools/testing/selftests/drivers/net/hw/ncdevmem:do_client shows an exa=
+mple of
+> +setting up the TX path of this API.
+> +
+> +
+> +NIC Setup
+> +---------
+> +
+> +The user must bind a TX dmabuf to a given NIC using the netlink API::
+> +
+> +        struct netdev_bind_tx_req *req =3D NULL;
+> +        struct netdev_bind_tx_rsp *rsp =3D NULL;
+> +        struct ynl_error yerr;
+> +
+> +        *ys =3D ynl_sock_create(&ynl_netdev_family, &yerr);
+> +
+> +        req =3D netdev_bind_tx_req_alloc();
+> +        netdev_bind_tx_req_set_ifindex(req, ifindex);
+> +        netdev_bind_tx_req_set_fd(req, dmabuf_fd);
+> +
+> +        rsp =3D netdev_bind_tx(*ys, req);
+> +
+> +        tx_dmabuf_id =3D rsp->id;
+> +
+> +
+> +The netlink API returns a dmabuf_id: a unique ID that refers to this dma=
+buf
+> +that has been bound.
+> +
+> +The user can unbind the dmabuf from the netdevice by closing the netlink=
+ socket
+> +that established the binding. We do this so that the binding is automati=
+cally
+> +unbound even if the userspace process crashes.
+> +
+> +Note that any reasonably well-behaved dmabuf from any exporter should wo=
+rk with
+> +devmem TCP, even if the dmabuf is not actually backed by devmem. An exam=
+ple of
+> +this is udmabuf, which wraps user memory (non-devmem) in a dmabuf.
+> +
+> +Socket Setup
+> +------------
+> +
+> +The user application must use MSG_ZEROCOPY flag when sending devmem TCP.=
+ Devmem
+> +cannot be copied by the kernel, so the semantics of the devmem TX are si=
+milar
+> +to the semantics of MSG_ZEROCOPY::
+> +
+> +	setsockopt(socket_fd, SOL_SOCKET, SO_ZEROCOPY, &opt, sizeof(opt));
+> +
+> +It is also recommended that the user binds the TX socket to the same int=
+erface
+> +the dma-buf has been bound to via SO_BINDTODEVICE::
+> +
+> +	setsockopt(socket_fd, SOL_SOCKET, SO_BINDTODEVICE, ifname, strlen(ifnam=
+e) + 1);
+> +
+> +
+> +Sending data
+> +------------
+> +
+> +Devmem data is sent using the SCM_DEVMEM_DMABUF cmsg.
+> +
+> +The user should create a msghdr where,
+> +
+> +* iov_base is set to the offset into the dmabuf to start sending from
+> +* iov_len is set to the number of bytes to be sent from the dmabuf
+> +
+> +The user passes the dma-buf id to send from via the dmabuf_tx_cmsg.dmabu=
+f_id.
+> +
+> +The example below sends 1024 bytes from offset 100 into the dmabuf, and =
+2048
+> +from offset 2000 into the dmabuf. The dmabuf to send from is tx_dmabuf_i=
+d::
+> +
+> +       char ctrl_data[CMSG_SPACE(sizeof(struct dmabuf_tx_cmsg))];
+> +       struct dmabuf_tx_cmsg ddmabuf;
+> +       struct msghdr msg =3D {};
+> +       struct cmsghdr *cmsg;
+> +       struct iovec iov[2];
+> +
+> +       iov[0].iov_base =3D (void*)100;
+> +       iov[0].iov_len =3D 1024;
+> +       iov[1].iov_base =3D (void*)2000;
+> +       iov[1].iov_len =3D 2048;
+> +
+> +       msg.msg_iov =3D iov;
+> +       msg.msg_iovlen =3D 2;
+> +
+> +       msg.msg_control =3D ctrl_data;
+> +       msg.msg_controllen =3D sizeof(ctrl_data);
+> +
+> +       cmsg =3D CMSG_FIRSTHDR(&msg);
+> +       cmsg->cmsg_level =3D SOL_SOCKET;
+> +       cmsg->cmsg_type =3D SCM_DEVMEM_DMABUF;
+> +       cmsg->cmsg_len =3D CMSG_LEN(sizeof(struct dmabuf_tx_cmsg));
+> +
+> +       ddmabuf.dmabuf_id =3D tx_dmabuf_id;
+> +
+> +       *((struct dmabuf_tx_cmsg *)CMSG_DATA(cmsg)) =3D ddmabuf;
+> +
+> +       sendmsg(socket_fd, &msg, MSG_ZEROCOPY);
+> +
+> +
+> +Reusing TX dmabufs
+> +------------------
+> +
+> +Similar to MSG_ZEROCOPY with regular memory, the user should not modify =
+the
+> +contents of the dma-buf while a send operation is in progress. This is b=
+ecause
+> +the kernel does not keep a copy of the dmabuf contents. Instead, the ker=
+nel
+> +will pin and send data from the buffer available to the userspace.
+> +
+> +Just as in MSG_ZEROCOPY, the kernel notifies the userspace of send compl=
+etions
+> +using MSG_ERRQUEUE::
+> +
+> +        int64_t tstop =3D gettimeofday_ms() + waittime_ms;
+> +        char control[CMSG_SPACE(100)] =3D {};
+> +        struct sock_extended_err *serr;
+> +        struct msghdr msg =3D {};
+> +        struct cmsghdr *cm;
+> +        int retries =3D 10;
+> +        __u32 hi, lo;
+> +
+> +        msg.msg_control =3D control;
+> +        msg.msg_controllen =3D sizeof(control);
+> +
+> +        while (gettimeofday_ms() < tstop) {
+> +                if (!do_poll(fd)) continue;
+> +
+> +                ret =3D recvmsg(fd, &msg, MSG_ERRQUEUE);
+> +
+> +                for (cm =3D CMSG_FIRSTHDR(&msg); cm; cm =3D CMSG_NXTHDR(=
+&msg, cm)) {
+> +                        serr =3D (void *)CMSG_DATA(cm);
+> +
+> +                        hi =3D serr->ee_data;
+> +                        lo =3D serr->ee_info;
+> +
+> +                        fprintf(stdout, "tx complete [%d,%d]\n", lo, hi);
+> +                }
+> +        }
+> +
+> +After the associated sendmsg has been completed, the dmabuf can be reuse=
+d by
+> +the userspace.
+> +
+> +
+>  Implementation & Caveats
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
 
-Change 'sectors' argument type from 'int' to 'sector_t'.
+Looks good, thanks!
 
-This change avoids truncation of badblocks length for large sectors by
-replacing 'int' with 'sector_t' (u64), enabling proper handling of larger
-disk sizes and ensuring compatibility with 64-bit sector addressing.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Fixes: 9e0e252a048b ("badblocks: Add core badblock management code")
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
-Acked-by: Coly Li <colyli@kernel.org>
----
- block/badblocks.c             | 20 ++++++++------------
- drivers/block/null_blk/main.c |  2 +-
- drivers/md/md.h               |  6 +++---
- drivers/md/raid1-10.c         |  2 +-
- drivers/md/raid1.c            |  4 ++--
- drivers/md/raid10.c           |  8 ++++----
- drivers/nvdimm/nd.h           |  2 +-
- drivers/nvdimm/pfn_devs.c     |  7 ++++---
- drivers/nvdimm/pmem.c         |  2 +-
- include/linux/badblocks.h     |  8 ++++----
- 10 files changed, 29 insertions(+), 32 deletions(-)
+--=20
+An old man doll... just what I always wanted! - Clara
 
-diff --git a/block/badblocks.c b/block/badblocks.c
-index e326a16fd056..673ef068423a 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -836,7 +836,7 @@ static bool try_adjacent_combine(struct badblocks *bb, int prev)
- }
- 
- /* Do exact work to set bad block range into the bad block table */
--static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+static bool _badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 			   int acknowledged)
- {
- 	int len = 0, added = 0;
-@@ -956,8 +956,6 @@ static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
- 	if (sectors > 0)
- 		goto re_insert;
- 
--	WARN_ON(sectors < 0);
--
- 	/*
- 	 * Check whether the following already set range can be
- 	 * merged. (prev < 0) condition is not handled here,
-@@ -1048,7 +1046,7 @@ static int front_splitting_clear(struct badblocks *bb, int prev,
- }
- 
- /* Do the exact work to clear bad block range from the bad block table */
--static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+static bool _badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
- {
- 	struct badblocks_context bad;
- 	int prev = -1, hint = -1;
-@@ -1171,8 +1169,6 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- 	if (sectors > 0)
- 		goto re_clear;
- 
--	WARN_ON(sectors < 0);
--
- 	if (cleared) {
- 		badblocks_update_acked(bb);
- 		set_changed(bb);
-@@ -1187,8 +1183,8 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- }
- 
- /* Do the exact work to check bad blocks range from the bad block table */
--static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--			    sector_t *first_bad, int *bad_sectors)
-+static int _badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+			    sector_t *first_bad, sector_t *bad_sectors)
- {
- 	int prev = -1, hint = -1, set = 0;
- 	struct badblocks_context bad;
-@@ -1298,8 +1294,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
-  * -1: there are bad blocks which have not yet been acknowledged in metadata.
-  * plus the start/length of the first bad section we overlap.
-  */
--int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--			sector_t *first_bad, int *bad_sectors)
-+int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+			sector_t *first_bad, sector_t *bad_sectors)
- {
- 	unsigned int seq;
- 	int rv;
-@@ -1341,7 +1337,7 @@ EXPORT_SYMBOL_GPL(badblocks_check);
-  *  false: failed to set badblocks (out of space). Parital setting will be
-  *  treated as failure.
-  */
--bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 		   int acknowledged)
- {
- 	return _badblocks_set(bb, s, sectors, acknowledged);
-@@ -1362,7 +1358,7 @@ EXPORT_SYMBOL_GPL(badblocks_set);
-  *  true: success
-  *  false: failed to clear badblocks
-  */
--bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
- {
- 	return _badblocks_clear(bb, s, sectors);
- }
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 1f39617d780b..318c3ab448fb 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1301,7 +1301,7 @@ static inline blk_status_t null_handle_badblocks(struct nullb_cmd *cmd,
- {
- 	struct badblocks *bb = &cmd->nq->dev->badblocks;
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	if (badblocks_check(bb, sector, nr_sectors, &first_bad, &bad_sectors))
- 		return BLK_STS_IOERR;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 923a0ef51efe..6edc0f71b7d4 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -266,8 +266,8 @@ enum flag_bits {
- 	Nonrot,			/* non-rotational device (SSD) */
- };
- 
--static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
--			      sector_t *first_bad, int *bad_sectors)
-+static inline int is_badblock(struct md_rdev *rdev, sector_t s, sector_t sectors,
-+			      sector_t *first_bad, sector_t *bad_sectors)
- {
- 	if (unlikely(rdev->badblocks.count)) {
- 		int rv = badblocks_check(&rdev->badblocks, rdev->data_offset + s,
-@@ -284,7 +284,7 @@ static inline int rdev_has_badblock(struct md_rdev *rdev, sector_t s,
- 				    int sectors)
- {
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	return is_badblock(rdev, s, sectors, &first_bad, &bad_sectors);
- }
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index 4378d3250bd7..62b980b12f93 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -247,7 +247,7 @@ static inline int raid1_check_read_range(struct md_rdev *rdev,
- 					 sector_t this_sector, int *len)
- {
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	/* no bad block overlap */
- 	if (!is_badblock(rdev, this_sector, *len, &first_bad, &bad_sectors))
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 8e9f303c5603..652c101e522b 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1537,7 +1537,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		atomic_inc(&rdev->nr_pending);
- 		if (test_bit(WriteErrorSeen, &rdev->flags)) {
- 			sector_t first_bad;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			int is_bad;
- 
- 			is_bad = is_badblock(rdev, r1_bio->sector, max_sectors,
-@@ -2886,7 +2886,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		} else {
- 			/* may need to read from here */
- 			sector_t first_bad = MaxSector;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 
- 			if (is_badblock(rdev, sector_nr, good_sectors,
- 					&first_bad, &bad_sectors)) {
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 45faa34f0be8..f5e272a54844 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -747,7 +747,7 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 
- 	for (slot = 0; slot < conf->copies ; slot++) {
- 		sector_t first_bad;
--		int bad_sectors;
-+		sector_t bad_sectors;
- 		sector_t dev_sector;
- 		unsigned int pending;
- 		bool nonrot;
-@@ -1438,7 +1438,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
- 		if (rdev && test_bit(WriteErrorSeen, &rdev->flags)) {
- 			sector_t first_bad;
- 			sector_t dev_sector = r10_bio->devs[i].addr;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			int is_bad;
- 
- 			is_bad = is_badblock(rdev, dev_sector, max_sectors,
-@@ -3413,7 +3413,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				sector_t from_addr, to_addr;
- 				struct md_rdev *rdev = conf->mirrors[d].rdev;
- 				sector_t sector, first_bad;
--				int bad_sectors;
-+				sector_t bad_sectors;
- 				if (!rdev ||
- 				    !test_bit(In_sync, &rdev->flags))
- 					continue;
-@@ -3609,7 +3609,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		for (i = 0; i < conf->copies; i++) {
- 			int d = r10_bio->devs[i].devnum;
- 			sector_t first_bad, sector;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			struct md_rdev *rdev;
- 
- 			if (r10_bio->devs[i].repl_bio)
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 5ca06e9a2d29..cc5c8f3f81e8 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -673,7 +673,7 @@ static inline bool is_bad_pmem(struct badblocks *bb, sector_t sector,
- {
- 	if (bb->count) {
- 		sector_t first_bad;
--		int num_bad;
-+		sector_t num_bad;
- 
- 		return !!badblocks_check(bb, sector, len / 512, &first_bad,
- 				&num_bad);
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index cfdfe0eaa512..8f3e816e805d 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -367,9 +367,10 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 	struct nd_namespace_common *ndns = nd_pfn->ndns;
- 	void *zero_page = page_address(ZERO_PAGE(0));
- 	struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
--	int num_bad, meta_num, rc, bb_present;
-+	int meta_num, rc, bb_present;
- 	sector_t first_bad, meta_start;
- 	struct nd_namespace_io *nsio;
-+	sector_t num_bad;
- 
- 	if (nd_pfn->mode != PFN_MODE_PMEM)
- 		return 0;
-@@ -394,7 +395,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 		bb_present = badblocks_check(&nd_region->bb, meta_start,
- 				meta_num, &first_bad, &num_bad);
- 		if (bb_present) {
--			dev_dbg(&nd_pfn->dev, "meta: %x badblocks at %llx\n",
-+			dev_dbg(&nd_pfn->dev, "meta: %llx badblocks at %llx\n",
- 					num_bad, first_bad);
- 			nsoff = ALIGN_DOWN((nd_region->ndr_start
- 					+ (first_bad << 9)) - nsio->res.start,
-@@ -413,7 +414,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 			}
- 			if (rc) {
- 				dev_err(&nd_pfn->dev,
--					"error clearing %x badblocks at %llx\n",
-+					"error clearing %llx badblocks at %llx\n",
- 					num_bad, first_bad);
- 				return rc;
- 			}
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index d81faa9d89c9..43156e1576c9 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -249,7 +249,7 @@ __weak long __pmem_direct_access(struct pmem_device *pmem, pgoff_t pgoff,
- 	unsigned int num = PFN_PHYS(nr_pages) >> SECTOR_SHIFT;
- 	struct badblocks *bb = &pmem->bb;
- 	sector_t first_bad;
--	int num_bad;
-+	sector_t num_bad;
- 
- 	if (kaddr)
- 		*kaddr = pmem->virt_addr + offset;
-diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
-index 8764bed9ff16..996493917f36 100644
---- a/include/linux/badblocks.h
-+++ b/include/linux/badblocks.h
-@@ -48,11 +48,11 @@ struct badblocks_context {
- 	int		ack;
- };
- 
--int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--		   sector_t *first_bad, int *bad_sectors);
--bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+		    sector_t *first_bad, sector_t *bad_sectors);
-+bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 		   int acknowledged);
--bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors);
-+bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors);
- void ack_all_badblocks(struct badblocks *bb);
- ssize_t badblocks_show(struct badblocks *bb, char *page, int unack);
- ssize_t badblocks_store(struct badblocks *bb, const char *page, size_t len,
--- 
-2.39.2
+--AMvatQGVE1g1y7TH
+Content-Type: application/pgp-signature; name=signature.asc
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ8AbdwAKCRD2uYlJVVFO
+o5L6AP94BQBQkG23E8CUzSu2bJ8z0CxxYycEKJqhqTQ+o4ZjrAEA+k30eIV66TQg
++CdsIvY8VaYj1OlgpJ5nlSex5IoycAg=
+=GAXk
+-----END PGP SIGNATURE-----
+
+--AMvatQGVE1g1y7TH--
