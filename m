@@ -1,234 +1,147 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [61.152.208.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641F270042
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.152.208.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152041EEE6
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740617310; cv=none; b=Wm5AQp79H9cUP7HSJpOJ8USmOz6dNUblqOu351oSa2AmIANJfInOyUGukACgUhXdrEKgQRbGRDADHOrdW6BFMinY9j5dmGevNNhVL6WCiiedju1kVS5euQegHU3aBtXS5dSNWm49IoBY179x1F1+x9wSHZ71IWMSS0d+t8/EToc=
+	t=1740617393; cv=none; b=RIAAAWaz7sEd+js4tSMtB6me5HIhfPZZBH/Scd31N3ICWd338NTvPo1Bp2wr0i/rwH3hM0SQ5wDlAT3WvWBrB9w4vXt+Fi9rtI+RCugoCW/37J1BwBi0aqs6W++weVQECo/3FwWRMc9aMVYltQd8M99ZBSw3t0hu9xvhIecqWTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740617310; c=relaxed/simple;
-	bh=TW2S73cCRvglYfDwmQGd9RWd8/DD6yZTh696UemLXhU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KdfL0p4qNu5B5MN4IS97f+yxCYE/P2GjLqFesbcXDkcj1q2TO04pOCNOFR4D75r60WeEx4w9C1oA8GxEJ1Mh9kXh76Ky40y9Cn0xc2N7sA026iYHj0eDm6yq/47SYf43cmTIHQD0mib9ttEO9gH+22at2jMZHMJ9tudKy160j5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=61.152.208.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1740616660-1eb14e7a0031330001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id UYHoqvL7SyDRaaIW (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 08:37:40 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
- 2025 08:37:40 +0800
-Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
- ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
- 15.01.2507.044; Thu, 27 Feb 2025 08:37:40 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from xin.lan (10.32.64.1) by ZXBJMBX03.zhaoxin.com (10.29.252.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 26 Feb
- 2025 20:19:04 +0800
-From: LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-To: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
-	<robert.moore@intel.com>, <yazen.ghannam@amd.com>, <avadhut.naik@amd.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>
-CC: <CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
-	<leoliu@zhaoxin.com>, LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-Subject: [PATCH v5 4/4] PCI: ACPI: Add new pci_acpi_program_hest_aer_params()
-Date: Wed, 26 Feb 2025 20:18:38 +0800
-X-ASG-Orig-Subj: [PATCH v5 4/4] PCI: ACPI: Add new pci_acpi_program_hest_aer_params()
-Message-ID: <20250226121838.364533-5-LeoLiu-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
-References: <20250226121838.364533-1-LeoLiu-oc@zhaoxin.com>
+	s=arc-20240116; t=1740617393; c=relaxed/simple;
+	bh=VKfKBSoKsWgdO+5+inyMfZQxtAALsjTA1Rz1kTOzju4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CssYSKEYR/nlnTXllFvDA+mKLNzQIK5lMm9nm8V7ll4rCSSroRNXIbuubTiz5vzPIcVGp7VoQtnu3rI05WN33u7qkK07E0tR9GNc4+RRwLpReXueORaAdF0y64yHTZpj/UeGtNwf9Gcflu1OUczo6foLwSqHoRbxhlVPSUXrpCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=pCF6FuEn; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="pCF6FuEn"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-439a1e8ba83so3878055e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:49:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=citrix.com; s=google; t=1740617390; x=1741222190; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y8IoVJnLvqM0mjAqtWpyGMN4QIA5NLPCn75z9KjHyIg=;
+        b=pCF6FuEnf9xwVWq5tUXKxmVikqRtTU4ntxC5RPqeOYEFZcOizRfX8/EHBdrUB080/R
+         EV4xlSfLg09u9IfgFEJZHKvbib1y8R2ZdadABrcvUIyII5MfZGLpgioxLXNFlvYFIUtT
+         JxAAg7q1Uxtm3hoP0FWeK+AJYjFihX1Crve+s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740617390; x=1741222190;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y8IoVJnLvqM0mjAqtWpyGMN4QIA5NLPCn75z9KjHyIg=;
+        b=D+wJpaj0HhdmTe2Q2spQj0cIttB93YQL8DUrN+x7Hel1eWqijqPVzN8TZAWe7zddGg
+         AB/Yb9HcohPAEAfg1Zbr55YfICBEco2Do02IeayDN3DHWQ0tvcHo0Q78wp/dI26B1Mz0
+         iFTZRU2OWX0r4sL2WXbxdU+jV/FG6Zx2MAos9HnNa/FHprxYsOI91UsX3NRljTVed6zJ
+         LhN9naK82L2jfXxZMkuNGe5hwi+DXF4xrCLczHeLjcQP8WeEH8gpOXfDWw3qUtVyDwLb
+         rDa7fSsAhk5hxZgFIrQUf4NaLEizhV/4LAFH+SzTPHGa9ryi5cajDijQKyLURqRtJPph
+         OooA==
+X-Gm-Message-State: AOJu0YylxZRDPcmH4ZM+D/NiNaYMX40jioY0m7IdgqRFRv0N80bauRRy
+	RAlt42apvEEyQcOS28fhTnvngym5tbvktHPKtS8kOUYS96iVluRV3zN4PynlhB7gCJMejcS2hGA
+	Y
+X-Gm-Gg: ASbGncsqiNXUMPsQWH5gk5vs1p9tbULi971t7Ga+M90+hxLldAoo32QErTSNLHd5zMr
+	KQqzn+7X3+mHnapgiUPNlUXHiUaKUUiXzfRYk8gQ6FyDjsLUJs/C/jvknNJxII5Zq6ktS1rYBMJ
+	OLWlNLEZ0L0bYP0sUOZ5t9m85lzsG35e48W2ewGRcJ0OaiJ+MkcFfIK2mywCRMti+KBb8nWl2Jf
+	jr/kZzXSyX709JMDO+THfOYktcah4WgwxDB+0iG2tqB2mlNngga97E4yjZ1Mb7amNHOfMRIL+CW
+	j66griQP1xw0d2zgnUW1jcDgi9oHPY0uLOmOKpwncg8wh6hmxmoK3uhqEqfDs2PVXw==
+X-Google-Smtp-Source: AGHT+IGpsPywBJAzXALDQ0K7XrDZ7T0bbJAVmRf7sfiVbZ5/xXkC0xIWYXubPm/rFRohJ/Ap0ZlT2g==
+X-Received: by 2002:a05:600c:3506:b0:439:9f97:7d6c with SMTP id 5b1f17b1804b1-439aebcfc40mr188435305e9.29.1740617390403;
+        Wed, 26 Feb 2025 16:49:50 -0800 (PST)
+Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b73718de4sm5642915e9.23.2025.02.26.16.49.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 16:49:49 -0800 (PST)
+Message-ID: <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
+Date: Thu, 27 Feb 2025 00:49:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Moderation-Data: 2/27/2025 8:37:39 AM
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1740616660
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 5086
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137756
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+ Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
+Content-Language: en-GB
+From: Andrew Cooper <andrew.cooper3@citrix.com>
+Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
+ 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
+ 6+ahAA==
+In-Reply-To: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+On 26/02/2025 9:03 pm, Pawan Gupta wrote:
+> @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
+>  
+>  #ifdef CONFIG_X86_64
+>  
+> +/*
+> + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
+> + * to the retpoline thunk with a CS prefix when the register requires
+> + * a REX prefix byte to encode. Also see apply_retpolines().
+> + */
 
-Call the func pci_acpi_program_hest_aer_params() for every PCIe device,
-the purpose of this function is to extract register value from HEST PCIe
-AER structures and program them into AER Capabilities. This function
-applies to all hardware platforms that has a PCI Express AER structure
-in HEST.
+Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
+conditional CS prefix in a manner compatible with
+-mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
 
-Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
----
- drivers/pci/pci-acpi.c | 90 ++++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h      |  6 +++
- drivers/pci/probe.c    |  1 +
- 3 files changed, 97 insertions(+)
+> +#define __CS_PREFIX(reg)				\
+> +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
+> +	.ifc \\rs, \reg;				\
 
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index af370628e583..2e9a50fc7433 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -19,6 +19,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/pm_qos.h>
- #include <linux/rwsem.h>
-+#include <acpi/apei.h>
- #include "pci.h"
-=20
- /*
-@@ -806,6 +807,95 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
- 	return -ENODEV;
- }
-=20
-+#ifdef CONFIG_ACPI_APEI
-+/*
-+ * program_hest_aer_common() - configure AER common registers for Root Por=
-ts,
-+ * Endpoints and PCIe to PCI/PCI-X bridges
-+ */
-+static void program_hest_aer_common(struct acpi_hest_aer_common aer_common=
-, struct pci_dev *dev,
-+				    int pos)
-+{
-+	u32 uncor_mask =3D aer_common.uncorrectable_mask;
-+	u32 uncor_severity =3D aer_common.uncorrectable_severity;
-+	u32 cor_mask =3D aer_common.correctable_mask;
-+	u32 adv_cap =3D aer_common.advanced_capabilities;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, uncor_mask);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, uncor_severity);
-+	pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, cor_mask);
-+	pci_write_config_dword(dev, pos + PCI_ERR_CAP, adv_cap);
-+}
-+
-+static void program_hest_aer_root(struct acpi_hest_aer_root *aer_root, str=
-uct pci_dev *dev, int pos)
-+{
-+	u32 root_err_cmd =3D aer_root->root_error_command;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, root_err_cmd);
-+}
-+
-+static void program_hest_aer_bridge(struct acpi_hest_aer_bridge *hest_aer_=
-bridge,
-+				    struct pci_dev *dev, int pos)
-+{
-+	u32 uncor_mask2 =3D hest_aer_bridge->uncorrectable_mask2;
-+	u32 uncor_severity2 =3D hest_aer_bridge->uncorrectable_severity2;
-+	u32 adv_cap2 =3D hest_aer_bridge->advanced_capabilities2;
-+
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK2, uncor_mask2);
-+	pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER2, uncor_severity2);
-+	pci_write_config_dword(dev, pos + PCI_ERR_CAP2, adv_cap2);
-+}
-+
-+static void program_hest_aer_params(struct hest_parse_aer_info info)
-+{
-+	struct pci_dev *dev;
-+	int port_type;
-+	int pos;
-+	struct acpi_hest_aer_root *hest_aer_root;
-+	struct acpi_hest_aer *hest_aer_endpoint;
-+	struct acpi_hest_aer_bridge *hest_aer_bridge;
-+
-+	dev =3D info.pci_dev;
-+	port_type =3D pci_pcie_type(dev);
-+	pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
-+	if (!pos)
-+		return;
-+
-+	switch (port_type) {
-+	case PCI_EXP_TYPE_ROOT_PORT:
-+		hest_aer_root =3D (struct acpi_hest_aer_root *)info.data;
-+		program_hest_aer_common(hest_aer_root->aer, dev, pos);
-+		program_hest_aer_root(hest_aer_root, dev, pos);
-+		break;
-+	case PCI_EXP_TYPE_ENDPOINT:
-+		hest_aer_endpoint =3D (struct acpi_hest_aer *)info.data;
-+		program_hest_aer_common(hest_aer_endpoint->aer, dev, pos);
-+		break;
-+	case PCI_EXP_TYPE_PCI_BRIDGE:
-+		hest_aer_bridge =3D (struct acpi_hest_aer_bridge *)info.data;
-+		program_hest_aer_common(hest_aer_bridge->aer, dev, pos);
-+		program_hest_aer_bridge(hest_aer_bridge, dev, pos);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+void pci_acpi_program_hest_aer_params(struct pci_dev *dev)
-+{
-+	struct hest_parse_aer_info info =3D {
-+		.pci_dev =3D dev
-+	};
-+
-+	if (!pci_is_pcie(dev))
-+		return;
-+
-+	if (apei_hest_parse(hest_parse_pcie_aer, &info) > 0)
-+		program_hest_aer_params(info);
-+
-+	return;
-+}
-+#endif
-+
- /**
-  * pciehp_is_native - Check whether a hotplug port is handled by the OS
-  * @bridge: Hotplug port to check
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 01e51db8d285..6ce44a2a3a69 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -902,6 +902,12 @@ static inline void pci_save_aer_state(struct pci_dev *=
-dev) { }
- static inline void pci_restore_aer_state(struct pci_dev *dev) { }
- #endif
-=20
-+#ifdef CONFIG_ACPI_APEI
-+void pci_acpi_program_hest_aer_params(struct pci_dev *dev);
-+#else
-+static inline void pci_acpi_program_hest_aer_params(struct pci_dev *dev){ =
-}
-+#endif
-+
- #ifdef CONFIG_ACPI
- bool pci_acpi_preserve_config(struct pci_host_bridge *bridge);
- int pci_acpi_program_hp_params(struct pci_dev *dev);
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 246744d8d268..40ef918c049c 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2352,6 +2352,7 @@ static void pci_configure_device(struct pci_dev *dev)
- 	pci_configure_serr(dev);
-=20
- 	pci_acpi_program_hp_params(dev);
-+	pci_acpi_program_hest_aer_params(dev);
- }
-=20
- static void pci_release_capabilities(struct pci_dev *dev)
---=20
-2.34.1
+Why are these escaped differently?  Given they're all \r of some form or
+another, I guess something is going wonky with __stringify(), but its
+still weird for them to be different.
 
+Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
+ends up?
+
+~Andrew
