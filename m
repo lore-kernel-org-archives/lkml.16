@@ -1,177 +1,168 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EEB22D7BE;
-	Thu, 27 Feb 2025 12:18:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F2522DF9E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658732; cv=none; b=gJLe10ZgRpSEsRtsa3Hm8OXl7AbilT0Z11D9FQU+jobPQNV6Q6U+Mqm++o5s8z+afJ9X0rJ+yeVl1plryfm7GVcoYclPuVcdnHqgZHgI4549NVGO5aMIU84HFZybYv7hPs6YtDhLtN9jycodWOr8gEeBlrT+LT2nLm0PHrKSYDk=
+	t=1740658799; cv=none; b=kgeZwx+F/hCYgCGjuxMzz/FtfheHbpa9rxmnBoWAhF1UMCt/Ir9JbDWYKfCBmBNdRoKp9T131eYijrq8uVq+HPDst47SnoYb/4AdZo5o+KcaEfGCF2zGuCRdkPzYW1hU0xx8JSoADotrQshXeEwe3uehXS8rgVWuZwpfKdfARcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658732; c=relaxed/simple;
-	bh=MslIQA5QHTBZ8/xByWEGkAlB0Wtbl/MEE+cgVdbemrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kLa0RLvXx2COsd0udkifgHryCFXJG5ppljmnq+s1ZfdWYjjVcM4awZ4Ymzw3pJGrTWSNMNbSHUqpnR+uyCZgp++KSA/sUAfV9ZfzT5E1DUBlc+Da6ORt/n+N2otpLwN011hXJ5RefcGVVPHUQhObzxMxdtekANJH29vmIqFMNPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nJwZcULP; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740658799; c=relaxed/simple;
+	bh=u7MGhynBrW4XzL2BBEX+Qn/6dYTwxzMNVdpH0lUcAp0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=URBBcX1LQSbYxBs7vy/GOlb/U5T8CoqRWh0gRogAHw+SH2iodljG9xhlj/j18EdjDnO1qaYHmHUavuJlr1QhTWnwLxA2gXIR28ReQZv3RQAxMRcUgLsekKI4GMF6eQ8A6WM8uEqcQlAhCcuQnnLHnq6biX5ArttT2p5JHQ77V3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oFVha0SR; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nJwZcULP"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R9RU3K012382;
-	Thu, 27 Feb 2025 13:18:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	5VtVpJbGl3ABqgeyotfSFZTXggVBvrafMpv9raSwNMI=; b=nJwZcULPguYTFbLK
-	s00zfJzJvVpHQh6/3RohsrUhqhjn5Uu6s/W72KrdQhfvtEj9v+b+VBIjBKouXUJc
-	cTA0ai1DvN6SC2Qa3r7gMUqs2gSODT9cie56XWXiyf9MYzV1yuPJgY7Gtu0dmXvh
-	Z/3KS9y5wUYK6E415GV7CkqaP48Iv9fyC018NbQ/6iRK99WgnP/BKdDKh66+hW5Y
-	LZqNKHjDzI9l8hcBnnQ8qB8f1u8X80M9IY0sAcmgA2fNjLo9VizKFhsty8DZWyti
-	Hny0mmZFyCUzaLhMZyZdzQn3vcIdkOp13Whwhn8ebzvG13LCYBjw22njwSWnOnHs
-	NRhWRw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 451psvah7m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 13:18:38 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 45CEC40045;
-	Thu, 27 Feb 2025 13:17:31 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 73A2540E4F0;
-	Thu, 27 Feb 2025 13:16:43 +0100 (CET)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Feb
- 2025 13:16:42 +0100
-Message-ID: <df74157e-d141-4045-a244-3168c58c0ff4@foss.st.com>
-Date: Thu, 27 Feb 2025 13:16:42 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oFVha0SR"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-390df0138beso469675f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:19:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740658795; x=1741263595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e4K8UiwVopP53xOklWDCrKpSnqZT0eqEWjR2XgfhARY=;
+        b=oFVha0SRj1OPMM2EymezsVg/qqoXpdUY9WNMdBVAw9ZMuoLTFlVO+IqK8fUvajsZOR
+         b5Ay7Rnc361j2hTPlnN4kPyKC5kZ3XIQZh3I4deWOVuVpdmiff8U5Y6ewUuveK/vmD3j
+         ba4aKtrQy9qmt2F1HUIX1b2Kv8TIGOU58MNeDbMJFiNbE4a8VvJZAaaV+H9Sh0rfUTEQ
+         jyV0OQnkMWXQEuMrunjL8ZL+aHD1aGE16TYgf9xD0etfoN7nPh8Cd+MLeBW2/37zNmYJ
+         HatvnrDEpSf6yqJhs7oMcQjuhOlLDnPvEqovwxiUS5KxtlNor0xbeh5/bpp4dFX8MrT7
+         hX9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740658795; x=1741263595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e4K8UiwVopP53xOklWDCrKpSnqZT0eqEWjR2XgfhARY=;
+        b=FQ9ZxPV084nn/psSwbO5v3aVHdmS4WXU8Ds0DTKxnI4jwEF9UcyZvD4r48pbIT5bWh
+         RfAAogL6NFSmcQ8RTeOH6SODjBHCbQUm5NzOldPy9VXGk2IIFEKHtKi1HrW20/JnwbG3
+         6PoTeMMUiZ17USXSq9rhLGFeYvBu+bgJklCQ499dD/6ruBhsvle7L+wvmwb2SSPemu9F
+         518EerxQBWEBJ+If2Ju5xqc12K6fiuMYMt+zNVS6J2iQzFtbve671qKT21jpRYfR6VMY
+         BjfGTh07YfG1vi4sGsBYsM8P7O4D97BWPutV5fqnBf6oCap8yrthfhfAmOzLZAWvLutp
+         5utA==
+X-Forwarded-Encrypted: i=1; AJvYcCWE53Dw+lzS+PI6GjOJDpixow35zmfrKKHcu9sm1shsZMRsPjfM/iCOWDEtMQYR8Hwf5xdwlz+BqbsGYvk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+5Y4/e6/6yUcMsXOc2w3aQGxE/o9N1emrMQQBkFj/zj6bZ3oC
+	3QKKJ67XxgRQO8CTshXuA9oNexb6DPJpkP0inEMzI1fyPKGEV1+j3zJN8q3kcAEoTMKu4TXIUc2
+	WfieDUzKsn41eEyTdAlPDZuOyyB3WSLPtbrO+
+X-Gm-Gg: ASbGncuMDv8G/nMG9/jYF5ReD2a+yJRG8fe0/3FSfKs+IrQdumiQzXvpOPVNfqzKVzk
+	/qdbuAKbejQ1HvujOQFu6pBRzTVM3Jd8eosYI9BTzBu+utHwjEcKYGqmmjTGKBJwE+6lHfLtkcj
+	HShVxYUlH3stnD2Rs5+HTmZsIPNCQ2Fe5GPscnuw==
+X-Google-Smtp-Source: AGHT+IEKZwk8Kq2mq+sCggG9tt199/S5gDLDG+iTeZ1Eo+AMAi7QqJSIE9qQ+X+XF1Rpkj8qlzEAsa7zDuZuHXBR2wQ=
+X-Received: by 2002:a5d:5985:0:b0:38f:3ee5:fd36 with SMTP id
+ ffacd0b85a97d-38f6f0af903mr23070702f8f.53.1740658795362; Thu, 27 Feb 2025
+ 04:19:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/9] ARM: dts: stm32: add Hardware debug port (HDP) on
- stm32mp25
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Clement LE GOFFIC
-	<clement.legoffic@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-7-9d049c65330a@foss.st.com>
- <418a80a9-8c08-4dd1-bf49-1bd7378321aa@kernel.org>
- <b257aa79-6ca9-4f57-988a-ec00225992ab@foss.st.com>
- <b57e3c9e-244e-435b-8a7b-cf90f3a973b3@kernel.org>
- <988667a4-4bc0-4594-8dfd-a7b652b149b2@foss.st.com>
- <55beb3e7-65ac-4145-adae-fb064378c78d@kernel.org>
- <8cdc7e52-f9e2-4fc9-be68-0dd72a25ee1b@foss.st.com>
- <48cc626a-d632-444f-8563-07a9ea0ecc71@kernel.org>
- <17450f7d-d398-4a75-8b53-6c9c396661ab@kernel.org>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <17450f7d-d398-4a75-8b53-6c9c396661ab@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_05,2025-02-27_01,2024-11-22_01
+References: <CAH5fLggyEXyyaFNnmBCPOSX051TiFyAp0B8GfahbPg=+LrtUWA@mail.gmail.com>
+ <20250225180223.763026-1-aliceryhl@google.com> <20250227104640.sa6vqdz7j5hwjigs@vireshk-i7>
+In-Reply-To: <20250227104640.sa6vqdz7j5hwjigs@vireshk-i7>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 27 Feb 2025 13:19:43 +0100
+X-Gm-Features: AQ5f1JqWf30os7GawawS5Uk4aefwZr9l8Qmlesu4YIZqX8gdGJlMfcQv-exzF4E
+Message-ID: <CAH5fLgg8PvCEEks81Dy_3eRBkVG4P0a7usB2cfP2pbcSw495FA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] rust: Add initial cpumask abstractions
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, benno.lossin@proton.me, 
+	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, dakr@redhat.com, 
+	gary@garyguo.net, linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk, 
+	ojeda@kernel.org, rust-for-linux@vger.kernel.org, tmgross@umich.edu, 
+	vincent.guittot@linaro.org, yury.norov@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 27, 2025 at 11:46=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
+>
+> On 25-02-25, 18:02, Alice Ryhl wrote:
+> > diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+> > +/// This corresponds to the C type alias `cpumask_var_t`.
+> > +pub struct CpumaskBox {
+> > +    #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> > +    ptr: NonNull<Cpumask>,
+> > +    #[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> > +    mask: Cpumask,
+> > +}
+> >
+> > +impl CpumaskBox {
+> > +    pub fn new(_flags: Flags) -> Result<Self, AllocError> {
+> > +        Ok(Self {
+> > +            #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> > +            ptr: {
+> > +                let mut ptr: *mut bindings::cpumask =3D ptr::null_mut(=
+);
+> > +                unsafe { bindings::zalloc_cpumask_var(&mut ptr, _flags=
+.as_raw()) };
+> > +                NonNull::new(ptr.cast()).ok_or(AllocError)?
+> > +            },
+> >              #[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> > -            // SAFETY: The pointer was earlier initialized from the re=
+sult of `KBox::into_raw()`.
+> > -            unsafe {
+> > -                drop(KBox::from_raw(self.ptr))
+> > -            };
+> > -        }
+> > +            mask: unsafe { core::mem::zeroed() },
+>
+> This will work correctly, yes, but I wasn't sure if the Rust code
+> should do this or depend on the C API and call zalloc_cpumask_var().
+> The implementation of struct cpumask allows this to work right now,
+> but any change where some internal state management is done, for
+> example, within the structure may break the Rust side.
+>
+> I am okay with this way of doing it if that looks okay to you.
+>
+> I have made following changes over your diff.
+>
+> Thanks for your help in simplifying the code.
+>
+> --
+> viresh
+>
+> -------------------------8<-------------------------
+>
+> diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+> index f82dafbc4e61..d56f7dc9d762 100644
+> --- a/rust/kernel/cpumask.rs
+> +++ b/rust/kernel/cpumask.rs
+> @@ -13,20 +13,28 @@
+>  #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+>  use core::ptr::{self, NonNull};
+>
+> +#[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> +use core::mem::MaybeUninit;
+> +
+> +use core::ops::{Deref, DerefMut};
+> +
+>  /// This corresponds to the C type `struct cpumask`.
+>  #[repr(transparent)]
+> -pub struct Cpumask {
+> -    mask: Opaque<bindings::cpumask>,
+> -}
+> +pub struct Cpumask(Opaque<bindings::cpumask>);
+>
+>  impl Cpumask {
+> -    /// Creates a reference to an existing `struct cpumask` pointer.
+> +    /// Creates a mutable reference to an existing `struct cpumask` poin=
+ter.
+>      ///
+>      /// # Safety
+>      ///
+>      /// The caller must ensure that `ptr` is valid for writing and remai=
+ns valid for the lifetime
+>      /// of the returned reference.
+> -    pub unsafe fn from_raw_mut<'a>(ptr: *mut bindings::cpumask) -> &'a m=
+ut Self {
+> +    pub unsafe fn from_raw_mut<'a>(ptr: *mut bindings::cpumask_var_t) ->=
+ &'a mut Self {
 
+Why?
 
-On 2/26/25 22:31, Krzysztof Kozlowski wrote:
-> On 26/02/2025 22:26, Krzysztof Kozlowski wrote:
->> On 26/02/2025 16:30, Alexandre TORGUE wrote:
->>>
->>>
->>> On 2/26/25 16:08, Krzysztof Kozlowski wrote:
->>>> On 26/02/2025 10:33, Alexandre TORGUE wrote:
->>>>>>>>> +		hdp: pinctrl@44090000 {
->>>>>>>>> +			compatible = "st,stm32mp-hdp";
->>>>>>>>
->>>>>>>> So here again - you have stm32mp251 SoC, but use entirely different
->>>>>>>> compatible.
->>>>>>>
->>>>>>> Ok so I will use "st,stm32mp15-hdp"
->>>>>>
->>>>>>
->>>>>> This means this is stm32mp15 SoC. I do not see such SoC on list of your
->>>>>> SoCs in bindings. What's more, there are no bindings for other SoC
->>>>>> components for stm32mp15!
->>>>>
->>>>> Yes stm32mp15 is not a "real SoC". I agree that at the beginning of the
->>>>> STM32 story we didn't have a clear rule/view to correctly naming our
->>>>> compatible. We tried to improve the situation to avoid compatible like
->>>>> "st,stm32", "st,stm32mp" or "st,stm32mp1". So we introduced
->>>>> "st,stm32mp13", "st,stm32mp15" or "st,stm32mp25" for new drivers. So yes
->>>>> it represents a SoC family and not a real SoC. We haven't had much
->>>>> negative feedback it.
->>>>>
->>>>> But, if it's not clean to do it in this way, lets define SoC compatible
->>>>> for any new driver.
->>>>
->>>> Compatibles are for hardware.
->>>>
->>>>> For the HDP case it is: "st,stm32mp157" and used for STM32MP13,
->>>>> STM32MP15 end STM32MP25 SoC families (if driver is the same for all
->>>>> those SoCs).
->>>>
->>>> No, it's three compatibles, because you have three SoCs. BTW, writing
->>>> bindings (and online resources and previous reviews and my talks) are
->>>> saying that, so we do not ask for anything new here, anything different.
->>>> At least not new when looking at last 5 years, because 10 years ago many
->>>> rules were relaxed...
->>>
->>> So adding 3 times the same IP in 3 different SoCs implies to have 3
->>
->> Yes. Always, as requested by writing bindings.
->>
->>> different compatibles. So each time we use this same IP in a new SoC, we
->>> have to add a new compatible. My (wrong) understanding was: as we have
->>
->> Yes, as requested by writing bindings and followed up by all recent
->> platforms having decent/active upstream support. See qcom, nxp, renesas
->> for example.
->>
->>> the same IP (same hardware) in each SoC we have the same compatible (and
->>
->> You do not have same hardware. You have same IP, or almost same because
->> they are almost never same, implemented in different hardware.
->>
->>> IP integration differences (clocks, interrupts) are handled by DT
->>> properties.
->>
->> Which binding doc/guide suggested such way? Countless reviews from DT
->> maintainers were saying opposite.
-> I was not precise: IP integration differences are of course handles as
-> DT properties, but I wanted to say that it does not solve the problem
-> that IP integration means you might have differences in this device and
-> you should have different quirks.
+Perhaps put this on the CpumaskBox and keep the `struct cpumask` one here?
 
-Yes I agree. We'll take care of it for future development. Maybe, It 
-would be nice to apply this rule in our current drivers/DT already 
-upstream ?
-
-> 
-> And the example in this patchset: entirely different pin functions is a
-> proof. This device behaves/operates/integrates differently, thus
-> different compatible.
-
-Yes, discussing with Clement, it is clear that we need 3 different 
-compatibles.
-
-> Best regards,
-> Krzysztof
+Alice
