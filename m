@@ -1,38 +1,36 @@
 Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC9826E958;
-	Thu, 27 Feb 2025 19:26:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA4A26E95D;
+	Thu, 27 Feb 2025 19:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684362; cv=none; b=V6YRLYgNnTXBF5bC7vhECczpW8Q3NM8ezDA25XmCfPg3jbS1D1Kn82TDc+gp/zZ8XGZQcZ0MPQYSRRAbch6v+ayqdC/xIv2sPVD3yMZQA+INFwYk/1gF44rrhyAl5xwc04PqVxsRwF0owTVuT7ufBz4L1UwzwW4iS5mBCfDccDU=
+	t=1740684363; cv=none; b=Ymo3L9dKz/QCsE8b5pGdAT1M7lc0wOS2BKDet+wZpoBT1jTLPFdOth0ZEYCvlwvpkwSsPC33NIstDkH+wVlJUlnfJMuytMUQ/BRaOyMmahFIDF9CUklw843JGvEHp3XfmZL5zrtC82IeVdyGGpYtlvR2EshhWdrW8tqSXbvXOok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684362; c=relaxed/simple;
-	bh=a6NvEy6QBLiN8CY+IhF9/3XHktH32/23x1gAefp+5zg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sZKw44noNLuNXxKiLJVhlUnCPzvJDSwE+pB4Vy6KkdGLTSIAgcQaE7Wvsj8bBxzWuwfE4cKOggdnGRFbyhZjcExml0inVA5KCYfy3TKvCELJThZXkMUDJi9Awre9s2toZnyj+eSYxLAb2Z5FqGk5FXzsI305Wmi1/YFEDC2nmGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=iqKZCRay; arc=none smtp.client-ip=67.231.148.174
+	s=arc-20240116; t=1740684363; c=relaxed/simple;
+	bh=+MnmQAWHaliLVDUS1hWbgMPHvuQn4za/3sOMfuhi2tg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mve14Sny01Z4KkCANuae3v3ucRZObHC6cMQ61XZl/wnbxwp2s8HHDyWrFKFEZcHycKay41W7nYKCyuBCi/+Tvg/OXSqPQlv7apaI626yCOe/0nX8ORAbGio6VuuLZxgCcPVRlbsvmKejx/mdRhFPj9V9+iv0cmL6cVf4ROX2iIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=KEn55KSf; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="iqKZCRay"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="KEn55KSf"
 Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RFjKPv005358;
-	Thu, 27 Feb 2025 11:25:40 -0800
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RFjKPt005358;
+	Thu, 27 Feb 2025 11:25:39 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=b
-	YTLXJD40V2QUBA5lQJUGgPgBRx7eVqymsySQ7bcibY=; b=iqKZCRayiWsTCOtm6
-	MC4DlAwa5vb6bboPXL205jex4Ctny5Bm2umMCnF1La8FITfNL3OEIKb6hrfB+Arm
-	AIrRf/Jb1YIlrsVlt4KKA4sramAhrxZOA0iOgwtHJyJRQQJeRGzwc53wvUu6e55e
-	Rqu6ANnYijHb+vhPIo0ppugjXdwgj801+pih0i0NIxmvq4es+tKmWY0/1CCFq+eB
-	yLvCVuO/QXQwNIF+8ltgz8nplgCPUfXoIqhQskujZDdouN4qv0+DYU9Xqudek5uQ
-	9Nhy5mAFKbxRtgiStr3sTwowNbKKE6ftGxesOL+lXPpE6DO5WWbSmkjCcOZX+89m
-	vM4xw==
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=L+Ymq3rUGoUbchUwObBot+u
+	Zi50aDDGM2O9Rfhoc+HQ=; b=KEn55KSfKjOgs+58LJClx6Gp2al7aRI4Rf0MOEz
+	0UpNy8WIyjqnxAO81CTwvEq8noosLoQQgogsrBxKKqHOq3afDOjbW3OrLeyki1hR
+	I4lwa/9svz5mbjkUVfZTyGBBSD73TG9v60fcSZ0/O4DbfUP4uAyT+TrHBb16gjAF
+	xOSeAPm+yPbftSwuRCQcOlYfjfc+3uffkc3pmhHIevqiqZ4o++PTJ9vAL0cd8coi
+	79amE9Pr6sDHr9hSWqHDZSs41h0qB0PkCDyRoD/GYaCgXIMSJGrlcdaokzqTwg9D
+	E+NwFd6tUVPZPMv2W/8lbOAGliydm6FkOwrjOudnUJGiSbw==
 Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 452tyjrhbm-3
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 452tyjrhbm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 11:25:40 -0800 (PST)
+	Thu, 27 Feb 2025 11:25:39 -0800 (PST)
 Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
  DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -41,7 +39,7 @@ Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
  (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
  Transport; Thu, 27 Feb 2025 11:25:38 -0800
 Received: from wd-ubuntu-24-04.marvell.com (wd-ubuntu-24-04.marvell.com [10.111.132.113])
-	by maili.marvell.com (Postfix) with ESMTP id 786455B6927;
+	by maili.marvell.com (Postfix) with ESMTP id 1EA733F7079;
 	Thu, 27 Feb 2025 11:25:38 -0800 (PST)
 From: Wilson Ding <dingwei@marvell.com>
 To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
@@ -51,12 +49,10 @@ CC: <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <p.zabel@pengutronix.de>,
         <salee@marvell.com>, <gakula@marvell.com>,
         Wilson Ding <dingwei@marvell.com>
-Subject: [PATCH v3 3/3] arm64: dts: marvell: cp11x: Add reset controller node
-Date: Thu, 27 Feb 2025 11:25:36 -0800
-Message-ID: <20250227192536.2426490-4-dingwei@marvell.com>
+Subject: [PATCH v3 0/3] Add Armada8K reset controller support
+Date: Thu, 27 Feb 2025 11:25:33 -0800
+Message-ID: <20250227192536.2426490-1-dingwei@marvell.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250227192536.2426490-1-dingwei@marvell.com>
-References: <20250227192536.2426490-1-dingwei@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,47 +61,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: F9GJO5NrJ5WTW0ERHCE9qRfpK7xQkZIZ
-X-Authority-Analysis: v=2.4 cv=UIYnHDfy c=1 sm=1 tr=0 ts=67c0bc34 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=T2h4t0Lz3GQA:10 a=M5GUcnROAAAA:8 a=DYY7cqjbEommNVqY-hUA:9 a=cX4pScRg4-JUD0_czzmr:22 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-GUID: F9GJO5NrJ5WTW0ERHCE9qRfpK7xQkZIZ
+X-Proofpoint-ORIG-GUID: -cHPloBC-hxEftL3iYoYFCczjX1kjUaK
+X-Authority-Analysis: v=2.4 cv=UIYnHDfy c=1 sm=1 tr=0 ts=67c0bc33 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=T2h4t0Lz3GQA:10 a=Jdwyv6mE_Hljsyy0yKYA:9
+X-Proofpoint-GUID: -cHPloBC-hxEftL3iYoYFCczjX1kjUaK
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
 
-Add the reset controller node as a sub-node to the system controller
-node.
+Armada8K has one simple register for unit soft reset, which is part of
+the system controller register area. The simple reset code doesn't
+support register access via regmap for the syscon devices. This patch
+series created a new driver based on the simple reset code, and add
+Armada8K support then.
 
-Signed-off-by: Wilson Ding <dingwei@marvell.com>
+Thanks,
+Wilson
+
 ---
- arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-index 161beec0b6b0..c27058d1534e 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-@@ -226,6 +226,8 @@ CP11X_LABEL(rtc): rtc@284000 {
- 		CP11X_LABEL(syscon0): system-controller@440000 {
- 			compatible = "syscon", "simple-mfd";
- 			reg = <0x440000 0x2000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 
- 			CP11X_LABEL(clk): clock {
- 				compatible = "marvell,cp110-clock";
-@@ -273,6 +275,12 @@ CP11X_LABEL(gpio2): gpio@140 {
- 					 <&CP11X_LABEL(clk) 1 17>;
- 				status = "disabled";
- 			};
-+
-+			CP11X_LABEL(swrst): reset-controller@268 {
-+				compatible = "marvell,armada8k-reset";
-+				reg = <0x268 0x4>;
-+				#reset-cells = <1>;
-+			};
- 		};
- 
- 		CP11X_LABEL(syscon1): system-controller@400000 {
+Changes in v3:
+  - Abandoned the use of the 'offset' property to specify the register
+    offset.
+  - Dropped the changes to 'cp110-system-controller.txt'.
+  - Created a new dt-binding head file to define the reset lines.
+  - Fixed the errors and warnings reported by dt_binding_check and
+    dtbs_check.
+
+Changes in v2:
+  - Created a new driver for SYSCON device instead of extending the
+    simple reset code.
+  - Allow to retreive the register offset from the 'reg' property as
+    an alternative to the 'offset' property.
+  - Allow to retrevie the register size from the 'reg' property to
+    calculate the number of reset lines.
+  - Added the new dt-binding files to document the device-tree scheme
+    and fix DT check issues.
+  - Updated the device-tree node name to 'reset-controller' to follow
+    the name conventions.
+
+Changes in v1:
+  - Init version.
+
+Wilson Ding (3):
+  dt-bindings: reset: Add Armada8K reset controller
+  reset: Add support for Armada8K reset controller
+  arm64: dts: marvell: cp11x: Add reset controller node
+
+ .../reset/marvell,armada8k-reset.yaml         |  48 +++++
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi |   8 +
+ drivers/reset/Kconfig                         |  12 ++
+ drivers/reset/Makefile                        |   1 +
+ drivers/reset/reset-simple-syscon.c           | 188 ++++++++++++++++++
+ .../reset/marvell,armada8k-reset.h            |  27 +++
+ include/linux/reset/reset-simple.h            |   3 +
+ 7 files changed, 287 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/marvell,armada8k-reset.yaml
+ create mode 100644 drivers/reset/reset-simple-syscon.c
+ create mode 100644 include/dt-bindings/reset/marvell,armada8k-reset.h
+
 -- 
 2.43.0
 
