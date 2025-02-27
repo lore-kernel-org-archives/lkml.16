@@ -1,79 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C826E652
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5824D26FA43;
+	Thu, 27 Feb 2025 19:12:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740683539; cv=none; b=B6iDI/EelAkz/4Q1M9V0BPYRhkBCCFDRk4QzPY7ZXiD3NLEYQKQW5TXacPdpXbOiU7qrcl3KqZ656QANNNn6JXtKpeTvq1CM50d5iKUXeLsPX1tlnMJ5s9tD24yHkYcFViGz//1JIUCWjNjw+UkZOe9HuOw9zfVbrrx+3Pdc9Z0=
+	t=1740683545; cv=none; b=BiXvzq3HXzgGWtjgPpiZlUvxCkhFL2X/2bxRszMthnOVzVsbqa8JgHVViyaOxCtrMk7ZAXMNopfdnIXG2JTOhBaZBlCzuTp/v0FO0+6Wa7OCEuYCXVLpXsxnkbps+9mzFVNI4skYN7fazkPDsDmzzqBez2F6I9GyJ40aeoNDVpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740683539; c=relaxed/simple;
-	bh=QfA4t+TnvHcJFsgllIETJAAm5PaYWOAJv/1avs53/vQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O4X7CFbd2xA+RQL47P/5I3c+Jqs4cxzqFwNxmVdwfRkjdvcny9L4D+GSiQxZFqASvklhuYuJJJEzGkU+/7Ag6oKgMS7JZQ+krRpUBFQ/Mv2DJK/rEDxYSFeuOnudVGwA9JVNtqTjH2O+rFgrQX9X1nriQ8V2QerpMQnLEzMf9O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Od+gIcsA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740683545; c=relaxed/simple;
+	bh=XNv1JeMEygO+u0rfyIvYtfLNF9wa0OuxFFuJmv+IbKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mH09YBA0GNaJ8L/INr12Bw4VnWxy2CFqGVoL2xvL553LCqzUoLuQas63YqApwD6vSTu17E2r4uDtqCSa/DhUJmRk0ZBruVB1AFjrGhtI/pkxFe98AKs5bk8LqsXTFGH4hcLD6cIwfVgimm4fV2ZsXAo6inh9BzOv/SQcjiLB7Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyD4phbC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Od+gIcsA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4FFC4CEDD;
-	Thu, 27 Feb 2025 19:12:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyD4phbC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5EDCC4CEE4;
+	Thu, 27 Feb 2025 19:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740683537;
-	bh=QfA4t+TnvHcJFsgllIETJAAm5PaYWOAJv/1avs53/vQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Od+gIcsAbJ0H1nOcpQ6ESquno0NZMfuV8zyzNPCpvZdNazt8GQPkFsQCgkZquN3Ew
-	 gg/TRp5D5BLMx1My9kMmIf3PHS1nM14tINr0qZoOebWIUrHu+y9ww436VNR1HfsSdP
-	 6r/s6ShV0tE71YPtV69HUqYNoE6Qy0U4D7280y73mVSbOAgUJqiJpxItjerdgdYq+p
-	 N/0uGtJvN9J3skKd9xBxkvzFMTQeAI2vE4tt4mdMM5s9eQcDag54lJUrxBiNnf0s6P
-	 mQi64WWmNUFqzwwQs0SNHeazT/jNwAHnaRR+ZFZgEKlz6rO6RlIPN4U+Q9nOyN1Ucy
-	 GtBewlT+8waUA==
-Date: Thu, 27 Feb 2025 20:12:07 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: "Chang S. Bae" <chang.seok.bae@intel.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
-Subject: Re: [PATCH RFC v1 06/11] x86/fpu/mpx: Remove MPX xstate component
- support
-Message-ID: <Z8C5B9PJUqkEDGH9@gmail.com>
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250227184502.10288-7-chang.seok.bae@intel.com>
+	s=k20201202; t=1740683545;
+	bh=XNv1JeMEygO+u0rfyIvYtfLNF9wa0OuxFFuJmv+IbKg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SyD4phbCJbtes5DUJhY0DJqXoTH0IfUB1La3ZQsTpoDrOvCZ14GI1aj9NbXxlFqag
+	 LVOoPqf9PKdxhxBwr6cbf8w6M9PRFwVcrToOdPgBp9B4YDoYaOjOqvQVVntiwH00F/
+	 HDtKI326SVS+qOFRt2rZ0+Kq5ti3Y5B7G7Mee4EZNm2IkxRXSzN70ZEMngYFEPpFLT
+	 nTMiPBqhaUUppYHLePiRWAoY5GXAEY+ry5OYn1qYk98oUx7ZiNrsWI/KA3IVSuznLK
+	 PGwvKxbGj3xU1tx9YBjZOw8KXkEzrqwakHezZctEt04qOxjiN+3+7KMfFwRIZQ4m8J
+	 Jo9I5eIw+bWDQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH 2/3] perf ftrace: Remove an unnecessary condition check in BPF
+Date: Thu, 27 Feb 2025 11:12:22 -0800
+Message-ID: <20250227191223.1288473-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
+In-Reply-To: <20250227191223.1288473-1-namhyung@kernel.org>
+References: <20250227191223.1288473-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227184502.10288-7-chang.seok.bae@intel.com>
+Content-Transfer-Encoding: 8bit
 
+The bucket_num is set based on the {max,min}_latency already in
+cmd_ftrace(), so no need to check it again in BPF.  Also I found
+that it didn't pass the max_latency to BPF. :)
 
-* Chang S. Bae <chang.seok.bae@intel.com> wrote:
+No functional changes intended.
 
-> A new xstate component is set to occupy the position previously used by
-> MPX in the non-compacted format, then creating a fundamental conflict
-> between the two.
-> 
-> Currently, xfeature_noncompact_order[] includes MPX, but the introduction
-> of the new feature would cause a direct conflict there unless MPX is
-> removed. Fortunately, MPX support has already been deprecated and
-> effectively removed by commit:
-> 
->     45fc24e89b7c ("x86/mpx: remove MPX from arch/x86")
-> 
-> Explicitly disable the deprecated feature to reserve a space for the new
-> xstate.
-> 
-> Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-> ---
-> Several code references to this feature macro remain, primarily on the
-> KVM side. While they are likely to become obsolete after this patch,
-> their cleanup has been deferred at this review stage: This can be
-> addressed in a follow-up patch or included as an optional part of APX
-> enablement, I suppose.
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/func_latency.bpf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-So can this patch be moved further up in the series (without breaking 
-anything), to make it easier to review the impact of the APX changes?
+diff --git a/tools/perf/util/bpf_skel/func_latency.bpf.c b/tools/perf/util/bpf_skel/func_latency.bpf.c
+index 3d3d9f427c20876e..ad70547446786c54 100644
+--- a/tools/perf/util/bpf_skel/func_latency.bpf.c
++++ b/tools/perf/util/bpf_skel/func_latency.bpf.c
+@@ -125,8 +125,7 @@ int BPF_PROG(func_end)
+ 			// than the min latency desired.
+ 			if (val > 0) { // 1st entry: [ 1 unit .. bucket_range units )
+ 				key = val / bucket_range + 1;
+-				if (key >= bucket_num ||
+-					val >= max_latency - min_latency)
++				if (key >= bucket_num)
+ 					key = bucket_num - 1;
+ 			}
+ 
+-- 
+2.48.1.711.g2feabab25a-goog
 
-Thanks,
-
-	Ingo
