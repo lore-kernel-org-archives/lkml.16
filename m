@@ -1,37 +1,39 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E0F626A1A4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F156726E97A;
+	Thu, 27 Feb 2025 20:26:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687966; cv=none; b=H46IrEpd2fWYJPmE8QFOCmQjpIsAh323r8E+mkQkqjFQsmCy+oxmLs31bPnUSZAO4NCvvQwiljzkxU+xhpffVlk9w9psbTaJ53zS1XzO+BLG7AvrT39+VCauJbNSSl0SxZuO1gPqG6po61VG+FAZ5Muv1uXgh6GBq3Osvj3XAmA=
+	t=1740687978; cv=none; b=MkHU4ap1ziJyG64bEtnsKYJbnFhn1uIg4JtFteuitdUzEhGjH8p7eNh4ExMf5oTk+Tu5bUvtwUev+2LAAkncHG+mvBClF/lCdFLHZcD+MNOEvtRrChq1IPa45wE2cR1Hx8uEGzaCQqvk3NqRNcE64GdXVbBgjnD5yHndszzhRq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687966; c=relaxed/simple;
-	bh=drGbI7MXeidstezmlwRHaw42Md50B8JUUxRUva8Crw4=;
+	s=arc-20240116; t=1740687978; c=relaxed/simple;
+	bh=HS/AUV6+Qpsw3N32uy3TyW+OGn3hvfruRaKt+iFFMg8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChCgei1rv9ngTm+I0TQ7GIIs8Ktp0SYt92NW7iklqNDHrMqHtXyrGjASiEJQ+S/s1Jfo+S4Ka0LehfUwWHgH47pbe6bqBbtbk0vzXJVBQ70K4DpoMpaRSijc9sI9whXvaw4GNe4SrOS5RRDrBIH2DRo2LXI3S7hLNpCJvfZ0olc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46DB1516;
-	Thu, 27 Feb 2025 12:26:18 -0800 (PST)
-Received: from bogus (unknown [10.57.37.210])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FDAB3F673;
-	Thu, 27 Feb 2025 12:26:00 -0800 (PST)
-Date: Thu, 27 Feb 2025 20:25:57 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Sebastian Ene <sebastianene@google.com>
-Cc: catalin.marinas@arm.com, joey.gouly@arm.com, maz@kernel.org,
-	Sudeep Holla <sudeep.holla@arm.com>, oliver.upton@linux.dev,
-	snehalreddy@google.com, suzuki.poulose@arm.com,
-	vdonnefort@google.com, will@kernel.org, yuzenghui@huawei.com,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 2/4] KVM: arm64: Move the ffa_to_linux definition to
- the ffa header
-Message-ID: <20250227202557.d3fd6ylzbaho4pvx@bogus>
-References: <20250227181750.3606372-1-sebastianene@google.com>
- <20250227181750.3606372-3-sebastianene@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=BN0LTCuzY6z6rT0wyQPl+uOLDclDtBGm/fHtb+n1SCWBfJ8WpakolMcJ9KtnzjRcFwjogtFks/8zztdCVeNZijJRsPFw1GmzmjgbVfBSOKlMdJGo3oyG1BDnRwn63tXANo7W/pJ6Bht62wXrnBIwhzgtWGrVV+wMQCLyZSSJ6Gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZemE8IaV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZemE8IaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1400C4CEDD;
+	Thu, 27 Feb 2025 20:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740687977;
+	bh=HS/AUV6+Qpsw3N32uy3TyW+OGn3hvfruRaKt+iFFMg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZemE8IaVZyzzWcQTcjHDhHLYPWMeFwP1iQShD2UV29ukIaVc4ZdPLRyAjiFEkLqfj
+	 zIdeHsqImXcpaPaYqCwTPzCt5FsfMiy8OKpek/aWRahy22rfTTg6WB2djdN7QvVSLW
+	 n2V2EjAf+JZhtXZuJpPyrtMRYSDwJKGQJ4Ubzzz0=
+Date: Thu, 27 Feb 2025 12:25:07 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Christian Heusel <christian@heusel.eu>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sean Rhodes <sean@starlabs.systems>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	stable@vger.kernel.org, qf <quintafeira@tutanota.com>
+Subject: Re: [PATCH] Revert "drivers/card_reader/rtsx_usb: Restore interrupt
+ based detection"
+Message-ID: <2025022758-traps-nebulizer-5356@gregkh>
+References: <20250224-revert-sdcard-patch-v1-1-d1a457fbb796@heusel.eu>
+ <0944ac33-c460-4d3b-9ec8-db70d11ee9c1@heusel.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,16 +42,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227181750.3606372-3-sebastianene@google.com>
+In-Reply-To: <0944ac33-c460-4d3b-9ec8-db70d11ee9c1@heusel.eu>
 
-On Thu, Feb 27, 2025 at 06:17:47PM +0000, Sebastian Ene wrote:
-> Keep the ffa_to_linux error map in the header and move it away
-> from the arm ffa driver to make it accessible for other components.
+On Thu, Feb 27, 2025 at 02:40:04PM +0100, Christian Heusel wrote:
+> On 25/02/24 09:32AM, Christian Heusel wrote:
+> > This reverts commit 235b630eda072d7e7b102ab346d6b8a2c028a772.
+> > 
+> > This commit was found responsible for issues with SD card recognition,
+> > as users had to re-insert their cards in the readers and wait for a
+> > while. As for some people the SD card was involved in the boot process
+> > it also caused boot failures.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Link: https://bbs.archlinux.org/viewtopic.php?id=303321
+> > Fixes: 235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt based detection")
+> > Reported-by: qf <quintafeira@tutanota.com>
+> > Closes: https://lore.kernel.org/all/1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu
+> > Signed-off-by: Christian Heusel <christian@heusel.eu>
+> 
+> Hey Arnd, hey greg,
+> 
+> could one of you pick this up? Sean said in the other thread that going
+> with the revert for now seems like the best option and that he'll
+> revisit this once he has time...
 
-Do you plan to push/target these changes for v6.15 ? If not, I can take
-this patch with other FF-A changes in my tree for v6.15. Otherwise, it
-is must go along with other changes.
+Yes, will go queue this up right now, thanks.
 
---
-Regards,
-Sudeep
+greg k-h
