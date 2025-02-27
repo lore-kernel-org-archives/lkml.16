@@ -1,145 +1,128 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7EFF25EF9C
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.59
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0C621C160
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740681695; cv=none; b=mgdlBEtFdgrZlVUmjRHU/WQlH75iMHxzyXp8cmh9ZiZtpTvPCrRvtPTEfgumMVF0Yiba9gJLQw9BUiaaPmfo3aLC2dNvU6LBVl+VaxB/Vw70iVQbLBtyjSM7RbAdCl88RhiwEgD6j/09eNG3zJ077w7h3b+fQ8yaf1w+LiayMBg=
+	t=1740681702; cv=none; b=Aw71HX3u9hg2jgU2gQwuyauOjBYrnmPCSwkutN+ZRPMjj65kz55mBbWkHtzVia7LNm2tl/T7LvKc0wM60kxX6tqhwbQZKqyxDjeo5rzwr6BAJ2zBgBu3g3g87l5HjtQAKBqL6HGHCdv/OIFkmcmlKvMHajF0JARBGDfE1MA6fV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740681695; c=relaxed/simple;
-	bh=tapKa4ENwa3OBlIjhb4jmk2jsNXPicM6WS6wpGM88bI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Kc6Gq1BEMt9Cbf7MsgPi8gSRojGUZLCIibMfP2zUpHAYd1vEQlshPX2FEvUj4M9YwL+LsWHP3B4Lwuy+gAO/Dz8QNnBdtZQ7qgW+00ojWvUn4i+UvRbxadHF0OLjtOUNPXUp9OY4X2/O9JgEaec7sInSLDN2xIVuZZwGR4it0f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=NBqM4qid; arc=none smtp.client-ip=121.127.44.59
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1740681702; c=relaxed/simple;
+	bh=ETOaYhPjXGmZkiakzSlAaPfRYM+txKLp21G5z67NWO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kM+zRDxkF5hnRCQ25HJXFMVeoJJqiacaUcwoa/HJMYy8mGd9Drg9dvOtlix0/9MQJVFhZCuSjMctXdasfBXVYWqe2zYuIzLOczrER6ZXQuCkz2NFuVlD0EXXzRIDTnuCXOAbcQGTLM0X5X6RZCDPTY7VRPSMNTL13VOgp5IdQsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kZoK0+1M; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="NBqM4qid"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1740681693; bh=bnDwHn3VE/1QDoX5PmDpHlQdrc4Kek1m+Wmq70y11Yg=;
- b=NBqM4qidq/tKl1rLyHAw6yL8e40xXGp8JWxgtAaFpf3gbe9rTrCYfBVhcJa0+tf3u6evneI0j
- 13OrUozS/vBmwjEJnUUiZOmdXUOOhAVMAX3UOzFTuARsyNkRz3cKTMOlwE0wm3Pe90eblUvf3Xu
- jA3tpNPUcNOjvBHSFCUUVLUROp3LHszgUa+6UEBQs8wE6LhGO+bHAVnTp79xnvgoY9+fTkZeEHV
- /HJDs8Q+ZEhrisx4h7nZrE0Eigfe7QZ1Opkzto8b5zXGkBlJatgaK2VKVx595BHTO8Uheuk7jpm
- 63ju8ROa7hRGbJOInrWx9I5sMLNIxdpc6g4ecd6Jh4xA==
-X-Forward-Email-ID: 67c0b1dabf572996e86214e5
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 121.127.44.59
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Yao Zi <ziyao@disroot.org>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>
-Subject: [PATCH 4/4] arm64: dts: rockchip: Add adc-keys node to Radxa E20C
-Date: Thu, 27 Feb 2025 18:40:53 +0000
-Message-ID: <20250227184058.2964204-5-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250227184058.2964204-1-jonas@kwiboo.se>
-References: <20250227184058.2964204-1-jonas@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kZoK0+1M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740681700; x=1772217700;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ETOaYhPjXGmZkiakzSlAaPfRYM+txKLp21G5z67NWO8=;
+  b=kZoK0+1MUi+lD8MYIhGbe62Hgr8Mq1ur4qcYEgNyPfnnp4j1PZwDbP7I
+   O0TUA8+Do0lqSat2k0bbjv0klmzL/A0ddLsfa30eLK09Rgt/jd1vXZZYW
+   cjeLi5ulfbmpW9ZuDazz+tI5NLSyYkO4bHiFTeTYDQerzbjA4QeriSY4B
+   CPgRGuNzXiWJQ9/T+XGPkbMSWI0kLuYjcVN8oQEjgJXMsjNl4Xn+Hh4+Z
+   +2bOEfxHY5DFJbV7nsfcrK/NRZLBXW/yIToyB0tCWBipff+jpmk91avgo
+   LF0AMBnZEkytpoOcjNh23dz4d0LhIlPY5G0ZarK4Fn5/Fww/yuQ+4l656
+   Q==;
+X-CSE-ConnectionGUID: 1K+SbC0rQFKAEGfHzm3LFg==
+X-CSE-MsgGUID: 3GRFel2nQS6WNoHUnEn8QA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="53000319"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="53000319"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 10:41:40 -0800
+X-CSE-ConnectionGUID: gkbmOA3aRQOyTDlqaaSsCA==
+X-CSE-MsgGUID: F+YkDjecTxGbHL20R9byeA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="122054644"
+Received: from jgarnacx-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.170])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 10:41:39 -0800
+Date: Thu, 27 Feb 2025 10:41:33 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: x86@kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
+Message-ID: <20250227184133.lxm43awa2jgdpl4q@desk>
+References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
+ <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
 
-Radxa E20C has two buttons, one SARADC maskrom button and one GPIO user
-button.
+On Thu, Feb 27, 2025 at 12:49:48AM +0000, Andrew Cooper wrote:
+> On 26/02/2025 9:03 pm, Pawan Gupta wrote:
+> > @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
+> >  
+> >  #ifdef CONFIG_X86_64
+> >  
+> > +/*
+> > + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
+> > + * to the retpoline thunk with a CS prefix when the register requires
+> > + * a REX prefix byte to encode. Also see apply_retpolines().
+> > + */
+> 
+> Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
+> conditional CS prefix in a manner compatible with
+> -mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
 
-Add support for the maskrom button using a adc-keys node, also add the
-regulators used by SARADC controller.
+You are right, I will update the comment, and also the ASSEMBLY version
+where this comment came from:
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
- .../boot/dts/rockchip/rk3528-radxa-e20c.dts   | 50 +++++++++++++++++++
- 1 file changed, 50 insertions(+)
+  /*
+   * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
+   * to the retpoline thunk with a CS prefix when the register requires
+   * a REX prefix byte to encode. Also see apply_retpolines().
+   */
+  .macro __CS_PREFIX reg:req
+          .irp rs,r8,r9,r10,r11,r12,r13,r14,r15
+          .ifc \reg,\rs
+          .byte 0x2e
+          .endif
+          .endr
+  .endm
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-index d2cdb63d4a9d..dcc0b2584bbc 100644
---- a/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3528-radxa-e20c.dts
-@@ -6,6 +6,8 @@
-  */
- 
- /dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
- #include "rk3528.dtsi"
- 
- / {
-@@ -15,6 +17,54 @@ / {
- 	chosen {
- 		stdout-path = "serial0:1500000n8";
- 	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 0>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1800000>;
-+		poll-interval = <100>;
-+
-+		button-maskrom {
-+			label = "MASKROM";
-+			linux,code = <KEY_SETUP>;
-+			press-threshold-microvolt = <0>;
-+		};
-+	};
-+
-+	vcc_1v8: regulator-1v8-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_1v8";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
-+	};
-+
-+	vcc_3v3: regulator-3v3-vcc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc5v0_sys: regulator-5v0-vcc-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+};
-+
-+&saradc {
-+	vref-supply = <&vcc_1v8>;
-+	status = "okay";
- };
- 
- &uart0 {
--- 
-2.48.1
+> > +#define __CS_PREFIX(reg)				\
+> > +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
+> > +	.ifc \\rs, \reg;				\
+> 
+> Why are these escaped differently?  Given they're all \r of some form or
+> another, I guess something is going wonky with __stringify(), but its
+> still weird for them to be different.
+> 
+> Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
+> ends up?
 
+Below is the pre-processed source for test_cc() generated with "make arch/x86/kvm/emulate.i".
+
+- This is with double backslash in ".ifc \\rs, \reg":
+
+	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \\rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "call __x86_indirect_thunk_%V[thunk_target]\n"
+                                                                                  ^
+	This ends up emitting the CS prefix byte correctly:
+
+	2e e8 51 c9 32 01       cs call ffffffff824289e0
+
+- This is with single backslash in ".ifc \\rs, \reg":
+
+	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "c      all __x86_indirect_thunk_%V[thunk_target]\n"
+                                                                                  ^
+	This version does not emit the CS prefix byte:
+
+	e8 52 c9 32 01          call   ffffffff824289e0
+
+I tried looking in gcc inline assembly documentation but could not find
+anything that would explain this. :(
