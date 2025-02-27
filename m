@@ -1,184 +1,150 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AAA25F792
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3858A25F962;
+	Thu, 27 Feb 2025 15:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668272; cv=none; b=eQfSaGkAJ1bGp0vvGSn2nfHfiDEquvYbyNsUlknuJnN9KRMdJTe1GasH2dNM2BXZDXzuc9QM9+Pfg6ba+Jcl+GBjkuU8UBtXlwRqGQY81rPfDSaubNfXgnXRU/CXFa6PrnFI4bu328kBfEIjYnbdpnVQ4MzfQ8MgPTsYGo+6iow=
+	t=1740668427; cv=none; b=clR51TMU6bTkO5xP0DlAsCvKuWqer0zbYtOmlZ84XP9N5abE4EfoN4VTwBCDdKb1GT00rYpsvV49OrOxa9rdx/fam4g1ZOkQDWtpUQ4pZoCKB6EeBJOvi53689Xge5Chncp7gHrOdUhBR5Xlh5uipawEhN4SenQRGQtkRTpOvWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668272; c=relaxed/simple;
-	bh=DDXrrba6/WpzP8bI9c/CPfIOz9zI6g2hO9iOlccn1Sg=;
+	s=arc-20240116; t=1740668427; c=relaxed/simple;
+	bh=/wEWDdRFvDhvBDXL2VX1k4uW6fkAuxc2yL3wG/BajfM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=um/4SIfLCS467V/pguCs8rwaj9whIXoQCcOZwrfNIXZKJyzI+5lQrcN7CVCyx20jX5ytXO4VeZQs9TtfJ6xV9AZiUe+I8HVnG/zRg05qjmncM2+/quM0Hmfx30W5RzeZrNnK3jRFouz9KZZpCEoGn38L5FTO19zaGi+dmLCdfvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sIfbzkkg; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cN/GrzR6Cn4B898Bx8hnP6xBTPl9RNjYTzlOmMx0qXy19PmBGYyBuYaq8StZ4Raykw11oNlVUX+SZnOF7AKcXgnoQp+XDYsCBhkNZjIoN+dvtrtENrU8UxlMJB3Ka8sSV3u6FEI7ONOlN8cTTa5fBgYrZZRsiMZ7t8C1B9a3bEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBodfDEd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIfbzkkg"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30795988ebeso11459261fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:57:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740668269; x=1741273069; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=o6kWm1WxAljHizi3xT8gP5C7gJ5IPTi+Bx7Iv+hmWHQ=;
-        b=sIfbzkkgLHNyfgVCSp/oKxGS4T31vpSW5HhBsYfo2BlJAGMAWeEBHHsUDXXLHlOE2h
-         1nKlNadr/jmZV40UZ6LTelZT2yM39izHFMNWtU7EzoUxYqKqQx0g6oGXQU+VCOpbCgrg
-         uiI5379Z0oapoaD2+XXz9rcmuw4v+gmGmxLjuEvcnzEUqF86EAbMc82NqtjeA+UlKPGF
-         /Rc/an+QIbCRZkTgMNxG+EoUGwmaPbgP6tncvyiZx8V+ozsm9wu1oPNusX0Tc3eZCcWi
-         +toXS4hF3NECMf76qHBiVUAQdn37nJmR9PXhZD7bAvIeQjd3GPxiH6CaZq+J4aGo6sBm
-         EglA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740668269; x=1741273069;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o6kWm1WxAljHizi3xT8gP5C7gJ5IPTi+Bx7Iv+hmWHQ=;
-        b=WKM9/I7sZCo3e8rTdv/1FcFlpHMtxLZSJ2oOZCQg+C8XvhjPW4nEJheRXBsAMj/yfR
-         WDSq7XvTAvjEP2gIPSlzpOIvJsX825aJPQx1q8IEj1D0LUF+RWoBls6o6blgBOKYXtlj
-         +72mOtyfNClw9ZUJ/0CeawsJXuSD/glX6Lyz2gM2IeEUllQDygtFvrEDdqzfWzBZ1Yyj
-         9IkajEWRwewJG7w5ujCOdOgNml03oPH6BNfiWARt0pPweSdVswLLdnpQ8EdmyIRD/XYM
-         WfiZLRK0xkiI/90awtLzTX34RkDt6iuU685PEr/U4r+AEUyiOYUDdUasKGWTdfYlhrl+
-         t7Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCWiozV/YbL0gpaIPT9V7X5ldHg1uotRhpdhO61icQXWIyhFKB5GIHtP646HblyjidcoyvbulGK7/tOA1T8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ1LL3NcEj2Z72x0SKM51JZbjbXBkXW8Q1mou7Ch7OXK10y/mU
-	EYo46fG9rIro2Itk4xsn+4gyK1WJ9q4E543cEamabOi3GRXncyZtK0k8ongRktY=
-X-Gm-Gg: ASbGnctF7zGM4tw5pSVrfpg9nLqnidm20E3SCgdI7TyEIT25cPqfAl8HgMKArehPtYm
-	lSotVUbg8jg6vv/0I6g5tL0YkLlgKHp1jqikUz5bKZ6AV9Z5Ta/YNyCaFiX9a/7lIgK+YdVbtHh
-	jbdRV4AjXHnUqJ5aKhK6262YZOox1Q5SnT087zjLA3Qxowb4kQAmUMo4wxyAUpMPjh4QKTpaA6y
-	cJ2G8tME6zvojmM+L3E+Zc31r1Jp6JE311VYoxTJQEFzMh/M447o3GPTY3mmjF4nnOZRrORuOTI
-	Lm6T4YF2/m9mwFB6fQvZypF80MrWvjGIbmKpc/Kod5isSxK09XtrjkYGKqUyzsNy6D2c5qfk0qn
-	FKcuEkw==
-X-Google-Smtp-Source: AGHT+IFle+ByWFKvSAisfuqZrntUlT1vHp52/oS2NVYwgUxcznsQotmllj3S/yU1ebMvTGen2ti2HA==
-X-Received: by 2002:a2e:81d2:0:b0:2fb:cc0:2a05 with SMTP id 38308e7fff4ca-30a80cba36dmr62735011fa.37.1740668268815;
-        Thu, 27 Feb 2025 06:57:48 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b8688a587sm1920371fa.111.2025.02.27.06.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 06:57:48 -0800 (PST)
-Date: Thu, 27 Feb 2025 16:57:46 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Nikita Travkin <nikita@trvn.ru>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] {vision/navigation}-mezzanine: Fix overlay root node
-Message-ID: <axorlloo25pdox6kjl23l4kzosofxhqkygxbtcbtx3sbgj54m7@hn3jyf4oaeno>
-References: <20250226-qcom-nonroot-overlays-v1-0-26c6e7605833@trvn.ru>
- <vq5dcsi55aqn56h6ihysqk4lainhmjbyvot3jiqkxm3i7igsak@da5u6ro7rkvg>
- <62a53d3222dfc516accd8dcd5e1adca0@trvn.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBodfDEd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D07CC4CEDD;
+	Thu, 27 Feb 2025 15:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740668426;
+	bh=/wEWDdRFvDhvBDXL2VX1k4uW6fkAuxc2yL3wG/BajfM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FBodfDEd7ufhMdkegCEIXifhmdKJEbQBFH73iRziE7fUxcJG3pQ8uRd5Ykm1o9N2J
+	 ltD8hyx4eDfINE197ZJrIlz/4x9QVixyC/CPKEr4r3SqZw1mLzsJj/xkWqvG+8JYFn
+	 vvFAwFNOQmQHpfc98u/tIpPXdmeIv9RgPrAWziici+0L+qS1Kq0Wcvt88s0YHvC56N
+	 1+hViXT7+UXkey9Arl7pXxMk5CkdKSzNU84JM4Y9ohY4TFUjqHpy/WCXcPKGRw6o8e
+	 XT3AYZzFL096g5xUDK9HZ1VIo88y0oWQBQZs6+FORy7aO2GwDth7KX/MzsYjmUCjlN
+	 /AWimxzp8ao1g==
+Date: Fri, 28 Feb 2025 00:00:21 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Dharma.B@microchip.com,
+	Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v4 0/2] microchip-tcb-capture: Add Capture, Compare,
+ Overflow etc. events
+Message-ID: <Z8B-BW1JwIrI18E4@ishi>
+References: <20250211151914.313585-3-csokas.bence@prolan.hu>
+ <Z7h0AXV1zlgp9Nw-@ishi>
+ <8fb9f188-3065-4fdc-a9f1-152cc5959186@prolan.hu>
+ <Z7vihBqOgP3fBUVq@ishi>
+ <bfa70e78-3cc3-4295-820b-3925c26135cb@prolan.hu>
+ <Z7_xTQeTzD-RH3nH@ishi>
+ <7c9941e0-1169-46cd-95b0-785e8f72eb34@prolan.hu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JRv2vhZkORQfAtjS"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <62a53d3222dfc516accd8dcd5e1adca0@trvn.ru>
+In-Reply-To: <7c9941e0-1169-46cd-95b0-785e8f72eb34@prolan.hu>
 
-On Thu, Feb 27, 2025 at 02:01:41PM +0500, Nikita Travkin wrote:
-> Dmitry Baryshkov писал(а) 27.02.2025 09:16:
-> > On Wed, Feb 26, 2025 at 07:29:54PM +0500, Nikita Travkin wrote:
-> >> While considering to propose WoA EL2 dt overlays upstream I was looking
-> >> at existing overlays and noticed that some of them are broken: they put
-> >> seemingly meaningful fixups into the overlay's "/" node, which places
-> >> them into the overlay "metadata" itself, not into a fixup fragment to be
-> >> applied to the actual dtb. This series fixes those two by changing to
-> >> full path "&{/}" which should work as it was initially intended.
-> >> 
-> >> See demonstration of the problem below:
-> >> 
-> [...]
-> >> $ dtc extra.dtbo
-> >> /dts-v1/;
-> >> 
-> >> / {
-> >> 	foo;
-> >> 
-> >> 	bar {
-> >> 		baz;
-> >> 	};
-> > 
-> > Is this behaviour documented somewhere? I'd say, it would be a surprise
-> > to me.
-> > 
-> 
-> According to dtc docs [1],
-> 
->    3.b) The Device Tree fragments must be compiled with the same option but they
->    must also have a tag (/plugin/) that allows undefined references to nodes
->    that are not present at compilation time to be recorded so that the runtime
->    loader can fix them.
-> 
-> so per my understanding "plugin" directive only changes the meaning of
-> references (i.e. stuff with "&"), to generate fragments/fixups, which
-> are the only way libfdt combines overlays into the base dtb.
-> 
-> I suppose the old way of "manually" writing fragments (and thus writing
-> to / as raw nodes) was kept because phandle/path based updates were
-> added later to dtc and many overlays were still defining raw fragments...
-> 
-> "/" also allows one to write "raw" nodes into the overlay, which is
-> sometimes used by downstreams. (i.e. they put custom extensions to the
-> overlay format [2] or add metadata into / of the dtbo like "compatible"
-> values to reject incompatible overlays from applying. [3]) This is
-> actually why I started looking here in the first place as for woa el2
-> overlays I was asked to add compatible metadata as, apparently, NixOS
-> tooling requires it to validate the overlays [4].
 
-I see. Thanks a lot for the explanation and for the pointers!
+--JRv2vhZkORQfAtjS
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> [1] https://web.git.kernel.org/pub/scm/utils/dtc/dtc.git/tree/Documentation/dt-object-internal.txt#n120
-> [2] https://github.com/raspberrypi/linux/blob/rpi-6.6.y/arch/arm/boot/dts/overlays/adafruit-st7735r-overlay.dts#L73
-> [3] https://github.com/radxa-pkg/radxa-overlays/blob/main/arch/arm64/boot/dts/rockchip/overlays/rk3588-i2c0-m1.dts#L5
-> [4] https://github.com/TravMurav/slbounce/blob/main/dtbo/x1e-el2.dtso#L12
-> 
-> >> 
-> >> 	fragment@0 {
-> >> 		target-path = "/";
-> >> 
-> >> 		__overlay__ {
-> >> 			whatever-comes-next-after-baz;
-> >> 		};
-> >> 	};
-> >> };
-> >> 
-> >> $ dtc combine.dtb
-> >> /dts-v1/;
-> >> 
-> >> / {
-> >> 	whatever-comes-next-after-baz;
-> >> 	compatible = "fake,board";
-> >> 	fake,value = <0x2a>;
-> >> };
-> >> 
-> >> In the resulting dtb foo bar and baz are missing.
-> >> 
-> >> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> >> ---
-> >> Nikita Travkin (2):
-> >>       arm64: dts: qcom: qrb5165-rb5-vision-mezzanine: Fix broken overlay root
-> >>       arm64: dts: qcom: sdm845-db845c-navigation-mezzanine: Fix the overlay root
-> >> 
-> >>  arch/arm64/boot/dts/qcom/qrb5165-rb5-vision-mezzanine.dtso       | 2 +-
-> >>  arch/arm64/boot/dts/qcom/sdm845-db845c-navigation-mezzanine.dtso | 2 +-
-> >>  2 files changed, 2 insertions(+), 2 deletions(-)
-> >> ---
-> >> base-commit: 8433c776e1eb1371f5cd40b5fd3a61f9c7b7f3ad
-> >> change-id: 20250226-qcom-nonroot-overlays-bfe21d33be8c
-> >> 
-> >> Best regards,
-> >> -- 
-> >> Nikita Travkin <nikita@trvn.ru>
-> >>
+On Thu, Feb 27, 2025 at 03:17:55PM +0100, Cs=F3k=E1s Bence wrote:
+> On 2025. 02. 27. 5:59, William Breathitt Gray wrote:
+> > If that is true, then the correct way for this hardware to be exposed is
+> > to have each TCB be a Counter device where each TCC is exposed as a
+> > Count. So for this SoC: two Counter devices as counter0 and counter1;
+> > count0, count1, and count2 as the three TCC; i.e. counter0/count{0,1,2}
+> > and counter1/count{0,1,2}.
+>=20
+> And how would the extensions fit into this? `capture{0..6}`/`compare{0..3=
+}?
+> For me, the status quo fits better.
 
--- 
-With best wishes
-Dmitry
+For your patchset here, treat it as if nothing is changing. So leave it
+as capture0 and capture1 exposing RA and RB respectively.
+
+> > With that setup, configurations that affect the entire TCB (e.g. Block
+> > Mode Register) can be exposed as Counter device components. Furthermore,
+> > this would allow users to set Counter watches to collect component
+> > values for the other two Counts while triggering off of the events of
+> > any particular one, which wouldn't be possible if each TCC is isolated
+> > to its own Counter device as is the case right now.
+>=20
+> TCCs are pretty self-contained though. BMR only seems to be used
+
+In the Generic Counter Interface, hardware functionality exposure is
+scoped by its influence over particular components of the Generic
+Counter paradigm. That means, configurations that affect a particular
+Count are grouped under that Count (i.e. "count0/enable" enables Count0)
+while configurations that affect a particular Signal are grouped under
+that Signal (i.e. "signal2/polarity" sets Signal2's polarity).
+
+In the same way, configurations that affect the Counter device as a
+whole are exposed as device components. That's what the functionality
+BMR provides does, so it's appropriate to expose it as several Counter
+device components.
+
+Right now the microchip-tcb-capture doesn't do much with BMR, but
+looking at the datasheet I see that it does have the capable to
+configure several settings that affect the entire TCB. For example, you
+can swap PHA and PHB (via SWAP bit), you can enable autocorrection for
+missing pulses (via AUTOC bit), you can define a maximum filter threshold
+(via MAXFILT bitfield), etc. These are controls users would expect to
+find as Counter device components rather than Count components for
+example.
+
+> > Regardless, the three TCC of each TCB should be grouped together
+> > logically as they can represent related values. For example,  when using
+> > the quadrature decoder TTC0 CV can represent Speed/Position while TTC1
+> > CV represents rotation, thus giving a high level of precision on motion
+> > system position as the datasheet points out.
+>=20
+> From what I gathered from looking at the code, the quadrature mode uses a
+> hardware decoder that gives us processed values already. Though I don't u=
+se
+> it, so I don't know any specifics.
+>=20
+> One more thing, as Kamel pointed it out, the current implementation allows
+> channels of a TCB to perform different functions, e.g. one used for PWM, =
+one
+> for clocksource and a third for counter capture. Whether that works in
+> practice, I cannot tell either, we only use TCB0 channel 0 for clocksource
+> and TCB1 channel 1 for the counter.
+
+In theory this shouldn't be a problem because the counter driver
+shouldn't try to perform non-counter functions, just expose the
+counter-specific ones when available. We would need to check which mode
+the channel is in and return -EBUSY if that respective channel's
+components are accessed during a non-supported mode. This is how we
+handle similar situations in other counter driver such as the
+stm32-lptimer-cnt and intel-qep modules.
+
+William Breathitt Gray
+
+--JRv2vhZkORQfAtjS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZ8B+BQAKCRC1SFbKvhIj
+K2B7AP92Bqn5O1QmN/PsfBvrBJMxb/B6Caf8ZfWiXnKGsj0irwD+O+0ifNToacDX
+/+9P6G5lzlqM3moVhdFNPdXC6ZCMjwc=
+=sDy7
+-----END PGP SIGNATURE-----
+
+--JRv2vhZkORQfAtjS--
