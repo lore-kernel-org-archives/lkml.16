@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C34224B05;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB91223705;
 	Thu, 27 Feb 2025 08:15:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740644100; cv=none; b=WIMgsoyWqKeq9U7FmlrtxI+bBkPKLbgHWz1vhsx5B5GXl/RMWuKrSvmlNDRaUvprMg54JZ7SJHnapYHyOaYYLxHewvfV/blIfxmcNrjatlz//sFZj4bvwvYJw0W8uCc6p8Snl0KAA+MXL3fEmnipJ/OnITtMBYWd9FenqP/Cr64=
+	t=1740644100; cv=none; b=dFH3joTQ2yBqEREsPmZlhqbAkVg1etrHT52iGxkm1dOI1YyyagAVmft2Fiacn86TQdbpPj2DfBrJ6NyNgowoGcn64eZVwj5FLFVHPZ3KfQA7avNlf4zSmFEnQo96Y51IqLPVYbYDiA2KjyHfRkkqSZhDOa61o4oVqRbDAH2Ty3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740644100; c=relaxed/simple;
-	bh=JCo+sXKSHDz8HEVbOnF+KvLq0jr6fSndq2qiFxS5ixo=;
+	bh=/3SmeavIPPYReTdlvxZX4Pbmr+aY589/IzJBgjNFja4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sFm7tNWtFNCwTiBU92x4jU7fyJfgMb7eIKycODcR31VedSNIz1GA8L4XYJNv1ZD9gNL5umcImrJdGzRn4DwIA002TzpMIVB1wgWuwwi1gqfFcXqsV+eQ5BlzHZ70yfdMnmKMSiHOpppZT/EHwz5ioSD113gD8MZaiTvy1h8ih+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbspQbqL; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kqbHxnm5Lrd3zBYe5hOuWEY602Pnz+fSuIhawotIl3e3eeeLLxz4jUTQDivk2fYnG8ehzD7SE75DRwHxkRVzJDEjVrqupSvkKGei7SeVmlhquEBWq4VOUyT1w1mssjZKzfyrnrdq3OAPjdkYqqphHrEfIHLbAW9U7egO3NPrs+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leTdlBvO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbspQbqL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EC5DC4AF19;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leTdlBvO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A16BC4CEE9;
 	Thu, 27 Feb 2025 08:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740644100;
-	bh=JCo+sXKSHDz8HEVbOnF+KvLq0jr6fSndq2qiFxS5ixo=;
+	bh=/3SmeavIPPYReTdlvxZX4Pbmr+aY589/IzJBgjNFja4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kbspQbqLimMo5R6dkMMojBO8RdDwnOwvMV6sklOFdEH7aZvS1AXmEQJ3HcR4tL9mU
-	 vmcokEFKjhMiKeCjt8bn5km5SM9lrTP2KRHi0nrQ6iSPaSsk+grIYtP8scEz73UYVQ
-	 tpkvVXk34Gs0/278bCBXYZs7/AjT9noVnp8G4Xj8v6u+pSLXTWBXlDD6GGQ8Qcq7aw
-	 jHRdSFCXPx6VEBW43s9iNJZ5JcnlR6Bt1jqLbzNM2LU6LQCcgGnAjH8GeCUhNpZlJf
-	 2c3MMoXxEMal4pCoIdgsxwMpXRP4PLr5kxpoe1JVXjzUHl4qVXV2GTd9VkV76hLaHX
-	 s5CaAH1oBDW7A==
+	b=leTdlBvOxLply4739USth94wtNEiJKpTCphPK1qRkxmyLNpQ61CqLVnEIhX5OWwZE
+	 HuYSFf5KjAgHfsE5EH0Fh95CJzbh04s766AIfYSlthD/hSwYlRX75TXbu0zrnFZx1k
+	 bWV5Kqep8cbaFnfP1zxkv/STaRw+zy76SERnf1iA9S/bKfa39XfXS+t7tZ1rTNuyTE
+	 XjQQZ8YZADIBrXiTKzBjYrhyAh94Z5TPPj4cYpBthRvvnyAf8I3bRH0d2IS/FkSNyA
+	 or9Tc1LOpC9jdsTnUHBiiRk1PIyjZrIHF/6HmaKJDjZ49MFVPgwZ110LE5eH+F/5SJ
+	 hFNMdKkGH+s5Q==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1tnZ33-000000006mg-3phw;
-	Thu, 27 Feb 2025 09:15:13 +0100
+	id 1tnZ34-000000006ml-0Krc;
+	Thu, 27 Feb 2025 09:15:14 +0100
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Bjorn Andersson <andersson@kernel.org>,
 	Konrad Dybcio <konradybcio@kernel.org>
@@ -39,11 +39,10 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 6/8] arm64: dts: qcom: x1e80100-yoga-slim7x: mark l12b and l15b always-on
-Date: Thu, 27 Feb 2025 09:13:55 +0100
-Message-ID: <20250227081357.25971-7-johan+linaro@kernel.org>
+	stable@vger.kernel.org
+Subject: [PATCH 8/8] arm64: dts: qcom: x1e78100-t14s: fix missing HID supplies
+Date: Thu, 27 Feb 2025 09:13:57 +0100
+Message-ID: <20250227081357.25971-9-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.45.3
 In-Reply-To: <20250227081357.25971-1-johan+linaro@kernel.org>
 References: <20250227081357.25971-1-johan+linaro@kernel.org>
@@ -55,42 +54,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The l12b and l15b supplies are used by components that are not (fully)
-described (and some never will be) and must never be disabled.
+Add the missing HID supplies to avoid relying on other consumers to keep
+them on.
 
-Mark the regulators as always-on to prevent them from being disabled,
-for example, when consumers probe defer or suspend.
+This also avoids the following warnings on boot:
 
-Fixes: 45247fe17db2 ("arm64: dts: qcom: x1e80100: add Lenovo Thinkpad Yoga slim 7x devicetree")
-Cc: stable@vger.kernel.org	# 6.11
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+	i2c_hid_of 0-0010: supply vdd not found, using dummy regulator
+	i2c_hid_of 0-0010: supply vddl not found, using dummy regulator
+	i2c_hid_of 1-0015: supply vdd not found, using dummy regulator
+	i2c_hid_of 1-002c: supply vdd not found, using dummy regulator
+	i2c_hid_of 1-0015: supply vddl not found, using dummy regulator
+	i2c_hid_of 1-002c: supply vddl not found, using dummy regulator
+	i2c_hid_of 1-003a: supply vdd not found, using dummy regulator
+	i2c_hid_of 1-003a: supply vddl not found, using dummy regulator
+
+Note that VCC3B is also used for things like the modem which are not yet
+described so mark the regulator as always-on for now.
+
+Fixes: 7d1cbe2f4985 ("arm64: dts: qcom: Add X1E78100 ThinkPad T14s Gen 6")
+Cc: stable@vger.kernel.org	# 6.12
+Cc: Konrad Dybcio <konradybcio@kernel.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../qcom/x1e78100-lenovo-thinkpad-t14s.dts    | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-index a3d53f2ba2c3..9d4ba9728355 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
-@@ -290,6 +290,7 @@ vreg_l12b_1p2: ldo12 {
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1200000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+index 7f756ce48d2f..3ff0c65e374c 100644
+--- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
++++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/gpio-keys.h>
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
  
- 		vreg_l14b_3p0: ldo14 {
-@@ -304,8 +305,8 @@ vreg_l15b_1p8: ldo15 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+			regulator-always-on;
- 		};
--
+ #include "x1e80100.dtsi"
+@@ -153,6 +154,23 @@ vreg_edp_3p3: regulator-edp-3p3 {
+ 		regulator-boot-on;
  	};
  
- 	regulators-1 {
++	vreg_misc_3p3: regulator-misc-3p3 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "VCC3B";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&pm8550ve_8_gpios 6 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++
++		pinctrl-0 = <&misc_3p3_reg_en>;
++		pinctrl-names = "default";
++
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
+ 	vreg_nvme: regulator-nvme {
+ 		compatible = "regulator-fixed";
+ 
+@@ -580,6 +598,9 @@ touchpad@15 {
+ 		hid-descr-addr = <0x1>;
+ 		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
+ 
++		vdd-supply = <&vreg_misc_3p3>;
++		vddl-supply = <&vreg_l12b_1p2>;
++
+ 		wakeup-source;
+ 	};
+ 
+@@ -591,6 +612,9 @@ touchpad@2c {
+ 		hid-descr-addr = <0x20>;
+ 		interrupts-extended = <&tlmm 3 IRQ_TYPE_LEVEL_LOW>;
+ 
++		vdd-supply = <&vreg_misc_3p3>;
++		vddl-supply = <&vreg_l12b_1p2>;
++
+ 		wakeup-source;
+ 	};
+ 
+@@ -602,6 +626,9 @@ keyboard@3a {
+ 		hid-descr-addr = <0x1>;
+ 		interrupts-extended = <&tlmm 67 IRQ_TYPE_LEVEL_LOW>;
+ 
++		vdd-supply = <&vreg_misc_3p3>;
++		vddl-supply = <&vreg_l15b_1p8>;
++
+ 		pinctrl-0 = <&kybd_default>;
+ 		pinctrl-names = "default";
+ 
+@@ -670,6 +697,9 @@ touchscreen@10 {
+ 		hid-descr-addr = <0x1>;
+ 		interrupts-extended = <&tlmm 51 IRQ_TYPE_LEVEL_LOW>;
+ 
++		vdd-supply = <&vreg_misc_3p3>;
++		vddl-supply = <&vreg_l15b_1p8>;
++
+ 		pinctrl-0 = <&ts0_default>;
+ 		pinctrl-names = "default";
+ 	};
+@@ -779,6 +809,19 @@ &pcie6a_phy {
+ 	status = "okay";
+ };
+ 
++&pm8550ve_8_gpios {
++	misc_3p3_reg_en: misc-3p3-reg-en-state {
++		pins = "gpio6";
++		function = "normal";
++		bias-disable;
++		drive-push-pull;
++		input-disable;
++		output-enable;
++		power-source = <1>; /* 1.8 V */
++		qcom,drive-strength = <PMIC_GPIO_STRENGTH_LOW>;
++	};
++};
++
+ &pmc8380_3_gpios {
+ 	edp_bl_en: edp-bl-en-state {
+ 		pins = "gpio4";
 -- 
 2.45.3
 
