@@ -1,156 +1,111 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8439925D911;
-	Thu, 27 Feb 2025 19:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC9826E958;
+	Thu, 27 Feb 2025 19:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740684336; cv=none; b=kBsf3KTyD+H/pAp9qbIhC9VdLta0ZAzcGnnrvjlU8SN8gAJ5PZuO7Vh8dFXk2ZRlP05rbTrsr078uvR8lg2V7SxvuxmPzrSirBt7beq7Hm64qIIUZbrnmraJUdPP99XAPjUs40HV5qsRzKozkCLgK2wd2+w67Qw7wEfXyNbIVAc=
+	t=1740684362; cv=none; b=V6YRLYgNnTXBF5bC7vhECczpW8Q3NM8ezDA25XmCfPg3jbS1D1Kn82TDc+gp/zZ8XGZQcZ0MPQYSRRAbch6v+ayqdC/xIv2sPVD3yMZQA+INFwYk/1gF44rrhyAl5xwc04PqVxsRwF0owTVuT7ufBz4L1UwzwW4iS5mBCfDccDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740684336; c=relaxed/simple;
-	bh=I4osQ5RPj6E7bXAobrn2V0yGZ0kIauATo/Cf+WI8eCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ciL1SMYOY2dyoRK5Hom0B8jyK888AwjsCPFgy3d7ngEHUEEXumVNSfxH/ftQALxMbQ9teSaRlr2bK0aPU/ojPW8pFn6Z6ANLXOHVac60M7bALcBx0pWYdLnfzrORJO9ECa4u3mCIOrRjSNHEQqZdLABkLH1lXtziOS10HbESaiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YIkpYg7+; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740684362; c=relaxed/simple;
+	bh=a6NvEy6QBLiN8CY+IhF9/3XHktH32/23x1gAefp+5zg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sZKw44noNLuNXxKiLJVhlUnCPzvJDSwE+pB4Vy6KkdGLTSIAgcQaE7Wvsj8bBxzWuwfE4cKOggdnGRFbyhZjcExml0inVA5KCYfy3TKvCELJThZXkMUDJi9Awre9s2toZnyj+eSYxLAb2Z5FqGk5FXzsI305Wmi1/YFEDC2nmGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=iqKZCRay; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YIkpYg7+"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5485646441cso1401551e87.2;
-        Thu, 27 Feb 2025 11:25:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740684333; x=1741289133; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cocSoxI0vBLolc8jUN8YVirpU/dxiOfgNogxYs9IIlU=;
-        b=YIkpYg7+7tYmpr7UVMzDA4tEJQkWwCZtOu0YJ3COFAxkPWdH4VKQrvhLmg8EpLym6b
-         2RSvmwjzPbuSs817BpWejdtGq+JsjyV/o7GUsjablqIQFMNO1omRkrf8/Q4ZdgsfgWCN
-         fUFpiia0Zi+2yKchrD0zu0UWTG9HZVOMXutey52kI+qaf5Z8I0MRGoRX9wUi3huj8tpK
-         qvrm5vWtNZ+TgNvWY6tNyCpFBoZJEe7waxqlbntwBUhYY0aKC8CG/MhwvUfSreoHYE36
-         mpyguEQOsvhq9X0TqmoOaSU7PqLzScMJyPQ1KoX9gsMeZtR+Cfk8RZhR4dTwXvpdcMwK
-         slnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740684333; x=1741289133;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cocSoxI0vBLolc8jUN8YVirpU/dxiOfgNogxYs9IIlU=;
-        b=GYPre0N8YMcAYcjpFyjt+CpxAEzbentr/ZoaT/x7HofZrhEc/40pmPq0d+hoc2yWgU
-         7C1XG/wOhrMKN9U6eBTuHO2YU/6msktxaQHZ/Gao3ETB+yP5XKZXB9k/0Wk+OsFTuA2t
-         J60IoQu8KyfFwoOWASPKFDor9w6cfcSXwQVlnLp6drVNinEmTh9PqmbTKEKUTT6PKcSR
-         aCzG+m7ZlgwyYyLucHVR0F3BHl3h+SFaCCWWVK/BPWipsQcGW8rKXfxBYl8PLj5JGal9
-         49n6lY7qsUzvvkknNk/kiR6A6hBwx3IlRmtDhRY2FqHKYmmvwJt75k78YvQOhZMxHmKb
-         xSvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKt4UDhtldXpdSy5sOeCIF1Fj8rKPB0uq/nb4VKYTtYvb3XeB2gIIZy9bORqbl+2iuY6kKo/OQPMGbYFgi140=@vger.kernel.org, AJvYcCXPDetVFxnGbpGVD3fjt4/Cg0McBxpU+oyE3HMilkNvWTn95Mm951dGuQ0XcTTty+k2NGmEY6HFrNwhmJg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyN7wUwsYbO5PFAy9Z3C6N0LBv31N0e2VQLwgkW73OOWwcEJxCp
-	32i22d00Co++WwZqM/oy9/TA0LU5QLGJoy2rlU9hm7fP4sDVHCzX/1bjjLhGi7fUjuI8ZHEtXdO
-	9OoQUlib2fMqCtJULkG1FUUB73h8=
-X-Gm-Gg: ASbGnctBcNMjY/viNuVn8jv8ufXGQt4sd0qSnT60ei80+H7BUslYnKVurfvgGTl/SjY
-	I9CWmN8IVclHm1QotSv/VYbOGqJ2Hk+vLNIyvg6/uO1b0y2XFfR0YVO26a//POtCTZMrzCHMDLc
-	LjffYjZ05F
-X-Google-Smtp-Source: AGHT+IFSs2bI1kvd8svQvV0yYqC4L2f0QU31S933XS4fK48/mlI2CA8/SvzCilIe1uYB4dcFtVyxl2+NSdpFe8SrYp0=
-X-Received: by 2002:a05:6512:4021:b0:546:2f44:ee99 with SMTP id
- 2adb3069b0e04-5494c11b5b0mr270889e87.17.1740684332213; Thu, 27 Feb 2025
- 11:25:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="iqKZCRay"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RFjKPv005358;
+	Thu, 27 Feb 2025 11:25:40 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=b
+	YTLXJD40V2QUBA5lQJUGgPgBRx7eVqymsySQ7bcibY=; b=iqKZCRayiWsTCOtm6
+	MC4DlAwa5vb6bboPXL205jex4Ctny5Bm2umMCnF1La8FITfNL3OEIKb6hrfB+Arm
+	AIrRf/Jb1YIlrsVlt4KKA4sramAhrxZOA0iOgwtHJyJRQQJeRGzwc53wvUu6e55e
+	Rqu6ANnYijHb+vhPIo0ppugjXdwgj801+pih0i0NIxmvq4es+tKmWY0/1CCFq+eB
+	yLvCVuO/QXQwNIF+8ltgz8nplgCPUfXoIqhQskujZDdouN4qv0+DYU9Xqudek5uQ
+	9Nhy5mAFKbxRtgiStr3sTwowNbKKE6ftGxesOL+lXPpE6DO5WWbSmkjCcOZX+89m
+	vM4xw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 452tyjrhbm-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 27 Feb 2025 11:25:40 -0800 (PST)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 27 Feb 2025 11:25:38 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 27 Feb 2025 11:25:38 -0800
+Received: from wd-ubuntu-24-04.marvell.com (wd-ubuntu-24-04.marvell.com [10.111.132.113])
+	by maili.marvell.com (Postfix) with ESMTP id 786455B6927;
+	Thu, 27 Feb 2025 11:25:38 -0800 (PST)
+From: Wilson Ding <dingwei@marvell.com>
+To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
+        <sebastian.hesselbarth@gmail.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <p.zabel@pengutronix.de>,
+        <salee@marvell.com>, <gakula@marvell.com>,
+        Wilson Ding <dingwei@marvell.com>
+Subject: [PATCH v3 3/3] arm64: dts: marvell: cp11x: Add reset controller node
+Date: Thu, 27 Feb 2025 11:25:36 -0800
+Message-ID: <20250227192536.2426490-4-dingwei@marvell.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250227192536.2426490-1-dingwei@marvell.com>
+References: <20250227192536.2426490-1-dingwei@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
- <lz7hsnvexoywjgdor33mcjrcztxpf7lzvw3khwzd5rifetwrcf@g527ypfkbhp2>
- <780ff858-4f8e-424f-b40c-b9634407dce3@ralfj.de> <CAFJgqgRN0zwwaNttS_9qnncTDnSA-HU5EgAXFrNHoPQ7U8fUxw@mail.gmail.com>
- <f3a83d60-3506-4e20-b202-ef2ea99ef4dc@ralfj.de> <CAFJgqgR4Q=uDKNnU=2yo5zoyFOLERG+48bFuk4Dd-c+S6x+N5w@mail.gmail.com>
- <7edf8624-c9a0-4d8d-a09e-2eac55dc6fc5@ralfj.de> <CAFJgqgS-S3ZbPfYsA-eJmCXHhMrzwaKW1-G+LegKJNqqGm31UQ@mail.gmail.com>
- <CANiq72mw_zo4ai7QWD5eLN_oFXE1RVkotFsGS+f=6LRmJoHM7Q@mail.gmail.com>
-In-Reply-To: <CANiq72mw_zo4ai7QWD5eLN_oFXE1RVkotFsGS+f=6LRmJoHM7Q@mail.gmail.com>
-From: Ventura Jack <venturajack85@gmail.com>
-Date: Thu, 27 Feb 2025 12:25:16 -0700
-X-Gm-Features: AQ5f1Jpv6efWrpBsz_NNHvYeXfkaD5e-40YnVta7Hcw-aWaliwo1gWLR8BsXl_0
-Message-ID: <CAFJgqgR+hFY3XkUusq0HkdgUEp54kpQH7zJi8WcgYNB7i33ygA@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Ralf Jung <post@ralfj.de>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Gary Guo <gary@garyguo.net>, torvalds@linux-foundation.org, airlied@gmail.com, 
-	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
-	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
-	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: F9GJO5NrJ5WTW0ERHCE9qRfpK7xQkZIZ
+X-Authority-Analysis: v=2.4 cv=UIYnHDfy c=1 sm=1 tr=0 ts=67c0bc34 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=T2h4t0Lz3GQA:10 a=M5GUcnROAAAA:8 a=DYY7cqjbEommNVqY-hUA:9 a=cX4pScRg4-JUD0_czzmr:22 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-GUID: F9GJO5NrJ5WTW0ERHCE9qRfpK7xQkZIZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
 
-On Thu, Feb 27, 2025 at 10:59=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Thu, Feb 27, 2025 at 6:34=E2=80=AFPM Ventura Jack <venturajack85@gmail=
-.com> wrote:
-> >
-> > I have seen some Rust proponents literally say that there is
-> > a specification for Rust, and that it is called rustc/LLVM.
-> > Though those specific individuals may not have been the
-> > most credible individuals.
->
-> These "Some say..." arguments are not really useful, to be honest.
+Add the reset controller node as a sub-node to the system controller
+node.
 
-I disagree, I think they are fine to mention, especially
-if I add any necessary and relevant caveats.
+Signed-off-by: Wilson Ding <dingwei@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> > A fear I have is that there may be hidden reliance in
-> > multiple different ways on LLVM, as well as on rustc.
-> > Maybe even very deeply so. The complexity of Rust's
-> > type system and rustc's type system checking makes
-> > me more worried about this point. If there are hidden
-> > elements, they may turn out to be very difficult to fix,
-> > especially if they are discovered to be fundamental.
->
-> If you have concrete concerns (apart from the ones you already raised
-> so far which are not really applicable), please explain them.
->
-> Otherwise, this sounds a bit like an appeal to fear, sorry.
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+index 161beec0b6b0..c27058d1534e 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+@@ -226,6 +226,8 @@ CP11X_LABEL(rtc): rtc@284000 {
+ 		CP11X_LABEL(syscon0): system-controller@440000 {
+ 			compatible = "syscon", "simple-mfd";
+ 			reg = <0x440000 0x2000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
+ 
+ 			CP11X_LABEL(clk): clock {
+ 				compatible = "marvell,cp110-clock";
+@@ -273,6 +275,12 @@ CP11X_LABEL(gpio2): gpio@140 {
+ 					 <&CP11X_LABEL(clk) 1 17>;
+ 				status = "disabled";
+ 			};
++
++			CP11X_LABEL(swrst): reset-controller@268 {
++				compatible = "marvell,armada8k-reset";
++				reg = <0x268 0x4>;
++				#reset-cells = <1>;
++			};
+ 		};
+ 
+ 		CP11X_LABEL(syscon1): system-controller@400000 {
+-- 
+2.43.0
 
-But the concrete concerns I raised are applicable, I am
-very sorry, but you are wrong on this point as far as I can tell.
-
-And others also have fears in some related topics. Like the
-example I mentioned later in the email.
-
->>[Omitted] several
->> issues are labeled with "S-fear".
->>
->>      https://github.com/lcnr/solver-woes/issues
-
-Do you have any thoughts on those issues labeled
-with "S-fear"?
-
-And the argument makes logical sense. And Ralf Jung
-did discuss the issues of osssification and risk of
-overfitting.
-
-I am convinced that succeeding in having at least
-two major Rust compilers, gccrs being the most
-promising second one AFAIK, will be helpful directly, and
-also indirectly allay some concerns that some people have.
-
-> > You mention ossifying, but the more popular Rust becomes,
-> > the more painful breakage will be, and the less suited
-> > Rust will be as a research language.
->
-> Rust is not a research language -- I guess you may be including
-> features that are not promised to be stable, but that means even C
-> would a research language... :)
-
-I have heard others describe Rust as experimental,
-and used that as one justification for not adopting
-Rust. On the other hand, companies like Amazon
-Web Services have lots of employed Rust developers,
-AWS more than 300, and Rust is probably among the
-20 most used programming languages. Comparable
-in usage to Scala AFAIK, if for instance Redmonk's
-rankings are used.
-
-Best, VJ.
