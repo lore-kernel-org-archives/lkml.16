@@ -1,93 +1,82 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E1022FDE6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 13:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE06422F17B;
+	Thu, 27 Feb 2025 13:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663587; cv=none; b=ptMm9gyWbpsa+jTL4PGHlqD5V/zgW44bvOT6Vlyme6Oxbrn6bm09qMmSGi69mqOtMpcSBvVwJq0MqzqGjGI2XXmFEE2Xod4BuQ4Xysj81pbJaDFflUsKok5EIHNFweG6hxnmDUCwHJWMKmSu9uSWh7J0yHs1zrsIg1VHhcfhpj8=
+	t=1740663598; cv=none; b=H1HQvmZwD5/sjywlkzywZLTNuuI4WoFONwMqqY6eQZvSCa5tbcfcRECMxpg4mZZ1BUeHMLRmnsBzSGNVRdYnwwErzSldpRVfeqQejvodUEsXssT5km3bkEiNBSZQnuR7ALN8/3fjCA5AYg1xJ709nLY68TGniE/rb4L5OOI672o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740663587; c=relaxed/simple;
-	bh=RCZ/znCiLgPDJlD8DO9J07JeZbOzuydbrz7wYkKnkmo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=txUTI1lzg1kW6oBa2faqmEVyKmVf8RG5rOG5Hrxx+OHUp3hOb/Nr2o4ev+RFbDopA/hjvWdg7ZpgEd3qNroap1cRKtkrwvFW6hx71VWPi/czTy1YDgvPT1I3V+saFBGNB2pjX678RUplldi9+l228B1aTWcLVFzbKAn4WAtj1zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=OXr4V6H7; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1740663598; c=relaxed/simple;
+	bh=cHUQXYpMECA1CrjD2oF3utlXd4IOvTws7zBps4QG/YU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=N+3wEdFoWNlsJ8LVZDEA85rKRIBrYT1fKuST7YprvAbCguEpaZp3CTkyPKdwSVgYCghMa99T/ey6QR6vpx17Bb5svagDKihD7PLT/sAKbnNPQR1Zr88nkBgXj6LTFIXIfXrYKLzrvloIUL1eHfU77TCShHapYo9ayjdKn3FQre4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUdi2pHs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="OXr4V6H7"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3116740E0202;
-	Thu, 27 Feb 2025 13:39:42 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rIH1zlLNrMQy; Thu, 27 Feb 2025 13:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740663578; bh=18WFGl9s+05bN0lVPybpQk0Euk09X2qT0aMw4pcwvPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OXr4V6H7GonxyNFVgf/KaBm8Pqfc2RtbX0xDR4pYa3srCkn8FfE3h5G53N0v71Xxb
-	 d7Iz+Be2AAVzHclVd3UoAUZ59I/UuNbczgACEYtknpU4dsrIcKqppaqMa3USvxuRfe
-	 h8OoXdOzho9oxIcVZv+SR51iA4ymQONIciomVKR4AYpCWngv56biEmfuoDxgDPznfS
-	 yZ235X599K/cUYfytUU8twWFvfXkyvMzgcJG2YDo8JDTaQqF0kayWaB5DCZNrXS8N5
-	 oXhbp1XhyyWqIfwFZsYl5zg3A20t6afRpghwiIf5pGxJLAfDeKUf6jeMMjwb80Dt7T
-	 ri0A7g6iY52QEFsXjOhov5G8IisHLeHI3ukw13xflxsVnn4yk2V2z5bDGWaerB/DV0
-	 r9qzkYBaHt1TUJJLxca8ag4wTxqhvlr431KVrrCW2H+KxQLbC40OVRBRTw0HlADzcY
-	 li+vM16FXJnrP9FvmYI75R0S+gdWqz2JGz2u9xjnOIbVjBOLTkVxOj0vvCY3hm0dJ2
-	 2b8FfIfnGzMoh3aZdm0dW/lqOoJrs265TmRfdHET2JowdmuhykYiHHSYjsjrOQz43H
-	 ecJ6Ryz/55e7P1j2Wc6/r46WzafsSPYH0TVghw9+Qr7iHnWSQs0m7yxuO2NWTro8oT
-	 TRYcmUlEH1feM8xwD9cUyM/o=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E5DB40E01A3;
-	Thu, 27 Feb 2025 13:39:28 +0000 (UTC)
-Date: Thu, 27 Feb 2025 14:39:22 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: "Kaplan, David" <David.Kaplan@amd.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
-Message-ID: <20250227133922.GDZ8BrCjnPlQBOLB0y@fat_crate.local>
-References: <LV3PR12MB9265249E8D0FD3920C42A1A994FB2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250217233928.k3oem3bm7w63jzfr@jpoimboe>
- <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250218070501.7mwcxqgsuxl3meef@jpoimboe>
- <20250218085203.GDZ7RKM6IyPDQAkZ8A@fat_crate.local>
- <20250220220440.ma5yfebhiovkqojt@jpoimboe>
- <LV3PR12MB9265DE3082FA0A7FDF9B587594C22@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250226201453.jgg6kucaathzmcvs@desk>
- <20250226210129.GHZ7-BKYvxN_I3f_B2@fat_crate.local>
- <20250226215147.233kxx2z7v7rnu5k@desk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUdi2pHs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E04C4CEDD;
+	Thu, 27 Feb 2025 13:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740663598;
+	bh=cHUQXYpMECA1CrjD2oF3utlXd4IOvTws7zBps4QG/YU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=IUdi2pHsnjtC3+oCFGu6yr3FYLbI3gp7NuuthL2YRkCo7aVzirJzZhkujCiXeQETp
+	 9XTt5Rgej4zUn5LYmcH6/guD1uS4xm0ggMl0rwSO5v6ybcuf0hMgM/54K3NGl+EVRx
+	 qmbKwkeclEETmkS5opO3f10HRN8zOd7RGgNHbgWAUx00KW78XxQXFIM5+VqIE4GSl6
+	 R3/rrDP0JOZW51rh273W9yDcHM+uF2/gz3evgGulQP066tiHOCMPoqh/NQCv/Q1lZQ
+	 HUP3/dt9ej9u0nKc1kRzz3nBMTIc82I+7XlRwpuPaBMkUL+bLHnKC7VvRGSA/Ajj4K
+	 ts9cEsAGnJDJw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C61380AA7F;
+	Thu, 27 Feb 2025 13:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250226215147.233kxx2z7v7rnu5k@desk>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 net-next] net: ethernet: mtk_ppe_offload: Allow QinQ,
+ double ETH_P_8021Q only
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174066363025.1432096.10317097850381047661.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Feb 2025 13:40:30 +0000
+References: <20250225201509.20843-1-ericwouds@gmail.com>
+In-Reply-To: <20250225201509.20843-1-ericwouds@gmail.com>
+To: Eric Woudstra <ericwouds@gmail.com>
+Cc: nbd@nbd.name, sean.wang@mediatek.com, lorenzo@kernel.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, frank-w@public-files.de,
+ daniel@makrotopia.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
-On Wed, Feb 26, 2025 at 01:51:47PM -0800, Pawan Gupta wrote:
-> I got that part, what I meant was allowing to use =off,<enabled vectors>
-> seems unnecessary when the same can be achieved by =on,<disabled vectors>.
+Hello:
 
-I think Josh was the one on that thread who suggested that we should have
-negative options. You can go read upthread.
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
+On Tue, 25 Feb 2025 21:15:09 +0100 you wrote:
+> mtk_foe_entry_set_vlan() in mtk_ppe.c already supports double vlan
+> tagging, but mtk_flow_offload_replace() in mtk_ppe_offload.c only allows
+> for 1 vlan tag, optionally in combination with pppoe and dsa tags.
+> 
+> However, mtk_foe_entry_set_vlan() only allows for setting the vlan id.
+> The protocol cannot be set, it is always ETH_P_8021Q, for inner and outer
+> tag. This patch adds QinQ support to mtk_flow_offload_replace(), only in
+> the case that both inner and outer tags are ETH_P_8021Q.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v4,net-next] net: ethernet: mtk_ppe_offload: Allow QinQ, double ETH_P_8021Q only
+    https://git.kernel.org/netdev/net-next/c/7fe0353606d7
+
+You are awesome, thank you!
 -- 
-Regards/Gruss,
-    Boris.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
