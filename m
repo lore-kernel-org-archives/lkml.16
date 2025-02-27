@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB5E22FDF2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAA422F397;
 	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740663654; cv=none; b=F5onjzqABW0TZRoDeqlVCCwsRAZcxp9SFsjS6y9QJMsM9aB0RziBOynSwZ39AgR3mW2+Xad86sKulGHm+sWr+gkTZd4cENltsrs5cIQ7QaCcFMS8B2CSEYgKe2+TsEwsgHmg8QBatryrfL1kbtBa8r6WEq3Kr6grH9flagxCHnI=
+	t=1740663654; cv=none; b=U+cVicByGkZj0pWUUCqdbC+ROYGDW5lOmLTeErPxLTs9qPT5tKwMp5lo0WLPtfuDzgpxmNRvn3c93zAA9OWklCsm98OyConp7VmXBjCMoTvD4L4UEo1nkfjIXJ4l1GAtsoyaReU1RtmElOn2I0n/4W++tCvgxaDDLtADKfuKa4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740663654; c=relaxed/simple;
-	bh=bWWTG1PyfIMJzF76NSy+EeTbgLJvzK2k4Qb5cBe0Hbg=;
+	bh=DsfpIEJszPEAQuW43jGjfUKbpSkRvvrQxM3WE/LyN7E=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZKqyzs6y8Q+e1L4UsSGCRC1zoRGJsiAzY9Szkyy18Sn5MevUuZVsSOe2+VSHXv7AFmEUAkW3P/uv2U/dDfh+0Q8nuIlgpPsGJQKdEYfPq70E+l1oB25oHI4Ts6hyMIB8QfB9C/bKBiMcQgjfeXu/wfFiFSLkgPSuqhqVeeDG0gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7P0oEFk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=VdK5gaD4jAeZ0lar1FV+cD/YqT0xqWWi4LNbTyUTuMDG0mndx5hpUswRoSfVMWdCnYGETY/dCcZ3hDUv//Jd0DkAbEHaIZkpbMhWAr6CsrmpYnl2/ZnYoMhxz1uHN1OPxiwLUdCS/aPf+IGz31wNyyPe1Z/zl0fjsUaW2d2OW2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FcxGYYhV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7P0oEFk"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 106B9C4CEDD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FcxGYYhV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2549AC4AF0C;
 	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740663654;
-	bh=bWWTG1PyfIMJzF76NSy+EeTbgLJvzK2k4Qb5cBe0Hbg=;
+	bh=DsfpIEJszPEAQuW43jGjfUKbpSkRvvrQxM3WE/LyN7E=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=X7P0oEFkqR7Rf7qH5uvtWIjxDmcc4cV7Vojhbif7fhkbbza3ngQ/1CmmHk2g0qIOh
-	 DUChIRTYVHNCkYglPgWN00Wm5n5aEYNFLPQhI1pFvH2JQdzA4527xVMVdLoPH8Yb1m
-	 220NyjZ/I+6SefCibrHQkdFxPNGWg4+tR5QL12HtHHXcIqyOGd/FRu/nV127c1+oew
-	 fJusNc8/k/Ljwn+8CnndvfmXSyCDvcJPX5XM89qTwrLgL0ZgFaVmHofW0HXqyHlCOL
-	 FVR96eGCYQwdA8P2VBuGqDpStU94PPfuP5UZZW0m7gr/KMG9gyfqp+zCIc6SoVA9jI
-	 nZBqED5Lfr/8A==
+	b=FcxGYYhV7IbH7zFntaDkWT69h36zG2J5T6/uxS3NwlDfbfS51ZwOSwWKim42g0YjC
+	 +5/sKkm2FamfbcU4IMVwsOsaoXA2tMk7jFLxI9Xlo2BaUrlpiwes2N8IDQ7TDKneQj
+	 sEjx/WeCulwHZj0MAT3Z9ZlIvflV4cNVAp713LyRQAWWQMQget/yh6kHKXmUJi86jz
+	 eVco1lgr/CQVt6vVa/PhdGilaLkTk/iZ43w/aEnA295Xnd/YWdRHjP/F17JciAQXB7
+	 yvff9uGHovGAfqkNYYnNHmzQq/TFPIqqhf2x+crTnrU/EWtIG8AC1lBzxVrfKcAice
+	 V4fCNPPuxPSXg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F26D3C19F32;
-	Thu, 27 Feb 2025 13:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF5EC19F2E;
+	Thu, 27 Feb 2025 13:40:54 +0000 (UTC)
 From: Manivannan Sadhasivam via B4 Relay <devnull+manivannan.sadhasivam.linaro.org@kernel.org>
-Date: Thu, 27 Feb 2025 19:10:43 +0530
-Subject: [PATCH 01/23] dt-bindings: PCI: qcom,pcie-sm8150: Add 'global'
+Date: Thu, 27 Feb 2025 19:10:45 +0530
+Subject: [PATCH 03/23] dt-bindings: PCI: qcom,pcie-sm8250: Add 'global'
  interrupt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-pcie-global-irq-v1-1-2b70a7819d1e@linaro.org>
+Message-Id: <20250227-pcie-global-irq-v1-3-2b70a7819d1e@linaro.org>
 References: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 In-Reply-To: <20250227-pcie-global-irq-v1-0-2b70a7819d1e@linaro.org>
 To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
@@ -56,14 +56,14 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
 X-Mailer: b4 0.14.1
 X-Developer-Signature: v=1; a=openpgp-sha256; l=1751;
  i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
- bh=55z0isesPRsoBW3LenxOlNppI2+qm4UnlpCp+bQlx+o=;
- b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBnwGtd9RJU6/KQfNEbU+phDnWfHBYIQttEQ3oYd
- ZcxmyTt0VWJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCZ8BrXQAKCRBVnxHm/pHO
- 9UFjB/9v69ly4JdQX9NEiGFfnEeG3NoKG7tJrWhB+YNiek51SgDupekl4cBrA6yTwblfsar5RpQ
- DeHzJbmdXYo2aufqn6rmCqzftyw9ZDtBOhnHb4ACmn+lmkl6ZxVMlyiwhv05Dmc0hIwedEO/g2S
- nb118sm5KOicWusf7jU+rIwL8y6dCNrcx1fLc9UTYfZT1hmilD3wtIW3YY1JM0PR8MXVvE9xr1w
- r451drJfphqR6nPXCnW3KMM2B4oGcyOSDmtrJRMJScIbO/M00O6juO4Y2AKAUx4yXdh6/Gvumun
- R0Dj5GVziTccc6UWs+nplgB3UcVYJpKi1LB/y/d15KixOdph
+ bh=EsGx8DzxLm57OyGTXGe0TOfMlOA4Ni7Q8YePcJ+flH4=;
+ b=owGbwMvMwMUYOl/w2b+J574ynlZLYkg/kB075a1Qqc/Sfawc3KnePy2rU+al7n//1Ld8puXn7
+ l2ccTInOxmNWRgYuRhkxRRZ0pc6azV6nL6xJEJ9OswgViaQKQxcnAIwkY+l7P+0jMsrQ1av3J3t
+ X/hrbmrP0hc/p4fveDW5bmFNecTelHd3dvcmZMY4KBXsPjTpgroVW/9Ge6uTkQr12iuqm3et3fN
+ Y+PRlX+FKsdJA5Y9T2KwNmy0fXLBJy0oMrp7WGXdgjaOYxOdbGVxnbGz3yq7+zFzqp6ckyHtKdc
+ Fy+62FGaz8pZkVprp7D9RWmyQc52XbVZzjWSCtNc1m1raXQv6rDUKWF1zc8K8tNuGSSNJxGTNWw
+ +MeRUkp23y2bzqyd8IK5jw2tyjBa7Fz3u52di8wjjcKF3ylFHZplfVGvfc7mfoSq3bWh+cf67dw
+ yXKeqXa+xbJNLaPCbPlM9fwGh382YvV2P5321Zbllv0CAA==
 X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
  fpr=C668AEC3C3188E4C611465E7488550E901166008
 X-Endpoint-Received: by B4 Relay for
@@ -78,14 +78,14 @@ events.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml | 9 ++++++---
+ Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml | 9 ++++++---
  1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
-index 9d569644fda9..a604f2a79de3 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8150.yaml
-@@ -49,9 +49,10 @@ properties:
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml
+index 4d060bce6f9d..af4dae68d508 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sm8250.yaml
+@@ -61,9 +61,10 @@ properties:
  
    interrupts:
      minItems: 8
@@ -97,7 +97,7 @@ index 9d569644fda9..a604f2a79de3 100644
      items:
        - const: msi0
        - const: msi1
-@@ -61,6 +62,7 @@ properties:
+@@ -73,6 +74,7 @@ properties:
        - const: msi5
        - const: msi6
        - const: msi7
@@ -105,7 +105,7 @@ index 9d569644fda9..a604f2a79de3 100644
  
    resets:
      maxItems: 1
-@@ -128,9 +130,10 @@ examples:
+@@ -143,9 +145,10 @@ examples:
                           <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
                           <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
                           <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
