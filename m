@@ -1,133 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 730AC281346;
-	Thu, 27 Feb 2025 23:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740698243; cv=none; b=uYCagyxNN+/RxU3laihIT4CEdutwZGmDNZTrXkPFylJpwnq+o8ECHTnqTmtv3Ge+xC545Ejkt8nQXpVWNtbH+9I6srC9g7XCVqGjC37HQWJbEvV1UKWNXLFcZewah53QL+UofKA/4nRLbSM7V6IE8cJ8eSmuG8FqZAUeGKgyScA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740698243; c=relaxed/simple;
-	bh=N2wqrVUVFkxtvhU2Y91GirWIHTHAoB2PKBzqD/9Fb3c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=THu1oikBdYtelnDYJGU0Lp6U/hEtZhKiy95SX5bDFrd1QizBYaR5PiAEVV0wMZ5Dw15gHyvZ0OBQXFJGr3RZ7gd39MxggyLZR7XsrgL8MxT7kIWzlhSzuVrQLnOg1W4xi6sH93DOhHlESPcF/GwO1jLOSjU29CssO9jz5TV2D50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27910153B;
-	Thu, 27 Feb 2025 15:17:36 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C2ED3F673;
-	Thu, 27 Feb 2025 15:17:19 -0800 (PST)
-From: Andre Przywara <andre.przywara@arm.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>
-Cc: linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAB6280A43
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740698244; cv=pass; b=h6J8+mlJDpOp8VfCSkOsM7aWfrDO3d0uc84p9P2nhZbglbBvJAbdAa1f6sIEZPgfLmCDG0occXJ7yoeKs24NevNcMOl2c1dF297lalglEfk7mTIDtEeNLZCFJo9qvhfjCnJttQLKYAf4mMb12q83v2Ik/IzctJPeSBMQgrHmnaI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740698244; c=relaxed/simple;
+	bh=pR2xb8PwWqrPuQuCeFyFKzkwCnfpK+EnOXc4fLlzn4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W8U57HaaBdiZHw+79wGVE1hRUDw8SaZ5y1p017hgATiGqwVw04lhhEWBm2AiqnBa1H8oGJ9xK45daPqz3uxLws3Af7iJY8P/HlJjF9HfZkb2csYb4+rNfXB21p6koy8ScIuH3rl/hiqMMz0sREpzh7HLWmqSD47l3zEIdeyZR3E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=jbZu3TsK; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="jbZu3TsK"
+ARC-Seal: i=1; a=rsa-sha256; t=1740698217; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kqyu5ZDfG0HF645XywrkxJkGLgzIQfEupezpqOoKn938juOkqSllu+okQOH63lzw/zRpOrgoRH/T62SVDZzrdKO972ZFbd69SaRdKJzrJwZL0Y5Zq1l+cwZAB2ImFvvQAhgmFfUpz6ALNwceTcnUqn+EVaBNvbyGs1VONDhZ5rI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740698217; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Uybfw6VMQDqxGI4M1ZS03Lizizr/4KGcJ/Xq0XzsYxA=; 
+	b=TpkUSS5CYQ9KCKqEMO6okPdIV1NOULC4FsrK50ylluCs/yDt+bU9RDjx2OVRbMK8ONoT/7p+QVlX+0riNCBZkNLIXX9Aoy86P6VOQAtcAavgLw7OK98mQ3h87mWBQGVYoEWgUC9t6KDRLXni3CrWdGC6dXZvnW8gbVvQFbttI0c=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740698217;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Uybfw6VMQDqxGI4M1ZS03Lizizr/4KGcJ/Xq0XzsYxA=;
+	b=jbZu3TsKd6WNSjbq6xnFBybJplajC7SlWLHL9Id3aIkmbh5HhEFAjkdm5CQ7UyRD
+	eF2zLQhZXhZDdatDNmtUc560j6ANOLMYASXB0iIsLYttdNvocd7S6mAHFntm6usY8hQ
+	nOGNuYOh0dHImNKTEILlIrkqrA81ypr6ZhveX0LE=
+Received: by mx.zohomail.com with SMTPS id 174069821485122.99218337972684;
+	Thu, 27 Feb 2025 15:16:54 -0800 (PST)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/8] pinctrl: sunxi: support moved power configuration registers
-Date: Thu, 27 Feb 2025 23:14:43 +0000
-Message-ID: <20250227231447.20161-5-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.46.3
-In-Reply-To: <20250227231447.20161-1-andre.przywara@arm.com>
-References: <20250227231447.20161-1-andre.przywara@arm.com>
+Subject: [PATCH v3 1/2] drm/panthor: Replace sleep locks with spinlocks in fdinfo path
+Date: Thu, 27 Feb 2025 23:16:25 +0000
+Message-ID: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The Allwinner pincontroller IP features some registers to control the
-withstand voltage of each pin group. So far those registers were always
-located at the same offset, but the A523 SoC has moved them (probably to
-accommodate all eleven pin banks).
+Commit 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo
+group samples") introduced an xarray lock to deal with potential
+use-after-free errors when accessing groups fdinfo figures. However, this
+toggles the kernel's atomic context status, so the next nested mutex lock
+will raise a warning when the kernel is compiled with mutex debug options:
 
-Add a flag to note this feature, and use that to program the registers
-either at offset 0x340 or 0x380. So far no pincontroller driver uses
-this flag, but we need it for the upcoming A523 support.
+CONFIG_DEBUG_RT_MUTEXES=y
+CONFIG_DEBUG_MUTEXES=y
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Replace Panthor's group fdinfo data mutex with a guarded spinlock.
+
+Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo group samples")
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 ---
- drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++----
- drivers/pinctrl/sunxi/pinctrl-sunxi.h |  7 +++++--
- 2 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 83a031ceb29f2..fc12e6f807e4d 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -736,9 +736,9 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		val = uV > 1800000 && uV <= 2500000 ? BIT(bank) : 0;
+diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+index 1a276db095ff..4d31d1967716 100644
+--- a/drivers/gpu/drm/panthor/panthor_sched.c
++++ b/drivers/gpu/drm/panthor/panthor_sched.c
+@@ -9,6 +9,7 @@
+ #include <drm/panthor_drm.h>
  
- 		raw_spin_lock_irqsave(&pctl->lock, flags);
--		reg = readl(pctl->membase + PIO_POW_MOD_CTL_REG);
-+		reg = readl(pctl->membase + pctl->pow_mod_sel_offset);
- 		reg &= ~BIT(bank);
--		writel(reg | val, pctl->membase + PIO_POW_MOD_CTL_REG);
-+		writel(reg | val, pctl->membase + pctl->pow_mod_sel_offset);
- 		raw_spin_unlock_irqrestore(&pctl->lock, flags);
+ #include <linux/build_bug.h>
++#include <linux/cleanup.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/dma-mapping.h>
+@@ -631,10 +632,10 @@ struct panthor_group {
+ 		struct panthor_gpu_usage data;
  
- 		fallthrough;
-@@ -746,9 +746,12 @@ static int sunxi_pinctrl_set_io_bias_cfg(struct sunxi_pinctrl *pctl,
- 		val = uV <= 1800000 ? 1 : 0;
+ 		/**
+-		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
+-		 * and job post-completion processing function
++		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
++		 * callback and job post-completion processing function
+ 		 */
+-		struct mutex lock;
++		spinlock_t lock;
  
- 		raw_spin_lock_irqsave(&pctl->lock, flags);
--		reg = readl(pctl->membase + PIO_POW_MOD_SEL_REG);
-+		reg = readl(pctl->membase + pctl->pow_mod_sel_offset +
-+			    PIO_POW_MOD_CTL_OFS);
- 		reg &= ~(1 << bank);
--		writel(reg | val << bank, pctl->membase + PIO_POW_MOD_SEL_REG);
-+		writel(reg | val << bank,
-+		       pctl->membase + pctl->pow_mod_sel_offset +
-+		       PIO_POW_MOD_CTL_OFS);
- 		raw_spin_unlock_irqrestore(&pctl->lock, flags);
- 		return 0;
- 	default:
-@@ -1520,6 +1523,10 @@ int sunxi_pinctrl_init_with_flags(struct platform_device *pdev,
- 		pctl->pull_regs_offset = PULL_REGS_OFFSET;
- 		pctl->dlevel_field_width = DLEVEL_FIELD_WIDTH;
+ 		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
+ 		size_t kbo_sizes;
+@@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
+ 						   release_work);
+ 	u32 i;
+ 
+-	mutex_destroy(&group->fdinfo.lock);
+-
+ 	for (i = 0; i < group->queue_count; i++)
+ 		group_free_queue(group, group->queues[i]);
+ 
+@@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
+ 	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
+ 	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
+ 
+-	mutex_lock(&group->fdinfo.lock);
+-	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
+-		fdinfo->cycles += data->cycles.after - data->cycles.before;
+-	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
+-		fdinfo->time += data->time.after - data->time.before;
+-	mutex_unlock(&group->fdinfo.lock);
++	scoped_guard(spinlock, &group->fdinfo.lock) {
++		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
++			fdinfo->cycles += data->cycles.after - data->cycles.before;
++		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
++			fdinfo->time += data->time.after - data->time.before;
++	}
+ }
+ 
+ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+@@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+ 
+ 	xa_lock(&gpool->xa);
+ 	xa_for_each(&gpool->xa, i, group) {
+-		mutex_lock(&group->fdinfo.lock);
++		guard(spinlock)(&group->fdinfo.lock);
+ 		pfile->stats.cycles += group->fdinfo.data.cycles;
+ 		pfile->stats.time += group->fdinfo.data.time;
+ 		group->fdinfo.data.cycles = 0;
+ 		group->fdinfo.data.time = 0;
+-		mutex_unlock(&group->fdinfo.lock);
  	}
-+	if (flags & SUNXI_PINCTRL_ELEVEN_BANKS)
-+		pctl->pow_mod_sel_offset = PIO_11B_POW_MOD_SEL_REG;
-+	else
-+		pctl->pow_mod_sel_offset = PIO_POW_MOD_SEL_REG;
+ 	xa_unlock(&gpool->xa);
+ }
+@@ -3537,7 +3535,7 @@ int panthor_group_create(struct panthor_file *pfile,
+ 	mutex_unlock(&sched->reset.lock);
  
- 	pctl->irq_array = devm_kcalloc(&pdev->dev,
- 				       IRQ_PER_BANK * pctl->desc->irq_banks,
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-index 6cf721876d89d..742fc795c7664 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-@@ -87,9 +87,11 @@
- #define SUNXI_PINCTRL_VARIANT_MASK	GENMASK(7, 0)
- #define SUNXI_PINCTRL_NEW_REG_LAYOUT	BIT(8)
- #define SUNXI_PINCTRL_PORTF_SWITCH	BIT(9)
-+#define SUNXI_PINCTRL_ELEVEN_BANKS	BIT(10)
+ 	add_group_kbo_sizes(group->ptdev, group);
+-	mutex_init(&group->fdinfo.lock);
++	spin_lock_init(&group->fdinfo.lock);
  
--#define PIO_POW_MOD_SEL_REG	0x340
--#define PIO_POW_MOD_CTL_REG	0x344
-+#define PIO_POW_MOD_SEL_REG		0x340
-+#define PIO_11B_POW_MOD_SEL_REG		0x380
-+#define PIO_POW_MOD_CTL_OFS		0x004
+ 	return gid;
  
- #define PIO_BANK_K_OFFSET		0x500
- 
-@@ -173,6 +175,7 @@ struct sunxi_pinctrl {
- 	u32				bank_mem_size;
- 	u32				pull_regs_offset;
- 	u32				dlevel_field_width;
-+	u32				pow_mod_sel_offset;
- };
- 
- #define SUNXI_PIN(_pin, ...)					\
 -- 
-2.46.3
+2.47.1
 
