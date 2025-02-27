@@ -1,174 +1,185 @@
-Received: from mail-m49194.qiye.163.com (mail-m49194.qiye.163.com [45.254.49.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C12B22FF37;
-	Thu, 27 Feb 2025 13:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94FF231A4D;
+	Thu, 27 Feb 2025 13:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740664139; cv=none; b=oHgYY3yOKKXS7JxYexVi1Gqd7TBgiS13zAQ1SAuHCHWj70BsaMQCwiAT/19J38SNkGo2Z8oA7ZuUgHkXwgJ0SqB3vW6Nna0w39X31iSPDNmPsvLv0XfPO2i/+/PCzaKWV/N/bmMDW85E67zv9CPIfhIHF7tICoRYDXHPRxbyODs=
+	t=1740664148; cv=none; b=hx/sYoWhFOsvsLITHLGebEFRXsJvrQcATStADPCdMtRd9dPyxdL+i3+FM0Z7fTaTWNvnGq+3KrUzxnvlh6Ghd9onBJsgqtNBJVHw/QthfVRUIw2g9jn7yHCZqn6QwP0HytgEhwLwHi+uuhkEe8GRTkhL0viP6arc6bTRhsp9O2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740664139; c=relaxed/simple;
-	bh=Oo5KVV7zBvZLUXwNgq6q2KgXzXuCfR/cjksy5rU+SBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gfXj7auvE45OcznW7So3IBDZUGlEpOrAQOaGeYKbVO8PzUA3iz37QxD3a5fHNURkbboY4dYDyoSsdlLNChFH683uMRupCoPNUHZqLYYvXugocYJoBuGcv5ZnAZu34pQmJk1Qd201aT6EcyXfTnNgdDH+1A6NXbuNkr6FreYgIQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=i5P3hTgF; arc=none smtp.client-ip=45.254.49.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740664148; c=relaxed/simple;
+	bh=P8IJYd8FR/Icvn1RJCn9y4YI8x1haSgI21fF0CZ+RPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iidFnsmtpfFsd4Tyr8UcpdFiVyLTA6IAYgOeE+AokAVJBv4geludks1tIQCXtNHfvzbtmWY3+q0IqS5JtOnZ4PtEQO/xuwRI/MOFDSzZGUxIAe+hwdc33utysj96BsEsznH0y7nDIVDC0rA0C0FfhW7ebeA4/2N7uH0XxAGZIG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/tduRXi; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="i5P3hTgF"
-Received: from [172.16.12.67] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id c661e153;
-	Thu, 27 Feb 2025 19:26:22 +0800 (GMT+08:00)
-Message-ID: <d77bfb17-d875-4bd2-abb4-e9ff012d7bfc@rock-chips.com>
-Date: Thu, 27 Feb 2025 19:26:21 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/tduRXi"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dedd4782c6so1622589a12.3;
+        Thu, 27 Feb 2025 05:49:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740664145; x=1741268945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=14WfYF+JxUtInqVcnDAf3w6mUXX5Xz6J1f5cc1Inytw=;
+        b=X/tduRXi5aKihQkQojTV13zdzA8NC1ZLtPLFtvHjNPe0qDZsJ3CeF7DxxDxhkjVSZV
+         HiKzp5MVxs+WEsyAVPKfhCOIi7oY0ZgeB4J8cFCGqICD/gEo2bLyjdCwo0LlE/uXFquf
+         dgHmL2rrIQSeQu+JibKane+vBqAYwdpuwczuH3zqcv2znGcy30lXywgkqyn9RlNYZj7v
+         UR4WhRwYBAuGyJFfBh9e6EEbMhYF5N5ZpD+TDVrHdd77vxBB9pk9Uf6896b61PuIMW1a
+         OLLBNdiBF+r5FEMIkdCUy7sUDQsyEBueu0fcQC9RrHZv1wEA/xWnzqicGw/yL7n3w6nS
+         wbUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740664145; x=1741268945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=14WfYF+JxUtInqVcnDAf3w6mUXX5Xz6J1f5cc1Inytw=;
+        b=GSXNyMos88Xfh2DxQDhUeheAzreEZZCW0hOB4LcpnwfeX82gZucGcx3OyXqrqnE1jz
+         ZLugNEah0D9+XOQwJR0swqqHSfgURoXD+Pe+vtApmLfATgrBL8MLq7hlXE8j+GH2Xblz
+         OKLAbjtd2s0oJabzYSccz0dP2kJHeX6x1znKcA4rfrMlZjx1UYQD9sBFCjTAkietZUbx
+         OJZEn3+xEZN3yvTXpxKjMh/Tmr74qTf/6XaQC/XzH+o/YKSyfmggDUhd7KbJz7cx/Hce
+         Gn9zjuvs+XTiwZn+a8p29cOiN9TF5fLYY3D1mqchKN07rxc+eg87LP54UFLoaR8+EEJn
+         T0rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWSyFJYZcYf3tQWFdvS9Hxu2NMNXMZ/iBTdeWnzanvVvrkFwFgmTHErVsAeiuAXJkHwedmT5OkET/AOTw=@vger.kernel.org, AJvYcCXpqjtZ+/ZQW0of5ANTVUscOEDqRU9tDUpuOzKU3RrkiaLeEkIqymvBNAcZoY23kfGQtdIdi2uAXEPYqm3g3g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI7AHkRtbmL3oEquqXgEMqEswn7htR7XjMdB8Fxycs6VOflNyF
+	ZMXoUid1d25z8+U8lifs3KOvIn25Uw3Psl6ZZTSXXZaag2S/sFpQVoWLc3/yrBKYJMk8uZhodt2
+	TviYpxwJEltIrIl2J5+rSlmYqNMU=
+X-Gm-Gg: ASbGncvUpy5UpwqNs5QrTgYtURto1KQN3djwgSc4rpDlJP1vLBfOkE98/Kp5++kA8FP
+	IR7wJXcUNKdWxjWMWzQoBPU77XD0wLXg+WFPYGZve7vxNLi5mRuaFY4teM79mkUbpO5VCppEch4
+	psMR/63PhJ+ikYANudrSgi1N1bmafg79/vRtiGXHPd
+X-Google-Smtp-Source: AGHT+IFrqmFPhnupTYYjxWUe3DTusMoVDTpQWWdo2IJDFGKcTSDAIGd3WmoPoKQWNXBjAvow9yTPQbKK60HJOeI6bq0=
+X-Received: by 2002:a05:6402:2787:b0:5dc:7f96:6263 with SMTP id
+ 4fb4d7f45d1cf-5e4469daa04mr14622035a12.15.1740664144559; Thu, 27 Feb 2025
+ 05:49:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] thermal: rockchip: Support the rk3562 SoC in thermal
- driver
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
- =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org,
- Shaohan Yao <shaohan.yao@rock-chips.com>, linux-pm@vger.kernel.org,
- Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
- Zhang Rui <rui.zhang@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- linux-arm-kernel@lists.infradead.org
-References: <20241224094015.3816301-1-kever.yang@rock-chips.com>
- <20241224094015.3816301-2-kever.yang@rock-chips.com>
- <7f17cc55-a741-4bb8-9513-0580ca6fedd3@linaro.org> <17758610.geO5KgaWL5@diego>
- <e36a5771-d277-41d3-af9c-c5841c4060a2@linaro.org>
-Content-Language: en-US
-From: Kever Yang <kever.yang@rock-chips.com>
-In-Reply-To: <e36a5771-d277-41d3-af9c-c5841c4060a2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUlDQlZOGEJJS0pKHk0eShhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9547285bae03afkunmc661e153
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NUk6CQw*CDIJTg0zATUcQlFW
-	Nh4aCgJVSlVKTE9LTU5OTkNIT05OVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISExMNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=i5P3hTgFm+CnEdpL/8tNOszN+11tNwkNdYMuDt9fVuC8Q03OnD2woX8xplYkHaD0wN/kiOLdzgIqdtrYKqSTItqn0yZDr6UsDoeJEsJGMbFo4TEeXb1PWyBrA1oaHfIEP59NHeTDvRIc28/dGrSwmrds+jl2u6uyf9O7NJzGDKw=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=6AqLQisyWEDMQ8wooXXEp+oSjAf7xuTYbpqqo/XRzD8=;
-	h=date:mime-version:subject:message-id:from;
+References: <20250227-configfs-v5-0-c40e8dc3b9cd@kernel.org> <20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org>
+In-Reply-To: <20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 27 Feb 2025 08:48:27 -0500
+X-Gm-Features: AQ5f1JqqdLUSn16lxx8sMpg0_xRZhMsea0cF-Qy8ejK9uaChfCARGhlD-gE3w6w
+Message-ID: <CAJ-ks9=B=ceCN0VO3JH37LJbuVbQ5Y2sqfOgFCyJ0BfFGSEmkA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: sync: change `<Arc<T> as ForeignOwnable>::PointedTo`
+ to `T`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
+	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Daniel,
-
-On 2025/2/19 03:43, Daniel Lezcano wrote:
-> On 11/02/2025 11:19, Heiko Stübner wrote:
->> Hey Daniel,
->>
->> Am Dienstag, 11. Februar 2025, 10:36:09 MEZ schrieb Daniel Lezcano:
->>> On 24/12/2024 10:40, Kever Yang wrote:
->>>> From: Shaohan Yao <shaohan.yao@rock-chips.com>
->>>>
->>>> There are one Temperature Sensor on rk3562, channel 0 is for chip.
->>>
->>> A bit stingy in terms of description, no ?
->>>
->>>
->>>> Signed-off-by: Shaohan Yao <shaohan.yao@rock-chips.com>
->>>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->> [...]
->>>> +static const struct tsadc_table rk3562_code_table[] = {
->>>> +    {0, -40000},
->>>> +    {1419, -40000},
->>>> +    {1428, -35000},
->>>> +    {1436, -30000},
->>>> +    {1445, -25000},
->>>> +    {1453, -20000},
->>>> +    {1462, -15000},
->>>> +    {1470, -10000},
->>>> +    {1479, -5000},
->>>> +    {1487, 0},
->>>> +    {1496, 5000},
->>>> +    {1504, 10000},
->>>> +    {1512, 15000},
->>>> +    {1521, 20000},
->>>> +    {1529, 25000},
->>>> +    {1538, 30000},
->>>> +    {1546, 35000},
->>>> +    {1555, 40000},
->>>> +    {1563, 45000},
->>>> +    {1572, 50000},
->>>> +    {1580, 55000},
->>>> +    {1589, 60000},
->>>> +    {1598, 65000},
->>>> +    {1606, 70000},
->>>> +    {1615, 75000},
->>>> +    {1623, 80000},
->>>> +    {1632, 85000},
->>>> +    {1640, 90000},
->>>> +    {1648, 95000},
->>>> +    {1657, 100000},
->>>> +    {1666, 105000},
->>>> +    {1674, 110000},
->>>> +    {1682, 115000},
->>>> +    {1691, 120000},
->>>> +    {1699, 125000},
->>>> +    {TSADCV2_DATA_MASK, 125000},
->>>> +};
->>>
->>> May be it is time to optimize all these tables out of the memory 
->>> driver?
->>>
->>> It is the 9th table introduced.
->>
->> just to see if we think differently, what do you have in mind?
->>
->> For me the adc-to-temperature conversion _is_ part of the hw-block 
->> itself,
->> so should likely not spill into the devicetree, but you're right, 
->> defining
->> a big table for each soc also isn't really great.
->>
->> For the rk3562 in question, the stepping seems to be 8,9,8,9,....
->> where for the rk3568 the value stepping seems to be 32,36,32,36,...
->> and it looks similar for the other socs too, with the driver is already
->> interpolating between values it seems.
->>
->> So even just halving (or more) all the big tables (dropping every second
->> entry for example) should not really loose us real granularity.
+On Thu, Feb 27, 2025 at 7:37=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
 >
-> It can be just a formula to be reused in the adc_to_temp, temp_to_adc 
-> or precompute the table from the formula:
+> Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
+> `Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
+> functionality, but allows `ArcInner` to be private. Further, it allows
+> downstream users to write code that is generic over `Box` and `Arc`, when
+> downstream users need access to `T` after calling `into_foreign`.
 >
-> For instance the following formulas:
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
 >
-> rk3588_code_table:
+> This patch is a dependency for Rust `configfs` abstractions. It allows bo=
+th
+> `Box` and `Arc` to be used as pointer types in the `configfs` hierarchy.
+> ---
+>  rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
 >
->     y = ((x^2 + 23315x - 5949300) * 100) / 2457
+> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
+> index dfe4abf82c25..3d77a31e116f 100644
+> --- a/rust/kernel/sync/arc.rs
+> +++ b/rust/kernel/sync/arc.rs
+> @@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
+>  #[doc(hidden)]
+>  #[pin_data]
+>  #[repr(C)]
+> -pub struct ArcInner<T: ?Sized> {
+> +struct ArcInner<T: ?Sized> {
+>      refcount: Opaque<bindings::refcount_t>,
+>      data: T,
+>  }
+> @@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> Option<Pin<Uniq=
+ueArc<T>>> {
 >
-> rk3568_code_table:
+>  // SAFETY: The `into_foreign` function returns a pointer that is well-al=
+igned.
+>  unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
+> -    type PointedTo =3D ArcInner<T>;
+> +    type PointedTo =3D T;
+>      type Borrowed<'a> =3D ArcBorrow<'a, T>;
+>      type BorrowedMut<'a> =3D Self::Borrowed<'a>;
 >
->     y = ((x^2 - 2660x + 1547712) * 625) / 2448
-I can understand, it looks much better if we can use the formula instead 
-of the table.
+>      fn into_foreign(self) -> *mut Self::PointedTo {
+> -        ManuallyDrop::new(self).ptr.as_ptr()
+> +        let this =3D ManuallyDrop::new(self).ptr.as_ptr();
+> +        // SAFETY: `x` is a valid pointer to `Self` so the projection be=
+low is
+> +        // in bounds of the allocation.
 
-We got all these data from different vendor/foundry ,  some of vendor do 
-provide the formula while others not.
+Isn't the unsafe bit `*this`, which is what this comment should
+justify? In Rust 1.82+ `addr_of_mut!` isn't unsafe I believe. Also `x`
+is likely meant to be `this`.
 
-And I think there is a key issue is that the formula may not fit for all 
-the situation, sometimes need to calibrate
-
-after chips are out, only the table is available in this case.
-
-And in this case, we send the table as-is from the vendor.
-
-
-Thanks,
-
-- Kever
-
+> +        unsafe { core::ptr::addr_of_mut!((*this).data) }
+>      }
 >
-> etc ...
+>      unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
+> +        // SAFETY: We did the reverse offset calculation in `into_foreig=
+n`, so
+> +        // the offset calculation below is in bounds of the allocation.
+> +        let inner_ptr =3D unsafe { kernel::container_of!(ptr, ArcInner<T=
+>, data).cast_mut() };
+> +
+>          // SAFETY: The safety requirements of this function ensure that =
+`ptr` comes from a previous
+>          // call to `Self::into_foreign`.
+> -        let inner =3D unsafe { NonNull::new_unchecked(ptr) };
+> +        let inner =3D unsafe { NonNull::new_unchecked(inner_ptr) };
 >
+>          // SAFETY: By the safety requirement of this function, we know t=
+hat `ptr` came from
+>          // a previous call to `Arc::into_foreign`, which guarantees that=
+ `ptr` is valid and
+> @@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) ->=
+ Self {
+>      }
 >
+>      unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, T> =
+{
+> +        // SAFETY: We did the reverse offset calculation in `into_foreig=
+n`, so
+> +        // the offset calculation below is in bounds of the allocation.
+> +        let inner_ptr =3D unsafe { kernel::container_of!(ptr, ArcInner<T=
+>, data).cast_mut() };
+> +
+>          // SAFETY: The safety requirements of this function ensure that =
+`ptr` comes from a previous
+>          // call to `Self::into_foreign`.
+> -        let inner =3D unsafe { NonNull::new_unchecked(ptr) };
+> +        let inner =3D unsafe { NonNull::new_unchecked(inner_ptr) };
+>
+>          // SAFETY: The safety requirements of `from_foreign` ensure that=
+ the object remains alive
+>          // for the lifetime of the returned value.
+
+It might be good to extract a shared helper from `from_foreign` and
+`borrow`, though the duplication isn't new in this patch. Either way:
+
+Reviewed-by: Tamir Duberstein <tamird@gmail.com>
