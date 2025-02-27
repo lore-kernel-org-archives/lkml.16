@@ -1,242 +1,152 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7391D86F1
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D421D5ADD
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740627440; cv=none; b=m2yLREqoWRPkMx4iwwulp4L5UfTq49PR/rFO4qFXXV3F14O+6+vmaMT6b+hXSSv6/Co/9vuOGTwjAL10q5wdNguo4op2BVmUwu6scsyVuOJ8wkdQCbdfB96p6Cgjn8DhKxX1J0pNm/H1DQaVaSIcosFAdD8KzRCFJH/zrWcLHL0=
+	t=1740627591; cv=none; b=qEpgpRZHP/xEMO/Bb2X5EuVfKcq9FwBmrpsLU1T/kiy/M6ltq4ZBk64bjBfk0cJDTQ5HogQS+GUy3aCn2yvLnnrDnx4WNNLfRpkXkAcC1VHc8joI8R2Ei3zE4lfjdG0Q1wyV2mvXsUa3/8g3Ka+RA/GaFKFQq23CAbvRcFDTMLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740627440; c=relaxed/simple;
-	bh=lSumbw1PWf7tSByOP5CKs66VRaIHHh6tWApRYCGgNjo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=Rx8VosnrM3Z0thFJ1WG4npc8vIAhtxS3xezdmwdqTXMP9UGe2B5glciCxbWk5+tCh42pNCXeuGKLqcriMt1VxK2l8G8lNaP+8HqIGGPJzKW0TwtVyeLUpAsz6G7Wfd1TmnlCxtrG6UJstUbAuAQRAI/wzNtpKttoZ9vMp3YJkjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oVF89agC; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740627591; c=relaxed/simple;
+	bh=8NZQRl+nsIrBQgX3n3RDpAkQuhuYznIhsac/14r1q9s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RKlf2vepVlO8o/qQUT+VfSzkKHCmd+0V4O1rZYjSWP50pxndNNBpG9Mc+73fdADl6o46znCn4VSvAaQq0iKleL2gJrUuIykMqDKN0IECUX2tJY2JEGJutoewsfWp8nBMDksDhdPzvJOcMbaGYA2uawkgQvJWSfMfvVyJ/PeYaWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=IKrgYt4R; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oVF89agC"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250227033716epoutp037761af4e782df520895d2830239161b5~n8254ft141710417104epoutp03_
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:37:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250227033716epoutp037761af4e782df520895d2830239161b5~n8254ft141710417104epoutp03_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740627436;
-	bh=rJUWO7g9RjJRp9fZlO7QpyX9lTOA51pukK5hQ5BEOsw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oVF89agC/G7UYT4ieerLuP7AhDgYHyfLqW+HYmb74iFS65Ea48PIGYB7bw38wnwGZ
-	 zSabbPkFT1xVG61T8ydRUvYOjafCKZ18mBRLZdHbdnOWfP8fLky8EM5W3yVQpjS24t
-	 lccX5qmq75VneHb2ihwKQL55e/7tVfCdORzHGHiw=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250227033716epcas5p3e5c9f9958f59dca7b91d2bf26f839b7d~n825aMZYV1825818258epcas5p3O;
-	Thu, 27 Feb 2025 03:37:16 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z3H8W0Lb3z4x9Py; Thu, 27 Feb
-	2025 03:37:15 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	59.EB.19933.AEDDFB76; Thu, 27 Feb 2025 12:37:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250226103145epcas5p12873b39b9b467f35a38151e1938976d4~nu3gUOMuK3171031710epcas5p19;
-	Wed, 26 Feb 2025 10:31:45 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250226103145epsmtrp16cae50a09d5d8d4e288ba32326fc4ed9~nu3gTSt412262222622epsmtrp1W;
-	Wed, 26 Feb 2025 10:31:45 +0000 (GMT)
-X-AuditID: b6c32a4a-c1fda70000004ddd-e6-67bfddeacc9e
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	65.B5.23488.19DEEB76; Wed, 26 Feb 2025 19:31:45 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250226103142epsmtip1527f0d1050a1c8f0fe72e6a3929311c6~nu3d6d-Dt0651706517epsmtip1n;
-	Wed, 26 Feb 2025 10:31:42 +0000 (GMT)
-From: Swathi K S <swathi.ks@samsung.com>
-To: rmk+kernel@armlinux.org.uk
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, krzk+dt@kernel.org, swathi.ks@samsung.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com, gost.dev@samsung.com
-Subject: Re: [PATCH net-next] net: stmmac: dwc-qos: clean up clock
- initialisation
-Date: Wed, 26 Feb 2025 15:56:34 +0530
-Message-Id: <20250226102634.4584-1-swathi.ks@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <E1tlRMP-004Vt5-W1@rmk-PC.armlinux.org.uk>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WTe0xbVRzHd27b2xYoXAvigTggV5fBJqxFHrduDJ3LcuP4A8MkxkS7Sm/a
-	QrntelsURyYCK46ERxNlSpAVtzkGgekdYHlNYAq4ySbg0DroqDwi3dzYKEu6BbCloP99fs/v
-	7/zOOQKOuAONFGhoI2WgFVocDeB2Xo3bGe+a/kElmW2UEZ7FWkBcmLHxiPqbZVzizI83eMT8
-	0F98wt7fhRCLdQ6U+LWzikews5M8YqK7HiUqJud4RMNqK48YsoYTj6/fA8TXHW4+4Vzq5RPj
-	1RaEcH9n578qJicmxzhk+0U7Qs5Xd/DJrrppPmllTSTbfAolL5/7mOyyLSPkgyu3ULKqvRmQ
-	A1ek5DIblRn0Tt4+NaVQUoYYis7RKTW0Kg0/nCV/XZ6cIpHGS2VEKh5DK/KpNPxgRmb8IY3W
-	ezg8pkChNXldmQqGwffs32fQmYxUjFrHGNNwSq/U6pP0CYwinzHRqgSaMr4ilUgSk72JR/PU
-	49bt+k78w8bZBbQY/Pl8BRAKIJYEH7rMSAUIEIixHgAv9Exx/MYjAB2jJTy/8RjAkfIFzlZJ
-	+Xz/ZqAPwBb7INdvuAE0e1iuLwvFYuHvTd/zfRyGRUGzdRr1MQcb4ECHM8HHoVgWvL3yCPiY
-	i+2A8+zABoswGTyz1LapFg1bvu3fYCGWCpdOtaE+MYiNCKC9/A7wJx2Et0uvIn4Oha7hdr6f
-	I+FitXmT5bCl6hbXz2o4/cSC+jkd9v9W7/ULvMPFwUvde/zu7fDza22If+ZgWPl0brO9CNoa
-	tvgFuHp3crNlBOw8/4DvawMxEj49H+rfSQWAJdXjoAZE1f2vYAWgGURQeiZfRTHJ+kSa+uC/
-	S8vR5bNg4/3uesMGnDNLCYMAEYBBAAUcPEwk1PSqxCKlovAjyqCTG0xaihkEyd79WTiRz+bo
-	vB+ANsqlSTJJUkpKSpLs5RQp/pyotKtMJcZUCiOVR1F6yrBVhwiEkcVIGD38E0pI24ruWjVT
-	f3/5UiC7jvyxbbQYp0drPxVT6t3K431flYpQ55Hw6Rr9nfhvmkZ2TFxOJ2tuckTRwZF9cZoJ
-	ffwnvQuthXOBIXvdq2hR4hehFvNbscKOA2M/z0iPhr99uOWa7VjjkdRDGRaFrbZkRZua+0xr
-	Q/abotxa9X42wIGzzjWb/H7Q8Gup1wvGCoveDX7oLPFs2xnIVka4P1uP7Q7JNr24LshwpV88
-	ea/Pc87zfvTZvY6ZS1FDK6O7104UeFwnRCXq5cogebUmfy3xn7PuMOFS2Y2p08dPhxT88sR1
-	v8fByAsOHMNkTezicnZ9Vot5SCk56cJz37Nn4VxGrZDu4hgYxb8yUgurSAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWRfSyUcQDH/Z53cjyO9PPenmm7riVXVr9aa7aWnmVWaaaUdPE4ymF3XmKr
-	pCSnedlCM3HMpiPi1CHmrYZppciVjMlLZRPKS0nUsP77bN/Pvt8/vgwunsLtmfDIGEEVKY/g
-	KDPC8Jxz3pn9rVnhnp1ihZYmcwEqG6knUUHPLQIVvXhNoomOURoNtDZgaDJ/mEJvDBkk0o8Z
-	SdT3rIBCGuM4iQpXKknUobVFiy+nACp5Ok+jT7NNNOrNzMbQfM0A7Snm+4xvcf6JbgDjJzKf
-	0nxD/hDNa/WxvL48jeJrS6/zDfVzGD/T3E/xGU/KAd/WLOPn9M4nzAPMDoYIEeFxgmrXoQtm
-	Yb1ap2gDd6V47DOVBD46aoApA1kPmDrRSmqAGSNmGwFcyLlNbQR28MfNHHKDraFu9Qu9If0A
-	sPL34LpEsRL4/mEdvcY2rDO8rR2i1iSc7cdhsVaPawDDWLMnYW0yt+YQ7DY4oW8Dayxi98Oi
-	2Sp8Y8AFVlS3rrMpuw/OplWt94vZvTCr8xGWBSy0wKQc2AnRaqVCGSyLlkUK8W5quVIdG6lw
-	C45S6sH6IVJJPZheTN7VDjAGtAPI4JyNyDS8SSEWhcgTEgVVVJAqNkJQtwMHhuC2iHSy0wox
-	q5DHCJcFIVpQ/U8xxtQ+CTO3r98T2r/8/eiBlbK0a6Lp+LwHZ934HYW879Xzq8Nlf3IXMgyf
-	egy6CmXOgprQLWepAyVFfZ3idGmKd2fjfbki8JLE3U/l+2FEMmdudL4xFnJP9jNA07V9+djP
-	O+cs97l2OVYW4c3ShOqEpl8aD3aqRW8SN30w9F3MUveBGWzGATtiEbj57vVZolBREWr08uo3
-	afT1afvL+FugrzWbSkIGXVJXd49xl1stHWzc7BpXXimVxv1+daRrWV5Q92FJ/k1vanzS1aR0
-	tc9l8jERP2pOR9DSU55E1cWcpR586xkfLpRATk7pPsNWQotjokYC8fbftv5vBkXHK69aZXKE
-	Okwuk+IqtfwfUGfyHv8CAAA=
-X-CMS-MailID: 20250226103145epcas5p12873b39b9b467f35a38151e1938976d4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250226103145epcas5p12873b39b9b467f35a38151e1938976d4
-References: <E1tlRMP-004Vt5-W1@rmk-PC.armlinux.org.uk>
-	<CGME20250226103145epcas5p12873b39b9b467f35a38151e1938976d4@epcas5p1.samsung.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="IKrgYt4R"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51QJToOV011784
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:39:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	BiPDf3NLW+yGvrT10OYje340P3sXo9W1cFDbMr7u/kk=; b=IKrgYt4RXPdwtHLo
+	019UhXiNsIh7Ywm6PsYSD9KV4DMzC91oytVuorNMysWTLuyBMcCsnEALSi6u7lqm
+	LKc9nC3xN0XwfsFPk9WTzyIYcgysRXKBr1ygEqAZbZHcKze+shwkcXhCT50iVfaJ
+	kdi8XG6IxDMstE7d80Rjws4vl3fzBr+AzWBV9tICiFgkeX8DRdMu0cxCDXPy/MJX
+	DUTLcg2xLIdGZhoulxr8BOkFJYkyncNoC875tOb5jG4idpK4xdHbkE5Z6h/6L3t5
+	yLcBlT/KpTVcT8h5F3NfPx0Luw3GV1tvmX8W+MbDcyJbj08IvTfkpToU3L8OLD68
+	eIItpw==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 451prmm5a3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 03:39:48 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2f81a0d0a18so1211323a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 19:39:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740627588; x=1741232388;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BiPDf3NLW+yGvrT10OYje340P3sXo9W1cFDbMr7u/kk=;
+        b=qzhgVesTBI8oNUCX6BY+KK/CanKgaNVGZqJMw8dzn1mJSP4wEGqQStt5Bjr/h/3tz4
+         +bGou9biryUKEo/+MT6JCba6ztGY7RmQfkdBQcPhmkkqtZCloT7zT13ok6rHvY4tstU+
+         FvDNF0RPNWSqbHsgrFv00zwn5s2PqVtkHIk8nwtk++CBQLXo+zPI5EVzpF77TPx0B+WG
+         gm1mTa6gilA7JvpnE++8PNRxgOEQCoRTQEWxlyulatkjfdrw4SHYJRczm8YjjZI/DBlR
+         Fuf/gb/D16UGA5IPSyX7/SVRzKRMOzOp3v6E9JUUPJL3uFcqnFmpiESxVpzEv1F0DDZx
+         R1eg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtLA9nNeQqS65OCTRc6unuh42fHAn2S5b1gaJQhCtpie1CB5QA+WHSf01v0Fx3Wd8q7hwFOkQWOUUzir0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRbjE1lpXc8C5PciB+shXZm9Jy7zJtvSWq/pULQQKpXEDFBiHj
+	Ch7+DQ+EWmRPi1WZdfnKG6h3kfsc7R18K3HTp3pVWDFpedVz+j1jb0wiqYctpYtAkvIhYkJsb0U
+	GsX3CTTzQ8jNbu86bP9etInUdmDXxJQ9YT7L8yv1JL7RBoVVTaJcwee5timy3NWs=
+X-Gm-Gg: ASbGnctwRzYtR3kG8G6IVGwXsENfo14/l9k6wgk/xC0aB1sswtjA9YET6Cpm7JKaGFj
+	bCVMuO6v5F+9mJK7mmZEGGGfXERBYus07Yfsx+zX21CVQXCl3o3VB422x20NFzBhjMbb6rFwBxR
+	9Z1a7ExcMraOjGGbGsvDPRaKl4kweGJtIKyVF14ZGHbaUcY8E5Gvvm7mqnI/wSRzEVBTvC1F45H
+	cMNMl9FApMP4t4OVJA0mktfaLaHrmtt1PQn6lOrFWz/+vdcTVANoP5rbZcfHw2ISq1kQaykLPYe
+	5IYlX+7m+Ee4tL9HPQzrDfjBpV0lJwWSNg35HWKy9tnu
+X-Received: by 2002:a17:90b:540c:b0:2ee:f80c:6889 with SMTP id 98e67ed59e1d1-2fe68d064a4mr16813419a91.33.1740627587934;
+        Wed, 26 Feb 2025 19:39:47 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG+W4t33FA3KMwH1ikkC71nGMT26WMp7/JlR/4/dLA43Wj2y4kkKdxpe47SOg4q/G/BiHuvwg==
+X-Received: by 2002:a17:90b:540c:b0:2ee:f80c:6889 with SMTP id 98e67ed59e1d1-2fe68d064a4mr16813385a91.33.1740627587569;
+        Wed, 26 Feb 2025 19:39:47 -0800 (PST)
+Received: from [10.92.199.34] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22350531a43sm4162105ad.238.2025.02.26.19.39.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 19:39:46 -0800 (PST)
+Message-ID: <dd16f56b-f066-44b7-b5ff-baf608e0f87e@oss.qualcomm.com>
+Date: Thu, 27 Feb 2025 09:09:38 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add 'global'
+ interrupt
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        chaitanya chundru <quic_krichai@quicinc.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
+        amitk@kernel.org, dmitry.baryshkov@linaro.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez@oss.qualcomm.com
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+ <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
+ <20250226-enlightened-chachalaca-of-artistry-2de5ea@krzk-bin>
+ <t34rurxh5cb7hwzvt6ps3fgw4kh4ddwcieukskxxz5mo3pegst@jkapxm6izq7p>
+ <e83bc594-5500-4f76-b3d1-96f669515c24@kernel.org>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <e83bc594-5500-4f76-b3d1-96f669515c24@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: OSoOvXcYWdbZl-s2Mv1Q24sB6_TIA6z1
+X-Proofpoint-GUID: OSoOvXcYWdbZl-s2Mv1Q24sB6_TIA6z1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-27_02,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ mlxlogscore=708 spamscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502270026
 
->Precedence: bulk
->X-Mailing-List: netdev@vger.kernel.org
->List-Id: <netdev.vger.kernel.org>
->List-Subscribe: <mailto:netdev+subscribe@vger.kernel.org>
->List-Unsubscribe: <mailto:netdev+unsubscribe@vger.kernel.org>
->MIME-Version: 1.0
->Content-Disposition: inline
->Content-Transfer-Encoding: 8bit
->Content-Type: text/plain; charset="utf-8"
->Message-Id: <E1tlRMP-004Vt5-W1@rmk-PC.armlinux.org.uk>
->Sender: Russell King <rmk@armlinux.org.uk>
->Date: Fri, 21 Feb 2025 11:38:25 +0000
->
->Clean up the clock initialisation by providing a helper to find a
->named clock in the bulk clocks, and provide the name of the stmmac
->clock in match data so we can locate the stmmac clock in generic
->code.
->
->Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
->---
->dwc_eth_find_clk() should probably become a generic helper given that
->plat_dat->clks is part of the core platform support code, but that
->can be done later when converting more drivers - which I will get
->around to once I've got the set_clk_tx_rate() patch series out that
->someone else needs to make progress.
->
-> .../stmicro/stmmac/dwmac-dwc-qos-eth.c        | 32 +++++++++++--------
-> 1 file changed, 18 insertions(+), 14 deletions(-)
->
->diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
->index 392574bdd4a4..9e2035d1fb86 100644
->--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
->+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
->@@ -35,6 +35,16 @@ struct tegra_eqos {
-> 	struct gpio_desc *reset;
-> };
-> 
->+static struct clk *dwc_eth_find_clk(struct plat_stmmacenet_data *plat_dat,
->+				    const char *name)
->+{
->+	for (int i = 0; i < plat_dat->num_clks; i++)
->+		if (strcmp(plat_dat->clks[i].id, name) == 0)
->+			return plat_dat->clks[i].clk;
->+
->+	return 0;
->+}
->+
-> static int dwc_eth_dwmac_config_dt(struct platform_device *pdev,
-> 				   struct plat_stmmacenet_data *plat_dat)
-> {
->@@ -121,12 +131,7 @@ static int dwc_qos_probe(struct platform_device *pdev,
-> 			 struct plat_stmmacenet_data *plat_dat,
-> 			 struct stmmac_resources *stmmac_res)
-> {
->-	for (int i = 0; i < plat_dat->num_clks; i++) {
->-		if (strcmp(plat_dat->clks[i].id, "apb_pclk") == 0)
->-			plat_dat->stmmac_clk = plat_dat->clks[i].clk;
->-		else if (strcmp(plat_dat->clks[i].id, "phy_ref_clk") == 0)
->-			plat_dat->pclk = plat_dat->clks[i].clk;
->-	}
->+	plat_dat->pclk = dwc_eth_find_clk(plat_dat, "phy_ref_clk");
-> 
-> 	return 0;
-> }
->@@ -237,18 +242,12 @@ static int tegra_eqos_probe(struct platform_device *pdev,
-> 
-> 	eqos->dev = &pdev->dev;
-> 	eqos->regs = res->addr;
->+	eqos->clk_slave = data->stmmac_clk;
-> 
-> 	if (!is_of_node(dev->fwnode))
-> 		goto bypass_clk_reset_gpio;
-> 
->-	for (int i = 0; i < data->num_clks; i++) {
->-		if (strcmp(data->clks[i].id, "slave_bus") == 0) {
->-			eqos->clk_slave = data->clks[i].clk;
->-			data->stmmac_clk = eqos->clk_slave;
->-		} else if (strcmp(data->clks[i].id, "tx") == 0) {
->-			eqos->clk_tx = data->clks[i].clk;
->-		}
->-	}
->+	eqos->clk_tx = dwc_eth_find_clk(data, "tx");
-> 
-> 	eqos->reset = devm_gpiod_get(&pdev->dev, "phy-reset", GPIOD_OUT_HIGH);
-> 	if (IS_ERR(eqos->reset)) {
->@@ -312,15 +311,18 @@ struct dwc_eth_dwmac_data {
-> 		     struct plat_stmmacenet_data *data,
-> 		     struct stmmac_resources *res);
-> 	void (*remove)(struct platform_device *pdev);
->+	const char *stmmac_clk_name;
-> };
-> 
-> static const struct dwc_eth_dwmac_data dwc_qos_data = {
-> 	.probe = dwc_qos_probe,
->+	.stmmac_clk_name = "apb_pclk",
-> };
-> 
-> static const struct dwc_eth_dwmac_data tegra_eqos_data = {
-> 	.probe = tegra_eqos_probe,
-> 	.remove = tegra_eqos_remove,
->+	.stmmac_clk_name = "slave_bus",
-> };
-> 
-> static int dwc_eth_dwmac_probe(struct platform_device *pdev)
->@@ -360,6 +362,8 @@ static int dwc_eth_dwmac_probe(struct platform_device *pdev)
-> 	if (ret)
-> 		return dev_err_probe(&pdev->dev, ret, "Failed to enable clocks\n");
-> 
->+	data->stmmac_clk = dwc_eth_find_clk(plat_dat, data->stmmac_clk_name);
->+
-> 	ret = data->probe(pdev, plat_dat, &stmmac_res);
-> 	if (ret < 0) {
-> 		dev_err_probe(&pdev->dev, ret, "failed to probe subdriver\n");
 
-Hi Russell,
-Tested this patch on FSD platform and it works.
-Please feel free to add Tested-by: Swathi K S <swathi.ks@samsung.com>
 
--Swathi
+On 2/27/2025 3:03 AM, Krzysztof Kozlowski wrote:
+> On 26/02/2025 17:29, Bjorn Andersson wrote:
+>>>> @@ -54,7 +54,7 @@ properties:
+>>>>   
+>>>>     interrupts:
+>>>>       minItems: 8
+>>>> -    maxItems: 8
+>>>> +    maxItems: 9
+>>>>   
+>>>>     interrupt-names:
+>>>>       items:
+>>>> @@ -66,6 +66,7 @@ properties:
+>>>>         - const: msi5
+>>>>         - const: msi6
+>>>>         - const: msi7
+>>>> +      - const: global
+>>>
+>>> Either context is missing or these are not synced with interrupts.
+>>>
+>>
+>> I think the patch context ("properties") is confusing here, but it looks
+>> to me that these are in sync: interrupts is defined to have 8 items, and
+>> interrupt-names is a list of msi0 through msi7.
+> 
+> interrupt-names has minItems 9 in this case, so they are not synced.
+> That's my concern
+> 
+Ok I will update the minItems to 9 as suggested.
 
->-- 
->2.30.2
+- Krishna Chaitanya.
+> 
+> Best regards,
+> Krzysztof
