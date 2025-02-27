@@ -1,39 +1,35 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AF90270031;
-	Thu, 27 Feb 2025 03:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A5F270031;
+	Thu, 27 Feb 2025 03:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740628788; cv=none; b=s/XcU45BX6lNM53w2a/iahLNMXL+G2VT/oeR19Q8vj3Wo7trf6b66/8VXe3JyTlG0QspQTwFTOO2D72RQ3RBudnkO8hu7EqfgTKG7mwAVWLlXTzk0AxNx7bGhfYQKJxMcZ3nnYQXfea9YhN3XbFiwXnpRhymML0jarFOoayRMqU=
+	t=1740628800; cv=none; b=DXdXMeO6ns/vt/pELHMP8OpIV92Z9r+kYB1cX8YDYv+3avgQ82AYBzyO4WsZMZ4KTK0d8PnZN8WzWXxro1P+So25D5A0UDeW7ynbCkOW9DhTSeVvZpGJ3PScWYkt1dBg94cPRXzOndIGZqMyo1x03gDLP6m6RNCVu0JU+rszdbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740628788; c=relaxed/simple;
-	bh=CTbn3mDU1q2bd4YekBgaUFA9rOPCxfYb+qhX0gJiXmw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KmfCfFNZDnm1+nKBA/PpM43Bvuz5I9dLdG8/yioWPbbaL8k442h3M/AGU0EKWKI6dFecU3kSIC7XhLms9UPMgDXSlKek6EshC5UISCddkEW/7jDSi7Hjmtax93vGi/R014dew/bM6/AkoIbhYAsmtMxSm55ppSRYV8SRbO8U8a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W7/AXjWO; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740628800; c=relaxed/simple;
+	bh=PXwwjYBG0TEbPFo6wPf+Qlk8kiWbzki99+R+i9PcAlw=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I5/j3rGhqXUSOCM5nO0ODD71oYNEuYx6xc6b9s++psd0n0NsD1gkzvLbMxa6P9YolET0i8BbUMNvnW5M716b7+h/zf83lUH2NxqzDIdmYlcy7OgQ3mI/h9LNZRhfUtH8qG+wcvj0Wcn1X7hvCC6///Ox8bO2Vl1dpl7sVi7K4Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qN6JZkkB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W7/AXjWO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Hn/CJ
-	t9Yrsg1ucTjtdL991VMH20VtNJuTV1fblUx8lI=; b=W7/AXjWO9sBuU2jjR6NAV
-	EMDpwzSYG05pI+mTZbozJ1G7WojV/FEuo5uy7Pdpy+GtZZo4YxXexhG6hyYijWWh
-	WKR+rWXzFg5b58AlFE2PtA2vKYa4Fyfozi2vO//Nd/HGgaH26vWgDbZ+TJfFxAjS
-	3Tm1KmSN+gfU8SYilu7hgg=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDX79EF479nOIz7Ow--.31489S4;
-	Thu, 27 Feb 2025 11:59:02 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: mporter@kernel.crashing.org,
-	alex.bou9@gmail.com,
-	haoxiang_li2024@163.com,
-	error27@gmail.com,
-	akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] rapidio: fix an API misues when rio_add_net() fails
-Date: Thu, 27 Feb 2025 11:58:59 +0800
-Message-Id: <20250227035859.3675795-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qN6JZkkB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0E1C4CEDD;
+	Thu, 27 Feb 2025 03:59:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740628799;
+	bh=PXwwjYBG0TEbPFo6wPf+Qlk8kiWbzki99+R+i9PcAlw=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=qN6JZkkBV5HIcGNQmUnMNUl0D/cnWKCb7pe8exBqMyO+R2lTfN5KxjWmBrY3IGs3l
+	 rNR+8Hp721FwcsUszXwXtX0SBV+UUuXzet6UlldpXobJ5J7ECGAllxYdX44ypk4h2y
+	 qO9PBKjGfxT6ZO8WyaTSt8KJpmgpd47H4uOX8X50GmoNGbGvJu+eCVwK4E5JHH2tFi
+	 KaSsMQgxGyH33KUBQczz/qxM13TT6yUkmSzDcJ79umK/p+vC+j7RDdfF/L6baj506m
+	 gKrvfKfYFdwLN9unOBdT7864ddEcrMA/y4U/YoRCN17uMbcxDJy5h/y7pR7ioyRszM
+	 3gTzS4OHqbMZw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE01E380CFE6;
+	Thu, 27 Feb 2025 04:00:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,36 +37,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDX79EF479nOIz7Ow--.31489S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XF1ktr15GrW8Jw1UXrWUArb_yoWfZrgEkw
-	48urn7Xws5AF4rJ345Wwn3ZF4F9F1xtrZ5ZF4jqFZ3GrZ3XF9Fgr1DXFs5tw15ZF1xZF97
-	Za40gr1rCw47GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sREs2atUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0hsBbme-4c0gOwAAsJ
+Subject: Re: [PATCH net 0/3] mlx5 misc fixes 2025-02-25
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174062883149.960972.10978491350422097713.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Feb 2025 04:00:31 +0000
+References: <20250225072608.526866-1-tariqt@nvidia.com>
+In-Reply-To: <20250225072608.526866-1-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, andrew+netdev@lunn.ch, gal@nvidia.com,
+ mbloch@nvidia.com, saeedm@nvidia.com, leon@kernel.org, cratiu@nvidia.com,
+ cjubran@nvidia.com, shayd@nvidia.com, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
-rio_add_net() calls device_register() and fails when device_register()
-fails. Thus, put_device() should be used rather than kfree().
+Hello:
 
-Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
- drivers/rapidio/devices/rio_mport_cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-index 27afbb9d544b..cfff1c82fb25 100644
---- a/drivers/rapidio/devices/rio_mport_cdev.c
-+++ b/drivers/rapidio/devices/rio_mport_cdev.c
-@@ -1742,7 +1742,7 @@ static int rio_mport_add_riodev(struct mport_cdev_priv *priv,
- 		err = rio_add_net(net);
- 		if (err) {
- 			rmcd_debug(RDEV, "failed to register net, err=%d", err);
--			kfree(net);
-+			put_device(&net->dev);
- 			goto cleanup;
- 		}
- 	}
+On Tue, 25 Feb 2025 09:26:05 +0200 you wrote:
+> Hi,
+> 
+> This small patchset provides misc bug fixes from the team to the mlx5
+> core driver.
+> 
+> Thanks,
+> Tariq.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/3] net/mlx5: Fix vport QoS cleanup on error
+    https://git.kernel.org/netdev/net/c/7f3528f7d2f9
+  - [net,2/3] net/mlx5: Restore missing trace event when enabling vport QoS
+    https://git.kernel.org/netdev/net/c/47bcd9bf3d23
+  - [net,3/3] net/mlx5: IRQ, Fix null string in debug print
+    https://git.kernel.org/netdev/net/c/2f5a6014eb16
+
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
