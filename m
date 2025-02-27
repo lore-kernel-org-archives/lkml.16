@@ -1,299 +1,231 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B9C1A9B2A;
-	Thu, 27 Feb 2025 21:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532611A9B2A;
+	Thu, 27 Feb 2025 21:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692380; cv=none; b=SdSTXymt3YEhONWX8YqrJI/eLzFUWKiiRxWKtT5qeKyacqBbnpmY1DKoXhOnYcfD3nf5jdQ3XKeyDSZt7pIbCJ6l16unF7RW+BzJKjFjLBZBU4gDGbvHR1lOAfRXXVsNiYaqZicvZ8qeYLxtkKeqzUjvuXACgJg5a5lHgbCu9jg=
+	t=1740692454; cv=none; b=UI8sb9QwwJxZIKo2Muh5OGxS12n+NraWaHQpAcHvsZtZZwT3tDUaBIEFxrunhp14a+HG18mrmPcMj7CQt/evc6hbCaBPR5KH/D73YW4mYZ9t8/VL5NB/XkIGD5JwqjAH2t+T/r6nd4WD0QI9NtljssHucsq7YyjZIVF5nfGRRng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692380; c=relaxed/simple;
-	bh=Y3E7VGIAhO0Vv9/c8425Yr/gdlv8MZnGhkzpRUXwtNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bE4M1dWkQmU30IvoQsxLGzyUJTnU3lNP/lGlp0FsNHJpe2WpFKxXLwrEgdgjJIccJUO0Ei6dpCSKstdlpzPAur0FjFwW/zCBTtOmh3XlnSpa1ywIhEduq2CKGRLvouaWX9etDsjeGbZzYTH2LbwZFiGcGtZ2uzeFKWgao7vt4fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NFvilmyF; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740692454; c=relaxed/simple;
+	bh=L80Hlu8u8o5Ot4DJmrVS3vc1lu4qJoip5Aoy1QOg3tc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pc0EhZ0tBQDhrvXWZ0Dirf4TKjJVWZBNWODXXvP9b8vu4Et8ZbQmL0oNxTh0s8H766QrzCIbtKY11Bo9QZ54GWD+sz6LEylf9+/e9n9cY4upY0YNcvq1vJkMQ74V5VienNxGHGNkRp75429qjtk7i8FoK0I9RNpbnqyFw6yVJkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifD9LFyf; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NFvilmyF"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51RLdRdo2469570
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 27 Feb 2025 15:39:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740692367;
-	bh=nVZYza+MC2QljsqmOtf10Gpoo5weCxof9ntu9Cj1Hxs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=NFvilmyFCUXFa6DvuSlPY4UKrb8yobGSZ6qeBJKJKx1G9vvOx0HPQlpIx6IOFRzYA
-	 MSbEhX8U2eK7UHYfu++1/mYI0Lgy28mBOQgbI5UhZ0gvUY4fZ3ASlWvpqf9U5R4yjO
-	 2WBZle8Txdr1tDLJVdK8xhpgfruOUa2SSBkjePUU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51RLdRCx038307;
-	Thu, 27 Feb 2025 15:39:27 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
- Feb 2025 15:39:27 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 27 Feb 2025 15:39:27 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51RLdQAv018642;
-	Thu, 27 Feb 2025 15:39:26 -0600
-Message-ID: <3b232103-3c02-4d7a-864c-45e6a3de3095@ti.com>
-Date: Thu, 27 Feb 2025 15:39:26 -0600
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifD9LFyf"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54843052bcdso1242378e87.1;
+        Thu, 27 Feb 2025 13:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740692450; x=1741297250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r485+lRjbUqyvnC85LY4WqpLa9nC9htuImJ9LIfqUKQ=;
+        b=ifD9LFyfIn0Uce2rcKCD8P/KFpCn5LX9edfRNTMckBQxSAC+UsEpmMPkKuBeikyTaU
+         jSG/KgsdMWv/e1/a+1yUikPCkQpKaTAgXofFcMW0x9aReN/6CFauW1VYxke9M+AxMTdc
+         I7hs3F69I2A8yY4Pzm3icL6WIFh0ZPXXLiBs2ZtDorv6S0nooZEL3VToMCnl0wVMDosW
+         3+Q1kTZ9jyxKDwojMyi+kan//+9cHVkYRFqLL9H6O+jv3hZlbgPr0YNUnriSJIiMCQZQ
+         5G64ZOu6EtmSjuwITpldtVHISowibDY24bQB0X6x4jLZBejY5IH6SkiOsABjWhi7cUHS
+         6kCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740692450; x=1741297250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r485+lRjbUqyvnC85LY4WqpLa9nC9htuImJ9LIfqUKQ=;
+        b=O6Xg0RsDFwVqo4ww3Xkn7ZfNS8dHsyXv8+m8OPIhB7WlrTiKejvl7KRgo7xVmVFHXL
+         cHChmzD59r+HzwkMh5QQ7mw6TGNJUaJlhq1EiV2i7P84dCbMT1GSrC40Bl3+pyjEavQN
+         Hz1t4W7aFpBNciYylnSeMuxdq20TDzvg5QaV/MFnszA0ANohmal2vBaPof3Qwxe382rz
+         mor/Bvcwa1atnuIMXhZQ6NsI27Xiw6UvmwKdbgEa+qXR4nFdTWl17tfWCB7/MWIDjgY4
+         mrGvgrPgYW6bP7FiIx9DS/V6t+DmDzx9M+b+yrHquycSfS35hozlsQppNliC8hV5dFdY
+         AyLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlRxo3hzeQC6haJcjgw3/2SWElI579wbXAheoRsEFkNii4xmrNh8bDEkHYKGVU4sReHCrCEy5ZyAXUOWw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp5ZnUILHG3r1dKu8ZNVruDrWGzGwoVS843xfmkstUdKX/KBoI
+	+DBQ0x0AjvBoe32ooQpvE4yEPcF1tdYwionQ5YLlr/snA7HRWEpx73C1wnscgsgc83jOmcnCfzM
+	Hb9LTI3kuiWWFVUew8OAID5M1TuzCH4Zz50A=
+X-Gm-Gg: ASbGncvqJE8QM8y33nJloMaQgo14YjqAg+axnruRuFH9wNkXg2aHq39SVe7rBUBYw6m
+	9K1maPr0C/6BZqdVOm299rf2Ye9knKYfppNZsfYLijtz+AB6kwraHgocZBBdIp0GXP8uzaCYqHR
+	Mf+Zak7g==
+X-Google-Smtp-Source: AGHT+IHc/Epr7Ps+0AR+8pRbVCia557Ml9EMV/xnohQ/bDgHDHT8kiVp140V7y6FhpaXwbFME5SmOFEqm3/MMUqyuaE=
+X-Received: by 2002:a19:521a:0:b0:549:4df0:76 with SMTP id 2adb3069b0e04-5494df00079mr133755e87.4.1740692450037;
+ Thu, 27 Feb 2025 13:40:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/2] mux: mmio: Extend mmio-mux driver to configure
- mux with new DT property
-To: Chintan Vankar <c-vankar@ti.com>, Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Peter Rosin <peda@axentia.se>,
-        <tglx@linutronix.de>, <gregkh@linuxfoundation.org>, <vigneshr@ti.com>,
-        <nm@ti.com>, <s-vadapalli@ti.com>, <danishanwar@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250227202206.2551305-1-c-vankar@ti.com>
- <20250227202206.2551305-3-c-vankar@ti.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <20250227202206.2551305-3-c-vankar@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250227171417.4023415-1-chharry@google.com>
+In-Reply-To: <20250227171417.4023415-1-chharry@google.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Fri, 28 Feb 2025 02:40:37 +0500
+X-Gm-Features: AQ5f1JoMkjAaQBE1fZYPMwpPqsgvE_QCMmnXVYFBRCrp0nJBRvjDWUeAH45XxtE
+Message-ID: <CABBYNZ+QdWQ49ZMxPLj86d=kjr7Sf38LR1PrYrPhU8kZMQuh0A@mail.gmail.com>
+Subject: Re: [PATCH v3] Bluetooth: btusb: Configure altsetting for HCI_USER_CHANNEL
+To: Hsin-chen Chuang <chharry@google.com>
+Cc: linux-bluetooth@vger.kernel.org, gregkh@linuxfoundation.org, 
+	pmenzel@molgen.mpg.de, chromeos-bluetooth-upstreaming@chromium.org, 
+	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/27/25 2:22 PM, Chintan Vankar wrote:
-> MMIO mux driver is designed to parse "mux-reg-masks" and "idle-states"
-> property independently to configure mux registers. Drawback of this
-> approach is, while configuring mux-controller one need to specify every
-> register of memory space with offset and mask in "mux-reg-masks" and
-> register state to "idle-states", that would be more complex for devices
-> with large memory space.
-> 
-> Add support to extend the mmio mux driver to configure a specific register
-> or set of register in memory space.
-> 
-> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+Hi Hsin-chen,
+
+On Thu, Feb 27, 2025 at 12:14=E2=80=AFPM Hsin-chen Chuang <chharry@google.c=
+om> wrote:
+>
+> From: Hsin-chen Chuang <chharry@chromium.org>
+>
+> Automatically configure the altsetting for HCI_USER_CHANNEL when a SCO
+> is connected.
+>
+> The motivation is to enable the HCI_USER_CHANNEL user to send out SCO
+> data through USB Bluetooth chips, which is mainly used for bidirectional
+> audio transfer (voice call). This was not capable because:
+>
+> - Per Bluetooth Core Spec v5, Vol 4, Part B, 2.1, the corresponding
+>   alternate setting should be set based on the air mode in order to
+>   transfer SCO data, but
+> - The Linux Bluetooth HCI_USER_CHANNEL exposes the Bluetooth Host
+>   Controller Interface to the user space, which is something above the
+>   USB layer. The user space is not able to configure the USB alt while
+>   keeping the channel open.
+>
+> This patch intercepts the HCI_EV_SYNC_CONN_COMPLETE packets in btusb,
+> extracts the air mode, and configures the alt setting in btusb.
+>
+> This patch is tested on ChromeOS devices. The USB Bluetooth models
+> (CVSD, TRANS alt3 and alt6) could work without a customized kernel.
+>
+> Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control US=
+B alt setting")
+> Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
 > ---
->   drivers/mux/mmio.c | 148 +++++++++++++++++++++++++++++++++++++--------
->   1 file changed, 122 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/mux/mmio.c b/drivers/mux/mmio.c
-> index 30a952c34365..8937d0ea2b11 100644
-> --- a/drivers/mux/mmio.c
-> +++ b/drivers/mux/mmio.c
-> @@ -2,7 +2,7 @@
->   /*
->    * MMIO register bitfield-controlled multiplexer driver
->    *
-> - * Copyright (C) 2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
-> + * Copyright (C) 2017-2025 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
->    */
->   
->   #include <linux/bitops.h>
-> @@ -33,10 +33,84 @@ static const struct of_device_id mux_mmio_dt_ids[] = {
->   };
->   MODULE_DEVICE_TABLE(of, mux_mmio_dt_ids);
->   
-> +static int reg_mux_get_controllers(const struct device_node *np, char *prop_name)
+>
+> Changes in v3:
+> - Remove module parameter
+> - Set Kconfig to default y if CHROME_PLATFORMS
+>
+> Changes in v2:
+> - Give up tracking the SCO handles. Only configure the altsetting when
+>   SCO connected.
+> - Put the change behind Kconfig/module parameter
+>
+>  drivers/bluetooth/Kconfig | 11 ++++++++++
+>  drivers/bluetooth/btusb.c | 43 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 54 insertions(+)
+>
+> diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
+> index 4ab32abf0f48..cdf7a5caa5c8 100644
+> --- a/drivers/bluetooth/Kconfig
+> +++ b/drivers/bluetooth/Kconfig
+> @@ -56,6 +56,17 @@ config BT_HCIBTUSB_POLL_SYNC
+>           Say Y here to enable USB poll_sync for Bluetooth USB devices by
+>           default.
+>
+> +config BT_HCIBTUSB_AUTO_SET_ISOC_ALT
+> +       bool "Auto set isoc_altsetting for HCI_USER_CHANNEL when SCO conn=
+ected"
+> +       depends on BT_HCIBTUSB
+> +       default y if CHROME_PLATFORMS
+> +       help
+> +         Say Y here to enable auto set isoc_altsetting for HCI_USER_CHAN=
+NEL
+> +         when SCO connected
+> +
+> +         When enabled, btusb intercepts the HCI_EV_SYNC_CONN_COMPLETE pa=
+ckets
+> +         and configures isoc_altsetting automatically for HCI_USER_CHANN=
+EL.
+> +
+>  config BT_HCIBTUSB_BCM
+>         bool "Broadcom protocol support"
+>         depends on BT_HCIBTUSB
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index de3fa725d210..2642d2ca885f 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -34,6 +34,8 @@ static bool force_scofix;
+>  static bool enable_autosuspend =3D IS_ENABLED(CONFIG_BT_HCIBTUSB_AUTOSUS=
+PEND);
+>  static bool enable_poll_sync =3D IS_ENABLED(CONFIG_BT_HCIBTUSB_POLL_SYNC=
+);
+>  static bool reset =3D true;
+> +static bool auto_set_isoc_alt =3D
+> +       IS_ENABLED(CONFIG_BT_HCIBTUSB_AUTO_SET_ISOC_ALT);
+>
+>  static struct usb_driver btusb_driver;
+>
+> @@ -1113,6 +1115,42 @@ static inline void btusb_free_frags(struct btusb_d=
+ata *data)
+>         spin_unlock_irqrestore(&data->rxlock, flags);
+>  }
+>
+> +static void btusb_sco_connected(struct btusb_data *data, struct sk_buff =
+*skb)
 > +{
-> +	int ret;
+> +       struct hci_event_hdr *hdr =3D (void *) skb->data;
+> +       struct hci_ev_sync_conn_complete *ev =3D
+> +               (void *) skb->data + sizeof(*hdr);
+> +       struct hci_dev *hdev =3D data->hdev;
+> +       unsigned int notify_air_mode;
 > +
-> +	ret = of_property_count_u32_elems(np, prop_name);
-> +	if (ret == 0 || ret % 2)
-> +		ret = -EINVAL;
+> +       if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT)
+> +               return;
 > +
-> +	return ret;
+> +       if (skb->len < sizeof(*hdr) || hdr->evt !=3D HCI_EV_SYNC_CONN_COM=
+PLETE)
+> +               return;
+> +
+> +       if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->status)
+> +               return;
+> +
+> +       switch (ev->air_mode) {
+> +       case BT_CODEC_CVSD:
+> +               notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_CVSD;
+> +               break;
+> +
+> +       case BT_CODEC_TRANSPARENT:
+> +               notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_TRANSP;
+> +               break;
+> +
+> +       default:
+> +               return;
+> +       }
+> +
+> +       bt_dev_info(hdev, "enabling SCO with air mode %u", ev->air_mode);
+> +       data->sco_num =3D 1;
+> +       data->air_mode =3D notify_air_mode;
+> +       schedule_work(&data->work);
 > +}
 > +
-> +static int reg_mux_get_controllers_extended(const struct device_node *np, char *prop_name)
-> +{
-> +	int ret;
+>  static int btusb_recv_event(struct btusb_data *data, struct sk_buff *skb=
+)
+>  {
+>         if (data->intr_interval) {
+> @@ -1120,6 +1158,11 @@ static int btusb_recv_event(struct btusb_data *dat=
+a, struct sk_buff *skb)
+>                 schedule_delayed_work(&data->rx_work, 0);
+>         }
+>
+> +       /* Configure altsetting for HCI_USER_CHANNEL on SCO connected */
+> +       if (auto_set_isoc_alt &&
+> +           hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
+> +               btusb_sco_connected(data, skb);
 > +
-> +	ret = of_property_count_u32_elems(np, prop_name);
-> +	if (ret == 0 || ret % 3)
-> +		ret = -EINVAL;
-> +
-> +	return ret;
-> +}
-> +
-> +static int reg_mux_parse_dt(const struct device_node *np, bool *mux_reg_masks_state,
-> +			    int *num_fields)
-> +{
-> +	int ret;
-> +
-> +	if (*mux_reg_masks_state) {
-> +		ret = reg_mux_get_controllers_extended(np, "mux-reg-masks-state");
-> +		if (ret < 0)
-> +			return ret;
-> +		*num_fields = ret / 3;
-> +	} else {
-> +		ret = reg_mux_get_controllers(np, "mux-reg-masks");
-> +		if (ret < 0)
-> +			return ret;
-> +		*num_fields = ret / 2;
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int mux_reg_set_parameters(const struct device_node *np, char *prop_name, u32 *reg,
-> +				  u32 *mask, int index)
-> +{
-> +	int ret;
-> +
-> +	ret = of_property_read_u32_index(np, prop_name,
-> +					 2 * index, reg);
-> +	if (!ret)
-> +		ret = of_property_read_u32_index(np, prop_name,
-> +						 2 * index + 1, mask);
-> +
-> +	return ret;
-> +}
-> +
-> +static int mux_reg_set_parameters_extended(const struct device_node *np, char *prop_name, u32 *reg,
-> +					   u32 *mask, u32 *state, int index)
-> +{
-> +	int ret;
-> +
-> +	ret = of_property_read_u32_index(np, prop_name,
-> +					 3 * index, reg);
+>         return data->recv_event(data->hdev, skb);
+>  }
+>
+> --
+> 2.48.1.658.g4767266eb4-goog
 
-This is some odd line wrapping, why newline at 55 chars here?
-You can go to 80 or 100 if it is readable.
+This has been merged, I did some minor rewording here and there but
+the logic remains the same, now we can problem revert b16b327edb4d
+("Bluetooth: btusb: add sysfs attribute to control USB alt setting")?
 
-> +	if (!ret) {
-
-Just return early, no need for this MISRA-like "single return" junk.
-
-> +		ret = of_property_read_u32_index(np, prop_name,
-> +						 3 * index + 1, mask);
-> +		if (!ret)
-> +			ret = of_property_read_u32_index(np, prop_name,
-> +							 3 * index + 2, state);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->   static int mux_mmio_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct device_node *np = dev->of_node;
-> +	bool mux_reg_masks_state = false;
->   	struct regmap_field **fields;
->   	struct mux_chip *mux_chip;
->   	struct regmap *regmap;
-> @@ -59,15 +133,19 @@ static int mux_mmio_probe(struct platform_device *pdev)
->   		return dev_err_probe(dev, PTR_ERR(regmap),
->   				     "failed to get regmap\n");
->   
-> -	ret = of_property_count_u32_elems(np, "mux-reg-masks");
-> -	if (ret == 0 || ret % 2)
-> -		ret = -EINVAL;
-> +	if (of_property_present(np, "mux-reg-masks-state"))
-> +		mux_reg_masks_state = true;
-> +
-> +	ret = reg_mux_parse_dt(np, &mux_reg_masks_state, &num_fields);
-
-Why are you passing this bool by pointer? You don't modify it in the function..
-
->   	if (ret < 0) {
-> -		dev_err(dev, "mux-reg-masks property missing or invalid: %d\n",
-> -			ret);
-> +		if (mux_reg_masks_state)
-> +			dev_err(dev, "mux-reg-masks-state property missing or invalid: %d\n",
-> +				ret);
-> +		else
-> +			dev_err(dev, "mux-reg-masks property missing or invalid: %d\n",
-> +				ret);
->   		return ret;
->   	}
-> -	num_fields = ret / 2;
->   
->   	mux_chip = devm_mux_chip_alloc(dev, num_fields, num_fields *
->   				       sizeof(*fields));
-> @@ -79,19 +157,25 @@ static int mux_mmio_probe(struct platform_device *pdev)
->   	for (i = 0; i < num_fields; i++) {
->   		struct mux_control *mux = &mux_chip->mux[i];
->   		struct reg_field field;
-> -		s32 idle_state = MUX_IDLE_AS_IS;
-> +		s32 state, idle_state = MUX_IDLE_AS_IS;
->   		u32 reg, mask;
->   		int bits;
->   
-> -		ret = of_property_read_u32_index(np, "mux-reg-masks",
-> -						 2 * i, &reg);
-> -		if (!ret)
-> -			ret = of_property_read_u32_index(np, "mux-reg-masks",
-> -							 2 * i + 1, &mask);
-> -		if (ret < 0) {
-> -			dev_err(dev, "bitfield %d: failed to read mux-reg-masks property: %d\n",
-> -				i, ret);
-> -			return ret;
-> +		if (!mux_reg_masks_state) {
-> +			ret = mux_reg_set_parameters(np, "mux-reg-masks", &reg, &mask, i);
-> +			if (ret < 0) {
-> +				dev_err(dev, "bitfield %d: failed to read mux-reg-masks property: %d\n",
-> +					i, ret);
-> +				return ret;
-> +			}
-> +		} else {
-> +			ret = mux_reg_set_parameters_extended(np, "mux-reg-masks-state", &reg,
-> +							      &mask, &state, i);
-> +			if (ret < 0) {
-> +				dev_err(dev, "bitfield %d: failed to read custom-states property: %d\n",
-> +					i, ret);
-> +				return ret;
-> +			}
->   		}
->   
->   		field.reg = reg;
-> @@ -115,16 +199,28 @@ static int mux_mmio_probe(struct platform_device *pdev)
->   		bits = 1 + field.msb - field.lsb;
->   		mux->states = 1 << bits;
->   
-> -		of_property_read_u32_index(np, "idle-states", i,
-> -					   (u32 *)&idle_state);
-> -		if (idle_state != MUX_IDLE_AS_IS) {
-> -			if (idle_state < 0 || idle_state >= mux->states) {
-> -				dev_err(dev, "bitfield: %d: out of range idle state %d\n",
-> -					i, idle_state);
-> -				return -EINVAL;
-> +		if (!mux_reg_masks_state) {
-> +			of_property_read_u32_index(np, "idle-states", i,
-> +						   (u32 *)&idle_state);
-
- From here down, both branches of this are almost identical, idle_state and
-your new "state" var do the same thing, why do you need both?
-
-Andrew
-
-> +			if (idle_state != MUX_IDLE_AS_IS) {
-> +				if (idle_state < 0 || idle_state >= mux->states) {
-> +					dev_err(dev, "bitfield: %d: out of range idle state %d\n",
-> +						i, idle_state);
-> +					return -EINVAL;
-> +				}
-> +
-> +				mux->idle_state = idle_state;
-> +			}
-> +		} else {
-> +			if (state != MUX_IDLE_AS_IS) {
-> +				if (state < 0 || state >= mux->states) {
-> +					dev_err(dev, "bitfield: %d: out of range idle state %d\n",
-> +						i, state);
-> +					return -EINVAL;
-> +				}
-> +
-> +				mux->idle_state = state;
->   			}
-> -
-> -			mux->idle_state = idle_state;
->   		}
->   	}
->   
+--=20
+Luiz Augusto von Dentz
