@@ -1,218 +1,257 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FA81B4139
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343381B21B7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740674493; cv=none; b=qNCHWnadfvV5ihHkO4Kz5TAx0MKe51V/Fyiz9kgFIllA3o+KnaBx7O4hkF6NCM0OIhnU/eP8xqcqVRGVGLyeCfqKzWE9w9YJiQk4Pd2MmrT2iv3n6L4pIvZ5Ddvu5zb+h4y85f3ux0XshK9ENJRS8Vrl1CcPmGqo5iJGSasVsSM=
+	t=1740674612; cv=none; b=dh2/RyifazhfWtsguDVo46DbpNcv0eKY1rTTOcskcTI+s9J5cevBBjgVZ+hV164SQXjsgptT3EFi4nW/Z2NvCBa1sQidsRFfxD71zYtId3xcj3kXlIVugVUAn4xIUPgmHcsulqJQ64zGmpCHLnG5jHSKVeFIQazfWYHyC1JrJ5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740674493; c=relaxed/simple;
-	bh=QRz2GR01hMpu7P7aMvh4cB65ZqdVrSDqQqVZTdvDRCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q4bI5j8HB9zPaIckcEmwWdz+/jjLoD+VeCbScj/HLEtvArUFwadI9WLZ2LLsb2fpA1Z1M7OptDvQe8Zfl4TUIYQGLVhMIfzr+8w0uahrvrHfDgWs5CntOYHGR1ANCdp947pl5eFys0q/YSyxwwTvjyxn4hc8vlM3Mi77jW+zTjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tngwH-0007ld-79; Thu, 27 Feb 2025 17:40:45 +0100
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tngwE-0039ik-2j;
-	Thu, 27 Feb 2025 17:40:42 +0100
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tngwE-003TkQ-2I;
-	Thu, 27 Feb 2025 17:40:42 +0100
-Date: Thu, 27 Feb 2025 17:40:42 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 06/12] net: pse-pd: Add support for budget
- evaluation strategies
-Message-ID: <Z8CVimyMj261wc7w@pengutronix.de>
-References: <20250220165129.6f72f51a@kernel.org>
- <20250224141037.1c79122b@kmaincent-XPS-13-7390>
- <20250224134522.1cc36aa3@kernel.org>
- <20250225102558.2cf3d8a5@kmaincent-XPS-13-7390>
- <20250225174752.5dbf65e2@kernel.org>
- <Z76t0VotFL7ji41M@pengutronix.de>
- <Z76vfyv5XoMKmyH_@pengutronix.de>
- <20250226184257.7d2187aa@kernel.org>
- <Z8AW6S2xmzGZ0y9B@pengutronix.de>
- <20250227155727.7bdc069f@kmaincent-XPS-13-7390>
+	s=arc-20240116; t=1740674612; c=relaxed/simple;
+	bh=N2U6Xyj+9lJkd79UADYQfgAlIIyD7zVtVL/LKmWPx0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h/3xOgxvUQBqpF9f2O/3Xp9U+PngKXxn618iiuqkWrw3rrPslabbSbJBomh2ZtYNiTPMoNizWrU+FkbmZV55JxyJnLIsPEs366gtSJe8WUyvpgmwg3y5upj8J760J/HG22hPO/V7BSv42kepsPJokQsdxMFfyjkv76nIGcAEDVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q6fPEnZx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6fPEnZx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740674607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TQNCbBxi7eD7idYstTcVVTcDcXqJ3+FMvik+jAH6Dos=;
+	b=Q6fPEnZx8nLEFQPAzBX7CCyKjB0JIFhgqsLYEMbMBhX8iq9ds9berfAbIIavAvAV9OlMHT
+	dOkvXaoyGN1BCwy4K+YgLRYQtxbv7i0/B7bK9izLbf/u9Bw1tXxJPRfaKuuX2QiAbYOeNo
+	Gq/7EZ3SLkqZsV4G0WLkRG/TISrqt70=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-141-rOjCYrpLPeG5hum8F66PKg-1; Thu, 27 Feb 2025 11:43:26 -0500
+X-MC-Unique: rOjCYrpLPeG5hum8F66PKg-1
+X-Mimecast-MFC-AGG-ID: rOjCYrpLPeG5hum8F66PKg_1740674605
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43988b9ecfbso6015295e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:43:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740674605; x=1741279405;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TQNCbBxi7eD7idYstTcVVTcDcXqJ3+FMvik+jAH6Dos=;
+        b=HvBDoR3TdGNKF3d9DRzRblfkIzkaYEoI6oOA/ycLm7bSngPsN7MJr3zrynZTv22ExK
+         gnN/fTLnVB4baTHAii8c33P3wSmAh1bfoEFUWXcJXbT5jPlFYnapC0fQIGPGedzks9LG
+         1iQsGUSVV5OwT1oc2Kh0XJPViS6yd1DSGPFzWI41uo/KffBCosd4JLtpn0h6Xy9UbI37
+         OY0Z56gpFpNEngXnuOqqyHbAZqwXHWq19leF8muV/PuwAaY5e1ZKwe4tn6IQrGKkoAdl
+         uLkz3uMiQsgsGVFC8cNupmgLZk2IG02JPBsLmaGEEO0c+1geMd/s02fH3x+/tgLPCHjd
+         GAiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUODI8QrM/0VbO6jZPj/jl1IJ9Y9d8UcChiVj+2jG/+ch8d/JWvTOQ1xPsswGxtF74HAe0+kXKAlsgLJqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywi76/lqBQuyfaTtZZZ4Eel0BgOYD0JMH6TId9QYoLizLvG1lGC
+	IaekfQ8fInuVwRztI8V69MmMvf9vzchQjBV2cOiqgqQV35XEEbb6Z12MZk+GO16qr0tkGHLt9WS
+	WTpLmY4wWEgaqsM8xSVnnOy14vb00A+Om7KqTjMZ9wjfcpiwU/+SMFTjKmtzkrg==
+X-Gm-Gg: ASbGnct8a9R85YHkjHdm+MRKLHzxJ5DM9PboQ8q/o1/BR+pSVZ2LZ1cEVjZloBAiDjY
+	NDNpehRtl3RaveFGt/jwLGq67MoY+IhReELsGXoG7arDWvgAN6Bbq/muu8mTtlvz5cwMb5NDxnE
+	jPkioumFd1om+GV0jFqXaSjn2csvzRiuxVtWNJc8kqZ+tWiFZSspNjdsLJsiYxkMixE64x2qoKJ
+	SgzTNoLirFvCw5e1HjV9hxKKDNBFFxPctz614Hf9uaSbyhFAlWYP0ffVhptJTckVMp5V/hzGNIq
+	Fes9O+qElP9Ci4mcdZFTSgZyld3tEq6KsPAmu6Uu1cWTRcQE5fRM53MSkCbG+HU=
+X-Received: by 2002:a05:600c:3c83:b0:439:82de:9166 with SMTP id 5b1f17b1804b1-43ab8fd1e8dmr64031145e9.1.1740674605052;
+        Thu, 27 Feb 2025 08:43:25 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFrTKA/tq7v3HDQicW7l4zuzGDkJqwkvaaj/r610R8fS1dVqhjB9P9yfyCOg58tOjH/0/jlEQ==
+X-Received: by 2002:a05:600c:3c83:b0:439:82de:9166 with SMTP id 5b1f17b1804b1-43ab8fd1e8dmr64030785e9.1.1740674604620;
+        Thu, 27 Feb 2025 08:43:24 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b737074d8sm29172345e9.16.2025.02.27.08.43.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 08:43:24 -0800 (PST)
+Date: Thu, 27 Feb 2025 17:43:21 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Ani Sinha
+ <anisinha@redhat.com>, Cleber Rosa <crosa@redhat.com>, Dongjiu Geng
+ <gengdongjiu1@gmail.com>, Eduardo Habkost <eduardo@habkost.net>, Eric Blake
+ <eblake@redhat.com>, John Snow <jsnow@redhat.com>, Marcel Apfelbaum
+ <marcel.apfelbaum@gmail.com>, Markus Armbruster <armbru@redhat.com>,
+ Michael Roth <michael.roth@amd.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Peter Maydell <peter.maydell@linaro.org>, Shannon Zhao
+ <shannon.zhaosl@gmail.com>, Yanan Wang <wangyanan55@huawei.com>, Zhao Liu
+ <zhao1.liu@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/19] Change ghes to use HEST-based offsets and add
+ support for error inject
+Message-ID: <20250227174321.0162a10f@imammedo.users.ipa.redhat.com>
+In-Reply-To: <cover.1740671863.git.mchehab+huawei@kernel.org>
+References: <cover.1740671863.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227155727.7bdc069f@kmaincent-XPS-13-7390>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 27, 2025 at 03:57:27PM +0100, Kory Maincent wrote:
-> On Thu, 27 Feb 2025 08:40:25 +0100
-> Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+On Thu, 27 Feb 2025 17:00:38 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+
+> Now that the ghes preparation patches were merged, let's add support
+> for error injection.
 > 
-> > On Wed, Feb 26, 2025 at 06:42:57PM -0800, Jakub Kicinski wrote:
-> > > On Wed, 26 Feb 2025 07:06:55 +0100 Oleksij Rempel wrote:  
-> > > > Here is one example how it is done by HP switches:
-> > > > https://arubanetworking.hpe.com/techdocs/AOS-CX/10.08/HTML/monitoring_6200/Content/Chp_PoE/PoE_cmds/pow-ove-eth-all-by.htm
-> > > > 
-> > > > switch(config)# interface 1/1/1    <---- per interface
-> > > > switch(config-if)# power-over-ethernet allocate-by usage
-> > > > switch(config-if)# power-over-ethernet allocate-by class
-> > > > 
-> > > > Cisco example:
-> > > > https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/93x/power-over-ethernet/configuration/configuring-power-over-ethernet/m-configuring-power-over-ethernet.html
-> > > > 
-> > > > switch(config)# interface ethernet1/1   <---- per interface
-> > > > switch(config-if)# power inline auto  
-> > > 
-> > > I don't see any mention of a domain in these docs.
-> > > This patchset is creating a concept of "domain" but does 
-> > > not expose it as an object.  
-> > 
-> > Ok, I see. @Köry, can you please provide regulator_summary with some
-> > inlined comments to regulators related to the PSE components and PSE
-> > related outputs of ethtool (or what ever tool you are using).
-> > 
-> > I wont to use this examples to answer.
+> On this version, HEST table got added to ACPI tables testing for aarch64 virt.
 > 
-> On my side, I am not close to using sysfs. As we do all configurations
-> through ethtool I have assumed we should continue with ethtool.
-
-Yes, I agree. But it won't be possible to do it for all components.
-
-> I think we should set the port priority through ethtool.
-
-ack
-
-> but indeed the PSE  power domain method get and set could be moved to
-> sysfs as it is not something  relative to the port but to a group of
-> ports.
-
-I would prefer to have it in the for of devlink or use regulator netlink
-interface. But, we do not need to do this discussion right now.
-
-> Ethtool should still report the  PSE power domain ID of a port to know
-> which domain the port is.
-
-Exactly.
-
-@Jakub, at current implementation stage, user need to know the domain
-id, because ports (and priorities) are grouped by the top level
-regulators (pse-regX in the regulator_summary), they are our top-level
-bottlenecks.
-
-HP and Cisco switch either use different PSE controllers, or just didn't
-exposed this nuance to the user. Let's assume, they have only one
-global power domain.
-
-So, in current patch set I would expect (not force :) ) implementation for
-following fields:
-- per port:
-  - priority (valid within the power domain)
-  - power reservation/allocation methods. First of all, because all
-    already supported controllers have different implemented/default
-    methods: microchip - dynamic, TI - static, regulator-pse - fixed (no
-    classification is supported).
-    At same time, in the future, we will need be able switch between
-    (static or dynamic) and fixed for LLPD or manual configuration.
-    Yes, at this point all ports show the same information and it seems
-    to be duplicated.
-  - power domain ID.
-
-@Jakub, did I answered you question, or missed the point? :)
-
-> @Oleksij here it is:
-
-Thank you!
-
-I do not expect it to be the primer user interface, but it can provide
-additional diagnostic information. I wonted to see how it is aligns
-with current ethtool UAPI implementation and if it possible to combine
-it for diagnostics.
-
-> # cat /sys/kernel/debug/regulator/regulator_summary
->  regulator                      use open bypass  opmode voltage current     min     max
-> ---------------------------------------------------------------------------------------
->  regulator-dummy                  5    4      0 unknown     0mV     0mA     0mV     0mV 
->     d00e0000.sata-target          1                                 0mA     0mV     0mV
->     d00e0000.sata-phy             1                                 0mA     0mV     0mV
->     d00e0000.sata-ahci            1                                 0mA     0mV     0mV
->     spi0.0-vcc                    1                                 0mA     0mV     0mV
->  pse-reg                          1    4      0 unknown     0mV     0mA     0mV     0mV 
-
-pse-regX should be attached to the main supply regulator for better full
-picture. And use different name to be better identified as PSE power domains with ID?
-
->     pse-0-0020_pi0                0    1      0 unknown 53816mV  2369mA     0mV     0mV 
->        0-0020-pse-0-0020_pi0      0                                 0mA     0mV     0mV
->     pse-0-0020_pi2                0    1      0 unknown 53816mV  2369mA     0mV     0mV 
->        0-0020-pse-0-0020_pi2      0                                 0mA     0mV     0mV
->     pse-0-0020_pi7                0    1      0 unknown 53816mV  2369mA     0mV     0mV 
->        0-0020-pse-0-0020_pi7      0                                 0mA     0mV     0mV
->  pse-reg2                         1    2      0 unknown     0mV     0mA     0mV     0mV 
->     pse-0-0020_pi1                0    0      0 unknown 53816mV  4738mA     0mV     0mV 
->  vcc_sd1                          2    1      0 unknown  1800mV     0mA  1800mV  3300mV 
->     d00d0000.mmc-vqmmc            1                                 0mA  1800mV  1950mV
+> There are also some patch reorder to help reviewers to check the changes.
 > 
-> # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-get --json
->  '{"header":{"dev-name":"wan"}}'
-> {'c33-pse-admin-state': 2,
->  'c33-pse-avail-pw-limit': 127500,
->  'c33-pse-pw-d-status': 2,
->  'c33-pse-pw-limit-ranges': [{'max': 99900, 'min': 2000}],
->  'header': {'dev-index': 4, 'dev-name': 'wan'},
->  'pse-budget-eval-strat': 2,
->  'pse-prio': 0,
->  'pse-prio-max': 8,
->  'pse-pw-d-id': 1}
+> The code itself is almost identical to v4, with just a few minor nits addressed.
+checkpatch on my machine still complains
+
+0007-acpi-ghes-Use-HEST-table-offsets-when-preparing-GHES.patch has no obvious style problems and is ready for submission.
+Checking 0008-acpi-ghes-don-t-hard-code-the-number-of-sources-for-.patch...
+WARNING: line over 80 characters
+#170: FILE: hw/acpi/ghes.c:390:
++        build_ghes_v2_entry(table_data, linker, &notif_source[i], i, num_sources);
+
+total: 0 errors, 1 warnings, 159 lines checked
+
+0008-acpi-ghes-don-t-hard-code-the-number-of-sources-for-.patch has style problems, please review.  If any of these errors
+are false positives report them to the maintainer, see
+CHECKPATCH in MAINTAINERS.
+Checking 0009-acpi-ghes-add-a-notifier-to-notify-when-error-data-i.patch...
+total: 0 errors, 0 warnings, 26 lines checked
+
+0009-acpi-ghes-add-a-notifier-to-notify-when-error-data-i.patch has no obvious style problems and is ready for submission.
+Checking 0010-acpi-generic_event_device-Update-GHES-migration-to-c.patch...
+total: 0 errors, 0 warnings, 41 lines checked
+
+0010-acpi-generic_event_device-Update-GHES-migration-to-c.patch has no obvious style problems and is ready for submission.
+Checking 0011-acpi-generic_event_device-add-logic-to-detect-if-HES.patch...
+total: 0 errors, 0 warnings, 59 lines checked
+
+0011-acpi-generic_event_device-add-logic-to-detect-if-HES.patch has no obvious style problems and is ready for submission.
+Checking 0012-acpi-generic_event_device-add-an-APEI-error-device.patch...
+total: 0 errors, 0 warnings, 72 lines checked
+
+0012-acpi-generic_event_device-add-an-APEI-error-device.patch has no obvious style problems and is ready for submission.
+Checking 0013-tests-acpi-virt-allow-acpi-table-changes-at-DSDT-and.patch...
+total: 0 errors, 0 warnings, 7 lines checked
+
+0013-tests-acpi-virt-allow-acpi-table-changes-at-DSDT-and.patch has no obvious style problems and is ready for submission.
+Checking 0014-arm-virt-Wire-up-a-GED-error-device-for-ACPI-GHES.patch...
+WARNING: line over 80 characters
+#68: FILE: hw/arm/virt.c:1015:
++    VirtMachineState *s = container_of(n, VirtMachineState, generic_error_notifier);
+
+total: 0 errors, 1 warnings, 44 lines checked
+
+0014-arm-virt-Wire-up-a-GED-error-device-for-ACPI-GHES.patch has style problems, please review.  If any of these errors
+are false positives report them to the maintainer, see
+CHECKPATCH in MAINTAINERS.
+Checking 0015-qapi-acpi-hest-add-an-interface-to-do-generic-CPER-e.patch...
+total: 0 errors, 0 warnings, 178 lines checked
+
+
+
+> ---
+> v6:
+> - some minor nits addressed:
+>    - use GPA instead of offset;
+>    - merged two patches;
+>    - fixed a couple of long line coding style issues;
+>    - the HEST/DSDT diff inside a patch was changed to avoid troubles
+>      applying it.
 > 
-> # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-set --json
->  '{"header":{"dev-name":"wan"}, "pse-prio":1}'
-> None
-> # ./ynl/cli.py --spec netlink/specs/ethtool.yaml --no-schema --do pse-set --json
-> '{"header":{"dev-name":"wan"}, "c33-pse-avail-pw-limit":15000}'
+> v5:
+> - make checkpatch happier;
+> - HEST table is now tested;
+> - some changes at HEST spec documentation to align with code changes;
+> - extra care was taken with regards to git bisectability.
+> 
+> v4:
+> - added an extra comment for AcpiGhesState structure;
+> - patches reordered;
+> - no functional changes, just code shift between the patches in this series.
+> 
+> v3:
+> - addressed more nits;
+> - hest_add_le now points to the beginning of HEST table;
+> - removed HEST from tests/data/acpi;
+> - added an extra patch to not use fw_cfg with virt-10.0 for hw_error_le
+> 
+> v2: 
+> - address some nits;
+> - improved ags cleanup patch and removed ags.present field;
+> - added some missing le*_to_cpu() calls;
+> - update date at copyright for new files to 2024-2025;
+> - qmp command changed to: inject-ghes-v2-error ans since updated to 10.0;
+> - added HEST and DSDT tables after the changes to make check target happy.
+>   (two patches: first one whitelisting such tables; second one removing from
+>    whitelist and updating/adding such tables to tests/data/acpi)
+> 
+> 
+> 
+> Mauro Carvalho Chehab (19):
+>   tests/acpi: virt: add an empty HEST file
+>   tests/qtest/bios-tables-test: extend to also check HEST table
+>   tests/acpi: virt: update HEST file with its current data
+>   acpi/ghes: Cleanup the code which gets ghes ged state
+>   acpi/ghes: prepare to change the way HEST offsets are calculated
+>   acpi/ghes: add a firmware file with HEST address
+>   acpi/ghes: Use HEST table offsets when preparing GHES records
+>   acpi/ghes: don't hard-code the number of sources for HEST table
+>   acpi/ghes: add a notifier to notify when error data is ready
+>   acpi/generic_event_device: Update GHES migration to cover hest addr
+>   acpi/generic_event_device: add logic to detect if HEST addr is
+>     available
+>   acpi/generic_event_device: add an APEI error device
+>   tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
+>   arm/virt: Wire up a GED error device for ACPI / GHES
+>   qapi/acpi-hest: add an interface to do generic CPER error injection
+>   acpi/generic_event_device.c: enable use_hest_addr for QEMU 10.x
+>   tests/acpi: virt: update HEST and DSDT tables
+>   docs: hest: add new "etc/acpi_table_hest_addr" and update workflow
+>   scripts/ghes_inject: add a script to generate GHES error inject
+> 
+>  MAINTAINERS                                   |  10 +
+>  docs/specs/acpi_hest_ghes.rst                 |  28 +-
+>  hw/acpi/Kconfig                               |   5 +
+>  hw/acpi/aml-build.c                           |  10 +
+>  hw/acpi/generic_event_device.c                |  44 ++
+>  hw/acpi/ghes-stub.c                           |   7 +-
+>  hw/acpi/ghes.c                                | 231 ++++--
+>  hw/acpi/ghes_cper.c                           |  38 +
+>  hw/acpi/ghes_cper_stub.c                      |  19 +
+>  hw/acpi/meson.build                           |   2 +
+>  hw/arm/virt-acpi-build.c                      |  35 +-
+>  hw/arm/virt.c                                 |  19 +-
+>  hw/core/machine.c                             |   2 +
+>  include/hw/acpi/acpi_dev_interface.h          |   1 +
+>  include/hw/acpi/aml-build.h                   |   2 +
+>  include/hw/acpi/generic_event_device.h        |   1 +
+>  include/hw/acpi/ghes.h                        |  51 +-
+>  include/hw/arm/virt.h                         |   2 +
+>  qapi/acpi-hest.json                           |  35 +
+>  qapi/meson.build                              |   1 +
+>  qapi/qapi-schema.json                         |   1 +
+>  scripts/arm_processor_error.py                | 476 ++++++++++++
+>  scripts/ghes_inject.py                        |  51 ++
+>  scripts/qmp_helper.py                         | 703 ++++++++++++++++++
+>  target/arm/kvm.c                              |   7 +-
+>  tests/data/acpi/aarch64/virt/DSDT             | Bin 5196 -> 5240 bytes
+>  .../data/acpi/aarch64/virt/DSDT.acpihmatvirt  | Bin 5282 -> 5326 bytes
+>  tests/data/acpi/aarch64/virt/DSDT.memhp       | Bin 6557 -> 6601 bytes
+>  tests/data/acpi/aarch64/virt/DSDT.pxb         | Bin 7679 -> 7723 bytes
+>  tests/data/acpi/aarch64/virt/DSDT.topology    | Bin 5398 -> 5442 bytes
+>  tests/data/acpi/aarch64/virt/HEST             | Bin 0 -> 224 bytes
+>  tests/qtest/bios-tables-test.c                |   2 +-
+>  32 files changed, 1692 insertions(+), 91 deletions(-)
+>  create mode 100644 hw/acpi/ghes_cper.c
+>  create mode 100644 hw/acpi/ghes_cper_stub.c
+>  create mode 100644 qapi/acpi-hest.json
+>  create mode 100644 scripts/arm_processor_error.py
+>  create mode 100755 scripts/ghes_inject.py
+>  create mode 100755 scripts/qmp_helper.py
+>  create mode 100644 tests/data/acpi/aarch64/virt/HEST
+> 
 
-
-Best Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
