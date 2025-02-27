@@ -1,165 +1,75 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2058.outbound.protection.outlook.com [40.107.101.58])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A0F5231A55;
-	Thu, 27 Feb 2025 15:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740668960; cv=fail; b=qAeDgFiCBCgkmYPhmah+Wm0BFcIazk/WlUUaGIXrpAG6PICzl0z2AGME+tb/lulzW+eSkJWp4gsKR2jVL/vs0OQWxk5fig61lM+pQnOVUZKEFlYKcdoC+OBJ5j7VYo04RzJa1eVnA6obfSFKgVt01dvNSVi6WK2L8gVDjyNQfWw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740668960; c=relaxed/simple;
-	bh=ZTEwLb0oMtJHideSiZ6nbIF2dXIzj5jZtTmfbm8sd38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gt5nx6X9pCxY+LeaFFBymXHhTy5wlj7AcC5fOBIBKBGeXM41X/JIraD28tRS5px4hc53SNQETQJB2UvSM8CM7unpcWIxFM5AtHxacpFYnlXq3q54Ipj34Zf1uqsJtEpVPMObutsvTPuPYBEt6yO8iiukWZri0wSB6WjxOaLj4NQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pKaIS9Fp; arc=fail smtp.client-ip=40.107.101.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF732309A1;
+	Thu, 27 Feb 2025 15:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740668989; cv=none; b=F4FMtV8Epyoez5iIC65WXXkJM8c4EBcv0ShzPrCsckbOGxpk/1T9yTT4tcLnH2P4sIUuFW3wtNdBq+QlSwhfZus25TxAKuFnHjYDFJMp6wTp1eNXLJL/E7tV+icQYAsD45cm2ht5CVF2RP5FzMbInNApQtXUKE5VRR12fGFm/YM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740668989; c=relaxed/simple;
+	bh=IKveQp0TXWwuACZBcooQBA/ITay4t9n3XRYcOXujElo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSW3ovYHxqKhGDgSuiv1KqR7A1R2pxsNs0YDw3hJNp+N8Wi7blAkjKZpRJ7XANeXWyQBugOzhZNiTApNwjQA+2TC32nsUlogvgennE0tIgJDxqAL6uKO0kiRfUH2HT9gAbtP9abXxFTILAm8rqIAo/GFepSxr7ThW8ApJTg+0Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gLfBVzeJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pKaIS9Fp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xmcAsEm7Nkzq+IAIvb8Oj++s3jdIvL28aM8h0lmvm0WQfYQ5wRIcD3lmLdzanhQMbYdKKWsmqnScMh+HWZSyFWYL0zLLva71SubZdyW8YLeUepaptshfHGl906mdD2BfYsKJR84ACqTeRgHXWsUHoE1O6mU6OyANQla+uBgkKAuFfgUhKzJeWaG1X/JUmcpyvpVp2qgj5ZNl+YCrwmZxA5/FBhlBE1/sJAueKnhYJ+2qFhY9TK0XB5/MaO5S/+9s5CF/7wPlxv059Iod6RmLnOhWlg/IPMo141ELls+v8DCFjYRWlwJbfRdg7ZzfiX9jSzcxNEiWoe0zDs0GZl8T/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9LifbGEWq+1iL9mxWHvrXWvMCXOo7lbz6vsZSiJ8SeI=;
- b=qFcXak0FqVVL7CJ7VyUkT3aDx7HHeA4WiPbcPy18u1q9WENXDDD10HpANnIEgmgPmXM+K0b4HWhOg3XT6PQi1Zhm+pNcQ22aRqzOTMOg/ZVAhkbRcEc4mF9gNQwNEfJvo1dHvUGG8eevNCG3lFD4VQ6Yl+8xaBKB1uUMkq2QowWvRa0lpMcqeuLxLN0gUyMjFJSbKKdXtEkY4idSCG297Sd9k/p4JsoYDor1NhvhJobwg3bowTlhvWzjs1LoFnzSnfnLAIjgjh12PCVUK+uEZ4QDlSoKba2e3nZw7D/gildErFec4U9hk3Y0dWLEMrCmQk2LXE+1iBRryRGW8d8P1w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9LifbGEWq+1iL9mxWHvrXWvMCXOo7lbz6vsZSiJ8SeI=;
- b=pKaIS9Fpr9K6/VZ9siemEQYDl5lv5dc3yXFGjxDAFBE6urtJVLlzbVFkzv7TVRKV47xam/7ggvb0L30zO3mBZXcAFQeuVCPFLvtIQ2IreM2BKVITjuCA4gktASneo9jfuYo3OEsDxH6qEztds6ztZYvKZ6KBJ6ttuxJfbAsWBnk=
-Received: from BN9P223CA0020.NAMP223.PROD.OUTLOOK.COM (2603:10b6:408:10b::25)
- by BN5PR12MB9488.namprd12.prod.outlook.com (2603:10b6:408:2a9::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Thu, 27 Feb
- 2025 15:09:12 +0000
-Received: from BN2PEPF00004FBE.namprd04.prod.outlook.com
- (2603:10b6:408:10b:cafe::7b) by BN9P223CA0020.outlook.office365.com
- (2603:10b6:408:10b::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.23 via Frontend Transport; Thu,
- 27 Feb 2025 15:09:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FBE.mail.protection.outlook.com (10.167.243.184) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 15:09:12 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Feb
- 2025 09:09:10 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Feb
- 2025 09:09:09 -0600
-Received: from [172.31.223.240] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Thu, 27 Feb 2025 09:09:08 -0600
-Message-ID: <7e2e48b5-27b6-45a5-975a-7616f2c0f2f5@amd.com>
-Date: Thu, 27 Feb 2025 09:57:45 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gLfBVzeJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BECC4CEDD;
+	Thu, 27 Feb 2025 15:09:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740668988;
+	bh=IKveQp0TXWwuACZBcooQBA/ITay4t9n3XRYcOXujElo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gLfBVzeJQRcPN/vAyogRoXvxAOqZZD63SxRWakjS5neXEQTXmwh1jDc/xfM9bORCD
+	 oQDLOv9ZJB+aviv1hwFHwbyi8vFwrinlZSl17abry/Y4fGWYb0QYDOu/NrFyB1hA+Z
+	 VR8mfc0QCEbXn8uuyQSkP4RS+OBhbgNIxa4WWFOjFr8QtKZW8qZ6l/+vwi4JA11woh
+	 9MTDROemC56x5+zqMZ8cF8N1AE76cHfXtWEuRPOO6Y2IqQxew6xniBy9EFTJP2NE/t
+	 5RLXTdJGb+SjuOWRO2v3EKpwheGZh60x2Grkx9MjPPvLtTg76385bOTu8bt7zK4Y+H
+	 pmV+Kvo0r2NNQ==
+Date: Thu, 27 Feb 2025 08:09:45 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Lei Yang <leiyang@redhat.com>
+Cc: Keith Busch <kbusch@meta.com>, pbonzini@redhat.com, seanjc@google.com,
+	kvm@vger.kernel.org, x86@kernel.org, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 0/2] kvm/x86: vhost task creation failure handling
+Message-ID: <Z8CAORHSFh5LnKNw@kbusch-mbp>
+References: <20250226213844.3826821-1-kbusch@meta.com>
+ <CAPpAL=yffyhUrdEJHtAw4BDpV-=Z5mZq0r1ZFcoj1v1OBLnp_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xen/pciback: Make missing GSI non-fatal
-To: "Chen, Jiqian" <Jiqian.Chen@amd.com>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Juergen Gross
-	<jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Oleksandr
- Tyshchenko" <oleksandr_tyshchenko@epam.com>, "Huang, Ray" <Ray.Huang@amd.com>
-References: <20250226200134.29759-1-jason.andryuk@amd.com>
- <BL1PR12MB58498AC8C41605DD4E288F4BE7CD2@BL1PR12MB5849.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: Jason Andryuk <jason.andryuk@amd.com>
-In-Reply-To: <BL1PR12MB58498AC8C41605DD4E288F4BE7CD2@BL1PR12MB5849.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Received-SPF: None (SATLEXMB05.amd.com: jason.andryuk@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBE:EE_|BN5PR12MB9488:EE_
-X-MS-Office365-Filtering-Correlation-Id: 709c2fa1-ed81-4e4b-6bd6-08dd5740b170
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZE5Od1FvQUFVVVFoRDAzRVN3dFdiMmJFSzBEbjdUQkhWUDVVeXpCRWtEZG00?=
- =?utf-8?B?SjgxRjFQUEoxMjZ0d2c4Y0JBdEhIZjJacFNleWFmMy9JS2hFSWlwUEpBQ0xL?=
- =?utf-8?B?NE80alNxNGVWaFRZSm94Y0IzYmZMQU5uTXZUOHorVDQxQWF4WCsvbkxZNHl6?=
- =?utf-8?B?cVNJVC9zN0EzYnVEWDZWU2taZDFpN3BNa24zdkk1REFxVTY2Zzc4a1pPOERJ?=
- =?utf-8?B?UXFHc3VOUUxuY1RWYmRLaDcvZHJ1V3h2dmFTZFZJMmhZODV2UGlHLzJyVEVW?=
- =?utf-8?B?Rjg1SUhJR3hWekpOZDZJUkZLL240MUNKUTFCOFJMRkw1MmtJUUZrSUdCSHhs?=
- =?utf-8?B?ZVk3dk5VeXVaVE95cVVxbEZkekNpdG9BbmlnNkZRUHQ1SEYzT2kyaVNFOHdS?=
- =?utf-8?B?blhEMGE5elNlUEg4VUpoNWhRbzczbmo4VUE4SlJmaGM2WDhKYllMU0tUdjAz?=
- =?utf-8?B?QU1PcnVlZ2tMZk5xbklQTm9SV1ppc0tGVHo1QWJIdk81ZDFXQm15Y3VkVXha?=
- =?utf-8?B?ZFRaSGUzZnFmQVZlOStlRko4dkZrWXMzVWU2V3A5eWhLYjdOb1FNZC93N01V?=
- =?utf-8?B?dEw2U0ZWbjltWERWYkxXekVQV0ZoRGdNaS9xQkx5MUQ5MTRpS2ZPRzNKMzJV?=
- =?utf-8?B?M1Q0d0VyN0NDanRLVjNyamwyQzJqWHlPcko2YWtuTzhHdDhYQUNOS3d3MlRz?=
- =?utf-8?B?dDJLYTd0QkdUSWN3VmZjVm9HVzltL3VVNTlUaVlQQjN6UlNkY2pDbHBKcEhv?=
- =?utf-8?B?WURGQW5oRUZuOUcvTTN0K2NXYnNJRzlIcVpmR1o5WkhNdmpxMWZucmZuWkVn?=
- =?utf-8?B?UW0zTEtPZS9zb0JlZkQ2THJXR2RsV1o4TVpBRXZ5NGQ3b1VFU2d5L05FTjBE?=
- =?utf-8?B?dHhObnZoYkdseHhhZzd1eDNxYi9VcDlqU2RUUitLZVhOUGwxUVZoMWEwclor?=
- =?utf-8?B?ay9zRFAvaDZKb1hzWEEwS1hEOFY2NlBERGdidW8vbE9MN0hMWXVIZk81bFJS?=
- =?utf-8?B?bEFYa0lleVV0RWJJTFhHM0ZIZUx5YlprQmVyN0NoN0g5VmhkNTFTRE50Q2VW?=
- =?utf-8?B?RnVZeGVwR2Rkak1sTHpwdktLVmdBVWw1MVpKWjFyc1BWSldvUC9OaGpVTnM1?=
- =?utf-8?B?SFZPU0hvY2NIMUpxY2ZjbHhKZzQwL3hJTVdib3JhaWU3MTdMMzR6cWdocG0z?=
- =?utf-8?B?eDBSa1V4Zms4eDR1MTVXWS9kU2hHajBVL0wwd0ZNaUpRU3l2OGUwNFNMYUow?=
- =?utf-8?B?TXZkWDhsSjRKUS9PY2J5d29kcmhpQ3E2SUp1dWQyVFkvSHYxWGV6UWZrTXBn?=
- =?utf-8?B?eTRNbW0zTS9kcFFHdUJUOTROOEJRWEh0d0RnRzM4S1pVY29QU0t4V2EwVzdW?=
- =?utf-8?B?OFFlZkFTN1l0dnNVb2U3cG5XSkpEaklscjdnQW5scGdMTjQ3czZCMG83RTR6?=
- =?utf-8?B?L2tXSk9XVE04clp3SkNqdU81ZzZxSHFXU0Nnd3ZFRGMySWFVUElCdGJMaFhT?=
- =?utf-8?B?L0NkZys3MkhQVU1Db0VRRHl3SWNMRWc5SllKQlV1bW0vUDZLN3ozL0EvdUZu?=
- =?utf-8?B?RXpGOHNTcVU0VXVSWUhLV0tTMWdWVmxHL2NlV1A5Q1lwR2IwNXNxRUF3YmFn?=
- =?utf-8?B?OHFxOERTNmdmbGhaK293VzdPVFIwSXV6d0lqMCtGUFpud0tqSSsybmEzN1BX?=
- =?utf-8?B?bUFWRmJDelBiRTRnQ3FJL3Rrb0JvMVVJSVdHbEVtblIxNnJGLyt5RGU3VGJj?=
- =?utf-8?B?VHh0L1lxZCtmSEJpcVZNRm9qaGJsVy9qQytqMzFLWTl4YnRUMmU5VUtrbXZF?=
- =?utf-8?B?Vy82TlRqU1B2VVJIVk9oYWp1UG01NXNjMUFYcUpmWGQxeDFmM2w5OVdHREcr?=
- =?utf-8?B?TzBYeEM2OFFzVzJPMVhqZjVjOXZvemJZUUxTTDdPUnR4cTFOYmVrUW02U0tp?=
- =?utf-8?B?UGdSNUhhYVFUeGMxRkUzVC83TTVuMC9nTDVnczdjT2syVXZweDlqOE1SQWY4?=
- =?utf-8?Q?3SOtg5RsUM4bh0STPj1lb+norEVwSQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 15:09:12.2468
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 709c2fa1-ed81-4e4b-6bd6-08dd5740b170
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBE.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN5PR12MB9488
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPpAL=yffyhUrdEJHtAw4BDpV-=Z5mZq0r1ZFcoj1v1OBLnp_g@mail.gmail.com>
 
-On 2025-02-26 22:36, Chen, Jiqian wrote:
-> On 2025/2/27 04:01, Jason Andryuk wrote:
->> @@ -475,14 +478,14 @@ static int pcistub_init_device(struct pcistub_device *psdev)
->>   #ifdef CONFIG_XEN_ACPI
->>   	if (xen_initial_domain() && xen_pvh_domain()) {
->>   		err = xen_acpi_get_gsi_info(dev, &gsi, &trigger, &polarity);
->> -		if (err) {
->> -			dev_err(&dev->dev, "Fail to get gsi info!\n");
->> -			goto config_release;
->> +		if (err && err != -ENOENT) {
->> +			dev_err(&dev->dev, "Failed to get gsi info! %d\n", err);
-> I think here needs " goto config_release;" since it is not ENOENT error.
+On Thu, Feb 27, 2025 at 06:21:34PM +0800, Lei Yang wrote:
+> Hi Keith
+> 
+> There are some error messages from qemu output when I tested this
+> series of patches with the virtio-net regression test. It can
+> reproduced by boot up a guest with vhost device after applied your
+> patches.
+> Error messages:
+> Qemu output:
+> qemu-kvm: -netdev {"id": "idoejzv8", "type": "tap", "vhost": true,
+> "vhostfd": "16", "fd": "10"}: vhost_set_owner failed: Cannot allocate
+> memory
+> qemu-kvm: -netdev {"id": "idoejzv8", "type": "tap", "vhost": true,
+> "vhostfd": "16", "fd": "10"}: vhost-net requested but could not be
+> initialized
 
-Yes, thank you for catching that.
+*facepalm*
 
-Regards,
-Jason
+I accidently left the "!" in the condition:
 
-
+@@ -666,7 +666,7 @@ static struct vhost_worker *vhost_worker_create(struct vhost_dev *dev)
+ 
+ 	vtsk = vhost_task_create(vhost_run_work_list, vhost_worker_killed,
+ 				 worker, name);
+-	if (!vtsk)
++	if (!IS_ERR(vtsk))
+ 		goto free_worker;
