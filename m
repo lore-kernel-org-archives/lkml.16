@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B682321B9EE;
-	Thu, 27 Feb 2025 10:12:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC05227E9F;
+	Thu, 27 Feb 2025 10:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740651126; cv=none; b=ruT2R+H8Q8jhEbxaQxRXI+1o0MDZ6L+SMPnl1i3TBcX/p2MnS6KgoGZZNlcJpc72X/uDD5rnRjI3b2fWTkDD3fpy8D4bg6wPlsb7pbnRYA4cjteBUSYiy47pv7xO9coKbGESZ4yKi/PvHyYQo5pCIeKAQBUKa+92Qcy/kxs/gUg=
+	t=1740651127; cv=none; b=NlUTN7M5Qh1/stPxh76sBqgjNxZ3V/o07jWVc5DnV/iPobDoB1NAtNmkyiRJQFnJxI96zffvT+ovBOnPsVepfalBK2rDhrp7G41wOuNevlGy1Syfn0QtJQSAj4CBOOLkWSB4gtcleId1Y/Oh46FvXGNx5vlTnqUbTu52VCeVLnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740651126; c=relaxed/simple;
-	bh=TDaHHD3znPKw0gDl+1AxqWAsn0c2xyArdl1AM8a0KgY=;
+	s=arc-20240116; t=1740651127; c=relaxed/simple;
+	bh=yPPjYg2MPC3loQddpXdHS122QuJb6BDP+DiCTIUaOas=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=XhjXH/tPTPPskpLQ5Dpjbp6unL/CsnmITioGIuuz6JRYmb0d605zljvyuy06jM+JOGD/nyIJo0icz21GW16dWZc67P845trDH4G9dZChJ3Bxp31bwoIaoTTBukxTYbq7H3/daDLT178fIf3Wqzi7seX3dweouTeijiJZDYpsS20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1HFrP0QP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QWrA4GJu; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=NHVIqYUAcn/H7EWCLeG1sD0+Yv+GG4uVQSSLPPMgwEwRwh2ZQa85XoJPLL7XSfj8o8F393nrmcndheTxDuo7p3Z8kq5FjwPh5hzTXpWCQxaK0xFrDi35woyl5uGegkOMTbvrKoUXNUUkjUSh3QIuQ73QuVNre/SuzajFW63sKrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MWcKUxWi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HVbucNur; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1HFrP0QP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QWrA4GJu"
-Date: Thu, 27 Feb 2025 10:12:00 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MWcKUxWi";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HVbucNur"
+Date: Thu, 27 Feb 2025 10:12:02 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740651122;
+	s=2020; t=1740651123;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c5kOSPXRtGCZUMNRy6y6gR7OQJiDKyWBsfL7ICDhqh4=;
-	b=1HFrP0QPDE6WmfvlyB7Rnirdy8Z3FG6+p0HB/r7v5hOv0oKavAFNoPCOp4bh7EGpRUEk5b
-	ZFrxZDtlCGA48pRW5RFBmEayqViyFCtWOEFmRKIukJgUOf5BmCnB1DQX+1LrWry3gHHU6T
-	vDGnSciOqtvM1ImFAO7EXZ3sV09fN3eAmYcpyzSU82QaXYQSp9u9KeH+AoDHiPGEi/4zNA
-	h0uB5Dp7Mtk8x5kkfX8+4ld+CXS7sAhLXyQk2xHsBAmddVW5UYIfg6UFKW+vPuelEZVBRJ
-	oQD9nLBzkI5I3+NUCt/3efUZ5GCzWQrGmzcM8TeDmrXK6uDaSSvzA08vOyw6fw==
+	bh=9Ey3fjvBrGuE99ckrkrimsJPnUnDZi8vpt+g8vEP7gE=;
+	b=MWcKUxWiaordh7VZ8TAJ3faEMwApmh+lkzAGez5s15HGtf82Fai4+BN0EeOySaaL0c4+wU
+	BAOLOB+uI/TlKQ46zj6y3foHH/rn/hhNp8GyMKIk9VIiACuoy/lkD9B+shJ/1mm3iqv3NI
+	IEYLUAYSOuv5QLiH3X4VaxxoNvxS6zrV0XMDB1Fp1WrdyKh/fC6PtNkgd5NIufK/xW768B
+	9vyzQLFpXGjOwcCFgQcfJvTe1HFuin/U+nwf2iGHeeMKkCnuf8eJVD9Ip+umjq432KF8i0
+	gy1IgcqQ7Po184XPXhG6OEQgUYsUqvjIrg1ga2mC2sZiGb8c4UGtjgRUmjGVyg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740651122;
+	s=2020e; t=1740651123;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c5kOSPXRtGCZUMNRy6y6gR7OQJiDKyWBsfL7ICDhqh4=;
-	b=QWrA4GJuvRZhCf4kPAbF4ycosOvGXg1+vpkmW3NZVOBcXIb1OOGJylhtyWVCslw55gki4J
-	5x5bj6b6UixvDIBw==
+	bh=9Ey3fjvBrGuE99ckrkrimsJPnUnDZi8vpt+g8vEP7gE=;
+	b=HVbucNuronL5onImWlvU6dGajF56NdJOdvmV46SpilycKVmZrPBMX01EMUBNDHbnMczk2z
+	K1X02uaNjf1stsAQ==
 From: "tip-bot2 for Yosry Ahmed" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Remove X86_FEATURE_USE_IBPB
+Subject:
+ [tip: x86/bugs] x86/bugs: Use a static branch to guard IBPB on vCPU switch
 Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Ingo Molnar <mingo@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250227012712.3193063-7-yosry.ahmed@linux.dev>
-References: <20250227012712.3193063-7-yosry.ahmed@linux.dev>
+ Josh Poimboeuf <jpoimboe@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250227012712.3193063-5-yosry.ahmed@linux.dev>
+References: <20250227012712.3193063-5-yosry.ahmed@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174065112088.10177.3693883070893160991.tip-bot2@tip-bot2>
+Message-ID: <174065112276.10177.15875859543519400534.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,77 +68,96 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/bugs branch of tip:
 
-Commit-ID:     8f64eee70cdd3bb8c3ec7d30f0d1f52922aaef7c
-Gitweb:        https://git.kernel.org/tip/8f64eee70cdd3bb8c3ec7d30f0d1f52922aaef7c
+Commit-ID:     80dacb080461edfc1d854721ee6933a4cfa3b602
+Gitweb:        https://git.kernel.org/tip/80dacb080461edfc1d854721ee6933a4cfa3b602
 Author:        Yosry Ahmed <yosry.ahmed@linux.dev>
-AuthorDate:    Thu, 27 Feb 2025 01:27:12 
+AuthorDate:    Thu, 27 Feb 2025 01:27:10 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Feb 2025 10:57:21 +01:00
+CommitterDate: Thu, 27 Feb 2025 10:57:20 +01:00
 
-x86/bugs: Remove X86_FEATURE_USE_IBPB
+x86/bugs: Use a static branch to guard IBPB on vCPU switch
 
-X86_FEATURE_USE_IBPB was introduced in:
+Instead of using X86_FEATURE_USE_IBPB to guard the IBPB execution in KVM
+when a new vCPU is loaded, introduce a static branch, similar to
+switch_mm_*_ibpb.
 
-  2961298efe1e ("x86/cpufeatures: Clean up Spectre v2 related CPUID flags")
-
-to have separate flags for when the CPU supports IBPB (i.e. X86_FEATURE_IBPB)
-and when an IBPB is actually used to mitigate Spectre v2.
-
-Ever since then, the uses of IBPB expanded. The name became confusing
-because it does not control all IBPB executions in the kernel.
-Furthermore, because its name is generic and it's buried within
-indirect_branch_prediction_barrier(), it's easy to use it not knowing
-that it is specific to Spectre v2.
-
-X86_FEATURE_USE_IBPB is no longer needed because all the IBPB executions
-it used to control are now controlled through other means (e.g.
-switch_mm_*_ibpb static branches).
-
-Remove the unused feature bit.
+This makes it obvious in spectre_v2_user_select_mitigation() what
+exactly is being toggled, instead of the unclear X86_FEATURE_USE_IBPB
+(which will be shortly removed). It also provides more fine-grained
+control, making it simpler to change/add paths that control the IBPB in
+the vCPU switch path without affecting other IBPBs.
 
 Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/r/20250227012712.3193063-7-yosry.ahmed@linux.dev
+Acked-by: Sean Christopherson <seanjc@google.com>
+Link: https://lore.kernel.org/r/20250227012712.3193063-5-yosry.ahmed@linux.dev
 ---
- arch/x86/include/asm/cpufeatures.h       | 1 -
- arch/x86/kernel/cpu/bugs.c               | 1 -
- tools/arch/x86/include/asm/cpufeatures.h | 1 -
- 3 files changed, 3 deletions(-)
+ arch/x86/include/asm/nospec-branch.h | 2 ++
+ arch/x86/kernel/cpu/bugs.c           | 5 +++++
+ arch/x86/kvm/svm/svm.c               | 2 +-
+ arch/x86/kvm/vmx/vmx.c               | 2 +-
+ 4 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 43653f2..c8701ab 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -210,7 +210,6 @@
- #define X86_FEATURE_MBA			( 7*32+18) /* "mba" Memory Bandwidth Allocation */
- #define X86_FEATURE_RSB_CTXSW		( 7*32+19) /* Fill RSB on context switches */
- #define X86_FEATURE_PERFMON_V2		( 7*32+20) /* "perfmon_v2" AMD Performance Monitoring Version 2 */
--#define X86_FEATURE_USE_IBPB		( 7*32+21) /* Indirect Branch Prediction Barrier enabled */
- #define X86_FEATURE_USE_IBRS_FW		( 7*32+22) /* Use IBRS during runtime firmware calls */
- #define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE	( 7*32+23) /* Disable Speculative Store Bypass. */
- #define X86_FEATURE_LS_CFG_SSBD		( 7*32+24)  /* AMD SSBD implementation via LS_CFG MSR */
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
+index 7cbb76a..36bc395 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -552,6 +552,8 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_stibp);
+ DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+ DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+ 
++DECLARE_STATIC_KEY_FALSE(switch_vcpu_ibpb);
++
+ DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
+ 
+ DECLARE_STATIC_KEY_FALSE(switch_mm_cond_l1d_flush);
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 7f904d0..5397d0a 100644
+index 1d7afc4..7f904d0 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1368,7 +1368,6 @@ spectre_v2_user_select_mitigation(void)
+@@ -113,6 +113,10 @@ DEFINE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+ /* Control unconditional IBPB in switch_mm() */
+ DEFINE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
  
++/* Control IBPB on vCPU load */
++DEFINE_STATIC_KEY_FALSE(switch_vcpu_ibpb);
++EXPORT_SYMBOL_GPL(switch_vcpu_ibpb);
++
+ /* Control MDS CPU buffer clear before idling (halt, mwait) */
+ DEFINE_STATIC_KEY_FALSE(mds_idle_clear);
+ EXPORT_SYMBOL_GPL(mds_idle_clear);
+@@ -1365,6 +1369,7 @@ spectre_v2_user_select_mitigation(void)
  	/* Initialize Indirect Branch Prediction Barrier */
  	if (boot_cpu_has(X86_FEATURE_IBPB)) {
--		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
- 		static_branch_enable(&switch_vcpu_ibpb);
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
++		static_branch_enable(&switch_vcpu_ibpb);
  
  		spectre_v2_user_ibpb = mode;
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 17b6590..ec99113 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -210,7 +210,6 @@
- #define X86_FEATURE_MBA			( 7*32+18) /* "mba" Memory Bandwidth Allocation */
- #define X86_FEATURE_RSB_CTXSW		( 7*32+19) /* Fill RSB on context switches */
- #define X86_FEATURE_PERFMON_V2		( 7*32+20) /* "perfmon_v2" AMD Performance Monitoring Version 2 */
--#define X86_FEATURE_USE_IBPB		( 7*32+21) /* Indirect Branch Prediction Barrier enabled */
- #define X86_FEATURE_USE_IBRS_FW		( 7*32+22) /* Use IBRS during runtime firmware calls */
- #define X86_FEATURE_SPEC_STORE_BYPASS_DISABLE	( 7*32+23) /* Disable Speculative Store Bypass. */
- #define X86_FEATURE_LS_CFG_SSBD		( 7*32+24)  /* AMD SSBD implementation via LS_CFG MSR */
+ 		switch (cmd) {
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 57222c3..a73875f 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1566,7 +1566,7 @@ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 		sd->current_vmcb = svm->vmcb;
+ 
+ 		if (!cpu_feature_enabled(X86_FEATURE_IBPB_ON_VMEXIT) &&
+-		    cpu_feature_enabled(X86_FEATURE_USE_IBPB))
++		    static_branch_likely(&switch_vcpu_ibpb))
+ 			indirect_branch_prediction_barrier();
+ 	}
+ 	if (kvm_vcpu_apicv_active(vcpu))
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 042b7a8..956f914 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1477,7 +1477,7 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
+ 		 * performs IBPB on nested VM-Exit (a single nested transition
+ 		 * may switch the active VMCS multiple times).
+ 		 */
+-		if (cpu_feature_enabled(X86_FEATURE_USE_IBPB) &&
++		if (static_branch_likely(&switch_vcpu_ibpb) &&
+ 		    (!buddy || WARN_ON_ONCE(buddy->vmcs != prev)))
+ 			indirect_branch_prediction_barrier();
+ 	}
