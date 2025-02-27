@@ -1,32 +1,65 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C37226D06;
-	Thu, 27 Feb 2025 09:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CCE226D06;
+	Thu, 27 Feb 2025 09:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740648363; cv=none; b=DkfuykqGhFbKopHuWomPzcqTGhR+6wb6AHeXYh6EHbVGZYQMMOfTyK4M0MSUvbLU9TtWpR9WkuHsX+/NmhIa0Ph0gtWFUzxkiv5ywGDgRbJ4JvUKAUOiO4TDPWuyhfH94JwUUKNrqvv1O5oTErrQf0IO+DV/NcvMVW6WkYlw6qw=
+	t=1740648417; cv=none; b=GNyhWirpCoKtjUk3MbUcYZhYTvXPC54M7J2658ygGRovK5tY1tg3bqfYVmyB2yg5/nptNSi4k4kgLaStOHwvL0N1O0ro/Ap0KJIgzv1WpKnnXluBbdRT6XItDQ4gT4AXthT41ImTcgTMji2vqK32wmQFKupyBjX4ycvGCbD8TNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740648363; c=relaxed/simple;
-	bh=51QJII6fUdiPIfCW79kJ4QsvgBBy1ihvI+vJ0EJXRJ4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EYGgAf3AZOYVStRiwlyQa8dSE0dE2HCN10fP06KHGegfwK0xV5lhbwCJsiZHgpyxfbIYVT4hmiFZekuk0SYsjFr6d2TxaTaUmwhRgCt6JILVW90FhZznBU6fcNXyyYHsp+QQBuhwhH+CzJtezhi7sDRX70f3c8CTTI8sBCG77Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201612.home.langchao.com
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202502271724453794;
-        Thu, 27 Feb 2025 17:24:45 +0800
-Received: from locahost.localdomain (10.94.4.82) by
- jtjnmail201612.home.langchao.com (10.100.2.12) with Microsoft SMTP Server id
- 15.1.2507.39; Thu, 27 Feb 2025 17:24:44 +0800
-From: Charles Han <hanchunchao@inspur.com>
-To: <perex@perex.cz>, <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Charles Han
-	<hanchunchao@inspur.com>
-Subject: [PATCH] ALSA: seq: seq_oss_event: fix inconsistent indenting warning in note_on_event()
-Date: Thu, 27 Feb 2025 17:24:41 +0800
-Message-ID: <20250227092441.19044-1-hanchunchao@inspur.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1740648417; c=relaxed/simple;
+	bh=S1XOeVmtQkcD/IsX/mGhIpVMvMKU1yve/GlRx1cRLgE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cFB2HcRkFNzljqEQWBWVLI4FsWfVZlHB9BW9OkNkUe3cAzegkuluHwZTphK+bQIIwC1yVu4OGx/b0eOEDJaMB/Yhm91XiKL40u45e0O5GtixzhWuyWDy5jN/Zb3SjtPVnmp9N9FXl4sbdGb2FiW/VfmxhJrVqPcrtcd9ek4l6Us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DXIH+4j5; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DXIH+4j5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740648417; x=1772184417;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=S1XOeVmtQkcD/IsX/mGhIpVMvMKU1yve/GlRx1cRLgE=;
+  b=DXIH+4j5Dn8LXMH8NLt0prCM28QL7lCzMAEXsa9G4ZrFL1n/yLrzsquT
+   9ebHN/JRumCdIwSC9bTzkvr9XcOXA3PgcR22yk91vYC3P/kn6klyiM0Vl
+   LB/vNWaBjUEYTkLb845lPr2uhbIok8WQyCtH35CO9ntTet4HKq210uaLm
+   r8J0NniLZ3fRvQeDAXwlnmZQdAk0tuqdXOVn1yiq/CD5XrtCRDrwOc23X
+   A4S+wTl3UARfl/HNr/4YX928j5d/yEGYH5cC8JQvavPtSofdBve9FcEpN
+   Kr7VtAyhSo5Jk1TOIVOmVPWr1LIGVk10vlnVMxzfnirvzTB+7/eMYeQdm
+   Q==;
+X-CSE-ConnectionGUID: psYvn6rRR4SqBRKB/Qc4pg==
+X-CSE-MsgGUID: 9GyMvUcdSZOiSrqF7rVeRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="58945456"
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="58945456"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 01:26:56 -0800
+X-CSE-ConnectionGUID: nENdso6DTfa6qS65dYaoyA==
+X-CSE-MsgGUID: QDsYqhjQQk6TLy1G6HX71Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
+   d="scan'208";a="121571993"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.138])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 01:26:52 -0800
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: sakari.ailus@linux.intel.com,
+	laurent.pinchart@ideasonboard.com
+Cc: tomi.valkeinen@ideasonboard.com,
+	jacopo.mondi@ideasonboard.com,
+	hverkuil@xs4all.nl,
+	kieran.bingham@ideasonboard.com,
+	naush@raspberrypi.com,
+	mchehab@kernel.org,
+	hdegoede@redhat.com,
+	dave.stevenson@raspberrypi.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mehdi Djait <mehdi.djait@linux.intel.com>
+Subject: [RFC PATCH v1] media: v4l2-common: Add a helper for obtaining the clock producer
+Date: Thu, 27 Feb 2025 10:26:43 +0100
+Message-ID: <20250227092643.113939-1-mehdi.djait@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,35 +67,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 2025227172445306a30912b55c7cedf2b913425d7437d
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
 
-Fix below inconsistent indenting smatch warning.
-smatch warnings:
-sound/core/seq/oss/seq_oss_event.c:297 note_on_event() warn: inconsistent indenting
+Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+platforms to retrieve a reference to the clock producer from firmware.
 
-Signed-off-by: Charles Han <hanchunchao@inspur.com>
+This helper behaves the same as clk_get_optional() except where there is
+no clock producer like typically in ACPI-based platforms.
+For ACPI-based platforms the function will read the "clock-frequency"
+property (_DSD ACPI property) and register a fixed frequency clock with
+the frequency indicated in the property.
+
+Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
 ---
- sound/core/seq/oss/seq_oss_event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/v4l2-core/v4l2-common.c | 38 +++++++++++++++++++++++++++
+ include/media/v4l2-common.h           | 19 ++++++++++++++
+ 2 files changed, 57 insertions(+)
 
-diff --git a/sound/core/seq/oss/seq_oss_event.c b/sound/core/seq/oss/seq_oss_event.c
-index 7b7c925dd3aa..9a42713c7bdd 100644
---- a/sound/core/seq/oss/seq_oss_event.c
-+++ b/sound/core/seq/oss/seq_oss_event.c
-@@ -294,7 +294,7 @@ note_on_event(struct seq_oss_devinfo *dp, int dev, int ch, int note, int vel, st
- 				/* set volume to zero -- note off */
- 			//	type = SNDRV_SEQ_EVENT_NOTEOFF;
- 			//else
--				if (info->ch[ch].vel)
-+			if (info->ch[ch].vel)
- 				/* sample already started -- volume change */
- 				type = SNDRV_SEQ_EVENT_KEYPRESS;
- 			else
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index 0a2f4f0d0a07..308a13536ac3 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -34,6 +34,9 @@
+  * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
+  */
+ 
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/kernel.h>
+@@ -636,3 +639,38 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
++
++struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
++{
++	struct clk_hw *clk_hw;
++	struct clk *clk;
++	char *clk_name;
++	u32 rate;
++	int ret;
++
++	clk = devm_clk_get_optional(dev, id);
++	if (clk || IS_ERR(clk))
++		return clk;
++
++	if (!is_acpi_node(dev_fwnode(dev)))
++		return ERR_PTR(-EINVAL);
++
++	ret = device_property_read_u32(dev, "clock-frequency", &rate);
++	if (ret)
++		return ERR_PTR(ret);
++
++	if (!id) {
++		clk_name = devm_kasprintf(dev, GFP_KERNEL, "clk-%s",
++					  dev_name(dev));
++		if (!clk_name)
++			return ERR_PTR(-ENOMEM);
++	}
++
++	clk_hw = devm_clk_hw_register_fixed_rate(dev, id ? id : clk_name, NULL,
++						 0, rate);
++	if (IS_ERR(clk_hw))
++		return ERR_CAST(clk_hw);
++
++	return clk_hw->clk;
++}
++EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+index 63ad36f04f72..6446575b2a75 100644
+--- a/include/media/v4l2-common.h
++++ b/include/media/v4l2-common.h
+@@ -573,6 +573,25 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+ 			     unsigned int num_of_driver_link_freqs,
+ 			     unsigned long *bitmap);
+ 
++/**
++ * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
++ *			      producer for a camera sensor.
++ *
++ * @dev: device for v4l2 sensor clock "consumer"
++ * @id: clock consumer ID
++ *
++ * This function behaves the same way as clk_get_optional() except where there
++ * is no clock producer like in ACPI-based platforms.
++ * For ACPI-based platforms, the function will read the "clock-frequency"
++ * property (_DSD ACPI property) and register a fixed-clock with the frequency
++ * indicated in the property.
++ *
++ * Return:
++ * * %pointer to a struct clk: Success
++ * * %valid IS_ERR() condition containing errno: Failure
++ */
++struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
++
+ static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+ {
+ 	/*
 -- 
-2.43.0
+2.48.1
 
