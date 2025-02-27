@@ -1,245 +1,240 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2104.outbound.protection.partner.outlook.cn [139.219.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB091A38E3
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.104
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740630465; cv=fail; b=kFR8WrjJQS67K2yw/NEDQX7nNNqcjx9hMbIUPcCUlj7Q7wxhsoXBZoF8hFTmMsYmAquUL24GwdLSfVTuyCIVpqm7LE0I1tnEdVt0BtvKrdjxsn3kf6U090Mdy0YRTQDAWNRb2uVFBcy0uVTdT4o4jdqyW8aZJzJhEnvaC+nBCGA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740630465; c=relaxed/simple;
-	bh=Lwa0IQliJ8BEq4SCAgogG4k3+h2UD0EMaoYsPZcVxZ0=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=o/jKeee+5Jgl/yJiL0x6ZLRQlm0zaeEkEhwFCvcDgUsJ5l9T3dufHkUQXGL6/VM5JD+RqDkOQrwV6zX/A+6o5ducTgtF2SrDaHKQX+ffcVaVQ+fS6ybUtre6LwVoh2qxgMSjLrBB7mlRP5otbulUJ3266ubLxlclfVL7E+ydtvs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqjnT87fIiPv5bHoL5rPzYNe/aX2iYcioYUyQ48m57ZzAMF4gVeYBJEbZHVD/MURHCpbb3xUNLtFCPGPwdZDahnKeQxhgBBdpr9Kls5NfMHm/kiObR8FYeimO8/ZNqihxOrZdlciiwq3qUmi4so9sLzbTT3+RFpSSq0L+08OjZrllCnJqP1Bx+CoVI/H4SqZKYIgmtPIMuNXbL0FduuPIDkIgJb/E4lnxuydApXd2S20SuLy9yIkA+SHN+8t6MAIe2Fyb8jK6yW7PoDRzJtmP0KaUU0K/KnKNmR3UPjjyuKd7gx3Fqzx6KprE/eCh35S4rez9SylYIlicUsx7bx6aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CuU7TopDyERisMhKE6D7jEs+WRec+Ri4qO4291jwkOw=;
- b=B3++D47Bb/zu2zsYaIRFJyAzcYi5W7CHLNWh06om8JoLwbR7PGxJiF/LDRMnsawH/iQHN7KtLdxnpyajzLPav/7JLVtoLzwCeI5mADC4Nd7ltfeR7eR/fjHdjlg6R7LrHAiLfns48tAGhQu3SvhrP4bQgm3MioTlcFFraUrSAo7VaZFoeat6IHRKD4EdRAbMZFfbLGWuBqpec8DV0ssjCOtT2drrSk/7MrevcevLobhARnoQ9X6x0DVliJLu210MeWJXaU41MyzSdOh50Cxy7oyc8pNz0/i9bdYC0PYZalP+b2BzlCoPuAhLiETx8VLOThKVMtEBdZwaMHYHIu2rCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:e::11) by ZQ0PR01MB1239.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1c::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.15; Thu, 27 Feb
- 2025 02:53:51 +0000
-Received: from ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn
- ([fe80::6949:6e77:b17f:c6d0]) by
- ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn ([fe80::6949:6e77:b17f:c6d0%4])
- with mapi id 15.20.8489.014; Thu, 27 Feb 2025 02:53:51 +0000
-From: Tingbo Liao <tingbo.liao@starfivetech.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti
-	<alex@ghiti.fr>
-CC: Tingbo Liao <tingbo.liao@starfivetech.com>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Fix the __riscv_copy_vec_words_unaligned implementation
-Thread-Topic: Fix the __riscv_copy_vec_words_unaligned implementation
-Thread-Index: AduIwkod/W+x7D/lR1mCACD0gkE+/A==
-Date: Thu, 27 Feb 2025 02:53:51 +0000
-Message-ID:
- <ZQ0PR01MB098393466A0CB4722C8D62279BCDA@ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB0983:EE_|ZQ0PR01MB1239:EE_
-x-ms-office365-filtering-correlation-id: 208bfd26-625f-4dbc-2e06-08dd56d9f75f
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|41320700013|366016|8096899003|4053099003|38070700018;
-x-microsoft-antispam-message-info:
- 3i5rtAniRYq0gaefUXzTzIDceKSEJi5EaGwO9QpDYzii6iDtWc/rN3vncdbmH40mv/FQR0QnnCSDSMABteLmrKog+zTjUDUvOcQcXJrSeBefNPBnZ2uQ3VMwaNqhbgHFLJQpUF0sskuqtniT8mZI2HjIaQRqvTFXvdqwiZw7AgqDvoTUZoYk+r2kwh135xpSEqmAJMfGff4q+cZS/4u2Swq62Ry3aATES6CFhKwk/DdivMZFjOpGAngCOlqQG4UGZgbwifqNpgn/NgsHNuSNL0SfZu/dVHiYDgYxO8J2bG0ZanJeJlOk1OA0jlXHTF4YKAvJGnQsXbm0wGjK91DB+OMqHvWg0O/FHbLLnMBi0iMtiFjvOc3QL7j28bVqkMbv5IH3oqzaVu8wEAx5+iWPWEMmkAhbrQwuZCrN5B5bWzzArgwm7Dese86Wc4vbJun/zU+kSTEcUED39fMvzVa/dRdsUH/C4hnNPhv4uqw4OQm9ENGuOo9ozg+FIGqb9NUDONUaZjyC20QDTg7YSNbaWdkoATfiv2YkJzbJ9YPDvv+tBd79QHj6E9sorBiG8ThDkITKbeC76I1/cNopyxlo3a1GPt+Gq3HGpm2FmYGZ7p8=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(366016)(8096899003)(4053099003)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?h+l9gBKOx4HSvau50G1VTDEkH1dbgB+A2pvVuUaSgaqiChzYWeANdcFjO+nH?=
- =?us-ascii?Q?BUpCx54m1wtGhx5XqicgZtoMhnraE5Wjq0AdR10SbWiT2GdShjtsNIVD+Olh?=
- =?us-ascii?Q?9QGRztla9ta9hx4kHZtBecY29HMd/kXjy8x/VF/DSHb5VTdAV5lLvI+rE25r?=
- =?us-ascii?Q?YNEAKRjDGCxBQy3EJ/wyTTwgG9dzPjnTrMhLlf8mewSmU/nNFjg/ATq8Ilvv?=
- =?us-ascii?Q?VcihwJaDv5Gat4diRf6qBO5yW54Gc8UHcY0EzUiAyVA8iY6jR5JlY+t3g5Ec?=
- =?us-ascii?Q?nezpTkOhCSMCBNxy93s0G4VIxVX8wUKbEWBbHaCJM67LoTJqbTVHIoqYXuVG?=
- =?us-ascii?Q?PPwlNAn0uBvZ7iPTPmr9ysxElOK1ARSn8x3iQ5yV6CB1MdJIM9MqDzWjlSXo?=
- =?us-ascii?Q?aAs9XcPJBGemZ0JZRONMsr1GS/WK9BNB6zQWVTYwj15PU37ij6Wosawg6F1N?=
- =?us-ascii?Q?CkdUPE1KG4p6RpBelztiQp1XBa+0Bnq/aA8NoQBRn7Bc0t3aYRqDNTUw+78Y?=
- =?us-ascii?Q?8Xc2kFTewZpuSq/gCI8I0UR+Qi1VlpR3wYuzFRLuo5OsnOMgExWNtDlanyc8?=
- =?us-ascii?Q?SrxcTwkDcwgXHoOdxklhmybOz0Rn3DvlhWZl6Q/r7GQG3WyL89PiZFOVh8Az?=
- =?us-ascii?Q?DEJ7XxLxJSACJHuo0ZuUNLoy4pQqyKC6ialENmvD15MPemLOlpD85M4ScUDz?=
- =?us-ascii?Q?R2SRFa8vMTrD82pIvmJeERwy2Zqf4QpF4k/s1wJJxIV6YwNAhVei6TXTXU2x?=
- =?us-ascii?Q?GTFm8e4yNVW1pcGYqlVa0fx/2Dx6ZrJzalVGXGRCisBtD/r1nFHGZ/6+pXbs?=
- =?us-ascii?Q?QV5Q9S+GxyXzIzKYh/tSf1dEitSg/C9RZwBe0B813Ok6oO6mTMMljFK9PCFl?=
- =?us-ascii?Q?BBsHl9FTbREIWuQLy7Kt5LUrkWFT/KKmSq5lESH2p0wqNm8YUCu2iitEeHjK?=
- =?us-ascii?Q?h2rDHK5FdLW0dubdbUsh5jYyQDswreQHiF8MVLvGDwRsPhsOU7NwTA13ePcT?=
- =?us-ascii?Q?k+inlti3gJuvJy9jlD4QdVfc1i0XUFj0xaMTTlZHc5ipQ3deYjIb96iO8Ie5?=
- =?us-ascii?Q?tIyU7cvienW84c67pFrOnN14DnXAvMtSKKoUWn6QR7Ron6/1dUrXCl/xCGFF?=
- =?us-ascii?Q?RFHCG70/hiBkXi4x2SeEruZE/cXatLEnpHKVspPxj48Rr0m6y+6AboM7HuCm?=
- =?us-ascii?Q?ifva9q7iFYgvoFi2vObFo8PxKXgTWjONUsqiTV3fMKdskcL0K0tc+6YI821F?=
- =?us-ascii?Q?Rfp9yKRLov7k3jKyW5MDnDma+U0bjq0JbPPaIHwmdkD+WwR4val2hu+MfpHW?=
- =?us-ascii?Q?iFu4SjGEsn5ScDNyIisxM6JWwYnv/m0pI84T+4gkBDYGJEP9SCLjzmip7b8H?=
- =?us-ascii?Q?0PrnirD3gPRpOdFxArFMYQY6wW+bxci0/9lPuKtfyKtz+ywmcII8RXdrVJj7?=
- =?us-ascii?Q?5eih1FyPINcjbYI+cZMuJrWFSu5+e7IlIzI4y5YFnMIWsTKSPqipJn8kTrdj?=
- =?us-ascii?Q?cA4bSnHq66ShbLr+i5EYGrvModZ0dUBB9TfWyETcoaD6fCD5259rGj0p0VXI?=
- =?us-ascii?Q?msWGckWZGCC9sdDcF3CShqEJepX3t5//hikX7zU5?=
-Content-Type: multipart/mixed;
-	boundary="_004_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B6B4A1C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740630626; cv=none; b=MuKaJaDdMW7a77R77RosW6yfH/tYyLRiGUBuylhxzZW+BTyJPzNiZyMwB/3RamMW9AIZA1+ZUxUQ2peJnAT1H8qYye0ULGIbHQ0tf/2iuqZc3up705H5+i4P8X/ga0SD3Zjw75xfwNcqDDNMeqRqWV9JrzK7RJvHleHw0lM3FtI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740630626; c=relaxed/simple;
+	bh=K5Ig3YWAa+ZrYmIukjgNYwh4zK1sumsgYolE4PtduI4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbABsDgXz3lib2FGcejShwY6EPCPNmKqkrlxyljD7Z84reySXCTJw7jNF2bLmL7g2PQTtihmCnUdmfWx0D8to3RB9XsReuvQXETTkvN9tWhQRmpgBCI5ervWxoUCtrYIbVKzxTlHFqAuKdH6wFTRyu1CeHYUIw9TpCqAvMnk6+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m0rimY+x; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m0rimY+x"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-545fed4642aso471511e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:30:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740630621; x=1741235421; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6xImYWDi5dHhhhMYMyVIYxjxB6DJ6bmImK4QBDVtyf4=;
+        b=m0rimY+xPxa6Rt9eD08HgZpGg8Ufd978jWDP7E4h4nx7POfHYrERe9sZxNsD5bgi13
+         dNOFSqkegTp7FG3APXGDW2G9HHtfP0kENY4g16xAEPeATEwh8YO+a4dVt3oLmlAsUNSe
+         XNUdcnlwvGOy54bDCdhB0t66SgmDVGI4whLN0gmset1MmCqOj1m2iDaqlKQp6Yw3XWp3
+         NfpWrjqL7/iZhZfoqb1r3giKn7iZaO0Poj5BDDCrOOGIe985ink4dZzQVziwA4rv4I2g
+         OnijiDfD7bcurP/pl47Yp35iQi4J83i7HPSOqxeLhfX6/sNPNW+CJ97MFS1lKhc9kwBF
+         1tiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740630621; x=1741235421;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6xImYWDi5dHhhhMYMyVIYxjxB6DJ6bmImK4QBDVtyf4=;
+        b=F4g/3pKx+ilXDu1N0xJ7OHfjsXXHoHaF55LUxrXHFWKLCzOAsN75d6ECBlW8GyXaVt
+         frs7NV2zPF8aPyb8UT0FMcuZzyFyp+kjY05JuH3yRpKPRhNfVvqeKfT9BAh/3hQnSeRg
+         CbL8U+cKYrI6QbyBHURc+f+0a7uDG//0ylwNlVI86hLoCUNZncFD+TZBXyTCOYJoOa5q
+         JOmuahPp6dC8Llf0jJRanONcYTsp5vvZBVbwF72MYkuXMGSYRSqSWuUWAngh2gwieVxz
+         sv8BMpBmi+YrUEIAhM38a7P4vrHUUrhtg0yPQfNGhfVV49ky6nDPZoF7BTsKWUX6Saxp
+         RBRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpRLtnL/r6JfFThx+K2hKEfd1qEOUVsXViC6mgP+3CatkuYeGe+XKR7zU8M5u040wDrKI7uf03MaxbBRU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4kMWFEhLObpvQI4/o+i1QZa5K9XIKW3MYwGa9y93mMfCWpTLF
+	9Epe7lzWeI2C78nkUqwnqou+IP/7/GKa1HDvqgZIGbKTFOzGn88ZVBCK5XlGg2Q=
+X-Gm-Gg: ASbGncswkx15gaf74iv4zr56EhP/k2Z7mcC04Oun/gL9fnIc+56XEHf0nzVuf+5eSd5
+	qFS+HyVoWwt7y/0VXGHgqgpnRt/ftSNt7l17JNz43JrBsX8TXg0Bp8V8dv36j8mUdyxZxIzzNvs
+	XSNzlLlBnkRCpR2G7RyQHprD4fN6t1A7k0hfuWExX9O/kLTwlhM1RiKpeq0vz1uPXvQB051ceQY
+	54iGy/f1fn1BUuGf5qKxgeTD+YgTZusxVlMoEgbkcI0rQ+4wN42ZulJByBtR2jvReB/7cR1zJjY
+	TfvWzRDeUGwk0nP13ln2/KYBoUljBNy9Zk4W5jviRUBkUsJNbYe8iXy5y0IE5lqNxC1A63tjSel
+	vF44wmQ==
+X-Google-Smtp-Source: AGHT+IGL7HDk5Dk+8hhQWHKYR6eLK127rmTECoFhOD2p60rLksOSOUqbp9cBZQmHY4NpEr7VKXUNsg==
+X-Received: by 2002:a05:6512:ea1:b0:545:2c25:44e6 with SMTP id 2adb3069b0e04-54838ef5865mr10147861e87.25.1740630621185;
+        Wed, 26 Feb 2025 20:30:21 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443cd06fsm60825e87.228.2025.02.26.20.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 20:30:19 -0800 (PST)
+Date: Thu, 27 Feb 2025 06:30:17 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	cros-qcom-dts-watchers@chromium.org, ~postmarketos/upstreaming@lists.sr.ht, 
+	phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcm6490-fairphone-fp5: Hook up
+ DisplayPort over USB-C
+Message-ID: <it5pyziyolnzjlfzfcvugiupauf6vqrbes4kdjpae2edgoc2pc@zr3d4iqczuvc>
+References: <20250226-fp5-pmic-glink-dp-v1-0-e6661d38652c@fairphone.com>
+ <20250226-fp5-pmic-glink-dp-v1-3-e6661d38652c@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB0983.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 208bfd26-625f-4dbc-2e06-08dd56d9f75f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2025 02:53:51.4297
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xe585u6bQ372dA3GpDwDJQuwH7Yb1W7uxCqqRMPrcSiLv8KLK72uInlyALctAuSIhr4Smc4QRf/wWifB5rQ5ZNXrg1r7QCgtqhzKpCsLQec=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1239
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226-fp5-pmic-glink-dp-v1-3-e6661d38652c@fairphone.com>
 
---_004_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_
-Content-Type: multipart/alternative;
-	boundary="_000_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_"
+On Wed, Feb 26, 2025 at 03:10:20PM +0100, Luca Weiss wrote:
+> Extend the USB graph to connect the OCP96011 switch, the PTN36502
+> redriver, the USB controllers and the MDSS, so that DisplayPort over
+> USB-C is working.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts | 67 +++++++++++++++++++++-
+>  arch/arm64/boot/dts/qcom/sc7280.dtsi               |  2 +
+>  2 files changed, 67 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> index b3fc37dba51523ce5678ae6d73f7d835f8b26d9e..1e04c7ec7163538d93543f36094203e58212f600 100644
+> --- a/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcm6490-fairphone-fp5.dts
+> @@ -101,7 +101,15 @@ port@1 {
+>  					reg = <1>;
+>  
+>  					pmic_glink_ss_in: endpoint {
+> -						remote-endpoint = <&usb_1_dwc3_ss>;
+> +						remote-endpoint = <&redriver_ss_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +
+> +					pmic_glink_sbu: endpoint {
+> +						remote-endpoint = <&ocp96011_sbu_mux>;
+>  					};
+>  				};
+>  			};
+> @@ -758,6 +766,16 @@ typec-mux@42 {
+>  		interrupts-extended = <&tlmm 7 IRQ_TYPE_LEVEL_LOW>;
+>  
+>  		vcc-supply = <&vreg_bob>;
+> +
+> +		mode-switch;
+> +		orientation-switch;
 
---_000_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Should be a part of the previous patch.
 
-Hi All:
+> +
+> +		port {
+> +			ocp96011_sbu_mux: endpoint {
+> +				remote-endpoint = <&pmic_glink_sbu>;
+> +				data-lanes = <1 0>;
+> +			};
+> +		};
+>  	};
+>  
+>  	/* AW86927FCR haptics @ 5a */
+> @@ -778,6 +796,30 @@ typec-mux@1a {
+>  		reg = <0x1a>;
+>  
+>  		vdd18-supply = <&vreg_usb_redrive_1v8>;
+> +
+> +		retimer-switch;
+> +		orientation-switch;
 
-  We correct the VEC_S macro definition to fix the implementation of vector=
- words copy in the case of unalignment in RISC-V.
+Should be a part of the previous patch.
 
-Thanks.
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +
+> +				redriver_ss_out: endpoint {
+> +					remote-endpoint = <&pmic_glink_ss_in>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +
+> +				redriver_ss_in: endpoint {
+> +					remote-endpoint = <&usb_dp_qmpphy_out>;
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> @@ -799,6 +841,15 @@ &mdss {
+>  	status = "okay";
+>  };
+>  
+> +&mdss_dp {
+> +	status = "okay";
+> +};
+> +
+> +&mdss_dp_out {
+> +	data-lanes = <0 1>;
+> +	remote-endpoint = <&usb_dp_qmpphy_dp_in>;
+> +};
+> +
+>  &mdss_dsi {
+>  	vdda-supply = <&vreg_l6b>;
+>  	status = "okay";
+> @@ -1297,7 +1348,7 @@ &usb_1_dwc3_hs {
+>  };
+>  
+>  &usb_1_dwc3_ss {
+> -	remote-endpoint = <&pmic_glink_ss_in>;
+> +	remote-endpoint = <&usb_dp_qmpphy_usb_ss_in>;
+>  };
+>  
+>  &usb_1_hsphy {
+> @@ -1326,6 +1377,18 @@ &usb_1_qmpphy {
+>  	status = "okay";
+>  };
+>  
+> +&usb_dp_qmpphy_dp_in {
+> +	remote-endpoint = <&mdss_dp_out>;
+> +};
 
-Best Regards,
+I think this one is static, plese push it to the SoC dtsi.
 
-Tingbo
+> +
+> +&usb_dp_qmpphy_out {
+> +	remote-endpoint = <&redriver_ss_in>;
+> +};
+> +
+> +&usb_dp_qmpphy_usb_ss_in {
+> +	remote-endpoint = <&usb_1_dwc3_ss>;
+> +};
 
+And this one too.
 
---_000_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+> +
+>  &venus {
+>  	firmware-name = "qcom/qcm6490/fairphone5/venus.mbn";
+>  	status = "okay";
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 0f2caf36910b65c398c9e03800a8ce0a8a1f8fc7..4880d26e745566fa7ef906a0489e3772f2426ab6 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -3639,6 +3639,8 @@ usb_1_qmpphy: phy@88e8000 {
+>  			#clock-cells = <1>;
+>  			#phy-cells = <1>;
+>  
+> +			orientation-switch;
+> +
+>  			ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> 
+> -- 
+> 2.48.1
+> 
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:DengXian;
-	panose-1:2 1 6 0 3 1 1 1 1 1;}
-@font-face
-	{font-family:Aptos;}
-@font-face
-	{font-family:DengXian;
-	panose-1:2 1 6 0 3 1 1 1 1 1;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	font-size:10.5pt;
-	font-family:DengXian;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:DengXian;
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-size:10.5pt;
-	mso-ligatures:none;}
-/* Page Definitions */
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"ZH-CN" link=3D"#0563C1" vlink=3D"#954F72" style=3D"word-wrap:=
-break-word;text-justify-trim:punctuation">
-<div class=3D"WordSection1">
-<p style=3D"line-height:200%"><span lang=3D"EN-US" style=3D"font-size:14.0p=
-t;line-height:200%;font-family:&quot;Times New Roman&quot;,serif;color:blac=
-k">Hi All:</span><span lang=3D"EN-US"><o:p></o:p></span></p>
-<p style=3D"line-height:200%"><span lang=3D"EN-US" style=3D"font-size:14.0p=
-t;line-height:200%;font-family:&quot;Times New Roman&quot;,serif;color:blac=
-k">&nbsp; We correct the VEC_S macro definition to fix the implementation o=
-f vector words copy in the case of unalignment in RISC-V.<o:p></o:p></span>=
-</p>
-<p style=3D"line-height:15.75pt"><span lang=3D"EN-US" style=3D"font-size:14=
-.0pt;font-family:&quot;Times New Roman&quot;,serif;color:black">Thanks.</sp=
-an><span lang=3D"EN-US"><o:p></o:p></span></p>
-<p><span lang=3D"EN-US" style=3D"font-size:14.0pt;font-family:&quot;Times N=
-ew Roman&quot;,serif;color:black">Best Regards,</span><span lang=3D"EN-US">=
-<o:p></o:p></span></p>
-<p><span lang=3D"EN-US" style=3D"font-size:14.0pt;font-family:&quot;Times N=
-ew Roman&quot;,serif;color:black">Tingbo</span><span lang=3D"EN-US"><o:p></=
-o:p></span></p>
-<p class=3D"MsoNormal"><span lang=3D"EN-US"><o:p>&nbsp;</o:p></span></p>
-</div>
-</body>
-</html>
-
---_000_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_--
-
---_004_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_
-Content-Type: application/octet-stream;
-	name="0001-Fix-the-__riscv_copy_vec_words_unaligned-implementation.patch"
-Content-Description:
- 0001-Fix-the-__riscv_copy_vec_words_unaligned-implementation.patch
-Content-Disposition: attachment;
-	filename="0001-Fix-the-__riscv_copy_vec_words_unaligned-implementation.patch";
-	size=1099; creation-date="Thu, 27 Feb 2025 02:49:28 GMT";
-	modification-date="Thu, 27 Feb 2025 02:53:51 GMT"
-Content-Transfer-Encoding: base64
-
-RnJvbSA0NjE4Njg0MzViM2ZiMzQ2Y2YwZTBiNDBhMmFmMDlmMWZjNThkMDA0IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiAidGluZ2JvLmxpYW8iIDx0aW5nYm8ubGlhb0BzdGFyZml2ZXRl
-Y2guY29tPgpEYXRlOiBUaHUsIDI3IEZlYiAyMDI1IDA5OjMxOjQ5ICswODAwClN1YmplY3Q6IFtQ
-QVRDSF0gRml4IHRoZSBfX3Jpc2N2X2NvcHlfdmVjX3dvcmRzX3VuYWxpZ25lZCBpbXBsZW1lbnRh
-dGlvbgoKQ29ycmVjdCB0aGUgVkVDX1MgbWFjcm8gZGVmaW5pdGlvbiB0byBmaXggdGhlIGltcGxl
-bWVudGF0aW9uCm9mIHZlY3RvciB3b3JkcyBjb3B5IGluIHRoZSBjYXNlIG9mIHVuYWxpZ25tZW50
-IGluIFJJU0MtVi4KClNpZ25lZC1vZmYtYnk6IHRpbmdiby5saWFvIDx0aW5nYm8ubGlhb0BzdGFy
-Zml2ZXRlY2guY29tPgotLS0KIGFyY2gvcmlzY3Yva2VybmVsL3ZlYy1jb3B5LXVuYWxpZ25lZC5T
-IHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9rZXJuZWwvdmVjLWNvcHktdW5hbGlnbmVkLlMgYi9hcmNo
-L3Jpc2N2L2tlcm5lbC92ZWMtY29weS11bmFsaWduZWQuUwppbmRleCBkMTZmMTlmMWIzYjYuLjdj
-ZTRkZTZmNmU2OSAxMDA2NDQKLS0tIGEvYXJjaC9yaXNjdi9rZXJuZWwvdmVjLWNvcHktdW5hbGln
-bmVkLlMKKysrIGIvYXJjaC9yaXNjdi9rZXJuZWwvdmVjLWNvcHktdW5hbGlnbmVkLlMKQEAgLTEx
-LDcgKzExLDcgQEAKIAogI2RlZmluZSBXT1JEX1NFVyBDT05DQVRFTkFURShlLCBXT1JEX0VFVykK
-ICNkZWZpbmUgVkVDX0wgQ09OQ0FURU5BVEUodmxlLCBXT1JEX0VFVykudgotI2RlZmluZSBWRUNf
-UyBDT05DQVRFTkFURSh2bGUsIFdPUkRfRUVXKS52CisjZGVmaW5lIFZFQ19TIENPTkNBVEVOQVRF
-KHZzZSwgV09SRF9FRVcpLnYKIAogLyogdm9pZCBfX3Jpc2N2X2NvcHlfdmVjX3dvcmRzX3VuYWxp
-Z25lZCh2b2lkICosIGNvbnN0IHZvaWQgKiwgc2l6ZV90KSAqLwogLyogUGVyZm9ybXMgYSBtZW1j
-cHkgd2l0aG91dCBhbGlnbmluZyBidWZmZXJzLCB1c2luZyB3b3JkIGxvYWRzIGFuZCBzdG9yZXMu
-ICovCi0tIAoyLjQ2LjAKCg==
-
---_004_ZQ0PR01MB098393466A0CB4722C8D62279BCDAZQ0PR01MB0983CHNP_--
+-- 
+With best wishes
+Dmitry
