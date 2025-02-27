@@ -1,72 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCEF38DF9;
-	Thu, 27 Feb 2025 07:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1F62222B8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 07:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740642493; cv=none; b=gJggRz4HkKIiN2Ifs+tAW3fwqYPwB88e1yexwLmaA7x4i3fNRo0tTfHTi2VWWhQIi5ClljfqJWU84ynSvPrhAyxlBA3IE+YjAw9A42MiCvdu0KJwO3N1tdU6RE0HeF9G/l0xNOxfKLOOBnwzryXPTw+yClKTtManZekUkpAgPlE=
+	t=1740642513; cv=none; b=I2Npy8iTogCyYzmTQSbP1Rz44Ins7haFJhQbTnN+DqRpwOiM8rgT7UpakakD+zde90w+b9J25at8nSP0x2s1VPQD9WCaIFFWzC4wOEScsnRUE6hhIK0OuCQHTnvxD31EiKFEhscVuxgkjQrHL2sbCiFmx7AV7c9x3RUyiaEGe5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740642493; c=relaxed/simple;
-	bh=3hYVLitfg1qAcrjHx6qDFufWzXOiu0Ripju1RMLtR4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWtXfJQoW54XPC899hh2NfbzKkQHT3av5Yi5MG6wKRQewodgf+LfA6yUx8l5TB98/wM2bH3fNBmFx4GdvQzMXoeGGQUiIJwgoxWBkxPZJCC4rj8mfYP+OyzCVfBzF0k6I46ExvUg9qqLP2K/lJ6T3WH+sdms59gy+ZGqfKnjeVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDmlBXMU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740642513; c=relaxed/simple;
+	bh=LcTTmUaiUueHzxkqqk4T+6kRWsuH1UVWB8bDZx3I/t4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DLOH9x6Bo6ehUZ343jWVa99lyw8r/eFRPjcfM0m/ixmHKwe+EbkaXBm5FAGlBQ3vUxbQWMX6Pk/Df6at8lLxU87zblGPr115qVgT34fphQcjOuV5x7k+IHE3PcBbn8QA5wd4+ubCUvy2FKPuHj9FRashZCpBAJhq/Ccc1TUpXI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b=CeVlpRfs; arc=none smtp.client-ip=185.136.64.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDmlBXMU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AA4C4CEDD;
-	Thu, 27 Feb 2025 07:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740642492;
-	bh=3hYVLitfg1qAcrjHx6qDFufWzXOiu0Ripju1RMLtR4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UDmlBXMUlUCBgfDT40Vh9WUJ2lpVkLiPbhKDT/LtOLeZsCQ2XRCIAKEvHcvqUytPV
-	 N0jrvy2OxtNVi6YaHfPtoGHN9rrAQyb1e54yTqA+uaMpfkz5HRROeMgWL1d4ygAvF0
-	 un7MgXCKiTB1Zw8DH9n+5V5pKtVvAvi0rEkbN4m5wkBhZae2XGVf49nltcvdkidCJq
-	 dICFV8ItGfly8F5j9wzrEQ22cej24JZfD3XEKNdv8fXVatvDXOqT4DX6oPJuXLF4v0
-	 9GTGrTK2hZYIslM4q0imGxmLiBm2b1Yy438eE6ECD6MyoUujnWW7/pa+PVLUr4qU+Z
-	 6JLhnE495nZQQ==
-Date: Thu, 27 Feb 2025 08:48:09 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Marek Vasut <marex@denx.de>, Stephen Boyd <sboyd@kernel.org>, 
-	Shengjiu Wang <shengjiu.wang@nxp.com>, Adam Ford <aford173@gmail.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, linux-clk@vger.kernel.org, imx@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=alexander.sverdlin@siemens.com header.b="CeVlpRfs"
+Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 2025022707482405f637aac6e48568cb
+        for <linux-kernel@vger.kernel.org>;
+        Thu, 27 Feb 2025 08:48:24 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=alexander.sverdlin@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc;
+ bh=is2ITOYKTL7kmTYspiTeObOPS74J39ADsO954CSY7t8=;
+ b=CeVlpRfsRHIVS/dTMY+Uq9NSXNSfWpXZdFo+B6VL2fIU53UFm+HimvRh6Oxe+cZsrBS1j7
+ z4UzWbEhxkPCws2te2J1N64dyB3Qrnw2DzGaxPhVz68WQpn22CNL40JLSF+tucBpLAcVxs0c
+ IyKoL0fsHXxXoHWJEyBJ4j38HHgFvZun3uq0hLQB8I8VmUkrbAPH7z5YvkCqb1WmntMDkj9E
+ kFPvSrVN/kgu62T+yMGmspC4iZ6NZGQjZ217BoNLRqbCdNIbBEjlAsUDml+rfCRqN1psL6ii
+ qTACQc1MVvQCxTyynCuuRpzuZxAvk0IUpkpH4EkVBIQ791PTioPiuRmQ==;
+From: "A. Sverdlin" <alexander.sverdlin@siemens.com>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	netdev@vger.kernel.org
+Cc: Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-omap@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dt-bindings: clock: imx8mp: add axi clock
-Message-ID: <20250227-ubiquitous-hopeful-beluga-effd3a@krzk-bin>
-References: <20250226164513.33822-1-laurentiumihalcea111@gmail.com>
- <20250226164513.33822-2-laurentiumihalcea111@gmail.com>
+Subject: [PATCH net-next] net: ethernet: ti: cpsw_new: populate netdev of_node
+Date: Thu, 27 Feb 2025 08:46:46 +0100
+Message-ID: <20250227074704.4067481-1-alexander.sverdlin@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250226164513.33822-2-laurentiumihalcea111@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-456497:519-21489:flowmailer
 
-On Wed, Feb 26, 2025 at 11:45:10AM -0500, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> 
-> Some components of AUDIOMIX (i.e: DSP, OCRAM_A) are clocked by
-> AUDIO_AXI_CLK_ROOT. Since the AUDIOMIX block control manages the clock
-> gates for those components, include their root clock in the list of clocks
-> consumed by the IP.
-> 
-> Fixes: 95a0aa7bb10e ("dt-bindings: clock: imx8mp: Add audiomix block control")
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
-> ---
->  .../devicetree/bindings/clock/imx8mp-audiomix.yaml     | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+So that of_find_net_device_by_node() can find cpsw-nuss ports and other DSA
+switches can be stacked downstream. Tested in conjunction with KSZ8873.
 
-Best regards,
-Krzysztof
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+---
+ drivers/net/ethernet/ti/cpsw_new.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index cec0a90659d94..66713bc931741 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1418,6 +1418,7 @@ static int cpsw_create_ports(struct cpsw_common *cpsw)
+ 		ndev->netdev_ops = &cpsw_netdev_ops;
+ 		ndev->ethtool_ops = &cpsw_ethtool_ops;
+ 		SET_NETDEV_DEV(ndev, dev);
++		ndev->dev.of_node = slave_data->slave_node;
+ 
+ 		if (!napi_ndev) {
+ 			/* CPSW Host port CPDMA interface is shared between
+-- 
+2.48.1
 
