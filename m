@@ -1,161 +1,193 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2044.outbound.protection.outlook.com [40.107.102.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD5A1ADFE4;
-	Thu, 27 Feb 2025 16:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673921; cv=fail; b=RTOMbUhW4n3y2qowhswXpFdUwVkuWBWxB3jaSm9ze11DzO4J14XmQ+l5kWBdi219+O6jkqjp5Q66lMZIIkLl6WZLqiQ4tDmUdaVXgBJJfIYTpT+DJNvBzHspzeD4cBy3KGVAV8ielFTs4OHfEO6sr9Xd6miXN81PGZGVYvGglrs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673921; c=relaxed/simple;
-	bh=iL0YqAiiC9DoFIYVD7vWstUzBwGU6YVcseCCTB2toTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Akd9RqRnXSFHdEYPH61EfnzCorZuFArA7tg66/MlwG3aEyEUTV33CwgOrK4RlrPgd5Aoj+lkLbaPHqkbCSJVfypKaDj8sEJq9gZ3qDAY8YOHPQOq71b3udp6AGH/1fL6b19xZuYfyOdpf29Zzj3q4qQ/ykW7JotIVRQPJAhxCrY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eMQgQWni; arc=fail smtp.client-ip=40.107.102.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EEDA1AF0C5
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740673968; cv=none; b=lR1W71E5LYy37/FotzcDPv9L4Gw1UlJ34epUSp8c73+sVgPMmlbizuhrd5f/hBGeKrLPX8gjieTvmROx4KAqJAPKUjscpb+V/a+uu7hRj+V+FJS02zIIhvBntLIirRlLqXmM5mXLvcXmcILo7BRwXfNjAKUYaIs6kHen2GGNs00=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740673968; c=relaxed/simple;
+	bh=wuQ99hXtmb6GTwGl7mePLWn1OF/2FQnmOhHQ/Yjazmk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UBpFfeFXFKvbasiX1GEIaR346f7OzA3fEZMq0WLH9lTwEZfrV6bE31JqziOlQsVzdlCdhwjh9K1W399JgetiqvkQ8p5UzKbXGxW6QiNA4FsykPSB9Bmq2QRPzQzUcCj0TRvklYAoK0Dm0j+DihhHZDqFRRUK2WY5wTNBuqubbYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rezkK4U7; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eMQgQWni"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Cqh71sB9RXRFb0vYextsNvXjOD7yyGy6vFBHowuNiwytWRlMRksjWAri5/9mpXjjfWChwY8ZLC60H5PGozQaZe41jN/EgNGeNJDqzier4fE34AKDqXYQQZiaMS7ATFPNdUtfiVZ3dd1MTNO2XZ/95lA8P/5+GrKtJOg+ejtNeaa7LV8wfYsUX2qYamvwpXI8oY1ULzn33F6JxnFM9COuZD3nxPg067eH33l6LELDpF9mYzsLp/khTJLpY+ZynIrxbevVwwRCm0yyBZRmb1fprsQMrFPVDrIJf9h8S5C0lVkJjvMlht/E64/he6OWYplyvWpFE3h9wkOQIhRahwSJxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5SJ/m0Ejw1G3PmBmnIcZdwnybVeylxyhfPvWrZ1Yeb8=;
- b=zGtzhZg10ZIA5ZjxHGlN3hsCj7aSzrVCQkD3GLv/oB+sWtdm1F3mSNQsvRuVyN1GWqc2dVHNDauaDYP/QYG562ZvZ9xJucJIgjKwjALLrtNSw/0YbcYzDs/5M3xRrzSduyvIM/6qChRI5bgNVIf/KZX9l1u92aXSQTcTTnqk9BPOyA5neFduoJU1/Redpn717Q5Ph+8JBWxXbTNOblJRNbJaO6e7/SV3l90yE1dvhuvYxF7SWR8Rzg86uJGep0cPQ59xVNCFHyRWh0g5m+tj8xDSuQCKcOcz5tgf0JbEniVxQVumwcV56JK2lopm4c3bsYT5fQNSvJoPQp3xm9raXg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5SJ/m0Ejw1G3PmBmnIcZdwnybVeylxyhfPvWrZ1Yeb8=;
- b=eMQgQWni7dTDugwxnh06jZMgKH21FpydAJy5IC0ctymemBfjPJAMiikT3NdEaNTeSwKT8MzHYf5RhkSdO7FSRoDHEy6zXAHxe8z0SOSh5vT1ZhilQTQePLtmeHQdWZGUPsLw6w9L6+mwbSFhjXgHUiJUMsmDSWwmJus1hknOgJw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com (2603:10b6:8:a4::7) by
- SN7PR12MB6911.namprd12.prod.outlook.com (2603:10b6:806:261::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8466.20; Thu, 27 Feb 2025 16:31:57 +0000
-Received: from DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f]) by DM4PR12MB6373.namprd12.prod.outlook.com
- ([fe80::12f7:eff:380b:589f%5]) with mapi id 15.20.8466.016; Thu, 27 Feb 2025
- 16:31:57 +0000
-Date: Thu, 27 Feb 2025 11:31:48 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 06/16] x86/mce: Remove __mcheck_cpu_init_early()
-Message-ID: <20250227163148.GA785742@yaz-khff2.amd.com>
-References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
- <20250213-wip-mca-updates-v2-6-3636547fe05f@amd.com>
- <20250227152500.GAZ8CDzEBRWBUukmcl@fat_crate.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227152500.GAZ8CDzEBRWBUukmcl@fat_crate.local>
-X-ClientProxiedBy: BN0PR04CA0095.namprd04.prod.outlook.com
- (2603:10b6:408:ec::10) To DM4PR12MB6373.namprd12.prod.outlook.com
- (2603:10b6:8:a4::7)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rezkK4U7"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abee54ae370so167686566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:32:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740673964; x=1741278764; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uxBzUeb6aEpw2RFXXNhIl9qOIlWZxMjJ6EPTTtqpNP4=;
+        b=rezkK4U7Tw3qR+vcpgzgc1rho+4OVxDcQVa1Q1NmO7qMF2eF3p14dqh0aLxVUhJfTV
+         aOl70Xt1MCDzYD9wG0+f1WlfOB/I9BxErRdebcbbHWZz+qU4tM1kBkn+/qdZ6hpehNOf
+         ZpVDyiqB7ncPjWGps2+2cwE7e6ROVVlZVcJlJrUQE268r2wVdY5HrnXUBCKAN+LxqHq0
+         z2TWVt3rm/Q5jFR1LyInTjgNNLYwF88+gbTFIdivYt1S3yQ8cG8dxKLZQQ5nZcDW+RfS
+         wH+HsqOY+zWDCCONM5WYQqCZygIDas/uDSg1CNLlUHd8lTYI3L/fNLxmbPEhCQZW/TZk
+         H21w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740673964; x=1741278764;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uxBzUeb6aEpw2RFXXNhIl9qOIlWZxMjJ6EPTTtqpNP4=;
+        b=DQ22HnVGkuJrIu7qzspOca5ZydVHbu1J+TfuveNPGGy4uaH8ago9LN8KfHt1JiR8Ul
+         v3FnVc5cR44n9SSa5szM95lDbPckEZymlql7ELELYQK8i7iaxBa6ldz3s6fqzeQTDEsT
+         LDhLAYU1Qv72dc9SMGBQ0bGbn50rECpmxSXK4OOwqxTSVDJ9c5uepCYmDquktXNwVLmL
+         5sVGrfx/s3+Eq2aCNU3pVLpGc+WBn7Cobj2meTxx2YBISEu6KYnDDq6s/0DTzbDYkg+n
+         SQho2rfNwvgNLJ89zlChh/zuygCFug5aMsKb2KML3mZvIqKl8YLnk66ybNu/MQduqJuj
+         8ckA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAEfbxQkf/fcAH4WjMWFMkvxlWdgyvNA23BjMtNsQGLRcXQ2+WubdaKjC7jh0NbHCiVkah6E8xzbQt7oY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOOpKLXDSw9KjkTe7EHkqIs/LLHbEvbDqiy72xL7tMjnLwPZZV
+	lHwCGtAAVcheTwc7NBRQiegdWzGdieE+QLw7clWc0zivk9cNQRNbWMG9zlbCpUU=
+X-Gm-Gg: ASbGnctXRXw2Q7OmCZ756dGE/iL8UEDNw6rfEp/V4JWf2QnffjPNh9A8U6/nsDk3LZh
+	jenjiMPxGkhGUMrqr/Ph1rBce6aEzYK3b7AjPAQreB5Xr0aGlEdfVKdgCjTK1mVOZ2vpgmP9QIo
+	Yv75hRyWCQrJ6OdeTZKgZthaBAlp4ipPcJ6gORWu+GJS17yleC54i4LY3Elzk+hkvac6nScELRs
+	/FPMZHjfvPsSCvDMbiHRHVx66kHU6vGd3h/dtypXIr3u/zVwiYSGsy37DHb22q05u7fdZwtJaZp
+	r9GoOcmf6z3oMwVzST0hK9I=
+X-Google-Smtp-Source: AGHT+IENWfYyNPrvqdJkkInr0wph6rUkn8UzeZpWdw7KVY+SQfhvXNCVt/aAXye31RRnjNVIrHnJ5w==
+X-Received: by 2002:a17:906:d542:b0:ab7:e3cb:ca81 with SMTP id a640c23a62f3a-abf2657c56dmr9884666b.30.1740673963757;
+        Thu, 27 Feb 2025 08:32:43 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf1f1d5b4csm56471066b.85.2025.02.27.08.32.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 08:32:43 -0800 (PST)
+Date: Thu, 27 Feb 2025 18:32:41 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Kamal Wadhwa <quic_kamalw@quicinc.com>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] leds: rgb: leds-qcom-lpg: Fix pwm resolution for Hi-Res
+ PWMs
+Message-ID: <Z8CTqdFafLY17C25@linaro.org>
+References: <20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-v1-1-a161ec670ea5@linaro.org>
+ <dfthocttum7dscotngi6l2hz6bpdwfgrdxpvkcv6bdux3lt66d@iqfvmntvzyut>
+ <Z7zVgeM+7P7SLWIu@linaro.org>
+ <vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67pd2@cz2dcracta6w>
+ <Z7161SzdxhLITsW3@linaro.org>
+ <5euqboshlfwweie7tlaffajzg3siiy6bm3j4evr572ko54gtbv@7lan3vizskt3>
+ <Z8B2Bl/9uD3jPvQi@linaro.org>
+ <j55de6bbipoavqx25w2s6qr7n6fv6w7bj3lrgyag4dlvvddbqv@shn22aqcqeci>
+ <Z8CIY2OJUMqIOHGU@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB6373:EE_|SN7PR12MB6911:EE_
-X-MS-Office365-Filtering-Correlation-Id: e3ee9fb6-aac8-4c95-9cc0-08dd574c409f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qYAqUTu81IgnS8Sa81ubVL/ui4r363Fw9KoSL8hCLbCidPz/cVqQSKfEeIZx?=
- =?us-ascii?Q?cyXNvTsMZvLmIK5IzaEsdo26VhSDUVa62Ik4DoPSmz4brwMOf3Og5C0cLsvp?=
- =?us-ascii?Q?zbWhkIeZnkudgyv5ADQhsFvtjZASGUVM5SZt9+bAjW/SpzCLMjEC0B5F3/5v?=
- =?us-ascii?Q?1qFDoekeAM22jtkeOQn9lrMdsrkW8bSZ0KoTcFx7q6tqN45wyh4PF7HVjxxU?=
- =?us-ascii?Q?aHh0xVKx8a3GSv3L51zkfo0vHo+hC6aE2ZPknsXdGLwxRGVBrr1UmvHKnQew?=
- =?us-ascii?Q?Bn5mFv6qyG8Z0G5rXB1uTepprtKqHB35lqLpFXHlc1IhyBtf7pHbHD45zea1?=
- =?us-ascii?Q?8Ok8jK6Fi/LS69rmvmns9upjnYL9WuL71epGXEE97HkFAuZV//KCH5FDmBOI?=
- =?us-ascii?Q?LEASE2ZmGWcfZ6LTcpq/WT5oJBR0t26bnG6TOnngMQBCbuQ02/FPtWooZ0wH?=
- =?us-ascii?Q?bYMYNcs43lDtBvSYFDBMF1tdMAmdfXTW918ywS78E51YFHZow0+plLV5LIIm?=
- =?us-ascii?Q?ZzZ1dJjJlnfTyDTGKsmH7Lhms8GmvJJbFQmf1im3IhouAKexm1KnGMakIyuG?=
- =?us-ascii?Q?9Q1ReH5hHmTKY71SSg2nEgfwqbtuAY2Nepvsg54g1bUKhrri947mNyytKRef?=
- =?us-ascii?Q?zaHZhAogthdsPtad2/s5SKa4qFKHvjmNQ/Cvs+5iZKpHVZC9jMJjWtcTaiUG?=
- =?us-ascii?Q?9GULPshPqwErsrFFy3XgrgjCV69J0DEzxbOqP1fBHzvoeUHB24HXvRysGWra?=
- =?us-ascii?Q?riEoxkUdgLvuXO+bC3nh/5fq4VB1PSTonEjz0PrUKlwlACu2rnju5RBgVL1W?=
- =?us-ascii?Q?wlZYKvq+O51gViRRjQYeA4IgfbI3YtZCJ0g5YPEIKIpAQ4esDAr0wGHxIRFs?=
- =?us-ascii?Q?UXbmuj7n+HYfZKG7T6H9pwKP+6oFS6rnrkOSXWkxnVZETa0AKn38vMXhJv7l?=
- =?us-ascii?Q?J/rmGe7iAtxxyJYR3bDGa0IbIkqshKNNGGlFIF6lXDKmMQIjC+JdqWDW6q2h?=
- =?us-ascii?Q?eTMC4vq9PMcZl+AJ6L9jVxTyI/W7bIDiNDUdnwWMyrwjIVO6gQp0Nv90i1CQ?=
- =?us-ascii?Q?lUo80aWUBSfgBAu9/qFTfYZtIJlj6tcn0cfFWKDm1pdMZuUe895nQJypfK4H?=
- =?us-ascii?Q?CMAISMCDE6AbDoQgdEGp1GJHvJbmGpd5emXDFgIWfqdb4XPwErPXVYIwNgMQ?=
- =?us-ascii?Q?gC1iOqvZU+o3pYKg7NEocSD9OuRVaYMaYIGr0MMgoAO2LGXmVFgXwOr6ZEjz?=
- =?us-ascii?Q?j4oVwHlbWO5aOwc+PYlm+7ghPqdM4WOP31hcBFQD+g3lr62uUqOkMN/AbXoe?=
- =?us-ascii?Q?qYJVV4NCgt/5iGtGluiWNjSo6SCUdgyVYLvVQtjeTo845Z0fOw2Gi8+D6Mjj?=
- =?us-ascii?Q?tYGxKYc4nzamoSvbKYrVoOsqce0F?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6373.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SkRyAqChTqK4RwQivivgCkpMc40a6RzYb6NqETTwetn0uXdknss5V+Cz4M9K?=
- =?us-ascii?Q?8GQjXcvqT9XMQUFx0dGRFwOCAizvTS4S3s8oazcYLktSeeRA1Y6keeQcP1jZ?=
- =?us-ascii?Q?DRfIp9F2Z6jmqOHwMIPawuyx05uXAHHPvkjte2IqocTQSwYVFyj8kFvuYvCc?=
- =?us-ascii?Q?F+vbcR47F2BOBSld0yrCHx3F3jye17AuVpqrjbvTuU7PuopmgY+l0S4selGu?=
- =?us-ascii?Q?Q/jIHJgmL9df5dj9+XVKlmRDmt1GPv3BEQ8cEzi26gzmpfIz7UXvjFg064do?=
- =?us-ascii?Q?JwGNy9Y2vfPTLBe90FZpr3XeGKAOoZ7RrQ7Mj01toVK3cYFjaP0ex0Rg3r+p?=
- =?us-ascii?Q?V90BtpB59yedpHZHRMBlVkTgiAVlPFlqz416TJjCl62uHshu0nssKtDp6SEW?=
- =?us-ascii?Q?ZMnS6xALphpB3+Ouzp1VSGNZG3mWZ167weYpClJbCvAmKOd14aFPBXhQtODg?=
- =?us-ascii?Q?D2HDgri9fuLvdKNc3Lj2uYOWoX4lyWuHisnw0qEsbqVsWg4Z1MG2pMv1v5jy?=
- =?us-ascii?Q?h4RoKZ29Qp6O2sFlZpQnC90rU/+kaHxybV8OPbKJ1X/PvrcL9dxOnveLEx6J?=
- =?us-ascii?Q?YLVsv88v1YRvpITDoTMDf1/YprLMtPXwr+XvaC+h7+kBIVtbG+rYXVOH6L8f?=
- =?us-ascii?Q?pU17Gc4tJkAWnoojKtwmaYEaMB/5BCHtyOxTOd8JCCOP46k7O7h0pO+5OjCj?=
- =?us-ascii?Q?klVgoOoetZCKvuylgiy9/qevWrE3eeoV5Ik9nX4VM6KhMsdAyYpNlnyOboVX?=
- =?us-ascii?Q?agK1DV4OXfFaf9C45ppxcszsmtt3eZ71FQLH4OdboX6dFJyCg1ajNGc+8NuX?=
- =?us-ascii?Q?TJPoU685XQChq80PaGXHg9iuWWlbxyYDrLBjAzGIVUeUjrQp+x4dvGhrnhb2?=
- =?us-ascii?Q?zw2mLDIRiR1mWCCrbx3jS4K5b9rWWmnQWWBfH9Y7o9JKWPjuk6mEyeQUqdkq?=
- =?us-ascii?Q?ofkN7WPZWGB15PiSXg+tISFQw+QDmuE+pl+kamgyYcg3fjU+YGUGxIE7PkUZ?=
- =?us-ascii?Q?b9QSAY/cSUMad/B443l9p2CVIuqWSTTeW4jenCzjNHpBM+GOiV9lYPSvrDE2?=
- =?us-ascii?Q?73b1CAHn+sperTa6EkEgk/OGxK9bvgE5cc5zsTz3/12n3mZkiGKQkIrU3PXy?=
- =?us-ascii?Q?hTcycQmB6If+v8pKJIWdd7EuUstr37TpbBu/PFfYi766fAbjFtCgj4qaaJKL?=
- =?us-ascii?Q?Qo/c1ztMgyjWXH0ipyMW4WP3h1yWAxUPDTrNcUReZxyHom3xuOFYvM3bBrXK?=
- =?us-ascii?Q?g1toqkoAMSVBIS9pDm1kZbMsQY0k8Bjqsmn0QMB9Fi76Gwm6YH72gox/9cXH?=
- =?us-ascii?Q?nrxVo2+DIIr5+JqY68N1UehTZPM2bbIrIQzBXHd1z+JRDE9TZpt5elZwmaSB?=
- =?us-ascii?Q?/hOvLoQmeQk4q1MOK6c0zs8E/8fJIddgeIIyXMYogouGVDdt6tTiFp+79MMt?=
- =?us-ascii?Q?ymY6FZSTuKBAinz2Ndd5KMyxy/UaQa8cVmfmQ7AgfqKZlemldvXe4paVB44Y?=
- =?us-ascii?Q?yGusw9bpsmfoKZ3rTeTNbFMR4dC31b5cyjDOgJkntJtuBTnFOrkPR5/Fvbng?=
- =?us-ascii?Q?M9M60jan2dHNe3QYnLq7Z+3AizQRlRjgkT1H2rIG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e3ee9fb6-aac8-4c95-9cc0-08dd574c409f
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6373.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 16:31:57.2408
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: y5CHBPpet59NtSO81T4lAMAFjSqhiQfWCGFiM/2KkVUf2HvRugpSBIKP+IHZFNfvKSVwJ8Kl3xaPBl5sNLvaIA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6911
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z8CIY2OJUMqIOHGU@linaro.org>
 
-On Thu, Feb 27, 2025 at 04:25:00PM +0100, Borislav Petkov wrote:
-> On Thu, Feb 13, 2025 at 04:45:55PM +0000, Yazen Ghannam wrote:
-> > Also, move __mcheck_cpu_init_generic() after
-> > __mcheck_cpu_init_prepare_banks() so that MCA is enabled after the first
-> > MCA polling event.
+On 25-02-27 17:44:35, Abel Vesa wrote:
+> On 25-02-27 16:25:06, Uwe Kleine-König wrote:
+> > Hello Abel,
+> > 
+> > On Thu, Feb 27, 2025 at 04:26:14PM +0200, Abel Vesa wrote:
+> > > On 25-02-27 10:58:47, Uwe Kleine-König wrote:
+> > > > Can you please enable CONFIG_PWM_DEBUG, enable pwm tracing (
+> > > > 
+> > > > 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+> > > > 
+> > > > ) then reproduce the problem and provide the output of
+> > > > 
+> > > > 	cat /sys/kernel/debug/tracing/trace
+> > > > 
+> > > > .
+> > > 
+> > > $ cat trace
+> > > # tracer: nop
+> > > #
+> > > # entries-in-buffer/entries-written: 13/13   #P:12
+> > > #
+> > > #                                _-----=> irqs-off/BH-disabled
+> > > #                               / _----=> need-resched
+> > > #                              | / _---=> hardirq/softirq
+> > > #                              || / _--=> preempt-depth
+> > > #                              ||| / _-=> migrate-disable
+> > > #                              |||| /     delay
+> > > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > > #              | |         |   |||||     |         |
+> > >         modprobe-203     [000] .....     0.938668: pwm_get: pwmchip0.0: period=1066407 duty_cycle=533334 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.938775: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=0 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.938821: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.938936: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.938982: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.939274: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=921458 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.939320: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.939434: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > >         modprobe-203     [000] .....     0.939480: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > >  systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=5000000 polarity=0 enabled=1 err=0
+> > >  systemd-backlig-724     [006] .....     9.079585: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > >  systemd-backlig-724     [006] .....     9.079698: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > >  systemd-backlig-724     [006] .....     9.079750: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > > $
+> > > 
+> > > > 
+> > > > I didn't take a deeper dive in this driver combination, but here is a
+> > > > description about what *should* happen:
+> > > > 
+> > > > You're talking about period in MHz, the PWM abstraction uses
+> > > > nanoseconds. So your summary translated to the PWM wording is (to the
+> > > > best of my understanding):
+> > > > 
+> > > >   1. PWM backlight driver requests PWM with .period = 200 ns and
+> > > >      .duty_cycle = 200 ns.
+> > > > 
+> > > >   2. leds-qcom-lpg cannot pick 200 ns exactly and then chooses .period =
+> > > >      1000000000 / 4.26666 MHz = 234.375 ns
+> > > >      
+> > > >   3. leds-qcom-lpg then determines setting for requested .duty_cycle
+> > > >      based on .period = 200 ns which then ends up with something bogus.
+> > 
+> > The trace looks better than what I expected. 2. is fine here because it
+> > seems when Sebastian wrote "driver requests PWM with 5 MHz period" that
+> > meant period = 5000000 ns. That was then rounded down to 4266537 ns. And
+> > the request for period = 5000000 ns + duty_cycle = 5000000 ns was
+> > serviced by configuring period = 4266537 ns + duty_cycle = 4266537 ns.
+> > So that's a 100 % relative duty configuration as intended.
+> > 
+> > So just from the traces I don't spot a problem. Do these logs not match
+> > what actually happens on the signal?
 > 
-> The reason being?
-> 
-> Precaution?
-> 
-> It was this way since forever, why are you moving it now? Any particular
-> reason?
-> 
+> What I do not get is why do we expect 2 pwm_get() and 2 pwm_apply()
+> calls each time ?
 
-1) To read/clear old errors before turning on MCA. The updated
-__mcheck_cpu_init_prepare_banks() function does this for the MCi_CTL
-registers. This patch does this for the MCG_CTL register too.
+OK, so the second pwm_apply() is due to CONFIG_PWM_DEBUG.
 
-2) To ensure that vendor-specific setup is finished beforehand also.
+But still, the first pwm_apply() requests duty cycle of 5MHz:
 
-Thanks,
-Yazen
+systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=5000000 polarity=0 enabled=1 err=0
+
+So since the period is 4.26MHz, due to the knobs selected by the
+provider, this duty cycle will result in a PWM value that is above the
+selected resolution, as I already mentioned.
+
+> 
+> Need to dig a bit further.
+> 
+> But meanwhile, if the first pwm_apply() call goes all the way to the
+> provider, then the duty cycle value, when translated to the actual PWM
+> value that gets written to reg, will overflow. So this is what is wrong.
+> And this is what actually happens.
+> 
+> > 
+> > Best regards
+> > Uwe
+> 
+> 
+> 
