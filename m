@@ -1,124 +1,138 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8D626E968;
-	Thu, 27 Feb 2025 22:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8782D1DE2A7;
+	Thu, 27 Feb 2025 22:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740694082; cv=none; b=GTcIg0cWF+uFCZOKm9zDlDTWARsGa8PxbllhHWEkjQH2MR29dHciBtLoZ8qp57vsSVN4RS4HQC/LZ2mxnjxSq2ILeLA5utjksznk+z06gn1xN/j4J6SMKBwU8bSkMv4anudl9FrrMDWPegcFjQVq2Dqi0AyEAvv45aluF5HfIGA=
+	t=1740694114; cv=none; b=sILYZ5Oksr3AHzpZvVBz04yAQvz3xAwx5FE/mgl4p8su/mCVSBTRrhdz54LGXXrfUWKi323h1ZKLMqc3sLdyza3x+bELg8YyJp2um+U3pY1kdeAa+LCAZzBVgaVP0xA7XYSWjOfBRbX0NXAABQWUcvOb4cF2uk938ID2H/ftM+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740694082; c=relaxed/simple;
-	bh=UN+Ru2yjqJrkcSVGik6SXxWdueMW66UZG8XnISR/UP0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U5r0ePeealrT7vE7fpanMSYFkHnhX+NP3tI1J3uaQSJp0A1FtNYFQmssrf4MI/C8m4/I9LoW+nticZz//o8dGKNsFR7oijzW64hBOTRwNGUVw/5EtChyM8gsGw+AN7YnPcVVbalRzOH9657rt6p1DJizM3mD5dncxFlGqNAlE5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nhpYy57d; arc=none smtp.client-ip=209.85.218.42
+	s=arc-20240116; t=1740694114; c=relaxed/simple;
+	bh=Ya4qVCIKkvKe+lGvSytM2sqLi8oWybmjEa4BYB0T1gI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d52gp/lsVSglnSypZrZTJQAQCerTKsNcLRqR6TCDxVxP281kyxG96VsEDAykX6WZM6pfmh/91wKe7CyUlVjLrR4RCLnpFzyvhhTjiyO5Z97CvVuWDz1vMFs7Ppw2lNCLn7q7jQHPBMshGzt0Qs9K1/GOECow0ZqH667qW22APkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PPc9c/iY; arc=none smtp.client-ip=209.85.216.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nhpYy57d"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb892fe379so206176066b.0;
-        Thu, 27 Feb 2025 14:08:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPc9c/iY"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2feb96064e4so828616a91.1;
+        Thu, 27 Feb 2025 14:08:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740694079; x=1741298879; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ADjzqVu0rQMGccp4tlner6D96WtUA+UNr/2jIh2K1oc=;
-        b=nhpYy57dLJH1uPapQI7VnXH1HZpEkA4pWhCcg8ejbk5k7VSzfZokdbiZ5OA9YC10cE
-         L8WWibF6EYYyjJZSygxVWd5GUXsaITlN85fJtjgJFO/i9y4AhklroffS2bcHtAgckpGh
-         p6uZ2vDixkuJDv7q57KIIk+JfHG/X11fZFAKObCab8rx45rAPSZbY8h2bSquqBt6KPF0
-         Nam3Jb1s/FGOK+FFNJGfaffIxT6AjrhAQ9jaCuyTpZHBfoQkEEQxYj53XnINu9eNuXHX
-         ScVKgSgQ4OHHtnbNqlVGd7Aw3pXlefhif269O8U8pzcxGIiji8VwQ7nP6Fum2N9IC1hq
-         Lo0Q==
+        d=gmail.com; s=20230601; t=1740694113; x=1741298913; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uGZUrwXESnrYSl+z0YVCe/i4oeHpds0PraptN6sp7Ks=;
+        b=PPc9c/iYVZaGAgCDN++vacJqrz8gk4/6FQ+XLgCQlStstDsR59/+Enzb3YCA/7aGX1
+         LJpNWrLah9g3v6+sYKXglLOZd0FpthO1t1nFqtKFoP/zcUD+Hr4ZL8riO89xqgFwTyqY
+         Ey7X/7T3sAF0iM+53NTHKDM1B7oP8nERzRQ+WdQQp12XSSZ9m6EcKRkZS2y6mGKrwnMU
+         lcHkFPYM3PD9l5SPCxHoR2k8xZ7Z19SyEzBoVYd1OEjDt3b7h+HqW5GIPmGRE/5Iiz7f
+         ngM+XY6dgOpXS9GVVeJZAvF4sVAcWwRY3fyZhJHyI78rOuhVnxJB4airMXLoKuvyVvEi
+         dDcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740694079; x=1741298879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ADjzqVu0rQMGccp4tlner6D96WtUA+UNr/2jIh2K1oc=;
-        b=LI8CsWzJ7kvh3ezXpDM2d/iuwSwPp7MmADVHgPQq/Pvt0DABfgJRagEKoqy6WEn8yB
-         hLzKMwPtENFvsGI1nGqKGjCYzt2t3qjk9HPDravQx55Vt+/WTKZr/qRg+xkEXMZ+2mKh
-         uAroUeiGXxNX1/IxVGj0G3Lgg+nqYq1nrR2oaYla9A47IdVxVujaOfPLXittmTwdZrwI
-         S+QVw98a3xZ6pydw9shAWJQ9KdXOs7hDBtgdNj9LaYO6iGnxnPdyz2rwpPNnOhs2qU3i
-         ohsIwJBmHhrqUf0iXgalFOYLIq+r+pllL8RV9jjsOhEhaqEuCiBx2+m2iSvx6nfRn2EL
-         gtIw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVVhv9IOZbwmXAFCXnx3SnIp2NVENVXjbks7cWg+/I6vXQk+AsTOpHmYu8OSl++z2yUBMeZx5DDLMsttNS@vger.kernel.org, AJvYcCWnS0zVR4l7O7YQJ+wBadtQxvw20ijwv8OpdIFGDK2GZKpLkKHaMZQkDJMIg7CLkMc/RQPSUyIMylzH6ixp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv8nBQt+chqmVS1Vk7Hy4QBCAtjmBZZUAXN8Je7sz/7JX395gN
-	mk59Hi7KFd8Q5Jc7vcOMNXpN/6VwEkvDvXva0s8OJHydd/VXgy1QId7aG2MyDJ1A9ZMBmKE67W8
-	MtNA2dLBYT9DigMQ5KKnRqoiH+1c=
-X-Gm-Gg: ASbGncsleKffVWeH/iO0hATIaYzRNrTzcCW1WS9QF1uz1gN5nwnLqAwG9ITmB8KZya3
-	yTFwbaVHXUv5CyDDH441qMP+HYxjKy1+lj/iurCeT89v3gIaw7H6StJNVISZjHRPJSDn22SKTa1
-	nRGSz6c7A=
-X-Google-Smtp-Source: AGHT+IEBd5l3TXoINUYoCqfpZdrHIWch7LPPU/DVCUKfuAbX+iDCrpluTBxuviWEJtgjZj47tQXm4fxrqHTF+kGUQeE=
-X-Received: by 2002:a05:6402:34c6:b0:5de:4a8b:4c9c with SMTP id
- 4fb4d7f45d1cf-5e4d6b62f6emr1432015a12.32.1740694078277; Thu, 27 Feb 2025
- 14:07:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740694113; x=1741298913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uGZUrwXESnrYSl+z0YVCe/i4oeHpds0PraptN6sp7Ks=;
+        b=p55NOoNiB5SB0ZwgKVLbcffgSmBc2o8xkvHueitmgzL2JpEzqpXX0qSA1yIjxLuGnm
+         M5LGuxQa2OnFuEY5IcEovdkLqSrYN+r8jQkZvQggKKctC3fgD/SmOBTpiwUlVHQXoaQ2
+         OQ53E8E43v+33XEJ1Ky+sKqqZ8MAFle9JpEr1Z4Bw84xcQpIMigCJe0M7y69sCxqI8yf
+         K3uE9GGSw2HGCJz+rs4ZNxBntFE/AT0L3E9kfNL0Ul2IgL/FYwoledsaS8svCJPMUn63
+         68uLqCx4z5SAMWCMoNHpqvo0Ff/Lf0rdkYAejlevqZHgUwkX3nYoSoYNTaZWcq4xjxYD
+         074Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWTXP03y7ppfgdzhT6nc1d9ZEYaR5SF5mRu5T0q0yUyf1KRZ3Wp1QP26ia8LaNqAisD8/c=@vger.kernel.org, AJvYcCXdDuHpdjECS5T8nWUDcJm+9dZRC+Kpjg19MkYN8f/OP8F+iklgbyhslL/nnJ9vHnrv/qI4WScP0Q5HFOWI@vger.kernel.org, AJvYcCXpMcqQ0Ri19M1AUbL0R7t+l92l/we+naT43dZizrCX34HHAEY+t3Ge7jFmvOEF9vjh0BNXMgOwO39R/irmZ1Qf@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqRv4GlBVQvHV/Jt6xqYt2zx2/H8aIOZcm4F7tT/33DU1kdKsC
+	GUmy3mK6szpvOBJ1MUZcyhlrjaemg8EdHVvTZQy6XbQQqfD+SuM=
+X-Gm-Gg: ASbGncuiJRfcySMwUyvZ7ZUE4q72u4s5Hbqwm04vYmF1aMzAxBwhTKXT//HLj0S+5b8
+	7OiY8EatXq7p58+5E3UsSDbPv0+X5hrcHbUNnXP7Yw08UuUebU1CyBK3/FQ+/SBIxCcZncGVUKi
+	ekaLaZAWr1d8L7TNv7oChCBKzcb0VA5CeZxTWfLU1Q/y2TWcUMr5jPknS78VNJoXuv+Mj+DhYro
+	O4kJFavBWvYhOvnp0ktpE+Mx/OVz1Wm4N1tUFuP/TfpoTFaIfMiShtRdjaZGJBbTjxIXsXvQGYo
+	B2PLxM8lxGNbSQq8UZeFTqPAhg==
+X-Google-Smtp-Source: AGHT+IEJ7aycePp+9lT7H+/P2NL5K2dM8OD/iNM4WQdvVrwZ2TnKe7E8R2qFUh+mps4pjwEZ6qM+gw==
+X-Received: by 2002:a17:90b:4b:b0:2fe:a515:4a98 with SMTP id 98e67ed59e1d1-2febac05a46mr1358858a91.31.1740694112740;
+        Thu, 27 Feb 2025 14:08:32 -0800 (PST)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fe825d2b18sm4439851a91.24.2025.02.27.14.08.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 14:08:32 -0800 (PST)
+Date: Thu, 27 Feb 2025 14:08:31 -0800
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: "Bastien Curutchet (eBPF Foundation)" <bastien.curutchet@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 01/10] selftests/bpf: test_tunnel: Add
+ generic_attach* helpers
+Message-ID: <Z8DiX8MmJWvO5Ws2@mini-arch>
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+ <20250227-tunnels-v1-1-33df5c30aa04@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227180407.111787-1-mjguzik@gmail.com> <20250227215834.GE25639@redhat.com>
-In-Reply-To: <20250227215834.GE25639@redhat.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 27 Feb 2025 23:07:45 +0100
-X-Gm-Features: AQ5f1JpvudCDW09pKlncHJMvLXGsrmhmZGJuFrf5IBX_27iIWhHqMRNvU_zS9vU
-Message-ID: <CAGudoHG7EF5_wnNhsyFoiRtU-qW1b=vUaVaFk7TKnqeSjC6sOg@mail.gmail.com>
-Subject: Re: [PATCH] pipe: cache 2 pages instead of 1
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250227-tunnels-v1-1-33df5c30aa04@bootlin.com>
 
-On Thu, Feb 27, 2025 at 10:59=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wr=
-ote:
-> > +static struct page *anon_pipe_get_page(struct pipe_inode_info *pipe)
-> > +{
-> > +     struct page *page;
-> > +
-> > +     if (pipe->tmp_page[0]) {
-> > +             page =3D pipe->tmp_page[0];
-> > +             pipe->tmp_page[0] =3D NULL;
-> > +     } else if (pipe->tmp_page[1]) {
-> > +             page =3D pipe->tmp_page[1];
-> > +             pipe->tmp_page[1] =3D NULL;
-> > +     } else {
-> > +             page =3D alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
-> > +     }
-> > +
-> > +     return page;
-> > +}
->
-> Perhaps something like
->
->         for (i =3D 0; i < ARRAY_SIZE(pipe->tmp_page); i++) {
->                 if (pipe->tmp_page[i]) {
->                         struct page *page =3D pipe->tmp_page[i];
->                         pipe->tmp_page[i] =3D NULL;
->                         return page;
->                 }
->         }
->
->         return alloc_page(GFP_HIGHUSER | __GFP_ACCOUNT);
-> ?
->
-> Same for anon_pipe_put_page() and free_pipe_info().
->
-> This avoids the code duplication and allows to change the size of
-> pipe->tmp_page[] array without other changes.
->
+On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
+> A fair amount of code duplication is present among tests to attach BPF
+> programs.
+> 
+> Create generic_attach* helpers that attach BPF programs to a given
+> interface.
+> Use ASSERT_OK_FD() instead of ASSERT_GE() to check fd's validity.
+> Use these helpers in all the available tests.
+> 
+> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+> ---
+>  .../testing/selftests/bpf/prog_tests/test_tunnel.c | 128 ++++++++++-----------
+>  1 file changed, 62 insertions(+), 66 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+> index cec746e77cd3abdf561cfc2422fa0a934fc481cd..27a8c8caa87e4c6b39b2b26c2aa9860b131a70a9 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+> @@ -397,6 +397,56 @@ static int attach_tc_prog(struct bpf_tc_hook *hook, int igr_fd, int egr_fd)
+>  	return 0;
+>  }
+>  
+> +static int generic_attach(const char *dev, int igr_fd, int egr_fd)
+> +{
+> +	DECLARE_LIBBPF_OPTS(bpf_tc_hook, tc_hook, .attach_point = BPF_TC_INGRESS);
 
-I have almost no opinion one way or the other and I'm not going to
-argue about this bit. I only note I don't expect there is a legit
-reason to go beyond 2 pages here. As in if more is warranted, the
-approach to baking the area should probably change.
+nit: .attach_point = BPF_TC_INGRESS is a bit confusing to me here
+(because we later attach both ingress and egress progs); mostly
+because the way attach_tc_prog is written I think. Can we move
+tc_hook definition to attach_tc_prog and make it
+.attach_point=BPF_TC_INGRESS|BPF_TC_EGRESS? And then we can make
+attach_tc_prog accept ifindex instead of tc_hook.
 
-I started with this being spelled out so that I have easier time
-toggling the extra slot for testing.
+int attach_tc_prog(int ifindex, igr_fd, egr_fd)
+{
+	DECLARE_LIBBPF_OPTS(bpf_tc_hook, tc_hook, .attach_point = BPF_TC_INGRESS|BPF_TC_EGRESS);
 
-That said, I don't know who counts as the pipe man today. I can do the
-needful(tm) no problem.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+	bpf_tc_hook_create(&tc_hook);
+	if (igr_fd >= 0) {
+		tc_hook.attach_point = BPF_TC_INGRESS;
+		...
+	}
+	if (egr_fd >= 0) {
+		tc_hook.attach_point = BPF_TC_EGRESS;
+		...
+	}
+}
+
+Or is it just me?
