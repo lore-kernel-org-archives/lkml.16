@@ -1,91 +1,121 @@
-Received: from www522.your-server.de (www522.your-server.de [195.201.215.122])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D32E1A9B2A;
-	Thu, 27 Feb 2025 21:02:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.215.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCAED200111;
+	Thu, 27 Feb 2025 21:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740690173; cv=none; b=PfmEV+XsTi8VUS1ZzIcyhKYQJd9weFYCqsHfe51BtjhLvtYmXvYbsrBO07iikYCqyP9Ss7L86zxVpNjUTRlkuCA9dnUFt56RPOGcUOWejV3MJpEq7k0ZvhLniqjfbHObx/qzZUrSGHMdJlhnTT+RbtzTMNRZPZdz4d6MaVkEqeI=
+	t=1740690186; cv=none; b=gRdIR/AdjjBRyeDfj2ZC9kyu183kYX+63QNYpdz/A64tvfPNFCCdJYK9qm4kqbkI4HHOBpCak8ZAZ2i1s1PZTzYSrix2gRPaNCN2Du5lAmYPSw7WnUIqVzTTNmP3FI/cQvEhDHC8E3YOaqp2Lpe4YzVKdgoG4ZXFv9v31gwABSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740690173; c=relaxed/simple;
-	bh=6NYlHZ4xc25oN3QPeOzW7hvvodzJe/fumzzfcMmfcPw=;
-	h=Message-Id:Cc:To:From:Date:Subject; b=gEuhVk+QNFxS3BvpHGt55hmQ8n4vK2HhYfrb5X0FHE2TF1MbHSZkO+BShbLmCs2p1RK4/+LJRz5mZ/CfhjCFRBOHNK5g9+fdmMsT3Xrbu+vr/9pPfLZwi3fVnArKF4DsTfXHyyNwj6oCnSaweffau43I6rhy1D7o0sYz61pc07s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de; spf=pass smtp.mailfrom=folker-schwesinger.de; dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b=etHdWh0w; arc=none smtp.client-ip=195.201.215.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=folker-schwesinger.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=folker-schwesinger.de
+	s=arc-20240116; t=1740690186; c=relaxed/simple;
+	bh=3r4B5oXY/BH77JcRs+o7wfqEqeE4UQbUlNZHU1J1ejA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W8drGfQb5p7g/nELgpjO0uMWWlvKgt47+jx1ueVl/eHg63CM1ei8BLzgLqbXfqaFWo1Mx+bvwgXul6Ua91sLoThKQvwvbWS1A378KqC7dLe1se67KkvcMbdOaC8sQC6rtHayOnrbo2WVEPUcelObcplJi6cwVgs9SOXJWpktLkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kyclk4gH; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=folker-schwesinger.de header.i=@folker-schwesinger.de header.b="etHdWh0w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=folker-schwesinger.de; s=default2212; h=Subject:Date:From:To:Cc:Message-Id:
-	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References;
-	bh=ct8SrB60d6zDrIGtD5NcucoiPwJRvKTewfeK7626vSE=; b=etHdWh0wVNkty5DRaf7xhYUiZT
-	BVcp/6G62MwKrAy6ofI/EcesilgaG1GMFVp+VkDSbZdS/FS+RuZx9+gY5wWLD+DMapgtbMRhgXDyp
-	A1PbwADor6SrcoCKXkxP9Asj8xXknf6w+gA7MXHQMCtnBIRDe5nYpJ93JyrFRO6Z/jeQwETGUxkl7
-	/60HNHQtGPkAF6HsATWJv0gtKFlySdhMSC6MZRQMvAyrBM1dvLkSK8sKYfEhXyotnJmt87CT7Ql/u
-	ZSN5EsWq/pyd74K0oiukEGh9yYDW9aMjRIw1uFppTYQTdovMhLViliXL8dQeU6OrnaMVNy8GmshlG
-	A4Ea7++Q==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www522.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1tnkhQ-0008jC-2c;
-	Thu, 27 Feb 2025 21:41:41 +0100
-Received: from [170.62.100.249] (helo=localhost)
-	by sslproxy02.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <dev@folker-schwesinger.de>)
-	id 1tnkhQ-0002zu-3D;
-	Thu, 27 Feb 2025 21:41:40 +0100
-Message-Id: <D83IPSTKYWNB.1PUBV1530XI86@folker-schwesinger.de>
-Cc: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Folker
- Schwesinger" <dev@folker-schwesinger.de>
-To: "Jonathan Cameron" <jic23@kernel.org>, "Lars-Peter Clausen"
- <lars@metafoo.de>, "Nuno Sa" <nuno.sa@analog.com>, "Paul Cercueil"
- <paul@crapouillou.net>, "Peter Zijlstra" <peterz@infradead.org>
-From: "Folker Schwesinger" <dev@folker-schwesinger.de>
-Date: Thu, 27 Feb 2025 20:27:53 +0100
-Subject: [PATCH] iio: buffer-dma: Fix docstrings
-X-Authenticated-Sender: dev@folker-schwesinger.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27562/Thu Feb 27 10:48:50 2025)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kyclk4gH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740690185; x=1772226185;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3r4B5oXY/BH77JcRs+o7wfqEqeE4UQbUlNZHU1J1ejA=;
+  b=Kyclk4gHrHuoiFVBwIoCY0gL4dshLAAXRbdXq/MyHis710UHoiSgda8K
+   X1506q1E/W0dSbF1GUlIE+TcG6gZs1DuzdQARToRwuAUTFqnyYoQRogWo
+   1arCSrswItJ11ie5r5XmsC2OB6CuoLIoRk3nwlwOqgb0w65rUVLcudL+G
+   d25m3o0mFNlIJr31g5Nqiws1DMQRTieBg5M2ut7OrQzBUdR02fbyFtHGy
+   1k/91fVLtgi8Ld7EXOzltCZBgdmpS6G3iE+RrbpM9hOQqnmWavkupU1I2
+   dP+o4Z78ZB+/HDfU/l4b6pX6HNgtGW093HUt3u9jEoqQklp1nZKY61jkX
+   g==;
+X-CSE-ConnectionGUID: juUW6RoPR3WeTDZ15KS7GQ==
+X-CSE-MsgGUID: eYiJuHFZSU+lHc9T4r1lQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45518600"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="45518600"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 13:03:04 -0800
+X-CSE-ConnectionGUID: +u2IBbgaT/mS0s9qGAf+wQ==
+X-CSE-MsgGUID: BOhJFFZHRXqlhvzLKhBp0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="116940037"
+Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.72]) ([10.125.108.72])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 13:03:03 -0800
+Message-ID: <60941700-89e9-44c4-9e28-be482268d327@intel.com>
+Date: Thu, 27 Feb 2025 13:03:15 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/crc32: use builtins to improve code generation
+To: Bill Wendling <morbo@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Eric Biggers <ebiggers@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Justin Stitt <justinstitt@google.com>, LKML <linux-kernel@vger.kernel.org>,
+ linux-crypto@vger.kernel.org, clang-built-linux <llvm@lists.linux.dev>
+References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
+ <d20da175-2102-4ac0-bf91-0ab8f6b6b317@intel.com>
+ <CAGG=3QX-msHuRffAtNCBoqYo=15Z--5RXbPbJ=Tzkb+C9zNSaw@mail.gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <CAGG=3QX-msHuRffAtNCBoqYo=15Z--5RXbPbJ=Tzkb+C9zNSaw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Fix a typo in the docstring of iio_dma_buffer_read() and fix what looks
-like a copy-and-paste error in the iio_dma_buffer_write() docstring.
+On 2/27/25 12:57, Bill Wendling wrote:
+> I vastly prefer the first way if made "static __always_inline".
 
-Signed-off-by: Folker Schwesinger <dev@folker-schwesinger.de>
----
- drivers/iio/buffer/industrialio-buffer-dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/buffer/industrialio-buffer-dma.c b/drivers/iio/buffer/industrialio-buffer-dma.c
-index 7ea784304ffb..ee294a775e8a 100644
---- a/drivers/iio/buffer/industrialio-buffer-dma.c
-+++ b/drivers/iio/buffer/industrialio-buffer-dma.c
-@@ -624,7 +624,7 @@ static int iio_dma_buffer_io(struct iio_buffer *buffer, size_t n,
- 
- /**
-  * iio_dma_buffer_read() - DMA buffer read callback
-- * @buffer: Buffer to read form
-+ * @buffer: Buffer to read from
-  * @n: Number of bytes to read
-  * @user_buffer: Userspace buffer to copy the data to
-  *
-@@ -640,7 +640,7 @@ EXPORT_SYMBOL_NS_GPL(iio_dma_buffer_read, "IIO_DMA_BUFFER");
- 
- /**
-  * iio_dma_buffer_write() - DMA buffer write callback
-- * @buffer: Buffer to read form
-+ * @buffer: Buffer to write to
-  * @n: Number of bytes to read
-  * @user_buffer: Userspace buffer to copy the data from
-  *
-
-base-commit: faeaa1ec6c63b6676679f321601471772f2a0c9b
--- 
-2.48.1
+'static', for sure. But I'd leave the explicit inlining out unless the
+compiler is actively being stupid.
