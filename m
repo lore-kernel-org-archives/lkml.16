@@ -1,165 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33F623A9AF;
-	Thu, 27 Feb 2025 14:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB85123BF9E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665009; cv=none; b=DjVj9kxJ9AcLM7E0y9k0Zw/WgrIP8ke+3hm8AsFfsyoQ66NGH+Wt1oOlJTlbFWO0AiFNU4ks+11Yzepg37i1ys/0jhLwAK/ZTw6/i6eAbYa6tl4XZHP4kAMUi8DWG7GFKCK3CwuRnN7uF5uP6vcFUd0/XeqsMFWsyLiY6UQfipQ=
+	t=1740665011; cv=none; b=C9TDdSs4PpzYot1bAuNQHN/wYzH2U8qC6x4NRhcEy1i51KUGz+IVMNqALdXQHM6ye3VAKS/Lz1I5PdktYcjuht8D5zM9dRv1n8+kPxn7Agj92fWMmMNec3Z/L7HtNpvMkEqkZ73X6Y2jWd/xnyb5qpT/CM3GukG3FCGwjDsgtj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665009; c=relaxed/simple;
-	bh=claEV0o7Z2UgBKhKfxHYHpDfoRczRJppwv++FUBhBRg=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qQBsfZ36YjMKqLP+hd4i3+H/EONyRZ6pw9EASgzY3J2Wli2pQiRzxpqKKn2UcicVBKXOIO558TC0DAk+SUzGPWiZi1QlHRS6+c/JRYMJz5muEq8IYpX4Em+EjuXeXJE75XD4MsmN4LKpU3X8MZMATa5RgrWJaJK06OWawz5Vhy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N5WkGAxb; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740665011; c=relaxed/simple;
+	bh=tEYzJCTiKzF2LYVQgmRQQO5J+znKSKUm4lTw0Foc0rI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SUEhb4QJdAWdN+tLdHsvalH8stSLSUnvHyauLOO2nw5VrZxjhJk4Bzcff78FhJ18PuZm1yockoZWSHSLRZTkTiWG5Q3W87YnHlDe+5wdjoP0zj1bSwO+1vjA9Asgd8r+0j6bKmxuZhhyV+ahswgOouCLssTgg0l/18Bh7APvojs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RCxIQVf2; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N5WkGAxb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740665008; x=1772201008;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=claEV0o7Z2UgBKhKfxHYHpDfoRczRJppwv++FUBhBRg=;
-  b=N5WkGAxbbcRAKMU4zjrxD2jziDbRT98RpqGbZNPPZjIbLluuHqJlIfte
-   3YQ7uAqtoyM9la/sNrsWorKkIzSj6oq8OIHMd99M+WsUeiYsuCLahO+Oo
-   GgTLGEzGYk718JiQf4VnVh+wZKfnDUeD91LatScXZlZP5LE/ShFFArgUK
-   eWSp+Bkf9f3i6/nFclkVssw8aENMfY+cor+tRLpKhSvCywWYg1E4B6Dma
-   29PNNzrkkX7aw5hp3rVa7HiVF9H3tScBOZroHQNAv9GZyx+TIkIn4iaE4
-   BEOz3SNZRwiQIlUYJTxjqwWp+dw0CFVPLR0f/anroPQdrTVM3Ov3Bo/8y
-   w==;
-X-CSE-ConnectionGUID: y1Au7YueRcaSMTUhpVPkDg==
-X-CSE-MsgGUID: UbF4qunNQAaSvHrKW3NJnA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41752492"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41752492"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:03:27 -0800
-X-CSE-ConnectionGUID: 3whTWWJwQZyZVdxfg1Hj+A==
-X-CSE-MsgGUID: l48GnSgRSCm/l9QxzDQuSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="122149788"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Feb 2025 06:03:19 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v6 8/9] igc: Add support to get MAC Merge data via ethtool
-Date: Thu, 27 Feb 2025 09:01:56 -0500
-Message-Id: <20250227140158.2129988-9-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RCxIQVf2"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4399a5afcb3so8917085e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740665008; x=1741269808; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UERrY3gBSSj6jqgnpUhhnhNURH28RQ/gzb1aJd+BElY=;
+        b=RCxIQVf2TR8+mwFImbw6l59LvRKXpw5erPd9Cv9YWlqKocgh80eu5+gjVqORvfR8HG
+         iDJ9lYTvhq2X4YKPwGH3mk/JdcYsXKg+TnwO7b5fvM7C9Usezhk0oh362XHJYieIqqtc
+         lhW936th2L1Q+Ki/DK7DEhOPqWRvEz+X1Y3IrQLRX8sgc2z8Kfy6kNgFBR1sI1GQpbx3
+         BI9De0HgsUlZxdjdzqb6+pNisMEnV8Nv2c+WWFehq/BwgYY1qJroeiezypYR3wUQl9yz
+         jlD7u5aMPrkUCNPLLAqzMqo901l7RWNBvxJzqQD7LPZetej7gCdr+u3vo6gKQwb3fU+5
+         W88A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740665008; x=1741269808;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UERrY3gBSSj6jqgnpUhhnhNURH28RQ/gzb1aJd+BElY=;
+        b=jKiXv2uDhRNqC3y+r7WqmhSX+t5GOha0LVc6WcEEJc0j3jkpqYSp1Lq0RW7CxDNyrB
+         KEdJOO2531XoRxRiCgKeNpVtx/tjHMc+8rJcPUG7KEheXG9OQ041HJVUpOfF0+5o2uka
+         32gLCFhaFAhqxa/p6yjJzPJZHKkKs/CId76cRTqDLFU6nSh+VrYIDzqN4m2to2X+FNlA
+         ZQunK7lRJVUEu6brzA8LVZmgb1NQ/zJQTHtTUm1WN48pucga3A+yITnwz74F0ikwdque
+         qG37/7Osf+D+RF77y45iGsPuu67oBcOOLKP2J5BX5/Toe5SGnV19zpd88SUctXc/oNdx
+         ZRSw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsShb/zjyu6FHCHO9BLel35ESMlBtZIGfuLzIzQLI+OBWH42r97TyYdKgqdwPKGgtRtYUbIiXi3XNKtG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCmT+G3kAE/xL4c9ZxZfs1ZuSOwMAHXwbLmiPw1eKu2wekGZAy
+	wdMESFZRpAwBKFiQmYzcXUG01qy+BjJePp5Jv5f1fPXfg+JJ9g+JRe4Sib3YSAGZz0Xwwu22XY2
+	PF+mK8Q==
+X-Google-Smtp-Source: AGHT+IGELPmTJWOnBa0OmWHIZY2PvlDBv7UKitIGSs6BatAfX6oWrFx6LdmrVg2XeAUP6GEID5iXeu8ZKecv
+X-Received: from wmbg8.prod.google.com ([2002:a05:600c:a408:b0:439:88bc:d27d])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:5117:b0:439:86fb:7325
+ with SMTP id 5b1f17b1804b1-43ab0f8dd49mr129858495e9.31.1740665008218; Thu, 27
+ Feb 2025 06:03:28 -0800 (PST)
+Date: Thu, 27 Feb 2025 15:03:14 +0100
+In-Reply-To: <cover.1740664852.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <cover.1740664852.git.dvyukov@google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <e534910c51271eebf4055a92f3b1c5ac998988bc.1740664852.git.dvyukov@google.com>
+Subject: [PATCH v6 3/4] rseq: Make rseq work with protection keys
+From: Dmitry Vyukov <dvyukov@google.com>
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Implement "ethtool --show-mm" callback for IGC.
+If an application registers rseq, and ever switches to another pkey
+protection (such that the rseq becomes inaccessible), then any
+context switch will cause failure in __rseq_handle_notify_resume()
+attempting to read/write struct rseq and/or rseq_cs. Since context
+switches are asynchronous and are outside of the application control
+(not part of the restricted code scope), temporarily switch to
+pkey value that allows access to the 0 (default) PKEY.
 
-Tested with command:
-$ ethtool --show-mm enp1s0.
-  MAC Merge layer state for enp1s0:
-  pMAC enabled: on
-  TX enabled: on
-  TX active: on
-  TX minimum fragment size: 64
-  RX minimum fragment size: 60
-  Verify enabled: on
-  Verify time: 128
-  Max verify time: 128
-  Verification status: SUCCEEDED
+Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
 
-Verified that the fields value are retrieved correctly.
-
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
 ---
- drivers/net/ethernet/intel/igc/igc_ethtool.c | 14 ++++++++++++++
- drivers/net/ethernet/intel/igc/igc_tsn.h     |  1 +
+Changes in v6:
+ - Added a comment to struct rseq with MPK rules
+
+Changes in v4:
+ - Added Fixes tag
+
+Changes in v3:
+ - simplify control flow to always enable access to 0 pkey
+
+Changes in v2:
+ - fixed typos and reworded the comment
+---
+ include/uapi/linux/rseq.h |  4 ++++
+ kernel/rseq.c             | 11 +++++++++++
  2 files changed, 15 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_ethtool.c b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-index 081e24f228b2..7f0052e0d50c 100644
---- a/drivers/net/ethernet/intel/igc/igc_ethtool.c
-+++ b/drivers/net/ethernet/intel/igc/igc_ethtool.c
-@@ -1782,6 +1782,19 @@ static int igc_ethtool_set_eee(struct net_device *netdev,
- 	return 0;
+diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+index c233aae5eac90..019fd248cf749 100644
+--- a/include/uapi/linux/rseq.h
++++ b/include/uapi/linux/rseq.h
+@@ -58,6 +58,10 @@ struct rseq_cs {
+  * contained within a single cache-line.
+  *
+  * A single struct rseq per thread is allowed.
++ *
++ * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
++ * then the assigned pkey should either be accessible whenever these structs
++ * are registered/installed, or they should be protected with pkey 0.
+  */
+ struct rseq {
+ 	/*
+diff --git a/kernel/rseq.c b/kernel/rseq.c
+index 2cb16091ec0ae..9d9c976d3b78c 100644
+--- a/kernel/rseq.c
++++ b/kernel/rseq.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/sched.h>
+ #include <linux/uaccess.h>
++#include <linux/pkeys.h>
+ #include <linux/syscalls.h>
+ #include <linux/rseq.h>
+ #include <linux/types.h>
+@@ -402,11 +403,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+ {
+ 	struct task_struct *t = current;
++	pkey_reg_t saved_pkey;
+ 	int ret, sig;
+ 
+ 	if (unlikely(t->flags & PF_EXITING))
+ 		return;
+ 
++	/*
++	 * Enable access to the default (0) pkey in case the thread has
++	 * currently disabled access to it and struct rseq/rseq_cs has
++	 * 0 pkey assigned (the only supported value for now).
++	 */
++	saved_pkey = enable_zero_pkey_val();
++
+ 	/*
+ 	 * regs is NULL if and only if the caller is in a syscall path.  Skip
+ 	 * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
+@@ -419,9 +428,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+ 	}
+ 	if (unlikely(rseq_update_cpu_node_id(t)))
+ 		goto error;
++	write_pkey_val(saved_pkey);
+ 	return;
+ 
+ error:
++	write_pkey_val(saved_pkey);
+ 	sig = ksig ? ksig->sig : 0;
+ 	force_sigsegv(sig);
  }
- 
-+static int igc_ethtool_get_mm(struct net_device *netdev,
-+			      struct ethtool_mm_state *cmd)
-+{
-+	struct igc_adapter *adapter = netdev_priv(netdev);
-+	struct fpe_t *fpe = &adapter->fpe;
-+
-+	ethtool_mmsv_get_mm(&fpe->mmsv, cmd);
-+	cmd->tx_min_frag_size = fpe->tx_min_frag_size;
-+	cmd->rx_min_frag_size = IGC_RX_MIN_FRAG_SIZE;
-+
-+	return 0;
-+}
-+
- static int igc_ethtool_set_mm(struct net_device *netdev,
- 			      struct ethtool_mm_cfg *cmd,
- 			      struct netlink_ext_ack *extack)
-@@ -2093,6 +2106,7 @@ static const struct ethtool_ops igc_ethtool_ops = {
- 	.set_rxfh		= igc_ethtool_set_rxfh,
- 	.get_ts_info		= igc_ethtool_get_ts_info,
- 	.get_channels		= igc_ethtool_get_channels,
-+	.get_mm			= igc_ethtool_get_mm,
- 	.set_mm			= igc_ethtool_set_mm,
- 	.set_channels		= igc_ethtool_set_channels,
- 	.get_priv_flags		= igc_ethtool_get_priv_flags,
-diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.h b/drivers/net/ethernet/intel/igc/igc_tsn.h
-index 7491fd65b846..14495a22f77d 100644
---- a/drivers/net/ethernet/intel/igc/igc_tsn.h
-+++ b/drivers/net/ethernet/intel/igc/igc_tsn.h
-@@ -4,6 +4,7 @@
- #ifndef _IGC_TSN_H_
- #define _IGC_TSN_H_
- 
-+#define IGC_RX_MIN_FRAG_SIZE		60
- #define SMD_FRAME_SIZE			60
- 
- enum igc_txd_popts_type {
 -- 
-2.34.1
+2.48.1.658.g4767266eb4-goog
 
