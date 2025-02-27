@@ -1,102 +1,104 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BE9277811
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ABD26F469;
+	Thu, 27 Feb 2025 23:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740697418; cv=none; b=Pg4jOiV79Fl0O35soHJr1QizJ7I7Twy/pX8eHGtGWnsdPEVXg2PffOBc0INcbHB/NvvQnUZBmeYa+Wv0fIys0loAXNxOxEH182OMVhYQpZbVpddt8emTOynroPO7eZNYlu4HI3KdveG4FtPkfpzF0o7bxsK4VOX67KKEyjO36KA=
+	t=1740697424; cv=none; b=REwWBJuwkXTx5FlbJyKT7wtFji3UKf2qy34lwAipeLMTccD4LnqQpa1tM07y7uEI2nflHq0ViU7MwTRuPxUJt4jiTC9XmTEuGRliOnwR1pxJ+8FIx0lAABXy/5NbI6peeVYkm3W57DuY5zrVLr1vUNZXvel+sLWwJjnIPRrXbKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740697418; c=relaxed/simple;
-	bh=unc1U3UsaQzC2zLNPE3ZM1RfsgqWoJ9BU1VPtJQuZfs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q2BrM12XgxC4khFkcMDN9v5wDlXrWBOlTHQO/ieeGG3+HoRWbdosPXmu4AOm4m6alhOMSZxOpUTXUaSXjVQscr8+q5WqBR3jgTGu5BDKAu7LkKTFBmbpwyxePECNeloyEJgePwUjZWTw9TjtV1KiA1h60QfBGaRsef01fEdkbPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnD0F3VM; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740697424; c=relaxed/simple;
+	bh=0iT8jAYbTIV6/JT+rArq6GBtNxLmL5SGdbTXp05TjXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jtxiC980zEwYEbU8RdAIuJ37GUCKbfXVzJRhfuIFWHNxjf4JM59MDRo6WeOCzOtaQ/lcSU7A2tZG+pLvDoJQ/xDgzVtwdcX7XCwVrp4oWWyM7q4rMeiy+t802ET7hawTv4lQInj9yBzcNGzdruQsdDDau5LWuD4Jd1o7Gxd4fIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRpQX/iv; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnD0F3VM"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so10734405e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 15:03:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRpQX/iv"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4397dff185fso13391485e9.2;
+        Thu, 27 Feb 2025 15:03:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740697415; x=1741302215; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ll/D1Yp9YdEiWG0VMnt0/X896G3hXKSn6gBmjESi2yo=;
-        b=cnD0F3VM4ufMsiKDq38E8HOhzIXyow3NOVUxxL1e9e3knLJGQQFi46rbzto/CV8TFX
-         MI5Tz39acu0sJ9FtDEHz+QzDU3x7l4AQcDNLKXpjZBMuaXQZBK13YKqQWJpM1QeNCfgJ
-         svZlftfZinTwZxvjXkJ/57RMJWCRHjLHFmpXSqH4HI2/NtC+QirMwmMUYBfIXZjd28mY
-         WDRuWJgGyvGpi57wP1jSqPhwazYBuNpkOQOvEASmIFSoro0nhlgXjhg8cp5BVDxLEqPf
-         4KeABd/9VUe9OXECReJdxKBuuyek5VKcm3J3tVzdltEqGZNqjjxqKSEySZOsMX7lGq5O
-         hClA==
+        d=gmail.com; s=20230601; t=1740697420; x=1741302220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k2YPodslC9xBCdYDOuo4n6OjeMEfkunhm0xpWdMwxIc=;
+        b=RRpQX/ivm47wrAeBfbXMS8KPbUuDWKgGLMXh8UIa851J6UIVzEQaQ+81NJQROA17O0
+         +KIdG0R3qm5qx2aDdWFIl7WXxUe6TA8En7ufcp7/+DCgMtTlJWpn+5w9rg4+iiC6LvNX
+         aDFqsRfQV/dltPcEq1nuSi0Ejuj+giNl+/ixJhyFM1/JPLTU3Ekp1vgVp8axEMabHrXP
+         PaDZ1rCYKC1ut7t8Jlnnfm30GQPTNMWgYl61ih0ve/kxQacT242YZbhXY8sv5Kcdkw/C
+         qS8bAydytjo3RYDqaeRnS0hZnuukDCxRzqcDhJ2/fopnP+whlCTyT525Bj3syBUfvgCu
+         Qp4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740697415; x=1741302215;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ll/D1Yp9YdEiWG0VMnt0/X896G3hXKSn6gBmjESi2yo=;
-        b=MlFDHQ0wjFqUkhwfw9gw6qISQHevs4E2O5Aomm4+jnPv70e/A6HwpxsbQoX+0XSJEH
-         lc/kJKVBUAF6nCm5gFCHQ1kkSPcddL6BRays+cjd9nlUbnfZ5VeqFjCYndok669aFASZ
-         LGX/DAbRbNBFqecGBqgXDVANRLJS9u/6sgRSPdgimjMvqmxlxWjcUIINm7qsWAmD3K/y
-         b9Q4hkU4DBU24Ad6O9vKFxjg+hlf0L9CC8QQ75lcDHNM10RZ2Y5HIl+31iTrJbVWrxBv
-         hjaMQsyFIqlgHEVr6JW10+qxs0Pur8AcuHVI/gvm6eobKw3D8bpfWAGU+it4oKjUfaVF
-         Ra8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUs7J2+qujaDqhE5EjUXl8uUUmbF1VrSVmyBbXFWM2O3gorSGG6AvFfGOwSoHpw62qvgO97sW1RW7q0SZ8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAdYs4R5jx1M+C6BTlIvnlfOrk52wV+g7crDSJ5KGueHTTzJqx
-	Lh+FjRmjYMM+Glecs/jfTSwz7ApYQ+nQUt0rI/Ng20QpA4RPq4onUzg908fZANctqWRVloVtW9X
-	yjsGf1ajr0VJ3OdiO22pvw4d+NucXfzqPJDjW
-X-Gm-Gg: ASbGncvDbcQFRbynENghoyTCJHqPASGdIiIVb7nzS7Ul0xBsgpiztu/1akg3xrnKNWp
-	ds6DXdlpyKSrh2WgP2dF2DIxlnNP+IBJtHUl/v+thoRah5yQ6P+WovQkowjXXpR4mfiR+wyPsci
-	9wJm24vh6A
-X-Google-Smtp-Source: AGHT+IH0vtD3leLHVKGE1YsdW0lXCnA7JBJK4TPzTKwNX3QfLtfjcQo34otPR8D4B7PHLaAzUskWpOkkEESRkd7QTJY=
-X-Received: by 2002:a05:6000:156d:b0:38d:d701:419c with SMTP id
- ffacd0b85a97d-390eca07090mr799765f8f.41.1740697415370; Thu, 27 Feb 2025
- 15:03:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740697420; x=1741302220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k2YPodslC9xBCdYDOuo4n6OjeMEfkunhm0xpWdMwxIc=;
+        b=JbwbTVj0TL5MhD/Y6B5bYqT56Yde8MF/dhLhmFqmPOeuvgDZ4iA8eDV3zblxoLH7S0
+         +BecXtKde6S6Y3Y+hpXo3qcVujujmHRRaX8Cx6P09Fct4f4awUKmbAfPfuGqaKjzwjXe
+         n2QreHNwubKlAPaCnRCItw+B0SK1pZfFOZdpInMJf10oLyM7H2kkOIlm5MctltyyW5a0
+         /BEV7lHkD6bcVsAQ0IzQq7iCFrKIC5sKcqfzxj40dUpkZ8fANVvY3n8ltsrm0wRUWQtg
+         PynfcZzqmj0Kp2UmHQsHKnk25+Ze2LTg867/+1dA/n4vz4zDEqreF4SPdZ2ZjqDisXiW
+         1Mjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuc11ck380BfqEfOuEOzOo3Rx/7cS8M5ZrgHWSuE9EGrpfWKB8RIV68UY0Plm6YGY/56a5NtFVWY/UF9OA@vger.kernel.org, AJvYcCWIxLsO89g8mpMKMrMCQ+HTdzu8WRheawETWVmLehSGKubsNH4G59Zsx54IR6aaqRHOAvrHtuELZuKQJDUyah5K@vger.kernel.org, AJvYcCWWkk39OM+0Nen4JBcVXdPWgubzT8YypgRVOp14fMvpbxz5P6cDBgiFHR9YM2hK4AtaNJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEyBLZkVZoEU3YyBAuK6TwX1oQY5GLxhP31FqIzQ4KCzjC7Um4
+	DFwpI58fAX/zgea9hyKfOAOYEaUCXuVzEY8QlYN/rEzBG0AC0YxG
+X-Gm-Gg: ASbGncvDajIXb7Zceb8PlkOYIDNliCENyFJ/m4D95itx6RqOMrhBtsjIj/6g0xKn0TD
+	bSMmCDczkZgtllZlyKVDD7v2IYrxJ7JbxnWErWpgNEejJoKZHNfKIqNsxE9/7H3/dCHb5CWWcmk
+	OLvACNZt+gtATvWSA/xAlTRScpx8QOhu04wErYD7yVDa0N4MjWLTAdpizTPAQaAn2Znko7mY2gE
+	sGvZ8cM8GpoYNWpT1F35fJL17473HmptUTdvDcT5BXdvgaCy1az9cr9S6Afa23CS6Kz13LiXKEN
+	4JR32LcLMFk4jaPUug1mjFbrmkQ=
+X-Google-Smtp-Source: AGHT+IGcaB+hVpAE6LBoJnhlL/n+Tz4TaOAFX4qtUtqkkdfljnpRgZpXncHbzLr1fz6F1NkHPqjcJQ==
+X-Received: by 2002:a05:6000:20c6:b0:390:e3d7:11e3 with SMTP id ffacd0b85a97d-390ec9bccc9mr642887f8f.22.1740697420443;
+        Thu, 27 Feb 2025 15:03:40 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47b6cd8sm3285274f8f.44.2025.02.27.15.03.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 15:03:40 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] KVM: selftests: Fix spelling mistake "avaialable" -> "available"
+Date: Thu, 27 Feb 2025 23:03:05 +0000
+Message-ID: <20250227230305.661761-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227-export-macro-v1-0-948775fc37aa@google.com> <2025022714-specked-refocus-b701@gregkh>
-In-Reply-To: <2025022714-specked-refocus-b701@gregkh>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 28 Feb 2025 00:03:23 +0100
-X-Gm-Features: AQ5f1JrzmubPIlcM7hbuqwMtOjWGwGG1Zpx4TwvnGzseGbROnHWzj2ebyC4m22o
-Message-ID: <CAH5fLgg3cU5anozNWd6pDS7M2_0YiU5bT0jJxCRiK6MJyBrGeg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] Check Rust signatures at compile time
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 8:31=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Feb 27, 2025 at 05:01:58PM +0000, Alice Ryhl wrote:
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->
-> It's a bit odd to sign off on a 0/X email with no patch or description
-> :)
+There is a spelling mistake in a ksft_test_result_skip message. Fix it.
 
-What b4 does, I do. ;)
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/testing/selftests/kvm/s390/cpumodel_subfuncs_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Seriously, nice work!  This resolves the issues I had, and it looks like
-> you found a needed fix already where things were not quite defined
-> properly.
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+diff --git a/tools/testing/selftests/kvm/s390/cpumodel_subfuncs_test.c b/tools/testing/selftests/kvm/s390/cpumodel_subfuncs_test.c
+index 27255880dabd..aded795d42be 100644
+--- a/tools/testing/selftests/kvm/s390/cpumodel_subfuncs_test.c
++++ b/tools/testing/selftests/kvm/s390/cpumodel_subfuncs_test.c
+@@ -291,7 +291,7 @@ int main(int argc, char *argv[])
+ 			ksft_test_result_pass("%s\n", testlist[idx].subfunc_name);
+ 			free(array);
+ 		} else {
+-			ksft_test_result_skip("%s feature is not avaialable\n",
++			ksft_test_result_skip("%s feature is not available\n",
+ 					      testlist[idx].subfunc_name);
+ 		}
+ 	}
+-- 
+2.47.2
 
-Thanks!
-
-Alice
