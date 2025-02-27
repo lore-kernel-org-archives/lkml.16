@@ -1,155 +1,127 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D011CEAA3;
-	Thu, 27 Feb 2025 21:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A840271815;
+	Thu, 27 Feb 2025 21:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740692876; cv=none; b=pROlkQfY4v+keDtmnWEq+5/XQTSIT7T2Kk7LrRjNvCpLgX0l0EKc3B7uAtaaNO0HhODYUjTp9gMJ7WKJq6N9ccCnlBPmxCyRgnaOYtVsGO0lST/y27o7eViIIA0GDlgo8ess7fY/Jtu7YztumnOEwuWUWr+DTYna+HYVYmoFdG8=
+	t=1740692880; cv=none; b=Yj4lV4PhOUby23Vd7LPFGTcxCD7duKM7rQXaA9jg6OcMqyfvFCjNk8FL7/EREtd7bbFQU6QcgTqZFyezhI5ifcRpxh2l0dq5p7kH9hl1/XNEu/jtR72ogJhEbkuSdL8vZnC4IhotXtCXnp5RiHaHEtcYo3XOx1DHu//5UB+qgiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740692876; c=relaxed/simple;
-	bh=8s3KyPP5+X5tLO930i9gADccHKv4fCmFC0alqAjK0f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QU5oYO8m/oCg5E7qpEnAFPRghWkaFW58VvCc2zPVe6JPAA4Slm9INdre7GqW6aGxDmP15gwNWU/7DeZClxJ0xV0J8wzxzB6lxhRLpsRKQXLrG4v5JGrUMnCSZa3Y/72a/yyte230ist0E4bmZ/BgEEjeOXNbgkWdZI0+zOpFzQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=HNFB8BfO; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1740692880; c=relaxed/simple;
+	bh=BjqVqzhktYwhpoR5gD02U6D0iieURF7D5wZ0FkzbMXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fgRJQULQSpoG76Y1bnT5LUzQSgJtR1zHzngELETTuTlmGGstt+DrCyTgWWWBDv7bhGAOPm684dZjUQnlgBjULifnrCXZwLXhJ11rfeGmXgz1Al4NRVN5kJH6QAFWO4KIhT6Q8Q4x+LZTpmnnmx5dLW9dc4M3yvypo0LkXRn4pfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUiKd4+x; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="HNFB8BfO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=gYjaKOa1qyvTVLLATJgBPcnTo3YvBY1Vu2MT27yHSZo=; b=HNFB8BfOVSohIXtfIvjNdHwd2w
-	dasmnZAFnwCd6WtdseHM7+CukesU4EuE8ivRkTdDXlJArWVNQDbDZSrsnuFDo+tFd2R++XK2IElKg
-	xA0tAHsF4U1/+6gr/WTi4g0rlvIZSNbZzK5kP0cYNkDmdqdF30mI7/EnnOqooeW7SVVQ5G2//v4pw
-	tNHbWcmGHOWXWLkvPtu4yFyyMOXQeo6mxrDQfK0pL0XdRMQ1tnE9+jB43kewfhgmKlBgfPyCFj8NB
-	PwP1WFrjrGVIc7V4vS9VSBNbEmF0KltjGsamvRDAYQI3D84FTVHPV65BngQghdP+AkuLMtyUjGbBs
-	LTm4jOHg==;
-Date: Thu, 27 Feb 2025 22:47:38 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Nishanth Menon <nm@ti.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, <vigneshr@ti.com>,
- <aaro.koskinen@iki.fi>, <khilman@baylibre.com>, <rogerq@kernel.org>,
- <tony@atomide.com>, <jmkrzyszt@gmail.com>, <reidt@ti.com>,
- <wsa@kernel.org>, <linux-omap@vger.kernel.org>,
- <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <stable@kernel.org>
-Subject: Re: [PATCH] i2c: omap: fix IRQ storms
-Message-ID: <20250227224738.6d7ebd8e@akair>
-In-Reply-To: <20250227142055.ndzavzysaenoducj@murky>
-References: <20250207185435.751878-1-andreas@kemnade.info>
-	<c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
-	<20250220100745.05c0eff8@akair>
-	<20250227142055.ndzavzysaenoducj@murky>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUiKd4+x"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso9910005e9.0;
+        Thu, 27 Feb 2025 13:47:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740692874; x=1741297674; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hPsgbgu3FIiYxP/zboORp1uv/rfrWPbLOG86PuABuH8=;
+        b=WUiKd4+xuu9Onkt4i9xlK0ujQSwuMrSN5rXsnedEGpkCKowR6W8tjlts/SdulES/Ot
+         f7JJC4zzIiow2xsiXTF05rX2CoMoEzh73sC3TpYJInmK99BCrxc7kn136HMlv7/CJbKV
+         IJaBSii55NnU6rXbeHPLYZchIJNcGVsOsU57oi0v1EF6lMgmcIxPZxsVpQbJdRGjFUwC
+         MiM8Lj+sF0rhrw9TeVgIBBlU8AvVo7+5bj3ddmKej2U6JBsylIXbEBE+KnCiB+oGGxxc
+         TileKH4Uv9f8Sz4r444i7t6P1DOD4+vaP7sGNZXgvhW0WIHdEyKCfkPFnPfMOXwF0dRH
+         UGAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740692874; x=1741297674;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hPsgbgu3FIiYxP/zboORp1uv/rfrWPbLOG86PuABuH8=;
+        b=pYbyL+/rsnONT1Wgh2uVJeaBMU0un/juLREceEa7nM2IU/zFYytEq+vkNX9W9A1BFc
+         1LPP7389eDxqFjS8GZCwLy3yT+UAy2XkzmIq9AHW1tUylF9rWvsgtg8L/fAQvsB1JzYv
+         v3ZGwBpkXST6ZgCU3wogOJMbLwbU88BoQkuJocBKEcP2l/y5UQy+vKig3tjbK7Pwmzls
+         eFJNQAJouSYbvUQkY9DHKtUDPfPAON9A0u0V02LvEVslOnDEAyRVdidTHwnE2HafHpKf
+         IYnMcAcbG42UHPejcr9uzt2tCdNjpQPjFw92yzl32xrO4ZD87RLcMsazrqKsr1MYDz8i
+         OPOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTeAxk2X+1waZLvbKKVodWLjvd2R2+uckxT8xQts84otJIfHkgUuC2dumsIbadLi6rkWTOVPJkIdBeyO/jbA==@vger.kernel.org, AJvYcCXS/IZhpYhicFmGU3A1Cdryz3dyTHaDOrqHWx8Um3GGNlhcyGLZPPFgcg91SisPB1Il/YaBTe/8V5c/vlBz@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVH9tTVDChoXJJVY+U+AaLYB8vNVqqKp+mk3umiWfoEE5mjLOy
+	Soj7+/Q7iOhqJsv3NWq95sZQMRzh6LFaf73M19pXwjfDvFOs8ruwAfyHEIbHO9I=
+X-Gm-Gg: ASbGncshFj/q2rai7FVu7tGFjlVS3Pl7wH6+8TCFpcTtbetARSaRDmL9LdJX47AQzRp
+	oLNS/qd1hBJOLAJzBg6trUP64VzrVI7ROAQOFaqiimg2nKkTQrEqZFjZislBDoPhu+fuMNIWEj+
+	pkP44jobQqvyx/7IYqdD1kK33q4fWEV5dfJhW4DZGbUHEIwmHr8u6m7A1AaGmanrlDlTSfv/cY1
+	32oeaPaPAeeu1ZJ3mbIkgUtTgUBn26xYeA5L4dVCk3siWLOUe9lqOi/k9Fklt3PAGoGVazkj0Il
+	Vzt4wPv7WNbnidXsegRG9fXMtuU=
+X-Google-Smtp-Source: AGHT+IFvRqWE6o8uWmYw6dawx6Taw5Dz2GijLOiouxcfaB8nbGuRuBCvHnRPMeIdpSEg8CrE/irs2w==
+X-Received: by 2002:a05:600c:1392:b0:439:98fd:a4b6 with SMTP id 5b1f17b1804b1-43ba629a811mr8661265e9.15.1740692874281;
+        Thu, 27 Feb 2025 13:47:54 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba5870e7sm70221605e9.35.2025.02.27.13.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 13:47:53 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+	linux-bcachefs@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] bcachefs: remove superfluous semicolons after statements
+Date: Thu, 27 Feb 2025 21:47:19 +0000
+Message-ID: <20250227214719.653887-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Thu, 27 Feb 2025 08:20:55 -0600
-schrieb Nishanth Menon <nm@ti.com>:
+There are a several statements with two following semicolons, replace
+these with just one semicolon.
 
-> On 10:08-20250220, Andreas Kemnade wrote:
-> > Am Wed, 19 Feb 2025 20:22:13 +0100
-> > schrieb Andi Shyti <andi.shyti@kernel.org>:
-> >  =20
-> > > Hi,
-> > >=20
-> > > On Fri, Feb 07, 2025 at 07:54:35PM +0100, Andreas Kemnade wrote: =20
-> > > > On the GTA04A5 writing a reset command to the gyroscope causes IRQ
-> > > > storms because NACK IRQs are enabled and therefore triggered but not
-> > > > acked.
-> > > >=20
-> > > > Sending a reset command to the gyroscope by
-> > > > i2cset 1 0x69 0x14 0xb6
-> > > > with an additional debug print in the ISR (not the thread) itself
-> > > > causes
-> > > >=20
-> > > > [ 363.353515] i2c i2c-1: ioctl, cmd=3D0x720, arg=3D0xbe801b00
-> > > > [ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0=
-x0, stop: 1
-> > > > [ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x1110)
-> > > > [ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR =3D 0x0010)
-> > > > [ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > > > [ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > > > [ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR =3D 0x0102)
-> > > > repeating till infinity
-> > > > [...]
-> > > > (0x2 =3D NACK, 0x100 =3D Bus free, which is not enabled)
-> > > > Apparently no other IRQ bit gets set, so this stalls.
-> > > >=20
-> > > > Do not ignore enabled interrupts and make sure they are acked.
-> > > > If the NACK IRQ is not needed, it should simply not enabled, but
-> > > > according to the above log, caring about it is necessary unless
-> > > > the Bus free IRQ is enabled and handled. The assumption that is
-> > > > will always come with a ARDY IRQ, which was the idea behind
-> > > > ignoring it, proves wrong.
-> > > > It is true for simple reads from an unused address.
-> > > >=20
-> > > > So revert
-> > > > commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readin=
-gs").
-> > > >=20
-> > > > The offending commit was used to reduce the false detections in
-> > > > i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
-> > > > rare false detections (I have never seen such on my systems) is the
-> > > > lesser devil than having basically the system hanging completely.
-> > > >=20
-> > > > No more details came to light in the corresponding email thread sin=
-ce
-> > > > several months:
-> > > > https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti=
-.com/
-> > > > so no better fix to solve both problems can be developed right now.=
-   =20
-> > >=20
-> > > I need someone from TI or someone who can test to ack here.
-> > >=20
-> > > Can someone help?
-> > > =20
-> > The original (IMHO minor) problem which should be fixed by c770657bd261
-> > is hard to test, I have never seen that on any system (and as a
-> > platform maintainer have a bunch of them) I have access to.
-> > There is not much description anywhere about the system in which the
-> > original system occured, and no reaction since several months from the
-> > author, so I do not see anything which can be done.
-> > Maybe it was just faulty hardware.
-> >=20
-> > As said in the commit message, reverting it should be the lesser devil.
-> > And that state was tested for many years. =20
->=20
-> Can we not handle this slightly differently? leave the fix based on
-> compatible? we know that the i2c controller changed over time. the
-> i2cdetect bug fixed by c770657bd261 esp hard to find and fix.
->=20
-looking a bit more deeper in:
-Why do we have omap_i2c_isr at all? Can there any case that
-stat & mask =3D=3D 0 there (without c770657bd261 applied)?
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ fs/bcachefs/btree_cache.c | 2 +-
+ fs/bcachefs/btree_io.c    | 2 +-
+ fs/bcachefs/btree_iter.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-I looked at omap_i2c_xfer_data() and nothing interesting seems to
-happen without other bits besides OMAP_I2C_STAT_NACK.=20
-Looking again, things get interesting when that loop is left.
+diff --git a/fs/bcachefs/btree_cache.c b/fs/bcachefs/btree_cache.c
+index ca755e8d1a37..23ca9cc18b56 100644
+--- a/fs/bcachefs/btree_cache.c
++++ b/fs/bcachefs/btree_cache.c
+@@ -521,7 +521,7 @@ static unsigned long bch2_btree_cache_scan(struct shrinker *shrink,
+ 		if (btree_node_accessed(b)) {
+ 			clear_btree_node_accessed(b);
+ 			bc->not_freed[BCH_BTREE_CACHE_NOT_FREED_access_bit]++;
+-			--touched;;
++			--touched;
+ 		} else if (!btree_node_reclaim(c, b, true)) {
+ 			__bch2_btree_node_hash_remove(bc, b);
+ 			__btree_node_data_free(bc, b);
+diff --git a/fs/bcachefs/btree_io.c b/fs/bcachefs/btree_io.c
+index 80a0094be356..8c8724173f0b 100644
+--- a/fs/bcachefs/btree_io.c
++++ b/fs/bcachefs/btree_io.c
+@@ -1919,7 +1919,7 @@ static void btree_node_scrub_work(struct work_struct *work)
+ 	}
+ 
+ 	printbuf_exit(&err);
+-	bch2_bkey_buf_exit(&scrub->key, c);;
++	bch2_bkey_buf_exit(&scrub->key, c);
+ 	btree_bounce_free(c, c->opts.btree_node_size, scrub->used_mempool, scrub->buf);
+ 	percpu_ref_put(&scrub->ca->io_ref);
+ 	kfree(scrub);
+diff --git a/fs/bcachefs/btree_iter.c b/fs/bcachefs/btree_iter.c
+index e32fce4fd258..168a6b7201f1 100644
+--- a/fs/bcachefs/btree_iter.c
++++ b/fs/bcachefs/btree_iter.c
+@@ -2717,7 +2717,7 @@ struct bkey_s_c bch2_btree_iter_peek_prev_min(struct btree_iter *iter, struct bp
+ 	}
+ 
+ 	/* Extents can straddle iter->pos: */
+-	iter->pos = bpos_min(iter->pos, k.k->p);;
++	iter->pos = bpos_min(iter->pos, k.k->p);
+ 
+ 	if (iter->flags & BTREE_ITER_filter_snapshots)
+ 		iter->pos.snapshot = iter->snapshot;
+-- 
+2.47.2
 
-Maybe just acking NACK, setting cmd_err and return -EAGAIN if no other
-bits are set. That should not cause changes to scenarios where NACK
-comes with other bits set. Lets check whether that fixes the
-mess I see here. Well, everything is better then having that IRQ going
-mad.
-
-For reference, the sensor involved was the BMG160. Because it is not
-enabled in omap2plus_defconfig, the issue did not show up early.
-=46rom my understanding, that there is a NACK after the reset command
-data byte is sent. @Nikolaus: are there any nice and simple test points
-for a scope?
-
-Do you have any chance to test such a scenario on any device requiring
-the c770657bd261 applied?
-
-Regards,
-Andreas
