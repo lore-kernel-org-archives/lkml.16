@@ -1,149 +1,139 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87821225403
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 08:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84CD225403;
+	Thu, 27 Feb 2025 08:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740646696; cv=none; b=L6yNCk9umWzCfYcvNiWoFHpYCcHZDEWeS+vUEIYhmSgc1q6DqE8aWPolJEGlvl9+p78AB+rIQMzHrfW6B8ahosHrb6UxkUjCxhvnB2f/kUHTQ2zLw9hZp9CYcJbkbcODUMXVlsqc3iVKkg5vovPQbOKwiQTJ3wcePrwy3Oqhv2Y=
+	t=1740646707; cv=none; b=rhCrDEgHRuOxXuZrFvKNqMKI7xsw8Z48VxY4mquzQx9cwRkPG7WNs9vm8Y+SJUabG3Nc9Ul/u0ZpPT6YwxkUenhySGR6gandO0u1DDiNTVZn5Qb/8+DqUke+iDVrGmjEoRaLoD7tzXUAAhwkpCrUf/w9kxCFLWAN7M1VvLluo6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740646696; c=relaxed/simple;
-	bh=mRCwYdhDdjfT1ryuXbi5zx1t+2TvkYj+V5CHntnFZQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XcYXd7DQnjNkdGrf2pr2Xo3uScvLutNUCrQflcS0L8GdVoRUuoU5TWXF3NQPbk4eAuPa14/T1BPtzq77FK1cXxcrm5tGimzcUSRsYdTToGteofhEEq6eUKrmRJa8eHyakYOrqaSz+IV4X95PaOOB5RiYAbYnUKNOG6hna9C50Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NR0EdkVF; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740646707; c=relaxed/simple;
+	bh=EQ3MlbKxDtR5dd2Px0qRSamaBS7FsofcEx3iJRs0w9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=feAHYvYhUKjWddEAXhQUTJ2spg5juBMs4w5fZlEZOXvmrHsmYgJkpaaorsWlPsYdmRDjVCHEkpzYRS/5Zw7t6a1CmFhip++Yvk+wEnuxxVs13czlK6VM6RRPe3qqRIQF72fAdUoIKBJxlauO4auQDp7Y6L4G1b4+4YO/YZwLYKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=WKNzkHH7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TkEJ1wjw; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NR0EdkVF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740646695; x=1772182695;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=mRCwYdhDdjfT1ryuXbi5zx1t+2TvkYj+V5CHntnFZQ8=;
-  b=NR0EdkVFYp8UcGAaxW219Oxe+M7RPkds0dbzwEzZtWVImTbNyqxCaRO5
-   iNQdVZapFZg3t4AvaqE6LMCwE3/jbbMFb4WyCuxYuS1nBqKBkcmt1U2kk
-   iE/8FWuunQPX+0yeZjh2aInURSdzJdhcBSI5HH5I1DnLW+fy4/UgTnCHT
-   LsXhN147kpSD1B59Ney4HCsnSvwnwPOo6QeoFrLcNy3uMQveHGX/JOjjm
-   L9k5A8+9vNJggelcl6+DZXmUEA+twAbEyTzddEd1omJhTHIWGUOZH28a9
-   6p9mkQLb4XtryLu0zjGq9v6Lkfh8DaeGmYb5kQ8xnscT77yv3GknUDtkU
-   w==;
-X-CSE-ConnectionGUID: YSG6e6cATPWZBB76ANDEMw==
-X-CSE-MsgGUID: 01pbVCgBTKiM3n10jwvxSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="45179082"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="45179082"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 00:58:15 -0800
-X-CSE-ConnectionGUID: qWue2tijSk2NplSDvMcZ8Q==
-X-CSE-MsgGUID: qqmTMjZ2Q4aqEghxTsrESA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="116738627"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 27 Feb 2025 00:58:13 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnZib-000D84-2V;
-	Thu, 27 Feb 2025 08:58:09 +0000
-Date: Thu, 27 Feb 2025 16:57:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Piotr Kwapulinski <piotr.kwapulinski@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>,
-	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s'
- directive output may be truncated writing up to 287 bytes into a region of
- size 64
-Message-ID: <202502271608.TTHgj7OB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="WKNzkHH7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TkEJ1wjw"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 97E951382F4C;
+	Thu, 27 Feb 2025 03:58:24 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Thu, 27 Feb 2025 03:58:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1740646704; x=1740733104; bh=7xLUD2jiu5StKBefCueNi
+	IqULkTWQovFAKg6LQiBsz0=; b=WKNzkHH7dpZ/zouawKUjq795KLzxdOQTd1P3d
+	g2gooYJRJKNgJL062YJP63poUPw1/eeYzIuSe7KvI+dA5zwrA/sMC8sa4hScUNuP
+	3m10G7JF9YG3mvSLjf2C63Py/emahjMpEwh0OQZaOtxjGmvQm3h/r/jD8Dfx38Qy
+	+gMeJkLFpltFWY0ltXtzmMz2jnSEzXk5wuMW+kCEsqU/5SeQaXifh73joSgz3ot7
+	xNG4563jUMVDRzHALXyIJFcR7av5mlszpHpfrYJ+2BLtBEefunloLbErtPlDmQy2
+	Fys1uZG0PDo0B4bcFdJ2Us4BBDGN2UZWrlxYbY9jmG3z49/qg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740646704; x=1740733104; bh=7xLUD2jiu5StKBefCueNiIqULkTWQovFAKg
+	6LQiBsz0=; b=TkEJ1wjw9CPpeJZB/8OglXhW3c8mlGaFPTKGF8CbN34kKAH2fvF
+	/6VXfsWzDIJn1L3dtEQP6811vUUEwdFafFN2MkxbHxaS7aXF3rEOqbfQdXpvqTuW
+	Nno7zp95EkrRNwqLlJQlPfX+qxTrsGqZ/R9tXdKheJg7x2FIfikEHXMxuUzNe5TF
+	/zTY7twfxSK9ljKrn9DMMpAmPX6HpDZZP21JdWag0VxKV3KFGZeetYVrudFCfSVA
+	D3UULl8VcteepVupv4WodqcNYy+U0OpFZHjS+jT2s5T2M+311J+Xj++Miiwn8uUj
+	OBpN+iGWcuoCLvGudISPklSeDyjQPMgXcvQ==
+X-ME-Sender: <xms:MCnAZ1lvyf5o0KUfgwMq0DiNJwHCxNd_73cBVw6Nw5JC8uz3hdyXbQ>
+    <xme:MCnAZw170JEKUgQqmaQiJHSuzoHFi_7eUbCAOvWWqrY-zYxwdc5G4JfWNTh2oXLyy
+    Aqj1jkdIcZx50QDrHE>
+X-ME-Received: <xmr:MCnAZ7pqrhHhAUd7M3iIqiyQCdyhesr2ZOpDI3AHvmaPGnvfiSuo-JtteMIRtvRw4xsqVbQz7APON0wRLA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekjedtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhu
+    khgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdehueelkeegheduud
+    efuddvveffleegffejkeeiffeugfehvdektefgfffgieefnecuffhomhgrihhnpehkvghr
+    nhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeelpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrd
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgt
+    ohhmpdhrtghpthhtohepihhlphhordhjrghrvhhinhgvnheslhhinhhugidrihhnthgvlh
+    drtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigkeeisehvghgv
+    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvg
+    hrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsvghnthhishhssehkvghrnhgvlhdr
+    ohhrghdprhgtphhtthhopehjihhkohhssehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtoheplhhu
+    khgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:MCnAZ1n5gS_fuK8rx-dAvetKCsBEQt0E4CZflkJLIxgXNL12oWY90A>
+    <xmx:MCnAZz3lrEhdcTp2iqABLrlbNfcmSIXm-f3B_5pB1iNwGXspHU3awQ>
+    <xmx:MCnAZ0sFtQIFQnUVsryTDvcqu3mDO3ygj8WW3yvQUi2m6BIy0TikSA>
+    <xmx:MCnAZ3U0liexQ8a6mAaqitkmmyY29wSuTz9rhy7WtBqjtwZ4GpBlLg>
+    <xmx:MCnAZ1wiXI28zuoy3vjKTNuXkrb-M8-eZlEaTVxQ3WCDPhbPXcdZoy1n>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 27 Feb 2025 03:58:21 -0500 (EST)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	bentiss@kernel.org,
+	jikos@kernel.org,
+	mario.limonciello@amd.com,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH v3 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
+Date: Thu, 27 Feb 2025 21:58:15 +1300
+Message-ID: <20250227085817.1007697-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Piotr,
+This short series refactors the Ally suspend/resume functionality in the
+asus-wmi driver along with adding support for ROG Ally MCU version checking.
 
-FYI, the error/warning still remains.
+The version checking is then used to toggle the use of older CSEE call hacks
+that were initially used to combat Ally suspend/wake issues arising from the MCU
+not clearing a particular flag on resume. ASUS have since corrected this
+especially for Linux in newer firmware versions.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   dd83757f6e686a2188997cb58b5975f744bb7786
-commit: 1050713026a08d605b61f039700b67aab646371f i40e: add support for PTP external synchronization clock
-date:   3 years, 7 months ago
-config: alpha-randconfig-p001-20211207 (https://download.01.org/0day-ci/archive/20250227/202502271608.TTHgj7OB-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250227/202502271608.TTHgj7OB-lkp@intel.com/reproduce)
+- hid-asus requests the MCU version and displays a warning if the version is
+  older than the one that fixes the issue.
+- hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+version is high enough.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502271608.TTHgj7OB-lkp@intel.com/
+*Note: In review it was requested by Mario that I try strsep() for parsing
+the version. I did try this and a few variations but the result was much
+more code due to having to check more edge cases due to the input being
+raw bytes. In the end the cleaned up while loop proved more robust.
 
-All warnings (new ones prefixed by >>):
+- Changelog:
+  + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
+    - Adjust warning message to explicitly mention suspend issues
+    - Use switch/case block to set min_version
+      - Set min_version to 0 by default and toggle hacks off
+  + V3
+    - Remove noise (excess pr_info)
+    - Use kstrtoint, not kstrtolong
+    - Use __free(kfree) for allocated mem and drop goto + logging
+    - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
+    - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
+      correct the message.
 
-   drivers/net/ethernet/intel/i40e/i40e_ptp.c: In function 'i40e_ptp_init':
->> drivers/net/ethernet/intel/i40e/i40e_ptp.c:1375:27: warning: '%s' directive output may be truncated writing up to 287 bytes into a region of size 64 [-Wformat-truncation=]
-    1375 |                          "%s", sdp_desc[i].name);
-         |                           ^~
-   In function 'i40e_init_pin_config',
-       inlined from 'i40e_ptp_create_clock' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1414:13,
-       inlined from 'i40e_ptp_init' at drivers/net/ethernet/intel/i40e/i40e_ptp.c:1519:8:
-   drivers/net/ethernet/intel/i40e/i40e_ptp.c:1373:17: note: 'snprintf' output between 1 and 288 bytes into a destination of size 64
-    1373 |                 snprintf(pf->ptp_caps.pin_config[i].name,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1374 |                          sizeof(pf->ptp_caps.pin_config[i].name),
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    1375 |                          "%s", sdp_desc[i].name);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~
+Luke D. Jones (2):
+  hid-asus: check ROG Ally MCU version and warn
+  platform/x86: asus-wmi: Refactor Ally suspend/resume
 
-
-vim +1375 drivers/net/ethernet/intel/i40e/i40e_ptp.c
-
-  1349	
-  1350	/**
-  1351	 * i40e_init_pin_config - initialize pins.
-  1352	 * @pf: private board structure
-  1353	 *
-  1354	 * Initialize pins for external clock source.
-  1355	 * Return 0 on success or error code on failure.
-  1356	 **/
-  1357	static int i40e_init_pin_config(struct i40e_pf *pf)
-  1358	{
-  1359		int i;
-  1360	
-  1361		pf->ptp_caps.n_pins = 3;
-  1362		pf->ptp_caps.n_ext_ts = 2;
-  1363		pf->ptp_caps.pps = 1;
-  1364		pf->ptp_caps.n_per_out = 2;
-  1365	
-  1366		pf->ptp_caps.pin_config = kcalloc(pf->ptp_caps.n_pins,
-  1367						  sizeof(*pf->ptp_caps.pin_config),
-  1368						  GFP_KERNEL);
-  1369		if (!pf->ptp_caps.pin_config)
-  1370			return -ENOMEM;
-  1371	
-  1372		for (i = 0; i < pf->ptp_caps.n_pins; i++) {
-  1373			snprintf(pf->ptp_caps.pin_config[i].name,
-  1374				 sizeof(pf->ptp_caps.pin_config[i].name),
-> 1375				 "%s", sdp_desc[i].name);
-  1376			pf->ptp_caps.pin_config[i].index = sdp_desc[i].index;
-  1377			pf->ptp_caps.pin_config[i].func = PTP_PF_NONE;
-  1378			pf->ptp_caps.pin_config[i].chan = sdp_desc[i].chan;
-  1379		}
-  1380	
-  1381		pf->ptp_caps.verify = i40e_ptp_verify;
-  1382		pf->ptp_caps.enable = i40e_ptp_feature_enable;
-  1383	
-  1384		pf->ptp_caps.pps = 1;
-  1385	
-  1386		return 0;
-  1387	}
-  1388	
+ drivers/hid/hid-asus.c                     | 111 +++++++++++++++++-
+ drivers/platform/x86/asus-wmi.c            | 130 ++++++++++++++-------
+ include/linux/platform_data/x86/asus-wmi.h |  15 +++
+ 3 files changed, 215 insertions(+), 41 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
