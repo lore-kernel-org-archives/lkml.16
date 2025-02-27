@@ -1,40 +1,41 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EB526E953
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:12:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3359827005C
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740683578; cv=none; b=bY5IPqlrd8GR+8PLYJAYqKcYzlVGwjoCkYKBh28ZDUpUumpNikzsLBpxeCw19W9tNf7HkX/h4ygP/6b0PNZxjlqLeyphSih8E4CocegbUbmVI7ClVrp4XQxPAu+iNZGzTYSKCOXRwEOEP9gALA1PIhZM2Jx6HRJijlkD1zoTQco=
+	t=1740683768; cv=none; b=OeI/oCkB4N+U7RBiqnLRdGbyol0Ct9t4FKRAOhYIfyfp6uxfXMRC8IgIQk6ftvBBYogtx/HW7fW0sMzpcTXjr0jwUeF7KwYORBD1M4ZbZfUhvGjTHlbg4TXBcdkRpnpwstAqf41tlWBwTQNjybpbTDSXGDRtuhzOvlwV4+c1HEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740683578; c=relaxed/simple;
-	bh=co3VcKDWj0Njuazgt6Yz2lw4OZPKhNdPrBACMvEL5kw=;
+	s=arc-20240116; t=1740683768; c=relaxed/simple;
+	bh=v66HyVb30HGGLg9kKQ6/DG7AiHUsKM2ZRI/mlwwjpVY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=txxhj/AqlBEqtJ6KxtC9/c6127sKbflcn500iw7pIEIJYRWcVepNXis8RlugM0p3Mc360NkhwiFIC6lCrhHQX+VPIVHLqVR62/nZ2MMcmGfYskYOIAueIItr2fbkGn/upMdJjq1CuzLfhQZKjBQZZ7KhaQ28Au85HYeVhPGAJCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=a5AoxiIH; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=USZJtR2V65kYCbDCw+9XSVsNW3HSNv/jX+sy5IiD3nvEwljKuZvCtKFk9YhDrJFVTCTC1zaGAz/hB1ef1Osv+Iq4mcMlDp/B3d2E3pzQMm5sOAiPOlYtvIiLkpB61phiClSCHl537OD02rxHerce/xOqWqTf1G3AeJkssJtz0SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=odpBTL6c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="a5AoxiIH"
-Date: Thu, 27 Feb 2025 11:12:50 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740683573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4GOHQJk3YUfcrqiLzuEZ20VE/FeleMmsKoRU8HGkVGo=;
-	b=a5AoxiIHHvuOHihCLev1Nj57wARcGYHOWa/1STY74zAUpgLnYSFO13r80jGDlpaSSHQlOZ
-	JRHzkCYy1ifp5Tg5m83rM/y0YfhALiPNQ1GIvLX/5VV9Z6zoXy7KhDqZwfrQcjnSgYN6H8
-	CygQpjlJW9nblnIOCVos5QT3CgNGplo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: ying chen <yc1082463@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/vmscan: when the swappiness is set to 0, memory
- swapping should be prohibited during the global reclaim process
-Message-ID: <5u6rwht2mdwi3t4x3r5gtelruihtvfak24ci32moh2v7z52a3g@qkr2jcjgh4dw>
-References: <CAN2Y7hxDdATNfb=R5J1as3pqA1RsP8c8LubC4QxojK5cJS9Q9w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="odpBTL6c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A50C4CEDD;
+	Thu, 27 Feb 2025 19:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740683767;
+	bh=v66HyVb30HGGLg9kKQ6/DG7AiHUsKM2ZRI/mlwwjpVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=odpBTL6c19YiBCH9yzS5EtsykIlOSL8TewBy8KyfUMJPu+h004pBbPcPqaSHirIpk
+	 CJkpCYqdMxgmTKa9GMwYhITYuenXWAaY320EKtLJNkfC745pVGkErKzUrQmN3VUvM+
+	 837obixdDgU16cW6Xh/BYFqxtmlQEUgYgYUPACMY56s3WQ6s+7+y65MbJfc3KEPjVE
+	 EEVU7ZGttSDeYJGbidRZzh7o+eQ1i6saTmv40oQLk8h9Hx2GVCwOp5scbaZX2tg+M1
+	 7zRAysdTauKEtqcrwinUGhKDCO7EKDZeSdYypnwpWVjj2JL6qRJ+YpbvFgJ0qXY/pp
+	 aGctZDikjTuqA==
+Date: Thu, 27 Feb 2025 20:15:58 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC v1 00/11] x86: Support Intel Advanced Performance
+ Extensions
+Message-ID: <Z8C57rzRt90obAFg@gmail.com>
+References: <20250227184502.10288-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,20 +44,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAN2Y7hxDdATNfb=R5J1as3pqA1RsP8c8LubC4QxojK5cJS9Q9w@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250227184502.10288-1-chang.seok.bae@intel.com>
 
-On Thu, Feb 27, 2025 at 10:34:51PM +0800, ying chen wrote:
-> When we use zram as swap disks, global reclaim may cause the memory in some
-> cgroups with memory.swappiness set to 0 to be swapped into zram. This memory
-> won't be swapped back immediately after the free memory increases. Instead,
-> it will continue to occupy the zram space, which may result in no available
-> zram space for the cgroups with swapping enabled. Therefore, I think that
-> when the vm.swappiness is set to 0, global reclaim should also refrain
-> from memory swapping, just like these cgroups.
+
+* Chang S. Bae <chang.seok.bae@intel.com> wrote:
+
+> == Introduction ==
 > 
-> Signed-off-by: yc1082463 <yc1082463@gmail.com>
+> APX introduces a new set of general-purpose registers designed to improve
+> performance. Currently, these registers are expected to be used primarily
+> by userspace applications, with no intended use in kernel mode. More
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> details on its use cases can be found in the published documentation [1].
 
-It seems like you are still on memcg-v1. What is stopping you to move to
-memcg-v2 and use memory.swap.max = 0?
+I strongly suspect this won't remain so, unless there's some horrible 
+ISA limitation or other quirk that makes APX unsuitable for kernel use.
 
+The moment one of the mainstream compilers adds support for it we'll 
+want to enable it for the kernel too. Since the new GP registers are 
+caller-saved they are fairly easy to use as scratch registers to reduce 
+stack pressure, which is very much present on x86-64, especially when 
+the frame pointer is in use.
+
+So we need to keep that in mind when shaping these patches.
+
+Unless I'm missing something that is. :-)
+
+Thanks,
+
+	Ingo
