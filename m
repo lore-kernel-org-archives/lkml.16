@@ -1,56 +1,56 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1ADA21B9E6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB131EA65;
+	Thu, 27 Feb 2025 06:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740636992; cv=none; b=jf9PO2wZ2eZ++IXI8C78dTQuTq3WfsqMdg0FDYUd4D2o8jeFJIaa56YZRJu8AlG3d9EI+LAoKIbCO/A4wlwqXpe/Ai7NcgueJRN8wqhqgBKDgE3z1zT+kXuPf1//qVsvMT63LY5rXebqLbpV3X98Evr1p7Q92/Zpijydskf8KJ0=
+	t=1740637018; cv=none; b=BfsAK6yzawK9qs47XRJMvjxGBenUa+zSFZA9zBkgRpi68ZwMX2xNYcBpnhlkuFGcmSrNOenLIhmH/ybTHpU5H6G/2GhlrMW+WhL4DefnR4GM+dLQ0YrDQ9f4MUGX8CWsbr9w6N6D6F11C1dzx9AUXrwTQDKbQsq3YE9cHrPsKGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740636992; c=relaxed/simple;
-	bh=FprXlwf5FNOqNXB7rLjZwqKM4fIG4idwE/s0iLleCoM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=K51QbY/Dtl77bjSlW8zeY2O6N6NBikxn9gXDXw4koYEWb/1+KMmqpiqcedTODwpdw85Fx4u+J3pnrHvmb5o87AcBU6zlnBSoxFGLuhSMsFU+7LUUMoQZGOd7uJ0TYA7yjUslV127ioSU+YxvPu0QtM1nA0MsptZl8oRlDw2r03c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=VIjxa5kf; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1740637018; c=relaxed/simple;
+	bh=VOygxrRuQi0MuwwrjmEfkbNUSuc27WpWl959Ony6xE8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H5kUacuRFDeKu/2Ihz8nwKb/VOca0H2F3t8/84+WEbo7Nn3l5pWR+yLRNybYt5m5jlCRZY7nvYRrcyGJHRbPLKUw2CkqYo7+frTnGjhADBuHlPEE2w7IP3mRWrvglsqCqhrTjrVbq8H4ad/r8V8z4iCJiRclIpIsRkIh1dvrj0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CMO8HFcs; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="VIjxa5kf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1740636979;
-	bh=F3ApL+JeDj3lZFD/DdaVFfxrPRTF2KrKK9eGSSim+FM=;
-	h=From:To:Cc:Subject:Date;
-	b=VIjxa5kfcIu0r42/PiK6V26jLGe+aa0+k9QaEnW+6i0FmXSjbisdiYmaRMC2j2bhm
-	 clg/VURVpZHKqmYn2Fxo5/f8EFG2oJnxce39xE6R421ERsmyOtrxLyc/113kQb4S8Z
-	 bVi4YJcQXhkOAcSO98Bgm5hLTnIpGkpc8N/v6ql0=
-Received: from localhost.localdomain ([116.128.244.169])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id 283BCA36; Thu, 27 Feb 2025 14:10:03 +0800
-X-QQ-mid: xmsmtpt1740636603trv9hp5qc
-Message-ID: <tencent_0B119ADC0E546990F05E3727AB7364AEAB08@qq.com>
-X-QQ-XMAILINFO: MIOa0ndEC0BblRG9mBKOGjwVz6dYFOm/8zfpux30lV2XceDC4J3biozxfv8LsC
-	 8ADOslqitConxJltL5mq5EOjZA6iDqLZ/UHQZZ+Q1FajJeVbVmcvVO2IFO8uRqa7pkJwFSewtU+e
-	 Gqa8TP08EwZwR6iquaZg8jzUFP4CMzwPquxlXQpQZccaPFz6LmN5nHaCh3PPHoJo0kTC15bvAvr6
-	 en1Zba+EFK+AoTwFTpD+3xv3njDIUz0nl6/f0l8wU8NFmeKck9gKDav1l7reUKaaLUTHbPn+AYbK
-	 dFImohiIMbD05QAufhzRSMcvq6e3flBWbJzvghKUQxeG6ysYeZTu000MEXr24VyNW3a7iWfLwDe/
-	 529bj/oDmye5RA0xnNVBIkzOMcm+sZlP7iagcDrKAKRcfBDFn0fzRWjZ+gt2Bew1rTQJgR76etcC
-	 iksofHXZzBvFOWPljJsvv3Q/HzOYfhJUuvfpPbQTVpEaxvHOEJD0dsd7vOzWusS9V3MjJt8vbvUc
-	 3uju1X6U43rJS3Yvt95+RIH2o66ugE6KCa4kDysH3aFZNMD+2/LtxZHRMJ4O9uoko14B6+319ywP
-	 BmIeLF+U2dSfJ3Nhp0jWPu+hcjfyGhdXswxjUNn5eUaKBQdsn1b9jr3igEouQdcO95CAR3og71mb
-	 o8q/bCUVa0S9sZmkkQ29zYQIsMreH04x8DX+MXuXn85P3ewdG9T/3Dp4pUhg1I9UZt5QE98le153
-	 TVAzXLDQ4XogC1fc5pPq5liT94UBlUhJgHHhZtj+CVCZ0YfFcJoz6nw5WUMrt2Vwk4Ei5qz4fwTz
-	 o+j0sY8PhlHIOKvfa6veFjzMLO+s946NZSoyLqUh4SjrzOvR3rOF/sitG3i4c8ezqSIvogH7QD8b
-	 2XeMP+iIOlShNUFfVBONfvrwO7G1sbZProP0hMuHeyq+fcr8l3wPBC+shIFwUDxLz3puk8T2xf//
-	 q5fGrSz4Y=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: xiaopeitux@foxmail.com
-To: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH] mm/list_lru: Remove unnecessary NULL check before kfree()
-Date: Thu, 27 Feb 2025 14:10:02 +0800
-X-OQ-MSGID: <ccf2e7de4caba7b16dee2aef2608f72e1ab974e7.1740636544.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CMO8HFcs"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51R6GmwR1771632
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+	Thu, 27 Feb 2025 00:16:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740637008;
+	bh=AtiE7jmXgdQuBTp//fQBjeoSIa2kWNKuBTEAPBRs2QA=;
+	h=From:To:CC:Subject:Date;
+	b=CMO8HFcszCsgkK2Te9V+JopO5Flgd/AUpem1gtxpsO3vnLYXXDkTFEj9Z1B6AMY5I
+	 upZlFOYFfLs4Gcj/f+XMG531OtEeR0mKDQuGVLexYjuH2zikEz/KwBje7Gp5qJY8PB
+	 8NQNFMI/VkUriQcSGruwnXxlxOV9eEblJP9hMgaA=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51R6Gm67017400;
+	Thu, 27 Feb 2025 00:16:48 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Feb 2025 00:16:48 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Feb 2025 00:16:48 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51R6GiYa034038;
+	Thu, 27 Feb 2025 00:16:44 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <j-choudhary@ti.com>,
+        <rogerq@kernel.org>
+CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix serdes_ln_ctrl reg-masks
+Date: Thu, 27 Feb 2025 11:46:43 +0530
+Message-ID: <20250227061643.144026-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,34 +58,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Pei Xiao <xiaopei01@kylinos.cn>
+Commit under Fixes added the 'idle-states' property for SERDES4 lane muxing
+without defining the corresponding register offsets and masks for it in the
+'mux-reg-masks' property within the 'serdes_ln_ctrl' node.
 
-Since kfree() already checks if its argument is NULL, an additional
-check before calling kfree() is unnecessary and can be removed.
+Fix this.
 
-Remove it and thus also the following cocci warning:
-	WARNING: NULL check before some freeing functions is not needed.
-
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+Fixes: 7287d423f138 ("arm64: dts: ti: k3-j784s4-main: Add system controller and SERDES lane mux")
+Cc: stable@vger.kernel.org
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- mm/list_lru.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 7d69434c70e0..7c8fb17d9027 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -548,8 +548,7 @@ int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
- 			}
- 			xas_unlock_irqrestore(&xas, flags);
- 		} while (xas_nomem(&xas, gfp));
--		if (mlru)
--			kfree(mlru);
-+		kfree(mlru);
- 	} while (pos != memcg && !css_is_dying(&pos->css));
- 
- 	return xas_error(&xas);
+Hello,
+
+This patch is based on commit
+dd83757f6e68 Merge tag 'bcachefs-2025-02-26' of git://evilpiepirate.org/bcachefs
+of the master branch of Mainline Linux.
+
+Regards,
+Siddharth.
+
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+index 83bbf94b58d1..a5fefafcba74 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+@@ -84,7 +84,9 @@ serdes_ln_ctrl: mux-controller@4080 {
+ 					<0x10 0x3>, <0x14 0x3>, /* SERDES1 lane0/1 select */
+ 					<0x18 0x3>, <0x1c 0x3>, /* SERDES1 lane2/3 select */
+ 					<0x20 0x3>, <0x24 0x3>, /* SERDES2 lane0/1 select */
+-					<0x28 0x3>, <0x2c 0x3>; /* SERDES2 lane2/3 select */
++					<0x28 0x3>, <0x2c 0x3>, /* SERDES2 lane2/3 select */
++					<0x30 0x3>, <0x34 0x3>, /* SERDES4 lane0/1 select */
++					<0x38 0x3>, <0x3c 0x3>; /* SERDES4 lane2/3 select */
+ 			idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>,
+ 				      <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
+ 				      <J784S4_SERDES0_LANE2_IP3_UNUSED>,
 -- 
-2.25.1
+2.34.1
 
