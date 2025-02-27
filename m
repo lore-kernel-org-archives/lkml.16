@@ -1,121 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B1F2376E4;
-	Thu, 27 Feb 2025 14:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EAC239094
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665001; cv=none; b=uyquMNm800XGM9REoqG9ra+tVb+qMhmzPe5vJPR+0XTSNnR1p9NxdEhUPsZ6OXdIyiHfNIdIqe+J7L6aowgzsH0XqXNHESSDhKyfVi+4exMZmdVKUfIJuYBnx9pPhNwCLJJ5xhQCDXj58REJCqDVd9f2OiSEVgrjS0RhXewq5oE=
+	t=1740665004; cv=none; b=W8qIac/HyyexnrLwOTTLPxr0pVUv1zDxD0Mxokxh22MFvEspeH5klEVguuDZ1w8+Fi6qhWwPjN8pxyYkfIlZFKoAfiwlyQvBH6Sc0A3CxCUBtKzKlZJ6tpaWs414XggZsGnTu4YAYiTdIA5bYpmFjQVkXsJsV1IMil8q71hTvtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740665001; c=relaxed/simple;
-	bh=uDhO0buD+LbU4a/ZJlAIOO0MmLejKrvfWJSAZJp7WPs=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dgfj4UUjRFVMU5KHYgiNFcROqBG+fWhO7fYfbaLosctSHoACNN+GmsahckWCEDp0+owrqAsRtmHYlgNgYnCqV/OrrfyP1SxkHP4ENrYC02VTZpYMrv7IbWrip7TU2AOaUMdttcx6E76/+NasuVWWduqHQgOa/u9ggqmsWrXf6Ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FuKOMMSA; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740665004; c=relaxed/simple;
+	bh=3NnxLM9evLC5dZoexGpaMUPJqUxrZ9lwjMscmx27tjo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=P58BvDITGSAIFLOHhJNtvNkR7l3G2MDoYWO0fUy1CseTUl1G4RgABzBAhufADD9O6J79H7djPS2Viana3vOds8lIQP/4Knlzz7JJa2JJZQclOFJeC3DdYUckZNHlUct9yz+XVpj99G9V18zU3xt6jD7Z0P0vERF5iUiwGTcQgKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CIDF0hya; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FuKOMMSA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740665000; x=1772201000;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=uDhO0buD+LbU4a/ZJlAIOO0MmLejKrvfWJSAZJp7WPs=;
-  b=FuKOMMSAw27+Wk8Dvq3eIPiA7PtIWyCIgpwd8ofWLaH/uwgdLhbMefeV
-   ZYi0oCF1OQZhdvoXVIOX7F2aNPibyg6Em6tpRBVxoSTkYz+2ShyajyA+5
-   GddYYPWxwgOOZC6HfqC9M3z652tPpQUL2lvIhmJ3VV7R9dA607d4qUAjF
-   8zRgi+1mszT7II1kzXYYU1RXbTPOtL9PPCTz+U915kPDCRly6mM0A5PRN
-   bCcfcsw8sAcZr7ttrM21l7EdJrHwEJTG4aionM4M3zcIC+U2tTWBe8vkK
-   ReBah59JnTD4qFKAkUy+xSxN8I75A2UeK6kRrB0UdRVoQboVf4r3TePNv
-   Q==;
-X-CSE-ConnectionGUID: ihXB0TN4R8OldpPrtzvp1Q==
-X-CSE-MsgGUID: SGNgUl8PQW+qLjeqkC2vug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41752457"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41752457"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:03:20 -0800
-X-CSE-ConnectionGUID: 2AnrQAY7TXaV+zHSI9JYzg==
-X-CSE-MsgGUID: TTojhYVeS5mGhPqkZzny4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="122149716"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Feb 2025 06:03:12 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v6 7/9] igc: Block setting preemptible traffic class in taprio
-Date: Thu, 27 Feb 2025 09:01:55 -0500
-Message-Id: <20250227140158.2129988-8-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CIDF0hya"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-390eb06d920so81480f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:03:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740665001; x=1741269801; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=saWev/BLtPHQI+zr3xOwDwS1bzfDXQxRvDaSiKo3ZN4=;
+        b=CIDF0hyaafsyrb9W24ayhuVhiXQ54R6nsLM7Z5u+nne7zr3RgA2uUaZwvRwlBI/4Co
+         9RK0rNXVh7Ffxu5MQ9e6CIe6GuQCGLEpSJfYhJPv8PaOOaWqJjxiN2oC+ZmtDWmQVouL
+         6UTXzO7gbytvM66uxakubQ9xJSuWoZdhdtFZvoeHdAUxp1zvmMl5cbPuBOKlGrJ4cXtD
+         uOvIZbrElPzuKwhRVsbwmkQow11DvqvN84Z6TscSOgVbai++03bNNli6Dghjve2ca1C7
+         1y09crIyVg+7Lv77LCTmfVbjytKqqJ2X2DIRjeYYEx8wRnhnreOSVW+8CiVr+dYm93bJ
+         Qv6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740665001; x=1741269801;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=saWev/BLtPHQI+zr3xOwDwS1bzfDXQxRvDaSiKo3ZN4=;
+        b=OVhLjagDQBZATA95tyIOKookC7EFHDi13ySplzS3LH6sC1aj6PWJZ7MdaksxtVI721
+         VWVD35TXocj6b2lJ40Zas/3k4c7R24h9Na/7bDVod0u4k38mhjhmCNw/Uaa3w2qlTiDo
+         XyPKQQ0YztSmAIXyVZDtRKrQat28ouTB3m0TfVjb7MzApZht9hMfOID03lJWIUJLYUN7
+         CrMgj3tNsNxMmZGVz5P33z+8zZ9KkyI7F9eTrrT4BC6Zln9/78Br1El6TXMOv1LZuKep
+         mKPM8isOdPdh7SWZLcDQOPftsm5glJ9bKIVa4yH5eFonOV6nwfZts5NzmJS2B8qDlHIR
+         12Mw==
+X-Forwarded-Encrypted: i=1; AJvYcCURiM4UMEjsWDZUedBl4Jbx5ffaIEw/+DtGk5QM/7f6vNS/Ln421sAj0YUHx9V+Qz1z1IOAYoKrPtFP2GQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo4SOpf/2kJ06wmIFcGvOeANbOV5LccyN/8T7AjLtTmFJFX0A0
+	U5NLaRN3Q1J4FEyChU/lTOqosZD5ISIsmIjOuMHDh4vQEJGyHzhlwwdESKArj53fXZE3M5x7W1I
+	gz8YAkA==
+X-Google-Smtp-Source: AGHT+IFmqZomhoMqAYZ8T+5JMApUMHdVzCXF2alNphLj59R1cMvvM9y4wMaLrZO53sJ8XqE4aAhk5Ho1jVlP
+X-Received: from wrd5.prod.google.com ([2002:a05:6000:4a05:b0:390:df7c:ab82])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1a87:b0:390:e005:65b9
+ with SMTP id ffacd0b85a97d-390e005680amr5677012f8f.23.1740665000917; Thu, 27
+ Feb 2025 06:03:20 -0800 (PST)
+Date: Thu, 27 Feb 2025 15:03:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <cover.1740664852.git.dvyukov@google.com>
+Subject: [PATCH v6 0/4] rseq: Make rseq work with protection keys
+From: Dmitry Vyukov <dvyukov@google.com>
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Since preemptible tc implementation is not ready yet, block it from being
-set in taprio. The existing code already blocks it in mqprio.
+If an application registers rseq, and ever switches to another pkey
+protection (such that the rseq becomes inaccessible), then any
+context switch will cause failure in __rseq_handle_notify_resume()
+attempting to read/write struct rseq and/or rseq_cs. Since context
+switches are asynchronous and are outside of the application control
+(not part of the restricted code scope), temporarily enable access
+to 0 (default) PKEY to read/write rseq/rseq_cs.
+0 is the only PKEY supported for rseq for now.
+Theoretically other PKEYs can be supported, but it's unclear
+how/if that can work. So for now we don't support that to simplify
+code.
 
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 5a6648a12a53..e6a398dbf09b 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -6408,6 +6408,10 @@ static int igc_save_qbv_schedule(struct igc_adapter *adapter,
- 	if (!validate_schedule(adapter, qopt))
- 		return -EINVAL;
- 
-+	/* preemptible isn't supported yet */
-+	if (qopt->mqprio.preemptible_tcs)
-+		return -EOPNOTSUPP;
-+
- 	igc_ptp_read(adapter, &now);
- 
- 	if (igc_tsn_is_taprio_activated_by_user(adapter) &&
+Dmitry Vyukov (4):
+  pkeys: add API to switch to permissive/zero pkey register
+  x86/signal: Use write_permissive_pkey_val() helper
+  rseq: Make rseq work with protection keys
+  selftests/rseq: Add test for rseq+pkeys
+
+ arch/x86/Kconfig                         |  1 +
+ arch/x86/include/asm/pkeys.h             | 30 ++++++++
+ arch/x86/include/asm/pkru.h              | 10 ++-
+ arch/x86/kernel/signal.c                 |  6 +-
+ include/linux/pkeys.h                    | 31 ++++++++
+ include/uapi/linux/rseq.h                |  4 +
+ kernel/rseq.c                            | 11 +++
+ mm/Kconfig                               |  2 +
+ tools/testing/selftests/rseq/Makefile    |  2 +-
+ tools/testing/selftests/rseq/pkey_test.c | 98 ++++++++++++++++++++++++
+ tools/testing/selftests/rseq/rseq.h      |  1 +
+ 11 files changed, 188 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/rseq/pkey_test.c
+
+
+base-commit: dd83757f6e686a2188997cb58b5975f744bb7786
 -- 
-2.34.1
+2.48.1.658.g4767266eb4-goog
 
