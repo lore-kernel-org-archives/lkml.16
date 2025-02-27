@@ -1,169 +1,356 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329EAC8EB
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E96FC2C9
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740616538; cv=none; b=GXsjY4ZqRT/Ovmvz9jY3rJGTFSmSFS/YC+dZo2+nvD4r2WKV69UcraUQJCtiHU6gtva0V4n0wJoW2rFJvZykBcmtKbWhGLdBJRHC2jTB47YUB75rUkkLXEraxGU4HP9sUpJwFk+hxXRuwfzWGk/fO2hWHgBXeT+nKaKCO0CY9kM=
+	t=1740616549; cv=none; b=KuXSe64QTrz32zAr3wmXI4NjkJ0caLeKmXfj6Nxi6AAgtUD2E/RtIQFEk6JhE01ewLgMz9TIwwOX68p/9d73+orfBDonK1Qnf8RaNp7Y6AxfkvIV1QCdr4JEnBGgGhq1aPzGWAJQtGVBz7T0x7rYEp5q4NKB/LizDqm5goRVsy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740616538; c=relaxed/simple;
-	bh=3AJ9d5rV3h390IdH4wOO16rKMYbgUmA06NdBKs+n/k0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJmkgo8lQB7FMiy6x8oUVwSIukmE4NuyiOeYxU9jLf6rFwyr2/Wtz+Iu2SDwCAtr+Y0cSI2E8+bbjpg1W+r+wMutt7YPYrU+hPa/m6Nqx+p30l+KRKCJl4FqVXUeqdbcvevPViZS5AoL+LdH+OClfHTwPjUrhBHu8L7NMM+zfJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqP+v7J+; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740616549; c=relaxed/simple;
+	bh=sX6k+ExVgGNyDnumdmJIdayUEA+By8ga08Ti0Wfuoc8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YOeAbt6WBirTGOx1CQOuvX5bHKStMpmcLPiyDVlid5L1uT/DvH5eeia8Fw8OVpW1X9IQaBvAJLqVCJgnP/RfEdJt5tsk1PF857xvr0Y4Vauuz7ZvmW+8UYnRucpTVd9Tjj3nZRqxzVDGPWz0Cfl6FJ2B/AiNH0cALch+YmnfWqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CV93pHNl; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqP+v7J+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740616536; x=1772152536;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3AJ9d5rV3h390IdH4wOO16rKMYbgUmA06NdBKs+n/k0=;
-  b=bqP+v7J+a4dPUeoGoxWWcmqZ8rzB4DVvNq/1qDax0sKHPCqPXC9nAEmQ
-   XrOW6rI0rf0tAwX0DfjHB2VmzY1goPMjkZbzDtwNq6916JB8O3NlbQd6T
-   boVVKFPI+2Y2duQVKz23L30ceO86zk7oC2POAMpowsefnsWnKrgZTHmCn
-   9YOHscznhYAyh6Y5osBxwv/1Quq33Ia2d0UzjqXHi82JySO/f37q10DWf
-   mcWiiaSbC/DLOFNQi95NEqAZkVil0jr/cg5X4Z8KuQkFnqR5KFG+oXWge
-   MESRSrMsDY7dzyqzkyoGpX5PSZgJSSZNz5Xj0qdkAelb0jBHC8AR2Cw+O
-   Q==;
-X-CSE-ConnectionGUID: d1ehmkKARGSn5p0UEmgLiw==
-X-CSE-MsgGUID: 98DlFOiaSWiTOLZEu3TBWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="52127108"
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="52127108"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 16:35:35 -0800
-X-CSE-ConnectionGUID: Oa/EQP7aTFahHnpuYImnrQ==
-X-CSE-MsgGUID: K8+uyhU4SUKCyMb8Q12T8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,318,1732608000"; 
-   d="scan'208";a="121459600"
-Received: from unknown (HELO desk) ([10.125.145.169])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 16:35:34 -0800
-Date: Wed, 26 Feb 2025 16:35:28 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: "Kaplan, David" <David.Kaplan@amd.com>, Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 20/35] x86/bugs: Define attack vectors
-Message-ID: <20250227003528.hnviwrtzs7jc3juj@desk>
-References: <20250217233928.k3oem3bm7w63jzfr@jpoimboe>
- <LV3PR12MB9265041C9D8D4F3E5760F0B694FA2@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250218070501.7mwcxqgsuxl3meef@jpoimboe>
- <20250218085203.GDZ7RKM6IyPDQAkZ8A@fat_crate.local>
- <20250220220440.ma5yfebhiovkqojt@jpoimboe>
- <LV3PR12MB9265DE3082FA0A7FDF9B587594C22@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250226201453.jgg6kucaathzmcvs@desk>
- <LV3PR12MB9265F875F52317BBCDF953EC94C22@LV3PR12MB9265.namprd12.prod.outlook.com>
- <20250226221324.hq2nevnnnrpgo75n@desk>
- <20250226234440.4dk4t3urkzt4zll7@jpoimboe>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CV93pHNl"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22331df540aso9876685ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:35:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740616547; x=1741221347; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uT5qN4teqIhN8OgGcN83osIEOThqIeAxronJTF18w94=;
+        b=CV93pHNlEJa0nnH2FFCd9LoeYfdJBYrBlB3/XXlf3ud1rtRaS1obrYT60g9HIZxA/p
+         j2cghqq8xyGh8p6dt+b7fHZe/l57Ilga7psO1P+uHr4o0Fmaxv8mueppNUERFaVdMO/T
+         DTCzNmYyQHxwyxQgrmW1CbgMCcuM+hQ/PtevE2f3sVlBxdhMjWPLgCbziapv0HI9cm1M
+         2vOA3zGsxCB3CTAryo7DEJ8alLbogjXmrOwHP/nQldk1gAZsZ4ALmLmUmmyXDTTAf5x6
+         5+vmydmrWyXzLTCpVe8la6b4TVzV8PWjeZW+pOyGGt607ys3xdjahxHLXsi9ZPaPEDUw
+         8O2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740616547; x=1741221347;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uT5qN4teqIhN8OgGcN83osIEOThqIeAxronJTF18w94=;
+        b=McHrXO9sTNCSKiPFqqFsdm7Z77Xu9ZBFul4DvMrDZho71Qd0Il/A6ABdl7prWPDvKI
+         Lg7SB2ErChizp4OAiPCKcbhbU0CEsJI3PcDL8hqRYJOJJTzjeafGRTTCcYjCci2jWvVp
+         3JgX1xaHDvDCja5v8kI/H9s81cIHI+Gf/mwMCcb2gjyoShK009EOkV2WHS9M3dIs0amv
+         G2zFbRVCpc1bDKmjmVFPse4BlLJ4RdTK/gy8y/D8O1M3+2DcI4GnG3GUO7GC34MDy5bA
+         eJvbpPe0L11urAAaZ7+dpAZdV0oZmH57qCASnDXn1iBREFlVdGSu+OCQOFZNA5ZK9MQl
+         mjbQ==
+X-Gm-Message-State: AOJu0Yxwy4mrN+wejk+nCOXI4uy9fNXL7mi8LCy9a3vaQ1rf3yPSRl0F
+	GbWgEAUPDFWBpa4qrcDLrtEwTWNE6gBQU0EDExBqce8/w1hdkDUrSrJxw2WUInfLa00Whp5hgaO
+	KjPJrMbhgc3SdzFRom7i5lF86q3n7qKIqU49AilPGZVuffQLP4hFOliMT8wTqyaW/K7u0iz0F/D
+	Vxn3XtbdON84eQRJ+McApU07uDrWpkjZed2v60H4DY
+X-Google-Smtp-Source: AGHT+IEhVou1kAichbSUs8mzNp9wPwBY0b2D1W3ERA7S8+Dol9j5TmEUBzuy/uk5ihEM3zbiUALvmCyQzkQ=
+X-Received: from pfuw10.prod.google.com ([2002:a05:6a00:14ca:b0:732:9235:5f2])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1709:b0:732:2967:400
+ with SMTP id d2e1a72fcca58-7347910977emr14896254b3a.12.1740616546640; Wed, 26
+ Feb 2025 16:35:46 -0800 (PST)
+Date: Wed, 26 Feb 2025 16:28:54 -0800
+In-Reply-To: <20250227003359.732948-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226234440.4dk4t3urkzt4zll7@jpoimboe>
+Mime-Version: 1.0
+References: <20250227003359.732948-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250227003359.732948-3-ctshao@google.com>
+Subject: [PATCH v8 2/4] perf lock: Retrieve owner callstack in bpf program
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Feb 26, 2025 at 03:44:40PM -0800, Josh Poimboeuf wrote:
-> On Wed, Feb 26, 2025 at 02:13:24PM -0800, Pawan Gupta wrote:
-> > On Wed, Feb 26, 2025 at 09:03:58PM +0000, Kaplan, David wrote:
-> > > > Extending =auto to take attack vectors is going to be tricky, because it already
-> > > > takes ",nosmt" which would conflict with ",no_cross_thread".
-> > > >
-> > > > How about we keep =off, and =auto as is, and add:
-> > > >
-> > > >   mitigations=selective,no_user_kernel,no_cross_thread,...
-> > > >
-> > > > Requiring the user to explicitly select attack vectors to disable (rather than to
-> > > > enable). This would be more verbose, but it would be clear that the user is explicitly
-> > > > selecting attack vectors to disable. Also, if a new attack vector gets added in future,
-> > > > it would be mitigated by default, without requiring the world to change their cmdline.
-> > > 
-> > > I kind of like that.
-> 
-> While it might be true that we don't necessarily need both opt-in and
-> opt-out options...
-> 
-> I'm missing the point of the "selective" thing vs just
-> "auto,no_whatever"?
+This implements per-callstack aggregation of lock owners in addition to
+per-thread.  The owner callstack is captured using `bpf_get_task_stack()`
+at `contention_begin()` and it also adds a custom stackid function for the
+owner stacks to be compared easily.
 
-That was my first thought, but then I realized that in "auto,nosmt" nosmt
-is the opposite of disabling the mitigation. It would be cleaner to have
-"=selective,no_whatever" which is self-explanatory.
+The owner info is kept in a hash map using lock addr as a key to handle
+multiple waiters for the same lock.  At `contention_end()`, it updates the
+owner lock stat based on the info that was saved at `contention_begin()`.
+If there are more waiters, it'd update the owner pid to itself as
+`contention_end()` means it gets the lock now.  But it also needs to check
+the return value of the lock function in case task was killed by a signal
+or something.
 
-> > > Note that for the SMT stuff, my new plan had been to use a separate
-> > > option 'mitigate_smt' which will be on/off/auto.
-> >
-> > I would avoid that, because we can't drop support for
-> > "mitigations=auto,nosmt"
-> 
-> We wouldn't have to drop support for that...  If there's a conflict
-> between the two options then just print a warning and pick one.
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 212 +++++++++++++++++-
+ 1 file changed, 203 insertions(+), 9 deletions(-)
 
-Introducing one more option for smt seems unnecessary. We already have
-auto,nosmt and nosmt. Trying to guess which one takes precedence would
-be confusing.
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 23fe9cc980ae..69be7a4234e0 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -197,6 +197,9 @@ int data_fail;
+ int task_map_full;
+ int data_map_full;
+ 
++struct task_struct *bpf_task_from_pid(s32 pid) __ksym __weak;
++void bpf_task_release(struct task_struct *p) __ksym __weak;
++
+ static inline __u64 get_current_cgroup_id(void)
+ {
+ 	struct task_struct *task;
+@@ -420,6 +423,61 @@ static inline struct tstamp_data *get_tstamp_elem(__u32 flags)
+ 	return pelem;
+ }
+ 
++static inline s32 get_owner_stack_id(u64 *stacktrace)
++{
++	s32 *id, new_id;
++	static s64 id_gen = 1;
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	new_id = (s32)__sync_fetch_and_add(&id_gen, 1);
++
++	bpf_map_update_elem(&owner_stacks, stacktrace, &new_id, BPF_NOEXIST);
++
++	id = bpf_map_lookup_elem(&owner_stacks, stacktrace);
++	if (id)
++		return *id;
++
++	return -1;
++}
++
++static inline void update_contention_data(struct contention_data *data, u64 duration, u32 count)
++{
++	__sync_fetch_and_add(&data->total_time, duration);
++	__sync_fetch_and_add(&data->count, count);
++
++	/* FIXME: need atomic operations */
++	if (data->max_time < duration)
++		data->max_time = duration;
++	if (data->min_time > duration)
++		data->min_time = duration;
++}
++
++static inline void update_owner_stat(u32 id, u64 duration, u32 flags)
++{
++	struct contention_key key = {
++		.stack_id = id,
++		.pid = 0,
++		.lock_addr_or_cgroup = 0,
++	};
++	struct contention_data *data = bpf_map_lookup_elem(&owner_stat, &key);
++
++	if (!data) {
++		struct contention_data first = {
++			.total_time = duration,
++			.max_time = duration,
++			.min_time = duration,
++			.count = 1,
++			.flags = flags,
++		};
++		bpf_map_update_elem(&owner_stat, &key, &first, BPF_NOEXIST);
++	} else {
++		update_contention_data(data, duration, 1);
++	}
++}
++
+ SEC("tp_btf/contention_begin")
+ int contention_begin(u64 *ctx)
+ {
+@@ -437,6 +495,72 @@ int contention_begin(u64 *ctx)
+ 	pelem->flags = (__u32)ctx[1];
+ 
+ 	if (needs_callstack) {
++		u32 i = 0;
++		u32 id = 0;
++		int owner_pid;
++		u64 *buf;
++		struct task_struct *task;
++		struct owner_tracing_data *otdata;
++
++		if (!lock_owner)
++			goto skip_owner;
++
++		task = get_lock_owner(pelem->lock, pelem->flags);
++		if (!task)
++			goto skip_owner;
++
++		owner_pid = BPF_CORE_READ(task, pid);
++
++		buf = bpf_map_lookup_elem(&stack_buf, &i);
++		if (!buf)
++			goto skip_owner;
++		for (i = 0; i < max_stack; i++)
++			buf[i] = 0x0;
++
++		if (!bpf_task_from_pid)
++			goto skip_owner;
++
++		task = bpf_task_from_pid(owner_pid);
++		if (!task)
++			goto skip_owner;
++
++		bpf_get_task_stack(task, buf, max_stack * sizeof(unsigned long), 0);
++		bpf_task_release(task);
++
++		otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++		id = get_owner_stack_id(buf);
++
++		/*
++		 * Contention just happens, or corner case `lock` is owned by process not
++		 * `owner_pid`. For the corner case we treat it as unexpected internal error and
++		 * just ignore the precvious tracing record.
++		 */
++		if (!otdata || otdata->pid != owner_pid) {
++			struct owner_tracing_data first = {
++				.pid = owner_pid,
++				.timestamp = pelem->timestamp,
++				.count = 1,
++				.stack_id = id,
++			};
++			bpf_map_update_elem(&owner_data, &pelem->lock, &first, BPF_ANY);
++		}
++		/* Contention is ongoing and new waiter joins */
++		else {
++			__sync_fetch_and_add(&otdata->count, 1);
++
++			/*
++			 * The owner is the same, but stacktrace might be changed. In this case we
++			 * store/update `owner_stat` based on current owner stack id.
++			 */
++			if (id != otdata->stack_id) {
++				update_owner_stat(id, pelem->timestamp - otdata->timestamp,
++						  pelem->flags);
++
++				otdata->timestamp = pelem->timestamp;
++				otdata->stack_id = id;
++			}
++		}
++skip_owner:
+ 		pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+ 						  BPF_F_FAST_STACK_CMP | stack_skip);
+ 		if (pelem->stack_id < 0)
+@@ -473,6 +597,7 @@ int contention_end(u64 *ctx)
+ 	struct tstamp_data *pelem;
+ 	struct contention_key key = {};
+ 	struct contention_data *data;
++	__u64 timestamp;
+ 	__u64 duration;
+ 	bool need_delete = false;
+ 
+@@ -500,12 +625,88 @@ int contention_end(u64 *ctx)
+ 		need_delete = true;
+ 	}
+ 
+-	duration = bpf_ktime_get_ns() - pelem->timestamp;
++	timestamp = bpf_ktime_get_ns();
++	duration = timestamp - pelem->timestamp;
+ 	if ((__s64)duration < 0) {
+ 		__sync_fetch_and_add(&time_fail, 1);
+ 		goto out;
+ 	}
+ 
++	if (needs_callstack && lock_owner) {
++		struct owner_tracing_data *otdata = bpf_map_lookup_elem(&owner_data, &pelem->lock);
++
++		if (!otdata)
++			goto skip_owner;
++
++		/* Update `owner_stat` */
++		update_owner_stat(otdata->stack_id, timestamp - otdata->timestamp, pelem->flags);
++
++		/* No contention is occurring, delete `lock` entry in `owner_data` */
++		if (otdata->count <= 1)
++			bpf_map_delete_elem(&owner_data, &pelem->lock);
++		/*
++		 * Contention is still ongoing, with a new owner (current task). `owner_data`
++		 * should be updated accordingly.
++		 */
++		else {
++			u32 i = 0;
++			s32 ret = (s32)ctx[1];
++			u64 *buf;
++
++			otdata->timestamp = timestamp;
++			__sync_fetch_and_add(&otdata->count, -1);
++
++			buf = bpf_map_lookup_elem(&stack_buf, &i);
++			if (!buf)
++				goto skip_owner;
++			for (i = 0; i < (u32)max_stack; i++)
++				buf[i] = 0x0;
++
++			/*
++			 * `ret` has the return code of the lock function.
++			 * If `ret` is negative, the current task terminates lock waiting without
++			 * acquiring it. Owner is not changed, but we still need to update the owner
++			 * stack.
++			 */
++			if (ret < 0) {
++				s32 id = 0;
++				struct task_struct *task;
++
++				if (!bpf_task_from_pid)
++					goto skip_owner;
++
++				task = bpf_task_from_pid(otdata->pid);
++				if (!task)
++					goto skip_owner;
++
++				bpf_get_task_stack(task, buf,
++						   max_stack * sizeof(unsigned long), 0);
++				bpf_task_release(task);
++
++				id = get_owner_stack_id(buf);
++
++				/*
++				 * If owner stack is changed, update owner stack id for this lock.
++				 */
++				if (id != otdata->stack_id)
++					otdata->stack_id = id;
++			}
++			/*
++			 * Otherwise, update tracing data with the current task, which is the new
++			 * owner.
++			 */
++			else {
++				otdata->pid = pid;
++				/*
++				 * We don't want to retrieve callstack here, since it is where the
++				 * current task acquires the lock and provides no additional
++				 * information. We simply assign -1 to invalidate it.
++				 */
++				otdata->stack_id = -1;
++			}
++		}
++	}
++skip_owner:
+ 	switch (aggr_mode) {
+ 	case LOCK_AGGR_CALLER:
+ 		key.stack_id = pelem->stack_id;
+@@ -589,14 +790,7 @@ int contention_end(u64 *ctx)
+ 	}
+ 
+ found:
+-	__sync_fetch_and_add(&data->total_time, duration);
+-	__sync_fetch_and_add(&data->count, 1);
+-
+-	/* FIXME: need atomic operations */
+-	if (data->max_time < duration)
+-		data->max_time = duration;
+-	if (data->min_time > duration)
+-		data->min_time = duration;
++	update_contention_data(data, duration, 1);
+ 
+ out:
+ 	pelem->lock = 0;
+-- 
+2.48.1.658.g4767266eb4-goog
 
-> > and we also have a separate cmdline parameter
-> > "nosmt":
-> > 
-> > 	nosmt		[KNL,MIPS,PPC,S390,EARLY] Disable symmetric multithreading (SMT).
-> > 			Equivalent to smt=1.
-> > 
-> > 			[KNL,X86,PPC] Disable symmetric multithreading (SMT).
-> > 			nosmt=force: Force disable SMT, cannot be undone
-> > 				     via the sysfs control file.
-> 
-> The separate 'nosmt' option is orthogonal to the mitigation stuff.  If
-> it disables SMT then there are no cross-thread mitigations to do in the
-> first place.
-
-Right.
-
-> > > But we could also combine that with mitigations=selective perhaps with
-> > > tokens like 'mitigate_smt' (enable all relevant SMT mitigations including
-> > > disabling SMT if needed) or 'no_mitigate_smt' (do not enable any SMT
-> > > mitigation).  If no token is specified, then we'd default to the behavior
-> > > today where SMT won't be disabled but other mitigations get applied.
-> > > Then everything is in one option.
-> > 
-> > Agree.
-> 
-> I think that's *way* too subtle.  It's completely unlike the other
-> options in that it's not a binary opt-out.  And it sneakily obfuscates
-> the mitigate_smt tristate (with the third state being the unspecified
-> default).
-> 
-> However, one of those three states is already represented by
-> 'auto,nosmt'.  Why not just piggyback on that by allowing the vectors to
-> be combined with it?  Then we only need two more states, which could be
-> represented with e.g., "[no_]cross_thread".
-> 
-> For example, to disable SMT (if needed), along with disabling of
-> vectors:
->   
->   mitigations=auto,nosmt,no_user_kernel,etc
-> 
-> Or to disable all SMT mitigations (e.g., because the user is doing core
-> scheduling):
-> 
->   mitigations=auto,no_cross_thread,etc
-> 
-> And combining 'auto,nosmt' with 'no_cross_thread' is nonsensical, in
-> which case so it could just pick the former and print a warning.
-
-That seems reasonable. The only thing is now we are mixing enabling and
-disabling mitigations in the attack vector list. And that probably is
-better than having a separate parameter.
