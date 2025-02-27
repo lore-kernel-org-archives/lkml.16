@@ -1,169 +1,92 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E79822DFB9;
-	Thu, 27 Feb 2025 14:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF39233120
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740664979; cv=none; b=YpatnJAP0lhW6/kY1W6MgpN5atVnSSd7s2l2F9OXknjTrHsq45pRUCeUeXVQDL2EBSdoq/TfaPXselnySVkNfNhK5oQJaxHA8ZG+C94z3MtRcTQtCzxcyMboZorOuRZBhqvDTh4TwUUBqgzb9WesX+Oba4/RBkN5h0jvoX7hvIc=
+	t=1740664987; cv=none; b=fCqZInUsv1g7bGXH6qxnYy9Pfb5nNURkWBUXZVLAtJF5s/f+cc1uexY1jZ+6r/C8+AsxPqsbJhspa2sJAf/pMESZPk0A95XzLVUeV4m92lcTOcAsTIJzscgauQkyBLgEKqrAl6i0pnAmDU7wQVkoIU2nfkF62KbmnqkaSzS4jV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740664979; c=relaxed/simple;
-	bh=2Msp7YoBmanu425m0MXmljH1/c1Or8M2lkzZSA8x+50=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=f4R6L9p+gPfBkG8WqZBs6HHewDRK8P44cfdVFF07NRpL88MLX0MTqumdXASb6hqrgmxWOE9pLkkhHF7ZkCMm66o8aQUDioUcsSI2R5B81oZq6+re7lql+SIGpZt/sYiV8spUjyprK1xUXXBBQ9PunLdxK1nRVqOaworv51i/vI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fKnd9KgV; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740664987; c=relaxed/simple;
+	bh=rF4R9E3R8iJoYzAAad6PRC7+Gtk8GNmQmk4DUkE+qO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f+iEQBihyPkgTUW+e/bj0qcToZ+L0h2Ht6B0qDoR36/N7X3atTqmUV3yH/s7Xk7cbClyn+ixtHucEjJzb8YnEQA2LLs4lCmNX9DdZV270BkwKyZlCtlyjoa1ueZxobiC79bW7TmHiukPuFQhCPmEjXYkugLbGaq1vq/oZZf2RE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K5va8Thr; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fKnd9KgV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K5va8Thr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740664978; x=1772200978;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=2Msp7YoBmanu425m0MXmljH1/c1Or8M2lkzZSA8x+50=;
-  b=fKnd9KgVgiOwklVQpFX6BpdYOc8M1InQbCeYgVscQqbtIlW57aBjmQqP
-   4n1AnVpQ7nClS4kxLH7gA/TLCrYDoD/c18zPm2ps9J2wIDUJM6Cj1ZaFn
-   QTCA5t1Ig3XSexBPqWDliW5hxGeup8EseiNlPyRu6MIxscr49AIw0L5tY
-   ifn8mHtFlaAFhI+X/QDLJMfcYHxBpK9zeOJUuu6gi720JMOLefWmlSo2p
-   XRlW3X5b/CoziKSJKbO5qCjHyk1GKcSsYrvMh+N8YdSnV0h9Jgf4YY0VC
-   rrdBSmN5MRakja5j68Rqz958fiJqeI2ajURueacyCPe08Q1eCfXtmeEyo
-   g==;
-X-CSE-ConnectionGUID: 1Xpr0WuaRoWTRK+DfxRgMA==
-X-CSE-MsgGUID: ZU4MyIWeTsKLTjWiRXQfFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41752366"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41752366"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:02:57 -0800
-X-CSE-ConnectionGUID: UnMvmEi2QmWQ5xMolcf1/A==
-X-CSE-MsgGUID: VkTmaFqeTsqlGt0eqbsrPQ==
-X-ExtLoop1: 1
+  t=1740664986; x=1772200986;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rF4R9E3R8iJoYzAAad6PRC7+Gtk8GNmQmk4DUkE+qO8=;
+  b=K5va8ThrLQPIfZCOUYn5M+rSXg2mme0M/K6WZ46d1xjeLJEdAA//6o8p
+   HgnQXEVPtoQXDxPaOQdYBeytRHUIdHe0WOsPFaldVdhDxx4u2GxGEX2dL
+   0aQxZtGv7LHaoCRDtIiUm6J/F665dToUCo93EmA6lcQxYVjqwhiMYnjJJ
+   Py0geMS/KiewfHXe0bw0ZrxTCXbF1BTsFmsu7dsMljmXj5s1lKEzWswSE
+   dPzp6n9QLH8CpB6z10mdfPbLKSAvJaO3Y8i9bt/3e1ELbcVv7GOvqfRxT
+   GoJuMaXqtbEUDYGnJa25qlab1SAb7xTySuYDXpZPR7Xq0kbPWUnVC+fuV
+   Q==;
+X-CSE-ConnectionGUID: eda+zhRDSg6/hPCPMBr6uw==
+X-CSE-MsgGUID: wN2jW/sMRNWd9VRtWl9lsg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="51761224"
 X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="122149579"
-Received: from mohdfai2-ilbpg12-1.png.intel.com ([10.88.227.73])
-  by fmviesa004.fm.intel.com with ESMTP; 27 Feb 2025 06:02:49 -0800
-From: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Simon Horman <horms@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Xiaolei Wang <xiaolei.wang@windriver.com>,
-	Suraj Jaiswal <quic_jsuraj@quicinc.com>,
-	Kory Maincent <kory.maincent@bootlin.com>,
-	Gal Pressman <gal@nvidia.com>,
-	Jesper Nilsson <jesper.nilsson@axis.com>,
-	Andrew Halaney <ahalaney@redhat.com>,
-	Choong Yong Liang <yong.liang.choong@linux.intel.com>,
-	Faizal Rahim <faizal.abdul.rahim@linux.intel.com>,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-	Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	bpf@vger.kernel.org
-Subject: [PATCH iwl-next v6 4/9] igc: Set the RX packet buffer size for TSN mode
-Date: Thu, 27 Feb 2025 09:01:52 -0500
-Message-Id: <20250227140158.2129988-5-faizal.abdul.rahim@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
-References: <20250227140158.2129988-1-faizal.abdul.rahim@linux.intel.com>
+   d="scan'208";a="51761224"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:03:06 -0800
+X-CSE-ConnectionGUID: o50pmxeoTJuwCFXCEOFtNw==
+X-CSE-MsgGUID: WD927cQaTVePraIHBQJQ1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="147951887"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 06:03:02 -0800
+Date: Thu, 27 Feb 2025 16:03:00 +0200
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, lee@kernel.org,
+	giometti@enneenne.com, gregkh@linuxfoundation.org,
+	raymond.tan@intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 4/4] mfd: intel-ehl: Introduce Intel Elkhart Lake PSE
+ GPIO and TIO
+Message-ID: <Z8BwlFk-mnrMSxUe@black.fi.intel.com>
+References: <20250226061527.3031250-1-raag.jadav@intel.com>
+ <20250226061527.3031250-5-raag.jadav@intel.com>
+ <Z78VIjgkzf_GlauU@smile.fi.intel.com>
+ <Z78VkEnJh8l9MWF7@smile.fi.intel.com>
+ <Z7_0gJJL_h6lq4cz@black.fi.intel.com>
+ <Z8ASOo-TcQrZtgbj@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8ASOo-TcQrZtgbj@surfacebook.localdomain>
 
-In preparation for supporting frame preemption, when entering TSN mode
-set the receive packet buffer to 16KB for the Express MAC, 16KB for
-the Preemptible MAC and 2KB for the BMC, according to the datasheet
-section 7.1.3.2.
+On Thu, Feb 27, 2025 at 09:20:26AM +0200, Andy Shevchenko wrote:
+> Thu, Feb 27, 2025 at 07:13:36AM +0200, Raag Jadav kirjoitti:
+> > On Wed, Feb 26, 2025 at 03:22:24PM +0200, Andy Shevchenko wrote:
+> > > On Wed, Feb 26, 2025 at 03:20:35PM +0200, Andy Shevchenko wrote:
+> > > > On Wed, Feb 26, 2025 at 11:45:27AM +0530, Raag Jadav wrote:
 
-Co-developed-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Faizal Rahim <faizal.abdul.rahim@linux.intel.com>
----
- drivers/net/ethernet/intel/igc/igc_defines.h |  3 +++
- drivers/net/ethernet/intel/igc/igc_tsn.c     | 13 +++++++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
+...
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_defines.h b/drivers/net/ethernet/intel/igc/igc_defines.h
-index 516ef70c98e9..b19ac6f30dac 100644
---- a/drivers/net/ethernet/intel/igc/igc_defines.h
-+++ b/drivers/net/ethernet/intel/igc/igc_defines.h
-@@ -402,6 +402,9 @@
- 
-  /* 7KB bytes buffer for each tx queue (total 4 queues) + 4KB for BMC*/
- #define IGC_TXPBSIZE_TSN	0x041c71c7
-+/* 15KB for EXP + 15KB for BE + 2KB for BMC */
-+#define IGC_RXPBSIZE_TSN	0x0000f08f
-+#define IGC_RXPBSIZE_SIZE_MASK	0x0001FFFF
- 
- #define IGC_DTXMXPKTSZ_TSN	0x19 /* 1600 bytes of max TX DMA packet size */
- #define IGC_DTXMXPKTSZ_DEFAULT	0x98 /* 9728-byte Jumbo frames */
-diff --git a/drivers/net/ethernet/intel/igc/igc_tsn.c b/drivers/net/ethernet/intel/igc/igc_tsn.c
-index 1e44374ca1ff..f0213cfce07d 100644
---- a/drivers/net/ethernet/intel/igc/igc_tsn.c
-+++ b/drivers/net/ethernet/intel/igc/igc_tsn.c
-@@ -132,13 +132,17 @@ static int igc_tsn_disable_offload(struct igc_adapter *adapter)
- {
- 	u16 queue_per_tc[4] = { 3, 2, 1, 0 };
- 	struct igc_hw *hw = &adapter->hw;
--	u32 tqavctrl;
-+	u32 tqavctrl, rxpbs;
- 	int i;
- 
- 	wr32(IGC_GTXOFFSET, 0);
- 	wr32(IGC_TXPBS, I225_TXPBSIZE_DEFAULT);
- 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_DEFAULT);
- 
-+	rxpbs = rd32(IGC_RXPBS) & ~IGC_RXPBSIZE_SIZE_MASK;
-+	rxpbs |= I225_RXPBSIZE_DEFAULT;
-+	wr32(IGC_RXPBS, rxpbs);
-+
- 	if (igc_is_device_id_i226(hw))
- 		igc_tsn_restore_retx_default(adapter);
- 
-@@ -194,7 +198,7 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
- {
- 	struct igc_hw *hw = &adapter->hw;
- 	u32 tqavctrl, baset_l, baset_h;
--	u32 sec, nsec, cycle;
-+	u32 sec, nsec, cycle, rxpbs;
- 	ktime_t base_time, systim;
- 	int i;
- 
-@@ -202,6 +206,11 @@ static int igc_tsn_enable_offload(struct igc_adapter *adapter)
- 	wr32(IGC_DTXMXPKTSZ, IGC_DTXMXPKTSZ_TSN);
- 	wr32(IGC_TXPBS, IGC_TXPBSIZE_TSN);
- 
-+	rxpbs = rd32(IGC_RXPBS) & ~IGC_RXPBSIZE_SIZE_MASK;
-+	rxpbs |= IGC_RXPBSIZE_TSN;
-+
-+	wr32(IGC_RXPBS, rxpbs);
-+
- 	if (igc_is_device_id_i226(hw))
- 		igc_tsn_set_retx_qbvfullthreshold(adapter);
- 
--- 
-2.34.1
+> > > And also Subject, you have currently 3 different names for the same:
+> > > Kconfig, Subject, filename.
+> > 
+> > Yeah just trying to dial down the acronym syndrome, you know how it has
+> > plagued our minds.
+> 
+> Right, but in MFD we are trying to follow some common schema(s) for file names.
+> Currently the most clear one is for PMIC drivers. Let's keep going with the
+> rest as well.
 
+Sure, I'm also a bit confused about how to wire up Kconfig here.
+Should PPS select MFD or depend on it?
+
+Raag
