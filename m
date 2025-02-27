@@ -1,178 +1,172 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2061.outbound.protection.outlook.com [40.107.243.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256101A9B2A;
-	Thu, 27 Feb 2025 21:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740690200; cv=none; b=t47O8Vv6PCpJPYv5MtNRiIFV54B4bon+wESvdTkYamq1zDj3+JGi8lyeviHEqxODC/634dsgWFY9teJrd6SvlTUmWxfyLJsP1nKb5BzcwTPg2ZywYpJdpRwUgOa3vmEj0OusbfFpLblCu1ixT1tlns8Uy/5JFQjkFpJ47W2DYtA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740690200; c=relaxed/simple;
-	bh=n0s0pvLs4N/eFWN5fJqX10ajVFKD6HnU7Kg2S63kz0k=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jLVXnE/LTtsJuN237YNfUUumW6+eawmlFACe1w4XGEkxWzJn6hVR7S6C49jd1eCSLWs5sKcpUhRNIMp660sNQW39TPR4IODF3Hbivcat6pE6pYXzmvieFKBynnhtfN8TqQsb6RRAITGMC/ekH73zJi5XFtWKNofJnpbip3FGeEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=px1TgrSh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kFzX+qBp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22B3225A50;
+	Thu, 27 Feb 2025 21:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740690223; cv=fail; b=J8OSa+UfK2HSx5Dq+mf1x7o6/0sQig7lF5k2JZ5z5LcpdofpZuQYQbjRtqNffB5MjhHso6wMWYP9Dg2daS2Odnj1+mloL3ON/EgUcHOB3tDYNhdsiTHwzZPJE+3bZQIWpS4uUTDIBqhztYyI6Qe5pl3dOuqbOQ1l66aEqNdbDwg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740690223; c=relaxed/simple;
+	bh=YgzVoQNXG1qKIgLGSqs517cAz8mu5fmjZErMswDKOCo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=SzuTx7OjVU0lhRIq6xEB9VYCBKLw5smZc6tNT0mm/tsOWRPJ5FAo7UY11DOU0toI2z6/IIWAjvtcMycOPfzpaTQEkb7Kuhfecyq+zIlBTcCgr3n46iB9gCxcNz+7ILd10eRBva4BpWcvMf6yf/7dHaSXREJmEVOVIpGaP/SDt9g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tPmsIiDW; arc=fail smtp.client-ip=40.107.243.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="px1TgrSh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kFzX+qBp"
-Date: Thu, 27 Feb 2025 21:02:22 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740690195;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LsZPoVQRz4ewufDmHvcQ5s456RuExlhmRlk1wbyZ+us=;
-	b=px1TgrShBQ/dzZ09bU9Yn+UYFyqW697hsK5UmQRu8dA3TkP/hVr7Io1rs8UDyckW7lWJWE
-	OAnnmIDvaU1l7ZWgac9MDS4y9IHr0R2gSeMSWD4UnAC5NY4pRc4i38cuPLs/PGFBYVNjVS
-	g85ZdxCKtumQRAH7MZfbnXx0vZ6Q21+NTMbB4Hq8J4SFBxTsVThqR1EDtDh/dWuq32YLcT
-	x4DPRiSj/cxlle/Z8eqPnixS2/h0urvCn586g4MMlQoc14jNyGg/SHEFOEq4gMvLHyX2e5
-	Geac0FKP+LaG531EOtD9ucyy8g4Wc8+1f06/Xs4nyZ5PFjfDE8C/2GPayLiQrw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740690195;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LsZPoVQRz4ewufDmHvcQ5s456RuExlhmRlk1wbyZ+us=;
-	b=kFzX+qBpwubpZt0ZHa3P7WK6S97D0NWxcCuxCOiztR/Zp83+bmHRoVA2uF1HInvam4h2ra
-	7qE43tPOVlezDODA==
-From: "tip-bot2 for Max Grobecker" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in
- init_amd_k8() on AMD when running in a virtual machine
-Cc: Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <533f9cf-1957-41e8-a8cc-ddce5438f658-max@grobecker.info>
-References: <533f9cf-1957-41e8-a8cc-ddce5438f658-max@grobecker.info>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tPmsIiDW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Xdza57FlP/6yeP1nXQA8igpHl1302p99MDriRYh4oOCEUSLTCdr881GZXjZtCYsL3F3+TomrNqjKfFeOa9GNk39emNx7Q5nrNtq2RjxikYnXYhRUbLxOOVg8199DDI/ho3APdpEiwoso4O29RG2itEfmB1/1/c5T7q0Lc7nGVU0FzQK6KIdA/fpJ8eM+MMY1AktfMNcqUFXFjHiTDyq7QfVa4po2q15xMxzW2Hu3zsHwvLAcX+k4fn68Mhfc89QZMexCq9+52mZQjQar2lExuU5Xf1/cwZR+4MiNZ3mKTxyTJIQmm3KKyZcBmj3+G+XvZIpdYEITmO91RUTC5AWsMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yarOgKWjGz88cOqyxMQqlUewe9DXgYHye0LwQMPZWGI=;
+ b=u4Tr7GUk4pjZ4c+IjmHSDyI6QPgc0TqgHXojUlpCav3RMFqaYXTQYCef++/CVbEGskQ1XOh/wp+dlFO+48rAfgkcbWcFmifOunC3DTdWVlcIOCl5prdlfmEgIlNyAjcNP7znNZiYO7MhgIrfDHSFwC7Hf/ev/duNtj5PCoxO27OnkYQOCUme87AKvUqSXRZA/GUuAWkN+UGkcsNmqIAI5llteCbMCrFkBIccUruLWPRCzOItLdtQOo4I2A/ThvFGEwkvrxE1mWqI0ZHPmnJNh/WHWN922MUsCD2Unqf5xK+rGxiAMZKfl8ImY2b8n5phPDlnEfSXpx/xSdqxbySl6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yarOgKWjGz88cOqyxMQqlUewe9DXgYHye0LwQMPZWGI=;
+ b=tPmsIiDW4rFmWNTRQ1q599cTA7gI07usP+EDwM3hImz/PoKGcTY1zAEx71YzWYOlAn4WEHBz4HOXS5eEQoaCHKkMhsN2h/WfsK5Sg6QbUv8gwEdD2Y+i3uuZySk3DVuyEs4yJa0Ww0JqayU0XNY1/xRddHmVZ4loRkmxnjJt0rYzxcexT0L0OJbXMQK4/ovM7PDAWRpWUFr3eFkOkACrWwn1PulQMqcwNgdmXip7IugNy+ps+7vyIHY7o80es7tNN2PX0EMzgx70n0uFXBExcFclN8yZ5plo4USr3XWKezkV822ujxIcTNCrBxTR0cSnv1Teu86E+ryW0aY/DdhuwA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9)
+ by DS0PR12MB7772.namprd12.prod.outlook.com (2603:10b6:8:138::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Thu, 27 Feb
+ 2025 21:03:38 +0000
+Received: from MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f]) by MW6PR12MB8663.namprd12.prod.outlook.com
+ ([fe80::594:5be3:34d:77f%2]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 21:03:38 +0000
+Date: Thu, 27 Feb 2025 17:03:36 -0400
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: robin.murphy@arm.com, joro@8bytes.org, will@kernel.org,
+	alex.williamson@redhat.com, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v1 2/4] iommu: Add iommu_default_domain_free helper
+Message-ID: <20250227210336.GP39591@nvidia.com>
+References: <cover.1740600272.git.nicolinc@nvidia.com>
+ <64511b5e5b2771e223799b92db40bee71e962b56.1740600272.git.nicolinc@nvidia.com>
+ <20250227195036.GK39591@nvidia.com>
+ <Z8DSGF0tGgvkJh41@Asurada-Nvidia>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8DSGF0tGgvkJh41@Asurada-Nvidia>
+X-ClientProxiedBy: BN0PR10CA0020.namprd10.prod.outlook.com
+ (2603:10b6:408:143::11) To MW6PR12MB8663.namprd12.prod.outlook.com
+ (2603:10b6:303:240::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174069015279.10177.12820241052987007054.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW6PR12MB8663:EE_|DS0PR12MB7772:EE_
+X-MS-Office365-Filtering-Correlation-Id: f8d002aa-a3f8-451f-2407-08dd577234f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HqBpIgA3zsFB5eODrXOaJ546mu4Yho0A+eOzsbVDattvh07GR9pDEC5ROH7s?=
+ =?us-ascii?Q?GGiepLwiRjPR/9J7v/dxALo5d42hV0yWgu9YhK/QK4HbXXTpbII7hp0jgd5B?=
+ =?us-ascii?Q?sMm8IQOd4s/tTNOx+5XNs3X3KSEFboKNI2UYI9h2vzqLOGpdZLMG7Qmi9P7I?=
+ =?us-ascii?Q?/yYcKasqOlO5xue1oGJt5kq5ImNpnWSgZXBMUTHkQK+ZjV+A7fNfJcyARn17?=
+ =?us-ascii?Q?hTp86Q13VB0pec62BaSMXqK+sV4a/OcEM8EDMqrfCFtf6Op/c4IkgdHGJugE?=
+ =?us-ascii?Q?cHcStb7juIN/Nhd7ILtE98dOuHWm2ZLXUn57rTNKzgwjz/hVV15293a7O33l?=
+ =?us-ascii?Q?k4h3cC7Nn8vVWsL84lmf8g+RsfXZJHcYgsepVpjyKvYCPwG3geuZgyDig9qM?=
+ =?us-ascii?Q?S+zwwNrtDYycmmtQhwf8MPtsz9ObUWZW8Cd9SH1H/GXdysYUvoVzlEH+jXRO?=
+ =?us-ascii?Q?8vIlWcTgaTMe8rYAwVeypBVnPQsXOQqI/scKUtNf7j7bXOW8BMm7279+AbBh?=
+ =?us-ascii?Q?OnoHQ4GZ4B/gOWpLlEfNfdL6f1LiOkb9Zsv6MaPrCiyJVt/WMvcKV96+LfqS?=
+ =?us-ascii?Q?GFtsrIjMX+9Y9rD1XggFx1w4CPS9fkjUi/Q5KshJ6/50/n9qL/DmOfZOGnYA?=
+ =?us-ascii?Q?iDC+5EzPo4jKGOz1Kz7iMXQ4/PTQWBqNWNdkqX54bKWGAE/EAYUgVxR5Adut?=
+ =?us-ascii?Q?cxtq2+jewJJDRIXt2wJylPg+5Q4OJGPD6Ct//RElRCCBkSwCyDnCo8A+MIhn?=
+ =?us-ascii?Q?dtyVCSEpvloNjP5fTCuvw/NFwfSn4HpCq9BD26iZOOzN4x1Ern5yUElync7p?=
+ =?us-ascii?Q?JQlHebV/+GkPORGhbxY9iy+LmZIjLoNEcnGtgd4NZm/C94edJgOR+sUKf2pX?=
+ =?us-ascii?Q?Fteh+eHGFST7awk2I1ioKFSMbNwviPZ1AlY/aSYD6/E7+1CN6HSjpXZv0twI?=
+ =?us-ascii?Q?Uy4rPDzIg9oEnZF6gER/Zf/ktUcF8twK3ZUtcXdgtA6jxTmZ6ZyNsAoX3/WJ?=
+ =?us-ascii?Q?ZbSs/ECqmWX3XqH4ulb+WFuQ6zU53BQHgKAI7P2XklgkcGHfcj11QYOPESon?=
+ =?us-ascii?Q?Jlag9Do8qnJuQnqd9x9TxoTIQtVfGMyheV2Ph7T7WW0IiGqCEqoK0IXl6uZz?=
+ =?us-ascii?Q?00PsgW18iw2U1XUBZkT52HFKExx7c4ARtiSZI9g1ZVHidytGC/4YeHuV5y6s?=
+ =?us-ascii?Q?GZ7/eocUOmc7R8syqhGr7iR3xdcm4R4A0wZ8TpZ+sPzbugIUaELEVtq5/MCY?=
+ =?us-ascii?Q?OGeEWSlzxCRTIbivVPZ5l9n1nSHMvyTOJb0p6WcXnSDGu8c4aWeXt9uBT0TO?=
+ =?us-ascii?Q?9nEfjRk7Nt9IVQKkXMKo/KdJZ2FLxhMHMb0vSiN3rQHSHyxRAvkmeOYkPd1O?=
+ =?us-ascii?Q?ere8+URTuoMje9A8ewaiUhQFjtNJ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW6PR12MB8663.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?d24bm5J818t7uAHYhLUIielLHNLjfxUyM2CiMpaYQVOBW+rCc7AixnEHNW8O?=
+ =?us-ascii?Q?vUCsmdPbuevs8Nu+6SR+Npy6DEzEP2Iz6B3fjYkJDPtCaO7dtIIh2HYy4Mi7?=
+ =?us-ascii?Q?9Ghsj7WSZ8AKgaWR5cjTXBqQAhsd5KHr/nlqbFVjtuoY0vddyHN2jin9hfrG?=
+ =?us-ascii?Q?PVmjYsrIvrB9ndlZNHv1buKvvAM3fF5yz1OTJpLSnEaNEo7z7oEWN8PXYzYS?=
+ =?us-ascii?Q?CyJWMkuQzIKyu7AoyFCQp6RlXPj2mrNqcWzzawMXwC561w9PT1FYFOnq8tz+?=
+ =?us-ascii?Q?ro6pp0RCkDb95R4c4FzQbpmpdRtYsovn/LvLkFJs+L1pL4wAXuM2q58JLhs+?=
+ =?us-ascii?Q?QfQwp+WR0tmQ9+dUoirdC/d2m+N5Pmv9YEx7sfxIQ/jWtEHlUv+bEjQDYbW0?=
+ =?us-ascii?Q?ARnb2hsiFTudvKfLpPpo4TPXnazAHTq8b68HAkDMlpOfP3rp3z9a++FmkMGx?=
+ =?us-ascii?Q?QMu3S0nnElD4vJuCu1ptJ1eBysuxjGp6qaqXdWicxaXXFM4g1OKvYKUUpVJ1?=
+ =?us-ascii?Q?EvA2+C2WhUT8um5EgHCE19A7ZphsZbVlPgFiDfSSExhZx7vXpBSdD1k4Cw7M?=
+ =?us-ascii?Q?MO3U02+tLHvjYqlILBVsfKAo0+H46H+PacQafUjLD+xnLsj1V+ZPKPbA3OOT?=
+ =?us-ascii?Q?giXWRVVJZBuBVvBsvYoZGbv3yQATnwS8mRbm4FsIHyjctzJPFtwgAyx+6jiZ?=
+ =?us-ascii?Q?0nT+AifKOTFY9M+QTPUNFshmDh/9hu1uCFL09G30AD2CurAON8qky1tZvX6L?=
+ =?us-ascii?Q?brwCjnIApj3qyXfrCv4D8MFvSky1UG5RKeWpdvcqtP4C/I29V59A69bjLT5a?=
+ =?us-ascii?Q?LXJThVoOXNWa3Z1E4hhOKMIAvHa6LLr/YTIzPj05oUCD872oOlN76q+5i81R?=
+ =?us-ascii?Q?uLm8pexH3IqMRPgUzavCqBugJ51R0d8tTdyWVSVKaTZs+dcRpylaSBVU4hJE?=
+ =?us-ascii?Q?IsKr65hVpaqtk6SIe4mTa84r02BD/qRkUOk6G82rFZlncg9chS/l32jRprWY?=
+ =?us-ascii?Q?7QKLCGftvR0Pdq3BNV7fYBKiyUXh9Fg/6+Tq9f+qCroq1KPpAe7tStLg6PaL?=
+ =?us-ascii?Q?acBQEjDuoetaY9ohbFeO83MoCpKEd3FSEPIUqn/zjpnjoj4hlnCpkL4jXpMg?=
+ =?us-ascii?Q?OCgRvQuXDZsOavSKri6fybDJsRuj3DgRIDFBKMHUHJIZHq1Esq2sgpRSe/6O?=
+ =?us-ascii?Q?el4L3vyn9DKbDqowSA/iZ9yrsBLH9Rw+dE2BHcRzJUq8FOQIXCRAT3XT/4px?=
+ =?us-ascii?Q?3rbmrV8zTnMrhJLxTT/X7Qz5Weouf65Ra4fU83JbcNOw3wJK3dxerORiAIxD?=
+ =?us-ascii?Q?ofg3W56ngQYG3SXfjhv7jN0YGOngQbLVKZR4fS4SlqQ3JVdkQ10R4BJBgHxy?=
+ =?us-ascii?Q?Rej4pVnrpnUIHsGT2qeW98BICFDOs0nLBkPvKrvPpxUyfL/V57UuM4lAesKs?=
+ =?us-ascii?Q?qH36r3Cs+UXuXT5UlBU3uWZmDMwBrFQ7LTgxa5AB07p3djVZbliUb3n5MIuP?=
+ =?us-ascii?Q?IMB7eBYWU9dmiZWSFrXADoPAD+/frlSHleO2jHD0L5/QTxZFL9FNV30rT6Ra?=
+ =?us-ascii?Q?Cl/R8jAI9nBrTyeEuywUUS6A5TJL8K56p7oUOEbK?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8d002aa-a3f8-451f-2407-08dd577234f8
+X-MS-Exchange-CrossTenant-AuthSource: MW6PR12MB8663.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 21:03:38.4523
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4DqRRYPvZipL6afBFMqOJnkk0+l6XXdQDC5Fo9Xauyla8phCl6EvHGwA4fzza/Oy
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7772
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Thu, Feb 27, 2025 at 12:59:04PM -0800, Nicolin Chen wrote:
+> On Thu, Feb 27, 2025 at 03:50:36PM -0400, Jason Gunthorpe wrote:
+> > On Wed, Feb 26, 2025 at 12:16:05PM -0800, Nicolin Chen wrote:
+> > > The iommu_put_dma_cookie() will be moved out of iommu_domain_free(). For a
+> > > default domain, iommu_put_dma_cookie() can be simply added to this helper.
+> > > 
+> > > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > > Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> > > ---
+> > >  drivers/iommu/iommu.c | 11 ++++++++---
+> > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > 
+> > Let's try to do what Robin suggested and put a private_data_owner
+> > value in the struct then this patch isn't used, we'd just do
+> > 
+> >       if (domain->private_data_owner == DMA)
+> > 	iommu_put_dma_cookie(domain);
+> > 
+> > Instead of this change and the similar VFIO change
+> 
+> Ack. I assume I should go with a smaller series starting with this
+> "private_data_owner", and then later a bigger series for the other
+> bits like translation_type that you mentioned in the other thread.
 
-Commit-ID:     faf7a039659bf8e8afaf4cb9e0106b268e9acdb4
-Gitweb:        https://git.kernel.org/tip/faf7a039659bf8e8afaf4cb9e0106b268e9=
-acdb4
-Author:        Max Grobecker <max@grobecker.info>
-AuthorDate:    Thu, 27 Feb 2025 21:45:05 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 27 Feb 2025 21:45:20 +01:00
+That could work, you could bitfiled type and steal a few bits for
+"private_data_owner" ?
 
-x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when ru=
-nning in a virtual machine
+Then try the sw_msi removal at the same time too?
 
-When running in a virtual machine, we might see the original hardware CPU
-vendor string (i.e. "AuthenticAMD"), but a model and family ID set by the
-hypervisor. In case we run on AMD hardware and the hypervisor sets a model
-ID < 0x14, the LAHF cpu feature is eliminated from the the list of CPU
-capabilities present to circumvent a bug with some BIOSes in conjunction with
-AMD K8 processors.
-
-Parsing the flags list from /proc/cpuinfo seems to be happening mostly in
-bash scripts and prebuilt Docker containers, as it does not need to have
-additionals tools present =E2=80=93 even though more reliable ways like using=
- "kcpuid",
-which calls the CPUID instruction instead of parsing a list, should be prefer=
-red.
-Scripts, that use /proc/cpuinfo to determine if the current CPU is
-"compliant" with defined microarchitecture levels like x86-64-v2 will falsely
-claim the CPU is incapable of modern CPU instructions when "lahf_lm" is missi=
-ng
-in that flags list.
-
-This can prevent some docker containers from starting or build scripts to cre=
-ate
-unoptimized binaries.
-
-Admittably, this is more a small inconvenience than a severe bug in the kernel
-and the shoddy scripts that rely on parsing /proc/cpuinfo
-should be fixed instead.
-
-This patch adds an additional check to see if we're running inside a
-virtual machine (X86_FEATURE_HYPERVISOR is present), which, to my
-understanding, can't be present on a real K8 processor as it was introduced
-only with the later/other Athlon64 models.
-
-Example output with the "lahf_lm" flag missing in the flags list
-(should be shown between "hypervisor" and "abm"):
-
-    $ cat /proc/cpuinfo
-    processor       : 0
-    vendor_id       : AuthenticAMD
-    cpu family      : 15
-    model           : 6
-    model name      : Common KVM processor
-    stepping        : 1
-    microcode       : 0x1000065
-    cpu MHz         : 2599.998
-    cache size      : 512 KB
-    physical id     : 0
-    siblings        : 1
-    core id         : 0
-    cpu cores       : 1
-    apicid          : 0
-    initial apicid  : 0
-    fpu             : yes
-    fpu_exception   : yes
-    cpuid level     : 13
-    wp              : yes
-    flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca
-                      cmov pat pse36 clflush mmx fxsr sse sse2 syscall nx rdt=
-scp
-                      lm rep_good nopl cpuid extd_apicid tsc_known_freq pni
-                      pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe pop=
-cnt
-                      tsc_deadline_timer aes xsave avx f16c hypervisor abm
-                      3dnowprefetch vmmcall bmi1 avx2 bmi2 xsaveopt
-
-... while kcpuid shows the feature to be present in the CPU:
-
-    # kcpuid -d | grep lahf
-         lahf_lm             - LAHF/SAHF available in 64-bit mode
-
-[ mingo: Updated the comment a bit. ]
-
-Signed-off-by: Max Grobecker <max@grobecker.info>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Link: https://lore.kernel.org/r/533f9cf-1957-41e8-a8cc-ddce5438f658-max@grobe=
-cker.info
----
- arch/x86/kernel/cpu/amd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 54194f5..c1f0a5f 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -631,8 +631,11 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
- 	 * Some BIOSes incorrectly force this feature, but only K8 revision D
- 	 * (model =3D 0x14) and later actually support it.
- 	 * (AMD Erratum #110, docId: 25759).
-+	 * Only clear capability flag if we're running on baremetal,
-+	 * as we might see a wrong model ID as a guest kernel. In such a case,
-+	 * we can safely assume we're not affected by this erratum.
- 	 */
--	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM)) {
-+	if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X=
-86_FEATURE_HYPERVISOR)) {
- 		clear_cpu_cap(c, X86_FEATURE_LAHF_LM);
- 		if (!rdmsrl_amd_safe(0xc001100d, &value)) {
- 			value &=3D ~BIT_64(32);
+Jason
