@@ -1,184 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DD122E00E;
-	Thu, 27 Feb 2025 12:17:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6670222D4E3
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 12:17:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658654; cv=none; b=E3FxvxHKnZ9aZXtAPSr9Hq63aM2zvfz0qwjg+jfpcYti4rvJ7QvA11qgh/D4h4+ku7OzPxK7GH0vaVMPZZ+ZG4QtqyYGn5oai9ZJwuuJ+D3DwFA3o8E4vrpad3h8Xh0sBalxq1RCj4lOJFmUiCkOG4iIG6AzKsRSVK49f3pTSnk=
+	t=1740658664; cv=none; b=nD8KRXhn88sDH0QF0EH1TZRQWpKMIu6Qzpx6umMPT9FnaWbGAO+I4zDNpr0vM6o7Xdj9lYJDfSWY0MEN3B/6GKwo7YjepUVMYlOY0FsorO953toIAI/qOzNODYMkT5+QLi16GoXzaczGmg6tsGVbpNQytdQQO3CaNL+vIINGP8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658654; c=relaxed/simple;
-	bh=cmKtuwnc2KIDaRI+wvWtnzBRpft8byHlKWXn0enjH2M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NS20ZM8J5mZ1iZVNzWkSM9WOQbTW+Oi8Rl+UWaNbr6XSzVc15h0Mgq/V+H47WMqKi7PxZRW3Xo9HVkhU6Ewt1cU7uGG0aG86nZNCLC0+EsUznKN8usS/+bMH40fRI5naN2efbGDVEFjZNtM4nrwZnMhgXCOM7m58JGcqx6HuPpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hDS+IVK9; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740658664; c=relaxed/simple;
+	bh=t2NEDTueBdrSzpgnFv04f30wmQJOXvi/XawvOOxHn+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eE46Q7gJ7aiYlXbR5sPs6cqxd8GFW3YyVzETu+I9Is1duUH1cIcTz3tSK6lW1i3bvMEF5xQpmQqEjrcg4RmcPVZDAckeOYsc/z1ARxlWwuzIkR8CewhsIXhFponwFTZeMj6VmDnQdHJ/pMsa2mwyVt7I1AINbNOU3HzHQlFoGNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=He49sx0v; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hDS+IVK9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740658653; x=1772194653;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cmKtuwnc2KIDaRI+wvWtnzBRpft8byHlKWXn0enjH2M=;
-  b=hDS+IVK9jV3/+TOd28JIlk+9oM1Ta8ZJHojzv7DIfqiF/NZGTSjcoFDq
-   FqE1xt6grf6qmkEGJ1gXGrisXuZ2GD2qoQ04in5bORrB77MXdIbZOp5bk
-   ffI0+5nZu7MJKqJQi33/RPPS1fwmbliff8OxUKblwdUIHzeqI0Z6nxy4A
-   M0xCsARDiuJxfYDjctq45QBPHl8vAXxgyulwDJ7/oS86XE9AnJsJ062XP
-   APBpJ729DIUyXftZFF7Ft8RN6TAgIvditWRmwEVYXTw7PCs2k3lvIkoXb
-   hwhe2j/IKQyrqnDB6R5fkLHdw6oKz82uzV44GME2IADtcmsJiv7wTLtEI
-   A==;
-X-CSE-ConnectionGUID: CPxCdRpTT02VPv6v+jyPMw==
-X-CSE-MsgGUID: F6lOC1kxR9aYFI5lAkYizA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41464441"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="41464441"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 04:17:32 -0800
-X-CSE-ConnectionGUID: 7vofMf2LTX++1OfF11Gvog==
-X-CSE-MsgGUID: r3sYWK5QQbiJ+y4gBWx37A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117519408"
-Received: from yongliang-ubuntu20-ilbpg12.png.intel.com ([10.88.227.39])
-  by orviesa007.jf.intel.com with ESMTP; 27 Feb 2025 04:17:25 -0800
-From: Choong Yong Liang <yong.liang.choong@linux.intel.com>
-To: Simon Horman <horms@kernel.org>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Jose Abreu <Jose.Abreu@synopsys.com>,
-	David E Box <david.e.box@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>,
-	David E Box <david.e.box@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jiawen Wu <jiawenwu@trustnetic.com>,
-	Mengyuan Lou <mengyuanlou@net-swift.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	Serge Semin <fancer.lancer@gmail.com>
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v9 6/6] net: stmmac: interface switching support for ADL-N platform
-Date: Thu, 27 Feb 2025 20:15:22 +0800
-Message-Id: <20250227121522.1802832-7-yong.liang.choong@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
-References: <20250227121522.1802832-1-yong.liang.choong@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="He49sx0v"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abf06950db5so123859966b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:17:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740658661; x=1741263461; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRXThQoOhwcNnfMppD5vGBwZ9FKwKkKrXbvSv/+frAI=;
+        b=He49sx0vEapmkUt1z3yGaOX1ltKdhey+ncCLb8smPK6USqhJwq6NcK7WeIJY0EjzAI
+         4Hu9Q3rF0qfiMuaPLH/y7YtvbLvdBVDkKwfYV+wU+9tAvOihXj+ZlCbG53WdyTDMDdTE
+         JYcqCuRlDrlBc0dSdzYgndXDjDEBhN8CsNv+2CbKSC6XcSKSn6FaTjJ/BYJFp3w0TVn3
+         XJPH8CM+ADA2Z3LK49fhG9b/R7AYSOEByh68057hRYTG03AWFRRUNhGVtSfvFby8urD0
+         pWKKNckHarYVdcEk9upm8CBREaTUccAjm4hYPIkEa/2uavHgbp/Lr6UVIvJFmGJq00BV
+         staQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740658661; x=1741263461;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aRXThQoOhwcNnfMppD5vGBwZ9FKwKkKrXbvSv/+frAI=;
+        b=PohWtTKExoKqByDh1i1YBRICD8atLnOdb3q5HxrhJiOlkY2f1YQ/nFPaC3fm4C2OlE
+         ZNeCHjRj38zoIHdhmjH/TQKVcSLsGmi5UQw1CtDVkrx4s76jBjkR+bsKHZt3sse6zPPh
+         pggnwyj80mWzGPVmZ2TcMeONK2WyykT5bkI6lOnjVOHaFCcx20BJLfuFmTwISR8CAI1+
+         JixvYpGKgwjjoWtfleEin9MSRPNMvzKHoWshHrCAAVWXkrX2XUHYUTAirp1rN1+hkGxw
+         ArCSenMVEdMpwisvZMgHbu2i5GN/Rs8eAaBPta2jzS4CYGGwbDgfQGnEir8xsbUDC2+h
+         Wsmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVzOjy+GiK8rww2/7OOWRDz4PJzRtBhjNlvsAF/4QXEzkwhELGf1ktcVH25kiMLFor28rTtOf9iJVcavr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJCN2RMO5hK1ftuqN1rBcHCyjTFdiyGyloq8FCF94zLV682Ht7
+	DmWO80gKxzApd05Ynq1HFKmj5LhX7vng19DnKTUpAGTn8t7XxZgYBFH45qsPjxl+GYOeyUyPP46
+	mQL3WR/FBdwKFZnJSChJE5udj+potm+x4CKY=
+X-Gm-Gg: ASbGnct3i47l16Mp5FVxvCSGE95SkbBCg4zDugexNVJrxd5riFZeXxGfpnJ2dNQxCej
+	Vx0FKsN5rwMDPE83eT5UhpLC9cqroGYKRpupujdZnbZ56djFS1H5gpBYBVFP5UjqVHhxqwEUJl4
+	fasGj5
+X-Google-Smtp-Source: AGHT+IHRc8urmMJEzZbReC8M5BOsivBbw5OeEiAmZaCJJN/28VM+niwg7HDoTK9wNm4K4ubtXD5ztJ3KeACr16PHRt8=
+X-Received: by 2002:a17:906:308e:b0:ab6:511d:8908 with SMTP id
+ a640c23a62f3a-abc0de19516mr2303876566b.40.1740658660615; Thu, 27 Feb 2025
+ 04:17:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
+ <20250227062859.GA2506@sol.localdomain> <68F134A3-5371-4E74-9942-2BC66984C18A@zytor.com>
+In-Reply-To: <68F134A3-5371-4E74-9942-2BC66984C18A@zytor.com>
+From: Bill Wendling <morbo@google.com>
+Date: Thu, 27 Feb 2025 04:17:24 -0800
+X-Gm-Features: AQ5f1JqSG0FexJpU0L8y0F9hIyeax1Uhs_LQEGtbtQBFiT71P2KI1fCoyo9pC64
+Message-ID: <CAGG=3QX2WX5U-uNp3VWSbQCN9fPVAirOBn5KcaWn8m-87RhWfg@mail.gmail.com>
+Subject: Re: [PATCH] x86/crc32: use builtins to improve code generation
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Justin Stitt <justinstitt@google.com>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, 
+	clang-built-linux <llvm@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The intel_config_serdes function was provided to handle interface mode
-changes for the ADL-N platform.
+On Thu, Feb 27, 2025 at 2:53=E2=80=AFAM H. Peter Anvin <hpa@zytor.com> wrot=
+e:
+> On February 26, 2025 10:28:59 PM PST, Eric Biggers <ebiggers@kernel.org> =
+wrote:
+> >On Wed, Feb 26, 2025 at 10:12:47PM -0800, Bill Wendling wrote:
+> >> For both gcc and clang, crc32 builtins generate better code than the
+> >> inline asm. GCC improves, removing unneeded "mov" instructions. Clang
+> >> does the same and unrolls the loops. GCC has no changes on i386, but
+> >> Clang's code generation is vastly improved, due to Clang's "rm"
+> >> constraint issue.
+> >>
+> >> The number of cycles improved by ~0.1% for GCC and ~1% for Clang, whic=
+h
+> >> is expected because of the "rm" issue. However, Clang's performance is
+> >> better than GCC's by ~1.5%, most likely due to loop unrolling.
+> >>
+> >> Link: https://github.com/llvm/llvm-project/issues/20571#issuecomment-2=
+649330009
+> >> Cc: Thomas Gleixner <tglx@linutronix.de>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Borislav Petkov <bp@alien8.de>
+> >> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> >> Cc: x86@kernel.org
+> >> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> >> Cc: Eric Biggers <ebiggers@kernel.org>
+> >> Cc: Ard Biesheuvel <ardb@kernel.org>
+> >> Cc: Nathan Chancellor <nathan@kernel.org>
+> >> Cc: Nick Desaulniers <nick.desaulniers+lkml@gmail.com>
+> >> Cc: Justin Stitt <justinstitt@google.com>
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Cc: linux-crypto@vger.kernel.org
+> >> Cc: llvm@lists.linux.dev
+> >> Signed-off-by: Bill Wendling <morbo@google.com>
+> >> ---
+> >>  arch/x86/Makefile         | 3 +++
+> >>  arch/x86/lib/crc32-glue.c | 8 ++++----
+> >>  2 files changed, 7 insertions(+), 4 deletions(-)
+> >
+> >Thanks!  A couple concerns, though:
+> >
+> >> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> >> index 5b773b34768d..241436da1473 100644
+> >> --- a/arch/x86/Makefile
+> >> +++ b/arch/x86/Makefile
+> >> @@ -114,6 +114,9 @@ else
+> >>  KBUILD_CFLAGS +=3D $(call cc-option,-fcf-protection=3Dnone)
+> >>  endif
+> >>
+> >> +# Enables the use of CRC32 builtins.
+> >> +KBUILD_CFLAGS +=3D -mcrc32
+> >
+> >Doesn't this technically allow the compiler to insert CRC32 instructions
+> >anywhere in arch/x86/ without the needed runtime CPU feature check?  Nor=
+mally
+> >when using intrinsics it's necessary to limit the scope of the feature
+> >enablement to match the runtime CPU feature check that is done, e.g. by =
+using
+> >the target function attribute.
+> >
+> >> diff --git a/arch/x86/lib/crc32-glue.c b/arch/x86/lib/crc32-glue.c
+> >> index 2dd18a886ded..fdb94bff25f4 100644
+> >> --- a/arch/x86/lib/crc32-glue.c
+> >> +++ b/arch/x86/lib/crc32-glue.c
+> >> @@ -48,9 +48,9 @@ u32 crc32_le_arch(u32 crc, const u8 *p, size_t len)
+> >>  EXPORT_SYMBOL(crc32_le_arch);
+> >>
+> >>  #ifdef CONFIG_X86_64
+> >> -#define CRC32_INST "crc32q %1, %q0"
+> >> +#define CRC32_INST __builtin_ia32_crc32di
+> >>  #else
+> >> -#define CRC32_INST "crc32l %1, %0"
+> >> +#define CRC32_INST __builtin_ia32_crc32si
+> >>  #endif
+> >
+> >Do both gcc and clang consider these builtins to be a stable API, or do =
+they
+> >only guarantee the stability of _mm_crc32_*() from immintrin.h?  At leas=
+t for
+> >the rest of the SSE and AVX stuff, I thought that only the immintrin.h f=
+unctions
+> >are actually considered stable.
+> >
+> >- Eric
+>
+> There is that... also are there compiler versions that we support that do=
+ not have -mcrc32 support?
+>
+Checking GCC 5.1.0 and Clang 13.0.1, it seems that both support '-mcrc32'.
 
-The Modphy register lane was provided to configure the serdes when
-changing interface modes.
-
-Signed-off-by: Michael Sit Wei Hong <michael.wei.hong.sit@intel.com>
-Signed-off-by: Choong Yong Liang <yong.liang.choong@linux.intel.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-intel.c | 52 ++++++++++++++++++-
- 1 file changed, 51 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-index f73a48f98581..9c8de47ee149 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel.c
-@@ -87,6 +87,7 @@ static const struct pmc_serdes_regs pid_modphy1_2p5g_regs[] = {
- };
- 
- static const int ehl_tsn_lane_regs[] = {7, 8, 9, 10, 11};
-+static const int adln_tsn_lane_regs[] = {6};
- 
- static int stmmac_pci_find_phy_addr(struct pci_dev *pdev,
- 				    const struct dmi_system_id *dmi_list)
-@@ -1004,6 +1005,55 @@ static int adls_sgmii_phy1_data(struct pci_dev *pdev,
- static struct stmmac_pci_info adls_sgmii1g_phy1_info = {
- 	.setup = adls_sgmii_phy1_data,
- };
-+
-+static int adln_common_data(struct pci_dev *pdev,
-+			    struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->rx_queues_to_use = 6;
-+	plat->tx_queues_to_use = 4;
-+	plat->clk_ptp_rate = 204800000;
-+
-+	plat->safety_feat_cfg->tsoee = 1;
-+	plat->safety_feat_cfg->mrxpee = 0;
-+	plat->safety_feat_cfg->mestee = 1;
-+	plat->safety_feat_cfg->mrxee = 1;
-+	plat->safety_feat_cfg->mtxee = 1;
-+	plat->safety_feat_cfg->epsi = 0;
-+	plat->safety_feat_cfg->edpp = 0;
-+	plat->safety_feat_cfg->prtyen = 0;
-+	plat->safety_feat_cfg->tmouten = 0;
-+
-+	intel_priv->tsn_lane_regs = adln_tsn_lane_regs;
-+	intel_priv->max_tsn_lane_regs = ARRAY_SIZE(adln_tsn_lane_regs);
-+
-+	return intel_mgbe_common_data(pdev, plat);
-+}
-+
-+static int adln_sgmii_phy0_data(struct pci_dev *pdev,
-+				struct plat_stmmacenet_data *plat)
-+{
-+	struct intel_priv_data *intel_priv = plat->bsp_priv;
-+
-+	plat->bus_id = 1;
-+	plat->phy_interface = PHY_INTERFACE_MODE_SGMII;
-+	plat->serdes_powerup = intel_serdes_powerup;
-+	plat->serdes_powerdown = intel_serdes_powerdown;
-+	plat->mac_finish = intel_mac_finish;
-+
-+	intel_priv->pid_1g.regs = pid_modphy1_1g_regs;
-+	intel_priv->pid_1g.num_regs = ARRAY_SIZE(pid_modphy1_1g_regs);
-+	intel_priv->pid_2p5g.regs = pid_modphy1_2p5g_regs;
-+	intel_priv->pid_2p5g.num_regs = ARRAY_SIZE(pid_modphy1_2p5g_regs);
-+
-+	return adln_common_data(pdev, plat);
-+}
-+
-+static struct stmmac_pci_info adln_sgmii1g_phy0_info = {
-+	.setup = adln_sgmii_phy0_data,
-+};
-+
- static const struct stmmac_pci_func_data galileo_stmmac_func_data[] = {
- 	{
- 		.func = 6,
-@@ -1386,7 +1436,7 @@ static const struct pci_device_id intel_eth_pci_id_table[] = {
- 	{ PCI_DEVICE_DATA(INTEL, TGLH_SGMII1G_1, &tgl_sgmii1g_phy1_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_0, &adls_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, ADLS_SGMII1G_1, &adls_sgmii1g_phy1_info) },
--	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &tgl_sgmii1g_phy0_info) },
-+	{ PCI_DEVICE_DATA(INTEL, ADLN_SGMII1G, &adln_sgmii1g_phy0_info) },
- 	{ PCI_DEVICE_DATA(INTEL, RPLP_SGMII1G, &tgl_sgmii1g_phy0_info) },
- 	{}
- };
--- 
-2.34.1
-
+-bw
