@@ -1,63 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815AB1ACEB5;
-	Thu, 27 Feb 2025 16:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6BB1A841B;
+	Thu, 27 Feb 2025 16:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673984; cv=none; b=s6hKRTeGy6ppUWkCsTld2nTxTb9qnughpFyLcy3QqFe/gFQ9fSgiB1WdSrBJxZ+YqBmCyo+0WFDeVtYN/ZsmrlLHBDsTea1aFobDB2XIx2lVWbi58F55Dzau16be4oTw3F/0U+cPOH8lzWphARCWrbvbtK/nB3oohvl+GQ4l+Xs=
+	t=1740673985; cv=none; b=D6PlT0uGrnM2YTd0HUUd6QOpmXd4WcVJ8oNZW+XAuk9iIEgBxmvLMbDJu2d9Xxk8bTZclYqUHgk+HC49M1TmJdQiVC+wQgHfn057vXohCj73B2fVqsxZTHz1GwOnk/GrhVF7rzICG696+HfJZwKGoAdO33+30jXmbIvdI2doBJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673984; c=relaxed/simple;
-	bh=xZAGtiBsGVxjIe3gDGDtguAEm32g2nHJ2cV0VNCaCc0=;
+	s=arc-20240116; t=1740673985; c=relaxed/simple;
+	bh=htxGHHxhBnqS/PiOOodAxjqduRBO1zsgesj2f6zMYUw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KElHh2ljkrcBCFs2vhPZ1u4xJGz0+opQomHUqNyov370F27xbmOQ29qiybIXgaFk9BMZENsCmAlSysc4WSsHwIzoakclZFesUsDhi2dOkDF9RRObqi7TASMXzdmE+0M1LFzXHBfUSWMpq5C0TkdWNwNUiovsuXnLopdJNuL47tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+CKa4q9; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=asiIWFdOQGEHqW/iF13aID6C1k/6sw9mqe6GaCUARYOU7EdE2NFqR9eltHI4UW6eRIIJF502RJjWxBVhNUeLqUxMWlrdgZohQi5nbeTjUz81G96nj8ckmf74eOecMH1VFE2Wlokj5V7km7Qd5JJ/VYqJx9xUWZeqdeZ3L2fERJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGemtPQv; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+CKa4q9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740673982; x=1772209982;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xZAGtiBsGVxjIe3gDGDtguAEm32g2nHJ2cV0VNCaCc0=;
-  b=n+CKa4q9Jq3fptWImzOiO2Wop/tp50kRp7TdX+r3FcTufZCloKlsdBkD
-   V6UHBd6RFqDwPQHfAAAzE/9AaeAwfLdJS/WYPgEFcbqyAzEVjMSQiPs/0
-   QiLK7MpihY7WNiVouLtqdETjgevXLrsci9zIXL4kGHi4mGATSb3qxRWfF
-   l4tzeTxOEvRUUUxDnwMl8lLYNBPV10X+75jDTULuQfPeEO10Z7JoAc2uA
-   OkOwKXNCwSWT4r/n4ArKkwvzoGVBnC3iHzX4ncw0f02SKUl1W0581g1Bk
-   XIFLe9WAFuV+MtSGTwSx1GES0Ejwc5/nstOdx9dePs1h2aXX1Wh1suaU1
-   w==;
-X-CSE-ConnectionGUID: bsHMLeMzS/mV6NzqB1qE/g==
-X-CSE-MsgGUID: zu3LkvlSTSivVwbx4M7fJA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52985966"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52985966"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 08:33:02 -0800
-X-CSE-ConnectionGUID: sPldEseqQBCwTkBow3WKPA==
-X-CSE-MsgGUID: T61cUxiFTMaOxWwXeT1zTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="140303904"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2025 08:33:00 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tngoj-000Dho-2G;
-	Thu, 27 Feb 2025 16:32:57 +0000
-Date: Fri, 28 Feb 2025 00:32:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	thierry.bultel@linatsea.fr
-Cc: oe-kbuild-all@lists.linux.dev, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 06/13] clk: renesas: Add support for R9A09G077 SoC
-Message-ID: <202502280006.8lJfdpzm-lkp@intel.com>
-References: <20250226130935.3029927-7-thierry.bultel.yh@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGemtPQv"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2234bec7192so31202695ad.2;
+        Thu, 27 Feb 2025 08:33:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740673983; x=1741278783; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Nwj0laHmdnBpGeTss6hHTN09yzjnmF6JdEEMkifswPE=;
+        b=WGemtPQv6x4hHGb+HHO+P2ewjWxT020gARWeO18xI0ZOa4oTS0TTZKgru81ECN2Am+
+         UBlTQccuCr/kEkE8VfPUlfLBiLVPUkcyQC9H8fVq8wzJvRZJ26uXBG/sSLUql94PZ4w5
+         ta4WKObpHCRbikstN2QZh5z3cqhOKO+ERYjvWtye/E2hr3APaCL5eZ0E7e4m8z5Ss54l
+         JQdvvCdyR7DsOLsSWP4D/PeRkAbuP14BNPt6n2u6G3j05RHPF/YJuwJwq7dHHbW5o6sN
+         F9lrVLtP9N2TNVLRaga0/zFQlB8MoAi4q3ERVtszZJOU8IANcnvlhSuL09p6docxcTQK
+         Ua/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740673983; x=1741278783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nwj0laHmdnBpGeTss6hHTN09yzjnmF6JdEEMkifswPE=;
+        b=Jb80ER3tMGWyu4+bqtgpWaTA4ZNKZ0Ovwy+OSIYOQ5UsYJSnaBdh3R9iXNjUKnlDzZ
+         sA4Kwte4X/IZRBTIO/JTkq/jDIvE0UZKSY5JPS4IABSoKm8uomkQXvkVaPUEbSjNKEcx
+         36Lu6JmemRvJU88Bh8oL0OLYkcH0m0jr2fIUNZ5CfZ6OG4a+6+GIyz/njGmGum0azojg
+         aLW71zgeoEkLc1iP/xjSDz8qOa1Scw6NXpRuGm1WSHRjHnIn193Hp4WrKN55CnOsiTW0
+         KPxyfE6bm4tn337+qHSzwzhgF7IIbT+HcoMQ9ELxisTIu5PI7J4xPhycQ5iW+HuOvq3Q
+         2hCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzEv5hKM5LRa2kA+XOR3S1XfyAa94y/c0p9eK2zyP/G/APRFn6sa2rnclKYZYlLFz8nsGDz76v6F3i@vger.kernel.org, AJvYcCWKXA1zfejB09X8/VfbrnnJ/lxiQS9KETl6yBV74t/2nXGndfGxbwcAcbISFpxwyY8Odk9rWVsuJYW1Nbc=@vger.kernel.org, AJvYcCWRgorViqSEubya2BAQPw5NNeU+qU3iEzXsY+iHx6js9462dEsn6Sdj2iLkt/3KZySv6o/AWNCwhJZPel+T@vger.kernel.org, AJvYcCWrCVDaUYsV/VwAVIR/NFSX8NgC4zCsrBORFD9fBniq0W69d1S3uHvG+2CI4ml14m/o/8/oHTr1dgfi@vger.kernel.org, AJvYcCXswHC2vw6kPaWKamNRlZABicU7EFvXbTc4yevQqSGLqmsnVDmsdPDph9NP85aempkaFxcWQkjTwago@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP40mKdSqRpgk6VgDEzVSkHJes0jaDvHzIszXpbs1XlRxUMRvJ
+	4fI5CbfqsIitBviKBp/UheNXqQo8pEZUKtvay0m/aQbIuhgY75VI
+X-Gm-Gg: ASbGncv/R2WcF1gKHIqdUKwxyrerMmbr/OS88+MDK+/7au6sZ0WbsCDbfbKeo5uW2ab
+	pFNYSw3kQSdbrEfSzQjsUBbxkrp2ONO2LrS1QAeQElyH+cNnXYMZmDf61Kh6BrlV30QtgyVQ/uJ
+	qSPirCRwOkiUEl2/+56SSt7tb6NA60vA/G+IJc0pCxvfTfB7fVSwvpHwaQSsfyctBOJcM7eePiZ
+	S4IjHdT7pqh4C2De06t8pwMLg9T6AIrYOVR99wtQcG8rJGRVVYj4KUMNr1oagyvvEZGgUN44aZo
+	ZzTpqHIqFApCrvWf9PAjDl+syxVcy4CmMUx+A1c=
+X-Google-Smtp-Source: AGHT+IHHq3zVV18mec1i1Yu/d1DvzKyXvMhaq+OgPUS3dyBp1OnowQQMhu7Ma17jRECN4fjMyC7XBQ==
+X-Received: by 2002:a05:6a00:cce:b0:732:1bad:e245 with SMTP id d2e1a72fcca58-734ac34dc5emr117245b3a.7.1740673982747;
+        Thu, 27 Feb 2025 08:33:02 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe487c1sm1819453b3a.45.2025.02.27.08.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 08:33:01 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 27 Feb 2025 08:32:58 -0800
+From: Guenter Roeck <linux@roeck-us.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: pmbus: add lt3074
+Message-ID: <dbd9cc84-a0b6-4323-b343-6e80aaaf2d14@roeck-us.net>
+References: <20250225-upstream-lt3074-v2-0-18ad10ba542e@analog.com>
+ <20250225-upstream-lt3074-v2-1-18ad10ba542e@analog.com>
+ <20250226-gentle-spicy-jacamar-2dd36a@krzk-bin>
+ <20250226145931.GA2314060-robh@kernel.org>
+ <3f7b031d-7b83-4a00-996d-aabb26278b67@roeck-us.net>
+ <20250227-sceptical-phenomenal-wolverine-56e3cf@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,136 +86,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250226130935.3029927-7-thierry.bultel.yh@bp.renesas.com>
+In-Reply-To: <20250227-sceptical-phenomenal-wolverine-56e3cf@krzk-bin>
 
-Hi Thierry,
+On Thu, Feb 27, 2025 at 09:50:23AM +0100, Krzysztof Kozlowski wrote:
+> > > > 
+> > > > hwmon code might need some changes, but that's not really relevant for
+> > > > proper hardware description.
+> > > 
+> > > Normally, I would agree, but it seems generic pmbus code expects this
+> > > structure. This just came up with changing another binding maintained by
+> > > 'Not Me' to follow this structure. We're stuck with the existing way, so
+> > > I don't know that it is worth supporting 2 ways forever. OTOH, is it
+> > > guaranteed that these devices will only ever be pmbus devices or that
+> > > other regulator devices which are not handled as pmbus devices currently
+> > > will be in the future. If so, more flexibility in the bindings will be
+> > > needed.
+> > > 
+> > 
+> > I would appreciate if someone would explain to me what the problems with
+> > the current PMBus code actually are. I have seen several comments claiming
+> 
+> Not exactly a problem but missing feature. pmbus code (at least one of
+> macros I looked at) expects regulator node and some sort of child of it
+> (vout), while such simple devices should be:
+> 
+> regulator {
+> 	compatible = "adi,lt3074";
+> 	regulator-name = "vout";
+> 	regulator-min-microvolt = "100000";
+> 	regulator-max-microvolt = "100000";
+> };
+> 
+> so without any of regulators and regulators/vout subnodes.
+> 
+> > that the code should be changed, but I have no idea what the expected changes
+> > actually are or, in other words, what the PMBus code should be doing
+> > differently.
+> 
+> I did not investigate much into pmbus code, but this might be as simple
+> as accepting arguments for .of_match and .regulators_node and then
+> accepting NULLs as them as well. Or a new macro which assigns NULLs
+> there.
+> 
 
-kernel test robot noticed the following build warnings:
+Unless I am missing something, the following should do the trick.
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on tty/tty-next tty/tty-linus geert-renesas-devel/next linus/master v6.14-rc4 next-20250227]
-[cannot apply to geert-renesas-drivers/renesas-clk]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index ddb19c9726d6..289767e5d599 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -512,7 +512,6 @@ int pmbus_regulator_init_cb(struct regulator_dev *rdev,
+ 	{							\
+ 		.name = (_name),				\
+ 		.of_match = of_match_ptr(_name),		\
+-		.regulators_node = of_match_ptr("regulators"),	\
+ 		.ops = &pmbus_regulator_ops,			\
+ 		.type = REGULATOR_VOLTAGE,			\
+ 		.owner = THIS_MODULE,				\
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thierry-Bultel/dt-bindings-clock-Add-cpg-for-the-Renesas-RZ-T2H-SoC/20250226-221033
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
-patch link:    https://lore.kernel.org/r/20250226130935.3029927-7-thierry.bultel.yh%40bp.renesas.com
-patch subject: [PATCH v3 06/13] clk: renesas: Add support for R9A09G077 SoC
-config: arc-randconfig-r122-20250227 (https://download.01.org/0day-ci/archive/20250228/202502280006.8lJfdpzm-lkp@intel.com/config)
-compiler: arceb-elf-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20250228/202502280006.8lJfdpzm-lkp@intel.com/reproduce)
+Maybe someone can check if that works.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502280006.8lJfdpzm-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> drivers/clk/renesas/renesas-cpg-mssr.c:216:49: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/clk/renesas/renesas-cpg-mssr.c:216:49: sparse:     expected void *base
-   drivers/clk/renesas/renesas-cpg-mssr.c:216:49: sparse:     got void [noderef] __iomem *
->> drivers/clk/renesas/renesas-cpg-mssr.c:294:51: sparse: sparse: incorrect type in initializer (different address spaces) @@     expected void [noderef] __iomem *addr @@     got void * @@
-   drivers/clk/renesas/renesas-cpg-mssr.c:294:51: sparse:     expected void [noderef] __iomem *addr
-   drivers/clk/renesas/renesas-cpg-mssr.c:294:51: sparse:     got void *
-
-vim +216 drivers/clk/renesas/renesas-cpg-mssr.c
-
-   211	
-   212	static void *cpg_rzt2h_addr_from_offset(struct clk_hw *hw, u16 offset)
-   213	{
-   214		struct mstp_clock *clock = to_mstp_clock(hw);
-   215		struct cpg_mssr_priv *priv = clock->priv;
- > 216		void *base = RZT2H_MSTPCR_BLOCK(offset) ? priv->pub.base1 : priv->pub.base0;
-   217	
-   218		return base + RZT2H_MSTPCR_OFFSET(offset);
-   219	}
-   220	
-   221	static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
-   222	{
-   223		struct mstp_clock *clock = to_mstp_clock(hw);
-   224		struct cpg_mssr_priv *priv = clock->priv;
-   225		unsigned int reg = clock->index / 32;
-   226		unsigned int bit = clock->index % 32;
-   227		struct device *dev = priv->dev;
-   228		u32 bitmask = BIT(bit);
-   229		unsigned long flags;
-   230		u32 value;
-   231		int error;
-   232	
-   233		dev_dbg(dev, "MSTP %u%02u/%pC %s\n", reg, bit, hw->clk,
-   234			enable ? "ON" : "OFF");
-   235		spin_lock_irqsave(&priv->pub.rmw_lock, flags);
-   236	
-   237		if (priv->reg_layout == CLK_REG_LAYOUT_RZ_A) {
-   238			value = readb(priv->pub.base0 + priv->control_regs[reg]);
-   239			if (enable)
-   240				value &= ~bitmask;
-   241			else
-   242				value |= bitmask;
-   243			writeb(value, priv->pub.base0 + priv->control_regs[reg]);
-   244	
-   245			/* dummy read to ensure write has completed */
-   246			readb(priv->pub.base0 + priv->control_regs[reg]);
-   247			barrier_data(priv->pub.base0 + priv->control_regs[reg]);
-   248	
-   249		} else {
-   250			value = readl(priv->pub.base0 + priv->control_regs[reg]);
-   251			if (enable)
-   252				value &= ~bitmask;
-   253			else
-   254				value |= bitmask;
-   255			writel(value, priv->pub.base0 + priv->control_regs[reg]);
-   256		}
-   257	
-   258		spin_unlock_irqrestore(&priv->pub.rmw_lock, flags);
-   259	
-   260		if (!enable || priv->reg_layout == CLK_REG_LAYOUT_RZ_A ||
-   261			priv->reg_layout == CLK_REG_LAYOUT_RZ_T2H)
-   262			return 0;
-   263	
-   264		error = readl_poll_timeout_atomic(priv->pub.base0 + priv->status_regs[reg],
-   265						  value, !(value & bitmask), 0, 10);
-   266		if (error)
-   267			dev_err(dev, "Failed to enable SMSTP %p[%d]\n",
-   268				priv->pub.base0 + priv->control_regs[reg], bit);
-   269	
-   270		return error;
-   271	}
-   272	
-   273	static int cpg_mstp_clock_enable(struct clk_hw *hw)
-   274	{
-   275		return cpg_mstp_clock_endisable(hw, true);
-   276	}
-   277	
-   278	static void cpg_mstp_clock_disable(struct clk_hw *hw)
-   279	{
-   280		cpg_mstp_clock_endisable(hw, false);
-   281	}
-   282	
-   283	static int cpg_mstp_clock_is_enabled(struct clk_hw *hw)
-   284	{
-   285		struct mstp_clock *clock = to_mstp_clock(hw);
-   286		struct cpg_mssr_priv *priv = clock->priv;
-   287		unsigned int reg = clock->index / 32;
-   288		u32 value;
-   289	
-   290		if (priv->reg_layout == CLK_REG_LAYOUT_RZ_A)
-   291			value = readb(priv->pub.base0 + priv->control_regs[reg]);
-   292		else if (priv->reg_layout == CLK_REG_LAYOUT_RZ_T2H) {
-   293			void __iomem *addr =
- > 294				cpg_rzt2h_addr_from_offset(hw,
-   295							   priv->control_regs[reg]);
-   296			value = readw(addr);
-   297		}
-   298		else
-   299			value = readl(priv->pub.base0 + priv->status_regs[reg]);
-   300	
-   301		return !(value & BIT(clock->index % 32));
-   302	}
-   303	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Guenter
