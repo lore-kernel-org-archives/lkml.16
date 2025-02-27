@@ -1,320 +1,187 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67DF123ED71
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740667473; cv=none; b=Lt/5HUKQwFFLjenM9aYgRlb3/WN4Ni5sFy9fw4x9ggd6IcPbngiRhlnGsmCtq4KgYD2k9CVGdM7RnDwmvD7Ob2jkRLkwnOIn4z1OAr6wCZpqIKl8Q4TDIrzm0l+YTv91ZV9rLtOmAylkoHYW9nK+hCn6ICmUzkPd4l722SckGsg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740667473; c=relaxed/simple;
-	bh=3l5Uf8lNBbC18wMrGyqzx818VSC1Uv7moppWS/4AgBE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mftX33L936RpwN5u1HxuG/nH1myE1sQgVlETp1Hdb8huqtNUWe/Sj3tQ/78//bWW6t4LMzm6fGd41Kts1w+fSWTUlifB5aFsmm7n1pLklNCazzxVgvvQyuUG5KT5kTS0tSVdKnsRnC/mbQNkb0vfy/qdT9+kg5liuuZCT355vko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 588172BCA;
-	Thu, 27 Feb 2025 06:44:46 -0800 (PST)
-Received: from [10.1.30.50] (e122027.cambridge.arm.com [10.1.30.50])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC5D03F673;
-	Thu, 27 Feb 2025 06:44:28 -0800 (PST)
-Message-ID: <6cdaafa2-68f9-4d5b-abe5-5c9c549e3c6e@arm.com>
-Date: Thu, 27 Feb 2025 14:44:24 +0000
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B9F423F266;
+	Thu, 27 Feb 2025 14:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740667472; cv=fail; b=Y/fmaA1YAqKdJ82itXy9M62Bxbq1f0dFFti2lzpV5lT7CLD8tdSOhwvX/0lHqNcDz47SAgxzXUgMMGbqfJvkwBFaxKj4SEXe0DfOXcjMddURME9ycJqqW2Dm1LpmtMlynySDCzJCiWp7sNRV2j77ZNclzoNPJIsn2nd63pL4TbU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740667472; c=relaxed/simple;
+	bh=1/wTApNMAaAMqRMy7Mu7PntVopqJjPlkGA+kRZRRrx8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HrEz8ZLoIR7p988dqVwRvawhR6u2jjLu45qiE7qgipJraZl6Galg0egyB0+WGjdOxYDvd6b6uz6RRz8YxcDV/epl/mXX/n/maHOCX0Qetgm5fF8ouC2IXhFYwMPzYFEq2z0EWN4WuxkDFa7hkIDYg/frgLdTq9Xrj+gMw6JzFHc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NQuWEH8N; arc=fail smtp.client-ip=40.107.220.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NQuWEH8N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wfPc2SwsosgeztZ0lohTUGezRZi0J7O1/557bhtsNfZ7xBCOTLdE/ssbih+gTTaAoBI/e8eKbP6pqzinaK3JFpWGsBZCj4U7ooFMgHO3RS8izC14hfYlX9saDGzGPu17lVCJQGV4lE9HvgEoonvMxCO28G6SVhdjcamA9gEESQQr/IxzkC0U1WCMB3E7urTEAKCkJDCC+dkbpDX7r963D7IfdLpxhNpTzZg6RXpaqQbSPVAwARwvitDc5KaP+AIMd1xlpYmEdTADfUcY5cotkoXRsjVudcJO5Mbm5cj5Io2IJ1D8FQeL9XzNXSwZO+gXFelbU83vx4tAudglXuVpwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N5jFneea8nqsXV7z3f39aZ/e1fjVIrazQCqKovI5bjY=;
+ b=b0XPQIp/FMS0mAlgE9rZPN8aE9upDDxfTgIx41pACtQj6r1kv7T+YVNdjaNhpwiy3ch3aVmR0SKtMJwwD9TKYm9nFPYnCvptIj51iACAHskV3EeTzuEXUUAnrDJdIUjpj/ayisa5hz1cR808nuh8Z3FJBiBMf8+8cxOs/HgethEjQRiFmjMAZVQ7b2q7Uu1N42evi81xrOCOSPXGJxWsSylgmtzbvcA+c2R7Sh79Zs3tlPA5S/8c0tn0RMjKZBUIM9FAVHBuqm30OX0cMTiVFxELrNGwKaQmlnt7hebV/YK6SJ4fM8FtCI/HfzSaxaWnqAAYl5qU6hYaXSy2gs0bvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N5jFneea8nqsXV7z3f39aZ/e1fjVIrazQCqKovI5bjY=;
+ b=NQuWEH8N2XopRhIIon9FZBe1QqOUpL0bCDqOMaEllyJKyHkt1E2uLsyB3nGA6S/t65rZC6bsyBEy+pa9KQ6FE3zZg/Datz+K9vWgAHPvAm0OeGkS3w5jmIoWEgv8/X6tuLGqgpXkbLpF9G35ctUZAzDzU3EN5HF/dtfPdajKjcQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by PH7PR12MB8426.namprd12.prod.outlook.com (2603:10b6:510:241::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Thu, 27 Feb
+ 2025 14:44:29 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8489.018; Thu, 27 Feb 2025
+ 14:44:29 +0000
+Message-ID: <f560ecab-c1bd-483e-9cd6-f6fb4127b8b8@amd.com>
+Date: Thu, 27 Feb 2025 20:14:21 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/5] KVM: SVM: Manually context switch DEBUGCTL if LBR
+ virtualization is disabled
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>,
+ rangemachine@gmail.com, whanos@sergal.fun,
+ Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250227011321.3229622-1-seanjc@google.com>
+ <20250227011321.3229622-4-seanjc@google.com>
+ <095fe2d0-5ce4-4e0f-8f1b-6f7d14a20342@amd.com> <Z8B2yWTva-B2Lfqt@google.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Z8B2yWTva-B2Lfqt@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0136.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:bf::23) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/4] drm/panfrost: Support ARM_64_LPAE_S1 page table
-To: Ariel D'Alessandro <ariel.dalessandro@collabora.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc: boris.brezillon@collabora.com, robh@kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch
-References: <20250226183043.140773-1-ariel.dalessandro@collabora.com>
- <20250226183043.140773-4-ariel.dalessandro@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250226183043.140773-4-ariel.dalessandro@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH7PR12MB8426:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5ec03c2-cb41-4b4b-6424-08dd573d3d27
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZHdXRUwyOVJuYzRTWHlkVGFCU0p1UmhKbjZqUmR6ZHVMNVliNUhwdnl5VE5w?=
+ =?utf-8?B?WEtCSUpxY3BuWE9LR2k0NExHb1NHR0FrU0Z6TEN2eW1sZkFra0RDRXBLUlhs?=
+ =?utf-8?B?OFdFdFZ3VnJCdGxTVEZLZ0pJWHJTZ3VyTGZpMXY5T0xxTjNzdTNCaDRJcFNL?=
+ =?utf-8?B?ak5uaU5ibGJYeGRIa2F3d3B2NUd6MVZQekhkQnl6SVB1dVlRT0lUOEU0b3Jx?=
+ =?utf-8?B?WmlBbTkrZUJ0eVNvblVwZE55VnNXaVV4QVRMMDNDKytUcWwybUQ2OG9OSEll?=
+ =?utf-8?B?QVFDcTQyb0NlNE11RXJudVlrTkNQa21SUkNPWG83R2FJMVByMmh6bzRsMkR0?=
+ =?utf-8?B?ckk3dmsrNmN2NHhIb21XcmVNYjhJT00zVWdERk1mMUY2VHFxSDVud3JTTjhG?=
+ =?utf-8?B?aVRJaUFQN1ZLYWpNNnhaR0IxRTVTRFBxTUthYUthajVSajVuVnZXQmJ4ZHdr?=
+ =?utf-8?B?VlFkc3A2dWdtdlFmTG5JcmFyUnM4ZzR6L09wcDRkQlk4Tk9vcHN2M3JUaWJm?=
+ =?utf-8?B?NzlzcWlTaVBjMXhnZHN4STUya2lHaEhoSmVJS3JaaXNpaVJVYjd2UGpMNncy?=
+ =?utf-8?B?WEdSajQ3TXhKWVR3N0N3RjhwdGlZTHdQRGwvcVEvNDlHeUI4Y3p4ZnNmZURt?=
+ =?utf-8?B?V2kzVkxjdXF5TlVBWUxBMEVjb21ZUjlrNVdRN3ZvNElIZ3RMcXNlTFJMVHZL?=
+ =?utf-8?B?MUEzMDRCdnpwRlByT3J2RkV2NjloMyttSytDVUplTW4vdkJXZlhXTitlLzUy?=
+ =?utf-8?B?eHZLakJ2NTFXcm03enZueFA1eDNYeDl5ZnA5cEU0YUJLNXBZQ3hNUmhKVW9r?=
+ =?utf-8?B?WDc0em1QbURERmxDWlZ6SFFJRTl2cEdUV0VPSmpQdHZXeWJxajhXcEhaOW5n?=
+ =?utf-8?B?RnBLc2gzVUt3U0FvSkNsMGpyRVl3alRUQlR4SXFXM2RqVXNOclhRSXR2b1lU?=
+ =?utf-8?B?bXZlck1tdkozTERoK3BlVnJOUW1sSzB5OVI1UHc4QndEU25JaVZHdHU1NTRa?=
+ =?utf-8?B?MzQyRGt0c0wraERYcTNxZ2xJNHM3enJXKzk2WW9ORDViYjZvWnlqbnhmSjNv?=
+ =?utf-8?B?eW9pVUNlZlJHTkx1WmJid1ZwRmR1clpvVnIydDRYdUtjalVKR0pmRjdoQWtY?=
+ =?utf-8?B?MzRadVRwaFg4YzIrbmtnUkpDcjNnTjByV1ZJVXR1b2dtd21vVlQwdGxIYjlN?=
+ =?utf-8?B?aTdlUHd2VzJqMktnMkpaUFc0RE1ub29UcXBVQjJUdmh3UjlGTUFUV3FlUUJH?=
+ =?utf-8?B?WENZNVA2UEJ5dnZHT3FjeW5tL1ZBZk9TVzYvNjlzbzRKR0t2NTdWaVh0djA0?=
+ =?utf-8?B?SFRxbmt0bHQ1MnNTNXM0NEViS2RyOU1PMFlOQVFkNnFnZm05c3ZKQXc5Vitx?=
+ =?utf-8?B?NFV5ZHV1eThJaFhHT2lubDR3VVlmNDFySnpNQzVTSFFvK0xCZmhBVzNndm9t?=
+ =?utf-8?B?Z3BYOExtOGkzT0dZRHJtdlE0WDQ5aFo3b2ZJK0VybE05M1ZTR2YwZlI0dDZQ?=
+ =?utf-8?B?TVpEL1V6TmtZSVZXZHF6akZ1K0lVVldHNHRFTWtzNGdoREtuMWxZWjMxUVcz?=
+ =?utf-8?B?OXlGYkowVDYreVRxU1piamI2TkZjTTNaL0R1WTBEOGN4cUJQODk5WHVneEZR?=
+ =?utf-8?B?SnhvS0hxK2dJTTBhQVBNZW5KUldFMUhRZU55VTAyc3hlUVFkN1NFWVVyRXR1?=
+ =?utf-8?B?eG1hTWd6M2xiK292UHR5R1JwM2FpSklqZjQxU2plS2RleERVUVJMT3d4VkhB?=
+ =?utf-8?B?QzNEVlFjeE13eEJ2QkJjUlJlSmJROW1ibVNUb3hReHhNL3dBbXI0dmYwMW5F?=
+ =?utf-8?B?ak9wWmZDeFFPL2JWeDhoWXZFendTZlMySkNEckFJekUxMmJ2SEE5anNHclRD?=
+ =?utf-8?Q?bobtqZXcyFhSh?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ckprb0xpS0JTUU1KVlo2N3hTelBVUjEzUnZ6UjZjWXk3ekoyVFZSMmQwdlVp?=
+ =?utf-8?B?aTE0TVFjS0hwTG5LNnBwY1A1R25PR29YMkJMTXNxTU53dE5OMXpDdWJCeGJo?=
+ =?utf-8?B?ZmxMUEoyM0JkSmpoT2s1NnNOSWNWYUZwa3lETVlzb1ZKTVAreUs5NjZia215?=
+ =?utf-8?B?bXBYdDNvaHFsMFgyV2RBY3o1cWZLYzNaTmhBVlYwcGtkdGhvVWRJa2lLTy85?=
+ =?utf-8?B?TSs4dVpwQnlxM2ZFdEN4ejFlSUxyRDBqaHNuN3p0LzViaTJSeUM2Z1A3Y05X?=
+ =?utf-8?B?aCtpUGVSZmFzNXdmQURMdW9YOEhZdE1Qd0N5RkRsOFpUODRJN3V2cWEvaXY5?=
+ =?utf-8?B?NGFZWEtvTnFmWTd5Q1QybEwrazQ0cW1iN3h2akdzUmF0RzQ2MFY0eUxrdjIx?=
+ =?utf-8?B?Wk1LaytNUVF3aEttSm9tT29QRytzc3p2cVhpMDRDWDRqT3dkdjJYajFKS2Vz?=
+ =?utf-8?B?ZHRmQzRFaEZvbFpweTNSTTV3RHFSb2taWVNzWFppZW1HMjUxQklRM2Z0K2hN?=
+ =?utf-8?B?Vkh2VEorY2dLMTR4dE5PUThmQnl0cjAvYUt4dHRleU5DVnBaT285THpyTG1I?=
+ =?utf-8?B?Y3ZLY1gzanIyaXJkWUx5Um56ZVFVUGFtMmxuZHpEakZrSERvT1FGbmptem9x?=
+ =?utf-8?B?aS9ZaWhVVzF6cVpTTmEwY1B2MUtjcUVidE82SGhpSHU5Ym9VRXJDV1VTU0ZQ?=
+ =?utf-8?B?dWZmbmJQaXRXNDdXOUFmbXVIREJZOHgvY0p2TGxJbWpHd0lBRWVic2M3cXRI?=
+ =?utf-8?B?Z2pXdFJkbWZ1d2pnaVlTRXdoKzdTREEvZnoraGttajBlOW04L3d4bzlmTVly?=
+ =?utf-8?B?MHRnZlJJN1ZLWFIzWnZVWjlXcUlUQW5ONnMzWGpxZ2tuUkxESW04b0ZCWW1N?=
+ =?utf-8?B?OUQvVzluVVZrYkc5MXBOT05XbHZKdVNPdXp2UjFubXdRaUdsT0NkWWtLa2RS?=
+ =?utf-8?B?Y0tINE9sZU85c2pLMzNJRUsybEFDUGU1ZnZEVzQ4K2M2dUt2K1plekFUQ25Y?=
+ =?utf-8?B?ZlF2RHlnc3lkYjRCZlAyU0RKQVBGNUs2b2pzbHZuWEtBTklmR3VLR1hvRWkx?=
+ =?utf-8?B?VzFienNhQzZ0K3FiWmo0YVpNejAyTXUrYjVGb004S0plZnRqcXh0ZmtMVUZO?=
+ =?utf-8?B?NjBmUy80NkFWTEhCMDV3RThWaXFnV2RPMXZkcGxrR1VVL3RoOGNQU3E5V3Q4?=
+ =?utf-8?B?Y0RUL0dDcXNxakdGUHhRYXgzdGJNOGhLT284bVEvcWloc0NzRHdNMGJlejZP?=
+ =?utf-8?B?WDlkNjd0d3liQVFwY1FGTjZhOU5nQmFFUk5IdjNKTkdmMXNOMmtxM3pxeUxs?=
+ =?utf-8?B?a2ZpdEdHaHhQZTdyNkl5UXU0UHpUcHE2MHZsZUoxc2J2U0NtMUdaNzBtNTlG?=
+ =?utf-8?B?YndnN2pxQ0IvSnRhZGV2ZUppRlF3SlR5RXpkbXJWV3QvSGZTWU1uRVZSVGRY?=
+ =?utf-8?B?SWxGaWg1U2l4cGNZL1lRbFFuS2RVMkp6KzV2VXVQQWlleUlRN3RETnpBc0xE?=
+ =?utf-8?B?UjIzU2tnc0RXVy9VQjEvN0I5SkEvWWpUWCsrRzh6ZlV4RDJlR1dYM04vb21Z?=
+ =?utf-8?B?aEE1VWI2WFV3andudGluZWlyaUJIWElOWnMwbHVjU0ZEdFc2NG02azVMWHhY?=
+ =?utf-8?B?ZHdwdytzRlpCRlMvRzBXTnNtWVU0YlZ4NGE4U3FlSXlLY1RQTlZBNjF3QVpj?=
+ =?utf-8?B?Y25zc1VodjBHVTF5RGgvdW1xbnNmVWtOQnFjOUZ3L3dxa1V1emFGY1N4QmFT?=
+ =?utf-8?B?UUtVM3EvUWxOaUpzZk1CVjVqNTJsUTFtRG1WejZRRHQ2UHFFby8rYmdGYjF1?=
+ =?utf-8?B?cC9Ec2JOMkZvRXBGUmI4NHdFNVF5blJ0Q3ZGbVFQdjBJcklxdklMRkdCQjBa?=
+ =?utf-8?B?MnMwQndneTB0RklOOVZUdU1JbGViNktrdy9PbTAxeUFsazlQMUhSdnFTSGVR?=
+ =?utf-8?B?ejg4Ty9lak5pZWlvRDdkNHJHR1NybjlMcmJUMnQwZXlTd1d2QzdRT1RhSFhh?=
+ =?utf-8?B?SVJtWDAvVzFGQjRhOHFTZllMR0pFM1ZtSjZKVG4zK0RzT1VuOHBNTlh6K2g0?=
+ =?utf-8?B?TVIrS1ZsZXl0VjJCUnRIL0hucW40U1M2UmhmZVQ1RWJieXo5cHlRMVFVK3lk?=
+ =?utf-8?Q?1cbMPqrUzp08hpmcShZiiRg/f?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5ec03c2-cb41-4b4b-6424-08dd573d3d27
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 14:44:29.1606
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: BECesZCXf4EAfwT6GXx4KCaHcW2CVx4WJTcFku1wpTO2HMNXXd/3qLZMtkdmz6QmnV7zRhbf9ElHiw/3YBBkFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8426
 
-On 26/02/2025 18:30, Ariel D'Alessandro wrote:
-> Bifrost MMUs support AArch64 4kB granule specification. However,
-> panfrost only enables MMU in legacy mode, despite the presence of the
-> HW_FEATURE_AARCH64_MMU feature flag.
+>> Somewhat related but independent: CPU automatically clears DEBUGCTL[BTF]
+>> on #DB exception. So, when DEBUGCTL is save/restored by KVM (i.e. when
+>> LBR virtualization is disabled), it's KVM's responsibility to clear
+>> DEBUGCTL[BTF].
+>> ---
+>> @@ -2090,6 +2090,14 @@ static int db_interception(struct kvm_vcpu *vcpu)
+>>  	      (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP)) &&
+>>  		!svm->nmi_singlestep) {
+>>  		u32 payload = svm->vmcb->save.dr6 ^ DR6_ACTIVE_LOW;
+>> +
+>> +		/*
+>> +		 * CPU automatically clears DEBUGCTL[BTF] on #DB exception.
+>> +		 * Simulate it when DEBUGCTL isn't auto save/restored.
+>> +		 */
+>> +		if (!(svm->vmcb->control.virt_ext & LBR_CTL_ENABLE_MASK))
+>> +			svm->vmcb->save.dbgctl &= ~0x2;
 > 
-> This commit adds support to use page tables according to AArch64 4kB
-> granule specification. This feature is enabled conditionally based on
-> the GPU model's HW_FEATURE_AARCH64_MMU feature flag.
+> Any reason not to clear is unconditionally?
 > 
-> Signed-off-by: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+> 		svm->vmcb->save.dbgctl &= ~DEBUGCTLMSR_BTF;
 
-I find some of the naming confusing here. The subject calls it
-'ARM_64_LPAE_S1' which in an unfortunate name from the iommu code.
+No particular reason, just that HW would have already done it when LBRV
+is enabled.
 
-AIUI, LPAE is the "Large Physical Address Extension" and is a v7 feature
-for 32 bit. "LEGACY" (as Bifrost calls it) mode is a (modified) version
-of LPAE, which in Linux we've called "mali_lpae".
-
-What you're adding support for is AARCH64_4K which is the v8 64 bit
-mode. So I think it's worth including the "64" part of the name of the
-mmu_lpae_s1_enable() function. Personally I'd be tempted to drop the
-"_s1" part, but I guess there's a small chance someone will find a use
-for the second stage one day.
-
-Note also that it's not necessarily a clear-cut improvement to use
-AARCH64_4K over LEGACY. I wouldn't be surprised if this actually causes
-(minor) performance regressions on some platforms. Sadly I don't have
-access to a range of hardware to test this on.
-
-Steve
-
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.h |   1 +
->  drivers/gpu/drm/panfrost/panfrost_mmu.c    | 118 +++++++++++++++++----
->  drivers/gpu/drm/panfrost/panfrost_regs.h   |  29 +++++
->  3 files changed, 128 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index cffcb0ac7c11..dea252f43c58 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -153,6 +153,7 @@ struct panfrost_device {
->  };
->  
->  struct panfrost_mmu {
-> +	void (*enable)(struct panfrost_device *pfdev, struct panfrost_mmu *mmu);
->  	struct panfrost_device *pfdev;
->  	struct kref refcount;
->  	struct io_pgtable_cfg pgtbl_cfg;
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> index 7df2c8d5b0ae..30b8e2723254 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-> @@ -26,6 +26,48 @@
->  #define mmu_write(dev, reg, data) writel(data, dev->iomem + reg)
->  #define mmu_read(dev, reg) readl(dev->iomem + reg)
->  
-> +static u64 mair_to_memattr(u64 mair, bool coherent)
-> +{
-> +	u64 memattr = 0;
-> +	u32 i;
-> +
-> +	for (i = 0; i < 8; i++) {
-> +		u8 in_attr = mair >> (8 * i), out_attr;
-> +		u8 outer = in_attr >> 4, inner = in_attr & 0xf;
-> +
-> +		/* For caching to be enabled, inner and outer caching policy
-> +		 * have to be both write-back, if one of them is write-through
-> +		 * or non-cacheable, we just choose non-cacheable. Device
-> +		 * memory is also translated to non-cacheable.
-> +		 */
-> +		if (!(outer & 3) || !(outer & 4) || !(inner & 4)) {
-> +			out_attr = AS_MEMATTR_AARCH64_INNER_OUTER_NC |
-> +				   AS_MEMATTR_AARCH64_SH_MIDGARD_INNER |
-> +				   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(false, false);
-> +		} else {
-> +			out_attr = AS_MEMATTR_AARCH64_INNER_OUTER_WB |
-> +				   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(inner & 1, inner & 2);
-> +			/* Use SH_MIDGARD_INNER mode when device isn't coherent,
-> +			 * so SH_IS, which is used when IOMMU_CACHE is set, maps
-> +			 * to Mali's internal-shareable mode. As per the Mali
-> +			 * Spec, inner and outer-shareable modes aren't allowed
-> +			 * for WB memory when coherency is disabled.
-> +			 * Use SH_CPU_INNER mode when coherency is enabled, so
-> +			 * that SH_IS actually maps to the standard definition of
-> +			 * inner-shareable.
-> +			 */
-> +			if (!coherent)
-> +				out_attr |= AS_MEMATTR_AARCH64_SH_MIDGARD_INNER;
-> +			else
-> +				out_attr |= AS_MEMATTR_AARCH64_SH_CPU_INNER;
-> +		}
-> +
-> +		memattr |= (u64)out_attr << (8 * i);
-> +	}
-> +
-> +	return memattr;
-> +}
-> +
->  static int wait_ready(struct panfrost_device *pfdev, u32 as_nr)
->  {
->  	int ret;
-> @@ -121,38 +163,66 @@ static int mmu_hw_do_operation(struct panfrost_device *pfdev,
->  	return ret;
->  }
->  
-> -static void panfrost_mmu_enable(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
-> +static void
-> +_panfrost_mmu_as_control_write(struct panfrost_device *pfdev, u32 as_nr,
-> +			       u64 transtab, u64 memattr, u64 transcfg)
->  {
-> -	int as_nr = mmu->as;
-> -	struct io_pgtable_cfg *cfg = &mmu->pgtbl_cfg;
-> -	u64 transtab = cfg->arm_mali_lpae_cfg.transtab;
-> -	u64 memattr = cfg->arm_mali_lpae_cfg.memattr;
-> -
->  	mmu_hw_do_operation_locked(pfdev, as_nr, 0, ~0ULL, AS_COMMAND_FLUSH_MEM);
->  
->  	mmu_write(pfdev, AS_TRANSTAB_LO(as_nr), lower_32_bits(transtab));
->  	mmu_write(pfdev, AS_TRANSTAB_HI(as_nr), upper_32_bits(transtab));
->  
-> -	/* Need to revisit mem attrs.
-> -	 * NC is the default, Mali driver is inner WT.
-> -	 */
->  	mmu_write(pfdev, AS_MEMATTR_LO(as_nr), lower_32_bits(memattr));
->  	mmu_write(pfdev, AS_MEMATTR_HI(as_nr), upper_32_bits(memattr));
->  
-> +	mmu_write(pfdev, AS_TRANSCFG_LO(as_nr), lower_32_bits(transcfg));
-> +	mmu_write(pfdev, AS_TRANSCFG_HI(as_nr), upper_32_bits(transcfg));
-> +
->  	write_cmd(pfdev, as_nr, AS_COMMAND_UPDATE);
-> +
-> +	dev_dbg(pfdev->dev, "mmu_as_control: as=%d, transtab=0x%016llx, memattr=0x%016llx, transcfg=0x%016llx",
-> +		as_nr, transtab, memattr, transcfg);
->  }
->  
-> -static void panfrost_mmu_disable(struct panfrost_device *pfdev, u32 as_nr)
-> +static void mmu_lpae_s1_enable(struct panfrost_device *pfdev,
-> +			       struct panfrost_mmu *mmu)
->  {
-> -	mmu_hw_do_operation_locked(pfdev, as_nr, 0, ~0ULL, AS_COMMAND_FLUSH_MEM);
-> +	struct io_pgtable_cfg *cfg = &mmu->pgtbl_cfg;
-> +	int as_nr = mmu->as;
->  
-> -	mmu_write(pfdev, AS_TRANSTAB_LO(as_nr), 0);
-> -	mmu_write(pfdev, AS_TRANSTAB_HI(as_nr), 0);
-> +	u64 transtab =
-> +		cfg->arm_lpae_s1_cfg.ttbr & AS_TRANSTAB_LPAE_ADDR_SPACE_MASK;
-> +	u64 memattr =
-> +		mair_to_memattr(cfg->arm_lpae_s1_cfg.mair, pfdev->coherent);
-> +	u32 va_bits = GPU_MMU_FEATURES_VA_BITS(pfdev->features.mmu_features);
-> +	u64 transcfg = AS_TRANSCFG_PTW_MEMATTR_WB |
-> +		       AS_TRANSCFG_PTW_RA |
-> +		       AS_TRANSCFG_ADRMODE_AARCH64_4K |
-> +		       AS_TRANSCFG_INA_BITS(55 - va_bits);
->  
-> -	mmu_write(pfdev, AS_MEMATTR_LO(as_nr), 0);
-> -	mmu_write(pfdev, AS_MEMATTR_HI(as_nr), 0);
-> +	if (pfdev->coherent)
-> +		transcfg |= AS_TRANSCFG_PTW_SH_OS;
->  
-> -	write_cmd(pfdev, as_nr, AS_COMMAND_UPDATE);
-> +	_panfrost_mmu_as_control_write(pfdev, as_nr, transtab, memattr,
-> +				       transcfg);
-> +}
-> +
-> +static void mmu_mali_lpae_enable(struct panfrost_device *pfdev,
-> +				 struct panfrost_mmu *mmu)
-> +{
-> +	struct io_pgtable_cfg *cfg = &mmu->pgtbl_cfg;
-> +	int as_nr = mmu->as;
-> +
-> +	_panfrost_mmu_as_control_write(pfdev, as_nr,
-> +				       cfg->arm_mali_lpae_cfg.transtab,
-> +				       cfg->arm_mali_lpae_cfg.memattr,
-> +				       AS_TRANSCFG_ADRMODE_LEGACY);
-> +}
-> +
-> +static void panfrost_mmu_disable(struct panfrost_device *pfdev, u32 as_nr)
-> +{
-> +	_panfrost_mmu_as_control_write(pfdev, as_nr, 0, 0,
-> +				       AS_TRANSCFG_ADRMODE_UNMAPPED);
->  }
->  
->  u32 panfrost_mmu_as_get(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
-> @@ -182,7 +252,7 @@ u32 panfrost_mmu_as_get(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
->  			mmu_write(pfdev, MMU_INT_CLEAR, mask);
->  			mmu_write(pfdev, MMU_INT_MASK, ~pfdev->as_faulty_mask);
->  			pfdev->as_faulty_mask &= ~mask;
-> -			panfrost_mmu_enable(pfdev, mmu);
-> +			mmu->enable(pfdev, mmu);
->  		}
->  
->  		goto out;
-> @@ -214,7 +284,7 @@ u32 panfrost_mmu_as_get(struct panfrost_device *pfdev, struct panfrost_mmu *mmu)
->  
->  	dev_dbg(pfdev->dev, "Assigned AS%d to mmu %p, alloc_mask=%lx", as, mmu, pfdev->as_alloc_mask);
->  
-> -	panfrost_mmu_enable(pfdev, mmu);
-> +	mmu->enable(pfdev, mmu);
->  
->  out:
->  	spin_unlock(&pfdev->as_lock);
-> @@ -618,6 +688,7 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->  	u32 va_bits = GPU_MMU_FEATURES_VA_BITS(pfdev->features.mmu_features);
->  	u32 pa_bits = GPU_MMU_FEATURES_PA_BITS(pfdev->features.mmu_features);
->  	struct panfrost_mmu *mmu;
-> +	enum io_pgtable_fmt fmt;
->  
->  	mmu = kzalloc(sizeof(*mmu), GFP_KERNEL);
->  	if (!mmu)
-> @@ -642,8 +713,15 @@ struct panfrost_mmu *panfrost_mmu_ctx_create(struct panfrost_device *pfdev)
->  		.iommu_dev	= pfdev->dev,
->  	};
->  
-> -	mmu->pgtbl_ops = alloc_io_pgtable_ops(ARM_MALI_LPAE, &mmu->pgtbl_cfg,
-> -					      mmu);
-> +	if (panfrost_has_hw_feature(pfdev, HW_FEATURE_AARCH64_MMU)) {
-> +		fmt = ARM_64_LPAE_S1;
-> +		mmu->enable = mmu_lpae_s1_enable;
-> +	} else {
-> +		fmt = ARM_MALI_LPAE;
-> +		mmu->enable = mmu_mali_lpae_enable;
-> +	}
-> +	mmu->pgtbl_ops = alloc_io_pgtable_ops(fmt, &mmu->pgtbl_cfg, mmu);
-> +
->  	if (!mmu->pgtbl_ops) {
->  		kfree(mmu);
->  		return ERR_PTR(-EINVAL);
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_regs.h b/drivers/gpu/drm/panfrost/panfrost_regs.h
-> index 4e6064d5feaa..a5ca36f583ff 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_regs.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_regs.h
-> @@ -301,6 +301,17 @@
->  #define AS_TRANSTAB_HI(as)		(MMU_AS(as) + 0x04) /* (RW) Translation Table Base Address for address space n, high word */
->  #define AS_MEMATTR_LO(as)		(MMU_AS(as) + 0x08) /* (RW) Memory attributes for address space n, low word. */
->  #define AS_MEMATTR_HI(as)		(MMU_AS(as) + 0x0C) /* (RW) Memory attributes for address space n, high word. */
-> +#define   AS_MEMATTR_AARCH64_INNER_ALLOC_IMPL		(2 << 2)
-> +#define   AS_MEMATTR_AARCH64_INNER_ALLOC_EXPL(w, r)	((3 << 2) | \
-> +							 ((w) ? BIT(0) : 0) | \
-> +							 ((r) ? BIT(1) : 0))
-> +#define   AS_MEMATTR_AARCH64_SH_MIDGARD_INNER		(0 << 4)
-> +#define   AS_MEMATTR_AARCH64_SH_CPU_INNER		(1 << 4)
-> +#define   AS_MEMATTR_AARCH64_SH_CPU_INNER_SHADER_COH	(2 << 4)
-> +#define   AS_MEMATTR_AARCH64_SHARED			(0 << 6)
-> +#define   AS_MEMATTR_AARCH64_INNER_OUTER_NC		(1 << 6)
-> +#define   AS_MEMATTR_AARCH64_INNER_OUTER_WB		(2 << 6)
-> +#define   AS_MEMATTR_AARCH64_FAULT			(3 << 6)
->  #define AS_LOCKADDR_LO(as)		(MMU_AS(as) + 0x10) /* (RW) Lock region address for address space n, low word */
->  #define AS_LOCKADDR_HI(as)		(MMU_AS(as) + 0x14) /* (RW) Lock region address for address space n, high word */
->  #define AS_COMMAND(as)			(MMU_AS(as) + 0x18) /* (WO) MMU command register for address space n */
-> @@ -311,6 +322,24 @@
->  /* Additional Bifrost AS registers */
->  #define AS_TRANSCFG_LO(as)		(MMU_AS(as) + 0x30) /* (RW) Translation table configuration for address space n, low word */
->  #define AS_TRANSCFG_HI(as)		(MMU_AS(as) + 0x34) /* (RW) Translation table configuration for address space n, high word */
-> +#define   AS_TRANSCFG_ADRMODE_LEGACY			(0 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_UNMAPPED			(1 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_IDENTITY			(2 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_AARCH64_4K		(6 << 0)
-> +#define   AS_TRANSCFG_ADRMODE_AARCH64_64K		(8 << 0)
-> +#define   AS_TRANSCFG_INA_BITS(x)			((x) << 6)
-> +#define   AS_TRANSCFG_OUTA_BITS(x)			((x) << 14)
-> +#define   AS_TRANSCFG_SL_CONCAT				BIT(22)
-> +#define   AS_TRANSCFG_PTW_MEMATTR_NC			(1 << 24)
-> +#define   AS_TRANSCFG_PTW_MEMATTR_WB			(2 << 24)
-> +#define   AS_TRANSCFG_PTW_SH_NS				(0 << 28)
-> +#define   AS_TRANSCFG_PTW_SH_OS				(2 << 28)
-> +#define   AS_TRANSCFG_PTW_SH_IS				(3 << 28)
-> +#define   AS_TRANSCFG_PTW_RA				BIT(30)
-> +#define   AS_TRANSCFG_DISABLE_HIER_AP			BIT(33)
-> +#define   AS_TRANSCFG_DISABLE_AF_FAULT			BIT(34)
-> +#define   AS_TRANSCFG_WXN				BIT(35)
-> +#define   AS_TRANSCFG_XREADABLE				BIT(36)
->  #define AS_FAULTEXTRA_LO(as)		(MMU_AS(as) + 0x38) /* (RO) Secondary fault address for address space n, low word */
->  #define AS_FAULTEXTRA_HI(as)		(MMU_AS(as) + 0x3C) /* (RO) Secondary fault address for address space n, high word */
->  
-
+Thanks,
+Ravi
