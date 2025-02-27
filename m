@@ -1,138 +1,123 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649A31DDD1;
-	Thu, 27 Feb 2025 06:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740637263; cv=pass; b=I7HvZazhB+1ZxTNYAOOHzWPvxJFM5eaCMtKgmIuCX56bQkukB3VcaJAK75q9yb8vpBMQO1Ap6Rzi6SNZsKhErXDCVNnDROJVOANoIc4uGsXG3ZftkasbQgg61Aehsyp66kokzJmbpm4lrT2jHjdhM2EGyxZJfm2G68gzE63U1Yo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740637263; c=relaxed/simple;
-	bh=QXFk6AMhbzhCA2gLl5st0ygMgRkWYmUuvZgfjp3wpRk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OXX3gCMMLApSWThpKyQ9uscSzg838wIz8WHJelosrm+TUzxFXv4dh5vvu0FEHxWkqAPcFVmwlcJKJui/syEin/x6qaW+S+Sj3clDK3LriM7yyP4FCblNHWZDczECBNlsQn7DnkZELyMY4yi9sKcq6wPmolG3E5N8lST+B4Z0MGg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=I6T6DoQy; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30411DDD1
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:21:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740637309; cv=none; b=pY7Nltb4I/yUUomhVRTzPsf0pDypaf+rRSz8RDLQqyHCz1tJPgnJAAAn3wSP4IgUHba1kMpwyGbQvZrJW2wnE9/I06X6cg92Rg36PFYHdQUF7MibhbiHwwtha/0R8GvXyTgPwRcw1iQBplfu1FZcfUWAxNixtkyn8hvUEiueAs4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740637309; c=relaxed/simple;
+	bh=9BQwvYLFuyKz8+vOPc/7vB9NDt1wrVlSjQz/uL+F0iM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KZC7lTS+lhhUom4JIyyix9/+0DHgKmWI9g+dGPFwVPYqCLMI61MxZ5jMFAF63wZll1MkeNzyxzWk07Bwx1kDQOPHB1I36jNRPgT4FrGrb6p/XVfCqN/BYqmoQSilCtwEwbC6KffXApKqmd+LDa6acP+BjYXFNlQbkjmGtRLFEig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=C5E79zdB; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="I6T6DoQy"
-ARC-Seal: i=1; a=rsa-sha256; t=1740637213; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=CBj+2u58FaLlfXUL5r4ElOi/IpxDJUdL5DLsNEHNk0+UdTf0KDAKmpQs29KN2wHLP9/UUsQgiHaFf2mLEtRXdtkxAOFjk5p7D77egssavIxWXcksgod1qfC2e6z2J999I8dM2W7bPgdcWUTxk0toEcEOpEB0gdkCyyGg9VlroKU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740637213; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ESKAXw1Tt8hbvdnODg8HBJ11zlfZzK9vXWlIshKQpnM=; 
-	b=eyor/mD0YxxN/+q0uTnIbXdi7xJWvjgNigMgz8rS5ydyCPMv7a3KBmIsu7MBqRtIkI7mdjiR8uUqRA0dE/B/r3/YCZy4LUrU0muqSyeh93ziWKJoboj4caNWqbmFxTL7Z6APJZeNKyWwAtzNqkvQBx4hAmhFqpnGSEGmX3vGkzg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740637213;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:From:From:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=ESKAXw1Tt8hbvdnODg8HBJ11zlfZzK9vXWlIshKQpnM=;
-	b=I6T6DoQyMwenD8Jj/4OugRF2aKDRyqQsd/tTY6GcNUy4pt7BKeT4PEW00BiaVpz9
-	fh+sT/lcbefoqcFBM6TegVOlcc3bkxh+DPX1SeXTVMpgetIWzaLT7nsc9ycU3ep1hw8
-	GzLi3NENYsWzsPypocvxxDRm88OXIufDY7H8cSoo=
-Received: by mx.zohomail.com with SMTPS id 1740637210671337.5440148916407;
-	Wed, 26 Feb 2025 22:20:10 -0800 (PST)
-Message-ID: <82e5a342-c82e-40c4-88a9-645a70420aa0@collabora.com>
-Date: Thu, 27 Feb 2025 09:20:03 +0300
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C5E79zdB"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2212222d4cdso91205ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 22:21:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740637307; x=1741242107; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qLGPv8wfagepaDcd3kRNoXQJFGOdNe+csTfwazr/hns=;
+        b=C5E79zdBts/WekRaOqTBW4NUd7jNOx26K33t+64WyuwT5g0zYwEiNR4DqGHuqZ/ZLj
+         1kY8Jxtf9jBOp2c/SNYSSXI4gbHj++an0Yey9cDM5kvtwMD4FTn5EDJcd3UwLbkUw6p2
+         rk+RA/KjjppJ7slmUr6F9vj+FjBLCviuqdr7rrGwrZXKPJ6pRzq90fKCErrgV9oGZrta
+         teNty+Mw2iXcuNeiIMoxuNwFrj9KW1Bs+HM+sCDQmD6FbYWLWpi2TkcMGz3fgrTyexa1
+         5bphDqUWu16jV3EGpYRFluLfVbOuRDUdV464diDhiSfQIgcUpdZ4Yk7A42tOPPct9GUG
+         A6tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740637307; x=1741242107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qLGPv8wfagepaDcd3kRNoXQJFGOdNe+csTfwazr/hns=;
+        b=glflwsZygg3tsQpREPXWq0hSqvXmTUcjo2hxyQVHr5WhCNC4kvRlGME0e9JoWoSLVX
+         Ai55ULkweXTbXei3nY8HVTO8h0y0HjxdTtn2iWryvLK8QIqUsHImyUVQip8RRQ/sHRFK
+         tn9Cj0SEzjdlgPgFsmqmKjKEk2gkb7JImnP57/bS/C3H7QT22e+8hsFS0l8vLogxHEyC
+         DS3GCP9opWWavLxibDNrs1jVkJZStNsMt41HWUAoTgFiOREcfnri0ufuvtR25Ezgb+sx
+         Rxj6xzIldEUgMJLBzQ/eoK1j61eu/OUryR2Wh5U84qI8Xt281VMViDb5GmTtnZ37FqW+
+         eL9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUFPQ0BqS/KqKwPD4ePZukjuYcC6CfZG3Uf6FyfBQvZbWLf4q+SWRwpPfL22bsiDHvKjlF3cPCAF9JVwDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzds9bgz26C8+L5avS42Lpg+7hioKtShASOhRe9ZbkhhPpUyMgq
+	SX9FTBFhX0fUO5QdDX62N8ikI7NJyjYjWOkJSs4Hf61GNmIHBWDA0hYoJGLdGXD/g0+mo+vhwMp
+	5MI0pbSYv4VH9VWaAy5eeMPxlzVVoxhZ1Tipz
+X-Gm-Gg: ASbGncuIBUzEjkKAoDpwKvxMCG8RwTVnvkXkqbHB2mMIHlWadQR4Z90gveaKi39zfC+
+	ZPjcuBzYrrJWpptB0Ko+QqE+jcvMk093hqM9OJwHjqdZ5ZSyVCNfLts1y0XR+1fnp8F9PIiEgsQ
+	EbmQ7sUJ8d
+X-Google-Smtp-Source: AGHT+IFEuuEK6gaJuEGoSW8v3ux9ytfx/BKpe7Ddlphni4oexNX3FSPoLq0aEXkLj+RhJyqZhVf2g6IeAdF1OYoSh3c=
+X-Received: by 2002:a17:902:f802:b0:215:8232:5596 with SMTP id
+ d9443c01a7336-2234d5c9a54mr1849385ad.16.1740637306890; Wed, 26 Feb 2025
+ 22:21:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 3/6] media: platform: synopsys: Add support for HDMI
- input driver
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
- Heiko Stuebner <heiko@sntech.de>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, jose.abreu@synopsys.com,
- nelson.costa@synopsys.com, shawn.wen@rock-chips.com,
- nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- Diederik de Haas <didi.debian@cknow.org>
-References: <20250227055025.766018-1-dmitry.osipenko@collabora.com>
- <20250227055025.766018-4-dmitry.osipenko@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250227055025.766018-4-dmitry.osipenko@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ZohoMailClient: External
+References: <20250109075108.7651-1-irogers@google.com> <20250109075108.7651-11-irogers@google.com>
+ <CAH0uvoj=PJMbOR_iQDFxRsGN+Q04tkkHdAceReHoZANOtv3uCA@mail.gmail.com>
+In-Reply-To: <CAH0uvoj=PJMbOR_iQDFxRsGN+Q04tkkHdAceReHoZANOtv3uCA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 26 Feb 2025 22:21:35 -0800
+X-Gm-Features: AQ5f1Jq9EUr_I848tMwfXYm17qUq1MvC7vt3jNKL1cfdGcj5Bzyn94grIV-BDHM
+Message-ID: <CAP-5=fXpfBJCENkHGd=mDKCBOhCmVr0ieF5-MvUbbV03DSA_hg@mail.gmail.com>
+Subject: Re: [PATCH v1 10/11] perf python: Add evlist.config to set up record options
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Levi Yun <yeoreum.yun@arm.com>, Ze Gao <zegao2021@gmail.com>, 
+	Weilin Wang <weilin.wang@intel.com>, Xu Yang <xu.yang_2@nxp.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/27/25 08:50, Dmitry Osipenko wrote:
-> +struct hdmirx_cec *snps_hdmirx_cec_register(struct hdmirx_cec_data *data)
-> +{
-> +	struct hdmirx_cec *cec;
-> +	unsigned int irqs;
-> +	int ret;
-> +
-> +	/*
-> +	 * Our device is just a convenience - we want to link to the real
-> +	 * hardware device here, so that userspace can see the association
-> +	 * between the HDMI hardware and its associated CEC chardev.
-> +	 */
-> +	cec = devm_kzalloc(data->dev, sizeof(*cec), GFP_KERNEL);
-> +	if (!cec)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	cec->dev = data->dev;
-> +	cec->irq = data->irq;
-> +	cec->ops = data->ops;
-> +	cec->hdmirx = data->hdmirx;
-> +
-> +	hdmirx_cec_update_bits(cec, GLOBAL_SWENABLE, CEC_ENABLE, CEC_ENABLE);
-> +	hdmirx_cec_update_bits(cec, CEC_CONFIG, RX_AUTO_DRIVE_ACKNOWLEDGE,
-> +			       RX_AUTO_DRIVE_ACKNOWLEDGE);
-> +
-> +	hdmirx_cec_write(cec, CEC_TX_COUNT, 0);
-> +	hdmirx_cec_write(cec, CEC_INT_MASK_N, 0);
-> +	hdmirx_cec_write(cec, CEC_INT_CLEAR, ~0);
-> +
-> +	cec->adap = cec_allocate_adapter(&hdmirx_cec_ops, cec, "snps-hdmirx",
-> +					 CEC_CAP_DEFAULTS | CEC_CAP_MONITOR_ALL,
-> +					 CEC_MAX_LOG_ADDRS);
-> +	if (IS_ERR(cec->adap)) {
-> +		dev_err(cec->dev, "cec adapter allocation failed\n");
-> +		return ERR_CAST(cec->adap);
-> +	}
-> +
-> +	/* override the module pointer */
-> +	cec->adap->owner = THIS_MODULE;
-> +
-> +	ret = devm_add_action(cec->dev, hdmirx_cec_del, cec);
-> +	if (ret) {
-> +		cec_delete_adapter(cec->adap);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	irq_set_status_flags(cec->irq, IRQ_NOAUTOEN);
-> +
-> +	ret = devm_request_threaded_irq(cec->dev, cec->irq,
-> +					hdmirx_cec_hardirq,
-> +					hdmirx_cec_thread, IRQF_ONESHOT,
-> +					"rk_hdmirx_cec", cec->adap);
-> +	if (ret) {
-> +		dev_err(cec->dev, "cec irq request failed\n");
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	cec->notify = cec_notifier_cec_adap_register(cec->dev,
-> +						     NULL, cec->adap);
+On Wed, Feb 26, 2025 at 9:46=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> Hello,
+>
+> On Wed, Jan 8, 2025 at 11:51=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > Add access to evlist__config that is used to configure an evlist with
+> > record options.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/python.c | 33 +++++++++++++++++++++++++++++++++
+> >  1 file changed, 33 insertions(+)
+> >
+>
+> <SNIP>
+>
+> > +               .user_interval       =3D ULLONG_MAX,
+> > +               .freq                =3D 4000,
+> > +               .target              =3D {
+> > +                       .uses_mmap   =3D true,
+> > +                       .default_per_cpu =3D true,
+> > +               },
+> > +               .nr_threads_synthesize =3D 1,
+> > +               .ctl_fd              =3D -1,
+> > +               .ctl_fd_ack          =3D -1,
+> > +                       .no_buffering =3D true,
+> > +                       .no_inherit =3D true,
+>
+> Are these indentations intentional?
 
-It now occurred to me that this cec->notify also should be not needed
-for this driver and *everything* related to CEC notifiers should be
-removed. Hans, is this correct or I'm missing something?
+Nope, not sure what happened. I'll fix it in v2.
 
--- 
-Best regards,
-Dmitry
+Thanks and thanks for the tags!
+Ian
+
+>
+> Thanks,
+> Howard
