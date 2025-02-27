@@ -1,163 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1211C07E6
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:18:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF601A841B;
+	Thu, 27 Feb 2025 20:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740687536; cv=none; b=g+4KTfzzXiEO9R0HppEUelZ1Mypj/rhIyH76UfdxoNPOjcBhQikreIb2LP7u5ktbpKueauikje9fDxkUtlmWHJRAk73dBQdKzN4fOJ/IHju2iJnFMksF4HELWJQkW2urEZAYJ2MTSLgRHdYk+yAIburloWWEeKw5kCPi9MF99rM=
+	t=1740687665; cv=none; b=Q6GkgkvCqzdHjm3cpWMit/yc1v/CWWkuT5YNyJvjZT8Kv52MJgsLNHTCno8mAb8+sLeHh3pCS6L+LaNxBF/UT58XYOo19uy2zr8qg3OjrA7B4BNzw+xQdSuMEojLP/bbVbHXBM9F1i+ZwOD8G+CAz57v6sYgX8pqVxwKO5PzONo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740687536; c=relaxed/simple;
-	bh=+TweW/BFWyrYX8cKdXeRzDCMX/yo1PPVIyK0g0icqF8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ontq5rSn0L5Gjzv3038t+y/7BFla6nowXpv6c+ro3r1yx/AvzbmEEef9oXI6JmaBF73ujBoC9RzDlDv8tWbtlnILVt79zsz3zy55UEJXtniKPDKqc5ez2EVAWEBBhrlgAWOFc/fQTbUSYocMCu1Hh6x646ONnPT53cluGr+D2k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UcB2z9z3; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740687665; c=relaxed/simple;
+	bh=MtJTpeWFMmC6NvtMRah9y80RKfrLTo6oD9RpFUOhNG0=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=ItmObFcbgayCt7eJBr531UCuLrjviwqsk1DTK200FZe29H6dIYfunegfzzx80oBXr0O1zHAunoQwoC5eEF7yUgzr35fliELDmWyGLAixzE4L8eSYsrtOC4xaVX3BOfBr7dqPGAOhCO3IpDgLASOENwbj5Lf9ZAnsG+8pe8EH7ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OP2kf5q0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RbjwaJxd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UcB2z9z3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740687534; x=1772223534;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+TweW/BFWyrYX8cKdXeRzDCMX/yo1PPVIyK0g0icqF8=;
-  b=UcB2z9z3jpznWCONS0mUiENsMjY75amBToS2EtaCsLVB6JrugKVe1yEF
-   kfHR42NIEIAys129S9tGPAxJN6h953fex1hbmTfU++/t0sjAaelxPq3np
-   fH+UfE1ssTkwyrmK4unQQ+kdnNHPVQ9GtT7rxZsshx7MUKdbbXXi3rBfS
-   enN+OhdUNntxwUzVc2NRD1zrq5fMQYy9Xz3NfNVrqrxxaFD+wFBcBQqFj
-   +tvIG99CEzU1okZYm0CluAHJCggJFCCr15x3SEPxQORt7GtjZ0jZtUZ6V
-   dfcfLfgtwG62q5RoaayYvgBJA7B4Mx8kFPV1sOxY3ywMvu6nL21CQ9lm+
-   g==;
-X-CSE-ConnectionGUID: HZ/eFDEjSX62jri8Bhp1Ew==
-X-CSE-MsgGUID: jhTLtH32QCG85SlJ78RdeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="53010325"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="53010325"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 12:18:54 -0800
-X-CSE-ConnectionGUID: G1tsPvtWS5WyCNQLylqTlA==
-X-CSE-MsgGUID: Od6FgnaSTjG3VYl/FTgLTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="140350410"
-Received: from kcaccard-desk.amr.corp.intel.com (HELO [10.125.108.72]) ([10.125.108.72])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 12:18:54 -0800
-Message-ID: <4c71fc86-2d70-4d50-b041-d6ef8c1baf4c@intel.com>
-Date: Thu, 27 Feb 2025 12:19:05 -0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OP2kf5q0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RbjwaJxd"
+Date: Thu, 27 Feb 2025 20:20:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740687659;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=N5GBxKj2vN1YefaqwaNRI9BMN2xaspLBJCa8Im2OHcY=;
+	b=OP2kf5q0IVeIGBHGUNHPGQaoASvAs2GP1C6inMAcWzKuUXpeaU7gBRXqaVy65B4Lx7tcOK
+	+gi6unj2/buKh8hZJmQ6cp9sZQDZC0uKOpaaXWkU3v85bZfy81D+sKNkJCmOioVZlEQbcr
+	VnlcXybIxNX1sMg3LlWpVVqsrE3gcTHbKcRXDQnHE04k5Wr2VLcWayzhEOsH6+wq74bjoh
+	QgzaHKPBL0GNBONeD786XYKdtFhbNsGEQkYGNU8tRtapXVjZiZtFxzxqQKEH3FnqLXRNp0
+	uzJnGMmfZncEFXSc+bwcNXqnxRb1TOa+SWQGcVw+u0VOYqSK1f2VIHz0eMv/2Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740687659;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=N5GBxKj2vN1YefaqwaNRI9BMN2xaspLBJCa8Im2OHcY=;
+	b=RbjwaJxdXIQx/ehHvdy0foLj6BocsnX5q679cM3v5zSwK7xNE+ujmDI4IWvY6dqpunzXKO
+	onqB0mUADF5uj3CA==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/core: Prevent rescheduling when interrupts
+ are disabled
+Cc: David Woodhouse <dwmw@amazon.co.uk>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v1 02/11] x86/fpu/xstate: Introduce xstate order table
- and accessor macro
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, Linus Torvalds <torvalds@linux-foundation.org>
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250227184502.10288-3-chang.seok.bae@intel.com>
- <Z8C3ZcMgHuBtIjFR@gmail.com> <674db309-e206-4bb4-bf99-b3c39bff7973@intel.com>
- <Z8C-xa7WB1kWoxqx@gmail.com> <af4ec757-22fd-4438-91fc-d8778998bf07@intel.com>
- <Z8DE0K2EEDe1dQdh@gmail.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <Z8DE0K2EEDe1dQdh@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174068765743.10177.15505690433402162747.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 2/27/25 12:02, Ingo Molnar wrote:
->>> There's a 4th option:
->>>
->>>    4. Reuse XFEATURES 3/4 (MPX) only on APX-aware kernels, keep it 
->>>       disabled for old kernels.
->>>
->>> Problem solved.
->> The worry boils down to code in the kernel or userspace doing this:
->>
->> 	if (XGETBV(0) & 0x11)
->> 		do_mpx_gunk();
-> New, APX-aware kernels wouldn't be doing this, why would they?
+The following commit has been merged into the sched/urgent branch of tip:
 
-New, updated software is rarely the problem. It would not be a problem
-in this case either.
+Commit-ID:     82c387ef7568c0d96a918a5a78d9cad6256cfa15
+Gitweb:        https://git.kernel.org/tip/82c387ef7568c0d96a918a5a78d9cad6256cfa15
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 16 Dec 2024 14:20:56 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 27 Feb 2025 21:13:57 +01:00
 
-The problem is with old OSes/VMMs and even old userspace on new kernels.
-XGETBV() is unprivileged, so the concern extends to userspace and kernel.
+sched/core: Prevent rescheduling when interrupts are disabled
 
->> So, sure, we could try to make sure that new kernels don't have any 
->> do_mpx_gunk() in them, but that doesn't help old kernels or other 
->> OSes/VMMs.
-> Old kernels would *never* see this bit enabled if it's disabled by 
-> default on bootup ...
-> 
-> VMMs would boot with it default-disabled as well, they can enable it 
-> themselves.
+David reported a warning observed while loop testing kexec jump:
 
-The problem is with code which is logically like this:
+  Interrupts enabled after irqrouter_resume+0x0/0x50
+  WARNING: CPU: 0 PID: 560 at drivers/base/syscore.c:103 syscore_resume+0x18a/0x220
+   kernel_kexec+0xf6/0x180
+   __do_sys_reboot+0x206/0x250
+   do_syscall_64+0x95/0x180
 
-        cpuid_count(CPUID_LEAF_XSTATE, 0, &eax, &ebx, &ecx, &edx);
-        fpu_kernel_cfg.max_features = eax + ((u64)edx << 32);
-	fpu_kernel_cfg.max_features &= SUPPORTED_FEATURE_MASK;
-	xsetbv(fpu_kernel_cfg.max_features);
+The corresponding interrupt flag trace:
 
-In that code, the kernel asks the CPU which features it supports and
-then it enables all those features. In an old kernel,
-SUPPORTED_FEATURE_MASK would contain the two MPX XFEATURES.
+  hardirqs last  enabled at (15573): [<ffffffffa8281b8e>] __up_console_sem+0x7e/0x90
+  hardirqs last disabled at (15580): [<ffffffffa8281b73>] __up_console_sem+0x63/0x90
 
-So I'm not _quite_ sure what you meant when you said:
+That means __up_console_sem() was invoked with interrupts enabled. Further
+instrumentation revealed that in the interrupt disabled section of kexec
+jump one of the syscore_suspend() callbacks woke up a task, which set the
+NEED_RESCHED flag. A later callback in the resume path invoked
+cond_resched() which in turn led to the invocation of the scheduler:
 
-> Old kernels would *never* see this bit enabled if it's disabled by
-> default on bootup ...
+  __cond_resched+0x21/0x60
+  down_timeout+0x18/0x60
+  acpi_os_wait_semaphore+0x4c/0x80
+  acpi_ut_acquire_mutex+0x3d/0x100
+  acpi_ns_get_node+0x27/0x60
+  acpi_ns_evaluate+0x1cb/0x2d0
+  acpi_rs_set_srs_method_data+0x156/0x190
+  acpi_pci_link_set+0x11c/0x290
+  irqrouter_resume+0x54/0x60
+  syscore_resume+0x6a/0x200
+  kernel_kexec+0x145/0x1c0
+  __do_sys_reboot+0xeb/0x240
+  do_syscall_64+0x95/0x180
 
-Because old kernel very much do see the MPX bits in CPUID and very much
-do enable them by default via XSETBV.
+This is a long standing problem, which probably got more visible with
+the recent printk changes. Something does a task wakeup and the
+scheduler sets the NEED_RESCHED flag. cond_resched() sees it set and
+invokes schedule() from a completely bogus context. The scheduler
+enables interrupts after context switching, which causes the above
+warning at the end.
 
-But I suspect I'm misunderstanding what you mean by "this bit" in first
-place. Could you explain in some more detail, please?
+Quite some of the code paths in syscore_suspend()/resume() can result in
+triggering a wakeup with the exactly same consequences. They might not
+have done so yet, but as they share a lot of code with normal operations
+it's just a question of time.
+
+The problem only affects the PREEMPT_NONE and PREEMPT_VOLUNTARY scheduling
+models. Full preemption is not affected as cond_resched() is disabled and
+the preemption check preemptible() takes the interrupt disabled flag into
+account.
+
+Cure the problem by adding a corresponding check into cond_resched().
+
+Reported-by: David Woodhouse <dwmw@amazon.co.uk>
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Closes: https://lore.kernel.org/all/7717fe2ac0ce5f0a2c43fdab8b11f4483d54a2a4.camel@infradead.org
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9aecd91..6718990 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -7285,7 +7285,7 @@ out_unlock:
+ #if !defined(CONFIG_PREEMPTION) || defined(CONFIG_PREEMPT_DYNAMIC)
+ int __sched __cond_resched(void)
+ {
+-	if (should_resched(0)) {
++	if (should_resched(0) && !irqs_disabled()) {
+ 		preempt_schedule_common();
+ 		return 1;
+ 	}
