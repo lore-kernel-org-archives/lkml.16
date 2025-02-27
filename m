@@ -1,124 +1,117 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D78622FE17
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3117230242
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 04:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740631086; cv=none; b=DFQgZvCVQ9luu3loM5uH8AC81d3JwkAgvQtRWKYf4mYIa5zXsz9sadUxt0TNgF/P2wVh1XfCmJqB+JfNhtbZg0Ztg/8VEP5nFirTtHm5Bwep7DFrrvi2V1Kpc/IAix64kEDaYFb6nQym6NXshw1irElpAJXF0lBH8tNw9ywAg6s=
+	t=1740631087; cv=none; b=PnTgp3uc3bzz2Kjix2mAznORV12vRxshdvxBzCp8DiwxfiiCSPM6RmCo0x5pfBv5XFFOHyYEFgHq0wFMsw9v5/tLcay5+Tsudlc2A8ceRZvIhJXeeirU6lus7y/nbpsa0edDJFQZKk7h2z1FBKupiC9ayIpV1S4lha64z0y0Brc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740631086; c=relaxed/simple;
-	bh=YXqmUW/0eh8jEOcE7CvrKP8PjkOyelgn6yR8rLddqH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uykUJpHXvvCebWjirqui/ps90S139XsNK7fgJAqjf3JJSgw3ajkvyraX1+EKT4DQjGqFbJYOGLtFt62gGf8eQ+gu3Pi2KwOWrbUxgYzzGzYmtNBdp0TnX0hW+Pq7AfJPou7AfBV6PvcXcNEI8Pdumg8uSJcHrrzCAFBTOA4WR3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UFZgYNSD; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740631087; c=relaxed/simple;
+	bh=W31aHz42Z/T5ZpbsLubBQm+2xkwzX3XN0l4V3Rn0VQ0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nSCUcgCeUjehoiUUnmnucum1Lkui8eTuJIehcu/BwH7J0a4JnRwJAUeVMG+w5+PLIkDrp5DSTz8F5YP4k/jSX/2PIsNsZUS4F4OotibQueK9sjYXG8vxjxxL4n6GGUuV4jxK5sLZYtgSMr6kljldxJrcpGuDNtlapDKgO2WzeqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UhkefBHV; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFZgYNSD"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54943bb8006so477876e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:04 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UhkefBHV"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fea65dcc3cso566810a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 20:38:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740631083; x=1741235883; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740631085; x=1741235885; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5mpbDw0Fet6YkuQYRz4hIjFDxEEh0ZsoMbrqLONn3kY=;
-        b=UFZgYNSDBliPgZdMXKOosm2gUhY9ItPevMX0rTLqJvHymcWAPCJt358hc6G5x2b7vc
-         57y1BSsrfNLkGbY/IUhd8E0Qnc2O5c9CLC7WzxSe+q4DlOD3fwcL74Cj7Y2w+OtWGHHH
-         C7q9esHTgVONxV5vTJWGTZac5FIUMRbAV9vXMSk2vxbmBEsbwUCiNHdqzEPL92YqrZ0V
-         5kdT9gg+0/wJdBit21PHpZvIZJMr8yHc/TMqkbTKB1dBq2WiM1JPec9ds45X3D+MbiZY
-         /hkFA40KFiX1z6v84ZXV5m2sa0BOtLeTsp4XLRXR897zhpHl4h0RA3XRA+soeQ16y7c5
-         6ctg==
+        bh=5Z7L+E0AxAkJHYT9s94E/nR5ku/ie8tNmkgfIKxsvlQ=;
+        b=UhkefBHVdCIsifzaBS1fW7KMPVCa1OjzaB6XI8yonREKNEV3i5hZhJ/G2HPU2e6CT6
+         q+P6Oo5UfL77T+IDVK0F2vZf7NthrEKEm9Ji8FJv1rZ9G+w8wjGixOthJn2wQmGW3x+b
+         n4l5XPFwnKVkS7AV0dvf9AOGS4tT6MllfgM/k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740631083; x=1741235883;
+        d=1e100.net; s=20230601; t=1740631085; x=1741235885;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5mpbDw0Fet6YkuQYRz4hIjFDxEEh0ZsoMbrqLONn3kY=;
-        b=xT+Z56PSYGKTi4IAKZQ7MEtYKt9t8puVOCLh9sLa74gi3VJmcnZ6zIMmcdxclSBjnQ
-         acFqXvHb2KvhtIBhvJR4OC63v5xB4LLlJi+qjWcIkljCkayE3uorBFlpRnv5szdnAeig
-         UHi8GQt0EH4zRvsFrhZPKMNoXAakI4ymDtH0o+cCgizy+tsRof7dOEi/4Y303Eai3bE+
-         +5jBLYJgMHS5BNv26P+BHPa+nucnrk5J2CWAJm/dCv2OisBqtcX57J7UgbLfQlV96ri+
-         W6F2DBQG/vpgcJP2zhO+LICtO8PQ7f7B6tnIf5KZhK3AcDRksxD0VrQbSODpysUkoEkw
-         E1pA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3Z7pKTE4u1wy+KcVPmNXGXd35duDF/4PS46LnkEwd3S47vAi7jknJXBkQzOSrgRpPLX9Nw2y2J41HOSA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywFBoF66kpX/e0Fwo/7UXYWixMD7WOcENVTO2ySTBm1Ure7OFz
-	EbbY7wniO7f+nDzlsFISN39g2ddbwAWb3wHQ+37QM7sDCOsEOngfdcr3ymMVHO4=
-X-Gm-Gg: ASbGncsXVnfbwfnLfpuzHKJftFR0nbxlPc9FJSsRdmFJjN4WLvgoeOsS7V0hEEkhOna
-	ODG0Rzv4JG3y/gItjOfNnVRKO8Oj5QbmUnh3gDvBygg9Khoi5Mkrm6I9dIM5mPwF2Tyb35OsAI+
-	mM7g2upV1cGSdUMDthfVwOHqx3rxykZNZ7ZN9wUoJo8LR9rxC6CNmgt8R0/B+XzzW3dgmmt0WCK
-	tr5ydMYhWJ4Ku+B1+iThDdEspA7Gnp3k0osUMA1pSRpGrLSzr2Qx/HaJ8cYhww3fFWUeVDfmsZe
-	mXVafPsBvYbiZstbboq1jj1m3uEx7QSIuzqL2I4y1g==
-X-Google-Smtp-Source: AGHT+IFgxjAKrvkpIGrRkJYBcLkZa/TaKD/dJweGI7YYBbQ4EzNsK1UsZ/cS/Ce561pRPgFymoguLw==
-X-Received: by 2002:a05:6512:3ca9:b0:546:2ff9:1539 with SMTP id 2adb3069b0e04-54851109cfcmr5718647e87.52.1740631082596;
-        Wed, 26 Feb 2025 20:38:02 -0800 (PST)
-Received: from umbar.unikie.fi ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443ccf45sm63485e87.229.2025.02.26.20.38.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 20:38:01 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Rob Clark <robdclark@gmail.com>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Sean Paul <sean@poorly.run>,
-	David Airlie <airlied@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Simona Vetter <simona@ffwll.ch>,
-	Archit Taneja <architt@codeaurora.org>,
-	Hai Li <hali@codeaurora.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>
-Cc: linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org,
+        bh=5Z7L+E0AxAkJHYT9s94E/nR5ku/ie8tNmkgfIKxsvlQ=;
+        b=sLDgkpI+dIBECUT7864pHlUeq1QBNhfaIC3mio5DkIBc4o55OF8EpyYbMUzzr40bJV
+         jJe8VCP0lkMrNXjR+1OL/WQGl6Fdm2omv0FxobQ2Yl5s9GK17wIjz+x0PbUiqlwpgSlq
+         eMqoznfTW9I2IpUkoWhrsHC6BMceEoqEfQdQDJIgtmHct5q/Zg44JyBcitQpNOdRxUle
+         TsmmKDUpCNqVfWcGKRHfST5zjBonn13ooPSIDGnpx7g4dm9EGiIBBZkz6chEeZDTVFyL
+         q87SGYxfBCcF049JwKy/2mLspikeerUvZuo3fJ9P9Fgh7Shp7C1OS12tXi7DN82DeZtT
+         Sp6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUZfudPXu3Px6DSm/71Bfitv+FKAOoprz1oU9zI338qPc7FH6NwYCwEFS4Wda2HdLuV31lfHF9T3Cqy224=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQEN9fkF2qymywEt001tSozmHvpeYuZeCXuUfUmkjHdBAf1YNd
+	mp8Sw7Qwm6prUhPCRjmOAT6iF+fT+SgQrTEUdmnThckxbL1uRUsD4TRV7lZLNA==
+X-Gm-Gg: ASbGncuNXSEEbllHcEZkmCz+zxSvTJobh5nV3VqktdL/bUmme88Bkews3WAB+6Nka6u
+	H+Ko8HhNYZHw8TdUrl0J+UUVJ7zC/J+JWNumYxjbWqhO9/FpcgTDGXvV1NFAi81plAxwUjCVBtO
+	oAm7UUfjjjdJieLYEVIcmJ++JAM8avm5XyPx6qM5/qJ9HJjXbVC15HuTbzTUnIcS/ZtxqT7wRup
+	fFYCQFlx/Scjut5hx0ouYRKOOfA7pPCt0ZjwfFh320KRFuxCUGyTkOMjoD/K7DZ6f4fka+XJAGo
+	MFp008xr8EAi0ciF/Qi24K9vOYvh
+X-Google-Smtp-Source: AGHT+IHkiQZTH+QyI09NsnNe2+VUmytHTF3AQc8esT3P6nxO5c5MPzYujs2/5+Dmg9L+ktNJZYSfyg==
+X-Received: by 2002:a17:90b:548f:b0:2ee:5958:828 with SMTP id 98e67ed59e1d1-2fce86adf6cmr41590472a91.9.1740631085050;
+        Wed, 26 Feb 2025 20:38:05 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:a9c0:1bc1:74e3:3e31])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-223501d2901sm5005945ad.30.2025.02.26.20.38.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 20:38:04 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Jordan Crouse <jordan@cosmicpenguin.net>,
-	~postmarketos/upstreaming@lists.sr.ht,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Martin Botka <martin.botka@somainline.org>,
-	Jami Kettunen <jami.kettunen@somainline.org>,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>
-Subject: Re: [PATCH v3 0/3] drm/msm: Initial fixes for DUALPIPE (+DSC) topology
-Date: Thu, 27 Feb 2025 06:37:32 +0200
-Message-Id: <174063096231.3733075.12359628764026922067.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-0-913100d6103f@somainline.org>
-References: <20250217-drm-msm-initial-dualpipe-dsc-fixes-v3-0-913100d6103f@somainline.org>
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v9 17/19] zram: do not leak page on recompress_store error path
+Date: Thu, 27 Feb 2025 13:35:35 +0900
+Message-ID: <20250227043618.88380-18-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+In-Reply-To: <20250227043618.88380-1-senozhatsky@chromium.org>
+References: <20250227043618.88380-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+Ensure the page used for local object data is freed
+on error out path.
 
-On Mon, 17 Feb 2025 12:17:40 +0100, Marijn Suijten wrote:
-> This series covers a step-up towards supporting the DUALPIPE DSC
-> topology, also known as 2:2:2 topology (on active-CTL hardware).  It
-> involves 2 layer mixers, 2 DSC compression encoders, and 2 interfaces
-> (on DSI, this is called bonded-DSI) where bandwidth constraints (e.g. 4k
-> panels at 120Hz) require two interfaces to transmit pixel data.
-> 
-> Enabling this topology will be hard(er) than downstream as hacking a
-> layout type in DTS won't be describing the hardware, but "dynamically"
-> determining it at runtime may pose some of a challenge that is left to a
-> future series.  Such changes will also involve the 1:1:1 topology needed
-> for constrained hardware like the Fairphone 5 on SC7280 with access to
-> only one DSC encoder and thus ruled out of the current 2:2:1 topology.
-> 
-> [...]
+Fixes: 3f909a60cec1 ("zram: rework recompress target selection strategy")
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/block/zram/zram_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Applied, thanks!
-
-[1/3] drm/msm/dsi: Use existing per-interface slice count in DSC timing
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/14ad809ceb66
-[2/3] drm/msm/dsi: Set PHY usescase (and mode) before registering DSI host
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/660c396c98c0
-[3/3] drm/msm/dpu: Remove arbitrary limit of 1 interface in DSC topology
-      https://gitlab.freedesktop.org/lumag/msm/-/commit/d245ce568929
-
-Best regards,
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 1e2ba3590a39..e8375fcdb36e 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -2013,7 +2013,7 @@ static ssize_t recompress_store(struct device *dev,
+ 	struct zram_pp_slot *pps;
+ 	u32 mode = 0, threshold = 0;
+ 	u32 prio, prio_max;
+-	struct page *page;
++	struct page *page = NULL;
+ 	ssize_t ret;
+ 
+ 	prio = ZRAM_SECONDARY_COMP;
+@@ -2157,9 +2157,9 @@ static ssize_t recompress_store(struct device *dev,
+ 		cond_resched();
+ 	}
+ 
+-	__free_page(page);
+-
+ release_init_lock:
++	if (page)
++		__free_page(page);
+ 	release_pp_ctl(zram, ctl);
+ 	atomic_set(&zram->pp_in_progress, 0);
+ 	up_read(&zram->init_lock);
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+2.48.1.658.g4767266eb4-goog
+
