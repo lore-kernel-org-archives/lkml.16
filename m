@@ -1,123 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F22EA59;
-	Thu, 27 Feb 2025 08:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC722223711;
+	Thu, 27 Feb 2025 08:29:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740644903; cv=none; b=YVd3kHxRNzc7yMiw5Ie6bK9llLQ+IL8cT2Znz6XiL3skWz6R8H4hXbEAGZ1jDCI4WH2Q5fqpI8oQ4M9YmNTOMo2lnDt+sxVkScyKeYKq3CEUeZMg/1XQxeWcvESIVWO9SVMPLn9v/G6s51sCC8XVp6FHhkhkLrl6IkXryArFTXM=
+	t=1740644985; cv=none; b=pkdSn8kN8fFDpMUq0c2WO2PF7VaQJKDiEtKkZpkWtLo7q5LnmOZj6ypgJ2PaGf/ZGEwN1uOrEwHcRPWfCXncwgnzHDSBiR3TWLFBQaJbBMAXgayKZ758EGsxtQK6ljnOc0GR/UXuA1yozP7rGcrYcJEktYS7D/0nRuuQiYh6Ch8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740644903; c=relaxed/simple;
-	bh=mL+ScEVoosTCLqReMvWvb0hKdFm7SzXMaD7EnmZ5gQU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=beFmba2znEwpsZA5p8TdKpNLuad2VpUIRp0304iC9YM+OZYqWFnmJv6mEk1emnc9EKZgiS/UDQfDZI6BhnCoEm2FWFo3YqRSzEGrwkn0HP7rOFRIeYETb1ptdFiCRA0X4ZZ7YpuwmY8eB1oc79UOvWWqC/rpXLXFo2ymRbiSPUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UkCcNxAH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740644985; c=relaxed/simple;
+	bh=zW0E8AcoXAZvyu8fI1UtUuZAzU6CpWw9TRKZgNnALk4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NlaOJRYHn8MJFB37vqO6Ny+potU8zUcFv0ckztASrd6Kot6yo7CKzezWemlh4696Z+kJuTmjD8hTQkp3Cdq1OQXVqZNaBVmt7RW010V3Lt5S8VzRmuxrvL9P8XiTMCG4y3l15as/HKQk+9OSQdSbLvB8Arfv96HGeFDnT3nFlXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=huPKehyV; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UkCcNxAH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB7C8C4CEDD;
-	Thu, 27 Feb 2025 08:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740644902;
-	bh=mL+ScEVoosTCLqReMvWvb0hKdFm7SzXMaD7EnmZ5gQU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=UkCcNxAHNlb8KdOpVGBTAsjYUG5oG1EXqGPyEiclsxzBC4p+LOLBcG4nlsZ/bWo+k
-	 W+AZVnrXuaRNp4mDR5r14XtUQsblr0rPT8GQGXSvmHHye9M6QtKrggxgtlCWPBRshH
-	 VXHHQftNfX5UHocw4EVWQUQmUDQz4GzjrsIKq68nK/GgPYUU36Ou13zR4DA+XXyBwE
-	 VnpTHUvNXXG1VQHUqqmr5E8R4xbVpPoN8BgaUYrbR3al/9qF/BSs/eqYzBZCgu+gBm
-	 aUlhq9JEmKjqnqTOuaNi+lue7T7tGaier67NxH/nVOHEYQbBo2Sn4rUSxSu7KWkMMY
-	 sFWAD4mVSBNWA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
-Cc: <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <x86@kernel.org>,  <linux-riscv@lists.infradead.org>,
-  <linux-arm-kernel@lists.infradead.org>,  <loongarch@lists.linux.dev>,
-  <tglx@linutronix.de>,  <mingo@redhat.com>,  <bp@alien8.de>,
-  <dave.hansen@linux.intel.com>,  <peterz@infradead.org>,  <hpa@zytor.com>,
-  <paul.walmsley@sifive.com>,  <palmer@dabbelt.com>,
-  <aou@eecs.berkeley.edu>,  <catalin.marinas@arm.com>,  <will@kernel.org>,
-  <chenhuacai@kernel.org>,  <kernel@xen0n.name>,
-  <tangyouling@loongson.cn>,  <hejinyang@loongson.cn>,
-  <yangtiezhu@loongson.cn>,  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
-  <boqun.feng@gmail.com>,  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
-  <benno.lossin@proton.me>,  <aliceryhl@google.com>,  <tmgross@umich.edu>
-Subject: Re: [PATCH v3 0/5] rust: Add bug/warn abstractions
-In-Reply-To: <20250227.155417.1610168537890385926.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Thu, 27 Feb 2025 15:54:17 +0900")
-References: <yy_ESUuchCjlaGIJHzCPAcP_d9ucSD0CGXaoZNNkY7BmN5Ch1J8avsA9QpKO5LkTjlGpu99jl8NrFl5NFSQXuw==@protonmail.internalid>
-	<20250213135759.190006-1-fujita.tomonori@gmail.com>
-	<8734g0v6ke.fsf@kernel.org>
-	<aPT3Afc47I_dmAxy1DPVKUobcIJLV0rRUOXJX-ab6IFWqflSxdlOVQdJT0rxYQHjDBeWHDFjWsdXfiCOZ5hPWg==@protonmail.internalid>
-	<20250227.155417.1610168537890385926.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Thu, 27 Feb 2025 09:28:11 +0100
-Message-ID: <87frjzu6zo.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="huPKehyV"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51R8TWTT1795967
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 27 Feb 2025 02:29:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1740644972;
+	bh=VdpIYHpFxJx7E3IK1fTiNq9eW/altzv0I3q3e08BHow=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=huPKehyVCARKNq5w1XbAdw22PZRdB3XPoyMeAfyacAeEHFu1v4CyL+UPkHh8DGbW8
+	 pQ2U5IS6Yi2+VzCsbY8JeZst51UJBvcdkIxRjKlxKTC2VK/qUTyGDY5j3m9X4J5jY5
+	 p6EWwhERG276KDTvOZSIDZ37slApO3tEZcyKNbVQ=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51R8TWmc025593
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 27 Feb 2025 02:29:32 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 27
+ Feb 2025 02:29:32 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 27 Feb 2025 02:29:32 -0600
+Received: from abhilash-HP.dhcp.ti.com (abhilash-hp.dhcp.ti.com [172.24.227.115])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51R8TMOd057599;
+	Thu, 27 Feb 2025 02:29:28 -0600
+From: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+To: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC: <mripard@kernel.org>, <mchehab@kernel.org>, <jai.luthra@linux.dev>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <devarsht@ti.com>, <vaishnav.a@ti.com>, <r-donadkar@ti.com>,
+        <u-kumar1@ti.com>, <y-abhilashchandra@ti.com>
+Subject: [PATCH v4 1/2] dt-bindings: media: cdns,csi2rx.yaml: Add optional interrupts for cdns-csi2rx
+Date: Thu, 27 Feb 2025 13:59:19 +0530
+Message-ID: <20250227082920.744908-2-y-abhilashchandra@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250227082920.744908-1-y-abhilashchandra@ti.com>
+References: <20250227082920.744908-1-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+The Cadence CSI2RX IP exposes 2 interrupts [0] 12.7 camera subsystem.
+So, add support for optional interrupts and interrupt-names properties.
+Keep the second interrupt optional, as it may be unconnected across
+different vendors.
 
-> On Wed, 26 Feb 2025 20:39:45 +0100
-> Andreas Hindborg <a.hindborg@kernel.org> wrote:
->
->> How does this series compare/overlap with [1] ?
->>
->> [1] https://lore.kernel.org/all/20241126-pr_once_macros-v4-0-410b8ca9643=
-e@tuta.io/
->
-> No overlap. Each solves a different problem. Both are necessary.
->
-> This patchset enables Rust code to call C's BUG/WARN properly.
->
-> Currently, Rust's BUG() is a simple wrapper for C's BUG()
-> (rust/helpers/bug.c). I added BUG() to rnull's init() and got the
-> following:
->
-> # insmod /root/rnull_mod.ko
-> rnull_mod: Rust null_blk loaded
-> ------------[ cut here ]------------
-> kernel BUG at rust/helpers/bug.c:7!
-> Oops: invalid opcode: 0000 [#1] SMP
-> CPU: 0 UID: 0 PID: 31 Comm: insmod Not tainted 6.14.0-rc1+ #103
-> RIP: 0010:rust_helper_BUG+0x8/0x10
-> (snip)
->
-> This is NOT debug information that we expect. The problem is that
-> BUG/WARN feature (lib/bug.c) can only be used from assembly.
->
-> This patchset includes only warn() but with bug() implementation on
-> top of this patchset, I got:
->
-> # insmod /root/rnull_mod.ko
-> rnull_mod: Rust null_blk loaded
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 31 at /home/fujita/git/linux-rust/drivers/block/rnul=
-l.rs:46 _RNvXCsafUg3oOYix8_5rnullNtB2_13NullBlkModu]
-> Modules linked in: rnull_mod(+)
-> CPU: 0 UID: 0 PID: 31 Comm: insmod Not tainted 6.14.0-rc1+ #104
-> RIP: 0010:_RNvXCsafUg3oOYix8_5rnullNtB2_13NullBlkModuleNtCsaYBeKL739Xz_6k=
-ernel13InPlaceModule4init+0x71/0x4f0 [rnull_mod]
->
->
-> The [1] patchset adds an abstraciton for include/linux/once_lite.h,
-> 'call a function once' feature, with pr_*_once() implementation.
->
-> pr_*_once() just calls printk() once. Unlike BUG/WARN, no debug
-> information (call place, registers, stack trace, etc).
->
->
-> The only connection between two patchset is that WARN_ONCE() can be
-> built on top of both like the C side.
+[0]: http://www.ti.com/lit/pdf/spruil1
 
-Awesome, thanks for explaining =F0=9F=91=8D
+Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+---
 
+Changes in v4:
+- Add flexibility in DT bindings
+- Drop the ACK from Krzysztof, since there is change in bindings
+- Make some minor changes in the commit messages.
 
-Best regards,
-Andreas Hindborg
+ .../devicetree/bindings/media/cdns,csi2rx.yaml         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+index 2008a47c0580..054ed4b94312 100644
+--- a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
++++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+@@ -24,6 +24,16 @@ properties:
+   reg:
+     maxItems: 1
+ 
++  interrupts:
++    minItems: 1
++    maxItems: 2
++
++  interrupt-names:
++    minItems: 1
++    items:
++      - const: error_irq
++      - const: irq
++
+   clocks:
+     items:
+       - description: CSI2Rx system clock
+-- 
+2.34.1
 
