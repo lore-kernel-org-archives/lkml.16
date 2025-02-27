@@ -1,37 +1,65 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [61.152.208.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1576327005B
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.152.208.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A9D4A24
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 00:40:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740616718; cv=none; b=BvbCPRpRg2cGMua5IvN0lRKsq3RooYN/Fg5KFt3Y2Ki10Uk9Sp0XQHxH1w57pA8dygFXcUkzDwvEcMx0I18XN70jtAFxkib8juEe89qwPKL4aZuJLJOOPr/mmpXvv7VGrnKLqydtlJIHnETv4TiDNUHBs+lWBCxB/QYnsxWyeG8=
+	t=1740616840; cv=none; b=VYk9r6ALQSwNgFdqjKVfxkq5oRhqKzfG3rN4e2MCcZ6zJPQL0Vye9TOwmVrdohTtImMeebFR97Vo6X8GpKdB+kGCuO8AK4EXjFL9w+KyzdmkulJ9C9uMNs9YHda+hvLCssmJ9xHhSG9cXauPdDnskjEMlQv3CKaBMNWHJ5YdG7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740616718; c=relaxed/simple;
-	bh=FIiVtcNHJYrmZ+Yz2YVjUiAkhpAPHWrX1l2qB64oxFE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=RAI4+JrTsSq4ujimhn8edZfDV+CuuwlsltUuXLFHSP3ZEeXjt7Irr4rZCf+nmHbodEqubq+PZF7kIhHE7WXELqSsxV1mxZvKhR4+Y+WrVbT7xS/NyJJ7g6bjffOxzv3oAjl/KcPjfNZ8tOElezeje3qvi++fZy/i1eEkbYFm1Wg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=61.152.208.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1740616714-1eb14e79fe312d0001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id gy3gPjRKSLH6Qt18 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 27 Feb 2025 08:38:34 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXSHMBX2.zhaoxin.com (10.28.252.164) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Thu, 27 Feb
- 2025 08:38:34 +0800
-Received: from ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298]) by
- ZXSHMBX2.zhaoxin.com ([fe80::4dfc:4f6a:c0cf:4298%4]) with mapi id
- 15.01.2507.044; Thu, 27 Feb 2025 08:38:34 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from [10.32.64.4] (10.32.64.4) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.44; Wed, 26 Feb
- 2025 17:41:12 +0800
-Message-ID: <1cb4d7de-ee6d-4ce7-bb4a-86ef5a986dba@zhaoxin.com>
-Date: Wed, 26 Feb 2025 17:41:10 +0800
+	s=arc-20240116; t=1740616840; c=relaxed/simple;
+	bh=jpLsczkirjl3znww0vHtEndaxD24N3ExtJwt48GA4Ow=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tRFv9WBfubbGHS8QTvRbRw5280zsQwX1qIi+6ZUacTJ9cSIFcmCz5QX98zzjY69r5NJQnhIcNxLectlO0dB9OWVNjoPSjWBI7lGiqHxPLS07PsjZmYCu0eK2pL4bg/o7eVa4ZZembBXHgA2IwsE9BNl3ICAk6UclETMlF3vdsHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j5EvtkN8; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5EvtkN8"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-390e3b3d3bcso270755f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 16:40:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740616837; x=1741221637; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jpLsczkirjl3znww0vHtEndaxD24N3ExtJwt48GA4Ow=;
+        b=j5EvtkN8N3A2HCls/pSAH0wrUZnMmuC3jvwNr7IKJ6Oj+ohHlDnC71rJLVHeAbrLvl
+         znyl7vpN1abevrtVBo6W36Vc+qJ+/zRGYEkPDQKGE4FyPUgWVVgTw9Jz7h2f3JcA++iU
+         SBSUhDJ7iMsXZ7Ye9gYMTaxHABnEmzgCpDU5ef9KK4ra39BCgaKNuvDcX0gUj8BTjKc0
+         6O8tcuy6r2uyqiuEmWhB38WvuGSb9+18AZCdSZVpuUOuFl4HHgvquYOrysa+zHgGQeID
+         HBX7VrD5WeVImbCye2jdzTPti7ANBLgUTm08PGOrUyUSUIu5jkvNnqmlRTw5NBSzvHtT
+         8TAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740616837; x=1741221637;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jpLsczkirjl3znww0vHtEndaxD24N3ExtJwt48GA4Ow=;
+        b=IRmtzN+5SxiU0DPTqLIMzg5ztU/9Tx13QjkMlJ9dBzPP5oA/m4IyPLtCBwQUnpCyej
+         1AUyxJNqdTEcccOzoM4APwLMXhVwnuOrLDZkavOdDET4NBlbTyxVjfN0XCC26ENV19I5
+         m2A09UivKLj3m10GV1B1x/4atCM3xIY1wXsC+xFbNuQEbpDJKyh4ftcoXeTLHoeoWL3s
+         gqgxnahLJElXxaBwOIUhPjQJUdsQFjCRzrUvq73vgaeB/0H/IcYJkqNXOOssJLNaxztB
+         s5K+8tdqJ49oSHEtEps1DRp5G+ykUYqezcCPBPgkphM/XMi9jqnT2K42RgcjXucqvBIB
+         lIHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ8dIQQ1jGk/JSbhDIRo5fJZIb6F6XefN52I04Ha+l9F8R7FA99qtHzpvABdtaPlLER/tPg9shY+zujew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPotHdPkbsm7RsuLyAMTo59WYnHg1CzxL9+GSX0XPSQDtcxOyd
+	VKuizs8g+z1a6Q1wjJZO8rh2W5ndj197z0diTcCaq7blWv25GTJ6
+X-Gm-Gg: ASbGncvOD1I5ZGAp6oBVqPjeGSUVd1URNhMWY8d56Vr1jJcNQ7u4QB3MzO8V8Oo8lF5
+	LdDyVLicfsOIC22nx82gCTWkyHJfG9vJ+/7HVGbZzCduviLTSJFjr4yV4+S3nlTQGmFMEsS+hyr
+	oMdh8WdNo6GdpQ6fc1BRWtrJIl0MN/s9OcXKTRsdgfw6FVd6uB2IH6h8QsCO8HHAlJXazUS+cKA
+	OI72+9llqsIwUtEnyU1Xab7/IzkUoAeQ/Ip/SWa8JhNRF2O3yPVOwDs0t7uRtjXLXl9ovZ4znri
+	A5Nk6JX/xP9AiEYcbWQ0EbuqyvVeSQ5UtzHK1eoMJz+DsxXV6KayYa8qNNDYTtVfvW3cRJ2ps1F
+	VFUAev/mv+UVJRqMiIVbOMoHKxAeM5W6n2Wz83ITNpQ==
+X-Google-Smtp-Source: AGHT+IHrZFOinDSrmWi4+m1t5sYEIk52JDxPafuRYroaeZUSAqukvpFIFZVBSIhGoAPxRg+hZKGI9Q==
+X-Received: by 2002:a5d:59a3:0:b0:385:d7f9:f157 with SMTP id ffacd0b85a97d-390cc631b55mr9933881f8f.36.1740616837065;
+        Wed, 26 Feb 2025 16:40:37 -0800 (PST)
+Received: from [26.26.26.1] (ec2-63-176-201-248.eu-central-1.compute.amazonaws.com. [63.176.201.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e46f580bsm402728f8f.0.2025.02.26.16.40.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Feb 2025 16:40:35 -0800 (PST)
+Message-ID: <f29818dc-a0a7-46c4-b541-1b469a6b3304@gmail.com>
+Date: Thu, 27 Feb 2025 08:40:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,267 +67,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: LeoLiu-oc <leoliu-oc@zhaoxin.com>
-Subject: Re: [PATCH v4 3/3] PCI/ACPI: Add pci_acpi_program_hest_aer_params()
-To: Yazen Ghannam <yazen.ghannam@amd.com>
-X-ASG-Orig-Subj: Re: [PATCH v4 3/3] PCI/ACPI: Add pci_acpi_program_hest_aer_params()
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
-	<robert.moore@intel.com>, <avadhut.naik@amd.com>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <acpica-devel@lists.linux.dev>,
-	<CobeChen@zhaoxin.com>, <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>
-References: <20241205114048.60291-1-LeoLiu-oc@zhaoxin.com>
- <20241205114048.60291-4-LeoLiu-oc@zhaoxin.com>
- <20241211194735.GB1960478@yaz-khff2.amd.com>
-In-Reply-To: <20241211194735.GB1960478@yaz-khff2.amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Moderation-Data: 2/27/2025 8:38:32 AM
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1740616714
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 7645
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -1.52
-X-Barracuda-Spam-Status: No, SCORE=-1.52 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=BSF_SC0_SA983
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.137756
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.50 BSF_SC0_SA983          Custom Rule BSF_SC0_SA983
+Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
+To: Jason Gunthorpe <jgg@ziepe.ca>, Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>, Yunhui Cui
+ <cuiyunhui@bytedance.com>, dwmw2@infradead.org, joro@8bytes.org,
+ will@kernel.org, robin.murphy@arm.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
+ <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
+ <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+ <20250225142610.GB545008@ziepe.ca>
+ <888f41b7-dac6-4faf-9f71-4d7bea050e41@linux.intel.com>
+ <33c4755d-6a0f-4734-88e0-84f0de67b652@linux.intel.com>
+ <83039906-77f7-4318-94bf-4c98bb3f0e32@linux.intel.com>
+ <20250226130423.GF5011@ziepe.ca>
+Content-Language: en-US
+From: Ethan Zhao <etzhao1900@gmail.com>
+In-Reply-To: <20250226130423.GF5011@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
+On 2/26/2025 9:04 PM, Jason Gunthorpe wrote:
+> On Wed, Feb 26, 2025 at 01:55:28PM +0800, Ethan Zhao wrote:
+>>> Provided the system does not respond to those events when this function
+>>> is called, it's fine to remove the lock.
+>> I agree.
+> I think it is running the destruction of the iommu far too late in the
+> process. IMHO it should be done after all the drivers have been
+> shutdown, before the CPUs go single threaded.
 
-=E5=9C=A8 2024/12/12 3:47, Yazen Ghannam =E5=86=99=E9=81=93:
->=20
->=20
-> [=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E6=9D=A5=E8=87=AA=E5=A4=96=E9=83=A8=
-=E5=8F=91=E4=BB=B6=E4=BA=BA =E8=B0=A8=E9=98=B2=E9=A3=8E=E9=99=A9]
->=20
-> On Thu, Dec 05, 2024 at 07:40:48PM +0800, LeoLiu-oc wrote:
->> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
->>
->> Call the func pci_acpi_program_hest_aer_params() for every PCIe device,
->> the purpose of this function is to extract register value from HEST PCIe
->> AER structures and program them into AER Capabilities. This function
->> applies to all hardware platforms that has a PCI Express AER structure
->> in HEST.
->>
->> Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
->> ---
->>   drivers/pci/pci-acpi.c | 103 +++++++++++++++++++++++++++++++++++++++++
->>   drivers/pci/pci.h      |   9 ++++
->>   drivers/pci/probe.c    |   1 +
->>   3 files changed, 113 insertions(+)
->>
->> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
->> index af370628e583..6e29af8e6cc4 100644
->> --- a/drivers/pci/pci-acpi.c
->> +++ b/drivers/pci/pci-acpi.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/pm_runtime.h>
->>   #include <linux/pm_qos.h>
->>   #include <linux/rwsem.h>
->> +#include <acpi/apei.h>
->>   #include "pci.h"
->>
->>   /*
->> @@ -806,6 +807,108 @@ int pci_acpi_program_hp_params(struct pci_dev *dev=
-)
->>        return -ENODEV;
->>   }
->>
->> +#ifdef CONFIG_ACPI_APEI
->> +/*
->> + * program_hest_aer_common() - configure AER common registers for Root =
-Ports,
->> + * Endpoints and PCIe to PCI/PCI-X bridges
->> + */
->> +static void program_hest_aer_common(struct acpi_hest_aer_common aer_com=
-mon,
->> +                                 struct pci_dev *dev, int pos)
->> +{
->> +     u32 uncor_mask;
->> +     u32 uncor_severity;
->> +     u32 cor_mask;
->> +     u32 adv_cap;
->> +
->> +     uncor_mask =3D aer_common.uncorrectable_mask;
->> +     uncor_severity =3D aer_common.uncorrectable_severity;
->> +     cor_mask =3D aer_common.correctable_mask;
->> +     adv_cap =3D aer_common.advanced_capabilities;
->> +
->=20
-> These can be done at the same time as the declarations. Same for the
-> remaining functions.
->=20
-These functions are called only in this pci-acpi.c file and should not=20
-require additional declarations.
+Hmm... so far it is fine, the iommu_shutdown only has a little work to
+do, disable the translation, the PMR disabling is just backward compatible,
+was deprecated already. if we move it to one position where all CPUs are
+cycling, we don't know what kind of user-land tasks left there (i.e. reboot -f
+case), it would be hard to full-fill the requirement of Intel VT-d, no ongoing
+transaction there on hardware when issue the translation disabling command.
 
->> +     pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK, uncor_mask);
->> +     pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER, uncor_sever=
-ity);
->> +     pci_write_config_dword(dev, pos + PCI_ERR_COR_MASK, cor_mask);
->> +     pci_write_config_dword(dev, pos + PCI_ERR_CAP, adv_cap);
->> +}
->> +
->> +static void program_hest_aer_root(struct acpi_hest_aer_root *aer_root,
->> +                               struct pci_dev *dev, int pos)
->> +{
->> +     u32 root_err_cmd;
->> +
->> +     root_err_cmd =3D aer_root->root_error_command;
->> +
->> +     pci_write_config_dword(dev, pos + PCI_ERR_ROOT_COMMAND, root_err_c=
-md);
->> +}
->> +
->> +static void program_hest_aer_bridge(struct acpi_hest_aer_bridge *hest_a=
-er_bridge,
->> +                                 struct pci_dev *dev, int pos)
->> +{
->> +     u32 uncor_mask2;
->> +     u32 uncor_severity2;
->> +     u32 adv_cap2;
->> +
->> +     uncor_mask2 =3D hest_aer_bridge->uncorrectable_mask2;
->> +     uncor_severity2 =3D hest_aer_bridge->uncorrectable_severity2;
->> +     adv_cap2 =3D hest_aer_bridge->advanced_capabilities2;
->> +
->> +     pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_MASK2, uncor_mask2=
-);
->> +     pci_write_config_dword(dev, pos + PCI_ERR_UNCOR_SEVER2, uncor_seve=
-rity2);
->> +     pci_write_config_dword(dev, pos + PCI_ERR_CAP2, adv_cap2);
->> +}
->> +
->> +static void program_hest_aer_params(struct hest_parse_aer_info info)
->> +{
->> +     struct pci_dev *dev;
->> +     int port_type;
->> +     int pos;
->> +     struct acpi_hest_aer_root *hest_aer_root;
->> +     struct acpi_hest_aer *hest_aer_endpoint;
->> +     struct acpi_hest_aer_bridge *hest_aer_bridge;
->> +
->> +     dev =3D info.pci_dev;
->> +     port_type =3D pci_pcie_type(dev);
->> +     pos =3D pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ERR);
->> +     if (!pos)
->> +             return;
->> +
->> +     switch (port_type) {
->> +     case PCI_EXP_TYPE_ROOT_PORT:
->> +             hest_aer_root =3D info.hest_aer_root_port;
->> +             program_hest_aer_common(hest_aer_root->aer, dev, pos);
->> +             program_hest_aer_root(hest_aer_root, dev, pos);
->> +     break;
->> +     case PCI_EXP_TYPE_ENDPOINT:
->> +             hest_aer_endpoint =3D info.hest_aer_endpoint;
->> +             program_hest_aer_common(hest_aer_endpoint->aer, dev, pos);
->> +     break;
->> +     case PCI_EXP_TYPE_PCI_BRIDGE:
->> +             hest_aer_bridge =3D info.hest_aer_bridge;
->> +             program_hest_aer_common(hest_aer_bridge->aer, dev, pos);
->> +             program_hest_aer_bridge(hest_aer_bridge, dev, pos);
->> +     break;
->> +     default:
->> +             return;
->> +     break;
->> +     }
->> +}
->> +
->> +int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
->> +{
->> +     struct hest_parse_aer_info info =3D {
->> +             .pci_dev =3D dev
->> +     };
->> +
->> +     if (!pci_is_pcie(dev))
->> +             return -ENODEV;
->> +
->> +     if (apei_hest_parse(hest_parse_pcie_aer, &info) =3D=3D 1)
->=20
-> Don't need the "=3D=3D 1".
->=20
-The apei_hest_parse function may return an error value, data are written=20
-to the aer registers only if the device in hest_parse_pcie_aer() matches=20
-the correct hest aer structure information. It is necessary to check=20
-whether the return value of the apei_hest_parse function is equal to 1.
+Of course, once you have clear motivation to re-position it. we would like
+to work on it.
 
->> +             program_hest_aer_params(info);
->> +
->> +     return 0;
->> +}
->> +#endif
->> +
->>   /**
->>    * pciehp_is_native - Check whether a hotplug port is handled by the O=
-S
->>    * @bridge: Hotplug port to check
->> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
->> index 2e40fc63ba31..78bdc121c905 100644
->> --- a/drivers/pci/pci.h
->> +++ b/drivers/pci/pci.h
->> @@ -897,6 +897,15 @@ static inline void pci_save_aer_state(struct pci_de=
-v *dev) { }
->>   static inline void pci_restore_aer_state(struct pci_dev *dev) { }
->>   #endif
->>
->> +#ifdef CONFIG_ACPI_APEI
->> +int pci_acpi_program_hest_aer_params(struct pci_dev *dev);
->=20
-> The return value is never checked, so this can return void.
->=20
-Ok, I agree with you, I will modify it in the next version.
+Thanks,
+Ethan
 
->> +#else
->> +static inline int pci_acpi_program_hest_aer_params(struct pci_dev *dev)
->> +{
->> +     return 0;
->> +}
->> +#endif
->> +
->>   #ifdef CONFIG_ACPI
->>   bool pci_acpi_preserve_config(struct pci_host_bridge *bridge);
->>   int pci_acpi_program_hp_params(struct pci_dev *dev);
->> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
->> index 2e81ab0f5a25..33b8b46ca554 100644
->> --- a/drivers/pci/probe.c
->> +++ b/drivers/pci/probe.c
->> @@ -2304,6 +2304,7 @@ static void pci_configure_device(struct pci_dev *d=
-ev)
->>        pci_configure_serr(dev);
->>
->>        pci_acpi_program_hp_params(dev);
->> +     pci_acpi_program_hest_aer_params(dev);
->=20
-> This should not be called here unconditionally.
->=20
-> OS should only write AER registers if granted permission through
-> _OSC.
->=20
-> It would be more appropriate to call this from pci_aer_init().
->=20
-> Thanks,
-> Yazen
-The question about whether OS has control of AER to write the=20
-information in the HEST AER structure to the AER register of the=20
-corresponding device has been discussed, see the link for more details:=20
-https://lore.kernel.org/all/a3a603ef-b813-4798-bb54-62076d53bd3a@zhaoxin.co=
-m/
-
-It is inappropriate to add the pci_acpi_program_hest_aer_params function=20
-to the pci_aer_init function=EF=BC=8CThe reason for this is that no involve=
-ment=20
-of the AER driver.
-
-Leoliu-oc
-Best Regards
-
+>
+> Jason
+>
