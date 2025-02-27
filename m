@@ -1,175 +1,99 @@
-Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDF8223711;
-	Thu, 27 Feb 2025 08:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A0DA59;
+	Thu, 27 Feb 2025 08:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740644373; cv=none; b=h4Ot5er+pB8hhQVXQUO6LynR0kM20dUyehTyxUBtIA+3nskvYvGicSXXZE1rX4jzk5P2rGD5CMdr8eZiFqVECOgMvDacmbXVfSA7uIzePz3uqmwcd8R1ZeZWd3fJvDAHXJ8THA/3hWB8w81x/rMzBviRuSIHfEB2LlE9VUBfwDU=
+	t=1740644451; cv=none; b=qkhu4ierUXwtjGvxamg8GdkSx+Kcc5Kh6+NExdNBwfPXJ7moNsOUP8FPPQ481DAC5OGE1HiqsrFgUdCOwB/R3sgkoHXT9dK3lcL50/StB/+aoCDi6yQlHXGdTogrsnkQkp6ipIYmAmYLYFW3BrLaIDjwO5iISBHKp4oX4SevBlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740644373; c=relaxed/simple;
-	bh=WuQI1ITKOPVp5WgRE8s5tzHcfV10x3QWes8eKtMTqKc=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Txi/b1mfEqPN1YCrBlOfkxHz/+u8oBd1AluPMZu8DNG54c3ruGPQJJtDAZ9IyKjT6KC4z/19AJ8jiQ8IfVkaTVwBVExuB1zv/OM6/iu7USIY/VGEiS6oSfJmmwqdYf3KiHX6JanNVzZkJ+0P1UoWdK0/mefFmCICFsHiPGfjYdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Qo10uA5x; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TWKnKn/7; arc=none smtp.client-ip=103.168.172.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740644451; c=relaxed/simple;
+	bh=4ffz2MO6+Bn9pTFZqNJARYS9yBa3M1fEfZf1jWfeuZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UZTgIT9CF9rTJgWSLn0aOxWkf18hUbuwuR8zr0OyK1yywCcH8UYpSKmpQ2GAzRdxpbOvKYuLALLzd9c3R3xUy2u1jG4uztRDib33TenQAZM502ldCtmjCwY0vvz1M4Hrnn49+ynkS2MvZ0/zF5nibQCDxAPZJaNfm2FObAv8rPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jno52Y+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Qo10uA5x";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TWKnKn/7"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 35FB61140B75;
-	Thu, 27 Feb 2025 03:19:30 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Thu, 27 Feb 2025 03:19:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740644370;
-	 x=1740730770; bh=J4sN4a1OZVim1rCZfmG4xp4g6SnKXjn/a7pXMNn9YAQ=; b=
-	Qo10uA5xy/QdV/njsAM9pdNEjw9gdlulUParp7/jtuT9MuJiRodwdxBlUC6snmSg
-	ZBdlx6cXV/iHQkWo392S+w7QE3H+qFWjKY5bchm6WzJWjNxhrEFId462HWwx79CN
-	sRYteNhUaqS32dMohd6VDFhM9lQfPAWOnGyt7MhRrhoex/YtUnHW084K8HaW2zMk
-	OSaAqtf4DNc6i/urvFIHNRz9vhzk5mQfcWNlludrlZnPGyfB+e58juv2IIVuCaFT
-	4e4nDmbplHcJfptBhw8TOzXGDBGgA7oD3qwRN9bA3PxwMHD4kEw+xBkQmpMxQ8Z1
-	xMEp9R/Sz/wEP6SVDoHWLQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740644370; x=
-	1740730770; bh=J4sN4a1OZVim1rCZfmG4xp4g6SnKXjn/a7pXMNn9YAQ=; b=T
-	WKnKn/7oNQpvbT2IVGC+P3eGDtXpBAN5bijQkowGPSB8eXkNztNCbNUU0bDbVy0u
-	b3umdtmdPNpNhK2A/XW/XKcqOtpA9US1t27EjAUBRjAAOfMjmXGmKDdVJ+BQ3bHg
-	yO3qa1y9EBHSFFJmaZZKSP8xno2jgaD7KY4V+xd4PCy5LcDlJXILVEwiUoP3fQM4
-	VpmUhKESwJ98SSu2P65DLCILhk9CZ7FyNcaKxlwFZSbw58vodgeJXlqAniFvLRBa
-	9fq5IYnromVRh2RAYuhobfgIh34VCdW5GyKw4nuUA/y5LIAsuPWNcej/C6/ltp5e
-	tDjXrsB4zIaEFKnlgW4Jg==
-X-ME-Sender: <xms:ESDAZ1Ta1E3WmZDKY9vR2D0E8y7ssuZjUfo5jrXhzt38CB0Oa4VpMA>
-    <xme:ESDAZ-yJLsXb8JldwKQJILOIhlrcOFlU9SVWDxKPiFc2MYHxwaWEZ1fkt604fVJja
-    KcjB_LmAz5BAGe51LQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekieeliecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpeefhfehteffuddvgfeigefhjeetvdekteekjeef
-    keekleffjeetvedvgefhhfeihfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
-    rhhnuggsrdguvgdpnhgspghrtghpthhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehkrhiikheskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivgifshhkiheslh
-    hinhgrrhhordhorhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohes
-    lhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugi
-    hfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgv
-    rhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvgh
-    gvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:ESDAZ60Zq4ldJJTsAsafBsApk-rilkR5biwtI7okTJaT5M4n45wQvA>
-    <xmx:ESDAZ9DISk2aHqS2FwENgsZzDiEI4RtLPZmg5sWW5ZBje8R9Ck8rRg>
-    <xmx:ESDAZ-gkRtWDcuawOJx6whFHy25EQoIhY6qzLzND3-aviJCKwbpo4w>
-    <xmx:ESDAZxrDzIrAMB0IW_No4w4XaFXLq9ZVGPJGEdv2NyWKEGvXgsV7ug>
-    <xmx:EiDAZ5V8PYZR0ip7QkuneVHeCF0OSbc1Gt6YMwHtPbK0cpwX-UEcAkTG>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 9F46D2220076; Thu, 27 Feb 2025 03:19:29 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jno52Y+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3790C4CEDD;
+	Thu, 27 Feb 2025 08:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740644451;
+	bh=4ffz2MO6+Bn9pTFZqNJARYS9yBa3M1fEfZf1jWfeuZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jno52Y+p0y0rkxxqKEwyjRQtikEA+nCRBI1ijB/0h3csf9VeX2Ga3bz6B6CH8eQcf
+	 X6dXc/bA38gFwQ8u5XgycUufL3J2HAFQMrziO3fpnCSRFZbFO0T2ZF+Up0MUweuKpX
+	 vxr/YGicslV0+tQ6a46KJp+JQaYeb4kBre+N1fY68mLwlK41NzFeiukSt5cSh1ME1S
+	 sE1B/3popzwjPDoOLOLtg4PlcEI++MHSisxtC6OmwazZgW/LkOgblKhfOT2AOBfS+q
+	 qS2oTmvlO6Gkue+fGTTlvmmm0r5MwfpdmTgqZSIaMOrSKHJC7jI5oH5Hpkm4bU8l0r
+	 aH61UBq4yk1pw==
+Date: Thu, 27 Feb 2025 00:20:49 -0800
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Chun-Tse Shao <ctshao@google.com>,
+	linux-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, terrelln@fb.com,
+	leo.yan@arm.com, dvyukov@google.com, james.clark@linaro.org,
+	christophe.leroy@csgroup.eu, ben.gainey@arm.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf record: Add 8-byte aligned event type
+ PERF_RECORD_COMPRESSED2
+Message-ID: <Z8AgYUnNkSA_Q36F@google.com>
+References: <20250227053738.788153-1-ctshao@google.com>
+ <Z8AAcZXtuD7O3TAV@tassilo>
+ <CAP-5=fU4rVkTS07Uq8g9roO4kXq_z2R0CgMX55YFXFWMHzWTGw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 27 Feb 2025 09:18:30 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Message-Id: <f9b8acf8-7ed5-4d9f-84d1-acdbaa9e96d8@app.fastmail.com>
-In-Reply-To: <Z78itKfsojtMpr_o@smile.fi.intel.com>
-References: <20250225100838.362125-1-andriy.shevchenko@linux.intel.com>
- <b8a1315a-8d86-4904-92d1-179699f54e03@app.fastmail.com>
- <88ad89bc-9261-4af0-a7ab-28dd760af567@kernel.org>
- <Z78itKfsojtMpr_o@smile.fi.intel.com>
-Subject: Re: [PATCH v1 1/1] at24: Drop of_match_ptr() and ACPI_PTR() protections
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU4rVkTS07Uq8g9roO4kXq_z2R0CgMX55YFXFWMHzWTGw@mail.gmail.com>
 
-On Wed, Feb 26, 2025, at 15:18, Andy Shevchenko wrote:
-> On Tue, Feb 25, 2025 at 06:21:29PM +0100, Krzysztof Kozlowski wrote:
->> On 25/02/2025 11:29, Arnd Bergmann wrote:
->> 
->> I tried to fix this in SPI, regulator and ASoC 2 years ago and Mark
->> rejected such approach of dropping ACPI/of_match_ptr. AFAIU, Mark wants
->> this to be fixed in more generic way, on the OF and ACPI common code,
->> not per driver.
->> 
->> SPI:
->> https://lore.kernel.org/all/7a65d775-cf07-4393-8b10-2cef4d5266ab@sirena.org.uk/
->> 
->> regulator:
->> https://lore.kernel.org/all/20230310214553.275450-1-krzysztof.kozlowski@linaro.org/
->> 
->> ASoC:
->> https://lore.kernel.org/all/20230310214333.274903-1-krzysztof.kozlowski@linaro.org/
->
-> It was almost two years ago. Things may be changed :-)
-> At least I have no impediments so far with converting drivers I'm supporting in
-> the SPI. For ASoC there might be a new attempt by Cezary Rojewski in the future
-> (he does some cleanups in that area, and we discussed cleaning up ACPI_PTR() at
->  minimum).
+On Wed, Feb 26, 2025 at 10:20:36PM -0800, Ian Rogers wrote:
+> On Wed, Feb 26, 2025 at 10:04 PM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > On Wed, Feb 26, 2025 at 09:34:06PM -0800, Chun-Tse Shao wrote:
+> > > The original PERF_RECORD_COMPRESS is not 8-byte aligned, which can cause
+> > > asan runtime error:
+> >
+> > It seems pointless. Most architectures have cheap unaligned accesses
+> > these days.
+> >
+> > Just disable that error?
+> 
+> The perf_event_header in perf_event.h is:
+> ```
+> struct perf_event_header {
+> __u32 type;
+> __u16 misc;
+> __u16 size;
+> };
+> ```
+> so it is assuming at least 4-byte alignment. 8-byte alignment is
+> assumed in many places in tools/lib/perf/include/perf/event.h. We pad
+> events to ensure the alignment in about 30 places already:
+> ```
+> $ grep -r PERF_ALIGN tools/perf|grep u64|wc -l
+> 32
+> ```
 
-I skipped those three subsystems when I sent my backlog. Comparing
-what I have left with the version from the patches above I see
-that about 40% of the warnings in all three are already addressed
-in the meantime, leaving just
+I vaguely remember that it needs 8 bytes alignment to deal with partial
+mmap-ed data on 32-bit machines so that it can make sure the header is
+not across the mmap boundary.
 
- drivers/regulator/pbias-regulator.c   | 2 +-
- drivers/regulator/twl-regulator.c     | 2 +-
- drivers/regulator/twl6030-regulator.c | 2 +-
- drivers/spi/spi-armada-3700.c | 2 +-
- drivers/spi/spi-img-spfi.c    | 2 +-
- drivers/spi/spi-meson-spicc.c | 2 +-
- drivers/spi/spi-meson-spifc.c | 2 +-
- drivers/spi/spi-orion.c       | 2 +-
- drivers/spi/spi-pic32-sqi.c   | 2 +-
- drivers/spi/spi-pic32.c       | 2 +-
- drivers/spi/spi-rockchip.c    | 2 +-
- drivers/spi/spi-s3c64xx.c     | 2 +-
- drivers/spi/spi-st-ssc4.c     | 2 +-
- sound/soc/amd/acp3x-rt5682-max9836.c | 2 +-
- sound/soc/atmel/sam9x5_wm8731.c      | 2 +-
- sound/soc/codecs/rt1318.c            | 6 ++----
- sound/soc/codecs/rt5514-spi.c        | 2 +-
- sound/soc/qcom/lpass-sc7280.c        | 2 +-
- sound/soc/samsung/aries_wm8994.c     | 2 +-
+Thanks,
+Namhyung
 
-I send everything else that I have to address the warnings, and
-they are slowly making their way into the tree, as of today the
-remaining ones are
 
- drivers/char/apm-emulation.c              | 5 ++---
- drivers/char/tpm/tpm_ftpm_tee.c           | 2 +-
- drivers/comedi/drivers/ni_atmio.c         | 2 +-
- drivers/dma/img-mdc-dma.c                 | 2 +-
- drivers/fpga/versal-fpga.c                | 2 +-
- drivers/input/touchscreen/stmpe-ts.c      | 2 +-
- drivers/mux/adg792a.c                     | 2 +-
- drivers/net/ethernet/apm/xgene-v2/main.c  | 4 +---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
- drivers/rtc/rtc-fsl-ftm-alarm.c           | 2 +-
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c    | 2 +-
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c    | 2 +-
- drivers/tty/serial/amba-pl011.c           | 6 +++---
- drivers/tty/serial/ma35d1_serial.c        | 2 +-
-
-and I'm optimistic about most of them making it into the
-next merge window. Once few enough are left, I can send
-it again as a series that turns on the warning by default
-and hopefully by that time we can wear down Mark enough
-that he takes the patches even if he still disagrees ;-)
-
-      Arnd
+> Having sanitizers I think is a must, if we allow unaligned events we'd
+> need to introduce helper functions or memcpys to workaround the
+> unaligned undefined behavior. I think the padding is a less worse
+> alternative and one that was already picked.
+> 
+> Thanks,
+> Ian
