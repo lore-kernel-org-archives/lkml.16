@@ -1,159 +1,162 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01AC2B9B7;
-	Thu, 27 Feb 2025 03:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992AD78F4B;
+	Thu, 27 Feb 2025 03:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740625528; cv=none; b=D3m9aGtIbLyfj3E56HRL/JRu0V52asIL07L7lg346ieBR9FeclWisG7ziU+9nZdPLoclW9Re+m4Buc1gEhoyXEKJUSy+OctdG0in5fJJpQpce1atsnDq2/O7+CMJxiCzgUKYvgv+OHoyoFBO4RgtVN0p894/laSG1st/NguZfnA=
+	t=1740625610; cv=none; b=MkiinrEm1pqpcrPr86++ankLy4DDE/vQuiTBgeModuKicKDcDgUR2oNmMtOe2XhOMF/ahitXOqG54GGsT8WnfuF/0FsVbAeYZkjisHwI9IGEorrxnT6v4AI6VlmRt/F3uxPvlQN/gqaHDdSbCRLbVXUEWiarf8nWy+VgrEGluGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740625528; c=relaxed/simple;
-	bh=7WtL4nedANVT2iqljZ7s77zwDOpB0DfKNNT/4bjqozA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YE77emM19vq82zWOIKT/9Pv5t12UZLHLHhgcf8Es4BlRoU2em7dBeIFBa/zJHMJcQI08rY2waPIrYf8y+jlo5H/5czFIGJJtcCYKbVRzasU2ZtulL2Q/DnMFrOA1ZJPRzvms60AY7HyzXayboLFAb4LTfZEXN3gtksAuAlXhtn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjqkmrNx; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740625610; c=relaxed/simple;
+	bh=q2ghoz1pWJEIqwjf30Ucg7t93D2Nrvj2VISWKXWFeS0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LnBq0gbal68FlEyyf1Ekz44rz/T/L23WHcm5GUpBqJwVTvgky6mLXn8KWWdQTCmDGovM8bOOEu+WTiziGLjsvs8hwTA2AGJGJB7KVVV1IHWixb1bOAbk4joO76Cn71GpPx1QszfnlEsusXQarhlDvtr1huIDfrY0l8I/m5RBptw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKOIEVIt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjqkmrNx"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-869440f201eso379744241.3;
-        Wed, 26 Feb 2025 19:05:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740625525; x=1741230325; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IXVx49eJQBLxbCrIlxbeeYi4KBlOK0BbrpMyI4DO0vk=;
-        b=DjqkmrNxFaKt8dsM23JihGHZTQg7KqFSX6yH7ifGmfzWuTVjfpc0Ed6D5lLQGcgq+f
-         SClY4Q3spGIx3nFocDMywIrigjHZD2gR1OZBz6L1bVXICvSeiq9oEwIyBXmoU/p2N9Mb
-         wEi5xTDdolbuCDn31Y+gHFjWMF18r+cSyKqSC0bq0IEeO3iM1+fdzru98uwPknwiMOzM
-         L9PCZeOd2OwtiJzrXSU6w5glWCh/bPYCrr87IFKuRI+ZuvR6pXFSCphC3QmQQgB7hbcO
-         5pLbRiCI7wUvNpzdLu4dzCBs4eSFVUAjYkim6hvJM7Jc5LLKN0jFoN5rohs+n8x3nN+J
-         rukA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740625525; x=1741230325;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IXVx49eJQBLxbCrIlxbeeYi4KBlOK0BbrpMyI4DO0vk=;
-        b=QO4ITxiC53fOIjSgIUD5ZJrRXTpe0b1Ycj9397O4b5mS0RiMiAnGr+GgzuIXms8TIa
-         DCaHRlFrngfLB9x8FbgkDhBo3GuO5fLb454DDSQj5z+RNJ2AgNzs0ytzgOeinxJ4eeod
-         kZI4ZFcy5pesT2iu/9nuN/MJl+TwbhrrpxfLn2TAvhsbq9aBXhnMLWMOCofm8cTbaEWv
-         ndFHqOrJlFeqru96btm2dZ1UeZ/nFEMsADP5WC9apEsEZZNr1JrB1bNwD+zt/IXKKrkE
-         9HCXGBEaLSnn+ZaR96dHxROGbjVYmEWPYrna3P2QoaCqaVs5U5jh7p4gZBMiSBKwfHt/
-         W1+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAgz+DkcV7FYVusPt+vvTLAdUgw+erqF1MKfyrX10WASQYhwTTxlNY8kykslj3f1Ut6NcNVWYgQk9/dWv9@vger.kernel.org, AJvYcCUm4CQBa7pNFE/4OEQq6ffsZweeRvrA0rAv45iDI0izocO+OYeM7cxE4f2pX4/P+MmQNvHHEDACZEkaKX8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxYTWErltNpk+tJBVBq8Ogiyr2HgWMWzJixRhIAZK3p2wVvSXb
-	RKjKTg67aexZb0PVO88GGPW/1VTyugqs9w8XNXBJAKQIHoyuj4NlK9YYAnYHTonekEv/LgYiQkf
-	iivxRVLtYUdqJ9411prUkPKLWloo=
-X-Gm-Gg: ASbGnct9Ec/DACfjcPl2x5b0fYimgQWtpSfdZamWgjitfQdQwKR0CT6kpzCzD8w9QD2
-	YexsLtglUQJs7hUM0qLpEE0fCOw4puMiCnPL+IKMthHGm7aOYBrk12qS2PEk8id67fxqkczeTtv
-	/AltuH3ew=
-X-Google-Smtp-Source: AGHT+IFyyL3QwKMRRIxrajlGaeKqkP2l4r4cTYgFE9XLJOhNICubo3hunk6zTvETFEecuXEDORjBfHeBIuyCQFpuRBM=
-X-Received: by 2002:a05:6102:1614:b0:4bb:9b46:3f6f with SMTP id
- ada2fe7eead31-4bfc27aed9fmr12833741137.1.1740625525584; Wed, 26 Feb 2025
- 19:05:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKOIEVIt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC92BC4CED6;
+	Thu, 27 Feb 2025 03:06:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740625610;
+	bh=q2ghoz1pWJEIqwjf30Ucg7t93D2Nrvj2VISWKXWFeS0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XKOIEVItYrAj/NHvNuhYHb1TLQ0uWUr6Cfms8KX4vn/wJBClj/nY8frxgb/Uc4f9F
+	 eBPOTrxKFeK0bhW86VnrG78WQXS614b953FFfZEnwXD+vynPLg2MdMKDLDhqrNw9Lb
+	 gL87zVRHdia/yyl5wGrhI4dcgu4aux5HeF/km2dVwo8F0fh6Jou02XLsO503f3ZTuf
+	 MgZxMB+pYdH+zLZFVQtJsf3WE31XgskWhHJ6J7114z31SqyGdDmyhdrwZ5nSxJ5NVM
+	 8je6WFfjt3CYVTVckaoBkvxKLMHK+6crHGpgiRVQOMYs9GTnyvw9bhltXv66apH9XT
+	 xXxJC0D5wudzQ==
+Received: by venus (Postfix, from userid 1000)
+	id ADF6718066B; Thu, 27 Feb 2025 04:06:47 +0100 (CET)
+Date: Thu, 27 Feb 2025 04:06:47 +0100
+From: Sebastian Reichel <sre@kernel.org>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Abel Vesa <abel.vesa@linaro.org>, Lee Jones <lee@kernel.org>, 
+	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
+Message-ID: <cmjyaveolhjtfhqbjpc6ghh7g2f5jmeyavoms5lqup6dyidngl@ljvxgoyw57md>
+References: <20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org>
+ <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJD7tkbRHkb7Znzto6=RRDQA9zXZSva43GukhBEfjrgm1qOxHw@mail.gmail.com>
- <Z3yMNI_DbkKBKJxO@gondor.apana.org.au> <CAJD7tkaTuNWF42+CoCLruPZks3F7H9mS=6S74cmXnyWz-2tuPw@mail.gmail.com>
- <Z7F1B_blIbByYBzz@gondor.apana.org.au> <Z7dnPh4tPxLO1UEo@google.com>
- <CAGsJ_4yVFG-C=nJWp8xda3eLZENc4dpU-d4VyFswOitiXe+G_Q@mail.gmail.com>
- <Z7lv6JLax4S8vTtD@gondor.apana.org.au> <CAGsJ_4yAQxjTnSALZHAJZDdUnXKAYFvQCcjQjHiQSUip6cJGKg@mail.gmail.com>
- <Z7l0Hf-CFFjeKaZY@gondor.apana.org.au> <CAGsJ_4zFdHUPELSYDkrN4ie2c73L6e=FEdQbDL3JckS4unKFpg@mail.gmail.com>
- <Z7zpZlWmSV15EUVV@google.com>
-In-Reply-To: <Z7zpZlWmSV15EUVV@google.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 27 Feb 2025 16:05:14 +1300
-X-Gm-Features: AQ5f1JqXTKth9otrpj1zvCFqiq4wqPtE2SBEWuDVtOaMhsKlJKNsoIq3Jx_5obQ
-Message-ID: <CAGsJ_4wr3aT7zxn1MTjUjvQV9jeCGn=xi6VZz0qPm=xEBM6Qdg@mail.gmail.com>
-Subject: Re: [PATCH v5 02/12] crypto: acomp - Define new interfaces for
- compress/decompress batching.
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	"Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "nphamcs@gmail.com" <nphamcs@gmail.com>, 
-	"chengming.zhou@linux.dev" <chengming.zhou@linux.dev>, 
-	"usamaarif642@gmail.com" <usamaarif642@gmail.com>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>, 
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>, 
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, 
-	"clabbe@baylibre.com" <clabbe@baylibre.com>, "ardb@kernel.org" <ardb@kernel.org>, 
-	"ebiggers@google.com" <ebiggers@google.com>, "surenb@google.com" <surenb@google.com>, 
-	"Accardi, Kristen C" <kristen.c.accardi@intel.com>, 
-	"Feghali, Wajdi K" <wajdi.k.feghali@intel.com>, "Gopal, Vinodh" <vinodh.gopal@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a5rbsad7opocfj4r"
+Content-Disposition: inline
+In-Reply-To: <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
+
+
+--a5rbsad7opocfj4r
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
+MIME-Version: 1.0
 
-On Tue, Feb 25, 2025 at 10:49=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.dev=
-> wrote:
->
-> On Sat, Feb 22, 2025 at 08:13:13PM +1300, Barry Song wrote:
-> > On Sat, Feb 22, 2025 at 7:52=E2=80=AFPM Herbert Xu <herbert@gondor.apan=
-a.org.au> wrote:
-> > >
-> > > On Sat, Feb 22, 2025 at 07:41:54PM +1300, Barry Song wrote:
-> > > >
-> > > > probably no, as an incompressible page might become compressible
-> > > > after changing an algorithm. This is possible, users may swith an
-> > > > algorithm to compress an incompressible page in the background.
-> > >
-> > > I don't understand the difference.  If something is wrong with
-> > > the system causing the compression algorithm to fail, shouldn't
-> > > zswap just hobble along as if the page was incompressible?
-> > >
-> > > In fact it would be quite reasonble to try to recompress it if
-> > > the admin did change the algorithm later because the error may
-> > > have been specific to the previous algorithm implementation.
-> > >
-> >
-> > Somehow, I find your comment reasonable. Another point I want
-> > to mention is the semantic difference. For example, in a system
-> > with only one algorithm, a dst_buf overflow still means a successful
-> > swap-out. However, other errors actually indicate an I/O failure.
-> > In such cases, vmscan.c will log the relevant error in pageout() to
-> > notify the user.
-> >
-> > Anyway, I'm not an authority on this, so I=E2=80=99d like to see commen=
-ts
-> > from Minchan, Sergey, and Yosry.
->
-> From a zswap perspective, things are a bit simpler. Currently zswap
-> handles compression errors and pages compressing to above PAGE_SIZE in
-> the same way (because zs_pool_malloc() will fail for sizes larger than
-> PAGE_SIZE). In both cases, zswap_store() will err out, and the page will
-> either go to the underlying swap disk or reclaim of that page will fail
-> if writeback is disabled for this cgroup.
->
-> Zswap currently does not do anything special about incompressible pages,
-> it just passes them along to disk. So if the Crypto API can guarantee
-> that compression nevers writes past PAGE_SIZE, the main benefit for
-> zswap would be reducing the buffer size from PAGE_SIZE*2 to PAGE_SIZE.
->
-> If/when zswap develops handling of incompressible memory (to avoid LRU
-> inversion), I imagine we would handle compression errors and
-> incompressible pages similarly. In both cases we'd store the page as-is
-> and move th LRU along to write more pages to disk. There is no point to
-> fail the reclaim operation in this case, because unlike zram we do have
-> a choice :)
+Hi,
 
-Yes. For zswap, I suppose we just need to wait until all driver issues are
-resolved, such as:
-crypto: lzo - Fix compression buffer overrun
-https://lore.kernel.org/lkml/Z7_JOAgi-Ej3CCic@gondor.apana.org.au/
+On Wed, Feb 26, 2025 at 05:34:50PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Wed, Feb 26, 2025 at 05:31:08PM +0200, Abel Vesa wrote:
+> > The current implementation assumes that the PWM provider will be able to
+> > meet the requested period, but that is not always the case. Some PWM
+> > providers have limited HW configuration capabilities and can only
+> > provide a period that is somewhat close to the requested one. This
+> > simply means that the duty cycle requested might either be above the
+> > PWM's maximum value or the 100% duty cycle is never reached.
+>=20
+> If you request a state with 100% relative duty cycle you should get 100%
+> unless the hardware cannot do that. Which PWM hardware are you using?
+> Which requests are you actually doing that don't match your expectation?
 
-for zswap, we just need to address point 1, which is not the case yet.
+drivers/leds/rgb/leds-qcom-lpg.c (which probably should at least get
+a MAINTAINERS entry to have you CC'd considering all the PWM bits in
+it). See the following discussion (I point you to my message in the
+middle of a thread, which has a summary and probably is a good
+starting point):
 
-"
-> 1. All drivers must be capable of handling dst_buf overflow.
+https://lore.kernel.org/all/vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67=
+pd2@cz2dcracta6w/
 
--Not the case.
-"
+Greetings,
 
-Thanks
-Barry
+-- Sebastian
+
+> > This could be easily fixed if the pwm_apply*() API family would allow
+> > overriding the period within the PWM state that's used for providing the
+> > duty cycle. But that is currently not the case.
+>=20
+> I don't understand what you mean here.
+>=20
+> > So easiest fix here is to read back the period from the PWM provider via
+> > the provider's ->get_state() op, if implemented, which should provide t=
+he
+> > best matched period. Do this on probe after the first ->pwm_apply() op =
+has
+> > been done, which will allow the provider to determine the best match
+> > period based on available configuration knobs. From there on, the
+> > backlight will use the best matched period, since the driver's internal
+> > PWM state is now synced up with the one from provider.
+> > [...]
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight=
+/pwm_bl.c
+> > index 237d3d3f3bb1a6d713c5f6ec3198af772bf1268c..71a3e9cd8844095e85c01b1=
+94d7466978f1ca78e 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -525,6 +525,17 @@ static int pwm_backlight_probe(struct platform_dev=
+ice *pdev)
+> >  		goto err_alloc;
+> >  	}
+> > =20
+> > +	/*
+> > +	 * The actual period might differ from the requested one due to HW
+> > +	 * limitations, so sync up the period with one determined by the
+> > +	 * provider driver.
+> > +	 */
+> > +	ret =3D pwm_get_state_hw(pb->pwm, &pb->pwm->state);
+>=20
+> As a consumer you're not supposed to write to &pb->pwm->state. That's a
+> layer violation. Please call pwm_get_state_hw() with a struct pwm_state
+> that you own and save the relevant parts in your driver data.
+>=20
+> > +	if (ret && ret !=3D -EOPNOTSUPP) {
+> > +		dev_err(&pdev->dev, "failed to get PWM HW state");
+> > +		goto err_alloc;
+> > +	}
+> > +
+> >  	memset(&props, 0, sizeof(struct backlight_properties));
+> > =20
+> >  	if (data->levels) {
+>=20
+> Best regards
+> Uwe
+
+
+
+--a5rbsad7opocfj4r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAme/1sMACgkQ2O7X88g7
++pp2axAAjUk/lD0Uk4ltqhBQwfAEUqmFf1DoyH07Pzeqgx00DfAcBr2cL/Nae/by
+vz0CXq2TrsiJG9tYNV/YzQfTq21f6xNhg+HYVqRnw4M6N5NEubL3FFxDUG7aug5r
+vJsbi/ZMqRla7FtyH6fVC2r51AZqI1/+BdB1zuN5k8TB8t7NHWe6gSTcxTL++TfS
+EzOrvlAwTyFJkGCbLw5laeXQ7OdZCdPF0ASms+r6p4FTASs0351udCRSy6wWSvg5
+oRrY8U59bkjRB9r8/0LiT6k3eQkvhlNpknYqwdDAZc4DK/X9Pg2ssHBDKjOxJNyP
+fymMw/yRJ/yGBMlzcdRJhmEZUc6ruDWmAi6GaNOCndslanwZUDge+dalgtyYa6HQ
+JzIDINQM4r4hDnNXSrAL/JIXNUpbldjJzR4gbz9rmDcFyf7MovcBOY/FspXHSxZA
+L6D/DEF1HeMVl/qIJJGDQvJ35hUcGE9C6oFA+pEz0IxDyi1kUmYPVdZNmJ9nriYM
+k9OZmU/C8Mqch9E0cQFceRbE+/U0PyZZ2Mafv2Aju99OqV9vplUCDHyNqu82tdZW
+IXRvpWgf5qk5SzXLS8TkNyfkDGofP4JN6SbT/te1gCRHOi1oOs05kYjtb4xpCB51
+MMjrboCZedmzGwmsM3Evbw+e0W04zIwNiEeDBUElo20hdw9Idjw=
+=dIdK
+-----END PGP SIGNATURE-----
+
+--a5rbsad7opocfj4r--
