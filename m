@@ -1,68 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D711A3178
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156A31ADFE4;
+	Thu, 27 Feb 2025 16:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673649; cv=none; b=FcK6tD6HFvhXRX7KeeLubeN13vY+xb8nLEfWaqXsFIVyjCsNX+1klvu324n2O7zlsyIifpzFetCuPqLdz93kqK3sveYUgDbOIb8SJ3gfm20Y6I96EnoVQSDCbWCCc0bXZFfU+YPLOeqUx/VBP+HeksgsHL8xBGmdurPjEY83uow=
+	t=1740673714; cv=none; b=GJb1pmv+6+iFITg5ipB5vgj3noClCfWN7EcWEYesuRIbhS3f2jAE/thEURwb1OHW2H2Jo4Ex/TOvVtl4KpsgtIg7QptAnYfo0sOwkns1RQBuJS2MCbjYhjioLYzv4V0E1Jour7loowjuLUcoagR3VWBx7AgPa9WbGMPZpfbq3Hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673649; c=relaxed/simple;
-	bh=CqfgSenLX0g4/F+BPmO4k7pBbeoQY+ChNLkUs2hFiO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fATjahTCCmtRTLSZiK0tUeaViaUopmqNFyaZ/7+jWvP4L9KvCVAXvnRhpkKVkSohg1FhCM/B6PvdMDtPMaHr88xBAm+1EG82TbFLk3AiKcaHUY9JqFaibmlKnyrYImjGKukSK3jS2RVxN5LPFkIp6D679Q6dgSLUtLizkLMXH3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sflvuWkX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740673714; c=relaxed/simple;
+	bh=2iBidgsKtTbg0E7ehuShbszFLmDzVWzb65EighhQS9w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=FOBW4aI3mzAKNJh0cZHnvRGcMDYEDrcwLuTKcH/SjtuwyjDOT55HUH3zS9h6G8e26li2r8aITbSozcPzUBo01jS+eKsrATaJecVPvEvgurRqnt1xI3aLHPZO6gvHVtm+dJWlaEBTxGJfGihy+XQqJzGFwbeAwd91FEQPGSD6Unk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TN0VEc7F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sflvuWkX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D769C4CEDD;
-	Thu, 27 Feb 2025 16:27:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TN0VEc7F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44F89C4CEDD;
+	Thu, 27 Feb 2025 16:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740673648;
-	bh=CqfgSenLX0g4/F+BPmO4k7pBbeoQY+ChNLkUs2hFiO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sflvuWkXKWbDYL212qkVg3GDGJ8FoYujaTBndVsQxAJqoVFx36hhI7W2NcWAqMefz
-	 MO1RNegYJUEGjvK2h5ebT6XfGUIHmfGYlrcWtdQEUR9La7agj9eKtFAd2HCrQTokBl
-	 aova2gecbzO1eDMsc34FWbNCufUo8oKJs6nCmlFoOGpl++Obt+fj/MjZE3wxg+/C+2
-	 Ru1a++5+NBDDfYaFBp2qB/17Rknbu0WCZ34f943KncalWPC2Q5snvkjOj6khwznDb0
-	 jOtOi+KLaqY0Oam7gH6wqZ78Zf5pvN4J2LmPfP/9kRV9e0dS7LWEl3gUMee+Q8HcUN
-	 sW03y7kznxGkg==
-Date: Thu, 27 Feb 2025 06:27:27 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH sched_ext/for-6.15] tools/sched_ext: Provide a compatible
- helper for scx_bpf_events()
-Message-ID: <Z8CSb4qe3xwx5Rdm@slm.duckdns.org>
-References: <20250227091138.253809-1-arighi@nvidia.com>
+	s=k20201202; t=1740673713;
+	bh=2iBidgsKtTbg0E7ehuShbszFLmDzVWzb65EighhQS9w=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=TN0VEc7FnvH7troPAhz266xeyNUOCDKTt3BnuQI6leHzpf5y21du2OhHY/hELP1x0
+	 p5AOlgYg30eFgS/DDTuNb9NgN6lN74Zs+RWW92a/IA0FhwO6ZBDLOR9RFGoaFhCfH8
+	 FNw9T+mWQvfnbZEIDTBJ9E7WfW4JAVAniRp8tXBGPYGjKdd+5a8QESQTCgLsUPLXIZ
+	 GvDjLD9mLcMGmVZvuhfOqWPKXK2O56vW8GA40RLFqUOe3AZQbXS00BsZfGjhy1SM0g
+	 GVmOt/9Pn6q5/m8K8VOTo6zJ2Fq59HU+mppLTXUDkTPYAuuyzOyhzi//0vTvqyIVtE
+	 gKbnVVJDqaw/w==
+From: Lee Jones <lee@kernel.org>
+To: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Remi Pommarel <repk@triplefau.lt>
+Cc: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Hans de Goede <hdegoede@redhat.com>, 
+ Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <19c81177059dab7b656c42063958011a8e4d1a66.1740050412.git.repk@triplefau.lt>
+References: <19c81177059dab7b656c42063958011a8e4d1a66.1740050412.git.repk@triplefau.lt>
+Subject: Re: (subset) [PATCH v2] leds: Fix LED_OFF brightness race
+Message-Id: <174067371203.3568117.5632131578268185238.b4-ty@kernel.org>
+Date: Thu, 27 Feb 2025 16:28:32 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227091138.253809-1-arighi@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-On Thu, Feb 27, 2025 at 10:11:38AM +0100, Andrea Righi wrote:
-> Introduce __COMPAT_scx_bpf_events() to use scx_bpf_events() in a
-> compatible way also with kernels that don't provide this kfunc.
+On Thu, 20 Feb 2025 12:23:17 +0100, Remi Pommarel wrote:
+> While commit fa15d8c69238 ("leds: Fix set_brightness_delayed() race")
+> successfully forces led_set_brightness() to be called with LED_OFF at
+> least once when switching from blinking to LED on state so that
+> hw-blinking can be disabled, another race remains. Indeed in
+> led_set_brightness(LED_OFF) followed by led_set_brightness(any)
+> scenario the following CPU scheduling can happen:
 > 
-> This also fixes the following error with scx_qmap when running on a
-> kernel that does not provide scx_bpf_events():
-> 
->  ; scx_bpf_events(&events, sizeof(events)); @ scx_qmap.bpf.c:777
->  318: (b7) r2 = 72                     ; R2_w=72 async_cb
->  319: <invalid kfunc call>
->  kfunc 'scx_bpf_events' is referenced but wasn't resolved
-> 
-> Fixes: 9865f31d852a4 ("sched_ext: Add scx_bpf_events() and scx_read_event() for BPF schedulers")
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
+> [...]
 
-Applied to sched_ext/for-6.15.
+Applied, thanks!
 
-Thanks.
+[1/1] leds: Fix LED_OFF brightness race
+      commit: 2c70953b6f535f7698ccbf22c1f5ba26cb6c2816
 
--- 
-tejun
+--
+Lee Jones [李琼斯]
+
