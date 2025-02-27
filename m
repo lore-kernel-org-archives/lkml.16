@@ -1,127 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C626321B9DD;
-	Thu, 27 Feb 2025 06:00:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AB12E403;
+	Thu, 27 Feb 2025 06:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740636035; cv=none; b=tG5v+Tk2evrPYGOruozB6qwAaM+tSjXRheCD9cU2gf7KfdL4Dn3S2olHqzE0csxpiKfsJId82ArkYdWK2jlgTD646omdBffJ0OnjFQyvoBrXZmb3VOc9/iqdAApMPR1n+AtqGRrRYIX1ZQyJrSa6zN4W8PjuY+CIUrWlRq2KdSQ=
+	t=1740636107; cv=none; b=P1ux3a9j3ZByP86j0EaBTSyH1+pNgAyKHZ2vFQDe/2y7IpTdQ6iPJSmQ1jeGe8OiDNAa/qUM8ImAYtZ7oTvVgrv4hYRwXQvkXr/RbKOGwfcpQh0i9L7zCAUL+Dlc9QRurgQOVUwf3wi1fM9cGabYjmXys9rhVis7+4qw3f0UWg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740636035; c=relaxed/simple;
-	bh=wghXbd5IbpTMH6PzuvfZWZWny5yH0iTqVnlU3Razxj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CnIu8e4qaZSZyPFiCBDlnmQ1QhV4fk+rouN+0vTY1+xv9AvwPgCS5a/OPA7rcnNkykB/7z/UDF6/GHxaDzlcjsnRYadH0XYp51xtyOhAmVooSH64Td+CgIy8FMQwaToyYKAT9quaLdYNqCTEKdFiqK8DU+hbo9N6/cjeUgqPXMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F0YN2OtI; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740636107; c=relaxed/simple;
+	bh=rPsLXSIlQSDCrhzxipSR0b90z+AZe/txP8doGIMPNLI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GyzescKGNrnSJ5wiACqgz4IdmPDLPnOYBPWBAHHmU86DzmsDidthCuooDJDtk8jD391tX+EwICPElpUqJV4FCcGndSZmgshEfVozAjq2uvXnqQ/IRTXLRuPceobT/OCKkxrjpyBCoarptRptXW9WOlj4SqIHywKC1aPTBDYGBYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ao1d9D2T; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F0YN2OtI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740636034; x=1772172034;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wghXbd5IbpTMH6PzuvfZWZWny5yH0iTqVnlU3Razxj8=;
-  b=F0YN2OtI50FOUioZ28r4RCf+Xytmjy82+mBMfPeytXqU9tahYG04wFZ9
-   EMfQdiXPqlaAVfZoiakmkuN8+IP/h86fMZIvSIusAcfKJoQSST/tgY8Sm
-   W/+D3d8g3BEA9SE/faE5rYIindLNxA23a1zaChPBycFKmZLKDhIUJns5c
-   7Y5DY2FV3frDkf3G+21dBXOJUiOdYX4rQy78kPaREhpMcmrOST1Up7q+2
-   aX3psAHbddFLfOqEln9ePoeEM5b2188Lc3NTh92gQC7fLt2rzTexWcEuv
-   qdsnCZkXqzBH3I56ijaGVBmRh35BuOqxmLC8eW9ROZ2CX24EZCUjXCaps
-   w==;
-X-CSE-ConnectionGUID: 3/e05AYDTTizWMmtuN2xDA==
-X-CSE-MsgGUID: tQH+W898TSa+RUgBRmopdw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11357"; a="52149070"
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="52149070"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 22:00:26 -0800
-X-CSE-ConnectionGUID: tzi6/lT1TmCx8F+X9J7WyA==
-X-CSE-MsgGUID: 8rgcTR3WTLO693wDEZ0llA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,319,1732608000"; 
-   d="scan'208";a="116719266"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2025 22:00:22 -0800
-Date: Thu, 27 Feb 2025 06:56:39 +0100
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>, Gal Pressman <gal@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shahar Shitrit <shshitrit@nvidia.com>,
-	Moshe Shemesh <moshe@nvidia.com>
-Subject: Re: [PATCH net-next 3/4] net/mlx5: Expose crr in health buffer
-Message-ID: <Z7/+lxTndCRC6OtE@mev-dev.igk.intel.com>
-References: <20250226122543.147594-1-tariqt@nvidia.com>
- <20250226122543.147594-4-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ao1d9D2T"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2fe9759e5c1so1005346a91.0;
+        Wed, 26 Feb 2025 22:01:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740636104; x=1741240904; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/mQOD6qMSjdqWtzCTx+pFa0M8XN6p/c/XrJV+5EOBBM=;
+        b=ao1d9D2TuVrpFCHqBSTxaepvAelyhYyt55Wn0U8OSBjPcx7jQA0el0NqELvaHw9GVw
+         IjTAx1hylXDq9Y6/jghmp8EeJnmvyBlxwyD0FXE7NiWxwnoZrRH5lAjY6eT1h9qOCype
+         QXuhRJcBqNznj7TPD1MO/A0uRPlAyjr+22iM/I8aRIkfJGDUwK7VbTVu873Ydn/36f8D
+         UcA1hudiqTp8VEns0l3KguwhukM8ZTENnAqHAvhi2YduFio4ng1qxw4DO6v1HXZC8Ynv
+         D/y1d2zU/q1cQ9xahSiLblEFoFBADptyYEyXlhPvMsT+AJFmSf7GM/T9GgBQSt+NR+n/
+         0jqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740636104; x=1741240904;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/mQOD6qMSjdqWtzCTx+pFa0M8XN6p/c/XrJV+5EOBBM=;
+        b=PZo3yfHat3b3dF7O/oNc+Psn3IVOJ/mVsJBQN5yvc6xfFYU5CNeBl5JEzoeScnWweU
+         L4kS+ftdI5BDmESJxhE5KgOD5y28C7L4SrIbE5Ms7v1kFnLGIskaZGo9Iqd8nZi1Yrq5
+         NTrNrT22XqgM+8o4hpoQ3rppjpzNDxe7cBxFyBDaDUpBeSrxWJ7KG2/W33iynftOrQ2o
+         i6k6gVblJiagC5W33YXFrBMX41KZUujBpfqyCQNLcLF/xr76ozi93ke0hQyZGTHyz48L
+         LxdFbZDDvCh9oHpQfFvXPHH0kMxe3ernihRKT9sgeCvXkJGsvz077S4QXObOWYM2DdD0
+         LlsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1+QynGzVLcq61x8erR8Mix+SduOhSMlbFSzl6XMpzyg1xPiJPkajdzmWVPGZdtW58hwGIkZ5Ypqii@vger.kernel.org
+X-Gm-Message-State: AOJu0YzudOOujiDNrRuKEh6XKrAvE62G2yp7I5BXFU3LSq2AlfodFDFn
+	x6Y41PeFL+84OKA0/5Bduy+jdpt/CcK2BT45SpKG0mPq8AlkQebk
+X-Gm-Gg: ASbGncs3OxyRlPo9ESAUUxhmf16aTgatKcRhRD3agZAvXi0wqQc6xXulWryyVN8sgYf
+	hpylxfNX7hkN6su5Je75nWY5PmUczW206m8aSkkLa1xVa0+eX/NMZBH+1cLauIu0J0g96b49kQ+
+	ilqSi1AX/ImcEuvLeMLzlMphtaBwGctEpDLlUi5DbCv8xt4pFQeMw5zEmjhlOGDB15DedWxAkpH
+	1utRLx6YXfGUm/ZnFYBxbYFlsNDLs7OP5lg2yz6+ASc6dRhkiUAB7ii8q3G0bwfBQSenc9pz1Nk
+	Uft6C+zEDnST3Va6L0iLBk4dOkf/nmYEbOr0
+X-Google-Smtp-Source: AGHT+IFuEs4AAjjifzVRpqGnWLY52CMxLXiU8hn4T+n1HgSLdz6Z6rVMv5YZ5DGLwtmkw/hJmQTEUA==
+X-Received: by 2002:a17:90b:2588:b0:2fa:20f4:d277 with SMTP id 98e67ed59e1d1-2fce873af65mr39994730a91.24.1740636104120;
+        Wed, 26 Feb 2025 22:01:44 -0800 (PST)
+Received: from cs20-buildserver.lan ([2403:c300:cd02:bc36:2e0:4cff:fe68:863])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe824b67a1sm2728177a91.0.2025.02.26.22.01.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 22:01:43 -0800 (PST)
+From: Stanley Chu <stanley.chuys@gmail.com>
+X-Google-Original-From: Stanley Chu <yschu@nuvoton.com>
+To: frank.li@nxp.com,
+	miquel.raynal@bootlin.com,
+	alexandre.belloni@bootlin.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-i3c@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	tomer.maimon@nuvoton.com,
+	kwliu@nuvoton.com,
+	yschu@nuvoton.com
+Subject: [PATCH v5 0/5] Add support for Nuvoton npcm845 i3c controller
+Date: Thu, 27 Feb 2025 14:01:26 +0800
+Message-Id: <20250227060131.2206860-1-yschu@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226122543.147594-4-tariqt@nvidia.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 26, 2025 at 02:25:42PM +0200, Tariq Toukan wrote:
-> From: Shahar Shitrit <shshitrit@nvidia.com>
-> 
-> Expose crr bit in struct health buffer. When set, it indicates that
-> the error cannot be recovered without flow involving a cold reset.
-> Add its value to the health buffer info log.
-> 
-> Signed-off-by: Shahar Shitrit <shshitrit@nvidia.com>
-> Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/health.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/health.c b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-> index 665cbce89175..c7ff646e0865 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/health.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/health.c
-> @@ -96,6 +96,11 @@ static int mlx5_health_get_rfr(u8 rfr_severity)
->  	return rfr_severity >> MLX5_RFR_BIT_OFFSET;
->  }
->  
-> +static int mlx5_health_get_crr(u8 rfr_severity)
-> +{
-> +	return (rfr_severity >> MLX5_CRR_BIT_OFFSET) & 0x01;
-> +}
-> +
->  static bool sensor_fw_synd_rfr(struct mlx5_core_dev *dev)
->  {
->  	struct mlx5_core_health *health = &dev->priv.health;
-> @@ -442,12 +447,15 @@ static void print_health_info(struct mlx5_core_dev *dev)
->  	mlx5_log(dev, severity, "time %u\n", ioread32be(&h->time));
->  	mlx5_log(dev, severity, "hw_id 0x%08x\n", ioread32be(&h->hw_id));
->  	mlx5_log(dev, severity, "rfr %d\n", mlx5_health_get_rfr(rfr_severity));
-> +	mlx5_log(dev, severity, "crr %d\n", mlx5_health_get_crr(rfr_severity));
->  	mlx5_log(dev, severity, "severity %d (%s)\n", severity, mlx5_loglevel_str(severity));
->  	mlx5_log(dev, severity, "irisc_index %d\n", ioread8(&h->irisc_index));
->  	mlx5_log(dev, severity, "synd 0x%x: %s\n", ioread8(&h->synd),
->  		 hsynd_str(ioread8(&h->synd)));
->  	mlx5_log(dev, severity, "ext_synd 0x%04x\n", ioread16be(&h->ext_synd));
->  	mlx5_log(dev, severity, "raw fw_ver 0x%08x\n", ioread32be(&h->fw_ver));
-> +	if (mlx5_health_get_crr(rfr_severity))
-> +		mlx5_core_warn(dev, "Cold reset is required\n");
-I wonder if it shouldn't be right after the print about crr value to
-tell the user that cold reset is required because of that value.
+This patchset adds support for the Nuvoton npcm845
+Board Management controller (BMC) SoC family.
 
-Patch looks fine, thanks.
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+The Nuvoton npcm845 uses the same Silvico IP but an older version.
+This patchset adds fixes for the npcm845 specific hardware issues.
 
->  }
+--
+v5:
+ - Add default driver data
+ - Add helper function svc_has_daa_corrupt()
+ - Revise SVC_I3C_QUIRK_FIFO_EMPTY fix and add comments
 
->  
->  static int
-> -- 
-> 2.45.0
+v4:
+ - Fix kernel test robot build warning.
+ - Add SVC_I3C_QUIRK_DAA_CORRUPT fix
+
+v3:
+ - Add more description in dt-binging commit message
+ - Add the svc_i3c_drvdata structure in struct svc_i3c_master
+ - Improve the do_daa
+
+v2:
+ - Add a new compatible string in dt-binding doc.
+ - Add driver data for npcm845 to address the quirks.
+ - Modify svc_i3c_master_write to be reused by SVC_I3C_QUIRK_FIFO_EMPTY fix
+ - Fix typo of SVC_I3C_QUIRK_FALSE_SLVSTART fix.
+ - Remove the code changes in svc_i3c_master_do_daa_locked, will add it in
+   another patch series for common improvement.
+---
+
+Stanley Chu (5):
+  dt-bindings: i3c: silvaco: Add npcm845 compatible string
+  i3c: master: svc: Add support for Nuvoton npcm845 i3c
+  i3c: master: svc: Fix npcm845 FIFO empty issue
+  i3c: master: svc: Fix npcm845 invalid slvstart event
+  i3c: master: svc: Fix npcm845 DAA process corruption
+
+ .../bindings/i3c/silvaco,i3c-master.yaml      |   4 +-
+ drivers/i3c/master/svc-i3c-master.c           | 123 ++++++++++++++++--
+ 2 files changed, 116 insertions(+), 11 deletions(-)
+
+-- 
+2.34.1
+
