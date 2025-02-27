@@ -1,48 +1,41 @@
-Received: from smtp15.bhosted.nl (smtp15.bhosted.nl [94.124.121.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3AD01ADFE4
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 16:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.26
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E461B0424;
+	Thu, 27 Feb 2025 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740673791; cv=none; b=IUA3/DRqprsMNBIQyMTKwMz/x9wHdfXT6nXwVibbnOV7cBixHsiw/MbcstpICxRCroOPFK1yUH3bQ2pFD0Q3dSTsSdKO2I0XG8QrzeY4v6MPnglv2LAIMyJfsBiDTKKT2MZFE0ttRORIQdsFFND8b4b+ZctVzfE5O1Nz8I7pXu8=
+	t=1740673794; cv=none; b=HAnKpwTr5a/r5fl4WNngiIy9EOozxMwl3oyyCes2ZcQNGYCehCpyz3VRpfICgdWpXll3o8uIaUPuj0Q71D9zMAATUq5Mi/x/RgO5CIzXV9RoKBOy7M30vncSAJ4BVkp9DhFg68MAYPFAwZNbHt1HV33jH0LnOabmoLoVKPStmHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740673791; c=relaxed/simple;
-	bh=PgRYUUeTT1JBmil9ECVJeO3haSqsaiggs8Yz5Nhgtw8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KbjPeAZJ5UF1E+IDrLdXkNGbXMKeRT+PF4v29bt12wJVaSL4foqrTtV7F+TxBasAlBLqduy3ERrg1wltxETrHNCVV6ByIQ68vlMljxCBnJsStpwWarjwT8/BcE1laqoP1BFseuJVqba2bVfXk0n9ZvEQDt98vFKJfVveRIlLBGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=aKHt2hRN; arc=none smtp.client-ip=94.124.121.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1740673794; c=relaxed/simple;
+	bh=A4CTCMtqzteIMnkNZTip3GKEW+1+PgI9x/4aI8hqOM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K2PoxZTmIB0wc07MlnbS0g0XWMONUhv2MwjOCrlBxTIFzwb2fGm44nGln+njNs9OSxENCy6Qk6R2446mWgEFA8lZSWdmegLLIVTBh5mf5aT3XQCysqc+XC5vBBV8E1uVHERikLx4eO3FtAhOjf7uT3DLl4zMHlZBRMapKiXfaGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ViIgTwqw; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="aKHt2hRN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:mime-version:message-id:date:subject:cc:to:from:
-	 from;
-	bh=uyV67zBxhxQ45yLPsz+CN/F+f5ojkxID4+JV1MJhHxc=;
-	b=aKHt2hRNqQgkGbX+Y0tqd5xrl5PNcuC6dvFM+lszxu3eoFiMxmtoT8JruHbdnwYf4AHQUdrKjRm23
-	 ixMiwngJ+F8ASW6i1nWbftovrMwIIpFd2h3uIEDX+lwVCVLdOSIO9oHs0Kt5Gt7Kt8OPJKmbdcNJAw
-	 QNkTVg0y1oOodskw61ZoOGmefMYn9emWguSXLLJi1GvJe/cu/wRDVXNZTbr4GFlGTlLFHth9GkX0nq
-	 ybfhZdqG9Wf6N0pbKgYMPKfvGN9dZtvSjjPMT6d1a4J+AkU+4MsykZML2Z2KgSGkHglFDnyxop6Nip
-	 lb6lXQoZEW3lE5XlG9bth9iv0bEIZVw==
-X-MSG-ID: e6781c98-f527-11ef-a399-00505681446f
-From: David Jander <david@protonic.nl>
-To: linux-kernel@vger.kernel.org
-Cc: linux-iio@vger.kernel.org,
-	Jonathan Corbet <corbet@lwn.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Nuno Sa <nuno.sa@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	David Jander <david@protonic.nl>
-Subject: [RFC PATCH 0/7] Add Linux Motion Control subsystem
-Date: Thu, 27 Feb 2025 17:28:16 +0100
-Message-ID: <20250227162823.3585810-1-david@protonic.nl>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ViIgTwqw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8KKMS
+	vcGBYzx/WXKXqtiTwnIOJ6axQoKyOMDp2Y1KoQ=; b=ViIgTwqwiY9YEpnHd/Mx/
+	Ev+EpQW7nOalI2rlkw3uugm0w4SPZI6Ene9TsLJo6dTg2PTpwYBvjk9nS0CuWRKU
+	kdzrpHN/B7ke2qtDdJ7+xy+elVHXse5+nRRJHYUpKotvJhIaEtQ4UqStkdqUhhJT
+	4VCwDfAJ4y7hPstuh9nQbY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wD3d8SoksBnzyN4PA--.58111S2;
+	Fri, 28 Feb 2025 00:28:24 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: tglx@linutronix.de
+Cc: manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	cassel@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
+Date: Fri, 28 Feb 2025 00:28:21 +0800
+Message-Id: <20250227162821.253020-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,99 +43,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3d8SoksBnzyN4PA--.58111S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WrWfWryftw4fCryUuFWrGrg_yoW8WFyrpr
+	WDJF43Gr48Jw1jqw47uFnrur1UXF4vvayfGr45Xw1SkwnIgwnFyryDKayxG3W3tr4ru3WY
+	y3Wqyw42krn8A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEl1vDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiDxUBo2fAkBQ-OQAAsd
 
-Request for comments on: adding the Linux Motion Control subsystem to the
-kernel.
+Add to view the addresses and data stored in the MSI capability or the
+addresses and data stored in the MSIX vector table.
 
-The Linux Motion Control subsystem (LMC) is a new kernel subsystem and
-associated device drivers for hardware devices that control mechanical
-motion. Most often these are different types of motors, but can also be
-linear actuators for example.
+e.g.
+root@root:/sys/bus/pci/devices/<dev>/msi_irqs# ls
+86  87  88  89
+root@root:/sys/bus/pci/devices/<dev>/msi_irqs# cat *
+msix
+ address_hi: 0x00000000
+ address_lo: 0x0e060040
+ msg_data: 0x00000000
+msix
+ address_hi: 0x00000000
+ address_lo: 0x0e060040
+ msg_data: 0x00000001
+msix
+ address_hi: 0x00000000
+ address_lo: 0x0e060040
+ msg_data: 0x00000002
+msix
+ address_hi: 0x00000000
+ address_lo: 0x0e060040
+ msg_data: 0x00000003
 
-This subsystem defines a new UAPI for motion devices on the user-space
-side, as well as common functionality for hardware device drivers on the
-driver side.
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+ kernel/irq/msi.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-The UAPI is based on a ioctl() interface on character devices representing
-a specific hardware device. The hardware device can control one or more
-actuators (motors), which are identified as channels in the UAPI. It is
-possible to execute motions on individual channels, or combined
-affecting several selected (or all) channels simutaneously. Examples of
-coordinated movements of several channels could be the individual axes
-of a 3D printer or CNC machine for example.
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 396a067a8a56..a37a3e535fb8 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -503,8 +503,18 @@ static ssize_t msi_mode_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	/* MSI vs. MSIX is per device not per interrupt */
+ 	bool is_msix = dev_is_pci(dev) ? to_pci_dev(dev)->msix_enabled : false;
++	struct msi_desc *desc;
++	u32 irq;
++
++	if (kstrtoint(attr->attr.name, 10, &irq) < 0)
++		return 0;
+ 
+-	return sysfs_emit(buf, "%s\n", is_msix ? "msix" : "msi");
++	desc = irq_get_msi_desc(irq);
++	return sysfs_emit(
++		buf,
++		"%s\n address_hi: 0x%08x\n address_lo: 0x%08x\n msg_data: 0x%08x\n",
++		is_msix ? "msix" : "msi", desc->msg.address_hi,
++		desc->msg.address_lo, desc->msg.data);
+ }
+ 
+ static void msi_sysfs_remove_desc(struct device *dev, struct msi_desc *desc)
 
-On the hardware side, this initial set of patches also includes two drivers
-for two different kinds of motors. One is a stepper motor controller
-device that containes a ramp generator capable of autonomously executing
-controlled motions following a multi-point acceleration profile
-(TMC5240), as well as a simple DC motor controller driver that can control
-DC motors via a half-bridge or full H-bridge driver such as the TI DRV8873
-for example.
-
-Towards the IIO subsystem, LMC supports generating iio trigger events that
-fire at certain motion events, such as passing a pre-programmed position or
-when reaching the motion target position, depending on the capabilities of
-the hardware device. This enables for example triggering an ADC measurement
-at a certain position during a movement.
-
-In the future, making use of PREEMPT_RT, even dumb STEP/DIR type stepper
-motor controller drivers may be implemented entirely in the kernel,
-depending on some characteristics of the hardware (latency jittter,
-interrupt latency and CPU speed mainly).
-
-The existence of this subsystem may affect other projects, such as
-Linux-CNC and Klipper for example.
-
-This code is already in use controlling machines with up to 16 stepper
-motors and up to 4 DC motors simutaneously. Up to this point the UAPI
-has shown to be adequate and sufficient. Careful thought has gone into
-the UAPI design to make sure it coveres as many use-cases as possible,
-while being versioned and extensible in the future, with backwards
-compatibility in mind.
-
-David Jander (7):
-  drivers: Add motion control subsystem
-  motion: Add ADI/Trinamic TMC5240 stepper motor controller
-  motion: Add simple-pwm.c PWM based DC motor controller driver
-  Documentation: Add Linux Motion Control documentation
-  dt-bindings: motion: Add common motion device properties
-  dt-bindings: motion: Add adi,tmc5240 bindings
-  dt-bindings: motion: Add motion-simple-pwm bindings
-
- .../bindings/motion/adi,tmc5240.yaml          |   60 +
- .../devicetree/bindings/motion/common.yaml    |   52 +
- .../bindings/motion/motion-simple-pwm.yaml    |   55 +
- Documentation/motion/index.rst                |   18 +
- Documentation/motion/motion-uapi.rst          |  555 ++++++++
- Documentation/subsystem-apis.rst              |    1 +
- MAINTAINERS                                   |   13 +
- drivers/Kconfig                               |    2 +
- drivers/Makefile                              |    2 +
- drivers/motion/Kconfig                        |   42 +
- drivers/motion/Makefile                       |    5 +
- drivers/motion/motion-core.c                  |  823 ++++++++++++
- drivers/motion/motion-core.h                  |  172 +++
- drivers/motion/motion-helpers.c               |  590 +++++++++
- drivers/motion/motion-helpers.h               |   23 +
- drivers/motion/simple-pwm.c                   |  199 +++
- drivers/motion/tmc5240.c                      | 1157 +++++++++++++++++
- include/uapi/linux/motion.h                   |  229 ++++
- 18 files changed, 3998 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/motion/adi,tmc5240.yaml
- create mode 100644 Documentation/devicetree/bindings/motion/common.yaml
- create mode 100644 Documentation/devicetree/bindings/motion/motion-simple-pwm.yaml
- create mode 100644 Documentation/motion/index.rst
- create mode 100644 Documentation/motion/motion-uapi.rst
- create mode 100644 drivers/motion/Kconfig
- create mode 100644 drivers/motion/Makefile
- create mode 100644 drivers/motion/motion-core.c
- create mode 100644 drivers/motion/motion-core.h
- create mode 100644 drivers/motion/motion-helpers.c
- create mode 100644 drivers/motion/motion-helpers.h
- create mode 100644 drivers/motion/simple-pwm.c
- create mode 100644 drivers/motion/tmc5240.c
- create mode 100644 include/uapi/linux/motion.h
-
+base-commit: dd83757f6e686a2188997cb58b5975f744bb7786
 -- 
-2.47.2
+2.25.1
 
