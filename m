@@ -1,157 +1,123 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2040.outbound.protection.outlook.com [40.107.117.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01BA1E8325;
-	Thu, 27 Feb 2025 05:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740635459; cv=fail; b=hWA7RNJlMIZxysjbe0GpqfHUpwiHGkTBcFhkq3RcXy3mknScblDzVziQz4Ujt1kR7zwi8iyveOVpPo5Sb1Kvdy17ilL3H+1a1KVL0Q2P60RncHV4hv+5McMiAXliEdpQOnNxJ+8W+ygB9SzJGxOxLGGEfcUXi2S339ilaOHAC3Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740635459; c=relaxed/simple;
-	bh=5RzdfXAVeseL+j/RDjWwWa0sFp78Ikq8LZ2/+isUTYQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=cpXVpQYkUl5KBJ6m/oJlkEJK6oFx7/F2FCP4vJlu4wXFU08uQvAfKbBzklDpQCnh/jLZkkyfxjuAcWMjnJyWA2pxXX4ZdEOmBH+iqyruaJuznlBD10ehZMpRaNc94LJv/33RIGBkaXorTFjfSMMcPszsFZcLDxEd8rZvunKeiOA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=Rwrrw04R; arc=fail smtp.client-ip=40.107.117.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19831EB5C7
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 05:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740635497; cv=none; b=YpUYMR6i3H+51wHlgcQs+N8ysTN2gK/AduORiFfNiEeJ962iq8IKsQeWoPJCrLso63GZ9dUkc93b6a7cX79ucJk3qI+zNW640PkcwHcB951KdjP1wUx3tzC+i9NlZLFqJLqqCm4Uvtrkpoi6e87lZmqbOsSA8cGXfDhgSc5ut/4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740635497; c=relaxed/simple;
+	bh=GRubHh+cAb1Qj+ayNxZtTMqoz4rE/+FrEX3gjpeiJJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RVrL767U2i1qmFL//7h41AHwUxgGRGMiBS5ID0iSL5neAi52b47xnUFIc2PcmMJaLJH74ti4xX3sThTbrGpwlf7iJXFAweQhoPkPyqRrpC1M2ZoV+4rNUbLbp1xaljEiCn6foc1e05mE8vRgxWFrXn9u8CtMeMqeZotEXDxg4ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r4vfKdpM; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="Rwrrw04R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OU1kDalkjOkqV84G/+W05GJBTs0u58oyft2za9iy4n0eYntBSCarV7ULstKj93Kb+nSctEWGyOCu4qwRvb4Isyfy4yGMCcDLt/sdBgg5ejK+/MqnVNBy6/KC9ZDMLIL2Sgasgbmj3x1TQJ0tyGamIkw5IjzgXXWW3qQeYI2YA3nwIl4PF7TRNrg4UaEn0FJ30Wpwa6ygXo1/084PmtEgCtLzQyV5+98jQ550rGgyFV1zRJXDJNrDOKHuXhKUq6juLVpanFI0Nl26lrpkCdKScB3l8l7cmrGIk/+MFfAqJlBZFq2P39mrMYi7tSSiSbMbSqwovcwSD2Q+x5MPCnmnGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Al4bc5cSUvmGbOxtZx8pnieQTZxXF7Zr8RZRpbIEOqE=;
- b=BmESsrxHWdJfGo2w2ju+e5OEQX4lMePO32LEw8fmw+NDDWvfvL6aN/xu7MezwzXU9h3NEf+RVge6a+69OMqfe5TsoM94LSQeDnLTnYOAO4enkGEVaSsW8x96GUIsz6YTfFNHgU8tmyWPYMREu1E4y0poFP9FuAeU2r9uvd30AWurHDqpiiifh8HZ5ULHNvQr94dlOffmdkd8813oP2TlvwTv5ThVNKBUxf+oR0tfk9Yozrb4JYUn8s18qqa8EMpTt5fRna7RioDhXSP6KzWEPgdUfiKiMBEffQ9PRlUATpcYURi6M1N7WoUOkkVWgJpwvKbv5SwLTuQmS53FHZzz6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Al4bc5cSUvmGbOxtZx8pnieQTZxXF7Zr8RZRpbIEOqE=;
- b=Rwrrw04RCNWCsRbLVpgk7+H78cg3wqznmU5Q8p/FU38pcLhL8GFnP05m13+SVSPDjc2tLnUrYyhr8bdVs16X2ggndRXsUfs17c9CmJ9w9vA8xKcCrxCFCxstQczUM1TuWx4Pgwr7Y/BkCcq+849G1xcukY1beg7ffdM8e/0z+Evww2RIbVX+IXTY8YpTakGTz4q1M3A3miQHbMWi6q2sWPlunKJAp5TnABhWER1J8PI5gnJWwBqUeIfmrE99xnwOWQTKrasthGH8hDH1PeIHOx2opo4SHyavTMOc1OijaD7TZfekonLeflFcIiZTo9AY3/YcSUQyO0TfWvzDJMxl5Q==
-Received: from SL2P216CA0135.KORP216.PROD.OUTLOOK.COM (2603:1096:101:1::14) by
- OSQPR04MB8042.apcprd04.prod.outlook.com (2603:1096:604:295::6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8466.19; Thu, 27 Feb 2025 05:50:49 +0000
-Received: from HK3PEPF0000021D.apcprd03.prod.outlook.com
- (2603:1096:101:1:cafe::68) by SL2P216CA0135.outlook.office365.com
- (2603:1096:101:1::14) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.19 via Frontend Transport; Thu,
- 27 Feb 2025 05:50:49 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK3PEPF0000021D.mail.protection.outlook.com (10.167.8.39) with Microsoft SMTP
- Server id 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 05:50:48
- +0000
-From: Jerry C Chen <Jerry_C_Chen@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-	Paul Fertser <fercerpav@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Jerry C Chen <Jerry_C_Chen@wiwynn.com>,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4vfKdpM"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54843052bcdso459215e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Feb 2025 21:51:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740635494; x=1741240294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B1U19xvVdCKVbh6i51+4ZDFXiDIrMz27FSxrW/i0pKg=;
+        b=r4vfKdpMug86OeXLnt80d8gW4VtH+8nr30vRFJVbwid3DQLgQXGBdpK0evwCm/U7ie
+         r8lr6SK4QDUFTxlyr3lM8GuQOrwhcyvgCbns+3BJxnO3j6I120xQbdw6L1za5EDo7INh
+         Zuq8w9A1pwF3oQ9MM8ehf7r7w3+33vam5h3TzbXsNyRMGdAukh5nk3J9fh9C9XyVnvfQ
+         ZswQMDMlz1d/YKMle+f7qJRvemHDwZXMa00cIfRTemvHZQshAU/6ZUf/Q5OgArsmQU09
+         MiZvGNN8BFuyTO+zf+FTYLfzsylrUTvcZw8whF96uv7eVBOqR4vMgbbtKJlxaqSywWh8
+         b3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740635494; x=1741240294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B1U19xvVdCKVbh6i51+4ZDFXiDIrMz27FSxrW/i0pKg=;
+        b=L434lNsriwD3Yeks3efYWqVmteeG+9aGtPz4dw8Cqwq2h467siNMrE2781EgBL2p3Y
+         JOhAjllYyg0TX7q3T80z2kd7RcJLoX7U3iNfCapCBHe2Ocled1FDTeWxU830zKqCVsgd
+         BukXeOzrpFFn1ssaSM3k/VI4sBkvzoI5jZ26T4SJdku3By7QowehSlyEq1X66xzRafal
+         ps1RBqNuBW9cmML7dPSR078YV98Ad/zpWlKfSQl8girknOfatI9G320VoYHoOKqUIKzh
+         7JZkm03IWdM05TMMZNNkS9+q8eTZ5WJOnLBCUHNLP3Gm8xy3yEvjfJZXvbX2pAOwrU4O
+         uWYw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8Lg3obvOqlAvJDZ/R0sw3cLmTkLEyftugZzJZ/3OBaXhUncll4fcW/fDgjvT5NzmThEYL0SNi1PUMc+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwF47FrC6UvvWq8yHST0JwckAE8uZIB1HvU0/Sevd4WzfWVfOB6
+	1MsPKw0Ra4fUuPNf8QR0/Oy4YTQzEfRnqA+Q6Uxr/F4DgfkMW/iaJlHmcyYK8k8=
+X-Gm-Gg: ASbGncvP+G01LFUWtX5wlR/NAnIlkOvRLm0A52ksG6wcabWZU43Rn1M69TdVKiLtzX8
+	bUFrN8Gvq3rCjQQy97kZ7/zl/abpitkRTQt6iZ1WfDw1Xi+P6AWEsK6MDaoxsroyMRW0ummRcIk
+	xf4ScTCfpJy5pMw5xdVVe+WBQ1FqXJ8hQIPLEAislpHSKphvmHnYTQ+eryokfoWy1KmgGly1kK3
+	uLRc51Wl3k3bUPe6B5b2Y9MhZjpIzYiv1d8A/7O+wYVDpc/uzSZY6OspYlBYnrbow3puwRrbrEW
+	ZBiQ0PCq3wOz5/31KeCOOuRdY2u+klC/psr5DlKqh5sy181B4Kdk5yvShN/g3N3gPepJghXNDEq
+	JaOUuIw==
+X-Google-Smtp-Source: AGHT+IGVzSFVtQHVGFHQLcFNQCwlkvUFIDCBs957Ra7OLOtuklfdObqmMHtARrsJHtaIOaTCbUtWbw==
+X-Received: by 2002:a05:6512:ba8:b0:545:746:f36a with SMTP id 2adb3069b0e04-548510ed195mr7100964e87.34.1740635493780;
+        Wed, 26 Feb 2025 21:51:33 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443b1213sm75514e87.155.2025.02.26.21.51.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 21:51:32 -0800 (PST)
+Date: Thu, 27 Feb 2025 07:51:30 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Vignesh Raman <vignesh.raman@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com, 
+	helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
+	guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com, valentine.burley@collabora.com, 
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] net/ncsi: fix buffer overflow in getting version id
-Date: Thu, 27 Feb 2025 13:50:44 +0800
-Message-Id: <20250227055044.3878374-1-Jerry_C_Chen@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH v1] drm/ci: remove CI_PRE_CLONE_SCRIPT
+Message-ID: <ukzyfymij2yilyy7ofyi3hj4urlrxxbx5rre3f7qg4zgkc65u5@vbutj63ucctc>
+References: <20250227043640.411696-1-vignesh.raman@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK3PEPF0000021D:EE_|OSQPR04MB8042:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 0f362cd4-20cb-4a8d-e26b-08dd56f2afc5
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|7416014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PWsQkMhPWLN8dzstM9+dlz0ZkQwteWqqU+ExFKBlWxEoF262fqGhnd/gUs/o?=
- =?us-ascii?Q?p+uGNOitNw3ISQhnqN4/WMh6fzqfGjdTCyE6L0z2cOX67SQ0domQL4w7/Hgp?=
- =?us-ascii?Q?KcjLMwfVKH/goj0bzb4cF9v8Nq7J0btTtbgC3Zp2pS4KRWuFdvEqDOqvJbyV?=
- =?us-ascii?Q?SZop/3dg4wc4V4Xh17Jkai5vU0ol0BUkRGJPOUe//DKbSU+Rs4YqhDFX8XuZ?=
- =?us-ascii?Q?yrkw+S897s+vTgy98JPMjSGNE6SelOkKzJzVIc2KwNKASZxTCHEsNW854f2J?=
- =?us-ascii?Q?KT6cjqToHg0upAKnj7hOUqs3slVjmRyzX7hLqu2VUgeVIyB90DrIEEJgyUZd?=
- =?us-ascii?Q?z4CVWgYKE9oHMfA5mCjjnSj77T7gHgzBjnKilV3f1aqdKsY3E7k4GZvN0e8P?=
- =?us-ascii?Q?r8XY+9P5AQryCdnCEzkEhWOWlggSGd9ICFnz6W41YXUrmk5yrnHTSzc+Xd+i?=
- =?us-ascii?Q?pCOfr109Zc+E31zVwHmd86ls/+aGPHZaxjRmsxR0Cho71BOA6BGJYF9rullG?=
- =?us-ascii?Q?yBUrENvDYAFWOdwSz3G48aEZRe42UoHPhPVOwUDm0eiFBJ4MNFMDRRbPP7Vd?=
- =?us-ascii?Q?KJ5ckmNXc1lENTiLNw553kBero2gvhFcxQ1OUW4nDiJaY78jtT217RElVoF7?=
- =?us-ascii?Q?BgJcl+kymNCge0bRQth8ywfFTimxNjJWYlSB0f08VFqR7LJzlsobLA3sbQGm?=
- =?us-ascii?Q?B7e65n6dmMjGSAHRWLFJd26aPngDeSSEgFCdQnBC9uVMe+jICYQs0ZnDXLnu?=
- =?us-ascii?Q?Jiu60Om10S38h4FEzX4DZSANL9ZFhqOrpxaF9jXtsP7bXV3sE4vaCqE1YctW?=
- =?us-ascii?Q?JAODeQis9quQjBKPWSBX3rbghkgX8U/O9gh5/WGzxS7C9jfejN/Y5U+LcYkH?=
- =?us-ascii?Q?+64fmP0Yy9nyElZ0S9jyzAgC1ok5IBlTBg840Hcdwtt5BBFU8lMhuxMr7vNn?=
- =?us-ascii?Q?aOOC5TfrRCBA+1jn+2tefeuoRYL/NEP1aQ5uImwclhGuDXI2QYj6oc99sgPh?=
- =?us-ascii?Q?0oTUqmma55fG5/d8rmyE7bPO4h6Ckt6Kk/YvFDu4VLaljm3rj48PJQT6PHc4?=
- =?us-ascii?Q?1n62z0yv7YLNRIDGH4sy3MICdLSq9+7Si3gb9WeR+RIdf/rSeZJKKYHT01qE?=
- =?us-ascii?Q?JPp/UM/Q+eGEJx0Gpt98xywNq5VSJSx63HEiXE6wq1aD2B18jxkFScw5+OFX?=
- =?us-ascii?Q?S95hGMAdusgaksz5iq6TdGkVk0a6GephxU5CRgJbxpNH2hsvVo8kjzPn0ghZ?=
- =?us-ascii?Q?ccZZqxRLDqoDHt6pit8Zs+0jZJGrxQmEuLit6CkoJD3hozGPBSx/3me5OJf4?=
- =?us-ascii?Q?Z2JBSIc60Cv1VLDWyoMvHW1ICwqtHWEmg2QirulOUng/1VJ4GhhDwQXujOV8?=
- =?us-ascii?Q?KhbFRbSNA+vok/WzkICEK5NyBN2+goB8o5P/J1GZ6aCKi3Ubhiqv7GoIBYfu?=
- =?us-ascii?Q?BqpG80NZokCQnsp9NqE0CrIk/htaW6t2cB+1zg1x+MN7rFgi/0i5uw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(7416014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 05:50:48.5190
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f362cd4-20cb-4a8d-e26b-08dd56f2afc5
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK3PEPF0000021D.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSQPR04MB8042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227043640.411696-1-vignesh.raman@collabora.com>
 
-In NC-SI spec v1.2 section 8.4.44.2, the firmware name doesn't
-need to be null terminated while its size occupies the full size
-of the field. Fix the buffer overflow issue by adding one
-additional byte for null terminator.
+On Thu, Feb 27, 2025 at 10:06:24AM +0530, Vignesh Raman wrote:
+> If we are not caching the git archive, do not
+> set CI_PRE_CLONE_SCRIPT. Setting it makes CI
+> try to download the cache first, and if it is
+> missing, it tries to clone the repo within a
+> time limit, which can cause build failures.
 
-Signed-off-by: Jerry C Chen <Jerry_C_Chen@wiwynn.com>
----
- net/ncsi/internal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please wrap the commit message according to the guidelines. 47 chars in
+a line is way too short.
 
-diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
-index 4e0842df5234..fb918af74521 100644
---- a/net/ncsi/internal.h
-+++ b/net/ncsi/internal.h
-@@ -110,7 +110,7 @@ struct ncsi_channel_version {
-        u8   update;            /* NCSI version update */
-        char alpha1;            /* NCSI version alpha1 */
-        char alpha2;            /* NCSI version alpha2 */
--       u8  fw_name[12];        /* Firmware name string                */
-+       u8  fw_name[12+1];      /* Firmware name string               */
-        u32 fw_version;         /* Firmware version                   */
-        u16 pci_ids[4];         /* PCI identification                 */
-        u32 mf_id;              /* Manufacture ID                     */
---
-2.25.1
+BTW: this didn't help with the python-artifacts issue. It still times
+out.
 
-WIWYNN PROPRIETARY
-This email (and any attachments) contains proprietary or confidential infor=
-mation and is for the sole use of its intended recipient. Any unauthorized =
-review, use, copying or distribution of this email or the content of this e=
-mail is strictly prohibited. If you are not the intended recipient, please =
-notify the sender and delete this email immediately.
+> 
+> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+> ---
+>  drivers/gpu/drm/ci/gitlab-ci.yml | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
+> index f4e324e156db..0bc4ac344757 100644
+> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
+> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+> @@ -13,12 +13,6 @@ variables:
+>    FDO_UPSTREAM_REPO: helen.fornazier/linux   # The repo where the git-archive daily runs
+>    MESA_TEMPLATES_COMMIT: &ci-templates-commit d5aa3941aa03c2f716595116354fb81eb8012acb
+>    DRM_CI_PROJECT_URL: https://gitlab.freedesktop.org/${DRM_CI_PROJECT_PATH}
+> -  CI_PRE_CLONE_SCRIPT: |-
+> -          set -o xtrace
+> -          curl -L --retry 4 -f --retry-all-errors --retry-delay 60 -s ${DRM_CI_PROJECT_URL}/-/raw/${DRM_CI_COMMIT_SHA}/.gitlab-ci/download-git-cache.sh -o download-git-cache.sh
+> -          bash download-git-cache.sh
+> -          rm download-git-cache.sh
+> -          set +o xtrace
+>    S3_JWT_FILE: /s3_jwt
+>    S3_JWT_FILE_SCRIPT: |-
+>        echo -n '${S3_JWT}' > '${S3_JWT_FILE}' &&
+> -- 
+> 2.47.2
+> 
+
+-- 
+With best wishes
+Dmitry
