@@ -1,64 +1,98 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C551A2C27
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03D11D9A7F;
+	Thu, 27 Feb 2025 17:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675719; cv=none; b=PGU077HvK8AoReuYD7IVoLFxF57hyg2gV1AlHgyK/FIWZvtAHL+l3mCTMgsybbEzqxaLwmKxSueUzRKWgvoEzGni9PBKCwUt5tRAz4SGz00RCJiYMONl9RjKvSFLBCvQSWRF2Geg9iIhlBc+lAesyw18vcYCEInsoXQjJQJcfwg=
+	t=1740675733; cv=none; b=GRu0QaPsbetZUKT458KUPob/176VUIzXXT/3rLosTa6EpRWxNG9AYN/fmETNUMbwqNkccOG9N2P3RYedCw8Gta52LQXcCsU3LlZmuXsZgh25GN3SqE8I4Aw3qV7ujB0gUQ+VzNHBzZJjoGhGTIdl83RXX3MhgbSs6H+Jia6bYZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675719; c=relaxed/simple;
-	bh=Xrcd65Zx52177pXz2X3OxgzXdbY9csWef6zPrPdXhdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lYWFFpHur+U/1b1tIeDHpvJ6Ib88oVzGR9XoZXQIVekjo3hpCORQvfL08ZVURTv/1qR0FTwqbATo1gghKDCbOA0d73j9cdfbgngSzQW1im1lb0Fl/B2gpIFcjyS/SZ5YF2bKhsuC8vgSjV9geP3gikTsU0RisPzcqxgTVPLIPfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=Kera79ZW; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1740675733; c=relaxed/simple;
+	bh=g21j8Ki80r5R3Q3hRSeH57lB4KZggPymAcYwAS/yqeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o4y7C3a2xI0FWQFi7pWps+5L681UrFj06GAjSdk25T2QSRDzo5OItEChedBMJRuFMfOKGC4Mf+wXu01cchIPGuwwBC0VAe4JJ6YxliY+c+PcWjx54ghFtcMkzVJ1VUC8CndPD90WjQajj6ASCSEXp4ozpn3zYq1czS5sJoqt1OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VlV7HjWL; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="Kera79ZW"
-Date: Thu, 27 Feb 2025 12:01:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1740675714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5x59HniqPBqKKUIe7KYWznQqiJ8WVEBPJBvvS+VQjM0=;
-	b=Kera79ZW3++yznfu3mAeSIAL6eOLHyPpNcGQKzcrdDdDb73e2Fh0TwnZ9Yq00rcKdFJNFQ
-	5z1fb483MJ22YqTgDZOzt3kjh4/VwlPwvfvNt3VtNAoygbgrzMJG1iq206e4g+LgyCkZRi
-	eomuOu1bEz4CFNaQfLF84y/U8KV1kvVxWDiAhcrDLrtTauVh7hLBJ/ZIQJeTKCHsddI1zI
-	oKodu9pwXf6cr01Udyk0uXEzbjd/TdgQmHGwCp37InptMozO5CwDZkQ0Kn2HZ592bfdEFs
-	321icTewVkrwRzENiVe6VErW1A4HQJ3TpaGfyVtncVF0tST5jW1zUP2XoiMdGA==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: fnkl.kernel@gmail.com
-Cc: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 2/2] iommu: apple-dart: Allow mismatched bypass support
-Message-ID: <Z8Cae58jLqcGwF8S@blossom>
-References: <20250227-isp-dart-v1-0-161e91ef4f46@gmail.com>
- <20250227-isp-dart-v1-2-161e91ef4f46@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VlV7HjWL"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id F0B68210D0D8;
+	Thu, 27 Feb 2025 09:02:09 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F0B68210D0D8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740675730;
+	bh=UoCV5HAJeH3XjGtJFdhDgStkjmGqfA1T4wdKfeu4AsQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VlV7HjWLGHggF73qzcmagSPrXdyB3Ix7hVmrQTgBusBHr3KadTdfJw7oJ2yXwUk/u
+	 kr4aIHEUGfkzWNvvtjBkjAK/7EfisK4p8Jts/+3gCZZGO/f3wovVYe/0X7hvCNX0Nf
+	 n+uakKRBuAXNaRCdRUx/ewFxPDYTCuUsc/g4y41M=
+Message-ID: <74af19c4-639f-4bcc-b667-b5f102bbb312@linux.microsoft.com>
+Date: Thu, 27 Feb 2025 09:02:09 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227-isp-dart-v1-2-161e91ef4f46@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+ will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
+ joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> +		/* Will be ANDed with DART capabilities */
-> +		cfg->supports_bypass = true;
-...
-> +	if (!dart->supports_bypass)
-> +		cfg->supports_bypass = false;
 
-Probably better to write
 
-   cfg->supports_bypass &= dart->supports_bypass;
+On 2/26/2025 3:07 PM, Nuno Das Neves wrote:
 
-To match what's in the comment!
+[...]
+
+> +
+> +const char *hv_result_to_string(u64 hv_status)
+> +{
+> +	switch (hv_result(hv_status)) {
+
+[...]
+
+> +		return "HV_STATUS_VTL_ALREADY_ENABLED";
+> +	default:
+> +		return "Unknown";
+> +	};
+> +	return "Unknown";
+> +}
+> +EXPORT_SYMBOL_GPL(hv_result_to_string);
+
+Should we remove this and output the hexadecimal error code in ~3 places
+this function is used?
+
+The "Unknown" part would make debugging harder actually when something
+fails. I presume that the mainstream scenarios all work, and it is the
+edge cases that might fail, and these are likelier to produce "Unknown".
+
+Folks who actually debug failed hypercalls rarely have issues with
+looking up the error code, and printing "Unknown" to the log is worse
+than a hexadecimal. Like even the people who wrote the code got nothing
+to say about what is going on.
+
+-- 
+Thank you,
+Roman
+
