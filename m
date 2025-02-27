@@ -1,111 +1,101 @@
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F08C1F5820;
-	Thu, 27 Feb 2025 18:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 782351DE3A4;
+	Thu, 27 Feb 2025 18:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682189; cv=none; b=sK4gep1IdBxra4jSreX4fwObgEF1/+mdqJ6Vzt7tbRa4BDNlFaFPNwK3xgujDMx1y8tguBpULszb3NvDeT8Zbn+xg3vbJ9MwI1tUiSHxNDnG6nYd9Ud12KuQDRdjW6qsER0e8w41zgLJSgOzQR4rTfTZ3LAMQWPZPtZPZ1CxUFs=
+	t=1740682232; cv=none; b=tYtu/78MqZeepEOoksvPR8jrliROE9N42smaAZZbg3L0ZynJK0Ip7TDvUx01N0Rog39Lhb249JkBM/6cOeXZkgDht0N5YpKylE4rzVgMM5+wzr92L+ElxpenovHsSklRbnUrseEFF4rzw2k/mVfJMNBu7iXOPZDhgacrsepT3vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740682189; c=relaxed/simple;
-	bh=jD8IrSFKJ+w8OwiRwskbeXe3GSuxpQOGZpZcLLSKcp8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Gu8ylHbEIjTf1cSAGb81rRLl3zyfdGaAre0HXntlWGCjf0ptNC5uIIM2+/y3pSjtc1pY5FHakYaBOkH+j8uvViusZ2ZdE2Xdw3t4zs4oO+J9WKKfhn+UjoCsNNobL+939LhQuY+shEb99Ug65lP9aYxgEo5vv9WGs08bcq8CmWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GlCtr5W9; arc=none smtp.client-ip=13.77.154.182
+	s=arc-20240116; t=1740682232; c=relaxed/simple;
+	bh=F1lTmqgjHYJPjcmbtxE/n3iAXCq4SZkVmt5nqUeZPXY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UUAbgYd+WIY89QNALCaSsR9uBKRLzqDEcEVKRwFBqz1yAXKXFwNuyPrcMg2/EtvjN+qyyOmRCQeWDoUsIIJ/2YQKb2qi0uK56A4ybbuB+pWwKnIbT1zTkolVWhTfDRm77C5UBEAoI/6jPwMfVII+7dCL0dRsU9AWhkOsncMCeYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FNbW9YBu; arc=none smtp.client-ip=13.77.154.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GlCtr5W9"
-Received: from thinkpad-p16sg1.corp.microsoft.com (unknown [20.236.10.206])
-	by linux.microsoft.com (Postfix) with ESMTPSA id A4279210EAC1;
-	Thu, 27 Feb 2025 10:49:47 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A4279210EAC1
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FNbW9YBu"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9B421210D0D8;
+	Thu, 27 Feb 2025 10:50:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9B421210D0D8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740682187;
-	bh=nz70CBPIYU1n5UuvgHW65DgzacxtlZnlMe0KudNX5Uo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlCtr5W9NTY1BR4vDbGgcZSQoYn3+qfCRMDJAv2LO2ZhAfsHt7ie9A6zC3XeNqbpj
-	 RH81gHKezlv57RQ8kdkkuC6Fr3QUudb87hIs2NMvozkSoyMKSHTk8Ps8lg9r/hRN3l
-	 KdtPQtSMEe96dxCDjN0YZtpV8dN4LsvjacmxujR8=
-From: Shyam Saini <shyamsaini@linux.microsoft.com>
-To: linux-kernel@vger.kernel.org,
-	linux-modules@vger.kernel.org
-Cc: petr.pavlu@suse.com,
-	code@tyhicks.com,
-	linux@rasmusvillemoes.dk,
-	christophe.leroy@csgroup.eu,
-	hch@infradead.org,
-	mcgrof@kernel.org,
-	frkaya@linux.microsoft.com,
-	vijayb@linux.microsoft.com,
-	linux@weissschuh.net,
-	samitolvanen@google.com,
-	da.gomez@samsung.com,
-	gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	dakr@kernel.org,
-	stable@kernel.org
-Subject: [PATCH v4 4/4] drivers: base: handle module_kobject creation
-Date: Thu, 27 Feb 2025 10:49:30 -0800
-Message-Id: <20250227184930.34163-5-shyamsaini@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
-References: <20250227184930.34163-1-shyamsaini@linux.microsoft.com>
+	s=default; t=1740682231;
+	bh=dHwZT1w8oWRsXa8H/+DiZfRcRSkOTyh9HqlMdGrYI/Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FNbW9YBuPokWfkhV8B0zMJtN5945pEMQP20InF/WOW6hK0iLB5iSFm7uJafeCDov9
+	 ygoVc1l10LfK0HlQbcUkAzGjyXWi8ArYK0CYgWh0b61j196eOqg//F7JMoJtHcRzGr
+	 /mlcu6UBD8g84zdCQtIgCvdToz5xVsg4gg8RkKH4=
+Message-ID: <f332b77a-940f-4007-a44a-de64878d5201@linux.microsoft.com>
+Date: Thu, 27 Feb 2025 10:50:30 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 10/10] Drivers: hv: Introduce mshv_root module to
+ expose /dev/mshv to VMMs
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ mhklinux@outlook.com, decui@microsoft.com, catalin.marinas@arm.com,
+ will@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
+ joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <1740611284-27506-11-git-send-email-nunodasneves@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-module_add_driver() relies on module_kset list for
-/sys/module/<built-in-module>/drivers directory creation.
 
-Since,
-commit 96a1a2412acba ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
-drivers which are initialized from subsys_initcall() or any other
-higher precedence initcall couldn't find the related kobject entry
-in the module_kset list because module_kset is not fully populated
-by the time module_add_driver() refers it. As a consequence,
-module_add_driver() returns early without calling make_driver_name().
-Therefore, /sys/module/<built-in-module>/drivers is never created.
 
-Fix this issue by letting module_add_driver() handle module_kobject
-creation itself.
 
-Fixes: 96a1a2412acb ("kernel/params.c: defer most of param_sysfs_init() to late_initcall time")
-Cc: stable@kernel.org
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Signed-off-by: Shyam Saini <shyamsaini@linux.microsoft.com>
----
- drivers/base/module.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+On 2/26/2025 3:08 PM, Nuno Das Neves wrote:
+> Provide a set of IOCTLs for creating and managing child partitions when
+> running as root partition on Hyper-V. The new driver is enabled via
+> CONFIG_MSHV_ROOT.
+> 
 
-diff --git a/drivers/base/module.c b/drivers/base/module.c
-index 5bc71bea883a..218aaa096455 100644
---- a/drivers/base/module.c
-+++ b/drivers/base/module.c
-@@ -42,16 +42,13 @@ int module_add_driver(struct module *mod, const struct device_driver *drv)
- 	if (mod)
- 		mk = &mod->mkobj;
- 	else if (drv->mod_name) {
--		struct kobject *mkobj;
--
--		/* Lookup built-in module entry in /sys/modules */
--		mkobj = kset_find_obj(module_kset, drv->mod_name);
--		if (mkobj) {
--			mk = container_of(mkobj, struct module_kobject, kobj);
-+		/* Lookup or create built-in module entry in /sys/modules */
-+		mk = lookup_or_create_module_kobject(drv->mod_name);
-+		if (mk) {
- 			/* remember our module structure */
- 			drv->p->mkobj = mk;
--			/* kset_find_obj took a reference */
--			kobject_put(mkobj);
-+			/* lookup_or_create_module_kobject took a reference */
-+			kobject_put(&mk->kobj);
- 		}
- 	}
- 
+[...]
+
+
+As I understood, the changes fall into these buckets:
+
+1. Partition management (VPs and memory). Built of the top of fd's which
+    looks as the right approach. There is ref counting etc.
+2. Scheduling. Here, there is the mature KVM and Xen code to find
+    inspiration in. Xen being the Type 1 hypervisor should likely be
+    closer to MSHV in my understanding.
+3. IOCTL code allocation. Not sure how this is allocated yet given that
+    the patch series has been through a multi-year review, that must be
+    settled by now.
+4. IOCTLs themselves. The majority just marshals data to the
+    hypervisor.
+
+Despite the rather large size of the patch, I spot-checked the places
+where I have the chance to make an informed decision, and could not find
+anything that'd stand out as suspicious to me. Going to extrapolate that
+the patch itself should be good enough. Given that this code has been in
+development and validation for a few years, I'd vote to merge it. That
+will also enable upstreaming the rest of the VTL mode code that powers
+Azure Boost (https://github.com/microsoft/OHCL-Linux-Kernel)
+
+Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+
 -- 
-2.34.1
+Thank you,
+Roman
 
