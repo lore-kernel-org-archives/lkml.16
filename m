@@ -1,130 +1,212 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DD126FA77;
-	Thu, 27 Feb 2025 20:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE9C26FA7B;
+	Thu, 27 Feb 2025 20:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740686946; cv=none; b=n5H+jXEYa6vXcilO2CFlns6bo1VujfV3u3DnuhSuO/LAxftRyBvXhxHl+C/tHL1h4g+NNQgZ01fHhklF032Kh/lWOyjZX/yXv6fKbu4Ixk8kpmzSbqiou4pzquBMZTlD7B7o3pOdNg/ZlsgZmmw9Bv2yqbfFGEL2chF3EJ3uGR4=
+	t=1740686949; cv=none; b=f/QMeIiSW5MxqzQXtERIFTpGSE+BJLCvwpW2Vsv6Q3VhAgAi0SQ55O9T9mE1dnXjpzFGs72SCr+umpmRmuDYG6NcuP2wLU7IyXqJxqc9UWVExG5gISbTMU4xg6a+9V/SqLPrj7RYe4g51ixxDt1KeFZKi50MXTDwfhbIoQ1cBfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740686946; c=relaxed/simple;
-	bh=p6/ejIMAtHX+vgHsuYL7A7FgcViJs+GWPq+L50lkmS4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=lRiRlFQ2/PKiD7kKzfCRjvtlBUdcjcDwP+x+/YMP2li8H4b+z/Y4dal4m1Qt5TCv4liCirVBuff4X78UmXuU3bHKkqNTOQAkewhuhkyxob0WzV/P705TV2Pw0uHa+yWPWKrDKCXzAZQKwYF/RBhxau+EfzIeZMpNAUAFOorxMEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=koaBa5/M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740686949; c=relaxed/simple;
+	bh=j5VRDcgqEaXuWIDavjd4YEFkmlI9dTVUxhcuv8TxV1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YpQZxBS1F6sdr4r+PxXmfzrmKnjX0C8tlNIGJIoUUsCp+BHyDP6z6Q/04pW8xfGH5kuEZ+8xqRPkTTNJ70GyLZutCqvhNBaJibH1Z4zEQSfTRXtfcYStiBqQCNz3TxMX7IAWkqsWynfYOhr3JKDQmXlgPhA9UBrnfYBAgYi0fQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnHlJzwu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="koaBa5/M"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51R9esw8005921;
-	Thu, 27 Feb 2025 20:08:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iJiZ+rie80rnqQq6KjuPpSE1AEOeqKU7peBCvgrsEjU=; b=koaBa5/MoV0oV9x1
-	KTrSByTkvKFh6wrK5Z73J3HKrt/LMvUJfr1mNqD5pe+NN6XZpyhvsKttNapXKSiK
-	TxvJEjzrRZ5UwRy3FKemtKLVierfH+J/W1JLTrXoI+w2xu/FR2uBDQ091jrYXHdd
-	UxsW7g7b3uokKRyjMe/YMokuyicg0KpJkTSsnQ9NhhJ66UxxVC1Gf/8jjmZuvdi2
-	cqGSL8XeLtnhJC8En3/4R8dzQYKoFnvjlLQDs5EGMl4ucVOu/vcrmi1zHSVTEuKF
-	6bkr/HC8xOO/0bgLDRHSgrVA7qX6N2YU6xv6OS8aF6ua5+bO33XJtVgwjN6eDKOw
-	CnDqQw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 452nmqstnc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 20:08:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51RK8rbQ025834
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 27 Feb 2025 20:08:53 GMT
-Received: from [10.213.111.143] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Feb
- 2025 12:08:47 -0800
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Date: Fri, 28 Feb 2025 01:37:52 +0530
-Subject: [PATCH v2 4/6] dt-bindings: display/msm/gmu: Add Adreno 623 GMU
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnHlJzwu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A482C4CEE4;
+	Thu, 27 Feb 2025 20:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740686949;
+	bh=j5VRDcgqEaXuWIDavjd4YEFkmlI9dTVUxhcuv8TxV1Y=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YnHlJzwuNAhrmOtUQIOONlXKaDukIwGkh5SrT+AZR/hmITYF8E+hdIpjGMviggUAj
+	 drRRRPU+0AG9uF7+Y4DAsDNah8z1NEGiynbb4H7ZmAMNCtqMAPnrEG0/FOhod04EkA
+	 U4ma/Mnk6WCTXvtBPcsBSlNVHumJohdP7s+1dB7bS3+4Ek6MDDTe+rDOOTWJOBoHw7
+	 88UWXpeCccf5vEyjP4aC80SfJnsy4m7ljKWtpGIkinhTaVHGH1AKbnN9aIZYuM++b4
+	 snIDmnGQv2ZxWJoUBIBmwAuOY6ko8JXBsH0MG2WGHgZeI3Q2ACG+RqLz0uhhZvCWq4
+	 NJ3Oif7ZQ51KA==
+Message-ID: <d1fc8fea-5a2c-4b38-949c-8063cb76fadf@kernel.org>
+Date: Thu, 27 Feb 2025 14:09:08 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 04/19] cpufreq/amd-pstate: Move perf values into a
+ union
+To: kernel test robot <lkp@intel.com>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ "(open list:X86 ARCHITECTURE (32-BIT AND 64-BIT))"
+ <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250226074934.1667721-5-superm1@kernel.org>
+ <202502272001.nafS0qXq-lkp@intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <202502272001.nafS0qXq-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250228-a623-gpu-support-v2-4-aea654ecc1d3@quicinc.com>
-References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
-In-Reply-To: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
-To: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Konrad
- Dybcio" <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Jie Zhang <quic_jiezh@quicinc.com>,
-        "Akhil P
- Oommen" <quic_akhilpo@quicinc.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740686902; l=953;
- i=quic_akhilpo@quicinc.com; s=20240726; h=from:subject:message-id;
- bh=DfKMnOhxIUd2ol9EHjfohXtXuDCE8+Jjlx2WR1J14qM=;
- b=eZX/H+XOueV7yGWO8WdZ3VBvRB+qiaM8avYmDDfrUswdDd6qE7eNcY5FJYtN5zg8xzmUnD87W
- 9+05QqrTt93CUBT/EvBZJi5e1zVSXiqyeYQ0LeeSTelKBilsdkW82Lt
-X-Developer-Key: i=quic_akhilpo@quicinc.com; a=ed25519;
- pk=lmVtttSHmAUYFnJsQHX80IIRmYmXA4+CzpGcWOOsfKA=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wXXJfrZKSXCL-V6EJmg2uDqIaW_74Dzy
-X-Proofpoint-ORIG-GUID: wXXJfrZKSXCL-V6EJmg2uDqIaW_74Dzy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_07,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0 bulkscore=0
- adultscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502270149
 
-From: Jie Zhang <quic_jiezh@quicinc.com>
+On 2/27/2025 06:59, kernel test robot wrote:
+> Hi Mario,
+> 
+> kernel test robot noticed the following build warnings:
+> 
+> [auto build test WARNING on amd-pstate/bleeding-edge]
+> [cannot apply to rafael-pm/linux-next rafael-pm/bleeding-edge tip/x86/core amd-pstate/linux-next linus/master v6.14-rc4 next-20250227]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Mario-Limonciello/cpufreq-amd-pstate-Invalidate-cppc_req_cached-during-suspend/20250226-155545
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/superm1/linux.git bleeding-edge
+> patch link:    https://lore.kernel.org/r/20250226074934.1667721-5-superm1%40kernel.org
+> patch subject: [PATCH v5 04/19] cpufreq/amd-pstate: Move perf values into a union
+> config: i386-buildonly-randconfig-003-20250227 (https://download.01.org/0day-ci/archive/20250227/202502272001.nafS0qXq-lkp@intel.com/config)
+> compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250227/202502272001.nafS0qXq-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202502272001.nafS0qXq-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>     In file included from drivers/cpufreq/amd-pstate.c:51:
+>     In file included from drivers/cpufreq/amd-pstate-trace.h:15:
+>     In file included from include/linux/trace_events.h:6:
+>     In file included from include/linux/ring_buffer.h:5:
+>     In file included from include/linux/mm.h:2224:
+>     include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+>       504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+>       505 |                            item];
+>           |                            ~~~~
+>     include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+>       511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+>       512 |                            NR_VM_NUMA_EVENT_ITEMS +
+>           |                            ~~~~~~~~~~~~~~~~~~~~~~
+>>> drivers/cpufreq/amd-pstate.c:914:41: warning: variable 'nominal_freq' is uninitialized when used here [-Wuninitialized]
+>       914 |                 perf.lowest_perf = freq_to_perf(perf, nominal_freq, min_freq);
+>           |                                                       ^~~~~~~~~~~~
+>     drivers/cpufreq/amd-pstate.c:902:38: note: initialize the variable 'nominal_freq' to silence this warning
+>       902 |         u32 min_freq, max_freq, nominal_freq, lowest_nonlinear_freq;
+>           |                                             ^
+>           |                                              = 0
+>     3 warnings generated.
+> 
+> 
+> vim +/nominal_freq +914 drivers/cpufreq/amd-pstate.c
+> 
+>     891	
+>     892	/*
+>     893	 * amd_pstate_init_freq: Initialize the nominal_freq and lowest_nonlinear_freq
+>     894	 *			 for the @cpudata object.
+>     895	 *
+>     896	 * Requires: all perf members of @cpudata to be initialized.
+>     897	 *
+>     898	 * Returns 0 on success, non-zero value on failure.
+>     899	 */
+>     900	static int amd_pstate_init_freq(struct amd_cpudata *cpudata)
+>     901	{
+>     902		u32 min_freq, max_freq, nominal_freq, lowest_nonlinear_freq;
+>     903		struct cppc_perf_caps cppc_perf;
+>     904		union perf_cached perf;
+>     905		int ret;
+>     906	
+>     907		ret = cppc_get_perf_caps(cpudata->cpu, &cppc_perf);
+>     908		if (ret)
+>     909			return ret;
+>     910		perf = READ_ONCE(cpudata->perf);
+>     911	
+>     912		if (quirks && quirks->lowest_freq) {
+>     913			min_freq = quirks->lowest_freq;
+>   > 914			perf.lowest_perf = freq_to_perf(perf, nominal_freq, min_freq);
+>     915			WRITE_ONCE(cpudata->perf, perf);
+>     916		} else
+>     917			min_freq = cppc_perf.lowest_freq;
+>     918	
+>     919		if (quirks && quirks->nominal_freq)
+>     920			nominal_freq = quirks->nominal_freq;
+>     921		else
+>     922			nominal_freq = cppc_perf.nominal_freq;
+>     923	
+>     924		min_freq *= 1000;
+>     925		nominal_freq *= 1000;
+>     926	
+>     927		WRITE_ONCE(cpudata->nominal_freq, nominal_freq);
+>     928	
+>     929		max_freq = perf_to_freq(perf, nominal_freq, perf.highest_perf);
+>     930		lowest_nonlinear_freq = perf_to_freq(perf, nominal_freq, perf.lowest_nonlinear_perf);
+>     931		WRITE_ONCE(cpudata->lowest_nonlinear_freq, lowest_nonlinear_freq);
+>     932	
+>     933		/**
+>     934		 * Below values need to be initialized correctly, otherwise driver will fail to load
+>     935		 * max_freq is calculated according to (nominal_freq * highest_perf)/nominal_perf
+>     936		 * lowest_nonlinear_freq is a value between [min_freq, nominal_freq]
+>     937		 * Check _CPC in ACPI table objects if any values are incorrect
+>     938		 */
+>     939		if (min_freq <= 0 || max_freq <= 0 || nominal_freq <= 0 || min_freq > max_freq) {
+>     940			pr_err("min_freq(%d) or max_freq(%d) or nominal_freq(%d) value is incorrect\n",
+>     941				min_freq, max_freq, nominal_freq);
+>     942			return -EINVAL;
+>     943		}
+>     944	
+>     945		if (lowest_nonlinear_freq <= min_freq || lowest_nonlinear_freq > nominal_freq) {
+>     946			pr_err("lowest_nonlinear_freq(%d) value is out of range [min_freq(%d), nominal_freq(%d)]\n",
+>     947				lowest_nonlinear_freq, min_freq, nominal_freq);
+>     948			return -EINVAL;
+>     949		}
+>     950	
+>     951		return 0;
+>     952	}
+>     953	
+> 
 
-Document Adreno 623 GMU in the dt-binding specification.
+The series is getting close (I think just one more patch needing review).
 
-Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
-Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/devicetree/bindings/display/msm/gmu.yaml | 1 +
- 1 file changed, 1 insertion(+)
+So if no other feedback for the series needing other fixes I will squash 
+this in to fix this issue when the series is merged.
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-index ab884e2364293ed4e79ddfec35b3c5f4d14ae853..4392aa7a4ffe2492d69a21e067be1f42e00016d8 100644
---- a/Documentation/devicetree/bindings/display/msm/gmu.yaml
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -123,6 +123,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,adreno-gmu-623.0
-               - qcom,adreno-gmu-635.0
-               - qcom,adreno-gmu-660.1
-               - qcom,adreno-gmu-663.0
+diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+index bd8bcda4e6eb0..034ee40681b4c 100644
+--- a/drivers/cpufreq/amd-pstate.c
++++ b/drivers/cpufreq/amd-pstate.c
+@@ -915,6 +915,12 @@ static int amd_pstate_init_freq(struct amd_cpudata 
+*cpudata)
+                 return ret;
+         perf = READ_ONCE(cpudata->perf);
 
--- 
-2.48.1
++       if (quirks && quirks->nominal_freq)
++               nominal_freq = quirks->nominal_freq;
++       else
++               nominal_freq = cppc_perf.nominal_freq;
++       nominal_freq *= 1000;
++
+         if (quirks && quirks->lowest_freq) {
+                 min_freq = quirks->lowest_freq;
+                 perf.lowest_perf = freq_to_perf(perf, nominal_freq, 
+min_freq);
+@@ -922,13 +928,7 @@ static int amd_pstate_init_freq(struct amd_cpudata 
+*cpudata)
+         } else
+                 min_freq = cppc_perf.lowest_freq;
+
+-       if (quirks && quirks->nominal_freq)
+-               nominal_freq = quirks->nominal_freq;
+-       else
+-               nominal_freq = cppc_perf.nominal_freq;
+-
+         min_freq *= 1000;
+-       nominal_freq *= 1000;
+
+         WRITE_ONCE(cpudata->nominal_freq, nominal_freq);
 
