@@ -1,201 +1,200 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18CA71BD000;
-	Thu, 27 Feb 2025 17:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AED1D5AD8
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 17:05:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740675898; cv=none; b=sQwh3IHVGTQgoZAtL4CMU+2MoQbB88I7x18pJMZ7DsuWmeswJOlzc94din39FnyFtpiJioP4bZy0+DskrwA7qNms5NdERWwleYJPWIC5YxYmq6v329oZTL6BMt09onTl4oIP7MbyVz4OlxAh1eVlsousCTYdAkQC9FIrjTFK2xc=
+	t=1740675921; cv=none; b=RcOEe22LLyY1jYUONRTRHYUq88tCTu2WR35T4nsW/ma13E0qOLtluRaOi6WXKkMaAMqAR/6TYqlLsseiza48V8rZUQ/V6WK+l2otZmyNkOrvPa5NTd7+3f3eosB3W8BcjQwbk3v7xHOqCKT/Ye7bB2QSYfKbad4Of7kBzyX8yuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740675898; c=relaxed/simple;
-	bh=IpzSwpQluQm6I1YjqsXB3FznvWyYqQ0pMG3+6mzdmZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qr55S4zP2GiAxBC6bCTPPp+9DeFd57Q/7Ytrhzo1cKRPil1a3BnM/V/6hEKrHME+u4dUrTEOy9HyLdtB6ED5d6JqAwq+fCEZ2af5IsVLyrHkideyJ33a7TbAqm9nJhVsz08EZE0WofRqU8CmKaefVnXpLpskglvSX9CdBj+KKSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=AqrKTlG5; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740675921; c=relaxed/simple;
+	bh=7XChtsa0NQK2jNQqByJFv42QLQZfG/59qbf5QMzlocg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rB+qeBcXSbKTRfiIX+bXxw7y8mXdXGejtHhB/F0iNN1fYBRqE8Fx6BTBaOCgUhgqWrpRjp213sATQ+1F5D/AmBDrW/Mre89tRCHA0TgLMPqbPe6Eb/MfINJ9RhHyZzZ13KHGKrStzJ1kUOo/Qb8co9WOyr3KDVAO/3k0zbdHGio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ww5FgaNi; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="AqrKTlG5"
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id D2B422E09025;
-	Thu, 27 Feb 2025 19:04:50 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740675891;
-	bh=uctSlkUrMlvHx12sB1tLgVZZkb6XinjT+9cqV4eWdrc=;
-	h=Received:From:Subject:To;
-	b=AqrKTlG5y5AeISQMVCFGS72PE96HijuE81nnDi5fgQKMz5zWdbuagRyRf87jxMbrd
-	 suOZ1I3GgSgT4VLg2dKfBJZ4t/GuwYh5r8cMILED/F+Sy3HYtnoP1EUjrt1Us82HLe
-	 ty20e40w6r8KtIJ3c20HGcn3u0eNiWkl+On0u/vs=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.176) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f176.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f176.google.com with SMTP id
- 38308e7fff4ca-30a69c1a8d3so13557181fa.3;
-        Thu, 27 Feb 2025 09:04:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVb6yC3In7ankkRsB8Y+uk7Dc2dqPCjPI12QklRdKBbnRNg/cENYayKVBty118fyoREWGqrmhgJko0gMrdoltMrXXaJyg==@vger.kernel.org,
- AJvYcCWbO/aG+mwJNEiFcGafVeoxFsd2yy3e356SkjBS0STZ8BcSP3GEFA/B6zzo95JSvJ6eMiNLe2A5l72e@vger.kernel.org,
- AJvYcCX+sIEgj5CjCHA1dXkAtaTlaXY89r92YVPJRhWg3vTBGsGGhUXrQKf3l0KON9NwBGMDNBS2KyonrdVM7YQ1@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTISU2TTKfShW9Q+TUffOZSKbQ2DNqVBoUWGogbDqaOK4n4Fp1
-	jIXJ4T/AgfAPj8FsA/9mf5yCm+0wxvqCFsOlrul0IOmbRD8WHaa/kplJRaLDXpAs78i3OSkLSyD
-	qN3RpHLqYnFiLZ5IL6cNgNjdQpM8=
-X-Google-Smtp-Source: 
- AGHT+IFi8/u7RYnWU+yBp7WaJ48+k2U5vzl9uTrylS5JlOVvEQo0LI18tCVl9j2wDfupmlamNXH+NwY7+k2m6+UqGEU=
-X-Received: by 2002:a2e:8950:0:b0:308:eabd:2991 with SMTP id
- 38308e7fff4ca-30a5985e216mr99513221fa.1.1740675890057; Thu, 27 Feb 2025
- 09:04:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ww5FgaNi"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-aaec111762bso200544966b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 09:05:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740675917; x=1741280717; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=K6Y8JQULavsNlLpEQIX3xqjGtKxhdLW9C1hzs6N6L9o=;
+        b=Ww5FgaNiNbH0Z21miuSO3vXT1jgydSjnpMGuH+EJC4ev26qbHHcfOQ2waCoRyE8x9g
+         AU6pQ8lNE7Sj//4JCzvkHec91jMaGPoemEfPZWuPZquRo0SDyKAnHH6EA/oZAoTp85HR
+         AI33fY7zKxiDKiLCPd4uqQxpi/+kLXMFrLCSb9g+OnZchauEowdwQSTZTLAU2p+ywsDH
+         zxzvjImMyqFlcachADC2ftJpqkulwVUNLbJ9fN44EysKwGI7IiaCjUbZjzFLth0Z4g7a
+         QiaSzvuOQqaBjGVFf57Jf6rSxNxe8FEuNjikpQa5TQVvjpIUTMVG8Skxaj71No3aGgqa
+         wUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740675917; x=1741280717;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K6Y8JQULavsNlLpEQIX3xqjGtKxhdLW9C1hzs6N6L9o=;
+        b=hgdTUQPaYu4V+bMxDFvZRE+H6a6+Xio2xbgtmmYN8/efWKJ7+I6C+oBKQCDbQEMFq0
+         YPrqwAUAfR0Mmbao6IUXlgpizCAOc6QvVhLSqinSor5CA0r8i06kfHpyrK4Q7HhTRWz4
+         P64vBnMR8G9m9LV31squfe98lkfm1intJbzypeX9c55a+609GbwSBpw+93O44Yrd4has
+         ksQI8dWIQ3zCFxAEGv+wUrMT1P20fO3NQFUGfOj3zGofnSlWaRJkKkBNT5WyQ3CBHqwX
+         H+1dwIu8MNwMl6RLhhYG3Fu6QAw9NFuz5yQIv9TTV+nDeJQ2mUW/lRk8h1Wz2BiVwGnX
+         5Brw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdg9ms3Vt6/xq2hsGgXD8xKr2V3/lPLwfwsvVfxc3on7S1Adc36aVysusWiFh+8AXKdsxliEJCLpxTssM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPXI1oA1aQa444h+zOV0YkcdNHIJIYYUleWbEyL9YRi0PJfzeg
+	uwk/nBluE67oEISlIb2HZBkLkKLB8C1SAN2Qp8ePEVpOmfCBe3ZGMyg3dvyvfIU=
+X-Gm-Gg: ASbGnctqRhu/e4FByAIRG4vF6IWUBBD0FIiSEr+mflUz3eU2zyrJOLL1/D6+E9Cyav4
+	2QxiXJtD0CdJm7Mp3lPA/v1gc1vAVWn4s4bIOTgPmVEuqmZYbCptTkS883s14vqI7PnPRh35+lB
+	igpkyUBGOJFYZoyg0CQtnhZdsvGP8ED9A7nWI88cbVbtZb4TERyXwNpdDpFW66J2GUetLmzAndm
+	N5FNjww7Ta33woxBv4rwWe4rv5o6SRxGaTRN4jNi6ZHvDv0gQx7KlBbJTJ0t7uYUlUD0vyyE38G
+	YVAFnz4Dhh/vdZ+WiBtu+rc=
+X-Google-Smtp-Source: AGHT+IEqzm7n+9CgLAtGOBByJjji4KY3D/kBRSRdTZK29CzMh0eKvJAC98wBTDUbj6GZHbvPXAzgOQ==
+X-Received: by 2002:a17:906:d542:b0:ab7:beeb:d1f1 with SMTP id a640c23a62f3a-abf26837fcemr20886166b.51.1740675916853;
+        Thu, 27 Feb 2025 09:05:16 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0b9990sm150354966b.35.2025.02.27.09.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 09:05:16 -0800 (PST)
+Date: Thu, 27 Feb 2025 19:05:14 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Anjelique Melendez <quic_amelende@quicinc.com>,
+	Kamal Wadhwa <quic_kamalw@quicinc.com>,
+	Jishnu Prakash <jishnu.prakash@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] leds: rgb: leds-qcom-lpg: Fix pwm resolution for Hi-Res
+ PWMs
+Message-ID: <Z8CbSvlG856oxQRw@linaro.org>
+References: <20250220-leds-qcom-lpg-fix-max-pwm-on-hi-res-v1-1-a161ec670ea5@linaro.org>
+ <dfthocttum7dscotngi6l2hz6bpdwfgrdxpvkcv6bdux3lt66d@iqfvmntvzyut>
+ <Z7zVgeM+7P7SLWIu@linaro.org>
+ <vc7irlp7nuy5yvkxwb5m7wy7j7jzgpg73zmajbmq2zjcd67pd2@cz2dcracta6w>
+ <Z7161SzdxhLITsW3@linaro.org>
+ <5euqboshlfwweie7tlaffajzg3siiy6bm3j4evr572ko54gtbv@7lan3vizskt3>
+ <Z8B2Bl/9uD3jPvQi@linaro.org>
+ <j55de6bbipoavqx25w2s6qr7n6fv6w7bj3lrgyag4dlvvddbqv@shn22aqcqeci>
+ <Z8CIY2OJUMqIOHGU@linaro.org>
+ <Z8CTqdFafLY17C25@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227153603.131046-1-lkml@antheas.dev>
- <20250227153603.131046-3-lkml@antheas.dev>
- <26c21df0-c885-4948-8902-685dcb7f13b8@amd.com>
-In-Reply-To: <26c21df0-c885-4948-8902-685dcb7f13b8@amd.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 27 Feb 2025 18:04:38 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwG8wqGCmVxK_dxGxWmqMofUGaThjiG9SaBEKWZ-EokjVQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JrM1bqkemwyvdtc5NJhNjjFLWRx1ZJiFq-t_e5lSbgYJmoU1B5C23ISdH0
-Message-ID: 
- <CAGwozwG8wqGCmVxK_dxGxWmqMofUGaThjiG9SaBEKWZ-EokjVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ACPI: platform_profile: make amd-pmf a secondary
- handler
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: mpearson-lenovo@squebb.ca, ilpo.jarvinen@linux.intel.com, lenb@kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org, rafael@kernel.org, hdegoede@redhat.com,
-	me@kylegospodneti.ch, luke@ljones.dev
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174067589159.17842.9673566004388985449@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z8CTqdFafLY17C25@linaro.org>
 
-On Thu, 27 Feb 2025 at 17:46, Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> On 2/27/2025 09:36, Antheas Kapenekakis wrote:
-> > Since amd-pmf is expected to run alongside other platform handlers, it
-> > should be able to accept all platform profiles. Therefore, mark it as
-> > secondary and in the case of a custom profile, make it NOOP without an
-> > error to allow primary handlers to receive a custom profile.
-> > The sysfs endpoint will still report custom, after all.
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >   drivers/platform/x86/amd/pmf/spc.c | 3 +++
-> >   drivers/platform/x86/amd/pmf/sps.c | 8 ++++++++
-> >   2 files changed, 11 insertions(+)
-> >
-> > diff --git a/drivers/platform/x86/amd/pmf/spc.c b/drivers/platform/x86/amd/pmf/spc.c
-> > index f34f3130c330..99c48378f943 100644
-> > --- a/drivers/platform/x86/amd/pmf/spc.c
-> > +++ b/drivers/platform/x86/amd/pmf/spc.c
-> > @@ -219,12 +219,15 @@ static int amd_pmf_get_slider_info(struct amd_pmf_dev *dev, struct ta_pmf_enact_
-> >
-> >       switch (dev->current_profile) {
-> >       case PLATFORM_PROFILE_PERFORMANCE:
-> > +     case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> >               val = TA_BEST_PERFORMANCE;
-> >               break;
-> >       case PLATFORM_PROFILE_BALANCED:
-> >               val = TA_BETTER_PERFORMANCE;
-> >               break;
-> >       case PLATFORM_PROFILE_LOW_POWER:
-> > +     case PLATFORM_PROFILE_COOL:
-> > +     case PLATFORM_PROFILE_QUIET:
-> >               val = TA_BEST_BATTERY;
->
-> I would really prefer we do the absolute bare minimum to help this issue
-> on ASUS (just special case quiet) and leave adding compat for other
-> profiles for other development.
+On 25-02-27 18:32:41, Abel Vesa wrote:
+> On 25-02-27 17:44:35, Abel Vesa wrote:
+> > On 25-02-27 16:25:06, Uwe Kleine-König wrote:
+> > > Hello Abel,
+> > > 
+> > > On Thu, Feb 27, 2025 at 04:26:14PM +0200, Abel Vesa wrote:
+> > > > On 25-02-27 10:58:47, Uwe Kleine-König wrote:
+> > > > > Can you please enable CONFIG_PWM_DEBUG, enable pwm tracing (
+> > > > > 
+> > > > > 	echo 1 > /sys/kernel/debug/tracing/events/pwm/enable
+> > > > > 
+> > > > > ) then reproduce the problem and provide the output of
+> > > > > 
+> > > > > 	cat /sys/kernel/debug/tracing/trace
+> > > > > 
+> > > > > .
+> > > > 
+> > > > $ cat trace
+> > > > # tracer: nop
+> > > > #
+> > > > # entries-in-buffer/entries-written: 13/13   #P:12
+> > > > #
+> > > > #                                _-----=> irqs-off/BH-disabled
+> > > > #                               / _----=> need-resched
+> > > > #                              | / _---=> hardirq/softirq
+> > > > #                              || / _--=> preempt-depth
+> > > > #                              ||| / _-=> migrate-disable
+> > > > #                              |||| /     delay
+> > > > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > > > #              | |         |   |||||     |         |
+> > > >         modprobe-203     [000] .....     0.938668: pwm_get: pwmchip0.0: period=1066407 duty_cycle=533334 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.938775: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=0 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.938821: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.938936: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.938982: pwm_get: pwmchip0.0: period=4266537 duty_cycle=0 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.939274: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=921458 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.939320: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.939434: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > > >         modprobe-203     [000] .....     0.939480: pwm_get: pwmchip0.0: period=4266537 duty_cycle=921355 polarity=0 enabled=1 err=0
+> > > >  systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=5000000 polarity=0 enabled=1 err=0
+> > > >  systemd-backlig-724     [006] .....     9.079585: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > > >  systemd-backlig-724     [006] .....     9.079698: pwm_apply: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > > >  systemd-backlig-724     [006] .....     9.079750: pwm_get: pwmchip0.0: period=4266537 duty_cycle=4266537 polarity=0 enabled=1 err=0
+> > > > $
+> > > > 
+> > > > > 
+> > > > > I didn't take a deeper dive in this driver combination, but here is a
+> > > > > description about what *should* happen:
+> > > > > 
+> > > > > You're talking about period in MHz, the PWM abstraction uses
+> > > > > nanoseconds. So your summary translated to the PWM wording is (to the
+> > > > > best of my understanding):
+> > > > > 
+> > > > >   1. PWM backlight driver requests PWM with .period = 200 ns and
+> > > > >      .duty_cycle = 200 ns.
+> > > > > 
+> > > > >   2. leds-qcom-lpg cannot pick 200 ns exactly and then chooses .period =
+> > > > >      1000000000 / 4.26666 MHz = 234.375 ns
+> > > > >      
+> > > > >   3. leds-qcom-lpg then determines setting for requested .duty_cycle
+> > > > >      based on .period = 200 ns which then ends up with something bogus.
+> > > 
+> > > The trace looks better than what I expected. 2. is fine here because it
+> > > seems when Sebastian wrote "driver requests PWM with 5 MHz period" that
+> > > meant period = 5000000 ns. That was then rounded down to 4266537 ns. And
+> > > the request for period = 5000000 ns + duty_cycle = 5000000 ns was
+> > > serviced by configuring period = 4266537 ns + duty_cycle = 4266537 ns.
+> > > So that's a 100 % relative duty configuration as intended.
+> > > 
+> > > So just from the traces I don't spot a problem. Do these logs not match
+> > > what actually happens on the signal?
+> > 
+> > What I do not get is why do we expect 2 pwm_get() and 2 pwm_apply()
+> > calls each time ?
+> 
+> OK, so the second pwm_apply() is due to CONFIG_PWM_DEBUG.
+> 
+> But still, the first pwm_apply() requests duty cycle of 5MHz:
+> 
+> systemd-backlig-724     [006] .....     9.079538: pwm_apply: pwmchip0.0: period=5000000 duty_cycle=5000000 polarity=0 enabled=1 err=0
+> 
+> So since the period is 4.26MHz, due to the knobs selected by the
+> provider, this duty cycle will result in a PWM value that is above the
+> selected resolution, as I already mentioned.
+> 
 
-I cannot risk other drivers having their options disabled. This can
-have carry-on effects in other drivers too.
+On top of that, the duty cycle in debugfs is also reported as 5000000ns
+when in fact it is 4266666ns, as the trace shows.
 
-Including in the legion v3 driver, in which you will end up disabling
-balanced-performance. Since Derek posted the v3 for that today.
-
-> The reason for this is that if you look at power_modes_v2 there are
-> actually 4 'possible' modes for v2 platforms.  So there is a bit of
-> nuance involved and it's really not a 'bug fix' anymore by doing so much
-> at once.
->
-> >               break;
-> >       default:
-> > diff --git a/drivers/platform/x86/amd/pmf/sps.c b/drivers/platform/x86/amd/pmf/sps.c
-> > index e6cf0b22dac3..a2a8511768ce 100644
-> > --- a/drivers/platform/x86/amd/pmf/sps.c
-> > +++ b/drivers/platform/x86/amd/pmf/sps.c
-> > @@ -297,12 +297,15 @@ int amd_pmf_get_pprof_modes(struct amd_pmf_dev *pmf)
-> >
-> >       switch (pmf->current_profile) {
-> >       case PLATFORM_PROFILE_PERFORMANCE:
-> > +     case PLATFORM_PROFILE_BALANCED_PERFORMANCE:
-> >               mode = POWER_MODE_PERFORMANCE;
-> >               break;
-> >       case PLATFORM_PROFILE_BALANCED:
-> >               mode = POWER_MODE_BALANCED_POWER;
-> >               break;
-> >       case PLATFORM_PROFILE_LOW_POWER:
-> > +     case PLATFORM_PROFILE_COOL:
-> > +     case PLATFORM_PROFILE_QUIET:
-> >               mode = POWER_MODE_POWER_SAVER;
-> >               break;
-> >       default:
-> > @@ -369,6 +372,10 @@ static int amd_pmf_profile_set(struct device *dev,
-> >       struct amd_pmf_dev *pmf = dev_get_drvdata(dev);
-> >       int ret = 0;
-> >
-> > +     /* If the profile is custom, bail without an error. */
-> > +     if (profile == PLATFORM_PROFILE_CUSTOM)
-> > +             return 0;
-> > +
->
-> The legacy interface doesn't support writing custom.
->
-> https://github.com/torvalds/linux/blob/v6.14-rc3/drivers/acpi/platform_profile.c#L382
->
-> IoW this is dead code.
-
-Noted.
-
-> >       pmf->current_profile = profile;
-> >
-> >       /* Notify EC about the slider position change */
-> > @@ -400,6 +407,7 @@ static const struct platform_profile_ops amd_pmf_profile_ops = {
-> >       .probe = amd_pmf_profile_probe,
-> >       .profile_get = amd_pmf_profile_get,
-> >       .profile_set = amd_pmf_profile_set,
-> > +     .secondary = true,
->
-> I really don't understand the need for declaring primary / secondary.
-> It really doesn't matter which driver can do it.  This same problem
-> could happen in any direction.
-
-No. amd-pmf is responsible here. That's why you made the multiple
-platform profile series after all. Other WMI drivers never load
-together. To maintain existing compatibility, those drivers need to
-still show the same options under the legacy endpoint.
-
-> As a different suggestion; how about a new "generic" callback for
-> 'compatibility' profiles?
->
-> Right now the .probe() callback amd_pmf_get_pprof_modes() will set bits
-> for visible profiles.
->
-> How about an optional .compat_profiles() for the hidden one(s)?  This
-> would allow any driver to implement them.
-
-amd-pmf cannot obscure any settings of the primary platform, so even
-in this case it ends up implementing all of them, and compat profiles
-becomes equivalent to .secondary with more steps (incl. a probe).
-
-> >   };
-> >
-> >   int amd_pmf_init_sps(struct amd_pmf_dev *dev)
->
+> > 
+> > Need to dig a bit further.
+> > 
+> > But meanwhile, if the first pwm_apply() call goes all the way to the
+> > provider, then the duty cycle value, when translated to the actual PWM
+> > value that gets written to reg, will overflow. So this is what is wrong.
+> > And this is what actually happens.
+> > 
+> > > 
+> > > Best regards
+> > > Uwe
+> > 
+> > 
+> > 
+> 
