@@ -1,432 +1,1269 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA52227B94;
-	Thu, 27 Feb 2025 09:04:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BEE227E8E
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 09:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740647097; cv=none; b=bFkUVN6WKTSxhqeaT2/j7jjSQaWkaQKv8pBAjm4d/cwDY15WoD8cT/hrCBUVpzdSxB7zBRPPfXXGPH8f3J1g6dWlhAaYKoQc1GN1Du1kDtPWAyiLbeRICs0qHTDrKFbJA+yTQNBYnATI8m1UtXhIeOmZW0oTZ6KZdcyhjq9oGDo=
+	t=1740647088; cv=none; b=XykQzILWEWdEwrsr98pLcXw/Wd7eqnz2zrWDUrRPghh0l/Yam5/6D2PI9T2BHicuqt4rl5OWhRSlMrFOIvY8wuoB+Qu6pyIWesBX4161Rf6fIsmsfzPMuBwpB8Xqaqh9ubEHhtYUGGtGubFCDZ7DsRlBLOQ2YlcJWMq1fGNA5tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740647097; c=relaxed/simple;
-	bh=89bPcO/HK5E1BWDD0JeHwjdhJavNSaJ8mXEZQLKSjPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hFiPbnj+Zoez4FYYoTDrINSmzCplpEC5DzvoigRJ2QB3cY+9bYOzJ8BZKAflIAFrDidvJTiNEDFtaZD7MRq4eaO3ZiJl0YW7yKKm5WP3/XU44s7y1Kek4wl6TRtrGRaK0JCVlkiPPUuQAYpOAMHK9WaVVuIoKJexE14BVPYIfec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=IjSLdRz3; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1740647088; c=relaxed/simple;
+	bh=n6Qhu06HKqtXg0BBGTXl0ERHNhskVAc1dk+IHWQyaKw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qTM7rOEu96gkg9Xp5NvymPnkyVb3oF+KffISlOQdgsY/KL2B0FLPj/oX5dYZsf+LNsRP7UGtBEgLmwYzrZ4p7YITYVVR2jpPJGFnTtHZAE6MaM+6fWmtHj0aaRd5qkQra/uzg7nI4eSugDt+ZoaV7aq46LeKoas64nguTdckkys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vZzN45gW; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="IjSLdRz3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=7Sb8zmb1YQ0xDWdOUEIIKx6CLaJbUgR7CiIwYopwI00=; b=IjSLdRz3fozveA23ztMUDQaZiw
-	0dbFZenT9cwCWAYLVToKrvBvBFSXrQvVXQL690q4fb8fBGgMjG6V26p87NXklCDjMWv31Ujw0tFL2
-	pzgnTzG64/yoBENIdznIly6eOKM45s0keTV3qXcw+r3VPjMVmWGkFdEZEMx/D+PPwY+dsdniqRt8x
-	xEsMYD/YOUUZBKdzFpGlY7GobJQHqAec2nxIvh172nI7nXB/qMU6dvxDnmYcaI+3lInN93TZdIOJy
-	PhK38CYigKX754t2DdB4qoXJjffIaFckxgpScAk9cd0LZUWJRIluie7wo1bJR+guWjC4WrHrfGKwr
-	bEsF6IfQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tnZp0-002Cz2-3B;
-	Thu, 27 Feb 2025 17:04:48 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 27 Feb 2025 17:04:46 +0800
-Date: Thu, 27 Feb 2025 17:04:46 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Nitin Gupta <nitingupta910@gmail.com>,
-	Richard Purdie <rpurdie@openedhand.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
-	Dave Rodgman <dave.rodgman@arm.com>
-Subject: [v3 PATCH] crypto: lzo - Fix compression buffer overrun
-Message-ID: <Z8Aqrrm2o_0SXciH@gondor.apana.org.au>
-References: <Z7rGXJSX57gEfXPw@gondor.apana.org.au>
- <20250226130037.GS5777@twin.jikos.cz>
- <Z7_D4i5yifwdXjwZ@gondor.apana.org.au>
- <Z7_JOAgi-Ej3CCic@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vZzN45gW"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-439846bc7eeso4098225e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 01:04:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740647084; x=1741251884; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DrA7KYJMf1IQTqfPPhnRCj8oLPA7sSX3cqMvFna8XxY=;
+        b=vZzN45gWo2u0ajAHuQ61ydD9o317SbAlYAZ9/oL9tdk9c8RVaUbyS887HQmg39o8K5
+         bjLfMeGAzg9JwqIWT01vzSdZN3l4hxI1+RzgcxW1fVARa4RLb93K4T+fuXI2j1CoxgFG
+         D7acYcyDZH8zIQcRqS20miWAMZ8zUmVG5xxGJ5Qo9CB87RIBHC3e5M60+1+opqYkLDq4
+         1wMfclQYb08KnpHnjI0sR6x6+54Lm6gNAXyqHJavT3exiFHiyPXpHs8hD0Ja1D15BVDR
+         5LBz0FpVtuebjTYZr48eUFg6VUpMpX/RxWcxQR/OFEfvXPtK75z60yU83p7ppQcNV8M8
+         bOEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740647084; x=1741251884;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DrA7KYJMf1IQTqfPPhnRCj8oLPA7sSX3cqMvFna8XxY=;
+        b=mEM6JdTCDdYge9tEs+472SeJS/mSbFrwtBfTaVZg8d0cPL2oPJRWcSAtrYTojndeHb
+         wl08RC9tnl156Hk15NgjYGhHVIUffRwk39pcEf6FwNYSJggcBHqCayVxC3RY+4rYynJp
+         Dc6LYQ+TCPF8wquIGiTP/WehWqwvxkvhHLd6lrCe8khnrYaV4c9Z38mRvesAPR5/8gSI
+         s3GCzT9BnqB2YNjELnSrjIc6BrHmqsZMQ399/1RF0L4KbF3nwbqYLGP7t6nj7Cqmy5Qi
+         cDQDV8o8zC8ucrIV+jiLQ409zCkOkVTshd0m4+URjKBtfj/GQl3LILvmdy28POKsf9Zy
+         Fqxg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7hgrwRoTciarBRlDQxeDu/q+AcGle8re8+/BXpn/5J9NtXkxXYAl8kCFi7M50GjXHWnpt6HuCZggNByE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyreADeinSO6ZAo2C8Bz/+aSesy9GGpawUEpirtDQ8F5+7trwCn
+	u2ngjZSRCvNb/A11YeTlI7r4oKiT/J35SYGOp/Fj4Fd9ngKz6zJz/h3cozv90C8=
+X-Gm-Gg: ASbGncsmfA8rKEVO0kNVss4XeRs4O/uUY8Uvr81/UHp924svoCHsPHsDfZfprKAfeNh
+	ebSqLUYnUdkly9uUHyILsEIiJoRId+NI8m6+oV2H0uZI7BIQLf287dHr47CjWNXmGvAFD5YG2q7
+	btmYjhsZQQD/2XN4zjGjOsW9FQijaF/LCLHpO6EoEAwe+FXRcB1CqxetNTvxXVzr6FRLog4MP5J
+	6aVyMJJ1HByk8Yt+SKZxELGeaU9Zd4sULv7G/XhaP5BTqlKAworFdysdYafKW4KB+LAWBHVGxv5
+	2VyzIWkEe0VKa6PwwH/iXNnDsa2vWkSqLtKuWk/ma7IKvLQ=
+X-Google-Smtp-Source: AGHT+IGXbBebcaWyANWEYk00nPALmxlMFJ2acbjoeP6/1LRVX40rI4U2TmjH0f12V5dTl5gZwIz67A==
+X-Received: by 2002:a05:6000:184e:b0:38f:3735:68e with SMTP id ffacd0b85a97d-390d4f9bce6mr5413485f8f.46.1740647083523;
+        Thu, 27 Feb 2025 01:04:43 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a7b88sm1362380f8f.40.2025.02.27.01.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 01:04:43 -0800 (PST)
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Date: Thu, 27 Feb 2025 10:04:39 +0100
+Subject: [PATCH v2 1/2] arm64: dts: qcom: sm8650: switch to interrupt-cells
+ 4 to add PPI partitions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7_JOAgi-Ej3CCic@gondor.apana.org.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250227-topic-sm8650-pmu-ppi-partition-v2-1-b93006a65037@linaro.org>
+References: <20250227-topic-sm8650-pmu-ppi-partition-v2-0-b93006a65037@linaro.org>
+In-Reply-To: <20250227-topic-sm8650-pmu-ppi-partition-v2-0-b93006a65037@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=45469;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=n6Qhu06HKqtXg0BBGTXl0ERHNhskVAc1dk+IHWQyaKw=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnwCqpvL8X5gp7iZownCN9NpaAYO3AI5SyxHrLKgm5
+ XITWSDWJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ8AqqQAKCRB33NvayMhJ0YTZD/
+ 9GMB9XTv/aguum1xZkzopn2sRgieEgykmC9Tro2W/4EoMOPHgKEL/EHLI5H+ZifkMygkUusdo+wBvC
+ yCfUZP6EVheDZIo6Cj7BAtfnFo8ky44NJCAabdAuClkMa1e6G/mbg0opssfNhmkn4ETUVt2UkrZ3/q
+ 1vbMuSLuZfw86yVIx3USAHUo2bJ2dgYSRmD2WJ6kxOZP4LqdV4JVFqji84XFkEwqbQNVjqfn5hrW79
+ 39auomLcznekipc1BS7OAUHeojiOtRgdXuPFGrWuUe9JffYBTSd2lnyhyytFLKzpcsXUyv4I+7DR/b
+ 5zEym5BEEiDotwdU166FNAcE6PXAwRBQdnGn3oJsvZyWW/Tn/+AihQGz6CGQUY88zTOirakPf890vs
+ lxh/VF4uhxV4JLwN5HpZC04JqFH5XC7vXGQs+IviPjkCkJ/NtrtNdDTNZEIKTRIhwgo8Y8jFILLBzB
+ 6aMfkS5B0+bdGsuInJfk9zYzf4Anqq05YJ63MPjBfaF0qs0phlx4L8QFCbn8dRnNepxpl0XWi2nKLj
+ H8phzpbmcY+2zbZ+WymggLfQ3Tke07Li3DzBwdoda6nzW5jkXTQED+/sXW0d2t9JBWv/LWdnSBTBZH
+ 3giG7lsjoUQ0iEb8qXx2+ZfXiAO1wWCSSqpq7e2O3QfsRH+R/uPpe6aWBAzw==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Unlike the decompression code, the compression code in LZO never
-checked for output overruns.  It instead assumes that the caller
-always provides enough buffer space, disregarding the buffer length
-provided by the caller.
+The ARM PMUs shares the same per-cpu (PPI) interrupt, so we need to switch
+to interrupt-cells = <4> in the GIC node to allow adding an interrupt
+partition map phandle as the 4th cell value for GIC_PPI interrupts.
 
-Add a safe compression interface that checks for the end of buffer
-before each write.  Use the safe interface in crypto/lzo.
-
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- crypto/lzo-rle.c              |   2 +-
- crypto/lzo.c                  |   2 +-
- include/linux/lzo.h           |   8 +++
- lib/lzo/Makefile              |   2 +-
- lib/lzo/lzo1x_compress.c      | 102 +++++++++++++++++++++++++---------
- lib/lzo/lzo1x_compress_safe.c |  18 ++++++
- 6 files changed, 106 insertions(+), 28 deletions(-)
- create mode 100644 lib/lzo/lzo1x_compress_safe.c
+ arch/arm64/boot/dts/qcom/sm8650.dtsi | 542 +++++++++++++++++------------------
+ 1 file changed, 271 insertions(+), 271 deletions(-)
 
---
-v3 fixes the modular build.
+diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+index de960bcaf3ccf6e2be47bf63a02effbfb75241bf..273170a2e9499b900b3348307f13c9bc1a9a7345 100644
+--- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
+@@ -1417,17 +1417,17 @@ opp-3302400000 {
+ 
+ 	pmu-a520 {
+ 		compatible = "arm,cortex-a520-pmu";
+-		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH 0>;
+ 	};
+ 
+ 	pmu-a720 {
+ 		compatible = "arm,cortex-a720-pmu";
+-		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH 0>;
+ 	};
+ 
+ 	pmu-x4 {
+ 		compatible = "arm,cortex-x4-pmu";
+-		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH 0>;
+ 	};
+ 
+ 	psci {
+@@ -1805,7 +1805,7 @@ ipcc: mailbox@406000 {
+ 			compatible = "qcom,sm8650-ipcc", "qcom,ipcc";
+ 			reg = <0 0x00406000 0 0x1000>;
+ 
+-			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+ 
+@@ -1816,18 +1816,18 @@ gpi_dma2: dma-controller@800000 {
+ 			compatible = "qcom,sm8650-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0 0x00800000 0 0x60000>;
+ 
+-			interrupts = <GIC_SPI 588 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 589 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 590 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 591 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 592 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 594 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 595 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 596 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 597 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 598 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 599 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 588 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 589 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 590 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 591 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 592 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 594 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 595 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 596 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 597 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 598 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 599 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			dma-channels = <12>;
+ 			dma-channel-mask = <0x3f>;
+@@ -1863,7 +1863,7 @@ i2c8: i2c@880000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00880000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S0_CLK>;
+ 				clock-names = "se";
+@@ -1900,7 +1900,7 @@ spi8: spi@880000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00880000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S0_CLK>;
+ 				clock-names = "se";
+@@ -1937,7 +1937,7 @@ i2c9: i2c@884000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00884000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 583 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 583 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
+ 				clock-names = "se";
+@@ -1974,7 +1974,7 @@ spi9: spi@884000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00884000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 583 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 583 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
+ 				clock-names = "se";
+@@ -2011,7 +2011,7 @@ i2c10: i2c@888000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00888000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S2_CLK>;
+ 				clock-names = "se";
+@@ -2048,7 +2048,7 @@ spi10: spi@888000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00888000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 584 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S2_CLK>;
+ 				clock-names = "se";
+@@ -2085,7 +2085,7 @@ i2c11: i2c@88c000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x0088c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S3_CLK>;
+ 				clock-names = "se";
+@@ -2122,7 +2122,7 @@ spi11: spi@88c000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x0088c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 585 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S3_CLK>;
+ 				clock-names = "se";
+@@ -2159,7 +2159,7 @@ i2c12: i2c@890000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00890000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 586 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 586 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S4_CLK>;
+ 				clock-names = "se";
+@@ -2196,7 +2196,7 @@ spi12: spi@890000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00890000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 586 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 586 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S4_CLK>;
+ 				clock-names = "se";
+@@ -2233,7 +2233,7 @@ i2c13: i2c@894000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00894000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 587 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 587 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S5_CLK>;
+ 				clock-names = "se";
+@@ -2270,7 +2270,7 @@ spi13: spi@894000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00894000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 587 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 587 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S5_CLK>;
+ 				clock-names = "se";
+@@ -2307,7 +2307,7 @@ uart14: serial@898000 {
+ 				compatible = "qcom,geni-uart";
+ 				reg = <0 0x00898000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 461 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 461 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S6_CLK>;
+ 				clock-names = "se";
+@@ -2333,7 +2333,7 @@ uart15: serial@89c000 {
+ 				compatible = "qcom,geni-debug-uart";
+ 				reg = <0 0x0089c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 462 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 462 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP2_S7_CLK>;
+ 				clock-names = "se";
+@@ -2373,7 +2373,7 @@ i2c_hub_0: i2c@980000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00980000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 464 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 464 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S0_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2404,7 +2404,7 @@ i2c_hub_1: i2c@984000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00984000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S1_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2435,7 +2435,7 @@ i2c_hub_2: i2c@988000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00988000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S2_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2466,7 +2466,7 @@ i2c_hub_3: i2c@98c000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x0098c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S3_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2497,7 +2497,7 @@ i2c_hub_4: i2c@990000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00990000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S4_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2528,7 +2528,7 @@ i2c_hub_5: i2c@994000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00994000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 469 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 469 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S5_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2559,7 +2559,7 @@ i2c_hub_6: i2c@998000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x00998000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S6_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2590,7 +2590,7 @@ i2c_hub_7: i2c@99c000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x0099c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S7_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2621,7 +2621,7 @@ i2c_hub_8: i2c@9a0000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x009a0000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S8_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2652,7 +2652,7 @@ i2c_hub_9: i2c@9a4000 {
+ 				compatible = "qcom,geni-i2c-master-hub";
+ 				reg = <0 0x009a4000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_I2C_S9_CLK>,
+ 					 <&gcc GCC_QUPV3_I2C_CORE_CLK>;
+@@ -2684,18 +2684,18 @@ gpi_dma1: dma-controller@a00000 {
+ 			compatible = "qcom,sm8650-gpi-dma", "qcom,sm6350-gpi-dma";
+ 			reg = <0 0x00a00000 0 0x60000>;
+ 
+-			interrupts = <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 294 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 295 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 294 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 295 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			dma-channels = <12>;
+ 			dma-channel-mask = <0xc>;
+@@ -2734,7 +2734,7 @@ i2c0: i2c@a80000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a80000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+ 				clock-names = "se";
+@@ -2771,7 +2771,7 @@ spi0: spi@a80000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a80000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+ 				clock-names = "se";
+@@ -2808,7 +2808,7 @@ i2c1: i2c@a84000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a84000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
+ 				clock-names = "se";
+@@ -2845,7 +2845,7 @@ spi1: spi@a84000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a84000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
+ 				clock-names = "se";
+@@ -2882,7 +2882,7 @@ i2c2: i2c@a88000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a88000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+ 				clock-names = "se";
+@@ -2919,7 +2919,7 @@ spi2: spi@a88000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a88000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+ 				clock-names = "se";
+@@ -2956,7 +2956,7 @@ i2c3: i2c@a8c000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a8c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
+ 				clock-names = "se";
+@@ -2993,7 +2993,7 @@ spi3: spi@a8c000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a8c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
+ 				clock-names = "se";
+@@ -3030,7 +3030,7 @@ i2c4: i2c@a90000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a90000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+ 				clock-names = "se";
+@@ -3067,7 +3067,7 @@ spi4: spi@a90000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a90000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+ 				clock-names = "se";
+@@ -3104,7 +3104,7 @@ i2c5: i2c@a94000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a94000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
+ 				clock-names = "se";
+@@ -3141,7 +3141,7 @@ spi5: spi@a94000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a94000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
+ 				clock-names = "se";
+@@ -3178,7 +3178,7 @@ i2c6: i2c@a98000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a98000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
+ 				clock-names = "se";
+@@ -3215,7 +3215,7 @@ spi6: spi@a98000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a98000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 363 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
+ 				clock-names = "se";
+@@ -3252,7 +3252,7 @@ i2c7: i2c@a9c000 {
+ 				compatible = "qcom,geni-i2c";
+ 				reg = <0 0x00a9c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 579 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 579 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
+ 				clock-names = "se";
+@@ -3289,7 +3289,7 @@ spi7: spi@a9c000 {
+ 				compatible = "qcom,geni-spi";
+ 				reg = <0 0x00a9c000 0 0x4000>;
+ 
+-				interrupts = <GIC_SPI 579 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 579 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
+ 				clock-names = "se";
+@@ -3409,15 +3409,15 @@ pcie0: pcie@1c00000 {
+ 			      <0 0x60100000 0 0x100000>;
+ 			reg-names = "parf", "dbi", "elbi", "atu", "config";
+ 
+-			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "msi0",
+ 					  "msi1",
+ 					  "msi2",
+@@ -3462,10 +3462,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 			iommu-map = <0     &apps_smmu 0x1400 0x1>,
+ 				    <0x100 &apps_smmu 0x1401 0x1>;
+ 
+-			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 1 &intc 0 0 0 149 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &intc 0 0 0 150 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			#interrupt-cells = <1>;
+ 
+@@ -3584,15 +3584,15 @@ pcie1: pcie@1c08000 {
+ 				    "atu",
+ 				    "config";
+ 
+-			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "msi0",
+ 					  "msi1",
+ 					  "msi2",
+@@ -3642,10 +3642,10 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
+ 			iommu-map = <0     &apps_smmu 0x1480 0x1>,
+ 				    <0x100 &apps_smmu 0x1481 0x1>;
+ 
+-			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>,
+-					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 2 &intc 0 0 0 435 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH 0>,
++					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-map-mask = <0 0 0 0x7>;
+ 			#interrupt-cells = <1>;
+ 
+@@ -3763,7 +3763,7 @@ cryptobam: dma-controller@1dc4000 {
+ 			compatible = "qcom,bam-v1.7.0";
+ 			reg = <0 0x01dc4000 0 0x28000>;
+ 
+-			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			#dma-cells = <1>;
+ 
+@@ -3815,7 +3815,7 @@ ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm8650-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
+ 			reg = <0 0x01d84000 0 0x3000>;
+ 
+-			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
+ 				 <&gcc GCC_AGGRE_UFS_PHY_AXI_CLK>,
+@@ -3936,7 +3936,7 @@ gpu: gpu@3d00000 {
+ 				    "cx_mem",
+ 				    "cx_dbgc";
+ 
+-			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			iommus = <&adreno_smmu 0 0x0>,
+ 				 <&adreno_smmu 1 0x0>;
+@@ -4035,8 +4035,8 @@ gmu: gmu@3d6a000 {
+ 			      <0x0 0x0b280000 0x0 0x10000>;
+ 			reg-names = "gmu", "rscc", "gmu_pdc";
+ 
+-			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "hfi", "gmu";
+ 
+ 			clocks = <&gpucc GPU_CC_AHB_CLK>,
+@@ -4099,32 +4099,32 @@ adreno_smmu: iommu@3da0000 {
+ 			reg = <0x0 0x03da0000 0x0 0x40000>;
+ 			#iommu-cells = <2>;
+ 			#global-interrupts = <1>;
+-			interrupts = <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 677 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 574 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 575 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 576 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 577 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 659 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 661 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 664 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 665 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 666 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 668 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 669 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 699 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 677 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 686 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 687 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 476 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 574 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 575 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 576 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 577 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 659 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 661 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 664 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 665 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 666 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 668 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 669 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 699 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			clocks = <&gpucc GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK>,
+ 				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
+ 				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>,
+@@ -4149,8 +4149,8 @@ ipa: ipa@3f40000 {
+ 				    "ipa-shared",
+ 				    "gsi";
+ 
+-			interrupts-extended = <&intc GIC_SPI 654 IRQ_TYPE_EDGE_RISING>,
+-					      <&intc GIC_SPI 432 IRQ_TYPE_LEVEL_HIGH>,
++			interrupts-extended = <&intc GIC_SPI 654 IRQ_TYPE_EDGE_RISING 0>,
++					      <&intc GIC_SPI 432 IRQ_TYPE_LEVEL_HIGH 0>,
+ 					      <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+ 					      <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
+ 			interrupt-names = "ipa",
+@@ -4182,7 +4182,7 @@ remoteproc_mpss: remoteproc@4080000 {
+ 			compatible = "qcom,sm8650-mpss-pas";
+ 			reg = <0x0 0x04080000 0x0 0x10000>;
+ 
+-			interrupts-extended = <&intc GIC_SPI 264 IRQ_TYPE_EDGE_RISING>,
++			interrupts-extended = <&intc GIC_SPI 264 IRQ_TYPE_EDGE_RISING 0>,
+ 					      <&smp2p_modem_in 0 IRQ_TYPE_EDGE_RISING>,
+ 					      <&smp2p_modem_in 1 IRQ_TYPE_EDGE_RISING>,
+ 					      <&smp2p_modem_in 2 IRQ_TYPE_EDGE_RISING>,
+@@ -4399,7 +4399,7 @@ lpass_wsa2macro: codec@6aa0000 {
+ 		swr3: soundwire@6ab0000 {
+ 			compatible = "qcom,soundwire-v2.0.0";
+ 			reg = <0 0x06ab0000 0 0x10000>;
+-			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			clocks = <&lpass_wsa2macro>;
+ 			clock-names = "iface";
+ 			label = "WSA2";
+@@ -4446,7 +4446,7 @@ lpass_rxmacro: codec@6ac0000 {
+ 		swr1: soundwire@6ad0000 {
+ 			compatible = "qcom,soundwire-v2.0.0";
+ 			reg = <0 0x06ad0000 0 0x10000>;
+-			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			clocks = <&lpass_rxmacro>;
+ 			clock-names = "iface";
+ 			label = "RX";
+@@ -4510,7 +4510,7 @@ lpass_wsamacro: codec@6b00000 {
+ 		swr0: soundwire@6b10000 {
+ 			compatible = "qcom,soundwire-v2.0.0";
+ 			reg = <0 0x06b10000 0 0x10000>;
+-			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			clocks = <&lpass_wsamacro>;
+ 			clock-names = "iface";
+ 			label = "WSA";
+@@ -4540,8 +4540,8 @@ swr0: soundwire@6b10000 {
+ 		swr2: soundwire@6d30000 {
+ 			compatible = "qcom,soundwire-v2.0.0";
+ 			reg = <0 0x06d30000 0 0x10000>;
+-			interrupts = <GIC_SPI 496 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 520 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 496 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 520 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "core", "wakeup";
+ 			clocks = <&lpass_txmacro>;
+ 			clock-names = "iface";
+@@ -4732,8 +4732,8 @@ sdhc_2: mmc@8804000 {
+ 			compatible = "qcom,sm8650-sdhci", "qcom,sdhci-msm-v5";
+ 			reg = <0 0x08804000 0 0x1000>;
+ 
+-			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "hc_irq",
+ 					  "pwr_irq";
+ 
+@@ -4807,7 +4807,7 @@ videocc: clock-controller@aaf0000 {
+ 		cci0: cci@ac15000 {
+ 			compatible = "qcom,sm8650-cci", "qcom,msm8996-cci";
+ 			reg = <0 0x0ac15000 0 0x1000>;
+-			interrupts = <GIC_SPI 426 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 426 IRQ_TYPE_EDGE_RISING 0>;
+ 			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
+ 			clocks = <&camcc CAM_CC_CAMNOC_AXI_NRT_CLK>,
+ 				 <&camcc CAM_CC_CPAS_AHB_CLK>,
+@@ -4840,7 +4840,7 @@ cci0_i2c1: i2c-bus@1 {
+ 		cci1: cci@ac16000 {
+ 			compatible = "qcom,sm8650-cci", "qcom,msm8996-cci";
+ 			reg = <0 0x0ac16000 0 0x1000>;
+-			interrupts = <GIC_SPI 427 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 427 IRQ_TYPE_EDGE_RISING 0>;
+ 			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
+ 			clocks = <&camcc CAM_CC_CAMNOC_AXI_NRT_CLK>,
+ 				 <&camcc CAM_CC_CPAS_AHB_CLK>,
+@@ -4873,7 +4873,7 @@ cci1_i2c1: i2c-bus@1 {
+ 		cci2: cci@ac17000 {
+ 			compatible = "qcom,sm8650-cci", "qcom,msm8996-cci";
+ 			reg = <0 0x0ac17000 0 0x1000>;
+-			interrupts = <GIC_SPI 428 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 428 IRQ_TYPE_EDGE_RISING 0>;
+ 			power-domains = <&camcc CAM_CC_TITAN_TOP_GDSC>;
+ 			clocks = <&camcc CAM_CC_CAMNOC_AXI_NRT_CLK>,
+ 				 <&camcc CAM_CC_CPAS_AHB_CLK>,
+@@ -4921,7 +4921,7 @@ mdss: display-subsystem@ae00000 {
+ 			reg = <0 0x0ae00000 0 0x1000>;
+ 			reg-names = "mdss";
+ 
+-			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
+ 				 <&gcc GCC_DISP_HF_AXI_CLK>,
+@@ -5390,8 +5390,8 @@ usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sm8650-dwc3", "qcom,dwc3";
+ 			reg = <0 0x0a6f8800 0 0x400>;
+ 
+-			interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
+-					      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++			interrupts-extended = <&intc GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH 0>,
++					      <&intc GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH 0>,
+ 					      <&pdc 14 IRQ_TYPE_EDGE_RISING>,
+ 					      <&pdc 15 IRQ_TYPE_EDGE_RISING>,
+ 					      <&pdc 17 IRQ_TYPE_LEVEL_HIGH>;
+@@ -5440,7 +5440,7 @@ usb_1_dwc3: usb@a600000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0 0x0a600000 0 0xcd00>;
+ 
+-				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				iommus = <&apps_smmu 0x40 0>;
+ 
+@@ -5504,8 +5504,8 @@ tsens0: thermal-sensor@c228000 {
+ 			reg = <0 0x0c228000 0 0x1000>, /* TM */
+ 			      <0 0x0c222000 0 0x1000>; /* SROT */
+ 
+-			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 640 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "uplow",
+ 					  "critical";
+ 
+@@ -5519,8 +5519,8 @@ tsens1: thermal-sensor@c229000 {
+ 			reg = <0 0x0c229000 0 0x1000>, /* TM */
+ 			      <0 0x0c223000 0 0x1000>; /* SROT */
+ 
+-			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "uplow",
+ 					  "critical";
+ 
+@@ -5534,8 +5534,8 @@ tsens2: thermal-sensor@c22a000 {
+ 			reg = <0 0x0c22a000 0 0x1000>, /* TM */
+ 			      <0 0x0c224000 0 0x1000>; /* SROT */
+ 
+-			interrupts = <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 642 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 642 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "uplow",
+ 					  "critical";
+ 
+@@ -5593,7 +5593,7 @@ tlmm: pinctrl@f100000 {
+ 			compatible = "qcom,sm8650-tlmm";
+ 			reg = <0 0x0f100000 0 0x300000>;
+ 
+-			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+@@ -6469,103 +6469,103 @@ apps_smmu: iommu@15000000 {
+ 			compatible = "qcom,sm8650-smmu-500", "qcom,smmu-500", "arm,mmu-500";
+ 			reg = <0 0x15000000 0 0x100000>;
+ 
+-			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 706 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 689 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 690 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 691 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 692 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 693 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 694 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 695 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 696 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 706 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 689 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 690 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 691 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 692 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 693 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 694 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 695 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 696 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			#iommu-cells = <2>;
+ 			#global-interrupts = <1>;
+@@ -6578,9 +6578,9 @@ intc: interrupt-controller@17100000 {
+ 			reg = <0 0x17100000 0 0x10000>,		/* GICD */
+ 			      <0 0x17180000 0 0x200000>;	/* GICR * 8 */
+ 
+-			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW 0>;
+ 
+-			#interrupt-cells = <3>;
++			#interrupt-cells = <4>;
+ 			interrupt-controller;
+ 
+ 			#redistributor-regions = <1>;
+@@ -6611,8 +6611,8 @@ frame@17421000 {
+ 				reg = <0x17421000 0x1000>,
+ 				      <0x17422000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
++					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <0>;
+ 			};
+@@ -6620,7 +6620,7 @@ frame@17421000 {
+ 			frame@17423000 {
+ 				reg = <0x17423000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <1>;
+ 
+@@ -6630,7 +6630,7 @@ frame@17423000 {
+ 			frame@17425000 {
+ 				reg = <0x17425000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <2>;
+ 
+@@ -6640,7 +6640,7 @@ frame@17425000 {
+ 			frame@17427000 {
+ 				reg = <0x17427000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <3>;
+ 
+@@ -6650,7 +6650,7 @@ frame@17427000 {
+ 			frame@17429000 {
+ 				reg = <0x17429000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <4>;
+ 
+@@ -6660,7 +6660,7 @@ frame@17429000 {
+ 			frame@1742b000 {
+ 				reg = <0x1742b000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <5>;
+ 
+@@ -6670,7 +6670,7 @@ frame@1742b000 {
+ 			frame@1742d000 {
+ 				reg = <0x1742d000 0x1000>;
+ 
+-				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 				frame-number = <6>;
+ 
+@@ -6688,9 +6688,9 @@ apps_rsc: rsc@17a00000 {
+ 				    "drv-1",
+ 				    "drv-2";
+ 
+-			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			power-domains = <&cluster_pd>;
+ 
+@@ -6808,10 +6808,10 @@ cpufreq_hw: cpufreq@17d91000 {
+ 				    "freq-domain2",
+ 				    "freq-domain3";
+ 
+-			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 738 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
++				     <GIC_SPI 738 IRQ_TYPE_LEVEL_HIGH 0>;
+ 			interrupt-names = "dcvsh-irq-0",
+ 					  "dcvsh-irq-1",
+ 					  "dcvsh-irq-2",
+@@ -6828,7 +6828,7 @@ pmu@24091000 {
+ 			compatible = "qcom,sm8650-llcc-bwmon", "qcom,sc7280-llcc-bwmon";
+ 			reg = <0 0x24091000 0 0x1000>;
+ 
+-			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			interconnects = <&mc_virt MASTER_LLCC QCOM_ICC_TAG_ACTIVE_ONLY
+ 					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ACTIVE_ONLY>;
+@@ -6880,7 +6880,7 @@ pmu@240b7400 {
+ 			compatible = "qcom,sm8650-cpu-bwmon", "qcom,sdm845-bwmon";
+ 			reg = <0 0x240b7400 0 0x600>;
+ 
+-			interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 581 IRQ_TYPE_LEVEL_HIGH 0>;
+ 
+ 			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
+ 					 &gem_noc SLAVE_LLCC QCOM_ICC_TAG_ACTIVE_ONLY>;
+@@ -6940,7 +6940,7 @@ system-cache-controller@25000000 {
+ 				    "llcc_broadcast_base",
+ 				    "llcc_broadcast_and_base";
+ 
+-			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		};
+ 
+ 		nsp_noc: interconnect@320c0000 {
+@@ -6956,7 +6956,7 @@ remoteproc_cdsp: remoteproc@32300000 {
+ 			compatible = "qcom,sm8650-cdsp-pas";
+ 			reg = <0x0 0x32300000 0x0 0x10000>;
+ 
+-			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
++			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING 0>,
+ 					      <&smp2p_cdsp_in 0 IRQ_TYPE_EDGE_RISING>,
+ 					      <&smp2p_cdsp_in 1 IRQ_TYPE_EDGE_RISING>,
+ 					      <&smp2p_cdsp_in 2 IRQ_TYPE_EDGE_RISING>,
+@@ -7956,9 +7956,9 @@ modem3-critical {
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 
+-		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+-			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW 0>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW 0>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW 0>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW 0>;
+ 	};
+ };
 
-diff --git a/crypto/lzo-rle.c b/crypto/lzo-rle.c
-index 0631d975bfac..0abc2d87f042 100644
---- a/crypto/lzo-rle.c
-+++ b/crypto/lzo-rle.c
-@@ -55,7 +55,7 @@ static int __lzorle_compress(const u8 *src, unsigned int slen,
- 	size_t tmp_len = *dlen; /* size_t(ulong) <-> uint on 64 bit */
- 	int err;
- 
--	err = lzorle1x_1_compress(src, slen, dst, &tmp_len, ctx);
-+	err = lzorle1x_1_compress_safe(src, slen, dst, &tmp_len, ctx);
- 
- 	if (err != LZO_E_OK)
- 		return -EINVAL;
-diff --git a/crypto/lzo.c b/crypto/lzo.c
-index ebda132dd22b..8338851c7406 100644
---- a/crypto/lzo.c
-+++ b/crypto/lzo.c
-@@ -55,7 +55,7 @@ static int __lzo_compress(const u8 *src, unsigned int slen,
- 	size_t tmp_len = *dlen; /* size_t(ulong) <-> uint on 64 bit */
- 	int err;
- 
--	err = lzo1x_1_compress(src, slen, dst, &tmp_len, ctx);
-+	err = lzo1x_1_compress_safe(src, slen, dst, &tmp_len, ctx);
- 
- 	if (err != LZO_E_OK)
- 		return -EINVAL;
-diff --git a/include/linux/lzo.h b/include/linux/lzo.h
-index e95c7d1092b2..4d30e3624acd 100644
---- a/include/linux/lzo.h
-+++ b/include/linux/lzo.h
-@@ -24,10 +24,18 @@
- int lzo1x_1_compress(const unsigned char *src, size_t src_len,
- 		     unsigned char *dst, size_t *dst_len, void *wrkmem);
- 
-+/* Same as above but does not write more than dst_len to dst. */
-+int lzo1x_1_compress_safe(const unsigned char *src, size_t src_len,
-+			  unsigned char *dst, size_t *dst_len, void *wrkmem);
-+
- /* This requires 'wrkmem' of size LZO1X_1_MEM_COMPRESS */
- int lzorle1x_1_compress(const unsigned char *src, size_t src_len,
- 		     unsigned char *dst, size_t *dst_len, void *wrkmem);
- 
-+/* Same as above but does not write more than dst_len to dst. */
-+int lzorle1x_1_compress_safe(const unsigned char *src, size_t src_len,
-+			     unsigned char *dst, size_t *dst_len, void *wrkmem);
-+
- /* safe decompression with overrun testing */
- int lzo1x_decompress_safe(const unsigned char *src, size_t src_len,
- 			  unsigned char *dst, size_t *dst_len);
-diff --git a/lib/lzo/Makefile b/lib/lzo/Makefile
-index 2f58fafbbddd..fc7b2b7ef4b2 100644
---- a/lib/lzo/Makefile
-+++ b/lib/lzo/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
--lzo_compress-objs := lzo1x_compress.o
-+lzo_compress-objs := lzo1x_compress.o lzo1x_compress_safe.o
- lzo_decompress-objs := lzo1x_decompress_safe.o
- 
- obj-$(CONFIG_LZO_COMPRESS) += lzo_compress.o
-diff --git a/lib/lzo/lzo1x_compress.c b/lib/lzo/lzo1x_compress.c
-index 47d6d43ea957..7b10ca86a893 100644
---- a/lib/lzo/lzo1x_compress.c
-+++ b/lib/lzo/lzo1x_compress.c
-@@ -18,11 +18,22 @@
- #include <linux/lzo.h>
- #include "lzodefs.h"
- 
--static noinline size_t
--lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
--		    unsigned char *out, size_t *out_len,
--		    size_t ti, void *wrkmem, signed char *state_offset,
--		    const unsigned char bitstream_version)
-+#undef LZO_UNSAFE
-+
-+#ifndef LZO_SAFE
-+#define LZO_UNSAFE 1
-+#define LZO_SAFE(name) name
-+#define HAVE_OP(x) 1
-+#endif
-+
-+#define NEED_OP(x) if (!HAVE_OP(x)) goto output_overrun
-+
-+static noinline int
-+LZO_SAFE(lzo1x_1_do_compress)(const unsigned char *in, size_t in_len,
-+			      unsigned char **out, unsigned char *op_end,
-+			      size_t *tp, void *wrkmem,
-+			      signed char *state_offset,
-+			      const unsigned char bitstream_version)
- {
- 	const unsigned char *ip;
- 	unsigned char *op;
-@@ -30,8 +41,9 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 	const unsigned char * const ip_end = in + in_len - 20;
- 	const unsigned char *ii;
- 	lzo_dict_t * const dict = (lzo_dict_t *) wrkmem;
-+	size_t ti = *tp;
- 
--	op = out;
-+	op = *out;
- 	ip = in;
- 	ii = ip;
- 	ip += ti < 4 ? 4 - ti : 0;
-@@ -116,25 +128,32 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		if (t != 0) {
- 			if (t <= 3) {
- 				op[*state_offset] |= t;
-+				NEED_OP(4);
- 				COPY4(op, ii);
- 				op += t;
- 			} else if (t <= 16) {
-+				NEED_OP(17);
- 				*op++ = (t - 3);
- 				COPY8(op, ii);
- 				COPY8(op + 8, ii + 8);
- 				op += t;
- 			} else {
- 				if (t <= 18) {
-+					NEED_OP(1);
- 					*op++ = (t - 3);
- 				} else {
- 					size_t tt = t - 18;
-+					NEED_OP(1);
- 					*op++ = 0;
- 					while (unlikely(tt > 255)) {
- 						tt -= 255;
-+						NEED_OP(1);
- 						*op++ = 0;
- 					}
-+					NEED_OP(1);
- 					*op++ = tt;
- 				}
-+				NEED_OP(t);
- 				do {
- 					COPY8(op, ii);
- 					COPY8(op + 8, ii + 8);
-@@ -151,6 +170,7 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		if (unlikely(run_length)) {
- 			ip += run_length;
- 			run_length -= MIN_ZERO_RUN_LENGTH;
-+			NEED_OP(4);
- 			put_unaligned_le32((run_length << 21) | 0xfffc18
- 					   | (run_length & 0x7), op);
- 			op += 4;
-@@ -243,10 +263,12 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		ip += m_len;
- 		if (m_len <= M2_MAX_LEN && m_off <= M2_MAX_OFFSET) {
- 			m_off -= 1;
-+			NEED_OP(2);
- 			*op++ = (((m_len - 1) << 5) | ((m_off & 7) << 2));
- 			*op++ = (m_off >> 3);
- 		} else if (m_off <= M3_MAX_OFFSET) {
- 			m_off -= 1;
-+			NEED_OP(1);
- 			if (m_len <= M3_MAX_LEN)
- 				*op++ = (M3_MARKER | (m_len - 2));
- 			else {
-@@ -254,14 +276,18 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 				*op++ = M3_MARKER | 0;
- 				while (unlikely(m_len > 255)) {
- 					m_len -= 255;
-+					NEED_OP(1);
- 					*op++ = 0;
- 				}
-+				NEED_OP(1);
- 				*op++ = (m_len);
- 			}
-+			NEED_OP(2);
- 			*op++ = (m_off << 2);
- 			*op++ = (m_off >> 6);
- 		} else {
- 			m_off -= 0x4000;
-+			NEED_OP(1);
- 			if (m_len <= M4_MAX_LEN)
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8)
- 						| (m_len - 2));
-@@ -282,11 +308,14 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 				m_len -= M4_MAX_LEN;
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8));
- 				while (unlikely(m_len > 255)) {
-+					NEED_OP(1);
- 					m_len -= 255;
- 					*op++ = 0;
- 				}
-+				NEED_OP(1);
- 				*op++ = (m_len);
- 			}
-+			NEED_OP(2);
- 			*op++ = (m_off << 2);
- 			*op++ = (m_off >> 6);
- 		}
-@@ -295,14 +324,20 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		ii = ip;
- 		goto next;
- 	}
--	*out_len = op - out;
--	return in_end - (ii - ti);
-+	*out = op;
-+	*tp = in_end - (ii - ti);
-+	return LZO_E_OK;
-+
-+output_overrun:
-+	return LZO_E_OUTPUT_OVERRUN;
- }
- 
--static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
--		     unsigned char *out, size_t *out_len,
--		     void *wrkmem, const unsigned char bitstream_version)
-+static int LZO_SAFE(lzogeneric1x_1_compress)(
-+	const unsigned char *in, size_t in_len,
-+	unsigned char *out, size_t *out_len,
-+	void *wrkmem, const unsigned char bitstream_version)
- {
-+	unsigned char * const op_end = out + *out_len;
- 	const unsigned char *ip = in;
- 	unsigned char *op = out;
- 	unsigned char *data_start;
-@@ -326,14 +361,18 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 	while (l > 20) {
- 		size_t ll = min_t(size_t, l, m4_max_offset + 1);
- 		uintptr_t ll_end = (uintptr_t) ip + ll;
-+		int err;
-+
- 		if ((ll_end + ((t + ll) >> 5)) <= ll_end)
- 			break;
- 		BUILD_BUG_ON(D_SIZE * sizeof(lzo_dict_t) > LZO1X_1_MEM_COMPRESS);
- 		memset(wrkmem, 0, D_SIZE * sizeof(lzo_dict_t));
--		t = lzo1x_1_do_compress(ip, ll, op, out_len, t, wrkmem,
--					&state_offset, bitstream_version);
-+		err = LZO_SAFE(lzo1x_1_do_compress)(
-+			ip, ll, &op, op_end, &t, wrkmem,
-+			&state_offset, bitstream_version);
-+		if (err != LZO_E_OK)
-+			return err;
- 		ip += ll;
--		op += *out_len;
- 		l  -= ll;
- 	}
- 	t += l;
-@@ -342,20 +381,26 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 		const unsigned char *ii = in + in_len - t;
- 
- 		if (op == data_start && t <= 238) {
-+			NEED_OP(1);
- 			*op++ = (17 + t);
- 		} else if (t <= 3) {
- 			op[state_offset] |= t;
- 		} else if (t <= 18) {
-+			NEED_OP(1);
- 			*op++ = (t - 3);
- 		} else {
- 			size_t tt = t - 18;
-+			NEED_OP(1);
- 			*op++ = 0;
- 			while (tt > 255) {
- 				tt -= 255;
-+				NEED_OP(1);
- 				*op++ = 0;
- 			}
-+			NEED_OP(1);
- 			*op++ = tt;
- 		}
-+		NEED_OP(t);
- 		if (t >= 16) do {
- 			COPY8(op, ii);
- 			COPY8(op + 8, ii + 8);
-@@ -368,31 +413,38 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 		} while (--t > 0);
- 	}
- 
-+	NEED_OP(3);
- 	*op++ = M4_MARKER | 1;
- 	*op++ = 0;
- 	*op++ = 0;
- 
- 	*out_len = op - out;
- 	return LZO_E_OK;
-+
-+output_overrun:
-+	return LZO_E_OUTPUT_OVERRUN;
- }
- 
--int lzo1x_1_compress(const unsigned char *in, size_t in_len,
--		     unsigned char *out, size_t *out_len,
--		     void *wrkmem)
-+int LZO_SAFE(lzo1x_1_compress)(const unsigned char *in, size_t in_len,
-+			       unsigned char *out, size_t *out_len,
-+			       void *wrkmem)
- {
--	return lzogeneric1x_1_compress(in, in_len, out, out_len, wrkmem, 0);
-+	return LZO_SAFE(lzogeneric1x_1_compress)(
-+		in, in_len, out, out_len, wrkmem, 0);
- }
- 
--int lzorle1x_1_compress(const unsigned char *in, size_t in_len,
--		     unsigned char *out, size_t *out_len,
--		     void *wrkmem)
-+int LZO_SAFE(lzorle1x_1_compress)(const unsigned char *in, size_t in_len,
-+				  unsigned char *out, size_t *out_len,
-+				  void *wrkmem)
- {
--	return lzogeneric1x_1_compress(in, in_len, out, out_len,
--				       wrkmem, LZO_VERSION);
-+	return LZO_SAFE(lzogeneric1x_1_compress)(
-+		in, in_len, out, out_len, wrkmem, LZO_VERSION);
- }
- 
--EXPORT_SYMBOL_GPL(lzo1x_1_compress);
--EXPORT_SYMBOL_GPL(lzorle1x_1_compress);
-+EXPORT_SYMBOL_GPL(LZO_SAFE(lzo1x_1_compress));
-+EXPORT_SYMBOL_GPL(LZO_SAFE(lzorle1x_1_compress));
- 
-+#ifndef LZO_UNSAFE
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("LZO1X-1 Compressor");
-+#endif
-diff --git a/lib/lzo/lzo1x_compress_safe.c b/lib/lzo/lzo1x_compress_safe.c
-new file mode 100644
-index 000000000000..371c9f849492
---- /dev/null
-+++ b/lib/lzo/lzo1x_compress_safe.c
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  LZO1X Compressor from LZO
-+ *
-+ *  Copyright (C) 1996-2012 Markus F.X.J. Oberhumer <markus@oberhumer.com>
-+ *
-+ *  The full LZO package can be found at:
-+ *  http://www.oberhumer.com/opensource/lzo/
-+ *
-+ *  Changed for Linux kernel use by:
-+ *  Nitin Gupta <nitingupta910@gmail.com>
-+ *  Richard Purdie <rpurdie@openedhand.com>
-+ */
-+
-+#define LZO_SAFE(name) name##_safe
-+#define HAVE_OP(x) ((size_t)(op_end - op) >= (size_t)(x))
-+
-+#include "lzo1x_compress.c"
 -- 
-2.39.5
+2.34.1
 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
