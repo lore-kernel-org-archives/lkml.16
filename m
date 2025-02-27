@@ -1,96 +1,88 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9452F136351;
-	Thu, 27 Feb 2025 17:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740677477; cv=pass; b=Fuo6VdumJvj8w6YDNF3yr8LyIFZcgLtEvU8HEU7BFCIL4hcCxUalp79sXDLsxoDtOtzieu0ha9ALZ1L1vDO1kII4nu5FgL8VWYfY4rAppRpZFba0pmr2Y5STzUcHCIVLxkKgUD3Px3frrrr2/dSOTaZ5Cdk/Av/GaHD8yTGb+hs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740677477; c=relaxed/simple;
-	bh=pY0h9Uqj3mrF8jCMF8B0UPDavohCQ9bLCBbrtld9yos=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=HM/4GydM6ZonVA6S4ZuUnJ8hsP/3csIzwjyMPsulgiAM1zLeVHLfnp71VK+N8DVh7Ha5lOXmmT8eEbFN0cbdU9pl8KJajDlTS1RiXfJgzWT6FI4HjHHdBe9M6t5JvoriKjs85F2gu2GoCYQhchE/QBOpMzJSe/O8CP+IRFpMqIo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=JL52TaCD; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 856DD27002E;
+	Thu, 27 Feb 2025 17:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740677541; cv=none; b=GJWZsZCmHMoa6voHodqtvqoKvBhIoVbN0hvU3HUiY/ruOG+EIbVcXa0p8YbgO1P1NqeicsZAWh3YRohWaj206tPBxpRp4lu6uaYsNTyeuipkM0UsjAElDUQyrMrH9taQNSHwj41rv5YO+iLXdDwWOyrZQLvJ8MB5H3xiHTYZFxA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740677541; c=relaxed/simple;
+	bh=ZF9S4DgsXojdfwe8fyj+o1u2upec991trSXQ85ErxyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=USI4Rh50QCq1WDuKLlFvxrOnn/K7hDAAo9WarwCuAGhwmZRrfbWbKviRd94YYf8HfQmVqgR9K/sOGMOTz/H+fl5E42ELMuZKZGaD0Q2ssnWU1dZ6B2pJHqKoEJFp6F/xWzLtu7J5636F7HJfX0Bmponz2HhqyAr7A6o7IOoZmhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeXhWU9t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="JL52TaCD"
-ARC-Seal: i=1; a=rsa-sha256; t=1740677409; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=FTN4iejmJbD3zVMnol9SB/PeFykB9egs/6XaEr/QRjdTPaUdScVFt6lCZY6KEANYdHHDJy7fCZuRPdBEpKhrEFG7SHykfe5UPS7hwBGtm0xkzcnKbd5SR/flZeOajo7BsHmUaYtj9Oy6dqmuWmfeWKJ/d+BDkF/l/rqtyKNJqSg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740677409; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=pY0h9Uqj3mrF8jCMF8B0UPDavohCQ9bLCBbrtld9yos=; 
-	b=OU4vLbh9z0Wy5rSJIPqAAiv0qNUjz4AmXUiLWpQ6fsJ4kSSGuqcfvGLDSTn8l8rsgKSm+TYNAJvdbiFXFpff2EF+3lU9XW0t1n3J8Dt0zKrNbhbPtRxzDCmO/xocviDo06i+l3xHHXTQomiq4gfIwGQ8FnbThMVrM0Ysr0rng5E=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740677409;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=pY0h9Uqj3mrF8jCMF8B0UPDavohCQ9bLCBbrtld9yos=;
-	b=JL52TaCD/b1D2zQ/WgtmajSca6k2sVDq6Nnt4Hj57q3CcJEGAv4w7b1HwGEUjIJr
-	xVwrhtV/sA5C2hjR/uK6oo5gsYD3G5J5JLwnyLLVnxa42ojnl2h8udtN5mKbNquqzsD
-	VGlODyRoOomK1FPb5kIcGn0UJJHSCdPZqrNCSB/E=
-Received: by mx.zohomail.com with SMTPS id 1740677406210259.24822276471855;
-	Thu, 27 Feb 2025 09:30:06 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeXhWU9t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27526C4CEDD;
+	Thu, 27 Feb 2025 17:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740677541;
+	bh=ZF9S4DgsXojdfwe8fyj+o1u2upec991trSXQ85ErxyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QeXhWU9tdT1xqO+/pAOx7GfponmkwTQKFnO5Gb4eSyOf1P2H9bcbKQ9U0kKL9Ppu2
+	 4KOCZl+UK7UIVCCHUMUzH452/mHiXadW2aa1wU5YrFFqXrsGWlLCcXydeHCPjk4IXL
+	 MSA9DTTNaBPsSjja8HR24z+tJZoSND3XA6QHvH4X9+EbDQtePCa6e6P10HUqmcXsDX
+	 H00mllT4FUfyYMWeXXerbKdY2tkbs1ZZ1RlcAC//aMUK6uJv5pqrpKQEVu7X8I5pHL
+	 5oHRfkZS9Ivc2P7osQ0Fl+8iB8DoIjH4xGeEdX4CgBHsBChMsm9uj1qr5Rdt8fZrqx
+	 jtYlHBn5PPSaQ==
+Date: Thu, 27 Feb 2025 18:32:15 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	paulmck@kernel.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <Z8ChnwPC0UwM8xBe@cassiopeiae>
+References: <20250226004916.GB4959@nvidia.com>
+ <Z75riltJo0WvOsS5@cassiopeiae>
+ <20250226172120.GD28425@nvidia.com>
+ <Z7-IHgcVVS8XBurW@cassiopeiae>
+ <20250226234730.GC39591@nvidia.com>
+ <Z7-0pOmWO6r_KeQI@boqun-archlinux>
+ <20250227144618.GE39591@nvidia.com>
+ <Z8CCKl_yA74WjpQ1@Mac.home>
+ <20250227161733.GH39591@nvidia.com>
+ <Z8CY7fqbtbO4v1jv@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v11 0/8] rust: Add IO polling
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250220070611.214262-1-fujita.tomonori@gmail.com>
-Date: Thu, 27 Feb 2025 14:29:45 -0300
-Cc: linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- netdev@vger.kernel.org,
- andrew@lunn.ch,
- hkallweit1@gmail.com,
- tmgross@umich.edu,
- ojeda@kernel.org,
- alex.gaynor@gmail.com,
- gary@garyguo.net,
- bjorn3_gh@protonmail.com,
- benno.lossin@proton.me,
- a.hindborg@samsung.com,
- aliceryhl@google.com,
- anna-maria@linutronix.de,
- frederic@kernel.org,
- tglx@linutronix.de,
- arnd@arndb.de,
- jstultz@google.com,
- sboyd@kernel.org,
- mingo@redhat.com,
- peterz@infradead.org,
- juri.lelli@redhat.com,
- vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com,
- rostedt@goodmis.org,
- bsegall@google.com,
- mgorman@suse.de,
- vschneid@redhat.com,
- tgunders@redhat.com,
- me@kloenk.dev,
- david.laight.linux@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4647720C-28CA-4E18-AD1E-55844CF078E6@collabora.com>
-References: <20250220070611.214262-1-fujita.tomonori@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8CY7fqbtbO4v1jv@Mac.home>
 
-Hi Fujita,
+On Thu, Feb 27, 2025 at 08:55:09AM -0800, Boqun Feng wrote:
+> On Thu, Feb 27, 2025 at 12:17:33PM -0400, Jason Gunthorpe wrote:
+> 
+> > I still wonder why you couldn't also have these reliable reference
+> > counts rooted on the device driver instead of only on the module.
+> > 
+> 
+> You could put reliable reference counts anywhere you want, as long as it
+> reflects the resource dependencies.
 
-Would you be interested in working on read_poll_timeout_atomic() as =
-well?
+Right, as I explained in a different reply, the signature for PCI driver probe()
+looks like this:
 
-There would be a user for that.
+	fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>>
 
-=E2=80=94 Daniel=20=
+The returned Pin<KBox<Self>> has the lifetime of the driver being bound to the
+device.
+
+Which means a driver can bind things to this lifetime. But, it isn't forced to,
+it can also put things into an Arc and share it with the rest of the world.
+
+If something is crucial to be bound to the lifetime of a driver being bound to a
+device (i.e. device resources), you have to expose it as Devres<T>.
+
+Subsequently, you can put the Devres<T> in an Arc and do whatever you want, the
+result will still be that T is dropped once the device is unbound.
