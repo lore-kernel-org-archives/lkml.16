@@ -1,165 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A0641487D5
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 10:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB7C21D3E7;
+	Thu, 27 Feb 2025 10:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740652256; cv=none; b=EAWM4FO9NRbmohM+LWQVCVENtR5rWvM6ls4/hO7F6C8Ire5dujnAqnYPWcTLlLys879GMc20LDfD9FK1lkBlowY0e31n7oYxlAKfMo5tVugwEgkHJWVvYLB2oR2s42Zyy+HiVZnnjrQkS9gNS2F9GNN6uf3njp6xpUZeTgk9WSo=
+	t=1740652415; cv=none; b=ERXTJ+jqIqj0xyKFZ5/cg4AAmIKRA2HVcvPQdDto7ls5PrTIVVf6x2SErQl5dyQzKuhrFUsu/krw1Tq1HnE/D9SvYwVnA5PqNQ9tKHtIh/KnvcHF/QlVifPFgytrM1gK+NT50ZnV5qySyZ8AIbt+/thbB1GWVPJqOZQZo2k3q+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740652256; c=relaxed/simple;
-	bh=+v3xkJS3XMAxcs9N3Ws2L/B6PJdrpS8kXHjrtO6boDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jopsz7wl3qIYX0Tb1Qem4JZEfXIUnTAQ0x84HgXUdmaLU1/o2k5PiTWHCzX/R4PD0fuz8Yfa+OFSy/RMcBzagMEZrusTmpSMoJExbQ1n6MFkWcnlMfFDI3hoEToJ+fhQsPpPTuG5sORG/gHC3kFI7oRYffEHQ+u26NNdIUKj+aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a1Jhue+4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a1Jhue+4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740652254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tOkzrL8YRVS4cEWE0UGROaO1cYbN8EnDQwWGMEJe0oQ=;
-	b=a1Jhue+4BBwxP+eWifeU4hpBTOgkC/2tT3wDO6CzvLS7aKjVhTZkN3j1PywWW+YONEC54B
-	THOCM8J4X2Q1SV994sqFFVS2RrRazQ8kCGM02xF/A+Td6rys0vUbFVkKQoCH2H7qTrGGtA
-	SB7kdMQrQdwxyZaxGWRV9pKBVSAmK6Q=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-489-ZtaUoZxvNs2xImFwwRpHSw-1; Thu, 27 Feb 2025 05:30:52 -0500
-X-MC-Unique: ZtaUoZxvNs2xImFwwRpHSw-1
-X-Mimecast-MFC-AGG-ID: ZtaUoZxvNs2xImFwwRpHSw_1740652251
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4399a5afc72so4050225e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 02:30:51 -0800 (PST)
+	s=arc-20240116; t=1740652415; c=relaxed/simple;
+	bh=sdRYJf5KqEhXm7M/os0m46/SzH35rQZIDcFmEL2GFkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tft7f8a39Lhobh/dnaBwZxjVOvMeFDRlB/w2XMrEjK7lS8YuQyHBtV1LKJh6ti9YmRF/bDQ52EK/cmPtJw5kgxxkVhMShoONRs/6Eu0hMFh7YuOv8Vbpmig96Op8aoBGtDLulhSMyKXLxJmE8CvGD5jd9/61RMcFu+upDf9Fom8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b3ed5fde5so395734241.0;
+        Thu, 27 Feb 2025 02:33:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740652251; x=1741257051;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tOkzrL8YRVS4cEWE0UGROaO1cYbN8EnDQwWGMEJe0oQ=;
-        b=eiDXNv82noXUJN6kcZoM6usHpvUh4zROlRyaWXZ8Y2FCKs7+4q1D8t4B3/ck/Mmjkm
-         r3Nz0XhLG5eQ2+3KaWL9zwo47Lyfluc0KjqO41b3knM3HtA2nHuw+RyZdmtxuy2NJsZ9
-         HXT7i1uICRGsPh8U5+WkN1urn96X7Ztkf0HmXmpsujiY1LENC+rq5LyQNuz3KY+mt9p7
-         TuhZ9cdBCsNfUJVo8+H8GtYsj11i3uEpT90y0EXpPsYMjmm1s09YS/HAC7aeRgNmvcL6
-         CdCBBaFjmi0xXAcXGAMX997WVkfFhEHbXnGL43FvwrlraaFJykuNJMaetr8lFC3+mwD7
-         H0dg==
-X-Forwarded-Encrypted: i=1; AJvYcCXMv7K9wnf1w+YRDCO+ObHWqi9AVRl8KS1P83bLwqlwAyxWhkmybkXLmh9yLwDnHmj///3zqj+Ft4WbSHs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBLZKknaoaWCGg0b3Ghv5xu563VxvZzpQ5MkNMuIy4aVLNPJ6A
-	ngFldLK+xE9Ny6FkKdmV1fvENvcL+L7lpwlzTaZoH8Re6rwX9K4MKX6QEn6hsJtwC9GYwW6YfU6
-	rNW0D+MNhP0t10m9fue9oQm5cnr4U0TW73AtTZdJzr6tPehRPopBLWWFsRYRBuQ==
-X-Gm-Gg: ASbGncs5FOnLxGjBSEXcWG8SknTgQUVLEzACrq0NAV6+Qx8u6dozJ6qu7NRvS775jSz
-	3+HgBl4yvrUJFbiprNswRbUai1J0n+lPGpW/oBxssK7AMngRmpHb2N+CBep6AeuYoBMy21/8IbE
-	DNtAb+DNk/ZY7N4VMzlsfpI/iiIMtU0zX3EqgciHkSVpUXwgVBAmQZNmfhQ2JBNo1MK/Ty7F6WL
-	W352Q12RBCK8kNoD3aBqm3lEi/VW/iInbxzQ5+6Ovg15uy1c9igJ3ILNAPcYCpP9tjfd4glPnWF
-	97Q2dhONA6ZG6rkUfR8gV/JYzIx8YjDTdivp05nyv6fr0g==
-X-Received: by 2002:a05:600c:3c95:b0:439:a88f:8523 with SMTP id 5b1f17b1804b1-439aebc2d5fmr171656785e9.21.1740652250892;
-        Thu, 27 Feb 2025 02:30:50 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHK6bHmySSujITFjcBPGuRs0PAR8EgMcRUkrPAM/8iUIqIbQEdpe+j6f1uiQXRHE5zW+7ZneA==
-X-Received: by 2002:a05:600c:3c95:b0:439:a88f:8523 with SMTP id 5b1f17b1804b1-439aebc2d5fmr171656515e9.21.1740652250529;
-        Thu, 27 Feb 2025 02:30:50 -0800 (PST)
-Received: from [192.168.88.253] (146-241-81-153.dyn.eolo.it. [146.241.81.153])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47965f3sm1585669f8f.9.2025.02.27.02.30.49
+        d=1e100.net; s=20230601; t=1740652411; x=1741257211;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ubSE84NjFTjsY5U2xLJxwBeHimqGUMTmF43TX7I58to=;
+        b=oBBvKr9XVDbFmwKhembhCuagm7yyyDaZXId+H9hUTcc0ek7mObLqOTTQiKR7EJ0yAE
+         /c6cxYKcqxiZP7Kp0mw9NpxjGS3TWIgTKzf9RhSjzqNexm5UF49utu0gt4/HWbnsNZ55
+         51d4AY5nRBe7/ZJjch7LnmAfJhusMtUJM/1zCEfF3EJJlBetVytPX5v/m6ZKQPGhtxCC
+         J8LrWDJ5zImhZ/5vQlRleLUDutmaXj76uEn6QbmL+bU3sVvmg2vYiV3Zhun6YxHnEKqI
+         hJ0Xhif7xDJkELroxVPffwW5Lqgy70A5YVodD3MUpEWoG+EKURquswOGUVmSKiZJTJ/P
+         7aLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUomP/c2MA4IuVz4uJuwQlLsNnwV/4iQh/q6ancGS0kkpn1oDIgKOu4rXv9Cm5aojtJurX5BT5ImToC@vger.kernel.org, AJvYcCVVFf6gLqzZ6rfqNpKBs0Hfq8jaMqshSIaXsAec0tIR8iFAxknBMR/lml904FQ0nhkJumEUHUa2E1LGislH3oyo7UU=@vger.kernel.org, AJvYcCWv1EL2utwHo2YlgV06/I+5+4v3RctOQkj8LYqrcqtTJ6sPilLCtdWQ1TTApEaZHCP2jImE15ehbJPyanM=@vger.kernel.org, AJvYcCX+bG+R3V9yUB1r1vMxLRAI0VDcRrUr0xOw5OejQtVeC1Itt9gWszGPcu6HnK2msiLFXMG/cwPSWzvqcvAb@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgXcmp1HywGQr289Pv1mTavtkWj3rgodthv67FELNB17hfMq0Q
+	u8MfmghAm0nHsTvs9OThR06wB9tl2+CBE37WfXAMpswyijlsyiBIj8YKirCi
+X-Gm-Gg: ASbGncvPVqsLJ5xKOFCuhkTFXah47xt/5Gj1FjoI8bMaUXZkXNGqUFhy3NOnEhAd6sA
+	Sv+s7/kIeumblNCRRIdtwwSO7dzdsiTINhc/6i+hN6Pw+zC5ciImMqcoyOnlE5cbdNV8Q6BK+7E
+	Yk4VC9AAntpUnwzRoIyN7+WqKY7qvW+17PJfBbqAWHVttbP/OewvKCI+f7esmlsXdmd9FPEaC7g
+	Yw++89z1H0K19cQEO24sWRki561ShUGEGescUKcOKcIRH2cv6+sLRJTQhDz0U3LFGGi6X1iHr2b
+	uE0AjxMYqQP/+puqe3vIlIjIibC2h7vCl5zUMprsG5eavegBysuKlWKmHoXOv7d6KhQn
+X-Google-Smtp-Source: AGHT+IG8QZ60apdnKBlKPn/BDfdi4vaLf8ZdXAbLymQpP6LqjEnW5zIiyBSSnWGaGcVdIDzEj1v4Kw==
+X-Received: by 2002:a05:6102:26cd:b0:4bb:dd1c:dcff with SMTP id ada2fe7eead31-4c030fd5013mr1118836137.2.1740652410866;
+        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c0345fc82fsm199790137.1.2025.02.27.02.33.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 02:30:50 -0800 (PST)
-Message-ID: <e71aecb0-9636-42d7-a9fb-2ff9df817cd7@redhat.com>
-Date: Thu, 27 Feb 2025 11:30:48 +0100
+        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52099627b5aso791000e0c.1;
+        Thu, 27 Feb 2025 02:33:30 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUlmQKq94RL7ibpCyZpDX1dC7g/X4RL/KonRvKEPk9jNGGscoOY/JdknYtP3UyuX9XDuVCVHrIpXqACbEgV@vger.kernel.org, AJvYcCVANtr7PKnLKea5/vusQL7DasrUQAJkSpPxMkAQYLNKMTYmW/ME7/VhhBLVaS9Q1bBCP4K26mWku332ToLXpcozYD8=@vger.kernel.org, AJvYcCVWa8NCXGo8A50Dmi74X3HmQCn4oT9Q23/QHd5Be6gEYWHBvBBdqBcfp37yP/nQ1PsjIxko6cBaIypbfqE=@vger.kernel.org, AJvYcCWiz20+v6jRU1HWRooyPE/xlM/TyFivpTC8tbhlugsiQmKoZn3WJ+tuqqGOJhvIwI3/Vq9Z2zTx89Mt@vger.kernel.org
+X-Received: by 2002:a05:6122:2708:b0:521:bb4e:c68d with SMTP id
+ 71dfb90a1353d-523493c558amr1710120e0c.0.1740652409909; Thu, 27 Feb 2025
+ 02:33:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net: ipv6: fix TCP GSO segmentation with NAT
-To: Eric Dumazet <edumazet@google.com>, Felix Fietkau <nbd@nbd.name>
-Cc: netdev@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, "David S. Miller"
- <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- Willem de Bruijn <willemb@google.com>, linux-kernel@vger.kernel.org
-References: <20250224112046.52304-1-nbd@nbd.name>
- <CANn89iLi-NC=4jbNfFW7DELtHS2_JNAHiwRs7GbfZP2E9rGqXA@mail.gmail.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <CANn89iLi-NC=4jbNfFW7DELtHS2_JNAHiwRs7GbfZP2E9rGqXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250226152418.1132337-1-tommaso.merciai.xr@bp.renesas.com> <20250226152418.1132337-2-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250226152418.1132337-2-tommaso.merciai.xr@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 27 Feb 2025 11:33:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUfZSP3BDmKYTBDbKFe=KVR6TtscMQZov4+UDoMXgZwGQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JrvdZJIWK8_MeL2zxoRDqPgCpV_45kQFeRZFTYprQXVZ0-CAVTqL8i0vNI
+Message-ID: <CAMuHMdUfZSP3BDmKYTBDbKFe=KVR6TtscMQZov4+UDoMXgZwGQ@mail.gmail.com>
+Subject: Re: [PATCH v3 01/17] media: dt-bindings: renesas,rzg2l-csi2: Document
+ Renesas RZ/V2H(P) SoC
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, Rob Herring <robh@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2/24/25 2:00 PM, Eric Dumazet wrote:
-> On Mon, Feb 24, 2025 at 12:21 PM Felix Fietkau <nbd@nbd.name> wrote:
->>
->> When updating the source/destination address, the TCP/UDP checksum needs to
->> be updated as well.
->>
->> Fixes: bee88cd5bd83 ("net: add support for segmenting TCP fraglist GSO packets")
->> Signed-off-by: Felix Fietkau <nbd@nbd.name>
->> ---
->>  net/ipv6/tcpv6_offload.c | 20 ++++++++++++++++----
->>  1 file changed, 16 insertions(+), 4 deletions(-)
->>
->> diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
->> index a45bf17cb2a1..5d0fcdbf57a1 100644
->> --- a/net/ipv6/tcpv6_offload.c
->> +++ b/net/ipv6/tcpv6_offload.c
->> @@ -113,24 +113,36 @@ static struct sk_buff *__tcpv6_gso_segment_list_csum(struct sk_buff *segs)
->>         struct sk_buff *seg;
->>         struct tcphdr *th2;
->>         struct ipv6hdr *iph2;
->> +       bool addr_equal;
->>
->>         seg = segs;
->>         th = tcp_hdr(seg);
->>         iph = ipv6_hdr(seg);
->>         th2 = tcp_hdr(seg->next);
->>         iph2 = ipv6_hdr(seg->next);
->> +       addr_equal = ipv6_addr_equal(&iph->saddr, &iph2->saddr) &&
->> +                    ipv6_addr_equal(&iph->daddr, &iph2->daddr);
->>
->>         if (!(*(const u32 *)&th->source ^ *(const u32 *)&th2->source) &&
->> -           ipv6_addr_equal(&iph->saddr, &iph2->saddr) &&
->> -           ipv6_addr_equal(&iph->daddr, &iph2->daddr))
->> +           addr_equal)
->>                 return segs;
->>
->>         while ((seg = seg->next)) {
->>                 th2 = tcp_hdr(seg);
->>                 iph2 = ipv6_hdr(seg);
->>
->> -               iph2->saddr = iph->saddr;
->> -               iph2->daddr = iph->daddr;
->> +               if (!addr_equal) {
->> +                       inet_proto_csum_replace16(&th2->check, seg,
->> +                                                 iph2->saddr.s6_addr32,
->> +                                                 iph->saddr.s6_addr32,
->> +                                                 true);
->> +                       inet_proto_csum_replace16(&th2->check, seg,
->> +                                                 iph2->daddr.s6_addr32,
->> +                                                 iph->daddr.s6_addr32,
->> +                                                 true);
->> +                       iph2->saddr = iph->saddr;
->> +                       iph2->daddr = iph->daddr;
->> +               }
->>                 __tcpv6_gso_segment_csum(seg, &th2->source, th->source);
->>                 __tcpv6_gso_segment_csum(seg, &th2->dest, th->dest);
-> 
-> Good catch !
-> 
-> I note that __tcpv4_gso_segment_csum() does the needed csum changes
-> for both ports and address components.
-> 
-> Have you considered using the same logic for IPv6, to keep
-> __tcpv6_gso_segment_list_csum()
-> and __tcpv4_gso_segment_list_csum() similar ?
+Hi Tommaso,
 
-I agree with Eric, I think we should try to keep ipv4 and ipv6 code and
-behavior similar, where/when it makes sense (like here).
+On Wed, 26 Feb 2025 at 16:25, Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> The MIPI CSI-2 block on the Renesas RZ/V2H(P) SoC is similar to the one
+> found on the Renesas RZ/G2L SoC, with the following differences:
+> - A different D-PHY
+> - Additional registers for the MIPI CSI-2 link
+> - Only two clocks
+>
+> Add a new compatible string, `renesas,r9a09g057-csi2`, for the RZ/V2H(P)
+> SoC.
+>
+> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
 
-@Felix, could you please update the patch accordingly?
+Thanks for your patch!
 
-Thanks,
+> --- a/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
 
-Paolo
+> @@ -48,7 +58,8 @@ properties:
+>    resets:
+>      items:
+>        - description: CRU_PRESETN reset terminal
+> -      - description: CRU_CMN_RSTB reset terminal
+> +      - description:
+> +          CRU_CMN_RSTB reset terminal (all but RZ/V2H(P)) or D-PHY reset (RZ/V2H(P))
 
+According to the flowcharts[1] in the RZ/G2L, RZ/V2L, and RZ/G2UL
+documentation, CPG_RST_CRU.CRU_CMN_RSTB is the D-PHY reset on all of
+them, so I think you can just write "D-PHY reset".
+Or "D-PHY reset (CRU_CMN_RSTB or CRU_n_S_RESETN)"?
+
+[1] Section 35. Camera Data Receiving Unit (CRU)
+    35.3.1 Starting Reception for the MIPI CSI-2 Input
+    35.3.2.2Stopping the D-PHY (MIPI CSI-2 Input)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
