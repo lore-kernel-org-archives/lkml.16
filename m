@@ -1,117 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A804B25742F;
-	Thu, 27 Feb 2025 15:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740670299; cv=none; b=C0CNedWbF3Qx0F+9rAFFK/GY6PTW42FOttz10GtAnW1ssiQOrO/SCFJNM5oIb7KJXcv/8sIsjnTTwICO07NTpE23tsT2l79qxb5N8Z6Pe2CQDCTRyBpRgsz5/qOOq+/hxRJaJWbmHhWQL98R6zwrDudewZyO0RQJ+HEJCDLIUxw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740670299; c=relaxed/simple;
-	bh=Q3lRWLaWxbeTrZTVVmnpz4D86xLuv8RWW2vivnHRv/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=crOk9s2zMuTOVapXxP5EkymKqR4yUOurizjaGGYxRhxxfOJI7ZWYxY7e5aBsC4++vmz52VjI1ha8fY6cSZV0xfWhoG28d9+jShoKJaeBDezHuZaHZ/h9ikzPJ29I1sWaE6vevMR94taI4xL6gZ5qXBoq7iE3npN8Y6WIwN3gsb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CvPZfcZD; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A612222BA;
+	Thu, 27 Feb 2025 15:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740670328; cv=fail; b=TzDhO3ReHdx3nf7ekTXvdMklWDOq3M3zIKdg9PVjzCgkD1LPswY9JIxDPdaoCVFuerGOXnyZeoSioOc1Wa1m6aRwjtzk1q1nnu3ZgE0JlRPvtvyDSv2IOoWcCxsNdCZ7irsucpxA+HjzN89FS2OvIFHR/h+Hk9k+ZKVqoHyL/H4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740670328; c=relaxed/simple;
+	bh=6FMfUgubD8dGtE0bnyXffThAaDwN3noTV4XYFFnGIY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Os8nrt8qRrukU8sbV2yYK3ky1kU9cSMID2DNP8UyeD2upAwuUw0GlM9pG3cF2O7oG9MNVjPp+MzCUbZheOBjcSE9vKrK1+QxCywWVeCWYAWocKNVfJsNSzUkjKX2y1VoDk9GVRFhBdImzRooWE8NnwqDUEkms+E90Xo1NdjAX7Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OkCQuVNk; arc=fail smtp.client-ip=40.107.94.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CvPZfcZD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A045C4CEDD;
-	Thu, 27 Feb 2025 15:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740670299;
-	bh=Q3lRWLaWxbeTrZTVVmnpz4D86xLuv8RWW2vivnHRv/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CvPZfcZDeH+L36p6g94hOMY7MuDA6i3eoVtEoTeLgSFjC/k1mdI/RZ3Kn6ZiWVGAn
-	 EYKNeDkUOdxB11ZadqNYXHk3ILkS3Z8HXPGifSj1zXflDGrdXqetqVK0qcGvDDXam7
-	 vQFYNxBe42hTJLlSFqBVuC5dMKhBAxea3S+P3gkg=
-Date: Thu, 27 Feb 2025 07:30:29 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Simona Vetter <simona.vetter@ffwll.ch>,
-	Zijun Hu <quic_zijuhu@quicinc.com>, linux-usb@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	=?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-Subject: Re: [PATCH v4 0/9] Driver core: Add faux bus devices
-Message-ID: <2025022719-papaya-resample-0b59@gregkh>
-References: <2025021023-sandstorm-precise-9f5d@gregkh>
- <7d196a91-220a-41a5-8577-198b436d8440@bootlin.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OkCQuVNk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qk8QpzXceadSdA7o0cGWhnRaGArfecSppharQRXTHWTxm2dzUdGadpzRUHMYCxBzKVIelMJhnlJoNPWUcoiylYJ1FlTx6iZblwcnf7vlSUujYUBQzPsWs9/YWS6jmyBg/TvCbXK7PVm3JhNwzS66vx9pH3b+SjWTyeU1dkQDTGgBexba78MQWX3wDtJHlg0n2jXMT/laWlOgUYAUyewmiJFG1UXycfokORATebsCTvg+C9n6dHoRQFWyvUQY9S1MWPfH4DU+s8aDc6+MXssTMTyRMheUEas8lU1r7ZRINujJ3DDbQHqJAn7046g6v9bkiKvlnryylidhXMkmG2v8oQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9nMM1yqvMNfokV5I8KePf2SbPLDoME1nwtdBMKk5wmY=;
+ b=PieLisN/NNDvcRDyiaI0R0/ycosfX+9PM0GUooX2Jej/Cu1TBgTGg0N3BeHM2LFsbVWDhQBgTJT+jlXUWCKIAKGoMJK+5sf8FKaFsBItq67GqQb+CPBdwjGWDdMr+4htpEEzqXfJ9Xxy+wMqdo0cdMltugT4PQc+eOxr4lain9RC9foYC67D80Egfju/ZigDhqNVyzib8Z7rhJGaBODomxjluxLNl/kB4cxxN0wj7zD30mwN2ghLpn7hUG8TeVa7sP3O/aCiZL6+bV4kT9HcheT4F3+gyGDx3Sc0aLITzjf1KwIGuqezq5u88e2lcMJCgMoSwdWzAJ//ct/4TtVBzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=suse.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9nMM1yqvMNfokV5I8KePf2SbPLDoME1nwtdBMKk5wmY=;
+ b=OkCQuVNkm0MuUnuVvj4Yk8JjFTohM/i3ISyNWGxjQ1j0uhS4iGmcxa/W2jSS0yW3ROZbo0VZY4SEyHpx5/6yYd4h6BI50WHAva/MwvVfIvkM5U1uNoROrT9dWzrhsKfXT+0HE13aqeTzRQHIJjWAtuTXnF5X6k9qRStzyXe/E/g=
+Received: from MW4PR04CA0041.namprd04.prod.outlook.com (2603:10b6:303:6a::16)
+ by PH7PR12MB8594.namprd12.prod.outlook.com (2603:10b6:510:1b3::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Thu, 27 Feb
+ 2025 15:32:01 +0000
+Received: from SJ1PEPF00001CEB.namprd03.prod.outlook.com
+ (2603:10b6:303:6a:cafe::ee) by MW4PR04CA0041.outlook.office365.com
+ (2603:10b6:303:6a::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.21 via Frontend Transport; Thu,
+ 27 Feb 2025 15:32:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CEB.mail.protection.outlook.com (10.167.242.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Thu, 27 Feb 2025 15:32:01 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Feb
+ 2025 09:31:59 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 27 Feb
+ 2025 09:31:17 -0600
+Received: from [172.31.223.240] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Thu, 27 Feb 2025 09:31:16 -0600
+Message-ID: <8a046a27-c0bc-42ec-accb-17a36135563f@amd.com>
+Date: Thu, 27 Feb 2025 10:19:53 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7d196a91-220a-41a5-8577-198b436d8440@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xen/pciback: Make missing GSI non-fatal
+To: Jan Beulich <jbeulich@suse.com>
+CC: <stable@vger.kernel.org>, <xen-devel@lists.xenproject.org>,
+	<linux-kernel@vger.kernel.org>, Juergen Gross <jgross@suse.com>, "Stefano
+ Stabellini" <sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>, Jiqian Chen <Jiqian.Chen@amd.com>, Huang Rui
+	<ray.huang@amd.com>
+References: <20250226200134.29759-1-jason.andryuk@amd.com>
+ <22a46f43-d60c-465d-9ae7-4d84ca9108d4@suse.com>
+Content-Language: en-US
+From: Jason Andryuk <jason.andryuk@amd.com>
+In-Reply-To: <22a46f43-d60c-465d-9ae7-4d84ca9108d4@suse.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Received-SPF: None (SATLEXMB05.amd.com: jason.andryuk@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEB:EE_|PH7PR12MB8594:EE_
+X-MS-Office365-Filtering-Correlation-Id: 45f243da-50a4-4da6-ce12-08dd5743e15a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QVFwR1ZKNnNUYjVnMXBTTWl5SURHVUhiNTFpM1I3bUQ2MVRWNm56MWgwRnNl?=
+ =?utf-8?B?OTR6ZmpTei9Wd1VkUEU2VWxXcmlFMDAxTVlISEVKMU8zeE9SM0hPeTcvcnNj?=
+ =?utf-8?B?aGF3RGh1Z0xzSFZpOTVSbDIzRWo0S0pGYlUwbVZvQ0VpV1RENVJmbmxsTmJl?=
+ =?utf-8?B?ZmU5MlhJUU1KajNXNzNLZlJwVllJbnlEZ0FCWFlXcGpZUjdXYUVWQ21oMjVV?=
+ =?utf-8?B?VDJMeEtUeEwvdWxNRlp3bHo2T3Z3OHRwamJ1cVJoUjZvTUVmV0k0cTVXQVV1?=
+ =?utf-8?B?cGpycy9hSjZldDFIY0Q5SFlTL2grejhiVFVzd3JlVC9CVUxzbW9Rb3R2OHEw?=
+ =?utf-8?B?eGo5YzhDU2M4Um1JQ2NFQldueldHTWU0ODd2V0hnL2FveS9qYWxqc21Lakk4?=
+ =?utf-8?B?ZU4vODhORHpvbGNRaDJZaWx3OVc3VWVoVk9mTEFSMnFycHdkWitPMXZ2UVVH?=
+ =?utf-8?B?aWJRMHQ3L0Npdjkxd1c0bnpUalp2YVdlU2JMU2RRaUJqT3RKRU1XSFp1YjdY?=
+ =?utf-8?B?SVREdTJUWU90L3dyWUo1N2hoWUVRUHlpMDVhY1RtRmt3QTJzbjhpUzZuQm1L?=
+ =?utf-8?B?L3NpR3NsZzVlT0h1YVFBNFYvTE9xa1ZvSTYwNnNwa3M5cEk1Q0Jab2pmdW80?=
+ =?utf-8?B?VkYyU211QXplbUxuWlFiYWsxQk8vdkxYRFdEN3ZvbmdHcnFhRklWU3hYNXJZ?=
+ =?utf-8?B?RHJvS202MlBiZ1lRLzdDWjFUY2NCdGdtcWFHZG9sR1pHUDc3SXJ6SndFbDVR?=
+ =?utf-8?B?YTRyV0NFaGw3cUVRWXFoRFNESkxub1kwclNnbWhiZE1acUZEVThkSTI5djYr?=
+ =?utf-8?B?OSs5TGUxY1BQQzdqVVR6eHpucFNZVnBZcXRkV0lBSDZob1NWM3JhMzhFNWRx?=
+ =?utf-8?B?bll1TUhRNXNrR0t2OEUwVDRTbGZIUTVCQ3RzMFJBRUZrTG5TWGFnL3pMbExs?=
+ =?utf-8?B?cHZnZ0RVUmQ1bFBsM3A5MFBOeWFCcVpBUGd6OGNoekJXOTFOZW45ZmRjTXhq?=
+ =?utf-8?B?NDE2Y0xqQkZhQU1ZZXlCdUh5blJlWmhSZS9nUE9JbCthaTJwOEViRVZranpq?=
+ =?utf-8?B?MDVTN25LNnFlbm9WczBBSnR4SzlXTHFnR0JqeS8zQkVMWlVZVnVaRDZjTzRJ?=
+ =?utf-8?B?WkV0K280OGhkenh4LzlPOWVvYjBmZGw2MlV2L3Q0RmlPMkJncXh6OGNUcE1B?=
+ =?utf-8?B?U08vUUVTeGc4WW0vSGhFR0tvM2Z1M1BPMnc2QklSTGlRV2JheWkxN0NKMFpP?=
+ =?utf-8?B?NHlrOG1qUzJuclhJaFgvbjU0czNCSzA3RDNnaC9qT3FVd1YwTTZibTBQVmtY?=
+ =?utf-8?B?Nk1Nd21taXdlUWpRZ3dXeHZtYUtHcTk4aVNTdUxYUTVMR0NHMFZWalhJb0tS?=
+ =?utf-8?B?UVpubHJ2NitwQUw4VUlGMlNpYmFVaTlYLzBneDNCRWNXZk4vL21WMEY0RmF2?=
+ =?utf-8?B?d3QzUTlEWEt0S3Y0RkNkaEtTYm01ampuNmFjQXRGTGNhSWE2QnlSUWE3STlk?=
+ =?utf-8?B?RXVOaDNBZFduUDBGdUVTUnVVNC9KNjRCQmZzTDdQWGNvWVp2eEE3c1MwMW54?=
+ =?utf-8?B?MlJyR0pkU3lOQ3FlVVJWUzJDS3hNTWUvSjVud2NwdklwZlZhcDBHZFZ6NmRw?=
+ =?utf-8?B?UGtCN1creWVpaWVFZ3hJeG1sZ2Y0YnhFMFExaW9CKzJNTzh4VGovR1M4TEVm?=
+ =?utf-8?B?RzI5ZGhhUU1nZkdkQ2UzQTJCTC9td1lLUUNXMmZjR2g0Q3N4eEszQkpiaVMy?=
+ =?utf-8?B?Vzc0RzFhaG5QVDB0dkdvOFhjWkY3OXlla2wyMmx1QzVrdUJhRmluOWpIZXIw?=
+ =?utf-8?B?dklaU2xXTzZDUlVuM005UnVPYWsxclZsL1poL2lVOHQwbVA1cmhGbzhvT1o3?=
+ =?utf-8?B?Ty9TbHkzUmZzQzVPWHZ2dG9qT1B2TUFwOTRLWlp4L1UrZ2g4QnBpWlljd1RQ?=
+ =?utf-8?B?R281Z3FxcnlNL2d1YmtWK1VxVlA0WlhnaitwQzhsSGhxMnhxMmVCU2sxMDJ3?=
+ =?utf-8?Q?7X1JIjJexLBvB6jaGRVUciSu6K7tls=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2025 15:32:01.0165
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 45f243da-50a4-4da6-ce12-08dd5743e15a
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CEB.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8594
 
-On Thu, Feb 27, 2025 at 02:06:21PM +0100, Louis Chauvet wrote:
+On 2025-02-27 03:23, Jan Beulich wrote:
+> On 26.02.2025 21:01, Jason Andryuk wrote:
 > 
+>> --- a/drivers/xen/acpi.c
+>> +++ b/drivers/xen/acpi.c
+>> @@ -101,7 +101,7 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>>   
+>>   	pin = dev->pin;
+>>   	if (!pin)
+>> -		return -EINVAL;
+>> +		return -ENOENT;
+>>   
+>>   	entry = acpi_pci_irq_lookup(dev, pin);
+>>   	if (entry) {
 > 
-> Le 10/02/2025 à 13:30, Greg Kroah-Hartman a écrit :
-> > For years/decades now, I've been complaining when I see people use
-> > platform devices for things that are obviously NOT platform devices.
-> > To finally fix this up, here is a "faux bus" that should be used instead
-> > of a platform device for these tiny and "fake" devices that people
-> > create all over the place.
-> > 
-> > The api is even simpler than the normal platform device api, just two
-> > functions, one to create a device and one to remove it.  When a device
-> > is created, if a probe/release callback is offered, they will be called
-> > at the proper time in the device's lifecycle.  When finished with the
-> > device, just destroy it and all should be good.
-> > 
-> > This simple api should also hopefully provide for a simple rust binding
-> > to it given the simple rules and lifecycle of the pointer passed back
-> > from the creation function (i.e. it is alive and valid for as long as
-> > you have not called destroy on it.)
-> > 
-> > I've also converted four different examples of platform device abuse, the
-> > dummy regulator driver, the USB phy code, the x86 microcode dvice, and
-> > the "regulator" device that wifi uses to load the firmware tables, to
-> > use this api.  In all cases, the logic either was identical, or became
-> > simpler, than before, a good sign (side note, a bug was fixed in the usb
-> > phy code that no one ever noticed before).
-> > 
-> > Note, unless there are major objections, I'm leaning toward getting
-> > patch 1 and 2 of this series merged during this -rc cycle so that all of
-> > the individual driver subsystem cleanups can go through those subsystems
-> > as needed, as well as allowing the rust developers to create a binding
-> > and get that merged easier.  Having patch 1 merged on its own isn't
-> > going to cause any changes if no one uses it, so that should be fine.
+> While I can understand this change, ...
 > 
-> Hi all,
+>> @@ -116,7 +116,7 @@ int xen_acpi_get_gsi_info(struct pci_dev *dev,
+>>   		gsi = -1;
+>>   
+>>   	if (gsi < 0)
+>> -		return -EINVAL;
+>> +		return -ENOENT;
+>>   
+>>   	*gsi_out = gsi;
+>>   	*trigger_out = trigger;
 > 
-> I have a maybe dumb question regarding the patches 3..9: do they break the
-> UAPI?
-> 
-> With a platform device, the drivers appear under /sys/bus/platform, but with
-> faux device, they appear under /sys/bus/faux.
-> 
-> I ask because I found out that one (see my reply to [2]) of the main drm
-> library expects to find all the devices under pci, usb, platform, virtio and
-> host1x buses [1], so at least for the vgem and vkms driver, this library
-> will be broken (it will not crash, but previously detected devices will
-> suddenly disappear).
+> ... I'd expect this needs to keep using an error code other than ENOENT.
+> Aiui this path means the device has a pin-based interrupt, just that it's
+> not configured correctly. In which case we'd better not allow the device
+> to be handed to a guest. Unless there's logic in place (somewhere) to
+> make sure it then would get to see a device without pin-based interrupt.
 
-Why does a userspace tool want to walk bus types?  Shouldn't it just be
-iterating over the userspace class type instead?  classes are how
-devices are exposed to userspace, not through a bus.  That way if there
-is a new bus type tomorrow (like this one), code will just keep working.
+This is actually the case that fails for me.
 
-What does the tool actually do in the platform device's directory?
+05:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. 
+RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller (rev 06)
+         Interrupt: pin A routed to IRQ -2147483648
 
-thanks,
+Interrupt Pin is 0x01, and Interrupt Line is 0xff
 
-greg k-h
+I'll have to check the existing code to see what it does.
+
+Also, thanks for catching the commit message typos.
+
+Regards,
+Jason
