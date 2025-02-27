@@ -1,124 +1,78 @@
-Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5971023A9A8
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 14:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 755E423AE79;
+	Thu, 27 Feb 2025 14:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740665009; cv=none; b=I9rsXQ18P3GCvqidOMCAeAzUQ3Hde4bMwONIO+6q13BUIc67g9IlzrKYxvnl56Dk6tAVELSsgytzOvoE3tzcFgebL1Rw4IuSxMxV4AEYphKnjVvxMje1U5O5Tmg7AckenuLd/9jY7MsksQkNmSd+jpZ26qKAZ07A+UEq0o9pwGU=
+	t=1740665009; cv=none; b=KjvFVJTI+lwOHoiTXvJ2YKUX6tCZQCYpGS/xKNdNhtTWKgTn8mQdER37XHFPgxpRwtPiPsakiGfunSTa/Hr+kwOp+hBJJmIK03ukCt0+TPGIZ1KZIYzvgLxVvYaI89UO2B0B47VxHfbTrgvkJY7u31BiH7KckiOkHjZR7yNm5/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740665009; c=relaxed/simple;
-	bh=CpsQ8gPZhCNNexBNxcXW/ScOiO2pyTQCoBkZQKi+y/U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WQm5oI9cfMvykHbv8eiyvUopF4Bkygw5ADODwzDyj1osfq940Fc/VNTVcQVZrp3n7xsevWleuuwPMO4zJei3nYPBsOw0Trmz1Nsr1lrxE5v1iB4VDc/zqG1m3H8TZIZ03Bj3qSkFN7eyHNF0Gm2m7SIIRBkykOioY22oJ9jrtug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PYeN2jNx; arc=none smtp.client-ip=209.85.208.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+	bh=W7j6pUw/4PAZdtwF8PROLode/MZ9q3ImqlsqxtKfh8Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t6xYRJaTaEFeOKFQ5EdKspMuA7LDHhEf5IoRXeGUHS5rdHx1bF4PmpsaF1hiErqisdrPsp7qAJutMpz95iqZiEErtDgmKsb4Oy5H+vCAaOX27dhFWr82sNSKXdFP4kdDQM3EK2BqnZ9BO9ZMKE4E7hni7sKoKgR1ewqk5kI9DJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LVSEiLsb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PYeN2jNx"
-Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5e067bbd3baso886445a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 06:03:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740665005; x=1741269805; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zNcMrV7t1QnfFYP1kD7TtFwTsf7x6jGURXQgshyNxRc=;
-        b=PYeN2jNxq8l7jxLv1/NQgeD6n/gC/eDW0YLYPcw9cUyVZk9hMyoY6G3NZyYKpWgDOS
-         bRkXvb4eg3kLaG/jH87augO/3SW3jWPdpt/a2/JN/CaPy/Cf7dMJyOdJnl8Xhp0odWS0
-         AT4ZB9LBzIb+mqL4N4TVDcw3l5bF8wVCiapHv1Oyo2QknfG7YY7Y/T9c2r9LNDT5G7ge
-         vu+bSFuDlq9ewEsNW+zMIZAaSWtikqKzZgsRbK/LiAuuUldmKxu8z3k7cHX6vV6ybVlj
-         9Td+iuEja3+G9EEhm+PpTWSEilcqGJYQkpOw3xVysOASwKN0bMmDvCyRuhb0tdv8kudz
-         fNEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740665005; x=1741269805;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zNcMrV7t1QnfFYP1kD7TtFwTsf7x6jGURXQgshyNxRc=;
-        b=TBqVck2MuZoiOA6UqhKKIS6hSS5ghCjUAEQkm7l27Tfc9bR1hzsSXmu5rgh66Bjqyd
-         K2jaCs2SElDf9Ji0rPIRIvGEfQgxeyVvvjsR+u9Jrx1X66XIXizZHQ0iqhxBiesRdJH1
-         ei3ElfZ7w5fdTjEeREqnZJvROZohbg0K5mH7QnwiNI6J0EjdFYsHP8rj9XKPJAF0jVum
-         QitPCfwosPG5tDdyvq5wzwb2Kk/jrQWqN2mTVzfF6qGn9vpFUsl8vSmaHyhkvDGdY10K
-         bH9zjr0b7p1U4xjsrh7O9jEqncAIAl8vw3QUMSJEHNELFABwZ7Axnq84/JzTDVBBzsms
-         /3Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ8s2VZDqTNCATp3b10Uj/kpdP9rYJfLSMSG1XU90+Rw0q3vN2CfRyw1rTyhZ/XKz83hGvpjaExTM4anw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAObjYFzpseGFkfJNRBNOpLZrxZuHF03PgKh03Oho0f/8XC2CH
-	kjCAOEv/+gQTHjFbRnTJs29rmovT6ggRjChojQNRAJcUyA+8kyn6UqAmgtjOKtjPRmBfWSEH3ow
-	1RZai+Q==
-X-Google-Smtp-Source: AGHT+IECnDVAUP/qesMVuEzS6Zlg9/xWdmrOeegb9HOJzOIDXshJAI6t0Db6uyA/R2Zo0JsDUzdzaRhPLSfQ
-X-Received: from edbio9.prod.google.com ([2002:a05:6402:2189:b0:5de:61a6:f3b9])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:5508:b0:5dc:cc02:5d25
- with SMTP id 4fb4d7f45d1cf-5e4a0d71d15mr9506998a12.11.1740665005693; Thu, 27
- Feb 2025 06:03:25 -0800 (PST)
-Date: Thu, 27 Feb 2025 15:03:13 +0100
-In-Reply-To: <cover.1740664852.git.dvyukov@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LVSEiLsb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8305AC4CEE7;
+	Thu, 27 Feb 2025 14:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740665008;
+	bh=W7j6pUw/4PAZdtwF8PROLode/MZ9q3ImqlsqxtKfh8Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LVSEiLsbs/01+Ko8YuihPFlFfBCKeYS+Ffr7/ZtkSKwA+jsLWV6M+cFqrByJ9skzx
+	 swzdP6GdWBGXgFSoYjdgU7IG2UKEyEMl+lHdL7sVh2o/1IAtId5UtRsGL7YyZDFPD3
+	 5CazvBHRnQUxIYdsu+fqA+He52UWQYa8OYHa+mEO8dNDFNOMhPKMvPLmxNhfuiZDbv
+	 /klsEjqYxdbeoAAyKZA/wAejyPs3x15TWw6k1HmMpfILVRByed7xncxHMoYRKW9e30
+	 GnJZ4U6LdfQQgecjjI6ZptGecIOLaQ0sW7pmQA9QrCz+V0vfYdMsfJivH/HLNuuave
+	 mUlLsCrmp/Erw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: cec: tda9950: add back i2c dependency
+Date: Thu, 27 Feb 2025 15:02:46 +0100
+Message-Id: <20250227140301.3062217-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1740664852.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <6873fab2d09be6a4254201391872daf0c455b5cd.1740664852.git.dvyukov@google.com>
-Subject: [PATCH v6 2/4] x86/signal: Use write_permissive_pkey_val() helper
-From: Dmitry Vyukov <dvyukov@google.com>
-To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
-	elver@google.com
-Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Use the new switch_to_permissive_pkey_reg() helper instead of the
-custom code. No functional changes intended.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
+drivers/media/cec/i2c/tda9950.c: In function 'tda9950_write_range':
+drivers/media/cec/i2c/tda9950.c:92:15: error: implicit declaration of function 'i2c_transfer' [-Wimplicit-function-declaration]
+   92 |         ret = i2c_transfer(client->adapter, &msg, 1);
+      |               ^~~~~~~~~~~~
+drivers/media/cec/i2c/tda9950.c: In function 'tda9950_probe':
+drivers/media/cec/i2c/tda9950.c:391:14: error: implicit declaration of function 'i2c_check_functionality' [-Wimplicit-function-declaration]
+  391 |         if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+      |              ^~~~~~~~~~~~~~~~~~~~~~~
 
+Fixes: caa6f4a75e9f ("media: cec: move driver for TDA9950 from drm/i2c")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-Changes in v3:
- - restore sig_prepare_pkru with the large comment and
-   make it call the new write_permissive_pkey_val
----
- arch/x86/kernel/signal.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/media/cec/i2c/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/signal.c b/arch/x86/kernel/signal.c
-index 5f441039b5725..27a66a0697dd2 100644
---- a/arch/x86/kernel/signal.c
-+++ b/arch/x86/kernel/signal.c
-@@ -28,6 +28,7 @@
- #include <linux/entry-common.h>
- #include <linux/syscalls.h>
- #include <linux/rseq.h>
-+#include <linux/pkeys.h>
+diff --git a/drivers/media/cec/i2c/Kconfig b/drivers/media/cec/i2c/Kconfig
+index b9d21643eef1..c31abc26f602 100644
+--- a/drivers/media/cec/i2c/Kconfig
++++ b/drivers/media/cec/i2c/Kconfig
+@@ -16,6 +16,7 @@ config CEC_CH7322
  
- #include <asm/processor.h>
- #include <asm/ucontext.h>
-@@ -72,10 +73,7 @@ static inline int is_x32_frame(struct ksignal *ksig)
-  */
- static inline u32 sig_prepare_pkru(void)
- {
--	u32 orig_pkru = read_pkru();
--
--	write_pkru(0);
--	return orig_pkru;
-+	return write_permissive_pkey_val();
- }
- 
- /*
+ config CEC_NXP_TDA9950
+ 	tristate "NXP Semiconductors TDA9950/TDA998X HDMI CEC"
++	depends on I2C
+ 	select CEC_NOTIFIER
+ 	select CEC_CORE
+ 	default DRM_I2C_NXP_TDA998X
 -- 
-2.48.1.658.g4767266eb4-goog
+2.39.5
 
