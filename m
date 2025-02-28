@@ -1,116 +1,82 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DDA1E4A9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 15:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFBE275616;
+	Fri, 28 Feb 2025 15:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740756015; cv=none; b=DHs5w1MuI4x8O4hNKZaX7/vSwMGAeajj5CTkxp5wBHb+kClquNPPaJDvG6qa6ojeMb/vNa4Dgnk0d6ocXzX3T2Sp1JF7PsiCvrcFFfHV6VipcD6tunxrHN4DuCrt/IFqwHVQmxFDjDPCFd4rPWGlTdRCT4aK/meWQf6QxCjLE+U=
+	t=1740756018; cv=none; b=HEOAEGC74ODNpHLVWjAA86CVSwbIogQ/RaX2BF9JR/FzCcGrgzJ1muTVowx/ovzJAIgRH4/B5cn81oOmiQWP/NO3bBz4OvRsehXcMMZZXgdPw3Ny+pzLIehFb9PyMU+knqbFCY21AKe1Mg3zz4qSWoWiOGK5fmjTDNj+LwQAPJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740756015; c=relaxed/simple;
-	bh=Rc20F5r9mpBcN4fiDTVuotzKFMtsdmXBMtwxA1mQV8Y=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LZQnJiDl+wRZB4GRAEiD7QtLpFoSVKspheK7nE+mRmZ2Qg/e8dAS5LNZtMaFBY+cfeUOVXY8oprsLlA61zmBEOYIEKeZiZx4lcZsEhRnD96zIms1YVKI3FvIUYwxHrInaB7xkOGc2DCelpOyL6ZLj2rNSHM9KdMJXhHbcwdrl+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=koRZsvEn; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740756018; c=relaxed/simple;
+	bh=FTlFHu4Ch9a58ygW9hXtWFQaX9Y+dzUSxzWtBGK6kHc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WKF5W3FxnVyDEZYh8P6C6x5SSXhwU+hsa9axD7egMZQhdlpg+8RWxr0LralQjWLzYasiLm9CEwA8Ca+giSDEYcMsyLIoztk8VD21wCYTE2tSACCDXtHHWEZG2hTgqpM2m9xOjY2ShUAJ6MB4SwuKIU+/9j3X9j2HRE98qfSAKGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bJiCRjWH; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koRZsvEn"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fed0f307ccso243425a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:20:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740756013; x=1741360813; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TnRNqc6xf3vLI0d4jgeOR5IoeVfkbwd3YSxybWBJS/c=;
-        b=koRZsvEndcvjudDAuknMqmjMkSN/Pd9FCIPR2f6pEL0yVoN4JAYTK5M3/R+w3E080R
-         2pXZZLKUDLhswk1YAldulQcuvGnRZDfmKI348FyTUszAl8dPRAz7K02bXIFq/ZEgON7f
-         ribTYY2bgVJZ2nAdKaCSo4jkGoiVT5ikx7Y5kdshXZvy6dht/kLn250YfcR2np8xCaEq
-         mcmSxTpDdPA5GIZTrkJRu1/NlVznMCMPcxfWDPvb+DgIPjSHLDal7yUILUiyhMJd622c
-         HBCw8GODkj3P/QNHNMrWo1JskQMsbIt38VAhqmjU07wQEgCj76b7Vjrxpw6O5PmEb7qn
-         H11A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740756013; x=1741360813;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TnRNqc6xf3vLI0d4jgeOR5IoeVfkbwd3YSxybWBJS/c=;
-        b=YOaUqFrxAMrvZ6yVJB5IgVDDqjKS2gT53vbOHIR9r4evsVy7h92714kTt930ulaIPE
-         A9PuZ5xGyzOiOAtQjENkokJKAk1Z9i1lTsfCRVVCpqqHvCjdr2ZoQrwe63i8BzpOFvxG
-         sl/rwqWapJH4z7jWMixC+snN7XLj5wN4fCEH5MsMPYfOlzCAfek/8vB8v+ti8EorB0ns
-         0igxbCU8x0HArb/hnlfq8vFQLPeAWvifzme+do6dXUB2GF5E/dHxp1jXbCZO+tJbe8a3
-         3P7kpN45zbu1mYvK6naAbv2fH4z28xB2XNsQt9ZClm4DqgfZfm9QvCSgjy7SkssfHdhT
-         F6/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVsv4gVNGkK//oyhtrK1+UNV2pRynaePMzOlfQMorFS4fVIx28Z0ogIxQ+vdCx8CKb3zmWaGI17wa12YXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKK73IC6qqKvX4TtFt0CwmnhAIrdehpWUbW8Krq99wdrQ+/1Wo
-	yxzeqS8ao4zQOrm+5NouXKsSpjm/IjOiEM5kpdHsPJ/WunOc/+mrxSbK5zjsTawVxA55xs2TqaL
-	utQ==
-X-Google-Smtp-Source: AGHT+IHxrjbgja5s5/MSwytHiq/fjqNyQDRtL1BTVI/8VvKR2D/IiVsXf3wwlnlVWtXexSDeJlW9StHdjZE=
-X-Received: from pgbcq12.prod.google.com ([2002:a05:6a02:408c:b0:ae2:add4:b424])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:696:b0:1ee:ce0a:532a
- with SMTP id adf61e73a8af0-1f2f4c9460emr6403280637.4.1740756012993; Fri, 28
- Feb 2025 07:20:12 -0800 (PST)
-Date: Fri, 28 Feb 2025 07:20:11 -0800
-In-Reply-To: <d1b46250-793e-41a5-9b65-95ed6312bc4a@intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bJiCRjWH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3989842E77;
+	Fri, 28 Feb 2025 15:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740756013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QZu5jeody6oxpz4x8MYrbb46BHii47kNRlyxqpDsps4=;
+	b=bJiCRjWHZaWuUlBYSiq0+u2M0Z5xY07jCE2o+h06fGeLVT/KsWyS2TADB8ycuM2dmyDtPg
+	7iVkMAmvQgajkEa79ecSw8hdMFuKKJtszx9CAwhN9CDtfHQB7HvuDj8UOOHIfeE6topG6V
+	5gXQWLbEowc+E6BkPkYJwNTf1dvP/a9E7DN6ps6OuVuHPSlVj3Z1Jg6eDj4BMOHqvWo9jm
+	NG1qZs4S42NAKRjv1xSp6yF10nY3SCf7WkJsGsGkq6NqNE5guiUAnIo6/hJ1IOgIDR0hbK
+	W0sKiprwmDsz5kdl13CONymdvpNQnh7qJ+lgce5SGGKa2ArnPXCjh5o5thhGdg==
+From: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Subject: [PATCH 0/2] Describe the cameras in the PinePhone Pro dts
+Date: Fri, 28 Feb 2025 16:19:49 +0100
+Message-Id: <20250228-camera-v1-0-c51869f94e97@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <Z8C3ZcMgHuBtIjFR@gmail.com> <674db309-e206-4bb4-bf99-b3c39bff7973@intel.com>
- <Z8C-xa7WB1kWoxqx@gmail.com> <af4ec757-22fd-4438-91fc-d8778998bf07@intel.com>
- <Z8DE0K2EEDe1dQdh@gmail.com> <4c71fc86-2d70-4d50-b041-d6ef8c1baf4c@intel.com>
- <Z8DLKj8qdLb7MllO@gmail.com> <1fb9325e-4430-4ac8-956f-c5255c9c9971@intel.com>
- <Z8DbEqXaxEB_4wmI@gmail.com> <d1b46250-793e-41a5-9b65-95ed6312bc4a@intel.com>
-Message-ID: <Z8HUK9bliN1sZYdL@google.com>
-Subject: Re: [PATCH RFC v1 02/11] x86/fpu/xstate: Introduce xstate order table
- and accessor macro
-From: Sean Christopherson <seanjc@google.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Ingo Molnar <mingo@kernel.org>, "Chang S. Bae" <chang.seok.bae@intel.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABXUwWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyML3eTE3NSiRF3zRAtLk6TUtMS0RHMloOKCotS0zAqwQdGxtbUAQP/
+ KrlgAAAA=
+X-Change-ID: 20250228-camera-7a894befafa7
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Olivier Benjamin <olivier.benjamin@bootlin.com>, oren@taumoda.com, 
+ Dragan Simic <dsimic@manjaro.org>, Ondrej Jirman <megi@xff.cz>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefqlhhivhhivghruceuvghnjhgrmhhinhcuoeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeevgfduhefhhfekheeileejieehueevkeffieeiteeluddtheelkeffhffhiefgnecuffhomhgrihhnpegtohguvggsvghrghdrohhrghenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgduledvrdduieekrddurddvtdgnpdhmrghilhhfrhhomhepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhin
+ hhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhotghktghhihhpsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepughsihhmihgtsehmrghnjhgrrhhordhorhhgpdhrtghpthhtohepmhgvghhiseigfhhfrdgtii
+X-GND-Sasl: olivier.benjamin@bootlin.com
 
-On Thu, Feb 27, 2025, Dave Hansen wrote:
-> On 2/27/25 13:37, Ingo Molnar wrote:
-> ...
-> >> Like I showed in my earlier example, the CPU enumerates which XSAVE
-> >> features are available. These enumeration bits in CPUID leaf 0xd *ARE*
-> >> set at boot independent of any other enabling or enumeration. In this
-> >> regard, XSAVE enumeration is quite independent of the other parts of the
-> >> ISA. This could, in theory, be changed to become dependent on some kind
-> >> of APX enabling. But that would be novel for an XSAVE feature.
-> > 
-> > Yeah. That would be novel for an XSAVE feature - but so is the change 
-> > in ordering. With my proposal we'd avoid the 
-> > xfeature_noncompact_order[] indirection table AFAICS.
-> 
-> Yeah, so with your proposal, we could toss out most of this series, so
-> roughly 100 lines of code.
-> 
-> The downsides are:
-> 
->  1. It can still confuse userspace, arguably in an architecture
->     violating manner because the SDM says: "If XCR0[4:3] is 11b, the
->     XSAVE feature set can be used to manage MPX state and software can
->     execute Intel MPX instructions." (this would be for userspace)
->    1a. Userspace like GDB still needs code to disambiguate XCR0[3:4]
->  2. It would add complexity in the XSAVE enumeration microcode. CPUID
->     data that comes right out of a ROM today would need to check some
->     CPU enabling state and change the enumeration.
->  3. Linux would still need to go fix up KVM in the kernel, like:
->     https://hansen.beer/~dave/intel/mpxapx.patch . Every APX-enabling
->     VMM would need something similar.
-> 
-> KVM folks, would you have any issues if XCR0[3:4] (the old MPX bits) got
-> used for this new APX feature?
+This series adds support for the Pine64 PinePhone Pro's rear and front
+cameras in Device Tree.
+This is based on some of Ondrej Jirman's patches hosted in his tree at
+https://codeberg.org/megi/linux, but I have also fully reviewed and
+re-written the code from the RK3399 datasheet, the PinePhone Pro
+schematic, and the IMX258-0AQH5 software reference manual.
 
-Yes.  I could live with complexity in KVM code, but I agree 100% with Andrew's
-take:
+I have tested these changes on my PinePhone Pro and am able to take
+photos from both cameras using libcamera's cam.
 
-  : XGETBV(0) & 0x18 in userspace has a very well defined meaning that is
-  : MPX and not "MPX now but something unrelated in the future".
+Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+---
+Olivier Benjamin (2):
+      arm64: dts: PinePhone Pro: describe I2c Bus 1 and IMX258 world camera
+      arm64: dts: PinePhone Pro: describe the OV8858 user camera
 
-The risk of breaking guest kernels and guest userspace is decidedly non-zero.
+ .../boot/dts/rockchip/rk3399-pinephone-pro.dts     | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+---
+-- 
+Olivier Benjamin <olivier.benjamin@bootlin.com>
+
