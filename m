@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE78241CB5;
-	Fri, 28 Feb 2025 08:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865A1242904;
+	Fri, 28 Feb 2025 08:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740730825; cv=none; b=f+nyh9ZzWXXmQIidi+TNM+YcdFX0SrQW/zACwfkD/TQQWoE5u6HriNKWv+S1jIQxvFBgU0wEhMXmU/3wWtGpH7FiITKz0IymEflt7hk5NwhSCz8EIbs+WcWApBPBKOP+y1ywTxZPCuVY+mu7SK9EGwuac+JpcLe+qYd2cUtGiYg=
+	t=1740730830; cv=none; b=bQdvvksLugzYSDzvAQ33upuIB4jxQGdfLZc4TsMMywJfaYmthvUYc6eWxmIwpIfkExm/QQqSUL8RV58R6klsEpybmP7c0M+plqI8PXHoKyBQVZTzhaih52RBO5ziSxPt5s/tB12FTAWROnzUAYrGk1YRaq9x08ktets6YOJhUDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740730825; c=relaxed/simple;
-	bh=07PaF1z2XapagVOUVls3LNjkNVKmOgxjvsYJxQn7wG8=;
+	s=arc-20240116; t=1740730830; c=relaxed/simple;
+	bh=8yTO/llICtnbsknrcvGs4/GhXN3R2fhImtsrIebDg+g=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=J1BR0jzfGuLOGw0CMK9LLlIkrXQdMFe9QcIfcfPUJh9e7lwpsVN+FlumkNcQheJHKYvzMA8W7oyYJxVFGq+95G8tkkzRzX5hSTo4T9XS3LDxyJwka03FNW7pxu4Ym01MvsjZWlLR/aJgHaTuJrKaX5sWJayEOZYMOz3NIHaxhg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEjJXe7L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AeE+FUBcWFXOilxFAQDhSupccVJjPwYJ031SNM56gwKyYyi6UqwDlI8+KR0XzlIDvjY9FXm5tqyGxVvqnps7Po9HFlFcJ28uhtz4ZwsZAuhnwJ/yNyjz+ix0nQFhbSKaxNGEm1gn3blD8U8iTOduamWDKvFFdCUqZUeeqmX9CLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVphZviI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEjJXe7L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D88C4C4CEE4;
-	Fri, 28 Feb 2025 08:20:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVphZviI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33CB0C4CED6;
+	Fri, 28 Feb 2025 08:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740730824;
-	bh=07PaF1z2XapagVOUVls3LNjkNVKmOgxjvsYJxQn7wG8=;
+	s=k20201202; t=1740730830;
+	bh=8yTO/llICtnbsknrcvGs4/GhXN3R2fhImtsrIebDg+g=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=iEjJXe7LbIrkINX5hp0Sgal0JU1zlp0qgi4Kd9CHEWE0Gkk7pcuXRiHXZvYNrsA23
-	 n3trDI8u5ZVZFp0k+U/kBYctkJHaYCk+Bf9BhG61gSxtCYl2GZq3eusrNsonAWqHkX
-	 5R83pyMHwTfHA8BxYDf3A6HR+4t1ohHRctB+QTliOM1+Q4NtwMRG4/zG+BBO5Tn8a8
-	 FAAfhsJt3y11eHAiRfkDJrSjtTnTXQd2ivf1bb99U/vArwQV2qm8tQeLPjPjaqCt8J
-	 rDh1okfNwoGmkQW2KQKz1HpMCs+Y/Q7nmcP9uaeepaBlweEFnf/oeToi8SRZ6Z2z1i
-	 es14H5VYpVKmg==
+	b=JVphZviI2BP21J+rsLbShFP+I+sXr+H4DNDYOwwFPt7phwM3tNOPrSOAMNwnvIOgN
+	 +jaW6MGSpZZLvuj4Ddk4M96WMF24TmYHMHLZpAjKHDf3DiQw5eMcPxQ7MWnG+lPQbk
+	 dWGgjVEjN4xvakGoYyGY/nG8ZIX6HIHVgg1Hojzsi4IT5xt+x0vDYkLjgoxAQrpUUH
+	 tUlcbEgLiJT++KN50RvHszDn7yaIBigkx+1/Pz3E1HApbUqMKdzzINYpP/YetbiG0m
+	 iVNGxufsOUf6aPNJw/v3W/nr76Sh7+qmYo/IIGggTH5dqvTgc/ey+mSd901kx0xkfz
+	 /SSF3jb9/PdQQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Alice Ryhl" <aliceryhl@google.com>
 Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
@@ -43,15 +43,15 @@ Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
  Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
   <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
   <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 4/4] panic_qr: use new #[export] macro
-In-Reply-To: <20250227-export-macro-v1-4-948775fc37aa@google.com> (Alice
-	Ryhl's message of "Thu, 27 Feb 2025 17:02:02 +0000")
+Subject: Re: [PATCH 3/4] print: use new #[export] macro for rust_fmt_argument
+In-Reply-To: <20250227-export-macro-v1-3-948775fc37aa@google.com> (Alice
+	Ryhl's message of "Thu, 27 Feb 2025 17:02:01 +0000")
 References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
-	<4cDCLbcJEQ7swGgJXKHMNNEKJT-zVTUP2Y__b8FvtuRWnKrlLV89Sa3hVF4Xh0t9QzFGm0yZ3f8gaIss-fGNng==@protonmail.internalid>
-	<20250227-export-macro-v1-4-948775fc37aa@google.com>
+	<HPpa1v7Unxin25S5VB3PgIDTgvQzpNQV4MyFqkGDP7w5sHWVmjRpH3OgnbagOSqHHCY9mnBIc3mlkAvEmEP5Kg==@protonmail.internalid>
+	<20250227-export-macro-v1-3-948775fc37aa@google.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Feb 2025 09:19:59 +0100
-Message-ID: <87jz9ao500.fsf@kernel.org>
+Date: Fri, 28 Feb 2025 09:15:09 +0100
+Message-ID: <87plj2o582.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,26 +62,9 @@ Content-Type: text/plain
 
 "Alice Ryhl" <aliceryhl@google.com> writes:
 
-> This validates at compile time that the signatures match what is in the
-> header file. It highlights one annoyance with the compile-time check,
-> which is that it can only be used with functions marked unsafe.
-
-It would indeed be nice if there was a way to mark some functions to be
-emitted as safe by bindgen.
-
->
-> If the function is not unsafe, then this error is emitted:
->
-> error[E0308]: `if` and `else` have incompatible types
->    --> <linux>/drivers/gpu/drm/drm_panic_qr.rs:987:19
->     |
-> 986 | #[export]
->     | --------- expected because of this
-> 987 | pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize) -> usize {
->     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected unsafe fn, found safe fn
->     |
->     = note: expected fn item `unsafe extern "C" fn(_, _) -> _ {kernel::bindings::drm_panic_qr_max_data_size}`
->                found fn item `extern "C" fn(_, _) -> _ {drm_panic_qr_max_data_size}`
+> This moves the rust_fmt_argument function over to use the new #[export]
+> macro, which will verify at compile-time that the function signature
+> matches what is in the header file.
 >
 > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
