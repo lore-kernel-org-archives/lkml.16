@@ -1,126 +1,133 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFDA1EF381;
-	Fri, 28 Feb 2025 16:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C51D13DDB9
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761204; cv=none; b=QIkApe7c5E8bwB6YkPv6OjDoiHHE01quspijq4lHBfKcxLY5sfSBlOffI2TaqKo3P1qk03vbykjeuyU5eCaraFE7hdSLt3TzXQ+kMyydtZ/q+xib8BwCPMWq69H3YZIV/uZsyGSsD96piEtSLZR8hTMTl/pb3vG8zcjDxf3CJCo=
+	t=1740761300; cv=none; b=IC/5Uri/EdiAVVbJO630+dP9frBodxliYUbMAp9XVfZiLLkzVFL7WUwEsfQ9KOZ+mdEuF7oE6wxHlTPQy/TRrGUCtqvc3rYFIefqs+OwznAG57HXwI+QlnTsjgXRna/axiKWDTi9clCfFKHtNeg8+J61b9dJnRE4hIqPktfkSaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761204; c=relaxed/simple;
-	bh=nvUfiWsd8nbrMykoM7e9GFXW4WS769a83atMPxoEsy8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XgPUfYwgX58WfolsSu6KnI2HipVk752FTHPrqC0T8KWqx/T3PTlEyM9w3eTztKqpksR/4NWQEq4+XBmFdi0/VTbEzjQ5ZD9oKq8AtQn0XiAyqacKSWYL6EjJy90In9RIQNyu5kEc/+I390o7Q0Exc5tAnVkzjk+cG1tgfCyEnnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PkJ5DZhP; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740761300; c=relaxed/simple;
+	bh=dAjBL/iEpByIoFF34kzXKhcHRPWC6BvpCQzwDXJnrmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sNmnXEHR5jmZjVWQPPF63/Hs8cjUl8NBUtEN6xKHlsvXx9PsoCGSh3xA8CVgLfGhjZYtVc74BZ9tnZf7Aec4nYuPvCNB2eeQ/3AIid2TRQbXu1h+mSBy9nS3yCsU6Q0WxmgHezHJ4PDawyh/DPNGppS+7JBRfnsH7jH0OfLTRb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R7WuCbA4; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkJ5DZhP"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-390df0138beso1342579f8f.0;
-        Fri, 28 Feb 2025 08:46:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740761201; x=1741366001; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bIuiU4XrhfkhWXOTfdn2ANWaE+TYEkq8GIKO0W429gE=;
-        b=PkJ5DZhPM0ZE3hb9JettQZ09nCGLlSJIwarcCorgv5EBjsxn3XRAMi4v/3HxZyx3ee
-         FkHWo0nOEr/4t7APrGcT1xT1VAsXMe8jIIIcHadrUGCbTedeBNpC/RKMtP1CwuSL4NGr
-         cabXLlaIdXRYLthhT+CjDwUe64MPDY8jG5yRGRh/XltfTpv38OVIcBjUQ2ELJJ8+eFeN
-         anaFtB9pXGbUb8fQE/TVsqPi9dwGjpCWQiGiMfYrVDAeVoaLAhr/eB4XO7Tqkf1gCcqq
-         cjBKiz4K/+05voWSU090HO8xZssLjkFdpblEHfl2e3TKeM/nuAW363z9Pqlyg/mydAPo
-         NI9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740761201; x=1741366001;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bIuiU4XrhfkhWXOTfdn2ANWaE+TYEkq8GIKO0W429gE=;
-        b=G/2MMtMkqnvdM8ungtZFd29wsg8wb4A9Y5eIKTCAoMeNMWB8LOKcLixt6cSU3SFABL
-         pCoH7CD7+oSc6lqkIb5WfN32O0sy7wwqCZZVKkqGYSOAJdjjkCDeF0taut6ITCjkEklW
-         rz5oZpfq3a+B8t0vbRLbQAn+YPnJi5jaIlzOhbiV9wrnHl+2ZeA2aZXmt1Edk7qlWqPE
-         p3GL1UIHSKGRkTBkUMw+LvD/KlLDpBZrwbCJtgMuvmTrbCnT2gTo6PfI8Lld7DzeQT0J
-         H9A2zD+AEllCp3zwU9ZeuPUY+kOydWNgg19yMtDjcpLbEHptYPEkXO9Jku4VbEOZvD0d
-         gPvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxD/4GonmrPVq/gi6RTv7jzJKrYy+QZeWP8FCThi8KcWl4kD3uP7PELHof+cvK6TNRR1kIVXGnuzexkUc=@vger.kernel.org, AJvYcCXIwVbRgbmKp2R9yGSHHLJKBu+EnA959zlcwe228w8V1NOKa3ocAQXxzhJY4gZ20YXs73MhV2t16vOyO34=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8enlLr+U3yXEzhs5TcA6w+bg1zoy8qref87Sg24u6hKpEeKBl
-	G/I92o5HV1hDzNJX20q0Ud6swKP8AvSF6mRsIGr0U+fSLeV4Hfa+
-X-Gm-Gg: ASbGncuqmjisJR3K41bDL4uGHBHLtEKhH/Ebza5iiEvAyUllGeIkyztb0WN+O0PbDW+
-	HGZh+sjZ7drS6SVTF0CeIgb7cs1NEYEXNajoBkPRD+KJT7Yxu5GNuQHB6Vl8xPuoJxP5xNMoe/r
-	Glc0GvHXHNLyLLDPpvoWkZr9VvJ+Ew/intWNdHd34RgeaKce0D5LLXMRwsqQ6qju19fSISe0D1s
-	5rZzNrHA6N78/8mGXeGHhY3KBYvhuPkPQprXjJlzHMR35FaYE0D0dGVBFeXc1VojuXmUnNaCMn3
-	SBpCRPFovIEqvHlonjCNh84GenC6dWEJvYdj/OHoWvgqCjBdJ72PzINgzZi8EBCtKYpfE2FgxpY
-	asFtdoufpuBBq
-X-Google-Smtp-Source: AGHT+IER1+rSFFUu3fp8H0Ep8h3KR4BZHOPdnn2CHy633ABSD7noywrDfjqO6v6gIHCs9lWQwwrr3Q==
-X-Received: by 2002:a05:6000:42c9:b0:38f:43c8:f765 with SMTP id ffacd0b85a97d-390ec7d2e69mr2382920f8f.26.1740761201038;
-        Fri, 28 Feb 2025 08:46:41 -0800 (PST)
-Received: from orome (p200300e41f187700f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f18:7700:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485d785sm5717708f8f.83.2025.02.28.08.46.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 08:46:39 -0800 (PST)
-Date: Fri, 28 Feb 2025 17:46:37 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: linux@treblig.org
-Cc: mperttunen@nvidia.com, linux-tegra@vger.kernel.org, airlied@gmail.com, 
-	simona@ffwll.ch, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpu: host1x: Remove unused host1x_debug_dump_syncpts
-Message-ID: <vukpbuvuyfljqtexnimsrfozt64pfrjc33a4ojb7lht7fke45a@g4afdjrz6u52>
-References: <20241215214750.448209-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R7WuCbA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740761298; x=1772297298;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dAjBL/iEpByIoFF34kzXKhcHRPWC6BvpCQzwDXJnrmo=;
+  b=R7WuCbA4IKYTZ7q2e3E9rNmNL+qaFwvZgXsxUJG38oUE53ZqYa4ZBD9r
+   HmqoCm97QdlngOgtnepIHSsqKXr9BtXnRHo5cwnjNNQ4xe/3GHqhBcMoq
+   WZn3Da65r2KVDd+1XFLbUicvI7QZ21Ky3jdrEvDStdBZwxUjJlBWZMyPB
+   Q16Pd8svVlS2Kbrugp0yag1xdbp4641OGvYllzhW04aK8WlJuZPKUiyor
+   1RlPYVkkZa8tYFfzhsBiXeo3cQT0c5lTt87GBD5B9b3O8gRe66DezBdvU
+   Gch9Fl05SqUnQ5ZQIXPNesWYKLUfRSL+npaoMwFYH2eyanLe+rseuZlpb
+   w==;
+X-CSE-ConnectionGUID: cZ7EhrDIQI+RIqWYyWVT1w==
+X-CSE-MsgGUID: poUYJipUTgibq8VVHr3rcA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="59235378"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="59235378"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 08:48:17 -0800
+X-CSE-ConnectionGUID: ENXyCYhEQQGKdhQgEy7xVg==
+X-CSE-MsgGUID: JOT5dnNFSz2FsTPOoLxFMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="117405683"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.137]) ([10.125.108.137])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 08:48:17 -0800
+Message-ID: <20f1af22-71dc-4d62-9615-03030012222e@intel.com>
+Date: Fri, 28 Feb 2025 08:48:30 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ff7apm55vn4rtl67"
-Content-Disposition: inline
-In-Reply-To: <20241215214750.448209-1-linux@treblig.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -tip] x86/locking/atomic: Use asm_inline for atomic
+ locking insns
+To: Uros Bizjak <ubizjak@gmail.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>
+References: <20250228123825.2729925-1-ubizjak@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250228123825.2729925-1-ubizjak@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 2/28/25 04:35, Uros Bizjak wrote:
+> The code size of the resulting x86_64 defconfig object file increases
+> for 33.264 kbytes, representing 1.2% code size increase:
+> 
+>    text    data     bss     dec     hex filename
+> 27450107        4633332  814148 32897587        1f5fa33 vmlinux-old.o
+> 27483371        4633784  814148 32931303        1f67de7 vmlinux-new.o
 
---ff7apm55vn4rtl67
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] gpu: host1x: Remove unused host1x_debug_dump_syncpts
-MIME-Version: 1.0
+So, first of all, thank you for including some objective measurement of
+the impact if your patches. It's much appreciated.
 
-On Sun, Dec 15, 2024 at 09:47:50PM +0000, linux@treblig.org wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->=20
-> host1x_debug_dump_syncpts() has been unused since
-> commit f0fb260a0cdb ("gpu: host1x: Implement syncpoint wait using DMA
-> fences")
->=20
-> Remove it.
->=20
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  drivers/gpu/host1x/debug.c | 9 ---------
->  drivers/gpu/host1x/debug.h | 1 -
->  2 files changed, 10 deletions(-)
+But I think the patches need to come with a solid theory of why they're
+good. The minimum bar for that, I think, is *some* kind of actual
+real-world performance test. I'm not picky. Just *something* that spends
+a lot of time in the kernel and ideally where a profile points at some
+of the code you're poking here.
 
-Applied to drm-misc-next, thanks.
+I'm seriously not picky: will-it-scale, lmbench, dbench, kernel
+compiles. *ANYTHING*. *ANY* hardware. Run it on your laptop.
 
-Thierry
-
---ff7apm55vn4rtl67
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmfB6G0ACgkQ3SOs138+
-s6EUBBAAgLDSAD8aYvQjGaTHJQTUm8gK7TeixY0nqbT9LFALAgJU1wA3DvmRvfIt
-vzHyaekT29Okc3NKZSu7YOCkn/JjwDDJXEcOphZ4HZG4PLk+SPXYNdqOIFShLdNe
-ikZLlAytLGgoxw7yBNzm/8p1xdLCSREKuXgkYY0q7FyCyRwA3r8iNJZoHTEB4TmY
-nVrE51yJDvZZIOGGA/YUcAcnMEArYlmUm9uZnb2hK8UUOzCWYwllMHS7ZCb1IrQ+
-k8Td/dD/IWowQVu0MEExSj/5hepdf0wn5FB5ooy+FXaJFvn6Nag4E1JtsDuxRZcL
-UiVfP7+RYC2w4DuqRU7bv2K/+ac7twINlGEK/j4qTi3HJ2wFKvaCpCHCV2vGzfpj
-BNDhrEby/eUuJurYZ9ySmE+yhJFcA6Yp0spzaNwa0bzRN4ivyQvaKh7mnQkpxbhg
-WXvEPRnf/F/Y2u2aPstbCjAeQK/DVTNhmSl8j3KIn6LVWm1/dncZvNkUjL2orxdn
-fg1f4sa7pbsV07DunFwCQNNLe6PXSeMyIA2mSbKoSYt2BqCw9sQDFMUbH90qCYiB
-6qblTxCNFyUL4G5GM8pvaKJfTTr0Uik3+wXCFjYE2O4KYuUP3plBzgmpZqnSIdLb
-ysAGN03PV5Dc2y91Fd1xNlYB0VqxK1KN4N5CMKK3oITMSdjR8lQ=
-=cUVd
------END PGP SIGNATURE-----
-
---ff7apm55vn4rtl67--
+But performance patches need to come with performance *numbers*.
