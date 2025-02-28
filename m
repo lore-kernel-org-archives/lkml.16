@@ -1,72 +1,51 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2A3199FBA
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:34:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E9A25F974
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740760474; cv=none; b=B1vViBsi5pUYs+m8h6XnVNp5Zm6ELyc+kbZvxmO5tDpAOhFI1tCWsjS65wo9YED8Rw8hBIwaEPjm2WdgNE0vxnKeDtWhv2qBcHEEmKjm9RJctQsCKT0gUyIxez0r1ENEoTx0+0H9QU2GcxhPDX0SOkPPDCHp9DGHzRA+qRNkmtg=
+	t=1740760569; cv=none; b=I5Nj24pW4ND3sw6M/p4bKohklXktCUH41wa4Tt+WR2f9qkYM0UCz+MRFnVgq+HuD8PFG3YY18V4VBxoPBses0pSjZpof9buDeDDew8DqD/BjFyxICUjlWaEWTutCZ9tjEN/O+PE2SQBvyeHfBryKf2541vcaXf98/ao2s4hc/HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740760474; c=relaxed/simple;
-	bh=cbAmjOkxGzlGB0vnl36OuBNhdg/uCF4jhOBU7jnRtC4=;
+	s=arc-20240116; t=1740760569; c=relaxed/simple;
+	bh=K77CUEtfwG/93Vke5Pk7GR9JF/a9/uvCr7iYeET14t8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSKicnOtRg6VBe1np17sZ757sVsmknAqH67wd9r83KN53JKDJv3bT5Gz1Gj694XgLtbjWsHfVlizPlzY26E9lkyJmsxJQVfLjlrdi5Mb8EhVLu8nO8XF4677XMXgOvUPm3/j5OS51sMun8EJJ/IcwqoUSftltkDj4qNsK+Opejc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PXx3XkDA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=q+52g049uHQ7J3toId5p08JDHqHlaSKhEe3jTsZTmdR9cQpaz1/cVYFjEzhdPIlMe2lmHhjYFbIznfMw4DQZiIetZr/FNb3R4GGgGA0azLsJn8ixWVBcKLxdReEPXW7GvbabF8vT7ZrJjiUmjxTijwfi19Yo+dPDlZpE0ad1/hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ovGoa2vf; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PXx3XkDA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740760470;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YNodNjyB5BMBDPR8Ne5FHZKK2te4oF7OXWhGp5jO3xs=;
-	b=PXx3XkDAdRE3/a90jVEaas8Gc+emgb4+B7vgzxStyFcd07rcrDDl3t+Z5lET6+1ocVWFwq
-	qYb5GC1utJzCfwPLoe8TLYLH+LTFPE5X5TC50xsoBFEGTVuBl5cb4FAF0axDNXJEuIoSt+
-	BqUSrmHBaQ9XU9b0NdLDM54uK9uW0rI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-248-3iXaHjlXNrOzj55e-F4uSA-1; Fri,
- 28 Feb 2025 11:34:26 -0500
-X-MC-Unique: 3iXaHjlXNrOzj55e-F4uSA-1
-X-Mimecast-MFC-AGG-ID: 3iXaHjlXNrOzj55e-F4uSA_1740760464
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E198180087C;
-	Fri, 28 Feb 2025 16:34:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.184])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8495F1944D2A;
-	Fri, 28 Feb 2025 16:34:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 28 Feb 2025 17:33:54 +0100 (CET)
-Date: Fri, 28 Feb 2025 17:33:48 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250228163347.GB17761@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250224142329.GA19016@redhat.com>
- <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
- <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com>
- <20250227211229.GD25639@redhat.com>
- <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
- <20250228143049.GA17761@redhat.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ovGoa2vf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=e9vSoM+7hs95bKdKIg7eM5WyD/pdP0vSTAfr15Di75g=; b=ovGoa2vfaZnp6Y6O28EKx54pAK
+	Zj/UuoQrcat4WFUQ+tUC+KgWadHtP4ZC18yJPvdTuzTmlHPmcV+IIamHGRi35wZLrlmMxkHZgXiUq
+	0tGOjVRGcubtySli2aoHuDuZKHZF4WQwgp3hj2jGW64zkEUpRRsSzlRcwBtTpoXwdvtumS3/9nrt3
+	+jciZIOZboUV35URq/DRdKOR3DPSR7Q91iezreRzK/Xh0syqR/MyrgTbY/QhvmKRUYPNN36vjtXcs
+	rCsYOwzZ4jHojdkQvda83BdHrIkPr7Ka5iiCKd7W8KBVRgpX8WeKKPY248Gq8vl5wB2p1GFd7p8aM
+	T2+J+qGg==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1to3KR-000000033wq-1NiW;
+	Fri, 28 Feb 2025 16:35:16 +0000
+Date: Fri, 28 Feb 2025 16:35:11 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Liu Shixin <liushixin2@huawei.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-mm@kvack.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Barry Song <baohua@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Hugh Dickins <hughd@google.com>,
+	Charan Teja Kalla <quic_charante@quicinc.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/migrate: fix shmem xarray update during migration
+Message-ID: <Z8HlvyKod4pbi6le@casper.infradead.org>
+References: <20250228154219.2214149-1-ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,68 +54,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250228143049.GA17761@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250228154219.2214149-1-ziy@nvidia.com>
 
-And... I know, I know you already hate me ;)
+On Fri, Feb 28, 2025 at 10:42:19AM -0500, Zi Yan wrote:
+> @@ -524,7 +525,11 @@ static int __folio_migrate_mapping(struct address_space *mapping,
+>  			folio_set_swapcache(newfolio);
+>  			newfolio->private = folio_get_private(folio);
+>  		}
+> -		entries = nr;
+> +		/* shmem uses high-order entry */
+> +		if (shmem_mapping(mapping))
 
-but if you have time, could you check if this patch (with or without the
-previous debugging patch) makes any difference? Just to be sure.
+It's be cheaper to check folio_test_anon() here, right?
 
-Oleg.
----
+Also, how did this bug remain unnoticed for almost 4 years?
+Our testing is terrible ;-(
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 4336b8cccf84..524b8845523e 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -445,7 +445,7 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 		return 0;
- 
- 	mutex_lock(&pipe->mutex);
--
-+again:
- 	if (!pipe->readers) {
- 		send_sig(SIGPIPE, current, 0);
- 		ret = -EPIPE;
-@@ -467,20 +467,24 @@ anon_pipe_write(struct kiocb *iocb, struct iov_iter *from)
- 		unsigned int mask = pipe->ring_size - 1;
- 		struct pipe_buffer *buf = &pipe->bufs[(head - 1) & mask];
- 		int offset = buf->offset + buf->len;
-+		int xxx;
- 
- 		if ((buf->flags & PIPE_BUF_FLAG_CAN_MERGE) &&
- 		    offset + chars <= PAGE_SIZE) {
--			ret = pipe_buf_confirm(pipe, buf);
--			if (ret)
-+			xxx = pipe_buf_confirm(pipe, buf);
-+			if (xxx) {
-+				if (!ret) ret = xxx;
- 				goto out;
-+			}
- 
--			ret = copy_page_from_iter(buf->page, offset, chars, from);
--			if (unlikely(ret < chars)) {
--				ret = -EFAULT;
-+			xxx = copy_page_from_iter(buf->page, offset, chars, from);
-+			if (unlikely(xxx < chars)) {
-+				if (!ret) ret = -EFAULT;
- 				goto out;
- 			}
- 
--			buf->len += ret;
-+			ret += xxx;
-+			buf->len += xxx;
- 			if (!iov_iter_count(from))
- 				goto out;
- 		}
-@@ -567,6 +571,7 @@ atomic_inc(&WR_SLEEP);
- 		mutex_lock(&pipe->mutex);
- 		was_empty = pipe_empty(pipe->head, pipe->tail);
- 		wake_next_writer = true;
-+		goto again;
- 	}
- out:
- 	if (pipe_full(pipe->head, pipe->tail, pipe->max_usage))
-
+> +			entries = 1;
+> +		else
+> +			entries = nr;
+>  	} else {
+>  		VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
+>  		entries = 1;
+> -- 
+> 2.47.2
+> 
