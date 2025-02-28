@@ -1,126 +1,180 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A181B25A33F
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA9F2561B7;
+	Fri, 28 Feb 2025 09:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.16.41.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740735350; cv=none; b=DSTw6QApA7JQBC5p/TFE3v0cn7PEXxAEBNO17qaqoFE0HUWPEbKYgXACuCNHgufJISq/YOH/jxkRMAOz1IiGq4ukdRRbWOz/OTyEiNQFufGGle1vN8PEvAqxcEBt9dIa+Tp+WX/zKm2MhSjxMJGV7unn1I8BVncg9HwJPy1GE4k=
+	t=1740735365; cv=none; b=XgY7uy3yo+KT0fgnozbWi0CzoP/xCoWfn6LfbIoOu9gYu+klM5cg64LcXYz807MTtPxlFQyfb0/ZNRu2T/i4VowtOWafTRIcG8iPORUPKK9GqUmzfDbTW7DpIAmUtG9ZlkzHnr1nfhKdL0rzKYFH8Aw8AFAvbvslgwleYofoq2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740735350; c=relaxed/simple;
-	bh=CJd4zI5DEoGnhGt2ovmxIPHzIsuD5CoyttXqlEUs0H4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o4+kYGtZ0ICgFxC+n441ZoNczSMzDlzu0Ky6LEZOjCwU1scWC/8OF48pWb/moWEu+yHaRop93VEBCQhAkGITQ8v5136oMqZAXyrs+CvS4FxPn/s0464Y42OwoRcVWKkbEpD993TwyDvCG93j/GIVOsDRYXSrhfJQgmLnf9ePvY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f4yUptjd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hGDJHir9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f4yUptjd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=hGDJHir9; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f4yUptjd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hGDJHir9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f4yUptjd";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="hGDJHir9"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	s=arc-20240116; t=1740735365; c=relaxed/simple;
+	bh=dvVuHsyaV1YMTJAXpLJmRkJdJcnxyYSL+ei2Hl8HF60=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DSEmoV1dYge/Zblg6a/6SQCU8QQCuS7X+2TmumjdS4+RNbLo/QreWgchg3Txr+oACbCW9tutBL6xkvM2j2K4OtBal5N33Yx0gJZfEFr4eW6pBpW0L/joK368LhvYNfwo0mzZUwY5qOxzEYwQCunD+O7fLfTcT2GawX0gk/i1P+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=195.16.41.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id E0F5E1FA1C;
+	Fri, 28 Feb 2025 12:35:49 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail04.astralinux.ru [10.177.185.109])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C3E8C1F38F;
-	Fri, 28 Feb 2025 09:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740735346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q7oqDkvMYuAbsul1/L1uNlA+Mh9xFj0VGt11HHTnYOY=;
-	b=f4yUptjdk4eucsKeWDR2/PTXIc/ful2h6oiflg6anliq0lu5qe4vVTwUuH9IlCeRwATdvm
-	CTu316uf7hXSrTP6ZHOvgPJJshiPsAYlrRzVqMDH1/JLZBNXj/O1DMh47yQMPvnT2HmTB1
-	KmvR7PuxB7jPkaQo7BbEUVaHI1CG4Z4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740735346;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q7oqDkvMYuAbsul1/L1uNlA+Mh9xFj0VGt11HHTnYOY=;
-	b=hGDJHir9aemVO2fMdr5CoQ5O8cUEeNtUexZcTNrNrd46lfmNBDBv3jRdbpMionbPG5NUxp
-	1G3AL8BOsy3wm0DA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740735346; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q7oqDkvMYuAbsul1/L1uNlA+Mh9xFj0VGt11HHTnYOY=;
-	b=f4yUptjdk4eucsKeWDR2/PTXIc/ful2h6oiflg6anliq0lu5qe4vVTwUuH9IlCeRwATdvm
-	CTu316uf7hXSrTP6ZHOvgPJJshiPsAYlrRzVqMDH1/JLZBNXj/O1DMh47yQMPvnT2HmTB1
-	KmvR7PuxB7jPkaQo7BbEUVaHI1CG4Z4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740735346;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q7oqDkvMYuAbsul1/L1uNlA+Mh9xFj0VGt11HHTnYOY=;
-	b=hGDJHir9aemVO2fMdr5CoQ5O8cUEeNtUexZcTNrNrd46lfmNBDBv3jRdbpMionbPG5NUxp
-	1G3AL8BOsy3wm0DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 912F21344A;
-	Fri, 28 Feb 2025 09:35:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id jx3tIXKDwWeoUAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Fri, 28 Feb 2025 09:35:46 +0000
-Date: Fri, 28 Feb 2025 10:35:46 +0100
-Message-ID: <87cyf2csy5.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Charles Han <hanchunchao@inspur.com>
-Cc: <perex@perex.cz>,
-	<tiwai@suse.com>,
-	<linux-sound@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] ALSA: seq: seq_oss_event: fix inconsistent indenting warning in note_on_event()
-In-Reply-To: <20250228033427.7056-1-hanchunchao@inspur.com>
-References: <20250227092441.19044-1-hanchunchao@inspur.com>
-	<20250228033427.7056-1-hanchunchao@inspur.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Fri, 28 Feb 2025 12:35:48 +0300 (MSK)
+Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.20.117])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Z433j4lgKzkWxV;
+	Fri, 28 Feb 2025 12:35:45 +0300 (MSK)
+From: Alexey Panov <apanov@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexey Panov <apanov@astralinux.ru>,
+	Jiri Pirko <jiri@resnulli.us>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+3c47b5843403a45aef57@syzkaller.appspotmail.com,
+	Octavian Purdila <tavip@google.com>,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCH 5.10/5.15] team: prevent adding a device which is already a team device lower
+Date: Fri, 28 Feb 2025 12:35:04 +0300
+Message-Id: <20250228093504.31062-1-apanov@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/02/28 06:59:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: apanov@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_one_url}, {Tracking_uf_ne_domains}, {Tracking_internal2}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;syzkaller.appspot.com:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191369 [Feb 28 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/28 06:44:00 #27492638
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/02/28 07:00:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-On Fri, 28 Feb 2025 04:34:27 +0100,
-Charles Han wrote:
-> 
-> Fix below inconsistent indenting smatch warning.
-> smatch warnings:
-> sound/core/seq/oss/seq_oss_event.c:297 note_on_event() warn: inconsistent indenting
-> 
-> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+From: Octavian Purdila <tavip@google.com>
 
-Thanks, applied.
+commit 3fff5da4ca2164bb4d0f1e6cd33f6eb8a0e73e50 upstream.
 
+Prevent adding a device which is already a team device lower,
+e.g. adding veth0 if vlan1 was already added and veth0 is a lower of
+vlan1.
 
-Takashi
+This is not useful in practice and can lead to recursive locking:
+
+$ ip link add veth0 type veth peer name veth1
+$ ip link set veth0 up
+$ ip link set veth1 up
+$ ip link add link veth0 name veth0.1 type vlan protocol 802.1Q id 1
+$ ip link add team0 type team
+$ ip link set veth0.1 down
+$ ip link set veth0.1 master team0
+team0: Port device veth0.1 added
+$ ip link set veth0 down
+$ ip link set veth0 master team0
+
+============================================
+WARNING: possible recursive locking detected
+6.13.0-rc2-virtme-00441-ga14a429069bb #46 Not tainted
+--------------------------------------------
+ip/7684 is trying to acquire lock:
+ffff888016848e00 (team->team_lock_key){+.+.}-{4:4}, at: team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+
+but task is already holding lock:
+ffff888016848e00 (team->team_lock_key){+.+.}-{4:4}, at: team_add_slave (drivers/net/team/team_core.c:1147 drivers/net/team/team_core.c:1977)
+
+other info that might help us debug this:
+Possible unsafe locking scenario:
+
+CPU0
+----
+lock(team->team_lock_key);
+lock(team->team_lock_key);
+
+*** DEADLOCK ***
+
+May be due to missing lock nesting notation
+
+2 locks held by ip/7684:
+
+stack backtrace:
+CPU: 3 UID: 0 PID: 7684 Comm: ip Not tainted 6.13.0-rc2-virtme-00441-ga14a429069bb #46
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+Call Trace:
+<TASK>
+dump_stack_lvl (lib/dump_stack.c:122)
+print_deadlock_bug.cold (kernel/locking/lockdep.c:3040)
+__lock_acquire (kernel/locking/lockdep.c:3893 kernel/locking/lockdep.c:5226)
+? netlink_broadcast_filtered (net/netlink/af_netlink.c:1548)
+lock_acquire.part.0 (kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5851)
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+? trace_lock_acquire (./include/trace/events/lock.h:24 (discriminator 2))
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+? lock_acquire (kernel/locking/lockdep.c:5822)
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+__mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:735)
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+? fib_sync_up (net/ipv4/fib_semantics.c:2167)
+? team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+team_device_event (drivers/net/team/team_core.c:2928 drivers/net/team/team_core.c:2951 drivers/net/team/team_core.c:2973)
+notifier_call_chain (kernel/notifier.c:85)
+call_netdevice_notifiers_info (net/core/dev.c:1996)
+__dev_notify_flags (net/core/dev.c:8993)
+? __dev_change_flags (net/core/dev.c:8975)
+dev_change_flags (net/core/dev.c:9027)
+vlan_device_event (net/8021q/vlan.c:85 net/8021q/vlan.c:470)
+? br_device_event (net/bridge/br.c:143)
+notifier_call_chain (kernel/notifier.c:85)
+call_netdevice_notifiers_info (net/core/dev.c:1996)
+dev_open (net/core/dev.c:1519 net/core/dev.c:1505)
+team_add_slave (drivers/net/team/team_core.c:1219 drivers/net/team/team_core.c:1977)
+? __pfx_team_add_slave (drivers/net/team/team_core.c:1972)
+do_set_master (net/core/rtnetlink.c:2917)
+do_setlink.isra.0 (net/core/rtnetlink.c:3117)
+
+Reported-by: syzbot+3c47b5843403a45aef57@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=3c47b5843403a45aef57
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Signed-off-by: Octavian Purdila <tavip@google.com>
+Reviewed-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[Alexey: fixed path from team_core.c to team.c to resolve merge conflict]
+Signed-off-by: Alexey Panov <apanov@astralinux.ru>
+---
+ drivers/net/team/team.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index 5e5af71a85ac..015151cd2222 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1166,6 +1166,13 @@ static int team_port_add(struct team *team, struct net_device *port_dev,
+ 		return -EBUSY;
+ 	}
+ 
++	if (netdev_has_upper_dev(port_dev, dev)) {
++		NL_SET_ERR_MSG(extack, "Device is already a lower device of the team interface");
++		netdev_err(dev, "Device %s is already a lower device of the team interface\n",
++			   portname);
++		return -EBUSY;
++	}
++
+ 	if (port_dev->features & NETIF_F_VLAN_CHALLENGED &&
+ 	    vlan_uses_dev(dev)) {
+ 		NL_SET_ERR_MSG(extack, "Device is VLAN challenged and team device has VLAN set up");
+-- 
+2.30.2
+
