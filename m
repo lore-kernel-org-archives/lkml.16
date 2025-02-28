@@ -1,238 +1,201 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466DE1F098C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B191F0985;
+	Fri, 28 Feb 2025 16:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761911; cv=none; b=ChsmF055ruwlwKJ53ID3HQvH1NvqPljAEkOOJf2QYwUAjCeBSlgNtMwcD7ilPp97mKclRMP1xwXuvJWsfmt3UDusqPuMUktFYiLZtZW306OZRcmqZSevKS+6BR8qxbfZEZntZbjVH23MKqBKRlD0iZ2JoQfsX+/aaDUFUJwM3P8=
+	t=1740761959; cv=none; b=cFrIGO7pV2s+ywy8W1hM9QzcH32I6+KFilMXtAcs6XOz1mCx6tX6r3mYstM8x8gP5UUjJwFS52I2ImHsNVHnNfHV/dsnnwl2LRQnWeR4U3Cl0bb4MGLK/fc8w9vZaw5fcNmzlH+xcczDm7gOC3vn28YJLgVv2D6rdVDYkEd2mrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761911; c=relaxed/simple;
-	bh=ExsCRg/AcfJi1acUUSoTLuOINbjZxO1hU6fyBGtOGas=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gJDz+ZL5S84lW+KroCtIjAafjxjC+WwwXLvi2zH1NinRVHU+3E9zR0M9LMRbS/ITWzPrca01gU/aFoakMHvMjm+OlLd8ZNdA6o4aOZh8Kn+6wYFaxjOmpLp7jagpdpamY+V8Sq0B7ySOB0qPKg6nk2pCPuhVrk1hqkgXgqkKkto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=HQEh5p1H; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740761959; c=relaxed/simple;
+	bh=qOHi6yDNAQDvAh2OBX2mIKesEC+zW55DOff8GRvWCg4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UAKFnDp0JBQhltA2lhNf/7rA7ZCqg5LxzfsLhjQPMoV45LSw9LvfqcMkMmi+n1Zpxh6nJQ0xSWD5NO/0ozR15+9cWa8B3j0dhzW5fWEnDvLkQynIQ09syj4i3wfL695E1FLXaOxtPKgbPcQj7KFBGmMw4bbdTl7N07JbSxty9zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vFBe+ny5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="HQEh5p1H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=0i2sTYLPGHibBms0uchTwR68AShtJdYq//ouv+fA2Lg=; b=HQEh5p1HbF2PwWVwJ9HBhI7+bg
-	vDrDF2JdFSysvP1uUGq/yE7IX9BOPjpxrOc5Zw01Q4Cox+vWuGtSh/DWpBo3Xlfp6HnsBHhOCYerW
-	A1vq4RDpVH/wsuHg72QdqZGYKx74xqASH9/zBaOsTN71D47MGgXj7V+2cxWMdc2b/6owIittUQtdR
-	tHQ/4bPWK/PgKkqIUKd19KQx7IJf/C2A3O7/3pZSCoJCRPKh+cLtQQ/cEzZQsLLrRw639Z972yPF+
-	QEPJueAVXZxC84lJRMOl0WUK7IK0qC6r4if/vbALod0yhwz7W7Ciq96KdlNGndsZQCpiAVNi2ysz9
-	i4RmKawQ==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1to3gh-00029i-NH; Fri, 28 Feb 2025 17:58:11 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	quentin.schulz@cherry.de,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH 2/2] drm/rockchip: lvds: Hide scary error messages on probe deferral
-Date: Fri, 28 Feb 2025 17:57:55 +0100
-Message-ID: <20250228165755.405138-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250228165755.405138-1-heiko@sntech.de>
-References: <20250228165755.405138-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vFBe+ny5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C26C4AF09;
+	Fri, 28 Feb 2025 16:59:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740761959;
+	bh=qOHi6yDNAQDvAh2OBX2mIKesEC+zW55DOff8GRvWCg4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=vFBe+ny5ptgIJQELJvKn89Ugx6KnDBOPhrEyrHfs9HOSDBZmlcgBgRmR71kqGtjKh
+	 C07djVodfYSYAFVJohZHLtJ9TTRuLy73cKn/oH8BDx4ijxHqwG1kkXJezGYbRng3sO
+	 3Faq7MPtuOx/6wnxpz/qeU6iyXGfwzIDnocx6SSD+glc4fqgGxKRrUM/6tzvKBQLi3
+	 ZW7jlkzsXb0DzGui4K8kVnGAma3uyL+EYw+rMqJTx5fBAeEPvlkhBWYFPSuDpBknTo
+	 gAd84rrjtYkjXLzGyQn+0KeR2CTjhxbvKGqf9ZVn3f0uqRDKmW1ZWZfGKHwAmx14Q8
+	 tm0y+QiIM/qgA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab744d5e567so401802266b.1;
+        Fri, 28 Feb 2025 08:59:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUiPt4vx06mZWsAhCStvF8pbrgtPgYbEg660HxAcPLoPwCWi1jtOEh3+NPVtK8Lutcpop/JUypEfmGgidIs@vger.kernel.org, AJvYcCUnwR6kQhWPu2peVFNvUyvby9oXwm7jfc826G0hTLwtlL/E/ON2Qy9LMzF/T5vnIfP/k4YJX37sJtLR8Q==@vger.kernel.org, AJvYcCV/8GR2w28vod9Ujkvtk08nQxVRycg533eVno+FT2NzRZcl6IErDLrbmKMhcRnIGY3pLZT8hyguZBFY@vger.kernel.org, AJvYcCV/L9Ygw78jzoTnijOe9w73txxY4jyW/Rd04zXAoB2X4TB4DPpJptXyPdh1wyMVeQUuOjlURyt/IuWv@vger.kernel.org, AJvYcCXSSFgRimCbDB7h6OUL8sJYblQpAyZSF1wkVzWGNQJko9Ww5RQqcrV7goNXhTy8k5k4ChmGDmZ5FqGScVnxSvY1aUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhTmzwnRLF+PyFBrpJW69XrGgpQY8bThCtfwhDgkYg7FpCqmXv
+	yYwlYawrsqkBDklP6pKn/kTLCpm6sK3Vrg657ML0loW7ZPqi1bKijYin79rNpYdd4eNRL7c0LGt
+	2d6rW80I7nntzpuNu/a6667Vsxg==
+X-Google-Smtp-Source: AGHT+IHA0zPRZLteCxoYig/yVyHsZYfuDj8GOG99a9h83rXOpmBqH7x7Q6QAw1T0TGyfEJFB+8YgmxVupI+GLspZlUw=
+X-Received: by 2002:a17:907:7212:b0:ab2:f6e5:3f1 with SMTP id
+ a640c23a62f3a-abf26430310mr376479566b.8.1740761957482; Fri, 28 Feb 2025
+ 08:59:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
+ <Z72QAOA9xXbP16K-@kuha.fi.intel.com> <Z72Zp8tpnvlFGdQ_@smile.fi.intel.com>
+ <ad39b453-7e5b-49bd-a4fd-6a4988636130@gmail.com> <Z72d7TzZ21WITW3f@smile.fi.intel.com>
+ <893a3c45-537e-47ad-afbd-1e5d3b9abe2c@gmail.com> <Z73M3Ua6u1FpgBEK@smile.fi.intel.com>
+ <720f9c69-ca1f-45cb-9f6e-c8e4703c9aad@gmail.com> <Z78g_uiXumn4mvET@smile.fi.intel.com>
+ <d7982b76-3da7-47ff-b2b2-f964610af1f7@gmail.com> <Z8B7h4_IWz43gFhO@smile.fi.intel.com>
+ <c9424f3e-1ff0-4c01-823a-19801cc3e7a7@gmail.com>
+In-Reply-To: <c9424f3e-1ff0-4c01-823a-19801cc3e7a7@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 28 Feb 2025 10:59:06 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+tkXAAVK2D_AtENuXJZOF2eK=sUnjv3=7PM8nAyAB7Xw@mail.gmail.com>
+X-Gm-Features: AQ5f1JoN6diiX-hK5SeGqaOY2e_sxsMHOrauD5SGgB18pP2IXFo3RXN1kEkkKSk
+Message-ID: <CAL_Jsq+tkXAAVK2D_AtENuXJZOF2eK=sUnjv3=7PM8nAyAB7Xw@mail.gmail.com>
+Subject: Re: [PATCH v4 02/10] property: Add device_get_child_node_count_named()
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Scally <djrscally@gmail.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, 
+	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, 
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Guillaume Stols <gstols@baylibre.com>, 
+	Olivier Moysan <olivier.moysan@foss.st.com>, Dumitru Ceclan <mitrutzceclan@gmail.com>, 
+	Trevor Gamblin <tgamblin@baylibre.com>, Matteo Martelli <matteomartelli3@gmail.com>, 
+	Alisa-Dariana Roman <alisadariana@gmail.com>, 
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-acpi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+On Thu, Feb 27, 2025 at 9:06=E2=80=AFAM Matti Vaittinen
+<mazziesaccount@gmail.com> wrote:
+>
+> On 27/02/2025 16:49, Andy Shevchenko wrote:
+> > On Thu, Feb 27, 2025 at 10:01:49AM +0200, Matti Vaittinen wrote:
+> >> On 26/02/2025 16:11, Andy Shevchenko wrote:
+> >>> On Wed, Feb 26, 2025 at 04:04:02PM +0200, Matti Vaittinen wrote:
+> >>>> On 25/02/2025 15:59, Andy Shevchenko wrote:
+> >>>>> On Tue, Feb 25, 2025 at 03:29:17PM +0200, Matti Vaittinen wrote:
+> >>>>>> On 25/02/2025 12:39, Andy Shevchenko wrote:
+> >>>>>>> On Tue, Feb 25, 2025 at 12:29:31PM +0200, Matti Vaittinen wrote:
+> >>>>>>>> On 25/02/2025 12:21, Andy Shevchenko wrote:
+> >>>>>>>>> On Tue, Feb 25, 2025 at 11:40:16AM +0200, Heikki Krogerus wrote=
+:
+> >
+> > ...
+> >
+> >>>>>>>>>>
+> >>>>>>>>>> I did not check how many users are you proposing for this, but=
+ if
+> >>>>>>>>>> there's only one, then IMO this should not be a global functio=
+n yet.
+> >>>>>>>>>> It just feels to special case to me. But let's see what the ot=
+hers
+> >>>>>>>>>> think.
+> >>>>>>>>>
+> >>>>>>>>> The problem is that if somebody hides it, we might potentially =
+see
+> >>>>>>>>> a duplication in the future. So I _slightly_ prefer to publish =
+and
+> >>>>>>>>> then drop that after a few cycles if no users appear.
+> >>>>>>>>
+> >>>>>>>> After taking a very quick grep I spotted one other existing plac=
+e where we
+> >>>>>>>> might be able to do direct conversion to use this function.
+> >>>>>>>>
+> >>>>>>>> drivers/net/ethernet/freescale/gianfar.c
+> >>>>>>>>
+> >>>>>>>> That'd be 2 users.
+> >>>>>>>
+> >>>>>>> I haven't checked myself, I believe your judgement,
+> >>>>>>
+> >>>>>> I took a better look and you obviously shouldn't believe :) The gi=
+anfar used
+> >>>>>> of_node instead of the fwnode. So, it'd be a single caller at star=
+ters.
+> >>>>>
+> >>>>> ...which is the same as dev_of_node(), which means that you can use=
+ your
+> >>>>> function there.
+> >>>>
+> >>>> I'm unsure what you mean. The proposed function
+> >>>> device_get_child_node_count_named() takes device pointer. I don't se=
+e how
+> >>>> dev_of_node() helps converting node to device?
+> >>>
+> >>> dev_of_node() takes the device pointer and dev_fwnode() takes that as=
+ well,
+> >>> it means that there is no difference which one to use OF-centric or f=
+wnode
+> >>
+> >> The proposed device_get_child_node_count_named() takes a device pointe=
+r. I
+> >> don't see how dev_of_node() helps if there is just of_node and no devi=
+ce
+> >> pointer available in the calling code.
+> >
+> > ???
+> >
+> > The loops are working on
+> >
+> >       struct device_node *np =3D pdev->dev.np;
+> >
+> > which is the equivalent to
+> >
+> >       struct device_node *np =3D dev_of_node(&pdev->dev);
+> >
+> > which takes device pointer.
+> >
+> >> (Well, as I wrote below, I could
+> >> alter the gianfar code by dropping the gfar_of_group_count(), so that =
+I have
+> >> the device pointer in caller). Anyways, I don't see how dev_of_node() =
+should
+> >> help unless you're proposing I add a of_get_child_node_count_named() o=
+r
+> >> somesuch - which I don't think makes sense.
+> >
+> > Are you forbidding yourself to change the function prototype to take a =
+device
+> > pointer instead of device_node one? :-)
+> >
+>
+> This is our point of misunderstanding. As I wrote, and as you can see
+> from the prototype, the function _is_ taking the device pointer. Hence I
+> didn't understand how dev_of_node() should help us.
+>
+> >>> API in this particular case. Just make sure that the function (and th=
+ere
+> >>> is also a second loop AFAICS) takes struct device *dev instead of str=
+uct
+> >>> device_node *np as a parameter.
+> >>
+> >> I think I lost the track here :)
+> >
+> > Make gfar_of_group_count() to take device pointer. As simple as that.
+>
+> that'd just make the gfar_of_group_count() a wrapper of the
+> of_get_child_node_count_named(). I prefer killing whole
+> gfar_of_group_count().
 
-Commit 52d11c863ac9 ("drm/rockchip: lvds: do not print scary message when
-probing defer") already started hiding scary messages that are not relevant
-if the requested supply just returned EPROBE_DEFER, but there are more
-possible sources - like the phy.
+Sigh. This is not that hard.
 
-So modernize the whole logging in the probe path by replacing the
-remaining deprecated DRM_DEV_ERROR with appropriate dev_err(_probe)
-and drm_err calls.
+- unsigned int num_grps =3D gfar_of_group_count(np);
++ unsigned int num_grps =3D
+device_get_child_node_count_named(&ofdev->dev, "queue-groups");
 
-The distinction here is that all messages talking about mishaps of the
-lvds element use dev_err(_probe) while messages caused by interaction
-with the main Rockchip drm-device use drm_err.
+And remove gfar_of_group_count() of course.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
- drivers/gpu/drm/rockchip/rockchip_lvds.c | 59 +++++++++++-------------
- 1 file changed, 26 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_lvds.c b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-index c19b7b1f6cb5..2b5101a764c8 100644
---- a/drivers/gpu/drm/rockchip/rockchip_lvds.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_lvds.c
-@@ -453,10 +453,9 @@ static int rk3288_lvds_probe(struct platform_device *pdev,
- 		return PTR_ERR(lvds->regs);
- 
- 	lvds->pclk = devm_clk_get_prepared(lvds->dev, "pclk_lvds");
--	if (IS_ERR(lvds->pclk)) {
--		DRM_DEV_ERROR(lvds->dev, "could not get pclk_lvds\n");
--		return PTR_ERR(lvds->pclk);
--	}
-+	if (IS_ERR(lvds->pclk))
-+		return dev_err_probe(lvds->dev, PTR_ERR(lvds->pclk),
-+				     "could not get pclk_lvds\n");
- 
- 	lvds->pins = devm_kzalloc(lvds->dev, sizeof(*lvds->pins),
- 				  GFP_KERNEL);
-@@ -465,14 +464,14 @@ static int rk3288_lvds_probe(struct platform_device *pdev,
- 
- 	lvds->pins->p = devm_pinctrl_get(lvds->dev);
- 	if (IS_ERR(lvds->pins->p)) {
--		DRM_DEV_ERROR(lvds->dev, "no pinctrl handle\n");
-+		dev_err(lvds->dev, "no pinctrl handle\n");
- 		devm_kfree(lvds->dev, lvds->pins);
- 		lvds->pins = NULL;
- 	} else {
- 		lvds->pins->default_state =
- 			pinctrl_lookup_state(lvds->pins->p, "lcdc");
- 		if (IS_ERR(lvds->pins->default_state)) {
--			DRM_DEV_ERROR(lvds->dev, "no default pinctrl state\n");
-+			dev_err(lvds->dev, "no default pinctrl state\n");
- 			devm_kfree(lvds->dev, lvds->pins);
- 			lvds->pins = NULL;
- 		}
-@@ -547,11 +546,10 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	lvds->drm_dev = drm_dev;
- 	port = of_graph_get_port_by_id(dev->of_node, 1);
--	if (!port) {
--		DRM_DEV_ERROR(dev,
--			      "can't found port point, please init lvds panel port!\n");
--		return -EINVAL;
--	}
-+	if (!port)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "can't found port point, please init lvds panel port!\n");
-+
- 	for_each_child_of_node(port, endpoint) {
- 		child_count++;
- 		of_property_read_u32(endpoint, "reg", &endpoint_id);
-@@ -563,7 +561,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		}
- 	}
- 	if (!child_count) {
--		DRM_DEV_ERROR(dev, "lvds port does not have any children\n");
-+		dev_err(dev, "lvds port does not have any children\n");
- 		ret = -EINVAL;
- 		goto err_put_port;
- 	} else if (ret) {
-@@ -581,7 +579,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		lvds->output = rockchip_lvds_name_to_output(name);
- 
- 	if (lvds->output < 0) {
--		DRM_DEV_ERROR(dev, "invalid output type [%s]\n", name);
-+		dev_err(dev, "invalid output type [%s]\n", name);
- 		ret = lvds->output;
- 		goto err_put_remote;
- 	}
-@@ -593,7 +591,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 		lvds->format = rockchip_lvds_name_to_format(name);
- 
- 	if (lvds->format < 0) {
--		DRM_DEV_ERROR(dev, "invalid data-mapping format [%s]\n", name);
-+		dev_err(dev, "invalid data-mapping format [%s]\n", name);
- 		ret = lvds->format;
- 		goto err_put_remote;
- 	}
-@@ -604,8 +602,8 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	ret = drm_simple_encoder_init(drm_dev, encoder, DRM_MODE_ENCODER_LVDS);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(drm_dev->dev,
--			      "failed to initialize encoder: %d\n", ret);
-+		drm_err(drm_dev,
-+			"failed to initialize encoder: %d\n", ret);
- 		goto err_put_remote;
- 	}
- 
-@@ -618,8 +616,8 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 					 &rockchip_lvds_connector_funcs,
- 					 DRM_MODE_CONNECTOR_LVDS);
- 		if (ret < 0) {
--			DRM_DEV_ERROR(drm_dev->dev,
--				      "failed to initialize connector: %d\n", ret);
-+			drm_err(drm_dev,
-+				"failed to initialize connector: %d\n", ret);
- 			goto err_free_encoder;
- 		}
- 
-@@ -633,9 +631,9 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 		connector = drm_bridge_connector_init(lvds->drm_dev, encoder);
- 		if (IS_ERR(connector)) {
--			DRM_DEV_ERROR(drm_dev->dev,
--				      "failed to initialize bridge connector: %pe\n",
--				      connector);
-+			drm_err(drm_dev,
-+				"failed to initialize bridge connector: %pe\n",
-+				connector);
- 			ret = PTR_ERR(connector);
- 			goto err_free_encoder;
- 		}
-@@ -643,8 +641,7 @@ static int rockchip_lvds_bind(struct device *dev, struct device *master,
- 
- 	ret = drm_connector_attach_encoder(connector, encoder);
- 	if (ret < 0) {
--		DRM_DEV_ERROR(drm_dev->dev,
--			      "failed to attach encoder: %d\n", ret);
-+		drm_err(drm_dev, "failed to attach encoder: %d\n", ret);
- 		goto err_free_connector;
- 	}
- 
-@@ -706,24 +703,20 @@ static int rockchip_lvds_probe(struct platform_device *pdev)
- 
- 	lvds->grf = syscon_regmap_lookup_by_phandle(dev->of_node,
- 						    "rockchip,grf");
--	if (IS_ERR(lvds->grf)) {
--		DRM_DEV_ERROR(dev, "missing rockchip,grf property\n");
--		return PTR_ERR(lvds->grf);
--	}
-+	if (IS_ERR(lvds->grf))
-+		return dev_err_probe(dev, PTR_ERR(lvds->grf), "missing rockchip,grf property\n");
- 
- 	ret = lvds->soc_data->probe(pdev, lvds);
--	if (ret) {
--		DRM_DEV_ERROR(dev, "Platform initialization failed\n");
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Platform initialization failed\n");
- 
- 	dev_set_drvdata(dev, lvds);
- 
- 	ret = component_add(&pdev->dev, &rockchip_lvds_component_ops);
- 	if (ret < 0)
--		DRM_DEV_ERROR(dev, "failed to add component\n");
-+		return dev_err_probe(dev, ret, "failed to add component\n");
- 
--	return ret;
-+	return 0;
- }
- 
- static void rockchip_lvds_remove(struct platform_device *pdev)
--- 
-2.47.2
-
+Rob
