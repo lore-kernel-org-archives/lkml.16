@@ -1,232 +1,173 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7431C2BD;
-	Fri, 28 Feb 2025 00:30:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3AA1522F
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740702623; cv=none; b=but58r7sUi9AF0cZCUdNpGIuho8P35uY/YrmQGkTDOJtoiRBijZtp6uUSidfqoSWHi1wF+OOUhYnnYSc+1+jN3NvWwiLdG0KyPX4J2rnMG0hNXPtRSjqGjlkbSGE4+yGu7RmQYNOsTgv5/NJo+oAhXFK1DorY3Q4Gj4MByw9Er8=
+	t=1740702686; cv=none; b=EHMNn3XgsjNbOMer0xLcTujKabOqWdEzgcNgA76SHaE6jylAgD72NFNaPV2ckOQNVaGnUMZd9Y3XUlh5ye9QTKIXI6oSisY7OXoGCVNuAGVSg7igDt/3t3vtcHOpP5pKI0Nrxx4QH00ystZQdYF7Bk/CiOaLMlU8Keew+dgt//M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740702623; c=relaxed/simple;
-	bh=270OxG8GIF4of5n0KXdJfSehe6zyxDTJj2SgvDJ4sOI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QCDBqAKwGZRILVCHn5utK3k7RsjUeivadQ4jA3Mq8esJfzlfrl+UwKDYVTXkrmEil9uMWj0PacHvBAzMNQLStjGKwCQyMUbvt60wzKwgA0eXQgpRp5u/k6fQ+9eQWHCFBX2ves75Fz4LsDGpG2NjF00kjSFojntw0rJcHWKKNpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=cT8EjUJA; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1740702686; c=relaxed/simple;
+	bh=0ZRivjjF1G3YtWZXwfdr4wG5BFuEN3wxUJ5Nc9dqWhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cDjUeRKAAGa6nw8BnduFa3D83c8i85bWKhuJ33D3sUE7bw6OcdwDF8Y4O0R0TkxmpF3h+xmH8hqEvib7G+dtOGE6tQhV4NVNy96wXOrA11WkdRNsVRo0ZSCPr+1Yjcr9hArLrNg87lSXmlV+omii6QWCQOLmD9h7B3ffahX0qnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qrfg1Ew/; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="cT8EjUJA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1740702621; x=1772238621;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qEqep+86iN7wQgF+squJGj2SBVPm66bjMKtemOZYB2M=;
-  b=cT8EjUJAH/1MYX4V6sJus1eaDz3VPMV/k9+n2AgfwjcMFe3B1OMs8FsY
-   RQ1nAY+jmhUVWS7UcmTdURKtsABOrZ84yfNaHjmHCkBYbJGIAiRg/YBzW
-   T+5K+M+RqDB+MANwzvntRj3KpWhKVV+z6RZzBFeys6GJhuPlmiAILOvGk
-   Y=;
-X-IronPort-AV: E=Sophos;i="6.13,320,1732579200"; 
-   d="scan'208";a="700832264"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 00:30:17 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:20259]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.24:2525] with esmtp (Farcaster)
- id f66a8442-262b-4866-983c-1797078256cb; Fri, 28 Feb 2025 00:30:16 +0000 (UTC)
-X-Farcaster-Flow-ID: f66a8442-262b-4866-983c-1797078256cb
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 28 Feb 2025 00:30:06 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.51) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 28 Feb 2025 00:30:02 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <menglong8.dong@gmail.com>
-CC: <davem@davemloft.net>, <dongml2@chinatelecom.cn>, <dsahern@kernel.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <kerneljasonxing@gmail.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<ncardwell@google.com>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<petrm@nvidia.com>, <yyd@google.com>
-Subject: Re: [RFC PATCH net-next] net: ip: add sysctl_ip_reuse_exact_match
-Date: Thu, 27 Feb 2025 16:29:53 -0800
-Message-ID: <20250228002953.68029-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250227123137.138778-1-dongml2@chinatelecom.cn>
-References: <20250227123137.138778-1-dongml2@chinatelecom.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qrfg1Ew/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740702685; x=1772238685;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0ZRivjjF1G3YtWZXwfdr4wG5BFuEN3wxUJ5Nc9dqWhc=;
+  b=Qrfg1Ew/31FV8AJhv4mJUj7hwp+Gq2VfbR9u9x+HelEibFN+QsZw49FA
+   l4iC+53vNY71p3q9xxXP5dVA93jX7iqAJSpYaLggf5bnSzLgJiNeZYCfZ
+   y8KnpbdD5unnIn2M9pfDtM5tqiKwcoUI/olT7hZKFiDgWF8b0S/QPKBmd
+   mFfY2UF36HtAYYVOk1mSo2Mmwozr6SJlIs05ChbtyucxWUpMC/xx+5k25
+   Cb+sT/hpd/uSUUtieS3KzFlu99yJezuHvMt2FmREk2L28A33WiHpLdOTa
+   6Kl9LPG3In+v9OE9WrtmoIEEe5z8do8xkzWrdLhbvoMFIaSzHpmKi3/yP
+   A==;
+X-CSE-ConnectionGUID: 4X5TGyyGSB+61WiBbepuMg==
+X-CSE-MsgGUID: P5MMLH1xTp+ld2kwfuhdOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41747897"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="41747897"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 16:31:23 -0800
+X-CSE-ConnectionGUID: u74nw6ZKTFS/KL4yrvFLvg==
+X-CSE-MsgGUID: USILXBKxTU+7MgUiae2X0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="117709471"
+Received: from jgarnacx-mobl1.amr.corp.intel.com (HELO desk) ([10.125.145.170])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 16:31:24 -0800
+Date: Thu, 27 Feb 2025 16:31:17 -0800
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Andrew Cooper <andrew.cooper3@citrix.com>
+Cc: x86@kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/speculation: Simplify and make CALL_NOSPEC consistent
+Message-ID: <20250228003117.q6f2f5a7ndt2o226@desk>
+References: <20250226-call-nospec-v1-1-4dde04a5c7a7@linux.intel.com>
+ <497a3694-cb0d-4678-9622-d9443bf8a40d@citrix.com>
+ <20250227184133.lxm43awa2jgdpl4q@desk>
+ <15253834-fb89-408f-8269-65413ad29f7a@citrix.com>
+ <20250227231342.jh67quujcd3tgmft@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D032UWB003.ant.amazon.com (10.13.139.165) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+In-Reply-To: <20250227231342.jh67quujcd3tgmft@desk>
 
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Thu, 27 Feb 2025 20:31:37 +0800
-> For now, the socket lookup will terminate if the socket is reuse port in
-> inet_lhash2_lookup(), which makes the socket is not the best match.
+On Thu, Feb 27, 2025 at 03:13:48PM -0800, Pawan Gupta wrote:
+> On Thu, Feb 27, 2025 at 06:57:37PM +0000, Andrew Cooper wrote:
+> > On 27/02/2025 6:41 pm, Pawan Gupta wrote:
+> > > On Thu, Feb 27, 2025 at 12:49:48AM +0000, Andrew Cooper wrote:
+> > >> On 26/02/2025 9:03 pm, Pawan Gupta wrote:
+> > >>> @@ -420,20 +420,28 @@ static inline void call_depth_return_thunk(void) {}
+> > >>>  
+> > >>>  #ifdef CONFIG_X86_64
+> > >>>  
+> > >>> +/*
+> > >>> + * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
+> > >>> + * to the retpoline thunk with a CS prefix when the register requires
+> > >>> + * a REX prefix byte to encode. Also see apply_retpolines().
+> > >>> + */
+> > >> Technically, both comments aren't quite accurate.  __CS_PREFIX() emits a
+> > >> conditional CS prefix in a manner compatible with
+> > >> -mindirect-branch-cs-prefix, not the full 5/6 byte jmp/call.
+> > > You are right, I will update the comment, and also the ASSEMBLY version
+> > > where this comment came from:
+> > >
+> > >   /*
+> > >    * Equivalent to -mindirect-branch-cs-prefix; emit the 5 byte jmp/call
+> > >    * to the retpoline thunk with a CS prefix when the register requires
+> > >    * a REX prefix byte to encode. Also see apply_retpolines().
+> > >    */
+> > >   .macro __CS_PREFIX reg:req
+> > >           .irp rs,r8,r9,r10,r11,r12,r13,r14,r15
+> > >           .ifc \reg,\rs
+> > >           .byte 0x2e
+> > >           .endif
+> > >           .endr
+> > >   .endm
+> > >
+> > >>> +#define __CS_PREFIX(reg)				\
+> > >>> +	.irp rs,r8,r9,r10,r11,r12,r13,r14,r15;		\
+> > >>> +	.ifc \\rs, \reg;				\
+> > >> Why are these escaped differently?  Given they're all \r of some form or
+> > >> another, I guess something is going wonky with __stringify(), but its
+> > >> still weird for them to be different.
+> > >>
+> > >> Do you have a fully pre-processed source to hand to see how CALL_NOSPEC
+> > >> ends up?
+> > > Below is the pre-processed source for test_cc() generated with "make arch/x86/kvm/emulate.i".
+> > >
+> > > - This is with double backslash in ".ifc \\rs, \reg":
+> > >
+> > > 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \\rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "call __x86_indirect_thunk_%V[thunk_target]\n"
+> > >                                                                                   ^
+> > > 	This ends up emitting the CS prefix byte correctly:
+> > >
+> > > 	2e e8 51 c9 32 01       cs call ffffffff824289e0
+> > >
+> > > - This is with single backslash in ".ifc \\rs, \reg":
+> > >
+> > > 	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15; .ifc \rs, \%V[thunk_target]; .byte 0x2e; .endif; .endr;" "c      all __x86_indirect_thunk_%V[thunk_target]\n"
+> > >                                                                                   ^
+> > > 	This version does not emit the CS prefix byte:
+> > >
+> > > 	e8 52 c9 32 01          call   ffffffff824289e0
+> > >
+> > > I tried looking in gcc inline assembly documentation but could not find
+> > > anything that would explain this. :(
+> > 
+> > It's because it's about plain C strings.
+> > 
+> > \r (from \rs) is Carriage Return (ASCII 0x0d).
 > 
-> For example, we have socket1 listening on "0.0.0.0:1234" and socket2
-> listening on "192.168.1.1:1234", and both of them enabled reuse port. The
-> socket1 will always be matched when a connection with the peer ip
-> "192.168.1.xx" comes if the socket1 is created later than socket2. This
-> is not expected, as socket2 has higher priority.
+> Ah, right.
 > 
-> This can cause unexpected behavior if TCP MD5 keys is used, as described
-> in Documentation/networking/vrf.rst -> Applications.
+> > After AS's macro expansion, \reg becomes \% which is not a valid escape
+> > character, so the \ gets left intact.
+> > 
+> > \reg should become \\reg or you'll probably get a compiler complaining
+> > eventually.
+> 
+> Using \\ for reg like this:
+> 
+>  .ifc \\rs, \\reg
+> 
+> is not emitting the CS prefix. I am trying to wrap my head around the
+> magic.
 
-Could you provide a minimal repro setup ?
-I somehow fail to reproduce the issue.
+Getting rid of one layer of macro makes it less magical:
 
+#define __CS_PREFIX(reg)				\
+            ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15\n"	\
+            ".ifc \\rs," reg "\n"                       \
+            ".byte 0x2e\n"                              \
+            ".endif\n"                                  \
+            ".endr\n"
 
-> Introduce the sysctl_ip_reuse_exact_match to make it find a best matched
-> socket when reuse port is used.
+#define CALL_NOSPEC    __CS_PREFIX("%V[thunk_target]")  \
+                        "call __x86_indirect_thunk_%V[thunk_target]\n"
+#else
+#define CALL_NOSPEC    "call *%[thunk_target]\n"
+#endif
 
-I think we should not introduce a new sysctl knob and an extra lookup,
-rather we can solve that in __inet_hash() taking d894ba18d4e4
-("soreuseport: fix ordering for mixed v4/v6 sockets") further.
+Preprocessor output is as expected, and this emits the CS prefix correctly:
 
-Could you test this patch ?
+	".ifc \\rs, %V[thunk_target]"
 
----8<---
-$ git show
-commit 4dbc44a153afe51a2b2698a55213e625a02e23c8
-Author: Kuniyuki Iwashima <kuniyu@amazon.com>
-Date:   Thu Feb 27 19:53:43 2025 +0000
+Full version:
 
-    tcp: Place non-wildcard sockets before wildcard ones in lhash2.
-    
-    Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-
-diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
-index 5eea47f135a4..115248bfe463 100644
---- a/include/net/inet_hashtables.h
-+++ b/include/net/inet_hashtables.h
-@@ -136,6 +136,9 @@ struct inet_bind_hashbucket {
- struct inet_listen_hashbucket {
- 	spinlock_t		lock;
- 	struct hlist_nulls_head	nulls_head;
-+#if IS_ENABLED(CONFIG_IPV6)
-+	struct hlist_nulls_node	*wildcard_node;
-+#endif
- };
- 
- /* This is for listening sockets, thus all sockets which possess wildcards. */
-diff --git a/include/net/sock.h b/include/net/sock.h
-index efc031163c33..4e8e10d2067b 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -863,6 +863,16 @@ static inline void __sk_nulls_add_node_tail_rcu(struct sock *sk, struct hlist_nu
- 	hlist_nulls_add_tail_rcu(&sk->sk_nulls_node, list);
- }
- 
-+static inline void __sk_nulls_add_node_before_rcu(struct sock *sk, struct hlist_nulls_node *next)
-+{
-+	struct hlist_nulls_node *n = &sk->sk_nulls_node;
-+
-+	WRITE_ONCE(n->pprev, next->pprev);
-+	WRITE_ONCE(n->next, next);
-+	WRITE_ONCE(next->pprev, &n->next);
-+	WRITE_ONCE(*(n->pprev), n);
-+}
-+
- static inline void sk_nulls_add_node_rcu(struct sock *sk, struct hlist_nulls_head *list)
- {
- 	sock_hold(sk);
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index ecda4c65788c..acfb693bb1d4 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -729,6 +729,7 @@ int __inet_hash(struct sock *sk, struct sock *osk)
- {
- 	struct inet_hashinfo *hashinfo = tcp_or_dccp_get_hashinfo(sk);
- 	struct inet_listen_hashbucket *ilb2;
-+	bool add_tail = false;
- 	int err = 0;
- 
- 	if (sk->sk_state != TCP_LISTEN) {
-@@ -737,21 +738,47 @@ int __inet_hash(struct sock *sk, struct sock *osk)
- 		local_bh_enable();
- 		return 0;
- 	}
-+
- 	WARN_ON(!sk_unhashed(sk));
- 	ilb2 = inet_lhash2_bucket_sk(hashinfo, sk);
- 
- 	spin_lock(&ilb2->lock);
-+
- 	if (sk->sk_reuseport) {
- 		err = inet_reuseport_add_sock(sk, ilb2);
- 		if (err)
- 			goto unlock;
-+
-+		if (inet_rcv_saddr_any(sk))
-+			add_tail = true;
- 	}
-+
- 	sock_set_flag(sk, SOCK_RCU_FREE);
--	if (IS_ENABLED(CONFIG_IPV6) && sk->sk_reuseport &&
--		sk->sk_family == AF_INET6)
--		__sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_head);
--	else
--		__sk_nulls_add_node_rcu(sk, &ilb2->nulls_head);
-+
-+#if IS_ENABLED(CONFIG_IPV6)
-+	if (sk->sk_family == AF_INET6) {
-+		if (add_tail || !ilb2->wildcard_node)
-+			__sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_head);
-+		else
-+			__sk_nulls_add_node_before_rcu(sk, ilb2->wildcard_node);
-+	} else
-+#endif
-+	{
-+		if (!add_tail)
-+			__sk_nulls_add_node_rcu(sk, &ilb2->nulls_head);
-+#if IS_ENABLED(CONFIG_IPV6)
-+		else if (ilb2->wildcard_node)
-+			__sk_nulls_add_node_before_rcu(sk, ilb2->wildcard_node);
-+#endif
-+		else
-+			__sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_head);
-+	}
-+
-+#if IS_ENABLED(CONFIG_IPV6)
-+	if (add_tail && (sk->sk_family == AF_INET || !ilb2->wildcard_node))
-+		ilb2->wildcard_node = &sk->sk_nulls_node;
-+#endif
-+
- 	sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
- unlock:
- 	spin_unlock(&ilb2->lock);
-@@ -794,6 +821,15 @@ void inet_unhash(struct sock *sk)
- 		if (rcu_access_pointer(sk->sk_reuseport_cb))
- 			reuseport_stop_listen_sock(sk);
- 
-+#if IS_ENABLED(CONFIG_IPV6)
-+		if (&sk->sk_nulls_node == ilb2->wildcard_node) {
-+			if (is_a_nulls(sk->sk_nulls_node.next))
-+				ilb2->wildcard_node = NULL;
-+			else
-+				ilb2->wildcard_node = sk->sk_nulls_node.next;
-+		}
-+#endif
-+
- 		__sk_nulls_del_node_init_rcu(sk);
- 		sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
- 		spin_unlock(&ilb2->lock);
-@@ -1183,6 +1219,9 @@ static void init_hashinfo_lhash2(struct inet_hashinfo *h)
- 		spin_lock_init(&h->lhash2[i].lock);
- 		INIT_HLIST_NULLS_HEAD(&h->lhash2[i].nulls_head,
- 				      i + LISTENING_NULLS_BASE);
-+#if IS_ENABLED(CONFIG_IPV6)
-+		h->lhash2[i].wildcard_node = NULL;
-+#endif
- 	}
- }
- 
----8<---
+	asm("push %[flags]; popf; " ".irp rs,r8,r9,r10,r11,r12,r13,r14,r15\n" ".ifc \\rs," "%V[thunk_target]" "\n" ".byte 0x2e\n" ".endif\n" ".endr\n" "call __x86_indirect_thunk_%V[thunk_target]\n"
+	: "=a"(rc), "+r" (current_stack_pointer) : [thunk_target]"r"(fop), [flags]"r"(flags));
