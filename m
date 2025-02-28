@@ -1,427 +1,244 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2045.outbound.protection.outlook.com [40.107.94.45])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B7825D910;
-	Fri, 28 Feb 2025 10:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4133525BACB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737019; cv=fail; b=prcGbZQuazhitsTeuOk/uoRjLfiBU3HUdp0iTV0adHoUEEz/cpfkr12RrhnUZNoHXC+Y7U6Zu/gsBjYcApHN+23DZehOUkPZc7DGPbRGj9mgcBUsWFUWMIOQF36tZVhc8jd7abvs+HXIlJPqOFEYuKW/HuDCY3cTqIjNfyswt/E=
+	t=1740737047; cv=fail; b=D8jrOBnwewWyprY3gwO8RpX4rORnxMcfxTVHV+nSazQvicit12R7n9U1BEBNJqgX+vGl/xP1YLXMSNBzJpBFc/eWGBjBBO4+O4E1I1YouS9WY5xm7+wou6iEvdv7/sbk5uDsyqnoa6e0UA25/ncln4aiH03Q691GaFELVi4fyQg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737019; c=relaxed/simple;
-	bh=l2SdbOLx1UtR+zm0Y8CiXAS/lQGnBOdJx9qxeT7vIUE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kzz0IJAZsylc/lzOdJR5J1woWc2SMHsqHANWyn9ug6TJqX32rdALjbT0uzppN5zVcE+BbS08CTvB070PibLH4a3DlQf8KpJ2tn5iiHQdfV4wTfv8Q2rQAGNapt2WD6EGFwoe/ZMc9wXlLS2U8UcvE/2fSHceKLy5wDe6MIkZ4KU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BTnbbg7s; arc=fail smtp.client-ip=40.107.94.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1740737047; c=relaxed/simple;
+	bh=6GF8JkH0A3e35uvE9JSSyoNVM4imTaOfJoJtUo3DH2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=PZN+zlAb1TOGrgDP2KJSU7C01FVoDD8YD3Bxi7cCdll57Wx/8F6hS4CA0lKhK+T7AzmHtijSZXupxJqo6vB7Xv0sQiiUKYl9qr952lUp1kMwJQZgjFBKGLM0nMdZj2ej0cp3jj3ywatgjfT3Legj7tl6kNBvukt2D1O8mA4mJJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=t+A6hsTl; arc=fail smtp.client-ip=40.107.244.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BTnbbg7s"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="t+A6hsTl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VlyLkSYe2XAhendbFXve+MENOTJ598sb7PlrEsrdgiaj/HnXx5my8KwqjysORyDAHhTbdiEeJ/RxypCAVTfFQDVCJyAXoT2PZBrZ8jQ28uqou2AIltCuhqd5iNDAa4YmpSmZoOYmpU81dOyJLBrzsbICC57ay1DjAc8+2urDEKu3yiGHQ0TUNk+9gGh/zHpbASwoY8+vjNPrVuWtcyeVnW/9wvRH+uq/yS4RYGebs5RjESB90+L/RPnENE9BxBa6VAYzTm3fCV12WNC/pWaZivCZvUgdu7VOHrKfHlTfSikMaAATWFdpWPdDJEfqdg8g+LU7YiDDAvtYIUkH6gKRjA==
+ b=Ysq7g8DyV4ewK646fLp8E1XIxC1eKhIhuOpoTZUCTBz77xWRcDTd4oXCE5iHd25gjEk33/Usj34iJoDRzh+XhYDGxTnqy0dPi/QwEdlgmUAIh2bw1KR+QeM+r7csuXjAYIEWTcA+rYmUXqCbjoRKas9fAY44I1nTgEfRhhypYY5FISNoRNSKaM+G59CJJekQCu7rSOirWNWMa+40cMPSD1gNyzTBkUQ9bzUIXAE4wXP7jVrjT6PxlQJ9u6621ITxPTcVG8bkgmf12fGcbtiWlcEstg7MjUQUGhx63AowQaK2DMrHOlUtNjhb/wqpx8CeemBjdeLxK28LDDvXmMDJqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sTAPrOe17RYinZ4WPSCZP78vnTnClburp1yunSCm6Wk=;
- b=FDn7BuxYGkOvdG1woLfgtQs0FnSyQDb+C0XSLsptsEQv+FIbDtkzJ6RiIe2Z3e/RuOomwcQF3hfWgQ3eORil1dtNcik78Irv03q5l3e0JJttky2aC63BPqXdMrE7LNxtLetTRXNSERQ23xfv6Di5J30tuYf/9Ke1mTeoZhfjmlHBS/VXEI3BvhOxHkSb/he/dh9U9vydihkHEGEUruCqx+Nlq2kAN8PlmGYe4S81Uxr+EA72qygpeyOYWPETxZ007nlWO10edMeFlP36DPKaIHgEjxHM3MDMNiuXhA2ILPo6KDV6IpFQogoLRXKnZEpRsvogoMnYJTY8MYaXG+pYoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ bh=2+YdWOdv5G4wF+yVxOSw3X00F9rHxsMUCLPUjvQpuiw=;
+ b=KTm3rkv6qv743k79FaSEeGWgIc4fjNN08mcBCR4RsZIqwmVhjH4Eu8B6Moqn4PpLVrdUKOZ/ldlRLgnkJp/n6C22VW8TDt6+5G8uoGX+C4Gj/pA7Y7ct6O2rrnJdKUPiLA32HuP2/8euGdWQR7G/fFSbsvlNAasF5xq7+pIHgpLuIzk13ii/sN8cRsWupRkYWtfNzTkGAZ+s24FtURWF61ZIzFHiJe6a9lwfY8SxRjjTURB3r7qHfP5q+1N3QYBz4PAGs5Bo+gDSBkNpmCsPX5prCkBWOb9lpoMwP3HcR0Aqu/kWogjo07CUKNzLTPR1VdN2gO/K3M/DTK+rRi2oEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sTAPrOe17RYinZ4WPSCZP78vnTnClburp1yunSCm6Wk=;
- b=BTnbbg7sQEpNSD+ZOa/aqXJ3wg3MYRgCdsRanQjEAQNI+nO8SIb1aENqXLlA8uEO+MaHKZad4YAj8TfJZl6CPYJ/Ts8Q9gEDHMNSYhj26rDtcN4MUDXs5vwT78PfIgSZILMro6t/2RBFAXTcnsEMqk+5ZiKYd9qJMf692yOqFZs=
-Received: from MW2PR16CA0046.namprd16.prod.outlook.com (2603:10b6:907:1::23)
- by CY5PR12MB6084.namprd12.prod.outlook.com (2603:10b6:930:28::7) with
+ bh=2+YdWOdv5G4wF+yVxOSw3X00F9rHxsMUCLPUjvQpuiw=;
+ b=t+A6hsTlQ+bq6fTtlTSURhjNTgyXGt+X2VqOOYlcxitIb0yuh8HAB2GDE2MC13KmttcPaI0jlZXSLgmlkdMzK3rRpvdRYfg6X5qrVxfYymW7BGDE/TxsHzeZjvZwAPWau1Bz9S0LPVSsVrN+xhOI5T4lsWFGuAWVk+IuqbHxGTwLyqUED913+lP9SklQWHxZ4WbiwGagA2hhJwxlXUMVwL8ROR5BjIIIxFsjKCjtUsOQONFS4qp4dV2cnD0wr9ey4jX3UoloCKDIuxr4JsYgCo0GDbc4xgxIdUugumx4BRhxBVkQUMuvH9Hz3l+N10Hq6NxV16+Dv1N9M/uT/wKZ7g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by PH7PR12MB6561.namprd12.prod.outlook.com (2603:10b6:510:213::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
- 2025 10:03:33 +0000
-Received: from SJ5PEPF000001D7.namprd05.prod.outlook.com
- (2603:10b6:907:1:cafe::b) by MW2PR16CA0046.outlook.office365.com
- (2603:10b6:907:1::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.21 via Frontend Transport; Fri,
- 28 Feb 2025 10:03:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001D7.mail.protection.outlook.com (10.167.242.59) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 10:03:32 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 04:02:59 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <kvm@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <Thomas.Lendacky@amd.com>,
-	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <bp@alien8.de>, <David.Kaplan@amd.com>,
-	<huibo.wang@amd.com>, <naveen.rao@amd.com>, <pgonda@google.com>,
-	<linux-kselftest@vger.kernel.org>, <shuah@kernel.org>
-Subject: [RFC PATCH 26/31] KVM: selftests: Add test to verify APIC MSR accesses for SAVIC guest
-Date: Fri, 28 Feb 2025 15:00:19 +0530
-Message-ID: <20250228093024.114983-27-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
-References: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Fri, 28 Feb
+ 2025 10:04:03 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%7]) with mapi id 15.20.8489.018; Fri, 28 Feb 2025
+ 10:04:02 +0000
+Date: Fri, 28 Feb 2025 11:03:54 +0100
+From: Andrea Righi <arighi@nvidia.com>
+To: Changwoo Min <changwoo@igalia.com>
+Cc: tj@kernel.org, void@manifault.com, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sched_ext: Add trace point to track sched_ext core
+ events
+Message-ID: <Z8GKCkWNVN_Pbcc0@gpd3>
+References: <20250228085944.19451-1-changwoo@igalia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228085944.19451-1-changwoo@igalia.com>
+X-ClientProxiedBy: LO4P123CA0598.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:295::22) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D7:EE_|CY5PR12MB6084:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2efda854-17bc-4997-3d01-08dd57df28be
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|PH7PR12MB6561:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6cd9ab2e-24d6-48a6-0fc2-08dd57df3a88
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?aAHUZQ2q46hRoDJECgTH5HrhprTHwqwiFs2fsBiOetQp9gCBK8JQ7YUMJUpQ?=
- =?us-ascii?Q?EUrdqrU4WE1HglHMFyBSejIG4U6RJdNgzdN8jDeUADP0wmyJbcyJbYIXkfJv?=
- =?us-ascii?Q?N3zvkKTO0HmCLo8S0siySmPsXKbDYnnlFt8ah+MTwu34MC+KonOvYG/f0iab?=
- =?us-ascii?Q?bE0ZZfMj8wYfuqaKhVMpTpMGxUm1AvP/3OrY8n32bdRqCd4iudXBsIph9bHK?=
- =?us-ascii?Q?PmAMeQVVGkGFGGbn0k0KkH6kXZykhxjcphQJuE+6r7KkhdXQxDBhvXbkaRX0?=
- =?us-ascii?Q?neV2xu/LclM9BnWNpU+039Tx3e9897Uv9agHvi/7VZRkJ3bfVrvsIjcHHusW?=
- =?us-ascii?Q?8zQ6R9QezQgdWeUtQPDrOHyGjZvHylDNUZc2b91ZGx1/bwk0ylMXu13AlzLi?=
- =?us-ascii?Q?dGz8pTWuHWoSmroru//j3VjEAX0y9H8SiMu+iI6h+90aRw9OoZVUNFKkuBxY?=
- =?us-ascii?Q?ydnP49DKgwDloK8lSWGYf2oVYytdESrt+idhE2sRWNRplVUgN9S+GvsDudoA?=
- =?us-ascii?Q?Y9GdXUMb8uKLD4Do8HFiEIQbWWug5YpRYZ4h8U59GJoCeT/tjhs2Cncx7mSo?=
- =?us-ascii?Q?h+67b2nbCyfEqgMBDGMC3ewBlB8rHF2HZuH5zXU2gyqYuwbKk7ztFpXDHLnC?=
- =?us-ascii?Q?WPwuvm29g/Fd/3LB+xN/KAY/fpU1qW/EbsutTU8vkBKb14tdJGISetkKxI0j?=
- =?us-ascii?Q?VoZckofA59nCeXPqKEUWLVk3PtQG84NO4FbHYpLFrPH/cbc5c2Z4WhYHZltj?=
- =?us-ascii?Q?XrgjBJDEdSpSwwpZ5zbe3dYpwp9FRJ7ek0dKO6lkZ3ICDaHo377Yck35cZ8m?=
- =?us-ascii?Q?uL/IL0D152PCUg8ThlANuAfhCAkW61I6V6cf7JRMI6yak3rcVyeENzxbmiPz?=
- =?us-ascii?Q?gC+JFW0yGovh9myE+bqQaI0QC0JlKz9Ku4rgSWdeItZMv5TnNlKzOZ5Qfa/W?=
- =?us-ascii?Q?cUGGvi0VFz9IE8c4RjABCJ6PaEGoExbM6bPzWl9DRirX2j7kpkyIra4keeBK?=
- =?us-ascii?Q?7NZRT3FbVhbUVhTGpupMrB+uf1e9/f4vYJZrttZvAg1iBHgE9P2m6oNz0nNq?=
- =?us-ascii?Q?A6PXJ0Wnh9L6La55qIETFJgjvm8HedXme49/H1V789U72nBkvXFvpm2/heAw?=
- =?us-ascii?Q?gogWaQScb6kyB6ZZjWiTv2UUyab33dO8JLvihWOhXq/5qtD8Nun+Zvdjm1Nt?=
- =?us-ascii?Q?AZLA5GuY7r4lfwzivVNqVlQDbepuzGuRGBw/S6k+yMHn+DrdNhP0KFbyT4MO?=
- =?us-ascii?Q?wQ19/ieZ8p/CExXyotD5xV9pMBRsB91VzNt4qpwL7IZVn57Xo1mV45wTy8Gy?=
- =?us-ascii?Q?i5lT5rC6O1eeXC/dh5GmUhe4vVFQGE4lCG9tUGb6BUZFe1GPy8eg16LBGXdn?=
- =?us-ascii?Q?q6nNmZLYuMAHMP4Vp2q412wCsyd++CtHhgz42SByWHZUfvdW59nTE0kzf8aW?=
- =?us-ascii?Q?zw080oFNl/B0685PICM9yRIMk2uLXueg4z8EzTUNxqzni/cFTy4vc6CEHX5U?=
- =?us-ascii?Q?6lIdgQEnMNgx9/0=3D?=
+	=?us-ascii?Q?29wjvyO6qlSgi9bMupwVL01Aw+JMBaDOHgFETGkgXyD0aSvj5Sx0qqccJ6pz?=
+ =?us-ascii?Q?Ui75gsa4s+4JNvFGD5Hm+5/aLFTY7Ucc6cRmIxNAXoZY6lbKB0IPTNDJcw7s?=
+ =?us-ascii?Q?iKpNW62Dg5NIFPeb4BCNR7nSwZ+OHUEhStA11IqBtNoSkNwcke26dx0iGIhK?=
+ =?us-ascii?Q?nfQsz7V/Kj/eZYx8TBMDUN03OPLVl4bihnmInUoQ8ZfXDidgRNt8GvQHsIM/?=
+ =?us-ascii?Q?doq4c2mbIz4YTHX9dh7gt9BJBBMBKJrjK5tx6N/IDmLVLF7FTv4n7o52XiED?=
+ =?us-ascii?Q?TskNRh2g5hxvQB3AibqDNcijB/64FKm1ZPQCNGeUDZauZTuLjJbjO2YwTGRq?=
+ =?us-ascii?Q?nBSlDxTTZ7tHwt4K7jAuIcRzYne0kqJqFcY/d4txo/srEewg1rLMvZ4VaX18?=
+ =?us-ascii?Q?O5emqAUeXEAPP972f5fzFI4K0gHHvL85euqP3Vj/Vzdu9NLzOcwSUuV+tK+P?=
+ =?us-ascii?Q?BztZMiA0ufUzzmo7y6w+I8Td4F1Z5KBBoBLB+mk0CbAZxdqka+3Ro4ihMM63?=
+ =?us-ascii?Q?Hvb144wYmW9OuR4zVhQaNiR97cKW/nRHZFNoRBRp/YEqEmORYNiSlnJ0c/Y9?=
+ =?us-ascii?Q?XcGliKiYS5d1jPoyr9qn3YIoF2oAivEMhnk4v0rXZW2Ji3EN7Z/ewyypaoaE?=
+ =?us-ascii?Q?mO+fnua4JSp9Pd5n5WJz5kXYelFhKj78G60sJElJzn4aTkRfZgDz9gn7zWxi?=
+ =?us-ascii?Q?Ww+9w1EaggOZ/mr1eM7k4+nJwOLn1YzuGlxX1ygKUFBhY68e/6CusdlOA7dI?=
+ =?us-ascii?Q?OwJA5RsFFkbKrjX4EHqfSDexByBiODsqonvbujHHTnVShTJQHsg2UXG21wVk?=
+ =?us-ascii?Q?KdzT/mSAczpcUIs5X8vXeJR+7AK/JhcvS4JIu8+SdtHQGieiqJwBInWTLKpx?=
+ =?us-ascii?Q?c90Nx/YYu9sAwulis+eOCxnBtzuPZEOVXNnnWA69Hr6d+QYiuoqF/XcNQ50M?=
+ =?us-ascii?Q?F7jM1O9djOemyCSKUgca96yuiXHCA7ukT4zx8QbguF0ysDZ0MoTxBZlt/jr1?=
+ =?us-ascii?Q?VJ2XzMk+mLElBAbU8qpTTgiHAKTxLf1e8R9LK2U4MOeQOEXB5coZg4vOFrZB?=
+ =?us-ascii?Q?eQPGVu8FvVhXAtKWjW7gnkgY27Bx2jKwDSjyqitsq5R8o3Xm6vJS+NvFYB6q?=
+ =?us-ascii?Q?qb0VRCGfXIjCfV3owHFBKusKIwMWLv/LhJjnXDS79hNn/PVGSEWefmjWTn/W?=
+ =?us-ascii?Q?PpafzyxKiUvdMHJQScgiaQwXV5VVIN+RZMflSuCdUjpXGJVLSRFiQQldT+ff?=
+ =?us-ascii?Q?zAPK4CmBJsTwL+8ta7dJW5bfLjnYlGcEtzo1UeW55gv/I1dS46n4+UfLmACR?=
+ =?us-ascii?Q?Pub7j7X+OuAODG2VN8VcO6yJoQKNbdFQbzYuCM8+Ro1ZVI34Qtg/VJ2Zgql4?=
+ =?us-ascii?Q?N+Frr/Zza5AXIXsZFre3sn2T/vE5?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 10:03:32.7639
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ddLJixWYnJqidI+bLMLez6dxDzelCaYpIyecXT0m1DIXJHiAvwpt7USBl+CX?=
+ =?us-ascii?Q?5akHvOztrJI1h2dbw0cD1IA1QPLA4nweNq9DajarFa2vlVXNT6uceEaPeyGn?=
+ =?us-ascii?Q?U8wRXsKcF3cxuiGL+m26hQQfmOU+oKhXvJngkx6gvxy9a3MWBcBsJUc7KFpf?=
+ =?us-ascii?Q?o3YKfxoYMKEdZ+CWpIdxwp3huMN/Wn+T6dIibqfQgWdFZmkgUQvJOaRQzenk?=
+ =?us-ascii?Q?UHs/lLW9xCmLeFhkCepVDWrA5fEGQM9OfLalF2UyjfN6nby7V4utTv5GqdGd?=
+ =?us-ascii?Q?SQ0xkIb6eJWbsA6/ni2X5GrVYYnnjyb216ZFwRXqQBcgkh9YwB3yXCYdkhSz?=
+ =?us-ascii?Q?sVYuuvoYae0wpBDRodlk5MyLKhU3sxyMff3gLmnZUdbumZmCc80mf95GiGKU?=
+ =?us-ascii?Q?ipjtDOhNcRL5J64jY6uY5ndrcpD0Vt+FzBDHRKEBulnHj6mAiePhP0KKvzTR?=
+ =?us-ascii?Q?MpOO/jNM6TDo/udfCEe9hVLpqqJ77n3ACHmk4NVdLsuhfi+v2fADm8DfLsu8?=
+ =?us-ascii?Q?1eZMWJyyX6vDq8u6UPAxv1dGtcRvlyoWZFoIXMN09tWyyUm4tn++L6MuVdgt?=
+ =?us-ascii?Q?zyV5yjR3+KF6f35qrBQYq69Z9Mh4YCG5PFAJ15dIA4yqnCHmtp2vDFoR8jmx?=
+ =?us-ascii?Q?5FfoDXC1DyZImc0c6C77hlNu3IiBySxy+JxVnYyS94kZ1iT1ZSCUTvvNrZA/?=
+ =?us-ascii?Q?wIM79r4Fxbqyj/jXN+JTjBh7hDPhkGaFuVAq6O09DAXrZ6C48S1SAcZx6rzV?=
+ =?us-ascii?Q?ywW7kX03RS4zCRq50xIG0+ORHfwU8CSSF77yLNdeV2mQG4UG5WBuva6nXFHN?=
+ =?us-ascii?Q?ecqT+f6hCX4oB7tuXZ5q6G/c+OosFlIzSXznB5xGMllgLcIUkbcpqAVjTu1O?=
+ =?us-ascii?Q?kaymT+1VuObROTaRstnn3VWaqHi6I50Sfpg6hp7LCzuvoyJ6Bq3bcYiNnWss?=
+ =?us-ascii?Q?Pz9C+4f6TfxHpVVEBokmHPUWitTUQHOT+phHObQekGb0xIjeHzbUJguhJfhA?=
+ =?us-ascii?Q?r6fTh64TpW2NF/QpLgZxx6o/EJA65YwU6nrsc+J4hzHL2ai9eT7DELCZvWTb?=
+ =?us-ascii?Q?vTxbKYXKLmw3ChCCOEVGDtX2cacF1QX40ud377CdamSJeM0Zjlae6EcRYaXh?=
+ =?us-ascii?Q?SbMoZTgmajKtysDUHA2NRIrQ2JM5LmWwemFF4Y/eeV/LHp2noGq+A7fpsfnJ?=
+ =?us-ascii?Q?YPR8rUWA8C9TI/59yLmKpd5k7YQM2qqHVDm5sx/aLq/5McJZVA2ZZReU3GXA?=
+ =?us-ascii?Q?1ue/eBqgwQ2mqNr+WQ1TB/LUKqn1VREAro59dNEYk0wuRKRhzbQXdGT5TyxB?=
+ =?us-ascii?Q?7B6PzAZDCaK4jsdZMaeUESwu4s3JCf6Zwp29qtXoiB711z1aOQnhwbRxbPnc?=
+ =?us-ascii?Q?OM01lpxFwrpay+g13D/Vxf+UgdxR7DxwjxnpIMkiRUgixrgGYg64e2JrQ+k6?=
+ =?us-ascii?Q?///XXvhcrDwURjnp4fRvIoZMgJNa2Z5ZcztoJbuuNasW4xhzf+PCYgTd4RBC?=
+ =?us-ascii?Q?K6Z1vo8zpyUKpehkIPlr5WgzyymeXtKkG6cQ6R0yz+cywRbvJqpkqB6hyQV1?=
+ =?us-ascii?Q?lRCXUGCnSOEB+I7gg19vI1KBb3TufNvBPzMIKiW+?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6cd9ab2e-24d6-48a6-0fc2-08dd57df3a88
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 10:04:02.8987
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2efda854-17bc-4997-3d01-08dd57df28be
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001D7.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6084
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZHIfV/uWpKWxVwjBWZkT7fEIeHnRzvAI1JGhKjD+B7ent16QmcI0ql4Ehd54P7HrkALOe3+wcDS8YWjx8GU1nw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6561
 
-Extend SAVIC test to verify APIC MSR accesses in SAVIC enabled
-mode. Verify the behavior of reads and writes using rdmsr/wrmsr
-for various APIC registers. In addition, test whether wrmsr
-based writes are propagated to guest backing page.
+On Fri, Feb 28, 2025 at 05:59:44PM +0900, Changwoo Min wrote:
+> Add tracing support to track sched_ext core events
+> (/sched_ext/sched_ext_event). This may be useful for debugging sched_ext
+> schedulers that trigger a particular event.
+> 
+> The trace point can be used as other trace points, so it can be used in,
+> for example, `perf trace` and BPF programs, as follows:
+> 
+> ======
+> $> sudo perf trace -e sched_ext:sched_ext_event --filter 'name == "SCX_EV_ENQ_SLICE_DFL"'
+> ======
+> 
+> ======
+> struct tp_sched_ext_event {
+> 	struct trace_entry ent;
+> 	u32 __data_loc_name;
+> 	u64 delta;
+> };
+> 
+> SEC("tracepoint/sched_ext/sched_ext_event")
+> int rtp_add_event(struct tp_sched_ext_event *ctx)
+> {
+> 	char event_name[128];
+> 	unsigned short offset = ctx->__data_loc_name & 0xFFFF;
+>         bpf_probe_read_str((void *)event_name, 128, (char *)ctx + offset);
+> 
+> 	bpf_printk("name %s   delta %llu", event_name, ctx->delta);
+> 	return 0;
+> }
+> ======
+> 
+> Signed-off-by: Changwoo Min <changwoo@igalia.com>
+> ---
+> 
+> ChangeLog v1 -> v2:
+>  - Rename @added field to @delta for clarity.
+>  - Rename sched_ext_add_event to sched_ext_event.
+>  - Drop the @offset field to avoid the potential misuse of non-portable numbers.
+> 
+>  include/trace/events/sched_ext.h | 19 +++++++++++++++++++
+>  kernel/sched/ext.c               |  2 ++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/include/trace/events/sched_ext.h b/include/trace/events/sched_ext.h
+> index fe19da7315a9..b73499981682 100644
+> --- a/include/trace/events/sched_ext.h
+> +++ b/include/trace/events/sched_ext.h
+> @@ -26,6 +26,25 @@ TRACE_EVENT(sched_ext_dump,
+>  	)
+>  );
+>  
+> +TRACE_EVENT(sched_ext_event,
+> +	    TP_PROTO(const char *name, __u64 delta),
+> +	    TP_ARGS(name, delta),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(	__u64,		delta		)
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
- .../testing/selftests/kvm/include/x86/apic.h  |   1 +
- .../testing/selftests/kvm/include/x86/savic.h |   3 +
- tools/testing/selftests/kvm/lib/x86/savic.c   |   7 +-
- tools/testing/selftests/kvm/x86/savic_test.c  | 192 +++++++++++++++++-
- 4 files changed, 198 insertions(+), 5 deletions(-)
+I'm wondering if we should use a __s64 here (and %lld below). We don't have
+negative deltas right now, but in the future who knows...
 
-diff --git a/tools/testing/selftests/kvm/include/x86/apic.h b/tools/testing/selftests/kvm/include/x86/apic.h
-index aa3a5d54c404..af555638086f 100644
---- a/tools/testing/selftests/kvm/include/x86/apic.h
-+++ b/tools/testing/selftests/kvm/include/x86/apic.h
-@@ -33,6 +33,7 @@
- #define	APIC_SPIV	0xF0
- #define		APIC_SPIV_FOCUS_DISABLED	(1 << 9)
- #define		APIC_SPIV_APIC_ENABLED		(1 << 8)
-+#define APIC_ISR	0x100
- #define APIC_TMR        0x180
- #define APIC_IRR	0x200
- #define	APIC_ICR	0x300
-diff --git a/tools/testing/selftests/kvm/include/x86/savic.h b/tools/testing/selftests/kvm/include/x86/savic.h
-index cb432eb527b3..33f19f5e39b3 100644
---- a/tools/testing/selftests/kvm/include/x86/savic.h
-+++ b/tools/testing/selftests/kvm/include/x86/savic.h
-@@ -6,6 +6,9 @@
- #ifndef SELFTEST_KVM_SAVIC_H
- #define SELFTEST_KVM_SAVIC_H
- 
-+#define APIC_REG_OFF(VEC)		(VEC / 32 * 16)
-+#define APIC_VEC_POS(VEC)		(VEC % 32)
-+
- struct guest_apic_page;
- 
- void guest_apic_pages_init(struct kvm_vm *vm);
-diff --git a/tools/testing/selftests/kvm/lib/x86/savic.c b/tools/testing/selftests/kvm/lib/x86/savic.c
-index d4c9fcf835ad..c637e486b6e8 100644
---- a/tools/testing/selftests/kvm/lib/x86/savic.c
-+++ b/tools/testing/selftests/kvm/lib/x86/savic.c
-@@ -9,6 +9,7 @@
- #include "kvm_util.h"
- #include "sev.h"
- #include "ex_regs.h"
-+#include "savic.h"
- 
- struct apic_page {
- 	u8 apic_regs[PAGE_SIZE];
-@@ -45,9 +46,6 @@ enum lapic_lvt_entry {
- #define SVM_EXIT_AVIC_UNACCELERATED_ACCESS      0x402
- #define SVM_EXIT_AVIC_INCOMPLETE_IPI            0x401
- 
--#define REG_OFF(VEC)		(VEC / 32 * 16)
--#define VEC_POS(VEC)		(VEC % 32)
--
- #define SAVIC_NMI_REQ_OFFSET            0x278
- 
- /*
-@@ -363,7 +361,8 @@ static void send_ipi(int cpu, int vector, bool nmi)
- 	if (nmi)
- 		savic_write_reg(apic_page, SAVIC_NMI_REQ_OFFSET, 1);
- 	else
--		savic_write_reg(apic_page, APIC_IRR + REG_OFF(vector), BIT(VEC_POS(vector)));
-+		savic_write_reg(apic_page, APIC_IRR + APIC_REG_OFF(vector),
-+				BIT(APIC_VEC_POS(vector)));
- }
- 
- static bool is_cpu_present(int cpu)
-diff --git a/tools/testing/selftests/kvm/x86/savic_test.c b/tools/testing/selftests/kvm/x86/savic_test.c
-index ca1d7352bc3e..8cba7a81bce2 100644
---- a/tools/testing/selftests/kvm/x86/savic_test.c
-+++ b/tools/testing/selftests/kvm/x86/savic_test.c
-@@ -29,6 +29,7 @@ enum savic_test_state {
- 	SAVIC_TEST_STATE(X2APIC_ENABLE),
- 	/* APIC regs state on Secure AVIC enablement */
- 	SAVIC_TEST_STATE(SAVIC_EN),
-+	SAVIC_TEST_STATE(SAVIC_APIC_MSR_ACCESSES),
- };
- 
- /* APIC reg values written by host. */
-@@ -288,6 +289,193 @@ static void guest_savic_enabled(int id)
- 	savic_write_apic_regs(apage);
- }
- 
-+static int savic_wrmsr(uint32_t reg, uint64_t val)
-+{
-+	switch (reg) {
-+	case APIC_LVR:
-+	case APIC_LDR:
-+	case APIC_ISR:
-+	case APIC_TMR:
-+	case APIC_IRR:
-+	case APIC_TMCCT:
-+		x2apic_write_reg_fault(reg, val);
-+		return -1;
-+	default:
-+		x2apic_write_reg(reg, val);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static uint64_t savic_rdmsr(uint32_t reg)
-+{
-+	uint64_t val;
-+	uint32_t msr = APIC_BASE_MSR + (reg >> 4);
-+
-+	switch (reg) {
-+	case APIC_EOI:
-+		uint8_t fault = rdmsr_safe(msr, &val);
-+
-+		__GUEST_ASSERT(fault == GP_VECTOR,
-+				"Wanted #GP on RDMSR(%x) = %x, got 0x%x\n",
-+				msr, GP_VECTOR, fault);
-+		return val;
-+	default:
-+		return x2apic_read_reg(reg);
-+	}
-+}
-+
-+static void guest_verify_host_guest_reg(struct guest_apic_page *apage, uint32_t reg,
-+		uint64_t val, char *regname)
-+{
-+	uint64_t hval, gval, gval2;
-+
-+	if (savic_wrmsr(reg, val) == -1) {
-+		savic_write_reg(apage, reg, val);
-+		/*
-+		 * Write using PV interface if wrmsr fails. Skip for
-+		 * regs which trigger GP
-+		 */
-+		if (reg != APIC_LVR && reg != APIC_TMR && reg != APIC_IRR)
-+			savic_hv_write_reg(reg, val);
-+	}
-+
-+	gval = savic_read_reg(apage, reg);
-+	gval2 = savic_rdmsr(reg);
-+	hval = savic_hv_read_reg(reg);
-+	__GUEST_ASSERT(gval == val, "Unexpected Guest %s 0x%lx, expected val:0x%lx\n",
-+			regname, gval, val);
-+	__GUEST_ASSERT(gval == gval2, "Unexpected Guest %s backing page value : 0x%lx, msr read val:0x%lx\n",
-+			regname, gval, gval2);
-+
-+	switch (reg) {
-+	case APIC_LVR:
-+	case APIC_LDR:
-+	case APIC_ISR:
-+	case APIC_TMICT:
-+	case APIC_TDCR:
-+	case APIC_LVTT:
-+	case APIC_LVTTHMR:
-+	case APIC_LVTPC:
-+	case APIC_LVT0:
-+	case APIC_LVT1:
-+	case APIC_LVTERR:
-+		__GUEST_ASSERT(hval == gval, "Guest 0x%lx host 0x%lx %s mismatch\n",
-+			gval, hval, regname);
-+		break;
-+	case APIC_TASKPRI:
-+	case APIC_SPIV:
-+	case APIC_ICR:
-+	case APIC_TMR:
-+	case APIC_IRR:
-+		__GUEST_ASSERT(hval != gval, "Guest 0x%lx host 0x%lx reg: %x %s must not match\n",
-+			gval, hval, reg, regname);
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static inline uint32_t x2apic_ldr(uint32_t id)
-+{
-+	return ((id >> 4) << 16) | (1 << (id & 0xf));
-+}
-+
-+static void guest_savic_apic_msr_accesses(int id)
-+{
-+	struct guest_apic_page *apage = get_guest_apic_page();
-+	uint64_t val, hval;
-+	uint32_t reg;
-+	int vec;
-+	int i;
-+	uint32_t lvt_regs[] = {
-+		APIC_LVTT, APIC_LVTTHMR, APIC_LVTPC,
-+		APIC_LVT0, APIC_LVT1, APIC_LVTERR
-+	};
-+
-+	reg = APIC_LVR;
-+	val = savic_hv_read_reg(reg);
-+	/* APIC_LVR state is in sync between host and guest. */
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_LVR");
-+
-+	reg = APIC_TASKPRI;
-+	val = 0x30;
-+	/* Write new TASKPRI to host using PV interface. */
-+	savic_hv_write_reg(reg, val);
-+	val = 0x40;
-+	/* TASKPRI is accelerated and state is not up-to-date in host. */
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_TASKPRI");
-+
-+	reg = APIC_PROCPRI;
-+	val = x2apic_read_reg(reg);
-+	/* APIC_PROCPRI is updated with the APIC_TASKPRI update above. */
-+	GUEST_ASSERT((val & 0xf0) == (x2apic_read_reg(APIC_TASKPRI) & 0xf0));
-+	GUEST_ASSERT((val & 0xf0) == 0x40);
-+	vec = 0x20;
-+	x2apic_write_reg(APIC_ICR, APIC_DEST_SELF | APIC_INT_ASSERT | vec);
-+	/* Interrupt remains pending in APIC_IRR. */
-+	val = savic_read_reg(apage, APIC_IRR + APIC_REG_OFF(vec));
-+	GUEST_ASSERT((val & BIT_ULL(APIC_VEC_POS(vec))) == BIT_ULL(APIC_VEC_POS(vec)));
-+	savic_wrmsr(APIC_TASKPRI, 0x0);
-+
-+	/* Triggers GP fault */
-+	savic_rdmsr(APIC_EOI);
-+
-+	reg = APIC_LDR;
-+	val = x2apic_ldr(savic_rdmsr(APIC_ID));
-+	hval = savic_hv_read_reg(APIC_LDR);
-+	__GUEST_ASSERT(val == hval, "APIC_LDR mismatch between host %lx and guest %lx",
-+			hval, val);
-+
-+	/* APIC_SPIV state is not visible to host. */
-+	reg = APIC_SPIV;
-+	val = savic_rdmsr(APIC_SPIV) & ~APIC_SPIV_APIC_ENABLED;
-+	savic_hv_write_reg(reg, val);
-+	val = savic_rdmsr(APIC_SPIV) | APIC_SPIV_APIC_ENABLED;
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_SPIV");
-+
-+	reg = APIC_ISR;
-+	(void) savic_rdmsr(reg);
-+	/* Triggers GP fault */
-+	savic_wrmsr(reg, 0x10);
-+
-+	/* APIC_TMR is not synced to host. */
-+	reg = APIC_TMR;
-+	val = 0x10000;
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_TMR");
-+	vec = 0x20;
-+	savic_write_reg(apage, reg + APIC_REG_OFF(vec),  BIT_ULL(APIC_VEC_POS(vec)));
-+	GUEST_ASSERT(x2apic_read_reg(reg + APIC_REG_OFF(vec)) & BIT_ULL(APIC_VEC_POS(vec)));
-+
-+	reg = APIC_IRR;
-+	val = 0x10000;
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_IRR");
-+	savic_write_reg(apage, reg, 0x0);
-+
-+	reg = APIC_TMICT;
-+	val = 0x555;
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_TMICT");
-+
-+	reg = APIC_TMCCT;
-+	savic_rdmsr(reg);
-+	savic_wrmsr(reg, 0xf);
-+
-+	reg = APIC_TDCR;
-+	val = 0x1;
-+	savic_hv_write_reg(reg, val);
-+	val = 0x3;
-+	guest_verify_host_guest_reg(apage, reg, val, "APIC_TDCR");
-+
-+	for (i = 0; i < ARRAY_SIZE(lvt_regs); i++) {
-+		reg = lvt_regs[i];
-+		val = 0x41;
-+		savic_hv_write_reg(reg, val);
-+		val = 0x42;
-+		guest_verify_host_guest_reg(apage, reg, val, "APIC_LVTx");
-+	}
-+}
-+
- static void guest_code(int id)
- {
- 	GUEST_ASSERT(rdmsr(MSR_AMD64_SEV) & MSR_AMD64_SNP_SECURE_AVIC);
-@@ -302,6 +490,8 @@ static void guest_code(int id)
- 
- 	SAVIC_GUEST_SYNC(SAVIC_EN, guest_savic_enabled);
- 
-+	SAVIC_GUEST_SYNC(SAVIC_APIC_MSR_ACCESSES, guest_savic_apic_msr_accesses);
-+
- 	GUEST_DONE();
- }
- 
-@@ -448,7 +638,7 @@ int main(int argc, char *argv[])
- 
- 	vcpu_args_set(vcpus[0], 1, vcpus[0]->id);
- 
--	vm_install_exception_handler(vm, 29, sev_es_vc_handler);
-+	vm_install_exception_handler(vm, 29, savic_vc_handler);
- 	vm_sev_launch(vm, snp_default_policy(), NULL);
- 
- 	r = pthread_create(&threads[0], NULL, vcpu_thread, vcpus[0]);
--- 
-2.34.1
+Apart than that, everything else looks good to me.
 
+Thanks,
+-Andrea
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name);
+> +		__entry->delta		= delta;
+> +	),
+> +
+> +	TP_printk("name %s delta %llu",
+> +		  __get_str(name), __entry->delta
+> +	)
+> +);
+> +
+>  #endif /* _TRACE_SCHED_EXT_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 986b655911df..53729c584b63 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -1554,6 +1554,7 @@ static DEFINE_PER_CPU(struct scx_event_stats, event_stats_cpu);
+>   */
+>  #define scx_add_event(name, cnt) do {						\
+>  	this_cpu_add(event_stats_cpu.name, cnt);				\
+> +	trace_sched_ext_event(#name, cnt);					\
+>  } while(0)
+>  
+>  /**
+> @@ -1565,6 +1566,7 @@ static DEFINE_PER_CPU(struct scx_event_stats, event_stats_cpu);
+>   */
+>  #define __scx_add_event(name, cnt) do {						\
+>  	__this_cpu_add(event_stats_cpu.name, cnt);				\
+> +	trace_sched_ext_event(#name, cnt);					\
+>  } while(0)
+>  
+>  /**
+> -- 
+> 2.48.1
+> 
