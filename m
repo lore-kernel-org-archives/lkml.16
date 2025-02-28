@@ -1,160 +1,159 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4495527781E;
-	Fri, 28 Feb 2025 15:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06ED26BDA4;
+	Fri, 28 Feb 2025 15:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740755875; cv=none; b=PFrPlOHg5voSLz3SoyCGwN55DItwbA2yy2MtNLtH240t0M1uzcoVh1gjK4B4dacJulR+p8Hll+SFaIKby/evf9B6VCROlJV9oBTfqQ4Uggscc6bVwjX5nGmRFhRkGRtcEM/SXRpBM3qX2W+sOzy7iqS0cAXyCyxJQEv8Iz9cm38=
+	t=1740755891; cv=none; b=pAZKxGdtIf184O2ACE2DVDPGEF5XGjs1bUcssIVejnouYkiP9+vkDTgRluS0RFvlhiXPA778amKdmj+JggbPJb7MzADpEQF+7zx2s2uLf9Zkb30SUa3LdLYAr8uP3W6lgXTWojnPDYoIqY1yVa72a6gbkN0glNZ6xcibCs1eHXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740755875; c=relaxed/simple;
-	bh=+c/cArmccdVpgW/XqUAwxxkRjm/IBO9LbeKsevVUHyI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Krac9PrHdJnVwP4BxckZCnuXZEICoQi2Kz4uW6THvlkrwPsndLmZ47USSyTzWnORPxGJQS69cyzJA04y21J78nA94ZhoOg/9PDmCJV5z+eayDxX3VOmCq2gkhXtlrUXrMY7MwoZdl4VS+ur91cfw4QhY3re3ZJ+twmV9ja73M/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9IxeuWp; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740755891; c=relaxed/simple;
+	bh=jkPRvgo3NpRaDEp4k1hzJV3HaS+fwgbJw+P6jRyMFGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ujsnWj2SCT0uOCnjMNDPVDISut5hYjrD3IYITpyiRttm8BFzOF3HZDw4vfsV8FLzi+MmgrWtqN/i7cK+sq3m4HuyPr5OPAiVZus8J/1SAFRVQMulxrcabtZ+ihnspjukjXCsAOGCNOyEP81voPeNOgzECiclbFcM2kT4zR6G7Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YVcCufY4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9IxeuWp"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4398ec2abc2so20271525e9.1;
-        Fri, 28 Feb 2025 07:17:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740755871; x=1741360671; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KXNpYBoe/Rd5GuuvNB+oq/lSRtvK1so1zgVywfK3t8s=;
-        b=T9IxeuWpJ3ZkcmcQr4xUdpvh30E/cQWR4+8lpm5cZ9xDMODdQeYHpFepmWb7CeV+AI
-         PaXUAFrpFTvUFP5AVGBdqn+ONmARED5p6PMVBTKtPaxlGuVUmknjO9vZ4rmj7UEtu1a0
-         VU7VCx6jAfoU0SgimnS08+d1n36qhi9OXw+a7DDLYYc+13OVVGKTSbiNLc8XUCzYAxip
-         SuAXq7dDcMTXLUTlv5ZprY3Jr6uclQvyOvoIclgXRvlAF4SzPPAXKJm+Uk1pzLqWZho6
-         cqT67mQgyYiE2DDC+aUXFvexwZKS+pB2HlLypvFkiHz3/Z36yxLOmKTgXrOoL/ouLMEu
-         zYAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740755871; x=1741360671;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KXNpYBoe/Rd5GuuvNB+oq/lSRtvK1so1zgVywfK3t8s=;
-        b=eJvCk/OZMZQrMf6tZMyLkDwOch2bBDJkHbv1BdWGPn2DTQvi8dn0kWs/vy+Yb7sTgc
-         iGSsaJRp6TiCPJjUAA9INqS518DIA42RkrpzyfkrK2RLl8mNFwOzo6Ev+uzE6j4WQGlk
-         JXBCrseadyYb47rRzwzr8IOJv2fnHAi5R24oGzlYws6Q8s+1nQNqiVJdno/Gc/F7AYfv
-         NvaXI6LBZJP6Gvuu16trOAEKprRRV4YVyXJVVfMGELC62Y/J+Fys9xbKzDAotYlJoHPf
-         chFMMCeYbe6n+vZBLZ8vCIn7Jp6UzaJeD3w4GIpLfFRiayylBVQjrc0+oWCFQygXD9ui
-         00BA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5783qmkKWn2aKo+yHW2hpp2CjeG0ocPs0iDPwOUUTQ49gcXbbvnu/+fIgZNi221+WSIQpDQtGPz8=@vger.kernel.org, AJvYcCWMTTcpIhlzRIZKMi8LZf04ApFHmymd+YPpd2Q1FjoKBtsR5G6L2Tg8l+uPA2o5z4fORoIzqo9k5DH2z1I=@vger.kernel.org, AJvYcCX+9/ob5Dvw1yNuuX8lh1XqJ3Z65GxfxsnKgaLfKqXs0WWxRcOxQ4EcKclowUZbl0KVXu4lLcl1XOPys7Iv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKfitdIPTTIZkL8Qga6sSP8DPYQLN7I8Zg4lFKI5FMkAFJaXzn
-	SgYkHSvCcIDYyZcvAvMyZ8EZi8tF0JOf7l8cxg68K/XSJHwAwFcI
-X-Gm-Gg: ASbGncuk6LiKuQqZ7qqTORCbv0CfvvlfjTuH3kDumu5FIbJ6WNytJ42AwolfI9Ux501
-	f8tGju40QEn49z5U999JY4g4aXR3Jec53cQy6vzOjpnQGPN7sisa+VMFYPQ2toKzefltqcFZsdY
-	7Dlv1AURlnnP+qThNkCecfw7bzfo5EXmrWxUmr1QdTCe7OBpUWrIOro7V6d9iUrDvcdASIjf/aS
-	+gzcrZj5ePmTCTfRTW5bwgEwrbG81+ZUr30Lk7mhCca3j3wD7lItwiGBOm3fXZFovWuK4OwxUP9
-	rryukpb5KzSbP4G1564GVH6wzf1fUgF/7czUwJM=
-X-Google-Smtp-Source: AGHT+IHgnDNSyRbxWFIVxBnQrBG4eQUmoRauNdsSwxjsBbalYes6/9RG6l4xH2PwkzDkC3v2abvGCg==
-X-Received: by 2002:a05:600c:1c8e:b0:43a:b0ac:b10c with SMTP id 5b1f17b1804b1-43ba6744a10mr25188575e9.26.1740755870539;
-        Fri, 28 Feb 2025 07:17:50 -0800 (PST)
-Received: from demon-pc.localdomain ([188.27.130.21])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b694524c6sm63096825e9.0.2025.02.28.07.17.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 07:17:50 -0800 (PST)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v3 9/9] i2c: atr: add passthrough flag
-Date: Fri, 28 Feb 2025 17:17:26 +0200
-Message-ID: <20250228151730.1874916-10-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250228151730.1874916-1-demonsingur@gmail.com>
-References: <20250228151730.1874916-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YVcCufY4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB84C4CED6;
+	Fri, 28 Feb 2025 15:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740755889;
+	bh=jkPRvgo3NpRaDEp4k1hzJV3HaS+fwgbJw+P6jRyMFGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YVcCufY4G1TsQxgU92YFTwrHcLywjpyb41J0DfYNxaBJvrYArIte5gY7HV6saTZ8r
+	 xHXPcmui7GLTuGkjmyxX6xAf/4pBTVbk4Uk7cLC/NBZYXho1I5tlYJmBVATfDGSwT4
+	 pEp1GrtGxb/KhnT6XcsQirXIBsrLDlMU+vztD7x5L5/0EZfuye5yBpmUUq+AxWIl6X
+	 H95hdzTfzsvnWd6yYFXRV9z+HADw8FuUES9TjCeBz/YptSgodpY4g+g3JEU2CcF6dZ
+	 NqA+yJL0n9Z+aeBFZW4Uxhd6l78d7TEFJmlBx1V5LI75eLay/f+J2EdoAGrnHIUKeT
+	 tVsdxI8QExtew==
+Date: Fri, 28 Feb 2025 16:18:05 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: David Jander <david@protonic.nl>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-iio@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Nuno Sa <nuno.sa@analog.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [RFC PATCH 7/7] dt-bindings: motion: Add motion-simple-pwm
+ bindings
+Message-ID: <tm57fsmijq4t4y4dpmtss63ekzpm5oefir5tz4aioxq5dx4or6@lgoqjpxc3axh>
+References: <20250227162823.3585810-1-david@protonic.nl>
+ <20250227162823.3585810-8-david@protonic.nl>
+ <20250228-wonderful-python-of-resistance-d5b662@krzk-bin>
+ <20250228102201.590b4be6@erd003.prtnl>
+ <9a1d75a2-66c0-46b6-91a1-4922b892dfb1@kernel.org>
+ <20250228110931.7bdae7fd@erd003.prtnl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rfp3v5bmp743c3to"
+Content-Disposition: inline
+In-Reply-To: <20250228110931.7bdae7fd@erd003.prtnl>
 
-Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
-the child ATRs need to be forwarded as-is if the parent I2C ATR can
-only do static mapping.
 
-In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
-address remapping hardware capabilities, but it is able to select which
-GMSL link to talk to, allowing it to change the address of the
-serializer.
+--rfp3v5bmp743c3to
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC PATCH 7/7] dt-bindings: motion: Add motion-simple-pwm
+ bindings
+MIME-Version: 1.0
 
-The child ATRs need to have their alias pools defined in such a way to
-prevent overlapping addresses between them, but there's no way around
-this without orchestration between multiple ATR instances.
+Hey David,
 
-To allow for this use-case, add a flag that allows unmapped addresses
-to be passed through, since they are already remapped by the child ATRs.
+On Fri, Feb 28, 2025 at 11:09:31AM +0100, David Jander wrote:
+> On Fri, 28 Feb 2025 10:37:48 +0100
+> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>=20
+> > On 28/02/2025 10:22, David Jander wrote:
+> > >  =20
+> > >>> +
+> > >>> +  motion,pwm-inverted:
+> > >>> +    $ref: /schemas/types.yaml#/definitions/flag   =20
+> > >>
+> > >> And PWM flag does not work? =20
+> > >=20
+> > > I have seen PWM controllers that don't seem to support the
+> > > PWM_POLARITY_INVERTED flag and those where it just doesn't work. Shou=
+ld all =20
+> >=20
+> >=20
+> > Shouldn't the controllers be fixed? Or let's rephrase the question: why
+> > only this PWM consumer needs this property and none of others need it?
+>=20
+> CCing Uwe Kleine-Koenig and linux-pwm mailing list.
+>=20
+> I know that at least in kernel 6.11 the pwm-stm32.c PWM driver doesn't
+> properly invert the PWM signal when specifying PWM_POLARITY_INVERTED. I a=
+gree
+> this is a probably bug that needs fixing if still present in 6.14-rc. Bes=
+ides
+> that, if linux-pwm agrees that every single PWM driver _must_ properly su=
+pport
+> this flag, I will drop this consumer flag an start fixing broken PWM driv=
+ers
+> that I encounter. I agree that it makes more sense this way, but I wanted=
+ to
+> be sure.
 
-There's no case where an address that has not been remapped by the child
-ATR will hit the parent ATR.
+Some hardwares cannot support PWM_POLARITY_INVERTED. Affected drivers
+include:
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
- drivers/i2c/i2c-atr.c   | 7 +++++--
- include/linux/i2c-atr.h | 2 ++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+	pwm-adp5585
+	pwm-ntxec
+	pwm-raspberrypi-poe
+	pwm-rz-mtu3 (software limitation only)
+	pwm-sunplus
+	pwm-twl-led (not completely sure, that one is strange)
 
-diff --git a/drivers/i2c/i2c-atr.c b/drivers/i2c/i2c-atr.c
-index 699cf23185c0..c7d0a30e7c39 100644
---- a/drivers/i2c/i2c-atr.c
-+++ b/drivers/i2c/i2c-atr.c
-@@ -390,6 +390,9 @@ static int i2c_atr_map_msgs(struct i2c_atr_chan *chan, struct i2c_msg *msgs,
- 		c2a = i2c_atr_get_mapping_by_addr(chan, msgs[i].addr);
- 
- 		if (!c2a) {
-+			if (atr->flags & I2C_ATR_F_PASSTHROUGH)
-+				continue;
-+
- 			dev_err(atr->dev, "client 0x%02x not mapped!\n",
- 				msgs[i].addr);
- 
-@@ -482,13 +485,13 @@ static int i2c_atr_smbus_xfer(struct i2c_adapter *adap, u16 addr,
- 
- 	c2a = i2c_atr_get_mapping_by_addr(chan, addr);
- 
--	if (!c2a) {
-+	if (!c2a && !(atr->flags & I2C_ATR_F_PASSTHROUGH)) {
- 		dev_err(atr->dev, "client 0x%02x not mapped!\n", addr);
- 		mutex_unlock(&chan->alias_pairs_lock);
- 		return -ENXIO;
- 	}
- 
--	alias = c2a->alias;
-+	alias = c2a ? c2a->alias : addr;
- 
- 	mutex_unlock(&chan->alias_pairs_lock);
- 
-diff --git a/include/linux/i2c-atr.h b/include/linux/i2c-atr.h
-index 7c6a9627191d..f979b931ca05 100644
---- a/include/linux/i2c-atr.h
-+++ b/include/linux/i2c-atr.h
-@@ -22,9 +22,11 @@ struct i2c_atr;
-  * enum i2c_atr_flags - Flags for an I2C ATR driver
-  *
-  * @I2C_ATR_F_STATIC: ATR does not support dynamic mapping, use static mapping
-+ * @I2C_ATR_F_PASSTHROUGH: Allow unmapped incoming addresses to pass through
-  */
- enum i2c_atr_flags {
- 	I2C_ATR_F_STATIC = BIT(0),
-+	I2C_ATR_F_PASSTHROUGH = BIT(1),
- };
- 
- /**
--- 
-2.48.1
+=2E ISTR that there is a driver that does only support inverted polarity,
+but I don't find it. For an overview I recommend reading through the
+output of:
 
+	for f in drivers/pwm/pwm-*; do
+		echo $f;
+		sed -rn '/Limitations:/,/\*\/?$/p' $f;
+		echo;
+	done | less
+
+=2E (Note not all drivers have commentary in the right format to unveil
+their limitations.)
+
+For most use-cases you can just do
+
+	.duty_cycle =3D .period - .duty_cycle
+
+instead of inverting polarity, but there is no abstraction in the PWM
+bindings for that and also no helpers in the PWM framework. The problem
+is more or less ignored, so if you have a device with
+
+	pwms =3D <&pwm0 0 PWM_POLARITY_INVERTED>;
+
+and the PWM chip in question doesn't support that, the pwm API functions
+will fail. So the system designer better makes sure that the PWM
+hardware can cope with the needed polarity.
+
+Best regards
+Uwe
+
+--rfp3v5bmp743c3to
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfB06AACgkQj4D7WH0S
+/k4NKQgAgDC2JJ02fk1A7PHXuaUhWRukm6F8XGZLDrQDFRYtxz8yV4pdryg+dQ/+
+4eexB6lXvkYCA7d2N13Ij/iRe6ou5gf6lXWC0Pf7sCkrcPTZgNOy3DGCaubOrkT6
+c+/cCzVSrr3xhp1dDEC4sO20USUbjCurHkuhwVO6eUuDKc6rpm43GTs8lWiAbBPh
+2MiCcOP3FyEotRl6mvegvaeKuj4qzjAZkpk+aNBU6sxfuCbkHbO50GXqUQIR/LSS
+GPs3+oAGm30doTOYJJKXlotrv9Dg3nDIqcXugpiEDlPPOHR2l2URUQ6zQFAi6FIY
+AFNoAAbpnoQQV2PW3ew4qf8UIZRXVg==
+=ELQV
+-----END PGP SIGNATURE-----
+
+--rfp3v5bmp743c3to--
