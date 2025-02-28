@@ -1,97 +1,130 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD188241CB5;
-	Fri, 28 Feb 2025 08:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59B7241CB5;
+	Fri, 28 Feb 2025 08:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740730816; cv=none; b=cGs2gCilM7yhXxCFLXbD4WfBI/m8WXRtOdJ18Ju4J3ryvXrIfsEP5yyRJGvAw01gyBI0y0qIHcUJJRM+viKY8jZYrbkOjs8cXr5Fsh4rvYsHhtRaxaB8a1vMGl2jke9lxh90FH6nOFU2/gDdTayttos9ZuvHQR6zLAZga+/E6RI=
+	t=1740730821; cv=none; b=VhpMNNPbuqn0U908GKgyUL6lBjXnfzp3/4qPCSxX3RKfayQPSiz4ZCeeYQi2cPPqeJIm7W1XNDQp4QsKuWw8fZTYuMAmAQ32PvPfE38s9jWq9NFmoJCKuNHd7uBREmPS+rNATGyNq4UMEdeJbCu0Z10ZoAjdqJiwh58cKi3gpJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740730816; c=relaxed/simple;
-	bh=UoYB/trv8Iol0MuUUKBG5qPWot2+WIDQonMIAwMDczI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IgYoeL8Sdi6zlnhc/c7ZmOK33Ey1HgyB+GE6Mh/X7N6yTdAisvqk9hsusqcnmb1q4GSxP+fiexPFsppM09bqL9H0cnduLJJHYcvdDiPmqk2cK5yLabKyVBlR/axPwAyPueIOBYuotN+h1aa11nfvlKAEcyr8oaM1U2PoefbnLLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=feH99N/c; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740730821; c=relaxed/simple;
+	bh=OEgpyMB4mVz6xatqE7RFgUZeG48lXrAMDdUyOzv9uoM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dzt5vySpp42MzKBX+fyQY2vTMdVYX5/Byqn0mSQD/9gtP7u9CGEg7E/iy8ByDIZYOytgx+tRuYRER4hvn6gZUdplwZO1fFoHi3jri0Qg840EV4PxpV0dOnkeUYQTUEAZTEqGEAwq1nH30UcG1j59B80FsQtvdI2NFdXLpR40m9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bfhi+k5P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="feH99N/c"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso18672115e9.1;
-        Fri, 28 Feb 2025 00:20:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740730813; x=1741335613; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPge7hJBFTAy8hBIjP18QmIC3VRabllYYNmaNi1fIfE=;
-        b=feH99N/c6b3yr5lA5lUsxwTYApKInOIidaiKq2cQFKulgkOT7TgwIdIervjUS27s/D
-         oUiChYQdbyCFAuTt/bC3TE7X04kfXoDaaHwia7yGFkAQPRBYQS2xN+I/PJpIZ8YjepiG
-         9OJ5eL+gzL6Ts9xljEj7J/hxAI+j6L1nm0eFcDe4yu4YcEJPIJOR6KSb+lqOp82KR9hx
-         6qJIOdT7YfIvdGRNQqglFeAvOCgihVIXoh8oO3HQfe/SKny5AGQPhTAS3R5fJjGiKodX
-         Q2+XoWxPNkeh5p05UBVxhfoYdpWWpxbDDIOz7memt8SY7wgKJ9KCEKjBIJl4eR8q1ZUA
-         7efA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740730813; x=1741335613;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sPge7hJBFTAy8hBIjP18QmIC3VRabllYYNmaNi1fIfE=;
-        b=Sqo/Oz4LrC7uAsZcfvXHRF4mhCp2xPgciLYMAfkjkIJ7l++CMCCdc65rOeBwDrh2c4
-         AdMMb2Gd2/LwEnmabNV0vG+ePiJyVIrBVIOCQkLMprbuEwhEvaKPQJTQ/pKdohRApeNv
-         /FFAXz/+pK3ozmz/zZ2/Bhb7xqd5fPD+SPNb353D+g+cg/28PG8qicKMw6f50K2dwyQS
-         2D4bkZu1NAwim4tjxgmcaj8vV693TM/TABwD/kfK7HwrM7PIarHQyUF5fiqi6S57p2F6
-         JWCUgIcHxEWi3U3hV/verc56mLsSyC9amHe9SExq3NrkDKTNF7a9HCBj+Mo89FQN9yUR
-         03Pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWS4dChe2Y3kRiFCoxjnePeRldtPx2vJzfzslW2xymlyV1sF3HKwXUymGoynx2MYlpLBdHF2nDT6T+Kw9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJgPNDQLNlhDcYD/61wuf4XmzrvjoY7D1/3Y+zqim//ahxT1N1
-	iz06gMaBAkhY5HWhm+oKmmQubdwcimczj9u83lj7I+5uVTnYBNKAXAp5A6SQcDg=
-X-Gm-Gg: ASbGncskRT5lrJuxbj9aeCKkeAq7bor6jzSwS4TTzWbvPRwf/HTn9jRI/ReVE7jkqAh
-	ApdHrE9MkTN5DBIJqmkdlwtwCaDzJ0u5eQ+eREa+iwfOWnhw/oaSwSoHTb1YdaTbm6lrQ8zqd7F
-	OTlK3sIyjP7+71zfzpYbuZZ75bpcgnOnthkGbndhcaQO6b7nuQdyupfP9G2wKvYECy8GU8/8Y1I
-	B6K/ZK1bXc59/XL6RXzTYv+SlKelI22E4f99KFUK2RCiSkM6Ztta1XZBd1m7T2XE3axLRDzQBne
-	6wyh5rVaEOPxPgVZMQwhBBcoKTQ=
-X-Google-Smtp-Source: AGHT+IF4wqDn0bWt72AMDVpq0SAkVtQs1nZiW788ghlF7P5exRytaopy9FghXRWiJbTb3ReocT2sWw==
-X-Received: by 2002:a05:600c:4f12:b0:43b:8198:f713 with SMTP id 5b1f17b1804b1-43ba66d9e7emr19590375e9.4.1740730812888;
-        Fri, 28 Feb 2025 00:20:12 -0800 (PST)
-Received: from localhost ([194.120.133.72])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e4796600sm4404636f8f.20.2025.02.28.00.20.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 00:20:12 -0800 (PST)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Huisong Li <lihuisong@huawei.com>
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] soc: hisilicon: kunpeng_hccs: Fix spelling mistake "decrese" -> "decrease"
-Date: Fri, 28 Feb 2025 08:19:36 +0000
-Message-ID: <20250228081936.675072-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bfhi+k5P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70BCFC4CED6;
+	Fri, 28 Feb 2025 08:20:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740730819;
+	bh=OEgpyMB4mVz6xatqE7RFgUZeG48lXrAMDdUyOzv9uoM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bfhi+k5PGKHOytnaDgogFOZMKWU/7OkKnKF5XpK9xc3sMCy8q6/MocZmU5zn3yeHd
+	 P5Kq6xcPKMQGEtjUzq/XWfSPzrJbCRLdZkziAosodf+AKzgR1Xcz5MYsIj0HoTL7Hz
+	 gFT8JUGfzxz4EI4CTjNVoISrmdH2UeovZSpVoy2P8dKR698GA8HrBdmsCnX3Bc2RTt
+	 HuXY6Y7LYKOarTLmv/YK2M9bbaJpJRXMWkyAn05Fr7psuZ+edeIMcDMx3Lw8H0U8e8
+	 3nZVIeuQo95PgyQgn7VCgm0xb+UvpA5+a1+qVkA9D1oYT/tmZ3buhInqUzUSNphHkt
+	 xIIf0/3TL36Vg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Petr Mladek" <pmladek@suse.com>,  "Steven Rostedt"
+ <rostedt@goodmis.org>,  "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>,  "Rasmus Villemoes"
+ <linux@rasmusvillemoes.dk>,  "Sergey Senozhatsky"
+ <senozhatsky@chromium.org>,  "Andrew Morton" <akpm@linux-foundation.org>,
+  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin"
+ <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,  "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
+ <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "David
+ Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
+  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 1/4] rust: fix signature of rust_fmt_argument
+In-Reply-To: <20250227-export-macro-v1-1-948775fc37aa@google.com> (Alice
+	Ryhl's message of "Thu, 27 Feb 2025 17:01:59 +0000")
+References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
+	<qxbD5y-rJZMJDMN1wtODJBCAdNtNdQFsYIDhZUex7KcbPiUvABElh5V8c9EFoAPZ7xQe_L8JS6MzAIqciAb12w==@protonmail.internalid>
+	<20250227-export-macro-v1-1-948775fc37aa@google.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 28 Feb 2025 09:13:25 +0100
+Message-ID: <87v7suo5ay.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-There is a spelling mistake in a dev_err message. Fix it.
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/soc/hisilicon/kunpeng_hccs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Without this change, the rest of this series will emit the following
+> error message:
+>
+> error[E0308]: `if` and `else` have incompatible types
+>   --> <linux>/rust/kernel/print.rs:22:22
+>    |
+> 21 | #[export]
+>    | --------- expected because of this
+> 22 | unsafe extern "C" fn rust_fmt_argument(
+>    |                      ^^^^^^^^^^^^^^^^^ expected `u8`, found `i8`
+>    |
+>    = note: expected fn item `unsafe extern "C" fn(*mut u8, *mut u8, *mut c_void) -> *mut u8 {bindings::rust_fmt_argument}`
+>               found fn item `unsafe extern "C" fn(*mut i8, *mut i8, *const c_void) -> *mut i8 {print::rust_fmt_argument}`
+>
+> The error may be different depending on the architecture.
+>
+> Fixes: 787983da7718 ("vsprintf: add new `%pA` format specifier")
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> ---
+>  lib/vsprintf.c       | 2 +-
+>  rust/kernel/print.rs | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 56fe96319292..a8ac4c4fffcf 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2285,7 +2285,7 @@ int __init no_hash_pointers_enable(char *str)
+>  early_param("no_hash_pointers", no_hash_pointers_enable);
+>
+>  /* Used for Rust formatting ('%pA'). */
+> -char *rust_fmt_argument(char *buf, char *end, void *ptr);
+> +char *rust_fmt_argument(char *buf, char *end, const void *ptr);
+>
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+> diff --git a/rust/kernel/print.rs b/rust/kernel/print.rs
+> index b19ee490be58..8551631dedf1 100644
+> --- a/rust/kernel/print.rs
+> +++ b/rust/kernel/print.rs
+> @@ -6,13 +6,13 @@
+>  //!
+>  //! Reference: <https://docs.kernel.org/core-api/printk-basics.html>
+>
+> -use core::{
+> +use core::fmt;
+> +
+> +use crate::{
+>      ffi::{c_char, c_void},
+> -    fmt,
+> +    str::RawFormatter,
+>  };
+>
+> -use crate::str::RawFormatter;
+> -
+>  // Called from `vsprintf` with format specifier `%pA`.
+>  #[expect(clippy::missing_safety_doc)]
+>  #[no_mangle]
 
-diff --git a/drivers/soc/hisilicon/kunpeng_hccs.c b/drivers/soc/hisilicon/kunpeng_hccs.c
-index 8aa8dec14911..828ec8fec5d7 100644
---- a/drivers/soc/hisilicon/kunpeng_hccs.c
-+++ b/drivers/soc/hisilicon/kunpeng_hccs.c
-@@ -1476,7 +1476,7 @@ static ssize_t dec_lane_of_type_store(struct kobject *kobj, struct kobj_attribut
- 		goto out;
- 	if (!all_in_idle) {
- 		ret = -EBUSY;
--		dev_err(hdev->dev, "please don't decrese lanes on high load with %s, ret = %d.\n",
-+		dev_err(hdev->dev, "please don't decrease lanes on high load with %s, ret = %d.\n",
- 			hccs_port_type_to_name(hdev, port_type), ret);
- 		goto out;
- 	}
--- 
-2.47.2
+The changes in this last hunk is not mentioned in the commit message.
+
+
+Best regards,
+Andreas Hindborg
+
 
