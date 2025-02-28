@@ -1,334 +1,181 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2052.outbound.protection.outlook.com [40.107.236.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90BB3276D3B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733467; cv=none; b=WOMWtpMR5TT5MsFzQUBSgdawcQWCvfoNc16NdgcFAEtiZbkmaxaQzFcB94R6gIp/lvIulaSnIg8bf1AJRCbCizmp/j26MMObH/WnX4JfHutQIaV0X0F1P1zAZ4TwOg40X8s/tpcfaPB3+SdKT7zErzdxHtAQ76S8Z3dqmZvRBQc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733467; c=relaxed/simple;
-	bh=8MvqQQAW1T4lrgjuumqbegZ6QGi41mZBKsWq+n5fS5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cp+qQTpvLONLS05Y/5wDmIlfI3nsjXzN4IDHSKgmCP9KVNSXzPnD+LalC+RLSB2Q+J9SxFqMScJ2dudEs+uyxXk+NP+WSaNDtbt2tpbq2HAt9pYWCsPMGhLlCGqI6JzD7Sj2AKONA3JhGxMXLMgEeQ7kzM/qqJOnUgQRxsJoovQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W1VpoDIZ; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BEE1DDA20;
+	Fri, 28 Feb 2025 09:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740733491; cv=fail; b=nLLpV5jT1/OHOt5RQm0bAdOEvC91tur5cOkVf2TrjA/24Uvxn9UqAHn/85NIvsPcpd/M7cMCR0S5Ua7thu8lQZscCidRFQUhrDomm06vZ/mzRNd/am4O0ckVhCNDuc02O9qY9XqqfuGqZOJ9RAUW7gmDVhqBNglzTN3yH4WaP24=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740733491; c=relaxed/simple;
+	bh=6WDCEvPpkwHP20TDuahu0rNUJjZ+Jfh7kYejLo2MRvA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ECttrBs4bGIVtwGvsolLEOAt6y59cRYye79Zd1PdJQm9+JsKymCrJ3rhIutT856NySIVzVvS6PJP/5xrNhk7SxaEZAyqf2dkObuNfRXnQCJf2c+Y6B5ScGoQ4877DtyZLF2Rlubvt4l9ODBA+T0ycLb5wofPi5pFaw/Zon/eQ/Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=cwxLli+Y; arc=fail smtp.client-ip=40.107.236.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W1VpoDIZ"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-390df942558so1421446f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:04:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740733464; x=1741338264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3OHkCovGrXR3vNs/yhb/RhCLokYtfuYeJvX5KaS2+hM=;
-        b=W1VpoDIZWPMzCaEJRj79ifOUSPwiUQLmZaK+PToQkXirV8D8vini1ne6TUStBsCUEE
-         uE0Ag/8hcnVnjJ8DoPiI5ttR3f1YB6VslNZpnTKvdtOYSiaq5Ti7rJ1sgCF+OVgBiqnt
-         pmaxeiEbaC2tUGLcukQAi+XdC6PN0e+4CnzOc3LTjW3jfzd3QILeMlKhwKSfshpR4loU
-         e6USyBV091mlM5JoO9TeHK4jt30ht3zTj7KC+qmeoequ9qUgWj7LnErm/TIc+k3hycvR
-         Rrz8kyydFNyp2e9RWcA0DvKs3RF1rQpG9y5ImUbCydzbluypUjUvAn1/D710cU3mlSmM
-         2KhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740733464; x=1741338264;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3OHkCovGrXR3vNs/yhb/RhCLokYtfuYeJvX5KaS2+hM=;
-        b=EZxbM+tQa9hAWmDdff1vgyFUSAvD43yPWbiaRrT/Nreh3LYvcFLjXmezn+lEziJuvP
-         62z1zxOA4D7Acne76OORsSUjSLm4FvlnPP2mBfQ71hglKiQETEhpKxf8B+8mhaKhD4Ui
-         TKwBOtNBgw/aUNJM55YdJsbZTV2D8ZrI43pprxh17GTOqCW9j9EJYUNjZSOheM8nks6F
-         hCZXQNM5i0+MLenHQS4ic/7EJWi1sUmHevJnf1P727GQHklDmqRY0yKJjg+/XqlT/zyq
-         R6iCJNqDRIrmzI8jHcdG4JlJYmxzuNmw0k//LzPhHjGidTay7t44YZwiRc3bVcq0iVZq
-         ey2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUHq7p0jOqudy/gPsTFCW9k/vTJ6SucK7sscbkN6nzGqIPstCOH6vdkEFM2fMwLFERq9Yrq344gCQu+hCA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySaHnj6f9OeQNBq1FJhgwQtom7zuSW65rQ8/4UUatVz67csExi
-	/aVbOzpnTUFnqf11TQ81Dslv/lddJK3M5bSk9gCufkxk0/4UveJ4+qQUfMFyt1ImqimprH7qFuE
-	phaySNTaicjDhyKRScS3/S3L1lpv2izNp3NIN
-X-Gm-Gg: ASbGnctzaTZNi6wTmr0IsMa1a3n2U6EpbWKVDIXP6GR+xuq84nZuLvO1fI/LU6WqXfv
-	2xdDmGHWkYWkbCVyfBbfVRBfh/DKzulf1Dg0X95ugtx/IejUiQEZPVWpuAIuFEBQ9fS3Etw2ZLv
-	Cg9qYN2+vKYwhQ8sNZcWPCrfzDmEUeHu8xoA9P
-X-Google-Smtp-Source: AGHT+IHcheD4qjv4BV/CfpHVEIEjQTXsfvTUtOfeoZIL8CBuhYu/S1nosBYnS5BciMEwb5jNY7POkL8qlUxyXbG2sPs=
-X-Received: by 2002:a05:6000:144b:b0:385:f7d9:99f5 with SMTP id
- ffacd0b85a97d-390eca63b71mr1942575f8f.51.1740733463613; Fri, 28 Feb 2025
- 01:04:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="cwxLli+Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=t8YNUoej6iOsFSY5YSzD/yMULm59VdkUpZFyRKOVEKmqFeFVzaqEjgk8BYUKKChXf77ytCZOJp4/mKJ6aF4junM1PNG40twclPOSxnp1L253tCcPTZ14kW6KF+3vh0hf4NvRZgnkxQUP8+8+xT3xOGRzwidVohCFmI6/L9oxoFuAaLD5nx50rsn2hflVS/BcFvv1lwOxy9LmU/7KOIi7tUneS7LjGPfVC3DqitVNZ1mhwP1jOIMTtnbvMYU37MsRz2upXLQLmRJBJnNF5+jU3cjEtpOHATvovAb3gf2TNHwacYs7Y1+gc9PZ+F9lpPQ9kHNE0DYdrgCvJvJ7WQjaJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JZtvj0Tmb7QFhHOr7sMRflnBPAi/75mPWS+3iodBw8Y=;
+ b=i33YzJMlXwYj7zmx6oDw2K5Sc7J8Urdf3wISFeRuKs/iIiv0/FLYLyMep3n7YH3s2sZrfLO+PCnwBlnINGqgaTcYXDleAUIHopDfvh101McjyujkEZtAtVgMSuIWqCkhIhjDhbym8LBKgV2p/D8PvzcKHwEa1+olzttRE82ZiDMCkIDJ/T5QEVwF9cbUNj7yh5EBwQvSON2QL34O2aUs+Orgz0lGS1bm0wkvmwj8kkWFWAZF3ikmRRv5d85vEgSJaioorYdKpD4UKSp8YSeW6O7rm0R5f4Fcj+e3YIp0c771dmdC1AqLH0l8/+fYqZ+wE6GVLFZYXMfigJ+e0FDtJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JZtvj0Tmb7QFhHOr7sMRflnBPAi/75mPWS+3iodBw8Y=;
+ b=cwxLli+Y7sTB0lb1oWdTQO0qEqxVM7JsuTlKRn6d63YGWIFhgP+D7y3V2iuPIJYSSpLf6PWgrpICevUqlAzO3FJaq7an7csIJAJRI61b/iuqnrZJiR5MPAvAikDWLrNt8MNETlplmrXV5D3jajW63Z/H74lGU5uGcAsxBlgL71U=
+Received: from MW4PR03CA0140.namprd03.prod.outlook.com (2603:10b6:303:8c::25)
+ by CY8PR12MB7124.namprd12.prod.outlook.com (2603:10b6:930:5f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
+ 2025 09:04:45 +0000
+Received: from SJ1PEPF00001CDF.namprd05.prod.outlook.com
+ (2603:10b6:303:8c:cafe::d) by MW4PR03CA0140.outlook.office365.com
+ (2603:10b6:303:8c::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Fri,
+ 28 Feb 2025 09:04:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CDF.mail.protection.outlook.com (10.167.242.7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:04:44 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 03:02:10 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
+Subject: [RFC PATCH 06/19] KVM: SVM: Initialize apic protected state for SAVIC guests
+Date: Fri, 28 Feb 2025 14:21:02 +0530
+Message-ID: <20250228085115.105648-7-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
- <CKneQ3Au7Fx5Uc7AM_RTi5BXRNnOUcrfnqI0fuWO5M7QIosWye4LhdM7bf9zqqzC5dCISrLHE9OgvVeVSla54Q==@protonmail.internalid>
- <20250227-export-macro-v1-2-948775fc37aa@google.com> <871pvipjxe.fsf@kernel.org>
-In-Reply-To: <871pvipjxe.fsf@kernel.org>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 28 Feb 2025 10:04:11 +0100
-X-Gm-Features: AQ5f1JoJhUzxkrKlJTdjR0yIGZyICCE2ZXFseogh0kdUyKEZhUpa7ALlmGCwpTw
-Message-ID: <CAH5fLggu+-Fw-4Z02xS3qSdhJAcSyNXaMn+CQ0XkBvqvgeAbGQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] rust: add #[export] macro
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CDF:EE_|CY8PR12MB7124:EE_
+X-MS-Office365-Filtering-Correlation-Id: c60805c5-3f28-43fe-6d69-08dd57d6f198
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?okxClPqCGxA3keLrMVOaX9/TIU9Onb2s8U9yn07F9O5cs+zHPofe0xV2At7L?=
+ =?us-ascii?Q?m7iEdDZvHDqjoNBsFekWZcAsqu9E6N/lMwOzvtxcjNJE0w5LWxKFWbczt0lj?=
+ =?us-ascii?Q?Zo76GkaMqfA4BtcbtHuu0uscjNEN4NMtJpOYtJckF7UW0dwocVQ8AaKdGeFY?=
+ =?us-ascii?Q?N2kWVUJZgOGfBTZg7CawdXdU7CIVOMXvOKhzZR0eJ0CVgbxucIWqUpWINBOw?=
+ =?us-ascii?Q?HlaEYMCw5j5+7Vp7+kPlDNJ2Loe4WvJLgOjBcRbWxT2C2genpi2Z3Qn6zSjx?=
+ =?us-ascii?Q?yYar+Q7+QDuB2JCVZqRXtio0duh9EJd6ObiCGmo3/30UmI+0oyYYSZoKvzJ7?=
+ =?us-ascii?Q?sQbbPDWQ8lOlFSfPavKWiQEQjN+fBfptGhiTxw83oP4KTE8apaM4OpwkJgjP?=
+ =?us-ascii?Q?14utP3TiIbdL7CDWP3eKMhXaTAxhgkrH4Ox7GyJQ+qk9zJWQCuQTfywjpKR9?=
+ =?us-ascii?Q?oAWJALQC3/jS7lfVCBo3SpPnbvM4S5z5DRop4Kb32l4fb1v5oHccQOJna9n3?=
+ =?us-ascii?Q?HBIg16ef72bSmbuGU6ROxFsAwCrL3GTmDUo9DmUfWwSoIFtX5KygAsnwr/UM?=
+ =?us-ascii?Q?hncyi7ZLtbhOS2bJVHztFV1fAc4pXqA1QfKdZH14MBV4xV1EGC7g/u2KGPC9?=
+ =?us-ascii?Q?7fVuGL9Y0GW2axJ3IEPlgfkZsgTI5cbvp+kBGQIzzRmbleUSzYOOpcLIhsjK?=
+ =?us-ascii?Q?u1hFuIuXU+qXZv3Ij7mO/xVQmTu5zyBbwzW0ZuNeMft5X7rO8MxNE7DcOLIU?=
+ =?us-ascii?Q?J797dbFAIrjLTdJESD+jmrOtZigyDvgxGgRyqF2MqATSyXUEe5u84zmGulLK?=
+ =?us-ascii?Q?npoktj6k9aMk662UCtad18gala29I0mWRRMhpnI1fBXkgDgOe69fxkA4rTB5?=
+ =?us-ascii?Q?cFblq3whq3Knxgjha0OlTxBQrsp/mV+w9pnoIravjTV7i0qZz8nqouQTSHyi?=
+ =?us-ascii?Q?P7EGwHxKl6H6HfF1+HAO4dNHL+BO/GGCDijKUJKHQS2r9FSX4RLa1VJZqGUb?=
+ =?us-ascii?Q?nwAeucuI1cnSmeaWr+I1hCTPSqiyZnQOxeJf8+ZgZD2X13xVSwwW/N84hHuR?=
+ =?us-ascii?Q?jrEuytKssqtJh5cIJoZKTrswRdjHHs3PwAk83xPBLw/+1Swus1JuqMZY6Kb8?=
+ =?us-ascii?Q?MOKzsATlT0CkSbq7ijvm4Ng7ted2FI1kXVnGCahS4tAoqheFVrGgZHUjXJF3?=
+ =?us-ascii?Q?CMpg6ZgUGegjIoewuRh3dGuHGFzqp/rKMvBwKrngeuTTuIbeF/aqjfUieHB+?=
+ =?us-ascii?Q?znTwv1lcxsEqg6s0wJM2VNsSFUu1pa5VJpuwQcBXN4Z9tVbpxHTAs3/qhZOm?=
+ =?us-ascii?Q?R/utATwlIQkOuLWSLo6HCf38zhnqoMm65BiT9RngvaZPSEwZMZwG07prK5Wo?=
+ =?us-ascii?Q?o6uDnsyTqyyAxNXorATeUTSw+FdErjCrZijfnkhSoXsppfTPPgFQEgMOSRiA?=
+ =?us-ascii?Q?sjYza0XX5SSKGHw1lRfpw57ITuM3Igbw5YH/Ja42a2jkA2o6DkOl9B2s3MNn?=
+ =?us-ascii?Q?+osW+QKMjeSHMBg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:04:44.2363
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c60805c5-3f28-43fe-6d69-08dd57d6f198
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CDF.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7124
 
-On Fri, Feb 28, 2025 at 9:20=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
-.org> wrote:
->
-> "Alice Ryhl" <aliceryhl@google.com> writes:
->
-> > This macro behaves like #[no_mangle], but also performs an assertion
-> > that the Rust function has the same signature as what is declared in th=
-e
-> > C header.
-> >
-> > If the signatures don't match, you will get errors that look like this:
-> >
-> > error[E0308]: `if` and `else` have incompatible types
-> >   --> <linux>/rust/kernel/print.rs:22:22
-> >    |
-> > 21 | #[export]
-> >    | --------- expected because of this
-> > 22 | unsafe extern "C" fn rust_fmt_argument(
-> >    |                      ^^^^^^^^^^^^^^^^^ expected `u8`, found `i8`
-> >    |
-> >    =3D note: expected fn item `unsafe extern "C" fn(*mut u8, *mut u8, *=
-mut c_void) -> *mut u8 {bindings::rust_fmt_argument}`
-> >               found fn item `unsafe extern "C" fn(*mut i8, *mut i8, *co=
-nst c_void) -> *mut i8 {print::rust_fmt_argument}`
-> >
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/kernel/prelude.rs |  2 +-
-> >  rust/macros/export.rs  | 25 +++++++++++++++++++++++++
-> >  rust/macros/helpers.rs | 19 ++++++++++++++++++-
-> >  rust/macros/lib.rs     | 18 ++++++++++++++++++
-> >  rust/macros/quote.rs   | 21 +++++++++++++++++++--
-> >  5 files changed, 81 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-> > index dde2e0649790..889102f5a81e 100644
-> > --- a/rust/kernel/prelude.rs
-> > +++ b/rust/kernel/prelude.rs
-> > @@ -17,7 +17,7 @@
-> >  pub use crate::alloc::{flags::*, Box, KBox, KVBox, KVVec, KVec, VBox, =
-VVec, Vec};
-> >
-> >  #[doc(no_inline)]
-> > -pub use macros::{module, pin_data, pinned_drop, vtable, Zeroable};
-> > +pub use macros::{export, module, pin_data, pinned_drop, vtable, Zeroab=
-le};
-> >
-> >  pub use super::{build_assert, build_error};
-> >
-> > diff --git a/rust/macros/export.rs b/rust/macros/export.rs
-> > new file mode 100644
-> > index 000000000000..3398e1655124
-> > --- /dev/null
-> > +++ b/rust/macros/export.rs
-> > @@ -0,0 +1,25 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +use crate::helpers::function_name;
-> > +use proc_macro::TokenStream;
-> > +
-> > +pub(crate) fn export(_attr: TokenStream, ts: TokenStream) -> TokenStre=
-am {
->
-> This function is documented in macros/lib.rs. Could you insert a
-> docstring with a link to the function that carries the docs?
+Initialize lapic's guest_apic_protected for Secure AVIC guests.
+This is only an initialization commit and actual support for
+creating Secure AVIC enabled guests and injecting interrupts
+would be added in later commits.
 
-These functions are not visible in the docs, and no other macro does that.
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+ arch/x86/kvm/svm/svm.c | 3 +++
+ arch/x86/kvm/svm/svm.h | 5 +++++
+ 2 files changed, 8 insertions(+)
 
-> Please describe how the function operates and what mechanics it uses to
-> achieve its goal in a implementation detail comment.
->
-> > +    let Some(name) =3D function_name(ts.clone()) else {
-> > +        return "::core::compile_error!(\"The #[export] attribute must =
-be used on a function.\");"
-> > +            .parse::<TokenStream>()
-> > +            .unwrap();
-> > +    };
-> > +
-> > +    let signature_check =3D quote!(
-> > +        const _: () =3D {
-> > +            if true {
-> > +                ::kernel::bindings::#name
-> > +            } else {
-> > +                #name
-> > +            };
-> > +        };
-> > +    );
-> > +
-> > +    let no_mangle =3D "#[no_mangle]".parse::<TokenStream>().unwrap();
-> > +    TokenStream::from_iter([signature_check, no_mangle, ts])
-> > +}
-> > diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
-> > index 563dcd2b7ace..3e04f8ecfc74 100644
-> > --- a/rust/macros/helpers.rs
-> > +++ b/rust/macros/helpers.rs
-> > @@ -1,6 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> > -use proc_macro::{token_stream, Group, TokenStream, TokenTree};
-> > +use proc_macro::{token_stream, Group, Ident, TokenStream, TokenTree};
-> >
-> >  pub(crate) fn try_ident(it: &mut token_stream::IntoIter) -> Option<Str=
-ing> {
-> >      if let Some(TokenTree::Ident(ident)) =3D it.next() {
-> > @@ -215,3 +215,20 @@ pub(crate) fn parse_generics(input: TokenStream) -=
-> (Generics, Vec<TokenTree>) {
-> >          rest,
-> >      )
-> >  }
-> > +
-> > +/// Given a function declaration, finds the name of the function.
-> > +pub(crate) fn function_name(input: TokenStream) -> Option<Ident> {
->
-> It would be great with a few tests for this function.
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 456d841298f7..d4191c0a0133 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -1442,6 +1442,9 @@ static int svm_vcpu_create(struct kvm_vcpu *vcpu)
+ 	if (!vmcb01_page)
+ 		goto out;
+ 
++	if (sev_savic_active(vcpu->kvm))
++		vcpu->arch.apic->guest_apic_protected = APIC_STATE_PROTECTED_INJECTED_INTR;
++
+ 	if (sev_es_guest(vcpu->kvm)) {
+ 		/*
+ 		 * SEV-ES guests require a separate VMSA page used to contain
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 9d7cdb8fbf87..7cde221e477e 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -756,6 +756,10 @@ void sev_snp_init_protected_guest_state(struct kvm_vcpu *vcpu);
+ int sev_gmem_prepare(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+ void sev_gmem_invalidate(kvm_pfn_t start, kvm_pfn_t end);
+ int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn);
++static inline bool sev_savic_active(struct kvm *kvm)
++{
++	return to_kvm_sev_info(kvm)->vmsa_features & SVM_SEV_FEAT_SECURE_AVIC;
++}
+ #else
+ static inline struct page *snp_safe_alloc_page_node(int node, gfp_t gfp)
+ {
+@@ -786,6 +790,7 @@ static inline int sev_private_max_mapping_level(struct kvm *kvm, kvm_pfn_t pfn)
+ {
+ 	return 0;
+ }
++static inline bool sev_savic_active(struct kvm *kvm) { return false; }
+ 
+ #endif
+ 
+-- 
+2.34.1
 
-I don't think we have a mechanism for tests in the macro crate?
-
-> > +    let mut input =3D input.into_iter();
-> > +    while let Some(token) =3D input.next() {
-> > +        match token {
-> > +            TokenTree::Ident(i) if i.to_string() =3D=3D "fn" =3D> {
-> > +                if let Some(TokenTree::Ident(i)) =3D input.next() {
-> > +                    return Some(i);
-> > +                }
-> > +                return None;
-> > +            }
-> > +            _ =3D> continue,
-> > +        }
-> > +    }
-> > +    None
-> > +}
-> > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-> > index d61bc6a56425..3cbf7705c4c1 100644
-> > --- a/rust/macros/lib.rs
-> > +++ b/rust/macros/lib.rs
-> > @@ -9,6 +9,7 @@
-> >  #[macro_use]
-> >  mod quote;
-> >  mod concat_idents;
-> > +mod export;
-> >  mod helpers;
-> >  mod module;
-> >  mod paste;
-> > @@ -174,6 +175,23 @@ pub fn vtable(attr: TokenStream, ts: TokenStream) =
--> TokenStream {
-> >      vtable::vtable(attr, ts)
-> >  }
-> >
-> > +/// Export a function so that C code can call it.
-> > +///
-> > +/// This macro has the following effect:
-> > +///
-> > +/// * Disables name mangling for this function.
-> > +/// * Verifies at compile-time that the function signature matches wha=
-t's in the header file.
-> > +///
-> > +/// This macro requires that the function is mentioned in a C header f=
-ile, and that the header file
-> > +/// is included in `rust/bindings/bindings_helper.h`.
-> > +///
-> > +/// This macro is *not* the same as the C macro `EXPORT_SYMBOL*`, sinc=
-e all Rust symbols are
-> > +/// currently automatically exported with `EXPORT_SYMBOL_GPL`.
->
-> Perhaps add the following:
->
-> This macro is useful when rust code is providing a function symbol whose
-> signature is dictated by a C header file.
-
-I do think this could use more info about when to use it. E.g., you
-don't use it if C calls it via a vtable, but only if C calls it via a
-declaration in a header file. I'll add more info.
-
-> > +#[proc_macro_attribute]
-> > +pub fn export(attr: TokenStream, ts: TokenStream) -> TokenStream {
-> > +    export::export(attr, ts)
-> > +}
-> > +
-> >  /// Concatenate two identifiers.
-> >  ///
-> >  /// This is useful in macros that need to declare or reference items w=
-ith names
-> > diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
-> > index 33a199e4f176..c18960a91082 100644
-> > --- a/rust/macros/quote.rs
-> > +++ b/rust/macros/quote.rs
-> > @@ -20,6 +20,12 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
-> >      }
-> >  }
-> >
-> > +impl ToTokens for proc_macro::Ident {
-> > +    fn to_tokens(&self, tokens: &mut TokenStream) {
-> > +        tokens.extend([TokenTree::from(self.clone())]);
-> > +    }
-> > +}
-> > +
-> >  impl ToTokens for TokenTree {
-> >      fn to_tokens(&self, tokens: &mut TokenStream) {
-> >          tokens.extend([self.clone()]);
-> > @@ -40,7 +46,7 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
-> >  /// `quote` crate but provides only just enough functionality needed b=
-y the current `macros` crate.
-> >  macro_rules! quote_spanned {
-> >      ($span:expr =3D> $($tt:tt)*) =3D> {{
-> > -        let mut tokens;
-> > +        let mut tokens: ::std::vec::Vec<::proc_macro::TokenTree>;
-> >          #[allow(clippy::vec_init_then_push)]
-> >          {
-> >              tokens =3D ::std::vec::Vec::new();
-> > @@ -65,7 +71,8 @@ macro_rules! quote_spanned {
-> >          quote_spanned!(@proc $v $span $($tt)*);
-> >      };
-> >      (@proc $v:ident $span:ident ( $($inner:tt)* ) $($tt:tt)*) =3D> {
-> > -        let mut tokens =3D ::std::vec::Vec::new();
-> > +        #[allow(unused_mut)]
-> > +        let mut tokens =3D ::std::vec::Vec::<::proc_macro::TokenTree>:=
-:new();
-> >          quote_spanned!(@proc tokens $span $($inner)*);
-> >          $v.push(::proc_macro::TokenTree::Group(::proc_macro::Group::ne=
-w(
-> >              ::proc_macro::Delimiter::Parenthesis,
-> > @@ -136,6 +143,16 @@ macro_rules! quote_spanned {
-> >          ));
-> >          quote_spanned!(@proc $v $span $($tt)*);
-> >      };
-> > +    (@proc $v:ident $span:ident =3D $($tt:tt)*) =3D> {
-> > +        $v.push(::proc_macro::TokenTree::Punct(
-> > +                ::proc_macro::Punct::new('=3D', ::proc_macro::Spacing:=
-:Alone)
-> > +        ));
-> > +        quote_spanned!(@proc $v $span $($tt)*);
-> > +    };
-> > +    (@proc $v:ident $span:ident _ $($tt:tt)*) =3D> {
-> > +        $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::ne=
-w("_", $span)));
-> > +        quote_spanned!(@proc $v $span $($tt)*);
-> > +    };
-> >      (@proc $v:ident $span:ident $id:ident $($tt:tt)*) =3D> {
-> >          $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::ne=
-w(stringify!($id), $span)));
-> >          quote_spanned!(@proc $v $span $($tt)*);
->
-> The update to `impl ToTokens for TokenTree` should be split out in a
-> separate patch and should carry some explanation of the change.
-
-I think this case is borderline for whether it's necessary to split
-up, but okay.
-
-Alice
