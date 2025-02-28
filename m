@@ -1,142 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7520276027;
-	Fri, 28 Feb 2025 19:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03500230BD8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772438; cv=none; b=Rvqbd8xCvnjCLTtmCM51AHKDkdvI7XATt437tztTRMi2iv8w5LIGqcN8evSy76S+vEIuHpFXHOC5ZQeHss4gMvcBwvphExu/11Qj1txw2pbqB961g9/GY7oR2KuKt6U09F8l0Uy3Dy4wCJQrwZTDq0sl+YExjQJnp5DfV9XV2z8=
+	t=1740772449; cv=none; b=pdSa7smIWEdDlmPWfO4wQKoajRoWkyj+NPsG7PuefajFeyEw0ZF9e44uw567yTKX5j1Q9LSCUVryFRnm8C8qu2WUr9PXgxufz/tvxNfPaST6C0o0jAEWG6dQzQMCImqx654aHEg0Hr3wOOu17E1guB03L/+PTKAlPrM1VIWM2EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772438; c=relaxed/simple;
-	bh=/XH79EmqZl8K0OrxFZw/WEPOCqQyhyfy8x5Gy0s2Ggk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=niIOOcLtSquwbcAWuMaj62i8FWBLPIZ8yqHklxtD9wRsSit2vgg0mimAEW3uGlwAm0wpJRWe38atqQVbGZtd2d1rRWGwpT8ZU2J3al+8EdfhV8hTpc+2+wJBoSkXAqkcMGc7m8zqv4xuG2HnxB8Sd7Cg2yPI+p72/ctr5CNi5sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ywy/lHFD; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ywy/lHFD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740772437; x=1772308437;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=/XH79EmqZl8K0OrxFZw/WEPOCqQyhyfy8x5Gy0s2Ggk=;
-  b=Ywy/lHFD6+27KBChViFakYLBoSjMGPpOJ/czhtp3gVsvPLWKPycjfFfN
-   7pW78st+ZWJw8sOO4TxMXX4pOw32QsxHA/BJhdV7i1EGPCxMbQnbULbKs
-   7KEM4L+i41bvfjY6E2t5UtEePHtcg/Hk9/ulXBbmwgdi5Yt59kWepU9BV
-   92WSYoucokCaiiR02BRhT2LhMAxDHzbqGxMvtYGz8fWGIcycVMEdM5VYi
-   419MISbavjBqYPCyDG5uN8Jpskdc2wa5qgIl7Q4x3VY3uc5kxCTvw734A
-   jTLsy1eJ6Og6KxrvM2CiCYCjwaCPzsWLEOzNjZSW863BY8uVBqJL/FXgi
-   Q==;
-X-CSE-ConnectionGUID: zffUTvGCRuK3dG6wrC2EQg==
-X-CSE-MsgGUID: jiH0pbQOSGm5Tum2EocQvg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41633140"
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="41633140"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 11:53:56 -0800
-X-CSE-ConnectionGUID: L7IzgDXOTIiV0GiWviUL/g==
-X-CSE-MsgGUID: ghGfT8WBTBShlKN3tlKBeg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="121553798"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.221.30])
-  by fmviesa003.fm.intel.com with ESMTP; 28 Feb 2025 11:53:54 -0800
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: [PATCH] perf stat: Fix uniquify for hybrid systems
-Date: Fri, 28 Feb 2025 13:53:51 -0600
-Message-ID: <20250228195351.1160071-1-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1740772449; c=relaxed/simple;
+	bh=jOG6JRbOX7kETk8jiCqeZ5lPaJ0cQAuO41k4XsqBrkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kCCsHIyhd3IKgZb8CVRDmSnMtiTp3ouZyI0ZWvgAaa9pcwEIvhiC6jpdaJU+MhqhEkwQ8TteTHyolSkvzt+yIXM+yz7Yq8K6AbJxQZVKtvDVRodxCgx7yKzKLSZqNyp5wlnGtLsq8Vznwey113r5EW/leSvIaQjGhiTlTqh8k70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3B7A150C;
+	Fri, 28 Feb 2025 11:54:22 -0800 (PST)
+Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 117BB3F5A1;
+	Fri, 28 Feb 2025 11:53:56 -0800 (PST)
+Message-ID: <3e21aab4-d813-4f5b-9f60-74887270f12f@arm.com>
+Date: Fri, 28 Feb 2025 19:53:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 31/42] x86/resctrl: Remove the limit on the number of
+ CLOSID
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
+ <20250207181823.6378-32-james.morse@arm.com>
+ <6c1e02c6-085a-4866-99a3-59b954b687ee@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <6c1e02c6-085a-4866-99a3-59b954b687ee@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Currently, perf stat is omitting the pmu name for legacy events
-on hybrid systems. git bisect indicated commit 357b965deba9 as the cause:
+Hi Reinette,
 
-Bisecting: 0 revisions left to test after this (roughly 0 steps)
-[357b965deba9fb71467413e473764ec4e1694d8d] perf stat: Changes to event
-name uniquification
+On 20/02/2025 04:21, Reinette Chatre wrote:
+> On 2/7/25 10:18 AM, James Morse wrote:
+>> From: Amit Singh Tomar <amitsinght@marvell.com>
+>>
+>> Resctrl allocates and finds free CLOSID values using the bits of a u32.
+>> This restricts the number of control groups that can be created by
+>> user-space.
+>>
+>> MPAM has an architectural limit of 2^16 CLOSID values, Intel x86 could
+>> be extended beyond 32 values. There is at least one MPAM platform which
+>> supports more than 32 CLOSID values.
+>>
+>> Replace the fixed size bitmap with calls to the bitmap API to allocate
+>> an array of a sufficient size.
+>>
+>> ffs() returns '1' for bit 0, hence the existing code subtracts 1 from
+>> the index to get the CLOSID value. find_first_bit() returns the bit
+>> number which does not need adjusting.
+>>
+>> Signed-off-by: Amit Singh Tomar <amitsinght@marvell.com>
+>> [ morse: fixed the off-by-one in the allocator and the wrong
+>>  not-found value. Removed the limit. Rephrase the commit message. ]
+>> Signed-off-by: James Morse <james.morse@arm.com>
 
-Include an additional check for hybrid architectures when determining
-whether to uniquify legacy events.
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index 08fec23a38bf..de79da30d500 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
 
-Before:
+>> @@ -152,20 +152,30 @@ int closids_supported(void)
 
-$ sudo ./perf stat -e cycles -a sleep 1
+>> +static void closid_exit(void)
+>> +{
+>> +	bitmap_free(closid_free_map);
 
- Performance counter stats for 'system wide':
+> With closid_free_map being a global, could this also set
+> closid_free_map to NULL?
 
-       173,903,751      cycles
-       666,423,950      cycles
+Makes sense,
 
-       1.006615048 seconds time elapsed
+> 
+>>  }
+>>  
+>>  static int closid_alloc(void)
 
-After:
+>> @@ -2754,20 +2763,22 @@ static int rdt_get_tree(struct fs_context *fc)
+>>  		goto out_ctx;
+>>  	}
+>>  
+>> -	closid_init();
+>> +	ret = closid_init();
+>> +	if (ret)
+>> +		goto out_schemata_free;
+>>  
+>>  	if (resctrl_arch_mon_capable())
+>>  		flags |= RFTYPE_MON;
+>>  
+>>  	ret = rdtgroup_add_files(rdtgroup_default.kn, flags);
+>>  	if (ret)
+>> -		goto out_schemata_free;
+>> +		goto out_closid_exit;
+>>  
+>>  	kernfs_activate(rdtgroup_default.kn);
+>>  
+>>  	ret = rdtgroup_create_info_dir(rdtgroup_default.kn);
+>>  	if (ret < 0)
+>> -		goto out_schemata_free;
+>> +		goto out_closid_exit;
+>>  
+>>  	if (resctrl_arch_mon_capable()) {
+>>  		ret = mongroup_create_dir(rdtgroup_default.kn,
 
-$ sudo ./perf stat -e cycles -a sleep 1
+> With closid_init() called from rdt_get_tree() during mount I expected
+> closid_exit() to be called from rdt_kill_sb() during unmount ?
 
- Performance counter stats for 'system wide':
+Ah, I'd missed that - the old version got called multiple times but it was harmless. Now
+it potentially leaks the bitmap. Fixed.
 
-       841,496,603      cpu_atom/cycles/
-     3,308,929,412      cpu_core/cycles/
 
-       1.002483283 seconds time elapsed
+Thanks!
 
-Fixes: 357b965deba9 ("perf stat: Changes to event name uniquification")
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
- tools/perf/util/stat-display.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index e65c7e9f15d1..df9f68080ec9 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -1676,6 +1676,7 @@ static bool evlist__disable_uniquify(const struct evlist *evlist)
- 
- static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_stat_config *config)
- {
-+	bool hybrid = (!config->hybrid_merge && evsel__is_hybrid(counter));
- 	struct evsel *evsel;
- 
- 	if (counter->merged_stat) {
-@@ -1688,7 +1689,8 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
- 		return;
- 	}
- 
--	if  (counter->core.attr.type < PERF_TYPE_MAX && counter->core.attr.type != PERF_TYPE_RAW) {
-+	if (!hybrid && counter->core.attr.type < PERF_TYPE_MAX &&
-+		counter->core.attr.type != PERF_TYPE_RAW) {
- 		/* Legacy event, don't uniquify. */
- 		return;
- 	}
-@@ -1705,7 +1707,7 @@ static void evsel__set_needs_uniquify(struct evsel *counter, const struct perf_s
- 		return;
- 	}
- 
--	if (!config->hybrid_merge && evsel__is_hybrid(counter)) {
-+	if (hybrid) {
- 		/* Unique hybrid counters necessary. */
- 		counter->needs_uniquify = true;
- 		return;
--- 
-2.48.1
-
+James
