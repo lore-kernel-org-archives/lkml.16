@@ -1,79 +1,135 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F94257434
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D07F257434;
+	Fri, 28 Feb 2025 09:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740735006; cv=none; b=FHs0k9zFAIF5Ck6r+OrmivlorbvUVXbKrLiV9UpFAU8snAuWpNIDv0m9m9uANY10Jzsmx9Y0/5EfM7hQDsM20/o22hmcojE5aFpiOc0xQD4SkBWYxcrlQL7k5QG4GDsON6WVsdT+A26RkGP0oWffgo3D4XL1OyJPqp8GjJyRr30=
+	t=1740735022; cv=none; b=jDD99HwcxxCZI7AABMCdrHaDxVzxdXRQdOOI00dk9yGdBdvYZTOkMhTEq375zy9w1WsLgOmStr/IXbC/p5Ib993SqhxlVKmGYaD/VX3VJmsEctxE495l/OjFlYCpYjUnLPHrOCvk4MORX8aV3wHVgO71iDk6wJSN75T+F+O3JdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740735006; c=relaxed/simple;
-	bh=24oC386422ePAgsMPWbvUb/aX6+nV/UCDhbtqdyFH7k=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gIsJYfx4IHBiyWkpXK48WXnMdvaxzi7wW1FAVVPPipSA8LO5twhB8kxKtdKJlIGLiSVKzICyJWxrdQngnb1fIBYJBN9E8iKl558j5U95DT9pb/z+Cbuf78P10gsyHfi4/8jB3ntLJ7OURiR3o1dOdVxzyvEcMJaaeo0sJB4mviE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z42tp0HRVz6K5rN;
-	Fri, 28 Feb 2025 17:28:02 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EAD9F1400D4;
-	Fri, 28 Feb 2025 17:30:02 +0800 (CST)
-Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 28 Feb
- 2025 10:30:00 +0100
-Date: Fri, 28 Feb 2025 17:29:55 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
-	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
-	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 16/19] acpi/generic_event_device.c: enable
- use_hest_addr for QEMU 10.x
-Message-ID: <20250228172955.0000740e@huawei.com>
-In-Reply-To: <797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
-References: <cover.1740671863.git.mchehab+huawei@kernel.org>
-	<797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1740735022; c=relaxed/simple;
+	bh=vueB8glrxQlRjIMAss1r71kAHRNbnxrNli+SINmYOp4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BA8oySEp73XwDOfAh9zaKKz33RdJUv0j5tZ3WKittKLw0ph4mXl6ZSLUDHakalFeJskaC4GveyV5fCy23DsBpYDNzFCDIcgx8FxWRCdBWefORDQopE5h8IxIPRidGfkljzOgkj6SRCbT/zyQ62UNy53C2DRah55muDjFuM6Ulfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V3SAatq9; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V3SAatq9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740735021; x=1772271021;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vueB8glrxQlRjIMAss1r71kAHRNbnxrNli+SINmYOp4=;
+  b=V3SAatq9sX9FRNKYU0bJMvcASKVdC9DCqqhE4+2DD3MzKyK2+IT0lLDY
+   CZfhrQ0gIA58TaBaa0utRIe1goat3FRj/4U5Ovll48PrRt/zOBoIYvwNf
+   ThTTem4qAuVD4fgsveuAyaIZkKJkmZ43RIq7Flv71wQwIaEWWi/THoyw/
+   AvNk2A2Eui7j1i1gKjYbeDiE7MFOJTyGazYbLU4i6Y7wFXwnR4dYxYKyZ
+   Htk5kDipPQQJ14vG7aLBDTGrYwPFqof6hkvg3bNNK019GWmvwhwVrqw8D
+   JkEEBSgFHW/VVjuKB0yNJeqxR4o7fhtnb7TtSrgAhfFULpbORZ1DCwyMG
+   A==;
+X-CSE-ConnectionGUID: 8Mdr2y6LRNiWYHY8Saejzg==
+X-CSE-MsgGUID: 0VqJnVbaTtKxb/h+roQNAw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45438694"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="45438694"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 01:30:21 -0800
+X-CSE-ConnectionGUID: Ql+YnlPFR8mAYyWI4sxNoQ==
+X-CSE-MsgGUID: wfjEbwY/SauCZb3PqK/3UA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148214038"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Feb 2025 01:30:19 -0800
+Message-ID: <31b489db-9028-4eea-b84d-9497d49fdddc@linux.intel.com>
+Date: Fri, 28 Feb 2025 11:31:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xhci: Restrict USB4 tunnel detection for USB3 devices to
+ Intel hosts
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Marc Zyngier <maz@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Oliver Upton <oliver.upton@linux.dev>,
+ stable@vger.kernel.org
+References: <20250227194529.2288718-1-maz@kernel.org>
+ <2025022709-unread-mystified-ddf1@gregkh>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <2025022709-unread-mystified-ddf1@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 27 Feb 2025 17:00:54 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-
-> Now that we have everything in place, enable using HEST GPA
-> instead of etc/hardware_errors GPA.
+On 27.2.2025 22.20, Greg Kroah-Hartman wrote:
+> On Thu, Feb 27, 2025 at 07:45:29PM +0000, Marc Zyngier wrote:
+>> When adding support for USB3-over-USB4 tunnelling detection, a check
+>> for an Intel-specific capability was added. This capability, which
+>> goes by ID 206, is used without any check that we are actually
+>> dealing with an Intel host.
+>>
+>> As it turns out, the Cadence XHCI controller *also* exposes an
+>> extended capability numbered 206 (for unknown purposes), but of
+>> course doesn't have the Intel-specific registers that the tunnelling
+>> code is trying to access. Fun follows.
+>>
+>> The core of the problems is that the tunnelling code blindly uses
+>> vendor-specific capabilities without any check (the Intel-provided
+>> documentation I have at hand indicates that 192-255 are indeed
+>> vendor-specific).
+>>
+>> Restrict the detection code to Intel HW for real, preventing any
+>> further explosion on my (non-Intel) HW.
+>>
+>> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 948ce83fbb7df ("xhci: Add USB4 tunnel detection for USB3 devices on Intel hosts")
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>   drivers/usb/host/xhci-hub.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+>> index 9693464c05204..69c278b64084b 100644
+>> --- a/drivers/usb/host/xhci-hub.c
+>> +++ b/drivers/usb/host/xhci-hub.c
+>> @@ -12,6 +12,7 @@
+>>   #include <linux/slab.h>
+>>   #include <linux/unaligned.h>
+>>   #include <linux/bitfield.h>
+>> +#include <linux/pci.h>
+>>   
+>>   #include "xhci.h"
+>>   #include "xhci-trace.h"
+>> @@ -770,9 +771,16 @@ static int xhci_exit_test_mode(struct xhci_hcd *xhci)
+>>   enum usb_link_tunnel_mode xhci_port_is_tunneled(struct xhci_hcd *xhci,
+>>   						struct xhci_port *port)
+>>   {
+>> +	struct usb_hcd *hcd;
+>>   	void __iomem *base;
+>>   	u32 offset;
+>>   
+>> +	/* Don't try and probe this capability for non-Intel hosts */
+>> +	hcd = xhci_to_hcd(xhci);
+>> +	if (!dev_is_pci(hcd->self.controller) ||
+>> +	    to_pci_dev(hcd->self.controller)->vendor != PCI_VENDOR_ID_INTEL)
+>> +		return USB_LINK_UNKNOWN;
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Looks good.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  hw/acpi/generic_event_device.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Ugh, nice catch.
 > 
-> diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-> index f029753ab709..9fe70b74bd42 100644
-> --- a/hw/acpi/generic_event_device.c
-> +++ b/hw/acpi/generic_event_device.c
-> @@ -332,7 +332,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
->  static const Property acpi_ged_properties[] = {
->      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
->      DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
-> -                     ghes_state.use_hest_addr, false),
-> +                     ghes_state.use_hest_addr, true),
->  };
->  
->  static const VMStateDescription vmstate_memhp_state = {
+> Mathias, want me to just take this directly for now and not wait for you
+> to resend it?
 
+Yes, please, take it directly
+
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+
+Thanks
+Mathias
