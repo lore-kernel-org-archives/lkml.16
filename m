@@ -1,129 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABCE202C22
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B17D22CBCB;
+	Fri, 28 Feb 2025 08:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740730504; cv=none; b=ckoiX0JDKESygt9Cw93fcFhl/BZctRkU7S4qhlxmRW8nKmqAxy/+vL2X2nwmY3L9FnFdMhS+zrWDLs802dl17ZOMrH9RGAeDkAWLMC5CFz/XaMeifnIIHF6Ha6/BsdUF3zhv1HjG8GRTlnSFNVTEhLi443ZcAdnb400iaeIBRBA=
+	t=1740730544; cv=none; b=U+65TI5vdI4PfMzxbL6LgGqGgqkWm4bFRrlhEt8QjzYjYUaDi0XXCpWj5uhJuSgi+cN+tc5EMXvdWkBsklroSmm+2xXm4EVJGy1d/7QuizI6AIar8BDuFxZpnMmVeJGJnACYy/48c0A37ZON6LAP1eQT2geV0ZwJrjE9dQTaCoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740730504; c=relaxed/simple;
-	bh=i/awX897IKbbFPKU31yR0reOKho27xl7tHdkuuKPePw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QW7IEUImAMVlJLT12dWtSZ7JhD5Dnv2dmLgr+bvIL2RPQAFpzPaP4KNjlNGJ+/OrK3QitPXFlKMOGMt10XsRdZJxDvth1GXYlrFevcey98NKt0x/mWuMNGyMOdYZEUFvuubrZJr/mvgRCTPQEpK2hNntqBpAn893VXiI4Ok4ZVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R4DIBl66; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740730544; c=relaxed/simple;
+	bh=WvAzpXYuDStbIgKgevXS4PEedZ9dOlJ+/Y44X6oyEF0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MXLSj76pEr+HXmP9XiNmnQWdrF29x25nob/Ew5eSTSB1GQ6zaPrehLoVS2Lnx+CR+Je4Pw9rm4NJw+oNtdK9BGpBmAsmZh+PIoeEkxBlt+B2IdL6ybxrNNle928ukZPODlIQ1nkD+igLRJfeN3U0ROX21Btcfka7s/m5dLgoqwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=P4+3jflR; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4DIBl66"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740730502;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="P4+3jflR"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C61E944432;
+	Fri, 28 Feb 2025 08:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740730533;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gVPNzs6ByW/HG56n5ZRSBScqeoqqOmHNsYho5zA17Ek=;
-	b=R4DIBl66kcWAN4HHATNQHPQXFkuSUZgAXFwtVCcKRgh7IyyEZxS6AKvxRmjfydOc7UxUrY
-	qGu0qS+axEsE5Tu6XZD+GdIPuhWMzPQKQrRo7J6hdi+zzQSrBCKUwReLRL/5JtcG+vzusW
-	ddrW9aTp48rgjEKotjdKm9dMjm0mudg=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-606-OX_9k14TPDmJv8ObvGqQOA-1; Fri, 28 Feb 2025 03:14:58 -0500
-X-MC-Unique: OX_9k14TPDmJv8ObvGqQOA-1
-X-Mimecast-MFC-AGG-ID: OX_9k14TPDmJv8ObvGqQOA_1740730498
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fea8e4a655so5243460a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:14:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740730498; x=1741335298;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gVPNzs6ByW/HG56n5ZRSBScqeoqqOmHNsYho5zA17Ek=;
-        b=Oao7DR8D1Uh/MQdx3BDjloVhboBFhclEKUB19BPhZGGpIWbPOQQxU/oaCjeFsEv1x8
-         Flm7nIc3Ai8uzfWa5akp74qSP69Oa0ZVklFOzEtm6gO1GqlWuXooAJPd2z0aUAOBige2
-         NtP/UyzrtVxecbPEfWbneXDEQBoySM5avwkMwzz35JN/d7/1ziLjDI+r8w9Ou6+MuZC/
-         xPORuZ6gV/C23Yzp60LHXn7wfaKRjLcU/EIo5GkjhU/fGza4RENzPhhKUgd/h71SGmng
-         GLd4lAhB8+QRkpS7oSl0QwGihVChN1TgbtwkyJNmEaLQS4agNwD3xXCFvA7Tklb1G/ZB
-         gzhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvl7+EnBIcbSRbTapPuf/+Cjicit0JaVTotxJSF5is3wzctZ1mjgvpT9ESczxvG2WjXMbhO1Rxev7UCYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoXrMvYe3BwghQipRNy7Ht2nBDoDypXP3JiFDrlk5RXjE4l0/L
-	Vq1KlcL+ErcqkHIResgbQSsbEKQ50MGxFPGpp/VqihBzkxVENEcFvdJKSTbr0v8kC7H4cZJlCRP
-	q8eBKTf/Ss5XeAb/a63TqmruRrStSDB3NXYtvfSM8kuqBM45qcVPMSuFdY6qUS5u7bu6aV7spmO
-	z9SWqdULvEQ7uMi0LGozpbxC/61NDlSac6hfXd
-X-Gm-Gg: ASbGnctIUjKEy1841VvxYUW3vW6tWhaE5/s/Wc7fRWU0ouJxwT+gGNFbKQpkHzY+jXA
-	P8KnGOl76uIswHsq05l8nTeZ6yKR/xd4/lQQGcK4e9ktWtWaC3+oV+Io/37p37gHK600obBH0MQ
-	==
-X-Received: by 2002:a17:90b:3509:b0:2f9:9ddd:68b9 with SMTP id 98e67ed59e1d1-2febabd9c6bmr3713394a91.26.1740730497705;
-        Fri, 28 Feb 2025 00:14:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGcn+x0GZCIknQ4zTQaIWwzNhdUzSiOqz72PNKBkKpuyU9ZwZnQPTZZgdJG8a4JcV4cazyA92Z/y0DGoohoCj0=
-X-Received: by 2002:a17:90b:3509:b0:2f9:9ddd:68b9 with SMTP id
- 98e67ed59e1d1-2febabd9c6bmr3713377a91.26.1740730497420; Fri, 28 Feb 2025
- 00:14:57 -0800 (PST)
+	bh=1iuifuyC6NwdJO1A+Y1ARBqJ7aQn+uQXOyq27YtuDWY=;
+	b=P4+3jflRxGg/jV135L0ycaPLhy0wFGWV7b4xHnid2vIQ4EWylqaSqoDPc/Mv0xqhG0RF/4
+	bXgBQ9zXbuKck7zg+NcVqYBYSvXMmP+z+mRwEG7KgGNbkTJ4yD7A5FRDMZ+LWcskgcZ0ur
+	U85N9738IWlHE/ypWDJe7IA20sZP+H7/C2AsWAwEGY/GvUr7G7t5okLPnupvntT/QXks/f
+	e2oWQU037PNB84V3g0e028iWOgUa2pdP7XxGHgrncwwXYY6J/QGRVcL9tmh3Uvy+JhiPnM
+	4lU7K0Z25QchE2OoSH06FC/B4VNbhVR0/5Kv/qCW7cIRMR4s/N3JSXsgF8Olhw==
+Message-ID: <d95c15b7-3641-4334-a42b-b56067e5e0f0@bootlin.com>
+Date: Fri, 28 Feb 2025 09:15:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227185017.206785-1-jdamato@fastly.com> <20250227185017.206785-4-jdamato@fastly.com>
-In-Reply-To: <20250227185017.206785-4-jdamato@fastly.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Fri, 28 Feb 2025 16:14:46 +0800
-X-Gm-Features: AQ5f1Jol8DOnnluZJdrms83ewIQuIWuNFxqYbgH6IOJBaoShyIqsVl50giYriC4
-Message-ID: <CACGkMEus3m5M5ecA4u7irKd-N0p0=ZjnAPanLk-YJgoB6jhgBA@mail.gmail.com>
-Subject: Re: [PATCH net-next v5 3/4] virtio-net: Map NAPIs to queues
-To: Joe Damato <jdamato@fastly.com>
-Cc: netdev@vger.kernel.org, mkarsten@uwaterloo.ca, 
-	gerhard@engleder-embedded.com, xuanzhuo@linux.alibaba.com, kuba@kernel.org, 
-	mst@redhat.com, leiyang@redhat.com, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	"open list:VIRTIO CORE AND NET DRIVERS" <virtualization@lists.linux.dev>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next 04/10] selftests/bpf: test_tunnel: Move ip6gre
+ tunnel test to test_progs
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Alexis Lothore <alexis.lothore@bootlin.com>, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227-tunnels-v1-0-33df5c30aa04@bootlin.com>
+ <20250227-tunnels-v1-4-33df5c30aa04@bootlin.com> <Z8DkxXy9ZAbASXCk@mini-arch>
+Content-Language: en-US
+From: Bastien Curutchet <bastien.curutchet@bootlin.com>
+In-Reply-To: <Z8DkxXy9ZAbASXCk@mini-arch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekleekkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeeurghsthhivghnucevuhhruhhttghhvghtuceosggrshhtihgvnhdrtghurhhuthgthhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfehgefgteffkeehveeuvdekvddvueefgeejvefgleevveevteffveefgfehieejnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrudegngdpmhgrihhlfhhrohhmpegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehsthhfohhmihgthhgvvhesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrt
+ ghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomhdprhgtphhtthhopehsohhngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihonhhghhhonhhgrdhsohhngheslhhinhhugidruggvvh
+X-GND-Sasl: bastien.curutchet@bootlin.com
 
-On Fri, Feb 28, 2025 at 2:50=E2=80=AFAM Joe Damato <jdamato@fastly.com> wro=
-te:
->
-> Use netif_queue_set_napi to map NAPIs to queue IDs so that the mapping
-> can be accessed by user apps. Note that the netif_queue_set_napi
-> currently requires RTNL, so care must be taken to ensure RTNL is held on
-> paths where this API might be reached.
->
-> The paths in the driver where this API can be reached appear to be:
->
->   - ndo_open, ndo_close, which hold RTNL so no driver change is needed.
->   - rx_pause, rx_resume, tx_pause, tx_resume are reached either via
->     an ethtool ioctl or via XSK - neither path requires a driver change.
->   - power management paths (which call open and close), which have been
->     updated to hold/release RTNL.
->   - refill_work, which has been updated to hold RTNL.
->
-> $ ethtool -i ens4 | grep driver
-> driver: virtio_net
->
-> $ sudo ethtool -L ens4 combined 4
->
-> $ ./tools/net/ynl/pyynl/cli.py \
->        --spec Documentation/netlink/specs/netdev.yaml \
->        --dump queue-get --json=3D'{"ifindex": 2}'
-> [{'id': 0, 'ifindex': 2, 'napi-id': 8289, 'type': 'rx'},
->  {'id': 1, 'ifindex': 2, 'napi-id': 8290, 'type': 'rx'},
->  {'id': 2, 'ifindex': 2, 'napi-id': 8291, 'type': 'rx'},
->  {'id': 3, 'ifindex': 2, 'napi-id': 8292, 'type': 'rx'},
->  {'id': 0, 'ifindex': 2, 'type': 'tx'},
->  {'id': 1, 'ifindex': 2, 'type': 'tx'},
->  {'id': 2, 'ifindex': 2, 'type': 'tx'},
->  {'id': 3, 'ifindex': 2, 'type': 'tx'}]
->
-> Note that virtio_net has TX-only NAPIs which do not have NAPI IDs, so
-> the lack of 'napi-id' in the above output is expected.
->
-> Signed-off-by: Joe Damato <jdamato@fastly.com>
-> ---
+Hi Stanislav
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+On 2/27/25 11:18 PM, Stanislav Fomichev wrote:
+> On 02/27, Bastien Curutchet (eBPF Foundation) wrote:
+>> ip6gre tunnels are tested in the test_tunnel.sh but not in the test_progs
+>> framework.
+>>
+>> Add a new test in test_progs to test ip6gre tunnels. It uses the same
+>> network topology and the same BPF programs than the script. Disable the
+>> IPv6 DAD feature because it can take lot of time and cause some tests to
+>> fail depending on the environment they're run on.
+>> Remove test_ip6gre() and test_ip6gretap() from the script.
+>>
+>> Signed-off-by: Bastien Curutchet (eBPF Foundation) <bastien.curutchet@bootlin.com>
+>> ---
+>>   .../testing/selftests/bpf/prog_tests/test_tunnel.c | 110 +++++++++++++++++++++
+>>   tools/testing/selftests/bpf/test_tunnel.sh         |  95 ------------------
+>>   2 files changed, 110 insertions(+), 95 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+>> index bd1410b90b94773ba9bc1fa378bb7139f8d4670a..f00727aedee0c283002c55a45a04a96013d39a5d 100644
+>> --- a/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+>> +++ b/tools/testing/selftests/bpf/prog_tests/test_tunnel.c
+>> @@ -71,6 +71,8 @@
+>>   #define IP4_ADDR2_VETH1 "172.16.1.20"
+>>   #define IP4_ADDR_TUNL_DEV0 "10.1.1.100"
+>>   #define IP4_ADDR_TUNL_DEV1 "10.1.1.200"
+>> +#define IP6_ADDR_TUNL_DEV0 "fc80::100"
+>> +#define IP6_ADDR_TUNL_DEV1 "fc80::200"
+>>   
+>>   #define IP6_ADDR_VETH0 "::11"
+>>   #define IP6_ADDR1_VETH1 "::22"
+>> @@ -101,11 +103,21 @@
+>>   #define GRE_TUNL_DEV0 "gre00"
+>>   #define GRE_TUNL_DEV1 "gre11"
+>>   
+>> +#define IP6GRE_TUNL_DEV0 "ip6gre00"
+>> +#define IP6GRE_TUNL_DEV1 "ip6gre11"
+>> +
+>>   #define PING_ARGS "-i 0.01 -c 3 -w 10 -q"
+>>   
+>>   static int config_device(void)
+>>   {
+>>   	SYS(fail, "ip netns add at_ns0");
+> 
+> [..]
+> 
+>> +	/* disable IPv6 DAD because it might take too long and fail tests */
+>> +	SYS(fail, "ip netns exec at_ns0 sysctl -wq net.ipv6.conf.default.accept_dad=0");
+>> +	SYS(fail, "ip netns exec at_ns0 sysctl -wq net.ipv6.conf.all.accept_dad=0");
+>> +	SYS(fail, "sysctl -wq net.ipv6.conf.default.accept_dad=0");
+>> +	SYS(fail, "sysctl -wq net.ipv6.conf.all.accept_dad=0");
+> 
+> `ip addr add ... nodad` should be a less invasive alternative?
 
-Thanks
+I didn't know I could do it through `ip addr`, I'll try this !
 
+
+Best regards,
+Bastien
