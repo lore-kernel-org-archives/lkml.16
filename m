@@ -1,81 +1,112 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5891DE3C5
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 22:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7D8823F372;
+	Fri, 28 Feb 2025 22:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740783177; cv=none; b=PP1P/2QqccT/n+j6dhFlhcM07lL5RBW/PaLbvTw92lggbupMTTq1ZQcvt6V/Gmk54kJSGBQe2RkTCLtbpwIkNuntXo2bO2G+utSQYQ50xC8fUD5icouAgd0qvxY1PIHfbBGKzxNbbGFC/EudnqFzI4lhetNpaaVxK76k55psZr0=
+	t=1740783277; cv=none; b=NufSHhqIF2gIy3Sp60ZoJCa0wuq3tr5aWY2f4VvxHAtHKjD67qNE8prOvhxG/H6zaTcZ2XM3/eNhHttd3SnOWy+DmDEPxwF9c2IY4V1TIkQOSX5NShgl+jNE6pfu1K+01ec8zPn2H5Ibdu1ouDdrKx1cQYEtxpHxCpAHPUVNE6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740783177; c=relaxed/simple;
-	bh=h90kvu5iSqJCvc5DdzBIQAzGoR9h/C9uYGG8AjFPFF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GYnA/ql16dxIo40vTKbHs5ApVqP/3a+kGw9Ewj1MTC9EFA4LsiD5Pz1oa618w2q4QvU/KUJMyt98oUezmeXGtHkdMOHvRd4TN+U06J7mmFNtjykLQ98QI/03vphftAf2K3igDgGVerGkMXt2WU1JR1s5wShCc9xR5Stkmj0QtkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=L/QzjciV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1740783277; c=relaxed/simple;
+	bh=Y0G3FnraSQXiNQhkOrQUyVD84KOBIVeLzxdHqm2PlH0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tJClwyuWr+NhnlttKV3a5hOu85sekAVbm534LDM9viIbY5kLy1oi/EvPwhGcUcG7jB3bhmtnZ6xuQ7emKXHsKolTSe6Ima4kjMxyOvIrYZblnuJ6K/3qIls779SvsqQhgQCN7Eg3QqgkveyBAjpim2vfVcFw0P2cWHDE0/IP7DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=lrLbKq5M; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="L/QzjciV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3C25A40E01AE;
-	Fri, 28 Feb 2025 22:52:53 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UhL2etBhPipe; Fri, 28 Feb 2025 22:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740783169; bh=Q8CPGnBcYQ0z2mF7VyF7zgGcozIGUedzccreIgsCT04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L/QzjciV1xg1OCNQ9blV1E1FkRtol4a+VRyHJQ1eznAz4Z03YDRGbj0LEwOdmRqoZ
-	 lPoQyORBLnxVIQJ3AqqbGsAMwxDvSRTLG4mj8LW+yCSBp1adz9jXKF0dUUUBCkmCWa
-	 FiScFY0bKP8WGyQ7nMjajs8lhFe18ymanJbDiynTpTbpvd8RVyDLNSSrZKFzkEY3Mm
-	 fyxqXl8Q0/GDYGpXsaVR787YaLEL1TZoHDBDbwXViIhYzk0GBfqwusGFz9RUGALS5b
-	 M4wRCl69BEsU5WQgZbC4pz/wJxvrEQbU/iHgJFijnIyAM96Icy0VHqJsrFFgtVHXz/
-	 nxG2VBRHr03rYFHOjtwQaURVIWg2jj8Ono9mR0186NsrlhM0z3/ZkFBt1PWe+3E9/Y
-	 8TlpOccaxkYHJhne/k9xQLfgrOtUye7mEe3+ymDzkLKc2eW4HRcZy4sDWbKeoqkGoG
-	 UhTni9MTUGBqh/F0sLPumbpW1gmvvJopFznR/SSixy9qJgPwr/KrOzhFzihHFFCQuK
-	 c/HmFrSAlbMJkD5+7icm2sxmO0snLUqms08sRbhh+ZMNEETHMdH1LdLUX+QYKIZE4W
-	 pfsOzYNnzpyR8o+jIZeXpIoH4216DMtivM8dLnwJXGA2V0sX5H+yjymPn7YZSngcTA
-	 xx8ihHo/uaLYFdRpJETCpWYY=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 684FF40E0028;
-	Fri, 28 Feb 2025 22:52:42 +0000 (UTC)
-Date: Fri, 28 Feb 2025 23:52:36 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Colin Mitchell <colinmitchell@google.com>
-Cc: chang.seok.bae@intel.com, dave.hansen@linux.intel.com,
-	linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-	x86@kernel.org
-Subject: Re: [PATCH 0/6] x86/microcode: Support for Intel Staging Feature
-Message-ID: <20250228225236.GHZ8I-NBTC6L6Qc-iM@fat_crate.local>
-References: <b0cf3395-ed21-4f48-ab49-81c67f6a032a@intel.com>
- <20250228222715.3306015-1-colinmitchell@google.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="lrLbKq5M"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 63053210D0EB;
+	Fri, 28 Feb 2025 14:54:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 63053210D0EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740783275;
+	bh=TCatK5jzZyZHj5IWMa9vYckFbMN+IcQtVDdwoyNHQFg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lrLbKq5Msbgdg556oQJ/q3Vkhz2eFIziDB/Hf1Tzs4Gma9XSJpfWnkLJQKvlZtwLa
+	 k2d8Kk6UneLTSaa1ZEqgRkj49xfyCebhGSPSYnhnLtV/p+lT9gs5iNJgRnRgL34Old
+	 8BgrpEjxHQrb/ycRBfKyWULbvrcCIEbWRSNkZTwY=
+Message-ID: <aba327ea-ee90-4868-b23e-c2a3ce2ede43@linux.microsoft.com>
+Date: Fri, 28 Feb 2025 14:54:35 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250228222715.3306015-1-colinmitchell@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next] scsi: storvsc: Don't call the packet status
+ the hypercall status
+To: Michael Kelley <mhklinux@outlook.com>,
+ "kys@microsoft.com" <kys@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "James.Bottomley@HansenPartnership.com"
+ <James.Bottomley@HansenPartnership.com>,
+ "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>
+References: <20250227233110.36596-1-romank@linux.microsoft.com>
+ <SN6PR02MB4157749BCF2F3226008575E0D4CC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157749BCF2F3226008575E0D4CC2@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 28, 2025 at 02:27:15PM -0800, Colin Mitchell wrote:
-> As a potential user, I'd advocate for an option to disable legacy
-> loading if staging is supported.
 
-What happens if staging is failing indefinitely, for whatever reason?
 
-You can't load any microcode anymore if you've disabled the legacy method
-too.
+On 2/28/2025 12:55 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Thursday, February 27, 2025 3:31 PM
+>>
+>> The log statement reports the packet status code as the hypercall
+>> status code which causes confusion when debugging.
+>>
+>> Fix the name of the datum being logged.
+>>
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>>   drivers/scsi/storvsc_drv.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+>> index a8614e54544e..d7ec79536d9a 100644
+>> --- a/drivers/scsi/storvsc_drv.c
+>> +++ b/drivers/scsi/storvsc_drv.c
+>> @@ -1183,7 +1183,7 @@ static void storvsc_on_io_completion(struct storvsc_device *stor_device,
+>>   			STORVSC_LOGGING_WARN : STORVSC_LOGGING_ERROR;
+>>
+>>   		storvsc_log_ratelimited(device, loglevel,
+>> -			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x hv 0x%x\n",
+>> +			"tag#%d cmd 0x%x status: scsi 0x%x srb 0x%x sts 0x%x\n",
+>>   			scsi_cmd_to_rq(request->cmd)->tag,
+>>   			stor_pkt->vm_srb.cdb[0],
+>>   			vstor_packet->vm_srb.scsi_status,
+> 
+> FWIW, I added that last status value labelled "hv" in commit 08f76547f08d. And
+> to confirm the discussion on the other thread, it's not a hypercall status -- it's a
+> standard Windows NT status returned by the host-side VMBus or storvsp code.
+> The "hv" is shorthand for Hyper-V, not hypercall. Perhaps that status is
+> interpretable in a Windows guest, but it's not really interpretable in a Linux
+> guest. The hex value would be useful only in the context of a support case
+> where someone on the host side could be engaged to help with the
+> interpretation.
+> 
+> I have no strong opinions on the label. Changing it from "hv" to "sts" or
+> to "host" works for me.
+
+Thank you, Michael, for helping us out with that! I'm leaning towards
+"host" after Easwar's suggestion. As I understand from your reply,
+it's fair to keep the tag as you're fine with the "host" option.
+
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
 
 -- 
-Regards/Gruss,
-    Boris.
+Thank you,
+Roman
 
-https://people.kernel.org/tglx/notes-about-netiquette
