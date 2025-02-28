@@ -1,65 +1,58 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE7C1C1F05;
-	Fri, 28 Feb 2025 06:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E461BE87B;
+	Fri, 28 Feb 2025 06:23:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740723785; cv=none; b=MyE67gLSj4OX9zGi5LGtAqaFWPq77vWLmP3l5I6EJhRHhW3V1B2JCupSqS4tl1GHi9N35yYE2Nx8+LdqnJCSHLh0V7owPq8tJxywum+nUCV8T3m5+TW8eOmaM+veECKvKaNamxVvW1xFH0ZpXFaNXri+KAjY0Fop0DImzuZD420=
+	t=1740723788; cv=none; b=USmsDTlpIsZ8aHsARZv+pEACvnoSTb5H225jsLQCoQ/3xiU3NfCEY9RBfiB4qxboWBNcmZicnTQmFmd6PBxaI6E1ZC6YCO5PCV4nGmpbaoFTHHyyC6jWJqagvSj2Y+zR0RBZ7J/Rk2q6BZp4XgBtsny3S7HQCccNrrrMVKHITZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740723785; c=relaxed/simple;
-	bh=UtukjhqwGE0Hd8fZJV2n1uZQXu3dhW86zoX/NQCG38Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RJ+9VL11Rvf0ztkcnNfV3Nh4pXLKzL7fUTkz4i9rxlPpN+xB+ayexVWXV4KK0I+dmoDTyKNyqCVV2Fu/l7sDXOhbCuQlV0ltiV9y1CH3fqIgRW7dOUgBLYQjHvfrow0U/PqbjgJcHAcDbuTBntV1ePqxufMscdt/1C49yikGaS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=E8sgEQ21; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740723788; c=relaxed/simple;
+	bh=9v666/dwEW35XOonDYfSAMRqNdcF/kzGSuqjPi/WTkg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rcnmK/WLpEbMKhoNB7ixbCP4qaMDImdTHv7mxBjj87nLMSqfKNHASlnOkJXpJqE5T+UQRrMf3chcAMpiOz6+ASJHdzz6R4qYGoFBhaSiJwfgSXTVre85+ohRo70f/ubCrDlSnv3gSliIHAlkUjyqilC5lb/e2MEAtBmKX82r88c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=gl9N/KeB; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="E8sgEQ21"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RMoAVp015771;
-	Fri, 28 Feb 2025 06:22:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=at2Cnga4f2JPFrAj6Uq/CQvl4vfboJ7HHptuh4+ln
-	Dg=; b=E8sgEQ2187zol8L3njf5nh9uQbzzP9jTPrnVOe96NgEw5EedaUMUbcnHU
-	lH/Fkhr1+2BlhJSTNAyWOS6APsDPEzn5qmcK5iwe1DLnoazwKaHWMFx/CWhv49sx
-	wWArwXvDvThuG1tEprohLItfeaY7aiKxBMm9OhehzK2J5KIWxJM/Hq3XlmshPnEf
-	upAQNLQkdKJmpWvJlm3lLIhN/+f9zNwHsRfVbDMrgab6rrPGEFIbhNL0xN7OsSFB
-	l2mIiufBDPhWFvh7OzjSZUGs6IDLdtZJhTkYxJRmPw0YdpJBxEoW4BKJH1rhzhsF
-	NWwIDVsJsa7dQwZ8gI1SwJ0prjbtw==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45316a9mxs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 06:22:53 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51S5pigP012565;
-	Fri, 28 Feb 2025 06:22:53 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwt578d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 06:22:52 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51S6MnF532506600
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Feb 2025 06:22:49 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 22D6A20043;
-	Fri, 28 Feb 2025 06:22:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED85E20040;
-	Fri, 28 Feb 2025 06:22:48 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 28 Feb 2025 06:22:48 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/test: Skip leader sampling for s390
-Date: Fri, 28 Feb 2025 07:22:41 +0100
-Message-ID: <20250228062241.303309-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gl9N/KeB"
+X-UUID: 6f4304e8f59c11efaae1fd9735fae912-20250228
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=EGtjHx6cqk/IoEviwQ3UR0x/lfXLIpLJhQtpRCQRULs=;
+	b=gl9N/KeBxaUb9OkchgOL2MQhNfo0m4u8fyFi5FV4zkxLgbKZue3HT4e/zWEmdevmbw44QqdK+ux4OCOZam6Hzg14Jgib8MuAEJPkS5TJkkl9yhFTiIFDvofHyKMOgs1HL2/H953aZqM7W337Q5ymC+eKBehewhiJGxhQeLnMuQY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:06033555-2f06-453d-b5eb-60706902bf01,IP:0,U
+	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:60aa074,CLOUDID:aef7adb5-a2a1-4ef3-9ef9-e116773da0a7,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
+	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 6f4304e8f59c11efaae1fd9735fae912-20250228
+Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
+	(envelope-from <leilk.liu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1264475581; Fri, 28 Feb 2025 14:22:50 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 28 Feb 2025 14:22:48 +0800
+Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Fri, 28 Feb 2025 14:22:48 +0800
+From: Leilk Liu <leilk.liu@mediatek.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Rob Herring <robh+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-spi@vger.kernel.org>, <linux-mediatek@lists.infradead.org>, Leilk Liu
+	<leilk.liu@mediatek.com>
+Subject: [PATCH v1] spi: mt65xx: add PM QoS support
+Date: Fri, 28 Feb 2025 14:22:03 +0800
+Message-ID: <20250228062246.24186-1-leilk.liu@mediatek.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,137 +60,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: b-UWM9UWIsRBaQOJaLwYWM5LfZ1D-jg6
-X-Proofpoint-GUID: b-UWM9UWIsRBaQOJaLwYWM5LfZ1D-jg6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-27_08,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 spamscore=0 phishscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502280041
+Content-Type: text/plain
+X-MTK: N
 
-In tree linux-next
-the perf test case 114 'perf record tests' has a subtest
-named 'Basic leader sampling test' which always fails on s390.
-Root cause is this invocation
+Enable Quality of Service(QoS) support to speed up interrupt service
+routine handle. Sometimes, a gic interrupt will be generated after
+SPI transmission, but at this time the CPU is in an idle state and the
+processing handler will be ver slow. It takes time to exit the idle state
+and then become active. This will cause the SPI handler to execute slowly
+and cause SPI transfer timeouts.
 
- # perf record -vv -e '{cycles,cycles}:Su' -- perf test -w brstack
-
- ...
- In the debug output the following 2 event are installed:
-
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  disabled                         1
-  exclude_kernel                   1
-  exclude_hv                       1
-  freq                             1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
- ------------------------------------------------------------
- perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
-  size                             136
-  config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  exclude_kernel                   1
-  exclude_hv                       1
-  sample_id_all                    1
- ------------------------------------------------------------
- sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8 = 6
- ...
-
-The first event is the group leader and is installed as sampling event.
-The secound one is group member and is installed as counting event.
-
-Namhyung Kim confirms this observation:
-> Yep, the syntax '{event1,event2}:S' is for group leader sampling which
-> reduces the overhead of PMU interrupts.  The idea is that those events
-> are scheduled together so sampling is enabled only for the leader
-> (usually the first) event and it reads counts from the member events
-> using PERF_SAMPLE_READ.
->
-> So they should have the same counts if it uses the same events in a
-> group.
-
-However this does not work on s390. s390 has one dedicated sampling PMU
-which supports only one event. A different PMU is used for counting.
-Both run concurrently using different setups and frequencies.
-
-On s390x a sampling event is setup using a preset trigger and a large
-buffer. The hardware
- - writes a samples (64 bytes) into this buffer
-   when a given number of CPU instructions has been executed.
- - and triggers an interrupt when the buffer gets full.
-The trigger has just a few possible values.
-
-On s390x the counting event cycles is used to read out the numer of
-CPU cycles executed.
-
-On s390 above invocation created 2 events executed on 2 different
-PMU and the result are diffent values from two independently running
-PMUs which do not match in a consistent and reliably as on Intel:
-
- # ./perf record  -e '{cycles,cycles}:Su' -- perf test -w brstack
-   ...
- # ./perf script
-   perf 2799437 92568.845118:  5508000 cycles:  3ffbcb898b6 do_lookup_x+0x196
-   perf 2799437 92568.845119:  1377000 cycles:  3ffbcb898b6 do_lookup_x+0x196
-   perf 2799437 92568.845120:  4131000 cycles:  3ffbcb897e8 do_lookup_x+0xc8
-   perf 2799437 92568.845121:  1377000 cycles:  3ffbcb8a37c _dl_lookup_symbol
-   perf 2799437 92568.845122:  1377000 cycles:  3ffbcb89558 check_match+0x18
-   perf 2799437 92568.845123:  2754000 cycles:  3ffbcb89b2a do_lookup_x+0x40a
-   perf 2799437 92568.845124:  1377000 cycles:  3ffbcb89b1e do_lookup_x+0x3fe
-
-As can be seen the result match very often but not all the time
-make this test on s390 failing very, very often.
-
-This patch bypasses this test on s390.
-
-Output before:
- # ./perf test 114
- 114: perf record tests                       : FAILED!
- #
-
-Output after:
- # ./perf test 114
- 114: perf record tests                       : Ok
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 ---
- tools/perf/tests/shell/record.sh | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-mt65xx.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index ba8d873d3ca7..98b69820bc5f 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -231,6 +231,12 @@ test_cgroup() {
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 197bf2dbe5de..2ab65f858a21 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -20,6 +20,7 @@
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi-mem.h>
+ #include <linux/dma-mapping.h>
++#include <linux/pm_qos.h>
  
- test_leader_sampling() {
-   echo "Basic leader sampling test"
-+  if [ "$(uname -m)" = s390x ]
-+  then
-+    echo "Leader sampling skipped"
-+    ((skipped+=1))
-+    return
-+  fi
-   if ! perf record -o "${perfdata}" -e "{cycles,cycles}:Su" -- \
-     perf test -w brstack 2> /dev/null
-   then
+ #define SPI_CFG0_REG			0x0000
+ #define SPI_CFG1_REG			0x0004
+@@ -166,6 +167,7 @@ struct mtk_spi {
+ 	struct scatterlist *tx_sgl, *rx_sgl;
+ 	u32 tx_sgl_len, rx_sgl_len;
+ 	const struct mtk_spi_compatible *dev_comp;
++	struct pm_qos_request qos_request;
+ 	u32 spi_clk_hz;
+ 	struct completion spimem_done;
+ 	bool use_spimem;
+@@ -356,6 +358,7 @@ static int mtk_spi_hw_init(struct spi_controller *host,
+ 	struct mtk_chip_config *chip_config = spi->controller_data;
+ 	struct mtk_spi *mdata = spi_controller_get_devdata(host);
+ 
++	cpu_latency_qos_update_request(&mdata->qos_request, 500);
+ 	cpha = spi->mode & SPI_CPHA ? 1 : 0;
+ 	cpol = spi->mode & SPI_CPOL ? 1 : 0;
+ 
+@@ -459,6 +462,15 @@ static int mtk_spi_prepare_message(struct spi_controller *host,
+ 	return mtk_spi_hw_init(host, msg->spi);
+ }
+ 
++static int mtk_spi_unprepare_message(struct spi_controller *host,
++				     struct spi_message *message)
++{
++	struct mtk_spi *mdata = spi_controller_get_devdata(host);
++
++	cpu_latency_qos_update_request(&mdata->qos_request, PM_QOS_DEFAULT_VALUE);
++	return 0;
++}
++
+ static void mtk_spi_set_cs(struct spi_device *spi, bool enable)
+ {
+ 	u32 reg_val;
+@@ -1143,6 +1155,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 
+ 	host->set_cs = mtk_spi_set_cs;
+ 	host->prepare_message = mtk_spi_prepare_message;
++	host->unprepare_message = mtk_spi_unprepare_message;
+ 	host->transfer_one = mtk_spi_transfer_one;
+ 	host->can_dma = mtk_spi_can_dma;
+ 	host->setup = mtk_spi_setup;
+@@ -1249,6 +1262,8 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 		clk_disable_unprepare(mdata->spi_hclk);
+ 	}
+ 
++	cpu_latency_qos_add_request(&mdata->qos_request, PM_QOS_DEFAULT_VALUE);
++
+ 	if (mdata->dev_comp->need_pad_sel) {
+ 		if (mdata->pad_num != host->num_chipselect)
+ 			return dev_err_probe(dev, -EINVAL,
+@@ -1292,6 +1307,7 @@ static void mtk_spi_remove(struct platform_device *pdev)
+ 	struct mtk_spi *mdata = spi_controller_get_devdata(host);
+ 	int ret;
+ 
++	cpu_latency_qos_remove_request(&mdata->qos_request);
+ 	if (mdata->use_spimem && !completion_done(&mdata->spimem_done))
+ 		complete(&mdata->spimem_done);
+ 
 -- 
-2.45.2
+2.46.0
 
