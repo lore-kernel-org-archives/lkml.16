@@ -1,161 +1,182 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ADD241C99;
-	Fri, 28 Feb 2025 11:49:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0707925F781;
+	Fri, 28 Feb 2025 11:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740743364; cv=none; b=qvkrfTfGF81d092bnw8LYqkDIvThzoAbJU6rUjmGr1Qfgd0X0J3rSVeK29VkCaDn+L+eVU1ePXaRC5dZ8LCM+l+IzwlQOpumEkswccpXDN9k3xl5INJMC/R/2TTCLzMNM3ITyNQcR74/HTO1OvpgTKnPs+76rVuPrKcWCsZXK+k=
+	t=1740743627; cv=none; b=Oeil9Jsu+K3FVjD76BhR+TlSbRE+hRmjUZCxpa5jrWaeEpYl8/AewCmmPdnY/FyJpFwB288UBdN/3lssul1iBNdVy5A347WxlGcBTe6roJp3jXGIeLtKrT8n/JhrCNHwpuTUzHqUq9WW6pGCwJ9dpldCGQ8+hVXSFYFSA12dv9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740743364; c=relaxed/simple;
-	bh=z9dLHg6FwMPdmlEcFS0/R9/QUqkKVjGSKO+pK1qa69g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UxbbjMyjyz1619Vqk+8Gsb9Bi8273dJzTabsJhT+vZ/Yudh+sHCeBE79bT5U7J1kDkqO7fXQeMvJUH8A/Q/mu5Aetwifyv2y/6q1431JWlU7Mq9fp/Y6p5c+WuCpWpqU/dtUEyjn0ZSmNLixXEHPTAjtVWxXD9ZZwLHI+qguYOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 28 Feb
- 2025 14:49:11 +0300
-Received: from [192.168.211.132] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Fri, 28 Feb
- 2025 14:49:10 +0300
-Message-ID: <fec70d1f-4f52-4986-ae78-b3b4a6d4758c@fintech.ru>
-Date: Fri, 28 Feb 2025 14:49:07 +0300
+	s=arc-20240116; t=1740743627; c=relaxed/simple;
+	bh=E1hqlbTgogEWysyrmKzHGbChBIgfmeI6e5ILt4hPov4=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=DMTSICapU6rYasE/cN0LYgvNvOGxGKb/hQaxUtJRu0kn07iIL5f/MgqAm7fteC61bDIbtBVQR+1glyu6RaEQvm13kChNb+xpe3PbVXZns2T+++8GrgCkFrBTdgkLzJQ5LPb2sk8o6mZ+L3cgunGxxIO8nr9cIIwnnk4JZcWlIFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s4bFHrY4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fNxy6Tyq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s4bFHrY4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fNxy6Tyq"
+Date: Fri, 28 Feb 2025 11:53:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740743624;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nsjPWnynEbbF2TFIsikWVKKbCJuqCcEWuoQl6fWp41o=;
+	b=s4bFHrY4B8n8vnuksn6N7YU4CxDyvgN2TCYKsAiopye2GLop7bSqxjn+58Yv9S+wsuVthY
+	iZ/+IOGnDaLHF+v0zx3f6isf5WUhr5BcS6wvp0glbM+Fgw4bSDauNwoWXTMyXz/ArHZKMn
+	QfbCZHznD9LdewrQPU05rKba1QBwvqBU9a/592ZIVpGXpbu6kJ3UPjZD25keaSouQGuGNs
+	xFu8ZF/PXq0tdYjnoVDDxJ8a7LJCm7bY8YIEWGcZeMahr10vAXDZ4UlHi4CEqtX0UiTdOV
+	ZD7UUHZFIdmgNqvtFuXiK/FAuOLrKDD8Orph/6gqN9w/EVXIjfawuVsn7GXK+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740743624;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nsjPWnynEbbF2TFIsikWVKKbCJuqCcEWuoQl6fWp41o=;
+	b=fNxy6Tyq/A+5bzRH+RXbGDr8k/8F6Eb5CdLWZOHzseapiltDM3eEfHriSsA86FueaXGEQj
+	6vlC+CUW0QohSuBg==
+From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/bugs] x86/bugs: Relocate mds/taa/mmio/rfds defines
+Cc: David Kaplan <david.kaplan@amd.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250108202515.385902-3-david.kaplan@amd.com>
+References: <20250108202515.385902-3-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: vimc: skip .s_stream() for stopped entities
-To: Shuah Khan <skhan@linuxfoundation.org>, Kieran Bingham
-	<kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>
-References: <20250224154928.1220074-1-n.zhandarovich@fintech.ru>
- <cffe9295-7070-4d69-896f-7f0a406861c9@linuxfoundation.org>
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Content-Language: en-US
-In-Reply-To: <cffe9295-7070-4d69-896f-7f0a406861c9@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Message-ID: <174074362368.10177.4839927541564124478.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi,
+The following commit has been merged into the x86/bugs branch of tip:
 
-On 2/27/25 19:36, Shuah Khan wrote:
-> On 2/24/25 08:49, Nikita Zhandarovich wrote:
->> Syzbot reported [1] a warning prompted by a check in call_s_stream()
->> that checks whether .s_stream() operation is warranted for unstarted
->> or stopped subdevs.
->>
->> Add a simple fix in vimc_streamer_pipeline_terminate() ensuring that
->> entities skip a call to .s_stream() unless they have been previously
->> properly started.
->>
->> [1] Syzbot report:
->> ------------[ cut here ]------------
->> WARNING: CPU: 0 PID: 5933 at drivers/media/v4l2-core/v4l2-
->> subdev.c:460 call_s_stream+0x2df/0x350 drivers/media/v4l2-core/v4l2-
->> subdev.c:460
->> Modules linked in:
->> CPU: 0 UID: 0 PID: 5933 Comm: syz-executor330 Not tainted 6.13.0-rc2-
->> syzkaller-00362-g2d8308bf5b67 #0
->> ...
->> Call Trace:
->>   <TASK>
->>   vimc_streamer_pipeline_terminate+0x218/0x320 drivers/media/test-
->> drivers/vimc/vimc-streamer.c:62
->>   vimc_streamer_pipeline_init drivers/media/test-drivers/vimc/vimc-
->> streamer.c:101 [inline]
->>   vimc_streamer_s_stream+0x650/0x9a0 drivers/media/test-drivers/vimc/
->> vimc-streamer.c:203
->>   vimc_capture_start_streaming+0xa1/0x130 drivers/media/test-drivers/
->> vimc/vimc-capture.c:256
->>   vb2_start_streaming+0x15f/0x5a0 drivers/media/common/videobuf2/
->> videobuf2-core.c:1789
->>   vb2_core_streamon+0x2a7/0x450 drivers/media/common/videobuf2/
->> videobuf2-core.c:2348
->>   vb2_streamon drivers/media/common/videobuf2/videobuf2-v4l2.c:875
->> [inline]
->>   vb2_ioctl_streamon+0xf4/0x170 drivers/media/common/videobuf2/
->> videobuf2-v4l2.c:1118
->>   __video_do_ioctl+0xaf0/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3122
->>   video_usercopy+0x4d2/0x1620 drivers/media/v4l2-core/v4l2-ioctl.c:3463
->>   v4l2_ioctl+0x1ba/0x250 drivers/media/v4l2-core/v4l2-dev.c:366
->>   vfs_ioctl fs/ioctl.c:51 [inline]
->>   __do_sys_ioctl fs/ioctl.c:906 [inline]
->>   __se_sys_ioctl fs/ioctl.c:892 [inline]
->>   __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
->>   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>   do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
->>   entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f2b85c01b19
->> ...
->>
->> Reported-by: syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=5bcd7c809d365e14c4df
->> Fixes: adc589d2a208 ("media: vimc: Add vimc-streamer for stream
->> control")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
->> ---
->>   drivers/media/test-drivers/vimc/vimc-streamer.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/
->> drivers/media/test-drivers/vimc/vimc-streamer.c
->> index 807551a5143b..64dd7e0ea5ad 100644
->> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
->> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
->> @@ -59,6 +59,12 @@ static void
->> vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
->>               continue;
->>             sd = media_entity_to_v4l2_subdev(ved->ent);
->> +        /*
->> +         * Do not call .s_stream() to stop an already
->> +         * stopped/unstarted subdev.
->> +         */
->> +        if (!sd->s_stream_enabled)
-> 
-> The right interface to call is v4l2_subdev_is_streaming() instead
-> of checking s_stream_enabled directly.
-> 
+Commit-ID:     2c93762ec4b3ab66980ee7aaffde1e050bfbf291
+Gitweb:        https://git.kernel.org/tip/2c93762ec4b3ab66980ee7aaffde1e050bfbf291
+Author:        David Kaplan <david.kaplan@amd.com>
+AuthorDate:    Wed, 08 Jan 2025 14:24:42 -06:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Fri, 28 Feb 2025 12:39:17 +01:00
 
-Agreed, thank you for your suggestion, I'll fix it in v2.
+x86/bugs: Relocate mds/taa/mmio/rfds defines
 
->> +            continue;
->>           v4l2_subdev_call(sd, video, s_stream, 0);
->>       }
->>   }
-> 
-> Would it better to change vimc_streamer_pipeline_init() to not
-> call vimc_streamer_pipeline_terminate() instead here?
-> 
-> ret = v4l2_subdev_call(sd, video, s_stream, 1);
->                         if (ret && ret != -ENOIOCTLCMD) {
->                                 dev_err(ved->dev, "subdev_call error
-> %s\n",
->                                         ved->ent->name);
->                                 vimc_streamer_pipeline_terminate(stream);
->                                 return ret;
->                         }
-> 
+Move the mds, taa, mmio, and rfds mitigation enums earlier in the file to
+prepare for restructuring of these mitigations as they are all inter-related.
 
-Correct me if I'm wrong but since we go through several entities in
-vimc_streamer_pipeline_init(), some of them may have had streaming
-enabled before we trigger an error here. And if we decide to exit early
-due to said error, this is the time to stop all previously started
-entities.
+No functional change.
 
-> 
-> thanks,
-> -- Shuah
+Signed-off-by: David Kaplan <david.kaplan@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20250108202515.385902-3-david.kaplan@amd.com
+---
+ arch/x86/kernel/cpu/bugs.c | 60 +++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 29 deletions(-)
 
-Regards,
-Nikita
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 5397d0a..4269ed1 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -247,6 +247,37 @@ static const char * const mds_strings[] = {
+ 	[MDS_MITIGATION_VMWERV]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
+ };
+ 
++enum taa_mitigations {
++	TAA_MITIGATION_OFF,
++	TAA_MITIGATION_UCODE_NEEDED,
++	TAA_MITIGATION_VERW,
++	TAA_MITIGATION_TSX_DISABLED,
++};
++
++/* Default mitigation for TAA-affected CPUs */
++static enum taa_mitigations taa_mitigation __ro_after_init =
++	IS_ENABLED(CONFIG_MITIGATION_TAA) ? TAA_MITIGATION_VERW : TAA_MITIGATION_OFF;
++
++enum mmio_mitigations {
++	MMIO_MITIGATION_OFF,
++	MMIO_MITIGATION_UCODE_NEEDED,
++	MMIO_MITIGATION_VERW,
++};
++
++/* Default mitigation for Processor MMIO Stale Data vulnerabilities */
++static enum mmio_mitigations mmio_mitigation __ro_after_init =
++	IS_ENABLED(CONFIG_MITIGATION_MMIO_STALE_DATA) ? MMIO_MITIGATION_VERW : MMIO_MITIGATION_OFF;
++
++enum rfds_mitigations {
++	RFDS_MITIGATION_OFF,
++	RFDS_MITIGATION_VERW,
++	RFDS_MITIGATION_UCODE_NEEDED,
++};
++
++/* Default mitigation for Register File Data Sampling */
++static enum rfds_mitigations rfds_mitigation __ro_after_init =
++	IS_ENABLED(CONFIG_MITIGATION_RFDS) ? RFDS_MITIGATION_VERW : RFDS_MITIGATION_OFF;
++
+ static void __init mds_select_mitigation(void)
+ {
+ 	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
+@@ -290,16 +321,6 @@ early_param("mds", mds_cmdline);
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"TAA: " fmt
+ 
+-enum taa_mitigations {
+-	TAA_MITIGATION_OFF,
+-	TAA_MITIGATION_UCODE_NEEDED,
+-	TAA_MITIGATION_VERW,
+-	TAA_MITIGATION_TSX_DISABLED,
+-};
+-
+-/* Default mitigation for TAA-affected CPUs */
+-static enum taa_mitigations taa_mitigation __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_TAA) ? TAA_MITIGATION_VERW : TAA_MITIGATION_OFF;
+ static bool taa_nosmt __ro_after_init;
+ 
+ static const char * const taa_strings[] = {
+@@ -390,15 +411,6 @@ early_param("tsx_async_abort", tsx_async_abort_parse_cmdline);
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"MMIO Stale Data: " fmt
+ 
+-enum mmio_mitigations {
+-	MMIO_MITIGATION_OFF,
+-	MMIO_MITIGATION_UCODE_NEEDED,
+-	MMIO_MITIGATION_VERW,
+-};
+-
+-/* Default mitigation for Processor MMIO Stale Data vulnerabilities */
+-static enum mmio_mitigations mmio_mitigation __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_MMIO_STALE_DATA) ? MMIO_MITIGATION_VERW : MMIO_MITIGATION_OFF;
+ static bool mmio_nosmt __ro_after_init = false;
+ 
+ static const char * const mmio_strings[] = {
+@@ -487,16 +499,6 @@ early_param("mmio_stale_data", mmio_stale_data_parse_cmdline);
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"Register File Data Sampling: " fmt
+ 
+-enum rfds_mitigations {
+-	RFDS_MITIGATION_OFF,
+-	RFDS_MITIGATION_VERW,
+-	RFDS_MITIGATION_UCODE_NEEDED,
+-};
+-
+-/* Default mitigation for Register File Data Sampling */
+-static enum rfds_mitigations rfds_mitigation __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_RFDS) ? RFDS_MITIGATION_VERW : RFDS_MITIGATION_OFF;
+-
+ static const char * const rfds_strings[] = {
+ 	[RFDS_MITIGATION_OFF]			= "Vulnerable",
+ 	[RFDS_MITIGATION_VERW]			= "Mitigation: Clear Register File",
