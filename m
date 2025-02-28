@@ -1,129 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B523125B2
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A88E125B2;
+	Fri, 28 Feb 2025 02:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740708515; cv=none; b=bn4PtmcdVZOojepjLlTcv7ApHvt1KbMMV9/+3zt62gjDEufc7lVYC2HUqPj/lpf2YZvZLfwO5JVOAX1/4iHUP1kYUP1JgAkeF3kyvpls0PvREejqpvEd56Y9Tk8MBSHfnOSC8ll8NvI4/pXNBf6+9rAHpnM4BQeAX4j7YFiCiNw=
+	t=1740708538; cv=none; b=Q6l+ZhUS/YIT6B1DVLtD51pUwUvfy6ym0TcvlydRL8NZUC0Gu03Cq4KL1vDEOeZoIVtMiB0Jbj+j3Eeg3+WaEiOuoD5BLRlMinnSfNbn2VUne/dNmEXRW43EI1Tmt3qjT0gWJXRpoofjvut3vnnxdvtxth3AzqU/MQ8UGhHoLiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740708515; c=relaxed/simple;
-	bh=ntMRFDWO+IFXNxwNxjfm8PreVjt8JX+kXRYeGVuWOBg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a737akE3nR4ByeNaBSjE5liZU9TDxoyiOYsAcuh84TI5qQK+VOo3FJf0FflpDx2J/o67am+I89MuLnrhD6PPwb0KB+CEdAxHaudGEdOXRI8A+fVssDKE4VuD9Xg3Ece8gatuZmaacuhtyliHBtX/UeMLP6bcP3OWG/NnBrmQd2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IMId/STe; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740708538; c=relaxed/simple;
+	bh=5pr8uhB5SExy3iDSiDu9M//1Qd4Bg7ELhoDwqC9I9t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pn2hpnZL2rOqh9EhPq/1t1f72wRPA7PLwMGvMkZq+k4/EZn1Z53r/MkNYHMi1/aqOIvi1bCi7EujY6hkea2xxVRzgItxaXDFPJRMrTG2jT4CCV7dRQnGqDx4cboBwTN2yM4YcIaYaq/eLWxSZVUjmduJqWLgexA11WL+8FgWZs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBZ7fC++; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IMId/STe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740708509;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vQ/Fl0HwXzRHNyxsWxoDbaxOZuT2N+fcGDEHmXA1hb0=;
-	b=IMId/STe+3oQLfDC8ekxjcNJo2zPo+RR1Di1+ncSZ7Gmw98eycPNK/BXVIkyE0ncp/jNmw
-	fDOSbGDcIyMv9c8Jk9/QVT/hHeog4LOZ25E6LZzqImk4EbGEHjwHY4vqc3qbcXc0I1NEYC
-	JdDT8jRXz/zgoVhyoKc0Wf3wlpEyIvA=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-452-9ZY6KbgNMO61NAuIsXyA0w-1; Thu, 27 Feb 2025 21:08:27 -0500
-X-MC-Unique: 9ZY6KbgNMO61NAuIsXyA0w-1
-X-Mimecast-MFC-AGG-ID: 9ZY6KbgNMO61NAuIsXyA0w_1740708506
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2234dddbd6fso37184895ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:08:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740708506; x=1741313306;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vQ/Fl0HwXzRHNyxsWxoDbaxOZuT2N+fcGDEHmXA1hb0=;
-        b=N3pUCqxFdphmXr0639RDNcFwjnNOBzh5CjgNue3gvJltidVLn1iaSW/QfJWgeshuTB
-         UKsyie1c02zYgCz15M/oUkhu8YvtPaaEGodlflF5avP4Iur0ZpTurq2pDy8AM2v47u4t
-         erPeFOCT+rTfURE4KZWF1bes8gG533PMTT4+R53Ulwz9gzNbayANYttTDiuHcHZQUYLN
-         rh/rPJTxV4liHbt9wKx0cG70MTJgkLBMHRqaalPkp7d6EFOBVdl+pW7XJ5zVbu1QFULT
-         tQyk6Asxdq44UXmnT3bV7NOz4YB8SjmL4YBnaMTzzw8u/ZylshyACxfKpHuKhswooJqg
-         ldFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWzseqsDWUAZpOnt18hjZd3tIg7WuPVW+VmLq4B8iqV65Bw323CrtgDyNLLplaP6O2Nzs5ie7/Flxur+DE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwg1RCayUJXOrNwblWy2uvizbnZI00T19QfwOc06IBOC8I/O3B
-	kx/eEDFglAk5IovUnhym66dpr4U3RltxKxv4kgbwMHMWeHVVBFcLzsfCtX4P+Dz03HPi7pKteuq
-	p6hMxXcVaSv9geMcU8m9v+0+c+qNwUh+X98z3SnRwRzWbH3JsezNpM7SN5wjMtw==
-X-Gm-Gg: ASbGnctnA4uhxmBHPnPmKUMCHIqVrTf/CPmxjeNr4wikC/CK0zwtFiqY1WDte7AecZj
-	opLXfwiSTKuERnZYgW+oizz8JbOoRkQZrOsYvhTbBHLxDy8xQ6akaVPdlJuXXE7uDUztLfSLgwE
-	zMNztlN90kF5/23CjCkZM0r8QE/dMnQUj2iHEwroY/5x9wnn8hxnKOztOxzMhsB1XcE56h42b68
-	aLrG2+edoCSpcVPIFLRUYnhjZE5t6XJ7I7TdY/E2dJyokUqFub5yPd3ZkXn5fdW3KdYcl+3ngZ7
-	ZikyyUrIa1iY0zFPIw==
-X-Received: by 2002:a17:902:e88f:b0:221:89e6:ccb6 with SMTP id d9443c01a7336-2236750c421mr28814185ad.25.1740708506485;
-        Thu, 27 Feb 2025 18:08:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFqsxG1w4CFgPe7zp+BHrGfr4zyqy2gKPJF3ydIcoqOzD/vMt4rTiKChpT0/GXLXVDP/aNN0g==
-X-Received: by 2002:a17:902:e88f:b0:221:89e6:ccb6 with SMTP id d9443c01a7336-2236750c421mr28813865ad.25.1740708506147;
-        Thu, 27 Feb 2025 18:08:26 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.164])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223501fae0esm22661535ad.93.2025.02.27.18.08.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 18:08:25 -0800 (PST)
-Message-ID: <5c59d489-f9f9-4383-a90d-93badfb65291@redhat.com>
-Date: Fri, 28 Feb 2025 12:08:19 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBZ7fC++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F52CC4CEE9;
+	Fri, 28 Feb 2025 02:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740708537;
+	bh=5pr8uhB5SExy3iDSiDu9M//1Qd4Bg7ELhoDwqC9I9t4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dBZ7fC++U6uUckHrv/9YRCdMjwAi3rZPzwMkhwFTh4J42qa/ywvHDdKubIDBWArjk
+	 cycrsE/IGkX2tjEuSi0ew04SIVU7+lE1V8ztOZU9osSXFnoQnx6HsO7B9QlrKV/Vfp
+	 ioYuk6l9HCCstmqFJNaE1b+GjL1AhI4pKJ6UWNseFaEPawhgjnmCf6Rwhb4YS+wiQB
+	 Udp0OeYe5/V2DFKMtdIWEr6tFPdrFu7c4WDq9OBc9Xw9l/LF3F5gzKG858UvO1UD3b
+	 QR7y1A+t2SZkaF6L3FfsGFixAGm62Jr9ieRgi6jARcqYPNAijugKvYZzrl2vao88VX
+	 RK4VR5A+FF8kw==
+Date: Thu, 27 Feb 2025 18:08:55 -0800
+From: Eric Biggers <ebiggers@kernel.org>
+To: Bill Wendling <morbo@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	LKML <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org,
+	clang-built-linux <llvm@lists.linux.dev>
+Subject: Re: [PATCH] x86/crc32: use builtins to improve code generation
+Message-ID: <20250228020855.GA5588@sol.localdomain>
+References: <CAGG=3QVi27WRYVxmsk9+HLpJw9ZJrpfLjU8G4exuXm-vUA-KqQ@mail.gmail.com>
+ <20250227062859.GA2506@sol.localdomain>
+ <CAGG=3QVitM-AwqtYF0QjxpBV7Q8bqv59Os+jELFRUKMnRS9OGA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] arm64: realm: Use aliased addresses for device DMA
- to shared buffers
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org
-Cc: will@kernel.org, catalin.marinas@arm.com, maz@kernel.org,
- steven.price@arm.com, aneesh.kumar@kernel.org, robin.murphy@arm.com,
- linux-arm-kernel@lists.infradead.org,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Tom Lendacky <thomas.lendacky@amd.com>
-References: <20250227144150.1667735-1-suzuki.poulose@arm.com>
- <20250227144150.1667735-4-suzuki.poulose@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250227144150.1667735-4-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGG=3QVitM-AwqtYF0QjxpBV7Q8bqv59Os+jELFRUKMnRS9OGA@mail.gmail.com>
 
+On Wed, Feb 26, 2025 at 11:08:22PM -0800, Bill Wendling wrote:
+> > Doesn't this technically allow the compiler to insert CRC32 instructions
+> > anywhere in arch/x86/ without the needed runtime CPU feature check?  Normally
+> > when using intrinsics it's necessary to limit the scope of the feature
+> > enablement to match the runtime CPU feature check that is done, e.g. by using
+> > the target function attribute.
+> >
+> I'm not sure if CRC32 instructions will automatically be inserted when
+> not explicitly called, especially since the other vector features are
+> disabled. I wanted to limit enabling this flag for only crc32-glue.c,
+> but my Makefile-fu failed me. The file appears to be compiled twice.
+> But adding __attribute__((target("crc32"))) to the function would be
+> much better.
 
+Technically, limiting it to crc32-glue.c still isn't enough, as much of the code
+in that file is executed before the crc32 instruction support is checked for.
 
-On 2/28/25 12:41 AM, Suzuki K Poulose wrote:
-> When a device performs DMA to a shared buffer using physical addresses,
-> (without Stage1 translation), the device must use the "{I}PA address" with the
-> top bit set in Realm. This is to make sure that a trusted device will be able
-> to write to shared buffers as well as the protected buffers. Thus, a Realm must
-> always program the full address including the "protection" bit, like AMD SME
-> encryption bits.
-> 
-> Enable this by providing arm64 specific dma_addr_{encrypted, canonical}
-> helpers for Realms. Please note that the VMM needs to similarly make sure that
-> the SMMU Stage2 in the Non-secure world is setup accordingly to map IPA at the
-> unprotected alias.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Steven Price <steven.price@arm.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
-> Changes since v2:
->   - Drop dma_addr_encrypted() helper, which is a NOP for CCA ( Aneesh )
->   - Only mask the "top" IPA bit and not all the bits beyond top bit. ( Robin )
->   - Use PROT_NS_SHARED, now that we only set/clear top bit. (Gavin)
-> ---
->   arch/arm64/include/asm/mem_encrypt.h | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
+I also noticed that -mcrc32 support wasn't added to clang until clang 14, by
+https://github.com/llvm/llvm-project/commit/12fa608af44a80de8b655a8a984cd095908e7e80
+But according to https://docs.kernel.org/process/changes.html the minimum clang
+version to build Linux is 13.0.1.  So there's a missing check for support.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+> > Do both gcc and clang consider these builtins to be a stable API, or do they
+> > only guarantee the stability of _mm_crc32_*() from immintrin.h?  At least for
+> > the rest of the SSE and AVX stuff, I thought that only the immintrin.h functions
+> > are actually considered stable.
+> >
+> I don't know the answer for this. In general, once we (Clang) create a
+> __builtin_* function it's not going away, because it will break anyone
+> who uses them. (I assume the same is true for GCC.)
 
+Here are examples of LLVM commits that removed x86 builtins:
+
+* https://github.com/llvm/llvm-project/commit/09857a4bd166ca62a9610629731dfbf8f62cd955
+* https://github.com/llvm/llvm-project/commit/9a14c369c422b244db78f1a9f947a891a75d912f
+* https://github.com/llvm/llvm-project/commit/ec6024d0811b3116e0a29481b01179d5081a3b92
+* https://github.com/llvm/llvm-project/commit/e4074432d5bf5c295f96eeed27c5b693f5b3bf16
+* https://github.com/llvm/llvm-project/commit/9fddc3fd00b3ad5df5a3988e5cc4708254976173
+
+So no, they do not appear to be considered stable.
+
+(The equivalents in immintrin.h are stable, but good luck including immintrin.h
+in the Linux kernel, since it depends on stdlib.h.)
+
+Of course, if we really wanted this we could go with "it works in practice"
+anyway.  But, given the small benefit of this patch vs. the potential risk I
+don't think we should bother with it, unless it's acked by the gcc and clang
+folks on the following points:
+
+* The crc32 builtins are stable.
+
+* gcc and clang will never generate crc32 instructions without explicitly using
+  the builtins.  (BTW, keep in mind this ongoing work:
+  https://gcc.gnu.org/wiki/cauldron2023talks?action=AttachFile&do=get&target=GCC+CRC+optimization.pdf)
+
+Also note that crc32c_arch() already calls into the assembly code in
+arch/x86/lib/crc32c-3way.S to handle lengths >= 512 bytes, and for handling the
+tail data that assembly function already has a nice qword-at-a-time loop which
+is exactly what we are trying to generate here.  A more promising approach might
+be to reorganize things a bit so that we can reuse that assembly code.
+
+- Eric
