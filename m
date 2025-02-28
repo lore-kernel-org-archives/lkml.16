@@ -1,121 +1,133 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BE18819;
-	Fri, 28 Feb 2025 03:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E76617BA3;
+	Fri, 28 Feb 2025 03:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740714565; cv=none; b=DyC909YYprDstM1R6Rmd+SYLlAGaYEux8DG3ITEt5ISJpV9QouqqRoXbuR5YTc0s0B0ct7/LoCGyvIInm6dWWi8dhOVctwqISRqARBf7xich9XaJsmHcZPc35K4rt8jkhsT0HMgXtWBG5O8iPLQkNhXvrkVciQdkrCq9a41ckT4=
+	t=1740714705; cv=none; b=j8CvScH3Bg0IyaRloAy/zw0WCHYT+I38TjGVwhJ7JfXyuKihTpbnkGnPydsXuVWT62p+u6d8hHZgm21WZhRI23IB2ThHr13T+o66qkoiSUP2wwZm294BS4eFcmQj5i0l2K1QKjbATg58q1t4fEh/3AtDWNPMSzvx5wdgWsjTZCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740714565; c=relaxed/simple;
-	bh=2JJRsSl9s1ShM7CmwpkQX5IijJd0EPLQAbxDyAdVct4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=r0rnlHffNcsyFm/euUZWSIAD9qWneIv+dfc9kP7ngmQ4KpXiTiAzWWnMRqWNvttQJOhGCxa6WGgXO5/6nJo/TW8Flh0uiIIxLBnSS76wxCk8ZpH6GZselQd97Xd5EwFqB47z6AfFraTvC6NVnuhBBUJAW0B7xdAFJAvV6dn0frw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FeEH2h8I; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1740714705; c=relaxed/simple;
+	bh=yKN09BvLDaiC4SpyxvS+pwLkqAqDF739KyfOxk8S3Kc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H5r/gKdjk1TcDwIPizBpwZ04hvqsV5InsYLhuAOWzyfWGi16kr6pt6ZMkkGoFtmfbHlGPQuwXQ2ENlDFhODLqMJWNcFdU3FjpYgMSvx5NVTqO7kSPFamg5xPMm7fMRN8XORtm8a8stzQSADOocd6c9dprlxPL/Iiw8tWhH51hIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=j1GJWQ1w; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FeEH2h8I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1740714560;
-	bh=6E/Ll8VCwKDAYpHkrqT04AlysqffxMkMCwKN9pLzA5g=;
-	h=Date:From:To:Cc:Subject:From;
-	b=FeEH2h8IV3dCReCMxRFwMByCOCMc6evZ7cSXTQko/8Fyq/8YkH6kAeyWWWY3x973X
-	 jRo6BXgCHwN95NvrOCPvkl4fvhcF+f/W1e4yM4jKSY9Uc8euiREMzXicwPFhX44ICz
-	 Pth2x01tkfAVD/Gy9rmCDuY3E5+pekS9PQiJB4XLF5hq2bpMCReeUNXhK+uqLeIey+
-	 7V/kjr8sM8fJ4M1AjeQFJEZc9LG2h0J4rCItcfZIdKXVPTTPqj0rfn5j07AweALIUY
-	 FRPe2y2AkA+sXZ++JjWjDZAYy/cRW2JnLhP075DQuAU+gY1UOyBf+haepkqtxodWVY
-	 Y+iocU/RCBk8Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="j1GJWQ1w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740714701;
+	bh=yKN09BvLDaiC4SpyxvS+pwLkqAqDF739KyfOxk8S3Kc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=j1GJWQ1wVo8l4SQahFnNcPJYoiKrWO4p6GuKLQqi9NXrqiI/ALqUHsY+6ae0TwfjO
+	 EJy6vjVy7RI7ktX0Q/b5kfDO2PbDGV9ox6un8mHJz1RG6h5k3lyM1UnuMA+0UT3my4
+	 ljFI4RkkAAvht5Z9f9OE8s7LxWKeuTZ5Zzfnx7irYvgPuBZABELIf6vZfsF1cgPPl4
+	 puzJaCA0KxlBE6OYKhiOOVLIEtbsi+kME8mQ1qF0Mt6XIzSl+87FLfIgNzwl1E6FR1
+	 RyA7284U97mbh/h1nzhleMd8DZ5cr42NTY5UnHPqvvS+ZgrR5m2ovFbGn0RdrkG4Dz
+	 VHT/13iVcfWag==
+Received: from [IPv6:2606:6d00:11:e976::c41] (unknown [IPv6:2606:6d00:11:e976::c41])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z3vMz08wsz4wbx;
-	Fri, 28 Feb 2025 14:49:17 +1100 (AEDT)
-Date: Fri, 28 Feb 2025 14:49:16 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jens Axboe <axboe@kernel.dk>, David Miller <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Networking <netdev@vger.kernel.org>, David Wei <dw@davidwei.uk>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the block tree with the net-next tree
-Message-ID: <20250228144916.3f5905cf@canb.auug.org.au>
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 04C5B17E087E;
+	Fri, 28 Feb 2025 04:51:38 +0100 (CET)
+Message-ID: <863f9c1beb7a912f94f8740b3e5095e09e49cee5.camel@collabora.com>
+Subject: Re: [PATCH v10 6/6] arm64: defconfig: Enable Synopsys HDMI receiver
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Dmitry Osipenko	
+ <dmitry.osipenko@collabora.com>, Shreeya Patel
+ <shreeya.patel@collabora.com>,  Heiko Stuebner	 <heiko@sntech.de>, Mauro
+ Carvalho Chehab <mchehab@kernel.org>, Rob Herring	 <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
+ <conor+dt@kernel.org>, jose.abreu@synopsys.com, nelson.costa@synopsys.com, 
+	shawn.wen@rock-chips.com, Sebastian Reichel
+ <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, linux-media@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Date: Thu, 27 Feb 2025 22:51:37 -0500
+In-Reply-To: <a8a6c8c8-ee3b-422a-8573-a2cbb61fc3aa@xs4all.nl>
+References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
+	 <20250225183058.607047-7-dmitry.osipenko@collabora.com>
+	 <a8a6c8c8-ee3b-422a-8573-a2cbb61fc3aa@xs4all.nl>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/IqqFrWOlEanhzm3JG70FbSu";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/IqqFrWOlEanhzm3JG70FbSu
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Hans,
 
-Hi all,
+Le mercredi 26 février 2025 à 09:31 +0100, Hans Verkuil a écrit :
+> On 25/02/2025 19:30, Dmitry Osipenko wrote:
+> > From: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > 
+> > The Rockchip RK3588 has a built-in HDMI receiver block from
+> > Synopsys. Let's enable the driver for it.
+> > 
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> > Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+> > ---
+> >  arch/arm64/configs/defconfig | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/arch/arm64/configs/defconfig
+> > b/arch/arm64/configs/defconfig
+> > index cb7da4415599..3dccc9e1c4aa 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -859,6 +859,8 @@ CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
+> >  CONFIG_VIDEO_SAMSUNG_S5P_JPEG=m
+> >  CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
+> >  CONFIG_VIDEO_SUN6I_CSI=m
+> > +CONFIG_VIDEO_SYNOPSYS_HDMIRX=m
+> > +CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID=y
+> 
+> I do not believe it is a good idea to default to y for this option.
+> 
+> The EDID depends on the specific device you make, and you should
+> think carefully about whether the default EDID fits the needs of the
+> device.
+> 
+> So if you want the default EDID, then you should manually select it
+> and not have it autoselected.
 
-Today's linux-next merge of the block tree got a conflict in:
+Following up here, from the device maker perspective sure, but I'm not
+sure this is the best choice for generic Linux distribution. As of
+today, pretty much no userspace capture software knows about this,
+meaning the device will not work out of the box in OBS, GStreamer,
+Ffmpeg, Web Browsers. In comparison, if you pick any UVC HDMI capture,
+it just work, with a default EDID that covers the range of
+capabilities, which in this case are defined by the SoC.
 
-  tools/testing/selftests/drivers/net/hw/Makefile
+Whatever we make as a choice, will always be the wrong choice for
+someone, though I expect this to be a lot easier to change for
+"specialized" implementation. Now, since there is no reason you can't
+do a specilized implementation on generic Linux distro, and because you
+might disagree with me, perhaps a compromise is to also add a module
+parameter, so that there is a run-time override to this.
 
-between commit:
+Nicolas
 
-  185646a8a0a8 ("selftests: drv-net: add tests for napi IRQ affinity notifi=
-ers")
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> >  CONFIG_VIDEO_TI_J721E_CSI2RX=m
+> >  CONFIG_VIDEO_HANTRO=m
+> >  CONFIG_VIDEO_IMX219=m
+> 
+> 
 
-from the net-next tree and commit:
-
-  71082faa2c64 ("io_uring/zcrx: add selftest")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/drivers/net/hw/Makefile
-index cde5814ff9a7,7efc47c89463..000000000000
---- a/tools/testing/selftests/drivers/net/hw/Makefile
-+++ b/tools/testing/selftests/drivers/net/hw/Makefile
-@@@ -10,7 -12,7 +12,8 @@@ TEST_PROGS =3D=20
-  	ethtool_rmon.sh \
-  	hw_stats_l3.sh \
-  	hw_stats_l3_gre.sh \
-+ 	iou-zcrx.py \
- +	irq.py \
-  	loopback.sh \
-  	nic_link_layer.py \
-  	nic_performance.py \
-@@@ -43,4 -42,4 +46,6 @@@ include ../../../lib.m
-  YNL_GENS :=3D ethtool netdev
-  include ../../../net/ynl.mk
- =20
-+ $(OUTPUT)/iou-zcrx: LDLIBS +=3D -luring
-++
- +include ../../../net/bpf.mk
-
---Sig_/IqqFrWOlEanhzm3JG70FbSu
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfBMjwACgkQAVBC80lX
-0GzgUwf/T+4bByxUtEmJQ/tSOYTLf+IKtgczZtQ1OgybowN4jSLUDPvIJvFEbPi5
-l1nQ4BMJtoyL7TJFG7yStomvFNAZHXdFHBNDudzhlCAn9tKfOXYp3JquagO7dweT
-p14NOW/TmDOACGBz+hrqB/hkGqLdwJZFDd3MZGhoGbBOz3Zt7iqEdTCU39pJCWA+
-XcAdk3TgApsf9ta3Cw1EQSpnWWqhH3/0bQssJGzfg+MhtLJTt8Kf2o/SYrD1LQT6
-26koynuAP+/v6Mm9+FqBH6VldKZxxMuGa0y8wALCtukXt86mZe+It45TkB8GzAQE
-7JzDbPL1MYIYsufMF7eyRXfwZr1r/Q==
-=B+NT
------END PGP SIGNATURE-----
-
---Sig_/IqqFrWOlEanhzm3JG70FbSu--
+-- 
+Nicolas Dufresne
+Principal Engineer at Collabora
