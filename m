@@ -1,21 +1,22 @@
-Received: from out198-12.us.a.mail.aliyun.com (out198-12.us.a.mail.aliyun.com [47.90.198.12])
+Received: from out28-98.mail.aliyun.com (out28-98.mail.aliyun.com [115.124.28.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2249D25F97C;
-	Fri, 28 Feb 2025 10:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F271E25FA06;
+	Fri, 28 Feb 2025 10:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736848; cv=none; b=XUR8ElNw2eaEcWCmgSnJkFZwZKJ1zFS3gRk+yYBNiElS6YIMvaxRHf48Doo+qyC/rcPy2oKbREz5UqyYD9HIdu3e8cJxxNcGYc4TrPuvhvhXt0bJOOIcUOVpEUImLwhhXvDGPMNMrqYGvgYOhWX3YaL01j6dZMXsFLnCV2sXGlk=
+	t=1740736848; cv=none; b=Y5f2iHAQHT4b5p5BDq1UpzvNmYhvGflEpcyA1riBaMGRAde5p+/T0usCSOjhWluOXbG+86/vR0KSlngH5MDVTnJON+GY7ddl4bv3buMKt/DvnnB4Y37Z08vAWaITtR4qllb0YkTQboEpC9MyLae+NP55rS43alwwoL8714CWXp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740736848; c=relaxed/simple;
-	bh=wCzcqb5ex/eO+H7R2RyhdEzh0ARjyXyxCI2VpaIU6go=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MgRJ8WqvNrc8hDHQhib5JJipiU4IX9idKBOmrrQUz1pX3pxVB2HjAUDJU0Of7Pb9AtQq/6NwqzTNA/UIc4VRH48YTZ9FigtYG3raoz8wcYjPRhTF7WEA0CQx+FCGzv/XNvohlU9HVnK0J2yTw4Prw8Ngyw8qSbjn/Hlzp0yBycA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=47.90.198.12
+	bh=m6WuCiV/RYA+a5NP+PJkwLidaergF+ppnvVg4Hw89LQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=C7RDIVO8C+y6RxTBUQehez2HWuvWQ57moY3MoBAm8cu3RMVqOVPsHnYxSD2nJ0H0WJfjnca+UowFUiIwIGwY9WV+M9SV6doR6c9TwwRJcexiP2WzkfBxrTTrqBYZqTz+3o98++4NY+W3jOAlUtIN1sdNZIA9YoNc6j1FL57zzoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=115.124.28.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
-Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.bfyn0sj_1740736820 cluster:ay29)
+Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.bfyn1DD_1740736834 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Fri, 28 Feb 2025 18:00:31 +0800
+          Fri, 28 Feb 2025 18:00:35 +0800
 From: Frank Sae <Frank.Sae@motor-comm.com>
 To: Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
@@ -32,95 +33,379 @@ Cc: Masahiro Yamada <masahiroy@kernel.org>,
 	xiaogang.fan@motor-comm.com,
 	fei.zhang@motor-comm.com,
 	hua.sun@motor-comm.com
-Subject: [PATCH net-next v3 00/14] net:yt6801: Add Motorcomm yt6801 PCIe driver
-Date: Fri, 28 Feb 2025 18:00:06 +0800
-Message-Id: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
+Subject: [PATCH net-next v3 05/14] motorcomm:yt6801: Implement the .ndo_open function
+Date: Fri, 28 Feb 2025 18:00:11 +0800
+Message-Id: <20250228100020.3944-6-Frank.Sae@motor-comm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
+References: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This series includes adding Motorcomm YT6801 Gigabit ethernet driver
- and adding yt6801 ethernet driver entry in MAINTAINERS file.
-YT6801 integrates a YT8531S phy.
+Implement the .ndo_open function to Calculate the Rx buffer size, allocate
+ the channels and rings.
 
 Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
 ---
+ .../ethernet/motorcomm/yt6801/yt6801_desc.c   | 223 ++++++++++++++++++
+ .../ethernet/motorcomm/yt6801/yt6801_net.c    |  90 +++++++
+ 2 files changed, 313 insertions(+)
 
-v3:
- - Remove about 5000 lines of code
- - Remove statistics, ethtool, WoL, PHY handling ...
- - Reorganize this driver code and remove redundant code
- - Remove unnecessary yt_dbg information
- - Remove netif_carrier_on/netif_carrier_off
- - Remove hw_ops
- - Add PHY_INTERFACE_MODE_INTERNAL mode in phy driver to support yt6801
- - replease '#ifdef CONFIG_PCI_MSI' as 'if (IS_ENABLED(CONFIG_PCI_MSI) {}'
- - replease ‘fxgmac_pdata val’ as 'priv'
-
-v2: https://patchwork.kernel.org/project/netdevbpf/cover/20241120105625.22508-1-Frank.Sae@motor-comm.com/
- - Split this driver into multiple patches.
- - Reorganize this driver code and remove redundant code
- - Remove PHY handling code and use phylib.
- - Remove writing ASPM config
- - Use generic power management instead of pci_driver.suspend()/resume()
- - Add Space before closing "*/"
-
-v1: https://patchwork.kernel.org/project/netdevbpf/patch/20240913124113.9174-1-Frank.Sae@motor-comm.com/
-
-
-This patch is to add the ethernet device driver for the PCIe interface of
- Motorcomm YT6801 Gigabit Ethernet.
-We tested this driver on an Ubuntu x86 PC with YT6801 network card.
-
-Frank Sae (14):
-  motorcomm:yt6801: Implement mdio register
-  motorcomm:yt6801: Add support for a pci table in this module
-  motorcomm:yt6801: Implement pci_driver shutdown
-  motorcomm:yt6801: Implement the fxgmac_init function
-  motorcomm:yt6801: Implement the .ndo_open function
-  motorcomm:yt6801: Implement the fxgmac_start function
-  phy:motorcomm: Add PHY_INTERFACE_MODE_INTERNAL to support YT6801
-  motorcomm:yt6801: Implement the fxgmac_hw_init function
-  motorcomm:yt6801: Implement the poll functions
-  motorcomm:yt6801: Implement .ndo_start_xmit function
-  motorcomm:yt6801: Implement some net_device_ops function
-  motorcomm:yt6801: Implement pci_driver suspend and resume
-  motorcomm:yt6801: Add makefile and Kconfig
-  motorcomm:yt6801: update ethernet documentation and maintainer
-
- .../device_drivers/ethernet/index.rst         |    1 +
- .../ethernet/motorcomm/yt6801.rst             |   20 +
- MAINTAINERS                                   |    8 +
- drivers/net/ethernet/Kconfig                  |    1 +
- drivers/net/ethernet/Makefile                 |    1 +
- drivers/net/ethernet/motorcomm/Kconfig        |   27 +
- drivers/net/ethernet/motorcomm/Makefile       |    6 +
- .../net/ethernet/motorcomm/yt6801/Makefile    |    8 +
- .../net/ethernet/motorcomm/yt6801/yt6801.h    |  379 +++
- .../ethernet/motorcomm/yt6801/yt6801_desc.c   |  571 ++++
- .../ethernet/motorcomm/yt6801/yt6801_desc.h   |   35 +
- .../ethernet/motorcomm/yt6801/yt6801_net.c    | 2876 +++++++++++++++++
- .../ethernet/motorcomm/yt6801/yt6801_pci.c    |  186 ++
- .../ethernet/motorcomm/yt6801/yt6801_type.h   |  967 ++++++
- drivers/net/phy/motorcomm.c                   |    6 +
- 15 files changed, 5092 insertions(+)
- create mode 100644 Documentation/networking/device_drivers/ethernet/motorcomm/yt6801.rst
- create mode 100644 drivers/net/ethernet/motorcomm/Kconfig
- create mode 100644 drivers/net/ethernet/motorcomm/Makefile
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/Makefile
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801.h
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_pci.c
- create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
-
+diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
+index 3ff5eff11..74a0bec45 100644
+--- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
++++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
+@@ -48,3 +48,226 @@ void fxgmac_desc_data_unmap(struct fxgmac_pdata *priv,
+ 
+ 	desc_data->mapped_as_page = 0;
+ }
++
++static int fxgmac_ring_init(struct fxgmac_pdata *priv, struct fxgmac_ring *ring,
++			    unsigned int dma_desc_count)
++{
++	/* Descriptors */
++	ring->dma_desc_count = dma_desc_count;
++	ring->dma_desc_head =
++		dma_alloc_coherent(priv->dev, (sizeof(struct fxgmac_dma_desc) *
++				   dma_desc_count),
++				   &ring->dma_desc_head_addr, GFP_KERNEL);
++	if (!ring->dma_desc_head)
++		return -ENOMEM;
++
++	/* Array of descriptor data */
++	ring->desc_data_head = kcalloc(dma_desc_count,
++				       sizeof(struct fxgmac_desc_data),
++				       GFP_KERNEL);
++	if (!ring->desc_data_head)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static void fxgmac_ring_free(struct fxgmac_pdata *priv,
++			     struct fxgmac_ring *ring)
++{
++	if (!ring)
++		return;
++
++	if (ring->desc_data_head) {
++		for (u32 i = 0; i < ring->dma_desc_count; i++)
++			fxgmac_desc_data_unmap(priv,
++					       FXGMAC_GET_DESC_DATA(ring, i));
++
++		kfree(ring->desc_data_head);
++		ring->desc_data_head = NULL;
++	}
++
++	if (ring->rx_hdr_pa.pages) {
++		dma_unmap_page(priv->dev, ring->rx_hdr_pa.pages_dma,
++			       ring->rx_hdr_pa.pages_len, DMA_FROM_DEVICE);
++		put_page(ring->rx_hdr_pa.pages);
++
++		ring->rx_hdr_pa.pages = NULL;
++		ring->rx_hdr_pa.pages_len = 0;
++		ring->rx_hdr_pa.pages_offset = 0;
++		ring->rx_hdr_pa.pages_dma = 0;
++	}
++
++	if (ring->rx_buf_pa.pages) {
++		dma_unmap_page(priv->dev, ring->rx_buf_pa.pages_dma,
++			       ring->rx_buf_pa.pages_len, DMA_FROM_DEVICE);
++		put_page(ring->rx_buf_pa.pages);
++
++		ring->rx_buf_pa.pages = NULL;
++		ring->rx_buf_pa.pages_len = 0;
++		ring->rx_buf_pa.pages_offset = 0;
++		ring->rx_buf_pa.pages_dma = 0;
++	}
++	if (ring->dma_desc_head) {
++		dma_free_coherent(priv->dev, (sizeof(struct fxgmac_dma_desc) *
++				  ring->dma_desc_count), ring->dma_desc_head,
++				  ring->dma_desc_head_addr);
++		ring->dma_desc_head = NULL;
++	}
++}
++
++static void fxgmac_rings_free(struct fxgmac_pdata *priv)
++{
++	struct fxgmac_channel *channel = priv->channel_head;
++
++	fxgmac_ring_free(priv, channel->tx_ring);
++
++	for (u32 i = 0; i < priv->channel_count; i++, channel++)
++		fxgmac_ring_free(priv, channel->rx_ring);
++}
++
++static int fxgmac_rings_alloc(struct fxgmac_pdata *priv)
++{
++	struct fxgmac_channel *channel = priv->channel_head;
++	int ret;
++
++	ret = fxgmac_ring_init(priv, channel->tx_ring, priv->tx_desc_count);
++	if (ret < 0) {
++		yt_err(priv, "error initializing Tx ring");
++		goto err_init_ring;
++	}
++
++	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
++		ret = fxgmac_ring_init(priv, channel->rx_ring,
++				       priv->rx_desc_count);
++		if (ret < 0) {
++			yt_err(priv, "error initializing Rx ring\n");
++			goto err_init_ring;
++		}
++	}
++	return 0;
++
++err_init_ring:
++	fxgmac_rings_free(priv);
++	return ret;
++}
++
++static void fxgmac_channels_free(struct fxgmac_pdata *priv)
++{
++	struct fxgmac_channel *channel = priv->channel_head;
++
++	kfree(channel->tx_ring);
++	channel->tx_ring = NULL;
++
++	kfree(channel->rx_ring);
++	channel->rx_ring = NULL;
++
++	kfree(channel);
++	priv->channel_head = NULL;
++}
++
++void fxgmac_channels_rings_free(struct fxgmac_pdata *priv)
++{
++	fxgmac_rings_free(priv);
++	fxgmac_channels_free(priv);
++}
++
++#ifdef CONFIG_PCI_MSI
++static void fxgmac_set_msix_tx_irq(struct fxgmac_pdata *priv,
++				   struct fxgmac_channel *channel, u32 i)
++{
++	if (i != 0) /*only one tx*/
++		return;
++
++	priv->channel_irq[FXGMAC_MAX_DMA_RX_CHANNELS] =
++		priv->msix_entries[FXGMAC_MAX_DMA_RX_CHANNELS].vector;
++	channel->dma_irq_tx = priv->channel_irq[FXGMAC_MAX_DMA_RX_CHANNELS];
++}
++#endif
++
++static int fxgmac_channels_alloc(struct fxgmac_pdata *priv)
++{
++	struct fxgmac_channel *channel_head, *channel;
++	struct fxgmac_ring *tx_ring, *rx_ring;
++	int ret = -ENOMEM;
++
++	channel_head = kcalloc(priv->channel_count,
++			       sizeof(struct fxgmac_channel), GFP_KERNEL);
++
++	if (!channel_head)
++		return ret;
++
++	tx_ring = kcalloc(FXGMAC_TX_1_RING, sizeof(struct fxgmac_ring),
++			  GFP_KERNEL);
++	if (!tx_ring)
++		goto err_tx_ring;
++
++	rx_ring = kcalloc(priv->rx_ring_count, sizeof(struct fxgmac_ring),
++			  GFP_KERNEL);
++	if (!rx_ring)
++		goto err_rx_ring;
++
++	channel = channel_head;
++	for (u32 i = 0; i < priv->channel_count; i++, channel++) {
++		snprintf(channel->name, sizeof(channel->name), "channel-%u", i);
++		channel->priv = priv;
++		channel->queue_index = i;
++		channel->dma_regs = (priv)->hw_addr + MAC_OFFSET + DMA_CH_BASE +
++				    (DMA_CH_INC * i);
++
++		if (priv->per_channel_irq) {
++			priv->channel_irq[i] = priv->msix_entries[i].vector;
++
++			if (IS_ENABLED(CONFIG_PCI_MSI))
++				fxgmac_set_msix_tx_irq(priv, channel, i);
++
++			/* Get the per DMA rx interrupt */
++			ret = priv->channel_irq[i];
++			if (ret < 0) {
++				yt_err(priv, "get_irq %u err\n", i + 1);
++				goto err_irq;
++			}
++
++			channel->dma_irq_rx = ret;
++		}
++
++		if (i < FXGMAC_TX_1_RING)
++			channel->tx_ring = tx_ring++;
++
++		if (i < priv->rx_ring_count)
++			channel->rx_ring = rx_ring++;
++	}
++
++	priv->channel_head = channel_head;
++	return 0;
++
++err_irq:
++	kfree(rx_ring);
++
++err_rx_ring:
++	kfree(tx_ring);
++
++err_tx_ring:
++	kfree(channel_head);
++
++	yt_err(priv, "%s err:%d\n", __func__, ret);
++	return ret;
++}
++
++int fxgmac_channels_rings_alloc(struct fxgmac_pdata *priv)
++{
++	int ret;
++
++	ret = fxgmac_channels_alloc(priv);
++	if (ret < 0)
++		goto err_alloc;
++
++	ret = fxgmac_rings_alloc(priv);
++	if (ret < 0)
++		goto err_alloc;
++
++	return 0;
++
++err_alloc:
++	fxgmac_channels_rings_free(priv);
++	return ret;
++}
+diff --git a/drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c b/drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c
+index 350510174..c5e02c497 100644
+--- a/drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c
++++ b/drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c
+@@ -11,6 +11,8 @@
+ #include "yt6801.h"
+ #include "yt6801_desc.h"
+ 
++const struct net_device_ops *fxgmac_get_netdev_ops(void);
++
+ #define PHY_WR_CONFIG(reg_offset)	(0x8000205 + ((reg_offset) * 0x10000))
+ static int fxgmac_phy_write_reg(struct fxgmac_pdata *priv, u32 reg_id, u32 data)
+ {
+@@ -391,6 +393,32 @@ static void fxgmac_stop(struct fxgmac_pdata *priv)
+ 	netdev_tx_reset_queue(txq);
+ }
+ 
++static void fxgmac_restart(struct fxgmac_pdata *priv)
++{
++	int ret;
++
++	/* If not running, "restart" will happen on open */
++	if (!netif_running(priv->netdev) && priv->dev_state != FXGMAC_DEV_START)
++		return;
++
++	mutex_lock(&priv->mutex);
++	fxgmac_stop(priv);
++	fxgmac_free_tx_data(priv);
++	fxgmac_free_rx_data(priv);
++	ret = fxgmac_start(priv);
++	if (ret < 0)
++		yt_err(priv, "%s err, ret = %d.\n", __func__, ret);
++
++	mutex_unlock(&priv->mutex);
++}
++
++static void fxgmac_restart_work(struct work_struct *work)
++{
++	rtnl_lock();
++	fxgmac_restart(container_of(work, struct fxgmac_pdata, restart_work));
++	rtnl_unlock();
++}
++
+ static void fxgmac_config_powerdown(struct fxgmac_pdata *priv)
+ {
+ 	FXGMAC_MAC_IO_WR_BITS(priv, MAC_CR, RE, 1); /* Enable MAC Rx */
+@@ -435,6 +463,59 @@ int fxgmac_net_powerdown(struct fxgmac_pdata *priv)
+ 	return 0;
+ }
+ 
++static int fxgmac_calc_rx_buf_size(struct fxgmac_pdata *priv, unsigned int mtu)
++{
++	u32 rx_buf_size, max_mtu = FXGMAC_JUMBO_PACKET_MTU - ETH_HLEN;
++
++	if (mtu > max_mtu) {
++		yt_err(priv, "MTU exceeds maximum supported value\n");
++		return -EINVAL;
++	}
++
++	rx_buf_size = mtu + ETH_HLEN + ETH_FCS_LEN + VLAN_HLEN;
++	rx_buf_size =
++		clamp_val(rx_buf_size, FXGMAC_RX_MIN_BUF_SIZE, PAGE_SIZE * 4);
++
++	rx_buf_size = (rx_buf_size + FXGMAC_RX_BUF_ALIGN - 1) &
++		      ~(FXGMAC_RX_BUF_ALIGN - 1);
++
++	return rx_buf_size;
++}
++
++static int fxgmac_open(struct net_device *netdev)
++{
++	struct fxgmac_pdata *priv = netdev_priv(netdev);
++	int ret;
++
++	mutex_lock(&priv->mutex);
++	priv->dev_state = FXGMAC_DEV_OPEN;
++
++	/* Calculate the Rx buffer size before allocating rings */
++	ret = fxgmac_calc_rx_buf_size(priv, netdev->mtu);
++	if (ret < 0)
++		goto unlock;
++
++	priv->rx_buf_size = ret;
++	ret = fxgmac_channels_rings_alloc(priv);
++	if (ret < 0)
++		goto unlock;
++
++	INIT_WORK(&priv->restart_work, fxgmac_restart_work);
++	ret = fxgmac_start(priv);
++	if (ret < 0)
++		goto err_channels_and_rings;
++
++	mutex_unlock(&priv->mutex);
++	return 0;
++
++err_channels_and_rings:
++	fxgmac_channels_rings_free(priv);
++	yt_err(priv, "%s, channel alloc err\n", __func__);
++unlock:
++	mutex_unlock(&priv->mutex);
++	return ret;
++}
++
+ #define EFUSE_FISRT_UPDATE_ADDR				255
+ #define EFUSE_SECOND_UPDATE_ADDR			209
+ #define EFUSE_MAX_ENTRY					39
+@@ -932,3 +1013,12 @@ int fxgmac_drv_probe(struct device *dev, struct fxgmac_resources *res)
+ 	free_netdev(netdev);
+ 	return ret;
+ }
++
++static const struct net_device_ops fxgmac_netdev_ops = {
++	.ndo_open		= fxgmac_open,
++};
++
++const struct net_device_ops *fxgmac_get_netdev_ops(void)
++{
++	return &fxgmac_netdev_ops;
++}
 -- 
 2.34.1
 
