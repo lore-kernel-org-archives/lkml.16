@@ -1,125 +1,165 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C0F25F790;
-	Fri, 28 Feb 2025 11:53:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D409F25F790;
+	Fri, 28 Feb 2025 11:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740743629; cv=none; b=oCgoyGToGr7eFklcO11WL2zIYmaJFocILiaeBCDVTfOq8+7Hg0nCLjb/1ICmorP+DCZh+LqX9ED67dIx7QjHWETRfBTrVnfZEG1DoRGgSpsAi0RhMGlw9krj4i+8Nl8Yb2dK+REB2Mot+m0zYbGr6LAShobLEiLGn9UfzG/yU5Y=
+	t=1740743778; cv=none; b=c/XvYt2+lrnwVBZ2jG7BKlMc6ArjZgGEtnhfa36iR/fqfYg57C42JRzYB4pvP2/GPzaa0Id3fY+EXjHnDCrw8zAJGDUpdFqvDRK7EchirNDnAiOvsbN4mV/9R4gZj6tolPmMCNRTVbUnHAI5iPHj9H3AUaZmToKJtlcbjcCKmNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740743629; c=relaxed/simple;
-	bh=Xx+4DZJBedoY68hJkMV5msyJ11vfL3QGPNi6lrxFSOc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=l8vgkip+TV/ssMAoqDQ4ihrNvRPH4+RrLU8vL3YwUtfZnsWXZVJzClsGCqBDi/Sx7iU6lboXSAq5VCjlRkaeQWi3LVrThyr1jPjegmcC1O6JFaIpxAaa48ntkBLv0spXB32v9gJNO2K1XitezXBrrSeJlqBREEQ6zYG+sUElcgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pmm1Wifu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Djx1kyEW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740743778; c=relaxed/simple;
+	bh=DU2MIOCInzlt7F0yK4hZYi3mDmHRqglMly/XxHRLOHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nkc8lA92wUs6iQGkHNMsI04MaUD4zuZeiaSWv7XxUr/xZkSbgOCWVPYMJEnNbjXBIkok2RYCsJtUhSmm4UYR7SZ7mJ1LpBzW8+SI5IP6oPzsCFIN7YlYqTF4wsinhOjhryiUmTi3G4dL9E07V9Pj0Q1E6SSMCyS9+1LwlZTIcCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b1yCl0V6; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pmm1Wifu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Djx1kyEW"
-Date: Fri, 28 Feb 2025 11:53:44 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740743625;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gAPqhRamjcVJxO68ILjzT32M+umBIEEXQgY+krUtrIA=;
-	b=pmm1Wifu4ex4ML80wjiL5vonEhZGuCVysNDcegibtqKxnAU42Gny02u4YVQGBeiqVcC0jZ
-	XUHK7pjwE9C9M4mc2l2WaQ1DWtgLaxS4W5KHurByIESXpbGHd68c4HczqriyG08LQFbB1u
-	2X+dquY/pqKb4WDa2TLLUHuEZARSVpsFscSbPlxDQ3P7HgUUM7hl5jITEuGco4SbxNg3Ul
-	j0Zbk/C9ohN06QMUkeDP2KKFmQEwEZ5VFvAUbKY4OAU1Hp2mA5oy7f7iXN5ocfKN9Ju/mD
-	afB+IO2Zmb0+yAjGmQ96HBoFUU5bXLTtBuAOO8OIWKK6qwzF3zvwdmVEmtfTOw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740743625;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gAPqhRamjcVJxO68ILjzT32M+umBIEEXQgY+krUtrIA=;
-	b=Djx1kyEWNiaTe6L780mVquGUIK8rVBcfD1jxxohnXE8XtJq9uDw6P5otKoa5bIXi3IHPmB
-	mrWlOJeI7ZMQC1Dw==
-From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Add X86_BUG_SPECTRE_V2_USER
-Cc: David Kaplan <david.kaplan@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250108202515.385902-2-david.kaplan@amd.com>
-References: <20250108202515.385902-2-david.kaplan@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b1yCl0V6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740743777; x=1772279777;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DU2MIOCInzlt7F0yK4hZYi3mDmHRqglMly/XxHRLOHM=;
+  b=b1yCl0V6EVsnsqLW7n5QBdOUeQcR9EBXomgpmxf0Jh2gafyWOr9zHbbe
+   2Nz6CgDpYuSmHXEp8wnd7QLanqYWHTZSoE2HMpHJPIHJuEmIZa8N1OXGe
+   JicDG2JvSrH/g68YW/Z1TSA9r5iA78J47iapKj/jEugcmSRaNwu2D83mz
+   kr/wHcNx4Wd7YiOhBK8jfwkUQDMH+gEf+KumQas2myudXYi8PRju1NVl7
+   Op6TRsqxqQFuAYqUzsBPwDjrgTG6ofF/dOPA1oz6OuntohWs1UuekuYg/
+   1VLjZpvioMNy9/DMxaS0L8h8SYeL32Qly4fzYaIDk8goHqnogBYjWMYWa
+   Q==;
+X-CSE-ConnectionGUID: diPBXjtDRMu6skFlVpoC6Q==
+X-CSE-MsgGUID: YQziP3ZdTu6ETBImqYGkeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="59082602"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="59082602"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 03:56:17 -0800
+X-CSE-ConnectionGUID: jgKVaaQqQzWugKKqsbzRCQ==
+X-CSE-MsgGUID: bNPavz8jSr6zb9KSBDo6yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="117106196"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa006.fm.intel.com with ESMTP; 28 Feb 2025 03:56:13 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnyyR-000EpM-1p;
+	Fri, 28 Feb 2025 11:56:11 +0000
+Date: Fri, 28 Feb 2025 19:55:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Longfang Liu <liulongfang@huawei.com>, alex.williamson@redhat.com,
+	jgg@nvidia.com, shameerali.kolothum.thodi@huawei.com,
+	jonathan.cameron@huawei.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxarm@openeuler.org, liulongfang@huawei.com
+Subject: Re: [PATCH v4 1/5] hisi_acc_vfio_pci: fix XQE dma address error
+Message-ID: <202502281952.Z9JQ8jcK-lkp@intel.com>
+References: <20250225062757.19692-2-liulongfang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174074362446.10177.6431632226859188999.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225062757.19692-2-liulongfang@huawei.com>
 
-The following commit has been merged into the x86/bugs branch of tip:
+Hi Longfang,
 
-Commit-ID:     98c7a713db91c5a9a7ffc47cd85e7158e0963cb8
-Gitweb:        https://git.kernel.org/tip/98c7a713db91c5a9a7ffc47cd85e7158e0963cb8
-Author:        David Kaplan <david.kaplan@amd.com>
-AuthorDate:    Wed, 08 Jan 2025 14:24:41 -06:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 28 Feb 2025 12:34:30 +01:00
+kernel test robot noticed the following build errors:
 
-x86/bugs: Add X86_BUG_SPECTRE_V2_USER
+[auto build test ERROR on awilliam-vfio/next]
+[also build test ERROR on awilliam-vfio/for-linus linus/master v6.14-rc4 next-20250227]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-All CPU vulnerabilities with command line options map to a single X86_BUG bit
-except for Spectre V2 where both the spectre_v2 and spectre_v2_user command
-line options are related to the same bug.
+url:    https://github.com/intel-lab-lkp/linux/commits/Longfang-Liu/hisi_acc_vfio_pci-fix-XQE-dma-address-error/20250225-143347
+base:   https://github.com/awilliam/linux-vfio.git next
+patch link:    https://lore.kernel.org/r/20250225062757.19692-2-liulongfang%40huawei.com
+patch subject: [PATCH v4 1/5] hisi_acc_vfio_pci: fix XQE dma address error
+config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20250228/202502281952.Z9JQ8jcK-lkp@intel.com/config)
+compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502281952.Z9JQ8jcK-lkp@intel.com/reproduce)
 
-The spectre_v2 command line options mostly relate to user->kernel and
-guest->host mitigations, while the spectre_v2_user command line options relate
-to user->user or guest->guest protections.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502281952.Z9JQ8jcK-lkp@intel.com/
 
-Define a new X86_BUG bit for spectre_v2_user so each *_select_mitigation()
-function in bugs.c is related to a unique X86_BUG bit.
+All errors (new ones prefixed by >>):
 
-No functional changes.
+   In file included from drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:9:
+   In file included from include/linux/hisi_acc_qm.h:10:
+   In file included from include/linux/pci.h:1644:
+   In file included from include/linux/dmapool.h:14:
+   In file included from include/linux/scatterlist.h:8:
+   In file included from include/linux/mm.h:2224:
+   include/linux/vmstat.h:504:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     504 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     505 |                            item];
+         |                            ~~~~
+   include/linux/vmstat.h:511:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     511 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     512 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/vmstat.h:524:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
+     524 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
+     525 |                            NR_VM_NUMA_EVENT_ITEMS +
+         |                            ~~~~~~~~~~~~~~~~~~~~~~
+>> drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:448:23: error: use of undeclared identifier 'ACC_DRV_MAR'
+     448 |         vf_data->major_ver = ACC_DRV_MAR;
+         |                              ^
+>> drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c:449:23: error: use of undeclared identifier 'ACC_DRV_MIN'
+     449 |         vf_data->minor_ver = ACC_DRV_MIN;
+         |                              ^
+   3 warnings and 2 errors generated.
 
-Signed-off-by: David Kaplan <david.kaplan@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20250108202515.385902-2-david.kaplan@amd.com
----
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/common.c       | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index c8701ab..0bc4203 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -537,4 +537,5 @@
- #define X86_BUG_RFDS			X86_BUG(1*32 + 2) /* "rfds" CPU is vulnerable to Register File Data Sampling */
- #define X86_BUG_BHI			X86_BUG(1*32 + 3) /* "bhi" CPU is affected by Branch History Injection */
- #define X86_BUG_IBPB_NO_RET	   	X86_BUG(1*32 + 4) /* "ibpb_no_ret" IBPB omits return target predictions */
-+#define X86_BUG_SPECTRE_V2_USER		X86_BUG(1*32 + 5) /* "spectre_v2_user" CPU is affected by Spectre variant 2 attack between user processes */
- #endif /* _ASM_X86_CPUFEATURES_H */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 7cce91b..1e80d76 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1331,8 +1331,10 @@ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
- 
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
- 
--	if (!cpu_matches(cpu_vuln_whitelist, NO_SPECTRE_V2))
-+	if (!cpu_matches(cpu_vuln_whitelist, NO_SPECTRE_V2)) {
- 		setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
-+		setup_force_cpu_bug(X86_BUG_SPECTRE_V2_USER);
-+	}
- 
- 	if (!cpu_matches(cpu_vuln_whitelist, NO_SSB) &&
- 	    !(x86_arch_cap_msr & ARCH_CAP_SSB_NO) &&
+vim +/ACC_DRV_MAR +448 drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+
+   438	
+   439	static int vf_qm_get_match_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+   440					struct acc_vf_data *vf_data)
+   441	{
+   442		struct hisi_qm *pf_qm = hisi_acc_vdev->pf_qm;
+   443		struct device *dev = &pf_qm->pdev->dev;
+   444		int vf_id = hisi_acc_vdev->vf_id;
+   445		int ret;
+   446	
+   447		vf_data->acc_magic = ACC_DEV_MAGIC_V2;
+ > 448		vf_data->major_ver = ACC_DRV_MAR;
+ > 449		vf_data->minor_ver = ACC_DRV_MIN;
+   450		/* Save device id */
+   451		vf_data->dev_id = hisi_acc_vdev->vf_dev->device;
+   452	
+   453		/* VF qp num save from PF */
+   454		ret = pf_qm_get_qp_num(pf_qm, vf_id, &vf_data->qp_base);
+   455		if (ret <= 0) {
+   456			dev_err(dev, "failed to get vft qp nums!\n");
+   457			return -EINVAL;
+   458		}
+   459	
+   460		vf_data->qp_num = ret;
+   461	
+   462		/* VF isolation state save from PF */
+   463		ret = qm_read_regs(pf_qm, QM_QUE_ISO_CFG_V, &vf_data->que_iso_cfg, 1);
+   464		if (ret) {
+   465			dev_err(dev, "failed to read QM_QUE_ISO_CFG_V!\n");
+   466			return ret;
+   467		}
+   468	
+   469		return 0;
+   470	}
+   471	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
