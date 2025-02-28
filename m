@@ -1,54 +1,54 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03DAC277005
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:30:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB10D277033
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767428; cv=none; b=KLEp9JLlehDT5Rp1kel9kvrdNvhizVwN0kPG7B3nrpxp7vFa9FfrT37kI+EwOYm51LeKF2gKVD/5wgCmq00FIVhVB5meAS+L8HSfo8aHH7UvA8X9epQeKLqLsqLyg8u6he3vdhhFJrkOMMk3p7gF4qBCM1oikWMEvWP//8JUzgk=
+	t=1740767431; cv=none; b=LnqdSk+kFm0WIE/9BjaQBO8iMm8ielQtmV4Nv1zyHqOEIRhnDztkVL6iPdCl/A0vW9wS7MULQYQ5c0mLNes++foQSFWHKXUj4EFoTHZHijWyelekKww/WlpTX0/4AY3NN6z9pEQRLhCsnigHgRrmD+QDgwuxxcx2BJvlErJqUNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740767428; c=relaxed/simple;
-	bh=3Lv5Z/ATYlscC4ohH4kKoakZp5reDJ5CLNojylEo6Ic=;
+	s=arc-20240116; t=1740767431; c=relaxed/simple;
+	bh=7Acur164byQ0STeNcJdwq9eVToq5iNa+oJyKcDPpqPU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CBJFZQ90Rd1KZNuBL+AJS+2yEl+ucpDOolxCAFY4rNN/mr9yeSPIosCmxB3tZpJUchYmwZtxV+UtzA9tw1oHn4hrviSjN8/l8DETiAtdjkwYQB4xaMADXA14Sr3be7HhutHdkJxnvPYBlvJbHSY07oWfynS0vtLNe1B7P1PSidU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ieyKP8RZ; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=ezh9lCwA0ME0ruyfkUIJOpqYmDglC+kVZ9S178C+lEkILRShN/ofKwPprevLLeXdOOTsANZPumJummI52uMd9nFH/iuyKdIE0Ed3ODbqOGyptJllQez5YEBdx0UWP3GQTKqV43A3An+Q37uP5pCpEbaWKb7t31FDvHQUp0Momp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m7Ppxl9/; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ieyKP8RZ"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2234dddbd6fso54914895ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:30:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7Ppxl9/"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc3e239675so8300490a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:30:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740767426; x=1741372226; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740767429; x=1741372229; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJJkcZXm0UDGyycKT5zJa6qHUoeoBff/K3o/6oYQz4Q=;
-        b=ieyKP8RZ59dybxy+2H/6/dDk7PNpX1wcvdj85shbqJ3Ik00cSihG1+Fz9lc6qyKXNV
-         RUthr4IZx6YulKf4d601xkTPE/mP1MIJSMu6eKVL/I+w/TujsoNO9sL6CqxBtodOzdgJ
-         HXod50EJEavU31a4ft4ywz57uN+A2+1cnwia2GTSJrwTNJc94i1fw7x6r34x+Y7xTHk8
-         RghRg26DXceIIsowfkCj+OJjlO76YdsYNjgQjFoeZ04IG752YNpnuJvX8NLm4IRVwZ6d
-         5/dhqgBFZ9t/m1mWwpuSamoVpQz0TVHWJRSn0vmTudgP/+WJEbpVZUtbx2gmlv1fGwfk
-         1vMA==
+        bh=SJXuy9g+fIYCpUv35AHIylFJGRqMuxPCbt3E+0p7mQw=;
+        b=m7Ppxl9/bdSS/bg/4tvvMaDmUARFBACgN219cRFc2ZsWuHDR3yWL33PG2Z2WcQXM1q
+         IT8RkQiLN9psHuZzTxnnu0PNmPM2SPQwYtKDPi6A+IDDg4sR851U1OGDPW86wxyEJ8Na
+         SpysYTgc+l4xxGPKD5hsS5ePJAhfL/iKQCDeccNSpKCknhL4YxDE0D9ShYjsg+UBXYAZ
+         hqnH07eiEqsxtBTrFB8uX9UyXZqfy3/Fxpb1Ol6sEdSyQhBGsBGOhKiueJQJix5wM+kR
+         FekTlHomSUSog82ynZBYAsjypTqxemyllQrMhidErGyU+qRNwd4mYiOKgynLgBu6Y2f9
+         wt5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740767426; x=1741372226;
+        d=1e100.net; s=20230601; t=1740767429; x=1741372229;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GJJkcZXm0UDGyycKT5zJa6qHUoeoBff/K3o/6oYQz4Q=;
-        b=pgEainlfp0kTFdao2wWQWetIb/LPnEuRjRIrqasUYWpfw0d3j2uDUfcZmcMWUmFZaU
-         jPL5uzHqwPg4jQoRd9L+OLCmQntvTgdsl/SWus4713BY1kqQcKFMi6AasNQva+pY2vT6
-         v//q6Z1voGKiB+RgaA+eDMp63dtBRLGt7eVmqFRq9lZDjN3fvn0gfIpd9I2hxdtIjn1k
-         kMLt3VNRC09tFY7ksYTr1AXehJ50y72B8VuNAA0VV/si9IwDfQRI7gntX6eHxYJa7Hc2
-         JSDdMCORzprdSJAyPHJfCdYsTnOqaDkDBrW39CdcRmlEqWYf00fUaklTpbMOCUxCqTCx
-         P0NA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0qoE7DEYCWcnFOTCgz+0rekXNiuczlZKHhrHRG14r9nrTNETPj8gPe6m95J7uJdX7wi7Un0paWSE9dF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzs8YifNU01oVfG5e6wFlseKP7QRoKp7NyeTOnsmLH8gRDVGpgg
-	wT+MOaWwQAAuDRHpNm4pwPL0BT9cpJKhKnRkjSag/F/ZPXjmtX+TPU2N9LQdujRAKVYzTg==
-X-Google-Smtp-Source: AGHT+IFaQfecV0+g8772luhiih5Wz27ZxuM2qewDmjx0CupIM+riybkEMnFN2lTpHGDtl7PIHg8dgK4Y
-X-Received: from pjbpw4.prod.google.com ([2002:a17:90b:2784:b0:2ef:82c0:cb8d])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ef47:b0:221:2d4b:b4c6
- with SMTP id d9443c01a7336-2234b05eb87mr134741995ad.17.1740767426169; Fri, 28
- Feb 2025 10:30:26 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:29:24 +0000
+        bh=SJXuy9g+fIYCpUv35AHIylFJGRqMuxPCbt3E+0p7mQw=;
+        b=FucC7b+HakL6Q8hrTyqxPo2OiM07heVIVUix7ve0YUWwsskpgA4dJmG31nvBWCckQO
+         TNq4npubxkDgqdJyGhXU66y6dpWkb4fWYwhp4aNr7AqH138ENVHVrD+YyttUesprP02W
+         zgaQQDDWR5LC+6BIGJWfRoSWKm4/OI4BGI4imDg0eCG2LzFRO3tiCcKxxA5LrfoGMs1t
+         hvY8C/PZXHlDGUE9rGU2HEPfE+Kmb2DydshFVTlZf59+K1oIaM31OdjQGH0Yvq6vF4fs
+         zbtNY/24ZTZxxOgBAQZv4QIsjc2HAmY8VyoYusBLLQdX3tW7vuikRtjjh/ybLLiNalSP
+         cgVg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3VIhGxET0NURHPpOXjSeR1BAqi5Bf23B9kZiTaZnBvDaC67rkbfpIesKOLfxzkZCaR3Uhx3XrT73ld7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRU495WswhwSVbnSuiwwvw8lbbHaejup79VB6HtOTq7jX/Xlxj
+	IWc0huD+gY6Xo+jx4pttdtKlBnaB2TOjgFbI5/Gw1RRbnGElu59ngXrWm+gFdwjsEX6VJQ==
+X-Google-Smtp-Source: AGHT+IGyWQ5eAZFcGmvk4D9+09d3FgZW3zWgk6sQSpIGwMbzM1TQ8agrO5NPaNt1FY233n8g7xNvD2p7
+X-Received: from pjyp12.prod.google.com ([2002:a17:90a:e70c:b0:2d8:8340:8e46])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c88:b0:2ee:ee77:2263
+ with SMTP id 98e67ed59e1d1-2febab2ecd6mr7718548a91.7.1740767429126; Fri, 28
+ Feb 2025 10:30:29 -0800 (PST)
+Date: Fri, 28 Feb 2025 18:29:26 +0000
 In-Reply-To: <20250228182928.2645936-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250228182928.2645936-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250228182928.2645936-24-fvdl@google.com>
-Subject: [PATCH v5 23/27] mm/cma: introduce a cma validate function
+Message-ID: <20250228182928.2645936-26-fvdl@google.com>
+Subject: [PATCH v5 25/27] mm/hugetlb: add hugetlb_cma_only cmdline option
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
@@ -68,163 +68,93 @@ Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com,
 	Frank van der Linden <fvdl@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Define a function to check if a CMA area is valid, which means:
-do its ranges not cross any zone boundaries. Store the result
-in the newly created flags for each CMA area, so that multiple
-calls are dealt with.
+Add an option to force hugetlb gigantic pages to be allocated using
+CMA only (if hugetlb_cma is enabled). This avoids a fallback to
+allocation from the rest of system memory if the CMA allocation
+fails. This makes the size of hugetlb_cma a hard upper boundary
+for gigantic hugetlb page allocations.
 
-This allows for checking the validity of a CMA area early, which
-is needed later in order to be able to allocate hugetlb bootmem
-pages from it with pre-HVO.
+This is useful because, with a large CMA area, the kernel's
+unmovable allocations will have less room to work with and it
+is undesirable for new hugetlb gigantic page allocations
+to be done from that remaining area. It will eat in to the space
+available for unmovable allocations, leading to unwanted system
+behavior (OOMs because the kernel fails to do unmovable allocations).
+
+So, with this enabled, an administrator can force a hard upper
+bound for runtime gigantic page allocations, and have more
+predictable system behavior.
 
 Signed-off-by: Frank van der Linden <fvdl@google.com>
 ---
- include/linux/cma.h |  5 ++++
- mm/cma.c            | 60 ++++++++++++++++++++++++++++++++++++---------
- mm/cma.h            |  8 +++++-
- 3 files changed, 60 insertions(+), 13 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ mm/hugetlb.c                                    | 14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/include/linux/cma.h b/include/linux/cma.h
-index 03d85c100dcc..62d9c1cf6326 100644
---- a/include/linux/cma.h
-+++ b/include/linux/cma.h
-@@ -60,6 +60,7 @@ extern void cma_reserve_pages_on_error(struct cma *cma);
- #ifdef CONFIG_CMA
- struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp);
- bool cma_free_folio(struct cma *cma, const struct folio *folio);
-+bool cma_validate_zones(struct cma *cma);
- #else
- static inline struct folio *cma_alloc_folio(struct cma *cma, int order, gfp_t gfp)
- {
-@@ -70,6 +71,10 @@ static inline bool cma_free_folio(struct cma *cma, const struct folio *folio)
- {
- 	return false;
- }
-+static inline bool cma_validate_zones(struct cma *cma)
-+{
-+	return false;
-+}
- #endif
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index ae21d911d1c7..491628ac071a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1892,6 +1892,13 @@
+ 			hugepages using the CMA allocator. If enabled, the
+ 			boot-time allocation of gigantic hugepages is skipped.
  
++	hugetlb_cma_only=
++			[HW,CMA,EARLY] When allocating new HugeTLB pages, only
++			try to allocate from the CMA areas.
++
++			This option does nothing if hugetlb_cma= is not also
++			specified.
++
+ 	hugetlb_free_vmemmap=
+ 			[KNL] Requires CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP
+ 			enabled.
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 634dc53f1e3e..0b483c466656 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -59,6 +59,7 @@ struct hstate hstates[HUGE_MAX_HSTATE];
+ static struct cma *hugetlb_cma[MAX_NUMNODES];
+ static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
  #endif
-diff --git a/mm/cma.c b/mm/cma.c
-index 61ad4fd2f62d..5e1d169e24fa 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -99,6 +99,49 @@ static void cma_clear_bitmap(struct cma *cma, const struct cma_memrange *cmr,
- 	spin_unlock_irqrestore(&cma->lock, flags);
- }
++static bool hugetlb_cma_only;
+ static unsigned long hugetlb_cma_size __initdata;
  
-+/*
-+ * Check if a CMA area contains no ranges that intersect with
-+ * multiple zones. Store the result in the flags in case
-+ * this gets called more than once.
-+ */
-+bool cma_validate_zones(struct cma *cma)
-+{
-+	int r;
-+	unsigned long base_pfn;
-+	struct cma_memrange *cmr;
-+	bool valid_bit_set;
-+
-+	/*
-+	 * If already validated, return result of previous check.
-+	 * Either the valid or invalid bit will be set if this
-+	 * check has already been done. If neither is set, the
-+	 * check has not been performed yet.
-+	 */
-+	valid_bit_set = test_bit(CMA_ZONES_VALID, &cma->flags);
-+	if (valid_bit_set || test_bit(CMA_ZONES_INVALID, &cma->flags))
-+		return valid_bit_set;
-+
-+	for (r = 0; r < cma->nranges; r++) {
-+		cmr = &cma->ranges[r];
-+		base_pfn = cmr->base_pfn;
-+
-+		/*
-+		 * alloc_contig_range() requires the pfn range specified
-+		 * to be in the same zone. Simplify by forcing the entire
-+		 * CMA resv range to be in the same zone.
-+		 */
-+		WARN_ON_ONCE(!pfn_valid(base_pfn));
-+		if (pfn_range_intersects_zones(cma->nid, base_pfn, cmr->count)) {
-+			set_bit(CMA_ZONES_INVALID, &cma->flags);
-+			return false;
-+		}
-+	}
-+
-+	set_bit(CMA_ZONES_VALID, &cma->flags);
-+
-+	return true;
-+}
-+
- static void __init cma_activate_area(struct cma *cma)
- {
- 	unsigned long pfn, base_pfn;
-@@ -113,19 +156,12 @@ static void __init cma_activate_area(struct cma *cma)
- 			goto cleanup;
+ __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
+@@ -1510,6 +1511,9 @@ static struct folio *alloc_gigantic_folio(struct hstate *h, gfp_t gfp_mask,
  	}
- 
-+	if (!cma_validate_zones(cma))
-+		goto cleanup;
+ #endif
+ 	if (!folio) {
++		if (hugetlb_cma_only)
++			return NULL;
 +
- 	for (r = 0; r < cma->nranges; r++) {
- 		cmr = &cma->ranges[r];
- 		base_pfn = cmr->base_pfn;
--
--		/*
--		 * alloc_contig_range() requires the pfn range specified
--		 * to be in the same zone. Simplify by forcing the entire
--		 * CMA resv range to be in the same zone.
--		 */
--		WARN_ON_ONCE(!pfn_valid(base_pfn));
--		if (pfn_range_intersects_zones(cma->nid, base_pfn, cmr->count))
--			goto cleanup;
--
- 		for (pfn = base_pfn; pfn < base_pfn + cmr->count;
- 		     pfn += pageblock_nr_pages)
- 			init_cma_reserved_pageblock(pfn_to_page(pfn));
-@@ -145,7 +181,7 @@ static void __init cma_activate_area(struct cma *cma)
- 		bitmap_free(cma->ranges[r].bitmap);
+ 		folio = folio_alloc_gigantic(order, gfp_mask, nid, nodemask);
+ 		if (!folio)
+ 			return NULL;
+@@ -4738,6 +4742,9 @@ static __init void hugetlb_parse_params(void)
  
- 	/* Expose all pages to the buddy, they are useless for CMA. */
--	if (!cma->reserve_pages_on_error) {
-+	if (!test_bit(CMA_RESERVE_PAGES_ON_ERROR, &cma->flags)) {
- 		for (r = 0; r < allocrange; r++) {
- 			cmr = &cma->ranges[r];
- 			for (pfn = cmr->base_pfn;
-@@ -172,7 +208,7 @@ core_initcall(cma_init_reserved_areas);
- 
- void __init cma_reserve_pages_on_error(struct cma *cma)
- {
--	cma->reserve_pages_on_error = true;
-+	set_bit(CMA_RESERVE_PAGES_ON_ERROR, &cma->flags);
+ 		hcp->setup(hcp->val);
+ 	}
++
++	if (!hugetlb_cma_size)
++		hugetlb_cma_only = false;
  }
  
- static int __init cma_new_area(const char *name, phys_addr_t size,
-diff --git a/mm/cma.h b/mm/cma.h
-index ff79dba5508c..bddc84b3cd96 100644
---- a/mm/cma.h
-+++ b/mm/cma.h
-@@ -49,11 +49,17 @@ struct cma {
- 	/* kobject requires dynamic object */
- 	struct cma_kobject *cma_kobj;
- #endif
--	bool reserve_pages_on_error;
-+	unsigned long flags;
- 	/* NUMA node (NUMA_NO_NODE if unspecified) */
- 	int nid;
- };
+ /*
+@@ -7850,6 +7857,13 @@ static int __init cmdline_parse_hugetlb_cma(char *p)
  
-+enum cma_flags {
-+	CMA_RESERVE_PAGES_ON_ERROR,
-+	CMA_ZONES_VALID,
-+	CMA_ZONES_INVALID,
-+};
+ early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
+ 
++static int __init cmdline_parse_hugetlb_cma_only(char *p)
++{
++	return kstrtobool(p, &hugetlb_cma_only);
++}
 +
- extern struct cma cma_areas[MAX_CMA_AREAS];
- extern unsigned int cma_area_count;
- 
++early_param("hugetlb_cma_only", cmdline_parse_hugetlb_cma_only);
++
+ void __init hugetlb_cma_reserve(int order)
+ {
+ 	unsigned long size, reserved, per_node;
 -- 
 2.48.1.711.g2feabab25a-goog
 
