@@ -1,295 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1B654782
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76171805A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740707393; cv=none; b=ARprwfQDEmv4UoqpYGPUumcNvLOiKdAIyYgri2sn+tK353x/b7L/PAbLAwZKd9RpVm2mAvVi1tGi7T2uPsNGCkMr8H8fcNy7yRATVjXtD9YV2xDan2LRTAEqJeE2vjGW4gQ0vQo+kS2i8HMmUZIWqFnf0kmVPm6qWOMx+AvG+XI=
+	t=1740707545; cv=none; b=fTZCo/WZleAqAvBBldOZ8ZxOHrHbbk5vaxdA63D4y5+TPsPsbsBlTf7QZS+zsADgt/VkhcgsAyVO+kwUIeLH+xh8RvSHW7npPUWkDuB3ZufKN9fn0FQyYRCSAhJq0ycYt7ZzRMG5Mh+EmO8NFLnUIxUpcZ1aJ9zT4ACP354e8nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740707393; c=relaxed/simple;
-	bh=0VY1TID949UImeVHNR6LSjUTfsDAex3p0YM5P5Y5bYU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=XhH+EIJ10y3O0OPgHw2DZ4qKM1s8W5WzNoi3IvOi1FFbgSnha1O3ut6HtHOw6YZk5WrpSyaQIRzn2U0+aiZcbR/o8ejYr4gEr/ADHmb9sb/jSUlESPx37xbpTUJmmeZU7pkHzf5TzPk0otZx3OQm27q40aRa9mHbj5mxkC/mkg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdg0zqbn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdg0zqbn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D70C4CEE6;
-	Fri, 28 Feb 2025 01:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740707393;
-	bh=0VY1TID949UImeVHNR6LSjUTfsDAex3p0YM5P5Y5bYU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=sdg0zqbnp+8QN6rbw/ZOaoY9jHb3UOkxbj7pkTBhX7DEmpVM7tjmrkPBA+MOcP7AP
-	 72OIjtUbA2R3GchYZJS16e5RwVCCDBe6+u9Lq05APQxgBMURPF/cxMDwwoEKX38Slg
-	 AJDo/1rSBXFkwXIFN9RAcnn+Fii+csWvtiX+kw9hFl+mHb1ZkhdqPtUysngA8E4rbE
-	 K92AcJ7F5jsn5dpCigtBkmV08lcmikzqGLm7V4XMsHAE/0Rc0eyQzQ/lEgC+MQUl6N
-	 8gVDejdYqeM44LGf25cTgdxe4vDfqwoxwn2cKh6ieoO89WcIuROxUyvhgbQ3TNLsUr
-	 og3WbEhgdtnBw==
-Message-ID: <fced113e-885d-4be7-87c2-1e14b9d64357@kernel.org>
-Date: Fri, 28 Feb 2025 09:49:55 +0800
+	s=arc-20240116; t=1740707545; c=relaxed/simple;
+	bh=jMRX8lDy8SNSLQqZnkKvU/L994cG+F4sDrOdqFgsHqI=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=eZSZi5Ad4deacyoySbl2iQkaDD6cr5uc/TNB1h+wOgEzFfWBcLbC1YPt7G1V2PY+q6v6SHyGOeHLNe9w1Ls8txStdNWYnl6BpghMgYkrO7S/W70dFRO1h2rON+CnuWZeC6cRdAa6tuR/1te1VLSEIhe4TzrQRJT0mOPFvloN3Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z3rhJ6fbczvWqh;
+	Fri, 28 Feb 2025 09:48:16 +0800 (CST)
+Received: from kwepemg200013.china.huawei.com (unknown [7.202.181.64])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0D395180087;
+	Fri, 28 Feb 2025 09:52:02 +0800 (CST)
+Received: from [10.174.179.24] (10.174.179.24) by
+ kwepemg200013.china.huawei.com (7.202.181.64) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 28 Feb 2025 09:52:00 +0800
+Subject: Re: Softlockup when test shmem swapout-swapin and compaction
+To: Zi Yan <ziy@nvidia.com>
+References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
+ <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
+ <acbfc1da-f743-b11b-191c-ce6e476f1709@huawei.com>
+ <696E1819-D7E3-42BD-B3F0-8B3AC67A8ADB@nvidia.com>
+CC: Baolin Wang <baolin.wang@linux.alibaba.com>, <linux-mm@kvack.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Barry Song
+	<baohua@kernel.org>, David Hildenbrand <david@redhat.com>, Hugh Dickins
+	<hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Lance Yang
+	<ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>, Ryan Roberts
+	<ryan.roberts@arm.com>, Andrew Morton <akpm@linux-foundation.org>
+From: Liu Shixin <liushixin2@huawei.com>
+Message-ID: <ffea2791-817e-b1a5-ba41-10ed2a5d9636@huawei.com>
+Date: Fri, 28 Feb 2025 09:52:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, Leo Stone <leocstone@gmail.com>,
- syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
-Subject: Re: [PATCH v4] f2fs: add check for deleted inode
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-References: <20250212072742.977248-1-chao@kernel.org>
- <Z6zQoyNp5td-Wgd1@google.com>
- <d8be79a2-9470-45b7-9df1-b571f2219c30@kernel.org>
- <Z64uA2ys4nhV54lI@google.com>
- <666e62d1-3446-485e-bac9-0cc8089b04de@kernel.org>
- <5f390129-1b93-42d2-8db7-276c370db90f@kernel.org>
- <Z76KaW6iAsafDDbB@google.com>
- <7fb3ffcb-4513-45da-8f83-eebe8f5e008b@kernel.org>
- <Z79MQD3Qr3HkfUDX@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Z79MQD3Qr3HkfUDX@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <696E1819-D7E3-42BD-B3F0-8B3AC67A8ADB@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg200013.china.huawei.com (7.202.181.64)
 
-On 2025/2/27 1:15, Jaegeuk Kim wrote:
-> On 02/26, Chao Yu wrote:
->> On 2/26/25 11:28, Jaegeuk Kim wrote:
->>> On 02/24, Chao Yu wrote:
->>>> On 2/14/25 09:44, Chao Yu wrote:
->>>>> On 2/14/25 01:38, Jaegeuk Kim wrote:
->>>>>> On 02/13, Chao Yu wrote:
->>>>>>> On 2/13/25 00:47, Jaegeuk Kim wrote:
->>>>>>>> On 02/12, Chao Yu wrote:
->>>>>>>>> From: Leo Stone <leocstone@gmail.com>
->>>>>>>>>
->>>>>>>>> The syzbot reproducer mounts a f2fs image, then tries to unlink an
->>>>>>>>> existing file. However, the unlinked file already has a link count of 0
->>>>>>>>> when it is read for the first time in do_read_inode().
->>>>>>>>>
->>>>>>>>> Add a check to sanity_check_inode() for i_nlink == 0.
->>>>>>>>>
->>>>>>>>> [Chao Yu: rebase the code and fix orphan inode recovery issue]
->>>>>>>>> Reported-by: syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
->>>>>>>>> Closes: https://syzkaller.appspot.com/bug?extid=b01a36acd7007e273a83
->>>>>>>>> Fixes: 39a53e0ce0df ("f2fs: add superblock and major in-memory structure")
->>>>>>>>> Signed-off-by: Leo Stone <leocstone@gmail.com>
->>>>>>>>> Signed-off-by: Chao Yu <chao@kernel.org>
->>>>>>>>> ---
->>>>>>>>>   fs/f2fs/checkpoint.c | 4 ++++
->>>>>>>>>   fs/f2fs/f2fs.h       | 1 +
->>>>>>>>>   fs/f2fs/inode.c      | 6 ++++++
->>>>>>>>>   3 files changed, 11 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>>>>>>>> index bd890738b94d..ada2c548645c 100644
->>>>>>>>> --- a/fs/f2fs/checkpoint.c
->>>>>>>>> +++ b/fs/f2fs/checkpoint.c
->>>>>>>>> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->>>>>>>>>   	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
->>>>>>>>>   		f2fs_info(sbi, "orphan cleanup on readonly fs");
->>>>>>>>>   
->>>>>>>>> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
->>>>>>>>
->>>>>>>> What about using SBI_POR_DOING?
->>>>>>>
->>>>>>> SBI_POR_DOING will cover most flow of f2fs_fill_super(), I think we can add a
->>>>>>> separated flag just covering f2fs_recover_orphan_inodes(), so that we can allow
->>>>>>> iget() of root_inode and all inodes during roll-forward recovery to do sanity
->>>>>>> check nlink w/ zero. What do you think?
->>>>>>
->>>>>> Can we do this sanity check after f2fs_iget in the f2fs_unlink() only?
->>>>>
->>>>> Sure, we need to cover f2fs_rename() as well, please check this:
->>>>>
->>>>> https://lore.kernel.org/all/67450f9a.050a0220.21d33d.0003.GAE@google.com
->>>>
->>>> Hi Jaegeuk,
->>>>
->>>> I'm testing this, seems there is a problem, once we opened an inode that
->>>> has zeroed nlink, in f2fs_evict_inode(), the inode and all its data will be
->>>> deleted, then leaving its stale dir entry in parent directory.
->>>>
->>>> What do you think using v4? so that we may has chance to repair it w/ fsck
->>>> rather than just deleting it?
+
+
+On 2025/2/28 7:43, Zi Yan wrote:
+> On 27 Feb 2025, at 2:04, Liu Shixin wrote:
+>
+>> On 2025/2/26 15:22, Baolin Wang wrote:
+>>> Add Zi.
 >>>
->>> Do you mean v4 as the below change?
->>
->> I mean this v4 patch:
-> 
-> What about checking i_nlink right after f2fs_iget in f2fs_lookup?
-
-Fine to me, I've updated in v5.
-
-Thanks,
-
-> 
->>
->> ---
->>   fs/f2fs/checkpoint.c | 4 ++++
->>   fs/f2fs/f2fs.h       | 1 +
->>   fs/f2fs/inode.c      | 6 ++++++
->>   3 files changed, 11 insertions(+)
->>
->> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->> index bd890738b94d..ada2c548645c 100644
->> --- a/fs/f2fs/checkpoint.c
->> +++ b/fs/f2fs/checkpoint.c
->> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->>   	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
->>   		f2fs_info(sbi, "orphan cleanup on readonly fs");
->>
->> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
->> +
->>   	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
->>   	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
->>
->> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->>   		}
->>   		f2fs_put_page(page, 1);
->>   	}
->> +
->>   	/* clear Orphan Flag */
->>   	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
->>   out:
->> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
->>   	set_sbi_flag(sbi, SBI_IS_RECOVERED);
->>
->>   	return err;
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 05879c6dc4d6..1c75081c0c14 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -1322,6 +1322,7 @@ enum {
->>   	SBI_IS_CLOSE,				/* specify unmounting */
->>   	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
->>   	SBI_POR_DOING,				/* recovery is doing or not */
->> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
->>   	SBI_NEED_SB_WRITE,			/* need to recover superblock */
->>   	SBI_NEED_CP,				/* need to checkpoint */
->>   	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
->> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
->> index d6ad7810df69..02f1b69d03d8 100644
->> --- a/fs/f2fs/inode.c
->> +++ b/fs/f2fs/inode.c
->> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
->>   		}
->>   	}
->>
->> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
->> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
->> +			  __func__, inode->i_ino);
->> +		return false;
->> +	}
->> +
->>   	return true;
->>   }
->>
->> Thanks,
->>
+>>> On 2025/2/26 15:03, Liu Shixin wrote:
+>>>> Hi all,
+>>>>
+>>>> I found a softlockup when testing shmem large folio swapout-swapin and compaction:
+>>>>
+>>>>   watchdog: BUG: soft lockup - CPU#30 stuck for 179s! [folio_swap:4714]
+>>>>   Modules linked in: zram xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat xt_addrtype iptable_filter ip_tantel_rapl_msr intel_rapl_common intel_uncore_frequency_common skx_edac_common nfit libnvdimm kvm_intel kvm rapl cixt4 mbcache jbd2 sr_mod cdrom ata_generic ata_piix virtio_net net_failover ghash_clmulni_intel libata sha512_ssse3
+>>>>   CPU: 30 UID: 0 PID: 4714 Comm: folio_swap Kdump: loaded Tainted: G             L     6.14.0-rc4-next-20250225+ #2
+>>>>   Tainted: [L]=SOFTLOCKUP
+>>>>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+>>>>   RIP: 0010:xas_load+0x5d/0xc0
+>>>>   Code: 08 48 d3 ea 83 e2 3f 89 d0 48 83 c0 04 48 8b 44 c6 08 48 89 73 18 48 89 c1 83 e1 03 48 83 f9 02 75 08 48 3d
+>>>>   RSP: 0000:ffffadf142f1ba60 EFLAGS: 00000293
+>>>>   RAX: ffffe524cc4f6700 RBX: ffffadf142f1ba90 RCX: 0000000000000000
+>>>>   RDX: 0000000000000011 RSI: ffff9a3e058acb68 RDI: ffffadf142f1ba90
+>>>>   RBP: fffffffffffffffe R08: ffffadf142f1bb50 R09: 0000000000000392
+>>>>   R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000011
+>>>>   R13: ffffadf142f1bb48 R14: ffff9a3e04e9c588 R15: 0000000000000000
+>>>>   FS:  00007fd957666740(0000) GS:ffff9a41ac0e5000(0000) knlGS:0000000000000000
+>>>>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>   CR2: 00007fd922860000 CR3: 000000025c360001 CR4: 0000000000772ef0
+>>>>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>>>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>>>   PKRU: 55555554
+>>>>   Call Trace:
+>>>>    <IRQ>
+>>>>    ? watchdog_timer_fn+0x1c9/0x250
+>>>>    ? __pfx_watchdog_timer_fn+0x10/0x10
+>>>>    ? __hrtimer_run_queues+0x10e/0x250
+>>>>    ? hrtimer_interrupt+0xfb/0x240
+>>>>    ? __sysvec_apic_timer_interrupt+0x4e/0xe0
+>>>>    ? sysvec_apic_timer_interrupt+0x68/0x90
+>>>>    </IRQ>
+>>>>    <TASK>
+>>>>    ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>>>>    ? xas_load+0x5d/0xc0
+>>>>    xas_find+0x153/0x1a0
+>>>>    find_get_entries+0x73/0x280
+>>>>    shmem_undo_range+0x1fc/0x640
+>>>>    shmem_evict_inode+0x109/0x270
+>>>>    evict+0x107/0x240
+>>>>    ? fsnotify_destroy_marks+0x25/0x180
+>>>>    ? _atomic_dec_and_lock+0x35/0x50
+>>>>    __dentry_kill+0x71/0x190
+>>>>    dput+0xd1/0x190
+>>>>    __fput+0x128/0x2a0
+>>>>    task_work_run+0x57/0x90
+>>>>    syscall_exit_to_user_mode+0x1cb/0x1e0
+>>>>    do_syscall_64+0x67/0x170
+>>>>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>   RIP: 0033:0x7fd95776eb8b
+>>>>
+>>>> If CONFIG_DEBUG_VM is enabled, we will meet VM_BUG_ON_FOLIO(!folio_test_locked(folio)) in
+>>>> shmem_add_to_page_cache() too.  It seems that the problem is related to memory migration or
+>>>> compaction which is necessary for reproduction,  although without a clear why.
+>>>>
+>>>> To reproduce the problem, we need firstly a zram device as swap backend, and then run the
+>>>> reproduction program. The reproduction program consists of three parts:
+>>>>   1. A process constantly changes the status of shmem large folio by these interfaces:
+>>>>          /sys/kernel/mm/transparent_hugepage/hugepages-<size>/shmem_enabled
+>>>>   2. A process constantly echo 1 > /proc/sys/vm/compact_memory
+>>>>   3. A process constantly alloc/free/swapout/swapin shmem large folios.
+>>>>
+>>>> I'm not sure whether the first process is necessary but the second and third are. In addition,
+>>>> I tried hacking to modify compaction_alloc to return NULL, and the problem disappeared,
+>>>> so I guess the problem is in migration.
+>>>>
+>>>> The problem is different with https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
+>>>> since I have confirmed this porblem still existed after merge the fixed patch.
+>>> Could you check if your version includes Zi's fix[1]? Not sure if it's related to the shmem large folio split.
 >>>
->>>>
->>>> ---
->>>>   fs/f2fs/namei.c | 19 +++++++++++++++++++
->>>>   1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
->>>> index a278c7da8177..949621bc0d07 100644
->>>> --- a/fs/f2fs/namei.c
->>>> +++ b/fs/f2fs/namei.c
->>>> @@ -547,6 +547,16 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
->>>>   		goto fail;
->>>>   	}
->>>>
->>>> +	if (unlikely(S_ISDIR(inode->i_mode) ?
->>>> +			inode->i_nlink <= 1 : inode->i_nlink == 0)) {
->>>> +		f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
->>>> +				__func__, inode->i_ino, inode->i_nlink,
->>>> +				S_ISDIR(inode->i_mode));
->>>> +		err = -EFSCORRUPTED;
->>>> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
->>>> +		goto fail;
->>>> +	}
->>>> +
->>>>   	err = f2fs_dquot_initialize(dir);
->>>>   	if (err)
->>>>   		goto fail;
->>>> @@ -968,6 +978,15 @@ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
->>>>   	}
->>>>
->>>>   	if (new_inode) {
->>>> +		if (unlikely(old_is_dir ?
->>>> +			new_inode->i_nlink <= 1 : new_inode->i_nlink == 0)) {
->>>> +			f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
->>>> +				__func__, new_inode->i_ino, new_inode->i_nlink,
->>>> +				S_ISDIR(new_inode->i_mode));
->>>> +			err = -EFSCORRUPTED;
->>>> +			set_sbi_flag(sbi, SBI_NEED_FSCK);
->>>> +			goto out_dir;
->>>> +		}
->>>>
->>>>   		err = -ENOTEMPTY;
->>>>   		if (old_is_dir && !f2fs_empty_dir(new_inode))
->>>> -- 
->>>> 2.48.1.601.g30ceb7b040-goog
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>>
->>>>>>>
->>>>>>> Thanks,
->>>>>>>
->>>>>>>>
->>>>>>>>> +
->>>>>>>>>   	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
->>>>>>>>>   	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
->>>>>>>>>   
->>>>>>>>> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->>>>>>>>>   		}
->>>>>>>>>   		f2fs_put_page(page, 1);
->>>>>>>>>   	}
->>>>>>>>> +
->>>>>>>>>   	/* clear Orphan Flag */
->>>>>>>>>   	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
->>>>>>>>>   out:
->>>>>>>>> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
->>>>>>>>>   	set_sbi_flag(sbi, SBI_IS_RECOVERED);
->>>>>>>>>   
->>>>>>>>>   	return err;
->>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>>>>>> index 05879c6dc4d6..1c75081c0c14 100644
->>>>>>>>> --- a/fs/f2fs/f2fs.h
->>>>>>>>> +++ b/fs/f2fs/f2fs.h
->>>>>>>>> @@ -1322,6 +1322,7 @@ enum {
->>>>>>>>>   	SBI_IS_CLOSE,				/* specify unmounting */
->>>>>>>>>   	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
->>>>>>>>>   	SBI_POR_DOING,				/* recovery is doing or not */
->>>>>>>>> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
->>>>>>>>>   	SBI_NEED_SB_WRITE,			/* need to recover superblock */
->>>>>>>>>   	SBI_NEED_CP,				/* need to checkpoint */
->>>>>>>>>   	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
->>>>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
->>>>>>>>> index d6ad7810df69..02f1b69d03d8 100644
->>>>>>>>> --- a/fs/f2fs/inode.c
->>>>>>>>> +++ b/fs/f2fs/inode.c
->>>>>>>>> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
->>>>>>>>>   		}
->>>>>>>>>   	}
->>>>>>>>>   
->>>>>>>>> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
->>>>>>>>> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
->>>>>>>>> +			  __func__, inode->i_ino);
->>>>>>>>> +		return false;
->>>>>>>>> +	}
->>>>>>>>> +
->>>>>>>>>   	return true;
->>>>>>>>>   }
->>>>>>>>>   
->>>>>>>>> -- 
->>>>>>>>> 2.48.1.502.g6dc24dfdaf-goog
->>>>>
+>>> [1] https://lore.kernel.org/all/AF487A7A-F685-485D-8D74-756C843D6F0A@nvidia.com/
+>>> .
+>>>
+>> Already include this patch when test.
+> Hi Shixin,
+>
+> Can you try the diff below? It fixed my local repro.
+>
+> The issue is that after Baolin’s patch, shmem folios now use high-order
+> entry, so the migration code should not update multiple xarray slots.
+Looks reasonable. I'll try it, thanks.
+>
+> Hi Baolin,
+>
+> Is your patch affecting anonymous swapping out? If yes, we can remove
+> the for loop of updating xarray in __folio_migrate_mapping().
+>
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 365c6daa8d1b..be77932596b3 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -44,6 +44,7 @@
+>  #include <linux/sched/sysctl.h>
+>  #include <linux/memory-tiers.h>
+>  #include <linux/pagewalk.h>
+> +#include <linux/shmem_fs.h>
+>
+>  #include <asm/tlbflush.h>
+>
+> @@ -524,7 +525,11 @@ static int __folio_migrate_mapping(struct address_space *mapping,
+>  			folio_set_swapcache(newfolio);
+>  			newfolio->private = folio_get_private(folio);
+>  		}
+> -		entries = nr;
+> +		/* shmem now uses high-order entry */
+> +		if (folio->mapping && shmem_mapping(folio->mapping))
+> +			entries = 1;
+> +		else
+> +			entries = nr;
+>  	} else {
+>  		VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
+>  		entries = 1;
+>
+>
+> Best Regards,
+> Yan, Zi
+> .
+>
 
