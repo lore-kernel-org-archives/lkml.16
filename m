@@ -1,203 +1,142 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2071.outbound.protection.outlook.com [40.107.223.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C507E26F444;
-	Fri, 28 Feb 2025 14:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740753000; cv=fail; b=rPxeKLKE2TcM+b0pZJ2OpkGL5i7T6gvHrWDKqCvR8magTPHVtZ0JggUqBa4CZpVqFH2O5dnSP8zmwjCaeHMGkjRTNzdljXRJgGUMJ0L13+MN9p6yXdQ/V0kEWY8HkIb/0kz6P9rQhBOnlo0EQXYeg7zGYC87Rvk5ZX92ETxJmPM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740753000; c=relaxed/simple;
-	bh=xo/b+XG86iXfXWFci61LpFDsl3Vuu5nv2aomjFU4pu0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FXvteLfkOuAPzry5gdqwTY8MgmJIkhzkz1JYFdzcmEpFweec14rsJgEtcvtSxuSC3QtOtKjJQBmgU7mV/1rMJ9sIIGY4bM352k5+z68WuvVnBrhrGawYd65lLA9qcoLASGBj1wlFFsJfVn/NQL+wPjUUYjgdKswn+LiZGOQB7Zk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IxWcGWPp; arc=fail smtp.client-ip=40.107.223.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9249825DB1E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740753086; cv=none; b=fm+kwRc+TOy8BmyX1n1l8LHesu4pon8EdoQOQIqYW5Iwhe1JiaoKDMIW2vSufM3gcmd+Buj3BBC7+diBRO393o2oEcijO0RBucQNG+vdOH4CVe8RaxQSUyeI7sEZulEj+2nNw59VPjanj3z68VH+z7/ypopklnaR6AiNdIicPXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740753086; c=relaxed/simple;
+	bh=nUk6SUrdY4aUpslHGVCo2dqPiYq4ZEyTeRGdaNOXMM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HRz2RsSQ3cQidfHGK9Y9ZrMe4QOHT0u+dFrCeJH57vgsKd7wJz/KYf+xYQ7nDkQ68vGVKZW8tSq5OHYmlPZMJ32In2wW1OAqDI/o+254WQYCvGjh+myXMObr9HBbKCrLbiBZ0bjV3YADY9a3pwyxEkRZIEOGAezUqlAlaXFgtNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IQyT3UtT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RHY54wjV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IQyT3UtT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RHY54wjV; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IxWcGWPp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Kp8uKUrpsXDN8LDld0cNqFiQ9OSEeqGUGRfhw9KHlz7+JDTjqrcAM2mu2lr8aOIfou9+tMVhLGFZlKUo98Nd9KMtMKTQSGvwyIT/8y3St8rTP5kRnPEIPJ08krlHDNL+FQIMi8NVMmEXk2kkzm4+U0YjHfEzmUwyrVK+PTsSK5JzczZtgiWv6NuUUjGNKoUmvzK2Z5GK1ke8lulh2zqu4EbmJMEeDcFD5M32pMdVvusIL3cG6a0VUesmvOP/mxOuUeOdEeTT0E1EeksbWxIYTJqONyK3kut20asLNw3jx4tWlro65G6KEVY1Jt3DblqjZy9uQvdcsPVxunzcISxgyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SxmhKJrDS5dYTmlwm+W0hY5YlyZMQr9nq5Pz3eitRQ4=;
- b=mPBrTfq6T+cEg2NWsJyjZ2VKIqs/Anyg203EVMTtdiDzQb7vy91CTZKYnF59LkOqjM1+BZwLxzPR6IaDN+spvLjOSja+hYqZh5zGB2E66uB9bhxOqEAHtArWQnD/c+RIVLA/YuRJ7HTd/0Bq5rrf8q5eRwQAfNh8AOh6Bv/85atDWDjftOO/og5t2dUnUbWpKLszDwwkrwBb7K/PlLz8mzDlGYohFr0eIEm38pVEnm0ydTjkTu/FuwaMcZVqNNe41WxEBnZQHbI/JehjNFH/ZbSS0QH740FEe1phm3SQ3aR3u1+WhxxUuuapdMR224sbMzfHcpwtUUsKt7aNviRgUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SxmhKJrDS5dYTmlwm+W0hY5YlyZMQr9nq5Pz3eitRQ4=;
- b=IxWcGWPpABOgmf9aKxNxpUwlLXVa7/QLyWowNnbmlKj+Bsvlqsa8xWfWne7eiqWBDRNQyJz+szKXMPl5s/aODB4hOdjpyMIiU5K1kxiS8JUXLznI2KUlEn1pJ4oAZcC5+rZtYwvfjadtnb5vK2LaDFASfQTeVou5unFM5G8BN4I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6354.namprd12.prod.outlook.com (2603:10b6:208:3e2::11)
- by SA5PPFA403A61D8.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8da) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
- 2025 14:29:53 +0000
-Received: from IA1PR12MB6354.namprd12.prod.outlook.com
- ([fe80::baf9:26a2:9fab:4514]) by IA1PR12MB6354.namprd12.prod.outlook.com
- ([fe80::baf9:26a2:9fab:4514%5]) with mapi id 15.20.8489.019; Fri, 28 Feb 2025
- 14:29:53 +0000
-Date: Fri, 28 Feb 2025 09:29:53 -0500
-From: Yazen Ghannam <yazen.ghannam@amd.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, Tony Luck <tony.luck@intel.com>,
-	linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-	Smita.KoralahalliChannabasappa@amd.com
-Subject: Re: [PATCH v2 06/16] x86/mce: Remove __mcheck_cpu_init_early()
-Message-ID: <20250228142953.GA1053941@yaz-khff2.amd.com>
-References: <20250213-wip-mca-updates-v2-0-3636547fe05f@amd.com>
- <20250213-wip-mca-updates-v2-6-3636547fe05f@amd.com>
- <20250227152500.GAZ8CDzEBRWBUukmcl@fat_crate.local>
- <20250227163148.GA785742@yaz-khff2.amd.com>
- <DE184F9D-EF80-4A88-9275-C900C4AA13D2@alien8.de>
- <20250227195933.GA936031@yaz-khff2.amd.com>
- <7D626975-3F9C-4B7F-A1E7-FAB3B02964DC@alien8.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7D626975-3F9C-4B7F-A1E7-FAB3B02964DC@alien8.de>
-X-ClientProxiedBy: BN9PR03CA0395.namprd03.prod.outlook.com
- (2603:10b6:408:111::10) To IA1PR12MB6354.namprd12.prod.outlook.com
- (2603:10b6:208:3e2::11)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IQyT3UtT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RHY54wjV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IQyT3UtT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RHY54wjV"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8A2091F37E;
+	Fri, 28 Feb 2025 14:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740753082; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NMLGrhDi6I//lMI70sCRAXVQHhjEiCASJ/hozkyQ65E=;
+	b=IQyT3UtTBrut9gl6hUC3wLMpvrfJYYd5ZPs95v6dOCztxJGZjLDmx+SlzhgyVdTAR6UlQD
+	DR4kNBRe8/zHjC279NFxn83Y5sEZv998e6Tar5hbdFG4iIhbcjyTls8Ebhd9b4RkDdM+HQ
+	RH8a75M3cjZgb8BLar3iXz5b5p0hlDg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740753082;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NMLGrhDi6I//lMI70sCRAXVQHhjEiCASJ/hozkyQ65E=;
+	b=RHY54wjV1LBMfN5p7wDFT+hjqV92hJshVP5jcLxwfUw41k/p2cOX6XYj+1QFR7Qbk/6QPB
+	nYz0hnYq+7LXZJBA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=IQyT3UtT;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RHY54wjV
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740753082; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NMLGrhDi6I//lMI70sCRAXVQHhjEiCASJ/hozkyQ65E=;
+	b=IQyT3UtTBrut9gl6hUC3wLMpvrfJYYd5ZPs95v6dOCztxJGZjLDmx+SlzhgyVdTAR6UlQD
+	DR4kNBRe8/zHjC279NFxn83Y5sEZv998e6Tar5hbdFG4iIhbcjyTls8Ebhd9b4RkDdM+HQ
+	RH8a75M3cjZgb8BLar3iXz5b5p0hlDg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740753082;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NMLGrhDi6I//lMI70sCRAXVQHhjEiCASJ/hozkyQ65E=;
+	b=RHY54wjV1LBMfN5p7wDFT+hjqV92hJshVP5jcLxwfUw41k/p2cOX6XYj+1QFR7Qbk/6QPB
+	nYz0hnYq+7LXZJBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7B23E137AC;
+	Fri, 28 Feb 2025 14:31:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 7EopHbrIwWdZNwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 28 Feb 2025 14:31:22 +0000
+Date: Fri, 28 Feb 2025 15:31:22 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/11] nvmet-fcloop: track tport with ref counting
+Message-ID: <771a6319-75cc-4026-9c7f-d2c31f303bf5@flourine.local>
+References: <20250226-nvmet-fcloop-v1-0-c0bd83d43e6a@kernel.org>
+ <20250226-nvmet-fcloop-v1-5-c0bd83d43e6a@kernel.org>
+ <ceb7e531-cc0b-4a4a-a97d-c578daf9d5b2@suse.de>
+ <adb0bdc1-f4be-4004-8651-7f8393276f46@flourine.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6354:EE_|SA5PPFA403A61D8:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8ff80443-8e5d-4b0f-98cf-08dd58045dcf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?deHP1pKmFhCbdEJvt2FDGRjLu7mdtAgttF+4F21OkqvRnTQjUFbFn9XSWVpj?=
- =?us-ascii?Q?KuR35vPyQeFDrgQjxM+Zcm3ok+c77aKk6vYXRnu7UL/ARX4evFRry169J/m3?=
- =?us-ascii?Q?FqvWWkSnL8IUiUCQ4hTPocAvD2WEUShBWn7U90d+gwWAEmXNsiALQ1MZaWcI?=
- =?us-ascii?Q?PdiGuNk+RFwV4hpKG602qF26YPgIMgssxnD4auGI3mLbSbwyv5GPuFNCUE2e?=
- =?us-ascii?Q?q6aUDBbvdwnZ6VIq6gMrTwCwJj+IBLS4s+Gejyw/Cx4yTFElXmNPseyaw4PN?=
- =?us-ascii?Q?XHGFRKfjQDrWKNN01+tTpEDBzjBfv+/fYJmlhtMapxeha4wEK1y+l9Ij+mbn?=
- =?us-ascii?Q?puyLZivwyYh8cKwWr2eod6XIyKMJXIB+Rlck9dHV9wrmB+n3lUMttiYLznL7?=
- =?us-ascii?Q?F57D55HBAN8weiHsOfea1dZ9Lb4XrQFY1R+0KYayhPRuzXszUkIooalk5Vo5?=
- =?us-ascii?Q?F2rpzkIuKSOrD925G5KRL8M3y4kVSulllKfggGyAXxUVJPOEtzy3FwJ0Q9Aj?=
- =?us-ascii?Q?DYleZvx8H0wB3N9FVYciRRZGfIUtVHF+IDUzdMBVWs77Ae6ADGW+JoOzBduX?=
- =?us-ascii?Q?h2ax6/6QuY75rBYhFWVDh16f6yMpk742zvHSUEvudqA8xI3k11cMSF+gCXkQ?=
- =?us-ascii?Q?MFkj30zXtSQcsojbhCL0ZAcQMsn/yU+k8Q9/F8R+4Sq3Nq6ByWDt097Jzalc?=
- =?us-ascii?Q?CE4p+DSfMMaQwQTY/eKsHyVVlI2CcD9pmMlmqaR6Ix/6jxVYMSPI4CwDb+wJ?=
- =?us-ascii?Q?D249rUrmSaJh9fMzD1B8aywKECOFIS5kIdwU+t7VNBeYIexUxFH5RsMiUYk7?=
- =?us-ascii?Q?PG5DtJu62u6roTTbbEPSiN/xuPWVIzH/HSeGDpNWC0lP0aB0vrAPVIuoouuW?=
- =?us-ascii?Q?N6ELCO6fbDVgju6/nJEvYli6tzv542+5mLrMomI1WFnvqHQkCxYo2X474/jX?=
- =?us-ascii?Q?WfiUR9h7AkWuwNcYiYqHtmWcSwlG1bN4QV1qMxpfio7oJZE5KqsIwWWikTVm?=
- =?us-ascii?Q?qjTU7HuMFt+Qjs5OKuxkoIlljnwviv8tXBZL06NMlLBKjn7KfLsYpso5pmcE?=
- =?us-ascii?Q?3em5dbrfvd3EI94iRP1rS2yfJav3/iR9F/9L8mPtwsmLtgSo43Qoz9yAS8Sl?=
- =?us-ascii?Q?qIEHfbwWekDpSnMN1xuiP1z8mt55l4bAOHZ1eUNrTv7lxh+uBwItgMNtmPQq?=
- =?us-ascii?Q?PeqicSauyHTjDV1FoZZRM2xUf9UF3sWVCb6PswuAdvv/JjzPKp5ijGXTu7a/?=
- =?us-ascii?Q?j9MEP1XG4Wfa09cxQXqe2TRqMul+EcWva5mcNNOy0cxZJDWDLzULss8dUNsQ?=
- =?us-ascii?Q?hgqXPffIc4W7eFob9zGLJx5WSKNJFhciyIAYxtdGZEKSF1ABT3vH1lZ1K/bb?=
- =?us-ascii?Q?NYs9MUOdanNIQATx/Ql/9eARV/1ZvxJXkZjNKHR5hcu6Xll0jw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6354.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?eCZUQwQYb1m9JKxujQkWxspO/nrkV5kFrQ6VycIcPpABsyGuJE2X7Z7lHAgL?=
- =?us-ascii?Q?vpAqFH5q1Ba9yfrn8IR162aDr6sgkpzaniAU+BagyC21gHWMDSAp8Ro9LIsu?=
- =?us-ascii?Q?pn+VroMAitk3/NkmmWP951D1p2uDjAdBJAaoEAzivZpc195pNZh7bW0yCPJQ?=
- =?us-ascii?Q?DTluiYV7OfP7tgf4ny3xsWJmJqeuAvwnmKk+EJYOWtwaiQBIC+8UqxxedTDP?=
- =?us-ascii?Q?WNoCwIB40C+Cgj6Ak9Lk0gdv1tI+xNJo10zhiIeGCcJxqOQ5EBz6UIqOwynT?=
- =?us-ascii?Q?BZioginreauY+OUTAnQp7kafWlKW2ZnAkuvaV2kjXSYMwpiq//1wxZXehl3H?=
- =?us-ascii?Q?qlXBZZioomslT5QnD7P8UCIYAVTeHqrivc1WUrzslXUkg5NDdmyrwLjwu5eH?=
- =?us-ascii?Q?bNa82PGseBwRTcZ2xr1hHzJdLYiiiaxh02YyjJyxMD8nVmcjwRcXR8jpD+hH?=
- =?us-ascii?Q?ueRtoWuN2dEaHsAkdjHuotjdcf4hCszqxyYZSpek24hG6U+w5P0to5cd45/v?=
- =?us-ascii?Q?qt4yBdsZcdXS1Aus9hIKt0O6RrMVrs4CLI0FNPDzJzocUitk9xvOV1jZM7/E?=
- =?us-ascii?Q?Z9GewwdotBoBtP7ccoWzroDYymCrDJGe1xvY0nOHcWq27iVrsgyuIja+FYd0?=
- =?us-ascii?Q?j8eE8gOw3zN21Rs4u6mysi8+9UlO2D6Xe/ahW/fi2hk5TYNeHDDuH06GZp4r?=
- =?us-ascii?Q?yJC/husKp7ItifgIyG7v34UQHUmcYfGi2QYRRAIBoMYDQvptKwyAOZxRS3HT?=
- =?us-ascii?Q?ySfalxPmcdFHafPXHirUXGm6BbNJNcgdYOFCiRwJweEvc7P9Txvb8SMXm1TB?=
- =?us-ascii?Q?0HktNzVMaef/eo6sRI52iy0n2pnA3D+FLZYCI9/iHEYzbg/Lez1FbJYGIquZ?=
- =?us-ascii?Q?5ZUKE0SQC6pdCX0oviiwScyLCXRo1FLrNq0mkJIGfkZS+PZ4H9Hk3E6We1l2?=
- =?us-ascii?Q?B5RRBM3nZbs29/hYJbyBpubQ5yZ612HvSaGa4WEsmxhQJsH+GmJ2lN9FBk8c?=
- =?us-ascii?Q?XiIpRu9/vSKfuAavvC27hRi86LsPKgURXvvdLOReUdPqY6vUie7QuE4MsDAv?=
- =?us-ascii?Q?L/MQkXuahE6PgBAaBCcpSt19a3d72HSVZ2CqUhFvi/GYCgVzFeB4Br66yFMp?=
- =?us-ascii?Q?aBIEi1EX/wMEUejF0kJsKKVTWtYQL8dV8tP59iMRilucztj1YWIjinnZwNCH?=
- =?us-ascii?Q?zgTmJa0WkCONHUang3GF9/+w3h06DGbDybvql8tDSOXpXyktFPwLmuq08I1n?=
- =?us-ascii?Q?ID/W0g2kiX7Z12H6ZV6fMc2O2pBacV/NlUhqfF1UUaiTgJiaoY77Tpcu3rMA?=
- =?us-ascii?Q?m/huyi4vhpVhdV/1gWj2wt7UvN9KrB/r+8DSzvmylsMXwAabDAfF1PbvYuh0?=
- =?us-ascii?Q?fH/gugT35gBr3YjHJV1PfYZEVhhOLdA1xNwssvQsHdLPoxYRwNfv1iBWwjcm?=
- =?us-ascii?Q?96nUUUWPOAbh0f3ehldeK9gmsdKYmpk5tY5FstBP6VXLrqLg/E9d1T3oMF86?=
- =?us-ascii?Q?nyNmoJvOl/nBFjAF0yC9oMGvL14QBZqnUztojqPBivh2c8IyY9cSN3v1Zrs9?=
- =?us-ascii?Q?RaAI77Wr0VubPXR8KLNdQqvmEBEPX4W/JE/9DOdq?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ff80443-8e5d-4b0f-98cf-08dd58045dcf
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6354.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 14:29:53.4978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O1Fvwgysv6ef0bL/v2trBUt7hLddq9z7QpTl+8+Z/TJ5kdJZqCZeZZdXM7pvE1/3ddiP/K3MIwJ739p093hsKA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPFA403A61D8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <adb0bdc1-f4be-4004-8651-7f8393276f46@flourine.local>
+X-Rspamd-Queue-Id: 8A2091F37E
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Feb 27, 2025 at 09:48:01PM +0100, Borislav Petkov wrote:
-> On February 27, 2025 8:59:33 PM GMT+01:00, Yazen Ghannam <yazen.ghannam@amd.com> wrote:
-> >On Thu, Feb 27, 2025 at 08:33:19PM +0100, Borislav Petkov wrote:
-> >> On February 27, 2025 5:31:48 PM GMT+01:00, Yazen Ghannam <yazen.ghannam@amd.com> wrote:
-> >> >On Thu, Feb 27, 2025 at 04:25:00PM +0100, Borislav Petkov wrote:
-> >> >> On Thu, Feb 13, 2025 at 04:45:55PM +0000, Yazen Ghannam wrote:
-> >> >> > Also, move __mcheck_cpu_init_generic() after
-> >> >> > __mcheck_cpu_init_prepare_banks() so that MCA is enabled after the first
-> >> >> > MCA polling event.
-> >> >> 
-> >> >> The reason being?
-> >> >> 
-> >> >> Precaution?
-> >> >> 
-> >> >> It was this way since forever, why are you moving it now? Any particular
-> >> >> reason?
-> >> >> 
-> >> >
-> >> >1) To read/clear old errors before turning on MCA. The updated
-> >> >__mcheck_cpu_init_prepare_banks() function does this for the MCi_CTL
-> >> >registers. This patch does this for the MCG_CTL register too.
-> >> >
-> >> >2) To ensure that vendor-specific setup is finished beforehand also.
-> >> 
-> >> That doesn't answer my question. All of the above gets done even without shuffling the order...
-> >> 
-> >> 
-> >
-> >MCA banks can start logging errors once MCG_CTL is set. The AMD docs say
-> >"The operating system must initialize the MCA_CONFIG registers prior to
-> >initialization of the MCA_CTL registers."
-> >
-> >"The MCA_CTL registers must be initialized prior to enabling the error
-> >reporting banks in MCG_CTL".
-> >
-> >However, the Intel docs "Machine-Check Initialization Pseudocode" say
-> >MCG_CTL first then MCi_CTL.
-> >
-> >But both agree that CR4.MCE should be set last.
-> >
-> >We have an old thread on the topic that led to this patch.
-> >https://lore.kernel.org/all/YqJHwXkg3Ny9fI3s@yaz-fattaah/
-> >
-> >And it seemed okay at the time.
-> >https://lore.kernel.org/all/YrnTMmwl5TrHwT9J@zn.tnic/
-> >
-> >I don't think anything much has changed since then, so I included the
-> >old patch again in this set.
-> >
-> >Thanks,
-> >Yazen
+On Fri, Feb 28, 2025 at 09:30:42AM +0100, Daniel Wagner wrote:
+> On Fri, Feb 28, 2025 at 08:27:40AM +0100, Hannes Reinecke wrote:
+> > >   	if (!tport->remoteport) {
+> > >   		tls_req->status = -ECONNREFUSED;
+> > >   		spin_lock(&tport->lock);
+> > >   		list_add_tail(&tls_req->ls_list, &tport->ls_list);
+> > >   		spin_unlock(&tport->lock);
+> > > -		queue_work(nvmet_wq, &tport->ls_work);
+> > > +		if (queue_work(nvmet_wq, &tport->ls_work))
+> > > +			fcloop_tport_get(tport);
+> > 
+> > Don't you need to remove the 'tls_req' from the list, too, seeing that
+> > it'll never be transferred?
 > 
-> This is exactly what needs to be in the commit message - why is the change being done. 
-> -- 
+> Good point. I'll add the error handling.
 
-Sure thing. I'll update the commit message.
-
-Thanks,
-Yazen
+In fact, I think a WARN_ONCE is the better choice here, as the element
+should not be on the list (an error in the code) and queue_work will only
+return false if the work item is already scheduled.
