@@ -1,80 +1,336 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAFE1EDA2F;
-	Fri, 28 Feb 2025 09:25:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E7A1CAA64;
+	Fri, 28 Feb 2025 09:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734711; cv=none; b=k884Mm575ENbcgY7boovo6ePy1UOgkIUzNwfKeUUdTgGF67CXLIcZXvfoQhag7o30CO2JdyJltJkgi6aSw7xiEu6rOrZk6gMWhssA/2DVwhN84HPIqrJXP9Z/9q0uEVrfCE2XhFbcD3tjY03LDXxEz4jQ7QV9BoNWDNYkUefEbc=
+	t=1740734711; cv=none; b=ifobhCtZwWRdKUnSb0q7QieePiMtAp7fX6cADg5n8/QYCwiRJLAwPH0KDV62iKD6EAQQpzXR/8WEcq850nrpL5DM/GCsxet+bRZ0ZPoGvX2vsDAzatCOdUj+JWtCk5PQDl3vgEvupJAvAcyj3XbBPNPq9B/5rBaAVztW4Dd/5yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740734711; c=relaxed/simple;
-	bh=WBcFDJByMQMtWT0RXtUsFwuOqIlRxlxgPiBO43pa9/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CmNAJTzkTHRHPtvz0/PqES8+VpNgOSnFwxFJfGhyFTLcKxdDB0jSeIyjRh1jPu1mcsmygHvuH+/qD+7LCreGINtRHd9LR3YTYSIT/jWCRYU1X5RUUxra0V3RwLWgyKXYcGff5fLE2KLR1MgaXGidDjuE5x2vSPi7BJpjZkQBG0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A6B/FC7u; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=UWsfIKGRckRFyb0P8JHyv3MDBXglaE5uP8q0o2dx604=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=kpApYnYh5O50n97pOshkFNcHNvOyCfF+1UnBpoALz21qUi83jjeWqtIGBfyG2+BXVvLlsKPDyN1iB+1OHkUzxMJLWwvPReQqdesWOlcNc/WBfCQoA/Up/N7U5ckhmQU+FHWdoThXmec22mIDhPbukawq+wDL3nF3bc6vUH1y9TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUgg2vpg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A6B/FC7u"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 84D2E443DF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUgg2vpg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF43AC4CED6;
 	Fri, 28 Feb 2025 09:25:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740734706;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WBcFDJByMQMtWT0RXtUsFwuOqIlRxlxgPiBO43pa9/0=;
-	b=A6B/FC7uNF+Sw7Y2G+M67FUaGF0x3XjICwzA7R9UX8puFZ5LIVhq55UrPsS3svQJYZGCMQ
-	xGcMGr2ltvJTl8Q8vFcypdQcjJKjRXIK5ySUhT/3mLo9XRUxpoNfz74rtMvfrHFnNMbHa0
-	+HloQwb+6fHM/hVmrugTqAINk+0pAQ4g/oup7T1E9ymwaz0uybJ1eFh7N227LdM6oFISsg
-	KRcZ+MTVCae0ZUhBF7rwwLUTEoS0rUXS3mpjGtBNe3GUz6SqMep+glBJzQRmkRGRCJSZc5
-	NWw5WHueSe6hatKuP2TZ//fEy57hUBHO9EfGDIOcjtmCas2ojZ2yFdG+c9K+mQ==
-Date: Fri, 28 Feb 2025 10:25:03 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Kyle Hendry <kylehendrydev@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, noltari@gmail.com, jonas.gorski@gmail.com,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] net: phy: bcm63xx: add support for BCM63268 GPHY
-Message-ID: <20250228102503.4a3014c2@kmaincent-XPS-13-7390>
-In-Reply-To: <20250228002722.5619-1-kylehendrydev@gmail.com>
-References: <20250228002722.5619-1-kylehendrydev@gmail.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740734710;
+	bh=UWsfIKGRckRFyb0P8JHyv3MDBXglaE5uP8q0o2dx604=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=XUgg2vpgWyB2yeY6UgpHlQvsV2DJj1GzsFCqUCSEnm6MQR0VzEq7E4uySUhcgMbGN
+	 tP7Z2NLyFl/WQ8rTUKCQmIkB9w2mrQj91rVycbRlI9J+zgmWxMdn+TWzcc2kLWVq6Y
+	 A82um9fRBV+h/aLBMH4uORt5PSNsxyeRGTbKklXSuM7yVp0hH/i0H/Pankx8b9jvc+
+	 BkebSHr+yEcaZ++Nnl8idQNjR+/7ga55SFuRTBqiCQUy8jxGoRR4MHBiwmyQ/tzMcv
+	 D3Qh6eQd765DpEO8zgKpapEcSj7tVFBWJaBLW/lcIa1aCIiPqIy28byxINiQjWnkyX
+	 xKHxrn9CYveHw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Petr Mladek" <pmladek@suse.com>,  "Steven Rostedt"
+ <rostedt@goodmis.org>,  "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>,  "Rasmus Villemoes"
+ <linux@rasmusvillemoes.dk>,  "Sergey Senozhatsky"
+ <senozhatsky@chromium.org>,  "Andrew Morton" <akpm@linux-foundation.org>,
+  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin"
+ <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,  "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
+ <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "David
+ Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
+  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH 2/4] rust: add #[export] macro
+In-Reply-To: <CAH5fLggu+-Fw-4Z02xS3qSdhJAcSyNXaMn+CQ0XkBvqvgeAbGQ@mail.gmail.com>
+ (Alice
+	Ryhl's message of "Fri, 28 Feb 2025 10:04:11 +0100")
+References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
+	<CKneQ3Au7Fx5Uc7AM_RTi5BXRNnOUcrfnqI0fuWO5M7QIosWye4LhdM7bf9zqqzC5dCISrLHE9OgvVeVSla54Q==@protonmail.internalid>
+	<20250227-export-macro-v1-2-948775fc37aa@google.com>
+	<871pvipjxe.fsf@kernel.org>
+	<09wV2B1K7GvpVYdB-P4QG9vnkK4dmVu_Qwnc6_K2wLZUrjatv3o9FDJW0V94dJOfOhNIDVEuXkqKY-VXnZcTUA==@protonmail.internalid>
+	<CAH5fLggu+-Fw-4Z02xS3qSdhJAcSyNXaMn+CQ0XkBvqvgeAbGQ@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 28 Feb 2025 10:24:42 +0100
+Message-ID: <8734fyo205.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltddtvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehkhihlvghhvghnughrhiguvghvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtp
- hhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: kory.maincent@bootlin.com
 
-On Thu, 27 Feb 2025 16:27:14 -0800
-Kyle Hendry <kylehendrydev@gmail.com> wrote:
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-> Some BCM63268 bootloaders do not enable the internal PHYs by default.
-> This patch series adds a phy driver to set the registers required=20
-> for the gigabit PHY to work.=20
+> On Fri, Feb 28, 2025 at 9:20=E2=80=AFAM Andreas Hindborg <a.hindborg@kern=
+el.org> wrote:
+>>
+>> "Alice Ryhl" <aliceryhl@google.com> writes:
+>>
+>> > This macro behaves like #[no_mangle], but also performs an assertion
+>> > that the Rust function has the same signature as what is declared in t=
+he
+>> > C header.
+>> >
+>> > If the signatures don't match, you will get errors that look like this:
+>> >
+>> > error[E0308]: `if` and `else` have incompatible types
+>> >   --> <linux>/rust/kernel/print.rs:22:22
+>> >    |
+>> > 21 | #[export]
+>> >    | --------- expected because of this
+>> > 22 | unsafe extern "C" fn rust_fmt_argument(
+>> >    |                      ^^^^^^^^^^^^^^^^^ expected `u8`, found `i8`
+>> >    |
+>> >    =3D note: expected fn item `unsafe extern "C" fn(*mut u8, *mut u8, =
+*mut c_void) -> *mut u8 {bindings::rust_fmt_argument}`
+>> >               found fn item `unsafe extern "C" fn(*mut i8, *mut i8, *c=
+onst c_void) -> *mut i8 {print::rust_fmt_argument}`
+>> >
+>> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+>> > ---
+>> >  rust/kernel/prelude.rs |  2 +-
+>> >  rust/macros/export.rs  | 25 +++++++++++++++++++++++++
+>> >  rust/macros/helpers.rs | 19 ++++++++++++++++++-
+>> >  rust/macros/lib.rs     | 18 ++++++++++++++++++
+>> >  rust/macros/quote.rs   | 21 +++++++++++++++++++--
+>> >  5 files changed, 81 insertions(+), 4 deletions(-)
+>> >
+>> > diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
+>> > index dde2e0649790..889102f5a81e 100644
+>> > --- a/rust/kernel/prelude.rs
+>> > +++ b/rust/kernel/prelude.rs
+>> > @@ -17,7 +17,7 @@
+>> >  pub use crate::alloc::{flags::*, Box, KBox, KVBox, KVVec, KVec, VBox,=
+ VVec, Vec};
+>> >
+>> >  #[doc(no_inline)]
+>> > -pub use macros::{module, pin_data, pinned_drop, vtable, Zeroable};
+>> > +pub use macros::{export, module, pin_data, pinned_drop, vtable, Zeroa=
+ble};
+>> >
+>> >  pub use super::{build_assert, build_error};
+>> >
+>> > diff --git a/rust/macros/export.rs b/rust/macros/export.rs
+>> > new file mode 100644
+>> > index 000000000000..3398e1655124
+>> > --- /dev/null
+>> > +++ b/rust/macros/export.rs
+>> > @@ -0,0 +1,25 @@
+>> > +// SPDX-License-Identifier: GPL-2.0
+>> > +
+>> > +use crate::helpers::function_name;
+>> > +use proc_macro::TokenStream;
+>> > +
+>> > +pub(crate) fn export(_attr: TokenStream, ts: TokenStream) -> TokenStr=
+eam {
+>>
+>> This function is documented in macros/lib.rs. Could you insert a
+>> docstring with a link to the function that carries the docs?
+>
+> These functions are not visible in the docs, and no other macro does that.
 
-These are no fixes, you should add net-next prefix in your series.
+I do realize that. I don't think it is ever too late to start improving.
+Don't you think it would be overall net positive to have
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+/// Please see [`crate::export`] for documentation.
+
+attached to this function?
+
+>
+>> Please describe how the function operates and what mechanics it uses to
+>> achieve its goal in a implementation detail comment.
+>>
+>> > +    let Some(name) =3D function_name(ts.clone()) else {
+>> > +        return "::core::compile_error!(\"The #[export] attribute must=
+ be used on a function.\");"
+>> > +            .parse::<TokenStream>()
+>> > +            .unwrap();
+>> > +    };
+>> > +
+>> > +    let signature_check =3D quote!(
+>> > +        const _: () =3D {
+>> > +            if true {
+>> > +                ::kernel::bindings::#name
+>> > +            } else {
+>> > +                #name
+>> > +            };
+>> > +        };
+>> > +    );
+>> > +
+>> > +    let no_mangle =3D "#[no_mangle]".parse::<TokenStream>().unwrap();
+>> > +    TokenStream::from_iter([signature_check, no_mangle, ts])
+>> > +}
+>> > diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+>> > index 563dcd2b7ace..3e04f8ecfc74 100644
+>> > --- a/rust/macros/helpers.rs
+>> > +++ b/rust/macros/helpers.rs
+>> > @@ -1,6 +1,6 @@
+>> >  // SPDX-License-Identifier: GPL-2.0
+>> >
+>> > -use proc_macro::{token_stream, Group, TokenStream, TokenTree};
+>> > +use proc_macro::{token_stream, Group, Ident, TokenStream, TokenTree};
+>> >
+>> >  pub(crate) fn try_ident(it: &mut token_stream::IntoIter) -> Option<St=
+ring> {
+>> >      if let Some(TokenTree::Ident(ident)) =3D it.next() {
+>> > @@ -215,3 +215,20 @@ pub(crate) fn parse_generics(input: TokenStream) =
+-> (Generics, Vec<TokenTree>) {
+>> >          rest,
+>> >      )
+>> >  }
+>> > +
+>> > +/// Given a function declaration, finds the name of the function.
+>> > +pub(crate) fn function_name(input: TokenStream) -> Option<Ident> {
+>>
+>> It would be great with a few tests for this function.
+>
+> I don't think we have a mechanism for tests in the macro crate?
+
+Ah, I didn't realize. I'll create an issue for that if it is so.
+
+>
+>> > +    let mut input =3D input.into_iter();
+>> > +    while let Some(token) =3D input.next() {
+>> > +        match token {
+>> > +            TokenTree::Ident(i) if i.to_string() =3D=3D "fn" =3D> {
+>> > +                if let Some(TokenTree::Ident(i)) =3D input.next() {
+>> > +                    return Some(i);
+>> > +                }
+>> > +                return None;
+>> > +            }
+>> > +            _ =3D> continue,
+>> > +        }
+>> > +    }
+>> > +    None
+>> > +}
+>> > diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+>> > index d61bc6a56425..3cbf7705c4c1 100644
+>> > --- a/rust/macros/lib.rs
+>> > +++ b/rust/macros/lib.rs
+>> > @@ -9,6 +9,7 @@
+>> >  #[macro_use]
+>> >  mod quote;
+>> >  mod concat_idents;
+>> > +mod export;
+>> >  mod helpers;
+>> >  mod module;
+>> >  mod paste;
+>> > @@ -174,6 +175,23 @@ pub fn vtable(attr: TokenStream, ts: TokenStream)=
+ -> TokenStream {
+>> >      vtable::vtable(attr, ts)
+>> >  }
+>> >
+>> > +/// Export a function so that C code can call it.
+>> > +///
+>> > +/// This macro has the following effect:
+>> > +///
+>> > +/// * Disables name mangling for this function.
+>> > +/// * Verifies at compile-time that the function signature matches wh=
+at's in the header file.
+>> > +///
+>> > +/// This macro requires that the function is mentioned in a C header =
+file, and that the header file
+>> > +/// is included in `rust/bindings/bindings_helper.h`.
+>> > +///
+>> > +/// This macro is *not* the same as the C macro `EXPORT_SYMBOL*`, sin=
+ce all Rust symbols are
+>> > +/// currently automatically exported with `EXPORT_SYMBOL_GPL`.
+>>
+>> Perhaps add the following:
+>>
+>> This macro is useful when rust code is providing a function symbol whose
+>> signature is dictated by a C header file.
+>
+> I do think this could use more info about when to use it. E.g., you
+> don't use it if C calls it via a vtable, but only if C calls it via a
+> declaration in a header file. I'll add more info.
+>
+>> > +#[proc_macro_attribute]
+>> > +pub fn export(attr: TokenStream, ts: TokenStream) -> TokenStream {
+>> > +    export::export(attr, ts)
+>> > +}
+>> > +
+>> >  /// Concatenate two identifiers.
+>> >  ///
+>> >  /// This is useful in macros that need to declare or reference items =
+with names
+>> > diff --git a/rust/macros/quote.rs b/rust/macros/quote.rs
+>> > index 33a199e4f176..c18960a91082 100644
+>> > --- a/rust/macros/quote.rs
+>> > +++ b/rust/macros/quote.rs
+>> > @@ -20,6 +20,12 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
+>> >      }
+>> >  }
+>> >
+>> > +impl ToTokens for proc_macro::Ident {
+>> > +    fn to_tokens(&self, tokens: &mut TokenStream) {
+>> > +        tokens.extend([TokenTree::from(self.clone())]);
+>> > +    }
+>> > +}
+>> > +
+>> >  impl ToTokens for TokenTree {
+>> >      fn to_tokens(&self, tokens: &mut TokenStream) {
+>> >          tokens.extend([self.clone()]);
+>> > @@ -40,7 +46,7 @@ fn to_tokens(&self, tokens: &mut TokenStream) {
+>> >  /// `quote` crate but provides only just enough functionality needed =
+by the current `macros` crate.
+>> >  macro_rules! quote_spanned {
+>> >      ($span:expr =3D> $($tt:tt)*) =3D> {{
+>> > -        let mut tokens;
+>> > +        let mut tokens: ::std::vec::Vec<::proc_macro::TokenTree>;
+>> >          #[allow(clippy::vec_init_then_push)]
+>> >          {
+>> >              tokens =3D ::std::vec::Vec::new();
+>> > @@ -65,7 +71,8 @@ macro_rules! quote_spanned {
+>> >          quote_spanned!(@proc $v $span $($tt)*);
+>> >      };
+>> >      (@proc $v:ident $span:ident ( $($inner:tt)* ) $($tt:tt)*) =3D> {
+>> > -        let mut tokens =3D ::std::vec::Vec::new();
+>> > +        #[allow(unused_mut)]
+>> > +        let mut tokens =3D ::std::vec::Vec::<::proc_macro::TokenTree>=
+::new();
+>> >          quote_spanned!(@proc tokens $span $($inner)*);
+>> >          $v.push(::proc_macro::TokenTree::Group(::proc_macro::Group::n=
+ew(
+>> >              ::proc_macro::Delimiter::Parenthesis,
+>> > @@ -136,6 +143,16 @@ macro_rules! quote_spanned {
+>> >          ));
+>> >          quote_spanned!(@proc $v $span $($tt)*);
+>> >      };
+>> > +    (@proc $v:ident $span:ident =3D $($tt:tt)*) =3D> {
+>> > +        $v.push(::proc_macro::TokenTree::Punct(
+>> > +                ::proc_macro::Punct::new('=3D', ::proc_macro::Spacing=
+::Alone)
+>> > +        ));
+>> > +        quote_spanned!(@proc $v $span $($tt)*);
+>> > +    };
+>> > +    (@proc $v:ident $span:ident _ $($tt:tt)*) =3D> {
+>> > +        $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::n=
+ew("_", $span)));
+>> > +        quote_spanned!(@proc $v $span $($tt)*);
+>> > +    };
+>> >      (@proc $v:ident $span:ident $id:ident $($tt:tt)*) =3D> {
+>> >          $v.push(::proc_macro::TokenTree::Ident(::proc_macro::Ident::n=
+ew(stringify!($id), $span)));
+>> >          quote_spanned!(@proc $v $span $($tt)*);
+>>
+>> The update to `impl ToTokens for TokenTree` should be split out in a
+>> separate patch and should carry some explanation of the change.
+>
+> I think this case is borderline for whether it's necessary to split
+> up, but okay.
+
+Thanks!
+
+
+Best regards,
+Andreas Hindborg
+
+
+
