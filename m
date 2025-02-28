@@ -1,72 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBB01C82F4;
-	Fri, 28 Feb 2025 07:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CAC276D12
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740727172; cv=none; b=aNqMLwK39INUNklI7kXBMdi4ZXYvPi4agET5xHUlyREsV50o/Co5+Jb2GSALrvv08bswS1RiJc6CAtYlE+a+7UhQSB5A1kaRBcmetqylrEmx1co8nAz+sDK34cHQKsNOcVq2eDP+rqYO8mh7dnZUwiK7HkEgao7fQQ8SuploseE=
+	t=1740727264; cv=none; b=jHf1/DORd7ZBDA4y1SAUFYi23KIDSy2rU0vk97Aev3NKnQsJyARCsbz96aoT4TwtYSxLHV68zffUxi2HE8BkQIJoZKFgxrU2Ta7fMvPGJPM/dTc5Z/hRz0vjN07PRXxD2e8+GFkc5e5RP3nL8uaSbS12jp7FsnM1USjJsjBlgUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740727172; c=relaxed/simple;
-	bh=JFPGqxxqRZkkHMQpC6NAIa713K0DriM3Y8/V0d2b3W0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mKgjp4D0AOaGtRlziri2Zs2S4/dcjdBXk4xI9UXY/HTpV3xFQ19u9Nwso3gekZSSZSG6LKeTYTavEMG7UmyZGGIXRqdheUjJJ8wQ8pVnhlc8vbiQPU10wo8TRgg6k+nhDbQwIkF/UhJhgbc7j/apBTIZo2BgmkpLA3cVjkfrB4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OGkTi2JR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740727264; c=relaxed/simple;
+	bh=1gAWfoSMq8LFM7YVwcijVnd2p21QSP7sglR7kagc+3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L7HJkg8KZmAS87P1iRwRbN8TGIu4ClcdY5QCF6jfc8taQOlLGCGPvACix7tMMAvC1OLvKtvTaeoqT59xQLAK3XU3NknvPAUsF+5GTBRm05YpSaS5cXcuCN6NRE5L34S/wi9FfiB61vHgR1jnfvXjJzWbYA3Mip+gVqj8kRxh9r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QCyR8OhG; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGkTi2JR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51005C4CEE7;
-	Fri, 28 Feb 2025 07:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740727171;
-	bh=JFPGqxxqRZkkHMQpC6NAIa713K0DriM3Y8/V0d2b3W0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=OGkTi2JRhOOArxzG+LxU9tpIASg2gvYH6FbZwiiuzMBbl07sxlnrQo9gCgdEO5IeF
-	 ljSqEDkSOLVeeNvOj0iyn+CKGGCVh1KQOJzMCScbluO4SCH3JG6GGuPdsaMYDphwsl
-	 6/YicYgBSbdCDsrDDmmYSrCtJMTIB+zLAemEWt9GtvLxZ4V3T16ioQ5a6jhsXToMki
-	 Lj1mUXThClyKc0K7bNB7+Lvpq8mH4oNhGHlOrGz0COIvx+3/6mxlciuJbtY5w2IGMG
-	 N6fBbgNDMWlPB82y1b9QCxXmqQEn4A9E3s2W2IC6S2drmmzs50B9BBhN5Pu+GOlw05
-	 YbOs34rHBEXsQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Petr Mladek" <pmladek@suse.com>,  "Steven Rostedt"
- <rostedt@goodmis.org>,  "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>,  "Rasmus Villemoes"
- <linux@rasmusvillemoes.dk>,  "Sergey Senozhatsky"
- <senozhatsky@chromium.org>,  "Andrew Morton" <akpm@linux-foundation.org>,
-  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
- Lossin"
- <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,  "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
- <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "David
- Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
-  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 0/4] Check Rust signatures at compile time
-In-Reply-To: <20250227-export-macro-v1-0-948775fc37aa@google.com> (Alice
-	Ryhl's message of "Thu, 27 Feb 2025 17:01:58 +0000")
-References: <UXTosjUFv_CKOV-K4oqNGBhMEv64tds9NgXWhHEYdCHuKM2qSPFrpBnTqhFGkcbv5_KXYERykIXhn-sYnEeuUg==@protonmail.internalid>
-	<20250227-export-macro-v1-0-948775fc37aa@google.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Feb 2025 08:19:21 +0100
-Message-ID: <877c5apmdi.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QCyR8OhG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740727262; x=1772263262;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1gAWfoSMq8LFM7YVwcijVnd2p21QSP7sglR7kagc+3o=;
+  b=QCyR8OhG+JO8VnOSilpbSoC+j03FWwtg6cwINp73+r7t6InTZeA8sGXF
+   4uphsD6jmlKA/DOMQONkZW0dMztP8OO3RUcnwQzCbjatVqLlG9NI/kkPI
+   b9hLa5idYGyzVtwi4ujxSlNnoSvLaIfz3bEDr++Ng+YUw5E1uNQmDtnIt
+   zqG+vsWew9IBaKSGw+4UZ+R4lA0ZHCveY2QCa+wzDxUcxGskb/MU+rsQx
+   vawkY3iWYUM1HGhsgwHEKCXDy94tNdPbOT314c4Bf9/EfnsvnFw9VPSw1
+   goyXfJGbbwSrNUc7fHJvX0HCG52bNQ41T5LozCT8y4MTHwW4HIzogvMdp
+   w==;
+X-CSE-ConnectionGUID: hjJeCcEuR1mN/DMlm0+tTw==
+X-CSE-MsgGUID: 1dRh+YlkTkqy///6aAaXsA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="29242628"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="29242628"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 23:21:01 -0800
+X-CSE-ConnectionGUID: M607BflNSAaFQQvfmt8aHQ==
+X-CSE-MsgGUID: wtuZKRbpSVuw4A/vWwr0+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="140487400"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2025 23:20:58 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	bleung@chromium.org,
+	groeck@chromium.org,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v2 0/2] Convert regulator drivers to use devm_kmemdup_array()
+Date: Fri, 28 Feb 2025 12:50:55 +0530
+Message-Id: <20250228072057.151436-1-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+This series converts regulator drivers to use the newly introduced[1]
+devm_kmemdup_array() helper. This depends on changes available on
+immutable tag[2].
 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+[1] https://lore.kernel.org/r/20250212062513.2254767-1-raag.jadav@intel.com
+[2] https://lore.kernel.org/r/Z7xGpz3Q4Zj6YHx7@black.fi.intel.com
 
-What is going on with the cover letter of this one?
+v2: Split patch series per subsystem
+
+Raag Jadav (2):
+  regulator: devres: use devm_kmemdup_array()
+  regulator: cros-ec: use devm_kmemdup_array()
+
+ drivers/regulator/cros-ec-regulator.c | 4 ++--
+ drivers/regulator/devres.c            | 5 ++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
 
-Best regards,
-Andreas Hindborg
-
+base-commit: b8c38ccb2ca52b9a38cfeb9f89abab5d6e713221
+-- 
+2.34.1
 
