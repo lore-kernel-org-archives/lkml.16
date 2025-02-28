@@ -1,113 +1,125 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E3E1DE2A6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 21:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110141DD525;
+	Fri, 28 Feb 2025 21:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740779411; cv=none; b=KgX8bg8vWDfE9L7AVHWpwRs8OuIWrcJPEPwhRYZ+4Cq2PHcZ2p5T2pCeiyjqwCRSphl3po9dJLyI2vKW/iZI7MephN2/hiT3kbIzUC0tHvne9q0CHkMmxyu1wt4y4NXBRyBMPnuj7gIgSxDrIUPc4hWnZhyg46Ut6BJN/UnwYZg=
+	t=1740779478; cv=none; b=sCcV3fOSB3J7ZxzbLEvmqqxLqHmmMkQ1aaT5k4x3mHqrmO3Cy97Hy0vz85V6HFGxNHvSk6B4nSziFeHrxL8UL1x5L8gHVjJaX6yTO1nuaJnsoXDvwN3H6w5tbK2vExiMHIz+wKhGBnLIMnWVMyCFA972npcaXCaGpEIagQ/FP5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740779411; c=relaxed/simple;
-	bh=vPrLb7ByBN5CnRsJVpjPUL4dfZtqSm5TSlqF0/YVaxs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gS9NtidYQzPi3IxVNcbtTAtai6kJ6LI6zXZQebcLbaVDb1w2cOMABw3anBcdQBpkU9ty7Kzbvr+tb70R2BcY2pKDILKqaCwA8DvyCrbz/NuvX92CvrNjehX/QGEd0qPykOCVmGJKAA6xPqbZ2e9PES9WQp0ydGKXv66BHmJgFqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=H9mIWyL3; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1740779478; c=relaxed/simple;
+	bh=MpxAPzTlZ5GUX0OOzjchOn8f8pXXh+0IM+v+xJd4WWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T4/qaYrDXEqZLSNIDHxicbozxYVIVjuS/AWZRtxghBdQl+lhtMGr8AHGm01uYmymbceB7u8TifgASOW4YvGc9pnjxhvQPkPz7bpKmfrRxMHRO92BaYwYT45tAG4//ZCQQu0+tuoLgwT96fqv3FFg1E1yANjtPjxdPK1fYXN+V2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFJExWtH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="H9mIWyL3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=oCDXtCW5o4O6IdQSa491PzOZb8jjQJcoikIvha8SEEw=; b=H9mIWyL31odPjG/yzhOB80yR/c
-	tUYrQwkvz7Sd6QrKAYFJguI/OzL6+F2j7CPH1D5hx5SNNq+WZYiwoWOwdHQe+NY1CiOVaQXyC6Sm4
-	GrqddEJAK9/qUG9zLIWj6iGKbTHhG+16PQ96/x5MaKQFKKkynDbXPjwP8bcoBTxRlLuw8H18D/m4i
-	SdSurqIfKz6Zb9DwEuiR8pOg0IPVrIopPR2LrvHcyZSUdaaZ0LCoRuLNgjni9rTLYLHAoVCy0BbN2
-	1c/1efvGy1j7Tj06PrferLx7/83hcm8sMCWbuPT4EOcpFa7Ef24qiMFivnrx7bsRfv9KtUzZVzCqT
-	EF9HcNaQ==;
-Received: from [179.106.178.202] (helo=[192.168.5.235])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1to8Ev-002H2Z-Ju; Fri, 28 Feb 2025 22:49:55 +0100
-Message-ID: <38b9cc8b-2a55-4815-a19f-f5bdf0f7687c@igalia.com>
-Date: Fri, 28 Feb 2025 18:49:43 -0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFJExWtH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6AAC4CED6;
+	Fri, 28 Feb 2025 21:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740779477;
+	bh=MpxAPzTlZ5GUX0OOzjchOn8f8pXXh+0IM+v+xJd4WWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TFJExWtH2LCBe7zjInr9DuNEQHLDHXLiJBc3/HwBevOdhVxqXOryyZLBeVOEU1/O3
+	 Fse/CqUmQ2d/liVgpd2ZXuqL6ntJ5N1aNoevYQBSUczjhsGZdz8UWsCCb9sCOZ64Ia
+	 V3v75TzQM6ILLwp/YzYnXPrgWnrw2X+BNXymwVyUjdSsNkMNxcynq7pekl8uGa61rp
+	 YUluNc1Ho4kqxCSXsuPfa6GilbamXY8OCXa+uFQcgJE5nAtyz4cbfZSri/9CDpWXI+
+	 V1RFBZPCwaa4VMS43U6SMlg50kUWi4gkaeLQRKgYb49aZ5PfMcn2A7OjjMEkuClObu
+	 XAwNgq0DExw/g==
+Date: Fri, 28 Feb 2025 15:51:15 -0600
+From: Rob Herring <robh@kernel.org>
+To: jiebing chen <jiebing.chen@amlogic.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+	jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com
+Subject: Re: [PATCH v3 1/6] dt-bindings: clock: meson: Add audio power domain
+ for s4 soc
+Message-ID: <20250228215115.GA3756522-robh@kernel.org>
+References: <20250228-audio_drvier-v3-0-dbfd30507e4c@amlogic.com>
+ <20250228-audio_drvier-v3-1-dbfd30507e4c@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] drm/amdgpu: Make use of drm_wedge_app_info
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?B?J0NocmlzdGlhbiBLw7ZuaWcn?= <christian.koenig@amd.com>,
- siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
- rodrigo.vivi@intel.com, jani.nikula@linux.intel.com
-References: <20250228121353.1442591-1-andrealmeid@igalia.com>
- <20250228121353.1442591-3-andrealmeid@igalia.com>
- <Z8HO-s_otb2u44V7@black.fi.intel.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <Z8HO-s_otb2u44V7@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228-audio_drvier-v3-1-dbfd30507e4c@amlogic.com>
 
-Hi Raag,
+On Fri, Feb 28, 2025 at 04:04:09PM +0800, jiebing chen wrote:
+> Audio power domain found on S4 device. It need to enable before audio work.
+> 
+> Signed-off-by: jiebing chen <jiebing.chen@amlogic.com>
+> ---
+>  .../bindings/clock/amlogic,axg-audio-clkc.yaml         | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+> index fd7982dd4ceab82389167079c2258a9acff51a76..364783c6f7572b09d57de2b35d33adb7bcf7db18 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - amlogic,axg-audio-clkc
+>        - amlogic,g12a-audio-clkc
+>        - amlogic,sm1-audio-clkc
+> +      - amlogic,s4-audio-clkc
+>  
+>    '#clock-cells':
+>      const: 1
+> @@ -100,6 +101,9 @@ properties:
+>    resets:
+>      description: internal reset line
+>  
+> +  power-domains:
+> +    description: audio controller power
 
-On 2/28/25 11:58, Raag Jadav wrote:
-> On Fri, Feb 28, 2025 at 09:13:53AM -0300, André Almeida wrote:
->> To notify userspace about which app (if any) made the device get in a
->> wedge state, make use of drm_wedge_app_info parameter, filling it with
->> the app PID and name.
->>
->> Signed-off-by: André Almeida <andrealmeid@igalia.com>
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 19 +++++++++++++++++--
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  6 +++++-
->>   2 files changed, 22 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> index 00b9b87dafd8..e06adf6f34fd 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> @@ -6123,8 +6123,23 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
->>   
->>   	atomic_set(&adev->reset_domain->reset_res, r);
->>   
->> -	if (!r)
->> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->> +	if (!r) {
->> +		struct drm_wedge_app_info aux, *info = NULL;
->> +
->> +		if (job) {
->> +			struct amdgpu_task_info *ti;
->> +
->> +			ti = amdgpu_vm_get_task_info_pasid(adev, job->pasid);
->> +			if (ti) {
->> +				aux.pid = ti->pid;
->> +				aux.comm = ti->process_name;
->> +				info = &aux;
->> +				amdgpu_vm_put_task_info(ti);
->> +			}
->> +		}
-> Is this guaranteed to be guilty app and not some scheduled worker?
+You have to define how many (maxItems).
 
-This is how amdgpu decides which app is the guilty one earlier in the 
-code as in the print:
-
-     ti = amdgpu_vm_get_task_info_pasid(ring->adev, job->pasid);
-
-     "Process information: process %s pid %d thread %s pid %d\n"
-
-So I think it's consistent with what the driver thinks it's the guilty 
-process.
-
-> Raag
->
+> +
+>  required:
+>    - compatible
+>    - '#clock-cells'
+> @@ -116,12 +120,26 @@ allOf:
+>              enum:
+>                - amlogic,g12a-audio-clkc
+>                - amlogic,sm1-audio-clkc
+> +              - amlogic,s4-audio-clkc
+>      then:
+>        required:
+>          - '#reset-cells'
+>      else:
+>        properties:
+>          '#reset-cells': false
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - amlogic,s4-audio-clkc
+> +    then:
+> +      required:
+> +        - power-domains
+> +
+> +    else:
+> +      properties:
+> +        power-domains: false
+>  
+>  additionalProperties: false
+>  
+> 
+> -- 
+> 2.43.0
+> 
