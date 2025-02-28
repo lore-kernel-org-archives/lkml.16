@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8344230BF1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:57:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA21726E140
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772656; cv=none; b=K+kIaSLaOsKXqJUM6DRirO3fr53FYsu62zHo2uSGL6aQZm7iSW4Iyhj/MYitnlQtuPtvkUXMtjV4o95HWexAaK7Hyh3o6xe+ZJBgx8DpG76cAPl8DK/3XxRYAVzHylBNXOd3kEKzU5tm2uDya71O07hF8H6W6mvbUxEvxxgZ9qI=
+	t=1740772665; cv=none; b=qd1KNNY+QGxx9Midi9JVOyf7RlOYtHQ9k4+RT8lSbOsU3rwGIV1xsXL79F51WIl7C1BfmoSGViIGzDbLDSOfGNX++Uhd+DqIcJcF/S6a79zn1Ahbpc5xqcWgiiCyMIiK9TYGba97Tk2w3q6W3PRlVGltoa4+4dIimZS/GVGK/O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772656; c=relaxed/simple;
-	bh=1d7dLm9lvOeTfheTIPgrr5OtAUKSbtdDXtylxiWsR/Y=;
+	s=arc-20240116; t=1740772665; c=relaxed/simple;
+	bh=M3Geb5rqxlv3C2sUQe/HlxCDuxcdfeIoByMychjQPJ0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jk4axknGZfC+WUV+JWmD8e9RzWkh3n5U5zqtd6OEaaH9mDSRVogGeQ5dSjDuG6DulAnAVdwXnvWJBw79nHVBHTdpwcgzNgk0h6ViQv+pHigjwsbojP+5IQb0LaPLgf/rdrbqQt9CGjrx2SM5BR5LnMhDMjv0JtEoIL2zmvBRXDI=
+	 In-Reply-To:Content-Type; b=EpCn4TUdcdfQmuN0WMgrkqqgqLEBuhwXz+Dpf02sfKUfuNtcUs8hU4uyywHBG6rbTEwYpos7nXKr7UaHri2kadHKST7zx9qgZR2Se78Bf0lnZYyamgQdZf1M6y9RtL3ZGpD92SDe3gVDO7k3iqtaWpulO8Pg5llBU3b9AHh3oCM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C681515;
-	Fri, 28 Feb 2025 11:57:49 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AE3B1515;
+	Fri, 28 Feb 2025 11:57:58 -0800 (PST)
 Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AEA33F5A1;
-	Fri, 28 Feb 2025 11:57:28 -0800 (PST)
-Message-ID: <e0ac8b22-ba7e-4a99-8cc7-9a324f05ebcd@arm.com>
-Date: Fri, 28 Feb 2025 19:57:26 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB0CF3F5A1;
+	Fri, 28 Feb 2025 11:57:35 -0800 (PST)
+Message-ID: <9d4bc823-28d2-4ab4-a573-894109b51845@arm.com>
+Date: Fri, 28 Feb 2025 19:57:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,8 +27,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 41/42] x86/resctrl: Move the filesystem bits to headers
- visible to fs/resctrl
+Subject: Re: [PATCH v6 42/42] x86/resctrl: Add python script to move resctrl
+ code to /fs/resctrl
 To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -45,50 +45,95 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
- <20250207181823.6378-42-james.morse@arm.com>
- <44fc5a31-43d8-413d-b938-638294a1e096@intel.com>
+ <20250207181823.6378-43-james.morse@arm.com>
+ <baa225e6-65bd-49ec-baf9-166ae4f2926c@intel.com>
+ <545e4e79-e309-4bda-9a70-204d83749308@intel.com>
 Content-Language: en-GB
 From: James Morse <james.morse@arm.com>
-In-Reply-To: <44fc5a31-43d8-413d-b938-638294a1e096@intel.com>
+In-Reply-To: <545e4e79-e309-4bda-9a70-204d83749308@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Reinette,
 
-On 20/02/2025 06:00, Reinette Chatre wrote:
-> On 2/7/25 10:18 AM, James Morse wrote:
->> Once the filesystem parts of resctrl move to fs/resctrl, it cannot rely
->> on definitions in x86's internal.h.
+On 25/02/2025 16:16, Reinette Chatre wrote:
+> On 2/19/25 10:10 PM, Reinette Chatre wrote:
+>> On 2/7/25 10:18 AM, James Morse wrote:
+>>> To support more than one architecture resctrl needs to move from arch/x86
+>>> to live under fs. Moving all the code breaks any series on the mailing
+>>> list, so needs scheduling carefully.
+>>>
+>>> Maintaining the patch that moves all this code has proved labour intensive.
+>>> It's also near-impossible to review that no inadvertent changes have
+>>> crept in.
+>>>
+>>> To solve these problems, temporarily add a hacky python program that
+>>> lists all the functions that should move, and those that should stay.
+>>>
+>>> No attempt to parse C code is made, this thing tries to name 'blocks'
+>>> based on hueristics about the kernel coding style. It's fragile, but
 >>
->> Move definitions in internal.h that need to be shared between the
->> filesystem and architecture code to header files that fs/resctrl can
->> include.
+>> (heuristics)
 >>
->> Doing this separately means the filesystem code only moves between files
->> of the same name, instead of having these changes mixed in too.
+>>> good enough for its single use here.
+>>>
+>>> This only exists to show I have nothing up my sleeve.
+>>> I don't suggested this gets merged.
+>>>
+>>> The patch this script generaets has the following corner cases:
+>> (generates)
+>>
+>>> * The original files are regenerated, which will add newlines that are
+>>>   not present in the original file.
+>>> * An trace-point header file the only contains boiler-plate is created
+>>>   in the arch and filesystem code. The parser doesn't know how to remove
+>>>   the includes for these - but its easy to 'keep' the file contents on
+>>>   the correct side. A follow-up patch will remove these files and their
+>>>   includes.
+>>
+>> Related to the tracepoints I also noticed that there are some leftover
+>> tracing defines in files that no longer make use of tracing.
+>> For example, arch/x86/kernel/cpu/resctrl/monitor.c contains:
+>> #define CREATE_TRACE_POINTS
+>> #include monitor_trace.h
+>>
+>> and fs/resctrl/pseudo_lock.c contains:
+>> #define CREATE_TRACE_POINTS
+>> #include "pseudo_lock_trace.h"
+>>
+>> I assumed this will also be removed in this follow-up patch?
 
->> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
->> index 6303c0ee0ae2..f2cd7ba39fcc 100644
->> --- a/arch/x86/kernel/cpu/resctrl/core.c
->> +++ b/arch/x86/kernel/cpu/resctrl/core.c
->> @@ -288,6 +288,11 @@ static void rdt_get_cdp_l2_config(void)
->>  	rdt_get_cdp_config(RDT_RESOURCE_L2);
->>  }
->>  
->> +bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
->> +{
->> +	return rdt_resources_all[l].cdp_enabled;
->> +}
->> +
-> 
-> This moves resctrl_arch_get_cdp_enabled() to arch/x86/kernel/cpu/resctrl/core.c
-> while resctrl_arch_set_cdp_enabled() is already in arch/x86/kernel/cpu/resctrl/rdtgroup.c.
-> Most of resctrl_arch_get_cdp_enabled()'s callers are 
-> in arch/x86/kernel/cpu/resctrl/rdtgroup.c so it seems appropriate to keep it with
-> its partner resctrl_arch_set_cdp_enabled()?
+Yup:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.14-rc1&id=3d0430324a0c7e7ad765140f9e78a9a312a13573
 
-Yup - that would make more sense.
-(This will date back to when I was moving the code around by hand every release!)
+I'll include this patch in v7, you found a case where its not as harmless as I thought.
+
+
+>>> * asm/cpu_device_id.h and a relative path for 'X86_CONFIG()' are kept
+>>>   in the filesystem code to ensure x86 builds. A follow-up patch will
+>>>   remove these.
+>>> * This script doesn't know how to move the documentation, and update the
+>>>   links in comments. A follow-up patch does this.
+>>
+>> One unexpected thing I noticed is that fs/resctr/internal.h contains:
+>> #ifndef _ASM_X86_RESCTRL_INTERNAL_H
+>> #define _ASM_X86_RESCTRL_INTERNAL_H
+>> ...
+>> #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
+
+That's a new one - I'll add a follow-up patch to change those.
+
+
+> It looks like another item for this list of "corner cases" is that the
+> #include of all files need to be reviewed after the code move. There are
+> functions depending on a particular #include that are moved out of the .c
+> file but the (no longer needed) #include remains.
+
+Indeed, that is one of the followups that I'll include in v7.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot/v6.14-rc1&id=9e2bd53f5e2b33fef69db1aae2dd7aeeaf1dd24c
+
+I suggest all these get merged into the patch that moves the code - but I'll post them
+separately in case anyone is interested in regenerating the patch using this script.
 
 
 Thanks,
