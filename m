@@ -1,107 +1,111 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8794F819
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C79819;
+	Fri, 28 Feb 2025 04:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740715444; cv=none; b=ok+t1Nv7ZhVWzLllGo09yYSZ8MRtTzSABIL80H+aRt514zrfqCyQ4Y0sai5q5eke7LCC4dt7sfMK0P7Yd28AMl9U4giTnnG9bHu2HMOh8TxEgx7NvllAHAe8vCw3ZF1Fd/1fB/yYSJC58WOtToW5n81D16Uww3GgocarAly+508=
+	t=1740715855; cv=none; b=DMtHe2OIw3KlqW4lxnQxfRLGKOsJX0sO9E4RHDcOTt0jX9nwIJgo/SjmljMPBX45orBVzOInisbEkLeVScCDNTLGc62jj0DKc3MUPiSoVxlySwz2JIMnHgpgbSFKqK9hYioBNmRN+YyHGYrfRhIPjpbDLmmdzrwuO93bPjD5tZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740715444; c=relaxed/simple;
-	bh=yjpHU47lcxuI7NezIsym2hhyx+WdaZiRRUZi87/74KA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVA08Ue5VD+lSfUBA7y9a6kq3psN31RmcJTDhB+AE62U1cT9HPyuPv2P3I8bjDU1orHaV+5ZeE3JdbhE0OmLBnSlU9KegbmVutP3mJhxXK96UyZ6g76w8+cbmosF82auQRGug8oZ0/61rhVWVVOZcFsD0sfQ2zQnkIhIXY46iLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CQxYpcq6; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740715855; c=relaxed/simple;
+	bh=NSFjxfw6LLh6SxzhBpp353tIgTqX3m+6FPJXN2/FUYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=axP/yt1W6dtuvCC7+arLJav80YgLr2ybBCEjiMogBc+OUFQG42+3LhQ0XEFi2nuJuYmiNlThUQZtuyDNjmF7AUKi3irjGsYboQyvu6oLnqavMKgMEwkR5NKViV4jTcJ5GYsYeVnkqjnMO/IVgGFCkGPFSTSfb3+7pxzVNIuhwwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xti2E36W; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CQxYpcq6"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54298ec925bso2546984e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 20:04:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xti2E36W"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-aaec111762bso282919466b.2;
+        Thu, 27 Feb 2025 20:10:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740715439; x=1741320239; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qd/SSjZSdsFXpP8Mw5Z4CDkuUKoi98PoVJbFfa8a+ac=;
-        b=CQxYpcq6ft4BwgkFyYLcBYH4d7AkpbdbEHltFgzXFm1mij0oUF8XKRs2xjlm7JpQgo
-         5Zr4mvu2Wa2iNfR3C5SrY8mfFNH2h1UoTlZGYTuRuotDMmKZAXoMhhRa5ljtYUlPhAM+
-         n+yusGsbUEbLXd+31tE2EAQe8EEbGS8c8MDUt7jNLNE6ncnQlm7Akp0Gaba9p+cO1f4D
-         USHQgso6zURMyEYpEwNPYq2sXsmXHL8X9dZmz27VzTSlCVLf6uxSLfzt1gjXhgKYSL2c
-         yWoVdbAkAxdVbU4apO4ZyIXXGTUtwlwWYx7AkrhbbfsqzaxpBmgX11GX+hS0Cvm/wk+t
-         Orjw==
+        d=gmail.com; s=20230601; t=1740715852; x=1741320652; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lcd92g+YASdLuBfcNT0sjtP8tAqW0wrx0vnpP3NYpsk=;
+        b=Xti2E36WMvWvwPf5xfm/rTfY97B9YDdfAIyzefxhIYtf+zwG03kFxi/vleJKbJ+hWi
+         K/6aK7rLm/M5LaVcMLr+fLnr8+FtS4JSKNjm9b0+Ked252izUdhJGnA8iCNYjmr/HOu8
+         xKIygCmPXMPm5QFyCxVcq+efRFqZwq5mkebG4WE+zVSpQOXT5T8OEyMBO8+kfZaYUDE8
+         z27VDdLEo3xz5rflEpF7cCz5hgmiCkArbG9POrR7uYr3MmD7BFUrEYk2ooQYOT8Xf2WE
+         3gLGOaio5fJ5mtE7IItFe/D1vKrrG6UBPqTVrFYRxZuKPR9aD9EXSwAaUIrmB11gvvDh
+         xr8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740715439; x=1741320239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qd/SSjZSdsFXpP8Mw5Z4CDkuUKoi98PoVJbFfa8a+ac=;
-        b=iU+97NC5a7vdXJkLuSsINBNWitOkdR3TdNvlkxl1XD1mNHXQgtjCXb6lbrF/xomNWP
-         GD5bZmZymXHp+DZkgf8lW5tKm/ldPQ+xqSWU+vg24XNXCk11R+8u/w71JpEKrRLljsVB
-         huk3tlyRiPz+Gxzd7tpau3m/PGcnCZ1MrXRlru/d2cyygFJBOqT0WYbRd7Q49N3z4dXv
-         bX1YHMCI+52K9MHI/NruK39KsPypZL/Be56kM5WcG3e79zl3aFMhZTWGAtE8XC4S4TP6
-         s4JgcCSxNR5fcXXs6lOLFMW+FxZHeVia3EjojM2hXpSNjMLTZePCNSlwKNGH1MdlluiG
-         0U0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUC2pHXHITnm9rmPrMi6HeLvqPCGVfamEA02xalbjR6tmt1VQ4QjlZ3UctSMxP9CBtANOo4dpUJQFcxT/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD1o9F+1P+VMFVhGcK/KQIp8QMgRmEOtP7wy6P1XAxYkKjxaT1
-	ayPOwHRd/LqpQmUaTYvHiA+usHRbu1MlnK6HfxrZttUFUVYF7hilPwg9r8dbA9A=
-X-Gm-Gg: ASbGncvdaJ6dY6X3l4UXeL08tQXx9OySc3/yJyVquh5G00//FAw6gPQp1WXkDuXnX8q
-	JR5Y/AThWOlPgBiOdJEVmgCZS/uj6+k2G8gBKcl201F0QKCNn3nYjqQ28wJJsxW6bQjYXej/Fz+
-	np7K0TyX69HROzwN7knOa6LziNXygTRoIqE5Pj8qXXZ9PMkWGZh04XibwZEmBe2civ4+t9AkOu6
-	wkfLqxc+75QJ1R+7oWNIk2r5Ga7pJN8YLQuewdtyCy5Ewp54ng8kdGJAMzmWuU1J9WJ220prfVC
-	XpkLJ8mdMRB6i3BH3u+A8IZix4ILwtmzeeABMDV/nRu5VUanoSZ6VoB4kyZTRa2reqdzEl8ylMt
-	L78olpw==
-X-Google-Smtp-Source: AGHT+IHNQymHd5ykzqnXmyMsW1a5EMx9alc09Hn9+MB6NToh83PZlB6/RNRvKwbTSqirwQlRGlJx9g==
-X-Received: by 2002:a2e:b70f:0:b0:308:eb58:6571 with SMTP id 38308e7fff4ca-30b9341382cmr4665921fa.26.1740715439491;
-        Thu, 27 Feb 2025 20:03:59 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b962da0ccsm1003861fa.27.2025.02.27.20.03.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 20:03:58 -0800 (PST)
-Date: Fri, 28 Feb 2025 06:03:55 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Marijn Suijten <marijn.suijten@somainline.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] drm/msm/dpu: remove DPU_CTL_SPLIT_DISPLAY from CTL
- blocks on DPU >= 5.0
-Message-ID: <6utf3iirzf7vtotsjxswtiuodt75mtrmhlofvsju5qfdmx7sdk@6mflw7g67ljy>
-References: <20250220-dpu-active-ctl-v1-0-71ca67a564f8@linaro.org>
- <20250220-dpu-active-ctl-v1-7-71ca67a564f8@linaro.org>
- <45evxcbkcenkoiufh6vqpq5ngfz3mz62evvjxehmqgp5sd4lo3@a5swxugzf4fm>
+        d=1e100.net; s=20230601; t=1740715852; x=1741320652;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Lcd92g+YASdLuBfcNT0sjtP8tAqW0wrx0vnpP3NYpsk=;
+        b=J+WcrvShqX9tjA8aLx9pbs24cEHdr83czWcoAiCMxdSMrnsKAEm6r9bGxch/b3W4iC
+         Jbn1uvVkmHyYFClBeXnpWAaMybDeOWB95CnoQ5Yn3EgAOUw7+8cEp5y+unZWB22Vq/Sj
+         +b15sJ7bgbIC3bGOT7s5Z3rdRTexjkwtEJ5iMtj8Gxe58tgHbQZAyZ0lbCY+ms7GqFR4
+         XhoZDh4jwiWXhakO1RtRzVApj6gPtpjg6M/XEi6rXBK935aOsv8PKDclf4BjX9f/u/5v
+         DIj3i/jaOii5bVChzCGwgR7GgElykCxmVXVICEHNF+cMLAc6eIg5CLzDVjh7PGc/jorj
+         54/w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4qyL6UklG73R9vMVGoPrw601BznEZa3oiC2NJy5oF+JFQLthbgglTZu523k6Bd6CO2uUgepSOwQGEpUeBgkM=@vger.kernel.org, AJvYcCWwpqCwyWio734QKSzdcpGJf2QxQT9KoUWPxTUZQ5BToigtEJzuRozcanQl78LjPWUHxKeNXsxghnmy4qA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmhHabbNLSRTkKT+zxcEqxpQUUPnf+sY0P0wju4ciAuKwRjt5J
+	ysMcFW5wTdQBlnYYAr5W9xNuC4tAQarj11zVa5p2KBAZdEyL6loQYbFBpAU6X78b+lM/ctFkPah
+	T5SeelaF3molzLu+tegOBuF6ZiLM=
+X-Gm-Gg: ASbGncsQ2W2hv8/zI0/v51vpGoMx/SQEyUEpKvr0kA+ssm2yZ/PTy4vUu1t+N7fbKk/
+	x63yurSYdv/7hN1tsy2UjyFRvFsqSvctrZXlHWlS07U/oWdfbLqNq56BgDi3CUYAPWCLehjtk3o
+	Ntsf8hUQ==
+X-Google-Smtp-Source: AGHT+IF9sJMz5Qmd4c0NenYr7NxJc+GevSxwqY3e4jvZ362s8Gj8aBTzO4nWeEj4+Ox8TXhdRJm/iHtd9ZA1ZCbV47w=
+X-Received: by 2002:a17:907:3f15:b0:abb:e7ed:d71e with SMTP id
+ a640c23a62f3a-abf265e9049mr181693466b.46.1740715852119; Thu, 27 Feb 2025
+ 20:10:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45evxcbkcenkoiufh6vqpq5ngfz3mz62evvjxehmqgp5sd4lo3@a5swxugzf4fm>
+References: <2f062199-8d69-48a2-baa6-abb755479a16@nvidia.com>
+ <Z73rP4secPlUMIoS@cassiopeiae> <20250225210228.GA1801922@joelnvbox>
+ <20250225225756.GA4959@nvidia.com> <Z75WKSRlUVEqpysJ@cassiopeiae>
+ <20250226004916.GB4959@nvidia.com> <Z75riltJo0WvOsS5@cassiopeiae>
+ <20250226172120.GD28425@nvidia.com> <Z7-IHgcVVS8XBurW@cassiopeiae>
+ <20250226234730.GC39591@nvidia.com> <2025022644-fleshed-petite-a944@gregkh>
+ <D82UB3V6NZ55.3OEPPW2W8MFZV@nvidia.com> <CAPM=9txrRFOb6Uzm=e0S6Tfxmskm4zwAZgsWnkvCzxN=XCZ6Vw@mail.gmail.com>
+ <D83LT2GGLT92.FJ3H552P6H7@nvidia.com>
+In-Reply-To: <D83LT2GGLT92.FJ3H552P6H7@nvidia.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 28 Feb 2025 14:10:39 +1000
+X-Gm-Features: AQ5f1Jr5Ozqb72tvcld9L9m5FNlXAbV1CYF4W0rCkCIrTShr4JR1mLntCUta_cU
+Message-ID: <CAPM=9txOK4_uVvmb4bWirBVPNsPoPTiF0NMK_FJTd1NuY0Y5xg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice implementation
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Jason Gunthorpe <jgg@nvidia.com>, 
+	Danilo Krummrich <dakr@kernel.org>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Gary Guo <gary@garyguo.net>, 
+	Joel Fernandes <joel@joelfernandes.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Ben Skeggs <bskeggs@nvidia.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, paulmck@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 21, 2025 at 12:37:40AM +0100, Marijn Suijten wrote:
-> On 2025-02-20 12:26:24, Dmitry Baryshkov wrote:
-> > Since DPU 5.0 CTL blocks do not require DPU_CTL_SPLIT_DISPLAY, as single
-> > CTL is used for both interfaces. As both RM and encoder now handle
-> > active CTLs, drop that feature bit.
-> 
-> I was wondering if this bit only existed to ensure the right "pair" of CTLs
-> exist: not on DPU 4.0, but on DPU 3.0 we see that CTL_0 and CTL_2 have this bit
-> but not CTL_1.  Meaning that split display can only work when that specific pair
-> of CTL_0 and CTL_2 is used in conjunction?
+On Fri, 28 Feb 2025 at 09:07, John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On Thu Feb 27, 2025 at 1:42 PM PST, Dave Airlie wrote:
+> > On Thu, 27 Feb 2025 at 11:34, John Hubbard <jhubbard@nvidia.com> wrote:
+> >> On Wed Feb 26, 2025 at 5:02 PM PST, Greg KH wrote:
+> >> > On Wed, Feb 26, 2025 at 07:47:30PM -0400, Jason Gunthorpe wrote:
+> ...
+> > nova is just a drm driver, it's not a rewrite of the drm subsystem,
+> > that sort of effort would entail a much larger commitment.
+>
+> Maybe at this point in the discussion it would help to discern between
+> nova-core and nova-drm:
+>
+>     drivers/gpu/nova-core/ (under discussion here)
 
-Unfortunately I don't have a deep knowledge of those platforms and I
-don't have a way to test it. My SDM660 board (IFC6560) doesn't have DSI1
-routed anywhere.
+nova-core won't be suffering any of the issues Jason is raising,
+nova-core isn't going to have userspace facing interfaces or be part
+of any subsystem with major lifetime expectations. It has to deal with
+the hardware going away due to hot unplugs, and that is what this
+devres is for.
 
-> 
-> > 
-> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
-> 
+nova-core will be a kernel internal pci driver, and vfio and nova-drm
+will load on top of it, once those drivers are loaded and talking to
+userspace they will keep references on the nova-core driver module
+through normal means.
 
--- 
-With best wishes
-Dmitry
+Dave.
