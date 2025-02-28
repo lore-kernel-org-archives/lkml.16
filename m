@@ -1,134 +1,114 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F0192D7E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF1145A18
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740710456; cv=none; b=s6HCY804MiHTYdj89Gb8c9f0oKaP6X+GHro8TWziEp/28GviReokk/Z1Jhn0fl5ibgOKkN59UxptK9A34dZ60LXIbaZB773P21p9u3A8u0u602/zcp3Img+zu6LEECQchBcCjz5/yGepCnbXmO6dVp6o9g/AlXswmNY2qNjAV6o=
+	t=1740710483; cv=none; b=Oq7hL+iwPqhoKRFI4k2TvMHJkzL2pJBiJE4Yc8fudNCc34jxx4GnBuQkeO4HuVA08UdDwUUWzgCly3NPEfpc+/3q5wz+6T8d+niNClUjuW/DzXNYvAZg1+i/eI1THhRsUlWfFnIT1owhUCUrDtRZp0mKDzLKbmohcxAbBz2R7Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740710456; c=relaxed/simple;
-	bh=5ERbWujSiKto3U+OO7RC5nldxvAV3Xb1FsVd/34DI+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VBI7c+1/d0HCaErsDwrrAHJ4YgVD+AksEsQIrQ+b5MS4p4UJvvg18xzegp4p2FHC6+Y6Dr9IDR1P3FSDiUaHEp4Wwwyxcr4/u5l7heIuiDZGqSHocNVHwrizQVc2Vq55jZR8eL+3D522Qa/jMmQ9ZjARcfvwe2tUsNZfdUaNgR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=THXMXRvd; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740710483; c=relaxed/simple;
+	bh=Y1IsWeuuOSviB9Q6mrcThc4GHvp0DUw+/aom6Js6MOA=;
+	h=MIME-Version:Date:From:To:Message-Id:Subject:Content-Type; b=cTEC/ttwjqLKmhaAUChEX5NcXK208bYPG29Ce6+83Vh+/+szZ2uuWVB8wl+mUwTKCGXmJ8EuNnLb7Z5nhXwwkbE5QR5F4ztljFA544nvM6XFjY6aX4AKOx+G9X6TGP99hy85vJkgShA1PHjbhiI1favonQeEW/QE9eYtk3oW/Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=doridian.net; spf=pass smtp.mailfrom=doridian.net; dkim=pass (2048-bit key) header.d=doridian.net header.i=@doridian.net header.b=KT9El2D5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QFWQF4fP; arc=none smtp.client-ip=103.168.172.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=doridian.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=doridian.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="THXMXRvd"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30613802a04so17642141fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:40:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740710453; x=1741315253; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C0drAA2PvbJ4hUCTdzmpW/pfB1rIMSFKchoim7lWctY=;
-        b=THXMXRvdIlfXj56fnnVKkVPc6C2OO/0JQlblGwdyclizvvKfuCl80dSXXLPxjQKijP
-         iSN5C+f/n9yhyDH9PqBwmhzk830A0prpcHRcDekKAmcDa7Bs9VOAyyx0725Yl2D20TYv
-         qHaZ40jlDQyi4CgFHKaMndE697BD8lq+H4xOcGu+zRC0jgYqk4YwNsPNqy7np0fcD5uM
-         XoxdYgQhDD/TV0Z3nkemnpREzxLgvUcogVwZi5cxv3wPYiV5bA6JD/TNq4VM29Bt9ADb
-         +fOgXGHb1Bi555pSWO1Hk40Y9nXgZshKhjmBOow2E7ibda+XZHkIlbGVMoS8nKXnNBYn
-         WaFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740710453; x=1741315253;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C0drAA2PvbJ4hUCTdzmpW/pfB1rIMSFKchoim7lWctY=;
-        b=NEtaZhNSpLzTAu9e//2WExKv10Xfj7vaJOp4Xl2WUXjXWgzIR8uwWIwpVNYKTsRibH
-         qxdTUW8KHiOxhCXYp/cfx3x+GMQY+LXd5b1iwYMP8sXIcrdk9ZqjmtTTmUYfyjr6qSXK
-         wEA8qGmLz6V8xQxwG0yRgxIVRpFwiA/VL4PjS1miotIg3/6DkhitscNiJAc9SBcdOc8F
-         eIRgmR8j0RFD6QJKWxy+qIOLeL59S3rsgHIRF8qMxEwNGAyBBDurfTSnOdiyLB6pKCCc
-         Aw4p/Z1RcGmSTHLsrFR9wmiHH9weu6mWHXmLc4Shcux35vwDOrUHyMo8HD8cy9w2pe3H
-         a4Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCfDou0goeCi2Or2wnk+aLwJ9SnV2rnV9FG3J2bXcbTv46mdYjTEaIacVQwxD+t6zwjdTWdY5eL943qmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCP3kQJkfRxFYLMospg70w0odDlGofe5YaY90o6ggnc5ulhKOg
-	Rv6cC36d6zdyakvr8E2fw1onLtqRSq3idyOHbteEhqUXdKNAmSeKuc/4ZGXzgeY=
-X-Gm-Gg: ASbGncu1R430LMbOHEfiv6F3WaTPeALr4crVx+qou08jRLSqz7AhRS2sVZpwev5eSQh
-	jPPKT/iayWpAczUkt7HTotBuatvxQyXby9RCywOi+T4LpP+1/R0ZxgnLNFFXky8wjMfR7OVHNyI
-	fh9itKN9ldVVOiTEDaBePLoZj+u261zdlE42v0vTk3LeJ4JKpq5EEQtjXqxet5JLHnIbygfkAqh
-	eAQRCP0vU8rMEBp/XBMBwQ1ksOy0yY+E+gAakaLv4qWkfmlcnXI1vpbVmhBF4hxUtZ52BMzs1HW
-	7KUZaKIEFOHEDmyskqgJQVsgIvYuJCRi7w==
-X-Google-Smtp-Source: AGHT+IEyA6OYswRzZk6KES4gyk4YksuY5o9aOh5bM9ecrpKh5LG64AXf+j9DZx4ELbV5JDnuU1skDA==
-X-Received: by 2002:a05:651c:b0d:b0:30b:8de7:c877 with SMTP id 38308e7fff4ca-30b932f27f5mr3782391fa.29.1740710452656;
-        Thu, 27 Feb 2025 18:40:52 -0800 (PST)
-Received: from umbar.lan ([192.130.178.90])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b867a7403sm3493881fa.17.2025.02.27.18.40.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 18:40:51 -0800 (PST)
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 28 Feb 2025 04:40:41 +0200
-Subject: [PATCH 4/4] drm/msm/dpu: remove DSC feature bit for PINGPONG on
- SDM630
+	dkim=pass (2048-bit key) header.d=doridian.net header.i=@doridian.net header.b="KT9El2D5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QFWQF4fP"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 1378211403EF
+	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 21:41:17 -0500 (EST)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-09.internal (MEProxy); Thu, 27 Feb 2025 21:41:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=doridian.net; h=
+	cc:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm3; t=1740710477; x=1740796877; bh=I1XXRya/wh
+	Yvvb0FE5FRcM/g+sPzAqjsPyPRhMueVXE=; b=KT9El2D50+llySFE4oZSiL9/cF
+	YCTQtnB++N66qCLO9+kQ4UxDbxanosb5J3eQOgi+W2JJoH+7g2qJHHB46AJQg1Oo
+	4Wk7MxxKWznNV3BZ6+Y3S7awd0pIggvKDDFy6suK8+BsZu9EvihGHVE8kVCkJ1jF
+	jFLtFWLPSzuP7BN+MXj007sFT+Hw11oNlPLb/tbOKPxyDoBIrfkDb2qOzXkkE9js
+	iB+Yp3oqdLOf11ER6l2wQddL+5I1nx9QjWXpX+oWiJCmTGKfid1d12y7rWYhnxlI
+	ImKKALvjS3UJ2AFCU194s09l6UDK2rUXELcKg0op/0TntcNRIdJhh2vFM6ew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740710477; x=1740796877; bh=I1XXRya/whYvvb0FE5FRcM/g+sPzAqjsPyP
+	RhMueVXE=; b=QFWQF4fP2KDHDD5X+sThog8jI9ZmiLAEyPXYof8aMkfNtpQ0zAE
+	6GX8ydVZvJRGrLQVEPHQb39XCC4aby/TZuiuHoA8//+4Y4Gw7jaDdbG0OCqTbCZv
+	F4Q3JoqmLW45XVm41A9focnyNj6FpI5V7LKXXcpeMnzzntfK/iDyunNCYsn+zvQu
+	LV4Z/oeaDnAjKtSly17yaS4resuBblzGFu6s5EXSYyKkUHOajIJjoN//fZA+9Arz
+	qnCERpZxHll6LEiLhOt0Pf1qHRShyr/kyXLamMfbau6KBU56vQWIDWSGOHVLICC4
+	TMV6ingigim9zG7o4KhlCt6FtabS0clPL0A==
+X-ME-Sender: <xms:TCLBZ7mAweF1i-cgHj4W1Z3yqlvPu17hfx2SmWi6XBe2LBy7oN0CXg>
+    <xme:TCLBZ-0gjFno-XbsxvSWoXRxNbcuC_6xDfKLGtLvOuzeTHRhNViSxCq6ZlcFC-8l4
+    S0QrLNx72xLyHccoB4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekledvtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepofggff
+    fhvffkufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcuffhivghtiigvrhdf
+    uceoghhithesughorhhiughirghnrdhnvghtqeenucggtffrrghtthgvrhhnpeeiiefhie
+    etffdvffejfedulefftedtudduheeljedtueekheetveefteejgfdvteenucffohhmrghi
+    nhepfhhrrghmvgdrfihorhhknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
+    hmrghilhhfrhhomhepghhithesughorhhiughirghnrdhnvghtpdhnsggprhgtphhtthho
+    pedupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
+    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:TCLBZxpLG96RtzU-RRN23WUttfSL2hsmz8_upQg8bj90JsUmI8mKew>
+    <xmx:TCLBZznC8yOvQYVPO_n-POqbb0jNFTIVmTWMBPXxaR-Oyez9nwJ2SA>
+    <xmx:TCLBZ52sGAbkXWlOWxI0mSOkZtPHT7rhpLvUWKmB20lNkaINUBy-SQ>
+    <xmx:TCLBZyspOYtrRtGeyDOg40iRcj0ilsoDHz51QdWZXF-WKAqzMYVrBQ>
+    <xmx:TSLBZ697oZzotW3xBvR3UJA7ZSMtSNW3YiATJqZiyydTrYttypi9wzrx>
+Feedback-ID: ie91947d0:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C9D2729C006F; Thu, 27 Feb 2025 21:41:16 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Date: Thu, 27 Feb 2025 18:40:12 -0800
+From: "Mark Dietzer" <git@doridian.net>
+To: linux-kernel@vger.kernel.org
+Message-Id: <1c96811e-4d54-480a-bc09-bcd2999e8e66@app.fastmail.com>
+Subject: [PATCH] drm: panel-backlight-quirks: Add Framework 16 panel
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250228-dpu-fix-catalog-v1-4-b05d22fbc2b4@linaro.org>
-References: <20250228-dpu-fix-catalog-v1-0-b05d22fbc2b4@linaro.org>
-In-Reply-To: <20250228-dpu-fix-catalog-v1-0-b05d22fbc2b4@linaro.org>
-To: Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1666;
- i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=5ERbWujSiKto3U+OO7RC5nldxvAV3Xb1FsVd/34DI+E=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBnwSIppBKKZZWahn5Gl8puGu+J1APz0T7Ew7c91
- NvB4zUOR9WJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZ8EiKQAKCRCLPIo+Aiko
- 1eomB/kBscyXJstvxO1FfWarKxnLaj7+/cQqdJ7b2BZA4oKjEbWHt2gFNgSYoHv7kOWYpUX11BW
- GOEP2C05FVnfyF6dAFFx0mebAYSL3KQGKruZ5UmU/fXl3oAMzp5l3/H8Wav17TR+3S6eREXFEUX
- P6EYdVUAY+SIMsvoVXjsm+MEfBEe6hrDo6xtWeHDslnkniKMMZ8W6mfbNjXmaYMRafQtpOPTg+9
- EzqgYx/i//5cMR3KYNmfD8xzFYv6b1AjfzxcKEYahT3njHxlN0xubMbY9xyrNbULC769joFbum5
- 2HMO77CtKfK4Aaxm3utxQUGoihOPJq58CCHDcD12f+w5MiYE
-X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-The MSM8937 platform doesn't have DSC blocks nor does have it DSC
-registers in the PINGPONG block. Drop the DPU_PINGPONG_DSC feature bit
-from the PINGPONG's feature mask, replacing PINGPONG_SDM845_MASK and
-PINGPONG_SDM845_TE2_MASK with proper bitmasks.
+Similarly for the Framework 13 panels already handled in those quirks, the 16 can be helped by the same kind of patch.
 
-Fixes: 7204df5e7e68 ("drm/msm/dpu: add support for SDM660 and SDM630 platforms")
-Reported-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+I have run this on my own 16 for multiple months (hard coding the value to 0 before the quirks made it upstream) and it has resulted in a darker minimum brightness (as expected) and no issues.
+
+The Framework community threads between the 13 and 16 for this improvement are the same one, so user reports in the link below will be mixed and likely more focused on the 13.
+
+Link: https://community.frame.work/t/solved-even-lower-screen-brightness/25711/60
+
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_panel_backlight_quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-index df01227fc36468f4945c03e767e1409ea4fc0896..4fdc9c19a74a0c52ae502b77fb8697a53bef0f97 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-@@ -115,14 +115,15 @@ static const struct dpu_pingpong_cfg sdm630_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = PINGPONG_SDM845_TE2_MASK,
-+		.features = BIT(DPU_PINGPONG_DITHER) |
-+			    BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
- 	}, {
- 		.name = "pingpong_2", .id = PINGPONG_2,
- 		.base = 0x71000, .len = 0xd4,
--		.features = PINGPONG_SDM845_MASK,
-+		.features = BIT(DPU_PINGPONG_DITHER),
- 		.sblk = &sdm845_pp_sblk,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 10),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 14),
+diff --git a/drivers/gpu/drm/drm_panel_backlight_quirks.c b/drivers/gpu/drm/drm_panel_backlight_quirks.c
+index c477d98ade2b..52aa2a7fa63e 100644
+--- a/drivers/gpu/drm/drm_panel_backlight_quirks.c
++++ b/drivers/gpu/drm/drm_panel_backlight_quirks.c
+@@ -41,6 +41,14 @@ static const struct drm_panel_min_backlight_quirk drm_panel_min_backlight_quirks
+                .ident.name = "NE135A1M-NY1",
+                .min_brightness = 0,
+        },
++       /* 16 inch panel */
++       {
++               .dmi_match.field = DMI_BOARD_VENDOR,
++               .dmi_match.value = "Framework",
++               .ident.panel_id = drm_edid_encode_panel_id('B', 'O', 'E', 0x0cb4),
++               .ident.name = "NE160QDM-NZ6",
++               .min_brightness = 0,
++       },
+ };
 
--- 
-2.39.5
-
+ static bool drm_panel_min_backlight_quirk_matches(const struct drm_panel_min_backlight_quirk *quirk,
+--
+2.48.1
