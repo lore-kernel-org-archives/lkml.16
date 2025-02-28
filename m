@@ -1,92 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BDD1A3140;
-	Fri, 28 Feb 2025 04:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 038071BBBD4
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 05:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740718655; cv=none; b=CMsd1gML9zAUnAJbhyaYUPhguDtk28kFcZJjTkZpcBDs05Jtln3TJ/sEsYd6R9Ld17EpNZCTooeUeEhhXg4ULCG4F8TQLCHsXrzYhKYxADyMIc4HJ8MIQXyoSO8fiIJ7XHQu5tzc7FZEZFkJPmSTDTfP8oBTaMvaZboQh35F7Wo=
+	t=1740719016; cv=none; b=PoABxHXkzfSk4aHq6offyFGvECTRmqYtRYyRoBmUsEKlQzlVY/kyp8NeQe9Dj9OudwBWVyaJjETd+nd6IqEbAuUhtOMiwmNCW7zFL3bGKEmgxjBmiWC8LeM7U42fX79vAzZDmu6+TgdyTutTizMdrAl0mR+mhuLQVhsfjUsDMkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740718655; c=relaxed/simple;
-	bh=QrNGroVYoQ/+Oe6QW8oV1ySJLkXG2GnrUIjFbYRGZW0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZucUkzYM11JFXRcLcF6zP8aE19aOXOeNmVvjn1TPq3HmHrfLmNqlENAkgOwS2MTbAnGnOwBWOb/5986PM8tA4JBcvZpH7bs+SxmwzrqNukXAxmmCPFMVm1MwuljGA1vLeIPDGb4mNlf7zm2sraFtCKl938Ye5B/noKTG558HHT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MlJg70sV; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740719016; c=relaxed/simple;
+	bh=4qgnoU2IzYG+runO5deGQ34JtoBImTWSSSAIltL6Cds=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UTYwm/5Ygxqxdac7uGDVtdRaeuoLmizNAMqcg6f1w220qdDXXHvFdIFDBpq1zimQaS4DveikKMJ/q9hgRkjWUSHwNM4Jph4ekQp3QCI1/QCCqs+gAOdnlRBsxZvHyXmi8tqHfddGJhoywXxdyISwv7gNcBfq2Asc6N+OQt1aEjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DlUZmIxd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MlJg70sV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740718654; x=1772254654;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QrNGroVYoQ/+Oe6QW8oV1ySJLkXG2GnrUIjFbYRGZW0=;
-  b=MlJg70sV5AWC/SSfeen7/DxOW0N4ffX1ZtcSmdlHFKst4BYOk35V3B5a
-   lABJG0ZnTKIv1uUnJLjSj4ffwK5CYoSpCZsuWXozzOQsyBHwzjJnsUOu2
-   qAPr8Lr9JW/75jj4Et9G1HK+YufBKrPcqSejTIrscEQd1ZlMVbAv7Ll9d
-   ZcESaQfLIJ2hC4vEFyiGIjIbVE8x1gvEdJMoipyhmN/SLVeX7vFfxBPXZ
-   fBvYWelWihYy8zn9f37OkNaWcoSl00acQIvTTWV3tI3y3x9WImQfJaF3L
-   B8clL4l6JfKEAa0wO0QaJNhxLPmLactJAABBRxFs7yzJCHnPrKPkHDaP4
-   A==;
-X-CSE-ConnectionGUID: Xlda4NQqSVGy+ud8x74OUw==
-X-CSE-MsgGUID: h8JjRYz9TvaG3hg/wpktGw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45554641"
-X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
-   d="scan'208";a="45554641"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 20:57:33 -0800
-X-CSE-ConnectionGUID: szytzD3xRbmOecp98ULNPQ==
-X-CSE-MsgGUID: eXIAEFFHRYKJvvNvGBm1Dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
-   d="scan'208";a="122245976"
-Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
-  by orviesa004.jf.intel.com with ESMTP; 27 Feb 2025 20:57:31 -0800
-From: niravkumar.l.rabara@intel.com
-To: Dinh Nguyen <dinguyen@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	niravkumar.l.rabara@intel.com,
-	nirav.rabara@altera.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH RESEND v3 2/2] arm64: dts: socfpga: agilex5: add clock-names property to nand node
-Date: Fri, 28 Feb 2025 12:53:49 +0800
-Message-Id: <20250228045349.1429680-1-niravkumar.l.rabara@intel.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DlUZmIxd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740719013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9rWEuJNQK68ECdNdbzEIN/CxByzhoyQY+jPP6y/Lhd0=;
+	b=DlUZmIxdbxB0zhH7VGi4D4NKUzG3PT7ojdB/4oFSuWcuegiOdnNBwI9JqIBOPEBsWvqd6X
+	HjkLwScEr53OGQfeqhFCkLxAf1UJ5bxKcY11r4a2dG9f6mY1vzWEgLzH29PdgkPWk2G4NR
+	4uTI6jMJoSGys7puYm8sl1DV5fzEsO8=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-470-tLxX70tNO6O3fin0MZsonQ-1; Fri,
+ 28 Feb 2025 00:03:29 -0500
+X-MC-Unique: tLxX70tNO6O3fin0MZsonQ-1
+X-Mimecast-MFC-AGG-ID: tLxX70tNO6O3fin0MZsonQ_1740719006
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF7A21800876;
+	Fri, 28 Feb 2025 05:03:25 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.52])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D92E19560B9;
+	Fri, 28 Feb 2025 05:03:22 +0000 (UTC)
+Date: Fri, 28 Feb 2025 13:03:18 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com, Mike Rapoport <mike.rapoport@gmail.com>
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+Message-ID: <Z8FDlp8QvnSR58Vd@MiWiFi-R3L-srv>
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+ <20250218225502.747963-3-chenste@linux.microsoft.com>
+ <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
+ <55acf768b52b47dd9d33fa0486772d8c7ae38779.camel@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <55acf768b52b47dd9d33fa0486772d8c7ae38779.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+On 02/27/25 at 10:41am, Mimi Zohar wrote:
+> [Cc'ing Mike Rapoport]
+> 
+> On Mon, 2025-02-24 at 14:14 +0800, Baoquan He wrote:
+> > Hi Steve, Mimi,
+> > 
+> > On 02/18/25 at 02:54pm, steven chen wrote:
+> > > Currently, the mechanism to map and unmap segments to the kimage
+> > > structure is not available to the subsystems outside of kexec.  This
+> > > functionality is needed when IMA is allocating the memory segments
+> > > during kexec 'load' operation.  Implement functions to map and unmap
+> > > segments to kimage.
+> > 
+> > I am done with the whole patchset understanding. My concern is if this
+> > TPM PCRs content can be carried over through newly introduced KHO. I can
+> > see that these patchset doesn't introduce too much new code changes,
+> > while if many conponents need do this, kexec reboot will be patched all
+> > over its body and become ugly and hard to maintain.
+> > 
+> > Please check Mike Rapoport's v4 patchset to see if IMA can register
+> > itself to KHO and do somthing during 2nd kernel init to restore those
+> > TPM PCRs content to make sure all measurement logs are read correctly.
+> > [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+> 
+> Hi Baoquan,
+> 
+> I was hoping to look at Mike's patch set before responding, but perhaps it is
+> better to respond earlier rather than later with my initial thoughts.
+> 
+> The IMA measurement list isn't stored in contiguous memory, but has to be
+> marshalled before being carried across kexec, and then unmarshalled to restore
+> it after the kexec.  Roberto Sassu has been thinking about changing how the IMA
+> measurement list is stored so marshalling/unmarshalling wouldn't be necessary. 
+> Making both this change and using KHO going forward would be a good idea.
+> 
+> However, that sort of change wouldn't be appropriate to backport.  So the
+> question comes down to whether being unable to attest the measurement list,
+> because the measurements are copied too early at kexec load, but the TPM is
+> being extended through kexec exec, is considered a bug.  If that is the case,
+> then I suggest finish cleaning up and upstreaming this patch set so that it
+> could be backported.
 
-Add required clock-names property to the nand node.
-
-Fixes: 2d599bc43813 (arm64: dts: agilex5: add initial support for Intel Agilex5 SoCFPGA)
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
----
- arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-index 51c6e19e40b8..27f75e1bc8eb 100644
---- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-+++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
-@@ -271,6 +271,7 @@ nand: nand-controller@10b80000 {
- 			#size-cells = <0>;
- 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clkmgr AGILEX5_NAND_NF_CLK>;
-+			clock-names = "nf_clk";
- 			cdns,board-delay-ps = <4830>;
- 			status = "disabled";
- 		};
--- 
-2.25.1
+Ah, I understand your concern. There are stable kernels or distros
+kernels which need be taken care of. If then, we can continue to work on
+polishing this patchset, as you have pointed out, there are still room
+in this patchset to improve before merging.
 
