@@ -1,79 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 269F5277812;
-	Fri, 28 Feb 2025 16:32:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB8D271818;
+	Fri, 28 Feb 2025 16:32:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740760339; cv=none; b=hBCx9sCohdrtJ8+Fad/SWWmsuGWTcBmJNkHzZmIhpsSbXPrvv4bBnIj1mZHDkfji9zB5TvuBY+V5W1xmbQteqiHyNk3cmFWdOthvJYoQ9I/F4QbqZ2R85ufSQs+2TTTnD0TaFLC3unHl8cOioJNhvM20CSsMAHe4hVs2DmGF+kg=
+	t=1740760341; cv=none; b=CRpOXc49msb7kZO28/8L6vU71NGWXKD86R2Xx+P/jEw9BfWGm/QdTjDydVOaaviUXM8FRsSRSolBKkuu4nHgjFkWgWXFrwdYE9lVtQf3dYucpBDx+/E/oxMDUic9IXR6H7vNAjO7y6eej0hrK14dO2oBrhHXgCiKXkkuswxbB28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740760339; c=relaxed/simple;
-	bh=P/RcA4P+v+ljSl+5AN9FN5lP81wuZbneRs9Oo7I8WlQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uH9+56X35l5alpwl+eayAc+FlpEGXIZM8r0snYxcYmYSpVL/a6nl4p9M65H8chpEdjXiWYtWrncDno7z4FwicilhA5Tswd2DgxMS5Lb7pzPoNOtf/svr5rUfpkxGNJ8RpLPjGoKhtPij2ZZHfb4PB8+F1Ai/+6g3Bvu7n7dUGng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgygkE0c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740760341; c=relaxed/simple;
+	bh=naU5NcTyc/mk/u2vWARR4qABxP0SYCsR8XPzuhcXIqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rfTCLR0RU/PevXxlQm4P22ooybW95NXSx3hHiqE7QkSnNuVkQ1sHx1NSFyxbgd9u/wWmucRldT+Gn0w13dRh8LuQat7jIR1JgDRTkPTuO1Dz0nrpz6xpgEP4ggZp82U5mPBPWoNSHL+z7h0HOWHNDG5tiX8iw/5wvmftW8she34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FpDetBCS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgygkE0c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9DEC4CED6;
-	Fri, 28 Feb 2025 16:32:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FpDetBCS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1E2AC4CED6;
+	Fri, 28 Feb 2025 16:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740760337;
-	bh=P/RcA4P+v+ljSl+5AN9FN5lP81wuZbneRs9Oo7I8WlQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mgygkE0cniB6CNWpyJm5orUa820AWr6Al74fOmB5Adv0DHZj4hMkEUM08Y2QU5wq+
-	 xRm3tYzGsVSuA21y9YNLLypFfcoItSGIc2yrxbLlVXKIwapeE9yNJ7iiA0tfjLsraP
-	 /ze+vCzXmSmdt1aHE6D+fYt/1Ctd0AABzJrhtkETmZ2HHxmi/d34ssJ7ZlrgeuN/ht
-	 BhXp23mzTO+zCODQfqtbFVPXeQVdSGyAE2r5XJtfsYUI5Y3bDEaN1vFYpIGda6xn96
-	 /9aJZGr3sbMi4et8+k0WkD0UTNpR/hkVmeb9YsphvaXMY1eHRmJl1tvQDnNbkU7iZO
-	 VKhRjsWJubk5Q==
-From: Mario Limonciello <superm1@kernel.org>
-To: Basavaraj Natikar <basavaraj.natikar@amd.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>
-Cc: linux-kernel@vger.kernel.org (open list),
-	linux-input@vger.kernel.org (open list:AMD SENSOR FUSION HUB DRIVER),
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>,
-	Anson Tsao <anson.tsao@amd.com>
-Subject: [PATCH 3/3] HID: amd_sfh: Don't show wrong status for amd_sfh_hpd_info()
-Date: Fri, 28 Feb 2025 10:31:53 -0600
-Message-ID: <20250228163153.2554935-4-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250228163153.2554935-1-superm1@kernel.org>
-References: <20250228163153.2554935-1-superm1@kernel.org>
+	s=k20201202; t=1740760340;
+	bh=naU5NcTyc/mk/u2vWARR4qABxP0SYCsR8XPzuhcXIqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FpDetBCSWlgBGYHmAWsX4bv9+6pykViHpztrT9L1JYjeU3X9vHu6CnxAb8/rNlZz5
+	 uy+YeWzp8yVumQidC26CsgCnE3548jkJtzNMhmeWgfvdaVyVJplORBp3crJXQdqHdw
+	 Rz+66HRBsjvAa1q/yryzfaAwPGme+RTEAVCgjoSi+p9Y36s8hGra/REouAYQ77UJiZ
+	 mFBa0noorypX9k+GbmhYHvVAiNjRL9qz6F6tyv1RmW931vVthfC+cs0ZEw4KLAIVBf
+	 gCozJs12v1nuz6hYZ0dZ9mvuNonVlaBmiZb7x5Z+FT1RsLEJzBQI5ukPGImylQRKIK
+	 fOYmFS4uZoxJg==
+Date: Fri, 28 Feb 2025 10:32:19 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Muni Sekhar <munisekharrms@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+	Sanyog Kale <sanyog.r.kale@intel.com>, linux-sound@vger.kernel.org
+Subject: Re: pci: acpi: Query on ACPI Device Tree Representation and
+ Enumeration for Xilinx FPGA PCIe Endpoint functions
+Message-ID: <20250228163219.GA54330@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHhAz+j46nus_rGJ72rZ86UyzL+AM_HBCivjpZEx3T0thOxqAQ@mail.gmail.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+[+cc SoundWire folks]
 
-When HPD is present but has been disabled, avoid reporting HPD status
-to PMF.
+On Fri, Feb 28, 2025 at 08:19:44PM +0530, Muni Sekhar wrote:
+> On Thu, Feb 27, 2025 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Feb 27, 2025 at 07:25:32PM +0530, Muni Sekhar wrote:
+> > > I am currently working on a project involving a Xilinx FPGA connected
+> > > to an x86 CPU via a PCIe root port. The Xilinx FPGA functions as a
+> > > PCIe endpoint with single function capability and is programmed to
+> > > emulate the Soundwire Master controller. It can be dynamically
+> > > reprogrammed to emulate other interfaces as needed. Essentially, the
+> > > FPGA emulates an interface and connects to the CPU via the PCIe bus.
+> > >
+> > > Given this setup, the BIOS does not have prior knowledge of the
+> > > function implemented in the Xilinx FPGA PCIe endpoint. I have a couple
+> > > of questions regarding this configuration:
+> > >
+> > > Is it possible to define an ACPI Device Tree representation for this
+> > > type of hardware setup?
+> > > Can we achieve ACPI-based device enumeration with this configuration?
+> >
+> > If the FPGA is programmed before BIOS enumerates PCI devices, the FPGA
+> > would look just like any other PCI device, and BIOS would be able to
+> > read the Vendor ID and Device ID and would be able to size and program
+> > the BARs.
+>
+> Yes, the FPGA is programmed with this Soundwire IP before the BIOS
+> enumerates PCI devices.
+> We need to port the Soundwire driver
+> (https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soundwire/qcom.c)
+>  to the x86 platform.
+> 
+> Since x86 platforms typically do not use device trees, and the
+> Soundwire IP is implemented in the FPGA, how can we emulate device
+> tree functionality or use a different mechanism to pass hardware
+> configuration to the driver? Specifically, how can we handle the
+> following API calls on an x86 platform?
+> 
+>    ret = of_property_read_u32(np, "qcom,din-ports", &val);
+>    ret = of_property_read_u32(np, "qcom,dout-ports", &val);
+>    ret = of_property_read_u8_array(np, "qcom,ports-offset1", off1, nports);
+> 
+> static const struct of_device_id qcom_swrm_of_match[] = {
+> { .compatible = "qcom,soundwire-v1.3.0", .data = &swrm_v1_3_data },
+> { .compatible = "qcom,soundwire-v1.5.1", .data = &swrm_v1_5_data },
+> { .compatible = "qcom,soundwire-v1.6.0", .data = &swrm_v1_6_data },
+> { .compatible = "qcom,soundwire-v1.7.0", .data = &swrm_v1_5_data },
+> { .compatible = "qcom,soundwire-v2.0.0", .data = &swrm_v2_0_data },
+> {/* sentinel */},
+> };
+> 
+> Basically, how can we define ACPI tables for functions implemented in
+> an FPGA that connects to the system via PCI?
 
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>
-Tested-by: Anson Tsao <anson.tsao@amd.com>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Seems like a generic problem for PCI sound devices, and I don't know
+how drivers deal with it.  It looks like all the SoundWire drivers
+are platform drivers (not PCI drivers), so there's nothing there to
+look at.
 
-diff --git a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-index ffb98b4c36cbd..837d59e7a6610 100644
---- a/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-+++ b/drivers/hid/amd-sfh-hid/sfh1_1/amd_sfh_interface.c
-@@ -129,7 +129,7 @@ static int amd_sfh_hpd_info(u8 *user_present)
- 	if (!user_present)
- 		return -EINVAL;
- 
--	if (!emp2 || !emp2->dev_en.is_hpd_present)
-+	if (!emp2 || !emp2->dev_en.is_hpd_present || !emp2->dev_en.is_hpd_enabled)
- 		return -ENODEV;
- 
- 	hpdstatus.val = readl(emp2->mmio + amd_get_c2p_val(emp2, 4));
--- 
-2.43.0
+Maybe the sound folks have ideas.
 
+Bjorn
