@@ -1,356 +1,404 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AF51EF361;
-	Fri, 28 Feb 2025 15:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BF41EF361;
+	Fri, 28 Feb 2025 15:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740755354; cv=none; b=uj+FEovryyy3MnHRTC72vJph6xdAXEcEncCq30oejpP/PeHtz2wpvrdL/rJ9uyiEWX9uPyk2RncfH7mtDff0268cxQwVvTBtgVpznoTpNXEHMv4Qlxs7uM4ix2q4n7t6KKAzX7+dv3Pb+1+GHdeba7fv3sv15QK1Q5AVAs9wXkU=
+	t=1740755428; cv=none; b=RTNSAZp3rhXr4DcLXLyXB6NrNK6Y26GSC1AYUt2m1PBavut0+iVkcVkIiN+KUVsuldMzLsrakyysNp/CAef7PUZbz7hQDi/oDuHIKY26ENJbs+FyfN9fcJF5pNeZ67wgjqM6ZWCl2uJsmLdwV+f/6e2XOHLZNnNwcoT+7xzJt34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740755354; c=relaxed/simple;
-	bh=hGqHI0O3P2T4eHBMTPJT7GNJAOHOoT6Gwg6oZqBSFNA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SBWIpmT8XWFY35RvmhuIXhNAQVT13QCW1x6xclEfPjoXzH4UC/dsKg2QvWLcyDOMPRx+K1Ji1tryJxY0/xnpb8VuMfiEbSKMM4rBzMphXF/R2RDHdQP77w804xV69oxyEbi3V6lXvWHd0bt0W4JOS2d3BAXNzdK09Nprt8LBct4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=UMh/3T1v; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740755428; c=relaxed/simple;
+	bh=ZxZ3U4UI58ui7l/tX+m1aiWEAVqlpLKgpsunvIyKk6g=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VlqgNaUKqbMkJLTxbAm735rxRtBVHXd+jeTsFv2wJpOrMo/SHNxhcB6r7zAo4Qk7QIT/B2SwRYR/6mOIFEqWYQ1G0yxZW/ok99UJSLhc8dBRHZ+PHjlbUsOl1fEkcjlHtvjjOPF0i5VAK4iWCTu8C8Q2Na3SCKJTrQYnRAUtO4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3/udowa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="UMh/3T1v"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=775evDg1YCOE4KeHp/EcISrgAi5/5BCQk1GDyV+DPBc=; b=UMh/3T1vQrfYxrviT5c3amxzfj
-	7Adc04gNO8Vo/oY6E/WIOsvgvA0+PE153N5dWbBgei4D1wN/WoU4g1N8RyZvIA4wLzFgkbbgcYXYe
-	nh35NuxltxJ4mNCLwchlaTETWT0PcGMV8f4B1KWbHQE0zfCkI1zsR1w3aEKlOOJwKW4hrq7lttnUY
-	RiAVmxpmYVGjbU2CDBG9bRtwYVArd20VL7Lhfo0OyIFpoiaOaFZXGpSX5wx3J7suDZIoNrGEei5sN
-	WLdmyF6LxRGfEpRer5+/B4C9UHZyg7DhLPDh3PumPGGWgxr7jSXWwz2L1+NVHof3r0mMqR751AXfY
-	9CEMUDMw==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=localhost.localdomain)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1to1zA-0001Ww-2G; Fri, 28 Feb 2025 16:09:08 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: heiko@sntech.de
-Cc: quentin.schulz@cherry.de,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3/udowa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 372BBC4CED6;
+	Fri, 28 Feb 2025 15:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740755427;
+	bh=ZxZ3U4UI58ui7l/tX+m1aiWEAVqlpLKgpsunvIyKk6g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c3/udowap86TNDEbZLhVxiisnW5/x2aQ6jaGrby0RDSW0mcevILV0qFo4uJEprgyl
+	 LnFjTqmYCQ9uOZkvcuJdVxix0HSTiK2vB3u9/IoixqewLNLpIi43jHCGffgcVMT/88
+	 O6Tlu8Bfh1mJNiKDwrjQ2goMR7hHhewbllKQmoddMXqtHDyYeq7/2NkIeVIyWEcfU6
+	 rpg06/2hMzvfzoGcg9FpHgO2LpAFjk/ySze9vbd5mwocQrIblYcdWLs6CRfp/YpdLJ
+	 RWZdn9/+tfKQxm8ZITi1KT+H6rHAIc4ndekMv266TXZcHm90KSkxDrtw+3fe5vU5jc
+	 Oy/eeuNPHdTRg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1to20O-0096E8-T4;
+	Fri, 28 Feb 2025 15:10:25 +0000
+Date: Fri, 28 Feb 2025 15:10:24 +0000
+Message-ID: <86r03ip0kf.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de,
 	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	dse@thaumatec.com,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH v4] arm64: dts: rockchip: add usb typec host support to rk3588-jaguar
-Date: Fri, 28 Feb 2025 16:08:53 +0100
-Message-ID: <20250228150853.329175-1-heiko@sntech.de>
-X-Mailer: git-send-email 2.47.2
+	cix-kernel-upstream@cixtech.com,
+	marcin@juszkiewicz.com.pl,
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH v3 6/6] arm64: dts: cix: add initial CIX P1(SKY1) dts support
+In-Reply-To: <20250227120619.1741431-7-peter.chen@cixtech.com>
+References: <20250227120619.1741431-1-peter.chen@cixtech.com>
+	<20250227120619.1741431-7-peter.chen@cixtech.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: peter.chen@cixtech.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl, fugang.duan@cixtech.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+On Thu, 27 Feb 2025 12:06:19 +0000,
+Peter Chen <peter.chen@cixtech.com> wrote:
+> 
+> CIX SKY1 SoC is high performance Armv9 SoC designed by Cixtech,
+> and Orion O6 is open source motherboard launched by Radxa.
+> See below for detail:
+> https://docs.radxa.com/en/orion/o6/getting-started/introduction
+> 
+> In this commit, it only adds limited components for running initramfs
+> at Orion O6.
+> 
+> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
+> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> ---
+> Changes for v3:
+> - Fix two dts coding sytle issues 
+> 
+>  arch/arm64/boot/dts/Makefile              |   1 +
+>  arch/arm64/boot/dts/cix/Makefile          |   2 +
+>  arch/arm64/boot/dts/cix/sky1-orion-o6.dts |  26 +++
+>  arch/arm64/boot/dts/cix/sky1.dtsi         | 216 ++++++++++++++++++++++
+>  4 files changed, 245 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/cix/Makefile
+>  create mode 100644 arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+>  create mode 100644 arch/arm64/boot/dts/cix/sky1.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index 79b73a21ddc2..8e7ccd0027bd 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -13,6 +13,7 @@ subdir-y += bitmain
+>  subdir-y += blaize
+>  subdir-y += broadcom
+>  subdir-y += cavium
+> +subdir-y += cix
+>  subdir-y += exynos
+>  subdir-y += freescale
+>  subdir-y += hisilicon
+> diff --git a/arch/arm64/boot/dts/cix/Makefile b/arch/arm64/boot/dts/cix/Makefile
+> new file mode 100644
+> index 000000000000..ed3713982012
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/cix/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_CIX) += sky1-orion-o6.dtb
+> diff --git a/arch/arm64/boot/dts/cix/sky1-orion-o6.dts b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> new file mode 100644
+> index 000000000000..78f4fcd87216
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+> @@ -0,0 +1,26 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright 2025 Cix Technology Group Co., Ltd.
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sky1.dtsi"
+> +/ {
+> +	model = "Radxa Orion O6";
+> +	compatible = "radxa,orion-o6", "cix,sky1";
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			reusable;
+> +			size = <0x0 0x28000000>;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/cix/sky1.dtsi b/arch/arm64/boot/dts/cix/sky1.dtsi
+> new file mode 100644
+> index 000000000000..c6d7a48e9893
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/cix/sky1.dtsi
+> @@ -0,0 +1,216 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright 2025 Cix Technology Group Co., Ltd.
+> + *
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			compatible = "arm,cortex-a520";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x0>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <403>;
+> +		};
+> +
+> +		cpu1: cpu@100 {
+> +			compatible = "arm,cortex-a520";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x100>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <403>;
+> +		};
+> +
+> +		cpu2: cpu@200 {
+> +			compatible = "arm,cortex-a520";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x200>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <403>;
+> +		};
+> +
+> +		cpu3: cpu@300 {
+> +			compatible = "arm,cortex-a520";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x300>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <403>;
+> +		};
+> +
+> +		cpu4: cpu@400 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x400>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu5: cpu@500 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x500>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu6: cpu@600 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x600>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu7: cpu@700 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x700>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu8: cpu@800 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x800>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu9: cpu@900 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0x900>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu10: cpu@a00 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0xa00>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
+> +
+> +		cpu11: cpu@b00 {
+> +			compatible = "arm,cortex-a720";
+> +			enable-method = "psci";
+> +			reg = <0x0 0xb00>;
+> +			device_type = "cpu";
+> +			capacity-dmips-mhz = <1024>;
+> +		};
 
-Jaguar has two type-c ports connected to fusb302 controllers that can
-work both in host and device mode and can also run in display-port
-altmode.
+Given that half the A720s are advertised with lower clock speed, how
+comes they all have the same capacity?
 
-While these ports can work in dual-role data mode, they do not support
-powering the device itself as power-sink. This causes issues because
-the current infrastructure does not cope well with dual-role data
-without dual-role power.
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&cpu0>;
+> +				};
+> +				core1 {
+> +					cpu = <&cpu1>;
+> +				};
+> +				core2 {
+> +					cpu = <&cpu2>;
+> +				};
+> +				core3 {
+> +					cpu = <&cpu3>;
+> +				};
+> +				core4 {
+> +					cpu = <&cpu4>;
+> +				};
+> +				core5 {
+> +					cpu = <&cpu5>;
+> +				};
+> +				core6 {
+> +					cpu = <&cpu6>;
+> +				};
+> +				core7 {
+> +					cpu = <&cpu7>;
+> +				};
+> +				core8 {
+> +					cpu = <&cpu8>;
+> +				};
+> +				core9 {
+> +					cpu = <&cpu9>;
+> +				};
+> +				core10 {
+> +					cpu = <&cpu10>;
+> +				};
+> +				core11 {
+> +					cpu = <&cpu11>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	pmu-a520 {
+> +		compatible = "arm,cortex-a520-pmu";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	pmu-a720 {
+> +		compatible = "arm,cortex-a720-pmu";
+> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+> +	};
 
-So add the necessary nodes for the type-c controllers as well as enable
-the relevant core usb nodes. So far host modes works reliably, but
-device-mode does not. So devicemode needs more investigation.
+This is wrong. The default configuration for PPIs is to expose the
+*same* device on all CPUs. You must use PPI affinities for your PMUs.
+Please see the GICv3 binding for the details.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
-Tested-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-changes in v4:
-- reword commit message to reflect device-mode not working
-- rename sbu-pins pinctrl to include _dc
-- set sbu-dc-pins pinconfig to pull-down. This follows how some
-  dedicated SBU-related ICs do it either internally (TS3USBCA4)
-  or in the block-diagram describe external pull downs (NX20P0407)
-changes in v3:
-- more review comments from Quentin
-  (sbu-pin pinctrl, comments)
-changes in v2:
-- address review comments from Quentin
-  (comments, pinctrl, sbu-gpios and much more)
+> +
+> +	pmu-spe {
+> +		compatible = "arm,statistical-profiling-extension-v1";
+> +		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	soc@0 {
+> +		compatible = "simple-bus";
+> +		ranges = <0 0 0 0 0x20 0>;
+> +		dma-ranges;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +
+> +		gic: interrupt-controller@e010000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0x0 0x0e010000 0 0x10000>,	/* GICD */
+> +			      <0x0 0x0e090000 0 0x300000>;       /* GICR * 12 */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_LOW>;
+> +			#interrupt-cells = <3>;
 
- .../arm64/boot/dts/rockchip/rk3588-jaguar.dts | 218 ++++++++++++++++++
- 1 file changed, 218 insertions(+)
+This will need to be bumped up to 4, and all the interrupt specifiers adjusted.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-index 9a43e4fdc4f5..9fceea6c1398 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-@@ -333,6 +333,56 @@ rtc_twi: rtc@6f {
- 		};
- 	};
- 
-+	typec-portc@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PA3 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cc_int1>;
-+		vbus-supply = <&vcc_5v0_usb_c1>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			data-role = "dual";
-+			label = "USBC-1 P11";
-+			power-role = "source";
-+			self-powered;
-+			source-pdos =
-+				<PDO_FIXED(5000, 1500, PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)>;
-+			vbus-supply = <&vcc_5v0_usb_c1>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					usbc0_hs: endpoint {
-+						remote-endpoint = <&usb_host0_xhci_drd_sw>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					usbc0_ss: endpoint {
-+						remote-endpoint = <&usbdp_phy0_typec_ss>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					usbc0_sbu: endpoint {
-+						remote-endpoint = <&usbdp_phy0_typec_sbu>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	vdd_npu_s0: regulator@42 {
- 		compatible = "rockchip,rk8602";
- 		reg = <0x42>;
-@@ -394,6 +444,56 @@ &i2c8 {
- 	pinctrl-0 = <&i2c8m2_xfer>;
- 	status = "okay";
- 
-+	typec-portc@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <RK_PA4 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cc_int2>;
-+		vbus-supply = <&vcc_5v0_usb_c2>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			data-role = "dual";
-+			label = "USBC-2 P12";
-+			power-role = "source";
-+			self-powered;
-+			source-pdos =
-+				<PDO_FIXED(5000, 1500, PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)>;
-+			vbus-supply = <&vcc_5v0_usb_c2>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+
-+					usbc1_hs: endpoint {
-+						remote-endpoint = <&usb_host1_xhci_drd_sw>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+
-+					usbc1_ss: endpoint {
-+						remote-endpoint = <&usbdp_phy1_typec_ss>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+
-+					usbc1_sbu: endpoint {
-+						remote-endpoint = <&usbdp_phy1_typec_sbu>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
- 	vdd_cpu_big0_s0: regulator@42 {
- 		compatible = "rockchip,rk8602";
- 		reg = <0x42>;
-@@ -487,6 +587,26 @@ pcie30x4_waken_m0: pcie30x4-waken-m0 {
- 			rockchip,pins = <0 RK_PC7 12 &pcfg_pull_none>;
- 		};
- 	};
-+
-+	usb3 {
-+		cc_int1: cc-int1 {
-+			rockchip,pins = <4 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		cc_int2: cc-int2 {
-+			rockchip,pins = <4 RK_PA4 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		typec0_sbu_dc_pins: typec0-sbu-dc-pins {
-+			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_down>,
-+					<1 RK_PC3 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+
-+		typec1_sbu_dc_pins: typec1-sbu-dc-pins {
-+			rockchip,pins = <0 RK_PD4 RK_FUNC_GPIO &pcfg_pull_down>,
-+					<1 RK_PB5 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
- };
- 
- &saradc {
-@@ -854,6 +974,24 @@ &tsadc {
- 	status = "okay";
- };
- 
-+/* USB-C P11 connector */
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+/* USB-C P12 connector */
-+&u2phy1 {
-+	status = "okay";
-+};
-+
-+&u2phy1_otg {
-+	status = "okay";
-+};
-+
- &u2phy2 {
- 	status = "okay";
- };
-@@ -896,6 +1034,56 @@ &uart7 {
- 	status = "okay";
- };
- 
-+/* Type-C on P11 */
-+&usbdp_phy0 {
-+	orientation-switch;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&typec0_sbu_dc_pins>;
-+	sbu1-dc-gpios = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>; /* Q7_USB_C0_SBU1_DC */
-+	sbu2-dc-gpios = <&gpio1 RK_PC3 GPIO_ACTIVE_HIGH>; /* Q7_USB_C0_SBU2_DC */
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy0_typec_ss: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_ss>;
-+		};
-+
-+		usbdp_phy0_typec_sbu: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usbc0_sbu>;
-+		};
-+	};
-+};
-+
-+/* Type-C on P12 */
-+&usbdp_phy1 {
-+	orientation-switch;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&typec1_sbu_dc_pins>;
-+	sbu1-dc-gpios = <&gpio0 RK_PD4 GPIO_ACTIVE_HIGH>; /* Q7_USB_C1_SBU1_DC */
-+	sbu2-dc-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>; /* Q7_USB_C1_SBU2_DC */
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy1_typec_ss: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc1_ss>;
-+		};
-+
-+		usbdp_phy1_typec_sbu: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usbc1_sbu>;
-+		};
-+	};
-+};
-+
- /* host0 on P10 USB-A */
- &usb_host0_ehci {
- 	status = "okay";
-@@ -906,6 +1094,36 @@ &usb_host0_ohci {
- 	status = "okay";
- };
- 
-+/* host0 on P11 USB-C */
-+&usb_host0_xhci {
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb_host0_xhci_drd_sw: endpoint {
-+			remote-endpoint = <&usbc0_hs>;
-+		};
-+	};
-+};
-+
-+/* host1 on P12 USB-C */
-+&usb_host1_xhci {
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usb_host1_xhci_drd_sw: endpoint {
-+			remote-endpoint = <&usbc1_hs>;
-+		};
-+	};
-+};
-+
- /* host1 on M.2 E-key */
- &usb_host1_ehci {
- 	status = "okay";
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+
+Drop this, this is useless. It is pretty obvious that there is a
+single RD region, and 1 is the default.
+
+> +			redistributor-stride = <0 0x40000>;
+
+Drop this. This is a standard GIC700 that doesn't need any help
+computing the stride as it obeys the architecture.
+
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+
+I don't understand why you repeat this on every sub-nodes.
+
+> +			ranges;
+> +
+> +			gic_its: msi-controller@e050000 {
+> +				compatible = "arm,gic-v3-its";
+> +				reg = <0x0 0x0e050000 0x0 0x30000>;
+> +				msi-controller;
+> +				#msi-cells = <1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-names = "sec-phys", "phys", "virt", "hyp-phys", "hyp-virt";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 12 IRQ_TYPE_LEVEL_LOW>;
+> +		clock-frequency = <1000000000>;
+
+Drop this. The firmware already sets CNTFRQ_EL0 to the correct value,
+it seems. And if it doesn't, please fix the firmware.
+
+> +		arm,no-tick-in-suspend;
+
+Why do you need this? Is the HW so broken that you have implemented
+the global counter in a power domain that isn't always on?
+
+As it stands, this DT is completely broken and needs major fixing.
+
+	M.
+
 -- 
-2.47.2
-
+Without deviation from the norm, progress is not possible.
