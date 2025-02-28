@@ -1,340 +1,203 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D1B11A3158;
-	Fri, 28 Feb 2025 09:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733525; cv=none; b=ukvKgahgyMpCCrtovBoN0/vedY4RyUpJunjtYaRYsK3ozVAUlU5p/w/ka+S0qknpEUeEH2+s0WLBZYpvLVFX6Y+NCEpoRKLhP3u5/TWryPfcIQlubOgM5m70O3RsPIynSJ1xizEMiRCtu2zyns3L/PcHmS8ZPnC+Ndju1I8m6gE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733525; c=relaxed/simple;
-	bh=ZvuoGKETIKuqrexGW8SWwG8bQ1czS38AO8zWebfhBU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XXGW4XOU8CZ6BefPOwwmMyp4UgjGw2w+Tbzr7UkjEVi9Ccyu3Jt7GaWdMiW5Ov5PHEc6Hq8I4TJnGBQJgGjjViGIrSnsDoeY6P4AFzOidFjOLiUnCfwJeomC5LmVLnLOXV0craNhghLqmWHr0s2wRCIYBQyFvz7MW7Qoub+DW2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ikfT6RAO; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2070.outbound.protection.outlook.com [40.107.94.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E761A3158;
+	Fri, 28 Feb 2025 09:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740733539; cv=fail; b=QTb3twE6VihM7wdz5yOj1OMCt1c1X1rPzfjXYdQz6hlvlBZh6tisIieyZAWxoSKhqNoPeD7pnh2Q+U5fuRRCTwmdAVuvhUlz1eXRvBcowdgJsMIFJ3ASVnftMJvY7Zkztp5SAUZa816kgL6ueadr7YNKkZGUCHcmFa83HEXio2A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740733539; c=relaxed/simple;
+	bh=wxBTtctkNjQKsWhRKcF1wiTiYFKho3rHZxel+hz+03o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C7xjGAj8/OZO+ZYbcbPC461GNoi2gQshwflRP+OjAICuEsRq7qghLXhkFdondKBNO/G1GajQzNAfcW1103yT+RowrxMVizAS5H05w0q4DsqS0vW3hqw+1ism5NXZICSioHQyvZ92Gv2qHgSNjwtm+ipsYmCg9V6vzidxGQ8z4/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fWusdhJn; arc=fail smtp.client-ip=40.107.94.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ikfT6RAO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=nNdk8J4H0DGZo/AJqzuSIUDj2qvadjIR23mnD0+nTyw=;
-	b=ikfT6RAOEWarYrABl77wrDMFDpkaDJiqeOmRk5vjn8ujOspOjpkgiJzEywroGb
-	/bVKQMoAbo3OEBsaQbNXUUhOaJRMzPhy+LZtLpWTD2jiW7cvbHZoQlS44gppdc8Z
-	bfw4JKwsrOIbxCTSz6j6XQDuPcoMDTNEMHMBhulKkMrNY=
-Received: from [192.168.34.52] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDnMPYpfMFnEqAaJQ--.1908S2;
-	Fri, 28 Feb 2025 17:04:43 +0800 (CST)
-Message-ID: <251ce5c0-8c10-4b29-9ffb-592e908187fd@163.com>
-Date: Fri, 28 Feb 2025 17:04:41 +0800
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fWusdhJn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Yv7vrRz7VW0emM6/NPhrAh9bpwJpTMjOCa2lnPBQVqMHUp3oYFvLPtx483+MOedKzGjSXlZgnfR2w6M/tPyWb0roXcUO6WaJUrdyBSmuOqE+F8/3tmt/A98FL2CnW/gT4hDzgQux6OHxesoNIPIuaYlAzngYdo1+9CxBiW2XoEQxmEAqU99jTYQCnEx0OlVNckVkoPmUvuih1rN3DrCkErstaii+yy0rYfXbsqgMKk/LfEC+cG5tzSlSu3zsh7gZBwCUD5lDgvUKRSy6nzEQVCIil36RwANMEVHJlgh4gw6PuYaUdw3NbDN1+Zv4vugLnrcQJg7NYOn9RPx8Djywpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bS+PZC3EUTudMMth3fF3meGGM8HntlMe2BYSCcNsc3g=;
+ b=zBmjY00B+tvLNcVx5dvo6xy6SFr4SbBN2HCLpK9jJUvFIzn8a/vd+dJfBAQgUOHnxaRW02ye9+PmrpkVs1QH00gRlQMzEjcK5qU42qPxlF0aS0pQ+HVe2A/DjmapOU96Kah8mNWljC78fhn5OnDIbVaSVc3lRXDr/bUKkCZEyg/88eDgDXp08HvWdHsgck8iz91XfMqjYWNbtoH/KgNBYAgzlhTF7H2eXqweITVWHluTg6JoPyaa1sYqNR4z18WKI3/1y6GppUi8ccbFIkIEq5aGEPL2gEoESmT0hWUvToM6sgh4Feianq3946WjEs2qV2TCF+giSoPpxYOHoaGwEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bS+PZC3EUTudMMth3fF3meGGM8HntlMe2BYSCcNsc3g=;
+ b=fWusdhJnXB1IaBoTfPaGvyzKHrjiGzU6nkqpVz16nFbVlZ0d4xvP4NyLvvvrL1VMoPjcNOmo6F/X8NMvLDXNbLdZcrui4LXLanp/wSkFb4WIFvJwnKz/zMgxOarw0vEazPeHvcjNR/o3C45aIVpguRoOsEDZxM1Kv8eyzdKY2ao=
+Received: from MW2PR16CA0009.namprd16.prod.outlook.com (2603:10b6:907::22) by
+ IA0PPF04DCE520E.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bc5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
+ 2025 09:05:35 +0000
+Received: from SJ1PEPF000023D0.namprd02.prod.outlook.com
+ (2603:10b6:907:0:cafe::f1) by MW2PR16CA0009.outlook.office365.com
+ (2603:10b6:907::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.20 via Frontend Transport; Fri,
+ 28 Feb 2025 09:05:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF000023D0.mail.protection.outlook.com (10.167.244.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:05:35 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 03:04:09 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
+Subject: [RFC PATCH 07/19] KVM: SEV: Do not intercept SECURE_AVIC_CONTROL MSR
+Date: Fri, 28 Feb 2025 14:21:03 +0530
+Message-ID: <20250228085115.105648-8-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] genirq/msi: Add the address and data that show MSI/MSIX
-To: Thomas Gleixner <tglx@linutronix.de>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: kw@linux.com, kwilczynski@kernel.org, bhelgaas@google.com,
- cassel@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250227162821.253020-1-18255117159@163.com>
- <20250227163937.wv4hsucatyandde3@thinkpad> <877c5be0no.ffs@tglx>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <877c5be0no.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PSgvCgDnMPYpfMFnEqAaJQ--.1908S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3GryfAFyUAr18Jr4UKF43trb_yoWxCF18pF
-	yUKF47Cr48JFyYywsrGa17ur9rXFWqvF4qy39Fy3yIy3yaqw1vgFyfZas7GFy5trsrZ3s5
-	t3WUXa40qrs3AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Um2NNUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDx4Co2fBdUDKGQAAsw
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF000023D0:EE_|IA0PPF04DCE520E:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b94958c-a917-4ebb-b27b-08dd57d70fef
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?bzJwbgdZ0m7dxfAbx0xIfRaeu0Z/PTPNBdpmS2h4TQzWbfcPw+yckPjzrZ5a?=
+ =?us-ascii?Q?IoR7pth+XkkZpmf5ncKtI5BDjs6PZKaKKYUt+FdwrOzEQGFL61TZqTAJJlnl?=
+ =?us-ascii?Q?9nBoGn+IgyvxzU4xX1kK5aFzK92FJENZ3gMXtnrYqDhqH9S5dmywBI9nstnn?=
+ =?us-ascii?Q?1Zr0t51Ew/ZzlbMk/KMomAueDGbcfp45hy3Py2WAtwz771a66hAyyVo4lLSw?=
+ =?us-ascii?Q?5+hlyUWSWGUBoV9GgeTzVN83ZU67a8WxWJXA0rUSX3Q8wNxGi+WusYlvtYpz?=
+ =?us-ascii?Q?67mAq+xfyldcJy2H6R95Bs8ux2BgjhHAHCNqtfJVn5i4FV2CjOnMATxgT+VV?=
+ =?us-ascii?Q?g0nte12T8ANP9Bq2sx0ykIdZo5bnkkGUj1arb8DPQ1bHDLr81t0C78IgS4rl?=
+ =?us-ascii?Q?Da7tWXuiRxEdtJP4DOyGISlQJvmzPAaR/7QZa9UPWKPlRJ6ZlpIy/zSmY5li?=
+ =?us-ascii?Q?Qu1czt3iwwKsr8hs+xvIzScQPCz3yHJLpEeJwAY3xD7mCAFKgoBtZu9q9igR?=
+ =?us-ascii?Q?vN48D7FE246kIAoPSadyplOQQEmOEJpdzopEiLO0RJ1nEXcOQYR1xb9GS9pD?=
+ =?us-ascii?Q?e/uuUye2VxuSzT+qkD90SYx78LXgf8j9Pa+I+rQpXX0WdNS+1G0dRD6Q/kGz?=
+ =?us-ascii?Q?97mlnywzJXZElSoZ1X1hUB2ioTwN88IcuhCoD2wDtKSYEeGAzjsyoQ0eLyXW?=
+ =?us-ascii?Q?RV/XWxC2I3LYUf0SIVAwbblyTbE8no/RoqOqGwMXGe5WRw74HxgY9VYfhNHF?=
+ =?us-ascii?Q?VUvuyjJCBzmf3v7jFpoqledbEVdeMyJuCNVZSGvY3sKXnDi/cN84g69XARuN?=
+ =?us-ascii?Q?wftv6kEqolOndxVoW8SU4HVGmOod9kvdsWC5wTrDaPJHkX7meYu4xJmWYI0g?=
+ =?us-ascii?Q?P4pEZ+zbJ4VNdCn/QqrC7fqknjTuJSdkHdiCZYqJ3LxYDrct6BRqgyTExphl?=
+ =?us-ascii?Q?T/lsqKLKH/0mo7/uqNP/WUzsoWftmgwSunFBany3ITEE2L9fiGHt9nwzHMvq?=
+ =?us-ascii?Q?EBL5oMn6r9qnv709HlusaAwvWUgfCANJ5ZP/4JSPGBOW6Q3smW7cd5Y5xckx?=
+ =?us-ascii?Q?uBtuOCUUbPyAg4CFOcWZ8iWN9hh5VRs2lDQzjdygOQDycNapW8vbHA8FKP1q?=
+ =?us-ascii?Q?tVEYULm3GhJruYm2l6gVvenpt91e9b8FPxcwnf3QRVw/eDcPhHNdwZ+GIWa+?=
+ =?us-ascii?Q?XDz+ow67LIQ39J5ziqpi1Mnru5qMxNxTtxyreRQXnNsGyyu9uF/IDmI3jRFs?=
+ =?us-ascii?Q?43Kk4CUkmZZYD9ReoMGVmbJ1OLAB87MmYX7BonuFzyswlovIKW27so6BI1p0?=
+ =?us-ascii?Q?PX1WgsJ1ILbna1iKXvpibeKbvhmJO6fbgFgXT/b/DWlUWTP9sO/nA7T2+wbW?=
+ =?us-ascii?Q?krw5jjiL0FV7J9RPVZxfMORUR1C6DHSXJMYuBmZnOVrgslADn+EnmgWEt7ED?=
+ =?us-ascii?Q?ffjvG8LQva3Nl+xN8N5KLtl1yOoCJVRKZEGxbFnOHqVJouZjbZ/yS1ZeNcPv?=
+ =?us-ascii?Q?Iw1a9OYLOF+jW1c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:05:35.1555
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b94958c-a917-4ebb-b27b-08dd57d70fef
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF000023D0.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF04DCE520E
 
+From: Kishon Vijay Abraham I <kvijayab@amd.com>
 
+The SECURE_AVIC_CONTROL MSR (0xc0010138) holds the GPA of the APIC
+backing page and bitfields to enable Secure AVIC and NMI. This MSR
+is populated by the guest and the hypervisor should not intercept it
+so that the guest can properly set the MSR. Disable intercepting the
+SECURE_AVIC_CONTROL MSR for Secure AVIC enabled guests.
 
-On 2025/2/28 01:51, Thomas Gleixner wrote:
-> On Thu, Feb 27 2025 at 22:09, Manivannan Sadhasivam wrote:
->> On Fri, Feb 28, 2025 at 12:28:21AM +0800, Hans Zhang wrote:
->>> +	return sysfs_emit(
->>> +		buf,
->>> +		"%s\n address_hi: 0x%08x\n address_lo: 0x%08x\n msg_data: 0x%08x\n",
->>> +		is_msix ? "msix" : "msi", desc->msg.address_hi,
->>> +		desc->msg.address_lo, desc->msg.data);
->>
->> Sysfs is an ABI. You cannot change the semantics of an attribute.
-> 
-> Correct. Aside of that this is debug information and has no business in
-> sysfs.
-> 
-> The obvious place to expose this is via the existing debugfs irq/*
-> mechanism. All it requires is to implement a debug_show() callback in
-> the MSI core code and assign it to domain ops::debug_show() on domain
-> creation, if it does not provide its own callback.
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Co-developed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+ arch/x86/include/asm/msr-index.h | 2 ++
+ arch/x86/kvm/svm/sev.c           | 3 +++
+ arch/x86/kvm/svm/svm.c           | 1 +
+ arch/x86/kvm/svm/svm.h           | 2 +-
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
-Hi Thomas(tglx),
-
-Is the following patch OK? Please give me some advice. Thank you very much.
-
-Best regards
-Hans
-
-
-patch:
-
-diff --git a/kernel/irq/debugfs.c b/kernel/irq/debugfs.c
-index ca142b9a4db3..447fa24520f4 100644
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -3,6 +3,7 @@
-
-  #include <linux/irqdomain.h>
-  #include <linux/irq.h>
-+#include <linux/msi.h>
-  #include <linux/uaccess.h>
-
-  #include "internals.h"
-@@ -56,6 +57,26 @@ static const struct irq_bit_descr irqchip_flags[] = {
-         BIT_MASK_DESCR(IRQCHIP_MOVE_DEFERRED),
-  };
-
-+static void irq_debug_show_msi_msix(struct seq_file *m, struct irq_data 
-*data,
-+                                   int ind)
-+{
-+       struct msi_desc *desc;
-+       bool is_msix;
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 3ae84c3b8e6d..6fb734228726 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -683,6 +683,8 @@
+ #define MSR_AMD64_SNP_RESV_BIT		18
+ #define MSR_AMD64_SNP_RESERVED_MASK	GENMASK_ULL(63, MSR_AMD64_SNP_RESV_BIT)
+ 
++#define MSR_AMD64_SECURE_AVIC_CONTROL	0xc0010138
 +
-+       desc = irq_get_msi_desc(data->irq);
-+       if (!desc)
-+               return;
+ #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
+ 
+ #define MSR_AMD64_RMP_BASE		0xc0010132
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 82209cd56ec6..6313679a65b8 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -4573,6 +4573,9 @@ static void sev_es_init_vmcb(struct vcpu_svm *svm)
+ 	/* Clear intercepts on selected MSRs */
+ 	set_msr_interception(vcpu, svm->msrpm, MSR_EFER, 1, 1);
+ 	set_msr_interception(vcpu, svm->msrpm, MSR_IA32_CR_PAT, 1, 1);
 +
-+       is_msix = desc->pci.msi_attrib.is_msix;
-+       seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
-+       seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "",
-+               desc->msg.address_hi);
-+       seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "",
-+               desc->msg.address_lo);
-+       seq_printf(m, "\n%*smsg_data: 0x%08x\n", ind + 1, "",
-+               desc->msg.data);
-+}
-+
-  static void
-  irq_debug_show_chip(struct seq_file *m, struct irq_data *data, int ind)
-  {
-@@ -178,6 +199,7 @@ static int irq_debug_show(struct seq_file *m, void *p)
-         seq_printf(m, "node:     %d\n", irq_data_get_node(data));
-         irq_debug_show_masks(m, desc);
-         irq_debug_show_data(m, data, 0);
-+       irq_debug_show_msi_msix(m, data, 0);
-         raw_spin_unlock_irq(&desc->lock);
-         return 0;
-  }
-
-
-
-
-e.g.
-root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
-  85:          0          0          0          0          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 75497472 Edge      PCIe PME, aerdrv
-  86:          0         30          0          0          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021760 Edge      nvme0q0
-  87:        682          0          0          0          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021761 Edge      nvme0q1
-  88:          0        400          0          0          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021762 Edge      nvme0q2
-  89:          0          0        246          0          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021763 Edge      nvme0q3
-  90:          0          0          0        141          0          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021764 Edge      nvme0q4
-  91:          0          0          0          0        177          0 
-         0          0          0          0          0          0 
-ITS-MSI 76021765 Edge      nvme0q5
-  92:          0          0          0          0          0        173 
-         0          0          0          0          0          0 
-ITS-MSI 76021766 Edge      nvme0q6
-  93:          0          0          0          0          0          0 
-       374          0          0          0          0          0 
-ITS-MSI 76021767 Edge      nvme0q7
-  94:          0          0          0          0          0          0 
-         0         62          0          0          0          0 
-ITS-MSI 76021768 Edge      nvme0q8
-  95:          0          0          0          0          0          0 
-         0          0        137          0          0          0 
-ITS-MSI 76021769 Edge      nvme0q9
-  96:          0          0          0          0          0          0 
-         0          0          0        177          0          0 
-ITS-MSI 76021770 Edge      nvme0q10
-  97:          0          0          0          0          0          0 
-         0          0          0          0        403          0 
-ITS-MSI 76021771 Edge      nvme0q11
-  98:          0          0          0          0          0          0 
-         0          0          0          0          0        246 
-ITS-MSI 76021772 Edge      nvme0q12
-root@root:/sys/kernel/debug/irq/irqs# cat 86
-handler:  handle_fasteoi_irq
-device:   0000:91:00.0
-status:   0x00000000
-istate:   0x00004000
-ddepth:   0
-wdepth:   0
-dstate:   0x31401200
-             IRQD_ACTIVATED
-             IRQD_IRQ_STARTED
-             IRQD_SINGLE_TARGET
-             IRQD_AFFINITY_SET
-             IRQD_AFFINITY_ON_ACTIVATE
-             IRQD_HANDLE_ENFORCE_IRQCTX
-node:     0
-affinity: 6
-effectiv: 6
-domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
-  hwirq:   0x4880000
-  chip:    ITS-MSI
-   flags:   0x20
-              IRQCHIP_ONESHOT_SAFE
-  parent:
-     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
-      hwirq:   0x2001
-      chip:    ITS
-       flags:   0x0
-      parent:
-         domain:  :soc@0:interrupt-controller@0e001000-1
-          hwirq:   0x2001
-          chip:    GICv3
-           flags:   0x15
-                      IRQCHIP_SET_TYPE_MASKED
-                      IRQCHIP_MASK_ON_SUSPEND
-                      IRQCHIP_SKIP_SET_WAKE
-msix:
-  address_hi: 0x00000000
-  address_lo: 0x0e060040
-  msg_data: 0x00000000
-root@root:/sys/kernel/debug/irq/irqs# cat 87
-handler:  handle_fasteoi_irq
-device:   0000:91:00.0
-status:   0x00000000
-istate:   0x00004000
-ddepth:   0
-wdepth:   0
-dstate:   0x31600200
-             IRQD_ACTIVATED
-             IRQD_IRQ_STARTED
-             IRQD_SINGLE_TARGET
-             IRQD_AFFINITY_MANAGED
-             IRQD_AFFINITY_ON_ACTIVATE
-             IRQD_HANDLE_ENFORCE_IRQCTX
-node:     0
-affinity: 0
-effectiv: 0
-domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
-  hwirq:   0x4880001
-  chip:    ITS-MSI
-   flags:   0x20
-              IRQCHIP_ONESHOT_SAFE
-  parent:
-     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
-      hwirq:   0x2002
-      chip:    ITS
-       flags:   0x0
-      parent:
-         domain:  :soc@0:interrupt-controller@0e001000-1
-          hwirq:   0x2002
-          chip:    GICv3
-           flags:   0x15
-                      IRQCHIP_SET_TYPE_MASKED
-                      IRQCHIP_MASK_ON_SUSPEND
-                      IRQCHIP_SKIP_SET_WAKE
-msix:
-  address_hi: 0x00000000
-  address_lo: 0x0e060040
-  msg_data: 0x00000001
-root@root:/sys/kernel/debug/irq/irqs#
-root@root:/sys/kernel/debug/irq/irqs# cat 88
-handler:  handle_fasteoi_irq
-device:   0000:91:00.0
-status:   0x00000000
-istate:   0x00004000
-ddepth:   0
-wdepth:   0
-dstate:   0x31600200
-             IRQD_ACTIVATED
-             IRQD_IRQ_STARTED
-             IRQD_SINGLE_TARGET
-             IRQD_AFFINITY_MANAGED
-             IRQD_AFFINITY_ON_ACTIVATE
-             IRQD_HANDLE_ENFORCE_IRQCTX
-node:     0
-affinity: 1
-effectiv: 1
-domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
-  hwirq:   0x4880002
-  chip:    ITS-MSI
-   flags:   0x20
-              IRQCHIP_ONESHOT_SAFE
-  parent:
-     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
-      hwirq:   0x2003
-      chip:    ITS
-       flags:   0x0
-      parent:
-         domain:  :soc@0:interrupt-controller@0e001000-1
-          hwirq:   0x2003
-          chip:    GICv3
-           flags:   0x15
-                      IRQCHIP_SET_TYPE_MASKED
-                      IRQCHIP_MASK_ON_SUSPEND
-                      IRQCHIP_SKIP_SET_WAKE
-msix:
-  address_hi: 0x00000000
-  address_lo: 0x0e060040
-  msg_data: 0x00000002
-root@root:/sys/kernel/debug/irq/irqs# cat 89
-handler:  handle_fasteoi_irq
-device:   0000:91:00.0
-status:   0x00000000
-istate:   0x00004000
-ddepth:   0
-wdepth:   0
-dstate:   0x31600200
-             IRQD_ACTIVATED
-             IRQD_IRQ_STARTED
-             IRQD_SINGLE_TARGET
-             IRQD_AFFINITY_MANAGED
-             IRQD_AFFINITY_ON_ACTIVATE
-             IRQD_HANDLE_ENFORCE_IRQCTX
-node:     0
-affinity: 2
-effectiv: 2
-domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
-  hwirq:   0x4880003
-  chip:    ITS-MSI
-   flags:   0x20
-              IRQCHIP_ONESHOT_SAFE
-  parent:
-     domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
-      hwirq:   0x2004
-      chip:    ITS
-       flags:   0x0
-      parent:
-         domain:  :soc@0:interrupt-controller@0e001000-1
-          hwirq:   0x2004
-          chip:    GICv3
-           flags:   0x15
-                      IRQCHIP_SET_TYPE_MASKED
-                      IRQCHIP_MASK_ON_SUSPEND
-                      IRQCHIP_SKIP_SET_WAKE
-msix:
-  address_hi: 0x00000000
-  address_lo: 0x0e060040
-  msg_data: 0x00000003
-
-
++	if (sev_savic_active(vcpu->kvm))
++		set_msr_interception(vcpu, svm->msrpm, MSR_AMD64_SECURE_AVIC_CONTROL, 1, 1);
+ }
+ 
+ void sev_init_vmcb(struct vcpu_svm *svm)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index d4191c0a0133..d00ae58c0b0a 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -110,6 +110,7 @@ static const struct svm_direct_access_msrs {
+ 	{ .index = MSR_EFER,				.always = false },
+ 	{ .index = MSR_IA32_CR_PAT,			.always = false },
+ 	{ .index = MSR_AMD64_SEV_ES_GHCB,		.always = true  },
++	{ .index = MSR_AMD64_SECURE_AVIC_CONTROL,	.always = false },
+ 	{ .index = MSR_TSC_AUX,				.always = false },
+ 	{ .index = X2APIC_MSR(APIC_ID),			.always = false },
+ 	{ .index = X2APIC_MSR(APIC_LVR),		.always = false },
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 7cde221e477e..e855f101e60f 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
+ #define	IOPM_SIZE PAGE_SIZE * 3
+ #define	MSRPM_SIZE PAGE_SIZE * 2
+ 
+-#define MAX_DIRECT_ACCESS_MSRS	48
++#define MAX_DIRECT_ACCESS_MSRS	49
+ #define MSRPM_OFFSETS	32
+ extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
+ extern bool npt_enabled;
+-- 
+2.34.1
 
