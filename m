@@ -1,81 +1,77 @@
-Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
+Received: from mail-pl1-f228.google.com (mail-pl1-f228.google.com [209.85.214.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B359C1DF747
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 23:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824101DF747
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 23:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740787170; cv=none; b=TXpchPAhwPPasS9/hf9dv4rByogDH190LZcpIl4yybZ3eIilIt8H6oX1bnejOD0fdrhZXcKk7bu3EY969pWgNuiuy+Tkfy9vjSKybhHl62tz+B2aiFe8afoFVz8aDZcgUZcKL3nCGKnLn4b/Tb1LwF5t2gS022zb1SkpjTl8moQ=
+	t=1740787194; cv=none; b=HteN1reoKKItqAP4+yu5ed/sVbruexyHfEfUlprZUMMH5xQ6kD32LtNiKv82/yvOpJtU2R2dYM/lMpLK3nzGB8GUxzaf4VDcLOqzH/IULzsv1gFSCDY8t/Rr/d1csChAl8qmmUpo01F/5BDkpazBwcokTcpRQNsPtqqSbzfhkcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740787170; c=relaxed/simple;
-	bh=/ShPFdmtDi5zFWZPDuX4uvqo7DJ/+xJn2xPk55ZuQbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K+O5zXtYFk4NnPRzzVtZW+lJvYhYk0o8Cu8ti6mbFcd0uRdmnhg6sGL2D9dSWjAhCis4flo4lZHvLJYqL58XWJi05nv4pFVblBpQK7TRzcTDvFo2jqpN3w5yyIHZ8m/Ug7G5q7DfycLk+ZBCEPas6jqkt9giLtpld4K+BVUK9R0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Bb3+dpIj; arc=none smtp.client-ip=209.85.214.226
+	s=arc-20240116; t=1740787194; c=relaxed/simple;
+	bh=M19kqPwNW3vIXGn+RbcnqMl8wOB9w+/nhDOK8KFUgxw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7n+XCWkDQeT8CgTpUsyqeOq/W5J5TZ5RjyKpb7+pXigUqRsNEKxR7BZU0biQ4j8nzdysTSEYd4X/wn4FE4QcLiHg3393MJ2ZVTEuSDZVsc7SCgElKiL+havgVKuw2MG6/cBVnV0qVQG8FPlRnuAGA1In7nnoVJgms+/VVtY9/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=QeCRZzBB; arc=none smtp.client-ip=209.85.214.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Bb3+dpIj"
-Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-223532fae14so6043565ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 15:59:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="QeCRZzBB"
+Received: by mail-pl1-f228.google.com with SMTP id d9443c01a7336-2232aead21aso6696515ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 15:59:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1740787168; x=1741391968; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YG/WzviAKa26P9kIv9dajWRH9oVJW/MjIO0ud3obPZI=;
-        b=Bb3+dpIjNzolqpvPRpJTdPDkx/FQNie4AbcF1y+slnYdzPXF0sf5PxMSCmr3d7DZm0
-         385BqwwE9IUtlAbGNOtcIeBXlc7mK1uc1EfkMKZLRmLQAR7nkfvkc+/gUavjRyW3LUin
-         PDBz67WofuHZTS3nCWHwLXdAo+6/1IHSstmluuwcaBfXZKe7fQsWuU1ZYe6vs8Uo054d
-         Kzua77Z+HwN7rNSgzy0Oeau1YH601ptEpvshJpoBs/VuzlTUgWTmE0IFtDOwcpCyoWrB
-         U+lrIMFch4Zb5jnuAUEqFwJwO7yKN05RV6Wbc7BAtAYC703T1eP83TYjMOAIYlRqX2/i
-         yD6A==
+        d=purestorage.com; s=google2022; t=1740787192; x=1741391992; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JSAJMXS5kmM5iwGMwe4iAEt0SbX+ffh78y3gp8LBwPk=;
+        b=QeCRZzBBjv67C1z6Ur4k1aan8mf2RiEZL1RAvXNWeTm+4Xn/p8GKEqJCp61s4vwo77
+         V3Yw4CByOVqjDbbDHt4KC1NNq09SbuxDMeJtngwf/1wKjzfuPEvMYghP9peDBiELIbCi
+         deB0J1S8IXuVxoJM+E9Nod9NxEzdYFGQfwg3lRt1gMnn6wfWh/CmAVQz54zOu/nibnXu
+         dvBY28CisI6EajoA7+NFNGmf0y03XyIm4wgRGDnEXt8jGrolUhr4N+vyyNaPobHbYhN+
+         cU9+E+Auc4dRFV5jCst0jayLiIIcQuVzDyIeOuMisSLij0h9avm8d9NyvI8CtdVNBGNw
+         x8hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740787168; x=1741391968;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YG/WzviAKa26P9kIv9dajWRH9oVJW/MjIO0ud3obPZI=;
-        b=noA6aXtfbPs9T5UL+FA5qtpQnVasQwfojWl432ZEAC3y9zUUZKxRyXeCBarAeX3Yo7
-         QPO5m7/Q3fd/TuWJxXw9B6MohSAJKa0CQEcwFSGg1Pb+yLQDMSzMVicb+arZ5suZ8Dgc
-         R6ADVJeHN611JhnNAXqUQ7rLt4U/PND4ostg0E5f+1nmJtUEVyTmR2ZHPUBwvvG9xMIS
-         WluCXBnVHtUXOYRvmOEfRx/a32Q5nasoxQWMjZqxhw6/9MNQ3hOmCwYkTk/BHgyNv5QZ
-         kGpy5wRcKuG7bEhkcojNmlDg7PGkSnHCbMNyoMA4QIsWeO2Ccuksjn49+R6jlADewK8g
-         y/qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhrxiR7ZLuaCqjV2oENpiijC7yp2OpsS5/sVWozqgan+S6Y9JEivD5bHroPHeCKIfm5s09/MmNAYlj3DA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwehksmzFrLlZTRVPtl/zlgkQ/oCWvBtWCuskO79l+TeeK/O+bx
-	US8xhDc0rKy/p0Wf35mNrMxSdej3wIi0D+3yaFxSXEspUwG5KPEbcr3AHHT5Jn+p2i09/achsVB
-	dk1wsCCGYCDO47Wm8RBJawkV0H54oJLtKbnouTpODgU6vssZm
-X-Gm-Gg: ASbGnctm1wAO/zuyrmTLK/ruolemR4QEbKaqi8hszpGcJg7mM7drHa0C9FkKmrI3q54
-	olz23QQMZBJ4xqUo3BQW3hOzcPFQURjBBOnbH41WXegH+LpnCpIpXzMPFwDMN75eBJS3SrEaPJt
-	4O3uZ76B9h02NoISOMSVgKHtoCGXkJbK0C+xl1afZ6vjFk5gI38agfrpqr/haS/FgL5THV2+aIf
-	ANjnjLREG0lxrfv7i/NijHmCYgswPhx9NAfPy5q+WLNwjz2ukAXimOsQ4Qj3QjTahqBNMlHBXHb
-	8pJe9+kt38eNfuLxHDP6B8RVUz3Sk4M/ow==
-X-Google-Smtp-Source: AGHT+IFHsPC6/EgweKrZsOqRp/ximYusBvGZYTTJpG1c/+bUJfy0qECQNUKeO9TX9U6nuPa28QKEjcpBKwxD
-X-Received: by 2002:a17:902:d541:b0:223:5525:622f with SMTP id d9443c01a7336-22368f6c10amr31026015ad.1.1740787167809;
-        Fri, 28 Feb 2025 15:59:27 -0800 (PST)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-223501f9de3sm2367515ad.32.2025.02.28.15.59.27
+        d=1e100.net; s=20230601; t=1740787192; x=1741391992;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JSAJMXS5kmM5iwGMwe4iAEt0SbX+ffh78y3gp8LBwPk=;
+        b=O7VkA6Q6k+j8gbhsRTQj8Q6OgAH6WTZOHUM3A7l56QhvGPTXmDT+yYOOFNDB14Dvc9
+         am3yd97F1aFb4f6EOaeMT8jJzJK5jILiMq50MBW8ELQ1oFZcnvGfs6P9CQOMLrLTyEus
+         7rn86t/a4Iu2xDRNur8ubtS5Cqo9KHTEcj1EGEjSff4FIaBEy7mzcqXf+EIVZ4AeQqI5
+         k157aBaBhJSc9O98CZ90JiEu5OwgYzVkFsiGt9NLuJiAssfZFMRdpvC8v0sCGhcQ9uXK
+         paH0SuMbdMBjYgsz4nLKY+I2Kf1ZNMyWteUi8T6NYgec9s5nSRxnyXM3ZfiJ1n0qbW44
+         yZJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWI3fpFa16ntTddluYpr487olkfASrDcTi5dXwaZJ0KKcvqudILoHfV75ixh7RXj9WQ8bpFGJcgYLI1ibw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuOxMIcxkWAn/Q1/f2582roE/zUSvE/GB/FBp0PKlRoW5Dc4qr
+	xeN5O5rk7F7RtH632XwR3yH+AmsNQtid76FDnJPzyLO3d7n4/EuFOx7NbBIfhkC1DACLY9jMggY
+	MRnFKS9xhFgxCVSXLfREItRd4AeSk6jLx
+X-Gm-Gg: ASbGncs9tH+rahJquYoGmvGrW1mI4zn5XqVRL8hVz9R3sgUQ9xCv/NExo9RhHWSDsBN
+	2bMnhEBiQmHz7E3EMJyU480hIPeSvBoV3b3EysBy4Iotte5Gamz4BmDMFZW/tpnRjfsw+pwHGGc
+	NGBbjzIg0R0X6aJsme/PC4WDPIutHSwQagceYqp2P/2NYob3Mp4gzwDvH7pGTZlnHoIuTSWGTA+
+	zA5pL7kMmaE5ereU732vFjTFsj+0Xfl97IRf33Rz9fxNk7KEIczY+QavoLZx9ND8zJPPh6L+Pzz
+	eSReSkcOZiXnHD0IiBS83J3ogCF7B/EwqLyJghh/iaseahPN
+X-Google-Smtp-Source: AGHT+IFXwoTbx+UT09HA0mseihQdFnNVZNlDZ+Vyxp4n3cmTdkTekPi9axOJaI12Kcp3hl9Tn51ew5XmZClo
+X-Received: by 2002:a17:903:f85:b0:215:3862:603a with SMTP id d9443c01a7336-223692477f6mr31720455ad.10.1740787191655;
+        Fri, 28 Feb 2025 15:59:51 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-223501fb591sm2330175ad.44.2025.02.28.15.59.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 15:59:27 -0800 (PST)
+        Fri, 28 Feb 2025 15:59:51 -0800 (PST)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 0807434028F;
-	Fri, 28 Feb 2025 16:59:27 -0700 (MST)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 36D4B34028F;
+	Fri, 28 Feb 2025 16:59:51 -0700 (MST)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 008E0E41AF2; Fri, 28 Feb 2025 16:59:26 -0700 (MST)
+	id 1F621E419EA; Fri, 28 Feb 2025 16:59:21 -0700 (MST)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	Pavel Begunkov <asml.silence@gmail.com>
 Cc: Caleb Sander Mateos <csander@purestorage.com>,
 	io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] io_uring/rsrc: skip NULL file/buffer checks in io_free_rsrc_node()
-Date: Fri, 28 Feb 2025 16:59:14 -0700
-Message-ID: <20250228235916.670437-5-csander@purestorage.com>
+Subject: [PATCH 1/5] io_uring/rsrc: split out io_free_node() helper
+Date: Fri, 28 Feb 2025 16:59:10 -0700
+Message-ID: <20250228235916.670437-1-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250228235916.670437-1-csander@purestorage.com>
-References: <20250228235916.670437-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,41 +80,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-io_rsrc_node's of type IORING_RSRC_FILE always have a file attached
-immediately after they are allocated. IORING_RSRC_BUFFER nodes won't be
-returned from io_sqe_buffer_register()/io_buffer_register_bvec() until
-they have a io_mapped_ubuf attached.
-
-So remove the checks for a NULL file/buffer in io_free_rsrc_node().
+Split the freeing of the io_rsrc_node from io_free_rsrc_node(), for use
+with nodes that haven't been fully initialized.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- io_uring/rsrc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ io_uring/rsrc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index 95def9e5f3a7..c8b79ebcff68 100644
+index 45bfb37bca1e..d941256f0d8c 100644
 --- a/io_uring/rsrc.c
 +++ b/io_uring/rsrc.c
-@@ -498,16 +498,14 @@ void io_free_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *node)
+@@ -485,10 +485,16 @@ int io_files_update(struct io_kiocb *req, unsigned int issue_flags)
+ 		req_set_fail(req);
+ 	io_req_set_res(req, ret, 0);
+ 	return IOU_OK;
+ }
+ 
++static void io_free_node(struct io_ring_ctx *ctx, struct io_rsrc_node *node)
++{
++	if (!io_alloc_cache_put(&ctx->node_cache, node))
++		kvfree(node);
++}
++
+ void io_free_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *node)
+ {
  	if (node->tag)
  		io_post_aux_cqe(ctx, node->tag, 0, 0);
  
- 	switch (node->type) {
- 	case IORING_RSRC_FILE:
--		if (io_slot_file(node))
--			fput(io_slot_file(node));
-+		fput(io_slot_file(node));
- 		break;
- 	case IORING_RSRC_BUFFER:
--		if (node->buf)
--			io_buffer_unmap(ctx, node->buf);
-+		io_buffer_unmap(ctx, node->buf);
- 		break;
+@@ -504,12 +510,11 @@ void io_free_rsrc_node(struct io_ring_ctx *ctx, struct io_rsrc_node *node)
  	default:
  		WARN_ON_ONCE(1);
  		break;
  	}
+ 
+-	if (!io_alloc_cache_put(&ctx->node_cache, node))
+-		kvfree(node);
++	io_free_node(ctx, node);
+ }
+ 
+ int io_sqe_files_unregister(struct io_ring_ctx *ctx)
+ {
+ 	if (!ctx->file_table.data.nr)
 -- 
 2.45.2
 
