@@ -1,136 +1,85 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D6526AABF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C9626AABB
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740746280; cv=none; b=VXJC771rl4k+J9WBjHOK44PmHi6L5IOy/Y6/OncsU6AbXohwOHpWQbdBb8DGvUhK+wbw3ken3jbfiILnlYviGsdl0HGvzJ+V/rBuiZDxoV42IPRnxQyYCkyphbdT6s2sI8f3H5Ha9oykKcqLE40V+N1iJN6Q4EEYWJhOkv2n5cg=
+	t=1740746303; cv=none; b=fMXuFNfwhKrcenB01E94be7hZoErMv4zwooQFH2TVUD7VnRumlQhGUtqZQpq4xi8VJ224ePt5qaWJCFUV7ZnW8MkqEDOUuOgfZ2/PaRDRO7ybSy365X0o/16d7eDZ8DGO8B3H9NwKzl5+uATXOy374sj/W98vU8omhwxgbLq354=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740746280; c=relaxed/simple;
-	bh=ZovQPRZql6TndyyqkCCimphTD1Q1x0s3eMlmjBD41KM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rfMmc6+/mVQk6iiwlVzLQ0QACmfmJkNDPGI8DwtlqWjpyN47032es5DsZnDqjYObEVWiUWRQGqGTt4d07NLXvrfr6Z0Gu1Of/UTMvNsvOJgMKC60HXhDb+TqAYIQLF54i8RFdUg8g75ONl59XVtwfVzI7K24PGz7InkNa3wW8FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=jCSe15VE; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="jCSe15VE"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e4b410e48bso3098502a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:37:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1740746276; x=1741351076; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+lUi7TDWm5DZEk1+vj+Gomi1jwfuwvI4mo++EyAzIHw=;
-        b=jCSe15VEq6MpB2/5OEFWZEksT8aS05H5/FHZcLj+fBTS5ZhaPv3TT9cmqzfyOo6U9L
-         zeTw9iB03daeev5OHvYVQA10ZUhqidDCIJ5O6sa4+iD6QpKVehEbKKv7zAsEhV5/JQFj
-         DtIcCVy9lBWW/+hLKPz2ZrO3gNyfZ8EhdUMZY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740746276; x=1741351076;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+lUi7TDWm5DZEk1+vj+Gomi1jwfuwvI4mo++EyAzIHw=;
-        b=s8UeGy3zS5bC1QflhYU5K6yrFfektCc1iqBQiVH0+OlFImCvZlmzI5I/L3XBBaWxSY
-         s9iLDuFUI8vjg9VjVGHJKVUjNDVP+9GsIRjjd5zreXm+rn/7VJYoSjwjW+cgroumom6s
-         Pst+tpROHi/BqXamnSpLEkYQHbUe7ngzbDAB++1ugBglN8jWFr9zqd7ql4oXGe+0luoG
-         eS2A7Vc+MyMWyz7bBRGesb9tQHYr22X94b3ED3ji5TMpZcRt0xc0POTM6Dfg/1iozktY
-         w/Mniz84C1b83s39/ljbG2a8/cZaUfLK5DXJN/j08XofqRvsTOqadmrSrIFeemc6EXvd
-         oZjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6H5KPqOX/LyYv04tA3WqBVccgPpP8zAU1T55ys/17L8oroSAMbuaEuju92Xs/z3lHp5Uz5rvtLFs+12k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqHEgfb3cYXuv96YH49OYMepjLGp8a8BznXkM/O+G0qG/xWoDW
-	alKRLa/qkZcJ0FNLm+hA9WvFVAdE/SF86j53zGufbGaqTbwU2nUTK9zc3KlE5j4=
-X-Gm-Gg: ASbGnctARKapoTCQsNTQSr5RCZevFBYOwHb7cx1G3gsQMHj9Ga6gskAowDsFM6lQKbv
-	cjZZTSesBYiLZbRD5xi0n0xVSgWKV90xqC9OYLsBTjBwTO08Iu+0wFI8MMOrTfLq6g8b41HfDSf
-	IwzE2nzVr6FJRw3/oMDTjRvq/073xWZKvBuq7PBFkHs24YQGrDdn0cBMQCA0X5RPDti0PpJ76IM
-	r9RXl6gk8Dqa0jM2jyHWJXJg3wd7L+HeTGxxgD5lYZCZPcaCVP/9rCL4cfqENYqL1AfVNBg3G0B
-	2Q0me+9gxp3vKxrQoY6Zya6l/7x4zmY=
-X-Google-Smtp-Source: AGHT+IFXqFX+dmK6Tf53q9lL5WTgrMJLcEbkciCEYtLtRd65bqdRe2AXfvwUSIAwNgfqJo2GPKXk9Q==
-X-Received: by 2002:a05:6402:268a:b0:5e4:a438:a50c with SMTP id 4fb4d7f45d1cf-5e4d6b69085mr2364147a12.20.1740746276267;
-        Fri, 28 Feb 2025 04:37:56 -0800 (PST)
-Received: from localhost ([84.78.159.3])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b4aa13sm2419563a12.7.2025.02.28.04.37.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 04:37:55 -0800 (PST)
-Date: Fri, 28 Feb 2025 13:37:54 +0100
-From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
-	xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2] xen: Add support for XenServer 6.1 platform device
-Message-ID: <Z8GuItUuhbF1UZ9V@macbook.local>
-References: <20250225140400.23992-1-frediano.ziglio@cloud.com>
- <20250227145016.25350-1-frediano.ziglio@cloud.com>
- <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
+	s=arc-20240116; t=1740746303; c=relaxed/simple;
+	bh=EIcRVasJC025o6/4mA0xKPrn2lm35JhJ8GCsnKR0nIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i9MTYHWDzwE8aIAx0NDwZAGcFC3FXIV9tdqM79Gd8x9DZKt+k4xK4Z+1vE6zJKxM/lWdev8b4AGKYJzrzIcz0teaidFcEuKlMgWvmm05a5ik8mQZC8nnksstu0Tu/kjvneDe34Zf0Z7adxsWSbvHWnUBTdx7QOjw2/4tXsAl0bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7BE0220578;
+	Fri, 28 Feb 2025 12:38:09 +0000 (UTC)
+Message-ID: <99529247-b489-4e10-afc8-3abe6fbd777e@ghiti.fr>
+Date: Fri, 28 Feb 2025 13:38:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: mm: Don't use %pK through printk
+Content-Language: en-US
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250217-restricted-pointers-riscv-v1-1-72a078076a76@linutronix.de>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20250217-restricted-pointers-riscv-v1-1-72a078076a76@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a14c6897-075c-4b2c-8906-75eb96d5c430@citrix.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdegudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepjeeiuedujeeikeevuedtgeeuhfekudeludegveehffefjedugeegudffgfeluefgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeegrggvsgemugeifegumedvsgekheemvggttdgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeegrggvsgemugeifegumedvsgekheemvggttdgupdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeegrggvsgemugeifegumedvsgekheemvggttdgungdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepthhhohhmrghsrdifvghishhsshgthhhuhheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrt
+ ghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alex@ghiti.fr
 
-On Thu, Feb 27, 2025 at 03:41:54PM +0000, Andrew Cooper wrote:
-> On 27/02/2025 2:50 pm, Frediano Ziglio wrote:
-> > On XenServer on Windows machine a platform device with ID 2 instead of
-> > 1 is used.
-> >
-> > This device is mainly identical to device 1 but due to some Windows
-> > update behaviour it was decided to use a device with a different ID.
-> >
-> > This causes compatibility issues with Linux which expects, if Xen
-> > is detected, to find a Xen platform device (5853:0001) otherwise code
-> > will crash due to some missing initialization (specifically grant
-> > tables). Specifically from dmesg
-> >
-> >     RIP: 0010:gnttab_expand+0x29/0x210
-> >     Code: 90 0f 1f 44 00 00 55 31 d2 48 89 e5 41 57 41 56 41 55 41 89 fd
-> >           41 54 53 48 83 ec 10 48 8b 05 7e 9a 49 02 44 8b 35 a7 9a 49 02
-> >           <8b> 48 04 8d 44 39 ff f7 f1 45 8d 24 06 89 c3 e8 43 fe ff ff
-> >           44 39
-> >     RSP: 0000:ffffba34c01fbc88 EFLAGS: 00010086
+Hi Thomas,
 
-I think the back trace might be more helpful here rather than the raw
-code?
+On 17/02/2025 08:37, Thomas Weißschuh wrote:
+> Restricted pointers ("%pK") are not meant to be used through printk().
+> It can unintentionally expose security sensitive, raw pointer values.
+>
+> Use regular pointer formatting instead.
+>
+> Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>   arch/riscv/mm/physaddr.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/mm/physaddr.c b/arch/riscv/mm/physaddr.c
+> index 18706f457da7ecf84591510ea26789f7ae3e9abf..559d291fac5c62271a0e793321c97b87bf4e1b3c 100644
+> --- a/arch/riscv/mm/physaddr.c
+> +++ b/arch/riscv/mm/physaddr.c
+> @@ -12,7 +12,7 @@ phys_addr_t __virt_to_phys(unsigned long x)
+>   	 * Boundary checking aginst the kernel linear mapping space.
+>   	 */
+>   	WARN(!is_linear_mapping(x) && !is_kernel_mapping(x),
+> -	     "virt_to_phys used for non-linear address: %pK (%pS)\n",
+> +	     "virt_to_phys used for non-linear address: %p (%pS)\n",
+>   	     (void *)x, (void *)x);
+>   
+>   	return __va_to_pa_nodebug(x);
+>
+> ---
+> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+> change-id: 20250217-restricted-pointers-riscv-62ca6d5fbf14
+>
+> Best regards,
 
-Not sure if it helps, but there's a document in upstream Xen
-repository that lists the IDs:
 
-https://xenbits.xen.org/docs/unstable/man/xen-pci-device-reservations.7.html
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
-It would be good to record the information you have gathered about the
-different devices somewhere.  Maybe xen-pci-device-reservations would
-be a good place to list the intended usage of those device IDs, as
-right now it just lists the allocated ranges, but no information about
-what's the purpose of each device.
+Thanks,
 
-> >     ...
-> >
-> > The device 2 is presented by Xapi adding device specification to
-> > Qemu command line.
-> >
-> > Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
-> 
-> I'm split about this.  It's just papering over the bugs that exist
-> elsewhere in the Xen initialisation code.
-> 
-> But, if we're going to take this approach, then 0xc000 needs adding too,
-> which is the other device ID you might find when trying to boot Linux in
-> a VM configured using a Windows template.
+Alex
 
-Won't adding 0xc000 cause issues?  As then the xenpci driver will bind
-to two devices on the same system (either 0001 or 0002, and
-additionally c000).  As it's my understanding that the device with ID
-c000 will be present in conjunction with either a device with ID 0001
-or 0002.
-
-Thanks, Roger.
