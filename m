@@ -1,160 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2067.outbound.protection.outlook.com [40.107.237.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A3A276D12;
-	Fri, 28 Feb 2025 01:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740706183; cv=none; b=MTPy/wZpWRFAHH6VT6no+UhmpI6AaXqoKa+ugBCppJggG0XO9wJSYWybNvAZ3s7pW7YuI++8HRrw+7oL9iAoympMkgr30tWecQpATTNHK0aXPjwi7OG6eCF4x0mCpGvisrTVl7UNbow2x8pOUNlloHNEFUkoJPXf+MqylVjpes0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740706183; c=relaxed/simple;
-	bh=0Kaw4aySzXzJh8b//ALxlZ2RwWuBVvZuS4cYdwjBK+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DtD+tLE00Nwc+VsAjWromQZr+23Nqn2ddunWIEkPDUtLkgNgoVMlh7z+87fglxVgzHUSbLalTNs67x11ekaFyT8ATKVMqibNEGr7lSUrZIoGTC94hnhKEgBLJlZ3g9ShZfBvP0Ucx5VhyieerEv9HLg9isp8Mpb982Tgni2JZlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H7jtZsQR; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB0AC12B71
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740706305; cv=fail; b=odv88v7iLbw5bsuG71yRuiz8Hi/lv4DeLbOSSaZxpjM+BAUjDDdFDXTjTIvdUrifmR5HLLqRbnfw8yDelNwGlYAF0K3uy/nuS34VD+wY07Ubwb++4HcZuUUeaOTNRazPtXX5rjgBU7J3XdFj00ZA/GE8W7wagQ66ePBNila7yug=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740706305; c=relaxed/simple;
+	bh=SqlQwimpXLNW4dRUCH3dWKCvBI8S8fYxDt6zoPFkJ+s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CNiwJs2harLagQeonsRyeG/oBYhAnNbSKorBHmsWVysKRR8x3cyOGthAn67+ZJTFaJAxuZ+AymfDqoUGrJgEJ12IwrnuDuCRY5dhzzEfdWv2NdWwwMmQ1iL0m4c73dxoRRRiyDZfWtIQQrKf4TzEqAzncD+DNMK+fTCpLFrTmuM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=tpSwR25F; arc=fail smtp.client-ip=40.107.237.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H7jtZsQR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740706182; x=1772242182;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0Kaw4aySzXzJh8b//ALxlZ2RwWuBVvZuS4cYdwjBK+4=;
-  b=H7jtZsQRDc99zPpjzw46j/obgI/Y6ruW0fF+IkqF9N4+v2rmFd+sNlY2
-   wy3SpOaQgNVpotQimsFenFlPKS3YNtliyXidma5ifn6dtI9HvzsmumArw
-   Ts5U9ANfZMiy//+pcRb588xRd/3Cq5lBOu5qL2pvufOGU3WHyGXNg80Sf
-   /uQ0oVifB9HkovvHU6ED0oUQuFdXenHTp7JARpKra+8lQoHaWtNuJlxI4
-   G5FRJ2cOsXNZpK1lraqTX08lqXpU6M49/LeuDIMLWTNW1iDiYgZ8FIept
-   gwKE2rcI7mjSG9dsslMLVWHXRJhKKvf4MU6ifg9n/V0OMQ1SeCasAVUBO
-   w==;
-X-CSE-ConnectionGUID: b9oBVvA8Q8WlHE56sbytfA==
-X-CSE-MsgGUID: J6VU82vITnSzNycvM0+0MQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45275641"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="45275641"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 17:29:41 -0800
-X-CSE-ConnectionGUID: tQ2gpyfRQ9adco+P481y1g==
-X-CSE-MsgGUID: EFDf9J9jSi+DvFy8QwsOMQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="148014413"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 27 Feb 2025 17:29:33 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnpBh-000EH4-0H;
-	Fri, 28 Feb 2025 01:29:25 +0000
-Date: Fri, 28 Feb 2025 09:28:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ryan Chen <ryan_chen@aspeedtech.com>, benh@kernel.crashing.org,
-	joel@jms.id.au, andi.shyti@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	andrew@codeconstruct.com.au, p.zabel@pengutronix.de,
-	andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org,
-	openbmc@lists.ozlabs.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v16 2/3] i2c: aspeed: support AST2600 i2c new register
- mode driver
-Message-ID: <202502280902.U0gLDhve-lkp@intel.com>
-References: <20250224055936.1804279-3-ryan_chen@aspeedtech.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="tpSwR25F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=FXpq/nef50W89pDLerX4CYFHCK8AIzkvh9DI0FRHs/2qe0HfjpYkwpGhkp3HjKrkBPjyXzPDT7CEgi9Iu906xDSveYl9fdQC0c7FeSEk9on1KzbLb4qO1wjxXq+p5FW6fEFespssruO6GqRlkuUZcqrYPyZDf+bBPV0O9yqXYeDaPQ19QtLFOpDVpmUVwsbYe9cI78XTb+P8sWY72fuo7rfvmyVkmw4T19wtJmlwRTWyoZNylTFaajuiCkzjQ8OjlNz0D4h50r3meoJl3SpP00Pc+Gk0z5VctES6lW3FWl7RH9wtdNGiqXhFzjJdNfdtLYdRLPem7dySOEbQNul84Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8t85Fka3xDPRPCICTR+E2dOQzdPtkqxfEyVtF+LOPPg=;
+ b=vXfjxG8B4lP/z+48Zd0Ewj016CKAgAgv0DoJ+cNa7o6cMaN615a11QG6YhzKmpF0pO9cEq/2N/haVQg/W15rgATUD90Y6EKA3je2JUCHeRZYdnVJbj1sONncvMGzqhNP5PbJeGSJSHlwbdpb+ubDZu9t7zjMwWfx0+SHoafXTS7Lo0RNoV75N8OCUXdf08TEEDRhQkE2E3/w+HE0Op5CGt2XzjX2jDoa/cznvD0wgYaJqni0cCaiia35ryqIPryrguaYw0mlZWs/1OD0jXibrNVcH/2BmRGAyCYO2kWSks33xIHiu3DCRKM3JdKGd7pWBAdFQrSh2kB7NTASeZIXOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8t85Fka3xDPRPCICTR+E2dOQzdPtkqxfEyVtF+LOPPg=;
+ b=tpSwR25FeAbO+felXkU+abv777OOzt1retumVNY81suAiIp8WeModvZHSNDuAsshJsunKTML11nfoeKCblv984u2r8WjALmioDJXH1lA7NBo3HuWMsE8Hiw+7eHFsZDhp2gEVbAwMwXFH3pQh/PlUI7dooQ5X5iOKlFtQh6uGRic7Ul1WbDy6frWiUb1Olv+pJR7l+5g+h9l+uzaFE0pD38sQe2U5ntRD+AD1FfWnN8mZ7kiGECDJ7FSWhAKJsNpS/1r4d1oe6iQfIj2r4lJo4J5/QKAib7V4Sdlu3afu//BJUel3xbxQNF9ymbl7gk5tYv623sDv+tjMeqhS2RLuQ==
+Received: from MW4PR04CA0346.namprd04.prod.outlook.com (2603:10b6:303:8a::21)
+ by SJ2PR12MB8159.namprd12.prod.outlook.com (2603:10b6:a03:4f9::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Fri, 28 Feb
+ 2025 01:31:40 +0000
+Received: from SJ1PEPF00001CE5.namprd03.prod.outlook.com
+ (2603:10b6:303:8a:cafe::e) by MW4PR04CA0346.outlook.office365.com
+ (2603:10b6:303:8a::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.23 via Frontend Transport; Fri,
+ 28 Feb 2025 01:31:40 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ SJ1PEPF00001CE5.mail.protection.outlook.com (10.167.242.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 01:31:40 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 27 Feb
+ 2025 17:31:22 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 27 Feb
+ 2025 17:31:22 -0800
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Thu, 27 Feb 2025 17:31:22 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <will@kernel.org>
+CC: <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/4] iommu: Isolate iova_cookie to actual owners
+Date: Thu, 27 Feb 2025 17:31:14 -0800
+Message-ID: <cover.1740705776.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224055936.1804279-3-ryan_chen@aspeedtech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE5:EE_|SJ2PR12MB8159:EE_
+X-MS-Office365-Filtering-Correlation-Id: e97c9204-3e8a-41b6-39d8-08dd5797a686
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?atTAOSwT3FLF93Q/Xq6syQedExjxzbFh+6xSP8pOLizxIm7glugXpEt3EUWb?=
+ =?us-ascii?Q?HZsk/Vit/Jmki/QAPAQF+HmKDXADHrmZFQfUyDoxC2NloIW4deiAMHQivhTX?=
+ =?us-ascii?Q?YWpSSppYeZ559w/YQwWtXe8pMsg/gIYEumCwc3yHmxWj71CXTI2OQ7UVNvN0?=
+ =?us-ascii?Q?J8n9zhL/bYH96XGoddxZpgRtAyTAgeEdyvXn4RmhzyG5psR1xWf3+o4Yf7+M?=
+ =?us-ascii?Q?qrvpH2CzZ5R3jzH/2S7ZDCJ6vscdCTMW0suUNtxdw2TA0jB8KZ15N4wn6agy?=
+ =?us-ascii?Q?yGVmKFejrAyOf3iy/7xtoZbqvA8v0ixWBSSMwQUtMkdH1yvXmRBu1gXc6SOw?=
+ =?us-ascii?Q?fFloJOE+6KCQfKQ3GTQd9fkHj7MKyDDg56FA2rsVZrv9Vm428efJMfdbjnj2?=
+ =?us-ascii?Q?ivm+IF8wNFad3nwgARxXO6lIOSCGgmALbvmRM9EN0BMIpa80O7oQHmCJPwsi?=
+ =?us-ascii?Q?ngfdyS+gvQZsYBn+sfdnmLa2y8AxExbPnN5Pn673J7I3XYq+V6wvIzfzMddp?=
+ =?us-ascii?Q?w/25X1hdgOD93pJa0Lc5PXH+IclWo41ljh6fR9+Claby+sU2dYcGgOyyU34L?=
+ =?us-ascii?Q?0MWi+dIF7TnWur1mSI9xiSnQbONB2+xbbc4nGHA/sSGOGBpBsd6PA2PNWuch?=
+ =?us-ascii?Q?Nqvj0arxNcj0mFSko54BqZ3RFnvKW8c1oMBe+rA0BAYhDcMfLtUkSmzyHE8g?=
+ =?us-ascii?Q?uI2OUCukYGpTGhDb3H1Pum0RAQ2BbJc4SnTLW5EAC1LooE8Bxln5/Vsx3/Wo?=
+ =?us-ascii?Q?dCfO2MT/D0cbnOluNCB6D8R5XSG0EaiIgEv2Aedv1huW4oFTRBDkuzepYRIt?=
+ =?us-ascii?Q?C9inMI0bM5bAs7w5UL9JiSf7253QrfrNwr8jnf0qwpeu//bsvEzs9eNkQaez?=
+ =?us-ascii?Q?zU99jba7eumypdzAwb69C3WuJPWgziB6aHfR+63ispJBxgaYAkVslrXkqRTN?=
+ =?us-ascii?Q?haQI8coC9HmzdYJ0Y0CYuC1zIK92qOTJaEC0G6hOMAOoTywc4UIrKRs5mILi?=
+ =?us-ascii?Q?nksm2urvLxuIHS3HzWEcdiI2KTO16ARThtk5AEzWnjtJ8kQZQ91x/gCiwONG?=
+ =?us-ascii?Q?fFQox7j2FN2s/v14EGXXfplYYxn0LGJil27V/NgTMQZUcofLYGXEoJIZlZNl?=
+ =?us-ascii?Q?ZY31XB2yUvjJ5pePBn7+MJPf1kfn90/8qxUDr/N/7+wSvjhHQKc4Ray4diiU?=
+ =?us-ascii?Q?PPZDxbDp6vi+jw3TJJin3GJif/wC8ISD7AEBf9ehDPMMnpVE+ikKHAAIR+fr?=
+ =?us-ascii?Q?7rxicXTO1RynhYlSR2Kq5cgCqWktiXX0JVav4e+cIvR+3+dxUKRSV4tclJKX?=
+ =?us-ascii?Q?ONqdqu9dxMzWKQLeeGoRcbh6mAaSPNPpAWU5V5x+A4fonfJP9wzgVdH1lK+V?=
+ =?us-ascii?Q?5gaTfES+kWxsSSp7k3kBz0B1VBKIZxNNEU4bxlwUrvPs7uWk48sDQPcMIS2b?=
+ =?us-ascii?Q?QzztaYzuO2U2lPEl2qSjBTOFGZ1jjtbOVdSumtlLvLwTtiTq4aRQxwgLi5uV?=
+ =?us-ascii?Q?Dul2kTxgIXFd0is=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 01:31:40.1189
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e97c9204-3e8a-41b6-39d8-08dd5797a686
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE5.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8159
 
-Hi Ryan,
+Now, iommufd implements its own sw_msi function that does not touch the
+domain->iova_cookie but domain->iommufd_hwpt, as a domain owner pointer.
 
-kernel test robot noticed the following build warnings:
+Isolate the iova_cookie from iommufd by putting it into the union where
+the iommufd_hwpt is located.
 
-[auto build test WARNING on andi-shyti/i2c/i2c-host]
-[also build test WARNING on linus/master v6.14-rc4 next-20250227]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This requires a set of preparations for iommu core to know what module
+owns the domain private data. Since there are only two implementations
+of the sw_msi function pointer, take an easier approach by calling the
+two implementations directly according to a new private_data_owner tag.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ryan-Chen/dt-bindings-i2c-aspeed-support-for-AST2600-i2cv2/20250224-140221
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
-patch link:    https://lore.kernel.org/r/20250224055936.1804279-3-ryan_chen%40aspeedtech.com
-patch subject: [PATCH v16 2/3] i2c: aspeed: support AST2600 i2c new register mode driver
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20250228/202502280902.U0gLDhve-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280902.U0gLDhve-lkp@intel.com/reproduce)
+This is a clean-up series for the sw_msi Part-1 core series, prior to
+the Part-2/3 series. It's on github:
+https://github.com/nicolinc/iommufd/commits/iommufd_msi_cleanup-v2
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502280902.U0gLDhve-lkp@intel.com/
+Changelog
+v2
+ * Drop sw_msi function pointer
+ * Add a new private_data_owner tag in iommu_domain
+ * Let iommu core call the two sw_msi implementations directly
+v1
+ https://lore.kernel.org/all/cover.1740600272.git.nicolinc@nvidia.com/
 
-All warnings (new ones prefixed by >>):
+Thanks
+Nicolin
 
-   drivers/i2c/busses/i2c-ast2600.c: In function 'ast2600_i2c_recover_bus':
->> drivers/i2c/busses/i2c-ast2600.c:345:32: warning: unsigned conversion from 'int' to 'u8' {aka 'unsigned char'} changes value from '-145' to '111' [-Woverflow]
-     345 |                         return -ETIMEDOUT;
-         |                                ^
+Nicolin Chen (4):
+  iommu: Add private_data_owner to iommu_domain
+  iommufd: Move iommufd_sw_msi and related functions to driver.c
+  iommu: Drop sw_msi from iommu_domain
+  iommu: Turn iova_cookie to dma-iommu private pointer
+
+ drivers/iommu/dma-iommu.h               |   9 ++
+ drivers/iommu/iommufd/iommufd_private.h |   5 +-
+ include/linux/iommu.h                   |  24 ++---
+ include/linux/iommufd.h                 |   9 ++
+ drivers/iommu/dma-iommu.c               |  18 ++--
+ drivers/iommu/iommu.c                   |  16 ++-
+ drivers/iommu/iommufd/device.c          | 122 -----------------------
+ drivers/iommu/iommufd/driver.c          | 124 ++++++++++++++++++++++++
+ drivers/iommu/iommufd/hw_pagetable.c    |   6 +-
+ 9 files changed, 176 insertions(+), 157 deletions(-)
 
 
-vim +345 drivers/i2c/busses/i2c-ast2600.c
-
-   315	
-   316	static u8 ast2600_i2c_recover_bus(struct ast2600_i2c_bus *i2c_bus)
-   317	{
-   318		u32 state = readl(i2c_bus->reg_base + AST2600_I2CC_STS_AND_BUFF);
-   319		int ret = 0;
-   320		u32 ctrl;
-   321		int r;
-   322	
-   323		dev_dbg(i2c_bus->dev, "%d-bus recovery bus [%x]\n", i2c_bus->adap.nr, state);
-   324	
-   325		ctrl = readl(i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL);
-   326	
-   327		/* Disable controller */
-   328		writel(ctrl & ~(AST2600_I2CC_MASTER_EN | AST2600_I2CC_SLAVE_EN),
-   329		       i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL);
-   330	
-   331		writel(readl(i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL) | AST2600_I2CC_MASTER_EN,
-   332		       i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL);
-   333	
-   334		reinit_completion(&i2c_bus->cmd_complete);
-   335		i2c_bus->cmd_err = 0;
-   336	
-   337		/* Check 0x14's SDA and SCL status */
-   338		state = readl(i2c_bus->reg_base + AST2600_I2CC_STS_AND_BUFF);
-   339		if (!(state & AST2600_I2CC_SDA_LINE_STS) && (state & AST2600_I2CC_SCL_LINE_STS)) {
-   340			writel(AST2600_I2CM_RECOVER_CMD_EN, i2c_bus->reg_base + AST2600_I2CM_CMD_STS);
-   341			r = wait_for_completion_timeout(&i2c_bus->cmd_complete, i2c_bus->adap.timeout);
-   342			if (r == 0) {
-   343				dev_dbg(i2c_bus->dev, "recovery timed out\n");
-   344				writel(ctrl, i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL);
- > 345				return -ETIMEDOUT;
-   346			} else if (i2c_bus->cmd_err) {
-   347				dev_dbg(i2c_bus->dev, "recovery error\n");
-   348				ret = -EPROTO;
-   349			}
-   350		}
-   351	
-   352		/* Recovery done */
-   353		state = readl(i2c_bus->reg_base + AST2600_I2CC_STS_AND_BUFF);
-   354		if (state & AST2600_I2CC_BUS_BUSY_STS) {
-   355			dev_dbg(i2c_bus->dev, "Can't recover bus [%x]\n", state);
-   356			ret = -EPROTO;
-   357		}
-   358	
-   359		/* restore original controller setting */
-   360		writel(ctrl, i2c_bus->reg_base + AST2600_I2CC_FUN_CTRL);
-   361		return ret;
-   362	}
-   363	
-
+base-commit: 598749522d4254afb33b8a6c1bea614a95896868
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
