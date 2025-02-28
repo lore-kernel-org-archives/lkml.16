@@ -1,117 +1,206 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F77C23F39A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 22:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3502623F39A;
+	Fri, 28 Feb 2025 22:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740782136; cv=none; b=U/6HEO8JloEQaAFVHC8WkV/P72nZHkBP91T1qBKqtpDQ6ZsD8+OH4ib5Jm2HzhQ1FqQleAzbBV3YNRq0k04vXsD8xr/JliUukXkyVpUyq782W3szmTL13j4Tg8FbiPaG1o0ZwKkjYqxRy4LWbMgSYLs1me/JkHctx8RlhSX/e+U=
+	t=1740782178; cv=none; b=TxlEmt4cywHr6w6qUuoyeqRx0tmyofU3gR8+9ikiiTslSwm3HMwsert44PEyj5wabYp9Iz195ldya4r5bkVksQ3maBzPmzMK3yDLEUehZtjjW/Y2B3A058bTwu8eRk9S71dL+ABIdcwh8pgubkRCscoz3DLau5lz1cpDBf+nt7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740782136; c=relaxed/simple;
-	bh=/GN3Gq02lKGxFjLKREUiZZBaqMHMWg8SCb7Y4qcnaOo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=laB3ZZqnBczDDfOljxwDtETAwMmaro2KDV56GHIORCO2ACcs5uRaBuB22nYrmXM+TaBbWht2uP9o7k4PTdSEWHC1Sh7YGkM5VN3ztslDalTnicISbWbs3ZemuWaF+l+hmMwpIuwW7EzfqRNPZ9WojnduP9OD7GTABxquq4Bzfp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bSazCb08; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740782178; c=relaxed/simple;
+	bh=trd+8GTKhRLhBPavf4IOlzQe3opgYKvvSUglWL26lW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZQsORJTkeQdgae7mbLVV+byAWviNAnc0zp4fEWlHQSYuUmvOi4/tR2lj5ZKqN6khssAxx+2L1V8A/FYM2VrjHyyd2WF0hYZSZkU6St5FDXoTp98/CEsUuiCQFthkTFgqqM3Ulj5s+XdjY0k80Revoq1SiW2QjEbOwKUre/ALGGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfEWj0Dl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bSazCb08"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e0b70fb1daso4337589a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:35:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740782132; x=1741386932; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MRYH/DqwOrqprt4Hy5jDneelAnanR7z2qpvPIfRcpyU=;
-        b=bSazCb08sZmSmWzCZw94+3/DiJLgRT7xF3xAIMyxbTlk6H+moxsJE6ra1DkSiBYeMi
-         znDrQ7yqF2nOCM/JrMVCtjgeWRlDRAShQtql79gqN//cRWy3ukGZYpZm3sbn9zXpYGna
-         PpR/i8c3EjT4UMKDfoG2Y+3BufmXi8H3XcPAg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740782132; x=1741386932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MRYH/DqwOrqprt4Hy5jDneelAnanR7z2qpvPIfRcpyU=;
-        b=jY5DDrB/Wxu3pz6sPe5oMJblHi/zh3a+0NBn+9HSNXhwcYtI9HKQlOYmBuLLA4/bHq
-         PUNhpYFLM7+xNnYrGlT0juewEiTRXYNOrCmH7kwTPPqhtTfPdWDKn/Lwg4ZxNIiBOIiX
-         khZUHKPbYAuhBAsIYWHwzjj1mArQDBdR33RVN3jOiodvhS8BRYGteMJysWO7CLYJtv3K
-         uEa1BPbmVlvqGOfQq5WciISBXQXcKGH58m11mtOcjzwWwBbOjtUMy9IjlFLu/MAFQFwI
-         sDp2sQzXLCvAehGnyx8qktOVZ54Zxr9902ZmXHBRjcl7/Ops8xAIICW94T410cyT+WQz
-         Fdog==
-X-Forwarded-Encrypted: i=1; AJvYcCXOsEvYJvtEi/ub7MNd2JLoqkHzlkSQeVuzdGWLYnagRMaK5ao2Fnt8AAtVm2aM/tDEM9hRqu1IhQCWUt4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfk31IWx9Fb4AZctRIUbRoC9d5EbMd98fGNfRO2akNhzyWzYWR
-	FMWMudgUulhxvPX5EtL5pFzE/bBBb9upHgYN1hbdDEkv4hOcVRl2cL7Ol6g3OKRHdbNN6QTGGQj
-	Mdg==
-X-Gm-Gg: ASbGncsTDk61tzQOebQH8tlUNZPu6476YLld29+z7xxbOZERkkh+Sy6UeV5yFNruniN
-	+qGc3ZnVyAEF0s1s7953nzfk1mIVILhjNuX/vwUeQ2czGbUmXsEsiTjKjf/yd2lOqE5sHvzUGb1
-	uq6i+G5StPIAJ0PRAYYhHU4XEDaCuwM+xF67YMFCdLqUEPLgA1IWrDP5tqcAaHicdnLDKddbJsZ
-	PzrfwiDtOaGeRlpvYAsl9Q75KLNilPG4HwSEYLVxdaN05OM6KG+WmoCmjTioTEwuj4vsnLJb2dl
-	++KQiNmYcPrzLoLyVGQUKUKLoCWWA84XDEjXazl6CA+GyGN8Ox5WcaNJ74wxdlVmif8YAbdpM/o
-	df5FchpgW
-X-Google-Smtp-Source: AGHT+IFq5j7EfQucapaGcttSTVgtgcPQLmiNRfF6yDU2zK4Q9ZpCYaScBPGVqo6MjfFSvUVFSfAQ6Q==
-X-Received: by 2002:a05:6402:274b:b0:5e4:cf2e:891c with SMTP id 4fb4d7f45d1cf-5e4d6ad8737mr5251804a12.12.1740782131819;
-        Fri, 28 Feb 2025 14:35:31 -0800 (PST)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b6dac5sm3131884a12.19.2025.02.28.14.35.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Feb 2025 14:35:30 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaec111762bso466051666b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:35:29 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV/eVBG/ZBXqICkcAQQbJ6rDPxMwCaM8Ka/M4GOgU1hDUgy3zNLQ+m2FZvkVjd9FL59XSmQBhEvtBAXfXc=@vger.kernel.org
-X-Received: by 2002:a2e:be03:0:b0:309:1d7b:f027 with SMTP id
- 38308e7fff4ca-30b9320f37bmr19835331fa.9.1740781801791; Fri, 28 Feb 2025
- 14:30:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfEWj0Dl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B44BC4CED6;
+	Fri, 28 Feb 2025 22:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740782177;
+	bh=trd+8GTKhRLhBPavf4IOlzQe3opgYKvvSUglWL26lW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dfEWj0DlqoNjTgGPuPjKK/81b24RfFVVWsbFLyY/EaJQ/l/MuSZfNJRmCA/wgyCGa
+	 Vd00wkjF2fljiMAhtMtaHRXB75v4ca/E7r5wD1xGB8aVtEtZ0my1DX0A/cqFoMZGDm
+	 ZKsX1buNTLCKN0J6PFzHBQf23K+f0UdXglylgebUif2AZkbKnulsVpj7a+GihkmV5c
+	 mQWTRItKUd1QlkGNGeeXiDLSSudUp09NuPBZD5MXf3mucLZGsdanRkmUEgeUn7rA6c
+	 7+jMwri/+XT6+LepZrrZN7lxFzmyenJHCBZcMJq6D233Q+TXiBddbbyEsTn70jhk5U
+	 fbXJVqR/5+9XA==
+Date: Fri, 28 Feb 2025 16:36:14 -0600
+From: Rob Herring <robh@kernel.org>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+	Wesley Cheng <quic_wcheng@quicinc.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/7] dt-bindings: usb: Introduce qcom,snps-dwc3
+Message-ID: <20250228223614.GA3792644-robh@kernel.org>
+References: <20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com>
+ <20250226-dwc3-refactor-v4-1-4415e7111e49@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org> <20250225-bridge-connector-v4-15-7ecb07b09cad@kernel.org>
-In-Reply-To: <20250225-bridge-connector-v4-15-7ecb07b09cad@kernel.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 28 Feb 2025 14:29:49 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=XSoANcWJEB13xmP0HjMS9dSF-LFsXG-1DS-UPbbeOxig@mail.gmail.com>
-X-Gm-Features: AQ5f1Jqp-7Ry1Gg8ZKOqY3HRbtGi61kp0H-KrgGIBh7MRLyPJ5mDvINcqx1JO8Q
-Message-ID: <CAD=FV=XSoANcWJEB13xmP0HjMS9dSF-LFsXG-1DS-UPbbeOxig@mail.gmail.com>
-Subject: Re: [PATCH v4 15/15] drm/bridge: ti-sn65dsi86: Use bridge_state crtc pointer
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Herve Codina <herve.codina@bootlin.com>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250226-dwc3-refactor-v4-1-4415e7111e49@oss.qualcomm.com>
 
-Hi,
-
-On Tue, Feb 25, 2025 at 8:44=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
-wrote:
->
-> The TI sn65dsi86 driver follows the drm_encoder->crtc pointer that is
-> deprecated and shouldn't be used by atomic drivers.
->
-> This was due to the fact that we did't have any other alternative to
-> retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
-> in the bridge state, so we can move to atomic callbacks and drop that
-> deprecated pointer usage.
->
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+On Wed, Feb 26, 2025 at 04:17:48PM -0800, Bjorn Andersson wrote:
+> The Qualcomm USB glue is not separate of the Synopsys DWC3 core and
+> several of the snps,dwc3 properties (such as clocks and reset) conflicts
+> in expectation with the Qualcomm integration.
+> 
+> Using the newly split out Synopsys DWC3 core properties, describe the
+> Qualcomm USB block in a single block. The new binding is a copy of
+> qcom,dwc3 with the needed modifications.
+> 
+> It would have been convenient to retain the two structures with the same
+> compatibles, but as there exist no way to select a binding based on the
+> absence of a subnode/patternProperty, a new generic compatible is
+> introduced to describe this binding.
+> 
+> To avoid redefining all the platform-specific compatibles, "select" is
+> used to tell the DeviceTree validator which binding to use solely on the
+> generic compatible. (Otherwise if the specific compatible matches during
+> validation, the generic one must match as well)
+> 
+> Mark qcom,dwc3 deprecated, to favor expressing future platforms using
+> the new combined binding.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 > ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 58 +++++++++++++++++++++++------=
-------
->  1 file changed, 39 insertions(+), 19 deletions(-)
+>  .../devicetree/bindings/usb/qcom,dwc3.yaml         |  13 +-
+>  .../devicetree/bindings/usb/qcom,snps-dwc3.yaml    | 619 +++++++++++++++++++++
+>  2 files changed, 631 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> index a2b3cf625e5b..6d818e6dddbc 100644
+> --- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> +++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+> @@ -4,11 +4,22 @@
+>  $id: http://devicetree.org/schemas/usb/qcom,dwc3.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Qualcomm SuperSpeed DWC3 USB SoC controller
+> +title: Legacy Qualcomm SuperSpeed DWC3 USB SoC controller
+>  
+>  maintainers:
+>    - Wesley Cheng <quic_wcheng@quicinc.com>
+>  
+> +# Use the combined qcom,snps-dwc3 instead
+> +deprecated: true
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: qcom,dwc3
+> +  required:
+> +    - compatible
+> +
+>  properties:
+>    compatible:
+>      items:
+> diff --git a/Documentation/devicetree/bindings/usb/qcom,snps-dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,snps-dwc3.yaml
+> new file mode 100644
+> index 000000000000..37af52e01803
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/qcom,snps-dwc3.yaml
+> @@ -0,0 +1,619 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/usb/qcom,snps-dwc3.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm SuperSpeed DWC3 USB SoC controller
+> +
+> +maintainers:
+> +  - Wesley Cheng <quic_wcheng@quicinc.com>
+> +
+> +description:
+> +  Describes the Qualcomm USB block, based on Synopsys DWC3.
+> +
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: qcom,snps-dwc3
+> +  required:
+> +    - compatible
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - qcom,ipq4019-dwc3
+> +          - qcom,ipq5018-dwc3
+> +          - qcom,ipq5332-dwc3
+> +          - qcom,ipq5424-dwc3
+> +          - qcom,ipq6018-dwc3
+> +          - qcom,ipq8064-dwc3
+> +          - qcom,ipq8074-dwc3
+> +          - qcom,ipq9574-dwc3
+> +          - qcom,msm8953-dwc3
+> +          - qcom,msm8994-dwc3
+> +          - qcom,msm8996-dwc3
+> +          - qcom,msm8998-dwc3
+> +          - qcom,qcm2290-dwc3
+> +          - qcom,qcs404-dwc3
+> +          - qcom,qcs615-dwc3
+> +          - qcom,qcs8300-dwc3
+> +          - qcom,qdu1000-dwc3
+> +          - qcom,sa8775p-dwc3
+> +          - qcom,sar2130p-dwc3
+> +          - qcom,sc7180-dwc3
+> +          - qcom,sc7280-dwc3
+> +          - qcom,sc8180x-dwc3
+> +          - qcom,sc8180x-dwc3-mp
+> +          - qcom,sc8280xp-dwc3
+> +          - qcom,sc8280xp-dwc3-mp
+> +          - qcom,sdm660-dwc3
+> +          - qcom,sdm670-dwc3
+> +          - qcom,sdm845-dwc3
+> +          - qcom,sdx55-dwc3
+> +          - qcom,sdx65-dwc3
+> +          - qcom,sdx75-dwc3
+> +          - qcom,sm4250-dwc3
+> +          - qcom,sm6115-dwc3
+> +          - qcom,sm6125-dwc3
+> +          - qcom,sm6350-dwc3
+> +          - qcom,sm6375-dwc3
+> +          - qcom,sm8150-dwc3
+> +          - qcom,sm8250-dwc3
+> +          - qcom,sm8350-dwc3
+> +          - qcom,sm8450-dwc3
+> +          - qcom,sm8550-dwc3
+> +          - qcom,sm8650-dwc3
+> +          - qcom,x1e80100-dwc3
+> +      - const: qcom,snps-dwc3
+> +
+> +  reg:
+> +    description: Offset and length of register set for QSCRATCH wrapper
 
-Booted this up on my coachz with ti-sn65dsi86 and the display came up:
+I think you want to drop this. Or do you need 2 regions? The wrapper 
+regs and the DWC3 regs? Probably worth describing separately even if 
+they are adjacent currently.
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    description: specifies a phandle to PM domain provider node
 
-I haven't followed all of the refactorings, but assuming all the
-previous patches are good w/ folks then this one seems fine to me:
+Drop the description.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Otherwise, looks good.
+
+Rob
