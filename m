@@ -1,150 +1,94 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009E126AABF
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:38:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C4326B962
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740746303; cv=none; b=LPGFRcfOlps6erBOTYAHv4Mopq8K3dHfiRcf7+WvR/GVCdR+o58uoi0mXRd9b6ogE/Pf9pVuoT+O7mT1c/pdlkPGmsn003tjEQpPB2SCVJnMBuwbA4uASPKhT6l0x5PnMcktNMxe3EbLvfU45PFH9Mn2WfNT4fPilxl8OTty0QU=
+	t=1740746308; cv=none; b=Qia8NLUrBBvEHb+0BTO4HgrCuiC6bXt6QixRLO3YSa+xcD2GTu9mcKcjiuA/W3v4UlmIMtaRDysVE+XVqIT4gy0DQodc7lnhUGHPk4whWZo2BZlXpxE/8vjza3rUJYKUa0hNsz20FSBOglsP3z0h0lSE6jTGzA1INl12MAQAKeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740746303; c=relaxed/simple;
-	bh=YiXSMEs1WmqmVHd09AJ85IwIatOEb4iEeGZ8qUBwlQY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iTokm5p1liDE+BMXSSd0iU3CyHpBQvIPvjRHmgP3GtzJPhpQQlOu11YOYgTWvGBbbnLgSwF8fjhEBThRw/T2TTuHNaNVEaQBWwMRKexOQpHwNitsU1FZHCcqmiGKc775RVAPJfhll8WDmYo09kBnmQLgB28zpA9LQ31H71R/dBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qIH0mDlE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qIH0mDlE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740746298;
-	bh=YiXSMEs1WmqmVHd09AJ85IwIatOEb4iEeGZ8qUBwlQY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qIH0mDlEzvSZ+tfY8AXSKv4grR/j0uFU5EEsHKijdSUeXskyfoe8l6fp2CpdpVjjY
-	 uGc2GZdgSFhCqH/m5AeiAqZqCmJOlY5S1V2PaPpI6nTWJYwXIy7CLQDaWHhJOH8zRh
-	 1vxsQUqI/wzpARKmP4kN25MB1KVZHlvIUEOhwcPNqAd4Z6Oqx6Rjwd85yPsRZCuNV9
-	 G2IEJeB2l48p25WbrVkK/RXn0rFHW5Hrnw1wy26Xdfartkv1ucYmNqVU37C1gtVomm
-	 jomU1xvEYqYv22KPFKsuot7EeJQ/dq7KqM0NsCBot/qAgCHNjmmBRWLpRFBZ3adSqS
-	 CtYV8nLfjc7ng==
-Received: from [192.168.50.250] (unknown [171.76.85.20])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E30CF17E017D;
-	Fri, 28 Feb 2025 13:38:15 +0100 (CET)
-Message-ID: <e8e7de99-ade8-48ca-804c-58ce3fedad4b@collabora.com>
-Date: Fri, 28 Feb 2025 18:08:04 +0530
+	s=arc-20240116; t=1740746308; c=relaxed/simple;
+	bh=DZD875o1zR1JJ32xiqYTydGWJqFSjevYCUQv5vmvk8I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VR1NhhLxkmrzHRfF8Za6LlpFkJwwP21+0oJWAlVx5kZ08w4+yFMOZH3jaAjFguOj7sG+vvQ3jFXn41uQPOO0c8tA4kRSe+tE/03E7LeGUzh6iGz89WlCTWtlxMv9FAH47bV1GWyzQvkto2ZbrgUwCPHVbFgPqY86YI2k6AIwaTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tnzd6-0000H9-Kc; Fri, 28 Feb 2025 13:38:12 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tnzd5-003IOz-2H;
+	Fri, 28 Feb 2025 13:38:11 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tnzd5-0007Cv-20;
+	Fri, 28 Feb 2025 13:38:11 +0100
+Message-ID: <c965906ea8797385399534e974cabdba5564ae0f.camel@pengutronix.de>
+Subject: Re: [PATCH v1 1/2] phy: freescale: imx8m-pcie: cleanup reset logic
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Stefan Eichenberger <eichest@gmail.com>, vkoul@kernel.org, 
+	kishon@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, 
+	kernel@pengutronix.de, festevam@gmail.com, tharvey@gateworks.com, 
+	hongxing.zhu@nxp.com, francesco.dolcini@toradex.com
+Cc: linux-phy@lists.infradead.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan
+	Eichenberger <stefan.eichenberger@toradex.com>
+Date: Fri, 28 Feb 2025 13:38:11 +0100
+In-Reply-To: <20250228103959.47419-2-eichest@gmail.com>
+References: <20250228103959.47419-1-eichest@gmail.com>
+	 <20250228103959.47419-2-eichest@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/ci: fix merge request rules
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
- helen.fornazier@gmail.com, airlied@gmail.com, simona.vetter@ffwll.ch,
- robdclark@gmail.com, guilherme.gallo@collabora.com,
- sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
- linux-kernel@vger.kernel.org
-References: <20250227042058.409003-1-vignesh.raman@collabora.com>
- <ondpwjsgujhk7wo3gaajoeamcf4gkp424cxmyslwsybrlkzo5f@xh3yx2r2mp6k>
-Content-Language: en-US
-From: Vignesh Raman <vignesh.raman@collabora.com>
-In-Reply-To: <ondpwjsgujhk7wo3gaajoeamcf4gkp424cxmyslwsybrlkzo5f@xh3yx2r2mp6k>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Fr, 2025-02-28 at 11:38 +0100, Stefan Eichenberger wrote:
+> From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+>=20
+> Remove the switch statement and base perst release on whether it is
+> found in the device tree. The probe function fails without the reset
+> property, making it mandatory. Therefore, always release reset
+> independent of the variant.
+>=20
+> This does not change the behavior of the driver but reduces driver
+> complexity and allows for easier future modifications.
+>=20
+> Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+> ---
+>  drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/fre=
+escale/phy-fsl-imx8m-pcie.c
+> index e98361dcdeadf..00f957a42d9dc 100644
+> --- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> +++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
+> @@ -141,15 +141,11 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
+>  			   IMX8MM_GPR_PCIE_REF_CLK_PLL);
+>  	usleep_range(100, 200);
+> =20
+> -	switch (imx8_phy->drvdata->variant) {
+> -	case IMX8MP:
+> +	if (imx8_phy->perst)
 
-On 28/02/25 12:28, Dmitry Baryshkov wrote:
-> On Thu, Feb 27, 2025 at 09:50:50AM +0530, Vignesh Raman wrote:
->> Merge request pipelines were only created when changes
->> were made to drivers/gpu/drm/ci/, causing MRs that
->> didn't touch this path to break. Fix MR pipeline rules
->> to trigger jobs for all changes.
->>
->> Run jobs automatically for marge-bot and scheduled
->> pipelines, but in all other cases run manually. Also
->> remove CI_PROJECT_NAMESPACE checks specific to mesa.
->>
->> Fixes: df54f04f2020 ("drm/ci: update gitlab rules")
->> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
->> ---
->>
->> v2:
->>    - Run jobs automatically for marge-bot and scheduled
->>      pipelines, but in all other cases run manually. Also
->>      remove CI_PROJECT_NAMESPACE checks specific to mesa.
->>
->> ---
->>   drivers/gpu/drm/ci/gitlab-ci.yml | 21 +++++----------------
->>   1 file changed, 5 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
->> index f04aabe8327c..f4e324e156db 100644
->> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
->> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
->> @@ -143,11 +143,11 @@ stages:
->>       # Pre-merge pipeline
->>       - if: &is-pre-merge $CI_PIPELINE_SOURCE == "merge_request_event"
->>       # Push to a branch on a fork
->> -    - if: &is-fork-push $CI_PROJECT_NAMESPACE != "mesa" && $CI_PIPELINE_SOURCE == "push"
->> +    - if: &is-fork-push $CI_PIPELINE_SOURCE == "push"
->>       # nightly pipeline
->>       - if: &is-scheduled-pipeline $CI_PIPELINE_SOURCE == "schedule"
->>       # pipeline for direct pushes that bypassed the CI
->> -    - if: &is-direct-push $CI_PROJECT_NAMESPACE == "mesa" && $CI_PIPELINE_SOURCE == "push" && $GITLAB_USER_LOGIN != "marge-bot"
->> +    - if: &is-direct-push $CI_PIPELINE_SOURCE == "push" && $GITLAB_USER_LOGIN != "marge-bot"
->>   
->>   
->>   # Rules applied to every job in the pipeline
->> @@ -170,26 +170,15 @@ stages:
->>       - !reference [.disable-farm-mr-rules, rules]
->>       # Never run immediately after merging, as we just ran everything
->>       - !reference [.never-post-merge-rules, rules]
->> -    # Build everything in merge pipelines, if any files affecting the pipeline
->> -    # were changed
->> +    # Build everything in merge pipelines
->>       - if: *is-merge-attempt
->> -      changes: &all_paths
->> -      - drivers/gpu/drm/ci/**/*
->>         when: on_success
->>       # Same as above, but for pre-merge pipelines
->>       - if: *is-pre-merge
->> -      changes:
->> -        *all_paths
->> -      when: manual
->> -    # Skip everything for pre-merge and merge pipelines which don't change
->> -    # anything in the build
->> -    - if: *is-merge-attempt
->> -      when: never
->> -    - if: *is-pre-merge
->> -      when: never
->> +    - when: manual
-> 
-> I believe there should be no dash on this line
-> 
->>       # Build everything after someone bypassed the CI
->>       - if: *is-direct-push
->> -      when: on_success
->> +    - when: manual
-> 
-> And on this line too.
+This check is not necessary, reset_control_deassert(NULL) is a no-op:
 
-Thanks for spotting this. Will fix and send v3.
+>  		reset_control_deassert(imx8_phy->perst);
 
-Regards,
-Vignesh
-
-> 
->>       # Build everything in scheduled pipelines
->>       - if: *is-scheduled-pipeline
->>         when: on_success
->> -- 
->> 2.47.2
->>
-> 
-
+regards
+Philipp
