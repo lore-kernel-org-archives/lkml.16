@@ -1,196 +1,188 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2047.outbound.protection.outlook.com [40.107.20.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF2E1EF366;
-	Fri, 28 Feb 2025 15:43:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740757425; cv=none; b=U99X1FhT69h/YWRTqyRZMHnv+leX5IOdqJH/QqS/gcxfqxvq3oaARi/BwhDaPAfKFkvdlYf7Vr2nFUC5zpp8lGzMNKMMCrKLMvsL8C71aLgyfSbvQICaMaxTYB2Rrrlw1Zq+8ZIG6cgaCTL358i3iHCF8hBcJClvyn0jQ7CQXUw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740757425; c=relaxed/simple;
-	bh=Mwxp7fWh57muJ79bmMwuri6+CFcJRk6JKHp4BpFMV0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qNfTBXBg37e7hTi18crrzXeTbW0Twn+uorcfnlQmmzgO86gkV85y8ZQTISW+s1K5YpNXTfxwwHoeSSwi0qr4TZnurKp6PQQjq0JEKzZ3y84y/80d4dcWJD47U9UPNeaxvVKndox49KVNNPOy2ib8cUceTYsVsy4z0SR7PNLuIT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AtoqqGei; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8AE2702A5;
+	Fri, 28 Feb 2025 15:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740757428; cv=fail; b=BcfJx7+nnCcOerdko5x6sTiUS99y//HZhKMesut5aRqqdQIxtwbGK+ZO7K/C0KTOqKtqRJA3Jbau0Nim5ZEU70tnFi5xaUQmYFZUNA+m0Vsy3Jo301Q4BnunBoKfxbt1Q5HQ6NR+48B3zLnW6dzVQqJ4Qt7/gxKqF/4e6Dz7kmg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740757428; c=relaxed/simple;
+	bh=bvEF3X1xspEkrRl/6XCuZmqiGytC9KyBHv3h9uzpYd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nIzTo6yE5Cwrf1aqxlrmzsfz2DLcRb4QT9WKZuHpDt71xcNlukkVFXSUXkQoUt6aFHuoGcVKu9zGv4M9bocGHufw4MRmDp3IN6G2bcxn4U5155ebGwbvua5GNTKncusTZlPk8uo/ZICX7fXr22KIaM91GmTUDqgg2ZQ9FhFcntI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=cTKA2VcW; arc=fail smtp.client-ip=40.107.20.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AtoqqGei"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fe5d75ff8cso592444a91.3;
-        Fri, 28 Feb 2025 07:43:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740757423; x=1741362223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cb2U97DDdzxwdyEir0Iv6h63iSbnYqe/duqVh4GgZ0g=;
-        b=AtoqqGeiqzgW2xFeSCYUw81Y0RDm9yxFlf9NYgfaHcdKCmrkwZOwv6lRLpPWStsg5D
-         5Lq31VfhXCgeSvStqRcV4yv3ufJXllIRNS01YX7udX38UxxsHeU8QN7yTT+cWyWyIBAF
-         8fE0JpIJTdCs1bZ3UXCLkrwUf1jOV1SGVBzoXHiiDS7viaI0Reb7quYPVDxS16BiDuNy
-         QC6rjPHZxqNWZYbrK78YZMaua2bMUxekyM/hH2SXMzAITOhQ5+XhhDUrzdOdPUGFL0+g
-         EDRmu2X6kcYs4Kt5slGoMa7ZHi+zUGYguNBdhJ4hlxBDGkfEsvuzro6iZZnMz/+oJI1M
-         47/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740757423; x=1741362223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cb2U97DDdzxwdyEir0Iv6h63iSbnYqe/duqVh4GgZ0g=;
-        b=tvnwjm98jzZT6HAXd+bgZDuZChOlhZ32s5v09MWUCN2mdXLMufT/wH6678CXvYxdRB
-         dlHUUsRW0P67NUdUfjZgRWiNewb+kOvXeRLG04cyot/FDV+KtVPB6CAvrdTzueJDuXhT
-         K/dfzVkThYC25o/BIwHfGvo3oNklf9OduaXg0WxOr2DYbL67FPN8/O0bjXja/ioLgtxv
-         fKyfn29XSHd/zSPKNgCl/PpXDeA7oiioDyk6vusrxHZ5WPuESkBfyR5h889qMJlznAWo
-         2+78w0SPCpmG2EVCHWdmm7fFlLY5BNIpQwPfLbTCHUAP7MYi+3JWS++1WSZrVag+yLya
-         911g==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Lk9NJHdko6YpZ5GwG/D9ieWP+QfqxQdUzcbgPbONl9p7cxbWrXtG/hFCVfrEUm1ykXyFQE7Q3jP+G9Y=@vger.kernel.org, AJvYcCVaYewTndo4jbD898Kxky7t0rtRNvlJId2bQEMHkB6K/6yB8tchOOYGI3hdmmsd+wIm61EafSJCItRZdWz0ksA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdRhUHYcSPgxDSdCssIAblpkubp2uGS7TrHfgjmd/YeamilFEm
-	RHv39XUUKx4/uiOYUv9GesN/AuPSNefvyZpW3OtFCxu30PAT/5uExfin7spt/QP0G2S1Qndjlzh
-	9cCETC+5zhQdbjXggFycrxLsf6bk=
-X-Gm-Gg: ASbGncthIdw9Ga97jSbDU6ks8d93GEo5TJQvnL+8ccb85kwoY0dakOoi9OMuHNTUDGr
-	K7rjcno4dQC+7fJTJ2M4Tf4PDsR/R4ofU9/X09RDth1LxrPnB91/9DD/TtxhQh4cTPI1A7LN0C9
-	XgQIxswLs=
-X-Google-Smtp-Source: AGHT+IEaMRx1TPdDq9q3j9YOLGbnxNgJLGf0PUg2Nz40DrGCUiOOqKPDdHa6a84tFD9tR0ndWWK8ewFqBxC6ZNCgG9w=
-X-Received: by 2002:a17:90b:3b8d:b0:2fa:6055:17e7 with SMTP id
- 98e67ed59e1d1-2febac10932mr2460393a91.8.1740757423425; Fri, 28 Feb 2025
- 07:43:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="cTKA2VcW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Sbjos0KBZdLif3mu3BdYWccLmMySNbU4WXlOcVlsczMsrcHGvSEykh2xIxUZnTtK38pmH2yjl4X/u6ZoxN2h+E4E7HO31U2M1gobV4h3sf6O3jFUZtMvIFJmXfIHmTTuFIKW5am/m0Mr5PwrIx5np6TKsDwtfSJ3rSil6519AATtK2DttxOLDr0VCkoM5ahbvZBGVe5MYJdWiKuvuJ6mXaUSYBukHh7TFBEPltzzj4rytOhYCXnP9/tq3Jgn1yGyHt8XvAYYvkFUy9dgB1FGvW3WVoKwkah6HZ4eSdyAE2xC6mZcQPDE+tJzd0Fo341/pTSTLRGSabIpvRK8+VZV5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=giG25u9QW7UUSc7J55ByNf6RWI66RXJ1nJiWcWmD4pw=;
+ b=nn4Q9jxLLqxjzTOCqlfpXg4dUOvGZRgMW/1ZXWDBlgcRfTv/Xarg4xcu3jJDTVe4I+fZxc/OSDpA4oq2/hQyhZljLBIRzkY4MzbmjWep1k5l0SmihR/JoIBmyX4rIlNzkFJUegTWiXj2UV/+78pgjREYqCh0Kb24bljFddxVke8uqkOkEvia4DivCEUVG08OGOau/TXFPkN6IDsW7OAVT4/87YUztURKHsB/ejvS9Gy81NuXMrBIQpAUlb2BXEwY0PFHdcB2OTQpZrmLUUshF4Qxjc52nWV0wuBW4KChACdw3PInbqGN3AboHe65u+kuTdgufVwm69lBE8gsAH7cMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=giG25u9QW7UUSc7J55ByNf6RWI66RXJ1nJiWcWmD4pw=;
+ b=cTKA2VcWoJKWfT7Tbhznw1ReVttPmWQLdtg+bnThJDeitCowPtOVzC6O8eQFOi1a08dici1sM4rNqkRJkDGlOfjf4VNY5RWvZBNi0YDqvfim9LZK+fYlT56/4QY2fhhMmv1voG4nXCKOVtCDZsfoisIWfddxir5DkxZS3sfsDXbfrzUrw2Vyy+nPsrhfvj/GJ3rMWW/nFUsLwYnlVXNk5l57k8x6afUp8fqjZ+kBUN//EOpvxtD+j+TtrPjBuhAmUVZUcfFMmXnVJ61m7rs3f6OE2VCpDhesNjql9FS8ICn3vdpQe3hDZD7qdnmMJOIMNGwD1hLMfBg0TvVmrULB6A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from AS8PR04MB8216.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::22)
+ by DU4PR04MB11054.eurprd04.prod.outlook.com (2603:10a6:10:581::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
+ 2025 15:43:43 +0000
+Received: from AS8PR04MB8216.eurprd04.prod.outlook.com
+ ([fe80::f1:514e:3f1e:4e4a]) by AS8PR04MB8216.eurprd04.prod.outlook.com
+ ([fe80::f1:514e:3f1e:4e4a%5]) with mapi id 15.20.8489.018; Fri, 28 Feb 2025
+ 15:43:42 +0000
+From: Andrei Botila <andrei.botila@oss.nxp.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	s32@nxp.com,
+	Christophe Lizzi <clizzi@redhat.com>,
+	Alberto Ruiz <aruizrui@redhat.com>,
+	Enric Balletbo <eballetb@redhat.com>,
+	Andrei Botila <andrei.botila@oss.nxp.com>
+Subject: [PATCH net-next v2 0/2] net: phy: nxp-c45-tja11xx: add support for TJA1121
+Date: Fri, 28 Feb 2025 17:43:18 +0200
+Message-ID: <20250228154320.2979000-1-andrei.botila@oss.nxp.com>
+X-Mailer: git-send-email 2.48.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM0PR05CA0092.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::32) To AS8PR04MB8216.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f2::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228132928.880683-1-guillaume1.gomez@gmail.com>
-In-Reply-To: <20250228132928.880683-1-guillaume1.gomez@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 28 Feb 2025 16:43:29 +0100
-X-Gm-Features: AQ5f1JrudrTcjO7fEhP9TqP7zOFRXSPccW98GtWaABxTyV_YDsXX2BckGPTVAqM
-Message-ID: <CANiq72mENfqG6iNjgXpq4LVEceZ4174yGhg-RB0MsMxLVed-1A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] Use new `--output-format=doctest` rustdoc command
- line flag to improve doctest handling.
-To: Guillaume Gomez <guillaume1.gomez@gmail.com>
-Cc: ojeda@kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8216:EE_|DU4PR04MB11054:EE_
+X-MS-Office365-Filtering-Correlation-Id: c182a436-f452-4672-cbf0-08dd580eadba
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MVY0OTd3VmpreUFJRkJjTnFGSVRVSUU5Z3AzWlJmQjlMVkF5YWw2UThTTkZS?=
+ =?utf-8?B?NkN4dEhzSkkvVnlONkJHeDErRGJyZ2hJNzRxeDd4a2tJUGZDL3RvcWNsZ1k5?=
+ =?utf-8?B?WFlUMVU4TXpaTDRUNVNrcUphVG1wQVEvTENUeDBQdFI2czhkYjBwRHJNNFNJ?=
+ =?utf-8?B?blJFLzZaZEpoZDIzSGNqUWxxN21FWSsreTk3aXEzSUtvWjdnK0UrdnRPamJ5?=
+ =?utf-8?B?ei9qWHp0b2RnNjBsMjNiRVdIUGRERkw0eGIrcmU0b0NmNnIxbHVpdXRtdi83?=
+ =?utf-8?B?T1FFdGhLczJhZTJUVC9RRmUrNkJSSVJod01DMHg4RitpNjVwdS9qb3BkOHU0?=
+ =?utf-8?B?RllUcmt5RUR0UnN3RWpPNzZyS3hkMFUyMXRXSUZKejBiQm55SWVSb1BWUmQ1?=
+ =?utf-8?B?U2h3WnlnM01YVjMydU55SlduU2dvTWI0MHBYSDBZZHBlK3Y0K0cvR2Jvcjlx?=
+ =?utf-8?B?VEtlK3pQWlcvVnlyVysxcHV5L3dpN3VBQ0o5Vm82ZGpjdzljWVdBVytOWnZw?=
+ =?utf-8?B?MEw5NUl5K2lwSlprbytNVnkwdkpFVUJTa3hld2V0WWZCRWZGTW5qM2JiR3dO?=
+ =?utf-8?B?M3d4ZVRRSVNaTllEYTVybnl1bkFneVloSzNVbWMvZWc1alNvcFQ2eTJMbW91?=
+ =?utf-8?B?RjN3S1drRjhBTWF6OE9TY1FhWlhnbkNkZEtXZTZSMWhSbVh2SGdCNlQyRTNC?=
+ =?utf-8?B?V2s3ZUNDeGEzQndwSWNWSndsWk9yVzlQamYrOVlGcldkMkhoZDZPdmQ4QkFx?=
+ =?utf-8?B?emhWU1AvTnh3cUxuRk52K3IyR296cnVTWFcyWkttTndGU3VCNnVvbzdzVmty?=
+ =?utf-8?B?UUIzYmxLSnZmUnJLSDlSbFl2dUxQSmV6eDgzUW1LeTNSSHhHNndsQ1BxSWkw?=
+ =?utf-8?B?VXZVVWNWRU8xMEEzak5SajgxcjVWbkIvck8xMEE2UXRoaElPZVIzbWNKUUM0?=
+ =?utf-8?B?bVVrSzQ0QXljYkZBNXgvVk9HM3RGeUhFcTRMTUFiOGNQMWd0WGUybXBDbHFX?=
+ =?utf-8?B?TzY3b2RDTWh2TUFCenU5RDgyUkIvUmE1T2F4eUZ4MjliQzBCVGY5RHdkd1c0?=
+ =?utf-8?B?MzZFb1dBRjdVU2liR1hjYjcrVkZzdTljWjE1NW9kNkJQTlRNVW1ReXlIem9Q?=
+ =?utf-8?B?S2tiV2NWUXpxNGU5c0U5VVBuZ3FZSHpaM3dJb3gxZVNYTXhrUHdBeGFuaFd5?=
+ =?utf-8?B?UjkwTmpncDNVRXN3WGRNSi9Ea3RSb2Iwdll4QURXdGxaRWppZExHRHN5RGl4?=
+ =?utf-8?B?NS9kM2QxMVBHZjJ2czVTZGUyVjU1TkQ3cUlGUzJ0Q0UvSGI3Zks1d2syNGkz?=
+ =?utf-8?B?ZWxEc0tRV0I5RmJGdzhiNGhlTU1VejdHL29jNncxT1g3TUNPNzRqWEQwUkNQ?=
+ =?utf-8?B?MXYyQ2VxelBBa2psZUNHcEVwbUdPekluRTBJVGY0SW5vSVhZeC9qVVFTZVZV?=
+ =?utf-8?B?a3daanVXN1BhcUlVZTgrZWJPSDFSYWE4cUNteFM3dWVST1JiaEtwV0VLQWZH?=
+ =?utf-8?B?Q013cjVMMjVTM1NVenlVRlpXUjhHcThpQlpXSTlodGVhMzRiZG1OWExoQ2Zu?=
+ =?utf-8?B?MkNCYXVJQUwyRVZzOFBBYTN1SklCRUdYcWFVQU96djdXSHlsRWRRLzFSWHlL?=
+ =?utf-8?B?bTJxMXVSNTFlS3dibXNkbFFwWnBabjVneDM2dVFTemdVSFUwa1RMeEJlOVd6?=
+ =?utf-8?B?dkVEMy9oY1d0c3V6aDRlMFFpOEJIUzZ1KzhDczhtRHI0RVBqaCtVZlZPMEpD?=
+ =?utf-8?B?Q0FqMFVZeCtvN2dselBVSVF4S2E3TXYwV0ZCSHZUVk13SnAxcTNFUzhPRGdY?=
+ =?utf-8?B?cHUrNjRvcEJaL09ESEpMekpDWVJ4K2VKMzg3OEZxY1MxYjhZSzEwS29OMXFi?=
+ =?utf-8?Q?hJiP0628nQnbz?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8216.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZW8yalVGRUpVcnVSNVpRSXBseTRVbWttb040aHNXNTNzZDhFaTRieVVGb2JP?=
+ =?utf-8?B?bFNPVk1QU3VvYnVzU2NQRFc5bDhpUGEvRlhqeUtxK3pVem0rV0Q1V1BBbVps?=
+ =?utf-8?B?RHRTdFB3SW1GZGFyc0h5bUF1cjZIUlp0R1NTOHYzU0tXSlpBY3hrQXh6ZThW?=
+ =?utf-8?B?VzNTaTJwbVdjeGpoc1UxL2JPWFMxTXFHZldEUVMxMWNWajR6UHdlODJWMk1C?=
+ =?utf-8?B?N3VUTlpPRnFjbEl4d0Q4dUF3ZjlBd3NTT0JlM3UzVlZ0d2I4V0pTb1c0VkNU?=
+ =?utf-8?B?VlB3ZXN6WEUzcm5iRlUzdkVsY0M5TE9DZGRTaXBEQ2ZUalozSXFLNU1CSnZt?=
+ =?utf-8?B?eGFERG1haTU3V3JSZmtMbVo5WUl5N0xhRnhsSmlhSFp2djc1bEpsZHRrOXAy?=
+ =?utf-8?B?eXNEaXd0NE1MS04zZmpvNElXQzg1RDRRVktuVTA2U3d4em1SenRUVDJ0dzEx?=
+ =?utf-8?B?NmNtQitGSEErd0VBcjV4TERDcEF1ODVMU3A5a0lKOTRHWmNlZndEMHpBZWNy?=
+ =?utf-8?B?c1hFNFRtR2NYTk1DVmpsSUxXaWZtWGRFYTNianVhL2FHaUpkQ1VxVGE3Zm5Z?=
+ =?utf-8?B?Q0dlMUhUeEhQN2R5dVRuNXZDaDZFMHlqd01YbC9VL041SkdMZTRxWG11ZURV?=
+ =?utf-8?B?dUNmV0VmN00xemRTU0phSG1kaFJvaWJKM0tIbGVpKy9WQlhjWXozdE5zUVdB?=
+ =?utf-8?B?Wm5IVHJiWWZzMGtzZ1NzSHJGL0ZWSTR0MjhJUGx0RTAyYVVYRnFCbXQ1NWdI?=
+ =?utf-8?B?WlppeHJWSURyQ1R6emwxTzBobDMyVXlQUkM2aGQ0NjNUSHFITVZGVFJIb2tR?=
+ =?utf-8?B?TzFXV2pTbWJ4ckt6QkNWTmpsUm52K2M5cldwN2IyRGlFWVNiOS9HQUVxL2cx?=
+ =?utf-8?B?M2NEWGllZ2xkMXFXcnhjSkVVZzhYSmNQQUJBeGdmZHJFQVRSN1REc0hvVFhW?=
+ =?utf-8?B?cVhWVjByZHJLSWhsMW1tY2hFN2QzSERUS2VyblpSUXhTbHRuN0J6YjhraFpw?=
+ =?utf-8?B?Ujc3Znp4Tm1rU1BRa1dvblpzL1lKdDg0NVlaQ3BBTTBvZjJTUlV5YWV3U0R1?=
+ =?utf-8?B?WWRNOUxEbkVJT0xLQ1Q3VTBTQklDaHp2WEYxd0orVmtrNTdFalNaSE9qMEEv?=
+ =?utf-8?B?Wng1UzBOYlhqOWt5NmFjeDRjTktiZzJiWnFhY2tSMURKZzV5TC9kN3ZmcG5C?=
+ =?utf-8?B?RG5DeGtkekJISnlzQmNuYUp2TE1wdzRrZ0lERS8rK0pieFpkVS9peW85cEpx?=
+ =?utf-8?B?MlFMY3dZc2YvektaVGJLbndDL1lWVlYweTY4U2EraWV1ckdzM0t2SzRMTVlC?=
+ =?utf-8?B?TDgrOUtuWGNiWjRITVlUUmVvMVFTakFOV2RMZnZiSTYrRk1uWDJrNklrdU0z?=
+ =?utf-8?B?dC9NdWozS3J1ZFFGNnBkVUlMa1hqTDFGeW1VbGpFK09lcEZJdUFETnpaTW1p?=
+ =?utf-8?B?RkpFemxtVCs3TXBndTZ5V01uUllCb2ovYXNyMENkeFpvUXlQcnl0OS8vVjRG?=
+ =?utf-8?B?dUl2SnFQN2d2ZzNob1dDRzh2SEZva1hkRCtQY0UxdXg2UndhVVl2cDR2ME80?=
+ =?utf-8?B?bXRBS0tkbWFhS3I1M2RQZ2hROVhnSmR5QkNUK3VGRE1OOVhJR1ZtWStuWHhE?=
+ =?utf-8?B?QUdZajdUL2pyWUU2Qm96bm9tZUsya2NpbDRyK0t4UXpnNkR4b3hWQ2MvZloy?=
+ =?utf-8?B?VmJkM1pSSSswdkhnYldZeWozRUF6c3NKdCtYV2ZDWGZ5L1RhZnJaR1NLZVAz?=
+ =?utf-8?B?TGt5dlROc2pzTUlVYzRwRkhDZXZDcDhuVFNKMDVGTEFMUkc0MlJNME1EMksx?=
+ =?utf-8?B?SmxGeHdsM0RYeDFjLzg4VCtyNUxjdDNkL0FKVEVuTldFbUh0T0E5MXVvRkhv?=
+ =?utf-8?B?YzVLV1F1UVZ4T1QwSHBaVHdvdDBsd2NlalFCR2xRT0ovd3RhNzljUi9yYldF?=
+ =?utf-8?B?TlN1eEJnTjJ1d1VZT24vUHNhbzZHWlpUMTFla2JNN3BBV3VPb1pxeXpJRitS?=
+ =?utf-8?B?S1U1dHVPMXBmeDhLeUE4cU5yRDZOeVRpRE9LUjgvRjNFYWdzT2J2VTY5ZTJS?=
+ =?utf-8?B?VlhIM1NDcjZTbGpIcGl5TDlwOXFEaGtMYjNLU0REbENTSUhjaHlnVERjM2ZN?=
+ =?utf-8?Q?3+79sdTY5PRSXtWdrfXdLoUBc?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c182a436-f452-4672-cbf0-08dd580eadba
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8216.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 15:43:42.7517
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +zMG0O0MI6RBXw9f0cJjuuOrN4lzyKgpCcT9EPAiwtC2CxP78dgCFuhlqQU5ZUg5oNkrcIM95fyD1cdGD/rpkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11054
 
-On Fri, Feb 28, 2025 at 2:29=E2=80=AFPM Guillaume Gomez
-<guillaume1.gomez@gmail.com> wrote:
->
-> Before this patch, the code was using very hacky methods in order to retr=
-ieve
-> doctests, modify them as needed and then concatenate all of them in one f=
-ile.
->
-> Now, with this new flag, it instead asks rustdoc to provide the doctests
-> code with their associated information such as file path and line number.
+This patch series adds .match_phy_device for the existing TJAs
+to differentiate between TJA1103/TJA1104 and TJA1120/TJA1121.
+TJA1103 and TJA1104 share the same PHY_ID but TJA1104 has MACsec
+capabilities while TJA1103 doesn't.
+Also add support for TJA1121 which is based on TJA1120 hardware
+with additional MACsec IP.
 
-Thanks for doing this (and the `rustdoc` side of it!), and welcome!
+Changes in v2:
+- add .match_phy_device
+- removed errata from v1, will be sent to net for backporting
 
-Normally in commit messages we need to give more details:
+Andrei Botila (2):
+  net: phy: nxp-c45-tja11xx: add match_phy_device to TJA1103/TJA1104
+  net: phy: nxp-c45-tja11xx: add support for TJA1121
 
-  - A Signed-off-by is required (please see for what that implies).
+ drivers/net/phy/Kconfig           |  2 +-
+ drivers/net/phy/nxp-c45-tja11xx.c | 94 ++++++++++++++++++++++++++++++-
+ 2 files changed, 92 insertions(+), 4 deletions(-)
 
-    https://docs.kernel.org/process/submitting-patches.html#sign-your-work-=
-the-developer-s-certificate-of-origin
+-- 
+2.48.1
 
-  - The commit message should explain the motivation, i.e. removing
-the 2 unstable `rustdoc` features, and moving to the new,
-intended-to-be-stable one (which one? etc.), and so on.
-
-  - Also, a bit of context (or at least linking to it) would be good,
-e.g. explaining that we were working on removing unstable features,
-and that `rustdoc` provided a new flag for the kernel, ideally with
-links to the relevant Rust tracking issues/PRs (typically with a
-"Link: " tag), plus which version the unstable feature is available,
-etc. (well, when we know for sure, i.e. I understand that we may need
-to tweak it still).
-
-Anyway, those are procedural details we can sort out later :) What is
-most important I think are the following two notes, please see below.
-
-> -       $(RUSTDOC) --test $(rust_flags) \
-> +       $(RUSTDOC) --output-format=3Ddoctest $(rust_flags) \
->                 -L$(objtree)/$(obj) --extern ffi --extern kernel \
->                 --extern build_error --extern macros \
->                 --extern bindings --extern uapi \
-> -               --no-run --crate-name kernel -Zunstable-options \
-> +               --crate-name kernel -Zunstable-options \
->                 --sysroot=3D/dev/null \
-> -               --test-builder $(objtree)/scripts/rustdoc_test_builder \
-> -               $< $(rustdoc_test_kernel_quiet); \
-> +               $< $(rustdoc_test_kernel_quiet) > rustdoc.json; \
-> +       cat rustdoc.json | $(objtree)/scripts/rustdoc_test_builder; \
->         $(objtree)/scripts/rustdoc_test_gen
-
-We currently support versions 1.78+, so we will need to do these
-things conditionally. I can help with that, so don't worry too much
-about it for the moment (e.g. we have `rustc-option` and other helpers
-to pick the right flags given a version etc.).
-
-Similarly, we will also need to tell the script whether to use the old
-or the new way, too.
-
-> +    // We replace the `Result` if needed.
-> +    let doctest_code =3D doctest_code.replace(
-> +        "fn main() { fn _inner() -> Result<",
-> +        "fn main() { fn _inner() -> core::result::Result<",
-> +    );
-
-Hmm... I was hoping we could do something on the `rustdoc` side to
-remove these hacks altogether since we are going to have a "proper
-flag" for it, i.e. to avoid relying on the particular "format" of the
-tests somehow.
-
-I wrote about a bit of that here:
-
-    https://github.com/rust-lang/rust/pull/134531#discussion_r1894610592
-
-> +    let doctest_code =3D doctest_code.replace(
-> +        "} _inner().unwrap() }",
-> +        "} let test_return_value =3D _inner(); assert!(test_return_value=
-.is_ok()); }",
->      );
-> +    std::fs::write(path, doctest_code.as_bytes()).unwrap();
-> +}
-
-Same for this.
-
-> +    } else {
-> +        panic!("missing `format_version` field");
-> +    }
-
-`expect` maybe?
-
-> @@ -87,8 +87,8 @@ fn find_candidates(
->
->      assert!(
->          valid_paths.len() > 0,
-> -        "No path candidates found. This is likely a bug in the build sys=
-tem, or some files went \
-> -        away while compiling."
-> +        "No path candidates found for `{file}`. This is likely a bug in =
-the build system, or some \
-> +        files went away while compiling.",
->      );
->
->      if valid_paths.len() > 1 {
-> @@ -97,8 +97,8 @@ fn find_candidates(
->              eprintln!("    {path:?}");
->          }
->          panic!(
-> -            "Several path candidates found, please resolve the ambiguity=
- by renaming a file or \
-> -            folder."
-> +            "Several path candidates found for `{file}`, please resolve =
-the ambiguity by renaming \
-> +            a file or folder."
->          );
->      }
-
-These two bits could go in a first patch, I think, though it isn't a big de=
-al.
-
-Thanks again for getting us out of unstable in `rustdoc`!
-
-Cheers,
-Miguel
