@@ -1,117 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE926B2C8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3E82F41;
+	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740747594; cv=none; b=nN4ye91xajd31iHaHAOr0z9g2W4PHVqkfFA3D3zUiPQolQS5LXAqdlvNKsC9ecdlbCFHijM+P52XDqM4p+g6KYagvRD7JGQB3TZwtx/1SI405Cd8ihLHl5pbjyRyWVScnZyCul5qyqwF2ZHR7pLQygdKx7IJFAkB9DfmDMB1KD0=
+	t=1740747709; cv=none; b=XD2mzqn9+xke9ouYB8VPuYX0Tq4Mlq6Ng9Yx1aC+y6ZsuTQl/0nsjgGedP271zkPgNb+FT5sLY3oBNHLRAUEdbykWi3lwCeHk1BNaIhyz8LP8tzpTsHA1Gzyi0DvuOmc2jmGJrIBsrlKYnelpUCZ45ubMNNfcyj/lkL97KlQ4D0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740747594; c=relaxed/simple;
-	bh=3DKT7J+swXfr3LZY9NRwOLeY8J+OdBEFnuOEu3W8oWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OiuDGVxwgcfbxKnAn+LkHVGN/G80YOCx45RHSW9XcpJSlr1suYVSAQ8LHZJRV7n8iEVnIp0rCHLLe15+NJ2szQh33/iOmZUvb3UA5kHhyroKikbm344Pbq49jd3LTveKnMh944mYckroE+5Zg7VDguGwvsWM1pQ0LYjXyBrgsZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+T58mQr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740747709; c=relaxed/simple;
+	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sxsy+C+GBWfdL/jF99bzeWyUNScl6pWgkfXIzN/Zn7qMgxRQ1ALGTug0IJzCoxKhqryV77bguICCkEJgX8bIBRUUfCC3BkJXQonYPZgUOH3opCKLRVai6HmNDwhl44/BVALeDi7kjNKZfLeE6Kmxe+WwpQomNMLrvu0dyxp/95M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gs/8PV+g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+T58mQr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740747591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c83XVy6ozclMfOWx6ksvJRIp+J3X+fmuC/ka4FyOnOE=;
-	b=J+T58mQrISVMClWI3vv6AVTayFUYLEBJw0lNDups01s0gKdNI+sEu0rs57FAziioPU2KCA
-	mcTf7TEYSVj3vcwcE6JuUobmhQ/BOEj4EcwZN7NWzBXNvBMhCyuI/WiLQ6/bA2fVvdW8HC
-	jsqF2mjg+2qP/dzNT3tKk5R1u41sCX4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-536-z26nYuikNSCUuFbJSxSxpA-1; Fri, 28 Feb 2025 07:59:50 -0500
-X-MC-Unique: z26nYuikNSCUuFbJSxSxpA-1
-X-Mimecast-MFC-AGG-ID: z26nYuikNSCUuFbJSxSxpA_1740747589
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-390f000e962so308990f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:59:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740747589; x=1741352389;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c83XVy6ozclMfOWx6ksvJRIp+J3X+fmuC/ka4FyOnOE=;
-        b=kd14o3z4ZyrnKZDkGGvF5zPY/OwxbiH7pOXw+26X8Pbpy1+9tnjXazSDjYKo8I1VVj
-         W5CZxkmkTlHQZ6xYIa9+EfIuYdUA328BNxGxvSHC0mv65an9/WKBjh9mbLDq3X0E4GJZ
-         LFibfT/U9kr2v/1Fd1ExaNsNperccietPvf9hK7MKqoPT1NBKiA1c9GVpxVO0/zfhv9C
-         mg0tcAtKZrGAeJA7fOJF3yPCUoTu4WuOklaeckoDCBDR+MkO/zU+ll7oM82JvYVGNufX
-         IyKEWrcapHrw+7eNg6U8IFPFcE5mN11oV3JvZCRSyzVnxy6+Jz2w8bVYAsVMnDbVFDXs
-         RLIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUKpnSP8u1o+rgS8iT1LJ7Y6+X3tghQhwsCHFgRqaE5H2ZCuzaucppJOmcqVDGzad2XbDdIvyWIx6UTTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyD/X296WpIlqi652jS8NWT0XRAzaxbEnS0ta8Ix2amlG8bQfVn
-	/pEuVwZAVfsmTBSOEzD5qnlN7WGg5ucPutIrIZUqs+S//C5cy22BjiTs2PMqSOpGA3xibNqB3np
-	WrPBmWmO2IX6dHPWUrqhUbX1fMh3DfK62Z8hIxfbA3wiUVCrrrS6xi2yq5wAHGg==
-X-Gm-Gg: ASbGncsrHWprtJgQN5Ou9P2LR+miDMIxu4T/PqQTNjMu0jkQVcrJJmUQKLd41V/b8g1
-	aXp9BAvTUgtwwGcVAwJM+Ab5PWSgPNcsStCPS1aoIoAczI7gLEtQG9YRSHIIf2I1j9/DOWSHhEP
-	kxk1AkYfixkUFKPPmZ3mJA6MWXvNEVongOa17EPpJvwHi3HlbtPPYfvAVcMam6nhqJeBtQxKVDq
-	0vF3sw3icN5SzSXvyXK/viB4SMZyWoEgRVRvh7L+kW0kmjQe0GpEkxltMWhG52FnXgnaI2PL5Kw
-	SGVCHGl8GMqhoXXIkkzBOJLcd17kgKcDA1T9K5MRmMmESDyRLRBJoaZWItqupKY=
-X-Received: by 2002:a05:6000:1f8b:b0:38d:e092:3ced with SMTP id ffacd0b85a97d-390ec7c6c4amr2643359f8f.7.1740747588684;
-        Fri, 28 Feb 2025 04:59:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF39024ECeki2qeJ7m1bCe/xYOH62Iyh1CEl4EZF/iAAejb6b6Z9XQvhcS5PKHFcbRdN7SHDw==
-X-Received: by 2002:a05:6000:1f8b:b0:38d:e092:3ced with SMTP id ffacd0b85a97d-390ec7c6c4amr2643343f8f.7.1740747588359;
-        Fri, 28 Feb 2025 04:59:48 -0800 (PST)
-Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6739sm5110782f8f.22.2025.02.28.04.59.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 04:59:47 -0800 (PST)
-Date: Fri, 28 Feb 2025 13:59:47 +0100
-From: Igor Mammedov <imammedo@redhat.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
- qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
- <anisinha@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 16/19] acpi/generic_event_device.c: enable
- use_hest_addr for QEMU 10.x
-Message-ID: <20250228135947.15504734@imammedo.users.ipa.redhat.com>
-In-Reply-To: <797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
-References: <cover.1740671863.git.mchehab+huawei@kernel.org>
-	<797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gs/8PV+g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B3EFC4CEE9;
+	Fri, 28 Feb 2025 13:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740747709;
+	bh=lqnR+JheswhvgrFJM6KyRTYNfvwJMuW0EW4T0IeIFF0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Gs/8PV+gdhuqgRbRq3PWjR3X7flzk5Sve8/pUNLfAw1jQyg46GaipmTQE1u7rL9KI
+	 cC8DRRVmSMQ/maxG43w/CCFfvrgMfBO286h9OoQMJCu029WsOjx7jXnOtit9wUTJ2m
+	 LL0LhSAx8yHebaGiZAusP9sUL9bjehVR4Qmz3PP8ZswaIDDwESVk2yBWOkdfFgTvqa
+	 Jt2pVvAVS95SHofj/HczhBM9c3gAcDW1mTu/BRhbUgAEW9tQ0y8hEdMREN7Dq0ywAd
+	 xXmzv+kqWC2B3uL7MB20vnyrHyrh/i9M+R3Y00WgK0HqlmMUnQScr2qKg0coCu66aH
+	 J84bAXsnYzvSw==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e0373c7f55so3089500a12.0;
+        Fri, 28 Feb 2025 05:01:49 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVKt4VjA6jSdf8HixjSv8FZ2Jok8LIJLcD5QMkoe5IL9QGLsj5n8y5VQbI1SVC5vkFT2XuV/2Cpw98Gapvh@vger.kernel.org, AJvYcCWOFFE7n6eR+6Dr+f8vMgFq3c+12QRdP/hdVWbhilNv/BDpyN4Ssu7aSS8qxaUr8OM7rCQ3kbKcHZAsBg==@vger.kernel.org, AJvYcCX7qIV4O9qUBpMXDctToiTaLSlxQimwmd1h8x4s/hmjPclwK2eP0a+nsE6m+SGhr6zwM4EB8PC1mzL6/zKXAK8d@vger.kernel.org, AJvYcCXeCrl/b5jec72yhIYBLeR8yaR5Fn8EdeRPECv0UeRqDayYanX+s5XPMnLBv/DHUCZx7GH4OVik5fZm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxy9j3iz84o6m1ADyTRWTNojSQWMxwqRYA0eX0G2vsKR/l1sGl
+	eolASQHN7jg7NAUalcr4lWqjrqR0yTfmLIyI3o9X80Tu28UDMYWwfBxiHGvO6yerNNKV1NOQXBD
+	oU6AUsWcnUIedTwKGOFheVcm+2Q==
+X-Google-Smtp-Source: AGHT+IE3NVig6fcg7AWmf0LSZkEe9NZzSMZOtu4y73Ybn5vbLk/MQ08kJCOadYw8rDMrC7ULMWJhx6pGL/o+kHXgo3E=
+X-Received: by 2002:a17:907:6e87:b0:ab7:d537:91cb with SMTP id
+ a640c23a62f3a-abf261f98e3mr316126266b.7.1740747707559; Fri, 28 Feb 2025
+ 05:01:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
+ <20250226-max77759-mfd-v2-3-a65ebe2bc0a9@linaro.org> <20250227130451.GA1783593-robh@kernel.org>
+ <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
+In-Reply-To: <503e105b71fa4271f40a2d3ca18ba13ed7d45a65.camel@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 28 Feb 2025 07:01:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo7EndHwP8BRLSbmoeH26pdkVjNoOZvQIz2llEEQ2ewDNuDr81I38wLGHg
+Message-ID: <CAL_JsqK-_rPZqt_vRv75dSWDLUAyZ-LB=qz5J=Kse=7bO4q8sA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] dt-bindings: mfd: add max77759 binding
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 27 Feb 2025 17:00:54 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On Thu, Feb 27, 2025 at 7:14=E2=80=AFAM Andr=C3=A9 Draszik <andre.draszik@l=
+inaro.org> wrote:
+>
+> On Thu, 2025-02-27 at 07:04 -0600, Rob Herring wrote:
+> > On Wed, Feb 26, 2025 at 05:51:22PM +0000, Andr=C3=A9 Draszik wrote:
+> > > The Maxim MAX77759 is a companion PMIC for USB Type-C applications an=
+d
+> > > includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+> > > Port Controller (TCPC), NVMEM, and a GPIO expander.
+> > >
+> > > This describes the top-level device.
+> > >
+> > > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > >
+> > > ---
+> > > v2:
+> > > * rename expected nvmem subdev nodename to 'nvmem-0'
+> > >   I'd have preferred just 'nvmem', but that matches nvmem-consumer.ya=
+ml
+> > >   and fails validation.
+> > >
+> > > Note: MAINTAINERS doesn't need updating, the binding update for the
+> > > first leaf device (gpio) adds a wildcard matching all max77759 bindin=
+gs
+> > > ---
+> > >  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++++++++++=
+++++++++++
+> > >  1 file changed, 104 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yam=
+l b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> > > new file mode 100644
+> > > index 0000000000000000000000000000000000000000..87e3737896a289998a18b=
+67932dbccacfb8e3150
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> > > @@ -0,0 +1,104 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
+> > > +
+> > > +maintainers:
+> > > +  - Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> > > +
+> > > +description: |
+> > > +  This is a part of device tree bindings for the MAX77759 companion =
+Power
+> > > +  Management IC for USB Type-C applications.
+> > > +
+> > > +  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sen=
+sors, USB
+> > > +  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: maxim,max77759
+> > > +
+> > > +  interrupts:
+> > > +    maxItems: 1
+> > > +
+> > > +  interrupt-controller: true
+> > > +
+> > > +  "#interrupt-cells":
+> > > +    const: 2
+> > > +
+> > > +  gpio-controller: true
+> > > +
+> > > +  "#gpio-cells":
+> > > +    const: 2
+> >
+> > Why do you have GPIO properties here and in the child node? Either woul=
+d
+> > be valid, but both probably not. Putting them here is actually
+> > preferred.
+>
+> That's an oversight, I meant to put them into the child only, not here,
+> since the child is the one providing the gpio functionality.
+>
+> What's the reason to have it preferred inside this parent node?
 
-> Now that we have everything in place, enable using HEST GPA
-> instead of etc/hardware_errors GPA.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+It really depends whether the GPIO block is a separate sub-block which
+is going to get reused or has its own resources or not. It's the same
+thing in system controllers which are often just a collection of
+leftover control bits.
 
-Reviewed-by: Igor Mammedov <imammedo@redhat.com>
+We just don't want child nodes created just for the ease of
+instantiating drivers in Linux. While it's nice if drivers and nodes
+are 1 to 1, but that's specific to an OS.
 
-> ---
->  hw/acpi/generic_event_device.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
-> index f029753ab709..9fe70b74bd42 100644
-> --- a/hw/acpi/generic_event_device.c
-> +++ b/hw/acpi/generic_event_device.c
-> @@ -332,7 +332,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
->  static const Property acpi_ged_properties[] = {
->      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
->      DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
-> -                     ghes_state.use_hest_addr, false),
-> +                     ghes_state.use_hest_addr, true),
->  };
->  
->  static const VMStateDescription vmstate_memhp_state = {
+You already need other child nodes here, so I don't care too much in this c=
+ase.
 
+Rob
