@@ -1,88 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47B01F4C85;
-	Fri, 28 Feb 2025 18:29:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58582755E5;
+	Fri, 28 Feb 2025 18:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767353; cv=none; b=BHnr5aQ9h7YncIW4YfL0ocjXUTK0MXt9x/+Ch6CH8f7Ee2ueronA2fa/ZAP/CefdiJDoXvaMXHDamFPFtsbNXRmbQTfiAVZDjIK46IZXIunZyWQLb2Tc+Xu7xRPCxZfk++05XyuMWNfHeDFG56qeLXJ6o/WEVqdlLzcFhLFwtjg=
+	t=1740767374; cv=none; b=pRebwCJBGWcNTtJZwMShou3W/osOQfEqHbX35ceYTMoilxiCq0yqId8ZF+2kTqkal5Ng/eb/WVxJpcTHtO+A/hlgHyHiogwe5scyKeEk9bLELVxF19cRcwqVijBeQMJJW8++qxnv4Y/+Pwc2E89ycC6oN/RkqHgsXf4Ufic8LiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740767353; c=relaxed/simple;
-	bh=+vOIjyiiLtVaLNR4TkknfidJzzH1lydetnHTsM3M5Ko=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=JNf7Cd5UsHS4VxAoEIVOSksSi9i2grFb5iN14+qb6kdxy5ZAyttsMIbOYMcatrs1Rq3EyB4pfzsDP+NRRPwgTzBlSgyjXCBuilp2Rh3ZgfP62gSsev5bCJo4tPxwSCUUjjknyOEAIxuJtrknrpQxCoqQ0pr1UNnq6VBm0Z13gtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNVASr6Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740767374; c=relaxed/simple;
+	bh=GdT+FAgbr7YwWuisQ170ntVSMrN/XYHPwVBuOoYX/Zc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rESsofqQ9LnvPFxnLhiZM/i6e6bFyJXARQ3jxmzgHPoQbgvgdfNke6bcjm7sX3f2mBmVVGlnCZBMQKNPgViHzfALXh/9rflH7zB6iA+Xf/v9K/jN/TELS4A5jl27zvnakzWR6Qc4Iqa/Mwe+k3DjLdRhOGJkenZKbWE0GRLEgXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=rRXuZPY5; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNVASr6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F09C4CEE2;
-	Fri, 28 Feb 2025 18:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740767352;
-	bh=+vOIjyiiLtVaLNR4TkknfidJzzH1lydetnHTsM3M5Ko=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=PNVASr6Q63EkrDf9s+27lNtNmVKtsJzWvv86NgdeCb6HzXpZIGH7FV6FTggPTRUk1
-	 qxevy5676b7NPXxA/pegE7MzsXwamHMpPFS9PkEcCmi78shuQ9Mf3uNCTlswXg0UYQ
-	 O4DU3vNNeM/8zZm87tbreJhZg0eqBeR7arejRYkfPz9deRbR/LOGVCh1dS0vKxTBJm
-	 /kLmNSXaS+BEIk1uwYzpa82PVitMKJEel8GtTYUMNnCP+KsOlKx7pfgolDXsQRpgx8
-	 Jz/OljzlrOMvqX1KE0sIkrSiMSHQAIXpW90M8PpLr2+DmbG3yuRIA0OUKED0RpzzZK
-	 Ak+eCma6zMW6Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Oliver Mangold" <oliver.mangold@pm.me>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  <linux-kernel@vger.kernel.org>,
-  <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2] rust: adding UniqueRefCounted and UniqueRef types
-In-Reply-To: <Z8H6EUy1HqLrzytE@laptop> (Oliver Mangold's message of "Fri, 28
-	Feb 2025 18:01:55 +0000")
-References: <EiaQ-C0o3GMQQpw3jCnXUnNgph2WIJ5-Cm8P5N9OysIlDKYrjHNun5Ol4Q1FfVGw64k6TGCfUVBJK5r0_2eypg==@protonmail.internalid>
-	<MFrukGViddXfhKeURDySTWCDW6Pk8Oo5keozdVg9hehiS3P4FVHKv4d-Fwn87yprBUeyTHcY6T1k9htIhPzc9Q==@protonmail.internalid>
-	<Z8H6EUy1HqLrzytE@laptop>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Feb 2025 19:29:02 +0100
-Message-ID: <87frjxncsx.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rRXuZPY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1740767370;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GdT+FAgbr7YwWuisQ170ntVSMrN/XYHPwVBuOoYX/Zc=;
+	b=rRXuZPY5ppmvJrIqNUkY2LCcwmGUj0xvFH3Ey5JXpY4l7FONLXUlZXmktoc1WX5o+tch7E
+	VRMTAo7GnVVTxfovz1qPaOie3uFo1DyeWDNVvhgWFhOvig5DZXxKMEMR132rIO8kWjhazL
+	/FVbC0mVSbYoIuFPmBESRc2d7cq+DSA=
+Message-ID: <3bf98fabea4b7b35816411a2253e08848d900401.camel@crapouillou.net>
+Subject: Re: [PATCH v2 0/4] pinctrl: ingenic: add support for x1600 SoC and
+ MII and I2S for jz4730
+From: Paul Cercueil <paul@crapouillou.net>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Linus Walleij	
+ <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Andreas Kemnade <andreas@kemnade.info>, Paul Boddie
+ <paul@boddie.org.uk>,  Tim Bysun <tim.bysun@ingenic.com>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org, 
+	letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Date: Fri, 28 Feb 2025 19:28:28 +0100
+In-Reply-To: <cover.1740749637.git.hns@goldelico.com>
+References: <cover.1740749637.git.hns@goldelico.com>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZM
+ LQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5Uz
+ FZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtN
+ z8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe
+ +rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY
+ 3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr
+ 1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f
+ 33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIP
+ dlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET
+ 4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7U
+ rf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KF
+ lBwgAhlGy6nqP7O3u7q23hRU=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
 
-"Oliver Mangold" <oliver.mangold@pm.me> writes:
+Hi Nikolaus,
 
-> For usage with block-mq, a variant of ARef
-> which is guaranteed to be unique would be useful.
-> As chances are it is useful in general, This implements it
-> as kernel::types::UniqueRef.
-> The difference between ARef and UniqueRef
-> is basically the same as between Arc and UniqueArc.
+Le vendredi 28 f=C3=A9vrier 2025 =C3=A0 14:33 +0100, H. Nikolaus Schaller a
+=C3=A9crit=C2=A0:
+> PATCH V2 2025-02-28 14:33:57:
+> Fix pwm5/pwm6/pwm7 pin groups (each one can be muxed to one of two
+> pads while pwm0-4 have only one pad) for X1600.
+>=20
+> PATCH V1 2025-02-26 18:14:53:
+> This series expands pinctrl support for some Ingenic/Lumissil SoC.
+> For the jz4730 we add MII and I2S pinctrl and general x1600 support.
+>=20
+> The x1600 parts were jointly developed.
+>=20
+> Code was tested on LX16 board (x1600) and Alpha400 (jz4730) and
+> on CI20 (jz4780).
+>=20
+> Co-authored-by: Andreas Kemnade <andreas@kemnade.info>
+> Co-authored-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-I would suggest splitting out the use case from the commit message:
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-  rust: add `UniqueRef` for `ARef` references
+For the whole patchset, with the nit on patch 4/4.
 
-  Add `UniqeRef` as a variabt of `ARef` that is guaranteed to be unique.
-  This is useful when mutable access to the underlying type is required
-  and we can guarantee uniqueness, and when APIs that would normally take
-  an `ARef` require uniqueness.
+Either fix it when sending a v3 with my reviewed-by tag above, unless
+Linus does it when merging.
 
-  ---
+Cheers,
+-Paul
 
-  Upcomming changes to the rust block device driver API depend on this
-  patch. Please see [1] for a use casel.
-
-  [1] https://github.com/metaspace/linux/blob/41034cb4ea7cd20b981ce320136b6526a9fa9db6/rust/kernel/block/mq/request.rs#L406
-
-
-The comments after the --- will not got in the commit log, they are a
-message for the review process only.
-
-
-Best regards,
-Andreas Hindborg
-
+>=20
+>=20
+> H. Nikolaus Schaller (3):
+> =C2=A0 bindings: ingenic,pinctrl: add x1600
+> =C2=A0 pinctrl: ingenic: jz4730: add pinmux for MII
+> =C2=A0 pinctrl: ingenic: jz4730: add pinmux for I2S interface
+>=20
+> Paul Boddie (1):
+> =C2=A0 pinctrl: ingenic: add x1600 support
+>=20
+> =C2=A0.../bindings/pinctrl/ingenic,pinctrl.yaml=C2=A0=C2=A0=C2=A0=C2=A0 |=
+=C2=A0=C2=A0 2 +
+> =C2=A0drivers/pinctrl/pinctrl-ingenic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 261
+> +++++++++++++++++-
+> =C2=A02 files changed, 261 insertions(+), 2 deletions(-)
+>=20
 
