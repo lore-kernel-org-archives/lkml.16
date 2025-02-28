@@ -1,58 +1,81 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABFE276D12
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:28:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DFD276D12
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740727732; cv=none; b=lChcKTVxYzl/JKQG5qVym9RBiNkv2YmARMqCok8grxp8CI6uf/4AxZKN8H+Q5WSDoMzcnXO4zJyxYeLMMoejGPReJli22sWLkbHmoaHgdAgIcSEiTchXc/2vFKwgfZEFpuUAy1lB7GcOAFv8pNl0Lo86/AEJfyoX+iaFJeld9BU=
+	t=1740727799; cv=none; b=cujfMnAMKuUZAxty76kkpzfhP0il1IbspyiJuN9Vxl/8ay8nTiKza0XXBjrU6qPrisSWo/QWFjvaPIK4xhcIKWLBDevfsK1YUlN8a7JLt8siWCaCqJi4YKxD0ma9j6Sb1lPMS+B/fBDzwRTDJtymjfKqMWrtIR5E7lbRbNS3Ma0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740727732; c=relaxed/simple;
-	bh=9GKM2L3DtD3eswSDGESGDwXtAnvmMKXriDsUwgs0IQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=GSec9oJW6j52KjFHtGzW8+ah5FuK4nZdg3EtHsoRiCn2N2IT2VEtWSqzQ1BtL7+0yG1A0K8Ez+SP5PpsdV8dmO1gWS9q6NzCJCAyLVf7YtuNKK9HwIkW+t/FYxDg6EJN2cN7RMzfmiMBTWr++iNcfsKwk+bJxzUCU0uwVN1tu5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WLL7+dv9; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WLL7+dv9; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740727799; c=relaxed/simple;
+	bh=0zN4f1+L9LdPrHry+A+G7fmUO0cTFvNV1tCK8DaWg+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KClJhKjuoXsJm5gj1LG3S/+iXErdP/59m1hNF3E1WDHwhevAat91zP1Z1EGPe6HerSdw7wQQ0RUAu9o55xC304Bj1gKBYr34+D3/9cAs0HcOUYmW62leSvXXX22ZdBizEti0K06mJGe9bPOT30ILnVr7783TiUBvNlOqpnXWwJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=X8MAj09H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QhtE9e1x; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Wyl467bd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=/o3lPyX/; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WLL7+dv9";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WLL7+dv9"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="X8MAj09H";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QhtE9e1x";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Wyl467bd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="/o3lPyX/"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 295FA1F38F;
-	Fri, 28 Feb 2025 07:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740727729; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E5EC21F38F;
+	Fri, 28 Feb 2025 07:29:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740727796; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9GKM2L3DtD3eswSDGESGDwXtAnvmMKXriDsUwgs0IQ0=;
-	b=WLL7+dv9KwPIMp5U8MeGKtcuCr09MvD0c5sgJETUwcxaxTORRDKfYQnBn2LtqbymnlpjSI
-	LFXiyQxDAoJdZOAGa2Yw8YlitmVXE4cm1n7rBJNVI4x1Jp0BslBgYxNc5gtMXRrakB/dzz
-	WsAhmqIOX4jr6SD+TBbe/4rJS8e2E+M=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2/1IpDiGvbmm1xwAmPe6In42i/zSc4rgCKQylXwqu4=;
+	b=X8MAj09HueHceDkqzcczaTMLFFjjssekxR1qFHVDpdoG94o9OEOaIXwhc5dbRw3yIzXQSG
+	54qUI/e/wni5YZGxFFYVt/vY59ybVa7iz9IVA1SOyyaYL1sCXBnbk9sCv0k75HhU3KkAHE
+	/QL5WqYcbSjQEzrQNnxQXUeInXxzNpQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740727796;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2/1IpDiGvbmm1xwAmPe6In42i/zSc4rgCKQylXwqu4=;
+	b=QhtE9e1xDlWijjfK1fm6Qk63fAJmz6ZXtX0P7XNgJSZdR+6rjbJPikeoD9ao3sz0N8T/fl
+	gJ0Gp+mfKqbdZqBA==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=WLL7+dv9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1740727729; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Wyl467bd;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="/o3lPyX/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740727795; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9GKM2L3DtD3eswSDGESGDwXtAnvmMKXriDsUwgs0IQ0=;
-	b=WLL7+dv9KwPIMp5U8MeGKtcuCr09MvD0c5sgJETUwcxaxTORRDKfYQnBn2LtqbymnlpjSI
-	LFXiyQxDAoJdZOAGa2Yw8YlitmVXE4cm1n7rBJNVI4x1Jp0BslBgYxNc5gtMXRrakB/dzz
-	WsAhmqIOX4jr6SD+TBbe/4rJS8e2E+M=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2/1IpDiGvbmm1xwAmPe6In42i/zSc4rgCKQylXwqu4=;
+	b=Wyl467bdL1zo1AqjhSJPTQOGkHQBPdChSi1QczWPv/WfnOFwnG3YZ3vqHcjhvnrG5c/GbA
+	ZBgsE/cg07TolqMvzY2YbmqtOC3YaDw9FG/jkb0zS4szW2jpYTEfBumNfwRCljkfd437K2
+	ACe/xaOC7yJZbFfQdWet73a/rll1/HI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740727795;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e2/1IpDiGvbmm1xwAmPe6In42i/zSc4rgCKQylXwqu4=;
+	b=/o3lPyX/xt5PLzJIWOMqXeIaOTWef7yYgk1JusQxfsDULwWjuvu2CnrDHnxQsTainEHvCO
+	s/zSFtA1I5kyqTCw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F3E7137AC;
-	Fri, 28 Feb 2025 07:28:49 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 82C78137AC;
+	Fri, 28 Feb 2025 07:29:55 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id NSM1ArFlwWeJJQAAD6G6ig
-	(envelope-from <jgross@suse.com>); Fri, 28 Feb 2025 07:28:49 +0000
-Message-ID: <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
-Date: Fri, 28 Feb 2025 08:28:48 +0100
+	id XLhtHvNlwWflJQAAD6G6ig
+	(envelope-from <hare@suse.de>); Fri, 28 Feb 2025 07:29:55 +0000
+Message-ID: <1ee44bb6-df3c-4903-9bdd-0c7728500c18@suse.de>
+Date: Fri, 28 Feb 2025 08:29:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,193 +83,202 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: CVE-2025-21818: x86/xen: fix xen_hypercall_hvm() to not clobber
- %rbx
-To: cve@kernel.org, linux-kernel@vger.kernel.org
-References: <2025022710-CVE-2025-21818-27ee@gregkh>
+Subject: Re: [PATCH 06/11] nvmet-fcloop: track rport with ref counting
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250226-nvmet-fcloop-v1-0-c0bd83d43e6a@kernel.org>
+ <20250226-nvmet-fcloop-v1-6-c0bd83d43e6a@kernel.org>
 Content-Language: en-US
-From: Juergen Gross <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <2025022710-CVE-2025-21818-27ee@gregkh>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------NhlfvLqft5piul0vIEbZdRk6"
-X-Rspamd-Queue-Id: 295FA1F38F
-X-Spam-Score: -5.41
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.41 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SIGNED_PGP(-2.00)[];
-	MIME_BASE64_TEXT_BOGUS(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_UNKNOWN(0.10)[application/pgp-keys];
-	MIME_BASE64_TEXT(0.10)[];
-	MX_GOOD(-0.01)[];
-	RCVD_TLS_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:mid,suse.com:dkim];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_NONE(0.00)[];
-	HAS_ATTACHMENT(0.00)[]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------NhlfvLqft5piul0vIEbZdRk6
-Content-Type: multipart/mixed; boundary="------------RfZrau0zIPEczcrKkNcsix0W";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: cve@kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <f78c7925-8057-4503-93ec-c50386a63862@suse.com>
-Subject: Re: CVE-2025-21818: x86/xen: fix xen_hypercall_hvm() to not clobber
- %rbx
-References: <2025022710-CVE-2025-21818-27ee@gregkh>
-In-Reply-To: <2025022710-CVE-2025-21818-27ee@gregkh>
-
---------------RfZrau0zIPEczcrKkNcsix0W
-Content-Type: multipart/mixed; boundary="------------ebsJJBQyIb0IB8DCniJajQkM"
-
---------------ebsJJBQyIb0IB8DCniJajQkM
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250226-nvmet-fcloop-v1-6-c0bd83d43e6a@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: E5EC21F38F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-T24gMjcuMDIuMjUgMjE6MDMsIEdyZWcgS3JvYWgtSGFydG1hbiB3cm90ZToNCj4gRGVzY3Jp
-cHRpb24NCj4gPT09PT09PT09PT0NCj4gDQo+IEluIHRoZSBMaW51eCBrZXJuZWwsIHRoZSBm
-b2xsb3dpbmcgdnVsbmVyYWJpbGl0eSBoYXMgYmVlbiByZXNvbHZlZDoNCj4gDQo+IHg4Ni94
-ZW46IGZpeCB4ZW5faHlwZXJjYWxsX2h2bSgpIHRvIG5vdCBjbG9iYmVyICVyYngNCj4gDQo+
-IHhlbl9oeXBlcmNhbGxfaHZtKCksIHdoaWNoIGlzIHVzZWQgd2hlbiBydW5uaW5nIGFzIGEg
-WGVuIFBWSCBndWVzdCBhdA0KPiBtb3N0IG9ubHkgb25jZSBkdXJpbmcgZWFybHkgYm9vdCwg
-aXMgY2xvYmJlcmluZyAlcmJ4LiBEZXBlbmRpbmcgb24NCj4gd2hldGhlciB0aGUgY2FsbGVy
-IHJlbGllcyBvbiAlcmJ4IHRvIGJlIHByZXNlcnZlZCBhY3Jvc3MgdGhlIGNhbGwgb3INCj4g
-bm90LCB0aGlzIGNsb2JiZXJpbmcgbWlnaHQgcmVzdWx0IGluIGFuIGVhcmx5IGNyYXNoIG9m
-IHRoZSBzeXN0ZW0uDQo+IA0KPiBUaGlzIGNhbiBiZSBhdm9pZGVkIGJ5IHVzaW5nIGFuIGFs
-cmVhZHkgc2F2ZWQgcmVnaXN0ZXIgaW5zdGVhZCBvZiAlcmJ4Lg0KPiANCj4gVGhlIExpbnV4
-IGtlcm5lbCBDVkUgdGVhbSBoYXMgYXNzaWduZWQgQ1ZFLTIwMjUtMjE4MTggdG8gdGhpcyBp
-c3N1ZS4NCg0KUGxlYXNlIHJldm9rZSB0aGlzIENWRS4NCg0KVGhlcmUgaXMgbm8gd2F5IGFu
-IHVucHJpdmlsZWdlZCB1c2VyIGNhbiB0cmlnZ2VyIHRoaXMgaXNzdWUgYXQgd2lsbC4NClRo
-ZSBpc3N1ZSBpcyBndWVzdCBsb2NhbCBhbmQgd2lsbCBlaXRoZXIgaGFwcGVuIHZlcnkgZWFy
-bHkgYXQgYm9vdCBvcg0KaXQgd29uJ3QgaGFwcGVuIGF0IGFsbC4NCg0KU28gbm8gc2VjdXJp
-dHkgaXNzdWUuDQoNCg0KSnVlcmdlbg0K
---------------ebsJJBQyIb0IB8DCniJajQkM
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+On 2/26/25 19:45, Daniel Wagner wrote:
+> The rport object is created via nvme_fc_register_remote and freed
+> via nvme_fc_unregister_remoteport. That means after the port is
+> unregistered nothing should use it. Thus ensure with refcounting
+> that there is no user left before the unregister step.
+> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fcloop.c | 53 ++++++++++++++++++++++++++------------------
+>   1 file changed, 32 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
+> index 2269b4d20af2ef9bb423617b94a5f5326ea124bd..d64f5fba136e13c9e4e545acecd905c31542d442 100644
+> --- a/drivers/nvme/target/fcloop.c
+> +++ b/drivers/nvme/target/fcloop.c
+> @@ -223,8 +223,12 @@ struct fcloop_rport {
+>   	spinlock_t			lock;
+>   	struct list_head		ls_list;
+>   	struct work_struct		ls_work;
+> +	struct kref			ref;
+>   };
+>   
+> +static int fcloop_rport_get(struct fcloop_rport *rport);
+> +static void fcloop_rport_put(struct fcloop_rport *rport);
+> +
+>   struct fcloop_tport {
+>   	struct nvmet_fc_target_port	*targetport;
+>   	struct nvme_fc_remote_port	*remoteport;
+> @@ -346,6 +350,7 @@ fcloop_rport_lsrqst_work(struct work_struct *work)
+>   		spin_lock(&rport->lock);
+>   	}
+>   	spin_unlock(&rport->lock);
+> +	fcloop_rport_put(rport);
+>   }
+>   
+>   static int
+> @@ -365,7 +370,8 @@ fcloop_h2t_ls_req(struct nvme_fc_local_port *localport,
+>   		spin_lock(&rport->lock);
+>   		list_add_tail(&tls_req->ls_list, &rport->ls_list);
+>   		spin_unlock(&rport->lock);
+> -		queue_work(nvmet_wq, &rport->ls_work);
+> +		if (queue_work(nvmet_wq, &rport->ls_work))
+> +			fcloop_rport_get(rport);
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Same argument than previously: don't we need to remove 'tls_req' from 
+the list on failure?
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+>   		return ret;
+>   	}
+>   
+> @@ -398,7 +404,8 @@ fcloop_h2t_xmt_ls_rsp(struct nvmet_fc_target_port *targetport,
+>   		spin_lock(&rport->lock);
+>   		list_add_tail(&tls_req->ls_list, &rport->ls_list);
+>   		spin_unlock(&rport->lock);
+> -		queue_work(nvmet_wq, &rport->ls_work);
+> +		if (queue_work(nvmet_wq, &rport->ls_work))
+> +			fcloop_rport_get(rport);
 
---------------ebsJJBQyIb0IB8DCniJajQkM--
+Same here.
 
---------------RfZrau0zIPEczcrKkNcsix0W--
+>   	}
+>   
+>   	return 0;
+> @@ -1078,9 +1085,6 @@ fcloop_localport_delete(struct nvme_fc_local_port *localport)
+>   static void
+>   fcloop_remoteport_delete(struct nvme_fc_remote_port *remoteport)
+>   {
+> -	struct fcloop_rport *rport = remoteport->private;
+> -
+> -	flush_work(&rport->ls_work);
+>   }
 
---------------NhlfvLqft5piul0vIEbZdRk6
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+Empty function.
 
------BEGIN PGP SIGNATURE-----
+>   
+>   static void
+> @@ -1386,6 +1390,8 @@ fcloop_create_remote_port(struct device *dev, struct device_attribute *attr,
+>   
+>   	/* success */
+>   	rport = remoteport->private;
+> +	kref_init(&rport->ref);
+> +
+>   	rport->remoteport = remoteport;
+>   	rport->targetport = (nport->tport) ?  nport->tport->targetport : NULL;
+>   	if (nport->tport) {
+> @@ -1418,21 +1424,30 @@ __unlink_remote_port(struct fcloop_nport *nport)
+>   	return rport;
+>   }
+>   
+> -static int
+> -__remoteport_unreg(struct fcloop_nport *nport, struct fcloop_rport *rport)
+> +static void
+> +fcloop_remoteport_unreg(struct kref *ref)
+>   {
+> -	int ret;
+> +	struct fcloop_rport *rport =
+> +		container_of(ref, struct fcloop_rport, ref);
+> +	struct fcloop_nport *nport;
+>   
+> -	if (!rport) {
+> -		ret = -EALREADY;
+> -		goto out;
+> -	}
+> +	nport = rport->nport;
+> +	nvme_fc_unregister_remoteport(rport->remoteport);
+>   
+> -	ret = nvme_fc_unregister_remoteport(rport->remoteport);
+> -out:
+>   	/* nport ref put: remoteport */
+>   	fcloop_nport_put(nport);
+> -	return ret;
+> +}
+> +
+> +static int
+> +fcloop_rport_get(struct fcloop_rport *rport)
+> +{
+> +	return kref_get_unless_zero(&rport->ref);
+> +}
+> +
+> +static void
+> +fcloop_rport_put(struct fcloop_rport *rport)
+> +{
+> +	kref_put(&rport->ref, fcloop_remoteport_unreg);
+>   }
+>   
+>   static ssize_t
+> @@ -1468,8 +1483,7 @@ fcloop_delete_remote_port(struct device *dev, struct device_attribute *attr,
+>   	if (!nport)
+>   		return -ENOENT;
+>   
+> -	ret = __remoteport_unreg(nport, rport);
+> -
+> +	fcloop_rport_put(rport);
+>   	fcloop_nport_put(nport);
+>   
+>   	return ret ? ret : count;
+> @@ -1717,10 +1731,7 @@ static void __exit fcloop_exit(void)
+>   		spin_unlock_irqrestore(&fcloop_lock, flags);
+>   
+>   		fcloop_tport_put(tport);
+> -
+> -		ret = __remoteport_unreg(nport, rport);
+> -		if (ret)
+> -			pr_warn("%s: Failed deleting remote port\n", __func__);
+> +		fcloop_rport_put(rport);
+>   
+>   		spin_lock_irqsave(&fcloop_lock, flags);
+>   	}
+> 
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfBZbAFAwAAAAAACgkQsN6d1ii/Ey97
-yggAir3OF+VfugsVrM1HzJO+7DGQRC1UTVQV3G809IKWSmlAqcKRuBbqbHlQz3TvcbG8zcYI/19Q
-pssVFFgPft73twLG4zizT5wuyDBqsnMfmC0KpoixAztWXsFxs8TV2YPczsAGQwWZeqt7b9Cmr8+0
-B7fAdYnZLHeWzQJJo8Hm9H53fIYZh+ujtF8Abv/HU8T3xOZmAN0Q3PDjsyD6w9EP2w84nHEWl/DQ
-hJ42jnvkEs5XcdDHmdQozW5bQJy1UEEvRBVCpMxcdxBOBv11C7v9TJFHyWWXs2mviZT4jVXHAs5s
-oj/hkFiKteT350PouD4ulwNnoOH5dTaM27LKkVwy2w==
-=4BjZ
------END PGP SIGNATURE-----
+Cheers,
 
---------------NhlfvLqft5piul0vIEbZdRk6--
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
