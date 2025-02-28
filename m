@@ -1,58 +1,60 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58437272924
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF2F2702B7;
+	Fri, 28 Feb 2025 16:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740760644; cv=none; b=AbqBy5vt7xHQRUXYNo9E54tH7In0z2gE+C3qbZte5D3HsXPqxCBNWq8AfesS3bbpIPsxSyK2V9jPFhfIdzjt2+pGT6w4L26qIoqSX2BtHiaUudLC/Ef1Ofsfji+RgQfc1I548AnmTj+Rp37nad9fV6EkW1os1roy+a/jgY4q/9c=
+	t=1740760659; cv=none; b=fWIe62gl189P8a/w/K2t4udKXIz+mX5bKZEXRiutNmKyaXlXsAuqUYako4cckjIhmTw02a14VqsLnQtdfQREou+mR3Gg3pMTyO/mUs4LaPriGgFyYGxL425psHQ/mJ8lm0S5Dh4BZzYakdXDqkdaxNMVSGvWnn61e16ntjfCn8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740760644; c=relaxed/simple;
-	bh=bgjg/hEmlBXv67fTl4fRy81b4dDXu1T6gmhB1dO3WdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZ0XSHimMZ8OUvsfibwHJBy0xTk4fpwMtYmR8lJn+K/8SDDSShLUz7iShmStpTipdkkYcR0VRAfHS0UKsqSk+BzUzGhW8FUOdPDxehnru0ebN+MZkjJ8JNYr2gx5fa22bjEHPHoKs5EIyuf3DQqOSur1NjtRYta/I9DrbX/fa3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fHOywo9E; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740760659; c=relaxed/simple;
+	bh=epNnDncNDPb3P9Gfrg3v/n733ph9wy4EFsXFRHFRvKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DrJKTISgP49HvjnI7vuEUnOMKgGonQjPzG4AZOUfVKvMqoU4UPIHgRYNVA7kA9vcj0puOH1VtSJrgRxfR7nTpGW4AsPTPA5y9bKQxY0sSEFZFz2ebPWabLJVBWQAtH81JIdaDbnx+5mrjfKqYUN1K+CEvOxVxjaObpTQatqDgIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=B9GH67kh; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fHOywo9E"
-Message-ID: <64a6131a-79d8-4250-9215-5e565a598424@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740760635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yVrsBw3fKJbseyJjn+B6nGAkxIf2sXzvqUGFkrakjmA=;
-	b=fHOywo9ErC6m0P2jZEnXQ7vgcWmHdqXDSEWMuHjpx8US8oTSv8SFvwhhQGwmXILoZ1sSHW
-	2L+PDHrt4ebf5xGK0aUX26AV+QieJTdRzSQStv0zR8QJU1A4/yiUM9rFfZs2y+VadKZXIp
-	bcKMq1xV57NluZrX5IoESMTwIhEOJ6s=
-Date: Fri, 28 Feb 2025 16:37:10 +0000
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="B9GH67kh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=1VRZoqoHCK+crSI0o1Efw52ErTi5ppZiw43v7ZMPgsI=; b=B9GH67kh5Jx8WzgqtpIIffYyq3
+	PWDB2DLd/vOU1AwfV204wkdgFxp78886X72/Ob+ubLCt+jeR4DCJpFk4VoO2BUpK2M2oQI87XSI0D
+	3+dNH2QThUO2gaotwredUNBP3UQhuCf2nSiZ18yMiWTn0r2HRCWEOhldpdhbV3oGjP+I=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1to3MX-0010OP-I6; Fri, 28 Feb 2025 17:37:21 +0100
+Date: Fri, 28 Feb 2025 17:37:21 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] e1000e: Link flap workaround option for false IRP events
+Message-ID: <51f829a0-43e2-4cb5-ac0f-a0098d53ce7b@lunn.ch>
+References: <mpearson-lenovo@squebb.ca>
+ <20250226194422.1030419-1-mpearson-lenovo@squebb.ca>
+ <36ae9886-8696-4f8a-a1e4-b93a9bd47b2f@lunn.ch>
+ <50d86329-98b1-4579-9cf1-d974cf7a748d@app.fastmail.com>
+ <1a4ed373-9d27-4f4b-9e75-9434b4f5cad9@lunn.ch>
+ <9f460418-99c6-49f9-ac2c-7a957f781e17@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 net-next] dpll: Add an assertion to check
- freq_supported_num
-To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, przemyslaw.kitszel@intel.com
-Cc: arkadiusz.kubalewski@intel.com, davem@davemloft.net, jan.glaza@intel.com,
- jiri@resnulli.us, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250228150210.34404-1-jiashengjiangcool@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250228150210.34404-1-jiashengjiangcool@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9f460418-99c6-49f9-ac2c-7a957f781e17@app.fastmail.com>
 
-On 28/02/2025 15:02, Jiasheng Jiang wrote:
-> Since the driver is broken in the case that src->freq_supported is not
-> NULL but src->freq_supported_num is 0, add an assertion for it.
-> 
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
+> For the PHY - do you know a way of determining this easily?
 
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Add printk()s to e1000e_get_phy_type_from_id().
+
+	Andrew
