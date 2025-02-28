@@ -1,126 +1,182 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4EE276046
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2F8286288;
+	Fri, 28 Feb 2025 18:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767409; cv=none; b=Pi8bnOROCn+ypXqN4cuty1QMtdX4f1Inrg4AmTyD5bMVPW9JqZMYtLuEmzv/daoJ/nk7nrrjyylX6boSbUezMK4/3Ny+YuPf09omw58ONIwj+sb3A5EHHoHFKpHHOBAfsJW+D0Jkcw4DJ6FAEPqugWxIinjrBUS5PPjh9DHPPe0=
+	t=1740767409; cv=none; b=q3A8+S7/pKW0GJF8Va1PZsDadmNIJvV5IhyHHdjtLETZ2LxnskIDb/Fes4P0ImYFPzTXekrjwuoJ7CqSZvPMTwLipOLDiHIeWC2/OzvLL9OJmKCvPRqg7p+VWqoQzD58qJ8h4KenjObpZ52vXUBqi0LlQxteGMWnYy+je5wFJVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740767409; c=relaxed/simple;
-	bh=rfDCDTCZR1vjOAMrrN+kyOgyhP5uaFXoA6YPneWMxAc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lK6hoXydOjcHCiWMRtnfx5J7F6UPYxcgGmUrmHF+nz0aKZWw5gizwttQuv9Ii67mAnNACYiKh20+s/qDJRghx0rpxTAJn8a4IyiiQ7gwmaSZ1YgLaVbQLb9api8/D+K4/xkuZOjLzhw0nd8OefXB2edkvPyVYsK9XfjWeQJmVLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EG1buTcf; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
+	bh=rEj78UcFQDAHphVHUC5xoGH16EIO4LDyE10+E990cOA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p5TXQOwHbkOHRcB9iwwAVS6/1wYHhPZPVJgzsNTTENfv2PiblX8UympBy9+zb+V3BjI10xJli6yxqanBKlW5sxvnnmppu9u0i9Ysdhhwt/yXkgUDWjO47WDB3gqOfh8ZirK0JNZy7Fy16m8VIX2OakKXGOOFnX59lq0SlyNNtrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvN7UDtz; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EG1buTcf"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2feb019b13aso6136533a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:30:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvN7UDtz"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5494bc4d741so1598486e87.2;
+        Fri, 28 Feb 2025 10:30:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740767407; x=1741372207; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbowoUPJCyiQsizxpkD6Ny3B5kmia3e97FJeeBCM/C8=;
-        b=EG1buTcfCMMPbS+T/zSxeNYMHxXezbZSlnwd2W24ZG4q8eyd+h9TMoMlo8gsspTe2P
-         oHsuOGsVp4PE1eMtdz+PGMBSvhtnWj83AMiVWATj70PKHo30ID8ya3FfxrkREhFExnCG
-         zGjE0GIPGRMzlt/50cWAoC/p/bxYKbblBG2Sg3sg4H1jUvJ7g7lzSB72aYyZMq9dwD4t
-         awtV8baGG8t1pkCi8xYPKlFFRrxVjIv2/gu45X+IoQmO6ThjxMZOptTu623QzkkM92WR
-         UU5gShORSVal6KqmSuygESsw0/+zJG2iATgfIf4K98mHdVcKNA6+x1VPGCRm7cyGCJG6
-         hd2w==
+        d=gmail.com; s=20230601; t=1740767405; x=1741372205; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyGlG6KmyWC/vhmNe6q6s0Da+XSfS6Lsa7LYaDsWvDU=;
+        b=TvN7UDtz2EMmxWZFFkEZ7nNpJw8tnzopV6chW1g47WDX7rlIZK0+3C+bcolwLGq0Kr
+         17Rnv619jDG2s1sMK2/+n2RFGl1yajlRiOusGCAs5/tNaXDZCyUfVSwdGqIBl3Kjoa8b
+         Snd2qwncmIQHh29YXyXIb/7HmS8wrWQf7WDFZNEP6uyn/oxLoa4I0iXQvR9Kwu54njSQ
+         KyVl2dAIvJVKJeAsJRBM3P7eU27/ycieKax4qpjzalDhwJu5D20C7N3jYHhDHHnrtpOe
+         AGWh2BJajlfI4KKMq0M2mbh9TQ/aQfbqtuLsblultRossT4m7Bteb6DlAN7GMTNoVZy/
+         I9yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740767407; x=1741372207;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbowoUPJCyiQsizxpkD6Ny3B5kmia3e97FJeeBCM/C8=;
-        b=uhQb8OrbFmcF6adPZPX7Ej+tiHpfe7EPVQjnn7OCAORuNFYHM6liu6PpztYzoDvKIZ
-         WOTLIJH5+lC12vm4X3qD1DJ4he3QlP18lDmI9VDjex5yFAEXxhsTPEhRICAdUS2dHPOc
-         VI+kQgDk6Ihl13iGC58eJEXXQDvbNEiLOEKFCfjP7m6QnGvb7/oL7wxMCN13RZRzJ4+P
-         fVTu2CpBQdQlkpkkXvZ2KhjlT/cboWrGvuCRVroflvtSe1t1o6VyDrEn1iZGq05aWwdH
-         qKYBEU7ZnND0pUonI11b7o5sFGD33KDaJzkyPZ02ywGMk/l762NcOXToHWhiTALxY+Gj
-         nUpA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRbbHbpXYS46DeQbwMpgYe3h4sgUGTaOZ8cY24zH/Q5KpLVsBDgtFBFPz8ZgXwQSYXgx7f/aVwZU4MasI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzi+B/6ehQVLKtZhthFAuOFbGHqcUbjgBDZsgRqpQxJp1V9q/ec
-	hbm1wrl90mEmViXzOAv+9ieXw+X/I7biIzPMlf8ORaQmJeJd3HuP7AXRl7gpydPAJ4eW0A==
-X-Google-Smtp-Source: AGHT+IGKuB3uJBVlbNU/F3YmwsBG4OICoUNsGFAqYF88KK7BiOQo3YRtYFp6xhdAPgZNqpSARz9qCLce
-X-Received: from pjbsn4.prod.google.com ([2002:a17:90b:2e84:b0:2fc:13d6:b4cb])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1804:b0:2fe:8c22:48b0
- with SMTP id 98e67ed59e1d1-2febab7876amr7870153a91.15.1740767407364; Fri, 28
- Feb 2025 10:30:07 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:29:12 +0000
-In-Reply-To: <20250228182928.2645936-1-fvdl@google.com>
+        d=1e100.net; s=20230601; t=1740767405; x=1741372205;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IyGlG6KmyWC/vhmNe6q6s0Da+XSfS6Lsa7LYaDsWvDU=;
+        b=RDau0RzIXsKdI5dLHoLlSj4cwp1seT6kha57MhyqVYIul1EWkw5PSVQSV4qW2YMsyY
+         U5fCWA+a+73BaS7yRqc9EKchGTLfibP2ZPABjdEhiFUZz1KP+EPLysVYXRippjyPB1zB
+         RgJRbyfir5Spgu5Ad86wcG4Rio5NO9EaxnCsdd7SXWFYrBH5sYvbFiHYNPHTrTFd7fxT
+         7oIoyeQtU75skP2G8w3mVVLAnTOtMUy2W5Jn7yvKlQCd6R8BeVwo2mBvn50RyqB8ovGG
+         wZlY5vwY5HqPBPaXQkpvp1WNMWrcZIrIkCOhd20Od3MfYUd26E0aZVjBwPUaErzGKVIw
+         5nhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuZ7mo7bGIYadBvr1sNA3AztvISQu+eQds+RLFt700zuNBJS2pxvZMY6aw7KKzVXS9tOW0@vger.kernel.org, AJvYcCWmWRdYUFFy3LyInSqUODCWvgJt58EpjZtwyqt0FMJ+2lrZTOGYSrOPFnehg7lJjdgUC4h9DBYPNLpQsEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI7xvuOziBpRhwRpeHv6ulfA3tZ70qOpZOpIkGR9Izgw2WUenz
+	e0FzjhC5cTHx0bOLHDRzA6WKkvBsuOq+KSPGLr+/w+ahFxxuftUy
+X-Gm-Gg: ASbGncta4N/luzb+XC9GE38P7drsyWTwi79foyiwJVpm/wWa9n4JqK1bDgvhH1zvaif
+	nKoBf4f9aEqV/RP0Yrv2PYbhYVQVhQf2lgrjxSiFkg2L3jyHe6sLd73z0tAbaBeqhDqsXH7li4/
+	u/n34WhKU71761BAIoSDbRpiX2zGVKh0afJfeDpqZPo8qnp4uNtPt35b1J59qKCtIbueDUzo7uE
+	34dulpUI89QY+yeC9zPyY69gCvqy20jwPsIFVVwYWQV3LfTBO+hJoe8ZIjkZyGXsS8VdaFiP7v9
+	xYJy3cefEoMzCWhW6xzt4JJoQaeFRz73Cns4MALsbIlWpI0c
+X-Google-Smtp-Source: AGHT+IEkJ6IMmCKxPFsLqxJMA1GDDzT6covfWgsgXVKfqGf1wEovMTD7mrXAregnRjEGvq2NaapgDw==
+X-Received: by 2002:a05:6512:a8b:b0:545:2302:6835 with SMTP id 2adb3069b0e04-5494c107e6bmr1828479e87.2.1740767404684;
+        Fri, 28 Feb 2025 10:30:04 -0800 (PST)
+Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549441741d4sm573051e87.33.2025.02.28.10.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 10:30:03 -0800 (PST)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Fri, 28 Feb 2025 19:30:01 +0100
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Uladzislau Rezki <urezki@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+	RCU <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Cheung Wall <zzqq0103.hey@gmail.com>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v4 3/3] rcu: Use _full() API to debug synchronize_rcu()
+Message-ID: <Z8IAqQ3dYdDsj5GN@pc636>
+References: <20250227131613.52683-1-urezki@gmail.com>
+ <20250227131613.52683-3-urezki@gmail.com>
+ <Z8CdB0Hzvdu5ZVSI@Mac.home>
+ <d8b196c1-c1b5-4bf9-b1cb-dde8642cc34b@paulmck-laptop>
+ <Z8Ckb6spK35-Ez4U@pc636>
+ <1408fc88-e2c6-4f49-b581-0e9ad5620fe0@paulmck-laptop>
+ <Z8HmH85bYNU8enJ2@pc636>
+ <Z8Htg565HnNumdxy@pc636>
+ <6e4688d1-afe7-4508-9ebc-eeece0692365@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250228182928.2645936-1-fvdl@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250228182928.2645936-12-fvdl@google.com>
-Subject: [PATCH v5 11/27] mm/hugetlb: set migratetype for bootmem folios
-From: Frank van der Linden <fvdl@google.com>
-To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
-	roman.gushchin@linux.dev, ziy@nvidia.com, david@redhat.com, 
-	Frank van der Linden <fvdl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e4688d1-afe7-4508-9ebc-eeece0692365@paulmck-laptop>
 
-The pageblocks that back memblock allocated hugetlb folios might
-not have the migrate type set, in the CONFIG_DEFERRED_STRUCT_PAGE_INIT
-case.
+On Fri, Feb 28, 2025 at 10:25:58AM -0800, Paul E. McKenney wrote:
+> On Fri, Feb 28, 2025 at 06:08:19PM +0100, Uladzislau Rezki wrote:
+> > On Fri, Feb 28, 2025 at 05:36:47PM +0100, Uladzislau Rezki wrote:
+> > > On Fri, Feb 28, 2025 at 07:41:40AM -0800, Paul E. McKenney wrote:
+> > > > On Thu, Feb 27, 2025 at 06:44:15PM +0100, Uladzislau Rezki wrote:
+> > > > > On Thu, Feb 27, 2025 at 09:26:40AM -0800, Paul E. McKenney wrote:
+> > > > > > On Thu, Feb 27, 2025 at 09:12:39AM -0800, Boqun Feng wrote:
+> > > > > > > Hi Ulad,
+> > > > > > > 
+> > > > > > > I put these three patches into next (and misc.2025.02.27a) for some
+> > > > > > > testing, hopefully it all goes well and they can make it v6.15.
+> > > > > > > 
+> > > > > > > A few tag changed below:
+> > > > > > > 
+> > > > > > > On Thu, Feb 27, 2025 at 02:16:13PM +0100, Uladzislau Rezki (Sony) wrote:
+> > > > > > > > Switch for using of get_state_synchronize_rcu_full() and
+> > > > > > > > poll_state_synchronize_rcu_full() pair to debug a normal
+> > > > > > > > synchronize_rcu() call.
+> > > > > > > > 
+> > > > > > > > Just using "not" full APIs to identify if a grace period is
+> > > > > > > > passed or not might lead to a false-positive kernel splat.
+> > > > > > > > 
+> > > > > > > > It can happen, because get_state_synchronize_rcu() compresses
+> > > > > > > > both normal and expedited states into one single unsigned long
+> > > > > > > > value, so a poll_state_synchronize_rcu() can miss GP-completion
+> > > > > > > > when synchronize_rcu()/synchronize_rcu_expedited() concurrently
+> > > > > > > > run.
+> > > > > > > > 
+> > > > > > > > To address this, switch to poll_state_synchronize_rcu_full() and
+> > > > > > > > get_state_synchronize_rcu_full() APIs, which use separate variables
+> > > > > > > > for expedited and normal states.
+> > > > > > > > 
+> > > > > > > > Link: https://lore.kernel.org/lkml/Z5ikQeVmVdsWQrdD@pc636/T/
+> > > > > > > 
+> > > > > > > I switch this into "Closes:" per checkpatch.
+> > > > > > > 
+> > > > > > > > Fixes: 988f569ae041 ("rcu: Reduce synchronize_rcu() latency")
+> > > > > > > > Reported-by: cheung wall <zzqq0103.hey@gmail.com>
+> > > > > > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > > > > > 
+> > > > > > > You seem to forget add Paul's Reviewed-by, so I add it in rcu/next.
+> > > > > > > Would you or Paul double-check the Reviewed-by should be here?
+> > > > > > 
+> > > > > > I am good with keeping my Reviewed-by tags.
+> > > > > > 
+> > > > > Thanks Paul!
+> > > > 
+> > > > Except that I got this from overnight testing of rcu/dev on the shared
+> > > > RCU tree:
+> > > > 
+> > > > WARNING: CPU: 5 PID: 14 at kernel/rcu/tree.c:1636 rcu_sr_normal_complete+0x5c/0x80
+> > > > 
+> > > > I see this only on TREE05.  Which should not be too surprising, given
+> > > > that this is the scenario that tests it.  It happened within five minutes
+> > > > on all 14 of the TREE05 runs.
+> > > > 
+> > > Hm.. This is not fun. I tested this on my system and i did not manage to
+> > > trigger this whereas you do. Something is wrong.
+> > >
+> > We have below code to start a new GP, if we detect that processing is
+> > starved:
+> > 
+> > <snip>
+> > /*
+> >  * The "start_new_poll" is set to true, only when this GP is not able
+> >  * to handle anything and there are outstanding users. It happens when
+> >  * the rcu_sr_normal_gp_init() function was not able to insert a dummy
+> >  * separator to the llist, because there were no left any dummy-nodes.
+> >  *
+> >  * Number of dummy-nodes is fixed, it could be that we are run out of
+> >  * them, if so we start a new pool request to repeat a try. It is rare
+> >  * and it means that a system is doing a slow processing of callbacks.
+> >  */
+> >   if (start_new_poll)
+> >     (void) start_poll_synchronize_rcu();
+> > <snip>
+> > 
+> > we do not use a _full() version, since we need to inform rcu-gp-kthread
+> > to initiate a new GP.
+> > 
+> > Any thoughts?
+> 
+> My kneejerk not-to-be-trusted take is that it does not matter which type
+> of grace period gets started so long as a grace period does get started.
+> Presumably you have done the get_state_synchronize_rcu_full() before
+> this point?
+> 
+Yes, of course. That code is located in the gp-kthread. get_state_synchronize_rcu_full()
+is done before.
 
-memblock allocated hugetlb folios might be given to the buddy allocator
-eventually (if nr_hugepages is lowered), so make sure that the migrate
-type for the pageblocks contained in them is set when initializing them.
-Set it to the default that memmap init also uses (MIGRATE_MOVABLE).
-
-Signed-off-by: Frank van der Linden <fvdl@google.com>
----
- mm/hugetlb.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 1a200f89e21a..19a7a795a388 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3254,6 +3254,26 @@ static void __init hugetlb_folio_init_vmemmap(struct folio *folio,
- 	prep_compound_head((struct page *)folio, huge_page_order(h));
- }
- 
-+/*
-+ * memblock-allocated pageblocks might not have the migrate type set
-+ * if marked with the 'noinit' flag. Set it to the default (MIGRATE_MOVABLE)
-+ * here.
-+ *
-+ * Note that this will not write the page struct, it is ok (and necessary)
-+ * to do this on vmemmap optimized folios.
-+ */
-+static void __init hugetlb_bootmem_init_migratetype(struct folio *folio,
-+							  struct hstate *h)
-+{
-+	unsigned long nr_pages = pages_per_huge_page(h), i;
-+
-+	WARN_ON_ONCE(!pageblock_aligned(folio_pfn(folio)));
-+
-+	for (i = 0; i < nr_pages; i += pageblock_nr_pages)
-+		set_pageblock_migratetype(folio_page(folio, i),
-+					  MIGRATE_MOVABLE);
-+}
-+
- static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 					struct list_head *folio_list)
- {
-@@ -3275,6 +3295,7 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 					HUGETLB_VMEMMAP_RESERVE_PAGES,
- 					pages_per_huge_page(h));
- 		}
-+		hugetlb_bootmem_init_migratetype(folio, h);
- 		/* Subdivide locks to achieve better parallel performance */
- 		spin_lock_irqsave(&hugetlb_lock, flags);
- 		__prep_account_new_huge_page(h, folio_nid(folio));
--- 
-2.48.1.711.g2feabab25a-goog
-
+--
+Uladzislau Rezki
