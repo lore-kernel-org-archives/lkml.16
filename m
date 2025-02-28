@@ -1,257 +1,266 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918831F4C85
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:29:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD772755F6
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:29:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767391; cv=none; b=Dp+4Rxt3x0WAT1yXbu6h/Xkwsrf33Hrc4VHLxXzxkKx2DXHJYiYIKlRwp/MvEIdhGMxGJ1bddrBiNs68uF7xLODvpGm/KHVGqLzHH0Ec+ASuHW5xIf1RswjAwctjqaewPaosIt5dvSUoGhisGynZ1fsGLIoLxi/d8m6o2Tf+SSE=
+	t=1740767392; cv=none; b=g15z/Iys1HfqBebOND5LMM3FkpoI6SJqsz0WC49893DvNRTwWIdIc8jfy30acky+PPO/0jehg1GA3aTg5Ho7SIyROl34bhDyguZ1ilwBByyCGHMODE8wjkODfSLE29ykGfm1ndeH6EwInafzYvnN9j+DfZd7bPC59pX6nfCY5lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740767391; c=relaxed/simple;
-	bh=0hjkwZjOfvxqyDjE1nraNcnYwtkrcvuweYJHD4hYypA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pb/75Uezgsdye7wlvb3qr2YABaqzGiRjmAPjgnJnrrIKn7+HSCodezpckfQvh4NmYnXY0CimyjUlAVI5XnGHQ+P07nEvCqFlQwHz2dY/5LXsr/r66J1yx0wVak0NRjSlDhKMUqHAN5/ZqYvCyzbnfZFOzCt0IEciCJP/WlT2QZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JkvfnVU8; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1740767392; c=relaxed/simple;
+	bh=vHaXUAlNn8PozCDKoY9kUl2s51Y98UGyKOdNrWvNRpU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=OdDKgH2T5W2mnFXA8DiafFh3tUEogflFclDcXrg3AqYfk0YcFyt3fQN6q5ymHeK69h9s0sP0R7naRL91XDSZDxkxkz4Su5rvC15KJe/Bjm8G50XuTGVx/4NPJoAt1TtrGsIx5CnoYEbQAn0u+WezzoqqeasWNzL8VQMZqyhayjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P6RYC5Be; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JkvfnVU8"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fed20dd70cso426774a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:29:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P6RYC5Be"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so5260838a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:29:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740767389; x=1741372189; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qYw/4jzpPhrn2ghi3M0NL4BqtWBXDbsucrgLdEREcUk=;
-        b=JkvfnVU8skCalS5fd2DWawgtTgmUJ7CIjTLnQe8iVB1u2RCwBPc59wA5srJ6gDD6U4
-         bzRBQIi1xTM+CapW5L+3z+LsMAqCvrOtezta8mNVCoHbgxi/tV3ZGSoT0E9Hc1omlzaI
-         AWk+WU/lBEnEN7bP9GpMySZaPn8x8jDQcHbXN+AGLxrYWLdNz8pWsy9wrUrh+tEUoQmw
-         H+mlMc0bULmH/yLGBo9X2YuL2pNRux7/V6X3oyWDXKhfUqLH0h7VCIi6NBJfLxjm3O9T
-         dE0NgZxiI6Yt1EYAYzlEgtfUxZqFjsfuYxHRGNiHbNkQTxoJr7zHH1sAOVKxRk7tTqdg
-         UYRw==
+        d=google.com; s=20230601; t=1740767390; x=1741372190; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kKtMLmlpe+m6qN9ca3/progHrAqe0123z61YwAW9d3s=;
+        b=P6RYC5BeX37Yoyf8kX1eUMYMvp+VTHvM0Do8l06m0GuBzK0rE1HgtoQeZDpiXoqcYy
+         8JlFByDOaLuw7Z2gV+EVC1uuGt010klvdTLCQ6Qa02U3x+AtVOxCdvhm5VK0AaS+fBZ7
+         JQj8rX2y6IeFZRTBnMPVKtPHQ56BS9+/o/KHdQ+1f9q4FsF37K1fDHI8r9xq2LMtz8tI
+         oJ2SDonS6lj3tleJ8U6+Q5DyZIg30+DL8/Ml3BvHErUvjZWbTYnan6x/+o0XSmcCyGVi
+         pnt5nYgNxo8MOhSti38fIBakC5sVHnbz5dD4ouOt9GHjLKVHip5wzgs9D8klo1htT1Kx
+         Q71g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740767389; x=1741372189;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qYw/4jzpPhrn2ghi3M0NL4BqtWBXDbsucrgLdEREcUk=;
-        b=g1dsucy1VTRuVqhvPZycP3ijzFPR9PAkt79+WGHFhexponxDq95pCzyxIWUqGjLIFR
-         CYZk6Iikg1mmgsowhEln2P3c2ATfnlp4nBSRmQcvPcMH9axoLDVH9eja37mPYkHD9z0J
-         X1Zc5D8gzfn/YLPyZCQE8IbWzFtfzYGg8LZgqepCnIM3H6RwDNasXKUZ2Ttz4ARwTszd
-         /ujML92JqXnQFIet4KVkAwRCSpEeRj1Zavsem6N2vAORXWESvQ2dsmks8oTM4Kvvjv5Y
-         yBz5hPv+K5wcLdIZKtsGGQNRfxCVtwtGIx2goGRftQ4Z3ZWebA7+ATRyfxS6UxYc4jOW
-         W9+g==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Xagq/LzsqxTFmRRgUVZlzngiihKBwzF3dRhJ1JOj1oB/E73yO0KmzGqN9IjmaWUIsNzGeadED9/w4VY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHBy5IiQpfOh8TPrNYnxd2VGLuDEPqCHcetqPS3PDq56c4lp9i
-	xCa+OxkIbaaWdhtzOHcJl1A2kFJi8pWKTgn1ZHkJSYBQ8w9rQkfF9//F0eRkETrcJqH+1Q==
-X-Google-Smtp-Source: AGHT+IESZf099U8QrglpAAdw2N5nAQz5IJiwSKjoOaMnJZta22YCE6lq6SYy2PQ3La5jrNurn7grddFo
-X-Received: from pjbsu16.prod.google.com ([2002:a17:90b:5350:b0:2fa:24c5:36e])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3ec4:b0:2ee:d96a:5816
- with SMTP id 98e67ed59e1d1-2febab5e105mr7663025a91.10.1740767388824; Fri, 28
- Feb 2025 10:29:48 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:29:01 +0000
+        d=1e100.net; s=20230601; t=1740767390; x=1741372190;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kKtMLmlpe+m6qN9ca3/progHrAqe0123z61YwAW9d3s=;
+        b=Wpq1+0aaaCAan/p1VZQ9luI2jsfHYy7NlToWylxNlvAo7kPo4I5w8ewOmQCc4R46OV
+         DXUlbFnjTsHex4hRAAeZahwTz0+PaHIpm00C2o3gyK+qUtQZy9x0Q14DCZfEsRYQv4yp
+         XPK+Of/zMKWeu4h57G7zrwZmoFEc+twoyeUjPMdRMwX2DSIptAychuS72GDMY4XH4h4R
+         EHFz8ogb/TqXlPd3QG5e+oLgdcs2nc4lvNRAHjrqNkaj1GT53RZu0+H3MEeYNWlw8M1S
+         7oxCoE0cl7tyvE1m9Vh46SVc+9oyUSdkD3ZnIYJUZWovFHnIkKeOnRIliiuCai6wVrOK
+         XQVg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeDJmWw7kbFSVRzkvMEH4S77vFJdtXSKRho3OdEPdnyFamvfx0+zUBJsxXC/+IA8oqE+JIEXAVdUVazG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwACuuUbIWm6TA3jd0v3/xK6x1C4iqEYGhY8jBidNj5wCRde7TP
+	qh8Nxx56fAlg4AGr4fvMuV0pxVIynRo98Gf+qkAgAG33EHsa8FtOe7TtxD4h5vdg6FsbAA==
+X-Google-Smtp-Source: AGHT+IHqJuYtYkzOhZDMCMvoR+05mDEEDRM0zr7QytAhww8Je1Y3UD1lMlTzOEV4CRBkoQI5L703TwyQ
+X-Received: from pjbsr11.prod.google.com ([2002:a17:90b:4e8b:b0:2ef:82a8:7171])
+ (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a89:b0:2ef:e0bb:1ef2
+ with SMTP id 98e67ed59e1d1-2febab71ec6mr6563503a91.19.1740767390505; Fri, 28
+ Feb 2025 10:29:50 -0800 (PST)
+Date: Fri, 28 Feb 2025 18:29:02 +0000
+In-Reply-To: <20250228182928.2645936-1-fvdl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250228182928.2645936-1-fvdl@google.com>
 X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250228182928.2645936-1-fvdl@google.com>
-Subject: [PATCH v5 00/27] hugetlb/CMA improvements for large systems
+Message-ID: <20250228182928.2645936-2-fvdl@google.com>
+Subject: [PATCH v5 01/27] mm/cma: export total and free number of pages for
+ CMA areas
 From: Frank van der Linden <fvdl@google.com>
 To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
 	linux-kernel@vger.kernel.org
 Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
 	roman.gushchin@linux.dev, ziy@nvidia.com, david@redhat.com, 
-	Frank van der Linden <fvdl@google.com>
+	Frank van der Linden <fvdl@google.com>, Oscar Salvador <osalvador@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 
-v5:
-* make SPARSEMEM_VMEMMAP_PREINIT an internal config option,
-  and rename ARCH_WANT_SPARSE_VMEMMAP_PREINIT to
-  ARCH_WANT_HUGETLB_VMEMMAP_PREINIT (suggested by
-  Johannes Weiner <hannes@cmpxchg.org>)
-* warning fixes to mm/cma.c (from Arnd Bergmann <arnd@arndb.de>)
+In addition to the number of allocations and releases, system
+management software may like to be aware of the size of CMA
+areas, and how many pages are available in it. This information
+is currently not available, so export it in total_page and
+available_pages, respectively.
 
-v4:
-* This series assumes that the following patch has been applied:
-  https://lore.kernel.org/linux-mm/1f9f5fb4-27cd-4981-aa60-789a33376598@redhat.com/
-* Drop memblock alloc loop patch that wasn't needed.
-* Update documentation to reflect that hugepagesz and hugepages
-  are now early parameters.
-* Fix uninitialized var warning (from Dan Carpenter <dan.carpenter@linaro.org>)
-* In the case of node fallback by memblock_alloc_try_nid_raw, make sure
-  to get the actual NUMA node it was allocated from and put it on the
-  list for that node, as this is what the pre-HVO code needs.
-* Moved some empty static inline function decls to the right patch.
-* Fix incorrect memory stats for hugetlb_cma= combined with hugepages=
+The name 'available_pages' was picked over 'free_pages' because
+'free' implies that the pages are unused. But they might not
+be, they just haven't been used by cma_alloc
 
-v3:
-* Fix SPDX comment include file format.
-* Add new hugetlb_cma.* files to MAINTAINERS
-* Document new ranges/ subdir in CMA debugfs.
-* Fix powerpc compilation for config without HAVE_BOOTMEM_INFO_NODE
-* Fix various other nits found by kernel test robot.
-* Use a PFN value of -1 to indicate a non-mirrored mapping
-  in sparse-vmemmap.c, not 0.
-* Fix incorrect if() statement that got mangled in cma.c
+The number of available pages is tracked regardless of
+CONFIG_CMA_SYSFS, allowing for a few minor shortcuts in
+the code, avoiding bitmap operations.
 
-v2:
-* Add missing CMA debugfs code.
-* Minor cleanups in hugetlb_cma changes.
-* Move hugetlb_cma code to its own file to further clean
-  things up.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Frank van der Linden <fvdl@google.com>
+---
+ Documentation/ABI/testing/sysfs-kernel-mm-cma | 13 +++++++++++
+ mm/cma.c                                      | 22 ++++++++++++++-----
+ mm/cma.h                                      |  1 +
+ mm/cma_debug.c                                |  5 +----
+ mm/cma_sysfs.c                                | 20 +++++++++++++++++
+ 5 files changed, 51 insertions(+), 10 deletions(-)
 
-On large systems, we observed some issues with hugetlb and CMA:
-
-1) When specifying a large number of hugetlb boot pages (hugepages=
-   on the commandline), the kernel may run out of memory before it
-   even gets to HVO. For example, if you have a 3072G system, and
-   want to use 3024 1G hugetlb pages for VMs, that should leave
-   you plenty of space for the hypervisor, provided you have the
-   hugetlb vmemmap optimization (HVO) enabled. However, since
-   the vmemmap pages are always allocated first, and then later
-   in boot freed, you will actually run yourself out of memory
-   before you can do HVO. This means not getting all the hugetlb
-   pages you want, and worse, failure to boot if there is an
-   allocation failure in the system from which it can't recover.
-
-2) There is a system setup where you might want to use hugetlb_cma
-   with a large value (say, again, 3024 out of 3072G like above),
-   and then lower that if system usage allows it, to make room
-   for non-hugetlb processes. For this, a variation of the problem
-   above applies: the kernel runs out of unmovable space to allocate
-   from before you finish boot, since your CMA area takes up all
-   the space.
-
-3) CMA wants to use one big contiguous area for allocations. Which
-   fails if you have the aforementioned 3T system with a gap in the
-   middle of physical memory (like the < 40bits BIOS DMA area seen on
-   some AMD systems). You then won't be able to set up a CMA area for
-   one of the NUMA nodes, leading to loss of half of your hugetlb
-   CMA area.
-
-4) Under the scenario mentioned in 2), when trying to grow the
-   number of hugetlb pages after dropping it for a while, new
-   CMA allocations may fail occasionally. This is not unexpected,
-   some transient references on pages may prevent cma_alloc
-   from succeeding under memory pressure. However, the hugetlb
-   code then falls back to a normal contiguous alloc, which may
-   end up succeeding. This is not always desired behavior. If
-   you have a large CMA area, then the kernel has a restricted
-   amount of memory it can do unmovable allocations from (a well
-   known issue). A normal contiguous alloc may eat further in to
-   this space.
-
-
-To resolve these issues, do the following:
-
-* Add hooks to the section init code to do custom initialization
-  of memmap pages. Hugetlb bootmem (memblock) allocated pages can
-  then be pre-HVOed. This avoids allocating a large number of
-  vmemmap pages early in boot, only to have them be freed again
-  later, and also avoids running out of memory as described under 1).
-  Using these hooks for hugetlb is optional. It requires moving
-  hugetlb bootmem allocation to an earlier spot by the architecture.
-  This has been enabled on x86.
-* hugetlb_cma doesn't care about the CMA area it uses being one
-  large contiguous range. Multiple smaller ranges are fine. The
-  only requirements are that the areas should be on one NUMA node,
-  and individual gigantic pages should be allocatable from them. So,
-  implement multi-range support for CMA, avoiding issue 3).
-* Introduce a hugetlb_cma_only option on the commandline. This only
-  allows allocations from CMA for gigantic pages, if hugetlb_cma=
-  is also specified.
-* With hugetlb_cma_only active, it also makes sense to be able to
-  pre-allocate gigantic hugetlb pages at boot time from the CMA
-  area(s). Add a rudimentary early CMA allocation interface, that
-  just grabs a piece of memblock-allocated space from the CMA
-  area, which gets marked as allocated in the CMA bitmap
-  when the CMA area is initialized. With this, hugepages= can
-  be supported with hugetlb_cma=, making scenario 2) work.
-
-Additionally, fix some minor bugs, with one worth mentioning:
-since hugetlb gigantic bootmem pages are allocated by memblock,
-they may span multiple zones, as memblock doesn't (and mostly
-can't) know about zones. This can cause problems. A hugetlb page
-spanning multiple zones is bad, and it's worse with HVO, when
-the de-HVO step effectively sneakily re-assigns pages to a
-different zone than originally configured, since the tail pages
-all inherit the zone from the first 60 tail pages. This condition
-is not common, but can be easily reproduced using ZONE_MOVABLE.
-To fix this, add checks to see if gigantic bootmem pages intersect
-with multiple zones, and do not use them if they do, giving them
-back to the page allocator instead.
-
-The first patch is kind of along for the ride, except that
-maintaining an available_count for a CMA area is convenient
-for the multiple range support.
-
-Frank van der Linden (27):
-  mm/cma: export total and free number of pages for CMA areas
-  mm, cma: support multiple contiguous ranges, if requested
-  mm/cma: introduce cma_intersects function
-  mm, hugetlb: use cma_declare_contiguous_multi
-  mm/hugetlb: remove redundant __ClearPageReserved
-  mm/hugetlb: use online nodes for bootmem allocation
-  mm/hugetlb: convert cmdline parameters from setup to early
-  x86/mm: make register_page_bootmem_memmap handle PTE mappings
-  mm/bootmem_info: export register_page_bootmem_memmap
-  mm/sparse: allow for alternate vmemmap section init at boot
-  mm/hugetlb: set migratetype for bootmem folios
-  mm: define __init_reserved_page_zone function
-  mm/hugetlb: check bootmem pages for zone intersections
-  mm/sparse: add vmemmap_*_hvo functions
-  mm/hugetlb: deal with multiple calls to hugetlb_bootmem_alloc
-  mm/hugetlb: move huge_boot_pages list init to hugetlb_bootmem_alloc
-  mm/hugetlb: add pre-HVO framework
-  mm/hugetlb_vmemmap: fix hugetlb_vmemmap_restore_folios definition
-  mm/hugetlb: do pre-HVO for bootmem allocated pages
-  x86/setup: call hugetlb_bootmem_alloc early
-  x86/mm: set ARCH_WANT_HUGETLB_VMEMMAP_PREINIT
-  mm/cma: simplify zone intersection check
-  mm/cma: introduce a cma validate function
-  mm/cma: introduce interface for early reservations
-  mm/hugetlb: add hugetlb_cma_only cmdline option
-  mm/hugetlb: enable bootmem allocation from CMA areas
-  mm/hugetlb: move hugetlb CMA code in to its own file
-
- Documentation/ABI/testing/sysfs-kernel-mm-cma |  13 +
- .../admin-guide/kernel-parameters.txt         |  21 +-
- Documentation/admin-guide/mm/cma_debugfs.rst  |  10 +-
- MAINTAINERS                                   |   2 +
- arch/powerpc/include/asm/book3s/64/hugetlb.h  |   6 +
- arch/powerpc/mm/hugetlbpage.c                 |   1 +
- arch/powerpc/mm/init_64.c                     |   4 +
- arch/s390/mm/init.c                           |  13 +-
- arch/x86/Kconfig                              |   1 +
- arch/x86/kernel/setup.c                       |   4 +-
- arch/x86/mm/init_64.c                         |  18 +-
- fs/Kconfig                                    |   1 +
- include/linux/bootmem_info.h                  |   7 +
- include/linux/cma.h                           |   9 +
- include/linux/hugetlb.h                       |  35 +
- include/linux/mm.h                            |  13 +-
- include/linux/mmzone.h                        |  35 +
- mm/Kconfig                                    |   6 +
- mm/Makefile                                   |   3 +
- mm/bootmem_info.c                             |   4 +-
- mm/cma.c                                      | 739 +++++++++++++++---
- mm/cma.h                                      |  46 +-
- mm/cma_debug.c                                |  61 +-
- mm/cma_sysfs.c                                |  20 +
- mm/hugetlb.c                                  | 582 ++++++++------
- mm/hugetlb_cma.c                              | 275 +++++++
- mm/hugetlb_cma.h                              |  57 ++
- mm/hugetlb_vmemmap.c                          | 199 ++++-
- mm/hugetlb_vmemmap.h                          |  23 +-
- mm/internal.h                                 |  19 +
- mm/mm_init.c                                  |  78 +-
- mm/sparse-vmemmap.c                           | 168 +++-
- mm/sparse.c                                   |  87 ++-
- 33 files changed, 2065 insertions(+), 495 deletions(-)
- create mode 100644 mm/hugetlb_cma.c
- create mode 100644 mm/hugetlb_cma.h
-
+diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-cma b/Documentation/ABI/testing/sysfs-kernel-mm-cma
+index dfd755201142..aaf2a5d8b13b 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-mm-cma
++++ b/Documentation/ABI/testing/sysfs-kernel-mm-cma
+@@ -29,3 +29,16 @@ Date:		Feb 2024
+ Contact:	Anshuman Khandual <anshuman.khandual@arm.com>
+ Description:
+ 		the number of pages CMA API succeeded to release
++
++What:		/sys/kernel/mm/cma/<cma-heap-name>/total_pages
++Date:		Jun 2024
++Contact:	Frank van der Linden <fvdl@google.com>
++Description:
++		The size of the CMA area in pages.
++
++What:		/sys/kernel/mm/cma/<cma-heap-name>/available_pages
++Date:		Jun 2024
++Contact:	Frank van der Linden <fvdl@google.com>
++Description:
++		The number of pages in the CMA area that are still
++		available for CMA allocation.
+diff --git a/mm/cma.c b/mm/cma.c
+index de5bc0c81fc2..95a8788e54d3 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -86,6 +86,7 @@ static void cma_clear_bitmap(struct cma *cma, unsigned long pfn,
+ 
+ 	spin_lock_irqsave(&cma->lock, flags);
+ 	bitmap_clear(cma->bitmap, bitmap_no, bitmap_count);
++	cma->available_count += count;
+ 	spin_unlock_irqrestore(&cma->lock, flags);
+ }
+ 
+@@ -133,7 +134,7 @@ static void __init cma_activate_area(struct cma *cma)
+ 			free_reserved_page(pfn_to_page(pfn));
+ 	}
+ 	totalcma_pages -= cma->count;
+-	cma->count = 0;
++	cma->available_count = cma->count = 0;
+ 	pr_err("CMA area %s could not be activated\n", cma->name);
+ }
+ 
+@@ -206,7 +207,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
+ 		snprintf(cma->name, CMA_MAX_NAME,  "cma%d\n", cma_area_count);
+ 
+ 	cma->base_pfn = PFN_DOWN(base);
+-	cma->count = size >> PAGE_SHIFT;
++	cma->available_count = cma->count = size >> PAGE_SHIFT;
+ 	cma->order_per_bit = order_per_bit;
+ 	*res_cma = cma;
+ 	cma_area_count++;
+@@ -390,7 +391,7 @@ static void cma_debug_show_areas(struct cma *cma)
+ {
+ 	unsigned long next_zero_bit, next_set_bit, nr_zero;
+ 	unsigned long start = 0;
+-	unsigned long nr_part, nr_total = 0;
++	unsigned long nr_part;
+ 	unsigned long nbits = cma_bitmap_maxno(cma);
+ 
+ 	spin_lock_irq(&cma->lock);
+@@ -402,12 +403,12 @@ static void cma_debug_show_areas(struct cma *cma)
+ 		next_set_bit = find_next_bit(cma->bitmap, nbits, next_zero_bit);
+ 		nr_zero = next_set_bit - next_zero_bit;
+ 		nr_part = nr_zero << cma->order_per_bit;
+-		pr_cont("%s%lu@%lu", nr_total ? "+" : "", nr_part,
++		pr_cont("%s%lu@%lu", start ? "+" : "", nr_part,
+ 			next_zero_bit);
+-		nr_total += nr_part;
+ 		start = next_zero_bit + nr_zero;
+ 	}
+-	pr_cont("=> %lu free of %lu total pages\n", nr_total, cma->count);
++	pr_cont("=> %lu free of %lu total pages\n", cma->available_count,
++			cma->count);
+ 	spin_unlock_irq(&cma->lock);
+ }
+ 
+@@ -444,6 +445,14 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
+ 
+ 	for (;;) {
+ 		spin_lock_irq(&cma->lock);
++		/*
++		 * If the request is larger than the available number
++		 * of pages, stop right away.
++		 */
++		if (count > cma->available_count) {
++			spin_unlock_irq(&cma->lock);
++			break;
++		}
+ 		bitmap_no = bitmap_find_next_zero_area_off(cma->bitmap,
+ 				bitmap_maxno, start, bitmap_count, mask,
+ 				offset);
+@@ -452,6 +461,7 @@ static struct page *__cma_alloc(struct cma *cma, unsigned long count,
+ 			break;
+ 		}
+ 		bitmap_set(cma->bitmap, bitmap_no, bitmap_count);
++		cma->available_count -= count;
+ 		/*
+ 		 * It's safe to drop the lock here. We've marked this region for
+ 		 * our exclusive use. If the migration fails we will take the
+diff --git a/mm/cma.h b/mm/cma.h
+index 8485ef893e99..3dd3376ae980 100644
+--- a/mm/cma.h
++++ b/mm/cma.h
+@@ -13,6 +13,7 @@ struct cma_kobject {
+ struct cma {
+ 	unsigned long   base_pfn;
+ 	unsigned long   count;
++	unsigned long	available_count;
+ 	unsigned long   *bitmap;
+ 	unsigned int order_per_bit; /* Order of pages represented by one bit */
+ 	spinlock_t	lock;
+diff --git a/mm/cma_debug.c b/mm/cma_debug.c
+index 602fff89b15f..89236f22230a 100644
+--- a/mm/cma_debug.c
++++ b/mm/cma_debug.c
+@@ -34,13 +34,10 @@ DEFINE_DEBUGFS_ATTRIBUTE(cma_debugfs_fops, cma_debugfs_get, NULL, "%llu\n");
+ static int cma_used_get(void *data, u64 *val)
+ {
+ 	struct cma *cma = data;
+-	unsigned long used;
+ 
+ 	spin_lock_irq(&cma->lock);
+-	/* pages counter is smaller than sizeof(int) */
+-	used = bitmap_weight(cma->bitmap, (int)cma_bitmap_maxno(cma));
++	*val = cma->count - cma->available_count;
+ 	spin_unlock_irq(&cma->lock);
+-	*val = (u64)used << cma->order_per_bit;
+ 
+ 	return 0;
+ }
+diff --git a/mm/cma_sysfs.c b/mm/cma_sysfs.c
+index f50db3973171..97acd3e5a6a5 100644
+--- a/mm/cma_sysfs.c
++++ b/mm/cma_sysfs.c
+@@ -62,6 +62,24 @@ static ssize_t release_pages_success_show(struct kobject *kobj,
+ }
+ CMA_ATTR_RO(release_pages_success);
+ 
++static ssize_t total_pages_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
++{
++	struct cma *cma = cma_from_kobj(kobj);
++
++	return sysfs_emit(buf, "%lu\n", cma->count);
++}
++CMA_ATTR_RO(total_pages);
++
++static ssize_t available_pages_show(struct kobject *kobj,
++					  struct kobj_attribute *attr, char *buf)
++{
++	struct cma *cma = cma_from_kobj(kobj);
++
++	return sysfs_emit(buf, "%lu\n", cma->available_count);
++}
++CMA_ATTR_RO(available_pages);
++
+ static void cma_kobj_release(struct kobject *kobj)
+ {
+ 	struct cma *cma = cma_from_kobj(kobj);
+@@ -75,6 +93,8 @@ static struct attribute *cma_attrs[] = {
+ 	&alloc_pages_success_attr.attr,
+ 	&alloc_pages_fail_attr.attr,
+ 	&release_pages_success_attr.attr,
++	&total_pages_attr.attr,
++	&available_pages_attr.attr,
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(cma);
 -- 
 2.48.1.711.g2feabab25a-goog
 
