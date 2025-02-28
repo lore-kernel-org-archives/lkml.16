@@ -1,56 +1,53 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8989E1EF37B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 15:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7BCF1EF37B;
+	Fri, 28 Feb 2025 15:14:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740755556; cv=none; b=OdS1FJV1k/qZOnksSo4P5WA4XajvF9oWrNfMFUsBaZ1vqz9E/KkU95SEssyWRpPSsZTNwB1E8SJRWfAc5KK+eFEcs0hPB1wHR5gHDRdijwIix4b4tPz+kPLejQ8yqkHqFd49YrDDPJmYJqP7ewW5nACNQk1DZDgrMEWDUBZ9apc=
+	t=1740755643; cv=none; b=VUtU9+I6ugo6sQztSnfLPC5y2OPeXATApYmEQe3jE5Q+ZsIs14O9RbPMQNjoOCOU76u8rhjyU7VvE64KC8asGw6bADVpeSq6vVSwentjBHCZQmC+OkGbSWiCv6khdt+baucXL+SA/9BoNLTrhUGBuk4U+86xWTBRm6y5tqWmX2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740755556; c=relaxed/simple;
-	bh=IdxijL2MKs5ZKc3W56BJQd2rktqrB8w0eK8g/S1abHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hbfYCYPUArg0caKNbBPyCHDwNIu60/awTff3BmVR2vmj4Ojc/scffnsKMbuNF3TFZXNQjO4KfKwZoGQXc5tKEYp7X38ONJudD378NbQAUme7htJAdFjShlOgY3N5vXsZjxBHXvzlUcKnAOCVsNEuaae3JbxgBILK8SsvLanRl0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FClhitgE; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740755643; c=relaxed/simple;
+	bh=U3dRrAdPcD5ykuZwBZVulA4GGiqZba4MIDWQMtMWSIo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=lkAxWg96hYVx3SWhmun5Em2fHNi5SBhSm1ehya/Zir/hwy50TZGn/eYSP2nu4iEC+JzeIat8ATH4WT5899KHcPocsk+KLo6IzeSzoggWcSli3i6wsi3/HeJcULzbTn+r5JoIB0IOfUilsJ6aKhu0cf26dVq1G4cG4Z/s4PGsv0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=bEJ31olJ; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FClhitgE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740755552;
-	bh=IdxijL2MKs5ZKc3W56BJQd2rktqrB8w0eK8g/S1abHs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FClhitgEXxiiyxS1uGMDRJEzbKKwnNPFp+y2W+t/PIbI3XEpO85OW7o0yfxWWY/B3
-	 hXGWCDuXwVF/jypCMQJ4zEvk+6yf/Vmr3u5FRZEUxYTTjbw2aooaif90OT43++AgFK
-	 KdTOhw4ftcLIklUIa7U7tQI83kCB6sNn9OgTADm5lhSQa1XjKd0mo3KvidUszYwTKQ
-	 zVWWt5NF0IuPa2j5YgewkQK7IE/fUcOmo/NwFFuuUXqCBG3/1zTWmWxhqTZBZZtuhY
-	 JJsRzrZeV+veLOKZcKJIihT5wKBWMauhyIpOJdsksUk5oGKtSYH9gkx6W2av6NR2ZS
-	 ouWSkFZ4XU3qQ==
-Received: from localhost.localdomain (unknown [171.76.85.20])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 78B2117E066F;
-	Fri, 28 Feb 2025 16:12:29 +0100 (CET)
-From: Vignesh Raman <vignesh.raman@collabora.com>
-To: dri-devel@lists.freedesktop.org
-Cc: daniels@collabora.com,
-	helen.fornazier@gmail.com,
-	airlied@gmail.com,
-	simona.vetter@ffwll.ch,
-	robdclark@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	guilherme.gallo@collabora.com,
-	sergi.blanch.torne@collabora.com,
-	valentine.burley@collabora.com,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm/ci: use shallow clone to avoid timeouts
-Date: Fri, 28 Feb 2025 20:42:12 +0530
-Message-ID: <20250228151217.563807-1-vignesh.raman@collabora.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="bEJ31olJ"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 6C9221F9D8;
+	Fri, 28 Feb 2025 16:13:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1740755639;
+	bh=Hba3OPddqmnGuDnES7XnqkDAeIm8Aq9AiYitH82aoGY=; h=From:To:Subject;
+	b=bEJ31olJuMURWHkviCt3MCT+NaBg2GBhN+P0kQLpFhkLzKmYUl+G2XcdKdLLvYrv4
+	 K/2cuaZNo/EWQ7zkde/wW7UI0g78yucskujp0lCrXSHYuNMFQUuEvSl8lxzNi/2/0A
+	 KkWAaAdDux/p6pV9EI8juHId4Iled9ceox3HOJL1D1IaorWyQPEX26pxJycpFqTbBZ
+	 uAQhdWb9d3vUYGOFwE5LT4nyhoXao/GcqlOcZ6hUDVkavfP3CCebfiBlSEn6pkN/YQ
+	 r88gUhxkfIuh+clbdgEQmSo2mkqd5EMeqVe0YVV8mPrH2orgDo6EeyE0zaVgzDWDo7
+	 eia7dNDQhyQlQ==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Stefan Agner <stefan@agner.ch>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 2/4] ARM: dts: imx6qdl-apalis/colibri: Remove compatible from SoM dtsi
+Date: Fri, 28 Feb 2025 16:13:50 +0100
+Message-Id: <20250228151352.91768-3-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250228151352.91768-1-francesco@dolcini.it>
+References: <20250228151352.91768-1-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,34 +56,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The python-artifacts job has a timeout of 10 minutes, which causes
-build failures as it was unable to clone the repository within the
-specified limits. Set GIT_DEPTH to 50 to speed up cloning and avoid
-build failures due to timeouts when fetching the full repository.
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+The SoM cannot be used standalone, this compatible is invalid and it is
+always overwritten when this .dtsi file is included, remove it
+therefore.
+
+Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 ---
-
-v2:
-  - Set GIT_DEPTH to 50 to allow the check-patch job to pass
-
+v2: new patch
 ---
- drivers/gpu/drm/ci/gitlab-ci.yml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi  | 1 -
+ arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/gitlab-ci.yml
-index f4e324e156db..3ba50fcd6f15 100644
---- a/drivers/gpu/drm/ci/gitlab-ci.yml
-+++ b/drivers/gpu/drm/ci/gitlab-ci.yml
-@@ -40,6 +40,8 @@ variables:
-   ARTIFACTS_BASE_URL: https://${CI_PROJECT_ROOT_NAMESPACE}.${CI_PAGES_DOMAIN}/-/${CI_PROJECT_NAME}/-/jobs/${CI_JOB_ID}/artifacts
-   # Python scripts for structured logger
-   PYTHONPATH: "$PYTHONPATH:$CI_PROJECT_DIR/install"
-+  # Set to 0 to disable shallow cloning
-+  GIT_DEPTH: 50
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
+index dffab5aa8b9c..e42a553bdd3b 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-apalis.dtsi
+@@ -10,7 +10,6 @@
  
+ / {
+ 	model = "Toradex Apalis iMX6Q/D Module";
+-	compatible = "toradex,apalis_imx6q", "fsl,imx6q";
  
- default:
+ 	aliases {
+ 		mmc0 = &usdhc3; /* eMMC */
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
+index 9f33419c260b..fc61d5866b09 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-colibri.dtsi
+@@ -10,7 +10,6 @@
+ 
+ / {
+ 	model = "Toradex Colibri iMX6DL/S Module";
+-	compatible = "toradex,colibri_imx6dl", "fsl,imx6dl";
+ 
+ 	aliases {
+ 		mmc0 = &usdhc3; /* eMMC */
 -- 
-2.47.2
+2.39.5
 
