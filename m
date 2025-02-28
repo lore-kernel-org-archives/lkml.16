@@ -1,178 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CF0226FDBE;
-	Fri, 28 Feb 2025 14:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E71126E652
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740752641; cv=none; b=XuFxgTyNAapZM5BrBF5tjJ0ftwy1UMLoEIEbCdQSAcrigl8VmY8TTqkTYTBNhm/OTW4nlyaZ0Oo89cJOXYeKySwYUWgljossURMvv2rtPuJnUngS6j7iv3zq/YR3NAzi9naT1G8W+cdvDinVk0aBRmlGJZqqN4HjTXObcyMMR9o=
+	t=1740752724; cv=none; b=XRTS5xOzKpX8Gd6HHUnoKYlrR41Nzyhh03u967PPHtYPiBVxeUiXvFeNrl+D7k8VIEFDPyYmQGNYPVKQ3/ghVmolX5NeakriQQKBSBw/CUhUryp2uH8Un21kIJ5O8KpotyN/7KV8mvbZeFZOVg8qi4BqyN8AWNL7Q4BRjrK6x7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740752641; c=relaxed/simple;
-	bh=khKfY/IBW02PeE8kauJY4wJKQ61VMPyzLS8E+LWvU3I=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=AH6nCoVvp3BLj45XX3S1mm84oWORK+ttIWxqX2agsS7uoyUfBFNX6mqs/+rC0cw9uzPIaS5Lm7Vu5hzWlzn+MqBmodTH9ILYxYMD6O6j+6VRzlXW1RO5P3UxlOFnMc7YXBNXzYNfWt+F3sZw3wk268hvR5v9SiDG1uwV+Gw2DiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMQZTc/6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740752724; c=relaxed/simple;
+	bh=OIzHAEtZLRdehCT8XTvoyMMkGvyxwP0N0aEn13IQuXs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IPPRheeGyUj3RuVL842zwj+unkTqMscaRazcQUxJhEwEgtGnBwc+qRvwkMuU9u459JnN95LJrbWRGqMVkrLbvB+JQHhbSrNyzVce/w+QWoUUinXryFFit4upSffCMnXBtp0RJEmjNDKXA6B819ARK/SPtOM3Tm7r3wC387IG3uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YD/Gv684; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMQZTc/6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38227C4CEE5;
-	Fri, 28 Feb 2025 14:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740752641;
-	bh=khKfY/IBW02PeE8kauJY4wJKQ61VMPyzLS8E+LWvU3I=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=OMQZTc/6QWL4nNe8A8lPHGEuMcdgvvD6ahM/H+K3Jx8mwJ3Co9yx0+M63FUzBELB4
-	 BfA1+x24nR8uUyGJUFv6+JYbYpGfkXTLDMw9H01vV7DWmSVIsUj0dqXLFDpmHqlXtp
-	 FUv6uaVWiDm2fJlYnigkZ2dmeCwlAPtQSg08Pf+NWiRcT3ahg9UvDgMRXpc+AxSbrv
-	 4BEqGWi993HEl9c0D5TarEDv77Cc2haiN+lsJ18TXC7TrQQs5AC4DF9fyGAza5A6+t
-	 LEd3KjIfUMv9KGLOL+a09YfsETfSZkbFT0Q5NMUa0yiUVb0MK0S+j8IP0WO6YnHT1f
-	 o1WGLenDfacBQ==
-Date: Fri, 28 Feb 2025 08:23:59 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YD/Gv684"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abb81285d33so415417566b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 06:25:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740752721; x=1741357521; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j95NBh5qzJcx7cZbH3fh5wk/7zjXRZ1HkMfWcLmgpJU=;
+        b=YD/Gv684NgBtRmqnEuxv3ZkTs8lpd7IQ/kRJw2IH69AGEhsuwCjyGIrbbnc6xVsqil
+         vpcHL45K9SrE2RSI+6cogyigSU04wK14oiP6QTBa186Hz539aRYfvpPOBaejT3ZHmwbs
+         Q0w2ILqh91FiCpORBKDYPTasE6hQiXFVBbwDufJMNfYY6kKkaB94yFNvuLGGxLlLInlW
+         HA35N+Nexa1pVKWuFQcWotaQuSFow2XY1jRvl97oMFR96jbrBOMaZXCxAFsfajpoSEWx
+         gP8tmxAKCc7e49OA+u9wUWWQiICOsTsoRuElQbDbqe8B7kdYDx/z2SDYNg3FN/5npdlZ
+         Q1gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740752721; x=1741357521;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j95NBh5qzJcx7cZbH3fh5wk/7zjXRZ1HkMfWcLmgpJU=;
+        b=Hp2oNkq0m+52/iqlPP8gQrHVvrKcDf/knYvWWf99swO7X8QHwlzNbUSr03j3inUc8A
+         66iEoNoITRQ06eCVarsmtaq4ihQ4eLbjuHy8apzzFiRhjpV+7jCPedTB6TPdddcZjoLf
+         E+tbpkeJwfW+7sfbxIC8i9Kbf5ol73x40qMMSffFUP2gfi80a+19MWcMOa57jrO9A6if
+         VkCtJ2VL+kJ7O1gGW7PKmLDR6GTwrDVMJO2X2FCu7lKqvxydoy2gEAXtTySQ36Y9JEig
+         jf0miFviXmTDIwQFxNkQUMKET0U4WU+oJ/9SUhp3BdS8NS7uJO8aZHmO1nGELSbRhY59
+         9F0A==
+X-Forwarded-Encrypted: i=1; AJvYcCWin0F6WCQcmjSud3d+xi1/jH9oxm9mLCwGNTwyWMrINdMR1cfY78v7f04pOX0rhufRmuhZnqPx8+odTKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Pggrdzm1kCxcbdjMmoK0DKy7Z0o+O0hmQb7ComlXazosyMv/
+	/Z6IsxN3eu69yeEfWoRV7VtZhd90ASJxpZX2JjTyLaTG48TT1EiB9xL2j8jolwQ=
+X-Gm-Gg: ASbGnctbJ0fUVDOYUcLEEjKpRBlLmbAH1fwMF29zW/BmPZXyg3nvdPTF60CuftyA1NB
+	ewAF7Q+O3c8gKVSnIF6PN4xADRtsVVLwfsHgYp74z5pnsEDjiJNkhvT+mnb2vyh2cHKbtA8YEa/
+	HGIbnGPvIMfFgBZ7CEHmmIpoUyjPlwYPfDqaORzSyjtWqaod/FrgPh2yyaB/vlkGeSaoz9fj1+g
+	IWhjwaUEgwMNhRYtuj4nPpA0KQbtNiOQvAtZhP2vXOT+2fWFI/Syff8xL6pRdv146zSsGWzOx2A
+	HaT0Fl8HCUOH8hbcLc4O+t5/rW32pSncIzcBxRhYMhi05CpEAQOQ5m7K5KVcgkgnfQggyfomEg/
+	BmQ/9g2gMEA==
+X-Google-Smtp-Source: AGHT+IH7P3KcRrpCODNCujFnOOLmi8XeVbBnZbd6Z7IVNjqTTc15B6SHZjXQ6PZV2vMMvoftmGaSyw==
+X-Received: by 2002:a17:907:7fa3:b0:ab7:d361:11b4 with SMTP id a640c23a62f3a-abf25f9053bmr352779866b.7.1740752720580;
+        Fri, 28 Feb 2025 06:25:20 -0800 (PST)
+Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c75bffcsm298754466b.143.2025.02.28.06.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 06:25:20 -0800 (PST)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Fri, 28 Feb 2025 14:25:16 +0000
+Subject: [PATCH v3 2/6] dt-bindings: nvmem: add max77759 binding
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, 
- conor+dt@kernel.org, krzk+dt@kernel.org, devicetree@vger.kernel.org, 
- p.zabel@pengutronix.de, alexandre.belloni@bootlin.com, lee@kernel.org, 
- linux-rtc@vger.kernel.org, nicolas.ferre@microchip.com, 
- claudiu.beznea@tuxon.dev, sre@kernel.org
-To: Ryan.Wanner@microchip.com
-In-Reply-To: <cover.1740671156.git.Ryan.Wanner@microchip.com>
-References: <cover.1740671156.git.Ryan.Wanner@microchip.com>
-Message-Id: <174075232975.2756279.6056576336708729694.robh@kernel.org>
-Subject: Re: [PATCH v3 00/21] Enable Power Modes Support for SAMA7D65 SoC
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250228-max77759-mfd-v3-2-0c3627d42526@linaro.org>
+References: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org>
+In-Reply-To: <20250228-max77759-mfd-v3-0-0c3627d42526@linaro.org>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
+The Maxim MAX77759 is a companion PMIC for USB Type-C applications and
+includes Battery Charger, Fuel Gauge, temperature sensors, USB Type-C
+Port Controller (TCPC), NVMEM, and a GPIO expander.
 
-On Thu, 27 Feb 2025 08:51:47 -0700, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> This patch set adds support for low power modes for the SAMA7D65 SoC and
-> the required components and changes for low power modes.
-> 
-> The series includes changes in the asm code to account for the addtional
-> clocks that are in this SoC.
-> 
-> The Device tree additions are to enable all the components needed to
-> keep the SoC in low power mode.
-> 
-> There are some DTB check warnings but that is due to the dt-binding not
-> in the correct .yaml file format.
-> 
-> Changes v1 -> v2:
-> - Add missing compatible for ddr3phy, it is now in both syscon sets.
-> - Fix alphabetical ordering for sama7d65.
-> - Remove the incorrect reorganizing patch.
-> - Remove sama7g5-rtt as a compatible for sama7d65-rtt and add
->   sama7d65-rtt as a compatible wake up source in the pm driver.
-> 
-> Changes from v2 -> v3:
-> - Correct mistake in v2 sfrbu dt-binding patch.
-> - Correct incorrect dt-binding addition and formatting for rtc and rtt bindings.
-> - Add missing SoB tag.
-> - Cleaned up commit message for Backup mode to describe SHDWC is status
->   register is cleared for this SoC.
-> - Cleaned up variable naming and usage for mcks. Changed the mcks number
->   to the correct number of clocks needed to be saved and corrected the
->   ASM code accordingly.
-> - Removed the SHDWC from ULP0 wake-up source as it is not configured as
->   a valid wake-up source for ULP0.
-> - Separated all the DTSI and DTS changes into individual patches.
-> 
-> 
-> Li Bin (1):
->   ARM: at91: pm: fix at91_suspend_finish for ZQ calibration
-> 
-> Ryan Wanner (20):
->   dt-bindings: mfd: syscon: add microchip,sama7d65-ddr3phy
->   dt-bindings: mfd: syscon: add microchip,sama7d65-sfrbu
->   dt-bindings: sram: Add microchip,sama7d65-sram
->   dt-bindings: power: reset: atmel,sama5d2-shdwc: Add
->     microchip,sama7d65-shdwc
->   dt-bindings: reset: atmel,at91sam9260-reset: add
->     microchip,sama7d65-rstc
->   dt-bindings: rtc: at91rm9200: add microchip,sama7d65-rtc
->   dt-bindings: at91rm9260-rtt: add microchip,sama7d65-rtt
->   ARM: at91: Add PM support to sama7d65
->   ARM: at91: pm: add DT compatible support for sama7d65
->   ARM: at91: PM: Add Backup mode for SAMA7D65
->   ARM: at91: pm: Enable ULP0/ULP1 for SAMA7D65
->   power: reset: at91-sama5d2_shdwc: Add sama7d65 PMC
->   ARM: dts: microchip: sama7d65: Add SRAM and DRAM components support
->   ARM: dts: microchip: sama7d65: Add Reset Controller to sama7d65 SoC
->   ARM: dts: microchip: sama7d65: Add Shutdown controller support
->   ARM: dts: microchip: sama7d65: Add RTT and GPBR Support for sama7d65
->     SoC
->   ARM: dts: microchip: sama7d65: Add RTC support for sama7d65
->   ARM: dts: microchip: sama7d65: Add SFRBU support to sama7d65
->   ARM: dts: microchip: sama7d65: Enable shutdown controller
->   ARM: dts: microchip: sama7d65: Add RTT timer to curiosity board
-> 
->  .../devicetree/bindings/mfd/syscon.yaml       |   4 +
->  .../power/reset/atmel,sama5d2-shdwc.yaml      |   5 +
->  .../reset/atmel,at91sam9260-reset.yaml        |   3 +
->  .../bindings/rtc/atmel,at91rm9200-rtc.yaml    |   4 +-
->  .../bindings/rtc/atmel,at91sam9260-rtt.yaml   |   1 +
->  .../devicetree/bindings/sram/sram.yaml        |   1 +
->  .../dts/microchip/at91-sama7d65_curiosity.dts |  13 +++
->  arch/arm/boot/dts/microchip/sama7d65.dtsi     |  77 +++++++++++++
->  arch/arm/mach-at91/Kconfig                    |   1 +
->  arch/arm/mach-at91/pm.c                       |  47 +++++---
->  arch/arm/mach-at91/pm.h                       |   1 +
->  arch/arm/mach-at91/pm_data-offsets.c          |   2 +
->  arch/arm/mach-at91/pm_suspend.S               | 101 ++++++++++++++++--
->  drivers/power/reset/at91-sama5d2_shdwc.c      |   1 +
->  14 files changed, 238 insertions(+), 23 deletions(-)
-> 
-> --
-> 2.43.0
-> 
-> 
-> 
+This describes its storage module (NVMEM).
 
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+v2:
+* drop example as the MFD binding has a complete one (Rob)
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Note: MAINTAINERS doesn't need updating, the binding update for the
+first leaf device (gpio) adds a wildcard matching all max77759 bindings
+---
+ .../bindings/nvmem/maxim,max77759-nvmem.yaml       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
+diff --git a/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..1e3bd4433007341a11040f513bf444866b9e38a8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/maxim,max77759-nvmem.yaml
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/nvmem/maxim,max77759-nvmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Maxim Integrated MAX77759 Non Volatile Memory
++
++maintainers:
++  - André Draszik <andre.draszik@linaro.org>
++
++description: |
++  This module is part of the MAX77759 PMIC. For additional information, see
++  Documentation/devicetree/bindings/mfd/maxim,max77759.yaml.
++
++  The MAX77759 is a PMIC integrating, amongst others, Non Volatile Memory
++  (NVMEM) with 30 bytes of storage which can be used by software to store
++  information or communicate with a boot loader.
++
++properties:
++  compatible:
++    const: maxim,max77759-nvmem
++
++  wp-gpios: false
++
++required:
++  - compatible
++
++allOf:
++  - $ref: nvmem.yaml#
++
++unevaluatedProperties: false
 
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/microchip/' for cover.1740671156.git.Ryan.Wanner@microchip.com:
-
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/secumod@e0004000: failed to match any schema with compatible: ['microchip,sama7d65-secumod', 'atmel,sama5d2-secumod', 'syscon']
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/secumod@e0004000: failed to match any schema with compatible: ['microchip,sama7d65-secumod', 'atmel,sama5d2-secumod', 'syscon']
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: sfr@e0008000: compatible:1: 'syscon' was expected
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: sfr@e0008000: compatible: ['microchip,sama7d65-sfrbu', 'atmel,sama5d2-sfrbu', 'syscon'] is too long
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/gpbr@e001d700: failed to match any schema with compatible: ['microchip,sama7d65-gpbr', 'syscon']
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/uddrc@e3800000: failed to match any schema with compatible: ['microchip,sama7d65-uddrc', 'microchip,sama7g5-uddrc']
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: /soc/uddrc@e3800000: failed to match any schema with compatible: ['microchip,sama7d65-uddrc', 'microchip,sama7g5-uddrc']
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: ddr3phy@e3804000: compatible:1: 'syscon' was expected
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: ddr3phy@e3804000: compatible: ['microchip,sama7d65-ddr3phy', 'microchip,sama7g5-ddr3phy'] does not contain items matching the given schema
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7d65_curiosity.dtb: ddr3phy@e3804000: Unevaluated properties are not allowed ('compatible' was unexpected)
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7g5ek.dtb: sfr@e0008000: compatible:0: 'microchip,sama7g5-sfrbu' is not one of ['al,alpine-sysfabric-service', 'allwinner,sun8i-a83t-system-controller', 'allwinner,sun8i-h3-system-controller', 'allwinner,sun8i-v3s-system-controller', 'allwinner,sun50i-a64-system-controller', 'altr,l3regs', 'altr,sdr-ctl', 'amd,pensando-elba-syscon', 'amlogic,meson-mx-assist', 'amlogic,meson-mx-bootrom', 'amlogic,meson8-analog-top', 'amlogic,meson8b-analog-top', 'amlogic,meson8-pmu', 'amlogic,meson8b-pmu', 'apm,merlin-poweroff-mailbox', 'apm,mustang-poweroff-mailbox', 'apm,xgene-csw', 'apm,xgene-efuse', 'apm,xgene-mcb', 'apm,xgene-rb', 'apm,xgene-scu', 'atmel,sama5d2-sfrbu', 'atmel,sama5d3-nfc-io', 'atmel,sama5d3-sfrbu', 'atmel,sama5d4-sfrbu', 'axis,artpec6-syscon', 'brcm,cru-clkset', 'brcm,sr-cdru', 'brcm,sr-mhb', 'cirrus,ep7209-syscon1', 'cirrus,ep7209-syscon2', 'cirrus,ep7209-syscon3', 'cnxt,cx92755-uc', 'freecom,fsg-cs2-system-controller', 'fsl,imx93-aonmix-ns-syscfg', 'fsl,imx93-wakeupmix-syscfg', 'fsl,ls1088a-reset', 'fsl,vf610-anatop', 'fsl,vf610-mscm-cpucfg', 'hisilicon,dsa-subctrl', 'hisilicon,hi6220-sramctrl', 'hisilicon,hip04-ppe', 'hisilicon,pcie-sas-subctrl', 'hisilicon,peri-subctrl', 'hpe,gxp-sysreg', 'loongson,ls1b-syscon', 'loongson,ls1c-syscon', 'lsi,axxia-syscon', 'marvell,armada-3700-cpu-misc', 'marvell,armada-3700-nb-pm', 'marvell,armada-3700-avs', 'marvell,armada-3700-usb2-host-misc', 'marvell,dove-global-config', 'mediatek,mt2701-pctl-a-syscfg', 'mediatek,mt2712-pctl-a-syscfg', 'mediatek,mt6397-pctl-pmic-syscfg', 'mediatek,mt8135-pctl-a-syscfg', 'mediatek,mt8135-pctl-b-syscfg', 'mediatek,mt8173-pctl-a-syscfg', 'mediatek,mt8365-syscfg', 'microchip,lan966x-cpu-syscon', 'microchip,mpfs-sysreg-scb', 'microchip,sam9x60-sfr', 'microchip,sama7d65-ddr3phy', 'microchip,sama7d65-sfrbu', 'microchip,sama7g5-ddr3phy', 'mscc,ocelot-cpu-syscon', 'mstar,msc313-pmsleep', 'nuvoton,ma35d1-sys', 'nuvoton,wpcm450-shm', 'rockchip,px30-qos', 'rockchip,rk3036-qos', 'rockchip,rk3066-qos', 'rockchip,rk3128-qos', 'rockchip,rk3228-qos', 'rockchip,rk3288-qos', 'rockchip,rk3368-qos', 'rockchip,rk3399-qos', 'rockchip,rk3562-qos', 'rockchip,rk3568-qos', 'rockchip,rk3576-qos', 'rockchip,rk3588-qos', 'rockchip,rv1126-qos', 'st,spear1340-misc', 'stericsson,nomadik-pmu', 'starfive,jh7100-sysmain', 'ti,am62-opp-efuse-table', 'ti,am62-usb-phy-ctrl', 'ti,am625-dss-oldi-io-ctrl', 'ti,am62p-cpsw-mac-efuse', 'ti,am654-dss-oldi-io-ctrl', 'ti,j784s4-acspcie-proxy-ctrl', 'ti,j784s4-pcie-ctrl', 'ti,keystone-pllctrl']
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-arch/arm/boot/dts/microchip/at91-sama7g54_curiosity.dtb: sfr@e0008000: compatible:0: 'microchip,sama7g5-sfrbu' is not one of ['al,alpine-sysfabric-service', 'allwinner,sun8i-a83t-system-controller', 'allwinner,sun8i-h3-system-controller', 'allwinner,sun8i-v3s-system-controller', 'allwinner,sun50i-a64-system-controller', 'altr,l3regs', 'altr,sdr-ctl', 'amd,pensando-elba-syscon', 'amlogic,meson-mx-assist', 'amlogic,meson-mx-bootrom', 'amlogic,meson8-analog-top', 'amlogic,meson8b-analog-top', 'amlogic,meson8-pmu', 'amlogic,meson8b-pmu', 'apm,merlin-poweroff-mailbox', 'apm,mustang-poweroff-mailbox', 'apm,xgene-csw', 'apm,xgene-efuse', 'apm,xgene-mcb', 'apm,xgene-rb', 'apm,xgene-scu', 'atmel,sama5d2-sfrbu', 'atmel,sama5d3-nfc-io', 'atmel,sama5d3-sfrbu', 'atmel,sama5d4-sfrbu', 'axis,artpec6-syscon', 'brcm,cru-clkset', 'brcm,sr-cdru', 'brcm,sr-mhb', 'cirrus,ep7209-syscon1', 'cirrus,ep7209-syscon2', 'cirrus,ep7209-syscon3', 'cnxt,cx92755-uc', 'freecom,fsg-cs2-system-controller', 'fsl,imx93-aonmix-ns-syscfg', 'fsl,imx93-wakeupmix-syscfg', 'fsl,ls1088a-reset', 'fsl,vf610-anatop', 'fsl,vf610-mscm-cpucfg', 'hisilicon,dsa-subctrl', 'hisilicon,hi6220-sramctrl', 'hisilicon,hip04-ppe', 'hisilicon,pcie-sas-subctrl', 'hisilicon,peri-subctrl', 'hpe,gxp-sysreg', 'loongson,ls1b-syscon', 'loongson,ls1c-syscon', 'lsi,axxia-syscon', 'marvell,armada-3700-cpu-misc', 'marvell,armada-3700-nb-pm', 'marvell,armada-3700-avs', 'marvell,armada-3700-usb2-host-misc', 'marvell,dove-global-config', 'mediatek,mt2701-pctl-a-syscfg', 'mediatek,mt2712-pctl-a-syscfg', 'mediatek,mt6397-pctl-pmic-syscfg', 'mediatek,mt8135-pctl-a-syscfg', 'mediatek,mt8135-pctl-b-syscfg', 'mediatek,mt8173-pctl-a-syscfg', 'mediatek,mt8365-syscfg', 'microchip,lan966x-cpu-syscon', 'microchip,mpfs-sysreg-scb', 'microchip,sam9x60-sfr', 'microchip,sama7d65-ddr3phy', 'microchip,sama7d65-sfrbu', 'microchip,sama7g5-ddr3phy', 'mscc,ocelot-cpu-syscon', 'mstar,msc313-pmsleep', 'nuvoton,ma35d1-sys', 'nuvoton,wpcm450-shm', 'rockchip,px30-qos', 'rockchip,rk3036-qos', 'rockchip,rk3066-qos', 'rockchip,rk3128-qos', 'rockchip,rk3228-qos', 'rockchip,rk3288-qos', 'rockchip,rk3368-qos', 'rockchip,rk3399-qos', 'rockchip,rk3562-qos', 'rockchip,rk3568-qos', 'rockchip,rk3576-qos', 'rockchip,rk3588-qos', 'rockchip,rv1126-qos', 'st,spear1340-misc', 'stericsson,nomadik-pmu', 'starfive,jh7100-sysmain', 'ti,am62-opp-efuse-table', 'ti,am62-usb-phy-ctrl', 'ti,am625-dss-oldi-io-ctrl', 'ti,am62p-cpsw-mac-efuse', 'ti,am654-dss-oldi-io-ctrl', 'ti,j784s4-acspcie-proxy-ctrl', 'ti,j784s4-pcie-ctrl', 'ti,keystone-pllctrl']
-	from schema $id: http://devicetree.org/schemas/mfd/syscon.yaml#
-
-
-
-
+-- 
+2.48.1.711.g2feabab25a-goog
 
