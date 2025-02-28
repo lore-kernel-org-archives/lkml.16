@@ -1,122 +1,148 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973771C75E2
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89B51C701E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729419; cv=none; b=o0L16Rr+AZt95efBRf99RFx7Oxbf7OzRJfGgY6/cn6Pz3nDTMM45qND4T2FcxmhSsDtwJ7ACiYj1ZrpAUgpZH0ky7++ijebI+S7tS9hibaTT4dHaZpeeViYL5W81MAhUSS6/ZBR+TApcXglYWYdlPZ8qqt8h6J8D+JvTdkOJ9vU=
+	t=1740729422; cv=none; b=bT2+qhAbHiaT2mU69XkiCMra8sWPKl/s4VROMGKi4v/N1GZ54TZuPQW+FAP53yXb2WxC3XHWbg0ZzMvdUymDBxZAolhUDwkcWullbdfjEUo8B0yKJmak37YqqsCa+yUy5EwH8azKqyGN4HiL3xLOpK/SW4dQgq+Lf5cuEfdQBy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729419; c=relaxed/simple;
-	bh=+EDAJ73DStfMSqA6gAhC1SZrXNktmDUfQj5Ip4QS3bw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Kui8x3CvvUpVij029+Cctk5xDeC2jZch281bBNAfmofp6sIe3OtAvpmUuDE+XnmbcFEpAshg/zm0FwvVxvCxMPOsVmaIWsJhd8ZyHccNuHgUTb4B/Fs7EQnyMIeeLJ/G5k4WLQQRyOSHw3CpoC8ImpEVHNMjte/RjpKWnLxbkhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=q232I1OA; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740729422; c=relaxed/simple;
+	bh=sXeSRtt8KMLM94AGLcgdrPYyAwLovRHZDFXkfhdwGzc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3YnuBPYc8qNFmYtfpydZsSzaPP1LThPks0eerPHKWD+va0I3fHXJpnsvEZqY+kKmD7AOnLXxF0M63f1lQz5EcuBJJRVfMVPpNiibo9wvQu7awefPPUv0p9TFFhnJAvI+W/iOsj+akqbq3Wa1mPrhV30mGEgT9qB+YAPnoiJtWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UAZFwBtz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XtbLek28; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UAZFwBtz; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XtbLek28; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q232I1OA"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2234daaf269so48235035ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740729417; x=1741334217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gTz6ofSciL2eXzNdkAhDR+tvNoRg5kiUiLQxdxgVGYk=;
-        b=q232I1OAdXc6xS9vCIzEWo4bqO/3Jo/qW8PLU9vBcqr4WV7QX4welDCFMPov+5VglB
-         jAT2WSvHVcFeDAvIfPyRXViHby9dEPWVUtX5CXMrCEcLGd/vlETl5Cbd0W2gwsYJp8hN
-         nvTu3ct4E/PQXtXIuWNlMTA/oTOKDDYiPJY9KAcLZP9gYpIiMUQo/SiyakGbj9y9tOwo
-         dckSnj3109+0tcuPOOWZzHQJkWPwzhmbhd5p5t2tWp57TFFgYk5tCouGmeefBNVMlZNZ
-         LG/96FGWdOE+quKivoJI3zZ6I1V+SOgqKQUbTiV2yUI+R7dX5jrezJBHSwHl/IviL1eB
-         x/6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740729417; x=1741334217;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gTz6ofSciL2eXzNdkAhDR+tvNoRg5kiUiLQxdxgVGYk=;
-        b=pBF11ISjKjkGDuLeDCGSTOYlAeAn6aNNObX/LcufzBbKXy1IXu6X8pchLvJZPJfCUu
-         IOdQlWL8grvfqO2CKe6Z5Qzs2XpAaT7Mfd+G6EJMFpL2UPbq+dtb8aNRQuU4wgvWdrGe
-         PeOIO05oxP2U+ZpX9qup/UTt0Q+E8ju05kkxko0bCiyKd/SnUqxaz8jGeglon387gVaq
-         yD7HfoE1MOZtQys0oGlJq6XCmBdsLqS7feSo4wXv8dRSzj29Mm3otvy39QXeBsO5axkw
-         VpPao87S9qP3q50HjCU9tPGcrvfWoretw0cdkRr4v+J451fazevdjHoJb7frajMWDTV8
-         pkCA==
-X-Gm-Message-State: AOJu0YxmU8kqEkZ5wQMTXo043qLYwnQ/PTgwwuXL7tHhHNW8JfZP0mea
-	YLILXmpF0+g2cWldNllFqEAKMe/2JUBjda72PumqjOKfO6yuszbNw4/TsCzpp5E=
-X-Gm-Gg: ASbGncsPM+5xwg/yvgRfh3ynKb9T+2ia1tODwRjDHMOpoPeWTQfSvl3Mcu1tvWA85kB
-	llhZ0LO3wc+PVZBiVbuMXJ6Ff2pj+JAe5fIHVZuvRCL5Z+ZXEYLVM0ROA7pmCS4o48gA97RApxI
-	40UOMpHuTvcgxX/kWRa1AokxrV0Aw8waeXtQ1GtDXfx25TSXdjxKuWdaBL7z3Qa6nf8mgqgY6du
-	vcmL8Kp6O5YVwUI2BeUuExyjkVQgVwqu8hfvj8fspaJJu1t72Sdjvd7+gvQOyRzSDonFwcDeoZf
-	MMfbDBF1AP36jtn2Ntc1G1yyQKA=
-X-Google-Smtp-Source: AGHT+IFGpTJLDvxLtvXLcdS7yjyRf63+ncOkZSbMRmureb3JGoaHRvxlTM1CAaR0IVK73tvTJ4D6CQ==
-X-Received: by 2002:a17:902:d512:b0:223:6254:79b8 with SMTP id d9443c01a7336-2236926f058mr34736085ad.47.1740729416895;
-        Thu, 27 Feb 2025 23:56:56 -0800 (PST)
-Received: from localhost ([122.172.84.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2235051ffc0sm27428085ad.226.2025.02.27.23.56.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 23:56:56 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Burak Emir <bqe@google.com>
-Subject: [PATCH V2 0/2] Rust: Add cpumask abstractions
-Date: Fri, 28 Feb 2025 13:26:45 +0530
-Message-Id: <cover.1740726226.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UAZFwBtz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XtbLek28";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UAZFwBtz";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XtbLek28"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0B75C2116F;
+	Fri, 28 Feb 2025 07:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740729419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMhfRxvqIxKZMaQZi3hmHrhrCs+pyqYO7m7E4eS+VBs=;
+	b=UAZFwBtzHSBKCPtNx7WHhO16JG5xF871Dgorzgjj0w8p4FRTsaATlE/P2h3j6giFJLHg0B
+	rhahqIkCoSAEq+9dXSBKtYMsAx4m2eiBBMV/Ho9xCLV+vF/gHwzfBsK4MXaGML0/T9L8zj
+	DkgwsAGJFyY5hexDsD2sgml5KjqwFPQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740729419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMhfRxvqIxKZMaQZi3hmHrhrCs+pyqYO7m7E4eS+VBs=;
+	b=XtbLek288T5w9IO4MIJcSfmiX2k8M8x9cjE2u8pWYPlML4RxBCb63mpouktiobGF+hQJi+
+	X6pX5jXg5sfOMUCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740729419; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMhfRxvqIxKZMaQZi3hmHrhrCs+pyqYO7m7E4eS+VBs=;
+	b=UAZFwBtzHSBKCPtNx7WHhO16JG5xF871Dgorzgjj0w8p4FRTsaATlE/P2h3j6giFJLHg0B
+	rhahqIkCoSAEq+9dXSBKtYMsAx4m2eiBBMV/Ho9xCLV+vF/gHwzfBsK4MXaGML0/T9L8zj
+	DkgwsAGJFyY5hexDsD2sgml5KjqwFPQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740729419;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hMhfRxvqIxKZMaQZi3hmHrhrCs+pyqYO7m7E4eS+VBs=;
+	b=XtbLek288T5w9IO4MIJcSfmiX2k8M8x9cjE2u8pWYPlML4RxBCb63mpouktiobGF+hQJi+
+	X6pX5jXg5sfOMUCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E58BE13888;
+	Fri, 28 Feb 2025 07:56:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vjwUN0pswWfGLgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Fri, 28 Feb 2025 07:56:58 +0000
+Date: Fri, 28 Feb 2025 08:56:58 +0100
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>, 
+	Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/11] nvmet-fcloop: refactor fcloop_nport_alloc
+Message-ID: <0e41c69f-32f0-4c19-8d52-04d767acbaed@flourine.local>
+References: <20250226-nvmet-fcloop-v1-0-c0bd83d43e6a@kernel.org>
+ <20250226-nvmet-fcloop-v1-3-c0bd83d43e6a@kernel.org>
+ <fd877a93-8630-4180-a591-5916e18cda72@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fd877a93-8630-4180-a591-5916e18cda72@suse.de>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_DN_SOME(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+On Fri, Feb 28, 2025 at 08:11:11AM +0100, Hannes Reinecke wrote:
+> > +	nport = fcloop_nport_lookup(opts->wwnn, opts->wwpn);
+> > +	if (nport && ((remoteport && nport->rport) ||
+> > +		      (!remoteport && nport->tport))) {
+> > +		/* invalid configuration */
+> > +		goto out_put_nport;
+> > +	}
+> > -	spin_lock_irqsave(&fcloop_lock, flags);
+> > +	if (!nport) {
+> > +		nport = kzalloc(sizeof(*nport), GFP_KERNEL);
+> > +		if (!nport)
+> > +			goto out_free_opts;
+> > -	list_for_each_entry(tmplport, &fcloop_lports, lport_list) {
+> > -		if (tmplport->localport->node_name == opts->wwnn &&
+> > -		    tmplport->localport->port_name == opts->wwpn)
+> > -			goto out_invalid_opts;
+> > +		INIT_LIST_HEAD(&nport->nport_list);
+> > +		nport->node_name = opts->wwnn;
+> > +		nport->port_name = opts->wwpn;
+> > +		kref_init(&nport->ref);
+> > -		if (tmplport->localport->node_name == opts->lpwwnn &&
+> > -		    tmplport->localport->port_name == opts->lpwwpn)
+> > -			lport = tmplport;
+> > +		spin_lock_irqsave(&fcloop_lock, flags);
+> > +		list_add_tail(&nport->nport_list, &fcloop_nports);
+> > +		spin_unlock_irqrestore(&fcloop_lock, flags);
+> 
+> Don't you need to check here if an 'nport' with the same node_name and
+> port_name is already present?
 
-This series adds initial cpumask Rust abstractions and adds a new maintenance
-entry for the same.
-
-This was earlier sent as part of a larger series [1] and it was suggested to
-send these separately.
-
-Depends on: [2].
-
-V1->V2:
-- Add Yury's Reviewed-by tag in 2/2.
-
-- Implemented two different structures, Cpumask (corresponds to struct
-  cpumask) and CpumaskBox (corresponds to cpumask_var_t). Thanks Alice for
-  helping out.
-
---
-Viresh
-
-[1] https://lore.kernel.org/all/cover.1738832118.git.viresh.kumar@linaro.org/
-[2] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gmail.com/
-
-Viresh Kumar (2):
-  rust: Add initial cpumask abstractions
-  MAINTAINERS: Add entry for Rust bitmap API
-
- MAINTAINERS            |   6 ++
- rust/kernel/cpumask.rs | 209 +++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs     |   1 +
- 3 files changed, 216 insertions(+)
- create mode 100644 rust/kernel/cpumask.rs
-
--- 
-2.31.1.272.g89b43f80a514
-
+There is the existing check which filters out some of the duplicates
+(the check is there to allow setting up the target or the remote port
+first, so the order doesn't matter), though I am not sure if it would
+catch all duplicates. I don't mind adding this, but I'd say it would be
+better in a separate patch. I tried to refactor this code without
+changing anything else.
