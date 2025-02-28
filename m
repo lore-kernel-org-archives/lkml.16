@@ -1,105 +1,108 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2D48F6B;
-	Fri, 28 Feb 2025 08:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384262505B0;
+	Fri, 28 Feb 2025 08:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740731592; cv=none; b=aKKneXTonUnfzJvg18kobvOh5ErotUK0VYSA0T5ZAEJ2dr9IN1fa9lOr1t5vrYDogx17KMVQvTu0lPVvI42xGI5sb085fUuyIxwuwIuC6h1BI5Ap05rTE6ssVoT4HFp/jZt7jcAaWJVbEawVjepSv/iI6nF/YzFBm1GouU3PCQs=
+	t=1740731606; cv=none; b=OM3p3E4+P+tevhNTS+Rrj85zoKVozwhCaz8Q2iqsXsjxtwbJbuQ37YqvJ8jfPmJDbwEZNJTkpodo0XbZIoKZnmTsMumQ5U5mpTDmw6n/wUpfXYbSNUUf8hQjLBKBIh7k38/Qd5mO327doo89QlfamlDRhbB85/DOeREDpcfCuyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740731592; c=relaxed/simple;
-	bh=FsVOmG+eOn25bBM3FLaDmS1bSRItCTyhAfkQr4QLaYc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=V7sGrlnxs6KPxIP86Qy7RcK3FsaxI5/MSXeIaIR0odVvjvSVYEUV8rWWyFsDDX7W78oONKVRRtD/iiARWwi27eWHELkyymlVSi1ZSsoqkvklY0G41YWmt3dXy+26LET8+QMsPSKpSgwM44nKVylU2FiUI/ejdcifbQYSrRtyvrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=aw7sxCaH; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+	s=arc-20240116; t=1740731606; c=relaxed/simple;
+	bh=LRCy5Q6xrGTrkxnCGNdgxl18T95wjYXYomd6Qcd8JpM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O+G1qyaPyCFUo0+1nJt6rR1seg3QfqkdTnPwAbN+mcbQQY/dMz3N7EYzRmIIFQB0c7pfYIMZWLQTRT4wPVOo4AEecHAne/YQRPaQ/uYRomIzMIXN+7aZ61ysNkKk8Nmieonn7GO0/Ggb5yVkH4wSOw8cpkSOVg/d9IOf/c9yraw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Vk1t9kI8; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="aw7sxCaH"
-Received: from vra-171-233.tugraz.at (vra-171-233.tugraz.at [129.27.171.233])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4Z41gB0Bxhz1JJBs;
-	Fri, 28 Feb 2025 09:32:53 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailrelay.tugraz.at 4Z41gB0Bxhz1JJBs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1740731576;
-	bh=FsVOmG+eOn25bBM3FLaDmS1bSRItCTyhAfkQr4QLaYc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aw7sxCaH0qhEdPR8CbZIfrvPiH3FGpYjUrQmy1JII1+W+77aVTI44jmglapIsuu+0
-	 HZOOdkh0gL4xUM9Jj957zm1JDYS7VPx6RcxAjEGwcYVztEeFE6x2UWnZWd+9/fhICu
-	 wmpBMTqWDeXOfRyynJGu+nwnLRHttw3txVBjsMpQ=
-Message-ID: <d465e17bfc45e02b2bbd68a4235cc1c7fd7500e1.camel@tugraz.at>
-Subject: Re: C aggregate passing (Rust kernel policy)
-From: Martin Uecker <uecker@tugraz.at>
-To: Ralf Jung <post@ralfj.de>, Linus Torvalds
- <torvalds@linux-foundation.org>,  "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Alice Ryhl <aliceryhl@google.com>, Ventura Jack
- <venturajack85@gmail.com>,  Kent Overstreet <kent.overstreet@linux.dev>,
- Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com, 
- david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
- hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
- linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
- rust-for-linux@vger.kernel.org
-Date: Fri, 28 Feb 2025 09:32:52 +0100
-In-Reply-To: <59c7a1aa-7ff8-4ed1-a83f-5db43094d3a8@ralfj.de>
-References: 
-	<CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
-	 <20250222141521.1fe24871@eugeo>
-	 <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
-	 <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
-	 <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
-	 <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
-	 <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-	 <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-	 <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
-	 <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
-	 <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
-	 <59c7a1aa-7ff8-4ed1-a83f-5db43094d3a8@ralfj.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vk1t9kI8"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so11888405e9.3;
+        Fri, 28 Feb 2025 00:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740731603; x=1741336403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=altOlD5OfS9XMQsr9JEVj89aEfRHMr4jhcpHBqrXJ/0=;
+        b=Vk1t9kI84Jc9I8KCv57ch9YcjkHl+Ldespo6RzhK4cU3OSQYsB4jKgOnPHPWFmNsO9
+         r4SWJUq8tjFtrhXvjCBcYsDgHAxoILZ3tlf2e4Fr54djkwI1MoUN6OO/7aAz+mBduxYu
+         dwVBw+S+i8VsXKLsLx7t/J178aGaUUA5hzxNK7AAe1/dQLw4zkyGxsSJ7P6iGN+jTAYy
+         OzrOU89W/Buz3e6oaJaJj32Hnm7RXdC4bgi/n1yya2M1j77YH9g5feLZeV79bYIUZkkj
+         tJY9/S/LVZeg1PAcla4yjtrhK7ORXZr/0oJuVjSTwCRbHZlto2bP+YbtsnML5Fu0FD7s
+         nNng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740731603; x=1741336403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=altOlD5OfS9XMQsr9JEVj89aEfRHMr4jhcpHBqrXJ/0=;
+        b=KZtq7OxR+vzmW/BW8ikfGm4IiO6I2AN53JRerJrSy1p2VznMMgLhrFxolNF3a20TYn
+         WZuqN7IHhLWhxoLz4P7/TSzD8oocD7uqKWHLwnGC7UxE3y8lPLeSUQWr7s06hAxxmV0E
+         cTG86gI6uXfzL8qfRXL5i63D4DTw3DvxESIvemom0wjuRJ864g1MUXGBKGHrme2Bd8Ck
+         B9DroNnRPXwOgJ6VnsdcQrwRImuKTf0zUyzRb5BmmuVAOgfOWm5ODByalxL2j18f5hlR
+         N3YoxFGPD4RCCj6izfNXMYE3yMZs20AeX2CeQOuzVMl25GQSu7mCmMGntDJzW3ElWh5s
+         JgSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKcggbB5Uq1SORfy0L/0exsOaTlRCE64ei/BGMnEkTXz7xuRi95dvZJvawlqDd7Gu1si5oao8bwyG+lY4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyhg//eLXJzc08IY86ysAddSAFidDtOR660lTqitA5Ly136zixS
+	R/q51gw/XRAd0Kfzt3xsZ2dho/HC7FxxZv3ElDnY3vihmc0LLTrL
+X-Gm-Gg: ASbGncsOewJNKdueuu03z2WuR2pvOWTCnsGtz9J01k8tE5d1g2xnxnuPq9BuenLnAtF
+	dMTLDnlzVr3dN1ICKz1kI3JaxPqqFYaLq8DjYhihkrklJXWIKw2RmnIS0v6b7liK0zwlNfPBsbW
+	oniJI4TfnUCaEhuhz5lU36G/D4ahXiudpFVk8vDvD8BaGvgjL0uj3Sovliogs8+Wpe/kZoS1AE9
+	TmFsugdLzxtIrpgky94/35giYSn4aZkisrXAzmDRD4x/tb4DI0QWHfSW+5EapbNvST9mkPUUaZb
+	2MWpfgpclyHbYthv5Fli9He2hhs=
+X-Google-Smtp-Source: AGHT+IFow7FUOytG/ykCncfTbL0sB2LYY5hKFmRDCWNXGIyfl+KPtU4kWQ6hYwmvBGNpZfuJxe3aQQ==
+X-Received: by 2002:a05:600c:3b0d:b0:439:88bb:d02d with SMTP id 5b1f17b1804b1-43ba66da7eemr16388845e9.2.1740731603153;
+        Fri, 28 Feb 2025 00:33:23 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba532b2fsm79801705e9.10.2025.02.28.00.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 00:33:22 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/bridge: Fix spelling mistake "gettin" -> "getting"
+Date: Fri, 28 Feb 2025 08:32:47 +0000
+Message-ID: <20250228083248.676473-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: 0.0
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.116
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Freitag, dem 28.02.2025 um 09:08 +0100 schrieb Ralf Jung:
+There is a spelling mistake in a dev_err message. Fix it.
 
->=20
-> (From a different email)
-> > It sounds you want to see the semantics strengthened in case
-> > of a data race from there being UB to having either the old
-> > or new value being visible to another thread, where at some
-> > point this could change but needs to be consistent for a
-> > single access as expressed in the source code.
->=20
-> This would definitely impact optimizations of purely sequential code. May=
-be that=20
-> is a price worth paying, but one of the goals of the C++ model was that i=
-f you=20
-> don't use threads, you shouldn't pay for them. Disallowing rematerializat=
-ion in=20
-> entirely sequential code (just one of the likely many consequences of mak=
-ing=20
-> data races not UB) contradicts that goal.=C2=A0
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/gpu/drm/bridge/sii902x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is the feedback I now also got from GCC, i.e. there are cases where
-register allocator would indeed rematerialize a load and they think this is
-reasonable.
-
-> Given that even in highly concurrent=20
-> programs, most accesses are entirely sequential, it doesn't seem unreason=
-able to=20
-> say that the exceptional case needs to be marked in the program (especial=
-ly if=20
-> you have a type system which helps ensure that you don't forget to do so)=
-.
-
-Martin
-
+diff --git a/drivers/gpu/drm/bridge/sii902x.c b/drivers/gpu/drm/bridge/sii902x.c
+index 2100a687096e..914a2609a685 100644
+--- a/drivers/gpu/drm/bridge/sii902x.c
++++ b/drivers/gpu/drm/bridge/sii902x.c
+@@ -887,7 +887,7 @@ static int sii902x_audio_codec_init(struct sii902x *sii902x,
+ 		lanes[0] = 0;
+ 	} else if (num_lanes < 0) {
+ 		dev_err(dev,
+-			"%s: Error gettin \"sil,i2s-data-lanes\": %d\n",
++			"%s: Error getting \"sil,i2s-data-lanes\": %d\n",
+ 			__func__, num_lanes);
+ 		return num_lanes;
+ 	}
+-- 
+2.47.2
 
