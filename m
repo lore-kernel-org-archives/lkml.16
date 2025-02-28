@@ -1,195 +1,245 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C3C33596A;
-	Fri, 28 Feb 2025 01:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740707694; cv=none; b=MVcY+OUHKRQoVYGJ4Iuw/Li+wYHu5Pn93ey6V1Dbw8PN20fwPSsL+yYcNATTdFxA53VDYGLV8nmKU0hKZI5+yFHeeueUewSqIdX3KFhyc6WzLnN7JzY/YiuIseQuJS/EyHv65p8TY4wFUWUJqQ1oPRlAf+VGHJiMhe7rfomnao0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740707694; c=relaxed/simple;
-	bh=Lp1jbP3VtIoZJb7DDjRQCPnuT/WqIWZRzxbJAQE3YnA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=sUhwxFtUg5sQeFToy9qKPq/jAjjiANiSkNnECv0FVDxh0NPznBVx4EMQS1swHyYlkcYKmef1Mt+RTowM2DbKTpS6KCGYGbZbHyBy6o5vMpZHTpspSVQwTI58XBQsxIGnLVXdVPD9aSQN+UsTBCo1PdGkmnEYx65O7YoqTCNweeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hc1Wnley; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C53748F;
+	Fri, 28 Feb 2025 01:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740707795; cv=fail; b=EYW/eAgVDjP723BHpFdIq+OOzeCaG8GF/wNB0ddpwusECsWHYNql+XxM7KaJgdECcV5FBkhY6o6ZSKz29U3NCYrkqnGPfamV7ZVRw5hpX5BH2KZp/yUYiIDEVt+vi+6o2VJjHy7jB704W13rXXBz2o0kBDVFVht8HeOMrpcGmCA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740707795; c=relaxed/simple;
+	bh=osbdWUAS/gpvTL75ySENgZNNRarrTyMk1WdHCB9Zsgg=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=getcgMFLiYXs/RbZt8mOPAJ8SbnXbHswYLgrxPrPSRf0bH/qC+pnylfoF3yim1sMlh2nJzIPfnKSFxN0n8PeAW/ODvsfMlN4wRR46GEZrgBMR734spxyKsNg7NU2L8mA6+abXXynsu2TSVDzRXoXjaDeEeSxRXBuWAQ8BNMBTQo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J28gRGw1; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hc1Wnley"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51S1ouig2394050
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 27 Feb 2025 17:50:57 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51S1ouig2394050
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740707463;
-	bh=zdxlCZN7qRmiM8/WMWaSChORmP5U1+mg9Dd2GNfsbGA=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=hc1WnleyPiNvmeMgkj0Fbb3sTWrGCmnnaxiRXiZvVvO6Is3ZJKu6mp+YJv2Dbs05X
-	 aVxT1zsm98Egcx7g7dDapGUM1ppk6QkyAa2wZSKXLVi8I4OeDG/xzxwpW4dEA2MBFx
-	 T1ntM64Z768sGTrScS8Wa6oiWHo2Bu8akRlkAIPTgcwVRV0sgRtvWguE9SobXFYNdw
-	 ClhsdUIvwPyfzfAd+XeT/JQ5MtCRtjegffTL4YeiMAwTwSfCb9k77v5gFOVLmhUpKy
-	 VYHzzZXLAdv9xzXZj/lrKYrLB5diO6XmkXYCixEjE5jI7GVtxQxUpXMNKybtxiJAEr
-	 DXDmmmDy5eD+w==
-Date: Thu, 27 Feb 2025 17:50:55 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: David Laight <david.laight.linux@gmail.com>,
-        Yury Norov <yury.norov@gmail.com>
-CC: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, akpm@linux-foundation.org, alistair@popple.id.au,
-        linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250227215741.1c2e382f@pumpkin>
-References: <20250223164217.2139331-1-visitorckw@gmail.com> <20250223164217.2139331-3-visitorckw@gmail.com> <Z7zIBwH4aUA7G9MY@thinkpad> <20250226222911.22cb0c18@pumpkin> <Z8CpaaHv0ahHFVuK@thinkpad> <20250227215741.1c2e382f@pumpkin>
-Message-ID: <EF874FA4-2719-44EA-B0DB-93A0980142BE@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J28gRGw1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740707792; x=1772243792;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=osbdWUAS/gpvTL75ySENgZNNRarrTyMk1WdHCB9Zsgg=;
+  b=J28gRGw1LtXhSVVnHExYWwnxwESSAteI4Mli4bVbLe8tvmyhtv0mYGV1
+   v13u8JqArDmkJBLV2whuJ38kFZxPDG8kfHzObOFbTH59ZEzoGXHZtYZHw
+   El94jevX7NMJp4CdJM3uBeDGhcwAUXhwmH/+B+Sx63k48mDOXMhOxEiVo
+   zLji2Oud/Y1kVdF8Ke3EsrY+FTIzDj5dgJHxbt+YFqPDX85R0aZPP+hKN
+   jdw5MJVenkP3seyXHUP8R/8HCboZZsDSMGnTFS9A0UMmM//KuHc3Hgd+Q
+   XCO41e4WHaJrhV0Dd0U3XWt4LInzbLBVGexsa2BbV7eK6ABAxGbylmIJU
+   g==;
+X-CSE-ConnectionGUID: HZtVY6wYQtGdB53jkaDD1A==
+X-CSE-MsgGUID: 6hQw7TWCQbqFifC+5e5vcw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="52614073"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="52614073"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 17:56:32 -0800
+X-CSE-ConnectionGUID: Qug+w6xVSg+MfEhpr/HpNQ==
+X-CSE-MsgGUID: Yw5hezZyS/ixkGJtwb7EiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="148018544"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 17:56:33 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 27 Feb 2025 17:56:31 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 27 Feb 2025 17:56:31 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.41) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 27 Feb 2025 17:56:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YPsLIcqr7+DOABZeH9fy/reiKadgp7a7VQ/KiQou1/sJTTEgwR/LP+dM1L+KSVJAsTR3jTyoEYZfrgdkQe0frdJ19gFOzH8vGvrUMoEI+O/SK3MPrloWrrPoC5rohHlORlYvq1nIMejEzt3+ZQ+1v6jnx9lOL6c6GJDm54NGyYl9XRzAdyXKsYvf7/L8U+WYBMApACb9MhNGpwEw3m1WTFtUTBRuLp3G0QO0u/9NbOXc7kTrYiE/3vQNFUugfLDz8CpnD+OpfqxYq9s3/pxL+U44G0qhkT9l3CcZnvUjE2lfGdGM1aiaLDQZQCXwI/zfrHQ1kGAkUuCFX1u6JrLIzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yE15hVQm94jwRngGBcEfoxgxNf6ftiFFEGoDmZWXn4Y=;
+ b=v8nJLnz2WsPXOy2zqp8EhoEIEsb0yIIWxEwdrxDlZfob0F4v4xBD4dKkI4oTn+XhZXiA4rOAVxpBr4AIzuVdo/9b+myTvslYXfT35tonejWulr7JkR2VyREEYssSl5umnOLFHCJFAFoP+5zudwGvTAM3uEw3KogDeIbA/8IdV5jDt3/oTvtxc3IshWUX5cO8uvT/29gcFl51oekLrSnkIE0++Mfq3sBo7mholJGOjEq5c5XffL0BaA6xDEDi6CihOyrI7jQw3LFiK04HPKr21hucJiu9H7ZtWuMItfjfBcxAO3rkWiKcQDP6l9tol14nAhV+lDdB8O33OuvIK5p6Tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM3PR11MB8735.namprd11.prod.outlook.com (2603:10b6:0:4b::20) by
+ MN0PR11MB6181.namprd11.prod.outlook.com (2603:10b6:208:3c7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
+ 2025 01:56:11 +0000
+Received: from DM3PR11MB8735.namprd11.prod.outlook.com
+ ([fe80::3225:d39b:ca64:ab95]) by DM3PR11MB8735.namprd11.prod.outlook.com
+ ([fe80::3225:d39b:ca64:ab95%7]) with mapi id 15.20.8466.020; Fri, 28 Feb 2025
+ 01:56:11 +0000
+Message-ID: <e86039e7-b3e5-4581-9701-06fcd0ebda20@intel.com>
+Date: Fri, 28 Feb 2025 09:56:03 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 33/33] KVM: TDX: Register TDX host key IDs to cgroup misc
+ controller
+To: Paolo Bonzini <pbonzini@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<kvm@vger.kernel.org>
+CC: <seanjc@google.com>, Yan Zhao <yan.y.zhao@intel.com>, Rick Edgecombe
+	<rick.p.edgecombe@intel.com>, Zhiming Hu <zhiming.hu@intel.com>, "Isaku
+ Yamahata" <isaku.yamahata@intel.com>
+References: <20250226181453.2311849-1-pbonzini@redhat.com>
+ <20250226181453.2311849-34-pbonzini@redhat.com>
+From: Chenyi Qiang <chenyi.qiang@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250226181453.2311849-34-pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0039.apcprd02.prod.outlook.com
+ (2603:1096:4:1f6::9) To DM3PR11MB8735.namprd11.prod.outlook.com
+ (2603:10b6:0:4b::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM3PR11MB8735:EE_|MN0PR11MB6181:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0d83343-ea67-46f8-d14b-08dd579b1354
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UlBqeFRPcFExWlBZTG5sS1FCUG1rdlZIc1hHcmpxSmlhWEVEZzY5aUJZeGdO?=
+ =?utf-8?B?T24zY0I0dnA5WUtITklGejY2STJGcmNRV09ZbmRDR3NhdEExNnRReXkzRmFG?=
+ =?utf-8?B?UkxVWGQxRmRXa3dtZjB4K21ta2dsUDJsZTJRNEZmUE1mekM1SHo3c3YwNlBQ?=
+ =?utf-8?B?OHNTa2FxNjM0bHdBWjRIRmY4L0c2OXBlM1FvdksvaG5pVzd5Y2tPQXdlSW0y?=
+ =?utf-8?B?NlNOanJzQnJvaW1qODlvQlR3dUdXVkRlblBkUFJiTTNCejlnUVB2bXQ4MFc1?=
+ =?utf-8?B?azZpajlSNS9XV1JkQjk2eENMUU1BazZYa1FpWlN6eUJGUEZTR3hUMjNvbVhB?=
+ =?utf-8?B?SEo4cVQ0bzJzQnlzTlBmcmtWckZGbEJxa3F1RlZYRWdlQ3RhaXMrN2lZTm1T?=
+ =?utf-8?B?Ylh2ZXJkMVlzWVh2SGN3NTFoTm5TQS9HTEJFSkgxamJ5dHk4dXZ6SmhNR0Y1?=
+ =?utf-8?B?Q29tTjlMM2E2Zno0RmozN3BEb3RFam54K0ZaMGRndTZLM3hhQUxENE9qTllm?=
+ =?utf-8?B?K245TDEzV1VGaXlPMi95WmpIZFVxMS9mdjdsMVRRL1hYWmJsbFNxaEMxTWxJ?=
+ =?utf-8?B?RXhvenZ2THU4Mi9hRERPSUg0NUp4VWlpQTBxZXBBdXNTelhxaGUwU05CcmNq?=
+ =?utf-8?B?bnZxQXg0RzRCaXk5MXF2NGhCN0d4MWlJS2NRZFZWbjhMVStDMXpWL1pLV0Q1?=
+ =?utf-8?B?b29HblhvbStVNm1xU0tiWnpnQnNpdnBCQWNCWmRjdlJFQXVyWUVZb1Y4WXdE?=
+ =?utf-8?B?dEFmdHdDdDEvRXJncEo1cEpRbHV5TUVhOXVTc0p5VmFTUHhhbEF0YVRXeXJO?=
+ =?utf-8?B?UjAzU3M4WFZPUUltNEk3OURpTjRyMVIxRmZ4K0EvSDF1RWVmNGh3RHFVRlNP?=
+ =?utf-8?B?amJPS256RXBaWTNTMUhabFZ6dGpQMTh2bXlYM1VjVXduNzJ0SUN0Q2MxK2Rq?=
+ =?utf-8?B?Z2VwN2JvK2MvdzNzdzRtTGhQWmlsUmVxTmliR2ZzdHBkVU9HN251d3J5cHgz?=
+ =?utf-8?B?aHVHeFFwQVF1OXplQVFFbHZOZ1Q1RzdGd0Y5RGU4QkpoaFFFMStObVFzQ1kx?=
+ =?utf-8?B?dnhGRFZTM2dCaWZBQUJQRFQ5SXhUYTdDT0JRSnVOUzQ3WGtzMDR2elIwQ3Iv?=
+ =?utf-8?B?UXdJbGQ1MGw2N2FGakYrRVRnM0dDaGVnZU1RVkMyQUJ0QlhCSWE5dDBUYnIw?=
+ =?utf-8?B?a0UyclA4VHNwdzlKK1ZuakhYZXphNHg4MmtmY3hWcWMxWUtLMG91NVl4WmQr?=
+ =?utf-8?B?Vy9rQktmSVlZQkpEYUl1cUJ3aHZSVDNyNDdLNGJVZHlxUHduaFB6RzBOQ2Qz?=
+ =?utf-8?B?ekZ3cCtBSENYSXA1d3BJRjNFY2NQUGlvaEE4SXcvTTVJY0dJKytESUJxNnE3?=
+ =?utf-8?B?aWVEaEx2L1dFQjNmSnhGNXRHdE1GclhiZUc0NTVoOGxoaGU3aENGZHZnTHRP?=
+ =?utf-8?B?aXJ4MXpxN0k5OXA2OWxsb3AwK3dWSUc3L2EvOTgrK2w3eWZxbFpzSVByTDZG?=
+ =?utf-8?B?dGg2UE5lVmVmcmlUcWc0VTg0YzlSSFppZFE3aDlzSWNOTk1wdGt3L1BXcEE2?=
+ =?utf-8?B?b1lHRFhPUDN3SG5lRUpkK00zRVdNc2RpVFJNNHBYemZsaFY0S2FTcC9STWp3?=
+ =?utf-8?B?N254V1ZNMEluUXpYM1RSR3VJSTlrcFR3c21iNDVEbUJvZ2NzODllQkNzdXVv?=
+ =?utf-8?B?ZFBJcXlLYXNkNTFWdnhaVGdKcU1lRnVIRFlkSnplN2EyRUZhM3UyTjJxMkhJ?=
+ =?utf-8?B?OEVXaFRoelJRR09HZVJvOEdFeEExdndWQ2s3dDZKbTdGTWZ6ZUQ1ZUVoTEVK?=
+ =?utf-8?B?bVR3QndGNHQweWt1REhRTEtxa0I3bENaNGtQdExUaDM2QUVyYmxjKytDWlk5?=
+ =?utf-8?Q?CcUx7v7B/zftU?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM3PR11MB8735.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VVlRN0o1dllIK2l3QWlkZEw0alJQM0NQWEVGd3orK3FSc0JNSG50OGRqaTVY?=
+ =?utf-8?B?L2J1Njl1SjJPRzZubkhqTW1sZXkzeFViaDQvSCtUSnFIYVlPUlltaUZpRjB2?=
+ =?utf-8?B?aW8rMGg5Y0lBdmtZZWdtOHhBNFAvVnRUTUFBWW9LSW1OdjV3UDdnaTVjcTUx?=
+ =?utf-8?B?RkRldjQ3d3BLUHlYclljS1A0NGxvSjQzbkNFMTREak9yVnc1dzRwc2Zrc0ls?=
+ =?utf-8?B?d2kyOGF4bEdEaHR0MGVqT3NLa25qZ1EwMGFJSEdFenFyWGsvNFByQlFkY05H?=
+ =?utf-8?B?clRubGg1d0ZiUlVjczI4S3pITzV0NFBCUXN6L2hnRms5MFlDSTllRDN2NG5K?=
+ =?utf-8?B?R09jazNHcEh0QW04NHU1eXdoK0hybVBPdlBUaGdCdUFYZ1ZSUUtIZ1JTQ1kr?=
+ =?utf-8?B?Tm9ZakVGTVBnVTE2eW9MTVZOV3ljWEE0bjViSWdPT1RxTVFZSHI2UDJDQ2Ir?=
+ =?utf-8?B?Rkk5OCtpR3Y5NjB4VDQ2WEJ4T0xvNjVaZkRGdURFN2lFS0NyS2gxZklVeXB4?=
+ =?utf-8?B?R0RuQ2JweXhjU0V5Q0JwSlFRMXBOZUx4TzRpbUlUSzNFdktVWFAyRWVobDJJ?=
+ =?utf-8?B?UUtKR1pCSEZ4MG1BemY4TkNvZ0oyUkk2cGs0MmhwNkZuVk1EMjJ2ZCtNSWVk?=
+ =?utf-8?B?VUJ4RU9IckFtM3ord1c0QkZTT3NMS25PQmF1NDFLeUNQcHNXaGlIUUNRcnhH?=
+ =?utf-8?B?QUVneS95ODN6VmVaYnlITWRzb3JNYXcydU11SVQ5dHlqK0E4aW40cGVhZnZp?=
+ =?utf-8?B?NENDeGloYlpRdmVSYXNKSmxuZ05GMFdyNUk0OVYzY0FrRTZ5MTJ4blJkcFJQ?=
+ =?utf-8?B?NVc5Um5FK3YwZU8zNmY4V1lwbWE3OTNBQ3RoOHo4b0d5U3VTTlVZUmw0UUJJ?=
+ =?utf-8?B?eDk0MlhwTVphMGtUdGZtbEwrcGgvLzNsUUxIaXFtSmxXT2pha05hb2MrSFI5?=
+ =?utf-8?B?MGdwVk8vRldoaVRSVUtOK0JPYW1LbWtKaCt0WWEvNDdvdHNRMXJaVkdUZ0hD?=
+ =?utf-8?B?TG9oZ25zdVBDWUQvVDh6WEdDVUE4Q0wrTjEzV1hUaUtQaTY4clJHTGQ4b3Zs?=
+ =?utf-8?B?Rk1nbitrMXFyZEJVRFFZYzYvV1NvOWgxbFpOVmFPNFh0Nzczb2hkTUVTcjcz?=
+ =?utf-8?B?ZUtlcldCVXZUUktsTndkVWxBUDFaWTM1WEhKV3ZzazE1YnFtRU0rSGwrOStZ?=
+ =?utf-8?B?NWhkZ0w0Q2FpZjUxSW5LeExJVHMwalViQVcycm4vNCt3cjZtTTZiMG92L1k4?=
+ =?utf-8?B?WHJ3L2E2N0t1eGlLdzZvWTJaUU5UeldwV21XckVMUmhNMCtiRjNIdjlKTzdB?=
+ =?utf-8?B?VmF2K3I3bzNDbGVMN3FaTUFyQjZnWlFVWThLT0lNR2d5elhsaHhZM2pydnpm?=
+ =?utf-8?B?Ny9qR2t1bEpGbU03eXQ0UTlJcjBMWnZQVXAxbVZtdUJJZ1dFZWVOYXF3SkY3?=
+ =?utf-8?B?SjFIYXZmby8rc0hrYTgzVXFYbmNjcmkxb0hweGMvWmhqbUtVNGJHeUZ4dyts?=
+ =?utf-8?B?ai9GaVQzOGNOcVlYUTlmazBscGhZQ2FmditaYTBOTklmUHJ1Nld2Z05sMHdX?=
+ =?utf-8?B?a2E1aEo3djN6RDhhWHY1dVlsQWVBZEVIYWEyS0pHUk9YY1YvbWhkbWJCcWJ0?=
+ =?utf-8?B?eGVZdUtvUmhDL2NIUXk4UmJxaVNPRVZUdUUwRWlubEN3RWtaRDZTUmh1bXo3?=
+ =?utf-8?B?ZHpXM0dNNVI2QlhjNlJ5TVV2Mmozb3lxclZSRG1vZXhjdHBrWG1PMmZHWHZk?=
+ =?utf-8?B?aWdxM1lxSXh1MFdHTDBvdzJDeUt4dGpYZDNmYVNKWTRFRnV6TmtadytudWlv?=
+ =?utf-8?B?ZjBTdTNWK1llc3dBOUNZb3dQamZYdjYvVEpFZE9ScjBGSFhCZkkzbGZBcyti?=
+ =?utf-8?B?ajFKNVBuNk0wcjcxb25nQ3J0ZmxQZWVWRzdSekpoNkxjaHh3Tk5MeUd3Tmt4?=
+ =?utf-8?B?WU5adU05V1ZqZnVSNkpBVjcrbFFpdkNVSHBoMGVzSC9Zb1k2ajY5M3Y1MjQ0?=
+ =?utf-8?B?Unp0OUgrVW9XVWFmVjlzaFQzVG1HRW1RUXJoUVNmWHdXdktFdzJXc2tVakN2?=
+ =?utf-8?B?K1ROVThSaWp5d2NMekpYQkJvZkE3dzJzQ0s2Um1taTN3QVlRRHl2NXlMNGJt?=
+ =?utf-8?B?UFNnZmNvR0xjdmEzWXYxczVaalJ0cERIMStoSGtUcldxaTZnZERhTlNUbTYr?=
+ =?utf-8?B?ZkE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0d83343-ea67-46f8-d14b-08dd579b1354
+X-MS-Exchange-CrossTenant-AuthSource: DM3PR11MB8735.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 01:56:11.5738
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LCKlhsRGnwyWxgkHzlPgwI6ICZVceoF8FFKO9PENnN1LJJEZBSX5hMr+qe1F4MN6gIx8HeRIW4v7kENcNW8FCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6181
+X-OriginatorOrg: intel.com
 
-On February 27, 2025 1:57:41 PM PST, David Laight <david=2Elaight=2Elinux@g=
-mail=2Ecom> wrote:
->On Thu, 27 Feb 2025 13:05:29 -0500
->Yury Norov <yury=2Enorov@gmail=2Ecom> wrote:
->
->> On Wed, Feb 26, 2025 at 10:29:11PM +0000, David Laight wrote:
->> > On Mon, 24 Feb 2025 14:27:03 -0500
->> > Yury Norov <yury=2Enorov@gmail=2Ecom> wrote:
->> > =2E=2E=2E=2E =20
->> > > +#define parity(val)					\
->> > > +({							\
->> > > +	u64 __v =3D (val);				\
->> > > +	int __ret;					\
->> > > +	switch (BITS_PER_TYPE(val)) {			\
->> > > +	case 64:					\
->> > > +		__v ^=3D __v >> 32;			\
->> > > +		fallthrough;				\
->> > > +	case 32:					\
->> > > +		__v ^=3D __v >> 16;			\
->> > > +		fallthrough;				\
->> > > +	case 16:					\
->> > > +		__v ^=3D __v >> 8;			\
->> > > +		fallthrough;				\
->> > > +	case 8:						\
->> > > +		__v ^=3D __v >> 4;			\
->> > > +		__ret =3D  (0x6996 >> (__v & 0xf)) & 1;	\
->> > > +		break;					\
->> > > +	default:					\
->> > > +		BUILD_BUG();				\
->> > > +	}						\
->> > > +	__ret;						\
->> > > +})
->> > > + =20
->> >=20
->> > You really don't want to do that!
->> > gcc makes a right hash of it for x86 (32bit)=2E
->> > See https://www=2Egodbolt=2Eorg/z/jG8dv3cvs =20
->>=20
->> GCC fails to even understand this=2E Of course, the __v should be an
->> __auto_type=2E But that way GCC fails to understand that case 64 is
->> a dead code for all smaller type and throws a false-positive=20
->> Wshift-count-overflow=2E This is a known issue, unfixed for 25 years!
->
->Just do __v ^=3D __v >> 16 >> 16
->
->>=20
->> https://gcc=2Egnu=2Eorg/bugzilla/show_bug=2Ecgi?id=3D4210
->> =20
->> > You do better using a __v32 after the 64bit xor=2E =20
->>=20
->> It should be an __auto_type=2E I already mentioned=2E So because of tha=
-t,
->> we can either do something like this:
->>=20
->>   #define parity(val)					\
->>   ({							\
->>   #ifdef CLANG                                          \
->>   	__auto_type __v =3D (val);			\
->>   #else /* GCC; because of this and that */             \
->>   	u64 __v =3D (val);			        \
->>   #endif                                                \
->>   	int __ret;					\
->>=20
->> Or simply disable Wshift-count-overflow for GCC=2E
->
->For 64bit values on 32bit it is probably better to do:
->int p32(unsigned long long x)
->{
->    unsigned int lo =3D x;
->    lo ^=3D x >> 32;
->    lo ^=3D lo >> 16;
->    lo ^=3D lo >> 8;
->    lo ^=3D lo >> 4;
->    return (0x6996 >> (lo & 0xf)) & 1;
->}
->That stops the compiler doing 64bit shifts (ok on x86, but probably not e=
-lsewhere)=2E
->It is likely to be reasonably optimal for most 64bit cpu as well=2E
->(For x86-64 it probably removes a load of REX prefix=2E)
->(It adds an extra instruction to arm because if its barrel shifter=2E)
->
->
->>=20
->> > Even the 64bit version is probably sub-optimal (both gcc and clang)=
-=2E
->> > The whole lot ends up being a bit single register dependency chain=2E
->> > You want to do: =20
->>=20
->> No, I don't=2E I want to have a sane compiler that does it for me=2E
->>=20
->> > 	mov %eax, %edx
->> > 	shrl $n, %eax
->> > 	xor %edx, %eax
->> > so that the 'mov' and 'shrl' can happen in the same clock
->> > (without relying on the register-register move being optimised out)=
-=2E
->> >=20
->> > I dropped in the arm64 for an example of where the magic shift of 699=
-6
->> > just adds an extra instruction=2E =20
->>=20
->> It's still unclear to me that this parity thing is used in hot paths=2E
->> If that holds, it's unclear that your hand-made version is better than
->> what's generated by GCC=2E
->
->I wasn't seriously considering doing that optimisation=2E
->Perhaps just hoping is might make a compiler person think :-)
->
->	David
->
->>=20
->> Do you have any perf test?
->>=20
->> Thanks,
->> Yury
->
 
-What the compiler people need to do is to not make __builtin_parity*() gen=
-erate crap=2E
+
+On 2/27/2025 2:14 AM, Paolo Bonzini wrote:
+> From: Zhiming Hu <zhiming.hu@intel.com>
+> 
+> TDX host key IDs (HKID) are limit resources in a machine, and the misc
+> cgroup lets the machine owner track their usage and limits the possibility
+> of abusing them outside the owner's control.
+> 
+> The cgroup v2 miscellaneous subsystem was introduced to control the
+> resource of AMD SEV & SEV-ES ASIDs.  Likewise introduce HKIDs as a misc
+> resource.
+> 
+> Signed-off-by: Zhiming Hu <zhiming.hu@intel.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/include/asm/tdx.h  |  2 ++
+>  arch/x86/kvm/vmx/tdx.c      | 14 ++++++++++++++
+>  arch/x86/kvm/vmx/tdx.h      |  1 +
+>  arch/x86/virt/vmx/tdx/tdx.c |  6 ++++++
+>  include/linux/misc_cgroup.h |  4 ++++
+>  kernel/cgroup/misc.c        |  4 ++++
+>  6 files changed, 31 insertions(+)
+> 
+> diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+> index 52a21075c0a6..7dd71ca3eb57 100644
+> --- a/arch/x86/include/asm/tdx.h
+> +++ b/arch/x86/include/asm/tdx.h
+> @@ -124,6 +124,7 @@ const char *tdx_dump_mce_info(struct mce *m);
+>  const struct tdx_sys_info *tdx_get_sysinfo(void);
+>  
+>  int tdx_guest_keyid_alloc(void);
+> +u32 tdx_get_nr_guest_keyids(void);
+>  void tdx_guest_keyid_free(unsigned int keyid);
+>  
+>  struct tdx_td {
+> @@ -179,6 +180,7 @@ u64 tdh_phymem_page_wbinvd_tdr(struct tdx_td *td);
+>  static inline void tdx_init(void) { }
+>  static inline int tdx_cpu_enable(void) { return -ENODEV; }
+>  static inline int tdx_enable(void)  { return -ENODEV; }
+> +static u32 tdx_get_nr_guest_keyids(void) { return 0; }
+
+static inline ...
+
+Otherwise will trigger build error when !TDX_HOST
+
+>  static inline const char *tdx_dump_mce_info(struct mce *m) { return NULL; }
+>  static inline const struct tdx_sys_info *tdx_get_sysinfo(void) { return NULL; }
+>  #endif	/* CONFIG_INTEL_TDX_HOST */
+
+
