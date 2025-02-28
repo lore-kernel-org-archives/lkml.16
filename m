@@ -1,98 +1,70 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62195849C;
-	Fri, 28 Feb 2025 11:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D349849C;
+	Fri, 28 Feb 2025 11:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740742146; cv=none; b=ZRH3RL/bc3JEt6tmDgawOWzCrox3UPgpQjhdBxJQ0C0Abn2uKcyCxaSi0EqYtOHW96YjkcIDbNwThgKZTj3dlyHNQxc3U61iMk/wcnKPB8EGbLJ96Td7vELxkTYNDAoo8RS0K424Dr6QCZVkfO6FRC7hWKeEUYElQE0aR1D1aQs=
+	t=1740742159; cv=none; b=BZ1HhiavlT7RxIYxxeZv2ghBN5mZgUs+37Qbb9ycovZzi45s5H1P3P98jIWfmox36Nl7xTNUV3QsQXALiQYi4Z4RLrEr6NHxCNmnEjSm/sjlcHE4dV+Y1Fhr9X6Xt1FaYOO1C2RsW/Cz3inUz5vNYUerwPEk/K4VegJidmNYGkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740742146; c=relaxed/simple;
-	bh=Esl8+tCtDY0CJiVw8EehvFLirtiKZE38eHn9WD+1GZU=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=dOAXVD1b8vhazpo4C1xT3lmlKaXOtrAbOxaddWegvZ/j4QtxZUpQaHBgIVhUfeaWwiieNN14NASxBt+vW7Hhe3WJlU5thNp8wkPwpBy6Q5RaWfAdgbj6C6SYVI/Ihhfqj/s1kd9zgPaB28GLZDZzcORrrck+1hFqw9aWtynCWyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=D/gvxBky; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="D/gvxBky"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=From:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=zNHptpbLXQ8swyWY9wfkxP0OcEEdiU/o4VafTsgVKzY=; b=D/gvxBkyHgUgFjNP31TQpXtqHa
-	5fYBULwlTR36eWlzN7e7Ud8N67vuvze555S8fALOQCoPbKfl2T/jRXdsczwy1s1uMM+MYiqyBhHW4
-	ExbsaslAai+b9rctDi2y2x8m23I+LFUgALKvn4hnQhR4LPvk2i0462OB4U7R1jzrIwpRD/NoX5EvU
-	x3XjkLIw/g8vWy3OVTmlkhC3/ge7/c0BCkQGyRx97CKPdVycj5J/ExTDjCI7uk6fJftQruJQHDqIs
-	mCk0jXzwEGMmtJAubB3FwBnlgV/Ay1EiDGgr+VB11YOOYdObW2x3PBSxGu3/cvTm0TDoQvKcmmxsC
-	Sc61pbTg==;
-From: Andreas Kemnade <andreas@kemnade.info>
-To: aaro.koskinen@iki.fi,
-	andreas@kemnade.info,
-	khilman@baylibre.com,
-	rogerq@kernel.org,
-	tony@atomide.com,
-	linux@armlinux.org.uk,
-	linux-omap@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: omap2plus_defconfig: enable I2C devices of GTA04
-Date: Fri, 28 Feb 2025 12:27:50 +0100
-Message-Id: <20250228112750.367251-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1740742159; c=relaxed/simple;
+	bh=t2rsTXukOG1wdsDx/CDpSDoU0C2ghthM/Wky2Fb/gdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DvFX7LgtIWuoaI062oLJ+dOFUdSYy7Tnh50oJDhDIeHfs6O2ckdycNMei8+r0E7WyrJY7rLl/oddrYJGQVKLktGJ4dqyJceqPMdM78oHh3m9WrYRdGFYAmDlmdTvws96W3t+/ccE4ZjBcMbtKcbOj28j/hZ+FxnmbDQMQDOr9xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B84C4CED6;
+	Fri, 28 Feb 2025 11:29:11 +0000 (UTC)
+Date: Fri, 28 Feb 2025 11:29:08 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: yazen.ghannam@amd.com, mark.rutland@arm.com, mingo@redhat.com,
+	robin.murphy@arm.com, Jonathan.Cameron@huawei.com, bp@alien8.de,
+	rafael@kernel.org, linux-arm-kernel@lists.infradead.org,
+	wangkefeng.wang@huawei.com, tanxiaofei@huawei.com,
+	mawupeng1@huawei.com, tony.luck@intel.com, linmiaohe@huawei.com,
+	naoya.horiguchi@nec.com, james.morse@arm.com,
+	tongtiangen@huawei.com, gregkh@linuxfoundation.org, will@kernel.org,
+	jarkko@kernel.org, linux-acpi@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+	linux-edac@vger.kernel.org, x86@kernel.org, justin.he@arm.com,
+	ardb@kernel.org, ying.huang@linux.alibaba.com, ashish.kalra@amd.com,
+	baolin.wang@linux.alibaba.com, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, lenb@kernel.org, hpa@zytor.com,
+	robert.moore@intel.com, lvying6@huawei.com, xiexiuqi@huawei.com,
+	zhuo.song@linux.alibaba.com, lpieralisi@kernel.org,
+	guohanjun@huawei.com, sudeep.holla@arm.com
+Subject: Re: [PATCH v18 2/3] mm: memory-failure: move return value
+ documentation to function declaration
+Message-ID: <Z8GeBJ9tTayTm9s9@arm.com>
+References: <20250107081735.16159-1-xueshuai@linux.alibaba.com>
+ <20250107081735.16159-3-xueshuai@linux.alibaba.com>
+ <Z8BbFRupgknBTvH8@arm.com>
+ <0c93542f-4521-41bc-a030-5b2d8621aa6a@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0c93542f-4521-41bc-a030-5b2d8621aa6a@linux.alibaba.com>
 
-Enable I2C devices of GTA04 to get better test coverage when using
-the defconfig. Until the I2C host driver is fixed, BMG160 module should be
-blacklisted when booting on the GTA04A5.
+On Fri, Feb 28, 2025 at 09:46:30AM +0800, Shuai Xue wrote:
+[...]
+> > On Tue, Jan 07, 2025 at 04:17:34PM +0800, Shuai Xue wrote:
+> > > Part of return value comments for memory_failure() were originally
+> > > documented at the call site. Move those comments to the function
+> > > declaration to improve code readability and to provide developers with
+[...]
+> By the way, could arm maintainers help to ack patch 1 and 3 if there
+> is no objection?
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- arch/arm/configs/omap2plus_defconfig | 8 ++++++++
- 1 file changed, 8 insertions(+)
+James Morse is listed as reviewer of the ACPI APEI code but he's busy
+with resctrl/MPAM. Adding Lorenzo, Sudeep and Hanjun as arm64 ACPI
+maintainers, hopefully they can help. Here's the full series:
 
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-index 6de45d7f6078..84f334e94d5f 100644
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -609,6 +609,7 @@ CONFIG_LEDS_LP5523=m
- CONFIG_LEDS_PCA963X=m
- CONFIG_LEDS_PWM=m
- CONFIG_LEDS_BD2606MVV=m
-+CONFIG_LEDS_TCA6507=m
- CONFIG_LEDS_TRIGGERS=y
- CONFIG_LEDS_TRIGGER_TIMER=m
- CONFIG_LEDS_TRIGGER_ONESHOT=m
-@@ -643,6 +644,8 @@ CONFIG_TI_EMIF_SRAM=m
- CONFIG_IIO=m
- CONFIG_IIO_SW_DEVICE=m
- CONFIG_IIO_SW_TRIGGER=m
-+CONFIG_BMA180=m
-+CONFIG_BMC150_ACCEL=m
- CONFIG_IIO_ST_ACCEL_3AXIS=m
- CONFIG_KXCJK1013=m
- CONFIG_CPCAP_ADC=m
-@@ -650,10 +653,15 @@ CONFIG_INA2XX_ADC=m
- CONFIG_TI_AM335X_ADC=m
- CONFIG_TWL4030_MADC=m
- CONFIG_TWL6030_GPADC=m
-+CONFIG_BMG160=m
- CONFIG_MPU3050_I2C=m
-+CONFIG_ITG3200=m
-+CONFIG_BOSCH_BNO055_I2C=m
- CONFIG_INV_MPU6050_I2C=m
- CONFIG_SENSORS_ISL29028=m
- CONFIG_AK8975=m
-+CONFIG_BMC150_MAGN_I2C=m
-+CONFIG_SENSORS_HMC5843_I2C=m
- CONFIG_BMP280=m
- CONFIG_PWM=y
- CONFIG_PWM_OMAP_DMTIMER=m
+https://lore.kernel.org/r/20250107081735.16159-1-xueshuai@linux.alibaba.com/
+
 -- 
-2.39.5
-
+Catalin
