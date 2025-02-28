@@ -1,32 +1,33 @@
 Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07D4276D38
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:31:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA6617BA3
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:31:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740709867; cv=none; b=Z7+u6AM3ywY2Vf5EDjlFHzL4FAeRwGM2cLRGUjgOxMefyp/LZPONcHZhhaJxNFynCLGQhvhy9i+/HrwWBxNzhOtEJiC1tjv4VBOouSP7rQybipeLpl72ues8qnAzVKH2YjOsGxgmbQnitSNhcrcXqHN9yIXKGkTOD/g7AoWFa0g=
+	t=1740709869; cv=none; b=DWOHQuYUCF8G3Ik9DYA/V/F64eXMFzRZEKSRrNTJ6zCeG61JBpbLk+M2/sGr9nk3R5BxOdpROY4NhSEKHAnGI11LuBKN6TP0feffImdTeCqf9sbF1G+y3jadREW83H5253wYEio0LuIpZKT897HFQLQAL4uWZmazZ8LSqjEXJfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740709867; c=relaxed/simple;
-	bh=CajDnPXnEEJRA735qE5+L7uuscbI+D22NlEy0SQnEig=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AP0kWzMQtPOJVsrUCc9v5hYELsDjzVCOW32Hp/+zKdqqVZt0JGtLT4Zx13y2Qugm5+EBifaOaGbYmenVoWRTeVXSjXgrD3YuKQkNruylWokri9AoexITAgqz9zILxdFh1JwOfAaBQkrrPTwwxq3LzZYx0nA9nZOqgPRjhzxf45s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=dExi75r6; arc=none smtp.client-ip=158.69.130.18
+	s=arc-20240116; t=1740709869; c=relaxed/simple;
+	bh=swtR6F88cbKVzdm+NrDTVhCXo1eYZDF79C/l4caSVJw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LoHpx/0VaJefphwzM44wOY/ZEjxZ4Y8MirHqil7rIVxIyvzFKL6DxpOMr62e/G4FUYuoDzl0oBr3/q6FDAWLWy4/ZCCbT8YFjfLU6JPYIgyZDysWPYHWbUoiM6G0aFAr+lVzntnwHhBM0eVz27ZlAtJOiGkjDSP2q5znjLx8Uow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=EmykgpXy; arc=none smtp.client-ip=158.69.130.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="dExi75r6"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="EmykgpXy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
 	s=smtpout1; t=1740709859;
-	bh=CajDnPXnEEJRA735qE5+L7uuscbI+D22NlEy0SQnEig=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dExi75r6e3SIJcmQwT6cH1M7/LM5Rk/+nekjzXVqAF+0oZp86Ss6M5JEslTFYUjDg
-	 PPsoOl7XezYERI0QBlEH6y0ZU/TP3930DIafs3IV0IgnasZR++1IHm0XTRNazLjWiT
-	 iTHdmI+nB+Lvd+//atNAzwhIzGeVK0thUQshni5uAd6oUa+Gh8CRgA5rEo3qyVS+VW
-	 NgOBImEMgtlIOZofw0Gq9fTmPtyeNf68oZlbVZGmeuwYDFyDxpBob9DnqH3TSkHlnJ
-	 7FYh04ofXk4RjIHwNpB9WHCmOfRoP5/AuDhxFwWTL/GQdPaLZFLORLpmw3hXQ/SH5O
-	 2f3V4cT5/9epw==
+	bh=swtR6F88cbKVzdm+NrDTVhCXo1eYZDF79C/l4caSVJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EmykgpXy1gGmyGYdH0Q9n3pB/kU2w6Z3jdYPyOvETkpaoGinxXvL1ftzDJpxQJPvK
+	 j0oZXtAv7ioeBglEIpSY51zV/Ugg3IG1XhBIUIbChKCG24IjOUo5gB8Pe3b5qEsJM6
+	 mSQmWfl8KVSZVxipAgi5zAaB1lzi3Kw9Sz0KTrC2f+p7aUSV8jSooEL7dJFXMpWp/v
+	 tD+68xfXySOK4qj8Lt5VYmXRiIbHB4vHa2FV12bda8FqrgYT/k/moNPDvIC2OM892K
+	 Yh/xEw1QfT5GF8M63m55tigugUQxVpqSx8GtIbXPkSJA35wcSCuUmd7eFgt+6W1XOa
+	 K55eaNV4x+onA==
 Received: from thinkos.internal.efficios.com (unknown [IPv6:2606:6d00:100:4000:cacb:9855:de1f:ded2])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Z3sdb426hz10GY;
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Z3sdb69Mgzylf;
 	Thu, 27 Feb 2025 21:30:59 -0500 (EST)
 From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Andrew Morton <akpm@linux-foundation.org>
@@ -36,10 +37,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Matthew Wilcox <willy@infradead.org>,
 	Olivier Dion <odion@efficios.com>,
 	linux-mm@kvack.org
-Subject: [RFC PATCH 0/2] SKSM: Synchronous Kernel Samepage Merging
-Date: Thu, 27 Feb 2025 21:30:41 -0500
-Message-Id: <20250228023043.83726-1-mathieu.desnoyers@efficios.com>
+Subject: [RFC PATCH 2/2] selftests/kskm: Introduce SKSM basic test
+Date: Thu, 27 Feb 2025 21:30:43 -0500
+Message-Id: <20250228023043.83726-3-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250228023043.83726-1-mathieu.desnoyers@efficios.com>
+References: <20250228023043.83726-1-mathieu.desnoyers@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,50 +51,275 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series introduces SKSM, a new page deduplication ABI,
-aiming to fix the limitations inherent to the KSM ABI.
+Introduce a basic selftest for SKSM. See ./basic_test -h for
+options.
 
-The implementation is simple enough: SKSM is implemented in about 100
-LOC compared to 2.5k LOC for KSM (on top of the common KSM helpers).
-
-This is sent as a proof of concept. It applies on top of v6.13.
-
-Feedback is welcome!
-
-Mathieu
-
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Olivier Dion <odion@efficios.com>
 Cc: linux-mm@kvack.org
-
-Mathieu Desnoyers (2):
-  mm: Introduce SKSM: Synchronous Kernel Samepage Merging
-  selftests/kskm: Introduce SKSM basic test
-
- include/linux/ksm.h                       |   4 +
- include/linux/mm_types.h                  |   7 +
- include/linux/page-flags.h                |  42 ++++
- include/linux/sksm.h                      |  27 +++
- include/uapi/asm-generic/mman-common.h    |   2 +
- mm/Kconfig                                |   5 +
- mm/Makefile                               |   1 +
- mm/ksm-common.h                           | 228 ++++++++++++++++++++++
- mm/ksm.c                                  | 219 +--------------------
- mm/madvise.c                              |   6 +
- mm/memory.c                               |   2 +
- mm/page_alloc.c                           |   3 +
- mm/sksm.c                                 | 190 ++++++++++++++++++
+---
  tools/testing/selftests/sksm/.gitignore   |   2 +
  tools/testing/selftests/sksm/Makefile     |  14 ++
- tools/testing/selftests/sksm/basic_test.c | 217 ++++++++++++++++++++
- 16 files changed, 751 insertions(+), 218 deletions(-)
- create mode 100644 include/linux/sksm.h
- create mode 100644 mm/ksm-common.h
- create mode 100644 mm/sksm.c
+ tools/testing/selftests/sksm/basic_test.c | 217 ++++++++++++++++++++++
+ 3 files changed, 233 insertions(+)
  create mode 100644 tools/testing/selftests/sksm/.gitignore
  create mode 100644 tools/testing/selftests/sksm/Makefile
  create mode 100644 tools/testing/selftests/sksm/basic_test.c
 
+diff --git a/tools/testing/selftests/sksm/.gitignore b/tools/testing/selftests/sksm/.gitignore
+new file mode 100644
+index 000000000000..0f5b0baa91e7
+--- /dev/null
++++ b/tools/testing/selftests/sksm/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++basic_test
+diff --git a/tools/testing/selftests/sksm/Makefile b/tools/testing/selftests/sksm/Makefile
+new file mode 100644
+index 000000000000..ec1a10783bda
+--- /dev/null
++++ b/tools/testing/selftests/sksm/Makefile
+@@ -0,0 +1,14 @@
++# SPDX-License-Identifier: GPL-2.0+ OR MIT
++
++top_srcdir = ../../../..
++
++CFLAGS += -O2 -Wall -g -I./ $(KHDR_INCLUDES) -L$(OUTPUT) -Wl,-rpath=./ \
++	  $(CLANG_FLAGS) -I$(top_srcdir)/tools/include
++LDLIBS += -lpthread
++
++TEST_GEN_PROGS = basic_test
++
++include ../lib.mk
++
++$(OUTPUT)/%: %.c
++	$(CC) $(CFLAGS) $< $(LDLIBS) -o $@
+diff --git a/tools/testing/selftests/sksm/basic_test.c b/tools/testing/selftests/sksm/basic_test.c
+new file mode 100644
+index 000000000000..1a7571a999d2
+--- /dev/null
++++ b/tools/testing/selftests/sksm/basic_test.c
+@@ -0,0 +1,217 @@
++// SPDX-License-Identifier: LGPL-2.1
++/*
++ * Basic test for SKSM.
++ */
++
++#include <stdlib.h>
++#include <sys/mman.h>
++#include <stdio.h>
++#include <errno.h>
++#include <string.h>
++#include <unistd.h>
++#include <poll.h>
++
++#ifndef MADV_MERGE
++#define MADV_MERGE	26
++#endif
++
++#define PAGE_SIZE	4096
++
++#define WRITE_ONCE(x, val) ((*(volatile typeof(x) *) &(x)) = (val))
++
++static int opt_stop_at = 0, opt_pause = 0;
++
++struct test_page {
++	char array[PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
++};
++
++struct test_page2 {
++	char array[2 * PAGE_SIZE] __attribute__((aligned(PAGE_SIZE)));
++};
++
++/* identical to zero page. */
++static struct test_page zero;
++
++/* a1 and a2 are identical. */
++static struct test_page a1 = {
++	.array[0] = 0x42,
++	.array[1] = 0x42,
++};
++
++static struct test_page a2 = {
++	.array[0] = 0x42,
++	.array[1] = 0x42,
++};
++
++/* b1 and b2 are identical. */
++static struct test_page2 b1 = {
++	.array[0] = 0x43,
++	.array[1] = 0x43,
++	.array[PAGE_SIZE] = 0x44,
++	.array[PAGE_SIZE + 1] = 0x44,
++};
++
++static struct test_page2 b2 = {
++	.array[0] = 0x43,
++	.array[1] = 0x43,
++	.array[PAGE_SIZE] = 0x44,
++	.array[PAGE_SIZE + 1] = 0x44,
++};
++
++static void touch_pages(void *p, size_t len)
++{
++	size_t i;
++
++	for (i = 0; i < len; i += PAGE_SIZE)
++		WRITE_ONCE(((char *)p)[i], ((char *)p)[i]);
++}
++
++static void test_step(char step)
++{
++	printf("\nTest step: <%c>\n", step);
++	if (opt_pause) {
++		printf("Press ENTER to continue...\n");
++		getchar();
++	}
++	if (opt_stop_at == step) {
++		poll(NULL, 0, -1);
++		exit(0);
++	}
++}
++
++static void show_usage(int argc, char **argv)
++{
++	printf("Usage : %s <OPTIONS>\n",
++		argv[0]);
++	printf("OPTIONS:\n");
++	printf("	[-s stop_at] Stop test at step A, B, C, D, E, or F and wait forever.\n");
++	printf("	[-p] Pause test between steps (await newline from the console).\n");
++	printf("	[-h] Show this help.\n");
++	printf("\n");
++}
++
++int main(int argc, char **argv)
++{
++	int i;
++
++	for (i = 1; i < argc; i++) {
++		if (argv[i][0] != '-')
++			continue;
++		switch (argv[i][1]) {
++		case 's':
++			if (argc < i + 2) {
++				show_usage(argc, argv);
++				return -1;
++			}
++			opt_stop_at = *argv[i + 1];
++			switch (opt_stop_at) {
++			case 'A':
++			case 'B':
++			case 'C':
++			case 'D':
++			case 'E':
++			case 'F':
++				break;
++			default:
++				show_usage(argc, argv);
++				return -1;
++			}
++			i++;
++			break;
++		case 'p':
++			opt_pause = 1;
++			i++;
++			break;
++		case 'h':
++			show_usage(argc, argv);
++			return 0;
++		default:
++			show_usage(argc, argv);
++			return -1;
++		}
++	}
++
++
++	printf("PID: %d\n", getpid());
++	printf("Shared mapping (write-protected)\n");
++
++	test_step('A');
++
++	printf("madvise MADV_MERGE a1\n");
++	if (madvise(&a1, sizeof(a1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE a2\n");
++	if (madvise(&a2, sizeof(a2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b1\n");
++	if (madvise(&b1, sizeof(b1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b2\n");
++	if (madvise(&b2, sizeof(b2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE zero\n");
++	if (madvise(&zero, sizeof(zero), MADV_MERGE))
++		goto error;
++
++	test_step('B');
++
++	printf("Trigger COW\n");
++	touch_pages(&zero, sizeof(zero));
++	touch_pages(&a1, sizeof(a1));
++	touch_pages(&a2, sizeof(a2));
++	touch_pages(&b1, sizeof(b1));
++	touch_pages(&b2, sizeof(b2));
++
++	test_step('C');
++
++	printf("madvise MADV_MERGE a1\n");
++	if (madvise(&a1, sizeof(a1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE a2\n");
++	if (madvise(&a2, sizeof(a2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b1\n");
++	if (madvise(&b1, sizeof(b1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b2\n");
++	if (madvise(&b2, sizeof(b2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE zero\n");
++	if (madvise(&zero, sizeof(zero), MADV_MERGE))
++		goto error;
++
++	test_step('D');
++
++	printf("Trigger COW\n");
++	touch_pages(&zero, sizeof(zero));
++	touch_pages(&a1, sizeof(a1));
++	touch_pages(&a2, sizeof(a2));
++	touch_pages(&b1, sizeof(b1));
++	touch_pages(&b2, sizeof(b2));
++
++	test_step('E');
++
++	printf("madvise MADV_MERGE a1\n");
++	if (madvise(&a1, sizeof(a1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE a2\n");
++	if (madvise(&a2, sizeof(a2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b1\n");
++	if (madvise(&b1, sizeof(b1), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE b2\n");
++	if (madvise(&b2, sizeof(b2), MADV_MERGE))
++		goto error;
++	printf("madvise MADV_MERGE zero\n");
++	if (madvise(&zero, sizeof(zero), MADV_MERGE))
++		goto error;
++
++	test_step('F');
++
++	return 0;
++
++error:
++	perror("madvise");
++	return -1;
++}
 -- 
 2.39.5
+
