@@ -1,64 +1,66 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD80276D02
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:07:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF5126D5AD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740751646; cv=none; b=EjQsLBnXrpA4OqMc+eiXq47m1jRC7ZR8sTYQx+2aZ+aaHAFTYjWtNfEfCm2SfmcUkdd9pzPypuDSxbcFITQS2K47YrNmHEhEQcVMc5BysalNT0XRLvS2ky2fbGI4Vt7Twcf4cstFpx4vGlnlHBdgZNWxnTZTtxg2AgzXjYBc9/s=
+	t=1740751646; cv=none; b=kEXF7VQFnf8nPw+I/L00ojia9znGoXgSI0eErDlvlS7jdxI3dTLnFFW2MupLkbH6c56oSqtxO+LpYnL6/l1hsKRRCMFH4paGu4jP0EjHqwXZf3882LhSbnZoVSyIGHwtMeBhZxuAOw9/CLyQ53F+KrytC0oSPy6o3KWrQ238Jg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740751646; c=relaxed/simple;
-	bh=D6dkdQq4iA5tj9KDLaYBN/k9ZLQ40l8wYqCnUHgdGG0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RtFU2wPVQeWGj+GwqEyAJstDX7jx+LY3H1lrRhTCCzFd5zu2SiYPGFFGpWsvXvMU2KlKw4h812NYNcQFyVadcMWCro29ZBpo4GGX+pso04bXCYbKZU4W51zHeaGORaW3Rhu7Gvx3rA2M1nIUreGBkppai3SB2oBoMGFKEjoTYVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Krie4Osc; arc=none smtp.client-ip=209.85.208.41
+	bh=YYl9m2BnndcCMYaFzMLWUSCBfr0DlXeXEgFndcdua9E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=lVkO5OmiXqelxVUezxm5HmZ16DGrRyQnzt/vTe8LT+YdGexdZx/tRuHrLNkudMI0Ka0CRXt8GpKj/wGAyXIiviQ5SBMVyFPCZVpmvVo1NeI4FtOvc9ozrHQp4OOqXUKv9gzWuKdYBRf8lWmTvsPb41eIn4e9vIl/OXztCHGtZFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FWSYZCEa; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Krie4Osc"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so3366976a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 06:07:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWSYZCEa"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e0939c6456so2923100a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 06:07:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740751642; x=1741356442; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhLZqgcaujiFhw9G1dCH5p0FiLmGyvslkaMt4uwl9Do=;
-        b=Krie4Osc0DNEinlUAyFTqNzopM5rxbSDXSx+7/YIPnjHeGkHfJbBSUjo5mkF1GKs4q
-         mIrLqoS2F1GPTgXE54L9i6ipSA6qu45Gv9Gj/Jd5dt9ragEQW6UOGl4Cxge2DF6kbgnO
-         GEd/s4zk+TUhPxnvMcjBFvEuok4LJx77ZKCXFieXx3nkrw1uiu3AnSEIUmzN37Sd4E2K
-         3L9qQIZY4xgnsISUYWuiKGDEyBTxjJEvgyRlJ+0CpB99LzLqq4iCOaMyUjaqL+OyjQE/
-         IFHVKBpQaQce3fOlqgVaoZI4DddaF1r6ZwiFzNyrWLy4L+0ZYllhH3UXHyok3o4tJpNF
-         TQEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740751642; x=1741356442;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1740751643; x=1741356443; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xhLZqgcaujiFhw9G1dCH5p0FiLmGyvslkaMt4uwl9Do=;
-        b=lqguEetC+r3Lc5pxVHdXLicIGBXPbIwP+Ds8ZglqL3L8XVlz7/xwIZyr8rtkMzDmeO
-         NwdOONnpdUmAzXrMRmRAkOwzi3MNsGUka8Q3+49mUW++ud7EAG6wjcEacz4Vubj5yMew
-         0y3RpFkg2hmewNBp1jvkO43LaxTJi0F1hT/p/1asnoQviojO1f67ogOQR+iOvTRtgMv/
-         GBnd/Oys7t/pVuTMoMN+VKc8q77i5+1pRr+rJ+K8uIJNOQwW2t3p/D5bO2Wq72yeOwwJ
-         YG98nALdi3yaGi2ajMt1vu9RolKHVPkVRVElvd10+iYlEp3QiG3Ol+9JHC5x3nIdzkMk
-         cd4g==
-X-Gm-Message-State: AOJu0YzI9t4PARZcoA23rgqBuBcW7CZacrowrQKQsuguqbZ4uCarbydC
-	asZ6afiRe3qwc9I+Gi7Q839Idj83LdCA54BPXGo8btAKsamhpyP9PawOJtVk1nY=
-X-Gm-Gg: ASbGncu4sUv9HbbbdL9A3OmBeyImPmeCYDC80n3iMWy2+o2N3QPZQe55jKST9LuJ7W3
-	ohNIg0GVwEsndfepOP8rdJVviKYzWqbtcC4ttMVfZmMltajCNEgsoCKMHxCebA1YQOk74NeSfl8
-	0mHmcT7PfzgpHk/NejkUnWvKXPJOkJ7qPyLuzalXYBn8JzmTd62qZZMxY0BNwE42mZMKmQAC3Ae
-	q4SocclQCH4Cio2YATsTr0ihpGx07qB99G5wDDkV43ZHbEidS2JlA8gwopRgS/njAdCsmhbDb0R
-	5wqIGT54fecwZx/oHKkYSX3vwPYB24UBrT2RHsmNDY+HRJliY1Z7mzAmi7LaGiO3pbTq5cAK9f1
-	yx6nC27GkfQ==
-X-Google-Smtp-Source: AGHT+IHP7pUAJMVQB1Guj47dyI47K7YXQj82SFh5z5QQxgHATc6r4NQ1/TjLpJM/Ncf+/B2eBWDZ7w==
-X-Received: by 2002:a05:6402:5242:b0:5e4:cfb0:f667 with SMTP id 4fb4d7f45d1cf-5e4d6b691d6mr2481074a12.21.1740751641613;
-        Fri, 28 Feb 2025 06:07:21 -0800 (PST)
+        bh=NEusmS+5iWAG1jDnjFt/eyKJ89b8w4e+6UytiCX0MQA=;
+        b=FWSYZCEadyU8vj+pOdi9pSaK3qhDb0DI4SvuPVtjfjAN5lOFDiPpEUdNMZ2yKCrCRn
+         XCsoPymSJT6/1KXGy7qXM9YpN+9bX0BkcbuJawYWUjvDgdkf1V9mn/OpD8JcQiEX1dzh
+         l9BMqalRG+AtTZFpjLKPCs6AmJsJfVZ62z+eyXcgzuSRGmEnRHdPP2eeDVgvOvZr3xMy
+         wfdCsQHPpVt3oH6b8rXf6rqiE5YaM61GS3TCBDeDFFySy7l2Fa+mq3GQuEmdIg7vPoMZ
+         EZ4sb7BzTtmF4AwmWcoUZ9F3GvQYPMVuhD/QOxy63cMX2iSmfIRnDVy4iHop7gFfmDQC
+         E+3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740751643; x=1741356443;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NEusmS+5iWAG1jDnjFt/eyKJ89b8w4e+6UytiCX0MQA=;
+        b=hFQD4k/DqmalTmsL386TCvawxFdZepB3qvL3JquebQ+yoP39dPp90Y2T257XLmhRbL
+         cb0oe3CMXNdq4Yaws4QWb7VWrsSxPDZMFRtLGORTgtJRitp6Vp4g+YOl3nbyk5EwdB2b
+         4XJkzNArDvgVP29moIXRsz476CV3u8u7zzuBwv2KVBSWoN9CJyjcxIgA2cfJ2VCmgjUi
+         /OBO1YqgZogi1NenFaG3Li5fAcW2qBUquOqh4nw3JWTDJaJo/14vgfEnGSMt5VaIQYOa
+         o2Aj01avc38MglZ6mSw/5W9/6NFrNAsttdbtgdQX6ZnXy2/cldMw9wU2yri6cpc0fb+j
+         xQfg==
+X-Gm-Message-State: AOJu0YxgCu0agPADMLXu1A1yxrc+sUErpIDjIHZCw9fYp+zuM1kScsHR
+	4eZYToWGYQS1DNrjRwGMEYjN5tnNHvv9NCkZ1wp1iBcN4CA3zvA0JX1dUJp18U0=
+X-Gm-Gg: ASbGncuvK7SDj6Y10Bsazia0/4MH7pY33porRgSDkHhLWJkGLowsvMohuScTxf6A9bC
+	5ZuppMJAgBPOp6R9jZcxWrJeHIRP5jj1xW13jlJOkeGJdLVl9PMaOJhxgkTZq84XuoG51D2lJxe
+	GXlf8RA+Zgx7N9obqSaq94HhLZAFAGr9F40bmt01qB3g2XpfvT1PTpx3s0nSdf1FbOc8ozkAFYO
+	QZ3FyK8XBZbHaJR4BLnSWKGvlXdIvRPvJlwok/uncQZ53MKbg4yBIJrtj7hqz0Am4jZOsknsQgj
+	upfwLuvMXQb2CXj5qqjq901TFhljkB7WrW85e2iFRh+uN7RDNQxaBWPHg5xDfOTd2i9VzFuOKTL
+	zgp1FsCngYQ==
+X-Google-Smtp-Source: AGHT+IHzPJx5i3RI7O2yaVdHtPJ0az692A2jfkouiK94jhHcaAYqi/2J0zpg5aMdk74cXIZT8BcCug==
+X-Received: by 2002:a05:6402:42cb:b0:5d9:a54:f8b4 with SMTP id 4fb4d7f45d1cf-5e4d6af0565mr2697422a12.11.1740751643440;
+        Fri, 28 Feb 2025 06:07:23 -0800 (PST)
 Received: from puffmais.c.googlers.com (30.171.91.34.bc.googleusercontent.com. [34.91.171.30])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb51f9sm2550839a12.55.2025.02.28.06.07.20
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3fb51f9sm2550839a12.55.2025.02.28.06.07.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 06:07:21 -0800 (PST)
+        Fri, 28 Feb 2025 06:07:22 -0800 (PST)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Subject: [PATCH 00/18] a few rtc driver cleanups
-Date: Fri, 28 Feb 2025 14:07:13 +0000
-Message-Id: <20250228-rtc-cleanups-v1-0-b44cec078481@linaro.org>
+Date: Fri, 28 Feb 2025 14:07:15 +0000
+Subject: [PATCH 02/18] rtc: s5m: drop needless struct s5m_rtc_info::i2c
+ member
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIABHDwWcC/x3MQQqAIBBA0avIrBN0SoiuEi3MphoIE60IxLsnL
- d/i/wyJIlOCQWSI9HDi01foRoDbrd9I8lINqNAoxF7Gy0l3kPV3SFKjU7PR2JLtoCYh0srvvxu
- nUj6cRcJTXgAAAA==
-X-Change-ID: 20250228-rtc-cleanups-12c0b5123ea4
+Message-Id: <20250228-rtc-cleanups-v1-2-b44cec078481@linaro.org>
+References: <20250228-rtc-cleanups-v1-0-b44cec078481@linaro.org>
+In-Reply-To: <20250228-rtc-cleanups-v1-0-b44cec078481@linaro.org>
 To: Chanwoo Choi <cw00.choi@samsung.com>, 
  Krzysztof Kozlowski <krzk@kernel.org>, 
  Alexandre Belloni <alexandre.belloni@bootlin.com>, 
@@ -88,67 +89,59 @@ Cc: linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-Hi,
+When this driver was converted to using the devres managed i2c device
+in commit 7db7ad0817fe ("rtc: s5m: use devm_i2c_new_dummy_device()"),
+struct s5m_rtc_info::i2c became essentially unused.
 
-While looking at RTC, I noticed that various drivers are keeping
-pointers to data that they're not using themselves throughout their
-lifetime.
-
-So I took the liberty to drop these pointers and this series is the
-result.
-
-The last two patches also convert two drivers to using dev_err_probe(),
-as I looked slightly closer into those two. They don't exactly fit the
-general subject of removal of unneeded pointers, but I wanted to share
-them anyway, since they're ready.
-
-All of this was compile-tested only.
-
-Cheers,
-Andre'
+We can drop it from the structure and just use a local temporary
+variable, reducing runtime memory consumption by a few bytes.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
-André Draszik (18):
-      rtc: max77686: drop needless struct max77686_rtc_info::rtc member
-      rtc: s5m: drop needless struct s5m_rtc_info::i2c member
-      rtc: aspeed: drop needless struct aspeed_rtc::rtc_dev member
-      rtc: ds2404: drop needless struct ds2404::rtc member
-      rtc: ep93xx: drop needless struct ep93xx_rtc::rtc member
-      rtc: ftrtc010: drop needless struct ftrtc010_rtc::rtc_dev member
-      rtc: m48t86: drop needless struct m48t86_rtc_info::rtc member
-      rtc: meson: drop needless struct meson_rtc::rtc member
-      rtc: meson-vrtc: drop needless struct meson_vrtc_data::rtc member
-      rtc: pl030: drop needless struct pl030_rtc::rtc member
-      rtc: rx8581: drop needless struct rx8581::rtc member
-      rtc: s35390a: drop needless struct s35390a::rtc member
-      rtc: sd2405al: drop needless struct sd2405al::rtc member
-      rtc: sd3078: drop needless struct sd3078::rtc member
-      rtc: rx8581: drop needless struct rx8581
-      rtc: sd3078: drop needless struct sd3078
-      rtc: max77686: use dev_err_probe() where appropriate
-      rtc: s5m: convert to dev_err_probe() where appropriate
+ drivers/rtc/rtc-s5m.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
- drivers/rtc/rtc-aspeed.c     | 16 ++++-----
- drivers/rtc/rtc-ds2404.c     | 14 ++++----
- drivers/rtc/rtc-ep93xx.c     | 16 ++++-----
- drivers/rtc/rtc-ftrtc010.c   | 17 +++++----
- drivers/rtc/rtc-m48t86.c     | 14 ++++----
- drivers/rtc/rtc-max77686.c   | 37 +++++++++----------
- drivers/rtc/rtc-meson-vrtc.c | 12 +++----
- drivers/rtc/rtc-meson.c      | 16 ++++-----
- drivers/rtc/rtc-pl030.c      | 14 ++++----
- drivers/rtc/rtc-rx8581.c     | 85 +++++++++++++++++++-------------------------
- drivers/rtc/rtc-s35390a.c    | 22 ++++++------
- drivers/rtc/rtc-s5m.c        | 58 +++++++++++++-----------------
- drivers/rtc/rtc-sd2405al.c   | 16 ++++-----
- drivers/rtc/rtc-sd3078.c     | 71 +++++++++++++++---------------------
- 14 files changed, 183 insertions(+), 225 deletions(-)
----
-base-commit: 0226d0ce98a477937ed295fb7df4cc30b46fc304
-change-id: 20250228-rtc-cleanups-12c0b5123ea4
+diff --git a/drivers/rtc/rtc-s5m.c b/drivers/rtc/rtc-s5m.c
+index 36acca5b2639e272dd9baed06ea5582f635702b0..77dd61c30681b8f0a2f23063ad5f7eb52f5b7158 100644
+--- a/drivers/rtc/rtc-s5m.c
++++ b/drivers/rtc/rtc-s5m.c
+@@ -146,7 +146,6 @@ static const struct s5m_rtc_reg_config s2mps15_rtc_regs = {
+ 
+ struct s5m_rtc_info {
+ 	struct device *dev;
+-	struct i2c_client *i2c;
+ 	struct sec_pmic_dev *s5m87xx;
+ 	struct regmap *regmap;
+ 	struct rtc_device *rtc_dev;
+@@ -640,6 +639,7 @@ static int s5m_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct sec_pmic_dev *s5m87xx = dev_get_drvdata(pdev->dev.parent);
+ 	struct s5m_rtc_info *info;
++	struct i2c_client *i2c;
+ 	const struct regmap_config *regmap_cfg;
+ 	int ret, alarm_irq;
+ 
+@@ -675,14 +675,14 @@ static int s5m_rtc_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	info->i2c = devm_i2c_new_dummy_device(&pdev->dev, s5m87xx->i2c->adapter,
+-					      RTC_I2C_ADDR);
+-	if (IS_ERR(info->i2c)) {
++	i2c = devm_i2c_new_dummy_device(&pdev->dev, i2c->adapter,
++					RTC_I2C_ADDR);
++	if (IS_ERR(i2c)) {
+ 		dev_err(&pdev->dev, "Failed to allocate I2C for RTC\n");
+-		return PTR_ERR(info->i2c);
++		return PTR_ERR(i2c);
+ 	}
+ 
+-	info->regmap = devm_regmap_init_i2c(info->i2c, regmap_cfg);
++	info->regmap = devm_regmap_init_i2c(i2c, regmap_cfg);
+ 	if (IS_ERR(info->regmap)) {
+ 		ret = PTR_ERR(info->regmap);
+ 		dev_err(&pdev->dev, "Failed to allocate RTC register map: %d\n",
 
-Best regards,
 -- 
-André Draszik <andre.draszik@linaro.org>
+2.48.1.711.g2feabab25a-goog
 
