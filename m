@@ -1,139 +1,105 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D3271EF38B;
-	Fri, 28 Feb 2025 15:25:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFF11EF38B;
+	Fri, 28 Feb 2025 15:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740756333; cv=none; b=Ei/KsZy8Qwhlw45ZPDIf7/mEpCw6nvaTZODoo51NjrXL5RyV/hq3CMwNXU/GG92b/Kn3No7TjkjSdr8O2IrlIEnIjuIb51Z+5QU0XyqQQXlbWnCfzvmvH0PM2nZpd8vwojSSnZN22cLmwKUIx2HulVEwTpMQS8KeXfwnMEnxCkE=
+	t=1740756357; cv=none; b=kJdLWV+apbWkFv3L3RuiuP9o3OhBhlFzlWOPFBeufvVIGpJvll5WARaqkU+X9Mgc2eqG+k15G5bcq/27ph/M6rAq0KA4SRkD/nCOiCm+dcCC9nvE6voatLaiK2kbxdq+wDHRDYv2cI6/bBYGFP3khCah0W9ayIgfEsDz4mwb84E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740756333; c=relaxed/simple;
-	bh=ODmNapznqY8Lme8EQzhzqsVIiFhxyacVEuG07Lrpk8g=;
+	s=arc-20240116; t=1740756357; c=relaxed/simple;
+	bh=iSHhu8DojQZ/z0Bux1fFHThPhnvaqOETluuPREszvKE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N7TDLb1qf5nXEAI4xEbG5Ez+Lza1UEzsYDL2latfQVWqO4u7l9zHqhm3kXD4eoRpi3eoTSo2t/AVIvGBcuyL+9qKjy2hesq5+OQYgU/W7t8CpE94dTarMZeb3fO4w+1soQLFtUDl6f4t5yMOLjlbG6Qj7zL/ll6ctdICpvORA4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=pass smtp.mailfrom=queasysnail.net; dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b=cR514c5k; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J2MERTsJ; arc=none smtp.client-ip=202.12.124.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=queasysnail.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cs0oyw9Nc0RDAnIl9D1IdgjIsyUOIRHfS54kVI6DPVqdT6Bd9UTIxx7mLfBgBiFq27LvEWdjoexovSACZfTkjRePg6E4krisCGHvFtw9D8b+ARlba5hfKhqKf5j3f0PCorDZtUIhx+D0o4lgh9nHxL+QDstxqt+JJCYbvCz22Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=JkZu9ZW0; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=queasysnail.net header.i=@queasysnail.net header.b="cR514c5k";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J2MERTsJ"
-Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
-	by mailfout.stl.internal (Postfix) with ESMTP id 207FE1140115;
-	Fri, 28 Feb 2025 10:25:29 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-13.internal (MEProxy); Fri, 28 Feb 2025 10:25:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=queasysnail.net;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm2; t=1740756328; x=
-	1740842728; bh=ErdEwWcoExwEOY5i1AObPTgWEmNKaVenoEWoKPxkSio=; b=c
-	R514c5kPjM+fYh1kH7V8EFmY/yNHbWD7bka2YKC6ChQeB6LMbR6pWlcZBH1pVmZP
-	SRhNuPhncPdKIyNMXt1Q6aNLF8mHSO/g/1g+vWdwrgh57A0gE7UT+f+tr1ycq4QB
-	1ikHfMGnpElAGI4jITrdKu11ZyxOK3XF5IXFrzraWdm71jVNAoZCspChAIwwJ+SD
-	NkVc5hSJZiOtQViC3hxB11212nSllwoYcHWwncROJUrrNTpjVe8CN9/+1nqfcpcy
-	RCrTUcPhev3YSHUMmrh2MZ99tLwDr3lNMybsXQslYpphWFgi+FwIdooxWCab9amk
-	MaGoksyQlpg8yAEyobdSA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1740756328; x=1740842728; bh=ErdEwWcoExwEOY5i1AObPTgWEmNKaVenoEW
-	oKPxkSio=; b=J2MERTsJA9SZKVy7proKCTzdmJizI094Ux89ZbR16wKtKr1iWGi
-	56NX7V1oHvVfocccxHJqLWk/+xmuc0m35oN7r3X3pxPeHTuODmowTHQ1FZtYwNg0
-	w0IwuwqtwR1A1HKm0RvUv9lF031FZcvqoa5vapKfm7YFWuEO6AGQNwmmE1NbQ+Na
-	KCXDHspjzyRtnE7O21LhryIiep10x1cUZE3jwoYkTnf4ydkVsubSG57LpnPVvHmU
-	EmEzie+qc1S2u+Qps5pf380gvYa1fk265K091pcNuDEaBkDcvCHFsAvgKmZVrcy2
-	bQP6Z97tOuhJUlEWhe9Uh/jdUMzmGfBbGvw==
-X-ME-Sender: <xms:aNXBZ7zShFUL8VxB5mnlPUfmPmZdzdYBnL15GBbkjGbq6jyggvEFOg>
-    <xme:aNXBZzS-KFShLzicVvQVF5VSXyAXS4jTw0fOSpZjsMHgpEDCjvaPcBiAj2Nakjgg7
-    Hd3lfWybW4ucWeZzv4>
-X-ME-Received: <xmr:aNXBZ1UMjNf6Pzg7oNU46vg1ZfJHLLCqPFzuVc69-ElSX8SPBCxpqW07-adJ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdejgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
-    necuhfhrohhmpefurggsrhhinhgrucffuhgsrhhotggruceoshgusehquhgvrghshihsnh
-    grihhlrdhnvghtqeenucggtffrrghtthgvrhhnpeeuhffhfffgfffhfeeuiedugedtfefh
-    keegteehgeehieffgfeuvdeuffefgfduffenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpehsugesqhhuvggrshihshhnrghilhdrnhgvthdpnhgs
-    pghrtghpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhtoh
-    hnihhosehophgvnhhvphhnrdhnvghtpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdr
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtg
-    homhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgr
-    sggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvg
-    hrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtoheprhihrgiirghnohhvrdhsrdgrsehgmhgrihhlrdgtohhmpdhrtghpth
-    htoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthh
-X-ME-Proxy: <xmx:aNXBZ1gK9fLxRDIsHr6FK2-sNN-REHCuiak6aiBIypd-dUOzp43XmA>
-    <xmx:aNXBZ9A7BK_vw-DNFctbe47SLGYou0vcjkjHoO8ektE2ylZB-Tpx2g>
-    <xmx:aNXBZ-LzMFeZtzWuSItq2dU0YDUHd7w9Q26g1Tz2dgUV_IJAjA-rYA>
-    <xmx:aNXBZ8B06l3osqXklxmOftSldYp1VWcOD8MUf6EcjHBWT_CYLBK2qQ>
-    <xmx:aNXBZ1w9ywBUoD5AK63W6eRjzpySEMVLmIENMhclsoJ_Iog7sJ66Einv>
-Feedback-ID: i934648bf:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Feb 2025 10:25:28 -0500 (EST)
-Date: Fri, 28 Feb 2025 16:25:26 +0100
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: Antonio Quartulli <antonio@openvpn.net>
-Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Shuah Khan <shuah@kernel.org>, ryazanov.s.a@gmail.com,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
-Subject: Re: [PATCH net-next v20 09/25] ovpn: implement basic RX path (UDP)
-Message-ID: <Z8HVZm_eQwNR_r1A@hog>
-References: <20250227-b4-ovpn-v20-0-93f363310834@openvpn.net>
- <20250227-b4-ovpn-v20-9-93f363310834@openvpn.net>
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="JkZu9ZW0"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4Z4Bqd6q12z9scl;
+	Fri, 28 Feb 2025 16:25:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1740756350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K/zWPmaHu9T0gtGq/CPJkALifQhwYRPAKcGYrmHsfn4=;
+	b=JkZu9ZW0h0xb10B845As94XNc4ElaqnNKHtZ9LcuuIYuDz5ZvU0moGCdVvXmtbgB3h4rwY
+	nlcFOqQQwDKjK82vIZN5m+ZATxjTi+3Zcq1fpsm+PLSKHYzKk3QE4l6FeoAa84W2DynmHv
+	nNPstEFd8wmGU7eewLYBDULVS5K5mRs2NWkiROlKvBbA3n0rYCvHOURycwqYmL256NxkYR
+	Q3RwVNesB4OSrjNypRmNVkMdmRB498AZGkGNMomoAiQR5R34ieKY0gxFhhqEmTxYj8x679
+	Bz6+E1mqjnEMOcKEFPdmnIWuY7fBWSxelgNV29HulthBCXh3Ksa5b9ffCOX6yg==
+Date: Fri, 28 Feb 2025 16:25:47 +0100
+From: Anthony Ruhier <aruhier@mailbox.org>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND] power: supply: qcom_battmgr: abs() on POWER_NOW
+ property
+Message-ID: <ycz7kwtr5d6bnrjjfmauktq2s7vtwsunpg7nfunfywxu5uou34@gfgoeeyarh46>
+References: <20250213-patch-qcomm-bat-uint-power-v1-1-16e7e2a77a02@mailbox.org>
+ <yfbgbdugk4xdjpemozdzcuxczx4xd5aphykuksf3lhn22dsgkf@fcfgddu6gpyt>
+ <ioiy4ixlvx5gxl3f4pqshwxz35ktrqghju2circpnd3qicgemc@oohazfsfvuag>
+ <p5tszocxa7mcazgxsnt3gnv547m523gde2hj2yekiuoimm6rsy@pzofvxngb4ul>
+ <7wbot7sxm3y5y7in5ashcn5lpx3mi55abnbfrkz2jta7nm6jep@zk6zvocd3tuz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250227-b4-ovpn-v20-9-93f363310834@openvpn.net>
+In-Reply-To: <7wbot7sxm3y5y7in5ashcn5lpx3mi55abnbfrkz2jta7nm6jep@zk6zvocd3tuz>
+X-MBO-RS-META: jxo8su5z4w5hog8w3ppqqzf45qezxabu
+X-MBO-RS-ID: 43b314216067739c03d
 
-(I'm still reviewing how everything fits together, but one small thing
-here:)
+On Sat, Feb 15, 2025 at 04:08:25AM +0100, Sebastian Reichel wrote:
+> Hi,
+>
+> There are other drivers reporting negative values as documented.
+> Most of the embedded ones do this actually and there surely are
+> (embedded) userspace programs relying on this by now. But the
+> most used driver - generic ACPI battery - does not. That's why
+> quite a few userspace tools handle it wrong without anyone
+> noticing for quite some time. Fixing it to follow the ABI would
+> obviously end up in a bunch of regression reports, so things are
+> a bit messy :(
+>
+> > I think it is a problem of the 'acpi' tool. At least 'upower -d' uses
+> > fabs internally since the initial commit in 2008.
+>
+> It's definitely sensible to fix the userspace tools. We can't change
+> the documented ABI for current_now after that many years and while
+> documentation for power_now is missing, it would be quite unexpected
+> to have it behave differently than current_now. Also userspace
+> tooling needs to handle current_now and power_now anyways. And we
+> surely can't change the behaviour for all drivers reporting signed
+> data. So let's keep qcom_battmgr as is. It follows the documented
+> ABI and hopefully helps giving this more exposure (I'm typing this
+> on a X1E laptop right now and can see your problem with waybar).
+>
+> But we should document the power_now property. It somehow fell
+> through the cracks :)
+>
+> -- Sebastian
 
-2025-02-27, 02:21:34 +0100, Antonio Quartulli wrote:
-> +static void ovpn_udp_close(struct sock *sk, long timeout)
-> +{
-> +	struct ovpn_socket *sock;
-> +	struct ovpn_priv *ovpn;
-> +
-> +	rcu_read_lock();
-> +	sock = rcu_dereference_sk_user_data(sk);
-> +	if (!sock || !sock->ovpn) {
-> +		rcu_read_unlock();
-> +		return;
-> +	}
-> +	ovpn = sock->ovpn;
-> +	rcu_read_unlock();
-> +
-> +	if (ovpn->mode == OVPN_MODE_P2P)
-> +		ovpn_peer_release_p2p(ovpn, sk,
-> +				      OVPN_DEL_PEER_REASON_TRANSPORT_DISCONNECT);
-> +	sock->udp_prot->close(sk, timeout);
-> +}
-> +
-> +static void ovpn_udp_build_protos(struct proto *new_prot,
-> +				  const struct proto *orig_prot)
-> +{
-> +	memcpy(new_prot, orig_prot, sizeof(*new_prot));
-> +	new_prot->close = ovpn_udp_close;
-> +}
+Hi,
+As an update around this topic, I sent some patches in the different tools I'm
+using to correctly handle negative values in current_now and power_now:
 
-Could you set ->encap_destroy in udp_tunnel_sock_cfg, instead of
-making up your own struct proto? It should allow to do basically the
-same thing, but with less code in ovpn:
+  * Waybar (included in release 0.12.0): https://github.com/Alexays/Waybar/pull/3942
+  * Powertop (merged): https://github.com/fenrus75/powertop/pull/173
+  * acpi-client (included in release 1.8): https://sourceforge.net/p/acpiclient/code/merge-requests/1/
 
-->close = udp_lib_close -> sk_common_release -> sk_prot->destroy = udp_destroy_sock -> encap_destroy
+It was quicker to get this merged than what I expected, which is good news!
 
+There's probably other tools to fix, I just fixed the tools I'm using. I
+encounter the issue on other tools, I'll send a patch.
 
--- 
-Sabrina
+--
+Anthony Ruhier
