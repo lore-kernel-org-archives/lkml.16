@@ -1,217 +1,179 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC3F25E444;
-	Fri, 28 Feb 2025 10:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9680825D53B
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737938; cv=none; b=N2hE+bFAZH4pUiz+OkytIn/4YiWLO09wBuzRv3bq7dDbrrOlXog8fvZBvGcTF+CggnXS2aF8csdkHd2MyN7LZONGM1iiwaFhyBuEjsr8yksoTuwGDDmuhLAGDjDJaKtWXKc2CzaUdwqoZLZjASi/eZIBwtLbHSWZ82BOFg+itPo=
+	t=1740737998; cv=none; b=JPG4W2rwRCwHl4HabW23pbak+tzsb1Duix1ZVpHn6YQgyCYvgol2P/MXg9goYTzPVErYMgK9Heme8TP1bg2QIxHV9o5xxs8M0NdnwgKj7oCCbJLVkEipgBGYJsYzdVdCKrlE0ZcgRDFs4onvwV5wlYlYEasos2QlgAttevFY3jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737938; c=relaxed/simple;
-	bh=bUqwURlMDqP4+mpjSwPYYRUMNT3uIuLyjH6OOZCuoGY=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=El2E/qWFkEuqovae9vY1e2yX40mZvb7RSbglA2oqw6jOqcpxnHpw4PJdTLyXS2XHEepZtAtpP9mT9dU8GWPQURvrOETtbVIqdb38EhKRlNm3O1I6UNwlhRBwN0rUp4Tu+ucbBI2vAI3vg4zHhh1m8TL9TITsaO9ksTE89ync9/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OjsV7RAw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4DscmT8l; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OjsV7RAw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4DscmT8l"
-Date: Fri, 28 Feb 2025 10:18:53 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740737935;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iuV5QnrElaaxhr8AuMgXa+PQYP2OIkfrssPPL58J22w=;
-	b=OjsV7RAwAFIX0/Cx2P3+7HEIMwhBtUJayB5MGnUa+BQSaytLB7KXxEVQy4XddgEYw4W4O6
-	UdzRN0C1HBfPJqX2l68RcDmx5sadB4Z26yNRyfnSzVgkx6wjq6P1LCKT61XUd5MAla2Ut9
-	rB8CRylOLVGrH+YYRQJBxXr4ZfwMDc5WFXpnHgZ8Xy8AhfXlFG84bSJMlDCiKsVIdyh7uf
-	GJvBUM2bTwaTWOijLonrChHu6Au3YMShmYCyeFVTTBcZ2LyFgiOK3r9nJ6KgvWQVlzW91T
-	5Yjc/Yi4F5tyamnnHKVLCfJF+2iNIjOvBJR6VWSiXzstv/86wqD2SSi2vNZVPg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740737935;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iuV5QnrElaaxhr8AuMgXa+PQYP2OIkfrssPPL58J22w=;
-	b=4DscmT8ls9w+1dlzXek+IphEK6ow4cx8/iE8tKXRvhZhukGDXdbI9gwAY3ks3DgWDZyzEe
-	Bxj9ilKgXUMtOfBg==
-From: "tip-bot2 for Brendan Jackman" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu: Create helper function to parse the
- 'clearcpuid=' boot parameter
-Cc: Brendan Jackman <jackmanb@google.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20241220-force-cpu-bug-v2-1-7dc71bce742a@google.com>
-References: <20241220-force-cpu-bug-v2-1-7dc71bce742a@google.com>
+	s=arc-20240116; t=1740737998; c=relaxed/simple;
+	bh=wZZhMkhQRmVPgHtgd0PNxvh1/Smcic6VSazFh0kFzjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AkoA+Ywmoj8iNkV+/WYdMHiJ4lxSlV8szNqplx85f8tayJ3Mxnhl3577X/XqsMpT2U/cdH3k+MFpqfpHdOwhRF/C9XhENN2y+IvapEhaLieT288qbIVnpEQc2UZ6HqS1XiyVMRW3FsRLQFAXtddrrFUg5s4BgIbfWcSKXyTtY5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tnxTE-0000p1-HQ; Fri, 28 Feb 2025 11:19:52 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tnxTE-003HFg-0g;
+	Fri, 28 Feb 2025 11:19:52 +0100
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1tnxTE-005Ghl-0F;
+	Fri, 28 Feb 2025 11:19:52 +0100
+Date: Fri, 28 Feb 2025 11:19:52 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org,
+	Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>,
+	imx@lists.linux.dev,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Fabio Estevam <festevam@gmail.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/5] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+Message-ID: <20250228101952.g6tae3ni5xrhjk3y@pengutronix.de>
+References: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
+ <20250221191909.31874-5-laurentiumihalcea111@gmail.com>
+ <Z7jahtO3bxjkMfnc@lizhi-Precision-Tower-5810>
+ <cd6a84cd-ff17-45df-becc-9bfc74522f73@gmail.com>
+ <20250227-monumental-whale-of-security-b1c84e-mkl@pengutronix.de>
+ <Z8CWsI/DKZtDBkzE@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174073793391.10177.13481068038175777623.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z8CWsI/DKZtDBkzE@lizhi-Precision-Tower-5810>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+Hi,
 
-Commit-ID:     f034937f5af32188cd1c07865c885b2f171e17bf
-Gitweb:        https://git.kernel.org/tip/f034937f5af32188cd1c07865c885b2f171e17bf
-Author:        Brendan Jackman <jackmanb@google.com>
-AuthorDate:    Fri, 20 Dec 2024 15:18:31 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 28 Feb 2025 10:57:49 +01:00
+On 25-02-27, Frank Li wrote:
+> On Thu, Feb 27, 2025 at 11:57:54AM +0100, Marc Kleine-Budde wrote:
+> > On 25.02.2025 16:14:34, Mihalcea Laurentiu wrote:
+> > >
+> > > On 21.02.2025 21:56, Frank Li wrote:
+> > > > On Fri, Feb 21, 2025 at 02:19:08PM -0500, Laurentiu Mihalcea wrote:
+> > > >> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> > > >>
+> > > >> AIPS5 is actually AIPSTZ5 as it offers some security-related
+> > > >> configurations. Since these configurations need to be applied before
+> > > >> accessing any of the peripherals on the bus, it's better to make AIPSTZ5
+> > > >> be their parent instead of keeping AIPS5 and adding a child node for
+> > > >> AIPSTZ5. Also, because of the security configurations, the address space
+> > > >> of the bus has to be changed to that of the configuration registers.
+> > > > The orginal 0x30c0_0000..0x31200000 include 0x30df0000, why not map only
+> > > > config address part in your drivers.
+> > > >
+> > > > Frank
+> > >
+> > > Any concerns/anything wrong with current approach?
+> > >
+> > >
+> > > I find it a bit awkward to have the whole bus address space
+> > > in the DT given that we're only interested in using the access
+> > > controller register space.
+> > >
+> > >
+> > > I'm fine with the approach you suggested but I don't see a
+> > > reason for using it?
+> >
+> > Looking at the "AIPS5 Memory Map" (page 34/35 in i.MX 8M Plus
+> > Applications Processor Reference Manual, Rev. 3, 08/2024), the
+> > AIPS5_Configuration is part of the AIPS5 bus. IMHO the bus is something
+> > different than the bus configuration. Why not model it as part of the
+> > bus?
+> >
+> > > >> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > >> index e0d3b8cba221..a1d9b834d2da 100644
+> > > >> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > >> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > >> @@ -1399,11 +1399,13 @@ eqos: ethernet@30bf0000 {
+> > > >>  			};
+> > > >>  		};
+> > > >>
+> > > >> -		aips5: bus@30c00000 {
+> > > >> -			compatible = "fsl,aips-bus", "simple-bus";
+> > > >> -			reg = <0x30c00000 0x400000>;
+> > > >> +		aips5: bus@30df0000 {
+> >                        ^^^^^^^^^^^^
+> > > >> +			compatible = "fsl,imx8mp-aipstz", "simple-bus";
+> > > >> +			reg = <0x30df0000 0x10000>;
+> > > >> +			power-domains = <&pgc_audio>;
+> > > >>  			#address-cells = <1>;
+> > > >>  			#size-cells = <1>;
+> > > >> +			#access-controller-cells = <0>;
+> > > >>  			ranges;
+> > > >>
+> > > >>  			spba-bus@30c00000 {
+> >                         ^^^^^^^^^^^^^^^^^
+> >
+> > This looks very strange: The aips5 bus starts at 0x30df0000 and has a
+> > child bus starting at 0x30c00000?
+> 
+> @30df0000 should match controller reg's address.
+> 
+> subnode address 0x30c00000,  should be descript in "ranges", which 1:1 map.
+> 
+> So it should be reasonable. another example:
+> i2c@1000 {
+> 
+> 	device@1c <- which use difference address space.
+> }
+> 
+> The similar case also happen at pcie.
 
-x86/cpu: Create helper function to parse the 'clearcpuid=' boot parameter
+I'm not really convinced that pcie and i2c are good examples here. I2C
+does have an other addressing scheme by nature and the hotplug-able pcie
+is dependeds on the pcie device memory map of course.
 
-This is in preparation for a later commit that will reuse this code, to
-make review convenient.
+Here we're talking about an access control IP core on a bus which is
+static.
 
-Factor out a helper function which does the full handling for this arg
-including printing info to the console.
+But.. it looks like from DT abstraction it's fine because STM did
+something similiar with their st,stm32mp25-rifsc or st,stm32-etzpc
+albeit it does look strange and I don't know why we have to limit the
+address space since it was already mapped but used by the fsl,aips-bus
+driver.
 
-No functional change intended.
+Regards,
+  Marco
 
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20241220-force-cpu-bug-v2-1-7dc71bce742a@google.com
----
- arch/x86/kernel/cpu/common.c | 96 ++++++++++++++++++-----------------
- 1 file changed, 52 insertions(+), 44 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 76598a9..137d3e0 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1479,56 +1479,18 @@ static void detect_nopl(void)
- #endif
- }
- 
--/*
-- * We parse cpu parameters early because fpu__init_system() is executed
-- * before parse_early_param().
-- */
--static void __init cpu_parse_early_param(void)
-+static inline void parse_clearcpuid(char *arg)
- {
--	char arg[128];
--	char *argptr = arg, *opt;
--	int arglen, taint = 0;
--
--#ifdef CONFIG_X86_32
--	if (cmdline_find_option_bool(boot_command_line, "no387"))
--#ifdef CONFIG_MATH_EMULATION
--		setup_clear_cpu_cap(X86_FEATURE_FPU);
--#else
--		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
--#endif
--
--	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
--		setup_clear_cpu_cap(X86_FEATURE_FXSR);
--#endif
--
--	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
--		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
--
--	if (cmdline_find_option_bool(boot_command_line, "noxsaveopt"))
--		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
--
--	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
--		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
--
--	if (cmdline_find_option_bool(boot_command_line, "nousershstk"))
--		setup_clear_cpu_cap(X86_FEATURE_USER_SHSTK);
--
--	/* Minimize the gap between FRED is available and available but disabled. */
--	arglen = cmdline_find_option(boot_command_line, "fred", arg, sizeof(arg));
--	if (arglen != 2 || strncmp(arg, "on", 2))
--		setup_clear_cpu_cap(X86_FEATURE_FRED);
--
--	arglen = cmdline_find_option(boot_command_line, "clearcpuid", arg, sizeof(arg));
--	if (arglen <= 0)
--		return;
-+	char *opt;
-+	int taint = 0;
- 
- 	pr_info("Clearing CPUID bits:");
- 
--	while (argptr) {
-+	while (arg) {
- 		bool found __maybe_unused = false;
- 		unsigned int bit;
- 
--		opt = strsep(&argptr, ",");
-+		opt = strsep(&arg, ",");
- 
- 		/*
- 		 * Handle naked numbers first for feature flags which don't
-@@ -1570,10 +1532,56 @@ static void __init cpu_parse_early_param(void)
- 		if (!found)
- 			pr_cont(" (unknown: %s)", opt);
- 	}
--	pr_cont("\n");
- 
- 	if (taint)
- 		add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
-+
-+	pr_cont("\n");
-+}
-+
-+
-+/*
-+ * We parse cpu parameters early because fpu__init_system() is executed
-+ * before parse_early_param().
-+ */
-+static void __init cpu_parse_early_param(void)
-+{
-+	char arg[128];
-+	int arglen;
-+
-+#ifdef CONFIG_X86_32
-+	if (cmdline_find_option_bool(boot_command_line, "no387"))
-+#ifdef CONFIG_MATH_EMULATION
-+		setup_clear_cpu_cap(X86_FEATURE_FPU);
-+#else
-+		pr_err("Option 'no387' required CONFIG_MATH_EMULATION enabled.\n");
-+#endif
-+
-+	if (cmdline_find_option_bool(boot_command_line, "nofxsr"))
-+		setup_clear_cpu_cap(X86_FEATURE_FXSR);
-+#endif
-+
-+	if (cmdline_find_option_bool(boot_command_line, "noxsave"))
-+		setup_clear_cpu_cap(X86_FEATURE_XSAVE);
-+
-+	if (cmdline_find_option_bool(boot_command_line, "noxsaveopt"))
-+		setup_clear_cpu_cap(X86_FEATURE_XSAVEOPT);
-+
-+	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
-+		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
-+
-+	if (cmdline_find_option_bool(boot_command_line, "nousershstk"))
-+		setup_clear_cpu_cap(X86_FEATURE_USER_SHSTK);
-+
-+	/* Minimize the gap between FRED is available and available but disabled. */
-+	arglen = cmdline_find_option(boot_command_line, "fred", arg, sizeof(arg));
-+	if (arglen != 2 || strncmp(arg, "on", 2))
-+		setup_clear_cpu_cap(X86_FEATURE_FRED);
-+
-+	arglen = cmdline_find_option(boot_command_line, "clearcpuid", arg, sizeof(arg));
-+	if (arglen <= 0)
-+		return;
-+	parse_clearcpuid(arg);
- }
- 
- /*
+> 
+> Frank
+> 
+> >
+> > regards,
+> > Marc
+> >
+> > --
+> > Pengutronix e.K.                 | Marc Kleine-Budde          |
+> > Embedded Linux                   | https://www.pengutronix.de |
+> > Vertretung Nürnberg              | Phone: +49-5121-206917-129 |
+> > Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+> 
+> 
+> 
+> 
