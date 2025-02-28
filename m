@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D3482755F6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:54:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2050C230BD8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:55:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772494; cv=none; b=Ad7N91QGdm7BR1M9wNepzlbjZnAdCDO/ngWJjNm59n7zlMbcajwRHKCiQLq6XzbEBCfThB4/84YLv52oCGLY6fVtUrVw4IZx5/KTBEP54jlNNESYL99qORjC7ZZQfbVW0o5uTHEIiqiCbpPC0dvgFms8dTSiwvOhzkNGpEeoqc8=
+	t=1740772530; cv=none; b=lYSZ43Y9aapHL3EEN6FAdVzg4f8F5QHkFXkhLedBG8u7NVaHKuPmWHH1d0EVrxMVETPf8syRZIx8tVOSrgD0juWWkkgi8LqoXMJqUKMt6owTu7W4/nq87ahHJ/LIsEPYuMeHd1gw5G5fCpfTxs2VH9N8woS1B++RqES9h707g24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772494; c=relaxed/simple;
-	bh=Hglg1Rk3wjepSjBH+v1NlSRpnLWuGrnBt3dezuHufTE=;
+	s=arc-20240116; t=1740772530; c=relaxed/simple;
+	bh=+tfHQjfpf/kVJGDuX+IhePHsJLEjr3Ddygk5rSJAQU4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZM7BVSc0uzNB9dvskvXASXq8V5dfpQcJSa4ss5LSqArHNn5itQAqCm60PAKuURsHlfdt2SY6m9Qn0ZuvAJHNHQ8ktA/NZLjK32O/e0busD/QKXuqtX5XsDbdcV0LnrOv+pAnOSNNWOFZKIu3Fwt3lNZUW2G7qucx2RzGePuHmOM=
+	 In-Reply-To:Content-Type; b=otdMeucm9bryeX9dneKLqmDToab/0fP3R2UsgjZCKR2Aml50QzSmEIZRkncwDcuZGW5d7bCilMV+qFagJTcEMyWGS/FwUPPjyG6oCG2P7pt0hwhHIu6IVvYPWPmj//bQL5pBvmkgVHBcG3IMuuSisd34k8p+QgUeLfVufov2x3g=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D50DC176A;
-	Fri, 28 Feb 2025 11:55:07 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0EB41007;
+	Fri, 28 Feb 2025 11:55:43 -0800 (PST)
 Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 715E23F5A1;
-	Fri, 28 Feb 2025 11:54:48 -0800 (PST)
-Message-ID: <93bd2525-d98d-4fbe-8e98-ff252d17f5e0@arm.com>
-Date: Fri, 28 Feb 2025 19:54:25 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF4DB3F5A1;
+	Fri, 28 Feb 2025 11:55:21 -0800 (PST)
+Message-ID: <7562c41a-42f1-4d33-a543-d92ead1d72da@arm.com>
+Date: Fri, 28 Feb 2025 19:55:19 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,13 +27,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 40/42] fs/resctrl: Add boiler plate for external
- resctrl code
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH v6 36/42] x86/resctrl: Add end-marker to the
+ resctrl_event_id enum
+To: babu.moger@amd.com, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ shameerali.kolothum.thodi@huawei.com,
  D Scott Phillips OS <scott@os.amperecomputing.com>,
  carl@os.amperecomputing.com, lcherian@marvell.com,
  bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
@@ -45,75 +45,50 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
- <20250207181823.6378-41-james.morse@arm.com>
- <67ef5b80-cafb-4e04-a66a-5f361a3d4f85@intel.com>
+ <20250207181823.6378-37-james.morse@arm.com>
+ <f91e1dd2-2ab3-4c23-893d-a87d4d38e43e@amd.com>
 Content-Language: en-GB
 From: James Morse <james.morse@arm.com>
-In-Reply-To: <67ef5b80-cafb-4e04-a66a-5f361a3d4f85@intel.com>
+In-Reply-To: <f91e1dd2-2ab3-4c23-893d-a87d4d38e43e@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Reinette,
+Hi Babu,
 
-On 20/02/2025 05:54, Reinette Chatre wrote:
-> On 2/7/25 10:18 AM, James Morse wrote:
->> Add Makefile and Kconfig for fs/resctrl. Add ARCH_HAS_CPU_RESCTRL
->> for the common parts of the resctrl interface and make X86_CPU_RESCTRL
->> select this.
+On 27/02/2025 20:26, Moger, Babu wrote:
+> On 2/7/25 12:18, James Morse wrote:
+>> The resctrl_event_id enum gives names to the counter event numbers on x86.
+>> These are used directly by resctrl.
 >>
->> Adding an include of asm/resctrl.h to linux/resctrl.h allows the
->> /fs/resctrl files to switch over to using this header instead.
+>> To allow the MPAM driver to keep an array of these the size of the enum
+>> needs to be known.
+>>
+>> Add a 'num_events' define which can be used to size an array. This isn't
+>> a member of the enum to avoid updating switch statements that would
+>> otherwise be missing a case.
 
->> diff --git a/fs/resctrl/Kconfig b/fs/resctrl/Kconfig
->> new file mode 100644
->> index 000000000000..229ca71a8258
->> --- /dev/null
->> +++ b/fs/resctrl/Kconfig
->> @@ -0,0 +1,37 @@
->> +config RESCTRL_FS
->> +	bool "CPU Resource Control Filesystem (resctrl)"
->> +	depends on ARCH_HAS_CPU_RESCTRL
->> +	select KERNFS
->> +	select PROC_CPU_RESCTRL if PROC_FS
->> +	help
->> +	  Some architectures provide hardware facilities to group tasks and
->> +	  monitor and control their usage of memory system resources such as
->> +	  caches and memory bandwidth.  Examples of such facilities include
->> +	  Intel's Resource Director Technology (Intel(R) RDT) and AMD's
->> +	  Platform Quality of Service (AMD QoS).
->> +
->> +	  If your system has the necessary support and you want to be able to
->> +	  assign tasks to groups and manipulate the associated resource
->> +	  monitors and controls from userspace, say Y here to get a mountable
->> +	  'resctrl' filesystem that lets you do just that.
->> +
->> +	  If nothing mounts or prods the 'resctrl' filesystem, resource
->> +	  controls and monitors are left in a quiescent, permissive state.
->> +
->> +	  On architectures where this can be disabled independently, it is
->> +	  safe to say N.
->> +
->> +	  See <file:Documentation/arch/x86/resctrl.rst> for more information.
->> +
->> +config RESCTRL_FS_PSEUDO_LOCK
->> +	bool
->> +	help
->> +	  Software mechanism to pin data in a cache portion using
->> +	  micro-architecture specific knowledge.
->> +
->> +config RESCTRL_RMID_DEPENDS_ON_CLOSID
->> +	bool
->> +	help
->> +	  Enabled by the architecture when the RMID values depend on the CLOSID.
->> +	  This causes the CLOSID allocator to search for CLOSID with clean
->> +	  RMID.
-> 
-> With RESCTRL_FS_PSEUDO_LOCK and RESCTRL_RMID_DEPENDS_ON_CLOSID appearing at
-> same level as RESCTRL_FS all three configs "depends on MISC_FILESYSTEMS".
-> Should RESCTRL_FS_PSEUDO_LOCK and RESCTRL_RMID_DEPENDS_ON_CLOSID
-> "depends on RESCTRL_FS" instead?
+>> diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+>> index 51c51a1aabfb..70226f5ab3e3 100644
+>> --- a/include/linux/resctrl_types.h
+>> +++ b/include/linux/resctrl_types.h
+>> @@ -51,4 +51,6 @@ enum resctrl_event_id {
+>>  	QOS_L3_MBM_LOCAL_EVENT_ID	= 0x03,
+>>  };
+>>  
+>> +#define QOS_NUM_EVENTS		(QOS_L3_MBM_LOCAL_EVENT_ID + 1)
 
-Sure, it can't hurt.
+> Why cant this be part of "enum resctrl_event_id" like we defined
+> RDT_NUM_RESOURCES?
+
+Maybe its a difference that only exists in my head, but the rdt resource array is
+completely a resctrl concept, the positions in the enum don't mean anything.
+Not so for for resctrl_event_id - those numbers mean something to the X86 CPUs. Resctrl
+needs some unique identifier for those, and its simpler just to use these directly. I
+didn't want to add anything to this enum.
+
+If there are mpam specific events, (currently there is only the risk of bandwidth counters
+on the L2, or scattered at random through the system), I'd prefer to support them via perf
+and keep them out of here completely.
 
 
 Thanks,
