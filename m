@@ -1,85 +1,74 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C4C25F7A6;
-	Fri, 28 Feb 2025 10:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B3925C715
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740739211; cv=none; b=pgvvOr/QJTLDmvS4MpkAUUWk0xmd08GTGUT+OTfToxg6d9bqRFZEzL0YTOhtYBMA+mXyM2zBD+5YUxM2yaSm91FpoJZni3Zy7zOagf5Wm4H6iX+jvbXAFDFD9xygKnAbw00oPzV3dLpb2w6XandKABP4AhsBiUGouBukf9DI5ec=
+	t=1740739442; cv=none; b=ipHHdPUuZyVAzjUdmxMoz9DAkS+RnNdVzvO/sZF+pQ/kaWUmV2lJu3lJl4+BXQN+sjoVe1CQBxFvyvUJodZ875v+AggmvOgyeOcM8s8JhiTNBy7qSHIO20FOdMn/ps0+R6tFcFTf5FPubPtiFr8MU2jL9iilczEsVMx5QPIhzWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740739211; c=relaxed/simple;
-	bh=BtzMxTsiUBKKfohLqHJJpcoRDbN/5OcsFVC/lglePDo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kuCIRNuNdjdeBxj4x8EcIn5BqN66qOC+LFDyfW/OsJrVf5om0EHu6+TXRJrNXyooKQ+/19f6f3tU2qPxhcx9kWIUnlfvUieTJb+JHsIoDOwurKHV3QeHwbh+FP0vkPKkUtYB8PRLw47lYxTHjGN05DNnus2Txw+yTYhVJdmZ0KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnpLZRJC; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740739442; c=relaxed/simple;
+	bh=30gTwZ7bAoXwE4rB6Ipx4ul5/zTbp92zD7vXVbloYAY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K0ulCj+HAsqrU/jnUse3VmYFK4u3fk+8nmpEUpNSDgZM914Pv5vx6GsdCVnzL5RzVLD0K5UPPHed2JigGhdXmnnQ+oGtC/KzPyxGPVCY5kuQ/29birw1tZOOMTqS4zOLaEYD/dxwgiNfmKcVvml+8N5uxKKj0lKzMwnZfVD5LHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=iiOyoC/F; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnpLZRJC"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-439ac3216dcso13639895e9.1;
-        Fri, 28 Feb 2025 02:40:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="iiOyoC/F"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2fbffe0254fso4026917a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:44:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740739207; x=1741344007; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kNQfrx2+Y7l3TBgRs2HYeEusAxTadJTrsHyF6Qzg2L4=;
-        b=nnpLZRJCF1qKbfV9HQUddiiMlj+lZRDLYASG+6yFlbFpWNsJ96PeVhghKTQa0Y/SGo
-         WWigE6GuH60MQqMUPAMkFAEC1KZN4FmwjdkMSMv+AULSx5lU4TqiIAXHcygC/LIRswvP
-         P6nAFARjEk42yBUkolK4Gs02dMy8LoyJCrnybg3TIDsmHicbq0KprKJyjsKxwwdenQrf
-         UBQ7nPctS7r7OYELIqiqXf9UGof0Pzb78B/+KVqtmKkpVc0rGR+v9CYa1WeFmF8Up+sZ
-         TSS3XiWzyrlUlbdQ4bdjTdd1DWjE7CkDdM2lrFqrHmycdImvqDbSy6GCyIn55H2OgopC
-         HaJw==
+        d=shopee.com; s=shopee.com; t=1740739440; x=1741344240; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=joQAlWzi3rsOp1MlSht4qO1NHlVdWdwzqn85zxRvT2o=;
+        b=iiOyoC/FoD0rsrtsUY6TsSh3hzXcKgPGfDAod6ZSGAT/05ohiK+P9/vg1tpiZc5qAN
+         DbW8wt4+m8T4WAkTyXw0QnemFbfEzy25CbPOQXyZz6+gWtHYiiXSq4fy/kWFGtZy8En/
+         qdBf9rYFziIL5f/Y+F01quQmPanQZZshJjprCo4GJNOadCoTnpY/sf4XSLhE5TZqoGss
+         MEDahcZ27jjWwODWRl0ZKxaNI26ZHtWXBL5acGNihfYQRinxantiW370kTn4j1LmErc2
+         PILuASAmqhiDiqXxPeAuEnpDVKekiGi+NorPLgQfiSmWwl8JHQeHiifSyMWMQ9r1Kv11
+         1OTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740739207; x=1741344007;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kNQfrx2+Y7l3TBgRs2HYeEusAxTadJTrsHyF6Qzg2L4=;
-        b=a1J4MN3lZEAmpaT1ZxhDRQ6HJhUY6cGJcyJXsvdgGyywiL0Igsjl1IQ+mb/RYx7rWg
-         n/j5BBSFEoGFgSuNAwqTBQ8BMP/EDgde+oH8S0/Bkomrg1ldJi5/eOibS3/sbfdUDP44
-         lsCrWPakhomNLa7YX8fxff8A1FMIcWeV+9DGfNUn4302x/w9QB4tTY7xAaQO9UueafZx
-         ujmEPfRIE+gzK+9f+CDgGEAol3GED7ui/UPwUUo6II+tP7+NeejLI47s0qLSNJNmgrP+
-         R0gxkkdaHmfMh+jhUpeitI7ue7U/33RZksvrQ80rdVLlUkRUFU0GMgIcXvMcCATkGzZ2
-         jIqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+aE52KxdWAvxCPpwhvxmyFfagOIYTRPrlRUhHoatO0fci8fkbqTEryrtxCT9RzMB3yUQMblT/@vger.kernel.org, AJvYcCW2fuVJfNJVv1ma4z90+9DaFIf2+qeDy96ho/HARdFctbUIf0yZfPqCQte7+5sHbY2PjzhE0izE9iZ3e6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpEsOn6MyCpj0SBklFzdIfDqTilV+VQkoQDwPBMSjBTUUKdFqX
-	CfWaRin+VjNF5P1w8dSAmj0TVBLRQDXUJpKQBXV/SJfnXAVbfJ+l
-X-Gm-Gg: ASbGnctvflhkKNJlkHCQGbOG5fzj3rh7/AE+inHmuWb3kc83YxHH3vOdW7hsdw8Ld1N
-	AXGtEqPmRmgy4ovj9cDz3axrvJTHrT72c20JP1gZuRxVSdcAR+DR0UrjC/PgNluOjyoBjod2SYT
-	f2U/EGD+YtpYxjHWlQAceQiWgWHWBQv4hZ6iJmqvHm9Hoaqt8/bycqEi5f6oKFaAzf4394sU9lK
-	flxDxLIph4nYxdn1sTdBXpO53V0oOhKTF5xvVC3byZbWfIQWPHiAtiPKNkB/o7gCCiSN9DbPy89
-	ysCGPxWzWOfwnnkIPMWzlPW5ZVkQdM6EFwibT5CWpg==
-X-Google-Smtp-Source: AGHT+IHwAKMkbQkKZji2hIl2kLJahCHtsGvhDRkHSsHi5xjEjBT4SBZNdGXhe19X/KZFU+W8IlL/xQ==
-X-Received: by 2002:a05:600c:1c95:b0:439:8bb3:cf8e with SMTP id 5b1f17b1804b1-43ba67606abmr21106225e9.20.1740739207395;
-        Fri, 28 Feb 2025 02:40:07 -0800 (PST)
-Received: from eichest-laptop.toradex.int ([2a02:168:af72:0:31d5:4145:8035:cb68])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43b73703caesm52078855e9.12.2025.02.28.02.40.06
+        d=1e100.net; s=20230601; t=1740739440; x=1741344240;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=joQAlWzi3rsOp1MlSht4qO1NHlVdWdwzqn85zxRvT2o=;
+        b=E0R+r3eRyvJQ4NBkZD5dAS4vfPkKi3VR9Ftf4OTdRl46WMihUNBwmMfGMWZXSmvisd
+         5mqb7/OXfzJhQXdQsSCmcsVMYwZ1SbaB/Dlkr+vbgG2tlPX9bKBj9u2XqysKTB63eRgn
+         C+FQugtmvnhkzM9HAy7kDvRL3qDegI/dZxHnIPpbFq+MwJR6zl4OTP1vlwblEsgLJP0i
+         wymyNLEKIQ+PYzhwbJquQkSSMk77RBtKiayprDPVEIJR02SeXtvtcf1h+r3mXF75K8sL
+         kkuYZmtXfkbnB2qwbd+yoavZE7iqt51LJ7x7ZSK2mrM4i+dPlK5WH5PnFJw5yMcUAQr6
+         b51Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWdsUSY6Q//AfWDGSR8MjCvnjhvpeYtV0f6mPo/Fyahhw14JXWPWkzB/1mTX9at/3Miaa7NDpswU8jKH60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNw1Jf1KnpHdRpinUyMyPJ0Ho7rPuO0I2UgnyTHFcZ5SKeFRl+
+	fXy6Bnqb2mErID791KhSI9vTIApfplTOSIUWHpJIGZIZSKNMXAj3SlOKy7+QEog=
+X-Gm-Gg: ASbGnctyVZq35pMLiKLv6m2MyW+0oJe0hmiHQ7ifmV3jyjgwZKfCqorKnsnL8QpQSoE
+	O+lbJ70WcQyuCnozNbrkWIZUP0VlAyMhRVKuSeJT1JU7aDifc7w0t0If1wJNLTB6QRxg90DrUhc
+	6ppb4DoKkcwvgNde5O4zyKhl81U4nwN4WuWQS7OZ0nNCXZUwGhxCsKRrZbCNL59jAqQEoe4KalX
+	LXfcgY635PF1F9eKUgg16oxNyyOJwebyh1i+EZHHBf3zJTlY7JeDTTbfqypxl0N0iiCBOJKOzrE
+	1tnU0nnXCvTAy12oP0ZLDYY+r5OOY9YwVt6wfsk=
+X-Google-Smtp-Source: AGHT+IEXM8Hl65f9VBidJfr6xhS16N45GlUrNTaace61xpGVMFjlV4G78nmeJfiFIijTFbWQihn3xw==
+X-Received: by 2002:a17:90b:574c:b0:2fa:b84:b304 with SMTP id 98e67ed59e1d1-2febabdc1fdmr4085761a91.22.1740739440439;
+        Fri, 28 Feb 2025 02:44:00 -0800 (PST)
+Received: from localhost.localdomain ([143.92.64.18])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe825a98e7sm5534840a91.4.2025.02.28.02.43.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 02:40:06 -0800 (PST)
-From: Stefan Eichenberger <eichest@gmail.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	p.zabel@pengutronix.de,
-	tharvey@gateworks.com,
-	hongxing.zhu@nxp.com,
-	francesco.dolcini@toradex.com
-Cc: linux-phy@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
+        Fri, 28 Feb 2025 02:43:59 -0800 (PST)
+From: Haifeng Xu <haifeng.xu@shopee.com>
+To: brauner@kernel.org,
+	ebiederm@xmission.com,
+	asml.silence@gmail.com
+Cc: axboe@kernel.dk,
+	olivier@trillion01.com,
+	jack@suse.cz,
+	io-uring@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Stefan Eichenberger <stefan.eichenberger@toradex.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v1 2/2] phy: freescale: imx8m-pcie: assert phy reset and perst in power off
-Date: Fri, 28 Feb 2025 11:38:34 +0100
-Message-ID: <20250228103959.47419-3-eichest@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250228103959.47419-1-eichest@gmail.com>
-References: <20250228103959.47419-1-eichest@gmail.com>
+	Haifeng Xu <haifeng.xu@shopee.com>
+Subject: [PATCH RESEND] io_uring: fix the dead lock between io_uring and core dump
+Date: Fri, 28 Feb 2025 18:43:53 +0800
+Message-ID: <20250228104353.300686-1-haifeng.xu@shopee.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,62 +77,207 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+In our production environment, we found many hung tasks.
 
-Ensure the PHY reset and perst is asserted during power-off to
-guarantee it is in a reset state upon repeated power-on calls. This
-resolves an issue where the PHY may not properly initialize during
-subsequent power-on cycles. Power-on will deassert the reset at the
-appropriate time after tuning the PHY parameters.
+	Thead A (exit_mm)
+	...
+		if (core_state) {
+		struct core_thread self;
 
-During suspend/resume cycles, we observed that the PHY PLL failed to
-lock during resume when the CPU temperature increased from 65C to 75C.
-The observed errors were:
-  phy phy-32f00000.pcie-phy.3: phy poweron failed --> -110
-  imx6q-pcie 33800000.pcie: waiting for PHY ready timeout!
-  imx6q-pcie 33800000.pcie: PM: dpm_run_callback(): genpd_resume_noirq+0x0/0x80 returns -110
-  imx6q-pcie 33800000.pcie: PM: failed to resume noirq: error -110
+		mmap_read_unlock(mm);
 
-This resulted in a complete CPU freeze, which is resolved by ensuring
-the PHY is in reset during power-on, thus preventing PHY PLL failures.
+		self.task = current;
+		if (self.task->flags & PF_SIGNALED)
+			self.next = xchg(&core_state->dumper.next, &self);
+		else
+			self.task = NULL;
+		/*
+		 * Implies mb(), the result of xchg() must be visible
+		 * to core_state->dumper.
+		 */
+		if (atomic_dec_and_test(&core_state->nr_threads))
+			complete(&core_state->startup);
 
-Cc: stable@vger.kernel.org
-Fixes: 1aa97b002258 ("phy: freescale: pcie: Initialize the imx8 pcie standalone phy driver")
-Signed-off-by: Stefan Eichenberger <stefan.eichenberger@toradex.com>
+		for (;;) {
+			set_current_state(TASK_UNINTERRUPTIBLE);
+			if (!self.task) /* see coredump_finish() */
+				break;
+			freezable_schedule();
+		}
+		__set_current_state(TASK_RUNNING);
+		mmap_read_lock(mm);
+	}
+	...
+
+	Thead B (coredump_wait)
+	...
+		if (core_waiters > 0) {
+		struct core_thread *ptr;
+
+		freezer_do_not_count();
+		wait_for_completion(&core_state->startup);
+		freezer_count();
+		/*
+		 * Wait for all the threads to become inactive, so that
+		 * all the thread context (extended register state, like
+		 * fpu etc) gets copied to the memory.
+		 */
+		ptr = core_state->dumper.next;
+		while (ptr != NULL) {
+			wait_task_inactive(ptr->task, 0);
+			ptr = ptr->next;
+		}
+	...
+
+	Thead C (io_worker_exit)
+	...
+		if (refcount_dec_and_test(&worker->ref))
+		complete(&worker->ref_done);
+		wait_for_completion(&worker->ref_done);
+	...
+
+Thread A is waiting Thead B to finish core dump, but Thead B found that there is
+still one thread which doesn't step into exit_mm() to dec core_state->nr_threads.
+The thead is Thread C, it has submitted a task_work (create_worker_cb) to Thread B
+and then wait Thread B to execute or cancel the work. So this causes deadlock between
+io_uring and core dump.
+
+Our kernel vesion is stable 5.15.125, and the commit 1d5f5ea7cb7d ("io-wq: remove worker to owner tw dependency")
+is included. When the last io woker exits, it doesn't find any callback. Once scheduled out,
+it will invoke io_wq_worker_sleeping() to submit a task work to the master thread. So the
+commit 1d5f5ea7cb7d ("io-wq: remove worker to owner tw dependency") won't help in this case.
+
+For the core dump thread, we can set a timeout to check whether the taks_work callback exists,
+If needed, cancel the task_work and wake up the io worker, so the dead lock will be resolved.
+
+Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
 ---
- drivers/phy/freescale/phy-fsl-imx8m-pcie.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ fs/coredump.c              |  6 ++++--
+ include/linux/completion.h |  2 ++
+ io_uring/io-wq.c           |  3 +--
+ io_uring/io-wq.h           |  1 +
+ kernel/sched/completion.c  | 11 +++++++++++
+ kernel/sched/core.c        |  8 ++++++++
+ 6 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-index 00f957a42d9dc..36bef416618de 100644
---- a/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8m-pcie.c
-@@ -158,6 +158,17 @@ static int imx8_pcie_phy_power_on(struct phy *phy)
- 	return ret;
+diff --git a/fs/coredump.c b/fs/coredump.c
+index 591700e1b2ce..1d972d5882f0 100644
+--- a/fs/coredump.c
++++ b/fs/coredump.c
+@@ -42,6 +42,7 @@
+ #include <linux/path.h>
+ #include <linux/timekeeping.h>
+ #include <linux/sysctl.h>
++#include <linux/sched/sysctl.h>
+ #include <linux/elf.h>
+ 
+ #include <linux/uaccess.h>
+@@ -406,6 +407,7 @@ static int coredump_wait(int exit_code, struct core_state *core_state)
+ {
+ 	struct task_struct *tsk = current;
+ 	int core_waiters = -EBUSY;
++	unsigned long hang_check = sysctl_hung_task_timeout_secs;
+ 
+ 	init_completion(&core_state->startup);
+ 	core_state->dumper.task = tsk;
+@@ -415,8 +417,8 @@ static int coredump_wait(int exit_code, struct core_state *core_state)
+ 	if (core_waiters > 0) {
+ 		struct core_thread *ptr;
+ 
+-		wait_for_completion_state(&core_state->startup,
+-					  TASK_UNINTERRUPTIBLE|TASK_FREEZABLE);
++		wait_for_completion_state_timeout(&core_state->startup, TASK_UNINTERRUPTIBLE|TASK_FREEZABLE,
++						  hang_check * (HZ/2));
+ 		/*
+ 		 * Wait for all the threads to become inactive, so that
+ 		 * all the thread context (extended register state, like
+diff --git a/include/linux/completion.h b/include/linux/completion.h
+index fb2915676574..432de8ecc32d 100644
+--- a/include/linux/completion.h
++++ b/include/linux/completion.h
+@@ -104,6 +104,8 @@ extern void wait_for_completion_io(struct completion *);
+ extern int wait_for_completion_interruptible(struct completion *x);
+ extern int wait_for_completion_killable(struct completion *x);
+ extern int wait_for_completion_state(struct completion *x, unsigned int state);
++extern int wait_for_completion_state_timeout(struct completion *x, unsigned int state,
++					     unsigned long timeout);
+ extern unsigned long wait_for_completion_timeout(struct completion *x,
+ 						   unsigned long timeout);
+ extern unsigned long wait_for_completion_io_timeout(struct completion *x,
+diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+index 91019b4d0308..1c03dc57a3b3 100644
+--- a/io_uring/io-wq.c
++++ b/io_uring/io-wq.c
+@@ -141,7 +141,6 @@ static bool io_acct_cancel_pending_work(struct io_wq *wq,
+ 					struct io_wq_acct *acct,
+ 					struct io_cb_cancel_data *match);
+ static void create_worker_cb(struct callback_head *cb);
+-static void io_wq_cancel_tw_create(struct io_wq *wq);
+ 
+ static bool io_worker_get(struct io_worker *worker)
+ {
+@@ -1230,7 +1229,7 @@ void io_wq_exit_start(struct io_wq *wq)
+ 	set_bit(IO_WQ_BIT_EXIT, &wq->state);
  }
  
-+static int imx8_pcie_phy_power_off(struct phy *phy)
-+{
-+	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
-+
-+	reset_control_assert(imx8_phy->reset);
-+	if (imx8_phy->perst)
-+		reset_control_assert(imx8_phy->perst);
-+
-+	return 0;
-+}
-+
- static int imx8_pcie_phy_init(struct phy *phy)
+-static void io_wq_cancel_tw_create(struct io_wq *wq)
++void io_wq_cancel_tw_create(struct io_wq *wq)
  {
- 	struct imx8_pcie_phy *imx8_phy = phy_get_drvdata(phy);
-@@ -178,6 +189,7 @@ static const struct phy_ops imx8_pcie_phy_ops = {
- 	.init		= imx8_pcie_phy_init,
- 	.exit		= imx8_pcie_phy_exit,
- 	.power_on	= imx8_pcie_phy_power_on,
-+	.power_off	= imx8_pcie_phy_power_off,
- 	.owner		= THIS_MODULE,
+ 	struct callback_head *cb;
+ 
+diff --git a/io_uring/io-wq.h b/io_uring/io-wq.h
+index b3b004a7b625..48ba66b5d0bd 100644
+--- a/io_uring/io-wq.h
++++ b/io_uring/io-wq.h
+@@ -43,6 +43,7 @@ struct io_wq_data {
+ 	free_work_fn *free_work;
  };
  
++void io_wq_cancel_tw_create(struct io_wq *wq);
+ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data);
+ void io_wq_exit_start(struct io_wq *wq);
+ void io_wq_put_and_exit(struct io_wq *wq);
+diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
+index 3561ab533dd4..9e7936a3cad4 100644
+--- a/kernel/sched/completion.c
++++ b/kernel/sched/completion.c
+@@ -269,6 +269,17 @@ int __sched wait_for_completion_state(struct completion *x, unsigned int state)
+ }
+ EXPORT_SYMBOL(wait_for_completion_state);
+ 
++int __sched wait_for_completion_state_timeout(struct completion *x, unsigned int state,
++					      unsigned long timeout)
++{
++	long t = wait_for_common(x, timeout, state);
++
++	if (t == -ERESTARTSYS)
++		return t;
++	return 0;
++}
++EXPORT_SYMBOL(wait_for_completion_state_timeout);
++
+ /**
+  * wait_for_completion_killable_timeout: - waits for completion of a task (w/(to,killable))
+  * @x:  holds the state of this particular completion
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 9aecd914ac69..e0c9694d8134 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6806,6 +6806,14 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 		wq_worker_sleeping(tsk);
+ 	else if (task_flags & PF_IO_WORKER)
+ 		io_wq_worker_sleeping(tsk);
++#ifdef CONFIG_IO_URING
++	else if (task_flags & PF_DUMPCORE) {
++		struct io_uring_task *io_uring = tsk->io_uring;
++
++		if (io_uring)
++			io_wq_cancel_tw_create(io_uring->io_wq);
++	}
++#endif
+ 
+ 	/*
+ 	 * spinlock and rwlock must not flush block requests.  This will
 -- 
-2.45.2
+2.43.0
 
