@@ -1,118 +1,83 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015C91FE451;
-	Fri, 28 Feb 2025 10:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8277325F789;
+	Fri, 28 Feb 2025 10:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740738596; cv=none; b=mW3NBZA3s2OkuEHyRKpJ3Qqi16GUC/3PAP0dstML7jClOD2bio7ZkiS5zUrQMW7+Kc2PDugb4c738qC52Ezx4Ol8jSd736lnV3YrxAvm1IbqIsOVYPwlY3N41OkVnWj6Z+TQpqOAPDbW+MAiKyxc7Hqg9QAiW32/VSapDvfoSyQ=
+	t=1740738725; cv=none; b=ZAUQ1nPNEYeIXwlIhg4aSL84hPPEOHYR/JWwBjIclgfuCThwgecNk8waPnnPkX973eA9BSsTU1e63PpXHMf1ZAYMqHrG6+h4/XxfvhvYlnANKPkbiLYmMnnyps7w50IQzdwcoqwIWnPhbodhhNOJYpmyvQkmcn+eCnTiHnDLNy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740738596; c=relaxed/simple;
-	bh=Tziz2U7REJaUQT9szYJ+pjVyOgCIf3IwB5QcbGxgaWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n0YoTW/a6P68zFZgFpgrYrIsJtEtpazT0dfhLczSHfE9wwziQlVaaenJDsBhpXec9NuI4oTgrAkWfVAg0S7fUQ4cqn9AX3neZ34yzoYyAgQ9CcpIn00xf15sX2Lf9bNDDTYkxWFWHBiQ1lxkJqfXc/H8vnp/G9wo0fPJjmWDpKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=A977MKLp; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1740738725; c=relaxed/simple;
+	bh=YV+Rz0nT05zsjBIIG2ncvX7T1edTVuc7s3cZPCIXE2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aF8I3UryIJdVe918kb4cfJHnp5yZqrkny3g4bjyYovZySf9WU8/3+LrTGe4wXk7yQL3/yHtojvTf27quPd5EgcaocM6+An0UtlNgWWlVn+mxcZW20b2Sev3gp76c9C6lAIXcRs0KYYqQMUQy3ajhAGxGxn/p1BmoHsSSaVD0L4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/v+Amvc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A977MKLp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ht7ZbMwfV+utVkqPlmDB+z3+2vIA7uWpPnlzueknb74=; b=A977MKLp8As/l9zJTJHg41iGfQ
-	125R3PcMRlqReyzxem0p2D/9Y5E1pOHy+vt77I5lHaozgtYpfhRDt/YrYOUxZPFhDLGv67eMAqoYp
-	kmeGtsKh54ngtP8lV1LWjzKre3i6vOWW2tumWhnDzBIz49ogvT7L34BoJW/QT0nSH6h1RDDcbsNX4
-	+mNsqnEMerPGw/8NErqU28i5XWJmgTERh+Vu4Oqvi/7IPPbbih388NtU5ZC/Tg/d4y/vbePN0zz4c
-	TEvDofTVvCFK5/WqOTJk5gbzVJyRrHWpYrmDpJvGiL8Ejp6VRLmL+Ie4Edc7+wjxFSa2aKYwqTqz9
-	rqzWw3bg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tnxce-00000003x53-2kvA;
-	Fri, 28 Feb 2025 10:29:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 84C9E300780; Fri, 28 Feb 2025 11:29:35 +0100 (CET)
-Date: Fri, 28 Feb 2025 11:29:35 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: rostedt@goodmis.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com,
-	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	mathieu.desnoyers@efficios.com, nathan@kernel.org,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	dongml2@chinatelecom.cn, akpm@linux-foundation.org, rppt@kernel.org,
-	graf@amazon.com, dan.j.williams@intel.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next v2] add function metadata support
-Message-ID: <20250228102935.GM31462@noisy.programming.kicks-ass.net>
-References: <20250226121537.752241-1-dongml2@chinatelecom.cn>
- <20250227165302.GB5880@noisy.programming.kicks-ass.net>
- <CADxym3YCZ5dqXMFesNaAF_Z2EWWCj0bJyKQ+BnNw2c=g39CRFA@mail.gmail.com>
- <20250228102646.GW11590@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/v+Amvc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4E4C4CEED;
+	Fri, 28 Feb 2025 10:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740738725;
+	bh=YV+Rz0nT05zsjBIIG2ncvX7T1edTVuc7s3cZPCIXE2c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=s/v+AmvcOgOUCGexFGwYBeu6jkR/m6VEG64na9kIEbaMFq2RbAesjtS5qJb11NBZK
+	 nqglb19EGi9H73eFZRoeiijl3FRRDkIn3u1SyuD5XTr0yYngUafdaQKzEt72ieOn5m
+	 l52jwXmyp4EcicCeydWfQnYpmFldPpYmCXyF0057sYUqpZUkTSNZGGsF3f6sAA7IH0
+	 sx1+N4QKERtkofqlKT+nX/Bazs1c1BcYn3tZ/zd6xgI0/0LE6Yl2RfQXYLCbwgKKbF
+	 tLICY+2RsW6oRFsToPZudoeMebzFDyxQG3cuts6RAvsyEbwW6K+bfZxJoWHxA4+6cT
+	 9hCvQ5LSjG5Rg==
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org,
+	linux-fsdevel@lists.infradead.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
+Date: Fri, 28 Feb 2025 11:31:51 +0100
+Message-ID: <20250228-unberechenbar-trauen-cef35cae8629@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <3190716.1740733119@warthog.procyon.org.uk>
+References: <3190716.1740733119@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228102646.GW11590@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1078; i=brauner@kernel.org; h=from:subject:message-id; bh=YV+Rz0nT05zsjBIIG2ncvX7T1edTVuc7s3cZPCIXE2c=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQfnDDPbdeb7T2dwW0zbwicyPts+sGk9X/d9FMHJ4nOc eQXfNel01HKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjAR+TZGhn9H3lzhOKg+98rv 9+6NGz6WGiw/qrLfyebOK1327Ry24n0M/+vffizfk6LOErVgbqmUvriU/wv1dvPA/dMLL77zdp3 Kwg8A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 11:26:46AM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 28, 2025 at 05:53:07PM +0800, Menglong Dong wrote:
+On Fri, 28 Feb 2025 08:58:39 +0000, David Howells wrote:
+> Could you pull this into the VFS tree onto a stable branch?  The patches
+> were previously posted here as part of a longer series:
 > 
-> > I tested it a little by enabling CFI_CLANG and the extra 5-bytes
-> > padding. It works fine, as mostly CFI_CLANG use
-> > CONFIG_FUNCTION_PADDING_BYTES to find the tags. I'll
-> > do more testing on CFI_CLANG to make sure everything goes
-> > well.
+>   https://lore.kernel.org/r/20250224234154.2014840-1-dhowells@redhat.com/
 > 
-> I don't think you understand; please read:
+> The first five patches are fixes that have gone through the net tree to
+> Linus and hence this patchset is based on the latest merge by Linus and
+> I've dropped those from my branch.
 > 
-> arch/x86/kernel/alternative.c:__apply_fineibt() 
-> 
-> and all the code involved with patching FineIBT. I think you'll find it
-> very broken if you change anything here.
-> 
-> Can you post an actual function preamble from a kernel with
-> CONFIG_FINEIBT=y with your changes on?
-> 
-> Ex.
-> 
-> $ objdump -wdr build/kernel/futex/core.o
-> 
-> Disassembly of section .text:
-> 
-> 0000000000000000 <__cfi_futex_hash>:
->        0:       b9 93 0c f9 ad          mov    $0xadf90c93,%ecx
-> 
-> 0000000000000005 <.Ltmp0>:
->        5:       90                      nop
->        6:       90                      nop
->        7:       90                      nop
->        8:       90                      nop
->        9:       90                      nop
->        a:       90                      nop
->        b:       90                      nop
->        c:       90                      nop
->        d:       90                      nop
->        e:       90                      nop
->        f:       90                      nop
-> 
-> 0000000000000010 <futex_hash>:
->       10:       f3 0f 1e fa             endbr64
->       14:       e8 00 00 00 00          call   19 <futex_hash+0x9>      15: R_X86_64_PLT32      __fentry__-0x4
->       19:       8b 47 10                mov    0x10(%rdi),%eax
-> 
-> 
-> Any change to the layout here *WILL* break the FineIBT code.
-> 
-> 
-> If you want to test, make sure your build has FINEIBT=y and boot on an
-> Intel CPU that has CET-IBT (alderlake and later).
+> [...]
 
-Oh, wait, not true, tigerlake also has IBT.
+Pulled into the vfs-6.15.shared.afs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.shared.afs branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series or pull request allowing us to
+drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.shared.afs
+
+https://git.kernel.org/vfs/vfs/c/d0710fad7ac3
