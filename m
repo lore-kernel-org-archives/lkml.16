@@ -1,99 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE45125A2C0
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:45:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6819125DAF0
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740753932; cv=none; b=OWHbIODY+Wfge9VwRthmfJxfktZ3j6bwZDTLDLJUVwMu9pmhxQupOiiMubi4RxoMfPUBy+2gD7chOD2MZWo4yvvcf/HZ83NjUg3Sy+ECGNKbGnJx8ZIRR1e2in7KP3YgwmnIqa7CqnEtwdmHPByy1rgv/OOMXQYMMaOH2k/iHWI=
+	t=1740753940; cv=none; b=nZRTipVItGzwYK5ahtLEAWVCH5pFUa3EpGnVINkXW/jcoW4XSYRbwPrDpfGSQLzUYeHwfjwHt3WqWumM2R+Moq6ncKmcQ+qeL7DeVgV/hnAki17DjEP2ndX0FPpZJgp586EVLoQsJL0DqX3WWKffRGUGCObBMzXfn++PKBdV9N8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740753932; c=relaxed/simple;
-	bh=byHhrmUoG6SZ3TsbUshk2VRISfn1xMThT70emXrC9y4=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=SqJe79lknWDmxtlptaiRAsqblqnOgdCJzj317lWSyTyPKMjmicIgIQJq5hpufBhKcPojkW5KjbP0jikD+UPMlTZSmwmeKFKRn6pocyv8FnWTuIWqxTPuw0mUrqv8xu+XL/Juvq8JFcXD9Y6tOWwivxWIXth/VocHvfmG5XaAQjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ADngsAa5; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740753940; c=relaxed/simple;
+	bh=au8sBRE5mBCqJi5w2IwoBc9mkXkseL6XNqfDVOtZ8Bs=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=pvoXEGMZ3xC4r8GmmbJI39Ekd0iJZbV+htrNrP75pRzJoUCJ8P8B1y3h6s3jGgye1x4KTGDLn49GY5Tq7kZ3aC3A0I+xnPu86P1ytgCRvLGKr8MvOFcfhYv78K1qbJWlJi4uwb54QjsnXAxSSKrDERRF4xpCO6AZMg3OE9J5ZZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ttd+pUnc; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADngsAa5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740753929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U41DlrCChwyMCjiyWsF6DnAwdYiKyrfG/1RGaWwJ3j4=;
-	b=ADngsAa5GhBR9tx4RAxhjuA/8HUs6uXD1Ba3kp9rnI/a3vP+/9lgxwbwais9Fr3YLSN+h+
-	iRzbhXnvuDLhs81ptPZAUuY7iRM28vfJjtoPsDYmPcIYZmqD5Dw0857iErwJT+iPjRiyR0
-	qGo0WmSPkSE2pMGMtyjleuU1lUBxJpA=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-OFd7jWtlMIW4r8DVNW-9GQ-1; Fri,
- 28 Feb 2025 09:45:27 -0500
-X-MC-Unique: OFd7jWtlMIW4r8DVNW-9GQ-1
-X-Mimecast-MFC-AGG-ID: OFd7jWtlMIW4r8DVNW-9GQ_1740753926
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E1B371954202;
-	Fri, 28 Feb 2025 14:45:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C2FDE1955BCB;
-	Fri, 28 Feb 2025 14:45:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20250228062216.77e34415@kernel.org>
-References: <20250228062216.77e34415@kernel.org> <3190716.1740733119@warthog.procyon.org.uk>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    linux-afs@lists.infradead.org, linux-fsdevel@lists.infradead.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ttd+pUnc"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250228144535epoutp03eb47743edeab73e7c4b1535a256ceb14~oZnsiX3uy0890308903epoutp03A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:45:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250228144535epoutp03eb47743edeab73e7c4b1535a256ceb14~oZnsiX3uy0890308903epoutp03A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740753935;
+	bh=rHvKJLvygA9GD0SeTmwciLbo162z0lSbgYmgI1PHUcE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=ttd+pUnciB9kSxRVB67Jw8fPbw5Ppj2UG6Vwb/uhyl7OqEuLsCZpKqrI4EBEupfbd
+	 sK5zE/o2Sr5gqmAaZSn3mZWI++TFHIISKLNITwYXZjawWlD/0cHGbJa9LN43ERSlsk
+	 Pm1pa4ypJuZ+NKaDQyf/gJEuRPGQcizjzzyoOQxs=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20250228144533epcas5p1366a164956bc530c046b29a778e0fc84~oZnrj4LXE0649806498epcas5p1M;
+	Fri, 28 Feb 2025 14:45:33 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.177]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z49x80ytDz4x9Pp; Fri, 28 Feb
+	2025 14:45:32 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9B.6A.20052.C0CC1C76; Fri, 28 Feb 2025 23:45:32 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250228144531epcas5p217fab73da682601a89e208fff5a3775e~oZnpQO48S1123011230epcas5p2G;
+	Fri, 28 Feb 2025 14:45:31 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250228144531epsmtrp2c9ba04d92e99f0522ffdc7b96ac4ccb3~oZnpPn-q82769427694epsmtrp2W;
+	Fri, 28 Feb 2025 14:45:31 +0000 (GMT)
+X-AuditID: b6c32a49-3d20270000004e54-52-67c1cc0ccff4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1D.C6.23488.B0CC1C76; Fri, 28 Feb 2025 23:45:31 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.6]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250228144530epsmtip15c4a6355b383e399ecdc8d3e5da32266~oZnoLHFPS1886718867epsmtip1e;
+	Fri, 28 Feb 2025 14:45:30 +0000 (GMT)
+From: Anindya Sundar Gayen <anindya.sg@samsung.com>
+To: krzk@kernel.org, alim.akhtar@samsung.com,
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: aswani.reddy@samsung.com
+Subject: [PATCH] drm/exynos: fixed a spelling error
+Date: Fri, 28 Feb 2025 19:32:57 +0530
+Message-Id: <20250228140257.75045-1-anindya.sg@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7bCmui7PmYPpBudPsFo8mLeNzeLQ5q3s
+	Fle+vmezOH9+A7vFpsfXWC0u75rDZjHj/D4mB3aPTas62Tzudx9n8ti8pN6jb8sqRo/Pm+QC
+	WKOybTJSE1NSixRS85LzUzLz0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOArlBS
+	KEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2CqlFqTkFJgU6BUn5haX5qXr5aWWWBkaGBiZAhUm
+	ZGf07L7AVrCHo2Ltnh/MDYwt7F2MnBwSAiYSE7ZPYOti5OIQEtjNKPGvbQ8ThPOJUeLO+svM
+	EM43RomNV3vgWg7e+8kEYgsJ7GWU+PZEB6KomUniw8PTLF2MHBxsAsYSbQ8qQWpEBHYwSvTf
+	zgSxmQVkJFZc2soIYgsDlSxp+g42k0VAVWLxt+lgM3kFrCW+z+pmg9glL7F6wwGwIyQEVrFL
+	rFiyAeoIF4mXHd2MELawxKvjW6DiUhKf3+1lA7lBQiBfYsnZbIhwjsSB5Q+YIGx7iQNX5oCd
+	ySygKbF+lz7EaXwSvb+fMEF08kp0tAlBmCoSEztYYGbP/rGDGcL2kFi9s50FEgixEqdOzmWZ
+	wCgzC2HmAkbGVYySqQXFuempxaYFhnmp5fCISc7P3cQITkxanjsY7z74oHeIkYmD8RCjBAez
+	kgjvrNgD6UK8KYmVValF+fFFpTmpxYcYTYGBNJFZSjQ5H5ga80riDU0sDUzMzMxMLI3NDJXE
+	eZt3tqQLCaQnlqRmp6YWpBbB9DFxcEo1MK07yKm1pOt5zcTCVcmlHxzSfu3RPB9cHPCWYW9s
+	yLP0VS9CLpzLyHs5/bmzdkTAHakbYneOTrm5vvqDxgbl391sVjkna2OyJngs9uAomapUHW4w
+	rbiK9dPpy76xtaoPjihnWDUzXKnkyDS6mxZ1fbGH3msnhdUnZSzeHZuSM8f66GP3T/Jp3Ct+
+	XI2eELTj4c3O+P+WO1JnHriyp33KhX01DME2d10+7Xgz23VimoBFQdbBTz12Mxu0FWvLhZ4/
+	tSiuP37p9QN1M1/nBVVJp+JKWreICv7S3x25oVj7qf3EvlrdysQ/h6S3h+1vNv39S+vBF29d
+	vR7nbQJ3pU/deTbXerlQ0lFRY98je8/paSqxFGckGmoxFxUnAgB6Y1/B1QMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHJMWRmVeSWpSXmKPExsWy7bCSnC73mYPpBv//SFg8mLeNzeLQ5q3s
+	Fle+vmezOH9+A7vFpsfXWC0u75rDZjHj/D4mB3aPTas62Tzudx9n8ti8pN6jb8sqRo/Pm+QC
+	WKO4bFJSczLLUov07RK4Mnp2X2Ar2MNRsXbPD+YGxhb2LkZODgkBE4mD934ydTFycQgJ7GaU
+	uPxqGhtEQkri9v9ORghbWGLlv+fsEEWNTBL7T24D6uDgYBMwlmh7UAkSFxHYxyix+8BUsKnM
+	AjISKy5tBWsWBqpZ0vQdLM4ioCqx+Nt0JhCbV8Ba4vusbqhl8hKrNxxgnsDIs4CRYRWjZGpB
+	cW56brJhgWFearlecWJucWleul5yfu4mRnAQaWnsYHz3rUn/ECMTB+MhRgkOZiUR3lmxB9KF
+	eFMSK6tSi/Lji0pzUosPMUpzsCiJ8640jEgXEkhPLEnNTk0tSC2CyTJxcEo1MPVe4/D7vfvV
+	ty/+ZRw2kSFlqRmM8495uSq1zvbo8X3XWv1hkezNqwtWrjrOLqvOpOm4dfIBvzXqrC1y9Rv3
+	CYS92rhcY0Wf2IxJySme3222tlcmnOkt/tebK7pF9amR4elKO2HxSZn/9RveXnfPi+GNV8rj
+	6i5YyvuecbJjCfvynAXFt20XP7n4S+tVZJnPw+uJL1uzFENCtsssmenx9OCt+bsEf2c77nqQ
+	VtC1tOe+ySXpxTGB//0ZHjbEtHtZO9y/XPr6osXPOxJiJjlN51tTYnfaSq73Pfk44f2KNw4W
+	kZ7fUiIyU68rLyhYGTk31nHT5EQT7kWxy34krtWK1H6zKP6c8tV5ItZ+v5PUlFiKMxINtZiL
+	ihMBp1UOxJECAAA=
+X-CMS-MailID: 20250228144531epcas5p217fab73da682601a89e208fff5a3775e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250228144531epcas5p217fab73da682601a89e208fff5a3775e
+References: <CGME20250228144531epcas5p217fab73da682601a89e208fff5a3775e@epcas5p2.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3399366.1740753918.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Feb 2025 14:45:18 +0000
-Message-ID: <3399367.1740753918@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Jakub Kicinski <kuba@kernel.org> wrote:
+Corrected a spelling mistake in the exynos_drm_fimd driver to improve code
+readability. No functional changes were made.
 
-> fs/afs/cell.c:203:5-22: WARNING: Unsigned expression compared with zero:=
- cell -> dynroot_ino < 0
+Signed-off-by: Anindya Sundar Gayen <anindya.sg@samsung.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'll make this change:
-
---- a/fs/afs/cell.c
-+++ b/fs/afs/cell.c
-@@ -200,7 +200,7 @@ static struct afs_cell *afs_alloc_cell(struct afs_net =
-*net,
-        atomic_inc(&net->cells_outstanding);
-        cell->dynroot_ino =3D idr_alloc_cyclic(&net->cells_dyn_ino, cell,
-                                             2, INT_MAX / 2, GFP_KERNEL);
--       if (cell->dynroot_ino < 0)
-+       if ((int)cell->dynroot_ino < 0)
-                goto error;
-        cell->debug_id =3D atomic_inc_return(&cell_debug_id);
- =
-
-
-to patch 2 ("afs: Change dynroot to create contents on demand").
-
-I'm not sure why gcc didn't warn about this - I'm sure it used to.
-
-David
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+index 1ad87584b1c2..c394cc702d7d 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+@@ -731,7 +731,7 @@ static void fimd_win_set_pixfmt(struct fimd_context *ctx, unsigned int win,
+ 	/*
+ 	 * Setting dma-burst to 16Word causes permanent tearing for very small
+ 	 * buffers, e.g. cursor buffer. Burst Mode switching which based on
+-	 * plane size is not recommended as plane size varies alot towards the
++	 * plane size is not recommended as plane size varies a lot towards the
+ 	 * end of the screen and rapid movement causes unstable DMA, but it is
+ 	 * still better to change dma-burst than displaying garbage.
+ 	 */
+-- 
+2.17.1
 
