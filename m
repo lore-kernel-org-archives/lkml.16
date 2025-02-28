@@ -1,186 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from esa2.fujitsucc.c3s2.iphmx.com (esa2.fujitsucc.c3s2.iphmx.com [68.232.152.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5857F25A2D8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736564; cv=none; b=m7BmV45H0E+5bhufMKSjDemQreqMz8CqymrzQrWKq5/zh1PVfyqCSCR0wlmzzAQ5XF67fCLyHXvcaFK3mAg5Ct50s9CG42K1SRYO4zGbmZ02OFMP630M/sNyli+2dt+bCSzfzbu1vqWj+SKZUrdWu9JUYIYyVE3PwI+2dFrvNek=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736564; c=relaxed/simple;
-	bh=GDvWHbsfDV5zNWiJP1XmiPoJi4z6ZQmYIcUg8lclOGw=;
-	h=From:To:Cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=boa65Y0LlIv53+Py93K1Gq04JEbX4wut164sdt4UPPULpYtNi2MCi8KZiWI5NB05PDaCRWINziNdvD+VGWNAp95uxHH9VsR3cKSbPdwrQH6Si1At4xkt4xXEuJHaH/THIBPkeBQCUzRaIkkZGGUsnZIsLy95bmv9sPj4+BQSDgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MljCXRmu; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FA52594B7;
+	Fri, 28 Feb 2025 09:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.152.246
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740736585; cv=fail; b=YBELDsg8Qztfh9B28CRVWbGE1+i9KBz4dWFWgDxRrgwpMqYfAVuo/yctytzCnnA8ivQGfVlK3CWiYupnyF6ILpI5WEgQq30pzwvOWWH8vPtVHWJmxZBh3x/AUHRQ0IQIAsJUceARKbzKxRg/c8aw6nfWTpmQbOrLM26XY+l587I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740736585; c=relaxed/simple;
+	bh=l6De3czXBfI7Zn3oYMWbRpXcYHVLgy5ysB7Kln6Vur4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fuY6DJCiAafY/6RLYKzVM+VoRalW6WJD1lto+mHh6UKAZ7JElp8lD+EWD9H8kbscZVQAJjym6C0kxrX2oN6edSYgGC1sfuQatM7SivV/zjKaurSWnlqNA4vhX8AMwKoe9vDMrly/U7TE36niR1Ttxe8vMUt5eJYrSWsF4mpROTQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=F6uxNVwz; arc=fail smtp.client-ip=68.232.152.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MljCXRmu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740736561;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=O08f6gdA0KrLInA95FMEo2ZIg0CleDMWQyitTzKQIpg=;
-	b=MljCXRmuoRlJtGoFsHQKQjhuWqlOGaxIoC4Mmtz3uVCsoj9DbrVrIOTmy8nrwg2XxRPgMG
-	QrPokB2Y1zT+Q4KlrcTTJRyLLDgALH1k/2BWMLLtvlLzw7HRfU/7cjmrtmSkl9Xns5J0qd
-	oy+a4Zn4b4THRGSxPhYEIQxVbPMfIY0=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-593-svBPWvA2PHCXbUP18jwtKQ-1; Fri,
- 28 Feb 2025 04:55:57 -0500
-X-MC-Unique: svBPWvA2PHCXbUP18jwtKQ-1
-X-Mimecast-MFC-AGG-ID: svBPWvA2PHCXbUP18jwtKQ_1740736555
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D1E61955BFC;
-	Fri, 28 Feb 2025 09:55:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A1E59180087F;
-	Fri, 28 Feb 2025 09:55:48 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: David Howells <dhowells@redhat.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    Simon Horman <horms@kernel.org>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Chuck Lever <chuck.lever@oracle.com>,
-    Eric Biggers <ebiggers@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-    linux-crypto@vger.kernel.org, linux-afs@lists.infradead.org,
-    linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] crypto: Add Kerberos crypto lib
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="F6uxNVwz"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1740736584; x=1772272584;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=l6De3czXBfI7Zn3oYMWbRpXcYHVLgy5ysB7Kln6Vur4=;
+  b=F6uxNVwz8M/dFPwUrdWiv/6678+PxQ0t9zOu6YcBT3Km0QHIglq4uBAb
+   JcN/FUL16hy8eGzvTrpiGPiyHaXPJ2ZCv6ysMF5O83eOvm7S7nk5Q9HYE
+   6mg4+YAqSiM2tS9MuUqzfPSoBfkfZImLojyHSGujAA9KjswHA3gsdpi9H
+   vhnkyeAfkR3+BSqEV8RaCbt1LcIYZ28do7Ysv4lZMwOGBwsSDb3Umktrc
+   Iw01mx1BOddqaVM43pet84AKlbOBET+4Wrm723HtFWVxnsKZGIB0TcGvp
+   vYkXXwtvEWL7Z1MW6fU01qPXiURrMfgLLfJY/ie3F1I/1vDWkNxkb8NTf
+   A==;
+X-CSE-ConnectionGUID: 0htmSCSTTxGwcYp+kOmvRQ==
+X-CSE-MsgGUID: ODJF4sPzRFyFJJCicWPdDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="58947488"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732546800"; 
+   d="scan'208";a="58947488"
+Received: from mail-japaneastazlp17010007.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.7])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 18:55:09 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DfEAB9kWjIpxh4kxuYgJgC6tPL76dYoZunWJoeLE2FxubOuXpPUosLy1CbOzSCowes5B+OLm22RED4SpQ1HnQQq0jrFxKc4SnURBkGLsq6hCnBGuipOQWXo/4QEG0BSY3zvxe6IK314rXEOUvxMavrkP1DLYOO5eqLE8jGMvn55gXCYTKdiocFmDG9Wv/6Pjr0Td1/ZX5JurrB+TMuIQ+WAAN0jemmFo8agohKev9824OVjVtbpuDnVNG1MUGepq/osm/YrTNATdUIFfevs3XsaFwq3Lr3De1mHDTjcLdcZrtlL/rCdIALUInYf7PDwS97dPOd+FaqY5zGQT5Tgx1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l6De3czXBfI7Zn3oYMWbRpXcYHVLgy5ysB7Kln6Vur4=;
+ b=DcM7JJkmOB+nrgjqfyPkdGm9v/qidvGkl7RMCoTo5GNjguVdcjNek7Vl9jD1VxuL+2HQxa6XeYpB+mDSzgsKKWns6NBXyhEYNaY9eBaUeOU2ryayrBetMZPec29CAlf8rOkWzccm7EnEZzLm2rajhk19A+TCy/WskdzNuI5hlXlTFJqcwZIDM9xYJ8wW8JBTrkGiykLogaZgocdJxM4MsxflVBwrZ+5Cw0oE1gQ3F2lXdXxjvDs8v4MSTkiQobMhvp7AWm1VlmqAS0Vz6wyUcEn8o4iT4sfpcHtlljdgoEbw0Mf2jF786+mBYpxhLQIyOX0y6sQsGa6BlTlfOaqydg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from OSZPR01MB6908.jpnprd01.prod.outlook.com (2603:1096:604:138::6)
+ by TYAPR01MB5707.jpnprd01.prod.outlook.com (2603:1096:404:8059::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
+ 2025 09:55:06 +0000
+Received: from OSZPR01MB6908.jpnprd01.prod.outlook.com
+ ([fe80::ba52:b073:8bf:cc35]) by OSZPR01MB6908.jpnprd01.prod.outlook.com
+ ([fe80::ba52:b073:8bf:cc35%4]) with mapi id 15.20.8489.021; Fri, 28 Feb 2025
+ 09:55:06 +0000
+From: "Yoshihiro Furudera (Fujitsu)" <fj5100bi@fujitsu.com>
+To: 'James Clark' <james.clark@linaro.org>
+CC: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Mike
+ Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-perf-users@vger.kernel.org"
+	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "Akio Kakuno (Fujitsu)"
+	<fj3333bs@fujitsu.com>
+Subject: RE: [PATCH] Remove some PMU events for FUJITSU-MONAKA
+Thread-Topic: [PATCH] Remove some PMU events for FUJITSU-MONAKA
+Thread-Index: AQHbiNpQ8JjCRF9TOkCjxP8mdt+sprNa+hOAgAGBj7A=
+Date: Fri, 28 Feb 2025 09:55:05 +0000
+Message-ID:
+ <OSZPR01MB6908AA7CEB24ED38F9289D6DD4CC2@OSZPR01MB6908.jpnprd01.prod.outlook.com>
+References: <20250227054045.1340090-1-fj5100bi@fujitsu.com>
+ <96b323eb-15b2-4b60-8522-83bf2f57694b@linaro.org>
+In-Reply-To: <96b323eb-15b2-4b60-8522-83bf2f57694b@linaro.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ =?utf-8?B?TVNJUF9MYWJlbF9hNzI5NWNjMS1kMjc5LTQyYWMtYWI0ZC0zYjBmNGZlY2Uw?=
+ =?utf-8?B?NTBfQWN0aW9uSWQ9MTA5Y2JhYmItMjdiYS00ZmQ2LWIzNDQtYTQ4NTFlYWQ4?=
+ =?utf-8?B?MjMyO01TSVBfTGFiZWxfYTcyOTVjYzEtZDI3OS00MmFjLWFiNGQtM2IwZjRm?=
+ =?utf-8?B?ZWNlMDUwX0NvbnRlbnRCaXRzPTA7TVNJUF9MYWJlbF9hNzI5NWNjMS1kMjc5?=
+ =?utf-8?B?LTQyYWMtYWI0ZC0zYjBmNGZlY2UwNTBfRW5hYmxlZD10cnVlO01TSVBfTGFi?=
+ =?utf-8?B?ZWxfYTcyOTVjYzEtZDI3OS00MmFjLWFiNGQtM2IwZjRmZWNlMDUwX01ldGhv?=
+ =?utf-8?B?ZD1TdGFuZGFyZDtNU0lQX0xhYmVsX2E3Mjk1Y2MxLWQyNzktNDJhYy1hYjRk?=
+ =?utf-8?B?LTNiMGY0ZmVjZTA1MF9OYW1lPUZVSklUU1UtUkVTVFJJQ1RFROKAiztNU0lQ?=
+ =?utf-8?B?X0xhYmVsX2E3Mjk1Y2MxLWQyNzktNDJhYy1hYjRkLTNiMGY0ZmVjZTA1MF9T?=
+ =?utf-8?B?ZXREYXRlPTIwMjUtMDItMjhUMDk6NTM6NTFaO01TSVBfTGFiZWxfYTcyOTVj?=
+ =?utf-8?B?YzEtZDI3OS00MmFjLWFiNGQtM2IwZjRmZWNlMDUwX1NpdGVJZD1hMTlmMTIx?=
+ =?utf-8?Q?d-81e1-4858-a9d8-736e267fd4c7;?=
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: OSZPR01MB6908:EE_|TYAPR01MB5707:EE_
+x-ms-office365-filtering-correlation-id: fc1d3506-c0f9-4327-6218-08dd57ddfaa6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|1580799027|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dm0rcHFqVjZJYWdIekZmUEozbEJ3R2VIdzdXMGo2Qzd3L1Mrb3hKa0hINGNI?=
+ =?utf-8?B?TjIrQ2F3VENscFpiTlJSSWJiWktzMC81MUN0R0FOSHJrNTErQWJGeGFnMDJW?=
+ =?utf-8?B?dktIQ2FVR214dW1uZEthTFBIZnIwT0hmQ1RDNXVwTG5mZHpGL0lCRDBZbmd3?=
+ =?utf-8?B?aEU4VmZ2Z2JRa294Y05pOWhxZXRIK2wzYVNnK215OTlrdjBQdWNaYUw0a0dr?=
+ =?utf-8?B?VEV6TjQ1YThCb1hsVTFUdXRxS3Mvc0RPZnFqVkpuTHdzTnpZS3ZJSER5ZFM3?=
+ =?utf-8?B?OVJ6b3I0c0IycTZ3WmdJT2JFRncvUXFPZ1JPVjA2Ly9YSXRZNU53ZXA1QUFs?=
+ =?utf-8?B?cEpTQjR1NDNZZmUzNkc2R2FiRnUxVnNEaTFEcGsvNGJ4Q1FTTDBCWXMybnRi?=
+ =?utf-8?B?Wklya1p3WkRaRDRpVXpzUlZENFRpM095Q1RjZmQzRjIwbEcxZzZGRzh6dnNC?=
+ =?utf-8?B?SjJmUmdHaUFHc01uLzlKelF2Nmp2czhxbGVYYVlTeFNHL2VKQnhsaEt3dGpM?=
+ =?utf-8?B?cG5wVHRBdVUwSEJWQUV6a2VaZUZSajA4b1ByY3VoN1dtK3hjUHE0SnRteWI3?=
+ =?utf-8?B?UzNaQjJwVHl3N00rNzNpQW5VTnlJZk5Yd1VmZHAvT0RGeXFGODZyejNNbzNk?=
+ =?utf-8?B?U0V5YmZ5S1dOS0dsZTlLZVlLQ0JoWC9oa1dPVW5ERmY3RmtSYlMwWmczMHg0?=
+ =?utf-8?B?dThnWDRPb2pOWXgxV0padnB6anhqVjFTalBJRUQ1bDRFZUFmMGpKUVBQeitD?=
+ =?utf-8?B?azlKY1Eza0ZMK2lrQmk5M0ZyVjFBYVdBdWtxNmlzUGozcXNscTViQTllTHJP?=
+ =?utf-8?B?M1BkM1R2b0lpdFVqeWRIc2hBYjgwWkpHVThZcGVXSjQ1dTBUbUdTSzZ1enRw?=
+ =?utf-8?B?bFQwejhMZUptTWFhZHJkOXkvSXBtY0NlOUdaMnEzcXpMZ1RZZmZDVnFiNVk1?=
+ =?utf-8?B?T3BlMFR0RlJPWTc5RkpSeEQwejMzK1BiUkFNYWNjU2RaN3o3MVRIRC9MMDBG?=
+ =?utf-8?B?Vk5mck1yejQrZGFZTG01anpwWC84ZEdLS2QyZWQ0ZnZuUlpWREh5YTkra0t1?=
+ =?utf-8?B?dGozV1ozL1RUUk5hUXRickZ6NWY3UG92ZHhPL2tLdVNkVVYrMDVZN1FKZkg4?=
+ =?utf-8?B?VW9WSkF0blRmZ0ZJb1pJdVJuWWVsVm5SbU5paXlCdjBMU1hTQ2FGai9rV1Vw?=
+ =?utf-8?B?blg5a1o0dG5wNjM0UVNPWWRBTEliMFluT3lQTDhLaitPQ053Z0h3ck5BR3h0?=
+ =?utf-8?B?SkFmVi9nUnJZbWFTWEJsL1hBYlNHTmQwZTR4UU44VTRSLzFYRmhsaWh1TWRR?=
+ =?utf-8?B?cm5ZUGx1aGxudXRXdHI1d1FEWnBUZElacXlvMUNLMHhpYWRNaDJuRGNNUFNs?=
+ =?utf-8?B?MjlkUm1mUS9sZlJqY29oWVQ2ZFdyV0RQbFpUN3BrSTZlL0x4MmRUK1U3dUpm?=
+ =?utf-8?B?MW4rQnpTZk5jSkhaMzNEbk5jaWw1WlZtYWtraWNVaGNMNmUxLzdJWXF4dzcr?=
+ =?utf-8?B?NDYwR1V3TGVxY1RvVmRkV0pQQjFFTHlVRjlSakdnUk9vbGRLN0V6WWlCOS9Q?=
+ =?utf-8?B?SWw4eHBKVzc5T0U1TzlOT2EwMnhOcUM0RWpwcC9iQmZjUTFwR1ZSRzlOeXlX?=
+ =?utf-8?B?eldxcHZvbVN3Mk9PcFdSc05KRTJZSHpmZ05qUFF1QUFjVzVCc1M3dFBhaFNQ?=
+ =?utf-8?B?dEUwNDFCbWFKQms0RmtmY2NsZXQ1bFgrQ09TcjVTdWd1aUhOb0xhbXpVNUJ6?=
+ =?utf-8?B?V2p1VisxRFB3OXcxSjYvMzFCbHc2TGd5cWJNY2xUNHRERXFpTXZIZDRqZHJI?=
+ =?utf-8?B?RkJtUG96ZElMeGF0MkJRdnFsaS96dDVaZ2dRMzdRTVpRSXFhbTVkalIwdElv?=
+ =?utf-8?B?N2Ruc3Y0QlFvd1RTVytCbmxxeWlEMXlCbGs2aEgybXRKUDBhMUpWTFNyRHZ6?=
+ =?utf-8?B?dWFKeHJrY083d0t1Y1YvS2NZUWMvTEVJeWh2SERNaVJMakY0bW85R0RnOWlq?=
+ =?utf-8?B?WDVEZWxFaHlBPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB6908.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(1580799027)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?bkw4K3JWWGdEQXRCclpmckpTTUNtVGJXd3FJSzc1V0RKUVQ3UENzc00wandJ?=
+ =?utf-8?B?N1NQK1c3bm8zanNTR09naE1Uc0wvUTYzTHA3MVFNVDZpN2VWb1BtVzBMRHBk?=
+ =?utf-8?B?WkhacFFiMTA3QWdkUFpyUDcyRGFzVG93djZWNDNpQTdqQ0xXNkNzOEdueEI2?=
+ =?utf-8?B?V0wzelBBbDVSdlR2MysyaERwbVlvV2hDUHFUcm9TQ3hycklkOUV1eHBaR2py?=
+ =?utf-8?B?Y2hsRUlQYTkxSkNGTGJ2ODM2dVFXUW5Oc3gwTElNU0lOTWdVeVViL0o0NUhv?=
+ =?utf-8?B?b0JZUWJPS21JMFAyaXZGaSsxV0d5Rm5lUVhxbVVpeXBLM1AxMWdaaUtoTUU2?=
+ =?utf-8?B?UC83MHhzbDZ2VjhiWHdVdXNWcXpzU2x4K3psdFBMZUc3RjhMYzR3NGVaM05Y?=
+ =?utf-8?B?VmlWM3lrd2J4YzI4RjUrQURpMTg4aEJQOE5CRHNEemR3QXB1NG5Ma1FDSFh3?=
+ =?utf-8?B?ZjlBdzFJOU5kR3JUcWpzdWVLTmZMMHFvdlBXMHFWbFpDUU96V1VMaTU5c3ZB?=
+ =?utf-8?B?c2JHVUQ2dGdMd0NvVGR2ZDAxcGIvaVVQVkN2Z2tSOUowb1pTcTY0Ti9UMlRp?=
+ =?utf-8?B?S253VnVFSElYWFNyN3B1SGdjczc4cmRkbS9EK0ZyNCthN2hNZ2lsMlBHYU5O?=
+ =?utf-8?B?eGJJaDc1MmpYRkJ2WGJWMmo2ZXRjYTJFRGxyc0VDQVlnVnF4Vk4yTFBTbUpS?=
+ =?utf-8?B?SVpZYWkvN2EyZzl3MEMvRzNPYXRpdE53NG11enNxRmMyM1JzMUVBak84MUVJ?=
+ =?utf-8?B?Nkl4ZGoxMXB0Wi9ZbXpJdEw1L1h5bW44V2tYYVhJekxxWWRYUWw2R3JZTDk3?=
+ =?utf-8?B?Z2l6dUxjc1FZSnJTUXlXR0VabFZNZXh2dHl2U01vTXR2SnFCWTFONmEwR0Yz?=
+ =?utf-8?B?T3lHaVQ2Y3dNTndvTW9JSlE1N0ZSMVhvcUh2SnZ1ZEUycUhlTlBBWEdTK3Y2?=
+ =?utf-8?B?SXJoRXJzV3BTTW9aRXVJdFBJNjJJd3h5S1RyUEUzM3BPUFc5TDBXdjh1MXZ2?=
+ =?utf-8?B?NkhrT2VPTjZlSHVQYkM5L0pWZlQrMVVyTmt0UG1TNFRYMXJZeWdQUHJyNkhw?=
+ =?utf-8?B?WFVtRjVYYWlVN1VKQlJoQmtQMWdzLzBJRmpBSDVkcUtOd29SL1BCTW45bG5E?=
+ =?utf-8?B?R0JFTTRHY0NrN1FzdjkvNXFFTE9lZXJ1Vk9rQk9TTWdhcVdiVFlqMWZteS94?=
+ =?utf-8?B?dzlKUkFoS1V3WDB5RU80R0lYcGJRWFAzZGw1Sm5YM0drS3BWVlFJMGZ6SUVS?=
+ =?utf-8?B?dENnZHBPZktjY084RDdmdXlyUytnQlUxWFhVTGdKT2pMTkRLdllpdFJ3S29z?=
+ =?utf-8?B?UVZoQWNxb2JxZWpmUW05ejI2R05NZGZtaFRVb2Y2SzIwalU2MWczalNJa0xB?=
+ =?utf-8?B?UnEzcVFOK285WTYzbWFCTmxGZWJuZUtQb1VlN2ZMMlMwYkpMNVFVSG52RzdT?=
+ =?utf-8?B?bk1IcjdJZkMyTWUzYzluWlUxd3FvYXdvYnpxQkF5a1hBcEpHU05xRnY4K2pN?=
+ =?utf-8?B?Z3ROV25KYjNLKzBPbEFYM1EvNG9EK2Q3YVlRc3RVYVhnNnk5bUdtU3E4Q3N5?=
+ =?utf-8?B?ZkZOTDhnOGxlUDZFRENiZWRJK0NNb3JvbVRsYjBCNG1zQ01JVjIyUmVsMFFH?=
+ =?utf-8?B?dkxEY2pGSVg1UzZmY0tqRUwwNENiZHJjSDFJdEpoYVVmRXNrNWtadGlyV0I1?=
+ =?utf-8?B?ZExOaDFCOUFWR1RCd0NMcFFqVmpBc0hucGtJV2k0UjRudnlGbDZOdzN2VU9x?=
+ =?utf-8?B?NG1GM1EwNkJscWxCZHVPM21wRzFXcy8vSUtjTUJMNXFURXl1alI0RnVPWlZN?=
+ =?utf-8?B?ckxVU2NGOFo5d2dJelBXMWNseHlJZ0E4aFNrYkJxZ3dwY04ySjlmSFRHRFE3?=
+ =?utf-8?B?cy9kNnlQeHRCck1RRzJCWkJrUDdjbzNIM3pVeEN6MTRKWUp3NlZQRURUSDBK?=
+ =?utf-8?B?MFlVVlpDbjR6Nm1RdDZlQTJXV21xWVY4S1dic1dFc3p6SFBhOUprZmtOSURT?=
+ =?utf-8?B?MjVVRWJKMmZ5L3duZFZZdlk4dXpnejkzNjQvT3NjbDZqN0w1UkRobEZmMllV?=
+ =?utf-8?B?QTB1ckVyM3pGamJlQU5hUTFETVlwcmVHOWhzRllPVkEyTWlNRUY1dUJpSGI2?=
+ =?utf-8?Q?tXkdauY7jgq2SBhhRsjJ9OF3B?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3193935.1740736547.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Feb 2025 09:55:47 +0000
-Message-ID: <3193936.1740736547@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	UVedv/yABreC0JUMuvVW7pJsGDc5gNUTTrWE7w1ooSLpLHhY7BkQtZtjNCjO8ZMrJvILggyWyntDwpiAA7baiGWgHTgfm8Z2aFtrlBueqaXPtMKBTJ5pDvrpOg54kUtgb7QeGvg12ZW2ixAq3Na6CNYhYADOyyvHN22/unFPqGsR1/FkJ/h+CQe50A121W9zk5M7KXRsWrdtaoKYFmwG6kU5Qxdz7it1tdahs2JCIquirjap1VrR3bJI6/6UbJMnEYSNqHyabfg41MpDT8SEjdE+2iVSFROxYrZUmat9HwV2+0/Fbynvbr4CjA1ligpUG7T0d4CJlFinUXXTxr3sWI69oC2FGujhFRZ3ziRyPrwsQsn+roYYC9BqB9kUK7rSDOHmzuKnHPYJTA8G7j1bdxZAsuR5yFDgUx2Q/sOLGzGlz+J4g1HiiItL5ggyBlhNaTB/NPffFjgU2wZgfUo51q4m9NVggU3gzQqiixU4phKih0U8aoQU5B/QjBMUoIf7F2I39sDImzL7C2B8rHc9fizs2IB7pP5My75uLZBGmtmUMOFcV5Kd4ct4Vzyu4E18zNFB/ZRaF4FcKfPB/Wi2JtDVbZFEWEXsSCaLPTyBS5ogije6S06cvHlyw9KaHjPS
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB6908.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc1d3506-c0f9-4327-6218-08dd57ddfaa6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2025 09:55:06.0827
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b2EeJx+JW9ZSI5V+XeEAVcGgzWrkforVOI1LB45XFCaZCZEhad0EHFoPuhdlT4zmv7S2+Qsm3CTMBI11TTjsKFO9I/Tr8MjH9V9IzQSXNnU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB5707
 
-Hi Herbert,
-
-Could you pull this into the crypto tree please?  It does a couple of
-things:
-
- (1) Provide an AEAD crypto driver, krb5enc, that mirrors the authenc
-     driver, but that hashes the plaintext, not the ciphertext.  This was
-     made a separate module rather than just being a part of the authenc
-     driver because it has to do all of the constituent operations in the
-     opposite order - which impacts the async op handling.
-
-     Testmgr data is provided for AES+SHA2 and Camellia combinations of
-     authenc and krb5enc used by the krb5 library.  AES+SHA1 is not
-     provided as the RFCs don't contain usable test vectors.
-
- (2) Provide a Kerberos 5 crypto library.  This is an extract from the
-     sunrpc driver as that code can be shared between sunrpc/nfs and
-     rxrpc/afs.  This provides encryption, decryption, get MIC and verify
-     MIC routines that use and wrap the crypto functions, along with some
-     functions to provide layout management.
-
-     This supports AES+SHA1, AES+SHA2 and Camellia encryption types.
-
-     Self-testing is provided that goes further than is possible with
-     testmgr, doing subkey derivation as well.
-
-The patches were previously posted here:
-
-    https://lore.kernel.org/r/20250203142343.248839-1-dhowells@redhat.com/
-
-as part of a larger series, but the networking guys would prefer these to
-go through the crypto tree.  If you want them reposting independently, I
-can do that.
-
-David
----
-The following changes since commit 1e15510b71c99c6e49134d756df91069f7d1814=
-1:
-
-  Merge tag 'net-6.14-rc5' of git://git.kernel.org/pub/scm/linux/kernel/gi=
-t/netdev/net (2025-02-27 09:32:42 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/crypto-krb5-20250228
-
-for you to fetch changes up to 0dd8f8533a833eeb8e51034072a59930bcbec725:
-
-  crypto/krb5: Implement crypto self-testing (2025-02-28 09:42:42 +0000)
-
-----------------------------------------------------------------
-crypto: Add Kerberos crypto lib
-
-----------------------------------------------------------------
-David Howells (17):
-      crypto/krb5: Add API Documentation
-      crypto/krb5: Add some constants out of sunrpc headers
-      crypto: Add 'krb5enc' hash and cipher AEAD algorithm
-      crypto/krb5: Test manager data
-      crypto/krb5: Implement Kerberos crypto core
-      crypto/krb5: Add an API to query the layout of the crypto section
-      crypto/krb5: Add an API to alloc and prepare a crypto object
-      crypto/krb5: Add an API to perform requests
-      crypto/krb5: Provide infrastructure and key derivation
-      crypto/krb5: Implement the Kerberos5 rfc3961 key derivation
-      crypto/krb5: Provide RFC3961 setkey packaging functions
-      crypto/krb5: Implement the Kerberos5 rfc3961 encrypt and decrypt fun=
-ctions
-      crypto/krb5: Implement the Kerberos5 rfc3961 get_mic and verify_mic
-      crypto/krb5: Implement the AES enctypes from rfc3962
-      crypto/krb5: Implement the AES enctypes from rfc8009
-      crypto/krb5: Implement the Camellia enctypes from rfc6803
-      crypto/krb5: Implement crypto self-testing
-
- Documentation/crypto/index.rst   |   1 +
- Documentation/crypto/krb5.rst    | 262 +++++++++++++
- crypto/Kconfig                   |  13 +
- crypto/Makefile                  |   3 +
- crypto/krb5/Kconfig              |  26 ++
- crypto/krb5/Makefile             |  18 +
- crypto/krb5/internal.h           | 247 ++++++++++++
- crypto/krb5/krb5_api.c           | 452 ++++++++++++++++++++++
- crypto/krb5/krb5_kdf.c           | 145 +++++++
- crypto/krb5/rfc3961_simplified.c | 797 ++++++++++++++++++++++++++++++++++=
-+++++
- crypto/krb5/rfc3962_aes.c        | 115 ++++++
- crypto/krb5/rfc6803_camellia.c   | 237 ++++++++++++
- crypto/krb5/rfc8009_aes2.c       | 362 ++++++++++++++++++
- crypto/krb5/selftest.c           | 544 ++++++++++++++++++++++++++
- crypto/krb5/selftest_data.c      | 291 ++++++++++++++
- crypto/krb5enc.c                 | 504 +++++++++++++++++++++++++
- crypto/testmgr.c                 |  16 +
- crypto/testmgr.h                 | 351 +++++++++++++++++
- include/crypto/authenc.h         |   2 +
- include/crypto/krb5.h            | 160 ++++++++
- 20 files changed, 4546 insertions(+)
- create mode 100644 Documentation/crypto/krb5.rst
- create mode 100644 crypto/krb5/Kconfig
- create mode 100644 crypto/krb5/Makefile
- create mode 100644 crypto/krb5/internal.h
- create mode 100644 crypto/krb5/krb5_api.c
- create mode 100644 crypto/krb5/krb5_kdf.c
- create mode 100644 crypto/krb5/rfc3961_simplified.c
- create mode 100644 crypto/krb5/rfc3962_aes.c
- create mode 100644 crypto/krb5/rfc6803_camellia.c
- create mode 100644 crypto/krb5/rfc8009_aes2.c
- create mode 100644 crypto/krb5/selftest.c
- create mode 100644 crypto/krb5/selftest_data.c
- create mode 100644 crypto/krb5enc.c
- create mode 100644 include/crypto/krb5.h
-
+SGksIEphbWVzDQpUaGFuayB5b3UgZm9yIHlvdXIgY29tbWVudC4NCg0KPiBPbiAyNy8wMi8yMDI1
+IDU6NDAgYW0sIFlvc2hpaGlybyBGdXJ1ZGVyYSB3cm90ZToNCj4gPiBUaGUgZm9sbG93aW5nIGV2
+ZW50cyBhcmUgbm90IGNvdW50ZWQgcHJvcGVybHk6DQo+ID4NCj4gPiAweDAwMzcgTExfQ0FDSEVf
+TUlTU19SRA0KPiA+IDB4NDAwQiBMM0RfQ0FDSEVfTE1JU1NfUkQNCj4gDQo+IFRoZXNlIHR3byBh
+cmUgZGlzY292ZXJhYmxlIHNvIHdpbGwgc3RpbGwgYXBwZWFyIGluDQo+IC9zeXMvYnVzL2V2ZW50
+X3NvdXJjZS9kZXZpY2VzL2FybXY4X3BtdXYzXzAvZXZlbnRzLyBpZiB0aGUgaGFyZHdhcmUgc2F5
+cw0KPiB0aGV5IGV4aXN0LiBJdCBtaWdodCBiZSBiZXR0ZXIgdG8gY2hhbmdlIHRoZSBqc29uIHN0
+cmluZ3Mgb2YgdGhlc2UgdHdvIHRvIHdhcm4gdGhhdA0KPiB0aGV5IGRvbid0IHdvcmsgaWYgdGhh
+dCdzIHRoZSBjYXNlLCBvdGhlcndpc2UgUGVyZiB3aWxsIHN0aWxsIGxpc3QgdGhlbSBhbmQgeW91
+J2xsIGJlDQo+IHdvcnNlIG9mZi4NCg0KSSB3aWxsIGxlYXZlIHRoZXNlIDIgZXZlbnRzIGFuZA0K
+YWRkIGEgd2FybmluZyBtZXNzYWdlIHRvIHRoZSBkZXNjcmlwdGlvbiBpbiB0aGUgSlNPTiBmaWxl
+Lg0KSSB3aWxsIGhhbmRsZSBvdGhlciBldmVudHMgaW4gdGhlIHNhbWUgd2F5IGFzIHRoZXNlIDIg
+ZXZlbnRzLg0KDQo+IA0KPiA+IDB4MDM5NiBMMkRfQ0FDSEVfUkVGSUxMX0wzRF9NSVNTDQo+ID4g
+MHgwMzlBIEwyRF9DQUNIRV9SRUZJTExfTDNEX01JU1NfUFJGDQo+ID4gMHgwMzlCIEwyRF9DQUNI
+RV9SRUZJTExfTDNEX01JU1NfSFdQUkYgMHgwMzlDDQo+IEwyRF9DQUNIRV9SRUZJTExfTDNEX0hJ
+VA0KPiA+IDB4MDNBMCBMMkRfQ0FDSEVfUkVGSUxMX0wzRF9ISVRfUFJGDQo+ID4gMHgwM0ExIEwy
+RF9DQUNIRV9SRUZJTExfTDNEX0hJVF9IV1BSRg0KPiA+DQoNCkJlc3QgUmVnYXJkcywNCllvc2hp
+aGlybyBGdXJ1ZGVyYQ0K
