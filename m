@@ -1,77 +1,92 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C18C1ADC7E
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BDD1A3140;
+	Fri, 28 Feb 2025 04:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740718552; cv=none; b=Z5Fxo4Y8Zc4e8RLw5rfur9na1yaMQdiw+8VdY1MG0xGcM8g8kg7USlMOJUn3NBtSwvBRCq4g7dEBQjQe+q8I+S3FyowZsZCMs+cF9SYUYoEbaiB4tnPw3GRXnD9+2Mauxz9cPWJoo6/E7P5QRYEkZPcJAa5bNuGrT9c9Up0jfjo=
+	t=1740718655; cv=none; b=CMsd1gML9zAUnAJbhyaYUPhguDtk28kFcZJjTkZpcBDs05Jtln3TJ/sEsYd6R9Ld17EpNZCTooeUeEhhXg4ULCG4F8TQLCHsXrzYhKYxADyMIc4HJ8MIQXyoSO8fiIJ7XHQu5tzc7FZEZFkJPmSTDTfP8oBTaMvaZboQh35F7Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740718552; c=relaxed/simple;
-	bh=Oyl75bEPYRCX3+JQYAFY+KMkLUcjc1Apw/AyJ7p6sFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HHE7iHiRLabyUAjX0DaJoWGx0D/HRcLIc8feAjSMZP8eYwXFKZq1S1HHLcRnxGKKtOcGrfjLZiM1tnifgqovQSgWNq/+3zfE9Xe/bBllzS14Zqb2HyOYVbG3PJK1mDrLMAJDm643BoSo/UxvGZjjMSQ/gNwReXNE0Q1oUSn0cYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ov1dLN/b; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740718655; c=relaxed/simple;
+	bh=QrNGroVYoQ/+Oe6QW8oV1ySJLkXG2GnrUIjFbYRGZW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZucUkzYM11JFXRcLcF6zP8aE19aOXOeNmVvjn1TPq3HmHrfLmNqlENAkgOwS2MTbAnGnOwBWOb/5986PM8tA4JBcvZpH7bs+SxmwzrqNukXAxmmCPFMVm1MwuljGA1vLeIPDGb4mNlf7zm2sraFtCKl938Ye5B/noKTG558HHT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MlJg70sV; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ov1dLN/b"
-Date: Fri, 28 Feb 2025 12:55:41 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740718549;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SFH/CqJL4UtfGWPxwRoIS4R5TULoVqXuJV5xQ2LtJhc=;
-	b=ov1dLN/bUvjED2SjAV4KH0ECQ1auhmOEqu2GjUfcbRzWJMMx5PPb0vVmG34IcYYT412OYp
-	/d951uvU/pF3XqsdnHL1Ljl7og/zEU9Zw7+r+3CaIVTY0lyP2UoKxyPFPCKwKI/2KYLWjJ
-	+BHmQVYM1WPu1rRW1FptChqRHigQRY8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: horms@kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, pabeni@redhat.com, 
-	ricardo@marliere.net, viro@zeniv.linux.org.uk, dmantipov@yandex.ru, 
-	aleksander.lobakin@intel.com, linux-ppp@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mrpre@163.com, syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: Re: [PATCH net-next v4 1/1] ppp: Fix KMSAN warning by initializing
- 2-byte header
-Message-ID: <wm7gi3hafgaruhnjaz5bqdv7yrduf6cum3gljylypzqkvw2ctw@b2zb75i2hpid>
-References: <20250226013658.891214-1-jiayuan.chen@linux.dev>
- <20250226013658.891214-2-jiayuan.chen@linux.dev>
- <20250227174812.50d2eabe@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MlJg70sV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740718654; x=1772254654;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QrNGroVYoQ/+Oe6QW8oV1ySJLkXG2GnrUIjFbYRGZW0=;
+  b=MlJg70sV5AWC/SSfeen7/DxOW0N4ffX1ZtcSmdlHFKst4BYOk35V3B5a
+   lABJG0ZnTKIv1uUnJLjSj4ffwK5CYoSpCZsuWXozzOQsyBHwzjJnsUOu2
+   qAPr8Lr9JW/75jj4Et9G1HK+YufBKrPcqSejTIrscEQd1ZlMVbAv7Ll9d
+   ZcESaQfLIJ2hC4vEFyiGIjIbVE8x1gvEdJMoipyhmN/SLVeX7vFfxBPXZ
+   fBvYWelWihYy8zn9f37OkNaWcoSl00acQIvTTWV3tI3y3x9WImQfJaF3L
+   B8clL4l6JfKEAa0wO0QaJNhxLPmLactJAABBRxFs7yzJCHnPrKPkHDaP4
+   A==;
+X-CSE-ConnectionGUID: Xlda4NQqSVGy+ud8x74OUw==
+X-CSE-MsgGUID: h8JjRYz9TvaG3hg/wpktGw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45554641"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="45554641"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 20:57:33 -0800
+X-CSE-ConnectionGUID: szytzD3xRbmOecp98ULNPQ==
+X-CSE-MsgGUID: eXIAEFFHRYKJvvNvGBm1Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="122245976"
+Received: from pg15swiplab1181.png.altera.com ([10.244.232.167])
+  by orviesa004.jf.intel.com with ESMTP; 27 Feb 2025 20:57:31 -0800
+From: niravkumar.l.rabara@intel.com
+To: Dinh Nguyen <dinguyen@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	niravkumar.l.rabara@intel.com,
+	nirav.rabara@altera.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH RESEND v3 2/2] arm64: dts: socfpga: agilex5: add clock-names property to nand node
+Date: Fri, 28 Feb 2025 12:53:49 +0800
+Message-Id: <20250228045349.1429680-1-niravkumar.l.rabara@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250227174812.50d2eabe@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 05:48:12PM -0800, Jakub Kicinski wrote:
-> On Wed, 26 Feb 2025 09:36:58 +0800 Jiayuan Chen wrote:
-> > The PPP driver adds an extra 2-byte header to enable socket filters to run
-> Could you add:
-> 
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> 
-> And combine the cover letter with the commit message?
-> For a single-patch postings cover letter is not necessary.
-> 
-> > +		*(__be16 *)skb_push(skb, 2) = htons(PPP_FILTER_OUTBOUND_TAG);
-> >  		if (ppp->pass_filter &&
-> >  		    bpf_prog_run(ppp->pass_filter, skb) == 0) {
-> >  			if (ppp->debug & 1)
-> 
-> The exact same problem seems to be present in ppp_receive_nonmp_frame()
-> please fix them both.
-> -- 
-> pw-bot: cr
-Thanks, Jakub! I'll do that.
+From: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
 
-I was previously worried that the commit message would be too long,
-so I put the detailed information in the cover letter instead. I'll make
-the commit message more concise.
+Add required clock-names property to the nand node.
+
+Fixes: 2d599bc43813 (arm64: dts: agilex5: add initial support for Intel Agilex5 SoCFPGA)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Niravkumar L Rabara <niravkumar.l.rabara@intel.com>
+---
+ arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+index 51c6e19e40b8..27f75e1bc8eb 100644
+--- a/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
++++ b/arch/arm64/boot/dts/intel/socfpga_agilex5.dtsi
+@@ -271,6 +271,7 @@ nand: nand-controller@10b80000 {
+ 			#size-cells = <0>;
+ 			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clkmgr AGILEX5_NAND_NF_CLK>;
++			clock-names = "nf_clk";
+ 			cdns,board-delay-ps = <4830>;
+ 			status = "disabled";
+ 		};
+-- 
+2.25.1
+
