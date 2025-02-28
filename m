@@ -1,114 +1,176 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from freeshell.de (freeshell.de [116.202.128.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8383A1CEAC2
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7E10E5;
+	Fri, 28 Feb 2025 08:03:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729775; cv=none; b=O8WfX73hfcoHRXJkIHH7tj5HspWfcrRnNJVdrCeALYV/b+eY1A7V68MP47TtS3LWQyigm5ueGAjK4GPjB5KSImQEJZVcNxNnXcruPyFBiB/PmB49EBgoklU1rB2FWxBuyD1QlRoQaVGdtgblc1N1cOFhI46ET8kg/83bXhlSS7Y=
+	t=1740729822; cv=none; b=ewJLBFykgRESBTapMF0PMaUdMxZue6zYkuvtEfW3gz7MfMJKxkJ/Zbwt6tKTSJdFMkEjiJ4SvTeR0k2WmYsdzFa5RtxNqgmI1aEC3VuT7t03Ui0nV/YyLRmDqKkRzH0xRab5rPTS2RUGsze+yG/cEVcQz58rnDcg9SPxYbXe33k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729775; c=relaxed/simple;
-	bh=dzID++3XktGDEzV2iNVFJihvJ3tFvaCLWgWAWJvqJCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ufu8FwKVCNyhkYTKOmTu5YTGjJqXIPejl7EfmNQBfSyA2KiFj/a/xuonsuowfXkrUxF5pP5CSyC3pBTBoT0OjEHSUtFHrVAvHKdc16if4hzEYiFys+IZOdVU1MdRKodKMIDjxo4+qDOIKJXjbwmfl/ciUyY1LpJDioYLIBq/AE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E54REf0d; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740729822; c=relaxed/simple;
+	bh=+DQElHBvDKNGBcoSETty3Z7XBYvwn9DMo8M0nqGqAyA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k1xsfCiwVQsUySpt/zbawAraMG8RwcRqRkwAFUi5I63N7mdYjWB8bINXW04KD6BHfWDvSwm8FVydRoWC1FiLlAjJ10A3eF8kStA80diTiUxerYqlNFNGuzRoIl7XgZVHJypR7YTpNVr0xt4uR1lk2nsyZkCjb0m88Z3iveUMZuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; dkim=pass (1024-bit key) header.d=freeshell.de header.i=@freeshell.de header.b=wqUWew5O; arc=none smtp.client-ip=116.202.128.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E54REf0d"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30615661f98so18306651fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:02:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740729771; x=1741334571; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qbr0JlJIE4FS91eTAO4EKTfkc1unVkIhWKA7fZvGtG4=;
-        b=E54REf0dpvCieS5sjf7Z1vEZFzoxRDS9S6wEzUuPC3V+MimzfR0VcpOYppz5FOz70D
-         tO9VElGDi2qnyerfZazPIOLLvVq/d7hgLjPVTHOa68u0nn6YKSqNJGIZ4xhhi2bPNWya
-         sLVHQCqU0rQa8puDMwGpMWin6T/QEeFRJhzS9dUkSEcc6OkbrYwwmgzfQxElnpE1SE1V
-         Mo8t5hKSCZIO+DErwvs2JUp+gJeUnLl0MhkpM0p8REJHaOLXQO511emp+qDjCVckApOt
-         YqLh4dF0nXiqchvAuE5AQDMaiVgHufBoORhTlyyBpX06KH3q+alDQIFo6SFEkr8BnGhJ
-         HSzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740729771; x=1741334571;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qbr0JlJIE4FS91eTAO4EKTfkc1unVkIhWKA7fZvGtG4=;
-        b=lkQ2nvtLxiXk32P65YarCJWmgxIgyMWaBPdGD6w5WcwUQH7WLah51NW9sgJKc3aYx5
-         WozILRCIIx7QvM2oGpcDfz/kI/C1dh6B6/LcZznE/ELV/d/I2jhGZvEW+usVn/fghTYu
-         +cg4Li4Me41OTYVV40sMKnopuBnE/ZwA5+UJy2N3ZyW1wiPAgbGk9/FH161T0AIF6obq
-         GbblVLRtR6kX9r2/VDK/MES4FHAGbQcqlMfmb56HgHeOaefpW/s+c98UezGtcbBnfQ5I
-         t1YjVGzOXm2Z4fGOYM9+YXi7WHPAL+xkUQ+ElImzftMKjOmn26JDp6fk92Dqw7RqLQlU
-         uYSg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLFtiP6Q7Y3piI8jVnjSMIxh9JnVqm1QkSKhWSnvH8j0j4g8BWAPoBiQiwXNRnqhA1bF5PEmmJOUwETMk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw90LiEgw9Ec297I9/rtG6qm9wiXhXN/+IHWfvvt9MYsRjt7wVw
-	fR2ZxUkZ+5MR0rwQn74n0SQ+K9g8OMbiZ1/SfaSSNTvfDNoa/ArY+IhOvdxv2mlxTMs9/Rw7yuD
-	vvDf3Cmo2rBB4ljCoWSuDN/A1A/9O593WbYTA66snfmq6/YVpEr4=
-X-Gm-Gg: ASbGnctwKoE/tmeIYJrgkSSIZi0dIZopZAcuXK7GlcRUO12rYFTQPiJ+8ICFy5VLen9
-	r6Q1Ju/956/+H9hWTvz+7wYGzjE99L1F3bg23x3D3js6J+UM8kQ43xaywK1wQ5PZCoiLcxVYIZZ
-	SY4zELQbM=
-X-Google-Smtp-Source: AGHT+IFWOcXiVWcdOW41WFhd6agTYR3FpZBByYOSPhq67IJiAnEdPrPDXHVSJmb/dCVk0/uCVFRJDHBQkVe5M5ZJHDM=
-X-Received: by 2002:a05:6512:a8b:b0:545:49d:547a with SMTP id
- 2adb3069b0e04-5494c122e84mr972716e87.18.1740729771493; Fri, 28 Feb 2025
- 00:02:51 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=freeshell.de header.i=@freeshell.de header.b="wqUWew5O"
+Received: from [192.168.2.35] (unknown [98.97.25.197])
+	(Authenticated sender: e)
+	by freeshell.de (Postfix) with ESMTPSA id 4DA9AB4C0592;
+	Fri, 28 Feb 2025 08:53:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=freeshell.de;
+	s=mail; t=1740729229;
+	bh=AXDPsPyWvICXScXCh1eSoBQkEfWfZVi/WOVQ1cYJJA0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=wqUWew5OisMsHSP6/g5SkINKU6ork8UBayx98V8axC131N69Yk1QeqoyWXNjeEgvt
+	 40lVl7yRhMKKK+PFm+KKucXVZdg4CeEXBznZCvkjMMDMJ3jlEP67YeFQoIj2eu4swq
+	 2+I0mynKl/NAZKTr/6jgGYlyflKKGWXVAM34zzwU=
+Message-ID: <8b0f7b4f-e58a-45ae-931f-2b2853918ab4@freeshell.de>
+Date: Thu, 27 Feb 2025 23:53:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224045918.3321394-1-guan.wang.jy@renesas.com> <20250224045918.3321394-2-guan.wang.jy@renesas.com>
-In-Reply-To: <20250224045918.3321394-2-guan.wang.jy@renesas.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 28 Feb 2025 09:02:39 +0100
-X-Gm-Features: AQ5f1Jqy5qQny_DDgRtOCONi0twJXO_7cwKyXPro4kcz-2ed8U00XvOfzktKY60
-Message-ID: <CACRpkdbbXxpOx_uVX6WTWfbqBbXwt2ssvpQDMrmvYSydNaiY8w@mail.gmail.com>
-Subject: Re: [PATCH] mmc: block: add reset workaround for partition switch failures
-To: Guan Wang <guan.wang.jy@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Avri Altman <avri.altman@wdc.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Jens Axboe <axboe@kernel.dk>, guan.wang.jy@renesas.com, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
+ bootph-pre-ram hinting needed by boot loader
+To: Hal Feng <hal.feng@starfivetech.com>,
+ Hal Feng <hal.feng@linux.starfivetech.com>,
+ Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <20250203013730.269558-1-e@freeshell.de>
+ <20250203013730.269558-6-e@freeshell.de>
+ <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
+ <206a6ada-1ef9-47f3-b1cf-fb1a1540e95c@canonical.com>
+ <62D89163A60680E7+f0f5a4d4-42f1-454d-9dfe-cf53e2aca4ac@linux.starfivetech.com>
+ <cba21857-7eb2-4f10-a1bd-6743ce63dfa6@freeshell.de>
+ <ZQ2PR01MB1307ECDF175D20547AC69287E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
+Content-Language: en-US
+From: E Shattow <e@freeshell.de>
+In-Reply-To: <ZQ2PR01MB1307ECDF175D20547AC69287E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 6:00=E2=80=AFAM Guan Wang <guan.wang.jy@gmail.com> =
-wrote:
 
-> Some eMMC devices (e.g., BGSD4R and AIM20F) may enter an unresponsive sta=
-te
-> after encountering CRC errors during RPMB writes (CMD25). This prevents t=
-he
-> device from switching back to the main partition via CMD6, blocking furth=
-er
-> I/O operations.
->
-> The root cause is suspected to be a firmware/hardware issue in specific
-> eMMC models. A workaround is to perform a hardware reset via mmc_hw_reset=
-()
-> when the partition switch fails, followed by a retry.
->
-> Add a workaround that:
-> 1. If initial partition switch fails after rpmb access
-> 2. Performs mmc card reset using mmc_hw_reset()
-> 3. Retries switching to main partition
-> This helps resolve cases where the device becomes unresponsive after
-> RPMB operations.
->
-> Signed-off-by: Guan Wang <guan.wang.jy@renesas.com>
 
-This looks like a reasonable recovery to me.
+On 2/6/25 19:01, Hal Feng wrote:
+>> On 06.02.25 19:17, E Shattow wrote:
+>> On 2/5/25 18:59, Hal Feng wrote:
+>>> On 2/5/2025 6:01 PM, Heinrich Schuchardt wrote:
+>>>> On 2/5/25 08:57, Hal Feng wrote:
+>>>>> On 2/3/2025 9:37 AM, E Shattow wrote:
+>>>>>> Add bootph-pre-ram hinting to jh7110-common.dtsi:
+>>>>>>    - i2c5_pins and i2c-pins subnode for connection to eeprom
+>>>>>>    - eeprom node
+>>>>>>    - qspi flash configuration subnode
+>>>>>>    - memory node
+>>>>>>    - uart0 for serial console
+>>>>>>
+>>>>>>    With this the U-Boot SPL secondary program loader may drop such
+>>>>>>    overrides when using dt-rebasing with JH7110 OF_UPSTREAM board
+>> targets.
+>>>>>>
+>>>>>> Signed-off-by: E Shattow <e@freeshell.de>
+>>>>>> ---
+>>>>>>   arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
+>>>>>>   1 file changed, 6 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>>>>>> b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>>>>>> index 30c5f3487c8b..c9e7ae59ee7c 100644
+>>>>>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>>>>>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+>>>>>> @@ -28,6 +28,7 @@ chosen {
+>>>>>>       memory@40000000 {
+>>>>>>           device_type = "memory";
+>>>>>>           reg = <0x0 0x40000000 0x1 0x0>;
+>>>>>> +        bootph-pre-ram;
+>>>>>>       };
+>>>>>>         gpio-restart {
+>>>>>> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
+>>>>>>       };
+>>>>>>         eeprom@50 {
+>>>>>> +        bootph-pre-ram;
+>>>>>>           compatible = "atmel,24c04";
+>>>>>>           reg = <0x50>;
+>>>>>>           pagesize = <16>;
+>>>>>> @@ -323,6 +325,7 @@ &qspi {
+>>>>>>       nor_flash: flash@0 {
+>>>>>>           compatible = "jedec,spi-nor";
+>>>>>>           reg = <0>;
+>>>>>> +        bootph-pre-ram;
+>>>>>>           cdns,read-delay = <2>;
+>>>>>>           spi-max-frequency = <100000000>;
+>>>>>>           cdns,tshsl-ns = <1>;
+>>>>>> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
+>>>>>>       };
+>>>>>>         i2c5_pins: i2c5-0 {
+>>>>>> +        bootph-pre-ram;
+>>>>>>           i2c-pins {
+>>>>>>               pinmux = <GPIOMUX(19, GPOUT_LOW,
+>>>>>>                             GPOEN_SYS_I2C5_CLK, @@ -413,6 +417,7 @@
+>>>>>> GPI_SYS_I2C5_CLK)>,
+>>>>>>                             GPOEN_SYS_I2C5_DATA,
+>>>>>>                             GPI_SYS_I2C5_DATA)>;
+>>>>>>               bias-disable; /* external pull-up */
+>>>>>> +            bootph-pre-ram;
+>>>>>>               input-enable;
+>>>>>>               input-schmitt-enable;
+>>>>>>           };
+>>>>>> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
+>>>>>>   };
+>>>>>>     &uart0 {
+>>>>>> +    bootph-pre-ram;
+>>>>>>       clock-frequency = <24000000>;
+>>>>>>       pinctrl-names = "default";
+>>>>>>       pinctrl-0 = <&uart0_pins>;
+>>>>>
+>>>>> What about &mmc0, &mmc1, &qspi, &sysgpio, &mmc0_pins,
+>> &mmc1_pins, &i2c5?
+>>>>> Why not add "bootph-pre-ram;" for them?
+>>>>
+>>>> Would they be needed before relocation of U-Boot to DRAM?
+>>>
+>>> Yeah, they are needed by SPL and they are set in U-Boot
+>>> arch/riscv/dts/jh7110-common-u-boot.dtsi.
+>>>
+>>> Best regards,
+>>> Hal
+>>>
+>>
+>> When I tested on Star64 there was none of those needed to boot. We can add
+>> more bootph-pre-ram as needed but I want to know how to test (because I
+>> did not see any need for these).
+>>
+>> How do you test that these are needed?
+> 
+> In my opinion, SPL need to read U-Boot from EMMC (mmc0) or SDcard (mmc1) or
+> QSPI flash (qspi). Also it need to choose the correct DTB by reading EEPROM
+> mounted on i2c5. To run mmc / i2c drivers, the pin configurations (sysgpio, mmc0/1_pins)
+> are also needed.
+> 
+> Best regards,
+> Hal
 
-However not all hosts support HW reset. You currently have to do
-something this:
+EMMC or SDcard are not possible to boot (via JH7110 boot ROM, distinct
+from QSPI boot of U-Boot and later EMMC or SDcard capability) in this
+way on some of the boards where transistor logic pairs GPIO0 and GPIO1
+both-off or both-on. SDcard boot is officially recommended against as
+"not supported" by the StarFive reference documentation, and I suppose
+what remains is EMMC boot as valid though I have not heard of any users
+for this.
 
-if ((host->caps & MMC_CAP_HW_RESET) &&
-  host->ops->card_hw_reset)
-   mmc_hw_reset(card);
+What is the test procedure for EMMC boot, can you explain and I will try
+it on the Star64?
 
-Perhaps we should first just move this check into
-mmc_hw_reset() so that function can be called unconditionally?
-
-Yours,
-Linus Walleij
+-E
