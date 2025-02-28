@@ -1,182 +1,348 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2081.outbound.protection.outlook.com [40.107.212.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E312566F4;
-	Fri, 28 Feb 2025 09:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740735483; cv=fail; b=gszxEbXFwC79uKGpzNfOug84o+VcnIyWEPZdTh3Xyh3pg6T80PQAREbGONhOFmQDiJrbdLU4EZFsnHB5Pq59QowTmMmYbDvOJ4Tjhs7WGY0hTf8w7T5YlurEtgsotMATdudn52iqN4eGDSjbl+TFbQslUUtWlCgWTw1wSFHQ2mw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740735483; c=relaxed/simple;
-	bh=iuXwMtuK8Qp+kBRhW2KBYwirb7fZ9EHNNjvq766Pi2k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iGc/u0nmw6BpX3KpjjUqHfNOzXemxFLBI6/emUvbzPgi4Vgn2T3nijggcuirI4fw2LxRIFmi2NxZUZGk2tdi5vnE05xj84RYUk2jrWpLvbT07PJ4jGz2ejf5ybb2OfmIXCMq0YErGqebcVWxwjCrWMb3uk4s8LM2mXZivPAHHmM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=dEMWkaJm; arc=fail smtp.client-ip=40.107.212.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EFD2580CE;
+	Fri, 28 Feb 2025 09:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740735486; cv=none; b=t9MN9fr3spAY5k09jwCVc0uuwvYbb0inB7E4x9l8UDISORDKW8XysQg4YAyXE6u3OMYu2anE39/oR8XnaY1l1xLBnvvj+l7QlRQVMpZq+bP0MYD30XOdo7KJ18Xqhuena5rMb2MsIdbKwRIt160V1KKjKZeGJtWdHg4XfPxenH4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740735486; c=relaxed/simple;
+	bh=wCoAdbeX6SsMfq6oSGc/4uHSFzdb5+Tdx5YzVZ5IrcU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M9IEyEIlvCjaqgqGFcv13hcG2zDPClnkqXiDG7pZPPt2CprP2pL9GJc10Vts5yezJ3ON8ms14//j28tb9UwouDmQ5b0ZlFVIZX6PAICqB3gEZFoxTwv7pYlRTkS+9zBRBWTum2jnvr2RKv3fUHgLaIKDHN5tAhs3VW1VC/B3Sik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XF4Vv/l/; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="dEMWkaJm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NNZoQqrRgIpHGdrdCIViPAwb4ZpLVHo3aVDSN9s3H2s2OywMYi/FYuIxVO7WOmdwm7Gk5TgLctakJv5Esv559pxKx+zh8slze4N5iQ0Ngri0DN5yO40PH6PaohF6I6DaX12h8tVisDXUpnUTJCRyvEBWiVVkaGArvN3D40zbDF/yUi4Do/FpQK3JJjxPaUIol1zLvFg9SQmxp/Uri9slRxCcF3d1QxTAGMJcLuTKC59oyFyp5Hs74RWsX7g1M9GiSX/jCdm0QSRtCWrXqysnG7mQd/MueQPuEOS9w+IttzjVgBXFoeXIRmdItHghAjkvBlr3jO4kX5NoHAeo5I4gZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YfBY7B+XcSZMT1vqNjMwnDAibLm7YDtm6TmfpUeX70o=;
- b=Xex7Mx7rvGO8En3SOVpOEuSX9heXxzfVEvjeWCtY8jqQCqMJIVxUBS+mnEjjHZOq9vWP47iW6vKdYGZXTHblvfOChhHspiC2h2MeVG9CczpqhZGG9lxw8tMCLWqW4n75Y7v6YEqIQX6FkPW3FjXCP0F1gIIZ3v4i8sIiLV9Nb0d1XBfV/ss5tUcwh6OaPSjwOdjfE/l2WpySqsDwy9ckiP+e1qnrgoW52t3TOepFxBVUNulDGuoDFLhwTHy/LlMISC56IOiABzM50j508Khs/08ITS8azP4H/EJBHPr+3g4LeEHOC8cpElLc3FBWxKyfMIVRZNnCIUPXItWh8ejkZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfBY7B+XcSZMT1vqNjMwnDAibLm7YDtm6TmfpUeX70o=;
- b=dEMWkaJmkHdVKQ2DqdJ1XJXq8gPU8gEgmFf3ZXZ5FJbIBX5oPHLLdt/cBED1P66TW0vi7IX5JtZndH34LnOTfoqtU/RDOlGnR3T9hQO0MPyabtpR67ok8wj6V/liuiOsJMN57qHFmn/ud4TLOJeQq1UL5L4qfi0cw857DrOsx5g=
-Received: from DM6PR11CA0006.namprd11.prod.outlook.com (2603:10b6:5:190::19)
- by MN2PR12MB4391.namprd12.prod.outlook.com (2603:10b6:208:269::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
- 2025 09:37:58 +0000
-Received: from DS1PEPF00017090.namprd03.prod.outlook.com
- (2603:10b6:5:190:cafe::57) by DM6PR11CA0006.outlook.office365.com
- (2603:10b6:5:190::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.22 via Frontend Transport; Fri,
- 28 Feb 2025 09:37:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:37:58 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 03:34:56 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <kvm@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <Thomas.Lendacky@amd.com>,
-	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <bp@alien8.de>, <David.Kaplan@amd.com>,
-	<huibo.wang@amd.com>, <naveen.rao@amd.com>, <pgonda@google.com>,
-	<linux-kselftest@vger.kernel.org>, <shuah@kernel.org>
-Subject: [RFC PATCH 03/31] Add vm_vaddr_alloc_pages_shared()
-Date: Fri, 28 Feb 2025 14:59:56 +0530
-Message-ID: <20250228093024.114983-4-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
-References: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XF4Vv/l/"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6f6ae4846c7so16936277b3.1;
+        Fri, 28 Feb 2025 01:38:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740735483; x=1741340283; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UC0miZ0PpBEkIR2fGp0c3f/yHzMZejz8LlFF0rJC9zA=;
+        b=XF4Vv/l/D8fkXrse/KOjUxhULRwO4XgHq92w+92JNP9kLGaK/Uj+5ZV5Zi02ubrQ/J
+         ibF16NreOA9QuryDk4Mq+WRTZGKl4S+8UiXZy8je/X3vJ8LyBvO9/tNiPhM18Z/M/GlP
+         UUQN+AtxJo1yusCywoIqutong2zNceAcFy7s41HJSJDyRHhUMwfx0HO0nuWFqbQ21XBS
+         76CXo+oxMFfTbK3QuwnHZp6LUnOI8VsQoXbe/pm6K20fsq7gLmXwzeDs6W0dnIn6KHwg
+         udyDLHFNaf83K+vnBTp2VnCwmbhY69L1bO0m7UZzL89Te2gZXzgYvpqAfKbmcBYZt59w
+         dZ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740735483; x=1741340283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UC0miZ0PpBEkIR2fGp0c3f/yHzMZejz8LlFF0rJC9zA=;
+        b=jvbQUzdQgKGrhYcOfKN4xxFhYoIuRYvNXE2gefAP5iCflREd+W8CqjCZqorQtu7n8B
+         LriBJUJZK9ViTvC6uitsXDF+tlzGgo9OIcttbdLusvwtYVAdElBeTwDSmOnOt/aHr6FK
+         70tm9bXd2q8UdxeaREWsSm+S8lcZeKZ0+KYSbXnrGrvo+Sk9mTcEYtWiCJFwvT78q9Za
+         2gfkuNJ64dUMe+eTSkLTjQgtWCszZfq0kTNvll8Shq9VfJydIfUWjrB/Jg2pElMzR+No
+         CVul/xJOlewo9D7lL+3TFbfHUNOfFJxVaVJK2TL+b/CjmCcU+MM2RoEYBTF/1odE3d9X
+         /ZtA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzfFUTrBq9aR6d76w3R0df4rDvlD1XYjkPJwTy4pVJ0256jSLwikUPxKcnqOv92MvoOVyC0Xyw2LL2Jqs=@vger.kernel.org, AJvYcCW9ave03b9qd4qvKltKmvVF6veyG/c6QzXwo7beQbQa7dpMZd9c8bp9NqdVMMUABghV0FsKNRh7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7SmcLn+f+SeqBoleWMHvfVvC18W2N0q/baj2V1JQw3q+1oshi
+	TgnIsAeNAl6mZCCh8hSzLuebNGVRu+OCpfp9OS2yExcGGZ02XYqIwqB2EgXqC78pYooyQwf4FXm
+	eZpdE0+iuX5O1JVtNmtRMHU2e0jk=
+X-Gm-Gg: ASbGncuodWcbHS/ARC8uqrtjZEL3ZcyYsNAONASPAs1+pXFeMXpHnbpp8a42IHmnmUm
+	aYb4+g/hpTmkM8xHA9GjSh39nvurA2lubvekufOuj6ixHv3m6MfJbioyJBVCAsbASvlaHMW/JKs
+	LtpSbtr7k=
+X-Google-Smtp-Source: AGHT+IFYBc9mBF2+hcruHXBRBZGAay0j/UWOuh49WMymR3mqjN77Pej7PFJzp66kmiHeeISMO8V/ziEucsZG2fJAoCA=
+X-Received: by 2002:a05:690c:62c7:b0:6f7:56f7:239a with SMTP id
+ 00721157ae682-6fd4a0393c8mr33890727b3.5.1740735483025; Fri, 28 Feb 2025
+ 01:38:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|MN2PR12MB4391:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d937d01-71cd-4754-6d84-08dd57db961b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?v29dP+ojUtUMzJOMWcrfUOn08SAoekWG6hsj4zhcpLc9zjrJ8w9E+eXSFlzD?=
- =?us-ascii?Q?re3SGkmaIimQJlDicMAfYNVl0jLfLTW3ZwE3LUa/obHsnfxkJFlm3fu4vZpD?=
- =?us-ascii?Q?zki1/vpb6U08zY8sTrakSCQ/IGKbtMYJ5xXz/h20ssq6VOwRvWGcvBw6GOif?=
- =?us-ascii?Q?2lyYuf/Wdg8O8veNFdOg6gXA6BjX5oi7GRKBskojV4VPyGCS6mz6hQ7b0W3s?=
- =?us-ascii?Q?eUEkzXJJ3nRwvxCgxfvkBPADZyUmAg06j08iGLQPKeTSzx3xIxbgHR3RHF66?=
- =?us-ascii?Q?iznS+137LURvK8EMIlDo50N8Vkzy+xTiqrUidi95iT3Qmdt8/9ecUSpYimNM?=
- =?us-ascii?Q?FtXrzdTUvBhXKuEJca9i49fmZFCmZfMlHrC0Q6Lck7FX/nerXevr0a8ksmi5?=
- =?us-ascii?Q?fySTFfhyAAk6rzqAzyDgCy+AkYc4GySY6PNt02LU1hyVPC5QtTEsDGkFUxQy?=
- =?us-ascii?Q?vKfgHBCZd4Hk/yXSOiai36FPflzmpvJ2IlLlLZPEEwOTQzu6x0BU4KNeAJeL?=
- =?us-ascii?Q?K+SETQMkTY9yUtKskAm+rACYDr+MyukF1ssbpa1DAD29MBMk62kspXDmVSCh?=
- =?us-ascii?Q?dFE1LUerNYl8PBgfOW2waDeW1GC3mQOPGOK974O9EdwAdsiN9HL1DH2NW8R6?=
- =?us-ascii?Q?V/9i1KsZUu1VfN3XMbc9r5IZZxEVbFOaHBjxc5l8GfRXSkCtOcWsGRUNWJ2Y?=
- =?us-ascii?Q?JV3LNLYyBJ50wu7MCCJujfex2RFy+XcbU6G8hqo+d4PDx6hwBDUDcJCC0bwq?=
- =?us-ascii?Q?hXhGN/Bh4qP/t6LiRvSvvcBYws94/o8o89zhf+EeDFzwlcMjOA5wQVc0fZsT?=
- =?us-ascii?Q?dvV/Y+KD0mhqqE0uwLMhBW/otcI8yT91HWMRcKaAjinTZ9L+Cn/ejfbSd3Wb?=
- =?us-ascii?Q?9hVKt9hTajcSZv3oXqnKDqRnHGJEmjkR3exRCFkoJ5APHft+ac5Eu2/Elmoj?=
- =?us-ascii?Q?60xOn19lUPhpmCDLbB6gHwx1hRlDVeaT33r8EcQmbYSLjqcqa8fCeCI8T3Zn?=
- =?us-ascii?Q?7Fs4aV92bdQz/DBqOjWjlIggbgSMtbRAH8utEGDmj8xIOtbXep3fQAXsIAFF?=
- =?us-ascii?Q?3ytf+t9uaTdjoDn+y2M38U194mwnLQS1Arbfg8W81TC+mWqXXmT4+tbDy2cm?=
- =?us-ascii?Q?xH7k/8s35OTEMtMDl3fWtwH2R9YwtyFRjaGddU8Ilu7vCx4pQVB9Y9k1eNUX?=
- =?us-ascii?Q?UZkEI63zOPMxYDbkP/NPCeCJWBVDc5zUeiViOs/O3DVWcZ5hTMxEoGT/p2o1?=
- =?us-ascii?Q?l29e9M+j2kzrX1N0i1ivQCTu7tz7Oltxx5gVbq/hAS/aoH3obZ1Fs9GNeKMI?=
- =?us-ascii?Q?4t4K5gwBMPP4g9HAVnyyC9MBeHe4ocMhksWdE2ANUC0tdNljf3wv/adBOxx1?=
- =?us-ascii?Q?/DwtCYjUZMfTATswpjOsxt4BR1yTGBdid02wIHvNQva8CP/uAuUGSwhn9xry?=
- =?us-ascii?Q?BO+4N/EE/D3TL0Xc0+7Cs7brA4A7Ael/aHbyww5QCxzIzDYoxVxx5pIil81z?=
- =?us-ascii?Q?AgMR3I1Q6/cashk=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:37:58.3375
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d937d01-71cd-4754-6d84-08dd57db961b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017090.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4391
+References: <20250227123137.138778-1-dongml2@chinatelecom.cn> <20250228002953.68029-1-kuniyu@amazon.com>
+In-Reply-To: <20250228002953.68029-1-kuniyu@amazon.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Fri, 28 Feb 2025 17:36:31 +0800
+X-Gm-Features: AQ5f1JqGwRejjTEqIrWvXRyj6JDmAU0cR3n3Exf1NHOkApj_RMrmLjCZaFKPVPA
+Message-ID: <CADxym3a2mQnxbJgFCEoAb3U8s_xLAZmU9+bYN-a7mpHNLgjKVw@mail.gmail.com>
+Subject: Re: [RFC PATCH net-next] net: ip: add sysctl_ip_reuse_exact_match
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dongml2@chinatelecom.cn, dsahern@kernel.org, 
+	edumazet@google.com, horms@kernel.org, kerneljasonxing@gmail.com, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, ncardwell@google.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, petrm@nvidia.com, yyd@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peter Gonda <pgonda@google.com>
+On Fri, Feb 28, 2025 at 8:30=E2=80=AFAM Kuniyuki Iwashima <kuniyu@amazon.co=
+m> wrote:
+>
+> From: Menglong Dong <menglong8.dong@gmail.com>
+> Date: Thu, 27 Feb 2025 20:31:37 +0800
+> > For now, the socket lookup will terminate if the socket is reuse port i=
+n
+> > inet_lhash2_lookup(), which makes the socket is not the best match.
+> >
+> > For example, we have socket1 listening on "0.0.0.0:1234" and socket2
+> > listening on "192.168.1.1:1234", and both of them enabled reuse port. T=
+he
+> > socket1 will always be matched when a connection with the peer ip
+> > "192.168.1.xx" comes if the socket1 is created later than socket2. This
+> > is not expected, as socket2 has higher priority.
+> >
+> > This can cause unexpected behavior if TCP MD5 keys is used, as describe=
+d
+> > in Documentation/networking/vrf.rst -> Applications.
+>
+> Could you provide a minimal repro setup ?
+> I somehow fail to reproduce the issue.
+>
 
-Add a shared page allocation. To be used for SEV-ES GHCBs.
+Thanks for your replying :/
 
-Cc: Vishal Annapurve <vannapurve@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Carlos Bilbao <carlos.bilbao@amd.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Michael Roth <michael.roth@amd.com>
-Cc: kvm@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Peter Gonda <pgonda@google.com>
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
- tools/testing/selftests/kvm/include/kvm_util.h | 1 +
- tools/testing/selftests/kvm/lib/kvm_util.c     | 6 ++++++
- 2 files changed, 7 insertions(+)
+Sorry that I described it wrong in the commit log. I problem is that:
 
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index b621a0f1907e..bd963ff49bf0 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -605,6 +605,7 @@ vm_vaddr_t vm_vaddr_alloc_shared(struct kvm_vm *vm, size_t sz,
- 				 vm_vaddr_t vaddr_min,
- 				 enum kvm_mem_region_type type);
- vm_vaddr_t vm_vaddr_alloc_pages(struct kvm_vm *vm, int nr_pages);
-+vm_vaddr_t vm_vaddr_alloc_pages_shared(struct kvm_vm *vm, int nr_pages);
- vm_vaddr_t __vm_vaddr_alloc_page(struct kvm_vm *vm,
- 				 enum kvm_mem_region_type type);
- vm_vaddr_t vm_vaddr_alloc_page(struct kvm_vm *vm);
-diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-index 18a44d8220ef..4f3240976f6c 100644
---- a/tools/testing/selftests/kvm/lib/kvm_util.c
-+++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-@@ -1470,6 +1470,12 @@ vm_vaddr_t vm_vaddr_alloc_pages(struct kvm_vm *vm, int nr_pages)
- 	return vm_vaddr_alloc(vm, nr_pages * getpagesize(), KVM_UTIL_MIN_VADDR);
- }
- 
-+vm_vaddr_t vm_vaddr_alloc_pages_shared(struct kvm_vm *vm, int nr_pages)
-+{
-+	return vm_vaddr_alloc_shared(vm, nr_pages * getpagesize(),
-+				     KVM_UTIL_MIN_VADDR, MEM_REGION_TEST_DATA);
-+}
-+
- vm_vaddr_t __vm_vaddr_alloc_page(struct kvm_vm *vm, enum kvm_mem_region_type type)
- {
- 	return __vm_vaddr_alloc(vm, getpagesize(), KVM_UTIL_MIN_VADDR, type);
--- 
-2.34.1
+socket1 and socket2 both listen on "0.0.0.0:1234", but socket1 bind
+on "eth0". We create socket1 first, and then socket2. Then, all connections
+will goto socket2, which is not expected, as socket1 has higher priority.
 
+You can reproduce it with following code:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
+#include <linux/ip.h>
+#include <netinet/tcp.h>
+#include <arpa/inet.h>
+
+int main(int argc, char** argv)
+{
+    int listenfd, connfd;
+    struct sockaddr_in servaddr, client;
+    socklen_t clen;
+    char buff[4096];
+    int one =3D 1;
+    int n;
+
+    if ((listenfd =3D socket(AF_INET, SOCK_STREAM, 0)) =3D=3D -1) {
+        printf("create socket error: %s(errno: %d)\n", strerror(errno), err=
+no);
+        exit(0);
+    }
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family =3D AF_INET;
+    servaddr.sin_addr.s_addr =3D htonl(INADDR_ANY);
+    servaddr.sin_port =3D htons(6666);
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEPORT, &one, sizeof(one));
+    if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) =3D=
+=3D -1) {
+        printf("bind socket error: %s(errno: %d)\n", strerror(errno), errno=
+);
+        exit(0);
+    }
+
+    if (argc > 1) {
+        setsockopt(listenfd, SOL_SOCKET, SO_BINDTODEVICE, argv[1],
+               strlen(argv[1]) + 1);
+    }
+
+    if (listen(listenfd, 10) =3D=3D -1) {
+        printf("listen socket error: %s(errno: %d)\n", strerror(errno), err=
+no);
+        exit(0);
+    }
+    printf("=3D=3D=3D=3D=3D=3Dwaiting for client's request=3D=3D=3D=3D=3D=
+=3D\n");
+    while (1) {
+        clen =3D sizeof(struct sockaddr);
+        if ((connfd =3D accept(listenfd, (struct sockaddr*)&client,
+&clen)) =3D=3D -1) {
+            printf("accept socket error: %s(errno: %d)",
+strerror(errno), errno);
+            continue;
+        }
+
+        printf("recv msg from client: %x\n", client.sin_addr.s_addr);
+    }
+    close(listenfd);
+    return 0;
+}
+
+
+>
+> > Introduce the sysctl_ip_reuse_exact_match to make it find a best matche=
+d
+> > socket when reuse port is used.
+>
+> I think we should not introduce a new sysctl knob and an extra lookup,
+> rather we can solve that in __inet_hash() taking d894ba18d4e4
+> ("soreuseport: fix ordering for mixed v4/v6 sockets") further.
+>
+> Could you test this patch ?
+
+Sorry for my incorrect commit log, and this patch can't solve
+the problem that I had. Maybe we can compare the score of
+the socket in the list when we insert the socket to the listening
+hash table to place it in a proper place. However, it will make
+the inserting complex :/
+
+Thanks!
+Menglong Dong
+
+>
+> ---8<---
+> $ git show
+> commit 4dbc44a153afe51a2b2698a55213e625a02e23c8
+> Author: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Date:   Thu Feb 27 19:53:43 2025 +0000
+>
+>     tcp: Place non-wildcard sockets before wildcard ones in lhash2.
+>
+>     Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+>
+> diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.=
+h
+> index 5eea47f135a4..115248bfe463 100644
+> --- a/include/net/inet_hashtables.h
+> +++ b/include/net/inet_hashtables.h
+> @@ -136,6 +136,9 @@ struct inet_bind_hashbucket {
+>  struct inet_listen_hashbucket {
+>         spinlock_t              lock;
+>         struct hlist_nulls_head nulls_head;
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +       struct hlist_nulls_node *wildcard_node;
+> +#endif
+>  };
+>
+>  /* This is for listening sockets, thus all sockets which possess wildcar=
+ds. */
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index efc031163c33..4e8e10d2067b 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -863,6 +863,16 @@ static inline void __sk_nulls_add_node_tail_rcu(stru=
+ct sock *sk, struct hlist_nu
+>         hlist_nulls_add_tail_rcu(&sk->sk_nulls_node, list);
+>  }
+>
+> +static inline void __sk_nulls_add_node_before_rcu(struct sock *sk, struc=
+t hlist_nulls_node *next)
+> +{
+> +       struct hlist_nulls_node *n =3D &sk->sk_nulls_node;
+> +
+> +       WRITE_ONCE(n->pprev, next->pprev);
+> +       WRITE_ONCE(n->next, next);
+> +       WRITE_ONCE(next->pprev, &n->next);
+> +       WRITE_ONCE(*(n->pprev), n);
+> +}
+> +
+>  static inline void sk_nulls_add_node_rcu(struct sock *sk, struct hlist_n=
+ulls_head *list)
+>  {
+>         sock_hold(sk);
+> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+> index ecda4c65788c..acfb693bb1d4 100644
+> --- a/net/ipv4/inet_hashtables.c
+> +++ b/net/ipv4/inet_hashtables.c
+> @@ -729,6 +729,7 @@ int __inet_hash(struct sock *sk, struct sock *osk)
+>  {
+>         struct inet_hashinfo *hashinfo =3D tcp_or_dccp_get_hashinfo(sk);
+>         struct inet_listen_hashbucket *ilb2;
+> +       bool add_tail =3D false;
+>         int err =3D 0;
+>
+>         if (sk->sk_state !=3D TCP_LISTEN) {
+> @@ -737,21 +738,47 @@ int __inet_hash(struct sock *sk, struct sock *osk)
+>                 local_bh_enable();
+>                 return 0;
+>         }
+> +
+>         WARN_ON(!sk_unhashed(sk));
+>         ilb2 =3D inet_lhash2_bucket_sk(hashinfo, sk);
+>
+>         spin_lock(&ilb2->lock);
+> +
+>         if (sk->sk_reuseport) {
+>                 err =3D inet_reuseport_add_sock(sk, ilb2);
+>                 if (err)
+>                         goto unlock;
+> +
+> +               if (inet_rcv_saddr_any(sk))
+> +                       add_tail =3D true;
+>         }
+> +
+>         sock_set_flag(sk, SOCK_RCU_FREE);
+> -       if (IS_ENABLED(CONFIG_IPV6) && sk->sk_reuseport &&
+> -               sk->sk_family =3D=3D AF_INET6)
+> -               __sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_head);
+> -       else
+> -               __sk_nulls_add_node_rcu(sk, &ilb2->nulls_head);
+> +
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +       if (sk->sk_family =3D=3D AF_INET6) {
+> +               if (add_tail || !ilb2->wildcard_node)
+> +                       __sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_hea=
+d);
+> +               else
+> +                       __sk_nulls_add_node_before_rcu(sk, ilb2->wildcard=
+_node);
+> +       } else
+> +#endif
+> +       {
+> +               if (!add_tail)
+> +                       __sk_nulls_add_node_rcu(sk, &ilb2->nulls_head);
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +               else if (ilb2->wildcard_node)
+> +                       __sk_nulls_add_node_before_rcu(sk, ilb2->wildcard=
+_node);
+> +#endif
+> +               else
+> +                       __sk_nulls_add_node_tail_rcu(sk, &ilb2->nulls_hea=
+d);
+> +       }
+> +
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +       if (add_tail && (sk->sk_family =3D=3D AF_INET || !ilb2->wildcard_=
+node))
+> +               ilb2->wildcard_node =3D &sk->sk_nulls_node;
+> +#endif
+> +
+>         sock_prot_inuse_add(sock_net(sk), sk->sk_prot, 1);
+>  unlock:
+>         spin_unlock(&ilb2->lock);
+> @@ -794,6 +821,15 @@ void inet_unhash(struct sock *sk)
+>                 if (rcu_access_pointer(sk->sk_reuseport_cb))
+>                         reuseport_stop_listen_sock(sk);
+>
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +               if (&sk->sk_nulls_node =3D=3D ilb2->wildcard_node) {
+> +                       if (is_a_nulls(sk->sk_nulls_node.next))
+> +                               ilb2->wildcard_node =3D NULL;
+> +                       else
+> +                               ilb2->wildcard_node =3D sk->sk_nulls_node=
+.next;
+> +               }
+> +#endif
+> +
+>                 __sk_nulls_del_node_init_rcu(sk);
+>                 sock_prot_inuse_add(sock_net(sk), sk->sk_prot, -1);
+>                 spin_unlock(&ilb2->lock);
+> @@ -1183,6 +1219,9 @@ static void init_hashinfo_lhash2(struct inet_hashin=
+fo *h)
+>                 spin_lock_init(&h->lhash2[i].lock);
+>                 INIT_HLIST_NULLS_HEAD(&h->lhash2[i].nulls_head,
+>                                       i + LISTENING_NULLS_BASE);
+> +#if IS_ENABLED(CONFIG_IPV6)
+> +               h->lhash2[i].wildcard_node =3D NULL;
+> +#endif
+>         }
+>  }
+>
+> ---8<---
