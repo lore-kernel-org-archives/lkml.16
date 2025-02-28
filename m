@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E0F25DD09;
-	Fri, 28 Feb 2025 10:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68AF25D558;
+	Fri, 28 Feb 2025 10:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736842; cv=none; b=OTuYbNuLMo84Rp/VvtKnH0PE/r2U0IyJdU4Bniq5A0yG7smqa2/zCACWnezyLnLFWqfvkT01Sm+NXxVYbB5buloRqef++FcwouFMnuZ+ECy2jY8t1eOUPRQsY9Marz93OgyhEAvKs7XnSxAh0EG+AtqqI6OzfPV18qY/D0wlGp4=
+	t=1740736840; cv=none; b=q0+hOeMfMpnkbRTiRc3/wdfiPy4XrgCcF9JPMV0+n83nC+xBbA1ascG810LWwUTGeuLvXWvJnM9SzXSZPSMofZxbv5hDJyQWV68BmEZnWniw2By25r19WD0ZVPZxoiqaiPiw1x1wldkE3aeEzLTYEG+khgzeCYFsIa+lodpovAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736842; c=relaxed/simple;
-	bh=r6PEYgxq6/N6uxBAD+xcepNUnGuvoW5pJWNnSNPI1s4=;
+	s=arc-20240116; t=1740736840; c=relaxed/simple;
+	bh=0xFXq8Zw4cTjf3cki1MLbp7d9+ucTcZqeFB1NMNpIDM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JApudlcR2Yapa3W+4xfqq2yuDyCGfwrplyJSMTXRrAYD4urcmUPlejbmp9JFb2mwYbEY3lQhdJqhSGit0XE5BXNpVO7vYyxYhlcL8/nbuWtbC/C7C92oAbqVFShQ49bmTFckgdzjMzg5Ag3joMeijjZaZ4udeAuyjoGmCXAjiWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DmVw/xV1; arc=none smtp.client-ip=192.198.163.18
+	 MIME-Version; b=GbdI5h46OtSzAXxiIsiSEdJRk5Yk6Tjgfyt4TQr6ACqf7InSYsPXv8/OhPR3nrLnLSSXODSn9Vk34AG5nrdIZhSFJUM6GwUbOUz2D+lyj9IfYJ6yg1xZbcukRff0p4fWaWXn3br3Tr7fCK52fZIKKKcFIomQXhtwjGChDJHe9SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bxpDgvOw; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DmVw/xV1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bxpDgvOw"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740736840; x=1772272840;
+  t=1740736837; x=1772272837;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=r6PEYgxq6/N6uxBAD+xcepNUnGuvoW5pJWNnSNPI1s4=;
-  b=DmVw/xV1Vtcs8dVgSxoUFaiQEQdP5O9tXzvSzhe7smZVYoIlO5ITOrbE
-   f3oKslwwQGv9rFOjp0IUD+NpEXdpk9DXOuHUBdWmUF7Wox7x+x34q+SLx
-   /oILnrrJkcZZSRPqHdgU2ZpFidWf2WjQxRcQiaeRrFc9yECM8U3BZQw6H
-   Xyq5T1/Nyv1Ywr227Es6xjlS/M9AbQsOXxy/cngLMgC5lfmVVbCJ9tohD
-   D0v4AXvUDPlaIBo+f6IBlaUI9yYoOS817blIDljLoRx0twSlDjifJGmda
-   /KZtoyHsQffcn5UhRcmsErEyy0lhvaRWXLdOS0dwuOmScyYNiU7AAp3yM
-   g==;
-X-CSE-ConnectionGUID: OkFdMWBlTsyhhDKMPSL3wQ==
-X-CSE-MsgGUID: PCI5NR04QleS/T7u0fLQww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40902736"
+  bh=0xFXq8Zw4cTjf3cki1MLbp7d9+ucTcZqeFB1NMNpIDM=;
+  b=bxpDgvOwY02qMDiwKuJzayWrmXlvRMQthzzLsyRwIQDoxnjvzUoSNuIH
+   2xlYDa+2iu6IrO4FTaFxmDGUnVsPebe1tkRRM3gPBTojTX9df+u0pHF28
+   nyWj619ZSJo0aI2CSWyRsYHvEC6jnSeS93EKezloxwBMnULWA2Mlo9iIR
+   X2mM4f+76qXZeW/FPy3Re78DPRFqTufgberPosxpiZ+aGgKWwNEjhGl5/
+   JG12B4a/Ec5qWZ9FslfGpKIHAqFah77XdTlDeoIuYmUJOEEPJ2wnMA8Ow
+   QMRE9M+kczODsLItJWRlqhUjsPYvutjhAl15uGXt3cnF+lOQxtf57pLmo
+   w==;
+X-CSE-ConnectionGUID: r6UcxPg5RVK+Me9si+W7Ug==
+X-CSE-MsgGUID: pL2NsJsVQKGToIc2J1g1gA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40902706"
 X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="40902736"
+   d="scan'208";a="40902706"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:00:29 -0800
-X-CSE-ConnectionGUID: qKe0qnEyQwu6amG26g9mBA==
-X-CSE-MsgGUID: mm6IdXK6SA27wiKDPmIP8w==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:00:28 -0800
+X-CSE-ConnectionGUID: p6GaJnUYQWeG2qID4nJh6w==
+X-CSE-MsgGUID: QbWmU+zhR/miHDIBdzhRZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="117325757"
+   d="scan'208";a="117325745"
 Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
-  by orviesa006.jf.intel.com with ESMTP; 28 Feb 2025 02:00:29 -0800
+  by orviesa006.jf.intel.com with ESMTP; 28 Feb 2025 02:00:28 -0800
 From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
@@ -66,9 +66,9 @@ To: linux-kernel@vger.kernel.org,
 Cc: wajdi.k.feghali@intel.com,
 	vinodh.gopal@intel.com,
 	kanchana.p.sridhar@intel.com
-Subject: [PATCH v7 14/15] mm: zswap: Restructure & simplify zswap_store() to make it amenable for batching.
-Date: Fri, 28 Feb 2025 02:00:23 -0800
-Message-Id: <20250228100024.332528-15-kanchana.p.sridhar@intel.com>
+Subject: [PATCH v7 12/15] mm: zswap: Simplify acomp_ctx resource allocation/deletion and mutex lock usage.
+Date: Fri, 28 Feb 2025 02:00:21 -0800
+Message-Id: <20250228100024.332528-13-kanchana.p.sridhar@intel.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
 References: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
@@ -80,240 +80,385 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch introduces zswap_store_folio() that implements all the computes
-done earlier in zswap_store_page() for a single-page, for all the pages in
-a folio. This allows us to move the loop over the folio's pages from
-zswap_store() to zswap_store_folio().
+This patch modifies the acomp_ctx resources' lifetime to be from pool
+creation to deletion. A "bool __online" and "unsigned int nr_reqs" are
+added to "struct crypto_acomp_ctx" which simplify a few things:
 
-zswap_store_folio() starts by allocating all zswap entries required to
-store the folio. Next, it iterates over the folio's pages, and for each
-page, it calls zswap_compress(), adds the zswap entry to the xarray and
-LRU, charges zswap memory and increments zswap stats.
+1) zswap_pool_create() will initialize all members of each percpu acomp_ctx
+   to 0 or NULL and only then initialize the mutex.
+2) CPU hotplug will set nr_reqs to 1, allocate resources and set __online
+   to true, without locking the mutex.
+3) CPU hotunplug will lock the mutex before setting __online to false. It
+   will not delete any resources.
+4) acomp_ctx_get_cpu_lock() will lock the mutex, then check if __online
+   is true, and if so, return the mutex for use in zswap compress and
+   decompress ops.
+5) CPU onlining after offlining will simply check if either __online or
+   nr_reqs are non-0, and return 0 if so, with re-allocating the
+   resources.
+6) zswap_pool_destroy() will call a newly added zswap_cpu_comp_dealloc() to
+   delete the acomp_ctx resources.
+7) Common resource deletion code in case of zswap_cpu_comp_prepare()
+   errors, and for use in zswap_cpu_comp_dealloc(), is factored into a new
+   acomp_ctx_dealloc().
 
-The error handling and cleanup required for all failure scenarios that can
-occur while storing a folio in zswap are now consolidated to a
-"store_folio_failed" label in zswap_store_folio().
+The CPU hot[un]plug callback functions are moved to "pool functions"
+accordingly.
 
-These changes facilitate developing support for compress batching in
-zswap_store_folio().
+The per-cpu memory cost of not deleting the acomp_ctx resources upon CPU
+offlining, and only deleting them when the pool is destroyed, is as follows:
+
+    IAA with batching: 64.8 KB
+    Software compressors: 8.2 KB
+
+I would appreciate code review comments on whether this memory cost is
+acceptable, for the latency improvement that it provides due to a faster
+reclaim restart after a CPU hotunplug-hotplug sequence - all that the
+hotplug code needs to do is to check if acomp_ctx->nr_reqs is non-0, and
+if so, set __online to true and return, and reclaim can proceed.
 
 Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
 ---
- mm/zswap.c | 166 +++++++++++++++++++++++++++++++----------------------
- 1 file changed, 98 insertions(+), 68 deletions(-)
+ mm/zswap.c | 273 +++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 182 insertions(+), 91 deletions(-)
 
 diff --git a/mm/zswap.c b/mm/zswap.c
-index 6aa602b8514e..ab9167220cb6 100644
+index 10f2a16e7586..3a93714a9327 100644
 --- a/mm/zswap.c
 +++ b/mm/zswap.c
-@@ -1580,81 +1580,115 @@ static void shrink_worker(struct work_struct *w)
- * main API
+@@ -144,10 +144,12 @@ bool zswap_never_enabled(void)
+ struct crypto_acomp_ctx {
+ 	struct crypto_acomp *acomp;
+ 	struct acomp_req *req;
+-	struct crypto_wait wait;
+ 	u8 *buffer;
++	unsigned int nr_reqs;
++	struct crypto_wait wait;
+ 	struct mutex mutex;
+ 	bool is_sleepable;
++	bool __online;
+ };
+ 
+ /*
+@@ -246,6 +248,122 @@ static inline struct xarray *swap_zswap_tree(swp_entry_t swp)
  **********************************/
+ static void __zswap_pool_empty(struct percpu_ref *ref);
  
--static bool zswap_store_page(struct page *page,
--			     struct obj_cgroup *objcg,
--			     struct zswap_pool *pool)
-+/*
-+ * Store all pages in a folio.
-+ *
-+ * The error handling from all failure points is consolidated to the
-+ * "store_folio_failed" label, based on the initialization of the zswap entries'
-+ * handles to ERR_PTR(-EINVAL) at allocation time, and the fact that the
-+ * entry's handle is subsequently modified only upon a successful zpool_malloc()
-+ * after the page is compressed.
-+ */
-+static bool zswap_store_folio(struct folio *folio,
-+			      struct obj_cgroup *objcg,
-+			      struct zswap_pool *pool)
- {
--	swp_entry_t page_swpentry = page_swap_entry(page);
--	struct zswap_entry *entry, *old;
-+	long index, from_index = 0, nr_pages = folio_nr_pages(folio);
-+	struct zswap_entry **entries = NULL;
-+	int node_id = folio_nid(folio);
- 
--	/* allocate entry */
--	entry = zswap_entry_cache_alloc(GFP_KERNEL, page_to_nid(page));
--	if (!entry) {
--		zswap_reject_kmemcache_fail++;
-+	entries = kmalloc(nr_pages * sizeof(*entries), GFP_KERNEL);
-+	if (!entries)
- 		return false;
--	}
- 
--	if (!zswap_compress(page, entry, pool))
--		goto compress_failed;
-+	for (index = from_index; index < nr_pages; ++index) {
-+		entries[index] = zswap_entry_cache_alloc(GFP_KERNEL, node_id);
- 
--	old = xa_store(swap_zswap_tree(page_swpentry),
--		       swp_offset(page_swpentry),
--		       entry, GFP_KERNEL);
--	if (xa_is_err(old)) {
--		int err = xa_err(old);
-+		if (!entries[index]) {
-+			zswap_reject_kmemcache_fail++;
-+			nr_pages = index;
-+			goto store_folio_failed;
-+		}
- 
--		WARN_ONCE(err != -ENOMEM, "unexpected xarray error: %d\n", err);
--		zswap_reject_alloc_fail++;
--		goto store_failed;
-+		entries[index]->handle = (unsigned long)ERR_PTR(-EINVAL);
- 	}
- 
--	/*
--	 * We may have had an existing entry that became stale when
--	 * the folio was redirtied and now the new version is being
--	 * swapped out. Get rid of the old.
--	 */
--	if (old)
--		zswap_entry_free(old);
-+	for (index = from_index; index < nr_pages; ++index) {
-+		struct page *page = folio_page(folio, index);
-+		swp_entry_t page_swpentry = page_swap_entry(page);
-+		struct zswap_entry *old, *entry = entries[index];
- 
--	/*
--	 * The entry is successfully compressed and stored in the tree, there is
--	 * no further possibility of failure. Grab refs to the pool and objcg,
--	 * charge zswap memory, and increment zswap_stored_pages.
--	 * The opposite actions will be performed by zswap_entry_free()
--	 * when the entry is removed from the tree.
--	 */
--	zswap_pool_get(pool);
--	if (objcg) {
--		obj_cgroup_get(objcg);
--		obj_cgroup_charge_zswap(objcg, entry->length);
--	}
--	atomic_long_inc(&zswap_stored_pages);
-+		if (!zswap_compress(page, entry, pool)) {
-+			from_index = index;
-+			goto store_folio_failed;
-+		}
- 
--	/*
--	 * We finish initializing the entry while it's already in xarray.
--	 * This is safe because:
--	 *
--	 * 1. Concurrent stores and invalidations are excluded by folio lock.
--	 *
--	 * 2. Writeback is excluded by the entry not being on the LRU yet.
--	 *    The publishing order matters to prevent writeback from seeing
--	 *    an incoherent entry.
--	 */
--	entry->pool = pool;
--	entry->swpentry = page_swpentry;
--	entry->objcg = objcg;
--	entry->referenced = true;
--	if (entry->length) {
--		INIT_LIST_HEAD(&entry->lru);
--		zswap_lru_add(&zswap_list_lru, entry);
-+		old = xa_store(swap_zswap_tree(page_swpentry),
-+			       swp_offset(page_swpentry),
-+			       entry, GFP_KERNEL);
-+		if (xa_is_err(old)) {
-+			int err = xa_err(old);
++static void acomp_ctx_dealloc(struct crypto_acomp_ctx *acomp_ctx)
++{
++	if (!IS_ERR_OR_NULL(acomp_ctx) && acomp_ctx->nr_reqs) {
 +
-+			WARN_ONCE(err != -ENOMEM, "unexpected xarray error: %d\n", err);
-+			zswap_reject_alloc_fail++;
-+			from_index = index;
-+			goto store_folio_failed;
-+		}
++		if (!IS_ERR_OR_NULL(acomp_ctx->req))
++			acomp_request_free(acomp_ctx->req);
++		acomp_ctx->req = NULL;
 +
-+		/*
-+		 * We may have had an existing entry that became stale when
-+		 * the folio was redirtied and now the new version is being
-+		 * swapped out. Get rid of the old.
-+		 */
-+		if (old)
-+			zswap_entry_free(old);
++		kfree(acomp_ctx->buffer);
++		acomp_ctx->buffer = NULL;
 +
-+		/*
-+		 * The entry is successfully compressed and stored in the tree, there is
-+		 * no further possibility of failure. Grab refs to the pool and objcg,
-+		 * charge zswap memory, and increment zswap_stored_pages.
-+		 * The opposite actions will be performed by zswap_entry_free()
-+		 * when the entry is removed from the tree.
-+		 */
-+		zswap_pool_get(pool);
-+		if (objcg) {
-+			obj_cgroup_get(objcg);
-+			obj_cgroup_charge_zswap(objcg, entry->length);
-+		}
-+		atomic_long_inc(&zswap_stored_pages);
++		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
++			crypto_free_acomp(acomp_ctx->acomp);
 +
-+		/*
-+		 * We finish initializing the entry while it's already in xarray.
-+		 * This is safe because:
-+		 *
-+		 * 1. Concurrent stores and invalidations are excluded by folio lock.
-+		 *
-+		 * 2. Writeback is excluded by the entry not being on the LRU yet.
-+		 *    The publishing order matters to prevent writeback from seeing
-+		 *    an incoherent entry.
-+		 */
-+		entry->pool = pool;
-+		entry->swpentry = page_swpentry;
-+		entry->objcg = objcg;
-+		entry->referenced = true;
-+		if (entry->length) {
-+			INIT_LIST_HEAD(&entry->lru);
-+			zswap_lru_add(&zswap_list_lru, entry);
-+		}
- 	}
- 
-+	kfree(entries);
- 	return true;
- 
--store_failed:
--	zpool_free(pool->zpool, entry->handle);
--compress_failed:
--	zswap_entry_cache_free(entry);
-+store_folio_failed:
-+	for (index = from_index; index < nr_pages; ++index) {
-+		if (!IS_ERR_VALUE(entries[index]->handle))
-+			zpool_free(pool->zpool, entries[index]->handle);
++		acomp_ctx->nr_reqs = 0;
++	}
++}
 +
-+		zswap_entry_cache_free(entries[index]);
++static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
++{
++	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
++	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++	int ret = -ENOMEM;
++
++	/*
++	 * Just to be even more fail-safe against changes in assumptions and/or
++	 * implementation of the CPU hotplug code.
++	 */
++	if (acomp_ctx->__online)
++		return 0;
++
++	if (acomp_ctx->nr_reqs) {
++		acomp_ctx->__online = true;
++		return 0;
 +	}
 +
-+	kfree(entries);
- 	return false;
- }
- 
-@@ -1666,7 +1700,6 @@ bool zswap_store(struct folio *folio)
- 	struct mem_cgroup *memcg = NULL;
++	acomp_ctx->acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
++	if (IS_ERR(acomp_ctx->acomp)) {
++		pr_err("could not alloc crypto acomp %s : %ld\n",
++			pool->tfm_name, PTR_ERR(acomp_ctx->acomp));
++		ret = PTR_ERR(acomp_ctx->acomp);
++		goto fail;
++	}
++
++	acomp_ctx->nr_reqs = 1;
++
++	acomp_ctx->req = acomp_request_alloc(acomp_ctx->acomp);
++	if (!acomp_ctx->req) {
++		pr_err("could not alloc crypto acomp_request %s\n",
++		       pool->tfm_name);
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	acomp_ctx->buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
++	if (!acomp_ctx->buffer) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	crypto_init_wait(&acomp_ctx->wait);
++
++	/*
++	 * if the backend of acomp is async zip, crypto_req_done() will wakeup
++	 * crypto_wait_req(); if the backend of acomp is scomp, the callback
++	 * won't be called, crypto_wait_req() will return without blocking.
++	 */
++	acomp_request_set_callback(acomp_ctx->req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				   crypto_req_done, &acomp_ctx->wait);
++
++	acomp_ctx->is_sleepable = acomp_is_async(acomp_ctx->acomp);
++
++	acomp_ctx->__online = true;
++
++	return 0;
++
++fail:
++	acomp_ctx_dealloc(acomp_ctx);
++
++	return ret;
++}
++
++static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
++{
++	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
++	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++
++	mutex_lock(&acomp_ctx->mutex);
++	acomp_ctx->__online = false;
++	mutex_unlock(&acomp_ctx->mutex);
++
++	return 0;
++}
++
++static void zswap_cpu_comp_dealloc(unsigned int cpu, struct hlist_node *node)
++{
++	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
++	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++
++	/*
++	 * The lifetime of acomp_ctx resources is from pool creation to
++	 * pool deletion.
++	 *
++	 * Reclaims should not be happening because, we get to this routine only
++	 * in two scenarios:
++	 *
++	 * 1) pool creation failures before/during the pool ref initialization.
++	 * 2) we are in the process of releasing the pool, it is off the
++	 *    zswap_pools list and has no references.
++	 *
++	 * Hence, there is no need for locks.
++	 */
++	acomp_ctx->__online = false;
++	acomp_ctx_dealloc(acomp_ctx);
++}
++
+ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ {
  	struct zswap_pool *pool;
- 	bool ret = false;
--	long index;
- 
- 	VM_WARN_ON_ONCE(!folio_test_locked(folio));
- 	VM_WARN_ON_ONCE(!folio_test_swapcache(folio));
-@@ -1700,12 +1733,8 @@ bool zswap_store(struct folio *folio)
- 		mem_cgroup_put(memcg);
+@@ -285,13 +403,21 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ 		goto error;
  	}
  
--	for (index = 0; index < nr_pages; ++index) {
--		struct page *page = folio_page(folio, index);
+-	for_each_possible_cpu(cpu)
+-		mutex_init(&per_cpu_ptr(pool->acomp_ctx, cpu)->mutex);
++	for_each_possible_cpu(cpu) {
++		struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
++
++		acomp_ctx->acomp = NULL;
++		acomp_ctx->req = NULL;
++		acomp_ctx->buffer = NULL;
++		acomp_ctx->__online = false;
++		acomp_ctx->nr_reqs = 0;
++		mutex_init(&acomp_ctx->mutex);
++	}
+ 
+ 	ret = cpuhp_state_add_instance(CPUHP_MM_ZSWP_POOL_PREPARE,
+ 				       &pool->node);
+ 	if (ret)
+-		goto error;
++		goto ref_fail;
+ 
+ 	/* being the current pool takes 1 ref; this func expects the
+ 	 * caller to always add the new pool as the current pool
+@@ -307,6 +433,9 @@ static struct zswap_pool *zswap_pool_create(char *type, char *compressor)
+ 	return pool;
+ 
+ ref_fail:
++	for_each_possible_cpu(cpu)
++		zswap_cpu_comp_dealloc(cpu, &pool->node);
++
+ 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
+ error:
+ 	if (pool->acomp_ctx)
+@@ -361,8 +490,13 @@ static struct zswap_pool *__zswap_pool_create_fallback(void)
+ 
+ static void zswap_pool_destroy(struct zswap_pool *pool)
+ {
++	int cpu;
++
+ 	zswap_pool_debug("destroying", pool);
+ 
++	for_each_possible_cpu(cpu)
++		zswap_cpu_comp_dealloc(cpu, &pool->node);
++
+ 	cpuhp_state_remove_instance(CPUHP_MM_ZSWP_POOL_PREPARE, &pool->node);
+ 	free_percpu(pool->acomp_ctx);
+ 
+@@ -816,85 +950,6 @@ static void zswap_entry_free(struct zswap_entry *entry)
+ /*********************************
+ * compressed storage functions
+ **********************************/
+-static int zswap_cpu_comp_prepare(unsigned int cpu, struct hlist_node *node)
+-{
+-	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
+-	struct crypto_acomp *acomp = NULL;
+-	struct acomp_req *req = NULL;
+-	u8 *buffer = NULL;
+-	int ret;
 -
--		if (!zswap_store_page(page, objcg, pool))
--			goto put_pool;
+-	buffer = kmalloc_node(PAGE_SIZE * 2, GFP_KERNEL, cpu_to_node(cpu));
+-	if (!buffer) {
+-		ret = -ENOMEM;
+-		goto fail;
 -	}
-+	if (!zswap_store_folio(folio, objcg, pool))
-+		goto put_pool;
+-
+-	acomp = crypto_alloc_acomp_node(pool->tfm_name, 0, 0, cpu_to_node(cpu));
+-	if (IS_ERR(acomp)) {
+-		pr_err("could not alloc crypto acomp %s : %ld\n",
+-				pool->tfm_name, PTR_ERR(acomp));
+-		ret = PTR_ERR(acomp);
+-		goto fail;
+-	}
+-
+-	req = acomp_request_alloc(acomp);
+-	if (!req) {
+-		pr_err("could not alloc crypto acomp_request %s\n",
+-		       pool->tfm_name);
+-		ret = -ENOMEM;
+-		goto fail;
+-	}
+-
+-	/*
+-	 * Only hold the mutex after completing allocations, otherwise we may
+-	 * recurse into zswap through reclaim and attempt to hold the mutex
+-	 * again resulting in a deadlock.
+-	 */
+-	mutex_lock(&acomp_ctx->mutex);
+-	crypto_init_wait(&acomp_ctx->wait);
+-
+-	/*
+-	 * if the backend of acomp is async zip, crypto_req_done() will wakeup
+-	 * crypto_wait_req(); if the backend of acomp is scomp, the callback
+-	 * won't be called, crypto_wait_req() will return without blocking.
+-	 */
+-	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+-				   crypto_req_done, &acomp_ctx->wait);
+-
+-	acomp_ctx->buffer = buffer;
+-	acomp_ctx->acomp = acomp;
+-	acomp_ctx->is_sleepable = acomp_is_async(acomp);
+-	acomp_ctx->req = req;
+-	mutex_unlock(&acomp_ctx->mutex);
+-	return 0;
+-
+-fail:
+-	if (acomp)
+-		crypto_free_acomp(acomp);
+-	kfree(buffer);
+-	return ret;
+-}
+-
+-static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
+-{
+-	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
+-	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
+-
+-	mutex_lock(&acomp_ctx->mutex);
+-	if (!IS_ERR_OR_NULL(acomp_ctx)) {
+-		if (!IS_ERR_OR_NULL(acomp_ctx->req))
+-			acomp_request_free(acomp_ctx->req);
+-		acomp_ctx->req = NULL;
+-		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
+-			crypto_free_acomp(acomp_ctx->acomp);
+-		kfree(acomp_ctx->buffer);
+-	}
+-	mutex_unlock(&acomp_ctx->mutex);
+-
+-	return 0;
+-}
  
- 	if (objcg)
- 		count_objcg_events(objcg, ZSWPOUT, nr_pages);
-@@ -1732,6 +1761,7 @@ bool zswap_store(struct folio *folio)
- 		pgoff_t offset = swp_offset(swp);
- 		struct zswap_entry *entry;
- 		struct xarray *tree;
-+		long index;
+ static struct crypto_acomp_ctx *acomp_ctx_get_cpu_lock(struct zswap_pool *pool)
+ {
+@@ -902,16 +957,52 @@ static struct crypto_acomp_ctx *acomp_ctx_get_cpu_lock(struct zswap_pool *pool)
  
- 		for (index = 0; index < nr_pages; ++index) {
- 			tree = swap_zswap_tree(swp_entry(type, offset + index));
+ 	for (;;) {
+ 		acomp_ctx = raw_cpu_ptr(pool->acomp_ctx);
+-		mutex_lock(&acomp_ctx->mutex);
+-		if (likely(acomp_ctx->req))
+-			return acomp_ctx;
+ 		/*
+-		 * It is possible that we were migrated to a different CPU after
+-		 * getting the per-CPU ctx but before the mutex was acquired. If
+-		 * the old CPU got offlined, zswap_cpu_comp_dead() could have
+-		 * already freed ctx->req (among other things) and set it to
+-		 * NULL. Just try again on the new CPU that we ended up on.
++		 * If the CPU onlining code successfully allocates acomp_ctx resources,
++		 * it sets acomp_ctx->initialized to true. Until this happens, we have
++		 * two options:
++		 *
++		 * 1. Return NULL and fail all stores on this CPU.
++		 * 2. Retry, until onlining has finished allocating resources.
++		 *
++		 * In theory, option 1 could be more appropriate, because it
++		 * allows the calling procedure to decide how it wants to handle
++		 * reclaim racing with CPU hotplug. For instance, it might be Ok
++		 * for compress to return an error for the backing swap device
++		 * to store the folio. Decompress could wait until we get a
++		 * valid and locked mutex after onlining has completed. For now,
++		 * we go with option 2 because adding a do-while in
++		 * zswap_decompress() adds latency for software compressors.
++		 *
++		 * Once initialized, the resources will be de-allocated only
++		 * when the pool is destroyed. The acomp_ctx will hold on to the
++		 * resources through CPU offlining/onlining at any time until
++		 * the pool is destroyed.
++		 *
++		 * This prevents races/deadlocks between reclaim and CPU acomp_ctx
++		 * resource allocation that are a dependency for reclaim.
++		 * It further simplifies the interaction with CPU onlining and
++		 * offlining:
++		 *
++		 * - CPU onlining does not take the mutex. It only allocates
++		 *   resources and sets __online to true.
++		 * - CPU offlining acquires the mutex before setting
++		 *   __online to false. If reclaim has acquired the mutex,
++		 *   offlining will have to wait for reclaim to complete before
++		 *   hotunplug can proceed. Further, hotplug merely sets
++		 *   __online to false. It does not delete the acomp_ctx
++		 *   resources.
++		 *
++		 * Option 1 is better than potentially not exiting the earlier
++		 * for (;;) loop because the system is running low on memory
++		 * and/or CPUs are getting offlined for whatever reason. At
++		 * least failing this store will prevent data loss by failing
++		 * zswap_store(), and saving the data in the backing swap device.
+ 		 */
++		mutex_lock(&acomp_ctx->mutex);
++		if (likely(acomp_ctx->__online))
++			return acomp_ctx;
++
+ 		mutex_unlock(&acomp_ctx->mutex);
+ 	}
+ }
 -- 
 2.27.0
 
