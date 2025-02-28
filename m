@@ -1,341 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D2525DCF9
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:27:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A12B257428;
+	Fri, 28 Feb 2025 09:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734823; cv=none; b=EVTvopaHqBmy/Jo5PwAGLFhLQhrWdJdmGqq2U29u0sGuFpUikCeh1vubDq9zpBsT1gX6k7p6gz4rbMp6bhO/6o5qfgQEehqyVXRk2IqEvqoYBE0GKgSsqFso9poeXJJvILnzlXNuqA/D6K7D7OaRMqrpjlUWR44UKWqMyogd48k=
+	t=1740734840; cv=none; b=kXa6u4OHnbQ/pm30O/RXw35fDmJFjFvvZLifNn9PYx9/XSmvDKwXDnVDjDPJWP6DpLZc3Roq5xozOOAko9HXY9j5xPcisaLgu9HSqGZK29fCHudW/69eLNLEee3lM/32VIDzeTYM91Bcx+m+LWHeK9fc8da1LPY+1IuOVUcMOlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734823; c=relaxed/simple;
-	bh=bbTbD5ly23S5lFfg7DnqQ8Y2OpbibReUCRpapf7kFSA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T814021J+pA+CScSynZM/5DIp1h+6ks9rCEJm1GiGti1KRvwUbVP4HOFKLB9Ui/PxRuWp0NaEa18ocpcScABk+ZMBupIHPlVcCxgNGJ6rlM0SjWGLHzftUfMuFjDjRDTz7VeUZj6u/RTPCa85xlpNZnos2CQgxa53eAP3iBbLaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CQZU/eNu; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740734840; c=relaxed/simple;
+	bh=lz8ax6F0htmAbSQ5MPFNimyF74qU75QJLASs1fvZ70s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NcBEz471f388H5UNZ/ekAuV+XYfnAsyOz/fjzDuoQeUMXypR3uIzkDZ39b7iQLhvufKB+WkhoeZUb3RooAIe8Wr6qzMjrqugyNF2Y0ghnjDW0dzSGTu8DTv9ffYzj7PGeSfciHSPxjrrAliTl/lLN1+/MQDzL8h+KXoVia9JT7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWWvpTC6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CQZU/eNu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740734821; x=1772270821;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=bbTbD5ly23S5lFfg7DnqQ8Y2OpbibReUCRpapf7kFSA=;
-  b=CQZU/eNuIErwurA7YMyr6ZpSMYDAMfGegPN29B6iHDF0uE/ek6fozxX0
-   qr4XBrcvmwCQfrwo4dqJx3YMMFC+P6/qZuV8dBV8pK5D7AKVuboamW3/C
-   lruHFfAaUqcjPgRhXKdSDz2gtyIyG0fibodq+U33bOHK0T+5qwj7ALGBO
-   posTIqC6QStsit2J9cPqpS6De9ELOaIWrpb63JxI0FhhypjFitvwffOdW
-   MZTTIseEQcNNj4NwqJBT5Raxag5A7/rrOZoF4bcv9CUW6iV7bTdonVPpk
-   tnYRg+1qWkzOyDTnv57KClqhdp3iRbwb+QArDJR3sVjAPPdG0vdpNMl/h
-   A==;
-X-CSE-ConnectionGUID: vL/F7IGvTsqIlzTibu5qhA==
-X-CSE-MsgGUID: 3jCkEkmcS8eV1QuYvrilyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45438427"
-X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
-   d="scan'208";a="45438427"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 01:27:01 -0800
-X-CSE-ConnectionGUID: PsmO+JbrQk+ITcbJhuAvpw==
-X-CSE-MsgGUID: fgrQ+JAUSiKv3gbb2PELgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="148213089"
-Received: from allen-box.sh.intel.com ([10.239.159.52])
-  by fmviesa001.fm.intel.com with ESMTP; 28 Feb 2025 01:26:58 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>
-Cc: Dave Jiang <dave.jiang@intel.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Fenghua Yu <fenghuay@nvidia.com>,
-	Zhangfei Gao <zhangfei.gao@linaro.org>,
-	Zhou Wang <wangzhou1@hisilicon.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v3 12/12] iommu: Remove iommu_dev_enable/disable_feature()
-Date: Fri, 28 Feb 2025 17:26:31 +0800
-Message-ID: <20250228092631.3425464-13-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250228092631.3425464-1-baolu.lu@linux.intel.com>
-References: <20250228092631.3425464-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWWvpTC6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27921C4CED6;
+	Fri, 28 Feb 2025 09:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740734839;
+	bh=lz8ax6F0htmAbSQ5MPFNimyF74qU75QJLASs1fvZ70s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GWWvpTC6vMdZyaSwQiykIe3gqqQZidfdmEHVIYMReiu37txvRLr0LXPkZc+XwA+Wt
+	 lJla9ubjKAskk+ri3L9Y03xe3ZESzU/b9+PeUd1McaNPE1VKevdKv8xC4OumgqtJTt
+	 oR93Pt1qR4uYXrgnZn3JblY5r2KKTJrM4lVVyWEDOrJ2ngEBV6kCe1C2hEW5aFqhCD
+	 uBYekxvi7/ffFBmxHEDal9pvvnXaiaqnt23/Htd0BPks/JFtYN5KioFvHOUWJEFhnL
+	 u8nVdXsy12IhiqYmY6alEB7ZqEGDFSOfHyuCgqlGjAmt4FqdqpstyRmRFpW02XaZ9I
+	 AgaP0ex3AGuDw==
+Date: Fri, 28 Feb 2025 10:27:17 +0100
+From: Daniel Gomez <da.gomez@kernel.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, 
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	linux-modules@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	clang-built-linux <llvm@lists.linux.dev>, iovisor-dev <iovisor-dev@lists.iovisor.org>, 
+	gost.dev@samsung.com
+Subject: Re: [PATCH 2/2] moderr: add module error injection tool
+Message-ID: <3ehu3r4hlsf7cpptofz2y5aq2bazidq4buxbddqj6gzvzd3eh3@wzlnbvdsc6ty>
+References: <CGME20250122131159eucas1p17693e311a9b7674288eb3c34014b6f2c@eucas1p1.samsung.com>
+ <20250122-modules-error-injection-v1-0-910590a04fd5@samsung.com>
+ <20250122-modules-error-injection-v1-2-910590a04fd5@samsung.com>
+ <CAADnVQJ8tYSx-ujszq54m2XyecoJUgQZ6HQheTrohhfQS6Y9sQ@mail.gmail.com>
+ <Z5lEoUxV4fBzKf4i@bombadil.infradead.org>
+ <qnfhjhyqlagmrmk3dwfb2ay37ihi6dlkzs67bzxpu7izz6wqc5@aiohaxlgzx5r>
+ <Z7je7Kryipdq6AV4@bombadil.infradead.org>
+ <4xh2oviqumypm4r7jch25af5jtesof7wnejqybncuopayq6yiq@skayuieidaq7>
+ <ccofyygi4rerybdmecqswldykihtabx6yco7ztylqnbmw4a5qw@ye7zoq7mcol2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccofyygi4rerybdmecqswldykihtabx6yco7ztylqnbmw4a5qw@ye7zoq7mcol2>
 
-No external drivers use these interfaces anymore. Furthermore, no existing
-iommu drivers implement anything in the callbacks. Remove them to avoid
-dead code.
+On Mon, Feb 24, 2025 at 08:43:45AM +0100, Lucas De Marchi wrote:
+> On Sat, Feb 22, 2025 at 10:35:07PM +0100, Daniel Gomez wrote:
+> > On Fri, Feb 21, 2025 at 12:15:40PM +0100, Luis Chamberlain wrote:
+> > > On Wed, Feb 19, 2025 at 02:17:48PM -0600, Lucas De Marchi wrote:
+> > > > On Tue, Jan 28, 2025 at 12:57:05PM -0800, Luis Chamberlain wrote:
+> > > > > On Wed, Jan 22, 2025 at 09:02:19AM -0800, Alexei Starovoitov wrote:
+> > > > > > On Wed, Jan 22, 2025 at 5:12 AM Daniel Gomez <da.gomez@samsung.com> wrote:
+> > > > > > >
+> > > > > > > Add support for a module error injection tool. The tool
+> > > > > > > can inject errors in the annotated module kernel functions
+> > > > > > > such as complete_formation(), do_init_module() and
+> > > > > > > module_enable_rodata_after_init(). Module name and module function are
+> > > > > > > required parameters to have control over the error injection.
+> > > > > > >
+> > > > > > > Example: Inject error -22 to module_enable_rodata_ro_after_init for
+> > > > > > > brd module:
+> > > > > > >
+> > > > > > > sudo moderr --modname=brd --modfunc=module_enable_rodata_ro_after_init \
+> > > > > > > --error=-22 --trace
+> > > > > > > Monitoring module error injection... Hit Ctrl-C to end.
+> > > > > > > MODULE     ERROR FUNCTION
+> > > > > > > brd        -22   module_enable_rodata_after_init()
+> > > > > > >
+> > > > > > > Kernel messages:
+> > > > > > > [   89.463690] brd: module loaded
+> > > > > > > [   89.463855] brd: module_enable_rodata_ro_after_init() returned -22,
+> > > > > > > ro_after_init data might still be writable
+> > > > > > >
+> > > > > > > Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+> > > > > > > ---
+> > > > > > >  tools/bpf/Makefile            |  13 ++-
+> > > > > > >  tools/bpf/moderr/.gitignore   |   2 +
+> > > > > > >  tools/bpf/moderr/Makefile     |  95 +++++++++++++++++
+> > > > > > >  tools/bpf/moderr/moderr.bpf.c | 127 +++++++++++++++++++++++
+> > > > > > >  tools/bpf/moderr/moderr.c     | 236 ++++++++++++++++++++++++++++++++++++++++++
+> > > > > > >  tools/bpf/moderr/moderr.h     |  40 +++++++
+> > > > > > >  6 files changed, 510 insertions(+), 3 deletions(-)
+> > > > > >
+> > > > > > The tool looks useful, but we don't add tools to the kernel repo.
+> > > > > > It has to stay out of tree.
+> > > > >
+> > > > > For selftests we do add random tools.
+> > > > >
+> > > > > > The value of error injection is not clear to me.
+> > > > >
+> > > > > It is of great value, since it deals with corner cases which are
+> > > > > otherwise hard to reproduce in places which a real error can be
+> > > > > catostrophic.
+> > > > >
+> > > > > > Other places in the kernel use it to test paths in the kernel
+> > > > > > that are difficult to do otherwise.
+> > > > >
+> > > > > Right.
+> > > > >
+> > > > > > These 3 functions don't seem to be in this category.
+> > > > >
+> > > > > That's the key here we should focus on. The problem is when a maintainer
+> > > > > *does* agree that adding an error injection entry is useful for testing,
+> > > > > and we have a developer willing to do the work to help test / validate
+> > > > > it. In this case, this error case is rare but we do want to strive to
+> > > > > test this as we ramp up and extend our modules selftests.
+> > > > >
+> > > > > Then there is the aspect of how to mitigate how instrusive code changes
+> > > > > to allow error injection are. In 2021 we evaluated the prospect of error
+> > > > > injection in-kernel long ago for other areas like the block layer for
+> > > > > add_disk() failures [0] but the minimal interface to enable this from
+> > > > > userspace with debugfs was considered just too intrusive.
+> > > > >
+> > > > > This effort tried to evaluate what this could look like with eBPF to
+> > > > > mitigate the required in-kernel code, and I believe the light weight
+> > > > > nature of it by just requiring a sprinkle with ALLOW_ERROR_INJECTION()
+> > > > > suffices to my taste.
+> > > > >
+> > > > > So, perhaps the tools aspect can just go in:
+> > > > >
+> > > > > tools/testing/selftests/module/
+> > > >
+> > > > but why would it be module-specific?
+> > > 
+> > > Gotta start somewhere.
+> > > 
+> > > > Based on its current implementation
+> > > > and discussion about inject.py it seems to be generic enough to be
+> > > > useful to test any function annotated with ALLOW_ERROR_INJECTION().
+> > > >
+> > > > As xe driver maintainer, it may be interesting to use such a tool:
+> > > >
+> > > > 	$ git grep ALLOW_ERROR_INJECT -- drivers/gpu/drm/xe | wc -l  	23
+> > > >
+> > > > How does this approach compare to writing the function name on debugfs
+> > > > (the current approach in xe's testsuite)?
+> > > >
+> > > > 	fail_function @ https://docs.kernel.org/fault-injection/fault-injection.html#fault-injection-capabilities-infrastructure
+> > > > 	https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/blob/master/tests/intel/xe_fault_injection.c?ref_type=heads#L108
+> > > >
+> > > > If you decide to have the tool to live somewhere else, then kmod repo
+> > > > could be a candidate.
+> > > 
+> > > Would we install this upon install target?
+> > > 
+> > > Danny can decide on this :)
+> > > 
+> > > > Although I think having it in kernel tree is
+> > > > simpler maintenance-wise.
+> > > 
+> > > I think we have at least two users upstream who can make use of it. If
+> > > we end up going through tools/testing/selftests/module/ first, can't
+> > > you make use of it later?
+> > 
+> > What are the features in debugfs required to be useful for xe that we can
+> > port to an eBPF version? I see from the link provided the use of probability,
+> > interval, times and space but these are configured to allways trigger the error.
+> > Is that right?
+> 
+> I don't think we use them... we just set them to "always trigger" and
+> then create the conditions for that to happen.  But my question still
+> remains:  what is the benefit of using the bpf approach over writing
+> these files?
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/iommu/amd/iommu.c                   | 32 -------------------
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 34 ---------------------
- drivers/iommu/intel/iommu.c                 | 25 ---------------
- drivers/iommu/iommu.c                       | 32 -------------------
- include/linux/iommu.h                       | 28 -----------------
- 5 files changed, 151 deletions(-)
+The code to trigger the error injection still needs to exist with both
+approaches. My understanding from debugfs and the comment from Luis earlier in
+the thread is that with eBPF you can mitigate how intrusive in-kernel code
+changes are to allow error injection. Luis added the example here [1] for
+debugfs.
 
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index e3653bdfcd7d..8d74afa552fb 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -2983,36 +2983,6 @@ static const struct iommu_dirty_ops amd_dirty_ops = {
- 	.read_and_clear_dirty = amd_iommu_read_and_clear_dirty,
- };
- 
--static int amd_iommu_dev_enable_feature(struct device *dev,
--					enum iommu_dev_features feat)
--{
--	int ret = 0;
--
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--	return ret;
--}
--
--static int amd_iommu_dev_disable_feature(struct device *dev,
--					 enum iommu_dev_features feat)
--{
--	int ret = 0;
--
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		break;
--	default:
--		ret = -EINVAL;
--		break;
--	}
--	return ret;
--}
--
- const struct iommu_ops amd_iommu_ops = {
- 	.capable = amd_iommu_capable,
- 	.blocked_domain = &blocked_domain,
-@@ -3026,8 +2996,6 @@ const struct iommu_ops amd_iommu_ops = {
- 	.get_resv_regions = amd_iommu_get_resv_regions,
- 	.is_attach_deferred = amd_iommu_is_attach_deferred,
- 	.def_domain_type = amd_iommu_def_domain_type,
--	.dev_enable_feat = amd_iommu_dev_enable_feature,
--	.dev_disable_feat = amd_iommu_dev_disable_feature,
- 	.page_response = amd_iommu_page_response,
- 	.default_domain_ops = &(const struct iommu_domain_ops) {
- 		.attach_dev	= amd_iommu_attach_device,
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 3a2faf4fdd09..31500e25c4a5 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -3620,38 +3620,6 @@ static void arm_smmu_get_resv_regions(struct device *dev,
- 	iommu_dma_get_resv_regions(dev, head);
- }
- 
--static int arm_smmu_dev_enable_feature(struct device *dev,
--				       enum iommu_dev_features feat)
--{
--	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
--
--	if (!master)
--		return -ENODEV;
--
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		return 0;
--	default:
--		return -EINVAL;
--	}
--}
--
--static int arm_smmu_dev_disable_feature(struct device *dev,
--					enum iommu_dev_features feat)
--{
--	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
--
--	if (!master)
--		return -EINVAL;
--
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		return 0;
--	default:
--		return -EINVAL;
--	}
--}
--
- /*
-  * HiSilicon PCIe tune and trace device can be used to trace TLP headers on the
-  * PCIe link and save the data to memory by DMA. The hardware is restricted to
-@@ -3684,8 +3652,6 @@ static struct iommu_ops arm_smmu_ops = {
- 	.device_group		= arm_smmu_device_group,
- 	.of_xlate		= arm_smmu_of_xlate,
- 	.get_resv_regions	= arm_smmu_get_resv_regions,
--	.dev_enable_feat	= arm_smmu_dev_enable_feature,
--	.dev_disable_feat	= arm_smmu_dev_disable_feature,
- 	.page_response		= arm_smmu_page_response,
- 	.def_domain_type	= arm_smmu_def_domain_type,
- 	.viommu_alloc		= arm_vsmmu_alloc,
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index 872391896430..2b43dcc29663 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -3941,29 +3941,6 @@ void intel_iommu_disable_iopf(struct device *dev)
- 	iopf_queue_remove_device(iommu->iopf_queue, dev);
- }
- 
--static int
--intel_iommu_dev_enable_feat(struct device *dev, enum iommu_dev_features feat)
--{
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		return 0;
--	default:
--		return -ENODEV;
--	}
--}
--
--static int
--intel_iommu_dev_disable_feat(struct device *dev, enum iommu_dev_features feat)
--{
--	switch (feat) {
--	case IOMMU_DEV_FEAT_IOPF:
--		return 0;
--
--	default:
--		return -ENODEV;
--	}
--}
--
- static bool intel_iommu_is_attach_deferred(struct device *dev)
- {
- 	struct device_domain_info *info = dev_iommu_priv_get(dev);
-@@ -4408,8 +4385,6 @@ const struct iommu_ops intel_iommu_ops = {
- 	.release_device		= intel_iommu_release_device,
- 	.get_resv_regions	= intel_iommu_get_resv_regions,
- 	.device_group		= intel_iommu_device_group,
--	.dev_enable_feat	= intel_iommu_dev_enable_feat,
--	.dev_disable_feat	= intel_iommu_dev_disable_feat,
- 	.is_attach_deferred	= intel_iommu_is_attach_deferred,
- 	.def_domain_type	= device_def_domain_type,
- 	.pgsize_bitmap		= SZ_4K,
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 60aed01e54f2..e19c04304b03 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2877,38 +2877,6 @@ int iommu_fwspec_add_ids(struct device *dev, const u32 *ids, int num_ids)
- }
- EXPORT_SYMBOL_GPL(iommu_fwspec_add_ids);
- 
--/*
-- * Per device IOMMU features.
-- */
--int iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features feat)
--{
--	if (dev_has_iommu(dev)) {
--		const struct iommu_ops *ops = dev_iommu_ops(dev);
--
--		if (ops->dev_enable_feat)
--			return ops->dev_enable_feat(dev, feat);
--	}
--
--	return -ENODEV;
--}
--EXPORT_SYMBOL_GPL(iommu_dev_enable_feature);
--
--/*
-- * The device drivers should do the necessary cleanups before calling this.
-- */
--int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
--{
--	if (dev_has_iommu(dev)) {
--		const struct iommu_ops *ops = dev_iommu_ops(dev);
--
--		if (ops->dev_disable_feat)
--			return ops->dev_disable_feat(dev, feat);
--	}
--
--	return -EBUSY;
--}
--EXPORT_SYMBOL_GPL(iommu_dev_disable_feature);
--
- /**
-  * iommu_setup_default_domain - Set the default_domain for the group
-  * @group: Group to change
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 1d0dde49168d..127f99acab5f 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -301,16 +301,6 @@ struct iommu_iort_rmr_data {
- 	u32 num_sids;
- };
- 
--/**
-- * enum iommu_dev_features - Per device IOMMU features
-- * @IOMMU_DEV_FEAT_IOPF: I/O Page Faults such as PRI or Stall.
-- *
-- * Device drivers enable a feature using iommu_dev_enable_feature().
-- */
--enum iommu_dev_features {
--	IOMMU_DEV_FEAT_IOPF,
--};
--
- #define IOMMU_NO_PASID	(0U) /* Reserved for DMA w/o PASID */
- #define IOMMU_FIRST_GLOBAL_PASID	(1U) /*starting range for allocation */
- #define IOMMU_PASID_INVALID	(-1U)
-@@ -630,9 +620,6 @@ struct iommu_ops {
- 	bool (*is_attach_deferred)(struct device *dev);
- 
- 	/* Per device IOMMU features */
--	int (*dev_enable_feat)(struct device *dev, enum iommu_dev_features f);
--	int (*dev_disable_feat)(struct device *dev, enum iommu_dev_features f);
--
- 	void (*page_response)(struct device *dev, struct iopf_fault *evt,
- 			      struct iommu_page_response *msg);
- 
-@@ -1102,9 +1089,6 @@ void dev_iommu_priv_set(struct device *dev, void *priv);
- extern struct mutex iommu_probe_device_lock;
- int iommu_probe_device(struct device *dev);
- 
--int iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features f);
--int iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features f);
--
- int iommu_device_use_default_domain(struct device *dev);
- void iommu_device_unuse_default_domain(struct device *dev);
- 
-@@ -1393,18 +1377,6 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
- 	return -ENODEV;
- }
- 
--static inline int
--iommu_dev_enable_feature(struct device *dev, enum iommu_dev_features feat)
--{
--	return -ENODEV;
--}
--
--static inline int
--iommu_dev_disable_feature(struct device *dev, enum iommu_dev_features feat)
--{
--	return -ENODEV;
--}
--
- static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
- {
- 	return NULL;
--- 
-2.43.0
+[1] https://lore.kernel.org/all/20210512064629.13899-9-mcgrof@kernel.org/
 
+To compare patch 8 in [1] with eBPF approach: the patch describes
+all the necessary changes required to allow error injection on the
+add_disk() path. With eBPF one would simply annotate the function(s) with
+ALLOW_ERROR_INJECTION(), e.g. device_add() and replace the return value
+in eBPF code with bpf_override_return() as implemented in moderr tool for
+module_enable_rdata_after_init() for example.
+
+New error injection users such modules or block/disk would benefit of the eBPF
+approach with having a more simpler in-kernel code for the same purpose. Current
+users of debugfs/errorinj would have to remove all the upstream intrusive error
+injection related code if they want to adopt the eBPF approach.
+
+Daniel
+
+> 
+> Lucas De Marchi
+> 
+> > 
+> > > 
+> > >   Luis
