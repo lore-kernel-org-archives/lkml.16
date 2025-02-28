@@ -1,68 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FDD277005
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4938277015
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740768777; cv=none; b=YNXKnzuY3DOx2lXlb95NszaifLTVQJnim1Cy3dP6+qT7CldrdR3BuIbQWyqgYek3vznq5gUwl4us5EWC1KzshxS8xAZNCHB9Bp//dRGIFFqKyLFFuz5EHpJeteeEWu3hW6WZieW6pVTFQZDG4jp+81/uN5seZ1nEAsZsOft26Ic=
+	t=1740768888; cv=none; b=s5NpzkpY0hSdMuRHK7nGSw6aZeZsOBjaI/RsfePALBRW48JXZHtynEt9tSX74BtMVfDrXfn/oZfBCF+Xgb8gm1FiKo7I+1+wL1PeIObNUjLwEMmZMEbuUNRGE+X+QIQi2ASoh9P9mlslUMmhJ7cyWRWJGyNnwscVekhLitNtGws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740768777; c=relaxed/simple;
-	bh=4Q0hw/ajRFKVPitC4Ch9KNn7FeeRH/hNMXpUNvC+1Cc=;
+	s=arc-20240116; t=1740768888; c=relaxed/simple;
+	bh=TYvRxcLgN1IYxafXpxrr2T3Ke1WemjDAQaAfqYgyWxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ezTDoTw140X8xwHKS0EEjcM+R9DuZoNAtHBv/R3XKa35rVbEjNBkb87bYIAAdubmtpEzHBTRMdYdWr81BHR4uRGo66aUJALVwvsBDlmhFVd1Sw1f7WAj2qzd3zsCY/1XtFrF642SwiNKeXApthXooat67jOIOzjV6XtpeDdZKjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d6tXwGJN; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fi1OhhHp6AP/o9A4kDxSmYyQmO5B1VyEOBokG4vS48++96kohPZ029Fr2/Jfpslv1m2KPqNelG2x1yWjWl61bm7PXVEAKTkwF6Wl0CkRedv1VUWLaq4TAEdJiiexS2aI4rGEdC9jEGU0VqtqgMMVZgHeFpL74bLs9qJVONtdnqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kVEWUnYy; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d6tXwGJN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740768776; x=1772304776;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4Q0hw/ajRFKVPitC4Ch9KNn7FeeRH/hNMXpUNvC+1Cc=;
-  b=d6tXwGJNNrGLFgCuyr4IKIP7qEqJ78s8NTv4KaodFzqog3qhTyKtXBDN
-   ndpmVUPyO0PqSf9ThJded2zxy+Fv460PhrSFBWztepspg1ijwpRypYLtV
-   FSbY7iTnIFiDVeEhgc6OTOxghPE91guO5E0kC//0TOzsjJBfNZLg9f5mj
-   W3NLQHgluOyfee6TmMyIfPWIxE3B+WpirVDnUyPsD4IQnR5M8WdXLsVSo
-   +FtF9ZN4abE+xW6wHHgS42qdEjHKBTFM+Sw9WNYX8l7Ab8SONPD/WWjvs
-   ndORfM0BkHEimsH1RkhIyEOKtJlzjpDoA2RSHW/Y+8ZgaL1XDc1goU1Lq
-   g==;
-X-CSE-ConnectionGUID: JU/2jZUpQ1CrEAXX/y4zdg==
-X-CSE-MsgGUID: p2qjqepOTpuIrReHogtIFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41593415"
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="41593415"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 10:52:56 -0800
-X-CSE-ConnectionGUID: H2zszMg5SVWhBGdpTtACbg==
-X-CSE-MsgGUID: SRQuiKOdRe6jElvpX27CPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
-   d="scan'208";a="122549103"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 10:52:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1to5Tf-0000000G3oN-1QEH;
-	Fri, 28 Feb 2025 20:52:51 +0200
-Date: Fri, 28 Feb 2025 20:52:51 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Cleanup io.h
-Message-ID: <Z8IGA821OAgYN-K1@smile.fi.intel.com>
-References: <20250227070747.3105451-1-raag.jadav@intel.com>
- <Z8CD33_OWK2LB6IZ@smile.fi.intel.com>
- <0011035a-5816-48c4-9fe4-c0b9db3c8e72@app.fastmail.com>
- <Z8H1Y2_RlFnXeNEa@black.fi.intel.com>
- <Z8IDXD2bkO1t71yB@smile.fi.intel.com>
- <Z8IDgmrLx5DQADxJ@smile.fi.intel.com>
- <Z8IERmwHXUuJoD4S@black.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kVEWUnYy"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so474260666b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:54:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740768885; x=1741373685; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ppwxYptxUoJTBAvtQNONLY3e8TNhsTgMXgKzmUOztsk=;
+        b=kVEWUnYyGbgDtj27DSJxlFHL0bLgpZ8a7djRfLFJnOaFGZQgq5bGSiJ/im6gXw8vgu
+         bPApctZ2JH1kCg0cKH9o1ySUFpj7VOXochyI0HpKa7d0buyNPHHeq7x9ToySh7mjrTMp
+         6xqcfnULTXoC8mJQq5CotWu8KRpa9vWXrkbB/0GjG3ZGSQJPISC5zFQwQ/GMosDgMEvG
+         vQ3RB+PZvD7ULSSvAxlEbK9kAYddz2OFwSmxm5svMFghIt0dMqnarnGtHIMYqyh/4cig
+         pXv5pnHnDN7NQ47yaoNl0uS4M7BJGJEk9hNIW/gFrB7vHqJgxvBZhjBw8VfrR/eOyv/+
+         tL4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740768885; x=1741373685;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ppwxYptxUoJTBAvtQNONLY3e8TNhsTgMXgKzmUOztsk=;
+        b=qM7GIcuG3lpe49AvSTiNw0WJp+bpPJNIti5warXD6yeGSdcCQsLK7TevuTQhb65rw5
+         NWjbPc5pe2aDqMMsOI1P2xNF7t1+lRegCOsHljxW7lzcGrOoPo3ZGuYxk3UmgGgtB/UR
+         UVldsvYhprlQzt2pWV8vC3TorZLv5uMCWzgtRKj4n7tXg6vSUyVvfja1s8vipaI07sTr
+         sgRW6Vq7chUUVUhcRxgt1qx2lYJekU4Bg96YNaKeOEMqqO9ikl0rOZYfofVEDDKgjrdQ
+         ZCX9LMyKTqhQp6qLCCYalSdDe0xIuOQQwUc9RNo/mAcLrYjPWMKM/0ZLl8WTMkTJ6cFZ
+         EZZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWj6MxMLA6b0vFl0g/9rHrnrbiXN1uiIWAOrZNUgmErg9GzMQM3zW9288NuCrTVT04iNZCRLAEd2tKzReg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPlukENwqUpzudW4NZyBLO153Uz7PNSgg0l5TLT9ouLBW2y6tY
+	edBngicTzHTr8+ez1yEfIQIV41EXv+MLeTrQDrDZcaCy5QvYvLIacQHME2JoOQ==
+X-Gm-Gg: ASbGncvkKtETRcsc1rU/mxV8TY02D/i63cqWgKUYfaPIbfMdxgqQ3kArkWak5ytxA9P
+	59r962UbrW1Gl69MjpHAvxppEoCVNJZ1WgVkqWtoPtOJBJQmjZI0MPxXJbgp8oN+/0cawCEuF52
+	OcWf3V1PSANz4/ptDX3VxiJM1ySlQzDeWloIau8tDJR76DpAwo965A1wU3r3JlDmTfUneSo2v5Q
+	S5W+lq0wS2na10bqsi7M7OMpBxgjTPSWFh/GLY0W7MKsIs0RNHt3tUnBuk1G36cWPYZxdUu+5uJ
+	c3BGjmuX8ywp+P5nX9K47w2+uSHF/WAzFTtLi1dNr7ELVUuE/vMrvnwKqL/zEf8=
+X-Google-Smtp-Source: AGHT+IGRZqJXTWPcNybDnAZQX/clH2G/w7qq2Cr5221PpPPsrD4hU6+CM6oIxOZll7K724ZB2dG1Dg==
+X-Received: by 2002:a17:907:7f94:b0:ab7:be66:792f with SMTP id a640c23a62f3a-abf26837d32mr566881466b.49.1740768884775;
+        Fri, 28 Feb 2025 10:54:44 -0800 (PST)
+Received: from google.com (229.112.91.34.bc.googleusercontent.com. [34.91.112.229])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c0ba408sm331183566b.37.2025.02.28.10.54.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 10:54:43 -0800 (PST)
+Date: Fri, 28 Feb 2025 18:54:40 +0000
+From: Quentin Perret <qperret@google.com>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 1/9] KVM: arm64: Handle huge mappings for np-guest CMOs
+Message-ID: <Z8IGcA6h6hZx7ujh@google.com>
+References: <20250228102530.1229089-1-vdonnefort@google.com>
+ <20250228102530.1229089-2-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,50 +76,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z8IERmwHXUuJoD4S@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250228102530.1229089-2-vdonnefort@google.com>
 
-On Fri, Feb 28, 2025 at 08:45:26PM +0200, Raag Jadav wrote:
-> On Fri, Feb 28, 2025 at 08:42:10PM +0200, Andy Shevchenko wrote:
-> > On Fri, Feb 28, 2025 at 08:41:33PM +0200, Andy Shevchenko wrote:
-> > > On Fri, Feb 28, 2025 at 07:41:55PM +0200, Raag Jadav wrote:
-> > > > On Fri, Feb 28, 2025 at 06:11:16PM +0100, Arnd Bergmann wrote:
-> > > > > On Thu, Feb 27, 2025, at 16:25, Andy Shevchenko wrote:
-> > > > > > On Thu, Feb 27, 2025 at 12:37:45PM +0530, Raag Jadav wrote:
-> > > > > >> This series attempts to cleanup io.h with "include what you use" approach.
-> > > > > >> This depends on changes available on immutable tag[1].
-> > > > > >> 
-> > > > > >> Although this series is too trivial in the grand scheme of things, it is
-> > > > > >> still a tiny step towards untangling core headers. I have success results
-> > > > > >> from LKP for this series but there can still be corner cases. So perhaps
-> > > > > >> we can queue this on a temporary branch which we can use to submit fixes
-> > > > > >> in case of fallout.
-> > > > > >> 
-> > > > > >> Future plan is to use the excellent analysis[2][3] by Arnd to cleanup other
-> > > > > >> headers.
-> > > > > >> 
-> > > > > >> [1] https://lore.kernel.org/r/Z7xGpz3Q4Zj6YHx7@black.fi.intel.com
-> > > > > >> [2] https://lore.kernel.org/r/2342b516-2c6e-42e5-b4f4-579b280823ba@app.fastmail.com
-> > > > > >> [3] https://lore.kernel.org/r/f6eb011b-40fb-409a-b2b2-a09d0e770bbd@app.fastmail.com
-> > > > > >
-> > > > > > I believe Arnd can take it through his tree for headers as DRM part is 
-> > > > > > Acked already.
-> > > > > 
-> > > > > I've applied it yesterday and not seen any regression reports so far.
-> > > > 
-> > > > Probably because the immutable tag is already in -next?
-> > > 
-> > > Is there any?
-> > 
-> > Ah, you mean devres related?
+On Friday 28 Feb 2025 at 10:25:17 (+0000), Vincent Donnefort wrote:
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> index 19c3c631708c..a796e257c41f 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> @@ -219,14 +219,24 @@ static void guest_s2_put_page(void *addr)
+>  
+>  static void clean_dcache_guest_page(void *va, size_t size)
+>  {
+> -	__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)), size);
+> -	hyp_fixmap_unmap();
+> +	while (size) {
+
+Nit: not a problem at the moment, but this makes me mildly worried if
+size ever became non-page-aligned, could we make the code robust to
+that?
+
+> +		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> +					  PAGE_SIZE);
+> +		hyp_fixmap_unmap();
+> +		va += PAGE_SIZE;
+> +		size -= PAGE_SIZE;
+> +	}
+>  }
+>  
+>  static void invalidate_icache_guest_page(void *va, size_t size)
+>  {
+> -	__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)), size);
+> -	hyp_fixmap_unmap();
+> +	while (size) {
+> +		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> +					       PAGE_SIZE);
+> +		hyp_fixmap_unmap();
+> +		va += PAGE_SIZE;
+> +		size -= PAGE_SIZE;
+> +	}
+>  }
+>  
+>  int kvm_guest_prepare_stage2(struct pkvm_hyp_vm *vm, void *pgd)
+> -- 
+> 2.48.1.711.g2feabab25a-goog
 > 
-> Yeah, couldn't find it on Arnd's tree and I'm not sure if this series
-> works without it.
-
-But err.h is included in the io.h, no? Or did I misunderstand the point?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
