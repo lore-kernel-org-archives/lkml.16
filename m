@@ -1,139 +1,91 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E17923F39A;
-	Fri, 28 Feb 2025 22:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716781D61B1
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 22:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740782527; cv=none; b=odjhlg/ymTKmGvNq4Gv4d1aUoUNe/mz2r36Nr/Xu+N7feX/NTPEAYyL0Wcb32mGiHYBZf4pEm5ky/St0sjF/M0sRu9a2b8XvkpQxy02C8M4kF7n+Cywa3A+Uq6Ubow/6PrDp6+VhjUsa/602yCb1GgNmIXxdSWq5I5qjfDdHSIQ=
+	t=1740782582; cv=none; b=GnM+Way9jTXjNoT0+SzquuwaEPE0BqbTgB0KMDjoBnaKR6x6HyHa98TdCpVq71L4G7fsq+8a+nl66dRT8LV95DW2DChOvrtnUATacnbQofA6BDf4ijHnlUZWIHg33IIxblBOAuBOZbs9UNNztJ9LeL6j5tLZNiIC0StL0uUqTT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740782527; c=relaxed/simple;
-	bh=u//XrDtfAGhnVRyNGvnTIbDxJyV4yBDTUhlfRdirEcY=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=SsRAOLHrg+llyYrGaIQeaPKgxezeg37inxUEPLKaylhXXaStGjaVqfQTqmpQsgU7exsAREhQ7gXa+Z69EPuexv4QY8jhozn52PV3fuMjxinSgmusSGhgXmfp98fr8+Lti5jyyxRh8gIq0L9XIMI5HxH1eJ2l26uQdA4rjNTk4oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=NLxL2DHB; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1740782582; c=relaxed/simple;
+	bh=NYq9GU89dfTFUegDYYygPmHsdUwHcUkS2ntkv8n+GlU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Mfagvx4DL0qrljA+iyu8O7d/X4ukr50KESxEowWROjMGK4iQReC+dcdg4fseMyosg25EEbALXkLfwMHMAjt2TUHnC1Edg2RQ0TxmVQDjiRLJqhBA9vXqLHLc1B8iLC6Nc2IpHVdIP9EDouQyXsXOBw8pL210NYkNOhzc+KnyItw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XQcKQZh2; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="NLxL2DHB"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id 3CF9C210D0E8; Fri, 28 Feb 2025 14:42:05 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3CF9C210D0E8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1740782525;
-	bh=ajnKo8Udgtm8yjP8A4LPP4/6wP3HU81GoXRTiPwsqAk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NLxL2DHBpfLpG6qMuqASgNebXkUo28Ulf0ATyGEaRVCjlNXA2gGW4jdBFwcQb39ly
-	 GeETViBOI732yDeWDWVCk0e5Lb0lv0ZT/0uOcXU0o7PVqPPrqVqN4eSc584Y2kZhTl
-	 g3YbiyBVTUw6NcFWbx73Wrf7NbRX/PAvW6NDyUHM=
-From: longli@linuxonhyperv.com
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-rdma@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	Long Li <longli@microsoft.com>
-Subject: [Patch rdma-next] RDMA/mana_ib: handle net event for pointing to the current netdev
-Date: Fri, 28 Feb 2025 14:41:59 -0800
-Message-Id: <1740782519-13485-1-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XQcKQZh2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740782580; x=1772318580;
+  h=date:from:to:cc:subject:message-id;
+  bh=NYq9GU89dfTFUegDYYygPmHsdUwHcUkS2ntkv8n+GlU=;
+  b=XQcKQZh2BVa7Mtx4NfFe1mHCiwDo7ndgW1yOEp8chdYT0hPClL+qG/nw
+   C8Iz37qgqr7XkYhqfmGmdBuLkjUB4Q/jUAAzActB3L+wWfbWZEHwAYdRu
+   n8bsEQFM04rqh+OH6zz5ZMg/o7pTtGBCVM3BJuXnVrcJGvIPkR26gT945
+   gUG+j63JW9gqqqxzvzw0uT2hhbZoSA6f457DNsIDjzR6NU4rwic0qgC8b
+   9jssk06IJr0Osbk3DaszvhGok90lXqcOcK/g8lCqDPpd0bFu4gYavx1uK
+   1IKmNYDY+jAFyAwK/9eP/gGAQAHoNhiVjL18AbmbQYlQZ4XL5454JVN2z
+   A==;
+X-CSE-ConnectionGUID: rC9hRK6VSYaRj2eImqhFaA==
+X-CSE-MsgGUID: hXszwjcHTGKR+py8BbNaXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="41844305"
+X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
+   d="scan'208";a="41844305"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 14:42:59 -0800
+X-CSE-ConnectionGUID: ocKfCLhYQQePCjOT9GiQug==
+X-CSE-MsgGUID: ghx61IPmRoueGpe3p992Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,323,1732608000"; 
+   d="scan'208";a="117651797"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 28 Feb 2025 14:42:59 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1to94K-000Fb4-2q;
+	Fri, 28 Feb 2025 22:42:56 +0000
+Date: Sat, 01 Mar 2025 06:42:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/sev] BUILD SUCCESS
+ 72dafb567760320f2de7447cd6e979bf9d4e5d17
+Message-ID: <202503010649.CJvsKpmU-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-From: Long Li <longli@microsoft.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/sev
+branch HEAD: 72dafb567760320f2de7447cd6e979bf9d4e5d17  x86/sev: Add missing RIP_REL_REF() invocations during sme_enable()
 
-When running under Hyper-V, the master device to the RDMA device is always
-bonded to this RDMA device if it's present in the kernel. This is not
-user-configurable.
+elapsed time: 1457m
 
-The master device can be unbind/bind from the kernel. During those events,
-the RDMA device should set to the current netdev to relect the change of
-master device from those events.
+configs tested: 14
+configs skipped: 126
 
-Signed-off-by: Long Li <longli@microsoft.com>
----
- drivers/infiniband/hw/mana/device.c  | 35 ++++++++++++++++++++++++++++
- drivers/infiniband/hw/mana/mana_ib.h |  1 +
- 2 files changed, 36 insertions(+)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/infiniband/hw/mana/device.c b/drivers/infiniband/hw/mana/device.c
-index 3416a85f8738..3e4f069c2258 100644
---- a/drivers/infiniband/hw/mana/device.c
-+++ b/drivers/infiniband/hw/mana/device.c
-@@ -51,6 +51,37 @@ static const struct ib_device_ops mana_ib_dev_ops = {
- 			   ib_ind_table),
- };
- 
-+static int mana_ib_netdev_event(struct notifier_block *this,
-+				unsigned long event, void *ptr)
-+{
-+	struct mana_ib_dev *dev = container_of(this, struct mana_ib_dev, nb);
-+	struct net_device *event_dev = netdev_notifier_info_to_dev(ptr);
-+	struct gdma_context *gc = dev->gdma_dev->gdma_context;
-+	struct mana_context *mc = gc->mana.driver_data;
-+	struct net_device *ndev;
-+
-+	if (event_dev != mc->ports[0])
-+		return NOTIFY_DONE;
-+
-+	switch (event) {
-+	case NETDEV_CHANGEUPPER:
-+		rcu_read_lock();
-+		ndev = mana_get_primary_netdev_rcu(mc, 0);
-+		rcu_read_unlock();
-+
-+		/*
-+		 * RDMA core will setup GID based on updated netdev.
-+		 * It's not possible to race with the core as rtnl lock is being
-+		 * held.
-+		 */
-+		ib_device_set_netdev(&dev->ib_dev, ndev, 1);
-+
-+		return NOTIFY_OK;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
- static int mana_ib_probe(struct auxiliary_device *adev,
- 			 const struct auxiliary_device_id *id)
- {
-@@ -109,6 +140,9 @@ static int mana_ib_probe(struct auxiliary_device *adev,
- 	}
- 	dev->gdma_dev = &mdev->gdma_context->mana_ib;
- 
-+	dev->nb.notifier_call = mana_ib_netdev_event;
-+	register_netdevice_notifier(&dev->nb);
-+
- 	ret = mana_ib_gd_query_adapter_caps(dev);
- 	if (ret) {
- 		ibdev_err(&dev->ib_dev, "Failed to query device caps, ret %d",
-@@ -159,6 +193,7 @@ static void mana_ib_remove(struct auxiliary_device *adev)
- {
- 	struct mana_ib_dev *dev = dev_get_drvdata(&adev->dev);
- 
-+	unregister_netdevice_notifier(&dev->nb);
- 	ib_unregister_device(&dev->ib_dev);
- 	xa_destroy(&dev->qp_table_wq);
- 	mana_ib_gd_destroy_rnic_adapter(dev);
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index b53a5b4de908..d88187072899 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -64,6 +64,7 @@ struct mana_ib_dev {
- 	struct gdma_queue **eqs;
- 	struct xarray qp_table_wq;
- 	struct mana_ib_adapter_caps adapter_caps;
-+	struct notifier_block nb;
- };
- 
- struct mana_ib_wq {
--- 
-2.34.1
+tested configs:
+i386    buildonly-randconfig-001-20250228    clang-19
+i386    buildonly-randconfig-002-20250228    clang-19
+i386    buildonly-randconfig-003-20250228    gcc-12
+i386    buildonly-randconfig-004-20250228    clang-19
+i386    buildonly-randconfig-005-20250228    clang-19
+i386    buildonly-randconfig-006-20250228    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64  buildonly-randconfig-001-20250228    clang-19
+x86_64  buildonly-randconfig-002-20250228    clang-19
+x86_64  buildonly-randconfig-003-20250228    gcc-12
+x86_64  buildonly-randconfig-004-20250228    clang-19
+x86_64  buildonly-randconfig-005-20250228    gcc-12
+x86_64  buildonly-randconfig-006-20250228    gcc-12
+x86_64                          defconfig    gcc-11
 
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
