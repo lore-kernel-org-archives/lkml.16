@@ -1,128 +1,143 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E665326B950
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 13:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D46F626E14F
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 13:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740750859; cv=none; b=Fv9F0ceCDdLjCK9U9TBc0EQVD6MarFYyG/LJpcLJYnxCG1+5iC4zXpURMcLDU0m83brl8BOgl0i6geAkVFv1N+s1y3m10dI5nR1xsHgn+Os3i0YK22g/YFzDOvFyGdPwDyaJ3HG1VqDdlpSEJzI0qr4EoAsa4h7UtLDXeMginh4=
+	t=1740750879; cv=none; b=ZBr1T6Ba3aiYQF1IEckZNmhpsDsz9fAcN11dmd/BTy6fw+wSaENmaj+/AAEdbD5JYkPkePT3kIZKya0yYQdqgiX0127GJW0TgnODZSRGv1fAQViGK4yVgmXrJeaMc/9CE8nzFwAI1rhFfga8hcizimzulW8NT3EMtZGf7+OAcyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740750859; c=relaxed/simple;
-	bh=6nQd1xomJJEbRkBicsK3sFU1SOu4he/i1r6HbTBh4CM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=Avfd2e/kDSW9M+59W00gqzqXNXmyx3WVERMLJsw1iFROh6PwYvmNrLUzOR4qqI09Sf+glFKahpovigCwTZ1+VlFJgcgE2y3gU/uDBlynMon1NqWvR/rGeWYx6hlJbKyIAr/WG7EEsM6+zpouIAk15/IeIqQNsoUCt9KcYV0C+T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ONcz5vJx; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ONcz5vJx"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250228135414epoutp0427f02e222bbd9123f07bd7499a2a9446~oY63NRquI0697106971epoutp04F
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 13:54:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250228135414epoutp0427f02e222bbd9123f07bd7499a2a9446~oY63NRquI0697106971epoutp04F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740750854;
-	bh=y0i0iP7YFThBflzgZh4OQQwIJEzrlQCTwJu6xXb7Vnk=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=ONcz5vJxvL4v7sjoPOj8HWNQ2JvtD5Ow1wDWrONLoJUTdZN8th0A7tSZCJCbHeTPA
-	 tvdJE1s2Op2jANM0jHpLH5nNUtvGFHGkxsDOb4Cu+UQFKg0Y7O/pQ6Lm4J9L6g3on+
-	 bpRUklO8GPytjC5+Hdk0zWGDnYEuvnDHDypetvNY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-	20250228135413epcas5p288532ab265f1ea1a509f6d76adec911a~oY62-RNKv2093120931epcas5p2c;
-	Fri, 28 Feb 2025 13:54:13 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z48nw1vKTz4x9Pp; Fri, 28 Feb
-	2025 13:54:12 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	75.86.20052.400C1C76; Fri, 28 Feb 2025 22:54:12 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250228135411epcas5p1c1bbaea7cec83d32ac8f032817e558b9~oY61I96Gx3181931819epcas5p1v;
-	Fri, 28 Feb 2025 13:54:11 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250228135411epsmtrp11a58f7cef9cdf010eb26d457fe05905d~oY61IJ7nG1147611476epsmtrp1B;
-	Fri, 28 Feb 2025 13:54:11 +0000 (GMT)
-X-AuditID: b6c32a49-3d20270000004e54-6d-67c1c0049544
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	7C.0C.18949.300C1C76; Fri, 28 Feb 2025 22:54:11 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.6]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250228135410epsmtip21949833392c75f9528f2cd26cfc466d6~oY60PLzcQ2326823268epsmtip2a;
-	Fri, 28 Feb 2025 13:54:10 +0000 (GMT)
-From: Anindya Sundar Gayen <anindya.sg@samsung.com>
-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
-	daniel.lezcano@linaro.org
-Cc: aswani.reddy@samsung.com, pankaj.dubey@samsung.com
-Subject: [PATCH] clocksource: exynos_mct: fixed a spelling error
-Date: Fri, 28 Feb 2025 18:41:38 +0530
-Message-Id: <20250228131138.9208-1-anindya.sg@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7bCmpi7LgYPpBg9u81oc2ryV3WLeZ1mL
-	y7vmsFks2vqF3WLzpqnMDqwed67tYfN4d+4cu0ffllWMHp83yQWwRGXbZKQmpqQWKaTmJeen
-	ZOal2yp5B8c7x5uaGRjqGlpamCsp5CXmptoqufgE6Lpl5gCtVVIoS8wpBQoFJBYXK+nb2RTl
-	l5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkCFSZkZ1yYdpqxoIOtYlsHVwNj
-	M2sXIyeHhICJRP+j44xdjFwcQgK7GSVWn/vDDpIQEvjEKHHpszyE/Y1RYtVzb5iG000r2CAa
-	9jJKvHh0kgXCaWaSmHp6MZDDwcEmYCzR9qASpEFEIFDix78jTCA2s4CZxMy7p1lAbGEBB4mH
-	C78ygtgsAqoSN95uArN5Bawkvv+8xwaxTF5i9YYDzCDzJQQms0vsenaWHSLhItE3bS8LhC0s
-	8er4Fqi4lMTL/jZ2kBskBPIllpzNhgjnSBxY/oAJwraXOHBlDtiZzAKaEut36UOcxifR+/sJ
-	E0Qnr0RHmxCEqSIxsYMFZvbsHzuYIWwPiSmPJjNDQidWYknXc/YJjDKzEGYuYGRcxSiZWlCc
-	m55abFpgmJdaDo+W5PzcTYzgtKPluYPx7oMPeocYmTgYDzFKcDArifDOij2QLsSbklhZlVqU
-	H19UmpNafIjRFBhIE5mlRJPzgYkvryTe0MTSwMTMzMzE0tjMUEmct3lnS7qQQHpiSWp2ampB
-	ahFMHxMHp1QDk26zUI/WpRkrT7LejWO4+6RYxcvOPm79nY05bazfrLwXpNRyLE7cNcGhr1/e
-	Y39PxcpQa94v+5bfV/DVmPhLPyeFO2Ff/MkbcZv5X1bejoq9unf9GSGmzVL3tM7OyWa9Z90x
-	g1tDc4Ni1fK4vS/LbxoHHmgLO8v35Gup2skcH6Ntax8n3N05dep+wdcP278uufg5bZs62w2D
-	Pb8SNkjfbDutnvub/8hGAVs7wxVTNqoeuL1zAvf0Sx27TrU+mDZLbCbf12CBjQnXFV6U3Km+
-	ILG2ssNxqvfeozvOarFLyK4LWH4s52nAJ0n/4Ntdz5pc/tVLfdt35qffonebnyatX1ty4OKW
-	p/Fb5k6OqtV7KzRHiaU4I9FQi7moOBEAIwSWbsQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLJMWRmVeSWpSXmKPExsWy7bCSvC7zgYPpBvcu61gc2ryV3WLeZ1mL
-	y7vmsFks2vqF3WLzpqnMDqwed67tYfN4d+4cu0ffllWMHp83yQWwRHHZpKTmZJalFunbJXBl
-	XJh2mrGgg61iWwdXA2MzaxcjJ4eEgInE6aYVbF2MXBxCArsZJS43/mSESEhJ3P7fCWULS6z8
-	95wdoqiRSeLY698sXYwcHGwCxhJtDypBakQEgiW6b/0Fq2cWsJBYueUgM4gtLOAg8XDhV7A4
-	i4CqxI23m8BsXgErie8/77FBzJeXWL3hAPMERp4FjAyrGCVTC4pz03OLDQuM8lLL9YoTc4tL
-	89L1kvNzNzGCQ0RLawfjnlUf9A4xMnEwHmKU4GBWEuGdFXsgXYg3JbGyKrUoP76oNCe1+BCj
-	NAeLkjjvt9e9KUIC6YklqdmpqQWpRTBZJg5OqQYmrRTDlI+Nat4yVwUzS5Zvkbj5Y43Lw8nN
-	D1VS7NkVnT6vfF4b/Kzr9C3d7FVBX3lb5T++f1RpveBBja1jS68B16JPrG99Nfz5xPceSj1W
-	v0zN/ciLQxukk19/0fsff+jZ1IuCM1fPrPQ9+LZObJ28y7/5SQe/piz3kmW27iqTW5E8VeoG
-	752PTaVassusNq9I/T9PzV2msOOn3MaGFIXY5//F1X6bFZ59ttn5rM7W1t2H7ReXHBVscJkY
-	XMjfZj/BwaVkw5UzFgrvtwSs4m3wFlCv4DCZ6HBJs25y9Ca5PPb8gBBZ/628HTx6s+WPJJQK
-	BPVv0Gnob3SfNUFyRvAPpvOPF596sHvz0twXok+VWIozEg21mIuKEwEvA4CcgAIAAA==
-X-CMS-MailID: 20250228135411epcas5p1c1bbaea7cec83d32ac8f032817e558b9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250228135411epcas5p1c1bbaea7cec83d32ac8f032817e558b9
-References: <CGME20250228135411epcas5p1c1bbaea7cec83d32ac8f032817e558b9@epcas5p1.samsung.com>
+	s=arc-20240116; t=1740750879; c=relaxed/simple;
+	bh=iGWw15qAOshxKoxfswTya2Ck3Irxn54l0NaI7MI4s9U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=soXAecJwPpRaMwoPat7Ri3h/pG82HynaU33gF+d5dSsuHvuU8Oj2EjqvHfgk/2rRwwiaYoB+G54Pz/HSwbtuodEw8IalonXzrtcHgpygD18fjXQXPCZq2+cQSUk9fZJ6GuL+bbF0z7QgwnHLKuToN8KKehB0Zyt5lq0ZhJ8CD0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4DACD1688;
+	Fri, 28 Feb 2025 05:54:51 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF7283F6A8;
+	Fri, 28 Feb 2025 05:54:31 -0800 (PST)
+Date: Fri, 28 Feb 2025 13:54:29 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: <catalin.marinas@arm.com>, <will@kernel.org>, <tglx@linutronix.de>,
+	Sudeep Holla <sudeep.holla@arm.com>, <peterz@infradead.org>,
+	<mpe@ellerman.id.au>, <linux-arm-kernel@lists.infradead.org>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<pierre.gondois@arm.com>, <dietmar.eggemann@arm.com>,
+	<linuxppc-dev@lists.ozlabs.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <morten.rasmussen@arm.com>,
+	<msuchanek@suse.de>, <gregkh@linuxfoundation.org>,
+	<rafael@kernel.org>, <jonathan.cameron@huawei.com>,
+	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
+	<yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
+	<guohanjun@huawei.com>, <sshegde@linux.ibm.com>
+Subject: Re: [PATCH v11 2/4] arch_topology: Support SMT control for OF based
+ system
+Message-ID: <Z8HAFftf7rAdc_MC@bogus>
+References: <20250218141018.18082-1-yangyicong@huawei.com>
+ <20250218141018.18082-3-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218141018.18082-3-yangyicong@huawei.com>
 
-Fixed a spelling issue in driver.
+On Tue, Feb 18, 2025 at 10:10:16PM +0800, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> On building the topology from the devicetree, we've already
+> gotten the SMT thread number of each core. Update the largest
+> SMT thread number and enable the SMT control by the end of
+> topology parsing.
+> 
+> The core's SMT control provides two interface to the users [1]:
+> 1) enable/disable SMT by writing on/off
+> 2) enable/disable SMT by writing thread number 1/max_thread_number
+> 
+> If a system have more than one SMT thread number the 2) may
+> not handle it well, since there're multiple thread numbers in the
+> system and 2) only accept 1/max_thread_number. So issue a warning
+> to notify the users if such system detected.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-devices-system-cpu#n542
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  drivers/base/arch_topology.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> index 3ebe77566788..23f425a9d77a 100644
+> --- a/drivers/base/arch_topology.c
+> +++ b/drivers/base/arch_topology.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/cleanup.h>
+>  #include <linux/cpu.h>
+>  #include <linux/cpufreq.h>
+> +#include <linux/cpu_smt.h>
+>  #include <linux/device.h>
+>  #include <linux/of.h>
+>  #include <linux/slab.h>
+> @@ -506,6 +507,10 @@ core_initcall(free_raw_capacity);
+>  #endif
+>  
+>  #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+> +
+> +/* Maximum SMT thread number detected used to enable the SMT control */
+> +static unsigned int max_smt_thread_num;
+> +
+>  /*
+>   * This function returns the logic cpu number of the node.
+>   * There are basically three kinds of return values:
+> @@ -565,6 +570,16 @@ static int __init parse_core(struct device_node *core, int package_id,
+>  		i++;
+>  	} while (1);
+>  
+> +	/*
+> +	 * If max_smt_thread_num has been initialized and doesn't match
+> +	 * the thread number of this entry, then the system has
+> +	 * heterogeneous SMT topology.
+> +	 */
+> +	if (max_smt_thread_num && max_smt_thread_num != i)
+> +		pr_warn_once("Heterogeneous SMT topology is partly supported by SMT control\n");
+> +
 
-Signed-off-by: Anindya Sundar Gayen <anindya.sg@samsung.com>
----
- drivers/clocksource/exynos_mct.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+May be we need to make it more conditional as we may have to support
+systems with few cores that are single threaded ? I think Dietmar's
+comment is about that.
 
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index e6a02e351d77..da09f467a6bb 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -238,7 +238,7 @@ static cycles_t exynos4_read_current_timer(void)
- static int __init exynos4_clocksource_init(bool frc_shared)
- {
- 	/*
--	 * When the frc is shared, the main processer should have already
-+	 * When the frc is shared, the main processor should have already
- 	 * turned it on and we shouldn't be writing to TCON.
- 	 */
- 	if (frc_shared)
--- 
-2.17.1
+> +	max_smt_thread_num = max_t(unsigned int, max_smt_thread_num, i);
+> +
+>  	cpu = get_cpu_for_node(core);
+>  	if (cpu >= 0) {
+>  		if (!leaf) {
+> @@ -677,6 +692,18 @@ static int __init parse_socket(struct device_node *socket)
+>  	if (!has_socket)
+>  		ret = parse_cluster(socket, 0, -1, 0);
+>  
+> +	/*
+> +	 * Notify the CPU framework of the SMT support. Initialize the
+> +	 * max_smt_thread_num to 1 if no SMT support detected or failed
+> +	 * to parse the topology. A thread number of 1 can be handled by
+> +	 * the framework so we don't need to check max_smt_thread_num to
+> +	 * see we support SMT or not.
+> +	 */
+> +	if (!max_smt_thread_num || ret)
+> +		max_smt_thread_num = 1;
+> +
 
+For the failed parsing of topology, reset_cpu_topology() gets called.
+I suggest resetting max_smt_thread_num to 1 belongs there.
+
+And if you start with max_smt_thread_num, we don't need to update it to
+1 explicitly here. So I would like to get rid of above check completely.
+
+--
+Regards,
+Sudeep
