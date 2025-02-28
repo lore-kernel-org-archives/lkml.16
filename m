@@ -1,112 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EDF230BD0;
-	Fri, 28 Feb 2025 19:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF3B927605D
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 20:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772796; cv=none; b=idP02zJkcLwkyPiu/C9Kw1niw6gcRrzA7tfIMCG/GSeL0RK4nASl9yxKL2N2U1CxTjeevYrGii9fQv5PfGHiPzUtIr1XrxxaqHQu2NEznUeBKClBoB7Xcs+L4PAMufM6PMQeiLQHhPQ5P4qVdWUsPAJPNbTtCKsX/8Wr7w6eiQM=
+	t=1740772804; cv=none; b=p4UF7/DqsXU4exQiq7CtIsC3JtW45OvWc/R9LA2gUZ3N14GACcQ119omzsofdJLECv9tX30BwO8Gi61rxMysSyOeQsxLZNMTUmwmIkSSsKTMW9N4c0mgIeimjM8GC6AbND8qSwGHskU9J70oR/FWAFfXvccqCVZOAKGB20wyEJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772796; c=relaxed/simple;
-	bh=iMLzNP2CNTsdRqKCkwyK0u0Mfa7U3vhEemC06t/KnZY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HrAU7ynA2eCjDElISwlasvuFsXoMa1UrA/eziJ5Ln5YyCn18YxvK+0DhzYB2KHrQCjPdkMHn5wQClZQ5o3X/zrlhCU3DB0dyajfdugSr/kxklUL0dh8vn6iB5ZU7Bv7q+t6JtiJGcqAMxrIeuvDmgaeJAwNZoxugaQAfsWQkjKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=spyZd7Wi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="spyZd7Wi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99482C4CED6;
-	Fri, 28 Feb 2025 19:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740772795;
-	bh=iMLzNP2CNTsdRqKCkwyK0u0Mfa7U3vhEemC06t/KnZY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=spyZd7WiPxbNV+DhqyWzXYEaATf8dfgoRbBib4/DkFtWaYvQHyxjZoPUuytPSfaRP
-	 eKr5Zr3hK8vN328OTq50SKtTmNOs10/xbqUbBuj7BQPJ//6NLUIQThRYo/N+aItj6A
-	 zkg9mVT+QfwIfNu7vM+ZH9ZcImmo/SGBa0xluNQZQSmDNyggn7P/+1b9W8eZ9kftzX
-	 ZN99rmzbohGtSedizmkgM6suB2VoX1Q+uDbnz7kIYaQxOSonKELsBd6zwn4HMEOO/I
-	 mT0ioE3Z0FwegOZNsrNbTneuCbVZm/lgPwCgapt4Q4G3OVXmhZiF+/Pqz+NzR4j1Tg
-	 JR+j43H6Eg8rw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 43283CE0DEB; Fri, 28 Feb 2025 11:59:55 -0800 (PST)
-Date: Fri, 28 Feb 2025 11:59:55 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Uladzislau Rezki <urezki@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Cheung Wall <zzqq0103.hey@gmail.com>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH v4 3/3] rcu: Use _full() API to debug synchronize_rcu()
-Message-ID: <cdab57a4-8d58-41d9-a9b5-71d425a7375e@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250227131613.52683-3-urezki@gmail.com>
- <Z8CdB0Hzvdu5ZVSI@Mac.home>
- <d8b196c1-c1b5-4bf9-b1cb-dde8642cc34b@paulmck-laptop>
- <Z8Ckb6spK35-Ez4U@pc636>
- <1408fc88-e2c6-4f49-b581-0e9ad5620fe0@paulmck-laptop>
- <Z8HmH85bYNU8enJ2@pc636>
- <dd15fa79-70a5-4929-9339-51a47099c916@paulmck-laptop>
- <Z8H_aYBUHD2sS2Ir@pc636>
- <73724164-71f4-4671-b612-eb82a784da58@paulmck-laptop>
- <Z8IKs-I-YsOoS4uw@pc636>
+	s=arc-20240116; t=1740772804; c=relaxed/simple;
+	bh=MNL3BQ8NClzO1w0J6tcxcDDaJ1O4efSozUfKmkgJsn4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KzIgDOSMYmGoLVXOqTEkPJBjAdaBnvncdQg2t9me/7HgQZ3TLhyM+0ixceXRfP9lgBFVtZL7qtkeORQ8oySl7hR7HIlxfb8HB7zDU8RdyPcGroZQW6bF6h0hy2hZ9Us6dSvFnxofivO/cqc3gDO0mdF2IBWYZ3UE7StfgHry8vQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 485B31515;
+	Fri, 28 Feb 2025 12:00:17 -0800 (PST)
+Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC953F5A1;
+	Fri, 28 Feb 2025 11:59:58 -0800 (PST)
+From: James Morse <james.morse@arm.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	H Peter Anvin <hpa@zytor.com>,
+	Babu Moger <Babu.Moger@amd.com>,
+	James Morse <james.morse@arm.com>,
+	shameerali.kolothum.thodi@huawei.com,
+	D Scott Phillips OS <scott@os.amperecomputing.com>,
+	carl@os.amperecomputing.com,
+	lcherian@marvell.com,
+	bobo.shaobowang@huawei.com,
+	tan.shaopeng@fujitsu.com,
+	baolin.wang@linux.alibaba.com,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Xin Hao <xhao@linux.alibaba.com>,
+	peternewman@google.com,
+	dfustini@baylibre.com,
+	amitsinght@marvell.com,
+	David Hildenbrand <david@redhat.com>,
+	Rex Nie <rex.nie@jaguarmicro.com>,
+	Dave Martin <dave.martin@arm.com>,
+	Koba Ko <kobak@nvidia.com>,
+	Shanker Donthineni <sdonthineni@nvidia.com>,
+	fenghuay@nvidia.com,
+	Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v7 01/49] x86/resctrl: Fix allocation of cleanest CLOSID on platforms with no monitors
+Date: Fri, 28 Feb 2025 19:58:25 +0000
+Message-Id: <20250228195913.24895-2-james.morse@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20250228195913.24895-1-james.morse@arm.com>
+References: <20250228195913.24895-1-james.morse@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8IKs-I-YsOoS4uw@pc636>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 08:12:51PM +0100, Uladzislau Rezki wrote:
-> Hello, Paul!
-> 
-> > > > > > 
-> > > > > > Except that I got this from overnight testing of rcu/dev on the shared
-> > > > > > RCU tree:
-> > > > > > 
-> > > > > > WARNING: CPU: 5 PID: 14 at kernel/rcu/tree.c:1636 rcu_sr_normal_complete+0x5c/0x80
-> > > > > > 
-> > > > > > I see this only on TREE05.  Which should not be too surprising, given
-> > > > > > that this is the scenario that tests it.  It happened within five minutes
-> > > > > > on all 14 of the TREE05 runs.
-> > > > > > 
-> > > > > Hm.. This is not fun. I tested this on my system and i did not manage to
-> > > > > trigger this whereas you do. Something is wrong.
-> > > > 
-> > > > If you have a debug patch, I would be happy to give it a go.
-> > > > 
-> > > I can trigger it. But.
-> > > 
-> > > Some background. I tested those patches during many hours on the stable
-> > > kernel which is 6.13. On that kernel i was not able to trigger it. Running
-> > > the rcutorture on the our shared "dev" tree, which i did now, triggers this
-> > > right away.
-> > 
-> > Bisection?  (Hey, you knew that was coming!)
-> > 
-> Looks like this: rcu: Fix get_state_synchronize_rcu_full() GP-start detection
-> 
-> After revert in the dev, rcutorture passes TREE05, 16 instances.
+commit 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by
+searching closid_num_dirty_rmid") added logic that causes resctrl to
+search for the CLOSID with the fewest dirty cache lines when creating a
+new control group, if requested by the arch code. This depends on the
+values read from the llc_occupancy counters. The logic is applicable to
+architectures where the CLOSID effectively forms part of the monitoring
+identifier and so do not allow complete freedom to choose an unused
+monitoring identifier for a given CLOSID.
 
-Huh.  We sure don't get to revert that one...
+This support missed that some platforms may not have these counters.
+This causes a NULL pointer dereference when creating a new control
+group as the array was not allocated by dom_data_init().
 
-Do we have a problem with the ordering in rcu_gp_init() between the calls
-to rcu_seq_start() and portions of rcu_sr_normal_gp_init()?  For example,
-do we need to capture the relevant portion of the list before the call
-to rcu_seq_start(), and do the grace-period-start work afterwards?
+As this feature isn't necessary on platforms that don't have cache
+occupancy monitors, add this to the check that occurs when a new
+control group is allocated.
 
-My kneejerk (and possibibly completely wrong) guess is that rcu_gp_init()
-calls rcu_gp_start(), then there is a call to synchronize_rcu() whose
-cookie says wait for the end of the next grace period, then we capture
-the lists including this one that needs to wait longer.  Then when we
-look at the end of the grace period, boom!  This would be a real bug due
-to some CPU coming online between the time of the call to rcu_gp_start()
-and synchronize_rcu().
+Fixes: 6eac36bb9eb0 ("x86/resctrl: Allocate the cleanest CLOSID by searching closid_num_dirty_rmid")
+Signed-off-by: James Morse <james.morse@arm.com>
+Tested-by: Carl Worth <carl@os.amperecomputing.com> # arm64
+Tested-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+The existing code is not selected by any upstream platform, it makes
+no sense to backport this patch to stable.
 
-Or is there some other way that this can happen?
+Changes since v1:
+ * [Commit message only] Reword the first paragraph to make it clear
+   that the issue being fixed wasn't directly associated with addition
+   of a Kconfig option.  (Actually, the option is not in Kconfig yet,
+   and gets added later in this series.)
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-							Thanx, Paul
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 6419e04d8a7b..04b653d613e8 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -157,7 +157,8 @@ static int closid_alloc(void)
+ 
+ 	lockdep_assert_held(&rdtgroup_mutex);
+ 
+-	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID)) {
++	if (IS_ENABLED(CONFIG_RESCTRL_RMID_DEPENDS_ON_CLOSID) &&
++	    is_llc_occupancy_enabled()) {
+ 		cleanest_closid = resctrl_find_cleanest_closid();
+ 		if (cleanest_closid < 0)
+ 			return cleanest_closid;
+-- 
+2.39.5
+
