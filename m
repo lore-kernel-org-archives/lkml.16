@@ -1,169 +1,125 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A89BB26A1CD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:12:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE37E26A1B8;
+	Fri, 28 Feb 2025 12:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740744781; cv=none; b=J2L0IuISZOf3/O6Ug3N++Ayt5ttM0+IMTmLahrpyYNVmpFJ7mBtZbiVuSmZqD04Ybkmkr+bOZexaIJEB82SlkE9LNaI46LTMPEZZdUiZF2u4AMuTTrVG0uIiaM4K0KKEiHleWYAZJIZ1+d0Ez/phLeYrQDe9dJ/TemzJPIhn1G4=
+	t=1740744787; cv=none; b=A15tNytCwNeyC9mQsKkLK9sWtEha5lra1LfGctiU9zoTOg7VbOBU7il+L1QCIZ/TN5e/NL1AhsAHLc9UlQdrrUC+y7hklQYoINSpfI92Syt9J7B/AXxYyZBdcMNWMieTFQ0spzCfIg0Uzja/czcZm+7McORV8diLZV7ckoY+lBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740744781; c=relaxed/simple;
-	bh=p5FTCxkDarvA4bFqx29jb7fzd25JkroGfFErjHdL8lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UH2/ygsqNc+FHmKpwGXHsSC+0M+OGRufoUwP5hUP+PBwi7HJQRxLMQLHPPb4q9Pa1HMlQkvh0qRoFpijGl6jUdQgCg/Zvn7wc/85iHKY7wNFJEjx0wwcJ/xvmjCg7e1dEb0IR7iO1K2Nzv+GTqj4zgTJUUQmPAU7i/UF7cQX7yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=eAW5u2N7; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1740744787; c=relaxed/simple;
+	bh=FpHzOeapDEDiHpFGTjC8NOwiA9Xt7qV9cJfzT82rJZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eijPub0DIKDrIsJR72nV+gIKsYWVpIb5y83FQq/BkTPcvDr0Z2zOkVlQVp9C8SJciQ8vvVeldk7fEGS/Z1B+rBHnMV28723Zva6NPB5EAHKyFstLmco8JWHitsMgjMRA8wI5RFrUIbYW6/ggJyza0LTizYHmd+xeqdzRc2LYPgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czAGJ5tO; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="eAW5u2N7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=G9cZKFxW4oLU983sOFab31be+2wQdCOOeWwGe3gB4bQ=; b=eAW5u2N7Z2g0hcGe
-	gJgITOVoeZ7woxeI0C/ECMrFQ2iWbEKDJmBcuRQy/0adXTR9qguodqsLi7naIHx7Og3qbWP8JlpTn
-	4NPc0B5bz6Dz7/tE7zPMi44p/zVQEFj2riutUcUIgkhofPvDCE/pq65TOJ1d+R+rgtigPkNYsrYXw
-	FmDCadJYV7jnwaUNIe/jLXV/TpIPECSP81rFY2V9yqRtAvjsKNrQIK0E8T1yrKptY5GVCYJJSkHcU
-	vxin1GiLq/0arByDHxVbF14LqlVA354MX30lTTh3KYTyh+N96mYXwoj46tIvKrogdCXPVHYs4f69A
-	TE7HO+t2rhNZ4Ee/Lg==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1tnzEP-001cNB-0w;
-	Fri, 28 Feb 2025 12:12:41 +0000
-Date: Fri, 28 Feb 2025 12:12:41 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: airlied@gmail.com, simona@ffwll.ch, hdegoede@redhat.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vboxvideo: Remove unused hgsmi_cursor_position
-Message-ID: <Z8GoOUjgtq-1WCiw@gallifrey>
-References: <20241215220014.452537-1-linux@treblig.org>
- <Z8DaVW_U-QtBVSMf@gallifrey>
- <f853d48f-f0aa-45af-89f3-4081a620f234@suse.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czAGJ5tO"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e095d47a25so3386989a12.0;
+        Fri, 28 Feb 2025 04:13:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740744784; x=1741349584; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Bq8LDhar54MRPSFAhgDGLP8Fgo5fT+8EgstYHu3wH0=;
+        b=czAGJ5tOs0VM2sswCKMnV7dV8Eck98+0kV2gMT1PxSedrZTJ+ba3S2QJw5bhvNDztN
+         9PavAMJgwbccX3MEcvumesPul0qGsOpweBl+eulEWnF767yERSeL6xDD0gRgUtG70N5P
+         XbZvTEq5RNidB5K/wAFydp7XlV52O60mTqCYY1yPSgzlB2r9nJmB3YPPHxz5pk5HgorF
+         +FAXVEB6oZMmWQh/fxlJC2cf/Abpg70QT8rslp9NRDIRpZD6u3AcDvtRJ7ZCunLLWgAB
+         JKc2/zdW/JJndaq7f2mO7eEtHGENxx/XF1KS5m5uCRE1/kh17pNXEE2XX5T26ar19esb
+         JXiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740744784; x=1741349584;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Bq8LDhar54MRPSFAhgDGLP8Fgo5fT+8EgstYHu3wH0=;
+        b=qAXFndYzakGntBqWPY2zjNDYjqm9ZR8UuzYQcQIrpyd+xJYqZD0yxtxiapWG8i526+
+         ZEQE67Gk/a7QPt6l2RXZAGcerAai7J9Mdh1ZvN/Rafbhx5YV5Mz2qR8StNAC68N//Ctx
+         QNStiDLrYj4K6M7fXAxkrNOzi1TEAJrJl3G0MH+lxGkuRns3auu2JR5W93mT9LNzxDd+
+         o4Hv7GthzLzhGiQOOpIm8fCDu2o6bz90RenlrhHEIxktZyzptarU8XcINonX9/1nwXnh
+         7RDfjTr8Bd8z+bQy/Eh81sf6Xjn8mhW64qtKE72aeD5Nij/FRNDWMuBq42IlsMefl+xd
+         Hi7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVyC0za8ggo/V+GV/7xhoVK4NtSLDR7eZx3z3Ey2zX8vFxSFp7/r+LNjojcJsSTctvdPrPuMFqPVcUUe9Tm@vger.kernel.org, AJvYcCWQFIc9pZtvXB5+sa6fFwq4YOrekvyiVYSj4O/9eCKlePD9O0JbDxBt5ldmH4DnxwY/TwmGgx0iHA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZjpTCoN7xHaKT3pFu0B8dSGRIYuPTfGMEPbeAOjTA33Xp0eIo
+	7EH1l/l90NnNu8bsYewRX7G3g+P7vLYBHrWWOthkacnTmpD9tr44iAgXlw==
+X-Gm-Gg: ASbGncskVcEDhzB2lRiHzouZMJdsYUThoV8zmvfeTP0RZJoab447/IWrZ2Xi4VZ2nX0
+	YA7iG1V4aNkdNoywGqSWuSg0hA+gTHBtr1WuNpczn38DBmwFkG+3/f0il6n/qsG/V1JsD9+Hyyr
+	BLAD5vO85cyW6Lz1Vy6GthPR+irXD7Mv8HV2zAlUPxXqi4E6P9/BcMyzWNjTzykiMhx0evjFBpj
+	2HktDCUo2/wR6p+/Q92JJJx2UbH/WKYG468mIOd0Rxaa9RZ4tm8/nRMaxFPuQ1Qr26TO0aP6vML
+	ZOmbtCqT9wlQCu1P/7Q5c7Y6rdkDJvUnfbJqEp23EIe66aM6wfIobFyITTw=
+X-Google-Smtp-Source: AGHT+IFwJJNmHexcBrTOSnzNLDu/+LZZbiRhNDz0f/WLhH0avUCbNu7aRq+MLznexU+6kRiQYS7VTw==
+X-Received: by 2002:a17:907:969f:b0:abb:6259:477e with SMTP id a640c23a62f3a-abf2683e49fmr315112466b.55.1740744783818;
+        Fri, 28 Feb 2025 04:13:03 -0800 (PST)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:aa16])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf245cc3dbsm147041366b.160.2025.02.28.04.13.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2025 04:13:03 -0800 (PST)
+Message-ID: <98c54e34-ae65-4492-8e2f-9601b477a8c6@gmail.com>
+Date: Fri, 28 Feb 2025 12:14:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <f853d48f-f0aa-45af-89f3-4081a620f234@suse.de>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 12:12:03 up 295 days, 23:26,  1 user,  load average: 0.01, 0.01,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] io_uring/net: fix build warning for !CONFIG_COMPAT
+To: Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>
+Cc: Gabriel Krisman Bertazi <krisman@suse.de>, David Wei <dw@davidwei.uk>,
+ io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250227132018.1111094-1-arnd@kernel.org>
+ <275033e5-d3fe-400a-9e53-de1286adb107@gmail.com>
+ <9ef40a88-6243-4baf-8774-e4b72bfbb2f3@app.fastmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <9ef40a88-6243-4baf-8774-e4b72bfbb2f3@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-* Thomas Zimmermann (tzimmermann@suse.de) wrote:
-> Hi
+On 2/27/25 13:58, Arnd Bergmann wrote:
+> On Thu, Feb 27, 2025, at 14:49, Pavel Begunkov wrote:
+>> On 2/27/25 13:20, Arnd Bergmann wrote:
+>>>         |                      ^~~
+>>>
+>>> Since io_is_compat() turns into a compile-time 'false', the #ifdef
+>>> here is completely unnecessary, and removing it avoids the warning.
+>>
+>> I don't think __get_compat_msghdr() and other helpers are
+>> compiled for !COMPAT.
 > 
-> Am 27.02.25 um 22:34 schrieb Dr. David Alan Gilbert:
-> > * linux@treblig.org (linux@treblig.org) wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > > 
-> > > hgsmi_cursor_position() has been unused since 2018's
-> > > commit 35f3288c453e ("staging: vboxvideo: Atomic phase 1: convert cursor to
-> > > universal plane")
-> > > 
-> > > Remove it.
-> > > 
-> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > Hi David, Simona,
-> >    Will this one be picked up by drm-next?  It got Hans's
-> > review back on 16 Dec.
-> > ( in 2513e942-6391-4a96-b487-1e4ba19b7aeb@redhat.com )
+> They are not defined without CONFIG_COMPAT. My point in the
+> message is that io_is_compat() turning into a compile-time
+> 'false' value means that they also don't get called, because
+> compilers are really good at this type of dead code elimination.
 > 
-> Merged into drm-misc-next now. Apologies for the delay.
+>> I'd just silence it like:
+>>
+>> if (io_is_compat(req->ctx)) {
+>> 	ret = -EFAULT;
+>> #ifdef CONFIG_COMPAT
+>> 	...
+>> #endif CONFIG_COMPAT
+>> }
+> 
+> That seems even less readable. If you want to be explicit
+> about it, you could use
+> 
+>       if (IS_ENABLED(CONFIG_COMPAT) && io_is_compat(req->ctx)) {
+> 
+> to replace the #ifdef, but as I wrote in the patch
+> description, the compile-time check is really redundant
+> because io_is_compat() is meant to do exactly that.
 
-Thanks; I've got a bunch of other old ones with reviews I'll also ping
-soon.
+I do like getting rid of #ifdef, just a bit surprised that we're
+relying on dead code elimination, even though it's what any
+reasonable compiler must do.
 
-Dave
+Btw, sth went wrong with the reply: (delivered after 24733 seconds)
 
-> Best regards
-> Thomas
-> 
-> > 
-> >    Thanks,
-> > 
-> > Dave
-> > 
-> > > ---
-> > >   drivers/gpu/drm/vboxvideo/hgsmi_base.c      | 37 ---------------------
-> > >   drivers/gpu/drm/vboxvideo/vboxvideo_guest.h |  2 --
-> > >   2 files changed, 39 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/vboxvideo/hgsmi_base.c b/drivers/gpu/drm/vboxvideo/hgsmi_base.c
-> > > index 87dccaecc3e5..db994aeaa0f9 100644
-> > > --- a/drivers/gpu/drm/vboxvideo/hgsmi_base.c
-> > > +++ b/drivers/gpu/drm/vboxvideo/hgsmi_base.c
-> > > @@ -181,40 +181,3 @@ int hgsmi_update_pointer_shape(struct gen_pool *ctx, u32 flags,
-> > >   	return rc;
-> > >   }
-> > > -
-> > > -/**
-> > > - * hgsmi_cursor_position - Report the guest cursor position.  The host may
-> > > - *                         wish to use this information to re-position its
-> > > - *                         own cursor (though this is currently unlikely).
-> > > - *                         The current host cursor position is returned.
-> > > - * Return: 0 or negative errno value.
-> > > - * @ctx:              The context containing the heap used.
-> > > - * @report_position:  Are we reporting a position?
-> > > - * @x:                Guest cursor X position.
-> > > - * @y:                Guest cursor Y position.
-> > > - * @x_host:           Host cursor X position is stored here.  Optional.
-> > > - * @y_host:           Host cursor Y position is stored here.  Optional.
-> > > - */
-> > > -int hgsmi_cursor_position(struct gen_pool *ctx, bool report_position,
-> > > -			  u32 x, u32 y, u32 *x_host, u32 *y_host)
-> > > -{
-> > > -	struct vbva_cursor_position *p;
-> > > -
-> > > -	p = hgsmi_buffer_alloc(ctx, sizeof(*p), HGSMI_CH_VBVA,
-> > > -			       VBVA_CURSOR_POSITION);
-> > > -	if (!p)
-> > > -		return -ENOMEM;
-> > > -
-> > > -	p->report_position = report_position;
-> > > -	p->x = x;
-> > > -	p->y = y;
-> > > -
-> > > -	hgsmi_buffer_submit(ctx, p);
-> > > -
-> > > -	*x_host = p->x;
-> > > -	*y_host = p->y;
-> > > -
-> > > -	hgsmi_buffer_free(ctx, p);
-> > > -
-> > > -	return 0;
-> > > -}
-> > > diff --git a/drivers/gpu/drm/vboxvideo/vboxvideo_guest.h b/drivers/gpu/drm/vboxvideo/vboxvideo_guest.h
-> > > index 55fcee3a6470..643c4448bdcb 100644
-> > > --- a/drivers/gpu/drm/vboxvideo/vboxvideo_guest.h
-> > > +++ b/drivers/gpu/drm/vboxvideo/vboxvideo_guest.h
-> > > @@ -34,8 +34,6 @@ int hgsmi_query_conf(struct gen_pool *ctx, u32 index, u32 *value_ret);
-> > >   int hgsmi_update_pointer_shape(struct gen_pool *ctx, u32 flags,
-> > >   			       u32 hot_x, u32 hot_y, u32 width, u32 height,
-> > >   			       u8 *pixels, u32 len);
-> > > -int hgsmi_cursor_position(struct gen_pool *ctx, bool report_position,
-> > > -			  u32 x, u32 y, u32 *x_host, u32 *y_host);
-> > >   bool vbva_enable(struct vbva_buf_ctx *vbva_ctx, struct gen_pool *ctx,
-> > >   		 struct vbva_buffer *vbva, s32 screen);
-> > > -- 
-> > > 2.47.1
-> > > 
-> 
-> -- 
-> --
-> Thomas Zimmermann
-> Graphics Driver Developer
-> SUSE Software Solutions Germany GmbH
-> Frankenstrasse 146, 90461 Nuernberg, Germany
-> GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-> HRB 36809 (AG Nuernberg)
-> 
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Pavel Begunkov
+
