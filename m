@@ -1,22 +1,31 @@
-Received: from wangsu.com (mail.wangsu.com [180.101.34.75])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB97187553;
-	Fri, 28 Feb 2025 03:36:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=180.101.34.75
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A2114B07A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 03:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740713824; cv=none; b=LKm+NoXlcckDsjqVPYdk5BPMHR4h/jx/VbBLXO5aZpI9/A9em1Us/7F96wpYn+EnePvL1lOT92SCc3dG5e+6zHQm2P7/mD28D9mrT5Y7npkm1h5S7hmttbKnwGEMmMZEm97WDOBe4UyuVFBNhyfMp6qQmepMDQgKpA8vb6V9bCE=
+	t=1740713970; cv=none; b=OdXOs2d0eajJuhpqOccPkweyi1eovzhPZSSlOsWTwxM9HIYHusmZElg1ilcV9WLEHqu9/EfioVFw66Av9OeXQximrlVLeWGaOGlopubsAMHkrvmm41Zu1HBMNhIxyPJI2RcNgbVs5XgfQfDp5LZ45FXT8IHeaPKEHXWPYdaXYcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740713824; c=relaxed/simple;
-	bh=TQzvWiOdvU5caeaRBqElrxoX75nvhd1b0LPDOE8juNg=;
+	s=arc-20240116; t=1740713970; c=relaxed/simple;
+	bh=Odggy2B8m+JPewILF2GfggI0o70pWnGrVS9G9ry6AHE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rrI659jCqKrqDFJxTcy35vv8XJfl+8ZJ+1m20CDEL5nNr9riCqgIDV+H0Gx35D3d2JiKVzu9oKYLQAh/POV7CB6Xlsisgvw6XYWlenvsgnCc59WAdmdASA0gWUrwlUvol3vbO8f1XOpp7cue9q29rOUfhJBTuwFfGgOzk2jbtXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wangsu.com; spf=pass smtp.mailfrom=wangsu.com; arc=none smtp.client-ip=180.101.34.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wangsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wangsu.com
-Received: from [10.8.162.84] (unknown [59.61.78.234])
-	by app2 (Coremail) with SMTP id SyJltABX2Qw6L8FnOmQLAA--.668S2;
-	Fri, 28 Feb 2025 11:36:36 +0800 (CST)
-Message-ID: <a8af57eb-97dd-406a-8f5f-c4375ca4fce2@wangsu.com>
-Date: Fri, 28 Feb 2025 11:36:26 +0800
+	 In-Reply-To:Content-Type; b=u1QnFc98stEi0rIlcbXcWux5IyWqs24sb68+bieFEEOLU/uqVXBwYaxNMgZbqrjPhEwJ5zZ7VKWtXddotRcgS9AkOncnnmTO0r2BNIlPlxcfzecGIZJezeK9Z/NzkJepfnNLNii1IYpuqNkSsgb6hSFztefffn1GR7ka7T3rd8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=crF3S1sj; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="crF3S1sj"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740713964; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=QVfILHvRitpyM5pVXiaXZIFJCp09+H8y0qF8KXX/yFs=;
+	b=crF3S1sjIAHblXIY8kmXM9WN6nc0KI4iQNWn794rN/e90HNcl2g8FeZ+9SlWDIlWsgEdLGSz8VV9k2qUQDFCeW0Mc93ndGhFKQuOr9bVLuyfxCeCD/+1vNtfA/fDre4vz3yLky/ion/buFfcaGHPo9OjUAh7ro6e5fh0ocNvxrM=
+Received: from 30.221.80.187(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQO30ym_1740713961 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Feb 2025 11:39:22 +0800
+Message-ID: <7367bb73-3358-4925-ac9d-e2b90904d15a@linux.alibaba.com>
+Date: Fri, 28 Feb 2025 11:39:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -24,70 +33,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: manual merge of the net-next tree with the
- vfs-brauner tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Christian Brauner <brauner@kernel.org>
-Cc: Networking <netdev@vger.kernel.org>,
+Subject: Re: Softlockup when test shmem swapout-swapin and compaction
+To: Zi Yan <ziy@nvidia.com>, Liu Shixin <liushixin2@huawei.com>
+Cc: linux-mm@kvack.org,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>,
- Stefano Jordhani <sjordhani@gmail.com>
-References: <20250228132953.78a2b788@canb.auug.org.au>
-Content-Language: en-US
-From: Lin Feng <linf@wangsu.com>
-In-Reply-To: <20250228132953.78a2b788@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:SyJltABX2Qw6L8FnOmQLAA--.668S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFWrJF4UWryUJFWxAr4fZrb_yoW3trc_Wr
-	15t3Z7Jr1DZw47J3yIyF4fZFy7Gr48tr15Zr1kKr17Zas8Zay5CF4Sv34DX34rWr9IkF98
-	uF9IgFy8Kr129jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb48YjsxI4VWkKwAYFVCjjxCrM7CY07I20VC2zVCF04k26cxKx2IY
-	s7xG6rWj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI
-	8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vE
-	x4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzx
-	vE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VACjcxG62k0Y48FwI0_
-	Gr0_Cr1lYx0E74AGY7Cv6cx26r48McIj6xkF7I0En7xvr7AKxVW8Jr0_Cr1UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCY02Avz4vE14v_Gr4l42xK82IYc2Ij64vIr41l
-	42xK82IY6x8ErcxFaVAv8VW8GwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU59iSJUUUU
-	U==
-X-CM-SenderInfo: holqwq5zdqw23xof0z/
+ Barry Song <baohua@kernel.org>, David Hildenbrand <david@redhat.com>,
+ Hugh Dickins <hughd@google.com>, Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Lance Yang <ioworker0@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Ryan Roberts <ryan.roberts@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <28546fb4-5210-bf75-16d6-43e1f8646080@huawei.com>
+ <c4a07dd6-fffa-41f4-b6ff-3e333d1b5fc2@linux.alibaba.com>
+ <acbfc1da-f743-b11b-191c-ce6e476f1709@huawei.com>
+ <696E1819-D7E3-42BD-B3F0-8B3AC67A8ADB@nvidia.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <696E1819-D7E3-42BD-B3F0-8B3AC67A8ADB@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2/28/25 10:29, Stephen Rothwell wrote:
-> Hi all,
+On 2025/2/28 07:43, Zi Yan wrote:
+> On 27 Feb 2025, at 2:04, Liu Shixin wrote:
 > 
-> Today's linux-next merge of the net-next tree got a conflict in:
+>> On 2025/2/26 15:22, Baolin Wang wrote:
+>>> Add Zi.
+>>>
+>>> On 2025/2/26 15:03, Liu Shixin wrote:
+>>>> Hi all,
+>>>>
+>>>> I found a softlockup when testing shmem large folio swapout-swapin and compaction:
+>>>>
+>>>>    watchdog: BUG: soft lockup - CPU#30 stuck for 179s! [folio_swap:4714]
+>>>>    Modules linked in: zram xt_MASQUERADE nf_conntrack_netlink nfnetlink iptable_nat xt_addrtype iptable_filter ip_tantel_rapl_msr intel_rapl_common intel_uncore_frequency_common skx_edac_common nfit libnvdimm kvm_intel kvm rapl cixt4 mbcache jbd2 sr_mod cdrom ata_generic ata_piix virtio_net net_failover ghash_clmulni_intel libata sha512_ssse3
+>>>>    CPU: 30 UID: 0 PID: 4714 Comm: folio_swap Kdump: loaded Tainted: G             L     6.14.0-rc4-next-20250225+ #2
+>>>>    Tainted: [L]=SOFTLOCKUP
+>>>>    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+>>>>    RIP: 0010:xas_load+0x5d/0xc0
+>>>>    Code: 08 48 d3 ea 83 e2 3f 89 d0 48 83 c0 04 48 8b 44 c6 08 48 89 73 18 48 89 c1 83 e1 03 48 83 f9 02 75 08 48 3d
+>>>>    RSP: 0000:ffffadf142f1ba60 EFLAGS: 00000293
+>>>>    RAX: ffffe524cc4f6700 RBX: ffffadf142f1ba90 RCX: 0000000000000000
+>>>>    RDX: 0000000000000011 RSI: ffff9a3e058acb68 RDI: ffffadf142f1ba90
+>>>>    RBP: fffffffffffffffe R08: ffffadf142f1bb50 R09: 0000000000000392
+>>>>    R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000011
+>>>>    R13: ffffadf142f1bb48 R14: ffff9a3e04e9c588 R15: 0000000000000000
+>>>>    FS:  00007fd957666740(0000) GS:ffff9a41ac0e5000(0000) knlGS:0000000000000000
+>>>>    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>    CR2: 00007fd922860000 CR3: 000000025c360001 CR4: 0000000000772ef0
+>>>>    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>>>>    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>>>>    PKRU: 55555554
+>>>>    Call Trace:
+>>>>     <IRQ>
+>>>>     ? watchdog_timer_fn+0x1c9/0x250
+>>>>     ? __pfx_watchdog_timer_fn+0x10/0x10
+>>>>     ? __hrtimer_run_queues+0x10e/0x250
+>>>>     ? hrtimer_interrupt+0xfb/0x240
+>>>>     ? __sysvec_apic_timer_interrupt+0x4e/0xe0
+>>>>     ? sysvec_apic_timer_interrupt+0x68/0x90
+>>>>     </IRQ>
+>>>>     <TASK>
+>>>>     ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>>>>     ? xas_load+0x5d/0xc0
+>>>>     xas_find+0x153/0x1a0
+>>>>     find_get_entries+0x73/0x280
+>>>>     shmem_undo_range+0x1fc/0x640
+>>>>     shmem_evict_inode+0x109/0x270
+>>>>     evict+0x107/0x240
+>>>>     ? fsnotify_destroy_marks+0x25/0x180
+>>>>     ? _atomic_dec_and_lock+0x35/0x50
+>>>>     __dentry_kill+0x71/0x190
+>>>>     dput+0xd1/0x190
+>>>>     __fput+0x128/0x2a0
+>>>>     task_work_run+0x57/0x90
+>>>>     syscall_exit_to_user_mode+0x1cb/0x1e0
+>>>>     do_syscall_64+0x67/0x170
+>>>>     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>>>    RIP: 0033:0x7fd95776eb8b
+>>>>
+>>>> If CONFIG_DEBUG_VM is enabled, we will meet VM_BUG_ON_FOLIO(!folio_test_locked(folio)) in
+>>>> shmem_add_to_page_cache() too.  It seems that the problem is related to memory migration or
+>>>> compaction which is necessary for reproduction,  although without a clear why.
+>>>>
+>>>> To reproduce the problem, we need firstly a zram device as swap backend, and then run the
+>>>> reproduction program. The reproduction program consists of three parts:
+>>>>    1. A process constantly changes the status of shmem large folio by these interfaces:
+>>>>           /sys/kernel/mm/transparent_hugepage/hugepages-<size>/shmem_enabled
+>>>>    2. A process constantly echo 1 > /proc/sys/vm/compact_memory
+>>>>    3. A process constantly alloc/free/swapout/swapin shmem large folios.
+>>>>
+>>>> I'm not sure whether the first process is necessary but the second and third are. In addition,
+>>>> I tried hacking to modify compaction_alloc to return NULL, and the problem disappeared,
+>>>> so I guess the problem is in migration.
+>>>>
+>>>> The problem is different with https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
+>>>> since I have confirmed this porblem still existed after merge the fixed patch.
+>>>
+>>> Could you check if your version includes Zi's fix[1]? Not sure if it's related to the shmem large folio split.
+>>>
+>>> [1] https://lore.kernel.org/all/AF487A7A-F685-485D-8D74-756C843D6F0A@nvidia.com/
+>>> .
+>>>
+>> Already include this patch when test.
 > 
->   fs/eventpoll.c
+> Hi Shixin,
 > 
-> between commit:
+> Can you try the diff below? It fixed my local repro.
 > 
->   d3a194d95fc8 ("epoll: simplify ep_busy_loop by removing always 0 argument")
-> 
-> from the vfs-brauner tree and commit:
-> 
->   b9d752105e5f ("net: use napi_id_valid helper")
-> 
-> from the net-next tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-> 
+> The issue is that after Baolin’s patch, shmem folios now use high-order
+> entry, so the migration code should not update multiple xarray slots.
 
-Hi Stephen,
+It is not after my patches. After converting shmem to use folio, shmem 
+mapping will store large order, but during swap, the shmem large folio 
+will be split (whereas my patches allow shmem large folio swap without 
+splitting).
 
-The conflict fix looks good to me, thanks for handling this!
+> Hi Baolin,
+> 
+> Is your patch affecting anonymous swapping out? If yes, we can remove
 
-linfeng
+No.
 
+> the for loop of updating xarray in __folio_migrate_mapping().
+
+I think the issue is introduced by commit fc346d0a70a1 ("mm: migrate 
+high-order folios in swap cache correctly"), which did not handle shmem 
+folio correctly.
+
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 365c6daa8d1b..be77932596b3 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -44,6 +44,7 @@
+>   #include <linux/sched/sysctl.h>
+>   #include <linux/memory-tiers.h>
+>   #include <linux/pagewalk.h>
+> +#include <linux/shmem_fs.h>
+> 
+>   #include <asm/tlbflush.h>
+> 
+> @@ -524,7 +525,11 @@ static int __folio_migrate_mapping(struct address_space *mapping,
+>   			folio_set_swapcache(newfolio);
+>   			newfolio->private = folio_get_private(folio);
+>   		}
+> -		entries = nr;
+> +		/* shmem now uses high-order entry */
+> +		if (folio->mapping && shmem_mapping(folio->mapping))
+
+Nit: we've already checked the 'mapping', and we can simplify it to 
+'shmem_mapping(mapping)'.
+
+> +			entries = 1;
+> +		else
+> +			entries = nr;
+>   	} else {
+>   		VM_BUG_ON_FOLIO(folio_test_swapcache(folio), folio);
+>   		entries = 1;
+
+Good catch. The fix look good to me. Thanks.
