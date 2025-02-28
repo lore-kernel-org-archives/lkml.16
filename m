@@ -1,87 +1,221 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94511276D3B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72A51B21AC
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734302; cv=none; b=lttU08gJa/XaEsOqLOe81EUK3et9qJscahmRMzNZwbytK2wHQPVSdKiFaTyBiDb00E79p/3dCbbWcgA22A/SNHLwEEeBsZeT4qpZolNRHvte6/KaN4HKeodwjs+h5Qpkddx+iLgT9o/rSJqLZTprjjP9G8yz3Ujso6PZdGMII08=
+	t=1740734332; cv=none; b=Z30jOajS+EPLjGigxqfieVQsmnH+QFQ7KdbyW62LBZVbkyFO+/wc6i9MvgxoYxlLU7Sq0Q0dlhBWXmoVFcHAaPa2Z3PMe+ZiX1+a1etVO48SneHksmwmRJb+JKWOji9TLskSDLTW9JjyLWjxwLsGag6JwF2UecMea2W1M9oYs2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734302; c=relaxed/simple;
-	bh=hO+eh0t2F7LyPMEjfa1FCx2sOdvZPD16ZPi2EVsUb0g=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rNjBHnWVZQo/GMfWPoymwAqXnrJGxEg3so5zv8sdy89f5psHUFIRFRgX9EOAAJjxO34MBnqfYcF0xnO75kN8osGYVbj+BLJ0PF1VjbvKjYO6AnEs+T7ZJYhqByTUlJrC/FBMfhEyqSLp/VIeiSpn11BgYgU6AOmrF91hko4sdQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z42b81klbz6L597;
-	Fri, 28 Feb 2025 17:14:28 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B3A0E140E01;
-	Fri, 28 Feb 2025 17:18:18 +0800 (CST)
-Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 28 Feb
- 2025 10:18:16 +0100
-Date: Fri, 28 Feb 2025 17:18:11 +0800
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
-	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
-	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 03/19] tests/acpi: virt: update HEST file with its
- current data
-Message-ID: <20250228171811.000017d4@huawei.com>
-In-Reply-To: <342f2cbf20eee9cafbee834adc66ae81aa4df37b.1740671863.git.mchehab+huawei@kernel.org>
-References: <cover.1740671863.git.mchehab+huawei@kernel.org>
-	<342f2cbf20eee9cafbee834adc66ae81aa4df37b.1740671863.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1740734332; c=relaxed/simple;
+	bh=LMn5TDBLGTKdWMmooFzE+OAAHcbwpJBbJ88qKl8V17Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=XQANJ5lmNhtjBg83OoMNSD1QNYuoPEMkknu8iLlWIEGj8mFfIXHzYJAka4FocKaA3DVFA541aA00YtB28irepZFq1Eo3Yl+tlZPJ4rU6DsmFR2sLz7dLPReAnOBd8VTsDnTwUMYvsMGbKRUTsl1gKAet4wwhE7B5aQUOtptp2q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=NAZ/bSS5; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="NAZ/bSS5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1740734318;
+	bh=JgzES0WZ+Wx5kdBNCJuvn2E0r1/Jx+wWi7EE+40opbQ=;
+	h=From:To:Cc:Subject:Date;
+	b=NAZ/bSS5aZSkqIOJUUI6HLocMZP7tSHq/4OMWARatvRGCf7vOuSBAZRVWrEj185pl
+	 08DDTd1ucgDrZDDCpe5Kks87NirpOK9P9SqZ3SxIr1EZrVx4aOSFal3gJpMU5XNqCy
+	 MI4U979IXcGmI7I1kZVJokQ1lPxWIMJ5DWjvy2i4=
+Received: from localhost.localdomain ([116.128.244.169])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 4A51D2A5; Fri, 28 Feb 2025 17:18:37 +0800
+X-QQ-mid: xmsmtpt1740734317tkg89ouqu
+Message-ID: <tencent_66CF9C91EB4A4417F70E9511649A57DEC906@qq.com>
+X-QQ-XMAILINFO: MaaIYtAFx2QDP+/dvJeySgnapen3gvSe1CLCDy99YyF7StMCPsKwGcwA9vz4V0
+	 IUw6YVTvL9eKI08/aL9f7chYkhqqCenPHnKT3WucXgkIc469GsmvgvY8OTdIixFZuwfDWvgxwC5V
+	 w/GRaFADUiHTT9Rm3TAh5+sVBDcX3MgcmCjoK9HZ7Sd5h6JPl0uBFqjefYQt1ZYxRdeKFrObgsIv
+	 GbaDGMetvyJPa+JXnWf95dwLiSi2Nbf+o+w+ymcV+0O7HmlXjk0JxsZcEAX/h2Ti1HWrXRnxNpCl
+	 RYqFjVqam/BAX5mAlWg90lIJtv+cRj3fP7cCTN+Va9U30V9jsEQnlcaoGT3ifIb4U1FT2JCspObg
+	 Syvw7GQmHfdO4i94TMwILfOT6eYGvYbAoFBFp0Z1W3bjxt7u03GbfzHk/0MimLXpbvhaj3Y7KF5y
+	 IsOiNpy3Jg+aobJ6W5QJdFf8+kADcMjD64esaRPHWDiBc/ONDC/zCN4IdTdx+HoHN4SsUWkVTPnf
+	 tMpY12IJZzquJMVl14wpHUzM0A46cdhLABajdkLepjZEQyE+ntmyN5h1t+oFvorhuMhsWXGIKiGz
+	 FaGpAnes3P1cyxyKalHKr9MzE8XeZ7B/UsXstf/S8b3NFIsL4odSbRj2/wkatyIlBDpvBPANzvB0
+	 3mEokdeUhObrSVHKaFnP6q3XYSpk+UAX1aLJd8Kc9NLfmEJneUq/npgMMXu7Nyk+hx8tt2FQH/WG
+	 hk0oBBPKmpz2eIRSS4gO1CNopZOpzFwhkWJ++r9pgdRGtqgESwOsXh6YrMAUBmHw/ZgInx2lIfO+
+	 M58uoa4JxvKqwy7SgTUcv32gFUiUNMjQVitk7GUwqI93TRB5yEFh2xYkrIh7XaSdCBW9AOes1jmE
+	 K45AYBr2er+V2QvoL/em2uR3u1BXELtUiM91ZQ9ja507NReAGFusLhQIi5D3ar6luDELPnBZPqlp
+	 5kYkTYfA5zmKoVaG5nKnXCyo95uCOCcqJDkvJjwXE=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: xiaopeitux@foxmail.com
+To: gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	andriy.shevchenko@linux.intel.com
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH] driver core: Split devres APIs to device/devres.h
+Date: Fri, 28 Feb 2025 17:18:35 +0800
+X-OQ-MSGID: <7f59c984f5a675b77864af288fef404cd9fa2b7f.1740734232.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Feb 2025 17:00:41 +0100
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+From: Pei Xiao <xiaopei01@kylinos.cn>
 
-> Now that HEST table is checked for aarch64, add the current
-> firmware file.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Acked-by: Igor Mammedov <imammedo@redhat.com>
+Since a21cad931276 ("driver core: Split devres APIs to
+device/devres.h"),but some APIs like 'devm_alloc_percpu' didn't move to
+devres.h. we should also move it.
 
-Mostly for completeness rather than because there is any actual
-review we can do on 'this is what the file is'.
+Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
+---
+ include/linux/device.h        | 60 -----------------------------------
+ include/linux/device/devres.h | 58 +++++++++++++++++++++++++++++++++
+ 2 files changed, 58 insertions(+), 60 deletions(-)
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->  tests/data/acpi/aarch64/virt/HEST           | Bin 0 -> 132 bytes
->  tests/qtest/bios-tables-test-allowed-diff.h |   1 -
->  2 files changed, 1 deletion(-)
-> 
-> diff --git a/tests/data/acpi/aarch64/virt/HEST b/tests/data/acpi/aarch64/virt/HEST
-> index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..4c5d8c5b5da5b3241f93cd0839e94272bf6b1486 100644
-> GIT binary patch
-> literal 132
-> zcmeZp4Gw8xU|?W;<mB({5v<@85#X$#prF9Wz`y`vgJ=-uVqjqS|DS;o#%Ew*U|?_n
-> dk++-~7#J8hWI!Yi09DHYRr~Kh1c1x}0RY>66afGL
-> 
-> literal 0
-> HcmV?d00001
-> 
-> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-> index 39901c58d647..dfb8523c8bf4 100644
-> --- a/tests/qtest/bios-tables-test-allowed-diff.h
-> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
-> @@ -1,2 +1 @@
->  /* List of comma-separated changed AML files to ignore */
-> -"tests/data/acpi/aarch64/virt/HEST",
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ec330af24151..ab383a9bbc17 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -281,63 +281,6 @@ int __must_check device_create_bin_file(struct device *dev,
+ void device_remove_bin_file(struct device *dev,
+ 			    const struct bin_attribute *attr);
+ 
+-/* allows to add/remove a custom action to devres stack */
+-int devm_remove_action_nowarn(struct device *dev, void (*action)(void *), void *data);
+-
+-/**
+- * devm_remove_action() - removes previously added custom action
+- * @dev: Device that owns the action
+- * @action: Function implementing the action
+- * @data: Pointer to data passed to @action implementation
+- *
+- * Removes instance of @action previously added by devm_add_action().
+- * Both action and data should match one of the existing entries.
+- */
+-static inline
+-void devm_remove_action(struct device *dev, void (*action)(void *), void *data)
+-{
+-	WARN_ON(devm_remove_action_nowarn(dev, action, data));
+-}
+-
+-void devm_release_action(struct device *dev, void (*action)(void *), void *data);
+-
+-int __devm_add_action(struct device *dev, void (*action)(void *), void *data, const char *name);
+-#define devm_add_action(dev, action, data) \
+-	__devm_add_action(dev, action, data, #action)
+-
+-static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(void *),
+-					     void *data, const char *name)
+-{
+-	int ret;
+-
+-	ret = __devm_add_action(dev, action, data, name);
+-	if (ret)
+-		action(data);
+-
+-	return ret;
+-}
+-#define devm_add_action_or_reset(dev, action, data) \
+-	__devm_add_action_or_reset(dev, action, data, #action)
+-
+-/**
+- * devm_alloc_percpu - Resource-managed alloc_percpu
+- * @dev: Device to allocate per-cpu memory for
+- * @type: Type to allocate per-cpu memory for
+- *
+- * Managed alloc_percpu. Per-cpu memory allocated with this function is
+- * automatically freed on driver detach.
+- *
+- * RETURNS:
+- * Pointer to allocated memory on success, NULL on failure.
+- */
+-#define devm_alloc_percpu(dev, type)      \
+-	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
+-						      __alignof__(type)))
+-
+-void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
+-				   size_t align);
+-void devm_free_percpu(struct device *dev, void __percpu *pdata);
+-
+ struct device_dma_parameters {
+ 	/*
+ 	 * a low level driver may set these to teach IOMMU code about
+@@ -1163,9 +1106,6 @@ static inline void device_remove_group(struct device *dev,
+ 	device_remove_groups(dev, groups);
+ }
+ 
+-int __must_check devm_device_add_group(struct device *dev,
+-				       const struct attribute_group *grp);
+-
+ /*
+  * get_device - atomically increment the reference count for the device.
+  *
+diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
+index 9b49f9915850..8f93f7388dc1 100644
+--- a/include/linux/device/devres.h
++++ b/include/linux/device/devres.h
+@@ -126,4 +126,62 @@ void __iomem *devm_of_iomap(struct device *dev, struct device_node *node, int in
+ 
+ #endif
+ 
++/* allows to add/remove a custom action to devres stack */
++int devm_remove_action_nowarn(struct device *dev, void (*action)(void *), void *data);
++
++/**
++ * devm_remove_action() - removes previously added custom action
++ * @dev: Device that owns the action
++ * @action: Function implementing the action
++ * @data: Pointer to data passed to @action implementation
++ *
++ * Removes instance of @action previously added by devm_add_action().
++ * Both action and data should match one of the existing entries.
++ */
++static inline
++void devm_remove_action(struct device *dev, void (*action)(void *), void *data)
++{
++	WARN_ON(devm_remove_action_nowarn(dev, action, data));
++}
++
++void devm_release_action(struct device *dev, void (*action)(void *), void *data);
++
++int __devm_add_action(struct device *dev, void (*action)(void *), void *data, const char *name);
++#define devm_add_action(dev, action, data) \
++	__devm_add_action(dev, action, data, #action)
++
++static inline int __devm_add_action_or_reset(struct device *dev, void (*action)(void *),
++					     void *data, const char *name)
++{
++	int ret;
++
++	ret = __devm_add_action(dev, action, data, name);
++	if (ret)
++		action(data);
++
++	return ret;
++}
++#define devm_add_action_or_reset(dev, action, data) \
++	__devm_add_action_or_reset(dev, action, data, #action)
++
++/**
++ * devm_alloc_percpu - Resource-managed alloc_percpu
++ * @dev: Device to allocate per-cpu memory for
++ * @type: Type to allocate per-cpu memory for
++ *
++ * Managed alloc_percpu. Per-cpu memory allocated with this function is
++ * automatically freed on driver detach.
++ *
++ * RETURNS:
++ * Pointer to allocated memory on success, NULL on failure.
++ */
++#define devm_alloc_percpu(dev, type)      \
++	((typeof(type) __percpu *)__devm_alloc_percpu((dev), sizeof(type), \
++						      __alignof__(type)))
++
++void __percpu *__devm_alloc_percpu(struct device *dev, size_t size,
++				   size_t align);
++void devm_free_percpu(struct device *dev, void __percpu *pdata);
++int __must_check devm_device_add_group(struct device *dev,
++				       const struct attribute_group *grp);
+ #endif /* _DEVICE_DEVRES_H_ */
+-- 
+2.25.1
 
