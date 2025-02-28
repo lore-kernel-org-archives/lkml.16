@@ -1,87 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80CA2257AE8;
-	Fri, 28 Feb 2025 09:19:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7581CAA99;
+	Fri, 28 Feb 2025 09:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734342; cv=none; b=Gc5qQVxaPYJ+zgemtskI/NkPr/SY25HN2lQ0Ui2M+vMEmWRBeTGlPgsbWxaddC7ncqOPSFp3vjUQ4BCNjFn89EH1n5XiZ7iPLZakC4yCTS6ZD/SHwWOHl1wOPd7yFne1danJtywUkG4eA/IwHfqp7DNlMaTx/Qf/5d1dTBKVVIo=
+	t=1740734375; cv=none; b=Eqaq1BAvdBQiUfF+uBhSh+uFh2m/DRLX32Ph6eV5jS14psGgPScbbi8W2t2lVlE6Vh5C7Qv6583pSFgO2s1gYp+ZGWlTMjXdku2U77NDYD0+f1psoPbwvpaofS4qSWVqDt9yuALa20NQCwFnYTrLEprzrjC8Dflk1bqe8hQM9ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734342; c=relaxed/simple;
-	bh=A25tAOF8LWK1knSivsYAeHkV8bvcON0THzor7i3KpNE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kZUdE6/agYF4MCyn89fjIFdgV4asgsZgZlhvQpaNIeExDhZ+RRcU99Jn+CCy2Hrgk9MD/2Axyn7iwAjUbAzA7iYhKOObHuRnmL4XKECc3wBpX9UnEKvnmaYg3cj7oWUaHfwCuFeLIjSnBFTp+1QkyWqZfUsgw8hwqDSDXbrvHoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SQ9n4SuA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SQ9n4SuA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56ABCC4CEE4;
-	Fri, 28 Feb 2025 09:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740734342;
-	bh=A25tAOF8LWK1knSivsYAeHkV8bvcON0THzor7i3KpNE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=SQ9n4SuAbYUG5cK3GuLC6Jw53T9Fk7t5QzujB7vK7BFIV3+rgPTYCRGB6Oru3uuin
-	 4FnrbMCgNN2QZMzHpgW7Qo15+ZI7cTSOkpKtqo815rNxoCeEm8BPlpliWNDvl5W/bO
-	 KxUGxS8YWm1KagDqsuezs3xthzpMNRaaBhwiNI7hNU9sB/SaTgXQ7W6v90DIp8Q/lv
-	 ccEJhs0z5eH/OOM8U7n42azhnvqsBEHGjAWImyEtzVPSiKEhh6qYvFm5OnavYvPrK8
-	 GaewI4/0qms4BZqqnJ5fmhFw5yDaDv5GnHA3X92nC/RlbtNb1ckjR5I6ID/rzLd7By
-	 6vyFqEJlh+mHQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Petr Mladek" <pmladek@suse.com>,  "Steven Rostedt"
- <rostedt@goodmis.org>,  "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>,  "Rasmus Villemoes"
- <linux@rasmusvillemoes.dk>,  "Sergey Senozhatsky"
- <senozhatsky@chromium.org>,  "Andrew Morton" <akpm@linux-foundation.org>,
-  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
- Lossin"
- <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,  "Maarten
- Lankhorst" <maarten.lankhorst@linux.intel.com>,  "Maxime Ripard"
- <mripard@kernel.org>,  "Thomas Zimmermann" <tzimmermann@suse.de>,  "David
- Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
-  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 0/4] Check Rust signatures at compile time
-In-Reply-To: <CAH5fLgiNs-VKEQduL16eymSPnqA0_6aR8WDRYm68SE8FXGDHRw@mail.gmail.com>
- (Alice
-	Ryhl's message of "Fri, 28 Feb 2025 09:46:32 +0100")
-References: <UXTosjUFv_CKOV-K4oqNGBhMEv64tds9NgXWhHEYdCHuKM2qSPFrpBnTqhFGkcbv5_KXYERykIXhn-sYnEeuUg==@protonmail.internalid>
-	<20250227-export-macro-v1-0-948775fc37aa@google.com>
-	<877c5apmdi.fsf@kernel.org>
-	<n_SgeABndEnm2Yl1urxt15OBDGbfaY4y8M_DCt06Cwoql_kH-ErUfE48HL1gXbCy0eTa7sKHXdHmhyfuJteS-A==@protonmail.internalid>
-	<CAH5fLgiNs-VKEQduL16eymSPnqA0_6aR8WDRYm68SE8FXGDHRw@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Feb 2025 10:18:14 +0100
-Message-ID: <878qpqo2ax.fsf@kernel.org>
+	s=arc-20240116; t=1740734375; c=relaxed/simple;
+	bh=Vd3UmTfRLm+F06cpBFFtBHu6pRElLdw3agBFpIi7T2w=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PBaZZR1BEin0XXEqNTNG9st6NN1hoUcREccUPTG/FawgTKea6L7kN5ZTc5s6JFDLZsLA5np6692O6FFYwYs2NHew8IEjnwxHSZf6zq5jUdWoXndHjbffgKgM0/RiTGP/qDWJJoY66Ker22TsIVW+fcupDbz8ifhewFlO5Q1KmDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z42ff3zTmz6K9Sq;
+	Fri, 28 Feb 2025 17:17:30 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6F3ED140CF4;
+	Fri, 28 Feb 2025 17:19:31 +0800 (CST)
+Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 28 Feb
+ 2025 10:19:17 +0100
+Date: Fri, 28 Feb 2025 17:19:13 +0800
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
+	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
+	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>, Dongjiu Geng
+	<gengdongjiu1@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>, "Peter
+ Maydell" <peter.maydell@linaro.org>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 04/19] acpi/ghes: Cleanup the code which gets ghes
+ ged state
+Message-ID: <20250228171913.00003442@huawei.com>
+In-Reply-To: <cd48953a4568b401c689078898a729c3d5cb10c2.1740671863.git.mchehab+huawei@kernel.org>
+References: <cover.1740671863.git.mchehab+huawei@kernel.org>
+	<cd48953a4568b401c689078898a729c3d5cb10c2.1740671863.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-"Alice Ryhl" <aliceryhl@google.com> writes:
+On Thu, 27 Feb 2025 17:00:42 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-> On Fri, Feb 28, 2025 at 8:19=E2=80=AFAM Andreas Hindborg <a.hindborg@kern=
-el.org> wrote:
->>
->> "Alice Ryhl" <aliceryhl@google.com> writes:
->>
->> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
->>
->> What is going on with the cover letter of this one?
->
-> It's empty.
+> Move the check logic into a common function and simplify the
+> code which checks if GHES is enabled and was properly setup.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by:  Igor Mammedov <imammedo@redhat.com>
+This is the only place Igor's tag seems to have a bonus space..
+Probably worth tidying up if you are doing a v7
 
-I can see that =F0=9F=98=86 Would you consider making it not empty?
-
-
-Best regards,
-Andreas Hindborg
-
-
-
+Jonathan
