@@ -1,166 +1,286 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B7826E174
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EBB26B971
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740752102; cv=none; b=Gz3G2P7bZZirb7E9PKsIH3jt0pKp0NgnTsUoPqkWcXPTuhL55l6UDME/ouTln0TMiPyPDU6N5P6p11iBgXSjXrnkOjZyNf3dHopi76A/9NxybaroKC0hrpf8ff+6nZf0yJPWNR0+ezRbP9CMCyfZiYThUDH4e++Hs2+/oXRzkv8=
+	t=1740752235; cv=none; b=Wuvc9Defrv1H0ORjZgR9qwRixjXtJ0Hbs5MOM+uf3T2oIwyisoJrJi1pGyRLzGxtTVwKdl26aYp6FNzjcwfnZm+dTi54gSL78GpnM9YuMUsWRS3X1qHnCYz09riaZhCZ8lR15MkRlhJ3bfiBSpNNyVP3Ze9C36pTio3H5WW+9FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740752102; c=relaxed/simple;
-	bh=quiR16689GxKD0zMbG7akYA4bL0qENBpHq/iOV0l6G4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QrFfXRWnJF85Y0Vh3ZdMORq7SaJYtjP0Ahnxu+RoY2DaclzjhAnGjnK+/vcwq9wJu1kDRNe1jLiIfMWx5FwPLnCg5irhWPIpexOTtAVPUqlLJcydKVO64B2Y8iK3zorNxec0Gob/yZpBjV+epDBbEVQlOy3Emms9OtbYLlUVXdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lp3Khf6/; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740752235; c=relaxed/simple;
+	bh=F8zm6YQaiTa2XSTUkduNae4RXOCv5ivV4wzwzDD4rUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GTmDHtY7txChE5grUcf2XKJsnPg2H5mjn9i4rXpNZJNfWpRNMjbdy7XOsISma+IswEHqwekPLdOe7ZOtzIDa9VieqrepGbSjN1zNH8OtDnKfEbg5BlHkgiezWHE4enVneM4MXvdw6xoSXPGxawbGKvRWBczefFXrW2pPc8bsDKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LYAKBT+g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4GvZ/zPh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=LYAKBT+g; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4GvZ/zPh; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lp3Khf6/"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740752088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wRV6mcPluzpyEsyiWY9Lu/xX/hlkANEaDVySV+3Bifk=;
-	b=Lp3Khf6/5IRYZ1u1KG+iVCEuwSEmIiuPmFyHMKNUZCZg9a35PlRiIR4Jl1YQx5sScto8kY
-	xfOUBuSfBSz51sSzZ2fDfZpLHbabzEun/joZvOGwKcyvPDWsdtEo8QNu7Jfbop1EQ8YPcv
-	rrpE4q3OEPmmnp4cAmRhgLZm+0KH/Cc=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: horms@kernel.org,
-	kuba@kernel.org
-Cc: bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	ricardo@marliere.net,
-	viro@zeniv.linux.org.uk,
-	dmantipov@yandex.ru,
-	aleksander.lobakin@intel.com,
-	linux-ppp@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Paul Mackerras <paulus@samba.org>,
-	syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: [PATCH net-next v5] ppp: Fix KMSAN uninit-value warning with bpf
-Date: Fri, 28 Feb 2025 22:14:08 +0800
-Message-ID: <20250228141408.393864-1-jiayuan.chen@linux.dev>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LYAKBT+g";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4GvZ/zPh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="LYAKBT+g";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4GvZ/zPh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BD1A21F37E;
+	Fri, 28 Feb 2025 14:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740752231; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hIseiRro5ZDlr43rKJfqqqfDFAsRrvZFt1JC6oL9YnE=;
+	b=LYAKBT+gywT+qOSiQz8ecqjdOm74+q98gaYP+YDKnR/F87TfZ49MUFJCNNaCOcWKbmgQLS
+	WT4Is2KV6rpun1S5H7p1LknkSJMhoBqEGr1nrDGqP/ECkfZ7DWHQ1sXauPaq50BhqIO5Us
+	BRaoMBbN8QL0GNoficVjRfl/n42qetI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740752231;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hIseiRro5ZDlr43rKJfqqqfDFAsRrvZFt1JC6oL9YnE=;
+	b=4GvZ/zPhVrNKc8AKw7Z3I51uT11w12XQImbuBKgAD8dbx0C4zOwPocieku2c1mKwRj+N2H
+	3nfHK40ttQG74GAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=LYAKBT+g;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="4GvZ/zPh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740752231; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hIseiRro5ZDlr43rKJfqqqfDFAsRrvZFt1JC6oL9YnE=;
+	b=LYAKBT+gywT+qOSiQz8ecqjdOm74+q98gaYP+YDKnR/F87TfZ49MUFJCNNaCOcWKbmgQLS
+	WT4Is2KV6rpun1S5H7p1LknkSJMhoBqEGr1nrDGqP/ECkfZ7DWHQ1sXauPaq50BhqIO5Us
+	BRaoMBbN8QL0GNoficVjRfl/n42qetI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740752231;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=hIseiRro5ZDlr43rKJfqqqfDFAsRrvZFt1JC6oL9YnE=;
+	b=4GvZ/zPhVrNKc8AKw7Z3I51uT11w12XQImbuBKgAD8dbx0C4zOwPocieku2c1mKwRj+N2H
+	3nfHK40ttQG74GAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8E45C137AC;
+	Fri, 28 Feb 2025 14:17:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AtGOIGfFwWerMQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 28 Feb 2025 14:17:11 +0000
+Message-ID: <503c4ba7-c667-444a-b396-e85c46469f0a@suse.cz>
+Date: Fri, 28 Feb 2025 15:17:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/5] mm/filemap: add mempolicy support to the filemap
+ layer
+Content-Language: en-US
+To: Shivank Garg <shivankg@amd.com>, akpm@linux-foundation.org,
+ willy@infradead.org, pbonzini@redhat.com
+Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ linux-coco@lists.linux.dev, chao.gao@intel.com, seanjc@google.com,
+ ackerleytng@google.com, david@redhat.com, bharata@amd.com, nikunj@amd.com,
+ michael.day@amd.com, Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com,
+ michael.roth@amd.com, tabba@google.com
+References: <20250226082549.6034-1-shivankg@amd.com>
+ <20250226082549.6034-2-shivankg@amd.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250226082549.6034-2-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: BD1A21F37E
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:dkim];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Syzbot caught an "KMSAN: uninit-value" warning [1], which is caused by the
-ppp driver not initializing a 2-byte header when using socket filter.
+On 2/26/25 09:25, Shivank Garg wrote:
+> From: Shivansh Dhiman <shivansh.dhiman@amd.com>
+> 
+> Add NUMA mempolicy support to the filemap allocation path by introducing
+> new APIs that take a mempolicy argument:
+> - filemap_grab_folio_mpol()
+> - filemap_alloc_folio_mpol()
+> - __filemap_get_folio_mpol()
+> 
+> These APIs allow callers to specify a NUMA policy during page cache
+> allocations, enabling fine-grained control over memory placement. This is
+> particularly needed by KVM when using guest-memfd memory backends, where
+> the guest memory needs to be allocated according to the NUMA policy
+> specified by VMM.
+> 
+> The existing non-mempolicy APIs remain unchanged and continue to use the
+> default allocation behavior.
+> 
+> Signed-off-by: Shivansh Dhiman <shivansh.dhiman@amd.com>
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
 
-The following code can generate a PPP filter BPF program:
-'''
-struct bpf_program fp;
-pcap_t *handle;
-handle = pcap_open_dead(DLT_PPP_PPPD, 65535);
-pcap_compile(handle, &fp, "ip and outbound", 0, 0);
-bpf_dump(&fp, 1);
-'''
-Its output is:
-'''
-(000) ldh [2]
-(001) jeq #0x21 jt 2 jf 5
-(002) ldb [0]
-(003) jeq #0x1 jt 4 jf 5
-(004) ret #65535
-(005) ret #0
-'''
-Wen can find similar code at the following link:
-https://github.com/ppp-project/ppp/blob/master/pppd/options.c#L1680
-The maintainer of this code repository is also the original maintainer
-of the ppp driver.
+<snip>
 
-As you can see the BPF program skips 2 bytes of data and then reads the
-'Protocol' field to determine if it's an IP packet. Then it read the first
-byte of the first 2 bytes to determine the direction.
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -1001,11 +1001,17 @@ int filemap_add_folio(struct address_space *mapping, struct folio *folio,
+>  EXPORT_SYMBOL_GPL(filemap_add_folio);
+>  
+>  #ifdef CONFIG_NUMA
+> -struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
+> +struct folio *filemap_alloc_folio_mpol_noprof(gfp_t gfp, unsigned int order,
+> +		struct mempolicy *mpol)
+>  {
+>  	int n;
+>  	struct folio *folio;
+>  
+> +	if (mpol)
+> +		return folio_alloc_mpol_noprof(gfp, order, mpol,
+> +					       NO_INTERLEAVE_INDEX,
+> +					       numa_node_id());
+> +
+>  	if (cpuset_do_page_mem_spread()) {
+>  		unsigned int cpuset_mems_cookie;
+>  		do {
+> @@ -1018,6 +1024,12 @@ struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
+>  	}
+>  	return folio_alloc_noprof(gfp, order);
+>  }
+> +EXPORT_SYMBOL(filemap_alloc_folio_mpol_noprof);
+> +
+> +struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
+> +{
+> +	return filemap_alloc_folio_mpol_noprof(gfp, order, NULL);
+> +}
+>  EXPORT_SYMBOL(filemap_alloc_folio_noprof);
+>  #endif
 
-The issue is that only the first byte indicating direction is initialized
-in current ppp driver code while the second byte is not initialized.
+Here it seems to me:
 
-For normal BPF programs generated by libpcap, uninitialized data won't be
-used, so it's not a problem. However, for carefully crafted BPF programs,
-such as those generated by syzkaller [2], which start reading from offset
-0, the uninitialized data will be used and caught by KMSAN.
+- filemap_alloc_folio_noprof() could stay unchanged
+- filemap_alloc_folio_mpol_noprof() would
+  - call folio_alloc_mpol_noprof() if (mpol)
+  - call filemap_alloc_folio_noprof() otherwise
 
-[1] https://syzkaller.appspot.com/bug?extid=853242d9c9917165d791
-[2] https://syzkaller.appspot.com/text?tag=ReproC&x=11994913980000
+The code would be a bit more clearly structured that way?
 
-Cc: Paul Mackerras <paulus@samba.org>
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/000000000000dea025060d6bc3bc@google.com/
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- drivers/net/ppp/ppp_generic.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 4583e15ad03a..1420c4efa48e 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -72,6 +72,17 @@
- #define PPP_PROTO_LEN	2
- #define PPP_LCP_HDRLEN	4
- 
-+/* The filter instructions generated by libpcap are constructed
-+ * assuming a four-byte PPP header on each packet, where the last
-+ * 2 bytes are the protocol field defined in the RFC and the first
-+ * byte of the first 2 bytes indicates the direction.
-+ * The second byte is currently unused, but we still need to initialize
-+ * it to prevent crafted BPF programs from reading them which would
-+ * cause reading of uninitialized data.
-+ */
-+#define PPP_FILTER_OUTBOUND_TAG 0x0100
-+#define PPP_FILTER_INBOUND_TAG  0x0000
-+
- /*
-  * An instance of /dev/ppp can be associated with either a ppp
-  * interface unit or a ppp channel.  In both cases, file->private_data
-@@ -1762,10 +1773,10 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
- 
- 	if (proto < 0x8000) {
- #ifdef CONFIG_PPP_FILTER
--		/* check if we should pass this packet */
--		/* the filter instructions are constructed assuming
--		   a four-byte PPP header on each packet */
--		*(u8 *)skb_push(skb, 2) = 1;
-+		/* check if the packet passes the pass and active filters.
-+		 * See comment for PPP_FILTER_OUTBOUND_TAG above.
-+		 */
-+		*(__be16 *)skb_push(skb, 2) = htons(PPP_FILTER_OUTBOUND_TAG);
- 		if (ppp->pass_filter &&
- 		    bpf_prog_run(ppp->pass_filter, skb) == 0) {
- 			if (ppp->debug & 1)
-@@ -2482,14 +2493,13 @@ ppp_receive_nonmp_frame(struct ppp *ppp, struct sk_buff *skb)
- 		/* network protocol frame - give it to the kernel */
- 
- #ifdef CONFIG_PPP_FILTER
--		/* check if the packet passes the pass and active filters */
--		/* the filter instructions are constructed assuming
--		   a four-byte PPP header on each packet */
- 		if (ppp->pass_filter || ppp->active_filter) {
- 			if (skb_unclone(skb, GFP_ATOMIC))
- 				goto err;
--
--			*(u8 *)skb_push(skb, 2) = 0;
-+			/* Check if the packet passes the pass and active filters.
-+			 * See comment for PPP_FILTER_INBOUND_TAG above.
-+			 */
-+			*(__be16 *)skb_push(skb, 2) = htons(PPP_FILTER_INBOUND_TAG);
- 			if (ppp->pass_filter &&
- 			    bpf_prog_run(ppp->pass_filter, skb) == 0) {
- 				if (ppp->debug & 1)
--- 
-2.47.1
+> @@ -1881,11 +1893,12 @@ void *filemap_get_entry(struct address_space *mapping, pgoff_t index)
+>  }
+>  
+>  /**
+> - * __filemap_get_folio - Find and get a reference to a folio.
+> + * __filemap_get_folio_mpol - Find and get a reference to a folio.
+>   * @mapping: The address_space to search.
+>   * @index: The page index.
+>   * @fgp_flags: %FGP flags modify how the folio is returned.
+>   * @gfp: Memory allocation flags to use if %FGP_CREAT is specified.
+> + * @mpol: The mempolicy to apply when allocating a new folio.
+>   *
+>   * Looks up the page cache entry at @mapping & @index.
+>   *
+> @@ -1896,8 +1909,8 @@ void *filemap_get_entry(struct address_space *mapping, pgoff_t index)
+>   *
+>   * Return: The found folio or an ERR_PTR() otherwise.
+>   */
+> -struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+> -		fgf_t fgp_flags, gfp_t gfp)
+> +struct folio *__filemap_get_folio_mpol(struct address_space *mapping, pgoff_t index,
+> +		fgf_t fgp_flags, gfp_t gfp, struct mempolicy *mpol)
+>  {
+>  	struct folio *folio;
+>  
+> @@ -1967,7 +1980,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+>  			err = -ENOMEM;
+>  			if (order > min_order)
+>  				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
+> -			folio = filemap_alloc_folio(alloc_gfp, order);
+> +			folio = filemap_alloc_folio_mpol(alloc_gfp, order, mpol);
+>  			if (!folio)
+>  				continue;
+>  
+> @@ -2003,6 +2016,13 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+>  		folio_clear_dropbehind(folio);
+>  	return folio;
+>  }
+> +EXPORT_SYMBOL(__filemap_get_folio_mpol);
+> +
+> +struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+> +		fgf_t fgp_flags, gfp_t gfp)
+> +{
+> +	return __filemap_get_folio_mpol(mapping, index, fgp_flags, gfp, NULL);
+> +}
+>  EXPORT_SYMBOL(__filemap_get_folio);
+>  
+>  static inline struct folio *find_get_entry(struct xa_state *xas, pgoff_t max,
 
