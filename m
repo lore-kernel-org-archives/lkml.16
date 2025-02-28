@@ -1,70 +1,83 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BA51C331E;
-	Fri, 28 Feb 2025 14:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E601C331E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740753154; cv=none; b=svLNHXJVHJmek4AUB5qsJLYjoWVMs1ZKziOrA00DSXCIN0HHySblGJVqqOKVbiMnwj0o7g7qORSIAW3yJHBy7MT34we37EejJKbpwvv9Du/3m7SlurAFe+Aec4Pz4g6AuDaWQbpU4I/1wPQbVzhiv50+p92hIX2utRB+DTlF7CM=
+	t=1740753213; cv=none; b=YFfGcgwlc4IvbRcAahrTyzAteI0K/P/S+BCP0A/m4B2fvMdzVpnG7UP1aicNsGzFEUuD+ZYR+yNimPZGcZxjMY1Jy9+/8UU6t9SQISVKAwgWzOj82z1euqMDcwujFdqw30Fhb8IKukQSQW6atxYuSh1roSVvEVBu9mZ01tAFj28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740753154; c=relaxed/simple;
-	bh=IShPQzQud0CPmkUWa6FmVk1k6bMZYxMrSPQMdfHu2CU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X1LwbOh+n71AhULR/a2jrPXCzwtwsZ7Odfg+JAfhmo8qr7Il+qIoGc7fmFkiyVtQwmSDWPT4C/z5vqFoG9YbV8g6IVtITQswTmmA5kwcT4ZIEL9Gmx6rB22c3LgttPcF8cP89VYu60Zm5emTOGVEx4U8jWn9ewisSryi7s04ex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=vnqjAU1Y; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1740753213; c=relaxed/simple;
+	bh=Zgmg7JblY+/hL2U9IxAQA5UQ9MFOAnWe9NQRuo64PlQ=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=GXMeQ33hJG4JUOtq+O6hYk8J4n0LD7v8fX6GUh+UVRrRCDOC69nDcNYhrUBQxkFc5j1Sagf5c88pQgA/kxHAU2vxF965/K8G2Tr8398DPufnwTRQuAyOgWwRfeK0/gjc+tGp0zlQIsBg1eHl+uvDHWleUV6O8FHNmoYC7ZbBPw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SE06yr7S; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vnqjAU1Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=LUZgjJhckIEQIeL4sCjPQpGF4IsNItQ+wc3CINdwt28=; b=vnqjAU1YBbf2svvN1bCNqDLvhD
-	2n97xzQtDLJF/ITnq6k04j06r7cR4SVgAHT8ywACFHlD7GagTOh2iyuc7XUH/c766D0kdhrlnVins
-	Pnewj/h5dbvdMy/d0Yibcv9RqQj7sjUygGKn021tZPRkuquo4NyCgBDQXAKPjhZ09vWU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1to1PY-000yAO-Ft; Fri, 28 Feb 2025 15:32:20 +0100
-Date: Fri, 28 Feb 2025 15:32:20 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Frank Sae <Frank.Sae@motor-comm.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
-	xiaogang.fan@motor-comm.com, fei.zhang@motor-comm.com,
-	hua.sun@motor-comm.com
-Subject: Re: [PATCH net-next v3 05/14] motorcomm:yt6801: Implement the
- .ndo_open function
-Message-ID: <40d06932-3704-4eea-887f-ba286085532d@lunn.ch>
-References: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
- <20250228100020.3944-6-Frank.Sae@motor-comm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SE06yr7S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740753211;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=H1/lKR8OE6Oc19uEwndRksE75TBxzyMuRLQMwhnyPGk=;
+	b=SE06yr7SstCl70AhxuVIm8OHJNSENq0/b1KsRtstqrkvDuDAl2xprmhJoqilvl1srpbhGd
+	GjDkHccdg5W0sYZ34yAkGO2LvIAsX0dR3h052VPN/hgtdv3guYOWtFYCEYjdalM4grkth8
+	PuP0syxDeCtDQgc2XXx4tg8kjh71IHM=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-365-w6E_HGDOP5GXQP9jECoJNQ-1; Fri,
+ 28 Feb 2025 09:33:27 -0500
+X-MC-Unique: w6E_HGDOP5GXQP9jECoJNQ-1
+X-Mimecast-MFC-AGG-ID: w6E_HGDOP5GXQP9jECoJNQ_1740753206
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2D4BD1954128;
+	Fri, 28 Feb 2025 14:33:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 392BA1800367;
+	Fri, 28 Feb 2025 14:33:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20250228062216.77e34415@kernel.org>
+References: <20250228062216.77e34415@kernel.org> <3190716.1740733119@warthog.procyon.org.uk>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+    linux-afs@lists.infradead.org, linux-fsdevel@lists.infradead.org,
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228100020.3944-6-Frank.Sae@motor-comm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3377823.1740753199.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 28 Feb 2025 14:33:19 +0000
+Message-ID: <3377824.1740753199@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-> +static int fxgmac_open(struct net_device *netdev)
-> +{
-> +	struct fxgmac_pdata *priv = netdev_priv(netdev);
-> +	int ret;
-> +
-> +	mutex_lock(&priv->mutex);
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-What is this mutex protecting? Where it is defined you have:
+> fs/afs/cell.c:203:5-22: WARNING: Unsigned expression compared with zero:=
+ cell -> dynroot_ino < 0
 
-       struct mutex mutex; /* Driver lock */
+Yeah, thanks - error handling bug.  I can retag it and ask Christian to pu=
+ll
+it again.  (unless he'd rather stack a fix patch)
 
-which does not help at all. Why is the RTNL lock not sufficient?
+David
 
-	Andrew
