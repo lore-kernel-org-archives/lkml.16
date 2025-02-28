@@ -1,215 +1,158 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773FB8F6B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471212528EA
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740732240; cv=none; b=uu4iVh4ktNAXnSzij64eWm6obCWx9UKP0Ek+pXarG+zPIlokMATVtVpoBYWA2SEfjO8F0bP44EQ4LR4xOxMMrE64m+8BP07xZnQXfEfiiki73VtQLJbM04RSaaj5rpUUXm0R4A04ftKW7ZsPA1p8EPC5ZXvZYPTaHR1A9JHUk/g=
+	t=1740732277; cv=none; b=QUrjLwik2UYBm6hh8qs08nBq+lwZN5EhvUp70t/bc5lljrGDPKLpJXPNEN0wFnNolcpm9zHejzaufPPgytaNq/suvHFakBUxi2hGfChZk9IsH5l5jhl9xQ2ss84cLxdIAhro24w/lSXZicd3tiRP/EarjxUN5f7kLDpRtl+jJ2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740732240; c=relaxed/simple;
-	bh=feDBNntw9yX3Vh3kglgn6q5F5/6MdMcMdpEBHjC7Lfw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=kwcPh4dXS75HvUNbUxG/8Nh6M05XFssAJVNJ6s4ugLc1gTlf5wR5jfyohy37M1zPcxgqRm0jAFGDZNmhYVjNfA8H4og8NAt9Q1oii9Wm+WP8lIClSclO8AgkygIhotFR3uto8u9OVrQCrcquwafUgjJ3YKzPu8EK8ZMz4BFpprU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fEn/lsau; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1740732277; c=relaxed/simple;
+	bh=rJ99Rgrwd48M3vkF+RIcpmzBAXe1RpM3mGRPgHCqcdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B/fIJ51omTJPrxfCQnynY+J8eqJ/3eSrmX3W79ILQnMgLW96G7OfEANZ/b29c3GYn7PjJmZMmB7kOYBJCCAny2MMd7eKfS7JwKhsd2kQCfRYOGN5lVWfUMupvK1BhkodZN1tpJqZ1vfffAQsF9ZtDltmAHB1hbyfvxEVMLs1eFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TiJspgGN; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fEn/lsau"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4394c0a58e7so11924095e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:43:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TiJspgGN"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-38f504f087eso1306408f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:44:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740732237; x=1741337037; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCQhmEkI20WCXSrDNmwHS83kJOrfCigX2ZIIywReQD0=;
-        b=fEn/lsau+ZAFBqaSNEZ7wDpeYUZG7tfzEnuOffhaOZaRxb/000T2LedOouTSl2SRaT
-         vcSVn899WYdPG/1gjA76ETy2bzlDfnaFHfWD9JFeje4zBvPAlEAdLUQftmyT2erNZpqN
-         qU+hElQrJFvvD/G461l/VN+EmCDb9U/zqFdga+1cGeEwLOjKH/wAC9XT3xz2fDqnnGS8
-         bV5Soq3nACzcVd6Zb3Y2fptLE0q7x9czgltEhKfovziqp4xPFWQUN6qwWXjhXe8D2ouq
-         +JGnRygloQyVfaYtCjCzuZRaKEeI6/fhLm7YHDr+8+xxpTLyfbXAX/EAOiIhXx4cnlKH
-         BO5Q==
+        d=google.com; s=20230601; t=1740732274; x=1741337074; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GOxiVL/4Is0kUFnkic7+UTCC19Fblnv5O4EMApXB9Gc=;
+        b=TiJspgGN/6I7qmGXhwBlwNLFcGGVlcHs2VgJHn2CCpQC/M0i531r5IHJEZtJdcDEiq
+         YFSYFOmDSgjTmg+kWe/wu7D07H+ZzvO8259oSjz/0D60hp0FZle3RJ96P9GVSTrVPn6B
+         ZkILfEabNvq70U/kFjG6s2nJ/tNc367xYzLbid3ioRpyp5no+qQxOrOzUSAx2pg/H1DG
+         8Hx8VmOf8ZNe7GNUJh8fLkpVYpwI2M7YBdvBA0ZbarPf9P0JLEXqFHZBOMNfodTDIKKz
+         pzBcbYN9xM8CG7hw5ACvH/hbtgVkBh7sG174sUUhkQERJRUYZCferHudsY2rc2Df1N2n
+         ZgvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740732237; x=1741337037;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uCQhmEkI20WCXSrDNmwHS83kJOrfCigX2ZIIywReQD0=;
-        b=bFPadXUHxB9XNpA3yERtg8l2ThreiDM33gv8nNek5P7xFb02u1v+DCt01ilce/fBP2
-         Q3CHL1PsK32SvO+1+34XZ2ksgnsuT6R7aiGs3IwTFe5ItDc7rtNe78QGxdCl2wqF1MP8
-         /nQFQyefqs50hdFp/7DJ0RZDSvzT75xnIzi2h6LkprMpG5W9Ty4OPSJURCvTsUwHsrAu
-         UNsuJIHhyTdPzLDo2Usk1RUGlqAHCm+7cEC5/4Mj8/SM1SMr3m2TUgn8CBTtFtM2z9xf
-         1zjMTz1xGQw9KEw4XsR3z6UdlKg2ETpCYnP+Ivcu6iKf6XRcfOSfyp2Zk14TWiUzPgXY
-         2gGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLMpebN5JkYHGpSUkH8ykNkdTWihAQU5PlDRdwNHbdIqdUwADDgxp+gqI/tseVEc/ZfRATIPgM3RRLw+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ5qU6npgPYIyuen9Aew6UF+8SGdavJ3DODMHMbkzodJDb+Bpd
-	+xVED4o1i93YOc9plinVgS8relnZJqW4uuVCyHMD0U2b33ziSc8iEfdU/jLt8tQPYwCqt2DRH1C
-	AxAxYGfQjYw==
-X-Google-Smtp-Source: AGHT+IEJq+5yWOZHmvu9HxjEv9KlFOODJE3Hve16zw/QnOkwbeaxyl/H0lwa63WLmmVB/J+lwRxrJvVq5cm/Ag==
-X-Received: from wmsd7.prod.google.com ([2002:a05:600c:3ac7:b0:439:850b:8080])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4693:b0:439:a1f2:50a3 with SMTP id 5b1f17b1804b1-43ba66dfd93mr17960705e9.4.1740732236929;
- Fri, 28 Feb 2025 00:43:56 -0800 (PST)
-Date: Fri, 28 Feb 2025 08:43:55 +0000
-In-Reply-To: <20250227120607.GPZ8BVL2762we1j3uE@fat_crate.local>
+        d=1e100.net; s=20230601; t=1740732274; x=1741337074;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GOxiVL/4Is0kUFnkic7+UTCC19Fblnv5O4EMApXB9Gc=;
+        b=ZfHL5ywt2xK8jIhbFniLzs6+8RTvffFxOZquPeJrkt/84Q02YvOzyqciFxYfSeOGB+
+         94unJ84TcDBQA8OP/LnzBkHmvdwlcxYMX7Jk0OwnurQDg2FPBCCz0ZKXe5FIfjhE5h/c
+         yJpylosyFvheni0zz12D2ZdrNXPtc8fOLi/r57vC4YmXwL9ZRJB3y13PB4R+hkMyAeXY
+         jzl2nz7ElYIxJ3SMOOrYb862tKMJzGBbPDPSeB9Lvu5nFxcYO2j/qlaBv5qG9+zxs4jG
+         uspXVQudWq4Hr0NB06j9RNqTJXYyaHy2UNEJvSxK5YFBvFCOdgc5c1c0/YZKyT6E9AKI
+         0xbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVP31CM4VHsum+MZMY64S+ARnKv1OHlvFiu8liJepjqU4+YML0ITJ6R05Fbq4Oo5Z7cs//MfRJ18e3Jmuc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyrCG+UHMLu0GOktKbyZNDEpOuqT9TfWTSSkVzHMAcLsVmw0VK
+	5mzYy/Mr6UgNJAlPdCI2vsvwH2Uz9hf4N6wQTg79eYmu5ATNrrKq/8zckNrxWI3BlbPXFsL2A14
+	ymRo6XMmaWHRkWyFrXoPT/SqvqQUKBWdW+N/j
+X-Gm-Gg: ASbGncucE1t6BepJMIjIM9yr3JB1iwYHcci4MGpi363o+5TfTUBdFz743K8k7J/3hK8
+	0oqxWNJeAHInKesH5pi2lUZ/trA15z2dVjLbMuVDsLnMOZp0BIqFCUfuUIQnQ9+rp0Xp/paZ1PB
+	zQ9QXhu6ZerfUkwFxK9t/s6xCOaKy4rwwgG8Lh
+X-Google-Smtp-Source: AGHT+IHDCpdDmfH+NBkGICBqBloSnUKkAJpf/2fdReBq9ra852m/4DtL/k3NCUS+ytHHNljzKRaE7KY5cj/F7p1b24c=
+X-Received: by 2002:a5d:5983:0:b0:390:e822:46de with SMTP id
+ ffacd0b85a97d-390ec9dad21mr2091104f8f.33.1740732274407; Fri, 28 Feb 2025
+ 00:44:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227120607.GPZ8BVL2762we1j3uE@fat_crate.local>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250228084355.2061899-1-jackmanb@google.com>
-Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
-From: Brendan Jackman <jackmanb@google.com>
-To: bp@alien8.de
-Cc: akpm@linux-foundation.org, dave.hansen@linux.intel.com, 
-	jackmanb@google.com, yosryahmed@google.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterz@infradead.org, 
-	seanjc@google.com, tglx@linutronix.de, x86@kernel.org
+MIME-Version: 1.0
+References: <20250227-export-macro-v1-0-948775fc37aa@google.com>
+ <qxbD5y-rJZMJDMN1wtODJBCAdNtNdQFsYIDhZUex7KcbPiUvABElh5V8c9EFoAPZ7xQe_L8JS6MzAIqciAb12w==@protonmail.internalid>
+ <20250227-export-macro-v1-1-948775fc37aa@google.com> <87v7suo5ay.fsf@kernel.org>
+In-Reply-To: <87v7suo5ay.fsf@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 28 Feb 2025 09:44:21 +0100
+X-Gm-Features: AQ5f1JrXknBQCJv4d6JEhXtJTXzizHml9Tfu42Up3Etyslc_lFl3VblDtZu0QMs
+Message-ID: <CAH5fLgjKoHpGS9ugxawwJJbb68trHEVvBCCNWFcNSbScGKpuDA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] rust: fix signature of rust_fmt_argument
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > OK, sounds like I need to rewrite this explanation! It's only been
+On Fri, Feb 28, 2025 at 9:20=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> "Alice Ryhl" <aliceryhl@google.com> writes:
+>
+> > Without this change, the rest of this series will emit the following
+> > error message:
+> >
+> > error[E0308]: `if` and `else` have incompatible types
+> >   --> <linux>/rust/kernel/print.rs:22:22
+> >    |
+> > 21 | #[export]
+> >    | --------- expected because of this
+> > 22 | unsafe extern "C" fn rust_fmt_argument(
+> >    |                      ^^^^^^^^^^^^^^^^^ expected `u8`, found `i8`
+> >    |
+> >    =3D note: expected fn item `unsafe extern "C" fn(*mut u8, *mut u8, *=
+mut c_void) -> *mut u8 {bindings::rust_fmt_argument}`
+> >               found fn item `unsafe extern "C" fn(*mut i8, *mut i8, *co=
+nst c_void) -> *mut i8 {print::rust_fmt_argument}`
+> >
+> > The error may be different depending on the architecture.
+> >
+> > Fixes: 787983da7718 ("vsprintf: add new `%pA` format specifier")
+> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > ---
+> >  lib/vsprintf.c       | 2 +-
+> >  rust/kernel/print.rs | 8 ++++----
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 56fe96319292..a8ac4c4fffcf 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -2285,7 +2285,7 @@ int __init no_hash_pointers_enable(char *str)
+> >  early_param("no_hash_pointers", no_hash_pointers_enable);
+> >
+> >  /* Used for Rust formatting ('%pA'). */
+> > -char *rust_fmt_argument(char *buf, char *end, void *ptr);
+> > +char *rust_fmt_argument(char *buf, char *end, const void *ptr);
+> >
+> >  /*
+> >   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+> > diff --git a/rust/kernel/print.rs b/rust/kernel/print.rs
+> > index b19ee490be58..8551631dedf1 100644
+> > --- a/rust/kernel/print.rs
+> > +++ b/rust/kernel/print.rs
+> > @@ -6,13 +6,13 @@
+> >  //!
+> >  //! Reference: <https://docs.kernel.org/core-api/printk-basics.html>
+> >
+> > -use core::{
+> > +use core::fmt;
+> > +
+> > +use crate::{
+> >      ffi::{c_char, c_void},
+> > -    fmt,
+> > +    str::RawFormatter,
+> >  };
+> >
+> > -use crate::str::RawFormatter;
+> > -
+> >  // Called from `vsprintf` with format specifier `%pA`.
+> >  #[expect(clippy::missing_safety_doc)]
+> >  #[no_mangle]
+>
+> The changes in this last hunk is not mentioned in the commit message.
 
-> > read before by people who already knew how this thing worked so this
-> > might take a few attempts to make it clear.
-> > 
-> > Maybe the best way to make it clear is to explain this with reference
-> > to KVM. At a super high level, That looks like:
-> > 
-> > ioctl(KVM_RUN) {
-> >     enter_from_user_mode()
-> >     while !need_userspace_handling() {
-> >         asi_enter();  // part 1
-> >         vmenter();  // part 2
-> >         asi_relax(); // part 3
-> >     }
-> >     asi _exit(); // part 4b
-> >     exit_to_user_mode()
-> > }
-> > 
-> > So part 4a is just referring to continuation of the loop.
-> > 
-> > This explanation was written when that was the only user of this API
-> > so it was probably clearer, now we have userspace it seems a bit odd.
-> > 
-> > With my pseudocode above, does it make more sense? If so I'll try to
-> > think of a better way to explain it.
-> 
-> Well, it is still confusing. I would expect to see:
-> 
-> ioctl(KVM_RUN) {
->     enter_from_user_mode()
->     while !need_userspace_handling() {
->         asi_enter();  // part 1
->         vmenter();  // part 2
->         asi_exit(); // part 3
->     }
->     asi_switch(); // part 4b
->     exit_to_user_mode()
-> }
-> 
-> Because then it is ballanced: you enter the restricted address space, do stuff
-> and then you exit it without switching address space. But then you need to
-> switch address space so you have to do asi_exit or asi_switch or wnatnot. And
-> that's still unbalanced.
-> 
-> So from *only* looking at the usage, it'd be a lot more balanced if all calls
-> were paired:
-> 
-> ioctl(KVM_RUN) {
->     enter_from_user_mode()
->     asi_switch_to();			<-------+
->     while !need_userspace_handling() {		|
->         asi_enter();  // part 1		<---+	|
->         vmenter();  // part 2		    |	|
->         asi_exit(); // part 3		<---+	|
->     }						|
->     asi_switch_back(); // part 4b	<-------+
->     exit_to_user_mode()
-> }
-> 
-> (look at me doing ascii paintint :-P)
-> 
-> Naming is awful but it should illustrate what I mean:
-> 
-> 	asi_switch_to
-> 	  asi_enter
-> 	  asi_exit
-> 	asi_switch_back
-> 
-> Does that make more sense?
+The diff is rendered pretty poorly, but this is just importing
+integers from crate::ffi instead of core::ffi, and I do believe that
+the commit message makes it clear that this is needed.
 
-Yeah I see what you mean. I think the issues are:
-
-1. We're mixing up two different aspects in the API:
-
-   a. Starting and finishing "critical sections" (i.e. the region
-      between asi_enter() and asi_relax())
-
-   b. Actually triggering address space transitions.
-
-2. There is a fundamental asymmetry at play here: asi_enter() and
-   asi_exit() can both be NOPs (when we're already in the relevant
-   address space), and asi_enter() being a NOP is really the _whole
-   point of ASI_.
-
-   The ideal world is where asi_exit() is very very rare, so
-   asi_enter() is almost always a NOP.
-
-So we could disentangle part 1 by just rejigging things as you suggest,
-and I think the naming would be like:
-
-asi_enter
-  asi_start_critical
-  asi_end_critical
-asi_exit
-
-But the issue with that is that asi_start_critical() _must_ imply
-asi_enter() (otherwise if we get an NMI between asi_enter() and
-asi_start_critical(), and that causes a #PF, we will start the
-critical section in the wrong address space and ASI won't do its job).
-So, we are somewhat forced to mix up a. and b. from above.
-
-BTW, there is another thing complicating this picture a little: ASI
-"clients" (really just meaning KVM code at this point) are not not
-really supposed to care at all about the actual address space, the fact
-that they currently have to call asi_exit() in part 4b is just a
-temporary thing to simplify the initial implementation. It has a
-performance cost (not enormous, serious KVM platforms try pretty hard
-to avoid returning to user space, but it does still matter) so
-Google's internal version has already got rid of it and that's where I
-expect this thing to evolve too. But for now it just lets us keep
-things simple since e.g. we never have to think about context
-switching in the restricted address space.
-
-With that in mind, what if it looked like this:
-
-ioctl(KVM_RUN) {
-    enter_from_user_mode()
-    while !need_userspace_handling()
-	// This implies asi_enter(), but this code "doesn't care"
-	// about that.
-        asi_start_critical();
-        vmenter();
-        asi_end_critical();
-    }
-    // TODO: This is temporary, it should not be needed.
-    asi_exit();
-    exit_to_user_mode()
-}
-
-Once the asi_exit() call disappears, it will be symmetrical from the
-"client API"'s point of view. And while we still mix up address space
-switching with critical section boundaries, the address space
-switching is "just an implementation detail" and not really visible as
-part of the API.
-
-> Documentation/process/email-clients.rst
-
-I have now setup Mutt. But, for now I am replying with plan vim +
-git-send-email, because I also sent this RFC to a ridiculous CC list
-(I just blindly used the get_maintainers.pl output, I don't know why I
-thought that was a reasonable approach) and it turns out this is the
-easiest way to trim it in a reply! Hopefully I can get the headers
-right...
+Alice
