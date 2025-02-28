@@ -1,313 +1,324 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564F225B672
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736346; cv=none; b=W4VIXt2wXZ2Osdisx3sbcUVekxuQ/i3fSwrih9QS1eO36fFzkX5K3DiEzjtqxKCxHKQHnBPHEPkiqUa8rZO0AEPO02vxyEZXMGv2WGgIaUmzOvtW/dMo2Ry5TrA1gPN2HTlUUUzu9GhEW0BQf//P2OtuBPjE29xbZ/cJyYm18VQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736346; c=relaxed/simple;
-	bh=xG2WMXZKKbUfHfELCIo//n83d9/Xao8BvJm7eA4V9IY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JO7A3TV/ZQi5AeoS4BcmND75hGRto3INZDiNX53w6ojhxbr/mBlhj2A2YQcBgzJcmFifthNqZYUngUcLBsYkdO8KohHxXEA8KevNEdo+2oVicIZf03dCCPwE+EFY9MlnK+GbJG5hwVBpUI0Gypw9xtZVxa+pJOMIe31NUXql9bA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AWbaRhJT; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD89A2580CE;
+	Fri, 28 Feb 2025 09:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740736415; cv=fail; b=BxM/jahfVQOm52s1BGO7hFcywiIxaEqBN+4JiTgEJ7BgQEfXi/gZLVWI9M+qFEZNu8NMi+A9AhDuANrpnFDlS0t29CS7PpMc0ZZlWLoHSeXBnxlwyOEJo1cIgrjLeUL2X/xcQg7i7ytYU8rq8ukI5nuWlbYpoTmRoU8m2gf+n9A=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740736415; c=relaxed/simple;
+	bh=9nkeusDo+mnJavezRsOmXyKU9uVXIz32DGnKGaZDjr0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=J/rF3z/sENS5cgsEq3CHh2+wM85qdrgGW8MFklepkzc0qkiPIdGe1Ybu95Dq+jPIKT0+znDDuxPsqg5si6YEoSgottlXQaPU7O55MOMrvAvYcstVmUXB9J7mJ9jXZP5mHK6jcY2IWrq0x5gfwWCRwEMGVfcAN8G+yu7O/4AT4lc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yHC+t9hI; arc=fail smtp.client-ip=40.107.237.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AWbaRhJT"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-38f3bac2944so884245f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:52:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740736342; x=1741341142; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FW/4Itowb9kTuUXQ1y/EpM+Euvfc88hrYXKaBKarQSo=;
-        b=AWbaRhJT3u1aAy054wIrDkeueyZ8soS5oTW+p6HO5QdMrC03I3Tx5Rri5DQHBe3ovX
-         jjVR+xzf8ZCpW1JyG31wEFGjOJGm/TdmM75+H9Tz1BJrp+uuXaDG++NNBQELxeNJr81J
-         BNUVTG5IJCoIc6QQAOVXXjl346tXQw25/SNDEQxNGWjVSEuc5om75nVeMpsI9R9UmZz2
-         6JWfbpXajgWoM23ocEk4L2wqb7no8sAVwiDtL2eUQhtENCUkpGYI2eKzwwpbeUYGobsH
-         Gk3q2swohOhzjmVSs+D5/SHb3WLae1Ap3E0myr4A224t8ncn3NLBnAjjNYlS+jC6aVJH
-         Wwkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740736342; x=1741341142;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FW/4Itowb9kTuUXQ1y/EpM+Euvfc88hrYXKaBKarQSo=;
-        b=V+1nTJ/4sG7VT6seb2eUhB9L59i8SylbArChmiuMFV7eITnNUVPOlJcy3J5D13uk4v
-         fcyJ6wJPEdJj5/KVjPUGQ1pzKukhYzSTpgrw8h2vlE7DouUo73/hqi+uuZ1+O1X5GMtt
-         MsPxVJQbOyxA2TEixltHNcYVLzzumT5u5hSy7sJERallXzpXI68BKHXBsiMQ49fetTVL
-         zeLipRSVkpqypvHL6Ni53epx56Pp804BQodYAfqwQCjwHN18yNcYHOVRrVmPtIiYvaeB
-         jwc7GxCIyz9FiUJ6B4A0NpIEqFtZKhLJZhlvWoLdaYs3DyME3lsE89oukXfFU2eoewV7
-         ySkw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPjnrDJIf4sNx35Xm0qFPG7FvauNt6kKIER8u0f6SQd4/KyTGeEu/iHFp98KK0pl6nqVMUWzk3Juz8Uhg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuR3Grr0AwPQrxor2yy/RwODAl/R848DwJy0gM9Mc2tWhT63/K
-	Tm7gEg/ZOqZI6MLygVrTua/KF9/T1cY7xbN12xaBntY2H3W+AwyYQoOZJZh5vnSntltJrbmTLKc
-	233UG1jEiJg==
-X-Google-Smtp-Source: AGHT+IEu3+m482P1YPLRHuGe76vpYm6iwFvrHH/RmgK/tMNHmvSUd2hMzMyhtzJdg3Ovfa7XhnTfdGvRY/hbwQ==
-X-Received: from wmbez14.prod.google.com ([2002:a05:600c:83ce:b0:439:8664:577a])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:5988:0:b0:38f:30a3:5208 with SMTP id ffacd0b85a97d-390eca48478mr2569251f8f.39.1740736342806;
- Fri, 28 Feb 2025 01:52:22 -0800 (PST)
-Date: Fri, 28 Feb 2025 09:52:17 +0000
-In-Reply-To: <20250228-clarify-steal-v4-0-cb2ef1a4e610@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yHC+t9hI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Vmd0SUy2ggJV/yHeLmEwCL+Ba9/JzjQ8YRIA7rHtZ2KtjCp1j2pjjulaCc7AgqZmgMxsix6QVj4qXwkpmwKUJuWabS3kHoTUL25bQ4mTubOKCGZuTAU+jpF8gSxHtbEPM8EJUdUbCKdzp5ZDwxFW54JDuGRQ2+ZLloBSZZdWEwbG70PIkQXX3Y1KPSirJkYFIRedyPzixnPnCXtGFwDoAN8sd1s+3GuEIwQ3tymVlW0JFk5twJKlMXJZ/fgP5aKb2pKQ+A4fSopWAroF17mKM3eZQTZ+PDDHyxixTOqFg0QRlFL/dx2jfuCYjZG1xAmSYrRLe4qWI1ubDPtTvqjOwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lenrXz8ZRl7sZ39Vx5ZAlgu1sD540YDxOqFepZm5rj0=;
+ b=NY0Ex+n5YUoYUy9RR1jvjW2gBvEKEQQzQv4kWdduTgwWnBbh6YC9p64jq+qsdHhEMD1RAY+SN/jBWuVv42FB5p3cohWE/WeWgxrLHC0H5BiTioW8+Qxrb8wFnz60CKHE+XpW1Y58fLBintYo/5Ta5sVZ49dLh04l59sbOIU908QmrR7BjWc8fJphz9h/LveCSdhiYoOV1fkbGVQLQ2Qyh3TbILXQDUETfnBePTi9ZwXNGk59/PglQL2YAQQPZaJ5fSikZ4a1HdES/oSCUopf3zrLhqzy/eWLWTqg/EwhksHnYF4Pb5p5biM3audCJPJ/CCbBGLR9Y7l0ZOM/pf5rEg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lenrXz8ZRl7sZ39Vx5ZAlgu1sD540YDxOqFepZm5rj0=;
+ b=yHC+t9hIvsknN5ihwuQG86esGaQvLqp2TZ5ZrivGDSQTdA2he5K1TjeS4n1LAZSSlfnSOyDiP27fbkPoZnN+ehO+m+9xS4GzSH14YBkcu8tbNDf8uWXISc2nCf5DT4v2eRGrXO7h+E3DPvrvgMrPZ9IT3ZxJI+1BSCt5/OgiUsc=
+Received: from BYAPR07CA0034.namprd07.prod.outlook.com (2603:10b6:a02:bc::47)
+ by SN7PR12MB8819.namprd12.prod.outlook.com (2603:10b6:806:32a::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
+ 2025 09:53:30 +0000
+Received: from SJ1PEPF00001CEA.namprd03.prod.outlook.com
+ (2603:10b6:a02:bc:cafe::76) by BYAPR07CA0034.outlook.office365.com
+ (2603:10b6:a02:bc::47) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.21 via Frontend Transport; Fri,
+ 28 Feb 2025 09:53:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00001CEA.mail.protection.outlook.com (10.167.242.26) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:53:29 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 03:52:33 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <kvm@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>
+CC: <linux-kernel@vger.kernel.org>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <bp@alien8.de>, <David.Kaplan@amd.com>,
+	<huibo.wang@amd.com>, <naveen.rao@amd.com>, <pgonda@google.com>,
+	<linux-kselftest@vger.kernel.org>, <shuah@kernel.org>
+Subject: [RFC PATCH 20/31] KVM: selftests: Add unaccelerated APIC msrs #VC handling
+Date: Fri, 28 Feb 2025 15:00:13 +0530
+Message-ID: <20250228093024.114983-21-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
+References: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250228-clarify-steal-v4-0-cb2ef1a4e610@google.com>
-X-Mailer: b4 0.15-dev
-Message-ID: <20250228-clarify-steal-v4-1-cb2ef1a4e610@google.com>
-Subject: [PATCH v4 1/2] mm/page_alloc: Clarify terminology in migratetype
- fallback code
-From: Brendan Jackman <jackmanb@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>, 
-	Michal Hocko <mhocko@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEA:EE_|SN7PR12MB8819:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22ae5257-5b41-47f4-f577-08dd57ddc166
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?O/okJ6659nih+OiBe/i/QKu7/GUWmx5nnkFcwGR4pG+Kq13TdYmTw89gzinZ?=
+ =?us-ascii?Q?IDJiXfuSt1xPEv6FIFFYQ8lRvLeWBlHujuFddV7U3Xo2gAxUHVWJ5qg/wvNL?=
+ =?us-ascii?Q?Dz4yjLGEwmvhpxTTMGxVeGRFsPCA2+KYNrE4Bdw1a7OIdy25hJhH0VcsChDU?=
+ =?us-ascii?Q?b8Azw/V6PYzIpXwBXIUO3miybfZ7fEsv7xuvFP6NFp26tv78xP4coQ72CfwR?=
+ =?us-ascii?Q?+ZpNchku8EoRxSefSL8oZYP/FokTXGdW+ImemTBr5gCjFBgnvB4Tqh1JicKP?=
+ =?us-ascii?Q?2sy0MGBCnhi9Ol/NFuAv9iE8gGvoG9iRRTggZAyi9BxHVIcYqPPhTk9Rnwfv?=
+ =?us-ascii?Q?nYU/N7BfyHKKOV8a9f8GRUAQTowvD+Hhc/N0eb4KVTUAgtrmeFEsXfKsjQca?=
+ =?us-ascii?Q?2mYP/rZnRuIeUhG6KIgwauF0G2y0nI2o6juLLFZ42WMtE29vzRzE1YL1WcMD?=
+ =?us-ascii?Q?7R/H3zPdgO7fDnx9ZqQRLlPx5beu1degMbfviV6xTvjFMC8eXeR4S8zNuq3z?=
+ =?us-ascii?Q?x8e7l13h72VGWS6V3rqv89JtkXr157s7z82XiGJKP0YCsIaJK5CTQ8iXBiCa?=
+ =?us-ascii?Q?yGFOiB6SOARELgdY+/z2tohD4WEntL/FBxY1trnjMz5jgBZeS+FJHvhBE83i?=
+ =?us-ascii?Q?MxRhA8SzeY+n7dP/AEiRSehN6byzaBpjHtU0plr7fDx6cGKbMDrHyrAIIw0k?=
+ =?us-ascii?Q?iapBSajlgHwCCAfmHujR1TWp3RDJLNUL+mTwWAItkmYU2DNi4Q3h2LqkOr/W?=
+ =?us-ascii?Q?UdZGhOfUP38LTj+YW3Xn4jA0XLOMlPjJM+L1VGHpJaa7MaErH6CD833ZQBmr?=
+ =?us-ascii?Q?tF1051IU0dPhIV10Gv5pSeJ12CDdani1VEeD5FWHdI8fLIqtPfCtFUE7fFRl?=
+ =?us-ascii?Q?1Q+eTNMFPvQNbb9Fw6IN0tBPwBIZLJqTCESfBEzVd/pqA9xqX0k+VBVmZ4UC?=
+ =?us-ascii?Q?zYnzupYduGsfS+Vx0wGNKExwCqRUpKMl0bSNQIGiytROx4iljFHnG4QBxhyH?=
+ =?us-ascii?Q?m1RikV4xBYUsXXzBNsih5PYunnf6uDyaOU1hU+3CVEY2K/2IJsE+MC41LKaH?=
+ =?us-ascii?Q?lBiboDR5N9Veflgle+2bmorc2VLn/fquJvm7+QCUwoe1qwYVOEvjFjHvKq2u?=
+ =?us-ascii?Q?6SpUHKup7Y8LDtYsIOO6pZ//JhMzpo9qlxZOE3N09ulqnEWKGa1a263B1DZK?=
+ =?us-ascii?Q?4CqSUGQ9HWCSiXwGwBWu66vizQmzGlkzQ2gO+dQFMQWOwTxy/nmyWdqAEmm5?=
+ =?us-ascii?Q?szW+p+RZXnMpRRmPweiE4Zt0RPRdJ93r88P0mOMzXoNCZC8OAKjbo9REP4Vf?=
+ =?us-ascii?Q?rWbI0rm+F6G4+AfGBF/qeb6fylI1ZC53YHllPRs1LciyAV1aJ5WCwW+lGFsS?=
+ =?us-ascii?Q?tsGb1711lLei9eje4jZaya7qxo76TMSg4URdvWjWkieUl/4xI9HkUry+qdvl?=
+ =?us-ascii?Q?FryBAQzkMfUbQmtcgGP30pB2fKJUUMyMa2mXwBOb2AK9ZjFqhizdTKdCEXoF?=
+ =?us-ascii?Q?+nEsNc176VlB+3w=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:53:29.9055
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22ae5257-5b41-47f4-f577-08dd57ddc166
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CEA.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8819
 
-This code is rather confusing because:
+Add #VC exception handling support for unaccelerated msrs
+reads/writes for Secure AVIC guests.
 
- 1. "Steal" is sometimes used to refer to the general concept of
-    allocating from a from a block of a fallback migratetype
-    (steal_suitable_fallback()) but sometimes it refers specifically to
-    converting a whole block's migratetype (can_steal_fallback()).
-
- 2. can_steal_fallback() sounds as though it's answering the question "am
-    I functionally permitted to allocate from that other type" but in
-    fact it is encoding a heuristic preference.
-
- 3. The same piece of data has different names in different places:
-    can_steal vs whole_block. This reinforces point 2 because it looks
-    like the different names reflect a shift in intent from "am I
-    allowed to steal" to "do I want to steal", but no such shift exists.
-
-Fix 1. by avoiding the term "steal" in ambiguous contexts. Start using
-the term "claim" to refer to the special case of stealing the entire
-block.
-
-Fix 2. by using "should" instead of "can", and also rename its
-parameters and add some commentary to make it more explicit what they
-mean.
-
-Fix 3. by adopting the new "claim" terminology universally for this
-set of variables.
-
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
 ---
- mm/compaction.c |  4 ++--
- mm/internal.h   |  2 +-
- mm/page_alloc.c | 72 ++++++++++++++++++++++++++++-----------------------------
- 3 files changed, 39 insertions(+), 39 deletions(-)
+ .../testing/selftests/kvm/include/x86/apic.h  |   1 +
+ .../testing/selftests/kvm/include/x86/savic.h |   1 +
+ tools/testing/selftests/kvm/lib/x86/savic.c   | 145 ++++++++++++++++++
+ 3 files changed, 147 insertions(+)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 0992106d4ea751f7f1f8ebf7c75cd433d676cbe0..550ce50218075509ccb5f9485fd84f5d1f3d23a7 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2333,7 +2333,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
- 	ret = COMPACT_NO_SUITABLE_PAGE;
- 	for (order = cc->order; order < NR_PAGE_ORDERS; order++) {
- 		struct free_area *area = &cc->zone->free_area[order];
--		bool can_steal;
-+		bool claim_block;
+diff --git a/tools/testing/selftests/kvm/include/x86/apic.h b/tools/testing/selftests/kvm/include/x86/apic.h
+index 6ba5d0545bf8..aa3a5d54c404 100644
+--- a/tools/testing/selftests/kvm/include/x86/apic.h
++++ b/tools/testing/selftests/kvm/include/x86/apic.h
+@@ -33,6 +33,7 @@
+ #define	APIC_SPIV	0xF0
+ #define		APIC_SPIV_FOCUS_DISABLED	(1 << 9)
+ #define		APIC_SPIV_APIC_ENABLED		(1 << 8)
++#define APIC_TMR        0x180
+ #define APIC_IRR	0x200
+ #define	APIC_ICR	0x300
+ #define	APIC_LVTCMCI	0x2f0
+diff --git a/tools/testing/selftests/kvm/include/x86/savic.h b/tools/testing/selftests/kvm/include/x86/savic.h
+index 1ab92dad00c1..238d7450ab6e 100644
+--- a/tools/testing/selftests/kvm/include/x86/savic.h
++++ b/tools/testing/selftests/kvm/include/x86/savic.h
+@@ -16,4 +16,5 @@ void savic_hv_write_reg(uint32_t reg, uint64_t val);
+ uint64_t savic_hv_read_reg(uint32_t reg);
+ void savic_enable(void);
+ int savic_nr_pages_required(uint64_t page_size);
++void savic_vc_handler(struct ex_regs *regs);
+ #endif
+diff --git a/tools/testing/selftests/kvm/lib/x86/savic.c b/tools/testing/selftests/kvm/lib/x86/savic.c
+index f4a765b6040a..141d31637e51 100644
+--- a/tools/testing/selftests/kvm/lib/x86/savic.c
++++ b/tools/testing/selftests/kvm/lib/x86/savic.c
+@@ -42,6 +42,8 @@ enum lapic_lvt_entry {
+ #define MSR_AMD64_SECURE_AVIC_EN_BIT       0
+ #define MSR_AMD64_SECURE_AVIC_ALLOWED_NMI_BIT       1
  
- 		/* Job done if page is free of the right migratetype */
- 		if (!free_area_empty(area, migratetype))
-@@ -2350,7 +2350,7 @@ static enum compact_result __compact_finished(struct compact_control *cc)
- 		 * other migratetype buddy lists.
- 		 */
- 		if (find_suitable_fallback(area, order, migratetype,
--						true, &can_steal) != -1)
-+						true, &claim_block) != -1)
- 			/*
- 			 * Movable pages are OK in any pageblock. If we are
- 			 * stealing for a non-movable allocation, make sure
-diff --git a/mm/internal.h b/mm/internal.h
-index b07550db2bfd1d152fa90f91b3687b0fa1a9f653..aa30282a774ae26349944a75da854ae6a3da2a98 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -863,7 +863,7 @@ static inline void init_cma_pageblock(struct page *page)
- 
- 
- int find_suitable_fallback(struct free_area *area, unsigned int order,
--			int migratetype, bool only_stealable, bool *can_steal);
-+			int migratetype, bool claim_only, bool *claim_block);
- 
- static inline bool free_area_empty(struct free_area *area, int migratetype)
- {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 5d8e274c8b1d500d263a17ef36fe190f60b88196..441c9d9cc5f8edbae1f4169207f5de9f32586f34 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1942,22 +1942,22 @@ static inline bool boost_watermark(struct zone *zone)
- 
++#define SVM_EXIT_AVIC_UNACCELERATED_ACCESS      0x402
++
  /*
-  * When we are falling back to another migratetype during allocation, try to
-- * steal extra free pages from the same pageblocks to satisfy further
-- * allocations, instead of polluting multiple pageblocks.
-+ * claim entire blocks to satisfy further allocations, instead of polluting
-+ * multiple pageblocks.
-  *
-- * If we are stealing a relatively large buddy page, it is likely there will
-- * be more free pages in the pageblock, so try to steal them all. For
-- * reclaimable and unmovable allocations, we steal regardless of page size,
-- * as fragmentation caused by those allocations polluting movable pageblocks
-- * is worse than movable allocations stealing from unmovable and reclaimable
-- * pageblocks.
-+ * If we are stealing a relatively large buddy page, it is likely there will be
-+ * more free pages in the pageblock, so try to claim the whole block. For
-+ * reclaimable and unmovable allocations, we try to claim the whole block
-+ * regardless of page size, as fragmentation caused by those allocations
-+ * polluting movable pageblocks is worse than movable allocations stealing from
-+ * unmovable and reclaimable pageblocks.
+  * Initial pool of guest apic backing page.
   */
--static bool can_steal_fallback(unsigned int order, int start_mt)
-+static bool should_try_claim_block(unsigned int order, int start_mt)
- {
- 	/*
- 	 * Leaving this order check is intended, although there is
- 	 * relaxed order check in next check. The reason is that
--	 * we can actually steal whole pageblock if this condition met,
-+	 * we can actually claim the whole pageblock if this condition met,
- 	 * but, below check doesn't guarantee it and that is just heuristic
- 	 * so could be changed anytime.
- 	 */
-@@ -1970,7 +1970,7 @@ static bool can_steal_fallback(unsigned int order, int start_mt)
- 	 * reclaimable pages that are closest to the request size.  After a
- 	 * while, memory compaction may occur to form large contiguous pages,
- 	 * and the next movable allocation may not need to steal.  Unmovable and
--	 * reclaimable allocations need to actually steal pages.
-+	 * reclaimable allocations need to actually claim the whole block.
- 	 */
- 	if (order >= pageblock_order / 2 ||
- 		start_mt == MIGRATE_RECLAIMABLE ||
-@@ -1983,12 +1983,14 @@ static bool can_steal_fallback(unsigned int order, int start_mt)
- 
- /*
-  * Check whether there is a suitable fallback freepage with requested order.
-- * If only_stealable is true, this function returns fallback_mt only if
-- * we can steal other freepages all together. This would help to reduce
-+ * Sets *claim_block to instruct the caller whether it should convert a whole
-+ * pageblock to the returned migratetype.
-+ * If only_claim is true, this function returns fallback_mt only if
-+ * we would do this whole-block claiming. This would help to reduce
-  * fragmentation due to mixed migratetype pages in one pageblock.
-  */
- int find_suitable_fallback(struct free_area *area, unsigned int order,
--			int migratetype, bool only_stealable, bool *can_steal)
-+			int migratetype, bool only_claim, bool *claim_block)
- {
- 	int i;
- 	int fallback_mt;
-@@ -1996,19 +1998,16 @@ int find_suitable_fallback(struct free_area *area, unsigned int order,
- 	if (area->nr_free == 0)
- 		return -1;
- 
--	*can_steal = false;
-+	*claim_block = false;
- 	for (i = 0; i < MIGRATE_PCPTYPES - 1 ; i++) {
- 		fallback_mt = fallbacks[migratetype][i];
- 		if (free_area_empty(area, fallback_mt))
- 			continue;
- 
--		if (can_steal_fallback(order, migratetype))
--			*can_steal = true;
-+		if (should_try_claim_block(order, migratetype))
-+			*claim_block = true;
- 
--		if (!only_stealable)
--			return fallback_mt;
--
--		if (*can_steal)
-+		if (*claim_block || !only_claim)
- 			return fallback_mt;
- 	}
- 
-@@ -2016,14 +2015,14 @@ int find_suitable_fallback(struct free_area *area, unsigned int order,
+@@ -204,3 +206,146 @@ void savic_enable(void)
+ 			"SAVIC Control msr unexpected val : 0x%lx, expected : 0x%lx",
+ 			savic_ctrl_msr_val, exp_msr_val);
  }
- 
- /*
-- * This function implements actual steal behaviour. If order is large enough, we
-- * can claim the whole pageblock for the requested migratetype. If not, we check
-- * the pageblock for constituent pages; if at least half of the pages are free
-- * or compatible, we can still claim the whole block, so pages freed in the
-- * future will be put on the correct free list.
-+ * This function implements actual block claiming behaviour. If order is large
-+ * enough, we can claim the whole pageblock for the requested migratetype. If
-+ * not, we check the pageblock for constituent pages; if at least half of the
-+ * pages are free or compatible, we can still claim the whole block, so pages
-+ * freed in the future will be put on the correct free list.
-  */
- static struct page *
--try_to_steal_block(struct zone *zone, struct page *page,
-+try_to_claim_block(struct zone *zone, struct page *page,
- 		   int current_order, int order, int start_type,
- 		   int block_type, unsigned int alloc_flags)
- {
-@@ -2091,11 +2090,12 @@ try_to_steal_block(struct zone *zone, struct page *page,
- /*
-  * Try finding a free buddy page on the fallback list.
-  *
-- * This will attempt to steal a whole pageblock for the requested type
-+ * This will attempt to claim a whole pageblock for the requested type
-  * to ensure grouping of such requests in the future.
-  *
-- * If a whole block cannot be stolen, regress to __rmqueue_smallest()
-- * logic to at least break up as little contiguity as possible.
-+ * If a whole block cannot be claimed, steal an individual page, regressing to
-+ * __rmqueue_smallest() logic to at least break up as little contiguity as
-+ * possible.
-  *
-  * The use of signed ints for order and current_order is a deliberate
-  * deviation from the rest of this file, to make the for loop
-@@ -2112,7 +2112,7 @@ __rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
- 	int min_order = order;
- 	struct page *page;
- 	int fallback_mt;
--	bool can_steal;
-+	bool claim_block;
- 
- 	/*
- 	 * Do not steal pages from freelists belonging to other pageblocks
-@@ -2131,15 +2131,15 @@ __rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
- 				--current_order) {
- 		area = &(zone->free_area[current_order]);
- 		fallback_mt = find_suitable_fallback(area, current_order,
--				start_migratetype, false, &can_steal);
-+				start_migratetype, false, &claim_block);
- 		if (fallback_mt == -1)
- 			continue;
- 
--		if (!can_steal)
-+		if (!claim_block)
- 			break;
- 
- 		page = get_page_from_free_area(area, fallback_mt);
--		page = try_to_steal_block(zone, page, current_order, order,
-+		page = try_to_claim_block(zone, page, current_order, order,
- 					  start_migratetype, fallback_mt,
- 					  alloc_flags);
- 		if (page)
-@@ -2149,11 +2149,11 @@ __rmqueue_fallback(struct zone *zone, int order, int start_migratetype,
- 	if (alloc_flags & ALLOC_NOFRAGMENT)
- 		return NULL;
- 
--	/* No luck stealing blocks. Find the smallest fallback page */
-+	/* No luck claiming pageblock. Find the smallest fallback page */
- 	for (current_order = order; current_order < NR_PAGE_ORDERS; current_order++) {
- 		area = &(zone->free_area[current_order]);
- 		fallback_mt = find_suitable_fallback(area, current_order,
--				start_migratetype, false, &can_steal);
-+				start_migratetype, false, &claim_block);
- 		if (fallback_mt == -1)
- 			continue;
- 
-
++
++static bool savic_reg_access_is_trapped(uint32_t reg)
++{
++	switch (reg) {
++	case APIC_ID:
++	case APIC_TASKPRI:
++	case APIC_EOI:
++	case APIC_LDR:
++	case APIC_SPIV:
++	case APIC_ICR:
++	case APIC_ICR2:
++	case APIC_LVTT:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_LVTERR:
++	case APIC_TMICT:
++	case APIC_TDCR:
++		return true;
++	case APIC_LVR:
++	case APIC_PROCPRI:
++	case APIC_TMR:
++	case APIC_IRR ... APIC_IRR + 0x70:
++	case APIC_TMCCT:
++		return false;
++	default:
++		return false;
++	}
++}
++
++static void savic_unaccel_apic_msrs_read(struct guest_apic_page *apic_page,
++		uint32_t reg, uint64_t *val)
++{
++	switch (reg) {
++	case APIC_TMICT:
++	case APIC_TMCCT:
++	case APIC_TDCR:
++	case APIC_LVTT:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_LVTERR:
++		*val = savic_hv_read_reg(reg);
++		break;
++	default:
++		__GUEST_ASSERT(0, "Unexpected unaccelerated read trap for reg: %x\n", reg);
++	}
++}
++
++static void savic_unaccel_apic_msrs_write(struct guest_apic_page *apic_page,
++		uint32_t reg, uint64_t val)
++{
++	switch (reg) {
++	/*
++	 * APIC_ID value is in sync between guest apic backing page and
++	 * hv.
++	 * LVT* registers and APIC timer register updates are propagated to hv.
++	 */
++	case APIC_ID:
++	case APIC_LVTT:
++	case APIC_LVTTHMR:
++	case APIC_LVTPC:
++	case APIC_LVT0:
++	case APIC_LVT1:
++	case APIC_LVTERR:
++	case APIC_TMICT:
++	case APIC_TMCCT:
++	case APIC_TDCR:
++		savic_write_reg(apic_page, reg, val);
++		savic_hv_write_reg(reg, val);
++		break;
++	/*
++	 * LDR is derived in hv from APIC_ID.
++	 * TPR, SPIV, IRR information is not propagated to hv.
++	 */
++	case APIC_LDR:
++	case APIC_TASKPRI:
++	case APIC_SPIV:
++	case APIC_IRR:
++		savic_write_reg(apic_page, reg, val);
++		break;
++	/*
++	 * EOI write need to be propagated to hv for level-triggered
++	 * interrupts.
++	 */
++	case APIC_EOI:
++		savic_hv_write_reg(reg, val);
++		break;
++	default:
++		__GUEST_ASSERT(0, "Write not permitted for reg: %x\n", reg);
++	}
++}
++
++static void handle_savic_unaccel_access(struct ex_regs *regs)
++{
++	bool write;;
++	uint64_t msr = regs->rcx;
++	uint32_t reg = (msr - APIC_BASE_MSR) << 4;
++	struct guest_apic_page *apic_page;
++	uint64_t low = regs->rax;
++	uint64_t high = regs->rdx;
++	uint64_t val = 0;
++
++	apic_page = &apic_page_pool->guest_apic_page[x2apic_read_reg(APIC_ID)];
++
++	switch (msr) {
++	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
++		if (savic_reg_access_is_trapped(reg))
++			write = *((uint8_t *)regs->rip - 1) == 0x30;
++		else
++			write = *((uint8_t *)regs->rip + 1) == 0x30;
++		if (write) {
++			savic_unaccel_apic_msrs_write(apic_page, reg,
++						      high << 32 | low);
++		} else {
++			savic_unaccel_apic_msrs_read(apic_page, reg, &val);
++			regs->rax = val & ((1ULL << 32) - 1);
++			regs->rdx = val >> 32;
++		}
++		if (!savic_reg_access_is_trapped(reg))
++			regs->rip += 2;
++		break;
++	default:
++		__GUEST_ASSERT(0, "Unknown unaccelerated msr: %lx\n", msr);
++		break;
++	}
++}
++
++void savic_vc_handler(struct ex_regs *regs)
++{
++	uint64_t exit_code = regs->error_code;
++
++	switch (exit_code) {
++	case SVM_EXIT_AVIC_UNACCELERATED_ACCESS:
++		handle_savic_unaccel_access(regs);
++		break;
++	default:
++		sev_es_vc_handler(regs);
++		break;
++	}
++}
 -- 
-2.48.1.711.g2feabab25a-goog
+2.34.1
 
