@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D28219E0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DD81DFE8;
 	Fri, 28 Feb 2025 00:29:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740702542; cv=none; b=UUbjGDjlFcAqzWyQ8kOlYYvEjrsBuDLx+s4MNU2ddLCTjViCTy6M4+H1j+VXgHn2twiYcoqtcKREpcKBWUeVW0IPPmnySENUS6wyYDq5WyHbKa5f1dbI5woMT0GKWGv5QK6BUJ835V/Ce9IEZ/Rz/zhy2VexMRpgR1iJaKOZDG8=
+	t=1740702542; cv=none; b=nxNZrETxfiKEeJoapi3/88GxZigvpKjTNKvSqtP5Ffc2qLxKU9kGMru/UcbcqlmofuWGuKAvUSIpVzKoPXNYgpYAGPEDKu3Qxa1Wb4UG5b18hUax0nE5bpJ+0QXdghzOgG9K2yIqLKTnrpyaQ7et9QEBtVXXqh1zlWy2JB7lIGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740702542; c=relaxed/simple;
-	bh=oo71VY1McPM8/140gIhN/hZPHJcdcpEwgl7m7nF3O78=;
+	bh=kTqIZkhKLJ5jCwow6RTkusGiC8GJWw/LfCRBn/zeLoA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sK3x0FMWsVZo2aQugsWhxMvaBYFqDfHSrjbharlCNTSt/raOKUQ2yf3hudaK5i7gNsYYKgvsjkJmiEK4Sl3rKo3hhNd95+IsZ9u8w7uN1CoHg1jJRz4GW509/CQQB6h8XimCEQ1zLbg7jaw1USFmhvVlI6omxN4jBLd5ZNGkarI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TuhDHawi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=u0Vi7xQPGr/JKJYZV8AsDe5xj6D0quXNTvcvl/9fibRciKpy/o/PHHaCEXVhESlKIJY8Mlj7C32fdC988q1mQ8rEp1MIHYE4H85AuEPwTd7eOCD4uYFApwyJKl2iLPSYlEj3pxQrcuICovdnFdh/L0uMr6UbTPtX3H1Ez7d6C2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BErDsZTa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TuhDHawi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 263D7C4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BErDsZTa"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F0DEC4CEE4;
 	Fri, 28 Feb 2025 00:29:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740702542;
-	bh=oo71VY1McPM8/140gIhN/hZPHJcdcpEwgl7m7nF3O78=;
+	bh=kTqIZkhKLJ5jCwow6RTkusGiC8GJWw/LfCRBn/zeLoA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=TuhDHawisxL70UuXyiqJWIDUTYIfu+yKFG/Y4KYoya3WtNFQesP3pMyxyXbJ1aFrX
-	 WE8cp0ey70kPkP520TAlPwljsNc3HzAJdQwNmrrAykO5IePET41V82mWLp5p7y3I1z
-	 qWdVmHRwP8twdF9IgpOKaj0ofL0agA0GobmOwdglKXltCG8EfZO6TWoRrKzkk3Jn0H
-	 W/oHrCY80dP2rWHGUGAsBWOV+i/V5cULd255mX7OtHkQzmwriUUF0JY7JdrKdaIaD0
-	 9NWrpopA9Z74AOro9y5URZ5vRbMgr6obphPH7+dWXRi2k+ORBV/TvQdUcb5bCk6npi
-	 dVGq1n6lIhiIA==
+	b=BErDsZTa0gOhKW/TxMVLzqappJt3dXdENSDEMIyJYdqx8OnAgsRK0a4tCOXENlyQg
+	 Ll1CLmmDbTXRmsHeON+Bmhw7ADzEmzmA1ewsLsjmpOspqJ4HFwSP2ZtGFskoJqHeJa
+	 Ik6eHqDWtyHS/qgQOuPrbe9FGzB/tbf95IprPcrK3MEXT9yM/1u5uyKwQKCQ2rmzNA
+	 vgUgS4z4p1eY8yvHe3KKRN2cPq4qoSwM36Jfo7SNgcdDc+Y+BH9oJ6Y/BPDvK4fsyt
+	 j5okL8KaDXrcXHXeDa8qvhGVG7xIpqIXMXV67G0AMMcKdmVJ3/zWtfMlq8/tkD1MSl
+	 uAb/cfTCxa2aA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19869C282C7;
-	Fri, 28 Feb 2025 00:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDE3C19F32;
+	Fri, 28 Feb 2025 00:29:01 +0000 (UTC)
 From: Satish Kharat via B4 Relay <devnull+satishkh.cisco.com@kernel.org>
-Date: Thu, 27 Feb 2025 19:30:46 -0500
-Subject: [PATCH 3/8] enic: enic rq extended cq defines
+Date: Thu, 27 Feb 2025 19:30:44 -0500
+Subject: [PATCH 1/8] enic: Move function from header file to c file
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250227-enic_cleanup_and_ext_cq-v1-3-c314f95812bb@cisco.com>
+Message-Id: <20250227-enic_cleanup_and_ext_cq-v1-1-c314f95812bb@cisco.com>
 References: <20250227-enic_cleanup_and_ext_cq-v1-0-c314f95812bb@cisco.com>
 In-Reply-To: <20250227-enic_cleanup_and_ext_cq-v1-0-c314f95812bb@cisco.com>
 To: Christian Benvenuti <benve@cisco.com>, 
@@ -51,11 +51,11 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Satish Kharat <satishkh@cisco.com>, Nelson Escobar <neescoba@cisco.com>, 
  John Daley <johndale@cisco.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740702696; l=4129;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740702696; l=7840;
  i=satishkh@cisco.com; s=20250226; h=from:subject:message-id;
- bh=lCdejaRbYIFkRngxAAsLt06YyI38y1e/5BxDAW6GFew=;
- b=8krwWzhGpuEdsnyElxhnTRUhI/KyLuLSqi8SJ8CqWLyoLd0JCD1SoqUVHZ//kgJcf1Mz5VqSj
- M7FIEJrHjz/CqsglMyPNgBf+H7bloxCWM+BEDOpx4Kpo1Z3y0LEV2WT
+ bh=nNYqYqNjdD0WDdRxaCh9RCgCQpkRynWVhF0dMlyIVxE=;
+ b=VFZPNyP549zHPxa1BZxVAqgAOSCF5iEQu8enDQ5FuewoBdNv0rwbTOVcfWSE2EAiPVEXR6U3l
+ L/mJ3GNpV9xC4OlUyWH0gtM0dWv2nTpIBaOUUeBWCSLNlmsp7yfcTrf
 X-Developer-Key: i=satishkh@cisco.com; a=ed25519;
  pk=lkxzORFYn5ejiy0kzcsfkpGoXZDcnHMc4n3YK7jJnJo=
 X-Endpoint-Received: by B4 Relay for satishkh@cisco.com/20250226 with
@@ -65,9 +65,9 @@ Reply-To: satishkh@cisco.com
 
 From: Satish Kharat <satishkh@cisco.com>
 
-Adds the defines for 32 and 64 byte receive queue completion queue
-descriptors.
-Adds devcmd define to get rq cq descriptor size/s supported by hw.
+Moves cq_enet_rq_desc_dec from cq_enet_desc.h to enic_rq.c.
+This is in preparation for enic extended completion queue
+enabling.
 
 Co-developed-by: Nelson Escobar <neescoba@cisco.com>
 Signed-off-by: Nelson Escobar <neescoba@cisco.com>
@@ -75,114 +75,193 @@ Co-developed-by: John Daley <johndale@cisco.com>
 Signed-off-by: John Daley <johndale@cisco.com>
 Signed-off-by: Satish Kharat <satishkh@cisco.com>
 ---
- drivers/net/ethernet/cisco/enic/cq_enet_desc.h | 56 ++++++++++++++++++++++++++
- drivers/net/ethernet/cisco/enic/vnic_devcmd.h  | 19 +++++++++
- 2 files changed, 75 insertions(+)
+ drivers/net/ethernet/cisco/enic/cq_enet_desc.h | 81 -------------------------
+ drivers/net/ethernet/cisco/enic/enic_rq.c      | 82 ++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+), 81 deletions(-)
 
 diff --git a/drivers/net/ethernet/cisco/enic/cq_enet_desc.h b/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
-index 6abc134d07032a737c8b3d2987e3c7a4b8191991..809a3f30b87f78285414990a2a42c9a30a8662c6 100644
+index d25426470a293989ff472863cc85718e3b1d81d2..6abc134d07032a737c8b3d2987e3c7a4b8191991 100644
 --- a/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
 +++ b/drivers/net/ethernet/cisco/enic/cq_enet_desc.h
-@@ -24,6 +24,23 @@ static inline void cq_enet_wq_desc_dec(struct cq_enet_wq_desc *desc,
- 		color, q_number, completed_index);
+@@ -88,85 +88,4 @@ struct cq_enet_rq_desc {
+ #define CQ_ENET_RQ_DESC_FLAGS_IPV4_FRAGMENT         (0x1 << 6)
+ #define CQ_ENET_RQ_DESC_FLAGS_FCS_OK                (0x1 << 7)
+ 
+-static inline void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc,
+-	u8 *type, u8 *color, u16 *q_number, u16 *completed_index,
+-	u8 *ingress_port, u8 *fcoe, u8 *eop, u8 *sop, u8 *rss_type,
+-	u8 *csum_not_calc, u32 *rss_hash, u16 *bytes_written, u8 *packet_error,
+-	u8 *vlan_stripped, u16 *vlan_tci, u16 *checksum, u8 *fcoe_sof,
+-	u8 *fcoe_fc_crc_ok, u8 *fcoe_enc_error, u8 *fcoe_eof,
+-	u8 *tcp_udp_csum_ok, u8 *udp, u8 *tcp, u8 *ipv4_csum_ok,
+-	u8 *ipv6, u8 *ipv4, u8 *ipv4_fragment, u8 *fcs_ok)
+-{
+-	u16 completed_index_flags;
+-	u16 q_number_rss_type_flags;
+-	u16 bytes_written_flags;
+-
+-	cq_desc_dec((struct cq_desc *)desc, type,
+-		color, q_number, completed_index);
+-
+-	completed_index_flags = le16_to_cpu(desc->completed_index_flags);
+-	q_number_rss_type_flags =
+-		le16_to_cpu(desc->q_number_rss_type_flags);
+-	bytes_written_flags = le16_to_cpu(desc->bytes_written_flags);
+-
+-	*ingress_port = (completed_index_flags &
+-		CQ_ENET_RQ_DESC_FLAGS_INGRESS_PORT) ? 1 : 0;
+-	*fcoe = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_FCOE) ?
+-		1 : 0;
+-	*eop = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_EOP) ?
+-		1 : 0;
+-	*sop = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_SOP) ?
+-		1 : 0;
+-
+-	*rss_type = (u8)((q_number_rss_type_flags >> CQ_DESC_Q_NUM_BITS) &
+-		CQ_ENET_RQ_DESC_RSS_TYPE_MASK);
+-	*csum_not_calc = (q_number_rss_type_flags &
+-		CQ_ENET_RQ_DESC_FLAGS_CSUM_NOT_CALC) ? 1 : 0;
+-
+-	*rss_hash = le32_to_cpu(desc->rss_hash);
+-
+-	*bytes_written = bytes_written_flags &
+-		CQ_ENET_RQ_DESC_BYTES_WRITTEN_MASK;
+-	*packet_error = (bytes_written_flags &
+-		CQ_ENET_RQ_DESC_FLAGS_TRUNCATED) ? 1 : 0;
+-	*vlan_stripped = (bytes_written_flags &
+-		CQ_ENET_RQ_DESC_FLAGS_VLAN_STRIPPED) ? 1 : 0;
+-
+-	/*
+-	 * Tag Control Information(16) = user_priority(3) + cfi(1) + vlan(12)
+-	 */
+-	*vlan_tci = le16_to_cpu(desc->vlan);
+-
+-	if (*fcoe) {
+-		*fcoe_sof = (u8)(le16_to_cpu(desc->checksum_fcoe) &
+-			CQ_ENET_RQ_DESC_FCOE_SOF_MASK);
+-		*fcoe_fc_crc_ok = (desc->flags &
+-			CQ_ENET_RQ_DESC_FCOE_FC_CRC_OK) ? 1 : 0;
+-		*fcoe_enc_error = (desc->flags &
+-			CQ_ENET_RQ_DESC_FCOE_ENC_ERROR) ? 1 : 0;
+-		*fcoe_eof = (u8)((le16_to_cpu(desc->checksum_fcoe) >>
+-			CQ_ENET_RQ_DESC_FCOE_EOF_SHIFT) &
+-			CQ_ENET_RQ_DESC_FCOE_EOF_MASK);
+-		*checksum = 0;
+-	} else {
+-		*fcoe_sof = 0;
+-		*fcoe_fc_crc_ok = 0;
+-		*fcoe_enc_error = 0;
+-		*fcoe_eof = 0;
+-		*checksum = le16_to_cpu(desc->checksum_fcoe);
+-	}
+-
+-	*tcp_udp_csum_ok =
+-		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_TCP_UDP_CSUM_OK) ? 1 : 0;
+-	*udp = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_UDP) ? 1 : 0;
+-	*tcp = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_TCP) ? 1 : 0;
+-	*ipv4_csum_ok =
+-		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4_CSUM_OK) ? 1 : 0;
+-	*ipv6 = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV6) ? 1 : 0;
+-	*ipv4 = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4) ? 1 : 0;
+-	*ipv4_fragment =
+-		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4_FRAGMENT) ? 1 : 0;
+-	*fcs_ok = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_FCS_OK) ? 1 : 0;
+-}
+-
+ #endif /* _CQ_ENET_DESC_H_ */
+diff --git a/drivers/net/ethernet/cisco/enic/enic_rq.c b/drivers/net/ethernet/cisco/enic/enic_rq.c
+index e3228ef7988a1ef78e9051d9b1aa67df5191e2ac..8d5752c6bbbe34c79bdd5b8625645abec7eda3f9 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_rq.c
++++ b/drivers/net/ethernet/cisco/enic/enic_rq.c
+@@ -101,6 +101,88 @@ static void enic_rq_set_skb_flags(struct vnic_rq *vrq, u8 type, u32 rss_hash,
+ 	}
  }
  
-+/*
-+ * Defines and Capabilities for CMD_CQ_ENTRY_SIZE_SET
-+ */
-+#define VNIC_RQ_ALL (~0ULL)
++static inline void cq_enet_rq_desc_dec(struct cq_enet_rq_desc *desc, u8 *type, u8 *color,
++				       u16 *q_number, u16 *completed_index, u8 *ingress_port,
++				       u8 *fcoe, u8 *eop, u8 *sop, u8 *rss_type, u8 *csum_not_calc,
++				       u32 *rss_hash, u16 *bytes_written, u8 *packet_error,
++				       u8 *vlan_stripped, u16 *vlan_tci, u16 *checksum,
++				       u8 *fcoe_sof, u8 *fcoe_fc_crc_ok, u8 *fcoe_enc_error,
++				       u8 *fcoe_eof, u8 *tcp_udp_csum_ok, u8 *udp, u8 *tcp,
++				       u8 *ipv4_csum_ok, u8 *ipv6, u8 *ipv4, u8 *ipv4_fragment,
++				       u8 *fcs_ok)
++{
++	u16 completed_index_flags;
++	u16 q_number_rss_type_flags;
++	u16 bytes_written_flags;
 +
-+#define VNIC_RQ_CQ_ENTRY_SIZE_16 0
-+#define VNIC_RQ_CQ_ENTRY_SIZE_32 1
-+#define VNIC_RQ_CQ_ENTRY_SIZE_64 2
++	cq_desc_dec((struct cq_desc *)desc, type,
++		    color, q_number, completed_index);
 +
-+#define VNIC_RQ_CQ_ENTRY_SIZE_16_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_16)
-+#define VNIC_RQ_CQ_ENTRY_SIZE_32_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_32)
-+#define VNIC_RQ_CQ_ENTRY_SIZE_64_CAPABLE BIT(VNIC_RQ_CQ_ENTRY_SIZE_64)
++	completed_index_flags = le16_to_cpu(desc->completed_index_flags);
++	q_number_rss_type_flags =
++		le16_to_cpu(desc->q_number_rss_type_flags);
++	bytes_written_flags = le16_to_cpu(desc->bytes_written_flags);
 +
-+#define VNIC_RQ_CQ_ENTRY_SIZE_ALL_BIT  (VNIC_RQ_CQ_ENTRY_SIZE_16_CAPABLE | \
-+					VNIC_RQ_CQ_ENTRY_SIZE_32_CAPABLE | \
-+					VNIC_RQ_CQ_ENTRY_SIZE_64_CAPABLE)
++	*ingress_port = (completed_index_flags &
++		CQ_ENET_RQ_DESC_FLAGS_INGRESS_PORT) ? 1 : 0;
++	*fcoe = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_FCOE) ?
++		1 : 0;
++	*eop = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_EOP) ?
++		1 : 0;
++	*sop = (completed_index_flags & CQ_ENET_RQ_DESC_FLAGS_SOP) ?
++		1 : 0;
 +
- /* Completion queue descriptor: Ethernet receive queue, 16B */
- struct cq_enet_rq_desc {
- 	__le16 completed_index_flags;
-@@ -36,6 +53,45 @@ struct cq_enet_rq_desc {
- 	u8 type_color;
- };
- 
-+/* Completion queue descriptor: Ethernet receive queue, 32B */
-+struct cq_enet_rq_desc_32 {
-+	__le16 completed_index_flags;
-+	__le16 q_number_rss_type_flags;
-+	__le32 rss_hash;
-+	__le16 bytes_written_flags;
-+	__le16 vlan;
-+	__le16 checksum_fcoe;
-+	u8 flags;
-+	u8 fetch_index_flags;
-+	__le32 time_stamp;
-+	__le16 time_stamp2;
-+	__le16 pie_info;
-+	__le32 pie_info2;
-+	__le16 pie_info3;
-+	u8 pie_info4;
-+	u8 type_color;
-+};
++	*rss_type = (u8)((q_number_rss_type_flags >> CQ_DESC_Q_NUM_BITS) &
++		CQ_ENET_RQ_DESC_RSS_TYPE_MASK);
++	*csum_not_calc = (q_number_rss_type_flags &
++		CQ_ENET_RQ_DESC_FLAGS_CSUM_NOT_CALC) ? 1 : 0;
 +
-+/* Completion queue descriptor: Ethernet receive queue, 64B */
-+struct cq_enet_rq_desc_64 {
-+	__le16 completed_index_flags;
-+	__le16 q_number_rss_type_flags;
-+	__le32 rss_hash;
-+	__le16 bytes_written_flags;
-+	__le16 vlan;
-+	__le16 checksum_fcoe;
-+	u8 flags;
-+	u8 fetch_index_flags;
-+	__le32 time_stamp;
-+	__le16 time_stamp2;
-+	__le16 pie_info;
-+	__le32 pie_info2;
-+	__le16 pie_info3;
-+	u8 pie_info4;
-+	u8 reserved[32];
-+	u8 type_color;
-+};
++	*rss_hash = le32_to_cpu(desc->rss_hash);
 +
- #define CQ_ENET_RQ_DESC_FLAGS_INGRESS_PORT          (0x1 << 12)
- #define CQ_ENET_RQ_DESC_FLAGS_FCOE                  (0x1 << 13)
- #define CQ_ENET_RQ_DESC_FLAGS_EOP                   (0x1 << 14)
-diff --git a/drivers/net/ethernet/cisco/enic/vnic_devcmd.h b/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
-index db56d778877a73b0ef2adf59120cbc57999732ee..605ef17f967e4a7d62738b776bf4dbfdf172ba2a 100644
---- a/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
-+++ b/drivers/net/ethernet/cisco/enic/vnic_devcmd.h
-@@ -436,6 +436,25 @@ enum vnic_devcmd_cmd {
- 	 * in: (u16) a2 = unsigned short int port information
- 	 */
- 	CMD_OVERLAY_OFFLOAD_CFG = _CMDC(_CMD_DIR_WRITE, _CMD_VTYPE_ENET, 73),
++	*bytes_written = bytes_written_flags &
++		CQ_ENET_RQ_DESC_BYTES_WRITTEN_MASK;
++	*packet_error = (bytes_written_flags &
++		CQ_ENET_RQ_DESC_FLAGS_TRUNCATED) ? 1 : 0;
++	*vlan_stripped = (bytes_written_flags &
++		CQ_ENET_RQ_DESC_FLAGS_VLAN_STRIPPED) ? 1 : 0;
 +
 +	/*
-+	 * Set extended CQ field in MREGS of RQ (or all RQs)
-+	 * for given vNIC
-+	 * in: (u64) a0 = RQ selection (VNIC_RQ_ALL for all RQs)
-+	 *     (u32) a1 = CQ entry size
-+	 *         VNIC_RQ_CQ_ENTRY_SIZE_16 --> 16 bytes
-+	 *         VNIC_RQ_CQ_ENTRY_SIZE_32 --> 32 bytes
-+	 *         VNIC_RQ_CQ_ENTRY_SIZE_64 --> 64 bytes
-+	 *
-+	 * Capability query:
-+	 * out: (u32) a0 = errno, 0:valid cmd
-+	 *      (u32) a1 = value consisting of supported entries
-+	 *         bit 0: 16 bytes
-+	 *         bit 1: 32 bytes
-+	 *         bit 2: 64 bytes
++	 * Tag Control Information(16) = user_priority(3) + cfi(1) + vlan(12)
 +	 */
-+	CMD_CQ_ENTRY_SIZE_SET = _CMDC(_CMD_DIR_WRITE, _CMD_VTYPE_ENET, 90),
++	*vlan_tci = le16_to_cpu(desc->vlan);
 +
- };
- 
- /* CMD_ENABLE2 flags */
++	if (*fcoe) {
++		*fcoe_sof = (u8)(le16_to_cpu(desc->checksum_fcoe) &
++			CQ_ENET_RQ_DESC_FCOE_SOF_MASK);
++		*fcoe_fc_crc_ok = (desc->flags &
++			CQ_ENET_RQ_DESC_FCOE_FC_CRC_OK) ? 1 : 0;
++		*fcoe_enc_error = (desc->flags &
++			CQ_ENET_RQ_DESC_FCOE_ENC_ERROR) ? 1 : 0;
++		*fcoe_eof = (u8)((le16_to_cpu(desc->checksum_fcoe) >>
++			CQ_ENET_RQ_DESC_FCOE_EOF_SHIFT) &
++			CQ_ENET_RQ_DESC_FCOE_EOF_MASK);
++		*checksum = 0;
++	} else {
++		*fcoe_sof = 0;
++		*fcoe_fc_crc_ok = 0;
++		*fcoe_enc_error = 0;
++		*fcoe_eof = 0;
++		*checksum = le16_to_cpu(desc->checksum_fcoe);
++	}
++
++	*tcp_udp_csum_ok =
++		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_TCP_UDP_CSUM_OK) ? 1 : 0;
++	*udp = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_UDP) ? 1 : 0;
++	*tcp = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_TCP) ? 1 : 0;
++	*ipv4_csum_ok =
++		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4_CSUM_OK) ? 1 : 0;
++	*ipv6 = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV6) ? 1 : 0;
++	*ipv4 = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4) ? 1 : 0;
++	*ipv4_fragment =
++		(desc->flags & CQ_ENET_RQ_DESC_FLAGS_IPV4_FRAGMENT) ? 1 : 0;
++	*fcs_ok = (desc->flags & CQ_ENET_RQ_DESC_FLAGS_FCS_OK) ? 1 : 0;
++}
++
+ static bool enic_rq_pkt_error(struct vnic_rq *vrq, u8 packet_error, u8 fcs_ok,
+ 			      u16 bytes_written)
+ {
 
 -- 
 2.48.1
