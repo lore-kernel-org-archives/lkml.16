@@ -1,171 +1,216 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FC9260367;
-	Fri, 28 Feb 2025 10:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E0F254AE6;
+	Fri, 28 Feb 2025 10:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740739654; cv=none; b=kfZUwzSeAK5Q4UdUwJJOsiikvYg7ndr30a5Rgsp5yNxNOhOt1FT5ec2vY8J0RkOY/wXDzxedsQ8sbVgqyOTUHmXimT7gqXj0a1RfqIDs1m+x3fSBx7qoG1BGkp2bPfLU4mx10as2NPurrTtdka/aG9HCNJIQCO2+iNPaz2ThVJs=
+	t=1740739717; cv=none; b=mTr8N59RjHPFKkMhlBonU9Rt0MWvt/IjHQ/YioHYRxivb2SNHh32Z6M4fXU8NG0mz6OsjnGhXCujh3turEIJGnGXII+DObxD3guK+hMR6mJQd/dkCOD//9+bC41ZkxmgMgCQyraJXzRIKDQTMKTpgcvSxmMy0IMaqq/bHTkyrV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740739654; c=relaxed/simple;
-	bh=L68s6VwS54ddihqbAee1YcryRUuoHMpen2El/jr8MM8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Hvbz8JaPUvKgPCkDa/wlsJSeEFVf7WiyTgDMb03vL7gRyqjie9gU2OT/9/ytlbfCqWNRfpsFimBwTuFZQmPhk4L+TFGS8yLJshDqUBVvs95zjNOB/0PvwD7mgzCxJK7I5SJmQHJDVAMyfJ0NcRxuPikTA6VOPj9qToo89ZqjBjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pbbyCmK6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/Ppc9LE1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740739717; c=relaxed/simple;
+	bh=Lkr98+j8e6uZ7EaeQxen/k1uFuQao3EzZ/bsAvEKfgM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tdt1/xCh1MirmEajIU7zdZfEqxV+YUrMR+L2Ear9Mi0WCkJjsURwtpsoY78S/LXLvHELKMDy8V42aI3g7f3zPegyMMm2s7o6pXdkBrSCGbkDtos4KnBMkJPi6I1fj4uPU4kxOhjUGgG3ao9lWvdvDdLQ4s6g7DlOfuq9NIMegMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=F3+QLMH/; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pbbyCmK6";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/Ppc9LE1"
-Date: Fri, 28 Feb 2025 10:47:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740739650;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdcCEaxdspq2IpsD6PF5Mz6/40hsfx0ji8945Y8s7FM=;
-	b=pbbyCmK65BTsPKJdVcncvJWK6ZWQiM6CUyN68jXh78tfHfK3VkM8YEuStflfq86wdY8kt+
-	qxTtFeGKgJrbepemDvfLfbnr9v3KFAcTA3CbHXR3Bic/kVnR5rMDwOgETwZZP+CRpY8icm
-	MGmuGdw3oXEDB6WGb6Q2eKAmyAmYjTKdSWcEbx5DsYxrbbi9OsbwOiAafixz+c9YHi0b9f
-	8L/tccTsEqQz4gsThu06ggtjPGIAxprRn3Wmk+x79lwipsY+fgiWve7WbPFf0nOn4si7R+
-	Maroe8eY4+XM1QCv3YHjf5N68NZ8b0/5SHceMoCZnwjBpw9+dc/GhtNzQOzPmA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740739650;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PdcCEaxdspq2IpsD6PF5Mz6/40hsfx0ji8945Y8s7FM=;
-	b=/Ppc9LE1R4IycA4Zl0FK8uPNoHdFbInjV8uiBi3wqfSnYJBMzq7n0e9m1pbQo7zani3YXA
-	N2FQzT2kijLRVrAw==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: objtool/urgent] objtool: Fix C jump table annotations for Clang
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, Ard Biesheuvel <ardb@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250221135704.431269-6-ardb+git@google.com>
-References: <20250221135704.431269-6-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="F3+QLMH/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ZYyDAwDnX/ZSr9OBTEf9DBoZeTxH5uzvRHwMSrNv43A=; b=F3+QLMH/xgFo0BTjvB+ZO885V5
+	z37s6XxxCJHH75uZpjA9RoP0Qpc0wNVQtgpoHOJ0QIvLeapleJrdnI9xfL5pqwpG/gvC/yGgvkOib
+	7DxFjHMk15s9uOJwqzLqIa0s+w5EajDtNZHAFmye5Y4yMz1pqGtkCzGYQSw7w9V3KJvM=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:63536 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1tnxed-00Dtva-K9; Fri, 28 Feb 2025 11:31:40 +0100
+From: Matthias Fend <matthias.fend@emfend.at>
+Date: Fri, 28 Feb 2025 11:31:23 +0100
+Subject: [PATCH 1/2] dt-bindings: leds: add Texas Instruments TPS6131x
+ flash LED driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174073964983.10177.9041277746788147688.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250228-leds-tps6131x-v1-1-d1071d90f9ea@emfend.at>
+References: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
+In-Reply-To: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com
+X-Mailer: b4 0.14.2
+X-Spam-Score: -1.0
+X-Spam-Bar: -
+X-Spam-Report: Spam detection software, running on the system "lx20.hoststar.hosting",
+ has NOT identified this incoming email as spam.  The original
+ message has been attached to this so you can view it or label
+ similar future email.  If you have any questions, see
+ the administrator of that system for details.
+ 
+ Content preview:  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
+    Its power stage is capable of supplying a maximum total current of roughly
+    1500mA. The TPS6131x provides three constant-current sinks, c [...] 
+ 
+ Content analysis details:   (-1.0 points, 5.0 required)
+ 
+  pts rule name              description
+ ---- ---------------------- --------------------------------------------------
+ -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
+  0.0 TVD_RCVD_IP            Message was received from an IP address
+  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
+                             Alignment
 
-The following commit has been merged into the objtool/urgent branch of tip:
+Document Texas Instruments TPS61310/TPS61311 flash LED driver devicetree
+bindings.
 
-Commit-ID:     73cfc53cc3b6380eccf013049574485f64cb83ca
-Gitweb:        https://git.kernel.org/tip/73cfc53cc3b6380eccf013049574485f64cb83ca
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Fri, 21 Feb 2025 14:57:07 +01:00
-Committer:     Josh Poimboeuf <jpoimboe@kernel.org>
-CommitterDate: Tue, 25 Feb 2025 09:46:16 -08:00
-
-objtool: Fix C jump table annotations for Clang
-
-A C jump table (such as the one used by the BPF interpreter) is a const
-global array of absolute code addresses, and this means that the actual
-values in the table may not be known until the kernel is booted (e.g.,
-when using KASLR or when the kernel VA space is sized dynamically).
-
-When using PIE codegen, the compiler will default to placing such const
-global objects in .data.rel.ro (which is annotated as writable), rather
-than .rodata (which is annotated as read-only). As C jump tables are
-explicitly emitted into .rodata, this used to result in warnings for
-LoongArch builds (which uses PIE codegen for the entire kernel) like
-
-  Warning: setting incorrect section attributes for .rodata..c_jump_table
-
-due to the fact that the explicitly specified .rodata section inherited
-the read-write annotation that the compiler uses for such objects when
-using PIE codegen.
-
-This warning was suppressed by explicitly adding the read-only
-annotation to the __attribute__((section(""))) string, by commit
-
-  c5b1184decc8 ("compiler.h: specify correct attribute for .rodata..c_jump_table")
-
-Unfortunately, this hack does not work on Clang's integrated assembler,
-which happily interprets the appended section type and permission
-specifiers as part of the section name, which therefore no longer
-matches the hard-coded pattern '.rodata..c_jump_table' that objtool
-expects, causing it to emit a warning
-
-  kernel/bpf/core.o: warning: objtool: ___bpf_prog_run+0x20: sibling call from callable instruction with modified stack frame
-
-Work around this, by emitting C jump tables into .data.rel.ro instead,
-which is treated as .rodata by the linker script for all builds, not
-just PIE based ones.
-
-Fixes: c5b1184decc8 ("compiler.h: specify correct attribute for .rodata..c_jump_table")
-Tested-by: Tiezhu Yang <yangtiezhu@loongson.cn> # on LoongArch
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Link: https://lore.kernel.org/r/20250221135704.431269-6-ardb+git@google.com
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
 ---
- include/linux/compiler.h                | 2 +-
- tools/objtool/check.c                   | 7 ++++---
- tools/objtool/include/objtool/special.h | 2 +-
- 3 files changed, 6 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/leds/ti,tps6131x.yaml      | 123 +++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
 
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index b087de2..0c25f3e 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -110,7 +110,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
- /* Unreachable code */
- #ifdef CONFIG_OBJTOOL
- /* Annotate a C jump table to allow objtool to follow the code flow */
--#define __annotate_jump_table __section(".rodata..c_jump_table,\"a\",@progbits #")
-+#define __annotate_jump_table __section(".data.rel.ro.c_jump_table")
- #else /* !CONFIG_OBJTOOL */
- #define __annotate_jump_table
- #endif /* CONFIG_OBJTOOL */
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 497cb8d..1b5a1b3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2471,13 +2471,14 @@ static void mark_rodata(struct objtool_file *file)
- 	 *
- 	 * - .rodata: can contain GCC switch tables
- 	 * - .rodata.<func>: same, if -fdata-sections is being used
--	 * - .rodata..c_jump_table: contains C annotated jump tables
-+	 * - .data.rel.ro.c_jump_table: contains C annotated jump tables
- 	 *
- 	 * .rodata.str1.* sections are ignored; they don't contain jump tables.
- 	 */
- 	for_each_sec(file, sec) {
--		if (!strncmp(sec->name, ".rodata", 7) &&
--		    !strstr(sec->name, ".str1.")) {
-+		if ((!strncmp(sec->name, ".rodata", 7) &&
-+		     !strstr(sec->name, ".str1.")) ||
-+		    !strncmp(sec->name, ".data.rel.ro", 12)) {
- 			sec->rodata = true;
- 			found = true;
- 		}
-diff --git a/tools/objtool/include/objtool/special.h b/tools/objtool/include/objtool/special.h
-index e7ee7ff..e049679 100644
---- a/tools/objtool/include/objtool/special.h
-+++ b/tools/objtool/include/objtool/special.h
-@@ -10,7 +10,7 @@
- #include <objtool/check.h>
- #include <objtool/elf.h>
- 
--#define C_JUMP_TABLE_SECTION ".rodata..c_jump_table"
-+#define C_JUMP_TABLE_SECTION ".data.rel.ro.c_jump_table"
- 
- struct special_alt {
- 	struct list_head list;
+diff --git a/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml b/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..c08b3cef7abcec07237d3271456ff1f888b2b809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/ti,tps6131x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments TPS6131X flash LED driver
++
++maintainers:
++  - Matthias Fend <matthias.fend@emfend.at>
++
++description: |
++  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
++  Its power stage is capable of supplying a maximum total current of roughly 1500mA.
++  The TPS6131x provides three constant-current sinks, capable of sinking
++  up to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode.
++  In torch mode, each sink (LED1, LED2, LED3) supports currents up to 175mA.
++
++  The data sheet can be found at:
++    https://www.ti.com/lit/ds/symlink/tps61310.pdf
++
++properties:
++  compatible:
++    enum:
++      - ti,tps61310
++      - ti,tps61311
++
++  reg:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to NRESET pin
++
++  ti,valley-current-limit:
++    type: boolean
++    description:
++      Reduce the valley peak current limit from 1750mA to 1250mA (TPS61310) or
++      from 2480mA to 1800mA (TPS61311).
++
++  led:
++    type: object
++    $ref: common.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      led-sources:
++        allOf:
++          - minItems: 1
++            maxItems: 3
++            items:
++              enum: [1, 2, 3]
++
++      led-max-microamp:
++        anyOf:
++          - minimum: 25000
++            maximum: 350000
++            multipleOf: 50000
++          - minimum: 25000
++            maximum: 525000
++            multipleOf: 25000
++
++      flash-max-microamp:
++        anyOf:
++          - minimum: 25000
++            maximum: 800000
++            multipleOf: 50000
++          - minimum: 25000
++            maximum: 1500000
++            multipleOf: 25000
++
++      flash-max-timeout-us:
++        enum: [ 5300, 10700, 16000, 21300, 26600, 32000, 37300, 68200, 71500,
++                102200, 136300, 170400, 204500, 340800, 579300, 852000 ]
++
++    required:
++      - led-sources
++      - led-max-microamp
++      - flash-max-microamp
++      - flash-max-timeout-us
++
++required:
++  - compatible
++  - reg
++  - '#address-cells'
++  - '#size-cells'
++  - led
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      led-controller@33 {
++        compatible = "ti,tps61310";
++        reg = <0x33>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
++
++        tps61310_flash: led {
++          function = LED_FUNCTION_FLASH;
++          color = <LED_COLOR_ID_WHITE>;
++          led-sources = <1>, <2>, <3>;
++          led-max-microamp = <525000>;
++          flash-max-microamp = <1500000>;
++          flash-max-timeout-us = <852000>;
++        };
++      };
++    };
+
+-- 
+2.34.1
+
