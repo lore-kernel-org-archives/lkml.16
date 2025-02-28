@@ -1,114 +1,144 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF1145A18
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3AF13213E
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740710483; cv=none; b=Oq7hL+iwPqhoKRFI4k2TvMHJkzL2pJBiJE4Yc8fudNCc34jxx4GnBuQkeO4HuVA08UdDwUUWzgCly3NPEfpc+/3q5wz+6T8d+niNClUjuW/DzXNYvAZg1+i/eI1THhRsUlWfFnIT1owhUCUrDtRZp0mKDzLKbmohcxAbBz2R7Fw=
+	t=1740710676; cv=none; b=prOHyEEFgVXAfjNSp2/b5O+5LV06N1XOaoj6dWJxy1E6+goarQOYPDy6Qqev8T++OjoJ06uy5ghrTAzcCn5MPDiRyk4C4OmxVmWre79GIPiMn5769U5ptMQ6VMewx2GlJnVXZ5FEdgK2rzzd4ppM9m//qLAUftXu+JWwGVcXWgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740710483; c=relaxed/simple;
-	bh=Y1IsWeuuOSviB9Q6mrcThc4GHvp0DUw+/aom6Js6MOA=;
-	h=MIME-Version:Date:From:To:Message-Id:Subject:Content-Type; b=cTEC/ttwjqLKmhaAUChEX5NcXK208bYPG29Ce6+83Vh+/+szZ2uuWVB8wl+mUwTKCGXmJ8EuNnLb7Z5nhXwwkbE5QR5F4ztljFA544nvM6XFjY6aX4AKOx+G9X6TGP99hy85vJkgShA1PHjbhiI1favonQeEW/QE9eYtk3oW/Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=doridian.net; spf=pass smtp.mailfrom=doridian.net; dkim=pass (2048-bit key) header.d=doridian.net header.i=@doridian.net header.b=KT9El2D5; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QFWQF4fP; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=doridian.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=doridian.net
+	s=arc-20240116; t=1740710676; c=relaxed/simple;
+	bh=0fz6H8dlUgf8ko9N18YypQHlBg79eNoT5rDDE25IBq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cA0RFFqLSScOWXqYfgvbqXaRFeMaZ9o3kcy5Rh3lBwF2gYLBpXYT6nh/QbSAQBBOQA5mmFyS7fz21DlBDamXgFodKuD76u/B6UOkyboD80DJai6voI/oSrfS6O1rI8dKkN0zO6D8akXhuayKvAbQqCmQzNjmp2WoVAQSp308vME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cdGvg9LM; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=doridian.net header.i=@doridian.net header.b="KT9El2D5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QFWQF4fP"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 1378211403EF
-	for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 21:41:17 -0500 (EST)
-Received: from phl-imap-06 ([10.202.2.83])
-  by phl-compute-09.internal (MEProxy); Thu, 27 Feb 2025 21:41:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=doridian.net; h=
-	cc:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm3; t=1740710477; x=1740796877; bh=I1XXRya/wh
-	Yvvb0FE5FRcM/g+sPzAqjsPyPRhMueVXE=; b=KT9El2D50+llySFE4oZSiL9/cF
-	YCTQtnB++N66qCLO9+kQ4UxDbxanosb5J3eQOgi+W2JJoH+7g2qJHHB46AJQg1Oo
-	4Wk7MxxKWznNV3BZ6+Y3S7awd0pIggvKDDFy6suK8+BsZu9EvihGHVE8kVCkJ1jF
-	jFLtFWLPSzuP7BN+MXj007sFT+Hw11oNlPLb/tbOKPxyDoBIrfkDb2qOzXkkE9js
-	iB+Yp3oqdLOf11ER6l2wQddL+5I1nx9QjWXpX+oWiJCmTGKfid1d12y7rWYhnxlI
-	ImKKALvjS3UJ2AFCU194s09l6UDK2rUXELcKg0op/0TntcNRIdJhh2vFM6ew==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1740710477; x=1740796877; bh=I1XXRya/whYvvb0FE5FRcM/g+sPzAqjsPyP
-	RhMueVXE=; b=QFWQF4fP2KDHDD5X+sThog8jI9ZmiLAEyPXYof8aMkfNtpQ0zAE
-	6GX8ydVZvJRGrLQVEPHQb39XCC4aby/TZuiuHoA8//+4Y4Gw7jaDdbG0OCqTbCZv
-	F4Q3JoqmLW45XVm41A9focnyNj6FpI5V7LKXXcpeMnzzntfK/iDyunNCYsn+zvQu
-	LV4Z/oeaDnAjKtSly17yaS4resuBblzGFu6s5EXSYyKkUHOajIJjoN//fZA+9Arz
-	qnCERpZxHll6LEiLhOt0Pf1qHRShyr/kyXLamMfbau6KBU56vQWIDWSGOHVLICC4
-	TMV6ingigim9zG7o4KhlCt6FtabS0clPL0A==
-X-ME-Sender: <xms:TCLBZ7mAweF1i-cgHj4W1Z3yqlvPu17hfx2SmWi6XBe2LBy7oN0CXg>
-    <xme:TCLBZ-0gjFno-XbsxvSWoXRxNbcuC_6xDfKLGtLvOuzeTHRhNViSxCq6ZlcFC-8l4
-    S0QrLNx72xLyHccoB4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekledvtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepofggff
-    fhvffkufgtgfesthejredtredttdenucfhrhhomhepfdforghrkhcuffhivghtiigvrhdf
-    uceoghhithesughorhhiughirghnrdhnvghtqeenucggtffrrghtthgvrhhnpeeiiefhie
-    etffdvffejfedulefftedtudduheeljedtueekheetveefteejgfdvteenucffohhmrghi
-    nhepfhhrrghmvgdrfihorhhknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepghhithesughorhhiughirghnrdhnvghtpdhnsggprhgtphhtthho
-    pedupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlh
-    esvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:TCLBZxpLG96RtzU-RRN23WUttfSL2hsmz8_upQg8bj90JsUmI8mKew>
-    <xmx:TCLBZznC8yOvQYVPO_n-POqbb0jNFTIVmTWMBPXxaR-Oyez9nwJ2SA>
-    <xmx:TCLBZ52sGAbkXWlOWxI0mSOkZtPHT7rhpLvUWKmB20lNkaINUBy-SQ>
-    <xmx:TCLBZyspOYtrRtGeyDOg40iRcj0ilsoDHz51QdWZXF-WKAqzMYVrBQ>
-    <xmx:TSLBZ697oZzotW3xBvR3UJA7ZSMtSNW3YiATJqZiyydTrYttypi9wzrx>
-Feedback-ID: ie91947d0:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id C9D2729C006F; Thu, 27 Feb 2025 21:41:16 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cdGvg9LM"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22185cddbffso48455855ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:44:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1740710673; x=1741315473; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KrHEppDznEYNt+aFJHMFnsD9ySUlfKEU8kXo3t7+HP0=;
+        b=cdGvg9LMCPgA86eF1veU8MttIzjFc4M9bOp1Q+ej90hvu2aZr7uyASxs7uRlr3D8kE
+         YQQQANN+KG+nVURDCNJSv5gXBZoaa0W0i35WiZlp+mcBPmLoJfGx/iPTsUQgBx1Od+bK
+         riOJ/vkAG14G2L8zko8aUF3QwPxJv+wmmzqITfAAwEEj6QVyvyt382VqOYTnBuj9KJAU
+         HZNHwiMw671NsErHZxT6yRYWcQ8PvZzb/ikpwi5VOwlvOlu3HTNLh12KwEYvo2mJ8GYP
+         PjXRKUtbafnl+V/PCk7t9Iw7EHZB8TYDo5psvQDupJbFjo70IVyq0wgSs20gO+qgyNoS
+         eNKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740710673; x=1741315473;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KrHEppDznEYNt+aFJHMFnsD9ySUlfKEU8kXo3t7+HP0=;
+        b=F5qBP9KGLwK7VIhargEUpe/cjLGIpKFKZWUP3Z2o2TIE1E5NqISq0Hpu4OEcdE82Tr
+         lPqpvD0Ph6Ur4IEI79k58fts8hXcALDa53q4Kdir074MtCsQZfONyG/+DTcbpT0uWcBK
+         QpRmx/R+JCa5FDSIph+7KWepCOpCcAVpuLKhh3OPHCcP7oeba1UwovbKK+wCEbUOzktD
+         FwOQzeqPKz5VfF8sib87OG148VVZRtvJFscDY6c/5j1W8Ot46g/ZWOs1GA4vQKkQvujA
+         twgJp15/KkVsTjJliD1d3oeFaB1oa2/tyNOhnjmBIs2sRIUvXVd1+Hj3EK1CKeQqCZOj
+         7veQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkzvBRdrmaUem0Ia0L19TS2NN4/GM0qgP/7pybVBAsDCoM5qRrSPYNguLTMvn658OBiGmiBhbZaG+gXKw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyg6wplqOrBPFrJCQjah5XC4ZX4SmRTRR5LNkj7SB3fIrlf+SWM
+	6X99rOKBgW1Pdn4vuVKjsbx/oVux6xoVq4nKUFEGu8aLDyOMiu27kKxH6QYfh6M=
+X-Gm-Gg: ASbGncsOJcdyzhUIE6oBM0eh/5HJnpPMZKwzglMHQWJTGN+UGFigl2f5npGYZsj4Jom
+	iWjlrODAEAhUmChauuPQK7xYtP2TQnYWzl34LmTRwuBY5aAFRg7uV/JSVY5jt9Q0VBtMDe+to8f
+	jVvY9nhkZ435iEamlDn6KIbfQpCAD/ZRY9Q+5q4xsURsStqv3tNno5lPNwIIV8tIGJMzTaKV4IQ
+	yr0ZYie7Sdvm4cu+F0bWLzfPhwzgoSoxXlx6lVZBpuWPsVA2tAQw6X+e6/7dfTBgVgVRai6XXRM
+	Nxcc8PrY1pCBlqbMyLGxHT+eLJNOS0skrWoU7/rnUSL9CAB/sA==
+X-Google-Smtp-Source: AGHT+IF4hsdZRiz/aSbemK655CZrsY9ZUuvu4Xu2ENST8y9hxHTSO7PJo35OmCgDgimYWycuvOakGg==
+X-Received: by 2002:a05:6a20:1591:b0:1ee:d19c:45f9 with SMTP id adf61e73a8af0-1f2f3e11f86mr2902815637.19.1740710672736;
+        Thu, 27 Feb 2025 18:44:32 -0800 (PST)
+Received: from [10.68.122.90] ([63.216.146.179])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe514besm2559832b3a.71.2025.02.27.18.44.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Feb 2025 18:44:32 -0800 (PST)
+Message-ID: <e5f4e310-5bcd-4901-8ec3-757cf55dfa64@bytedance.com>
+Date: Fri, 28 Feb 2025 10:44:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 27 Feb 2025 18:40:12 -0800
-From: "Mark Dietzer" <git@doridian.net>
-To: linux-kernel@vger.kernel.org
-Message-Id: <1c96811e-4d54-480a-bc09-bcd2999e8e66@app.fastmail.com>
-Subject: [PATCH] drm: panel-backlight-quirks: Add Framework 16 panel
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] mm: pgtable: convert some architectures to use
+ tlb_remove_ptdesc()
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: peterz@infradead.org, kevin.brodsky@arm.com, riel@surriel.com,
+ vishal.moola@gmail.com, david@redhat.com, jannh@google.com,
+ hughd@google.com, willy@infradead.org, yuzhao@google.com,
+ muchun.song@linux.dev, akpm@linux-foundation.org, will@kernel.org,
+ aneesh.kumar@kernel.org, npiggin@gmail.com, arnd@arndb.de,
+ dave.hansen@linux.intel.com, rppt@kernel.org, alexghiti@rivosinc.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-sh@vger.kernel.org, linux-um@lists.infradead.org, x86@kernel.org,
+ linux-riscv@lists.infradead.org
+References: <cover.1740454179.git.zhengqi.arch@bytedance.com>
+ <19db3e8673b67bad2f1df1ab37f1c89d99eacfea.1740454179.git.zhengqi.arch@bytedance.com>
+ <CAMuHMdU8ttibKCiUPxSNBpJyrtBbrt1CqLa++jq6CpJFbFCwAg@mail.gmail.com>
+From: Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <CAMuHMdU8ttibKCiUPxSNBpJyrtBbrt1CqLa++jq6CpJFbFCwAg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Similarly for the Framework 13 panels already handled in those quirks, the 16 can be helped by the same kind of patch.
 
-I have run this on my own 16 for multiple months (hard coding the value to 0 before the quirks made it upstream) and it has resulted in a darker minimum brightness (as expected) and no issues.
 
-The Framework community threads between the 13 and 16 for this improvement are the same one, so user reports in the link below will be mixed and likely more focused on the 13.
+On 2/27/25 9:21 PM, Geert Uytterhoeven wrote:
+> Hi Qi,
+> 
+> On Tue, 25 Feb 2025 at 04:46, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+>> Now, the nine architectures of csky, hexagon, loongarch, m68k, mips,
+>> nios2, openrisc, sh and um do not select CONFIG_MMU_GATHER_RCU_TABLE_FREE,
+>> and just call pagetable_dtor() + tlb_remove_page_ptdesc() (the wrapper of
+>> tlb_remove_page()). This is the same as the implementation of
+>> tlb_remove_{ptdesc|table}() under !CONFIG_MMU_GATHER_TABLE_FREE, so
+>> convert these architectures to use tlb_remove_ptdesc().
+>>
+>> The ultimate goal is to make the architecture only use tlb_remove_ptdesc()
+>> or tlb_remove_table() for page table pages.
+>>
+>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+>> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> 
+> Thanks for your patch!
+> 
+>>   arch/m68k/include/asm/sun3_pgalloc.h | 3 +--
+> 
+> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
 
-Link: https://community.frame.work/t/solved-even-lower-screen-brightness/25711/60
+Thanks for your review.
 
----
- drivers/gpu/drm/drm_panel_backlight_quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> 
+>> --- a/arch/m68k/include/asm/sun3_pgalloc.h
+>> +++ b/arch/m68k/include/asm/sun3_pgalloc.h
+>> @@ -19,8 +19,7 @@ extern const char bad_pmd_string[];
+>>
+>>   #define __pte_free_tlb(tlb, pte, addr)                         \
+>>   do {                                                           \
+>> -       pagetable_dtor(page_ptdesc(pte));                       \
+>> -       tlb_remove_page_ptdesc((tlb), page_ptdesc(pte));        \
+>> +       tlb_remove_ptdesc((tlb), page_ptdesc(pte));             \
+>>   } while (0)
+>>
+> 
+> With only a single statement remaining, you can remove the do { ... }
+> while construct, too.
 
-diff --git a/drivers/gpu/drm/drm_panel_backlight_quirks.c b/drivers/gpu/drm/drm_panel_backlight_quirks.c
-index c477d98ade2b..52aa2a7fa63e 100644
---- a/drivers/gpu/drm/drm_panel_backlight_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_backlight_quirks.c
-@@ -41,6 +41,14 @@ static const struct drm_panel_min_backlight_quirk drm_panel_min_backlight_quirks
-                .ident.name = "NE135A1M-NY1",
-                .min_brightness = 0,
-        },
-+       /* 16 inch panel */
-+       {
-+               .dmi_match.field = DMI_BOARD_VENDOR,
-+               .dmi_match.value = "Framework",
-+               .ident.panel_id = drm_edid_encode_panel_id('B', 'O', 'E', 0x0cb4),
-+               .ident.name = "NE160QDM-NZ6",
-+               .min_brightness = 0,
-+       },
- };
+Ah, right. Will do in the next version.
 
- static bool drm_panel_min_backlight_quirk_matches(const struct drm_panel_min_backlight_quirk *quirk,
---
-2.48.1
+Thanks!
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
+
