@@ -1,35 +1,47 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1833F254867;
-	Fri, 28 Feb 2025 08:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D261E255E22
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733200; cv=none; b=FH/pRY+QqfVVAuFfv9wDOtfAKV+08GHXhdj5bZeMmFzoPXMb0ScD2ffzrgFZvPn8im+0rnSv+UWlrLduH7Wruu/MsvD83X287cY+kkYBn3alS0kDpckXmwwPNbnbMF5F52ZjVa0+z2Zkk4SUkX4Wm5DQT9YwRxvlnKN8nWhsbBw=
+	t=1740733217; cv=none; b=SysON0NzCaVTf/pPZUVRZ0CeHJgsbfYuMvKGjj4IHn7kZCLZiAMcf4DngOSiiSpYvAWcrOiB7Az8kC+F2a0Zlj4Hk6dQ6DPe9nkO5mVhJzilcqAYUCdVOHD86djWSgt0B3BNuM5XDtXXSFMPh1ZOKW9QpU3uYDhhH8xOLhAQIo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733200; c=relaxed/simple;
-	bh=kI3Z3wp8Ji5DPJmFPz7FRuOxsxH6WGI9IT1Imk0ZHkE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=oMY2+LUX1DVqaSBoNw5e5HtSUfr0Ij+98UhofvwG7el+dddkYEN7GfAlgIP0mooZ9Bfb8abbMTvUC/hm7cWI+lqKX82PRTS6L9GzM0rAYpnahTNzCIKxsKNGab888/48eH5S1J2MRjuWEfpFtC7ZAGUbIlme7npz1rrY7HAOu9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbKeZtES; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740733217; c=relaxed/simple;
+	bh=mzc25wq3Csf/EZLN6ZLDiln49xQ+5s7zroBqJBuLEfc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RlNcxCo7rjYAHXnCDEgAUb7/O6RpVkGyTtjJXJXxHKuWerzQ+cQh0eo7oOR9uwtdBJX9fucYz1BLBhPEfAh+oFEblBW4J2xHvaBjwdAJcd87Y9rQD0KN33+QGvvMOrvWklellNAniOkCBGIdj8n5woudo4Z86di4KyyadPQfFNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=UKq6HgbR; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbKeZtES"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DA2C4CED6;
-	Fri, 28 Feb 2025 08:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740733199;
-	bh=kI3Z3wp8Ji5DPJmFPz7FRuOxsxH6WGI9IT1Imk0ZHkE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AbKeZtES77cwD1+ZtJ6ITeKjQyc3wMTZfRm/ECSYpmaqPIRPNmy2yBXTd1qCV9KZ7
-	 wyoT5cSWrZvIGRnnYlomM2SBSZKFYKHO9LAkm0O5+RiqqYcxXzHVvQaIPqI5PQl4zV
-	 mxmjqStGvr0f5JMMkiIzGv229+dX1y9Q6AMeFcnARIOSg02JAoc54ORwPxYxhkPwQt
-	 tbn6VziBVnN8mUqhfYRf72yT5GVACc7i5LRvEZ51h/jdJ/SRpohK9/JaPtmj0gd+fT
-	 zDNhMumqbrXSOiCx0lPQd/i+NgwxgsnM1MuyjqA4RV0bvioTSgjV8JG24Z8bKvaQAg
-	 8TYXiGZ4fmtUg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAF92380CFF1;
-	Fri, 28 Feb 2025 09:00:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="UKq6HgbR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=SOiQ8tn4AKnAdhAjLocySKLR0p2tLjQ2yrXrzUz5VHw=; b=UKq6HgbRovZZCQLRMyxtLC0X0r
+	hwA1Ak+BkM6OcbaSZkpmbbz+onRwtF1hu3t3qbW2TxZMiX9fCy6uI5ajYY3U5pPoThXJhVQyHkTIc
+	gX0S4hwoXWw0paRsRiJS43Qnnb4gDCPnolLAA9ODpCBNB70xidCJlezZDDEVxAn260iZENfu6eYFe
+	F+2zpDnA1eF2O74IvGYp+RqXsM0z7rPZbP01S4/EuUazqnkeE9tUuKzEujFSrAMcG0ahB06UYgvID
+	tmEkSX/UZtGjbLwbM90KC+V+hxPISUFrCzj2dRn8efX/nV4dI5xr0oDP89DD4iTxD+49X6DP5uOEy
+	yNCs9eUg==;
+Received: from [58.29.143.236] (helo=localhost)
+	by fanzine2.igalia.com with utf8esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tnwDn-001xDd-OY; Fri, 28 Feb 2025 09:59:58 +0100
+From: Changwoo Min <changwoo@igalia.com>
+To: tj@kernel.org,
+	void@manifault.com,
+	arighi@nvidia.com
+Cc: kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v2] sched_ext: Add trace point to track sched_ext core events
+Date: Fri, 28 Feb 2025 17:59:44 +0900
+Message-ID: <20250228085944.19451-1-changwoo@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,49 +49,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/4] mlx5: Trust lockdown health syndrome
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174073323150.2067282.15443577671242720643.git-patchwork-notify@kernel.org>
-Date: Fri, 28 Feb 2025 09:00:31 +0000
-References: <20250226122543.147594-1-tariqt@nvidia.com>
-In-Reply-To: <20250226122543.147594-1-tariqt@nvidia.com>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, andrew+netdev@lunn.ch, saeedm@nvidia.com,
- gal@nvidia.com, leonro@nvidia.com, leon@kernel.org, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Add tracing support to track sched_ext core events
+(/sched_ext/sched_ext_event). This may be useful for debugging sched_ext
+schedulers that trigger a particular event.
 
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+The trace point can be used as other trace points, so it can be used in,
+for example, `perf trace` and BPF programs, as follows:
 
-On Wed, 26 Feb 2025 14:25:39 +0200 you wrote:
-> Hi,
-> 
-> This series introduces a new error type in the health syndrome,
-> specifically for trust lock-down.  Additionally, it exposes the CRR bit
-> in the health buffer, which, when set, indicates that the error cannot
-> be recovered without a process involving a cold reset. We add The CRR
-> bit value to the health buffer info log and update it to be logged on
-> any syndrome.
-> 
-> [...]
+======
+$> sudo perf trace -e sched_ext:sched_ext_event --filter 'name == "SCX_EV_ENQ_SLICE_DFL"'
+======
 
-Here is the summary with links:
-  - [net-next,1/4] net/mlx5: Avoid report two health errors on same syndrome
-    https://git.kernel.org/netdev/net-next/c/b5d7b2f04ebc
-  - [net-next,2/4] net/mlx5: Log health buffer data on any syndrome
-    https://git.kernel.org/netdev/net-next/c/6bdce277a326
-  - [net-next,3/4] net/mlx5: Expose crr in health buffer
-    https://git.kernel.org/netdev/net-next/c/63f26199721f
-  - [net-next,4/4] net/mlx5: Add trust lockdown error to health syndrome print function
-    https://git.kernel.org/netdev/net-next/c/680173b6bb6b
+======
+struct tp_sched_ext_event {
+	struct trace_entry ent;
+	u32 __data_loc_name;
+	u64 delta;
+};
 
-You are awesome, thank you!
+SEC("tracepoint/sched_ext/sched_ext_event")
+int rtp_add_event(struct tp_sched_ext_event *ctx)
+{
+	char event_name[128];
+	unsigned short offset = ctx->__data_loc_name & 0xFFFF;
+        bpf_probe_read_str((void *)event_name, 128, (char *)ctx + offset);
+
+	bpf_printk("name %s   delta %llu", event_name, ctx->delta);
+	return 0;
+}
+======
+
+Signed-off-by: Changwoo Min <changwoo@igalia.com>
+---
+
+ChangeLog v1 -> v2:
+ - Rename @added field to @delta for clarity.
+ - Rename sched_ext_add_event to sched_ext_event.
+ - Drop the @offset field to avoid the potential misuse of non-portable numbers.
+
+ include/trace/events/sched_ext.h | 19 +++++++++++++++++++
+ kernel/sched/ext.c               |  2 ++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/include/trace/events/sched_ext.h b/include/trace/events/sched_ext.h
+index fe19da7315a9..b73499981682 100644
+--- a/include/trace/events/sched_ext.h
++++ b/include/trace/events/sched_ext.h
+@@ -26,6 +26,25 @@ TRACE_EVENT(sched_ext_dump,
+ 	)
+ );
+ 
++TRACE_EVENT(sched_ext_event,
++	    TP_PROTO(const char *name, __u64 delta),
++	    TP_ARGS(name, delta),
++
++	TP_STRUCT__entry(
++		__string(name, name)
++		__field(	__u64,		delta		)
++	),
++
++	TP_fast_assign(
++		__assign_str(name);
++		__entry->delta		= delta;
++	),
++
++	TP_printk("name %s delta %llu",
++		  __get_str(name), __entry->delta
++	)
++);
++
+ #endif /* _TRACE_SCHED_EXT_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 986b655911df..53729c584b63 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -1554,6 +1554,7 @@ static DEFINE_PER_CPU(struct scx_event_stats, event_stats_cpu);
+  */
+ #define scx_add_event(name, cnt) do {						\
+ 	this_cpu_add(event_stats_cpu.name, cnt);				\
++	trace_sched_ext_event(#name, cnt);					\
+ } while(0)
+ 
+ /**
+@@ -1565,6 +1566,7 @@ static DEFINE_PER_CPU(struct scx_event_stats, event_stats_cpu);
+  */
+ #define __scx_add_event(name, cnt) do {						\
+ 	__this_cpu_add(event_stats_cpu.name, cnt);				\
++	trace_sched_ext_event(#name, cnt);					\
+ } while(0)
+ 
+ /**
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.48.1
 
