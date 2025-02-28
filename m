@@ -1,167 +1,109 @@
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ED3276D37
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 03:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DA6191F6C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 03:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740712601; cv=none; b=BpPU0NHxUhzM9qo9OzrMwskbqktZ74HXtGgOSg+AmROObfPREBkwRZXCXSDvSaVFXn2wGEcGaf5WCmLmDstwi0vso3dXi78qZs5bwS2oYGyMNmUoDsS745+OmEsOwgJgqsb2r3SBUmdFqWalbIGfMFDNW36U58UbdNK5EZ2P4Cw=
+	t=1740712605; cv=none; b=crVsPfGhBqCygopWApPu85H6p1XH6Pp8nyPPuX3XXyqO1FMTDy7f6eIgXs5G1FQrelbTRtVZA2UD2a0ZPVsOGbDm3+wJhbHX+tzU9oNbDl8P6iPQ3SgT+nhrBNV5DAzAOicDDC7Adeltyc5rhIqd+MIqctylu7BD1jjtSMBUKBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740712601; c=relaxed/simple;
-	bh=16PsM1hZHh5EdbZ8YIY3Neqt37raxq7tLRBID1W5BIA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lSLpLx4oakaYJ90bSu7zyIXP27r2cO8e4NUQMX/XLaWkGZIVGOjgHulFP153AtrHaR1dOEOQZP/Ras4+32sVIlksal1Nom2x8yDE4NDUhN2r6T4N2vc9LrN9mtQ/PgFBIoWGARkl4AKVM3fyLKt9FCuxGsrNoiPbnAG4TakiG5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCgxRF3i; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740712605; c=relaxed/simple;
+	bh=945iZjBC6be0i+7TRujKrgv5Y70HZgVmXmfGIOQ7IZk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RP4WmRIe/aTO/GgK72pDB6eq0nCG7b9cx/B7TfCuFmGrbdxDdSwykneDYvZxu31U7/HGdiJULPNwvHy8wmX7JGaXSCt6iulAKkO7iyeGtcraqwZTcUpMiGL/2nq2f+hInA5pGe2LMGOjCcaGvgZfn0ZcnrnsP+01s0AP5GG4nyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqQYjhqT; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCgxRF3i"
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-abb81285d33so317293466b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 19:16:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740712597; x=1741317397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AsQv1V81RoMvDet1T87kyc/NnMb5goNVEAJP9Aqhjow=;
-        b=lCgxRF3irtW0Z0DlEFUlGETx7UXAv26jbTV85D5laddKP3FJmSvDffv1adZXvMLvjV
-         lVVyIjAuvQqVZcDw6qB1k3M45KeSOWysEvFhs1SU9oqJsBDhyAvXsTDlUxie4em66IgE
-         r6GTTJHjudj68lOgFconHGhKXMxGmDBQGSbKq06gH+7xx3pdxeUWN4Sz7K/7F7tHRvwE
-         vj+47WWHabnoL3Qznr+ucOxp2vuWBfETLCEJonwFtA3PYTAIykufQ6oZbAujV5ATTUCP
-         IRmxyAejgNeSAel8Z3QevFMh3Dk0bEYQl0ylahbbg/KC2SdTjRzKWtGb7HsdIboA0PvU
-         3bYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740712597; x=1741317397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AsQv1V81RoMvDet1T87kyc/NnMb5goNVEAJP9Aqhjow=;
-        b=h3RVUWOZZ/OHS9mTHID03zN1c0AsNRYk5X3nBqXH46E7YrxcUJFQvm5DC0FeUPxPo7
-         SU7lS/5baoI5eMDrm+MnJoctlsUMOcg+43gJNJx6Jv8P3eADTgXid6aWxEH+1xZubVmJ
-         ERgKH+7ye0RC52e38+5EJUeiCoi6DM5HRX5sxIq6kf5ERBeflhdsD+Xovh8GjZeB94IO
-         CcdXU5OAmFxypkYXFqdnhI0yiPcXBDxnReQro28EKoCruZx4GyDxD2tICk3ZHuaZy2fA
-         lzxP6nYYl9V9wAOj3pGa/+LRQVxGgOQfwqX/8cu4CYDPg8uZwsumytQTb7vTGLv0tQ2W
-         CHCA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxu1Wpx3LM7jPjPD+vPkZfWUgjmKmkWoz9U7sCSzaTx46oXgJI0xTYJq+V08SD3rmjxGqLtAh+we0n4MU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZeRQKR6sPl1SZzTY5cV2KC5YU8x0fSDFUdqsE7C6J3rdTH+Kn
-	Ai9jFxkKDPWqWyOL1y3AdsFtx7+YRS5DGfBBA8tLJJ3TTEmeeRhOFwVAoKljYeO/DwuETZSb/jx
-	cqp3uqB++LODR3SSjDkbTIcUfaI0=
-X-Gm-Gg: ASbGnculqLpp0ny1cLRp9z8RzTusegIDL+Vtp1adGPkFMTHHAig2qcKgsmazgzzIEO4
-	eNx8ugwXxJVPUHECFiV5AQT7kaK2v+mZ7HCmD4bwGQWn5XQheqcc1aQcxbRXOoqGHjcEsLtvEgI
-	MA/cW4oLMo
-X-Google-Smtp-Source: AGHT+IGtTLidtoJ1+wTRTSrRYN6Stb7rU8rJHiX+Hp1pZywNzcYDvnpR3lE67iaDxJfTRHQve0GKBK5FjyIMDANyQ8U=
-X-Received: by 2002:a17:907:7f0f:b0:ab6:b9c0:1ea2 with SMTP id
- a640c23a62f3a-abf261f2529mr163289766b.25.1740712597351; Thu, 27 Feb 2025
- 19:16:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqQYjhqT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740712604; x=1772248604;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=945iZjBC6be0i+7TRujKrgv5Y70HZgVmXmfGIOQ7IZk=;
+  b=lqQYjhqT6DIcwDxUxZAVGgt3GMaXXeaPHJi8Ct60n7uY2khhC7FZpQwl
+   zOwb0Gx/88ifdRz1d1iiy+GWr3fRRQl0K3+BSdT/59gcRznu32xGXL3Jq
+   wNUVq0LsDpmRB0cjU/MAboXkosEODvC2B7Sbl0Mqek0rLLKfHkb3QFNNr
+   s3vk/AQpcikLm745AR+Hqp0W/lGTVTSKSd34YeYQDWwrzmDdEivJ41nzF
+   4aVsrF10tZ/PpdK6KxPM6yFmTdjMSdoTr+2lyZc+54Wv8PuaN4sY4ZQHS
+   KKTzVtFcJnRVadbqLcg+3L7XejqxUsf8ZG3r6In72CVpcUkOI50hpQxfl
+   g==;
+X-CSE-ConnectionGUID: wY1rn9+iRAOOPDR0/Ztk+w==
+X-CSE-MsgGUID: Tl2E9GWgRnSQ5+ZCLi5jJA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40876274"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="40876274"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 19:16:43 -0800
+X-CSE-ConnectionGUID: lnBAp3OeSsGMY8TYtxyRqw==
+X-CSE-MsgGUID: 8DUBKbovT824AL+9mZx9xA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="154397759"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 19:16:41 -0800
+Message-ID: <f6d0fcb1-b974-440f-9208-257422bc01a6@linux.intel.com>
+Date: Fri, 28 Feb 2025 11:13:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAN2Y7hxDdATNfb=R5J1as3pqA1RsP8c8LubC4QxojK5cJS9Q9w@mail.gmail.com>
- <20250227155431.2534325-1-joshua.hahnjy@gmail.com>
-In-Reply-To: <20250227155431.2534325-1-joshua.hahnjy@gmail.com>
-From: ying chen <yc1082463@gmail.com>
-Date: Fri, 28 Feb 2025 11:16:25 +0800
-X-Gm-Features: AQ5f1Jryxw3FMTA2IoyXpHhM2strZZsKlz0OOnXnnAoM-bqY5L_DIGfHx66LEFI
-Message-ID: <CAN2Y7hwBQUwWZLjgOZHuMLeLKGkgqJec=2YOGftizPjrHObcGQ@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmscan: when the swappiness is set to 0, memory
- swapping should be prohibited during the global reclaim process
-To: Joshua Hahn <joshua.hahnjy@gmail.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, hannes@cmpxchg.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] iommu: Add private_data_owner to iommu_domain
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
+ robin.murphy@arm.com, joro@8bytes.org, will@kernel.org
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <cover.1740705776.git.nicolinc@nvidia.com>
+ <45c03a1bc86528c9194589cc3a5afe3eb2a15c9e.1740705776.git.nicolinc@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <45c03a1bc86528c9194589cc3a5afe3eb2a15c9e.1740705776.git.nicolinc@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-We only create a limited zram disk size for the cgroups that allow swapping=
-.
-If this part of the swap space is occupied by other cgroups that don't
-allow swapping,
-the cgroups that allow swapping may not have enough swap space available.
+On 2/28/25 09:31, Nicolin Chen wrote:
+> Steal two bits from the 32-bit "type" in struct iommu_domain to store a
+> new tag for private data owned by either dma-iommu or iommufd.
+> 
+> Set the domain->private_data_owner in dma-iommu and iommufd. These will
+> be used to replace the sw_msi function pointer.
+> 
+> Suggested-by: Jason Gunthorpe<jgg@nvidia.com>
+> Signed-off-by: Nicolin Chen<nicolinc@nvidia.com>
+> ---
+>   include/linux/iommu.h                | 7 ++++++-
+>   drivers/iommu/dma-iommu.c            | 2 ++
+>   drivers/iommu/iommufd/hw_pagetable.c | 3 +++
+>   3 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index e93d2e918599..4f2774c08262 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -209,8 +209,13 @@ struct iommu_domain_geometry {
+>   #define IOMMU_DOMAIN_PLATFORM	(__IOMMU_DOMAIN_PLATFORM)
+>   #define IOMMU_DOMAIN_NESTED	(__IOMMU_DOMAIN_NESTED)
+>   
+> +#define IOMMU_DOMAIN_DATA_OWNER_NONE (0U)
+> +#define IOMMU_DOMAIN_DATA_OWNER_DMA (1U)
+> +#define IOMMU_DOMAIN_DATA_OWNER_IOMMUFD (2U)
+> +
+>   struct iommu_domain {
+> -	unsigned type;
+> +	u32 type : 30;
+> +	u32 private_data_owner : 2;
 
-On Thu, Feb 27, 2025 at 11:54=E2=80=AFPM Joshua Hahn <joshua.hahnjy@gmail.c=
-om> wrote:
->
-> On Thu, 27 Feb 2025 22:34:51 +0800 ying chen <yc1082463@gmail.com> wrote:
->
-> Hi Ying,
->
-> I hope you are having a great day! I wanted to share a few thoughts:
->
-> Previously, when the system is under a lot of memory pressure and is
-> facing OOMs, global reclaim can create space for the system and prevent
-> going out of memory by swapping, even when swappiness is 0. If this patch
-> removes that check, it would mean that global reclaim can no longer
-> "bypass" the swappiness =3D=3D 0 condition.
->
-> I am also CCing Johannes, who is the original author of this section [1],
-> who clarified in the patch that swappiness =3D=3D 0 has different meaning=
-s for
-> global reclaim and memory cgroup reclaim.
->
-> > When we use zram as swap disks, global reclaim may cause the memory in =
-some
-> > cgroups with memory.swappiness set to 0 to be swapped into zram. This m=
-emory
-> > won't be swapped back immediately after the free memory increases. Inst=
-ead,
-> > it will continue to occupy the zram space, which may result in no avail=
-able
-> > zram space for the cgroups with swapping enabled. Therefore, I think th=
-at
->
-> IMHO, I think that even with zram, we would still want to allow the syste=
-m
-> to reclaim memory & swap out, in case we are facing imminent OOMs. Even i=
-f
-> the memory isn't immediately swapped back in when we are able to manage t=
-he
-> memory spike and see free memory, I imagine that we might not even be abl=
-e
-> to manage the spike if we prevent global reclaim from swapping.
->
-> These are just some thoughts that I had about the patch. However, my
-> understanding of zram and reclaim is limited; please feel free to
-> correct me if you see anything that I am not understanding correctly.
->
-> Thank you for your time, have a great day!
-> Joshua
->
-> [1] https://lore.kernel.org/linux-mm/1355767957-4913-4-git-send-email-han=
-nes@cmpxchg.org/
->
-> > when the vm.swappiness is set to 0, global reclaim should also refrain
-> > from memory swapping, just like these cgroups.
-> >
-> > Signed-off-by: yc1082463 <yc1082463@gmail.com>
-> > ---
-> >  mm/vmscan.c | 9 +--------
-> >  1 file changed, 1 insertion(+), 8 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index c767d71c43d7..bdbb0fc03412 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -2426,14 +2426,7 @@ static void get_scan_count(struct lruvec
-> > *lruvec, struct scan_control *sc,
-> >                 goto out;
-> >         }
-> >
-> > -       /*
-> > -        * Global reclaim will swap to prevent OOM even with no
-> > -        * swappiness, but memcg users want to use this knob to
-> > -        * disable swapping for individual groups completely when
-> > -        * using the memory controller's swap limit feature would be
-> > -        * too expensive.
-> > -        */
-> > -       if (cgroup_reclaim(sc) && !swappiness) {
-> > +       if (!swappiness) {
-> >                 scan_balance =3D SCAN_FILE;
-> >                 goto out;
-> >         }
-> > --
-> > 2.34.1
->
-> Sent using hkml (https://github.com/sjp38/hackermail)
->
+Is there any special consideration for reserving only 2 bits for the
+private data owner? Is it possible to allocate more bits so that it
+could be more extensible for the future?
+
+For example, current iommu core allows a kernel device driver to
+allocate a paging domain and replace the default domain for kernel DMA.
+This suggests the private data owner bits may be needed beyond iommu-dma
+and iommufd.
+
+Thanks,
+baolu
