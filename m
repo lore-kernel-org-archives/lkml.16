@@ -1,68 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A831DE88B;
-	Fri, 28 Feb 2025 22:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B5BA1DE88B;
+	Fri, 28 Feb 2025 22:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740781501; cv=none; b=s+cJgGVMby0tTks2TsTD/MAvePRftYHWrrhgo7msssOxQ/yefTbrmt9AWlVMr+e4Ckf+Dl9c19z9OdHc9GedGDqgUq2WWLH/yjSepR/21GlTM982RJdeaZQQ6cWWp1I8z+2d4vIIjMjwJEITe5qCpyRhNAGQ6BCiA7h73k9SSio=
+	t=1740781523; cv=none; b=dmwSeRoC9beCiD+FqUTKmSUgdfF04diph2oGPFPV//zG5JWBNntRH/b+pCz6Q1DbFD5rx37U/LGQidrmDmsdxz4va3lT7LlZ6/gkMm3Tf0WjJ4TlY3ueH17CGlKbvTO3yXQg+t70+IGszmKrkFIJo4pu6dY1cX+7VYSwuutWpO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740781501; c=relaxed/simple;
-	bh=nl0RxLxluqEXdwZrRYcWUvlPQj16buT8wUVR1+IW6iM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CHpos5PiEnc1gY4kQObM/VRDCVJPMatcz6jF8yn47ak4OTEE9HZwT7VZofC9JuYyQCr1nlU1/O4LYXYAkegfuQfMUuJYay8K+TiWhU65/3oLlbXuUJg0vuMAFmuNE4j6Rzdln1bZpmJesjyxeWDlNhMNOIM/yxzqY+ew0BWI03w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLYoa5ZD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740781523; c=relaxed/simple;
+	bh=1obOMr1Rmb8R+h1EQDNEXYfeQUcnlviZ5c7bzgYHXOM=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=t5Ug91PDwhbPemoPsng4tayxzqjAl787kBTMYBfGxtZ+l5/K1bnuefBJudDRymxyUmNk9XDniPvyr5mJNN2DWQFnZN3KOzqol3FFKwYKcTb88up3qXj0a0twAwDNUrLdCjEhL9wSODjbx7EyVKR1x98ZPMBNSgmPXSU6dWBEHnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=e+S8EPIK; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLYoa5ZD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A6CEC4CEE2;
-	Fri, 28 Feb 2025 22:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740781501;
-	bh=nl0RxLxluqEXdwZrRYcWUvlPQj16buT8wUVR1+IW6iM=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=kLYoa5ZD1tgEpJrzTr028axEhdyIgCeEEujQNZ+krj6mzvUouRhGZQ8em5TF2zHM7
-	 ShRDbMBadSb5IAkSXm2Lg+UFy8bZ6fqVLGJNfPTNYRonz2a/G0tf6XGq8oSpc/gyLr
-	 SBKjq2MaTK5I3RVuBQMXk5ZyKRnaS95Ubv6CJ+/SY48mLvWem58bPzLjyg5FYJbMVx
-	 aAlGcVaLYA+kJ5/aWYyuHKo4CXMQ0ZWNvDUrhfb9PeF6Qaee2pug9/lIDHB+hbBmzM
-	 30SeD0ZIw2Pw2yOnV+0t+aj7O+JEmTNFe9pfjQ2wr7bdiNnZuijUgzSESdT57CrWrF
-	 Id+Krrv4JXJ+w==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
- Mike Leach <mike.leach@linaro.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20250227085544.2154136-1-leo.yan@arm.com>
-References: <20250227085544.2154136-1-leo.yan@arm.com>
-Subject: Re: [PATCH v2] perf arm-spe: Report error if set frequency
-Message-Id: <174078150058.322575.7287434251293207744.b4-ty@kernel.org>
-Date: Fri, 28 Feb 2025 14:25:00 -0800
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="e+S8EPIK"
+Received: by linux.microsoft.com (Postfix, from userid 1202)
+	id C7544210D0EB; Fri, 28 Feb 2025 14:25:21 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C7544210D0EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+	s=default; t=1740781521;
+	bh=gckZXDWAjiG2ABDpx5tWE9GOBieJFQc592HWfvAcwyE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=e+S8EPIKSTxcKfVTfs45fE8DXvCE5wLn8L7ydpmmJVRfahBF40Q4FNvCqeUFbYFGI
+	 sGLAC2/bgQh1hTP31vyloJ8N4IRyKLWqnfmlQ77KT4s/E+2HtqBwPWDD6vo0o+8tGS
+	 NZYDdk066vEo8fewWUpSuXaCjGj4fP/pb2Zwn3ng=
+From: longli@linuxonhyperv.com
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Simon Horman <horms@kernel.org>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Souradeep Chakrabarti <schakrabarti@linux.microsoft.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Cc: Long Li <longli@microsoft.com>
+Subject: [PATCH] hv_netvsc: set device master/slave flags on bonding
+Date: Fri, 28 Feb 2025 14:25:13 -0800
+Message-Id: <1740781513-10090-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 27 Feb 2025 08:55:44 +0000, Leo Yan wrote:
-> When users set the parameter '-F' to specify frequency for Arm SPE, the
-> tool reports error:
-> 
->   perf record -F 1000 -e arm_spe_0// -- sleep 1
->   Error:
->   Invalid event (arm_spe_0//) in per-thread mode, enable system wide with '-a'.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+From: Long Li <longli@microsoft.com>
 
-Best regards,
-Namhyung
+Currently netvsc only sets the SLAVE flag on VF netdev when it's bonded. It
+should also set the MASTER flag on itself and clear all those flags when
+the VF is unbonded.
 
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/net/hyperv/netvsc_drv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index d6c4abfc3a28..7ac18fede2f3 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -2204,6 +2204,7 @@ static int netvsc_vf_join(struct net_device *vf_netdev,
+ 		goto rx_handler_failed;
+ 	}
+ 
++	ndev->flags |= IFF_MASTER;
+ 	ret = netdev_master_upper_dev_link(vf_netdev, ndev,
+ 					   NULL, NULL, NULL);
+ 	if (ret != 0) {
+@@ -2484,7 +2485,12 @@ static int netvsc_unregister_vf(struct net_device *vf_netdev)
+ 
+ 	reinit_completion(&net_device_ctx->vf_add);
+ 	netdev_rx_handler_unregister(vf_netdev);
++
++	/* Unlink the slave device and clear flag */
++	vf_netdev->flags &= ~IFF_SLAVE;
++	ndev->flags &= ~IFF_MASTER;
+ 	netdev_upper_dev_unlink(vf_netdev, ndev);
++
+ 	RCU_INIT_POINTER(net_device_ctx->vf_netdev, NULL);
+ 	dev_put(vf_netdev);
+ 
+-- 
+2.34.1
 
