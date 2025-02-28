@@ -1,129 +1,78 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201025F981
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6741ACEDB;
+	Fri, 28 Feb 2025 11:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740740321; cv=none; b=FoJICAgl802NnHAWpaosyuwEzaiovPcNlWOypLmuX6gZev0k0oihMT0/m4Av0jCy0NNV7bAwKUz+pSFqzqF+y7IoALyYKC/gbFc7olZsKdVRhwyNCQ2Vj43zkh8h6yntOQjZHhOkfdTSIzvu7xp7X/e7/OB3uj4c1j7UYBBiy2g=
+	t=1740740457; cv=none; b=oUjkNb10YbTjwePVkIuYOVmC2hcXI47xuvMQas7LSleuUYPTK1jVFVc5R1mCUALfrNnhNuajhuXy5b8tBVkXJ788xFJE3MedHKDKgPQ2zpquDnCGNl+CIZd7KxTjK9LA9eV+TjKWiglpkNOgzHvitVGGlnyoMKQiNNsG4TSrLVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740740321; c=relaxed/simple;
-	bh=oxqNUINeTffXc20l0BtSEeH5hWwFLIffg14u7l8+l+8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fkFPTl01pXXvjTjqbLnlzNfJP/QeagDtZ5AydYQixSFLuJ+BdmATrLFyv5F1DPNEpIkNTNQF2fdNMrt1Uklc+hYLxdwPr5CkJFsUSxhu8BGvkrtcByzVPuvFDQlAv0l6iGUwy2A1ZXBIVvryAMY5Xeab2yw1fu8bbwYhfquJ0ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kxUdpb80; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kxUdpb80"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-390dd3654aeso1119827f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:58:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740740318; x=1741345118; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oxqNUINeTffXc20l0BtSEeH5hWwFLIffg14u7l8+l+8=;
-        b=kxUdpb80n7pBgWUDV0C2ir3//YEBA5Q7QctLX7E93Fnxu4OzFHRjitL+sp1CF6GbiY
-         H5IoylsfqxUmvK87IcjnKuYxumTzpKlxMMpF34cWTKDvtpwA10buOOYPEgeZ00hqpsHh
-         3MDUSyAecYMFzz7viZV++8JikkNACZki3w+ZsoWV6+vGfQzwzimwo75eVXxJexSDm5tb
-         0mU1nIyayh9A0vYyqYv/V2Jbe08RrKeDZRoplgSr+mlzIEnM5y1lgAD9RTfTQ/TrxWCT
-         4pO++SZ56UQXhw2UGcopDTPVE0MwOI4xvxHI9PCYHGX9rwzhHcGac3AECd/brXJXi43U
-         ZGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740740318; x=1741345118;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oxqNUINeTffXc20l0BtSEeH5hWwFLIffg14u7l8+l+8=;
-        b=wgaOvMy2yNK1JAZyq3IkhRxSNaquu7rpnDCvPu+VtdVrfIxVrY66XAn/ymX59UhOCP
-         2qY11jboS2Wl3IzSRZo4/fb0g5o/zthwolW00KDa3N+YdtqUBgaIlOwuKJriid7t5l1B
-         zslzfjBLaPRuWgBcnQ8eZbm9hBJhaflhu9Wxheq5ErF3nkbdjcrMkq5OuiB+q7f5aMLu
-         pnZd23fL1G2Xd0Lo6zvsk4Pb4xfwgFPb5OIYnotaeDMITt40TSLqAleYfMWkXfE7NsLX
-         MrlfMxWYGwxHoWezKdsQWz11cBPsmQoqJAWxhcZUcthDDQ/Jc4crjQmjsA6ZZpkNCBBd
-         +ZVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZuYfqZDHYspUgVPCPihtNFmnCmydTXd1J1GRiPm+RiF8VZouOwEiIdZIngLlWQGIfKzkeBBiV8xO2gDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOsvLKBmC3uSWRyLebL5uuuJB68fZCV/zSoHGOnEhRMzFJWjN7
-	32dYA2sKPxUQI9Z31H3S1swRaP6l7b9dijhxMP3gsliE5QermgaC/QADAfyl2B8=
-X-Gm-Gg: ASbGnctFnAoi1cfOg8KsS9ryJ07fwAiCcyQOtBZmJJF98y9xHvpQswD17GRfASk8753
-	i2ivtr7Yqw2bR1gWLm2+g3KvlpaTvZZCcV3VKsoTLPimUD11iena1wZ5paenuEYO0t5Y2XaZwGN
-	qoTySOZC2b5KDUhRloDOZ+tPQ3rK6FwvZ1mku49wmCsxHCSc9/xscprhsO7X/lizra0Uj2cZuFY
-	Xcg1ZxOAnWf94/SwPIOEdvc2HsqFh9uCd6NB2I9azTgp3BDePuoQ0/0+I3jIy11f43j2eWc3x8y
-	O8fapAreEstrtpoyprrpMR4VFxMClg==
-X-Google-Smtp-Source: AGHT+IEt5YT3CBVFRKgnoMOQ/u6jH6bjwPCwN0M1DfhxLjRDEfi9tiVUCytcpBFYvfzc3Nle3t/Cuw==
-X-Received: by 2002:a05:6000:1885:b0:38f:2766:7594 with SMTP id ffacd0b85a97d-390ec7cf66bmr2121670f8f.12.1740740318200;
-        Fri, 28 Feb 2025 02:58:38 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e4795978sm4724227f8f.3.2025.02.28.02.58.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 02:58:37 -0800 (PST)
-Message-ID: <d06058296a194a4f2c9fcbcc5c24816ecb1f51b1.camel@linaro.org>
-Subject: Re: [PATCH v2 5/6] gpio: max77759: add Maxim MAX77759 gpio driver
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>,  Srinivas Kandagatla
- <srinivas.kandagatla@linaro.org>, Kees Cook <kees@kernel.org>, "Gustavo A.
- R. Silva"	 <gustavoars@kernel.org>, Peter Griffin
- <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, Will
- McVicker <willmcvicker@google.com>, 	kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-gpio@vger.kernel.org, 	linux-hardening@vger.kernel.org
-Date: Fri, 28 Feb 2025 10:58:36 +0000
-In-Reply-To: <CACRpkdYoWuJzjqiKrSNzdXV+5N9Gp0n+pdCwSZgocwy0JHo7Vw@mail.gmail.com>
-References: <20250226-max77759-mfd-v2-0-a65ebe2bc0a9@linaro.org>
-	 <20250226-max77759-mfd-v2-5-a65ebe2bc0a9@linaro.org>
-	 <CACRpkdYoWuJzjqiKrSNzdXV+5N9Gp0n+pdCwSZgocwy0JHo7Vw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.53.2-1 
+	s=arc-20240116; t=1740740457; c=relaxed/simple;
+	bh=fy0rrOyVDewDPklbCqvdhOp3juLTfjm0e3sk1PpGsj0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ilw3LcDDHPlF1zOgTPTIM42ePImQRDc6+CVS/sqML0Oe5HhgFlrZAmJXxhEEFbD+4k0XZZ60qaNK3fcKxq+V/VAjFaczS076GqgpRAvQEhPHP16xKKr1yPtkIAFUVXIr3HEXPsF86OpjKKpcd3W9cVfO/CQK7jqhs4XZpEyupKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z44rM06kWzwXF5;
+	Fri, 28 Feb 2025 18:56:03 +0800 (CST)
+Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 059401800CD;
+	Fri, 28 Feb 2025 19:00:51 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 28 Feb 2025 19:00:50 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
+CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
+	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
+Subject: [PATCH net] net: hns3: make sure ptp clock is unregister and freed if hclge_ptp_get_cycle returns an error
+Date: Fri, 28 Feb 2025 18:52:58 +0800
+Message-ID: <20250228105258.1243461-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemk100013.china.huawei.com (7.202.194.61)
 
-Hi Linus,
+From: Peiyang Wang <wangpeiyang1@huawei.com>
 
-Thanks for you review!
+During the initialization of ptp, hclge_ptp_get_cycle might return an error
+and returned directly without unregister clock and free it. To avoid that,
+call hclge_ptp_destroy_clock to unregist and free clock if
+hclge_ptp_get_cycle failed.
 
-On Fri, 2025-02-28 at 08:10 +0100, Linus Walleij wrote:
-> Hi Andr=C3=A9,
->=20
-> thanks for your patch!
->=20
-> mostly looks fine, given the MFD design is accepted.
-> Nitpicks below:
->=20
-> On Wed, Feb 26, 2025 at 6:51=E2=80=AFPM Andr=C3=A9 Draszik <andre.draszik=
-@linaro.org> wrote:
->=20
-> > +static irqreturn_t max77759_gpio_irqhandler(int irq, void *data)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int handled =3D 0;
->=20
-> bool handled =3D false;
->=20
-> (...)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 for_each_set_bit(offset, &pending, MAX77759_N_GPIOS) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned in=
-t virq;
->=20
-> I usually just call this "irq", as it's not any more virtual than any oth=
-er
-> Linux magic number, and it can confuse people working with
-> actual virtualization when we call things virtual like this.
+Fixes: 8373cd38a888 ("net: hns3: change the method of obtaining default ptp cycle")
+Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
+Signed-off-by: Jijie Shao <shaojijie@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Calling it 'irq' would shadow the first argument of this irq
-handler function, which is also and usually called irq and which
-I'd like to avoid shadowing.
-
-Are you OK with 'subirq'? Or any other preference?
-
-Cheers,
-Andre'
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+index bab16c2191b2..181af419b878 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c
+@@ -483,7 +483,7 @@ int hclge_ptp_init(struct hclge_dev *hdev)
+ 
+ 		ret = hclge_ptp_get_cycle(hdev);
+ 		if (ret)
+-			return ret;
++			goto out;
+ 	}
+ 
+ 	ret = hclge_ptp_int_en(hdev, true);
+-- 
+2.33.0
 
