@@ -1,101 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF54025C6F1;
-	Fri, 28 Feb 2025 09:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4D925C715
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734810; cv=none; b=iLt2ek2G0p2Tn81u5sLOIljnM9cjR/aJKwJQ9aJPI7xsDOgCu5ZCN3lP0E2V0D0qHdhBQonbh1XSAZvT/uKEjIheb/IP4GqHQE5PF9wLlgBxVej2+jdCt52eaPziWaKG0P/vhA4m3W/5s4o0EV+hfStdR8x2Ho+WsWRCmqPHiF0=
+	t=1740734813; cv=none; b=hsCHUKCRkCZnnK4WmQjg1T5CRhn7IELVEH87xA3Q9TnP9tyh/Hux4ejSlWtPxH4xgW+0KbNDombPbMYZxZX/OnV/G4EITVYH14+nPO+nC922gWwwXSdb9+mE4nI0iOTaFljoiWMLambQvvmDapgyfnRU6sIOdG1L9EqRB4UsYbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734810; c=relaxed/simple;
-	bh=kmNRUDi63hoq1y/R979Fz7vtxyOlpOhEMURK3Cge2yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TE8t6A0q8EF+1bAiySEVzrZPvWjfoS3fuFy6uGgTumKonHb6Fln1QF43YdULGHA1EAb5LoCDKvZ3hAFsOlp3fvnUC4Wh3Oi+FLyT1o6eEFZofdHscy4UTuBKCu0FWMgc1vuC8M8mYi2I6ASlJrj530+flcGi5CrRrpxfxJvB7iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaKK/NBw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740734813; c=relaxed/simple;
+	bh=LalUdJVj91uyCo7aoTOFqO1HMi4LdrZjiQ2EMwM8TAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=S+nEmhJoRvH/xCsU+CMEy04BjPLpFSMVTRZH4VLspWtmo0TmRu/FYYxzRlHWJwW2xPFvZh+oyB4Owp6OgOMoW6egb8dPTiLjf/PYvgnQRr3l13N9Y/soiWk0GsBaV6Chw5XfrOL+39SSskUKq4fMHWV6rfqghz+1V+g0HeY4kTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S7Rqr7Zb; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaKK/NBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 031A7C4CED6;
-	Fri, 28 Feb 2025 09:26:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740734810;
-	bh=kmNRUDi63hoq1y/R979Fz7vtxyOlpOhEMURK3Cge2yY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BaKK/NBwdo88Afyx9Hd5lt5ZhktyVBK5rK3FiEDNihfSDT+E1exaPmE3kv3vEKSob
-	 R5hRdWaIoq9DqeXWdGe7Qn51baP+M4E2DuN0n5VHSmOvRbguoOii7GDmY8Pzf/AWfj
-	 XNrHjGMMx8+a+7r6m53ikg3z/WuwaNoq6xkXI1nZnoJfMXjdScIBaYcPZ3EMIqtDKH
-	 KbiTochLI+h3TkWYwXxtH2b77ww8NuAbXeE1yDpi+FUsh5x5LjT6sBY/6s8EdhZ5iN
-	 YVobQev5BF5Bcr4SsqVmvQV7CDAJ+zLxKtukW4R6UVtEVjijiz2ywUuvkkOQUMA2nt
-	 Ez5RFXH2btGVA==
-Date: Fri, 28 Feb 2025 10:26:35 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-	will@kernel.org, peterz@infradead.org, yury.norov@gmail.com,
-	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: Re: [PATCH v6 0/5] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-Message-ID: <Z8GBS81JWP7dl5s2@gmail.com>
-References: <20250228082338.73859-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S7Rqr7Zb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740734811; x=1772270811;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LalUdJVj91uyCo7aoTOFqO1HMi4LdrZjiQ2EMwM8TAI=;
+  b=S7Rqr7ZbGDMX3vul18vVaFivawtpU63GdPQWadXRYE0DBe9XoqEQMPLN
+   2cHGyx5nlk9ORNW0Isjwy85E5IunBqhg8Gvj6ClRaq1U1I1qj6WhLDGlM
+   aU7gOnillcH6SWFRGfMNk/+ilS+K3CAEtmerIP4IDIAAL1TW9X9ZogOVO
+   Tmzi0diYPG1a++uRK6s3Y/vieyASdHWOKYxvJkDs+O8CFOqXg9ctQUSa3
+   HEnjfbZZiv7Gek5NwvtQQjRmlKByGk+HZmITq+4G1d3af9vmHJupNX+f2
+   JNwW4zoAhI1I2pKRy1+aZeKtFyYjqIVAJHkFsgmRiD3H9aDvjyxD6n9G+
+   Q==;
+X-CSE-ConnectionGUID: aaCSYXsJQDyCppPeGEglBg==
+X-CSE-MsgGUID: 1Sv/g/VUTMii2aR9JgfHtw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45438387"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="45438387"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 01:26:51 -0800
+X-CSE-ConnectionGUID: rIN3CM7pREaYG0jjKCaufQ==
+X-CSE-MsgGUID: kXPuFILMQm+V+D/OlpANQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="148213026"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by fmviesa001.fm.intel.com with ESMTP; 28 Feb 2025 01:26:47 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Fenghua Yu <fenghuay@nvidia.com>,
+	Zhangfei Gao <zhangfei.gao@linaro.org>,
+	Zhou Wang <wangzhou1@hisilicon.com>,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH v3 09/12] dmaengine: idxd: Remove unnecessary IOMMU_DEV_FEAT_IOPF
+Date: Fri, 28 Feb 2025 17:26:28 +0800
+Message-ID: <20250228092631.3425464-10-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250228092631.3425464-1-baolu.lu@linux.intel.com>
+References: <20250228092631.3425464-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228082338.73859-1-xin@zytor.com>
+Content-Transfer-Encoding: 8bit
 
+The IOMMU_DEV_FEAT_IOPF implementation in the iommu driver is just a no-op.
+It will also be removed from the iommu driver in the subsequent patch.
+Remove it to avoid dead code.
 
-* Xin Li (Intel) <xin@zytor.com> wrote:
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+---
+ drivers/dma/idxd/init.c | 37 ++++++-------------------------------
+ 1 file changed, 6 insertions(+), 31 deletions(-)
 
-> The x86 build process first generates required and disabled feature
-> masks based on current build config, and then uses these generated
-> masks to compile the source code.  When a CPU feature is not enabled
-> in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
-> flag, i.e., DISABLE_FRED, needs to be properly defined and added to
-> a specific disabled CPU features mask in <asm/disabled-features.h>,
-> as the following patch does:
-> https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
-> As a result, the FRED feature bit is surely cleared in the generated
-> kernel binary when CONFIG_X86_FRED=n.
-> 
-> Recently there is another case to repeat the same exercise for the
-> AMD SEV-SNP CPU feature:
-> https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
-> https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
-> 
-> It was one thing when there were four of CPU feature masks, but with
-> over 20 it is going to cause mistakes, e.g.,
-> https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
-> 
-> We want to eliminate the stupidly repeated exercise to manually assign
-> features to CPU feature words through introducing an AWK script to
-> automatically generate a header with required and disabled CPU feature
-> masks based on current build config, and this patch set does that.
-> 
-> Link to v5:
-> https://lore.kernel.org/lkml/20250106070727.3211006-1-xin@zytor.com/
-> 
-> 
-> H. Peter Anvin (Intel) (3):
->   x86/cpufeatures: Rename X86_CMPXCHG64 to X86_CX8
->   x86/cpufeatures: Add {required,disabled} feature configs
->   x86/cpufeatures: Generate a feature mask header based on build config
-> 
-> Xin Li (Intel) (2):
->   x86/cpufeatures: Remove {disabled,required}-features.h
->   x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index 1e5038cca22c..d44944195807 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -626,21 +626,6 @@ static void idxd_disable_system_pasid(struct idxd_device *idxd)
+ 	idxd->pasid = IOMMU_PASID_INVALID;
+ }
+ 
+-static int idxd_enable_sva(struct pci_dev *pdev)
+-{
+-	int ret;
+-
+-	ret = iommu_dev_enable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+-	if (ret)
+-		return ret;
+-	return 0;
+-}
+-
+-static void idxd_disable_sva(struct pci_dev *pdev)
+-{
+-	iommu_dev_disable_feature(&pdev->dev, IOMMU_DEV_FEAT_IOPF);
+-}
+-
+ static int idxd_probe(struct idxd_device *idxd)
+ {
+ 	struct pci_dev *pdev = idxd->pdev;
+@@ -655,17 +640,13 @@ static int idxd_probe(struct idxd_device *idxd)
+ 	dev_dbg(dev, "IDXD reset complete\n");
+ 
+ 	if (IS_ENABLED(CONFIG_INTEL_IDXD_SVM) && sva) {
+-		if (idxd_enable_sva(pdev)) {
+-			dev_warn(dev, "Unable to turn on user SVA feature.\n");
+-		} else {
+-			set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
++		set_bit(IDXD_FLAG_USER_PASID_ENABLED, &idxd->flags);
+ 
+-			rc = idxd_enable_system_pasid(idxd);
+-			if (rc)
+-				dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
+-			else
+-				set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+-		}
++		rc = idxd_enable_system_pasid(idxd);
++		if (rc)
++			dev_warn(dev, "No in-kernel DMA with PASID. %d\n", rc);
++		else
++			set_bit(IDXD_FLAG_PASID_ENABLED, &idxd->flags);
+ 	} else if (!sva) {
+ 		dev_warn(dev, "User forced SVA off via module param.\n");
+ 	}
+@@ -703,8 +684,6 @@ static int idxd_probe(struct idxd_device *idxd)
+  err:
+ 	if (device_pasid_enabled(idxd))
+ 		idxd_disable_system_pasid(idxd);
+-	if (device_user_pasid_enabled(idxd))
+-		idxd_disable_sva(pdev);
+ 	return rc;
+ }
+ 
+@@ -715,8 +694,6 @@ static void idxd_cleanup(struct idxd_device *idxd)
+ 	idxd_cleanup_internals(idxd);
+ 	if (device_pasid_enabled(idxd))
+ 		idxd_disable_system_pasid(idxd);
+-	if (device_user_pasid_enabled(idxd))
+-		idxd_disable_sva(idxd->pdev);
+ }
+ 
+ /*
+@@ -1248,8 +1225,6 @@ static void idxd_remove(struct pci_dev *pdev)
+ 	free_irq(irq_entry->vector, irq_entry);
+ 	pci_free_irq_vectors(pdev);
+ 	pci_iounmap(pdev, idxd->reg_base);
+-	if (device_user_pasid_enabled(idxd))
+-		idxd_disable_sva(pdev);
+ 	pci_disable_device(pdev);
+ 	destroy_workqueue(idxd->wq);
+ 	perfmon_pmu_remove(idxd);
+-- 
+2.43.0
 
->  24 files changed, 320 insertions(+), 634 deletions(-)
-
-Very nice!
-
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
