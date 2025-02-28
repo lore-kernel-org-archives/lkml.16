@@ -1,118 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443C7125B2
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7381B140E5F;
+	Fri, 28 Feb 2025 02:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740708549; cv=none; b=pFRBmIOurio7LzoVRKrunAq+gUlqbfEI+VToYqRWqgOvelFyu8JFO+oO5mGN4qdpZ8QaEb5l0YxLF3nbJqvuAU8PzIXQ5fmlW5EQn/IXJoOGel955Mquq6rNP6jVjaTUmNfGhV95NSSZdwo9PHyr4Y80qz5ceSqp0xNnb1a6+NM=
+	t=1740708555; cv=none; b=qFUHn6APUVBPjX8C7PeW6WmrmIBfA55Th3uLxp2hTywbCIlqRgsjFHbQLudDWZT7bzkbY+yZr37ciAJKo9rwHJUEzYGF+vdmsP/knKODx2CE393int7tJ+yJOqKtgHJYEtXl2zDJDv7LU87QKwt1UYJsF3a5zZv6LvEI0IopRUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740708549; c=relaxed/simple;
-	bh=FeINGRLknlP5dt3tCP0bSzZ/i8BVmEOimAwyc+VvazU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n0Dn6stvH/bkMXjFW/fLRWbWaqFkVJN5xfBDtdFh3Et2U0e9zgXeNfO0ZTViiqLDxQD54YzSyRFrpJnDksa06zWiSQ0KaYRlRNZpezIUOKCTaXGJjMtI1/Wa2SyrdIP3VneruZ+cseLXldjP+OUOqRvthOzhPQVQhfXMNySK3Aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kok/v3L6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740708555; c=relaxed/simple;
+	bh=7aXQGxqBnGBVomTgWjndFPyhUKxp6YcF8yQM4y03MzE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EqJ9MOUDsDRhiZqizPuAgOzg1KFjoIIQStpvcQAR1uR592jsREKRhFXc570/Y/ybspCq82qJ9LsFDOT8OU0QLN0Ax/ruyQgbG59yl7/cBvlg8DjjHCFsMgBq/Qylll7Y5uiOKflIEzjTc2jb8xkoa0mQmT6mjqSVKNbER6quRXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0th/sWW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kok/v3L6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740708546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uDA8ZdJRcIn7ES0nC9Xy5c+VwiJPVKulN1nVpxhKFD8=;
-	b=Kok/v3L6WKH2z1hE1LxjIqBN+FM1q5zVahGHmSpN4AtO7f7cATNugg3Lvdm1625IH9C1IC
-	5WF5tq1g3FRvIu9xcEduyNwA3OpABU2AbZ+hBzDMLTQW8wB8q4YECSGGv3kHL6AEh8Y/dr
-	77TdTt5YAJcPdQDqUQx/kvrwokICO58=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-620-mfTjEe20McayhuufSuP-Rw-1; Thu, 27 Feb 2025 21:08:59 -0500
-X-MC-Unique: mfTjEe20McayhuufSuP-Rw-1
-X-Mimecast-MFC-AGG-ID: mfTjEe20McayhuufSuP-Rw_1740708533
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22331df540aso47645115ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 18:08:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740708533; x=1741313333;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDA8ZdJRcIn7ES0nC9Xy5c+VwiJPVKulN1nVpxhKFD8=;
-        b=sMhx81PRqY/wpEhwz/kf6DEp1hsbTAVmwRx0hkN1GJymKpj5rspFtVQi36CKKzWigC
-         itvYD+ABJ2HJYQKuWr0rnoMVXYQKUAq92Lfqmt3vFobVc0oua9BvbEosysTIsC0WwnCf
-         /VK9oC8CyyCKqAQEcIPV4qkKszyYdcB+fcYIGrvYT7DtxL861lgEbxmTMfarWxhntwzf
-         CexqnnrY5mVTibtX0SoQeJEbmzynuvAwKehKmEiCucEemenvsaMT/QMvDWk8rS4qunjl
-         KM3wvHWY5VXyrvQFqHQ0g5U0e/w2fS+Px/96ICo5R78zqF+SzRvq9IHsOBcjj4UOhWeQ
-         fdIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUH0X6/743R/QHODqiM9m200+b8wej9yIjSJJJ4w7aOplCg3abMu8EjorlP4cvC5HVZ7CU1/qzZVm2O91c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9P2nHtC7zgLrsb+0E9JThkdpjcPwvWWXEqRGWU+KMNVTmGIzZ
-	21gawDpDp68PBe2lfcXwAYF0tYuL39BXCMonxR61mPAgOZYbPT+XObVolOmgLcbmjItjXqnZse3
-	/gvyDA0k0+z2kae6NH5HdTrMiemO/A9UTcgj5CW4oCb1mo5Ti2zNjxrXAUCKU/w==
-X-Gm-Gg: ASbGncvzFvcp0WmssGoBMbHV/y8mqsowk7TWf4I2S285BU+4f/G75cokVGk4tGh3KF0
-	KyULYZ+SnpoZRbekYW8tGZk0s73qqWsXNVZsmbNr+4/7y1G4vWc5VEZl3E61VPg6BNvT8jHOhcH
-	nBGHnwZ9HQ/qZPiWLHTJzITXqMU3nd+hvP+5AO91m0Os8IYJ2ImZWs9lz1OMUG9hrGahcezjImJ
-	OzcLHUg6bDimH1D/zXxo2GkpRDC5dsCMNYH6fN+G4JyHVkIJRp5cZU2WVykqccWCFWCKSRj5ch0
-	W1W3Mm7j+Py+2UjTAA==
-X-Received: by 2002:a17:903:fae:b0:223:674d:c989 with SMTP id d9443c01a7336-223692585fbmr22521225ad.41.1740708533545;
-        Thu, 27 Feb 2025 18:08:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFu9ARko1SYR5EXP3Bd9fWGTG0mutlK4ufDD7+7kHYr1uaxFIPvIaHW+HuHlgORm9NSM1R2nQ==
-X-Received: by 2002:a17:903:fae:b0:223:674d:c989 with SMTP id d9443c01a7336-223692585fbmr22520815ad.41.1740708533178;
-        Thu, 27 Feb 2025 18:08:53 -0800 (PST)
-Received: from [192.168.68.55] ([180.233.125.164])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-223504dc3b7sm22723325ad.173.2025.02.27.18.08.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Feb 2025 18:08:52 -0800 (PST)
-Message-ID: <6ae2b809-7cc6-471b-9065-be446411570b@redhat.com>
-Date: Fri, 28 Feb 2025 12:08:47 +1000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0th/sWW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDFDDC4CEDD;
+	Fri, 28 Feb 2025 02:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740708555;
+	bh=7aXQGxqBnGBVomTgWjndFPyhUKxp6YcF8yQM4y03MzE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L0th/sWWHGU3L3ZB4L4y9cOzD8ByR6pb7+el6BvGsXLUQ8iqm6AEhKVmCMM0SSSbk
+	 yxRLSqd/t3znZTsdxXcUSj3O1jq9dUnMd1m/OcuNnJ3Ke107rfyH8mwXjNpJoIcV7W
+	 Iml0gPtdfeIFLn9DFnTYhtlj+UsFUcezC77UgAQ12XwIZOzmL7TG/KQfGrJVv+MS/T
+	 CUWT8KIb6lSF7c+Uc2JF3DugJOodiS/lWvBJXFxpza2vn5ZXDMb9xszU4d58GZPuTN
+	 FAepguvrmXrScWdc3m25CSbbATulrU+oy5Gd0w9ngI3XOqjq+uvIR4O8xV4AjXuzID
+	 Dym3U7UP3jeGA==
+Date: Thu, 27 Feb 2025 18:09:13 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Eric Woudstra <ericwouds@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Pablo Neira Ayuso
+ <pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>, Jiri Pirko
+ <jiri@resnulli.us>, Ivan Vecera <ivecera@redhat.com>, Roopa Prabhu
+ <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Matthias
+ Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, Kuniyuki Iwashima
+ <kuniyu@amazon.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Joe
+ Damato <jdamato@fastly.com>, Alexander Lobakin
+ <aleksander.lobakin@intel.com>, Vladimir Oltean <olteanv@gmail.com>, "Frank
+ Wunderlich" <frank-w@public-files.de>, Daniel Golle
+ <daniel@makrotopia.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org, bridge@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v7 net-next 03/14] netfilter: bridge: Add conntrack
+ double vlan and pppoe
+Message-ID: <20250227180913.6248bbd3@kernel.org>
+In-Reply-To: <20250225201616.21114-4-ericwouds@gmail.com>
+References: <20250225201616.21114-1-ericwouds@gmail.com>
+	<20250225201616.21114-4-ericwouds@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/3] dma: Fix encryption bit clearing for dma_to_phys
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org
-Cc: will@kernel.org, catalin.marinas@arm.com, maz@kernel.org,
- steven.price@arm.com, aneesh.kumar@kernel.org, robin.murphy@arm.com,
- linux-arm-kernel@lists.infradead.org,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
- Tom Lendacky <thomas.lendacky@amd.com>
-References: <20250227144150.1667735-1-suzuki.poulose@arm.com>
- <20250227144150.1667735-2-suzuki.poulose@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250227144150.1667735-2-suzuki.poulose@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2/28/25 12:41 AM, Suzuki K Poulose wrote:
-> phys_to_dma() sets the encryption bit on the translated DMA address. But
-> dma_to_phys() clears the encryption bit after it has been translated back
-> to the physical address, which could fail if the device uses DMA ranges.
-> 
-> AMD SME doesn't use the DMA ranges and thus this is harmless. But as we
-> are about to add support for other architectures, let us fix this.
-> 
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-> Link: https://lkml.kernel.org/r/yq5amsen9stc.fsf@kernel.org
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Steven Price <steven.price@arm.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->   include/linux/dma-direct.h | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+On Tue, 25 Feb 2025 21:16:05 +0100 Eric Woudstra wrote:
+> +		struct ppp_hdr {
+> +			struct pppoe_hdr hdr;
+> +			__be16 proto;
+> +		} *ph;
 
+W=1 C=1 GCC build gives us:
+
+net/bridge/netfilter/nf_conntrack_bridge.c: note: in included file (through ../include/linux/if_pppox.h, ../include/uapi/linux/netfilter_bridge.h, ../include/linux/netfilter_bridge.h):
+include/uapi/linux/if_pppox.h:153:29: warning: array of flexible structures
+
+I'm guessing it doesn't like that hdr has a zero-length array which
+overlaps proto.
+
+Looks like kernel code doesn't current need those arrays.
+Could you submit something like the diff below first, and then rebase on top?
+CC hardening folks on the submission.
+
+diff --git a/drivers/net/ppp/pppoe.c b/drivers/net/ppp/pppoe.c
+index 2ea4f4890d23..3a800af4e987 100644
+--- a/drivers/net/ppp/pppoe.c
++++ b/drivers/net/ppp/pppoe.c
+@@ -881,7 +881,7 @@ static int pppoe_sendmsg(struct socket *sock, struct msghdr *m,
+        skb->protocol = cpu_to_be16(ETH_P_PPP_SES);
+ 
+        ph = skb_put(skb, total_len + sizeof(struct pppoe_hdr));
+-       start = (char *)&ph->tag[0];
++       start = (char *)ph + sizeof(*ph);
+ 
+        error = memcpy_from_msg(start, m, total_len);
+        if (error < 0) {
+diff --git a/include/uapi/linux/if_pppox.h b/include/uapi/linux/if_pppox.h
+index 9abd80dcc46f..29b804aa7474 100644
+--- a/include/uapi/linux/if_pppox.h
++++ b/include/uapi/linux/if_pppox.h
+@@ -122,7 +122,9 @@ struct sockaddr_pppol2tpv3in6 {
+ struct pppoe_tag {
+        __be16 tag_type;
+        __be16 tag_len;
++#ifndef __KERNEL__
+        char tag_data[];
++#endif
+ } __attribute__ ((packed));
+ 
+ /* Tag identifiers */
+@@ -150,7 +152,9 @@ struct pppoe_hdr {
+        __u8 code;
+        __be16 sid;
+        __be16 length;
++#ifndef __KERNEL__
+        struct pppoe_tag tag[];
++#endif
+ } __packed;
+ 
+ /* Length of entire PPPoE + PPP header */
+-- 
+pw-bot: cr
