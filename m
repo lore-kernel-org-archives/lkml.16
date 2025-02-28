@@ -1,91 +1,105 @@
-Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [5.144.164.167])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D626F24A046
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.167
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A033C1C2324;
+	Fri, 28 Feb 2025 09:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734276; cv=none; b=LajeoRdEjvHuWL5eNQJ14g9jsJBpPm1Y5eNyILVDoafcB5ya1LErYFakzvp/In7Av5KwNSf82IDcOo3PxfkH4dbajMdcPn2DiBhbN6X32UkyQXWAZudEzarzOjp0ja7CFAoebbxa9O9WUDqxIhZPZDg/7IOil/cJnpTxk5Vvz+I=
+	t=1740734277; cv=none; b=rTdsRV5V8tToNQiu/NU4/uKdUvfCgYLtW6V7OYBBzt/qB3li+WbhmwAXrVCuM5ysVGN67+D6ishS0RJRTls1fBQ/21ggvYwKuyhiKUPbbShOVniGaol/mygjcWtCsFl0Z0prdq3eHPmHzXQZvI2AONkbsI+qCsSuR1jeBkJbfio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734276; c=relaxed/simple;
-	bh=UWrasMPhZgBN8iz+xsk13yZ0dRriDkIlfknmsEWbDn8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=qrYgFo6CFBMHD4C/+oUx7T5SyQBWlGx9pA+MlRiNBSL8f5mzSJa+5WUbHlOhBsSe7uj6HAU0zZ8uM9Pozw8PbqEaQ0oZrMHmElszTcgbATdgR3NBKHLQBICQ5/o419uz9PLP7PgwANILexqpexak6rL3uprpsCjwWfDFJejJ+oM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.167
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from [127.0.0.1] (161-51-78-170.static.ef-service.nl [161.51.78.170])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 13C6D3EE67;
-	Fri, 28 Feb 2025 10:08:48 +0100 (CET)
-Date: Fri, 28 Feb 2025 10:08:47 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-CC: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_8/8=5D_drm/msm/dpu=3A_drop_n?=
- =?US-ASCII?Q?ow-unused_condition_for_has=5Flegacy=5Fctls?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20250228-dpu-active-ctl-v2-8-9a9df2ee5193@linaro.org>
-References: <20250228-dpu-active-ctl-v2-0-9a9df2ee5193@linaro.org> <20250228-dpu-active-ctl-v2-8-9a9df2ee5193@linaro.org>
-Message-ID: <CA752964-870A-4DB9-A6F7-0E701EA24AB2@somainline.org>
+	s=arc-20240116; t=1740734277; c=relaxed/simple;
+	bh=Z8agXOvfl+b8eIlKBVhxUrvRWqQjZd5gHAju5GqfGp4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rg1xzyiBiIjlvoSNafMHoolOLTR8xSi6B/1XgmkUlsp3EQXwRMllB+tjUtJH2m0rIuZpvMNNv9HxfLvB1AcN+WcX1DXuUc5Tm5aXgGY3jV/F+vlmx+bkpHgxPwwG2or+DFl3wLgUdsIJFhejDs1YNg4hm5OvmEouIZOG4l3XbjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CSQE5MaW; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CSQE5MaW"
+Received: from neptunite.hamster-moth.ts.net (unknown [IPv6:2404:7a81:160:2100:7597:2d2d:d3f:6ef1])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A5C91606;
+	Fri, 28 Feb 2025 10:16:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740734177;
+	bh=Z8agXOvfl+b8eIlKBVhxUrvRWqQjZd5gHAju5GqfGp4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CSQE5MaWFATU6H2Hx9yBqIob8CgnfL+SIeMD1JZaRYkV5HOMnY4ZwxxVdwxwj1d/S
+	 6FtQJwJ2Pay3a5S/Z8VuQeKWYSUrSYGy4nTdXd8UKokTArwPey501MN8/ZYZBS6lVn
+	 kxhZnrT4l/JZYZDxvNLBUgdfJgRSr2FhZmKpuBUw=
+From: Paul Elder <paul.elder@ideasonboard.com>
+To: linux-media@vger.kernel.org
+Cc: kieran.bingham@ideasonboard.com,
+	Paul Elder <paul.elder@ideasonboard.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] media: imx335: Set vblank immediately
+Date: Fri, 28 Feb 2025 18:17:31 +0900
+Message-Id: <20250228091731.236162-1-paul.elder@ideasonboard.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On 28 February 2025 05:14:12 CET, Dmitry Baryshkov <dmitry=2Ebaryshkov@lina=
-ro=2Eorg> wrote:
->Now as we have dropped the DPU_CTL_SPLIT_DISPLAY from DPU >=3D 5=2E0
->configuration, drop the rm->has_legacy_ctl condition which short-cutted
->the check for those platforms=2E
->
->Suggested-by: Marijn Suijten <marijn=2Esuijten@somainline=2Eorg>
->Signed-off-by: Dmitry Baryshkov <dmitry=2Ebaryshkov@linaro=2Eorg>
->
->---
->
->Note, it is imposible to reoder commits in any other sensible way=2E The
+When the vblank v4l2 control is set, it does not get written to the
+hardware unless exposure is also changed. Change the behavior such that
+the vblank is written immediately when the control is set, as setting
+the vblank without changing the exposure is a valid use case (such as
+for changing the frame rate).
 
-Reorder :)
+Signed-off-by: Paul Elder <paul.elder@ideasonboard.com>
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
->DPU_CTL_SPLIT_DISPLAY can not be dropped before the patch that enables
->single-CTL support=2E
+---
+Changes in v2:
+- error check the modify range
+- improve commit message
+---
+ drivers/media/i2c/imx335.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-Maybe I expected this note on patch 4/6 introducing it, but it disappears =
-after merging anyway so that's a mega-nit=2E Thanks for sending this!
-
-Reviewed-by: Marijn Suijten <marijn=2Esuijten@somainline=2Eorg>
-
->---
-> drivers/gpu/drm/msm/disp/dpu1/dpu_rm=2Ec | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
->
->diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm=2Ec b/drivers/gpu/drm/m=
-sm/disp/dpu1/dpu_rm=2Ec
->index 4dbc9bc7eb4f151f83055220665ee5fd238ae7ba=2E=2E2557effe639b5360bc948=
-a49b0cccdb59ee35dab 100644
->--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm=2Ec
->+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm=2Ec
->@@ -410,8 +410,7 @@ static int _dpu_rm_reserve_ctls(
->=20
-> 		DPU_DEBUG("ctl %d caps 0x%lX\n", j + CTL_0, features);
->=20
->-		if (rm->has_legacy_ctls &&
->-		    needs_split_display !=3D has_split_display)
->+		if (needs_split_display !=3D has_split_display)
-> 			continue;
->=20
-> 		ctl_idx[i] =3D j;
->
+diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
+index fcfd1d851bd4..0beb80b8c458 100644
+--- a/drivers/media/i2c/imx335.c
++++ b/drivers/media/i2c/imx335.c
+@@ -559,12 +559,14 @@ static int imx335_set_ctrl(struct v4l2_ctrl *ctrl)
+ 			imx335->vblank,
+ 			imx335->vblank + imx335->cur_mode->height);
+ 
+-		return __v4l2_ctrl_modify_range(imx335->exp_ctrl,
+-						IMX335_EXPOSURE_MIN,
+-						imx335->vblank +
+-						imx335->cur_mode->height -
+-						IMX335_EXPOSURE_OFFSET,
+-						1, IMX335_EXPOSURE_DEFAULT);
++		ret = __v4l2_ctrl_modify_range(imx335->exp_ctrl,
++					       IMX335_EXPOSURE_MIN,
++					       imx335->vblank +
++					       imx335->cur_mode->height -
++					       IMX335_EXPOSURE_OFFSET,
++					       1, IMX335_EXPOSURE_DEFAULT);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	/*
+@@ -575,6 +577,13 @@ static int imx335_set_ctrl(struct v4l2_ctrl *ctrl)
+ 		return 0;
+ 
+ 	switch (ctrl->id) {
++	case V4L2_CID_VBLANK:
++		exposure = imx335->exp_ctrl->val;
++		analog_gain = imx335->again_ctrl->val;
++
++		ret = imx335_update_exp_gain(imx335, exposure, analog_gain);
++
++		break;
+ 	case V4L2_CID_EXPOSURE:
+ 		exposure = ctrl->val;
+ 		analog_gain = imx335->again_ctrl->val;
+-- 
+2.39.2
 
