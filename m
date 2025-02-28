@@ -1,118 +1,80 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out198-8.us.a.mail.aliyun.com (out198-8.us.a.mail.aliyun.com [47.90.198.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF4417BA3;
-	Fri, 28 Feb 2025 03:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEE180A80;
+	Fri, 28 Feb 2025 03:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740714919; cv=none; b=oJrlnQdy6UnGz8eZABUVqjfn/qsHDTVT9ksW/MAU+B1PX4WgA8VvXqFtJuw0n84OoXYFaHCkd4bJJfuxSkPLLwMOHGugQvJB+Brakww2hwUgCcrwRd9lEuuuqKep4UmLTVWPW6fA8NOuZnWJCSkuKRCijotXTGxmb2+6EyElZRA=
+	t=1740714950; cv=none; b=AS0YPpHcKZ3sGouR43Pyj5gxQ+yTAQWw23YFilIa4FSnmuRXLib+dVpQ+AtKsJMkoc4r6I4W67ZyZhKTIYafgkpl+oS+oqxj/6co+FAQdrqNP22CB0EaDNtHxxHP2aXIu9y20FqDp0+hvQU6psB5AJ2oEvzuQZUNGv0hYGEloyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740714919; c=relaxed/simple;
-	bh=VGRVXS19emRX6O8GPdk4cMmd7Iwtyznx7nZF9BgfBE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qdvDpc6US+Yheg+U2u63VndRYZq6/8ec8sc52XJKW9p8zIlKbvXwqTu71sFPhOIjGQKXWaWMjShJO70U9ifP/5TpvQ/rBxmG43f3zMz6x2L2nHJtpAGJn1WNbBYzY/FhFl7URyVJSK6ngLfxwSB0LfUYAtTZkMRAO7mjrK2r4tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.55.252])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 2E481342F9A;
-	Fri, 28 Feb 2025 03:55:16 +0000 (UTC)
-Date: Fri, 28 Feb 2025 03:55:07 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Zixian Zeng <sycamoremoon376@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@outlook.com>, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	sophgo@lists.linux.dev
-Subject: Re: [PATCH] riscv: dts: sophgo: sg2042: Add spi devices
-Message-ID: <20250228035507-GYA52348@gentoo>
-References: <20250228-sfg-spi-v1-1-b989aed94911@gmail.com>
+	s=arc-20240116; t=1740714950; c=relaxed/simple;
+	bh=i6bW/rHcvgT89EAEJIDB0utm9PBMM3NgXDcWd3OeJ18=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fBog+wefkDHEytIGvAe+GHSmgHiB3/oGd9QQy4lI6sLCYgHOA2MqkgEENVjwJpCUGvBAFZT8vigB6s5W0O6o0xP9QnhFobQkMqBtGd5UUl1As9BsZP/oBavm43dGa4SvWWPD+vywVn6ikjscVgCjG+bkAmeyYpuJCpia8p1rb2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=47.90.198.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.bfYTayM_1740714599 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Feb 2025 11:50:05 +0800
+From: wangweidong.a@awinic.com
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	ivprusov@salutedevices.com,
+	jack.yu@realtek.com,
+	wangweidong.a@awinic.com,
+	zhoubinbin@loongson.cn,
+	luca.ceresoli@bootlin.com,
+	quic_pkumpatl@quicinc.com,
+	paulha@opensource.cirrus.com,
+	rf@opensource.cirrus.com,
+	nuno.sa@analog.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yijiangtao@awinic.com
+Subject: [PATCH V2 0/2] ASoC: codecs: Add aw88166 amplifier driver
+Date: Fri, 28 Feb 2025 11:49:56 +0800
+Message-ID: <20250228034958.181934-1-wangweidong.a@awinic.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228-sfg-spi-v1-1-b989aed94911@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Zixian:
+From: Weidong Wang <wangweidong.a@awinic.com>
 
-On 10:47 Fri 28 Feb     , Zixian Zeng wrote:
-> Add spi devices for the sg2042 soc.
-> 
-> Signed-off-by: Zixian Zeng <sycamoremoon376@gmail.com>
-> ---
->  arch/riscv/boot/dts/sophgo/sg2042.dtsi | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/arch/riscv/boot/dts/sophgo/sg2042.dtsi b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> index 0fca16c469cc95aa897b6b57e0a287a687b4d251..d413daa47cf081f23284851db1eeceb3a157e9c0 100644
-> --- a/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> +++ b/arch/riscv/boot/dts/sophgo/sg2042.dtsi
-> @@ -800,5 +800,35 @@ flash@0 {
->  				compatible = "jedec,spi-nor";
->  			};
->  		};
-> +
-> +		spi0: spi@7040004000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <0x01>;
-> +			#size-cells = <0x00>;
-> +			reg = <0x70 0x40004000 0x00 0x1000>;
-for consistency, I'd suggest moving 'reg' info above '#address-cells'
+Add the awinic,aw88166 property to support the aw88166 chip.
 
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <110 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clkgen GATE_CLK_APB_SPI>,
-> +					<&clkgen GATE_CLK_SYSDMA_AXI>;
-> +			clock-frequency = <250000000>;
-ditto, move clock above interrupt
+The driver is for amplifiers aw88166 of Awinic Technology
+Corporation. The AW88166 is a high efficiency digital
+Smart K audio amplifier
 
-> +			resets = <&rstgen RST_SPI0>;
-> +			num-cs = <0x02>;
-> +			status = "okay";
-in dtsi file, please make status disabled by default, then enable it at board file
+v1 -> v2: Modify the problem that the reset function
+           does not match the definition in the yaml file
 
-> +		};
-> +
-> +		spi1: spi@7040005000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <0x01>;
-> +			#size-cells = <0x00>;
-> +			reg = <0x70 0x40005000 0x00 0x1000>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <111 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clkgen GATE_CLK_APB_SPI>,
-> +					<&clkgen GATE_CLK_SYSDMA_AXI>;
-> +			clock-frequency = <250000000>;
-> +			resets = <&rstgen RST_SPI1>;
-> +			num-cs = <0x02>;
-> +			status = "okay";
-> +		};
->  	};
->  };
-> 
-> ---
-> base-commit: 9ef5d3235d41a6f5230d3ddf5eb994483853b3e8
-> change-id: 20250228-sfg-spi-e3f2aeca09ab
-> 
-> Best regards,
-> -- 
-> Zixian Zeng <sycamoremoon376@gmail.com>
-> 
+Weidong Wang (2):
+  ASoC: dt-bindings: Add schema for "awinic,aw88166"
+  ASoC: codecs: Add aw88166 amplifier driver
 
+ .../bindings/sound/awinic,aw88395.yaml        |    1 +
+ sound/soc/codecs/Kconfig                      |   13 +
+ sound/soc/codecs/Makefile                     |    2 +
+ sound/soc/codecs/aw88166.c                    | 1935 +++++++++++++++++
+ sound/soc/codecs/aw88166.h                    |  534 +++++
+ 5 files changed, 2485 insertions(+)
+ create mode 100644 sound/soc/codecs/aw88166.c
+ create mode 100644 sound/soc/codecs/aw88166.h
+
+
+base-commit: 1e15510b71c99c6e49134d756df91069f7d18141
 -- 
-Yixun Lan (dlan)
-Gentoo Linux Developer
-GPG Key ID AABEFD55
+2.47.0
+
