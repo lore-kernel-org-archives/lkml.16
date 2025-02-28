@@ -1,70 +1,116 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E291DED71;
-	Fri, 28 Feb 2025 08:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6F01DEFC5;
+	Fri, 28 Feb 2025 08:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729874; cv=none; b=KJaSyxExLG5sCZru735bPoVb9BaVeTtHtMtuyKqJP5YO74MUsF5olDtu7xgOp1L2Sp9nW6vxc4hBXZw4WjPiQUPnJgfZabdX+1JfUYasdxux4YmNG2LvoehgeNzjhbtG0orst0J7G8HHZy49bgfokWINjnUtsFA68Qu1DmlRvnU=
+	t=1740729875; cv=none; b=gYmT0QMiH9Z9GHZiZRnqQlgbFsZbtQgiHZluYzeeOnnueMSJdPjcKkyGcszihc+mfVfPVaaBYIp2R02BjruMYhDcfZqOLF7vDIYZ9nzn+cCMOvSiD7yrXX2oKamhe+zKYwD1SM4uk3I9o8ae/ucg39f7xmN6s17V0fp+wvDngZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729874; c=relaxed/simple;
-	bh=cRraVrCsk7oih973hMyVgNXX546h2/sFoqEXMgAY73E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t2iyUkj2Bccs5EMyHnjKL/gYPqpzRxwMX/aj9uGsNUUzLDENIzWFx0Uy1G4hAWJH9LDYPEpRkYZzNoUeyxPeoI1f1E1+CXVB0vK/wSZOaZaJCJlace19DPfN+1gSAvaQIKJKOQIJ1LjijwVQ2OXaF1n0A/jLQYiocifUPlH64vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201602.home.langchao.com
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202502281604121904;
-        Fri, 28 Feb 2025 16:04:12 +0800
-Received: from localhost.localdomain (10.94.16.254) by
- jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
- 15.1.2507.39; Fri, 28 Feb 2025 16:04:10 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <sre@kernel.org>, <mazziesaccount@gmail.com>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH 6/9] power: supply: ltc4162l: convert to use maple tree register cache
-Date: Fri, 28 Feb 2025 03:02:33 -0500
-Message-ID: <20250228080236.2759-7-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
-In-Reply-To: <20250228080236.2759-1-liubo03@inspur.com>
-References: <20250228080236.2759-1-liubo03@inspur.com>
+	s=arc-20240116; t=1740729875; c=relaxed/simple;
+	bh=x2141hNFezK6mYwqWQI9537WXt7YCIJnzh0zwLxszv8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=arn4imeAw9BC6e8q5YGLf2Y4m5Ljbs7PzcrXS2qzt2bilVVopN/SzDaULefqWTUpBnVaogIYoXB5FxvkEP9PBAoLw0wlmcRZSXz24NMcAM5b5c/Sm+MEOq1SMG+dhGN8okCK1/My8C1vPV++j95c6h3WXvIoSecj6q9lQUcgiGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggHJbmaV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggHJbmaV"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D17D6C4CED6;
+	Fri, 28 Feb 2025 08:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740729874;
+	bh=x2141hNFezK6mYwqWQI9537WXt7YCIJnzh0zwLxszv8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=ggHJbmaVVOISS/Zmur3noPoa9ob4zXIkPHN/yvlkzVW30sINZG185Q7hEHhYiN+eR
+	 yen0N5/zOSKn8GEgJHuBTwcSFevgaUGaTUK/F4awi5n/IELEwzVhtQ+8D6inTliy62
+	 wAJeMGLJ3qZAmGSqNqnhzCwlg6khEWpO6JAu3DFbEuKe+xTetT+TUW/4LT9UU127ew
+	 WQM1C8vNbbAElSCdlxqhkoDHn/Re8zYCFGaI6Z06zI5+Eb4EBOuVecqulbYYt/ZQ+0
+	 zyLB/BBEFBx+QdgbxotiPFjxLEYt6PNVUS3gs1+EBph/xJWce+wNqG5N0I1UICA4Q2
+	 Eb5P29/iNrRsQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF6DC282C5;
+	Fri, 28 Feb 2025 08:04:34 +0000 (UTC)
+From: jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>
+Subject: [PATCH v3 0/6] Add support for S4 audio
+Date: Fri, 28 Feb 2025 16:04:08 +0800
+Message-Id: <20250228-audio_drvier-v3-0-dbfd30507e4c@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-tUid: 2025228160412efab2db1656c3b236493fa94adeef672
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPhtwWcC/13M0QrCIBiG4VsZHmf4q0PXUfcREebc9kOboSXF8
+ N5zg4h1+H3wPjOJLqCL5FDNJLiEEf1UhthVxA5m6h3FtmzCGa8ZAKPm2aK/tCGhC5QpUwsNVjb
+ ySkpyD67D18qdzmUPGB8+vFc9wfJ+IbGFElBGtQWpFOuENuxoxpvv0e6tH8lCJf7LOci/nJdcK
+ K2hM0LZxm3znPMH59QOeOkAAAA=
+X-Change-ID: 20250110-audio_drvier-07a5381c494b
+To: Jerome Brunet <jbrunet@baylibre.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+ jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com, 
+ jiebing chen <jiebing.chen@amlogic.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740729872; l=1652;
+ i=jiebing.chen@amlogic.com; s=20250110; h=from:subject:message-id;
+ bh=x2141hNFezK6mYwqWQI9537WXt7YCIJnzh0zwLxszv8=;
+ b=D0A/1LXJsQqSGXP7YG/LoMPSb5KDruBemjmW99wLhc4KV+CLVtukH8eStEK+HV3PGNIo4yL/o
+ 9+irLhQOedMDqh4SfvL/ccR5s7Ie9UnlESjSA7Etj+eVhwTWTgYbH3T
+X-Developer-Key: i=jiebing.chen@amlogic.com; a=ed25519;
+ pk=6rFvvF45A84pLNRy03hfUHeROxHCnZ+1KAGw/DoqKic=
+X-Endpoint-Received: by B4 Relay for jiebing.chen@amlogic.com/20250110 with
+ auth_id=316
+X-Original-From: jiebing chen <jiebing.chen@amlogic.com>
+Reply-To: jiebing.chen@amlogic.com
 
-The maple tree register cache is based on a much more modern data structure
-than the rbtree cache and makes optimisation choices which are probably
-more appropriate for modern systems than those made by the rbtree cache.
+Add s4 audio base driver. 
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
+Signed-off-by: jiebing chen <jiebing.chen@amlogic.com>
 ---
- drivers/power/supply/ltc4162-l-charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v3:
+- remove g12a tocodec switch event
+- Modify the incorrect title for dt-bindings
+- Link to v2: https://lore.kernel.org/r/20250214-audio_drvier-v2-0-37881fa37c9e@amlogic.com
 
-diff --git a/drivers/power/supply/ltc4162-l-charger.c b/drivers/power/supply/ltc4162-l-charger.c
-index 23eb426295db..99566f3c0946 100644
---- a/drivers/power/supply/ltc4162-l-charger.c
-+++ b/drivers/power/supply/ltc4162-l-charger.c
-@@ -1119,7 +1119,7 @@ static const struct regmap_config ltc4162l_regmap_config = {
- 	.writeable_reg	= ltc4162l_is_writeable_reg,
- 	.volatile_reg	= ltc4162l_is_volatile_reg,
- 	.max_register	= LTC4162L_INPUT_UNDERVOLTAGE_DAC,
--	.cache_type	= REGCACHE_RBTREE,
-+	.cache_type	= REGCACHE_MAPLE,
- };
- 
- static void ltc4162l_clear_interrupts(struct ltc4162l_info *info)
+Changes in v2:
+- remove tdm pad control and change tocodec base on g12a
+- change hifipll rate to support 24bit
+- add s4 audio clock
+- Link to v1: https://lore.kernel.org/r/20250113-audio_drvier-v1-0-8c14770f38a0@amlogic.com
+
+---
+jiebing chen (6):
+      dt-bindings: clock: meson: Add audio power domain for s4 soc
+      dt-bindings: clock: axg-audio: Add mclk and sclk pad clock ids
+      dt-bindings: Asoc: axg-audio: Add s4 audio tocodec
+      clk: meson: axg-audio: Add the mclk pad div for s4
+      ASoC: meson: s4: Add s4 tocodec driver
+      arm64: dts: amlogic: Add Amlogic S4 Audio
+
+ .../bindings/clock/amlogic,axg-audio-clkc.yaml     |  18 +
+ .../bindings/sound/amlogic,g12a-toacodec.yaml      |   1 +
+ .../boot/dts/amlogic/meson-s4-s805x2-aq222.dts     | 219 +++++++++++
+ arch/arm64/boot/dts/amlogic/meson-s4.dtsi          | 371 ++++++++++++++++++-
+ drivers/clk/meson/axg-audio.c                      | 410 ++++++++++++++++++++-
+ drivers/clk/meson/axg-audio.h                      |   4 +
+ include/dt-bindings/clock/axg-audio-clkc.h         |  11 +
+ sound/soc/meson/g12a-toacodec.c                    |  51 +++
+ 8 files changed, 1081 insertions(+), 4 deletions(-)
+---
+base-commit: 6ecd20965bdc21b265a0671ccf36d9ad8043f5ab
+change-id: 20250110-audio_drvier-07a5381c494b
+
+Best regards,
 -- 
-2.31.1
+jiebing chen <jiebing.chen@amlogic.com>
+
 
