@@ -1,123 +1,223 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C3926B090
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE1423315A;
+	Fri, 28 Feb 2025 12:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740744925; cv=none; b=U+4WHBPNLZ3JqNh77gOKoUra4yCpYtPw9CvQkgpCsasmwl80v1YXsy1SlHXEMTAGx6GnH2Bf4GN68OL8V8CU2YDw5dNyqayvUyL6TewIsJyrTC+hGV4GwezoF9qR6RHHXHtpoH3NI85C6BmtE9dnMnKVqXGbvacrRYBctTC+HRk=
+	t=1740745006; cv=none; b=LASPF3LkVjj6Rke9HuiirWqA4ZmykhJJJqTjMSUmua716LKHWxc3dYXhnsFEQh1c0kscvK0/4zkAyf53/f/tGQM3RAgh8Bv95gI1k51EawqurKBIYSZcLvbsZ2taaNV6D5vbMCygk8POs12op0b98NcnMF7elmMCdvvT+FW0PbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740744925; c=relaxed/simple;
-	bh=jUNIrARAbtbTs0tlrP0Tn9FLBSgxnIB4tXATcm2ewZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YEknVjzaHZkbyEpvRorP8OH3hphOZ1vwEEAHLGEGshTdvmCKAEKqQbq41J5uT7myCHLw5rHPcpv8gT/t1/N0kPIMsGNKrn5zrhzDHZZm7ikqfn5M3iU0VW09p4VkNT+HMkzDzcml9bxemwOZUaSy3ztP4xawjW1KO1aa4mes7c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QuuHrE+m; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740745006; c=relaxed/simple;
+	bh=Imv45Fvq22xNgZhJykuszyMaW/DiQ2hopybitukhTTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BqTYIf1Y5T70R6dVX1Vq0+ncr5xRgDFFUTrsCsk/8nV0z8RO5hFvPUktwIbm4hyUvgRWXbUDGCIJdUt/lVQZP0qI9afFpZr3ChyQ4B94QueifdtT4+qtamq45ZbmpUUfjmlcYm+82+MhCrixTtWKqH9m1yXKMXKZt14QgqvEeyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F2S4+9ai; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QuuHrE+m"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-6fd2fca1cebso12870757b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:15:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740744923; x=1741349723; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUNIrARAbtbTs0tlrP0Tn9FLBSgxnIB4tXATcm2ewZk=;
-        b=QuuHrE+mpQ/NoTWgX7ZAEzezNs+vN6gNvLOcqVVEKYYrdNQeOUjuZuSQCzUDbUIqjp
-         UzSlYXbZDIOLJpD/E1Kx4svNG2JWP5HpevbzWm1fSjVUAgrA4e2U9qJDjwYxpfB8hV1V
-         tcJagQAH30HXsaIKpyw+4jFu2PNDuQ7rfnGHABCx2B+7EYFTA45H/mA3Q9fDnAtDX0E7
-         232ru8SSxbyvw3/Jccu8oMpTT8Q+iQe2dM9jSXthoDyUFqJc+vqlGrN+av38Tnbn8Kfx
-         iBFyZ1zSnVHP5T4LXbci5VDQzRDmlx8bxqebZAWbLyfwAn9+sSqrkJ3q6raUiES6w7Y+
-         Ukzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740744923; x=1741349723;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jUNIrARAbtbTs0tlrP0Tn9FLBSgxnIB4tXATcm2ewZk=;
-        b=KukxTTcjW2TadzcnxmwnDlMo4ERAXOuW8NAmMJ3yBQ1Xgu3uyewbROznwScvjwSnt4
-         wTAqogaCTsIa6z32Ppzc5zZ4PZcWF5/2Q8Ycy86OtO2o9GoHiGCF3T4xHhxGjQkVswB2
-         NBmQdFmKT5sXyfdxbCeSOlU+gbVqSxjlYr+STN7TNX6SgE6eCafwwYnL3IQyvZ4lmNgQ
-         PRPnmY1aofVQLuZ/dbEHwrUV5QwH4/czRwwqAcJsM//rcpy4OvxiER0Eo6xhqAjBiP2H
-         gUtIavFGkcfch4xb61KMaRaGDahhzehHBsvCSTQeA7FXKnpMFIBqYmni3t9oBYDfl+UV
-         wYsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgqv2YdRdDdLqKNnHnVGQhcW652e4feLNReiWH6ocZBTAy14zt+iuxIAkCfSjZl1G+COQU/LbNltgea8w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKl2kicYrf4gAdzwEx9XGxYf3JRohU6pMRwo3j7e3LWVDYvuyg
-	l6REtggEl1DRyYxdS/pRgylsgyzl0d7zpeqGIztzSEYyQ08ayqexAh3qS1h5Uhc2CF46aQqgs6i
-	BBqUPhG86YIvJ+A2z8QVYRlCan5NRqzPIRF84rqcqvSF2xBFZ
-X-Gm-Gg: ASbGncu3Vh8t8XKgzb6ahPMjR2uOxiWmdGhb3+Ohjhh1TOuuMiQmMjWQjYXdd82PIXs
-	58XbafCG1hmOikr4y+KHTNmj/+36p/5YfDdsjUUT40TRtz0npnpV40rj8aNnghEBwqZsXDIkNaP
-	RjwII3aSY0
-X-Google-Smtp-Source: AGHT+IHT7obeRQVC5jfTWOVMXwZbo8MvDy1vz1fLAzz3uGYU/jwe30ZeBEtELX2ss/DGYLXh7XY0o+RqytL8ARTZDYA=
-X-Received: by 2002:a05:690c:4a0e:b0:6fb:1c5a:80fc with SMTP id
- 00721157ae682-6fd4a0c405amr41901307b3.26.1740744923010; Fri, 28 Feb 2025
- 04:15:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F2S4+9ai"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740745004; x=1772281004;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Imv45Fvq22xNgZhJykuszyMaW/DiQ2hopybitukhTTw=;
+  b=F2S4+9aiBLQsTtpvWdNfvq/Rx5eI+WVP+ICccKHX6fJRwc7vFcyqzGCr
+   6kzEWib1csPKxZ7pR18FGzE+qo3Ivrvi9LZmghLyiQhxUptuWaW1bDob4
+   3nrgB/gttWgQyMNdJ1F0kSddM5yiJinmlApd3O2UoRQ0myo7Hp6Gj4I9/
+   NY+qX7htf33f4RtHq9JLvwncLZOOV6IknIsQb3KcI1ra0a6AXBDgIQhqJ
+   wiCx8ysROzv/siuW1aVx9Zn6JrPI04PSRcPo8JAecKR2gIGSivGwYAqBu
+   3qCQbOy/dARujyJiTDe3K5rAkFqc8B8745Vb52obGNHEnn2LQbeB0Rzwh
+   w==;
+X-CSE-ConnectionGUID: PjKNm9exRLWJ2+tRC/eZpQ==
+X-CSE-MsgGUID: xRSgc5E8QF6n6VLpeLixFw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="59209245"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="59209245"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:16:43 -0800
+X-CSE-ConnectionGUID: kYvVF8i1R3O7LxR6R+sejg==
+X-CSE-MsgGUID: kb9H8yrsTbKd+EIxCKSNeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="121931592"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:16:40 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tnzIC-0000000FwOX-1qG2;
+	Fri, 28 Feb 2025 14:16:36 +0200
+Date: Fri, 28 Feb 2025 14:16:36 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "pmladek@suse.com" <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+	"corbet@lwn.net" <corbet@lwn.net>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"apw@canonical.com" <apw@canonical.com>,
+	"joe@perches.com" <joe@perches.com>,
+	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	"sven@svenpeter.dev" <sven@svenpeter.dev>,
+	Janne Grunau <j@jannau.net>,
+	"alyssa@rosenzweig.io" <alyssa@rosenzweig.io>,
+	"asahi@lists.linux.dev" <asahi@lists.linux.dev>
+Subject: Re: [PATCH v4] lib/vsprintf: Add support for generic FOURCCs by
+ extending %p4cc
+Message-ID: <Z8GpJDGeJVHbIy8X@smile.fi.intel.com>
+References: <DB7F502D-1477-49C9-A36D-1DEE408ED23C@live.com>
+ <Z8B6DwcRbV-8D8GB@smile.fi.intel.com>
+ <PN3PR01MB9597916417D398179C55BD98B8CD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220-rk3588-gpu-pwr-domain-regulator-v6-0-a4f9c24e5b81@kernel.org>
-In-Reply-To: <20250220-rk3588-gpu-pwr-domain-regulator-v6-0-a4f9c24e5b81@kernel.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 28 Feb 2025 13:14:47 +0100
-X-Gm-Features: AQ5f1JrDK1Y4U3HrAxZBGp7DwLtxTGI5xNt7avBzml29SRZW6KdhhTSUIQ_s8IE
-Message-ID: <CAPDyKFpQaX8nUt_OQ-hwB+zYqWVCLKci2BmhrBOYUTcrkOMv9g@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] Fix RK3588 power domain problems
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Elaine Zhang <zhangqing@rock-chips.com>, 
-	=?UTF-8?Q?Adri=C3=A1n_Mart=C3=ADnez_Larumbe?= <adrian.larumbe@collabora.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Peter Geis <pgwipeout@gmail.com>, 
-	Tomeu Vizoso <tomeu@tomeuvizoso.net>, Vignesh Raman <vignesh.raman@collabora.com>, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN3PR01MB9597916417D398179C55BD98B8CD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 20 Feb 2025 at 19:58, Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
->
-> Hi,
->
-> I got a report, that the Linux kernel crashes on Rock 5B when the panthor
-> driver is loaded late after booting. The crash starts with the following
-> shortened error print:
->
-> rockchip-pm-domain fd8d8000.power-management:power-controller: failed to set domain 'gpu', val=0
-> rockchip-pm-domain fd8d8000.power-management:power-controller: failed to get ack on domain 'gpu', val=0xa9fff
-> SError Interrupt on CPU4, code 0x00000000be000411 -- SError
->
-> This series first does some cleanups in the Rockchip power domain
-> driver and changes the driver, so that it no longer tries to continue
-> when it fails to enable a domain. This gets rid of the SError interrupt
-> and long backtraces. But the kernel still hangs when it fails to enable
-> a power domain. I have not done further analysis to check if that can
-> be avoided.
->
-> Last but not least this provides a fix for the GPU power domain failing
-> to get enabled - after some testing from my side it seems to require the
-> GPU voltage supply to be enabled.
->
-> This introduces devm_of_regulator_get without the _optional suffix, since
-> that is more sensible for the Rockchip usecase. Longer explanation can be
-> seen in patch 6, which adds the handling to the Rockchip driver. My merge
-> suggestion would be that Mark provides an immutable branch to Ulf.
->
-> The last patch, which updates the RK3588 board files should cover all RK3588
-> boards that are currently in Heiko's for-next branch. Any board missing the
-> update will behave as before, so it is perfectly fine not to update all DT
-> files at once (in case I missed any).
->
-> This is based on Heiko's for-next branch. Also it's probably worth mentioning,
-> that mesa CI is carrying this patchset for quite some time now.
+On Thu, Feb 27, 2025 at 05:10:52PM +0000, Aditya Garg wrote:
+> > On 27 Feb 2025, at 8:13 PM, andriy.shevchenko@linux.intel.com wrote:
+> > On Thu, Feb 27, 2025 at 06:30:48AM +0000, Aditya Garg wrote:
 
-[...]
+...
 
-I have pulled patch 1 from Mark's tree and applied patch 2 -> patch 7 for next.
+> >> +Generic FourCC code
+> >> +-------------------
+> >> +
+> >> +::
+> >> +    %p4c[hrbl]    gP00 (0x67503030)
+> >> +
+> >> +Print a generic FourCC code, as both ASCII characters and its numerical
+> >> +value as hexadecimal.
+> >> +
+> >> +The additional ``h``, ``r``, ``b``, and ``l`` specifiers are used to specify
+> >> +host, reversed, big or little endian order data respectively. Host endian
+> >> +order means the data is interpreted as a 32-bit integer and the most
+> >> +significant byte is printed first; that is, the character code as printed
+> >> +matches the byte order stored in memory on big-endian systems, and is reversed
+> >> +on little-endian systems.
+> > 
+> > Btw, this sounds to me that 'h' should be accompanied with 'n', otherwise it's
+> > confusing why BE is the host order out of the blue.
+> > so, it needs more information that this mimics htonl() / ntohl() for networking.
+> > 
+> > Does 'r' actually should be 'n'?
+> 
+> I believe you mean negative endian? Can be done.
 
-Note that, patch6 (the DT patch) is also available on the immutable dt branch.
+No, 'network order' / 'host order'. That's where BE comes from, but you may ask
+the original author about this. h/r pair makes little sense to me as it
+inconsistent.
 
-Thanks and kind regards
-Uffe
+> >> +Passed by reference.
+> >> +
+> >> +Examples for a little-endian machine, given &(u32)0x67503030::
+> >> +
+> >> +    %p4ch    gP00 (0x67503030)
+> >> +    %p4cr    00Pg (0x30305067)
+> >> +    %p4cb    00Pg (0x30305067)
+> >> +    %p4cl    gP00 (0x67503030)
+> >> +
+> >> +Examples for a big-endian machine, given &(u32)0x67503030::
+> >> +
+> >> +    %p4ch    gP00 (0x67503030)
+> >> +    %p4cr    00Pg (0x30305067)
+> >> +    %p4cb    gP00 (0x67503030)
+> >> +    %p4cl    00Pg (0x30305067)
+> >> +
+
+...
+
+> >> +    switch (fmt[2]) {
+> >> +    case 'h':
+> >> +        val = orig;
+> >> +        break;
+> >> +    case 'r':
+> >> +        orig = swab32(orig);
+> >> +        val = orig;
+> >> +        break;
+> >> +    case 'l':
+> >> +        orig = (__force u32)cpu_to_le32(orig);
+> >> +        val = orig;
+> >> +        break;
+> >> +    case 'b':
+> >> +        orig = (__force u32)cpu_to_be32(orig);
+> >> +        val = orig;
+> >> +        break;
+> >> +    case 'c':
+> >> +        /* Pixel formats are printed LSB-first */
+> >> +        val = swab32(orig & ~BIT(31));
+> >> +        pixel_fmt = true;
+> >> +        break;
+> >> +    default:
+> >> +        return error_string(buf, end, "(%p4?)", spec);
+> >> +    }
+> > 
+> > Actually you can replace all these orig copies by introducing a new boolean, pixel_be.
+> > 
+> > Will become
+> > 
+> >    switch (fmt[2]) {
+> >    case 'h':
+> >        val = orig;
+> >        break;
+> >    case 'r': // or 'n' ?
+> >        val = swab32(orig);
+> >        break;
+> >    case 'l':
+> >        val = (__force u32)cpu_to_le32(orig);
+> >        break;
+> >    case 'b':
+> >        val = (__force u32)cpu_to_be32(orig);
+> >        break;
+> >    case 'c':
+> >        pixel_fmt = true;
+> >        pixel_be = orig & BIT(31);
+> >        /* Pixel formats are printed LSB-first */
+> >        val = swab32(orig & ~BIT(31));
+> >        break;
+> >    default:
+> >        return error_string(buf, end, "(%p4?)", spec);
+> >    }
+> > 
+> > And with this the existence of 'val' now becomes doubtful, we may reuse 'orig',
+> > just name it 'val' everywhere, no?
+> 
+> In case c, val != orig, in rest it is. We can just use pixel_fmt to check
+> this condition, but places where we use orig, and not val will need an if
+> statement or something similar. Tbh, it's an unecessary complication. You
+> might want to see this part of the code:
+
+Fair enough.
+
+> 	if (pixel_fmt) {
+> 		*p++ = ' ';
+> 		strcpy(p, orig & BIT(31) ? "big-endian" : "little-endian");
+> 		p += strlen(p);
+> 	}
+> 
+> 	*p++ = ' ';
+> 	*p++ = '(';
+> 	p = special_hex_number(p, output + sizeof(output) - 2, orig, sizeof(u32));
+> 	*p++ = ')';
+> 	*p = '\0';
+> 
+> Here, special_hex_number is common to all cases.
+
+I see, thanks for pointing this out.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
