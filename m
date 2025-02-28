@@ -1,91 +1,151 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E2189B84;
-	Fri, 28 Feb 2025 16:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35200189B84
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761590; cv=none; b=CGX2nS5+vqFbzWgCGh6+L6GrAJV9ZOHF6fMCETepf1B3IN3XLDDkshO0VBgwIvJqUzcWZwXwB+WpeE3jgLVYEDPs2+RwlmUq1qZRdfNuNvw2WCzMmLtdSAVWm3SbpbWL6Orm9pqXsFk6I8PK3bon3NyUMxnGKFznCwFiXX4rLZo=
+	t=1740761603; cv=none; b=XeeoG7I+ytkt6whAKqV5mRKmIt79t/TPH3jhD8yofIJb9DCT29qUuyHjh4C0mUsJUIYYa4B0J4z9fL2un2cFxmcycPEsjqSGsGZDOXkGaCzYs/JvVbbEwyNH3eqV/ywKSvkFTW3nv5cIiviewZz03ejES3uffSDhqb4/h9cowHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761590; c=relaxed/simple;
-	bh=bLFy4dLPTMPmfedYKSEthq725z2E3f8b5RvrPsWSXqU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gfjNjGh2Nb5Nhja/5vZdEeDZdzirNAnvQRakBERHZieRoUAHOexKx7OplbNEtdVCewC4fzhEPjuxpCFRiAy0vXGOX4cFKMRZCfQ9RkG03qQkCtPnnvXG+KijKdixpXOBbKpw2PfvUOFVpmbc6fS2ue6Q0/g0ZLqX7x6hTtaggiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FeAAJdLN; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FeAAJdLN"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2fe5d75ff8cso610534a91.3;
-        Fri, 28 Feb 2025 08:53:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740761588; x=1741366388; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bLFy4dLPTMPmfedYKSEthq725z2E3f8b5RvrPsWSXqU=;
-        b=FeAAJdLN6/boNAdDSYWqq/ej9a+MiKQcfhEqYVMtlu25RiFhFySIbfkVI0Y93yD5pN
-         StSl9GzZMKV/ZZNHhCOvX6bTYuu2fMIMeUjk+JAYj8x50PDSRNf1pdBt82hjp9VSiGmk
-         p3BFnPb2V6nX1NH1zrzy0jB72+aJpJCB2FG7mi0EwHpG2HStrQw+YbsLjg1NJftNUHfP
-         BbViS0NrLJBcO63eP3j31m+NkZJneOzjPZlmLN5OSKxXgrbRdiowSgv8m7U61cEYctmE
-         XK5V0dLrLHftecqIAhuYc5MfLLa9KIOAUtv0GE7RjXBtuRV7bUsml/y5o7plpQruPv1J
-         gZRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740761588; x=1741366388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bLFy4dLPTMPmfedYKSEthq725z2E3f8b5RvrPsWSXqU=;
-        b=WsM4ZQ6cqbRIGoK1M+4+C2DI9nL2M9e9s6eIhUz8yQVjYYF2wX/cGFrUwaj6Y/vcIi
-         f5Iy0TZ0HuqnmYrxTF4nu6HW1cD+J3oPUNQ128QQ0rF5F7NZL+0b3LdQWs62wFKZeLU0
-         FWi1mySMFIyZhJMHv6GKskpUdGp51vVcf68P6lELv9hbdQIYWA5GE/c4F+fj8LF4cVRI
-         7AvTZE2nvDAicxGPpDWO/H9swvxtsbEz18ldgDdv2flFrLxxOHuLA/x7QJl2pSIKkDvl
-         0SnZnkziN35SgryNpdrqje9Hvb8KI/OOapOjvlkhziRgSQAeGt+8stRLHeu5Cnol96Mi
-         /3Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBfGWlI2gElZ5jZrCR1LBySK3JFHFF6JkojSzSWMf7rSJIGxV+kGYrNqEk8BKa7OMUmpKb9prh5tzDet0do9Q=@vger.kernel.org, AJvYcCVN1JopyZZTwSBdZ1FmkRWbVRbD3y5j4aafGVcC/4hOoILC2OLaD4B5PerzpNQtTNqJV7cpL/4zX/WZhHc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywd6kTunF/n9pkeLzvbqYoTCH3IhOedQBfjv7rD0AmS7uCy5UR
-	z0Jd+hai2ARdPfnmi4F+/Cu+USC7UJL/rWcG8qFNZfRpxHPEnwhT7mHbTCeeQDxnn3UYcfsHfH9
-	+A+tMqGTww6oR4CFROhoPPvj7vlM=
-X-Gm-Gg: ASbGncsMvS0k8Yt8Pkrd48REIr1BkcH/V2mJ0Cz82Hvr8R+7ft7zgHT8d8WJZLj3n4T
-	Ml4wrgGHsyROSTlVRNGYmtiyOzP8kKzDH5j5FgqQ2j9YfdoZcxYRYFjjBKKjzoVWkAcUo/oOxMH
-	0/iG/yXas=
-X-Google-Smtp-Source: AGHT+IEabpHlD/ZFJMOi1Nz8EESWEiDt15fTdWfPe5Dox78oNhY13LkdOtELGxHB3stZA3v+yeCpK201xo74IBiJJhM=
-X-Received: by 2002:a17:90b:1c0e:b0:2fc:25b3:6a91 with SMTP id
- 98e67ed59e1d1-2febac0576amr2629651a91.5.1740761588035; Fri, 28 Feb 2025
- 08:53:08 -0800 (PST)
+	s=arc-20240116; t=1740761603; c=relaxed/simple;
+	bh=tgmOZUaV5HcyzBER0+xh4TbnFQgsCQx+ORmnNsm9C2s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rprbj7krWusEAzOf4tfJwYG68Nfs/Vuw3l0uQ9UztHvY8mLdzKPQ9YfS0NUDByKqbcWamzoFxtw+eAEl+AgZs37hLJzlgVHe3bAuXAzM+nCBiGgS0lldN34ipOICY6f7uEd29nFfBVLTFBukJXNZ1Arl8lDdHXFdGQEYs5qeCPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A83EF1515;
+	Fri, 28 Feb 2025 08:53:36 -0800 (PST)
+Received: from [10.1.36.17] (e122027.cambridge.arm.com [10.1.36.17])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 535E43F6A8;
+	Fri, 28 Feb 2025 08:53:19 -0800 (PST)
+Message-ID: <6218ded2-dd8b-4761-b4f3-975107a1f7c4@arm.com>
+Date: Fri, 28 Feb 2025 16:53:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <kQ8hbiYXcV2MseWnElEexwgQswt23842ggoLF2xsd1hDd-4K106zO_gGho5K6KI147luazt2rZNOY3NOJP4JOw==@protonmail.internalid>
-In-Reply-To: <kQ8hbiYXcV2MseWnElEexwgQswt23842ggoLF2xsd1hDd-4K106zO_gGho5K6KI147luazt2rZNOY3NOJP4JOw==@protonmail.internalid>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 28 Feb 2025 17:52:54 +0100
-X-Gm-Features: AQ5f1JoTGWdcCTTOPcGWqmyjXyMYZPDtD1emKLgUhr33suYkWbeR2ljxGv-2qMU
-Message-ID: <CANiq72kgAh2MkfX0+ihjgTAvrexmg+WoPyQnaQ6n1Yq=u61OQg@mail.gmail.com>
-Subject: Re: [PATCH] rust: adding UniqueRefCounted and UniqueRef types
-To: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] drm/panthor: Replace sleep locks with spinlocks in
+ fdinfo path
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ Boris Brezillon <boris.brezillon@collabora.com>,
+ Liviu Dudau <liviu.dudau@arm.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 28, 2025 at 5:06=E2=80=AFPM Oliver Mangold <oliver.mangold@pm.m=
-e> wrote:
->
-> should I post it again with a fix, then?
+On 27/02/2025 23:16, Adrián Larumbe wrote:
+> Commit 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo
+> group samples") introduced an xarray lock to deal with potential
+> use-after-free errors when accessing groups fdinfo figures. However, this
+> toggles the kernel's atomic context status, so the next nested mutex lock
+> will raise a warning when the kernel is compiled with mutex debug options:
+> 
+> CONFIG_DEBUG_RT_MUTEXES=y
+> CONFIG_DEBUG_MUTEXES=y
+> 
+> Replace Panthor's group fdinfo data mutex with a guarded spinlock.
+> 
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+> 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo group samples")
 
-Yes, sorry, we need properly formatted patches.
+Missing "Fixes:" prefix
 
-If you are editing manually the patch, I would recommend testing if
-you can apply the patch locally before submitting (and check that the
-commit message and so on is correct).
+> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Otherwise
 
-Cheers,
-Miguel
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+> ---
+>  drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
+> index 1a276db095ff..4d31d1967716 100644
+> --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> @@ -9,6 +9,7 @@
+>  #include <drm/panthor_drm.h>
+>  
+>  #include <linux/build_bug.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/dma-mapping.h>
+> @@ -631,10 +632,10 @@ struct panthor_group {
+>  		struct panthor_gpu_usage data;
+>  
+>  		/**
+> -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
+> -		 * and job post-completion processing function
+> +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
+> +		 * callback and job post-completion processing function
+>  		 */
+> -		struct mutex lock;
+> +		spinlock_t lock;
+>  
+>  		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
+>  		size_t kbo_sizes;
+> @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
+>  						   release_work);
+>  	u32 i;
+>  
+> -	mutex_destroy(&group->fdinfo.lock);
+> -
+>  	for (i = 0; i < group->queue_count; i++)
+>  		group_free_queue(group, group->queues[i]);
+>  
+> @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
+>  	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
+>  	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
+>  
+> -	mutex_lock(&group->fdinfo.lock);
+> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
+> -		fdinfo->cycles += data->cycles.after - data->cycles.before;
+> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
+> -		fdinfo->time += data->time.after - data->time.before;
+> -	mutex_unlock(&group->fdinfo.lock);
+> +	scoped_guard(spinlock, &group->fdinfo.lock) {
+> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
+> +			fdinfo->cycles += data->cycles.after - data->cycles.before;
+> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
+> +			fdinfo->time += data->time.after - data->time.before;
+> +	}
+>  }
+>  
+>  void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+> @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
+>  
+>  	xa_lock(&gpool->xa);
+>  	xa_for_each(&gpool->xa, i, group) {
+> -		mutex_lock(&group->fdinfo.lock);
+> +		guard(spinlock)(&group->fdinfo.lock);
+>  		pfile->stats.cycles += group->fdinfo.data.cycles;
+>  		pfile->stats.time += group->fdinfo.data.time;
+>  		group->fdinfo.data.cycles = 0;
+>  		group->fdinfo.data.time = 0;
+> -		mutex_unlock(&group->fdinfo.lock);
+>  	}
+>  	xa_unlock(&gpool->xa);
+>  }
+> @@ -3537,7 +3535,7 @@ int panthor_group_create(struct panthor_file *pfile,
+>  	mutex_unlock(&sched->reset.lock);
+>  
+>  	add_group_kbo_sizes(group->ptdev, group);
+> -	mutex_init(&group->fdinfo.lock);
+> +	spin_lock_init(&group->fdinfo.lock);
+>  
+>  	return gid;
+>  
+
