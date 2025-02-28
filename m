@@ -1,217 +1,131 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAFFA25B68C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736106; cv=none; b=m218Z/vmYcg/bE4ErnN/dyYh96JM0qbxmzLHi3gYuwo4jHu9pkdq6/sNAhoe/5Jkhs9BuLqDOlmiibgcESFFqHoV5Z9TZatBp2a5VP8QclbC+FuMbL/s0cH9cDB8nLlc1mvRX1bLE8x8rhy2K0G0w+oz6J6Gjm87oq0LKPY46h4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736106; c=relaxed/simple;
-	bh=XYLUnTNaQuIXtH7OIV1lfwAh6b5aC2kp3AK1Hzj5ows=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=F8LVmHmAUROQtZr1vCFVolAMS7uARRLZZ5B0+u+7ihJbZ4sjPkY6oIDvdFAk94XYfKkv6AnC2iBewDdW/M9206BFyJ9+mbWNLVchApjjVPEALp/teZzYRbuVXcSCkBu7eU5eI7t6dH3TaKUoNbU4bb/wueKqG/Glc4v0dUrpbtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LHuSGsB/; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D21F9416;
+	Fri, 28 Feb 2025 09:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=81.169.146.216
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740736191; cv=pass; b=mfNcdJ+eA+IC/lmIHFCr6al5DovTo9f4mbCWsBhjWVLCc95DNoKkqpL9XUDHuRgL4h8+cE0DPXnM+KQzj85IJmZYA8lTN7K9mYlONGVjfXFtCIUGAYr/Ou20RHb9P+bsvHMZBciThIe/KwcSnkfS4OoEG6mD/OkvkmrsD/39Rsk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740736191; c=relaxed/simple;
+	bh=VYGAI3rv8ysclVl7aBNvJn+D75Mvc5tRYEQHog/yWUs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=HwEqcJdS5h1xvKOxSbtLCwLD54ywiYGwtdrT7NGwYDCayrbwlQztCpOjvPFfwRPuX0dSxYs9P5ioWqKwH4daKJXRjYli/Lq1VXsuXKH2dUWXXbXQU0xQKXBofG8yvRtM0p8GFz89Tr5QgZiocu12GWuXH0qDUT0YgZfKemmuGqc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com; spf=pass smtp.mailfrom=goldelico.com; dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=QKaDaYyR; dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b=wV3eEW2t; arc=pass smtp.client-ip=81.169.146.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=goldelico.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goldelico.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LHuSGsB/"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250228094821epoutp013c656f2f7acd331f3dc648c742f62d96~oVkLjTQjx1282312823epoutp01F
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:48:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250228094821epoutp013c656f2f7acd331f3dc648c742f62d96~oVkLjTQjx1282312823epoutp01F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740736101;
-	bh=18iY0XXTL9npz3MKKWokwxOCWnjgB6CSduF8tMUm4D0=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=LHuSGsB/rUi328g13YXk+u3ZJOcNkembfbeAzApQD93vSs+xVNICeTDCmPbZy3nQD
-	 6v4dN8Fq6nb+Vw/axM2Izj2rzJV7VF7XihrLaYOz46QswtqE3AFWqhkJVg2dSIUtjE
-	 IJmkj1CFH3QRDDo5FyZFtAhah7TxxTg35fX+L02Q=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250228094820epcas5p36bb70d2da5c76c8a64f7680975938b10~oVkK4BMF72824028240epcas5p3z;
-	Fri, 28 Feb 2025 09:48:20 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z43LC21S0z4x9Pv; Fri, 28 Feb
-	2025 09:48:19 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CC.9D.19956.36681C76; Fri, 28 Feb 2025 18:48:19 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250228093256epcas5p1584a4e85ed027dd253a5d8617366eeae~oVWuK-JrX1275612756epcas5p1x;
-	Fri, 28 Feb 2025 09:32:56 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250228093256epsmtrp17c571e0bcfc27d794238cdb648d7b327~oVWuGLwdF2192121921epsmtrp1t;
-	Fri, 28 Feb 2025 09:32:56 +0000 (GMT)
-X-AuditID: b6c32a4b-fe9f470000004df4-4d-67c186634c18
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	15.5E.33707.8C281C76; Fri, 28 Feb 2025 18:32:56 +0900 (KST)
-Received: from FDSFTE245 (unknown [107.122.81.20]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250228093255epsmtip2deda8297f5f97a1b168b219bbac633d2~oVWtRHRt00156501565epsmtip2K;
-	Fri, 28 Feb 2025 09:32:55 +0000 (GMT)
-From: "Aatif Mushtaq/Aatif Mushtaq" <aatif4.m@samsung.com>
-To: "'Vinod Koul'" <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <aswani.reddy@samsung.com>
-In-Reply-To: <Z8Ab3VcAXf5z7UqE@vaman>
-Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-Date: Fri, 28 Feb 2025 15:02:38 +0530
-Message-ID: <000501db89c3$bf6de540$3e49afc0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="QKaDaYyR";
+	dkim=permerror (0-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="wV3eEW2t"
+ARC-Seal: i=1; a=rsa-sha256; t=1740736169; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=MoUDHBCqtSFYwuQ9e0LiSC/g2V3goZtdS45GBI8g6wFXWskbQxb82c1Aazw4huB3DU
+    SyVQCNgrXK7kNHtQHxwaioPHqESnflJo/B1GqfBc3s0WydAETZuHFKZ4ktNm/G1A3jKB
+    /9Jxsde5pxzRZ6n3w/VP0NjYfcpsAp0FJve7/QQnv/f2RcKXQ+F/JYE9KYuMqvoff1xS
+    G17u/H1NTrstN5I8Cjn+3HpGmRvujeW05X9xsVSLRzX9PvxUmnYtmItZ5E5J3rrvAXVc
+    qz85CwV5OYH6BR1CtCUGwLilJjHXdsb4WeUqmWR7/QbK6mNBO6naGOnsifhvlTNGoik4
+    rNWw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1740736169;
+    s=strato-dkim-0002; d=strato.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=VYGAI3rv8ysclVl7aBNvJn+D75Mvc5tRYEQHog/yWUs=;
+    b=c1W4Dk9Ng7xrwmvP5Mlyd8aB60hYEmkXYpPTO3hCQSbzjYSGuUEottCLeS0IwhRuZG
+    0/obPRt8rh1nCK6Wr/lxhtNlVzTHFOWTIt7zzA/oFKJHh0gIdqYFzeaETPxn2SwkiJai
+    GVp3L1ljaJHhVJgQho5IREM4qanDAOKid9oSDwjc18bNr1zuEv7+4+0tSacpwxjTsL1P
+    J1KLBUPdo8x05cPrqZJv03qFEThfop/yJvHsoRZ9WKEiwmemjG8Zda5vXvbVJHfZndys
+    LAF03I+3h3Aox/gT168ztW4Wa8QcejSgPRJ094j98sjEqc3j/7qp93Gk8TvvAcJA2up5
+    Klng==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1740736169;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=VYGAI3rv8ysclVl7aBNvJn+D75Mvc5tRYEQHog/yWUs=;
+    b=QKaDaYyRlqG49ZVDPa96Lm2LFSGCSrbSpA7ZsfXEP+T3JTbP9NwAfMCpbEkiNgKtdS
+    glW/+RNe0gdvsw5IzXzmYDylNfq4AP8x8LWgd+V3ufiJOlsxaXim1U844pCKzekEM3r5
+    lWElZ2y07TJkHaTItoxv+999mdRZ1PEbOz3cUF/lzBVkDsge9Qp85pT8XwOxJXFSQUXZ
+    A6IWri/q6uaahnb3kmCgqjSF7d1t+DcDUlDMLwjAlzkCzjh1SCIQ1kCbQ5GEPDluL0E1
+    Oftth+0qQs5JJ/lKDBLzL0fqt+JNEQgNvzGBCOEpheHgCOw3Z6vyI7NUI8ak1P5MFhss
+    iBDg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1740736169;
+    s=strato-dkim-0003; d=goldelico.com;
+    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
+    From:Subject:Sender;
+    bh=VYGAI3rv8ysclVl7aBNvJn+D75Mvc5tRYEQHog/yWUs=;
+    b=wV3eEW2tPjNrAhtKFZGuAFjsyCV9y6LUgNADBooLbAiqtEDd8Hjb5mNeryHcc3rPlp
+    VnaxogI2u01Ks4MY4DBw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o12DNOsPj0lFzL1yeTkZ"
+Received: from smtpclient.apple
+    by smtp.strato.de (RZmta 51.3.0 DYNA|AUTH)
+    with ESMTPSA id Q56adc11S9nSGy3
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+	(Client did not present a certificate);
+    Fri, 28 Feb 2025 10:49:28 +0100 (CET)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKUCj5EGvbQKqHTg
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjk+LIzCtJLcpLzFFi42LZdlhTXTe57WC6wZsrPBaHNm9lt1g99S+r
-	xeVdc9gsFm39wm6x884JZgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
-	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITtj9sUHzAXtshWzW54wNjD2iXcx
-	cnJICJhIdNz8xdTFyMUhJLCbUaJx1hR2COcTo8SDXw2sIFVgzsoFhjAdcyZuY4Mo2sko8fXH
-	WqiO54wSHyZfYwGpYhOwkjj/ax8biC0ioCqx5ckDIJuDg1mgUmLLK02QMCdQeM7clewgtrCA
-	i8TJc3/AylmA4odfrAKL8wpYStzcupMZwhaUODnzCdh4ZgF5ie1v5zBDHKQg8fPpMlaIVW4S
-	O68uZIOoEZc4+rOHGeQ2CYGP7BInb+1ngWhwkehZNZ0NwhaWeHV8CzuELSXxsr8Nyk6WuPl+
-	H5SdIzFh4Woo217iwJU5LBC/aEqs36UPEZaVmHpqHRPEXj6J3t9PmCDivBI75sHYShJr3vdB
-	rZWQ+HfwJOMERqVZSF6bheS1WUhemIWwbQEjyypGydSC4tz01GLTAuO81HJ4fCfn525iBCdI
-	Le8djI8efNA7xMjEwXiIUYKDWUmEd1bsgXQh3pTEyqrUovz4otKc1OJDjKbA8J7ILCWanA9M
-	0Xkl8YYmlgYmZmZmJpbGZoZK4rzNO1vShQTSE0tSs1NTC1KLYPqYODilGphsdix92vH4kmNq
-	UB2LUo9f3Lpj16W3X7ty4eYqrjLms8Vyf36eamiu3RAwUX6j5xz2zTPU5ni+bas5/yz4huQV
-	48vV379sPiC7faFCq7y9T2mWjcnBTM+gZS51/okv1gXMXhy5j8V/x46+PUz+3JayhrXHnW/Z
-	Rxfteb1jguTjFTlLA8q23LSydL72RDG73F2482Lw/9NtXz4ark+72P3v+RefOT976zdc3yAm
-	r1/zYLH4u2lWi2ILlXRZl01d1s8oqbWiJ+i+7hT5i/1vF1dGOmwP1DPROMpgu0BMyOdqp1FY
-	Rhm7amsU84zf8wv/xgnZ8G/95vf5adq5hLtXduq6XGH5EvdxkqRwZczVO1eUWIozEg21mIuK
-	EwGuFQ08GQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJLMWRmVeSWpSXmKPExsWy7bCSvO6JpoPpBt0r+CwObd7KbrF66l9W
-	i8u75rBZLNr6hd1i550TzA6sHptWdbJ59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8bsiw+Y
-	C9plK2a3PGFsYOwT72Lk5JAQMJGYM3EbWxcjF4eQwHZGid72Q4wQCQmJ5s5GJghbWGLlv+fs
-	ILaQwFNGiRV7M0BsNgErifO/9rGB2CICqhJbnjwAs5kFaiUeLLrGBDH0EqPE7Qe3WUESnEBF
-	c+auBBskLOAicfLcH7AGFqD44RerwOK8ApYSN7fuZIawBSVOznzC0sXIATRUT6JtIyPEfHmJ
-	7W/nMEPcpiDx8+kyVogb3CR2Xl0IdYO4xNGfPcwTGIVnIZk0C2HSLCSTZiHpWMDIsopRNLWg
-	ODc9N7nAUK84Mbe4NC9dLzk/dxMjODa0gnYwLlv/V+8QIxMH4yFGCQ5mJRHeWbEH0oV4UxIr
-	q1KL8uOLSnNSiw8xSnOwKInzKud0pggJpCeWpGanphakFsFkmTg4pRqY3I5fiuIXWyIiK34l
-	bUOve5sM27p/V6PfbJFJzBDNXXZceR5z7mwO/7aduy6UCCc08l2rNdYyTzWOzpnofVFDNNXq
-	yDxpmzXvHwrybPi+KdTy2HPxiRcTHGUZIi0UYqtTFof9OJu5paBoosG9wH8NHQm2jNZ/d/9L
-	XXNTpj/qla/Npa6AX1NfXIm3jBG7+m9du+mCL+r7NZcaFqzfb9jIWnnv655Pe3Sd7i+wPCJ9
-	pD/yckL0nd0LvYpdneJce00fcL44y8haLFLt0VvMfGVZ0lkdq6Pxc5nmfmGu9y2845+xRPX0
-	7JZ+W7ZFe56IN7z8HB1VziDXMVNciaVa1LV+n2uOa8Mu7shHnHwPliixFGckGmoxFxUnAgCG
-	a0C4/AIAAA==
-X-CMS-MailID: 20250228093256epcas5p1584a4e85ed027dd253a5d8617366eeae
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
-References: <20250210061915.26218-1-aatif4.m@samsung.com>
-	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
-	<20250210061915.26218-2-aatif4.m@samsung.com> <Z8Ab3VcAXf5z7UqE@vaman>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
+Subject: Re: [PATCH] i2c: omap: fix IRQ storms
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20250227224738.6d7ebd8e@akair>
+Date: Fri, 28 Feb 2025 10:49:18 +0100
+Cc: Nishanth Menon <nm@ti.com>,
+ Andi Shyti <andi.shyti@kernel.org>,
+ "Raghavendra, Vignesh" <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Kevin Hilman <khilman@baylibre.com>,
+ Roger Quadros <rogerq@kernel.org>,
+ Tony Lindgren <tony@atomide.com>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+ Reid Tonking <reidt@ti.com>,
+ wsa@kernel.org,
+ Linux-OMAP <linux-omap@vger.kernel.org>,
+ linux-i2c@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ stable@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <137529D7-D8A6-458B-9658-2998F31239FD@goldelico.com>
+References: <20250207185435.751878-1-andreas@kemnade.info>
+ <c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
+ <20250220100745.05c0eff8@akair> <20250227142055.ndzavzysaenoducj@murky>
+ <20250227224738.6d7ebd8e@akair>
+To: Andreas Kemnade <andreas@kemnade.info>
+X-Mailer: Apple Mail (2.3776.700.51.11.1)
 
+Hi Andreas,
 
+> Am 27.02.2025 um 22:47 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> For reference, the sensor involved was the BMG160. Because it is not
+> enabled in omap2plus_defconfig, the issue did not show up early.
+> =46rom my understanding, that there is a NACK after the reset command
+> data byte is sent. @Nikolaus: are there any nice and simple test =
+points
+> for a scope?
 
-> -----Original Message-----
-> From: Vinod Koul <vkoul@kernel.org>
-> Sent: 27 February 2025 13:32
-> To: Aatif Mushtaq <aatif4.m@samsung.com>
-> Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org;
-> pankaj.dubey@samsung.com; aswani.reddy@samsung.com
-> Subject: Re: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> 
-> On 10-02-25, 11:49, Aatif Mushtaq wrote:
-> > Add a new dma engine API to support 2D DMA operations.
-> > The API will be used to get the descriptor for 2D transfer based on
-> > the 16-bit immediate to define the stride length between consecuitive
-> > source address or destination address after every DMA load and store
-> > instruction is processed.
-> 
-> Why should we define a new API for this...? Why not use the sg or
-> interleaved api for this?
-> 
+According to schematics [1] you can either tap the I2C bus at the camera =
+connector
+(pins 3 and 5) or R206 and R207.
 
-Thanks for pointing out, interleaved API can be used for this.
-I will make the change
+For the camera connector you would need a flex cable that fits the =
+SD-52437-2471
+connector.
 
-> >
-> > Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
-> > ---
-> >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> >
-> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > index b137fdb56093..8a73b2147983 100644
-> > --- a/include/linux/dmaengine.h
-> > +++ b/include/linux/dmaengine.h
-> > @@ -833,6 +833,7 @@ struct dma_filter {
-> >   *	be called after period_len bytes have been transferred.
-> >   * @device_prep_interleaved_dma: Transfer expression in a generic way.
-> >   * @device_prep_dma_imm_data: DMA's 8 byte immediate data to the
-> dst
-> > address
-> > + * @device_prep_2d_dma_memcpy: prepares a 2D memcpy operation
-> >   * @device_caps: May be used to override the generic DMA slave
-> capabilities
-> >   *	with per-channel specific ones
-> >   * @device_config: Pushes a new configuration to a channel, return 0
-> > or an error @@ -938,6 +939,9 @@ struct dma_device {
-> >  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
-> >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
-> >  		unsigned long flags);
-> > +	struct dma_async_tx_descriptor
-> *(*device_prep_2d_dma_memcpy)(
-> > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags);
-> >
-> >  	void (*device_caps)(struct dma_chan *chan, struct dma_slave_caps
-> *caps);
-> >  	int (*device_config)(struct dma_chan *chan, struct
-> dma_slave_config
-> > *config); @@ -1087,6 +1091,27 @@ static inline struct
-> dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
-> >  						    len, flags);
-> >  }
-> >
-> > +/**
-> > + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy
-> descriptor.
-> > + * @chan: The channel to be used for this descriptor
-> > + * @dest: Address of the destination data for a DMA channel
-> > + * @src: Address of the source data for a DMA channel
-> > + * @len: The total size of data
-> > + * @src_imm: The immediate value to be added to the src address
-> > +register
-> > + * @dest_imm: The immediate value to be added to the dst address
-> > +register
-> > + * @flags: DMA engine flags
-> > + */
-> > +static inline struct dma_async_tx_descriptor
-> *device_prep_2d_dma_memcpy(
-> > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
-> > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long flags)
-{
-> > +	if (!chan || !chan->device || !chan->device-
-> >device_prep_2d_dma_memcpy)
-> > +		return NULL;
-> > +
-> > +	return chan->device->device_prep_2d_dma_memcpy(chan, dest,
-> src, len,
-> > +						       src_imm, dest_imm,
-> flags); }
-> > +
-> >  static inline bool dmaengine_is_metadata_mode_supported(struct
-> dma_chan *chan,
-> >  		enum dma_desc_metadata_mode mode)
-> >  {
-> > --
-> > 2.17.1
-> 
-> --
-> ~Vinod
+The resistors are located near the pogo pin connector for the right =
+speaker (all
+are near the antenna connector). If you need a photo please let me know.
+It would be better to solder tiny wires...
+
+BR,
+Nikolaus
+
+[1]: https://projects.goldelico.com/p/gta04-main/downloads/48/
 
