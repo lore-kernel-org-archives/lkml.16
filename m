@@ -1,90 +1,295 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F8E2628C
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1B654782
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740707393; cv=none; b=SwT93jFvtZdx8nkISAdkVOm9IR4nEvm7GlhsCzQULNq8PTyiTKQoCfk66C/eeZa8az3jK+qJdeAAdxXRL4Ztpt4KiUEznGAj7OZ1T1eCNT1rvlyxtiyTExeMUrJrFWElGHFRBQ1Y5T4eeFtySpQ2w6f/MBfisLv/+yeQRmEbn+0=
+	t=1740707393; cv=none; b=ARprwfQDEmv4UoqpYGPUumcNvLOiKdAIyYgri2sn+tK353x/b7L/PAbLAwZKd9RpVm2mAvVi1tGi7T2uPsNGCkMr8H8fcNy7yRATVjXtD9YV2xDan2LRTAEqJeE2vjGW4gQ0vQo+kS2i8HMmUZIWqFnf0kmVPm6qWOMx+AvG+XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740707393; c=relaxed/simple;
-	bh=ktRhhmnrpNjYS2J+Fqf7mz5+zvoyQaMFSiTUEmlwv0Q=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=joUEuDKNIFpsu1Ndu7FslLOzHyalI/QL4P7b5bCjEfGIixAtP9mjig0I3FgMFDhoEOWdRK0r1b3GFEKwfgFEAPFaS4rU004mIzOfF6t8sJmHAxvlxTewhZXq7erNsHyiK5txzrYkCbLJrycIUUIW6Ok4xRtVfdQ5vkYU4m8dfIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=vG8vwXfU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	bh=0VY1TID949UImeVHNR6LSjUTfsDAex3p0YM5P5Y5bYU=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XhH+EIJ10y3O0OPgHw2DZ4qKM1s8W5WzNoi3IvOi1FFbgSnha1O3ut6HtHOw6YZk5WrpSyaQIRzn2U0+aiZcbR/o8ejYr4gEr/ADHmb9sb/jSUlESPx37xbpTUJmmeZU7pkHzf5TzPk0otZx3OQm27q40aRa9mHbj5mxkC/mkg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sdg0zqbn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="vG8vwXfU"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51S1n2tw2393688
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 27 Feb 2025 17:49:02 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51S1n2tw2393688
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740707343;
-	bh=6FCGUjjFfT2kFKjHpJH1aBTC0RhE3epJX4ztS4rM3LM=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=vG8vwXfU0xFwfQ8UNJe3TppVziH4T6Y3EQ/ntjR/h0oWTzTPjrDe3Quu93XFXiAUX
-	 JebOUQ0bjNPgui5w1kY9ABIW70EOizhzxUzOApXehqcabAfVOaGe7kGWmE1eDNC5Aw
-	 qcVdSrKuqZT3KQaGyROngWXE6qPeleWNHxriBJWYkmxR7jrbPcyeCw1b3tbD8BQx/O
-	 YeyipTb7aETyuVLTCsGKRtL9QYU/LCcnCeI4fV77Kn/rP+807Bxv9f2d4A3e41tQpP
-	 DX+nf5DTQ2Wbnsn6M4n2a+5ApcXY2cQ4C89C3FF6W2lUXMQvgZbIBCpTaAcLN9HUp2
-	 r8rygA4um6c5g==
-Date: Thu, 27 Feb 2025 17:48:58 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-CC: Arnd Bergmann <arnd@kernel.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v3 05/10] x86: remove HIGHMEM64G support
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHk-=wjFb7jeWXB2wovPeHqZ7XaxfiCbb+Vgk9FeGO2pcY78zA@mail.gmail.com>
-References: <20250226213714.4040853-1-arnd@kernel.org> <20250226213714.4040853-6-arnd@kernel.org> <572DCA31-1CCA-45FB-ADCD-29C24A527437@zytor.com> <CAHk-=wjFb7jeWXB2wovPeHqZ7XaxfiCbb+Vgk9FeGO2pcY78zA@mail.gmail.com>
-Message-ID: <628C48B3-E6B3-4A24-A9EF-7C07F828608E@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sdg0zqbn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29D70C4CEE6;
+	Fri, 28 Feb 2025 01:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740707393;
+	bh=0VY1TID949UImeVHNR6LSjUTfsDAex3p0YM5P5Y5bYU=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=sdg0zqbnp+8QN6rbw/ZOaoY9jHb3UOkxbj7pkTBhX7DEmpVM7tjmrkPBA+MOcP7AP
+	 72OIjtUbA2R3GchYZJS16e5RwVCCDBe6+u9Lq05APQxgBMURPF/cxMDwwoEKX38Slg
+	 AJDo/1rSBXFkwXIFN9RAcnn+Fii+csWvtiX+kw9hFl+mHb1ZkhdqPtUysngA8E4rbE
+	 K92AcJ7F5jsn5dpCigtBkmV08lcmikzqGLm7V4XMsHAE/0Rc0eyQzQ/lEgC+MQUl6N
+	 8gVDejdYqeM44LGf25cTgdxe4vDfqwoxwn2cKh6ieoO89WcIuROxUyvhgbQ3TNLsUr
+	 og3WbEhgdtnBw==
+Message-ID: <fced113e-885d-4be7-87c2-1e14b9d64357@kernel.org>
+Date: Fri, 28 Feb 2025 09:49:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, Leo Stone <leocstone@gmail.com>,
+ syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
+Subject: Re: [PATCH v4] f2fs: add check for deleted inode
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+References: <20250212072742.977248-1-chao@kernel.org>
+ <Z6zQoyNp5td-Wgd1@google.com>
+ <d8be79a2-9470-45b7-9df1-b571f2219c30@kernel.org>
+ <Z64uA2ys4nhV54lI@google.com>
+ <666e62d1-3446-485e-bac9-0cc8089b04de@kernel.org>
+ <5f390129-1b93-42d2-8db7-276c370db90f@kernel.org>
+ <Z76KaW6iAsafDDbB@google.com>
+ <7fb3ffcb-4513-45da-8f83-eebe8f5e008b@kernel.org>
+ <Z79MQD3Qr3HkfUDX@google.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <Z79MQD3Qr3HkfUDX@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On February 27, 2025 8:51:59 AM PST, Linus Torvalds <torvalds@linux-foundat=
-ion=2Eorg> wrote:
->On Thu, 27 Feb 2025 at 07:41, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+On 2025/2/27 1:15, Jaegeuk Kim wrote:
+> On 02/26, Chao Yu wrote:
+>> On 2/26/25 11:28, Jaegeuk Kim wrote:
+>>> On 02/24, Chao Yu wrote:
+>>>> On 2/14/25 09:44, Chao Yu wrote:
+>>>>> On 2/14/25 01:38, Jaegeuk Kim wrote:
+>>>>>> On 02/13, Chao Yu wrote:
+>>>>>>> On 2/13/25 00:47, Jaegeuk Kim wrote:
+>>>>>>>> On 02/12, Chao Yu wrote:
+>>>>>>>>> From: Leo Stone <leocstone@gmail.com>
+>>>>>>>>>
+>>>>>>>>> The syzbot reproducer mounts a f2fs image, then tries to unlink an
+>>>>>>>>> existing file. However, the unlinked file already has a link count of 0
+>>>>>>>>> when it is read for the first time in do_read_inode().
+>>>>>>>>>
+>>>>>>>>> Add a check to sanity_check_inode() for i_nlink == 0.
+>>>>>>>>>
+>>>>>>>>> [Chao Yu: rebase the code and fix orphan inode recovery issue]
+>>>>>>>>> Reported-by: syzbot+b01a36acd7007e273a83@syzkaller.appspotmail.com
+>>>>>>>>> Closes: https://syzkaller.appspot.com/bug?extid=b01a36acd7007e273a83
+>>>>>>>>> Fixes: 39a53e0ce0df ("f2fs: add superblock and major in-memory structure")
+>>>>>>>>> Signed-off-by: Leo Stone <leocstone@gmail.com>
+>>>>>>>>> Signed-off-by: Chao Yu <chao@kernel.org>
+>>>>>>>>> ---
+>>>>>>>>>   fs/f2fs/checkpoint.c | 4 ++++
+>>>>>>>>>   fs/f2fs/f2fs.h       | 1 +
+>>>>>>>>>   fs/f2fs/inode.c      | 6 ++++++
+>>>>>>>>>   3 files changed, 11 insertions(+)
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>>>>>>>>> index bd890738b94d..ada2c548645c 100644
+>>>>>>>>> --- a/fs/f2fs/checkpoint.c
+>>>>>>>>> +++ b/fs/f2fs/checkpoint.c
+>>>>>>>>> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+>>>>>>>>>   	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
+>>>>>>>>>   		f2fs_info(sbi, "orphan cleanup on readonly fs");
+>>>>>>>>>   
+>>>>>>>>> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
+>>>>>>>>
+>>>>>>>> What about using SBI_POR_DOING?
+>>>>>>>
+>>>>>>> SBI_POR_DOING will cover most flow of f2fs_fill_super(), I think we can add a
+>>>>>>> separated flag just covering f2fs_recover_orphan_inodes(), so that we can allow
+>>>>>>> iget() of root_inode and all inodes during roll-forward recovery to do sanity
+>>>>>>> check nlink w/ zero. What do you think?
+>>>>>>
+>>>>>> Can we do this sanity check after f2fs_iget in the f2fs_unlink() only?
+>>>>>
+>>>>> Sure, we need to cover f2fs_rename() as well, please check this:
+>>>>>
+>>>>> https://lore.kernel.org/all/67450f9a.050a0220.21d33d.0003.GAE@google.com
+>>>>
+>>>> Hi Jaegeuk,
+>>>>
+>>>> I'm testing this, seems there is a problem, once we opened an inode that
+>>>> has zeroed nlink, in f2fs_evict_inode(), the inode and all its data will be
+>>>> deleted, then leaving its stale dir entry in parent directory.
+>>>>
+>>>> What do you think using v4? so that we may has chance to repair it w/ fsck
+>>>> rather than just deleting it?
+>>>
+>>> Do you mean v4 as the below change?
 >>
->> One of the generations of kernel=2Eorg ran on a dual socket system with
->> 6 GiB RAM=2E It was a mess; basically it achieved less than 50% memory
->> utilization because of highmem=2E
->
->I'll be very very happy when HIGHMEM is gone completely, but yes,
->HIGHMEM64G was particularly painful=2E
->
->It was definitely used, and it worked better under some loads than
->others (large user footprints with lots of anonymous memory and little
->kernel side memory pressure), but it was not great in general=2E
->
->I suspect that absolutely everybody who ever used it switched to
->64-bit as soon as humanly possible and nobody has likely actively used
->it for a *long* time=2E
->
->Good riddance,
->
->            Linus
+>> I mean this v4 patch:
+> 
+> What about checking i_nlink right after f2fs_iget in f2fs_lookup?
 
-I wish that were true=2E=20
+Fine to me, I've updated in v5.
 
-At rPath I had to debug a customer machine where they insisted on a 32-bit=
- OS because they were worried about the breakage possibilities of the compa=
-t layer=2E In retrospect we really didn't spend enough time/effort on makin=
-g sure an all-32-bit userspace would run on a 64-bit kernel; little corner =
-cases like autofs (my fault) that only popped up when all the system softwa=
-re was 32 bits=2E=2E=2E
+Thanks,
+
+> 
+>>
+>> ---
+>>   fs/f2fs/checkpoint.c | 4 ++++
+>>   fs/f2fs/f2fs.h       | 1 +
+>>   fs/f2fs/inode.c      | 6 ++++++
+>>   3 files changed, 11 insertions(+)
+>>
+>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>> index bd890738b94d..ada2c548645c 100644
+>> --- a/fs/f2fs/checkpoint.c
+>> +++ b/fs/f2fs/checkpoint.c
+>> @@ -751,6 +751,8 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+>>   	if (is_sbi_flag_set(sbi, SBI_IS_WRITABLE))
+>>   		f2fs_info(sbi, "orphan cleanup on readonly fs");
+>>
+>> +	set_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
+>> +
+>>   	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
+>>   	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
+>>
+>> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+>>   		}
+>>   		f2fs_put_page(page, 1);
+>>   	}
+>> +
+>>   	/* clear Orphan Flag */
+>>   	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
+>>   out:
+>> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
+>>   	set_sbi_flag(sbi, SBI_IS_RECOVERED);
+>>
+>>   	return err;
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 05879c6dc4d6..1c75081c0c14 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1322,6 +1322,7 @@ enum {
+>>   	SBI_IS_CLOSE,				/* specify unmounting */
+>>   	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
+>>   	SBI_POR_DOING,				/* recovery is doing or not */
+>> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
+>>   	SBI_NEED_SB_WRITE,			/* need to recover superblock */
+>>   	SBI_NEED_CP,				/* need to checkpoint */
+>>   	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
+>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>> index d6ad7810df69..02f1b69d03d8 100644
+>> --- a/fs/f2fs/inode.c
+>> +++ b/fs/f2fs/inode.c
+>> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
+>>   		}
+>>   	}
+>>
+>> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
+>> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
+>> +			  __func__, inode->i_ino);
+>> +		return false;
+>> +	}
+>> +
+>>   	return true;
+>>   }
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> ---
+>>>>   fs/f2fs/namei.c | 19 +++++++++++++++++++
+>>>>   1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+>>>> index a278c7da8177..949621bc0d07 100644
+>>>> --- a/fs/f2fs/namei.c
+>>>> +++ b/fs/f2fs/namei.c
+>>>> @@ -547,6 +547,16 @@ static int f2fs_unlink(struct inode *dir, struct dentry *dentry)
+>>>>   		goto fail;
+>>>>   	}
+>>>>
+>>>> +	if (unlikely(S_ISDIR(inode->i_mode) ?
+>>>> +			inode->i_nlink <= 1 : inode->i_nlink == 0)) {
+>>>> +		f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
+>>>> +				__func__, inode->i_ino, inode->i_nlink,
+>>>> +				S_ISDIR(inode->i_mode));
+>>>> +		err = -EFSCORRUPTED;
+>>>> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>>>> +		goto fail;
+>>>> +	}
+>>>> +
+>>>>   	err = f2fs_dquot_initialize(dir);
+>>>>   	if (err)
+>>>>   		goto fail;
+>>>> @@ -968,6 +978,15 @@ static int f2fs_rename(struct mnt_idmap *idmap, struct inode *old_dir,
+>>>>   	}
+>>>>
+>>>>   	if (new_inode) {
+>>>> +		if (unlikely(old_is_dir ?
+>>>> +			new_inode->i_nlink <= 1 : new_inode->i_nlink == 0)) {
+>>>> +			f2fs_err_ratelimited(sbi, "%s: inode (ino=%lx) has inconsistent nlink: %u, isdir: %d",
+>>>> +				__func__, new_inode->i_ino, new_inode->i_nlink,
+>>>> +				S_ISDIR(new_inode->i_mode));
+>>>> +			err = -EFSCORRUPTED;
+>>>> +			set_sbi_flag(sbi, SBI_NEED_FSCK);
+>>>> +			goto out_dir;
+>>>> +		}
+>>>>
+>>>>   		err = -ENOTEMPTY;
+>>>>   		if (old_is_dir && !f2fs_empty_dir(new_inode))
+>>>> -- 
+>>>> 2.48.1.601.g30ceb7b040-goog
+>>>>
+>>>>>
+>>>>> Thanks,
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>>
+>>>>>>>>
+>>>>>>>>> +
+>>>>>>>>>   	start_blk = __start_cp_addr(sbi) + 1 + __cp_payload(sbi);
+>>>>>>>>>   	orphan_blocks = __start_sum_addr(sbi) - 1 - __cp_payload(sbi);
+>>>>>>>>>   
+>>>>>>>>> @@ -778,9 +780,11 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
+>>>>>>>>>   		}
+>>>>>>>>>   		f2fs_put_page(page, 1);
+>>>>>>>>>   	}
+>>>>>>>>> +
+>>>>>>>>>   	/* clear Orphan Flag */
+>>>>>>>>>   	clear_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG);
+>>>>>>>>>   out:
+>>>>>>>>> +	clear_sbi_flag(sbi, SBI_ORPHAN_RECOVERY);
+>>>>>>>>>   	set_sbi_flag(sbi, SBI_IS_RECOVERED);
+>>>>>>>>>   
+>>>>>>>>>   	return err;
+>>>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>>>> index 05879c6dc4d6..1c75081c0c14 100644
+>>>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>>>> @@ -1322,6 +1322,7 @@ enum {
+>>>>>>>>>   	SBI_IS_CLOSE,				/* specify unmounting */
+>>>>>>>>>   	SBI_NEED_FSCK,				/* need fsck.f2fs to fix */
+>>>>>>>>>   	SBI_POR_DOING,				/* recovery is doing or not */
+>>>>>>>>> +	SBI_ORPHAN_RECOVERY,			/* orphan inodes recovery is doing */
+>>>>>>>>>   	SBI_NEED_SB_WRITE,			/* need to recover superblock */
+>>>>>>>>>   	SBI_NEED_CP,				/* need to checkpoint */
+>>>>>>>>>   	SBI_IS_SHUTDOWN,			/* shutdown by ioctl */
+>>>>>>>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>>>>>>>>> index d6ad7810df69..02f1b69d03d8 100644
+>>>>>>>>> --- a/fs/f2fs/inode.c
+>>>>>>>>> +++ b/fs/f2fs/inode.c
+>>>>>>>>> @@ -386,6 +386,12 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
+>>>>>>>>>   		}
+>>>>>>>>>   	}
+>>>>>>>>>   
+>>>>>>>>> +	if (inode->i_nlink == 0 && !is_sbi_flag_set(sbi, SBI_ORPHAN_RECOVERY)) {
+>>>>>>>>> +		f2fs_warn(sbi, "%s: inode (ino=%lx) has a link count of 0",
+>>>>>>>>> +			  __func__, inode->i_ino);
+>>>>>>>>> +		return false;
+>>>>>>>>> +	}
+>>>>>>>>> +
+>>>>>>>>>   	return true;
+>>>>>>>>>   }
+>>>>>>>>>   
+>>>>>>>>> -- 
+>>>>>>>>> 2.48.1.502.g6dc24dfdaf-goog
+>>>>>
+
