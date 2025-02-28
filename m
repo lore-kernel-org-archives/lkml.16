@@ -1,131 +1,185 @@
-Received: from smtp16.bhosted.nl (smtp16.bhosted.nl [94.124.121.27])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E142505CA
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:48:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.124.121.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D646276D3B;
+	Fri, 28 Feb 2025 08:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740732505; cv=none; b=pK2mnZq6tMKQkdcYj/tGg5UoEQyyPuSm5n3lRPXOr3nF+jd+tArvjvwyJfri2M8Vahkwndtujm+MirOw0aE24m9SM36zk/qgEGdD92U04Df87ySvtT1AehoSvdfo/Ojv21NN3pBTakw2R80sUUi4hRbCUtGhQWsSpEzqgDxm/WQ=
+	t=1740732589; cv=none; b=bOPdXD+bxUwQuNhKfSP2XCbtk2aOQZfkViu2Ji+nlQ9nHeUOVWLimLRWPT8g6WXT3Scqfu6gJfVOBS2/HHyOP348TF4KfnhmasOnG9uztyZCTnwUxHNC5pMyA5Rx6RIOGOiVSP+S79NT0pdPpfAdp1LxM9ggejqJqzsnO+jR5zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740732505; c=relaxed/simple;
-	bh=5Y4az6HpX0m67GPoqxGohyZ+WCOs21Oqm7I46A/5BDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IiusGzZMer1z8vjHue6skbqjtXAh1hQyef2KM/zNrP7LxQj9RPZ72A2SVVihDNJ5GK0uvNISrRepbBpUXcoMSzl4iKL7YjjWRmry/cO/DSqq0DaEpqQ8tOu90FXcAoBGA9IRPfKHc4XFehkY+zzt8l7jqm2sB2cMz70/I+oUlt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl; spf=pass smtp.mailfrom=protonic.nl; dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b=keMuUWZP; arc=none smtp.client-ip=94.124.121.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=protonic.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonic.nl
+	s=arc-20240116; t=1740732589; c=relaxed/simple;
+	bh=hrumNHzaFlpOdg+6QSUhWy9VTkbT/XcBYRpYCCjZgnA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FD2/DFkhNTIyXwX2jIg8ssoeMz1diWar1tZpEGdAfNzhdk5wRHN+TFkVfxgNhOmD0vbiNi5nCjkOEyBH6Z13t7rMea2JSFcPnxFh0Oc1wXQscL4zBV3DIuMQnIMfM1NdEhzNkd59j+pl/qDyEJwZxwSch2hpUlXu+iqhq363keA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UimGJTRL; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonic.nl header.i=@protonic.nl header.b="keMuUWZP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=protonic.nl; s=202111;
-	h=content-transfer-encoding:content-type:mime-version:references:in-reply-to:
-	 message-id:subject:cc:to:from:date:from;
-	bh=ifGH9TUIXn6Zckh2DlBzL0q10eJHl+qybe+rMqZOb9Y=;
-	b=keMuUWZPnJH2Weghw+u/6W/CusmGl770MxkAFbOdTE3rc5Ec7oEIoUcOT6mG6Yew44NWoZTsr2I98
-	 SJAGgHbSo2iSz0ZJdRxckwj3l5lgfSAK4zcLDTnU3h4eb5F2JMgGwrMvHofwMXchSSMzr6+4+2nKnA
-	 FWBSO2Ry29YUm+30aOt8hbBfO6BaVjvAgTAveROxXTNwQhx+IReOOn+l2EaatGLZPH2KrijO0R20lq
-	 pP8Qu/lOD+EFA6jZVyptTIUHgITtSt84nbEzcQK8yQQFscgGZyIaFpXZWhoSK1IWar7O4HWA/US6i0
-	 rYwEyE6TvlqckAs5GneTbQrexcsVFfQ==
-X-MSG-ID: c1f43f4f-f5b0-11ef-8b43-005056817704
-Date: Fri, 28 Feb 2025 09:48:18 +0100
-From: David Jander <david@protonic.nl>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Jonathan Corbet
- <corbet@lwn.net>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Nuno Sa
- <nuno.sa@analog.com>, Jonathan Cameron <jic23@kernel.org>, Oleksij Rempel
- <o.rempel@pengutronix.de>
-Subject: Re: [RFC PATCH 6/7] dt-bindings: motion: Add adi,tmc5240 bindings
-Message-ID: <20250228094818.0aad5491@erd003.prtnl>
-In-Reply-To: <20250228-groovy-lyrical-skunk-751ee3@krzk-bin>
-References: <20250227162823.3585810-1-david@protonic.nl>
-	<20250227162823.3585810-7-david@protonic.nl>
-	<20250228-groovy-lyrical-skunk-751ee3@krzk-bin>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UimGJTRL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740732585;
+	bh=hrumNHzaFlpOdg+6QSUhWy9VTkbT/XcBYRpYCCjZgnA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UimGJTRL1tIv6J8a8JGGrwRYcp09VlmGWndhoaSNzJsNgxU7hQA+ao4Hq0/GfWjF/
+	 wxZlEyGFhmniAZCDvHnliCz6foiyg93iX2PxNAMnvCVILMxcdbdPtG+v+LzyIa9uVg
+	 /cxkO/SDiSu7lp/WfOTz6TvsqMWffZ5CRVsj+kX0m2TqeogpBHN39xDbQ+Hms7RYfF
+	 iG7A4vICu1W0aLiHAaY8dHohFzpKOwrgb98xtrrUJU7EXReL6fK+YSac6vO7UgOpFP
+	 ltTukYslZX6JP4UFZH5FF2SIQ9aoNvaApYT+K1rM1ucXDqWj0o1flWr/Xc5Zw428CE
+	 Qhp9PqIESQVhA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A97DB17E0673;
+	Fri, 28 Feb 2025 09:49:44 +0100 (CET)
+Message-ID: <4ae2ef45-93c8-4cac-8331-0962085cea10@collabora.com>
+Date: Fri, 28 Feb 2025 09:49:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] pinctrl: mediatek: Add pinctrl driver on mt8196
+To: Cathy Xu <ot_cathy.xu@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Sean Wang <sean.wang@kernel.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Yong Mao <yong.mao@mediatek.com>,
+ Axe Yang <axe.yang@mediatek.com>, Wenbin Mei <wenbin.mei@mediatek.com>,
+ Lei Xue <lei.xue@mediatek.com>, Guodong Liu <guodong.liu@mediatek.com>
+References: <20250228011702.16493-1-ot_cathy.xu@mediatek.com>
+ <20250228011702.16493-4-ot_cathy.xu@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250228011702.16493-4-ot_cathy.xu@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-Dear Krzysztof,
-
-Thanks for reviewing...
-
-On Fri, 28 Feb 2025 08:11:04 +0100
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
-
-> On Thu, Feb 27, 2025 at 05:28:22PM +0100, David Jander wrote:
-> [...]
-> > +
-> > +  enable-supply:
-> > +    description: Optional external enable supply to control SLEEPn pin. Can  
+Il 28/02/25 02:16, Cathy Xu ha scritto:
+> From: Guodong Liu <guodong.liu@mediatek.com>
 > 
-> That's odd. regular pins are not supplies. This must be named after
-> physical supplies. There is vdd18, vcc, vcp but nothing about enable
-> supply in datasheet.
+> Add pinctrl driver support for MediaTek Soc mt8196.
 > 
-> > +      be shared between several controllers.  
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
+> ---
+>   drivers/pinctrl/mediatek/Kconfig              |   12 +
+>   drivers/pinctrl/mediatek/Makefile             |    1 +
+>   drivers/pinctrl/mediatek/pinctrl-mt8196.c     | 1857 +++++++++++
+>   drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h | 2789 +++++++++++++++++
+>   4 files changed, 4659 insertions(+)
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8196.c
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
 > 
-> Second sentence is both redundant and really not relevant to this
-> binding. It's not this binding which decides about sharing.
+> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
+> index 58f32818a0e6..b59d94a0fe3b 100644
+> --- a/drivers/pinctrl/mediatek/Kconfig
+> +++ b/drivers/pinctrl/mediatek/Kconfig
+> @@ -263,6 +263,18 @@ config PINCTRL_MT8195
+>   	default ARM64 && ARCH_MEDIATEK
+>   	select PINCTRL_MTK_PARIS
+>   
+> +config PINCTRL_MT8196
+> +	bool "MediaTek MT8196 pin control"
+> +	depends on OF
+> +	depends on ARM64 || COMPILE_TEST
+> +	default ARM64 && ARCH_MEDIATEK
+> +	select PINCTRL_MTK_PARIS
+> +	help
+> +	  Say yes here to support pin controller and gpio driver
+> +	  on MediaTek MT8196 SoC.
+> +	  In MTK platform, we support virtual gpio and use it to
+> +	  map specific eint which doesn't have real gpio pin.
+> +
+>   config PINCTRL_MT8365
+>   	bool "MediaTek MT8365 pin control"
+>   	depends on OF
+> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
+> index 721ae83476d0..08e7239fcd8b 100644
+> --- a/drivers/pinctrl/mediatek/Makefile
+> +++ b/drivers/pinctrl/mediatek/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_PINCTRL_MT8186)		+= pinctrl-mt8186.o
+>   obj-$(CONFIG_PINCTRL_MT8188)		+= pinctrl-mt8188.o
+>   obj-$(CONFIG_PINCTRL_MT8192)		+= pinctrl-mt8192.o
+>   obj-$(CONFIG_PINCTRL_MT8195)		+= pinctrl-mt8195.o
+> +obj-$(CONFIG_PINCTRL_MT8196)		+= pinctrl-mt8196.o
+>   obj-$(CONFIG_PINCTRL_MT8365)		+= pinctrl-mt8365.o
+>   obj-$(CONFIG_PINCTRL_MT8516)		+= pinctrl-mt8516.o
+>   obj-$(CONFIG_PINCTRL_MT6397)		+= pinctrl-mt6397.o
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8196.c b/drivers/pinctrl/mediatek/pinctrl-mt8196.c
+> new file mode 100644
+> index 000000000000..1baefdc7e36d
+> --- /dev/null
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mt8196.c
+> @@ -0,0 +1,1857 @@
 
-Good point. I think I should drop the whole property, since it is indeed
-irrelevant. If extra supplies need to be specified, they always can be, right?
+..snip..
 
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> > +  - $ref: /schemas/motion/common.yaml#
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    spi {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        motor@0 {
-> > +            compatible = "adi,tmc5240";
-> > +            reg = <0>;
-> > +            interrupts-extended = <&gpiok 7 0>;  
-> 
-> Include header and use standard defines for flags.
+> +
+> +static const struct mtk_pin_soc mt8196_data = {
+> +	.reg_cal = mt8196_reg_cals,
+> +	.pins = mtk_pins_mt8196,
+> +	.npins = ARRAY_SIZE(mtk_pins_mt8196),
+> +	.ngrps = ARRAY_SIZE(mtk_pins_mt8196),
+> +	.eint_hw = &mt8196_eint_hw,
+> +	.nfuncs = 8,
+> +	.gpio_m = 0,
+> +	.base_names = mt8196_pinctrl_register_base_names,
+> +	.nbase_names = ARRAY_SIZE(mt8196_pinctrl_register_base_names),
+> +	.pull_type = mt8196_pull_type,
+> +	.pin_rsel = mt8196_pin_rsel_val_range,
+> +	.npin_rsel = ARRAY_SIZE(mt8196_pin_rsel_val_range),
+> +	.bias_set_combo = mtk_pinconf_bias_set_combo,
+> +	.bias_get_combo = mtk_pinconf_bias_get_combo,
+> +	.drive_set = mtk_pinconf_drive_set_rev1,
+> +	.drive_get = mtk_pinconf_drive_get_rev1,
+> +	.adv_drive_get = mtk_pinconf_adv_drive_get_raw,
+> +	.adv_drive_set = mtk_pinconf_adv_drive_set_raw,
 
-Thanks. I didn't know I could include them here... will fix this.
+In the cover letter, you said:
 
-> 
-> > +            clocks = <&clock_tmc5240>;
-> > +            enable-supply = <&stpsleepn>;
-> > +            spi-max-frequency = <1000000>;  
-> 
-> Where are any other properties from common schema?
+"Add values in SI units option to |struct mtk_pin_soc| in pinctrl-mt8196.c"
 
-The properties in common.yaml are optional. Do I need to explicitly specify
-this somehow (they are not listed under "required:")?
-In fact, the tmc5240 driver has its own known constants for these properties
-that it fills in. One can overrule them here if needed, but I suppose in the
-case of the tmc5240 the regular use-case is not to do that. Should I maybe add
-a second example that overrules the defaults?
+....I don't see that here though?
 
-Best regards,
+> +};
+> +
+> +static const struct of_device_id mt8196_pinctrl_of_match[] = {
+> +	{ .compatible = "mediatek,mt8196-pinctrl", .data = &mt8196_data },
+> +	{ }
 
--- 
-David Jander
+{ /* sentinel */ }
 
+> +};
+> +
+> +static struct platform_driver mt8196_pinctrl_driver = {
+> +	.driver = {
+> +		.name = "mt8196-pinctrl",
+> +		.of_match_table = mt8196_pinctrl_of_match,
+> +		.pm = pm_sleep_ptr(&mtk_paris_pinctrl_pm_ops),
+> +	},
+> +	.probe = mtk_paris_pinctrl_probe,
+> +};
+> +
+> +static int __init mt8196_pinctrl_init(void)
+> +{
+> +	return platform_driver_register(&mt8196_pinctrl_driver);
+> +}
+> +arch_initcall(mt8196_pinctrl_init);
+> +
+> +MODULE_DESCRIPTION("MediaTek MT8196 Pinctrl Driver");
+
+MODULE_LICENSE is missing!
+
+Cheers,
+Angelo
+
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h b/drivers/pinctrl/mediatek/pinctrl-mtk-mt8196.h
+> new file mode 100644
+> index 000000000000..d342d091672c
