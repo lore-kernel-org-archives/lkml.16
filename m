@@ -1,163 +1,117 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2841126B2B5
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFE926B2C8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740747584; cv=none; b=RBOj7KBX78n0HDaPx3dc1blt+TfEIm9aKFP1ITVmlxWBPV6DVi3ktde6A6YQyf6GmaOPK9tg1sRd/ylsYn6QcECHonfDEF/DHYuoTBTpGcC9U0mkPYSFxVe8cl6/Xb9iQt6NHIyWdjLavZcPm3JkRoZrjDiIH1S049m2iMXFC/4=
+	t=1740747594; cv=none; b=nN4ye91xajd31iHaHAOr0z9g2W4PHVqkfFA3D3zUiPQolQS5LXAqdlvNKsC9ecdlbCFHijM+P52XDqM4p+g6KYagvRD7JGQB3TZwtx/1SI405Cd8ihLHl5pbjyRyWVScnZyCul5qyqwF2ZHR7pLQygdKx7IJFAkB9DfmDMB1KD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740747584; c=relaxed/simple;
-	bh=4CTspMKLjSchgdZUIDYXHa17XzqC+EKN22jzUDz747I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZwKBd3MxVshXQzcM+ZNo9wzg4jTmSDQOJSZaMsD3msGjIuUQyqan/dAFf1qq2sKTU8/etcEOHiBRfRunsKQLCzX9zavA8dEQORJ6Ac/cY9F2yLP3l7BD5m75wG0J5WOOR+6lgSr5rmEcXgrViMy0ckw3Gmh5eLTZnppMARCFmgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PC0n80Z9; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740747594; c=relaxed/simple;
+	bh=3DKT7J+swXfr3LZY9NRwOLeY8J+OdBEFnuOEu3W8oWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OiuDGVxwgcfbxKnAn+LkHVGN/G80YOCx45RHSW9XcpJSlr1suYVSAQ8LHZJRV7n8iEVnIp0rCHLLe15+NJ2szQh33/iOmZUvb3UA5kHhyroKikbm344Pbq49jd3LTveKnMh944mYckroE+5Zg7VDguGwvsWM1pQ0LYjXyBrgsZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J+T58mQr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PC0n80Z9"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6f47ed1f40dso15941327b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:59:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740747582; x=1741352382; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KCTmypiLeGBL8xVDG84oHuOUgQGA6jAq3NzfKLXhqvU=;
-        b=PC0n80Z9gbkZtXZMOww/zEV+UnO+3/jjRHLLWiolWbPdayv/hTJHCfI7jnNxYrWuwR
-         ah6J+wo6ua3N8JgC9jTAY7RceGszVLXbbXvw59hzb6zKOPHnCWkjpfHjajwQd3yxsSjD
-         VPRVGH5jkkDyP9AKfilK9e3QGFEezNEH1up+xHRgK9mait0Q7n3UoKjS8d9ahHj+g2S6
-         sCaPWcYOAs/npPYguFdwn7ovQ5SGqQ5Wfb61qA5a8LytYEQmJu7QrrYoegqg2hK7bxzw
-         FXbUDxl243Ttq9Cu4kDH866icPVdYctXzFMXnAgZNdqYKSHVkszo60KVVxbUXGjFWgN6
-         +t7g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J+T58mQr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740747591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c83XVy6ozclMfOWx6ksvJRIp+J3X+fmuC/ka4FyOnOE=;
+	b=J+T58mQrISVMClWI3vv6AVTayFUYLEBJw0lNDups01s0gKdNI+sEu0rs57FAziioPU2KCA
+	mcTf7TEYSVj3vcwcE6JuUobmhQ/BOEj4EcwZN7NWzBXNvBMhCyuI/WiLQ6/bA2fVvdW8HC
+	jsqF2mjg+2qP/dzNT3tKk5R1u41sCX4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-536-z26nYuikNSCUuFbJSxSxpA-1; Fri, 28 Feb 2025 07:59:50 -0500
+X-MC-Unique: z26nYuikNSCUuFbJSxSxpA-1
+X-Mimecast-MFC-AGG-ID: z26nYuikNSCUuFbJSxSxpA_1740747589
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-390f000e962so308990f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 04:59:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740747582; x=1741352382;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740747589; x=1741352389;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KCTmypiLeGBL8xVDG84oHuOUgQGA6jAq3NzfKLXhqvU=;
-        b=p64ZQs0sAVGVLjGQxK54dKIxz8yH5F6v28JyBexqwVA0zCgU72npLcrfRDZnPOcm7s
-         JHUEhwj6rwg5iy83OaLipkwV+510c29BJtzxz9cIwF/yKYUhqECaaxnmjxfvAIIrZ4yW
-         0E6k0baAeyE8bGci5QRFxj9k/4mojWPyCe4PDuzUz0h2UqW+/2U6uzzNwsIMparGuxGl
-         ka2Ok96965kgyTHpo6l2u/c133FDDqWXiGFJ5mFfYvtn4vJn+JYYfo7xGR2cFBGjEnNc
-         GDrbsUQLNjkQqaIpFt4EujH9YohnWn5Ov1vpwJl5v2DVjfur0+zeupqIfov9EGN/9zEq
-         iJrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIiRjqoyJtHpo3iICLZKqWBJfHeTJj/m3ROsr5h2TCAutf0aMLflIxUccrVaSJjymBse/8NYrNL8ituyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLOaO+IxQS7NHuqmF9NwqROvavubHo2QviLwxsSen1KVlIq+q7
-	mfcKhnPvosenc+7BJu3kbOhbS9/GF0FN10e1gCyypznAil0525qDeQROtiZ4SyEtUtJjQKtva6u
-	ioEavnnpnO/tYMjsMtlYI2IFTe+airULXccr1A+JQyU9BiiVEjV4=
-X-Gm-Gg: ASbGncv0ggL/dMDpijteZ8GUbK/ErRJh2eNzZ9UXphzFsX8J1eqfKtlMMdZJfAdzSwi
-	2KnAwJXLwnmpfX/Lof1ThpmkAL+SYxGY6a+ooUBmt4es8RAyUeZkq+khGziTPxRDhlSMlB/IlpW
-	+uzqOxx+Zw
-X-Google-Smtp-Source: AGHT+IHtf9QXuiY5xXAGiBiB0ZqMXV16c1zC+23L951s4uTBNQf6KtwYbOfS7+aOcWi8wholKrvRp2OF2LeDxR8Wm8I=
-X-Received: by 2002:a05:690c:3686:b0:6ef:6a71:aa55 with SMTP id
- 00721157ae682-6fd49ead0dbmr49973807b3.0.1740747582047; Fri, 28 Feb 2025
- 04:59:42 -0800 (PST)
+        bh=c83XVy6ozclMfOWx6ksvJRIp+J3X+fmuC/ka4FyOnOE=;
+        b=kd14o3z4ZyrnKZDkGGvF5zPY/OwxbiH7pOXw+26X8Pbpy1+9tnjXazSDjYKo8I1VVj
+         W5CZxkmkTlHQZ6xYIa9+EfIuYdUA328BNxGxvSHC0mv65an9/WKBjh9mbLDq3X0E4GJZ
+         LFibfT/U9kr2v/1Fd1ExaNsNperccietPvf9hK7MKqoPT1NBKiA1c9GVpxVO0/zfhv9C
+         mg0tcAtKZrGAeJA7fOJF3yPCUoTu4WuOklaeckoDCBDR+MkO/zU+ll7oM82JvYVGNufX
+         IyKEWrcapHrw+7eNg6U8IFPFcE5mN11oV3JvZCRSyzVnxy6+Jz2w8bVYAsVMnDbVFDXs
+         RLIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUKpnSP8u1o+rgS8iT1LJ7Y6+X3tghQhwsCHFgRqaE5H2ZCuzaucppJOmcqVDGzad2XbDdIvyWIx6UTTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyD/X296WpIlqi652jS8NWT0XRAzaxbEnS0ta8Ix2amlG8bQfVn
+	/pEuVwZAVfsmTBSOEzD5qnlN7WGg5ucPutIrIZUqs+S//C5cy22BjiTs2PMqSOpGA3xibNqB3np
+	WrPBmWmO2IX6dHPWUrqhUbX1fMh3DfK62Z8hIxfbA3wiUVCrrrS6xi2yq5wAHGg==
+X-Gm-Gg: ASbGncsrHWprtJgQN5Ou9P2LR+miDMIxu4T/PqQTNjMu0jkQVcrJJmUQKLd41V/b8g1
+	aXp9BAvTUgtwwGcVAwJM+Ab5PWSgPNcsStCPS1aoIoAczI7gLEtQG9YRSHIIf2I1j9/DOWSHhEP
+	kxk1AkYfixkUFKPPmZ3mJA6MWXvNEVongOa17EPpJvwHi3HlbtPPYfvAVcMam6nhqJeBtQxKVDq
+	0vF3sw3icN5SzSXvyXK/viB4SMZyWoEgRVRvh7L+kW0kmjQe0GpEkxltMWhG52FnXgnaI2PL5Kw
+	SGVCHGl8GMqhoXXIkkzBOJLcd17kgKcDA1T9K5MRmMmESDyRLRBJoaZWItqupKY=
+X-Received: by 2002:a05:6000:1f8b:b0:38d:e092:3ced with SMTP id ffacd0b85a97d-390ec7c6c4amr2643359f8f.7.1740747588684;
+        Fri, 28 Feb 2025 04:59:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF39024ECeki2qeJ7m1bCe/xYOH62Iyh1CEl4EZF/iAAejb6b6Z9XQvhcS5PKHFcbRdN7SHDw==
+X-Received: by 2002:a05:6000:1f8b:b0:38d:e092:3ced with SMTP id ffacd0b85a97d-390ec7c6c4amr2643343f8f.7.1740747588359;
+        Fri, 28 Feb 2025 04:59:48 -0800 (PST)
+Received: from imammedo.users.ipa.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e47a6739sm5110782f8f.22.2025.02.28.04.59.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 04:59:47 -0800 (PST)
+Date: Fri, 28 Feb 2025 13:59:47 +0100
+From: Igor Mammedov <imammedo@redhat.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Ani Sinha
+ <anisinha@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 16/19] acpi/generic_event_device.c: enable
+ use_hest_addr for QEMU 10.x
+Message-ID: <20250228135947.15504734@imammedo.users.ipa.redhat.com>
+In-Reply-To: <797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
+References: <cover.1740671863.git.mchehab+huawei@kernel.org>
+	<797c0199ef713241db145baf3860d32e0eb1d03a.1740671863.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220113338.60ba2290@canb.auug.org.au> <15141602.O6BkTfRZtg@diego>
- <CAMuHMdU102nhmHoxo+z2XCxNf+gLFuBnAZamtW+V=WjKFX9rjA@mail.gmail.com> <2087532.0S5aU1g85B@diego>
-In-Reply-To: <2087532.0S5aU1g85B@diego>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 28 Feb 2025 13:59:06 +0100
-X-Gm-Features: AQ5f1JrBlInqsTnKC-ZJdzKy1iY_YHHHz4CIkGCaW6ofmvNG5_zIe99Suy3Ucbg
-Message-ID: <CAPDyKFr7g5sEP06_cUO6zFk1GA_QmXg30aKdqrYA3RmU=ybTzA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the pmdomain tree
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Shawn Lin <shawn.lin@rock-chips.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 28 Feb 2025 at 10:01, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
->
-> Am Donnerstag, 27. Februar 2025, 18:05:18 MEZ schrieb Geert Uytterhoeven:
-> > On Thu, 27 Feb 2025 at 17:16, Heiko St=C3=BCbner <heiko@sntech.de> wrot=
-e:
-> > > Am Donnerstag, 27. Februar 2025, 16:56:01 MEZ schrieb Geert Uytterhoe=
-ven:
-> > > > On Mon, 24 Feb 2025 at 13:27, Ulf Hansson <ulf.hansson@linaro.org> =
-wrote:
-> > > > So this was fixed by adding a dependency on HAVE_ARM_SMCCC_DISCOVER=
-Y[1].
-> > > >
-> > > > I am no Rockchip expert, but is this the correct fix?
-> > > > As arch/arm/boot/dts/rockchip/rk3036.dtsi uses enable-method =3D
-> > > > "rockchip,rk3036-smp", e.g. RK3036 does not depend on PSCI, so I as=
-sume
-> > > > you could run a kernel without PSCI support on RK3036 before?
-> > >
-> > > All still relevant 32bit Rockchip SoCs (rv11*) already switched over =
-to
-> > > PSCI. So if one uses some sort of distro-kernel (or one simply built =
-from
-> > > the in-kernel defconfig), PSCI support will be in there already.
-> >
-> > OK.
-> >
-> > > So the only case where this is relevant, is for kernels custom-build =
-for
-> > > one specific soc type.
-> > >
-> > > The rk3036 (and rk3128) are from the same era as the rk3288 - 2014 .
-> > > That's more than 10 years ago. And we're not talking about these old
-> > > boards not working anymore - just a _possible_ size increase in very
-> > > special cases (of not using any distro-like kernel).
-> > >
-> > > arm32 psci.o is 176kb ... and even my r3036-kylin board came with 512=
-MB
-> > > ram. So personally I'm not too worried.
-> >
-> > My worry is not so much about the size increase, but about
-> > CONFIG_ROCKCHIP_PM_DOMAINS becoming disabled when
-> > running "make oldconfig" if CONFIG_PSCI is disabled.
->
-> ah, now I get it :-)
->
->
-> I guess there are ways to prevent this (still uncommon) case:
->
-> (1) The CONFIG_ARM_GIC_V3 already uses a
->   select HAVE_ARM_SMCCC_DISCOVERY
-> The pm-domain could do that as well.
+On Thu, 27 Feb 2025 17:00:54 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-I think the select better belongs in the soc specific Kconfig.
+> Now that we have everything in place, enable using HEST GPA
+> instead of etc/hardware_errors GPA.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Like in arch/arm/mach-rockchip/Kconfig, for example.
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 
->
-> (2) The main __arm_smccc_smc has a stub for the !CONFIG_HAVE_ARM_SMCCC
-> case, and arm_smccc_1_1_get_conduit() is described as
->     "When SMCCCv1.1 is not present, returns SMCCC_CONDUIT_NONE."
->
-> ------
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> index 67f6fdf2e7cd..3e6b34570a64 100644
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -300,7 +300,14 @@ enum arm_smccc_conduit {
->   *
->   * When SMCCCv1.1 is not present, returns SMCCC_CONDUIT_NONE.
->   */
-> +#ifdef CONFIG_HAVE_ARM_SMCCC_DISCOVERY
->  enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
-> +#else
-> +static inline enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
-> +{
-> +       return SMCCC_CONDUIT_NONE;
-> +}
-> +#endif
+> ---
+>  hw/acpi/generic_event_device.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
+> index f029753ab709..9fe70b74bd42 100644
+> --- a/hw/acpi/generic_event_device.c
+> +++ b/hw/acpi/generic_event_device.c
+> @@ -332,7 +332,7 @@ static void acpi_ged_send_event(AcpiDeviceIf *adev, AcpiEventStatusBits ev)
+>  static const Property acpi_ged_properties[] = {
+>      DEFINE_PROP_UINT32("ged-event", AcpiGedState, ged_event_bitmap, 0),
+>      DEFINE_PROP_BOOL("x-has-hest-addr", AcpiGedState,
+> -                     ghes_state.use_hest_addr, false),
+> +                     ghes_state.use_hest_addr, true),
+>  };
+>  
+>  static const VMStateDescription vmstate_memhp_state = {
 
-This could make sense, but to me this is an orthogonal problem.
-
-In the end, we really need the "select" to be done so the platform
-becomes configured correctly.
-
-Kind regards
-Uffe
