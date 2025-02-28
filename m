@@ -1,81 +1,65 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F3B25A32B
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7976D256C74;
+	Fri, 28 Feb 2025 10:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736765; cv=none; b=ZSVW4BjNWoBHuwcNhASsZjmLKajQFvC7Y7CVnCbXnK/afaT9WDQ/uNR6FV77cCHCGqrtst1YaQLCUH4gxCrUnTuVVMQmekQI9C+CCeJNKAGLClc9GPvqECfUjsdHiU4aM7jrzXS4z6u5ltTV39HXY7tRocJ5ZRXP3ejjq9Q43Ac=
+	t=1740736813; cv=none; b=Xb2SMl7wvJsfsG1OadhztD4Hvh1yFCbF1bGnLxyyo9s05AE3ZX/+lorNgKqZz3CvsDjemKGFYUl4tv6NTBxzOLHwvLloK9AFx+KfgVqb4sFzX/kQrcMbcHgiYOU2tuIRqX79pKQPSQ5F3xdcpRUHxST/moZDLjhgAai1Qo3gAR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736765; c=relaxed/simple;
-	bh=TBKDKAHba6vy4Gu+Okfq348lsxqNrjmdldedIzZQ+LQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MCSPOSn8aQObRZIiM3C5eh7PE2cTNcDGVeK3guVNFQOy09ySoLRaKzQw2nHxisqtpPCQoax3mno785w8YBAHhwbsirTXfx+J34YYO1/NDLDva8wJ20BRg4hl3Roen6rUUi/deqogUQKpE+pz7/Ihz1xhNnzgQ5CWiBCW5bMlruw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=D7xOMS7u; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rzUugGZN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=cTSLYIv8; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rSTOXzj6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740736813; c=relaxed/simple;
+	bh=2fezt6E/toOpvGQ/maIJKmQIerdFnEOW1E01JmM4A5A=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=sC0Al7k1+2hfxXYHhUr7VYoEtN50b3ObEIfNdmsS+PF64MSaEOd8Oj4bRoRuJ5H5EstyaTCCJD0ekGGvS/ey35nVdwinVbvKLrHcFAHG5FzEZLg5niD3aAixywwyaR4EZM0ZQuiMjSeadtvYWNMfp+Z2q/NDZks+9E1+cJvUVSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SK5AB13D; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="D7xOMS7u";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rzUugGZN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="cTSLYIv8";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rSTOXzj6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 71E7E2116C;
-	Fri, 28 Feb 2025 09:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740736761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s12o1+CXrrYel8uzxeTgDHxzQL0Te2TUvuy+8vHWHvw=;
-	b=D7xOMS7ukH/cI+58o34ihd1euOVdChw0UmmNoTmOhLlusbe19k3zaSCFTTLrjdUm5/Amoz
-	75UvFC6gJDM/jCrL825VD2GVfD1ilDeUHgF5tUK1CgcHwQgsH24udQKlgwv00LmaVMGTAO
-	BFIX7iXGq9gTVstP6OiGsO5Y5YojwxA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740736761;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s12o1+CXrrYel8uzxeTgDHxzQL0Te2TUvuy+8vHWHvw=;
-	b=rzUugGZN4MZjETVS3RYrTOrlojEnmO2c/tK9lOx0V1g1B7Il6gO6FBVKZcpP1avVF3nNla
-	nH4tvs6mp3lNY1BA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=cTSLYIv8;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rSTOXzj6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740736760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s12o1+CXrrYel8uzxeTgDHxzQL0Te2TUvuy+8vHWHvw=;
-	b=cTSLYIv8dC3/2W5ZzlOb7WFh+EwfO3e9CnNBwy7nyyVaGwVb/mZoPZXkBwrXx2WYY8Vvli
-	iqB/62DoFaZ+HLSFZY6+n4H3tUP5zS9kT2RYzTX8KErsMc5qy1p7Tew4xC1LTeRb4b+OOS
-	CNJzbm2mgXjYHIBszQ0648Dj1U37OP0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740736760;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=s12o1+CXrrYel8uzxeTgDHxzQL0Te2TUvuy+8vHWHvw=;
-	b=rSTOXzj6EMhn5udsT9DpQyLEhUUo8Vjyxq0fynASTHkczBTN7LDiR/OxyLGtB3u9+VRCfk
-	pp6+CZMwlia+K3CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 57295137AC;
-	Fri, 28 Feb 2025 09:59:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id eFPsFPiIwWeQWAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 28 Feb 2025 09:59:20 +0000
-Message-ID: <13614e0a-4985-42a1-87b2-a57237437a08@suse.cz>
-Date: Fri, 28 Feb 2025 10:59:20 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SK5AB13D"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30b909f0629so8236601fa.0;
+        Fri, 28 Feb 2025 02:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740736808; x=1741341608; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e8/KW66e+2kSdtpDjiB9O/DXhYGHHMWWc9C6pdhsHHA=;
+        b=SK5AB13DtRTLct4rRBaFqMVQnGONI3hZmo66s4QIM1FHHPazpG21796REGr33o/vzB
+         TIfOY6LciCFaBBCiwPJXutqc7N82KhEpg0m2QgNXayqD8+HI9DyiOu0UL+hdKTpQrOL1
+         nOy3fLLrZV1HVPLvZGDFDBVhyHS4eHJVxNcnwJ1X01rAyaCXDrQ9No/GxJZW5KRK63xv
+         SUchW26GrtzkY3CY8FAqjMhItLWjPJfoBHVH1N/CayAbZhM2dgm5m7PBSIKjD2p1j/LO
+         YehpJJ7yDyDeA3XE/Le3LeTxK8GLHY1L7ROggxPQV5skftWMuEYleybwqIWISwXFxUGS
+         GSnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740736808; x=1741341608;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8/KW66e+2kSdtpDjiB9O/DXhYGHHMWWc9C6pdhsHHA=;
+        b=o6yYblrg2PQXFwHAHilgLfODFyzrNQkRsLdnA9zeEwazoOz00PXei49mKgCaNR8GCF
+         30kIjwmZxxpkUPV2z7e1Y3wTeTZ+cmNqDwfoMjAeuGw5oYA5iMx0Ik+ZRe8ahfdbUys7
+         5qgSBaNSP0L90/WaXdq39CErUP7yOxSXoUVXbAXteotofHMA1HkfzIGjNi2pQh9kdAgL
+         LUr6MFrxpW13m9hwGrxt3pePj5wj/W1n8klbKbja7f2Rznve+DCfXYdHxznSFUXStB5z
+         ZK4bIB+Bt0EqU3UyQshAITMAXBfCmMf3B4m3cueH7L+VRxPmgzH/CG4OY7c3M39IJUiu
+         udCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUaw1jQ8q1mc8w8/Lc7u0siQAZI/39ITaa0rwkx4E8Z0bKAxoB+icxLzvxUAHqGKP6ZR8lyqsIGQKKMjoal@vger.kernel.org, AJvYcCWaBGdTTMfpPPPH/Xl7HlApToo7ITvs3cRfCtgChQE2YAuRUtcuNAPkyViEkCljeWODYRGHiIx7waFM@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZnXhXpbwzGwZgBRytgB9SkOshC+ao8ix0vCn9yJj942ZIlDp+
+	fN6iei56ruvwZqjOYD1jadhzXwYFVrmZ4wbresJImLV9/YDXnyA5
+X-Gm-Gg: ASbGncumS96vT6iIR21+5oXLYBBqcpHCFmO2TN7gGcy7fqMM5vh+V2L7HXm/NDdwH58
+	NUGPRhe7/+XUBDHbZD5Ru47QlCHboGykcfhvSpu9DtoZoMr3i3sMt11RhAKpcKeDv7+mHEQClSG
+	YuUeIPlp9M5fXuSkKPhDNfDdTpjRPzZ74GkViaG3ifHWfwo3et+zo2Q1VBavUa0fNQrOo83oLNG
+	XDYoPibZBMPOQGYP1oTimEhm/LEOyu3Mt4bia993vVTUQBxyFl+SWMgsLqCzmPG94xchSoA02To
+	aE4LF4dBOJOKCGPkMannQe+LGQc/SxwdKKjiS3Re51do3wAbARJzAfxGosqxE0UY5iwerjjUM0j
+	uzIR17tM=
+X-Google-Smtp-Source: AGHT+IGyRp8hI4t7T43ptRiHkMVh7sT8uEcSSYopBs+Zo+MF7XVTxA73/hYKbTZJJ7+AgQQ9QgdWPA==
+X-Received: by 2002:a2e:b8d1:0:b0:309:1f1a:276b with SMTP id 38308e7fff4ca-30b90a0d479mr8875191fa.10.1740736808128;
+        Fri, 28 Feb 2025 02:00:08 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30b867a7c66sm4555331fa.7.2025.02.28.02.00.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2025 02:00:07 -0800 (PST)
+Message-ID: <46364d27-0316-4288-b559-209b4e41a533@gmail.com>
+Date: Fri, 28 Feb 2025 12:00:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,134 +67,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] mm/page_alloc: Clarify should_claim_block()
- commentary
-Content-Language: en-US
-To: Brendan Jackman <jackmanb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>, Michal Hocko
- <mhocko@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Yosry Ahmed <yosry.ahmed@linux.dev>
-References: <20250228-clarify-steal-v4-0-cb2ef1a4e610@google.com>
- <20250228-clarify-steal-v4-2-cb2ef1a4e610@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250228-clarify-steal-v4-2-cb2ef1a4e610@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 71E7E2116C
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Subject: Re: [PATCH] gpio: Document the 'valid_mask' being internal
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+References: <Z71qphikHPGB0Yuv@mva-rohm>
+ <CACRpkdYOGeDaDUuQQUGwvFNNk7ZuFjkXSMPXL3BJ=4jGEGPkoQ@mail.gmail.com>
+ <ce0d802d-6bad-4028-bb57-18bddba5632d@gmail.com>
+ <CACRpkdZtWLGAn0K+xENY+RF6CsWPn0m7R--W9EaH+xTKazALFg@mail.gmail.com>
+ <8979f8d4-8768-40b0-a3a7-6638ddb626cd@gmail.com>
+ <a7ab9d47-cd17-4098-b2ba-d53dfc19dbed@gmail.com>
+ <CACRpkdafJfmuO++XXSFha51Q5=9DrqqRtxOpNeUsmvy7BHrC2g@mail.gmail.com>
+ <f3984cfc-3e3f-47d9-a734-3af7f072c22b@gmail.com>
+ <6cb71da0-18cd-4ecc-8b7d-822e85987216@gmail.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+In-Reply-To: <6cb71da0-18cd-4ecc-8b7d-822e85987216@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 2/28/25 10:52, Brendan Jackman wrote:
-> There's lots of text here but it's a little hard to follow, this is an
-> attempt to break it up and align its structure more closely with the
-> code.
+On 28/02/2025 11:42, Matti Vaittinen wrote:
+> On 28/02/2025 11:28, Matti Vaittinen wrote:
+>>
+>> CC: Geert (because, I think he was asked about the Rcar GPIO check 
+>> before).
+>>
+>> On 28/02/2025 10:23, Linus Walleij wrote:
+>>> On Thu, Feb 27, 2025 at 9:24 AM Matti Vaittinen
+>>> <mazziesaccount@gmail.com> wrote:
 > 
-> Reword the top-level function comment to just explain what question the
-> function answers from the point of view of the caller.
+>>> The call graph should look like this:
+>>>
+>>> devm_gpiod_get_array()
+>>>      gpiod_get_array()
+>>>          gpiod_get_index(0...n)
+>>>              gpiod_find_and_request()
+>>>                  gpiod_request()
+>>>                      gpiod_request_commit()
+>>
+>> Here in my setup the guard.gc->request == NULL. Thus the code never 
+>> goes to the branch with the validation. And just before you ask me why 
+>> the guard.gc->request is NULL - what do you call a blind bambi? :)
+>>   - No idea.
 > 
-> Break up the internal logic into different sections that can have their
-> own commentary describing why that part of the rationale is present.
+> Oh, I suppose the 'guard.gc' is just the chip structure. So, these 
+> validity checks are only applied if the gc provides the request 
+> callback? As far as I understand, the request callback is optional, and 
+> thus the validity check for GPIOs may be omitted.
 > 
-> Note the page_group_by_mobility_disabled logic is not explained in the
-> commentary, that is outside the scope of this patch...
-> 
-> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+>>
+>>>                          gpiochip_line_is_valid()
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Would something like this be appropriate? It seems to work "on my 
+machine" :) Do you see any unwanted side-effects?
 
-> +	/*
-> +	 * Unmovable/reclaimable allocations would cause permanent
-> +	 * fragmentations if they fell back to allocating from a movable block
-> +	 * (polluting it), so we try to claim the whole block regardless of the
-> +	 * allocation size. Later movable allocations can always steal from this
-> +	 * block, which is less problematic.
-> +	 */
-> +	if (start_mt == MIGRATE_RECLAIMABLE || start_mt == MIGRATE_UNMOVABLE)
-> +		return true;
-> +
-> +	if (page_group_by_mobility_disabled)
-> +		return true;
-> +
-> +	/*
-> +	 * Movable pages won't cause permanent fragmentation, so when you alloc
++++ b/drivers/gpio/gpiolib.c
+@@ -2315,6 +2315,10 @@ static int gpiod_request_commit(struct gpio_desc 
+*desc, const char *label)
+         if (!guard.gc)
+                 return -ENODEV;
 
-s/you/we/ for consistency? I think Andrew can amend locally to avoid resend.
++       offset = gpio_chip_hwgpio(desc);
++       if (!gpiochip_line_is_valid(guard.gc, offset))
++               return -EINVAL;
++
+         if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
+                 return -EBUSY;
 
-Thanks.
+@@ -2323,11 +2327,7 @@ static int gpiod_request_commit(struct gpio_desc 
+*desc, const char *label)
+          */
 
-> +	 * small pages, we just need to temporarily steal unmovable or
-> +	 * reclaimable pages that are closest to the request size. After a
-> +	 * while, memory compaction may occur to form large contiguous pages,
-> +	 * and the next movable allocation may not need to steal.
-> +	 */
->  	return false;
->  }
->  
-> 
+         if (guard.gc->request) {
+-               offset = gpio_chip_hwgpio(desc);
+-               if (gpiochip_line_is_valid(guard.gc, offset))
+-                       ret = guard.gc->request(guard.gc, offset);
+-               else
+-                       ret = -EINVAL;
++               ret = guard.gc->request(guard.gc, offset);
+                 if (ret)
+                         goto out_clear_bit;
+         }
 
+I can craft a formal patch if this seems reasonable.
+
+Yours,
+	-- Matti
