@@ -1,296 +1,205 @@
-Received: from smtpx.fel.cvut.cz (smtpx.feld.cvut.cz [147.32.210.153])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B172566C4;
-	Fri, 28 Feb 2025 09:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=147.32.210.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924682580F8
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736094; cv=none; b=sHP1WiH6R1V/I9Sc97pbfzA+70JzuAyUkGAR43YwGiw6jxOFqv8xP/CkCpKgnHI+CRvgiYYiBGB5ef23LZLcrO90sbX8j1E7UPI7rbEMy/+K6HdQAwzt6vrWui8cU0KfoTHwWWa2/5JPO2PSW8q5plvdS1FHCxJbeq8XGe7N3uI=
+	t=1740736100; cv=none; b=CEXLG5iVeGEkEm/jlhZDZgM3Ny4G9m5uvL69kHIFfvt210CjSRsLO6kMImFNkmcwc/jOMcRUJxKACDHf6ugQrTiLgsL4w+/db2SGxgpARRlQ+06nkr3J4Ctyig2vDMv4bG35v7xqENJMeBFzca7Fyp8JJ8uKkWzZdL7t0HsrshM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736094; c=relaxed/simple;
-	bh=Y2u0vTAtoMWbonIsPCrW2jF+SV3pPZwoCud/mkjYeCM=;
-	h=From:To:Subject:Date:Cc:References:In-Reply-To:MIME-Version:
-	 Content-Type:Content-Disposition:Message-Id; b=sjMmXQCojRlQSFz2o9WD9BsmNdwKT4B7dnUvGT/MqcCdE0VMsx5GGH6kfhfq5M34ZYRE4E0QWzjEgG5TgNZcqXOZ5BiQVCMC2Qqj2llxOmQ6Jjd5ZK98eJtTXRsJrsBcQ5J3mvqyikt8cSzHsWew3oGC/Siumhy/+vpFbafobto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pikron.com; spf=pass smtp.mailfrom=fel.cvut.cz; arc=none smtp.client-ip=147.32.210.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pikron.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fel.cvut.cz
-Received: from localhost (unknown [192.168.200.27])
-	by smtpx.fel.cvut.cz (Postfix) with ESMTP id 6C3C640619;
-	Fri, 28 Feb 2025 10:38:13 +0100 (CET)
-X-Virus-Scanned: IMAP STYX AMAVIS
-Received: from smtpx.fel.cvut.cz ([192.168.200.2])
- by localhost (cerokez-250.feld.cvut.cz [192.168.200.27]) (amavis, port 10060)
- with ESMTP id 3XiIfuOHGNn1; Fri, 28 Feb 2025 10:38:07 +0100 (CET)
-Received: from baree.pikron.com (static-84-242-78-234.bb.vodafone.cz [84.242.78.234])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pisa)
-	by smtpx.fel.cvut.cz (Postfix) with ESMTPSA id 03B3D40463;
-	Fri, 28 Feb 2025 10:34:27 +0100 (CET)
-From: Pavel Pisa <ppisa@pikron.com>
-To: David Jander <david@protonic.nl>
-Subject: Re: [RFC PATCH 0/7] Add Linux Motion Control subsystem
-Date: Fri, 28 Feb 2025 10:34:43 +0100
-User-Agent: KMail/1.9.10
-Cc: linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org,
- Jonathan Corbet <corbet@lwn.net>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- devicetree@vger.kernel.org,
- linux-doc@vger.kernel.org,
- Nuno Sa <nuno.sa@analog.com>,
- Jonathan Cameron <jic23@kernel.org>,
- Oleksij Rempel <o.rempel@pengutronix.de>
-References: <20250227162823.3585810-1-david@protonic.nl>
-In-Reply-To: <20250227162823.3585810-1-david@protonic.nl>
-X-KMail-QuotePrefix: > 
-Organization: PiKRON Ltd.
+	s=arc-20240116; t=1740736100; c=relaxed/simple;
+	bh=8czOAp1XIVXzJzW/nGeiln/rxS6cj6xKkuUCCr0X8ZA=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=pNW7XWOmaPFOKL3Ez1SEoboL7DSFox/P8bKkYnmLM9lijzMIvqxk20xqB1s7Fhsth995IWd9PEfu/J6pTdj2bMWwOlWD/xiAYmT57kfA1QpaCmlwwU1fXamizLQnxTqO1Ml/jCWD6JFQSewdvSKytj+sUpHO76XuxtUFgGzM9vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=b/wBmhrA; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="b/wBmhrA"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250228094810epoutp01d0b37687ab2deec6b8c432d11079449f~oVkBT5ssb1418214182epoutp01a
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:48:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250228094810epoutp01d0b37687ab2deec6b8c432d11079449f~oVkBT5ssb1418214182epoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740736090;
+	bh=d/xrksObyuUS+LfR0wsAM0jpJ6JI4C0qssS+Biux8N8=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=b/wBmhrAsfgpVJAMqJYU0R5MjmfQjV+Tzuva/an1oEo2ZZKMTIDgphUuImNnED8gF
+	 PIsG1Dtq+6Ci93Wg7eeBNPS+qq9MSk/naRg1WMvEYzwGYjml8jcQnIQYbCo1U/64TD
+	 M/4navUYX+kJbQ2zzElVnkzBVNoYMZQJiS1Lj/fI=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250228094809epcas5p43b4423daa009f9e6d37523f7cd7d890a~oVkA0hqiK1544615446epcas5p4W;
+	Fri, 28 Feb 2025 09:48:09 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z43L006Lmz4x9Pp; Fri, 28 Feb
+	2025 09:48:08 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F4.9D.19956.75681C76; Fri, 28 Feb 2025 18:48:07 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250228070503epcas5p3260dacbf7b2ce5cdb1783e570af665a1~oTVm3L9Hm1856518565epcas5p3E;
+	Fri, 28 Feb 2025 07:05:03 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250228070503epsmtrp2cec91f437594f495f6c7d4d7d07cfec2~oTVm2ZPRN1928319283epsmtrp2d;
+	Fri, 28 Feb 2025 07:05:03 +0000 (GMT)
+X-AuditID: b6c32a4b-fe9f470000004df4-33-67c18657ffcd
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	00.CA.18729.F1061C76; Fri, 28 Feb 2025 16:05:03 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250228070501epsmtip2b98fd1fe64992511d761785b68a5e7a4~oTVlEB6Zi0820508205epsmtip2L;
+	Fri, 28 Feb 2025 07:05:01 +0000 (GMT)
+From: Aakarsh Jain <aakarsh.jain@samsung.com>
+To: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: m.szyprowski@samsung.com, andrzej.hajda@intel.com, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, krzysztof.kozlowski+dt@linaro.org,
+	linux-samsung-soc@vger.kernel.org, gost.dev@samsung.com,
+	aswani.reddy@samsung.com, pankaj.dubey@samsung.com, Aakarsh Jain
+	<aakarsh.jain@samsung.com>
+Subject: [PATCH] media: s5p-mfc: Support for handling RET_ENC_BUFFER_FULL
+ interrupt
+Date: Fri, 28 Feb 2025 12:29:52 +0530
+Message-Id: <20250228065952.14375-1-aakarsh.jain@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJKsWRmVeSWpSXmKPExsWy7bCmhm5428F0g5PTrSye7pjJanF/8WcW
+	i0Obt7Jb3Dywk8ni4sy7LBZ9Lx4yW2x6fI3V4vKuOWwWPRu2slrMOL+PyWLtkbvsFss2/WGy
+	WLT1C7sDr8fiPS+ZPDat6mTzuHNtD5vH5iX1Hn1bVjF6fN4k53Hq62f2APaobJuM1MSU1CKF
+	1Lzk/JTMvHRbJe/geOd4UzMDQ11DSwtzJYW8xNxUWyUXnwBdt8wcoGuVFMoSc0qBQgGJxcVK
+	+nY2RfmlJakKGfnFJbZKqQUpOQUmBXrFibnFpXnpenmpJVaGBgZGpkCFCdkZL/+sZS+4KVOx
+	8/Qa1gbGdxJdjJwcEgImEv13ljB2MXJxCAnsZpS4d2wDlPOJUeLfxmtsEM43RonZExYxdzFy
+	gLU8742CiO9llJjStYcdwvnCKLF+6zFWkCI2AV2Js9tzQFaICKRKvFq3lhWkhllgCZPEoiPP
+	mEASwgKhEo+aPrOD2CwCqhLT/uxkBbF5BWwleg9cYoG4T15i9YYDzCDNEgJv2SVu7/wGdYWL
+	xIXdHhA1whKvjm9hh7ClJD6/28sGYSdLPF70khnCzpFYv2cK1Ex7iQNX5rCAjGEW0JRYv0sf
+	IiwrMfXUOrDTmAX4JHp/P2GCiPNK7JgHY6tJzLnzgxXClpE4vHopI4TtIfHpyBuwGiGBWIk5
+	N56wTWCUnYWwYQEj4ypGydSC4tz01GLTAuO81HJ4PCXn525iBKdBLe8djI8efNA7xMjEwXiI
+	UYKDWUmEd1bsgXQh3pTEyqrUovz4otKc1OJDjKbAIJvILCWanA9MxHkl8YYmlgYmZmZmJpbG
+	ZoZK4rzNO1vShQTSE0tSs1NTC1KLYPqYODilGpjmPY1e8t+Fz27j+UsWdaah1yOmTM79dzn4
+	1bd7jRvfro+ze+/knKJ7NaAj7P9xbQ9xaf1unVUfgw4la16aKfN5fnPq1XzXXaZpK35r7vdM
+	rp50hINb65/qrq6pF1bcWtAiceuUwt8DfvNKhes3fbzb/bBFQ1GHvej7x7m35/REKddq/5+1
+	oejBIRHTc9wvJ8xW/FXF8cjgmRT7tJAi5hVngr2CNl7YUmW9f9WDtKaHuy4uurraKPvqN+X7
+	/U4F27SP9C7ZPelG9br7E4v0fSLk3vrwsJ778OyX732Jg9UlG1Yy8nv/PvUhWf/BqeaWvzHf
+	3V59qMuZtSdync0j1qcfqh+rbCtLOKZxx1NjxfXie0osxRmJhlrMRcWJAM60yisMBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKLMWRmVeSWpSXmKPExsWy7bCSvK58wsF0g/bDyhZPd8xktbi/+DOL
+	xaHNW9ktbh7YyWRxceZdFou+Fw+ZLTY9vsZqcXnXHDaLng1bWS1mnN/HZLH2yF12i2Wb/jBZ
+	LNr6hd2B12PxnpdMHptWdbJ53Lm2h81j85J6j74tqxg9Pm+S8zj19TN7AHsUl01Kak5mWWqR
+	vl0CV8bLP2vZC27KVOw8vYa1gfGdRBcjB4eEgInE896oLkYuDiGB3YwSExdPZeli5ASKy0j8
+	bzvGDmELS6z895wdougTo8SmV2uYQZrZBHQlzm7PAakREUiXmHTnKwtIDbPAOiaJnSsnsoIk
+	hAWCJTasms4MYrMIqEpM+7MTLM4rYCvRe+AS1DJ5idUbDjBPYORZwMiwilEytaA4Nz232LDA
+	MC+1XK84Mbe4NC9dLzk/dxMjOCS1NHcwbl/1Qe8QIxMH4yFGCQ5mJRHeWbEH0oV4UxIrq1KL
+	8uOLSnNSiw8xSnOwKInzir/oTRESSE8sSc1OTS1ILYLJMnFwSjUwRV2N/ffr54Nr58REL7Gm
+	LTr3+MUsr4R8g8DQTxP6LNYvsJmyVVk8yP+YZkG/0sJ0z9T/O+Imzg7SeSU3ibe9S3v9Xul3
+	pX2N8Vb3ahNeHxVnPPM7/OMLeyb/dPaUpsjcfSu5X8VdOPqsxz6rQDZxy/snvb48dequ6f9M
+	chkmO/IcSWvXn1ow9/j023MmfXhStUSoZvq/UzUsfod+FwSes9NU02Xl5Mw4+oCnUW5Zudyz
+	hicx37Stl6xRc54mf+Vj0NWZpduWaO46/SnqgoaFVE7DO7YE013bOz4tWS286er1r3WsZpHr
+	u0/ElR3stHVLU401cVvmtYP7f8Kb/fkOPv/uc8ofXs73n2N5yztpJZbijERDLeai4kQA2gjU
+	HbgCAAA=
+X-CMS-MailID: 20250228070503epcas5p3260dacbf7b2ce5cdb1783e570af665a1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250228070503epcas5p3260dacbf7b2ce5cdb1783e570af665a1
+References: <CGME20250228070503epcas5p3260dacbf7b2ce5cdb1783e570af665a1@epcas5p3.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202502281034.43102.ppisa@pikron.com>
 
-Hello David and others
+When output encoded buffer size provided by userspace
+is insufficient with current encoding parameters, it
+leads to RET_ENC_BUFFER_FULL interrupt which was not
+handled in IRQ handler.
+
+On handling of RET_ENC_BUFFER_FULL interrupt leads to
+NAL_ABORT command from host to risc which in turn leads
+to RET_NAL_ABORT interrupt. On receiving RET_NAL_ABORT
+driver clears workbit and VB2 queues for cleaner closing
+of MFC instance.
+
+When user encounters "Call on DQBUF after unrecoverable
+error", userspace should close fd and restart with larger
+output encoder buffer size.
+
+Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
+---
+ .../media/platform/samsung/s5p-mfc/regs-mfc-v6.h   |  1 +
+ drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c   | 14 ++++++++++++++
+ .../platform/samsung/s5p-mfc/s5p_mfc_common.h      |  1 +
+ .../platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c      |  5 +++++
+ 4 files changed, 21 insertions(+)
+
+diff --git a/drivers/media/platform/samsung/s5p-mfc/regs-mfc-v6.h b/drivers/media/platform/samsung/s5p-mfc/regs-mfc-v6.h
+index fa49fe580e1a..075a58b50b8c 100644
+--- a/drivers/media/platform/samsung/s5p-mfc/regs-mfc-v6.h
++++ b/drivers/media/platform/samsung/s5p-mfc/regs-mfc-v6.h
+@@ -45,6 +45,7 @@
+ #define S5P_FIMV_H2R_CMD_WAKEUP_V6		8
+ #define S5P_FIMV_CH_LAST_FRAME_V6		9
+ #define S5P_FIMV_H2R_CMD_FLUSH_V6		10
++#define S5P_FIMV_H2R_CMD_NAL_ABORT_V6		11
+ /* RMVME: REALLOC used? */
+ #define S5P_FIMV_CH_FRAME_START_REALLOC_V6	5
+ 
+diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
+index 5f80931f056d..fa211c2d68a4 100644
+--- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
++++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc.c
+@@ -739,6 +739,20 @@ static irqreturn_t s5p_mfc_irq(int irq, void *priv)
+ 		ctx->state = MFCINST_RUNNING;
+ 		goto irq_cleanup_hw;
+ 
++	case S5P_MFC_R2H_CMD_ENC_BUFFER_FULL_RET:
++		ctx->state = MFCINST_NAL_ABORT;
++		s5p_mfc_hw_call(dev->mfc_ops, clear_int_flags, dev);
++		set_work_bit(ctx);
++		WARN_ON(test_and_clear_bit(0, &dev->hw_lock) == 0);
++		s5p_mfc_hw_call(dev->mfc_ops, try_run, dev);
++		break;
++
++	case S5P_MFC_R2H_CMD_NAL_ABORT_RET:
++		ctx->state = MFCINST_ERROR;
++		s5p_mfc_cleanup_queue(&ctx->dst_queue, &ctx->vq_dst);
++		s5p_mfc_cleanup_queue(&ctx->src_queue, &ctx->vq_src);
++		goto irq_cleanup_hw;
++
+ 	default:
+ 		mfc_debug(2, "Unknown int reason\n");
+ 		s5p_mfc_hw_call(dev->mfc_ops, clear_int_flags, dev);
+diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
+index 3cc2a4f5c40a..86c316c1ff8f 100644
+--- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
++++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_common.h
+@@ -141,6 +141,7 @@ enum s5p_mfc_inst_state {
+ 	MFCINST_RES_CHANGE_INIT,
+ 	MFCINST_RES_CHANGE_FLUSH,
+ 	MFCINST_RES_CHANGE_END,
++	MFCINST_NAL_ABORT,
+ };
+ 
+ /*
+diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
+index 4cf12f33d706..356adfddcfcf 100644
+--- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
++++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
+@@ -2229,6 +2229,11 @@ static void s5p_mfc_try_run_v6(struct s5p_mfc_dev *dev)
+ 		case MFCINST_HEAD_PRODUCED:
+ 			ret = s5p_mfc_run_init_enc_buffers(ctx);
+ 			break;
++		case MFCINST_NAL_ABORT:
++			mfc_write(dev, ctx->inst_no, S5P_FIMV_INSTANCE_ID_V6);
++			s5p_mfc_hw_call(dev->mfc_cmds, cmd_host2risc,
++					dev, S5P_FIMV_H2R_CMD_NAL_ABORT_V6, NULL);
++			break;
+ 		default:
+ 			ret = -EAGAIN;
+ 		}
+-- 
+2.17.1
 
-On Thursday 27 of February 2025 17:28:16 David Jander wrote:
-> Request for comments on: adding the Linux Motion Control subsystem to the
-> kernel.
-
-I have noticed on Phoronix, that the new system is emerging.
-This is area where I have lot (more than 30 years) of experience
-at my company and I have done even lot with my studnets at university.
-I have big interest that this interface fits our use neeeds
-and offers for future integration of our already open-source
-systems/components.
-
-This is preliminary reply, I want to find time for more discussion
-and analysis (which is quite hard during summer term where I have
-lot of teaching and even ongoing project now).
-
-I would like to discuse even future subsystem evolution
-which would allow coordinates axes groups creation, smooth
-segments based on N-th order splines incremental attachment,
-the path planning and re-planning if the target changes
-as reaction to camera or other sensor needs etc.
-
-At this moment I have interrest if there is site which
-would start to collect these ideas and where can be
-some references added.
-
-I think that I have quite some stuff to offer.
-
-To have idea about my direction of thinking and needs
-of interface I would provide some references even
-to our often commercially sold but mostly conceived
-as hobby projects.
-
-Coordinated axes groups movement with incremental spline
-segment addition into command queue (our COORDMV componet
-of PXMC library) is demonstrated on old BOSCH SR 450 SCARA
-system. The robot has never fully worked at Skoda Auto
-with original BOSH control unit. But when it has been donated
-to Czech Technical University, we have build control
-unit at my copany based on Motorola 68376 MCU in around
-2000 year. I have later paid one student to prepare
-demo in Python to demonstrate the system.
-
-You can click on video
-
-  MARS 8 BigBot and Robot Bosch SR 450 Drawing Roses 
-  http://pikron.com/pages/products/motion_control.html
-
-The related python application is there
-
-  https://github.com/cvut/pyrocon
-
-In the far future, I can imagine that it can connect
-to proposed LMC API and achieve the same results.
-
-The related control unit MARS 8 page
-
-  http://pikron.com/pages/products/motion_control/mars_8.html
-
-CPU board for museum or curiosity
-
-  http://pikron.com/pages/products/cpu_boards/mo_cpu1.html
-
-The firmware main application
-
-  https://gitlab.com/pikron/projects/mo_cpu1/mars-mo_cpu1
-
-which uses our PXMC motion control library
-
-  https://gitlab.com/pikron/sw-base/pxmc
-
-There is basic documentation for it on its site
-
-  https://pxmc.org/
-  https://pxmc.org/files/pxmc.pdf
-
-It is used in system less environment on the MARS 8 system
-and actual control at fixed sampling frequency is done
-in timer interrupt at 1 kHz.
-
-More such units serve our studnets to control CRS
-A465 robots for more than 20 years already.
-Their original control units have broken by age...
-
-The same library has been used in our design of HW and SW
-for infusion systems (MSP430 + iMX1 with RTEMS)
-
-  https://pikron.com/pages/devel/medinst.html
-
-HPL systems (LPC1768 HW)
-
-  http://pikron.com/pages/products/hplc/lcp_5024.html
-
-and on newer system less LPC4088 + Xilinx XC6SLX9
-system used for example for more ESA and ADS projects
-
-  https://www.esa.int/ESA_Multimedia/Images/2023/06/W-band_on_the_run
-  https://github.com/esa/lxrmount
-  https://gitlab.com/pikron/projects/lx_cpu/rocon-commander/-/wikis/lxr-lisa-com
-
-The LX_RoCoN is based on FPGA design with up to 8 IRC inputs, 16 arbitrarily
-assignable PWM H-bridge output, TUMBL (open source Microblaze variant) co-processor
-for up to four electronic commutations for PMSM, stepper or IRC equipped steppers
-there 
-
-  https://gitlab.com/pikron/projects/lx_cpu/lx-rocon
-
-The commutation ((forward + inverse) x (Park + Clarke)) by co-processor
-runs on PMW frequency (20 kHz), D+Q current PI, position PID and COORMV
-at 4 kHz.
-
-FPGA design has been started in the frame of the next thesis
-
-  https://dspace.cvut.cz/bitstream/handle/10467/23347/F3-DP-2014-Meloun-Martin-prace.pdf
-
-More Linux, RTEMS, NuttX, etc. theses led by me there
-
-  https://gitlab.fel.cvut.cz/otrees/org/-/wikis/theses-defend
-
-More information often about RT, motion control there
-
-   https://gitlab.fel.cvut.cz/otrees/org/-/wikis/knowbase
-
-Back to the GNU/Linux
-
-Experiment to run our PXMC library on Linux, demonstration on Raspberry Pi,
-AM4300, Xilinx Zynq with DC and PMSM motors
-
-  https://gitlab.com/pikron/projects/pxmc-linux
-
-The HW with small FPGA implementing IRC, 3x PWM and current ADC
-commanding and collection which is connected to Raspberry Pi
-by SPI there
-
-  https://gitlab.com/pikron/projects/rpi/rpi-mc-1
-
-It is intended for demonstration to enthusiasts, not for
-industry. (I am not happy to see H2 filling stations
-controlled by RPi today...)
-
-But the same code can be run on Xilinx Zynq with DC motor
-peripheral
-
-  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top/-/tree/master/system/ip/dcsimpledrv_1.0
-
-and PMSM peripheral
-
-  https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top/-/tree/master/system/ip/pmsm_3pmdrv1_to_pins
-
-but there are even more advanced option even for Linux.
-The TUMBL coprocessor has been replaced by small RISC-V
-developed in the frame of our Advanced Computer Architectures
-course by my studnets
-
-   https://gitlab.fel.cvut.cz/otrees/fpga/rvapo-vhdl
-
-and the 3 phase motor peripheral has been combined
-with this coprocessor on Zynq, So PREEMP_RT Linux (or even RETMS)
-can deliver D and Q PWM values to shared memory and coprocessor
-takes care about commutation at 20 kHz, then collects A, B, C
-currents and convert them at 20 kHz to D Q and filters
-them to deliver cumulative sum and accumulated samples
-count to the slower Linux control loop. But ARM core can
-access peripherals directly as well for debugging purposes
-etc.
-
-The Linux, RTEMS application source
-
-  https://gitlab.fel.cvut.cz/otrees/fpga/rvapo-apps/-/tree/master/apps/rvapo-pmsm
-  
-co-processor firware source
-
-  https://gitlab.fel.cvut.cz/otrees/fpga/rvapo-vhdl/-/blob/main/software/c/firmware_fresh/firmware.c
-
-The 3-phase peripheral can be synthesized even by fully open source
-tool chain to iCE40 and PMSM motor control has been demonstrated
-even on cheap ICE-V Wireless (ESP32C3+iCE40)) with SW running NuttX
-
-  https://gitlab.fel.cvut.cz/otrees/risc-v-esp32/ice-v-pmsm
-
-We have tatgets for the most of these peripherals under Linux
-and NuttX for pysimCoder
-
-  https://github.com/robertobucher/pysimCoder
-
-Some examples ow pysimCoder is used by independed
-company there
-
-  https://www.youtube.com/@robots5/videos
-
-It is on NuttX, but on RPi and Zynq it works even better
-on GNU/Linux.
-
-So in general, I think that we have large portfolio
-of building blocks which would allow to build motion,
-robotic controllers, communications etc. and I would be happy
-if they are reused and even some project conceived
-together with others to join the forces.
-
-It would be ideal if the all motion control related
-resources and links could be somehow collected
-that wheel is not reinvented unnecessarily.
-
-The most of my code is Mozilla, GPL etc... I have
-right to relicence my company stuff if the license does
-not fit. On the other hand, I do not intend to follow
-such offers as of one well funded chip related association,
-which offered us to relicense all to them with no retain
-of any control and additional right and they would not
-take care about the valuable project at all no looking
-for funding etc... no promise for developmet etc...
-So there are some limits.
-
-Best wishes,
-
-                Pavel
-
-                Pavel Pisa
-
-    phone:      +420 603531357
-    e-mail:     pisa@cmp.felk.cvut.cz
-    Department of Control Engineering FEE CVUT
-    Karlovo namesti 13, 121 35, Prague 2
-    university: http://control.fel.cvut.cz/
-    personal:   http://cmp.felk.cvut.cz/~pisa
-    company:    https://pikron.com/ PiKRON s.r.o.
-    Kankovskeho 1235, 182 00 Praha 8, Czech Republic
-    projects:   https://www.openhub.net/accounts/ppisa
-    social:     https://social.kernel.org/ppisa
-    CAN related:http://canbus.pages.fel.cvut.cz/
-    RISC-V education: https://comparch.edu.cvut.cz/
-    Open Technologies Research Education and Exchange Services
-    https://gitlab.fel.cvut.cz/otrees/org/-/wikis/home
