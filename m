@@ -1,505 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out198-12.us.a.mail.aliyun.com (out198-12.us.a.mail.aliyun.com [47.90.198.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9C525E444;
-	Fri, 28 Feb 2025 10:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2249D25F97C;
+	Fri, 28 Feb 2025 10:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736843; cv=none; b=fQSOS9sN2/booqZTc1RfnWSK9T+SRA62olz8IT7LC/Y4RG+aSOJokI9QZ6FYGVDmGaGcHPy6Kt0LDKF3MLejyS2VWGXO0gSJJJORxvhBmyRlP4MMRd65SEH5nSgJpiEslfrPVFQUIzZiNZSKsO5AWuXjmBbjVbWeSMS11kBjhiQ=
+	t=1740736848; cv=none; b=XUR8ElNw2eaEcWCmgSnJkFZwZKJ1zFS3gRk+yYBNiElS6YIMvaxRHf48Doo+qyC/rcPy2oKbREz5UqyYD9HIdu3e8cJxxNcGYc4TrPuvhvhXt0bJOOIcUOVpEUImLwhhXvDGPMNMrqYGvgYOhWX3YaL01j6dZMXsFLnCV2sXGlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736843; c=relaxed/simple;
-	bh=jvGXi0w+0TEz8Qyri1YoZHBnZuLioAdX+aCO0qi+82U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QsKFSYPjM+emDYni0k5AXtp38sUWKiEbrQa6TLmE3jUMlDI0YdSWha0ARhdy2TLg98By98Z6U7AbDmGvin/AXqqNI9Rfn4L0YGva3Qgxu4CpvkZaAEnRVpdA6vJMLLDPjOt93h5L5c6HZl81yZZgKSkmruSWNyjREGkXtjfHPh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lfMuV8Nk; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lfMuV8Nk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740736841; x=1772272841;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=jvGXi0w+0TEz8Qyri1YoZHBnZuLioAdX+aCO0qi+82U=;
-  b=lfMuV8NkHvnGDuQ2T7GoqTheD8oak5tJjlTKBrTjxt1lUZGVO6wwv1WK
-   DFPqJkCSZ4/++MRFhN+nElj+/4whx44vVxJUPUu0JcwQz3VJUwVRP5jXM
-   NpfNmNKjs5HRGSYFqjBXtxm4Fxv43axk4MKDyuZ4c4Kxb4vj0CiD7xV0+
-   oLsGZSVpIDhDjUhWKWqwuqrQXSgk0wqUx+SM818MFlF0F1U7iFuLh3uOM
-   F2S7Pco04Og2t6d3LvNcfTa9fB6ibN3XKypIg9Z8ArhWSuDSwiFadBTOt
-   iyLK9dgKy7G6jBBY28OAT7o/9vbA/omwpVwj34+NczB1MhoelffVAifaI
-   Q==;
-X-CSE-ConnectionGUID: oK7i7NahQOeM7GcHZ5fVcA==
-X-CSE-MsgGUID: ADPy/qW0TuerYoNtMDx2GA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40902752"
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="40902752"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:00:30 -0800
-X-CSE-ConnectionGUID: gf9n65U1T1W3py/NR3L3jA==
-X-CSE-MsgGUID: FFypTQGRSBufECFT1f0iYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="117325761"
-Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
-  by orviesa006.jf.intel.com with ESMTP; 28 Feb 2025 02:00:30 -0800
-From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	hannes@cmpxchg.org,
-	yosry.ahmed@linux.dev,
-	nphamcs@gmail.com,
-	chengming.zhou@linux.dev,
-	usamaarif642@gmail.com,
-	ryan.roberts@arm.com,
-	21cnbao@gmail.com,
-	ying.huang@linux.alibaba.com,
-	akpm@linux-foundation.org,
-	linux-crypto@vger.kernel.org,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	clabbe@baylibre.com,
-	ardb@kernel.org,
-	ebiggers@google.com,
-	surenb@google.com,
-	kristen.c.accardi@intel.com
-Cc: wajdi.k.feghali@intel.com,
-	vinodh.gopal@intel.com,
-	kanchana.p.sridhar@intel.com
-Subject: [PATCH v7 15/15] mm: zswap: Compress batching with request chaining in zswap_store() of large folios.
-Date: Fri, 28 Feb 2025 02:00:24 -0800
-Message-Id: <20250228100024.332528-16-kanchana.p.sridhar@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
-References: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
+	s=arc-20240116; t=1740736848; c=relaxed/simple;
+	bh=wCzcqb5ex/eO+H7R2RyhdEzh0ARjyXyxCI2VpaIU6go=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=MgRJ8WqvNrc8hDHQhib5JJipiU4IX9idKBOmrrQUz1pX3pxVB2HjAUDJU0Of7Pb9AtQq/6NwqzTNA/UIc4VRH48YTZ9FigtYG3raoz8wcYjPRhTF7WEA0CQx+FCGzv/XNvohlU9HVnK0J2yTw4Prw8Ngyw8qSbjn/Hlzp0yBycA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com; spf=pass smtp.mailfrom=motor-comm.com; arc=none smtp.client-ip=47.90.198.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motor-comm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motor-comm.com
+Received: from sun-VirtualBox..(mailfrom:Frank.Sae@motor-comm.com fp:SMTPD_---.bfyn0sj_1740736820 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Feb 2025 18:00:31 +0800
+From: Frank Sae <Frank.Sae@motor-comm.com>
+To: Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Frank <Frank.Sae@motor-comm.com>,
+	netdev@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	Parthiban.Veerasooran@microchip.com,
+	linux-kernel@vger.kernel.org,
+	xiaogang.fan@motor-comm.com,
+	fei.zhang@motor-comm.com,
+	hua.sun@motor-comm.com
+Subject: [PATCH net-next v3 00/14] net:yt6801: Add Motorcomm yt6801 PCIe driver
+Date: Fri, 28 Feb 2025 18:00:06 +0800
+Message-Id: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch introduces zswap_batch_compress() that takes an index within a
-folio, and sets up a request chain for compressing multiple pages of that
-folio, as a batch.
+This series includes adding Motorcomm YT6801 Gigabit ethernet driver
+ and adding yt6801 ethernet driver entry in MAINTAINERS file.
+YT6801 integrates a YT8531S phy.
 
-The call to the crypto layer is exactly the same as in zswap_compress(),
-when batch compressing a request chain in zswap_batch_compress().
-
-zswap_store_folio() is modified to detect if the pool's acomp_ctx has
-more than one "nr_reqs", which will be the case if the CPU onlining code
-has allocated multiple batching resources in the acomp_ctx. If so, it means
-compress batching can be used with a batch-size of "acomp_ctx->nr_reqs".
-
-If compress batching can be used, zswap_store_folio() will invoke
-zswap_batch_compress() to compress and store the folio in batches of
-"acomp_ctx->nr_reqs" pages.
-
-With Intel IAA, the iaa_crypto driver will compress each batch of pages in
-parallel in hardware.
-
-Hence, zswap_batch_compress() does the same computes for a batch, as
-zswap_compress() does for a page; and returns true if the batch was
-successfully compressed/stored, and false otherwise.
-
-If the pool does not support compress batching, or the folio has only one
-page, zswap_store_folio() calls zswap_compress() for each individual
-page in the folio, as before.
-
-Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+Signed-off-by: Frank Sae <Frank.Sae@motor-comm.com>
 ---
- mm/zswap.c | 296 ++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 224 insertions(+), 72 deletions(-)
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index ab9167220cb6..626574bd84f6 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -1051,9 +1051,9 @@ static void acomp_ctx_put_unlock(struct crypto_acomp_ctx *acomp_ctx)
- }
- 
- static bool zswap_compress(struct page *page, struct zswap_entry *entry,
--			   struct zswap_pool *pool)
-+			   struct zswap_pool *pool,
-+			   struct crypto_acomp_ctx *acomp_ctx)
- {
--	struct crypto_acomp_ctx *acomp_ctx;
- 	struct scatterlist input, output;
- 	int comp_ret = 0, alloc_ret = 0;
- 	unsigned int dlen = PAGE_SIZE;
-@@ -1063,7 +1063,8 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 	gfp_t gfp;
- 	u8 *dst;
- 
--	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
-+	lockdep_assert_held(&acomp_ctx->mutex);
-+
- 	dst = acomp_ctx->buffers[0];
- 	sg_init_table(&input, 1);
- 	sg_set_page(&input, page, PAGE_SIZE, 0);
-@@ -1091,7 +1092,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 	comp_ret = crypto_wait_req(crypto_acomp_compress(acomp_ctx->reqs[0]), &acomp_ctx->wait);
- 	dlen = acomp_ctx->reqs[0]->dlen;
- 	if (comp_ret)
--		goto unlock;
-+		goto check_errors;
- 
- 	zpool = pool->zpool;
- 	gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
-@@ -1099,7 +1100,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 		gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
- 	alloc_ret = zpool_malloc(zpool, dlen, gfp, &handle);
- 	if (alloc_ret)
--		goto unlock;
-+		goto check_errors;
- 
- 	buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
- 	memcpy(buf, dst, dlen);
-@@ -1108,7 +1109,7 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 	entry->handle = handle;
- 	entry->length = dlen;
- 
--unlock:
-+check_errors:
- 	if (comp_ret == -ENOSPC || alloc_ret == -ENOSPC)
- 		zswap_reject_compress_poor++;
- 	else if (comp_ret)
-@@ -1116,7 +1117,6 @@ static bool zswap_compress(struct page *page, struct zswap_entry *entry,
- 	else if (alloc_ret)
- 		zswap_reject_alloc_fail++;
- 
--	acomp_ctx_put_unlock(acomp_ctx);
- 	return comp_ret == 0 && alloc_ret == 0;
- }
- 
-@@ -1580,6 +1580,106 @@ static void shrink_worker(struct work_struct *w)
- * main API
- **********************************/
- 
-+/*
-+ * Batch compress multiple @nr_pages in @folio, starting from @index.
-+ */
-+static bool zswap_batch_compress(struct folio *folio,
-+				 long index,
-+				 unsigned int nr_pages,
-+				 struct zswap_entry *entries[],
-+				 struct zswap_pool *pool,
-+				 struct crypto_acomp_ctx *acomp_ctx)
-+{
-+	struct scatterlist inputs[ZSWAP_MAX_BATCH_SIZE];
-+	struct scatterlist outputs[ZSWAP_MAX_BATCH_SIZE];
-+	unsigned int i;
-+	int err = 0;
-+
-+	lockdep_assert_held(&acomp_ctx->mutex);
-+
-+	for (i = 0; i < nr_pages; ++i) {
-+		struct page *page = folio_page(folio, index + i);
-+
-+		sg_init_table(&inputs[i], 1);
-+		sg_set_page(&inputs[i], page, PAGE_SIZE, 0);
-+
-+		/*
-+		 * Each dst buffer should be of size (PAGE_SIZE * 2).
-+		 * Reflect same in sg_list.
-+		 */
-+		sg_init_one(&outputs[i], acomp_ctx->buffers[i], PAGE_SIZE * 2);
-+		acomp_request_set_params(acomp_ctx->reqs[i], &inputs[i],
-+					 &outputs[i], PAGE_SIZE, PAGE_SIZE);
-+
-+		/* Use acomp request chaining. */
-+		if (i)
-+			acomp_request_chain(acomp_ctx->reqs[i], acomp_ctx->reqs[0]);
-+		else
-+			acomp_reqchain_init(acomp_ctx->reqs[0], 0, crypto_req_done,
-+					    &acomp_ctx->wait);
-+	}
-+
-+	err = crypto_wait_req(crypto_acomp_compress(acomp_ctx->reqs[0]), &acomp_ctx->wait);
-+
-+	/*
-+	 * Get the individual compress errors from request chaining.
-+	 */
-+	for (i = 0; i < nr_pages; ++i) {
-+		if (unlikely(acomp_request_err(acomp_ctx->reqs[i]))) {
-+			err = -EINVAL;
-+			if (acomp_request_err(acomp_ctx->reqs[i]) == -ENOSPC)
-+				zswap_reject_compress_poor++;
-+			else
-+				zswap_reject_compress_fail++;
-+		}
-+	}
-+
-+	if (likely(!err)) {
-+		/*
-+		 * All batch pages were successfully compressed.
-+		 * Store the pages in zpool.
-+		 */
-+		struct zpool *zpool = pool->zpool;
-+		gfp_t gfp = __GFP_NORETRY | __GFP_NOWARN | __GFP_KSWAPD_RECLAIM;
-+
-+		if (zpool_malloc_support_movable(zpool))
-+			gfp |= __GFP_HIGHMEM | __GFP_MOVABLE;
-+
-+		for (i = 0; i < nr_pages; ++i) {
-+			unsigned long handle;
-+			char *buf;
-+
-+			err = zpool_malloc(zpool, acomp_ctx->reqs[i]->dlen, gfp, &handle);
-+
-+			if (err) {
-+				if (err == -ENOSPC)
-+					zswap_reject_compress_poor++;
-+				else
-+					zswap_reject_alloc_fail++;
-+
-+				break;
-+			}
-+
-+			buf = zpool_map_handle(zpool, handle, ZPOOL_MM_WO);
-+			memcpy(buf, acomp_ctx->buffers[i], acomp_ctx->reqs[i]->dlen);
-+			zpool_unmap_handle(zpool, handle);
-+
-+			entries[i]->handle = handle;
-+			entries[i]->length = acomp_ctx->reqs[i]->dlen;
-+		}
-+	}
-+
-+	/*
-+	 * Request chaining cleanup:
-+	 *
-+	 * - Clear the CRYPTO_TFM_REQ_CHAIN bit on acomp_ctx->reqs[0].
-+	 * - Reset the acomp_ctx->wait to notify acomp_ctx->reqs[0].
-+	 */
-+	acomp_reqchain_clear(acomp_ctx->reqs[0], &acomp_ctx->wait);
-+
-+	return !err;
-+}
-+
- /*
-  * Store all pages in a folio.
-  *
-@@ -1588,95 +1688,146 @@ static void shrink_worker(struct work_struct *w)
-  * handles to ERR_PTR(-EINVAL) at allocation time, and the fact that the
-  * entry's handle is subsequently modified only upon a successful zpool_malloc()
-  * after the page is compressed.
-+ *
-+ * For compressors that don't support batching, the following structure
-+ * showed a performance regression with zstd using 64K as well as 2M folios:
-+ *
-+ * Batched stores:
-+ * ---------------
-+ *  - Allocate all entries,
-+ *  - Compress all entries,
-+ *  - Store all entries in xarray/LRU.
-+ *
-+ * Hence, the above structure is maintained only for batched stores, and the
-+ * following structure is implemented for sequential stores of large folio pages,
-+ * that fixes the regression, while preserving common code paths for batched
-+ * and sequential stores of a folio:
-+ *
-+ * Sequential stores:
-+ * ------------------
-+ * For each page in folio:
-+ *  - allocate an entry,
-+ *  - compress the page,
-+ *  - store the entry in xarray/LRU.
-  */
- static bool zswap_store_folio(struct folio *folio,
- 			      struct obj_cgroup *objcg,
- 			      struct zswap_pool *pool)
- {
--	long index, from_index = 0, nr_pages = folio_nr_pages(folio);
-+	long index = 0, from_index = 0, nr_pages, nr_folio_pages = folio_nr_pages(folio);
- 	struct zswap_entry **entries = NULL;
-+	struct crypto_acomp_ctx *acomp_ctx;
- 	int node_id = folio_nid(folio);
-+	unsigned int batch_size;
-+	bool batching;
- 
--	entries = kmalloc(nr_pages * sizeof(*entries), GFP_KERNEL);
-+	entries = kmalloc(nr_folio_pages * sizeof(*entries), GFP_KERNEL);
- 	if (!entries)
- 		return false;
- 
--	for (index = from_index; index < nr_pages; ++index) {
--		entries[index] = zswap_entry_cache_alloc(GFP_KERNEL, node_id);
-+	acomp_ctx = acomp_ctx_get_cpu_lock(pool);
- 
--		if (!entries[index]) {
--			zswap_reject_kmemcache_fail++;
--			nr_pages = index;
--			goto store_folio_failed;
--		}
-+	batch_size = acomp_ctx->nr_reqs;
- 
--		entries[index]->handle = (unsigned long)ERR_PTR(-EINVAL);
--	}
-+	nr_pages = (batch_size > 1) ? nr_folio_pages : 1;
-+	batching = (nr_pages > 1) ? true : false;
- 
--	for (index = from_index; index < nr_pages; ++index) {
--		struct page *page = folio_page(folio, index);
--		swp_entry_t page_swpentry = page_swap_entry(page);
--		struct zswap_entry *old, *entry = entries[index];
-+	while (1) {
-+		for (index = from_index; index < nr_pages; ++index) {
-+			entries[index] = zswap_entry_cache_alloc(GFP_KERNEL, node_id);
- 
--		if (!zswap_compress(page, entry, pool)) {
--			from_index = index;
--			goto store_folio_failed;
--		}
-+			if (!entries[index]) {
-+				zswap_reject_kmemcache_fail++;
-+				nr_pages = index;
-+				goto store_folio_failed;
-+			}
- 
--		old = xa_store(swap_zswap_tree(page_swpentry),
--			       swp_offset(page_swpentry),
--			       entry, GFP_KERNEL);
--		if (xa_is_err(old)) {
--			int err = xa_err(old);
-+			entries[index]->handle = (unsigned long)ERR_PTR(-EINVAL);
-+		}
- 
--			WARN_ONCE(err != -ENOMEM, "unexpected xarray error: %d\n", err);
--			zswap_reject_alloc_fail++;
--			from_index = index;
--			goto store_folio_failed;
-+		if (batching) {
-+			/* Batch compress the pages in the folio. */
-+			for (index = from_index; index < nr_pages; index += batch_size) {
-+
-+				if (!zswap_batch_compress(folio, index,
-+							  min((unsigned int)(nr_pages - index),
-+							      batch_size),
-+							  &entries[index], pool, acomp_ctx))
-+					goto store_folio_failed;
-+			}
-+		} else {
-+			/* Sequential compress the next page in the folio. */
-+			struct page *page = folio_page(folio, from_index);
-+
-+			if (!zswap_compress(page, entries[from_index], pool, acomp_ctx))
-+				goto store_folio_failed;
- 		}
- 
--		/*
--		 * We may have had an existing entry that became stale when
--		 * the folio was redirtied and now the new version is being
--		 * swapped out. Get rid of the old.
--		 */
--		if (old)
--			zswap_entry_free(old);
-+		for (index = from_index; index < nr_pages; ++index) {
-+			swp_entry_t page_swpentry = page_swap_entry(folio_page(folio, index));
-+			struct zswap_entry *old, *entry = entries[index];
- 
--		/*
--		 * The entry is successfully compressed and stored in the tree, there is
--		 * no further possibility of failure. Grab refs to the pool and objcg,
--		 * charge zswap memory, and increment zswap_stored_pages.
--		 * The opposite actions will be performed by zswap_entry_free()
--		 * when the entry is removed from the tree.
--		 */
--		zswap_pool_get(pool);
--		if (objcg) {
--			obj_cgroup_get(objcg);
--			obj_cgroup_charge_zswap(objcg, entry->length);
--		}
--		atomic_long_inc(&zswap_stored_pages);
-+			old = xa_store(swap_zswap_tree(page_swpentry),
-+				swp_offset(page_swpentry),
-+				entry, GFP_KERNEL);
-+			if (xa_is_err(old)) {
-+				int err = xa_err(old);
- 
--		/*
--		 * We finish initializing the entry while it's already in xarray.
--		 * This is safe because:
--		 *
--		 * 1. Concurrent stores and invalidations are excluded by folio lock.
--		 *
--		 * 2. Writeback is excluded by the entry not being on the LRU yet.
--		 *    The publishing order matters to prevent writeback from seeing
--		 *    an incoherent entry.
--		 */
--		entry->pool = pool;
--		entry->swpentry = page_swpentry;
--		entry->objcg = objcg;
--		entry->referenced = true;
--		if (entry->length) {
--			INIT_LIST_HEAD(&entry->lru);
--			zswap_lru_add(&zswap_list_lru, entry);
-+				WARN_ONCE(err != -ENOMEM, "unexpected xarray error: %d\n", err);
-+				zswap_reject_alloc_fail++;
-+				from_index = index;
-+				goto store_folio_failed;
-+			}
-+
-+			/*
-+			 * We may have had an existing entry that became stale when
-+			 * the folio was redirtied and now the new version is being
-+			 * swapped out. Get rid of the old.
-+			 */
-+			if (old)
-+				zswap_entry_free(old);
-+
-+			/*
-+			 * The entry is successfully compressed and stored in the tree, there is
-+			 * no further possibility of failure. Grab refs to the pool and objcg,
-+			 * charge zswap memory, and increment zswap_stored_pages.
-+			 * The opposite actions will be performed by zswap_entry_free()
-+			 * when the entry is removed from the tree.
-+			 */
-+			zswap_pool_get(pool);
-+			if (objcg) {
-+				obj_cgroup_get(objcg);
-+				obj_cgroup_charge_zswap(objcg, entry->length);
-+			}
-+			atomic_long_inc(&zswap_stored_pages);
-+
-+			/*
-+			 * We finish initializing the entry while it's already in xarray.
-+			 * This is safe because:
-+			 *
-+			 * 1. Concurrent stores and invalidations are excluded by folio lock.
-+			 *
-+			 * 2. Writeback is excluded by the entry not being on the LRU yet.
-+			 *    The publishing order matters to prevent writeback from seeing
-+			 *    an incoherent entry.
-+			 */
-+			entry->pool = pool;
-+			entry->swpentry = page_swpentry;
-+			entry->objcg = objcg;
-+			entry->referenced = true;
-+			if (entry->length) {
-+				INIT_LIST_HEAD(&entry->lru);
-+				zswap_lru_add(&zswap_list_lru, entry);
-+			}
- 		}
-+
-+		from_index = nr_pages++;
-+
-+		if (nr_pages > nr_folio_pages)
-+			break;
- 	}
- 
-+	acomp_ctx_put_unlock(acomp_ctx);
- 	kfree(entries);
- 	return true;
- 
-@@ -1688,6 +1839,7 @@ static bool zswap_store_folio(struct folio *folio,
- 		zswap_entry_cache_free(entries[index]);
- 	}
- 
-+	acomp_ctx_put_unlock(acomp_ctx);
- 	kfree(entries);
- 	return false;
- }
+v3:
+ - Remove about 5000 lines of code
+ - Remove statistics, ethtool, WoL, PHY handling ...
+ - Reorganize this driver code and remove redundant code
+ - Remove unnecessary yt_dbg information
+ - Remove netif_carrier_on/netif_carrier_off
+ - Remove hw_ops
+ - Add PHY_INTERFACE_MODE_INTERNAL mode in phy driver to support yt6801
+ - replease '#ifdef CONFIG_PCI_MSI' as 'if (IS_ENABLED(CONFIG_PCI_MSI) {}'
+ - replease ‘fxgmac_pdata val’ as 'priv'
+
+v2: https://patchwork.kernel.org/project/netdevbpf/cover/20241120105625.22508-1-Frank.Sae@motor-comm.com/
+ - Split this driver into multiple patches.
+ - Reorganize this driver code and remove redundant code
+ - Remove PHY handling code and use phylib.
+ - Remove writing ASPM config
+ - Use generic power management instead of pci_driver.suspend()/resume()
+ - Add Space before closing "*/"
+
+v1: https://patchwork.kernel.org/project/netdevbpf/patch/20240913124113.9174-1-Frank.Sae@motor-comm.com/
+
+
+This patch is to add the ethernet device driver for the PCIe interface of
+ Motorcomm YT6801 Gigabit Ethernet.
+We tested this driver on an Ubuntu x86 PC with YT6801 network card.
+
+Frank Sae (14):
+  motorcomm:yt6801: Implement mdio register
+  motorcomm:yt6801: Add support for a pci table in this module
+  motorcomm:yt6801: Implement pci_driver shutdown
+  motorcomm:yt6801: Implement the fxgmac_init function
+  motorcomm:yt6801: Implement the .ndo_open function
+  motorcomm:yt6801: Implement the fxgmac_start function
+  phy:motorcomm: Add PHY_INTERFACE_MODE_INTERNAL to support YT6801
+  motorcomm:yt6801: Implement the fxgmac_hw_init function
+  motorcomm:yt6801: Implement the poll functions
+  motorcomm:yt6801: Implement .ndo_start_xmit function
+  motorcomm:yt6801: Implement some net_device_ops function
+  motorcomm:yt6801: Implement pci_driver suspend and resume
+  motorcomm:yt6801: Add makefile and Kconfig
+  motorcomm:yt6801: update ethernet documentation and maintainer
+
+ .../device_drivers/ethernet/index.rst         |    1 +
+ .../ethernet/motorcomm/yt6801.rst             |   20 +
+ MAINTAINERS                                   |    8 +
+ drivers/net/ethernet/Kconfig                  |    1 +
+ drivers/net/ethernet/Makefile                 |    1 +
+ drivers/net/ethernet/motorcomm/Kconfig        |   27 +
+ drivers/net/ethernet/motorcomm/Makefile       |    6 +
+ .../net/ethernet/motorcomm/yt6801/Makefile    |    8 +
+ .../net/ethernet/motorcomm/yt6801/yt6801.h    |  379 +++
+ .../ethernet/motorcomm/yt6801/yt6801_desc.c   |  571 ++++
+ .../ethernet/motorcomm/yt6801/yt6801_desc.h   |   35 +
+ .../ethernet/motorcomm/yt6801/yt6801_net.c    | 2876 +++++++++++++++++
+ .../ethernet/motorcomm/yt6801/yt6801_pci.c    |  186 ++
+ .../ethernet/motorcomm/yt6801/yt6801_type.h   |  967 ++++++
+ drivers/net/phy/motorcomm.c                   |    6 +
+ 15 files changed, 5092 insertions(+)
+ create mode 100644 Documentation/networking/device_drivers/ethernet/motorcomm/yt6801.rst
+ create mode 100644 drivers/net/ethernet/motorcomm/Kconfig
+ create mode 100644 drivers/net/ethernet/motorcomm/Makefile
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/Makefile
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801.h
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.c
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_desc.h
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_net.c
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_pci.c
+ create mode 100644 drivers/net/ethernet/motorcomm/yt6801/yt6801_type.h
+
 -- 
-2.27.0
+2.34.1
 
