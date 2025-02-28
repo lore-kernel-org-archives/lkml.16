@@ -1,124 +1,76 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D931DDA36
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 21:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940821DC04A;
+	Fri, 28 Feb 2025 21:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740779228; cv=none; b=peFkSikE8nmcv1WintmQoESPwnoKmMrRelIrqq/9qbG9lKZ8rqKLqNLm1xGZnDfdkCzyX4iX0qcdyrO7piltntA7/ZAxP23C2PRVHtsNzqjnuc+EoM9ZES/khr1qEX+lHKlmDROf5B9UhHrXbbZsPvBKDxlLZgjFvgjXELa5wqk=
+	t=1740779302; cv=none; b=DpbLsxh2c+VyZu6uYMaHMGle8HFDqgcqnzR7TksJWcC2pPRZwIu1KzmNX6t3m3taT5U4cdQ7zSkI3H8PJnQlGFfZBw8J0i9d3JWkkmaHUf29nhZZpfF0obY2BSe5/AVp/I8ktqR7Y2ZFEzuPq8GqnF4lsXfxFmfr7KTmLqvCIQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740779228; c=relaxed/simple;
-	bh=mPydt89MvdgbglLyTuaEog1lBE+jV7oN8dhZGR+r2Yo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y7DQdKJxcr4SpdWFByUnafHChNFGIeVE4qZuHImQJEUpYOEYGU+vkbiY71HBDpXRejbmDMOwRlMN8f62XKwECLItXmzh55hmrffEONvPSwXejn3rZD+gJIXU+SIK3xdLLd0J1ENOzISgfmfJgRpvlJE8bEMvmLqTsioZKjRl9kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=fqHhm1xH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=6dIRyO1F; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1740779302; c=relaxed/simple;
+	bh=ad68wow/kheHGqDYDcGvEp6n8B8FfKsoY8kEt3PnkdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2GvVGJRGiTqxLzXyj9YRWyIutg0aXlPj/zVlqvNFwjY0yJ+6KH5CXlLikmk+ZQgW7UU5EL1SlgJ0aM2kRICh/70FoLkOAhLXJYVzfSCj5v6SLpzKwIvIbb7lbSmoB5F4q8QweeBX0xh6/LTcGM+4hGQF5aKxTC+m/q6vFTVFoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDo+kLJy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="fqHhm1xH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="6dIRyO1F"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id A37AE254019E;
-	Fri, 28 Feb 2025 16:47:04 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Fri, 28 Feb 2025 16:47:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1740779224; x=1740865624; bh=Q/ZPl8hYKvlE0zF25CCtGHgMXwe0pyCB
-	psgPmfYBVQA=; b=fqHhm1xHlzVhtY1Vbjgrfp2EP02LKkoOdekFrEgRsc1zcJOI
-	ggpmUPg2e0cFXJvDa/6Rs5DTKQkY+2hgJdkA6uABqoGSMRYqEAE+vxy6lupNed3u
-	y6G/FUTGiPqvflCgCfmaBFuRamUApOgbS+zvcLFEcQMzOAEr1PR4r3YgrA7FMMG3
-	fZCFwB/HUiADX7F+/XI52hbduoIqa7qQoo/e3o+GfKTWEcG8R5NyKG2riSoTzQCt
-	WpF44mw6Ycox9TWkKrnb7ubBcdt/NzMVebFLvYYSaej5SbN7Rn5/UGXWFQCkHYk3
-	XNm8YlW/lkA4BRCQz5m/5/3YMT7PrUweIwM+6A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740779224; x=
-	1740865624; bh=Q/ZPl8hYKvlE0zF25CCtGHgMXwe0pyCBpsgPmfYBVQA=; b=6
-	dIRyO1F5mskS2lXBjigz+hlCayNNzWv2fT7XZ0aIEKUSn1OyyO3m+mwbOOyc1xiq
-	0ZsjkT+/2xBfatlqwU+SpIY8jx/iRRyyVIM5h+CXERFAT2Rn2hloCC6QMzJwou8r
-	xyHo7xIEoDkC79P6bM4TjwPjcC0BmxfO+nUWprFh11rm73e89Pfx0AsyQm7V/iQf
-	ifwPnR0wYDK5W28NKDQw7w2hFjITegKajjdCQDLcWVQ/TQDqemCRE6I6c/e4r94p
-	EeiM8TP3f/eriEWUxVBtf5LpXQiOc2gY7R5z+X2wtc0NVQj9eBH//Ub4hfzKoEOA
-	ZqtVJLZYvlSstX0Mym0zw==
-X-ME-Sender: <xms:1y7CZxzwH1xcG2lY9vzHi4MO9a40xkGqexINzLx0shCpFCR_m8UQFQ>
-    <xme:1y7CZxSAGNXpe1_J_cvAtnJtxuM0p9nkXRc3TuhZfm9EbLzhtjojn7bGoGf_Fm8-v
-    rMJwcE2OnKoCN5krz8>
-X-ME-Received: <xmr:1y7CZ7XYUCCD5rckJPHggXhS9AirCe8BUD0pnY7a60o8XjVjnlRXkrpAUzbXBLQakB-0sgOPjP22waCqCgt0XGHLBKwsJqmB2RCXUOOlKTsNvlxYRxQ9diUfRebMLP0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeludehudcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfgggtgfesthekredtredt
-    jeenucfhrhhomhepufhvvghnucfrvghtvghruceoshhvvghnsehsvhgvnhhpvghtvghrrd
-    guvghvqeenucggtffrrghtthgvrhhnpeegieehffethffhffefhfehkeevleevieetfeeg
-    keehhfeifffgheehieejheeihfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghrtghp
-    thhtohepjedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlhihsshgrsehroh
-    hsvghniiifvghighdrihhopdhrtghpthhtohepjhesjhgrnhhnrghurdhnvghtpdhrtghp
-    thhtohepshhvvghnsehsvhgvnhhpvghtvghrrdguvghvpdhrtghpthhtoheprghsrghhih
-    eslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehlihhnuhigqdgrrhhmqdhk
-    vghrnhgvlheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlih
-    hnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehm
-    rghrtggrnhesmhgrrhgtrghnrdhsth
-X-ME-Proxy: <xmx:1y7CZzhP3mZqGz0OHbVAImhh7nOqvpFlqOruUCgc7aifa5n4uu4uFA>
-    <xmx:1y7CZzDPt1sGvfxvfRaAPBa5o8d_RiHbc8h1kq4O784g7FD3jrXtPA>
-    <xmx:1y7CZ8LzjlLvnxkKfNkICzEK4aBPR0rgnUF9zPXQBeEYz4Np5eEzfQ>
-    <xmx:1y7CZyCnU_trvwblRfUCngMfye8Sh2AlTPisWOPS5iaDrcDWVKKTIA>
-    <xmx:2C7CZ1A3ssd-04Quimn1bou4rMPlwsgE_0n6A-ZXqeQSUCDF_Waoc6WN>
-Feedback-ID: i51094778:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 28 Feb 2025 16:47:01 -0500 (EST)
-From: Sven Peter <sven@svenpeter.dev>
-To: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Janne Grunau <j@jannau.net>,
-	Sven Peter <sven@svenpeter.dev>
-Cc: asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH v2 0/4] Miscellaneous Apple RTKit fixes
-Date: Fri, 28 Feb 2025 22:46:51 +0100
-Message-Id: <174077915358.356311.14232401754625389723.b4-ty@svenpeter.dev>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
-References: <20250226-apple-soc-misc-v2-0-c3ec37f9021b@svenpeter.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDo+kLJy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF0D9C4CED6;
+	Fri, 28 Feb 2025 21:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740779302;
+	bh=ad68wow/kheHGqDYDcGvEp6n8B8FfKsoY8kEt3PnkdI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cDo+kLJyacmZWp2zwhJpiTFN/LdjkUyb8HgjzvDmeZ68DuFT48fs6TITSR3JtA5oq
+	 loqQODCiovoWGh+QbRsewzml3djG8uydJGJHW6fofHFFdwcZdt94y68YMa31jlL8aT
+	 2zrvw95S/BaIJqnOHmbXB2mV4cT2E/OurfClijjj/0hAYOx1rtAcInC1DCExns15bJ
+	 dv3/LAwkY1uVYELiycPCHybFPgWSqUk41t369+pN74xeE3d5nbz7LQhAtMRzpsX/Yh
+	 uZLuY10Mk4eZmthk/N3gWbcuAMryzrZEBTKrxseAWaPUEmzx9K1K8IiBIbrB6FMT8Y
+	 8ZCPX48vKA4Xg==
+Date: Fri, 28 Feb 2025 15:48:20 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, linux-sunxi@lists.linux.dev,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	linux-gpio@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 6/8] dt-bindings: pinctrl: add compatible for
+ Allwinner A523/T527
+Message-ID: <174077929550.3754157.15994123507055894807.robh@kernel.org>
+References: <20250227231447.20161-1-andre.przywara@arm.com>
+ <20250227231447.20161-7-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227231447.20161-7-andre.przywara@arm.com>
 
 
-On Wed, 26 Feb 2025 19:00:02 +0000, Sven Peter wrote:
-> This series contains four unrelated minor fixes to our RTKit driver.
-> These are mainly required for drivers which aren't upstream yet but
-> have been part of our downstream tree for quite a while now.
+On Thu, 27 Feb 2025 23:14:45 +0000, Andre Przywara wrote:
+> The A523 contains a pin controller similar to previous SoCs, although
+> using 10 GPIO banks (PortB-PortK), all of them being IRQ capable.
+> With this SoC we introduce a new style of binding, where the pinmux values
+> for each pin group are stored in the new "allwinner,pinmux" property in
+> the DT node, instead of requiring every driver to store a mapping between
+> the function names and the required pinmux.
 > 
-> Best,
+> Add a new binding file, since all the different variants of the old
+> binding are making the file a bit unwieldy to handle already, and the new
+> property would make the situation worse.
 > 
-> Sven
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../allwinner,sun55i-a523-pinctrl.yaml        | 175 ++++++++++++++++++
+>  1 file changed, 175 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/allwinner,sun55i-a523-pinctrl.yaml
 > 
-> [...]
 
-Applied, thanks!
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-[1/4] soc: apple: rtkit: Add and use PWR_STATE_INIT instead of _ON
-      commit: 3e46b6df8465e7a1c0d8e87a0966ecfb753ae84b
-[2/4] soc: apple: rtkit: Implement OSLog buffers properly
-      commit: a06398687065e0c334dc5fc4d2778b5b87292e43
-[3/4] soc: apple: rtkit: Use high prio work queue
-      commit: 22af2fac88fa5dbc310bfe7d0b66d4de3ac47305
-[4/4] soc: apple: rtkit: Cut syslog messages after the first '\0'
-      commit: e210227f0259d2666cc41b28ed1b7b0b0a99ed4d
-
-Best regards,
--- 
-Sven Peter <sven@svenpeter.dev>
