@@ -1,136 +1,114 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89EC1E8321;
-	Fri, 28 Feb 2025 09:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F5D31A4F1F;
+	Fri, 28 Feb 2025 09:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733307; cv=none; b=MpvyYXRg0nK4rYM6ik8dmru674Kksb27tq9AaiRUBHgQF+gSas0AOMvmPt3wHZ+gPNUbG4V6WHJgszmtWcg/Ep2Sm29u13EvSiluWVBkw3v6S+xwLy0JAq4B6dA69YrwwXNa4p1LMRrYDVubnthjnVoHOXTabNOKXlTO8iPt5ls=
+	t=1740733388; cv=none; b=SC3aaqb0rES5onUauQaFwnEJ1a2LB+kdn6bynNaMJAHmjZz6Wj3zq5SqBarmFMcj/UtxSFIjwBCCJRAHnRPquXP0RqVKNA2ixhfTdZxrzlE5aCRsIdRyqSKBZQ+aP9G9o5UfrbJvrVw168rBew7fk7fxryaYwxffeQcx9Tdp2dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733307; c=relaxed/simple;
-	bh=nEX5uT4e0AB2AVLnf5R0GF6Fbtxry4MmDRIaRzp1z6c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KthlQPaOlOygKv5IgA9RL6KG6BwXpnh52BcJI6gYkA3gexh9rUqNa7ZIfeQkR9joo98H4t8hZbTLBB6or4hwm0m1ZVHrSqFKJXFI2zKcbkdf2GuzwSz2iJh6EP/DkIJqrAI4osI0GLJ2PSowvudkKegw1nYG52Ehpgsz5QUB/Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=nOFqVJ7Y; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740733388; c=relaxed/simple;
+	bh=+XGe0mu0SCo1mxTdfsf+zPYqAxLe/z501wqCSa1WhCo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fBXFOQlXNZ65A1ojVWmaa/cb1rrfWp/X9ugVPR3bOM1DgXx8IoEAtLVKKJSHz1EZ18JFSBdy5cKGPX/fNyEbZQ/WJdhdZHNZ3zmbFsSSetMM4nNDs4BGLp+Z0nr8JlTf6diPkN4uJcEE6Uy1OcfM5Bj+l6brKpQcFH793Q03HaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h+jq24IX; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="nOFqVJ7Y"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=OTBv0xr6NJnTSdyyl1TiCQzhVSmYt2aW96H5kc2RCw0=; b=nOFqVJ7Y2z7wfkE4WyH+5fvlHy
-	K6buyAbBc0np42yDtz+l4fqA4dD/FDe5eR6ewVgEFaxrmMR+hTSupiBonOc85R5CReBAsnPK0Wowe
-	zAqJTqseV1gZij8sXcogHmcv78V3IU2A1y4UpS5a6JEa6Kad79Bz7+Klr5nnBwRKD2zwwYzaaLW1X
-	o3zGj8+V3WcitQS7XSOQMpzm0CQxFllg5yFjS1h9f+DM+3YOpe8CTL/8laDyZYs46dkZvPs+r4e55
-	6SEzVk/w/mwsFxOktDvIAhXp/GzNUFvZzdExjyIPArS32u9Cz39UlFWojUy9shS16pVwj2xZVJ9UQ
-	zD51O3nA==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tnwFH-0007y4-J2; Fri, 28 Feb 2025 10:01:23 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- Shawn Lin <shawn.lin@rock-chips.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the pmdomain tree
-Date: Fri, 28 Feb 2025 10:01:22 +0100
-Message-ID: <2087532.0S5aU1g85B@diego>
-In-Reply-To:
- <CAMuHMdU102nhmHoxo+z2XCxNf+gLFuBnAZamtW+V=WjKFX9rjA@mail.gmail.com>
-References:
- <20250220113338.60ba2290@canb.auug.org.au> <15141602.O6BkTfRZtg@diego>
- <CAMuHMdU102nhmHoxo+z2XCxNf+gLFuBnAZamtW+V=WjKFX9rjA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h+jq24IX"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4398738217aso16486575e9.3;
+        Fri, 28 Feb 2025 01:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740733385; x=1741338185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JKm8+XA6ytvbZ7u+350CbkrEfd85KLjixp0jSDomf6Y=;
+        b=h+jq24IXfwJtaZ/ss1+JjKYWiNvIHZ9HLcUmoPx87pGJgu5pCx2HnZ/EYaSjZ+R76F
+         aZVhw/rOogrIjwFNWGNZByJ9NWxEuQw1VZB3K8g9yXJrzZoLPMzVwmH6UfbfMwyQvEUa
+         4l2xzsB0uXJQ5c9PoldBH6L8YZHHBBZjr7ehYyS0/9fRIBd+9bFSSd82gqt3/nNUJE9Q
+         VBnE2DSvrPMBZ3TUBWA9I378ZndCs71Z2txkVrly5NwauWiwV0ZJe8J862mLvKwrPWFl
+         vEzsCLrbK50BKAGT0o83YJaHaUdss1ALFrQbKrxXbybAum6+EeFDTlpBwJ3somEWXuPY
+         OGVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740733385; x=1741338185;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JKm8+XA6ytvbZ7u+350CbkrEfd85KLjixp0jSDomf6Y=;
+        b=gCcOagc5ORX99dtKkylOykpmp0U341q/uvm4omg+4Pr2gLwfpFKJ+sifedyBMw46He
+         BB+RmYmS1mMXSCiBs0k+qoh0UB6Bw58lgSmi0fIxOy0LLkYVp2i98azoipraAAAlIDXZ
+         +37hjt7KS91mkwLEplTcEt9gYa/OcLcF/uKjik+iuJNjWZJEFdLILEHBsnrozol07gYe
+         7wCdnRRVxrvv+KHJpuDwaHj7YwtpWhZWzf8gXaXTCuyTM59eXtEz8jY5W5sRZQrVmXXS
+         vvca3FH3LAQPVvAz38zsL6tgs5bEwqO9e7LrL0hgJGgOVxjPZ7usedUxQ9Nzup0gI84Q
+         Uwyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVGz32dmf+Pwm3GmchTwmjtFomGRfcSBk3Qxoer2S8gxKw+wCj+jN9fNmyouNoOruQREebsL2obqyM=@vger.kernel.org, AJvYcCWd4b6wILZkC1sdAq3bCmEclEDXvHq6qfA0dkQ20QnQywmch/yk1Ywljjx5be2bXAp+9UTzYY+8jnDixTD2@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2U/z8DbN7s+wje6pFd+CvVaiOMJkNgx8diGfiRA6zduRIlSdg
+	ydWB2J4mNa+Cpuj+ihBk9mMflqDzwkN2g0mwlo+9uE0HIAtYitg5ToMGQzgjF1k=
+X-Gm-Gg: ASbGncvwrvs1QRIiSKmqshIXHCk8KR6OnyVvpFctBwE+N/VXhRvqLqQA7O+/U5NQNW6
+	sg3l6c0b4om1ZNpGNiG+0b9TWlxR26jLNFWZCpH9kwCh5DSRwLlytELR5V0BZDnJsDUiE2Y4ThC
+	roMP6ZOt9UO9h1wQapfp2WH83SpMfJsqDuQwvd+elnfjbSRNtATFxci3zX6ZtICybWL25uEBSii
+	7QO+9pR/FOsPluWXU4DAXa3KJ4Z+aSaGrejqB2ms96KeykkXgBG0gxivXqARFJqkcikntV1HFK4
+	ApfH1XzJZRhD8egYmKdldMof50c=
+X-Google-Smtp-Source: AGHT+IGZNTyLmyojOEubcETsODxVRtD8NrJGYn+5jdOs3mlebik8+RmbfT6JasWkDn9iNLlOLztzhA==
+X-Received: by 2002:a05:600c:1550:b0:439:6dba:adf2 with SMTP id 5b1f17b1804b1-43ba66e7550mr20923105e9.15.1740733385220;
+        Fri, 28 Feb 2025 01:03:05 -0800 (PST)
+Received: from localhost ([194.120.133.72])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43aba5870e7sm84188545e9.35.2025.02.28.01.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 01:03:03 -0800 (PST)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Kevin Tsai <ktsai@capellamicro.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] iio: light: Fix spelling mistake "regist" -> "register"
+Date: Fri, 28 Feb 2025 09:02:28 +0000
+Message-ID: <20250228090228.679535-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Am Donnerstag, 27. Februar 2025, 18:05:18 MEZ schrieb Geert Uytterhoeven:
-> On Thu, 27 Feb 2025 at 17:16, Heiko St=C3=BCbner <heiko@sntech.de> wrote:
-> > Am Donnerstag, 27. Februar 2025, 16:56:01 MEZ schrieb Geert Uytterhoeve=
-n:
-> > > On Mon, 24 Feb 2025 at 13:27, Ulf Hansson <ulf.hansson@linaro.org> wr=
-ote:
-> > > So this was fixed by adding a dependency on HAVE_ARM_SMCCC_DISCOVERY[=
-1].
-> > >
-> > > I am no Rockchip expert, but is this the correct fix?
-> > > As arch/arm/boot/dts/rockchip/rk3036.dtsi uses enable-method =3D
-> > > "rockchip,rk3036-smp", e.g. RK3036 does not depend on PSCI, so I assu=
-me
-> > > you could run a kernel without PSCI support on RK3036 before?
-> >
-> > All still relevant 32bit Rockchip SoCs (rv11*) already switched over to
-> > PSCI. So if one uses some sort of distro-kernel (or one simply built fr=
-om
-> > the in-kernel defconfig), PSCI support will be in there already.
->=20
-> OK.
->=20
-> > So the only case where this is relevant, is for kernels custom-build for
-> > one specific soc type.
-> >
-> > The rk3036 (and rk3128) are from the same era as the rk3288 - 2014 .
-> > That's more than 10 years ago. And we're not talking about these old
-> > boards not working anymore - just a _possible_ size increase in very
-> > special cases (of not using any distro-like kernel).
-> >
-> > arm32 psci.o is 176kb ... and even my r3036-kylin board came with 512MB
-> > ram. So personally I'm not too worried.
->=20
-> My worry is not so much about the size increase, but about
-> CONFIG_ROCKCHIP_PM_DOMAINS becoming disabled when
-> running "make oldconfig" if CONFIG_PSCI is disabled.
+There are spelling mistakes in dev_err messages. Fix them.
 
-ah, now I get it :-)
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/iio/light/cm32181.c | 2 +-
+ drivers/iio/light/cm36651.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-
-I guess there are ways to prevent this (still uncommon) case:
-
-(1) The CONFIG_ARM_GIC_V3 already uses a
-  select HAVE_ARM_SMCCC_DISCOVERY
-The pm-domain could do that as well.
-
-(2) The main __arm_smccc_smc has a stub for the !CONFIG_HAVE_ARM_SMCCC
-case, and arm_smccc_1_1_get_conduit() is described as=20
-    "When SMCCCv1.1 is not present, returns SMCCC_CONDUIT_NONE."
-
-=2D-----
-diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-index 67f6fdf2e7cd..3e6b34570a64 100644
-=2D-- a/include/linux/arm-smccc.h
-+++ b/include/linux/arm-smccc.h
-@@ -300,7 +300,14 @@ enum arm_smccc_conduit {
-  *
-  * When SMCCCv1.1 is not present, returns SMCCC_CONDUIT_NONE.
-  */
-+#ifdef CONFIG_HAVE_ARM_SMCCC_DISCOVERY
- enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void);
-+#else
-+static inline enum arm_smccc_conduit arm_smccc_1_1_get_conduit(void)
-+{
-+       return SMCCC_CONDUIT_NONE;
-+}
-+#endif
-=20
- /**
-  * arm_smccc_get_version()
-=2D---
-
-I guess case (1) might be the easier one, because stubbing out only one
-smccc function might raise the issue of what about the others.
-
+diff --git a/drivers/iio/light/cm32181.c b/drivers/iio/light/cm32181.c
+index aeae0566ec12..bb90f738312a 100644
+--- a/drivers/iio/light/cm32181.c
++++ b/drivers/iio/light/cm32181.c
+@@ -492,7 +492,7 @@ static int cm32181_probe(struct i2c_client *client)
+ 
+ 	ret = devm_iio_device_register(dev, indio_dev);
+ 	if (ret) {
+-		dev_err(dev, "%s: regist device failed\n", __func__);
++		dev_err(dev, "%s: register device failed\n", __func__);
+ 		return ret;
+ 	}
+ 
+diff --git a/drivers/iio/light/cm36651.c b/drivers/iio/light/cm36651.c
+index ae3fc3299eec..446dd54d5037 100644
+--- a/drivers/iio/light/cm36651.c
++++ b/drivers/iio/light/cm36651.c
+@@ -683,7 +683,7 @@ static int cm36651_probe(struct i2c_client *client)
+ 
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret) {
+-		dev_err(&client->dev, "%s: regist device failed\n", __func__);
++		dev_err(&client->dev, "%s: register device failed\n", __func__);
+ 		goto error_free_irq;
+ 	}
+ 
+-- 
+2.47.2
 
