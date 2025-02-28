@@ -1,168 +1,155 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2119.outbound.protection.outlook.com [40.107.21.119])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D8725DB0A;
-	Fri, 28 Feb 2025 10:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.119
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737924; cv=fail; b=rAmI6rSzdA/Lwe8h6gnA459gwSQaJ3Z1YAjjhZZJ6CesfMKsJXoSNjKQMHOReDC9+qOYqJXWfHU9QOga+D2HhzEsjEVYL6wSX11CbFtis+1fluV4IjpPZYaUTeXQ0+WB6KJ9Wj7P7MWkVUB15SADUiuDSou7DVSxBf+Pf9CRU78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737924; c=relaxed/simple;
-	bh=/3uO7kd6hz/jYB2M/VE9cSVBC0wdVfjdMxzjJDE4Yr4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K7fL68rf3JrEhdJr6DRC4YkAiLhK6kf6sQwf746VLwkHdFss4eUilq5biop32y1Ii2lRKR/NlRw7HgFIeLbAPZwxxwGaTQh8oqTrhR+rmJyYY2ABU8nDSvOsPY9+TEj/EaswSHEmqZ0t9p0dR1yotWKuOc+wHmgHXlw8sSp3Db4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=ZesIhxBs; arc=fail smtp.client-ip=40.107.21.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE03E25DB0A;
+	Fri, 28 Feb 2025 10:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740737936; cv=none; b=J0EvXWf+ahAb4+b8avU2gi6rBx5LwikvR1wwwKQd7GWWEHDlLVJe6PVmSlT47OnETIZZNYU2vKcl3Skd4qacHOVp8XWmpooI7nnGrFWSeTjP4zTpVLNolyzVSl81osnDlrwMEXCqhGldjZ4SJJPxLTKdjFCSKHms5kQWlvJdFIs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740737936; c=relaxed/simple;
+	bh=h5oR+UK+IF9s7jct0xLfzPSaVXMUfp4JhlUkjTrZgng=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=NNX2savK/EYUcIxn6zHfJzMNj+nPD257DGEwe3CJEGEL4vbD75Tuub6E2IpRQQFp49bZo/QQGe3usfyiLXdXvK0DLmJFpcBGUFazF9Syzr+gXkPbIPai+DWxDqC2Xsf/fkgy9sHwAtUCMybQE99Bgd6B3/g46o6sIKB58cdraEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1TYz3CHn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XU2PVu7j; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="ZesIhxBs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bt1ZQymonHZzNLeDenDbZ/ZPiM0+udvMG+TqZPDTxIBHpz/Wk/phqQqzplVqEK5D0EYeWyCYECZL+ZjN+MsROLd/U9EpVngciwnFnqeQezp0VdOTbYt+PukjpnIfP9UNNnwI1DLjbHm7tnzrP6PtbAfntMEbsvfSKHZxmHx8abfbuYpmL0R5n2pazUkYHQZueBAXZVVVQ/vObC7miWgu8WcWNsE8mNA3mpXT4O8jw/b91xAIBSsCzuHLQgXZANBEmWUYk9UPShbA9HXjcHfEJsDD/YZz4OeIVfMhfYqt8akFezThu+/pSjiZEWmTGTRoBfVLZWkm/R/HA+7qBLlGWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6p+kyfX4mJUQ0rC3K61w3i/PRBFGOELkOVP9mDqb/wM=;
- b=b7guEUuS9m2gI6cxNnSxd737kxW72QZkYz8PkV51YltEJ6EkHh5YRvxTy7J7uMrDyAHcV9AezRhPqm7ZlHMO9G8F0jwf4LxVO8V0o2iFsyNwOr5yBy1GTZ/YX49D6mT6EatoB7yex8DP1UAz/ko02AsWoTKE5SJZ51WkJja052SRXsyjyq1VESCdH+GFTnLfSYvB9W693Lgp9OFSZ+0Iy+biCwEgiJzAe04NNvTrMZpbKGCsNnkB5Qiikr6Yi5c/58C5LIif7EyOV7hGQJKETFa/5oKBb+qokzsHEBF5u4YWpWyd1xRMARm9zJwKRPMgw+/dsaAN9L31yMhEh2Jz4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6p+kyfX4mJUQ0rC3K61w3i/PRBFGOELkOVP9mDqb/wM=;
- b=ZesIhxBsxec9NDTVJiXAfM2wUXqx9gnyupt4GTO9CX7RTtbM/9lbpbcHDQ/kQWk+7CMzf0/dlY/NB/yusCM+g3uWj2WEbIY65nSqb1VsY4pU4rkmIYsZ7T2GQv5WqiYvjkjG5/9M3LNl9JwLPt7oP/TyJ8pv+ozxFlCP2XL37InRqRGM0VNCXoR0SAzLwdTyEyhtNBL4nRlHeB3o1j1G7uEfwW23y0M7dKHrTQaww+mU9ke2IB4vzKTPZxEWz7qNOzMTZgKp5RqRXK7U4+lpzkg5BxXecd52UpkA5tFig2Q1FZZumzzHcbwdRtqHbs1HsWP1LHh0RnEwD8RXASrycw==
-Received: from PR3P193CA0013.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:50::18)
- by DU0P195MB1650.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:3a5::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
- 2025 10:18:35 +0000
-Received: from AMS0EPF000001A0.eurprd05.prod.outlook.com
- (2603:10a6:102:50:cafe::29) by PR3P193CA0013.outlook.office365.com
- (2603:10a6:102:50::18) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.21 via Frontend Transport; Fri,
- 28 Feb 2025 10:18:35 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
- smtp.mailfrom=phytec.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- phytec.de discourages use of 91.26.50.189 as permitted sender)
-Received: from Diagnostix.phytec.de (91.26.50.189) by
- AMS0EPF000001A0.mail.protection.outlook.com (10.167.16.230) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 10:18:35 +0000
-Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
- (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 28 Feb
- 2025 11:18:32 +0100
-Received: from phytec.de (172.25.0.51) by Florix.phytec.de (172.25.0.13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 28 Feb
- 2025 11:18:32 +0100
-From: Wadim Egorov <w.egorov@phytec.de>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <upstream@lists.phytec.de>
-Subject: [PATCH 5/5] arm64: dts: ti: k3-am62a-phycore-som: Reorder properties per DTS coding style
-Date: Fri, 28 Feb 2025 11:18:17 +0100
-Message-ID: <20250228101817.865811-5-w.egorov@phytec.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250228101817.865811-1-w.egorov@phytec.de>
-References: <20250228101817.865811-1-w.egorov@phytec.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1TYz3CHn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XU2PVu7j"
+Date: Fri, 28 Feb 2025 10:18:51 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740737933;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+Td20xOtlGWt2GXh9rt3aM23ulWnm3sPZmLCuqautPU=;
+	b=1TYz3CHnSzsEOkquzilQOW2yceLv1SgAQcH/ItK23OFPcEv9qXShjFrnqirT8yE/yJpfNS
+	fPj80ImbRMtIlDuZy8Rq1PKiQO5tfMBpYDITlhLqPC8yazs+c11+aZwcerz/k5YcH16Upj
+	zJHXrh831gZ/6mJLwNhHKWQ17d0wpgPdNkomh4ut8A6AVDuO24iB61W9bJiYHrZ0rQ5d2E
+	j14+DOsJ6QTb7pR1q9Oscu79/DE5UmgxcWMnEk4kARHA8EBJXkZ4AX2fLotXwn2/ALU52R
+	nLQCw5xoR2y8VtnG1CvJzq8yaarS0rfLUs7BrVY/H/zCew8DBYSZyGc581oENQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740737933;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+Td20xOtlGWt2GXh9rt3aM23ulWnm3sPZmLCuqautPU=;
+	b=XU2PVu7jw3NxpLQrietN30W25wZWrMvdWWTPKxBAlNmQ7r2XTWoFMNIiQEQ4qAYS5QiMwQ
+	keFQDSbXA1CAt6Ag==
+From: "tip-bot2 for Brendan Jackman" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Enable modifying CPU bug flags with
+ '{clear,set}puid='
+Cc: Brendan Jackman <jackmanb@google.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20241220-force-cpu-bug-v2-3-7dc71bce742a@google.com>
+References: <20241220-force-cpu-bug-v2-3-7dc71bce742a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
- (172.25.0.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A0:EE_|DU0P195MB1650:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3c3e5c88-92b0-4d7f-a409-08dd57e142a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LTqID5K9RX3eS6UljqTbvvBEsRDbrtJ34L2kERnTi44RUyxq/fykWw+Jkfva?=
- =?us-ascii?Q?jmfk6n1wjbAYRn9U38y6lujHALCusQyE1QNutyUrSjq4uAxIdbSkhYD4EBsm?=
- =?us-ascii?Q?7Fx6aeD6h5Dr8ZHVOiP3IOEGERinztBDETSvVH6U50+lzIuZSPqclaCoYo7T?=
- =?us-ascii?Q?uyz3osluYrr3avv1E8t5ZzX/psUizQ6pda8K2wxx5aW65YhuLcUXBlTpw/3t?=
- =?us-ascii?Q?59H2r7NWaX1oVRV94et3bYheyQjG3LRKmJJzOpkR9REPQnhUuIxYehWM5Cfy?=
- =?us-ascii?Q?wd5eKylvRWUIZMl/Hg3Sln6FuF876g5M8vlVtY2d7707ztNCy3dm5FQe2h51?=
- =?us-ascii?Q?zQgKbrldJ+JE1KlJmvkhifhvQ/ys6au9yYtRACxo6dI3zqaRKKbQHNia4GOC?=
- =?us-ascii?Q?ZCJeRB0Ecn0E+q+72crd82sDgub9mvuPycOQ/vZxN81XKyHhlipcYqR6/vqS?=
- =?us-ascii?Q?3ZFgY7yS/g+IIU9fQNh+2+cVBBGE1vVBGZGjBUnmD0I5FDp/kKPczDzqyhBt?=
- =?us-ascii?Q?0zDxNZwvJxZ4bljhPoc8rGn5kt6n3tEwDhBxQcK9/h1Ahf7LZaWOQX2I3QoQ?=
- =?us-ascii?Q?cbRCM1qT9mXb7BBEUJ651l4qlw9bdyDHvqwh9kP4EzxY2kd2dwVW3C3yPra+?=
- =?us-ascii?Q?cz8xfTDfwx1nthaKs3Y0E5QrLvTD6tQcv/6y6DtRGE/GdexcjjPzpiw7x725?=
- =?us-ascii?Q?O9NGSNvkcglxTkv5F2lamhPvnxHzIbS4E+r8VZEmbDLhDQQlL61tjO80TO78?=
- =?us-ascii?Q?FVO79jzKWpIkc33Tq2MKP2V25JIeJKCtQEx7GaO34ut6aUL5rubvc4u643pN?=
- =?us-ascii?Q?CR8BcsyC/HtIUFC9GV59PwLzkvs6KiJrdxGACFkCEWpO4lHBC+fty7WYtX6D?=
- =?us-ascii?Q?xXciSs/hv0yLzpkSl13/E6m125l3hIexHr4gkyhJ31e6XAzDuy9HXlTS/S69?=
- =?us-ascii?Q?oar+NFiK16JW69TDqzaLFOeXNhOAQYT9VzBRtpf8tK8alfKXqIi4xtn+XSsQ?=
- =?us-ascii?Q?s2flx5c5V205bGww2BbGhIEn5m4X3VigebKRJYjV0K4Rj8+eVQXbNSZQDKFu?=
- =?us-ascii?Q?Mz4H/Zerw79qbP7RflqlekBJ4koGQCSdgqFIRQsEKqzgTeVoRo0O0CI+5tCn?=
- =?us-ascii?Q?6fLq2boGkyKbPtVOLzuDCIzw5uCBWufJ5n2XxmbSl5U/fi5UphexmBzkXVbb?=
- =?us-ascii?Q?TdcQqPUy4arxMXOWsUHREjKOqjTxGrUu3V56ceb/22m0fTuFMz2EMb0IjD5b?=
- =?us-ascii?Q?cZ3q6lhWhmbtkm5xho2Xxfbweo2TSn0M+5xxRGm0nHnY/M3EYwE15SCx18i2?=
- =?us-ascii?Q?YOu5AAU+9SuhIkkoiiZGKkp2lwkTSjTsGtXDD67IdPpC77v4cenjG5Aa7TQr?=
- =?us-ascii?Q?EtGnaNALCr9JFVpCjFLQH44lLUa4tg27sh9O6nIvShi8b92k7EJDU75lJ7ef?=
- =?us-ascii?Q?Q4afO92yJHalfjlc7x3qx8kFA0FVvPVqnaIzRmnFHlyGBEaV5kymv2mf6jRd?=
- =?us-ascii?Q?nyMrzFoxJNo5/oM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1102;
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 10:18:35.3379
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c3e5c88-92b0-4d7f-a409-08dd57e142a2
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A0.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0P195MB1650
+Message-ID: <174073793204.10177.9171183498085789285.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Reorder properties to comply with the DeviceTree coding style guidelines:
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html
+The following commit has been merged into the x86/cpu branch of tip:
 
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+Commit-ID:     ab68d2e36532806b8f86ff2f60861dbb8443f0be
+Gitweb:        https://git.kernel.org/tip/ab68d2e36532806b8f86ff2f60861dbb8443f0be
+Author:        Brendan Jackman <jackmanb@google.com>
+AuthorDate:    Fri, 20 Dec 2024 15:18:33 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 28 Feb 2025 10:57:50 +01:00
+
+x86/cpu: Enable modifying CPU bug flags with '{clear,set}puid='
+
+Sometimes it can be very useful to run CPU vulnerability mitigations on
+systems where they aren't known to mitigate any real-world
+vulnerabilities. This can be handy for mundane reasons like debugging
+HW-agnostic logic on whatever machine is to hand, but also for research
+reasons: while some mitigations are focused on individual vulns and
+uarches, others are fairly general, and it's strategically useful to
+have an idea how they'd perform on systems where they aren't currently
+needed.
+
+As evidence for this being useful, a flag specifically for Retbleed was
+added in:
+
+  5c9a92dec323 ("x86/bugs: Add retbleed=force").
+
+Since CPU bugs are tracked using the same basic mechanism as features,
+and there are already parameters for manipulating them by hand, extend
+that mechanism to support bug as well as capabilities.
+
+With this patch and setcpuid=srso, a QEMU guest running on an Intel host
+will boot with Safe-RET enabled.
+
+Signed-off-by: Brendan Jackman <jackmanb@google.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20241220-force-cpu-bug-v2-3-7dc71bce742a@google.com
 ---
- arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/cpufeature.h |  1 +
+ arch/x86/kernel/cpu/common.c      | 16 ++++++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-index 1387d11f9a78..f567462ceb58 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-phycore-som.dtsi
-@@ -171,10 +171,10 @@ AM62AX_IOPAD(0x1f4, PIN_INPUT, 0) /* (D16) EXTINTn */
- };
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index de1ad09..e5fc003 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -50,6 +50,7 @@ extern const char * const x86_power_flags[32];
+  * X86_BUG_<name> - NCAPINTS*32.
+  */
+ extern const char * const x86_bug_flags[NBUGINTS*32];
++#define x86_bug_flag(flag) x86_bug_flags[flag]
  
- &cpsw3g {
--	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&main_rgmii1_pins_default>;
- 	bootph-all;
-+	status = "okay";
- };
+ #define test_cpu_cap(c, bit)						\
+ 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index ff483c9..0f32b6f 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1494,7 +1494,8 @@ static inline void parse_set_clear_cpuid(char *arg, bool set)
  
- &cpsw_port1 {
-@@ -224,8 +224,8 @@ pmic@30 {
- 		interrupts = <GIC_SPI 224 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
--		ti,power-button;
- 		system-power-controller;
-+		ti,power-button;
+ 		/*
+ 		 * Handle naked numbers first for feature flags which don't
+-		 * have names.
++		 * have names. It doesn't make sense for a bug not to have a
++		 * name so don't handle bug flags here.
+ 		 */
+ 		if (!kstrtouint(opt, 10, &bit)) {
+ 			if (bit < NCAPINTS * 32) {
+@@ -1518,11 +1519,18 @@ static inline void parse_set_clear_cpuid(char *arg, bool set)
+ 			continue;
+ 		}
  
- 		regulators {
- 			vdd_3v3: buck1 {
--- 
-2.34.1
-
+-		for (bit = 0; bit < 32 * NCAPINTS; bit++) {
+-			if (!x86_cap_flag(bit))
++		for (bit = 0; bit < 32 * (NCAPINTS + NBUGINTS); bit++) {
++			const char *flag;
++
++			if (bit < 32 * NCAPINTS)
++				flag = x86_cap_flag(bit);
++			else
++				flag = x86_bug_flag(bit - (32 * NCAPINTS));
++
++			if (!flag)
+ 				continue;
+ 
+-			if (strcmp(x86_cap_flag(bit), opt))
++			if (strcmp(flag, opt))
+ 				continue;
+ 
+ 			pr_cont(" %s", opt);
