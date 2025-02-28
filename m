@@ -1,105 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA01D26A1CD;
-	Fri, 28 Feb 2025 12:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C3072356D1;
+	Fri, 28 Feb 2025 12:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740745657; cv=none; b=SbAxwwP/3OYmPfcxsU/cSieQfQEFm8fT+vzlkG+17AY1A2qXsQVwUjPUIKaAwo3pkn25Z5eL4dtrNvrOhpsSWjrojBauggN4MhBNn3nIYJpyTb9uy9HpjRTojayW2B6f+gcNFdQ5rnvyF19SBcTtmsjxTYjf1oA848ioVCrQsoI=
+	t=1740745693; cv=none; b=SgaelUAk+D18CBOUjhS9RYpmIc8F+GpCv4lI+gzO6HsyDQWnnNkjiMiBLfgRr/AFosQ9udV3MSS9OP2yQIcOd+QU9tl0MB6WXCai4ATZLS+H+QHVTqUjv8mDyB8UHAfyJF4nA3GjQiDk0UWM1x2kTXoO0PZwDvqoCT9EGr7esaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740745657; c=relaxed/simple;
-	bh=D7zHHQU8x/t+aPG7jNWtRdAX0S65Ib4QP2cl0EV7yWk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OLJrzxYWW3C1SSciC6prq1v1ykIQ81IF5Rf973OxJ/usRMtz186cKZScHeBJw+GIMEvwd1fsBGZDRQlfmMwAOAlTTd6XZLZ4RaXoAW4sYHdnxpSnVN+kPHf2Cgy4tD311iR+zkCQK+n3Yx+Q3bsJIIbYlDeKLljLfK3oMJLxPFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SDqN4Kh8; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SDqN4Kh8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740745656; x=1772281656;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=D7zHHQU8x/t+aPG7jNWtRdAX0S65Ib4QP2cl0EV7yWk=;
-  b=SDqN4Kh8jZJ2qcQoXhscX6mFag+y5WKgvv+16+bDrAeiOn81M0Yefq3C
-   fKXMC4iMidqDu0pRHelPGt7v8AG32v4bUc998DX9C6S+K74+VbLkASoSE
-   LBUvSIOKoO65cn0vFKoxGolaX2hH2jCZP1JShrQlhr2qlPHa4+/0F4B4E
-   KRv2IBMyzMbwcRbAZotck+xGl/DQzOXCfrXh7xepf//NLMJFf9b5KPLEy
-   pbK7yRk+wLLpwudVTFNs73i1EmUIUVKLuW8mSpw6Nifs5OWLfGhmaK/eb
-   y7Ltf24djhoRqDe6Y41DbCVMr+PG/jfq66VQDtkcRe4gXTESfI7KRwPjH
-   Q==;
-X-CSE-ConnectionGUID: OM/yv+MBTxG+CqRa4ZUcpw==
-X-CSE-MsgGUID: 6x4Sp0V+QF6ql4923I9/zA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="53082887"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="53082887"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:27:35 -0800
-X-CSE-ConnectionGUID: 5e0OC6KWQ4WRvAvDygPQkw==
-X-CSE-MsgGUID: g4+/gMxaQvq+26wuw/LZfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="122273689"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:27:29 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tnzSf-0000000FwXh-37W4;
-	Fri, 28 Feb 2025 14:27:25 +0200
-Date: Fri, 28 Feb 2025 14:27:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Trevor Gross <tmgross@umich.edu>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 0/4] Check Rust signatures at compile time
-Message-ID: <Z8Grrb80WOf99qoX@smile.fi.intel.com>
-References: <UXTosjUFv_CKOV-K4oqNGBhMEv64tds9NgXWhHEYdCHuKM2qSPFrpBnTqhFGkcbv5_KXYERykIXhn-sYnEeuUg==@protonmail.internalid>
- <20250227-export-macro-v1-0-948775fc37aa@google.com>
- <877c5apmdi.fsf@kernel.org>
- <CAH5fLgiNs-VKEQduL16eymSPnqA0_6aR8WDRYm68SE8FXGDHRw@mail.gmail.com>
+	s=arc-20240116; t=1740745693; c=relaxed/simple;
+	bh=dPQQeCJ6zMXLp4WRSXuju/fSqlI129Q0WmkmNQYgv0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C7jZoFlmiv75IYrK8frv67vGZLwUXgHRK3yrVhIykjcg/1zLCFV3cg1jaSQ+ORaZ6J8devralzYUgJOI1t2I46bluyYhEZvooVi0TJkkuCjMYvsFu5cER8LfXOVuHOENZXYUGi0jBvB+oG6Zhsr2bV1O7IJpImgALAv/lA1YBIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 030F71688;
+	Fri, 28 Feb 2025 04:28:26 -0800 (PST)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 612313F6A8;
+	Fri, 28 Feb 2025 04:28:08 -0800 (PST)
+Message-ID: <fe56c774-dcd8-475f-8008-e5baa87908ef@arm.com>
+Date: Fri, 28 Feb 2025 12:28:06 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/16] selftests: vDSO: vdso_standalone_test_x86: Use
+ vdso_init_form_sysinfo_ehdr
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
+ <linux@weissschuh.net>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
+ <20250226-parse_vdso-nolibc-v2-10-28e14e031ed8@linutronix.de>
+Content-Language: en-US
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+In-Reply-To: <20250226-parse_vdso-nolibc-v2-10-28e14e031ed8@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH5fLgiNs-VKEQduL16eymSPnqA0_6aR8WDRYm68SE8FXGDHRw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 28, 2025 at 09:46:32AM +0100, Alice Ryhl wrote:
-> On Fri, Feb 28, 2025 at 8:19 AM Andreas Hindborg <a.hindborg@kernel.org> wrote:
-> >
-> > "Alice Ryhl" <aliceryhl@google.com> writes:
-> >
-> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> >
-> > What is going on with the cover letter of this one?
+
+
+On 26/02/2025 11:44, Thomas Weißschuh wrote:
+> vdso_standalone_test_x86 is the only user of vdso_init_from_auxv().
+> Instead of combining the parsing the aux vector with the parsing of the
+> vDSO, split them apart into getauxval() and the regular
+> vdso_init_from_sysinfo_ehdr().
 > 
-> It's empty.
+> The implementation of getauxval() is taken from
+> tools/include/nolibc/stdlib.h.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> 
 
-So, it means nothing to review, sorry.
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+> ---
+> All of this code will be deleted later again.
+> ---
+>  .../selftests/vDSO/vdso_standalone_test_x86.c      | 27 +++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> index 644915862af8883131e5defd336f1bd80736fc0f..500608f89c66b5747e3d845ebc54e4c3a35b6ccd 100644
+> --- a/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> +++ b/tools/testing/selftests/vDSO/vdso_standalone_test_x86.c
+> @@ -15,6 +15,7 @@
+>  #include <sys/time.h>
+>  #include <unistd.h>
+>  #include <stdint.h>
+> +#include <linux/auxvec.h>
+>  
+>  #include "parse_vdso.h"
+>  
+> @@ -84,6 +85,30 @@ void to_base10(char *lastdig, time_t n)
+>  	}
+>  }
+>  
+> +unsigned long getauxval(const unsigned long *auxv, unsigned long type)
+> +{
+> +	unsigned long ret;
+> +
+> +	if (!auxv)
+> +		return 0;
+> +
+> +	while (1) {
+> +		if (!auxv[0] && !auxv[1]) {
+> +			ret = 0;
+> +			break;
+> +		}
+> +
+> +		if (auxv[0] == type) {
+> +			ret = auxv[1];
+> +			break;
+> +		}
+> +
+> +		auxv += 2;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  void c_main(void **stack)
+>  {
+>  	/* Parse the stack */
+> @@ -96,7 +121,7 @@ void c_main(void **stack)
+>  	stack++;
+>  
+>  	/* Now we're pointing at auxv.  Initialize the vDSO parser. */
+> -	vdso_init_from_auxv((void *)stack);
+> +	vdso_init_from_sysinfo_ehdr(getauxval((unsigned long *)stack, AT_SYSINFO_EHDR));
+>  
+>  	/* Find gettimeofday. */
+>  	typedef long (*gtod_t)(struct timeval *tv, struct timezone *tz);
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Regards,
+Vincenzo
 
