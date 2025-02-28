@@ -1,171 +1,264 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15652702B7;
-	Fri, 28 Feb 2025 17:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB1D276039
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762509; cv=none; b=c+EPl503pbZ8xtdjM8B+bcCYNTEFGMXwn2QPgalJq2xrp28JUYF6yJ/j/+w4tO+zZZASajNUcb3dunyLPxVdh9Z8MqlbSrU/Eywg0yrGhpK0H9+A4w3TSq4KhjECEeKaDwJDQs0ODOHJPUzqj5PF7kW9IckkKZrf+2c/pVXtvrc=
+	t=1740762515; cv=none; b=XsFFPAImg138H6tzubokGvAc1FHqt3JTYgNYWnSNKptrbFoVZJi0j+jH1TDx20Lo6gIdW1F9dT/Lj8Q9evw1Sef9iC89ibzcZDbSoKCac9upxhCS6UJaH/S1MM5N1Z1Se5LKKTjmy1cel1CHLFa7c5RbBd4jOvcEBJVaVGprSpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762509; c=relaxed/simple;
-	bh=ACLIb+NpgbqVY+xntMyy9aeID2FvN87OO3Glwq+E6Ng=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kKU8f3PkC2k8o3bKCs+G+xhR/pfN4RU4s61y5RXGDaRidjtTQGhxgTsvFla0If/0AUFgNZfZAQSmuY+tDqoddCIIPLSvNJ+DxUS4O9gjgvlW/at9sIjxBpZGpP7xozgIDu/2XvemlwiC87D44cIjdhzH3QxOPdkQit75d2CzmMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7KzhAzZ; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7KzhAzZ"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-549490e290dso1235094e87.2;
-        Fri, 28 Feb 2025 09:08:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740762506; x=1741367306; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=O7ixW3KngAXUUODkP5bWrBi2H7GkNF4vIVUuhitUtD0=;
-        b=G7KzhAzZoO+qzDH5wTllxnvsDP3bfzUPd0Rkm2hG3tbQyqjMZM2DaeOFra+4X3LoF4
-         0u0geonRBJ+5SpaqxGMrlZRNeenRKFKYd8j5BAVbbtqzDNE7TEVSTIF3CoZbje/rAwC8
-         MXbmLXFc8PPmOzBOw0ONUPtZZ8dJ8ypC7zQN7jruOLBIwXOb9ddx5MCpeRo16lINlW0f
-         NnWUfKEtBtr/3o18FQcsxeEhz1mi/N2vFVUBwWcmAjGe7jGhLgweZppHC83SduR4JIuq
-         tC2eEUBB2E0GyeeZQBw/IzhGezzpiTb33qTd/qy5s2ipWTFgG0L/eS1cOov4CDqp7YyN
-         qyGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740762506; x=1741367306;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O7ixW3KngAXUUODkP5bWrBi2H7GkNF4vIVUuhitUtD0=;
-        b=B42mn80B9LSwQWNFconTGEpHC1uW5qR5C5TSOLoLMEx+uJa8Dstfr2j1bDH7IRUdma
-         IpDnPaa8uy7XEuLerxmKykNut5+HVaN+KlwEvZ0Djk+Me4coSPKFAc09VYGJFgDgs3kG
-         1qYL5q856tmri/aCwJLg13jNMklCzH+9FUBJ4deYHXckx73LcKeIXPp1M3N0NsayJ0RY
-         34VOoZ4OXvMQlwZxWPcGKR5JB02vuSQj5EuUbtkX7zbM5jrKrLJycfkLAyqG49LZV8V7
-         GnUA4mdEU+dXPiURgkQjRS+c+gBmDpmQzuhmtvifGQZm0GPTM3qK2pn/TbOW24PUzoTE
-         e53Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVCaLejDI3BBu0IUJ1F8Kzlo9yH0clhVHIx7ylBrO8H7foWTw5VuJHw35HV2VxWQvgiewvt@vger.kernel.org, AJvYcCVCcM4gIpXpRF8xHmlRPl5IoERJnRohdlAEEWRLVYuOCWfwTAFBmBtacYLMnn8h8mDOmVnNxhC7vPJ1n2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJrnCziQX4g9nNeUolysDNEMakmtJq3SWN4IsWOjgdBYn9lO+Y
-	xXoyLZ9ka5A/N/qTA8ZpXZaUKVJHgC6APnUwu+0qD1lJdsvgcFU/
-X-Gm-Gg: ASbGnctA0ga7Z5R/VuGnfkJGDiGjqNB0AIdJzEQrobDSZvwVSss30R5h5m2FKEP36Pc
-	4/BxoB78GhHc/mh2Ds8MkdGPHs7YpsENFSddJB+gIw8zi5fnlhfIaaxBzkcyB+i7aOyDpHX2MAf
-	YhRskoZ2YS0KedfXvHLvWMMNBBJS2hvlgnCDo6/J5TB/1DP+0SzKdQD/NN+p+U0u+7pZa6hJ99D
-	/OPjG60PxV4sKlO9JPDK+OUqm2XhPkK0Nczrjgsj6EXGRqx3kqFzplj7Ejf8U9KAoIBLvPKmGws
-	1MZlPTG4l1+VLDMQjaNgXRjJDg8kYWntANz9ckk587HFTOl6
-X-Google-Smtp-Source: AGHT+IEWJRE9/GZRX0rFDqRJY2PucanY7TwDXd/Q/ExQJY3euuAmZjdhuOnPKOeYtssXkgRqoOYhUg==
-X-Received: by 2002:ac2:4e14:0:b0:545:2c40:ec1d with SMTP id 2adb3069b0e04-5494c3550damr1882701e87.44.1740762503919;
-        Fri, 28 Feb 2025 09:08:23 -0800 (PST)
-Received: from pc636 (host-95-203-6-24.mobileonline.telia.com. [95.203.6.24])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443cb00dsm552848e87.211.2025.02.28.09.08.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 09:08:23 -0800 (PST)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Fri, 28 Feb 2025 18:08:19 +0100
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Cheung Wall <zzqq0103.hey@gmail.com>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [PATCH v4 3/3] rcu: Use _full() API to debug synchronize_rcu()
-Message-ID: <Z8Htg565HnNumdxy@pc636>
-References: <20250227131613.52683-1-urezki@gmail.com>
- <20250227131613.52683-3-urezki@gmail.com>
- <Z8CdB0Hzvdu5ZVSI@Mac.home>
- <d8b196c1-c1b5-4bf9-b1cb-dde8642cc34b@paulmck-laptop>
- <Z8Ckb6spK35-Ez4U@pc636>
- <1408fc88-e2c6-4f49-b581-0e9ad5620fe0@paulmck-laptop>
- <Z8HmH85bYNU8enJ2@pc636>
+	s=arc-20240116; t=1740762515; c=relaxed/simple;
+	bh=/PaPFpur610XMWMxsbWrTUWEJDEIaoCa73CoXYSCGWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Do15NJtx5uMb/ZfvofTT+1bUJj7FjJtBJ70+YZxs74Iue6DxQDe1fzdKujUkR6zjaug93HZUy+BTT0FH9Hr4ertWyPHz8d5mmNrx7wPsq1KD6Fj8twRVrxgcc/ezBCe8/yzsI1ID2ghdY1pEF8a6NWqF2ySW5wNI4Nv4xD7GCyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37091C4CEE2;
+	Fri, 28 Feb 2025 17:08:33 +0000 (UTC)
+Date: Fri, 28 Feb 2025 12:09:18 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Nikolay Kuratov <kniv@yandex-team.ru>
+Subject: [GIT PULL] tracing: Fixes for v6.14-rc4
+Message-ID: <20250228120918.5a050257@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8HmH85bYNU8enJ2@pc636>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 28, 2025 at 05:36:47PM +0100, Uladzislau Rezki wrote:
-> On Fri, Feb 28, 2025 at 07:41:40AM -0800, Paul E. McKenney wrote:
-> > On Thu, Feb 27, 2025 at 06:44:15PM +0100, Uladzislau Rezki wrote:
-> > > On Thu, Feb 27, 2025 at 09:26:40AM -0800, Paul E. McKenney wrote:
-> > > > On Thu, Feb 27, 2025 at 09:12:39AM -0800, Boqun Feng wrote:
-> > > > > Hi Ulad,
-> > > > > 
-> > > > > I put these three patches into next (and misc.2025.02.27a) for some
-> > > > > testing, hopefully it all goes well and they can make it v6.15.
-> > > > > 
-> > > > > A few tag changed below:
-> > > > > 
-> > > > > On Thu, Feb 27, 2025 at 02:16:13PM +0100, Uladzislau Rezki (Sony) wrote:
-> > > > > > Switch for using of get_state_synchronize_rcu_full() and
-> > > > > > poll_state_synchronize_rcu_full() pair to debug a normal
-> > > > > > synchronize_rcu() call.
-> > > > > > 
-> > > > > > Just using "not" full APIs to identify if a grace period is
-> > > > > > passed or not might lead to a false-positive kernel splat.
-> > > > > > 
-> > > > > > It can happen, because get_state_synchronize_rcu() compresses
-> > > > > > both normal and expedited states into one single unsigned long
-> > > > > > value, so a poll_state_synchronize_rcu() can miss GP-completion
-> > > > > > when synchronize_rcu()/synchronize_rcu_expedited() concurrently
-> > > > > > run.
-> > > > > > 
-> > > > > > To address this, switch to poll_state_synchronize_rcu_full() and
-> > > > > > get_state_synchronize_rcu_full() APIs, which use separate variables
-> > > > > > for expedited and normal states.
-> > > > > > 
-> > > > > > Link: https://lore.kernel.org/lkml/Z5ikQeVmVdsWQrdD@pc636/T/
-> > > > > 
-> > > > > I switch this into "Closes:" per checkpatch.
-> > > > > 
-> > > > > > Fixes: 988f569ae041 ("rcu: Reduce synchronize_rcu() latency")
-> > > > > > Reported-by: cheung wall <zzqq0103.hey@gmail.com>
-> > > > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > > > 
-> > > > > You seem to forget add Paul's Reviewed-by, so I add it in rcu/next.
-> > > > > Would you or Paul double-check the Reviewed-by should be here?
-> > > > 
-> > > > I am good with keeping my Reviewed-by tags.
-> > > > 
-> > > Thanks Paul!
-> > 
-> > Except that I got this from overnight testing of rcu/dev on the shared
-> > RCU tree:
-> > 
-> > WARNING: CPU: 5 PID: 14 at kernel/rcu/tree.c:1636 rcu_sr_normal_complete+0x5c/0x80
-> > 
-> > I see this only on TREE05.  Which should not be too surprising, given
-> > that this is the scenario that tests it.  It happened within five minutes
-> > on all 14 of the TREE05 runs.
-> > 
-> Hm.. This is not fun. I tested this on my system and i did not manage to
-> trigger this whereas you do. Something is wrong.
->
-We have below code to start a new GP, if we detect that processing is
-starved:
 
-<snip>
-/*
- * The "start_new_poll" is set to true, only when this GP is not able
- * to handle anything and there are outstanding users. It happens when
- * the rcu_sr_normal_gp_init() function was not able to insert a dummy
- * separator to the llist, because there were no left any dummy-nodes.
- *
- * Number of dummy-nodes is fixed, it could be that we are run out of
- * them, if so we start a new pool request to repeat a try. It is rare
- * and it means that a system is doing a slow processing of callbacks.
- */
-  if (start_new_poll)
-    (void) start_poll_synchronize_rcu();
-<snip>
+Linus,
 
-we do not use a _full() version, since we need to inform rcu-gp-kthread
-to initiate a new GP.
+Tracing fixes for v6.14:
 
-Any thoughts?
+- Fix crash from bad histogram entry
 
---
-Uladzislau Rezki
+  An error path in the histogram creation could leave an entry
+  in a link list that gets freed. Then when a new entry is added
+  it can cause a u-a-f bug. This is fixed by restructuring the code
+  so that the histogram is consistent on failure and everything is
+  cleaned up appropriately.
+
+- Fix fprobe self test
+
+  The fprobe self test relies on no function being attached by ftrace.
+  BPF programs can attach to functions via ftrace and systemd now
+  does so. This causes those functions to appear in the enabled_functions
+  list which holds all functions attached by ftrace. The selftest also
+  uses that file to see if functions are being connected correctly.
+  It counts the functions in the file, but if there's already functions
+  in the file, it fails. Instead, add the number of functions in the file
+  at the start of the test to all the calculations during the test.
+
+- Fix potential division by zero of the function profiler stddev
+
+  The calculated divisor that calculates the standard deviation of
+  the function times can overflow. If the overflow happens to land
+  on zero, that can cause a division by zero. Check for zero from
+  the calculation before doing the division.
+
+  TODO: Catch when it ever overflows and report it accordingly.
+        For now, just prevent the system from crashing.
+
+
+Please pull the latest trace-v6.14-rc4 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+trace-v6.14-rc4
+
+Tag SHA1: 91a87e3b52a1683844156e377986aaf69306b31f
+Head SHA1: a1a7eb89ca0b89dc1c326eeee2596f263291aca3
+
+
+Heiko Carstens (1):
+      selftests/ftrace: Let fprobe test consider already enabled functions
+
+Nikolay Kuratov (1):
+      ftrace: Avoid potential division by zero in function_stat_show()
+
+Steven Rostedt (1):
+      tracing: Fix bad hist from corrupting named_triggers list
+
+----
+ kernel/trace/ftrace.c                              | 27 +++++++++----------
+ kernel/trace/trace_events_hist.c                   | 30 +++++++++++-----------
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    | 18 ++++++++-----
+ 3 files changed, 38 insertions(+), 37 deletions(-)
+---------------------------
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 6b0c25761ccb..fc88e0688daf 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -540,6 +540,7 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 	static struct trace_seq s;
+ 	unsigned long long avg;
+ 	unsigned long long stddev;
++	unsigned long long stddev_denom;
+ #endif
+ 	guard(mutex)(&ftrace_profile_lock);
+ 
+@@ -559,23 +560,19 @@ static int function_stat_show(struct seq_file *m, void *v)
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	seq_puts(m, "    ");
+ 
+-	/* Sample standard deviation (s^2) */
+-	if (rec->counter <= 1)
+-		stddev = 0;
+-	else {
+-		/*
+-		 * Apply Welford's method:
+-		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
+-		 */
++	/*
++	 * Variance formula:
++	 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
++	 * Maybe Welford's method is better here?
++	 * Divide only by 1000 for ns^2 -> us^2 conversion.
++	 * trace_print_graph_duration will divide by 1000 again.
++	 */
++	stddev = 0;
++	stddev_denom = rec->counter * (rec->counter - 1) * 1000;
++	if (stddev_denom) {
+ 		stddev = rec->counter * rec->time_squared -
+ 			 rec->time * rec->time;
+-
+-		/*
+-		 * Divide only 1000 for ns^2 -> us^2 conversion.
+-		 * trace_print_graph_duration will divide 1000 again.
+-		 */
+-		stddev = div64_ul(stddev,
+-				  rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev, stddev_denom);
+ 	}
+ 
+ 	trace_seq_init(&s);
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..ad7419e24055 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6724,27 +6724,27 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (existing_hist_update_only(glob, trigger_data, file))
+ 		goto out_free;
+ 
+-	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
+-	if (ret < 0)
+-		goto out_free;
++	if (!get_named_trigger_data(trigger_data)) {
+ 
+-	if (get_named_trigger_data(trigger_data))
+-		goto enable;
++		ret = create_actions(hist_data);
++		if (ret)
++			goto out_free;
+ 
+-	ret = create_actions(hist_data);
+-	if (ret)
+-		goto out_unreg;
++		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
++			ret = save_hist_vars(hist_data);
++			if (ret)
++				goto out_free;
++		}
+ 
+-	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+-		ret = save_hist_vars(hist_data);
++		ret = tracing_map_init(hist_data->map);
+ 		if (ret)
+-			goto out_unreg;
++			goto out_free;
+ 	}
+ 
+-	ret = tracing_map_init(hist_data->map);
+-	if (ret)
+-		goto out_unreg;
+-enable:
++	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
++	if (ret < 0)
++		goto out_free;
++
+ 	ret = hist_trigger_enable(trigger_data, file);
+ 	if (ret)
+ 		goto out_unreg;
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+index 449f9d8be746..73f6c6fcecab 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+@@ -10,12 +10,16 @@ PLACE=$FUNCTION_FORK
+ PLACE2="kmem_cache_free"
+ PLACE3="schedule_timeout"
+ 
++# Some functions may have BPF programs attached, therefore
++# count already enabled_functions before tests start
++ocnt=`cat enabled_functions | wc -l`
++
+ echo "f:myevent1 $PLACE" >> dynamic_events
+ 
+ # Make sure the event is attached and is the only one
+ grep -q $PLACE enabled_functions
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -23,7 +27,7 @@ echo "f:myevent2 $PLACE%return" >> dynamic_events
+ 
+ # It should till be the only attached function
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -32,7 +36,7 @@ echo "f:myevent3 $PLACE2" >> dynamic_events
+ 
+ grep -q $PLACE2 enabled_functions
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 2 ]; then
++if [ $cnt -ne $((ocnt + 2)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -49,7 +53,7 @@ grep -q myevent1 dynamic_events
+ 
+ # should still have 2 left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 2 ]; then
++if [ $cnt -ne $((ocnt + 2)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -57,7 +61,7 @@ echo > dynamic_events
+ 
+ # Should have none left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 0 ]; then
++if [ $cnt -ne $ocnt ]; then
+ 	exit_fail
+ fi
+ 
+@@ -65,7 +69,7 @@ echo "f:myevent4 $PLACE" >> dynamic_events
+ 
+ # Should only have one enabled
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -73,7 +77,7 @@ echo > dynamic_events
+ 
+ # Should have none left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 0 ]; then
++if [ $cnt -ne $ocnt ]; then
+ 	exit_fail
+ fi
+ 
