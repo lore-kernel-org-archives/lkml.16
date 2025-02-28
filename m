@@ -1,88 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3852F37;
-	Fri, 28 Feb 2025 02:39:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA48C2F37;
+	Fri, 28 Feb 2025 02:40:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740710398; cv=none; b=ZaiJ+rSknV+sWLWv/04SdlGkOVthTq1BAI3glUg9a1Z9ByK9CaRgZDygoMqOvcvNIvWX8OLmEPCSkGv/1NxyXZRMd4RuoIMTeJz/x+3D7ynLcec1+Y7kjqAKMgLl5xO2uBmsFM8bQCMXjaxQf7xF9+M1Dvb5Z2XUVWHOkRByQZM=
+	t=1740710418; cv=none; b=q3f+a495btoWAKAK9CTpr2bi9XWgKsi53XK3IozImJ5xp8sTY2LLoAVOqXWZufmwvHTGiy2PGGFWnDB49aXgQXJVgv8HB426vdy6JD+9GXS27IexcYfHRqKTNfCYoZAIRFZjYAnAECrVE6EePqTyoT5xo3/X/EJeQSHfOdTqaTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740710398; c=relaxed/simple;
-	bh=n0lGgWpVMdnQZ8WaaunYSs+CDhI/VkhN2UbParMgr2A=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VgWCZx/qSG2kbclTAGxvNQcIniibLtr6//thx7aso9SC9e6pKCyAXYhLjI1MM9qLCA/akkXh1JMz2mSb5svSS85jrQ7kDg9tfTz3V5hgF5sSGf1uZ1X+LqgJsw1wYlgEIhZQlX0fxxiZ2ooz3MzCwzivQmaWqhzLuXtyJJ8j8FA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQQHrPpD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740710418; c=relaxed/simple;
+	bh=Ob2dsG0zgW0eN4CQrbKeXTe3FyXBv3AqsIuBlS2ahUo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oqGCVK+56q/1b/zTp8aJnC0kSjoJWNnVX3SEvfmKP2rT3KU0fQ6VA5ZHiuHxKpX71AtngfUkzcGb61wtqEjBxNUEMpTSYGzDswkrHjCraUYCIgQXV2LyUsS5amlZ4e+58V1z1xcnNA4gPq54w5CS0V2Cou7SFi8i4cMePFNcrkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0XeMSH/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQQHrPpD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26155C4CEDD;
-	Fri, 28 Feb 2025 02:39:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0XeMSH/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EEBDC4CEDD;
+	Fri, 28 Feb 2025 02:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740710398;
-	bh=n0lGgWpVMdnQZ8WaaunYSs+CDhI/VkhN2UbParMgr2A=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=lQQHrPpD+qj/hLOXAvWRKd+wUtlnOEvLwA1qNuPa0Xm5IeQ/ApRUE7/M4B38OJUMS
-	 UoiDSempoQesgGf/J74EmhD5qO7Mo+DWCWNcFzLU6+mM08kmZr7cJ4l0LsEuIIUJ1P
-	 hNgzdZWAlSS3XFGwO9njIS0gbOunwlhPhC7SoMZt5zxZ036v/gTh+81ARspORygJDx
-	 ahb415ZWI8n7o4OwrbaZuL0Y0TOOiDLt/2fbx8PXTVO30LyTFaRDwoLaDMbEHC8Jj6
-	 rzhwWa/+a4KryvShnTEUYuVPzG+jgN51Y5N2yZCmLirQbxUGdBKRUvneN5YHsqnq7W
-	 fjtLvWFYOFNrA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71F10380AACB;
-	Fri, 28 Feb 2025 02:40:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1740710418;
+	bh=Ob2dsG0zgW0eN4CQrbKeXTe3FyXBv3AqsIuBlS2ahUo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=S0XeMSH/uTHN4Vls9srGbPMx7+RsmhJ+TJY6eFjRPAdpVIwfIapCdmJ30wNl1cWp+
+	 wbQftOFeMZTsrVnst/hfBxgxJdCpDczL73l2HzvSfs5RvJJ7z8ytWIaQ29+PK2kfAe
+	 guKWkW7I3IM0mFoVE9vCykA0VRR+AD7PYwxFf5Nc2ncgiuTK9vrzr/+wKdDJ3Spcmb
+	 YePOl7kQtZfiwvBCSn2U5VEtOZGgNpE1w1qP2OHn/wSZE2YuVn+VoeIGgMeA0zfTt+
+	 hL0qSmot78FCs6tKASqcSW5ldkpy9JnzAzJt0G9FmkSaRzBwwnZDmgmsMp8Y6Y4oE0
+	 moJoWUbwr/YzA==
+Date: Thu, 27 Feb 2025 18:40:17 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Danny Lin <danny@orbstack.dev>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: fully namespace net.core.{r,w}mem_{default,max}
+ sysctls
+Message-ID: <20250227184017.100fe713@kernel.org>
+In-Reply-To: <20250226085229.7882-1-danny@orbstack.dev>
+References: <20250226085229.7882-1-danny@orbstack.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v4 0/4] stmmac: Several PCI-related improvements
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174071043026.1661895.15370002818806136916.git-patchwork-notify@kernel.org>
-Date: Fri, 28 Feb 2025 02:40:30 +0000
-References: <20250226085208.97891-1-phasta@kernel.org>
-In-Reply-To: <20250226085208.97891-1-phasta@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
- alexandre.torgue@foss.st.com, chenhuacai@kernel.org, si.yanteng@linux.dev,
- guyinggang@loongson.cn, chenfeiyang@loongson.cn, pstanner@redhat.com,
- jiaxun.yang@flygoat.com, zhangqing@loongson.cn, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Wed, 26 Feb 2025 00:52:27 -0800 Danny Lin wrote:
+> This builds on commit 19249c0724f2 ("net: make net.core.{r,w}mem_{default,max} namespaced")
+> by adding support for writing the sysctls from within net namespaces,
+> rather than only reading the values that were set in init_net. These are
+> relatively commonly-used sysctls, so programs may try to set them without
+> knowing that they're in a container. It can be surprising for such attempts
+> to fail with EACCES.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Wed, 26 Feb 2025 09:52:04 +0100 you wrote:
-> Changes in v4:
->   - Add missing full stop. (Yanteng)
->   - Move forgotten unused-variable-removes to the appropriate places.
->   - Add applicable RB / TB tags
-> 
-> Changes in v3:
->   - Several formatting nits (Paolo)
->   - Split up patch into a patch series (Yanteng)
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v4,1/4] stmmac: loongson: Pass correct arg to PCI function
-    https://git.kernel.org/netdev/net/c/00371a3f4877
-  - [net-next,v4,2/4] stmmac: loongson: Remove surplus loop
-    (no matching commit)
-  - [net-next,v4,3/4] stmmac: Remove pcim_* functions for driver detach
-    (no matching commit)
-  - [net-next,v4,4/4] stmmac: Replace deprecated PCI functions
-    (no matching commit)
-
-You are awesome, thank you!
+This does not apply, please rebase on latest net-next/main.
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+pw-bot: cr
