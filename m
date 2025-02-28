@@ -1,162 +1,160 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2074.outbound.protection.outlook.com [40.107.93.74])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CCF24A06C;
-	Fri, 28 Feb 2025 09:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733777; cv=fail; b=tbhxp9aB478GHlD6ny7/fVz/n6zAX0ZQ8mGG69HnD5JwspVwONC2j3YUIlGEbRV/05EPaOp90VdPBMmACGPRGiXFlsHAI2JSpiIXUoiruKco8eD1L8ntAFbXJpBXWNRW0YjEohRIq2IANsFWyETbiAC80dKJjOH6iPmsG+huAeA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733777; c=relaxed/simple;
-	bh=SOjmWcXofQOcDgqq25ssFmfZG6jOLuURxu6zMHLtnHk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jrR81JEUIBJKODI5V0wKIx9CV5dbYY2xIQg8tMETWglNwLxoofRut4uvelfsnHc5ukGrQJUfW1KKO65MeYKd/pfPKO7yjPScfk10WQ0a/cuDKKIdwYbyr0envhlNI3+wyZXV2uz+2RBPy+ilHP14iC8DOfN0WHhnNab61Drs8Vw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=BJjOCY8E; arc=fail smtp.client-ip=40.107.93.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A228A254861
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740733783; cv=none; b=VJut0QpURfSxffjZYFx9BxdrxKHhfKpd2VVJx/LH0mdFwWHtRXW2tpdSqSDly0bHou54pO1yUqndjCnlXYd8nd+P9eoXcDUbDfrbeUoGK8Br75IbvobFO8E7EkZGEb/P9t/DWzSIZtPP5Z/aBaGo7Mf58Hl1ZahUA8iTB9IpuVM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740733783; c=relaxed/simple;
+	bh=DQeNAI88QwiJ0H0IzWnlGmz69SqOt2Xtn7a33m1z57U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XMSKQ3vkPpVRnUXqSaOZyRXlE/uolxqA8A5Ob34Hcz0QsZ9vYzH0JItsh4pT0fEkdYWbhRX3Q5LzAHJJC2HUdfGFJ18iRSb8RK3+SOaPnE/l1G29bMuooEpuJOVKerzit8qzDy0f5K/ezoNAhvhLquBCjPrWwfrGY0ThWKOAT5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Dn6mFbnI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="BJjOCY8E"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l9DrLa+/3Whwat+iJIGhpUR13lcdxgegv/4x95YqXkSYohskVVZm5bXWZF31AYD3dW0k/XsfxyudwRtq+EK8a363kaupkAsMKl29/AJb2dYP5Mim73BFFkmgys6kK6aSQtSkc0D6ukNX9KybbBjy2Qi4YMZQaQXS4wdBf5JP4XOV+3vGGIoSYPy78ZM8BY7iVgb5+FKy0ghR7h3Ys6kA9RGOCeBQkcdJFS48XS6OmmZTwrhilYirBrFyBTdfwl6qLyWCikPUROIK8sqyN34DZetu9m+HGYUuQCojaQI8s2Qhu/ssiPGm1XOeZTdFWU1ImYE+bcTx7cwIZ+a4nbAqSA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=U5U1XQam6vnboZ0ChfmyQYP7hjtdOJg9jaG6xCX7ZrQ=;
- b=CrUej3GBfnVypALHWzXUMEn/rhVAaRlFaDGTdccp/TMnv1xmuMt1lT2Y642FqEiJ34QjvGfGG3RVH6SVnZWfLmJp4T2ZgE+c66f8m6BNYAKagaFmSvoYyS9JPMbY11zB7h6SeZxwoFGwYoQJwqnqcsA/AjrLEG1Db80DJqpInWEvkLqcKd2I5x/l8Mm4PH7yXO8LNhlJjsbPzYoVxBOG0M1WT4aGEFkRDWZdwqECBtvpaW2jFV7bHJyDRenjJ0AXCSQH0K/duv/m1sbDFz9cESAM5byODmXLqylyVCQrLEi+LlggRq01mw9LzKpTnWWy6pgUPjEaH/gic0ahGNLQPA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5U1XQam6vnboZ0ChfmyQYP7hjtdOJg9jaG6xCX7ZrQ=;
- b=BJjOCY8EFYdbLu68L/HvuQhmocJlLJE5W/z3pEkrw2vDb9ICwUsDZRdCG37VmV7+TQxn/8wH/QmHYdC4CsxY56hV/Mv17eHUCdh3nUzCoBUok8WRXBsRxDY5Q6di0i5o9v/2xi8xTrxn3FxR/ZeddPvXy6AQ54F2lBt7IEROqeM=
-Received: from BY5PR17CA0009.namprd17.prod.outlook.com (2603:10b6:a03:1b8::22)
- by SA1PR12MB8888.namprd12.prod.outlook.com (2603:10b6:806:38a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
- 2025 09:09:31 +0000
-Received: from SJ5PEPF000001ED.namprd05.prod.outlook.com
- (2603:10b6:a03:1b8:cafe::60) by BY5PR17CA0009.outlook.office365.com
- (2603:10b6:a03:1b8::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.22 via Frontend Transport; Fri,
- 28 Feb 2025 09:09:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001ED.mail.protection.outlook.com (10.167.242.201) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:09:31 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 03:09:08 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
-	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
-Subject: [RFC PATCH 10/19] KVM: SVM: Secure AVIC: Do not inject "Exceptions" for Secure AVIC
-Date: Fri, 28 Feb 2025 14:21:06 +0530
-Message-ID: <20250228085115.105648-11-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
-References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dn6mFbnI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740733780;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bNBOfaUsEVE1WE4tuVeIJP7JgkCRJme1Trp+BqRgXwE=;
+	b=Dn6mFbnIZ5GFQ2PrP58zf4puyhMOiLS5MxjuzzBMUJx5662FoJjKgzBZDi395ZSlXaz3hp
+	o0fgL29FOvEtraQvX+PTVaCuQQzH4BBni6pDurjkUHMKqEl7Fi70t8JUlalZvpgE3FIqCZ
+	cS9Ygz/ZzdfuM07+5RBPVPbminjdTgY=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-554-30d59UY1Mt2R5BrDJEWoDw-1; Fri, 28 Feb 2025 04:09:38 -0500
+X-MC-Unique: 30d59UY1Mt2R5BrDJEWoDw-1
+X-Mimecast-MFC-AGG-ID: 30d59UY1Mt2R5BrDJEWoDw_1740733778
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4394b8bd4e1so9932325e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:09:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740733778; x=1741338578;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bNBOfaUsEVE1WE4tuVeIJP7JgkCRJme1Trp+BqRgXwE=;
+        b=er8L0+kPAJOXhOd9sO/Jq3BYJ5N+L4oWhJIyB0vUdyE2nTPu4w8GyZL/s63ZnWdLz5
+         Gt9bSo/7pYQFkV0FGg84aCNKJXeJ4h+kqWvVn6BoelMKR8aD5MMqj0uKGNSQ1c+tgqAL
+         dOomoGZOaDhGtiAk3dsSeOsRC7LINASU0XbZLV09e78pu5R2/BskoFH/MitgqnT24llr
+         0NVn9a0kxRDc9Cyk3zcroHLlV/HL47nZ5CV7vmW7bO/yrkHQrPU/F4YWHjEuQ+iaWi4v
+         ZrBSXbs3MokZqpWgSyKMTh75LNcgiuud0YjX9e0NFuVmN7ZeXXW2Y9uClykxYpD+0lWH
+         nxAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0RU6BC1ut7awOcnNzHm5U6PwWos9yy/ouounn50lJFEpl3bu3ESM3vLhPyvrfSnJ3KouH4XsnGv3Frl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3TqmVKlAahJ3NpWmtD8PaIwAZgug7If7OfjFeO7Q5EBhUHiAD
+	8OTNZUwoYRLxxWciENG8++m3T5KFVq2amz9HsFZtT2+PWo8Ypg4m/IAhfLr2gZpwR1bWjK/Tf04
+	k3lC/VCusvwTKd6sdby3SBxMMJRcjQNVPfabDewfo7Id+vRaztGE4Eq7maC16Rlde3+KImLYV
+X-Gm-Gg: ASbGncupmIETFtKjjRKIWT0bEMO2jgfIQZe6JAld0dDCYI9Ooo8okfmMZLBVbtc0na3
+	RWXUhShbp8xAIM3+ocJrEdLG8x4pP7ojYorQfu8bRgTaba01uM5JtmPlA6BKpSCLNB4AiucYLQ0
+	b1633BznInCBswGk3e31bWnAwl8y92jcStfLTZMTSPpSUkHSmM8gPx/ALlx+x13XZcVGol8PPQE
+	44daRkIxJ3NX/7cA2tCGQ0qFf/3MCRQs6/IuVb2sDjJWRExgKv4NPyPiCJc/aMz7SVMPLfp4rd6
+	FUzZ1WrZytM5k0JZmaorWQWaz0wfFsp2Xfvv0rjZjuQ1P1y25okHKZULBh1vIdGvTjAYhm9pA1e
+	jMvViTUxFdvHxg/W6coxZFQKFFTMtLM9sE4l+LVCeqdU=
+X-Received: by 2002:a05:600c:3ca8:b0:439:94ef:3766 with SMTP id 5b1f17b1804b1-43ba67606b8mr17960285e9.19.1740733777658;
+        Fri, 28 Feb 2025 01:09:37 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFXr6Wi01aqBedbj7Dem90wxj+u2b2qPAW38UYsPBSAAjWWcn4dy/B1BZzcdMvyHyWYteAbpQ==
+X-Received: by 2002:a05:600c:3ca8:b0:439:94ef:3766 with SMTP id 5b1f17b1804b1-43ba67606b8mr17960025e9.19.1740733777311;
+        Fri, 28 Feb 2025 01:09:37 -0800 (PST)
+Received: from ?IPV6:2003:cb:c701:e300:af53:3949:eced:246d? (p200300cbc701e300af533949eced246d.dip0.t-ipconnect.de. [2003:cb:c701:e300:af53:3949:eced:246d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba587163sm80791205e9.36.2025.02.28.01.09.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2025 01:09:36 -0800 (PST)
+Message-ID: <a8eb1d44-5b11-4127-b79d-8464a3b0cb4c@redhat.com>
+Date: Fri, 28 Feb 2025 10:09:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001ED:EE_|SA1PR12MB8888:EE_
-X-MS-Office365-Filtering-Correlation-Id: a364d3ae-1750-46f3-d911-08dd57d79ce5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|376014|7416014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QhlCK5WZDBAHbCH1u/Q4vuuBD2EBmRfXIS7IF0VK/xGdI8dBirwafknBT5vU?=
- =?us-ascii?Q?JYl1JSbUm0X+pO4IftQ2psGB/1vVxDbBuVaTVtyNkomUJkbQ5zCWpDCkwRpm?=
- =?us-ascii?Q?pDgTJ7HiVE3zSSq2TTCECp+SAzhQW+2Ch0J79STqIKJC8PjMmRXFZvLFArpE?=
- =?us-ascii?Q?RzHTgMGRXJwXe4abkDOmSwWHH/89Zek2Av3/HIpvZXIzfeZM7SOcKbYlDZG7?=
- =?us-ascii?Q?ntRc0m52PkzIQzdPGdb/YKpK/+/PKGiDLpp0tEiN+ugeReUFoGF8P2Gc8/vJ?=
- =?us-ascii?Q?x8FkKgUeSbM3zTHTGyKAmPoXDa1wYNRiyt9GyiGBkh+ch2cOSwpKdBzC+UeU?=
- =?us-ascii?Q?OMVyMSpY+mGUuETG1+7jH9bARkZX/KHYSQ2gJImVOYlRDp9U+FTDZJT3gr/6?=
- =?us-ascii?Q?+ayw5eroUU0s9hONZSr5lBOPoUDgDzXF6cuDM7I1oT6LRdtPidDDlP8LT7MR?=
- =?us-ascii?Q?q+mt3vpJ5xN70He6Tztz+nMQuzZ/nooWZP1/H3JtEnwT5MC5YZOd6VLEcMlo?=
- =?us-ascii?Q?/xtJA3iosvrQsYq9QY1YGtAM3cnw869+THbqzCPVGeFOX+6NTZZkZhkla1jM?=
- =?us-ascii?Q?AyVUubK3haE/+FJFpVfbRtOTsIZLxK2guBHBfLkmHzMB0a2QGUvgXkUultL8?=
- =?us-ascii?Q?sIOFiqqmf/6EeElswKcf51uJ+1DBi30+WLbDKVMHhVkzXL/SRBJeFW5Rny4c?=
- =?us-ascii?Q?oWuDguvGf/TJAg1BKpRnQlFVGGuW1Xg5wbBIJ94Sd1dfWCIDqx/UOU2HEBQO?=
- =?us-ascii?Q?tv7fWfRY0qpFU70QI82IZcqFM9QD1nq3FiBNV9CwAiF6XC+YFbnBXr4ZyW5B?=
- =?us-ascii?Q?MU7Nw2TC4UDQ18fwvb+GTXx6nlQwJ9H+25Pa9uXEgyWiIDAWyX0xSfE9YBCR?=
- =?us-ascii?Q?g7aYjpZoonjTxbyBtQsvHXxB5NxHI37E/IN+jbmET3c079tF5m1D2G++Stfz?=
- =?us-ascii?Q?60U1Zt4bdeQ60GR0g296vBoUWmmsiN1secDqe7ALZTs9VU29OJNghWNtkmaz?=
- =?us-ascii?Q?xtvg0VKjvrxXREvp8tefp95BgELVFcZQqDCK/mKqrU4kMRaft+Jc2Q4/H2bT?=
- =?us-ascii?Q?EZEGerPjlEq2WoCLBdgnN701hTLO12xgjW1RTiL3olctrec4HBRPqQka2tOW?=
- =?us-ascii?Q?M4CGyLNmETVgVdE8vR9rOWwQlUPIRr5DlS35mStH/pIOZ3ZQ//J7rSSK4JB+?=
- =?us-ascii?Q?5ggoW8ZWVoz+7Yia6iH/xzZsFZlmOMLEqMkzyCdE/w9AeO2O8elI32HWurBD?=
- =?us-ascii?Q?QyhkmSveK2woS5FrX7fECjYMnmMsRcSCpt02qvX3Z0+3fzWTlnzhlPtMaWn8?=
- =?us-ascii?Q?Jp4hXQehq4/KkFHmc4zrmPDmPT0KZvlvva6HJLndBlwfXspZDQQ4EHJDS9Ra?=
- =?us-ascii?Q?1EjJEAZgZaLofq9qXOz33M4Rsjc+w4N0pM8NnDh18WNmdgtX8rGmuY2UCcmc?=
- =?us-ascii?Q?FB6DVSNizDWTf4hz/oUrYkZ7GgEEE1/JwGxnoDZHKSaNv/MLKLd78w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(7416014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:09:31.6028
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a364d3ae-1750-46f3-d911-08dd57d79ce5
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001ED.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8888
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] mm: page_owner: use new iteration API
+To: Luiz Capitulino <luizcap@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, yuzhao@google.com, pasha.tatashin@soleen.com
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, muchun.song@linux.dev
+References: <cover.1740434344.git.luizcap@redhat.com>
+ <badc717329c288c58b7abf7513603aa3042c008c.1740434344.git.luizcap@redhat.com>
+ <a196d780-c775-4f77-96f2-df3fe61af32f@redhat.com>
+ <68e82e87-606e-4443-99d3-7de6f665ce05@redhat.com>
+ <5bb20271-a92a-454e-90e7-8812fd01d31d@redhat.com>
+ <7ca09134-271e-48aa-b965-14fddd0504d9@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <7ca09134-271e-48aa-b965-14fddd0504d9@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Kishon Vijay Abraham I <kvijayab@amd.com>
+>> To be precise, can't we simply do the following on top?
+> 
+> Yes, that looks good and I like how the new API allows for simpler code.
+> 
+> My only concern is that if the user is not familiar with the page_ext
+> internals, it might not be clear what page_ext_put() is actually
+> protecting in which case it looks wrong that we're using a reference
+> returned by get_page_owner() after releasing the lock. If you think
+> that that's not an issue then I can apply this change on top.
 
-Secure AVIC does not support injecting "Exceptions" from hypervisor.
-Return from svm_inject_exception() for Secure AVIC.
+The page_ext stuff only protects the page_ext itself, not any data 
+stored in there. So I assume this should be just fine.
 
-HW takes care of delivering exceptions initiated by guest as well as
-re-injecting exceptions initiated by guest (in case there's an intercept
-before delivering the exceptions). However exceptions cannot be
-explicitly injected from Hypervisor when Secure AVIC is enabled.
+(most of these cases shouldn't need any protection, because the page_ext 
+should not actually ever vanish here for memory that we are holding in 
+our hands; but we decided to just add it everywhere for consistency)
 
-Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
- arch/x86/kvm/svm/svm.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 7cfd6e916c74..58733b63bcd7 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -463,6 +463,9 @@ static void svm_inject_exception(struct kvm_vcpu *vcpu)
- 	struct kvm_queued_exception *ex = &vcpu->arch.exception;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 
-+	if (sev_savic_active(vcpu->kvm))
-+		return;
-+
- 	kvm_deliver_exception_payload(vcpu, ex);
- 
- 	if (kvm_exception_is_soft(ex->vector) &&
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
