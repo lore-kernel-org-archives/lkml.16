@@ -1,90 +1,124 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F46C250C04
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403C0250C04
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740731985; cv=none; b=evLqBWsIrnhqfo5DLsNMmwws4DTJNutYrbGKES0p1CxZ5FTQj+3vDcmFhDCWCrJIyqKY1Av7aYFp1JXMgQQ8e6GKuZHUcpgOhfRIjJEj0UpdrXJ5ZfdUX5QCmMBezh6y9WgeYLyPnZv3yssHMf0MFmLF35VG4Z0nel3QwqMPKVE=
+	t=1740732003; cv=none; b=bh91VW5CnhAH1ko2spChe67hOwPutaCWlbeBNFMDQcuobPX7H/KlqBR8alD5zmUAq3uWd996ttfd3UZ/fK2nrIQNztNkNnG0a4Ms4lz3PvBlgc/ZWVOnAM7kCuil1pqDCfXp4xkfbvoCbqr4ehzSqZvDS41lbHujbQ5fHPo/fxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740731985; c=relaxed/simple;
-	bh=vXjiyibKKxM77UcLdQZUdVPFpQkCll0rLi8rRYGxZ3U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t62idpoQEW6wqeuEI6jLS1irKLUzBMaFX0kFMAIqGr6hq4WoNsJkFoS08mabpmy0xuxlCNbSKIyHvk/Vohr5M3eL0B5GkfekZYS7EZN6VUCj3gNyR77NYrUiv1Y7Eoot+dRxMp4jmJcw26DpyTtWC8B/Dr4l33JcYHI10MeIKis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bDiWInTE; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740732003; c=relaxed/simple;
+	bh=6nLlEJR+1HRqZHpNFMxHE62+fk85zp8gkyvfjgnlWPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h1a7XLyhhT/stz9LnOf74n9eNYtQABeYCvk0untDOsko8Twa812nFKLcFojj8nfv8qQY73dRwBoO9h0Nu/VPgr1jwLbQnVndVC5dmFKfK8HiSlkcFGb4ITpwFw9CJSJR/E+HdYYu9QDpEpW2EygHmmGdz2EOCDhzJpt1qUoe9DA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lVoZJbzN; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDiWInTE"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54838cd334cso2084469e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740731982; x=1741336782; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vXjiyibKKxM77UcLdQZUdVPFpQkCll0rLi8rRYGxZ3U=;
-        b=bDiWInTE2wLp8b29GnXJ1bKo9HpRSBfQ7dHgECNDrmHltAONJKsnNxAJU7CpwCd8hZ
-         hJTP0+ZZ2KMkWHrns30xZ4LZxqTCy4zr1W/RyvJaj3m+ACIpiHGcJxyb/AZM3OILfgPW
-         fDsoqMWXMNAj8osLKNKF3J1jXTcvFVSrMHIVrQzf9kbojD1MIJnL7RIWJ9GmnJJDhg1k
-         3RCpgm03MNmr2lwwCQMY1wFKtgNd7D55SmlrtwhftBFvXJsGFDWoHr4WG3jTuynkp2c8
-         KDbG5v4FXWuEW0o2VKfl/0a9V/gtw3w9JxOhz5lGF6tuikWKkEa8m/zLApsbvtRkgcGw
-         QPKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740731982; x=1741336782;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vXjiyibKKxM77UcLdQZUdVPFpQkCll0rLi8rRYGxZ3U=;
-        b=f81/z07DxF9Tj+pE5sGxsbjGruQBdEC8vN2U1MO/WT/Nz+d721DguyXuE7OtPJQwDw
-         RmMh7CQOQvq0+vz0iQEjGNMtaqC2DAL4Q8KXuXtbgQxUfdZbjVN+ADeTYdEsCmgO+J0+
-         HroPuccI+veQTcP4jn0kEMZyQ73SmAsYqyrLjVmJpXmbwGtkXamGMI0ougtC11j5VG2h
-         pBDJmltNQ/6/bBOyx48uLaYumuPKvhHpN2zk8QwugKu9cyTIUUdIlNx3tMZPHffm14na
-         plktO0KGkkPsfJEUZ7YX+qhovH6LbQRG1oC8Pz2byqEuMC5mOxmaCGx0qhl/cxf6Zvsj
-         BT6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXvKDng1xDObeJBJg07uw+meEMIuc2xEwb1e7ahybvmUW8c2/0E6YAIama801FLMGsmvJsy2J0cEwjAKzY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIv0uYEKt/EtPi5/fz9TnWo6P9MqQvOedmIrFJDY8qE+Zz09HQ
-	YP3l397psb/spUB9v+LpGUjRw59zptvc/qpQu5x9JyiYjbet4U3IMI7lHO4MxPHt8ozpX9hJ50/
-	drcOkCQ3xSs25rS1lS3Abk2ZPdFe4sv+waLRE9A==
-X-Gm-Gg: ASbGnctALjzHOv9oj34nzI/BcpNK750/Fu+Agaqqo04ZUykDOKDXlovNnWYky7/d5oC
-	50LNUnSg9At10AKJOWx8ZVQ9KCHBhIMgAPJ5Mgj/87CcspuXafi3UokNhX4oz4Ayni8CVM1JQ+e
-	7LdldBIm8=
-X-Google-Smtp-Source: AGHT+IGP05gd+tKAmHNLIYx59fJGUcXOpFn5E7WUbHiqgXJgfnuoO/oZlX/2XdBRPuKvDCHUORWy0P2hwCXTV/HE470=
-X-Received: by 2002:a05:6512:3a90:b0:549:4416:df02 with SMTP id
- 2adb3069b0e04-5494c332da2mr977914e87.41.1740731981662; Fri, 28 Feb 2025
- 00:39:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lVoZJbzN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740732000; x=1772268000;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6nLlEJR+1HRqZHpNFMxHE62+fk85zp8gkyvfjgnlWPs=;
+  b=lVoZJbzNos8hNXw2nKPuKxV4eiCsFWeYQPMFjBOGSreXKiDu1QEpbm76
+   cBRes40xFDt1Xr3u9dwRI4EUmqz8eZA/+UWxVFKhxpRnVN9MyYXwPKkzR
+   vGQM/7H5OxfZvK9FV6baWfC05PENUT2L3qU6k9CNTpOMH/IO6Y9BrHMw6
+   mebw62djrAADMBz2u5vyONYfWyW+fwXdhXM2Z4ho2ZvdE+odudhRX7JQE
+   aPf2LV/qQ2DKFXcLL2eaZh/z4AgN3wtZziJm8XbhVLjEpf717Efs7AxC3
+   VjVEOzCupPM7AXa+e/5Ew8xv3AKGJKFb1xmeBq0mEO2IjdrO4dMzPA5cx
+   g==;
+X-CSE-ConnectionGUID: qgVolWVmQmmxwx6Ip4eHRw==
+X-CSE-MsgGUID: iJwmvH/DT4SCj8RhP/He4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41905670"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="41905670"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 00:39:59 -0800
+X-CSE-ConnectionGUID: Ng7e4B6tRsSRZ7rZzz/aZQ==
+X-CSE-MsgGUID: fgjmtdnfSxiJ/VZEuJieeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="122510082"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 28 Feb 2025 00:39:56 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnvu4-000Eck-0q;
+	Fri, 28 Feb 2025 08:39:36 +0000
+Date: Fri, 28 Feb 2025 16:38:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: zihan zhou <15645113830zzh@gmail.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, bsegall@google.com,
+	dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+	linux-kernel@vger.kernel.org, mgorman@suse.de, mingo@redhat.com,
+	peterz@infradead.org, rostedt@goodmis.org,
+	vincent.guittot@linaro.org, vschneid@redhat.com
+Subject: Re: [PATCH V1 2/4] sched: Do predict load
+Message-ID: <202502281647.5vhdZuZE-lkp@intel.com>
+References: <20250221085051.32468-1-15645113830zzh@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227175132.3734524-1-robh@kernel.org>
-In-Reply-To: <20250227175132.3734524-1-robh@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 28 Feb 2025 09:39:30 +0100
-X-Gm-Features: AQ5f1JpcWRmXsix253vEwz0xl8LXX8T28Ut4ONXhb1Jer9IAi0xNCTvsBZEZyVY
-Message-ID: <CACRpkdZ8twhOH1T3cStuLsD7a7HME-wA9YzotmrhgXmy-zvPoA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: mvebu: Add missing 'gpio-ranges'
- property and hog nodes
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, 
-	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221085051.32468-1-15645113830zzh@gmail.com>
 
-On Thu, Feb 27, 2025 at 6:52=E2=80=AFPM Rob Herring (Arm) <robh@kernel.org>=
- wrote:
+Hi zihan,
 
-> The Marvell mvebu binding users already use 'gpio-ranges' and have hog
-> nodes, so add them to the binding.
->
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+kernel test robot noticed the following build warnings:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+[auto build test WARNING on tip/sched/core]
+[also build test WARNING on akpm-mm/mm-nonmm-unstable brauner-vfs/vfs.all peterz-queue/sched/core linus/master v6.14-rc4 next-20250227]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yours,
-Linus Walleij
+url:    https://github.com/intel-lab-lkp/linux/commits/zihan-zhou/sched-Add-kconfig-of-predict-load/20250221-165850
+base:   tip/sched/core
+patch link:    https://lore.kernel.org/r/20250221085051.32468-1-15645113830zzh%40gmail.com
+patch subject: [PATCH V1 2/4] sched: Do predict load
+config: hexagon-allyesconfig (https://download.01.org/0day-ci/archive/20250228/202502281647.5vhdZuZE-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502281647.5vhdZuZE-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502281647.5vhdZuZE-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/sched/fair.c:4755:17: warning: variable 'load' is uninitialized when used here [-Wuninitialized]
+    4755 |         load = div_u64(load * weight, PREDICT_LOAD_MAX);
+         |                        ^~~~
+   kernel/sched/fair.c:4749:20: note: initialize the variable 'load' to silence this warning
+    4749 |         unsigned long load;
+         |                           ^
+         |                            = 0
+   1 warning generated.
+
+
+vim +/load +4755 kernel/sched/fair.c
+
+  4746	
+  4747	static unsigned long restore_normalized_load(unsigned long normalized_load, unsigned long weight)
+  4748	{
+  4749		unsigned long load;
+  4750	
+  4751		//Prevent arithmetic overflow
+  4752		WARN_ON_ONCE(normalized_load > 4000000);
+  4753		if (weight == PREDICT_LOAD_MAX)
+  4754			return normalized_load;
+> 4755		load = div_u64(load * weight, PREDICT_LOAD_MAX);
+  4756		return load;
+  4757	}
+  4758	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
