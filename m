@@ -1,33 +1,25 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED35426F444;
-	Fri, 28 Feb 2025 19:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E367426F444
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772584; cv=none; b=WyS4n6a/RBv0msNeUk57rU/3qXiJgnqzMxrueYitM/23iNQUjDLJV6jpuCiBh4viIlTBiWOBY/z32Dn5h6l1bXcSdRRkama91YzhBfcaOUqkFSXTfShz8vzxQyykA/BcJlVfjQtfsez+Li700LPqVsMhNcX+rI5oRb+gpQfB0E8=
+	t=1740772589; cv=none; b=owjHic1SMNogx0TP0DT108rTCrd5f72MqucO/xgFBXjDatrND1dkDiZ6oe8E+xXow0RmS883rdHIip4IE0X4T3hwXuk6z+11qxe+O0z8GkIH30l8wj/OdkHBRC8ESn2Tf35ggovbbf3jyzjghiu4XtF1SLuqsDS4gj7Ru842v8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772584; c=relaxed/simple;
-	bh=cYaxjN3iUfl6YT0X8uG+buMGiBP974jD8GQws6y5ZA4=;
+	s=arc-20240116; t=1740772589; c=relaxed/simple;
+	bh=iXDSENzuCzYM8NWg9kgThbDP2nj0ZqpJsVwn8iRcgVM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VkBBlyZdzwRpXn8NOxSxRpe8jNNG2nhVa0flYkbCCd88XSFpuGBQNpCnLqe7G+dqHnXlLC88eOrkRjlzDSgc7ptQvtV/LV2U47URO1zbmVClE2nzK7jKXb4BdeefPZlfI8jWiI1GiZ3lp3cRQztZ2YTy/Q5nu8LwNP3BeG2UTWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfB/ZBjs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfB/ZBjs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46922C4CED6;
-	Fri, 28 Feb 2025 19:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740772583;
-	bh=cYaxjN3iUfl6YT0X8uG+buMGiBP974jD8GQws6y5ZA4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TfB/ZBjs8ZTYDagOOHObhkUsg1DnAQ9drYOOoExqPxSwPiCmYaoowa/pnETlSjQlA
-	 61xDYk9V+de7DUqFAjFkmn6lk5DuOpeSW0IqwUqUbkYwaSe61MJ23YcEThwdhwhLfj
-	 SppOOmgftaARe2k0FqneAIyo+UleahXjdA74nbDkWF/mC+TkV9SYQWc96Rvw43anpT
-	 lWgfWWoFTMvAv7K++LBJxbTt7MujjmGjnslGQ2zFKTm0hfXArqr8H6Oxzb7C0WLrjg
-	 XJFVxB+AC/S5dt9RhMCgA/gyG0ct+Z77jR+nMYWfmClfkWK0H4VoXTGb7aZdLwQwpc
-	 CIYperEJflTlA==
-Message-ID: <d1a29343-fe37-4564-a48d-2ba4890100fe@kernel.org>
-Date: Fri, 28 Feb 2025 13:56:21 -0600
+	 In-Reply-To:Content-Type; b=p3LgeTQSnrIrJmW/GSZ0KvobYnqwlZuIMY4QC+hT6K1rkB0RUfMLETQd0P9MBCKNFrpckKfiz8rPXAWbAM76/F4x0wM7SKSxiWlvrr8nPSSqvn97iKUwAYn+XIVayYCGQalrtB+UvlQdMHS5eDS8cWA/6YVxaeGejDOGBRX/CpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98797176A;
+	Fri, 28 Feb 2025 11:56:42 -0800 (PST)
+Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD4833F5A1;
+	Fri, 28 Feb 2025 11:56:21 -0800 (PST)
+Message-ID: <f73883af-64ed-4a89-a417-20b7b823a70d@arm.com>
+Date: Fri, 28 Feb 2025 19:56:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,119 +27,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add support for hidden choices to platform_profile
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
- <ilpo.jarvinen@linux.intel.com>, "Luke D . Jones" <luke@ljones.dev>,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "Derek J . Clark" <derekjohn.clark@gmail.com>, me@kylegospodneti.ch,
- Denis Benato <benato.denis96@gmail.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>
-References: <20250228170155.2623386-1-superm1@kernel.org>
- <fcf58c76-2c0b-4892-96aa-c9b5b35c3e68@app.fastmail.com>
- <7d76a774-9dad-4c94-b4df-7c040e9dbc47@kernel.org>
- <CAGwozwFGx4n8NccKOJf1Bf1k7P8t_Xd3R4SHeij+s6X=NqBz9Q@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <CAGwozwFGx4n8NccKOJf1Bf1k7P8t_Xd3R4SHeij+s6X=NqBz9Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v6 27/42] x86/resctrl: Move RFTYPE flags to be managed by
+ resctrl
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
+ <20250207181823.6378-28-james.morse@arm.com>
+ <5424ecd1-6a6b-4ed9-87cb-845036c23fb8@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <5424ecd1-6a6b-4ed9-87cb-845036c23fb8@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/28/2025 13:53, Antheas Kapenekakis wrote:
-> On Fri, 28 Feb 2025 at 20:45, Mario Limonciello <superm1@kernel.org> wrote:
->>
->> On 2/28/2025 13:39, Mark Pearson wrote:
->>> Hi Mario,
->>>
->>> On Fri, Feb 28, 2025, at 12:01 PM, Mario Limonciello wrote:
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> When two drivers provide platform profile handlers but use different
->>>> strings to mean (essentially) the same thing the legacy interface won't
->>>> export them because it only shows profiles common to multiple drivers.
->>>>
->>>> This causes an unexpected behavior to people who have upgraded from an
->>>> earlier kernel because if multiple drivers have bound platform profile
->>>> handlers they might not be able to access profiles they were expecting.
->>>>
->>>> Introduce a concept of a "hidden choice" that drivers can register and
->>>> the platform profile handler code will utilize when using the legacy
->>>> interface.
->>>>
->>>> There have been some other attempts at solving this issue in other ways.
->>>> This serves as an alternative to those attempts.
->>>>
->>>> Link:
->>>> https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#t
->>>> Link:
->>>> https://lore.kernel.org/platform-driver-x86/CAGwozwF-WVEgiAbWbRCiUaXf=BVa3KqmMJfs06trdMQHpTGmjQ@mail.gmail.com/T/#m2f3929e2d4f73cc0eedd14738170dad45232fd18
->>>> Cc: Antheas Kapenekakis <lkml@antheas.dev>
->>>> Cc: "Luke D. Jones" <luke@ljones.dev>
->>>>
->>>> Mario Limonciello (3):
->>>>     ACPI: platform_profile: Add support for hidden choices
->>>>     platform/x86/amd: pmf: Add 'quiet' to hidden choices
->>>>     platform/x86/amd: pmf: Add balanced-performance to hidden choices
->>>>
->>>>    drivers/acpi/platform_profile.c    | 94 +++++++++++++++++++++++-------
->>>>    drivers/platform/x86/amd/pmf/sps.c | 11 ++++
->>>>    include/linux/platform_profile.h   |  3 +
->>>>    3 files changed, 87 insertions(+), 21 deletions(-)
->>>>
->>>> --
->>>> 2.43.0
->>>
->>> The patches are all good - but my question is do we really need the whole hidden implementation bit?
->>>
->>> If the options are not hidden, and someone chooses quiet or balanced-performance for the amd-pmf driver - does it really matter that it's going to do the same as low-power or performance?
->>>
->>> So, same feedback as I had for Antheas's patches. I understand why this is being proposed but for me it is making things unnecessarily complicated.
->>>
->>> My personal vote remains that the amd_pmf driver carries the superset to keep everyone happy (sorry - it sucks to be the CPU vendor that has to play nice with everyone).
->>>
->>> Mark
->>
->> Well so the problem with having all of them is specifically what happens
->> when "only" amd-pmf is bound?
->>
->> If you advertise both "low power" and "quiet" it's really confusing to
->> userspace what the difference is.
->>
->> The fact that it's actually 100% the same brings me to my personal
->> opinion on all of this.  Although I spent time writing up this series to
->> do it this way my "preference" is that we permanently alias "low power"
->> and "quiet" to one another and update all drivers to use "low power"
->> instead.
->>
->> Granted that doesn't help the case of balance-performance being hidden
->> that Antheas mentioned for acer-wmi and legion-wmi but I don't know
->> serious of a problem that actually is.
-> 
-> Hi Mark,
-> So I agree with Mario here on that. I actually made the patch you
-> suggested last Sunday [1].
+Hi Reinette,
 
-My suggestion is actually more drastic than what you linked.  It's that 
-we make a change in the core to special case the aliased strings, and 
-then adjust all in-tree drivers to pick one or the other.
+On 20/02/2025 01:17, Reinette Chatre wrote:
+> On 2/7/25 10:18 AM, James Morse wrote:
+>> resctrl_file_fflags_init() is called from the architecture specific code
+>> to make the 'thread_throttle_mode' file visible. The architecture specific
+>> code has already set the membw.throttle_mode in the rdt_resource.
+>>
+>> This forces the RFTYPE flags used by resctrl to be exposed to the
+>> architecture specific code.
+>>
+>> This doesn't need to be specific to the architecture, the throttle_mode
+>> can be used by resctrl to determine if the 'thread_throttle_mode' file
+>> should be visible. This allows the RFTYPE flags to be private to resctrl.
+>>
+>> Add thread_throttle_mode_init(), and use it to call
+>> resctrl_file_fflags_init()  from resctrl_setup(). This avoids
+> 
+> "  from resctrl_setup()" -> " from resctrl_init()" ?
 
-> 
-> But then I looked at it and thought to myself that I can't ship this,
-> so I did a v2, which is what I sent on Tuesday.
-> 
-> My priority here is to not disrupt the existing ABI with 6.14. This
-> would allow extending this discussion by a couple of weeks, so a more
-> permanent solution can be found.
-> 
-> If that would be the case, perhaps my patch series is more preferable
-> as, since it is smaller, it would be cleaner to revert.
-> 
-> Antheas
-> 
-> [1] https://github.com/hhd-dev/patchwork/commit/aae724e8c90da3605bd131672fea07cd866af55f
+Ugh, thanks!
 
+
+>> publishing an extra function between the architecture and filesystem
+>> code.
+
+> | Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+
+
+Thanks!
+
+James
