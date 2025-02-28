@@ -1,149 +1,195 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9BB027F4CD
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 20:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA7D9251793;
+	Fri, 28 Feb 2025 20:03:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772977; cv=none; b=u6f0n9do+hyr8knZtS3tQnm84D8dcOmXjwQ+EJZy69z40Lopums7cz1vLQY08eaKVrXWnk422XkhnH+FC8iZ+74I4PYM4BLnyK+1KuzSdkOZ8C8N/SrebVh+UCI4iKCZGy45nYm0KZUSWq59pPsRL1zj5HVFvZ7ljFvtd1EE30U=
+	t=1740773035; cv=none; b=d7rWsWxPS6k/tJ48srmrjTnJ75Rfg5mH2ZlJUkgM4F3GKU4fotCU7hFswQkAmYrLGd1/sdC/ROH/n7wXcd4MJMS2B+4HzT7DSf3J3lcPw6gGEVlAQfVWfkJQxMV8gj8l+HD9rHGZdZsk01rrPVHyZgnWiK1AAghBss2CfTT6A/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772977; c=relaxed/simple;
-	bh=oWipp4b7XP/LWjrOVNtZMWjBbNlhCiTREU16scxbXYY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n2pQQVvb+jF2vaR+m/xvrzagrJ7OBU4HHai05TkoQyVwbcxoTIKE57iS5CuDqDTXeUtEGGVRZX5Uu1gYsReZn75S8EQu8cXutGqKMd9Lzp9G8a5Ln5Ar4BCsScaHl8xGP8dEPft+igxTW3xH896m2NJvdtutJDXW7eomGLikE9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54D041A2D;
-	Fri, 28 Feb 2025 12:03:10 -0800 (PST)
-Received: from merodach.members.linode.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14C013F5A1;
-	Fri, 28 Feb 2025 12:02:51 -0800 (PST)
-From: James Morse <james.morse@arm.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Reinette Chatre <reinette.chatre@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	H Peter Anvin <hpa@zytor.com>,
-	Babu Moger <Babu.Moger@amd.com>,
-	James Morse <james.morse@arm.com>,
-	shameerali.kolothum.thodi@huawei.com,
-	D Scott Phillips OS <scott@os.amperecomputing.com>,
-	carl@os.amperecomputing.com,
-	lcherian@marvell.com,
-	bobo.shaobowang@huawei.com,
-	tan.shaopeng@fujitsu.com,
-	baolin.wang@linux.alibaba.com,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Xin Hao <xhao@linux.alibaba.com>,
-	peternewman@google.com,
-	dfustini@baylibre.com,
-	amitsinght@marvell.com,
-	David Hildenbrand <david@redhat.com>,
-	Rex Nie <rex.nie@jaguarmicro.com>,
-	Dave Martin <dave.martin@arm.com>,
-	Koba Ko <kobak@nvidia.com>,
-	Shanker Donthineni <sdonthineni@nvidia.com>,
-	fenghuay@nvidia.com
-Subject: [PATCH v7 49/49] x86,fs/resctrl: Move resctrl.rst to live under Documentation/filesystems
-Date: Fri, 28 Feb 2025 19:59:13 +0000
-Message-Id: <20250228195913.24895-50-james.morse@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250228195913.24895-1-james.morse@arm.com>
-References: <20250228195913.24895-1-james.morse@arm.com>
+	s=arc-20240116; t=1740773035; c=relaxed/simple;
+	bh=nFP+C540tk3X6xmpiQ6nE9j425j4j6sXR0rZTPN2pB8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=hU7hkIFH5RTGbjgcG9I5a0my6PZmRzT8Ihskw+UeS+uEsBfr6QbSieSNz+5pG0p5IUemMUOz/Zyrul6rZXaZ/S5x5WyfM2m8K4a7bSP9rAjkNE5/pt653oFkIe4VY2vMsWOBDCOsRrSo4Rb+RWtodXq8F8R7Tx2vF24bvnDNYts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=eEKFrIBw; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=5ovHJHK1; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="eEKFrIBw";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="5ovHJHK1"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id F008A1380A2C;
+	Fri, 28 Feb 2025 15:03:51 -0500 (EST)
+Received: from phl-imap-10 ([10.202.2.85])
+  by phl-compute-06.internal (MEProxy); Fri, 28 Feb 2025 15:03:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1740773031;
+	 x=1740859431; bh=wPYXLIBT+Wmadp6rYziFldTcVGulm1uvonrgbV8TXWE=; b=
+	eEKFrIBwrIFEhG4tjJhhXUrW1nNf0rWs/ioC0iuTxIODGWMfMBVY9PDSVUTkUElT
+	z9NPTtaXwwCH63YJ4+ayq/IG8r8W3M1QgWYjTtW2E75UZzido1HVcx+fAy/+Wm8N
+	doZLvad/JFMoXBcuX9kbdz0ajrVsGJndTjURiTrZ1pmqq2feMkBow9Ue3JkOwn9B
+	c99ZXtXTTaTzK9QgOWzQunhI6mKRUfaiF1JUqsS+YT665nJBwVYaugGjXQMgr5NJ
+	H0IcA1Hxhq0yGlzIGQRvIuc7rGeQVcuQAHJc0WW6RAO707R2GNxARID4wZGPcc/J
+	elmf8Lsq205P4cPJKsgvZQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740773031; x=
+	1740859431; bh=wPYXLIBT+Wmadp6rYziFldTcVGulm1uvonrgbV8TXWE=; b=5
+	ovHJHK1xYYDjVF/+yOGMI80utAj0qxLXxHf3EkvSjrsnOMx06+1NpLk7sJRj3oCS
+	O2H5oCQJtm2I0r7gnwHX+//V+vQHlyNF+0qSbj4dsbA2qA9lyIHXUssaNlvP5Zbl
+	kcLC5bvsHz2mJEJt91o6gqC3xtB6gLC9iszsl/8aPOvdSRQJEW73KwW5IrMUs0Nn
+	R3vkJza10QbCCTb91JXhCi6k20dIW3fCIP4T+VaoLOlGG6bpaq2+IosIkd+BZsp9
+	ZMJI88kb8wsuXV0ErkIphYEjVq8RUtq94D+0L2f+21QFnyZk+i/8WrYB/d+aenYW
+	kdC4+JIKnhH+tRB1aenLw==
+X-ME-Sender: <xms:pxbCZ0uxmrDcWy7jcwTR9JMmiuNfxUeGHoaIoHRqw4oguDm3gzLiNg>
+    <xme:pxbCZxf7QPBkSHO-Pknd2BwkVr1iw7gXodxYHPYTbsPwqTmmrgUYn5bQ2MFCMmtY9
+    FzbXutLBR7bSIysQ7M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeludeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
+    tdenucfhrhhomhepfdforghrkhcurfgvrghrshhonhdfuceomhhpvggrrhhsohhnqdhlvg
+    hnohhvohesshhquhgvsggsrdgtrgeqnecuggftrfgrthhtvghrnheptdffvefgtefhveet
+    uddvfeelveektdduvdelgfehgfeikeffjeetjeevffektdfhnecuffhomhgrihhnpehkvg
+    hrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpehmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprh
+    gtphhtthhopedugedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhhhigrmhdq
+    shhunhgurghrrdhsqdhksegrmhgurdgtohhmpdhrtghpthhtohepmhgrrhhiohdrlhhimh
+    honhgtihgvlhhlohesrghmugdrtghomhdprhgtphhtthhopehlkhhmlhesrghnthhhvggr
+    shdruggvvhdprhgtphhtthhopegsvghnrghtohdruggvnhhishelieesghhmrghilhdrtg
+    homhdprhgtphhtthhopeguvghrvghkjhhohhhnrdgtlhgrrhhksehgmhgrihhlrdgtohhm
+    pdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsuh
+    hpvghrmhdusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmvgeskhihlhgvghhoshhp
+    ohgunhgvthhirdgthhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuh
+    igrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:pxbCZ_zq1Q_6WSAOpzbGxbIsogjrm5YU1dOY84la9kSO2yhBJE-ljA>
+    <xmx:pxbCZ3PhZlzd667izWOhQ7SB9YsnKoar1b2WScqol4MI00YyiqsCTQ>
+    <xmx:pxbCZ08Uo5JJhGV6yXMfRPyW5yZi8AqWD5acDFAf0zMLxXKg34NMmQ>
+    <xmx:pxbCZ_U7aa9KQ5_EUdC9_4C8sXx1MgRF1RWQa7Mtogf-RhzF_NYjFA>
+    <xmx:pxbCZ-eT_HMrhA9ZOQ0Hv4Frd075xGRHdRyAQ7Ak9bHu-2iIaUlktlzQ>
+Feedback-ID: ibe194615:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 31B093C0066; Fri, 28 Feb 2025 15:03:51 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Fri, 28 Feb 2025 15:03:29 -0500
+From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
+To: "Mario Limonciello" <superm1@kernel.org>,
+ "Shyam Sundar S K" <Shyam-sundar.S-k@amd.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Hans de Goede" <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ "Luke D . Jones" <luke@ljones.dev>
+Cc: 
+ "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+ "open list" <linux-kernel@vger.kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ "Derek J . Clark" <derekjohn.clark@gmail.com>,
+ "Antheas Kapenekakis" <lkml@antheas.dev>, me@kylegospodneti.ch,
+ "Denis Benato" <benato.denis96@gmail.com>,
+ "Limonciello, Mario" <mario.limonciello@amd.com>
+Message-Id: <07a94bc8-ee1a-41ea-bfd9-44c7f7188680@app.fastmail.com>
+In-Reply-To: <7d76a774-9dad-4c94-b4df-7c040e9dbc47@kernel.org>
+References: <20250228170155.2623386-1-superm1@kernel.org>
+ <fcf58c76-2c0b-4892-96aa-c9b5b35c3e68@app.fastmail.com>
+ <7d76a774-9dad-4c94-b4df-7c040e9dbc47@kernel.org>
+Subject: Re: [PATCH 0/3] Add support for hidden choices to platform_profile
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-The filesystem code has moved from arch/x86 to fs. Move the documentation
-too.
 
-Signed-off-by: James Morse <james.morse@arm.com>
----
-Changes since v6:
- * This patch is new.
----
- Documentation/arch/x86/index.rst                    | 1 -
- Documentation/filesystems/index.rst                 | 1 +
- Documentation/{arch/x86 => filesystems}/resctrl.rst | 0
- MAINTAINERS                                         | 2 +-
- arch/x86/kernel/cpu/resctrl/monitor.c               | 2 +-
- fs/resctrl/Kconfig                                  | 2 +-
- 6 files changed, 4 insertions(+), 4 deletions(-)
- rename Documentation/{arch/x86 => filesystems}/resctrl.rst (100%)
 
-diff --git a/Documentation/arch/x86/index.rst b/Documentation/arch/x86/index.rst
-index 8ac64d7de4dc..00f9a99689fb 100644
---- a/Documentation/arch/x86/index.rst
-+++ b/Documentation/arch/x86/index.rst
-@@ -31,7 +31,6 @@ x86-specific Documentation
-    pti
-    mds
-    microcode
--   resctrl
-    tsx_async_abort
-    buslock
-    usb-legacy-support
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2636f2a41bd3..239e44babf6d 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -113,6 +113,7 @@ Documentation for filesystem implementations.
-    qnx6
-    ramfs-rootfs-initramfs
-    relay
-+   resctrl
-    romfs
-    smb/index
-    spufs/index
-diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/filesystems/resctrl.rst
-similarity index 100%
-rename from Documentation/arch/x86/resctrl.rst
-rename to Documentation/filesystems/resctrl.rst
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 433ba4a5a84a..b0193b07d26f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19878,7 +19878,7 @@ M:	Fenghua Yu <fenghua.yu@intel.com>
- M:	Reinette Chatre <reinette.chatre@intel.com>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
--F:	Documentation/arch/x86/resctrl*
-+F:	Documentation/filesystems/resctrl.rst
- F:	arch/x86/include/asm/resctrl.h
- F:	arch/x86/kernel/cpu/resctrl/
- F:	fs/resctrl/
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index 800e52845b1d..163174cc0d3e 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -43,7 +43,7 @@ unsigned int rdt_mon_features;
- static int snc_nodes_per_l3_cache = 1;
- 
- /*
-- * The correction factor table is documented in Documentation/arch/x86/resctrl.rst.
-+ * The correction factor table is documented in Documentation/filesystems/resctrl.rst.
-  * If rmid > rmid threshold, MBM total and local values should be multiplied
-  * by the correction factor.
-  *
-diff --git a/fs/resctrl/Kconfig b/fs/resctrl/Kconfig
-index 478a8e2ad99f..21671301bd8a 100644
---- a/fs/resctrl/Kconfig
-+++ b/fs/resctrl/Kconfig
-@@ -21,7 +21,7 @@ config RESCTRL_FS
- 	  On architectures where this can be disabled independently, it is
- 	  safe to say N.
- 
--	  See <file:Documentation/arch/x86/resctrl.rst> for more information.
-+	  See <file:Documentation/filesystems/resctrl.rst> for more information.
- 
- config RESCTRL_FS_PSEUDO_LOCK
- 	bool
--- 
-2.39.5
+On Fri, Feb 28, 2025, at 2:44 PM, Mario Limonciello wrote:
+> On 2/28/2025 13:39, Mark Pearson wrote:
+>> Hi Mario,
+>> 
+>> On Fri, Feb 28, 2025, at 12:01 PM, Mario Limonciello wrote:
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> When two drivers provide platform profile handlers but use different
+>>> strings to mean (essentially) the same thing the legacy interface won't
+>>> export them because it only shows profiles common to multiple drivers.
+>>>
+>>> This causes an unexpected behavior to people who have upgraded from an
+>>> earlier kernel because if multiple drivers have bound platform profile
+>>> handlers they might not be able to access profiles they were expecting.
+>>>
+>>> Introduce a concept of a "hidden choice" that drivers can register and
+>>> the platform profile handler code will utilize when using the legacy
+>>> interface.
+>>>
+>>> There have been some other attempts at solving this issue in other ways.
+>>> This serves as an alternative to those attempts.
+>>>
+>>> Link:
+>>> https://lore.kernel.org/platform-driver-x86/e64b771e-3255-42ad-9257-5b8fc6c24ac9@gmx.de/T/#t
+>>> Link:
+>>> https://lore.kernel.org/platform-driver-x86/CAGwozwF-WVEgiAbWbRCiUaXf=BVa3KqmMJfs06trdMQHpTGmjQ@mail.gmail.com/T/#m2f3929e2d4f73cc0eedd14738170dad45232fd18
+>>> Cc: Antheas Kapenekakis <lkml@antheas.dev>
+>>> Cc: "Luke D. Jones" <luke@ljones.dev>
+>>>
+>>> Mario Limonciello (3):
+>>>    ACPI: platform_profile: Add support for hidden choices
+>>>    platform/x86/amd: pmf: Add 'quiet' to hidden choices
+>>>    platform/x86/amd: pmf: Add balanced-performance to hidden choices
+>>>
+>>>   drivers/acpi/platform_profile.c    | 94 +++++++++++++++++++++++-------
+>>>   drivers/platform/x86/amd/pmf/sps.c | 11 ++++
+>>>   include/linux/platform_profile.h   |  3 +
+>>>   3 files changed, 87 insertions(+), 21 deletions(-)
+>>>
+>>> -- 
+>>> 2.43.0
+>> 
+>> The patches are all good - but my question is do we really need the whole hidden implementation bit?
+>> 
+>> If the options are not hidden, and someone chooses quiet or balanced-performance for the amd-pmf driver - does it really matter that it's going to do the same as low-power or performance?
+>> 
+>> So, same feedback as I had for Antheas's patches. I understand why this is being proposed but for me it is making things unnecessarily complicated.
+>> 
+>> My personal vote remains that the amd_pmf driver carries the superset to keep everyone happy (sorry - it sucks to be the CPU vendor that has to play nice with everyone).
+>> 
+>> Mark
+>
+> Well so the problem with having all of them is specifically what happens 
+> when "only" amd-pmf is bound?
+>
+> If you advertise both "low power" and "quiet" it's really confusing to 
+> userspace what the difference is.
 
+Ah - I guess you get platforms without profile support where amd-pmf is the only thing. I hadn't considered that.
+
+FWIW, I believe we (Lenovo) have both low power and quiet on Windows...and they really don't make much difference (which is why the thermal team didn't do them both on Linux). 
+I don't know if Windows users are more or less confused (or maybe they've just abandoned all hope and are migrating to Linux...)
+
+You have a better feeling as to how many issues you'll get raised if they behave the same, and have to support a wider ecosystem, so I'm happy to be over-ruled. I just wanted to wave my flag that I think the driver is getting too complicated. I'm slightly dreading having to debug customer issues at this point.
+
+>
+> The fact that it's actually 100% the same brings me to my personal 
+> opinion on all of this.  Although I spent time writing up this series to 
+> do it this way my "preference" is that we permanently alias "low power" 
+> and "quiet" to one another and update all drivers to use "low power" 
+> instead.
+>
+
+Guaranteed if you do that some vendor will have something that differentiates.
+
+I can see having a 'use as much power as possible without needing fans' for quiet, and 'make the battery last as long as humanely possible whilst keeping the system usable' mode for low-power. Don't think anyone has done it...but they could.
+
+> Granted that doesn't help the case of balance-performance being hidden 
+> that Antheas mentioned for acer-wmi and legion-wmi but I don't know 
+> serious of a problem that actually is.
+
+I really have to go play with this on the Legion-Go. I need a time-machine.....
+
+Mark
