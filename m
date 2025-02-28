@@ -1,135 +1,103 @@
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8DC25DAF4;
-	Fri, 28 Feb 2025 10:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB80A25D209
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737840; cv=none; b=GVqBvwoIARoKLFFVsuIPZobYabjwJ80JSWab7IdfBS5KkJcaW7IpKQ0jj+ECqApUCmt8w6Guk/wzix3Jhb5TK85AYzzG+rP3aqfTcMVgbpl5WtHBV+tCkoqpKsKFCuwJ/6SxLk4gd+3+9TaiTxjecG8Ie0v2MAly6xZo9EWPcGo=
+	t=1740737850; cv=none; b=Q/4sjueGOOf7lyqpRqS7ZbhYggqXa+kFzHowIUAl8wrYRjxMayf1qVTdHo52NI0JX56+Bg+ZZdEY8t7w2e0xLP/eLs+xymj33HEuMkqUqKuruEiaqgOAEHruQ02yD65VlK1LnczHmLT/apg9zoYyV1SGdvF5VX7FvYOTMyY3Jog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737840; c=relaxed/simple;
-	bh=fvbjrF3RFlitvr8uzEvx8ow4b31xsSTWcr8kpA4lx3A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b89lqAkLb/x7dIWuaB+NXP9pjUrhEE54634UfU+gGKwCKcXvRG6SN941YatvWP68WMfzQUoQwCQiRmmkxuZTL9X/zsoihBaVYlkOIEM8UjRgzli+BhyKhETsVxMRFgGrjNpRe/+p00219xc2nHDkOmvBfJTsQc2BcmQpd7rqYNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=XxojHIRP; arc=none smtp.client-ip=178.238.236.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+	s=arc-20240116; t=1740737850; c=relaxed/simple;
+	bh=b9yW9aKaAj0vv2X4pBwVEAQJxZ6g3pOXCix4VsedwdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nw0YmdNsf1oELGVlGS6/eKdyoJx9LdcQMMTymdH09cpIRiutztkhDAMwrm2jw3SKWWBpmYyYhyET4xrqlWmQdWJz5LDBExQpIAOxUSK3PyuuWSfDx4xdpa0WqpNdlrwAKEvvvmgkU/FVoIn15W/st2BAnhJAuiOjBhi9uxxOj8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=raxQR0X/; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="XxojHIRP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=XM4FcO+7xezO5MBIOl4ah63+MR0NMozspQG+f2a2VZA=; b=XxojHIRPnmi/KnLTCn0pg9t8SF
-	435H+hao7/hsBjESMMsyzO52ehDz2U3BVZ7A2ss0o0DTAizrK/ksE+rjA03qdwmFe9y/E57r3KIXt
-	uncVANUBjTFZwy57BdErslKvidMkDf3ufAYGxBGm7V2Ygdl39DZZ1uc3xWt98keyYoETq9iWJMBCu
-	evGzAFalO1QN5Z2dv2L/ynJmE0RNg2k4Cot5mvee8Z4Gu1UvfUEbJSfFVwqVDrJUOroxeWAH9Sml9
-	XQup9aiE7vGTehfEJ3/V4bdRd3VM4MUlzJiBwMUy6BytytQhv6kdPM6Mu1dlCPy0t+uOyLhzBGzhX
-	bdTN0yJQ==;
-Date: Fri, 28 Feb 2025 11:17:07 +0100
-From: Andreas Kemnade <andreas@kemnade.info>
-To: Nishanth Menon <nm@ti.com>
-Cc: Andi Shyti <andi.shyti@kernel.org>, <vigneshr@ti.com>,
- <aaro.koskinen@iki.fi>, <khilman@baylibre.com>, <rogerq@kernel.org>,
- <tony@atomide.com>, <jmkrzyszt@gmail.com>, <reidt@ti.com>,
- <wsa@kernel.org>, <linux-omap@vger.kernel.org>,
- <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <stable@kernel.org>
-Subject: Re: [PATCH] i2c: omap: fix IRQ storms
-Message-ID: <20250228111707.6bf2b992@akair>
-In-Reply-To: <20250227142055.ndzavzysaenoducj@murky>
-References: <20250207185435.751878-1-andreas@kemnade.info>
-	<c3bcusjbn23z5yd2a3xtm7swnfizkl7rb6ufhicdhn52epnjvb@5uqm3g6jcony>
-	<20250220100745.05c0eff8@akair>
-	<20250227142055.ndzavzysaenoducj@murky>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="raxQR0X/"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5462ea9691cso2075882e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:17:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740737846; x=1741342646; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BtF5m7Eo7tw5lbKf+07cY2Tp/XNLgGV8I/BZlAp6LwE=;
+        b=raxQR0X//11z6BewOta7agfUypiDhK4ApQngGZqwK+M/3S2fl4OV8WSIpzq8OPdwtN
+         YMmQnIEa9idk8m+Lg15ITcP+7txroImhd/spu9J3hzPt3njZlZwwSTDZirviFGVvLHq4
+         LgK3UXtjhnpBiFWB9hFhw+Az+OVik7TZWbmJiK2v8nLlICYhec6ODatU4mwlSTiBT7uT
+         HBUPBrWymsDYnxgmvn393qOrpJmFlLV5kpTHlZDCwp84Gge5dB621/Mf77BlTB1ughfd
+         TNY0ZcBQPYTPA/zp+C/AcVMGgL70cvPpL2bmzR8DQzYARGqDIbSjL75siqrpZiEfpR9L
+         nbdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740737846; x=1741342646;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BtF5m7Eo7tw5lbKf+07cY2Tp/XNLgGV8I/BZlAp6LwE=;
+        b=Lov8NQRQBDDKkaBSCCMxF5S3e4li5JsypH1JXpy4jBSpHS/h+QAPe61oC1xLw7TPgg
+         fX29R4pxzyqaC3ICP8gp1Oh3RETh4SP9N0BqF4hvY0e/mLuzB6Ktcu6wqzBYB/ubiEnu
+         2UDD6Ox4JvQN9AsHsg03Fwcrim9wFpObegoalU4FK4aAwfxhwDGxsbfOps0J9RTMZ1Cy
+         7ig0hsa1BxGTPS1muagmHV3c0oHHWdJIYivmG1QgzUAjog7bRsXewzlEUsop/Zhkldk2
+         /AiA9/cbdzgaYuGWKR6uzh03sf/Mq8ac8HaP+C/b8/3ZL+oTBSdUwZDO3uFTjPfg/HqA
+         8vgg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2lM6VJymPVxiOt50d6eivo3c9moxcDEAREYByZ/lOSbfG6ggkxeXli0Rnyp4Zy9ZCbWLZ50Y639hVn98=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymsIvk7znSfRcAmNv3qD770UtQ3luoFSnDZSoooSOc9vNjCPTK
+	aV+RFCKlKQ3qC+Rg2S8WMvukphD0YVfVEmT7aH7A650AO6JMIPf4LJMX33+3OgQ=
+X-Gm-Gg: ASbGnctmIavObLlo032JCBmcnFRUdVeSzXRMSgqJ46CzaXPymAfwSnmtggn8wi1ZqJb
+	KX6EwDE7vQvugu9KlMU9F73eHY0+XsDkhkoUUZeK/ci0RfIQJHW2SHIkDc0zfx7AdLvZJCUyGAx
+	JKhOjdMQ4w4hqpq/ASTUSXIRFk/zOcDfnRLBgKDK943pfty2yH+HIZYiwt1Ws2OrEh8OIxaXg2D
+	GHJJKExkBCuImLcSvvKiA5Fy3+22uJMyGc9UyuG4KpIBxuO273yPCBSMr7Q/EI/kYYDO/D8eN7P
+	TNZu4L+6BsbcemLpw1jIV4KxSHhci/xkWIGgV9OtLSvXYoE13RqFZoqj4QB7geSUWSPNsyMFxUZ
+	8UG330A==
+X-Google-Smtp-Source: AGHT+IGumV9C8K5BUf/QNt3duu1Cz/DHryWxGnIRVWU5r5VemArqgE7BiCYNujMBRO+d3tj1JXx2Sg==
+X-Received: by 2002:ac2:4641:0:b0:549:54f7:e54 with SMTP id 2adb3069b0e04-54954f70ecfmr305434e87.50.1740737846015;
+        Fri, 28 Feb 2025 02:17:26 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549443cc9d3sm440219e87.224.2025.02.28.02.17.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 02:17:24 -0800 (PST)
+Date: Fri, 28 Feb 2025 12:17:22 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Johan Hovold <johan+linaro@kernel.org>
+Cc: Amit Kucheria <amitk@kernel.org>, 
+	Thara Gopinath <thara.gopinath@gmail.com>, "Rafael J . Wysocki " <rafael@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] thermal/drivers/qcom-spmi-temp-alarm: drop unused driver
+ data
+Message-ID: <u6h3ekbyhlscbf75wz5zc7pusizky4o34i5h3uluch5xi22oba@x7y4mhohlvgx>
+References: <20250228082936.5694-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228082936.5694-1-johan+linaro@kernel.org>
 
-Am Thu, 27 Feb 2025 08:20:55 -0600
-schrieb Nishanth Menon <nm@ti.com>:
-
-> On 10:08-20250220, Andreas Kemnade wrote:
-> > Am Wed, 19 Feb 2025 20:22:13 +0100
-> > schrieb Andi Shyti <andi.shyti@kernel.org>:
-> >   
-> > > Hi,
-> > > 
-> > > On Fri, Feb 07, 2025 at 07:54:35PM +0100, Andreas Kemnade wrote:  
-> > > > On the GTA04A5 writing a reset command to the gyroscope causes IRQ
-> > > > storms because NACK IRQs are enabled and therefore triggered but not
-> > > > acked.
-> > > > 
-> > > > Sending a reset command to the gyroscope by
-> > > > i2cset 1 0x69 0x14 0xb6
-> > > > with an additional debug print in the ISR (not the thread) itself
-> > > > causes
-> > > > 
-> > > > [ 363.353515] i2c i2c-1: ioctl, cmd=0x720, arg=0xbe801b00
-> > > > [ 363.359039] omap_i2c 48072000.i2c: addr: 0x0069, len: 2, flags: 0x0, stop: 1
-> > > > [ 363.366180] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x1110)
-> > > > [ 363.371673] omap_i2c 48072000.i2c: IRQ (ISR = 0x0010)
-> > > > [ 363.376892] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
-> > > > [ 363.382263] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
-> > > > [ 363.387664] omap_i2c 48072000.i2c: IRQ LL (ISR = 0x0102)
-> > > > repeating till infinity
-> > > > [...]
-> > > > (0x2 = NACK, 0x100 = Bus free, which is not enabled)
-> > > > Apparently no other IRQ bit gets set, so this stalls.
-> > > > 
-> > > > Do not ignore enabled interrupts and make sure they are acked.
-> > > > If the NACK IRQ is not needed, it should simply not enabled, but
-> > > > according to the above log, caring about it is necessary unless
-> > > > the Bus free IRQ is enabled and handled. The assumption that is
-> > > > will always come with a ARDY IRQ, which was the idea behind
-> > > > ignoring it, proves wrong.
-> > > > It is true for simple reads from an unused address.
-> > > > 
-> > > > So revert
-> > > > commit c770657bd261 ("i2c: omap: Fix standard mode false ACK readings").
-> > > > 
-> > > > The offending commit was used to reduce the false detections in
-> > > > i2cdetect. i2cdetect warns for confusing the I2C bus, so having some
-> > > > rare false detections (I have never seen such on my systems) is the
-> > > > lesser devil than having basically the system hanging completely.
-> > > > 
-> > > > No more details came to light in the corresponding email thread since
-> > > > several months:
-> > > > https://lore.kernel.org/linux-omap/20230426194956.689756-1-reidt@ti.com/
-> > > > so no better fix to solve both problems can be developed right now.    
-> > > 
-> > > I need someone from TI or someone who can test to ack here.
-> > > 
-> > > Can someone help?
-> > >  
-> > The original (IMHO minor) problem which should be fixed by c770657bd261
-> > is hard to test, I have never seen that on any system (and as a
-> > platform maintainer have a bunch of them) I have access to.
-> > There is not much description anywhere about the system in which the
-> > original system occured, and no reaction since several months from the
-> > author, so I do not see anything which can be done.
-> > Maybe it was just faulty hardware.
-> > 
-> > As said in the commit message, reverting it should be the lesser devil.
-> > And that state was tested for many years.  
+On Fri, Feb 28, 2025 at 09:29:36AM +0100, Johan Hovold wrote:
+> The platform device driver data has not been used since commit
+> 7a4ca51b7040 ("thermal/drivers/qcom-spmi: Use devm_iio_channel_get") so
+> drop the unnecessary assignment.
 > 
-> Can we not handle this slightly differently? leave the fix based on
-> compatible? we know that the i2c controller changed over time. the
-> i2cdetect bug fixed by c770657bd261 esp hard to find and fix.
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
 > 
-Looking again more deeply, I do not understand how c770657bd261
-should reliably prevent doing stuff without ARDY:
-omap_i2c_xfer_data() is called as a reaction the the IRQ but also in
-a polling loop. So it must deal with situations were only NACK is set
-there.
-So just disabling the IRQ cannot help. If that is just tested via
-i2cdetect, the polling mode is not tested.
+> I noticed this when doing some rework for pm8008 last year that I have
+> yet to finish.
+> 
+> This can go in meanwhile.
+> 
+> Johan
+> 
+> 
 
-Regards,
-Andreas
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+
+-- 
+With best wishes
+Dmitry
