@@ -1,174 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9384453363
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE2053363
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740752414; cv=none; b=GG5dY4qcQZpzhcAjRr525TrXlaZymWTskw/1wwUsNo0BfiXGcWClZRTTSwA65kgap0FeQF+6iDBQBC10M4ca6DthwC2xftgj7liltp5Ct58p1kZq8y2RUXj88ihX8OLaXsXVS5b4LUg1KqL+Vqp7aO8mhZAgEjyHvx9NgUddKII=
+	t=1740752426; cv=none; b=oh5axmPNz66q5dAEwETSCaghmwGQfuhacM9oqDylppQyU55U99533YVd499ETgv4ufWKTLw46utPmu6SGoN7dfBslG0n+zCPg5yrQJM3oNc7c/Y56GG6q/05BRlCayO2q2bh8P6QOOjFMCKbmEvCnFC4uuexA4aUW7ZHYzN0blw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740752414; c=relaxed/simple;
-	bh=SRQ0m/MZA7tHF75eUQbdOEzdkJsnHTBVME2DOpyXpBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p31NOF39H2RxUkAQPE+7tSCf9736jWa2enE5GWnyALT2Z3XlnJAMG+SibEpQlJXC4DmQLWsL2xz9q9d6Lzv0RqjKsWgKokw70kkEY0h1oThLYFAtMAYLw7/nIvLwM3QZZtW/WDcTyjQkhwVRS4U2+fsoqqoRgt4yzIZwj8AmTJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=id7j/O+p; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740752426; c=relaxed/simple;
+	bh=anGoJKP4e3oq3xRrI9guDLd77101unUczH+xlNTk/Fk=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=BSiiwkLThSWKQNkz+2H1Ui+AAgiTyzIDSMbxdnyk92hbDnuPD+yvkxQwUqZr2M4gtvMqZknxYrf/D44N+GSqBGwLcFs28lWHWDz+MkO3PrUBs1VutYVZIp+eqPkJbNQ9pxdAFK7PC0zKS/pTuwIYwlVmXj1t+qEaccQgafNw5JE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pfyYheMX; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="id7j/O+p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740752412; x=1772288412;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SRQ0m/MZA7tHF75eUQbdOEzdkJsnHTBVME2DOpyXpBc=;
-  b=id7j/O+p+XgyYbEWnpAvx4VJxsbaSfsqBVQdEpW61Kfadm82Kp/sb1dj
-   ZER2FNd0O2niffD8LUXnGLQbxvTxGFkdMJ8LTs2zJH++VzHrTYch18G1X
-   0jyKxSqZRNf6QIgllvj11oKuy3KWIw8ancyEpsL+cUhXWZ9yx9/VeqFPb
-   MI0AeodtSqisZIeN4RSXCTzZPDRLppRriNSDJFrChspRVLXoa+ke48YH6
-   y42sUG1rXTzXOn4CVAdgXxRC34FvPH8gyv61R8IkUx2nXLA8pkZUavBMv
-   v/nYQEdchNGiagYQ2vA9kR5y0fOrtSXRssEnRQEb54QOBc9NozfQvAhtS
-   A==;
-X-CSE-ConnectionGUID: PYZ7DJ3NTp+bJqsgUUmOpg==
-X-CSE-MsgGUID: QaFjbEoGThOpLzL/97VUkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="51885155"
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="51885155"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 06:20:11 -0800
-X-CSE-ConnectionGUID: g14DsdlNTRe0FmDqqTkSlQ==
-X-CSE-MsgGUID: X9pyEn+vSBGgLvpWvWl8Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
-   d="scan'208";a="121954926"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 06:20:08 -0800
-Date: Fri, 28 Feb 2025 16:20:05 +0200
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	Alex Deucher <alexander.deucher@amd.com>,
-	'Christian =?iso-8859-1?Q?K=F6nig'?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	lucas.demarchi@intel.com
-Subject: Re: [PATCH 1/2] drm: Create an app info option for wedge events
-Message-ID: <Z8HGFRGOYvyCCWWu@black.fi.intel.com>
-References: <20250228121353.1442591-1-andrealmeid@igalia.com>
- <20250228121353.1442591-2-andrealmeid@igalia.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pfyYheMX"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250228142020epoutp03179609529e9348490bf1eab9c821538b~oZRqWsG5w2247122471epoutp03O
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:20:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250228142020epoutp03179609529e9348490bf1eab9c821538b~oZRqWsG5w2247122471epoutp03O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740752420;
+	bh=YjHS5lQzbKkPowwCR1zNX2dluJmZJNm1nz6Pvscy/Wk=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=pfyYheMX2MGv4nPsfQ5l4KhHlcZns+spCEHimD5LxxxIcowymaOoSsNuihj7LFJko
+	 PQtgJxbvXOQGciB1Cov4BMAYFWtYzdbloeRLb7KdFC1MJzmESjTjKoHIYXYN4hLy3z
+	 12aSBcsOnuBsaRIFYvR7WX2VLZxA9QjI7eQ494Fc=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250228142020epcas5p43cfa7d7a465fcbd946ce16f223d778a6~oZRpzpxdD1432114321epcas5p4Q;
+	Fri, 28 Feb 2025 14:20:20 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.181]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z49N24H3Lz4x9Pr; Fri, 28 Feb
+	2025 14:20:18 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1F.68.19710.226C1C76; Fri, 28 Feb 2025 23:20:18 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250228142018epcas5p463b70b48a1dd36016c26dcf66f8b489d~oZRn67SxP1917919179epcas5p42;
+	Fri, 28 Feb 2025 14:20:18 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250228142018epsmtrp14b0f4592a064862cfc20cb5a6cd98583~oZRn6QXjY2679026790epsmtrp13;
+	Fri, 28 Feb 2025 14:20:18 +0000 (GMT)
+X-AuditID: b6c32a44-36bdd70000004cfe-7d-67c1c622c82d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	67.0D.18949.226C1C76; Fri, 28 Feb 2025 23:20:18 +0900 (KST)
+Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.6]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250228142017epsmtip224f154fc4fc4fc8f93c4e6c9ef83a290~oZRnMwY9K0770007700epsmtip2C;
+	Fri, 28 Feb 2025 14:20:17 +0000 (GMT)
+From: Anindya Sundar Gayen <anindya.sg@samsung.com>
+To: wsa+renesas@sang-engineering.com, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: aswani.reddy@samsung.com
+Subject: [PATCH] i2c: i2c-exynos5: fixed a spelling error
+Date: Fri, 28 Feb 2025 19:07:45 +0530
+Message-Id: <20250228133745.35053-1-anindya.sg@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7bCmlq7SsYPpBltmKVkc2ryV3aLj7xdG
+	i8u75rBZ9J1zd2Dx6NuyitHj2cL1LB6fN8kFMEdl22SkJqakFimk5iXnp2TmpdsqeQfHO8eb
+	mhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYALVNSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX2Cql
+	FqTkFJgU6BUn5haX5qXr5aWWWBkaGBiZAhUmZGdMONHBWrCdreLutA3sDYxzWbsYOTgkBEwk
+	bh+T7mLk5BAS2M0osXBdTBcjF5D9iVHi3PVjzBDON0aJd7umsME0bH2jBxHfyyjx+vJMJgin
+	mUniw5/rzCBFbALGEm0PKkGmigjES2xuW8ECYjMLyEisuLSVEcQWFrCUuPHvGzuIzSKgKvF/
+	eitYnFfAWuLFzSdg9RIC8hKrNxwAO0JCoJtdYsqdbUwQCReJBQdusULYwhKvjm9hh7ClJF72
+	t7FDHJovseRsNkQ4R+LA8gdQrfYSB67MYQEpYRbQlFi/Sx/iND6J3t9PmCA6eSU62oQgTBWJ
+	iR0sMLNn/9jBDGF7SNy6O5cdEmyxEsev/2eawCgzC2HmAkbGVYySqQXFuempyaYFhnmp5fBo
+	Sc7P3cQITjFaLjsYb8z/p3eIkYmD8RCjBAezkgjvrNgD6UK8KYmVValF+fFFpTmpxYcYTYGB
+	NJFZSjQ5H5jk8kriDU0sDUzMzMxMLI3NDJXEeZt3tqQLCaQnlqRmp6YWpBbB9DFxcEo1MJ2a
+	sS5jamByW3TPKRO2H067T909+06zdX7Dz6JLQWLS0/P0FHpOerMeFjzA1zDt5szZBQVbxJwN
+	O7bGHa4Wf/6luTzbq+/Tz1PJfxhNX5z/dWqjyZSrR9tPJK+71fRP9oKWyQdZjfiWZ78fTxKK
+	eBB5bPdPj2THpsDQZGeLwoy6j8z8vP9j710UlfG7yMaZKaH97rRA/WJtbbkva7Llys+cTFjX
+	0aKi1Rh5QjWV91za67UxO0Iklpjy+VyYfPxZW/BV/ymb5ntJ9V1n2WW4ZC/jy6cM6//KedQu
+	Tb30damhw8TmQK2FrXVzX8k+tTbINDzmGe9xbIqv/SJexbPrtzcETt+nUNGctVTjTEEXoxJL
+	cUaioRZzUXEiADiRQPi6AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJMWRmVeSWpSXmKPExsWy7bCSvK7SsYPpBkd6OC0Obd7KbtHx9wuj
+	xeVdc9gs+s65O7B49G1ZxejxbOF6Fo/Pm+QCmKO4bFJSczLLUov07RK4Miac6GAt2M5WcXfa
+	BvYGxrmsXYwcHBICJhJb3+h1MXJxCAnsZpT48/4GcxcjJ1BcSuL2/05GCFtYYuW/5+wgtpBA
+	I5NE1z0PkF42AWOJtgeVIGERgUSJTxNfsYHYzAIyEisubQVrFRawlLjx7xtYK4uAqsT/6a1g
+	cV4Ba4kXN5+wQIyXl1i94QDzBEaeBYwMqxglUwuKc9Nziw0LjPJSy/WKE3OLS/PS9ZLzczcx
+	goNBS2sH455VH/QOMTJxMB5ilOBgVhLhnRV7IF2INyWxsiq1KD++qDQntfgQozQHi5I477fX
+	vSlCAumJJanZqakFqUUwWSYOTqkGpn7to7N8Fh2zfZv/dr2GTVnVT7XvP6IuqvK82nUrQKj9
+	VYjsolUZ57p8t3GqHrh+stTNRuUKm+jp0uVfGzzzo3eHLz1861FG1jyOeYfDft+2sHO8y+N0
+	ZtqlZ0XcrmY/anQLuB8dnrPzFN8fsyX2hpNPsa17cjGdyav+f+S7CQ3cv2ZWXWQ61Nt2qbZL
+	+ZvUy3MHM5JPfnQTTdXkfT43L93litISG81jRonP133a+W9hy8OVr5h+zFijs8Flz+LNkn+5
+	Jvf82n9hlTuv5t5bm59ye/nwzZ59aGrpzIfLnStcPO6ZbHBUN9O+kaB/dHphZsStE/l/9vE9
+	f8Dxa9vUtYdLSkR4u/XkVE8qH7yeyy6hxFKckWioxVxUnAgAYiu9SHUCAAA=
+X-CMS-MailID: 20250228142018epcas5p463b70b48a1dd36016c26dcf66f8b489d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250228142018epcas5p463b70b48a1dd36016c26dcf66f8b489d
+References: <CGME20250228142018epcas5p463b70b48a1dd36016c26dcf66f8b489d@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250228121353.1442591-2-andrealmeid@igalia.com>
 
-Cc: Lucas
+Corrected a spelling mistake in the i2c-exynos5 driver to improve code
+readability. No functional changes were made.
 
-On Fri, Feb 28, 2025 at 09:13:52AM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which app was the cause can be useful for some
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what app caused the problem.
-> This is an optional argument, when `PID=-1` there's no information about
-> the app caused the problem, or if any app was involved during the hang.
-> 
-> Sometimes just the PID isn't enough giving that the app might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the app's name in the user
-> event.
-> 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  2 +-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  2 +-
->  drivers/gpu/drm/drm_drv.c                  | 16 +++++++++++++---
->  drivers/gpu/drm/i915/gt/intel_reset.c      |  3 ++-
->  drivers/gpu/drm/xe/xe_device.c             |  3 ++-
->  include/drm/drm_device.h                   |  8 ++++++++
->  include/drm/drm_drv.h                      |  3 ++-
->  7 files changed, 29 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 24ba52d76045..00b9b87dafd8 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -6124,7 +6124,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
->  	atomic_set(&adev->reset_domain->reset_res, r);
->  
->  	if (!r)
-> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
-> +		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->  
->  	return r;
->  }
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> index ef1b77f1e88f..3ed9cbcab1ad 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-> @@ -150,7 +150,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
->  			amdgpu_fence_driver_force_completion(ring);
->  			if (amdgpu_ring_sched_ready(ring))
->  				drm_sched_start(&ring->sched, 0);
-> -			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
-> +			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->  			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
->  			goto exit;
->  		}
-> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
-> index 17fc5dc708f4..48faafd82a99 100644
-> --- a/drivers/gpu/drm/drm_drv.c
-> +++ b/drivers/gpu/drm/drm_drv.c
-> @@ -522,6 +522,7 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   * drm_dev_wedged_event - generate a device wedged uevent
->   * @dev: DRM device
->   * @method: method(s) to be used for recovery
-> + * @info: optional information about the guilty app
->   *
->   * This generates a device wedged uevent for the DRM device specified by @dev.
->   * Recovery @method\(s) of choice will be sent in the uevent environment as
-> @@ -534,13 +535,14 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
->   *
->   * Returns: 0 on success, negative error code otherwise.
->   */
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_app_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
->  	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[32], pid_string[15], comm_string[TASK_COMM_LEN];
-> +	char *envp[] = { event_string, pid_string, comm_string, NULL };
->  
->  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
->  
-> @@ -562,6 +564,14 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->  		 "but recovered through reset" : "needs recovery");
->  
-> +	if (info) {
-> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +		snprintf(comm_string, sizeof(comm_string), "APP=%s", info->comm);
-> +	} else {
-> +		snprintf(pid_string, sizeof(pid_string), "%s", "PID=-1");
-> +		snprintf(comm_string, sizeof(comm_string), "%s", "APP=none");
-> +	}
+Signed-off-by: Anindya Sundar Gayen <anindya.sg@samsung.com>
+---
+ drivers/i2c/busses/i2c-exynos5.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This is not much use for wedge cases that needs recovery, since at that point
-the userspace will need to clean house anyway.
+diff --git a/drivers/i2c/busses/i2c-exynos5.c b/drivers/i2c/busses/i2c-exynos5.c
+index 6cdd957ea7e4..02f24479aa07 100644
+--- a/drivers/i2c/busses/i2c-exynos5.c
++++ b/drivers/i2c/busses/i2c-exynos5.c
+@@ -814,7 +814,7 @@ static int exynos5_i2c_xfer_msg(struct exynos5_i2c *i2c,
+ 		ret = i2c->state;
+ 
+ 	/*
+-	 * If this is the last message to be transfered (stop == 1)
++	 * If this is the last message to be transferred (stop == 1)
+ 	 * Then check if the bus can be brought back to idle.
+ 	 */
+ 	if (ret == 0 && stop)
+-- 
+2.17.1
 
-Which leaves us with only 'none' case and perhaps the need for standardization
-of "optional telemetry collection".
-
-Thoughts?
-
-Raag
