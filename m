@@ -1,156 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7E3227FE7D
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EA326B971;
+	Fri, 28 Feb 2025 18:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767124; cv=none; b=HVenO7txbQqEXojDk3ofBnkS/OzbzlVz3HHq9ypsjOIBP/Rf/MAIEyl43ShzJgjwRNpNDJnOMsAZkAvPAzmF4EjXvN5i2A40fmsG7wH2izcvyKtZs3klw1bZn6q/mtQRuzXegao0+01FJDGmNM318MomLewqow4h6jekD29G5Og=
+	t=1740767159; cv=none; b=XeYR1afxWi0LRdNwjkKjkixyPP50Q2v6GFkXnzUOjKXTajDddBeF3O3p9top6Uf5Tduzi5Z3NpZzkwKjhblwa/pHJw6+rV2pxnDRSteC8pulg5x/5g73iWYXiFddJ5AaRez+MX5jMN9zDFkaHhExhtUlUc4uUQxnJZv4NxFKY+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740767124; c=relaxed/simple;
-	bh=isMZCeL05jqInw1dcZFOt7OjqqcZM5ZV9+VOww44NeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NjE8tBkT+KgPrTgj/RGuVQCwzpiBHC7M2c1tVvjQnDbkD7FFgB0XDpSNQWTHE3PAbxmmTDh7jpVUt97EJkYuYU11/lZhKYIs8igSJD7rUCdncNbKFgF5U+Vx+YdVQlmwhhUybQfPNaGyTto6YxckXAb1sXbj0fRk5KeDmcbdW0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4995D19F0;
-	Fri, 28 Feb 2025 10:25:37 -0800 (PST)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.18])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF65D3F6A8;
-	Fri, 28 Feb 2025 10:25:18 -0800 (PST)
-From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-To: ryan.roberts@arm.com,
-	suzuki.poulose@arm.com,
-	yang@os.amperecomputing.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	joro@8bytes.org,
-	jean-philippe@linaro.org,
-	mark.rutland@arm.com,
-	joey.gouly@arm.com,
-	oliver.upton@linux.dev,
-	james.morse@arm.com,
-	broonie@kernel.org,
-	maz@kernel.org,
-	david@redhat.com,
-	akpm@linux-foundation.org,
-	jgg@ziepe.ca,
-	nicolinc@nvidia.com,
-	mshavit@google.com,
-	jsnitsel@redhat.com,
-	smostafa@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-Subject: [PATCH v2 4/4] iommu/arm: Add BBM Level 2 smmu feature
-Date: Fri, 28 Feb 2025 18:24:04 +0000
-Message-ID: <20250228182403.6269-6-miko.lenczewski@arm.com>
-X-Mailer: git-send-email 2.45.3
-In-Reply-To: <20250228182403.6269-2-miko.lenczewski@arm.com>
-References: <20250228182403.6269-2-miko.lenczewski@arm.com>
+	s=arc-20240116; t=1740767159; c=relaxed/simple;
+	bh=KWNfmpF8H7ef8BfvDKRANl/bBOIRz9uB8GRqpQxwgZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D6pMiclM4rSTEEfToK7aSUbuL1tSc1o7mCKyn6i/DDJu2XL1Ce7qELu7wzDpk8uo9AQBwXeBhd7UYga2mF1cWsXih9xNHRFjwlIc5hyh21EBjV7GFUH85mzz/MqOAY3wJphhD/fukgxfhPzC94yiyzyj2jgg9sSQkWSmKVedpas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRf83pOl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRf83pOl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB03EC4CED6;
+	Fri, 28 Feb 2025 18:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740767159;
+	bh=KWNfmpF8H7ef8BfvDKRANl/bBOIRz9uB8GRqpQxwgZQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=mRf83pOlLO7uGDaTA1eEb5PonlPf2Y/HOTCNDx+63r5NM4kSc4U71dQnlfjSm9xNl
+	 +U8gZSFZ466rq9EKmSV1BQTrFMUrFWBRsTRHTZxb0YuDDWaWmuQlr65vXOEWnZI7/7
+	 kcrv9cyJNOQeQozt5Z+LbeOL4W+2GgyJ4Q8IetNsrGkXSwKKVlHXT/ZoSZPsg2hU5r
+	 EDlxE9g7oActngZ77pZa+6oe5WJhUvbTMNepB7uHq2XsGE6oyZWQA1moSsO5wtXSu3
+	 F6Wb6Wm1AERTkWMm1MdWh0Cz+g/gQIrJuiZUzKMERgm2kI5azq4GpcRkGSn8AU4FN5
+	 V0dqc/aj0J9Xw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 97089CE0DEB; Fri, 28 Feb 2025 10:25:58 -0800 (PST)
+Date: Fri, 28 Feb 2025 10:25:58 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Uladzislau Rezki <urezki@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, RCU <rcu@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Cheung Wall <zzqq0103.hey@gmail.com>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
+Subject: Re: [PATCH v4 3/3] rcu: Use _full() API to debug synchronize_rcu()
+Message-ID: <6e4688d1-afe7-4508-9ebc-eeece0692365@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250227131613.52683-1-urezki@gmail.com>
+ <20250227131613.52683-3-urezki@gmail.com>
+ <Z8CdB0Hzvdu5ZVSI@Mac.home>
+ <d8b196c1-c1b5-4bf9-b1cb-dde8642cc34b@paulmck-laptop>
+ <Z8Ckb6spK35-Ez4U@pc636>
+ <1408fc88-e2c6-4f49-b581-0e9ad5620fe0@paulmck-laptop>
+ <Z8HmH85bYNU8enJ2@pc636>
+ <Z8Htg565HnNumdxy@pc636>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8Htg565HnNumdxy@pc636>
 
-For supporting BBM Level 2 for userspace mappings, we want to ensure
-that the smmu also supports its own version of BBM Level 2. Luckily, the
-smmu spec (IHI 0070G 3.21.1.3) is stricter than the aarch64 spec (DDI
-0487K.a D8.16.2), so already guarantees that no aborts are raised when
-BBM level 2 is claimed.
+On Fri, Feb 28, 2025 at 06:08:19PM +0100, Uladzislau Rezki wrote:
+> On Fri, Feb 28, 2025 at 05:36:47PM +0100, Uladzislau Rezki wrote:
+> > On Fri, Feb 28, 2025 at 07:41:40AM -0800, Paul E. McKenney wrote:
+> > > On Thu, Feb 27, 2025 at 06:44:15PM +0100, Uladzislau Rezki wrote:
+> > > > On Thu, Feb 27, 2025 at 09:26:40AM -0800, Paul E. McKenney wrote:
+> > > > > On Thu, Feb 27, 2025 at 09:12:39AM -0800, Boqun Feng wrote:
+> > > > > > Hi Ulad,
+> > > > > > 
+> > > > > > I put these three patches into next (and misc.2025.02.27a) for some
+> > > > > > testing, hopefully it all goes well and they can make it v6.15.
+> > > > > > 
+> > > > > > A few tag changed below:
+> > > > > > 
+> > > > > > On Thu, Feb 27, 2025 at 02:16:13PM +0100, Uladzislau Rezki (Sony) wrote:
+> > > > > > > Switch for using of get_state_synchronize_rcu_full() and
+> > > > > > > poll_state_synchronize_rcu_full() pair to debug a normal
+> > > > > > > synchronize_rcu() call.
+> > > > > > > 
+> > > > > > > Just using "not" full APIs to identify if a grace period is
+> > > > > > > passed or not might lead to a false-positive kernel splat.
+> > > > > > > 
+> > > > > > > It can happen, because get_state_synchronize_rcu() compresses
+> > > > > > > both normal and expedited states into one single unsigned long
+> > > > > > > value, so a poll_state_synchronize_rcu() can miss GP-completion
+> > > > > > > when synchronize_rcu()/synchronize_rcu_expedited() concurrently
+> > > > > > > run.
+> > > > > > > 
+> > > > > > > To address this, switch to poll_state_synchronize_rcu_full() and
+> > > > > > > get_state_synchronize_rcu_full() APIs, which use separate variables
+> > > > > > > for expedited and normal states.
+> > > > > > > 
+> > > > > > > Link: https://lore.kernel.org/lkml/Z5ikQeVmVdsWQrdD@pc636/T/
+> > > > > > 
+> > > > > > I switch this into "Closes:" per checkpatch.
+> > > > > > 
+> > > > > > > Fixes: 988f569ae041 ("rcu: Reduce synchronize_rcu() latency")
+> > > > > > > Reported-by: cheung wall <zzqq0103.hey@gmail.com>
+> > > > > > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > > > > > 
+> > > > > > You seem to forget add Paul's Reviewed-by, so I add it in rcu/next.
+> > > > > > Would you or Paul double-check the Reviewed-by should be here?
+> > > > > 
+> > > > > I am good with keeping my Reviewed-by tags.
+> > > > > 
+> > > > Thanks Paul!
+> > > 
+> > > Except that I got this from overnight testing of rcu/dev on the shared
+> > > RCU tree:
+> > > 
+> > > WARNING: CPU: 5 PID: 14 at kernel/rcu/tree.c:1636 rcu_sr_normal_complete+0x5c/0x80
+> > > 
+> > > I see this only on TREE05.  Which should not be too surprising, given
+> > > that this is the scenario that tests it.  It happened within five minutes
+> > > on all 14 of the TREE05 runs.
+> > > 
+> > Hm.. This is not fun. I tested this on my system and i did not manage to
+> > trigger this whereas you do. Something is wrong.
+> >
+> We have below code to start a new GP, if we detect that processing is
+> starved:
+> 
+> <snip>
+> /*
+>  * The "start_new_poll" is set to true, only when this GP is not able
+>  * to handle anything and there are outstanding users. It happens when
+>  * the rcu_sr_normal_gp_init() function was not able to insert a dummy
+>  * separator to the llist, because there were no left any dummy-nodes.
+>  *
+>  * Number of dummy-nodes is fixed, it could be that we are run out of
+>  * them, if so we start a new pool request to repeat a try. It is rare
+>  * and it means that a system is doing a slow processing of callbacks.
+>  */
+>   if (start_new_poll)
+>     (void) start_poll_synchronize_rcu();
+> <snip>
+> 
+> we do not use a _full() version, since we need to inform rcu-gp-kthread
+> to initiate a new GP.
+> 
+> Any thoughts?
 
-Add the feature and testing for it under arm_smmu_sva_supported().
+My kneejerk not-to-be-trusted take is that it does not matter which type
+of grace period gets started so long as a grace period does get started.
+Presumably you have done the get_state_synchronize_rcu_full() before
+this point?
 
-Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
----
- arch/arm64/kernel/cpufeature.c                  | 7 +++----
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c | 3 +++
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 3 +++
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h     | 4 ++++
- 4 files changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 63f6d356dc77..1022c63f81b2 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -2223,8 +2223,6 @@ static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int sco
- 			if (!cpu_has_bbml2_noabort(__cpu_read_midr(cpu)))
- 				return false;
- 		}
--
--		return true;
- 	} else if (scope & SCOPE_LOCAL_CPU) {
- 		/* We are a hot-plugged CPU, so only need to check our MIDR.
- 		 * If we have the correct MIDR, but the kernel booted on an
-@@ -2232,10 +2230,11 @@ static bool has_bbml2_noabort(const struct arm64_cpu_capabilities *caps, int sco
- 		 * we have an incorrect MIDR, but the kernel booted on a
- 		 * sufficient CPU, we will not bring up this CPU.
- 		 */
--		return cpu_has_bbml2_noabort(read_cpuid_id());
-+		if (!cpu_has_bbml2_noabort(read_cpuid_id()))
-+			return false;
- 	}
- 
--	return false;
-+	return has_cpuid_feature(caps, scope);
- }
- 
- #ifdef CONFIG_ARM64_PAN
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-index 9ba596430e7c..6ba182572788 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c
-@@ -222,6 +222,9 @@ bool arm_smmu_sva_supported(struct arm_smmu_device *smmu)
- 		feat_mask |= ARM_SMMU_FEAT_VAX;
- 	}
- 
-+	if (system_supports_bbml2_noabort())
-+		feat_mask |= ARM_SMMU_FEAT_BBML2;
-+
- 	if ((smmu->features & feat_mask) != feat_mask)
- 		return false;
- 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 358072b4e293..dcee0bdec924 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -4406,6 +4406,9 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
- 	if (FIELD_GET(IDR3_RIL, reg))
- 		smmu->features |= ARM_SMMU_FEAT_RANGE_INV;
- 
-+	if (FIELD_GET(IDR3_BBML, reg) == IDR3_BBML2)
-+		smmu->features |= ARM_SMMU_FEAT_BBML2;
-+
- 	/* IDR5 */
- 	reg = readl_relaxed(smmu->base + ARM_SMMU_IDR5);
- 
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-index bd9d7c85576a..85eaf3ab88c2 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-@@ -60,6 +60,9 @@ struct arm_smmu_device;
- #define ARM_SMMU_IDR3			0xc
- #define IDR3_FWB			(1 << 8)
- #define IDR3_RIL			(1 << 10)
-+#define IDR3_BBML			GENMASK(12, 11)
-+#define IDR3_BBML1			(1 << 11)
-+#define IDR3_BBML2			(2 << 11)
- 
- #define ARM_SMMU_IDR5			0x14
- #define IDR5_STALL_MAX			GENMASK(31, 16)
-@@ -754,6 +757,7 @@ struct arm_smmu_device {
- #define ARM_SMMU_FEAT_HA		(1 << 21)
- #define ARM_SMMU_FEAT_HD		(1 << 22)
- #define ARM_SMMU_FEAT_S2FWB		(1 << 23)
-+#define ARM_SMMU_FEAT_BBML2		(1 << 24)
- 	u32				features;
- 
- #define ARM_SMMU_OPT_SKIP_PREFETCH	(1 << 0)
--- 
-2.45.3
-
+							Thanx, Paul
