@@ -1,176 +1,71 @@
-Received: from freeshell.de (freeshell.de [116.202.128.144])
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC7E10E5;
-	Fri, 28 Feb 2025 08:03:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAE71BC9FB;
+	Fri, 28 Feb 2025 08:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729822; cv=none; b=ewJLBFykgRESBTapMF0PMaUdMxZue6zYkuvtEfW3gz7MfMJKxkJ/Zbwt6tKTSJdFMkEjiJ4SvTeR0k2WmYsdzFa5RtxNqgmI1aEC3VuT7t03Ui0nV/YyLRmDqKkRzH0xRab5rPTS2RUGsze+yG/cEVcQz58rnDcg9SPxYbXe33k=
+	t=1740729855; cv=none; b=nFvMjkHFXRXEBNhDONIlwtwdENepu3aDOSIBOniJgPws86YvVzXgaOawQDXp5Ta0E5kqW75oAxDYBA6i8eJOIlmWHVfln5rQiEuaiyIQMdrSMdWM4z+Ho4WkZ0DRYMi5aRB4BLj9/sySUOLPuIcXKPWBq4Ux/Vzzm0CUv90WH14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729822; c=relaxed/simple;
-	bh=+DQElHBvDKNGBcoSETty3Z7XBYvwn9DMo8M0nqGqAyA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k1xsfCiwVQsUySpt/zbawAraMG8RwcRqRkwAFUi5I63N7mdYjWB8bINXW04KD6BHfWDvSwm8FVydRoWC1FiLlAjJ10A3eF8kStA80diTiUxerYqlNFNGuzRoIl7XgZVHJypR7YTpNVr0xt4uR1lk2nsyZkCjb0m88Z3iveUMZuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; dkim=pass (1024-bit key) header.d=freeshell.de header.i=@freeshell.de header.b=wqUWew5O; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=freeshell.de header.i=@freeshell.de header.b="wqUWew5O"
-Received: from [192.168.2.35] (unknown [98.97.25.197])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 4DA9AB4C0592;
-	Fri, 28 Feb 2025 08:53:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=freeshell.de;
-	s=mail; t=1740729229;
-	bh=AXDPsPyWvICXScXCh1eSoBQkEfWfZVi/WOVQ1cYJJA0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=wqUWew5OisMsHSP6/g5SkINKU6ork8UBayx98V8axC131N69Yk1QeqoyWXNjeEgvt
-	 40lVl7yRhMKKK+PFm+KKucXVZdg4CeEXBznZCvkjMMDMJ3jlEP67YeFQoIj2eu4swq
-	 2+I0mynKl/NAZKTr/6jgGYlyflKKGWXVAM34zzwU=
-Message-ID: <8b0f7b4f-e58a-45ae-931f-2b2853918ab4@freeshell.de>
-Date: Thu, 27 Feb 2025 23:53:45 -0800
+	s=arc-20240116; t=1740729855; c=relaxed/simple;
+	bh=svq9Iu/fuXJ3Td3Wbgw3xJRuitwGhtbaWpt+BRHs/Zs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cydDf7weffvLTqtikv5is7TaGwBnyMSvQZfrdpPDnthS9MjzLh3Q93C0VQhjdmi4QK4X/OgGPx5xFL2ZQQaJU2clloWBumqujeMUvioGtKP4E5LAZ72dC19fy2z9EhcD2W271op/nc+4QLKctzaOD6V7WmDwkaPXkc5rpg77wxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
+Received: from jtjnmail201602.home.langchao.com
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202502281604061769;
+        Fri, 28 Feb 2025 16:04:06 +0800
+Received: from localhost.localdomain (10.94.16.254) by
+ jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
+ 15.1.2507.39; Fri, 28 Feb 2025 16:04:05 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <sre@kernel.org>, <mazziesaccount@gmail.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH 0/9] power: supply: convert to use maple tree register cache
+Date: Fri, 28 Feb 2025 03:02:27 -0500
+Message-ID: <20250228080236.2759-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] riscv: dts: starfive: jh7110-common:
- bootph-pre-ram hinting needed by boot loader
-To: Hal Feng <hal.feng@starfivetech.com>,
- Hal Feng <hal.feng@linux.starfivetech.com>,
- Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- Emil Renner Berthing <kernel@esmil.dk>, Conor Dooley <conor@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-6-e@freeshell.de>
- <25B3D8909DBCC21B+43663a76-4afa-44ae-95e2-3a8792de614c@linux.starfivetech.com>
- <206a6ada-1ef9-47f3-b1cf-fb1a1540e95c@canonical.com>
- <62D89163A60680E7+f0f5a4d4-42f1-454d-9dfe-cf53e2aca4ac@linux.starfivetech.com>
- <cba21857-7eb2-4f10-a1bd-6743ce63dfa6@freeshell.de>
- <ZQ2PR01MB1307ECDF175D20547AC69287E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <ZQ2PR01MB1307ECDF175D20547AC69287E6F1A@ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+tUid: 20252281604062f6713ea8aff083e82110897b9308013
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
 
+The maple tree register cache is based on a much more modern data structure
+than the rbtree cache and makes optimisation choices which are probably
+more appropriate for modern systems than those made by the rbtree cache.
 
+Bo Liu (9):
+  power: supply: bd99954: convert to use maple tree register cache
+  power: supply: bq24257: convert to use maple tree register cache
+  power: supply: bq2515x: convert to use maple tree register cache
+  power: supply: bq25890: convert to use maple tree register cache
+  power: supply: bq25980: convert to use maple tree register cache
+  power: supply: ltc4162l: convert to use maple tree register cache
+  power: supply: max1720x: convert to use maple tree register cache
+  power: supply: rt9455: convert to use maple tree register cache
+  power: supply: smb347: convert to use maple tree register cache
 
-On 2/6/25 19:01, Hal Feng wrote:
->> On 06.02.25 19:17, E Shattow wrote:
->> On 2/5/25 18:59, Hal Feng wrote:
->>> On 2/5/2025 6:01 PM, Heinrich Schuchardt wrote:
->>>> On 2/5/25 08:57, Hal Feng wrote:
->>>>> On 2/3/2025 9:37 AM, E Shattow wrote:
->>>>>> Add bootph-pre-ram hinting to jh7110-common.dtsi:
->>>>>>    - i2c5_pins and i2c-pins subnode for connection to eeprom
->>>>>>    - eeprom node
->>>>>>    - qspi flash configuration subnode
->>>>>>    - memory node
->>>>>>    - uart0 for serial console
->>>>>>
->>>>>>    With this the U-Boot SPL secondary program loader may drop such
->>>>>>    overrides when using dt-rebasing with JH7110 OF_UPSTREAM board
->> targets.
->>>>>>
->>>>>> Signed-off-by: E Shattow <e@freeshell.de>
->>>>>> ---
->>>>>>   arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 6 ++++++
->>>>>>   1 file changed, 6 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>>>> b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>>>> index 30c5f3487c8b..c9e7ae59ee7c 100644
->>>>>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>>>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>>>>> @@ -28,6 +28,7 @@ chosen {
->>>>>>       memory@40000000 {
->>>>>>           device_type = "memory";
->>>>>>           reg = <0x0 0x40000000 0x1 0x0>;
->>>>>> +        bootph-pre-ram;
->>>>>>       };
->>>>>>         gpio-restart {
->>>>>> @@ -247,6 +248,7 @@ emmc_vdd: aldo4 {
->>>>>>       };
->>>>>>         eeprom@50 {
->>>>>> +        bootph-pre-ram;
->>>>>>           compatible = "atmel,24c04";
->>>>>>           reg = <0x50>;
->>>>>>           pagesize = <16>;
->>>>>> @@ -323,6 +325,7 @@ &qspi {
->>>>>>       nor_flash: flash@0 {
->>>>>>           compatible = "jedec,spi-nor";
->>>>>>           reg = <0>;
->>>>>> +        bootph-pre-ram;
->>>>>>           cdns,read-delay = <2>;
->>>>>>           spi-max-frequency = <100000000>;
->>>>>>           cdns,tshsl-ns = <1>;
->>>>>> @@ -405,6 +408,7 @@ GPOEN_SYS_I2C2_DATA,
->>>>>>       };
->>>>>>         i2c5_pins: i2c5-0 {
->>>>>> +        bootph-pre-ram;
->>>>>>           i2c-pins {
->>>>>>               pinmux = <GPIOMUX(19, GPOUT_LOW,
->>>>>>                             GPOEN_SYS_I2C5_CLK, @@ -413,6 +417,7 @@
->>>>>> GPI_SYS_I2C5_CLK)>,
->>>>>>                             GPOEN_SYS_I2C5_DATA,
->>>>>>                             GPI_SYS_I2C5_DATA)>;
->>>>>>               bias-disable; /* external pull-up */
->>>>>> +            bootph-pre-ram;
->>>>>>               input-enable;
->>>>>>               input-schmitt-enable;
->>>>>>           };
->>>>>> @@ -641,6 +646,7 @@ GPOEN_DISABLE,
->>>>>>   };
->>>>>>     &uart0 {
->>>>>> +    bootph-pre-ram;
->>>>>>       clock-frequency = <24000000>;
->>>>>>       pinctrl-names = "default";
->>>>>>       pinctrl-0 = <&uart0_pins>;
->>>>>
->>>>> What about &mmc0, &mmc1, &qspi, &sysgpio, &mmc0_pins,
->> &mmc1_pins, &i2c5?
->>>>> Why not add "bootph-pre-ram;" for them?
->>>>
->>>> Would they be needed before relocation of U-Boot to DRAM?
->>>
->>> Yeah, they are needed by SPL and they are set in U-Boot
->>> arch/riscv/dts/jh7110-common-u-boot.dtsi.
->>>
->>> Best regards,
->>> Hal
->>>
->>
->> When I tested on Star64 there was none of those needed to boot. We can add
->> more bootph-pre-ram as needed but I want to know how to test (because I
->> did not see any need for these).
->>
->> How do you test that these are needed?
-> 
-> In my opinion, SPL need to read U-Boot from EMMC (mmc0) or SDcard (mmc1) or
-> QSPI flash (qspi). Also it need to choose the correct DTB by reading EEPROM
-> mounted on i2c5. To run mmc / i2c drivers, the pin configurations (sysgpio, mmc0/1_pins)
-> are also needed.
-> 
-> Best regards,
-> Hal
+ drivers/power/supply/bd99954-charger.c   | 2 +-
+ drivers/power/supply/bq24257_charger.c   | 2 +-
+ drivers/power/supply/bq2515x_charger.c   | 4 ++--
+ drivers/power/supply/bq25890_charger.c   | 2 +-
+ drivers/power/supply/bq25980_charger.c   | 6 +++---
+ drivers/power/supply/ltc4162-l-charger.c | 2 +-
+ drivers/power/supply/max1720x_battery.c  | 2 +-
+ drivers/power/supply/rt9455_charger.c    | 2 +-
+ drivers/power/supply/smb347-charger.c    | 2 +-
+ 9 files changed, 12 insertions(+), 12 deletions(-)
 
-EMMC or SDcard are not possible to boot (via JH7110 boot ROM, distinct
-from QSPI boot of U-Boot and later EMMC or SDcard capability) in this
-way on some of the boards where transistor logic pairs GPIO0 and GPIO1
-both-off or both-on. SDcard boot is officially recommended against as
-"not supported" by the StarFive reference documentation, and I suppose
-what remains is EMMC boot as valid though I have not heard of any users
-for this.
+-- 
+2.31.1
 
-What is the test procedure for EMMC boot, can you explain and I will try
-it on the Star64?
-
--E
