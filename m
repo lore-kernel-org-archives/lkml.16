@@ -1,230 +1,168 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNZPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19011027.outbound.protection.outlook.com [52.103.68.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4372755FE
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762536; cv=none; b=RrVG60hqOzeOAhwnlaTX+28yNgBVRtYWlkrVQmHXdDiHGUzpWff3f57RydUdOf/USPDbhNITjQkvtNAtId9NVL55Ub60DQvT30+/8cii5BX/rPx+qJilT9OqhRZMe5l2TBOY1wusz5n56Zo4PxcLd2F4jdbvcBSaUtm30GF68II=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762536; c=relaxed/simple;
-	bh=EmCyCn2DxF9tSGDIfIoV9yqm+qOWy504WdSnCUBtPkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j7luQYKOtxg2qgp4rcCUI2dLpCpqHCFAAud3nW3Hrn2F3P43KP70JABo5Co1I/yry2AtoFtwSJSU6/BAqvmlm0scfp68K1xGgulZH0qDXHKlxFH1m9VsDmYnBxEBnHxwxCLSH3JuzHKm4FEbnyd4rLdRHcMj8vs/XIoEOwbm93M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zTKrngKZ; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E8D1607AC;
+	Fri, 28 Feb 2025 17:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740762588; cv=fail; b=hNPzzsFdXWCAE3aKcPSEQU+6YrS+GMYp3CLyb3EYnPpFtjYCMd2eZ02WnIEqcunPtZanzs7sIfaf99lM+JmhRxdTwNVxNjywQvqy9HCzVy1LtIjZcnY3cALsUjEg14J3WwtpeZz32+ocgAEmQHt7q/j5NVOeY4grYSz9VejFTMQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740762588; c=relaxed/simple;
+	bh=353dHU/dcH1oQNEjAxC+mEVGV4fL2hyz2Spx7RZ3KFw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=olpUrvaGeU9jKTuICIKTOjknc0YDgda0fCKZNliR2YybBNqieyT+GNT6Fbuyu16QbNDDDcKOVjDC1Jbxh2tv6Q0+2X+d0Mj4BX4SH2O1z3RzU1N57M5NLy2gPTvlVJpTsTJx6wGmHoUzHvwHNUAIqd8RDM9M8MKj3RjuOF+yz1g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=krsR5jHC; arc=fail smtp.client-ip=52.103.68.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zTKrngKZ"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-390f69e71c8so176634f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:08:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740762532; x=1741367332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IaPCTODeLwe+V7QIP7WdzTJW222I9T9UXPmt/Ut/lfU=;
-        b=zTKrngKZ9G3faw9PsTHUDqLHS6RTAeEyOf3hk8v9Cmjc1SKZxanmzcKi5gAn0xX1M0
-         TtP8IVX95H/WlUi9mJXcEfc6XjNpFDfdtb8Khy+24llfG5dllx1KRKSN/f+8d/GP1WT2
-         VYx88hCtYdknv330ee7Wl+sQWWLeKzhqRT7HB4CKMFatEZz0k7H9kH6T7i4aWGOcGMcz
-         +gmOuDkl7jONJ8xIQM7sL4UarpWzeb/EsoBcCJGkleY1FAgMny1Xj/+azSoRLc0F3Btt
-         RfEvAsKNejgrQaL6TMwFRldp8dQxRIDO6XVmyEtWmjKmqKCEXBsGklujPtXUmbENuYtU
-         iV+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740762532; x=1741367332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IaPCTODeLwe+V7QIP7WdzTJW222I9T9UXPmt/Ut/lfU=;
-        b=orc/EYO3McQZznsCCmsD+cNqBIMx0GUOW2MKi8Ak9u3Zb/prWLkgfxMpIA7WWEpbng
-         09iSUTXltt2useK1XIAr5biO/5DClolpgOfI8ZCBNdnt8HyEvRQqskknfOSOoFndQpP0
-         A1/4zDAaNc6AJsh0wg7ZL20UX+sVU75Pg8ac1vlb3gODeiyWIS5OF3DeXljI8qLZDKbr
-         RuRLLgFcWMCMr9pse9tq4470HmS1TtfA7IdI2Ytg/w7zW10yz6aVNb+mu2HRvY5v/+0R
-         cnI2lmtZC2Ml6LZbs2tXyKe+ssdfC/fRIr4mZHIepq7CVQWpVwd31n2rz7PPu1C2ZbCb
-         pMww==
-X-Forwarded-Encrypted: i=1; AJvYcCUQqpHsX3DjQpRcUhsqRb4RMoSk1wIET6/3PzL7W2D82yoLVfPan2lv0gsnMiPTUsyRCqFL+H2NR+tFYnY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1SxZwpzVjhABSxodCPvZ1ET1AxkbRMJ99bqr4ZgyW7PF7AJdl
-	THesLZ4MWl+JvZpt6Smm+NMHl5U9v4gN4c8RFghs2zRppZH1Drm9o+A3A+4QpDpQE4kp+d0XnD9
-	iAlwO0tkj5CApzRGqZuyJIv+Ck/DQLdbNL3+E
-X-Gm-Gg: ASbGncthZODfVAQDlm297YSAS4FVxZq17K74cJXZ6GZiTObZhZYiB/7fWHDZuMrSySr
-	YVaaIaviY025XtqYOE5G38YfyguiX38HmJ67ZRM2QrDb+Y8+8yRqn9sxjj9SG0GaKeBX+3baBau
-	Ue+oIVtG6ifIR9YFBrJnPw3vdLw+K7e/WmFJZ+OQ==
-X-Google-Smtp-Source: AGHT+IG54e3GobkjZ8tPZxRoFcianUe+ZFTkJdAFfhIp2F2JiHuS56Xy9kQY/09d8HuGTQm+42i6miBW+7XanJXjdSQ=
-X-Received: by 2002:a05:6000:400a:b0:38f:23c4:208c with SMTP id
- ffacd0b85a97d-390e18c8b0amr6664532f8f.18.1740762530834; Fri, 28 Feb 2025
- 09:08:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="krsR5jHC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vQA65UIpDsgPbdG08Ro+Z5ARCSJwwwMljnJj/uqzhOiyeVpaiOPpGAdQaZf4InWIkYkJ5uHuHCGUMgx2HRhuC5cwVCB6ZTmw9xF9dKHm8s4LbcV4VZkDYBYYO+8AJQ7ei3puCGjU1MWuwOnwpyN1JYY0D5b+oA8VChRmdMK8ZQyOp4xn/Z92eouRi7PfwBmrv9x+L9cCKelk3NInlEfpVpVe21Kdhmtm/isor0CksVZPDXJ4INflbV+KxQy3/H5+vGAm8nuEmgi/m6/HqjKHh/nnjQ4JZKUWZWTU7aNTNU/+6op6bsLUXURG7al9K21IfEtW66RF2zi5xmWX8Xwo+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=353dHU/dcH1oQNEjAxC+mEVGV4fL2hyz2Spx7RZ3KFw=;
+ b=thzV7t8bIoRTGflFEvYsnNleWLH6nAo5lyH7LPsKIKkLdfQjmFHpcG+34HwFSAYx4hVHk5H4z6j4ZMPGADRPA2COo0uV+7HZXzJWtxjLEWNBVEBmlgqRlSoX6XitJWLqhICOeZVxk3GeIkhLhAh8NKpfFi5zoVqnY94Or6QQaTDZ94ERpRwS2XuXbf7nmjbXueCLjib7Grd47CcqPqgeSluED+Q4F1JPGwo6ggAggGogB25NcLxai+TnOA16C6mwZtmd7ORap28uM6ek446arg5jitTyDLEUlgKqALmSE1bL3+NGedMInWBL3LFjVN8/6NE+oFjODJAi67QbRWdOIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=353dHU/dcH1oQNEjAxC+mEVGV4fL2hyz2Spx7RZ3KFw=;
+ b=krsR5jHCbsponi+/ZNOoS0kDkTvMs6fcq7QnmkaU4rJYJcPvd5+xHzpK5H0jfnrhn9KY4RrtYa+toU+8y5kncwts6Pue7xQtg7KSR82RdmN3KhJr92LRoaDW4lUHd1e04Y44P2bVz/3nhf+N4fa0nrJ1yjLKied+94S0SVVz8aiSCGwAf8thIQwNs9jIlwzbPNVwYcZnV7e07gM5c7fI/B7wavSBIzSxmENzSc8DubyfrKF1IJhNRAi0xSE9codhzRGg+xBWtp+xwEPDniHK3zsViFtwih26ib1MWK4U1pQUMUlAQWoJXCOadLWCq2Mot3vLd+PS9Iip+HLKEUBWTg==
+Received: from PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:10c::9)
+ by MAYPR01MB10715.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:157::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.24; Fri, 28 Feb
+ 2025 17:09:36 +0000
+Received: from PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::5b05:29d:5646:39aa]) by PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::5b05:29d:5646:39aa%3]) with mapi id 15.20.8489.021; Fri, 28 Feb 2025
+ 17:09:36 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC: "castet.matthieu@free.fr" <castet.matthieu@free.fr>, "stf_xl@wp.pl"
+	<stf_xl@wp.pl>, "b-liu@ti.com" <b-liu@ti.com>, "johan@kernel.org"
+	<johan@kernel.org>, "heikki.krogerus@linux.intel.com"
+	<heikki.krogerus@linux.intel.com>, "valentina.manea.m@gmail.com"
+	<valentina.manea.m@gmail.com>, "shuah@kernel.org" <shuah@kernel.org>,
+	"i@zenithal.me" <i@zenithal.me>, "linux-usb@vger.kernel.org"
+	<linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org"
+	<linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] usb: replace strcpy() with strscpy()
+Thread-Topic: [PATCH] usb: replace strcpy() with strscpy()
+Thread-Index: AQHbifJsk9kt+6VW20O5GBlEUknWILNc8R0AgAACEhc=
+Date: Fri, 28 Feb 2025 17:09:36 +0000
+Message-ID:
+ <PN0PR01MB958840C7836018AB49819981B8CC2@PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM>
+References: <DEF7EF73-12C4-4F30-BC14-DD829F0C6884@live.com>
+ <2025022833-unawake-barricade-7bb8@gregkh>
+In-Reply-To: <2025022833-unawake-barricade-7bb8@gregkh>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN0PR01MB9588:EE_|MAYPR01MB10715:EE_
+x-ms-office365-filtering-correlation-id: c0c8cd51-9519-4e21-d4a3-08dd581aad8d
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|8062599003|19110799003|8060799006|461199028|15080799006|6072599003|7092599003|440099028|4302099013|3412199025|10035399004|102099032|1602099012;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dXprVE04ZDJvTWpvbS9BVmVSSm1tODFNSTlQOEZvdFNEazhLV0czdXJacXZX?=
+ =?utf-8?B?OVlCRThYTTJ3OFphNlJuTktvMERPMjlyM2cvVVBkeDVFaEZycmd4S3ozTGk0?=
+ =?utf-8?B?dWhVQXhJV2RjeWhyWUpMcmhpUHcwNW1wWGtiOFlDSHQ5R09GcW14UVZFRGxR?=
+ =?utf-8?B?UkVmUmZKNVFkV1ZWU0NoazJhTmI5b0wvRVNQcFc5SC9YRkVmczNhcnVyeXI3?=
+ =?utf-8?B?U1JZVENQcjRJWUUzdWl2eW1rWWlPK2VQendTWEphOFh4SjY1a3BhVmRBWXkz?=
+ =?utf-8?B?T3p4eGlnalRMb2JKbFVYTnUwRSsyRTdjR3hhazN0Yzd4dFFLUmdEcGhxQzlG?=
+ =?utf-8?B?WVVCTlg3YjFVNFk4UlRPYkc4Q3RDUjM5dSs0MEpsWXdJUVdnTTMyUmZLSnZs?=
+ =?utf-8?B?Y2ZCUHQvWUN1Z3V4cG1EVmlCc1N6b1p6R29EQkZubkYzc1UwaklYMGM0SmEz?=
+ =?utf-8?B?dE4weks4eTQyY3FPblFxUzZ6QjdiS1VSRW9zbi9CL051MTlZYmlIdXhPZUNW?=
+ =?utf-8?B?MjFrSllYQ0F1V2hiNXJwQWl5TVd2NGVWNE05NEdmcFU0S2d4Yk96d3ZtYlpE?=
+ =?utf-8?B?b0ROUWdkcm5xaENiWlNUY2hpOFhlamVxcjNUbWF6bDlmb2t4c0orYmJsT2sr?=
+ =?utf-8?B?dUVGQXFPZ0RpYVVwaVpBZjF1UVBITEdEMTIvTWVMZzZaL2F6UVRldEZZSzdG?=
+ =?utf-8?B?OElod1YrM004czMxeXdoSEdFbVA3R0hFUzd2SWV1VWJxRUZ0SzllSEozdzFW?=
+ =?utf-8?B?RW15TXFzSlduZUV0aTg2WHBCdWlJVUE0cEJzQ3Y4dGxGdFBUVDhIbW9ocS9H?=
+ =?utf-8?B?VWlYN1htZXRzQy8yMDkrTHJmUTFGOFB6L01yd1dIT2laZ1RlRWxlY0RvTmY0?=
+ =?utf-8?B?dkRJNlVueUl1L3BjUHF1b3Yvd3h1MWdTUkV0WWtjb2Z1VGUrSkRySDJuSHBQ?=
+ =?utf-8?B?RHpnZjNRM0dpekhOSEFkNnNoQzN2Qll1Y0Y4ekJvdk0vNEpoTldnSU41RStQ?=
+ =?utf-8?B?RGZleHJRc1dVenhYZlJEbjlmNkZVV0hqWFhMMGFxWm9IQ21WT0M3cW14eExR?=
+ =?utf-8?B?SHdCbkhNRDBwRVhYOGhnUzdUZjlwZnQ2NUIvWStUSG15amhDdVZqclppQ1pR?=
+ =?utf-8?B?R1RSbGdBYnpLVWlQSHRqRXBEQmhHb1BtU1JRZlg3TGJVOXVGR0x4bHozM3BX?=
+ =?utf-8?B?WEdVUlpuSHAwOU1hcFBhUTRGMTgwZnlUSzNoZmNPaWROOFBFcUdkUExEc05z?=
+ =?utf-8?B?ZmRFeUhTTW0wd2xHbk93Yy96RzhrQVVCaitvVC91NTV6aEo0WlN1WnBGMnJ1?=
+ =?utf-8?B?NE8zMTZSOGxXWnhyeHBXNGhaNmdMOVY2cW1ldWUvRUpJaDVXcVRUR0oxZ0pi?=
+ =?utf-8?B?MC9QdWsxdTk1Znd0WGR0UmZDT1FFMTBYOWZmeDdPbUdxQmtNa2phY0pyRnB2?=
+ =?utf-8?B?YUltNHF6UDdjWHRnUEIvNVdudXh3Y3liU0dkTGhzaG12dlBHZzZZS1d6OS9j?=
+ =?utf-8?B?TTF3d2RDN2VyNFVrY0ttVVM1M0lpcWl3RjNBZlRQUFJtQmlSSzBxaVBTTlNG?=
+ =?utf-8?B?ek10elZ0a1RUby95aTl4K2ZkYnRTWXkyYXZSTDRSSndIZGlsd3lzb3cydU5H?=
+ =?utf-8?B?UlJuSGEzdDhTejBaZzU4T0pzYjJ1VVE9PQ==?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WitPaEtRK3VkendBNkJCMWxobTZpZ04vSndCSHJubUtNTFo5aUxIanRxNWNp?=
+ =?utf-8?B?dmlYRzdMeCtnUTBFSUVoZkpiNlkvRjNmaFVjZzZiT3Y3Um9LOUNUQ2N3YlBK?=
+ =?utf-8?B?NXFmNVdhNGhpRU85MGIxT0R2NktqOEkxVUFHbGY2a0huSUJoanJEZnQraUF2?=
+ =?utf-8?B?d3hRT0o4OTM2UVh4U2thL3liRVY1OFFHV2JRZ1VaelNpWSs2SmVWK3lKSEx1?=
+ =?utf-8?B?QktwQkNEZjBINlFKSXR2MzQ4b3oramFQTk1SQTljMGMyR2Z5dDJwNnpUWU5I?=
+ =?utf-8?B?aFE4OTBGYkdCT3F4eGcrSHhkZ1d5M0cvdytmTFB2dncvMzRhQThDMDJidG5s?=
+ =?utf-8?B?SU9VYUJBbFg4VFB5elh4S1FJRzQxOFRJMFVxaDdoSUFjOGN4N21rb1QxRmkw?=
+ =?utf-8?B?Smt0VGRJTU04NHJEUjNOQnl1SFBxVkFvY0ZZY2c0dGovdUYzRFpzNDZDV09Q?=
+ =?utf-8?B?L1RibkdDQ3BYaWVFeUlIWlJlVTNRbWhXK3VuSnVsaTVIWUdvWFhOTTFqWXFu?=
+ =?utf-8?B?UWNHZGIrTm5PZ2RSQ3VjajlTU1JhZXlML29FanpBMkhTRDRiRVJGVlgxdUdt?=
+ =?utf-8?B?WHUzeEJxZVRsZlZvWlhpK3NxL2svTk8reTBPRFdDQTVvVWVjYnpkcjhtTkpq?=
+ =?utf-8?B?UjIrZFpoS25jZGVHRmQwK250c215dWNTZ3R0QUp4OE1jYUY2M3FkMzN0bWRK?=
+ =?utf-8?B?Vlg0ZldsYkVvcjk2QUViYzF3T20rWG9vM0kwZ016Qit3V2EwdCtGNUpQS2xY?=
+ =?utf-8?B?aXdFOE1HeFhrS2VjaXgva20wN1BURUJQWGhabkswTDMxaHVlNHRtZnBnNCtY?=
+ =?utf-8?B?a0FQNnFjMnRzZ1dqYnN3cHIrVFpCTWl4TFZVb0QyQmtHMzdBY0h2KzV4WkNS?=
+ =?utf-8?B?ejREdTNjR3ZPc1Vic3JvNlFlYjJiMVNRT0N3MmJNbXNIQXAvbnJPYVYxaWRm?=
+ =?utf-8?B?ZjJFMjBlWk9zUVJicThrUVZyMmFaTGh3RjIrbkFwTkZEQXNsUXNITStTQTh4?=
+ =?utf-8?B?QWw3R0FiQTNOVkdpZkZXUWdnUkpVNHU4THBnbkJGYjl1cExlRklmZ2dVSmFJ?=
+ =?utf-8?B?NDYyUzV6M2RZZVRFeFJweEUrYkFPNDNNR01VUkI2aG5LY1lPVHhXZWE4c1hI?=
+ =?utf-8?B?MWNYaEczUDhwSk1LT3o1TTJOZ1RLN0N5bDdJN2huTFpLazBuSlE2czlkdUZj?=
+ =?utf-8?B?amljZmhrbWVJTFFhUnRlOHhvOStvZWJnS3l3SzNlcUllczgrN0tVejh0TnAy?=
+ =?utf-8?B?ZVlhakhYQW5HenBCLzJVbU9DNERIMHV0RUkzbjFwWFlHcWR5R0JsUXpMOTgz?=
+ =?utf-8?B?OWJMWTJGbXU1Rmw3WE1vbnltUUgwODNlamhydllsRlh4QTMvTTV1alErN2Vp?=
+ =?utf-8?B?dXAveThNQytrQ3NxcTgySFVxM3NPOWRnd0tacDlrSnFwTThJR1MvR2JiVjFQ?=
+ =?utf-8?B?RVByWS9Jc2Q2L3QxZzZiSytPdTZrMXM5Q1FWK24ycTFaZHE3UkpabjJIb2pq?=
+ =?utf-8?B?S2VQUFJNT0R3THRKaUltV3VSNHZyekRlRFBHWWV2Smp0VEpiaEpKMVVMdG8v?=
+ =?utf-8?B?WVBGMnZpVTNWRDU4aGNGT1dGSTFkc3lTdGRhSE03NkNYZitJSlhmWmdya0hn?=
+ =?utf-8?B?T1hjQ3diRUQzckdCeUVrejVpQ1ZqMnRvSWlEbmdlMm5XUEdQZ1JpeEJuRnpY?=
+ =?utf-8?B?K3J3VmMydXQ5STFiWW14aGtwSWlUZHpMVkh6RnlUV2szSG5DbHlKOWR4eXkr?=
+ =?utf-8?Q?wfaqVuzUGSefKfq5gY=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228-export-macro-v2-0-569cc7e8926c@google.com>
- <20250228-export-macro-v2-5-569cc7e8926c@google.com> <CAJ-ks9k4rZdpL5dDfwMHuiKFdyYdY00YioYxdtsqszpcbhzjHQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9k4rZdpL5dDfwMHuiKFdyYdY00YioYxdtsqszpcbhzjHQ@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 28 Feb 2025 18:08:38 +0100
-X-Gm-Features: AQ5f1JpN4S2btnyWpu2cTmIDiHVgyZ8OiCtI3DLh4W0P9eLmgQGdOBc2TieXEkk
-Message-ID: <CAH5fLggDgYYk-0HzCjDmmHjV6JkR7WJhmQU-Nhbo4iBGBw1AJw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] panic_qr: use new #[export] macro
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN0PR01MB9588.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0c8cd51-9519-4e21-d4a3-08dd581aad8d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2025 17:09:36.0247
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MAYPR01MB10715
 
-On Fri, Feb 28, 2025 at 4:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Fri, Feb 28, 2025 at 7:41=E2=80=AFAM Alice Ryhl <aliceryhl@google.com>=
- wrote:
-> >
-> > This validates at compile time that the signatures match what is in the
-> > header file. It highlights one annoyance with the compile-time check,
-> > which is that it can only be used with functions marked unsafe.
-> >
-> > If the function is not unsafe, then this error is emitted:
-> >
-> > error[E0308]: `if` and `else` have incompatible types
-> >    --> <linux>/drivers/gpu/drm/drm_panic_qr.rs:987:19
-> >     |
-> > 986 | #[export]
-> >     | --------- expected because of this
-> > 987 | pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len=
-: usize) -> usize {
-> >     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected unsafe fn, =
-found safe fn
-> >     |
-> >     =3D note: expected fn item `unsafe extern "C" fn(_, _) -> _ {kernel=
-::bindings::drm_panic_qr_max_data_size}`
-> >                found fn item `extern "C" fn(_, _) -> _ {drm_panic_qr_ma=
-x_data_size}`
-> >
-> > Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  drivers/gpu/drm/drm_panic.c     |  5 -----
-> >  drivers/gpu/drm/drm_panic_qr.rs | 15 +++++++++++----
-> >  include/drm/drm_panic.h         |  7 +++++++
-> >  rust/bindings/bindings_helper.h |  4 ++++
-> >  4 files changed, 22 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-> > index f128d345b16d..dee5301dd729 100644
-> > --- a/drivers/gpu/drm/drm_panic.c
-> > +++ b/drivers/gpu/drm/drm_panic.c
-> > @@ -486,11 +486,6 @@ static void drm_panic_qr_exit(void)
-> >         stream.workspace =3D NULL;
-> >  }
-> >
-> > -extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> > -
-> > -extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data=
-_len, size_t data_size,
-> > -                               u8 *tmp, size_t tmp_size);
-> > -
-> >  static int drm_panic_get_qr_code_url(u8 **qr_image)
-> >  {
-> >         struct kmsg_dump_iter iter;
-> > diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_pani=
-c_qr.rs
-> > index bcf248f69252..d055655aa0cd 100644
-> > --- a/drivers/gpu/drm/drm_panic_qr.rs
-> > +++ b/drivers/gpu/drm/drm_panic_qr.rs
-> > @@ -27,7 +27,10 @@
-> >  //! * <https://github.com/bjguillot/qr>
-> >
-> >  use core::cmp;
-> > -use kernel::str::CStr;
-> > +use kernel::{
-> > +    prelude::*,
-> > +    str::CStr,
-> > +};
-> >
-> >  #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
-> >  struct Version(usize);
-> > @@ -929,7 +932,7 @@ fn draw_all(&mut self, data: impl Iterator<Item =3D=
- u8>) {
-> >  /// * `tmp` must be valid for reading and writing for `tmp_size` bytes=
-.
-> >  ///
-> >  /// They must remain valid for the duration of the function call.
-> > -#[no_mangle]
-> > +#[export]
-> >  pub unsafe extern "C" fn drm_panic_qr_generate(
-> >      url: *const kernel::ffi::c_char,
-> >      data: *mut u8,
-> > @@ -980,8 +983,12 @@ fn draw_all(&mut self, data: impl Iterator<Item =
-=3D u8>) {
-> >  /// * If `url_len` > 0, remove the 2 segments header/length and also c=
-ount the
-> >  ///   conversion to numeric segments.
-> >  /// * If `url_len` =3D 0, only removes 3 bytes for 1 binary segment.
-> > -#[no_mangle]
-> > -pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usi=
-ze) -> usize {
-> > +///
-> > +/// # Safety
-> > +///
-> > +/// Always safe to call.
->
-> This should explain why it's marked unsafe, since it's always safe to cal=
-l.
-
-Safety comments generally do not explain rationale for why they are
-the way they are. Where would you like me to put it?
-
-> > +#[export]
-> > +pub unsafe extern "C" fn drm_panic_qr_max_data_size(version: u8, url_l=
-en: usize) -> usize {
-> >      #[expect(clippy::manual_range_contains)]
-> >      if version < 1 || version > 40 {
-> >          return 0;
-> > diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-> > index f4e1fa9ae607..2a1536e0229a 100644
-> > --- a/include/drm/drm_panic.h
-> > +++ b/include/drm/drm_panic.h
-> > @@ -163,4 +163,11 @@ static inline void drm_panic_unlock(struct drm_dev=
-ice *dev, unsigned long flags)
-> >
-> >  #endif
-> >
-> > +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> > +extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> > +
-> > +extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data=
-_len, size_t data_size,
-> > +                               u8 *tmp, size_t tmp_size);
-> > +#endif
-> > +
-> >  #endif /* __DRM_PANIC_H__ */
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_h=
-elper.h
-> > index 55354e4dec14..5345aa93fb8a 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -36,6 +36,10 @@
-> >  #include <linux/workqueue.h>
-> >  #include <trace/events/rust_sample.h>
-> >
-> > +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> > +#include <drm/drm_panic.h>
-> > +#endif
->
-> Why the guard here?
->
-> It'd be nice to have a comment here explaining the atypical need for
-> this include.
-
-It's not necessary. I can drop it.
-
-Alice
+DQoNCj4gT24gMjggRmViIDIwMjUsIGF0IDEwOjMz4oCvUE0sIGdyZWdraEBsaW51eGZvdW5kYXRp
+b24ub3JnIHdyb3RlOg0KPiANCj4g77u/T24gRnJpLCBGZWIgMjgsIDIwMjUgYXQgMDM6MDc6MDNQ
+TSArMDAwMCwgQWRpdHlhIEdhcmcgd3JvdGU6DQo+PiBGcm9tOiBBZGl0eWEgR2FyZyA8Z2FyZ2Fk
+aXR5YTA4QGxpdmUuY29tPg0KPj4gDQo+PiBUaGUgc3RyY3B5KCkgZnVuY3Rpb24gaGFzIGJlZW4g
+ZGVwcmVjYXRlZCBhbmQgcmVwbGFjZWQgd2l0aCBzdHJzY3B5KCkuDQo+PiBUaGlzIHBhdGNoIHNo
+YWxsIHJlcGxhY2UgaXQgaW4gdGhlIHdob2xlIFVTQiB0cmVlLg0KPj4gDQo+PiBMaW5rOiBodHRw
+czovL2dpdGh1Yi5jb20vS1NQUC9saW51eC9pc3N1ZXMvODgNCj4+IFNpZ25lZC1vZmYtYnk6IEFk
+aXR5YSBHYXJnIDxnYXJnYWRpdHlhMDhAbGl2ZS5jb20+DQo+IA0KPiBBcyB0aGUgdHdvIGZ1bmN0
+aW9ucyBkbyBkaWZmZXJlbnQgdGhpbmdzLCBhcmUgeW91IHN1cmUgaXQgaXMgc2FmZSB0bw0KPiBq
+dXN0IGRvIGEgc2VhcmNoL3JlcGxhY2UgaGVyZT8gIElmIHNvLCB5b3UgbmVlZCB0byBleHBsYWlu
+IHRoYXQgaW4gdGhlDQo+IGNoYW5nZWxvZyB3aHkgdGhpcyBpcyBvaywgYW5kIGlmIG5vdCwgcGxl
+YXNlIGRvY3VtZW50IHRoYXQgYXMgd2VsbCA6KQ0KDQpUaGF0J3MgYWN0dWFsbHkgYSBnb29kIHF1
+ZXN0aW9uLiBGcm9tIHdoYXQgSSBjYW4gdGVsbCBmcm9tIHRoZSBrZXJuZWwgZG9jcywgdGhlIG9u
+bHkgY2FzZSB3aGVyZSB0aGlzIGNhbiBiZSBhIHByb2JsZW0gaXMgd2hlbiBzdHJjcHkgaXMgcmV0
+dXJuaW5nLiBXaGlsZSBJIGRvbid0IHNlZSBhbnkgc3VjaCBjYXNlIG92ZXIgaGVyZSwgSSdsbCBz
+dGlsbCBkb3VibGUgY2hlY2sgaWYgdGhhdCdzIHRoZSBjYXNlLiBBbHNvLCBJJ2xsIHdhaXQgZm9y
+IHRoZSBrZXJuZWwgdGVzdCBib3QgcmVzdWx0cy4NCg==
