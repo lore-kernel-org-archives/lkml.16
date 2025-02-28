@@ -1,77 +1,64 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0708B29A2;
-	Fri, 28 Feb 2025 01:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F0138B;
+	Fri, 28 Feb 2025 01:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740704697; cv=none; b=H9vxIoU9p1iOrrUb/2aONFnBgZtzQ5MaM0FgT1S19neiJj2MIqDkF5ZuisrzGLHdWJKlxdRrGLI4R/sDz1s8dFLNlRdzSSMMeFg7+0Of9pBsVnP9igrksB0F5xT5EP/uMxAXDj8IGXsjiiRE6JZC3UEWGF4iWopj22Sz2nvoLIQ=
+	t=1740704749; cv=none; b=ZVCF8bMGtZai26aPXnhm8C1kDC9WL6NGWmO8wlKIw3ZUeLDnTk56X7TWb5MBZiJMC/d4qH9J123EoYp+tVFJtz9B0Fd0xCfoMbBZX9Xwl0W6n3xUY/MIuH2yOhUzNCXzVqrg06da2kiXAkTxt2ULTPuzEClDPgrNczxejmk7rAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740704697; c=relaxed/simple;
-	bh=O+Sc7JEncLXs8OMrX6PMtFN47nfFazZvHFbK66KJAqY=;
-	h=Message-ID:Date:MIME-Version:CC:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DBqLgNL5uFX2DYjjEytg0XND3SSd/QsGkVbgXDLl+xpB2RJCWDvg7oq/vvvzF29e3FMclMdSe1KvbCpMbgAdXbXN22uvT+2awT/1tKWd9heFc/W7JD0FiMFC8ZRnOSlowH/ImUBkalOAexHMR9dkXrYRaaOwjWGZBxNkJvDSbME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Z3qfd6dFDz9w77;
-	Fri, 28 Feb 2025 09:01:45 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C6961403A0;
-	Fri, 28 Feb 2025 09:04:51 +0800 (CST)
-Received: from [10.67.120.192] (10.67.120.192) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 28 Feb 2025 09:04:50 +0800
-Message-ID: <69aae0dd-78f4-47e0-bb86-1d314588e7ad@huawei.com>
-Date: Fri, 28 Feb 2025 09:04:49 +0800
+	s=arc-20240116; t=1740704749; c=relaxed/simple;
+	bh=polPD8VaEKf+veiscNjndlyOpxGIQ7eRxcTUeyf9umU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LlxcR7rsnzs6lXCk3O9OATH5zN0/40fp/+pMoR74x1jexavfkoUA9W64gcq8Vsbz16mn9WQA/T293pfXRZzcsTxvS/KFt0HmD/3zoDxeEOorjrHFLId5+d7YBa4x/181Pv0+JCd99HSjgSFS7baaFHbd+uGneZGgI7qtV+dJe+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C815DC4CEDD;
+	Fri, 28 Feb 2025 01:05:47 +0000 (UTC)
+Date: Thu, 27 Feb 2025 20:06:31 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>, Tomas Glozar <tglozar@redhat.com>, "Luis
+ Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
+ <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
+Message-ID: <20250227200623.60f20571@gandalf.local.home>
+In-Reply-To: <20250127170251.744751-1-costa.shul@redhat.com>
+References: <20250127170251.744751-1-costa.shul@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-CC: <shaojijie@huawei.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>,
-	<shenjian15@huawei.com>, <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
-	<chenhao418@huawei.com>, <sudongming1@huawei.com>, <xujunsheng@huawei.com>,
-	<shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <kalesh-anakkur.purayil@broadcom.com>
-Subject: Re: [PATCH v3 net-next 2/6] net: hibmcge: Add support for rx checksum
- offload
-To: Jakub Kicinski <kuba@kernel.org>
-References: <20250221115526.1082660-1-shaojijie@huawei.com>
- <20250221115526.1082660-3-shaojijie@huawei.com>
- <20250224190937.05b421d0@kernel.org>
- <641ddf73-3497-433b-baf4-f7189384d19b@huawei.com>
- <20250225082306.524e8d6a@kernel.org>
- <11198621-5c04-4a00-a69e-165e22ebf0e8@huawei.com>
- <20250227064708.7811dfa7@kernel.org>
-From: Jijie Shao <shaojijie@huawei.com>
-In-Reply-To: <20250227064708.7811dfa7@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemk100013.china.huawei.com (7.202.194.61)
 
+On Mon, 27 Jan 2025 19:02:40 +0200
+Costa Shulyupin <costa.shul@redhat.com> wrote:
 
-on 2025/2/27 22:47, Jakub Kicinski wrote:
-> On Thu, 27 Feb 2025 19:28:25 +0800 Jijie Shao wrote:
->> rx checksum offload enable:
->> 	device check ok ->  CHECKSUM_UNNECESSARY -> stack
->> 	device check fail ->  drop
-> Don't drop packets on csum validation failure.
-> The stack can easily handle packets with bad csum.
-> And users will monitor stack metrics for csum errors.
-> Plus devices are wrong more often than the stack.
+> +++ b/tools/tracing/rtla/src/osnoise_hist.c
+> @@ -981,12 +981,11 @@ int osnoise_hist_main(int argc, char *argv[])
+>  
+>  	return_value = 0;
+>  
+> -	if (osnoise_trace_is_off(tool, record)) {
+> +	if (osnoise_trace_is_off(tool, record))
+>  		printf("rtla osnoise hit stop tracing\n");
+> -		if (params->trace_output) {
+> -			printf("  Saving trace to %s\n", params->trace_output);
+> -			save_trace_to_file(record->trace.inst, params->trace_output);
+> -		}
+> +	if (params->trace_output) {
+> +		printf("  Saving trace to %s\n", params->trace_output);
+> +		save_trace_to_file(record->trace.inst, params->trace_output);
+>  	}
 
-OK, I'll modify this in the v4 and modify the statistics as well.
+Without tracing being off, this can run forever if the events come in
+faster than it can be recorded. And save trace uses the "trace" file, which
+is slow to read.
 
-Thanks,
-Jijie Shao
+Are you sure you want that?
 
-
+-- Steve
