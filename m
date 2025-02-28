@@ -1,117 +1,152 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2D818C011
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075F31F4CAC;
+	Fri, 28 Feb 2025 17:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740763204; cv=none; b=da+j857/yJMBiSlUDAeCd5PnbePm6UqbmJqsJ2Sxt4SqQDsqpphqn9f/QI+lLsarr55IYpYpbY35h+WYSkXO+bQKQkTRGH1OLH/bglwgmlLSgO1TU1hcZFvq/jANxGPIOdK78EIiK3axipuTPWK4UeiQINtk/YvDMQWth3noqBw=
+	t=1740763215; cv=none; b=a5oOToU7uVC0OcQOrnFlscLB3Q2GB3rz+n0YjhYNKiJnf/g7s9+HufDn4U0W7td6Dfd6HJW0f2kvU7QGN7hUGd4Dz2I6lYFbOhJYfxJI8I8/Xq626jJ+N78sn/II6DZQsYJlCszZmdZX3ZgH9tTy2n5zOdoRbOya2Edybll7XpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740763204; c=relaxed/simple;
-	bh=lIWeH3Tboy6HGMoULxi8k18XVvdLTbiErv9XRPiEyeg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d5PemvEBoIvrgujVGGolIetEAwaRGtU0HkzLLRGK36FvgshjLhl8OOeUbjZqojk5iSfyzHGngueqrf9jQy2T+K6amCq9YmESjO6xsuObZDgvgsDkY4zZ5ER+reyNHHvy0VLrkPacVlQZtWCybVX6jJsIPgspCdhxywY6+NIOAPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uyj8r+4D; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740763215; c=relaxed/simple;
+	bh=Kbz0qcBmY6xxZf75C6c3JWoWGAUbcPPuwvQtUVadDM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XckfONKO06WC9knDbDBXrIQYq0JugdyBpcUYqTTBusKHiGJkVROELmeEjn6Rcx4c0F1lKz1hq16XPI8DUK9avkBaLzNidAKe83ET1W+CEVbU7iCjugzvDK1qXx28P5n2IjZiSNl2bBkptuOIK9RJSuMYDphBar51baDkEdQl6sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AYfrdmEM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uyj8r+4D"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22185cddbffso62365425ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:20:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740763202; x=1741368002; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VET5eArBu+43r67oe2DJk0w/RikzXdTiG7eAzr9StgI=;
-        b=Uyj8r+4Duj3eP41C7pkEsVGaKxWuo0DOrwnn98ItOhxbNuYkSfNuv9oyBbszvbIBd+
-         3EpbJ19ut4H91Y/h5C5D+DQkUBgheOFRdGLqPND49mhtvpDXPrdVyKEOLh5c2XnJtqlS
-         NefuC3qKWXc2r4M5RiWJ+fQpnHSmxAKlOp2+2ezF8+MaeBp/q8Xj92oKConKTGhYKMAr
-         FqLDIyvrxsUEqsZM8EM62ADRrvWktfvH2jDP8Xy4y3Bc8KFK/u/liYRQph0Z7w3qElJx
-         G8/Roar2CX9/x75H5YNb62g3EhFVUlNxGQBfAshwRfoE4/pa59dgHRgKQngKIJ0FhLPr
-         7QkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740763202; x=1741368002;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VET5eArBu+43r67oe2DJk0w/RikzXdTiG7eAzr9StgI=;
-        b=ivyqZODPZLib5V6SE+uyIg7vjyXlhrH1th92xuYj+VUjVpj4Tq+cbYK3FyyZCAyrRG
-         SGSFifbNprUKQ+HwOOwFenpTSJGaX9Byq0Uq46nHMNihNnHSLicUo+farMpzga3+aCcE
-         QUXxiCUDlGqxq7HR/qZwpE/+tvP36/RBa4l80AOBRu3KO80OSWtL+V/G//isfkJ6ZThC
-         0cLK93SjdH5aWl/gW79uTv7sIIAWacHgrjy2iMU9LoAfQkmHXL59l1HECPg742gXWJJI
-         iqi/nmIox1S99wd/rWq6XlhMaRCn3C+7DJdZtechq4WtG3xpyOD6nx/tCIKi1TqZx6pc
-         yrDg==
-X-Gm-Message-State: AOJu0Yz4ta2g2WGMq2LDQgkZwcZ8CLQu+ezYk+3yZAKkYsZk9hmkEEdK
-	5qXWbLl2YmgI7L1A0S0WQEr8ByyAReuhiqBtT1cICJd3qiKLHb733aDWgwr/EA7CROLK7V4udmO
-	qVIdzk8Jt2dpPjur/dJZqlaLl48A4Ug==
-X-Gm-Gg: ASbGncv705WBz2Zf/Mxkvj0efSBEjWLYGKVnTw5fY2WWzDfMj054bmFFlJdgJijjLFU
-	e5xiBIKI2JQc46AU3DqhXsalvXInemvnK3ecg3G1y080zc181P0DvdOf3xzkVikFK4VoqihJQom
-	bRYLlc4bGVc+oMvTIKDVgUWwY=
-X-Google-Smtp-Source: AGHT+IHJ4/GOLRYcFw2Ss7ass/jeDGaA8yDr4x2SmuOvxIMwiU92+bAaNgF3dBw9uKkeaVtC91FBWypHD++GixJfpfU=
-X-Received: by 2002:a05:6a00:1310:b0:725:41c4:dbc7 with SMTP id
- d2e1a72fcca58-734ac385a52mr7858063b3a.4.1740763202459; Fri, 28 Feb 2025
- 09:20:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AYfrdmEM"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 36672210D0D4;
+	Fri, 28 Feb 2025 09:20:13 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36672210D0D4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740763213;
+	bh=bd0qQbfp5v3IPIVdEdHCrsovEB4c3GORz0HpWujPouQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AYfrdmEMnrTp3u4fGr+friZ/WQFHHHILDsPmPQ9MKwb3SGKmwjPpsl858UOYErvdP
+	 YwOdhGGSTJXSNvi9mux3U6NeUutiv/cDxsTzOKbmxtZvqdDs0RyzazXvkJbSqEueFJ
+	 br9SJsLdH0V7j1oNDbwlduqiNDshOQi/xfz8XkWI=
+Message-ID: <212cc582-845d-42b2-89f2-1e9579f752ec@linux.microsoft.com>
+Date: Fri, 28 Feb 2025 09:20:13 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227195302.1667654-1-brgerst@gmail.com>
-In-Reply-To: <20250227195302.1667654-1-brgerst@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 28 Feb 2025 09:19:50 -0800
-X-Gm-Features: AQ5f1JoF4dp3S515kJ-LZ8rQYAXYUw-YyJz9Yr5ILyybg6aqPISjFDT8gbdxyTg
-Message-ID: <CAEf4BzZt486SUMQq2DwnRX7n_XS9Rd1KYqMTFxg=6=QRZf=-xA@mail.gmail.com>
-Subject: Re: [PATCH -tip 1/1] x86/bpf: Fix BPF percpu accesses
-To: Brian Gerst <brgerst@gmail.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 01/10] hyperv: Convert Hyper-V status codes to strings
+To: Easwar Hariharan <eahariha@linux.microsoft.com>
+Cc: Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ linux-hyperv@vger.kernel.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-acpi@vger.kernel.org, kys@microsoft.com,
+ haiyangz@microsoft.com, wei.liu@kernel.org, mhklinux@outlook.com,
+ decui@microsoft.com, catalin.marinas@arm.com, will@kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, daniel.lezcano@linaro.org,
+ joro@8bytes.org, robin.murphy@arm.com, arnd@arndb.de,
+ jinankjain@linux.microsoft.com, muminulrussell@gmail.com,
+ skinsburskii@linux.microsoft.com, mrathor@linux.microsoft.com,
+ ssengar@linux.microsoft.com, apais@linux.microsoft.com,
+ Tianyu.Lan@microsoft.com, stanislav.kinsburskiy@gmail.com,
+ gregkh@linuxfoundation.org, vkuznets@redhat.com, prapal@linux.microsoft.com,
+ muislam@microsoft.com, anrayabh@linux.microsoft.com, rafael@kernel.org,
+ lenb@kernel.org, corbet@lwn.net
+References: <1740611284-27506-1-git-send-email-nunodasneves@linux.microsoft.com>
+ <1740611284-27506-2-git-send-email-nunodasneves@linux.microsoft.com>
+ <74af19c4-639f-4bcc-b667-b5f102bbb312@linux.microsoft.com>
+ <8338dd00-3aa4-418f-a547-1c19623358cb@linux.microsoft.com>
+ <49a69fe3-fca5-426d-999d-61ee0c8f60f3@linux.microsoft.com>
+ <70b62e52-639a-4026-9a52-102d1de46ffd@linux.microsoft.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <70b62e52-639a-4026-9a52-102d1de46ffd@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 27, 2025 at 11:53=E2=80=AFAM Brian Gerst <brgerst@gmail.com> wr=
-ote:
->
-> Due to commit 9d7de2aa8b41 ("Use relative percpu offsets"), percpu
-> addresses went from positive offsets from the GSBASE to negative kernel
-> virtual addresses.  The BPF verifier has an optimization for x86-64 that
-> loads the address of cpu_number into a register, but was only doing a
-> 32-bit load which truncates negative addresses.  Change it to a 64-bit
-> load so that the address is properly sign-extended.
->
-> Fixes: 9d7de2aa8b41 ("Use relative percpu offsets")
-> Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> ---
->  kernel/bpf/verifier.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> index 60611df77957..f4859516b190 100644
-> --- a/kernel/bpf/verifier.c
-> +++ b/kernel/bpf/verifier.c
-> @@ -21707,7 +21707,7 @@ static int do_misc_fixups(struct bpf_verifier_env=
- *env)
->                          * way, it's fine to back out this inlining logic
->                          */
->  #ifdef CONFIG_SMP
-> -                       insn_buf[0] =3D BPF_MOV32_IMM(BPF_REG_0, (u32)(un=
-signed long)&pcpu_hot.cpu_number);
-> +                       insn_buf[0] =3D BPF_MOV64_IMM(BPF_REG_0, (u32)(un=
-signed long)&pcpu_hot.cpu_number);
 
-wouldn't you need to at least drop the (u32) cast? Otherwise what's
-really the point?
 
->                         insn_buf[1] =3D BPF_MOV64_PERCPU_REG(BPF_REG_0, B=
-PF_REG_0);
->                         insn_buf[2] =3D BPF_LDX_MEM(BPF_W, BPF_REG_0, BPF=
-_REG_0, 0);
->                         cnt =3D 3;
-> --
-> 2.48.1
+On 2/27/2025 3:25 PM, Easwar Hariharan wrote:
+> On 2/27/2025 3:08 PM, Roman Kisel wrote:
+
+[...]
+
+>> Would be great to learn the details to understand how this function is
+>> going to improve the situation:
+>>
+>> 1. How come the hex error code was useless, what is not matching
+>>     anything in the Linux headers?
+> 
+> It doesn't match anything in the Linux headers, but it's an NTSTATUS, not HVSTATUS.
+> 
+
+That is what it looks like from the code, I posted the details in the
+parallel thread.
+
+Here is a fix:
+https://lore.kernel.org/linux-hyperv/20250227233110.36596-1-romank@linux.microsoft.com/
+
+Also I think the commit description in your patch
+
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d2138eab8cde61e0e6f62d0713e45202e8457d6d
+
+conflates the hypervisor (ours runs bare-metal, Type 1) and the VMMs
+(Virtual Machine Monitors)+VSPs (Virtual Service Providers, e.g StorVSP
+that implements SCSI) running in the host/root/dom0 partition.
+
+> Coming from the PoV of a user, it would be a much more useful message to see:
+> 
+> [  249.512760] hv_storvsc fd1d2cbd-ce7c-535c-966b-eb5f811c95f0: tag#683 cmd 0x28 status: scsi 0x2 srb 0x4 hv STATUS_UNSUCCESSFUL
+> 
+> than
+> 
+> [  249.512760] hv_storvsc fd1d2cbd-ce7c-535c-966b-eb5f811c95f0: tag#683 cmd 0x28 status: scsi 0x2 srb 0x4 hv 0xc0000001
+> 
+
+It is likely that the PoV of a user that you've mentioned is actually
+a PoV of a (kernel) developer. It is hard to imagine that folks running
+web sites, DB servers, LoBs, LLMs, etc. in Hyper-V VMs care about the
+lowest software level of the virt stack in the form of the symbolic
+name or the hex code. They need their VMs to be reliable or suggest
+what the user may try if a configuration error is suspected.
+
+To make the error log message useful to the user, the message should
+mention ways of remediation or at least hint what might've gotten
+wedged. Without that, that's only useful for the people who work with
+the kernel code proper or the kernel interface to the user land.
+
+So I'd think that the hex error codes from the hypervisor give the user
+exactly as much as the error symbolic names do to get the system to the
+desired state: nothing. Even less when the error reported "Unknown" :)
+
+>> 2. How having "Unknown" in the log can possibly be better?
+> 
+> IMHO, seeing "Unknown" in an error report means that there's a new return value
+> that needs to be mapped to errno in hv_status_to_errno() and updated here as well.
+> 
+
+It means that to the developer. To the user, it means the developers
+messed something up and to make matters even worse they didn't leave any
+breadcrumbs (e.g. the hex code) to see what's wrong to help the user and
+themselves: there is just that "Unknown" thing in the log.
+
+>> 3. Given that the select hv status codes and the proposed strings have
+>>     1:1 correspondence, and there is the 1:N catch-all case for the
+>>     "Unknown", how's that better?
+>>
+> 
+> I didn't really follow this question, but I suppose the answer to Q2 answers this as
+> well. If not, please expand and I'll try to answer.
 >
+
+Sorry about that chunk, hit "Send" without looking the e-mail over
+another time. Appreciate the discussion very much!
+
+
+> Thanks,
+> Easwar (he/him)
+
+-- 
+Thank you,
+Roman
+
