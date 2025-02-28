@@ -1,124 +1,117 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3278B23F39A;
-	Fri, 28 Feb 2025 22:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F77C23F39A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 22:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740782096; cv=none; b=OLTXJlXDn+uvbx5PheI156WB0itXJ3dLwyc6tKiPVSwbKGxKBvR9YX/rkkPkO/nudYtXjKB69VgQQH8pWqZ7iHSYF0WEE7X9GzlDmIf8kg5CAIBhc174nhns8NxCflt6fATecKV2TO2qckB3LrdSfSByig7ApHgfzNxYm4bmsbM=
+	t=1740782136; cv=none; b=U/6HEO8JloEQaAFVHC8WkV/P72nZHkBP91T1qBKqtpDQ6ZsD8+OH4ib5Jm2HzhQ1FqQleAzbBV3YNRq0k04vXsD8xr/JliUukXkyVpUyq782W3szmTL13j4Tg8FbiPaG1o0ZwKkjYqxRy4LWbMgSYLs1me/JkHctx8RlhSX/e+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740782096; c=relaxed/simple;
-	bh=rIMtkx3BumZFM1f+9gr/3L1rwx+8OL99ijM7SYaHIHA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QsrvaJeRUYmJPMoV8RKiLmshhuboiUA906eE4yjJhVKBUmLuemfgHMUyzKJfKFer5u2dqGh3vHqLUtgeZX4YLl38fCQsu6VcaJ3U5yh4bhvtGG2EjAeqZJ0K26WAYZpkh0aztxcCOSYjl6tOTwF7WxXgd/AWvth3kaGSWD9RtHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=clg88Fvi; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+	s=arc-20240116; t=1740782136; c=relaxed/simple;
+	bh=/GN3Gq02lKGxFjLKREUiZZBaqMHMWg8SCb7Y4qcnaOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=laB3ZZqnBczDDfOljxwDtETAwMmaro2KDV56GHIORCO2ACcs5uRaBuB22nYrmXM+TaBbWht2uP9o7k4PTdSEWHC1Sh7YGkM5VN3ztslDalTnicISbWbs3ZemuWaF+l+hmMwpIuwW7EzfqRNPZ9WojnduP9OD7GTABxquq4Bzfp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bSazCb08; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="clg88Fvi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=WkMCPfebqRX1ArJd0tbG7Xc61T/aB+raQSI5boJryfM=; t=1740782093; x=1741386893; 
-	b=clg88FvigaDlx6wJQvruwHKpSpN+VDrWkALwnWMeTjx2T3ETDh5HSwU+bNtxlHp4rIIVJ4bqyww
-	gKICx7x3ECymZFApFRwn5+l09Y3p0d4/b2jfYJ7tgwKtDj4kYdyQ0AFjseGvI3vb6xxB6Gcr6athe
-	bEuClnUQmF04pFHfOiMjLWnHjkzkBYb5hoMrcWcvNB65vajKUkG8BfeEbKnH0u42o5QD12Vj4eCGD
-	6oIFnJ3cI1xQJmpfSjuCv5Fz0CkTdr2Jmj+ARO8z51Sn3iacY6hFUiAq1ki1vhS3buiwedfJU4aQb
-	jIxRglGohAmTn+x1G+Gm2odpcnDYym8Aj9gw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1to8wQ-00000001LRv-0LRi; Fri, 28 Feb 2025 23:34:46 +0100
-Received: from p5dc5515a.dip0.t-ipconnect.de ([93.197.81.90] helo=[192.168.178.61])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1to8wP-00000000NgP-3X5c; Fri, 28 Feb 2025 23:34:46 +0100
-Message-ID: <a917c1183f85bad8af1312994d330f141c57db04.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH 0/2] J2 Turtle Board fixes
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Rob Landley <rob@landley.net>, Artur Rojek <contact@artur-rojek.eu>, 
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- Daniel Lezcano	 <daniel.lezcano@linaro.org>, Thomas Gleixner
- <tglx@linutronix.de>, Uros Bizjak	 <ubizjak@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "D . Jeff Dionne"
-	 <jeff@coresemi.io>, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 28 Feb 2025 23:34:44 +0100
-In-Reply-To: <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
-References: <20250216175545.35079-1-contact@artur-rojek.eu>
-	 <f574808500e2c5fb733c1e5d9b4d17c2884d1b9f.camel@physik.fu-berlin.de>
-	 <1551804b-fc78-4a3f-add8-af693f340a01@landley.net>
-	 <48881e2d8efa9d7df8156f5f81cd662c2286e597.camel@physik.fu-berlin.de>
-	 <9cf43bbe-898f-4b29-bd85-04f5320bce77@landley.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bSazCb08"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e0b70fb1daso4337589a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:35:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740782132; x=1741386932; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MRYH/DqwOrqprt4Hy5jDneelAnanR7z2qpvPIfRcpyU=;
+        b=bSazCb08sZmSmWzCZw94+3/DiJLgRT7xF3xAIMyxbTlk6H+moxsJE6ra1DkSiBYeMi
+         znDrQ7yqF2nOCM/JrMVCtjgeWRlDRAShQtql79gqN//cRWy3ukGZYpZm3sbn9zXpYGna
+         PpR/i8c3EjT4UMKDfoG2Y+3BufmXi8H3XcPAg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740782132; x=1741386932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MRYH/DqwOrqprt4Hy5jDneelAnanR7z2qpvPIfRcpyU=;
+        b=jY5DDrB/Wxu3pz6sPe5oMJblHi/zh3a+0NBn+9HSNXhwcYtI9HKQlOYmBuLLA4/bHq
+         PUNhpYFLM7+xNnYrGlT0juewEiTRXYNOrCmH7kwTPPqhtTfPdWDKn/Lwg4ZxNIiBOIiX
+         khZUHKPbYAuhBAsIYWHwzjj1mArQDBdR33RVN3jOiodvhS8BRYGteMJysWO7CLYJtv3K
+         uEa1BPbmVlvqGOfQq5WciISBXQXcKGH58m11mtOcjzwWwBbOjtUMy9IjlFLu/MAFQFwI
+         sDp2sQzXLCvAehGnyx8qktOVZ54Zxr9902ZmXHBRjcl7/Ops8xAIICW94T410cyT+WQz
+         Fdog==
+X-Forwarded-Encrypted: i=1; AJvYcCXOsEvYJvtEi/ub7MNd2JLoqkHzlkSQeVuzdGWLYnagRMaK5ao2Fnt8AAtVm2aM/tDEM9hRqu1IhQCWUt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyfk31IWx9Fb4AZctRIUbRoC9d5EbMd98fGNfRO2akNhzyWzYWR
+	FMWMudgUulhxvPX5EtL5pFzE/bBBb9upHgYN1hbdDEkv4hOcVRl2cL7Ol6g3OKRHdbNN6QTGGQj
+	Mdg==
+X-Gm-Gg: ASbGncsTDk61tzQOebQH8tlUNZPu6476YLld29+z7xxbOZERkkh+Sy6UeV5yFNruniN
+	+qGc3ZnVyAEF0s1s7953nzfk1mIVILhjNuX/vwUeQ2czGbUmXsEsiTjKjf/yd2lOqE5sHvzUGb1
+	uq6i+G5StPIAJ0PRAYYhHU4XEDaCuwM+xF67YMFCdLqUEPLgA1IWrDP5tqcAaHicdnLDKddbJsZ
+	PzrfwiDtOaGeRlpvYAsl9Q75KLNilPG4HwSEYLVxdaN05OM6KG+WmoCmjTioTEwuj4vsnLJb2dl
+	++KQiNmYcPrzLoLyVGQUKUKLoCWWA84XDEjXazl6CA+GyGN8Ox5WcaNJ74wxdlVmif8YAbdpM/o
+	df5FchpgW
+X-Google-Smtp-Source: AGHT+IFq5j7EfQucapaGcttSTVgtgcPQLmiNRfF6yDU2zK4Q9ZpCYaScBPGVqo6MjfFSvUVFSfAQ6Q==
+X-Received: by 2002:a05:6402:274b:b0:5e4:cf2e:891c with SMTP id 4fb4d7f45d1cf-5e4d6ad8737mr5251804a12.12.1740782131819;
+        Fri, 28 Feb 2025 14:35:31 -0800 (PST)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b6dac5sm3131884a12.19.2025.02.28.14.35.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Feb 2025 14:35:30 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaec111762bso466051666b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:35:29 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV/eVBG/ZBXqICkcAQQbJ6rDPxMwCaM8Ka/M4GOgU1hDUgy3zNLQ+m2FZvkVjd9FL59XSmQBhEvtBAXfXc=@vger.kernel.org
+X-Received: by 2002:a2e:be03:0:b0:309:1d7b:f027 with SMTP id
+ 38308e7fff4ca-30b9320f37bmr19835331fa.9.1740781801791; Fri, 28 Feb 2025
+ 14:30:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org> <20250225-bridge-connector-v4-15-7ecb07b09cad@kernel.org>
+In-Reply-To: <20250225-bridge-connector-v4-15-7ecb07b09cad@kernel.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 28 Feb 2025 14:29:49 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XSoANcWJEB13xmP0HjMS9dSF-LFsXG-1DS-UPbbeOxig@mail.gmail.com>
+X-Gm-Features: AQ5f1Jqp-7Ry1Gg8ZKOqY3HRbtGi61kp0H-KrgGIBh7MRLyPJ5mDvINcqx1JO8Q
+Message-ID: <CAD=FV=XSoANcWJEB13xmP0HjMS9dSF-LFsXG-1DS-UPbbeOxig@mail.gmail.com>
+Subject: Re: [PATCH v4 15/15] drm/bridge: ti-sn65dsi86: Use bridge_state crtc pointer
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Herve Codina <herve.codina@bootlin.com>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Fri, 2025-02-28 at 16:19 -0600, Rob Landley wrote:
-> The march 2024 rebuild was in response to that Feb 2024 bugfix, so it=20
-> _should_ have the fix? (I'm waiting for another musl release to rebuild=
-=20
-> them again...)
->=20
-> I just downloaded the toolchain currently at that URL and built mkroot=
-=20
-> and it worked for me:
->=20
-> Run /init as init process
-> sntp: time.google.com:123: Try again
-> Type exit when done.
-> $ cat /proc/version
-> Linux version 6.14.0-rc3 (landley@driftwood) (sh2eb-linux-muslfdpic-cc=
-=20
-> (GCC) 11.2.0, GNU ld (GNU Binutils) 2.33.1) #1 SMP Fri Feb 28 15:47:36=
-=20
-> CST 2025
+On Tue, Feb 25, 2025 at 8:44=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
+wrote:
+>
+> The TI sn65dsi86 driver follows the drm_encoder->crtc pointer that is
+> deprecated and shouldn't be used by atomic drivers.
+>
+> This was due to the fact that we did't have any other alternative to
+> retrieve the CRTC pointer. Fortunately, the crtc pointer is now provided
+> in the bridge state, so we can move to atomic callbacks and drop that
+> deprecated pointer usage.
+>
+> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 58 +++++++++++++++++++++++------=
+------
+>  1 file changed, 39 insertions(+), 19 deletions(-)
 
-Is that on Toybox git HEAD?
+Booted this up on my coachz with ti-sn65dsi86 and the display came up:
 
-> And the failure _without_ the fix was deterministic rather than=20
-> intermittent, so...
->=20
-> Keep in mind the init script has a 3 second timeout trying to call sntp=
-=20
-> to set the clock, which will fail if the ethernet isn't connected (or no=
-=20
-> driver, or no internet...)
+Tested-by: Douglas Anderson <dianders@chromium.org>
 
-I'll try again this weekend. Also, I will review and pick up the fix.
+I haven't followed all of the refactorings, but assuming all the
+previous patches are good w/ folks then this one seems fine to me:
 
-> P.S. Speaking of intermittent, I hit that hang after "clocksource:=20
-> Switched to clocksource jcore_pit_cs" on one attempt just now. I should=
-=20
-> sit down with the engineers next time I'm in japan and try to root cause=
-=20
-> it. The scheduler fires reliably, so it's _probably_ not a hardware=20
-> issue? We've had Linux uptime of over a year, not just idle but running=
-=20
-> an energy monitoring app, so it's pretty stable in our systems...
-
-I thought it was a software issue?
-
-Adrian
-
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
