@@ -1,826 +1,490 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBC927BD72
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D736327CCCF
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740767435; cv=none; b=qI+tHq5tSrO5Kz0+pNDYQFG0XSGklNSbtDsXiUMc9Xich6Isevzbeez4TsDSJV7JtF0WDx9jUXIHdnMQyjuMdga7whGf6n+zLx2TZxYcVoJZArgh2hGZhw84fXs54uEtPBHEJZQZkKaj/KLyzZxmxCiU5JCC4910ptofNrg8UHE=
+	t=1740767523; cv=none; b=si58aHG6vAWSsyi1YNWC4LrADj5T8wwF4HV296NMKmbkEFHZHFpF7t5W2UcFoUjfuwLlTLIrEjUjkBsf/oh7eIb1fUoU4l9L12z7qJd5I5Q1tQ94hsYOmRhWguKaI+6gdsTOy01fD9hUL/Lc83bQbsxbUDEai4NB2UhWHXky7xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740767435; c=relaxed/simple;
-	bh=7OHwiYw8YnokkcKYcTEzxbmmpAqC1Wlk7woCRaj+P8I=;
+	s=arc-20240116; t=1740767523; c=relaxed/simple;
+	bh=guZt1Zi+iXkkSqZIGqCWWaUtqAwC15Ww+zgjipfFYog=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Iu38CTMdWoS0m3wsAMUFhAf8U2J0n2gZqecX9DjyF3YeLu0TXNfwd2Msn5febtaZNgTgiQdOQs5g2mUCBXlU/IHj+zUtkacaBIdHIFMl7iJrD/248DhbspVK9ZYqL285LGK7mvAN+C4k45UzT5LTwxdyPYrBo5DdDmL226Of+m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j8jR6Oon; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=VcvOeuognSaxUB7pC8rdBlCQfg+BuBhIuiRH+d/vMEvjQkWKpg2VQolUubeTQVS9vb162pvynDYHX41P+zR7owVa3LfQCsaJiIeYPO364/RFSB3eDmH3jnMdtl9mg69HczmkF+juDFElrtBZiw29i1qp4q+GdMGkOgAP2kYnVPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qwOJd1PK; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--fvdl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j8jR6Oon"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1eabf4f7so5261959a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:30:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qwOJd1PK"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-223725a1e76so12727965ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:32:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740767432; x=1741372232; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740767520; x=1741372320; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IoBHRW/adUD3sx6ef6qBe3DIT3wk3SN+71DQwCQYK8E=;
-        b=j8jR6Oontw7GZpNvz5d2UZbngUB+vMTXGut0IkJdg8IJR28+oABG8s9oIbpXf1KU0l
-         hEW1qUrtlm74F0ohzA9xt3nO2W0pHKnZT70yIipu6Z/lhrrxztot3XDrpyGh3PfD7zU8
-         bL6xsaFmPW6W/HQT71ZI48+x1cRBGqffyfPlelWvQ4JvRAY6K5zMH9QiRIQI8eWcAEkT
-         ROpxf/IsJH0uSVhVqlDWc7ba6hgD3oBuQtTOAS3y0bqxG4sDVHmO+bJi8bvo0nu51N08
-         lp5s4p8d5hEchKFZL+IclF5NZ6XT6LdI4NWlZ1IzXWK3Yc3Rmxwcdi6i0N4ixKN5k+99
-         wI7w==
+        bh=6pijisVLPCJj8vW2ZfATw2CQzs5cG5ymgPPQbMYMBHE=;
+        b=qwOJd1PKAiPgSNYHFttS7XbhwtAdlyjX7vmuyw76UEVFOpvAyDzRY6dJbiqhxOz9+C
+         lrLIt5DAKAbbFngQPOMW3jubsd/r9hqewu5kqfhkPqA8l9YM9DIBKQ1bzfmjK9l+KfSH
+         JhQHQAm/deIlz775qoMqZ9JKAtb9JTsXDK/KiCtiny8JmxPsVjHQTHenyHwBvY8HFhYe
+         FUXQsShQPfeWtm5vxK+pTy0wG+xfX7VrPbN2gV8DBoyS9kD+OM9rS7Hn5mTGUmXTMgpj
+         PXvz9tdkI4iMe7UYPI1zRwzM7VroP6xeK2zYzLzY0ZXcd85Nu3FTqaerNrJskdwnbtPP
+         NZ6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740767432; x=1741372232;
+        d=1e100.net; s=20230601; t=1740767520; x=1741372320;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IoBHRW/adUD3sx6ef6qBe3DIT3wk3SN+71DQwCQYK8E=;
-        b=tInH/8CF0fYeUeFTfYyendOzeZtIpkAdHzXHPbWjkzgljdq64qbKmO8NbK9R+hl9l+
-         PKkpgC++zx37QRY9ixE/gLKX8rwVEKcLsNUAfCwc6s43OL9KGJhhkY5ZqJR1gJBKjmJi
-         5Zbu2V0stI6KsJBoq3y0fNsZ++1SjvRgW8M/fmPtytt57SUcHNC5SopYTBFwAQibt/BE
-         Qr91NCePvFbOurW9aTxW73ko9OpjFFcW05FNZLeD8IF7CnaY0poQgnOOsYVcWyk4Uoh0
-         w2a+Rmqoi/40Yqrg2lTM5gbmNi0Ck7143tugJN3REzHad2/SD8gS8TYQ6ywMhFb+Srbs
-         JQ4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVxeHcT/n/MTG3UaKo0Pwf9EoA0+uWvEGKUVaxXe9rQzXjj8sW0oXmDR+U5GzT+3TMwoG7pAG7tmS6uFuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfGLe0UcvkeNccdNm/2+R1NDSfk5XEitHbXla5lvY0alTtrNgJ
-	AsyqhYp/UQd80a+Af0t9HUc88hGrRwHdYEcTvTDcUNbDRzcPsfELRsfZLjeK+V6Ym9oZyw==
-X-Google-Smtp-Source: AGHT+IFYRZfw/iKPy89wJmaJ/TEGAeh30n7Li+71hZoPe7g3000pn8NixLfIZexb+lsh6KpV8fXysdvq
-X-Received: from pjbnv1.prod.google.com ([2002:a17:90b:1b41:b0:2fe:d61a:ed])
- (user=fvdl job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3511:b0:2fa:1f1b:3db2
- with SMTP id 98e67ed59e1d1-2febabcfedfmr6880143a91.25.1740767432395; Fri, 28
- Feb 2025 10:30:32 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:29:28 +0000
-In-Reply-To: <20250228182928.2645936-1-fvdl@google.com>
+        bh=6pijisVLPCJj8vW2ZfATw2CQzs5cG5ymgPPQbMYMBHE=;
+        b=wMEV6dI7Mz9ZyVDIjDD6/c5aFZifO2HpfKD344duoneouXeqlYUdvnZhpOdJXCZnyB
+         9Qure0LnWkyRpLtEEH1T+yD5oOWO54S5Ay7AChFXo/kEksECJ8XeA6klU7LIdUvNokzk
+         usewguGUrtq8vDHlkLR8lRbqAnH1YeQFzhMQg/LiNn+PHr1AIJLzZpo0G8PpLPydJS/0
+         sR+bj1q0STUM8b+eJ3ADNMixFqA9mBlG8zrIdBy79DIaKJwKdj2tAZQRKxeO9e+AxoOk
+         BEgXQ1HfbOf+wEovRGamsvMqBa3A0weWEchrlXIwRHFKiQx7R7EV7MYMmhGYpOIpVv8C
+         HOpw==
+X-Forwarded-Encrypted: i=1; AJvYcCWxjgmPFts0kBM8MjwXXEU6U1WJxAvknvOp1iuNyoy9T7bkuO9zoiuxQxnv2XouA5hUW+3rOu71Kcbbjbo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3Z/nWVfGXuS9kbZ8EJX8i0MeduuTkAFfvX0Ls7b6JC1lIIJDp
+	DnpYKN9GkTn/leqAPx1lxS384KIoeM5RoecEbVGNEamwBgrkACCSOCIEQIBDkHtTD+yyj4Vinv2
+	SHg==
+X-Google-Smtp-Source: AGHT+IF4N9NsIkmr/dcMIkDaZ4a+7XdgaaufJF3rLHlXHdN4NAQScNU/ckB1oUbOH4qNPSFvkWjtZERYyYU=
+X-Received: from pjboh15.prod.google.com ([2002:a17:90b:3a4f:b0:2ea:5be5:da6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:8cb:b0:220:e63c:5b13
+ with SMTP id d9443c01a7336-2236925e4famr73615075ad.46.1740767520231; Fri, 28
+ Feb 2025 10:32:00 -0800 (PST)
+Date: Fri, 28 Feb 2025 10:31:58 -0800
+In-Reply-To: <27a491ee16015824b416e72921b02a02c27433f7.1740512583.git.ashish.kalra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250228182928.2645936-1-fvdl@google.com>
-X-Mailer: git-send-email 2.48.1.711.g2feabab25a-goog
-Message-ID: <20250228182928.2645936-28-fvdl@google.com>
-Subject: [PATCH v5 27/27] mm/hugetlb: move hugetlb CMA code in to its own file
-From: Frank van der Linden <fvdl@google.com>
-To: akpm@linux-foundation.org, muchun.song@linux.dev, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Cc: yuzhao@google.com, usamaarif642@gmail.com, joao.m.martins@oracle.com, 
-	roman.gushchin@linux.dev, ziy@nvidia.com, david@redhat.com, 
-	Frank van der Linden <fvdl@google.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <cover.1740512583.git.ashish.kalra@amd.com> <27a491ee16015824b416e72921b02a02c27433f7.1740512583.git.ashish.kalra@amd.com>
+Message-ID: <Z8IBHuSc3apsxePN@google.com>
+Subject: Re: [PATCH v5 6/7] KVM: SVM: Add support to initialize SEV/SNP
+ functionality in KVM
+From: Sean Christopherson <seanjc@google.com>
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	thomas.lendacky@amd.com, john.allen@amd.com, herbert@gondor.apana.org.au, 
+	michael.roth@amd.com, dionnaglaze@google.com, nikunj@amd.com, ardb@kernel.org, 
+	kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, aik@amd.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+Content-Type: multipart/mixed; charset="UTF-8"; boundary="ZxKkPI+e2NE34Qwk"
 
-hugetlb.c contained a number of CONFIG_CMA ifdefs, and
-the code inside them was large enough to merit being in
-its own file, so move it, cleaning up things a bit.
 
-Hide some direct variable access behind functions to
-accommodate the move.
+--ZxKkPI+e2NE34Qwk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No functional change intended.
+On Tue, Feb 25, 2025, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> Move platform initialization of SEV/SNP from CCP driver probe time to
+> KVM module load time so that KVM can do SEV/SNP platform initialization
+> explicitly if it actually wants to use SEV/SNP functionality.
+> 
+> Add support for KVM to explicitly call into the CCP driver at load time
+> to initialize SEV/SNP. If required, this behavior can be altered with KVM
+> module parameters to not do SEV/SNP platform initialization at module load
+> time. Additionally, a corresponding SEV/SNP platform shutdown is invoked
+> during KVM module unload time.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  arch/x86/kvm/svm/sev.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+> index 74525651770a..0bc6c0486071 100644
+> --- a/arch/x86/kvm/svm/sev.c
+> +++ b/arch/x86/kvm/svm/sev.c
+> @@ -2933,6 +2933,7 @@ void __init sev_set_cpu_caps(void)
+>  void __init sev_hardware_setup(void)
+>  {
+>  	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
+> +	struct sev_platform_init_args init_args = {0};
+>  	bool sev_snp_supported = false;
+>  	bool sev_es_supported = false;
+>  	bool sev_supported = false;
+> @@ -3059,6 +3060,17 @@ void __init sev_hardware_setup(void)
+>  	sev_supported_vmsa_features = 0;
+>  	if (sev_es_debug_swap_enabled)
+>  		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
+> +
+> +	if (!sev_enabled)
+> +		return;
+> +
+> +	/*
+> +	 * Always perform SEV initialization at setup time to avoid
+> +	 * complications when performing SEV initialization later
+> +	 * (such as suspending active guests, etc.).
 
-Signed-off-by: Frank van der Linden <fvdl@google.com>
+This is misleading and wildly incomplete.  *SEV* doesn't have complications, *SNP*
+has complications.  And looking through sev_platform_init(), all of this code
+is buggy.
+
+The sev_platform_init() return code is completely disconnected from SNP setup.
+It can return errors even if SNP setup succeeds, and can return success even if
+SNP setup fails.
+
+I also think it makes sense to require SNP to be initialized during KVM setup.
+I don't see anything in __sev_snp_init_locked() that suggests SNP initialization
+can magically succeed at runtime if it failed at boot.  To keep things sane and
+simple, I think KVM should reject module load if SNP is requested, setup fails,
+and kvm-amd.ko is a module.  If kvm-amd.ko is built-in and SNP fails, just disable
+SNP support.  I.e. when possible, let userspace decide what to do, but don't bring
+down all of KVM just because SNP setup failed.
+
+The attached patches are compile-tested (mostly), can you please test them and
+slot them in?
+
+> +	 */
+> +	init_args.probe = true;
+> +	sev_platform_init(&init_args);
+>  }
+>  
+>  void sev_hardware_unsetup(void)
+> @@ -3074,6 +3086,9 @@ void sev_hardware_unsetup(void)
+>  
+>  	misc_cg_set_capacity(MISC_CG_RES_SEV, 0);
+>  	misc_cg_set_capacity(MISC_CG_RES_SEV_ES, 0);
+> +
+> +	/* Do SEV and SNP Shutdown */
+
+Meh, just omit this comment.  
+
+> +	sev_platform_shutdown();
+>  }
+>  
+>  int sev_cpu_init(struct svm_cpu_data *sd)
+> -- 
+> 2.34.1
+> 
+
+--ZxKkPI+e2NE34Qwk
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-crypto-ccp-Enumerate-SNP-support-in-output-of-sev_pl.patch"
+
+From 7274d7156ff9df5018e4f8ac8fbfae7d7ca8d6d6 Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Fri, 28 Feb 2025 10:01:37 -0800
+Subject: [PATCH 1/4] crypto: ccp: Enumerate SNP support in output of
+ sev_platform_init()
+
+Add an output param to sev_platform_init() to communicate whether or not
+SNP was (or already was) successfully initialized.  The return code from
+sev_platform_init() is completely disconnected from SNP initialization,
+e.g. will return errors if SNP setup succeeded, and will return success if
+SNP setup failed.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- MAINTAINERS      |   2 +
- mm/Makefile      |   3 +
- mm/hugetlb.c     | 269 +++------------------------------------------
- mm/hugetlb_cma.c | 275 +++++++++++++++++++++++++++++++++++++++++++++++
- mm/hugetlb_cma.h |  57 ++++++++++
- 5 files changed, 354 insertions(+), 252 deletions(-)
- create mode 100644 mm/hugetlb_cma.c
- create mode 100644 mm/hugetlb_cma.h
+ drivers/crypto/ccp/sev-dev.c | 1 +
+ include/linux/psp-sev.h      | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8e0736dc2ee0..7d083b653b69 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10710,6 +10710,8 @@ F:	fs/hugetlbfs/
- F:	include/linux/hugetlb.h
- F:	include/trace/events/hugetlbfs.h
- F:	mm/hugetlb.c
-+F:	mm/hugetlb_cma.c
-+F:	mm/hugetlb_cma.h
- F:	mm/hugetlb_vmemmap.c
- F:	mm/hugetlb_vmemmap.h
- F:	tools/testing/selftests/cgroup/test_hugetlb_memcg.c
-diff --git a/mm/Makefile b/mm/Makefile
-index 850386a67b3e..810ccd45d270 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -79,6 +79,9 @@ obj-$(CONFIG_SWAP)	+= page_io.o swap_state.o swapfile.o swap_slots.o
- obj-$(CONFIG_ZSWAP)	+= zswap.o
- obj-$(CONFIG_HAS_DMA)	+= dmapool.o
- obj-$(CONFIG_HUGETLBFS)	+= hugetlb.o
-+ifdef CONFIG_CMA
-+obj-$(CONFIG_HUGETLBFS)	+= hugetlb_cma.o
-+endif
- obj-$(CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP)	+= hugetlb_vmemmap.o
- obj-$(CONFIG_NUMA) 	+= mempolicy.o
- obj-$(CONFIG_SPARSEMEM)	+= sparse.o
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 664ccaaa717a..3ee98f612137 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -49,19 +49,13 @@
- #include <linux/page_owner.h>
- #include "internal.h"
- #include "hugetlb_vmemmap.h"
-+#include "hugetlb_cma.h"
- #include <linux/page-isolation.h>
- 
- int hugetlb_max_hstate __read_mostly;
- unsigned int default_hstate_idx;
- struct hstate hstates[HUGE_MAX_HSTATE];
- 
--#ifdef CONFIG_CMA
--static struct cma *hugetlb_cma[MAX_NUMNODES];
--static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
--#endif
--static bool hugetlb_cma_only;
--static unsigned long hugetlb_cma_size __initdata;
--
- __initdata struct list_head huge_boot_pages[MAX_NUMNODES];
- static unsigned long hstate_boot_nrinvalid[HUGE_MAX_HSTATE] __initdata;
- 
-@@ -128,14 +122,11 @@ static struct resv_map *vma_resv_map(struct vm_area_struct *vma);
- 
- static void hugetlb_free_folio(struct folio *folio)
- {
--#ifdef CONFIG_CMA
--	int nid = folio_nid(folio);
--
- 	if (folio_test_hugetlb_cma(folio)) {
--		WARN_ON_ONCE(!cma_free_folio(hugetlb_cma[nid], folio));
-+		hugetlb_cma_free_folio(folio);
- 		return;
- 	}
--#endif
-+
- 	folio_put(folio);
- }
- 
-@@ -1492,31 +1483,9 @@ static struct folio *alloc_gigantic_folio(struct hstate *h, gfp_t gfp_mask,
- 	if (nid == NUMA_NO_NODE)
- 		nid = numa_mem_id();
- retry:
--	folio = NULL;
--#ifdef CONFIG_CMA
--	{
--		int node;
--
--		if (hugetlb_cma[nid])
--			folio = cma_alloc_folio(hugetlb_cma[nid], order, gfp_mask);
--
--		if (!folio && !(gfp_mask & __GFP_THISNODE)) {
--			for_each_node_mask(node, *nodemask) {
--				if (node == nid || !hugetlb_cma[node])
--					continue;
--
--				folio = cma_alloc_folio(hugetlb_cma[node], order, gfp_mask);
--				if (folio)
--					break;
--			}
--		}
--
--		if (folio)
--			folio_set_hugetlb_cma(folio);
--	}
--#endif
-+	folio = hugetlb_cma_alloc_folio(h, gfp_mask, nid, nodemask);
- 	if (!folio) {
--		if (hugetlb_cma_only)
-+		if (hugetlb_cma_exclusive_alloc())
- 			return NULL;
- 
- 		folio = folio_alloc_gigantic(order, gfp_mask, nid, nodemask);
-@@ -3179,47 +3148,14 @@ struct folio *alloc_hugetlb_folio(struct vm_area_struct *vma,
- 	return ERR_PTR(-ENOSPC);
- }
- 
--static bool __init hugetlb_early_cma(struct hstate *h)
--{
--	if (arch_has_huge_bootmem_alloc())
--		return false;
--
--	return (hstate_is_gigantic(h) && hugetlb_cma_only);
--}
--
- static __init void *alloc_bootmem(struct hstate *h, int nid, bool node_exact)
- {
- 	struct huge_bootmem_page *m;
--	unsigned long flags;
--	struct cma *cma;
- 	int listnode = nid;
- 
--#ifdef CONFIG_CMA
--	if (hugetlb_early_cma(h)) {
--		flags = HUGE_BOOTMEM_CMA;
--		cma = hugetlb_cma[nid];
--		m = cma_reserve_early(cma, huge_page_size(h));
--		if (!m) {
--			int node;
--
--			if (node_exact)
--				return NULL;
--			for_each_online_node(node) {
--				cma = hugetlb_cma[node];
--				if (!cma || node == nid)
--					continue;
--				m = cma_reserve_early(cma, huge_page_size(h));
--				if (m) {
--					listnode = node;
--					break;
--				}
--			}
--		}
--	} else
--#endif
--	{
--		flags = 0;
--		cma = NULL;
-+	if (hugetlb_early_cma(h))
-+		m = hugetlb_cma_alloc_bootmem(h, &listnode, node_exact);
-+	else {
- 		if (node_exact)
- 			m = memblock_alloc_exact_nid_raw(huge_page_size(h),
- 				huge_page_size(h), 0,
-@@ -3238,6 +3174,11 @@ static __init void *alloc_bootmem(struct hstate *h, int nid, bool node_exact)
- 			if (m)
- 				listnode = early_pfn_to_nid(PHYS_PFN(virt_to_phys(m)));
- 		}
-+
-+		if (m) {
-+			m->flags = 0;
-+			m->cma = NULL;
-+		}
- 	}
- 
- 	if (m) {
-@@ -3252,8 +3193,6 @@ static __init void *alloc_bootmem(struct hstate *h, int nid, bool node_exact)
- 		INIT_LIST_HEAD(&m->list);
- 		list_add(&m->list, &huge_boot_pages[listnode]);
- 		m->hstate = h;
--		m->flags = flags;
--		m->cma = cma;
- 	}
- 
- 	return m;
-@@ -3703,7 +3642,8 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- 	 * Skip gigantic hugepages allocation if early CMA
- 	 * reservations are not available.
- 	 */
--	if (hstate_is_gigantic(h) && hugetlb_cma_size && !hugetlb_early_cma(h)) {
-+	if (hstate_is_gigantic(h) && hugetlb_cma_total_size() &&
-+	    !hugetlb_early_cma(h)) {
- 		pr_warn_once("HugeTLB: hugetlb_cma is enabled, skip boot time allocation\n");
- 		return;
- 	}
-@@ -3740,7 +3680,7 @@ static void __init hugetlb_init_hstates(void)
+diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+index cde6ebab589d..5164c5f3bd3f 100644
+--- a/drivers/crypto/ccp/sev-dev.c
++++ b/drivers/crypto/ccp/sev-dev.c
+@@ -1357,6 +1357,7 @@ static int _sev_platform_init_locked(struct sev_platform_init_args *args)
  		 */
- 		if (hstate_is_gigantic(h) && !gigantic_page_runtime_supported())
- 			continue;
--		if (hugetlb_cma_size && h->order <= HUGETLB_PAGE_ORDER)
-+		if (hugetlb_cma_total_size() && h->order <= HUGETLB_PAGE_ORDER)
- 			continue;
- 		for_each_hstate(h2) {
- 			if (h2 == h)
-@@ -4642,14 +4582,6 @@ static void hugetlb_register_all_nodes(void) { }
- 
- #endif
- 
--#ifdef CONFIG_CMA
--static void __init hugetlb_cma_check(void);
--#else
--static inline __init void hugetlb_cma_check(void)
--{
--}
--#endif
--
- static void __init hugetlb_sysfs_init(void)
- {
- 	struct hstate *h;
-@@ -4833,8 +4765,7 @@ static __init void hugetlb_parse_params(void)
- 		hcp->setup(hcp->val);
+ 		dev_err(sev->dev, "SEV-SNP: failed to INIT, continue SEV INIT\n");
  	}
++	args->snp_initialized = sev->snp_initialized;
  
--	if (!hugetlb_cma_size)
--		hugetlb_cma_only = false;
-+	hugetlb_cma_validate_params();
- }
+ 	/* Defer legacy SEV/SEV-ES support if allowed by caller/module. */
+ 	if (args->probe && !psp_init_on_probe)
+diff --git a/include/linux/psp-sev.h b/include/linux/psp-sev.h
+index 0b3a36bdaa90..726535e302be 100644
+--- a/include/linux/psp-sev.h
++++ b/include/linux/psp-sev.h
+@@ -797,10 +797,12 @@ struct sev_data_snp_shutdown_ex {
+  * @probe: True if this is being called as part of CCP module probe, which
+  *  will defer SEV_INIT/SEV_INIT_EX firmware initialization until needed
+  *  unless psp_init_on_probe module param is set
++ * @snp_initialized: Output param that is true if SNP was initialized.
+  */
+ struct sev_platform_init_args {
+ 	int error;
+ 	bool probe;
++	bool snp_initialized;
+ };
  
- /*
-@@ -7904,169 +7835,3 @@ void hugetlb_unshare_all_pmds(struct vm_area_struct *vma)
- 	hugetlb_unshare_pmds(vma, ALIGN(vma->vm_start, PUD_SIZE),
- 			ALIGN_DOWN(vma->vm_end, PUD_SIZE));
- }
--
--#ifdef CONFIG_CMA
--static bool cma_reserve_called __initdata;
--
--static int __init cmdline_parse_hugetlb_cma(char *p)
--{
--	int nid, count = 0;
--	unsigned long tmp;
--	char *s = p;
--
--	while (*s) {
--		if (sscanf(s, "%lu%n", &tmp, &count) != 1)
--			break;
--
--		if (s[count] == ':') {
--			if (tmp >= MAX_NUMNODES)
--				break;
--			nid = array_index_nospec(tmp, MAX_NUMNODES);
--
--			s += count + 1;
--			tmp = memparse(s, &s);
--			hugetlb_cma_size_in_node[nid] = tmp;
--			hugetlb_cma_size += tmp;
--
--			/*
--			 * Skip the separator if have one, otherwise
--			 * break the parsing.
--			 */
--			if (*s == ',')
--				s++;
--			else
--				break;
--		} else {
--			hugetlb_cma_size = memparse(p, &p);
--			break;
--		}
--	}
--
--	return 0;
--}
--
--early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
--
--static int __init cmdline_parse_hugetlb_cma_only(char *p)
--{
--	return kstrtobool(p, &hugetlb_cma_only);
--}
--
--early_param("hugetlb_cma_only", cmdline_parse_hugetlb_cma_only);
--
--void __init hugetlb_cma_reserve(int order)
--{
--	unsigned long size, reserved, per_node;
--	bool node_specific_cma_alloc = false;
--	int nid;
--
--	/*
--	 * HugeTLB CMA reservation is required for gigantic
--	 * huge pages which could not be allocated via the
--	 * page allocator. Just warn if there is any change
--	 * breaking this assumption.
--	 */
--	VM_WARN_ON(order <= MAX_PAGE_ORDER);
--	cma_reserve_called = true;
--
--	if (!hugetlb_cma_size)
--		return;
--
--	for (nid = 0; nid < MAX_NUMNODES; nid++) {
--		if (hugetlb_cma_size_in_node[nid] == 0)
--			continue;
--
--		if (!node_online(nid)) {
--			pr_warn("hugetlb_cma: invalid node %d specified\n", nid);
--			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
--			hugetlb_cma_size_in_node[nid] = 0;
--			continue;
--		}
--
--		if (hugetlb_cma_size_in_node[nid] < (PAGE_SIZE << order)) {
--			pr_warn("hugetlb_cma: cma area of node %d should be at least %lu MiB\n",
--				nid, (PAGE_SIZE << order) / SZ_1M);
--			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
--			hugetlb_cma_size_in_node[nid] = 0;
--		} else {
--			node_specific_cma_alloc = true;
--		}
--	}
--
--	/* Validate the CMA size again in case some invalid nodes specified. */
--	if (!hugetlb_cma_size)
--		return;
--
--	if (hugetlb_cma_size < (PAGE_SIZE << order)) {
--		pr_warn("hugetlb_cma: cma area should be at least %lu MiB\n",
--			(PAGE_SIZE << order) / SZ_1M);
--		hugetlb_cma_size = 0;
--		return;
--	}
--
--	if (!node_specific_cma_alloc) {
--		/*
--		 * If 3 GB area is requested on a machine with 4 numa nodes,
--		 * let's allocate 1 GB on first three nodes and ignore the last one.
--		 */
--		per_node = DIV_ROUND_UP(hugetlb_cma_size, nr_online_nodes);
--		pr_info("hugetlb_cma: reserve %lu MiB, up to %lu MiB per node\n",
--			hugetlb_cma_size / SZ_1M, per_node / SZ_1M);
--	}
--
--	reserved = 0;
--	for_each_online_node(nid) {
--		int res;
--		char name[CMA_MAX_NAME];
--
--		if (node_specific_cma_alloc) {
--			if (hugetlb_cma_size_in_node[nid] == 0)
--				continue;
--
--			size = hugetlb_cma_size_in_node[nid];
--		} else {
--			size = min(per_node, hugetlb_cma_size - reserved);
--		}
--
--		size = round_up(size, PAGE_SIZE << order);
--
--		snprintf(name, sizeof(name), "hugetlb%d", nid);
--		/*
--		 * Note that 'order per bit' is based on smallest size that
--		 * may be returned to CMA allocator in the case of
--		 * huge page demotion.
--		 */
--		res = cma_declare_contiguous_multi(size, PAGE_SIZE << order,
--					HUGETLB_PAGE_ORDER, name,
--					&hugetlb_cma[nid], nid);
--		if (res) {
--			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
--				res, nid);
--			continue;
--		}
--
--		reserved += size;
--		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
--			size / SZ_1M, nid);
--
--		if (reserved >= hugetlb_cma_size)
--			break;
--	}
--
--	if (!reserved)
--		/*
--		 * hugetlb_cma_size is used to determine if allocations from
--		 * cma are possible.  Set to zero if no cma regions are set up.
--		 */
--		hugetlb_cma_size = 0;
--}
--
--static void __init hugetlb_cma_check(void)
--{
--	if (!hugetlb_cma_size || cma_reserve_called)
--		return;
--
--	pr_warn("hugetlb_cma: the option isn't supported by current arch\n");
--}
--
--#endif /* CONFIG_CMA */
-diff --git a/mm/hugetlb_cma.c b/mm/hugetlb_cma.c
-new file mode 100644
-index 000000000000..e0f2d5c3a84c
---- /dev/null
-+++ b/mm/hugetlb_cma.c
-@@ -0,0 +1,275 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/mm.h>
-+#include <linux/cma.h>
-+#include <linux/compiler.h>
-+#include <linux/mm_inline.h>
-+
-+#include <asm/page.h>
-+#include <asm/setup.h>
-+
-+#include <linux/hugetlb.h>
-+#include "internal.h"
-+#include "hugetlb_cma.h"
-+
-+
-+static struct cma *hugetlb_cma[MAX_NUMNODES];
-+static unsigned long hugetlb_cma_size_in_node[MAX_NUMNODES] __initdata;
-+static bool hugetlb_cma_only;
-+static unsigned long hugetlb_cma_size __initdata;
-+
-+void hugetlb_cma_free_folio(struct folio *folio)
-+{
-+	int nid = folio_nid(folio);
-+
-+	WARN_ON_ONCE(!cma_free_folio(hugetlb_cma[nid], folio));
-+}
-+
-+
-+struct folio *hugetlb_cma_alloc_folio(struct hstate *h, gfp_t gfp_mask,
-+				      int nid, nodemask_t *nodemask)
-+{
-+	int node;
-+	int order = huge_page_order(h);
-+	struct folio *folio = NULL;
-+
-+	if (hugetlb_cma[nid])
-+		folio = cma_alloc_folio(hugetlb_cma[nid], order, gfp_mask);
-+
-+	if (!folio && !(gfp_mask & __GFP_THISNODE)) {
-+		for_each_node_mask(node, *nodemask) {
-+			if (node == nid || !hugetlb_cma[node])
-+				continue;
-+
-+			folio = cma_alloc_folio(hugetlb_cma[node], order, gfp_mask);
-+			if (folio)
-+				break;
-+		}
-+	}
-+
-+	if (folio)
-+		folio_set_hugetlb_cma(folio);
-+
-+	return folio;
-+}
-+
-+struct huge_bootmem_page * __init
-+hugetlb_cma_alloc_bootmem(struct hstate *h, int *nid, bool node_exact)
-+{
-+	struct cma *cma;
-+	struct huge_bootmem_page *m;
-+	int node = *nid;
-+
-+	cma = hugetlb_cma[*nid];
-+	m = cma_reserve_early(cma, huge_page_size(h));
-+	if (!m) {
-+		if (node_exact)
-+			return NULL;
-+
-+		for_each_online_node(node) {
-+			cma = hugetlb_cma[node];
-+			if (!cma || node == *nid)
-+				continue;
-+			m = cma_reserve_early(cma, huge_page_size(h));
-+			if (m) {
-+				*nid = node;
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (m) {
-+		m->flags = HUGE_BOOTMEM_CMA;
-+		m->cma = cma;
-+	}
-+
-+	return m;
-+}
-+
-+
-+static bool cma_reserve_called __initdata;
-+
-+static int __init cmdline_parse_hugetlb_cma(char *p)
-+{
-+	int nid, count = 0;
-+	unsigned long tmp;
-+	char *s = p;
-+
-+	while (*s) {
-+		if (sscanf(s, "%lu%n", &tmp, &count) != 1)
-+			break;
-+
-+		if (s[count] == ':') {
-+			if (tmp >= MAX_NUMNODES)
-+				break;
-+			nid = array_index_nospec(tmp, MAX_NUMNODES);
-+
-+			s += count + 1;
-+			tmp = memparse(s, &s);
-+			hugetlb_cma_size_in_node[nid] = tmp;
-+			hugetlb_cma_size += tmp;
-+
-+			/*
-+			 * Skip the separator if have one, otherwise
-+			 * break the parsing.
-+			 */
-+			if (*s == ',')
-+				s++;
-+			else
-+				break;
-+		} else {
-+			hugetlb_cma_size = memparse(p, &p);
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+early_param("hugetlb_cma", cmdline_parse_hugetlb_cma);
-+
-+static int __init cmdline_parse_hugetlb_cma_only(char *p)
-+{
-+	return kstrtobool(p, &hugetlb_cma_only);
-+}
-+
-+early_param("hugetlb_cma_only", cmdline_parse_hugetlb_cma_only);
-+
-+void __init hugetlb_cma_reserve(int order)
-+{
-+	unsigned long size, reserved, per_node;
-+	bool node_specific_cma_alloc = false;
-+	int nid;
-+
-+	/*
-+	 * HugeTLB CMA reservation is required for gigantic
-+	 * huge pages which could not be allocated via the
-+	 * page allocator. Just warn if there is any change
-+	 * breaking this assumption.
-+	 */
-+	VM_WARN_ON(order <= MAX_PAGE_ORDER);
-+	cma_reserve_called = true;
-+
-+	if (!hugetlb_cma_size)
-+		return;
-+
-+	for (nid = 0; nid < MAX_NUMNODES; nid++) {
-+		if (hugetlb_cma_size_in_node[nid] == 0)
-+			continue;
-+
-+		if (!node_online(nid)) {
-+			pr_warn("hugetlb_cma: invalid node %d specified\n", nid);
-+			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
-+			hugetlb_cma_size_in_node[nid] = 0;
-+			continue;
-+		}
-+
-+		if (hugetlb_cma_size_in_node[nid] < (PAGE_SIZE << order)) {
-+			pr_warn("hugetlb_cma: cma area of node %d should be at least %lu MiB\n",
-+				nid, (PAGE_SIZE << order) / SZ_1M);
-+			hugetlb_cma_size -= hugetlb_cma_size_in_node[nid];
-+			hugetlb_cma_size_in_node[nid] = 0;
-+		} else {
-+			node_specific_cma_alloc = true;
-+		}
-+	}
-+
-+	/* Validate the CMA size again in case some invalid nodes specified. */
-+	if (!hugetlb_cma_size)
-+		return;
-+
-+	if (hugetlb_cma_size < (PAGE_SIZE << order)) {
-+		pr_warn("hugetlb_cma: cma area should be at least %lu MiB\n",
-+			(PAGE_SIZE << order) / SZ_1M);
-+		hugetlb_cma_size = 0;
-+		return;
-+	}
-+
-+	if (!node_specific_cma_alloc) {
-+		/*
-+		 * If 3 GB area is requested on a machine with 4 numa nodes,
-+		 * let's allocate 1 GB on first three nodes and ignore the last one.
-+		 */
-+		per_node = DIV_ROUND_UP(hugetlb_cma_size, nr_online_nodes);
-+		pr_info("hugetlb_cma: reserve %lu MiB, up to %lu MiB per node\n",
-+			hugetlb_cma_size / SZ_1M, per_node / SZ_1M);
-+	}
-+
-+	reserved = 0;
-+	for_each_online_node(nid) {
-+		int res;
-+		char name[CMA_MAX_NAME];
-+
-+		if (node_specific_cma_alloc) {
-+			if (hugetlb_cma_size_in_node[nid] == 0)
-+				continue;
-+
-+			size = hugetlb_cma_size_in_node[nid];
-+		} else {
-+			size = min(per_node, hugetlb_cma_size - reserved);
-+		}
-+
-+		size = round_up(size, PAGE_SIZE << order);
-+
-+		snprintf(name, sizeof(name), "hugetlb%d", nid);
-+		/*
-+		 * Note that 'order per bit' is based on smallest size that
-+		 * may be returned to CMA allocator in the case of
-+		 * huge page demotion.
-+		 */
-+		res = cma_declare_contiguous_multi(size, PAGE_SIZE << order,
-+					HUGETLB_PAGE_ORDER, name,
-+					&hugetlb_cma[nid], nid);
-+		if (res) {
-+			pr_warn("hugetlb_cma: reservation failed: err %d, node %d",
-+				res, nid);
-+			continue;
-+		}
-+
-+		reserved += size;
-+		pr_info("hugetlb_cma: reserved %lu MiB on node %d\n",
-+			size / SZ_1M, nid);
-+
-+		if (reserved >= hugetlb_cma_size)
-+			break;
-+	}
-+
-+	if (!reserved)
-+		/*
-+		 * hugetlb_cma_size is used to determine if allocations from
-+		 * cma are possible.  Set to zero if no cma regions are set up.
-+		 */
-+		hugetlb_cma_size = 0;
-+}
-+
-+void __init hugetlb_cma_check(void)
-+{
-+	if (!hugetlb_cma_size || cma_reserve_called)
-+		return;
-+
-+	pr_warn("hugetlb_cma: the option isn't supported by current arch\n");
-+}
-+
-+bool hugetlb_cma_exclusive_alloc(void)
-+{
-+	return hugetlb_cma_only;
-+}
-+
-+unsigned long __init hugetlb_cma_total_size(void)
-+{
-+	return hugetlb_cma_size;
-+}
-+
-+void __init hugetlb_cma_validate_params(void)
-+{
-+	if (!hugetlb_cma_size)
-+		hugetlb_cma_only = false;
-+}
-+
-+bool __init hugetlb_early_cma(struct hstate *h)
-+{
-+	if (arch_has_huge_bootmem_alloc())
-+		return false;
-+
-+	return hstate_is_gigantic(h) && hugetlb_cma_only;
-+}
-diff --git a/mm/hugetlb_cma.h b/mm/hugetlb_cma.h
-new file mode 100644
-index 000000000000..f7d7fb9880a2
---- /dev/null
-+++ b/mm/hugetlb_cma.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_HUGETLB_CMA_H
-+#define _LINUX_HUGETLB_CMA_H
-+
-+#ifdef CONFIG_CMA
-+void hugetlb_cma_free_folio(struct folio *folio);
-+struct folio *hugetlb_cma_alloc_folio(struct hstate *h, gfp_t gfp_mask,
-+				      int nid, nodemask_t *nodemask);
-+struct huge_bootmem_page *hugetlb_cma_alloc_bootmem(struct hstate *h, int *nid,
-+						    bool node_exact);
-+void hugetlb_cma_check(void);
-+bool hugetlb_cma_exclusive_alloc(void);
-+unsigned long hugetlb_cma_total_size(void);
-+void hugetlb_cma_validate_params(void);
-+bool hugetlb_early_cma(struct hstate *h);
-+#else
-+static inline void hugetlb_cma_free_folio(struct folio *folio)
-+{
-+}
-+
-+static inline struct folio *hugetlb_cma_alloc_folio(struct hstate *h,
-+	    gfp_t gfp_mask, int nid, nodemask_t *nodemask)
-+{
-+	return NULL;
-+}
-+
-+static inline
-+struct huge_bootmem_page *hugetlb_cma_alloc_bootmem(struct hstate *h, int *nid,
-+						    bool node_exact)
-+{
-+	return NULL;
-+}
-+
-+static inline void hugetlb_cma_check(void)
-+{
-+}
-+
-+static inline bool hugetlb_cma_exclusive_alloc(void)
-+{
-+	return false;
-+}
-+
-+static inline unsigned long hugetlb_cma_total_size(void)
-+{
-+	return 0;
-+}
-+
-+static inline void hugetlb_cma_validate_params(void)
-+{
-+}
-+
-+static inline bool hugetlb_early_cma(struct hstate *h)
-+{
-+	return false;
-+}
-+#endif
-+#endif
+ /**
+
+base-commit: ac2ba191f3b6b41c9403b142223dfcc3dfe8903b
 -- 
 2.48.1.711.g2feabab25a-goog
 
+
+--ZxKkPI+e2NE34Qwk
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0002-KVM-SVM-Reject-SNP-VM-creation-if-SNP-platform-initi.patch"
+
+From 6cd53151470bb088e6a5f1fded0e4d9b66fe7bbe Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Fri, 28 Feb 2025 10:09:48 -0800
+Subject: [PATCH 2/4] KVM: SVM: Reject SNP VM creation if SNP platform
+ initialization failed
+
+Explicitly check that SNP platform initialization succeeded prior to
+creating SNP VMs.  The return from sev_platform_init() only tracks "legacy"
+SEV and SEV-ES support, i.e. can return '0' even if SNP setup fails.
+
+Fixes: 1dfe571c12cf ("KVM: SEV: Add initial SEV-SNP support")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/sev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 3fc87cdc95c8..dd001a293899 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -449,6 +449,10 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 
+ 	/* This needs to happen after SEV/SNP firmware initialization. */
+ 	if (vm_type == KVM_X86_SNP_VM) {
++		if (!init_args.snp_initialized) {
++			ret = -EIO;
++			goto e_free;
++		}
+ 		ret = snp_guest_req_init(kvm);
+ 		if (ret)
+ 			goto e_free;
+-- 
+2.48.1.711.g2feabab25a-goog
+
+
+--ZxKkPI+e2NE34Qwk
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0003-KVM-SVM-Ignore-sev_platform_init-return-code-when-cr.patch"
+
+From 8dd4327a3e30ce73753e818377c6b47a16e48467 Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <seanjc@google.com>
+Date: Fri, 28 Feb 2025 10:09:48 -0800
+Subject: [PATCH 3/4] KVM: SVM: Ignore sev_platform_init() return code when
+ creating SNP VM
+
+Ignore errors from sev_platform_init() when creating SNP VMs, as SNP
+initialization can succeed even if SEV/SEV-ES initialization fails.
+
+Fixes: 1dfe571c12cf ("KVM: SEV: Add initial SEV-SNP support")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/sev.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index dd001a293899..354f6c32c435 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -443,8 +443,15 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 		goto e_no_asid;
+ 
+ 	init_args.probe = false;
++	/*
++	 * Initialize SEV/SEV-ES if neccessary, i.e. if the CCP driver was
++	 * configured to defer setup.
++	 * Ignore failure for SNP VMs, as SNP initialization can succeed even
++	 * if SEV/SEV-ES initialization fails (and vice versa).  SNP support is
++	 * communicated via an out param, and is checked below.
++	 */
+ 	ret = sev_platform_init(&init_args);
+-	if (ret)
++	if (ret && vm_type != KVM_X86_SNP_VM)
+ 		goto e_free;
+ 
+ 	/* This needs to happen after SEV/SNP firmware initialization. */
+-- 
+2.48.1.711.g2feabab25a-goog
+
+
+--ZxKkPI+e2NE34Qwk
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0004-KVM-SVM-Add-support-to-initialize-SEV-SNP-functional.patch"
+
+From d67d8504d1e288f646e67d264f418b2acc300236 Mon Sep 17 00:00:00 2001
+From: Ashish Kalra <ashish.kalra@amd.com>
+Date: Tue, 25 Feb 2025 21:01:33 +0000
+Subject: [PATCH 4/4] KVM: SVM: Add support to initialize SEV/SNP functionality
+ in KVM
+
+Move platform initialization of SEV/SNP from CCP driver probe time to
+KVM module load time so that KVM can do SEV/SNP platform initialization
+explicitly if it actually wants to use SEV/SNP functionality.
+
+Add support for KVM to explicitly call into the CCP driver at load time
+to initialize SEV/SNP. If required, this behavior can be altered with KVM
+module parameters to not do SEV/SNP platform initialization at module load
+time. Additionally, a corresponding SEV/SNP platform shutdown is invoked
+during KVM module unload time.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/kvm/svm/sev.c | 52 +++++++++++++++++++++++++++++++++++++-----
+ arch/x86/kvm/svm/svm.c |  4 +++-
+ arch/x86/kvm/svm/svm.h |  4 ++--
+ 3 files changed, 51 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 354f6c32c435..2b8c1d125164 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -402,7 +402,7 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 			    unsigned long vm_type)
+ {
+ 	struct kvm_sev_info *sev = to_kvm_sev_info(kvm);
+-	struct sev_platform_init_args init_args = {0};
++	struct sev_platform_init_args init_args = { .probe = false };
+ 	bool es_active = vm_type != KVM_X86_SEV_VM;
+ 	u64 valid_vmsa_features = es_active ? sev_supported_vmsa_features : 0;
+ 	int ret;
+@@ -442,10 +442,9 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 	if (ret)
+ 		goto e_no_asid;
+ 
+-	init_args.probe = false;
+ 	/*
+-	 * Initialize SEV/SEV-ES if neccessary, i.e. if the CCP driver was
+-	 * configured to defer setup.
++	 * Initialize SEV/SEV-ES if neccessary, i.e. if setup failued during
++	 * module load, or if the CCP driver was configured to defer setup.
+ 	 * Ignore failure for SNP VMs, as SNP initialization can succeed even
+ 	 * if SEV/SEV-ES initialization fails (and vice versa).  SNP support is
+ 	 * communicated via an out param, and is checked below.
+@@ -456,7 +455,11 @@ static int __sev_guest_init(struct kvm *kvm, struct kvm_sev_cmd *argp,
+ 
+ 	/* This needs to happen after SEV/SNP firmware initialization. */
+ 	if (vm_type == KVM_X86_SNP_VM) {
+-		if (!init_args.snp_initialized) {
++		/*
++		 * SNP is initialized during KVM setup, and KVM shouldn't
++		 * advertise support for SNP if initialization failed.
++		 */
++		if (WARN_ON_ONCE(!init_args.snp_initialized)) {
+ 			ret = -EIO;
+ 			goto e_free;
+ 		}
+@@ -2941,9 +2944,10 @@ void __init sev_set_cpu_caps(void)
+ 	}
+ }
+ 
+-void __init sev_hardware_setup(void)
++int __init sev_hardware_setup(void)
+ {
+ 	unsigned int eax, ebx, ecx, edx, sev_asid_count, sev_es_asid_count;
++	struct sev_platform_init_args init_args = { .probe = true };
+ 	bool sev_snp_supported = false;
+ 	bool sev_es_supported = false;
+ 	bool sev_supported = false;
+@@ -3044,6 +3048,38 @@ void __init sev_hardware_setup(void)
+ 	sev_snp_supported = sev_snp_enabled && cc_platform_has(CC_ATTR_HOST_SEV_SNP);
+ 
+ out:
++	/*
++	 * Initialize SEV+ in firmware and throughout the plaform.  If SNP is
++	 * supported by hardare, requested by the user, and fails to initialize,
++	 * reject setup if kvm-amd.ko is built as a module, i.e. if userspace
++	 * can retry and thus decide whether or not SNP is a hard requirement.
++	 * If KVM is fully built-in, continue on so that KVM can still run
++	 * non-SNP VMs.
++	 *
++	 * Leave SEV and SEV-ES as-is; they are compatible with runtime setup,
++	 * and KVM will retry initialization if/when the first SEV/SEV-ES VM is
++	 * created.
++	 *
++	 * Note, if psp_init_on_probe is disabled, this will initialize SNP+,
++	 * but not SEV or SEV-ES.  Deferring SEV/SEV-ES initialization allows
++	 * userspace to hotload firmware (SNP enabling is compatible, "legacy"
++	 * SEV/SEV-ES enabling is not).  As above, KVM will do SEV/SEV-ES at VM
++	 * creation if necessary.
++	 */
++	if (sev_supported) {
++		/*
++		 * Ignore the return value, which only communicates SEV/SEV-ES
++		 * status.  SNP status is provided as an output param.
++		 */
++		sev_platform_init(&init_args);
++		if (!init_args.snp_initialized && sev_snp_supported) {
++			if (IS_MODULE(CONFIG_KVM_AMD))
++				return -EIO;
++
++			sev_snp_supported = false;
++		}
++	}
++
+ 	if (boot_cpu_has(X86_FEATURE_SEV))
+ 		pr_info("SEV %s (ASIDs %u - %u)\n",
+ 			sev_supported ? min_sev_asid <= max_sev_asid ? "enabled" :
+@@ -3070,6 +3106,8 @@ void __init sev_hardware_setup(void)
+ 	sev_supported_vmsa_features = 0;
+ 	if (sev_es_debug_swap_enabled)
+ 		sev_supported_vmsa_features |= SVM_SEV_FEAT_DEBUG_SWAP;
++
++	return 0;
+ }
+ 
+ void sev_hardware_unsetup(void)
+@@ -3085,6 +3123,8 @@ void sev_hardware_unsetup(void)
+ 
+ 	misc_cg_set_capacity(MISC_CG_RES_SEV, 0);
+ 	misc_cg_set_capacity(MISC_CG_RES_SEV_ES, 0);
++
++	sev_platform_shutdown();
+ }
+ 
+ int sev_cpu_init(struct svm_cpu_data *sd)
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 58e377d32627..db48fb8d6257 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -5358,7 +5358,9 @@ static __init int svm_hardware_setup(void)
+ 	 * Note, SEV setup consumes npt_enabled and enable_mmio_caching (which
+ 	 * may be modified by svm_adjust_mmio_mask()), as well as nrips.
+ 	 */
+-	sev_hardware_setup();
++	r = sev_hardware_setup();
++	if (r)
++		return r;
+ 
+ 	svm_hv_hardware_setup();
+ 
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index faa5c0dab0ea..fe7bfab96397 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -773,7 +773,7 @@ static inline struct page *snp_safe_alloc_page(void)
+ void sev_free_vcpu(struct kvm_vcpu *vcpu);
+ void sev_vm_destroy(struct kvm *kvm);
+ void __init sev_set_cpu_caps(void);
+-void __init sev_hardware_setup(void);
++int __init sev_hardware_setup(void);
+ void sev_hardware_unsetup(void);
+ int sev_cpu_init(struct svm_cpu_data *sd);
+ int sev_dev_get_attr(u32 group, u64 attr, u64 *val);
+@@ -797,7 +797,7 @@ static inline struct page *snp_safe_alloc_page(void)
+ static inline void sev_free_vcpu(struct kvm_vcpu *vcpu) {}
+ static inline void sev_vm_destroy(struct kvm *kvm) {}
+ static inline void __init sev_set_cpu_caps(void) {}
+-static inline void __init sev_hardware_setup(void) {}
++static inline int __init sev_hardware_setup(void) { return 0; }
+ static inline void sev_hardware_unsetup(void) {}
+ static inline int sev_cpu_init(struct svm_cpu_data *sd) { return 0; }
+ static inline int sev_dev_get_attr(u32 group, u64 attr, u64 *val) { return -ENXIO; }
+-- 
+2.48.1.711.g2feabab25a-goog
+
+
+--ZxKkPI+e2NE34Qwk--
