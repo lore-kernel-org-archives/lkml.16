@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6440A1F0991;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F3361A8F9E;
 	Fri, 28 Feb 2025 17:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740763973; cv=none; b=W6ssFgNMMCakI4aLmdcjC1TWH7alWf//4MKiaGnjfbr1GT5/nY+ROB5jjTf+KMCnKlILfcHbFF/qX+II6//7+KZuRAlxU9AWfC47QFjeWZtYjmcv89p8MQnuUK6r5zsPG/YXoAQAZmjJa9UUDJ6A8rpMmtvQOsv/ZXAyVchL2vY=
+	t=1740763973; cv=none; b=Wp0ZnWc4JxAmLRB48p2bdYEAlrk2CYis+lQKavXk7g2o7291SStxOTtofGEi9wz93UEOEnkNCaPM8Q+eVDd5tavD0rgO5gZK7Nydr7RfFdR08IM7RqzReKQRoR6uaQOcBQFSMgjpd/v9Uvw2JY7EjPefZFTLIB9XVsxpS4k1Uvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740763973; c=relaxed/simple;
-	bh=cPTCJFNFhpivopOiLy1Jv1psoqvxMfFxzkCZOplVpG8=;
+	bh=ReYk6jJVsIMYTOIoTQKPS1h5Xno1Ot4VEYyDgi6Urow=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EVm/ltI1Jw9ucLy6Djfjw/mNdBtZhNrOW2vYlRdV6TMasRjGfZ6H26whDFFI6PUkOlSUDrRv4CLaLmKGVdclBpE5YGT1XNF0va0keqhpaChE8oEI9mjkBPGhN1V08tmlOMvf40cI2EUJE3q5aWSe9YAg6Yg4bhnQQMA/Woy6t9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PAnDYXUg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=tc84SRtddOLdgVtt21K06imeZpGF1iEV7bRsLGSV2C6VSYeJWssNV/UElDecv8nXkNEMLiGUQ72BGT9ROopjD5NwXZgUaMBR464WY0GH830GmiXMsMrbqnKaMk217BX6mquS06yM3QSpc2NVIMK6E5ZYlqvy6HGskPawgx8lLDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMiuDfHr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PAnDYXUg"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ED09DC4CEE5;
-	Fri, 28 Feb 2025 17:32:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMiuDfHr"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 26895C4CEEB;
+	Fri, 28 Feb 2025 17:32:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740763973;
-	bh=cPTCJFNFhpivopOiLy1Jv1psoqvxMfFxzkCZOplVpG8=;
+	bh=ReYk6jJVsIMYTOIoTQKPS1h5Xno1Ot4VEYyDgi6Urow=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PAnDYXUgCZ5QuzaeQDCLpumoywm88x5bUn0oDr1LDbQZL4kmqCNREDtK44lixn6J3
-	 hIa8CX/XuGLYoOkHVU2r1rlfelWKoI6UJG+qtv/lMfYLZzUP+96l1Mz4+nKM1vmJtg
-	 HexyI1GN8wR2TcFKhl9hY2l258mvaZAbNQYI+ZWvBiAAoAUFlNOfg3NT5P7YITA9/D
-	 ImrPo1C6d4DeMMd7hhLZZm1Nl2ha89CNtJ/VzHVVvBacItNcGQb3E1Svc06pbBLtDx
-	 31an8of+ADHeHjjQCKVeWTyRwvX6M/5TGbiAKhBdAm86qMBu60Tll+x7OVbTg6rl6a
-	 JxOB/ieHW5/5w==
+	b=WMiuDfHrsOTOiT9fkYgQcZe6NWwgSscn2LOTGDEhybHKG6aQfvaeyuFa1B//u6JAk
+	 y5V20oVeInfRPcosZEE2Fhz5wbJsM72uQPVtawaq7iL7iaXkp/EvZuv/t/EhomPjt3
+	 MadxB2L9fZSkj3uJuEEHoiWS9JuMXT+Lhm/sK5kTZ5T2kWtKEMAoRN6cGM9kFFd75p
+	 sojJmNnkt90L6gon/Bu5x92YCm6lIKZrbmGSsBB45hLPXDS70iv6eV97+UjSVUnuJA
+	 x6KexAn3TVmtybmXGhTCrgq8vo4JL1u+UPgqUYrigLQN7bRL8eSYJbE6YVdXQO1YrN
+	 171FdClvzYKyg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D2CC282D0;
-	Fri, 28 Feb 2025 17:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF0EC282D0;
+	Fri, 28 Feb 2025 17:32:53 +0000 (UTC)
 From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
-Date: Fri, 28 Feb 2025 18:32:50 +0100
-Subject: [PATCH v2 1/3] dt-bindings: net: Convert fsl,gianfar-{mdio,tbi} to
- YAML
+Date: Fri, 28 Feb 2025 18:32:52 +0100
+Subject: [PATCH v2 3/3] dt-bindings: net: Convert fsl,gianfar to YAML
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250228-gianfar-yaml-v2-1-6beeefbd4818@posteo.net>
+Message-Id: <20250228-gianfar-yaml-v2-3-6beeefbd4818@posteo.net>
 References: <20250228-gianfar-yaml-v2-0-6beeefbd4818@posteo.net>
 In-Reply-To: <20250228-gianfar-yaml-v2-0-6beeefbd4818@posteo.net>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -53,11 +52,11 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740763971; l=6137;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740763971; l=10323;
  i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
- bh=FCfdH7CYgs2HMWUtgO2Kr9tfttQkVuvNzc3Tc1aCf2A=;
- b=8irhqlR2weuPW/6zc6rywF4fLk+LFj0/mTGaobz+UPw2FG2CLoeL0AtZ1Eh7r51BK76I2qZW3
- 0tCOXs+XfvaBN+uxU6d4JkxMCSseq3DITbgq5IzKo26Rvl1UkQKfDFB
+ bh=PHFK6ij47fbj4JmpPy2/3CUOBG49DJDpgjnVIZVn6QQ=;
+ b=/VCBlPdyWnO80kkJilZJV3r7UrvAJMz/C62Cpa6Havos22nHsYpxfX9+n0fs3K7MvWyWRg7bB
+ 4lX/n31JzqxDaPlu/qLMfY6ZqyymJoP+2sELoQ1YS5WqAvKhIeh+0aS
 X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
  pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
 X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
@@ -67,47 +66,45 @@ Reply-To: j.ne@posteo.net
 
 From: "J. Neuschäfer" <j.ne@posteo.net>
 
-Move the information related to the Freescale Gianfar (TSEC) MDIO bus
-and the Ten-Bit Interface (TBI) from fsl-tsec-phy.txt to a new binding
-file in YAML format, fsl,gianfar-mdio.yaml.
+Add a binding for the "Gianfar" ethernet controller, also known as
+TSEC/eTSEC.
 
 Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
 ---
 
 V2:
-- remove definitions of #address/size-cells (already in mdio.yaml)
+- change MAC address in example to 00:00:00:00:00:00 instead of a real
+  Motorola MAC address (suggested by Andrew Lunn)
+- add constraints to #address/size-cells, fsl,num_tr/rx_queues
+- remove unnecessary type from dma-coherent
+- add minItems to interrupts
+- remove unnecessary #address/size-cells from queue-group@.*
+- describe interrupts of queue-group@.*
+- remove unnecessary bus in example
+- consistently use "type: boolean" for fsl,magic-packet,
+  instead of "$ref: /schemas/types.yaml#/definitions/flag"
+- fix name of rx-stash-idx property
+- fix type of rx-stash-len/idx properties
+- actually reference fsl,gianfar-mdio schema for mdio@.* subnodes
 - disambiguate compatible = "gianfar" schemas by using a "select:" schema
 ---
- .../devicetree/bindings/net/fsl,gianfar-mdio.yaml  | 113 +++++++++++++++++++++
- .../devicetree/bindings/net/fsl-tsec-phy.txt       |  41 +-------
- 2 files changed, 115 insertions(+), 39 deletions(-)
+ .../devicetree/bindings/net/fsl,gianfar.yaml       | 248 +++++++++++++++++++++
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |  39 +---
+ 2 files changed, 249 insertions(+), 38 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml b/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+diff --git a/Documentation/devicetree/bindings/net/fsl,gianfar.yaml b/Documentation/devicetree/bindings/net/fsl,gianfar.yaml
 new file mode 100644
-index 0000000000000000000000000000000000000000..22369771c13614875845b6d6e6d6031b933cb152
+index 0000000000000000000000000000000000000000..f92f284aa05b0ee34e331661308b7258cbda43c0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
-@@ -0,0 +1,113 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/net/fsl,gianfar.yaml
+@@ -0,0 +1,248 @@
++# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/net/fsl,gianfar-mdio.yaml#
++$id: http://devicetree.org/schemas/net/fsl,gianfar.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Freescale Gianfar (TSEC) MDIO Device
-+
-+description:
-+  This binding describes the MDIO is a bus to which the PHY devices are
-+  connected. For each device that exists on this bus, a child node should be
-+  created.
-+
-+  As of this writing, every TSEC is associated with an internal Ten-Bit
-+  Interface (TBI) PHY. This PHY is accessed through the local MDIO bus. These
-+  buses are defined similarly to the mdio buses, except they are compatible
-+  with "fsl,gianfar-tbi". The TBI PHYs underneath them are similar to normal
-+  PHYs, but the reg property is considered instructive, rather than
-+  descriptive. The reg property should be chosen so it doesn't interfere with
-+  other PHYs on the bus.
++title: Freescale Three-Speed Ethernet Controller (TSEC), "Gianfar"
 +
 +maintainers:
 +  - J. Neuschäfer <j.ne@posteo.net>
@@ -121,20 +118,13 @@ index 0000000000000000000000000000000000000000..22369771c13614875845b6d6e6d6031b
 +          contains:
 +            const: gianfar
 +        device_type:
-+          const: mdio
++          const: network
 +      required:
 +        - device_type
 +
 +    - properties:
 +        compatible:
-+          contains:
-+            enum:
-+              - fsl,gianfar-tbi
-+              - fsl,gianfar-mdio
-+              - fsl,etsec2-tbi
-+              - fsl,etsec2-mdio
-+              - fsl,ucc-mdio
-+              - ucc_geth_phy
++          const: fsl,etsec2
 +
 +  required:
 +    - compatible
@@ -142,118 +132,269 @@ index 0000000000000000000000000000000000000000..22369771c13614875845b6d6e6d6031b
 +properties:
 +  compatible:
 +    enum:
-+      - fsl,gianfar-tbi
-+      - fsl,gianfar-mdio
-+      - fsl,etsec2-tbi
-+      - fsl,etsec2-mdio
-+      - fsl,ucc-mdio
 +      - gianfar
-+      - ucc_geth_phy
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description:
-+          Offset and length of the register set for the device
-+
-+      - description:
-+          Optionally, the offset and length of the TBIPA register (TBI PHY
-+          address register). If TBIPA register is not specified, the driver
-+          will attempt to infer it from the register set specified (your
-+          mileage may vary).
++      - fsl,etsec2
 +
 +  device_type:
-+    const: mdio
++    const: network
++
++  model:
++    enum:
++      - FEC
++      - TSEC
++      - eTSEC
++
++  reg:
++    maxItems: 1
++
++  ranges: true
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  cell-index:
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  interrupts:
++    minItems: 1
++    items:
++      - description: Transmit interrupt or single combined interrupt
++      - description: Receive interrupt
++      - description: Error interrupt
++
++  dma-coherent: true
++
++  fsl,magic-packet:
++    type: boolean
++    description:
++      If present, indicates that the hardware supports waking up via magic packet.
++
++  fsl,wake-on-filer:
++    type: boolean
++    description:
++      If present, indicates that the hardware supports waking up by Filer
++      General Purpose Interrupt (FGPI) asserted on the Rx int line. This is
++      an advanced power management capability allowing certain packet types
++      (user) defined by filer rules to wake up the system.
++
++  bd-stash:
++    type: boolean
++    description:
++      If present, indicates that the hardware supports stashing buffer
++      descriptors in the L2.
++
++  rx-stash-len:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Denotes the number of bytes of a received buffer to stash in the L2.
++
++  rx-stash-idx:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Denotes the index of the first byte from the received buffer to stash in
++      the L2.
++
++  fsl,num_rx_queues:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Number of receive queues
++    const: 8
++
++  fsl,num_tx_queues:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: Number of transmit queues
++    const: 8
++
++  tbi-handle:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Reference (phandle) to the TBI node
 +
 +required:
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
++  - compatible
++  - model
++
++patternProperties:
++  "^mdio@[0-9a-f]+$":
++    $ref: /schemas/net/fsl,gianfar-mdio.yaml#
 +
 +allOf:
-+  - $ref: mdio.yaml#
++  - $ref: ethernet-controller.yaml#
 +
++  # eTSEC2 controller nodes have "queue group" subnodes and don't need a "reg"
++  # property.
 +  - if:
 +      properties:
 +        compatible:
 +          contains:
-+            const: ucc_geth_phy
++            const: fsl,etsec2
 +    then:
++      patternProperties:
++        "^queue-group@[0-9a-f]+$":
++          type: object
++
++          properties:
++            reg:
++              maxItems: 1
++
++            interrupts:
++              items:
++                - description: Transmit interrupt
++                - description: Receive interrupt
++                - description: Error interrupt
++
++          required:
++            - reg
++            - interrupts
++
++          additionalProperties: false
++    else:
 +      required:
-+        - device_type
++        - reg
++
++  # TSEC and eTSEC devices require three interrupts
++  - if:
++      properties:
++        model:
++          contains:
++            enum: [ TSEC, eTSEC ]
++    then:
++      properties:
++        interrupts:
++          items:
++            - description: Transmit interrupt
++            - description: Receive interrupt
++            - description: Error interrupt
++
++
 +
 +unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    soc {
++    ethernet@24000 {
++        device_type = "network";
++        model = "TSEC";
++        compatible = "gianfar";
++        reg = <0x24000 0x1000>;
++        local-mac-address = [ 00 00 00 00 00 00 ];
++        interrupts = <29 2>, <30 2>, <34 2>;
++        interrupt-parent = <&mpic>;
++        phy-handle = <&phy0>;
++    };
++
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    ethernet@24000 {
++        compatible = "gianfar";
++        reg = <0x24000 0x1000>;
++        ranges = <0x0 0x24000 0x1000>;
 +        #address-cells = <1>;
 +        #size-cells = <1>;
++        cell-index = <0>;
++        device_type = "network";
++        model = "eTSEC";
++        local-mac-address = [ 00 00 00 00 00 00 ];
++        interrupts = <32 IRQ_TYPE_LEVEL_LOW>,
++                     <33 IRQ_TYPE_LEVEL_LOW>,
++                     <34 IRQ_TYPE_LEVEL_LOW>;
++        interrupt-parent = <&ipic>;
 +
-+        mdio@24520 {
-+            reg = <0x24520 0x20>;
-+            compatible = "fsl,gianfar-mdio";
++        mdio@520 {
 +            #address-cells = <1>;
 +            #size-cells = <0>;
++            compatible = "fsl,gianfar-mdio";
++            reg = <0x520 0x20>;
++        };
++    };
 +
-+            ethernet-phy@0 {
-+                reg = <0>;
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    bus {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ethernet {
++            compatible = "fsl,etsec2";
++            ranges;
++            device_type = "network";
++            #address-cells = <2>;
++            #size-cells = <2>;
++            interrupt-parent = <&gic>;
++            model = "eTSEC";
++            fsl,magic-packet;
++            dma-coherent;
++
++            queue-group@2d10000 {
++                reg = <0x0 0x2d10000 0x0 0x1000>;
++                interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
++                             <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
++                             <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
++            };
++
++            queue-group@2d14000  {
++                reg = <0x0 0x2d14000 0x0 0x1000>;
++                interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
++                             <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
++                             <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
 +            };
 +        };
 +    };
++
++...
 diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
-index 9c9668c1b6a24edff7b7cf625b9f14c3cbc2e0c8..0e55e0af7d6f59cfb571dd3fcff704b7f4c140d2 100644
+index 0e55e0af7d6f59cfb571dd3fcff704b7f4c140d2..b18bb4c997ea3a221e599f694d9a28692cbcaa7c 100644
 --- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
 +++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
-@@ -1,47 +1,10 @@
- * MDIO IO device
- 
--The MDIO is a bus to which the PHY devices are connected.  For each
--device that exists on this bus, a child node should be created.  See
--the definition of the PHY node in booting-without-of.txt for an example
--of how to define a PHY.
--
--Required properties:
--  - reg : Offset and length of the register set for the device, and optionally
--          the offset and length of the TBIPA register (TBI PHY address
--	  register).  If TBIPA register is not specified, the driver will
--	  attempt to infer it from the register set specified (your mileage may
--	  vary).
--  - compatible : Should define the compatible device type for the
--    mdio. Currently supported strings/devices are:
--	- "fsl,gianfar-tbi"
--	- "fsl,gianfar-mdio"
--	- "fsl,etsec2-tbi"
--	- "fsl,etsec2-mdio"
--	- "fsl,ucc-mdio"
--	- "fsl,fman-mdio"
--    When device_type is "mdio", the following strings are also considered:
--	- "gianfar"
--	- "ucc_geth_phy"
--
--Example:
--
--	mdio@24520 {
--		reg = <24520 20>;
--		compatible = "fsl,gianfar-mdio";
--
--		ethernet-phy@0 {
--			......
--		};
--	};
-+Refer to Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
- 
- * TBI Internal MDIO bus
- 
--As of this writing, every tsec is associated with an internal TBI PHY.
--This PHY is accessed through the local MDIO bus.  These buses are defined
--similarly to the mdio buses, except they are compatible with "fsl,gianfar-tbi".
--The TBI PHYs underneath them are similar to normal PHYs, but the reg property
--is considered instructive, rather than descriptive.  The reg property should
--be chosen so it doesn't interfere with other PHYs on the bus.
-+Refer to Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+@@ -8,44 +8,7 @@ Refer to Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
  
  * Gianfar-compatible ethernet nodes
+ 
+-Properties:
+-
+-  - device_type : Should be "network"
+-  - model : Model of the device.  Can be "TSEC", "eTSEC", or "FEC"
+-  - compatible : Should be "gianfar"
+-  - reg : Offset and length of the register set for the device
+-  - interrupts : For FEC devices, the first interrupt is the device's
+-    interrupt.  For TSEC and eTSEC devices, the first interrupt is
+-    transmit, the second is receive, and the third is error.
+-  - phy-handle : See ethernet.txt file in the same directory.
+-  - fixed-link : See fixed-link.txt in the same directory.
+-  - phy-connection-type : See ethernet.txt file in the same directory.
+-    This property is only really needed if the connection is of type
+-    "rgmii-id", as all other connection types are detected by hardware.
+-  - fsl,magic-packet : If present, indicates that the hardware supports
+-    waking up via magic packet.
+-  - fsl,wake-on-filer : If present, indicates that the hardware supports
+-    waking up by Filer General Purpose Interrupt (FGPI) asserted on the
+-    Rx int line.  This is an advanced power management capability allowing
+-    certain packet types (user) defined by filer rules to wake up the system.
+-  - bd-stash : If present, indicates that the hardware supports stashing
+-    buffer descriptors in the L2.
+-  - rx-stash-len : Denotes the number of bytes of a received buffer to stash
+-    in the L2.
+-  - rx-stash-idx : Denotes the index of the first byte from the received
+-    buffer to stash in the L2.
+-
+-Example:
+-	ethernet@24000 {
+-		device_type = "network";
+-		model = "TSEC";
+-		compatible = "gianfar";
+-		reg = <0x24000 0x1000>;
+-		local-mac-address = [ 00 E0 0C 00 73 00 ];
+-		interrupts = <29 2 30 2 34 2>;
+-		interrupt-parent = <&mpic>;
+-		phy-handle = <&phy0>
+-	};
++Refer to Documentation/devicetree/bindings/net/fsl,gianfar.yaml
+ 
+ * Gianfar PTP clock nodes
  
 
 -- 
