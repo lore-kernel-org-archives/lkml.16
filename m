@@ -1,88 +1,87 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53BC6280A39;
-	Fri, 28 Feb 2025 16:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6AA0227560B;
+	Fri, 28 Feb 2025 16:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740760346; cv=none; b=MTsMWX9p2oXweRZSzfFHGeARREeikleCAJF8LldH0F1WgBewAaPp4+EdQGBPQpYeiHIBZqMkeBFFiHsehB2vnavJOK/zaiISXHyn8N5vZdUKyN8N7uyajipdfO23MxeJN3qsRlh8rqiN9pcJxOelHxCWYJPxcWvrbi1gsvrky2Q=
+	t=1740760354; cv=none; b=Z9POYK7PQN2KKrofVFEwiFL66roXDLp0lbDYoWFg68LmNUrpVlyOgO/OwcZ3PA6NUM4Vwi6UgD+8LpPWLc6OIIxW8S2xghEQGk52gXMZWlOZUEqYQTRuFhKO0p0GWI54IyQ874w5Tm3ifWhaR+x8SKwyW3d8gOe+2iWyZ8wKIRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740760346; c=relaxed/simple;
-	bh=/WgDmotLNZWIT1LRFDaE6/uBsWpuLYmYcKgtd73b4uI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gvNG5FE5usA/cXaVTREsmLsl9YJNhZ4XwnYrcBPLEs5UO/SJx0md0TsaSWgu54EcYFW+8wQJTsh2HmRzgbN5Pb4r7ogyPjw4I0/lPb6JBKP+qIlzw0HZoc60NpqzrhpG19N7IcEJHuHv4XRWPA/jN0LWPgOkRAGET5dj+gz6cvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=IBm7uNcl; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="IBm7uNcl"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 31D0A259C1;
-	Fri, 28 Feb 2025 17:32:21 +0100 (CET)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id mxMkCbQGKZyu; Fri, 28 Feb 2025 17:32:16 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1740760332; bh=/WgDmotLNZWIT1LRFDaE6/uBsWpuLYmYcKgtd73b4uI=;
-	h=From:To:Cc:Subject:Date;
-	b=IBm7uNclD2xtpKvBdOplyoTU9RL0cMbmVskEFxJGSOCFtvK6otlZgJuZUwVpEoaAp
-	 j7izJ3JIbkYIn2eUtLkDQMvNvh7mWN0MjaWUuCELvebtuAy+ovKfXNhe+Ej1bpU24H
-	 XATQPTSAGUDl5XiPhE/gbOyw83f7hbaEaM9Oq6IMz8nDZWLHBoJhRscuk8YqQ1TYUs
-	 1b+VRPLy8dmjUfBbM5XJnUCo7z6wg2MDm+lmj6Gm/Zqw2vE7qj1E/V0AqoZ7IY0wdO
-	 +AByPb2FXABEpPAdXfSwAFLSbt3jJl0vhKa/qdstvCQmCX/UN1ijVNKU7AO1PSyVcE
-	 St1cZuVAqhu3g==
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Diederik de Haas <didi.debian@cknow.org>,
-	Wenhao Cui <lasstp5011@gmail.com>,
-	Yuteng Zhong <zonyitoo@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH] arm64: dts: rockchip: Remove undocumented sdmmc property from lubancat-1
-Date: Fri, 28 Feb 2025 16:31:18 +0000
-Message-ID: <20250228163117.47318-2-ziyao@disroot.org>
+	s=arc-20240116; t=1740760354; c=relaxed/simple;
+	bh=eq+NnALod3436I9Ed+BoXmb+oSMC7kn0v44DWs+5M9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nWrpcUEZStxA6tCgTvNedIbzwwA0sE2w58rK6emW6lj2Ppam1wThbUVG39bQjA1W4SvdClQYFOLoSoc1RyVs9G2lTsFaVH+EudHWB2yBQYkXHm14mnwYSZAVVhrutg3iso19OFiwg6LaTzEjIsHSSYmsd7SqtVcaLQuUcYMK1dU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D657D150C;
+	Fri, 28 Feb 2025 08:32:47 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0A8E3F5A1;
+	Fri, 28 Feb 2025 08:32:31 -0800 (PST)
+Date: Fri, 28 Feb 2025 16:32:28 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Huisong Li <lihuisong@huawei.com>
+Cc: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<jassisinghbrar@gmail.com>, <liuyonglong@huawei.com>
+Subject: Re: [PATCH] mailbox: pcc: Fix can't clear level interrupt of type3
+ in cornor case
+Message-ID: <Z8HlHDAUWqQOjrCH@bogus>
+References: <20250227072341.28693-1-lihuisong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227072341.28693-1-lihuisong@huawei.com>
 
-Property "supports-cd" isn't documented anywhere and is unnecessary for
-mainline driver to function. It seems a property used by downstream
-kernel was brought into mainline.
+On Thu, Feb 27, 2025 at 03:23:41PM +0800, Huisong Li wrote:
+> The mbox_chan_received_data() will call Rx callback of mbox client driver
+> using type3 to set the flag of command completion. Then driver can continue
+> to do something like sending a new command. In this case, the rest of the
+> interrupt handler function may be concurrent with pcc_send_data().
+>
 
-This should be reported by dtbs_check, but mmc-controller-common.yaml
-defaults additionalProperties to true thus allows it. Remove the
-property to clean the devicetree up and avoid possible confusion.
+Understood and valid issue/bug.
 
-Fixes: 8d94da58de53 ("arm64: dts: rockchip: Add EmbedFire LubanCat 1")
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts | 1 -
- 1 file changed, 1 deletion(-)
+> The 'chan_in_use' flag of a channel is true after sending a command. And
+> the flag of the new command may be cleared by the running interrupt handler
+> in cornor case. As a result, the interrupt being level triggered can't be
+> cleared in pcc_mbox_irq() and it will be disabled after the number of
+> handled times exceeds the specified value. The error log is as follows:
+>
+> [519082.811553] kunpeng_hccs HISI04B2:00: PCC command executed timeout!
+   ^^^^
+These timestamps are useless, needs to be dropped.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts b/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-index 61dd71c259aa..ddf84c2a19cf 100644
---- a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-@@ -512,7 +512,6 @@ &sdhci {
- 
- &sdmmc0 {
- 	max-frequency = <150000000>;
--	supports-sd;
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
--- 
-2.48.1
+> [519082.828532] kunpeng_hccs HISI04B2:00: get port link status info failed, ret = -110.
+> [519082.833438] irq 13: nobody cared (try booting with the "irqpoll" option)
+> [519082.844622] CPU: 304 PID: 15206 Comm: systemd-journal Kdump: loaded Tainted: G           OE     5.10.0 #5
+> [519082.854959] Hardware name: To be filled by O.E.M. To be filled by O.E.M./To be filled by O.E.M., BIOS Nezha B800 V3.1.0 01/02/2024
 
+"To be filled by O.E.M." interesting. Either as silicon vendor, some prefer
+to leave it this way to ensure the O.E.M fill them correctly or the firmware
+engineers are not bothered to get these right as nothing breaks without
+these.
+
+Anyways, good example of what not to have in the products, as it is completely
+useless.
+
+[...]
+
+>
+> To solve this issue, pcc_mbox_irq() clear 'chann_in_use' flag immediately
+> after clearing interrupt ack register.
+>
+
+This may be correct way of fixing the issue here, but I am questioning the
+existence of this flag now. I have some rework on this file. I will pick
+this up if I think this is needed as it may conflict with my changes or
+we will drop the flag completely. Give a week or so, will post the changes
+and we can take it from there.
+
+--
+Regards,
+Sudeep
