@@ -1,200 +1,455 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB7A27181C;
-	Fri, 28 Feb 2025 15:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B86D1EF385
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 15:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740755966; cv=none; b=Dti4t/fCEHS+o6+qIXCHXfpE5NZcNzyB+788RV1AXAjQJAyMkt7s4kxh6b287BrhA9NxMFf3HTP2juX3HZjKBnbhwvt88jEaU8Q70Eup3USWUIhWdnkVj0muHSgbWzn39A4REtl6+wzT1+vhDQGZuYYGkKGiJ5UgFNLEjnPnBKE=
+	t=1740755965; cv=none; b=nliw4rBV+ycFwD2X1qgLpwMVTMdKIy73izYalNaDuhaRF8uqinMMhPpV7BrqX3l0oPudxJ2p4wU3e/uwUlnD5q3L3A/uyirf0P3FD8nyUr6K1kRZcTXxAQIOj+j574YtvLcylBp9QSI88e9vpaxUTJM07pHqHYNSYFgy1WwnSPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740755966; c=relaxed/simple;
-	bh=F8YT766/SjESb7HVqHUcjI5vFvf6sDNhEKkzd0Xmkzg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pK36BgB6o2vXyX4vM1Y2KMpPD2lYIaBy8RX+vYSn72W6LxkrPmiZkXvEYPamjlaUCKv7ZKAaCrc/iyG3CmovBDGO/YvnygGHu85ERFdE1O18r9WoAK4TFN5SokZWq360hVV8QhcQjL+ttg+ZXdMsTpEenfuWy9RkpupiSMw/0vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpGnAg0J; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740755965; c=relaxed/simple;
+	bh=f7EeFDszSQHnUwn3umZYuxnsbamXQDcHfCeof6RrpKw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FsIU4rcyjyQ5z8aZOrLQKgjr7fsHmwIlP5eEwDQk1NQj1MGIAp28Ck18tRaVq0j5nPyViCMKqjNtqWptDFH3Vqm6LKTBhg7D3e5m7MCiFEd6R8Sm2NFfqpqi0CwSuATF3l8a0/C8fHpqSPAJja5EvHwEZMbgqrDruSMCiXCTpXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p4MTwS14; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpGnAg0J"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abf48293ad0so21733166b.0;
-        Fri, 28 Feb 2025 07:19:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740755963; x=1741360763; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=P7oY7BYAEv4W8+02LYZ2YxpBYCsfW/J7/vInnek1u5o=;
-        b=WpGnAg0JdqFR9O4GyPPcGAUaQIpUYXnp9mdbfZdp5eU/RegYPEQC+035w44/U3e9bG
-         daB2x9HCWZT1NlUIZdV6KsqWYAoOJcX2z1LQCb2KcHieOTYK9gvGSvn7D0d1XDEVx9Z2
-         nKuvh0Yu0Tbu5YGzNQQ/sBe1eoao1ok6ppQYcX52/sV7S+unTLizRxRxA6GGgB/mB+53
-         cc+mmkLpXHiWR7krHLq3kb2jIp1gCZzQa4WyiDFvFfPb4AwOeo7aZUa/Ucha3RVlopDc
-         pjrMohu+nM88DmsWYPFW+EC27wwsrrktZGx3tCurSOPS5qrnPy8GX65lDx98Vu0jdM+e
-         /zFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740755963; x=1741360763;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P7oY7BYAEv4W8+02LYZ2YxpBYCsfW/J7/vInnek1u5o=;
-        b=pLuYK3q8w79gnBzd8VsWpkkPID+hrNwU37GlG/c/pAyQkaNSH32bx4nGNeff5YAPid
-         rp2N+GS51d9JMgEcTUIpQVDQJ1tcpOdz1wZG0mp+xP1x3dHjAOXdsPUDhPoxUY6e3cyi
-         QX3r6RF/80mggb74c8tvwgpZhKnNBJHsT8cad1W9LFOmQdnBqFkQI3UzyMakrnYOgN1k
-         lgWzOxmYaUAPNYDKzoettzOKwAUKX+nl0QSDlzPlJ63h59X5neUW1UUo8+1xKWn7cLVP
-         x95z4v+UADjS/k+jOuapclLJYdgb7/6MMu+unGNV+WEKkSzrIeXW7pdf0S4Wl6qc1qMG
-         +w+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVIkaOYVFN2R5+8IrYOijI65zBDR4OeUstLC5LhOjWAA4sNqFs6sT42x3wY/BLwTjAfWootr+tRpW8=@vger.kernel.org, AJvYcCW4dynuutYS26z4wBQ6c5X5tApebtfXvbzcG7+aM+ER5zBektrXNUJPZ1qz5iEM8ItFm2zrqGA4VblUW6c=@vger.kernel.org, AJvYcCWqoWaLpGkL7nrTpt8AokN6Rlpn8XRzaZMOTsQaWZGooe6YSxgqrtE+JZvRRa6EBV0HKQah69HvPBfBi68ot0gl1To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkiYDY/aXEkwWAz0YKFbRx7+Q4g+GecU4a7kRO42OSEb8/WzA5
-	pY52ZKfkM5JCZfkhBda5Db8c9eme5/jw+BgAPnISletb7KRPHr+rZYBKNhnpDK0ku3Er5KbZEHH
-	7e7jON/Cf84iJzGAWphx8kJtkZ/mrMw==
-X-Gm-Gg: ASbGncuTtGTM9WxAeCC3vVcUPOi3ilNDzhgDIecCxNpVk0JD9/LQR0rHkyzxmtXPyZQ
-	QYMUwDyL+VdoM3xbrq0LNSJGBdvQFC3FDmBfCBxwqgFN6Ibjk6AkB6XYyOo0c6xs1pM0CqkZfRv
-	EBjUZxnPs=
-X-Google-Smtp-Source: AGHT+IFtBraPIaQpBiymetsznsOvIzlEwuqrLSWFnfSvCpGcicRJBeGr4DA/338qPZgAwfUuoxlTMZWNYQWkG+jYe1A=
-X-Received: by 2002:a17:906:f592:b0:ab7:d06d:b4bf with SMTP id
- a640c23a62f3a-abf265a3614mr422762466b.39.1740755962545; Fri, 28 Feb 2025
- 07:19:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p4MTwS14"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E80D9443B4;
+	Fri, 28 Feb 2025 15:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740755954;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=6PsdEcGr91rbEcTkQHklpm6Jk5oSqLiuDoL+gKClvh8=;
+	b=p4MTwS14vrC9dsLEgdm258mnlVN8k6xN2B1BS9a3ez3Xwwl+wG68vP+NIrl+ClZxONRdlC
+	Xk8Do3hvheA8miUFhLXlI0C4iCAoQZ/GckYQTt6bGZjd0IqYPD3olugFBRzqmaQP93RUUH
+	DEdRD8LdG6ZgS/YUg60t9tFSYqPLlD1/GecAK1E1bxeKutsWjY8qJvjl328wri5Syw8U2U
+	3zhu76U6smpHfOs60kA4TwZIw7EAgQ5Z5h61gZEVpMty3jN0LhBefaqVlRnvicb41R774q
+	Udz2jNtfoNzACFIWI2JR8GPUtKbuZPDluOQkapSW4csZy+dHEDZ779NMPn5h4Q==
+Message-ID: <16d2f49f-02f6-44dd-91f2-05b2e5d598da@bootlin.com>
+Date: Fri, 28 Feb 2025 16:19:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250216195850.5352-1-linux.amoon@gmail.com> <20250216195850.5352-2-linux.amoon@gmail.com>
- <e101aff2-a08e-4fed-8e38-df1aea44d23e@arm.com>
-In-Reply-To: <e101aff2-a08e-4fed-8e38-df1aea44d23e@arm.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Fri, 28 Feb 2025 20:49:04 +0530
-X-Gm-Features: AQ5f1Jq85EQ9ba5HWSGuaxxOFszs6piXmm_ai8qdDjz-7jgZDC6Fo3Zgq3faa6E
-Message-ID: <CANAwSgRq+EjR70kVnh8AYZ6ZTSzV0uVwuF9E+_mpdG-6je-a8Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] drivers/thermal/exynos: Refactor clk_sec
- initialization inside SOC-specific case
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-samsung-soc@vger.kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	"open list:SAMSUNG THERMAL DRIVER" <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	"moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES" <linux-arm-kernel@lists.infradead.org>, 
-	Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/16] drm/vkms: Add and remove VKMS instances via
+ configfs
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: hamohammed.sa@gmail.com, simona@ffwll.ch, melissa.srw@gmail.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ airlied@gmail.com, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250225175936.7223-1-jose.exposito89@gmail.com>
+ <20250225175936.7223-3-jose.exposito89@gmail.com>
+Content-Language: en-US
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
+ xsFNBGCG5KEBEAD1yQ5C7eS4rxD0Wj7JRYZ07UhWTbBpbSjHjYJQWx/qupQdzzxe6sdrxYSY
+ 5K81kIWbtQX91pD/wH5UapRF4kwMXTAqof8+m3XfYcEDVG31Kf8QkJTG/gLBi1UfJgGBahbY
+ hjP40kuUR/mr7M7bKoBP9Uh0uaEM+DuKl6bSXMSrJ6fOtEPOtnfBY0xVPmqIKfLFEkjh800v
+ jD1fdwWKtAIXf+cQtC9QWvcdzAmQIwmyFBmbg+ccqao1OIXTgu+qMAHfgKDjYctESvo+Szmb
+ DFBZudPbyTAlf2mVKpoHKMGy3ndPZ19RboKUP0wjrF+Snif6zRFisHK7D/mqpgUftoV4HjEH
+ bQO9bTJZXIoPJMSb+Lyds0m83/LYfjcWP8w889bNyD4Lzzzu+hWIu/OObJeGEQqY01etOLMh
+ deuSuCG9tFr0DY6l37d4VK4dqq4Snmm87IRCb3AHAEMJ5SsO8WmRYF8ReLIk0tJJPrALv8DD
+ lnLnwadBJ9H8djZMj24+GC6MJjN8dDNWctpBXgGZKuCM7Ggaex+RLHP/+14Vl+lSLdFiUb3U
+ ljBXuc9v5/9+D8fWlH03q+NCa1dVgUtsP2lpolOV3EE85q1HdMyt5K91oB0hLNFdTFYwn1bW
+ WJ2FaRhiC1yV4kn/z8g7fAp57VyIb6lQfS1Wwuj5/53XYjdipQARAQABzSlMb3VpcyBDaGF1
+ dmV0IDxsb3Vpcy5jaGF1dmV0QGJvb3RsaW4uY29tPsLBlAQTAQgAPgIbAwULCQgHAgYVCgkI
+ CwIEFgIDAQIeAQIXgBYhBItxBK6aJy1mk/Un8uwYg/VeC0ClBQJmlnw+BQkH8MsdAAoJEOwY
+ g/VeC0ClyhwP/Ra6H+5F2NEW6/IMVHeXmhuly8CcZ3kyoKeGNowghIcTBo59dFh0atGCvr+y
+ K9YD5Pyg9aX4Ropw1R1RVIMrWoUNZUKebRTu6iNHkE6tmURJaKLzR+9la+789jznQvbV+9gM
+ YTBppX4/0cWY58jiDiDV4aJ77JDo7aWNK4hz8mZsB+Y7ezMuS4jy2r4b7dZ+YL/T9/k3/emO
+ PkAuFkVhkNhytMEyOBsT7SjL4IUBeYWvOw9MIaXEl4qW/5HLGtMuNhS94NsviDXZquoOHOby
+ 2uuRAI0bLz1qcsnY90yyPlDJ0pMuJHbi0DBzPTIYkyuwoyplfWxnUPp1wfsjiy/B6mRKTbdE
+ a/K6jNzdVC1LLjTD4EjwnCE8IZBRWH1NVC1suOkw3Sr1FYcHFSYqNDrrzO+RKtR1JMrIe8/3
+ Xhe2/UNUhppsK3SaFaIsu98mVQY3bA/Xn9wYcuAAzRzhEHgrbp8LPzYdi6Qtlqpt4HcPV3Ya
+ H9BkCacgyLHcdeQbBXaup9JbF5oqbdtwev3waAmNfhWhrQeqQ0tkrpJ46l9slEGEdao5Dcct
+ QDRjmJz7Gx/rKJngQrbboOQz+rhiHPoJc/n75lgOqtHRePNEf9xmtteHYpiAXh/YNooXJvdA
+ tgR1jAsCsxuXZnW2DpVClm1WSHNfLSWona8cTkcoSTeYCrnXzsFNBGCG6KUBEADZhvm9TZ25
+ JZa7wbKMOpvSH36K8wl74FhuVuv7ykeFPKH2oC7zmP1oqs1IF1UXQQzNkCHsBpIZq+TSE74a
+ mG4sEhZP0irrG/w3JQ9Vbxds7PzlQzDarJ1WJvS2KZ4AVnwc/ucirNuxinAuAmmNBUNF8w6o
+ Y97sdgFuIZUP6h972Tby5bu7wmy1hWL3+2QV+LEKmRpr0D9jDtJrKfm25sLwoHIojdQtGv2g
+ JbQ9Oh9+k3QG9Kh6tiQoOrzgJ9pNjamYsnti9M2XHhlX489eXq/E6bWOBRa0UmD0tuQKNgK1
+ n8EDmFPW3L0vEnytAl4QyZEzPhO30GEcgtNkaJVQwiXtn4FMw4R5ncqXVvzR7rnEuXwyO9RF
+ tjqhwxsfRlORo6vMKqvDxFfgIkVnlc2KBa563qDNARB6caG6kRaLVcy0pGVlCiHLjl6ygP+G
+ GCNfoh/PADQz7gaobN2WZzXbsVS5LDb9w/TqskSRhkgXpxt6k2rqNgdfeyomlkQnruvkIIjs
+ Sk2X68nwHJlCjze3IgSngS2Gc0NC/DDoUBMblP6a2LJwuF/nvaW+QzPquy5KjKUO2UqIO9y+
+ movZqE777uayqmMeIy4cd/gg/yTBBcGvWVm0Dh7dE6G6WXJUhWIUtXCzxKMmkvSmZy+gt1rN
+ OyCd65HgUXPBf+hioCzGVFSoqQARAQABwsOyBBgBCAAmAhsuFiEEi3EErponLWaT9Sfy7BiD
+ 9V4LQKUFAmaWfGYFCQfwx0ECQAkQ7BiD9V4LQKXBdCAEGQEIAB0WIQRPj7g/vng8MQxQWQQg
+ rS7GWxAs4gUCYIbopQAKCRAgrS7GWxAs4gfGEACcA0XVNesbVIyvs5SJpJy+6csrH4yy233o
+ GclX2P7pcCls55wiV6ywCtRaXWFjztYmklQieaZ/zq+pUuUDtBZo95rUP20E56gYV2XFB18W
+ YeekTwH5d2d/j++60iHExWTB+sgMEv3CEGikUBj7iaMX2KtaB1k9K+3K6dx/s1KWxOClFkbJ
+ EV/tmeq7Ta8LiytQM9b4yY550tzC0pEEeFcLFXo1m5KcJauYnAqrlOVY48NFpFUd9oAZf/Pz
+ p3oEs+zn/8zK2PBrZZCD6AhrbotRy7irE5eimhxcsFm1+MG5ufnaQUWHrRYXVuFhvkSoqZ8j
+ GPgPEpFor4NjRyX/PMLglQ7S5snkvKcr3Lun44aybXEHq/1FTzW2kOh6kFHFFOPbMv1voJKM
+ IzrmDoDS+xANt/La7OwpCylCgF6t9oHHTTGfAfwtfYZbiepC66FDe/Jt/QLwkIXeIoeSS1O4
+ 6rJdGWG2kHthUM+uIbUbaRJW8AkJpzP1Mz7TieR/9jO4YPeUm9tGL5kP2yyNtzFilcoOeox1
+ NSFNAPz+zPcovVmxAaSDGcSzhQVJVlk8xPib8g4fnI8qJ3Gj7xyw8D9dzxhCR2DIFmZL84En
+ N7Rj+k4VIGY7M/cVvxL81jlbMGMERMmb96Cua9z1ROviGA1He2gbHOcp6qmLNu3nprleG8PL
+ ZRNdEAC0iZapoyiXlVCKLFIwUPnxUz5iarqIfQU8sa1VXYYd/AAAFI6Wv3zfNtGicjgHP8rN
+ CIegqm2Av1939XXGZJVI9f3hEoUn04rvxCgcDcUvn7I0WTZ4JB9G5qAGvQLXeXK6Byu77qTx
+ eC7PUIIEKN3X47e8xTSj2reVTlanDr8yeqZhxpKHaS0laF8RbD85geZtAK67qEByX2KC9DUo
+ eHBFuXpYMzGQnf2SG105ePI2f4h5iAfbTW9VWH989fx4f2hVlDwTe08/NhPdwq/Houov9f/+
+ uPpYEMlHCNwE8GRV7aEjd/dvu87PQPm4zFtC3jgQaUKCbYYlHmYYRlrLQenX3QSorrQNPbfz
+ uQkNLDVcjgD2fxBpemT7EhHYBz+ugsfbtdsH+4jVCo5WLb/HxE6o5zvSIkXknWh1DhFj/qe9
+ Zb9PGmfp8T8Ty+c/hjE5x6SrkRCX8qPXIvfSWLlb8M0lpcpFK+tB+kZlu5I3ycQDNLTk3qmf
+ PdjUMWb5Ld21PSyCrtGc/hTKwxMoHsOZPy6UB8YJ5omZdsavcjKMrDpybguOfxUmGYs2H3MJ
+ ghIUQMMOe0267uQcmMNDPRueGWTLXcuyz0Tpe62Whekc3gNMl0JrNz6Gty8OBb/ETijfSHPE
+ qGHYuyAZJo9A/IazHuJ+4n+gm4kQl1WLfxoRMzYHCA==
+In-Reply-To: <20250225175936.7223-3-jose.exposito89@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdejfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepkeeivedtfeegtdekheethedttddtfefhhfegjeeljeejleduvdfhudegvdekheevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvtddtudemkeeiudemgedugedtmegtkeeitdemheguiedumeeifeefleemieeirgeimegvtdejheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemgedugedtmegtkeeitdemheguiedumeeifeefleemieeirgeimegvtdejhedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemgedugedtmegtkeeitdemheguiedumeeifeefleemieeirgeimegvtdejhegnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepjhhoshgvrdgvgihpohhsihhtohekleesghhmrghilhdrtghomhdprhgtphhtthhopehhrghmo
+ hhhrghmmhgvugdrshgrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopehmvghlihhsshgrrdhsrhifsehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsuhhsvgdruggvpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Hi Lukasz,
 
-Thanks for your review comments
 
-On Fri, 28 Feb 2025 at 20:07, Lukasz Luba <lukasz.luba@arm.com> wrote:
->
-> Hi Anand,
->
-> On 2/16/25 19:58, Anand Moon wrote:
-> > Refactor the initialization of the clk_sec clock to be inside the
-> > SOC_ARCH_EXYNOS5420_TRIMINFO case. It ensures that the clk_sec clock
-> > is only initialized for the specified SOC and not for other SOCs,
-> > thereby simplifying the code.
->
-> So IIUC there was no need to init that clock for other types of SoCs...
-> Do we know that for sure (e.g. from other TRMs)?
-This clock (clk) is utilized for the Thermal Management Unit (TMU) and
-the GPU in the Exynos 542x,
-as specified in the user manual.
->
-> If that was the case, then simplification here can go further, but after
-> some fixes.
->
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > v3: improve the commit message
-> > ---
-> >   drivers/thermal/samsung/exynos_tmu.c | 26 +++++++++++++-------------
-> >   1 file changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> > index 47a99b3c5395..9c138772d380 100644
-> > --- a/drivers/thermal/samsung/exynos_tmu.c
-> > +++ b/drivers/thermal/samsung/exynos_tmu.c
-> > @@ -1040,19 +1040,6 @@ static int exynos_tmu_probe(struct platform_device *pdev)
-> >       if (IS_ERR(data->clk))
-> >               return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
-> >
-> > -     data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> > -     if (IS_ERR(data->clk_sec)) {
-> > -             if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO)
-> > -                     return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> > -                                          "Failed to get triminfo clock\n");
-> > -     } else {
-> > -             ret = clk_prepare(data->clk_sec);
-> > -             if (ret) {
-> > -                     dev_err(dev, "Failed to get clock\n");
-> > -                     return ret;
-> > -             }
-> > -     }
-> > -
-> >       ret = clk_prepare(data->clk);
->
-> Here the data->clk is now used in different order.
-Ok.
->
-> >       if (ret) {
-> >               dev_err(dev, "Failed to get clock\n");
-> > @@ -1060,6 +1047,19 @@ static int exynos_tmu_probe(struct platform_device *pdev)
-> >       }
-> >
-> >       switch (data->soc) {
-> > +     case SOC_ARCH_EXYNOS5420_TRIMINFO:
-> > +             data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> > +             if (IS_ERR(data->clk_sec)) {
-> > +                     return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> > +                                          "Failed to get triminfo clock\n");
->
-> Then here you shouldn't simply copy the old code. Now the data->clk
-> is first, so should be 'clk_unprepare()' before return of the function.
->
-> > +             } else {
->
-> You can get rid of this 'else' above and still be safe in your
-> refactoring.
->
-> > +                     ret = clk_prepare(data->clk_sec);
-> > +                     if (ret) {
-> > +                             dev_err(dev, "Failed to get clock\n");
-> > +                             return ret;
-> > +                     }
->
-> Here you can further simplify this to something like:
-> -----------------------8<-------------------------------------
->
-> +       case SOC_ARCH_EXYNOS5420_TRIMINFO:
-> +               data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
-> +               if (IS_ERR(data->clk_sec)) {
-> +                       clk_unprepare(data->clk); ///// <----
-> +                       return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-> +                                            "Failed to get triminfo clock\n");
-> +               }
-> +               ret = clk_prepare(data->clk_sec);
-> +               if (ret) {
-> +                       dev_err(dev, "Failed to get clock\n");
-> +                       clk_unprepare(data->clk); ///// <----
-> +                       return ret;
-> +               }
+Le 25/02/2025 à 18:59, José Expósito a écrit :
+> Allow to create, enable, disable and destroy VKMS instances using
+> configfs.
+> 
+> For the moment, it is not possible to add pipeline items, so trying to
+> enable the device will fail printing an informative error to the log.
+> 
+> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Co-developed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> ---
+>   Documentation/gpu/vkms.rst           |  32 +++++
+>   drivers/gpu/drm/vkms/Kconfig         |   1 +
+>   drivers/gpu/drm/vkms/Makefile        |   3 +-
+>   drivers/gpu/drm/vkms/vkms_configfs.c | 169 +++++++++++++++++++++++++++
+>   drivers/gpu/drm/vkms/vkms_configfs.h |   8 ++
+>   drivers/gpu/drm/vkms/vkms_drv.c      |   7 ++
+>   6 files changed, 219 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/gpu/drm/vkms/vkms_configfs.c
+>   create mode 100644 drivers/gpu/drm/vkms/vkms_configfs.h
+> 
+> diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+> index ba04ac7c2167..423bdf86b5b1 100644
+> --- a/Documentation/gpu/vkms.rst
+> +++ b/Documentation/gpu/vkms.rst
+> @@ -51,6 +51,38 @@ To disable the driver, use ::
+>   
+>     sudo modprobe -r vkms
+>   
+> +Configuring With Configfs
+> +=========================
 > +
-> +       break;
-Ok
->
-> --------------------------->8---------------------------------
->
-> Or with better 'goto' flow.
->
-> > +             }
-> > +     break;
-> >       case SOC_ARCH_EXYNOS5433:
-> >       case SOC_ARCH_EXYNOS7:
-> >               data->sclk = devm_clk_get(dev, "tmu_sclk");
->
->
-> Also, you should revisit the 'goto' cleanup section at the bottom.
-Thanks. I will recheck and update the code for the next version.
->
-> Regards,
-> Lukasz
+> +It is possible to create and configure multiple VKMS instances via configfs.
+> +
+> +Start by mounting configfs and loading VKMS::
+> +
+> +  sudo mount -t configfs none /config
+> +  sudo modprobe vkms
+> +
+> +Once VKMS is loaded, ``/config/vkms`` is created automatically. Each directory
+> +under ``/config/vkms`` represents a VKMS instance, create a new one::
+> +
+> +  sudo mkdir /config/vkms/my-vkms
+> +
+> +By default, the instance is disabled::
+> +
+> +  cat /config/vkms/my-vkms/enabled
+> +  0
+> +
+> +Once you are done configuring the VKMS instance, enable it::
+> +
+> +  echo "1" | sudo tee /config/vkms/my-vkms/enabled
+> +
+> +Finally, you can remove the VKMS instance disabling it::
+> +
+> +  echo "0" | sudo tee /config/vkms/my-vkms/enabled
+> +
+> +And removing the top level directory::
+> +
+> +  sudo rmdir /config/vkms/my-vkms
+> +
+>   Testing With IGT
+>   ================
+>   
+> diff --git a/drivers/gpu/drm/vkms/Kconfig b/drivers/gpu/drm/vkms/Kconfig
+> index 3c02f928ffe6..3977bbb99f7d 100644
+> --- a/drivers/gpu/drm/vkms/Kconfig
+> +++ b/drivers/gpu/drm/vkms/Kconfig
+> @@ -7,6 +7,7 @@ config DRM_VKMS
+>   	select DRM_KMS_HELPER
+>   	select DRM_GEM_SHMEM_HELPER
+>   	select CRC32
+> +	select CONFIGFS_FS
+>   	default n
+>   	help
+>   	  Virtual Kernel Mode-Setting (VKMS) is used for testing or for
+> diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+> index d657865e573f..939991fc8233 100644
+> --- a/drivers/gpu/drm/vkms/Makefile
+> +++ b/drivers/gpu/drm/vkms/Makefile
+> @@ -8,7 +8,8 @@ vkms-y := \
+>   	vkms_composer.o \
+>   	vkms_writeback.o \
+>   	vkms_connector.o \
+> -	vkms_config.o
+> +	vkms_config.o \
+> +	vkms_configfs.o
+>   
+>   obj-$(CONFIG_DRM_VKMS) += vkms.o
+>   obj-$(CONFIG_DRM_VKMS_KUNIT_TEST) += tests/
+> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
+> new file mode 100644
+> index 000000000000..92512d52ddae
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vkms/vkms_configfs.c
+> @@ -0,0 +1,169 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +#include <linux/cleanup.h>
+> +#include <linux/configfs.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+> +
+> +#include "vkms_drv.h"
+> +#include "vkms_config.h"
+> +#include "vkms_configfs.h"
+> +
+> +/* To avoid registering configfs more than once or unregistering on error */
+> +static bool is_configfs_registered;
+> +
+> +/**
+> + * struct vkms_configfs_device - Configfs representation of a VKMS device
+> + *
+> + * @group: Top level configuration group that represents a VKMS device.
+> + * Initialized when a new directory is created under "/config/vkms/"
+> + * @lock: Lock used to project concurrent access to the configuration attributes
+> + * @config: Protected by @lock. Configuration of the VKMS device
+> + * @enabled: Protected by @lock. The device is created or destroyed when this
+> + * option changes
+> + */
+> +struct vkms_configfs_device {
+> +	struct config_group group;
+> +
+> +	struct mutex lock;
+> +	struct vkms_config *config;
+> +	bool enabled;
+> +};
+> +
+> +#define device_item_to_vkms_configfs_device(item) \
+> +	container_of(to_config_group((item)), struct vkms_configfs_device, \
+> +		     group)
+> +
+> +static ssize_t device_enabled_show(struct config_item *item, char *page)
+> +{
+> +	struct vkms_configfs_device *dev;
+> +
+> +	dev = device_item_to_vkms_configfs_device(item);
+> +
+> +	guard(mutex)(&dev->lock);
+> +	return sprintf(page, "%d\n", dev->enabled);
+> +}
+> +
+> +static ssize_t device_enabled_store(struct config_item *item, const char *page,
+> +				    size_t count)
+> +{
+> +	struct vkms_configfs_device *dev;
+> +	bool enabled;
+> +	int ret = 0;
+> +
+> +	dev = device_item_to_vkms_configfs_device(item);
+> +
+> +	if (kstrtobool(page, &enabled))
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&dev->lock);
+> +
+> +	if (!dev->enabled && enabled) {
+> +		if (!vkms_config_is_valid(dev->config))
+> +			return -EINVAL;
+> +
+> +		ret = vkms_create(dev->config);
+> +		if (ret)
+> +			return ret;
+> +	} else if (dev->enabled && !enabled) {
+> +		vkms_destroy(dev->config);
+> +	}
+> +
+> +	dev->enabled = enabled;
 
-Thanks
--Anand
+Sorry, I was maybe not clear enough, and you may hate me: I don't like 
+`guard(mutex)` :‑(. I proposed scoped_guard because it makes very clear 
+when the mutex is taken/released.
+
+For me guard(mutex) is almost the same as mutex_lock/unlock. Yes, your 
+mutex is always released, but:
+- without reading the code carefully, you don't know you have a mutex 
+(even worse than a mutex_lock because you don't have a bunch of 
+mutex_unlock to remind you)
+- you keep it until the end of the function, which may lock your mutex 
+for too long
+
+The scoped_guard solves the two issues:
+- you are in a dedicated block + indentation, so it is very easy to see 
+that you currently have a mutex
+- you know exactly when the mutex is released: leaving the block
+
+I am very sorry to make you work twice on this
+
+> +
+> +	return (ssize_t)count;
+> +}
+> +
+> +CONFIGFS_ATTR(device_, enabled);
+> +
+> +static struct configfs_attribute *device_item_attrs[] = {
+> +	&device_attr_enabled,
+> +	NULL,
+> +};
+> +
+> +static void device_release(struct config_item *item)
+> +{
+> +	struct vkms_configfs_device *dev;
+> +
+> +	dev = device_item_to_vkms_configfs_device(item);
+> +
+> +	if (dev->enabled)
+> +		vkms_destroy(dev->config);
+> +
+> +	mutex_destroy(&dev->lock);
+> +	vkms_config_destroy(dev->config);
+> +	kfree(dev);
+> +}
+> +
+> +static struct configfs_item_operations device_item_operations = {
+> +	.release	= &device_release,
+> +};
+> +
+> +static const struct config_item_type device_item_type = {
+> +	.ct_attrs	= device_item_attrs,
+> +	.ct_item_ops	= &device_item_operations,
+> +	.ct_owner	= THIS_MODULE,
+> +};
+> +
+> +static struct config_group *make_device_group(struct config_group *group,
+> +					      const char *name)
+> +{
+> +	struct vkms_configfs_device *dev;
+> +
+> +	if (strcmp(name, DEFAULT_DEVICE_NAME) == 0)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +	if (!dev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	dev->config = vkms_config_create(name);
+> +	if (IS_ERR(dev->config)) {
+> +		kfree(dev);
+> +		return ERR_CAST(dev->config);
+> +	}
+> +
+> +	config_group_init_type_name(&dev->group, name, &device_item_type);
+> +	mutex_init(&dev->lock);
+> +
+> +	return &dev->group;
+> +}
+> +
+> +static struct configfs_group_operations device_group_ops = {
+> +	.make_group = &make_device_group,
+> +};
+> +
+> +static const struct config_item_type device_group_type = {
+> +	.ct_group_ops	= &device_group_ops,
+> +	.ct_owner	= THIS_MODULE,
+> +};
+> +
+> +static struct configfs_subsystem vkms_subsys = {
+> +	.su_group = {
+> +		.cg_item = {
+> +			.ci_name = "vkms",
+> +			.ci_type = &device_group_type,
+> +		},
+> +	},
+> +	.su_mutex = __MUTEX_INITIALIZER(vkms_subsys.su_mutex),
+> +};
+> +
+> +int vkms_configfs_register(void)
+> +{
+> +	int ret;
+> +
+> +	if (is_configfs_registered)
+> +		return 0;
+> +
+> +	config_group_init(&vkms_subsys.su_group);
+> +	ret = configfs_register_subsystem(&vkms_subsys);
+> +
+> +	is_configfs_registered = ret == 0;
+> +
+> +	return ret;
+> +}
+> +
+> +void vkms_configfs_unregister(void)
+> +{
+> +	if (is_configfs_registered)
+> +		configfs_unregister_subsystem(&vkms_subsys);
+> +}
+> diff --git a/drivers/gpu/drm/vkms/vkms_configfs.h b/drivers/gpu/drm/vkms/vkms_configfs.h
+> new file mode 100644
+> index 000000000000..e9020b0043db
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vkms/vkms_configfs.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +#ifndef _VKMS_CONFIGFS_H_
+> +#define _VKMS_CONFIGFS_H_
+> +
+> +int vkms_configfs_register(void);
+> +void vkms_configfs_unregister(void);
+> +
+> +#endif /* _VKMS_CONFIGFS_H_ */
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index 23817c7b997e..5bcfbcb6c0c5 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -28,6 +28,7 @@
+>   #include <drm/drm_vblank.h>
+>   
+>   #include "vkms_config.h"
+> +#include "vkms_configfs.h"
+>   #include "vkms_drv.h"
+>   
+>   #define DRIVER_NAME	"vkms"
+> @@ -214,6 +215,10 @@ static int __init vkms_init(void)
+>   	int ret;
+>   	struct vkms_config *config;
+>   
+> +	ret = vkms_configfs_register();
+> +	if (ret)
+> +		return ret;
+> +
+>   	config = vkms_config_default_create(enable_cursor, enable_writeback, enable_overlay);
+>   	if (IS_ERR(config))
+>   		return PTR_ERR(config);
+> @@ -250,6 +255,8 @@ void vkms_destroy(struct vkms_config *config)
+>   
+>   static void __exit vkms_exit(void)
+>   {
+> +	vkms_configfs_unregister();
+> +
+>   	if (!default_config)
+>   		return;
+>   
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
