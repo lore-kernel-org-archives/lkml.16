@@ -1,259 +1,245 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2053.outbound.protection.outlook.com [40.107.95.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503F31B21AC
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734219; cv=none; b=ed8gEH9dDdsE+xQiBEXo79O/4tg5Iftm0AE7JXrh44ogdumf/QcF6/R9qwTTpbTU3jnRH6dMHGOZVcRUmkaXlhjDZQHAnCbrgGA+d5J77tKUkZFxxmmaX8t1geJyo/FIRnuGKOmwJtjT2XwRnB7YWoLgRQbig5V6wze4Unxw/aY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734219; c=relaxed/simple;
-	bh=AWlOSmOkjd2pidHdadSFAsCbtYnK0DbZHNntGIE2OyE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ceknK7E2zPb/wdF5JTwpI5I5QeSgyM2W4LaWcCd/AEsHKYrswGhBS40aF1+hor2p0MGZLPMxAJ/RkUqTHG4b7s3MeQJoVIXJVDHwPIC63w0HpTGLLlcPnocnby6KQFGHT2OZvv9KS7CzpVTP1t54nnIRFInI53jLcYWDtSTViFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=38KZo2W+; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9812561B7;
+	Fri, 28 Feb 2025 09:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740734224; cv=fail; b=rn4K5cK2oggqnzQm8Lm1WpfNb8nC6PhRPRNZRWNUQVmC7250xK2/aMcYCIQLHyUEyWcAW+Vve/UzmgMmdtr9rB+QY4DNQ4QnNmAkhWiA+w2BT7JD2HOx6Y8pZd8QRESB9xPSH21PfifaqYrLxXYYv1l3D4INkD8G0sZWvKNqbIA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740734224; c=relaxed/simple;
+	bh=EfeGP2NKoP07mW5811JxqfTNfEDlTPYXh8Xpw9gm90U=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xnt68YwqeoUiUKllJHUErY7Hp4SUbg2Qz7QifKRi7eIZzliVEzcXbvF2Y5u8VX2VM2Daqx+cGMGWsMx8y0qY/p/G7OkjeJIf2RmEo8topWUS7967TFdG8BkpZSTYcdvYDOMeAEdDU4tbpKpY6ZnunfncxX5NrPkvyswubpFKfyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1ZpJRbV5; arc=fail smtp.client-ip=40.107.95.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="38KZo2W+"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4398c8c8b2cso19137085e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 01:16:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740734213; x=1741339013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IuaVxyDMUNAScl8FlfdpvhJuNw6W7Sdakow95IhLyZA=;
-        b=38KZo2W+/0y2m15PF+wT4rIiqhOrJzntE+AXlOLrvLG7XwcCIit2P7zUqi/Gu7SP9u
-         LvG7IaqESWN+s1BDC5QEEHyXR4Z6s+aebDdpIcYE0WooLX6yQwufsaxmdhodVRmiGHF0
-         8DYeSl2F3rn+Oc+lV2KnOXUQkQniiqLVwHjKcWEVcSjex5NfuH8459reD0RNy+Ev/tki
-         BhcdyMEpxW3kDr+yZLbrICfmB3b3lweAnD/xMt3B2X0mZQA96rpVEOfc0A2pO34t9m1P
-         vKuNO3Jdj3++fCGj0RLij9i52b2ZlGBWbBft/EtwsRKGhmK7Dd5Lw646GWhEkZEQcdzC
-         mLTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740734213; x=1741339013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IuaVxyDMUNAScl8FlfdpvhJuNw6W7Sdakow95IhLyZA=;
-        b=e6Y3l339zB4rIdUI1TjaeCi9tPCTq63FSTXCzI05efoHcw8luaFKhIzrLtKiDgxQtw
-         KORPHOD9l6Y1GV5YE4823PAI7X7N7Cyf3S7Z4PEcbbIvYM0UB7yXS8mGBHOwlD4CrCO4
-         bXQUX5H6XbZnA5X3QwoDdvGr2QpXaLh6CAI0HVCAGnV0uBPNKMOTsHAY6Ro61kvi4lM2
-         x1z8SBt8S1sxZNCnq8sNYTG9bGZrztks4Dgdm3qFr6ApxGcr/J/lToz/ue1gF2md8e5B
-         xpGHjR5u7OA++3eSvfCXbwqBFOFF7h+9qoXQXg4hdHQSI9C/5MRZLGyO3/TltV/dWRHe
-         tbBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWguctuVNNLyqnS5A8Na4xcuZOwxx7RZs9KDIRu49zTeM/kQa4qH9rf4bfUlxisT6a1CmKS9kXSwfnbKws=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6X5E17nifaVmTxFywAFFPDAyvKQIFl/BZrjcZGmBZ0wIGssK/
-	WFpi1QEkMGjJbORWKRj/rrCtzyfxkPO4MCO1zFtp3ckfg9nLFPkW2NcmT1c3C0BYQZUXg+65v8R
-	xba9yWdszpMYmAxv78UzYj09p/0H03BTxaq4T
-X-Gm-Gg: ASbGncvXuXaIq/6JEv91EHvZvycIQaL2Cn2H03xVpfBj/wmZUwG6KsBeCm4Nobuj+GG
-	5swR+0k1p9mxgZfJeRotnZh504RUt+uTrpwkvcyKiP0SlhZJUk7Wj8hsJQnC5wWYsKzacSuFP9x
-	VOFPykfkk5wAj6MwRrhxwvD35L/Nrpbh0snnlT
-X-Google-Smtp-Source: AGHT+IHA+7WQ4XrPhFnhvJlLsJWgnrPPtDSkzDTN2TsB342bp0zRvKBL2EVzg8KQlVU/a2qmXVix250GYRtBuKKagWM=
-X-Received: by 2002:a05:6000:1ac6:b0:38d:cab2:921a with SMTP id
- ffacd0b85a97d-390ec7c8e9amr2482030f8f.1.1740734213339; Fri, 28 Feb 2025
- 01:16:53 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1ZpJRbV5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w5Rznzo9kcrUqeA0Jo39ES2Zt/UiZEYOx6yq36iVRkhf9CuZfKTDMiJ7U/XvkqY8j+fpMD5Z4yxd8m0lPb2o3CxDPhS5BN+bLxA9pviqy72pQQhyClbY1ofrwVskUQGWXWCP/0RUuBdzVbr2SXIl6NAzfoUWRUfhCpkRb/lRC2bvGf5hh6VsGTptUzxnLBKNXlzNXk8c1nQQ0lQtx8+YEJ2PPjGhM7ZbCtr6+jlVQaIVtTp2I0N9f9e3lidjiVjUOmm1xMw4w2sgo/uSmjEl7qkEWDF/+gx6YmgrADSuqmFZ4Bluucntj6dQTcvZuBUlkgfFPuNfIQc4gCTXx1De4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LxkZxrYMaVXrGEGfXJAVue1rMTnE+YRD8CFORz1BnSo=;
+ b=nESVjNytO4wknYFWE0ebW6Z4WQgcJBSjRIP+hlOrVtT1yG+g2o193oG1NouPO5zkSJ4VvlPu7bSiaFwMODL2KwsArkOhVUn7+mgmg8ImKkSsspXiq10FXouOZrVQDfPLajwFAIlJpBPMiRJhK8kDm5BAAV1XIkkr2fZpu0CMWenlkptwn6CylSp3HiszIMY4dl7XaxbTRIHhf7aN84UYyFLuCimP0rx/KhDOKBTSWjTcOQNi7vjyStf00nBNiUggOnq6nOcRxRwY/AxwFgRWAK9Dt0b6iJJJhvnBr3i63xfpOlLNWNvaXH1mDRbcLtZrtZpGWbzujgBfQcYfJ77lOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LxkZxrYMaVXrGEGfXJAVue1rMTnE+YRD8CFORz1BnSo=;
+ b=1ZpJRbV5rBc3+73lMEFHxVL9mL/GCww6erkDAfUtnk6esfIpcSdb4fmR5rl6Qrfu4v2ftG04ZkHGM8lZVEdjBxerG59KRinZ4UMD5ElyrfGS7zk55YGEEWemIXDnFLIHDq/bttxXjsJW12AUzzR0u9BXnbb6zdMk0OSmU/FcanM=
+Received: from MW3PR05CA0010.namprd05.prod.outlook.com (2603:10b6:303:2b::15)
+ by LV8PR12MB9261.namprd12.prod.outlook.com (2603:10b6:408:1ed::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Fri, 28 Feb
+ 2025 09:17:00 +0000
+Received: from SJ1PEPF00002318.namprd03.prod.outlook.com
+ (2603:10b6:303:2b:cafe::a4) by MW3PR05CA0010.outlook.office365.com
+ (2603:10b6:303:2b::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8511.9 via Frontend Transport; Fri,
+ 28 Feb 2025 09:16:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ1PEPF00002318.mail.protection.outlook.com (10.167.242.228) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:16:59 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 03:14:08 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
+Subject: [RFC PATCH 13/19] KVM: SVM/SEV: Secure AVIC: Enable NMI support
+Date: Fri, 28 Feb 2025 14:21:09 +0530
+Message-ID: <20250228085115.105648-14-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250227101720.1811578-1-bqe@google.com> <Z8CvLBwKeH2gM-2u@thinkpad>
-In-Reply-To: <Z8CvLBwKeH2gM-2u@thinkpad>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Fri, 28 Feb 2025 10:16:41 +0100
-X-Gm-Features: AQ5f1JqlWufWTIjvxttjREBttJDPgRPCP0Cava6ZfLFBYkDmZ-wg8Bfgy8yDt7Y
-Message-ID: <CAH5fLggXT70-V8hddtAobfgYyNOjhSYCsjrHoDWff9FZN5Y5-w@mail.gmail.com>
-Subject: Re: [PATCH] rust: add bindings and API for bitmap.h and bitops.h.
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00002318:EE_|LV8PR12MB9261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40364b00-90ba-4a4e-d8ec-08dd57d8a7fa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?H52H6lmHYHN5ER9a7q+7Wx/76kTXBsZ6waTSqOLW63CC+Y6bWx0ryqOQ/ohb?=
+ =?us-ascii?Q?h204eZpjT9MZPlS4FTgdAsKzauFpfxOn4MgTcaVdGa7BcNhK8WbIqL+pqLOH?=
+ =?us-ascii?Q?m3sJKpF/Jsz+xkDAT8dGBZCJOZcdgAtk2xuQMU3feE5m1bjqrssFwARZ44pq?=
+ =?us-ascii?Q?Qrb+UL2m64O7vQfZ2zg2NJP0mSlS2ub+kyD5gcoVC5u6S7itbmTCTG2tMpCK?=
+ =?us-ascii?Q?tT0h3MdtPMqh7Os8pZgYU1yR9xDaGJ3RcJ1iIa8wQDvm6V1+w0wTIAxX9arl?=
+ =?us-ascii?Q?7xty+dv8EQPVWKqZX8pUL78xw0/ee4JcbYOj+Pnc/WjnqVBXlS6NnDQ5ygMA?=
+ =?us-ascii?Q?OIrC0pZEP3/6zOEZPFIb3otu8xOnlvPXf/r4nowyPS4v/w0y3XhBfIdY7z9x?=
+ =?us-ascii?Q?u2E6JMxh9yy/wGrYp5AgYz4qdUaAJihcEqC8uq9R83Elrg/u3b/M31QSYeGI?=
+ =?us-ascii?Q?9fJE4qVrJoOrM1RfKMGBHeCnaDm2an5AiUHougpemfauRfhqgH7SdchIwyvs?=
+ =?us-ascii?Q?5xbEu/8jveGgR1+em8eqF6aM1ySuaKegG1hXi7x7osVJjrknRqkS29LKwYxZ?=
+ =?us-ascii?Q?ssMMIzrEHhOyffJRwKqPytEHtq8F3fdLGVam955E+qIZnTcrHMLFNvPFLz/1?=
+ =?us-ascii?Q?1pntHrT9kz91yiJijBHc93WdX54ZytF0Ohh94LMlCpu6Gvi+eeguMnDFJqzK?=
+ =?us-ascii?Q?FIUo57TqgPXXbyj2P7sHXlA+8Pd4/DncMopQu4iXo3S2mtcg7RKRz3iKnS17?=
+ =?us-ascii?Q?HHxrLWoOe5UlTnsFCPdMTqHETmwt6NyCKm2GxQSbs1q0cz+j4VB1TJK6XP/8?=
+ =?us-ascii?Q?ehjtUzi31YUo7KPgo2Jf4ZQDI2k0hSslo/w8i+kkUya6/3Q1sW087uMCp2Fx?=
+ =?us-ascii?Q?VNrYc1/tpf5Iq4XLmi4fI3p0AFLJQnPA0kmoijJiETFUNLNi1rgqO5/JM7qd?=
+ =?us-ascii?Q?8BnhmQJiKxub6FVJW7pydZwszwXdxyR7GYF01ReHa3EmpBruRj31zskUDcy1?=
+ =?us-ascii?Q?EtqhqlB0Obzkb1D2jNPfqcmRXgHbf08JD/Pvv9N29v3YNNL4aZyFhmWyv9m2?=
+ =?us-ascii?Q?C73R4LvlTPghs6d/2yUWQXC1ciNjhtT4V5b8vRnzUy5idjWhWx36zFSqzh9r?=
+ =?us-ascii?Q?SR0w0TF9OIot0sa5mTJg4GYVRu7cbwT71kf4IFmXFoahVXXzCnrQTb5asbkW?=
+ =?us-ascii?Q?Tfu/+/xhYl4PLFyoC+yj32BGivF/hIVY/5QH7YIULGVZg86JppL/k3wJx5Nv?=
+ =?us-ascii?Q?X+NCgme0yquznrAsSmxomVgM0nVTe7Id82sQq47q4Wo5B7mUUUyc4aF9fOj2?=
+ =?us-ascii?Q?gSS5AkG9wNQD0dlLd+PBoaVJkx/m82G4zwwfOiwQTtrrwir1mFZ9mxbkmHBQ?=
+ =?us-ascii?Q?3AvpbjiGBwzlMBQJR7dTjLfkcz8PxsoAcnN0QD0NrFmBVaYsCr3u85sPumph?=
+ =?us-ascii?Q?hMxVs4FI6u6GoYsrlHRsaWgipdo/IpoLLJ15pjqSrJDTBDmSsc3e6iMn07oL?=
+ =?us-ascii?Q?koftOCE2h2XEvQg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:16:59.7546
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40364b00-90ba-4a4e-d8ec-08dd57d8a7fa
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00002318.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9261
 
-On Thu, Feb 27, 2025 at 7:30=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
-rote:
->
-> On Thu, Feb 27, 2025 at 10:08:41AM +0000, Burak Emir wrote:
-> > Adds a bitmap and bitops bindings and bitmap Rust API.
-> > These are for porting the approach from commit 15d9da3f818c ("binder:
-> > use bitmap for faster descriptor lookup") to Rust. The functionality
-> > in dbitmap.h makes use of bitmap and bitops.
-> >
-> > The Rust bitmap API provides an abstraction to underlying bitmaps
-> > and bitops operations. For now, we only include methods that are
-> > necessary for reimplementing dbitmap.h. It is straightforward to add
-> > more methods later, as needed. We offer a safe API through
-> > bounds checks which panic if violated.
-> >
-> > This series uses the usize type for sizes and indices into the bitmap,
-> > because Rust generally always uses that type for indices and lengths
-> > and it will be more convenient if the API accepts that type. This means
-> > that we need to perform some casts to/from u32 and usize, since the C
-> > headers use unsigned int instead of size_t/unsigned long for these
-> > numbers in some places.
-> >
-> > Adds F: entries to MAINTAINERS.
-> >
-> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> > Signed-off-by: Burak Emir <bqe@google.com>
-> > ---
-> > This series adds a Rust abstraction for bitmap, and binding helpers
-> > for inline methods of bitmap.h bitops.h.
-> >
-> > It depends on [1] and [2] which add bitmap helpers, MAINTAINERS entries
-> > and an abstraction that is part of the bitmaps Rust API.
-> >
-> > Question for Yury: What would you like us to do for the MAINTAINERS
-> > file? For now I just added the new files as F: entries.
-> >
-> > [1] https://lore.kernel.org/all/20250224233938.3158-1-yury.norov@gmail.=
-com/
-> > [2] https://lore.kernel.org/all/cover.1740475625.git.viresh.kumar@linar=
-o.org/
-> >
-> >  MAINTAINERS                     |   4 +
-> >  rust/bindings/bindings_helper.h |   1 +
-> >  rust/helpers/bitmap.c           |   8 ++
-> >  rust/helpers/bitops.c           |  13 +++
-> >  rust/helpers/find.c             |  15 +++
-> >  rust/helpers/helpers.c          |   3 +
-> >  rust/kernel/bitmap.rs           | 182 ++++++++++++++++++++++++++++++++
-> >  rust/kernel/lib.rs              |   1 +
-> >  8 files changed, 227 insertions(+)
-> >  create mode 100644 rust/helpers/bitmap.c
-> >  create mode 100644 rust/helpers/bitops.c
-> >  create mode 100644 rust/helpers/find.c
-> >  create mode 100644 rust/kernel/bitmap.rs
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 6d6e55d8593b..359f09e8e2c0 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -4033,12 +4033,16 @@ BITMAP API BINDINGS [RUST]
-> >  M:   Yury Norov <yury.norov@gmail.com>
-> >  S:   Maintained
-> >  F:   rust/helpers/cpumask.c
-> > +F:   rust/helpers/find.c
-> > +F:   rust/helpers/bitmap.c
-> > +F:   rust/helpers/bitops.c
->
-> bitops.c is part of BITOPS API, not the BITMAP one. I think we need a
-> new record for it?
->
-> >
-> >  BITMAP API [RUST]
-> >  M:   Viresh Kumar <viresh.kumar@linaro.org> (cpumask)
-> >  R:   Yury Norov <yury.norov@gmail.com>
-> >  S:   Maintained
-> >  F:   rust/kernel/cpumask.rs
-> > +F:   rust/kernel/bitmap.rs
-> >
-> >  BITOPS API
-> >  M:   Yury Norov <yury.norov@gmail.com>
-> > diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_h=
-elper.h
-> > index 673b1daa9a58..50416c1a3de9 100644
-> > --- a/rust/bindings/bindings_helper.h
-> > +++ b/rust/bindings/bindings_helper.h
-> > @@ -7,6 +7,7 @@
-> >   */
-> >
-> >  #include <kunit/test.h>
-> > +#include <linux/bitmap.h>
-> >  #include <linux/blk-mq.h>
-> >  #include <linux/blk_types.h>
-> >  #include <linux/blkdev.h>
-> > diff --git a/rust/helpers/bitmap.c b/rust/helpers/bitmap.c
-> > new file mode 100644
-> > index 000000000000..4fa4e4f76110
-> > --- /dev/null
-> > +++ b/rust/helpers/bitmap.c
-> > @@ -0,0 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/bitmap.h>
-> > +
-> > +void rust_helper_bitmap_copy(unsigned long *dst, const unsigned long *=
-src, unsigned int nbits)
-> > +{
-> > +     bitmap_copy(dst, src, nbits);
-> > +}
-> > diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
-> > new file mode 100644
-> > index 000000000000..191ef0341fd5
-> > --- /dev/null
-> > +++ b/rust/helpers/bitops.c
-> > @@ -0,0 +1,13 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/bitops.h>
-> > +
-> > +void rust_helper_set_bit(unsigned int nr, volatile unsigned long *addr=
-)
-> > +{
-> > +     set_bit(nr, addr);
-> > +}
-> > +
-> > +void rust_helper_clear_bit(unsigned int nr, volatile unsigned long *ad=
-dr)
-> > +{
-> > +     clear_bit(nr, addr);
-> > +}
->
-> So you mention that you're rewriting dbitmap, and I took a brief look
-> at drivers/android/dbitmap.h.
->
-> What I can say is that at least dbitmap_acquire_next_zero_bit() abuses
-> the set_bit() API. It should use non-atomic __set_bit(). If you're
-> going to re-write it, can you review the existing code and make sure
-> you're using the right API in a right way?
+From: Kishon Vijay Abraham I <kvijayab@amd.com>
 
-Huh, I did not realize the method was atomic. I had assumed it wasn't
-from how Binder is using it.
+Secure AVIC only allows vNMI flow for injecting NMI interrupts to the
+guest. Also, Secure AVIC hardware manages NMI delivery to the guest and
+can detect if the guest is in a state to accept NMI. So, update NMI
+injection code flow for Secure AVIC to inject V_NMI and allow NMI
+injection if there is no V_NMI pending. In addition, Secure AVIC
+requires V_NMI_ENABLE in VINTR_CTRL field of VMSA to be set. Set
+V_NMI_ENABLE in VINTR_CTRL field of VMSA.
 
-> > diff --git a/rust/helpers/find.c b/rust/helpers/find.c
-> > new file mode 100644
-> > index 000000000000..3841d3f0330f
-> > --- /dev/null
-> > +++ b/rust/helpers/find.c
-> > @@ -0,0 +1,15 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#include <linux/find.h>
-> > +
-> > +unsigned long rust_helper_find_last_bit(const unsigned long *addr, uns=
-igned long size)
-> > +{
-> > +     return find_last_bit(addr, size);
-> > +}
-> > +
-> > +
-> > +unsigned long rust_helper_find_next_zero_bit(const unsigned long *addr=
-, unsigned long size,
-> > +                              unsigned long offset)
-> > +{
-> > +     return find_next_zero_bit(addr, size, offset);
-> > +}
->
-> For those two, the find_*_bit() are the wrappers around _find_*_bit()
-> in lib/find_bit.c, with a few exceptions. The reason for having the
-> wrappers is an optimization that improves code generation for small
-> bitmaps.
->
-> In your case, when you wrap a macro, the optimization becomes impossible,
-> and the macro is unneeded.
->
-> From technical perspective, the underscored _find_*_bit() functions
-> should be accessible by rust directly. Can you confirm that? If so,
-> maybe just use them and avoid bloating?
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Co-developed-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+ arch/x86/kvm/svm/sev.c |  2 +-
+ arch/x86/kvm/svm/svm.c | 56 ++++++++++++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 22 deletions(-)
 
-That sounds likely.
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 07a8a0c09382..40314c4086c2 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -855,7 +855,7 @@ static int sev_es_sync_vmsa(struct vcpu_svm *svm)
+ 
+ 	save->sev_features = sev->vmsa_features;
+ 	if (sev_savic_active(vcpu->kvm))
+-		save->vintr_ctrl |= V_GIF_MASK;
++		save->vintr_ctrl |= V_GIF_MASK | V_NMI_ENABLE_MASK;
+ 
+ 	/*
+ 	 * Skip FPU and AVX setup with KVM_SEV_ES_INIT to avoid
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 58733b63bcd7..08d5dc55e175 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3625,27 +3625,6 @@ static void pre_svm_run(struct kvm_vcpu *vcpu)
+ 		new_asid(svm, sd);
+ }
+ 
+-static void svm_inject_nmi(struct kvm_vcpu *vcpu)
+-{
+-	struct vcpu_svm *svm = to_svm(vcpu);
+-
+-	svm->vmcb->control.event_inj = SVM_EVTINJ_VALID | SVM_EVTINJ_TYPE_NMI;
+-
+-	if (svm->nmi_l1_to_l2)
+-		return;
+-
+-	/*
+-	 * No need to manually track NMI masking when vNMI is enabled, hardware
+-	 * automatically sets V_NMI_BLOCKING_MASK as appropriate, including the
+-	 * case where software directly injects an NMI.
+-	 */
+-	if (!is_vnmi_enabled(svm)) {
+-		svm->nmi_masked = true;
+-		svm_set_iret_intercept(svm);
+-	}
+-	++vcpu->stat.nmi_injections;
+-}
+-
+ static bool svm_is_vnmi_pending(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -3679,6 +3658,33 @@ static bool svm_set_vnmi_pending(struct kvm_vcpu *vcpu)
+ 	return true;
+ }
+ 
++static void svm_inject_nmi(struct kvm_vcpu *vcpu)
++{
++	struct vcpu_svm *svm = to_svm(vcpu);
++
++	if (sev_savic_active(vcpu->kvm)) {
++		svm_set_vnmi_pending(vcpu);
++		++vcpu->stat.nmi_injections;
++		return;
++	}
++
++	svm->vmcb->control.event_inj = SVM_EVTINJ_VALID | SVM_EVTINJ_TYPE_NMI;
++
++	if (svm->nmi_l1_to_l2)
++		return;
++
++	/*
++	 * No need to manually track NMI masking when vNMI is enabled, hardware
++	 * automatically sets V_NMI_BLOCKING_MASK as appropriate, including the
++	 * case where software directly injects an NMI.
++	 */
++	if (!is_vnmi_enabled(svm)) {
++		svm->nmi_masked = true;
++		svm_set_iret_intercept(svm);
++	}
++	++vcpu->stat.nmi_injections;
++}
++
+ static void svm_inject_irq(struct kvm_vcpu *vcpu, bool reinjected)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -3826,6 +3832,14 @@ bool svm_nmi_blocked(struct kvm_vcpu *vcpu)
+ static int svm_nmi_allowed(struct kvm_vcpu *vcpu, bool for_injection)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
++
++	/* Secure AVIC only support V_NMI based NMI injection. */
++	if (sev_savic_active(vcpu->kvm)) {
++		if (svm->vmcb->control.int_ctl & V_NMI_PENDING_MASK)
++			return 0;
++		return 1;
++	}
++
+ 	if (svm->nested.nested_run_pending)
+ 		return -EBUSY;
+ 
+-- 
+2.34.1
 
-Alice
