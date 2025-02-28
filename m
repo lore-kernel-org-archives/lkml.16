@@ -1,261 +1,286 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576DD1F193D
-	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F961F1534
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740995676; cv=none; b=sK2C9FvlRTGRkle5VWbgCtO5lz4R3a4e4FyZUCo8Rs8HLmQVSuml0K/SJOe1X6zgE6DGOBKLzOyo+hTSxHaW1OEkvT32WKRGLhmUyq2BG2gLTro7T0H9tcpK52qOjkZQJyViTYdnRoRqZqLnH270rmzulhlycR+A0eJ+8GCfgm8=
+	t=1740995708; cv=none; b=R4+t0JrMEHD5JP6fg2Yr8/TFQkMxtRt9l73KzK36MyoSvGI1zoBGP/yaSze8F9bto2oBiagpuHm5k5//upGdYJYwqfgH/XKhfkt5exCHiRrT9akIc3o5Kmq/1/fpguKJu9dagCqlNO0QjnQ8TF73DWAeo6rdKeyIMY9D2hpx/AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740995676; c=relaxed/simple;
-	bh=A58wzXqspOCF7y1nRcqMkTGPyro87VFDTZ78HorgFs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tFZVblnCX0Y09OkpfLGX0Lver4oMli9sI5WK6Ptn+CJds7b+/KPA00o72M5gUS49ViyI7Ud+AMtS8W1yFUaylj5kcnG9wUM51cJC6N44NREgjxFqO2WGyhyKktiXrTCP33uPG5fMutTbiMKZFHscPXdjW35NdbazY3prnwP3YWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DfL3huHZ; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1740995708; c=relaxed/simple;
+	bh=dBpyRD3Af4A+AiBhDTBakcxsh6+4fPaRYfan0doQJdg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=emQCN78orfgfNFu8hPWoAownoBmRD87fjfr6LlA3I7Q6iNXKzRBWrUS+QgD5P7fg1ifWu9p8xsKiUfiLEOIsvRuvQiWIdtyf0tR5IE5T3aaU+m4GXQvu+0B/aXQc16m7JNTJcoUiFdpmhu16wuhET7Z+wGWrVVgpDFUZboakniU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=dVuqAp1W; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DfL3huHZ"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e50d491f69so2436616a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 03 Mar 2025 01:54:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740995672; x=1741600472; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A58wzXqspOCF7y1nRcqMkTGPyro87VFDTZ78HorgFs8=;
-        b=DfL3huHZey2tUhWrSKQsKqyYBKRR79luWnjcdQZrChl5tZoQAcQ6HLmo4lCr2PiAAZ
-         p/Jx25u47+Qi+8mWE5nRlV4FNRcSg1inW7I4SSbIvXCP0b/1tKaeaeVC+y3Xnuv+4c7F
-         xhDzSy8ZzPdjyqv3tXyO01BGFWrvSny0mAMFztmzxbojg8ScBvxgITEMLvnI/w8icMGN
-         +q1IW5tmbUWpUxypCchDXcMsD/pqvhzWi0YaH+w9Y2Il+mcgZP3crOOf9GIdX+yA8lzO
-         pAxG7m5XPyno9NvRHGnG6h5yqXgPHdmMRrmm6jcjTAFlx5dntaoOtJdrQRemtgIDnyo0
-         ZqbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740995672; x=1741600472;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A58wzXqspOCF7y1nRcqMkTGPyro87VFDTZ78HorgFs8=;
-        b=BI0HprJKpNLCRd5WuWNzL9m2xHXF0TqrRzSNP797tsJI7+blMmwO86ZLdbyxmZpqU8
-         82t90bP35hOuA0D5SQ2tP74oq5G1X3a0pUSTb5MRE6d5ol5dL+nKnL2cJi8NOG3L8uEv
-         abny0YqB3PdzeiU3lzUhg/K86HMlf4R0ul7g8N07SKsnjnQNNRT1FjrmDEpk5NJCUKhN
-         I5YXrvAgM++iEG9J6BThyHt+H8RMgWVO96J/RFEugBz+lFY4wck/kbfWpWPm3E2qd+rL
-         4lGeB5hV+AYw4i7nyXWSqX1YbuGbZ7JmoYdIzEiR3IhzWpw9l7HElBJvwrkH14lykdX2
-         smJw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Kol3g4WfdiL+jxMC3QS0gJjIzR8ICI8JqZpOyP1DxQpG9P3KT3zyF/lqGu+QP+o9M3OKmEFCO4yL3SA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc5L5cXcBbnPz4bqbQuaLiJRIvTJ8kYfXLO5BYTepke/pG4DYX
-	18VavR2bltDe5QlmGnIxMnRAggl6cwmfTzaj5Ohwo+tmyVuWSjGCNlfVhUtKD50=
-X-Gm-Gg: ASbGncvMAH3xgE+mhKOrsZvmYtEyh8HG62rfqOf6lVucgjzxrZYHs34hHxsdfKdZKYY
-	KhmWoAEq0Rj6r3XUxpWL+g8CFRnfebRAiaDOipzaCKi7l1Dl3vZZ9+l74bRtmclIrgBLmnEupjo
-	WMxD3NqYva5sy5cJk3fwkZP7nEFHV0JSTXhXaw+GqHCZHe+JKPiiDX66xMKbY3r34hMby0zkDjg
-	DVC4cCB0sTXDn964+f9KzrRHHl2rlBqVOJtsNHpYOo9Gp0jj0ZoSLR2p//+Xq4fLjgZoOFkD8pC
-	Ig/7iTbSQV3xVAXKkX6cOo1g+4ZkltNBOpVtT60b694UCw6LrKcPX2S7e/6zp+QBAjVEzJAM0/O
-	PfKFw1BkcUoWwN6/qeSunrfv6MFxkqP0eBQYyXB+P5dNAhYNJs1ZOlCPGiavBrG7edVk=
-X-Google-Smtp-Source: AGHT+IGW4m97/5Z6mzGE+FtM7OG3AsUThkKvGu7Efn6SS4sBYUvLGkxkFKD9S/u/8MdUzBtxBFwR1w==
-X-Received: by 2002:a05:6402:26c9:b0:5e0:34b5:13c0 with SMTP id 4fb4d7f45d1cf-5e4d6b05015mr11608759a12.19.1740995672489;
-        Mon, 03 Mar 2025 01:54:32 -0800 (PST)
-Received: from ?IPV6:2003:e5:8714:500:2aea:6ec9:1d88:c1ef? (p200300e5871405002aea6ec91d88c1ef.dip0.t-ipconnect.de. [2003:e5:8714:500:2aea:6ec9:1d88:c1ef])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c43a6ab7sm6603426a12.74.2025.03.03.01.54.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Mar 2025 01:54:32 -0800 (PST)
-Message-ID: <e49c22e8-04df-4a1b-b68e-378f73a861f9@suse.com>
-Date: Mon, 3 Mar 2025 10:54:31 +0100
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dVuqAp1W"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250303094900epoutp018847fea4ea95d5f6d4786a3545792c71~pQgnUZ5E70496104961epoutp01L
+	for <linux-kernel@vger.kernel.org>; Mon,  3 Mar 2025 09:49:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250303094900epoutp018847fea4ea95d5f6d4786a3545792c71~pQgnUZ5E70496104961epoutp01L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740995340;
+	bh=A6rXyxrSkX4HADIgbY5HWK2vNlIuc7WBXS7Zq+Ms0JI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dVuqAp1WcRurfwCGQ8t3Ms9B0fFGX3lOBlAO2BclgS0K8Ut60gawC/sPdJJsdv/BA
+	 8XxQzamtIPPmg3t2AsL9LRe2aGV11+ZLZsophekOsA8n2Oby46Q2w5uvwEOreZF2zL
+	 yWgL/qsVHPjVKkCZEdBtoHyK0g2wjPnG6Y8PPo3s=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20250303094900epcas5p20c3abf562a30579b79a224889f449ef3~pQgmoK8Wm2511625116epcas5p28;
+	Mon,  3 Mar 2025 09:49:00 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z5vCY4lGHz4x9Q0; Mon,  3 Mar
+	2025 09:48:57 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6A.54.19710.90B75C76; Mon,  3 Mar 2025 18:48:57 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250228114813epcas5p32127b99d3a0adf6900a104468b48768d~oXM1p_I5X0606706067epcas5p39;
+	Fri, 28 Feb 2025 11:48:13 +0000 (GMT)
+Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250228114813epsmtrp2153ec45f033bf4373aece964cf49075a~oXM1pBsIZ2226522265epsmtrp2e;
+	Fri, 28 Feb 2025 11:48:13 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-0b-67c57b09f171
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	77.F6.33707.D72A1C76; Fri, 28 Feb 2025 20:48:13 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250228114810epsmtip1d1899f45fb2e472c25ba58375dd1b3b5~oXMyy6Y-Z1263712637epsmtip1y;
+	Fri, 28 Feb 2025 11:48:10 +0000 (GMT)
+From: Hrishikesh Deleep <hrishikesh.d@samsung.com>
+To: shradha.t@samsung.com
+Cc: 18255117159@163.com, Jonathan.Cameron@Huawei.com,
+	a.manzanares@samsung.com, bhelgaas@google.com, cassel@kernel.org,
+	fan.ni@samsung.com, jingoohan1@gmail.com, kw@linux.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	lpieralisi@kernel.org, manivannan.sadhasivam@linaro.org,
+	mark.rutland@arm.com, nifan.cxl@gmail.com, pankaj.dubey@samsung.com,
+	renyu.zj@linux.alibaba.com, robh@kernel.org, will@kernel.org,
+	xueshuai@linux.alibaba.com
+Subject: Re: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
+ PCIe DW
+Date: Fri, 28 Feb 2025 17:13:01 +0530
+Message-Id: <20250228114301.31739-1-hrishikesh.d@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250221131548.59616-1-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 1/4] x86/paravirt: Move halt paravirt calls under
- CONFIG_PARAVIRT
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- Vishal Annapurve <vannapurve@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- virtualization@lists.linux.dev, pbonzini@redhat.com, seanjc@google.com,
- erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com,
- sagis@google.com, oupton@google.com, pgonda@google.com,
- kirill@shutemov.name, dave.hansen@linux.intel.com,
- chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, ajay.kaher@broadcom.com,
- alexey.amakhalov@broadcom.com,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>
-References: <20250220211628.1832258-1-vannapurve@google.com>
- <20250220211628.1832258-2-vannapurve@google.com>
- <Z8IvDeIJH2EJuPo-@char.us.oracle.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <Z8IvDeIJH2EJuPo-@char.us.oracle.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------5LLYudiyGxvk0eCeMC0cD70G"
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOJsWRmVeSWpSXmKPExsWy7bCmli5n9dF0g6tnlC2utP9mt5h+WNFi
+	SVOGxbEJK5gtmlbfZbVY8WUmu8WqhdfYLBp6frNabHp8jdXi8q45bBZn5x1ns7iydR2LRcuf
+	FhaLuy2drBZLr19ksvi7bS+jxaKtX9gtFja/ZLT4v2cHu0Xv4VqLljumFu9/bmZzEPNYvGIK
+	q8eaeWsYPXbOusvusWBTqUfLkbesHptWdbJ53Lm2h81j50NLjydXpjN5bF5S79G3ZRWjx+dN
+	cgE8Udk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUDf
+	KimUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKTAr0ihNzi0vz0vXyUkusDA0MjEyB
+	ChOyMzZdecxWcMi5Yvr++AbGxVZdjJwcEgImElfXvmTvYuTiEBLYzSix/MglKOcTo8SmpScY
+	QarAnL0flGE6Dkz5yARRtJNRouXKDxYI5wujxNzW7SwgVWwCRhLfmvaC2SICkhJf+trAOpgF
+	prNIfFn5khkkISwQJvHv5w0wm0VAVeLJqU9gDbwCthJz248zQqyTl1i94QBYDaeAtcSqc9OZ
+	IGoEJU7OfAJWzwxU07x1NjPIAgmBfk6Jl7/bmCCaXSQ2vT3KBmELS7w6voUdwpaS+PxuL1Q8
+	W2LPoetQywokljQ8g6qxlzhwZQ7QAg6gBZoS63fpQ4RlJaaeWscEsZdPovf3E6hVvBI75sHY
+	ahKvZ09khbBlJC7NWswCYXtIzJm0GRq+fYwS2x48YZnAqDALyT+zkPwzC2H1AkbmVYySqQXF
+	uempyaYFhnmp5fBYTs7P3cQIzgFaLjsYb8z/p3eIkYmD8RCjBAezkghvYdCRdCHelMTKqtSi
+	/Pii0pzU4kOMpsAAn8gsJZqcD8xCeSXxhiaWBiZmZmYmlsZmhkrivM07W9KFBNITS1KzU1ML
+	Uotg+pg4OKUamLL47RhrX++ostmTZ+vcdetqu8P8CsP6M+V1ca7BsdNu8D8Qdvg5V2djyZKt
+	DSYqOdp7JC6eOWfNb5gQtPhBIKel+6fHLzku7mxkW/n3yH//CWcuXk6dkKPeNoexvnvXfePs
+	L+mTo3fskfw4/ZR6+np21ftqEs8SxZneRWbt3/r+66Ekv2N5AjK/e5cGfva9Kvpz1UnF5adl
+	gvZNFAlR9OeJVek4PKOh/1nQVMNbc6fWf9Vie6+wjHvrzpBXUqEfGz7suyqyyK3swPJLbrYX
+	+9xW6ji/WRBRo77Yb71irXrwYr607GfJ71a0h7Vav3a7lyc5y+t97ocDfK7TIkybbus9zD40
+	KbjZoeX9lSmXg5RYijMSDbWYi4oTAWfWAtSKBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsWy7bCSnG7tooPpBodPcllcaf/NbjH9sKLF
+	kqYMi2MTVjBbNK2+y2qx4stMdotVC6+xWTT0/Ga12PT4GqvF5V1z2CzOzjvOZnFl6zoWi5Y/
+	LSwWd1s6WS2WXr/IZPF3215Gi0Vbv7BbLGx+yWjxf88Odovew7UWLXdMLd7/3MzmIOaxeMUU
+	Vo8189YweuycdZfdY8GmUo+WI29ZPTat6mTzuHNtD5vHzoeWHk+uTGfy2Lyk3qNvyypGj8+b
+	5AJ4orhsUlJzMstSi/TtErgyNl15zFZwyLli+v74BsbFVl2MnBwSAiYSB6Z8ZOpi5OIQEtjO
+	KHHn1hVWiISMxNV1J9kgbGGJlf+es0MUfWKUeLJpITNIgk3ASOJb014WEFtEQFLiS18b2CRm
+	gfUsElvOPQRLCAuESOyetglsKouAqsSTU5/A4rwCthJz248zQmyQl1i94QDYUE4Ba4lV56Yz
+	gdhCAlYSe7bcZ4WoF5Q4OfMJUC8H0AJ1ifXzhEDCzECtzVtnM09gFJyFpGoWQtUsJFULGJlX
+	MYqmFhTnpucmFxjqFSfmFpfmpesl5+duYgRHslbQDsZl6//qHWJk4mA8xCjBwawkwjsr9kC6
+	EG9KYmVValF+fFFpTmrxIUZpDhYlcV7lnM4UIYH0xJLU7NTUgtQimCwTB6dUA1NLy8WShiQ+
+	Zt0fgcZli7dz8/66ou6yScjil83rMxp5+89MvhoqdfrnrMNND7OZ3x2xOFi2cPZLa2NBybVG
+	Yn+59HSbGDmOdDvOfxi4yJf1/R9H9jdy244lTb+5fe6Vkoeis1x1XzPMWDN1Qb3J2cP/eVf4
+	fFZ6ffMmb6jMxdqqFd+L1Xl/3pFX/MHpEHhTu27lxM5Pql2z7LmNW06YlH/8vIXx96Gik3MX
+	vGPTub1sq8Wl38dsWLj4had1qByQrc4xKHY5+uR//U7WGR785yK/LZjlplMoLZQ9a7ZHHs/+
+	IkODiEl+M/cvf35RbGGq/nJ9oZWn2OR/Rj2ZWP1S9B6ba9jZm+xiS41ipyrfWz1TiaU4I9FQ
+	i7moOBEALB5gqlMDAAA=
+X-CMS-MailID: 20250228114813epcas5p32127b99d3a0adf6900a104468b48768d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250228114813epcas5p32127b99d3a0adf6900a104468b48768d
+References: <20250221131548.59616-1-shradha.t@samsung.com>
+	<CGME20250228114813epcas5p32127b99d3a0adf6900a104468b48768d@epcas5p3.samsung.com>
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------5LLYudiyGxvk0eCeMC0cD70G
-Content-Type: multipart/mixed; boundary="------------Uen3bzhHMfNu8u1d60iDkUwy";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- Vishal Annapurve <vannapurve@google.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- virtualization@lists.linux.dev, pbonzini@redhat.com, seanjc@google.com,
- erdemaktas@google.com, ackerleytng@google.com, jxgao@google.com,
- sagis@google.com, oupton@google.com, pgonda@google.com,
- kirill@shutemov.name, dave.hansen@linux.intel.com,
- chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com,
- sathyanarayanan.kuppuswamy@linux.intel.com, ajay.kaher@broadcom.com,
- alexey.amakhalov@broadcom.com,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
- Tony Luck <tony.luck@intel.com>
-Message-ID: <e49c22e8-04df-4a1b-b68e-378f73a861f9@suse.com>
-Subject: Re: [PATCH V5 1/4] x86/paravirt: Move halt paravirt calls under
- CONFIG_PARAVIRT
-References: <20250220211628.1832258-1-vannapurve@google.com>
- <20250220211628.1832258-2-vannapurve@google.com>
- <Z8IvDeIJH2EJuPo-@char.us.oracle.com>
-In-Reply-To: <Z8IvDeIJH2EJuPo-@char.us.oracle.com>
+>Subject: [PATCH v7 0/5] Add support for debugfs based RAS DES feature in
+> PCIe DW
+>Date: Fri, 21 Feb 2025 18:45:43 +0530
+>Message-Id: <20250221131548.59616-1-shradha.t@samsung.com>
+>X-Mailer: git-send-email 2.17.1
+>Precedence: bulk
+>X-Mailing-List: linux-kernel@vger.kernel.org
+>List-Id: <linux-kernel.vger.kernel.org>
+>List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
+>List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+>MIME-Version: 1.0
+>Content-Transfer-Encoding: 8bit
+>X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJsWRmVeSWpSXmKPExsWy7bCmum7f2p3pBpev8Fhcaf/NbjH9sKLF
+>	kqYMi2MTVjBbNK2+y2qx4stMdotVC6+xWTT0/Ga12PT4GqvF5V1z2CzOzjvOZnFl6zoWi5Y/
+>	LSwWd1s6WS2WXr/IZPF3215Gi0Vbv7BbLGx+yWjxf88Odovew7UWLXdMLd7/3MzmIOaxeMUU
+>	Vo8189YweuycdZfdY8GmUo+WI29ZPTat6mTzuHNtD5vHzoeWHk+uTGfy2Lyk3qNvyypGj8+b
+>	5AJ4orJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4C+
+>	VVIoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQUmBToFSfmFpfmpevlpZZYGRoYGJkC
+>	FSZkZ9w5vYalYLZqxYb7X5gaGB/IdjFyckgImEi83vKXqYuRi0NIYDejxLsX7UwgCSGBT4wS
+>	u6dkQySA7IMTF7PDdKyZ08QKkdjJKHFn3nso5wujxL2+j2BVbAJaEo1fu5hBbBGBVkaJI8/E
+>	QIqYBbYxSxxYsQIsISwQJPFjXRsLiM0ioCrx/e98oGYODl4BK4k9K+0htslLrN5wAKycV0BQ
+>	4uTMJ2DlzEDx5q2zmSFqvnBIfJnNB2G7SCzadQPqUmGJV8e3QNlSEp/f7WWDsNMlVm6eAdWb
+>	I/Ft8xImCNte4sCVOSwgJzALaEqs36UPEZaVmHpqHRPEWj6J3t9PoMp5JXbMg7GVJb783cMC
+>	YUtKzDt2mRXC9pDYufkh2EghgViJ/v+2ExjlZyF5ZhaSZ2YhLF7AyLyKUTK1oDg3PTXZtMAw
+>	L7UcHq3J+bmbGMFJXstlB+ON+f/0DjEycTAeYpTgYFYS4dUt2ZEuxJuSWFmVWpQfX1Sak1p8
+>	iNEUGMATmaVEk/OBeSavJN7QxNLAxMzMzMTS2MxQSZy3eWdLupBAemJJanZqakFqEUwfEwen
+>	VAOTyWph2UVGD0z1j0+NvfvEdnGQ413ON1OnCFx4vMfJeqvN3Mp7Kx86NXwKsN+sdkziZXTt
+>	kesTTnswSfQ/W1W2UrvUr+Mf14yGGbL9V1cY802NfhC1Su7CI57OFPH5lz5En/srKjG9MXbJ
+>	wbvLF2vMuPtkX2nEE4bFtdvOlN1YvEY1xMF6apLnj5CG0sSSXn3PgKUsajzVWQ/TfU7n/lD5
+>	bfjrwVJLhqPcRqoTSkq8zi29HTM1wO3dCcNfq6we9H4Sbrx8ef67MN+3L8NLzveyuAo5iV1+
+>	s8+BVbngfu6khvO+c9YriUadC2QxkJvBY3eiVHQx3yuDqBXzeubVRsnkfzzpt9tl19/cGTOv
+>	1GuzKrEUZyQaajEXFScCAMosolJ7BAAA
+>X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsWy7bCSvG537Y50g2MLlC2utP9mt5h+WNFi
+>	SVOGxbEJK5gtmlbfZbVY8WUmu8WqhdfYLBp6frNabHp8jdXi8q45bBZn5x1ns7iydR2LRcuf
+>	FhaLuy2drBZLr19ksvi7bS+jxaKtX9gtFja/ZLT4v2cHu0Xv4VqLljumFu9/bmZzEPNYvGIK
+>	q8eaeWsYPXbOusvusWBTqUfLkbesHptWdbJ53Lm2h81j50NLjydXpjN5bF5S79G3ZRWjx+dN
+>	cgE8UVw2Kak5mWWpRfp2CVwZd06vYSmYrVqx4f4XpgbGB7JdjJwcEgImEmvmNLF2MXJxCAls
+>	Z5Q4cm4FE0RCUuLzxXVQtrDEyn/P2SGKPjFKnLi3HyzBJqAl0fi1ixkkISLQySix98g7sCpm
+>	gXPMEjM/tzCCVAkLBEicWbwezGYRUJX4/nc+UBEHB6+AlcSelfYQG+QlVm84wAxi8woISpyc
+>	+YQFpIRZQF1i/TwhkDAzUEnz1tnMExj5ZyGpmoVQNQtJ1QJG5lWMoqkFxbnpuckFhnrFibnF
+>	pXnpesn5uZsYwbGpFbSDcdn6v3qHGJk4GA8xSnAwK4nw6pbsSBfiTUmsrEotyo8vKs1JLT7E
+>	KM3BoiTOq5zTmSIkkJ5YkpqdmlqQWgSTZeLglGpg4pjMtu2b3EL3R9/vnl2nEvFC55TM2YSA
+>	my6J94qZeTt8782a/COa5zfzt5k3prcfseJ7luLkekH78Adlm03yN7mZkk1XMM56/M3uTPar
+>	ex8KP295FMh6s2nhnKm/5osxdX5TKq3b61nX9iT1YXNdyKerQsdqYjgT+VaEJK99GX3A6He8
+>	1XIWZ2vz9ffnsnQutJ2jtMajR/n7bM0NmbNmena/SZXhnfzD5alN2PFWrd0vK8Je8Blf3/b1
+>	x9bwBX5/Yl/s/XhNzGKZrer2uvBbUQqvGNOWb17bYhX/xT3W2q3tpEjcHY7SxiIpxtc63+us
+>	rinukH9y8IUFl3ej4vrW9/u/5z0wPMPHsW9quEntZSWW4oxEQy3mouJEAI4aFoM8AwAA
+>X-CMS-MailID: 20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5
+>X-Msg-Generator: CA
+>Content-Type: text/plain; charset="utf-8"
+>X-Sendblock-Type: REQ_APPROVE
+>CMS-TYPE: 105P
+>DLP-Filter: Pass
+>X-CFilter-Loop: Reflected
+>X-CMS-RootMailID: 20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5
+>References: <CGME20250221132011epcas5p4dea1e9ae5c09afaabcd1822f3a7d15c5@epcas5p4.samsung.com>
+>
+>DesignWare controller provides a vendor specific extended capability
+>called RASDES as an IP feature. This extended capability  provides
+>hardware information like:
+> - Debug registers to know the state of the link or controller. 
+> - Error injection mechanisms to inject various PCIe errors including
+>   sequence number, CRC
+> - Statistical counters to know how many times a particular event
+>   occurred
+>
+>However, in Linux we do not have any generic or custom support to be
+>able to use this feature in an efficient manner. This is the reason we
+>are proposing this framework. Debug and bring up time of high-speed IPs
+>are highly dependent on costlier hardware analyzers and this solution
+>will in some ways help to reduce the HW analyzer usage.
+>
+>The debugfs entries can be used to get information about underlying
+>hardware and can be shared with user space. Separate debugfs entries has
+>been created to cater to all the DES hooks provided by the controller.
+>The debugfs entries interacts with the RASDES registers in the required
+>sequence and provides the meaningful data to the user. This eases the
+>effort to understand and use the register information for debugging.
+>
+>This series creates a generic debugfs framework for DesignWare PCIe
+>controllers where other debug features apart from RASDES can also be
+>added as and when required.
+>
+>v7:
+>    - Moved the patches to make finding VSEC IDs common from Mani's patchset [1]
+>      into this series to remove dependancy as discussed
+>    - Addressed style related change requests from v6
+>
+>v6: https://lore.kernel.org/all/20250214105007.97582-1-shradha.t@samsung.com/
+>    - Addressed Niklas's comment to make vsec ID finding similar to perf
+>    - Minor changes in the driver to make the debugfs file common and
+>      not specefic to RASDES so that other developers can add debug
+>      related features to this file.
+>
+>v5: https://lore.kernel.org/all/20250121111421.35437-1-shradha.t@samsung.com/
+>    - Addressed Fan's comment to split the patches for easier review
+>    - Addressed Bjorn's comment to fix vendor specific cap search
+>    - Addressed style related change requests from v4
+>    - Added rasdes debugfs init call to common designware files for host
+>      and EP.
+>
+>v4: https://lore.kernel.org/lkml/20241206074456.17401-1-shradha.t@samsung.com/
+>    - Addressed comments from Manivannan, Bjorn and Jonathan
+>    - Addressed style related change requests from v3
+>    - Added Documentation under Documentation/ABI/testing and kdoc stype
+>      comments wherever required for better understanding
+>    - Enhanced error injection to include all possible error groups
+>    - Removed debugfs init call from common designware file and left it
+>      up to individual platform drivers to init/deinit as required.
+>
+>v3: https://lore.kernel.org/all/20240625093813.112555-1-shradha.t@samsung.com/
+>    - v2 had suggestions about moving this framework to perf/EDAC instead of a
+>      controller specific debugfs but after discussions we decided to go ahead
+>      with the same. Rebased and posted v3 with minor style changes.
+>
+>v2: https://lore.kernel.org/lkml/20231130115044.53512-1-shradha.t@samsung.com/
+>    - Addressed comments from Krzysztof Wilczyński, Bjorn Helgaas and
+>      posted v2 with a changed implementation for a better code design
+>
+>v1: https://lore.kernel.org/all/20210518174618.42089-1-shradha.t@samsung.com/T/
+>
+>[1] https://lore.kernel.org/all/20250218-pcie-qcom-ptm-v1-0-16d7e480d73e@linaro.org/
+>
+>Manivannan Sadhasivam (1):
+>  perf/dwc_pcie: Move common DWC struct definitions to 'pcie-dwc.h'
+>
+>Shradha Todi (4):
+>  PCI: dwc: Add helper to find the Vendor Specific Extended Capability
+>    (VSEC)
+>  Add debugfs based silicon debug support in DWC
+>  Add debugfs based error injection support in DWC
+>  Add debugfs based statistical counter support in DWC
+>
+> Documentation/ABI/testing/debugfs-dwc-pcie    | 144 +++++
+> MAINTAINERS                                   |   1 +
+> drivers/pci/controller/dwc/Kconfig            |  10 +
+> drivers/pci/controller/dwc/Makefile           |   1 +
+> .../controller/dwc/pcie-designware-debugfs.c  | 564 ++++++++++++++++++
+> .../pci/controller/dwc/pcie-designware-ep.c   |   5 +
+> .../pci/controller/dwc/pcie-designware-host.c |   6 +
+> drivers/pci/controller/dwc/pcie-designware.c  |  46 ++
+> drivers/pci/controller/dwc/pcie-designware.h  |  21 +
+> drivers/perf/dwc_pcie_pmu.c                   |  25 +-
+> include/linux/pcie-dwc.h                      |  36 ++
+> 11 files changed, 837 insertions(+), 22 deletions(-)
+> create mode 100644 Documentation/ABI/testing/debugfs-dwc-pcie
+> create mode 100644 drivers/pci/controller/dwc/pcie-designware-debugfs.c
+> create mode 100644 include/linux/pcie-dwc.h
+>
+>-- 
+>2.17.1
+>
+>
 
---------------Uen3bzhHMfNu8u1d60iDkUwy
-Content-Type: multipart/mixed; boundary="------------jshMhZZ1nAInseKi0TepNMrO"
+Thanks for adding the support!
 
---------------jshMhZZ1nAInseKi0TepNMrO
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Tested the patch in one of our internal SoC with DesginWare PCIe controller. The patch works fine.
 
-T24gMjguMDIuMjUgMjI6NDcsIEtvbnJhZCBSemVzenV0ZWsgV2lsayB3cm90ZToNCj4gT24g
-VGh1LCBGZWIgMjAsIDIwMjUgYXQgMDk6MTY6MjVQTSArMDAwMCwgVmlzaGFsIEFubmFwdXJ2
-ZSB3cm90ZToNCj4+IEZyb206ICJLaXJpbGwgQS4gU2h1dGVtb3YiIDxraXJpbGwuc2h1dGVt
-b3ZAbGludXguaW50ZWwuY29tPg0KPj4NCj4+IENPTkZJR19QQVJBVklSVF9YWEwgaXMgbWFp
-bmx5IGRlZmluZWQvdXNlZCBieSBYRU4gUFYgZ3Vlc3RzLiBGb3INCj4+IG90aGVyIFZNIGd1
-ZXN0IHR5cGVzLCBmZWF0dXJlcyBzdXBwb3J0ZWQgdW5kZXIgQ09ORklHX1BBUkFWSVJUDQo+
-PiBhcmUgc2VsZiBzdWZmaWNpZW50LiBDT05GSUdfUEFSQVZJUlQgbWFpbmx5IHByb3ZpZGVz
-IHN1cHBvcnQgZm9yDQo+PiBUTEIgZmx1c2ggb3BlcmF0aW9ucyBhbmQgdGltZSByZWxhdGVk
-IG9wZXJhdGlvbnMuDQo+Pg0KPj4gRm9yIFREWCBndWVzdCBhcyB3ZWxsLCBwYXJhdmlydCBj
-YWxscyB1bmRlciBDT05GSUdfUEFSVklSVCBtZWV0cw0KPj4gbW9zdCBvZiBpdHMgcmVxdWly
-ZW1lbnQgZXhjZXB0IHRoZSBuZWVkIG9mIEhMVCBhbmQgU0FGRV9ITFQNCj4+IHBhcmF2aXJ0
-IGNhbGxzLCB3aGljaCBpcyBjdXJyZW50bHkgZGVmaW5lZCB1bmRlcg0KPj4gQ09ORklHX1BB
-UkFWSVJUX1hYTC4NCj4+DQo+PiBTaW5jZSBlbmFibGluZyBDT05GSUdfUEFSQVZJUlRfWFhM
-IGlzIHRvbyBibG9hdGVkIGZvciBURFggZ3Vlc3QNCj4+IGxpa2UgcGxhdGZvcm1zLCBtb3Zl
-IEhMVCBhbmQgU0FGRV9ITFQgcGFyYXZpcnQgY2FsbHMgdW5kZXINCj4+IENPTkZJR19QQVJB
-VklSVC4NCj4gDQo+IENvdWxkIHlvdSB1c2UgdGhlIGJsb2F0LW8tbWV0ZXIgdG8gZ2l2ZSBh
-biBpZGVhIG9mIHRoZSBzYXZpbmdzPw0KPiANCj4gQWxzbyAuLiBhcmVuJ3QgbW9zdCBkaXN0
-cm9zIGJ1aWxkaW5nIHdpdGggWGVuIHN1cHBvcnQgc28gdGhleSB3aWxsDQo+IGFsd2F5cyBo
-YXZlIHRoZSBmdWxsIHBhcmF2aXJ0IHN1cHBvcnQ/DQoNCkFkZGluZyBQQVJBVklSVF9YWEwg
-dXNlcnMgc2hvdWxkIGJlIGF2b2lkZWQgaWYgcG9zc2libGUuDQoNCk1haW4gcmVhc29uIGlz
-IHRoYXQgdGhlIHdvcmsgdG8gbWFrZSBQVkggZG9tMCBmdWxseSBmdW5jdGlvbmFsIGNvbXBh
-cmVkDQp0byBQViBkb20wIHdpbGwgbWFrZSBpdCBwb3NzaWJsZSB0byBkZXByZWNhdGUgUFYg
-bW9kZSBpbiB0aGUgbG9uZyBydW4uDQoNCg0KSnVlcmdlbg0K
---------------jshMhZZ1nAInseKi0TepNMrO
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Hrishikesh Deleep <hrishikesh.d@samsung.com>
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
-
---------------jshMhZZ1nAInseKi0TepNMrO--
-
---------------Uen3bzhHMfNu8u1d60iDkUwy--
-
---------------5LLYudiyGxvk0eCeMC0cD70G
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmfFfFcFAwAAAAAACgkQsN6d1ii/Ey+4
-gwgAjrMMPRApBqvCdhGtxXLUvaKbrAWmodQYmqbOQ/crvyMlpszoJIjIfkMV7jL1OQBvz9E42wrP
-gt5UqElNT/CGt/teMeWGqvX8fmR25Yy6QAInCAa788M+g3qjxnbgBNF4kdstU4ejihHuEdfCNW7f
-aPudvRQk32GnVtYjLZX82MuHTHziub5ySmuuDY8AVNIVDm5f4Sj49dGDdC1WuaYl927Gc0iNCOJy
-mO+nmJ++ysZHqYhCtMReG75fPLnjrRkXHERjOAOxSXm+dFMRJCp5RNF0Jvd7nd8HAdFhDxpzOP0j
-QPWONYei2pGbVzafpTgjHSTnwqGxp9iIMUdmVbV0gA==
-=QRkL
------END PGP SIGNATURE-----
-
---------------5LLYudiyGxvk0eCeMC0cD70G--
