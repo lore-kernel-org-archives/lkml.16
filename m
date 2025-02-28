@@ -1,124 +1,83 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B9E26BD95;
-	Fri, 28 Feb 2025 12:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E1AB26D5CF;
+	Fri, 28 Feb 2025 12:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740747079; cv=none; b=ooXWv41yIJpLlrXWic2Um4CSx75NdqDezGrlDuwcafhYZUtO9RRofb0NlzAOKyxhs/sTYpFTRw/qdtSFJ8wM7VfRLfy9Hs2F8lj+2yS2k02pvg6ut9meDi3nLfWb54Ct5Sr/O2FB3wbdr/qJXoWkxnUT+QROjHvlTpblMh3BiZw=
+	t=1740747125; cv=none; b=LdiEMzkXPAQ/PvPsbcqx9+ksPI3IvRHK5Q+IwxBhxwmjegPmHYT3/6/vrjwn6tRAo6symItOPlu7wNDsCFT5MfvqnufPlxZfN525q2PvLJeWDC1WX2trPUCNbXtq0fOP9v6CG8y/sT6RqFwO3l8zWmFVxrxVQ0DV4wrYAnI7jsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740747079; c=relaxed/simple;
-	bh=scKazGwuzOTF12erXSPHX0Xf0go5XekomeaFO8oe4v8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=SqjtG472416K07f0kLj6ZfbGBPhUPqej0wQ5l5YyRZoywYy/nzsNeRDLLzHKzAuHI5G65CYw/qglirh93NCWDWdRW4t5vy/ks1FlMtNaMd16O9x11uhNPSCs2x6bqknYu4gF7GIUgvPNl46OG79A+TAkevGCU+QmCYCqYp6LWbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=rR6Wzjg+; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1740747125; c=relaxed/simple;
+	bh=qtVHDkxhDZ9QRs/IpSQz8H/vIugC+ZZc6I5P81tsh3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iellDexHAcDVcec5dsvtZ1px00TqzW1feSovQRG20DNehS1Uw0HB0K3tb/afQfynZRGtHguEAywiK+0KGRDRvZokeIBY3iCItq+yWokZfKBWI2SwVoOW7XLC9M2ITgEGegF1N+WMC/b9qsEwCCRScaA2YOYc5j/xgZs+9oiiWqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bvNre4wq; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="rR6Wzjg+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740747069; x=1741351869; i=markus.elfring@web.de;
-	bh=XS/kHt0Jzd2/r+Dt81keCnHWhP5OI706u2ZqfH4XrUs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=rR6Wzjg+uwiuEn4SZcVLqURjXbBpduacdCpjV1u7NyTpopiAhge3A2tHl1Y5HWUL
-	 BaDW1qy6b6603f4dqe9PGt0HmcKmV9Ei+Nfl57/D8mwhEoes/HnP1JPDD0g4GpDav
-	 wRJ0RQVRalvDPUbNF9Oh6kUS9QHNOQet6hTHs3IFhYAN6v0GdD49FJQopvJM8xPyN
-	 TfKJUOPc2UjB7YDleLlQ1MuB+27uQKFb+kFR+UiyEXjgqm6kKLOvE04AC6Jj7oxfu
-	 /17tN5NlAjsdt1pipZ1/QMk5RTFiphz0ZRMkNmQxk38jtjw3K/xF/RekSy8BLF70j
-	 oFENGhmE+3C1cVf8Eg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.27]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M6pUK-1twFLg1UZq-007I1m; Fri, 28
- Feb 2025 13:45:22 +0100
-Message-ID: <6b6d7ad3-7d25-4cf2-ab96-ddeed341599a@web.de>
-Date: Fri, 28 Feb 2025 13:45:21 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bvNre4wq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740747124; x=1772283124;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qtVHDkxhDZ9QRs/IpSQz8H/vIugC+ZZc6I5P81tsh3o=;
+  b=bvNre4wq1KkK+3ETkSKQ3oSqqEM0gcspyIYazhnmf1RADq+c++7ORO7P
+   20WLZsPfP9sBi3OQq4siNVhd6k8CVF/IX3bhWl3I5wVu3NIN30B4Tlb5N
+   0rIR3BTZsRgh9CkYpkGhO0s+ZaaMcdn85AXabskVAudzGEzTH0zW6K9ye
+   ihDul0UAGrP6wVol8x//6B3LWxo3nP7xoIH1sUetSuMCAurw6AGjwzsSI
+   9Q+iDFMFW2V+Rr7BKKsODz0+eHQ368RJC0M40/hwQUpYDzNZ3a+X8zPyI
+   zxMy2kYLHkMFk4aPC8oIiVDN7RopwYBJUrOQ1MdPyEXUn2FBCdqe5Z0oI
+   A==;
+X-CSE-ConnectionGUID: Qff0poL2RbGLGj6i+bUGGg==
+X-CSE-MsgGUID: atSU7u8zSyGEwBiL3Ingug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="40849901"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="40849901"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:52:04 -0800
+X-CSE-ConnectionGUID: UX3fm5sFQMqvM00VuJddLQ==
+X-CSE-MsgGUID: X/emzOIwQWKEk2GRoPyu6g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="122460635"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:52:02 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tnzqS-0000000Fwst-1v2M;
+	Fri, 28 Feb 2025 14:52:00 +0200
+Date: Fri, 28 Feb 2025 14:52:00 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v1 0/4] Input: Increase size of phys in the drivers
+Message-ID: <Z8GxcGgyAuMyRv5D@smile.fi.intel.com>
+References: <20250228121147.242115-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-nvme@lists.infradead.org, Christoph Hellwig <hch@lst.de>,
- James Smart <james.smart@broadcom.com>, Jens Axboe <axboe@kernel.dk>,
- Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Qasim Ijaz <qasdev00@gmail.com>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] nvme-fc: Simplify minimum determination in two functions
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:1JnjCFQUd0ttsIBWN281lO5nPMzTF+jyUeD2O/xAf3vIJ+adx7k
- cOdE3IDMpOUADsU0Ezq+bCzt4CYYDqWZI4Df2LgkrJaVT2o5yMdxVC6PgGRZIVvquEZC5XL
- fiJF/X0XuHknjvc4NlikDHSXTtwbIHSOI3D6fIPleypTR4u6fdtuhGdcFnu6FQrfO+9M7K6
- DqofhYYC7m9T1sYkKvN9g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QaPtVwaH4T8=;RAAFo7mD74pRr9Y3NLRGKhosheS
- jqtO1Yt2qLdIkpJS2ynbwYWgCB6fsmgoQEC05SpxaaDNwCcGqnaO/Exa6E4zRLyUL9nhetfVx
- qD/VBgABNBXB8VsioXMPmQ9uiTSmFYh9BCi2RLYGLHMHlzdIsmo2nsGBI25CE2j0QXhyGTHrs
- fbH7QIw88baD4FXv8AIsBTxlIZst41KmQZn1bWR+D3jg8VEiwwG44Ezz3ikwW9NTWDDKULurI
- wRU7i1YJVoFTuIkYN1ImMF7hDC8TqI1NtqBW+631uNhhmYGQ3/YI4pYcpqsHAQdkhDnIF86gv
- qQFjzc1toDFOXiBEH3OyM9KyhSxQPmmujPL8SlbXSsXHBbyOZOIMjJJ1yl77InUOKynNpuf7b
- 2gULk+lW1mfiZeHc2fDvXylypqcdK47NfWy24odPEgT+/SDCoS9tEAVKTYoLlB/uOIGCMJHI8
- lkzMAUJ68QqU9p57paZHjFAPj83+lWhAqF/B7IaGyHB8iGvCwPytH53pAIVsXOVcXJaE5/bML
- M+5jK+yRbmtASDyUsd7BMVK/I2/BRzVlbHVDADopM9wHXVX3oAg1tRFQfPJH/P8m6GvL/uVs3
- 7AEu3YqDIaqL0+nbgWIi54OpjmrkfKRPhQrjr+O1clcUxMrgJX5ly7qYFSiLEG/XaAZgnCcwE
- 1nR8egbXnywDdPX2YrRTHGH426mlgVixJh+ZdiJizh9oSG7McwVZ2gBnPasYELCJPWmPA8UgO
- 0faVDlbGMSNkOgkOsILs+Y576MHJ8Uxmds+MnFQ1KQxNZkJILDpOEe+BEnFXbphSI6naKLlY7
- hSbqpO6XfOqUgdYakE0do36I4/I4hh/Go0YEbmQGE9mc8T+UxEABDFTzPtAJVDzEqri3M757o
- czzYmVPsUKEPfRZ5pU4ctxY2ffRTogOmdcfHpwM/mK+zWJG9Gr8GfL6rGb615Z/we/xX4W0Ia
- vYKAS91aSWgZ8tFRyIbUEo8gMDVWXSHqXHfTNSxI2smu8GenizGbP3wF2Qcs2NBe806Y0zsZl
- yd+7t9sfX/NEh2M2npJyUJisbv4Upz5/Ld8WUeTi1EpUNNfCOmlxAsZERaupHGKHD+dA9TYwz
- G5m0sVT8h6gMC8tV1l2yFV1FaJDM1YUTaGWrD54nXikR/ysE98IBLKmVKlwDXUkX+mSd+D4Ix
- 3ce9RYW+zpmHB912XhnPRmW8C+WdnpdjnmN8OCmk3avXpnPwMtxpcCTRMV5eozS7lxt0trHBQ
- Sc7Yvpt5m/ojX1T+SfkhCr2e9YIXINwc/7bd8oDHqGA9ChqZKaU8rOSCkzJC7lsqfMtanhD/E
- VonjWow7UWiBQaocpdHKur8aqdt7/uqdgCNe3xIrlrNbWlMpuNlcI32yzIHJXF9iDGUSlt3gz
- eT9C2JYOXPojYf96ToDx64wk4YduiDvgtYrAxXzBco2MARcsNj0OBAbZ4HWmBapxUcmiLKfDE
- W4gE8StanRrfvWdpN1PCHG7acFgc=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228121147.242115-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 28 Feb 2025 13:38:38 +0100
+On Fri, Feb 28, 2025 at 02:07:43PM +0200, Andy Shevchenko wrote:
+> The drivers are using local member of 32 bytes to hold up to 40 (one-byte)
+> characters. GCC complains on that. This series fixes the issue in the affected
+> input drivers. Note, this is currently the biggest part of the warnings that
+> are being treated as errors with the default configurations on x86. With this
+> being applied we become quite close to enable CONFIG_WERROR=y (which is default
+> and basically reverted) in CIs. Clang, OTOH, has currently no issues with that.
 
-Replace nested min() calls by single min3() call in two
-function implementations.
+If acceptable, it would be good to have them as fixes for v6.14 cycle.
 
-This issue was transformed by using the Coccinelle software.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/nvme/host/fc.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index b9929a5a7f4e..6eed3ecdbaf6 100644
-=2D-- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -2858,8 +2858,7 @@ nvme_fc_create_io_queues(struct nvme_fc_ctrl *ctrl)
- 	unsigned int nr_io_queues;
- 	int ret;
-
--	nr_io_queues =3D min(min(opts->nr_io_queues, num_online_cpus()),
--				ctrl->lport->ops->max_hw_queues);
-+	nr_io_queues =3D min3(opts->nr_io_queues, num_online_cpus(), ctrl->lport=
-->ops->max_hw_queues);
- 	ret =3D nvme_set_queue_count(&ctrl->ctrl, &nr_io_queues);
- 	if (ret) {
- 		dev_info(ctrl->ctrl.device,
-@@ -2912,8 +2911,7 @@ nvme_fc_recreate_io_queues(struct nvme_fc_ctrl *ctrl=
-)
- 	unsigned int nr_io_queues;
- 	int ret;
-
--	nr_io_queues =3D min(min(opts->nr_io_queues, num_online_cpus()),
--				ctrl->lport->ops->max_hw_queues);
-+	nr_io_queues =3D min3(opts->nr_io_queues, num_online_cpus(), ctrl->lport=
-->ops->max_hw_queues);
- 	ret =3D nvme_set_queue_count(&ctrl->ctrl, &nr_io_queues);
- 	if (ret) {
- 		dev_info(ctrl->ctrl.device,
-=2D-
-2.48.1
 
