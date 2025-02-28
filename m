@@ -1,216 +1,188 @@
-Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E0F254AE6;
-	Fri, 28 Feb 2025 10:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C651B4250;
+	Fri, 28 Feb 2025 10:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740739717; cv=none; b=mTr8N59RjHPFKkMhlBonU9Rt0MWvt/IjHQ/YioHYRxivb2SNHh32Z6M4fXU8NG0mz6OsjnGhXCujh3turEIJGnGXII+DObxD3guK+hMR6mJQd/dkCOD//9+bC41ZkxmgMgCQyraJXzRIKDQTMKTpgcvSxmMy0IMaqq/bHTkyrV8=
+	t=1740739734; cv=none; b=hgo0vLwZYjPBXeJ27x3shLzs4nRO5xjRPI4u7+evNmVX/BLdXdBRD9cB1hwPafcGQ99t4efr/vdaqq3/y7adEzXMnG1MPk6nS5ic9zmsrlAUjgbfFCnxrvEtyaBHYdfE7BaNIrYebfQzu1xWdtE61hi+8Rd28z97jUuiOcztaMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740739717; c=relaxed/simple;
-	bh=Lkr98+j8e6uZ7EaeQxen/k1uFuQao3EzZ/bsAvEKfgM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tdt1/xCh1MirmEajIU7zdZfEqxV+YUrMR+L2Ear9Mi0WCkJjsURwtpsoY78S/LXLvHELKMDy8V42aI3g7f3zPegyMMm2s7o6pXdkBrSCGbkDtos4KnBMkJPi6I1fj4uPU4kxOhjUGgG3ao9lWvdvDdLQ4s6g7DlOfuq9NIMegMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=F3+QLMH/; arc=none smtp.client-ip=168.119.41.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
+	s=arc-20240116; t=1740739734; c=relaxed/simple;
+	bh=2nu/Y6+cz0NMSSixySPG8CnuznbZo4tBIamdzIavqDQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TjM2pgc2DfEzf0DxGr0Z+lY4VDqolOxirBHE3H4SfOD9uCrs64rdk4RNw6iy47Qtkbh4ROouGE+826JOe5PbFpVw96/L2uAx5pE8ZoHOyQ81rRG2h2wD+lz1iDnu5JdILqBJm7RJXU9XUB5K02eQcXcnPIf3jyMMBAWOGH6aGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=cwbqZ2Lk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="F3+QLMH/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
-	 s=mail; h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=ZYyDAwDnX/ZSr9OBTEf9DBoZeTxH5uzvRHwMSrNv43A=; b=F3+QLMH/xgFo0BTjvB+ZO885V5
-	z37s6XxxCJHH75uZpjA9RoP0Qpc0wNVQtgpoHOJ0QIvLeapleJrdnI9xfL5pqwpG/gvC/yGgvkOib
-	7DxFjHMk15s9uOJwqzLqIa0s+w5EajDtNZHAFmye5Y4yMz1pqGtkCzGYQSw7w9V3KJvM=;
-Received: from 194-208-208-245.tele.net ([194.208.208.245]:63536 helo=[127.0.1.1])
-	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <matthias.fend@emfend.at>)
-	id 1tnxed-00Dtva-K9; Fri, 28 Feb 2025 11:31:40 +0100
-From: Matthias Fend <matthias.fend@emfend.at>
-Date: Fri, 28 Feb 2025 11:31:23 +0100
-Subject: [PATCH 1/2] dt-bindings: leds: add Texas Instruments TPS6131x
- flash LED driver
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="cwbqZ2Lk"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B5B036A2;
+	Fri, 28 Feb 2025 11:47:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740739641;
+	bh=2nu/Y6+cz0NMSSixySPG8CnuznbZo4tBIamdzIavqDQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cwbqZ2LkeytLOt2OeEt1HSLjyELIcA+L1HAVjtkn/caZVs7ulBfwHffeI4q7P9piZ
+	 zZx0gVUgQzgzC8kptFXRvvOrj9EjzMYxC1ajQF6xHc+NRI+9ViMA+X3lqsiY+L1qqX
+	 feNJ1RE8DDiyHYPWRM7ytbaYQlFJREwRP/mywSAQ=
+Date: Fri, 28 Feb 2025 11:48:47 +0100
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+	Mikhail Rudenko <mike.rudenko@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Dafna Hirschfeld <dafna@fastmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: rkisp1: allow non-coherent video capture buffers
+Message-ID: <aw6hhc5x7lycbmckbc57ke5whksem5lasfkufcxrcuou5vhoyo@ylggg6tdzcnq>
+References: <20250102-b4-rkisp-noncoherent-v1-1-bba164f7132c@gmail.com>
+ <20250103152326.GP554@pendragon.ideasonboard.com>
+ <87bjw9s4s3.fsf@gmail.com>
+ <dtfv2slbtj3ar2wvlcnd74p3xtlvggebkk3fj5ocm3eil7kyqw@al3brwf4y5dw>
+ <CAAFQd5DS2x3sX59EdkTEMuO=eXc=Q0jD44EUwMisP6ocWz11qg@mail.gmail.com>
+ <bgnkzjpegpmif7gohoijt42rku6jruovjsxscg75dprdz5ek2i@ntfh2yyjyiry>
+ <CAAFQd5BihpFYgqvKta7ULMAVSMTy3kd6iR6Mo4ea9Ci935EFMA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250228-leds-tps6131x-v1-1-d1071d90f9ea@emfend.at>
-References: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
-In-Reply-To: <20250228-leds-tps6131x-v1-0-d1071d90f9ea@emfend.at>
-To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
- bsp-development.geo@leica-geosystems.com
-X-Mailer: b4 0.14.2
-X-Spam-Score: -1.0
-X-Spam-Bar: -
-X-Spam-Report: Spam detection software, running on the system "lx20.hoststar.hosting",
- has NOT identified this incoming email as spam.  The original
- message has been attached to this so you can view it or label
- similar future email.  If you have any questions, see
- the administrator of that system for details.
- 
- Content preview:  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
-    Its power stage is capable of supplying a maximum total current of roughly
-    1500mA. The TPS6131x provides three constant-current sinks, c [...] 
- 
- Content analysis details:   (-1.0 points, 5.0 required)
- 
-  pts rule name              description
- ---- ---------------------- --------------------------------------------------
- -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
-  0.0 TVD_RCVD_IP            Message was received from an IP address
-  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
-                             Alignment
+In-Reply-To: <CAAFQd5BihpFYgqvKta7ULMAVSMTy3kd6iR6Mo4ea9Ci935EFMA@mail.gmail.com>
 
-Document Texas Instruments TPS61310/TPS61311 flash LED driver devicetree
-bindings.
+Hi Tomasz
 
-Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
----
- .../devicetree/bindings/leds/ti,tps6131x.yaml      | 123 +++++++++++++++++++++
- 1 file changed, 123 insertions(+)
+On Fri, Feb 28, 2025 at 07:28:43PM +0900, Tomasz Figa wrote:
+> On Fri, Feb 28, 2025 at 7:18 PM Jacopo Mondi
+> <jacopo.mondi@ideasonboard.com> wrote:
+> >
+> > Hi Tomasz
+> >
+> > On Fri, Feb 28, 2025 at 07:00:57PM +0900, Tomasz Figa wrote:
+> > > Hi Jacopo,
+> > >
+> > > On Fri, Feb 28, 2025 at 2:11 AM Jacopo Mondi
+> > > <jacopo.mondi@ideasonboard.com> wrote:
+> > > >
+> > > > Hi Mikhail
+> > > >
+> > > > On Tue, Jan 14, 2025 at 07:00:39PM +0300, Mikhail Rudenko wrote:
+> > > > >
+> > > > > Hi Laurent,
+> > > > >
+> > > > > On 2025-01-03 at 17:23 +02, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > > > >
+> > > > > > On Thu, Jan 02, 2025 at 06:35:00PM +0300, Mikhail Rudenko wrote:
+> > > > > >> Currently, the rkisp1 driver always uses coherent DMA allocations for
+> > > > > >> video capture buffers. However, on some platforms, using non-coherent
+> > > > > >> buffers can improve performance, especially when CPU processing of
+> > > > > >> MMAP'ed video buffers is required.
+> > > > > >>
+> > > > > >> For example, on the Rockchip RK3399 running at maximum CPU frequency,
+> > > > > >> the time to memcpy a frame from a 1280x720 XRGB32 MMAP'ed buffer to a
+> > > > > >> malloc'ed userspace buffer decreases from 7.7 ms to 1.1 ms when using
+> > > > > >> non-coherent DMA allocation. CPU usage also decreases accordingly.
+> > > > > >
+> > > > > > What's the time taken by the cache management operations ?
+> > > > >
+> > > > > Sorry for the late reply, your question turned out a little more
+> > > > > interesting than I expected initially. :)
+> > > > >
+> > > > > When capturing using Yavta with MMAP buffers under the conditions mentioned
+> > > > > in the commit message, ftrace gives 437.6 +- 1.1 us for
+> > > > > dma_sync_sgtable_for_cpu and 409 +- 14 us for
+> > > > > dma_sync_sgtable_for_device. Thus, it looks like using non-coherent
+> > > > > buffers in this case is more CPU-efficient even when considering cache
+> > > > > management overhead.
+> > > > >
+> > > > > When trying to do the same measurements with libcamera, I failed. In a
+> > > > > typical libcamera use case when MMAP buffers are allocated from a
+> > > > > device, exported as dmabufs and then used for capture on the same device
+> > > > > with DMABUF memory type, cache management in kernel is skipped [1]
+> > > > > [2]. Also, vb2_dc_dmabuf_ops_{begin,end}_cpu_access are no-ops [3], so
+> > > > > DMA_BUF_IOCTL_SYNC from userspace does not work either.
+> > > > >
+> > > > > So it looks like to make this change really useful, the above issue of
+> > > > > cache management for libcamera/DMABUF/videobuf2-dma-contig has to be
+> > > > > solved. I'm not an expert in this area, so any advice is kindly welcome. :)
+> > > >
+> > > > It would be shame if we let this discussion drop dead.. cache
+> > > > management policies are relevant for performances, specifically for
+> > > > cpu access, and your above 7.7ms vs 1.1 ms test clearly shows that.
+> > > >
+> > > > >
+> > > > > [1] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n411
+> > > >
+> > > > I would like to know from Hans if the decision to disallow cache-hints
+> > > > for dmabuf importers is a design choice or is deeply rooted in other
+> > > > reasons I might be missing.
+> > >
+> > > When DMA-buf is used, the responsibility for cache management is
+> > > solely on the CPU users' side, so cache-hints don't really apply. It's
+> > > the exporter (=allocator) who determines the mapping policy of the
+> > > buffer and provides necessary DMA_BUF_SYNC operations (can be no-op if
+> > > the buffer is coherent).
+> >
+> > This all makes sense.
+> >
+> > I take it as, for libcamera, users of the FrameBufferAllocator helper
+> > (which first exports MMAP buffers from the video device and the
+> > imports them back as DMABUF) won't be able to control the cache
+> > policies.
+> >
+> > Now, in the long term, we want FrameBufferAllocator to go away and
+> > have either buffers exported by the consumer (likely DRM) or by a
+> > system wide buffer allocator (when we'll have one) and have the video
+> > devices operate as pure importers. But for the time being the
+> > "first export then import" use case is possibile and valid so I wonder
+> > if we should consider measures to allow controlling caching policies
+> > for this use case too.
+>
+> Hmm, I may be missing something, but if FrameBufferAllocator does the
+> allocation internally in libcamera, why couldn't it use the
+> V4L2_MEMORY_FLAG_NON_COHERENT REQBUFS/CREATE_BUFS flag?
 
-diff --git a/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml b/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..c08b3cef7abcec07237d3271456ff1f888b2b809
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/ti,tps6131x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments TPS6131X flash LED driver
-+
-+maintainers:
-+  - Matthias Fend <matthias.fend@emfend.at>
-+
-+description: |
-+  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
-+  Its power stage is capable of supplying a maximum total current of roughly 1500mA.
-+  The TPS6131x provides three constant-current sinks, capable of sinking
-+  up to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode.
-+  In torch mode, each sink (LED1, LED2, LED3) supports currents up to 175mA.
-+
-+  The data sheet can be found at:
-+    https://www.ti.com/lit/ds/symlink/tps61310.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tps61310
-+      - ti,tps61311
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: GPIO connected to NRESET pin
-+
-+  ti,valley-current-limit:
-+    type: boolean
-+    description:
-+      Reduce the valley peak current limit from 1750mA to 1250mA (TPS61310) or
-+      from 2480mA to 1800mA (TPS61311).
-+
-+  led:
-+    type: object
-+    $ref: common.yaml#
-+    unevaluatedProperties: false
-+
-+    properties:
-+      led-sources:
-+        allOf:
-+          - minItems: 1
-+            maxItems: 3
-+            items:
-+              enum: [1, 2, 3]
-+
-+      led-max-microamp:
-+        anyOf:
-+          - minimum: 25000
-+            maximum: 350000
-+            multipleOf: 50000
-+          - minimum: 25000
-+            maximum: 525000
-+            multipleOf: 25000
-+
-+      flash-max-microamp:
-+        anyOf:
-+          - minimum: 25000
-+            maximum: 800000
-+            multipleOf: 50000
-+          - minimum: 25000
-+            maximum: 1500000
-+            multipleOf: 25000
-+
-+      flash-max-timeout-us:
-+        enum: [ 5300, 10700, 16000, 21300, 26600, 32000, 37300, 68200, 71500,
-+                102200, 136300, 170400, 204500, 340800, 579300, 852000 ]
-+
-+    required:
-+      - led-sources
-+      - led-max-microamp
-+      - flash-max-microamp
-+      - flash-max-timeout-us
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#address-cells'
-+  - '#size-cells'
-+  - led
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/leds/common.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      led-controller@33 {
-+        compatible = "ti,tps61310";
-+        reg = <0x33>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
-+
-+        tps61310_flash: led {
-+          function = LED_FUNCTION_FLASH;
-+          color = <LED_COLOR_ID_WHITE>;
-+          led-sources = <1>, <2>, <3>;
-+          led-max-microamp = <525000>;
-+          flash-max-microamp = <1500000>;
-+          flash-max-timeout-us = <852000>;
-+        };
-+      };
-+    };
+-I- might be missing something, but reading the below links that
+Mikhail reported in a previous email
+[1] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n411
+[2] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n829
 
--- 
-2.34.1
+it seems to me that yes, when first exporting you can hint to tell
+vb2 to allocate from non-coherent/non-contiguous memory, but then when
+switching the device to importer mode (and import the same buffers it
+previously exported) the cache sync point would then
+be skipped, leading to possible synchronization issues between the cpu
+consumer and the device.
 
+>
+> Note that however, once the buffer is allocated and mapped once, on
+> many architectures it must keep the same mapping attributes across the
+> different mappings, due to how the memory hierarchy works. (Not sure
+> if this is what you are asking for here, though.)
+>
+> >
+> > >
+> > > Best regards,
+> > > Tomasz
+> > >
+> > > >
+> > > > I'm asking because the idea is for libcamera to act solely as dma-buf
+> > > > importer, the current alloc-export-then-import trick is an helper for
+> > > > applications to work around the absence of a system allocator.
+> > > >
+> > > > If the requirement to disable cache-hints for importers cannot be
+> > > > lifted, for libcamera it means we would not be able to use it.
+> > > >
+> > > >
+> > > > > [2] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n829
+> > > > > [3] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-dma-contig.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n426
+> > > > >
+> > > > > --
+> > > > > Best regards,
+> > > > > Mikhail Rudenko
+> > > > >
+> > > >
