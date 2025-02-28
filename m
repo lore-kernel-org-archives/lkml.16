@@ -1,119 +1,98 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37492157A55;
-	Fri, 28 Feb 2025 10:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D7525CC7A
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740738167; cv=none; b=nj2NjRajig+LWIRJBDiiTXxUurDi16H8d9tUc3btSspnC7mn90orfNvTwSsVxojct+Nb9Dbcw1d1vzAeV0V6QVfvcRjFv/SC59s2+Xh8oyyJhryQwcCWSLbXfSFmddhxA1n8jptagTbTUh/oWX5MYLuNXhU4+PN8JD89L/zbS64=
+	t=1740738234; cv=none; b=KhOYqNs3pPFO8uwOeI8i9P2svf2gQBZtSiBwBJYleAMdy45BQcbYdXLwVsKTin32VsSPkIlAADp4spHkC109MU+++P64ozUoVLFAAardRj4XnLojrwD4AF/JZDgOaWZwwelWDUSiPUhP3PFauZ//2GZAwstTpLBnucZgE7vGbGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740738167; c=relaxed/simple;
-	bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aOkC60npJ5IfJlSZEHokHYP1EJpm9RJY4UOK7P+xZLE0HASWvOGvUibYd+ZhI7thT+Ul4N6RXOIdOTbjuGLa3fWRpppXc6NrphmHKPjxOWxdMy+aCW2LMGl0MPAmu1O9iN3AgqWYnSVDP93FH7uoPYFW2YDcUGTPGP4PTushF98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ywooo/Qw; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740738234; c=relaxed/simple;
+	bh=6v+0WDwLgpXPJnPNKdHaqelPONmHUTruWATfgBMcnMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uheDpGA8snZiQbvAdjpsBbte0uQFV1dO8AcHcjqRj0HbJMWiZmMkPXbRDp1Ca1lpzsuAyCAuKFwNS8iihN8UHL0WZ04pY1b2Y8h7XRNhJKSAtT4Vh20isJAtgbelswYGKeE+WW0YktiKfDMrYKwECaJMlxzTvp5yD65JLp+xS7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DIlKdcHU; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ywooo/Qw"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2fe9596a582so475770a91.3;
-        Fri, 28 Feb 2025 02:22:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DIlKdcHU"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54605bfcc72so3475812e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:23:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740738165; x=1741342965; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-        b=Ywooo/QwziEi+rLbWHW9j2XP2SValmUxDlR7gsMikRgjHSH9StwxTZiTmiJjlfK+gm
-         lkLeS2RUVA61KPIacQHjx90ozvovkmc0XaPwejjYAum8RKvDQhIS881gpE/gojJWUHcc
-         EJeQYhITGlcB0o/Zh45jBuNVHd3JMR54TzmxkC9t6dzOL+0Xx2mU/fyFa+qU4+8stK9a
-         KwiKqJzQGoP2leFGamqDMChXojWMCF1QdghuHo8BXauxi2IHhcJ53heLwL3CCJ1ooQSs
-         xe+CKy4GkcyUrXPIatgY+tgh3xxVZlL3vVKjTpb9yZpdxfrnAop4AftuYs+mVYWz+h/5
-         v4cA==
+        d=linaro.org; s=google; t=1740738230; x=1741343030; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOXRurkxs0z+V+7lsmPMX66oMcslr79MsEtI3f5CfhE=;
+        b=DIlKdcHUCYQGw98cm/04fmMJFcmKm/eNXu2mr29k8SIqxEDM+OmahSXD2Gpk8JBKL4
+         c2kXBz1/Ka08ZTgYTu7wBABr3av+cx1DiaMS2Yr2vQlW58nnk9S6C9RwAmtDt9uHkliP
+         rjjYI3KakW1cZ/dq9Xc9Y4P2e4H+Y4b/nHAt6spa7EVZJQML/hVp3W+pdyHnokq7FoUZ
+         WfLX4u1zYqw8TFddcg9/Vs1A1O7w/vRGrhm36+PYaCG4heZ0i8Xq1pJX4juA6r7QW+as
+         MFrYyI64TqlZ8BUqB2+CmXWFvhIxo3ngRhoryYl6doSufFkV7iYCB+FMXZkQNll5LsbA
+         fKCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740738165; x=1741342965;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zQMkQAtj6vzSQBpImtNQZFAAzOJ67Rs10PHBe6Pdo/Y=;
-        b=MgyZJEnjyMUws1Vnb9jBHuQ7D9GNCNRoREBGRcosIPoTZjF+cHvaG+eM5yF2zSCUTe
-         Qket5+ZSr/hLCd6xcJm03U0Bqb0No36T7BjugosuRQSNRwv5Dn+3DV5SmASbj67NVzp2
-         UBQOoMEVL0YiiM1l4sOgSnAa1Y8AtOQaJw7w7f4vPsKMBiUEgRZwLGUjtgffruVThIPM
-         YbFg67yE3/lbvtnRvvKEnQQMa1La0ICMDUSv+NL6ZLbSh1uiN//EZWYjkIW9hvrvLKAx
-         V/geGtMqeVN1X4QvrbB4nZRLEFXnyPKwJxxTtLHteSbNEfhWRpAVkTEehxClVyu4Ms9Q
-         PGzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBprYe94Q92qwjGOlHjqeqrZ0IQSVDrhBsis7UjW/peDyMv/bBpTJx+jW130xxZfKYh/92@vger.kernel.org, AJvYcCVknXTQo1o0ApWkS9DZxLAGjtnoP2uiBxNgn7aOcRHc+78g+69CDlxQu+0FLJ1Czm2hOdMLIZS8Kkn6@vger.kernel.org, AJvYcCVqXCiTn/k0u0WIU7+d1FCGFW8ZKDLeRmF78poN4Harj+D4elI0POChb9OQvHip28UawabMCC64y+EY@vger.kernel.org, AJvYcCXGDYvro+L6qve4bFWLo/c1AxPTpvg/s4EtwU0qiECHISDN/LXEWaHpmL5pD6o4uA+RU4ifcXiShVXXu+Yswjw=@vger.kernel.org, AJvYcCXwLdAVn9et3qhMT7lFzIE0G0fECMQoszgkNaTi7bgAFVe7t/VKsKazKuU3so7+88MJp7Os3K8B43N/RYfh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyxn71jxs6OzWagodT/liUt0NKeXPyeLxvjcqUukOAiWWlI8NhJ
-	PhpfnqBa5NjaiWA4jiYJt4G7omtcqN4O4xzCgpECUqCJBicst95KANQuABjxgu1IDnO51UDhqWO
-	YQ262G3afKeSo+0WD5pGuYjwv3U8=
-X-Gm-Gg: ASbGncspADguRiiL2x091JegG+aIzErRLi+HnJXbTS9PpS6R5rRf2s8datufvISkr+s
-	+OM+TX1jQkKde/HLM3QcDZNMMfO4SFE8dGZKAvBOgWod5M2Dv832mqZ0c9axKTe77vi3b1U0lRj
-	P9mYVg9bc=
-X-Google-Smtp-Source: AGHT+IHIittGCPQby1z/CAAucXt5JFtqaN9s/CywTLEe2k/+dixEbEMthbGRpWklymixZ1tzV0vdjHdcEd+cYidEN04=
-X-Received: by 2002:a17:90b:1a91:b0:2fe:a747:935a with SMTP id
- 98e67ed59e1d1-2febabc3f2amr1758599a91.4.1740738165504; Fri, 28 Feb 2025
- 02:22:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740738230; x=1741343030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sOXRurkxs0z+V+7lsmPMX66oMcslr79MsEtI3f5CfhE=;
+        b=lXrJb/x6foo9FJqq1cWK9cnatR/y9YY1VCOyLDVOjH26ZVNE45oWd0re11fwOXSMJM
+         1p+YqiOFjTIGitPqg0VABds2M4vVPecUSn1Rdn5hcBL8UDYKhEgrIcpb1rPhVuEdIXwY
+         HGQacMe3A3JujBtHjQZKxhGBWwWleWzef6Q3q/r29UPJumqhCfu7yRtGLnCyH3MwZTLF
+         HEWeK62tfbCZDwe+T7durNDh2RYGhaXxiDHRZp0QLVH3QTwnVFCBV49w/rplp0NW6ZOL
+         EdTeRlqoB2m+aUx3AobP9hR9vFO0sK+LF34SHjY2n/FSu5MarTS3Nj/lLWSDfg54Wh51
+         qQqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4nf2u4TgcZm/YVzVqBrf4wB0kMRcM8VEheP5s74rtfPOT4LOomiuQ04DCJ9ujZewAunM6DgVvQDE34mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywp+I7hS1zNzDzR9cs017PsRiRsqyS8UxQC1PVIDEkl3wlt7tL
+	XqlVgwj9/C0wpkFrXEeAZYPnbkFd/IYxhS1ydLZgeL8LHzhXDMlH3mYIo+UgSt8=
+X-Gm-Gg: ASbGncuHGeeVM9iNLDrH4TMrCJFvKXEKb6Pc17OYljYvK5cG6ylTQUolBl1bEbsE2tu
+	fk4nk5dh/LUph6srnJQGQiXiO5LfSj+XQnTJkDvwuxZvvCY13rjPuDGBRo5RFLXuzzynPuEKVLW
+	fkEFKl1DNp0tCDBioQJXyEyIkuzqP592OJXJ1QtFIh1QxYDoM3IwYd/IoKFmuPMKupaet4BrakW
+	2dSVGcxAB3d+Fnevto2x1dFNOHThkcXUz0lZxebHrA4I9P3oQxtuSKPItG8wm2HlOdNlP/LMhaO
+	8shMIKSpOfhAfYobDeqyGnDy5tgSWACrsXKtcE9PDJUbON4kvEbg2bHlJJagPLwkrUY/70VEj4h
+	ttgD4HQ==
+X-Google-Smtp-Source: AGHT+IF9LbW1HCKmZbmSt9YCfBY3dVCCtw9fK87uyuUzNs/7q6xF88ILJDPLd2GLLROaUD03gbt8UA==
+X-Received: by 2002:ac2:4c4f:0:b0:545:25cc:23cd with SMTP id 2adb3069b0e04-5494c3339e6mr1166834e87.16.1740738230560;
+        Fri, 28 Feb 2025 02:23:50 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54944174494sm441628e87.10.2025.02.28.02.23.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Feb 2025 02:23:49 -0800 (PST)
+Date: Fri, 28 Feb 2025 12:23:46 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] drm/bridge: Fix spelling mistake "gettin" ->
+ "getting"
+Message-ID: <qyckacqgtlqrmu7xip3o5h3qjrdqegtvsivtqihg2asbk3rzm5@sagoukfjydp6>
+References: <20250228083248.676473-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241219170425.12036-1-dakr@kernel.org> <20241219170425.12036-8-dakr@kernel.org>
- <g63h5f3zowy375yutftautqhurflahq3o5nmujbr274c5d7u7u@j5cbqi5aba6k>
- <CANiq72=gZhG8MOCqPi8F0yp3WR1oW77V+MXdLP=RK_R2Jzg-cw@mail.gmail.com>
- <wnzq3vlgawjdchjck7nzwlzmm5qbmactwlhtj44ak7s7kefphd@m7emgjnmnkjn>
- <Z72jw3TYJHm7N242@pollux> <nlngenb6udempavyevw62qvdzuo7jr4m5mt4fwvznza347vicl@ynn4c5lojoub>
- <Z8A4E_AyDlSUT5Bq@pollux> <w2udn7qfzcvncghilcwaz4qc6rv2si3dqpjcs2wrbvits3b44k@parw3mnusbuf>
-In-Reply-To: <w2udn7qfzcvncghilcwaz4qc6rv2si3dqpjcs2wrbvits3b44k@parw3mnusbuf>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 28 Feb 2025 11:22:33 +0100
-X-Gm-Features: AQ5f1JoBAMoLfZEmHB4LoCW7CaOXRtnCBfVtt6Z6is_lk4ig8YbV9oYSmUL7ugI
-Message-ID: <CANiq72myNPVD=1jHzFxryvnBuwqdw7-PDbPsQ+FdpCjeYtVzig@mail.gmail.com>
-Subject: Re: [PATCH v7 07/16] rust: add `io::{Io, IoRaw}` base types
-To: Alistair Popple <apopple@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org, rafael@kernel.org, 
-	bhelgaas@google.com, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, tmgross@umich.edu, a.hindborg@samsung.com, 
-	aliceryhl@google.com, airlied@gmail.com, fujita.tomonori@gmail.com, 
-	lina@asahilina.net, pstanner@redhat.com, ajanulgu@redhat.com, 
-	lyude@redhat.com, robh@kernel.org, daniel.almeida@collabora.com, 
-	saravanak@google.com, dirk.behme@de.bosch.com, j@jannau.net, 
-	fabien.parent@linaro.org, chrisi.schrefl@gmail.com, paulmck@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, rcu@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250228083248.676473-1-colin.i.king@gmail.com>
 
-On Fri, Feb 28, 2025 at 6:29=E2=80=AFAM Alistair Popple <apopple@nvidia.com=
-> wrote:
->
-> I'm not sure I agree it works perfectly fine. Developer ergonomics are
-> an important aspect of any build environment, and I'd argue the ergonomic
-> limitation for (2) means it is at least somewhat broken and needs fixing.
->
-> Anyway thanks for your time and detailed explainations, I really just sta=
-rted
-> this thread as I think reducing friction for existing kernel developers t=
-o start
-> looking at Rust in the kernel is important.
+On Fri, Feb 28, 2025 at 08:32:47AM +0000, Colin Ian King wrote:
+> There is a spelling mistake in a dev_err message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/gpu/drm/bridge/sii902x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-+1, it is indeed very, very important.
+Fixes: ff5781634c41 ("drm/bridge: sii902x: Implement HDMI audio support")
 
-But, just to clarify, we have been caring about ergonomics and
-reducing friction for kernel developers since the very beginning,
-including asking upstream Rust for features and so on when applicable.
-
-In general, it has been a factor in most topics we have discussed in
-the team since 2020, not just for source code or debugging features,
-but also docs, KUnit, and so on.
-
-That is why we would like to improve it and why we have it in our
-upstream Rust wishlist and so on. In other words, it is not that we do
-not see the issue!
-
-I hope that clarifies.
-
-Cheers,
-Miguel
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+-- 
+With best wishes
+Dmitry
