@@ -1,151 +1,97 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35200189B84
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7695270EA4;
+	Fri, 28 Feb 2025 16:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761603; cv=none; b=XeeoG7I+ytkt6whAKqV5mRKmIt79t/TPH3jhD8yofIJb9DCT29qUuyHjh4C0mUsJUIYYa4B0J4z9fL2un2cFxmcycPEsjqSGsGZDOXkGaCzYs/JvVbbEwyNH3eqV/ywKSvkFTW3nv5cIiviewZz03ejES3uffSDhqb4/h9cowHw=
+	t=1740761618; cv=none; b=oWcHvlVzMFvC+FfH0GLHQP4NzTqHj8GLFRPLax/kj1OVew4ndpseAu26mRhfYvBjdHVn+ImYVGmasZS5rPMuw7g0shw7i01AVeWCMk2pVedOLPzy8LJwmHuPSsCunqTOym9st21/hPzO4KDlMXngYQnbjluloMGpl84K0OTEvJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761603; c=relaxed/simple;
-	bh=tgmOZUaV5HcyzBER0+xh4TbnFQgsCQx+ORmnNsm9C2s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rprbj7krWusEAzOf4tfJwYG68Nfs/Vuw3l0uQ9UztHvY8mLdzKPQ9YfS0NUDByKqbcWamzoFxtw+eAEl+AgZs37hLJzlgVHe3bAuXAzM+nCBiGgS0lldN34ipOICY6f7uEd29nFfBVLTFBukJXNZ1Arl8lDdHXFdGQEYs5qeCPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A83EF1515;
-	Fri, 28 Feb 2025 08:53:36 -0800 (PST)
-Received: from [10.1.36.17] (e122027.cambridge.arm.com [10.1.36.17])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 535E43F6A8;
-	Fri, 28 Feb 2025 08:53:19 -0800 (PST)
-Message-ID: <6218ded2-dd8b-4761-b4f3-975107a1f7c4@arm.com>
-Date: Fri, 28 Feb 2025 16:53:17 +0000
+	s=arc-20240116; t=1740761618; c=relaxed/simple;
+	bh=STdgObjwBqNhgrALQQxpcHwZDjl0JJEXoS2ZVGtQvcE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Yfm5A5AkWPzwwMucAIMqq2LPj3US5UPm+RurdBeCkAQKhHL+LLs29t+1fIylVTGlvp0xma4YmSyN3b5OamU2wDvt5EUOs92QgdaCErBslBdAw5kak5Uz1Ehr11m/3XDBfoguVn0EgdmdOlEIZXCxYwhlK5L6nb9g+nFP84nJIG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=B4Afbyjl; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="B4Afbyjl"
+Received: from narnia.corp.microsoft.com (unknown [167.220.2.28])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CC491210D0D6;
+	Fri, 28 Feb 2025 08:53:30 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CC491210D0D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740761616;
+	bh=XrnlsEB7QNopchRgDQls44QVaqbEuRTnrijpTykRZqw=;
+	h=From:To:Subject:Date:From;
+	b=B4Afbyjle5mnCPcLhMWTG3/y+zD4Hrbj9it+xyFiuDuTtti1OHEuvAsUFs5JtOwPn
+	 YnH0AwcijkIga5WHe7KJBz+16NcT3bMjUORqg7DWtWR+dD5uTVkjEFHtwj5//mmhAq
+	 cdOwP7VcHlc/WjVkozEVp/q/3NI4OSxaX4flwZQY=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	linux-security-module@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	selinux@vger.kernel.org,
+	bboscaccy@linux.microsoft.com
+Subject: [PATCH 0/1] v2 security: Propagate caller information in bpf hooks
+Date: Fri, 28 Feb 2025 08:53:04 -0800
+Message-ID: <20250228165322.3121535-1-bboscaccy@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] drm/panthor: Replace sleep locks with spinlocks in
- fdinfo path
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250227231628.4048738-1-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 27/02/2025 23:16, Adrián Larumbe wrote:
-> Commit 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo
-> group samples") introduced an xarray lock to deal with potential
-> use-after-free errors when accessing groups fdinfo figures. However, this
-> toggles the kernel's atomic context status, so the next nested mutex lock
-> will raise a warning when the kernel is compiled with mutex debug options:
-> 
-> CONFIG_DEBUG_RT_MUTEXES=y
-> CONFIG_DEBUG_MUTEXES=y
-> 
-> Replace Panthor's group fdinfo data mutex with a guarded spinlock.
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
-> 0590c94c3596 ("drm/panthor: Fix race condition when gathering fdinfo group samples")
+Hello,
 
-Missing "Fixes:" prefix
+While trying to implement an eBPF gatekeeper program, we ran into an
+issue whereas the LSM hooks are missing some relevant data.
 
-> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Otherwise
+Certain subcommands passed to the bpf() syscall can be invoked from
+either the kernel or userspace. Additionally, some fields in the
+bpf_attr sruct contain pointers, and depending on where the subcommand
+was invoked, could point to either user or kernel memory. One example
+of this, is the bpf_prog_load subcommand and it's fd_array.  This data
+is made available and used by the verifier, but not made available to
+the LSM subsystem. This patchset simply exposes that information to
+applicable LSM hooks.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
 
-> ---
->  drivers/gpu/drm/panthor/panthor_sched.c | 26 ++++++++++++-------------
->  1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index 1a276db095ff..4d31d1967716 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -9,6 +9,7 @@
->  #include <drm/panthor_drm.h>
->  
->  #include <linux/build_bug.h>
-> +#include <linux/cleanup.h>
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/dma-mapping.h>
-> @@ -631,10 +632,10 @@ struct panthor_group {
->  		struct panthor_gpu_usage data;
->  
->  		/**
-> -		 * @lock: Mutex to govern concurrent access from drm file's fdinfo callback
-> -		 * and job post-completion processing function
-> +		 * @fdinfo.lock: Spinlock to govern concurrent access from drm file's fdinfo
-> +		 * callback and job post-completion processing function
->  		 */
-> -		struct mutex lock;
-> +		spinlock_t lock;
->  
->  		/** @fdinfo.kbo_sizes: Aggregate size of private kernel BO's held by the group. */
->  		size_t kbo_sizes;
-> @@ -910,8 +911,6 @@ static void group_release_work(struct work_struct *work)
->  						   release_work);
->  	u32 i;
->  
-> -	mutex_destroy(&group->fdinfo.lock);
-> -
->  	for (i = 0; i < group->queue_count; i++)
->  		group_free_queue(group, group->queues[i]);
->  
-> @@ -2861,12 +2860,12 @@ static void update_fdinfo_stats(struct panthor_job *job)
->  	struct panthor_job_profiling_data *slots = queue->profiling.slots->kmap;
->  	struct panthor_job_profiling_data *data = &slots[job->profiling.slot];
->  
-> -	mutex_lock(&group->fdinfo.lock);
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> -		fdinfo->cycles += data->cycles.after - data->cycles.before;
-> -	if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> -		fdinfo->time += data->time.after - data->time.before;
-> -	mutex_unlock(&group->fdinfo.lock);
-> +	scoped_guard(spinlock, &group->fdinfo.lock) {
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_CYCLES)
-> +			fdinfo->cycles += data->cycles.after - data->cycles.before;
-> +		if (job->profiling.mask & PANTHOR_DEVICE_PROFILING_TIMESTAMP)
-> +			fdinfo->time += data->time.after - data->time.before;
-> +	}
->  }
->  
->  void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
-> @@ -2880,12 +2879,11 @@ void panthor_fdinfo_gather_group_samples(struct panthor_file *pfile)
->  
->  	xa_lock(&gpool->xa);
->  	xa_for_each(&gpool->xa, i, group) {
-> -		mutex_lock(&group->fdinfo.lock);
-> +		guard(spinlock)(&group->fdinfo.lock);
->  		pfile->stats.cycles += group->fdinfo.data.cycles;
->  		pfile->stats.time += group->fdinfo.data.time;
->  		group->fdinfo.data.cycles = 0;
->  		group->fdinfo.data.time = 0;
-> -		mutex_unlock(&group->fdinfo.lock);
->  	}
->  	xa_unlock(&gpool->xa);
->  }
-> @@ -3537,7 +3535,7 @@ int panthor_group_create(struct panthor_file *pfile,
->  	mutex_unlock(&sched->reset.lock);
->  
->  	add_group_kbo_sizes(group->ptdev, group);
-> -	mutex_init(&group->fdinfo.lock);
-> +	spin_lock_init(&group->fdinfo.lock);
->  
->  	return gid;
->  
+Change list:
+- v1 -> v2
+  - Pass a boolean flag in lieu of bpfptr_t
+
+Revisions:
+- v1
+  https://lore.kernel.org/bpf/20250226003055.1654837-1-bboscaccy@linux.microsoft.com/
+
+Blaise Boscaccy (1):
+  security: Propagate caller information in bpf hooks
+
+ include/linux/lsm_hook_defs.h |  6 +++---
+ include/linux/security.h      | 12 ++++++------
+ kernel/bpf/syscall.c          | 10 +++++-----
+ security/security.c           | 17 ++++++++++-------
+ security/selinux/hooks.c      |  6 +++---
+ 5 files changed, 27 insertions(+), 24 deletions(-)
+
+-- 
+2.48.1
 
