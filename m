@@ -1,123 +1,100 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B121D8DFE
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12AD92CCC0;
+	Fri, 28 Feb 2025 07:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729426; cv=none; b=MDnJI4qOZ5jVrZCpmTbiaaJnZ9kaq0T1M1fzbPzCs0pd7gIBTGcQTAKwT5Z6J4jOJ8njva4eHOOIwz0pNiG2dzt4C3QkdgTB7SxhN2Fsv1sxPj1zAnfo536ygrqaPrGjsH9uDNsPwEDsVGcxV5PcuMxqlKYlpzxN3UmB0It/t/8=
+	t=1740729490; cv=none; b=H2BMx8EmQLq3+UsJiFOAGCSz1Ejt44NariKSgz0sBsv6OgCjA9zhv8CYqIhzAac/CdBOy0CfPqwe74K9gtBZJglF1CnkOn1EBpJOBTrCVnunLT7H1vHKzikzY7ZdIln+ICfLagiQ+3vTSYT3uCUDrZqeXe/I1/nFyKdGbTHtm9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729426; c=relaxed/simple;
-	bh=gmMH+aUJE9Rk1973vUz9hXnl1+2zE7SmywBWSF30UzY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nJiuKgfhv4C7CtnOYuTQ9krhRSUoiwFaxtF3dn22npW6194gzVW8nP7zTPX5WZ2pHn4/MQMYbaG5Z+4sZMal+XqDbenWQSCTdDw/s2eWn9gW3p2OVxsnoiM3ddMGY4Xwd4JEavdCpMfrgc/qYTtoe/tcGdxwLl1+84nU8D1emWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N9SIgvPH; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740729490; c=relaxed/simple;
+	bh=A5UlJk1Lwgcjk63CUpIIkNaWpKKDpjlZEsd5GNdhYNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cIg6osQAWgK9420gByaDZP/IpbQzIw5B/mlDJMIrgnRdpGrhcnZW84sZ0oKz0X0E6N7CFVjBe4W9ItIRuSKa6Zo2mkvwtoUaUcVHTGO57s/9zALFnSdAWeruUlqUuffvp1ZtXKkcHFAurla2BZpRfkuwNbdkhCQciKFngbIacsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bqL8MAA5; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N9SIgvPH"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-222e8d07dc6so33609395ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 27 Feb 2025 23:57:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740729424; x=1741334224; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4WUki+CTmoGzsbV4r0P+sToWHb5wtaj3zroxo9tMJJk=;
-        b=N9SIgvPHmHba9/V2cdP4U9JI0Vjr+LutIPQzhKI9Qzx4hBs8fWz1plnND7d7wVcpiN
-         TlYOc3FAr//KC5HQH+Avm37rGHVPWRuauv3AkRnIzKMYKavs+N4fF8iP9hRPEjnbPe/4
-         isBL+jOtFgd11pHK6pfnDFt6/8TZoEi0tQEYxeROjsS4TX5ABCQFK2GeQLF+9r9cl6Ca
-         neGutvNt7BnHGlV51RG9QhW+ybkqxYL05wUTxlTa37waDvtAOW8K8nlvOxK8gVxtCxYf
-         HTojvLm9YMiUNLZL8oYPaU7hQRicpBz/hFBlsOLSF8bcO0zqx0NjZbk0KQEZ9stsl3h1
-         PXHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740729424; x=1741334224;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4WUki+CTmoGzsbV4r0P+sToWHb5wtaj3zroxo9tMJJk=;
-        b=nDYfttkwOAZ4sbgY5UR02SRBFJ5mUBZFKbRZyKzpk82rNYAnDC4mQ1B4V8DQvdF6eR
-         dwtsw/HnZ6mIDDPwezZXuA4gYs5WQisOJc3UI6WomDZHSOu2L2Pi//poHbgtkbXXIntc
-         nimAAQ8NpRN+9R7sJnYsHKobfaJwkFamdeUXDYDTAKaeIzH42YKkfL6O0r2FLk6FVrY5
-         W7T+6/Qw59j7IdyLqTu9KTtbdSbrCRmSQaxS/cHyfv+25Z1FTxfnufEz1yMstX3gPjkz
-         VIh8K9AS621tq+z/8QO0PbaMxkRuzjDF55SzPAjvvKOQ2rndbgYarjYw6k6IE1F6VNLO
-         jjVg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkgC5VtKWw48Y4AYJqWmZmmnvMuMgaC8AxQw1awyrxLMfXuMIGRSw3JK+cd+6P2gkeFRz483fE8VLWMhc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH14zXGXygzZeSupYXMUImQjXZ6IepvTXIvsv5G//TBh+BpDun
-	OExxxnIcAgq87gvHACzDFgPW/97r0+LuHtaoXX4aPYUSOnTfEeq1XZLH7AFDlMU=
-X-Gm-Gg: ASbGncuEAlORygUASiaWpwr4uw+El0R3AQgagS5Ku23bjkGa+bu3+WvZEWMkGVPWmk3
-	dUk0uwmw39YN75DmCXaL07lRvWACNFFn23m+0ra5Ng8fLUzvTGpKFBzvYROZpKw2TFgdHkeGAoo
-	T1XT7ZI1/fgyuWk+KU6ogtDF8oRXLqScMR2v4mvWIcOUd009eOLhbDPHUl5HexMO4HNkHR/czNe
-	DTpnP7IUYma9BXadNZVr35Bu9a8nHYOWxF4Wc67zuXA40d1IxLz7NrPb3YdvFIKT3rMEGkr6vMG
-	wqTu37vl+q6ZYEgoLKOnMyhy18s=
-X-Google-Smtp-Source: AGHT+IHF0XzUBOQzA4xQaAevOhP/XOeIAlJ08hdOp5noD+m/4qmyWqGwO+BqRhM4PXdmUbApIBe8gQ==
-X-Received: by 2002:a17:903:1c9:b0:215:b1e3:c051 with SMTP id d9443c01a7336-2236745595emr42790705ad.11.1740729424024;
-        Thu, 27 Feb 2025 23:57:04 -0800 (PST)
-Received: from localhost ([122.172.84.15])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22350537b47sm27618385ad.251.2025.02.27.23.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Feb 2025 23:57:03 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>,
-	rust-for-linux@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bqL8MAA5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=H4uV16DUgChkRShZd7CyTzN+P//AtMu7+LwcdpiOvIQ=; b=bqL8MAA5LcUEJ2THFuxDcc7ILy
+	KKUuHqucSIzt7nMETkv1JviFBO4XODR3BlWCfe1iVNKHVuoXN4MiAFv0v5sGRPizEk7m/8G2n1JtA
+	YuKUL0i3JEuXP6gZagHIxpyG94/r54ziumor8Er72q/L37mLw0AOj/3+FEBt7phiXwoMJL6cGmEs/
+	2ooZ2lNxfGzwJqRx3FDbRiemcLuwhYMnPpCR4AtJsYzMVPIxpwY2zda/JGw6/VIy3lLFSKMaU7skK
+	p81F9Kv6b/a06pElh2TVUHkV1uQQvsGrwaP/OHgY6y7ft7bsgGxEYSFNRNRXJujx6/Nridyt7PqgQ
+	apkx6zrg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tnvFs-00000003vXl-1BzF;
+	Fri, 28 Feb 2025 07:57:56 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4BDB7300756; Fri, 28 Feb 2025 08:57:55 +0100 (CET)
+Date: Fri, 28 Feb 2025 08:57:55 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
-	Burak Emir <bqe@google.com>
-Subject: [PATCH V2 2/2] MAINTAINERS: Add entry for Rust bitmap API
-Date: Fri, 28 Feb 2025 13:26:47 +0530
-Message-Id: <e93666104fa1e4616d88c31e89bacc4415db24af.1740726226.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1740726226.git.viresh.kumar@linaro.org>
-References: <cover.1740726226.git.viresh.kumar@linaro.org>
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 1/9] preempt: Introduce HARDIRQ_DISABLE_BITS
+Message-ID: <20250228075755.GC5880@noisy.programming.kicks-ass.net>
+References: <20250227221924.265259-1-lyude@redhat.com>
+ <20250227221924.265259-2-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227221924.265259-2-lyude@redhat.com>
 
-Update the MAINTAINERS file to include the Rust abstractions for bitmap
-API.
+On Thu, Feb 27, 2025 at 05:10:12PM -0500, Lyude Paul wrote:
 
-Yury has indicated that he does not wish to maintain the Rust code but
-would like to be listed as a reviewer.
+> @@ -26,29 +27,34 @@
+>   *
+>   *         PREEMPT_MASK:	0x000000ff
+>   *         SOFTIRQ_MASK:	0x0000ff00
+> - *         HARDIRQ_MASK:	0x000f0000
+> - *             NMI_MASK:	0x00f00000
+> + * HARDIRQ_DISABLE_MASK:	0x00ff0000
+> + *         HARDIRQ_MASK:	0x07000000
+> + *             NMI_MASK:	0x38000000
+>   * PREEMPT_NEED_RESCHED:	0x80000000
+>   */
+>  #define PREEMPT_BITS	8
+>  #define SOFTIRQ_BITS	8
+> -#define HARDIRQ_BITS	4
+> -#define NMI_BITS	4
+> +#define HARDIRQ_DISABLE_BITS	8
+> +#define HARDIRQ_BITS	3
+> +#define NMI_BITS	3
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Yury Norov <yury.norov@gmail.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+I'm a bit scared here. This reduces the number of NMI levels from 16 to
+8, and we have 5 IST gates that can nest in wonderful ways. This might
+just be achievable.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ec2428b82103..17e98d757b9b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4034,6 +4034,12 @@ M:	Yury Norov <yury.norov@gmail.com>
- S:	Maintained
- F:	rust/helpers/cpumask.c
- 
-+BITMAP API [RUST]
-+M:	Viresh Kumar <viresh.kumar@linaro.org> (cpumask)
-+R:	Yury Norov <yury.norov@gmail.com>
-+S:	Maintained
-+F:	rust/kernel/cpumask.rs
-+
- BITOPS API
- M:	Yury Norov <yury.norov@gmail.com>
- R:	Rasmus Villemoes <linux@rasmusvillemoes.dk>
--- 
-2.31.1.272.g89b43f80a514
+Also, you should probably double check the HARDIRQ bits against all
+architectures that have interrupt priority support -- Linux doesn't
+really do that, local_irq_disable() is typically disable-all, but things
+like PowerPC play funny games -- ideally those games are all played
+before entering the common code that has the accounting on.
+
+And I don't think we have overflow detection on the NMI/IRQ bits.
+
+The comment with __nmi_enter() is now wrong.
+
+
+Anyway, like I said before, I like the general idea, but I hate we're
+growing a 3rd form.
+
 
