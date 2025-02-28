@@ -1,204 +1,274 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010030.outbound.protection.outlook.com [52.101.229.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A68270EA4
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740754413; cv=none; b=NtB8oFgTJVIqcE3sTV1tqGMbIE1iaBtXyXF6Spoc6Hr91+A/eSk6JwJT0lIYaqVqmyu/dMkOATbkWzk6vFNsSb9RIonJzVUAa48hcfH18pqKLopxjYH3QOOMofNGLkN1V3vUhGVv1wq93vCuKuak6ClCCw6rbGspSFNFQxElFpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740754413; c=relaxed/simple;
-	bh=t1PAr2eEdMcCw9orI2VM67VmUdODOIx2DAcDEs7pVbw=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=DnfsYqBUbmWQWEJF0s09rhuCAaG8uXX1mWMV68dRXe51reiuecsvZQ3vFWYigps5GnIlXJp2jbKiYORkcU5XCid/T+u5yLH+AmDjlghd5x0UTDHXbUK7tc+KU8HD/9bIHK+pXr067LjT1pxPHa+cijMq7gRn2czEz+yPh7a9PIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i/CLJKeo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08150183CC3;
+	Fri, 28 Feb 2025 14:55:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740754540; cv=fail; b=LNCgnRiC+0E9Cww4B/75glkHUwM5NqsjKuO/mL4cV64MnPb/Nst9FW1+jsELx7Uxd/uhGLUKgtL1DyOUKdh2ODxHLMB5VvS8jbzaIdXS608RqCFUgFZ4BJ6/ERkRQHZeYub6sjNI5cxTFzI2LGMIcg9tRoICUqhU/JboNmJyKFI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740754540; c=relaxed/simple;
+	bh=raq+N8sPLSF7X5sUw/im55xYhn/4U+/uwEE+y4uCDkE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uSFJOyAz/rnYRe0LsAiZpHMLtIq3oyITbYTYgrzOY9S/mD7USWAb61ra6aVfxEQqmOoG6ANPiYj7DJzpPhOwc3j5QviVQtAHFHtdf00ooe0W/Wr4cXeMPWa+1bFWi33X8Tszre6EAOeh65F2/Vk244ZY+pESPp3hwBeadeb+NA0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=XFpL/p47; arc=fail smtp.client-ip=52.101.229.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/CLJKeo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740754410;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Y4Owtb6Y2XSyqYIbk6xQVrSNu7uVw1Cw1WOzP8Kp2SY=;
-	b=i/CLJKeoVnW5yEt44x1EnlT7iZ4rETlSw5XgajSalCc3DUMTuoHgNSKyxB2Qd8tkgrYuvx
-	Su7sZdzHQKiXhTjBS1S3fsIwgjbCUWA8bJP3zAHEyZWRT9CpeqWNVeMZoDJJKz8ykvsGTQ
-	7ZZw/ZjpobjdDr/NMxriu1kOuBE3DBc=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-574-H5y_UyCeOcO65OrsRAm9Jg-1; Fri,
- 28 Feb 2025 09:53:25 -0500
-X-MC-Unique: H5y_UyCeOcO65OrsRAm9Jg-1
-X-Mimecast-MFC-AGG-ID: H5y_UyCeOcO65OrsRAm9Jg_1740754404
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 078F61944EB8;
-	Fri, 28 Feb 2025 14:53:24 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.44.32.200])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6EF2B1800358;
-	Fri, 28 Feb 2025 14:53:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-cc: David Howells <dhowells@redhat.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Jakub Kicinski <kuba@kernel.org>,
-    "David S.
- Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-    linux-afs@lists.infradead.org, linux-fsdevel@lists.infradead.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL v2] afs, rxrpc: Clean up refcounting on afs_cell and afs_server records
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="XFpL/p47"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=g0EaeTSVdWHZb7K20kogzfOJ0RMwPPTLOuWDiBgmQH2JPkBa3VrRUpbLuuWQq/UB4QOZ4UZp916WPZFGIXTKgWp3oM38hZUusmFG7HBOckXFAhAhO/hW4PP6h53xCXqgr7G20/sCOapruU61pQnRbhclUMjp9d1p/VHCC3UbcJFvPyj7dVU6+g+vpvN8N7/T8MYoInZ3eymHLTrC8sUxtdD3yHTsSX38Z2o4K1kwDmdTvYKVy/GKyK7acxAII8t/VU5h0dICoyg3ZS5X1MCY10lDr4QGLSTzJEwl93RJMNdy/1JIYHsMiFWya0S8L+wWmrxExuFep5B2R8H06WHQZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l0UQbkyIYfXz+lX8d/NV2K1Ro8W58X5VPfSjzeF0r1w=;
+ b=YrfaxlBg9ZAwUof+DhVDbhYN+VdPe1rLl+hr7l+2Qnhdg/+Yjh5OIOElVpTXE9hglpzXidxwQgi4jsKqRNJy+egeWabQcO1dTgdHmOMNrHert0QMOUalD+BTCe++gp8RTn45i8aQxvSZQPwncUdjKntYAYvTDdlj1cFvoQ32Z/E1ZGjNuGYuJ/SFeuVoD9WgE9sLy+eWW40iOfvqcRbe/Pwqo8B4eVtZtBL7x7JPqaQTXQIdP6NxusHjuT/xbLCT59+uyTe+FUns7jVDg5Z1c1EC8P/L3jkwdaUwHulJZc+zQRaRMkJEUzYWrLLePO9HuYoZA70puhDADLqQXSv1Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l0UQbkyIYfXz+lX8d/NV2K1Ro8W58X5VPfSjzeF0r1w=;
+ b=XFpL/p47vaJJf1HUQ5TLobiYOUfPP06Hqk9gmbPAfERclByV8m2nO+vhyQFpePFRxiFpCa/fhCWT5sG1GAkuSFuGvmasLEowAFZNYCnnf54Vh4djPNSL74cR1qzmT2822GpYigMIqyTykphbdQqzIRL0huRLdFUwRp9347ssBGw=
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com (2603:1096:400:448::7)
+ by OSCPR01MB13240.jpnprd01.prod.outlook.com (2603:1096:604:34f::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.23; Fri, 28 Feb
+ 2025 14:55:34 +0000
+Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430]) by TYCPR01MB12093.jpnprd01.prod.outlook.com
+ ([fe80::439:42dd:2bf:a430%7]) with mapi id 15.20.8489.021; Fri, 28 Feb 2025
+ 14:55:34 +0000
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Magnus
+ Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>,
+	"dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: RE: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+Thread-Topic: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+Thread-Index: AQHbg6hTr6k5RmdmC0qfs3vIpDif/7NWbDgAgAUL6qCAARRzAIAAS6Iw
+Date: Fri, 28 Feb 2025 14:55:34 +0000
+Message-ID:
+ <TYCPR01MB12093D1484AD0E755B76FAE35C2CC2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+References: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com>
+ <20250220150110.738619-4-fabrizio.castro.jz@renesas.com>
+ <CAMuHMdUjDw923oStxqY+1myEePH9ApHnyd7sH=_4SSCnGMr=sw@mail.gmail.com>
+ <TYCPR01MB12093A1002C4F7D7B989D10C4C2CD2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
+ <CAMuHMdWzuNz_4LFtNtoiowq31b=wbA_9Qahj1f0EP-9Wq8X4Uw@mail.gmail.com>
+In-Reply-To:
+ <CAMuHMdWzuNz_4LFtNtoiowq31b=wbA_9Qahj1f0EP-9Wq8X4Uw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCPR01MB12093:EE_|OSCPR01MB13240:EE_
+x-ms-office365-filtering-correlation-id: e7d3d658-d992-43bd-a56a-08dd5807f48b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?VwdF6RpVVRNGStkMD3wm790CcU2EERXQrF5Brj8MbEOyNBoikwJ6SPIF5wNQ?=
+ =?us-ascii?Q?I1sRwNGozfB7zBMEmVykQKFzh+/ZSsmqQkoJevktqtNO4AgDTO0ilq04tvyi?=
+ =?us-ascii?Q?oPvCUnEA7SS0OS07kJuYfwxYrYt94ic95lod3B4RaZDFxQqu/9quvyS63Pho?=
+ =?us-ascii?Q?entIwxO3vCvfJcwKLG0wbJ7xcLLENGpfv7WAzF0kC52pKuRkSbTrzifvPBmf?=
+ =?us-ascii?Q?5OqoebbkEYneD5TpfHF89pb6x1UX/DFOgwwKfFg4caRdldPG2UmXRgjiDaY2?=
+ =?us-ascii?Q?qr2SxdiGw3fYkNedaKT0PZy17Lg0CaDucvrDDoGrDS1hBub0vDw+AhrgF6oa?=
+ =?us-ascii?Q?3D+yAGDU5wHgIc74MFMPH+PZUJQ4+rIQnDGXcfS6xhokQ4F/P53FMzf2Zc5w?=
+ =?us-ascii?Q?QxalScnrFGFdO3D82DbmtpXnrKvaZ81y96ckDQ7AVcI65ahTeIpU1AEitEea?=
+ =?us-ascii?Q?nMRKNZWjPbAlPBRDavUVjjDP1RoBQ7ckAs1E6rfJ5YrSWiEU6kvQ0sofnx/m?=
+ =?us-ascii?Q?ffdgXjYvUHx5ICKVVd5d6DAliJREb+r3z9YC57BdjQHlLhbVASW25lVgFQOo?=
+ =?us-ascii?Q?HRoBKQrJGkvs9tXapN158y9WavsUzBVr09x6Go+0wCFw2Gl/djPQHhISmN26?=
+ =?us-ascii?Q?yvXoKQBaUMOWx0ZgRN1jVapPk1azxqMdLyUY3/CjVCZvSyk7mk0y/N1hnkKY?=
+ =?us-ascii?Q?Y3NExP6jaRqJUgjXp4aBK0MqOz7awP6pQJwb0OCI3mg/S7yAIJ5SfZANdnhl?=
+ =?us-ascii?Q?CrGr/IFiUppeibj/7v5g9afP7TktpV2THoVyp9AG9nrb9cGGccFsqtH+jVJm?=
+ =?us-ascii?Q?EcBuK9INFgIc73glEP4gEj8EAq6Yo1ofCoMEvSC+ZQtA41DptDnNHM0/P9Rz?=
+ =?us-ascii?Q?4K1hJ5O35dQLYXVHJDx+WOZmCuYBV2KqtnKHPx6gAhYbWFmpQik61xtU6szQ?=
+ =?us-ascii?Q?RFPt7ryJ08F1LvPDMtzZH6Je0Ka1qGGa+SIjJt/1hPvXx5EX6gUDHyF4GjbD?=
+ =?us-ascii?Q?vtkh0IcRS2G+IoAHEVw/vkS5jaCcWcwPuiONE8LGHW9gDo8zSDm8SLneg+zG?=
+ =?us-ascii?Q?uGQ9d2vyFZWV8prBbZlrtR1i6NWP+CR02hpcVEJvhfGHYHx4IJjkEPO1wi+H?=
+ =?us-ascii?Q?3bYJGgEsF166e91lE4v8And3yU+Bf3A85uQsBcWojr5txjKJyC5tYNSx/+T2?=
+ =?us-ascii?Q?I81T78UQRIHXM0DzxsofsFUKwfGJeqVdRcghiahNS8Ur0CDphCxSWwYc1X9g?=
+ =?us-ascii?Q?ukSmCuU7cCrZ6OnwUVXUF9FdwaL+Z3StaBIslw95ix2bDzAd0golMu4slyG7?=
+ =?us-ascii?Q?b5qifApt7cmRoF8Rv5BJw+NM4ApSxYlaxGFEHG2w/Z9JsSVO7OvOoY6xj7cS?=
+ =?us-ascii?Q?5E0fjnlA8ssj8XCXp4aV139pU27F9UC5I2/SSh7oRMFC3Lmp9JDBcJqEbHMW?=
+ =?us-ascii?Q?UrpwghMXC7gKYVXOkh9bLpfJXLpWu81q?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB12093.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?W19YJz0OSZhzvNVQdtORZAqm73D527Mb+YiPzGQLGCGQk1IXcqMx33XLeiwE?=
+ =?us-ascii?Q?umaGPQbM4jqpnfSjLjkCWx21C/7kQ5fzpvgMMbEfIUcW0fZR4aVTpkmMxpqN?=
+ =?us-ascii?Q?mBcIuDVLq/yP+41Cu9zqcCrgphjt1OMNfao+oOLP4oZWNZvPougJ2j9DGVGX?=
+ =?us-ascii?Q?FKJFlPrnZZYOez81IaPwaScAHTyy1h9fdrfFUrUc8QSHeZz1K3CWPjH2HNDy?=
+ =?us-ascii?Q?efkvnonin+ruQDW/OWwWxsJ4LwAnJSKRlz0UyCoK3DsI/4cn1OUyqSav4dAm?=
+ =?us-ascii?Q?E+IsuOFPhncRD+fmDaPT6k7E5p7skOpIn6iZaJGaQOSo22QRhZnmtHQ5OmdC?=
+ =?us-ascii?Q?I1hPeOvHtg5kRCzVtekAWuXvgUvaVi/HQDawz+qxMLnZp9Qnihee66HSIcae?=
+ =?us-ascii?Q?0fEf17UlhCZh4IERjsqOja3RlaLj+HlBIj0XeVfBsevzj1LbW5DZNOto2PNU?=
+ =?us-ascii?Q?OZ/D36xh490pqoQFcD6AeUjIVtQ4QMRPXkDXM6YpiLuzHqaArIHjwRGcgZhb?=
+ =?us-ascii?Q?f34gfNhkQ0zUgI0G8Ts1pU6gxKSrk9YZ3y5vvxsiKJaVQoN6Txe79TrGq9IW?=
+ =?us-ascii?Q?rJ9XM8iv62aR6G24pQ2EhPErDTZxHqusb3iEAbPzQ6+emqcSdvFU8zqMmmVc?=
+ =?us-ascii?Q?BaHIzDnBGNS0bwMib4zaKaY03Q6q3P1a1of6lKWsm5yoh2tbKTwat1ODzqRl?=
+ =?us-ascii?Q?pxolHLW7SZTHI1NlLPfJT/0YewD56JfaT0v3XC5S3dZJ/rG2bW7B45kqWavo?=
+ =?us-ascii?Q?VjPGicVvuFiWSXJNbPOjuy3Ej6RjLJK+du25s2avhUaiaS2Z4H26CeM2HD0/?=
+ =?us-ascii?Q?FFGrRePBSTqYKvKlXZIeF61xOfzT01UWdi2H61q2c9BunLc7VXv4ilMHBuw9?=
+ =?us-ascii?Q?Lyssm+Ps0Rucbkp7ylCJMxDtGsIAdrWAOttXHXbOAj/yGDiERv+6J0Kw+lTj?=
+ =?us-ascii?Q?HrtvyhvAkKqD5lQv3N1slDAwtXpeqxnIgy4TGb1FsPNwU9xbrP4DI0H2lZOl?=
+ =?us-ascii?Q?hNXzWAfmH4gGV+owTRAawaITtnUJSWgYJYNog3eld+mZHyOovtt7hU96LYOO?=
+ =?us-ascii?Q?1iNts3dJpO6sBkmLzMpktJh/7a5hsPKaJLo9YjtJge8hnIo/k2tnhaamztgd?=
+ =?us-ascii?Q?LEuAwCgETekAJLzI1+r3NlpsWqtVL6llTP5s2BNT2HAN4WuquKDrp3/1U+lP?=
+ =?us-ascii?Q?zKd0NMt1jd0nn63foIbHSJnR0L1+GtY+Kd+BrUcVyngCvtP1Dt5BDoGodD6e?=
+ =?us-ascii?Q?r9iIbb69v59FdVbTP0qNWBb0MqCC0kOPNujFJlN1LbHGXxqkGdftUiDFgmZ9?=
+ =?us-ascii?Q?D9R3RMNv02fcGPfqGQK2Ou26hrMMokFJn9GxaTeYu7As2c7+k4miQJDyxroi?=
+ =?us-ascii?Q?iw7tU2Y5pnGiagRkm95q20WVW7FPtIyIVme6n/3gBVL8SGWysKluulVUtKhD?=
+ =?us-ascii?Q?0aqhAALmn687zhvsGrDBe1QZUMqIoQQqZeUVpWfR0LWfcv1I9GUaLGRVs/ix?=
+ =?us-ascii?Q?/xfq/Hq5JHNuaHPwNeaNflK08zxjAeqYcoxorxOlYeIjKFmXmgp1Ngt0Bx87?=
+ =?us-ascii?Q?2vHDjt2cxOUr6Ki5eIOCZZ0jWT4ZMQ6cnTyBplyo2DKyuIin0QWt48z3Vf3X?=
+ =?us-ascii?Q?FA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3399676.1740754398.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Feb 2025 14:53:18 +0000
-Message-ID: <3399677.1740754398@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB12093.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7d3d658-d992-43bd-a56a-08dd5807f48b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Feb 2025 14:55:34.6710
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8d9vUTBzyCvm2qPfuoxgpbqwGbZyPAwvEjD7qieYqUZCk4/Me3eII9EykDM40iLjvZ/gW3SX5kz8XlvuFhs6HccI/F6XRK/BmiW/h5iAK00=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB13240
 
-Hi Christian,
+Hi Geert,
 
-Could you pull this into the VFS tree onto a stable branch, replacing the
-earlier pull?  The patches were previously posted here as part of a longer
-series:
+Thanks for your feedback!
 
-  https://lore.kernel.org/r/20250224234154.2014840-1-dhowells@redhat.com/
+> From: Geert Uytterhoeven <geert@linux-m68k.org>
+> Sent: 28 February 2025 10:17
+> Subject: Re: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)=
+ family of SoCs
+>=20
+> Hi Fabrizio,
+>=20
+> On Thu, 27 Feb 2025 at 19:16, Fabrizio Castro
+> <fabrizio.castro.jz@renesas.com> wrote:
+> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Sent: 24 February 2025 12:44
+> > > Subject: Re: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2=
+H(P) family of SoCs
+> > >
+> > > On Thu, 20 Feb 2025 at 16:01, Fabrizio Castro
+> > > <fabrizio.castro.jz@renesas.com> wrote:
+> > > > Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+> > > > The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+> > > > Renesas RZ/G2L family of SoCs, but there are some differences:
+> > > > * It only uses one register area
+> > > > * It only uses one clock
+> > > > * It only uses one reset
+> > > > * Instead of using MID/IRD it uses REQ NO/ACK NO
+> > > > * It is connected to the Interrupt Control Unit (ICU)
+> > > >
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > >
+> > > > v1->v2:
+> > > > * Removed RZ/V2H DMAC example.
+> > > > * Improved the readability of the `if` statement.
+> > >
+> > > Thanks for the update!
+> > >
+> > > > --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> > > > +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> > > > @@ -61,14 +66,22 @@ properties:
+> > > >    '#dma-cells':
+> > > >      const: 1
+> > > >      description:
+> > > > -      The cell specifies the encoded MID/RID values of the DMAC po=
+rt
+> > > > -      connected to the DMA client and the slave channel configurat=
+ion
+> > > > -      parameters.
+> > > > +      For the RZ/A1H, RZ/Five, RZ/G2{L,LC,UL}, RZ/V2L, and RZ/G3S =
+SoCs, the cell
+> > > > +      specifies the encoded MID/RID values of the DMAC port connec=
+ted to the
+> > > > +      DMA client and the slave channel configuration parameters.
+> > > >        bits[0:9] - Specifies MID/RID value
+> > > >        bit[10] - Specifies DMA request high enable (HIEN)
+> > > >        bit[11] - Specifies DMA request detection type (LVL)
+> > > >        bits[12:14] - Specifies DMAACK output mode (AM)
+> > > >        bit[15] - Specifies Transfer Mode (TM)
+> > > > +      For the RZ/V2H(P) SoC the cell specifies the REQ NO, the ACK=
+ NO, and the
+> > > > +      slave channel configuration parameters.
+> > > > +      bits[0:9] - Specifies the REQ NO
+> > >
+> > > So REQ_NO is the new name for MID/RID.
+>=20
+> These are documented in Table 4.7-22 ("DMA Transfer Request Detection
+> Operation Setting Table").
 
-The first five patches are fixes that have gone through the net tree to
-Linus and hence this patchset is based on the latest merge by Linus and
-I've dropped those from my branch.
+REQ_NO is documented in both Table 4.7-22 and in Table 4.6-23 (column `DMAC=
+ No.`).
 
-This fixes an occasional hang that's only really encountered when rmmod'in=
-g
-the kafs module, one of the reasons why I'm proposing it for the next merg=
-e
-window rather than immediate upstreaming.  The changes include:
+>=20
+> > It's certainly similar. I would say that REQ_NO + ACK_NO is the new MID=
+_RID.
+> >
+> > > > +      bits[10:16] - Specifies the ACK NO
+> > >
+> > > This is a new field.
+> > > However, it is not clear to me which value to specify here, and if th=
+is
+> > > is a hardware property at all, and thus needs to be specified in DT?
+> >
+> > It is a HW property. The value to set can be found in Table 4.6-27 from
+> > the HW User Manual, column "Ack No".
+>=20
+> Thanks, but that table only shows values for SPDIF, SCU, SSIU and PFC
+> (for external DMA requests).  The most familiar DMA clients listed
+> in Table 4.7-22 are missing.  E.g. RSPI0 uses REQ_NO 0x8C/0x8D, but
+> which values does it need for ACK_NO?
 
- (1) Remove the "-o autocell" mount option.  This is obsolete with the
-     dynamic root and removing it makes the next patch slightly easier.
+Only a handful of devices need it. For every other device (and use case) on=
+ly the
+default value is needed.
 
- (2) Change how the dynamic root mount is constructed.  Currently, the roo=
-t
-     directory is (de)populated when it is (un)mounted if there are cells
-     already configured and, further, pairs of automount points have to be
-     created/removed each time a cell is added/deleted.
+But I'll take this out for now, until we get to support a device that actua=
+lly
+needs ACK NO.
 
-     This is changed so that readdir on the root dir lists all the known
-     cell automount pairs plus the @cell symlinks and the inodes and
-     dentries are constructed by lookup on demand.  This simplifies the
-     cell management code.
+Thanks!
 
- (3) A few improvements to the afs_volume tracepoint.
+Fab
 
- (4) A few improvements to the afs_server tracepoint.
-
- (5) Pass trace info into the afs_lookup_cell() function to allow the trac=
-e
-     log to indicate the purpose of the lookup.
-
- (6) Remove the 'net' parameter from afs_unuse_cell() as it's superfluous.
-
- (7) In rxrpc, allow a kernel app (such as kafs) to store a word of
-     information on rxrpc_peer records.
-
- (8) Use the information stored on the rxrpc_peer record to point to the
-     afs_server record.  This allows the server address lookup to be done
-     away with.
-
- (9) Simplify the afs_server ref/activity accounting to make each one
-     self-contained and not garbage collected from the cell management wor=
-k
-     item.
-
-(10) Simplify the afs_cell ref/activity accounting to make each one of
-     these also self-contained and not driven by a central management work
-     item.
-
-     The current code was intended to make it such that a single timer for
-     the namespace and one work item per cell could do all the work
-     required to maintain these records.  This, however, made for some
-     sequencing problems when cleaning up these records.  Further, the
-     attempt to pass refs along with timers and work items made getting it
-     right rather tricky when the timer or work item already had a ref
-     attached and now a ref had to be got rid of.
-
-Thanks,
-David
-
-Changes
-=3D=3D=3D=3D=3D=3D=3D
-ver #2)
- - Fix an error check of the form "unsigned value < 0".
-
-Link: https://lore.kernel.org/r//3190716.1740733119@warthog.procyon.org.uk=
-/ # v1
-
----
-The following changes since commit 1e15510b71c99c6e49134d756df91069f7d1814=
-1:
-
-  Merge tag 'net-6.14-rc5' of git://git.kernel.org/pub/scm/linux/kernel/gi=
-t/netdev/net (2025-02-27 09:32:42 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/afs-next-20250228-2
-
-for you to fetch changes up to 1832e155fa7aafa7a983bb3db2e5a7dbe0f1b074:
-
-  afs: Simplify cell record handling (2025-02-28 14:42:00 +0000)
-
-----------------------------------------------------------------
-afs: Fix ref leak in rmmod
-
-----------------------------------------------------------------
-David Howells (10):
-      afs: Remove the "autocell" mount option
-      afs: Change dynroot to create contents on demand
-      afs: Improve afs_volume tracing to display a debug ID
-      afs: Improve server refcount/active count tracing
-      afs: Make afs_lookup_cell() take a trace note
-      afs: Drop the net parameter from afs_unuse_cell()
-      rxrpc: Allow the app to store private data on peer structs
-      afs: Use the per-peer app data provided by rxrpc
-      afs: Fix afs_server ref accounting
-      afs: Simplify cell record handling
-
- fs/afs/addr_list.c         |  50 ++++
- fs/afs/cell.c              | 436 ++++++++++++++------------------
- fs/afs/cmservice.c         |  82 +------
- fs/afs/dir.c               |   5 +-
- fs/afs/dynroot.c           | 484 +++++++++++++++---------------------
- fs/afs/fs_probe.c          |  32 ++-
- fs/afs/fsclient.c          |   4 +-
- fs/afs/internal.h          |  98 ++++----
- fs/afs/main.c              |  16 +-
- fs/afs/mntpt.c             |   5 +-
- fs/afs/proc.c              |  15 +-
- fs/afs/rxrpc.c             |   8 +-
- fs/afs/server.c            | 601 +++++++++++++++++++---------------------=
------
- fs/afs/server_list.c       |   6 +-
- fs/afs/super.c             |  25 +-
- fs/afs/vl_alias.c          |   7 +-
- fs/afs/vl_rotate.c         |   2 +-
- fs/afs/volume.c            |  15 +-
- include/net/af_rxrpc.h     |   2 +
- include/trace/events/afs.h |  83 ++++---
- net/rxrpc/ar-internal.h    |   1 +
- net/rxrpc/peer_object.c    |  30 ++-
- 22 files changed, 903 insertions(+), 1104 deletions(-)
-
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>=20
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
