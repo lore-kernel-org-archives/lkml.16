@@ -1,218 +1,142 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
+Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [5.144.164.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC1B6276D3B;
-	Fri, 28 Feb 2025 09:22:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734579; cv=fail; b=s6HDXv6OHRbrqFvLPlChiiEPi9FglQV6kV6DhFIaJTaEYsZhq3DinngreK58k6G3eYYSKYURWLfoyn6B21G70FjRqswZORLUbGVRcaDc7LHEwXLmJrGTr6Qy3CQ8XkJfOk0XpLw1FRC8a2bT+rQ0gAuHNHtg/tt+FrPimWb2ZmY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734579; c=relaxed/simple;
-	bh=y2yK87GmOElZx7YoojZ0MU/vatdks/OAxnvGNc+M38Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e6UVD/sw4P6vcWoDk7icmKFRWjO/lZ3OPLzE+NmuP2vPqjh5p5/0fpxHeIs8zMn/CBefdAl9k2pDOrk2zaF8MM3yjFRC1y9PEq+dmlIoaBqVdFmUwyiaqtdFrNuNPpfjvwyXk9TvqXp9Er+ib55D0nQ0WPGZGkxsVWR2AXt3qrU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=zr1J+j1R; arc=fail smtp.client-ip=40.107.92.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="zr1J+j1R"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JneHbrRlN9XqtLVIRw+ERGl2KLTyT9UDntO/dhCU96IWbDLDnJBOw80kwPFIGTCUUPIxFvRroapBwGDosp3ifeQY7LAn2bB4jl0PtjOZjJ/SesKCGs0YVBQElCrtB1RnoVqcaClRwsI/M2JdoTInFFcK2lpVPO9o8/jnBzGgnQTcfjc3nUrc7CZmGAYkyu9sXyrQC+vU3Tacjo8dIGbM+yJYKOdrrGzk4WXWr0HldWkNkzoLIK/C7B7AOoWU8CApd8nBu9H52ETBRFE9sUxxYNI0FOmeLZdsCD2Ekp4QMNsIBSmhviz99sTNpT48ux5jJs3SAgS/o3MyOSyz4cybVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c1WMtFLwBm619ady0UKmZ95YE9M2q0JzD4sS7SkelFo=;
- b=PtZ0lHenAVG01aPhSfSh6tlk+qQwhBWozX8LWSK6kbOzP7S/v4X+6Ad1Q5fmDXDkADY+uNSMIZXDz3lyPMj8+DYZc+t7RxG/B3s+dC3CcongYdO0XYYou1ci2SdW2p8Z4Ty+ijbunj8cBHBR6JM4GmZ3cAlePtChsrbfpbTPt2oUcOY0B1ZIq5Hn1Ovw5PW3fbad7vcL5GXSr92gPTgwzSRGzcJNzOWG6mLPFib0pi0+PuH2TYHLx1ej0XMbQ8JEclCgSAM2pCLiAUpyCXJS9fE0iIzRm5MPRrTkO1oi9T/hk0llkOsrYFTcqHldTDHYtrr2Qf7c+/fbje6iAC5HvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c1WMtFLwBm619ady0UKmZ95YE9M2q0JzD4sS7SkelFo=;
- b=zr1J+j1RVFGfcs07r62iXx5edkQpn75Db5X2X6lu2aNxB8QHYWTDps1Qkr8HCv8qkmkTQr585S4FDKFSeFlopCryJanyMpxv5fguTK4iixSyT7ipv05eLD0b31FxJYMeO5CrKfjeysJofQwc4UnJCLggSj5NsT49CfWXCgK0PWo=
-Received: from SJ0P220CA0003.NAMP220.PROD.OUTLOOK.COM (2603:10b6:a03:41b::34)
- by PH8PR12MB7229.namprd12.prod.outlook.com (2603:10b6:510:227::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Fri, 28 Feb
- 2025 09:22:52 +0000
-Received: from SJ1PEPF00001CE3.namprd05.prod.outlook.com
- (2603:10b6:a03:41b:cafe::be) by SJ0P220CA0003.outlook.office365.com
- (2603:10b6:a03:41b::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.20 via Frontend Transport; Fri,
- 28 Feb 2025 09:22:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE3.mail.protection.outlook.com (10.167.242.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:22:52 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 03:20:16 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
-	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
-	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
-Subject: [RFC PATCH 16/19] KVM: x86: Secure AVIC: Add IOAPIC EOI support for level interrupts
-Date: Fri, 28 Feb 2025 14:21:12 +0530
-Message-ID: <20250228085115.105648-17-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
-References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5861C2324
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740734640; cv=none; b=bTygICoK3L5V16lr5IK0XhxjHEXvHDJHmOlG8zZ6A/Mh0HdIM0VegFtEO01SpB/L5rhLusxOkUVKC7HG9R2ay8LQZFp028Itv9+arz3yDzz0OglgYDco+vQjvyrdFqfrljw5XFplTyEhe1KEzSgesSGvcTodO8zn8IYGN417nTc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740734640; c=relaxed/simple;
+	bh=lWLCb46R8hij78SjcvmroxuHOuUYtOSrNx+gY4cGZB0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=XjaIWYFQnNy2uHWGzWGL8sYCaHqliBKjt6zl9Aq8sNu14WeMDO1aGh3TyuSoQwDrlSTw6iORrvR7008kVaB2oLe/Kez44Jc7j98wMI/eSzqWBXalq8wQ8+ISOXq0EnhJJT71evSWTZ+Jmm7n3fPnQ4WgAaUEYIoSVQqygBs4PKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from [127.0.0.1] (161-51-78-170.static.ef-service.nl [161.51.78.170])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 6CDB03F26F;
+	Fri, 28 Feb 2025 10:23:55 +0100 (CET)
+Date: Fri, 28 Feb 2025 10:23:54 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+CC: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] drm/msm/dpu: program master INTF value
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250228-dpu-active-ctl-v2-2-9a9df2ee5193@linaro.org>
+References: <20250228-dpu-active-ctl-v2-0-9a9df2ee5193@linaro.org> <20250228-dpu-active-ctl-v2-2-9a9df2ee5193@linaro.org>
+Message-ID: <CAACA6C8-441A-4B6E-AC07-A46094A02126@somainline.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE3:EE_|PH8PR12MB7229:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d84d417-7d45-400d-f35e-08dd57d97a32
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?flP6HIPp3RaVgGOSa1uDTM+8ZWkk89KE/a2p3UUiSEJLeQSJTrCJ7X009O6V?=
- =?us-ascii?Q?5vOePNW+SOY0gpZiP86i196qhz96lk6RPGa/0JfjpO2sD0nB8XhA7ylubmgM?=
- =?us-ascii?Q?fzTtzdL+tDqvtV4g61qC+ZfzhSAtFEQA+Xb6uxePUo0BTPyBBwkhbSPprLDD?=
- =?us-ascii?Q?wUVrIEVne9U3ZxtQJn3rrymTbjEW+db3aUWv89jNSvfryckOacCky3z/zXXu?=
- =?us-ascii?Q?ICb1idjAHHXrLgrU1obXxqj0y7TgBAYJ5aTW3Uwe/8Y+o3XTMu2RUzzk0ckX?=
- =?us-ascii?Q?83NCRxlz+pYwk1I5rxBQvkWSoN0JGQ6pERCYMS+1ofF1TB+wnx+Ar5G3LpNe?=
- =?us-ascii?Q?xzjVya/+0wsZY6vrbVv7ya2Hir1Xgd9HMW46gZYJmlq2xSttrDy6OlNwFBOD?=
- =?us-ascii?Q?mEabGzShPvalEGHJNfrSo4PmCOF5bsd4pHaNUVZg0+lp3m97bB9N/c0SbKOm?=
- =?us-ascii?Q?VfCwnjxhBMRVEHPmm2FFTRN0WM7bKAn0931tE5UB7JsGN7q7ShwyE72v3fNa?=
- =?us-ascii?Q?zn1sqcQ1ddikO8oSEmdR3SF6mXrNS2oQEjj4ewvPLfNy9TQUoWPlLe3fmSyk?=
- =?us-ascii?Q?cnVExBpahqe6qka7cbKDauyTSuFIngnzZ6Jn5hGOAxAIlWoMUF+R3Emli8CA?=
- =?us-ascii?Q?b+/t5OvWH27xpWIKDvE6yEaxhhaxrkR4LIPK55P6RGp8+MfmSXCmtJZ+VoHn?=
- =?us-ascii?Q?t0I3DvFGAg9v9YkgTV+wbgB+C38kApdlzG6o9TlKhLeazn+lu87PQSMlfnGe?=
- =?us-ascii?Q?cm6m9RdZPU0ACU6ouNjmoWp+kVrqRI5DGEP+++dfwu996U04Yjh0Nb563Zq1?=
- =?us-ascii?Q?aXtPUrLRSkE3waOx2jYDLomov1VYeiYEMuF5R0ZB8jh+s2EN/LeGT9SzcYhd?=
- =?us-ascii?Q?Yp7eiCqMhbWRUbxFwdTP0MsuOZj4E16+1dHzHjK9qfQmQUYc2vcN40OaOJOu?=
- =?us-ascii?Q?tyP6qIaG3bYTuNZblnn60t49h97TFYRv2FoSzdf/Qmj03r/E5o6R57yzgq2n?=
- =?us-ascii?Q?GdF1fIDs3BbfskuTJcwbVYwXS5vIyTqhRW2C66Ieh23QiG6Yi78PqllJkI3I?=
- =?us-ascii?Q?j5lc/4p3XCc7l6TGwArk9sE8/dTgkmTYgmpx0co0EbzMRPRbXCu6buCQtfFx?=
- =?us-ascii?Q?Pok3yoi6FGLXf8Eq1QFExmbk50TuPXIObE2baQagMePkGhj+2b4PB4s61pXe?=
- =?us-ascii?Q?j6ozGgj7V1g19gT9QF5kC8wt8bwusY0NmTNmVNtr7E6cuqP7yfta13+XKhf3?=
- =?us-ascii?Q?aCPspxz4UsYQY2z+hKFcWrpDZAHYTEEfwRPK2kbQ41sNjgm7/2IBlKVz66pg?=
- =?us-ascii?Q?EEj5YzvMjWs/JkSosDFIviaCasrJzsnnf6wgI4hGYGpPxLWWy9OwEFXS43wR?=
- =?us-ascii?Q?BvO39kCLTQoWa8L6qXMTSMztjy9aYyrL3FunZIs1lCBonqi5NtpRnJ/cua/0?=
- =?us-ascii?Q?LV2QRe+3qs4/XIlbI4wUXxi7G/vrtC/giEu/QodY8unSFA8H/+YTF/MMvbvN?=
- =?us-ascii?Q?akRkIWO7fyEkfRE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:22:52.4438
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d84d417-7d45-400d-f35e-08dd57d97a32
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE3.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7229
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Secure AVIC accelerates EOI writes for edge-triggered interrupts.
-For level-triggered interrupts, EOI msr write is forwarded to
-hypervisor. Handle APIC_EOI msr write VMGEXIT and propagate EOI
-writes to IOAPIC. Current implementation reuses unused host APIC_ISR
-regs space to maintain information about active level-triggered
-interrupts. As host APIC_TMR state is updated from IOAPIC redirect
-entry, host APIC_TMR is used to identify level-triggered IOAPIC
-interrupts.
+On 28 February 2025 05:14:06 CET, Dmitry Baryshkov <dmitry=2Ebaryshkov@lina=
+ro=2Eorg> wrote:
+>If several interfaces are being handled through a single CTL, a main
+>('master') INTF needs to be programmed into a separate register=2E Write
+>corresponding value into that register=2E
+>
+>Co-developed-by: Marijn Suijten <marijn=2Esuijten@somainline=2Eorg>
+>Signed-off-by: Marijn Suijten <marijn=2Esuijten@somainline=2Eorg>
+>Signed-off-by: Dmitry Baryshkov <dmitry=2Ebaryshkov@linaro=2Eorg>
+>---
+> drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Ec | 12 ++++++++++++
+> drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Eh |  2 ++
+> 2 files changed, 14 insertions(+)
+>
+>diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Ec b/drivers/gpu/d=
+rm/msm/disp/dpu1/dpu_hw_ctl=2Ec
+>index 32ab33b314fc44e12ccb935c1695d2eea5c7d9b2=2E=2Effff60c4206c6f2833293=
+fdcc56b653f7d3124a5 100644
+>--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Ec
+>+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Ec
+>@@ -583,6 +583,9 @@ static void dpu_hw_ctl_intf_cfg_v1(struct dpu_hw_ctl =
+*ctx,
+> 	DPU_REG_WRITE(c, CTL_DSC_ACTIVE, dsc_active);
+> 	DPU_REG_WRITE(c, CTL_MERGE_3D_ACTIVE, merge_3d_active);
+>=20
+>+	if (cfg->intf_master)
+>+		DPU_REG_WRITE(c, CTL_INTF_MASTER, BIT(cfg->intf_master - INTF_0));
+>+
+> 	if (cfg->cdm)
+> 		DPU_REG_WRITE(c, CTL_CDM_ACTIVE, cfg->cdm);
+> }
+>@@ -625,6 +628,7 @@ static void dpu_hw_ctl_reset_intf_cfg_v1(struct dpu_h=
+w_ctl *ctx,
+> {
+> 	struct dpu_hw_blk_reg_map *c =3D &ctx->hw;
+> 	u32 intf_active =3D 0;
+>+	u32 intf_master =3D 0;
+> 	u32 wb_active =3D 0;
+> 	u32 merge3d_active =3D 0;
+> 	u32 dsc_active;
+>@@ -651,6 +655,14 @@ static void dpu_hw_ctl_reset_intf_cfg_v1(struct dpu_=
+hw_ctl *ctx,
+> 		intf_active =3D DPU_REG_READ(c, CTL_INTF_ACTIVE);
+> 		intf_active &=3D ~BIT(cfg->intf - INTF_0);
+> 		DPU_REG_WRITE(c, CTL_INTF_ACTIVE, intf_active);
+>+
+>+		intf_master =3D DPU_REG_READ(c, CTL_INTF_MASTER);
+>+
+>+		/* Unset this intf as master, if it is the current master */
+>+		if (intf_master =3D=3D BIT(cfg->intf - INTF_0)) {
+>+			DPU_DEBUG_DRIVER("Unsetting INTF_%d master\n", cfg->intf - INTF_0);
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
----
- arch/x86/kvm/lapic.h   |  5 +++++
- arch/x86/kvm/svm/sev.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+Don't think you want to include my testing ramblings here: we didn't print=
+ a message either when the master was _set_, and don't print messages for o=
+ther register writes either=2E
 
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index a1367689d53c..4e41c7ea4f66 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -159,6 +159,11 @@ static inline void kvm_lapic_clear_vector(int vec, void *bitmap)
- 	clear_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
- }
- 
-+static inline int kvm_lapic_test_vector(int vec, void *bitmap)
-+{
-+	return test_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
-+}
-+
- static inline void kvm_lapic_set_vector(int vec, void *bitmap)
- {
- 	set_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 77c1ecebf677..a7e916891226 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -4491,9 +4491,27 @@ static void savic_handle_icr_write(struct kvm_vcpu *kvm_vcpu, u64 icr)
- 	}
- }
- 
-+static int find_highest_isr(struct kvm_lapic *apic)
-+{
-+	int vec_per_reg = 32;
-+	int max_vec = 256;
-+	u32 *reg;
-+	int vec;
-+
-+	for (vec = max_vec - 32; vec >= 0; vec -= vec_per_reg) {
-+		reg = apic->regs + APIC_ISR + REG_POS(vec);
-+		if (*reg)
-+			return __fls(*reg) + vec;
-+	}
-+
-+	return -1;
-+}
-+
- static bool savic_handle_msr_exit(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_lapic *apic;
- 	u32 msr, reg;
-+	int vec;
- 
- 	msr = kvm_rcx_read(vcpu);
- 	reg = (msr - APIC_BASE_MSR) << 4;
-@@ -4512,6 +4530,12 @@ static bool savic_handle_msr_exit(struct kvm_vcpu *vcpu)
- 			return true;
- 		}
- 		break;
-+	case APIC_EOI:
-+		apic = vcpu->arch.apic;
-+		vec = find_highest_isr(apic);
-+		kvm_lapic_clear_vector(vec, apic->regs + APIC_ISR);
-+		kvm_apic_set_eoi_accelerated(vcpu, vec);
-+		return true;
- 	default:
- 		break;
- 	}
-@@ -5294,6 +5318,8 @@ void sev_savic_set_requested_irr(struct vcpu_svm *svm, bool reinjected)
- 			vec = (i << 5) + vec_pos;
- 			kvm_lapic_clear_vector(vec, apic->regs + APIC_IRR);
- 			val = val & ~BIT(vec_pos);
-+			if (kvm_lapic_test_vector(vec, apic->regs + APIC_TMR))
-+				kvm_lapic_set_vector(vec, apic->regs + APIC_ISR);
- 		} while (val);
- 	}
- 
--- 
-2.34.1
+After that:
+
+Reviewed-by: Marijn Suijten <marijn=2Esuijten@somainline=2Eorg>
+
+>+			DPU_REG_WRITE(c, CTL_INTF_MASTER, 0);
+>+		}
+> 	}
+>=20
+> 	if (cfg->wb) {
+>diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Eh b/drivers/gpu/d=
+rm/msm/disp/dpu1/dpu_hw_ctl=2Eh
+>index 85c6c835cc8780e6cb66f3a262d9897c91962935=2E=2Ee95989a2fdda6344d0cb9=
+d3036e6ed22a0458675 100644
+>--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Eh
+>+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl=2Eh
+>@@ -36,6 +36,7 @@ struct dpu_hw_stage_cfg {
+> /**
+>  * struct dpu_hw_intf_cfg :Describes how the DPU writes data to output i=
+nterface
+>  * @intf :                 Interface id
+>+ * @intf_master:           Master interface id in the dual pipe topology
+
+Not sure if you've seen my comment in v1 about the dual word; maybe the qu=
+adpipe series can update it since they might need a master (or two?) as wel=
+l?
+
+- Marijn
+
+>  * @mode_3d:               3d mux configuration
+>  * @merge_3d:              3d merge block used
+>  * @intf_mode_sel:         Interface mode, cmd / vid
+>@@ -45,6 +46,7 @@ struct dpu_hw_stage_cfg {
+>  */
+> struct dpu_hw_intf_cfg {
+> 	enum dpu_intf intf;
+>+	enum dpu_intf intf_master;
+> 	enum dpu_wb wb;
+> 	enum dpu_3d_blend_mode mode_3d;
+> 	enum dpu_merge_3d merge_3d;
+>
 
