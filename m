@@ -1,74 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7693271294;
-	Fri, 28 Feb 2025 16:37:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58437272924
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740760644; cv=none; b=pvocbeRrMSC8kQ864yXkSnI5CzXOgfG2hcBwwnMiS4FBY6QcT9gkb3FuR8oi/pzjL6xrhy+3a210G9Nd+IG9Rf9rwN+SMapQtUAyr3gjo7KMpOX3BlJMamyJFIan3r3wakLIOkiOcpcPqiXSRHlaHyVLBM2Paca500jzagKvc9s=
+	t=1740760644; cv=none; b=AbqBy5vt7xHQRUXYNo9E54tH7In0z2gE+C3qbZte5D3HsXPqxCBNWq8AfesS3bbpIPsxSyK2V9jPFhfIdzjt2+pGT6w4L26qIoqSX2BtHiaUudLC/Ef1Ofsfji+RgQfc1I548AnmTj+Rp37nad9fV6EkW1os1roy+a/jgY4q/9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740760644; c=relaxed/simple;
-	bh=A69CLjlOQbAO3pZl4fF041K+6a5JT2FGix0HP+Td0wc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=J6Yw9gcTGHYgC7OTnBxqImiQL6V8iTLjUTnMAD81vRvogsw9w9Azh+Vr7bmvtV10HnECiUcKuL6AkWm9IUwdUdbwo3wPdgYGDEUvzpqCErShKsFigM8A+M0ztbGU+tGg0KQiCQxPchK0UJ6nMB/akBXFmuEdogcldH8Tv4D1Bd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DHZSPwtb; arc=none smtp.client-ip=10.30.226.201
+	bh=bgjg/hEmlBXv67fTl4fRy81b4dDXu1T6gmhB1dO3WdI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZ0XSHimMZ8OUvsfibwHJBy0xTk4fpwMtYmR8lJn+K/8SDDSShLUz7iShmStpTipdkkYcR0VRAfHS0UKsqSk+BzUzGhW8FUOdPDxehnru0ebN+MZkjJ8JNYr2gx5fa22bjEHPHoKs5EIyuf3DQqOSur1NjtRYta/I9DrbX/fa3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fHOywo9E; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DHZSPwtb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 229D0C4CED6;
-	Fri, 28 Feb 2025 16:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740760643;
-	bh=A69CLjlOQbAO3pZl4fF041K+6a5JT2FGix0HP+Td0wc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=DHZSPwtb6DP3g/SDWt0N+aNOxTed6arPNw8IEvxLckTXrvGSzylNBPtv3VZu8I/pb
-	 CQVcVLDQYAgZEMXCHFYFxQZeoWfwJ/busg2F87CpKQELQIL6IKvDmwuSMYLzBNaoqk
-	 NHxPdteOmu86zIK8RtPolapyWcKWeBNw/Wr/l5I+XcGabfwhWoTvB0yEpIZqy5axRb
-	 ByEWINBILtw17M8JttsdIx2IXTI3gkA5DZhvuNjoXphL8Bjy5IrRPt3fZ5uhG0JY5W
-	 k2Ho98eF/PrTqkIUofPE9GcBKgpak60RfMi6oPOx60+7rgzufU7WUXxmk/j+99yoTW
-	 63dCZs1go/I9A==
-Date: Fri, 28 Feb 2025 10:37:21 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	jingoohan1@gmail.com
-Subject: Re: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
-Message-ID: <20250228163721.GA56317@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fHOywo9E"
+Message-ID: <64a6131a-79d8-4250-9215-5e565a598424@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740760635;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yVrsBw3fKJbseyJjn+B6nGAkxIf2sXzvqUGFkrakjmA=;
+	b=fHOywo9ErC6m0P2jZEnXQ7vgcWmHdqXDSEWMuHjpx8US8oTSv8SFvwhhQGwmXILoZ1sSHW
+	2L+PDHrt4ebf5xGK0aUX26AV+QieJTdRzSQStv0zR8QJU1A4/yiUM9rFfZs2y+VadKZXIp
+	bcKMq1xV57NluZrX5IoESMTwIhEOJ6s=
+Date: Fri, 28 Feb 2025 16:37:10 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+Subject: Re: [PATCH v4 net-next] dpll: Add an assertion to check
+ freq_supported_num
+To: Jiasheng Jiang <jiashengjiangcool@gmail.com>, przemyslaw.kitszel@intel.com
+Cc: arkadiusz.kubalewski@intel.com, davem@davemloft.net, jan.glaza@intel.com,
+ jiri@resnulli.us, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250228150210.34404-1-jiashengjiangcool@gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250228150210.34404-1-jiashengjiangcool@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Feb 28, 2025 at 03:03:51PM +0530, Thippeswamy Havalige wrote:
-> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
+On 28/02/2025 15:02, Jiasheng Jiang wrote:
+> Since the driver is broken in the case that src->freq_supported is not
+> NULL but src->freq_supported_num is 0, add an assertion for it.
 > 
-> The Versal2 devices include MDB Module. The integrated block for MDB along
-> with the integrated bridge can function as PCIe Root Port controller at
-> Gen5 32-GT/s operation per lane.
-> 
-> Bridge supports error and INTx interrupts and are handled using platform
-> specific interrupt line in Versal2.
-> 
-> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes:
-> | https://lore.kernel.org/oe-kbuild-all/202502191741.xrVmEAG4-lkp@intel.
-> | com/
+> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@gmail.com>
 
-Drop these reported-by: and closes: tags.
-
-Krzysztof K. already said this:
-https://lore.kernel.org/r/144202cc-057c-4a7d-852a-27e979284dd2@kernel.org
-
-Don't repost the series just for this.  If there are no other
-comments, we can remove this when merging it.
-
-Bjorn
+Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
