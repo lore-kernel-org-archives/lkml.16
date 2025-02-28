@@ -1,262 +1,82 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C271125335E;
-	Fri, 28 Feb 2025 09:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29ECD25A32C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 09:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740734933; cv=none; b=kF8livH65YZIo3cqvaXsScyAXp8hrWpHpT8F26lr8mQX6LYD1gHnMemcJzTZ8S6agNwEuWZ1JqLuzzoROMcW2sEW9khiEZVjRKSyo0FG6gTsHDOMtD8kbqtHbFd2TKovSRH53yzYO97paqU8hnGTYrgIPHFN953W1CobTcp/lwQ=
+	t=1740734951; cv=none; b=RyU5Cwp9/E+K1AdWstfX5R/dNt58bkMOc9h2cFFr5MLA0Vt7ATXRxnX98FNyjUH5WfS/NIrnHp7Yf+4QO0NXQ/COLgl2mao/x2STAV0IuB66GRBsT2DMpAinReQpswfvV7YhiGxXTmrAI+9GJY14JbQfF0/nI73XQttFkI2Oz1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740734933; c=relaxed/simple;
-	bh=UWdEkwmQSd5RN3XbDvZInCegn9+g4c/I3N5soOTqBUI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=jiDbaGVdAJWfQyLESYkzdky3qYieH8tazgYAPbFy10M1gnVYFnfsjpUJYRMvxYpl7bIedhHVLtRO/sSE0BhdO5hBswS9+GQPnh8RcZLh+7irsKrs+aivMXCJPNT8JEJaDLwV4Z57g54nqwsx27QcHkz13f4kY82k0ffFys7LD1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oVLXUnOn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ItyjmeQk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oVLXUnOn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ItyjmeQk"
-Date: Fri, 28 Feb 2025 09:28:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740734923;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e5KXKFDv51Vv6rCZ4mecvKZYZ8RbaGXYpLD2asuihIg=;
-	b=oVLXUnOnq90/QxxB2giTnFOjZaYkXtLErLYR7D6HBEkKR1zghYTMkVnkGHTD3Ec/ria/uA
-	YE1ZU+Wv53Rt35+AeHbFQ3rh8Gmc6vNxu/h5GKnVMBsAKsIRhnZYMVi64wqBPCa9SZo38r
-	2sBTv8657Y4QHtvwutBJVCAzn6ret3YWdrwI06g9Pfk5lff4AQJ6uh+w0DXXZYKGMHw5UL
-	plyHw3Dp5LuWnxClPsmZyDPkrLyc1wrB3XwYVedrYEI2Gw4eO4NcE+bFrCiH4d7lpIKbIO
-	reOMZIsNAI21/ZIJZANQGnILi+txfdc7kTTh6p8RHgYVoTAZVXPNmwDjrv3TKQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740734923;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e5KXKFDv51Vv6rCZ4mecvKZYZ8RbaGXYpLD2asuihIg=;
-	b=ItyjmeQkiC/DouVEZsF/OiYkfhCv+Pz7xqcB2/jEXdttC4JaRzD/DxgVhNyJjy/DLIEwrf
-	P9iwSAXznqLh7eCA==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] x86/locking: Remove semicolon from "lock" prefix
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250228085149.2478245-1-ubizjak@gmail.com>
-References: <20250228085149.2478245-1-ubizjak@gmail.com>
+	s=arc-20240116; t=1740734951; c=relaxed/simple;
+	bh=FMJyWMAIBZkBAW2p8o2ArvwofRRH2RCtDUFSualZQ1o=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BsDa10UYUnjTksj33tMQxTQFSUCBHbfsQMga70OQbQFADfszctRHcw53xcnLCao4YFww8jWyyk0mycCqlOfWRzpynLU/YYq127PbakkG6RdhkerwQHKegWmWAMcfL0pizpFnIafmaQGvJSQ7BwC9DMWXdLo0GhtLfV9UBD3WEgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Z42sj2ZQ4z6K9Tg;
+	Fri, 28 Feb 2025 17:27:05 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 44AEE1400D4;
+	Fri, 28 Feb 2025 17:29:06 +0800 (CST)
+Received: from localhost (10.96.237.92) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 28 Feb
+ 2025 10:29:03 +0100
+Date: Fri, 28 Feb 2025 17:28:58 +0800
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+CC: Igor Mammedov <imammedo@redhat.com>, "Michael S . Tsirkin"
+	<mst@redhat.com>, Shiju Jose <shiju.jose@huawei.com>, <qemu-arm@nongnu.org>,
+	<qemu-devel@nongnu.org>, Ani Sinha <anisinha@redhat.com>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 13/19] tests/acpi: virt: allow acpi table changes at
+ DSDT and HEST tables
+Message-ID: <20250228172858.00003e65@huawei.com>
+In-Reply-To: <9b15b83ec3726b6f29583d419e0c6c6aa01a9447.1740671863.git.mchehab+huawei@kernel.org>
+References: <cover.1740671863.git.mchehab+huawei@kernel.org>
+	<9b15b83ec3726b6f29583d419e0c6c6aa01a9447.1740671863.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174073491910.10177.9422897371260856615.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500009.china.huawei.com (7.191.174.84) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-The following commit has been merged into the locking/core branch of tip:
+On Thu, 27 Feb 2025 17:00:51 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
 
-Commit-ID:     023f3290b02552ea006c1a2013e373750d2cbff6
-Gitweb:        https://git.kernel.org/tip/023f3290b02552ea006c1a2013e373750d2cbff6
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Fri, 28 Feb 2025 09:51:15 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 28 Feb 2025 10:18:26 +01:00
+> We'll be adding a new GED device for HEST GPIO notification and
+> increasing the number of entries at the HEST table.
+> 
+> Blocklist testing HEST and DSDT tables until such changes
+> are completed.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Acked-by: Igor Mammedov <imammedo@redhat.com>
 
-x86/locking: Remove semicolon from "lock" prefix
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Minimum version of binutils required to compile the kernel is 2.25.
-This version correctly handles the "lock" prefix, so it is possible
-to remove the semicolon, which was used to support ancient versions
-of GNU as.
+> ---
+>  tests/qtest/bios-tables-test-allowed-diff.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
+> index dfb8523c8bf4..0a1a26543ba2 100644
+> --- a/tests/qtest/bios-tables-test-allowed-diff.h
+> +++ b/tests/qtest/bios-tables-test-allowed-diff.h
+> @@ -1 +1,7 @@
+>  /* List of comma-separated changed AML files to ignore */
+> +"tests/data/acpi/aarch64/virt/HEST",
+> +"tests/data/acpi/aarch64/virt/DSDT",
+> +"tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt",
+> +"tests/data/acpi/aarch64/virt/DSDT.memhp",
+> +"tests/data/acpi/aarch64/virt/DSDT.pxb",
+> +"tests/data/acpi/aarch64/virt/DSDT.topology",
 
-Due to the semicolon, the compiler considers "lock; insn" as two
-separate instructions. Removing the semicolon makes asm length
-calculations more accurate, consequently making scheduling and
-inlining decisions of the compiler more accurate.
-
-Removing the semicolon also enables assembler checks involving lock
-prefix. Trying to assemble e.g. "lock andl %eax, %ebx" results in:
-
-  Error: expecting lockable instruction after `lock'
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250228085149.2478245-1-ubizjak@gmail.com
----
- arch/x86/include/asm/alternative.h |  2 +-
- arch/x86/include/asm/barrier.h     |  8 ++++----
- arch/x86/include/asm/cmpxchg.h     |  4 ++--
- arch/x86/include/asm/cmpxchg_32.h  |  4 ++--
- arch/x86/include/asm/edac.h        |  2 +-
- arch/x86/include/asm/sync_bitops.h | 12 ++++++------
- 6 files changed, 16 insertions(+), 16 deletions(-)
-
-diff --git a/arch/x86/include/asm/alternative.h b/arch/x86/include/asm/alternative.h
-index e3903b7..3b3d3aa 100644
---- a/arch/x86/include/asm/alternative.h
-+++ b/arch/x86/include/asm/alternative.h
-@@ -48,7 +48,7 @@
- 		".popsection\n"				\
- 		"671:"
- 
--#define LOCK_PREFIX LOCK_PREFIX_HERE "\n\tlock; "
-+#define LOCK_PREFIX LOCK_PREFIX_HERE "\n\tlock "
- 
- #else /* ! CONFIG_SMP */
- #define LOCK_PREFIX_HERE ""
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 7b44b3c..db70832 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -12,11 +12,11 @@
-  */
- 
- #ifdef CONFIG_X86_32
--#define mb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)", "mfence", \
-+#define mb() asm volatile(ALTERNATIVE("lock addl $0,-4(%%esp)", "mfence", \
- 				      X86_FEATURE_XMM2) ::: "memory", "cc")
--#define rmb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)", "lfence", \
-+#define rmb() asm volatile(ALTERNATIVE("lock addl $0,-4(%%esp)", "lfence", \
- 				       X86_FEATURE_XMM2) ::: "memory", "cc")
--#define wmb() asm volatile(ALTERNATIVE("lock; addl $0,-4(%%esp)", "sfence", \
-+#define wmb() asm volatile(ALTERNATIVE("lock addl $0,-4(%%esp)", "sfence", \
- 				       X86_FEATURE_XMM2) ::: "memory", "cc")
- #else
- #define __mb()	asm volatile("mfence":::"memory")
-@@ -50,7 +50,7 @@
- #define __dma_rmb()	barrier()
- #define __dma_wmb()	barrier()
- 
--#define __smp_mb()	asm volatile("lock; addl $0,-4(%%" _ASM_SP ")" ::: "memory", "cc")
-+#define __smp_mb()	asm volatile("lock addl $0,-4(%%" _ASM_SP ")" ::: "memory", "cc")
- 
- #define __smp_rmb()	dma_rmb()
- #define __smp_wmb()	barrier()
-diff --git a/arch/x86/include/asm/cmpxchg.h b/arch/x86/include/asm/cmpxchg.h
-index 5612648..fd8afc1 100644
---- a/arch/x86/include/asm/cmpxchg.h
-+++ b/arch/x86/include/asm/cmpxchg.h
-@@ -134,7 +134,7 @@ extern void __add_wrong_size(void)
- 	__raw_cmpxchg((ptr), (old), (new), (size), LOCK_PREFIX)
- 
- #define __sync_cmpxchg(ptr, old, new, size)				\
--	__raw_cmpxchg((ptr), (old), (new), (size), "lock; ")
-+	__raw_cmpxchg((ptr), (old), (new), (size), "lock ")
- 
- #define __cmpxchg_local(ptr, old, new, size)				\
- 	__raw_cmpxchg((ptr), (old), (new), (size), "")
-@@ -222,7 +222,7 @@ extern void __add_wrong_size(void)
- 	__raw_try_cmpxchg((ptr), (pold), (new), (size), LOCK_PREFIX)
- 
- #define __sync_try_cmpxchg(ptr, pold, new, size)			\
--	__raw_try_cmpxchg((ptr), (pold), (new), (size), "lock; ")
-+	__raw_try_cmpxchg((ptr), (pold), (new), (size), "lock ")
- 
- #define __try_cmpxchg_local(ptr, pold, new, size)			\
- 	__raw_try_cmpxchg((ptr), (pold), (new), (size), "")
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index 95b5f99..8806c64 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -105,7 +105,7 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, 
- 
- static __always_inline u64 arch_cmpxchg64(volatile u64 *ptr, u64 old, u64 new)
- {
--	return __arch_cmpxchg64_emu(ptr, old, new, LOCK_PREFIX_HERE, "lock; ");
-+	return __arch_cmpxchg64_emu(ptr, old, new, LOCK_PREFIX_HERE, "lock ");
- }
- #define arch_cmpxchg64 arch_cmpxchg64
- 
-@@ -140,7 +140,7 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64 
- 
- static __always_inline bool arch_try_cmpxchg64(volatile u64 *ptr, u64 *oldp, u64 new)
- {
--	return __arch_try_cmpxchg64_emu(ptr, oldp, new, LOCK_PREFIX_HERE, "lock; ");
-+	return __arch_try_cmpxchg64_emu(ptr, oldp, new, LOCK_PREFIX_HERE, "lock ");
- }
- #define arch_try_cmpxchg64 arch_try_cmpxchg64
- 
-diff --git a/arch/x86/include/asm/edac.h b/arch/x86/include/asm/edac.h
-index 426fc53..dfbd1eb 100644
---- a/arch/x86/include/asm/edac.h
-+++ b/arch/x86/include/asm/edac.h
-@@ -13,7 +13,7 @@ static inline void edac_atomic_scrub(void *va, u32 size)
- 	 * are interrupt, DMA and SMP safe.
- 	 */
- 	for (i = 0; i < size / 4; i++, virt_addr++)
--		asm volatile("lock; addl $0, %0"::"m" (*virt_addr));
-+		asm volatile("lock addl $0, %0"::"m" (*virt_addr));
- }
- 
- #endif /* _ASM_X86_EDAC_H */
-diff --git a/arch/x86/include/asm/sync_bitops.h b/arch/x86/include/asm/sync_bitops.h
-index 6d8d6bc..cd21a04 100644
---- a/arch/x86/include/asm/sync_bitops.h
-+++ b/arch/x86/include/asm/sync_bitops.h
-@@ -31,7 +31,7 @@
-  */
- static inline void sync_set_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; " __ASM_SIZE(bts) " %1,%0"
-+	asm volatile("lock " __ASM_SIZE(bts) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -49,7 +49,7 @@ static inline void sync_set_bit(long nr, volatile unsigned long *addr)
-  */
- static inline void sync_clear_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; " __ASM_SIZE(btr) " %1,%0"
-+	asm volatile("lock " __ASM_SIZE(btr) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -66,7 +66,7 @@ static inline void sync_clear_bit(long nr, volatile unsigned long *addr)
-  */
- static inline void sync_change_bit(long nr, volatile unsigned long *addr)
- {
--	asm volatile("lock; " __ASM_SIZE(btc) " %1,%0"
-+	asm volatile("lock " __ASM_SIZE(btc) " %1,%0"
- 		     : "+m" (ADDR)
- 		     : "Ir" (nr)
- 		     : "memory");
-@@ -82,7 +82,7 @@ static inline void sync_change_bit(long nr, volatile unsigned long *addr)
-  */
- static inline bool sync_test_and_set_bit(long nr, volatile unsigned long *addr)
- {
--	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(bts), *addr, c, "Ir", nr);
-+	return GEN_BINARY_RMWcc("lock " __ASM_SIZE(bts), *addr, c, "Ir", nr);
- }
- 
- /**
-@@ -95,7 +95,7 @@ static inline bool sync_test_and_set_bit(long nr, volatile unsigned long *addr)
-  */
- static inline int sync_test_and_clear_bit(long nr, volatile unsigned long *addr)
- {
--	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btr), *addr, c, "Ir", nr);
-+	return GEN_BINARY_RMWcc("lock " __ASM_SIZE(btr), *addr, c, "Ir", nr);
- }
- 
- /**
-@@ -108,7 +108,7 @@ static inline int sync_test_and_clear_bit(long nr, volatile unsigned long *addr)
-  */
- static inline int sync_test_and_change_bit(long nr, volatile unsigned long *addr)
- {
--	return GEN_BINARY_RMWcc("lock; " __ASM_SIZE(btc), *addr, c, "Ir", nr);
-+	return GEN_BINARY_RMWcc("lock " __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
- #define sync_test_bit(nr, addr) test_bit(nr, addr)
