@@ -1,73 +1,77 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2061.outbound.protection.outlook.com [40.107.243.61])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BEC25D215;
-	Fri, 28 Feb 2025 10:00:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740736837; cv=fail; b=lR7Nlnx9/IgqWtdnRipSpWtBQLLUnRoHLaskhzMVkTRHBHcWBMrXxSp2xV18P5JFuLb3rVXhVRuNRSt6DImugmvaghMPNeu5osdkTDBqrz9EnyTxjeT80wke6AaC4zP0LdIJ/5OHjmpJwfvul2N8Mv4wLrytZr+vmTZ5+KqLntM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740736837; c=relaxed/simple;
-	bh=acyzADLyafEoCowuHUWwjAtsDLHSL5O46K5bItF/Uqc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dsuS0Rl6TedQORaFV0Pr+XsMmdSMCUkRryq224bCa1OJ7hOxvZBdDYmldUGPGetmlAKHadodBYxdX0KKRlE/K5/wMBa80jpF9rZB0deW+ef9SRU4FIuuChJMnrG5fYbhtsNhUsvE9+N0KxWOfGAi2DXKmrUPLRKlUFJuerCwuY8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=C7lFVwm8; arc=fail smtp.client-ip=40.107.243.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B909325D1FE;
+	Fri, 28 Feb 2025 10:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740736836; cv=none; b=QlVrSOxlGz9A2F8JV+zFcfSSxDZ3zyh87SIZantsVaToEoZ7d8STPrpqyapO0zu7iShNgERK9ybeWln58u1gXkqOycikARflRUDCO49k6Zab4l8K/cBapaL+jKvPNgJ/JloYFv5xMmZRCWLSfoYjUd/gBcBs9Hbst7ofXInTtoc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740736836; c=relaxed/simple;
+	bh=VUwt0gNvg+/EAq7f9Vl2avLoGXxhNLtj5vjvAXStlZ8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y58YZY7h9WZVc6AWknDnBVFbDZwkIs3w24GTgkojqL60X7g/t5gr1NqJgMgQfRnAVcqElX30ADXtaBgkXRyzt/0iPP2IxQk21ashqw97jyYkFcoJfY8IR6xuUzKHadzP7BFKeqws5KTIw8aDgV8Ulnm1/6XH5LWohOmx9YGdt+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CLQDsU+M; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="C7lFVwm8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=w8gsw0iL2/5eYV5IzcCn02tWMkOiTFgkfJ2nzKgxi0kvw/aco3nRO/SLoPp2IpEXikrlH/3x21tgNp5OdNedsif79UKu+zLetpHp/Y1CgJEjNghjYnTD9Ob1VHz98bzwmUpP28MIXKk2cdGYj7X7SJEWY66Ff+sc2AAvSx4p3geb5u4sh99N/YSOUF3vOJEhjneyH/tbXjpaeCuGcGTrGY9Rnq57Kc4TuDYihUvpO/uOty7lVpwWXnxdlGTJm0haUNX+oCHNV2I1B11BSQ142MEpP4i7Y8jaOKZHHk/k77NiPc81+uFtPaFIpiDcZ+aI1PdqDlR2sNFmvuDLj65X4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4pKE6RLaAWmEx0PGAQYTAZMsJhn2JgAgPrp4/QEuKMw=;
- b=BqtkcAGNSUQLOd400Qqx5xBGPw8HoKawhIDTk0XiBoMNWqiUYY8B7eBTRXx0mafPHQ7aWJ1ut1coN8QgjM5Q2m4enDSXpn6Bax/07HRG5ZJe1o07RZM2V32MPv7rkoI7WbgpgzuOm2wOQQRtrEnuBHOv55/v2ZLb/cxdC/fPyEU40hEjSMblXqe1/uSYG+Jx4YGgzvyV5v3mBW5uCO++7J9fgT48tzrH3rDvZp9pNN20n0BBdIhecYkb9a2pSruJGLpgEIaSomeLiun5ZG512H7yqu4GFMB+nPpsPRlx7FzwD0b2nCjZyr+lT3o+uTs2wb8QBAk2Pl7SwHxm7x+L4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4pKE6RLaAWmEx0PGAQYTAZMsJhn2JgAgPrp4/QEuKMw=;
- b=C7lFVwm8ihlRUYam23v8A2YGtSrG9tivwB1YLa4ijicPXqiyfiTVxp7MRKSaaL3VCHBpyK81nJV6+H/14NXn4KzYh09+5J6ZYgX69+mtucrEn2n9IHlKp8hkLYJlmK8A/lNyEd7n2gaeNr1VyPzxoGMc8iw4Ueue5SNGsorXp3Y=
-Received: from SN1PR12CA0069.namprd12.prod.outlook.com (2603:10b6:802:20::40)
- by CH0PR12MB8529.namprd12.prod.outlook.com (2603:10b6:610:18d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
- 2025 10:00:31 +0000
-Received: from SA2PEPF00003AE9.namprd02.prod.outlook.com
- (2603:10b6:802:20:cafe::7c) by SN1PR12CA0069.outlook.office365.com
- (2603:10b6:802:20::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.21 via Frontend Transport; Fri,
- 28 Feb 2025 10:00:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SA2PEPF00003AE9.mail.protection.outlook.com (10.167.248.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 10:00:30 +0000
-Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
- 2025 03:59:26 -0600
-From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-To: <kvm@vger.kernel.org>, <seanjc@google.com>, <pbonzini@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <Thomas.Lendacky@amd.com>,
-	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
-	<Suravee.Suthikulpanit@amd.com>, <bp@alien8.de>, <David.Kaplan@amd.com>,
-	<huibo.wang@amd.com>, <naveen.rao@amd.com>, <pgonda@google.com>,
-	<linux-kselftest@vger.kernel.org>, <shuah@kernel.org>
-Subject: [RFC PATCH 24/31] KVM: selftests: Add Secure AVIC mode to xapic_ipi_test
-Date: Fri, 28 Feb 2025 15:00:17 +0530
-Message-ID: <20250228093024.114983-25-Neeraj.Upadhyay@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
-References: <20250228093024.114983-1-Neeraj.Upadhyay@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CLQDsU+M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740736834; x=1772272834;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VUwt0gNvg+/EAq7f9Vl2avLoGXxhNLtj5vjvAXStlZ8=;
+  b=CLQDsU+MbEAFE35jtQMB4H74FnmfIfdH8LhRY2y+oZfCPkX3yqhUquQn
+   5TszvAyWXb6hXXOAVXXp8iedE2dv8C4Rbxp5ler1qiZV9kF4X2uikM+WS
+   NPsNr3e8p6H9y1TASzO602aLxY3e2bL/jX4jtR4YaiUjYf5E1hlIBTMTc
+   SIDyzP1MGaidZMh0HIGWKLcgD4zRVmoHuS9OHBHDiA29A3TCe09tVIoGn
+   F7Tt/chWiZywWqqkiW2qaNL8253Zvcthm37yo4eosWNf0F4By1jtO2YiG
+   hosi9bPtJbPbcvAJ22KWerjegkj73dIyrN0YtCsiTI5JQGCyWmCkY0nU0
+   g==;
+X-CSE-ConnectionGUID: OQj+s++3SZSocJgXLVZ6rw==
+X-CSE-MsgGUID: Dm56ME4XSmyAAY4W2UbzhA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="40902653"
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="40902653"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 02:00:27 -0800
+X-CSE-ConnectionGUID: s4+z0dMzREOAQBXWci/Acw==
+X-CSE-MsgGUID: 5FdoQSIxR9G/GCcLCUjYSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="117325729"
+Received: from jf5300-b11a338t.jf.intel.com ([10.242.51.115])
+  by orviesa006.jf.intel.com with ESMTP; 28 Feb 2025 02:00:27 -0800
+From: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev,
+	nphamcs@gmail.com,
+	chengming.zhou@linux.dev,
+	usamaarif642@gmail.com,
+	ryan.roberts@arm.com,
+	21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com,
+	akpm@linux-foundation.org,
+	linux-crypto@vger.kernel.org,
+	herbert@gondor.apana.org.au,
+	davem@davemloft.net,
+	clabbe@baylibre.com,
+	ardb@kernel.org,
+	ebiggers@google.com,
+	surenb@google.com,
+	kristen.c.accardi@intel.com
+Cc: wajdi.k.feghali@intel.com,
+	vinodh.gopal@intel.com,
+	kanchana.p.sridhar@intel.com
+Subject: [PATCH v7 08/15] crypto: iaa - Map IAA devices/wqs to cores based on packages instead of NUMA.
+Date: Fri, 28 Feb 2025 02:00:17 -0800
+Message-Id: <20250228100024.332528-9-kanchana.p.sridhar@intel.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
+References: <20250228100024.332528-1-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,261 +79,540 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE9:EE_|CH0PR12MB8529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 845fbab7-6e5f-44ad-c154-08dd57debbf1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9vE/gPOKdFN1aamhz8/D0G+ZvHCRrOy3ChbrIIFzl5qFsQyEKEz+l6IyJDJc?=
- =?us-ascii?Q?OJdhL0DUI8zwWbrKMLsi5nBbJgpnIiTlNx6WMejEEzfbsKoNEoLSSCl3yBr8?=
- =?us-ascii?Q?duLNpFvEJaY5UuA0flvGZz/LwTuPS8lHSRjSwxaBRDsNNWQhYzW/mAO4vQ+R?=
- =?us-ascii?Q?eg3x4jJyQ+A5OrV/YYiZU97vwA0+nvGYGLtG40bXlvjR9eUkg8FqX1mGHlKa?=
- =?us-ascii?Q?vc3Kz/R+2dO2f1e4dDok2upOwFxUN4m89CJ1NawXeG+KYtJz2f4cVnpJt7fa?=
- =?us-ascii?Q?kA4Yl3DXs1SEd9BoUKfjIZvwuPAVtqO0BaCS/cd8ck7V10YPrggNWDFhxm49?=
- =?us-ascii?Q?bWcuQJRv3t+DYRlgPWd1b3wWFBCI88rx0TAxzh2XoEmSxkvwzacVthNliOmr?=
- =?us-ascii?Q?w/ClM0/EFlQtmAla1oWdXPcWQySb3XOkm2VGbhKzI4EVvHnmfVK9qHkWSIvr?=
- =?us-ascii?Q?HrDqoVBBMFdWf8e34KBlUdU5vmFBAkEsVhgxsTXurUXjykA4IefSLUuOrgQs?=
- =?us-ascii?Q?wWmoOspjRzb1uVo01jPcoctQNEBYWzQrB3OvgPaFDJEMP8hAtW/0e9hu+b5d?=
- =?us-ascii?Q?yolYA+NOVRxvpvO2TXk/XzELQ+Wr2nCT/pc/zglTe6I/dIFJjXnv/LKnJ9bb?=
- =?us-ascii?Q?cT4HF1BTxlJT2sLVhtQ3aFsCBlx03EsloOnuCVmb4ZfciI4pfbLpB2rLyoXU?=
- =?us-ascii?Q?uPKqXIfbv6//5wkIPpEorMU7cY9cqskB1UJ7kbsSoS12GV318F4Ow8DEuC2I?=
- =?us-ascii?Q?PYaKEh2XMKVZBk15lVJJdK93WIpNtvR19a9Ed9veVczCmAlIyRHVPLYtkV4A?=
- =?us-ascii?Q?d90zEbp6YwlC3HI9d94li6iYMDN4KNsFSh+sIATh0jTYBE+ylno6Dv3mrKue?=
- =?us-ascii?Q?SufdMgq9mST5aenNmTQ5QTJHHa68qsPJ/FcJnS0d2V0/ioAosmtgRYv+eDSJ?=
- =?us-ascii?Q?diemp5mvUWxTf0jKaZ13jF/La1ZL1UqfIMdiNBedwWc09bQ1mBnY2f7VqU1m?=
- =?us-ascii?Q?tZmqbPxkZtnGzVZNyL7ZsP94quhSmcKDe+LaCIgP0QBWWjMIDVOjziMb6ZrE?=
- =?us-ascii?Q?seCpI9TkGT0k76d9ALTY5lFLDCk8yMGKYk4+4MIhY5e3TPstBt/HhNS3VqmC?=
- =?us-ascii?Q?8ZLVC2nTuv6Xz31xUrP6BHvS5lWSkUfhOkLRAGYSOP7ZW6saQ1S9+gVuvATe?=
- =?us-ascii?Q?e3fIRAFuYTPNNl7GXZx+j7f/2QoEPN2LWCODphFS2rHKq5kxSfc7Ml6FDnWM?=
- =?us-ascii?Q?xszJTKyacK+7YHKmMzxZj3OEB0DMrrLuM/mesI2z7vwFN66jS0rcyoqpTleG?=
- =?us-ascii?Q?M1e1yyAUBibj7HLX7USEQrDN0Mk3bHMg5wGYCd/PpCqBoCrQc1OUsrdeI9ir?=
- =?us-ascii?Q?lANmr5L7CZwqi7BrzlgS4rpgHweLttyV3RtTsxu3F2dgDMiJcqSYfbg4Xhkc?=
- =?us-ascii?Q?bNnSD2wocxAxvx6BzXbkW7k90hdEbUyduKkMSSRYllGw8X1c8MR7cYAA56Jk?=
- =?us-ascii?Q?qJ6is65vrHM+fMs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 10:00:30.3236
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 845fbab7-6e5f-44ad-c154-08dd57debbf1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8529
 
-Test cross-vCPU IPI for Secure AVIC guests using xapic_ipi_test.
-Add new "SAVIC" apic mode to the test for this.
+This patch modifies the algorithm for mapping available IAA devices and
+wqs to cores, as they are being discovered, based on packages instead of
+NUMA nodes. This leads to a more realistic mapping of IAA devices as
+compression/decompression resources for a package, rather than for a NUMA
+node. This also resolves problems that were observed during internal
+validation on Intel platforms with many more NUMA nodes than packages: for
+such cases, the earlier NUMA based allocation caused some IAAs to be
+over-subscribed and some to not be utilized at all.
 
-Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+As a result of this change from NUMA to packages, some of the core
+functions used by the iaa_crypto driver's "probe" and "remove" API
+have been re-written. The new infrastructure maintains a static/global
+mapping of "local wqs" per IAA device, in the "struct iaa_device" itself.
+The earlier implementation would allocate memory per-cpu for this data,
+which never changes once the IAA devices/wqs have been initialized.
+
+Two main outcomes from this new iaa_crypto driver infrastructure are:
+
+1) Resolves "task blocked for more than x seconds" errors observed during
+   internal validation on Intel systems with the earlier NUMA node based
+   mappings, which was root-caused to the non-optimal IAA-to-core mappings
+   described earlier.
+
+2) Results in a NUM_THREADS factor reduction in memory footprint cost of
+   initializing IAA devices/wqs, due to eliminating the per-cpu copies of
+   each IAA device's wqs. On a 384 cores Intel Granite Rapids server with
+   8 IAA devices, this saves 140MiB.
+
+Signed-off-by: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
 ---
- tools/arch/x86/include/asm/msr-index.h        |  4 +-
- .../selftests/kvm/include/x86/processor.h     |  1 +
- .../selftests/kvm/x86/xapic_ipi_test.c        | 70 ++++++++++++++-----
- 3 files changed, 55 insertions(+), 20 deletions(-)
+ drivers/crypto/intel/iaa/iaa_crypto.h      |  17 +-
+ drivers/crypto/intel/iaa/iaa_crypto_main.c | 276 ++++++++++++---------
+ 2 files changed, 171 insertions(+), 122 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index 3ae84c3b8e6d..93f3ff9991cc 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -680,7 +680,9 @@
- #define MSR_AMD64_SNP_VMSA_REG_PROT	BIT_ULL(MSR_AMD64_SNP_VMSA_REG_PROT_BIT)
- #define MSR_AMD64_SNP_SMT_PROT_BIT	17
- #define MSR_AMD64_SNP_SMT_PROT		BIT_ULL(MSR_AMD64_SNP_SMT_PROT_BIT)
--#define MSR_AMD64_SNP_RESV_BIT		18
-+#define MSR_AMD64_SNP_SECURE_AVIC_BIT	18
-+#define MSR_AMD64_SNP_SECURE_AVIC	BIT_ULL(MSR_AMD64_SNP_SECURE_AVIC_BIT)
-+#define MSR_AMD64_SNP_RESV_BIT		19
- #define MSR_AMD64_SNP_RESERVED_MASK	GENMASK_ULL(63, MSR_AMD64_SNP_RESV_BIT)
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto.h b/drivers/crypto/intel/iaa/iaa_crypto.h
+index 45d94a646636..72ffdf55f7b3 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto.h
++++ b/drivers/crypto/intel/iaa/iaa_crypto.h
+@@ -55,6 +55,7 @@ struct iaa_wq {
+ 	struct idxd_wq		*wq;
+ 	int			ref;
+ 	bool			remove;
++	bool			mapped;
  
- #define MSR_AMD64_VIRT_SPEC_CTRL	0xc001011f
-diff --git a/tools/testing/selftests/kvm/include/x86/processor.h b/tools/testing/selftests/kvm/include/x86/processor.h
-index 3f9369644962..f09b18944c47 100644
---- a/tools/testing/selftests/kvm/include/x86/processor.h
-+++ b/tools/testing/selftests/kvm/include/x86/processor.h
-@@ -201,6 +201,7 @@ struct kvm_x86_cpu_feature {
- #define X86_FEATURE_SEV			KVM_X86_CPU_FEATURE(0x8000001F, 0, EAX, 1)
- #define X86_FEATURE_SEV_ES		KVM_X86_CPU_FEATURE(0x8000001F, 0, EAX, 3)
- #define X86_FEATURE_SNP			KVM_X86_CPU_FEATURE(0x8000001F, 0, EAX, 4)
-+#define X86_FEATURE_SECURE_AVIC         KVM_X86_CPU_FEATURE(0x8000001F, 0, EAX, 26)
+ 	struct iaa_device	*iaa_device;
  
- /*
-  * KVM defined paravirt features.
-diff --git a/tools/testing/selftests/kvm/x86/xapic_ipi_test.c b/tools/testing/selftests/kvm/x86/xapic_ipi_test.c
-index 3a54d828dc69..e11c7ded8b8a 100644
---- a/tools/testing/selftests/kvm/x86/xapic_ipi_test.c
-+++ b/tools/testing/selftests/kvm/x86/xapic_ipi_test.c
-@@ -31,6 +31,7 @@
- #include "test_util.h"
- #include "vmx.h"
- #include "sev.h"
-+#include "savic.h"
+@@ -72,6 +73,13 @@ struct iaa_device_compression_mode {
+ 	dma_addr_t			aecs_comp_table_dma_addr;
+ };
  
- /* Default running time for the test */
- #define DEFAULT_RUN_SECS 3
-@@ -45,30 +46,44 @@
-  */
- #define IPI_VECTOR	 0xa5
- 
-+enum apic_mode {
-+	XAPIC,
-+	X2APIC,
-+	SAVIC,
++struct wq_table_entry {
++	struct idxd_wq **wqs;
++	int	max_wqs;
++	int	n_wqs;
++	int	cur_wq;
 +};
 +
+ /* Representation of IAA device with wqs, populated by probe */
+ struct iaa_device {
+ 	struct list_head		list;
+@@ -82,19 +90,14 @@ struct iaa_device {
+ 	int				n_wq;
+ 	struct list_head		wqs;
+ 
++	struct wq_table_entry		*iaa_local_wqs;
++
+ 	atomic64_t			comp_calls;
+ 	atomic64_t			comp_bytes;
+ 	atomic64_t			decomp_calls;
+ 	atomic64_t			decomp_bytes;
+ };
+ 
+-struct wq_table_entry {
+-	struct idxd_wq **wqs;
+-	int	max_wqs;
+-	int	n_wqs;
+-	int	cur_wq;
+-};
+-
+ #define IAA_AECS_ALIGN			32
+ 
  /*
-  * Incremented in the IPI handler. Provides evidence to the sender that the IPI
-  * arrived at the destination
-  */
- static volatile uint64_t *ipis_rcvd;
+diff --git a/drivers/crypto/intel/iaa/iaa_crypto_main.c b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+index abaee160e5ec..40751d7c83c0 100644
+--- a/drivers/crypto/intel/iaa/iaa_crypto_main.c
++++ b/drivers/crypto/intel/iaa/iaa_crypto_main.c
+@@ -30,8 +30,9 @@
+ /* number of iaa instances probed */
+ static unsigned int nr_iaa;
+ static unsigned int nr_cpus;
+-static unsigned int nr_nodes;
+-static unsigned int nr_cpus_per_node;
++static unsigned int nr_packages;
++static unsigned int nr_cpus_per_package;
++static unsigned int nr_iaa_per_package;
  
--static bool x2apic;
-+static int apic_mode;
- 
- static void apic_enable(void)
+ /* Number of physical cpus sharing each iaa instance */
+ static unsigned int cpus_per_iaa;
+@@ -462,17 +463,46 @@ static void remove_device_compression_modes(struct iaa_device *iaa_device)
+  * Functions for use in crypto probe and remove interfaces:
+  * allocate/init/query/deallocate devices/wqs.
+  ***********************************************************/
+-static struct iaa_device *iaa_device_alloc(void)
++static struct iaa_device *iaa_device_alloc(struct idxd_device *idxd)
  {
--	if (x2apic)
--		x2apic_enable();
--	else
-+	switch (apic_mode) {
-+	case XAPIC:
- 		xapic_enable();
-+		break;
-+	case X2APIC:
-+		x2apic_enable();
-+		break;
-+	case SAVIC:
-+		x2apic_enable();
-+		savic_enable();
-+		break;
-+	}
- }
++	struct wq_table_entry *local;
+ 	struct iaa_device *iaa_device;
  
- static uint32_t apic_read_reg(unsigned int reg)
- {
--	return x2apic ? x2apic_read_reg(reg) : xapic_read_reg(reg);
-+	return apic_mode != XAPIC ? x2apic_read_reg(reg) : xapic_read_reg(reg);
- }
+ 	iaa_device = kzalloc(sizeof(*iaa_device), GFP_KERNEL);
+ 	if (!iaa_device)
+-		return NULL;
++		goto err;
++
++	iaa_device->idxd = idxd;
++
++	/* IAA device's local wqs. */
++	iaa_device->iaa_local_wqs = kzalloc(sizeof(struct wq_table_entry), GFP_KERNEL);
++	if (!iaa_device->iaa_local_wqs)
++		goto err;
++
++	local = iaa_device->iaa_local_wqs;
++
++	local->wqs = kzalloc(iaa_device->idxd->max_wqs * sizeof(struct wq *), GFP_KERNEL);
++	if (!local->wqs)
++		goto err;
++
++	local->max_wqs = iaa_device->idxd->max_wqs;
++	local->n_wqs = 0;
  
- static void apic_write_reg(unsigned int reg, uint64_t val)
- {
--	if (x2apic)
-+	if (apic_mode != XAPIC)
- 		x2apic_write_reg(reg, val);
- 	else
- 		xapic_write_reg(reg, (uint32_t)val);
-@@ -144,7 +159,7 @@ static void halter_guest_code(struct test_data_page *data)
- static void guest_ipi_handler(struct ex_regs *regs)
- {
- 	(*ipis_rcvd)++;
--	apic_write_reg(APIC_EOI, 77);
-+	apic_write_reg(APIC_EOI, 0);
- }
+ 	INIT_LIST_HEAD(&iaa_device->wqs);
  
- static void sender_guest_code(struct test_data_page *data)
-@@ -184,7 +199,7 @@ static void sender_guest_code(struct test_data_page *data)
- 		 * First IPI can be sent unconditionally because halter vCPU
- 		 * starts earlier.
- 		 */
--		if (!x2apic) {
-+		if (apic_mode == XAPIC) {
- 			apic_write_reg(APIC_ICR2, icr2_val);
- 			apic_write_reg(APIC_ICR, icr_val);
- 		} else {
-@@ -385,10 +400,10 @@ void do_migrations(struct test_data_page *data, int run_secs, int delay_usecs,
- }
- 
- void get_cmdline_args(int argc, char *argv[], int *run_secs,
--		      bool *migrate, int *delay_usecs, bool *x2apic, int *vm_type)
-+		      bool *migrate, int *delay_usecs, int *apic_mode, int *vm_type)
- {
- 	for (;;) {
--		int opt = getopt(argc, argv, "s:d:v:me:t:");
-+		int opt = getopt(argc, argv, "s:d:v:me:t:g");
- 
- 		if (opt == -1)
- 			break;
-@@ -403,7 +418,7 @@ void get_cmdline_args(int argc, char *argv[], int *run_secs,
- 			*delay_usecs = parse_size(optarg);
- 			break;
- 		case 'e':
--			*x2apic = parse_size(optarg) == 1;
-+			*apic_mode = parse_size(optarg);
- 			break;
- 		case 't':
- 			*vm_type = parse_size(optarg);
-@@ -431,7 +446,7 @@ void get_cmdline_args(int argc, char *argv[], int *run_secs,
- 				    " Default is no migrations.\n"
- 				    "-d <delay microseconds> - delay between migrate_pages() calls."
- 				    " Default is %d microseconds.\n"
--				    "-e <apic mode> - APIC mode 0 - xapic , 1 - x2apic"
-+				    "-e <apic mode> - APIC mode 0 - xapic , 1 - x2apic, 3 - Secure AVIC"
- 				    " Default is xAPIC.\n"
- 				    "-t <vm type>. Default is %d.\n"
- 				    "Supported values:\n"
-@@ -483,10 +498,17 @@ int main(int argc, char *argv[])
- 	bool is_sev;
- 
- 	get_cmdline_args(argc, argv, &run_secs, &migrate, &delay_usecs,
--			 &x2apic, &vm_type);
-+			 &apic_mode, &vm_type);
-+	if (apic_mode == SAVIC) {
-+		vm_type = KVM_X86_SNP_VM;
-+		TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SNP));
-+		TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_IDLE_HLT));
-+		TEST_REQUIRE(kvm_cpu_has(X86_FEATURE_SECURE_AVIC));
+ 	return iaa_device;
++
++err:
++	if (iaa_device) {
++		if (iaa_device->iaa_local_wqs) {
++			if (iaa_device->iaa_local_wqs->wqs)
++				kfree(iaa_device->iaa_local_wqs->wqs);
++			kfree(iaa_device->iaa_local_wqs);
++		}
++		kfree(iaa_device);
 +	}
 +
- 	is_sev = is_sev_vm_type(vm_type);
++	return NULL;
+ }
  
--	if (x2apic)
-+	if (apic_mode != XAPIC)
- 		migrate = 0;
+ static bool iaa_has_wq(struct iaa_device *iaa_device, struct idxd_wq *wq)
+@@ -491,12 +521,10 @@ static struct iaa_device *add_iaa_device(struct idxd_device *idxd)
+ {
+ 	struct iaa_device *iaa_device;
  
- 	if (run_secs <= 0)
-@@ -494,18 +516,28 @@ int main(int argc, char *argv[])
- 	if (delay_usecs <= 0)
- 		delay_usecs = DEFAULT_DELAY_USECS;
+-	iaa_device = iaa_device_alloc();
++	iaa_device = iaa_device_alloc(idxd);
+ 	if (!iaa_device)
+ 		return NULL;
  
--	if (is_sev)
-+	if (apic_mode == SAVIC) {
-+		struct kvm_sev_init args = { .vmsa_features = BIT_ULL(SVM_FEAT_SECURE_AVIC) |
-+						BIT_ULL(SVM_FEAT_ALLOWED_SEV_FEATURES_VALID)
-+					   };
+-	iaa_device->idxd = idxd;
+-
+ 	list_add_tail(&iaa_device->list, &iaa_devices);
+ 
+ 	nr_iaa++;
+@@ -537,6 +565,7 @@ static int add_iaa_wq(struct iaa_device *iaa_device, struct idxd_wq *wq,
+ 	iaa_wq->wq = wq;
+ 	iaa_wq->iaa_device = iaa_device;
+ 	idxd_wq_set_private(wq, iaa_wq);
++	iaa_wq->mapped = false;
+ 
+ 	list_add_tail(&iaa_wq->list, &iaa_device->wqs);
+ 
+@@ -580,6 +609,13 @@ static void free_iaa_device(struct iaa_device *iaa_device)
+ 		return;
+ 
+ 	remove_device_compression_modes(iaa_device);
 +
-+		vm = _vm_sev_create_with_one_vcpu(vm_type, halter_guest_code,
-+				&params[0].vcpu, &args);
-+	} else if (is_sev) {
- 		vm = vm_sev_create_with_one_vcpu(vm_type, halter_guest_code,
- 				&params[0].vcpu);
--	else
++	if (iaa_device->iaa_local_wqs) {
++		if (iaa_device->iaa_local_wqs->wqs)
++			kfree(iaa_device->iaa_local_wqs->wqs);
++		kfree(iaa_device->iaa_local_wqs);
++	}
++
+ 	kfree(iaa_device);
+ }
+ 
+@@ -716,9 +752,14 @@ static int save_iaa_wq(struct idxd_wq *wq)
+ 	if (WARN_ON(nr_iaa == 0))
+ 		return -EINVAL;
+ 
+-	cpus_per_iaa = (nr_nodes * nr_cpus_per_node) / nr_iaa;
++	cpus_per_iaa = (nr_packages * nr_cpus_per_package) / nr_iaa;
+ 	if (!cpus_per_iaa)
+ 		cpus_per_iaa = 1;
++
++	nr_iaa_per_package = nr_iaa / nr_packages;
++	if (!nr_iaa_per_package)
++		nr_iaa_per_package = 1;
++
+ out:
+ 	return 0;
+ }
+@@ -735,53 +776,45 @@ static void remove_iaa_wq(struct idxd_wq *wq)
+ 	}
+ 
+ 	if (nr_iaa) {
+-		cpus_per_iaa = (nr_nodes * nr_cpus_per_node) / nr_iaa;
++		cpus_per_iaa = (nr_packages * nr_cpus_per_package) / nr_iaa;
+ 		if (!cpus_per_iaa)
+ 			cpus_per_iaa = 1;
+-	} else
++
++		nr_iaa_per_package = nr_iaa / nr_packages;
++		if (!nr_iaa_per_package)
++			nr_iaa_per_package = 1;
 +	} else {
- 		vm = vm_create_with_one_vcpu(&params[0].vcpu, halter_guest_code);
+ 		cpus_per_iaa = 1;
++		nr_iaa_per_package = 1;
 +	}
+ }
  
- 	vm_install_exception_handler(vm, IPI_VECTOR, guest_ipi_handler);
--	if (is_sev_es_vm(vm))
-+	if (apic_mode == SAVIC)
-+		vm_install_exception_handler(vm, 29, savic_vc_handler);
-+	else if (is_sev_es_vm(vm))
- 		vm_install_exception_handler(vm, 29, sev_es_vc_handler);
+ /***************************************************************
+  * Mapping IAA devices and wqs to cores with per-cpu wq_tables.
+  ***************************************************************/
+-static void wq_table_free_entry(int cpu)
+-{
+-	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+-
+-	kfree(entry->wqs);
+-	memset(entry, 0, sizeof(*entry));
+-}
+-
+-static void wq_table_clear_entry(int cpu)
+-{
+-	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+-
+-	entry->n_wqs = 0;
+-	entry->cur_wq = 0;
+-	memset(entry->wqs, 0, entry->max_wqs * sizeof(struct idxd_wq *));
+-}
+-
+-static void clear_wq_table(void)
++/*
++ * Given a cpu, find the closest IAA instance.  The idea is to try to
++ * choose the most appropriate IAA instance for a caller and spread
++ * available workqueues around to clients.
++ */
++static inline int cpu_to_iaa(int cpu)
+ {
+-	int cpu;
+-
+-	for (cpu = 0; cpu < nr_cpus; cpu++)
+-		wq_table_clear_entry(cpu);
++	int package_id, base_iaa, iaa = 0;
  
--	sync_global_to_guest(vm, x2apic);
--	if (!x2apic)
-+	sync_global_to_guest(vm, apic_mode);
-+	if (apic_mode == XAPIC)
- 		virt_pg_map(vm, APIC_DEFAULT_GPA, APIC_DEFAULT_GPA);
+-	pr_debug("cleared wq table\n");
+-}
++	if (!nr_packages || !nr_iaa_per_package)
++		return 0;
  
- 	params[1].vcpu = vm_vcpu_add(vm, 1, sender_guest_code);
+-static void free_wq_table(void)
+-{
+-	int cpu;
++	package_id = topology_logical_package_id(cpu);
++	base_iaa = package_id * nr_iaa_per_package;
++	iaa = base_iaa + ((cpu % nr_cpus_per_package) / cpus_per_iaa);
+ 
+-	for (cpu = 0; cpu < nr_cpus; cpu++)
+-		wq_table_free_entry(cpu);
++	pr_debug("cpu = %d, package_id = %d, base_iaa = %d, iaa = %d",
++		 cpu, package_id, base_iaa, iaa);
+ 
+-	free_percpu(wq_table);
++	if (iaa >= 0 && iaa < nr_iaa)
++		return iaa;
+ 
+-	pr_debug("freed wq table\n");
++	return (nr_iaa - 1);
+ }
+ 
+ static int alloc_wq_table(int max_wqs)
+@@ -795,13 +828,11 @@ static int alloc_wq_table(int max_wqs)
+ 
+ 	for (cpu = 0; cpu < nr_cpus; cpu++) {
+ 		entry = per_cpu_ptr(wq_table, cpu);
+-		entry->wqs = kcalloc(max_wqs, sizeof(struct wq *), GFP_KERNEL);
+-		if (!entry->wqs) {
+-			free_wq_table();
+-			return -ENOMEM;
+-		}
+ 
++		entry->wqs = NULL;
+ 		entry->max_wqs = max_wqs;
++		entry->n_wqs = 0;
++		entry->cur_wq = 0;
+ 	}
+ 
+ 	pr_debug("initialized wq table\n");
+@@ -809,33 +840,27 @@ static int alloc_wq_table(int max_wqs)
+ 	return 0;
+ }
+ 
+-static void wq_table_add(int cpu, struct idxd_wq *wq)
++static void wq_table_add(int cpu, struct wq_table_entry *iaa_local_wqs)
+ {
+ 	struct wq_table_entry *entry = per_cpu_ptr(wq_table, cpu);
+ 
+-	if (WARN_ON(entry->n_wqs == entry->max_wqs))
+-		return;
+-
+-	entry->wqs[entry->n_wqs++] = wq;
++	entry->wqs = iaa_local_wqs->wqs;
++	entry->max_wqs = iaa_local_wqs->max_wqs;
++	entry->n_wqs = iaa_local_wqs->n_wqs;
++	entry->cur_wq = 0;
+ 
+-	pr_debug("%s: added iaa wq %d.%d to idx %d of cpu %d\n", __func__,
++	pr_debug("%s: cpu %d: added %d iaa local wqs up to wq %d.%d\n", __func__,
++		 cpu, entry->n_wqs,
+ 		 entry->wqs[entry->n_wqs - 1]->idxd->id,
+-		 entry->wqs[entry->n_wqs - 1]->id, entry->n_wqs - 1, cpu);
++		 entry->wqs[entry->n_wqs - 1]->id);
+ }
+ 
+ static int wq_table_add_wqs(int iaa, int cpu)
+ {
+ 	struct iaa_device *iaa_device, *found_device = NULL;
+-	int ret = 0, cur_iaa = 0, n_wqs_added = 0;
+-	struct idxd_device *idxd;
+-	struct iaa_wq *iaa_wq;
+-	struct pci_dev *pdev;
+-	struct device *dev;
++	int ret = 0, cur_iaa = 0;
+ 
+ 	list_for_each_entry(iaa_device, &iaa_devices, list) {
+-		idxd = iaa_device->idxd;
+-		pdev = idxd->pdev;
+-		dev = &pdev->dev;
+ 
+ 		if (cur_iaa != iaa) {
+ 			cur_iaa++;
+@@ -843,7 +868,8 @@ static int wq_table_add_wqs(int iaa, int cpu)
+ 		}
+ 
+ 		found_device = iaa_device;
+-		dev_dbg(dev, "getting wq from iaa_device %d, cur_iaa %d\n",
++		dev_dbg(&found_device->idxd->pdev->dev,
++			"getting wq from iaa_device %d, cur_iaa %d\n",
+ 			found_device->idxd->id, cur_iaa);
+ 		break;
+ 	}
+@@ -858,29 +884,58 @@ static int wq_table_add_wqs(int iaa, int cpu)
+ 		}
+ 		cur_iaa = 0;
+ 
+-		idxd = found_device->idxd;
+-		pdev = idxd->pdev;
+-		dev = &pdev->dev;
+-		dev_dbg(dev, "getting wq from only iaa_device %d, cur_iaa %d\n",
++		dev_dbg(&found_device->idxd->pdev->dev,
++			"getting wq from only iaa_device %d, cur_iaa %d\n",
+ 			found_device->idxd->id, cur_iaa);
+ 	}
+ 
+-	list_for_each_entry(iaa_wq, &found_device->wqs, list) {
+-		wq_table_add(cpu, iaa_wq->wq);
+-		pr_debug("rebalance: added wq for cpu=%d: iaa wq %d.%d\n",
+-			 cpu, iaa_wq->wq->idxd->id, iaa_wq->wq->id);
+-		n_wqs_added++;
++	wq_table_add(cpu, found_device->iaa_local_wqs);
++
++out:
++	return ret;
++}
++
++static int map_iaa_device_wqs(struct iaa_device *iaa_device)
++{
++	struct wq_table_entry *local;
++	int ret = 0, n_wqs_added = 0;
++	struct iaa_wq *iaa_wq;
++
++	local = iaa_device->iaa_local_wqs;
++
++	list_for_each_entry(iaa_wq, &iaa_device->wqs, list) {
++		if (iaa_wq->mapped && ++n_wqs_added)
++			continue;
++
++		pr_debug("iaa_device %px: processing wq %d.%d\n", iaa_device, iaa_device->idxd->id, iaa_wq->wq->id);
++
++		if (WARN_ON(local->n_wqs == local->max_wqs))
++			break;
++
++		local->wqs[local->n_wqs++] = iaa_wq->wq;
++		pr_debug("iaa_device %px: added local wq %d.%d\n", iaa_device, iaa_device->idxd->id, iaa_wq->wq->id);
++
++		iaa_wq->mapped = true;
++		++n_wqs_added;
+ 	}
+ 
+-	if (!n_wqs_added) {
+-		pr_debug("couldn't find any iaa wqs!\n");
++	if (!n_wqs_added && !iaa_device->n_wq) {
++		pr_debug("iaa_device %d: couldn't find any iaa wqs!\n", iaa_device->idxd->id);
+ 		ret = -EINVAL;
+-		goto out;
+ 	}
+-out:
++
+ 	return ret;
+ }
+ 
++static void map_iaa_devices(void)
++{
++	struct iaa_device *iaa_device;
++
++	list_for_each_entry(iaa_device, &iaa_devices, list) {
++		BUG_ON(map_iaa_device_wqs(iaa_device));
++	}
++}
++
+ /*
+  * Rebalance the wq table so that given a cpu, it's easy to find the
+  * closest IAA instance.  The idea is to try to choose the most
+@@ -889,48 +944,42 @@ static int wq_table_add_wqs(int iaa, int cpu)
+  */
+ static void rebalance_wq_table(void)
+ {
+-	const struct cpumask *node_cpus;
+-	int node, cpu, iaa = -1;
++	int cpu, iaa;
+ 
+ 	if (nr_iaa == 0)
+ 		return;
+ 
+-	pr_debug("rebalance: nr_nodes=%d, nr_cpus %d, nr_iaa %d, cpus_per_iaa %d\n",
+-		 nr_nodes, nr_cpus, nr_iaa, cpus_per_iaa);
++	map_iaa_devices();
+ 
+-	clear_wq_table();
++	pr_debug("rebalance: nr_packages=%d, nr_cpus %d, nr_iaa %d, cpus_per_iaa %d\n",
++		 nr_packages, nr_cpus, nr_iaa, cpus_per_iaa);
+ 
+-	if (nr_iaa == 1) {
+-		for (cpu = 0; cpu < nr_cpus; cpu++) {
+-			if (WARN_ON(wq_table_add_wqs(0, cpu))) {
+-				pr_debug("could not add any wqs for iaa 0 to cpu %d!\n", cpu);
+-				return;
+-			}
++	for (cpu = 0; cpu < nr_cpus; cpu++) {
++		iaa = cpu_to_iaa(cpu);
++		pr_debug("rebalance: cpu=%d iaa=%d\n", cpu, iaa);
++
++		if (WARN_ON(iaa == -1)) {
++			pr_debug("rebalance (cpu_to_iaa(%d)) failed!\n", cpu);
++			return;
+ 		}
+ 
+-		return;
++		if (WARN_ON(wq_table_add_wqs(iaa, cpu))) {
++			pr_debug("could not add any wqs for iaa %d to cpu %d!\n", iaa, cpu);
++			return;
++		}
+ 	}
+ 
+-	for_each_node_with_cpus(node) {
+-		node_cpus = cpumask_of_node(node);
+-
+-		for (cpu = 0; cpu <  cpumask_weight(node_cpus); cpu++) {
+-			int node_cpu = cpumask_nth(cpu, node_cpus);
+-
+-			if (WARN_ON(node_cpu >= nr_cpu_ids)) {
+-				pr_debug("node_cpu %d doesn't exist!\n", node_cpu);
+-				return;
+-			}
+-
+-			if ((cpu % cpus_per_iaa) == 0)
+-				iaa++;
++	pr_debug("Finished rebalance local wqs.");
++}
+ 
+-			if (WARN_ON(wq_table_add_wqs(iaa, node_cpu))) {
+-				pr_debug("could not add any wqs for iaa %d to cpu %d!\n", iaa, cpu);
+-				return;
+-			}
+-		}
++static void free_wq_tables(void)
++{
++	if (wq_table) {
++		free_percpu(wq_table);
++		wq_table = NULL;
+ 	}
++
++	pr_debug("freed local wq table\n");
+ }
+ 
+ /***************************************************************
+@@ -2134,7 +2183,7 @@ static int iaa_crypto_probe(struct idxd_dev *idxd_dev)
+ 	free_iaa_wq(idxd_wq_get_private(wq));
+ err_save:
+ 	if (first_wq)
+-		free_wq_table();
++		free_wq_tables();
+ err_alloc:
+ 	mutex_unlock(&iaa_devices_lock);
+ 	idxd_drv_disable_wq(wq);
+@@ -2184,7 +2233,9 @@ static void iaa_crypto_remove(struct idxd_dev *idxd_dev)
+ 
+ 	if (nr_iaa == 0) {
+ 		iaa_crypto_enabled = false;
+-		free_wq_table();
++		free_wq_tables();
++		BUG_ON(!list_empty(&iaa_devices));
++		INIT_LIST_HEAD(&iaa_devices);
+ 		module_put(THIS_MODULE);
+ 
+ 		pr_info("iaa_crypto now DISABLED\n");
+@@ -2210,16 +2261,11 @@ static struct idxd_device_driver iaa_crypto_driver = {
+ static int __init iaa_crypto_init_module(void)
+ {
+ 	int ret = 0;
+-	int node;
++	INIT_LIST_HEAD(&iaa_devices);
+ 
+ 	nr_cpus = num_possible_cpus();
+-	for_each_node_with_cpus(node)
+-		nr_nodes++;
+-	if (!nr_nodes) {
+-		pr_err("IAA couldn't find any nodes with cpus\n");
+-		return -ENODEV;
+-	}
+-	nr_cpus_per_node = nr_cpus / nr_nodes;
++	nr_cpus_per_package = topology_num_cores_per_package();
++	nr_packages = topology_max_packages();
+ 
+ 	if (crypto_has_comp("deflate-generic", 0, 0))
+ 		deflate_generic_tfm = crypto_alloc_comp("deflate-generic", 0, 0);
 -- 
-2.34.1
+2.27.0
 
