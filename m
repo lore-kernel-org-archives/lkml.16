@@ -1,107 +1,75 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978B81F09B1
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 16:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C64C71F0985;
+	Fri, 28 Feb 2025 16:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761768; cv=none; b=p77bd0Wsx0UbBLLpC+W46wFRVnGyf80qm9M8g/KGGwcI2ARwpfrDJPnECnanjNqkjxPp62gTj7HZ9KkTaRkovKdRH7BzSEuXToI4REohRozASfZjEWnJMimAZ2DbgSAwnYDQbmgcafFMmvDtIIh++iWsgDgW0LhXOawN+pwfjkU=
+	t=1740761881; cv=none; b=rvWt/QtsdRUXQSQKOrp244NsIXxD8pyq1TiBipWNN1D7J43/hLWMBrfzxVTEMWfXMkcc6QdjdKNetrzRCfM+uPMwgb5rqrJOd+rd27eyvgF0zLyRS7aabgj0gNDm+kgBoPOGxQ9Gsa3ci94ms6Bgr0ZPUL0095Jr3OtBZN3XOA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761768; c=relaxed/simple;
-	bh=9uTSHLNgnbRt5Lsag5q7P+lfzkBEMtaYH2Jt6mYNjBg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=TJMXuXwKSb2ajasWgY9720lUKpty4rOMfyluLuwmv86kUeQSUbMwZGGsk0Z3aHOdhXLEj2YA+LfCxlGk1K9g6fXJuMd+3B2TvFJ9p2hwDWYhe+VOe/HY2D/xhZLkph9bolxHvR4F5IvnouUJebhOhUMUWE7/mUdgIk5ak/DPCRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=YnP5ml4l; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1740761881; c=relaxed/simple;
+	bh=GcQIO5T2X8BR3sO+RGdVUXzwPENxvN5NugZ5HeFQ7g0=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y9QN7ztwtwOHssdUfUzSt4vv5I4ZOv2tEPA+OeB5oJ9N3HxzC5Q7kW/kyWn/shoVy4jPAlm/Ko5UFVIZkq2Ffc1cWnFOS10f5vAd4CTx6PkN3WcAHxufvBghEmka68sbPbW8qNrNQAlA/XF2LQ1EIOkr6nlB//jpsPsDAUMvIew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kwS5cUkC; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="YnP5ml4l"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kwS5cUkC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AEB0E42E79;
+	Fri, 28 Feb 2025 16:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740761876;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2F1mWOvIOvmmRpjyWCO/cIFb/CfirKur93FFk/ac3ec=;
+	b=kwS5cUkCBzNhXpwumm51/SxS4Ozdl2Sj5wULvKeygX1xWZquY8z9jPc5EOf22uNKkswGcF
+	3zSFkdIqERAn3MuCucES1aGTqzTqxUCMT6MhWkQNIoYyWFmd6mzbwvQDPYlPC2cXg8qeU6
+	shHGLfkPb7Cbke0jlezDZKBpLEStGwDK4uRTBGEKp0ksWOdBYheGAzgFLEF0pyIrM0vw1b
+	fSlh2+dkMajaxPTNc+gk17QzJ2zQSKzZPw7+kLjZ7Yu3je4sCAWFrcXR+Fhq2nrsV8VFnM
+	Kcp0Q+RAhx5f1gVGxlZWXsZYSDNUbCXY5BfEhbn8P8ykJViwZW/Xejdn80Qp8w==
+Date: Fri, 28 Feb 2025 17:57:56 +0100
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] rtc: fsl-ftm-alarm: Mark acpi_id table as maybe
+ unused
+Message-ID: <174076185914.1014573.2350946288107195834.b4-ty@bootlin.com>
+References: <20250222114146.162835-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1740761759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CK2+2eTKEOuhyBSMGk3107aiSfJh4IB6MZYp2fX2orA=;
-	b=YnP5ml4lSpqZvZxXgRMBOB/tXJezBC6B6VFzwlj9SWokVPcyO2HSn0JrITrq3scrHkWXu8
-	P2NlPxV4wh2Snwo8S/3TIX7B3S2tlkZ08AymOj//GP3SX1QbQtvC5ZDvEyRAooPgUoeE64
-	j9eoZQB1dqHlTMSUJR458UWPER81onHKg512NWLcZyq3TV78EYMKPnnZn/z/TtccALiS/4
-	FgMyo5ZC4U2AtDv3xw/k0ZMOmSg7xa2IFYFVk+Wk4Zij2dFBBQmzZrsFy9PWe1nl4NWeYK
-	QE+jt2V+SrPhMP4k1JT3W3EAYP09vjRoBDLFCADQPhfmDZhD0jJuawYHjtvfqg==
-Content-Type: multipart/signed;
- boundary=9db44123ad8e24452ea89acc1d1803313fb749feac7e1c6887c874175b10;
- micalg=pgp-sha256; protocol="application/pgp-signature"
-Date: Fri, 28 Feb 2025 17:55:47 +0100
-Message-Id: <D848JET5TDL6.2L4ZQR0YHYQU6@cknow.org>
-Cc: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: Remove undocumented sdmmc
- property from lubancat-1
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Diederik de Haas" <didi.debian@cknow.org>
-To: "Yao Zi" <ziyao@disroot.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Dragan Simic"
- <dsimic@manjaro.org>, "Johan Jonker" <jbx6244@gmail.com>, "Wenhao Cui"
- <lasstp5011@gmail.com>, "Yuteng Zhong" <zonyitoo@gmail.com>
-References: <20250228163117.47318-2-ziyao@disroot.org>
-In-Reply-To: <20250228163117.47318-2-ziyao@disroot.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250222114146.162835-1-krzysztof.kozlowski@linaro.org>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetlhgvgigrnhgurhgvuceuvghllhhonhhiuceorghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepuddtgfehteevtedvteelleefffekhfdthfelgeefueelgeeuueeggfehheelvdegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegukeejvgemudgsudgsmeeltdekgeemtggtfhgtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegukeejvgemudgsudgsmeeltdekgeemtggtfhgtpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkv
+ ghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiihihsiihtohhfrdhkohiilhhofihskhhisehlihhnrghrohdrohhrgh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
---9db44123ad8e24452ea89acc1d1803313fb749feac7e1c6887c874175b10
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
+On Sat, 22 Feb 2025 12:41:45 +0100, Krzysztof Kozlowski wrote:
+> For !ACPI builds, the acpi_device_id table will not be referenced
+> because of ACPI_PTR:
+> 
+>   rtc-fsl-ftm-alarm.c:312:36: error: unused variable 'ftm_imx_acpi_ids' [-Werror,-Wunused-const-variable]
+> 
+> 
 
-On Fri Feb 28, 2025 at 5:31 PM CET, Yao Zi wrote:
-> Property "supports-cd" isn't documented anywhere and is unnecessary for
+Applied, thanks!
 
-s/supports-cd/supports-sd/ ?
+[1/2] rtc: fsl-ftm-alarm: Mark acpi_id table as maybe unused
+      https://git.kernel.org/abelloni/c/f36d6362c62c
+[2/2] rtc: pl030: Constify amba_id table
+      https://git.kernel.org/abelloni/c/72ce39bc61fa
 
-Cheers,
-  Diederik
+Best regards,
 
-> mainline driver to function. It seems a property used by downstream
-> kernel was brought into mainline.
->
-> This should be reported by dtbs_check, but mmc-controller-common.yaml
-> defaults additionalProperties to true thus allows it. Remove the
-> property to clean the devicetree up and avoid possible confusion.
->
-> Fixes: 8d94da58de53 ("arm64: dts: rockchip: Add EmbedFire LubanCat 1")
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts b/arch/ar=
-m64/boot/dts/rockchip/rk3566-lubancat-1.dts
-> index 61dd71c259aa..ddf84c2a19cf 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3566-lubancat-1.dts
-> @@ -512,7 +512,6 @@ &sdhci {
-> =20
->  &sdmmc0 {
->  	max-frequency =3D <150000000>;
-> -	supports-sd;
->  	bus-width =3D <4>;
->  	cap-mmc-highspeed;
->  	cap-sd-highspeed;
-
-
---9db44123ad8e24452ea89acc1d1803313fb749feac7e1c6887c874175b10
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZ8HqmAAKCRDXblvOeH7b
-brBnAQDYQlWpCi07tRhXA4WUv7ubZmIyzqkjeaOSH8mLwC7m9wEAhEKazw8l4USI
-CuStlAfbvqiFxfbuBJrPLhrrU8ag6A0=
-=EyJp
------END PGP SIGNATURE-----
-
---9db44123ad8e24452ea89acc1d1803313fb749feac7e1c6887c874175b10--
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
