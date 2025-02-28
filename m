@@ -1,82 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2E71F4C87
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 17:14:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EF41F4CB8;
+	Fri, 28 Feb 2025 17:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740762880; cv=none; b=PTmoVGoEdXcn07TctyjXF9KcyjOR10Pvxckg2q9uCm7YVO87BB0JCZluc1UzPfSNc2FpUK+Moqc5ANWOO/FOBFxLAf7NFDD2h17LmUW8Icu7TArxRU5FaGLtJDPsXKa35eas9GhD5fCGjlinj63JTiNUVQf+MdPblSeaywl18zU=
+	t=1740762908; cv=none; b=EB4OnXdw0hQQbYJbiKmxKFUCCKOzaA0DAY1S5ojOcN8Vdw5dTVMwgfd86891m4SKSHuNr819xQNSbRWsUU7/tT/Pz6vvBa/e0us7O65uSOc9GPS+D8YEPG1t4a9SCR2M24dNJS3fDlFZ99NM7NvfM7EHVG6wqkJSUVpjyAeIeBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740762880; c=relaxed/simple;
-	bh=NUeO+pACom+KYAvSBkCxTGgdvDOR9Jpk1E6DXGXn5d8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JKakhsZnzRMuxkupJh/4sjJN8zIiGYYnm1SIy6Wet9gWlMe7wdza9/HQzMUKwkALRSPFKsX5g2h21ore4eYInnmiMd02jIKee2pcRDxp7dRIGuQ96xaBUboSUke55uHpLG9aKI50o2oyZ+4asFF1CT8gzCUqR3vnU49wP3aTqqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blOqq7ri; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740762908; c=relaxed/simple;
+	bh=yw56OOcc4mOBuuj6ITPf/bufZr7+wEV6mWmgXwpcuAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A56NWSrX6w9/NikfWXyGo8RgRn2b9uQ1EIhJITfy/r8JdY/vEpp/cNXXkCQwZ/oahLZtTTJCHlAzzX0ICZ3gTrPpQnwfjbtxAHLgG3yR2/wqdNJbosP1p1JSKxz61pRsJz0j4mHL4Inw9Wn3S+nraIa98nYiZe2oR4zMnerR3dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Neb2MXZO; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blOqq7ri"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26549C4CEE5;
-	Fri, 28 Feb 2025 17:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740762879;
-	bh=NUeO+pACom+KYAvSBkCxTGgdvDOR9Jpk1E6DXGXn5d8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=blOqq7riYw7R2bigdfXnOIr7FBqTYdzXTdZGHwRMGAX8zLhtdK1E+SlbmmjRxOjxW
-	 4pcfCBzvvrkg8moo3H6dW1nRmeS7jZ1U2IfwO02whAEsP89tOkl+g6JJ1UVw1Cmech
-	 +7g60/hSpSx1LcShpVYdqrZSElpf3w6pOIYp554pOJpnSOlmEe4O687MWQLigOyVfv
-	 4WKGu+AMVDlUJ1GZhFuM3DuBwd3eyIq1VH9ofgDfLqZKCV0oFqPnr+JvMPPpVexa7x
-	 oBMgNvy9wjZiETUS/+OyXEgvAcx/8xQ32rHdcJfeJMCQENI9N7pEKgIfUKCM8wu0LF
-	 QKWg1oZ7M4dwQ==
-Date: Fri, 28 Feb 2025 18:14:26 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
-	dan.j.williams@intel.com, dave.hansen@linux.intel.com,
-	david@redhat.com, jane.chu@oracle.com, osalvador@suse.de,
-	tglx@linutronix.de
-Subject: Re: [PATCH v2 2/2] x86/mm: Remove unnecessary include in set_memory.h
-Message-ID: <Z8Hu8oDHRnLx_gxm@gmail.com>
-References: <20241212080904.2089632-1-kevin.brodsky@arm.com>
- <20241212080904.2089632-3-kevin.brodsky@arm.com>
- <Z8BiUnkPnvrx06vp@gmail.com>
- <Z8BirVtqibWY6zaT@gmail.com>
- <ce29384e-b3fe-4196-a986-bb57a5d693d6@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Neb2MXZO"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso334597266b.1;
+        Fri, 28 Feb 2025 09:15:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740762904; x=1741367704; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=afeonSAlFod4Wwm3A9Q0iIl/boL2tdt0YRRgmGv2+Wc=;
+        b=Neb2MXZOBiQOHw2W4MtkDC712Qs1vTzhK9tgByQLumV+FiPiEYlioMsW59rtBwAk1Q
+         NqGaV1TypMnXVSu+XAbNMK7AX/NyWJO48oCEaOlU4cDhg6LIsdH1O+CNZ1fjB/lMGNln
+         sOtCyhlg7Ctiq+J30Vz9cXI640mKtNb1YXAAKih1y8zmB/p122n6wc0mUblNlWu9zLSp
+         HUAFDYyDGvmYh2RL2H2d7MOsA3/5oTwOWuMYFWL1fSQPlnkMuuXEz5Gs6FSQIIVASNv0
+         ZxqahzUZi1oOT3P7ANS9S4HVUXeNEa2Szf9JHgqM/NoLnil+Ni0Csxhuj/DZbUwcMfXG
+         rf0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740762904; x=1741367704;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=afeonSAlFod4Wwm3A9Q0iIl/boL2tdt0YRRgmGv2+Wc=;
+        b=Xr9h9BcAIA/IpdBGCLyxUdvBL5b5mG5Qe6UPHtvg85F1K8KWeEisUs1iX89771468c
+         5Q5LIJ2H0PeZ+9KKhO575Wrb6+B/iqdfxy56qQTmdEy58QAwBdZ3+KONzpNrmxxg0fd4
+         pMTssKbD9bTL3+FQxg0takAmVKlc0VTcPpL5x9Ib5cpWweVPUgl18nMCpcrR6Cpp11LX
+         G2zkhBcZunc8WObA4AS2kbpDu+HZXvh+WuK1jVHtaZm1RMB6thWZllxvx1HNZAHCHrEw
+         kMqA8446MH6nXLoaEPkcsDzpIUhg7Zu/7in9zqMJ07S62wpYlCQGR/n0ywwd4TOqHifd
+         tT0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW2vIHAYHkco+aON0PmKqurOrI1jlrZBqHx5LHwnJk4d5RWLlnqgy/cvs8lXU5JJH6R+rBFNagF@vger.kernel.org, AJvYcCXWDRnomg6u+UTtIJlm4gu4k6g3ogUJ9pZGlXMxClrKmlxBNAIKJnuZAeF3pFyrVx5R5oxk+cZQ5OZBRxM=@vger.kernel.org, AJvYcCXcDnn5XqzoI806pd2wQu80mR5SrsQ5bt9uCQ8TMCUkRbq7y0bDuz8w82Kye9tzlLQGqURlhjCNLCac@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYR+nvaftkojlQDIqhoyoD2NrTYaEoWtG0FhShZ/FfgSIqzwkB
+	by4EXxCtW8F6u5UPm2Vr00qSrg3ok6yf/JHflV2D+VmKHALrUg2O
+X-Gm-Gg: ASbGncsQxSLdV1SznRtCcuQR54C3+z1ldjhJb1s2rK6YRL9EPJp7sK1Hlx4tBfwx0hm
+	pWHFwbNzt5u27a8dlY03plDLy/yvf8rXmE+abOoinVU3hqwHN/vd9eslcJvjcc3w2tku7YLmNBn
+	ZY7v6+6h6LhWhFv7D3tNdC//N4LR+ebOFqsQSEHSiPedp5vzWZRU+FYJUVHrwUUZnORDaxtGVNb
+	RLqZ/QeB/MhStArVtRyxeTGxH5uQnw+PmkuLSbG/sKVULZ1dv3+36MoB+cfcR8ceFl/ngctYAyR
+	ag+bypVhhPmC2NLaPhsVmj8ecQ3T/b12vt5zsCSm
+X-Google-Smtp-Source: AGHT+IFcwu5SgE7uaz6+ha2R6PQoBv6tsHMNfhGt4zl4vNELvAtuToKwfhdiqEMFcNgr+0yERYGfAA==
+X-Received: by 2002:a17:907:96a5:b0:ab7:eaf7:2bd6 with SMTP id a640c23a62f3a-abf269b8941mr492833766b.49.1740762903970;
+        Fri, 28 Feb 2025 09:15:03 -0800 (PST)
+Received: from foxbook (adqi59.neoplus.adsl.tpnet.pl. [79.185.142.59])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abf0c75d31csm316464266b.157.2025.02.28.09.15.02
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 28 Feb 2025 09:15:03 -0800 (PST)
+Date: Fri, 28 Feb 2025 18:14:59 +0100
+From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc: Kuangyi Chiang <ki.chiang65@gmail.com>, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ mathias.nyman@intel.com, stable@vger.kernel.org
+Subject: Re: [PATCH] usb: xhci: Handle quirky SuperSpeed isoc error
+ reporting by Etron HCs
+Message-ID: <20250228181459.2ec1d29c@foxbook>
+In-Reply-To: <20250228181146.5188fcdb@foxbook>
+References: <20250205234205.73ca4ff8@foxbook>
+	<b19218ab-5248-47ba-8111-157818415247@linux.intel.com>
+	<20250210095736.6607f098@foxbook>
+	<20250211133614.5d64301f@foxbook>
+	<CAHN5xi05h+4Fz2SwD=4xjU=Yq7=QuQfnnS01C=Ur3SqwTGxy9A@mail.gmail.com>
+	<20250212091254.50653eee@foxbook>
+	<41847336-9111-4aaa-b3dc-f3c18bb03508@linux.intel.com>
+	<20250228181146.5188fcdb@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce29384e-b3fe-4196-a986-bb57a5d693d6@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-* Kevin Brodsky <kevin.brodsky@arm.com> wrote:
+On Fri, 28 Feb 2025 18:11:46 +0100, Micha=C5=82 Pecio wrote:
+> What are your thoughts about killing error_mid_td completely and using
+> a similar mechanism to deal with those final events?
+>=20
+> 1. The events would be taken care of.
+>=20
+> 2. It should be OK wrt DMA, because the HC has no reason to touch data
+> buffers after an error. Short Packet is done this way and it works.
+>=20
+> 3. A remaining problem is that dequeue is advanced to end_trb too soon
+> and "tail" of the TD could be overwritten. Already a problem with
+> Short Packet and I think it can be solved by replacing most
+> xhci_dequeue_td() calls with xhci_td_cleanup() and adding to
+> handle_tx_event():
+>=20
+>     ep_ring->dequeue =3D ep_trb;
+>     ep_ring->deq_seg =3D ep_seg;
 
-> On 27/02/2025 14:03, Ingo Molnar wrote:
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >> So I tried to pick up this patch belatedly, but there's more places 
-> >> that mistakenly learned to rely on the stray <linux/mm.h> inclusion, 
-> >> for example on x86 defconfig-ish kernels:
-> >>
-> >>
-> >>   In file included from drivers/gpu/drm/i915/gt/intel_ggtt.c:6:
-> >>   ./arch/x86/include/asm/set_memory.h:40:57: error: unknown type name ‘pgprot_t’
-> >>   40 | int __set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
-> >>   |                                                         ^~~~~~~~
-> 
-> This patch relies on patch 1 in this series, which removes 
-> __set_memory_prot(). I seem to be able to build x86_64_defconfig 
-> without issue with both patches applies on the latest mainline.
+Forgot to add:
 
-Oh, the 1/2 patch was missing from my mailbox (my mbox's fault, not yours),
-and apparently the 'PATCH 2/2' tag wasn't a big enough of a clue for me
-that there's a dependent patch. ;-)
+4. Guaranteed low latency of error reporting.
 
-Anyway, I re-tested it with both patches applied and it's all looking 
-good now, and I have applied them to tip:x86/headers.
-
-Thanks,
-
-	Ingo
+5. Some annoying code for giving back 'error_mid_td' URBs under weird
+corner cases that I recently spent a few hours writing could be thrown
+out and handle_tx_event() would become a little simpler.
