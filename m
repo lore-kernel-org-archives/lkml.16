@@ -1,422 +1,97 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D994276D33;
-	Fri, 28 Feb 2025 02:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2CE276D33;
+	Fri, 28 Feb 2025 02:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740709495; cv=none; b=eHnVbXww5ZtNvwOVwuY4KBh45wsW+ByRZLrya1lQWCqveUvtEN1H49XpV2N+kxtH/8ZKQW9c+VLKRUcgCqK0Dzzva8m7f1TM5VMPZJ3eWW5TWk2kPAVwusZjm4nDgeuxs+YvBBOTqsMmS+Xj+0BGOSzMWQHMNV5yEB4PkgbiE+M=
+	t=1740709505; cv=none; b=kVPxjvAw1a2hUcUD/ZukuW+lyI/S9YWlVQj7QdoIzmIpI7h+s+OKbxHqDCg4OSa6/26QXfvG3gmIn2ZiB+XMM7rI4GHDSx4Q3MPlZ+fXzi7+ZeebO9azoIabhIe2Yvc6WJ7RG1+K/0hUzsuwIWNnrxrULaPUSlv2wKzTs1o/1/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740709495; c=relaxed/simple;
-	bh=6152mP3n6Wko11s6rGrSx58EFXwjyY4IufHDTzfu6c0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L9yOH9X50XCNeO8GacqJTkbHw77uh8A8Dv3SHBR28YukDmb1cu4m97ddFhJ/4toRevfxkaOrIcKGOo2H+obz8zPXsOUGJ2l2EZN3vz+OUrGnb775d16Ff8abH9xWO8R2EqjRhP7NajrFhNRuS/Osgoo4Yu0NGXrelp1nLtbJZIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1tnq3P-000000006qa-1HNs;
-	Fri, 28 Feb 2025 02:24:43 +0000
-Date: Fri, 28 Feb 2025 02:22:38 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"Chester A. Unal" <chester.a.unal@arinc9.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>,
-	John Crispin <john@phrozen.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH net-next] net: dsa: mt7530: make use of REGMAP_IRQ
-Message-ID: <Z8Ed7uVT4rV3PnVf@makrotopia.org>
-References: <0d50a1437c6d298b13fb19db546a20d10b643cc3.1740708525.git.daniel@makrotopia.org>
+	s=arc-20240116; t=1740709505; c=relaxed/simple;
+	bh=TH8GhiewyAoHOD6iRuesAFPW40a34FfeI1owzcTXXm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rk6dR2wHRqUlJ+cAKZmfKM/iWFAE/T42jqERUyNhxN5bEN6Fazdu5TYLyLv7P/iIfzDa5iKiJHTChux1BJ7m6BU5u/MV3SvyCz3L7x8xfnfk8nFH/vLcI+UxAy8/1kuele5n/vDmPYZrxlvGz43YIBDKHXtwieRVw9MaKOZguJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RVZlB3+b; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVZlB3+b"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so1820618a12.3;
+        Thu, 27 Feb 2025 18:25:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740709502; x=1741314302; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HOiFb2uaZTM/Hc5eDFna0HdsQUy4+S1apmiGNsTq08Y=;
+        b=RVZlB3+bgByvH7jV91p//4N7lsiEjjV24s5qCO6gK0LWbapy7rtCCdWdxpkHhebeqJ
+         ap4Bio/wdO1hkDfN5f9mRsTKeDKe4cBAdIR5Gnh/dmAn/to+md4SxdZY0EgOv+NNu6pO
+         l7Qp3RtpjQevsseskpnVYq79lJHnWno+99BhmdazU0eegiXWyC4XZFrzLDWge9YuVaq9
+         F5NoCgdnkhNCGaxyON5PWeNsbqvxd7ADLC+oef0oVV7Qe1qkUs5J/bEcZIdhQv005Dfh
+         8srTKkVix+xGMdii16NdcOv8uX0Uw2Wm13uocqPPtTeccXcbsZzwA9QFzMspWexchJdd
+         Njlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740709502; x=1741314302;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HOiFb2uaZTM/Hc5eDFna0HdsQUy4+S1apmiGNsTq08Y=;
+        b=pdU0sYomY1126zqMecxF5AbHhr19j4GZ0kC1QLL7osFZFH2nDvIv5sMNkM71MtusrO
+         uuyW29zXKf08m9wY1fid+evJAoV5SLh5DjnNhupTp+NDEZ1pgdOEr9d7YBgYp8iWmdEw
+         uO2O8INm0jwjRb79vgPSNhKSVLls+t5idmT08URWrRPvQnU73CCAlhWUa4xWL8/ico/8
+         KYgyN47RNHm1KVgb8H0H6gp2dirS+F5usuPX8ju26MWLudLQB6CNGZDYwNJHbq3xzJwn
+         MhzCBTZXr9mmevkxNcXQ6Z7I47pzt5e0wv5i9TGhvTHa7YCnN+H5o0CJZmt7yGsz8Apw
+         oeGA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWGpQNX+8PQDIG2YOtkPF6haoyZ8Wb8TJtHJkPpAxzDcWOACA9B1eYtxHHpVFmwlUT6uGVSc3PcFYiZBY8eNM=@vger.kernel.org, AJvYcCX+Ddu8KS6JEWgz2lJr0QsdDfC85PeBGTqZe1+5jFov8l3HnHjq/F/O5Zf3JWhvWFpbhcrS2fngFC+baCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfDKe28+eecxPxp4d/7zvwf3J+DKZMMzrVHBmUQEj5fMg2ng3s
+	f3A4V1J2siCl2FEZpqceCSYIK7Qn7NVtW3C+9Kj1ijhURwTUftzuAuRtPD76hetq7aIj5VGN+p3
+	u4u4kgc5HZTcCgiT4i1YT/51OTRE=
+X-Gm-Gg: ASbGncueNPjoZCfy7F4aVnTVohaRPi0SaJVKTG3+ptZdLYSQMiDPHcvNCWh56scTunF
+	ubwr6jb3ZmVwlp71gIddRafFXxh9m7PSEhWQD6V7uUS/TJG3yZPmj17uuG0JOaW3VVXYvwQLkgO
+	tdzDRrHA==
+X-Google-Smtp-Source: AGHT+IG8P/Rf7Nhp6ubr6y0mJxpSoaHQ23pNLudbTvjrOGOm94lBjX0PH2uiYGY5ebcGSTw2itPEiP8WYWZIYVpcOo8=
+X-Received: by 2002:a05:6402:1ecf:b0:5e4:ce6e:388b with SMTP id
+ 4fb4d7f45d1cf-5e4d6ac54a7mr3056695a12.6.1740709502364; Thu, 27 Feb 2025
+ 18:25:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0d50a1437c6d298b13fb19db546a20d10b643cc3.1740708525.git.daniel@makrotopia.org>
+References: <20250217-nova_timer-v1-0-78c5ace2d987@nvidia.com>
+ <Z7OrKX3zzjrzZdyz@pollux> <CAPM=9tyu84z4Xk5X0fykO3Dazby2UqRgwtN4woNKe4Z2yMyDZg@mail.gmail.com>
+ <D80AK2CLL4AZ.1G6R7OBHOF08O@nvidia.com> <Z7xg8uArPlr2gQBU@pollux>
+ <D81L5PE1SPWC.O56MB6SRS0XK@nvidia.com> <CAPM=9tw=8WtR9093EThr0aY6yTYtef9SBgjN5S1xZUXaWN8aWQ@mail.gmail.com>
+ <d9c7e8ff4b32f06650b2ad4e3b993d217b286aa9.camel@nvidia.com>
+In-Reply-To: <d9c7e8ff4b32f06650b2ad4e3b993d217b286aa9.camel@nvidia.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Fri, 28 Feb 2025 12:24:50 +1000
+X-Gm-Features: AQ5f1Jo9MDruhrTr2qymJBq8i--oaJMjPPjA2VFHO726289NAQO1EfWzdBHtnOI
+Message-ID: <CAPM=9txa5Uo0qC-5OqNOcrWaGNjJEr8+J+ug0C3e6fMk9t18Zg@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice implementation
+To: Timur Tabi <ttabi@nvidia.com>
+Cc: Alexandre Courbot <acourbot@nvidia.com>, 
+	"nouveau-bounces@lists.freedesktop.org" <nouveau-bounces@lists.freedesktop.org>, John Hubbard <jhubbard@nvidia.com>, 
+	"gary@garyguo.net" <gary@garyguo.net>, 
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"boqun.feng@gmail.com" <boqun.feng@gmail.com>, "dakr@kernel.org" <dakr@kernel.org>, 
+	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>, 
+	"joel@joelfernandes.org" <joel@joelfernandes.org>, Ben Skeggs <bskeggs@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Feb 28, 2025 at 02:14:48AM +0000, Daniel Golle wrote:
-> Use REGMAP_IRQ instead of open-coding irq chip handler and mask/unmask.
-> This greatly simplifies the code and allows to remove (almost) all
-> interrupt related functions from mt7530.c.
-> 
-> Tested on MT7988A built-in switch as well as MT7531AE IC.
-> 
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
->  drivers/net/dsa/Kconfig  |   1 +
->  drivers/net/dsa/mt7530.c | 235 +++++++++------------------------------
->  drivers/net/dsa/mt7530.h |   4 -
->  3 files changed, 56 insertions(+), 184 deletions(-)
-> 
-> diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-> index 2d10b4d6cfbb..bb9812b3b0e8 100644
-> --- a/drivers/net/dsa/Kconfig
-> +++ b/drivers/net/dsa/Kconfig
-> @@ -37,6 +37,7 @@ config NET_DSA_LANTIQ_GSWIP
->  config NET_DSA_MT7530
->  	tristate "MediaTek MT7530 and MT7531 Ethernet switch support"
->  	select NET_DSA_TAG_MTK
-> +	select REGMAP_IRQ
->  	imply NET_DSA_MT7530_MDIO
->  	imply NET_DSA_MT7530_MMIO
->  	help
-> diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-> index 8422262febaf..a62a6d3d3a59 100644
-> --- a/drivers/net/dsa/mt7530.c
-> +++ b/drivers/net/dsa/mt7530.c
-> @@ -2050,131 +2050,6 @@ mt7530_setup_gpio(struct mt7530_priv *priv)
->  }
->  #endif /* CONFIG_GPIOLIB */
->  
-> -static irqreturn_t
-> -mt7530_irq_thread_fn(int irq, void *dev_id)
-> -{
-> -	struct mt7530_priv *priv = dev_id;
-> -	bool handled = false;
-> -	u32 val;
-> -	int p;
-> -
-> -	mt7530_mutex_lock(priv);
-> -	val = mt7530_mii_read(priv, MT7530_SYS_INT_STS);
-> -	mt7530_mii_write(priv, MT7530_SYS_INT_STS, val);
-> -	mt7530_mutex_unlock(priv);
-> -
-> -	for (p = 0; p < MT7530_NUM_PHYS; p++) {
-> -		if (BIT(p) & val) {
-> -			unsigned int irq;
-> -
-> -			irq = irq_find_mapping(priv->irq_domain, p);
-> -			handle_nested_irq(irq);
-> -			handled = true;
-> -		}
-> -	}
-> -
-> -	return IRQ_RETVAL(handled);
-> -}
-> -
-> -static void
-> -mt7530_irq_mask(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	priv->irq_enable &= ~BIT(d->hwirq);
-> -}
-> -
-> -static void
-> -mt7530_irq_unmask(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	priv->irq_enable |= BIT(d->hwirq);
-> -}
-> -
-> -static void
-> -mt7530_irq_bus_lock(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	mt7530_mutex_lock(priv);
-> -}
-> -
-> -static void
-> -mt7530_irq_bus_sync_unlock(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	mt7530_mii_write(priv, MT7530_SYS_INT_EN, priv->irq_enable);
-> -	mt7530_mutex_unlock(priv);
-> -}
-> -
-> -static struct irq_chip mt7530_irq_chip = {
-> -	.name = KBUILD_MODNAME,
-> -	.irq_mask = mt7530_irq_mask,
-> -	.irq_unmask = mt7530_irq_unmask,
-> -	.irq_bus_lock = mt7530_irq_bus_lock,
-> -	.irq_bus_sync_unlock = mt7530_irq_bus_sync_unlock,
-> -};
-> -
-> -static int
-> -mt7530_irq_map(struct irq_domain *domain, unsigned int irq,
-> -	       irq_hw_number_t hwirq)
-> -{
-> -	irq_set_chip_data(irq, domain->host_data);
-> -	irq_set_chip_and_handler(irq, &mt7530_irq_chip, handle_simple_irq);
-> -	irq_set_nested_thread(irq, true);
-> -	irq_set_noprobe(irq);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct irq_domain_ops mt7530_irq_domain_ops = {
-> -	.map = mt7530_irq_map,
-> -	.xlate = irq_domain_xlate_onecell,
-> -};
-> -
-> -static void
-> -mt7988_irq_mask(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	priv->irq_enable &= ~BIT(d->hwirq);
-> -	mt7530_mii_write(priv, MT7530_SYS_INT_EN, priv->irq_enable);
-> -}
-> -
-> -static void
-> -mt7988_irq_unmask(struct irq_data *d)
-> -{
-> -	struct mt7530_priv *priv = irq_data_get_irq_chip_data(d);
-> -
-> -	priv->irq_enable |= BIT(d->hwirq);
-> -	mt7530_mii_write(priv, MT7530_SYS_INT_EN, priv->irq_enable);
-> -}
-> -
-> -static struct irq_chip mt7988_irq_chip = {
-> -	.name = KBUILD_MODNAME,
-> -	.irq_mask = mt7988_irq_mask,
-> -	.irq_unmask = mt7988_irq_unmask,
-> -};
-> -
-> -static int
-> -mt7988_irq_map(struct irq_domain *domain, unsigned int irq,
-> -	       irq_hw_number_t hwirq)
-> -{
-> -	irq_set_chip_data(irq, domain->host_data);
-> -	irq_set_chip_and_handler(irq, &mt7988_irq_chip, handle_simple_irq);
-> -	irq_set_nested_thread(irq, true);
-> -	irq_set_noprobe(irq);
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct irq_domain_ops mt7988_irq_domain_ops = {
-> -	.map = mt7988_irq_map,
-> -	.xlate = irq_domain_xlate_onecell,
-> -};
-> -
->  static void
->  mt7530_setup_mdio_irq(struct mt7530_priv *priv)
->  {
-> @@ -2191,49 +2066,71 @@ mt7530_setup_mdio_irq(struct mt7530_priv *priv)
->  	}
->  }
->  
-> +static const struct regmap_irq mt7530_irqs[] = {
-> +	REGMAP_IRQ_REG_LINE(0, 32), /* PHY 0 */
-> +	REGMAP_IRQ_REG_LINE(1, 32), /* PHY 1 */
-> +	REGMAP_IRQ_REG_LINE(2, 32), /* PHY 2 */
-> +	REGMAP_IRQ_REG_LINE(3, 32), /* PHY 3 */
-> +	REGMAP_IRQ_REG_LINE(4, 32), /* PHY 4 */
-> +	REGMAP_IRQ_REG_LINE(5, 32), /* PHY 5 */
-> +	REGMAP_IRQ_REG_LINE(6, 82), /* PHY 6 */
-                              ^^^
-                            nasty typo
-will fix in v2 after more time for comments.
+On Fri, 28 Feb 2025 at 11:49, Timur Tabi <ttabi@nvidia.com> wrote:
+>
+> On Fri, 2025-02-28 at 07:37 +1000, Dave Airlie wrote:
+> > I've tried to retrofit checking 0xffffffff to drivers a lot, I'd
+> > prefer not to. Drivers getting stuck in wait for clear bits for ever.
+>
+> That's what read_poll_timeout() is for.  I'm surprised Nouveau doesn't use it.
 
-> +	REGMAP_IRQ_REG_LINE(16, 32), /* MAC */
-> +	REGMAP_IRQ_REG_LINE(17, 32), /* BMU */
-> +	REGMAP_IRQ_REG_LINE(18, 32), /* MIB */
-> +	REGMAP_IRQ_REG_LINE(22, 32), /* ARL_COL_FULL_COL */
-> +	REGMAP_IRQ_REG_LINE(23, 32), /* ARL_COL_FULL */
-> +	REGMAP_IRQ_REG_LINE(24, 32), /* ARL_TLB_ERR */
-> +	REGMAP_IRQ_REG_LINE(25, 32), /* ARL_PKT_QERR */
-> +	REGMAP_IRQ_REG_LINE(26, 32), /* ARL_EQ_ERR */
-> +	REGMAP_IRQ_REG_LINE(27, 32), /* ARL_PKT_BC */
-> +	REGMAP_IRQ_REG_LINE(28, 32), /* ARL_SEC_IG1X */
-> +	REGMAP_IRQ_REG_LINE(29, 32), /* ARL_SEC_VLAN */
-> +	REGMAP_IRQ_REG_LINE(30, 32), /* ARL_SEC_TAG */
-> +	REGMAP_IRQ_REG_LINE(31, 32), /* ACL */
-> +};
-> +
-> +static const struct regmap_irq_chip mt7530_regmap_irq_chip = {
-> +	.name = KBUILD_MODNAME,
-> +	.status_base = MT7530_SYS_INT_STS,
-> +	.unmask_base = MT7530_SYS_INT_EN,
-> +	.ack_base = MT7530_SYS_INT_STS,
-> +	.init_ack_masked = true,
-> +	.irqs = mt7530_irqs,
-> +	.num_irqs = ARRAY_SIZE(mt7530_irqs),
-> +	.num_regs = 1,
-> +};
-> +
->  static int
->  mt7530_setup_irq(struct mt7530_priv *priv)
->  {
-> +	struct regmap_irq_chip_data *irq_data;
->  	struct device *dev = priv->dev;
->  	struct device_node *np = dev->of_node;
-> -	int ret;
-> +	int irq, ret;
->  
->  	if (!of_property_read_bool(np, "interrupt-controller")) {
->  		dev_info(dev, "no interrupt support\n");
->  		return 0;
->  	}
->  
-> -	priv->irq = of_irq_get(np, 0);
-> -	if (priv->irq <= 0) {
-> -		dev_err(dev, "failed to get parent IRQ: %d\n", priv->irq);
-> -		return priv->irq ? : -EINVAL;
-> -	}
-> -
-> -	if (priv->id == ID_MT7988 || priv->id == ID_EN7581)
-> -		priv->irq_domain = irq_domain_add_linear(np, MT7530_NUM_PHYS,
-> -							 &mt7988_irq_domain_ops,
-> -							 priv);
-> -	else
-> -		priv->irq_domain = irq_domain_add_linear(np, MT7530_NUM_PHYS,
-> -							 &mt7530_irq_domain_ops,
-> -							 priv);
-> -
-> -	if (!priv->irq_domain) {
-> -		dev_err(dev, "failed to create IRQ domain\n");
-> -		return -ENOMEM;
-> +	irq = of_irq_get(np, 0);
-> +	if (irq <= 0) {
-> +		dev_err(dev, "failed to get parent IRQ: %d\n", irq);
-> +		return irq ? : -EINVAL;
->  	}
->  
->  	/* This register must be set for MT7530 to properly fire interrupts */
->  	if (priv->id == ID_MT7530 || priv->id == ID_MT7621)
->  		mt7530_set(priv, MT7530_TOP_SIG_CTRL, TOP_SIG_CTRL_NORMAL);
->  
-> -	ret = request_threaded_irq(priv->irq, NULL, mt7530_irq_thread_fn,
-> -				   IRQF_ONESHOT, KBUILD_MODNAME, priv);
-> -	if (ret) {
-> -		irq_domain_remove(priv->irq_domain);
-> -		dev_err(dev, "failed to request IRQ: %d\n", ret);
-> +	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
-> +					      priv->regmap, irq,
-> +					      IRQF_ONESHOT,
-> +					      0, &mt7530_regmap_irq_chip, &irq_data);
-> +	if (ret)
->  		return ret;
-> -	}
-> +
-> +	priv->irq_domain = regmap_irq_get_domain(irq_data);
->  
->  	return 0;
->  }
-> @@ -2253,26 +2150,6 @@ mt7530_free_mdio_irq(struct mt7530_priv *priv)
->  	}
->  }
->  
-> -static void
-> -mt7530_free_irq_common(struct mt7530_priv *priv)
-> -{
-> -	free_irq(priv->irq, priv);
-> -	irq_domain_remove(priv->irq_domain);
-> -}
-> -
-> -static void
-> -mt7530_free_irq(struct mt7530_priv *priv)
-> -{
-> -	struct device_node *mnp, *np = priv->dev->of_node;
-> -
-> -	mnp = of_get_child_by_name(np, "mdio");
-> -	if (!mnp)
-> -		mt7530_free_mdio_irq(priv);
-> -	of_node_put(mnp);
-> -
-> -	mt7530_free_irq_common(priv);
-> -}
-> -
->  static int
->  mt7530_setup_mdio(struct mt7530_priv *priv)
->  {
-> @@ -2307,13 +2184,13 @@ mt7530_setup_mdio(struct mt7530_priv *priv)
->  	bus->parent = dev;
->  	bus->phy_mask = ~ds->phys_mii_mask;
->  
-> -	if (priv->irq && !mnp)
-> +	if (priv->irq_domain && !mnp)
->  		mt7530_setup_mdio_irq(priv);
->  
->  	ret = devm_of_mdiobus_register(dev, bus, mnp);
->  	if (ret) {
->  		dev_err(dev, "failed to register MDIO bus: %d\n", ret);
-> -		if (priv->irq && !mnp)
-> +		if (priv->irq_domain && !mnp)
->  			mt7530_free_mdio_irq(priv);
->  	}
->  
-> @@ -3096,8 +2973,6 @@ mt753x_setup(struct dsa_switch *ds)
->  		return ret;
->  
->  	ret = mt7530_setup_mdio(priv);
-> -	if (ret && priv->irq)
-> -		mt7530_free_irq_common(priv);
->  	if (ret)
->  		return ret;
->  
-> @@ -3108,11 +2983,11 @@ mt753x_setup(struct dsa_switch *ds)
->  		priv->pcs[i].port = i;
->  	}
->  
-> -	if (priv->create_sgmii) {
-> +	if (priv->create_sgmii)
->  		ret = priv->create_sgmii(priv);
-> -		if (ret && priv->irq)
-> -			mt7530_free_irq(priv);
-> -	}
-> +
-> +	if (ret && priv->irq_domain)
-> +		mt7530_free_mdio_irq(priv);
->  
->  	return ret;
->  }
-> @@ -3356,8 +3231,8 @@ EXPORT_SYMBOL_GPL(mt7530_probe_common);
->  void
->  mt7530_remove_common(struct mt7530_priv *priv)
->  {
-> -	if (priv->irq)
-> -		mt7530_free_irq(priv);
-> +	if (priv->irq_domain)
-> +		mt7530_free_mdio_irq(priv);
->  
->  	dsa_unregister_switch(priv->ds);
->  
-> diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-> index 448200689f49..747ad2f9cd2b 100644
-> --- a/drivers/net/dsa/mt7530.h
-> +++ b/drivers/net/dsa/mt7530.h
-> @@ -815,9 +815,7 @@ struct mt753x_info {
->   * @p5_mode:		Holding the current mode of port 5 of the MT7530 switch
->   * @p5_sgmii:		Flag for distinguishing if port 5 of the MT7531 switch
->   *			has got SGMII
-> - * @irq:		IRQ number of the switch
->   * @irq_domain:		IRQ domain of the switch irq_chip
-> - * @irq_enable:		IRQ enable bits, synced to SYS_INT_EN
->   * @create_sgmii:	Pointer to function creating SGMII PCS instance(s)
->   * @active_cpu_ports:	Holding the active CPU ports
->   * @mdiodev:		The pointer to the MDIO device structure
-> @@ -842,9 +840,7 @@ struct mt7530_priv {
->  	struct mt753x_pcs	pcs[MT7530_NUM_PORTS];
->  	/* protect among processes for registers access*/
->  	struct mutex reg_mutex;
-> -	int irq;
->  	struct irq_domain *irq_domain;
-> -	u32 irq_enable;
->  	int (*create_sgmii)(struct mt7530_priv *priv);
->  	u8 active_cpu_ports;
->  	struct mdio_device *mdiodev;
-> -- 
-> 2.48.1
-> 
-> 
+That doesn't handle the PCIE returns 0xffffffff case at all, which is
+the thing we most want to handle, it also uses the CPU timer whereas
+nouveau's wait infrastructure uses the GPU timer usually (though that
+could be changed).
+
+Dave.
