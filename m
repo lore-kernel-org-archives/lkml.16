@@ -1,141 +1,157 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1F6256C74
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 10:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EEE25C71F;
+	Fri, 28 Feb 2025 10:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737877; cv=none; b=e9ySyhLgp2XRkZShoFBaGEVqgb5UEYlGwGNU9UNA5WEgdq5bzUdIB59CL4vPj/5R+dlzQ/d2pYOYjbwcKBJ+l9P4f6vkS7OYsurTVp9c3DsWQCe2TjIdgBeUGvh3FG70X2Pu0GpcAYD14M/NKeX+swv676G00F8FCfMe2mtrqho=
+	t=1740737916; cv=none; b=egSC6igY0hEvoT4N79dhv0M0MqXm+gVG+0pPlH0WOXnTa6Q0d9axGaE4XaohAdzx55tjm9VRDcLCI/B0RukzJKNJha6B/L5xNbzv5E7Tj8wncIX9695bjFo8KPXg1IFe//Cng0ksRy5yCuhS1N3TnvGcPRbJmXlq9lhUw1AGKYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737877; c=relaxed/simple;
-	bh=9T7yEMjBzr/dGzam8l9t6bX4kbPkvk217sHLFZacMUY=;
+	s=arc-20240116; t=1740737916; c=relaxed/simple;
+	bh=x8P7iYSS8zlM2MxoipbGfAAaEUD4PJmjBAoZcxc5kD4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CzA7iwe5ZOMZ5TjBfJRMMBDpTai/KIFRhlaquRaTOiOjJa2Juul2yxw8QkOZoEYh0yR2OrwTsYlVwrt/hUT8QpoQEhUcezvCU/MxD7pXFofduAagXHqed4BP52f6FP6Xohsg+z92W1E4yK52zYt/nlY7O0RRQD93vIZOPGHNkdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=R5E4+iw8; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=szOXNBPcv7nor0k2a8A7FbJOGsRjaGO/xX0yTjWHRR5usHYJq2QSgvFDfd8A+iOxpn1wrXJ9AkbLn7uzY0jWiS5CBRPOYUb3gv/6yJ2FWPNVQGrHCc9B4xShBdLOMDgHqtmu5F/s6vCwPychZtWGHNObHGXgGSRyeTq4cpwpMLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JLdgHBis; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R5E4+iw8"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54298ec925bso2895611e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 02:17:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740737874; x=1741342674; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CqCAMLKDFMDmg/J9XlohF5SNVValJDhS7J4k1e5y8j8=;
-        b=R5E4+iw8AGO+2Hgf78SuAvuj7rVM+kFboBOjlcwOVP8MytT7bToG9Wzx2+5DkqXxMk
-         q+MvKoyOWq1GItU2KSDoCW6+s9wtpziok5sOP1E5fm7mREr4TKTaAH4qZVvXjfyUinmU
-         hIxPEqCsYeWvxB2Bw57bnjaWA0ESrDD+swWSNQ8lpEmNr9WstXxA1N1eYQ294Jn6QNaM
-         INCEQ5PBBU8MPlXcFjQOZpKEIEZLR/dwDCPBLzOCUWhdjMdpALxpYA//XHgle0G+mhhA
-         bcJOhgronqv9erOkmZAKpgfATt3D2vEgY+f/PzgUEiTR9GadKwXcBrZnFCJ2tdU4LOh2
-         D6cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740737874; x=1741342674;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CqCAMLKDFMDmg/J9XlohF5SNVValJDhS7J4k1e5y8j8=;
-        b=im7GqkMKFxijEfF0YfTK/JiG66nRB1ID3/CW2nXP+7sypBLURM4Kmh2KSd077PK3US
-         BfVq2e5vNUGKlFnKCFDRkWdku3BGbccVOdZUWnascXtTD/JZJqFjcQ0UyhkK2QgIqGZX
-         UFWXvpK/VpPNW7IN5JE0oQV2Lpmo2fqUxfIHuu84HdrANvUXBtlp3l/Zg3xzSM54VCgy
-         PfQj1x2oekcqfg56Kjdip3vLlNSOk/26n2jEYA/qtyGOzesvCjHWdXZaPzNAVoK/G6ue
-         DcrZB2ebF2XU0xfmwPjfp8QGXo9oKnEPuAlERLBNYP9lHzSLmkfzh2IzmpWuXzch4ldo
-         Km8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUro3TI0/tYW+3fz/7d3oyx1iSmnDX/r/aFDKjhs2+eRlqCmFyzc72DclU29b1MgwC2qMNplSCi3uvQP7s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+pCrWYSml2RN+Q3yag6D4xHo0dMz2AHYD69QsABwQ6LYY81PB
-	9kYV0TqqlDlYn+Oio490Bf7LQKCPIS27OycJqAkdFSz4JivDmQrozAPU19VpeSk=
-X-Gm-Gg: ASbGncvlrJciIaFbtnVjm9zZ07MVa521Rsle0b4OmV8/Tdngs1ZbN4syWVPvUg4Fvrv
-	NMq2yGtKxI7bB9Ff9eKHmOloPE9YfVEi/sag7M70cfaLAjz5sfuNJ/8HFiZnw/+TCUvS+QZyEP4
-	4x4X/23uwzaxg+Japle5UtWSdAimQGuBxSXQ1Jp6B9G2dQEdySfZGK05XRFPLUUMexW18pepbzx
-	DAWcedlJtvljPESj9phBDrPCSb/BJIabqgPm7pxd8zcKQe/3VsPZQb/DE91C7i9lfr+lxqTtfH3
-	aHZ48aeQNfZoxNfKuZpHV7ZiuQS3FF4SaFSrVKedvR2OOsZxv7CUkD4j7Od/2OP5Gv/4kn9zQOu
-	e98jxYw==
-X-Google-Smtp-Source: AGHT+IF3N0HBb4ltf2zBecIFj5x7J4NwmcVlVNLZd7wW8E14jB9yl9ngbFhq5O6DA0Qg+LTZLwm3ww==
-X-Received: by 2002:a05:6512:3d19:b0:545:ea9:1a19 with SMTP id 2adb3069b0e04-5494c10c72bmr1255712e87.5.1740737873802;
-        Fri, 28 Feb 2025 02:17:53 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5494417b62asm441359e87.85.2025.02.28.02.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 02:17:52 -0800 (PST)
-Date: Fri, 28 Feb 2025 12:17:49 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Cc: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jie Zhang <quic_jiezh@quicinc.com>
-Subject: Re: [PATCH v2 3/6] drm/msm/a6xx: Add support for Adreno 623
-Message-ID: <fje7r73olswfx5kbkvnlyvlhv3oqnj3ki26i2brb5fbuewfc3x@jsaz73zsd6rc>
-References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
- <20250228-a623-gpu-support-v2-3-aea654ecc1d3@quicinc.com>
- <67jiudy4bopd3mzoylj47stuxwc5jdt63akxwn5qqo4dov47za@xcece4v2k3m5>
- <4c81f193-a1d0-4abc-8be5-07c862de8937@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JLdgHBis"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 75AB99FF;
+	Fri, 28 Feb 2025 11:17:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740737822;
+	bh=x8P7iYSS8zlM2MxoipbGfAAaEUD4PJmjBAoZcxc5kD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JLdgHBis3RLKhkT3eW8n714D7El9DRKo8B1AEoctvAa5Q2jchorf+TUWnERxqGPqf
+	 MVpc40jDJ4R7HJ3v7PaaIQPhYTgJadDRTabMXTWVgWnJlI/9M4U6n0QUDdhb8EPmBB
+	 GrRhSm9wKggZ143auapEEkNHipGQOP0W1v9J7Pgc=
+Date: Fri, 28 Feb 2025 11:18:28 +0100
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+	Mikhail Rudenko <mike.rudenko@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Dafna Hirschfeld <dafna@fastmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: rkisp1: allow non-coherent video capture buffers
+Message-ID: <bgnkzjpegpmif7gohoijt42rku6jruovjsxscg75dprdz5ek2i@ntfh2yyjyiry>
+References: <20250102-b4-rkisp-noncoherent-v1-1-bba164f7132c@gmail.com>
+ <20250103152326.GP554@pendragon.ideasonboard.com>
+ <87bjw9s4s3.fsf@gmail.com>
+ <dtfv2slbtj3ar2wvlcnd74p3xtlvggebkk3fj5ocm3eil7kyqw@al3brwf4y5dw>
+ <CAAFQd5DS2x3sX59EdkTEMuO=eXc=Q0jD44EUwMisP6ocWz11qg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4c81f193-a1d0-4abc-8be5-07c862de8937@quicinc.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAFQd5DS2x3sX59EdkTEMuO=eXc=Q0jD44EUwMisP6ocWz11qg@mail.gmail.com>
 
-On Fri, Feb 28, 2025 at 01:43:12PM +0530, Akhil P Oommen wrote:
-> On 2/28/2025 4:56 AM, Dmitry Baryshkov wrote:
-> > On Fri, Feb 28, 2025 at 01:37:51AM +0530, Akhil P Oommen wrote:
-> >> From: Jie Zhang <quic_jiezh@quicinc.com>
-> >>
-> >> Add support for Adreno 623 GPU found in QCS8300 chipsets.
-> >>
-> >> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
-> >> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-> >> ---
-> >>  drivers/gpu/drm/msm/adreno/a6xx_catalog.c   | 29 +++++++++++++++++++++++++++++
-> >>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c       |  8 ++++++++
-> >>  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.c |  2 +-
-> >>  drivers/gpu/drm/msm/adreno/adreno_gpu.h     |  5 +++++
-> >>  4 files changed, 43 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> index 0ae29a7c8a4d3f74236a35cc919f69d5c0a384a0..1820c167fcee609deee3d49e7b5dd3736da23d99 100644
-> >> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> >> @@ -616,6 +616,14 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
-> >>  		gpu->ubwc_config.uavflagprd_inv = 2;
-> >>  	}
-> >>  
-> >> +	if (adreno_is_a623(gpu)) {
-> >> +		gpu->ubwc_config.highest_bank_bit = 16;
-> > 
-> > Just to doublecheck, the MDSS patch for QCS8300 used HBB=2, which
-> > means 15. Is 16 correct here? Or might the be a mistake in the MDSS
-> > patch?
-> 
-> https://patchwork.freedesktop.org/patch/632957/
-> I see HBB=3 here.
+Hi Tomasz
 
-Indeed. Excuse me for the noise.
+On Fri, Feb 28, 2025 at 07:00:57PM +0900, Tomasz Figa wrote:
+> Hi Jacopo,
+>
+> On Fri, Feb 28, 2025 at 2:11 AM Jacopo Mondi
+> <jacopo.mondi@ideasonboard.com> wrote:
+> >
+> > Hi Mikhail
+> >
+> > On Tue, Jan 14, 2025 at 07:00:39PM +0300, Mikhail Rudenko wrote:
+> > >
+> > > Hi Laurent,
+> > >
+> > > On 2025-01-03 at 17:23 +02, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > >
+> > > > On Thu, Jan 02, 2025 at 06:35:00PM +0300, Mikhail Rudenko wrote:
+> > > >> Currently, the rkisp1 driver always uses coherent DMA allocations for
+> > > >> video capture buffers. However, on some platforms, using non-coherent
+> > > >> buffers can improve performance, especially when CPU processing of
+> > > >> MMAP'ed video buffers is required.
+> > > >>
+> > > >> For example, on the Rockchip RK3399 running at maximum CPU frequency,
+> > > >> the time to memcpy a frame from a 1280x720 XRGB32 MMAP'ed buffer to a
+> > > >> malloc'ed userspace buffer decreases from 7.7 ms to 1.1 ms when using
+> > > >> non-coherent DMA allocation. CPU usage also decreases accordingly.
+> > > >
+> > > > What's the time taken by the cache management operations ?
+> > >
+> > > Sorry for the late reply, your question turned out a little more
+> > > interesting than I expected initially. :)
+> > >
+> > > When capturing using Yavta with MMAP buffers under the conditions mentioned
+> > > in the commit message, ftrace gives 437.6 +- 1.1 us for
+> > > dma_sync_sgtable_for_cpu and 409 +- 14 us for
+> > > dma_sync_sgtable_for_device. Thus, it looks like using non-coherent
+> > > buffers in this case is more CPU-efficient even when considering cache
+> > > management overhead.
+> > >
+> > > When trying to do the same measurements with libcamera, I failed. In a
+> > > typical libcamera use case when MMAP buffers are allocated from a
+> > > device, exported as dmabufs and then used for capture on the same device
+> > > with DMABUF memory type, cache management in kernel is skipped [1]
+> > > [2]. Also, vb2_dc_dmabuf_ops_{begin,end}_cpu_access are no-ops [3], so
+> > > DMA_BUF_IOCTL_SYNC from userspace does not work either.
+> > >
+> > > So it looks like to make this change really useful, the above issue of
+> > > cache management for libcamera/DMABUF/videobuf2-dma-contig has to be
+> > > solved. I'm not an expert in this area, so any advice is kindly welcome. :)
+> >
+> > It would be shame if we let this discussion drop dead.. cache
+> > management policies are relevant for performances, specifically for
+> > cpu access, and your above 7.7ms vs 1.1 ms test clearly shows that.
+> >
+> > >
+> > > [1] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n411
+> >
+> > I would like to know from Hans if the decision to disallow cache-hints
+> > for dmabuf importers is a design choice or is deeply rooted in other
+> > reasons I might be missing.
+>
+> When DMA-buf is used, the responsibility for cache management is
+> solely on the CPU users' side, so cache-hints don't really apply. It's
+> the exporter (=allocator) who determines the mapping policy of the
+> buffer and provides necessary DMA_BUF_SYNC operations (can be no-op if
+> the buffer is coherent).
 
-> 
-> -Akhil
-> 
-> > 
-> >> +		gpu->ubwc_config.amsbc = 1;
-> >> +		gpu->ubwc_config.rgb565_predicator = 1;
-> >> +		gpu->ubwc_config.uavflagprd_inv = 2;
-> >> +		gpu->ubwc_config.macrotile_mode = 1;
-> >> +	}
-> >> +
-> >>  	if (adreno_is_a640_family(gpu))
-> >>  		gpu->ubwc_config.amsbc = 1;
-> >>  
-> 
+This all makes sense.
 
--- 
-With best wishes
-Dmitry
+I take it as, for libcamera, users of the FrameBufferAllocator helper
+(which first exports MMAP buffers from the video device and the
+imports them back as DMABUF) won't be able to control the cache
+policies.
+
+Now, in the long term, we want FrameBufferAllocator to go away and
+have either buffers exported by the consumer (likely DRM) or by a
+system wide buffer allocator (when we'll have one) and have the video
+devices operate as pure importers. But for the time being the
+"first export then import" use case is possibile and valid so I wonder
+if we should consider measures to allow controlling caching policies
+for this use case too.
+
+>
+> Best regards,
+> Tomasz
+>
+> >
+> > I'm asking because the idea is for libcamera to act solely as dma-buf
+> > importer, the current alloc-export-then-import trick is an helper for
+> > applications to work around the absence of a system allocator.
+> >
+> > If the requirement to disable cache-hints for importers cannot be
+> > lifted, for libcamera it means we would not be able to use it.
+> >
+> >
+> > > [2] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-core.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n829
+> > > [3] https://git.linuxtv.org/media.git/tree/drivers/media/common/videobuf2/videobuf2-dma-contig.c?id=94794b5ce4d90ab134b0b101a02fddf6e74c437d#n426
+> > >
+> > > --
+> > > Best regards,
+> > > Mikhail Rudenko
+> > >
+> >
