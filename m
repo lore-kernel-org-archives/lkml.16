@@ -1,232 +1,408 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2054.outbound.protection.outlook.com [40.107.223.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC68276D3B;
-	Fri, 28 Feb 2025 09:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740733751; cv=none; b=PT/Gqixq5RJhkaMYD7yLeV9HXSf1m0uYrH6EdtucY9GeGgJpqkEgYl69JEmuVKI03/Cy22HkpeTMxo4TnMP/PTOup3+OZBAF7D8gsuM+yL3rB8H2sDdF2fiNpRD4XhS1xDfETRXr+PqdLpHzC17X/cTslFJP0tcPJXepgnncDtM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740733751; c=relaxed/simple;
-	bh=GoZcqFvSJPGWqXzIQfuyYmSDMLtzVMtF1NBzltjHK+8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sxwaHQ4wD+GEf1M2MeSHPimppmYfAOhj4KOtRIQ4juB2tNIQDNEWpcmAM92j03rjmzmPrSy7lU26+1rLV6CS96Wevrx12hKvS1bCn8ynXRpiAmPtNSW17MWxZpucI9lwHK3+UF3YqKWymnlIk43ediMF0kmNS0C3t9eeY8hZjVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=e75+3Ov5; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=Of13F4q/ reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C02254B1B;
+	Fri, 28 Feb 2025 09:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740733755; cv=fail; b=I2zB22bIR0esXDkTz/yikdAI97ZoYXSqMtfzL2DnAnh1/0SCyNsnacxVRTb5hdpfOF3T16eCuouQ8zr7KEWHyXzkzAs5qQRNmZTpRTL8Ip7WYcQJQygO3vwgf4zomVgbOeL1RbtSFjVS4TfnAJ1P8pUgM166rTfUOuh+tfIlOhM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740733755; c=relaxed/simple;
+	bh=WDO7dXWbMWOyUPyTEKDwd5GSKXHftByasQDVPeGefQ8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PrwVAc9IkgGZuIQ3dwt6DngwwYFeJeT7pu1L8qNBZEM0RTKMVHweDkD5ndtdg4bcFnNvVuHl0kKRiQGAKQLryeCeYL3FOX7N//DtAlxicnV5gDBi2oPnPHeJ0zrgOibuwiaF2T9Rn8ZLhlvXG1TZPMckf4nzFHPOmOSA/eKNupU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NYPslT2k; arc=fail smtp.client-ip=40.107.223.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="e75+3Ov5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="Of13F4q/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1740733748; x=1772269748;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oaH/BdmFOOEzxH+k/7wamxTTgjyZGL+sPbe4jCuCFkE=;
-  b=e75+3Ov5NJNejybvsoDOB2B22gxIggkaZ4yntkLz8XQTnt4cwgZQbksi
-   X9irlC8xyi3rQoVVHyRm0ACNJPbovp88eTrCCjOVRaeuGr4v/vQkHlxC5
-   AXQIKyZeNamJWuqnHsG9KYTaVTUuU+tTdh7eJYxloIAfy2Vf2eAYxP01X
-   H9hr2ZLg4sbDIOf9mZF+c/KW1dw+rcZ6GexB2F8KDiY7q6cP2R/BXSVpR
-   Yy/Ha9R1+enoaApu66FpLXADoIo8FSmDrtmTAMvpjBUwJBIpte6bRjxX3
-   1WtSm9dVoUPudSsAb10f1nWt8cGPMlNNYcoaugSTUHiTWb7A6lKTSFJUy
-   A==;
-X-CSE-ConnectionGUID: eweSCwxNQpCliKzed/NdZw==
-X-CSE-MsgGUID: Ed2i1XEuSTq/5mTYpDTHag==
-X-IronPort-AV: E=Sophos;i="6.13,321,1732575600"; 
-   d="scan'208";a="42169107"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 28 Feb 2025 10:09:04 +0100
-X-CheckPoint: {67C17D30-1D-2895743E-CD1E7AB7}
-X-MAIL-CPID: 0D00C71E310ECE96A7A5641DF01FE932_4
-X-Control-Analysis: str=0001.0A002111.67C17D30.0098,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0802D16B0CC;
-	Fri, 28 Feb 2025 10:08:58 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1740733740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oaH/BdmFOOEzxH+k/7wamxTTgjyZGL+sPbe4jCuCFkE=;
-	b=Of13F4q/jPwHfnNiYwxUYGpitPqaBTSS/QMJE6xY3fb7oHj4rhilrG4w2bmPiV4HekJzF/
-	kuHwyoWzlexoaYAMt1N2WfH6G/sXwd0D95D5ovMSulOMd37YDfXjUQbI1BsCEuWu7H1sLh
-	+kaql49u8oKmoSfxWozVk1viMCEdSPakIGnxs+Md5nxgdYRWDfOu/GdwpoIuiO6msZ+R49
-	lhGLfLkckJoSyg+fvR6J/EdRLm6g8BOc9dsJP7Co06HKG1kh/rTwyV9MjyfO0XSzHN2cZj
-	ZLBg4O7c4OpjhjKHGIzU+AHvMi1Izj/VArzDLMZX0OifuNT79LaAIiDaAzjgnQ==
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>,
- "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
- "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>, hongxing.zhu@nxp.com
-Subject:
- Re: [PATCH 4/5] arm64: dts: imx95: add PCIe's msi-map and iommu-map property
-Date: Fri, 28 Feb 2025 10:08:58 +0100
-Message-ID: <47051102.fMDQidcC6G@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <Z8CVU/RWXSNe7bfN@lizhi-Precision-Tower-5810>
-References:
- <20250128211559.1582598-1-Frank.Li@nxp.com> <1819305.VLH7GnMWUR@steina-w>
- <Z8CVU/RWXSNe7bfN@lizhi-Precision-Tower-5810>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NYPslT2k"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=waGAEANXjEkj1tCky3fDuV4quzypQmI5i9qjkA3MFWJ2x86cOJFmcBi6B+Ja8Yu+ZPe7ENhk/8Vkwvbu0bXNuA3RK31Nh6zJGb+WpN1L5JZpOhPWTkThzLFsH/ntbhLQtNerLh3jZuOhRCnZqfW8OBvIBhSeAKn5ndhLyOU0yy8Lg3uboxazY29TbEPSPskyH7r58p1RDTBu0QJi12Ybl8HtuED85IPgKSj/ppiP66CEEVmPHF/LGc1W47ygSSY5zZw4VYP55HmWW4/tdxVvOrc0A3OS+QBtBpQ8NgzjT/IjvU2aMuuoQgVdd+JwhBYy+FJs48r1pN9IJz0CzlnOnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/eJ+9LXJT74g3EXNSpB/lNEZ/9wtqRZAKZPifn5da4U=;
+ b=yPTrX3mecj+Bh7dmoxvatK/GiY3bejJPfPF+h6u1Z+/V0O4yPiSldAazxiwczKEE2pUE8XVDWXwroZbBaPVMDkpOs3AU1i/VNmLXwYrMW7WDvJX1f0r/wa22mp6zYwIjCE5aWed7VWnR76N9sX3VZztzWdWco3blGZAlecwLZElMy7ye3wMc3tlX3S9Yt6O6lpyl7ljJwh4Pxi7aN55UoO9T+f4dI7OxZ27Z0bUXwTibRnXXxMzY6qVf2MFVRjFkvqogcFZNb0ht+5kMFnf+hbFmf3oIXtQxA12OWhT2e7HbuOuC5zRhzcbpmy4fPYgsOWrDop/d92v3KFuu+2z3zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/eJ+9LXJT74g3EXNSpB/lNEZ/9wtqRZAKZPifn5da4U=;
+ b=NYPslT2kjZgzjIt8wUH0Bl7iCmdkewAyNWE6ETK5r4U0Y4nJSVjTa+YIVLLVxr+qVNE5rFA5+wMFsNvQnRxv/uHCR6LuL2/wuF+4NX8BLp5xBpe1pIdGDLqxl9kctqAdaRIhbv9uhod855u8pWB3GQ6Scv89MersXoUpzT+3yxI=
+Received: from BY5PR04CA0002.namprd04.prod.outlook.com (2603:10b6:a03:1d0::12)
+ by IA1PR12MB8333.namprd12.prod.outlook.com (2603:10b6:208:3fe::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Fri, 28 Feb
+ 2025 09:09:08 +0000
+Received: from SJ5PEPF000001E8.namprd05.prod.outlook.com
+ (2603:10b6:a03:1d0:cafe::12) by BY5PR04CA0002.outlook.office365.com
+ (2603:10b6:a03:1d0::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Fri,
+ 28 Feb 2025 09:09:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001E8.mail.protection.outlook.com (10.167.242.196) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 09:09:08 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 03:07:08 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
+Subject: [RFC PATCH 09/19] KVM: SVM/SEV/X86: Secure AVIC: Add hypervisor side IPI Delivery Support
+Date: Fri, 28 Feb 2025 14:21:05 +0530
+Message-ID: <20250228085115.105648-10-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+References: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E8:EE_|IA1PR12MB8333:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04dee30d-450f-46a2-a7cc-08dd57d78ecf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6eKi1sNBV1u3OYukd/nFvzg+LNuVKoyVomh74J0AzZolwMvp1Z3jKreeUJIN?=
+ =?us-ascii?Q?zR9G/Zh97tCWA28raK6LZAg+lPxlmukvjNKJ3X3jHAuQEvYgfiLG3cQsTD5Y?=
+ =?us-ascii?Q?BVMJ9iJfa3u/IfKByFw0PMnIMfTf9XjQSrzkjykQDVhbGSwAYaxDpe5/QuHk?=
+ =?us-ascii?Q?UQsbYv68OuxfXHgoG9kNQ3tzzxQMgSNp/oyr4G3eoWdb5lbyK9g00TPhvBgI?=
+ =?us-ascii?Q?0VMAZZIhCxmiDmf2ryrLr7g5h2ehMVZby2PvD0Q6dWkb6kxCJaGHUQHCnMGU?=
+ =?us-ascii?Q?WPh7pd9NNdrUOHosxSTrCa7eQVRehjBQDPtz4wMWJZAFS+omhpSAViTm5I94?=
+ =?us-ascii?Q?0l+GTpuS9mf6Cj4wN/3ku7SkcUrC+k+QUmLrrvXcKwxWaXA1hbqTkt2p77as?=
+ =?us-ascii?Q?0DAP22nm2YdKHlmATUiYrTQpArmtfTLqm8hNpud3jmNin15mepax9XxIbk3h?=
+ =?us-ascii?Q?59Sl+fpUB34ZU3MpFmX5dc2gDahcukG66587Oy5fVjqx6OEgmdQKuXpfyZ77?=
+ =?us-ascii?Q?kvc1fKtdeBLWkElAN/uX1JCfTJ2RLY4gQsu/3bxcol5BLSaTurer30XwmLMo?=
+ =?us-ascii?Q?9vzOoVP6sgrTriUdGaKpsY31pUi6mBhqTQo8mpkR4sB/DSdlcOhRSJUcNFlq?=
+ =?us-ascii?Q?nYaOUrkf8zZrm+uQGZJljEMETcJweoY/efd2wk0JRRhh6wWaaMFYQmV1zR48?=
+ =?us-ascii?Q?Cm1PxthtAuGykZgT8hhIxLyt0M13KexrWnLwQVse3/ytoUIN7jXEd02Ui3Oq?=
+ =?us-ascii?Q?JIPOZRChHz7LEQm5kwpFxzKjZhiEZAu9ZH1cKilF4IspxyU/VHhp9PG6De4A?=
+ =?us-ascii?Q?BEeZGBK3pa2vyxezdHFvzQdk7utm+oj3RvTuPDBxaAPTTBrDHZEEA2tm8e60?=
+ =?us-ascii?Q?peKi8otSP/aOL7Co4qAascyDE/EOm7E6wOIi5oJ/LNfER6FQblxl6fkd+uif?=
+ =?us-ascii?Q?czge47AMwhT0NFLbgPmCX/FNHj7Pssz0UEhaiRkzJqNgoh+wxcoW7HJG17Mu?=
+ =?us-ascii?Q?D+eHAaX0CoW0PYUDLOPgTeto5BqX9e08NWgLeNk+LRhC2EFA+IhO1bgxPjUZ?=
+ =?us-ascii?Q?I1fkyitz7kohVhxUinMJWmp0JUgOY81SkmJHQ7iHoaFJ6FBJwaNuslKtD1J4?=
+ =?us-ascii?Q?jtCLACFFP2d2F80aj/nK1bRF/cLyJhhW17TfGKBn3p962yDYNAo8LlAEMOrp?=
+ =?us-ascii?Q?Y3Za6uzQXJg0xp68SPKn42w9B92utzdVcDAVHoeSAQ+C7zabP1PzO8SGf3KB?=
+ =?us-ascii?Q?fbKMJWhbm5UZDdE6sdNtKecyudpC3mAmmAajO6gaWXKmRHSQc7DD1EKYOKeP?=
+ =?us-ascii?Q?0frja2Gez9ekHh9YpSEViHe9UsKd0sLDT9G6Krajx1DIFBIkW0rrzDib6hb7?=
+ =?us-ascii?Q?kXlj3STnOznM7YP6qHYIbXhWj0O0kCFCd//WCjSBP3Lpyug9ISNbQ8UaS6sS?=
+ =?us-ascii?Q?bBK0FCPesqBcjd1uFurbDqsge31oLc74Yk7tzsobKQ4PJYYSHjn7NA=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 09:09:08.0318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04dee30d-450f-46a2-a7cc-08dd57d78ecf
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001E8.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8333
 
-Hi Frank,
+Secure AVIC hardware only accelerates self IPIs. For cross-vCPU IPI,
+source vCPU updates the APIC_IRR of destination vCPU and then issues
+VMGEXIT with type "SVM_EXIT_MSR" to propagate APIC_ICR write to the
+hypervisor.
 
-Am Donnerstag, 27. Februar 2025, 17:39:47 CET schrieb Frank Li:
-> On Thu, Feb 27, 2025 at 08:54:13AM +0100, Alexander Stein wrote:
-> > Hi Frank,
-> >
-> > Am Mittwoch, 26. Februar 2025, 17:31:26 CET schrieb Frank Li:
-> > > On Wed, Feb 26, 2025 at 01:11:37PM +0100, Alexander Stein wrote:
-> > > > Hi Frank,
-> > > >
-> > > > Am Dienstag, 28. Januar 2025, 22:15:58 CET schrieb Frank Li:
-> > > > > Add PCIe's msi-map and iommu-map property because i.MX95 support =
-smmu and
-> > > > > its.
-> > > > >
-> > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/freescale/imx95.dtsi | 14 ++++++++++++++
-> > > > >  1 file changed, 14 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/freescale/imx95.dtsi b/arch/arm6=
-4/boot/dts/freescale/imx95.dtsi
-> > > > > index 6b8470cb3461a..2cebeda43a52d 100644
-> > > > > --- a/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/freescale/imx95.dtsi
-> > > > > @@ -1573,6 +1573,12 @@ pcie0: pcie@4c300000 {
-> > > > >  			assigned-clock-parents =3D <0>, <0>,
-> > > > >  						 <&scmi_clk IMX95_CLK_SYSPLL1_PFD1_DIV2>;
-> > > > >  			power-domains =3D <&scmi_devpd IMX95_PD_HSIO_TOP>;
-> > > > > +			/* pcie0's Devid(BIT[7:6]) is 0x00, stream id(BIT[5:0]) is 0x=
-10~0x17 */
-> > > > > +			msi-map =3D <0x0 &its 0x10 0x1>,
-> > > > > +				  <0x100 &its 0x11 0x7>;
-> > > >
-> > > > Aren't you missing msi-map-mask =3D <0x1ff>; here? Similar to pcie1.
-> > > > Either way, with this change PCIe on pcie0 is not working anymore,
-> > > > regardless of msi-map-mask.
-> > >
-> > > Yes, it should have msi-map-mask. During my test, I have not enable e=
-netc
-> > > so I have not found this problem.
-> >
-> > Just to be clear: This is not about enetc. This works fine here.
-> >
-> > > > Without msi-map-mask:
-> > > > > OF: /soc/pcie@4c300000: iommu-map, using mask 000001ff, id-base: =
-00000100, out-base: 00000011, length: 00000007, id: 00000300 -> 00000011
-> > > > > OF: /soc/pcie@4c300000: no msi-map translation for id 0x300 on (n=
-ull)
-> > > > > r8169 0000:03:00.0: error -EINVAL: enable failure
-> > > > > r8169 0000:03:00.0: probe with driver r8169 failed with error -22
-> > > >
-> > > > With msi-map-mask:
-> > > > > OF: /soc/pcie@4c300000: iommu-map, using mask 000001ff, id-base: =
-00000100, out-base: 00000011, length: 00000007, id: 00000300 -> 00000011
-> > > > > OF: /soc/pcie@4c300000: msi-map, using mask 000001ff, id-base: 00=
-000100, out-base: 00000011, length: 00000007, id: 00000300 -> 00000011
-> > > > > r8169 0000:03:00.0: enabling device (0000 -> 0003)
-> > > > > r8169 0000:03:00.0: enabling Mem-Wr-Inval
-> > > > > r8169 0000:03:00.0: error -EIO: PCI read failed
-> > > > > r8169 0000:03:00.0: probe with driver r8169 failed with error -5
-> > >
-> > > Can you try remove iommu-map and keep msi-map? then remove msi-map and
-> > > keep iommu-map to check which one cause this problem.
-> >
-> > With only msi-map removed, but smmu enabled:
-> > > arm-smmu-v3 490d0000.iommu: event 0x10 received:
-> > > arm-smmu-v3 490d0000.iommu:      0x0000001100000010
-> > > arm-smmu-v3 490d0000.iommu:      0x0000020a00000000
-> > > arm-smmu-v3 490d0000.iommu:      0x000000009b0cc000
-> > > arm-smmu-v3 490d0000.iommu:      0x0000000000000000
-> > > arm-smmu-v3 490d0000.iommu: event: F_TRANSLATION client: 0000:01:00.0=
- sid: 0x11 ssid: 0x0 iova: 0x9b0cc000 ipa: 0x0
-> > > arm-smmu-v3 490d0000.iommu: priv data read s1 "Input address caused f=
-ault" stag: 0x0 r8169 0000:03:00.0
-> > > enp3s0: Link is Down
-> >
-> > With only iommu-map removed, both smmu enabled or disabled:
-> > > OF: /soc/pcie@4c300000: msi-map, using mask 000001ff, id-base: 000001=
-00, out-base: 00000011, length: 00000007, id: 00000300 -> 00000011
-> > > r8169 0000:03:00.0: enabling device (0000 -> 0003)
-> > > r8169 0000:03:00.0: enabling Mem-Wr-Inval
-> > > r8169 0000:03:00.0: error -EIO: PCI read failed
-> > > r8169 0000:03:00.0: probe with driver r8169 failed with error -5
-> >
-> > Only if smmu is disabled and msi-map is removed the driver probes
-> > successfully:
-> > > r8169 0000:03:00.0: enabling device (0000 -> 0003)
-> > > r8169 0000:03:00.0: enabling Mem-Wr-Inval
-> > > r8169 0000:03:00.0 eth0: RTL8168g/8111g, d8:9d:b9:00:16:10, XID 4c0, =
-IRQ 160
-> > > r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes, tx check=
-summing: ko]
-> > > r8169 0000:03:00.0 enp3s0: renamed from eth0
-> > > r8169 0000:03:00.0: enabling bus mastering
-> > > r8169 0000:03:00.0 enp3s0: Link is Down
-> >
-> > > >
-> > > > Without msi-map/iommu-map:
-> > > > > r8169 0000:03:00.0: enabling device (0000 -> 0003)
-> > > > > r8169 0000:03:00.0: enabling Mem-Wr-Inval
-> > > > > r8169 0000:03:00.0 eth0: RTL8168g/8111g, d8:9d:b9:00:16:10, XID 4=
-c0, IRQ 166
-> > > > > r8169 0000:03:00.0 eth0: jumbo features [frames: 9194 bytes, tx c=
-hecksumming: ko]
-> > > > > r8169 0000:03:00.0 enp3s0: renamed from eth0
-> > > > > r8169 0000:03:00.0: enabling bus mastering
-> > > > > r8169 0000:03:00.0 enp3s0: Link is Down
-> > > >
-> > > > pcie1 works as expected. But this is only a single PCIe device, rat=
-her than
-> > > > having a PCIe bridge.
-> > > > Any idea what's wrong here?
-> > >
-> > > Can you help dump more information at for PCIe bridge case:
-> > >
-> > > imx_pcie_add_lut(), need rid and sid information.
-> > > drivers/pci/controller/dwc/pci-imx6.c
-> >
-> > Just to be clear, without msi-map and iommu-map I get:
-> > > imx6q-pcie 4c380000.pcie: rid: 0x0, sid: 0x18
-> > > imx6q-pcie 4c380000.pcie: rid: 0x100, sid: 0x19
->=20
-> Can you help dump register value PE0_LUT_CREQID offset 0x101 for your
-> smmu-map or msi-map enable case
+Hypervisor then examines the ICR data and sends doorbell to running vCPUs
+using AVIC Doorbell MSR or wakes up a blocking vCPU. Hypervisor then
+resumes the vCPU which issued the VMGEXIT.
 
-I am assuming you meant offset 0x101c, as stated in the RM.
-I added a dump directly before printing "PCI read failed" in r8169_main.c.
-Unfortunately this only returns 0 for both PCIe devices, so I'm wondering
-if this is correct.
+Co-developed-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Kishon Vijay Abraham I <kvijayab@amd.com>
+Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+---
+ arch/x86/kvm/svm/sev.c | 216 ++++++++++++++++++++++++++++++++++++++++-
+ arch/x86/kvm/svm/svm.h |   2 +
+ 2 files changed, 217 insertions(+), 1 deletion(-)
 
-> 2nd test.
-> change IMX95_PE0_LUT_MASK to 0x1ff
-
-Unfortunately I do not notice any effect/difference.
-
-Best regards
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
+diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
+index 080b71ade88d..d8413c7f4832 100644
+--- a/arch/x86/kvm/svm/sev.c
++++ b/arch/x86/kvm/svm/sev.c
+@@ -3496,6 +3496,89 @@ void pre_sev_run(struct vcpu_svm *svm, int cpu)
+ 	struct svm_cpu_data *sd = per_cpu_ptr(&svm_data, cpu);
+ 	unsigned int asid = sev_get_asid(svm->vcpu.kvm);
+ 
++	/*
++	 * It should be safe to clear sev_savic_has_pending_ipi here.
++	 *
++	 * Following are the scenarios possible:
++	 *
++	 * Scenario 1: sev_savic_has_pending_ipi is set before hlt exit of the
++	 * target vCPU.
++	 *
++	 * Source vCPU                     Target vCPU
++	 *
++	 * 1. Set APIC_IRR of target
++	 *    vCPU.
++	 *
++	 * 2. VMGEXIT
++	 *
++	 * 3. Set ...has_pending_ipi
++	 *
++	 * savic_handle_icr_write()
++	 *   ..._has_pending_ipi = true
++	 *
++	 * 4. avic_ring_doorbell()
++	 *                            - VS -
++	 *
++	 *				   4. VMEXIT
++	 *
++	 *                                 5. ..._has_pending_ipi = false
++	 *
++	 *                                 6. VM entry
++	 *
++	 *                                 7. hlt exit
++	 *
++	 * In this case, any VM exit taken by target vCPU before hlt exit
++	 * clears sev_savic_has_pending_ipi. On hlt exit, idle halt intercept
++	 * would find the V_INTR set and skip hlt exit.
++	 *
++	 * Scenario 2: sev_savic_has_pending_ipi is set when target vCPU
++	 * has taken hlt exit.
++	 *
++	 * Source vCPU                     Target vCPU
++	 *
++	 *                                 1. hlt exit
++	 *
++	 * 2. Set ...has_pending_ipi
++	 *                                 3. kvm_vcpu_has_events() returns true
++	 *                                    and VM is reentered.
++	 *
++	 *                                    vcpu_block()
++	 *                                      kvm_arch_vcpu_runnable()
++	 *                                        kvm_vcpu_has_events()
++	 *                                          <return true as ..._has_pending_ipi
++	 *                                           is set>
++	 *
++	 *                                 4. On VM entry, APIC_IRR state is re-evaluated
++	 *                                    and V_INTR is set and interrupt is delivered
++	 *                                    to vCPU.
++	 *
++	 *
++	 * Scenario 3: sev_savic_has_pending_ipi is set while halt exit is happening:
++	 *
++	 *
++	 * Source vCPU                        Target vCPU
++	 *
++	 *                                  1. hlt
++	 *                                       Hardware check V_INTR to determine
++	 *                                       if hlt exit need to be taken. No other
++	 *                                       exit such as intr exit can be taken
++	 *                                       while this sequence is being executed.
++	 *
++	 * 2. Set APIC_IRR of target vCPU.
++	 *
++	 * 3. Set ...has_pending_ipi
++	 *                                  4. hlt exit taken.
++	 *
++	 *                                  5. ...has_pending_ipi being set is observed
++	 *                                     by target vCPU and the vCPU is resumed.
++	 *
++	 * In this scenario, hardware ensures that target vCPU does not take any exit
++	 * between checking V_INTR state and halt exit. So, sev_savic_has_pending_ipi
++	 * remains set when vCPU takes hlt exit.
++	 */
++	if (READ_ONCE(svm->sev_savic_has_pending_ipi))
++		WRITE_ONCE(svm->sev_savic_has_pending_ipi, false);
++
+ 	/* Assign the asid allocated with this SEV guest */
+ 	svm->asid = asid;
+ 
+@@ -4303,6 +4386,129 @@ static int sev_handle_vmgexit_msr_protocol(struct vcpu_svm *svm)
+ 	return 0;
+ }
+ 
++static void savic_handle_icr_write(struct kvm_vcpu *kvm_vcpu, u64 icr)
++{
++	struct kvm *kvm = kvm_vcpu->kvm;
++	struct kvm_vcpu *vcpu;
++	u32 icr_low, icr_high;
++	bool in_guest_mode;
++	unsigned long i;
++
++	icr_low = lower_32_bits(icr);
++	icr_high = upper_32_bits(icr);
++
++	/*
++	 * TODO: Instead of scanning all the vCPUS, get fastpath working which should
++	 * look similar to avic_kick_target_vcpus_fast().
++	 */
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		if (!kvm_apic_match_dest(vcpu, kvm_vcpu->arch.apic, icr_low & APIC_SHORT_MASK,
++					 icr_high, icr_low & APIC_DEST_MASK))
++			continue;
++
++		/*
++		 * Setting sev_savic_has_pending_ipi could result in a spurious
++		 * wakeup from hlt (as kvm_cpu_has_interrupt() would return true)
++		 * if destination CPU is inside guest and guest does a halt exit
++		 * after handling the IPI. sev_savic_has_pending_ipi gets cleared
++		 * on vm entry, so there can be at most one spurious wakeup per IPI.
++		 * For vcpu->mode == IN_GUEST_MODE, sev_savic_has_pending_ipi need
++		 * to be set to handle the case where destination vCPU has taken
++		 * halt exit and the source CPU has not observed vcpu->mode !=
++		 * IN_GUEST_MODE.
++		 */
++		WRITE_ONCE(to_svm(vcpu)->sev_savic_has_pending_ipi, true);
++		/* Order sev_savic_has_pending_ipi write and vcpu->mode read. */
++		smp_mb();
++		/* Pairs with smp_store_release in vcpu_enter_guest. */
++		in_guest_mode = (smp_load_acquire(&vcpu->mode) == IN_GUEST_MODE);
++		if (in_guest_mode) {
++			/*
++			 * Signal the doorbell to tell hardware to inject the IRQ.
++			 *
++			 * If the vCPU exits the guest before the doorbell chimes,
++			 * below memory ordering guarantees that destination vCPU
++			 * observes sev_savic_has_pending_ipi == true before
++			 * blocking.
++			 *
++			 *   Src-CPU                       Dest-CPU
++			 *
++			 *  savic_handle_icr_write()
++			 *    sev_savic_has_pending_ipi = true
++			 *    smp_mb()
++			 *    smp_load_acquire(&vcpu->mode)
++			 *
++			 *                    - VS -
++			 *                              vcpu->mode = OUTSIDE_GUEST_MODE
++			 *                              __kvm_emulate_halt()
++			 *                                kvm_cpu_has_interrupt()
++			 *                                  smp_mb()
++			 *                                  if (sev_savic_has_pending_ipi)
++			 *                                      return true;
++			 *
++			 *   [S1]
++			 *     sev_savic_has_pending_ipi = true
++			 *
++			 *     SMP_MB
++			 *
++			 *   [L1]
++			 *     vcpu->mode
++			 *                                  [S2]
++			 *                                  vcpu->mode = OUTSIDE_GUEST_MODE
++			 *
++			 *
++			 *                                  SMP_MB
++			 *
++			 *                                  [L2] sev_savic_has_pending_ipi == true
++			 *
++			 *   exists (L1=IN_GUEST_MODE /\ L2=false)
++			 *
++			 *   Above condition does not exit. So, if source CPU observes vcpu->mode
++			 *   = IN_GUEST_MODE (L1), sev_savic_has_pending_ipi load by destination CPU
++			 *   (L2) should observe the store (S1) from source CPU.
++			 */
++			avic_ring_doorbell(vcpu);
++		} else {
++			/*
++			 * Wake the vCPU if it was blocking.
++			 *
++			 * Memory ordering is provided by smp_mb() in rcuwait_wake_up() on
++			 * source CPU and smp_mb() in set_current_state() inside
++			 * kvm_vcpu_block() on dest CPU.
++			 */
++			kvm_vcpu_kick(vcpu);
++		}
++	}
++}
++
++static bool savic_handle_msr_exit(struct kvm_vcpu *vcpu)
++{
++	u32 msr, reg;
++
++	msr = kvm_rcx_read(vcpu);
++	reg = (msr - APIC_BASE_MSR) << 4;
++
++	switch (reg) {
++	case APIC_ICR:
++		/*
++		 * Only APIC_ICR wrmsr requires special handling
++		 * for Secure AVIC guests to wake up destination
++		 * vCPUs.
++		 */
++		if (to_svm(vcpu)->vmcb->control.exit_info_1) {
++			u64 data = kvm_read_edx_eax(vcpu);
++
++			savic_handle_icr_write(vcpu, data);
++			return true;
++		}
++		break;
++	default:
++		break;
++	}
++
++	return false;
++}
++
+ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+@@ -4445,6 +4651,11 @@ int sev_handle_vmgexit(struct kvm_vcpu *vcpu)
+ 			    control->exit_info_1, control->exit_info_2);
+ 		ret = -EINVAL;
+ 		break;
++	case SVM_EXIT_MSR:
++		if (sev_savic_active(vcpu->kvm) && savic_handle_msr_exit(vcpu))
++			return 1;
++
++		fallthrough;
+ 	default:
+ 		ret = svm_invoke_exit_handler(vcpu, exit_code);
+ 	}
+@@ -5023,5 +5234,8 @@ void sev_savic_set_requested_irr(struct vcpu_svm *svm, bool reinjected)
+ 
+ bool sev_savic_has_pending_interrupt(struct kvm_vcpu *vcpu)
+ {
+-	return kvm_apic_has_interrupt(vcpu) != -1;
++	/* See memory ordering description in savic_handle_icr_write(). */
++	smp_mb();
++	return READ_ONCE(to_svm(vcpu)->sev_savic_has_pending_ipi) ||
++		kvm_apic_has_interrupt(vcpu) != -1;
+ }
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index f70c161ad352..62e3581b7d31 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -327,6 +327,8 @@ struct vcpu_svm {
+ 
+ 	/* Guest GIF value, used when vGIF is not enabled */
+ 	bool guest_gif;
++
++	bool sev_savic_has_pending_ipi;
+ };
+ 
+ struct svm_cpu_data {
+-- 
+2.34.1
 
