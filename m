@@ -1,147 +1,448 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2059.outbound.protection.outlook.com [40.107.243.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0858F25484A
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740732791; cv=none; b=MxrSan2Cu6/1Yo77XFWmRG2dCTQsBH8WRwRvLK0B8rITOLwi0pQ3DZUw8+A4cRLhDa7fymUZ2rlY1UpSi5mNjvJngwF7SD6xKk/x8MUCr8h+AhfjWNgtQTcbDUxCbZmxsdFtWubr5BAUc1lAvUPbIVVyMiXfjokk6Cq0G4LjrzM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740732791; c=relaxed/simple;
-	bh=qNe0LEGqpQQi8GIgH/wydL5K/ZSIvkZpuYesUP7jE8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oaL8KcceqrNLUIyQaRkMeNz4aSEBXZ1Q9+OAh+RXgNpstL4XLj0zoPxdXMch3K3O2AOZI076R1QVjuh46mgpa3O1IdRi9tt+AHm9kZWxpxw4ALSlCzSzzQWOYoM2ezNptqT6mWO1N3+nZz9aS/PSl5gBWcVGNqV8EGMGGSeAI2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tnw6m-0005fo-VB; Fri, 28 Feb 2025 09:52:36 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tnw6j-003GS3-27;
-	Fri, 28 Feb 2025 09:52:33 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 28E693CDF52;
-	Fri, 28 Feb 2025 08:52:33 +0000 (UTC)
-Date: Fri, 28 Feb 2025 09:52:31 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, 
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250228-married-bullfrog-of-reading-89042b-mkl@pengutronix.de>
-References: <20250225081644.3524915-1-a0282524688@gmail.com>
- <20250225081644.3524915-2-a0282524688@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F851C5D42;
+	Fri, 28 Feb 2025 08:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740732837; cv=fail; b=tuXq3AOoNW5xUS8avoklGjgc2aF8zKmVPUrCWGoN2j7jMWevLJ5+NN6vlkjkg3AHuB5N4qF+xVvqdeLySqphkDG89NwYGJbOeZwdKLTn8pzoM6rbOCkVDeiPiKaYHa7NAODbKMq3ecassIAfgftEZ27m8rdAX18QtvwlqzwOv/Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740732837; c=relaxed/simple;
+	bh=IDSwh2LDbPIzBRn9xtCZ5Q26WPSisdhxKehNCfQOYuA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ABm4YD9aRqUWiVIr6XMBpOH2LH1Hq0npjVjRQehT0vDqnFjFUO/ngOYc/JqlDR2POozrHduAuFRo7rD69sOENvbWYEuggmhVyWTD0RSfJ6BnZtf1UXxIL9fjt4QQxlZJvShNqh2FHo4aup0I5NH+oDkmQDSPa4mfnW1EC3FpZts=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UDZWJCcd; arc=fail smtp.client-ip=40.107.243.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UDZWJCcd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wVi671rlO0Yuv7msviG4NukIQvzc1pGn5qGQYJ0r+YCQ1PpRBlCNux+RYTX4dkrLjmjumuaCxCArNm7LYN8aiaX/z8D5nJTMF01Ag5FMzoZ0WmYuEcLbKPeT/kF2dy1RY1WTluEcM/frMO87+xZx69EMEDbAPEr4YOMBROSK+GpQ9Tq2rNeS3RD6a7UfE5m0fNSdpbpCLJXdQi1hfMynMA+eLbq9R/jyKbBuUxO5tsrn09CqpiwMxTbK1uAdfOxALVae/dYCVMfLW0Hyb8aEj5wrG1647qD0h63J0PraM1m3bz5ZSffBHEO8Bd5ZCqBOq6E3ObcT+uKYZyTO6qcLaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CyvkN8giYJzc821gCjUuxUBLCcAl1AfshMDzA/xREgk=;
+ b=Nz8k4eO0M1RaKcQm4E8gAVpZMoLGJ211oz8ifgzdADvftHbqYhaJDhf2Mxo+W1wGQdtRJuCvNlVGrMi5qzgoF0l9Kqkx5Z0s8wbD/k3GQ7ubMpOgaWEmINqzcIuBvr2vvwCOCZIBO/yW/OtsC3mpuBV5qy0giPgQRC+xtAaq81HkuacDQEemyODxqHuyYKAwDO84PhD2i037dsaIkPNCVayZKtZBf+BAjA3VeO5vrnDf5SV913JQE/4t3YH43+B/jtZS0PUyPUm+MwgpfXFwhGk1gESOXZmMxNPza7hM7cEhX0OLApqRkp/F3+qcrtMLd0CHVoB98HH1NjYXc6oNgA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CyvkN8giYJzc821gCjUuxUBLCcAl1AfshMDzA/xREgk=;
+ b=UDZWJCcdrwVq7xxPGiIVP9vR/UCtXlxqwMblQRWdJOkVGlELx9DXwUxnGBSIcrSTdH9hkRMcrxYUHkHll58O1mbZEcmOjatC+uVpX8dUylmFE2VjHdAJ5M7X7lnaqLHY6y4wsLM8jx71nrm6Ez/gPUhbIaoIdka65gp/iZZjBcw=
+Received: from BN9PR03CA0353.namprd03.prod.outlook.com (2603:10b6:408:f6::28)
+ by MN2PR12MB4302.namprd12.prod.outlook.com (2603:10b6:208:1de::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.19; Fri, 28 Feb
+ 2025 08:53:51 +0000
+Received: from BL02EPF00021F6F.namprd02.prod.outlook.com
+ (2603:10b6:408:f6:cafe::ac) by BN9PR03CA0353.outlook.office365.com
+ (2603:10b6:408:f6::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8489.23 via Frontend Transport; Fri,
+ 28 Feb 2025 08:53:51 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F6F.mail.protection.outlook.com (10.167.249.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Fri, 28 Feb 2025 08:53:51 +0000
+Received: from BLR-L-NUPADHYA.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 28 Feb
+ 2025 02:52:07 -0600
+From: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+To: <seanjc@google.com>, <pbonzini@redhat.com>, <kvm@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <dave.hansen@linux.intel.com>, <Thomas.Lendacky@amd.com>,
+	<nikunj@amd.com>, <Santosh.Shukla@amd.com>, <Vasant.Hegde@amd.com>,
+	<Suravee.Suthikulpanit@amd.com>, <David.Kaplan@amd.com>, <x86@kernel.org>,
+	<hpa@zytor.com>, <peterz@infradead.org>, <huibo.wang@amd.com>,
+	<naveen.rao@amd.com>, <binbin.wu@linux.intel.com>, <isaku.yamahata@intel.com>
+Subject: [RFC PATCH 00/19] AMD: Add Secure AVIC KVM Support
+Date: Fri, 28 Feb 2025 14:20:56 +0530
+Message-ID: <20250228085115.105648-1-Neeraj.Upadhyay@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="thau7tfhkoq4fek3"
-Content-Disposition: inline
-In-Reply-To: <20250225081644.3524915-2-a0282524688@gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F6F:EE_|MN2PR12MB4302:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99936a1b-ee59-4877-95b6-08dd57d56c87
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NEdBdkFYTlpzaWNUaXR1SWMxZDB5Y3NLb2ZZTEY2eTFBeVdma1FISm5WSnlv?=
+ =?utf-8?B?YXBYM0dRLzNQZ3U5ekNpZHJEaG96NXZBVkZiYjZNa2dRREpFYXM0R2VtY295?=
+ =?utf-8?B?SmdnZEJHblE2L2VHUzFwNUcyOU5DMWZORStjeXhxOHRWYWJBOGExaTJYNDNW?=
+ =?utf-8?B?VE14VTRaT3NzSGZhOGxHVmZwQVVXZStPNjdQZk5PTnJZNEZXakN0eDlieUty?=
+ =?utf-8?B?M2RHTGFMTEJha3JaMVRodlpMakJvVkM4L2NlNXpvTFMyNXJtMFJ1TFVmaFlQ?=
+ =?utf-8?B?cTI0M3M4UE9lMHdMUHQ1eUhpenJDY2ErTWRxTm85YmFhblBVZzRsUVZlOUtl?=
+ =?utf-8?B?SmYydUlyYTExRUtoY0tlZW1aS3dDM1BkNVFYaXlBOHA1VGpFNm5XOWtGMmdI?=
+ =?utf-8?B?SUZacy9lRWtUYUtRaURFOUc0ODVpN0RhQzllaTlJMEUxa29sVjdXMUp3cVF6?=
+ =?utf-8?B?TnBPbk9jNU9USTZFVUtuamJaWnV6SVoyT051MlBjWXVJNVRPeTVtbTQ2QXhX?=
+ =?utf-8?B?b3o0OFZpcStRcHJYUDNNZFRZeFg4NmZPbHFHVlNCRWFXenlrZ0FBQjdyWDh6?=
+ =?utf-8?B?VVd0a1FpK0N6cHMrR2U0UFlWOFdqcWo5NVFPVWJ0eWNHWHREeitVRkdnWStZ?=
+ =?utf-8?B?U3VyZFZhZlBBQ3FMRlNFb1R3NnVyanFYZWFCZUkvVUlidGlCUWxsc3Z4aC9W?=
+ =?utf-8?B?NEtVYjc1QTliZkg2Nnk2S0hXY3N6VjhydXZmVHF0aE0yZVEzczIyOG02THF0?=
+ =?utf-8?B?a0JNN1pDaEJSTHI4SDBVNitFZjdsQnVRR2VXTkRVeU55WDNUZVdDOG5KWnFh?=
+ =?utf-8?B?NXVSdTBFSzdZNVQzTlZCVWJyNmVKUHBWWW1OUnpqa3lMQk44aStYR1laUktJ?=
+ =?utf-8?B?Ykt1SVVXN1g3S0FGd2R4ekVPdldLTlFiQ0IxZUtycHlYUEcwN0p3c0hLWFNQ?=
+ =?utf-8?B?NUI4UHkrc1EyLzhHQm93Y0pLZTJOTm01YTdVQUs3bjd4Si96bXBpQVYyMCtU?=
+ =?utf-8?B?R1gvOWp5OFlLYXdKNW5CK1ZjQzFsVmhoYWNuVWx3clR3aDhSY290azBqaUUy?=
+ =?utf-8?B?SFgvSHhWeXRPODNnanp4RURuUkNPK3dndHQrbVE5eEljT2FpTTVrS3czd0p0?=
+ =?utf-8?B?NUN6eFZhT1djSElHWUlUekxoZ1ZHLzZ1c1U0SU9FRGpCd0V1dGh0TUtDaUFS?=
+ =?utf-8?B?TEF3QkI4SGNwL3hhd2lPd2dtWVJQUDIyRFFhT3pJL3dQUnNWaGNlQWxYb2kr?=
+ =?utf-8?B?VU42ZDJsOHhLSXhNSUtlU3JnWGk0RGNMMmYwTXBMRnBrT0N0OVVXVWI5OHdR?=
+ =?utf-8?B?WnpvY0orNjBzdFJhY0szZHBSRjZxSDRQdEhIdzljQ3BySDhVOE9QaWVGVGhY?=
+ =?utf-8?B?QmZCQXRjU0JBcExuSVVkYXpuOXN0cVlMZVNuaVJBTWpWRzd5bC9yOG54MXpk?=
+ =?utf-8?B?NlIzZTJNN3RudjlVL3FqaXYwcWRvU0xFTmRjYytqeWlMR0NJNXBBT3RNd2Fa?=
+ =?utf-8?B?bjUrTWRtVzhzVzZLVWl0ZTY4UTczdVpBZDRsck03d21vaFVHU252YVQycUtO?=
+ =?utf-8?B?L1I0b2VDdnRnV3R1RzVaSEtBZkFGTGRwRVczMUtmYUdoYlJqaTJpTmdNOHlk?=
+ =?utf-8?B?NUZ4KzV1WXcwcVBVbnd2UHFpREJxWVJidXFlVnlhNzhUbmhpSXF5emtDVzdy?=
+ =?utf-8?B?TXZWWkJWMHpheURtOXBXSEhTUE4rZWwwVkcybzRXenlwaG1ucnU1U2xCQW9v?=
+ =?utf-8?B?WGpXM0g2Q0EwZHI0dWI1V1Y3VnAyVzJtQWplQlRPZndvSmEyaDRkS1lnckNh?=
+ =?utf-8?B?VUdPRnNVWTc0Wms4KzNVMFpFRkVEVExzdWRHWjRHaTNhZ3NHemNoQU5xMi8z?=
+ =?utf-8?B?cmhJWFNvWlA5T1NUMU0yWWRyWEFOMFh2d0JGWXM5ZnAwM2xxMkZoTk9VUmE2?=
+ =?utf-8?Q?oi5hMujnq/mjL+gsDGaeDkiYh9tkkmJ2?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 08:53:51.6641
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99936a1b-ee59-4877-95b6-08dd57d56c87
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F6F.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4302
+
+Introduction
+------------
+
+Secure AVIC is a new hardware feature in the AMD64 architecture to
+allow SEV-SNP guests to prevent hypervisor from generating unexpected
+interrupts to a vCPU or otherwise violate architectural assumptions
+around APIC behavior.
+
+One of the significant differences from AVIC or emulated x2APIC is that
+Secure AVIC uses a guest-owned and managed APIC backing page. It also
+introduces additional fields in both the VMCB and the Secure AVIC backing
+page to aid the guest in limiting which interrupt vectors can be injected
+into the guest.
+
+Guest APIC Backing Page
+-----------------------
+Each vCPU has a guest-allocated APIC backing page of size 4K, which
+maintains APIC state for that vCPU. The x2APIC MSRs are mapped at
+their corresposing x2APIC MMIO offset within the guest APIC backing
+page. All x2APIC accesses by guest or Secure AVIC hardware operate
+on this backing page. The backing page should be pinned and NPT entry
+for it should be always mapped while the corresponding vCPU is running.
+
+MSR Accesses
+------------
+Secure AVIC only supports x2APIC MSR accesses. xAPIC MMIO offset based
+accesses are not supported.
+
+Some of the MSR writes such as ICR writes (with shorthand equal to
+self), SELF_IPI, EOI, TPR writes are accelerated by Secure AVIC
+hardware. Other MSR writes generate a #VC exception (
+VMEXIT_AVIC_NOACCEL or VMEXIT_AVIC_INCOMPLETE_IPI). The #VC
+exception handler reads/writes to the guest APIC backing page.
+As guest APIC backing page is accessible to the guest, guest can
+optimize APIC register access by directly reading/writing to the
+guest APIC backing page (instead of taking the #VC exception route).
+APIC msr reads are accelerated similar to AVIC, as described in
+table "15-22. Guest vAPIC Register Access Behavior" of APM.
+
+In addition to the architected MSRs, following new fields are added to
+the guest APIC backing page which can be modified directly by the
+guest:
+
+a. ALLOWED_IRR
+
+ALLOWED_IRR vector indicates the interrupt vectors which the guest
+allows the hypervisor to send. The combination of host-controlled
+REQUESTED_IRR vectors (part of VMCB) and ALLOWED_IRR is used by
+hardware to update the IRR vectors of the Guest APIC backing page.
+
+#Offset        #bits        Description
+204h           31:0         Guest allowed vectors 0-31
+214h           31:0         Guest allowed vectors 32-63
+...
+274h           31:0         Guest allowed vectors 224-255
+
+ALLOWED_IRR is meant to be used specifically for vectors that the
+hypervisor emulates and is allowed to inject, such as IOAPIC/MSI
+device interrupts.  Interrupt vectors used exclusively by the guest
+itself (like IPI vectors) should not be allowed to be injected into
+the guest for security reasons.
+
+b. NMI Request
+ 
+#Offset        #bits        Description
+278h           0            Set by Guest to request Virtual NMI
+
+Guest can set NMI_REQUEST to trigger APIC_ICR based NMIs.
+
+APIC Registers
+--------------
+
+1. APIC ID
+
+APIC_ID values is set by KVM and similar to x2apic, it is equal to
+vcpu_id for a vCPU.
+
+2. APIC LVR
+
+APIC Version register is expected to be read from KVM's APIC state using
+MSR_PROT rdmsr VMGEXIT and updated in guest APIC backing page.
+
+3. APIC TPR
+
+TPR writes are accelerated and not communicated to KVM. So,
+hypervisor does not have information about TPR value for a vCPU.
+
+4. APIC PPR
+
+Current state of PPR is not visible to KVM.
+
+5. APIC SPIV
+
+Spurious Interrupt Vector register value is not communicated to KVM.
+
+6. APIC IRR and ISR
+
+IRR and ISR states are visible only to guest. So, KVM cannot use these
+registers to determine interrupt which are pending completion.
+
+7. APIC TMR
+
+Trigger Mode Register state is owned by guest and not visible to
+KVM.
+
+8. Timer registers - TMICT, TMCCT, TDCR
+
+Timer registers are accessed using MSR_PROT VMGEXIT calls and not from
+the guest APIC backing page.
+
+9. LVT* registers
+
+LVT registers state is accessed from KVM APIC state for the vCPU.
+
+Idle halt Intercept
+-------------------
+
+As hypervisor does not have access to the APIC IRR state for a Secure
+AVIC guest, idle halt intercept feature should be always enabled for
+a Secure AVIC guest. Otherwise, any pending interrupts in APIC IRR during
+halt vmexit would not be serviced and vCPU could get stuck in halt forever.
+For idle halt intercept to work APIC TPR value should not block the
+pending interrupts.
+
+LAPIC Timer Support
+-------------------
+LAPIC timer is emulated by KVM. So, APIC_LVTT, APIC_TMICT and APIC_TDCR,
+APIC_TMCCT APIC registers are not read/written to the guest APIC backing
+page and are communicated to the hypervisor using MSR_PROT VMGEXIT. 
+
+IPI Support
+-----------
+Only SELF_IPI is accelerated by Secure AVIC hardware. Other IPI
+destination shorthands result in VMEXIT_AVIC_INCOMPLETE_IPI #VC exception.
+The expected guest handling for VMEXIT_AVIC_INCOMPLETE_IPI is:
+
+- For interrupts, update APIC_IRR in target vCPUs' guest APIC backing
+  page.
+
+- For NMIs, update NMI_REQUEST in target vCPUs' guest backing
+  page.
+
+- ICR based SMI, INIT, SIPI requests are not supported.
+
+- After updating the target vCPU's guest APIC backing page, source vCPU
+  does a MSR_PROT VMGEXIT.
+
+- KVM either wakes up the non-running target vCPU or sends a
+  AVIC doorbell.
+
+Exceptions Injection
+--------------------
+
+Secure AVIC does not support event injection for guests with Secure AVIC
+enabled in SEV_FEATURES. So, KVM cannot inject exceptions to Secure AVIC
+guests. Hardware takes care of reinjecting an interrupted exception (for
+example due to NPF) raised in guest on next VMRUN. VC exception is not
+reinjected. KVM clears all exception intercepts for Secure AVIC guest.
+
+Interrupt Injection
+-------------------
+
+IOAPIC and MSI based device interrupts can be injected by KVM. The
+interrupt flow for this is:
+
+- IOAPIC/MSI interrupts are updated in KVM's APIC_IRR state via
+  kvm_irq_delivery_to_apic().
+- in ->inject_irq() callback, all interrupts which are set in KVM's
+  APIC_IRR are copied to RequestedIRR VMCB field and UpdateIRR bit is
+  set.
+- VMENTER moves the current value of RequestedIRR to APIC_IRR in
+  guest APIC backing page and clears UpdateIRR.
+
+Given that hardware clearing of RequestedIRR and UpdateIRR can race
+with software writes to these fields, above interrupt injection
+flow ensures that all RequestedIRR and UpdateIRR writes are done
+from the same CPU where vCPU is run.
+
+As interrupt delivery to vCPU is managed by hardware, interrupt window
+is not applicable for Secure AVIC guests and interrupts are always
+allowed to be injected.
+
+PIC interrupts
+--------------
+
+Legacy PIC interrupts cannot be injected as they required event_inj or
+VINTR injection support. Both of these are cannot be done for Secure
+AVIC guest.
+
+PIT
+---
+
+PIT Reinject mode is not supported as it requires IRQ ack notification
+on EOI. As EOI is accelerated for edge interrupts, IRQ ack notification
+is not called for those interrupts.
+
+NMI Injection
+-------------
+
+NMI injection requires ALLOWED_NMI to be set in Secure AVIC control
+msr by the guest. Only VNMI injection is allowed.
+
+Open Points
+-----------
+
+- RTC_GSI requires pending EOI information to detect coalesced
+  interrupts. As RTC_GSI is edge triggered, Secure AVIC does not
+  forward EOI write to KVM for this interrupt. In addition, APIC_IRR
+  and APIC_ISR states are not visible to KVM and are part of guest
+  APIC backing page. Approach taken in this series is to disable
+  checking of coalesced RTC_GSI interrupts for Secure AVIC, which
+  could impact userspace.
+
+- EOI handling for level interrupts uses KVM's unused APIC_ISR regs
+  for tracking pending level interrupts. KVM uses its APIC_TMR state
+  to determine level-triggered interrupts. As KVM's APIC_TMR is
+  updated from IOAPIC redirect tables, the TMR information should be
+  accurate and match guest APIC state. This can be cleaned up later
+  to not use KVM's APIC_ISR state and maintained within sev code.
+
+- Spurious Interrupt Vector Register writes are not visible to KVM.
+  So, KVM cannot determine if the SW enabled bit is set.
+
+- As exceptions cannot be injected by KVM, a more detailed examination
+  of which intercepts need to be allowed for Secure AVIC guests is
+  required.
+
+- As KVM does not have access to the guest's APIC_IRR and APIC_ISR
+  states, kvm_apic_pending_eoi() does not return correct information.
+
+- External interrupts (PIC) are not supported. This breaks KVM's PIC
+  emulation.
+
+- PIT reinject mode is not supported.
+
+- Current code uses KVM's vCPU APIC_IRR for interrupts which
+  need to be injected to guest. Another approach could be to
+  maintain pending interrupts within sev code and inject using
+  flow similar to posted interrupts. 
+
+This series is based on top of commit f7bafceba76e ("KVM: remove
+kvm_arch_post_init_vm ") and is based on
+
+  git.kernel.org/pub/scm/virt/kvm/kvm.git next
+
+Git tree is available at:
+
+  https://github.com/AMDESE/linux-kvm/tree/savic-host-latest
+
+Qemu tree is at:
+  https://github.com/AMDESE/qemu/tree/secure-avic
+
+Guest Secure AVIC support is available at:
+
+  https://lore.kernel.org/lkml/20250226090525.231882-1-Neeraj.Upadhyay@amd.com/
+
+This series depends on below patch series:
+
+1. Idle Halt Intercept
+
+https://lore.kernel.org/all/20250128124812.7324-1-manali.shukla@amd.com/
+
+2. ALLOWED_SEV_FEATURES support
+
+https://lore.kernel.org/kvm/20250207233410.130813-1-kim.phillips@amd.com/
 
 
---thau7tfhkoq4fek3
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 1/7] mfd: Add core driver for Nuvoton NCT6694
-MIME-Version: 1.0
+Kishon Vijay Abraham I (5):
+  KVM: SEV: Do not intercept SECURE_AVIC_CONTROL MSR
+  KVM: SVM: Secure AVIC: Do not inject "Exceptions" for Secure AVIC
+  KVM: SVM/SEV: Secure AVIC: Set VGIF in VMSA area
+  KVM: SVM/SEV: Secure AVIC: Enable NMI support
+  KVM: x86: Secure AVIC: Indicate APIC is enabled by guest SW _always_
 
-On 25.02.2025 16:16:38, Ming Yu wrote:
+Neeraj Upadhyay (12):
+  KVM: x86: Convert guest_apic_protected bool to an enum type
+  x86/cpufeatures: Add Secure AVIC CPU Feature
+  KVM: SVM: Add support for Secure AVIC capability in KVM
+  KVM: SVM: Initialize apic protected state for SAVIC guests
+  KVM: SVM/SEV/X86: Secure AVIC: Add support to inject interrupts
+  KVM: SVM/SEV/X86: Secure AVIC: Add hypervisor side IPI Delivery
+    Support
+  KVM: SVM/SEV: Do not intercept exceptions for Secure AVIC guest
+  KVM: SVM/SEV: Add SVM_VMGEXIT_SECURE_AVIC GHCB protocol event handling
+  KVM: x86: Secure AVIC: Add IOAPIC EOI support for level interrupts
+  KVM: x86/ioapic: Disable RTC_GSI EOI tracking for protected APIC
+  X86: SVM: Check injected vectors before waiting for timer expiry
+  KVM: SVM/SEV: Allow creating VMs with Secure AVIC enabled
 
-[...]
+Sean Christopherson (2):
+  KVM: TDX: Add support for find pending IRQ in a protected local APIC
+  KVM: x86: Assume timer IRQ was injected if APIC state is protected
 
-> +static int nct6694_usb_probe(struct usb_interface *iface,
-> +			     const struct usb_device_id *id)
-> +{
-> +	struct usb_device *udev =3D interface_to_usbdev(iface);
-> +	struct usb_endpoint_descriptor *int_endpoint;
-> +	struct usb_host_interface *interface;
-> +	struct device *dev =3D &iface->dev;
-> +	struct nct6694 *nct6694;
-> +	int pipe, maxp;
-> +	int ret;
-> +
-> +	nct6694 =3D devm_kzalloc(dev, sizeof(*nct6694), GFP_KERNEL);
-> +	if (!nct6694)
-> +		return -ENOMEM;
-> +
-> +	pipe =3D usb_rcvintpipe(udev, NCT6694_INT_IN_EP);
-> +	maxp =3D usb_maxpacket(udev, pipe);
-> +
-> +	nct6694->usb_msg =3D devm_kzalloc(dev, sizeof(union nct6694_usb_msg), G=
-FP_KERNEL);
-> +	if (!nct6694->usb_msg)
-> +		return -ENOMEM;
-> +
-> +	nct6694->int_buffer =3D devm_kzalloc(dev, maxp, GFP_KERNEL);
-> +	if (!nct6694->int_buffer)
-> +		return -ENOMEM;
-> +
-> +	nct6694->int_in_urb =3D usb_alloc_urb(0, GFP_KERNEL);
-> +	if (!nct6694->int_in_urb)
-> +		return -ENOMEM;
-> +
-> +	nct6694->domain =3D irq_domain_add_simple(NULL, NCT6694_NR_IRQS, 0,
-> +						&nct6694_irq_domain_ops,
-> +						nct6694);
-> +	if (!nct6694->domain) {
-> +		ret =3D -ENODEV;
-> +		goto err_urb;
-> +	}
-> +
-> +	nct6694->dev =3D dev;
-> +	nct6694->udev =3D udev;
-> +	nct6694->timeout =3D NCT6694_URB_TIMEOUT;	/* Wait until URB completes */
+ arch/x86/include/asm/cpufeatures.h |   1 +
+ arch/x86/include/asm/kvm-x86-ops.h |   1 +
+ arch/x86/include/asm/kvm_host.h    |   1 +
+ arch/x86/include/asm/msr-index.h   |   2 +
+ arch/x86/include/asm/svm.h         |   9 +-
+ arch/x86/include/uapi/asm/svm.h    |   3 +
+ arch/x86/kvm/ioapic.c              |   8 +-
+ arch/x86/kvm/irq.c                 |   6 +
+ arch/x86/kvm/lapic.c               |  23 +-
+ arch/x86/kvm/lapic.h               |  16 ++
+ arch/x86/kvm/svm/sev.c             | 371 +++++++++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c             |  79 ++++--
+ arch/x86/kvm/svm/svm.h             |  17 +-
+ arch/x86/kvm/x86.c                 |  12 +-
+ 14 files changed, 518 insertions(+), 31 deletions(-)
 
-Why do you need this variable? You can directly use NCT6694_URB_TIMEOUT
-in the usb_bulk_msg() and friends calls.
 
-regards,
-Marc
+base-commit: f7bafceba76e9ab475b413578c1757ee18c3e44b
+-- 
+2.34.1
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---thau7tfhkoq4fek3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfBeUwACgkQDHRl3/mQ
-kZwj8Qf/ZqqBAFXxAYb+Ol2EYuIUSztYKNYnXALK+Hmv/b3tCAl+WuYuPRuK3nal
-tYrpJPUVfYcm7WGux3J3oGKiRAZDaOMCPHitSwdEscltvot8zwcA0hHcKqL7Itij
-Qu5x/rzaoPfQAc7vMQ1EFTQZRJEtrQUP2xe4c4tH+bSDbG0rWNy7I824ATNnl8mi
-UlFsGcRv6QZB0DtF7LX4qme7Ufm2+Io91ImVCkN19DH2Q3yW6rjTyQwEs9ZNBsgj
-X9rbbaIqxYYtkYD+4oJ0wC6OqIBhyuzTJvOWp8WOUb3rjgCuELkVrST4Jz86u/oy
-/+qVxFkZP/3CWH8ORdrd3TAfXxZSUQ==
-=5Ywe
------END PGP SIGNATURE-----
-
---thau7tfhkoq4fek3--
