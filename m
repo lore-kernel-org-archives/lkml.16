@@ -1,113 +1,99 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 387968F6B;
-	Fri, 28 Feb 2025 08:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF99A242907
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 08:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740731861; cv=none; b=Bdxo2zlxnhxONBBBPauRRxwYTPdFOO5kr4BibeyU/UC0LhH+1bCPBmJSVkpJHHQRyxXoIPmO8Zhq++bGOrTAuPG9v7s3ZIPRoX3SaCCwFN3nuyZzU2F1qrE+FbXAMaqkeVuNNbV8slh1OFbgKxTZhiWRocgbe/II594mXdfYf4E=
+	t=1740731928; cv=none; b=MwiOprCDIeJaWMSrXSjSs293QBxKqPYi/NzDTFCkHcjkcvyNChzBTbZsXA1oPE3Gh2Sz6+ixUYwR42DiMKOAofJnwlILR14NgMVqvCUmSuHwp1tRSUZWUG3x7+Hqd2UAErrQqk88cG7yjT1LlxzMSgBHFSK2XyhQhzPvl58z48U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740731861; c=relaxed/simple;
-	bh=t1cC0LN8Hj3VMl6AlaYbedROqrUYclxdgLf/7ja2sbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZmtx3l32MsPf64o2fJthBdwffMwFTsQKi2cmZbVdwFMq6qjHAq3oRpPdiEWf1mM+Z5dZiMY2z3JXhoOgzTYt7FJFMMZ0AGtY3m6Mlri29YUbNqtMyVfviZg5eXi6p/7Ky4sBOwW2nig66d70C8q4H16209XKbcqoSs9RI0iqVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0575130008A25;
-	Fri, 28 Feb 2025 09:37:36 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E321343BB02; Fri, 28 Feb 2025 09:37:35 +0100 (CET)
-Date: Fri, 28 Feb 2025 09:37:35 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Joel Mathew Thomas <proxy0@tutamail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] PCI/bwctrl: Disable PCIe BW controller during reset
-Message-ID: <Z8F1z-gyXJDyR6d0@wunner.de>
-References: <20250217165258.3811-1-ilpo.jarvinen@linux.intel.com>
- <Z7RL7ZXZ_vDUbncw@wunner.de>
- <14797a5a-6ded-bf8f-aa0c-128668ba608f@linux.intel.com>
- <Z7_4nMod6jWd-Bi1@wunner.de>
+	s=arc-20240116; t=1740731928; c=relaxed/simple;
+	bh=A1hq1DB07dwQXcqWwcco9SDEwQn8DEialn3ZI9yG+nI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r//b7b1DbLYWPbiStb5xNa9TzS/Pg4XNOvBaKnw5JyLhKrnarEmtr78yJ4n+DRXIewnJGX/Rl7L3YNU7LoEdA0ytv61zK1zMl04HkiYT2hrulRmGFtPDMcajcHvayzXyRv97FwPQUsi+wNqKLx8ArdE+k0H+pRLtZhnhUIqUIAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ktlfyo5R; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktlfyo5R"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30a2f240156so22019111fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 00:38:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740731925; x=1741336725; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fhQwmFqFnuuSHTQ4pAgL3POj8tqEsseUbiv1Ze3QwuU=;
+        b=ktlfyo5Rezu/DwyRXtB+mouxaCxNdMiOvsPrFQiZ6MqUd8kl38loCYP8gZilR3av/9
+         4orW/S5c6/3vJGv3xIkdfisMrmvsD5ezvh1wIfGla9GD4IxSJZ4nh0w9OT9Z2907Fpfu
+         6oiM0lua77jpKFdrTWRsLmzJ+dCnPk7Kz+4bFFvePfWh468oY9almut+KlraH8Lwx+rA
+         KwT45/3TRElrH8wbzNksnRDCIgwKw/hzAKjGWW3Oi/9fcPwkjEdIQ6Kj5zxbONafI7GB
+         oeZyUjWwAqpV+eoagBIruEFbRlq/fqNqjkcPK2B1T1j7cRzY65Gc2xstHMbWJ0zO6Xes
+         Xojg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740731925; x=1741336725;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fhQwmFqFnuuSHTQ4pAgL3POj8tqEsseUbiv1Ze3QwuU=;
+        b=IGJP1HoMG5VoScoyJbxkbdqyrqpCmPwjeUMK2EYzHnf0lUpCj6i+/2Ht4cS2aqY9re
+         o+EtGJUQn7eKMJiglW4FkdBJmBvobrKSTavsHOXAWgjo9Xh3L2hJG9PDYWRteMKtxvE9
+         ZKlZSSrX/caPOIOXAFN1R6rPYNzGiGpdQz5+pTtFDGdZnpahKEk7B2dA85UptPhkNz8V
+         yKlJGfdovUz6cb5fdmI9j8QVWNjbqglp9u4hTJDqT+XCZWEqVHUdsSDCHWb1sgQQXOky
+         gusKSa7uB37zjrMBgrFySmC9e4M8tilbQMl14ppch+v2Y+tKq/pR/n0V57k9TtK6iQcD
+         EQRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWTeJJTeCD/eUzmWcKOC/67mhYw3YoXAQQQfq6DAbnxJROYmZmVq+xfr3PjVkQFiN/EppDurXdtBTVWaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOUMPwVQKzwkc8jsgk7ADFqT0KOG4AMXpbo19mqGZ6IWQgJo5V
+	rz5AZ4Rzy0H0p0BitDxZs4OMlhrC0Vk9ckyGFyxeT143DoGbxOib+AdyvlzwnEIeAOnvOIyaUHt
+	aML58W6/5vBkNbn7i08PvErnM+Z+lgYiaCAy5dQ==
+X-Gm-Gg: ASbGncub/l3ZuO+vUSjt/14FHy0ggNaIbktahM0tuUDpjWaZREcFJx/G1Xb/I8HCuHS
+	NRE+lJHk77d6+e/wuELhAGnpjEEzVRGYq3j/VhjdV5heMSy7a2llRih2gVtX89TI4Cq/zB0pU8V
+	2tvqgDg2s=
+X-Google-Smtp-Source: AGHT+IGAeIIeJSXlZOyD09BfTdJNYrhaAtk2Dv0VSScJsFIn/A0Qltg4bWtfnluZesdEZ3LGCJeP/Y2geE3003qeeVo=
+X-Received: by 2002:a2e:be03:0:b0:309:1d7b:f027 with SMTP id
+ 38308e7fff4ca-30b9320f37bmr8362171fa.9.1740731924837; Fri, 28 Feb 2025
+ 00:38:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7_4nMod6jWd-Bi1@wunner.de>
+References: <20241217153249.5712-1-pshete@nvidia.com>
+In-Reply-To: <20241217153249.5712-1-pshete@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 28 Feb 2025 09:38:32 +0100
+X-Gm-Features: AQ5f1JphGbre185SJnlbZEv6StWJ-0HLtZWYERPdgLdD9d15LkTt3vUooRToznI
+Message-ID: <CACRpkdZGB=O_1ieN-RhFTVxsm6RWAcjO_JWvVBO8gLgUBZ4_CA@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl-tegra: Add config property GPIO mode
+To: Prathamesh Shete <pshete@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, peng.fan@nxp.com, 
+	linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 27, 2025 at 06:31:08AM +0100, Lukas Wunner wrote:
-> pcie_bwnotif_irq() accesses the Link Status register without
-> acquiring a runtime PM reference on the PCIe port.  This feels
-> wrong and may also contribute to the issue reported here.
-> Acquiring a runtime PM ref may sleep, so I think you need to
-> change the driver to use a threaded IRQ handler.
+Hi Prathamesh,
 
-I've realized we've had a discussion before why a threaded IRQ handler
-doesn't make sense...
+On Tue, Dec 17, 2024 at 4:33=E2=80=AFPM Prathamesh Shete <pshete@nvidia.com=
+> wrote:
 
-https://lore.kernel.org/all/Z35qJ3H_8u5LQDJ6@wunner.de/
+> The SFIO/GPIO select bit is a crucial part of Tegra's pin multiplexing
+> system:
+> - When set to 1, the pin operates in SFIO mode, controlled by the
+>   pin's assigned special function.
+> - When set to 0, the pin operates as a general-purpose GPIO.
+>
+> This SFIO/GPIO select bit that is set for a given pin is not displayed,
+> adding the support to retrieve this information from the
+> pinmux set for each pin.
+>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 
-...but I'm still worried that a Downstream Port in a nested-switch
-configuration may be runtime suspended while the hardirq handler
-is running.  Is there anything preventing that from happening?
+Sorry for taking so long and losing track of this :(
 
-To access config space of a port, it's sufficient if its upstream
-bridge is runtime active (i.e. in PCI D0).
+Patch applied, I take it this is for getting the right info
+in debugfs as Thierry says, and that's fine.
 
-So basically the below is what I have in mind.  This assumes that
-the upstream bridge is still in D0 when the interrupt handler runs
-because in atomic context we can't wait for it to be runtime resumed.
-Seems like a fair assumption to me but what do I know...
-
--- >8 --
-
-diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-index 0a5e7efbce2c..fea8f7412266 100644
---- a/drivers/pci/pcie/bwctrl.c
-+++ b/drivers/pci/pcie/bwctrl.c
-@@ -28,6 +28,7 @@
- #include <linux/mutex.h>
- #include <linux/pci.h>
- #include <linux/pci-bwctrl.h>
-+#include <linux/pm_runtime.h>
- #include <linux/rwsem.h>
- #include <linux/slab.h>
- #include <linux/types.h>
-@@ -235,9 +236,13 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
- 	struct pcie_device *srv = context;
- 	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
- 	struct pci_dev *port = srv->port;
-+	struct device *parent __free(pm_runtime_put) = port->dev.parent;
- 	u16 link_status, events;
- 	int ret;
- 
-+	if (parent)
-+		pm_runtime_get_noresume(parent);
-+
- 	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
- 	if (ret != PCIBIOS_SUCCESSFUL)
- 		return IRQ_NONE;
-diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-index d39dc863f612..038228de773d 100644
---- a/include/linux/pm_runtime.h
-+++ b/include/linux/pm_runtime.h
-@@ -448,6 +448,8 @@ static inline int pm_runtime_put(struct device *dev)
- 	return __pm_runtime_idle(dev, RPM_GET_PUT | RPM_ASYNC);
- }
- 
-+DEFINE_FREE(pm_runtime_put, struct device *, if (_T) pm_runtime_put(_T))
-+
- /**
-  * __pm_runtime_put_autosuspend - Drop device usage counter and queue autosuspend if 0.
-  * @dev: Target device.
+Yours,
+Linus Walleij
