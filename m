@@ -1,87 +1,135 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340B5276D12;
-	Fri, 28 Feb 2025 07:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07602CCC0
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740729217; cv=none; b=VfYMswSpdZRxInkrQGJ/MoGxhrd+LEVKHE8SwIMes9dptx7OkWIMwXPES/HJKLXtdQgZISJBHcJ11lzWh2as0bV/d3msjH1bt/Z+IADEhorTfI4KgX5ykiV1xv40iiIhcnc7c9TNCcew5W6SQ9RTbjV5+Gq3qWuN5rKgbIlJfiM=
+	t=1740729323; cv=none; b=a1cFN8ae97PyGARPlV41jVt3zu+wu4q4sBr3Ur1wWOzNPF9id2RgwuIFgzHUCPMDHeDu5QONQBUdMSIolTrfe9k/6aeM9rzf/dwyTxwx1UBb7aKxYwjwbw3zgH8ZzIhFcIQQvXToFEZzOvb09RqBA34CNsJ/tyS4ljpsijdFpeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740729217; c=relaxed/simple;
-	bh=zzS8CQISV+5yhlCP3batqFzbj2l/A2CILvpJfZUPa1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h3c1Y1GpQPnLwzzN0PHE8oFNEZ5sERJci0FE963ll1kQR5FFswgcMVkdOBM1QSueGDD0g2LNMjKTomfD3pzsaDH2y4x7YNALvT+M/46sKGDCL3QDphHOw62OKuu7QiD/dbWJ+tTS+QaOixbrXlOnehA06CdJet+xgpuXpXgr378=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=M36+h/1W; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740729323; c=relaxed/simple;
+	bh=6PdmsSO1BI5Z6V3wr7coLkzxxGzPEdCgMUotoEVoD4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gFPdwwg0edT5WPON+BYyhKOHuee9jEuY9RuLUZvwtGUSxNjAGb/ZTrZh5fF8Y78NgyDKJqmUbHFvPLBRjMXOgvcvvS0PaIyN9d/tDpFlbDK61JQnhoOYkjO+iZV/h75SKSHtfH8IABvFEjOCIX4hq4LbBGP4imsNZHuNWxHSh2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pSqybkae; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="M36+h/1W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=F+JzjQxRNFL6yDNf9+7cJLcCGEom5mmTMhziYT1IXJM=; b=M36+h/1W2S0DYGTc6rbsLXw8jq
-	EcXI1tKGOGxAGW/eebzYTorjwGwTrVzsOwSQQNsB+MJAnd7xsE0MDjzel/cbK3ppft++P2TZJnk6O
-	xy56vOwsKsAWvTL4+fc9nNidH2IZw7Lmy7dv/U1Akb6mSfd9yS4O7i/p+GvXe6CaiPB9wPYMtd8h3
-	et4xXv5E88NOCku21rX1X8T1HBxLFcwud4y26eqbvpRFYCOqSEN6nAtd5H7hEgM5X47IcsyuLcXp8
-	28S3ByUVbsOWLtZPjqiitBwZifc1sOrQn2AYTn4X5HXphmjgpBLnjOclGxts8TACa8FIsYnHTX5d1
-	8DPgpYLw==;
-Received: from i53875b47.versanet.de ([83.135.91.71] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tnvBV-0007Zk-Qn; Fri, 28 Feb 2025 08:53:25 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>
-Cc: Yao Zi <ziyao@disroot.org>, linux-rockchip@lists.infradead.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jonas Karlman <jonas@kwiboo.se>
-Subject: Re: [PATCH 2/7] dt-bindings: pinctrl: Add pinctrl support for RK3528
-Date: Fri, 28 Feb 2025 08:53:24 +0100
-Message-ID: <13293325.ZYm5mLc6kN@diego>
-In-Reply-To: <20250228064024.3200000-3-jonas@kwiboo.se>
-References:
- <20250228064024.3200000-1-jonas@kwiboo.se>
- <20250228064024.3200000-3-jonas@kwiboo.se>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pSqybkae"
+Date: Fri, 28 Feb 2025 13:25:11 +0530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740729318;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n9di/5YKWkXMpmrcJBjiPkEMKyrNmHmU26fwjOOihFU=;
+	b=pSqybkaemOpma83fuRyyJDdNkqxh30++IBpd1kyepHh+SfnS8R4710Sb76xYHg3drNQw1z
+	kxe6dcM4GqHsLE/9CUHBo6GT2Ct1j2PAb/96/opL2F0oeHELOoRUlycxogw7/HWNBJn4dm
+	HVlH1ocgAYwG7/shTYzXO6fHPCSyza0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jai Luthra <jai.luthra@linux.dev>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+	Changhuang Liang <changhuang.liang@starfivetech.com>
+Cc: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	mripard@kernel.org, mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, devarsht@ti.com, vaishnav.a@ti.com, r-donadkar@ti.com, 
+	u-kumar1@ti.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: cdns,csi2rx.yaml: Add
+ optional interrupts for cdns-csi2rx
+Message-ID: <24y6ggufmhmjkfxymhhxslthpbrsthfp67hkvq36dmnewpnv5c@dbs3hhhpme4w>
+X-PGP-Key: http://jailuthra.in/files/public-key.asc
+References: <20250227082920.744908-1-y-abhilashchandra@ti.com>
+ <20250227082920.744908-2-y-abhilashchandra@ti.com>
+ <20250228-sandy-nightingale-of-improvement-6eef5a@krzk-bin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-
-Am Freitag, 28. Februar 2025, 07:40:08 MEZ schrieb Jonas Karlman:
-> Add compatible string for RK3528 pin controller.
-> 
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-> ---
->  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> index 80a2b1934849..960758dc417f 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -44,6 +44,7 @@ properties:
->        - rockchip,rk3328-pinctrl
->        - rockchip,rk3368-pinctrl
->        - rockchip,rk3399-pinctrl
-> +      - rockchip,rk3528-pinctrl
->        - rockchip,rk3562-pinctrl
->        - rockchip,rk3568-pinctrl
->        - rockchip,rk3576-pinctrl
-> 
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="q2o2fulec7ph3r2v"
+Content-Disposition: inline
+In-Reply-To: <20250228-sandy-nightingale-of-improvement-6eef5a@krzk-bin>
+X-Migadu-Flow: FLOW_OUT
 
 
+--q2o2fulec7ph3r2v
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 1/2] dt-bindings: media: cdns,csi2rx.yaml: Add
+ optional interrupts for cdns-csi2rx
+MIME-Version: 1.0
 
+Hi Krzysztof,
 
+On Fri, Feb 28, 2025 at 08:34:22AM +0100, Krzysztof Kozlowski wrote:
+> On Thu, Feb 27, 2025 at 01:59:19PM +0530, Yemike Abhilash Chandra wrote:
+> > diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml b=
+/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+> > index 2008a47c0580..054ed4b94312 100644
+> > --- a/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+> > +++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.yaml
+> > @@ -24,6 +24,16 @@ properties:
+> >    reg:
+> >      maxItems: 1
+> > =20
+> > +  interrupts:
+> > +    minItems: 1
+> > +    maxItems: 2
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: error_irq
+> > +      - const: irq
+>=20
+> And how is this second interrupt in existing integrations?
+>=20
+
+TI SoCs integrate both of these if I understood the TRM correctly.
+
+Not sure about StarFive, maybe Changhuang can confirm that both irq and=20
+error_irq are integrated.
+
+> This is supposed to be constrained per variant... which probably will
+> tell you that these are not optional now.
+>=20
+
+To make sure I understand, we mark them both as non-optional in the binding=
+s=20
+by default. And if some particular SoC chooses to not integrate the second =
+irq=20
+they may add a constraint based on compatible?
+
+That seems perfectly reasonable. With that change,
+
+Reviewed-by: Jai Luthra <jai.luthra@linux.dev>
+
+> Best regards,
+> Krzysztof
+>=20
+
+--q2o2fulec7ph3r2v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmfBa98ACgkQQ96R+SSa
+cUUokQ/+K9rL8/asTsSDEg51WsTNzFpEskQ9MtuW5z/tgKHTXufIo02aReD4+7OF
+auow1IVymqv9knHffGrDt54mK3zQja/uZXR8B4rJvtUuGG05DY56ZWINIYsFtr34
+nTasO0/pTvcxAyluZg8I5nigARSvehdPlHPGfrmEWVRygq/zVzdUS2jDFFvXUVP6
+MYTbXVmDlIlQiO+BBWa1yKsxmr0Z7yFRMJkKKFDIvSqPwHCwg6iCOmUDkBY6pVjW
+v3jYQYXEd5zKSBdxdur2/KXRHePWv2YT543u3GbRX9RcaJaZ325rR4h+rKwsIKXw
+6ozMB4L1jfpH28wnvtmjxkGNGiwnMu1zTnggnrb1YRi45+C6Cb0IxsAYn7By8TCQ
+hA4Mit73AYEKIWk2m+Inq3N41yFSLYtr9/QCWrjtBdZP78GrA7TbiAkY/PZCU+A9
+9s+f/UZzTRaUteN/nrG0llvezQ7tl279xa1mY0stBu4wziDQ9p4abQ1mQuP/C17Z
+YjH2in0YrJ8bDFeVom+NSArAF9ISmGdsDIjRZbVYRL+lAd+QoAL9XJurqTwtiMxI
+V5kqu6roqA6pdYdYvMp2/HLJrfQ+faLgvTvIYYZeaJKZSLAs+qvK/4YwitcOvqB2
+HzlnaKd5BmQhVqhCrAzPB16iBNbv1YnFWGONcAD1ko111yw/3AA=
+=ArG9
+-----END PGP SIGNATURE-----
+
+--q2o2fulec7ph3r2v--
