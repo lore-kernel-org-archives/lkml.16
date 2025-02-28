@@ -1,112 +1,105 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D65A26AA83;
-	Fri, 28 Feb 2025 12:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E45926A1CD
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 12:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740745508; cv=none; b=ggqTysFQALmvg/ZYvAoxRkKJ4xpOx3vZ6lrWtSFZEsvtOCKHf/Rux+aWQsNlHIc8+q8fksRQOF8KHn61IHHSgbj79e9ftM8+73ZwsMsiEz4nmlzjlsDm1ot8grjOg3N8KVXemS91cEOlqjCjenPP9j6RqaWazyZsWcgKHDt/eys=
+	t=1740745539; cv=none; b=g//XxJpNzN2i+ue52LA1Vj+Yubm1i8Df2foXFz40CdfXjfl+qBbBK9/zVMNr0etkkQA+vzJOpS2Hexnz3h1i1Xf7gqeo0ryKZKjBSdOELYRw8bwRdV4e5vSKukQulltbDbXHcggj1Pr/RGBc6PrKy6RE4P/CFJeCT0b0CbQybS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740745508; c=relaxed/simple;
-	bh=EgYTsb8SgK35ajAyJ1BGm2OuxPtzfoOzV36j+4vxHck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZwumXfbgoSzEFlVzHjFRNMv/4qWjoJbhM9sOfORNf2+Djy6xb0azHGfoSXFJml5JX/RyVuzTwthUz2Y811rDe/h8KH6522FkPWqpvRZxJVh+dc532XA5yeyAPPtW7S+A+3Lv6ToEMsJXIYKlWPhacJdNaMtAV2uuElA72FpevvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D5871688;
-	Fri, 28 Feb 2025 04:25:22 -0800 (PST)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 773A93F6A8;
-	Fri, 28 Feb 2025 04:25:04 -0800 (PST)
-Message-ID: <e62791df-1570-4ac2-998f-86ece5903cb3@arm.com>
-Date: Fri, 28 Feb 2025 12:25:03 +0000
+	s=arc-20240116; t=1740745539; c=relaxed/simple;
+	bh=XqM5WqihnbemKDDciIHF4nQMqthqgTkWOa0BRrNtGzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=leli5TadutmXqdb71YoHDBiKRBbQRrNVrJBcBuZ2Lb5hkNIl84hxfk0Lr39vJjgo2zUHX9RZLGvY8u5gvXAxuu4n4yjYMwEcqTyPpX5jZHZmZ3gJz0N27eZRAxvcEhE/ZlZPfk355eQA/y+eFwzVYzSwLQld+oFb8EwVo0g6ok8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CBh8kvP+; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CBh8kvP+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740745538; x=1772281538;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XqM5WqihnbemKDDciIHF4nQMqthqgTkWOa0BRrNtGzY=;
+  b=CBh8kvP+hvkb1/8WDpFp6tHffhLCoBucu1HTnLuajNg+AKk9iYZsv9y2
+   fYaULizb54flibejOFwncMq2TzOIhbhYPdMQkv68kpxvvcEXrWJ+zgfxX
+   ywQohxofl7iBUjPkRUqC782ikt9iBqqIFVsd0HdOeNPNojuf0m6HjTAnj
+   DK6t7BmvwDzSjUQXhAMkQT3bfhyo4hzCfWO6G+r8mfJj7+nJSylaoGnUQ
+   syL2gFtIyCr+W31SJio0mA4EJ4EM/YjG1fgbDPmZ07sqjdVv2O5a4Vt3Q
+   PivZWGDKFlpVfzOmfOBWWvIwEPRxQFqR1iyEygqqcNjbSZ7E8qCVZG+GA
+   w==;
+X-CSE-ConnectionGUID: vw94adHjTY+9ruL3U3N2ww==
+X-CSE-MsgGUID: /mnn/YB8RZSLC3Nvnpu1RA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="53082756"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="53082756"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:25:38 -0800
+X-CSE-ConnectionGUID: +vEAD0khTHaoviOwOBaRTA==
+X-CSE-MsgGUID: NHIA2YbBRnSkulEVCiO8IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,322,1732608000"; 
+   d="scan'208";a="122337530"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 04:25:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tnzQo-0000000FwW8-3xEu;
+	Fri, 28 Feb 2025 14:25:30 +0200
+Date: Fri, 28 Feb 2025 14:25:30 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: kernel test robot <lkp@intel.com>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>, Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	"oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
+	Kerem Karabay <kekrby@gmail.com>,
+	Atharva Tiwari <evepolonium@gmail.com>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+Message-ID: <Z8GrOhRRsCvD_UtB@smile.fi.intel.com>
+References: <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
+ <202502280028.1Y9QMcR0-lkp@intel.com>
+ <PN3PR01MB9597926E81D2787F2210B84CB8CD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/16] elf, uapi: Add types ElfXX_Verdef and
- ElfXX_Veraux
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Kees Cook <kees@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
- Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <linux@weissschuh.net>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20250226-parse_vdso-nolibc-v2-0-28e14e031ed8@linutronix.de>
- <20250226-parse_vdso-nolibc-v2-6-28e14e031ed8@linutronix.de>
-Content-Language: en-US
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
-In-Reply-To: <20250226-parse_vdso-nolibc-v2-6-28e14e031ed8@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <PN3PR01MB9597926E81D2787F2210B84CB8CD2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-On 26/02/2025 11:44, Thomas Weißschuh wrote:
-> The types are used by tools/testing/selftests/vDSO/parse_vdso.c.
-> To be able to build the vDSO selftests without a libc dependency,
-> add the types to the kernels own UAPI headers.
+On Thu, Feb 27, 2025 at 05:28:33PM +0000, Aditya Garg wrote:
+> > On 27 Feb 2025, at 10:24 PM, kernel test robot <lkp@intel.com> wrote:
+> > ﻿Hi Aditya,
+> > 
+> > kernel test robot noticed the following build warnings:
+> > 
+> > [auto build test WARNING on linus/master]
+> > [also build test WARNING on v6.14-rc4 next-20250227]
+> > [If your patch is applied to the wrong git tree, kindly drop us a note.
 > 
-> Link: https://refspecs.linuxfoundation.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/symversion.html#VERDEFEXTS
-> Reviewed-by: Kees Cook <kees@kernel.org>
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->  include/uapi/linux/elf.h | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-> index 8846fe03ca5b836c96aad1be6d8fb9daf3d4b1d9..49f9f90458d8ca8e7b8f823d32be0a719ff827b3 100644
-> --- a/include/uapi/linux/elf.h
-> +++ b/include/uapi/linux/elf.h
-> @@ -491,4 +491,34 @@ typedef struct elf64_note {
->  /* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
->  #define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
->  
-> +typedef struct {
-> +  Elf32_Half	vd_version;
-> +  Elf32_Half	vd_flags;
-> +  Elf32_Half	vd_ndx;
-> +  Elf32_Half	vd_cnt;
-> +  Elf32_Word	vd_hash;
-> +  Elf32_Word	vd_aux;
-> +  Elf32_Word	vd_next;
-> +} Elf32_Verdef;
-> +
-> +typedef struct {
-> +  Elf64_Half	vd_version;
-> +  Elf64_Half	vd_flags;
-> +  Elf64_Half	vd_ndx;
-> +  Elf64_Half	vd_cnt;
-> +  Elf64_Word	vd_hash;
-> +  Elf64_Word	vd_aux;
-> +  Elf64_Word	vd_next;
-> +} Elf64_Verdef;
-> +
-> +typedef struct {
-> +  Elf32_Word    vda_name;
-> +  Elf32_Word    vda_next;
-> +} Elf32_Verdaux;
-> +
-> +typedef struct {
-> +  Elf64_Word    vda_name;
-> +  Elf64_Word    vda_next;
-> +} Elf64_Verdaux;
-> +
->  #endif /* _UAPI_LINUX_ELF_H */
-> 
+> A version 7 of this patch has already been submitted, not sure why kernel test robot tested version 4
 
-Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Because you are too fast to send a new versions. Whenever patch appears in ML
+it is seconds/minutes to trigger a bot build, which takes hours. I recommend
+spend more time on thinking and discussing, than issuing versions like from
+a machine gun.
 
 -- 
-Regards,
-Vincenzo
+With Best Regards,
+Andy Shevchenko
+
 
