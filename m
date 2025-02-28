@@ -1,71 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6060526D5B8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BA51C331E;
+	Fri, 28 Feb 2025 14:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740753097; cv=none; b=hM+8BnfcZav0Lcj8fBVWxDuTC9J6rBpJDkaopaj9pVeRqPPDXYPWLbnonMZe4vPBE2bZh94Et2BQ1Mg663u1TL7Yt39t5fFmaIldCxo31a2kTuvG/FMxTiMkW2EzxJN5LyhpY7aAJ4qKa0DUucpzc1OYf7/gLLPvi//6viYsKho=
+	t=1740753154; cv=none; b=svLNHXJVHJmek4AUB5qsJLYjoWVMs1ZKziOrA00DSXCIN0HHySblGJVqqOKVbiMnwj0o7g7qORSIAW3yJHBy7MT34we37EejJKbpwvv9Du/3m7SlurAFe+Aec4Pz4g6AuDaWQbpU4I/1wPQbVzhiv50+p92hIX2utRB+DTlF7CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740753097; c=relaxed/simple;
-	bh=+/OUZI85hwg/k2cEtTz1GWdTVoAX/aYCdClr+Dfppbw=;
+	s=arc-20240116; t=1740753154; c=relaxed/simple;
+	bh=IShPQzQud0CPmkUWa6FmVk1k6bMZYxMrSPQMdfHu2CU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QiFaOAxK5SG4Xwql0M67IUsbfmSKa5iFCacyvZyocV6tFj4aOsSUykow3XqHKkYL8WGrx1x5W1kw3loeWRRKkYLQ2qNyPMQk83FVOs9DQa2SCXYtaW5eiVKmWiuqqTZDMxm/+1/eczJAw77RUJYLwRK6/9cVIQFQ62or+NVCIeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bab0Epge; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X1LwbOh+n71AhULR/a2jrPXCzwtwsZ7Odfg+JAfhmo8qr7Il+qIoGc7fmFkiyVtQwmSDWPT4C/z5vqFoG9YbV8g6IVtITQswTmmA5kwcT4ZIEL9Gmx6rB22c3LgttPcF8cP89VYu60Zm5emTOGVEx4U8jWn9ewisSryi7s04ex8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=vnqjAU1Y; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bab0Epge"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740753095;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N4P9XwbgzvwWISqRS8OTNHyqORHJErzBhWoB7f4E7V8=;
-	b=Bab0EpgeNBlvSKr0WSz/7Zi560cI0sjivSW+2rR/jsEw/8no17M635q08nef3KbrR96Kfp
-	MDpueoH5xdp+6OaePlr2Nakw4U7JvvEagP425T0zikXwlEWL3LaY/V9AdfgGF217DeinhQ
-	/iOOe2/asr+BGMyL+AgqUulubLdw9tA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-628-owaju6uZNceD0Fni1ZR7Cw-1; Fri,
- 28 Feb 2025 09:31:31 -0500
-X-MC-Unique: owaju6uZNceD0Fni1ZR7Cw-1
-X-Mimecast-MFC-AGG-ID: owaju6uZNceD0Fni1ZR7Cw_1740753087
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5665F180087A;
-	Fri, 28 Feb 2025 14:31:26 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.184])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AB5B819560AB;
-	Fri, 28 Feb 2025 14:31:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 28 Feb 2025 15:30:56 +0100 (CET)
-Date: Fri, 28 Feb 2025 15:30:50 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250228143049.GA17761@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250224142329.GA19016@redhat.com>
- <qsehsgqnti4csvsg2xrrsof4qm4smhdhv6s4v4twspf76bp3jo@2mpz5xtqhmgt>
- <c63cc8e8-424f-43e2-834f-fc449b24787e@amd.com>
- <20250227211229.GD25639@redhat.com>
- <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vnqjAU1Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=LUZgjJhckIEQIeL4sCjPQpGF4IsNItQ+wc3CINdwt28=; b=vnqjAU1YBbf2svvN1bCNqDLvhD
+	2n97xzQtDLJF/ITnq6k04j06r7cR4SVgAHT8ywACFHlD7GagTOh2iyuc7XUH/c766D0kdhrlnVins
+	Pnewj/h5dbvdMy/d0Yibcv9RqQj7sjUygGKn021tZPRkuquo4NyCgBDQXAKPjhZ09vWU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1to1PY-000yAO-Ft; Fri, 28 Feb 2025 15:32:20 +0100
+Date: Fri, 28 Feb 2025 15:32:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Frank Sae <Frank.Sae@motor-comm.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Parthiban.Veerasooran@microchip.com, linux-kernel@vger.kernel.org,
+	xiaogang.fan@motor-comm.com, fei.zhang@motor-comm.com,
+	hua.sun@motor-comm.com
+Subject: Re: [PATCH net-next v3 05/14] motorcomm:yt6801: Implement the
+ .ndo_open function
+Message-ID: <40d06932-3704-4eea-887f-ba286085532d@lunn.ch>
+References: <20250228100020.3944-1-Frank.Sae@motor-comm.com>
+ <20250228100020.3944-6-Frank.Sae@motor-comm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,85 +52,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06ae9c0e-ba5c-4f25-a9b9-a34f3290f3fe@amd.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20250228100020.3944-6-Frank.Sae@motor-comm.com>
 
-On 02/28, Sapkal, Swapnil wrote:
->
-> Yes, I was able to reproduce the problem with the below patch.
-...
-> I found a case in the dump where the pipe is empty still both reader and
-> writer are waiting on it.
->
-> [ 1397.829761] E=1 F=0; W=1719147 R=1719147
-> [ 1397.837843] RD=1 WR=1
+> +static int fxgmac_open(struct net_device *netdev)
+> +{
+> +	struct fxgmac_pdata *priv = netdev_priv(netdev);
+> +	int ret;
+> +
+> +	mutex_lock(&priv->mutex);
 
-Thanks! and I see no more "WR=1" in the full dump.
+What is this mutex protecting? Where it is defined you have:
 
-This means that all live writes hang on the same pipe.
+       struct mutex mutex; /* Driver lock */
 
-So maybe the trivial program below can too reproduce the problem on your machine??
+which does not help at all. Why is the RTNL lock not sufficient?
 
-Say, with GROUPS=16 and WRITERS=20 ... or maybe even with GROUPS=1 and WRITERS=320 ...
-
-Oleg.
-
--------------------------------------------------------------------------------
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <assert.h>
-#include <pthread.h>
-
-static int GROUPS, WRITERS;
-static volatile int ALIVE[1024];
-
-void *group(void *arg)
-{
-	int fd[2], n, id = (long)arg;
-	char buf[100];
-
-	assert(pipe(fd) == 0);
-
-	for (n = 0; n < WRITERS; ++n) {
-		int pid = fork();
-		assert(pid >= 0);
-		if (pid)
-			continue;
-
-		close(fd[0]);
-		for (;;)
-			assert(write(fd[1], buf, sizeof(buf)) == sizeof(buf));
-	}
-
-	for (;;) {
-		assert(read(fd[0], buf, sizeof(buf)) == sizeof(buf));
-		ALIVE[id] = 1;
-	}
-}
-
-int main(int argc, const char *argv[])
-{
-	pthread_t pt;
-	int n;
-
-	assert(argc == 3);
-	GROUPS = atoi(argv[1]);
-	WRITERS = atoi(argv[2]);
-	assert(GROUPS <= 1024);
-
-	for (n = 0; n < GROUPS; ++n)
-		assert(pthread_create(&pt, NULL, group, (void*)(long)n) == 0);
-
-	for (;;) {
-		sleep(1);
-
-		for (n = 0; n < GROUPS; ++n) {
-			if (ALIVE[n] == 0)
-				printf("!!! thread %d stuck?\n", n);
-			ALIVE[n] = 0;
-		}
-	}
-}
-
+	Andrew
