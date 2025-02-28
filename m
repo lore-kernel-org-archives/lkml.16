@@ -1,57 +1,32 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964681C3BE8
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF501C5F35;
+	Fri, 28 Feb 2025 07:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740728338; cv=none; b=VFs3W6JusI3N1p1+ikn7DsP6RwFTJyPkjeHwkYiolqEhfzfn222b+DbgtRyQXFoV3dZDkHe35VbqZRZJpg6+z9UyEceQxIp81VZcuf6aY3dC3CXAkb5dCtnv4utbXN1qgDu4QW2AzUrMf4sliR4oD4IamjDzeElqUV5mUVcCH+U=
+	t=1740728702; cv=none; b=klDo7LtS8YGNjeFPPxYYIXjsGb7Io5IXfvrEZj57EUPfX6HZh5YzwYc5VRqI4Ela3JZKeFIdYc5d/9I/cJApuGxtrIJ6hB+6KDbbN6vplaZeYSVM6n1OGODO9BR+NeSJUGkby6GCe9U8vtyx8A1jq74/ESqEuM76TpjxFSTnrIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740728338; c=relaxed/simple;
-	bh=BY9q3rOxqkIVBMa7s2bmBZBkhUcguD3ZuXRRp63Ut6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ugmvTGRNkoIP59VU2E6gsA47uqfm5zLExAc2eDhAldkViUGEhYR+FZmmChGqVuEvoFZ2wU45D+zuOOYkmn9HW9i3Nb+Vc7sx9/yxm5btyfJBKI/iL07GqLOoftSl5H/El2VegdS6g2VBC+j2qUmSkDxkznx1Ef8z08n48/wh0fE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=E4clRksz; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740728702; c=relaxed/simple;
+	bh=Cqdlf4yoq30t+BX3DuWtax33mta4DCN20XIqO0aqf/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HYnwwXGwTdeDCUmsA9wN70zAGBlOo415Ga8vYJjYVz2U2JE+ouQ467gVZ5n4wlAHbDEwmuJH7zT1mxNlDV0h74u1p7ooOxKK7ui61x816pVJv10fqvUUKWLdLvITtgc3Tjlm428K6qZDH3A66WEITXxmovGlCakhv+75SkNmi5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=AGXlS+9T; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E4clRksz"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250228073853euoutp011287660d91da8bef480d0a81e2f86fc9~oTzJcqtbD1969219692euoutp01G
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:38:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250228073853euoutp011287660d91da8bef480d0a81e2f86fc9~oTzJcqtbD1969219692euoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740728333;
-	bh=fB1uu5Zm/JdUcvGbMy3KqsovvuV6bSi/1lbv+zVs20Q=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=E4clRksz1SUtlg+e1C0maB9+KnaXKDWsITIMWljPSLwLsF5HLwawlrv9y3qz8CR8A
-	 m1xoRjArPxkwbx5Rq0kSHJQUXMzLVaNS2UOQE0a6Iiof0KmPbofRg3Mh+N1Jy7EZcd
-	 QlaVR+XtV0E7cjL1mggU6pLM5+K2tsv+QxZKxgF8=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250228073849eucas1p2ea3c0061bc5efce9c318f48e23b0679e~oTzFTULj60716307163eucas1p2m;
-	Fri, 28 Feb 2025 07:38:49 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id D0.76.20821.90861C76; Fri, 28
-	Feb 2025 07:38:49 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250228073848eucas1p2c71a5ff2b7b1ec8388ea57bec7bd9b09~oTzEuBMhB3132931329eucas1p21;
-	Fri, 28 Feb 2025 07:38:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250228073848eusmtrp28a1e245fe1fb3aa7b5c93c5051f85326~oTzEtV3u30517905179eusmtrp2W;
-	Fri, 28 Feb 2025 07:38:48 +0000 (GMT)
-X-AuditID: cbfec7f2-b11c470000005155-85-67c168094b8f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id BD.9B.19920.80861C76; Fri, 28
-	Feb 2025 07:38:48 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250228073847eusmtip26d0d11427c3f7d3a2a2b24ab1aa31f3d~oTzDOuM0w0250102501eusmtip2j;
-	Fri, 28 Feb 2025 07:38:46 +0000 (GMT)
-Message-ID: <b0a3d6de-34c7-484a-9622-75431248e4eb@samsung.com>
-Date: Fri, 28 Feb 2025 08:38:46 +0100
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="AGXlS+9T"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1740728699; bh=Cqdlf4yoq30t+BX3DuWtax33mta4DCN20XIqO0aqf/k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AGXlS+9T2hBJetL2PAoO0+xMCbtPC32Keir+LaWJTyi4EhG4TiVncrKvf9M5nlfHL
+	 5/3LgEorqAyePLoDqQ+a3gKrVxTnW33X9FgW6zypyap562lYgq9uhTXH1vUBKSITXL
+	 NzWgh1x9iiJerDfoT2Nd8b+h5BcYFEQdJ/KjJa7M=
+Received: from [IPV6:2001:8e0:207e:3500:4ab6:48fe:df57:b084] (2001-8e0-207e-3500-4ab6-48fe-df57-b084.ewm.ftth.ip6.as8758.net [IPv6:2001:8e0:207e:3500:4ab6:48fe:df57:b084])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 024BD2052A86;
+	Fri, 28 Feb 2025 08:44:58 +0100 (CET)
+Message-ID: <07acc636-75d9-4e4b-9e99-9a784d88e188@ralfj.de>
+Date: Fri, 28 Feb 2025 08:44:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,99 +34,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2] media: s5p-mfc: Corrected NV12M/NV21M plane-sizes
-To: Aakarsh Jain <aakarsh.jain@samsung.com>,
-	linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: andrzej.hajda@intel.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-	krzysztof.kozlowski+dt@linaro.org, linux-samsung-soc@vger.kernel.org,
-	gost.dev@samsung.com, aswani.reddy@samsung.com, pankaj.dubey@samsung.com
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250226102251.9040-1-aakarsh.jain@samsung.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: David Laight <david.laight.linux@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Martin Uecker <uecker@tugraz.at>, "Paul E. McKenney" <paulmck@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Ventura Jack <venturajack85@gmail.com>,
+ Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>,
+ airlied@gmail.com, boqun.feng@gmail.com, ej@inai.de,
+ gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com,
+ ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+ miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
+ <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+ <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
+ <5d7363b0-785c-4101-8047-27cb7afb0364@ralfj.de>
+ <CAHk-=wh=8sqvB-_TkwRnvL7jVA_xKbzsy9VH-GR93brSxTp60w@mail.gmail.com>
+ <ed7ef66dbde453035117c3f2acb1daefa5bd19eb.camel@tugraz.at>
+ <CAHk-=whLSWX=-5-z4Q8x1f_NLrHd0e3afbEwYPkkVSXj=xT-JQ@mail.gmail.com>
+ <20250226162655.65ba4b51@gandalf.local.home>
+ <CAHk-=wjAcA4KrZ-47WiPd3haQU7rh+i315ApH82d=oZmgBUT_A@mail.gmail.com>
+ <20250226165619.64998576@gandalf.local.home>
+ <20250226171321.714f3b75@gandalf.local.home>
+ <CAHk-=wj8Btsn0zN5jT1nBsUskF8DJoZbMiK81i_wPBk82Z0MGw@mail.gmail.com>
+ <20250226173534.44b42190@gandalf.local.home>
+ <20250227204722.653ce86b@pumpkin>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <20250227204722.653ce86b@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7djP87qcGQfTDXZM5bB4umMmq8X9xZ9Z
-	LA5t3spucfPATiaLizPvslj0vXjIbLHp8TVWi8u75rBZ9GzYymox4/w+Jotlm/4wWSza+oXd
-	gcdj8Z6XTB6bVnWyedy5tofNY/OSeo++LasYPT5vkvM49fUzewB7FJdNSmpOZllqkb5dAlfG
-	nWkbmQq281fcWb2KqYGxjbeLkZNDQsBEYuf5K0xdjFwcQgIrGCXOP57CDOF8YZRYuX8mVOYz
-	o8T+X8uZYVqeXDgEVbWcUWLhqimsEM5HRoljf4+yg1TxCthJrPywkRHEZhFQlXj+pgEqLihx
-	cuYTFhBbVEBe4v6tGWBxYQFPiVc7J4KtExGYwChx/eMpFhCHWeAuo8SsRc9ZQaqYBcQlbj2Z
-	zwRiswkYSnS97WLrYuTg4BSwlVjfwwRRIi+x/e0csPMkBPo5Jd5eeM0GcbeLxMKl95ggbGGJ
-	V8e3sEPYMhL/d85ngmhoZ5RY8Ps+lAN0RsPzW4wQVdYSd879AtvGLKApsX6XPkTYUWLL+pms
-	IGEJAT6JG28FIY7gk5i0bTozRJhXoqNNCKJaTWLW8XVwaw9euMQ8gVFpFlK4zELy5Swk78xC
-	2LuAkWUVo3hqaXFuemqxYV5quV5xYm5xaV66XnJ+7iZGYDI7/e/4px2Mc1991DvEyMTBeIhR
-	goNZSYR3VuyBdCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8i/a3pgsJpCeWpGanphakFsFkmTg4
-	pRqYGtjE2ws+31Tu4TEXO/32b/t2hqfcSkLqifdc36kWVRR1rL2+hS+/4eUx4aLrzhv2nPOd
-	EKFeFD/vtazM5SAPxdaZG8/Jc2/Y78s7v/2VoIpxQUHarzNi17efOc5ya8qr2npv6V+tCaul
-	4k/P7ug0eur5vFvlne9cS8POaQVPS4TenfSfVe59csKxqeen3LVU36JdcDLy80JW9et+TT3a
-	5e+t2hS9Ltm2/PpsFJtRUKTP692sp7h1uvoyRu1JSzkbf13LPbq21rnsWbHeidwfredrpjZF
-	GKo0XRb4cdCueuNZ47ONp7frOJa5PrJmnZhyyOPmhqAXa31Znz2v2PxRtmnaSc89HZPXvcia
-	ncKuxFKckWioxVxUnAgAmXs5TdUDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsVy+t/xe7ocGQfTDeZel7d4umMmq8X9xZ9Z
-	LA5t3spucfPATiaLizPvslj0vXjIbLHp8TVWi8u75rBZ9GzYymox4/w+Jotlm/4wWSza+oXd
-	gcdj8Z6XTB6bVnWyedy5tofNY/OSeo++LasYPT5vkvM49fUzewB7lJ5NUX5pSapCRn5xia1S
-	tKGFkZ6hpYWekYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GnWkbmQq281fcWb2KqYGxjbeL
-	kZNDQsBE4smFQ8xdjFwcQgJLGSWuX97HDpGQkTg5rYEVwhaW+HOtiw2i6D2jxOmF58ESvAJ2
-	Eis/bGQEsVkEVCWev2lgh4gLSpyc+YQFxBYVkJe4f2sGWFxYwFPi1c6JTCCDRAQmAA16NwOs
-	mVngLqPEv15fiA1Aib2b3rNDJMQlbj2ZzwRiswkYSnS9BTmDg4NTwFZifQ8TRImZRNfWLqg5
-	8hLb385hnsAoNAvJHbOQTJqFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAmN3
-	27Gfm3cwznv1Ue8QIxMH4yFGCQ5mJRHeWbEH0oV4UxIrq1KL8uOLSnNSiw8xmgIDYyKzlGhy
-	PjB55JXEG5oZmBqamFkamFqaGSuJ87pdPp8mJJCeWJKanZpakFoE08fEwSnVwFR39Oa66oB3
-	YiH7Odte7U1SK+4ts3msLrB69f9i/z2fdsbW2R3TfeHRoLA69OCGNH/t/xJxWbHRxXYSPtdF
-	/tzZv+tN5IQyr03r0zMV4o9auu6q4tpz9HH3H/8rv3NOLrLX2f395/QJ9gobJmwO2yRbc72f
-	Z+3HwrwdvJE/7Nmu8gnNuM+lckVv8dLgqDNtKdNjn8TKvS3/dq1l0+Mvou3cR+b6dKwK+n82
-	w+LMpt1Zqw45s3TsLambzL7Gf5di36HbOlLi+kG9/GoVr59EnS2SzFH8u/mvqls9z9qE85JH
-	jKLvxnvxrPdhLPsvljTdwafooPnGi2UfRCYteLWR5Vjn2gM/NihZzz70QWjOVwUlluKMREMt
-	5qLiRABTtNcrZgMAAA==
-X-CMS-MailID: 20250228073848eucas1p2c71a5ff2b7b1ec8388ea57bec7bd9b09
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250226102749epcas5p35afe43774ad2917b846c921dc593a5ef
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250226102749epcas5p35afe43774ad2917b846c921dc593a5ef
-References: <CGME20250226102749epcas5p35afe43774ad2917b846c921dc593a5ef@epcas5p3.samsung.com>
-	<20250226102251.9040-1-aakarsh.jain@samsung.com>
 
-On 26.02.2025 11:22, Aakarsh Jain wrote:
-> There is a possibility of getting page fault if the overall
-> buffer size is not aligned to 256bytes. Since MFC does read
-> operation only and it won't corrupt the data values even if
-> it reads the extra bytes.
-> Corrected luma and chroma plane sizes for V4L2_PIX_FMT_NV12M
-> and V4L2_PIX_FMT_NV21M pixel format.
->
-> Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> Signed-off-by: Aakarsh Jain <aakarsh.jain@samsung.com>
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
-> changelog:
-> v1->v2
-> Patch link: https://patchwork.kernel.org/project/linux-media/patch/20240806115714.29828-1-aakarsh.jain@samsung.com/
-> Removed duplicate code and aligned luma and chroma size
-> to multiple of 256bytes as suggested by Hans.
->   drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
-> index 73f7af674c01..0c636090d723 100644
-> --- a/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
-> +++ b/drivers/media/platform/samsung/s5p-mfc/s5p_mfc_opr_v6.c
-> @@ -549,8 +549,9 @@ static void s5p_mfc_enc_calc_src_size_v6(struct s5p_mfc_ctx *ctx)
->   		case V4L2_PIX_FMT_NV21M:
->   			ctx->stride[0] = ALIGN(ctx->img_width, S5P_FIMV_NV12M_HALIGN_V6);
->   			ctx->stride[1] = ALIGN(ctx->img_width, S5P_FIMV_NV12M_HALIGN_V6);
-> -			ctx->luma_size = ctx->stride[0] * ALIGN(ctx->img_height, 16);
-> -			ctx->chroma_size =  ctx->stride[0] * ALIGN(ctx->img_height / 2, 16);
-> +			ctx->luma_size = ALIGN(ctx->stride[0] * ALIGN(ctx->img_height, 16), 256);
-> +			ctx->chroma_size = ALIGN(ctx->stride[0] * ALIGN(ctx->img_height / 2, 16),
-> +					256);
->   			break;
->   		case V4L2_PIX_FMT_YUV420M:
->   		case V4L2_PIX_FMT_YVU420M:
+Hi,
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+>> I guess you can sum this up to:
+>>
+>>    The compiler should never assume it's safe to read a global more than the
+>>    code specifies, but if the code reads a global more than once, it's fine
+>>    to cache the multiple reads.
+>>
+>> Same for writes, but I find WRITE_ONCE() used less often than READ_ONCE().
+>> And when I do use it, it is more to prevent write tearing as you mentioned.
+> 
+> Except that (IIRC) it is actually valid for the compiler to write something
+> entirely unrelated to a memory location before writing the expected value.
+> (eg use it instead of stack for a register spill+reload.)
+> Not gcc doesn't do that - but the standard lets it do it.
+
+Whether the compiler is permitted to do that depends heavily on what exactly the 
+code looks like, so it's hard to discuss this in the abstract.
+If inside some function, *all* writes to a given location are atomic (I think 
+that's what you call WRITE_ONCE?), then the compiler is *not* allowed to invent 
+any new writes to that memory. The compiler has to assume that there might be 
+concurrent reads from other threads, whose behavior could change from the extra 
+compiler-introduced writes. The spec (in C, C++, and Rust) already works like that.
+
+OTOH, the moment you do a single non-atomic write (i.e., a regular "*ptr = val;" 
+or memcpy or so), that is a signal to the compiler that there cannot be any 
+concurrent accesses happening at the moment, and therefore it can (and likely 
+will) introduce extra writes to that memory.
+
+Kind regards,
+Ralf
 
