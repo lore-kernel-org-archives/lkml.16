@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439A427700E;
-	Fri, 28 Feb 2025 18:58:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F241C548C;
+	Fri, 28 Feb 2025 18:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740769121; cv=none; b=PytRgLq0so0LLeDlY9yMZklHs2OCF/0GXDM/uM3mPP3dIXW90UTFcpPkado7DMD14oEwtalCG8rtWHX3xr/76HqAKa/w6G/ZLmuSFmmbL05RR5a6IGIN9/N1qHKhHgmU2otxDW7zRFD2KPtrREZ/mvKYjhNVkLNGrgLEcS9teY8=
+	t=1740769127; cv=none; b=a9y88Zk2bJuZF5v6XPpbsFCdRcZ+l2y961kPQRffcblKRn1l1YAdncpuTGlNNXpWsgS60GgoBnNJyT/B230i6lbRLSoj/5Alzmw91ckvKdwqcX/OETaJNisdqie5DzPxToehp8WTQ3EaNqUuwVzwq5FczUr0KEyf4bMF1QKCtSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740769121; c=relaxed/simple;
-	bh=0CWAFx3at7Ov80r+klQBiRHBMyocMZNWKTji/2lWbWo=;
+	s=arc-20240116; t=1740769127; c=relaxed/simple;
+	bh=CIA17vKj86QZVvcuBdGngR2g3nwrDmSjGoJQOl2IIs4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Wfj27SCscqKIsmZxOUC8TZKMuzVFE98Up/VszlCeuQMIdAKk6hH1q6e1ncOSFGWEFR1V/T0Lu/QuNP7fgupC7t3KFwfb94dpHOq4D7ZkqYZYjhq1kN3mByeIEQbMrxzvkMSLJ9WIKZAbKCa7jiy0W+h2FiVux6hlTgKG2ufjXug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hpCy+tlI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=MGhZWCEhTGEwvfkd77sMIZymsJbwvG+F5aSQ2iYllsR44GTN/AdnW279FXuJh0BwzwqZUXLx5lGCzBDVWx1bArP74KVHNEoBsj25Izh2DtG6FaVpK8ZVKJ0bNDwxRw/MSuXbmwY5DGiRKeNpqZGFiDfSEtKU28fwCIzu12cFftU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fh564Eqx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hpCy+tlI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9309C4CEE5;
-	Fri, 28 Feb 2025 18:58:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fh564Eqx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82186C4CED6;
+	Fri, 28 Feb 2025 18:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740769120;
-	bh=0CWAFx3at7Ov80r+klQBiRHBMyocMZNWKTji/2lWbWo=;
+	s=k20201202; t=1740769127;
+	bh=CIA17vKj86QZVvcuBdGngR2g3nwrDmSjGoJQOl2IIs4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=hpCy+tlIL/WiH8sIXrgw1CU9Iu7kCns02O5uwQNuWa+pDA5b8HsPwx7OVt0GpDHqI
-	 +Kn2pMfpWYk7v8zHZolQ/YqFAbVdzknKNL+qBy9nBz/bAYz5BmBd10QrN6tVfmrHCd
-	 v3M/fqA96zdyp4cKGpCQxrvmm+sVNAwYxkrqDoD2R422Bj7nqO7byGzOz22K7Edhap
-	 cMmhxdV2uqpP7GlJcf2k636Iij0TcRh+fcO5+EUxr3QzMQMMWmZjF2D4MmXkBVtrIs
-	 yHvsduUnQRZaoqdGTaua9jkMpB5EuwpZSX2EoxZX7/Op270jrlu2/9jjtRbNb4uu1D
-	 aS7wZjmBj+S4w==
+	b=Fh564EqxRGkM4ET1BYBiFfp6RT69LGTwBPr/GQ/PAMqX3Y0D2RN+/ad6M4RZL1gGi
+	 5/DSOCyVblBbt7bHCOG0S5g6FYcuHeDOvCdkWdKnx1ZnXvE2vMAaSL9zReGjcS5u8F
+	 s4zl61WKhzRfdn0Y+v5pRIZaP4SbfRL0/NaA/noarNaUCP4GN6uRjB9ZND9LEaRzhQ
+	 /BmP1DcWGYEua/HEb3alrccBqVw+oW4yyr/xDF8BuLXdJ2moQy8aHED3KzfzE7rRPG
+	 4DIkfeMY+SJJh2uBaLG9HhKIjrmxhBbUPHGe8tFIOP7FLqcd6fwuJ5Ygpi53x9OCD+
+	 J79qRh6kVuGMQ==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Alice Ryhl" <aliceryhl@google.com>
 Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
@@ -43,15 +43,15 @@ Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Miguel Ojeda"
  Airlie" <airlied@gmail.com>,  "Simona Vetter" <simona@ffwll.ch>,
   <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
   <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v2 3/5] rust: add #[export] macro
-In-Reply-To: <20250228-export-macro-v2-3-569cc7e8926c@google.com> (Alice
-	Ryhl's message of "Fri, 28 Feb 2025 12:39:32 +0000")
+Subject: Re: [PATCH v2 2/5] rust: macros: support additional tokens in quote!
+In-Reply-To: <20250228-export-macro-v2-2-569cc7e8926c@google.com> (Alice
+	Ryhl's message of "Fri, 28 Feb 2025 12:39:31 +0000")
 References: <20250228-export-macro-v2-0-569cc7e8926c@google.com>
-	<fSc95Xx2hPhD6YoRZ9J69-yHCdUg6S-frMHo1td_JsVpE2Tw3HmgDeteQR1SN-XwdpLwAnhS9jBzq-JCh8aoVw==@protonmail.internalid>
-	<20250228-export-macro-v2-3-569cc7e8926c@google.com>
+	<2uURW8_Sq6S8VV2UoJJ6bmoH71NWq1X6b1niImKX2mpjudmVM5tNapWA4OLWXoZ8nmcM--z2XtAdgKiNPx8qQg==@protonmail.internalid>
+	<20250228-export-macro-v2-2-569cc7e8926c@google.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 28 Feb 2025 19:53:31 +0100
-Message-ID: <87y0xplx3o.fsf@kernel.org>
+Date: Fri, 28 Feb 2025 19:51:21 +0100
+Message-ID: <874j0dnbrq.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,50 +62,36 @@ Content-Type: text/plain
 
 "Alice Ryhl" <aliceryhl@google.com> writes:
 
-> Rust has two different tools for generating function declarations to
-> call across the FFI boundary:
+> This gives the quote! macro support for the following additional tokens:
 >
-> * bindgen. Generates Rust declarations from a C header.
-> * cbindgen. Generates C headers from Rust declarations.
+> * The = token.
+> * The _ token.
+> * Using #my_var with variables of type Ident.
 >
-> In the kernel, we only use bindgen. This is because cbindgen assumes a
-> cargo-based buildsystem, so it is not compatible with the kernel's build
-> system. This means that when C code calls a Rust function by name, its
-> signature must be duplicated in both Rust code and a C header, and the
-> signature needs to be kept in sync manually.
+> Additionally, some type annotations are added to allow cases where
+> groups are empty. For example, quote! does support () in the input, but
+> only when it is *not* empty. When it is empty, the compiler cannot infer
+> the item type of `tokens`.
 >
-> To eliminate this manual checking, introduce a new macro that verifies
-> at compile time that the two function declarations use the same
-> signature. The idea is to run the C declaration through bindgen, and
-> then have rustc verify that the function pointers have the same type.
+> These additional quote! features are used by a new proc macro that
+> generates code looking like this:
 >
-> The signature must still be written twice, but at least you can no
-> longer get it wrong. If the signatures don't match, you will get errors
-> that look like this:
+> 	const _: () = {
+> 	    if true {
+> 	        ::kernel::bindings::#name
+> 	    } else {
+> 	        #name
+> 	    };
+> 	};
 >
-> error[E0308]: `if` and `else` have incompatible types
->   --> <linux>/rust/kernel/print.rs:22:22
->    |
-> 21 | #[export]
->    | --------- expected because of this
-> 22 | unsafe extern "C" fn rust_fmt_argument(
->    |                      ^^^^^^^^^^^^^^^^^ expected `u8`, found `i8`
->    |
->    = note: expected fn item `unsafe extern "C" fn(*mut u8, *mut u8, *mut c_void) -> *mut u8 {bindings::rust_fmt_argument}`
->               found fn item `unsafe extern "C" fn(*mut i8, *mut i8, *const c_void) -> *mut i8 {print::rust_fmt_argument}`
->
-> It is unfortunate that the error message starts out by saying "`if` and
-> `else` have incompatible types", but I believe the rest of the error
-> message is reasonably clear and not too confusing.
+> where #name has type Ident.
 >
 > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-
 
 Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 
 
 Best regards,
 Andreas Hindborg
-
 
 
