@@ -1,231 +1,157 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2675A1EF360;
-	Fri, 28 Feb 2025 15:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDF01EF360;
+	Fri, 28 Feb 2025 15:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740758133; cv=none; b=B7VbJPw+PPfUoqH71TP8MLrUP0PuC+zYifpz4p44WKTtbhVl9Oe/tNWcnDCxXkNbCyUAlkCnbrlPl9Kojb+lD/1BHv+F99fxUyBvOZelWUV3c0nX+87Wb6i5M1olRFxJ7xujL9kxPZhArfKTTcmk6nlHgcXZgLYX7YAYc6gefdE=
+	t=1740758148; cv=none; b=FEvSoDRj7gHkq3pscQpc+9SV1FIEohJk57We6r2qDhahVjzFsvySVUMfPke2ktRyB+Z4EK+tD0RqHYd8B6hC/+lYDgjqnBdDLKLSB2nnRorjWMSrRxrBFaQZxeyT41gjdI95uJZQAoqnFkUQOVOnnrRl0Uivvo88NNYS4F2PI6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740758133; c=relaxed/simple;
-	bh=akg3hfMrj8rJseZvQS4QHjk5DvDzbMeTuCXtQ3LNr1M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KAWxUU9W2BczSgKAFm9KfbTf0KnYWJVEJP5K4MsW1NEgBeUE9fzqfUMFpVVbooszgNuxMfxS3axclT7/HOPi+1eUTwYnfFDWwa82KlPBQqJZBax4DRGObbpnbgIZsKjhrUvaiaE+14xHkBHxTeXFmFpdGXoDlDOyT1PqMo16j98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XYrYhf5p; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740758148; c=relaxed/simple;
+	bh=G0Jo1xC7rXjKjZbrf2HnafijiPsizuCd+0u7sgwzaMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IhXgQFelB/CWz+OhhVmNiDB04m/6A5lNmvKqcGNncPQEpTKH9AeY0yi0zikOWgY8FI1YwdgmQ4jsL1xiOiK6Dse4jAlwhn1FAyJi3lgIyJ4eSWddSU0QCHOFuxtbtjGZMLVtg6wMcXkWPYx8c9EpnbSHHacaN6KyA4LEGQxvmmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=C44xf099; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYrYhf5p"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-307bc125e2eso25039641fa.3;
-        Fri, 28 Feb 2025 07:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740758129; x=1741362929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bHn0qaSarOO5nkT/BqsOGpUW4y3+EJjr5cHJDOEs+kg=;
-        b=XYrYhf5pg2IuBS7p5Pno1ffiW2tH6VHdJ8PsVsXvB5ebEJfV/bPXjy7tR/0bwZCnk4
-         aFGn68CVO1uCQkXWy60eLjyGv6FESczL+26dmEPcKaMSyXDm74kwho+KNaKmtDwhRLs6
-         w0qZ60ncu++t8r+UDvSjzJ1uBhmq1GFaKBQKtM0qrYiD7aEFKdlBxmU1/OIISVKQ1AXf
-         xpLCdYM31U87MLheByncD16sY6hOuA0zc99BsC6i+R7MUB5UsqQ9mh+kDzxiRYrfaAmZ
-         dtO0DLo+6TL3TCXjHJlUfdEsU5S7QUDawuE1vQ63PTkNji1CwQ8Lv6fCKMrnFzO/XALX
-         G2fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740758129; x=1741362929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bHn0qaSarOO5nkT/BqsOGpUW4y3+EJjr5cHJDOEs+kg=;
-        b=Rcee7ykayfwqOvm8SFdhflSDb/hhxq7SFK3pDYT2dBe/0XV0PWmOC9BFJSGPLEnnBf
-         hdDz983m8WVMgcm2acSFvlWb3m6wxA2Xe3vlyt/JwrB882NjRyE9XDljDVMUFTuuCHOm
-         vWhTWHpKxaPFSje+S9bnTTthXVaBOi4MV0gaV50kEPeZkUcN+q6v0wgqB+WWEtVyWXEy
-         GyLY4ANfFU+rybCeprlH7jJywZx15VjstEmEiscMa8G01K9QqYhiPbiEr2TVNmrq5aEi
-         LNX8ijPmroFQeus9SQBtlGbtBp3ytwRT6KIPo3grtJPwPQJ3SeJLdoA8l2TtqKKFK31B
-         OW+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWm9c8T1q/KXCSBxPvocjCSNgayMD0TOubN0628oNTUSCjBP4xZTIInyy7+MextXp61JF4t4TcaotK02ZmzF+A=@vger.kernel.org, AJvYcCXiLAMgg63mpFG2xXqF81BNwpbKUm4nzCfA15Bx3eaPqIussEVQg/q8ogFZ/fqC0KnGjq1zUPZ4PJs3lc8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFdf4oNzBxtNIRsLXhbOGz3Z6Q6sfB0zS1zxHcz1jnE3G+TwGR
-	t9EDAB5OWwoUQC+scn1m7S58o/K/kdtgu2XDNp1R7TbRJLuRrJ8nKJfHDJwH2ZSPJ8TAI5AIniT
-	PYRTSZJtCeWv5obkkQx6zqokS4wI=
-X-Gm-Gg: ASbGncseeFPuU/AUOqlSKII3r041gg5Dh6Yb1/7M1b1hyHMsr6/b+aIBlg9rf24xklx
-	eezRLiN1O4ntAc0GaWt/6yeev/Mu1OHx6haIhLsNmDgvEVXElOy0C6883IxXjLN+XqgS8CaTcjD
-	4coEuV5omLEM95W9TPXOlBl9ZvaaTYRwf4UWItGr6C
-X-Google-Smtp-Source: AGHT+IH4TnWs7AAWR6mSZJGzeTPP/IV0kwlekYfbQHJwIpvtqQS+Igon57DpTKr3TLAm0ffmLUtfQbT9lsn73QyqZdk=
-X-Received: by 2002:a05:651c:555:b0:308:eb34:103a with SMTP id
- 38308e7fff4ca-30b932f6d82mr16293581fa.28.1740758128998; Fri, 28 Feb 2025
- 07:55:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="C44xf099"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 663534427A;
+	Fri, 28 Feb 2025 15:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740758144;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0RnuSiKm23JcWF6Ab/jVuKak1mZScr6nXYjmv1TYGs0=;
+	b=C44xf0995MYpPrlcX0hzyrpkAsnPXj/LzWnxJyT5CJzvDEDCqeeP+hCobGvr6vrq8y5Dmd
+	vY+UiA5fo8swhT6DRWgEmAiiIHTxsrxRin5lPZuUmEhjvtl/u4XxBaUFmojIqmrX0BJoD4
+	7VgoJSgoyyCNr8k31F4c5WqzvboAisu6Ftabe8b3I28qzMUwztRn+/nl55p1FHpvIMCxh6
+	lOGEXl0VDgYNtfka6Rv6hKxSBj0jHI30lvSsFqSa/JpK6Zg615HnkxyooikSwsZjP3kuxN
+	bHMmdgwVWjyye4qZMHM4+iWNjeytT/pb7Bq9+C8WFJobKbVC3z17Z3BwXzkrog==
+Date: Fri, 28 Feb 2025 16:55:41 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Herve Codina
+ <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next v3 02/13] net: phy: Use an internal, searchable
+ storage for the linkmodes
+Message-ID: <20250228165541.04b6ba3c@fedora.home>
+In-Reply-To: <Z8HZJo9GE23uq5ew@shell.armlinux.org.uk>
+References: <20250228145540.2209551-1-maxime.chevallier@bootlin.com>
+	<20250228145540.2209551-3-maxime.chevallier@bootlin.com>
+	<Z8HZJo9GE23uq5ew@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228-export-macro-v2-0-569cc7e8926c@google.com> <20250228-export-macro-v2-5-569cc7e8926c@google.com>
-In-Reply-To: <20250228-export-macro-v2-5-569cc7e8926c@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 28 Feb 2025 10:54:53 -0500
-X-Gm-Features: AQ5f1Jr5a2e-MB7tbyFJrVeNND-UBub9gCfxNxl1epYDa4dtBuxZ-xEM_hkDrMo
-Message-ID: <CAJ-ks9k4rZdpL5dDfwMHuiKFdyYdY00YioYxdtsqszpcbhzjHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] panic_qr: use new #[export] macro
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeltdekudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtt
+ hhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Fri, Feb 28, 2025 at 7:41=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> This validates at compile time that the signatures match what is in the
-> header file. It highlights one annoyance with the compile-time check,
-> which is that it can only be used with functions marked unsafe.
->
-> If the function is not unsafe, then this error is emitted:
->
-> error[E0308]: `if` and `else` have incompatible types
->    --> <linux>/drivers/gpu/drm/drm_panic_qr.rs:987:19
->     |
-> 986 | #[export]
->     | --------- expected because of this
-> 987 | pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: =
-usize) -> usize {
->     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected unsafe fn, fo=
-und safe fn
->     |
->     =3D note: expected fn item `unsafe extern "C" fn(_, _) -> _ {kernel::=
-bindings::drm_panic_qr_max_data_size}`
->                found fn item `extern "C" fn(_, _) -> _ {drm_panic_qr_max_=
-data_size}`
->
-> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  drivers/gpu/drm/drm_panic.c     |  5 -----
->  drivers/gpu/drm/drm_panic_qr.rs | 15 +++++++++++----
->  include/drm/drm_panic.h         |  7 +++++++
->  rust/bindings/bindings_helper.h |  4 ++++
->  4 files changed, 22 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-> index f128d345b16d..dee5301dd729 100644
-> --- a/drivers/gpu/drm/drm_panic.c
-> +++ b/drivers/gpu/drm/drm_panic.c
-> @@ -486,11 +486,6 @@ static void drm_panic_qr_exit(void)
->         stream.workspace =3D NULL;
->  }
->
-> -extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> -
-> -extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_l=
-en, size_t data_size,
-> -                               u8 *tmp, size_t tmp_size);
-> -
->  static int drm_panic_get_qr_code_url(u8 **qr_image)
->  {
->         struct kmsg_dump_iter iter;
-> diff --git a/drivers/gpu/drm/drm_panic_qr.rs b/drivers/gpu/drm/drm_panic_=
-qr.rs
-> index bcf248f69252..d055655aa0cd 100644
-> --- a/drivers/gpu/drm/drm_panic_qr.rs
-> +++ b/drivers/gpu/drm/drm_panic_qr.rs
-> @@ -27,7 +27,10 @@
->  //! * <https://github.com/bjguillot/qr>
->
->  use core::cmp;
-> -use kernel::str::CStr;
-> +use kernel::{
-> +    prelude::*,
-> +    str::CStr,
-> +};
->
->  #[derive(Debug, Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
->  struct Version(usize);
-> @@ -929,7 +932,7 @@ fn draw_all(&mut self, data: impl Iterator<Item =3D u=
-8>) {
->  /// * `tmp` must be valid for reading and writing for `tmp_size` bytes.
->  ///
->  /// They must remain valid for the duration of the function call.
-> -#[no_mangle]
-> +#[export]
->  pub unsafe extern "C" fn drm_panic_qr_generate(
->      url: *const kernel::ffi::c_char,
->      data: *mut u8,
-> @@ -980,8 +983,12 @@ fn draw_all(&mut self, data: impl Iterator<Item =3D =
-u8>) {
->  /// * If `url_len` > 0, remove the 2 segments header/length and also cou=
-nt the
->  ///   conversion to numeric segments.
->  /// * If `url_len` =3D 0, only removes 3 bytes for 1 binary segment.
-> -#[no_mangle]
-> -pub extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len: usize=
-) -> usize {
-> +///
-> +/// # Safety
-> +///
-> +/// Always safe to call.
+Hello Russell,
 
-This should explain why it's marked unsafe, since it's always safe to call.
+On Fri, 28 Feb 2025 15:41:26 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
+> On Fri, Feb 28, 2025 at 03:55:27PM +0100, Maxime Chevallier wrote:
+> > The canonical definition for all the link modes is in linux/ethtool.h,
+> > which is complemented by the link_mode_params array stored in
+> > net/ethtool/common.h . That array contains all the metadata about each
+> > of these modes, including the Speed and Duplex information.
+> > 
+> > Phylib and phylink needs that information as well for internal
+> > management of the link, which was done by duplicating that information
+> > in locally-stored arrays and lookup functions. This makes it easy for
+> > developpers adding new modes to forget modifying phylib and phylink
+> > accordingly.
+> > 
+> > However, the link_mode_params array in net/ethtool/common.c is fairly
+> > inefficient to search through, as it isn't sorted in any manner. Phylib
+> > and phylink perform a lot of lookup operations, mostly to filter modes
+> > by speed and/or duplex.
+> > 
+> > We therefore introduce the link_caps private array in phy_caps.c, that
+> > indexes linkmodes in a more efficient manner. Each element associated a
+> > tuple <speed, duplex> to a bitfield of all the linkmodes runs at these
+> > speed/duplex.
+> > 
+> > We end-up with an array that's fairly short, easily addressable and that
+> > it optimised for the typical use-cases of phylib/phylink.
+> > 
+> > That array is initialized at the same time as phylib. As the
+> > link_mode_params array is part of the net stack, which phylink depends
+> > on, it should always be accessible from phylib.
+> > 
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > ---
+[...]
+> > +static int speed_duplex_to_capa(int speed, unsigned int duplex)
+> > +{
+> > +	if (duplex == DUPLEX_UNKNOWN ||
+> > +	    (speed > SPEED_1000 && duplex != DUPLEX_FULL))
+> > +		return -EINVAL;
+> > +
+> > +	switch (speed) {
+> > +	case SPEED_10: return duplex == DUPLEX_FULL ?
+> > +			      LINK_CAPA_10FD : LINK_CAPA_10HD;
+> > +	case SPEED_100: return duplex == DUPLEX_FULL ?
+> > +			       LINK_CAPA_100FD : LINK_CAPA_100HD;
+> > +	case SPEED_1000: return duplex == DUPLEX_FULL ?
+> > +				LINK_CAPA_1000FD : LINK_CAPA_1000HD;
+> > +	case SPEED_2500: return LINK_CAPA_2500FD;
+> > +	case SPEED_5000: return LINK_CAPA_5000FD;
+> > +	case SPEED_10000: return LINK_CAPA_10000FD;
+> > +	case SPEED_20000: return LINK_CAPA_20000FD;
+> > +	case SPEED_25000: return LINK_CAPA_25000FD;
+> > +	case SPEED_40000: return LINK_CAPA_40000FD;
+> > +	case SPEED_50000: return LINK_CAPA_50000FD;
+> > +	case SPEED_56000: return LINK_CAPA_56000FD;
+> > +	case SPEED_100000: return LINK_CAPA_100000FD;
+> > +	case SPEED_200000: return LINK_CAPA_200000FD;
+> > +	case SPEED_400000: return LINK_CAPA_400000FD;
+> > +	case SPEED_800000: return LINK_CAPA_800000FD;  
+> 
+> I think one of the issues you mentioned is about the need to update
+> several places as new linkmodes are added.
+> 
+> One of the side effects of adding new linkmodes is that they generally
+> come with faster speeds, so this is a place that needs to be updated
+> along with the table above.
+> 
+> I'm not sure whether this makes that problem better or worse - if a
+> new linkmode is added with a SPEED_*, the author of such a change has
+> to be on the ball to update these, and I'm not sure that'll happen.
 
-> +#[export]
-> +pub unsafe extern "C" fn drm_panic_qr_max_data_size(version: u8, url_len=
-: usize) -> usize {
->      #[expect(clippy::manual_range_contains)]
->      if version < 1 || version > 40 {
->          return 0;
-> diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-> index f4e1fa9ae607..2a1536e0229a 100644
-> --- a/include/drm/drm_panic.h
-> +++ b/include/drm/drm_panic.h
-> @@ -163,4 +163,11 @@ static inline void drm_panic_unlock(struct drm_devic=
-e *dev, unsigned long flags)
->
->  #endif
->
-> +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> +extern size_t drm_panic_qr_max_data_size(u8 version, size_t url_len);
-> +
-> +extern u8 drm_panic_qr_generate(const char *url, u8 *data, size_t data_l=
-en, size_t data_size,
-> +                               u8 *tmp, size_t tmp_size);
-> +#endif
-> +
->  #endif /* __DRM_PANIC_H__ */
-> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_hel=
-per.h
-> index 55354e4dec14..5345aa93fb8a 100644
-> --- a/rust/bindings/bindings_helper.h
-> +++ b/rust/bindings/bindings_helper.h
-> @@ -36,6 +36,10 @@
->  #include <linux/workqueue.h>
->  #include <trace/events/rust_sample.h>
->
-> +#if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-> +#include <drm/drm_panic.h>
-> +#endif
+That's true indeed, and it seems that's already the case today (there's
+no MAC_800000FD in phylink for example). It seems to me that NICs
+with very fast speeds don't care at all about phylib nor phylink...
 
-Why the guard here?
+So yeah this work does not address the complexity of adding a new speed
+:(
 
-It'd be nice to have a comment here explaining the atypical need for
-this include.
+To solve that, we could consider some macro magic to define new speeds
+with an associated LINK_CAPA, however that's quite the overhaul.
 
-> +
->  /* `bindgen` gets confused at certain things. */
->  const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN =3D ARCH_SLAB_MINALIGN=
-;
->  const size_t RUST_CONST_HELPER_PAGE_SIZE =3D PAGE_SIZE;
->
-> --
-> 2.48.1.711.g2feabab25a-goog
+Do you see that new enum for link_caps as a blocking point for that
+series ? 
 
-With Andy's comment about extern addressed:
-
-Reviewed-by: Tamir Duberstein <tamird@gmail.com>
+Maxime
