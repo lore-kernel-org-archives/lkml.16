@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA36B2755F6
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:57:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42885276044
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 19:57:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740772632; cv=none; b=CgwVjPIkGYIDhJByso3V/qGd/zqR06XYlPItedzCQ8KHqSZRyNjJFr55gZYGHAZg6sba/g3CwxTUW5u9y7oqOQ9vgmMKgW1vcqrIWu2QQVHU6ZDddy3ZAw49gR2eeVgMZnnclJeICQOO9BZ9FPNjDvIB5Fcd0zatpYjARFr0oNI=
+	t=1740772637; cv=none; b=rfJIYNQH1yMIt9YdBDmLGHliMpybFCwtCA5Y1gIywI4uWiHbjhy4A28ABujiag0R8/bzvb/jnBuQGV9RsQ0yOsnEj7+GIh2oLC+GqrkIqr1rmt7quusxbMjIG2ePoMsMIZHuB/d9LjhUfbc3bjWNEA0Cs+Kq0hmQuYKR5mf0V3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740772632; c=relaxed/simple;
-	bh=pebr1TXgGFm56+12yhdg/apHD43pzKh/GAy8OJlUNUk=;
+	s=arc-20240116; t=1740772637; c=relaxed/simple;
+	bh=btJbuDni26MIH0FoucvlP3QJeAkilzIT3P9E1Yas0KU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M32O/a9feefZwsCseoHl6XylHydMerDgs3uIRfoydOI6oiNliwYKQJ0Gd1xta4SVUSZ95U9BW2OZajVTT0THUHUNjGfI7GuIUpOWlfDNWyemgxDYdxjeEEaFbKG5bZZxvlBkU+/6vQJwWJsjMY0LJOcOoM+DVNEEkWqi9vVwEi4=
+	 In-Reply-To:Content-Type; b=tpWrK3FgUE3p0Xm+cgNjSDJuPbNjQHOP+GnoXOllQe+UPPhDsmodSvDeaxQRt0q7b9JufUWNapHmYuGWHuUEAJEHXgg19WE6cegw6DQBHqZV7KKCtTKObkiu5gtayy31qUfgzKs7W4VPX6DMZRulnfwHImqXMk0pndy1hKZtsRs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 623AF1515;
-	Fri, 28 Feb 2025 11:57:25 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4C47176A;
+	Fri, 28 Feb 2025 11:57:30 -0800 (PST)
 Received: from [10.1.197.49] (eglon.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0E13F5A1;
-	Fri, 28 Feb 2025 11:57:05 -0800 (PST)
-Message-ID: <0b410f04-4711-4e4c-a275-e823038ebfdf@arm.com>
-Date: Fri, 28 Feb 2025 19:57:03 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9526B3F5A1;
+	Fri, 28 Feb 2025 11:57:10 -0800 (PST)
+Message-ID: <cc14a8a5-e2d0-4c10-b3b3-d44e061e1a7d@arm.com>
+Date: Fri, 28 Feb 2025 19:56:21 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,8 +27,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 23/42] x86/resctrl: Add resctrl_arch_ prefix to pseudo
- lock functions
+Subject: Re: [PATCH v6 19/42] x86/resctrl: Add
+ resctrl_arch_is_evt_configurable() to abstract BMEC
 To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
@@ -45,50 +45,57 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Shanker Donthineni <sdonthineni@nvidia.com>,
  Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
 References: <20250207181823.6378-1-james.morse@arm.com>
- <20250207181823.6378-24-james.morse@arm.com>
- <2acf1b5b-1ada-4b52-a6af-8d8441fa66dd@intel.com>
+ <20250207181823.6378-20-james.morse@arm.com>
+ <bbbfd020-ee0d-42db-b055-f4056d63977e@intel.com>
 Content-Language: en-GB
 From: James Morse <james.morse@arm.com>
-In-Reply-To: <2acf1b5b-1ada-4b52-a6af-8d8441fa66dd@intel.com>
+In-Reply-To: <bbbfd020-ee0d-42db-b055-f4056d63977e@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Reinette,
 
-On 20/02/2025 00:53, Reinette Chatre wrote:
+On 20/02/2025 00:13, Reinette Chatre wrote:
 > On 2/7/25 10:18 AM, James Morse wrote:
->> resctrl's pseudo lock has some copy-to-cache and measurement
->> functions that are micro-architecture specific.
+>> When BMEC is supported the resctrl event can be configured in a number
+>> of ways. This depends on architecture support. rdt_get_mon_l3_config()
+>> modifies the struct mon_evt and calls mbm_config_rftype_init() to create
+>> the files that allow the configuration.
 >>
->> For example, pseudo_lock_fn() is not at all portable.
+>> Splitting this into separate architecture and filesystem parts would
+>> require the struct mon_evt and mbm_config_rftype_init() to be exposed.
 >>
->> Label these 'resctrl_arch_' so they stay under /arch/x86.
->> To expose these functions to the filesystem code they need an entry
->> in a header file, and can't be marked static.
+>> Instead, add resctrl_arch_is_evt_configurable(), and use this from
+>> resctrl_mon_resource_init() to initialise struct mon_evt and call
+>> mbm_config_rftype_init().
+>> resctrl_arch_is_evt_configurable() calls rdt_cpu_has() so it doesn't
+>> obviously benefit from being inlined. Putting it in core.c will allow
+>> rdt_cpu_has() to eventually become static.
 
->> -static int measure_l3_residency(void *_plr)
->> +int resctrl_arch_measure_l3_residency(void *_plr)
->>  {
->>  	struct pseudo_lock_region *plr = _plr;
->>  	struct residency_counts counts = {0};
->> @@ -1205,14 +1207,14 @@ static int pseudo_lock_measure_cycles(struct rdtgroup *rdtgrp, int sel)
->>  	plr->cpu = cpu;
+> Please replace all instances of mbm_config_rftype_init() with 
+> resctrl_file_fflags_init().
+
+Fixed, sorry I didn't spot that.
+
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+>> index 7d14d80b3f94..43a9291988d3 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/core.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/core.c
+>> @@ -831,6 +831,21 @@ bool __init rdt_cpu_has(int flag)
+>>  	return ret;
+>>  }
 >>  
->>  	if (sel == 1)
->> -		thread = kthread_run_on_cpu(measure_cycles_lat_fn, plr,
->> -					    cpu, "pseudo_lock_measure/%u");
->> +		thread = kthread_run_on_cpu(resctrl_arch_measure_cycles_lat_fn,
->> +					     plr, cpu, "pseudo_lock_measure/%u");
-> 
-> checkpatch.pl does not like this extra space that sneaked in.
+>> +bool __init resctrl_arch_is_evt_configurable(enum resctrl_event_id evt)
 
-Looks like I missed the step to re-check that after the rebase.
+> I know resctrl is not consistent in this regard but I think that it would improve
+> resctrl quality if new additions follow guidance from Documentation/process/coding-style.rst
+> (see section 6.1) Function prototypes) to place storage class attribute
+> (__init) before return type.
 
-
-> With spacing fixed:
-> | Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Done.
 
 
-Thanks!
+Thanks,
 
 James
