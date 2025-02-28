@@ -1,523 +1,226 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0024c301.pphosted.com (mx0b-0024c301.pphosted.com [148.163.153.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEE01F4C83;
-	Fri, 28 Feb 2025 17:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740764044; cv=none; b=Gxc7S/BomB1gInby4dlYU0kdDbhmUJq0y9/suZUt83BU4XkjB8kkrQ9pKF/liw6o/gOgricQX3aKS/non96fpYqsg0JUdzbUJzON7ptT4Bf+JyeYIef8jMAivuognEeagg4E806e+vGngEXAE1vnxvtwO5pF1QsHnGI5uPSg0fI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740764044; c=relaxed/simple;
-	bh=ga7vifj5ctJiMEimouIoEeSZP+WD4Qt8UQwAuS8nLSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUHOO54jOmE9i38LOridJtGi0up29VW4k7mKJCDeFByN5BUBo9yfGsdytBOPSgyzMzqjuZYmJQnQJ+Xsi6fQ5BHyDO0VpA0TCmfOLLm9L3DYhML98ZUU7xftMS+dSB7Jv3V0/ruAR4OxWUNqaVTvVUANfkuR76TeaEVOb8AzuvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C4fL8kYw; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FC5276023;
+	Fri, 28 Feb 2025 17:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.153.153
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740764051; cv=fail; b=T+PgRRmyC1OtxcSnni89uz5ZlFW3/HB30285BvWYad8QJ92KpEOe0MV2yXBoI64ZpLPTs5B6xNPP/UL2/TyJWoUIjv2fJ2qZBGkEzFvSh+A2jbt9r/ztTC/Jd0u6shTqEeLPTRoPYBhl3CSZieIiERWvSRTIhpc8gFqEvaLJNf0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740764051; c=relaxed/simple;
+	bh=mGDVwJ6XyqNwXA1CMoyo4Ur45INoV/fvuRnly0t+dPI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jF1XsuottxLQ1FCmRZvMnl7vfQqju5Y8pv0j8Xz6TNcHkiX6025pYY8mohvxmJUGrlxCk5UGPzO0WNnLD7dMxSfg8stsswbjPgkFKmaGF6JemH/0mhII49K5JCBwA2PhxIMO370zuEv8gd3cupe1GGTtU01g9lQGgagXUOcdeUk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com; spf=pass smtp.mailfrom=silabs.com; dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b=LwV91hFA; dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b=SMzfCDCI; arc=fail smtp.client-ip=148.163.153.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=silabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=silabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4fL8kYw"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-390ec7c2d40so990479f8f.1;
-        Fri, 28 Feb 2025 09:34:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740764040; x=1741368840; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=23YyeJYoDnTiEoCT9jrABPEwXgQJdKRqvAUOqdnjfw0=;
-        b=C4fL8kYwUz7pNiyIwWFJdTTPVk0j2154JL7EvvVepUTUiGcGdpk+U5un37rDp3OFU/
-         HAd63MwhcPgl4V0EzxRWG9R7hupLptOVz+6hoBDWCCjxwQti18WUAU8MemcRDqnD0cKk
-         t2KrViUSWpt6ndm9ORwpmuNHVcxBZP4FKhVCT0nUTurlIiiJlPfBPQzgYQb0sV0bt43p
-         E3iRWDfz1x3HGt+KO6JJdd3kTaJIrb8aazM7z9DKPZ9ttmZVoWX3F/bDyq2y7Rji3Bpn
-         +dt/Zq+JBSc23Fk0NH3/sLfJ/UlXUsntjku3D2XHZuhl86T850FgOMxBqraMOVvVuC3S
-         Ccgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740764040; x=1741368840;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23YyeJYoDnTiEoCT9jrABPEwXgQJdKRqvAUOqdnjfw0=;
-        b=Yy1T/lIsJFni/Vp6Orxg7Ss3A5/QD+vaOn+SnhlNicIfphLH23Muj025ynu42v3ogn
-         /TQm3UIMxZdCMVjii61wSWcuyQW4VD/T5SSqiF/KCYYIaTCpKpN3hDoQR6GjSyGmYMe0
-         nOabYizoRwP5rgVxC0WOQeVGie3HhsFjFAqklHH/lmpXRqg+tRA7lIOE71YlRU9+JHaE
-         5/MN+MPngsFIj087kkRblWV2TPPEkEVtZDAAkVAO5UiH7Xy9W/ZcozuKMZb72B115MJy
-         31HGLxQDwBL0sCwisZR3sg8gQeuNgPwXgRZ9tCsFcBlPWYHLW/XWZ4VKe1FP2h2HY4U+
-         MLKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWnak1dWZq3M7TG98ngdVvCufYuqGiJ8LyDpn9u6iA2M7gh3eT8EtMx4uFZOZFhSMtDEN0qvvE5V1MhXd8=@vger.kernel.org, AJvYcCXsHMkkHnJ2NE44I7jyaY5fq46Np5+4tGcXG1VnqGp172sw4F7sYg6Mdg8QFzKnI3okuuB2TzqZlZHhEbj+FelvQMVexGSV@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYrY1/Kub2LB8kmenquqnU20q9NMUUq8LKn6YWI5E/ce2/w2B5
-	e04MAY95xb8lvVo0JWN4zRQqnuZL4KrYwB1aK+Qu18V8zq9TsKks
-X-Gm-Gg: ASbGncv8Jj3MmiMbWv5jNmGs+67djV6MmBZIrqrhowwh7Tv4fUSTLIYbWEyzDQOfxm8
-	qWeiRwL2rjGCWO64sjLcesfRL8vOP9V9n962f8ahNqZDuPUTtv9WYV72tCoAqRp/JCL9rOxs23n
-	sonVfMSh1teSocmj8WY2jK2Fd19AVbOQVrzLwWr/fHMb2HpjacX8PneXsyjFt6cdTvRa5bbxTjt
-	guOHj9kUqM9jszyeHg7hWkQQvLgJ0xMaGJ47WiWXstgOfjcXHiYlcvgcdcqyizZce4LAbkMAVSW
-	M3WunbDjNJHLfHuhVkS9WU7Yw2w=
-X-Google-Smtp-Source: AGHT+IHTK8/RcRphtxwyeFz/0jFdhUlC7OzjWAWrhnu193+Bz1EaBcdxtyKUxLwDSrD1z7RRl2IMkg==
-X-Received: by 2002:a05:6000:1868:b0:390:de58:d7fe with SMTP id ffacd0b85a97d-390eca40e2bmr4017603f8f.51.1740764039886;
-        Fri, 28 Feb 2025 09:33:59 -0800 (PST)
-Received: from localhost ([2a00:79e1:abd:a201:48ff:95d2:7dab:ae81])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47b7c4fsm5839637f8f.52.2025.02.28.09.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Feb 2025 09:33:59 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:33:55 +0100
-From: =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To: =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc: Kees Cook <keescook@chromium.org>, Paul Moore <paul@paul-moore.com>,
-	linux-security-module@vger.kernel.org,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	Peter Newman <peternewman@google.com>,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [RFC 1/2] landlock: Multithreading support for
- landlock_restrict_self()
-Message-ID: <20250228.b3794e33d5c0@gnoack.org>
-References: <20250221184417.27954-2-gnoack3000@gmail.com>
- <20250221184417.27954-3-gnoack3000@gmail.com>
- <20250227.Aequah6Avieg@digikod.net>
+	dkim=pass (2048-bit key) header.d=silabs.com header.i=@silabs.com header.b="LwV91hFA";
+	dkim=pass (1024-bit key) header.d=silabs.com header.i=@silabs.com header.b="SMzfCDCI"
+Received: from pps.filterd (m0101742.ppops.net [127.0.0.1])
+	by mx0a-0024c301.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51SDK2j2012530;
+	Fri, 28 Feb 2025 11:15:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pps12202023;
+	 bh=mGDVwJ6XyqNwXA1CMoyo4Ur45INoV/fvuRnly0t+dPI=; b=LwV91hFAnyd9
+	5V39ac2deVuikZxP+gnFvNi5lrMrgXYGXNQedam9iXx45i77FIPu/z8ZsNzNrsyi
+	AqNGMYTPkzl0ynKnBCetgHAha0QQ4k13e8wYjCBqcdZ8yytMTh5HpKSwFoh5MVKo
+	/R00CpELWEyN+eK5uKyBgPe/EbOsqrkQS4Vc3dS5zRszo0pUeGWqOrHYA6T75VoC
+	zvwt5V9GC6veP0VuEKh410MIRkHow3cS7GR7phzyCYOTswVsR65VLfRqTcFZdj3R
+	lZGNRyvokCm7EXgJLFBq5qWiO3L9dUfEiCgoIp2fbGXLcgfyl+bfAbuOVd7EKVjO
+	DoiyfTPU0A==
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
+	by mx0a-0024c301.pphosted.com (PPS) with ESMTPS id 4539fbruje-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 28 Feb 2025 11:15:02 -0600 (CST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p9PxtQZWMiv75dZ6pm0uG5hXzBVR/pUUX5g6vYoDg3oWb6N5+9IwpxNKRBCUdBObMNQVqyI+XVEZHHVKK13JYXyr+xvAAWGD+XCxJ9lpQUofhsRz0yrQH7dgeVknanFnT8z2Ce9ngTdl9An8MHv5V5DTbm74yfu6MwllPAxnu+FEMPOygrLSt5+b9rU0ScLTB+lcbUabmTut8PWOK4QaX7mvd60C50dgNjnpHETUcDwbcmsb3oYZ1123GNI4s9SOCFhR+QfUo9tG6egjGTQGJ0IXqyuCmws9VA6Y4+Wf46FXRvnzw38kpfv9jqn9I3QHm6GHSFcaQru1qqM6wewMjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mGDVwJ6XyqNwXA1CMoyo4Ur45INoV/fvuRnly0t+dPI=;
+ b=WMHoA1DIjkDdNzvXTb2WvskES8VXFYL7cd+zkzlmDWUGSW6YWuLIE8TnSLlUslb9CLXIWiXBweNW2/MHmfklwasqR+UlP1tdEJK5VHmVMBrVg8KB6NpYFR77E48qU1LM3/CMeSqBLn4sb8DAl3VB2KkyPr2+z3WPKY26pQsaZaVBEs2fpZjs8R+TPWkoU1Q5Wxg0SpPKl8X+18EqnEnkMo93rNXONZ8f1YSPA/fRUd2pWPIPmEUCMZf0psfk9z8ouSi9jRtU6j5TOC2zDBNOkHZ1irgi87F5CnAalpmLZACcGNgrIQNpADcZ3IGiE9lfsYj0vGmMbq8cZ+b4MfOIUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=silabs.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mGDVwJ6XyqNwXA1CMoyo4Ur45INoV/fvuRnly0t+dPI=;
+ b=SMzfCDCIGWNcti3Z0LpxmUc/Yq7efwk3WST7qvOs9f2ITQxhWsLWGFbiIBvyp7/lfHVDEurlnGp8o/Q9taBusH5c6lPxNxTgoraekFpust3YrJ1bHkBC6CkyFPGAI1wf4ekCHjUPsCaO9PCeEKSjzgnuVHKFuL7Yx83Y9a30oqQ=
+Received: from IA1PR11MB7773.namprd11.prod.outlook.com (2603:10b6:208:3f0::21)
+ by SJ0PR11MB4861.namprd11.prod.outlook.com (2603:10b6:a03:2ac::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.22; Fri, 28 Feb
+ 2025 17:14:56 +0000
+Received: from IA1PR11MB7773.namprd11.prod.outlook.com
+ ([fe80::e78:8cb8:9f49:4005]) by IA1PR11MB7773.namprd11.prod.outlook.com
+ ([fe80::e78:8cb8:9f49:4005%7]) with mapi id 15.20.8489.019; Fri, 28 Feb 2025
+ 17:14:56 +0000
+From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>
+To: linux-wireless@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Kalle Valo <kvalo@kernel.org>,
+        linux-devel@silabs.com,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jerome.pouiller@silabs.com>
+Subject: [PATCH 3/5] wifi: wfx: allow SPI device to wake up the host
+Date: Fri, 28 Feb 2025 18:14:39 +0100
+Message-Id: <20250228171441.109321-4-jerome.pouiller@silabs.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250228171441.109321-1-jerome.pouiller@silabs.com>
+References: <20250228171441.109321-1-jerome.pouiller@silabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-ClientProxiedBy: PR1P264CA0058.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:102:2ca::12) To IA1PR11MB7773.namprd11.prod.outlook.com
+ (2603:10b6:208:3f0::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250227.Aequah6Avieg@digikod.net>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7773:EE_|SJ0PR11MB4861:EE_
+X-MS-Office365-Filtering-Correlation-Id: 62684c77-4fe0-48f4-3553-08dd581b6c6b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?clppcnB2ekdPTVloMVBxVElEY1I5R0tucDdvdGpaNDAxb0ltQ2lkdml6WG9M?=
+ =?utf-8?B?bVhGMGFNS2RSWnhFamZTeHFPMlg4Q0t2aVlFcXY3VWVpMks0V1hya0xxZ3A3?=
+ =?utf-8?B?cXVVTWJXQlRUQVpudnVFRWVwZG9FUS9rVUVGblZsVXJKOWNpTTdLZk9kVU9h?=
+ =?utf-8?B?WUZiaUlBSzIxSG16S2NZREZKd28ybTdWRnN3K3p2eWVDd2djUHN6OFBJQlNk?=
+ =?utf-8?B?VEZmRGtGUm1aSW1ZVDQwZVRJYzBLQXdwSjgrNU1lbXIrSWNwL29sbjM5OWd6?=
+ =?utf-8?B?MnBlNFNXMnZHUG5PelNGT3ZLbEhONnowUnQ4dWtHVERaZURlYmxaS2lLS3RW?=
+ =?utf-8?B?NlNyQk0rUVhZOFE2UkdxQWJRVENld3FpVVo2OHQ1cUdSRjhpa2owa0ZLZkQv?=
+ =?utf-8?B?dmJiQjdJS2ZXMjFDWm5kaktnTWRkL1dBc1kvcWtVZnpxL1kyUmdpSVhQbEk1?=
+ =?utf-8?B?cDNicUpjU2d0STJLM1lxTWJWWVJtLzRRQndaV0NBaEIvVXZPdG1VRjVOaDRh?=
+ =?utf-8?B?Z2FYY05Sc1F1L2t0TXZ6K0lLZTJsNmx2NERsK2RmVlgzVmFvTDc1cVFYZ0xq?=
+ =?utf-8?B?ZDVqamU3MEhXQWw3cldIY0kyMDBHNHRGTUpxUzljODQrL3ZWd3NPeCtCYlFh?=
+ =?utf-8?B?N2Jrb3VJYmVXL3BuMTVkL2praDZmZ3k2VmxxcE0rNWJhOThhTC9PNG45dW5W?=
+ =?utf-8?B?YjQxTHltemtyVFpjQWw2Zlo5QmM0WVB4V2l0MGpNQmFTVlBRZXp3eHB6ajBK?=
+ =?utf-8?B?ZUIwMWdXcHBISkZLbkVLWGc0Sytlakt3ajgwbkZ2U2srNVhuYnNTbW9KaTBM?=
+ =?utf-8?B?Q2VzYnZIM0E1clRXNWdNUXpVMUZ3UGJpUUlrN1ZqQklCQTJCK2FtMzhtaTJV?=
+ =?utf-8?B?RWNkRVZRakQ5aDdkbjNLV3poOUk4NWgzSElIT01pVzJCZGZzNGEzYVJ1QUlt?=
+ =?utf-8?B?R28vL1M2VTVoTHBpbGExb1dYU0YzbkNHcUZKNVZ5VE16ZlhUNzNtaWVlbDAz?=
+ =?utf-8?B?OFJVMXdQWlhIYXBXQ2ZFcnJFdXhnSU83UzZsTEc1bktKeDh4a1pKaXJIU1Q2?=
+ =?utf-8?B?a2w2dGNiNkhyRk1FZXhSMGdqREdRVHc5blIramgrVnVXSU9pZ0dLQXdFUmFz?=
+ =?utf-8?B?WTRGNlZwZTJSSitEWklaaHBTL0xBc3Y5WU1Jd2NFV2pXLzk5ZTZubm01eUJh?=
+ =?utf-8?B?R2VkMXMxaGM4UG1lZHg0b0JCVlFnMW9IWkpjb2lLK2ROMUczZ2JxMHZLbUlQ?=
+ =?utf-8?B?YzZGZzJZb2s2L0d2NEE1L0YxcWdtb2RIVTF6RG1ySldYazliZzU4TDYrSnNS?=
+ =?utf-8?B?ejdzSXlweFhZalorVE5GakJob0xaa2RyU1lNVzNTdUxxajBhSnVBdURNUVdE?=
+ =?utf-8?B?bFJsUjFMUTVZSmh1ZEdEZ2pYM1g5c0FnMlMyb0pwQ3prRVBPN2lIdSs5RnV0?=
+ =?utf-8?B?WjNmMnpqZmk3VjZwQjFDS0tYdm92TjlyRTdVd1RYUUFQYVFIUE5WeHl6eDlB?=
+ =?utf-8?B?M2dSWnhlTm1tNXRzN0lodVJsRHpZRFFjUGxkM2dzVGkrRlU2RXQ0RGZPVTgx?=
+ =?utf-8?B?SmFFWVA1MXFpclJDMDVwTms1RnFVdmhaaDRtK3dpc0Vxd2MydTFXQ01jQ0ZT?=
+ =?utf-8?B?SG5HZFl6SUxuVHNibWJ4RU8zYVBlVzJOWEd6UFZ0bSttQXA5MUJwOVlHL29s?=
+ =?utf-8?B?czlneWhwSHV1VmVQa2VKY0tzUVE4NmE4UWk5QWd5c25BS0tUbytuU3lpd09z?=
+ =?utf-8?B?dVdvUlc0Z2E1cDJKbjhaaW0rMUJab3I5VWtFOHE0aktPRkhoTWwvanFzcmlj?=
+ =?utf-8?B?c2kzRVpPYXlFQU43dW9BOVdFMFUyQ1U5WUhQdG1mSko3OGNNOUtLeVlnSEZZ?=
+ =?utf-8?B?ZW9qTlpNK0FwbldUbjM5VWVXaG5INXEzUzY5ei96ZkxwNFYzZTYzSXU4RE5I?=
+ =?utf-8?Q?wfUJWwNcSBizmIo32Fe/BfN4jBprkIMg?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7773.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QThJMjhnSWVaV3JiTlFkNktjWkJIOTZtdWZEbzBobms4Q2xTUmxoOThLQkhI?=
+ =?utf-8?B?Vnk0VStNd0g1cU9Ld1VjQWc4NVJTdk4yYk5Yc3FRUGFiWnN2cGhrYXpNSFZM?=
+ =?utf-8?B?aHcwYm9tMmpBcVdhcDRaMERUZnhab0lSbXJXM2wxZW5aRytVRmIvZ3lNWG1K?=
+ =?utf-8?B?VXpwK0xCeVpmeTFBL0REazJENFdZTjEzNDFycWtkb3ZJcXRrTlRmUWQzUThQ?=
+ =?utf-8?B?R3RFNXRyT3BVRW14cUc0d0VVeVJob1dTTzBudE84V3BFTWZmRU1NSUgvTGUz?=
+ =?utf-8?B?Y1RKQXBVYzVCVEVKOW1tWExsMFZZNXpZUVE2T0xtb1NaSFdSUlNoY3JyRG45?=
+ =?utf-8?B?Y1BPS1duUzkxYUJhZ2h6dWxudnduam5xRllxWndLS2NUaW4vYzJUVGxnOHhD?=
+ =?utf-8?B?SlppZFo3cDlLWjJ0MUlyQStOWWVhUkhhMDVON3RhY0dPSDB1bzJuT1hzY0xP?=
+ =?utf-8?B?a1p5dXY4N2FGUXJSay9GaWx4eUZxd1FzeWIrZkxsNmg0ZzlwVEwxL204R3Fl?=
+ =?utf-8?B?VDFBdDIybklWcEhPWmU1dEdCTnQrcXNYWDhONitpVzlBQUQ5QkR5ejFTUHVn?=
+ =?utf-8?B?c1dQZTJwd1NudWc1cDJ3aXR3Uk5hYXVyYXRCbFBLcGl1SEhQanp1bVUwZjNV?=
+ =?utf-8?B?OEJrVWNxV2RBQWd4bktQWWdaejljR01UZTZhVTlvUTFReGxTMHNEb1VxaWsw?=
+ =?utf-8?B?WDN3ckhPWS8wcVJHRkZuN1ZUemNZLzBpUFE5S3FOTkZ4cW9Dc3ZFWGVReElw?=
+ =?utf-8?B?UDc0MXlxQzVncU5YNEtJNloxcG52Qjc4UEdiYmhZYWR1dTJPL2R5QW5qQkNS?=
+ =?utf-8?B?eVdUVThrS0NDc04vSDFPbjVOZ3RVMC9pWDZhUXpVdWJtdmIxWnNYekRNUlZF?=
+ =?utf-8?B?QmVZR2kxVDNvSVk0WkFPU3VVMFlETHpUK0VqaUVPSWlpVUk2eno5WkxjR0k1?=
+ =?utf-8?B?Q3hHSnZkT3RoM3NGeU5LNjJka2Y3NzczcXd3UTFoQW95Vmw2ODB2Szk2QXZp?=
+ =?utf-8?B?YUJ6SlhpQ2JoU3p4d3EvRHY1YTczMUp3WHZaM0R2bWlnNzJJS3laeEwvdjNU?=
+ =?utf-8?B?a0RXUmdzS3gxdURGS015ZUtVYWE3Y0syRS9Bc2RESE9LL2k3SWRZeWtsaWhT?=
+ =?utf-8?B?M254QUxmSlJXeVQvMk5kTkJudnA4ZG4rVVpzS1ZGVUlQRThzb0d5SjNjWDZK?=
+ =?utf-8?B?dXluWld0N0s4Z1dwbWVFMHVyWFg0V3VYb09NWldvbm9iNUlEQUl0dUZmVGxS?=
+ =?utf-8?B?TnNrWVF3UHM2SWcwcUl1UDJJVlQ1a205Q0p1Q0NwRUpKSFVYbm00THlNSXZM?=
+ =?utf-8?B?cGh3NGxvVEJoVVNsb1RiUUl3bWt4NExBVjQ5RUpBMXFtcDRPTGdVUkxjTisx?=
+ =?utf-8?B?d1FFRVpSWEsyK1pwd3Zyc3U4TENmbUxxUVIwT2dYZFZKT1lLbFB2bHVrQ3pJ?=
+ =?utf-8?B?Vks1d0pPcHQzR0liMWtmMURMdmF3SGJ6dTZKOUdsaTlrNkZ4dUZkNDBieDJr?=
+ =?utf-8?B?U2JMOEhwNytSc3dQeWRVMEtvWVZKZXhzZDB6UFlIMVNGcUV2TEJwVllQYUVh?=
+ =?utf-8?B?V202anpxT0wwSFg3OW8zbnJCTi90eHhPYm9lUkF1SzVlbmFkYmRrTnJwL0hL?=
+ =?utf-8?B?T01Va3RHNTVMYytpeHQ4cVFadHFqSE5aNGxYdkxuUS9IZFVtZ1pUeFN3Uks4?=
+ =?utf-8?B?TGJyRjFucWlkdmsvS0ZxSDl4ajBtVlpDZ1d1OUFMbjR4cHovM2Z6QjErVFpp?=
+ =?utf-8?B?aCtHaERSdk85ZlVxdjJNa1M1VmMxMk8veHE1ek52ZU02QWQydXlPbnJnVlJX?=
+ =?utf-8?B?czh0ZHF2azFQdTR5MXZ2czRMbTRYbWhrQVAyNjJOSlRFZDZwTjhjcWZ3Mk1L?=
+ =?utf-8?B?cUxRRVd6YmVaS3hNWmtobC9kcStVYmFLMVpXcTJWMXFRaVRHTnYrSjVMakZi?=
+ =?utf-8?B?Q0M0dUpVTXhrVldTaERkN1JLZ1JoSmVvVkdEc2U1QXlsYUV4U3pxZjZFZmxn?=
+ =?utf-8?B?NUtibkszd2NBeTBLS1dGZ2dnUFkvL1F1dWhOVGZydXBvWDBEL3FuTFF5VlY1?=
+ =?utf-8?B?NHUyUzJjSXY4b0xQOG1NeVVxeUlRSTRPK21zSXBYMmx6Yno1K1BrUUNxZGxX?=
+ =?utf-8?Q?ZPfAjHYKXKBEYqLevE4u3sCPW?=
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 62684c77-4fe0-48f4-3553-08dd581b6c6b
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7773.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2025 17:14:56.5375
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O1VrvFU56SoiRVSIa5Xd6sOpyd0hIJy+opa30Q30lK1xIwoW0tnV9hBFGi1fMt02NJfUD8sRhhSy2ZXaY8PIFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4861
+X-Proofpoint-GUID: 7Q8aN8R_2U8TmTfEelB1oU4H4kkOAzAd
+X-Authority-Analysis: v=2.4 cv=BptnwZX5 c=1 sm=1 tr=0 ts=67c1ef16 cx=c_pps a=LxkDbUgDkQmSfly3BTNqMw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=T2h4t0Lz3GQA:10 a=M51BFTxLslgA:10 a=i1IsUcr2s-wA:10 a=2AEO0YjSAAAA:8 a=y8Il-FFEXRI_uRj3CQYA:9 a=QEXdDO2ut3YA:10 a=SRgmj7pJOxBPWxSGtsjD:22 a=d-TXpq5eZF0AJmg2YLt_:22
+X-Proofpoint-ORIG-GUID: 7Q8aN8R_2U8TmTfEelB1oU4H4kkOAzAd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-28_05,2025-02-27_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=875 bulkscore=0
+ lowpriorityscore=0 spamscore=0 impostorscore=0 mlxscore=0 phishscore=0
+ clxscore=1015 adultscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502100000
+ definitions=main-2502280126
 
-Hello!
-
-Thanks for the review!
-
-I'm adding David Howells to this thread as well.  David, maybe you can
-help us and suggest a appropriate way to update the struct cred across
-multiple threads?
-
-On Thu, Feb 27, 2025 at 09:53:11PM +0100, Mickaël Salaün wrote:
-> On Fri, Feb 21, 2025 at 07:44:17PM +0100, Günther Noack wrote:
-> > Introduce the LANDLOCK_RESTRICT_SELF_TSYNC flag.  With this flag, a
-> > given Landlock ruleset is applied to all threads of the calling
-> > process, instead of only the current one.
-> 
-> I initially though that we may pick another flag name but I now think
-> reusing the same name as for seccomp would be less confusing for users.
-
-+1, under the assumption that we implement a "syncing" behaviour here,
-I also think that the name is good.
-
-
-> > diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-> > index a9760d252fc2d..63792a6cde5ca 100644
-> > --- a/security/landlock/syscalls.c
-> > +++ b/security/landlock/syscalls.c
-
-> > +static struct cred *
-> > +landlock_prepare_creds(const struct landlock_ruleset *old_dom,
-> > +		       struct landlock_ruleset *new_dom)
-> > +{
-> > +	struct cred *new_cred;
-> > +	struct landlock_cred_security *new_llcred;
-> > +
-> > +	/*
-> > +	 * Similar checks as for seccomp(2), except that an -EPERM may be
-> > +	 * returned.
-> > +	 */
-> > +	if (!task_no_new_privs(current) &&
-> > +	    !ns_capable_noaudit(current_user_ns(), CAP_SYS_ADMIN))
-> > +		return ERR_PTR(-EPERM);
-> 
-> This should only be done for the calling thread, so just reusing the
-> existing code from landlock_restrict_self().
-> 
-> If the no_new_privs property is set for the current thread, it would
-> make sense to just set it for all other threads once we are sure we can
-> sandbox all of them (see seccomp_sync_threads).
-
-(See discussion below regarding NO_NEW_PRIVS)
-
-
-> For this we need to have two for_each_thread loops: one to check that
-> the current thread is legitimate to sandbox all the other threads and
-> make sure no error could arise (e.g. memory allocation), and another
-> loop to safely enforce the restrictions if the first one was OK.
-> 
-> The handling of the following prepare_cred()'s failure is the main
-> issue, but see my proposal below.
-> 
-> > +
-> > +	/* Prepares new credentials. */
-> > +	new_cred = prepare_creds();
-> > +	if (!new_cred)
-> > +		return ERR_PTR(-ENOMEM);
-> 
-> Instead of creating one new credential per thread, we should use the
-> newly created one (from landlock_restrict_self) and increment its
-> references.  In most cases that would avoid duplicating information and
-> wasting memory by creating one struct cred per thread.
-
-struct cred contains all kinds of other credentials as well, besides
-Landlock and NO_NEW_PRIVS. *In normal scenarios* I believe that the
-struct cred is the same for all threads, but this is not guaranteed.
-
-We can make it safe by requiring that all threads must point to the
-same struct cred, as you are suggesting below.  But how are users
-supposed to reason about whether all threads share the same struct
-cred?  To my knowledge, it is an implementation detail of the kernel.
-We can't expect callers to understand what properties belong to struct
-cred, and that list of properties can potentially change in the future
-as well.
-
-This is why in the proposal I sent, the only thing that matters about
-the preexisting struct cred is the Landlock domain which is stored in
-it.  This is a lower bar to meet and seems more appropriate for this
-Landlock-specific syscall.
-
-
-> > +	new_llcred = landlock_cred(new_cred);
-> > +	if (new_llcred->domain != old_dom) {
-> > +		abort_creds(new_cred);
-> > +		return ERR_PTR(-ESRCH);
-> 
-> To avoid dealing with prepare_creds()'s error, I think we could just
-> check that all threads have (initially) the same credentials, and either
-> swap this same old credential with the new one (created by the caller),
-> or swap the Landlock domain (and set no_new_privs) if the credentials
-> changed between the initial check and now.
-
-This would be working around the API documented in
-Documentation/security/credentials.rst, where the affected task should
-do its own prepare_creds()/abort_creds()/commit_creds() dance.
-
-After seeing how it had turned out in the keyctl case with an
-additional LSM hook, I was hoping to use the suggested API and do
-things as intended here.  prepare_creds() and commit_creds() do more
-than just switching pointers and refcounts, it is not clear to me that
-prepare_creds() on one task and commit_creds() on another would work
-with the same struct cred.
-
-
-> Actually it might be up to
-> three loops:
-> 
-> (lock cred_guard_mutex)
-
-FWIW, Peter Newman (CC'd) also pointed me at the tasklist lock, which
-is also used in Seccomp.  I believe we would also have to grab this
-one *before* starting to iterate over the list of tasks and *after*
-committing the last credentials, so that we don't spawn new tasks in
-the middle of the operation, which might still inherit old
-credentials.  (The drawback is that it is a global lock.)
-
-
-> 1. Check that all threads use the same credential, or abort the whole
->    operation otherwise.
-> 
-> 2. If the caller has no_new_privs (and passed the Landlock checks), set
->    no_new_privs to all threads.
-
-I am still conflicted about this.  This seems like a too implicit way
-to set NO_NEW_PRIVS and might surprise callers.  After all, we are not
-setting it in the single-threaded landlock_restrict_self() case
-either.
-
-
-> 3. Run a work_task on each thread that will either:
->    - if old thread's credential is still the same as the caller's
->      credentials, swap it with the new one with get_cred()/put_cred();
->    - otherwise, this means that the thread changed its credential after
->      the first loop but because we set no_new_privs, this alternative
->      credential should not give more privileges and we should be safe to
->      only swap the Landlock domain with the new one (if different).
->      Indeed, this alternative credential might be used by other threads
->      from the same process, but AFAIK not by threads from other
->      processes thanks to cred_guard_mutex.  This would require to bypass
->      the const pointer though.  Holding cred_guard_mutex will also make
->      sure that domains were not updated under our feet by another call
->      to landlock_restrict_self().
-
-Hmm, in the second case we'd still have to use the
-prepare_creds()/abort_creds()/commit_creds() API with all of its
-potential failure modes.  Or, we would have to swizzle out contents of
-struct cred directly, but that would be side-stepping that API again.
-
-I would prefer not to side-step that cred-updating API, given how it
-turned out in the keyctl case.  If it is absolutely necessary to
-change struct cred differently, I would rather introduce a new
-"official" way to change struct cred than to work around it from the
-outside without David Howells' knowledge.  But I'd prefer to do it
-with the existing update API, if we can.
-
-
-> (unlock cred_guard_mutex)
-> 
-> Another approach would be to leverage an LSM hook to deny credential
-> changes for a thread while we are changing them for the whole process,
-> but I'm not sure it would be better.
-> 
-> Kees, Paul, Jann, any better idea?
-> 
-> > +	}
-> > +
-> > +	/* Replaces the old (prepared) domain. */
-> > +	landlock_put_ruleset(new_llcred->domain);
-> > +	landlock_get_ruleset(new_dom);
-> > +	new_llcred->domain = new_dom;
-> > +
-> > +	return new_cred;
-> > +}
-> > +
-> > +/*
-> > + * restrict_one_thread - update a thread's Landlock domain in lockstep with the
-> > + * other threads in the same process.
-> > + *
-> > + * When this is run, the same function gets run in all other threads in the same
-> > + * process.  The concurrently running function invocations coordinate to wait
-> > + * until they are all done with the preparation step and have reported back
-> > + * errors from the preparation step, if necessary.
-> > + *
-> > + * Afterwards, depending on the presence of an error, all threads either commit
-> > + * or abort the prepared credentials.  The commit operation can not fail any more.
-> > + */
-> > +static void restrict_one_thread(struct landlock_tsync_shared_context *ctx)
-> > +{
-> > +	int res;
-> > +	struct cred *cred = landlock_prepare_creds(ctx->old_dom, ctx->new_dom);
-> > +
-> > +	/* On error, set the error and continue. (Do not return early.) */
-> > +	if (IS_ERR(cred))
-> > +		atomic_set(&ctx->preparation_error, PTR_ERR(cred));
-> > +
-> > +	/*
-> > +	 * Barrier: Wait until all threads are done preparing.
-> > +	 * After this point, we can have no more failures.
-> > +	 */
-> > +	if (atomic_dec_return(&ctx->num_preparing) == 0)
-> > +		complete_all(&ctx->all_prepared);
-> > +	wait_for_completion(&ctx->all_prepared);
-> 
-> The logic is OK but the side effect would be to block all threads, which
-> is an issue.  That's why we need at least two loops run by the calling
-> thread, and the other threads should not have to wait.
-
-If we do "prepare" and "commit" in two different loops, we'd still
-need to start a "task_work" for the threads in the "commit" loop so
-that they update their struct cred.  And if the struct cred changed in
-the meantime between the two loops, what do we do?  If we want
-all-or-nothing semantics, we'd still have to check for modification in
-the task_work and synchronize with a barrier between all tasks, right?
-Doesn't that have the same problems?  (I would also expect that
-wait-time-wise, the "landlock_prepare_creds" part would be quicker
-than waiting for the "all_prepared" barrier, so this doesn't seem to
-make a big difference?)
-
-> 
-> > +
-> > +	/*
-> > +	 * Abort the commit if any of the threads had an error.
-> > +	 * (It might also be this thread.)  Otherwise, commit.
-> > +	 */
-> > +	res = atomic_read(&ctx->preparation_error);
-> > +	if (res) {
-> > +		if (!IS_ERR(cred))
-> > +			abort_creds(cred);
-> > +	} else {
-> > +		commit_creds(cred);
-> > +	}
-> > +
-> > +	/* Notify the calling thread once all threads are done */
-> > +	if (atomic_dec_return(&ctx->num_unfinished) == 0)
-> > +		complete_all(&ctx->all_finished);
-> > +}
-> > +
-> > +/*
-> > + * restrict_one_thread_callback - task_work callback for restricting a thread
-> > + *
-> > + * Calls restrict_one_thread with the struct landlock_shared_tsync_context
-> > + * and frees up the per-work_task landlock_tsync_context afterwards.
-> > + */
-> > +static void restrict_one_thread_callback(struct callback_head *work)
-> > +{
-> > +	struct landlock_tsync_context *ctx =
-> > +		container_of(work, struct landlock_tsync_context, work);
-> > +	struct landlock_tsync_shared_context *sctx = ctx->ctx;
-> > +
-> > +	restrict_one_thread(sctx);
-> > +	kfree(ctx);
-> > +}
-> > +
-> > +/*
-> > + * restrict_all_threads - enables a Landlock policy for all threads
-> > + */
-> > +static int restrict_all_threads(const int ruleset_fd)
-> > +{
-> > +	int res;
-> > +	struct task_struct *thread, *caller;
-> > +	struct landlock_tsync_shared_context sctx;
-> > +	struct landlock_ruleset *ruleset;
-> > +
-> > +	/*
-> > +	 * XXX: Need to double check race conditions and deadlocks before
-> > +	 * merging this upstream. We probably need additional locking.
-> > +	 */
-> > +
-> > +	/* Starting with 1, as we're already counting current. */
-> > +	atomic_set(&sctx.num_preparing, 1);
-> > +	atomic_set(&sctx.num_unfinished, 1);
-> > +	init_completion(&sctx.all_prepared);
-> > +	init_completion(&sctx.all_finished);
-> > +	atomic_set(&sctx.preparation_error, 0);
-> > +	sctx.old_dom = landlock_get_current_domain();
-> > +
-> > +	/* Gets and checks the ruleset. */
-> > +	ruleset = get_ruleset_from_fd(ruleset_fd, FMODE_CAN_READ);
-> > +	if (IS_ERR(ruleset))
-> > +		return PTR_ERR(ruleset);
-> > +
-> > +	/*
-> > +	 * We pre-merge the domain for all threads,
-> > +	 * so that all threads end up with exactly the same domain.
-> > +	 */
-> > +	sctx.new_dom = landlock_merge_ruleset(sctx.old_dom, ruleset);
-> > +	landlock_put_ruleset(ruleset);
-> > +	if (IS_ERR(sctx.new_dom))
-> > +		return PTR_ERR(sctx.new_dom);
-> 
-> What is specific to this function should only start here.  The flag
-> checks (new ones are coming with the audit patch series), the ruleset
-> FD, the preapre_creds(), and the landlock_merge_ruleset() should be the
-> same.  We can initialize shared states from here.
-
-I'm not sure I understand fully; is the suggestion that I reorder the
-work at the top of restrict_all_threads() so that the parts that are
-also done in the single threaded-case can be factored out and done in
-the calling function?
-
-> 
-> > +
-> > +	landlock_get_ruleset(sctx.old_dom);
-> > +
-> > +	caller = current;
-> > +	for_each_thread(caller, thread) {
-> > +		/* Skip current, since it is initiating the sync. */
-> > +		if (thread == caller)
-> > +			continue;
-> > +
-> > +		/* Skip exited threads. */
-> > +		if (thread->flags & PF_EXITING)
-> > +			continue;
-> > +
-> > +		/* Deallocation is done by the task_work itself. */
-> > +		struct landlock_tsync_context *ctx =
-> > +			kzalloc(sizeof(*ctx), GFP_KERNEL_ACCOUNT);
-> > +		if (!ctx) {
-> > +			/*
-> > +			 * On error, keep already started threads from
-> > +			 * accidentally committing.  Do not start additional
-> > +			 * threads.
-> > +			 */
-> > +			atomic_set(&sctx.preparation_error, -ENOMEM);
-> > +			break;
-> > +		}
-> > +
-> > +		ctx->ctx = &sctx;
-> > +		atomic_inc(&sctx.num_preparing);
-> > +		atomic_inc(&sctx.num_unfinished);
-> > +		init_task_work(&ctx->work, restrict_one_thread_callback);
-> > +		res = task_work_add(thread, &ctx->work, TWA_SIGNAL);
-> > +		if (res) {
-> > +			atomic_set(&sctx.preparation_error, res);
-> > +			atomic_dec(&sctx.num_preparing);
-> > +			atomic_dec(&sctx.num_unfinished);
-> > +		}
-> > +	}
-> > +
-> > +	/* and do the same on the current thread */
-> > +	restrict_one_thread(&sctx);
-> > +
-> > +	res = atomic_read(&sctx.preparation_error);
-> > +	wait_for_completion(&sctx.all_finished);
-> > +	landlock_put_ruleset(sctx.new_dom);
-> > +	landlock_put_ruleset(sctx.old_dom);
-> > +	return res;
-> > +}
-> > +
-> >  /**
-> >   * sys_landlock_restrict_self - Enforce a ruleset on the calling thread
-> >   *
-> >   * @ruleset_fd: File descriptor tied to the ruleset to merge with the target.
-> > - * @flags: Must be 0.
-> > + * @flags: Flags to modify the behavior.
-> >   *
-> > - * This system call enables to enforce a Landlock ruleset on the current
-> > - * thread.  Enforcing a ruleset requires that the task has %CAP_SYS_ADMIN in its
-> > + * This system call enforces a Landlock ruleset on the current thread.
-> > + * Enforcing a ruleset requires that the task has %CAP_SYS_ADMIN in its
-> >   * namespace or is running with no_new_privs.  This avoids scenarios where
-> >   * unprivileged tasks can affect the behavior of privileged children.
-> >   *
-> > + * If %LANDLOCK_RESTRICT_SELF_TSYNC is specified in @flags, the ruleset will be
-> > + * applied to all threads of the current process.  For this, all threads must be
-> > + * in the same Landlock domain and fulfill the normal requirements for enforcing
-> > + * a Landlock ruleset.
-> > + *
-> >   * Possible returned errors are:
-> >   *
-> >   * - %EOPNOTSUPP: Landlock is supported by the kernel but disabled at boot time;
-> > @@ -447,6 +664,8 @@ SYSCALL_DEFINE4(landlock_add_rule, const int, ruleset_fd,
-> >   *   %CAP_SYS_ADMIN in its namespace.
-> >   * - %E2BIG: The maximum number of stacked rulesets is reached for the current
-> >   *   thread.
-> > + * - %ESRCH: When called with %LANDLOCK_RESTRICT_SELF_TSYNC, the processes'
-> > + *   threads were in different Landlock domains.
-> >   */
-> >  SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
-> >  		flags)
-> > @@ -467,10 +686,13 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
-> >  	    !ns_capable_noaudit(current_user_ns(), CAP_SYS_ADMIN))
-> >  		return -EPERM;
-> >  
-> > -	/* No flag for now. */
-> > -	if (flags)
-> > +	/* TSYNC is the only supported flag. */
-> > +	if (flags & ~LANDLOCK_RESTRICT_SELF_TSYNC)
-> >  		return -EINVAL;
-> >  
-> > +	if (flags & LANDLOCK_RESTRICT_SELF_TSYNC)
-> > +		return restrict_all_threads(ruleset_fd);
-> > +
-> 
-> As explained above, restrict_all_threads()'s logic should be called
-> later.
-> 
-> Starting here, as seccomp does, we can lock siglock (whatever flags are
-> used) to be sure there is not concurrent call to
-> landlock_restrict_self() on other threads of the same process.
-> 
-> If LANDLOCK_RESTRICT_SELF_TSYNC is set, we also need to lock
-> cred_guard_mutex to avoid race conditions with concurrent execve calls.
-
-I was confused about this lock, but found the remark in the seccomp
-logic again as well, which says:
-
-  /*
-   * Make sure we cannot change seccomp or nnp state via TSYNC
-   * while another thread is in the middle of calling exec.
-   */
-
-In my understanding, cred_guard_mutex gets locked in early stages of a
-execve() that prepares the "bprm".  If I understand this correctly,
-this is the scenario where the other thread is starting to run
-execve() (about to replace the entire process), but at the same time
-it still looks like a normal thread that belongs to the process.  Is
-that right?
-
-> >  	/* Gets and checks the ruleset. */
-> >  	ruleset = get_ruleset_from_fd(ruleset_fd, FMODE_CAN_READ);
-> >  	if (IS_ERR(ruleset))
-> > -- 
-> > 2.48.1
-> > 
-> > 
-
-Thanks for the review and for keeping the discussion at the more
-conceptual level for now!
-
-–Günther
+V2hlbiB0aGUgaG9zdCBpcyBhc2xlZXAsIHRoZSBkZXZpY2UgaGFzIHdha2UgdXAgdGhlIGhvc3Qg
+dXNpbmcgdGhlCnVzdWFsIFNQSSBJUlEuCgpTaWduZWQtb2ZmLWJ5OiBKw6lyw7RtZSBQb3VpbGxl
+ciA8amVyb21lLnBvdWlsbGVyQHNpbGFicy5jb20+Ci0tLQogZHJpdmVycy9uZXQvd2lyZWxlc3Mv
+c2lsYWJzL3dmeC9idXNfc3BpLmMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxl
+IGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL25ldC93aXJlbGVzcy9zaWxhYnMvd2Z4L2J1c19zcGkuYyBiL2RyaXZlcnMvbmV0L3dp
+cmVsZXNzL3NpbGFicy93ZngvYnVzX3NwaS5jCmluZGV4IDQ2Mjc4ZGNlN2ZmYy4uMWQ2YmYzNTI1
+ZjRlIDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9zaWxhYnMvd2Z4L2J1c19zcGku
+YworKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9zaWxhYnMvd2Z4L2J1c19zcGkuYwpAQCAtMTMs
+NiArMTMsNyBAQAogI2luY2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPgogI2luY2x1ZGUgPGxpbnV4
+L2lycS5oPgogI2luY2x1ZGUgPGxpbnV4L29mLmg+CisjaW5jbHVkZSA8bGludXgvcG0uaD4KIAog
+I2luY2x1ZGUgImJ1cy5oIgogI2luY2x1ZGUgIndmeC5oIgpAQCAtMTg5LDYgKzE5MCwyNiBAQCBz
+dGF0aWMgY29uc3Qgc3RydWN0IHdmeF9od2J1c19vcHMgd2Z4X3NwaV9od2J1c19vcHMgPSB7CiAJ
+LmFsaWduX3NpemUgICAgICA9IHdmeF9zcGlfYWxpZ25fc2l6ZSwKIH07CiAKK3N0YXRpYyBpbnQg
+d2Z4X3NwaV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKK3sKKwlzdHJ1Y3Qgc3BpX2Rldmlj
+ZSAqZnVuYyA9IHRvX3NwaV9kZXZpY2UoZGV2KTsKKwlzdHJ1Y3Qgd2Z4X3NwaV9wcml2ICpidXMg
+PSBzcGlfZ2V0X2RydmRhdGEoZnVuYyk7CisKKwlpZiAoIWRldmljZV9tYXlfd2FrZXVwKGRldikp
+CisJCXJldHVybiAwOworCWZsdXNoX3dvcmsoJmJ1cy0+Y29yZS0+aGlmLmJoKTsKKwlyZXR1cm4g
+ZW5hYmxlX2lycV93YWtlKGZ1bmMtPmlycSk7Cit9CisKK3N0YXRpYyBpbnQgd2Z4X3NwaV9yZXN1
+bWUoc3RydWN0IGRldmljZSAqZGV2KQoreworCXN0cnVjdCBzcGlfZGV2aWNlICpmdW5jID0gdG9f
+c3BpX2RldmljZShkZXYpOworCisJaWYgKCFkZXZpY2VfbWF5X3dha2V1cChkZXYpKQorCQlyZXR1
+cm4gMDsKKwlyZXR1cm4gZGlzYWJsZV9pcnFfd2FrZShmdW5jLT5pcnEpOworfQorCiBzdGF0aWMg
+aW50IHdmeF9zcGlfcHJvYmUoc3RydWN0IHNwaV9kZXZpY2UgKmZ1bmMpCiB7CiAJc3RydWN0IHdm
+eF9wbGF0Zm9ybV9kYXRhICpwZGF0YTsKQEAgLTIzOSw3ICsyNjAsMTIgQEAgc3RhdGljIGludCB3
+Znhfc3BpX3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpmdW5jKQogCWlmICghYnVzLT5jb3JlKQog
+CQlyZXR1cm4gLUVJTzsKIAotCXJldHVybiB3ZnhfcHJvYmUoYnVzLT5jb3JlKTsKKwlyZXQgPSB3
+ZnhfcHJvYmUoYnVzLT5jb3JlKTsKKwlpZiAocmV0KQorCQlyZXR1cm4gcmV0OworCisJZGV2aWNl
+X3NldF93YWtldXBfY2FwYWJsZSgmZnVuYy0+ZGV2LCB0cnVlKTsKKwlyZXR1cm4gMDsKIH0KIAog
+c3RhdGljIHZvaWQgd2Z4X3NwaV9yZW1vdmUoc3RydWN0IHNwaV9kZXZpY2UgKmZ1bmMpCkBAIC0y
+NzMsNiArMjk5LDggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgd2Z4X3NwaV9v
+Zl9tYXRjaFtdID0gewogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgd2Z4X3NwaV9vZl9tYXRjaCk7
+CiAjZW5kaWYKIAorREVGSU5FX1NJTVBMRV9ERVZfUE1fT1BTKHdmeF9zcGlfcG1fb3BzLCB3Znhf
+c3BpX3N1c3BlbmQsIHdmeF9zcGlfcmVzdW1lKTsKKwogc3RydWN0IHNwaV9kcml2ZXIgd2Z4X3Nw
+aV9kcml2ZXIgPSB7CiAJLmlkX3RhYmxlID0gd2Z4X3NwaV9pZCwKIAkucHJvYmUgPSB3Znhfc3Bp
+X3Byb2JlLApAQCAtMjgwLDUgKzMwOCw2IEBAIHN0cnVjdCBzcGlfZHJpdmVyIHdmeF9zcGlfZHJp
+dmVyID0gewogCS5kcml2ZXIgPSB7CiAJCS5uYW1lID0gIndmeC1zcGkiLAogCQkub2ZfbWF0Y2hf
+dGFibGUgPSBvZl9tYXRjaF9wdHIod2Z4X3NwaV9vZl9tYXRjaCksCisJCS5wbSA9ICZ3Znhfc3Bp
+X3BtX29wcywKIAl9LAogfTsKLS0gCjIuMzkuNQoK
