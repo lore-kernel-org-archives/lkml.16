@@ -1,65 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B455C27181C;
-	Fri, 28 Feb 2025 16:53:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4F526E97E;
+	Fri, 28 Feb 2025 16:53:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740761618; cv=none; b=DVs/+qm+cD3uWKRfZ125CtzRrb0wOUm+Uue8eioTzIa36mhRHEdFUzd+0f7S79OhbQ9R69+4rb6qu3hQ4wmxdqG8o349eRDK9S3B/QjdgyxnQULW34P3TfFXGeMd+j7apkB+kSZgwQfim0OaQKN7sZY7Qwp5dazqRoNAHUyZ5Js=
+	t=1740761619; cv=none; b=XjrrsW0lxfcibh2f9fkFdL0ucucL9v9TiKrBcEdYFSW9B5bs93b3KX8+KHLEL7RWcKN8n3Q9XUxPDY9qyPyTCiGaeF67pKGRzwPBGyWfJOO1qCpGTCZp7OaHHOjzWtMhjj3QLbRXruzT687SxlqaWq/Jj9aCiC++esIXTqst3+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740761618; c=relaxed/simple;
-	bh=GB25dmNkVoQdedWgd6WcPgjKvy05WTkGJXDHpV6HMIo=;
+	s=arc-20240116; t=1740761619; c=relaxed/simple;
+	bh=c2taeqS8lsOMq/9EBdG44FTRz+qklKVtW3WU/XtVm7I=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=I7aEAQkPDe0W4YsQrT1E7X8miEGPhyP1eLIy3osJxrSdXBgPDCYIbCfhV6vTGkObtPAgnwXRf8s01ltPd9phzUymvmcIxAa85kcKylWSoVd0jdPcHlNp4606zfvgWDjo2clNJIVqTCHfYkeCPOx9+xv/F5ozaGxnyVe5xWp+iwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dhagAO+/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cngV6CcK; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=BfqagvB3zZ0VgIvqbCtwTxLFWhR1YNfMAVpHVRovxHZEXGzn+ef5hrKqgUEoLWZy84OM0Tv/qF/hIlKW9svei1ghsuwVFu16MqGl9WPH9yjDAzKMMJEditU2/uY2vC9w8T6dY4/cN3A4rVEDS4EfXWbz1s37hxqboWy3dzypw1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4nosDSjm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zAaZfCXp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dhagAO+/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cngV6CcK"
-Date: Fri, 28 Feb 2025 16:53:34 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4nosDSjm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zAaZfCXp"
+Date: Fri, 28 Feb 2025 16:53:35 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740761615;
+	s=2020; t=1740761616;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4ck0ytUY1oqHwsGQM5Ka4epth2jKH9ZPp0bx3JQ5vbk=;
-	b=dhagAO+/N9anLCbUsQ1PMa5xVrY47l/IeqnFjCLcasPTXdijjbNOtwhgMpD30pkMQ1Emzt
-	UboEvPc4jSSZpUlmuzFmu3ce8RIHZJ4N1tsDZNbMH/AtJojN27XnfKEmbRrytl4uVDFTbM
-	lW6nc6NH6QDSNbxVy5bgCphbO5OE4JeLjWF1A3sw+yMSLr261aqvGjarBIYpqofbgBfnLU
-	QUtBhxHmEbnUIRVpOeT/oal7nPIUpkHlXu123uMlqgYcCvE9WKfbbIqgkSYtLl/pR5nCUI
-	LKDfQp8WenCTtNHfXyFuhof7UH7IZqxLw80YG87gliVT6mSl4poSGdpVG9luJQ==
+	bh=CC8LRlFH9I7k6BASM2BE7cnck6ft4vLzr6ZqRcz+p70=;
+	b=4nosDSjmn7nnpC8Xng+QYkriF8V1J4GL6KP1RWuGKS592J5iZ6T3aL3EQqzHeR9W+M37gN
+	HPaBIKqdPbaP2E/nj6CegvXv8XvMrUOXmGu4n/amCuB3yvcPV6zp/yhPHOLpPNh23FThlC
+	4sY30IE43zbcL75bSZ1MszhI9gUtXWgdbnJ96Rw9uObfxsLoIwyPyAbKZgehQUyVqvZwvZ
+	kpB6e8yNJvuEXpxpJbHeDbNXbxuwnOsuHpnmjwjtXDEqPfB64eNJp83j/55OS1TCu/7+Fd
+	YUYFuLbGm+zB4I8X6+biqXbYlzzMcj6q+rAiL9tnEzbE3RiQd+UWsAu/OJrJ/g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740761615;
+	s=2020e; t=1740761616;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=4ck0ytUY1oqHwsGQM5Ka4epth2jKH9ZPp0bx3JQ5vbk=;
-	b=cngV6CcKaFrbTiSftGr30SAyW5RN6O6uwuo0gQSHPhpCqWQlTL6yxAH5m6b5t6Xe2uB935
-	ILM2R42YNpmFJYBw==
+	bh=CC8LRlFH9I7k6BASM2BE7cnck6ft4vLzr6ZqRcz+p70=;
+	b=zAaZfCXpknAdc3Gk6Z/X9e/ryDd5HcITXFwarK1FtM3tDD539BBWVWSJi3T7ZFZj1GZdm5
+	JSvYnmalq4U3G5BA==
 From: "tip-bot2 for H. Peter Anvin (Intel)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpufeatures: Generate a feature mask header based
- on build config
+Subject: [tip: x86/cpu] x86/cpufeatures: Rename X86_CMPXCHG64 to X86_CX8
 Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>,
- Nikolay Borisov <nik.borisov@suse.com>, Ingo Molnar <mingo@kernel.org>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250228082338.73859-4-xin@zytor.com>
-References: <20250228082338.73859-4-xin@zytor.com>
+In-Reply-To: <20250228082338.73859-2-xin@zytor.com>
+References: <20250228082338.73859-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174076161451.10177.12394793801464108798.tip-bot2@tip-bot2>
+Message-ID: <174076161544.10177.382472902232608157.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,275 +67,175 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     cfc7686900a87ad8220bceb6b7862c6fcc00bff0
-Gitweb:        https://git.kernel.org/tip/cfc7686900a87ad8220bceb6b7862c6fcc00bff0
+Commit-ID:     909639aa58fe4789644104c1fd89264c57da0979
+Gitweb:        https://git.kernel.org/tip/909639aa58fe4789644104c1fd89264c57da0979
 Author:        H. Peter Anvin (Intel) <hpa@zytor.com>
-AuthorDate:    Fri, 28 Feb 2025 00:23:36 -08:00
+AuthorDate:    Fri, 28 Feb 2025 00:23:34 -08:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Fri, 28 Feb 2025 12:09:47 +01:00
+CommitterDate: Fri, 28 Feb 2025 11:42:34 +01:00
 
-x86/cpufeatures: Generate a feature mask header based on build config
+x86/cpufeatures: Rename X86_CMPXCHG64 to X86_CX8
 
-Introduce an AWK script to auto-generate a header with required and
-disabled feature masks based on <asm/cpufeatures.h> and current build
-config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-simply add
+Replace X86_CMPXCHG64 with X86_CX8, as CX8 is the name of the CPUID
+flag, thus to make it consistent with X86_FEATURE_CX8 defined in
+<asm/cpufeatures.h>.
 
-config X86_DISABLED_FEATURE_FRED
-	def_bool y
-	depends on !X86_FRED
-
-to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-feature disable flag, e.g., DISABLE_FRED.
-
-Lastly the generated required and disabled feature masks will be added
-to their corresponding feature masks for this particular compile-time
-configuration.
-
-  [ Xin: build integration improvements ]
+No functional change intended.
 
 Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250228082338.73859-4-xin@zytor.com
+Link: https://lore.kernel.org/r/20250228082338.73859-2-xin@zytor.com
 ---
- arch/x86/Makefile                  | 17 +++++-
- arch/x86/boot/cpucheck.c           |  3 +-
- arch/x86/boot/cpuflags.c           |  1 +-
- arch/x86/boot/mkcpustr.c           |  3 +-
- arch/x86/include/asm/Kbuild        |  1 +-
- arch/x86/include/asm/cpufeature.h  |  1 +-
- arch/x86/include/asm/cpufeatures.h |  8 +---
- arch/x86/kernel/verify_cpu.S       |  4 +-
- arch/x86/tools/featuremasks.awk    | 81 +++++++++++++++++++++++++++++-
- 9 files changed, 105 insertions(+), 14 deletions(-)
- create mode 100755 arch/x86/tools/featuremasks.awk
+ arch/x86/Kconfig                               | 2 +-
+ arch/x86/Kconfig.cpu                           | 4 ++--
+ arch/x86/include/asm/asm-prototypes.h          | 2 +-
+ arch/x86/include/asm/atomic64_32.h             | 2 +-
+ arch/x86/include/asm/cmpxchg_32.h              | 2 +-
+ arch/x86/include/asm/required-features.h       | 2 +-
+ arch/x86/lib/Makefile                          | 2 +-
+ arch/x86/lib/cmpxchg8b_emu.S                   | 2 +-
+ lib/atomic64_test.c                            | 2 +-
+ tools/arch/x86/include/asm/required-features.h | 2 +-
+ 10 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 8120085..ce6efad 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -259,9 +259,22 @@ archscripts: scripts_basic
- 	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index aa90f03..017035f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -133,7 +133,7 @@ config X86
+ 	select ARCH_SUPPORTS_AUTOFDO_CLANG
+ 	select ARCH_SUPPORTS_PROPELLER_CLANG    if X86_64
+ 	select ARCH_USE_BUILTIN_BSWAP
+-	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CMPXCHG64
++	select ARCH_USE_CMPXCHG_LOCKREF		if X86_CX8
+ 	select ARCH_USE_MEMTEST
+ 	select ARCH_USE_QUEUED_RWLOCKS
+ 	select ARCH_USE_QUEUED_SPINLOCKS
+diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
+index 8fcb8cc..f8b3296 100644
+--- a/arch/x86/Kconfig.cpu
++++ b/arch/x86/Kconfig.cpu
+@@ -299,7 +299,7 @@ config X86_HAVE_PAE
+ 	def_bool y
+ 	depends on MCRUSOE || MEFFICEON || MCYRIXIII || MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC7 || MATOM || X86_64
  
- ###
--# Syscall table generation
-+# Feature masks header and syscall table generation
+-config X86_CMPXCHG64
++config X86_CX8
+ 	def_bool y
+ 	depends on X86_HAVE_PAE || M586TSC || M586MMX || MK6 || MK7 || MGEODEGX1 || MGEODE_LX
  
--archheaders:
-+out := arch/x86/include/generated/asm
-+featuremasks_hdr := featuremasks.h
-+featuremasks_awk := $(srctree)/arch/x86/tools/featuremasks.awk
-+cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
-+quiet_cmd_gen_featuremasks = GEN     $@
-+      cmd_gen_featuremasks = $(AWK) -f $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
-+
-+$(out)/$(featuremasks_hdr): $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
-+	$(shell mkdir -p $(out))
-+	$(call if_changed,gen_featuremasks)
-+
-+targets += $(out)/$(featuremasks_hdr)
-+
-+archheaders: $(out)/$(featuremasks_hdr)
- 	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
+@@ -313,7 +313,7 @@ config X86_MINIMUM_CPU_FAMILY
+ 	int
+ 	default "64" if X86_64
+ 	default "6" if X86_32 && (MPENTIUM4 || MPENTIUMM || MPENTIUMIII || MPENTIUMII || M686 || MVIAC3_2 || MVIAC7 || MEFFICEON || MATOM || MK7)
+-	default "5" if X86_32 && X86_CMPXCHG64
++	default "5" if X86_32 && X86_CX8
+ 	default "4"
  
- ###
-diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
-index 0aae4d4..8d03a74 100644
---- a/arch/x86/boot/cpucheck.c
-+++ b/arch/x86/boot/cpucheck.c
-@@ -22,10 +22,11 @@
- # include "boot.h"
+ config X86_DEBUGCTLMSR
+diff --git a/arch/x86/include/asm/asm-prototypes.h b/arch/x86/include/asm/asm-prototypes.h
+index 3674006..8d9e627 100644
+--- a/arch/x86/include/asm/asm-prototypes.h
++++ b/arch/x86/include/asm/asm-prototypes.h
+@@ -16,7 +16,7 @@
+ #include <asm/gsseg.h>
+ #include <asm/nospec-branch.h>
+ 
+-#ifndef CONFIG_X86_CMPXCHG64
++#ifndef CONFIG_X86_CX8
+ extern void cmpxchg8b_emu(void);
  #endif
- #include <linux/types.h>
-+#include <asm/featuremasks.h>
- #include <asm/intel-family.h>
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
-+
- #include "string.h"
- #include "msr.h"
  
-diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
-index d75237b..0cabdac 100644
---- a/arch/x86/boot/cpuflags.c
-+++ b/arch/x86/boot/cpuflags.c
-@@ -3,7 +3,6 @@
- #include "bitops.h"
+diff --git a/arch/x86/include/asm/atomic64_32.h b/arch/x86/include/asm/atomic64_32.h
+index 6c6e9b9..797085e 100644
+--- a/arch/x86/include/asm/atomic64_32.h
++++ b/arch/x86/include/asm/atomic64_32.h
+@@ -48,7 +48,7 @@ static __always_inline s64 arch_atomic64_read_nonatomic(const atomic64_t *v)
+ 	ATOMIC64_EXPORT(atomic64_##sym)
+ #endif
  
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
- #include "cpuflags.h"
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ #define __alternative_atomic64(f, g, out, in...) \
+ 	asm volatile("call %c[func]" \
+ 		     : ALT_OUTPUT_SP(out) \
+diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
+index fd1282a..c38d4ed 100644
+--- a/arch/x86/include/asm/cmpxchg_32.h
++++ b/arch/x86/include/asm/cmpxchg_32.h
+@@ -69,7 +69,7 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, 
+ 	return __arch_try_cmpxchg64(ptr, oldp, new,);
+ }
  
-diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
-index da0ccc5..b901101 100644
---- a/arch/x86/boot/mkcpustr.c
-+++ b/arch/x86/boot/mkcpustr.c
-@@ -12,8 +12,6 @@
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
  
- #include <stdio.h>
+ #define arch_cmpxchg64 __cmpxchg64
  
--#include "../include/asm/required-features.h"
--#include "../include/asm/disabled-features.h"
- #include "../include/asm/cpufeatures.h"
- #include "../include/asm/vmxfeatures.h"
- #include "../kernel/cpu/capflags.c"
-@@ -23,6 +21,7 @@ int main(void)
- 	int i, j;
- 	const char *str;
+diff --git a/arch/x86/include/asm/required-features.h b/arch/x86/include/asm/required-features.h
+index e9187dd..0068133 100644
+--- a/arch/x86/include/asm/required-features.h
++++ b/arch/x86/include/asm/required-features.h
+@@ -23,7 +23,7 @@
+ # define NEED_PAE	0
+ #endif
  
-+	printf("#include <asm/featuremasks.h>\n\n");
- 	printf("static const char x86_cap_strs[] =\n");
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ # define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
+ #else
+ # define NEED_CX8	0
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 8a59c61..9bbe281 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -56,7 +56,7 @@ ifeq ($(CONFIG_X86_32),y)
+         lib-y += string_32.o
+         lib-y += memmove_32.o
+         lib-y += cmpxchg8b_emu.o
+-ifneq ($(CONFIG_X86_CMPXCHG64),y)
++ifneq ($(CONFIG_X86_CX8),y)
+         lib-y += atomic64_386_32.o
+ endif
+ else
+diff --git a/arch/x86/lib/cmpxchg8b_emu.S b/arch/x86/lib/cmpxchg8b_emu.S
+index 1c96be7..d4bb243 100644
+--- a/arch/x86/lib/cmpxchg8b_emu.S
++++ b/arch/x86/lib/cmpxchg8b_emu.S
+@@ -7,7 +7,7 @@
  
- 	for (i = 0; i < NCAPINTS; i++) {
-diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-index 58f4dde..51022d2 100644
---- a/arch/x86/include/asm/Kbuild
-+++ b/arch/x86/include/asm/Kbuild
-@@ -8,6 +8,7 @@ generated-y += syscalls_x32.h
- generated-y += unistd_32_ia32.h
- generated-y += unistd_64_x32.h
- generated-y += xen-hypercalls.h
-+generated-y += featuremasks.h
+ .text
  
- generic-y += early_ioremap.h
- generic-y += fprobe.h
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index e5fc003..c5e68da 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -9,6 +9,7 @@
- #include <asm/asm.h>
- #include <linux/bitops.h>
- #include <asm/alternative.h>
-+#include <asm/featuremasks.h>
+-#ifndef CONFIG_X86_CMPXCHG64
++#ifndef CONFIG_X86_CX8
  
- enum cpuid_leafs
- {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 508c0da..d5985e8 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
  /*
-  * Defines x86 CPU feature bits
-  */
-diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-index 1258a58..a23a65d 100644
---- a/arch/x86/kernel/verify_cpu.S
-+++ b/arch/x86/kernel/verify_cpu.S
-@@ -29,8 +29,12 @@
-  */
+  * Emulate 'cmpxchg8b (%esi)' on UP
+diff --git a/lib/atomic64_test.c b/lib/atomic64_test.c
+index 759ea17..d726068 100644
+--- a/lib/atomic64_test.c
++++ b/lib/atomic64_test.c
+@@ -254,7 +254,7 @@ static __init int test_atomics_init(void)
+ 	pr_info("passed for %s platform %s CX8 and %s SSE\n",
+ #ifdef CONFIG_X86_64
+ 		"x86-64",
+-#elif defined(CONFIG_X86_CMPXCHG64)
++#elif defined(CONFIG_X86_CX8)
+ 		"i586+",
+ #else
+ 		"i386+",
+diff --git a/tools/arch/x86/include/asm/required-features.h b/tools/arch/x86/include/asm/required-features.h
+index e9187dd..0068133 100644
+--- a/tools/arch/x86/include/asm/required-features.h
++++ b/tools/arch/x86/include/asm/required-features.h
+@@ -23,7 +23,7 @@
+ # define NEED_PAE	0
+ #endif
  
- #include <asm/cpufeatures.h>
-+#include <asm/featuremasks.h>
- #include <asm/msr-index.h>
- 
-+#define SSE_MASK	\
-+	(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X86_FEATURE_XMM2 & 31))))
-+
- SYM_FUNC_START_LOCAL(verify_cpu)
- 	pushf				# Save caller passed flags
- 	push	$0			# Kill any dangerous flags
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-new file mode 100755
-index 0000000..fd3e721
---- /dev/null
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -0,0 +1,81 @@
-+#!/usr/bin/awk
-+#
-+# Convert cpufeatures.h to a list of compile-time masks
-+# Note: this blithly assumes that each word has at least one
-+# feature defined in it; if not, something else is wrong!
-+#
-+
-+BEGIN {
-+	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
-+	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
-+
-+	file = 0
-+}
-+
-+FNR == 1 {
-+	++file;
-+
-+	# arch/x86/include/asm/cpufeatures.h
-+	if (file == 1)
-+		FS = "[ \t()*+]+";
-+
-+	# .config
-+	if (file == 2)
-+		FS = "=";
-+}
-+
-+# Create a dictionary of sorts, containing all defined feature bits
-+file == 1 && $1 ~ /^#define$/ && $2 ~ /^X86_FEATURE_/ {
-+	nfeat = $3 * $4 + $5;
-+	feat = $2;
-+	sub(/^X86_FEATURE_/, "", feat);
-+	feats[nfeat] = feat;
-+}
-+file == 1 && $1 ~ /^#define$/ && $2 == "NCAPINTS" {
-+	ncapints = int($3);
-+}
-+
-+# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
-+file == 2 && $1 ~ /^CONFIG_X86_(REQUIRED|DISABLED)_FEATURE_/ {
-+	on = ($2 == "y");
-+	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
-+		featstat[fs[2], fs[3]] = on;
-+}
-+
-+END {
-+	sets[1] = "REQUIRED";
-+	sets[2] = "DISABLED";
-+
-+	for (ns in sets) {
-+		s = sets[ns];
-+
-+		printf "/*\n";
-+		printf " * %s features:\n", s;
-+		printf " *\n";
-+		fstr = "";
-+		for (i = 0; i < ncapints; i++) {
-+			mask = 0;
-+			for (j = 0; j < 32; j++) {
-+				feat = feats[i*32 + j];
-+				if (featstat[s, feat]) {
-+					nfstr = fstr " " feat;
-+					if (length(nfstr) > 72) {
-+						printf " *   %s\n", fstr;
-+						nfstr = " " feat;
-+					}
-+					fstr = nfstr;
-+					mask += (2 ^ j);
-+				}
-+			}
-+			masks[i] = mask;
-+		}
-+		printf " *   %s\n */\n", fstr;
-+
-+		for (i = 0; i < ncapints; i++)
-+			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
-+
-+		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+	}
-+
-+	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
-+}
+-#ifdef CONFIG_X86_CMPXCHG64
++#ifdef CONFIG_X86_CX8
+ # define NEED_CX8	(1<<(X86_FEATURE_CX8 & 31))
+ #else
+ # define NEED_CX8	0
