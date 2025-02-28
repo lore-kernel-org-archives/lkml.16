@@ -1,109 +1,59 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393AC276D02
-	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 14:04:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A695925F984;
+	Fri, 28 Feb 2025 14:04:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740751455; cv=none; b=D+nL4Vo0SyIQw2HxxJl3AiCTpTPFKBTvFwnVMgUPr41d4MnddEx8b7LFaMUiltVbSae0th1utM7ZRq5X5rnPws/RWU3hWq52KbnGmwChnqs6edPnmVSYo45CPzn227D+1IATELezQIUnHtFzVkh667eACUeos9u8niX7RX7iJJ8=
+	t=1740751468; cv=none; b=FG5vcYMzs78mPeVvjioVZi88wPFyZQwiDf9BJxMWb3K5G9KiU/cHy9vTyYdEUn8gC9vZnJQkZ7JHxTEovsTkHZdWRlpAKGUFEQfwZvaDjda1/LsCsJmCY5ntzr57C13z/MGa1i+nMc1QxbwUod5hLPOyDqZUR1xP0dMUQ5rzIrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740751455; c=relaxed/simple;
-	bh=4Zkhi/3vKA6AEhdPvUdhJ3xbuKEvtPx76JsO2SWk8Ic=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=j3GOv53xkVqDoEolmMqp9vNZOYmWtzsJ5iSUizicLt1vEbrMIr8Oeg4leMxWVy7t8Y4qz/JNLuyN9ARe8RxsdvS0plCsEDx3yEK0YF/waFr2Ms206WGOy1MncHDi6MkkANGAjzScjbM+Fa/+f8pnY4PqGJR2lrRTGUk+1m6Y3do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eh9vXQjt; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eh9vXQjt"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2feb5cd04a0so2724031a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 06:04:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740751453; x=1741356253; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5r7TF3J4CQJcHdUT68P2kvwC87iUS7j4hBRA43VtK0=;
-        b=eh9vXQjtQIYtnvCNCnaIzC25LdbnlephFAMQkIz0Z9aJvRuncwvsULZjj56/ErW3CS
-         BVtzQEYmz7iOrr/GbosVm0SE1uhqsCSbZir3gMZ5AMGfTGvJpHgMm5fwq5wdr9B+XTEA
-         D/aeUz5u0q9LCkvCwqJ8lw0yfVSf2/G64MvApiiw+3WscIhkxFw4buJ2EWYCv/qRcK4b
-         Muc4DOAn+cSrqv0lE9NI/KDlvy7L+HePrPEKLf6MmSoBeJbO8CKg0bY9QtatN1Tu+WbQ
-         /1z6PZGVWsBvUHXK1FNVuCADEcWtGmQPoh+rsPEaUfF9tBkwUu8kVzvLk9hzzcsaDrg/
-         AQfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740751453; x=1741356253;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j5r7TF3J4CQJcHdUT68P2kvwC87iUS7j4hBRA43VtK0=;
-        b=ONKqV/7pn8c6LsFoxUkAKqXJZRnuuLzwq0MMukpOTLczJEFw3qVZyQ8HeTKmsJDdIv
-         oM2abE/y5KGU+q8KkyVRdpuoOeY+QBaa/3ksjR0nHp6aUpOvjISd6ITEkLI2xWJ2eiwZ
-         TUUYQZTUAjcXEzG2kSUEgGT6wAYeEPDk1fNqOAv3RxdUQs3i7YshI96ZmeHnxINDZZcE
-         MygvX7CXX3m72LMeJ/43WirXpe45Nsh+i36i2r+rPRPKuw928qBEI2F2I4llbRqqrMDJ
-         hjjQ8bfBRpFvQYlmbLgYFx1IMh/W/6nduypk83KBsEoXMq4/6AFQn6vqH2rnmXjxF95h
-         7g4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXis5dn1/Zbk8LYM0VfaykuF0uAIxm9pSmxpwW5TLNHNxyTY4rqFEFzkXXA7bGTs/qptzT/QwvFojcB8yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMXYIuQAM4gCuxLHGGwyogf1kZ3tcwqMQlS7SGCBjaGdSeT25g
-	/VuOTZcqdvcfT7wvkcVtR2LFV80gJF+TVEPsiLgxSDwKJYqr/RcOVrgn6DZ4DUtlEEWyIe1bqjJ
-	Ezg==
-X-Google-Smtp-Source: AGHT+IERc5Pv7+4vnoDGWvifxkMQiAEGd9EDuqaHFnE+42Ho1Qy7JMZwWwtUBI6rQGIzKNL4E69Gflsjx/E=
-X-Received: from pjbsn4.prod.google.com ([2002:a17:90b:2e84:b0:2fc:13d6:b4cb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4c08:b0:2ee:b2fe:eeeb
- with SMTP id 98e67ed59e1d1-2febac04c12mr4780225a91.22.1740751453510; Fri, 28
- Feb 2025 06:04:13 -0800 (PST)
-Date: Fri, 28 Feb 2025 06:04:12 -0800
-In-Reply-To: <653c3c6e-bdfc-4604-bda0-3b67970a0c62@amd.com>
+	s=arc-20240116; t=1740751468; c=relaxed/simple;
+	bh=1lmEBu63cYbLTK76KGFv2Qip+2pW2SmO02INamDKcgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K0+psJTcUFu+KUgaumKEG0f+6J7jdhBPXygzOa0436jEjSgB8VUYn57B7XjbNolJ4iFPAKbaEsIWGXNHmjcPYgtESGg1nxKRQFUwm62jce75bcJtoCd1GHe4nOuIazVIYpeP6Xdd7LeJVlLdnNkhUI4riJT8wDrLma43nP+Qn+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2AD981515;
+	Fri, 28 Feb 2025 06:04:41 -0800 (PST)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E94613F6A8;
+	Fri, 28 Feb 2025 06:04:23 -0800 (PST)
+Date: Fri, 28 Feb 2025 14:04:21 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Peng Fan <peng.fan@oss.nxp.com>, saravanak@google.com,
+	cristian.marussi@arm.com, krzk+dt@kernel.org, conor+dt@kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [RFC] dt-bindings: firmware: scmi: Introduce compatible string
+Message-ID: <Z8HCZQQLofaiGtpG@bogus>
+References: <20250226094456.2351571-1-peng.fan@oss.nxp.com>
+ <20250226160945.GA2505223-robh@kernel.org>
+ <20250227030924.GB11411@nxa18884-linux>
+ <CAL_JsqJOqKeDRuASWxCT=EA5LJbONpCX=Re8=XxKUbPToWy2Dg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227222411.3490595-1-seanjc@google.com> <653c3c6e-bdfc-4604-bda0-3b67970a0c62@amd.com>
-Message-ID: <Z8HCXP0hFYs0dUxM@google.com>
-Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
-From: Sean Christopherson <seanjc@google.com>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com, whanos@sergal.fun
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJOqKeDRuASWxCT=EA5LJbONpCX=Re8=XxKUbPToWy2Dg@mail.gmail.com>
 
-On Fri, Feb 28, 2025, Ravi Bangoria wrote:
-> On 28-Feb-25 3:54 AM, Sean Christopherson wrote:
-> > Fix a long-lurking bug in SVM where KVM runs the guest with the host's
-> > DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
-> > context switch DEBUGCTL if and only if LBR virtualization is enabled (not
-> > just supported, but fully enabled).
-> > 
-> > The bug has gone unnoticed because until recently, the only bits that
-> > KVM would leave set were things like BTF, which are guest visible but
-> > won't cause functional problems unless guest software is being especially
-> > particular about #DBs.
-> > 
-> > The bug was exposed by the addition of BusLockTrap ("Detect" in the kernel),
-> > as the resulting #DBs due to split-lock accesses in guest userspace (lol
-> > Steam) get reflected into the guest by KVM.
-> > 
-> > Note, I don't love suppressing DEBUGCTL.BTF, but practically speaking that's
-> > likely the behavior that SVM guests have gotten the vast, vast majority of
-> > the time, and given that it's the behavior on Intel, it's (hopefully) a safe
-> > option for a fix, e.g. versus trying to add proper BTF virtualization on the
-> > fly.
-> > 
-> > v3:
-> >  - Suppress BTF, as KVM doesn't actually support it. [Ravi]
-> >  - Actually load the guest's DEBUGCTL (though amusingly, with BTF squashed,
-> >    it's guaranteed to be '0' in this scenario). [Ravi]
-> > 
-> > v2:
-> >  - Load the guest's DEBUGCTL instead of simply zeroing it on VMRUN.
-> >  - Drop bits 5:3 from guest DEBUGCTL so that KVM doesn't let the guest
-> >    unintentionally enable BusLockTrap (AMD repurposed bits). [Ravi]
-> >  - Collect a review. [Xiaoyao]
-> >  - Make bits 5:3 fully reserved, in a separate not-for-stable patch.
-> > 
-> > v1: https://lore.kernel.org/all/20250224181315.2376869-1-seanjc@google.com
-> 
-> For the series,
-> 
-> Reviewed-and-tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
+On Fri, Feb 28, 2025 at 07:34:09AM -0600, Rob Herring wrote:
+>
+> - The parent driver creates child devices. The child devices can
+> either reuse the parent DT node (i.e. set dev.of_node) or just get it
+> from the parent device if needed.
+>
 
-Thank you for all your help, much appreciated!
+This is exactly what I was thinking to deal with the issue since this
+discussion started. I will give this a go. I believe this must solve
+the issue, but I didn't want to spit it out loud until I tried to hack
+and check.
+
+--
+Regards,
+Sudeep
