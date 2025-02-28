@@ -1,246 +1,93 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900351C7010;
-	Fri, 28 Feb 2025 07:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92B61CAA6C
+	for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 07:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740727267; cv=none; b=PshYcqyTfMH1oa4j0lHJ4D3P7YH3dNkNWU8TsjHeXCjiDLvQDA53riU0ClHI/Xv4QQRVa84nZvZMsw/1VNenJygoCUT5jnw3I3Qu/dnvQXegfUyC3/W0RCdqD6BOFh+rq8XycG9o0q8iNVND2f0CTg4DmGxvsnQNyqDE7fEzDCg=
+	t=1740727269; cv=none; b=CgbZ7CTvkcShW6+DsOzFyTJ2GXAP1dvGPs9UJHc9vP9EXvKHdRWyDufGWtImwcAtwYP4JpwED8PUY/WFMpj0BGfS+gOR09u6cme8LfKrGBynnDMFtg82oY8fcpKDelkXXulkRwaROvIEtuj1jo2iWfaKJWDm8Mg2T223tjvMxpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740727267; c=relaxed/simple;
-	bh=sl9r9VQ6VexKVxeS2jQ44jEFHbpnEm4bkHQf6mGicRU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NOh0aJ8zOHF6D4FD3bB5WXGIXXx3cSkFFjNr9yZI2R0TqREc6jGsKWHLL1hi7T5njLwoIO/xqKWjeJCVkhyldTP39GBT47hRrDB2gP2zOukmWlCVr+FLOO7+60rpIdTdJDSAs6jH6K4LqrNplrlVodBAQrprgqpG0ED+s5TF2GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OlqJxuxI; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740727269; c=relaxed/simple;
+	bh=LiGS3+6W4VSmf7HQmdSuxLihLsGhBnmgTm1eWOTnPMo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fQlzqVTeWtd/UmAUxHh9jt/58cMyJkt2jNrRtXrWzCDiIFH4MMiSZzfNNn3pikTYeHFHBNCuVOGjXRK9vKa8r/c74w978LJH7Wni1SrcWVdjIvyu/0t8oP6fzJZq1gywxS4m8pAANou68MbGb0ZY5hIAcRreONrqKKd/olncVY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xh/qEr4B; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OlqJxuxI"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51RL6ZHk004454;
-	Fri, 28 Feb 2025 07:20:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	COq625R9+If4QE8gOV9Ke/T020e16SpptKW3azs+Okw=; b=OlqJxuxIkVTSHXP+
-	jDR6RKK2zNWa64q1Rb9NI+MV3zkz8qmp5b+XTSiyxxj+T5w+R7aEyxWCXbcqu4+M
-	8h5KMgji8a9YNan+5FY3htFN3ZiIw4Ko9AIAZypw4rbowIQtKY6gI5uv2iHjRRyO
-	uXu09u58CTUOyP0bOtrGdX94kv4gH9WT0MCjUQljp0DeDOqrSYE/vQnrXY/AMW68
-	spauiuawVcNj+IkI6sbk8s9MrNAUGqvhvKkYIUQKstbOTF91OIJ3s//hd/RwGmQi
-	on86M3XTsrcBks39BglaOqx43r4yGl8NL12sREl8WsTlCQMgEV7MV3Vl7pL3Ij3h
-	mt+KOw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 452pm7k2bc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 07:20:39 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51S7KcRX004787
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Feb 2025 07:20:38 GMT
-Received: from [10.239.133.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 27 Feb
- 2025 23:20:29 -0800
-Message-ID: <1c483978-8e9d-4ba0-8c92-6b4f8c366e2a@quicinc.com>
-Date: Fri, 28 Feb 2025 15:20:27 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xh/qEr4B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740727267; x=1772263267;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=LiGS3+6W4VSmf7HQmdSuxLihLsGhBnmgTm1eWOTnPMo=;
+  b=Xh/qEr4BxFK1GZBWQezpog/y+CjvykEp6pz5DH0GXUm8bVafZgUdpJ8z
+   6K+gjvJGwfPd7jEuNH/IZETuTWH9DHS+R1HFltKETtxKUdSAFMMh6WBwe
+   VuezOwVyTudQUHtl6IlDZY5T8CWtC0pBqVj8dsj9KA5pQiTnHmT7z5MjB
+   tRNq6DaCeYv1dh1S8gDME9bCIyAq6ieVTu12YcXXC7UYgk7ge6gX2uaGe
+   9oFaV1U4Wns/QtiR/ikWR1Og6OdtAZHs4YdW81dgdMa2fJ0lk1zFcskIO
+   0T1PC/XUnXf6C6AhpeCG08TI2Rzt7QIhzkUxd3lovxEtcuF/w2c7FjJ3x
+   w==;
+X-CSE-ConnectionGUID: X2jW5kNISSyoWyvJdvFRDA==
+X-CSE-MsgGUID: TDrJq5S3RRGv9OjMbSPhXw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="29242637"
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="29242637"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 23:21:06 -0800
+X-CSE-ConnectionGUID: AovqdcdhTDGSC0sXB8Nryg==
+X-CSE-MsgGUID: 0R8SLaQyThiei2WV3iTnFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,321,1732608000"; 
+   d="scan'208";a="140487428"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa002.fm.intel.com with ESMTP; 27 Feb 2025 23:21:03 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	bleung@chromium.org,
+	groeck@chromium.org,
+	andriy.shevchenko@linux.intel.com
+Cc: linux-kernel@vger.kernel.org,
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v2 2/2] regulator: cros-ec: use devm_kmemdup_array()
+Date: Fri, 28 Feb 2025 12:50:57 +0530
+Message-Id: <20250228072057.151436-3-raag.jadav@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250228072057.151436-1-raag.jadav@intel.com>
+References: <20250228072057.151436-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: arm: Add Coresight device Trace NOC
- definition
-To: Rob Herring <robh@kernel.org>
-CC: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <kernel@quicinc.com>,
-        <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@oss.qualcomm.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250221-trace-noc-driver-v1-0-0a23fc643217@quicinc.com>
- <20250221-trace-noc-driver-v1-1-0a23fc643217@quicinc.com>
- <20250221235307.GA401276-robh@kernel.org>
-Content-Language: en-US
-From: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-In-Reply-To: <20250221235307.GA401276-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: g8-R13Gx_sxjZuIiU79pSGN8ljaQUnLU
-X-Proofpoint-GUID: g8-R13Gx_sxjZuIiU79pSGN8ljaQUnLU
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-28_01,2025-02-27_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 spamscore=0 priorityscore=1501 suspectscore=0
- malwarescore=0 adultscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502280051
+Content-Transfer-Encoding: 8bit
 
+Convert to use devm_kmemdup_array() and while at it, make the size robust
+against type changes.
 
+Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+---
+ drivers/regulator/cros-ec-regulator.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 2/22/2025 7:53 AM, Rob Herring wrote:
-> On Fri, Feb 21, 2025 at 03:40:28PM +0800, Yuanfang Zhang wrote:
->> Adds new coresight-tnoc.yaml file describing the bindings required
->> to define Trace NOC in the device trees.
->>
->> Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
->> ---
->>  .../bindings/arm/qcom,coresight-tnoc.yaml          | 107 +++++++++++++++++++++
->>  1 file changed, 107 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..b8c1aaf014fb483fd960ec55d1193fb3f66136d2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tnoc.yaml
->> @@ -0,0 +1,107 @@
->> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/arm/qcom,coresight-tnoc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Ttrace NOC(Network On Chip)
->> +
->> +maintainers:
->> +  - yuanfang Zhang <quic_yuanfang@quicinc.com>
->> +
->> +description:
->> +  The Trace NoC is an integration hierarchy which is a replacement of Dragonlink tile configuration.
->> +  It brings together debug component like TPDA, funnel and interconnect Trace Noc which collects trace
->> +  from subsystems and transfers to QDSS sink.
->> +
->> +  It sits in the different subsystem of SOC and aggregates the trace and transports it to Aggregation TNoC
->> +  or to QDSS trace sink eventually. Trace NoC embeds bridges for all the interfaces(APB, ATB, QPMDA & NTS).
->> +
->> +  Trace NoC can take inputs from different trace sources i.e. ATB, QPMDA.
-> 
-> Wrap lines at 80 char. And you need '>' to preserve paragraphs.
-how to use '>' to preserve paragraphs? i don't find it on other yaml, could you share one example?
-> 
->> +
->> +# Need a custom select here or 'arm,primecell' will match on lots of nodes
->> +select:
->> +  properties:
->> +    compatible:
->> +      contains:
->> +        enum:
->> +          - qcom,coresight-tnoc
->> +  required:
->> +    - compatible
->> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^tn(@[0-9a-f]+)$"
-> 
-> blank line
-Done in V2.
-> 
->> +  compatible:
->> +    items:
->> +      - const: qcom,coresight-tnoc
->> +      - const: arm,primecell
->> +
->> +  reg:
->> +    minItems: 1
->> +    maxItems: 2
-> 
-> Need to describe what each entry is.
-Update in V2.
-> 
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  clock-names:
->> +    items:
->> +      - const: apb_pclk
->> +
->> +  in-ports:
->> +    description: |
-> 
-> Don't need '|'
-Done in V2.
-> 
->> +      Input connections from subsystem to TNoC
->> +    $ref: /schemas/graph.yaml#/properties/ports
-> 
-> You have to define the 'port' nodes.
-Done in V2.
-> 
->> +
->> +  out-ports:
->> +    description: |
->> +      Output connections from the TNoC to Aggreg TNoC or to legacy CoreSight trace bus.
->> +    $ref: /schemas/graph.yaml#/properties/ports
->> +
->> +    properties:
->> +      port:
->> +        description: |
->> +          Output connections from the TNoC to Aggreg TNoC or to legacy CoreSight trace bus.
-> 
-> 'connections' sounds like more than 1, but you only have 1 port. 
-> 
-> Wrap at 80 char.
-Done in V2.
-> 
->> +        $ref: /schemas/graph.yaml#/properties/port
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +  - in-ports
->> +  - out-ports
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    tn@109ab000  {
->> +      compatible = "qcom,coresight-tnoc", "arm,primecell";
->> +      reg = <0x0 0x109ab000  0x0 0x4200>;
->> +
->> +      clocks = <&aoss_qmp>;
->> +      clock-names = "apb_pclk";
->> +
->> +      in-ports {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        port@0 {
->> +          reg = <0>;
->> +
->> +          tn_ag_in_tpdm_gcc: endpoint {
->> +            remote-endpoint = <&tpdm_gcc_out_tn_ag>;
->> +          };
->> +        };
->> +      };
->> +
->> +      out-ports {
->> +        port {
->> +          tn_ag_out_funnel_in1: endpoint {
->> +            remote-endpoint = <&funnel_in1_in_tn_ag>;
->> +          };
->> +        };
->> +      };
->> +    };
->> +...
->>
->> -- 
->> 2.34.1
->>
+diff --git a/drivers/regulator/cros-ec-regulator.c b/drivers/regulator/cros-ec-regulator.c
+index fb9643ed7a49..fb0767b33a36 100644
+--- a/drivers/regulator/cros-ec-regulator.c
++++ b/drivers/regulator/cros-ec-regulator.c
+@@ -138,8 +138,8 @@ static int cros_ec_regulator_init_info(struct device *dev,
+ 	data->num_voltages =
+ 		min_t(u16, ARRAY_SIZE(resp.voltages_mv), resp.num_voltages);
+ 	data->voltages_mV =
+-		devm_kmemdup(dev, resp.voltages_mv,
+-			     sizeof(u16) * data->num_voltages, GFP_KERNEL);
++		devm_kmemdup_array(dev, resp.voltages_mv, data->num_voltages,
++				   sizeof(resp.voltages_mv[0]), GFP_KERNEL);
+ 	if (!data->voltages_mV)
+ 		return -ENOMEM;
+ 
+-- 
+2.34.1
 
