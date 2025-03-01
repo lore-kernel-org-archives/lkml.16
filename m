@@ -1,163 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5042B2DA;
-	Sat,  1 Mar 2025 22:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABED189BB0;
+	Sat,  1 Mar 2025 22:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740866958; cv=none; b=he6OH4YecrNQoXAtdmOVXhG3rb4HAtDprN5Xj9qx2nPc191dnxev14DAPW3R2bS4uxio1GaBvSV20r7gRn4ma64aEfC50VYCz+GIY6F2jJfpfCYtUxial+KsKZPzBXmG3inF2DYIn1OlnI8NY5NL4yzaG4zV4sc+7SuUohAirIY=
+	t=1740867644; cv=none; b=HiPh3UHi/wqSKvWVm6tndUxYNWSz51471QxayPam7y3UsTeMgSxgGOMtVn5ysQDaR32TWZaoM9BUYu6UU6X2QILgbVsrzjPIiYhJp1rm34OXFbFNvolCWNri8hRFX+fLouEJy2IvdBoG2RuLiKeJ1l2bebBMMPVU7OkcKdis/Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740866958; c=relaxed/simple;
-	bh=uHtN/VWPtcnOkEo25Y7vtTV3AjhF+AbqcDWtH/62Pyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQvaQBywhlXGIgNhGb6TvwuliWOqbQYUxyBCqFOclm3drLnb86Yo3+1apXjGe2aOVTbZbBnGeZz6ep/J7V5CJgT2HL2FPbu3sMrVgue0hoO5sBYX5oxTU6y2dZs3nZbhXjsU9IlLsO4b1O9tg7POl6fdt7svnmZiLzZPJoruoxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hma9DBHL; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740867644; c=relaxed/simple;
+	bh=bWi5F8JskvMUXwDgg6TYargD0S/3onvbWna1Z9b1pt0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LnQHvitFZPsXfFMUjp8gb47oksZ+CWFGJv/6C8Yl56zwPjoEIvGBc8EpwcjPZ8ELk4uSu/cewvIaK5hEJGV1uymtuXg4+3NGJATshdaRcz3gfnpXVAGKxAA3AnxRMUTO64zoFSZ9c0q9slzR7XqORQatLx94MeIsEm3G9KNq318=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P4Xns9mL; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hma9DBHL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740866956; x=1772402956;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uHtN/VWPtcnOkEo25Y7vtTV3AjhF+AbqcDWtH/62Pyc=;
-  b=Hma9DBHL2gHR01zanHENH9r4wuo6ke49pYw15ToBOhPtuYX8IxwMprc4
-   oto9zn2kyhHXqt7he4s52qzjYvHPcFYk6sIl1JdvHucJZOwRtQUPe6KPO
-   YpXpLZkKSnj0olaIN6Bpqcsq4NH27JPR7+ysOiVdpPVQ5ABPBORnrXF+v
-   lVR/gl8ROGd06r7JyO1qmiBIM13YT4XjYwVJXLhIyBe37Dz98Qqxuyt80
-   dADrEHHUcvx06bDAOUcLyqjCHTmh8+1GwqtLFVgnqI4rIWRZs9TZ+euT3
-   hlBLFBrUGvqKO+U2M0eY8bQ+eCcIGlQJky1UhbtPBNjFHx0Ze4Gl+gRdv
-   Q==;
-X-CSE-ConnectionGUID: pCpEc7r2Q9+/i2SvemWH4g==
-X-CSE-MsgGUID: uZzoarOHTLqyI4MwiDrXJg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11360"; a="59185852"
-X-IronPort-AV: E=Sophos;i="6.13,326,1732608000"; 
-   d="scan'208";a="59185852"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2025 14:09:16 -0800
-X-CSE-ConnectionGUID: joFekOF/Tw+4gQQOZiONUA==
-X-CSE-MsgGUID: /My03QWvQ/eg9mZBHYEqZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="154820830"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 01 Mar 2025 14:09:14 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1toV1E-000GlW-10;
-	Sat, 01 Mar 2025 22:09:12 +0000
-Date: Sun, 2 Mar 2025 06:08:54 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pratap Nirujogi <pratap.nirujogi@amd.com>, linus.walleij@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.chan@amd.com,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>
-Subject: Re: [PATCH] pinctrl: amd: isp411: Add amdisp GPIO pinctrl
-Message-ID: <202503020508.tSquVmjP-lkp@intel.com>
-References: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4Xns9mL"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47208e35f9cso39753131cf.3;
+        Sat, 01 Mar 2025 14:20:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740867641; x=1741472441; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w2JFrSTKfau8m6kxQWUnIa48KZ7ucuFBY64RIjU9F4I=;
+        b=P4Xns9mLIB/r9QqIXWMpx+yYJTOCzWHKWK7GC2VI0y7V+GBHE96SKbY1paM5ly5Kma
+         YMV75WfY014Fm4H4TIV8nUjqklFo+knAjIxy5njBc+G4ZN85VYBMEMI7Q8JoijEZhcuw
+         jhowRc78296+SjpVE8CR7070N/rM1zEuHEYw4LUsvKRq3ibe7sGFpMcJXxdigP4zGmbt
+         0MtOE8FHEsWixMHNIrBZJESBIBdh9ieyfg+MKSN/0NrWlEOcJY++UgJfrRpnDgtN1XeY
+         eZHa1b/y16zPayzwGRpddvr4UptqJxU5JMqw7Q0xq+Sf4q0V4JbOwFF55OpG2Tw1mB1B
+         /66w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740867641; x=1741472441;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w2JFrSTKfau8m6kxQWUnIa48KZ7ucuFBY64RIjU9F4I=;
+        b=M3WbOXQX7Bwfh/er5ddlSR6MaaD1JrXC0bW62KlA7KIiOORLLyS1/dplgsSekzpx06
+         2krvihMaASXi0XgYu3oo4/c/0u8nbn7uaS6recuSvf2qqiDWeo3W1pnqzh4C+6PHzNwk
+         4isubELjPMG9rQlhQdzgqvZypvm5FSa5hO5M7I3f+XFa4dsQZzn6FcZX9h0RLkj6O/1o
+         8Kro9ZRRuLRnUU33f1fZbcHK/ROtP7VKaFpE8dwEFP53SUVWTGwpmQsknkNVHmyDQNXy
+         U3resDYS//BjRbeIqb4K7VMkPggjmfalq882VwtNlJgTp+3TjJaWE64NyFyE0ibYqDkV
+         73QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRRWvH6c7bQzqfUBbucize+s27XMdcwClwHvOeoAqtS+Fa7BpwOfkPpx9NPvCY/f3cUuAMU8h+uRGkwas=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuL8bRF7QEkXdGDFutcT83My5TfL/M19qb2N/oHuPAyW7nsqhm
+	N7zFolJK+ZjwUcwHUghfey6NnFDHpKE6soahk/zqnYtWkLEtkmEF
+X-Gm-Gg: ASbGnct2F8p4+TpRFBhhfUQTDw/8bL83KFiUf/pdsLSLuXmFWd047QD+PmLcqMjQk/L
+	pNTh/8wyhP9e7aANwsjEXe6WnLz+3Iqlm1w8X9YgAsc+Evac/qhAMENtHsXW3abAjj4qNljLLnJ
+	5zQCNYkrMvujyyZF1Y/6dZWBxY85ai+b//5Txv/WKzF8t+P03rHhNsuICjpPMJwayET29iOdFJH
+	ISqPYkqrZxAeDWp4sCqVuMvLaNzIlZmlXevZv5elGB/lcC2id+9W90b/DlomZ2YKt/5Hs71uEa7
+	xLYxry4XmEZJsQqpCa0FtMkLmcdsPREErWADV/ABRM44HA==
+X-Google-Smtp-Source: AGHT+IGAPwp+ISQn26o9aqiS0lxaAntODE0R4hb1MMh8gugmxccnoljIhp8g8WWDVGlv0CoUEvB+aw==
+X-Received: by 2002:a05:6214:226b:b0:6e6:668a:a27f with SMTP id 6a1803df08f44-6e8a0cfff83mr134583676d6.17.1740867641363;
+        Sat, 01 Mar 2025 14:20:41 -0800 (PST)
+Received: from iman-pc.home ([142.198.73.227])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e8976346fcsm36843696d6.14.2025.03.01.14.20.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Mar 2025 14:20:41 -0800 (PST)
+From: Seyediman Seyedarab <imandevel@gmail.com>
+X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu
+Cc: linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Seyediman Seyedarab <ImanDevel@gmail.com>
+Subject: [PATCH v2] kbuild: fix argument parsing in scripts/config
+Date: Sat,  1 Mar 2025 17:21:37 -0500
+Message-ID: <20250301222137.18617-1-ImanDevel@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250228165749.3476210-1-pratap.nirujogi@amd.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Pratap,
+The script previously assumed --file was always the first argument,
+which caused issues when it appeared later. This patch updates the
+parsing logic to scan all arguments to find --file, sets the config
+file correctly, and resets the argument list with the remaining
+commands.
 
-kernel test robot noticed the following build errors:
+It also fixes --refresh to respect --file by passing KCONFIG_CONFIG=$FN
+to make oldconfig.
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next linus/master v6.14-rc4 next-20250228]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
+---
+Changes in v2:
+Specified the script name in the commit message.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pratap-Nirujogi/pinctrl-amd-isp411-Add-amdisp-GPIO-pinctrl/20250301-011050
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20250228165749.3476210-1-pratap.nirujogi%40amd.com
-patch subject: [PATCH] pinctrl: amd: isp411: Add amdisp GPIO pinctrl
-config: arc-randconfig-002-20250302 (https://download.01.org/0day-ci/archive/20250302/202503020508.tSquVmjP-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250302/202503020508.tSquVmjP-lkp@intel.com/reproduce)
+ scripts/config | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503020508.tSquVmjP-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   drivers/pinctrl/pinctrl-amdisp.c: In function 'amdisp_gpiochip_add':
->> drivers/pinctrl/pinctrl-amdisp.c:196:13: error: 'struct gpio_chip' has no member named 'of_node'; did you mean 'fwnode'?
-     196 |         gc->of_node             = pdev->dev.of_node;
-         |             ^~~~~~~
-         |             fwnode
-   In file included from drivers/pinctrl/pinctrl-amdisp.c:42:
-   drivers/pinctrl/pinctrl-amd.h: At top level:
->> drivers/pinctrl/pinctrl-amd.h:1478:34: warning: 'pmx_functions' defined but not used [-Wunused-const-variable=]
-    1478 | static const struct amd_function pmx_functions[] = {
-         |                                  ^~~~~~~~~~~~~
->> drivers/pinctrl/pinctrl-amd.h:882:30: warning: 'kerncz_groups' defined but not used [-Wunused-const-variable=]
-     882 | static const struct pingroup kerncz_groups[] = {
-         |                              ^~~~~~~~~~~~~
->> drivers/pinctrl/pinctrl-amd.h:111:38: warning: 'kerncz_pins' defined but not used [-Wunused-const-variable=]
-     111 | static const struct pinctrl_pin_desc kerncz_pins[] = {
-         |                                      ^~~~~~~~~~~
-
-
-vim +196 drivers/pinctrl/pinctrl-amdisp.c
-
-   173	
-   174	static int amdisp_gpiochip_add(struct platform_device *pdev,
-   175				       struct amdisp_pinctrl *pctrl)
-   176	{
-   177		struct gpio_chip *gc = &pctrl->gc;
-   178		struct pinctrl_gpio_range *grange = &pctrl->gpio_range;
-   179		int ret;
-   180	
-   181		gc->label		= dev_name(pctrl->dev);
-   182		gc->owner		= THIS_MODULE;
-   183		gc->parent		= &pdev->dev;
-   184		gc->names		= amdisp_range_pins_name;
-   185		gc->request		= gpiochip_generic_request;
-   186		gc->free		= gpiochip_generic_free;
-   187		gc->get_direction	= amdisp_gpio_get_direction;
-   188		gc->direction_input	= amdisp_gpio_direction_input;
-   189		gc->direction_output	= amdisp_gpio_direction_output;
-   190		gc->get			= amdisp_gpio_get;
-   191		gc->set			= amdisp_gpio_set;
-   192		gc->set_config		= amdisp_gpio_set_config;
-   193		gc->base		= -1;
-   194		gc->ngpio		= ARRAY_SIZE(amdisp_range_pins);
-   195	#if defined(CONFIG_OF_GPIO)
- > 196		gc->of_node		= pdev->dev.of_node;
-   197		gc->of_gpio_n_cells	= 2;
-   198	#endif
-   199	
-   200		grange->id		= 0;
-   201		grange->pin_base	= 0;
-   202		grange->base		= 0;
-   203		grange->pins		= amdisp_range_pins;
-   204		grange->npins		= ARRAY_SIZE(amdisp_range_pins);
-   205		grange->name		= gc->label;
-   206		grange->gc		= gc;
-   207	
-   208		ret = devm_gpiochip_add_data(&pdev->dev, gc, pctrl);
-   209		if (ret)
-   210			return ret;
-   211	
-   212		pinctrl_add_gpio_range(pctrl->pctrl, grange);
-   213	
-   214		dev_info(&pdev->dev, "register amdisp gpio controller\n");
-   215		return 0;
-   216	}
-   217	#endif
-   218	
-
+diff --git a/scripts/config b/scripts/config
+index ff88e2faefd3..ea475c07de28 100755
+--- a/scripts/config
++++ b/scripts/config
+@@ -32,6 +32,7 @@ commands:
+                              Disable option directly after other option
+ 	--module-after|-M beforeopt option
+                              Turn option into module directly after other option
++	--refresh            Refresh the config using old settings
+ 
+ 	commands can be repeated multiple times
+ 
+@@ -124,16 +125,22 @@ undef_var() {
+ 	txt_delete "^# $name is not set" "$FN"
+ }
+ 
+-if [ "$1" = "--file" ]; then
+-	FN="$2"
+-	if [ "$FN" = "" ] ; then
+-		usage
++FN=.config
++CMDS=()
++while [[ $# -gt 0 ]]; do
++	if [ "$1" = "--file" ]; then
++		if [ "$2" = "" ]; then
++			usage
++		fi
++		FN="$2"
++		shift 2
++	else
++		CMDS+=("$1")
++		shift
+ 	fi
+-	shift 2
+-else
+-	FN=.config
+-fi
++done
+ 
++set -- "${CMDS[@]}"
+ if [ "$1" = "" ] ; then
+ 	usage
+ fi
+@@ -217,9 +224,8 @@ while [ "$1" != "" ] ; do
+ 		set_var "${CONFIG_}$B" "${CONFIG_}$B=m" "${CONFIG_}$A"
+ 		;;
+ 
+-	# undocumented because it ignores --file (fixme)
+ 	--refresh)
+-		yes "" | make oldconfig
++		yes "" | make oldconfig KCONFIG_CONFIG=$FN
+ 		;;
+ 
+ 	*)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
