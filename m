@@ -1,121 +1,110 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from ksmg01.maxima.ru (ksmg01.maxima.ru [81.200.124.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487CB1DD526;
-	Sat,  1 Mar 2025 11:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 580681C5F2D;
+	Sat,  1 Mar 2025 11:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740827539; cv=none; b=Zu09vXUJ1/Pp43/MqV5y3lGoZd6oQAZ+EL1hgrwGJw5v1cD88367wd/qo/GhEgbc6YvjdyRCO9WT3Kr+2gV25HswJm6AE0VSnQGi4ZWULgMBmRZW9de4nEjmiMmzexHsJIxSuuPAlSUOZRdVLVSxoxAPaIDTh7wJKGy8VM5Ssxs=
+	t=1740827616; cv=none; b=ml3dKCZ3BIYSQndRtM5lIlypbsk7i957+YRT+yh0bZBO8WEGGq5MKp8i1CsZ9bcot1paY45NDSF1u3JdcJmB8Pbi75mWbQal8ksceIWfwDWU+8a91KxRRtKvgbUjf5tHPvGGxDx+nWfWq4jdAVsssqhiz1XxkvxGNhGRVyWqMHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740827539; c=relaxed/simple;
-	bh=emQgneBQx2GkDTPzVDPMrpW49qKtnf5Ma/tpnHu+lM8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=MgTSTsXrF1OecjA4wLxupmQrae7pBrT1cEgH6WtAvZ8kXMx9CM5ErVWC/eNxs0CwILG+a4U03HqJg5CxmNnpPnBCvDijQR3zvfpraVTdEYrYhh/vPCZ9DVeemKwxwVy1srI3j5unIgD+A+McJAYz1TAokJj1V2XGAqdvkLRvyis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=1Zt7TsYu; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=3WyofDg3; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
+	s=arc-20240116; t=1740827616; c=relaxed/simple;
+	bh=+AbNtnaDXud5s74tJVuptbsFx8r7MhvvdNtsYu3ZnYQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P+MlbyyNfl6Zf2P40ph0A2X8zb6TxpTLsajx9Bj+uIqLr/6FrPaCaXO5j99P8kNBWXrelQBz2pFhp01eBJqJkC2F2A//qAf6RImqPsG563KMncl8x40yhCtrF8U7tiRBh1uKuFmW3pJ2MC4zQJ4VYxHk7qIL3Fxmf2SLkWf2Jfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=ELPdYg+l; arc=none smtp.client-ip=81.200.124.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="1Zt7TsYu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="3WyofDg3"
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfout.stl.internal (Postfix) with ESMTP id F422C114005D;
-	Sat,  1 Mar 2025 06:12:15 -0500 (EST)
-Received: from phl-imap-07 ([10.202.2.97])
-  by phl-compute-03.internal (MEProxy); Sat, 01 Mar 2025 06:12:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1740827535; x=1740913935; bh=emQgneBQx2GkDTPzVDPMrpW49qKtnf5M
-	a/tpnHu+lM8=; b=1Zt7TsYuUPsDseNNo+8ZboYjCukZzltRCNGiZobleRAAbZ61
-	+DEINfPW7ytAU8rVoVDJIB3DnW6CeFwaoks+WiJOFSJ74HD5L+5rhVwMgouXydkc
-	rr1a0/j1aDORpVQ48GqE5XG38eVlb+U3yttBq1tIQuwPVeptxGEEg3gEmL97XSop
-	+UTjQEI2uuTTZhEWUv0k5Qkor3EYFs7kz7QlXU/tT1lTBKo1PP5iUyfbu6qje0pc
-	3zBrTStTxf+1yz2SI7UBIwv3xJWNxPHwQ3P0u6Fy1etvTu70XwaRP541BuWhdGtt
-	mestxjOgZrG7vsXHwP/pSqBfKPq2AhfWQnh3Qw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740827535; x=
-	1740913935; bh=emQgneBQx2GkDTPzVDPMrpW49qKtnf5Ma/tpnHu+lM8=; b=3
-	WyofDg34NEAmG1IIbppF+U+1WYRDdsyTAgbrRU5x4m/xU9ucGDhPnLRp/fXCUOps
-	LMEET1BKDEfKft3fpl+QEzAlweuwJLcnfb0Eab/xo1RvywpSWa/mI5OyK3fDU2qW
-	hJ7yGYltO9rjYeSDcH1S2aSByKMaomDA0wEG2KTS9gZfbsGENuWhRESrDhgh6Mb3
-	w49wb1xccO6vzHaQ6wT53y4lP4dbp/k8YzulaX1/ehAYU2mv39EMX/cjx41y7EAG
-	oNAQep5BFF7797+oMHuA2fRmkHLCKVBh2sEvPccIXWv035rrT7dM5wDqls1ZY3jQ
-	4u6XrOQWAB24UiRDpxT0Q==
-X-ME-Sender: <xms:j-vCZ7nS1S8n2KRkLrQ3IQd3zaGY8WHneGQou7T2mdXF_7mjf3chMQ>
-    <xme:j-vCZ-0K33EQgZhAoCbAZJkyJs_qYMFkkZ9ovSDTNMtxuoVdT01rVAlQEUswhMlx8
-    tOjtDsZYVPZnxojPVQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdelfedugecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdfuvhgvnhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvg
-    hrrdguvghvqeenucggtffrrghtthgvrhhnpeelfeetueegudduueduuefhfeehgeevkeeu
-    feffvdffkedtffffleevffdvvdeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghr
-    tghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehtohifihhntg
-    hhvghnmhhisehgmhgrihhlrdgtohhmpdhrtghpthhtohepjhesjhgrnhhnrghurdhnvght
-    pdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsth
-    hsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheprghsrghhiheslhhishhtshdr
-    lhhinhhugidruggvvhdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrd
-    hiohdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhr
-    gh
-X-ME-Proxy: <xmx:j-vCZxrtpG8dOD1kK1nkjZB6mI2ZPo6C7AaojHHjZYhzH2iYKEshlg>
-    <xmx:j-vCZzm8GRtOJv5mWT60XiAx9_kTuadqz9kcfylk9k3RhgKAYnkjwQ>
-    <xmx:j-vCZ50e4NdzY9S2AKD3q7qkTIFNbU7Ea7adFSXec8amrAoc2EtrSQ>
-    <xmx:j-vCZyuzkCXjW1_BhRx-vmmfht-du1u8zjqt8y3z0zXqAcE7Z9qQBA>
-    <xmx:j-vCZzxd6ttZESm-38Va9fihMJk8oIDuoOU3vGte09e8X9CEzl7mxHl1>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 02609BA006F; Sat,  1 Mar 2025 06:12:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="ELPdYg+l"
+Received: from ksmg01.maxima.ru (localhost [127.0.0.1])
+	by ksmg01.maxima.ru (Postfix) with ESMTP id 0BCBCC0010;
+	Sat,  1 Mar 2025 14:13:24 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg01.maxima.ru 0BCBCC0010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
+	s=sl; t=1740827604; bh=QQhkhPBQhZUQUCZDT/NBlpDqW9OIbH89a7upfUDq8Fc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=ELPdYg+lR8sntCXynN9bMOO2/F9rne5oWjPqJZTJg+DCWlgEUJX/8iYd6BFjfrMvj
+	 HWeFMCZ7i+UISQ3N4mBYrMvW1xcYyn6taC5iiykMXsWEURKhsKCkYJnqKZLqOxWqBz
+	 hkloNiHPi7rxHhWkhALanWTi5QIHA4E7Jq7AooTavz/arjdca+hUVkKYASagejOg5/
+	 m3Mnvqx4h83yoe8gDgfEo8hpztM6AtNFp/QErej8k0NufKe6i9LUBFAf6medJozTxw
+	 QhxcBpmkQGSWEqt1QLsu9yD5hin3yzJ3wz9YUXvSxsPzBNmg+cW6DdbSsHXCiVUGTB
+	 ZFAdpn5C5018Q==
+Received: from ksmg01.maxima.ru (mail.maxima.ru [81.200.124.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
+	by ksmg01.maxima.ru (Postfix) with ESMTPS;
+	Sat,  1 Mar 2025 14:13:23 +0300 (MSK)
+Received: from localhost.maximatelecom.ru (5.1.51.90) by mmail-p-exch01.mt.ru
+ (81.200.124.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Sat, 1 Mar 2025
+ 14:13:22 +0300
+From: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+CC: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Jani Nikula <jani.nikula@intel.com>,
+	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>
+Subject: [PATCH] media: cec: avoid wraparound in timer interval calculation
+Date: Sat, 1 Mar 2025 16:09:57 +0500
+Message-ID: <20250301111053.2661-1-v.shevtsov@mt-integration.ru>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sat, 01 Mar 2025 12:11:54 +0100
-From: "Sven Peter" <sven@svenpeter.dev>
-To: "Nick Chan" <towinchenmi@gmail.com>, "Janne Grunau" <j@jannau.net>,
- "Alyssa Rosenzweig" <alyssa@rosenzweig.io>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <4670e5f8-2a92-46bd-8faa-dd3774517f3e@app.fastmail.com>
-In-Reply-To: <20250220-caches-v1-0-2c7011097768@gmail.com>
-References: <20250220-caches-v1-0-2c7011097768@gmail.com>
-Subject: Re: [PATCH 0/9] arm64: dts: apple: Add CPU cache information for Apple A7-A11,
- T2 SoCs
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch01.mt.ru
+ (81.200.124.61)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
+X-KSMG-AntiSpam-Envelope-From: v.shevtsov@mt-integration.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;ksmg01.maxima.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;81.200.124.61:7.1.2;mt-integration.ru:7.1.1, FromAlignment: s, ApMailHostAddress: 81.200.124.61
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191398 [Mar 01 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/03/01 07:55:00 #27511358
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 7
 
-Hi,
+[Why]
+The timer function code may have an integer wraparound issue. Since both
+pin->tx_custom_low_usecs and pin->tx_custom_high_usecs can be set to up to
+9999999 from the user space via cec_pin_error_inj_parse_line(), this may
+cause usecs to be overflowed when adap->monitor_pin_cnt is zero and usecs
+is multiplied by 1000.
 
-On Thu, Feb 20, 2025, at 13:21, Nick Chan wrote:
-> Add CPU cache information for Apple A7-A11, T2 SoCs. On Apple
-> A10 (T8010), A10X (T8011), T2 (T8012), only the caches in one of the
-> CPU clusters can be used due to the "Apple Fusion Architecture"
-> big.LITTLE switcher. The values for the P-cluster is used in this
-> case.
+[How]
+Fix this by casting usecs to u64 when it is being converted from
+microseconds to nanoseconds.
 
-So this means that the cache information will be "wrong" when the CPU
-is in the lower power states and only correct for the higher ones?
-I'm not familiar with how these values are used; are you and do you
-know if this will have any weird or unexpected effects?
-Would it be better to use the cache size for the lower rather than
-the higher states or does this not matter much?
+Found by Linux Verification Center (linuxtesting.org) with Svace.
 
+Fixes: 865463fc03ed ("media: cec-pin: add error injection support")
+Signed-off-by: Vitaliy Shevtsov <v.shevtsov@mt-integration.ru>
+---
+ drivers/media/cec/core/cec-pin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/media/cec/core/cec-pin.c b/drivers/media/cec/core/cec-pin.c
+index a70451d99ebc..f15ed5c67a65 100644
+--- a/drivers/media/cec/core/cec-pin.c
++++ b/drivers/media/cec/core/cec-pin.c
+@@ -1021,7 +1021,7 @@ static enum hrtimer_restart cec_pin_timer(struct hrtimer *timer)
+ 		pin->wait_usecs = 0;
+ 		pin->timer_ts = ktime_add_us(ts, usecs);
+ 		hrtimer_forward_now(timer,
+-				ns_to_ktime(usecs * 1000));
++				ns_to_ktime((u64)usecs * 1000));
+ 		return HRTIMER_RESTART;
+ 	}
+ 	pin->wait_usecs = usecs - 100;
+-- 
+2.48.1
 
-Best,
-
-
-Sven
