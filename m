@@ -1,154 +1,168 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 123991DE4C5;
-	Sat,  1 Mar 2025 12:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 172051DC9B8;
+	Sat,  1 Mar 2025 12:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740832742; cv=none; b=YvZs9iiLR0Qo/cYoRRL5oOi8c0vinm5eGNQ3oTCmZlhX5mti5wCJV3X6gV4CGuMzumnJPvInThEQNtuQw8zITes31oA8w7oec1tEt3ZL1m7Q8wMhAGcMWvutjU8zrRi1q74f1waAS3lqz06oTvVBDU7JSxuYcTvEzIE93O/7z/M=
+	t=1740832882; cv=none; b=OLncte9vXqpsgjKMishGWOJxc9V6rcxJPiP+wPUQkskrGoWTrVKK4pI1mJ3wts7dPcX3398EvV14HhVscGSHFlW1cHhw1cP4B878N5jFlFUrBQBvgISHMIBIUzpUpm5Fj6AFJLiP2tZxbnfKBxT087MzWmbdsgB6rf1e4rVxXyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740832742; c=relaxed/simple;
-	bh=g7eybK2HiEnG/Sy/24b6WL3kyyt30gNhkAJLXN0wue0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Ko7QEPT5FRxt+betDitUU9x/7tYDy8Ygkl7IGVgG3Mbkt/GeZdT1+lNDOhftuvkYBVKG/YBY4GHjOsBjnijQT6eCqOioOTv9DGuWppsLC9OXRSM/aGetqTf2eA5p0f5IDcqGgakyjFYhmRifSJrQlt/wgnup2OmJvwyvq9LmCno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=UXwOwJCm reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+	s=arc-20240116; t=1740832882; c=relaxed/simple;
+	bh=fH8zFdJMTFhGVX0V/1Yw10rbmIh+sDhnt/L2hdG9Swk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AoV14r/3iyYlUkwn/0cTQOMtGhx7gR4VT0p/pW+aX2CLs1dTHrW8yUUMZ5dCmy3/9tEDqjqd1zNJOGFkK/2RuT5rGiF2M/xNL6Wt3I7plz/ZVwUgHcFL37TFsPUnvwMelPGhryPCiGPpsTYqWflUbZ/g2g50mxkGb2seceA81Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TuayS3Q0; arc=none smtp.client-ip=220.197.31.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="UXwOwJCm"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TuayS3Q0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=wCBzAKO1DjF50DXGutZA1P0FPBm6tQ8AwKNOnu2djxk=; b=U
-	XwOwJCmyFLQziqjztw5xl6+AewfBMkvciqvrfBu3IQy1kKDj9OKy1r19h0v5HoWg
-	Djxf/MsQzb/7Iis6RjKx4zrAga6Ap0uCEvhEz37mp9PWTUz2rSuv94Ua9dDeB32+
-	behE8j06m91CjllViFMHDsYLlvccEHA+8oMymUlAfM=
-Received: from andyshrk$163.com ( [58.22.7.114] ) by
- ajax-webmail-wmsvr-40-107 (Coremail) ; Sat, 1 Mar 2025 20:38:01 +0800 (CST)
-Date: Sat, 1 Mar 2025 20:38:01 +0800 (CST)
-From: "Andy Yan" <andyshrk@163.com>
-To: "Sebastian Reichel" <sebastian.reichel@collabora.com>
-Cc: "Heiko Stuebner" <heiko@sntech.de>, "Rob Herring" <robh+dt@kernel.org>,
-	"Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"FUKAUMI Naoki" <naoki@radxa.com>,
-	linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kernel@collabora.com
-Subject: Re:[PATCH v1 1/1] arm64: dts: rockchip: Add USB-C support to ROCK
- 5B
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <20241210163615.120594-1-sebastian.reichel@collabora.com>
-References: <20241210163615.120594-1-sebastian.reichel@collabora.com>
-X-NTES-SC: AL_Qu2fAvSYvU4j5yaaY+kfmkcVgOw9UcO5v/Qk3oZXOJF8jCHpyAceeXBTHlbv/PCDBDqXkAiHVDdI89xeb5lhU4kMMSFSiLgpyvXmQtwdLcfubA==
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=+qSBU
+	FwKZK//BSLhdYUxhoKJBzrOrxn+r2oFPLui4bw=; b=TuayS3Q07Z/s/yQ5jxuXQ
+	jE1uu5qTf2xi82VAmCftDIQcjMelsYSOmlmwT7FqtNai7ZmNPY90023WRwRqTqdc
+	VtlEvSDrLDLJQq3mHE9/Y5rPmKPYEli6Hq6iSkBFc0hjPnlA67VKKLenvLCNwxhY
+	xVrEXUqf049pzFFJO8MNGk=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD379A7AMNnbQlkOw--.37453S2;
+	Sat, 01 Mar 2025 20:40:28 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: tglx@linutronix.de
+Cc: manivannan.sadhasivam@linaro.org,
+	kw@linux.com,
+	kwilczynski@kernel.org,
+	bhelgaas@google.com,
+	Frank.Li@nxp.com,
+	cassel@kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [v2] genirq/msi: Add the address and data that show MSI/MSIX
+Date: Sat,  1 Mar 2025 20:39:53 +0800
+Message-Id: <20250301123953.291675-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <12e97e18.367e.19551b6aea2.Coremail.andyshrk@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:aygvCgC33uap_8Jn5UJzAA--.55400W
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gMDXmfC+tw76gABsf
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD379A7AMNnbQlkOw--.37453S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJF45Ww4rAFyfKw47Ar43ZFb_yoWrJw4rpF
+	yUKF47Gr4xJr1Utw47G3WUW34Yya4qyF17t3sFqr1fArZ5Ww1kKFyjgay2gF13tF1jqr1F
+	y3W8Xa4FgrZ8CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0z_NtxDUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiugMDo2fC92OKywAAsp
 
-CkhpIFNlYmFzdGlhbiwKIApBdCAyMDI0LTEyLTExIDAwOjM2OjAxLCAiU2ViYXN0aWFuIFJlaWNo
-ZWwiIDxzZWJhc3RpYW4ucmVpY2hlbEBjb2xsYWJvcmEuY29tPiB3cm90ZToKPkFkZCBoYXJkd2Fy
-ZSBkZXNjcmlwdGlvbiBmb3IgdGhlIFVTQi1DIHBvcnQgaW4gdGhlIFJhZHhhIFJvY2sgNSBNb2Rl
-bCBCLgo+VGhpcyBkZXNjcmliZXMgdGhlIE9IQ0ksIEVIQ0kgYW5kIFhIQ0kgVVNCIHBhcnRzLCBi
-dXQgbm90IHlldCB0aGUKPkRpc3BsYXlQb3J0IEFsdE1vZGUgKGJpbmRpbmdzIGFyZSBub3QgeWV0
-IHVwc3RyZWFtKS4KPgo+VGhlIGZ1c2IzMDIgbm9kZSBpcyBtYXJrZWQgd2l0aCBzdGF0dXMgImZh
-aWwiLCBzaW5jZSB0aGUgYm9hcmQgaXMgdXN1YWxseQo+cG93ZXJlZCB0aHJvdWdoIHRoZSBVU0It
-QyBwb3J0LiBIYW5kbGluZyBvZiBlcnJvcnMgY2FuIHJlc3VsdCBpbiBoYXJkCj5yZXNldHMsIHdo
-aWNoIHJlbW92ZWQgdGhlIGJ1cyBwb3dlciBmb3Igc29tZSB0aW1lIHJlc3VsdGluZyBpbiBhIGJv
-YXJkCj5yZXNldC4KPgo+VGhlIG1haW4gcHJvYmxlbSBpcyB0aGF0IGRldmljZXMgYXJlIHN1cHBv
-c2VkIHRvIGludGVyYWN0IHdpdGggdGhlCj5wb3dlci1zdXBwbHkgd2l0aGluIDUgc2Vjb25kcyBh
-ZnRlciB0aGUgcGx1ZyBldmVudCBhY2NvcmRpbmcgdG8gdGhlCj5VU0IgUEQgc3BlY2lmaWNhdGlv
-bi4gVGhpcyBpcyBtb3JlIG9yIGxlc3MgaW1wb3NzaWJsZSB0byBhY2hpZXZlIHdoZW4KPnRoZSBr
-ZXJuZWwgaXMgdGhlIGZpcnN0IHNvZnR3YXJlIGNvbW11bmljYXRpbmcgd2l0aCB0aGUgcG93ZXIt
-c3VwcGx5Lgo+Cj5SZWNlbnQgVS1Cb290ICh2MjAyNS4wMSkgd2lsbCBzdGFydCBkb2luZyBVU0It
-UEQgY29tbXVuaWNhdGlvbiwgd2hpY2gKPnNvbHZlcyB0aGlzIGlzc3VlLiBVcHN0cmVhbSBVLUJv
-b3QgZG9pbmcgVVNCLVBEIGNvbW11bmljYXRpb24gd2lsbCBhbHNvCj5zZXQgdGhlIGZ1c2IzMDIg
-bm9kZSBzdGF0dXMgdG8gIm9rYXkiLiBUaGF0IHdheSBib290aW5nIGEga2VybmVsIHdpdGgKPnRo
-ZSB1cGRhdGVkIERUIG9uIGFuIG9sZCBVLUJvb3QgYXZvaWRzIGEgcmVzZXQgbG9vcC4KCiAgICBE
-byB5b3UgaGF2ZSBhbnkgcGxhbnMgdG8gY29udGludWUgd29ya2luZyBvbiB0aGlzIHBhdGNoPwog
-ICAgSSd2ZSBiZWVuIHdvcmtpbmcgb24gZW5hYmxpbmcgdGhlIERQIEFsdCBNb2RlIG91dHB1dCBy
-ZWNlbnRseQogICBhbmQgdGhpbmsgdGhlIFJvY2sgNWIgIGlzIGEgZ29vZCBzdGFydGluZyBwb2lu
-dOOAggogICAgIAo+Cj5TaWduZWQtb2ZmLWJ5OiBTZWJhc3RpYW4gUmVpY2hlbCA8c2ViYXN0aWFu
-LnJlaWNoZWxAY29sbGFib3JhLmNvbT4KPi0tLQo+IC4uLi9ib290L2R0cy9yb2NrY2hpcC9yazM1
-ODgtcm9jay01Yi5kdHMgICAgICB8IDEyMSArKysrKysrKysrKysrKysrKysKPiAxIGZpbGUgY2hh
-bmdlZCwgMTIxIGluc2VydGlvbnMoKykKPgo+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvcm9ja2NoaXAvcmszNTg4LXJvY2stNWIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2Nr
-Y2hpcC9yazM1ODgtcm9jay01Yi5kdHMKPmluZGV4IGQ1OTcxMTJmMWQ1Yi4uY2I1OTkwZGY2Y2Ni
-IDEwMDY0NAo+LS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazM1ODgtcm9jay01
-Yi5kdHMKPisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszNTg4LXJvY2stNWIu
-ZHRzCj5AQCAtNSw2ICs1LDcgQEAKPiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvZ3Bpby9ncGlvLmg+
-Cj4gI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2xlZHMvY29tbW9uLmg+Cj4gI2luY2x1ZGUgPGR0LWJp
-bmRpbmdzL3NvYy9yb2NrY2hpcCx2b3AyLmg+Cj4rI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3VzYi9w
-ZC5oPgo+ICNpbmNsdWRlICJyazM1ODguZHRzaSIKPiAKPiAvIHsKPkBAIC04NCw2ICs4NSwxNSBA
-QCByZmtpbGwtYnQgewo+IAkJc2h1dGRvd24tZ3Bpb3MgPSA8JmdwaW8zIFJLX1BENSBHUElPX0FD
-VElWRV9ISUdIPjsKPiAJfTsKPiAKPisJdmNjMTJ2X2RjaW46IHJlZ3VsYXRvci12Y2MxMnYtZGNp
-biB7Cj4rCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4rCQlyZWd1bGF0b3ItbmFt
-ZSA9ICJ2Y2MxMnZfZGNpbiI7Cj4rCQlyZWd1bGF0b3ItYWx3YXlzLW9uOwo+KwkJcmVndWxhdG9y
-LWJvb3Qtb247Cj4rCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxMjAwMDAwMD47Cj4rCQly
-ZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMjAwMDAwMD47Cj4rCX07Cj4rCj4gCXZjYzN2M19w
-Y2llMngxbDA6IHJlZ3VsYXRvci12Y2MzdjMtcGNpZTJ4MWwwIHsKPiAJCWNvbXBhdGlibGUgPSAi
-cmVndWxhdG9yLWZpeGVkIjsKPiAJCWVuYWJsZS1hY3RpdmUtaGlnaDsKPkBAIC0xNDIsNiArMTUy
-LDcgQEAgdmNjNXYwX3N5czogcmVndWxhdG9yLXZjYzV2MC1zeXMgewo+IAkJcmVndWxhdG9yLWJv
-b3Qtb247Cj4gCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsKPiAJCXJlZ3Vs
-YXRvci1tYXgtbWljcm92b2x0ID0gPDUwMDAwMDA+Owo+KwkJdmluLXN1cHBseSA9IDwmdmNjMTJ2
-X2RjaW4+Owo+IAl9Owo+IAo+IAl2Y2NfMXYxX25sZG9fczM6IHJlZ3VsYXRvci12Y2MtMXYxLW5s
-ZG8tczMgewo+QEAgLTI2NCw2ICsyNzUsNjcgQEAgcmVndWxhdG9yLXN0YXRlLW1lbSB7Cj4gCX07
-Cj4gfTsKPiAKPismaTJjNCB7Cj4rCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4rCXBpbmN0
-cmwtMCA9IDwmaTJjNG0xX3hmZXI+Owo+KwlzdGF0dXMgPSAib2theSI7Cj4rCj4rCXVzYmMwOiB1
-c2ItdHlwZWNAMjIgewo+KwkJY29tcGF0aWJsZSA9ICJmY3MsZnVzYjMwMiI7Cj4rCQlyZWcgPSA8
-MHgyMj47Cj4rCQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGlvMz47Cj4rCQlpbnRlcnJ1cHRzID0g
-PFJLX1BCNCBJUlFfVFlQRV9MRVZFTF9MT1c+Owo+KwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
-IjsKPisJCXBpbmN0cmwtMCA9IDwmdXNiYzBfaW50PjsKPisJCXZidXMtc3VwcGx5ID0gPCZ2Y2Mx
-MnZfZGNpbj47Cj4rCQkvKgo+KwkJICogV2hlbiB0aGUgYm9hcmQgaXMgc3RhcnRpbmcgdG8gc2Vu
-ZCBwb3dlci1kZWxpdmVyeSBtZXNzYWdlcwo+KwkJICogdG9vIGxhdGUgKDUgc2Vjb25kcyBhY2Nv
-cmRpbmcgdG8gdGhlIHNwZWNpZmljYXRpb24pLCB0aGUKPisJCSAqIHBvd2VyLXN1cHBseSByZWFj
-dHMgd2l0aCBhIGhhcmQtcmVzZXQuIFRoYXQgcmVtb3ZlcyB0aGUKPisJCSAqIHBvd2VyIGZyb20g
-VkJVUyBmb3Igc29tZSB0aW1lLCB3aGljaCByZXNldHMgdGUgd2hvbGUgYm9hcmQuCj4rCQkgKi8K
-PisJCXN0YXR1cyA9ICJmYWlsIjsKPisKPisJCXVzYl9jb246IGNvbm5lY3RvciB7Cj4rCQkJY29t
-cGF0aWJsZSA9ICJ1c2ItYy1jb25uZWN0b3IiOwo+KwkJCWxhYmVsID0gIlVTQi1DIjsKPisJCQlk
-YXRhLXJvbGUgPSAiZHVhbCI7Cj4rCQkJcG93ZXItcm9sZSA9ICJzaW5rIjsKPisJCQl0cnktcG93
-ZXItcm9sZSA9ICJzaW5rIjsKPisJCQlvcC1zaW5rLW1pY3Jvd2F0dCA9IDwxMDAwMDAwPjsKPisJ
-CQlzaW5rLXBkb3MgPQo+KwkJCQk8UERPX0ZJWEVEKDUwMDAsIDMwMDAsIFBET19GSVhFRF9VU0Jf
-Q09NTSk+LAo+KwkJCQk8UERPX1ZBUig1MDAwLCAyMDAwMCwgNTAwMCk+Owo+Kwo+KwkJCXBvcnRz
-IHsKPisJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4rCQkJCSNzaXplLWNlbGxzID0gPDA+Owo+
-Kwo+KwkJCQlwb3J0QDAgewo+KwkJCQkJcmVnID0gPDA+Owo+KwkJCQkJdXNiYzBfcm9sZV9zdzog
-ZW5kcG9pbnQgewo+KwkJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHdjM18wX3JvbGVfc3dpdGNo
-PjsKPisJCQkJCX07Cj4rCQkJCX07Cj4rCj4rCQkJCXBvcnRAMSB7Cj4rCQkJCQlyZWcgPSA8MT47
-Cj4rCQkJCQl1c2JjMF9vcmllbl9zdzogZW5kcG9pbnQgewo+KwkJCQkJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmdXNiZHBfcGh5MF9vcmllbnRhdGlvbl9zd2l0Y2g+Owo+KwkJCQkJfTsKPisJCQkJfTsK
-PisKPisJCQkJcG9ydEAyIHsKPisJCQkJCXJlZyA9IDwyPjsKPisJCQkJCWRwX2FsdG1vZGVfbXV4
-OiBlbmRwb2ludCB7Cj4rCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ1c2JkcF9waHkwX2RwX2Fs
-dG1vZGVfbXV4PjsKPisJCQkJCX07Cj4rCQkJCX07Cj4rCQkJfTsKPisJCX07Cj4rCX07Cj4rfTsK
-PisKPiAmaTJjNiB7Cj4gCXN0YXR1cyA9ICJva2F5IjsKPiAKPkBAIC00MjMsNiArNDk1LDEwIEBA
-IHVzYiB7Cj4gCQl2Y2M1djBfaG9zdF9lbjogdmNjNXYwLWhvc3QtZW4gewo+IAkJCXJvY2tjaGlw
-LHBpbnMgPSA8NCBSS19QQjAgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9uZT47Cj4gCQl9Owo+
-Kwo+KwkJdXNiYzBfaW50OiB1c2JjMC1pbnQgewo+KwkJCXJvY2tjaGlwLHBpbnMgPSA8MyBSS19Q
-QjQgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9uZT47Cj4rCQl9Owo+IAl9Owo+IH07Cj4gCj5A
-QCAtODM1LDYgKzkxMSwxNCBAQCAmdWFydDIgewo+IAlzdGF0dXMgPSAib2theSI7Cj4gfTsKPiAK
-PismdTJwaHkwIHsKPisJc3RhdHVzID0gIm9rYXkiOwo+K307Cj4rCj4rJnUycGh5MF9vdGcgewo+
-KwlzdGF0dXMgPSAib2theSI7Cj4rfTsKPisKPiAmdTJwaHkxIHsKPiAJc3RhdHVzID0gIm9rYXki
-Owo+IH07Cj5AQCAtODY2LDYgKzk1MCwyOSBAQCAmdXNiZHBfcGh5MSB7Cj4gCXN0YXR1cyA9ICJv
-a2F5IjsKPiB9Owo+IAo+KyZ1c2JkcF9waHkwIHsKPisJbW9kZS1zd2l0Y2g7Cj4rCW9yaWVudGF0
-aW9uLXN3aXRjaDsKPisJc2J1MS1kYy1ncGlvcyA9IDwmZ3BpbzQgUktfUEE2IEdQSU9fQUNUSVZF
-X0hJR0g+Owo+KwlzYnUyLWRjLWdwaW9zID0gPCZncGlvNCBSS19QQTcgR1BJT19BQ1RJVkVfSElH
-SD47Cj4rCXN0YXR1cyA9ICJva2F5IjsKPisKPisJcG9ydCB7Cj4rCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKPisJCSNzaXplLWNlbGxzID0gPDA+Owo+Kwo+KwkJdXNiZHBfcGh5MF9vcmllbnRhdGlv
-bl9zd2l0Y2g6IGVuZHBvaW50QDAgewo+KwkJCXJlZyA9IDwwPjsKPisJCQlyZW1vdGUtZW5kcG9p
-bnQgPSA8JnVzYmMwX29yaWVuX3N3PjsKPisJCX07Cj4rCj4rCQl1c2JkcF9waHkwX2RwX2FsdG1v
-ZGVfbXV4OiBlbmRwb2ludEAxIHsKPisJCQlyZWcgPSA8MT47Cj4rCQkJcmVtb3RlLWVuZHBvaW50
-ID0gPCZkcF9hbHRtb2RlX211eD47Cj4rCQl9Owo+Kwl9Owo+K307Cj4rCj4gJnVzYl9ob3N0MF9l
-aGNpIHsKPiAJc3RhdHVzID0gIm9rYXkiOwo+IH07Cj5AQCAtODc0LDYgKzk4MSwyMCBAQCAmdXNi
-X2hvc3QwX29oY2kgewo+IAlzdGF0dXMgPSAib2theSI7Cj4gfTsKPiAKPismdXNiX2hvc3QwX3ho
-Y2kgewo+Kwl1c2Itcm9sZS1zd2l0Y2g7Cj4rCXN0YXR1cyA9ICJva2F5IjsKPisKPisJcG9ydCB7
-Cj4rCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPisJCSNzaXplLWNlbGxzID0gPDA+Owo+Kwo+KwkJ
-ZHdjM18wX3JvbGVfc3dpdGNoOiBlbmRwb2ludCB7Cj4rCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ1
-c2JjMF9yb2xlX3N3PjsKPisJCX07Cj4rCX07Cj4rfTsKPisKPiAmdXNiX2hvc3QxX2VoY2kgewo+
-IAlzdGF0dXMgPSAib2theSI7Cj4gfTsKPi0tIAo+Mi40NS4yCj4K
+The debug_show() callback function is implemented in the MSI core code.
+And assign it to the domain ops::debug_show() creation.
+
+cat /sys/kernel/debug/irq/irqs/msi_irq_num, the address and data stored
+in the MSI capability or the address and data stored in the MSIX vector
+table will be displayed.
+
+e.g.
+root@root:/sys/kernel/debug/irq/irqs# cat /proc/interrupts | grep ITS
+ 85:          0          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 75497472 Edge      PCIe PME, aerdrv
+ 86:          0         30          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021760 Edge      nvme0q0
+ 87:        287          0          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021761 Edge      nvme0q1
+ 88:          0        265          0          0          0          0          0          0          0          0          0          0   ITS-MSI 76021762 Edge      nvme0q2
+ 89:          0          0        177          0          0          0          0          0          0          0          0          0   ITS-MSI 76021763 Edge      nvme0q3
+ 90:          0          0          0         76          0          0          0          0          0          0          0          0   ITS-MSI 76021764 Edge      nvme0q4
+ 91:          0          0          0          0        161          0          0          0          0          0          0          0   ITS-MSI 76021765 Edge      nvme0q5
+ 92:          0          0          0          0          0        991          0          0          0          0          0          0   ITS-MSI 76021766 Edge      nvme0q6
+ 93:          0          0          0          0          0          0        194          0          0          0          0          0   ITS-MSI 76021767 Edge      nvme0q7
+ 94:          0          0          0          0          0          0          0         94          0          0          0          0   ITS-MSI 76021768 Edge      nvme0q8
+ 95:          0          0          0          0          0          0          0          0        148          0          0          0   ITS-MSI 76021769 Edge      nvme0q9
+ 96:          0          0          0          0          0          0          0          0          0        261          0          0   ITS-MSI 76021770 Edge      nvme0q10
+ 97:          0          0          0          0          0          0          0          0          0          0        127          0   ITS-MSI 76021771 Edge      nvme0q11
+ 98:          0          0          0          0          0          0          0          0          0          0          0        317   ITS-MSI 76021772 Edge      nvme0q12
+root@root:/sys/kernel/debug/irq/irqs#
+root@root:/sys/kernel/debug/irq/irqs# cat 87
+handler:  handle_fasteoi_irq
+device:   0000:91:00.0
+status:   0x00000000
+istate:   0x00004000
+ddepth:   0
+wdepth:   0
+dstate:   0x31600200
+            IRQD_ACTIVATED
+            IRQD_IRQ_STARTED
+            IRQD_SINGLE_TARGET
+            IRQD_AFFINITY_MANAGED
+            IRQD_AFFINITY_ON_ACTIVATE
+            IRQD_HANDLE_ENFORCE_IRQCTX
+node:     0
+affinity: 0
+effectiv: 0
+domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-3
+ hwirq:   0x4880001
+ chip:    ITS-MSI
+  flags:   0x20
+             IRQCHIP_ONESHOT_SAFE
+ msix:
+  address_hi: 0x00000000
+  address_lo: 0x0e060040
+  msg_data:   0x00000001
+ parent:
+    domain:  :soc@0:interrupt-controller@0e001000:its@0e050000-5
+     hwirq:   0x2002
+     chip:    ITS
+      flags:   0x0
+     parent:
+        domain:  :soc@0:interrupt-controller@0e001000-1
+         hwirq:   0x2002
+         chip:    GICv3
+          flags:   0x15
+                     IRQCHIP_SET_TYPE_MASKED
+                     IRQCHIP_MASK_ON_SUSPEND
+                     IRQCHIP_SKIP_SET_WAKE
+
+Signed-off-by: Hans Zhang <18255117159@163.com>
+---
+Changes since v1:
+https://lore.kernel.org/linux-pci/20250227162821.253020-1-18255117159@163.com/
+
+- According to Thomas(tglx), the debug_show() callback should be added
+  to the MSI core code.
+---
+ kernel/irq/msi.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 396a067a8a56..7dc786360172 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -756,12 +756,30 @@ static int msi_domain_translate(struct irq_domain *domain, struct irq_fwspec *fw
+ 	return info->ops->msi_translate(domain, fwspec, hwirq, type);
+ }
+ 
++static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
++				  struct irq_data *irqd, int ind)
++{
++	struct msi_desc *desc;
++	bool is_msix;
++
++	desc = irq_get_msi_desc(irqd->irq);
++	if (!desc)
++		return;
++
++	is_msix = desc->pci.msi_attrib.is_msix;
++	seq_printf(m, "%*s%s:", ind, "", is_msix ? "msix" : "msi");
++	seq_printf(m, "\n%*saddress_hi: 0x%08x", ind + 1, "", desc->msg.address_hi);
++	seq_printf(m, "\n%*saddress_lo: 0x%08x", ind + 1, "", desc->msg.address_lo);
++	seq_printf(m, "\n%*smsg_data:   0x%08x\n", ind + 1, "", desc->msg.data);
++}
++
+ static const struct irq_domain_ops msi_domain_ops = {
+ 	.alloc		= msi_domain_alloc,
+ 	.free		= msi_domain_free,
+ 	.activate	= msi_domain_activate,
+ 	.deactivate	= msi_domain_deactivate,
+ 	.translate	= msi_domain_translate,
++	.debug_show     = msi_domain_debug_show,
+ };
+ 
+ static irq_hw_number_t msi_domain_ops_get_hwirq(struct msi_domain_info *info,
+
+base-commit: 76544811c850a1f4c055aa182b513b7a843868ea
+-- 
+2.25.1
+
