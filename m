@@ -1,271 +1,289 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863E523C9
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 02:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740796648; cv=none; b=kvqnl4B5MZYUfWKxHbn15qS393YxX8UrrX70/V4fcF15GT9Ezh6LFov3DAdsW+lTQia7S90/Beyn8BDgx4DKzlhBbzsTBGflaJSCayhIAbVqWpxCXBm+Swt23IvaZYBxIl+QLPsXRUFyEc6NISMaZaDLrDTdhsNKDmJV4ofCT68=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740796648; c=relaxed/simple;
-	bh=cTGPlx7pw6RIp8KSQT6BuCHfpEYmkepudlGmEEz51Ik=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CuIUKvL+tein/o7HtyZU5ls58aXwrP9OJZE/Izy/iZFYbi406zy+tytuTqnGlXi+6Q1O+7G+McBpe9i7dz9LOSTB4jR59VbHl+Nqq4nnYbfomxscsnN30MsCVdRyGbyuLfUq371yerHbCzRgNcsI8SnOHGs1NI2bqvQ82ZftQGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d2b6d933c1so50351725ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 28 Feb 2025 18:37:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740796645; x=1741401445;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KCt8WYLGPXzaOcIY+HeTQ3rXzOz4MRgxVUe/NkPCXPA=;
-        b=DWkBUZo+WKmoe1gtVcbUxmeVYyVW2y2yEeVGpcasKTYpVG27d84BTc8LRnLHMJpGQy
-         5SQzjEgSvLXUpDkIG2uO8nVvyJQkMKxaxflKWF0qtq9LyX1EpZGVUKjGBMOHzk4mClCx
-         NdVbt2NKfZwBekOV/N658RUGFq9SJiRKpbAdtW/w1NKaGpfKvEQ/JpRI5b9SO+oQvONk
-         bf8E2v+PXsKBMx/cSf03PLdqu46ZsnJBBGWX03TF7zvBd3dmyO0n5yhWaW8SePrtOSr+
-         lKUUmbrT131SAvQIDdGJG96CAf79LqErfgezXOnVjCPF2qe74nQdYM8pC6irFBKG7PA8
-         93Zg==
-X-Gm-Message-State: AOJu0YwL6FpC+ES46mpGgWqJBVJg8zmVJQ1E/sp9MS/JkkNYM+4CayAE
-	TjFMDOavT9fE91uPBcNlCxyMnmmy9j2sdewjwTjptyLfLFV8QW2nF1weXPwYkN1w8D2oiRO/DxS
-	o8wK10t88XDkpSi9bt8inIrukDg6RgsGtbF8PKqJay4fL0JR3IAocaLXceQ==
-X-Google-Smtp-Source: AGHT+IGiFd/UGDzTZZkUgVY/g2QjAZHGl8ItGLWRcWiifbfFjrn4Xps15mUfmqrKQVmbmM85FZ5Oz3ZzrqGBH1vXEeuFj6GkX3Ui
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA0423C9
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 02:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740796663; cv=fail; b=G5fN98LzCdqfalWtCRxHAjGEXFRJl6RLpstY1rDpnAb/y+JNsAMgUjuOZILeE5gwJG4RW448bNNo/druZL4ItDGRUc2bkQ99nANFBG9rSjZlPJoRpMHPsER+MwnNra2MhAsZZ++SS6CVY9qgfa9kZ2kNbgY5BwII/3P2V3TEswk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740796663; c=relaxed/simple;
+	bh=Zx5sZDAezVzmWEo7etFB+2DqBorgQJoy/Sf9iTfvlws=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=RGdQ1hwbEb8gdyg8RCnaZ+Ol7ltBEXZqOA0oChRRVnN9+x0GcqBVfklZ9QMmkj/ZTlj8d+UIBw/iBJ7IYvGh+WiIBtRWdzysa65mHhC97T+eaTI9xbrPYkzL4FKa9kW8NiaYYxPPu5hvjLZG0akbveQm1ebOwXcLFCr/C6+l074=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NNXnqDRu; arc=fail smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NNXnqDRu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740796661; x=1772332661;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Zx5sZDAezVzmWEo7etFB+2DqBorgQJoy/Sf9iTfvlws=;
+  b=NNXnqDRu3uWxJzfDk8u48WBML8u17SP6lg+TEp6DE+W327PA2eWWD8GZ
+   Vq/J+oVKWhOPoFarCyqORH2CbuvYk89iGuqMbSw0EucD8EzgAEXjtJ5v5
+   E4p1PmvOw/7TSGtMh2D1KxBGPIq32WGJohRv2G8xCqT6WG9/6544qdgtW
+   GK29LY9Asd3CQr5+dcNocxeC+HMMNfGIUUO53JXfcqUbGkIWvnU0RVXj1
+   58065NjsF2yvkR6FBMOGjEY5+Q5avUJu+3YRuxnjQtFUhWMVANASnj8xN
+   Wv1qZGgqxOTPlolfmF28LMzOEcdNVFvchG2x8f5opbJR06mmaqhCFt+gp
+   Q==;
+X-CSE-ConnectionGUID: XUiJcm4fSCW6Ntth+C00LA==
+X-CSE-MsgGUID: Jb8IECFzSauhlDshwYHUog==
+X-IronPort-AV: E=McAfee;i="6700,10204,11359"; a="40910433"
+X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
+   d="scan'208";a="40910433"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2025 18:37:39 -0800
+X-CSE-ConnectionGUID: SNuIHmncRp60poENJmROaA==
+X-CSE-MsgGUID: Xwbvz22+TvulBgdZWv24tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,324,1732608000"; 
+   d="scan'208";a="117281721"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 28 Feb 2025 18:35:10 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Fri, 28 Feb 2025 18:35:09 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Fri, 28 Feb 2025 18:35:09 -0800
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.40) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 28 Feb 2025 18:35:09 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bICGAzQoVb7UelTVm3AVRdHfdQHTGLhubwEQ01NFP+Vcl8Wc07/0aCMyg1/yeZ6sLAijP5/c2hBiJw0i7ErReyIbbh7Te3f2C04txNO9Aq/PSkBhKVNzb1A/fPiKbnAphmleqDAb33J67ziNgWWwC+Z5kMWgWkDE/SsV/FDEskNn7QI6BfSUFYc+9sMsuuDdcQlUip2WeZ9GzIQJRfRPf9RIEKwdgnxFArxQHmWlnFEfnR6RVURHd0FtTBcu9tLS57LurRVjaA8j0RyqDfR4B5hqLvX3zCpOo+57LDui0XabXz480/QczjHh3Qo7p61RPadC/EW2mPyfTncNxfaRZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RlPasOCO04HHVO+bn3DwLy8IRKwPmoWdLOikUnixRu4=;
+ b=QssWz/MPjugOxMqd9hLFf05mZzG3+iFmJlkruX84xMv9qBokCYiiN3WZZ7iV2b9bjelzPRSl7MjJczKOcxHVIVSSUXkLjxc8GPi//zJwM6ftXgCkwaPh2kZ1QOYo8LqMdQUYrCgdIf0TpEKmyOSNte5xIrEo8A2qkJcW9S5IwzxBva/DPFC3cdHAczORiig0ITGtdurQDAIZplHQqA5kL7kJTMQalpLir568vxIG+3X4MwP0WWt5ifLyGxv9+Qvb/r7ZwmBg2LW7f4CgG2prPDCzqrtyxX8s1gfidEfAWxeSau/aTuJcV74ibokvArJQ3zaO0jrTE3nBSoaKh+dFeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by SJ0PR11MB4847.namprd11.prod.outlook.com (2603:10b6:a03:2d9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.25; Sat, 1 Mar
+ 2025 02:35:05 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8489.025; Sat, 1 Mar 2025
+ 02:35:05 +0000
+Message-ID: <c7e9f509-404b-48c5-bda3-ecff80f95242@intel.com>
+Date: Fri, 28 Feb 2025 18:35:03 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 33/42] x86/resctrl: resctrl_exit() teardown resctrl but
+ leave the mount point
+To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
+	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
+ Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
+	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
+	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
+ Donthineni <sdonthineni@nvidia.com>, Shaopeng Tan
+	<tan.shaopeng@jp.fujitsu.com>, "Tony Luck" <tony.luck@intel.com>
+References: <20250207181823.6378-1-james.morse@arm.com>
+ <20250207181823.6378-34-james.morse@arm.com>
+ <91026839-2f2e-4562-aa77-6901148c89ad@intel.com>
+ <b3317010-b8bf-46f8-a176-28f810fd9920@arm.com>
+Content-Language: en-US
+From: Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <b3317010-b8bf-46f8-a176-28f810fd9920@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW3PR06CA0011.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::16) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d87:b0:3d1:980a:6a7c with SMTP id
- e9e14a558f8ab-3d3e6e736dfmr62211305ab.8.1740796645694; Fri, 28 Feb 2025
- 18:37:25 -0800 (PST)
-Date: Fri, 28 Feb 2025 18:37:25 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67c272e5.050a0220.dc10f.0159.GAE@google.com>
-Subject: [syzbot] [sound?] BUG: sleeping function called from invalid context
- in snd_card_locked
-From: syzbot <syzbot+4cb9fad083898f54c517@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, perex@perex.cz, 
-	syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|SJ0PR11MB4847:EE_
+X-MS-Office365-Filtering-Correlation-Id: c4b93536-1a77-4431-ab3c-08dd5869ad11
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?NURCRk03RlNlUk1iclVxR1JLaGpuMTZrNThFOUVUUkpNTXM1czlBRDJ6bU1B?=
+ =?utf-8?B?TkVIVjNkRHNUUTN3T1pneWhCa0xVVVVMNnRNNy9YRmRZdTVRc2svb0oxdEhz?=
+ =?utf-8?B?WDdTTnVaeGZQd2JkZlk5enc1ZE5HUE5NcFlSMWdnUnpBU3NZUWlud1UxOVUx?=
+ =?utf-8?B?Z3ZmMXZOZ2tEc1UyVm9IcGIwdlA2WkRJaklhVzVvbzN6NXg3Mi81ZkNnYmc1?=
+ =?utf-8?B?WlBCNHJQOEpMTEJITXZweUx6ajNyUm9FRyt5ZjlwOWE2RnljalNuMVlEZzJM?=
+ =?utf-8?B?bkpkaVhUUnhPZm1tT1R2a2xIeUhPUGQ2emEvSnhvaVZLMHA0Z2FNNUZiZkll?=
+ =?utf-8?B?RTYyTGNaSVBscVZBYVp2T1ZXRmNrMElUUXJka1hXeTYzLzZxdFA0UkxhYU5K?=
+ =?utf-8?B?Mlc2TjU1Qlg2Q1o5WXQ0Z29mbEdObm5BQnZyZUZjbjFFc3RVdHV2dWhFNHl3?=
+ =?utf-8?B?RkJHVG5tWkRRL0MvcHNQUWsyNkdPT1JFZWwwczVGM3Mvcy8ydWpMR2V0SUlG?=
+ =?utf-8?B?QWhuaTJZRWhTa3ZrbVJPcjdXYjVCVVo4MWxCbmIyMEhBWld2TGQ2MUVwbjlK?=
+ =?utf-8?B?M2s4Q0hJRnc2eHQxbkxCcHk1YStlQTBEUkQ4NC9mSzJIMGxURjByMWUzU1U1?=
+ =?utf-8?B?QlpBL1hyRnNTTWFsZWE3MVVybkV5VTZQbkYxWUM5R0hack1HY2Rydzk4a1ox?=
+ =?utf-8?B?VW9mZGhUbm00cmZjdUNQMktFUEdob3RlTTJqK0R5czh4dHZpMEJ3QThCaFdY?=
+ =?utf-8?B?QW8waXlvTWNzOWhHVDd0MlVkc0U0cmRuQnJscm5UK0ExUHN5TGJIbDRDWEEx?=
+ =?utf-8?B?L09lTFRHNnFkR1ZJemxHVS94YUNyV3gvSHNvMVNxdlgzc2xOMytWMkhSRXY1?=
+ =?utf-8?B?NDh5U0p3Qkd5YzBSVnRTcnpHTGRjRCtLcU5HNisrVGRPczFnWitrK3E2WFJG?=
+ =?utf-8?B?RCtZOWI4M3Nlcko1NEFUOURIUzNpcms5dmtNTXdwMlk2Wmp3LzB4LzBXTWg2?=
+ =?utf-8?B?Y0pzQ2ozTWszZlRsSHM2blZFaytNZ3JqWENRQ1h0Vzl1cmEzUjBuKzFVZ1hR?=
+ =?utf-8?B?bzlVeVVieXdpYUlpb3c3ZmZHQnFySzBBb0tHOXRqT0w3L3lrNHFMbHZ2UkMr?=
+ =?utf-8?B?c3RaZnBoQzBMMTVSelVhbk1FSGtralpJUkpCQlhvb29NaGhnMDhWTUcveWk4?=
+ =?utf-8?B?THQ2VHUyaW5zRStUMUJaL3E1SmVmSlV3Z3E2ZW54dmlCTW1EeXdyTjkwdG5T?=
+ =?utf-8?B?K1hFaVhmY2JDM2YyaCttVUk3bE9pVWF2T3Q4bVkvdTduQU5RTU1odzJnckd1?=
+ =?utf-8?B?aEJocytxekIwWGFKc09aRmc1RGlFSkU1MWl5bXRkd0IwZmpGTkh2S2l1VzVI?=
+ =?utf-8?B?Ri95b0xBSUJqRGVUUG43OStManJLblNBWkZWMDB1dUhldnJqTEhRek9tMWcw?=
+ =?utf-8?B?Wk9nditNeVdXR29GOGJNUXBNa3NoaTQ2dHpnTkJGKyt5S0F3Q0hLWXpTRml5?=
+ =?utf-8?B?WW9zK0l1OGZGUi9rQ0J4U1E4clJyaGdBTEVIMXQ3RE9CaTFMOTlEUEZkNzRL?=
+ =?utf-8?B?aGdLUUpJbVNDTVorTjV1czhLSU93U2V4VTlCamMvSXlMSk5ZOHlJbDl6d1U0?=
+ =?utf-8?B?TVhhR2xMWHZ0SzZoVi9zTllxbVRZWlVWbUw5bGNHWXRTeG01WGxFUzByaWc3?=
+ =?utf-8?B?K1o4bkRDV2ZtdVZPQmlaZThMN3FjL0VNS3pZQnZrcWpyN2ttQnh3YUJvZ1Ju?=
+ =?utf-8?B?dGJKNnlmRDc3U1hTQVVPM1NPSXg4RDBwUmkyMTdmS1FZWWVtMzlQaE00eVRC?=
+ =?utf-8?B?UTh6aXVPZ01yMjVCWmU0UT09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VGRkZ2Y2V0VBaXJLOUhUYWRQenR6dDZoMEJQV0x6Ykc2NG1HUUtaTXZnaFdw?=
+ =?utf-8?B?K1hvRzVEVXRoSGtSeVBuOXNENm5NOXd0Rk1NYzJXZ1ZOZlFCdUltY2w4eGFn?=
+ =?utf-8?B?NjNIcnd0bDFDZGE4L1VibGhnK3pib1hZa3UrQXB6WnJGMkdmRWJKazVGRTI5?=
+ =?utf-8?B?UGhrYjNpSmVRekR2ckl0SjZJU2FxZWtKNGVFL3paektLZk9iY2p6bDRnTm4w?=
+ =?utf-8?B?aXRhS2x0dHZEOVFGZENrZGp3ZGVTT1ZkS05raC9mS2dXQUZBZE55eUJ6RTRk?=
+ =?utf-8?B?aStBUk1FQ083dzBkbWZJbU1zRUgyTnkwNTI5QkliL3psWFFZWFlPT3VFTVhY?=
+ =?utf-8?B?bS9kYUJWS1hGRjgzZ0F2NnlrL2V3SVdzcDgxdnNPZm1yODdJV2hkR1ZWRWh4?=
+ =?utf-8?B?TFdZSmoxZkZnbTAyRk92SmMvckwvbWRYS1dieFdqM3dzOUxXWGJOOVdQSnA4?=
+ =?utf-8?B?VUZSOFBWckpWT1dHVDBPTXdtTndveXR1Z0tIU1FHQUVnTWtMYVNOV2V6Y1Jx?=
+ =?utf-8?B?UVZ4MmhpTG92cjVKa0V6S2dOMnk1RnNrRG92aVQ4YUcyMi8zN25UNElGMjJ4?=
+ =?utf-8?B?Y2ExVGNId3A4RUw2SDJmYVVzdDk2Wnhpc1FIMTJGL3hsOVZuNDQwOUdaT216?=
+ =?utf-8?B?dGRPZEVCSm1OR0VnNE5PalU2ZGhJQmRKeHZ5c0JkaGNYUk0rRHJmM3pIc2U4?=
+ =?utf-8?B?MGppSSs4cTFNdmdWUnd4aHg1eXdUZ3BTbFRSSUJkdUR5bUNyZy9JaTUwMzh0?=
+ =?utf-8?B?SUxNZzRjQStlNU9TL2gwYmhUNDBpUUdUTStNNzhzYUhmTmV3M1ZLQVQvR0Zy?=
+ =?utf-8?B?V2R2ZS9jcGVPcldBcjNUTkM4V0F2bUpFaVRBSGFUTllHSnJYUUtIb0lmeW5z?=
+ =?utf-8?B?aDI3M3A4eGJITHR4QmZzQ1pXMGUrMzdBQWxsUC80VTloWnp2aUJHdHNUUjlk?=
+ =?utf-8?B?MkY0VjBMeUNwOUZDR25NV1lLTmcyVSt6ZXlTTVBGZ0FQQlFsdUlWc1EreDdz?=
+ =?utf-8?B?VXhLWGZQZVVnaUc2cDNhaThLVWxBYy95ckdHWmxSUnkwV29IYmM4SmZTWUE5?=
+ =?utf-8?B?aFh0OUx1OGp5V0tINmhHanhHbzBUQ1A3NjhLR2syTE1kd201RDNrNHcyb3Nu?=
+ =?utf-8?B?QXhNL3lSRjdrZWk1cEhVNkJ6RmcveDk5amZnRjVwdm8yUGdsT2xoTmliRUww?=
+ =?utf-8?B?WTdzY1NCeWdUS2J6ckNENXlyaXVSVklob3kwUXN5WUpnek5pZHZqZ25XUVpC?=
+ =?utf-8?B?NUFZdkkxNnFnK2pOaHpndS9YL3Npdi9hcUJzSVU2Q3VZZm52K2dScWFENGtO?=
+ =?utf-8?B?SGJyQmZCQjFZdm02ckpxRFNNNGQrMnJtMDZFN0JtdU0rWnpDUnRSRjhLNkVT?=
+ =?utf-8?B?Y1RWT0YyQjIrc3NJV0pSb0ZrbkhmcGdLelVOMGRLaDlzUWRXRGhaYmRON21y?=
+ =?utf-8?B?VmpFMVdjN2twN05ueFVRRWxHcjlYcTQ4U29xenFhdytBMG51OUp1VnE3V0h6?=
+ =?utf-8?B?WktxNFZ0YnZiZzFQVDFtYVFNUHM3UFh6dVI5S24rZk81OS8waWFJSUJuK1lU?=
+ =?utf-8?B?ZW1uREgxcUMzYWpuN1dROU1zaVNpRklndjBHejZpY3pvck11Q3RmbVdheXpz?=
+ =?utf-8?B?Q2thT0IzM3Zha1owK1FickZXYnVIV0s1clBZaHlTRUxaLzN5ZjVoR28rVjk2?=
+ =?utf-8?B?aEZUVThxNmtzSnVVbnhjMTZKWjZ1eVllbW0vWmJSTmVOS2NHWjczRVdWdW5p?=
+ =?utf-8?B?VVZtclEzejZmWkhoaFRYVDlkUFQ5Q0dPYXFQcnBCSDZPWlJzc3FKRkJEZVd5?=
+ =?utf-8?B?MHpOTEdHcU4zK2h1QW1RYUtMbVJaL2JtanY5bHhQSlY1ZGo0WFNtRGpGRUds?=
+ =?utf-8?B?NFU2QmZqU3doVlpwRytQTE9Da1loWjlIN3NreG54aG1ocGcxU3U3YktuMmhr?=
+ =?utf-8?B?ejN2ZGwxNXJMU29GQk9icW5LQ2pIL2hnNGpSVUxsZlJDY2FUTGhTYnNlNFM2?=
+ =?utf-8?B?RVRKNTliQXh3UUk3L09EVE96Y1NqOTBaclVaM0pUWTRONmk1L211Tml0WTNq?=
+ =?utf-8?B?UHllVVhXUjlpZXpmYmNhWGVqR2tScFQ3WjBYcld2ZWZSZHNnRlRSUXAyR2gx?=
+ =?utf-8?B?dnBLUnJLdG0xWURPRXNNdm54cnV0OXErcXNCSWZSRVExWFhkTFpFOHpKekh5?=
+ =?utf-8?B?Nnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4b93536-1a77-4431-ab3c-08dd5869ad11
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2025 02:35:05.6222
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IlF2PiwZy2VlIvZM9fNZvftfFRuebh3T2g6s7ECNPHKwRMNKgGKpLqx5ud2RcQw/KwcCQ2zDNY+QB3M7oNRkiESAd5cVnYGQ3C5D+Tr4Rx4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB4847
+X-OriginatorOrg: intel.com
 
-Hello,
+Hi James,
 
-syzbot found the following issue on:
+On 2/28/25 11:54 AM, James Morse wrote:
+> Hi Reinette,
+> 
+> On 20/02/2025 04:42, Reinette Chatre wrote:
+>> On 2/7/25 10:18 AM, James Morse wrote:
+>>> resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
+>>> resctrl can't be built as a module, and the kernfs helpers are not exported
+>>> so this is unlikely to change. MPAM has an error interrupt which indicates
+>>> the MPAM driver has gone haywire. Should this occur tasks could run with
+>>> the wrong control values, leading to bad performance for important tasks.
+>>> The MPAM driver needs a way to tell resctrl that no further configuration
+>>> should be attempted.
+>>>
+>>> Using resctrl_exit() for this leaves the system in a funny state as
+>>> resctrl is still mounted, but cannot be un-mounted because the sysfs
+>>> directory that is typically used has been removed. Dave Martin suggests
+>>> this may cause systemd trouble in the future as not all filesystems
+>>> can be unmounted.
+>>>
+>>> Add calls to remove all the files and directories in resctrl, and
+>>> remove the sysfs_remove_mount_point() call that leaves the system
+>>> in a funny state. When triggered, this causes all the resctrl files
+>>> to disappear. resctrl can be unmounted, but not mounted again.
+> 
+>>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> index 6e30283358d4..424622d2f959 100644
+>>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> @@ -4371,9 +4375,12 @@ int __init resctrl_init(void)
+>>>  
+>>
+>> Could you please add the kerneldoc you proposed in
+>> https://lore.kernel.org/lkml/f2ecb501-bc65-49a9-903d-80ba1737845f@arm.com/ ?
+> 
+> Huh. The way that is indented means I copied it out the file - I'm not sure went wrong
+> there. Thanks for fishing out the link!
+> 
+> 
+>>>  void __exit resctrl_exit(void)
+>>>  {
+>>> +	mutex_lock(&rdtgroup_mutex);
+>>> +	rdtgroup_destroy_root();
+>>> +	mutex_unlock(&rdtgroup_mutex);
+>>> +
+>>>  	debugfs_remove_recursive(debugfs_resctrl);
+>>>  	unregister_filesystem(&rdt_fs_type);
+>>> -	sysfs_remove_mount_point(fs_kobj, "resctrl");
+>>>  
+>>>  	resctrl_mon_resource_exit();
+>>>  }
+>>
+>> It is difficult for me to follow the kernfs reference counting required
+>> to make this work. Specifically, the root kn is "destroyed" here but it
+>> is required to stick around until unmount when the rest of the files
+>> are removed.
+> 
+> This drops resctrl's reference to all of the files, which would make the files disappear.
+> unmount is what calls kernfs_kill_sb(), which gets rid of the root of the filesystem.
 
-HEAD commit:    d082ecbc71e9 Linux 6.14-rc4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14e3d7a4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f2f8fb6ad08b539
-dashboard link: https://syzkaller.appspot.com/bug?extid=4cb9fad083898f54c517
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+My concern is mostly with the kernfs_remove() calls in the rdt_kill_sb()->rmdir_all_sub()
+flow. For example:
+	kernfs_remove(kn_info);
+	kernfs_remove(kn_mongrp);
+	kernfs_remove(kn_mondata);
 
-Unfortunately, I don't have any reproducer for this issue yet.
+As I understand the above require the destroyed root to still be around.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-d082ecbc.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f7cfa9bd3468/vmlinux-d082ecbc.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d47dd7c3fc5d/bzImage-d082ecbc.xz
+> 
+> 
+>> Have you been able to test this flow? I think you mentioned
+>> something like this before but I cannot find the details now.
+> 
+> Yes:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git/commit/?h=mpam/snapshot%2bextras/v6.14-rc1&id=8c96f858b25aa42694c5db56a2afe255ed8262dd
+> 
+> This is a debugfs file that schedules the threaded bit of the MPAM error interrupt
+> handler. I figure its MPAM specific because there is no way into this code on x86.
+> (the aim is to get the CI to tickle this)
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4cb9fad083898f54c517@syzkaller.appspotmail.com
+Thank you.
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
-in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 1167, name: kworker/0:1H
-preempt_count: 0, expected: 0
-RCU nest depth: 0, expected: 0
-2 locks held by kworker/0:1H/1167:
- #0: ffff88801b089148 ((wq_completion)events_highpri){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3211
- #1: ffffc900061f7d18 ((work_completion)(&timer->task_work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3212
-irq event stamp: 1044
-hardirqs last  enabled at (1043): [<ffffffff8b59c523>] __raw_spin_unlock_irq include/linux/spinlock_api_smp.h:159 [inline]
-hardirqs last  enabled at (1043): [<ffffffff8b59c523>] _raw_spin_unlock_irq+0x23/0x50 kernel/locking/spinlock.c:202
-hardirqs last disabled at (1044): [<ffffffff8b59c2c2>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (1044): [<ffffffff8b59c2c2>] _raw_spin_lock_irqsave+0x52/0x60 kernel/locking/spinlock.c:162
-softirqs last  enabled at (204): [<ffffffff817c131b>] softirq_handle_end kernel/softirq.c:407 [inline]
-softirqs last  enabled at (204): [<ffffffff817c131b>] handle_softirqs+0x5bb/0x8f0 kernel/softirq.c:589
-softirqs last disabled at (183): [<ffffffff817c17e9>] __do_softirq kernel/softirq.c:595 [inline]
-softirqs last disabled at (183): [<ffffffff817c17e9>] invoke_softirq kernel/softirq.c:435 [inline]
-softirqs last disabled at (183): [<ffffffff817c17e9>] __irq_exit_rcu+0x109/0x170 kernel/softirq.c:662
-CPU: 0 UID: 0 PID: 1167 Comm: kworker/0:1H Not tainted 6.14.0-rc4-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_highpri snd_timer_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- __might_resched+0x3c0/0x5e0 kernel/sched/core.c:8767
- __mutex_lock_common kernel/locking/mutex.c:562 [inline]
- __mutex_lock+0x108/0xb10 kernel/locking/mutex.c:730
- class_mutex_constructor include/linux/mutex.h:201 [inline]
- snd_card_locked+0x1b/0x60 sound/core/init.c:399
- snd_request_card+0x14/0x70 sound/core/sound.c:62
- snd_seq_client_use_ptr+0x375/0x3c0 sound/core/seq/seq_clientmgr.c:152
- get_event_dest_client sound/core/seq/seq_clientmgr.c:533 [inline]
- snd_seq_deliver_single_event+0xdb/0x6e0 sound/core/seq/seq_clientmgr.c:663
- snd_seq_deliver_event+0x291/0x4b0 sound/core/seq/seq_clientmgr.c:822
- snd_seq_dispatch_event+0x117/0x580 sound/core/seq/seq_clientmgr.c:897
- snd_seq_check_queue+0x248/0x510 sound/core/seq/seq_queue.c:256
- snd_seq_timer_interrupt+0x2e3/0x390 sound/core/seq/seq_timer.c:153
- snd_timer_process_callbacks+0x217/0x2e0 sound/core/timer.c:785
- snd_timer_work+0xa9/0x100 sound/core/timer.c:815
- process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
- process_scheduled_works kernel/workqueue.c:3317 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+Reinette
 
-================================
-WARNING: inconsistent lock state
-6.14.0-rc4-syzkaller #0 Tainted: G        W         
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-kworker/0:1H/1167 [HC0[0]:SC0[0]:HE1:SE1] takes:
-ffff8880236dc148 (&timer->lock){?.-.}-{3:3}, at: spin_lock include/linux/spinlock.h:351 [inline]
-ffff8880236dc148 (&timer->lock){?.-.}-{3:3}, at: snd_timer_process_callbacks+0x227/0x2e0 sound/core/timer.c:786
-{IN-HARDIRQ-W} state was registered at:
-  lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
-  __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-  _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-  spin_lock include/linux/spinlock.h:351 [inline]
-  class_spinlock_constructor include/linux/spinlock.h:559 [inline]
-  snd_hrtimer_callback+0x53/0x400 sound/core/hrtimer.c:38
-  __run_hrtimer kernel/time/hrtimer.c:1801 [inline]
-  __hrtimer_run_queues+0x20a/0xae0 kernel/time/hrtimer.c:1865
-  hrtimer_interrupt+0x392/0x8e0 kernel/time/hrtimer.c:1927
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1038 [inline]
-  __sysvec_apic_timer_interrupt+0x10f/0x400 arch/x86/kernel/apic/apic.c:1055
-  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
-  sysvec_apic_timer_interrupt+0x9f/0xc0 arch/x86/kernel/apic/apic.c:1049
-  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-  __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
-  _raw_spin_unlock_irqrestore+0x31/0x80 kernel/locking/spinlock.c:194
-  class_raw_spinlock_irqsave_destructor include/linux/spinlock.h:551 [inline]
-  try_to_wake_up+0x949/0x1490 kernel/sched/core.c:4214
-  wake_up_process kernel/sched/core.c:4463 [inline]
-  wake_up_q+0x9c/0x160 kernel/sched/core.c:1075
-  raw_spin_unlock_irqrestore_wake include/linux/sched/wake_q.h:96 [inline]
-  __mutex_unlock_slowpath+0x231/0x6a0 kernel/locking/mutex.c:933
-  device_unlock include/linux/device.h:1045 [inline]
-  hub_event+0xc5f/0x4e10 drivers/usb/core/hub.c:5954
-  process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
-  process_scheduled_works kernel/workqueue.c:3317 [inline]
-  worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
-  kthread+0x3af/0x750 kernel/kthread.c:464
-  ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
-  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-irq event stamp: 1197
-hardirqs last  enabled at (1197): [<ffffffff8b59c5b2>] __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
-hardirqs last  enabled at (1197): [<ffffffff8b59c5b2>] _raw_spin_unlock_irqrestore+0x52/0x80 kernel/locking/spinlock.c:194
-hardirqs last disabled at (1196): [<ffffffff8b59c2c2>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (1196): [<ffffffff8b59c2c2>] _raw_spin_lock_irqsave+0x52/0x60 kernel/locking/spinlock.c:162
-softirqs last  enabled at (1156): [<ffffffff817c131b>] softirq_handle_end kernel/softirq.c:407 [inline]
-softirqs last  enabled at (1156): [<ffffffff817c131b>] handle_softirqs+0x5bb/0x8f0 kernel/softirq.c:589
-softirqs last disabled at (1047): [<ffffffff817c17e9>] __do_softirq kernel/softirq.c:595 [inline]
-softirqs last disabled at (1047): [<ffffffff817c17e9>] invoke_softirq kernel/softirq.c:435 [inline]
-softirqs last disabled at (1047): [<ffffffff817c17e9>] __irq_exit_rcu+0x109/0x170 kernel/softirq.c:662
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(&timer->lock);
-  <Interrupt>
-    lock(&timer->lock);
-
- *** DEADLOCK ***
-
-2 locks held by kworker/0:1H/1167:
- #0: ffff88801b089148 ((wq_completion)events_highpri){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3211
- #1: ffffc900061f7d18 ((work_completion)(&timer->task_work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3212
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 1167 Comm: kworker/0:1H Tainted: G        W          6.14.0-rc4-syzkaller #0
-Tainted: [W]=WARN
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_highpri snd_timer_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_usage_bug.part.0+0x3fb/0x680 kernel/locking/lockdep.c:4040
- print_usage_bug kernel/locking/lockdep.c:4008 [inline]
- valid_state kernel/locking/lockdep.c:4054 [inline]
- mark_lock_irq kernel/locking/lockdep.c:4265 [inline]
- mark_lock+0x92d/0xc60 kernel/locking/lockdep.c:4751
- mark_usage kernel/locking/lockdep.c:4660 [inline]
- __lock_acquire+0x98e/0x3c40 kernel/locking/lockdep.c:5182
- lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
- __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
- _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
- spin_lock include/linux/spinlock.h:351 [inline]
- snd_timer_process_callbacks+0x227/0x2e0 sound/core/timer.c:786
- snd_timer_work+0xa9/0x100 sound/core/timer.c:815
- process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
- process_scheduled_works kernel/workqueue.c:3317 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-------------[ cut here ]------------
-raw_local_irq_restore() called with IRQs enabled
-WARNING: CPU: 0 PID: 1167 at kernel/locking/irqflag-debug.c:10 warn_bogus_irq_restore+0x29/0x30 kernel/locking/irqflag-debug.c:10
-Modules linked in:
-CPU: 0 UID: 0 PID: 1167 Comm: kworker/0:1H Tainted: G        W          6.14.0-rc4-syzkaller #0
-Tainted: [W]=WARN
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_highpri snd_timer_work
-RIP: 0010:warn_bogus_irq_restore+0x29/0x30 kernel/locking/irqflag-debug.c:10
-Code: 90 f3 0f 1e fa 90 80 3d f9 a7 f3 04 00 74 06 90 c3 cc cc cc cc c6 05 ea a7 f3 04 01 90 48 c7 c7 c0 e6 6c 8b e8 58 df 22 f6 90 <0f> 0b 90 90 eb df 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc900061f7c18 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8880236dc130 RCX: ffffffff817a1229
-RDX: ffff888028238000 RSI: ffffffff817a1236 RDI: 0000000000000001
-RBP: 0000000000000286 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 61636f6c5f776172 R12: ffff8880236dc000
-R13: ffff8880236dc1b0 R14: 0000000000000000 R15: ffff88801b09d800
-FS:  0000000000000000(0000) GS:ffff88806a600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fecdd000218 CR3: 0000000031f9c000 CR4: 0000000000352ef0
-DR0: 0000000000000002 DR1: fffffffffffffffb DR2: 0000000000010001
-DR3: 0000000000000004 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:151 [inline]
- _raw_spin_unlock_irqrestore+0x74/0x80 kernel/locking/spinlock.c:194
- spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
- class_spinlock_irqsave_destructor include/linux/spinlock.h:572 [inline]
- snd_timer_work+0xbe/0x100 sound/core/timer.c:814
- process_one_work+0x9c5/0x1ba0 kernel/workqueue.c:3236
- process_scheduled_works kernel/workqueue.c:3317 [inline]
- worker_thread+0x6c8/0xf00 kernel/workqueue.c:3398
- kthread+0x3af/0x750 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
