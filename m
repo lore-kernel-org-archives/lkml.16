@@ -1,284 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9761CBEB9
-	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 07:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6EC61C3BF1
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 07:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740814495; cv=none; b=TZSz0egVon02yVO0Y4Y9AyEhgbLuk0tJlKdleG8M5dXk1QIw7K6OaHILsVm48pg0zu4dvMmBGoL1Im5ONXZDC/0VkwkeKHpxOLk5MwchilzM/lBLBMKqk7RQQbjrwiYpk4Zun/K+kY9gf0vvKN+5D2UUo1+IqnFnPjfMDj9+bwU=
+	t=1740814530; cv=none; b=cqQuTShgc7zDmC/dwCLrjWLSUrNb5u6m2TSHA3PydUaFOZBARSuHclkpmYG4Xb4T6pdiAanGyUXa8PvLrnS395BfmjqpwSETnQKUJ7V20VXk/OD5njqMHUi6bT1DUEZjYGEUcFSyaUVgsKGr6dwQ6YzBabtT+W5oK6DxmryYLEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740814495; c=relaxed/simple;
-	bh=d9isiOmwgsUb0CjVDs6grBxaGH/sjYwHlsMQDcTAOm4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GYkwiimX1Ncz5ShHT9JRy5Djgz6MH+z7c9YGNwsiqPbQX9uMuynpjhx2b+NrNiVagdQo+pPOUf7mZEOiGnjsZwKWgZdmyPtsZ6qjDHY/Caf7pVixnyBTaJs6U1ikYTX2PTirKgZTMluJEUeQIwnEuZ2T71IXsgpSL5Eyi94rfvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VNDyfnqh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740814530; c=relaxed/simple;
+	bh=9hpsEQ7G4PRVP1gknqhPbi2HNgsf+ElUy1LMJ4F0Xnc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSGpnWP2C2beOFPSAxQu4aoKSBvmZZOJ/Zj4Omnib6KaaE9/K2F0D+Kl1MeIOnzVq2Pgqw7aPewfnUeoYWkgbbBcuow27jRBFx3DuMKco0Mesxj+X1hDCeszXGH//tfqaukfm41FlxXZAVxODFJ7bfr5G7WQD12GmxFrab0FBXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wJNwQGSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNDyfnqh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740814492;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3jTxtJKmZDa4/XsXS9SpdkYsIOEr7/j29bQcYHyXCt0=;
-	b=VNDyfnqh0dhTjMBKDoITaGMqE4ePTBVSA5W94NWwaahGJIF1Z4x4yzGDDM8LIx65g1Fqsy
-	B0JEY0IrRRQMhIHHzkrRApN0HZ52S+gJruiu9UVnlTP6Zcl7DWO/3BaRTU+h+nM7yKSFMo
-	T50QNjuUI7dFJYFJxPspuwQO3BljUHc=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-212-tIdT7sU1MiO7kQrPKbVKbA-1; Sat,
- 01 Mar 2025 02:34:34 -0500
-X-MC-Unique: tIdT7sU1MiO7kQrPKbVKbA-1
-X-Mimecast-MFC-AGG-ID: tIdT7sU1MiO7kQrPKbVKbA_1740814473
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B013D1954B23;
-	Sat,  1 Mar 2025 07:34:33 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CF15C19560B9;
-	Sat,  1 Mar 2025 07:34:32 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	yan.y.zhao@intel.com,
-	Kevin Tian <kevin.tian@intel.com>
-Subject: [PATCH 3/4] KVM: x86: Introduce Intel specific quirk KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT
-Date: Sat,  1 Mar 2025 02:34:27 -0500
-Message-ID: <20250301073428.2435768-4-pbonzini@redhat.com>
-In-Reply-To: <20250301073428.2435768-1-pbonzini@redhat.com>
-References: <20250301073428.2435768-1-pbonzini@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wJNwQGSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED7B5C4CEDD;
+	Sat,  1 Mar 2025 07:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740814529;
+	bh=9hpsEQ7G4PRVP1gknqhPbi2HNgsf+ElUy1LMJ4F0Xnc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=wJNwQGSFopo2AMSXcM83b7X9gbVX2k5kthIt8mz1n1WpQJdLmbqLYj0ucltmzjuZu
+	 ydEHEMtmBdJYaCUxHXMDDAS7ll4IeGqLinCgaDRGe1rJ6SOuAUe1a4kdUbajb3522n
+	 ohDZfFO5QPewhAKh6N4GQDap7qbgUdGvMNzW1hmc=
+Date: Fri, 28 Feb 2025 23:34:16 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+Cc: ayaanmirza85@gmail.com, dakr@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] drivers/base: fix iterator cleanup in
+ attribute_container_find_class_device (v2)
+Message-ID: <2025022819-pushing-virtual-9b85@gregkh>
+References: <2025022606-carrousel-unstable-f2f3@gregkh>
+ <20250227124417.132020-4-ayaanmirzabaig85@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250227124417.132020-4-ayaanmirzabaig85@gmail.com>
 
-From: Yan Zhao <yan.y.zhao@intel.com>
+On Thu, Feb 27, 2025 at 06:11:29PM +0530, Ayaan Mirza Baig wrote:
+> This patch fixes a long-standing FIXME by refactoring
+> the function to ensure klist_iter_exit() is always
+> invoked once via a unified cleanup path
+> 
+> The patch has been tested thoroughly with a minimal
+> Debain System and scsi devices and GDB.
+> 
+> Tested-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
+> Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
 
-Introduce an Intel specific quirk KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT to have
-KVM ignore guest PAT when this quirk is enabled.
+No need to duplicate this here, if you sign-off it's implicit that you
+tested it :)
 
-KVM is able to safely honor guest PAT on Intel platforms when CPU feature
-self-snoop is supported. However, KVM honoring guest PAT was reverted after
-commit 9d70f3fec144 ("Revert "KVM: VMX: Always honor guest PAT on CPUs that
-support self-snoop""), due to UC access on certain Intel platforms being
-very slow [1]. Honoring guest PAT on those platforms may break some old
-guests that accidentally specify PAT as UC. Those old guests may never
-expect the slowness since KVM always forces WB previously. See [2].
+> ---
+>  drivers/base/attribute_container.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/attribute_container.c b/drivers/base/attribute_container.c
+> index 69637b2ec3bc..fbf7fd45651e 100644
+> --- a/drivers/base/attribute_container.c
+> +++ b/drivers/base/attribute_container.c
+> @@ -492,12 +492,11 @@ attribute_container_find_class_device(struct attribute_container *cont,
+>  	klist_for_each_entry(ic, &cont->containers, node, &iter) {
+>  		if (ic->classdev.parent == dev) {
+>  			cdev = &ic->classdev;
+> -			/* FIXME: must exit iterator then break */
+> -			klist_iter_exit(&iter);
+> -			break;
+> +			goto out;
+>  		}
+>  	}
+> -
+> +out:
+> +	klist_iter_exit(&iter);
 
-So, introduce an Intel specific quirk KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT.
-KVM enables the quirk on all Intel platforms by default to avoid breaking
-old unmodifiable guests. Newer userspace can disable this quirk to turn on
-honoring guest PAT.
+Are you sure this actually does something different?  Why is the FIXME
+there and why does this "simple" change solve the issue?  I don't
+understand how this change resolves the problem.
 
-The quirk is only valid on Intel's platforms and is absent on AMD's
-platforms as KVM always honors guest PAT when running on AMD.
+In other words, you're going to have to document this a lot better in
+the changelog message please.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
-Link: https://lore.kernel.org/all/Ztl9NWCOupNfVaCA@yzhao56-desk.sh.intel.com # [1]
-Link: https://lore.kernel.org/all/87jzfutmfc.fsf@redhat.com # [2]
-Message-ID: <20250224070946.31482-1-yan.y.zhao@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- Documentation/virt/kvm/api.rst  | 22 +++++++++++++++++++
- arch/x86/include/uapi/asm/kvm.h |  1 +
- arch/x86/kvm/mmu.h              |  2 +-
- arch/x86/kvm/mmu/mmu.c          | 11 ++++++----
- arch/x86/kvm/svm/svm.c          |  1 +
- arch/x86/kvm/vmx/vmx.c          | 39 +++++++++++++++++++++++++++------
- arch/x86/kvm/x86.c              |  2 +-
- 7 files changed, 65 insertions(+), 13 deletions(-)
+thanks,
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2d75edc9db4f..1f13e47a65fa 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -8157,6 +8157,28 @@ KVM_X86_QUIRK_STUFF_FEATURE_MSRS    By default, at vCPU creation, KVM sets the
-                                     and 0x489), as KVM does now allow them to
-                                     be set by userspace (KVM sets them based on
-                                     guest CPUID, for safety purposes).
-+
-+KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT  By default, on Intel platforms, KVM ignores
-+                                    guest PAT and forces the effective memory
-+                                    type to WB in EPT.  The quirk is not available
-+                                    on Intel platforms which are incapable of
-+                                    safely honoring guest PAT (i.e., without CPU
-+                                    self-snoop, KVM always ignores guest PAT and
-+                                    forces effective memory type to WB).  It is
-+                                    also ignored on AMD platforms or, on Intel,
-+                                    when a VM has non-coherent DMA devices
-+                                    assigned; KVM always honors guest PAT in
-+                                    such case. The quirk is needed to avoid
-+                                    slowdowns on certain Intel Xeon platforms
-+                                    (e.g. ICX, SPR) where self-snoop feature is
-+                                    supported but UC is slow enough to cause
-+                                    issues with some older guests that use
-+                                    UC instead of WC to map the video RAM.
-+                                    Userspace can disable the quirk to honor
-+                                    guest PAT if it knows that there is no such
-+                                    guest software, for example if it does not
-+                                    expose a bochs graphics device (which is
-+                                    known to have had a buggy driver).
- =================================== ============================================
- 
- 7.32 KVM_CAP_MAX_VCPU_ID
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 89cc7a18ef45..db55a70e173c 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -441,6 +441,7 @@ struct kvm_sync_regs {
- #define KVM_X86_QUIRK_MWAIT_NEVER_UD_FAULTS	(1 << 6)
- #define KVM_X86_QUIRK_SLOT_ZAP_ALL		(1 << 7)
- #define KVM_X86_QUIRK_STUFF_FEATURE_MSRS	(1 << 8)
-+#define KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT	(1 << 9)
- 
- #define KVM_STATE_NESTED_FORMAT_VMX	0
- #define KVM_STATE_NESTED_FORMAT_SVM	1
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 47e64a3c4ce3..f999c15d8d3e 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -232,7 +232,7 @@ static inline u8 permission_fault(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
- 	return -(u32)fault & errcode;
- }
- 
--bool kvm_mmu_may_ignore_guest_pat(void);
-+bool kvm_mmu_may_ignore_guest_pat(struct kvm *kvm);
- 
- int kvm_mmu_post_init_vm(struct kvm *kvm);
- void kvm_mmu_pre_destroy_vm(struct kvm *kvm);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index e6eb3a262f8d..bcf395d7ec53 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4663,17 +4663,20 @@ static int kvm_tdp_mmu_page_fault(struct kvm_vcpu *vcpu,
- }
- #endif
- 
--bool kvm_mmu_may_ignore_guest_pat(void)
-+bool kvm_mmu_may_ignore_guest_pat(struct kvm *kvm)
- {
- 	/*
- 	 * When EPT is enabled (shadow_memtype_mask is non-zero), and the VM
- 	 * has non-coherent DMA (DMA doesn't snoop CPU caches), KVM's ABI is to
- 	 * honor the memtype from the guest's PAT so that guest accesses to
- 	 * memory that is DMA'd aren't cached against the guest's wishes.  As a
--	 * result, KVM _may_ ignore guest PAT, whereas without non-coherent DMA,
--	 * KVM _always_ ignores guest PAT (when EPT is enabled).
-+	 * result, KVM _may_ ignore guest PAT, whereas without non-coherent DMA.
-+	 * KVM _always_ ignores guest PAT, when EPT is enabled and when quirk
-+	 * KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT is enabled or the CPU lacks the
-+	 * ability to safely honor guest PAT.
- 	 */
--	return shadow_memtype_mask;
-+	return shadow_memtype_mask &&
-+	       kvm_check_has_quirk(kvm, KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT);
- }
- 
- int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index ebaa5a41db07..2254dbebddac 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -5426,6 +5426,7 @@ static __init int svm_hardware_setup(void)
- 	 */
- 	allow_smaller_maxphyaddr = !npt_enabled;
- 
-+	kvm_caps.inapplicable_quirks |= KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT;
- 	return 0;
- 
- err:
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 75df4caea2f7..5365efb22e96 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7599,6 +7599,33 @@ int vmx_vm_init(struct kvm *kvm)
- 	return 0;
- }
- 
-+/*
-+ * Ignore guest PAT when the CPU doesn't support self-snoop to safely honor
-+ * guest PAT, or quirk KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT is turned on.  Always
-+ * honor guest PAT when there's non-coherent DMA device attached.
-+ *
-+ * Honoring guest PAT means letting the guest control memory types.
-+ * - On Intel CPUs that lack self-snoop feature, honoring guest PAT may result
-+ *   in unexpected behavior. So always ignore guest PAT on those CPUs.
-+ *
-+ * - KVM's ABI is to trust the guest for attached non-coherent DMA devices to
-+ *   function correctly (non-coherent DMA devices need the guest to flush CPU
-+ *   caches properly). So honoring guest PAT to avoid breaking existing ABI.
-+ *
-+ * - On certain Intel CPUs (e.g. SPR, ICX), though self-snoop feature is
-+ *   supported, UC is slow enough to cause issues with some older guests (e.g.
-+ *   an old version of bochs driver uses ioremap() instead of ioremap_wc() to
-+ *   map the video RAM, causing wayland desktop to fail to get started
-+ *   correctly). To avoid breaking those old guests that rely on KVM to force
-+ *   memory type to WB, only honoring guest PAT when quirk
-+ *   KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT is disabled.
-+ */
-+static inline bool vmx_ignore_guest_pat(struct kvm *kvm)
-+{
-+	return !kvm_arch_has_noncoherent_dma(kvm) &&
-+	       kvm_check_has_quirk(kvm, KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT);
-+}
-+
- u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
- {
- 	/*
-@@ -7608,13 +7635,8 @@ u8 vmx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
- 	if (is_mmio)
- 		return MTRR_TYPE_UNCACHABLE << VMX_EPT_MT_EPTE_SHIFT;
- 
--	/*
--	 * Force WB and ignore guest PAT if the VM does NOT have a non-coherent
--	 * device attached.  Letting the guest control memory types on Intel
--	 * CPUs may result in unexpected behavior, and so KVM's ABI is to trust
--	 * the guest to behave only as a last resort.
--	 */
--	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
-+	/* Force WB if ignoring guest PAT */
-+	if (vmx_ignore_guest_pat(vcpu->kvm))
- 		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
- 
- 	return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT);
-@@ -8506,6 +8528,9 @@ __init int vmx_hardware_setup(void)
- 
- 	kvm_set_posted_intr_wakeup_handler(pi_wakeup_handler);
- 
-+	/* Must use WB if the CPU does not have self-snoop.  */
-+	if (!static_cpu_has(X86_FEATURE_SELFSNOOP))
-+		kvm_caps.supported_quirks &= ~KVM_X86_QUIRK_EPT_IGNORE_GUEST_PAT;
- 	kvm_caps.inapplicable_quirks = KVM_X86_QUIRK_CD_NW_CLEARED;
- 	return r;
- }
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a97e58916b6a..b221f273ec77 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -13544,7 +13544,7 @@ static void kvm_noncoherent_dma_assignment_start_or_stop(struct kvm *kvm)
- 	 * (or last) non-coherent device is (un)registered to so that new SPTEs
- 	 * with the correct "ignore guest PAT" setting are created.
- 	 */
--	if (kvm_mmu_may_ignore_guest_pat())
-+	if (kvm_mmu_may_ignore_guest_pat(kvm))
- 		kvm_zap_gfn_range(kvm, gpa_to_gfn(0), gpa_to_gfn(~0ULL));
- }
- 
--- 
-2.43.5
-
-
+greg k-h
