@@ -1,112 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F42D28F5;
-	Sat,  1 Mar 2025 07:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E911C4A24
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 07:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740815381; cv=none; b=CctJAaMYsL3WFZAEMYZ+DcNcGEbcWVQXvlouR3Of8aPh6ZbY0/0rpLG7EfAv0YVl9T509KjIhu2D1vdrrLF2PwHhuqBjUAjUTUKpiMq6agqdSsZOaemkthFYKMxGBsSZ/cQjkcFWvIBMYxFJt7C1tVGixim75gbGOV2DBlphQAw=
+	t=1740815873; cv=none; b=N1Q7ghZTx9H4508UEk7ifqgbc9eVaI2yxmsTWLzQxk6/3cmb9qovFhAob7FRT4nQm2SXg4R3fOnzwLFhuoxOXZFySogFxZ4rqDbZYuARrxIyWy/zmKSw96FNrYgr6LN+RdfI+5PaPttSBN22U8nGUdX09H+qOuf2D404QGAJd5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740815381; c=relaxed/simple;
-	bh=SZI4oem7AV2imCWP1ydcfi/UNJr/qkLcL4nFKrpPpJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XTsLBvEHjrbSz7J25S+zrvyO5skkxdMslwXy7sR4+FJlU6NrKOsX33tJ04/nt6b0K5jCxXzJflIh85gcAKec7OYDPPwvYTifkbtbk9qkcyrH5KK1O+mMOu13dGY9rnWfy+21kU6TKOX/S5rF00Gy3VbMzx6L2/QPrfir5rMYqdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdKShtPE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740815873; c=relaxed/simple;
+	bh=6QUcifrKhzUKgXPcxaZK3/0bvh4sxZHVVHWo3IB+PGk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VWzm1JP5yJhNeahz/ejdpPhnViiXuhiNJuR+xilX8fMOO1CijwFUVdMiTIAryM/a/lLTXaQDtnkDWkRPjcfGI65UEFCOKBv5DXk++qMyMY8Qsxdf0z6wfdGaaJUFa5b8uczQAl/P0gyynPGAgTUA5EtsKpzzIW8Dab4Jy2w1hR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=caMhHIwI; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdKShtPE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260A3C4CEDD;
-	Sat,  1 Mar 2025 07:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740815380;
-	bh=SZI4oem7AV2imCWP1ydcfi/UNJr/qkLcL4nFKrpPpJ8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bdKShtPE2kJejDOMbzCUE9D48X79oVOMwZs5vhzY8RIQT3tinBGE+Yf3HqMa/ZOwu
-	 x23ZfxLuboNbV05ar3AaswlHoKvdozOju/56Kci9uiynSAqtkM4dv6iF2HNSY/Ke3b
-	 kzXHVSLPdMY0Y8erMsLYfnES4Wn+HPCwk/maf/NxjRJ/VLD8d3GEtSYJqOT/ystNH3
-	 Q/J1oZn1yO2YLw7Bgi/H2fQQURouaVChb1i/iOERKe16tedHOB7pT5EUPmkulccBTG
-	 ORSykebBCiBAaZnce4iB6m+nljFNQOm29Oew1S4F1AsUsGRF1t2URLG5BEdCN6ZIx+
-	 LcAUrozZvbfEQ==
-Message-ID: <02bbcbca-429b-4c89-88f6-54387bf7c1de@kernel.org>
-Date: Sat, 1 Mar 2025 08:49:36 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="caMhHIwI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740815870;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=f8IcxfwIe3Oc9yKSSo05CvmrpOyTrW66IHpbwozDSMA=;
+	b=caMhHIwI1Jvn6w7y1pIfVE4AgdX0PxKolf5VxS0nvM+nrSsMzPcbRsKpk1D1mF9V1axCFV
+	YOc4v53pEwm1cwFkw8hHtrUKIkByBHiJQ/mZiP10Dh0afLZUdY8VhUeF8YMuCJrvc5jLHl
+	b1fvV2g+AZPMvOxKjxNUPJDvoWGioG4=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-396-2hnLaSK4OMqWWssQWn5FkA-1; Sat,
+ 01 Mar 2025 02:57:34 -0500
+X-MC-Unique: 2hnLaSK4OMqWWssQWn5FkA-1
+X-Mimecast-MFC-AGG-ID: 2hnLaSK4OMqWWssQWn5FkA_1740815853
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 780111954B20;
+	Sat,  1 Mar 2025 07:57:33 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D9A701800371;
+	Sat,  1 Mar 2025 07:57:32 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] KVM fixes for Linux 6.14-rc5
+Date: Sat,  1 Mar 2025 02:57:32 -0500
+Message-ID: <20250301075732.2438425-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: More than 256/512 glyphs on the Liinux console
-To: Alan Mackenzie <acm@muc.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Simona Vetter <simona@ffwll.ch>, linux-serial@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <Z7idXzMcDhe_E5oN@MAC.fritz.box>
- <2025022243-street-joylessly-6dfa@gregkh> <Z7nu7HqKn4o2rMd5@MAC.fritz.box>
- <2025022355-peroxide-defacing-4fa4@gregkh> <Z7y4yHT0fNYYiPI8@MAC.fritz.box>
- <d5e05c61-d796-4e5c-9538-a1e068631bba@kernel.org>
- <Z73sqvjlbJ54FCtH@MAC.fritz.box> <2025022652-uptown-cheating-5df8@gregkh>
- <Z8BjC_TzuDVaFC_3@MAC.fritz.box>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- xsFNBE6S54YBEACzzjLwDUbU5elY4GTg/NdotjA0jyyJtYI86wdKraekbNE0bC4zV+ryvH4j
- rrcDwGs6tFVrAHvdHeIdI07s1iIx5R/ndcHwt4fvI8CL5PzPmn5J+h0WERR5rFprRh6axhOk
- rSD5CwQl19fm4AJCS6A9GJtOoiLpWn2/IbogPc71jQVrupZYYx51rAaHZ0D2KYK/uhfc6neJ
- i0WqPlbtIlIrpvWxckucNu6ZwXjFY0f3qIRg3Vqh5QxPkojGsq9tXVFVLEkSVz6FoqCHrUTx
- wr+aw6qqQVgvT/McQtsI0S66uIkQjzPUrgAEtWUv76rM4ekqL9stHyvTGw0Fjsualwb0Gwdx
- ReTZzMgheAyoy/umIOKrSEpWouVoBt5FFSZUyjuDdlPPYyPav+hpI6ggmCTld3u2hyiHji2H
- cDpcLM2LMhlHBipu80s9anNeZhCANDhbC5E+NZmuwgzHBcan8WC7xsPXPaiZSIm7TKaVoOcL
- 9tE5aN3jQmIlrT7ZUX52Ff/hSdx/JKDP3YMNtt4B0cH6ejIjtqTd+Ge8sSttsnNM0CQUkXps
- w98jwz+Lxw/bKMr3NSnnFpUZaxwji3BC9vYyxKMAwNelBCHEgS/OAa3EJoTfuYOK6wT6nadm
- YqYjwYbZE5V/SwzMbpWu7Jwlvuwyfo5mh7w5iMfnZE+vHFwp/wARAQABzSFKaXJpIFNsYWJ5
- IDxqaXJpc2xhYnlAa2VybmVsLm9yZz7CwXcEEwEIACEFAlW3RUwCGwMFCwkIBwIGFQgJCgsC
- BBYCAwECHgECF4AACgkQvSWxBAa0cEnVTg//TQpdIAr8Tn0VAeUjdVIH9XCFw+cPSU+zMSCH
- eCZoA/N6gitEcnvHoFVVM7b3hK2HgoFUNbmYC0RdcSc80pOF5gCnACSP9XWHGWzeKCARRcQR
- 4s5YD8I4VV5hqXcKo2DFAtIOVbHDW+0okOzcecdasCakUTr7s2fXz97uuoc2gIBB7bmHUGAH
- XQXHvdnCLjDjR+eJN+zrtbqZKYSfj89s/ZHn5Slug6w8qOPT1sVNGG+eWPlc5s7XYhT9z66E
- l5C0rG35JE4PhC+tl7BaE5IwjJlBMHf/cMJxNHAYoQ1hWQCKOfMDQ6bsEr++kGUCbHkrEFwD
- UVA72iLnnnlZCMevwE4hc0zVhseWhPc/KMYObU1sDGqaCesRLkE3tiE7X2cikmj/qH0CoMWe
- gjnwnQ2qVJcaPSzJ4QITvchEQ+tbuVAyvn9H+9MkdT7b7b2OaqYsUP8rn/2k1Td5zknUz7iF
- oJ0Z9wPTl6tDfF8phaMIPISYrhceVOIoL+rWfaikhBulZTIT5ihieY9nQOw6vhOfWkYvv0Dl
- o4GRnb2ybPQpfEs7WtetOsUgiUbfljTgILFw3CsPW8JESOGQc0Pv8ieznIighqPPFz9g+zSu
- Ss/rpcsqag5n9rQp/H3WW5zKUpeYcKGaPDp/vSUovMcjp8USIhzBBrmI7UWAtuedG9prjqfO
- wU0ETpLnhgEQAM+cDWLL+Wvc9cLhA2OXZ/gMmu7NbYKjfth1UyOuBd5emIO+d4RfFM02XFTI
- t4MxwhAryhsKQQcA4iQNldkbyeviYrPKWjLTjRXT5cD2lpWzr+Jx7mX7InV5JOz1Qq+P+nJW
- YIBjUKhI03ux89p58CYil24Zpyn2F5cX7U+inY8lJIBwLPBnc9Z0An/DVnUOD+0wIcYVnZAK
- DiIXODkGqTg3fhZwbbi+KAhtHPFM2fGw2VTUf62IHzV+eBSnamzPOBc1XsJYKRo3FHNeLuS8
- f4wUe7bWb9O66PPFK/RkeqNX6akkFBf9VfrZ1rTEKAyJ2uqf1EI1olYnENk4+00IBa+BavGQ
- 8UW9dGW3nbPrfuOV5UUvbnsSQwj67pSdrBQqilr5N/5H9z7VCDQ0dhuJNtvDSlTf2iUFBqgk
- 3smln31PUYiVPrMP0V4ja0i9qtO/TB01rTfTyXTRtqz53qO5dGsYiliJO5aUmh8swVpotgK4
- /57h3zGsaXO9PGgnnAdqeKVITaFTLY1ISg+Ptb4KoliiOjrBMmQUSJVtkUXMrCMCeuPDGHo7
- 39Xc75lcHlGuM3yEB//htKjyprbLeLf1y4xPyTeeF5zg/0ztRZNKZicgEmxyUNBHHnBKHQxz
- 1j+mzH0HjZZtXjGu2KLJ18G07q0fpz2ZPk2D53Ww39VNI/J9ABEBAAHCwV8EGAECAAkFAk6S
- 54YCGwwACgkQvSWxBAa0cEk3tRAAgO+DFpbyIa4RlnfpcW17AfnpZi9VR5+zr496n2jH/1ld
- wRO/S+QNSA8qdABqMb9WI4BNaoANgcg0AS429Mq0taaWKkAjkkGAT7mD1Q5PiLr06Y/+Kzdr
- 90eUVneqM2TUQQbK+Kh7JwmGVrRGNqQrDk+gRNvKnGwFNeTkTKtJ0P8jYd7P1gZb9Fwj9YLx
- jhn/sVIhNmEBLBoI7PL+9fbILqJPHgAwW35rpnq4f/EYTykbk1sa13Tav6btJ+4QOgbcezWI
- wZ5w/JVfEJW9JXp3BFAVzRQ5nVrrLDAJZ8Y5ioWcm99JtSIIxXxt9FJaGc1Bgsi5K/+dyTKL
- wLMJgiBzbVx8G+fCJJ9YtlNOPWhbKPlrQ8+AY52Aagi9WNhe6XfJdh5g6ptiOILm330mkR4g
- W6nEgZVyIyTq3ekOuruftWL99qpP5zi+eNrMmLRQx9iecDNgFr342R9bTDlb1TLuRb+/tJ98
- f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
- DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
- S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <Z8BjC_TzuDVaFC_3@MAC.fritz.box>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 27. 02. 25, 14:05, Alan Mackenzie wrote:
->> I don't know why distros seem to not be using it anymore, maybe there's
->> something else?
-> 
-> Jiri pointed to some problems yesterday from his point of view as a SuSE
-> maintainer.  Perhaps kmscon just needs bringing back into maintenance.  I
-> haven't actually looked at it yet.
+Linus,
 
-It was a bug and it works again with kmscon's git snapshot. This commit 
-in particular:
-https://github.com/Aetf/kmscon/commit/1de5e30ea4c8b9fc21623e5520b409c8e27a31d8
+The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
 
-thanks,
--- 
-js
-suse labs
+  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 916b7f42b3b3b539a71c204a9b49fdc4ca92cd82:
+
+  kvm: retry nx_huge_page_recovery_thread creation (2025-03-01 02:54:18 -0500)
+
+----------------------------------------------------------------
+ARM:
+
+* Fix TCR_EL2 configuration to not use the ASID in TTBR1_EL2
+  and not mess-up T1SZ/PS by using the HCR_EL2.E2H==0 layout.
+
+* Bring back the VMID allocation to the vcpu_load phase, ensuring
+  that we only setup VTTBR_EL2 once on VHE. This cures an ugly
+  race that would lead to running with an unallocated VMID.
+
+RISC-V:
+
+* Fix hart status check in SBI HSM extension
+
+* Fix hart suspend_type usage in SBI HSM extension
+
+* Fix error returned by SBI IPI and TIME extensions for
+  unsupported function IDs
+
+* Fix suspend_type usage in SBI SUSP extension
+
+* Remove unnecessary vcpu kick after injecting interrupt
+  via IMSIC guest file
+
+x86:
+
+* Fix an nVMX bug where KVM fails to detect that, after nested
+  VM-Exit, L1 has a pending IRQ (or NMI).
+
+* To avoid freeing the PIC while vCPUs are still around, which
+  would cause a NULL pointer access with the previous patch,
+  destroy vCPUs before any VM-level destruction.
+
+* Handle failures to create vhost_tasks
+
+----------------------------------------------------------------
+Andrew Jones (5):
+      riscv: KVM: Fix hart suspend status check
+      riscv: KVM: Fix hart suspend_type use
+      riscv: KVM: Fix SBI IPI error generation
+      riscv: KVM: Fix SBI TIME error generation
+      riscv: KVM: Fix SBI sleep_type use
+
+BillXiang (1):
+      riscv: KVM: Remove unnecessary vcpu kick
+
+Keith Busch (2):
+      vhost: return task creation error instead of NULL
+      kvm: retry nx_huge_page_recovery_thread creation
+
+Oliver Upton (1):
+      KVM: arm64: Ensure a VMID is allocated before programming VTTBR_EL2
+
+Paolo Bonzini (2):
+      Merge tag 'kvmarm-fixes-6.14-3' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD
+      Merge tag 'kvm-riscv-fixes-6.14-1' of https://github.com/kvm-riscv/linux into HEAD
+
+Sean Christopherson (2):
+      KVM: x86: Free vCPUs before freeing VM state
+      KVM: nVMX: Process events on nested VM-Exit if injectable IRQ or NMI is pending
+
+Will Deacon (1):
+      KVM: arm64: Fix tcr_el2 initialisation in hVHE mode
+
+ arch/arm64/include/asm/kvm_arm.h  |  2 +-
+ arch/arm64/include/asm/kvm_host.h |  2 +-
+ arch/arm64/kvm/arm.c              | 37 ++++++++++++++++-----------------
+ arch/arm64/kvm/vmid.c             | 11 +++-------
+ arch/riscv/kvm/aia_imsic.c        |  1 -
+ arch/riscv/kvm/vcpu_sbi_hsm.c     | 11 +++++-----
+ arch/riscv/kvm/vcpu_sbi_replace.c | 15 +++++++++++---
+ arch/riscv/kvm/vcpu_sbi_system.c  |  3 ++-
+ arch/x86/kvm/mmu/mmu.c            | 12 +++++------
+ arch/x86/kvm/vmx/nested.c         | 11 ++++++++++
+ arch/x86/kvm/x86.c                |  2 +-
+ drivers/vhost/vhost.c             |  2 +-
+ include/linux/call_once.h         | 43 +++++++++++++++++++++++++++++----------
+ kernel/vhost_task.c               |  4 ++--
+ 14 files changed, 94 insertions(+), 62 deletions(-)
+
