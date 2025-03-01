@@ -1,85 +1,169 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7745323F372;
-	Sat,  1 Mar 2025 12:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1821C1E4BE
+	for <linux-kernel@vger.kernel.org>; Sat,  1 Mar 2025 12:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740833102; cv=none; b=i76szmMfo/AC3HzzsLYWbVccp3mtR/3u6JjQ+j9hGIcS3m1ItBBUas599I9I/q8uQ9Q8CvNUte7SJOHhznfV8nET0uEm2h1qQs61Wa7V2mPr8wL7pCCCgWK8qdRpWOGQZfaX0nc03PPlm5QvlAxLGtDrkq3tqslL0HFNNtD8OkM=
+	t=1740833126; cv=none; b=VE7DRry6gG2QHvpuC5x5RKESuaC+A9Mbl8tl5qduQg3WGqjWqce8Znxfnx/+jyh1NXFBNwgrelJTUJllyxNTcFvn18CiuUcIpQOjZELOTDivdEG2nquPbvoyZ5Nv8CBKrp0oUD0ZzluSNrdAGalt3S6IpECC8WgnnjaLzmqlYns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740833102; c=relaxed/simple;
-	bh=L0mpe55eMmldTcY+TI4GJoQofUNmY83l2376LcHT7M8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Mi9mhq7ZbQZ1hmP6OTT4m39MF7omj17ZDiyUoUleBC1FzWlZKoeQFRbTuvRDsrZEO1ZOksF1ogdT1D9m3nBUPuN1qFWFUat6+DoRg1PNG20hK59JdWTs696/ks2oFl3osU1n4PQBzdZdUhJvi0mxu/Sx49yhXKJCz/hXE2FPDng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=UPUrbH4Z; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UPUrbH4Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=D1450
-	5eoFP/0xHq7p3qPv0wbvi5mxm7mCJIYN+BDc8k=; b=UPUrbH4Zthn4+DjdRvzse
-	ssMCpzDyYbK6N8TkwONaCcgAD8LvxjkrvnmDubHzZmUerSOrsfnSNlZoltr0ys88
-	0Itp7a1gMMZxNuhcWc5vobDb3bo+ROiBB7GFTCvrII6TYypZFcoTq3XFei2bN49p
-	4LhoEVFty2XeWBX+OFPrI4=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnbz4qAcNntfNcPg--.2910S2;
-	Sat, 01 Mar 2025 20:44:27 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org
-Cc: kw@linux.com,
-	manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	bhelgaas@google.com,
-	s-vadapalli@ti.com,
-	thomas.richard@bootlin.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	rockswang7@gmail.com,
-	"Hans Zhang" <18255117159@163.com>
-Subject: [RESEND] PCI: cadence: Fix runtime atomic count underflow.
-Date: Sat,  1 Mar 2025 20:44:18 +0800
-Message-Id: <20250301124418.291980-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740833126; c=relaxed/simple;
+	bh=nge10YJ9o3E9q9UptcYzZwL7sKC0Uq263Ftv4GNbgWo=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=n+7KtP3AmC2OIw5/8GU8vFZ8RmDGZ27/Ee9OYY14grH96atN3RZO5UhSH+a/X5sYYntmgn0XcwoUDCB2axyPmNQeXPdb30Fjq2nYFtA0gxz7s4rcYJzdp4lPXtIziwoOJgcD0Gn1XDTWima2AxotPSayQKg5wdoVp6jAp7IwZv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d054d79dacso58053635ab.2
+        for <linux-kernel@vger.kernel.org>; Sat, 01 Mar 2025 04:45:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740833124; x=1741437924;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8Q95zOLSYKCLrzAjQokGWyvnP2OsuHAOqXHJfcqwyKo=;
+        b=HE8Cq8JFTsveB9AjeNADT+i194cGY+E4jgHtQ1lkzRPzHVPtJA2TVdUn3+QZlOqNU7
+         8AjSq8OeGiaB2D7ZpQZ4pGCvQyEau58s5phTxHNnFDcVr3Vlh0RhSu66F+dP+c4Qo5ta
+         FVgrexECNxze0HTw1HLCb8sWaxTeOiiubCBQBge4gDeUkxog7yLVFFrWVXm3Peq01BXp
+         urmL7vB9VbHMdJVmAI78oyKlIVStaG4e5RIx/UcPw7gJr9666rMSWQd3hxYyFvJES4hY
+         WRj9DzyIR5K8H6N7XNOnIM97DE1jI24G4/R3HVvBc7exq6nrwBAB1xrtqF3cDZM4ZxdP
+         tdYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVo6QbH8eX3LT/S2PIHVD8DLKly/roGEHYw9qbOERWu3pDaczzNSsrGzkq2jZMZB4br5GvzrsJAA8ZgfHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Wlold5HIxP25ltQ7/x1xPwDgb1dR+ap8SaLzcE8z1ZOjxs8e
+	b9kSS823woYDRoWg/SHn49IBAwP42bPYSfbntBJG49gEcLK9Osvzn2nBX2GdY6ay9d/gND2EIAu
+	V0gf0SFOjVsqJ81/Ze8c3IFMQc5fTdRkffOj2/BS0eKrLwnq43Fhwg2w=
+X-Google-Smtp-Source: AGHT+IE5s3royZQYoqIz9BOPOExK81G7mfqUYFmrRU/4SNieha6SBeizmY8gV4VqmfFf+0UXzsYSDo0j7wz+nYO9nrb4GSPcuqKI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnbz4qAcNntfNcPg--.2910S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GFyfKF4kJryfuF4fZFyxXwb_yoWDWFc_u3
-	ZYvF4IyFs0gr9Ikayay3WrXryDZa4jqw4jgan3tF43AF1xtw1DW3WkZF98ZF1kG3Z8JFyj
-	yw1qv3ZrCF9rAjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRWHqcUUUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxIDo2fC+rxaxQAAsV
+X-Received: by 2002:a05:6e02:1a67:b0:3d3:dcfd:2768 with SMTP id
+ e9e14a558f8ab-3d3e6e458d8mr75129835ab.4.1740833124198; Sat, 01 Mar 2025
+ 04:45:24 -0800 (PST)
+Date: Sat, 01 Mar 2025 04:45:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67c30164.050a0220.dc10f.0167.GAE@google.com>
+Subject: [syzbot] [kernel?] WARNING in exit_itimers
+From: syzbot <syzbot+d9da13b17db05637e02d@syzkaller.appspotmail.com>
+To: anna-maria@linutronix.de, frederic@kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 
-From: "Hans Zhang" <18255117159@163.com>
+Hello,
 
-If the pci_host_probe fails to be executed and run one time
-pm_runtime_put_sync. Run pm_runtime_put_sync or pm_runtime_put again in
-cdns_plat_pcie_probe or j721e_pcie_probe. Finally, it will print log
-"runtime PM usage count underflow!".
+syzbot found the following issue on:
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
+HEAD commit:    d082ecbc71e9 Linux 6.14-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=173537a4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=299fb852e91f4f3c
+dashboard link: https://syzkaller.appspot.com/bug?extid=d9da13b17db05637e02d
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-d082ecbc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/bdb92972b307/vmlinux-d082ecbc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/15450a9ada87/Image-d082ecbc.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d9da13b17db05637e02d@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 21835 at kernel/time/posix-timers.c:1109 exit_itimers+0x238/0x34c kernel/time/posix-timers.c:1109
+Modules linked in:
+CPU: 0 UID: 0 PID: 21835 Comm: syz.0.5419 Not tainted 6.14.0-rc4-syzkaller #0
+Hardware name: linux,dummy-virt (DT)
+pstate: 21402009 (nzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+pc : exit_itimers+0x238/0x34c kernel/time/posix-timers.c:1109
+lr : itimer_delete kernel/time/posix-timers.c:1081 [inline]
+lr : exit_itimers+0x17c/0x34c kernel/time/posix-timers.c:1103
+sp : ffff800088ffbbf0
+x29: ffff800088ffbbf0 x28: 0000000000000001 x27: f0f0000007b99a38
+x26: 0000000000000000 x25: 0000000000000000 x24: f0f0000007b99240
+x23: 0000000000000000 x22: f0f0000007b99240 x21: f0f0000007b99240
+x20: 0000000000000001 x19: f0f0000007b99240 x18: 0000000000000000
+x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffea2d02c8
+x14: f0f0000007b992c0 x13: ffff8000828500c8 x12: 0000000000000001
+x11: 00000355b7b9e14b x10: 5d48c5ec52c2bb1a x9 : b4052c63a0d52864
+x8 : ffff800088ffbe38 x7 : fdf0000003263488 x6 : 0000000000000000
+x5 : 0000000000000000 x4 : 0000000001000001 x3 : 00000000000001f4
+x2 : fff000007f8d0758 x1 : f0f0000007b99240 x0 : fdf0000016d5fb60
+Call trace:
+ exit_itimers+0x238/0x34c kernel/time/posix-timers.c:1109 (P)
+ do_exit+0x17c/0x98c kernel/exit.c:912
+ do_group_exit+0x34/0x90 kernel/exit.c:1087
+ copy_siginfo_to_user+0x0/0xec kernel/signal.c:3036
+ do_signal+0x94/0x360 arch/arm64/kernel/signal.c:1658
+ do_notify_resume+0xd8/0x164 arch/arm64/kernel/entry-common.c:148
+ exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+ exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+ el0_svc+0xc0/0xe0 arch/arm64/kernel/entry-common.c:745
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+---[ end trace 0000000000000000 ]---
+------------[ cut here ]------------
+rcuref - imbalanced put()
+WARNING: CPU: 0 PID: 21835 at lib/rcuref.c:267 rcuref_put_slowpath+0xbc/0xd0 lib/rcuref.c:267
+Modules linked in:
+CPU: 0 UID: 0 PID: 21835 Comm: syz.0.5419 Tainted: G        W          6.14.0-rc4-syzkaller #0
+Tainted: [W]=WARN
+Hardware name: linux,dummy-virt (DT)
+pstate: 61402009 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+pc : rcuref_put_slowpath+0xbc/0xd0 lib/rcuref.c:267
+lr : rcuref_put_slowpath+0xbc/0xd0 lib/rcuref.c:267
+sp : ffff800088ffbbd0
+x29: ffff800088ffbbd0 x28: 0000000000000001 x27: f0f0000007b99a38
+x26: 0000000000000000 x25: 0000000000000000 x24: f0f0000007b99240
+x23: 0000000000000000 x22: f0f0000007b99240 x21: f0f0000007b99240
+x20: 00000000ffffffff x19: fdf0000016d5fc28 x18: 000000000001cf9f
+x17: 0000000000000000 x16: 0000000000000000 x15: ffff800088ffb560
+x14: 00000000ffffffea x13: ffff800088ffb988 x12: ffff80008292d920
+x11: fffffffffffd8010 x10: fffffffffffd7fe8 x9 : 0000000000009be8
+x8 : c0000000ffffe67f x7 : ffff80008287d898 x6 : 0000000000023ba8
+x5 : ffff8000828a14c8 x4 : 0000000000000000 x3 : 0000000000000000
+x2 : 0000000000000000 x1 : 0000000000000000 x0 : f0f0000007b99240
+Call trace:
+ rcuref_put_slowpath+0xbc/0xd0 lib/rcuref.c:267 (P)
+ __rcuref_put include/linux/rcuref.h:94 [inline]
+ rcuref_put include/linux/rcuref.h:150 [inline]
+ posixtimer_putref include/linux/posix-timers.h:226 [inline]
+ posix_timer_cleanup_ignored kernel/time/posix-timers.c:977 [inline]
+ exit_itimers+0x334/0x34c kernel/time/posix-timers.c:1114
+ do_exit+0x17c/0x98c kernel/exit.c:912
+ do_group_exit+0x34/0x90 kernel/exit.c:1087
+ copy_siginfo_to_user+0x0/0xec kernel/signal.c:3036
+ do_signal+0x94/0x360 arch/arm64/kernel/signal.c:1658
+ do_notify_resume+0xd8/0x164 arch/arm64/kernel/entry-common.c:148
+ exit_to_user_mode_prepare arch/arm64/kernel/entry-common.c:169 [inline]
+ exit_to_user_mode arch/arm64/kernel/entry-common.c:178 [inline]
+ el0_svc+0xc0/0xe0 arch/arm64/kernel/entry-common.c:745
+ el0t_64_sync_handler+0x10c/0x138 arch/arm64/kernel/entry-common.c:762
+ el0t_64_sync+0x1a4/0x1a8 arch/arm64/kernel/entry.S:600
+---[ end trace 0000000000000000 ]---
+
+
 ---
- drivers/pci/controller/cadence/pcie-cadence-host.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 8af95e9da7ce..fe0b8d76005e 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -576,8 +576,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	return 0;
- 
-- err_init:
--	pm_runtime_put_sync(dev);
--
-+err_init:
- 	return ret;
- }
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-base-commit: bb066fe812d6fb3a9d01c073d9f1e2fd5a63403b
--- 
-2.47.1
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
